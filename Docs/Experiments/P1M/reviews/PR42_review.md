@@ -56,7 +56,7 @@ to its base. Counts: **0 CRITICAL, 0 MAJOR, 1 MINOR** (process; it does not bloc
    - The #39 commits after 6bb89fc5 (e8bef8b0: the WP4 merge; fcdcd2c0: the N-1 admission) do not touch
      `island_impl.h`, so the identical-object-code result carries over.
    - The whole stack, #43 head 8d584649 (which contains 4cb0ebc2), ran the full `run_tests.sh` in the #43 review
-     (see PR43_review.md).
+     (see PR43_review.md): v4_tests 115/115 and WP4 golden 528,081 / 0.
 
 ## Findings
 

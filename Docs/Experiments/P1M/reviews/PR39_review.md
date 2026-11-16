@@ -20,7 +20,13 @@ Reviewer: independent (Opus 5.5, high), 2026-11-16. Base: `exp/P1M-engine` 571f1
 
 Counts at fcdcd2c0: **0 CRITICAL, 1 MAJOR (+ 1 MAJOR resolved), 6 MINOR** (+ 4 INFO).
 
-## Test run (Owls, Xeon Gold 6148, gcc 11.5, `nice -n 19`, 3 threads, fresh build of e8bef8b0 from `git archive`)
+## Test runs
+**fcdcd2c0, inside the stack** (#43 head 8d584649 = fcdcd2c0 + #42 + #43; see PR43_review.md):
+- v4_tests **115 / 115**, including `calibration_admission_n1_rule`. T3 hashes are unchanged.
+- WP4 R golden **528,081 checks, 0 failures**, the six `runner = "wp3"` runs included.
+- WP5 extras OK.
+
+### e8bef8b0 (Owls, Xeon Gold 6148, gcc 11.5, `nice -n 19`, 3 threads, fresh build from `git archive`)
 `TMPDIR=/home/fb31/SMC_Engineering_Department/tmp/20261116-review-39-43/t39 tests/run_tests.sh --threads 3` (quick):
 - v4_tests: **114 test cases, 0 failed, 0 check failures**.
   - Island goldens vs core: `golden_island_vs_core_engine`, `golden_compat_island_vs_core_serial_stream`,

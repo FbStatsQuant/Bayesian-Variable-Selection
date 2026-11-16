@@ -75,7 +75,15 @@ regression: the old offer path behaves the same.
     `binary`.
   - That path goes through all the new load sites: `load_island_full` (bulk), `read_store` for the setup table stores
     (bulk) and `Ledger::merge` (pair-sort `compact`).
-  - Result: see "Test runs".
+  - **Result:** in all 5 quick cases (AR0.5_n150_p300, AR0.6_n100_p40, AR0.9_n100_p30_s34, AR0.9_n120_p120,
+    IND_n80_p60_Te3), **all 39 data sections of fit.bin are identical** between base and head. These include the top
+    store, log Z, PIPs, HPM and provenance, the local search, the occupancy rows and the counters.
+  - **Two meta keys differ, both explained:**
+    - `mem_estimate`: the intended 26 → 30 + 4k change (e.g. `merged` 225,475 → 241,485 B);
+    - `inputs`: the input files' content hashes cover their own `meta`, and that holds the build's binary/git block.
+      The base was built from `git archive`, with no git. `data.bin`'s hash differs too, and this PR does not touch its
+      writer.
+  - Golden on both trees: 443,598 checks, 0 failures.
 
 ## (c) Every edit outside WP1's `store.*`
 
@@ -272,7 +280,20 @@ or negative. That does not matter for timing or hash equality, but the bench is 
 - **Discipline:** nothing written outside `engine_v4/`, no hard-coded paths, no large files.
 
 ## Test runs I did (Owls)
-TEST_RESULTS_PLACEHOLDER
+- **Head `bf7daa23`:** `TMPDIR=…/20261116-review-45 tests/run_tests.sh --quick --threads 3`.
+  - **113/113 PASS**, including `store_bulk_load_equals_offer_path_and_verifies` and
+    `merge_two_islands_same_model_two_values`.
+  - WP5 Slurm-driver 17 tests OK; competitor harness OK; install script 23 checks OK.
+  - **WP4 golden 443,598 checks, 0 failures.**
+  - Build flags `-O2 -fno-math-errno -ffp-contract=off -march=x86-64-v2`.
+  - (A first attempt was killed by a host restart mid-run. This is the complete re-run.)
+- **Patched golden copy** (keeps each T9-files `fit.bin`), quick, 3 threads:
+  - head: 443,598 / 0;
+  - base (`git archive 571f11bc`): 443,598 / 0;
+  - fit.bin comparison in §(b).
+- **`adv.cpp`:** 1,547 hostile and randomised checks on `load_unique_sorted`, `check_invariants` and the eval reader,
+  0 failures (§(a)).
+- **`v4_bench_store load|merge`** at cap 4·10⁷ + 1, base and head; **`rev_merge.cpp`** per-island probes (§(d)).
 
 All of my programs (`adv.cpp`, `rev_merge.cpp`, `fitcmp.cpp`, the patched golden copy, the base archive) lived in
 `/home/fb31/SMC_Engineering_Department/tmp/20261116-review-45`. I removed that folder afterwards. I started no
