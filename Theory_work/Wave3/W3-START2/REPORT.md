@@ -20,12 +20,12 @@ In words (all four improvements proposed by the base ticket's better-theorem rev
   **proper** subsets of the truth only. The term 15√(2/π)z_n/p of version 1.3.4 is gone. Reason: the at most 15 null
   columns that can share a block with every truth have zero mean gain, and for a bounded number of standard normal
   variables a fixed cut-off of the tail replaces the level z_n ≈ √(2 log p) (Lemma LEAK-0). Consequence: the
-  strong-signal corollary F2 needs no growth condition on p; for bounded p > s₀ the order n^{−1/2} is exact.
+  strong-signal corollary F2 needs no growth condition on p; for bounded p > s₀ the order n^{−1/2} is exact when η′ = 0 and κ_V > ½ (F2⁺).
 * **P2 — overlap under either visibility condition.** The lower bound π₀(S₀) ≥ n^{−E_n−ε} for a bounded leakage set
   holds under the margin form (V-m) as well as under (V-c), by the exact identity
   1/π₀(S₀) = [Σ_{T∈𝓛(Q)}γ₀(T)/γ₀(S₀)]/π₀(𝓛(Q)) and the lattice clause of Theorem START-F.
 * **P3 — a partition-free leaking-null limit that is not vacuous.** For 1 ≤ s₀ ≤ 15: if 17 − s₀ null columns each gain
-  more than (1 + 2Ā)·τ²_V·log n on every proper subset V of the truth, then π₀(S₀) → 0 at a polynomial rate, whatever
+  at least c·τ²_V·log n, with a fixed c > 1 + 2Ā, on every proper subset V of the truth, then π₀(S₀) → 0 at a polynomial rate, whatever
   the partition. A design satisfying the premise is given for every s₀ ∈ {1, …, 15}.
 * **P4 — leakage sets of any size ≤ K under Gaussian rows.** P(1 − π₀(𝓛(Q)) ≤ (|Q| + 1)·n^{−1/2}·e^{C_R√log n}) → 1 with no
   restriction on |Q| beyond |Q| ≤ K; the bound is informative up to |Q| = n^{1/2−ε}. Only the reference sets H_l stay
@@ -86,7 +86,7 @@ W3-START:LEAK stays in use for U_Q.
 
 | item | reading | evidence |
 |---|---|---|
-| leading rate n^{−1/2}·𝔏^♯_n(h) | sharp in order when 𝔏^♯_n(h) = O(1): o₀ ≥ T₁ ≥ ½(n + 1)^{−1/2} on every data set (T0), and 𝔏^♯_n(h) ≥ (p − s₀)/(4p) | `lemmas/P1_LEADING.md` P1.1, P1.6(v) |
+| leading rate n^{−1/2}·𝔏^♯_n(h) | the leading contribution is sharp in order when 𝔏^♯_n(h) = O(1): o₀ ≥ T₁ ≥ ½(n + 1)^{−1/2} on every data set (T0), and 𝔏^♯_n(h) ≥ (p − s₀)/(4p); exact order of the full odds o₀ needs the remainder conditions of F2⁺ (η′ = 0, κ_V > ½; P1.6(v)) | `lemmas/P1_LEADING.md` P1.1, P1.6(v) |
 | ε-dependent constant in (T1⁺)(d) | NECESSARY-FOR-ROUTE: the cut-off for the exceptional columns grows as the allowed failure probability decreases; exp(Z²/2) has infinite expectation | `lemmas/P1_LEADING.md` P1.3, Remarks |
 | s₀ = 0 keeps 𝔏⁰_n(h) | NECESSARY-FOR-ROUTE: every null is exceptional and there are p of them | `lemmas/P1_LEADING.md` P1.3, Remark (4) |
 | visibility in OVL⁺ | used only for π₀(𝓛(Q)) → 1 | `lemmas/P2_OVL.md` P2.2, P2.3 |
