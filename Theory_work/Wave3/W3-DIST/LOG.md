@@ -461,3 +461,16 @@ checkpoint on WEAKER TC1–TC9, X exhausted, B2-core → Gaussian only, B0 → f
   and the gloss; the external change named; gates=FAIL sentence; verdict-line block; D62). Seats launched, fresh
   threads, same models: Astra (codex, gpt-6-astra, high), Opus 5.5 (Claude Third, high). D6 thread settled.
   Nothing in the ticket folder is edited from now except `reviews/`, `LOG.md`, `CHECKPOINT_*.md`.
+- 05:19 — **DIFF ROUND R2: PASS.** astra 9.3 gates=PASS; opus 9.2 gates=PASS; all 20 claims ACCEPT from both; no new C/S/F
+  finding; both confirm by name that TC3's text is unchanged and proved as written and that the fixed-A gloss is exactly
+  what is proved. `manifest.py verify` on MANIFEST_R2: OK; `manifest.py bind`: OK (council cell: R2; MANIFEST c5cd9cdd…;
+  astra=9.3 PASS; opus=9.2 PASS). Verdict lines sent to the manager. Written: `reviews/R2_disposition.md`,
+  **`CHECKPOINT_3.md`**, `reviews/UNHARVESTED_STRENGTH.md` (ten items with gain and cost, HQ's item 8 included; none
+  worked on). The Opus seat's non-scoring note on DIST-2's rate wording is recorded in CP3 for the editorial batch
+  (the passing manifest is not edited). Seat threads settled. HOLDS read: none. The frozen content verifies after
+  these writes (only `reviews/`, `LOG.md`, `CHECKPOINT_3.md` touched). End of the lead's run: CP3 is the final message.
+- 05:21 — Manager: HQ's congratulations; RT1 (Sol, dept research folder) reads the DIST-2 rate sentence as **LOOSE, not false**:
+  no correction before recording; the erratum route of CP3 §7 stands. Item 9 (true s₀-dependence: ε_n² ≲ (1 + s₀^r)³
+  log n·ℓ_n/n for DIST-2 in the written proof; RT1 steps 4–11) added to `reviews/UNHARVESTED_STRENGTH.md` (the two
+  Opus items renumbered 10, 11; eleven rows). Nothing inside the manifest was edited. Recording by HQ waits for H5
+  card 13 and the recorder's task T. Thread stays open until HQ records.
