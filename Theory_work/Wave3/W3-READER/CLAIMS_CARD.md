@@ -1,5 +1,6 @@
-# Headline claims card — proposal v1.1, organised by five pillars (W3-READER, bridge leg, 2026-11-16)
+# Headline claims card — proposal v1.2, organised by five pillars (W3-READER, bridge leg, 2026-11-16)
 
+v1.2 = v1.1 with row 3.7 swapped to W3-SCR-R2 READER_DELTA v4 (HQ conditional GO, task R main 8875eeba, interim label removed d2b600ba): form (a), plain; row text per H5 card 11 — EQUAL.
 v1.1 = v1.0 with row 1.4 swapped to W3-MISR-R READER_DELTA v0.4 (HQ signal, task Q; accepted main 2b54cb3c): reader-version master CorGb-plus, Song–Liang line from the delta — STRONGER (weaker hypotheses).
 v1.0 = v0.9 with row 1.3 swapped to W3-PSHARP-R READER_DELTA v0.4 (HQ signal; headline sentence verbatim) — STRONGER
 (expectation display for every $p$ on the null-column designs). v0.9 = v0.8 with SL0 cleared (main 33e1f0f5): requoted statuses, SL0 reader wording dropped — EQUAL. v0.8 = v0.7 with the registry status refresh at main f526e45b and the row 1.1 Forms A/B (HQ order) — statuses only,
@@ -59,7 +60,7 @@ marked · **long** = primitive but lengthy · **limit** = no primitive version; 
 | 3.4 | *(moved to row 1.4, manager's CP1 decision 6)* | | | |
 | 3.5 | **The evidence estimate is unbiased.** Given the frozen calibration, each island's evidence estimate, and hence the printed (equal-weight pooled) $\hat Z$, is unbiased for $Z$; no condition on the design. | `W1-N1:Thm-N1@1.0.0`: "PROVED-CHECKED"; pooled form `W3-READER:PoolZ` (this ticket): "PROVED (by this seat, unchecked)". | The classical unbiasedness of SMC normalising-constant estimates (Del Moral), established **for the method as coded, calibration included** (the calibration is frozen before the final run's randomness) [GATES row 3.5]. | body remark (Thm 10 remark) |
 | 3.6 (Thm 10) | **The printed outputs are consistent** (Gaussian rows, sampler branch) [S2-F4, S2-F5]: in Theorem 10's setting — signal fixed on the standardised scale, Theorem 2's population floor, Theorem 5's visibility and no-leakage conditions — the errors $|\hat Z/Z-1|$, $|\log\hat Z-\log Z|$ and the sup-norm error of the pooled PIPs, multiplied by the indicator of calibration success, are $O_P(n^{-1/2}e^{C\sqrt{\log n}})$; the probabilities of "calibration succeeds and the MPM is wrong" and of "the run completes and the reported model is wrong" tend to zero. (Intersections, not conditioning: no lower bound on the probability of calibration success is claimed. On completed runs these are the printed fields.) | `W3-SAMP:C@1.1.3`, `TR@2.1.3`, `LT#@2.0.3`, `D@2.1.3`: "PROVED-CHECKED, conditional on SOP:TH09" (each) [REG-33e1]; start input `W3-START2:IF-START@1.0.0`: "PROVED-CHECKED"; posterior input `W2-APP:POST@1.0.6` (covers the standardised-signal convention): "PROVED-CHECKED, conditional on SOP:TH09". | Ties the theory to every number the software prints. | **clean**; NEW assembly R4; conditional on T03♯; body (H5 card 7) |
-| 3.7 (Thm 8) | **Certified screening** [SCR-PC]: under a sparse eigenvalue floor on $(q_n+s_0)$-sets, with the floor constant κ, the signal minimum b, the coefficient bound M and the noise variance σ² all fixed in $n$, and $(q_n+1)\log p+\log n\le c_1n$ (any $q_n=o(n/\log n)$ when $p\le n^A$), the probability that a run produces output, certifies a reported model of size $\le q_n$, and that model misses a true predictor tends to zero; no start, leakage, block or visibility condition. Signals varying with $n$ are not covered (open item SCR-R1). | `W3-SCR:A1@1.0.0`: "PROVED-CHECKED". | The only coded-method guarantee with no visibility or leakage condition; holds where 3.1–3.2 may fail (strong factors, masking). | **clean**, no bridge |
+| 3.7 (Thm 8) | **Certified screening** [SCR-PC, SCR-R2]: under (A1)–(A3) of Theorem 8 — a sparse eigenvalue floor on $(q_n+s_0)$-sets, with the floor constant κ, the signal minimum b, the coefficient bound M and the noise variance σ² all fixed in $n$, $q_n$ below the model-size cap $\min(p,\lfloor n/2\rfloor)$, and $(q_n+1)\log p+\log n\le c_1n$ (any $q_n=o(n/\log n)$ when $p\le n^A$) — the probability that a run produces output, certifies (sets its local-optimality flag for) a reported model of size $\le q_n$, and that model misses a true predictor tends to zero; no start, leakage, block or visibility condition. Signals varying with $n$ are not covered (open item SCR-R1). | `W3-SCR:A1@1.0.0`: "PROVED-CHECKED" (main d2b600ba, interim label removed; council R3, MANIFEST 19847f54…, sol=10.0 PASS, opus=9.4 PASS) [REG-d2b6]. | The only coded-method guarantee that needs no visibility, leakage, start or block condition, so its assumptions can hold on designs (strong factors included) where those of 3.1–3.2 do not [H5-11]. | **clean**, no bridge |
 
 ## Pillar 4 — The parallel method preserves it (mostly open)
 
@@ -99,11 +100,9 @@ may carry an unchecked "conditional on" input only if the abstract states it [H5
   $S_0$ but keeps the vanishing floor (A5), which still excludes exact linear dependence among $O(\log n)$ columns,
   duplicated null columns included* [H5-7.1].
 - **1.4** omitted variables — states its conditionality on the posterior refinements until they are recorded.
-- **3.7** certified screening — **abstract (H5 card 7 verdict)**, the clause of `READER_VERSIONS.md` row thm8 naming
-  κ, b, M and σ as fixed in $n$; the body carries Theorem 8′ (n-varying signals, master `W3-SCR:A-inf`). Form (a) if the
-  second SCR council round passes; otherwise **(b1), recommended**: the clause plus "(reviewed by a council on an
-  earlier text; the later narrowing to constants fixed in $n$ was re-verified by an independent reviewer; a second
-  council review is pending)"; (b2) would move the row to the body [SCR-PC].
+- **3.7** certified screening — **abstract, form (a), plain** (second SCR council round passed; H5 cards 9, 11): the
+  clause of `READER_VERSIONS.md` row thm8 "Placements" ($\kappa$, $b$, $M$, $\sigma_*$ fixed in $n$; $q_n$ below the cap;
+  $c_1$ by name; "certifies" defined); the body carries Theorem 8′ (plain) [SCR-R2].
 - **2.1** only after W3-DIST CP3; fallback **2.2** if it slips [H5-5].
 Body: 3.2, 3.3, 3.5 (remark), **3.6** (the consultant withdrew its promotion; its premises do not fit one abstract
 clause: Gaussian rows, population floor, visibility, no leakage, and the sampler conventions) [H5-7.4]. Pillars 4–5:

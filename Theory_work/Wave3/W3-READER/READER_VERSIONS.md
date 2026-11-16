@@ -815,7 +815,7 @@ any $b\ge\tfrac12$. Recommendation: present (A5)(a) in the main text (fully expl
 
 ## 8. Theorem 8 — Certified screening
 <!-- ROW thm8 BEGIN -->
-**Card row** 3.7 · **Section version** 0.5 (2026-11-16) · **Pending delta** —
+**Card row** 3.7 · **Section version** 0.6 (2026-11-16) · **Pending delta** —
 
 
 ### Reader statement
@@ -827,7 +827,7 @@ any $b\ge\tfrac12$. Recommendation: present (A5)(a) in the main text (fully expl
 - **(A3) Size budget.** $(q_n+1)\log p+\log n\le c_1n$, $c_1:=\kappa^2b_0^2/(200(M^2+\sigma_*^2))$, with
   $q_n\in\{0,\dots,K-1\}$ [S1-F8].
 
-Then
+A run *certifies* its reported model $\hat S$ when the run's local-optimality flag is set for $\hat S$. Then
 $$
 P\big(\text{output},\ \hat S\text{ certified},\ |\hat S|\le q_n,\ S_0\not\subseteq\hat S\big)\to0 .
 $$
@@ -836,20 +836,15 @@ In particular this holds for $p\le n^A$ and every $q_n=o(n/\log n)$. Signal size
 visibility is used beyond (A1)–(A3), and $p\le n^A$ is not needed. (The master needs only a weaker directional floor,
 which leaves null-null correlations free; the full floor (A1) does constrain them [S1-F8].)
 
-### Placements and forms of row 3.7 (H5 card 7 verdict, adopted by HQ; the CP3 freeze picks the form) [SCR-PC]
-- **Abstract (decided):** Theorem 8 as a clause, with **all four constants named as fixed in $n$**: *"Certified
-  screening: if the design has a sparse eigenvalue floor $\kappa$ on models of size $q_n+s_0$, the true coefficients
-  satisfy $\theta^*_{\min}\ge b$ and $\|\theta^*\|_1\le M$, the constants $\kappa$, $b$, $M$ and the noise variance
-  $\sigma_*^2$ are fixed in $n$, and $(q_n+1)\log p+\log n\le c_1n$, then the probability that a run produces output,
-  certifies a reported model of size at most $q_n$, and that model misses a true predictor tends to zero — with no
-  visibility, leakage, start or block condition."*
-- **Body (decided):** the general form for signals that vary with $n$, **Theorem 8′** below (master `W3-SCR:A-inf`).
-- **Form (a) — the second SCR council round passes (target Thu 18:00):** the abstract clause as above, plain.
-- **Form (b) — it misses Friday:** either **(b1)** the abstract clause followed by *"(reviewed by a council on an earlier
-  text; the later narrowing to constants fixed in $n$ was re-verified by an independent reviewer; a second council
-  review is pending)"*, or **(b2)** row 3.7 moves to the body. **Recommendation: (b1)** — the mathematics was
-  council-reviewed and the narrowing only adds premises (it weakens the statement) and has an independent check; the
-  label states exactly that, as the row 1.1 Form B1 does for its condition.
+### Placements of row 3.7 (form (a), plain: second SCR council round passed — W3-SCR-R2 R2 + diff round R3, MANIFEST_R3 `19847f54…`, both seats PASS; H5 cards 9 and 11; HQ acceptance) [SCR-R2]
+- **Abstract:** *"Certified screening: if the design has a sparse eigenvalue floor $\kappa$ on models of size $q_n+s_0$, the
+  true coefficients satisfy $\theta^*_{\min}\ge b$ and $\|\theta^*\|_1\le M$, the constants $\kappa$, $b$, $M$ and the noise
+  variance $\sigma_*^2$ are fixed in $n$, $q_n$ is below the method's model-size cap $\min(p,\lfloor n/2\rfloor)$, and
+  $(q_n+1)\log p+\log n\le c_1n$ with an explicit constant $c_1$ depending only on $\kappa,b,M,\sigma_*$, then the probability
+  that a run produces output, certifies a reported model of size at most $q_n$ ("certifies": the run's local-optimality
+  flag is set for that model), and that model misses a true predictor tends to zero — with no visibility, leakage, start
+  or block condition."* (The formula for $c_1$ stays in Theorem 8 (A3).)
+- **Body:** Theorem 8′ (signals that may vary with $n$; master `W3-SCR:A-inf`), plain.
 
 **Theorem 8′ (body; certified screening with signals that may vary with $n$).** Let the design be fixed and assume (S1),
 (S3). For $S\subseteq[p]$ and $t\notin S$ let $\gamma(t\mid S)$ be the *noiseless gain* of $t$ given $S$: the decrease of
@@ -866,10 +861,7 @@ bound on $s_0$, and no condition on the start, leakage, blocks or the collineari
 **"PROVED-CHECKED"**; its non-asymptotic form `W3-SCR:SCR-A@1.0.0` (:79-85, probability $\le3e^{-x}$ under a finite-$n$
 margin condition), **"PROVED-CHECKED"**. Theorem 8 is its corollary under fixed constants (`W3-SCR:A1`). *Bridge:* none
 (the quantities are the master's, described in words).
-*Form dependency (manager, 2026-11-16):* `W3-SCR:A-inf` sits in the post-C1 tree that the second SCR council round
-(W3-SCR-R2, per-claim table for all 21 rows) is re-reviewing. Theorem 8′ is stated **plain** if A-inf is ACCEPTed in that
-round; otherwise it carries the (b1) label: *"(reviewed by a council on an earlier text; a second council review is
-pending)"*. The CP3 freeze picks per the round's table.
+*Reviewed together with Theorem 8 in the second SCR council round; A-inf ACCEPTed by both seats (stated plain).*
 
 ### Why each assumption
 (A1) only the realised combination of missing truths must keep a fraction of its energy outside any small model (the
@@ -880,16 +872,32 @@ $\sigma\sqrt{((q_n+1)\log p+\log n)/n}$ exists (`W3-SCR:A1o`, different hypothes
 (A3) a union bound over models of size $\le q_n$.
 
 ### Master theorem
-`W3-SCR:A1@1.0.0`, `Theory_work/Wave3/W3-SCR/STATEMENT.md:158-163`, status **"PROVED-CHECKED"**.
+`W3-SCR:A1@1.0.0`, `Theory_work/Wave3/W3-SCR/STATEMENT.md:158-163`, status **"PROVED-CHECKED"** (registry main d2b600ba,
+interim label removed; council cell R3, MANIFEST 19847f54…, sol=10.0 PASS, opus=9.4 PASS) [REG-d2b6]. Companion for
+uncertified runs, not part of Theorem 8: `W3-SCR:SCR-G@1.0.0` (:132-145), status **"PROVED-CHECKED"** (same registry
+commit and council cell) [REG-d2b6].
 
 ### Bridges
 None: the statement is the master's, with the floor named in standard terms (the master already lists the sparse
 eigenvalue floor as the sufficient case, :158-159). "Certified" must be explained in words (NOTATION §5).
 
 ### Honest limits
-None. It is a one-sided guarantee (no false negatives among small certified models); exact recovery from the
+- The bound is on the probability of an intersection: a run produces output, certifies a small model, **and** that
+  model misses a true predictor. It is not a guarantee conditional on certification, and it does not say that the
+  method returns a superset of the true model with probability tending to one.
+- A run is not claimed to certify a small model with probability tending to one (`W3-SCR/STATEMENT.md:217-218`); how
+  often it does is reported from numerics (see the certification-frequency line).
+- It is one-sided: certified small models are not shown to equal the true model; exact recovery from the
 certificate needs a near-orthogonality floor (`W3-SCR:SCR-C`, PROVED-CHECKED), which is not reader-friendly
 ($\varphi_n(q_n)\ge2A/(2A+1)+\epsilon$) — keep it as a remark.
+
+### Certification frequency (numerics, not a theorem) [SCR-R2]
+A run certifies a model when its local-optimality flag is set. In existing numerics the method certified a small
+reported model in every completed run: 2,394 of 2,394 in the 2,400-fit study ($n=200$); 376 of 376 in the strong-factor
+experiment ($n\le150$, $p$ up to $10n$); 71 of 71 in the screening study ($n=100$). On strong-factor designs
+(equicorrelation $\rho\in\{0.5,0.7\}$, $p\ge2.5n$, $s_0\in\{4,8\}$) the certified model contained every true predictor in
+61 of 122 fits at $n=50$, 18 of 20 at $n=75$ and 30 of 30 at $n=100$.
+(Sources: `/home/fb31/BVS-wt/W3-SCR-R2/Theory_work/Wave3/W3-SCR-R2/reviews/READER_DELTA.md` §5, theory/W3-SCR-R2 @ 048b6b23.)
 
 #### Update log (thm8)
 - v0.1 2026-11-15: first version (CP1).
@@ -903,6 +911,12 @@ certificate needs a near-orthogonality floor (`W3-SCR:SCR-C`, PROVED-CHECKED), w
   statement = master A-inf in words; EQUAL to its master).
 - v0.5 2026-11-16: Theorem 8′ form dependency on the W3-SCR-R2 per-claim table noted (plain if A-inf ACCEPT, else
   (b1) label) (EQUAL).
+- v0.6 2026-11-16: [W3-SCR-R2 CP3; H5 cards 9, 11; recorder task R main 8875eeba, interim label removed d2b600ba] form (a) for row 3.7, plain (second SCR council round passed, R3 bind
+  OK 19847f54…); Theorem 8′ plain (A-inf ACCEPT); abstract: $c_1$ by name only (formula in body), $q_n$ below the cap
+  $\min(p,\lfloor n/2\rfloor)$ stated; honest limits: intersection event, certification not claimed w.p. → 1;
+  certification-frequency line (EQUAL). Source: W3-SCR-R2 `reviews/READER_DELTA.md` v4 @ 048b6b23. At application:
+  "certifies" defined at first use in the reader statement; the delta line's closing sentence on the sample size (A3)
+  requires at these constants is omitted (owner rule: no sample-size thresholds); A1, SCR-G statuses quoted at d2b600ba.
 <!-- ROW thm8 END -->
 
 ---
