@@ -7,3 +7,6 @@
   W3-MISR-R ef4f92a (briefs + RIDER_RULES committed, pushed). Snapshot cron added; test run OK.
 - 19:32 — leads launched (Opus 5.5 high, Claude Third): W3-START2-R mcp:launch:44aac259…, W3-RM2-R
   mcp:launch:86440d0e…, W3-PSHARP-R mcp:launch:fab7385a…. QUEUE.md, DECISIONS.md D1–D6 written.
+- 19:35 — parallel-SMC scoping digest delegated (Opus helper, Claude Third; → Theory_work/Dept/research/PSMC_DIGEST.md).
+  W3-EDIT brief drafted (Theory_work/Dept/drafts/), launch after HQ answers on the rehash path. Heartbeat scheduled
+  every 45 min (bound to this thread) to answer checkpoints and fill slots.
