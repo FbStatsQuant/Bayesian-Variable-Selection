@@ -28,3 +28,4 @@
 - 19:50 — W3-EDIT citation fixes done (1a198e6; CITEFIX_DONE 0b72e39; verified file). Pinged HQ for PR #10: merge 1a198e6 + patch rehash C-MIS:Thm-MIS(i), Thm-MIS(ii), Cor-N; offered a recorder-prepared rehash commit.
 - 19:52 — HQ 4(a) verdict: clear 44 flags; recorder task F staged; D17 strength gates → W3-READER leg 2.
 - 19:54 — owner's final rule (POLICIES §4/§8) relayed to all 8 leads (Opus/Sonnet/Haiku free; new Fable = owner green light with problem, why not Opus, how many, size, account).
+- 19:54 — W3-DIST: Astra L1 line check: Lemma X and X′ VERIFIED, no finding (reviews/L1_astra_X.md); DEPS X, X′ OK. CP2 Astra break review launched 19:46 (on the line-checked key lemma; L5 S/V, L2–L4, S2 still running). Memo adopted.
