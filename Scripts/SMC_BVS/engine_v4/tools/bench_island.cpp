@@ -3,14 +3,21 @@
 //   kernel <p> <threads> <nsup> <k> <div> <arith:bit|A> <tile>
 //        ns per (support, label) of the engine's label-major tile kernel (products + 8-lane flip scores + odds), nsup
 //        supports of size k (div = 0: the 5 truths + k-5 random members; div = 1: all random).
-//   island <p> <N> <threads> <arith> <kernel:lm|pm> <G> <tile> <T> <L> <Hm> [n] [store_cap]
-//        one island end to end on AR(0.6) data (geometric grid of T stages); prints M, distinct supports, phase times,
-//        store statistics and ns per elementary step.
+//   island <p> <N> <threads list> <bit|A> <lm|pm> <G> <tile> <geo:T | adaptive:Te> <L> <Hm> [n] [store_cap]
+//        one island end to end on AR(0.6) data, once per thread count (same output hash required); grid geo:T = a
+//        geometric T-stage grid, adaptive:Te = core's pilot rule (ESS >= 0.9 N per stage, floor 1/Te) on the island's
+//        own population (a calibrated-like schedule). Prints ns per step, M, products, offers, phase times, peak RSS.
 //   store <cap> <threads> <offers_per_thread>
 //        cost of TopStore::offer under a realistic mix (most offers below tau, duplicates above it).
 #include <omp.h>
 #include <chrono>
 #include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <cmath>
 #include <random>
 #include "v4/island/island.h"
 
@@ -89,42 +96,64 @@ static void bench_kernel(int p, int T, int nsup, int k, int div, int Bk) {
               A == Arith::Bit ? "bit" : "A", p, T, nsup, k, div, Bk, nA, 1e9 * tprod / pairs, 1e9 * tflip / pairs, 1e9 * (tprod + tflip) / pairs, wall, chk);
 }
 
+static long vm_hwm_kb() {
+  FILE* f = std::fopen("/proc/self/status", "r"); if (!f) return -1;
+  char line[256]; long kb = -1;
+  while (std::fgets(line, sizeof line, f)) if (std::strncmp(line, "VmHWM:", 6) == 0) { kb = std::atol(line + 6); break; }
+  std::fclose(f); return kb;
+}
+static std::vector<int> parse_list(const std::string& s) {
+  std::vector<int> v; size_t i = 0;
+  while (i < s.size()) { size_t j = s.find(',', i); if (j == std::string::npos) j = s.size(); v.push_back(std::atoi(s.substr(i, j - i).c_str())); i = j + 1; }
+  return v;
+}
+
+// island <p> <N> <threads list, e.g. 1,24,48,96> <bit|A> <lm|pm> <G> <tile> <grid: geo:T | adaptive:Te> <L> <Hm> [n] [cap]
 template <Arith A>
-static void bench_island(int p, int N, int T, KernelKind kk, int G, int Bk, int Tst, int L, int Hm, int n, uint64_t cap) {
+static void bench_island(int p, int N, const std::vector<int>& thr, KernelKind kk, int G, int Bk, const std::string& gspec, int L, int Hm, int n, uint64_t cap) {
   Data D; double t0 = now(); make_ar_data(D, n, p, 0.6, 7);
   Start st; build_start(st, D, contiguous_blocks(p, 4));
   Neighbours nb = window_neighbours(D, 14, 8);
-  std::printf("data+tables+neighbours n=%d p=%d: %.1f s wall\n", n, p, now() - t0);
-  IslandConfig c; c.seed = 2026; c.island = 1; c.N = N; c.L = L; c.Hm = Hm; c.B = 14; c.kernel = kk; c.G = G; c.tile = Bk; c.threads = T;
-  c.store_cap = cap;
-  // geometric grid 0 < 1e-3 ... 1 with Tst stages (stand-in for a calibrated grid)
-  c.grid.push_back(0.0); for (int t = 1; t < Tst; ++t) c.grid.push_back(std::pow(10.0, -3.0 * (1.0 - (double)t / (Tst - 1)) ) * ((double)t / Tst) + 0.0);
-  c.grid.push_back(1.0);
-  for (size_t i = 1; i < c.grid.size(); ++i) if (!(c.grid[i] > c.grid[i - 1])) c.grid[i] = std::nextafter(c.grid[i - 1], 2.0);
-  double w0 = now();
-  IslandRun r = run_island<A>(D, st, nb, c);
-  double wall = now() - w0;
-  const auto& k = r.ks;
-  int rounds = Tst + L + Hm;
-  double steps = (double)N * (p + 16) * rounds;
-  double thread_s = wall * T;
-  std::printf("island arith=%s kernel=%s p=%d n=%d N=%d threads=%d G=%d tile=%d T=%d L=%d Hm=%d: status %d, wall %.1f s\n", A == Arith::Bit ? "bit" : "A",
-              kk == KernelKind::LabelMajor ? "lm" : "pm", p, n, N, T, G, Bk, Tst, L, Hm, r.status, wall);
-  std::printf("  logZ %.6f  HPM |S|=%zu F=%.4f  store %zu (cap %llu, merges %llu, buffered offers %llu)\n", r.logZ, r.hpm.S.size(), r.hpm.F, r.top_v.size(),
-              (unsigned long long)(cap ? cap : 40ULL * p + 1), (unsigned long long)k.store_merges, (unsigned long long)k.store_buffered);
-  std::printf("  M (sweeps per particle-round) %.3f; (support,label) pairs per particle-round / p %.3f; passes %llu; distinct supports per pass %.1f\n",
-              (double)k.particle_sweeps / std::max<uint64_t>(1, k.particle_rounds), (double)k.support_label_pairs / std::max<uint64_t>(1, k.particle_rounds) / p,
-              (unsigned long long)k.passes, (double)k.supports / std::max<uint64_t>(1, k.passes));
-  std::printf("  wall s: init %.1f orders %.1f build %.1f phaseA %.1f walk %.1f phaseB %.1f apply %.1f barrier %.1f pm %.1f ckpt %.1f total %.1f\n",
-              k.t_init, k.t_orders, k.t_build, k.t_phaseA, k.t_walk, k.t_phaseB, k.t_apply, k.t_barrier, k.t_pm, k.t_ckpt, k.t_total);
-  std::printf("  cost per elementary step c = %.1f ns thread-time (wall x threads / N(p+16)rounds); per (support,label) pair (phase A thread-time) %.1f ns\n",
-              1e9 * thread_s / steps, 1e9 * k.t_phaseA * T / std::max<uint64_t>(1, k.support_label_pairs));
-  for (size_t t = 0; t < r.stages.size(); ++t) {
-    auto& s = r.stages[t];
-    if (t < 3 || t + 3 >= r.stages.size()) std::printf("  stage %2zu phi %.5f ess %.0f distinct %d/%d gibbs_change/particle %.3f\n", t + 1, s.phi, s.ess, s.distinct_res, s.distinct_moved, (double)s.moves.gibbs_change / N);
+  std::printf("# data AR(0.6) n=%d p=%d (stand-in partition: blocks of 4; window neighbours, B=14): %.1f s wall\n", n, p, now() - t0);
+  IslandConfig c; c.seed = 2026; c.island = 1; c.N = N; c.L = L; c.Hm = Hm; c.B = 14; c.kernel = kk; c.G = G; c.tile = Bk; c.store_cap = cap;
+  if (gspec.rfind("geo:", 0) == 0) {
+    int Tst = std::atoi(gspec.c_str() + 4);
+    c.grid.push_back(0.0); for (int t = 1; t < Tst; ++t) c.grid.push_back(std::pow(10.0, -3.0 * (1.0 - (double)t / (Tst - 1))) * ((double)t / Tst));
+    c.grid.push_back(1.0);
+    for (size_t i = 1; i < c.grid.size(); ++i) if (!(c.grid[i] > c.grid[i - 1])) c.grid[i] = std::nextafter(c.grid[i - 1], 2.0);
+  } else if (gspec.rfind("adaptive:", 0) == 0) {
+    c.adaptive = true; c.adaptive_H = N; c.adaptive_Te = std::atoi(gspec.c_str() + 9);
+  } else { std::fprintf(stderr, "grid spec: geo:T or adaptive:Te\n"); std::exit(2); }
+  uint64_t h0 = 0;
+  for (int T : thr) {
+    c.threads = T;
+    double w0 = now();
+    IslandRun r = run_island<A>(D, st, nb, c);
+    double wall = now() - w0;
+    const auto& k = r.ks;
+    int rounds = r.T + L + Hm;
+    double steps = (double)N * (p + 16) * rounds;   // elementary steps N (p + B + 2) per round
+    if (!h0) h0 = r.hash();
+    std::printf("island arith=%s kernel=%s p=%d n=%d N=%d threads=%d G=%d tile=%d grid=%s (T=%d) L=%d Hm=%d status=%d\n", A == Arith::Bit ? "bit" : "A",
+                kk == KernelKind::LabelMajor ? "lm" : "pm", p, n, N, T, G, Bk, gspec.c_str(), r.T, L, Hm, r.status);
+    std::printf("  wall %.2f s | ns per elementary step: %.1f thread-time (wall x threads / N(p+16)rounds) | %.2f wall\n", wall, 1e9 * wall * T / steps, 1e9 * wall / steps);
+    std::printf("  M (sweeps per particle-round) %.3f | (support,label) pairs per particle-round / p %.3f | passes %llu | distinct supports per pass %.1f\n",
+                (double)k.particle_sweeps / std::max<uint64_t>(1, k.particle_rounds), (double)k.support_label_pairs / std::max<uint64_t>(1, k.particle_rounds) / p,
+                (unsigned long long)k.passes, (double)k.supports / std::max<uint64_t>(1, k.passes));
+    std::printf("  products %.2f thread-s = %.1f ns per (support,label) pair = %.1f ns per step | phase A %.1f ns per pair (thread-time, incl. products)\n",
+                k.t_products, 1e9 * k.t_products / std::max<uint64_t>(1, k.support_label_pairs), 1e9 * k.t_products / steps,
+                1e9 * k.t_phaseA * T / std::max<uint64_t>(1, k.support_label_pairs));
+    std::printf("  offers buffered %llu (%.4f per step), store merges %llu, store %zu entries (cap %llu)\n", (unsigned long long)k.store_buffered,
+                k.store_buffered / steps, (unsigned long long)k.store_merges, r.top_v.size(), (unsigned long long)(cap ? cap : 40ULL * p + 1));
+    std::printf("  wall s: init %.2f orders %.2f build %.2f phaseA %.2f walk %.2f phaseB %.2f apply %.2f barrier %.2f pm %.2f\n",
+                k.t_init, k.t_orders, k.t_build, k.t_phaseA, k.t_walk, k.t_phaseB, k.t_apply, k.t_barrier, k.t_pm);
+    std::printf("  ns per step by phase (thread-time): orders %.1f build %.1f phaseA %.1f walk %.1f phaseB %.1f apply %.1f\n",
+                1e9 * k.t_orders * T / steps, 1e9 * k.t_build * T / steps, 1e9 * k.t_phaseA * T / steps, 1e9 * k.t_walk * T / steps,
+                1e9 * k.t_phaseB * T / steps, 1e9 * k.t_apply * T / steps);
+    std::printf("  logZ %.6f  HPM |S|=%zu F=%.4f  peak RSS %.2f GB  output hash %016llx (%s across thread counts)\n", r.logZ, r.hpm.S.size(), r.hpm.F,
+                vm_hwm_kb() / 1048576.0, (unsigned long long)r.hash(), r.hash() == h0 ? "same" : "DIFFERENT");
+    std::fflush(stdout);
   }
-  for (size_t t = 0; t < r.terminal_moves.size(); ++t) std::printf("  terminal round %zu: gibbs_change/particle %.3f distinct %d\n", t + 1, (double)r.terminal_moves[t].gibbs_change / N, r.terminal_distinct[t]);
-  std::printf("  hash %016llx\n", (unsigned long long)r.hash());
 }
 
 static void bench_store(uint64_t cap, int T, long per) {
@@ -166,11 +195,14 @@ int main(int argc, char** argv) {
     int p = atoi(argv[2]), T = atoi(argv[3]), ns = atoi(argv[4]), k = atoi(argv[5]), div = atoi(argv[6]); std::string ar = argv[7]; int Bk = atoi(argv[8]);
     if (ar == "bit") bench_kernel<Arith::Bit>(p, T, ns, k, div, Bk); else bench_kernel<Arith::ClassA>(p, T, ns, k, div, Bk);
   } else if (mode == "island") {
-    int p = atoi(argv[2]), N = atoi(argv[3]), T = atoi(argv[4]); std::string ar = argv[5], kn = argv[6];
-    int G = atoi(argv[7]), Bk = atoi(argv[8]), Ts = atoi(argv[9]), L = atoi(argv[10]), Hm = atoi(argv[11]);
+    if (argc < 12) { std::fprintf(stderr, "island <p> <N> <threads,list> <bit|A> <lm|pm> <G> <tile> <geo:T|adaptive:Te> <L> <Hm> [n] [cap]\n"); return 2; }
+    int p = atoi(argv[2]), N = atoi(argv[3]); std::vector<int> thr = parse_list(argv[4]); std::string ar = argv[5], kn = argv[6];
+    int G = atoi(argv[7]), Bk = atoi(argv[8]); std::string gs = argv[9]; int L = atoi(argv[10]), Hm = atoi(argv[11]);
     int n = argc > 12 ? atoi(argv[12]) : 200; uint64_t cap = argc > 13 ? strtoull(argv[13], 0, 10) : 0;
     KernelKind kk = kn == "pm" ? KernelKind::ParticleMajor : KernelKind::LabelMajor;
-    if (ar == "bit") bench_island<Arith::Bit>(p, N, T, kk, G, Bk, Ts, L, Hm, n, cap); else bench_island<Arith::ClassA>(p, N, T, kk, G, Bk, Ts, L, Hm, n, cap);
+    std::printf("# v4_bench_island flags %s, island ISA override '%s', kernel namespace %s; host threads available %d; compiler %s\n",
+                V4_BIT_FLAGS_STR, V4_ISLAND_ISA_STR, kHasFMA() ? "fma" : "base", omp_get_max_threads(), __VERSION__);
+    if (ar == "bit") bench_island<Arith::Bit>(p, N, thr, kk, G, Bk, gs, L, Hm, n, cap); else bench_island<Arith::ClassA>(p, N, thr, kk, G, Bk, gs, L, Hm, n, cap);
   } else if (mode == "store") {
     bench_store(strtoull(argv[2], 0, 10), atoi(argv[3]), atol(argv[4]));
   } else return 1;

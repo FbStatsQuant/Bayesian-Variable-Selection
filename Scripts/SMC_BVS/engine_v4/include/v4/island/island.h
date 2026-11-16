@@ -39,6 +39,9 @@ struct IslandConfig {
   int stop_after_step = -1;                 // testing (T6): write a checkpoint after step s and return `interrupted`
   bool resume = true;
   bool keep_terminal = false;
+  // adaptive schedule (core's pilot rule: largest phi' with population ESS >= 0.9 H, floor 1/Te). Benchmarks and
+  // pilot-like grids only; production islands use the frozen grid from calib.bin.
+  bool adaptive = false; double adaptive_H = 0; int adaptive_Te = 30;
 };
 
 using v4::StageRow;
@@ -46,6 +49,7 @@ using v4::StageRow;
 struct KernelStats {   // execution statistics (not part of the law, not hashed)
   uint64_t particle_rounds = 0, particle_sweeps = 0, passes = 0, support_label_pairs = 0, supports = 0;
   uint64_t slow_supports = 0, store_merges = 0, store_buffered = 0;
+  double t_products = 0;   // thread-seconds inside phase A spent on the tile products
   double t_init = 0, t_orders = 0, t_build = 0, t_phaseA = 0, t_walk = 0, t_phaseB = 0, t_apply = 0, t_barrier = 0,
          t_pm = 0, t_ckpt = 0, t_total = 0;
 };
@@ -57,6 +61,7 @@ struct IslandRun {
   std::string reason;
   int r = 0, N = 0, T = 0, L = 0, Hm = 0, p = 0;
   double logZ = NEG_INF; uint64_t init_hash = 0;
+  std::vector<double> grid;   // the schedule used (= cfg.grid, or the adaptive one)
   std::vector<StageRow> stages;
   std::vector<MoveStats> terminal_moves; std::vector<int32_t> terminal_distinct;
   std::vector<double> rb_acc, pip; std::vector<std::vector<double>> rb_round;

@@ -13,7 +13,37 @@ using u128 = unsigned __int128;
 inline uint64_t fix63(double o) { return (uint64_t)(o * 0x1.0p63); }   // o in [0, 1]
 inline double unfix63(u128 a) { return (double)a * 0x1.0p-63; }
 
-constexpr uint32_t SLOT_ACCEPT = 0xFFFFFFFFu;   // INTERFACES v0.1.2 §3 (I step accept)
+constexpr uint32_t SLOT_ACCEPT = 0xFFFFFFFFu;
+
+// core/cpp/v3_calib.h:11-46 (lse_cal, population_ess, pilot_next_phi), copied; used only by the adaptive schedule
+// option (benchmarks and pilot-like grids; the calibration itself is WP4's).
+inline double lse_cal(const std::vector<double>& x) {
+  double m = NEG_INF; for (double v : x) if (v > m) m = v;
+  if (!std::isfinite(m)) return m;
+  long double s = 0.0L; for (double v : x) s += pm::exp(v - m);
+  return m + pm::log((double)s);
+}
+inline double population_ess(const std::vector<double>& d, double delta) {
+  std::vector<double> x(d.size()), x2(d.size());
+  for (size_t i = 0; i < d.size(); ++i) { x[i] = delta * d[i]; x2[i] = 2 * x[i]; }
+  return pm::exp(2 * lse_cal(x) - lse_cal(x2));
+}
+struct NextPhi { double phi; bool forced; };
+inline NextPhi pilot_next_phi(const std::vector<double>& d, double phi, double H, int Te) {
+  const double thr = 0.90 * H;
+  if (population_ess(d, 1.0 - phi) >= thr) return {1.0, false};
+  double lo = phi, hi = 1.0;
+  for (int i = 0; i < 60; ++i) {
+    double mid = 0.5 * (lo + hi);
+    if (population_ess(d, mid - phi) >= thr) lo = mid; else hi = mid;
+  }
+  if (lo - phi < 1.0 / Te) {
+    double f = std::min(1.0, phi + 1.0 / Te);
+    if (f >= 1.0 - 1e-12) f = 1.0;
+    return {f, true};
+  }
+  return {lo, false};
+}   // INTERFACES v0.1.2 §3 (I step accept)
 
 struct Fnv { uint64_t h = 0xcbf29ce484222325ULL;
   void bytes(const void* p, size_t n) { const unsigned char* c = (const unsigned char*)p; for (size_t i = 0; i < n; ++i) { h ^= c[i]; h *= 0x100000001b3ULL; } }
@@ -312,12 +342,13 @@ class IslandEngine {
       {
         BitScorer& sc = *scorers[omp_get_thread_num()];
         avec<double> Pp((size_t)std::max(1, nA) * Bk + 8);
-        std::vector<uint8_t> inm(Bk);
-        #pragma omp for schedule(dynamic, 1)
+        std::vector<uint8_t> inm(Bk); double tprod = 0;
+        #pragma omp for schedule(dynamic, 1) nowait
         for (int ti = 0; ti < ntile; ++ti) {
           const int j0 = ti * Bk, nbv = std::min(Bk, p - j0);
           const double* Xtile = &Xt[(size_t)ti * Bk * D.n];
           // products P[a][jj] = sum_i x_{i,a} x_{i,j}, sequential in i (bits of the Gram entry)
+          const double tp0 = omp_get_wtime();
           for (int a = 0; a < nA; ++a) {
             const double* xa = &gb.XA[(size_t)a * D.n]; double* Pa = &Pp[(size_t)a * Bk];
             for (int c0 = 0; c0 < Bk; c0 += 64) {
@@ -332,6 +363,7 @@ class IslandEngine {
               store8(Pa + c0 + 32, s4); store8(Pa + c0 + 40, s5); store8(Pa + c0 + 48, s6); store8(Pa + c0 + 56, s7);
             }
           }
+          tprod += omp_get_wtime() - tp0;
           for (int s = 0; s < nsup; ++s) {
             const SupportCache& c = gb.sup[s];
             double* lb = &gb.lbuf[(size_t)s * p]; double* ob = &gb.obuf[(size_t)s * p];
@@ -393,6 +425,8 @@ class IslandEngine {
             }
           }
         }
+        #pragma omp atomic
+        KS.t_products += tprod;
       }
       lap(KS.t_phaseA);
 
@@ -601,7 +635,10 @@ class IslandEngine {
   IslandRun run() {
     auto tstart = std::chrono::steady_clock::now();
     last_ckpt = tstart;
-    const int N = cfg.N, T = (int)cfg.grid.size() - 1, L = cfg.L, Hm = cfg.Hm;
+    const int N = cfg.N, L = cfg.L, Hm = cfg.Hm;
+    // adaptive schedule (benchmarks / pilot-like grids): T is known only when phi reaches 1
+    int T = cfg.adaptive ? (1 << 23) : (int)cfg.grid.size() - 1;
+    std::vector<double> grid = cfg.adaptive ? std::vector<double>{0.0} : cfg.grid;
     res.r = (int)cfg.island; res.N = N; res.T = T; res.L = L; res.Hm = Hm; res.p = p;
     rb_cur.assign(p, 0); rb_tot.assign(p, 0);
     if (cfg.kernel == KernelKind::ParticleMajor) rb_thread.assign(NT, std::vector<u128>(p, 0));
@@ -638,7 +675,14 @@ class IslandEngine {
       for (int step = done_step + 1; step <= T + L + Hm && !stop; ++step) {
         if (step <= T) {   // bridge stage t (core/cpp/v3_engine.h:303-339)
           auto tb = std::chrono::steady_clock::now();
-          int t = step; double phi_prev = cfg.grid[t - 1], phi_new = cfg.grid[t], dphi = phi_new - phi_prev;
+          int t = step; double phi_prev = grid[t - 1];
+          if (cfg.adaptive) {   // core/cpp/v3_engine.h:309-313 with the pilot rule of core/cpp/v3_calib.h:30-46
+            std::vector<double> dv(N); for (int i = 0; i < N; ++i) dv[i] = P[i].d;
+            NextPhi np = pilot_next_phi(dv, phi_prev, cfg.adaptive_H > 0 ? cfg.adaptive_H : (double)N, cfg.adaptive_Te);
+            grid.push_back(np.phi);
+            if (np.phi == 1.0) T = t;   // the last bridge stage
+          }
+          double phi_new = grid[t], dphi = phi_new - phi_prev;
           for (int i = 0; i < N; ++i) lw[i] = dphi * P[i].d;
           double lse = log_sum_exp(lw);
           double inc = lse - pm::log((double)N);
@@ -672,6 +716,7 @@ class IslandEngine {
     } catch (const NumericalFailure& e) {
       res.status = 2; res.reason = e.what();
     }
+    res.T = T; res.grid = grid;
     if (stop) { res.status = 1; res.reason = "interrupted after checkpoint (stop_after_step)"; }
     // outputs
     res.logZ = logZ;
@@ -691,8 +736,10 @@ class IslandEngine {
 
 template <Arith A>
 IslandRun run_island(const Data& D, const Start& st, const Neighbours& nb, const IslandConfig& cfg) {
-  if (cfg.grid.size() < 2 || cfg.grid.front() != 0.0 || cfg.grid.back() != 1.0) throw std::invalid_argument("run_island: grid must run from 0 to 1");
+  if (!cfg.adaptive && (cfg.grid.size() < 2 || cfg.grid.front() != 0.0 || cfg.grid.back() != 1.0)) throw std::invalid_argument("run_island: grid must run from 0 to 1");
   for (size_t i = 1; i < cfg.grid.size(); ++i) if (!(cfg.grid[i] > cfg.grid[i - 1])) throw std::invalid_argument("run_island: grid not strictly increasing (I3)");
+  if (cfg.adaptive && !cfg.ckpt_path.empty()) throw std::invalid_argument("run_island: the adaptive schedule has no checkpoints");
+  if (cfg.G < 1 || cfg.G > 256) throw std::invalid_argument("run_island: G must be in 1..256 (manager decision Q3; INTERFACES memory)");
   IslandEngine<A> E(D, st, nb, cfg);
   return E.run();
 }
