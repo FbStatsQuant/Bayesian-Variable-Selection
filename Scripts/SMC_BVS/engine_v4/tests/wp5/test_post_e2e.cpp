@@ -7,6 +7,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <filesystem>
+#include <stdexcept>
 #include <fstream>
 #include <random>
 
@@ -29,7 +30,9 @@ void tdir_cleanup() { std::error_code ec; if (!tdir_path().empty()) std::filesys
 std::string tdir() {
   std::string& d = tdir_path();
   if (d.empty()) {
-    d = std::string(std::getenv("TMPDIR") ? std::getenv("TMPDIR") : ".") + "/wp5_e2e_" + std::to_string(getpid());
+    const char* td = std::getenv("TMPDIR");   // no fallback into the working tree
+    if (!td || !*td) throw std::runtime_error("TMPDIR is not set (tests write only under $TMPDIR)");
+    d = std::string(td) + "/wp5_e2e_" + std::to_string(getpid());
     std::error_code ec; std::filesystem::create_directories(d, ec);
     std::atexit(tdir_cleanup);
   }
