@@ -123,3 +123,4 @@
 - 22:49 — consultant consequences for READER relayed (D46); POST2-O1 queued with O3.
 - 22:54 — task K done: theory/W3-EDIT-now-rb af9825b (check 0 ERROR, assemble current, CI check/paper/cite PASS, tl 174/0) → HQ merge.
 - 22:55 — HQ merged W3-EDIT-now-rb → main 246587c3 (468/0). W3-EDIT ticket done; its lead thread is already settled (no pending tasks). Snapshot cron left in place (no-op logging).
+- 23:21 — heartbeat: PSMC-S0 CP1 final (FR1 fixed 9) → HQ + Engineering; thread settled; recorder to stage D-7. DIST: D2 done, D1 running. READER: card 7 folded. RM2-R SC1 since 21:47 (1h33).
