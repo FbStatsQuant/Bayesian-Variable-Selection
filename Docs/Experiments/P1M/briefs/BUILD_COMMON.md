@@ -60,3 +60,15 @@ State in the PR which tests ran, on which machine, with what result. A PR withou
   design flaw. Say what happened, its impact and what you propose.
 - Final message when your WP (or slice) is ready: at most 12 lines: PR link, what is in it, test results, open issues,
   measured numbers.
+
+## Codex / sandboxed agents (POLICIES §14, HQ 2026-11-16)
+An unattended agent that triggers a sandbox approval request stalls forever. For any **Codex** (or otherwise sandboxed)
+builder or reviewer, the brief must:
+- **never set TMPDIR or write outside the agent's own worktree**; scratch goes in a git-ignored folder inside it
+  (e.g. `<worktree>/.rc_tmp/`, listed in `.git/info/exclude`), removed at the end;
+- never ask the agent to write the review file into the shared docs folder: it writes inside its worktree and the
+  manager copies it.
+- put `.rc_tmp/` at the **worktree root**, never inside a ticket, spec or other frozen (hashed) folder, and never add a
+  `.gitignore` inside a frozen folder: stray files there break the freeze (HQ precision, main 44238a06).
+The department-tmp rule above (`/home/fb31/SMC_Engineering_Department/tmp/...`) applies only to unsandboxed Claude agents.
+Manager: when a review or build runs over 2 h, check its pending requests (`task_status` / the thread's pending approvals).

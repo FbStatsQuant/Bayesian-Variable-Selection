@@ -161,3 +161,4 @@ Proposed by the Engineering manager, approved by HQ, recorded in the changelog b
 - v1.0 (2026-11-15) — first version; submitted to HQ with EXP-CP1 v2. Includes the owner-priority rule for NOTS (owner, 11-15).
 - v1.0 approved by HQ 11-15, with two edits folded in: §4 data lifecycle → continuous offload (desktop primary, laptop mirror, NOTS freed after verification, 7-day rule); §2 Sol reviews subject to the Codex pacing level (POLICIES §14; at level ≥ 1 routine PR reviews are Opus-only).
 - v1.1 (2026-11-16) — §7: cost-honesty rule (HQ, after the WP3 SPR sweep cost 77.4 core-h against the stated ≈ 40).
+- v1.2 (2026-11-16) — POLICIES §14 (HQ): Codex/sandboxed agents never set TMPDIR or write outside their own worktree (scratch in a git-ignored `.rc_tmp/`); runs over 2 h get a pending-request check. Folded into briefs/BUILD_COMMON.md.
