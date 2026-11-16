@@ -227,3 +227,8 @@ returned `leaders_gamma0/1` of the final run. The inherited models' effect on th
   is a requirement; a construction failure installs the last good grid (else the pilot schedule), never "no output".
 - Their per-change overlap-rung notes (CP1 §"Engineering-facing notes") are adopted as input to the overlap design and
   MANIFEST_CELLS.md.
+
+## TODO (HQ 11-16): after the theory freeze (≥ Sat 11-21)
+Propose moving `Docs/Experiments/P1M/` out of the main clone into the Engineering worktree, with HQ's P1M snapshot line
+(cron :07/:22/:37/:52 → exp/P1M) re-pointed in commit-in-place mode (`SNAP_WT=1`). Until then: no new untracked files in
+the main clone outside `Docs/Experiments/P1M/`.

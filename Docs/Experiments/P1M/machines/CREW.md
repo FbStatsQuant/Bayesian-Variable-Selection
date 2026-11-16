@@ -142,3 +142,6 @@ Machines (daily check <date> <time>):
   day (date TBC). BNP is installing a watchdog that kills only runaway VS Code bundled-rg processes.
 - **Cleanliness sweep:** add BNP's watchdog alert file (path to follow from HQ) to the Owls sweep in the daily report;
   report any hits to HQ.
+- **BNP watchdog (HQ, 11-16):** alert file `/home/fb31/.config/bnp-eng/guard/ALERT`, with `guard.log` beside it (one line
+  per action). Installed ~10:13 CT 11-16. READ ONLY, never edit (an HQ-named exception to the folder scope). The daily
+  report shows new lines since the last report. Last seen guard.log line count: 0 (before install).
