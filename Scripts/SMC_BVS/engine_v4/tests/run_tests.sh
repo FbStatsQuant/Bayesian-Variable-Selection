@@ -29,4 +29,15 @@ if [[ "$fixtures" == 1 ]]; then
   nice -n 19 Rscript "$here/tools/make_fixtures.R" "$here" "$build/smcbvs4" "$TMPDIR/v4_fixwork"
 fi
 args=("${allow[@]}"); [[ "$mode" == full ]] && args+=(--full)
-nice -n 19 "$build/v4_tests" "${args[@]}"
+rc=0
+nice -n 19 "$build/v4_tests" "${args[@]}" || rc=1
+# WP5 extras: dry-run Slurm driver (Python, stdlib) and the competitor harness (R, base + v4_read.R), when present
+if command -v python3 > /dev/null; then
+  if TMPDIR="${TMPDIR:-$build}" nice -n 19 python3 "$here/tools/slurm/test_p1m_driver.py" > "$build/wp5_driver_tests.log" 2>&1; then
+    echo "WP5 Slurm-driver tests: OK ($(grep -E '^Ran' "$build/wp5_driver_tests.log"))"; else echo "WP5 Slurm-driver tests: FAILED ($build/wp5_driver_tests.log)"; rc=1; fi
+fi
+if command -v Rscript > /dev/null; then
+  if TMPDIR="${TMPDIR:-$build}" "$here/tools/competitors/test_competitors.sh" "$build" > "$build/wp5_competitors.log" 2>&1; then
+    echo "WP5 competitor harness: OK ($(grep 'packages missing' "$build/wp5_competitors.log" | sed 's/^ *//'))"; else echo "WP5 competitor harness: FAILED ($build/wp5_competitors.log)"; rc=1; fi
+fi
+exit $rc
