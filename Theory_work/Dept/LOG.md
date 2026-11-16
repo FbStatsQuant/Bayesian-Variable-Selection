@@ -34,3 +34,4 @@
 - 19:56 — owner scope clarification: D18 (premise tickets downgraded; PSMC-S0 Part 1 only; T-MERGE kept pending owner).
 - 19:57 — Eng confirms scope change; THEORY-2 dates void; A/B + Check C still wanted (non-blocking).
 - 19:57 — W3-EDIT: item 7 done (f40c5b7); D19 errata routing approved (a)+(b).
+- 19:58 — D19 correction: C-DLV is consumed by W3-RM2-R (DLV-0 rests on L4_delivery.md:13-22,79-91); W3-EDIT told to revert e1988ea by a new commit and route Prop-F wording CHAPTER-ONLY; RM2-R pointed to R-AUD1 (Prop-F over-strong sentence) for DLV-0.
