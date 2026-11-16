@@ -209,3 +209,12 @@ offering stays: in the large-p engine the inherited models are offered once, at 
 (ENGINEERING_SPEC §4.2, "class B for stores and HPM"). What D-7 drops is only the *final-run* leader stores as a data
 structure and as a returned field (`v3_run.R:210`). The question for Theory is therefore whether any result reads the
 returned `leaders_gamma0/1` of the final run. The inherited models' effect on the top store and the HPM is unchanged.
+
+## THEORY-6 Status after the owner's scope change (Theory manager, 11-15)
+- T-N, T-PART, T-STREAM and T-CAL are Engineering design choices now. The T-PART audit (Part 2) is cancelled: τ_n, ≥/> and
+  the packing order are ours to set and validate on the overlap rung.
+- T-MERGE ("any convex pooling inherits PIP/MPM consistency") stays with Theory if islands + merge remain part of the
+  theorem-covered method (HQ is asking the owner).
+- Coming from Theory: PSMC-S0 Part 1, Engineering-facing notes (tonight or at the latest Thu 12:00). Contents: Check C
+  (D-7), fixed-N and bounded-calibration observations, an OD-1 text correction, two calibration questions, and per change
+  what to document or validate on the overlap rung. Entries A/B staging continues (the THEORY-5 pins are being verified).
