@@ -5,231 +5,263 @@
 \usepackage{microtype}
 \usepackage{natbib}
 \usepackage{float}
-\usepackage{pdflscape}
+\usepackage{amssymb}
 \usepackage{../shared/smcbvs}
 \bibliographystyle{abbrvnat}
 \setcitestyle{authoryear,round}
-\linespread{1.06}
+\linespread{1.02}
 \setlength{\emergencystretch}{2em}
-% assumption labels of "What we prove", printed without links (this is a separate document)
+% assumption labels of "What we prove", printed without links (separate document)
 \newcommand{\lab}[1]{\textup{(\asmdisp{#1})}}
-\newcommand{\SL}{Song--Liang}
-\newcommand{\vd}[1]{\par\noindent\textbf{Verdict.} #1}
-\newcommand{\ev}[1]{\par\noindent\textbf{Evidence.} #1}
-\newcommand{\ro}[1]{\par\noindent\textbf{Rules out.} #1}
-\newcommand{\ds}[1]{\par\noindent\textbf{Our designs.} #1\par\medskip}
-\newcommand{\IN}{in}\newcommand{\OUT}{\textbf{out}}\newcommand{\UNC}{unclear}
-
-\title{Are the assumptions reasonable?}
-\author{SMC-BVS project}
-\date{Draft, \today}
+\newcommand{\SL}{Song and Liang}
+% paragraph heads: name, labels, verdict
+\newcommand{\ahead}[3]{\par\medskip\noindent\textbf{#1} #2. \emph{#3}\par}
+\newcommand{\ev}[1]{\noindent\emph{Evidence.} #1\par}
+\newcommand{\ro}[1]{\noindent\emph{Rules out.} #1\par}
+\newcommand{\ds}[1]{\noindent\emph{Our designs.} #1\par}
+\newcommand{\tu}[1]{\noindent\emph{A typical user.} #1\par}
+\newcommand{\yes}{$\bullet$}\newcommand{\no}{$\circ$}\newcommand{\unc}{?}\newcommand{\na}{--}
 
 \begin{document}
-\maketitle
+\begin{center}
+{\Large\bfseries Are the assumptions reasonable?}\par\smallskip
+{\small SMC-BVS project. Draft, \today}
+\end{center}
 
 % =====================================================================================================
 \section{The answer}\label{sec:a-answer}
 
-[DRAFT TEXT; see OUTLINE.md for the plan.]
+\paragraph{The posterior theorems.} Every design of our two simulation studies and of the $10^6$ plan (planned runs
+with up to $10^6$ predictors; all designs are listed in Section~\ref{sec:a-designs}) satisfies the assumptions of the
+posterior theorems, strong common factors included, in the sense defined at the end of this section. These are the
+\emph{selection theorems} (the posterior finds the true model; Theorems~3.1, 3.4 and~3.9) and the \emph{distribution
+theorem} (it finds the true conditional law of the response; Theorem~4.2). These assumptions are the same as, or comparable
+to, those of \citet{SongLiang2015}, the closest earlier analysis, except for three that are stronger: the range of $p$
+(polynomial in $n$), a collinearity floor of order $1/n$, and the law of the rows (Gaussian, or sub-Gaussian for the
+distribution theorem). In primitive terms, the selection theorem for Gaussian rows (Theorem~3.9) needs only this: a
+Gaussian linear model with i.i.d.\ Gaussian rows; a correlation matrix whose smallest eigenvalue is bounded below (its
+largest is free); a fixed number of nonzero coefficients that do not change with $n$; and $p\le n^A$.
 
-\paragraph{The posterior theorems hold on all our designs.} The two theorems about the posterior (it finds the true model;
-it finds the true conditional law of the response) hold on every design we simulate, strong factors included. Their
-assumptions are the same as, or comparable to, those of \citet{SongLiang2015}, the closest earlier analysis. Three are
-stronger than theirs, each for a stated reason: the range of $p$, a collinearity floor of order $1/n$, and the law of the
-rows.
+\paragraph{The reported-model theorem.} The theorem that the method, as coded, reports the true model (Theorem~5.7) adds three design conditions that come from how the method searches. \emph{Visibility}: no true predictor is cancelled by a few others; it
+is stronger than \SL's Condition~5. A \emph{polynomial leakage set}: the predictors that can imitate the signal form a set of at most $n^b$ predictors,
+$b<\tfrac12$; \SL{} state this only as an informal remark (p.~958). And a floor and local regressions inside that set,
+with no counterpart in their paper. The conditions hold on our independent, block and autoregressive designs. They fail for pervasive common factors
+when $p$ is much larger than $\sqrt n$, because every null predictor then imitates part of the signal; this puts our
+design S5 (blocks plus a global factor), the whole strong-factor study and FAC, the factor design of the $10^6$ plan,
+outside. Visibility can also fail on its
+own when true effects of mixed signs cancel.
 
-\paragraph{The reported-model theorem needs two more conditions.} The theorem that the method, as coded, reports the
-true model adds two design conditions that come from how the method searches: \emph{visibility} (no true predictor is
-cancelled by a few others) and a \emph{bounded leakage set} (the predictors that can imitate the signal are few). Song
-and Liang have counterparts of both (their Condition~5, and their remark~(a), p.~958). The two conditions hold for
-independent, block and autoregressive designs (AR up to correlation $0.8$). They can fail for pervasive factors with
-effects of mixed signs, and for data like the riboflavin data.
+\paragraph{The printed-estimates theorem.} The theorem that the printed inclusion probabilities, median model and
+estimate of the evidence (the normalising constant of the posterior) are consistent (Theorem~5.19) needs one more condition, \emph{no leakage}: every null predictor nearly uncorrelated
+with every true one. Of our designs, only the independent ones satisfy it. On our block and autoregressive designs the
+reported-model theorem still holds; on every design the posterior theorems hold and the evidence estimate is unbiased
+(proved for each of the four independent sampler runs that the method pools, its \emph{islands}, and for the pooled
+estimate; the status of the checks is in Section~\ref{sec:a-math}). Outside the independent designs
+no theorem says that the printed inclusion probabilities, median model and evidence estimate are close to the exact ones.
 
-\paragraph{The printed-estimates theorem is narrower.} The theorem that the printed inclusion probabilities, median
-model and evidence estimate are consistent needs \emph{no leakage}: every null predictor nearly uncorrelated with every
-true one. Of our designs, only the independent ones satisfy it. On the others, the reported-model theorem and the
-unbiasedness of the evidence estimate still hold.
-
-Theorem and assumption numbers refer to the companion section ``What we prove''.
+\paragraph{What ``inside'' means.} A design is \emph{inside} an assumption when the design, continued as a sequence in
+$n$ with its structure and the number of true predictors fixed, satisfies it. We judge the qualitative conditions (a
+floor bounded below, nonzero coefficients that do not change with $n$, a leakage set of size $n^b$); the explicit
+constants of the proofs are conservative and are not part of the judgement. The comparisons are with the published
+paper of \citet{SongLiang2015}; its online supplement is outside the comparison. Theorem and assumption numbers refer to
+the companion section ``What we prove''.
 
 % =====================================================================================================
 \section{The designs we judge}\label{sec:a-designs}
 
-All our designs have i.i.d.\ Gaussian rows, noise variance $1$, and fixed nonzero coefficients.
+All our designs have i.i.d.\ Gaussian rows, noise variance $1$ and fixed nonzero coefficients. They fall into three
+classes.
 \begin{itemize}[leftmargin=1.5em,itemsep=1pt]
-  \item \emph{The 2,400-fit study:} $n=200$, $p\in\{500,1000\}$, $\sz=14$ (one true predictor in each group of five).
-    S1 independent; S2 AR(1) with correlation $0.5$; S3, S4 blocks of five with correlation $0.7$, $0.85$; S5 blocks of five
-    at $0.7$ plus a global factor ($0.3$ between all columns); S6 blocks of five with correlations $0.4$--$0.9$.
-  \item \emph{The strong-factor study:} $n$ from $50$ to $150$, $p$ up to $10n$, $\sz\in\{4,8\}$; one factor with
-    common correlation $\rho\in\{0.3,0.5,0.7\}$; two pervasive factors; and S5.
-  \item \emph{The $10^6$ plan:} $\sz=5$; independent (IND); AR with correlation $0.6$ (the primary design); blocks of
-    $20$ at $0.5$ (BLK); one factor at $0.3$ (FAC).
+  \item \emph{Independent:} S1 of the 2,400-fit study, and IND of the $10^6$ plan.
+  \item \emph{Locally correlated:} S2 (AR(1), correlation $0.5$), S3, S4 (blocks of five at $0.7$, $0.85$), S6 (blocks of
+    five at $0.4$--$0.9$), AR (correlation $0.6$, the primary design of the $10^6$ plan) and BLK (blocks of $20$ at
+    $0.5$).
+  \item \emph{Pervasive factor:} S5 (blocks of five at $0.7$ plus a global factor, $0.3$ between all columns); the
+    strong-factor study (one factor at $0.3$, $0.5$ or $0.7$, with effects of aligned signs; two factors; and its own
+    version of S5), with $n$ from $50$ to $150$ and $p$ up to $10n$; and FAC (one factor at $0.3$), a contingent design of
+    the $10^6$ plan, run at $p=10^4$ only.
 \end{itemize}
-A design is \emph{inside} an assumption when the design, continued as a sequence in $n$ with its structure and $\sz$
-fixed, satisfies it. We judge the qualitative conditions (a floor bounded below, a signal on the $\rn$ scale, a leakage
-set of size $n^b$); the explicit constants of the proofs are conservative and are not part of the judgement.
+The 2,400-fit study has $n=200$, $p\in\{500,1000\}$ and $14$ true predictors, one in each group of five; the $10^6$ plan
+has $5$ true predictors. Table~\ref{tab:a-summary} summarises the verdicts.
 
-% =====================================================================================================
-\section{Summary}\label{sec:a-table}
-[TABLE --- design to follow the advisor's round.]
+\begin{table}[tp]
+\centering\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.12}
+\caption{The assumptions, \SL{} (2015), and our designs, by class (Section~\ref{sec:a-designs}): independent, locally
+correlated, pervasive factor. \yes{} inside, \no{} outside, \unc{} unclear, \na{} not applicable.}\label{tab:a-summary}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.2\linewidth}>{\raggedright\arraybackslash}p{0.21\linewidth}l>{\raggedright\arraybackslash}p{0.21\linewidth}ccc@{}}
+\toprule
+Assumption & In words & \begin{tabular}[b]{@{}l@{}}vs.\ Song\\and Liang\end{tabular} & Where in \SL & Indep. & Local & Factor \\
+\midrule
+\multicolumn{7}{@{}l}{\textbf{All theorems}} \\
+Gaussian linear model \lab{GL} & Gaussian noise, fixed variance & same & (1)--(2), p.~950 & \yes & \yes & \yes \\
+Dimension \lab{DIM} & $p\le n^A$ & stronger$^{a}$ & Cor.~1, p.~954 & \yes & \yes & \yes \\
+Fixed true model size \lab{SP} & $\sz$ fixed & same & (4), p.~950 & \yes & \yes & \yes \\
+\midrule
+\multicolumn{7}{@{}l}{\textbf{Posterior theorems}} \\
+Signal size & bounded; nonzero, not changing with $n$ (beta-min in Thm~3.1 only) & comparable & (3), p.~950; Thm~3, p.~956 & \yes & \yes & \yes \\
+Eigenvalue floor \lab{EF}, \lab{EFS} & fixed floor on small sets & comparable & Cond.~3, p.~955 & \yes & \yes & \yes \\
+Near-exact collinearity \lab{NC} & floor $c_\psi/n$ on $O(\log n)$ sets & stronger & (11), (14), p.~952; p.~953 & \yes & \yes & \yes \\
+Law of the rows \lab{GR} & Gaussian or sub-Gaussian & stronger & Cond.~1, p.~953 & \yes & \yes & \yes \\
+\midrule
+\multicolumn{7}{@{}l}{\textbf{Reported-model theorem, in addition}} \\
+Visibility \lab{V} & no true predictor cancelled by $\le15$ others & stronger & Cond.~5, p.~958 & \yes & \yes & \unc$^{b}$ \\
+Polynomial leakage set, 5.6(a) & at most $n^b$ imitators of the signal & comparable & remark (a), p.~958 & \yes & \yes & \no \\
+Floor and local regressions, 5.6(b),(c) & each regression in the set uses few members & none & --- & \yes & \yes & \na \\
+\midrule
+\multicolumn{7}{@{}l}{\textbf{Printed-estimates theorem, in addition}} \\
+No leakage \lab{NL} & null predictors nearly uncorrelated with true ones & none & --- & \yes & \no & \no \\
+\bottomrule
+\end{tabular}
+\par\smallskip\raggedright\footnotesize
+$^{a}$ For large $p$; weaker for small $p$ (they assume that their number of predictors grows at least like a power
+of $n$, p.~950).
+$^{b}$ Inside for the one-factor designs of the strong-factor study (effects of aligned signs); unclear for S5, the
+two-factor design, the study's own version of S5, and FAC.
+\end{table}
 
 % =====================================================================================================
 \section{The assumptions one by one}\label{sec:a-each}
 
-\subsection{Model and dimension}
+Every design of Section~\ref{sec:a-designs} is inside each assumption of Sections~\ref{sec:a-all}
+and~\ref{sec:a-post}; for these the paragraphs say how the assumption compares with \SL{} and what it excludes. ``Our
+designs'' lines appear only in Sections~\ref{sec:a-rm} and~\ref{sec:a-pe}.
 
-\paragraph{Gaussian linear model \lab{GL}} (all theorems).
-\vd{Same as \SL{} (their model (1) and density (2), p.~950).}
-\ev{Their density is $f^*(y,x)=\phi(y;x^\top\bstar,\sigs)\,\nu_x(dx)$; ours is the same model with an intercept. The
-distribution theorem even lets $\sigs$ depend on $n$.}
+\subsection{Assumptions of all theorems}\label{sec:a-all}
+
+\ahead{Gaussian linear model}{\lab{GL}}{Same as \SL{} (their model (1) and density (2), p.~950).}
+\ev{Their density is $f^*(y,x)=\phi(y;x^\top\bstar,\sigs)\,\nu_x(dx)$; ours is the same model with an intercept.}
 \ro{Heavy-tailed or heteroscedastic errors; no theorem of ours or of theirs covers them.}
-\ds{All inside (Gaussian noise is generated).}
 
-\paragraph{Dimension $p\le n^A$ \lab{DIM}} (all theorems except the every-design bound of Theorem~3.13(a)).
-\vd{Stronger than \SL{} on the upper range, weaker on the lower range. Their Corollary~1 (p.~954) allows
-$P_n<\exp(Cn^\alpha)$, $\alpha\in(0,1)$; but they also assume $P_n\succ n^\theta$ for some $\theta>0$ (p.~950), while we
-need no growth of $p$.}
-\ev{The bound enters only through union bounds over models of $O(\log n)$ predictors, so it allows every polynomial
-regime, $p\gg n$ included. Exponential $p$ is an open question, not a known failure.}
-\ro{Numbers of predictors with $\log p$ of polynomial order in $n$.}
-\ds{All inside. The largest exponent is the $10^6$ plan at $n=200$: $A=\log10^6/\log200\approx2.6$.}
+\ahead{Dimension $p\le n^A$}{\lab{DIM}}{Stronger than \SL{} for large $p$ (we allow only a power of $n$), weaker for small $p$ (we need no growth of $p$).}
+\ev{Their Corollary~1 (p.~954) allows $P_n<\exp(Cn^\alpha)$ with $\alpha\in(0,1)$, but they also assume $P_n\succ
+n^\theta$ for some $\theta>0$ (p.~950). Exponential $p$ is not covered. Our largest
+exponent is the $10^6$ plan at $n=200$: $A=\log10^6/\log200\approx2.6$.}
+\ro{Numbers of predictors that grow faster than every power of $n$, such as $\log p\asymp n^\alpha$.}
 
-\paragraph{Fixed true model size \lab{SP}} (all theorems; the distribution theorem with ``at most $s$'').
-\vd{Same as \SL{} (their strict sparsity (4), p.~950, used by their Theorems~2 and~3; their Theorem~1 alone allows the
-weaker (3)).}
-\ev{It cannot be dropped. By Theorem~3.13(a), on every design $\pis{\Sz}\le\{1+(\sz+1)/(3\sqrt n)\}^{-1}$, so
-$\pis{\Sz}\to1$ forces $\sz=o(\sqrt n)$, and the rate $\rn$ forces $\sz=O(\sqrt{\log n})$.}
-\ro{True models whose size grows with $n$ (the rate $\rn$ needs $\sz=O(\sqrt{\log n})$).}
-\ds{All inside, as sequences with $\sz$ fixed.}
+\ahead{Fixed true model size}{\lab{SP}}{Same as \SL{} (their strict sparsity (4), p.~950, used by their Theorems~2
+and~3).}
+\ev{It cannot be dropped: on every design $\pis{\Sz}\le\{1+(\sz+1)/(3\sqrt n)\}^{-1}$ (Theorem~3.13(a)), so a posterior miss of order $\rn$
+is possible only if $\sz=O(\sqrt{\log n})$.}
+\ro{True models whose size grows with $n$.}
 
-\subsection{Signal}
+\subsection{Assumptions of the posterior theorems}\label{sec:a-post}
 
-\paragraph{Signal size} (\lab{BC} and \lab{BM} in Theorem~3.1; \lab{FSb} and \lab{FSt} in Theorems~3.9, 5.7 and 5.19;
-Assumption~4.1(e)).
-\vd{Comparable to \SL. Above, their (3) with $\abs{x_i}\le1$ (Theorem~1, p.~952) bounds the signal. Below, their
-Theorem~3 (p.~956) states no beta-min: a true predictor need only be ``identifiable'' (their Condition~3, p.~955).}
-\ev{Theorems~3.9, 5.7 and 5.19 assume only fixed nonzero coefficients, as their setting does. The explicit beta-min
-\lab{BM}, at the usual order $\sigs\rn$, is used only in the fixed-design Theorem~3.1; Theorem~3.4 and the distribution
-theorem have none. Without any lower bound, specificity can fail (Remark~3.2(ii)).}
-\ro{True coefficients that shrink faster than $\rn$, and signals that grow without bound.}
-\ds{All inside (fixed nonzero coefficients, far above the $\rn$ scale as $n$ grows).}
+\ahead{Signal size}{\lab{BC}, \lab{FSb}, \lab{FSt} and Assumption~4.1(e), the bounds; \lab{BM}, the beta-min}{Comparable
+to \SL.}
+\ev{For the upper bound, their Theorem~1 (p.~952) bounds the signal through their (3) and $\abs{x_i}\le1$; under their
+(4) alone their main text states no bound. For the lower bound, their Theorem~3 (p.~956) states no beta-min: a true predictor need only be
+``identifiable'' (their Condition~3, p.~955); the step that uses it is in their supplement. Theorems~3.9, 5.7 and~5.19
+assume only nonzero coefficients that do not change with $n$, as their setting does; the explicit beta-min \lab{BM}, at the usual order
+$\sigs\rn$, appears only in the fixed-design Theorem~3.1, and Theorem~3.4 and the distribution theorem have none.
+Without any lower bound, specificity can fail (Remark~3.2(ii)).}
+\ro{True coefficients below a constant times $\rn$ (Theorem~3.1 only), and signals that grow without bound.}
 
-\subsection{Design, for the posterior theorems}
-
-\paragraph{Eigenvalue floor on small sets} (\lab{EF}, \lab{EFS}, Assumption~3.3(a); Assumption~4.5(a) for the parametric
-rate).
-\vd{Comparable to \SL's Condition~3 (p.~955): stronger in level and on smaller sets, for a stronger conclusion.}
-\ev{Their Condition~3 asks, in their sufficient forms for standard normal predictors (pp.~955--956), a \emph{vanishing}
-eigenvalue level on sets of $\bar r_n+1$ predictors with $\bar r_n\to\infty$, and yields sure screening only (p.~956:
-``the specificity is not controlled''). We ask a \emph{fixed} level on sets of $O(\log n)$ predictors and conclude exact
-selection with a rate. Both are implied by $\lmin(\Sig)\ge c$. No upper eigenvalue bound is used, so pervasive factors
-are allowed.}
+\ahead{Eigenvalue floor on small sets}{\lab{EF}, \lab{EFS}, Assumptions~3.3 and~4.5(a)}{Comparable to \SL's Condition~3
+(p.~955): a higher level, on smaller sets, for a stronger conclusion.}
+\ev{In their sufficient forms for standard normal predictors (pp.~955--956), Condition~3 asks a \emph{vanishing}
+eigenvalue level on sets of $\bar r_n+1$ predictors with $\bar r_n\to\infty$, and their Theorem~3 yields sure screening
+only (p.~956: ``the specificity is not controlled''). We ask a \emph{fixed} level, on sets of $(2A+2)\sz+2$ predictors for
+the fixed-design theorem and of $O(\log n)$ predictors for Gaussian rows, and conclude exact selection with a rate. Both of our forms
+are implied by $\lmin(\Sig)\ge c$. No upper eigenvalue bound is used, so pervasive factors are allowed: the smallest
+eigenvalue of $\Sig$ is $1$ (S1, IND), $1/3$ (S2), $0.3$ (S3, S5), $0.15$ (S4), $0.1$ (S6), $1-\rho$ (one factor at $\rho$),
+$0.40$ (two factors), $0.25$ (AR), $0.5$ (BLK) and $0.7$ (FAC).}
 \ro{Exact or asymptotic duplicates of a true predictor, and correlations tending to one with a true predictor.}
-\ds{All inside, strong factors included. The smallest eigenvalue of $\Sig$ is $1$ (S1, IND), $1/3$ (S2), $0.3$ (S3, S5),
-$0.15$ (S4), $0.1$ (S6), $1-\rho$ (one factor), $0.40$ (two factors), $0.25$ (AR $0.6$), $0.5$ (BLK) and $0.7$ (FAC).}
 
-\paragraph{No near-exact collinearity on sets of logarithmic size} (\lab{NC}; Assumption~4.1(d)).
-\vd{Stronger than \SL's Theorems~1--2, which have no design eigenvalue condition; very weak in absolute terms, and of
-the same order as a term they put in their prior.}
+\ahead{No near-exact collinearity on sets of logarithmic size}{\lab{NC}, Assumption~4.1(d)}{Absent from \SL's
+Theorems~1--2, so formally stronger; in absolute terms very weak (a floor of order $1/n$).}
 \ev{Their eigenvalue conditions (11) and (14) (p.~952) are on the prior covariance. With their own ridge choice, a ridge
-$c_n\propto1/n$ (p.~953), no design condition is left, at the price of a slower rate (their (10)). Our floor, $c_\psi/n$
-on the correlation scale, is of the same order and buys the radius $\sqrt{M\log n/n}$. Without it the distribution
-theorem still holds, with one extra factor $\sqrt{\log(\praw\vee n)}$ in the radius (Proposition~4.3(ii)).}
+$c_n\propto1/n$ (p.~953), no design condition is left, at the price of a slower rate (their (10)). Our floor, $c_\psi/n$ on
+the correlation scale, is of the same order as that ridge, on $O(\log n)$ sets only, and gives the distribution theorem
+its contraction radius $\sqrt{M\log n/n}$, for a fixed level $M$. Without it the distribution theorem still holds, with an
+extra factor $\sqrt{\log(\praw\vee n)}$ in the radius, $\praw$ being the number of raw predictors
+(Proposition~4.3(ii)).}
 \ro{Duplicated columns (null duplicates included) and exact linear dependence, as in one-hot or compositional coding.}
-\ds{All inside. A typical user is inside after removing exact duplicates and exact linear dependences.}
+\tu{Inside after removing exact duplicates and exact linear dependences.}
 
-\paragraph{Law of the rows} (\lab{GR}; Assumption~4.1(c)).
-\vd{Assumption~4.1(c) (sub-Gaussian on sparse directions) is stronger than \SL's Condition~1 (p.~953) and implies it;
-Gaussian rows are stronger still.}
+\ahead{Law of the rows}{\lab{GR}, Assumption~4.1(c)}{Assumption~4.1(c) is stronger than \SL's Condition~1 (p.~953) and
+implies it; Gaussian rows are stronger still.}
 \ev{For standardised predictors, Assumption~4.1(c) implies their Condition~1 for every $r$, with $\delta=\sqrt{3/8}/L$ and
-$M=\log2$: $(\sum_ia_iz_{j_i}/r)^2\le r^{-1}\sum_ia_i^2z_{j_i}^2$, and each predictor has
-$\E\exp(a_i^2z^2)\le(1-2L^2\delta^2)^{-1/2}=2$. The converse fails, for bounded, strongly dependent predictors.}
-\ro{Heavy-tailed predictors. Gaussian rows also exclude bounded data such as genotypes, which are covered instead by the
-fixed-design Theorem~3.1 when its sample conditions hold.}
-\ds{All inside (Gaussian generators).}
+$M=\log2$, $L$ being the sub-Gaussian constant of Assumption~4.1(c) (a two-line computation, independently checked). The converse fails, for bounded, strongly dependent
+predictors.}
+\ro{Non-Gaussian rows for Theorems~3.9, 5.7 and 5.19; heavy-tailed predictors for the distribution theorem.}
+\tu{Bounded data such as genotypes are outside the Gaussian-row theorems as stated, and inside \SL's Condition~1; they are
+covered by the fixed-design Theorem~3.1 when the observed design meets its conditions.}
 
-\subsection{Design, for the theorems on the coded method}
+\subsection{Further assumptions of the reported-model theorem}\label{sec:a-rm}
 
-\paragraph{Visibility \lab{V}} (Theorems~5.2, 5.7, 5.19).
-\vd{Stronger than \SL's Condition~5 (p.~958: $\abs{\operatorname{cov}(x_t,y)}>0$ for every true predictor), which is
-its case $U=\emptyset$ without the margin. The role is the same: the cheap first stage must see every true predictor.}
-\ev{Taking $U=\emptyset$ in \lab{V} gives $\abs{\Cov(W_j,y)}\ge a$. We condition on up to $15$ other columns because the
-method's blocks have at most $16$. The theory's map of design families records \lab{V} as automatic for bounded blocks
-with at most one true predictor each; for block and Markov structures the conditional covariance is
-$\theta^*_j\Var(W_j\mid W_U)$ plus geometrically small terms, at least $\abs{\theta^*_j}\lmin(\Sig)/2$.}
+\ahead{Visibility}{\lab{V}}{Stronger than \SL's Condition~5 (p.~958: $\abs{\operatorname{cov}(x_t,y)}>0$ for every true
+predictor). Their Condition~5 is our condition with no conditioning and no margin.}
+\ev{Visibility asks $\abs{\Cov(W_j,W^\top\tstar\mid W_U)}\ge a>0$ for every true predictor $j$, with $W$ the standardised
+predictors and $U$ any set of at most $15$ other columns. The role is the same as theirs: the cheap first stage (for us,
+the start law, the distribution the sampler starts from) must see every true predictor. We condition on up to $15$
+columns because the start law works on groups of at most $16$ predictors. For block and AR designs with at most one true
+predictor per correlation block, this covariance is $\theta^*_j\Var(W_j\mid W_U)$ plus geometrically small terms, at
+least $\abs{\theta^*_j}\lmin(\Sig)/2$.}
 \ro{Masking: a true predictor whose signal some $15$ other predictors cancel.}
-\ds{Inside: S1--S4, S6, IND, AR, BLK, and the one-factor designs (aligned signs). Unclear: S5, the two-factor design and
-FAC (a search found a near-cancellation for S5, none for the others; a search is not a proof).}
+\ds{Inside: the independent and locally correlated designs, and the one-factor designs of the strong-factor study, whose
+effects have aligned signs. Unclear: S5 (a search found a near-cancellation); the strong-factor study's two-factor
+design and its own version of S5, and FAC (a search found no cancellation).}
+\tu{A numerical check of the conditions' population quantities, not yet complete, found visibility failing for a
+pervasive factor with effects of mixed signs and for a riboflavin-like design, so a user with such data may be outside
+this theorem. Such a user may still be inside the posterior theorems.}
 
-\paragraph{Bounded leakage set} (Assumption~5.6(a)).
-\vd{Comparable to \SL, where the same requirement is an informal remark, not a condition (p.~958, remark (a)).}
-\ev{They write: ``if all the predictors are linearly correlated, it is futile to apply this iterative procedure'', and
-``if there are $p_n$ predictors correlated with the true predictors $X_t$, $p_n\prec P_n$, then there are at most $cp_n$
-predictors to be selected'' (p.~958). We state it as a hypothesis with a rate: the nulls that imitate a true predictor
-above the level $o(\rn)$ must lie in a set of at most $n^b$ columns, $b<\tfrac12$.}
-\ro{Pervasive factors with $p\gg\sqrt n$: every null then has a fixed covariance with every true predictor, so the
-leakage set is all of $\set{p}$.}
-\ds{Inside: S1 (no leakage set beyond the true model), S2 and AR (a neighbourhood of size $C\log n$), S3, S4, S6 and BLK
-(the true predictors' blocks). \textbf{Outside:} S5, the strong-factor study, FAC.}
+\ahead{Polynomial leakage set}{Assumption~5.6(a)}{Comparable to \SL, where the same requirement is an informal remark, not a
+condition (p.~958, remark (a)).}
+\ev{They write: ``if there are $p_n$ predictors correlated with the true predictors $X_t$, $p_n\prec P_n$, then there are
+at most $cp_n$ predictors to be selected'' (p.~958). They prove nothing on their sampler's output, so there is no formal
+counterpart to compare levels with. We state the requirement as a hypothesis with a rate: the null predictors whose
+conditional covariance with a true predictor exceeds a level $\varpi_n=o(\rn)$ must lie in a set of at most $n^b$
+columns, the leakage set $Q$, with $b<\tfrac12$.}
+\ro{Pervasive factors with $p\gg\sqrt n$: with no conditioning, every null predictor then has a fixed covariance with every
+true one, so the leakage set is all of $\set{p}$, and $\abs{Q}\le n^b$ would force $p\le n^b$.}
+\ds{\textbf{Inside:} S1 (no leakage set beyond the true model); S2 and AR (a neighbourhood of size $C\log n$ around the true
+predictors); S3, S4, S6 and BLK (the true predictors' blocks). \textbf{Outside:} S5, the whole strong-factor study, and
+FAC.}
 
-\paragraph{Floor on the leakage set and local regressions} (Assumption~5.6(b),(c)).
-\vd{No \SL{} counterpart: it serves the search, which they do not analyse.}
-\ev{It follows from the global floor of \lab{EFS} plus a locality property of $\Sig$: for block, banded and AR
-structures, take as local set the block-mates or the nearest leakage-set neighbours. A fixed-design version needs nothing
-of the kind when the leakage set has fewer than $\log n$ extra predictors (Theorem~5.12, case (d1)).}
+\ahead{Floor and local regressions inside the leakage set}{Assumption~5.6(b),(c)}{No \SL{} counterpart: it serves the search, which they
+do not analyse.}
+\ev{It follows from the global floor \lab{EFS} plus a locality property of $\Sig$: for block, banded and AR structures,
+take as local set the block-mates or the nearest leakage-set neighbours. A fixed-design version needs nothing of the kind
+when the leakage set has fewer than $\log n$ extra predictors (Theorem~5.12, case (d1)).}
 \ro{Leakage sets inside which regressions depend on many members at once.}
-\ds{As for the bounded leakage set; not applicable where that fails.}
+\ds{As for the polynomial leakage set; not applicable where that fails.}
 
-\paragraph{No leakage \lab{NL}} (Theorems~5.2, 5.19).
-\vd{No \SL{} counterpart, and narrow: the one assumption of the core theorems that most of our designs violate.}
-\ev{With $U=\emptyset$, \lab{NL} asks $\abs{\Cov(W_l,W_j)}\le C_Ln^{-1/2}$ for every null $l$ and true $j$. In AR(1) with
-correlation $0.5$ the neighbour of a true predictor has covariance $0.5$; in a block design every block-mate of a true
-predictor has covariance at least $0.4$. For such designs the start law concentrates on the models between the true
-model and the leakage set, not on the true model alone.}
+\subsection{Further assumption of the printed-estimates theorem}\label{sec:a-pe}
+
+\ahead{No leakage}{\lab{NL}}{No \SL{} counterpart; restrictive: only the independent designs satisfy it.}
+\ev{With no conditioning, \lab{NL} asks $\abs{\Cov(W_l,W_j)}\le C_Ln^{-1/2}$ for every null predictor $l$ and true
+predictor $j$. In AR(1) with correlation $0.5$ the neighbour of a true predictor has covariance $0.5$; in a block design
+every block-mate of a true predictor has covariance at least $0.4$. For such designs the start law concentrates on the
+models between the true model and the leakage set, not on the true model alone. On AR and BLK the present proof route
+cannot be extended as $n\to\infty$, because the start law's mass on the true model then decays faster than any power of
+$n$; at the sizes of the $10^6$ plan, no record shows this mass to be small. For S3, S4 and S6, a theorem under a
+weaker, group-relative form of \lab{NL} is a candidate; it is not proved.}
 \ro{Any null predictor correlated with a true one at a fixed level.}
-\ds{Inside: S1 and IND. \textbf{Outside:} S2--S6, the strong-factor study, AR (the primary $10^6$ design), BLK and FAC.
-There the reported-model Theorem~5.7 still holds (S2--S4, S6, AR, BLK), and so does the unbiasedness of the evidence
-estimate (Remark~5.22, every design).}
-
-\paragraph{Witness designs of Theorem~3.13(b).} Not an assumption to defend: a lower bound needs one design, and
-\SL{} give no lower bound. Part~(a) of the theorem has no assumption at all.
+\ds{\textbf{Inside:} the independent designs only. \textbf{Outside:} all locally correlated and factor designs, including AR, the
+primary design of the $10^6$ plan.}
 
 % =====================================================================================================
 \section{Assumptions on mathematical objects}\label{sec:a-math}
 
-Some premises are not about the data but about mathematical objects: the prior, distributions and distances, the
-Markov kernels, and properties of the code. These must be proved, not argued.
+Some premises are not about the data but about mathematical objects: the prior, distributions and distances, the Markov
+kernels, and properties of the code. These must be proved, not argued.
 \begin{itemize}[leftmargin=1.5em,itemsep=2pt]
-  \item \emph{Posterior theorems (true model, true distribution): no open item.} The facts about the prior, the lemma
-    that turns the posterior miss into statements about the highest posterior model, the median model and the inclusion
-    probabilities, and the Hellinger-distance facts are all proved and independently checked. The output description used
-    by Corollary~4.7 is checked against the code. (The expectation form of Theorem~3.1 rests on two supporting results,
-    proved but not yet independently checked; these are claims, not assumptions.)
-  \item \emph{Theorems on the coded method: proved, with code-level items pending.} The probabilistic events of the
-    reported-model proof are proved and independently checked. Thirteen code-level premises are named and are being
-    checked: that the run guard stops runs without changing them; that blocks have at most $16$ columns and depend on $X$
-    only; that the search from the start mode is executed as described; the start tables; that the calibration is a
-    function of the data and its own random numbers; that the start sampler is exact; that the coded moves are the stated
-    kernels; one line linking the start mass to the particle budget; the tie-aware start-mode recursion; two audits by
-    code reading; a bound on the overlap between the posterior and the start law, needed only by an alternative route
-    in a remark (Remark~5.21); and two items reached only through an older route, which the core theorems do not use. Five further
-    supporting claims (two relabellings, three short lemmas) follow the same route.
+  \item \emph{Posterior theorems.} The facts about the prior, the posterior-summary lemma (Lemma~2.1) and the
+    Hellinger-distance facts are proved and independently checked; the output description used by Corollary~4.7 is
+    checked against the code. Two supporting lemmas behind the expectation bound of Theorem~3.1 are not yet independently
+    checked, and one link in the record of Corollary~4.7 is to be corrected.
+  \item \emph{Theorems on the coded method.} The probabilistic events of the reported-model proof are proved and
+    independently checked. Thirteen premises are named and queued. Ten are code readings or short mathematical checks,
+    for example that the run guard stops runs without changing them, that the start sampler is exact, and that the coded
+    moves are the stated kernels. Of the other three, one is used only by the alternative argument of Remark~5.21 and
+    needs a new key lemma; two are used only by an older proof that the core theorems no longer use. The unbiasedness
+    of the evidence estimate also rests on two inputs not yet checked under the current protocol: the identities of the
+    frozen final run, and the two-line argument for the pooled form.
   \item \emph{Idealisations, stated as conventions:} exact arithmetic and ideal random numbers. They are disclosed, not
     provable.
 \end{itemize}
 
-% =====================================================================================================
-\section{What this means for a typical user}\label{sec:a-limits}
-
-A user with Gaussian-like predictors and no pervasive common factor is inside all three core results: the posterior
-finds the true model and the true conditional law, and the method reports the true model. A user whose predictors share
-a strong common factor, or whose true effects can cancel each other, as in data like the riboflavin data, may be outside
-the reported-model theorem: a numerical check of the conditions' population quantities on nineteen designs found
-visibility failing for a pervasive factor with effects of mixed signs and for a riboflavin-like design. For that user the
-posterior theorems still hold, so the posterior the method targets is right about the model and about the distribution;
-whether the method's search reports that model is then a question the theory does not answer. The printed inclusion
-probabilities, median model and evidence estimate are covered by a theorem only on designs without leakage; on block and
-autoregressive designs, the reported model and the unbiasedness of the evidence estimate are covered.
-
-\bibliography{../shared/refs}
+{\small\bibliography{../shared/refs}}
 \end{document}
