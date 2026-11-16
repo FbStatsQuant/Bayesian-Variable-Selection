@@ -34,6 +34,9 @@ struct IslandConfig {
   int B = 14;                               // number of N-swap labels (core: labels N1..NB)
   KernelKind kernel = KernelKind::LabelMajor;
   int G = 256; int tile = 128; int threads = 1;   // execution parameters: never part of the law (G = 0: largest G <= 256 that fits mem_budget)
+  double k_store = 0;                       // admission: calibration-measured mean stored |S| (0: estimate from pi_0)
+  double inputs_bytes = 0;                  // admission: setup / calib inputs mapped by the caller (X, z, diag(G) are in the plan)
+  int test_oom_pass = -1;                   // tests only: throw std::bad_alloc inside phase A at this pass (resource_limit path)
   uint64_t mem_budget = 0;                  // bytes; 0 = no admission check (--mem-budget; manager Q3/Q4)
   uint64_t store_cap = 0;                   // 0: 40 p + 1 (OD-13)
   std::string ckpt_path;                    // empty: no checkpoints; else <path>.a / <path>.b

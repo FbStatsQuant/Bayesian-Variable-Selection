@@ -121,6 +121,29 @@ increasing from 0 to 1, B ≥ 0.
   21.9 s parallel at pass ends (9 serial fallbacks) → 21.8 s with waves (0 fallbacks); island 108.7 → 93.5–100 s
   (machine load 59–224 during the runs). The gain grows with the thread count.
 
+### 1.8 v0.3 (review PR24): the plan is an upper bound; leaders in label-major
+- **Plan** (`memory.h`, terms listed there): inputs (X, z, diag(G); the caller adds the setup/calib sections through
+  `inputs_bytes`: **--mem-budget is the task's memory**, X is inside the plan; INTERFACES §7 note requested from WP1),
+  tiled X, the store (old + new kept run, pool over-reservation, staging at pow2 × 1.5, sort refs + the parallel
+  mergesort's temporary copy, flags, alive list, two indexes, one stale snapshot generation), the leader stores,
+  worker buffers for every store, RB incl. `rb_round` and compat, group buffers, support caches (k_q = min(K, 3k)),
+  particles and terminal supports, checkpoint buffers. Admission uses the calibration-measured mean stored |S|
+  (`k_store`) when given, else the π₀ estimate; the step-boundary re-check uses the store's actual pool (exact) and
+  refuses deterministically (resource_limit, no store reported, GUARD-W). The plan depends on the thread count, so a
+  refusal is reproducible for the same thread count (G and threads never change outputs).
+- MEASURED (Owls, 3 threads, N = 500, 3 stages + 1 round, VmHWM increment after clear_refs vs the plan without inputs,
+  at the true stored mean |S|): p = 2·10⁴: 231 / 314 MiB (G 64), 219 / 422 (G 256), with leaders 346 / 534 and
+  317 / 643 — the bound holds in all four; p = 10⁵: see the PR. Plan at 10⁶, k = 7, G = 64, 96 threads: ≈ 17.5 GiB
+  (store 12.3, inputs 1.5, x tiles 1.5, rows 1.0, orders 0.5, worker buffers 0.5) — to be checked against the post-fix
+  10⁶ peak of the NOTS lever batch.
+- **Leaders under label-major** (P1, option (b)): phase B computes log γ₀ of each consumed flip (the same block sum)
+  and offers to the leader stores under their own cut-offs (not the top store's shortcut); leader snapshots are released
+  like the top store's; NaN offers are refused. Test: leaders label-major = particle-major in both forms (the compat
+  golden ties particle-major to core). Cost: one composite sum per consumed (support, label) pair, only when `leaders`.
+- **Fallback routes under compat** (m6): with H = (n+1)G_S + I and A = G_S + I both positive definite and
+  Q ≥ y'y/(n+1) > 1e-8 y'y, the refactor, QR and non-negative-Q routes cannot be reached in exact arithmetic for
+  finite data; near-collinear columns do not trigger them. The compat golden adds a cap variant (n = 12, K = 6) instead.
+
 ---
 
 ## 2. Addressed sampling

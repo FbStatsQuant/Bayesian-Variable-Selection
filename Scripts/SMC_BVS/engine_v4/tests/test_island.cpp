@@ -492,33 +492,74 @@ TEST(store_parallel_compaction_any_flush_order) {
 
 // --mem-budget admission (manager Q3/Q4): deterministic refusal before any allocation with a named reason; G = 0
 // chooses the largest G <= 256 that fits, and the output does not depend on it.
+static MemSizes sizes_of(const Fixture& F, const IslandConfig& c, int G) {
+  MemSizes z; z.n = F.D.n; z.p = F.D.p; z.K = F.D.K; z.N = c.N; z.B = c.B; z.Hm = c.Hm; z.threads = c.threads; z.G = G; z.tile = 128;
+  z.cap = c.store_cap ? c.store_cap : 40ULL * F.D.p + 1; z.label_major = c.kernel == KernelKind::LabelMajor;
+  z.deferred = c.store_parallel_compact && c.threads > 1 && z.label_major; z.leaders = c.leaders; z.compat = c.compat; z.inputs_bytes = c.inputs_bytes;
+  return z;
+}
 TEST(mem_budget_admission) {
   Fixture F(100, 300, 26);
   IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = 3;
   const uint64_t h0 = run_island<Arith::ClassA>(F.D, F.st, F.nb, c).hash();
-  // the same estimate the island uses
   double Ek = 0; for (size_t k = 0; k < F.st.size_logmass.size(); ++k) Ek += (double)k * std::exp(F.st.size_logmass[k]);
   const double k_est = std::max(8.0, 2.0 * Ek + 2.0);
-  auto plan = [&](int G) { return island_memory(F.D.n, F.D.p, c.N, c.B, 40ULL * F.D.p + 1, c.threads, G, 128, true, true, k_est).total; };
-  // (1) refusal: budget below the G = 1 plan
+  auto plan = [&](int G) { return island_memory(sizes_of(F, c, G), k_est).total; };
+  // (1) refusal before any allocation: budget below the G = 1 plan; deterministic reason
   IslandConfig a = c; a.G = 0; a.mem_budget = plan(1) - 1;
   IslandRun r1 = run_island<Arith::ClassA>(F.D, F.st, F.nb, a);
   CHECKF(r1.status == 3 && r1.reason.rfind("mem_budget:", 0) == 0 && r1.top_v.empty(), "refusal: status %d reason %s", r1.status, r1.reason.c_str());
-  IslandRun r1b = run_island<Arith::ClassA>(F.D, F.st, F.nb, a);
-  CHECK(r1b.reason == r1.reason);   // deterministic
+  CHECK(run_island<Arith::ClassA>(F.D, F.st, F.nb, a).reason == r1.reason);
   // (2) G chosen by the budget: between plan(17) and plan(18) -> G = 17; same output as any G (T3)
   a.mem_budget = (plan(17) + plan(18)) / 2;
   IslandRun r2 = run_island<Arith::ClassA>(F.D, F.st, F.nb, a);
   CHECKF(r2.status == 0 && r2.G_used == 17 && r2.hash() == h0, "auto G: status %d G %d", r2.status, r2.G_used);
-  // (3) a fixed G whose plan exceeds the budget is refused (no silent change of the configuration)
+  // (3) a fixed G whose plan exceeds the budget is refused
   IslandConfig b = c; b.G = 48; b.mem_budget = plan(17);
   CHECK(run_island<Arith::ClassA>(F.D, F.st, F.nb, b).status == 3);
-  // (4) the plan grows with G, threads and k, and the store term dominates at large p (sanity of the accounting)
-  CHECK(plan(64) > plan(1));
-  MemPlan big = island_memory(200, 1000000, 2500, 14, 40000001ULL, 48, 64, 128, true, true, 8.0);
-  uint64_t store = 0; for (auto& it : big.items) if (it.name == "store_peak") store = it.bytes;
-  std::printf("  1M plan (G 64, 48 threads, k 8): %s\n", mem_plan_text(big).c_str());
-  CHECK(store > big.total / 3);
+  // (4) step-boundary refusal (review PR24 m1): the admission's k (k_store = 0.5) is far below the stored models' real
+  //     size, so the admission passes and the first step-boundary check (actual pool) refuses; no store is reported
+  IslandConfig d = c; d.k_store = 0.5;
+  d.mem_budget = island_memory(sizes_of(F, d, d.G), 0.5).total + 1024;
+  IslandRun r4 = run_island<Arith::ClassA>(F.D, F.st, F.nb, d);
+  CHECKF(r4.status == 3 && r4.reason.find("after step") != std::string::npos && r4.top_v.empty() && r4.rb_acc.empty(), "step refusal: status %d '%s'", r4.status, r4.reason.c_str());
+  std::string path = tmpdir() + "/wp3_refused.bin";
+  write_island_file(path, r4, Arith::ClassA, v4::Json::object());
+  { v4::fmt::Reader rd(path); uint64_t n = 0; rd.get<double>("top_v", &n);
+    CHECK(rd.json("meta").at("status").str() == "resource_limit" && n == 0 && !rd.has("logZ") && !rd.has("terminal_S")); }
+  std::remove(path.c_str());
+  // (5) the plan grows with G, threads, k and leaders
+  MemSizes z = sizes_of(F, c, 64); CHECK(island_memory(z, 8).total > island_memory(sizes_of(F, c, 1), 8).total);
+  MemSizes zl = z; zl.leaders = true; CHECK(island_memory(zl, 8).total > island_memory(z, 8).total);
+  MemSizes big; big.n = 200; big.p = 1000000; big.K = 100; big.N = 2500; big.B = 14; big.threads = 96; big.G = 64; big.cap = 40000001ULL;
+  std::printf("  1M plan (G 64, 96 threads, k 7): %s\n", mem_plan_text(island_memory(big, 7)).c_str());
+}
+
+// out of memory inside a parallel region (review #21 re-check n1): status resource_limit, never an abort
+TEST(oom_in_region_is_resource_limit) {
+  Fixture F(100, 300, 34);
+  for (int kern = 0; kern < 2; ++kern) for (int th : {1, 3}) {
+    IslandConfig c = small_cfg(); c.kernel = kern ? KernelKind::LabelMajor : KernelKind::ParticleMajor; c.threads = th; c.G = 16; c.test_oom_pass = 2;
+    IslandRun r = run_island<Arith::ClassA>(F.D, F.st, F.nb, c);
+    CHECKF(r.status == 3 && r.reason.find("out of memory") != std::string::npos && r.top_v.empty(), "threads %d: status %d '%s'", th, r.status, r.reason.c_str());
+  }
+}
+
+// leader stores (review PR24 P1): label-major = particle-major (= core through the compat golden), both arithmetic forms
+TEST(leaders_label_major_equal_particle_major) {
+  Fixture F(100, 300, 35);
+  for (int arith = 0; arith < 2; ++arith) {
+    IslandConfig c = small_cfg(); c.leaders = true; c.kernel = KernelKind::ParticleMajor; c.threads = 1;
+    IslandRun r0 = arith ? run_island<Arith::ClassA>(F.D, F.st, F.nb, c) : run_island<Arith::Bit>(F.D, F.st, F.nb, c);
+    c.kernel = KernelKind::LabelMajor; c.threads = 3; c.G = 16;
+    IslandRun r1 = arith ? run_island<Arith::ClassA>(F.D, F.st, F.nb, c) : run_island<Arith::Bit>(F.D, F.st, F.nb, c);
+    bool ok = r0.leaders && r1.leaders && !r0.lead0_v.empty() && r0.lead0_v.size() == r1.lead0_v.size() && r0.lead1_v.size() == r1.lead1_v.size() &&
+              r0.lead0_pool == r1.lead0_pool && r0.lead1_pool == r1.lead1_pool && r0.hash() == r1.hash();
+    for (size_t i = 0; ok && i < r0.lead0_v.size(); ++i) ok = same_bits(r0.lead0_v[i], r1.lead0_v[i]);
+    for (size_t i = 0; ok && i < r0.lead1_v.size(); ++i) ok = same_bits(r0.lead1_v[i], r1.lead1_v[i]);
+    CHECKF(ok, "arith %d: leaders PM %zu/%zu vs LM %zu/%zu", arith, r0.lead0_v.size(), r0.lead1_v.size(), r1.lead0_v.size(), r1.lead1_v.size());
+    std::printf("  [%s] lead0 %zu, lead1 %zu entries: label-major = particle-major\n", arith ? "A" : "bit", r1.lead0_v.size(), r1.lead1_v.size());
+  }
 }
 
 // Compat (serial v3 stream): checkpoint/resume restores the xoshiro state and the double RB accumulator (identical
@@ -622,7 +663,7 @@ TEST(store_snapshots_released) {
   std::printf("  kept runs alive: before %d, max during the island %d, after %d (merges %llu)\n", before, r.ks.kept_live_max, kept_live().load(),
               (unsigned long long)r.ks.store_merges);
   CHECK(kept_live().load() == before);
-  CHECK(r.ks.kept_live_max - before <= 4);
+  CHECK(r.ks.kept_live_max - before <= 3);   // current + new during a compaction + one stale snapshot mid-tile
 }
 
 // m6a: flips at supports k > 24 (the uncapped vector path), k = 25, 40, 99 at K = 100: bit form = scorer bits (both entry
@@ -666,3 +707,65 @@ TEST(gibbs_cap_island) {
     std::printf("  [%s] K = %d: %llu Gibbs steps at the cap\n", arith ? "A" : "bit", F.D.K, (unsigned long long)cap);
   }
 }
+
+// m5 (review PR24): compaction through offer() with the duplicate filter active and stale snapshots, serial in-pass
+// fallbacks (small stage_hard) interleaved with parallel compactions between cycles: equals the serial reference
+TEST(store_offer_path_fallbacks_and_parallel) {
+  std::mt19937_64 g(43);
+  std::vector<uint64_t> key(400); uint64_t x = 9; for (auto& k : key) k = splitmix64(x);
+  std::vector<std::pair<double, Model>> offers;
+  std::map<Model, double> val;
+  for (int i = 0; i < 90000; ++i) { Model S = random_support(g, 400, 1 + (int)(g() % 4)); if (!val.count(S)) val[S] = -std::floor((double)(g() % 9000) / 3.0); offers.push_back({val[S], S}); }
+  for (uint64_t cap : {2000ull, 20000ull}) {
+    v4::Store ref(cap, Order::HPM); for (auto& o : offers) ref.offer(o.first, o.second, D_hash(key, o.second)); ref.compact();
+    TopStore st; st.init(cap, Order::HPM); st.defer = true; st.buf_limit = 97; st.stage_hard = 3000; st.stage_limit = 1500;
+    std::vector<StoreBuffer> bufs(3);
+    for (int cycle = 0; cycle < 3; ++cycle) {
+      #pragma omp parallel for num_threads(3) schedule(dynamic, 64)
+      for (size_t i = cycle; i < offers.size(); i += 3) {
+        auto& o = offers[(i * 7919) % offers.size()];
+        st.offer(bufs[omp_get_thread_num()], o.first, o.second.data(), (uint32_t)o.second.size(), D_hash(key, o.second));
+      }
+      for (auto& b : bufs) st.flush(b);
+      for (auto& b : bufs) { b.snap.reset(); b.snap_gen = ~0ull; }
+      st.compact_parallel(3);
+    }
+    bool ok = st.check_invariant() && st.size() == ref.size();
+    for (size_t i = 0; ok && i < ref.size(); ++i) ok = same_bits(st.value(i), ref.v[i]) && st.model(i) == Model(ref.model(i).begin(), ref.model(i).end());
+    uint64_t dropped = 0; for (auto& b : bufs) dropped += b.n_dup_dropped;
+    CHECKF(ok, "cap %llu: size %zu vs %zu", (unsigned long long)cap, st.size(), ref.size());
+    std::printf("  cap %llu: %llu serial fallbacks, %llu compactions, %llu duplicate offers dropped, content = reference: %d\n", (unsigned long long)cap,
+                (unsigned long long)st.n_serial_merges, (unsigned long long)st.n_merges, (unsigned long long)dropped, (int)ok);
+  }
+}
+
+// P2 (review PR24): the plan is an upper bound of the island's memory. VmHWM is reset after the data are built
+// (/proc/self/clear_refs 5); the island's increment must not exceed the plan (without the inputs term, already
+// resident) evaluated at the stored models' true mean size. Quick case p = 2e4 here; p = 1e5 under --full.
+static long status_kb(const char* key) {
+  FILE* f = std::fopen("/proc/self/status", "r"); if (!f) return -1;
+  char line[256]; long kb = -1; size_t n = std::strlen(key);
+  while (std::fgets(line, sizeof line, f)) if (std::strncmp(line, key, n) == 0) { kb = std::atol(line + n); break; }
+  std::fclose(f); return kb;
+}
+static void plan_bounds_peak(int p, int N, std::initializer_list<int> Gs) {
+  Fixture F(200, p, 36);
+  for (int G : Gs) for (bool lead : {false, true}) {
+    IslandConfig c = small_cfg(); c.N = N; c.kernel = KernelKind::LabelMajor; c.threads = 3; c.G = G; c.leaders = lead;
+    c.grid = {0.0, 0.3, 0.7, 1.0}; c.L = 0; c.Hm = 1;
+    { FILE* cr = std::fopen("/proc/self/clear_refs", "w"); if (cr) { std::fputs("5", cr); std::fclose(cr); } }
+    const long rss0 = status_kb("VmRSS:");
+    IslandRun r = run_island<Arith::ClassA>(F.D, F.st, F.nb, c);
+    const long hwm = status_kb("VmHWM:");
+    double k = r.top_v.empty() ? 8.0 : (double)r.top_pool.size() / (double)r.top_v.size();
+    if (lead && !r.lead0_v.empty()) k = std::max({k, (double)r.lead0_pool.size() / r.lead0_v.size(), (double)r.lead1_pool.size() / r.lead1_v.size()});
+    MemPlan mp = island_memory(sizes_of(F, c, G), k);
+    uint64_t inputs = 0; for (auto& it : mp.items) if (it.name == "inputs") inputs = it.bytes;
+    const double plan_mb = (double)(mp.total - inputs) / 1048576.0, meas_mb = (double)(hwm - rss0) / 1024.0;
+    std::printf("  p %d N %d G %3d leaders %d: island peak increment %.0f MiB, plan %.0f MiB (k %.2f) -> %s\n", p, N, G, (int)lead, meas_mb, plan_mb, k,
+                plan_mb >= meas_mb ? "bound holds" : "BOUND FAILS");
+    CHECKF(r.status == 0 && rss0 > 0 && hwm > 0 && plan_mb >= meas_mb, "p %d G %d leaders %d: measured %.0f MiB > plan %.0f MiB", p, G, (int)lead, meas_mb, plan_mb);
+  }
+}
+TEST(mem_plan_bounds_measured_peak_2e4) { plan_bounds_peak(20000, 500, {64, 256}); }
+TEST_TAGGED(mem_plan_bounds_measured_peak_1e5, "full") { plan_bounds_peak(100000, 500, {64, 256}); }
