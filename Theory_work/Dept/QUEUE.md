@@ -45,6 +45,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 | NARROW batch | 12 statement-precision narrowings (LIFECYCLE §3, priced) + H5 card for GEN C4 / FAC-CS C1 / SAMP:Pkg | ADJ_MINORS_iii.md (D31) |
 | W2-APP Family-map diff round | F1–F4 + M57/M58 patches | PC1, D31 |
 | errata batch | CHAPTER-ONLY errata held for riders (W3-EDIT CP1 groups) + F-UNI "eventually" (H5) | D19, D31 |
+| accept-identity follow-ups | NB-3 sunset of the legacy Windows fallback; NB-4 compute identity once | CR_accept_identity_opus.md |
 | record-format package | 38 rows free-text → file-path evidence | recorder task I |
 | NOTS move | theory_w2/w3, /scratch theory_w2|3, P6 outputs → /home/fb31/SMC_Theory_Department on NOTS (+ scratch link, INDEX.md); one calm session; copies only, no deletion before Owls copy verified | D32/D33 (HQ approved) |
 
