@@ -509,3 +509,10 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
     compaction), then a firm re-size (quantity cut before precision).
   - The sweep cost 77.4 core-h vs ≈ 40 announced (covered by the 200 standing authority; rule: pre-announce > 50%
     overruns).
+- (overnight) ~01:30 CT 11-16, H5 card 7 (row 3.7, W3-SCR:A1): the post-council v3.4 edits narrowed A1 (κ, b, M, σ fixed
+  in n). The current proof is valid (Sol PC). The consultant AGREES that A1 stays in the abstract (reader text names κ, σ,
+  b, M fixed in n), and OBJECTS that a PC read is not enough. Adopted:
+  - a short SCR round: frozen current tree; Opus seat confirms the substantive hunks + per-claim table for all SCR rows;
+    Sol (or Astra) verdict on the same manifest;
+  - interim label on A1 and SCR-G: "council C1 on v3.3 text; post-C1 narrowing re-verified by Sol; second round pending";
+  - fallback: row 3.7 in the abstract with the label stated, or in the body.
