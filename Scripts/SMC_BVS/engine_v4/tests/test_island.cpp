@@ -195,7 +195,7 @@ TEST(store_order_free_multithread) {
       for (auto& b : bufs) st.flush(b);
       st.compact();
       bool ok = st.check_invariant() && st.size() == ref.size();
-      for (size_t i = 0; ok && i < ref.size(); ++i) ok = same_bits(st.v[i], std::get<0>(ref[i])) && st.model(i) == std::get<1>(ref[i]);
+      for (size_t i = 0; ok && i < ref.size(); ++i) ok = same_bits(st.value(i), std::get<0>(ref[i])) && st.model(i) == std::get<1>(ref[i]);
       CHECKF(ok, "cap %zu threads %d buf %zu: size %zu vs %zu", cap, threads, lim, st.size(), ref.size());
     }
   }
@@ -226,7 +226,7 @@ TEST(store_equals_wp1_reference_store) {
     for (auto& b : bufs) st.flush(b);
     st.compact();
     bool ok = ref.size() == st.size() && st.check_invariant() && ref.check_invariants();
-    for (size_t i = 0; ok && i < ref.size(); ++i) ok = same_bits(ref.v[i], st.v[i]) && Model(ref.model(i).begin(), ref.model(i).end()) == st.model(i);
+    for (size_t i = 0; ok && i < ref.size(); ++i) ok = same_bits(ref.v[i], st.value(i)) && Model(ref.model(i).begin(), ref.model(i).end()) == st.model(i);
     CHECKF(ok, "order %d cap %llu: sizes %zu vs %zu", (int)ord, (unsigned long long)cap, ref.size(), st.size());
   }
 }
@@ -362,4 +362,36 @@ TEST(island_file_roundtrip_and_terminal_supports) {
   write_island_file(path, ri, Arith::Bit, v4::Json::object());
   { v4::fmt::Reader rd(path); CHECK(!rd.has("logZ") && !rd.has("rb_acc") && !rd.has("pip_r") && !rd.has("terminal_S") && rd.has("st_phi")); }
   std::remove(path.c_str()); std::remove((a.ckpt_path + ".a").c_str()); std::remove((a.ckpt_path + ".b").c_str());
+}
+
+// Sol F2: ONE worker supplies ALL the winners. Thread 0 offers the c best of 3c models, threads 1-2 the 2c others (and
+// re-offers), with small buffers and staging so that thread 0 flushes many times; content must equal WP1's reference.
+TEST(store_one_worker_all_winners) {
+  const uint64_t cap = 100000; const int M = 3 * (int)cap;
+  std::vector<uint64_t> key(400); uint64_t x = 11; for (auto& k : key) k = splitmix64(x);
+  std::vector<Model> models; models.reserve(M);
+  std::mt19937_64 g(31);
+  std::set<Model> seen;
+  while ((int)models.size() < M) { Model S = random_support(g, 400, 2 + (int)(g() % 3)); if (seen.insert(S).second) models.push_back(S); }
+  auto val = [&](int i) { return -(double)i * 0.25; };   // model i has value -i/4: the winners are 0..cap-1
+  for (size_t lim : {(size_t)64, (size_t)65536}) {
+    TopStore st; st.init(cap, Order::HPM); st.buf_limit = lim; st.stage_limit = std::max<size_t>(4096, lim * 2);
+    std::vector<StoreBuffer> bufs(3);
+    #pragma omp parallel num_threads(3)
+    {
+      int t = omp_get_thread_num();
+      if (t == 0) { for (int i = (int)cap - 1; i >= 0; --i) st.offer(bufs[0], val(i), models[i].data(), (uint32_t)models[i].size(), D_hash(key, models[i])); }
+      else { for (int rep = 0; rep < 2; ++rep) for (int i = (int)cap + t - 1; i < M; i += 2) st.offer(bufs[t], val(i), models[i].data(), (uint32_t)models[i].size(), D_hash(key, models[i])); }
+    }
+    for (int t = 0; t < 3; ++t) st.flush(bufs[t]);
+    st.compact();
+    v4::Store ref(cap, Order::HPM);
+    for (int i = M - 1; i >= 0; --i) ref.offer(val(i), models[i], D_hash(key, models[i]));
+    ref.compact();
+    bool ok = st.size() == cap && ref.size() == cap && st.check_invariant();
+    for (size_t i = 0; ok && i < cap; ++i) ok = same_bits(st.value(i), ref.v[i]) && st.model(i) == models[i];
+    CHECKF(ok, "buffer %zu: size %zu, flushes %llu, merges %llu", lim, st.size(), (unsigned long long)st.n_flushes, (unsigned long long)st.n_merges);
+    std::printf("  one worker, all winners: buffer %zu -> %llu flushes, %llu compactions, content = reference: %d\n", lim,
+                (unsigned long long)st.n_flushes, (unsigned long long)st.n_merges, (int)ok);
+  }
 }

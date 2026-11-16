@@ -137,6 +137,7 @@ class IslandEngine {
   std::vector<std::vector<u128>> rb_thread;        // particle-major reference with threads
   IslandRun res;
   // tiled row-major copy of X for the label-major products: tile t holds columns [t*Bk, t*Bk + Bk) as n rows of Bk
+  std::vector<avec<double>> scratch_P;              // per-thread product buffers, grown on demand, kept across passes
   avec<double> Xt; int Bk = 128, ntile = 0;
   double logZ = 0;
   uint64_t ckpt_writes = 0;
@@ -149,6 +150,8 @@ class IslandEngine {
     top.init(cfg.store_cap ? cfg.store_cap : 40ULL * (uint64_t)p + 1, Order::HPM);
     for (int t = 0; t < NT; ++t) { tl.emplace_back(new ThreadLedger()); tl.back()->top = &top; scorers.emplace_back(new BitScorer(&D)); }
     master.top = &top;
+    top.dup_filter = cfg.store_dup_filter;
+    scratch_P.resize(NT);
     Bk = std::max(64, (cfg.tile + 63) / 64 * 64);
   }
 
@@ -352,7 +355,8 @@ class IslandEngine {
       #pragma omp parallel num_threads(NT)
       {
         BitScorer& sc = *scorers[omp_get_thread_num()];
-        avec<double> Pp((size_t)std::max(1, nA) * Bk + 8);
+        avec<double>& Pp = scratch_P[omp_get_thread_num()];   // persistent per thread (no allocation per pass)
+        if (Pp.size() < (size_t)std::max(1, nA) * Bk + 8) Pp.resize((size_t)std::max(1, nA) * Bk + 8);
         std::vector<uint8_t> inm(Bk); double tprod = 0;
         #pragma omp for schedule(dynamic, 1) nowait
         for (int ti = 0; ti < ntile; ++ti) {
@@ -595,7 +599,7 @@ class IslandEngine {
     w.putv(rb_tot);
     w.put(master.logical); w.put(master.island_best);
     w.put(master.hpm.has); w.putv(master.hpm.S); w.put(master.hpm.F); w.put(master.hpm.logm); w.put(master.hpm.key); w.put(master.hpm.phase); w.put(master.hpm.mech);
-    w.putv(top.v); w.putv(top.hash); w.putv(top.off); w.putv(top.len); w.putv(top.pool);
+    w.putv(top.k->v); w.putv(top.k->hash); w.putv(top.k->off); w.putv(top.k->len); w.putv(top.k->pool);
     uint64_t gen = (uint64_t)(step + 1) * 1024 + (uint64_t)(ckpt_writes & 1023);
     Fnv ck; ck.bytes(w.b.data(), w.b.size());
     Bytes out; out.b.insert(out.b.end(), kCkptMagic, kCkptMagic + 8); out.put(gen); uint64_t len = w.b.size(); out.put(len); out.put(ck.h);
@@ -628,10 +632,9 @@ class IslandEngine {
     r.getv(rb_tot);
     r.get(master.logical); r.get(master.island_best);
     r.get(master.hpm.has); r.getv(master.hpm.S); r.get(master.hpm.F); r.get(master.hpm.logm); r.get(master.hpm.key); r.get(master.hpm.phase); r.get(master.hpm.mech);
-    r.getv(top.v); r.getv(top.hash); r.getv(top.off); r.getv(top.len); r.getv(top.pool);
+    { auto nk = std::make_shared<Kept>(); r.getv(nk->v); r.getv(nk->hash); r.getv(nk->off); r.getv(nk->len); r.getv(nk->pool); top.k = nk; }
     if (r.bad) return -1;
-    top.rebuild_index();
-    top.tau.store(top.v.size() >= top.cap ? top.v.back() : NEG_INF);
+    top.publish_loaded();
     return step;
   }
   void maybe_ckpt(int step, bool& stop) {
@@ -737,9 +740,10 @@ class IslandEngine {
     }
     std::memcpy(res.logical, master.logical, sizeof(res.logical));
     res.island_best = master.island_best; res.hpm = master.hpm;
-    res.top_v = top.v; res.top_hash = top.hash; res.top_off = top.off; res.top_len = top.len; res.top_pool = top.pool;
+    res.top_v = top.k->v; res.top_hash = top.k->hash; res.top_off = top.k->off; res.top_len = top.k->len; res.top_pool = top.k->pool;
     if (cfg.keep_terminal) for (auto& x : P) res.terminal.push_back(x.S);
     res.ks.store_merges = top.n_merges; res.ks.store_buffered = top.n_buffered;
+    for (auto& t : tl) res.ks.store_dup_dropped += t->buf.n_dup_dropped;
     res.ks.t_total = std::chrono::duration<double>(std::chrono::steady_clock::now() - tstart).count();
     return res;
   }
