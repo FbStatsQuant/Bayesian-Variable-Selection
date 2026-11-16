@@ -355,3 +355,185 @@ TEST(wp4_io_island_layout_vs_wp3) {
   std::remove(pa.c_str()); std::remove(pb.c_str());
   cleanup(f);
 }
+
+#include <sys/wait.h>
+namespace {
+int run_cmd(const std::string& cmd) { int rc = std::system((cmd + " > /dev/null 2>&1").c_str()); return WIFEXITED(rc) ? WEXITSTATUS(rc) : -1; }
+std::string q(const std::string& s) { return "'" + s + "'"; }
+struct DirGuard { std::string d; ~DirGuard() { if (!d.empty()) run_cmd("rm -rf " + q(d)); } };
+}
+TEST(wp4_io_merge_cli_and_driver_manifest) {
+  // Review PR20 C-1 / M-1: the built smcbvs4 binary, called the way the CLI and the WP5 driver call it.
+  const std::string bin = V4_SMCBVS4, tools = std::string(V4_FIXTURE_DIR) + "/../../tools/slurm";
+  TmpGuard tmp_guard("cli"); Fx f = make_fx("cli", 16, fmt::M_V);   // the example plan's fits have R' = 16, mode V
+  DirGuard dg{tmp_path("cli_dir")}; run_cmd("mkdir -p " + q(dg.d));
+  std::string isl; for (size_t i = 0; i < f.ipath.size(); ++i) isl += (i ? "," : "") + f.ipath[i];
+  const std::string base = bin + " merge --data " + q(f.dpath) + " --setup " + q(f.spath) + " --calib " + q(f.cpath) + " --mode V --threads 2";
+  auto out = [&](const std::string& n) { return dg.d + "/" + n; };
+  // explicit arguments: --islands as the CLI passes it (one comma-separated string), R' from --Rp
+  CHECK_EQ(run_cmd(base + " --islands " + q(isl) + " --Rp 16 --out " + q(out("fit_ok.bin"))), 0);
+  { fmt::Reader R(out("fit_ok.bin")); Json m = R.json("meta");
+    CHECK(m.at("status").str() == "completed" && (int)m.at("Rp").num() == 16 && std::isfinite(m.at("logZ").num()) && R.has("pip_eq"));
+    CHECK(m.at("inputs").at("island_1.bin").str() == wp4io::head_island(f.ipath[0], 1, wp4io::Expect{fmt::M_V, f.dhash, f.shash, f.chash}, nullptr).content_hash); }
+  CHECK_EQ(run_cmd(base + " --islands " + q(isl) + " --out " + q(out("fit_noRp.bin"))), 13);                // no R'
+  std::string isl15 = isl.substr(0, isl.rfind(','));
+  CHECK_EQ(run_cmd(base + " --islands " + q(isl15) + " --Rp 16 --out " + q(out("fit_15.bin"))), 13);        // a subset
+  CHECK_EQ(run_cmd(base + " --islands " + q(isl15 + "," + f.ipath[0]) + " --Rp 16 --out " + q(out("fit_dup.bin"))), 13);   // duplicate
+  CHECK_EQ(run_cmd(base + " --islands '' --Rp 16 --out " + q(out("fit_empty.bin"))), 13);                    // empty list
+  CHECK_EQ(run_cmd(base + " --islands " + q(isl) + " --Rp 0 --out " + q(out("fit_rp0.bin"))), 13);           // R' = 0
+  CHECK_EQ(run_cmd(base + " --islands " + q(isl) + " --Rp 16"), 13);                                         // no --out
+  CHECK_EQ(run_cmd(base + " --islands " + q(isl) + " --Rp 16 --mem-budget 1000 --out " + q(out("fit_mem.bin"))), 11);   // bytes
+  { fmt::Reader R(out("fit_mem.bin")); Json m = R.json("meta");
+    CHECK(m.at("fit_state").str() == "not_admitted" && !R.has("pip_eq") && m.at("mem_estimate").at("budget").num() == 1000); }
+  CHECK_EQ(run_cmd(base + " --islands " + q(isl) + " --Rp 16 --mem-budget-gb 0.000001 --out " + q(out("fit_memgb.bin"))), 11);   // alias
+  // the WP5 driver: dry run of the example plan -> the merge manifest template -> p1m_manifest.py fill -> smcbvs4 merge --manifest
+  if (run_cmd("command -v python3") != 0) { std::printf("    python3 not found: driver-manifest part NOT RUN\n"); cleanup(f); return; }
+  const std::string drv = dg.d + "/drv", dept = dg.d + "/dept";
+  CHECK_EQ(run_cmd("python3 " + q(tools + "/p1m_driver.py") + " --plan " + q(tools + "/examples/plan_A2_pilot_1e4.json") + " --out " + q(drv) +
+                   " --dept " + q(dept) + " --now 2026-11-16T00:00:00Z"), 0);
+  const std::string tmpl = drv + "/manifests/A2_ARs_n200_r1/merge.json";
+  Json T = read_json_file(tmpl);
+  CHECK(T.at("mode").str() == "V" && (int)T.at("params").at("Rp").num() == 16 && T.at("inputs").size() == 19);
+  // place the run's files where the template names them, with the producers' records
+  std::string rundir;
+  for (auto& [k, v] : T.at("inputs").items()) {
+    std::string b = k.substr(k.find_last_of('/') + 1); rundir = k.substr(0, k.find_last_of('/'));
+    std::string src = b == "data.bin" ? f.dpath : b == "setup.bin" ? f.spath : b == "calib.bin" ? f.cpath
+                    : f.ipath[(size_t)std::stoi(b.substr(7, b.size() - 11)) - 1];
+    run_cmd("mkdir -p " + q(rundir) + " && cp " + q(src) + " " + q(k));
+    write_json_file(k + ".json", [] { Json j = Json::object(); j["status"] = "completed"; return j; }());
+  }
+  const std::string man = dg.d + "/merge_filled.json";
+  CHECK_EQ(run_cmd("BIN=" + q(bin) + " python3 " + q(tools + "/p1m_manifest.py") + " fill --template " + q(tmpl) + " --out " + q(man) + " --bin " + q(bin)), 0);
+  CHECK_EQ(run_cmd(bin + " merge --manifest " + q(man) + " --threads 2 --out " + q(rundir + "/fit.bin")), 0);
+  { fmt::Reader R(rundir + "/fit.bin"); Json m = R.json("meta");
+    CHECK(m.at("status").str() == "completed" && (int)m.at("Rp").num() == 16 && R.has("pip_r") && R.entry("pip_r").dims[0] == 16); }
+  CHECK_EQ(run_cmd(bin + " merge --manifest " + q(man) + " --threads 2 --mem-budget 1000 --out " + q(rundir + "/fit_mem.bin")), 11);
+  // an island input removed from the filled manifest: the merge is refused, never pooled as a subset
+  Json M = read_json_file(man); Json in2 = Json::object();
+  for (auto& [k, v] : M.at("inputs").items()) if (k.find("island_16.bin") == std::string::npos) in2[k] = v;
+  M["inputs"] = in2; write_json_file(dg.d + "/merge_15.json", M);
+  CHECK_EQ(run_cmd(bin + " merge --manifest " + q(dg.d + "/merge_15.json") + " --threads 2 --out " + q(rundir + "/fit_15.bin")), 13);
+  cleanup(f);
+}
+
+#include <functional>
+#include <unistd.h>
+namespace {
+// Rewrites one section of an engine file hash-consistently (the WP1 Writer recomputes every hash): the review PR20 probe.
+using Bytes = std::vector<uint8_t>;
+void rewrite(const std::string& src, const std::string& dst, const std::string& name, const std::function<void(Bytes&, uint64_t&, uint64_t&)>& mut) {
+  std::vector<std::pair<std::string, Bytes>> secs; std::vector<std::array<uint64_t, 3>> meta_d; std::vector<uint32_t> dt; Json meta;
+  uint32_t kind, mode;
+  { fmt::Reader R(src); kind = R.kind(); mode = R.mode();
+    for (auto& e : R.sections()) {
+      std::string n(e.name);
+      if (e.dtype == fmt::D_JSON) { meta = R.json(n); continue; }
+      const uint8_t* p = nullptr;
+      switch (e.dtype) {
+        case fmt::D_F64: p = (const uint8_t*)R.get<double>(n); break;   case fmt::D_I32: p = (const uint8_t*)R.get<int32_t>(n); break;
+        case fmt::D_U32: p = (const uint8_t*)R.get<uint32_t>(n); break; case fmt::D_I64: p = (const uint8_t*)R.get<int64_t>(n); break;
+        case fmt::D_U64: p = (const uint8_t*)R.get<uint64_t>(n); break; case fmt::D_U8: p = (const uint8_t*)R.get<uint8_t>(n); break;
+        case fmt::D_U16: p = (const uint8_t*)R.get<uint16_t>(n); break; default: p = (const uint8_t*)R.get<float>(n);
+      }
+      secs.push_back({n, Bytes(p, p + e.length)}); meta_d.push_back({e.dims[0], e.dims[1], 0}); dt.push_back(e.dtype);
+    } }
+  fmt::Writer W(kind, mode);
+  W.add_json("meta", meta);
+  for (size_t i = 0; i < secs.size(); ++i) {
+    uint64_t d0 = meta_d[i][0], d1 = meta_d[i][1];
+    if (secs[i].first == name) mut(secs[i].second, d0, d1);
+    W.add_copy(secs[i].first, dt[i], secs[i].second.data(), secs[i].second.size(), d0, d1);
+  }
+  W.write(dst);
+}
+template <class T> std::function<void(Bytes&, uint64_t&, uint64_t&)> set_at(size_t i, T v) {
+  return [i, v](Bytes& b, uint64_t&, uint64_t&) { std::memcpy(b.data() + i * sizeof(T), &v, sizeof(T)); };
+}
+template <class T> std::function<void(Bytes&, uint64_t&, uint64_t&)> set_all(std::vector<T> v) {
+  return [v](Bytes& b, uint64_t& d0, uint64_t&) { b.assign((const uint8_t*)v.data(), (const uint8_t*)(v.data() + v.size())); d0 = v.size(); };
+}
+// 0 = refused (invalid_input, record or exception), 1 = accepted as completed, 2 = other status, 3 = other exception;
+// a crash is a signal. The merge runs in a forked child (one thread), so a crash cannot kill the test binary.
+int merge_in_child(const Json& args, Json* rec_out_file = nullptr) {
+  (void)rec_out_file;
+  std::fflush(stdout);
+  pid_t pid = fork();
+  if (pid == 0) {
+    int code = 3;
+    try { Json r = merge::run(args); const std::string st = r.at("status").str(); code = st == "invalid_input" ? 0 : st == "completed" ? 1 : 2; }
+    catch (const Error& e) { code = e.st == Status::invalid_input ? 0 : 3; }
+    catch (...) { code = 3; }
+    _exit(code);
+  }
+  int ws = 0; waitpid(pid, &ws, 0);
+  return WIFEXITED(ws) ? WEXITSTATUS(ws) : 100 + (WIFSIGNALED(ws) ? WTERMSIG(ws) : 0);
+}
+}  // namespace
+
+TEST(wp4_io_hostile_files_refused) {
+  // Review PR20 M-2: hash-consistent files with bad content (the reviewer's corrupt-file list). Every case is refused with
+  // invalid_input -- never a crash, never a completed fit; H19 (other islands' island_best entries) is accepted with
+  // those entries ignored.
+  TmpGuard tmp_guard("hos"); Fx f = make_fx("hos", 4);
+  const int p = f.D.p;
+  auto args = [&](const std::string& out) { Json a = merge_args(f, out, 1); return a; };
+  CHECK_EQ(merge_in_child(args(tmp_path("hos_fit_base.bin"))), 1);   // the untouched fixture completes
+  struct Case { const char* id; int file; const char* sec; std::function<void(Bytes&, uint64_t&, uint64_t&)> mut; int want; };
+  // file: 0 island 1, 1 island 2, 10 calib, 20 setup
+  Model h0 = f.isl[0].led.hpmS; double hF = f.isl[0].led.hpmF;
+  size_t multi = 0;   // a store entry with >= 2 members (for the unsorted-model case)
+  { const Store& t = f.isl[0].led.top; for (size_t i = 0; i < t.size(); ++i) if (t.len[i] >= 2) { multi = t.off[i]; break; } }
+  std::vector<Case> cases = {
+    {"H1 top_pool index p+1e8", 0, "top_pool", set_at<int32_t>(0, p + 100000000), 0},
+    {"H2 top_pool index -1", 0, "top_pool", set_at<int32_t>(0, -1), 0},
+    {"H3 unsorted store model", 0, "top_pool", [multi](Bytes& b, uint64_t&, uint64_t&) { int32_t* q = (int32_t*)b.data() + multi; std::swap(q[0], q[1]); }, 0},
+    {"H4 top_off wraps", 0, "top_off", set_at<uint64_t>(1, UINT64_MAX), 0},
+    {"H5 hpm_S index p+1e8", 0, "hpm_S", set_all<int32_t>({p + 100000000}), 0},
+    {"H6 hpm_S unsorted", 0, "hpm_S", set_all<int32_t>({5, 2}), 0},
+    {"H7 hpm_ev phase 99 mech 77", 0, "hpm_ev", [](Bytes& b, uint64_t&, uint64_t&) { int64_t* e = (int64_t*)b.data(); e[10] = 99; e[11] = 77; }, 0},
+    {"H8 hpm_val F NaN", 0, "hpm_val", set_at<double>(0, std::numeric_limits<double>::quiet_NaN()), 0},
+    {"H9 top_v NaN", 0, "top_v", set_at<double>(0, std::numeric_limits<double>::quiet_NaN()), 0},
+    {"H10 st_ess length 1", 0, "st_ess", set_all<double>({40.0}), 0},
+    {"H11 empty grid", 0, "grid", set_all<double>({}), 0},
+    {"H11b grid not calib's", 0, "grid", set_all<double>({0, 0.5, 0.75, 1}), 0},
+    {"H16 top_len past the pool", 0, "top_len", set_at<uint16_t>(0, 60000), 0},
+    {"H17 empty logZ", 0, "logZ", set_all<double>({}), 0},
+    {"H18 pip_r NaN", 0, "pip_r", set_at<double>(0, std::numeric_limits<double>::quiet_NaN()), 0},
+    {"H18b pip_r > 1", 0, "pip_r", set_at<double>(0, 1.5), 0},
+    {"H20 logical size", 0, "logical", set_all<uint64_t>({1, 2, 3}), 0},
+    {"H21 hpm_ev stage > T", 0, "hpm_ev", [](Bytes& b, uint64_t&, uint64_t&) { ((int64_t*)b.data())[5] = 99; }, 0},
+    {"H22 hpm_ev other island", 0, "hpm_ev", [](Bytes& b, uint64_t&, uint64_t&) { ((int64_t*)b.data())[3] = 3; }, 0},
+    {"H23 terminal index p+1e8", 0, "terminal_S", set_at<int32_t>(0, p + 100000000), 0},
+    {"C1 calib inh_idx p+1e8", 10, "inh_idx", set_at<int32_t>(0, p + 100000000), 0},
+    {"C2 calib hpm_S p+1e8", 10, "hpm_S", set_all<int32_t>({p + 100000000}), 0},
+    {"C3 calib inh_F NaN", 10, "inh_F", set_at<double>(0, std::numeric_limits<double>::quiet_NaN()), 0},
+    {"C4 calib inh_ptr wraps", 10, "inh_ptr", set_at<int64_t>(1, (int64_t)1 << 40), 0},
+    {"S2 setup pos 40", 20, "pos", set_at<int32_t>(0, 40), 0},
+    {"S3 setup code_ptr 1e12", 20, "code_ptr", set_at<int64_t>(0, 1000000000000LL), 0},
+    {"S4 setup tstore pool p+1e8", 20, "tstore_top_pool", set_at<int32_t>(0, p + 100000000), 0},
+    {"S5 setup mode_S p+1e8", 20, "mode_S", set_all<int32_t>({p + 100000000}), 0},
+    {"S6 setup blk out of range", 20, "blk", set_at<int32_t>(0, 1000000), 0},
+    {"S7 setup logr NaN", 20, "logr", set_at<double>(1, std::numeric_limits<double>::quiet_NaN()), 0},
+  };
+  (void)h0; (void)hF;
+  for (auto& c : cases) {
+    const std::string src = c.file == 10 ? f.cpath : c.file == 20 ? f.spath : f.ipath[(size_t)c.file];
+    const std::string keep = src + ".orig";
+    run_cmd("cp " + q(src) + " " + q(keep));
+    rewrite(keep, src, c.sec, c.mut);
+    int got = merge_in_child(args(tmp_path("hos_fit_case.bin")));
+    CHECK_MSG(got == c.want, std::string(c.id) + ": got " + std::to_string(got) + (got >= 100 ? " (CRASH, signal " + std::to_string(got - 100) + ")" : ""));
+    run_cmd("mv " + q(keep) + " " + q(src));
+  }
+  // H19: island 2's entries for the other islands (1e300) are ignored: island_best of island 1 is island 1's own
+  { const std::string src = f.ipath[1], keep = src + ".orig";
+    run_cmd("cp " + q(src) + " " + q(keep));
+    rewrite(keep, src, "island_best", set_at<double>(1, 1e300));
+    Json r = merge::run(args(tmp_path("hos_fit_h19.bin")));
+    fmt::Reader R(tmp_path("hos_fit_h19.bin"));
+    std::vector<double> ib = R.vec<double>("island_best");
+    CHECK(r.at("status").str() == "completed" && ib.size() == 5 && ib[1] == f.isl[0].led.island_best[1] && ib[1] < 1e300);
+    run_cmd("mv " + q(keep) + " " + q(src)); }
+  cleanup(f);
+}
