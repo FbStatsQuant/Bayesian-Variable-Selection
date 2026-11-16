@@ -248,3 +248,8 @@
 - **D38.** BR1 NOT BROKEN (3 MINOR repaired); all line checks VERIFIED first attempt; DIST12.md in L6. TC9 EQUAL (HQ);
   WEAKER non-target rows to CP3; n₀ remark in REPORT only; unverified premises carried as "conditional on …". Next: L6 →
   Sol diff check → REPORT → Astra sweep → citecheck → council → CP3; council-freeze date requested from the lead.
+
+## 2026-11-15 21:34 CT — recorder real runs on main
+- E 68d48f4 (Engineering D-3/D-8), F 70644a2 + cec478b (assemble.py candidate blocks + 44 flags cleared +
+  HEADLINE_CANDIDATES.md), D 8efc627 (W3-POST2 10 rows PROVED-CHECKED conditional). check.py 468 / 0 ERROR; tl 174/0.
+  Next: C dry run (cascade until H; H may precede C's real run), F-UNI gate, CI venv, I, J.
