@@ -12,3 +12,5 @@
 - 2026-11-15 19:59 CST. Item 1 (API MINORs): H1 extraction done (73 findings / 39 claims). Classification: 4 IN-PLACE (M17, M45, M47 applied; M25 → CHAPTER-ONLY, see above), 1 CHAPTER-ONLY (M03), 9 NO CHANGE (audit-bundle limits), 23 NOT-EDITORIAL statement-level, 36 NOT-EDITORIAL proof-level. M16 (W2-APP Family-map table cell) is inside a registered span and would change its conclusion → NOT-EDITORIAL.
 - 2026-11-15 20:00 CST. TIMESTAMP FLAG: my message to the manager just now was stamped '~20:05' by hand; `date` at sending read 20:00 CST.
 - 2026-11-15 20:00 CST. Sol S1 'editorial only' diff check: brief saved (reviews/S1_editorial_check_brief.md, diff reviews/S1_diff.patch, 17 files); launching codex gpt-6.1-sol high (delegate_task).
+- 2026-11-15 20:04 CST. POLICIES §10 (final) noted. Settled the finished helper H1 (extraction thread). Sol S1 is still running; not touched.
+- 2026-11-15 20:11 CST. Manager request: triage of the 59 NOT-EDITORIAL MINORs → TRIAGE_MINORS.md: (iii) 20, (ii) 30, (i) 9; ★ 15 (from HEADLINE_CANDIDATES.md on recorder/staging-1115 ac5754d), incl. 6 ★ in (iii): M27, M30, M35, M57, M58, M61. Nothing applied.
