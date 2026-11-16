@@ -6,16 +6,19 @@
 #include <filesystem>
 #include <system_error>
 #include <thread>
+#include <stdexcept>
 #include <string>
 #include <unistd.h>
 #include <vector>
 #include "v4/gen.h"
 #include "v4/prep.h"
 
+// Temp paths live only under $TMPDIR (the department tmp folder). No fallback: an unset or empty TMPDIR throws, so the
+// calling test fails instead of writing into the working tree.
 inline std::string tmp_path(const std::string& name) {
   const char* t = std::getenv("TMPDIR");
-  std::string d = t ? t : ".";
-  return d + "/v4test_" + std::to_string(::getpid()) + "_" + name;
+  if (!t || !*t) throw std::runtime_error("TMPDIR is not set (tests write only under $TMPDIR)");
+  return std::string(t) + "/v4test_" + std::to_string(::getpid()) + "_" + name;
 }
 // Remove temp files / directories without failing the test: cleanup is not what tests check. On NFS a file that is
 // still open or mapped leaves a ".nfs*" placeholder until the handle closes, so callers release their handles first
