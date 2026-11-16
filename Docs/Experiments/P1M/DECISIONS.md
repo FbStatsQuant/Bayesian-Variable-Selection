@@ -69,3 +69,11 @@ OD-11 (who builds) is an HQ assignment.
 | H-2 | meaning of "validated against the theorem-covered method" | approved as in OWNER_SHEET §2: bits at p ≤ 5k; law and output agreement at 10⁴; exact at p ≤ 25; 1M self-consistency |
 | H-3 | evidence wording at 1M | approved: store/occupancy evidence + deterministic lower bound + unbiased SMC estimate, each labelled |
 | H-4 | competitors and framing (OD-10) | approved: "not found in the literature", never "first". 1M claims are worded as accurate posterior summaries unless the n = 1,000 cell supports more |
+
+## HQ decisions, 11-15 (late)
+| id | item | decision |
+|---|---|---|
+| H-5 | builder concurrency | **up to 5 Opus/Sonnet builders plus their independent reviewers, from now until the first 1M fit** (WP1–WP5 in parallel; Claude Third for now; the owner may move builders to another account) |
+| H-6 | OD-11, who builds | **Engineering builds everything**, with W3-SCALE leg-C material as input |
+| H-7 | Sol review of EXP-CP1 | do not block on it; fold it in when it lands |
+| H-8 | targets | 10⁵ rung in early December; first 1M fit before the holidays; report slippage early |

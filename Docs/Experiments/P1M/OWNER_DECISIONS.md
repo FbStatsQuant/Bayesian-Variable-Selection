@@ -147,7 +147,7 @@ uniform has a fixed address (island, phase, stage or round, particle, position, 
   rows 1–4) has a joint model-space sampler at 7.5·10⁵ (GPU, independent noise columns), mixture MCMC at 2·10⁶ (a′) and
   split-and-merge at 5·10⁵. So "not found in the literature", never "first".
 
-## OD-11 Who builds the engine  **→ HQ**
+## OD-11 Who builds the engine  **→ DECIDED by HQ 11-15 (DECISIONS H-6): Engineering builds everything**
 **Recommendation:**
 - The W3-SCALE leg-C team builds G1–G12 and G14 on its branch (it owns the engine and its gates).
 - This department builds G13 (generator, DIST evaluator, competitor harness, analysis) and specifies the acceptance tests.
