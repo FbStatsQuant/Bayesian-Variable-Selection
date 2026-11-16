@@ -83,6 +83,10 @@ PROGRAM Readability, with a fidelity check of every number.
 - **Holds:** read `Theory_work/Wave3/HOLDS.md` before each checkpoint, launch or freeze.
 
 ## 5. Resources
+**Account allocation is set by the owner** (2026-11-15). Depending on which Claude account is running dry, he tells HQ
+which account (Claude Third, Claude Personal, Claude Work) or which proportions to use for new agents, and HQ relays it
+to every manager. Managers apply the current allocation, recorded in `HQ_NOW.md` "ACCOUNT ALLOCATION", to every new
+agent they start.
 - **Claude Third:** ample; the default for Owls departments; Opus default, Fable for hard proofs or creative reviews.
 - **Claude Personal:** HQ and the Writing Department; budget resets Monday 16:00 CT.
 - **Claude Work:** as HQ says.

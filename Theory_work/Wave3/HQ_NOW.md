@@ -1,5 +1,8 @@
 # HQ now (resume card; HQ keeps this current)
 
+## ACCOUNT ALLOCATION (owner sets; HQ relays to all managers)
+- Current (2026-11-15): all new department agents on **Claude Third**; HQ and the Writing Department on Claude Personal.
+
 ## PRIORITY ORDER (owner 2026-11-15, evening)
 1. All consistency results (selection + distribution / W3-DIST) **and their Lean parts** come first.
 2. Parallel-method theory (T-MERGE, EVAR, POOL) is NOT a priority now; parked for the scaling paper.
