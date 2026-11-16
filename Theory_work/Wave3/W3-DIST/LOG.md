@@ -387,3 +387,16 @@ checkpoint on WEAKER TC1–TC9, X exhausted, B2-core → Gaussian only, B0 → f
   omitted-column reading exists (grep over STATEMENT, TARGET and the proof files), the only MISR input is R′ (a), (a′)
   in B0; the in-sample step conditions on the whole design (DIST12 D.4 Step 1) and the plug-in intercept is a parameter
   of a posterior draw. (My note to the manager was headed 04:35; the clock read 04:19.) Running: SW1 (Astra).
+- 04:35 — **SW1 landed** (`reviews/SW1_sweep_astra.md`, Astra, completion notice 04:31): **0 CRITICAL, 0 MAJOR, 9 MINOR**;
+  every claim and TC1–TC9 "proved as stated" (DIST-C after SW1-03, B3 after SW1-04); Corollary C's HPM conclusion
+  valid; "ready for council after local corrections". No finding on a target clause. Repairs applied:
+  STATEMENT **v1.4.9** (SW1-01: Lemma X's route paragraph and the A0/A1 consumes row describe the adopted proof;
+  SW1-03: (C-i) predictive display for both readings, tag EQUAL on TC8 pending the reviewer); B3.md line 11 "b_n > 0"
+  (SW1-04; row B3 STALE until D4); TARGET, ASSUMPTION_MAP, API_CARDS (SW1-02: (C) versus (L₀); SW1-05: status of S-FIT
+  after NEC); REPORT_extra registry blocks and relations section (SW1-07, SW1-08: rate with M₀, DIST-3 scope, DIST-C
+  alternatives and DIST-2 dependency, Theorem A's common event, Lemma S's reference assumption, P6's clause (c), two
+  `implies` edges and four sharpness entries removed); DEPS wording (SW1-09); **PINS.md** (SW1-06: the 65 bare line
+  pins inside 11 proof files are historical pins to STATEMENT v1.3.1; mapping generated mechanically; the checked
+  proof files are not edited). The seven "unharvested strength" items: named open items for HQ, not adopted
+  (TARGET §4). D4 (Sol, new agent, D62 brief `reviews/BRIEF_D4_sol_diff.md`, `reviews/DIFFS_D4.patch`) launched.
+  SW1 thread settled. Running: D4 (Sol). HOLDS read: none.

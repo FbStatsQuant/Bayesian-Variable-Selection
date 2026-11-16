@@ -88,6 +88,7 @@ over models with the geometric size prior. F-b (break): construct a design with 
 eigenvalue γ ≍ log n/n (near-copies with τ² ≍ log n/n²) on which Π(‖μ̂ − μ‖² > M log n | y) stays ≥ c^M with c close to 1,
 or ≥ n^{−c} for large M. F-c: non-supersets — replace the comparison with S₀ (cost n^{(A+½)s₀}) by a comparison with
 the best submodel T ⊆ S₀ and control ρ′_T.
+**Current status (2026-11-16) [SW1-05].** Route F-b succeeded for the fixed-design exponential form: Proposition NEC (`lemmas/NEC.md`) shows that the distance clause of Lemma X fails under (E), (C) alone. The in-probability form (route F-a) and a random-design counterexample remain open.
 
 ## Card B — bridge B2-core (sparse lower bound for the sample covariance; critical path of the reader version)
 **Statement.** z₁, …, z_n i.i.d. in ℝ^p with E z = 0, Var(z_j) = 1 for all j, and for every u with at most q nonzero

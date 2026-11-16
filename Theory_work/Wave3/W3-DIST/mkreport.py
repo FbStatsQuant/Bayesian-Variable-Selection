@@ -69,12 +69,12 @@ CLAIMS = [
  ('X', 'in-sample exponential core (key lemma)', 'lemmas/X.md §0–§7', P, 'reviews/L1_astra_X.md: VERIFIED (v0.3); break review reviews/BR1_astra_break.md: NOT BROKEN; v0.4 (three constants changed after L6-01, no step of the argument): reviews/D1_sol_diff.md VERIFIED'),
  ("X'", 'the same without the non-degeneracy interface', 'lemmas/X.md §9', P, 'reviews/L1_astra_X.md: VERIFIED; break review: NOT BROKEN; unaffected by v0.4 (reviews/D1_sol_diff.md)'),
  ('NEC', 'sharpness: the non-degeneracy hypothesis cannot be dropped from Lemma X (fixed design)', 'lemmas/NEC.md', P, 'reviews/L7_sol_NEC.md: VERIFIED; presentation amendments re-checked: reviews/D2_sol_NEC_diff.md, reviews/D3_sol_diff.md'),
- ('P6', 'domination transfer; Markov bound over models; convexity for predictive densities', 'work/D_output/P6_DISTC.md', P, 'reviews/L2_sol_D.md: VERIFIED; amendments to the file re-checked: reviews/D1_sol_diff.md, reviews/D3_sol_diff.md'),
+ ('P6', 'domination transfer; Markov bound over models (the convexity step for predictive densities is P6(c) of the proof file, §3, used in the proof of DIST-C)', 'work/D_output/P6_DISTC.md', P, 'reviews/L2_sol_D.md: VERIFIED; amendments to the file re-checked: reviews/D1_sol_diff.md, reviews/D3_sol_diff.md'),
  ('B0', 'scale reduction, pathwise', 'work/E_bridges/B0.md', P, 'reviews/L4_sol_E.md: VERIFIED'),
  ('B1', 'sample variances; energy and coefficient-cost events', 'work/E_bridges/B1.md', P, 'reviews/L4_sol_E.md: VERIFIED'),
  ('B2core', 'sparse lower bound for sample second moments, with an intercept', 'work/E_bridges/B2core.md', P, 'reviews/L4_sol_E.md: VERIFIED'),
  ('B2', 'non-degeneracy interface from the population assumptions', 'work/E_bridges/B2.md', P, 'reviews/L4_sol_E.md: VERIFIED-WITH-AMENDMENTS, statement wording applied'),
- ('B3', 'the events needed by Theorem B', 'work/E_bridges/B3.md', P + ', conditional on W3-POST:Thm-1 for its last sentence', 'reviews/L4_sol_E.md: VERIFIED-WITH-AMENDMENTS, applied; amendments: reviews/D1_sol_diff.md VERIFIED'),
+ ('B3', 'the events needed by Theorem B', 'work/E_bridges/B3.md', P + ', conditional on W3-POST:Thm-1 for its last sentence', 'reviews/L4_sol_E.md: VERIFIED-WITH-AMENDMENTS, applied; amendments: reviews/D1_sol_diff.md VERIFIED; the copy of (A6)(b) completed after the sweep: reviews/D4_sol_diff.md'),
 ]
 EXTRA = open('REPORT_extra.md', encoding='utf-8').read()   # §2–§6 prose and the registry blocks, with @@key@@ fields
 

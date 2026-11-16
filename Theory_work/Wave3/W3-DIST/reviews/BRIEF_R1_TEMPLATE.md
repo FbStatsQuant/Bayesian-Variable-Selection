@@ -31,6 +31,10 @@ Theory_work/Wave3/W3-DIST/reviews/MANIFEST_R1.txt`.
 ## Files you may read
 The files listed in that manifest, namely:
 - `STATEMENT.md` (version @@VER@@), `TARGET.md`, `REPORT.md`, `ASSUMPTION_MAP.md`, `API_CARDS.md` (common definitions);
+- `PINS.md`: inside the proof files under `work/`, a bare pin `STATEMENT.md:a-b` (or "(lines a–b)") is a **historical pin
+  to STATEMENT v1.3.1**, the version those proofs were written against; this record maps each pin to the object it
+  names and to the current lines. Identify the object by its name; do not report such a pin as wrong because the
+  current line differs (pins into the code, into other tickets and into [P1] are ordinary pins and must be right);
 - the proof files: `lemmas/X.md` (Lemma X: §0–§8; Lemma X′: §9), `lemmas/DIST12.md` (DIST-1, DIST-2), `lemmas/NEC.md`,
   `work/B_transfer/H.md`, `T.md`, `DIST3.md`, `work/C_size/S.md`, `V.md`, `work/D_output/P6_DISTC.md` (Lemma P6, DIST-C),
   `COR_C.md` (Corollary C), `work/E_bridges/B0.md`, `B1.md`, `B2core.md`, `B2.md`, `B3.md`, `ASSEMBLY.md` (Theorems A, B);

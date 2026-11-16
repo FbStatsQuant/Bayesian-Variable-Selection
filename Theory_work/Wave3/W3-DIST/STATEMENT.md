@@ -1,4 +1,4 @@
-# W3-DIST — STATEMENT (v1.4.8, 2026-11-16; lead: Claude Fable 5.2, Claude Third, high)
+# W3-DIST — STATEMENT (v1.4.9, 2026-11-16; lead: Claude Fable 5.2, Claude Third, high)
 
 **Status: targets TC1–TC9 fixed by HQ at CP1; proofs are in `lemmas/` and `work/<stream>/`; the check state of every item is
 in `DEPS.tsv` (a statement here is checked only if its row says OK).** v1.4 = v1.3.1 with the dispositions of the blind read S2
@@ -292,7 +292,7 @@ statement and is not restated.
   every measurable B. Store BMA: L_n = 1/π(𝒯). A single model Ŝ: L_n = 1/π(Ŝ).
 - (C-i) **Store BMA.** For every λ ∈ [0, c): P⊗( {completed} ∩ {π(𝒯) ≥ e^{−λt}} ∩ {Π̂^𝒯(B_n) > e^{−(c−λ)t}} ) ≤
   3e^{−ct} + P*(interfaces fail); on {completed} ∩ {π(𝒯) ≥ e^{−λt}} ∩ {Π̂^𝒯(B_n) ≤ e^{−(c−λ)t}} the store-BMA predictive density satisfies
-  d_H²(f̄^𝒯, f*) ≤ C²t/n + e^{−(c−λ)t}. Threshold form: for every a ∈ (0, 1], on the success event of DIST-1 every completed
+  d_H²(f̄^𝒯, f*) ≤ ε_n² + e^{−(c−λ)t}, where ε_n² = C²t/n for the bad set of (1.1) and ε_n² = C²tℓ_n/n for that of (1.2) [SW1-03]. Threshold form: for every a ∈ (0, 1], on the success event of DIST-1 every completed
   run with π(𝒯) ≥ a has Π̂^𝒯(B_n) ≤ ϱ_n/a (pathwise; proved in `work/D_output/P6_DISTC.md` as (C-i°)) [stream D SCR-2].
 - (C-ii) **When does the store hold enough mass?** (α) With selection: on {completed} ∩ {S₀ ∈ 𝓜} ∩ {δ_n < ½}, S₀ ∈ 𝒯
   and π(𝒯) > ½ (S₀ is then the unique maximiser of F and the top store keeps the best-scored offered model:
@@ -356,12 +356,14 @@ No floor is used. (D′ := M_S^{(1/c)} − M_{S₀}^{(c)}, c = 1 + η, M_T^{(c)}
 s₀ ∈ {0, …, s₀^r} with s₀ ≤ K, noise G, p ≤ n^A. Under (E; M), (C; M′), (ND; c_D, m_n(t)): there are c, C, C′, M₀ and **one
 n₀ valid for every t in the range**, such that for n ≥ n₀ and M₀ log n ≤ t ≤ n^{1−κ₀}, with d_t := s₀ + ⌈C′t/log n⌉:
   P_ε[ Π( ‖μ̂ − μ‖² > Cσ*²t  or  |v/σ*² − 1| > C√(t/n)  or  |S| > d_t | y ) > e^{−ct} ] ≤ 2e^{−ct}.
-Structure: (X1) noise event; (X2) good models (|S| ≤ d_t, L_S ≤ C″σ*²t) have conditional mass ≤ e^{−ct} outside the
-ball; (X3) small models with large ridge loss have total mass ≤ e^{−ct}π(S₀); (X4) models with |S| > d_t have total mass
-≤ e^{−ct} with probability ≥ 1 − e^{−ct}: supersets by truncated Occam moments under (ND) with Lemma V — **paying the
-factor exp(‖P_{S₀}e‖²/2σ*²) ≤ e^{C(t + s₀ log n)}, the union multiplicity 2^{s₀}(2p)^{s₀}(n+1)^{s₀/2} and the variance
-surcharge ε_{n,t}(j log n + t), ε_{n,t} = O(√(t/n) + (m_n(t)+s₀) log n/n), before Markov** —; other large models through
-their union with S₀; sizes above m_n(t) by Lemma S.
+Structure of the proof (`lemmas/X.md`, self-contained) [SW1-01]: (X1) a noise event; (X2) good models (|S| ≤ d_t, L_S ≤ C″σ*²t)
+have conditional mass ≤ e^{−ct} outside the ball, by the conditional Gaussian and inverse-gamma laws; (X3) small models
+with large ridge loss have total mass ≤ e^{−ct}π(S₀) (their score is suppressed); (X4) models with |S| > d_t have total
+mass ≤ e^{−ct} with probability ≥ 1 − e^{−ct}: for sizes in (d_t, m_n(t)], a moment of order λ = (4A+1)/(4A+2) of the Bayes
+factors of the supersets of S₀ under (ND), every other model of these sizes being compared with its union with S₀ (the
+multiplicity is paid by M₀ ≥ (A+1)s₀^r), then Markov's inequality; sizes above m_n(t) by a size tail that the proof file
+derives itself (numerator in expectation, denominator on the noise event). Lemmas S and V are companion results with
+their own proofs (`work/C_size/`); the proof of Lemma X re-derives the instances it needs and does not depend on them.
 
 **Lemma X′ (the same without (ND)).** Under (E; M), (C; M′) only, with constants depending also on κ₀: the conclusion
 of Lemma X holds with ‖μ̂ − μ‖² > Cσ*²tℓ_n and |S| > m_n(t) in place of ‖μ̂ − μ‖² > Cσ*²t and |S| > d_t (the variance
@@ -418,7 +420,7 @@ about the in-probability form.
 | consumed | recorded status | used for | exact content used |
 |---|---|---|---|
 | W3-POST2:D (v1.1.0; D.D(a) 1.0.0, D.D(b) 1.2.0) | **HQ note 2026-11-15: "council-passed C1 (11-09); D(b) repaired after the council, single Sol check (PC2); diff round in progress"** (registry: "PROVED (by this seat, unchecked)") | Lemma H and X2 use only the computations D0, D1 (re-derived here); **D(a) is no longer consumed** (DIST-3 v1.1 is self-contained); **D(b) only in fallback F-b**, which is conditional on it (rule 11) | Lemma D0; D1(a)–(d); D(b) (fallback only) |
-| W3-POST2:A0, A1 (1.0.0) | "PROVED (by this seat, unchecked)" | (ND) interface; X4 | (F_w) ⇒ (DG) ⇒ (ADG); truncated Occam weights a_J (re-derived with t-scaled truncation) |
+| W3-POST2:A0, A1 (1.0.0) | "PROVED (by this seat, unchecked)" | the form of the (ND) interface | A0: (F_w) ⇒ (DG) ⇒ (ADG), which motivates (ND) and is the model for bridge B2. **Not consumed as a premise**: the proof of Lemma X uses (ND) directly through a fractional moment and does not use A1's truncated Occam weights [SW1-01] |
 | W3-POST2:B (1.0.0) | "PROVED (by this seat, unchecked)" | Lemma S (proof re-run with exponential tails) | Steps 1–4 of `B_tail_approx.md` |
 | W3-POST2:E (1.0.0) | "PROVED (by this seat, unchecked)" | X3 (template) | Lemma E1(b) |
 | W3-POST:Lemma-1a′ (1.0.0) | "PROVED (by this seat, unchecked)" | Lemma S (starting point) | design-free size tail |
@@ -489,6 +491,8 @@ posterior with the contrast model (locked T01, [P1] `thm:T01i`, `lem:spec`, `lem
 | 1.4.6 | DIST-C (C-ii)(γ) added; Corollary C's closing sentences: the condition concerns the total posterior probability of the list, and the posterior is in general a mixture over many models | EQUAL (descriptive sentences; no statement relied on a point-mass posterior — (C-ii)(α) and the retention sentence use π(S₀) > ½ only as a sufficient condition) | cross-department finding: at moderate n the store law is a mixture over S₀ and many one-extra-variable supersets | Engineering via HQ and the manager (`Docs/Experiments/P1M/DECISIONS.md` D-17) | `reviews/D1_sol_diff.md`: CONFIRMED |
 | 1.4.7 | DIST-1 (c): the dependence of the rate constant on the sparsity is written out (C free of s₀^r; explicit bound on M₀; raw sparsity s₀^r in place of s₀) | EQUAL on TC3 ("M₀ = O((1 + s₀^r)(A + 1))" is now proved as written, for fixed (σ*², M, M′); v1.3's sentence was not established by the proof files: the constants of `lemmas/X.md` v0.3 gave M₀ ≳ s log s and C growing with s). Proof files: `lemmas/X.md` v0.4, `lemmas/DIST12.md` v0.2 (constants only) | a claimed constant dependence was not established | `reviews/L6_sol_DIST12.md` L6-01 (MAJOR) | `reviews/D1_sol_diff.md`: **CONFIRMED (EQUAL on TC3)**; the repair VERIFIED (Part A items 1–7) |
 | 1.4.8 | DIST-C (C-i): "on the complementary success event" replaced by the explicit event {completed} ∩ {π(𝒯) ≥ e^{−λt}} ∩ {Π̂^𝒯(B_n) ≤ e^{−(c−λ)t}}; changelog tags of three v1.4 rows split | EQUAL on TC8 (TC8 fixes the delivery statements "jointly with {completed} and under its named premise", which is this event; the loose phrase, read literally, also covered stopped runs and lists of small posterior probability, where nothing was proved or intended; the probability display and (C-0) are unchanged) | the statement did not match the proved form (`work/D_output/P6_DISTC.md` SCR-4) | `reviews/D1_sol_diff.md` D1-02, D1-03, D1-04 | `reviews/D3_sol_diff.md`: **CONFIRMED (EQUAL on TC8)**; D1-01 … D1-04 RESOLVED; Corollary C's reported-model conclusion VERIFIED |
+| 1.4.9 | DIST-C (C-i): the predictive display written for both readings (ε_n² = C²t/n for (1.1), C²tℓ_n/n for (1.2)) | EQUAL on TC8 (the sentence introducing DIST-C already said "(or (1.2), with its rate)"; the display now carries the substitution, as the proof does in `work/D_output/P6_DISTC.md` Remark 6.6; read literally for (1.2), the old display omitted ℓ_n) | the display left the substitution implicit | `reviews/SW1_sweep_astra.md` SW1-03 | `reviews/D4_sol_diff.md`: RESOLVED; **CONFIRMED (EQUAL on TC8)** |
+| 1.4.9 | §3 Lemma X: the paragraph describing the structure of the proof, and the consumes row for W3-POST2:A0, A1 | EQUAL (descriptions of the proof route and of what is consumed; the statement of Lemma X is unchanged). They described an earlier route (truncated moments, Lemmas S and V as inputs); the adopted proof is the fractional-moment route of `lemmas/X.md` and is self-contained | description did not match the adopted proof | `reviews/SW1_sweep_astra.md` SW1-01 | `reviews/D4_sol_diff.md`: RESOLVED; CONFIRMED (EQUAL) |
 Target clauses TC1–TC9 were fixed by HQ at CP1 (2026-11-15) in their v1.3 form; TC10 = companion results. **Relative to that
 baseline, no row of v1.4 weakens the mathematics of a target clause** (per S2: this sentence is about the CP1 baseline, not
 about the history before it — the pre-CP1 rows 1.0.1, 1.1 and 1.3 marked WEAKER did narrow ranges or add remainder events).
