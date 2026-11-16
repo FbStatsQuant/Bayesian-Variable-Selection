@@ -40,7 +40,7 @@ Numbering of the headline theorems (proposal; see `CLAIMS_CARD.md`):
 1. Posterior concentration, fixed design — §1
 2. Posterior concentration, random Gaussian design — §2
 3. The rate cannot be improved — §3
-4. Omitted variables (misspecification) — §4
+4. Omitted variables (misspecification) — §4 (card row 1.4)
 5. The start law already concentrates — §5
 6. The reported model, random Gaussian design (main theorem) — §6
 7. The reported model, fixed design — §7 (honest limits: sample-level conditions)
@@ -250,7 +250,7 @@ None. Note for the text: the expectation form of (b) for every $p$ (sharp2 rider
 
 ## 4. Theorem 4 — Omitted variables (misspecification)
 <!-- ROW thm4 BEGIN -->
-**Card row** 3.4 · **Section version** 0.2 (2026-11-15) · **Pending delta** MISR Cor-G(a)/Cor-H (rider T13, via Theory Dept)
+**Card row** 1.4 · **Section version** 0.2 (2026-11-15) · **Pending delta** MISR Cor-G(a)/Cor-H (rider T13, via Theory Dept)
 
 
 ### Reader statement
