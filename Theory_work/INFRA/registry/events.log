@@ -1834,3 +1834,7 @@ utc	actor	action	id	before	after	reason
 2026-11-16T09:02:46Z	HQ	set	W3-RM2:Cont-R	notes=	notes=W3-RM:RM-R is the TARGET of this containment lemma, not an input: the lemma prov	HQ-approved real run: edge to the superseded target replaced by the implies relation (Cont-F/R fix)
 2026-11-16T09:03:46Z	HQ	accept	W3-RM2:Cont-F		v1.0.2 fp2:4e1dcdd9721da6a37b80f05a	check.py --acceptance W3-RM2:Cont-F W3-RM2:Cont-R: PASS (0 ERROR)
 2026-11-16T09:03:46Z	HQ	accept	W3-RM2:Cont-R		v1.0.3 fp2:57dbde812cd014b864466fd6	check.py --acceptance W3-RM2:Cont-F W3-RM2:Cont-R: PASS (0 ERROR)
+2026-11-16T09:15:58Z	INFRA	ingest	W3-PSHARP-R:AE		v1.0.0 PROVED-CHECKED; council R2, MANIFEST fdfd45629f8716ac00e9854	ingested from W3-PSHARP-R_CP3.jsonl
+2026-11-16T09:15:58Z	INFRA	ingest	W3-PSHARP-R:A2C		v1.0.0 PROVED-CHECKED; council R2, MANIFEST fdfd45629f8716ac00e9854	ingested from W3-PSHARP-R_CP3.jsonl
+2026-11-16T09:16:09Z	HQ	accept	W3-PSHARP-R:A2C		v1.0.0 fp2:3f311b8dcab967234df20f68	check.py --acceptance W3-PSHARP-R:AE W3-PSHARP-R:A2C: PASS (0 ERROR)
+2026-11-16T09:16:09Z	HQ	accept	W3-PSHARP-R:AE		v1.0.0 fp2:7da164a089f3244bc2bac4f7	check.py --acceptance W3-PSHARP-R:AE W3-PSHARP-R:A2C: PASS (0 ERROR)
