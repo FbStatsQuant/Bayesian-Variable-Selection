@@ -654,7 +654,7 @@ abstract.
 
 ## 6. Theorem 6 — The reported model equals the truth (random Gaussian design; main theorem)
 <!-- ROW thm6 BEGIN -->
-**Card row** 3.1 · **Section version** 0.8 (2026-11-16) · **Pending delta** — (RM2-R rider merged, v0.8)
+**Card row** 3.1 · **Section version** 0.9 (2026-11-16) · **Pending delta** — (RM2-R rider merged, v0.8)
 
 
 ### Reader statement
@@ -689,6 +689,7 @@ $$
 P(\text{the run produces output})=1\ \ \text{for every admissible }n\ge3,\qquad P(\hat S=S_0)\to1 .
 $$
 The delivery statement idealises two fixed integer limits in the code (a base search cap of $10^6$, `v3_run.R:96`, and a 32-bit integer bound $2^{31}-1$ on the search cap, `cpp/v3_core.cpp:474`): the first can bind only when $n+p+1$ exceeds $2^{10^6}$, the second only when the starting model has more than about $2.1\times10^9$ variables, which needs $n\gtrsim4.3\times10^9$ since $|\tilde S_0|\le\lfloor n/2\rfloor$; without the idealisation, delivery holds on the bounded domain $\mathfrak D=\{\lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil\le10^6,\ \lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil+\lfloor n/2\rfloor\le2^{31}-1\}$, and with it (IDEAL-W⁺) for every $n$ [RM2R-5]. Neither limit can bind unless $n+p+1>2^{10^6}$ or $n\gtrsim4\times10^9$, that is, at no feasible problem size [RM2R-6].
+The guarantees describe the run as if uninterrupted; a run stopped by its time guard reports status `resource_limit` and no output. (No output means no estimates, `NOTATION.md` §5; the best model found before the stop is returned marked incomplete, `v3_run.R:142-145`.) [GUARD-W]
 
 *Remarks.* (o) [RM2R-3] Under (S4), for every seed and calibration outcome,
 $P(\hat S\neq S_0)\le P(S_0\text{ is not the unique maximiser of the score})+P(\text{the local search from the start mode
@@ -798,6 +799,7 @@ regressions are local. HQ choices: keep them as stated (faithful), or state Theo
   the implication edge to `C-DLV:Prop-F` is withdrawn. Assumptions (A1)–(A6) EQUAL.
   Supersedes the [FUNI-N] delivery wording of v0.7: delivery now rests on DLV-0 (method drift [D74]); (S4)(v) folded into (S4)(i) as IDEAL-W⁺, and $\mathfrak D$ is stated in the [RM2R-5] sentence.
 - FRZ-RQ 2026-11-16: [REG-6cd6] RM2-R @1.0.3 (ACTIVE, supersession deferred), POST-R/D-to-W @1.0.3, `W2-APP:POST@1.0.7` "PROVED-CHECKED", F-UNI @2.1.0 (history), RM-R @1.2.0 SUPERSEDED-VALID; row conditions now only the two delivery-path audits. Statuses only (EQUAL).
+- v0.9 2026-11-16: [GUARD-W] (HQ YES 11-16; W3-AUDIT track A T1 GUARD-W, theory/W3-AUDIT 58e24245, `track_A/T1_GW/`) sentence added after the delivery display, with a pointer to the meaning of "output" (code: `v3_fit.R:84`, `v3_run.R:142-145`): "The guarantees describe the run as if uninterrupted; a run stopped by its time guard reports status `resource_limit` and no output." Presentation (EQUAL).
 <!-- ROW thm6 END -->
 
 ---
@@ -1260,7 +1262,7 @@ enumeration branch are not covered. Status: the masters' statuses above, with th
 
 ## 10. Theorem 10 — The printed outputs are consistent (card row 3.6; row 3.5 as a remark)
 <!-- ROW thm10 BEGIN -->
-**Card row** 3.6 (and 3.5) · **Section version** 1.0 (2026-11-16) · **Pending delta** post-freeze rider SAMP-R1
+**Card row** 3.6 (and 3.5) · **Section version** 1.1 (2026-11-16) · **Pending delta** post-freeze rider SAMP-R1
 
 ### Reader statement
 **Theorem 10.** Let the rows of $X^{\mathrm r}$ be i.i.d. $N_p(m_n,\Sigma_n)$ with $\Sigma_n$ a correlation matrix, and
@@ -1292,13 +1294,13 @@ P\big(\mathcal A\cap\{\widehat{\mathrm{MPM}}\neq S_0\}\big)\to0,\qquad P\big(\te
 $$
 and the same rate holds for the printed fields multiplied by the indicator of a completed run. Here $Z$ is the exact
 normalising constant. No lower bound on $P(\mathcal A)$ is asserted: the statements are about intersections with
-$\mathcal A$ or with completion, not conditional on them.
+$\mathcal A$ or with completion, not conditional on them. The guarantees describe the run as if uninterrupted; a run stopped by its time guard reports status `resource_limit` and no output. (No output means no estimates, as in Theorem 6.) [GUARD-W]
 
 *Scope.* The exact-enumeration branch (small model spaces) is not covered by this theorem [S3-N3].
 
 *Remark (row 3.5: the pooled evidence is unbiased).* Given the calibration, on $\mathcal A$, $E[\hat Z\mid\text{calibration}]=Z$
 for every design and data set; no statistical condition is needed (claim `W3-READER:PoolZ`, `STATEMENT.md`, from the
-per-island identity of the unbiasedness theorem by linearity).
+per-island identity of the unbiasedness theorem by linearity). The guarantees describe the run as if uninterrupted; a run stopped by its time guard reports status `resource_limit` and no output. [GUARD-W]
 
 ### Why each assumption
 - (A2)–(A3) give posterior concentration (Theorem 2) and the start's small-set floor.
@@ -1357,6 +1359,7 @@ are "PROVED-CHECKED" since T03♯ was discharged (main 6cd699dd) [REG-6cd6]; the
   one needs (L-R⁺), polylogarithmic sets). The rate $\rho_n$ and the conclusions are unchanged. [RM2R-1] the completion
   remark refers to (S4) as amended (EQUAL).
 - FRZ-RQ 2026-11-16: [REG-6cd6] `W3-SAMP:C/TR` @1.1.4/2.1.4 and `W2-APP:POST@1.0.7` "PROVED-CHECKED"; no open registry condition (R4, PoolZ unchecked). Statuses only (EQUAL).
+- v1.1 2026-11-16: [GUARD-W] (HQ YES 11-16; W3-AUDIT track A T1 GUARD-W, theory/W3-AUDIT 58e24245, `track_A/T1_GW/`) sentence added to Theorem 10 and to the row 3.5 remark: "The guarantees describe the run as if uninterrupted; a run stopped by its time guard reports status `resource_limit` and no output." Presentation (EQUAL).
 <!-- ROW thm10 END -->
 
 ---
