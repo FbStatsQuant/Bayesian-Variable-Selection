@@ -23,16 +23,24 @@ const Json& binary_block() {
     Json l = Json::object();
     l["path"] = li.path; l["sha256"] = li.sha256; l["glibc"] = li.gnu_libc_version; l["fma_variant"] = li.fma_variant;
     l["binding"] = pm::binding();
+    const pm::SelfTest st = pm::self_test();
+    Json t = Json::object(); t["pass"] = st.ok;
+    for (auto& r : st.rows) t[r.fn] = r.ok;
+    l["self_test"] = t;
     j["libm"] = l;
     return j;
   }();
   return b;
 }
 
-void require_fma_variant() {
-  if (!pm::fma_variant_expected())
-    throw Error(Status::invalid_input, "libm FMA/AVX2 variant not available or masked (GLIBC_TUNABLES): bit-form results "
-                                       "would differ from the v3.1 records (INTERFACES §6)");
+void require_bit_libm() {
+  const pm::SelfTest& st = pm::self_test();
+  if (!st.ok) {
+    std::string bad;
+    for (auto& r : st.rows) if (!r.ok) bad += std::string(bad.empty() ? "" : ", ") + r.fn;
+    throw Error(Status::invalid_input, "libm self-test failed for " + bad + ": bit-form results would differ from the reference "
+                                       "(Owls = NOTS) bits (INTERFACES §6)");
+  }
 }
 
 void verify_inputs(const Json& manifest) {

@@ -123,6 +123,11 @@ struct CompatSource final : public UniformSource {
 //              < POST, then particle, position, slot.
 // A violation throws std::logic_error (callers map it to internal_error).
 // ---------------------------------------------------------------------------------------------------------------
+#ifdef V4_CHECK_ADDRESSES
+constexpr bool kCheckAddresses = true;    // cmake -DV4_CHECK_ADDRESSES=ON
+#else
+constexpr bool kCheckAddresses = false;
+#endif
 inline auto serial_key(const Address& a) {
   int rank = a.xph == X_INIT ? 0 : (a.xph == X_RESAMPLE || a.xph == X_BRIDGE) ? 1 : a.xph == X_BURN ? 2 : a.xph == X_MEASURED ? 3 : 4 + a.xph;
   int sub = a.xph == X_BRIDGE ? 1 : 0;

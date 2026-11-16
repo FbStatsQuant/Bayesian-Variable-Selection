@@ -92,6 +92,7 @@ ThreadLedger::ThreadLedger(Ledger& island, size_t buf_cap) : isl_(&island), cap_
 }
 void ThreadLedger::offer(int which, Store& s, double value, ModelView S, uint64_t h) {
   if (s.cap == 0) return;
+  if (value != value) throw Error(Status::internal_error, "store: NaN value (breaks the strict order)");
   if (value < s.cutoff()) { ++dropped_by_cutoff; return; }   // strictly worse than c entries already offered
   if (S.k > 65535) throw Error(Status::internal_error, "store: model too large");
   buf_[which].push(value, S, h);
