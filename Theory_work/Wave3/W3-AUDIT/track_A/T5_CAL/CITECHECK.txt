@@ -1,0 +1,59 @@
+OK            [STATEMENT.md] Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:86-86 sha=9b20e352eb | Shared implementation premises (named once, used by both cards): **EX-A** exact scores and arithmetic; **EX-S*
+OK            [STATEMENT.md] Theory_work/Wave1/W1-N1/STATEMENT.md:79-79 sha=89fa1b1f1e | - **CAL** 𝓒 is a function of the (fixed) data and streams 0–9.
+OK            [STATEMENT.md] Theory_work/Wave1/W1-N1/STATEMENT.md:29-31 sha=d84b5f812a | Calibration record 𝓒 (grid, tier, N_e, L, R′ and every other setting the final run uses), with success event 𝒜
+OK            [STATEMENT.md] Theory_work/Wave3/W3-SAMP/STATEMENT.md:64-65 sha=e24d9d5ade | Inherited from W1-N1 (`Theory_work/Wave1/W1-N1/STATEMENT.md` §2), same meaning: **EX-A**, **H-U**, **START**,
+OK            [STATEMENT.md] Theory_work/Wave3/W3-SAMP/STATEMENT.md:39-41 sha=6a1d51a353 | `lemmas/CC_code_check.md` (CC1–CC7). Calibration record 𝓒, success event 𝒜 ∈ σ(𝓒) — in code terms 𝒜 = {SMC bra
+OK            [STATEMENT.md] cpp/v3_util.h:43-61 sha=4e4e423462 | struct Xoshiro256ss {
+OK            [STATEMENT.md] Theory_work/Wave1/W1-N1/STATEMENT.md:71-72 sha=3d1f20b87c | - **EX-S / H-U** fresh independent ideal U[0,1) uniforms within each stream; streams independent (TLF:86). The
+OK            [STATEMENT.md] v3_fit.R:162-162 sha=ebeb469ff9 | t0 <- proc.time()[["elapsed"]]; fr <- v3_final_run(setup, frozen, seed, runtime, ls0 = ls0)
+OK            [STATEMENT.md] Theory_work/Wave3/W3-START2-R/STATEMENT.md:241-244 sha=c1bc18ec4c | **[IF-START] (T5⁺⁺) IF-START⁺⁺.** Under (T1⁺⁺) with (AL) at Q = S₀ and level vector h: for every event 𝒜 and e
+OK            [PROOF.md] cpp/v3_engine.h:20-23 sha=9538e23140 | struct RngSource : public VariateSource {
+OK            [PROOF.md] cpp/v3_core.cpp:239-241 sha=b2d8d32a37 | List cpp_start_draw(SEXP start, int N, double seed, double stream, bool as_key) {
+OK            [PROOF.md] cpp/v3_core.cpp:444-444 sha=d7d95c9f19 | RngSource rng; rng.g.seed_stream((uint64_t)seed, (uint64_t)(9 + r));  // final islands: streams 10..13 (M §6.1
+OK            [PROOF.md] cpp/v3_core.cpp:594-597 sha=957d6c77bb | RngSource& stream(int k) {
+OK            [PROOF.md] cpp/v3_core.cpp:669-669 sha=b7a4173b4a | p0[r - 1] = (double)c->stream(sid[r - 1]).g.count;   // R6: streams continue across rebuild iterations
+OK            [PROOF.md] cpp/v3_core.cpp:272-305 sha=76d4207a2c | List cpp_setup(SEXP ctx, int B) {
+OK            [PROOF.md] v3_fit.R:97-151 sha=6047930f9a | pre <- v3_preprocess(X, y, dup_components = FALSE)
+OK            [PROOF.md] cpp/v3_core.cpp:627-627 sha=0124be34cf | E.vs = &c->stream(sid);
+OK            [PROOF.md] cpp/v3_core.cpp:626-626 sha=baed180f7d | int sid = tier == 0 ? 0 : 5;
+OK            [PROOF.md] cpp/v3_core.cpp:668-668 sha=70af106444 | E.vs = &c->stream(sid[r - 1]);
+OK            [PROOF.md] cpp/v3_core.cpp:666-667 sha=2cd48b9125 | for (int r = 1; r <= 4; ++r) {
+OK            [PROOF.md] cpp/v3_core.cpp:632-632 sha=4d40b33be4 | IslandResult res = E.run_island_s(0, H, sch, L, Hm, tier, nullptr, PH_PILOT, 0);
+OK            [PROOF.md] cpp/v3_core.cpp:670-670 sha=482ef8d7cb | IslandResult res = E.run_island_s(r, H, sch, L, Hm, tier, nullptr, PH_DIAG, iter);
+OK            [PROOF.md] v3_calib.R:149-158 sha=d8aff0675a | tiers <- list(); status <- "ok"; e <- tier; blocked <- NULL
+OK            [PROOF.md] cpp/v3_core.cpp:444-444 sha=d7d95c9f19 | RngSource rng; rng.g.seed_stream((uint64_t)seed, (uint64_t)(9 + r));  // final islands: streams 10..13 (M §6.1
+OK            [PROOF.md] v3_fit.R:150-151 sha=c222da3fd1 | cal <- v3_calibrate(setup, seed, preflight = pf_fun, runtime = runtime,
+OK            [PROOF.md] v3_calib.R:146-148 sha=64c43097ec | cseed <- seed; v3_check_seed(seed)
+OK            [PROOF.md] cpp/v3_core.cpp:606-606 sha=b14d54b7e7 | c->setup_keep = setup; c->h = h.get(); c->seed = (uint64_t)seed;
+OK            [PROOF.md] v3_calib.R:171-171 sha=37249086a3 | out <- list(status = status, calibration_seed = cseed, tier_final = e, escalated = e == 1 && tier == 0,
+OK            [PROOF.md] v3_setup.R:67-77 sha=6f129f4e69 | v3_setup <- function(ctx) {
+OK            [PROOF.md] v3_calib.R:171-190 sha=ebbd881f9d | out <- list(status = status, calibration_seed = cseed, tier_final = e, escalated = e == 1 && tier == 0,
+OK            [PROOF.md] v3_fit.R:99-138 sha=2ecbad823a | if (pre$status != "ok") {
+OK            [PROOF.md] v3_calib.R:85-85 sha=c062eb50fa | for (it in seq_len(cs$ell)) {
+OK            [PROOF.md] v3_calib.R:11-11 sha=31a17d0207 | list(tier = tier, H = as.integer(b$tiers$H[tier + 1]), T_e = as.integer(b$tiers$T[tier + 1]),
+OK            [PROOF.md] cpp/v3_calib.h:38-42 sha=84562f4818 | if (lo - phi < 1.0 / Te) {
+OK            [PROOF.md] cpp/v3_calib.h:94-94 sha=12ba809763 | if ((int)g.grid.size() - 1 > Te) { g.ok = false; g.reason = "too_many_intervals"; return g; }
+OK            [PROOF.md] cpp/v3_engine.h:72-72 sha=4bc9f21ea6 | int nlabels() const { return D.p + B + 2; }
+OK            [PROOF.md] cpp/v3_engine.h:129-129 sha=9783ca5f8a | double u = vs->u("gibbs");
+OK            [PROOF.md] cpp/v3_engine.h:150-151 sha=58e6049a3a | int j = P.S[(int)std::floor(vs->u("uswap_j") * k)];
+OK            [PROOF.md] cpp/v3_engine.h:156-156 sha=565557be26 | double u = vs->u("uswap_accept");
+OK            [PROOF.md] cpp/v3_engine.h:167-167 sha=c691a76ab2 | int j = P.S[(int)std::floor(vs->u("nswap_j") * k)];
+OK            [PROOF.md] cpp/v3_engine.h:171-171 sha=e141e4a784 | int l = cand[(int)std::floor(vs->u("nswap_l") * cand.size())];
+OK            [PROOF.md] cpp/v3_engine.h:177-177 sha=4480f44e7e | double u = vs->u("nswap_accept");
+OK            [PROOF.md] cpp/v3_engine.h:189-189 sha=26af9345b2 | double u = vs->u("indep_accept");
+OK            [PROOF.md] cpp/v3_engine.h:199-199 sha=5a00247bf2 | for (int i = m - 1; i >= 1; --i) { int jj = (int)std::floor(vs->u("order") * (i + 1)); std::swap(ord[i], ord[j
+OK            [PROOF.md] cpp/v3_engine.h:250-250 sha=a4362c764f | double u = vs->u("resample");
+OK            [PROOF.md] cpp/v3_start.h:158-176 sha=bed8f205d3 | inline void draw_pi0(const Start& st, VariateSource& vs, std::vector<int>& S, std::vector<int>* sizes_out = nu
+OK            [PROOF.md] Theory_work/Wave1/W1-N1/STATEMENT.md:83-85 sha=11e757380c | - **MEAS** the realisation map (c, u) ↦ Φ(c, u) from (calibration value, stream) to the island record (includi
+OK            [PROOF.md] v3_fit.R:162-162 sha=ebeb469ff9 | t0 <- proc.time()[["elapsed"]]; fr <- v3_final_run(setup, frozen, seed, runtime, ls0 = ls0)
+OK            [PROOF.md] v3_run.R:223-228 sha=179a1d3b24 | v3_final_run <- function(setup, frozen, seed, runtime = NULL, ls0 = getOption("v3.ls0", TRUE)) {
+OK            [PROOF.md] v3_run.R:88-104 sha=89d0c6c8a1 | v3_run_settings <- function(setup, frozen, ls0 = getOption("v3.ls0", TRUE)) {
+OK            [PROOF.md] v3_setup.R:68-68 sha=32c6bbd90f | b <- v3_budgets(ctx$n, ctx$p)
+OK            [PROOF.md] v3_run.R:227-227 sha=5442b01fa0 | raw <- .v3cpp$cpp_final_run(setup$ptr, frozen[["grid"]], ro, as.numeric(seed), frozen[["inherited"]], runtime)
+OK            [PROOF.md] v3_fit.R:161-161 sha=d98b06e93b | frozen <- cal$frozen; fit$frozen <- frozen
+OK            [PROOF.md] v3_calib.R:184-190 sha=72ba62ed9c | if (status == "ok") {
+OK            [PROOF.md] cpp/v3_core.cpp:443-446 sha=855cede1e2 | for (int r = 1; r <= o.islands; ++r) {
+OK            [PROOF.md] Theory_work/Wave3/W3-START2-R/STATEMENT.md:241-244 sha=c1bc18ec4c | **[IF-START] (T5⁺⁺) IF-START⁺⁺.** Under (T1⁺⁺) with (AL) at Q = S₀ and level vector h: for every event 𝒜 and e
+
+56 citations: 56 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+Not machine-checked: unbackticked references and the semantic match of each excerpt.

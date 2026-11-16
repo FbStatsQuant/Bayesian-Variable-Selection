@@ -1,0 +1,59 @@
+OK            [STATEMENT.md] Theory_work/Wave3/W3-RM/STATEMENT.md:219-222 sha=b453f88083 | **(C3) Lemma E4 (closes premise e4)** [R01-1, R01-2]. For the routine `start_mode` of CORE `cpp/v3_start.h` as
+OK            [STATEMENT.md] Theory_work/Wave1/W1-N3/STATEMENT.md:92-98 sha=0582250229 | * (H1) **Encoding.** I is an instance as in §1 and `start_mode(st, cap)` is called with: `st.D` a valid pointe
+OK            [STATEMENT.md] Theory_work/Wave1/W1-N3/STATEMENT.md:56-57 sha=378091ed25 | * ρ_b(U) ∈ ℝ for every U ⊆ C_b with |U| ≤ min(|C_b|, K), with ρ_b(∅) = 0 (code: `st.logr[b][code(U)]`,
+OK            [STATEMENT.md] Theory_work/Wave1C/C-ENG/lemmas/TDP_E.md:29-32 sha=36d2abb053 | (H1) encoding as W1-N3 (H1): `st.blocks` a partition of {0..p−1} into increasing lists (any block order), |C_b
+OK            [STATEMENT.md] v3_fit.R:133-138 sha=824aecaade | t0 <- proc.time()[["elapsed"]]; setup <- v3_setup(ctx)
+OK            [STATEMENT.md] v3_setup.R:67-77 sha=6f129f4e69 | v3_setup <- function(ctx) {
+OK            [STATEMENT.md] cpp/v3_core.cpp:272-305 sha=76d4207a2c | List cpp_setup(SEXP ctx, int B) {
+OK            [STATEMENT.md] cpp/v3_core.cpp:392-392 sha=ffe0cb5c62 | HPtr h = get_holder(setup); const Data& D = *h->D; const Start& st = *h->st;
+OK            [STATEMENT.md] cpp/v3_core.cpp:469-469 sha=35f7274942 | ModeResult m = start_mode(st, 1000000, o.ls0_tie_dp);
+OK            [STATEMENT.md] cpp/v3_core.cpp:410-410 sha=c76165ccde | Engine E(D, st, h->Nb, h->B);
+OK            [STATEMENT.md] cpp/v3_core.cpp:611-611 sha=9031677c7b | c->E.reset(new Engine(D, *h->st, h->Nb, h->B));
+OK            [STATEMENT.md] cpp/v3_core.cpp:704-704 sha=b366767719 | CPtr c(state); const Data& D = *c->h->D; const Start& st = *c->h->st;
+OK            [STATEMENT.md] cpp/v3_core.cpp:204-212 sha=59ae24fd08 | List cpp_start(SEXP ctx, List blocks_R, List tables_R) {
+OK            [STATEMENT.md] v3_setup.R:38-38 sha=edca9ba9ea | s <- .v3cpp$cpp_start(ctx, lapply(blocks, as.integer), tables)
+OK            [PROOF.md] v3_fit.R:118-118 sha=18d46aead9 | ctx <- v3_context(pre$X, pre$y, orig = pre$kept, return_gram = FALSE)
+OK            [PROOF.md] cpp/v3_core.cpp:91-96 sha=4ef980160b | List cpp_context(NumericMatrix X, NumericVector y, IntegerVector orig, bool return_gram) {
+OK            [PROOF.md] cpp/v3_score.h:40-40 sha=3b222c88d0 | D.n = n; D.p = p; D.K = std::min(p, n / 2); D.W = nwords(p);
+OK            [PROOF.md] cpp/v3_score.h:61-70 sha=211f77dc0c | D.logw.assign(D.K + 1, 0.0);
+OK            [PROOF.md] cpp/v3_core.cpp:275-276 sha=396f215f01 | Holder* g = new Holder(); g->D = h->D; g->B = B;
+OK            [PROOF.md] cpp/v3_core.cpp:277-277 sha=20d9a37519 | g->st = std::make_shared<Start>(); Start& st = *g->st; st.D = &D; st.B = B;
+OK            [PROOF.md] cpp/v3_core.cpp:279-279 sha=0a29ea6572 | st.blocks = make_blocks(D, B);
+OK            [PROOF.md] cpp/v3_blocks.h:141-141 sha=4acff4509a | for (auto& b : blocks) std::sort(b.begin(), b.end());
+OK            [PROOF.md] cpp/v3_start.h:76-98 sha=565d2c2f39 | inline void build_tables(Start& st, Scorer& sc) {
+OK            [PROOF.md] cpp/v3_core.cpp:283-283 sha=89a1fef4b8 | build_tables(st, sc);
+OK            [PROOF.md] cpp/v3_start.h:78-78 sha=7b870b09dc | st.J = (int)st.blocks.size();
+OK            [PROOF.md] cpp/v3_start.h:79-80 sha=200c419d20 | st.blk.assign(D.p, -1); st.pos.assign(D.p, -1);
+OK            [PROOF.md] cpp/v3_start.h:85-86 sha=9426113ad7 | uint32_t ncode = 1u << m;
+OK            [PROOF.md] cpp/v3_start.h:91-91 sha=25b4b6993f | for (int i = 0; i < m; ++i) if (code & (1u << i)) U.push_back(st.blocks[b][i]);
+OK            [PROOF.md] cpp/v3_start.h:92-92 sha=159ed97641 | if ((int)U.size() > D.K) continue;
+OK            [PROOF.md] cpp/v3_start.h:93-95 sha=3cb37e4a9b | ScoreOut o = sc.score(U);
+OK            [PROOF.md] cpp/v3_score.h:60-60 sha=b84589440d | D.logm0 = D.logCn - D.nu * std::log(2 * D.b0 + D.yty);
+OK            [PROOF.md] cpp/v3_score.h:231-231 sha=b152e11ba7 | if (k == 0) { o.logm = D->logm0; o.Q = D->yty; o.route = ROUTE_CHOL; D->routes[ROUTE_CHOL]++; if (o.q_recomput
+OK            [PROOF.md] cpp/v3_core.cpp:284-297 sha=155b75c30f | } catch (NumericalFailure& e) {
+OK            [PROOF.md] v3_fit.R:134-138 sha=de9c6b0689 | if (inherits(setup, "v3_setup_failed")) {
+OK            [PROOF.md] cpp/v3_start.h:101-151 sha=396d637ed9 | inline void build_start(Start& st) {
+OK            [PROOF.md] cpp/v3_core.cpp:300-300 sha=a2eacfecae | build_start(st);
+OK            [PROOF.md] cpp/v3_start.h:107-112 sha=96bda360c0 | int m = (int)st.blocks[b].size(), top = std::min(m, K);
+OK            [PROOF.md] cpp/v3_start.h:113-113 sha=b3ee237bb2 | st.logprof[b].assign(top + 1, NEG_INF);
+OK            [PROOF.md] cpp/v3_core.cpp:146-146 sha=886abac455 | static void check_B(int B) { if (B < 1 || B > B_MAX) stop("block size B = %d outside the supported range 1..%d
+OK            [PROOF.md] cpp/v3_core.cpp:274-274 sha=afc0773c66 | check_B(B);
+OK            [PROOF.md] cpp/v3_core.cpp:277-277 sha=20d9a37519 | g->st = std::make_shared<Start>(); Start& st = *g->st; st.D = &D; st.B = B;
+OK            [PROOF.md] cpp/v3_core.cpp:305-305 sha=4a946c3698 | HPtr ptr(g, true);
+OK            [PROOF.md] cpp/v3_core.cpp:314-314 sha=755799ae74 | return List::create(_["status"] = "ok", _["ptr"] = ptr, _["B"] = B, _["blocks"] = blocks_to_R(D, st.blocks), _
+OK            [PROOF.md] v3_setup.R:70-70 sha=e725584594 | r <- .v3cpp$cpp_setup(ctx, as.integer(B))
+OK            [PROOF.md] v3_setup.R:75-75 sha=943172c834 | structure(list(ptr = r$ptr, ctx = ctx, budgets = b, B = B, blocks = r$blocks,
+OK            [PROOF.md] v3_calib.R:148-148 sha=f8c194df7e | state <- .v3cpp$cpp_cal_new(setup$ptr, as.numeric(cseed), ro, runtime)
+OK            [PROOF.md] v3_run.R:227-227 sha=5442b01fa0 | raw <- .v3cpp$cpp_final_run(setup$ptr, frozen[["grid"]], ro, as.numeric(seed), frozen[["inherited"]], runtime)
+OK            [PROOF.md] cpp/v3_core.cpp:392-392 sha=ffe0cb5c62 | HPtr h = get_holder(setup); const Data& D = *h->D; const Start& st = *h->st;
+OK            [PROOF.md] cpp/v3_core.cpp:410-410 sha=c76165ccde | Engine E(D, st, h->Nb, h->B);
+OK            [PROOF.md] cpp/v3_core.cpp:611-611 sha=9031677c7b | c->E.reset(new Engine(D, *h->st, h->Nb, h->B));
+OK            [PROOF.md] cpp/v3_engine.h:60-60 sha=457f71c54f | const Data& D; const Start& st; const std::vector<std::vector<int>>& Nb; int B;
+OK            [PROOF.md] cpp/v3_core.cpp:704-704 sha=b366767719 | CPtr c(state); const Data& D = *c->h->D; const Start& st = *c->h->st;
+OK            [PROOF.md] cpp/v3_start.h:271-271 sha=c55fbc08a9 | inline ModeResult start_mode(const Start& st, long cap = 1000000, bool tie_dp = true) {
+OK            [PROOF.md] cpp/v3_core.cpp:207-212 sha=b1364f0b99 | g->st = std::make_shared<Start>(); Start& st = *g->st; st.D = g->D.get();
+OK            [PROOF.md] cpp/v3_core.cpp:277-300 sha=cb4fdf365e | g->st = std::make_shared<Start>(); Start& st = *g->st; st.D = &D; st.B = B;
+OK            [PROOF.md] cpp/v3_core.cpp:469-469 sha=35f7274942 | ModeResult m = start_mode(st, 1000000, o.ls0_tie_dp);
+
+56 citations: 56 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+Not machine-checked: unbackticked references and the semantic match of each excerpt.

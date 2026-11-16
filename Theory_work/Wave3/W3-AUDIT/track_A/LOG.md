@@ -28,3 +28,15 @@ Times from `date` (CST).
   pair (𝒜°, 𝓒°); read W3-SAMP with 𝒜° (interface premises then with 1_𝒜°) — `T1_GW/CHECK.md`.
 - 2026-11-16 17:06 CHECKPOINT_1 written; turn ends for the manager's go. Kill budgets untouched. Subagents used: 3 (one at
   a time). Codex: none.
+- 2026-11-16 17:06 Manager: CHECKPOINT_1 accepted. GO for T3–T10. One Sol read now (gate) on T1+T2 lock + line check,
+  current text; further Claude re-read only if Sol finds a C. Better-theorem review: placeholder until HQ rules. Carry the
+  𝒜° flag into T5/T8. Recorder notes → post-freeze queue.
+- 2026-11-16 17:07 Sol gate read launched (Codex gpt-6.1-sol high, delegate_task, blind; brief
+  `reviews/SL1LC2_brief_sol.md`). Starting T3 meanwhile.
+- 2026-11-16 17:07–17:20 T3 OPC, T4 ENC, T5 CAL-C, T6 START-X, T7 KER, T8 OVL, T9 TDP, T10 P1/S.3: STATEMENT v1 + PROOF v1
+  each; citecheck 0 MISS on all. Findings while proving: (T5/T8) P-START's source holds "for every event 𝒜", so the 𝒜°
+  reading costs nothing; P-OVL with 𝒜° follows in one line under (A5), and without (A5) via the checked OVL route.
+  (T9) TDP_E correct; storage bound for TDP-IMPL supplied. (T10) INVENTORY/S.3 line numbers predate LS0; re-located;
+  new X9 (start_mode throws, unreachable) and X10 (LS0 guard, coded E5); D1 `schedule_limit` unreachable on the shipped
+  path under EX-A because of the tier-1 fallback (consistent with C-DLV:Prop-F). (T3) W1-GEN:L5 [OP] correct at the pin;
+  its note "LS0 is not in production code" is stale.

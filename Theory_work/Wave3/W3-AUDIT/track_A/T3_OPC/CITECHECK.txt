@@ -1,0 +1,77 @@
+OK            [STATEMENT.md] Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:86-86 sha=9b20e352eb | Shared implementation premises (named once, used by both cards): **EX-A** exact scores and arithmetic; **EX-S*
+OK            [STATEMENT.md] Theory_work/State_of_Project/sections/02_method.tex:490-499 sha=41c63b1b23 | \textbf{LS0: local search from the start mode.}
+OK            [STATEMENT.md] Theory_work/Wave1C/C-GROW/STATEMENT.md:68-71 sha=a4b7ce9cf5 | * **Method:** v3.1 with LS0 (SoP `02_method.tex:490-506`); local search M §6.10 (SoP `02_method.tex:463-467`):
+OK            [STATEMENT.md] Theory_work/Wave3/W3-RM/STATEMENT.md:58-63 sha=11dd8eaa9d | its D_n form.
+OK            [STATEMENT.md] Theory_work/Wave3/W3-RM/STATEMENT.md:53-54 sha=7c5b37a29b | 𝒦_n := {the deterministic LS0 (complete scans, cap ℓ_n + |S̃₀|) started from the coded start mode scores S₀}
+OK            [STATEMENT.md] Theory_work/Wave3/W3-RM/STATEMENT.md:168-169 sha=db165d32e4 | (b) for n with s₀ ≤ K, pathwise, for every seed, N_e, R′ and calibration outcome:
+OK            [STATEMENT.md] Theory_work/Wave1/W1-GEN/lemmas/L5_assembly.md:11-16 sha=4a5c81bb72 | * [OP] Operational closure: 𝒪̄ ∩ {S₀ ∉ 𝒮̄⁺} ⊆ {LS0 from S̃₀ does not score S₀}. Status: PROVED (by this seat,
+OK            [STATEMENT.md] v3_fit.R:73-73 sha=888cb8b97a | v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24), ls0 = getOption("v3.ls0", TRUE)) {
+OK            [STATEMENT.md] v3_run.R:93-102 sha=c2e6cb9d5c | if (isTRUE(ls0)) {
+OK            [STATEMENT.md] v3_preprocess.R:23-23 sha=88bf884342 | ell <- v3_ceil_log2(n + p + 1)
+OK            [STATEMENT.md] cpp/v3_start.h:271-271 sha=c55fbc08a9 | inline ModeResult start_mode(const Start& st, long cap = 1000000, bool tie_dp = true) {
+OK            [STATEMENT.md] Theory_work/Wave3/W3-RM/STATEMENT.md:62-63 sha=ed10f3dba7 | this configuration executes LS0 from `start_mode(...).S`; the exact branch scores every feasible model, and th
+OK            [STATEMENT.md] v3_run.R:91-91 sha=a2ae3dd4fd | islands = 4L, tier = as.integer(tier), ell = as.integer(b$ell),
+OK            [PROOF.md] v3_fit.R:73-73 sha=888cb8b97a | v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24), ls0 = getOption("v3.ls0", TRUE)) {
+OK            [PROOF.md] v3_fit.R:162-162 sha=ebeb469ff9 | t0 <- proc.time()[["elapsed"]]; fr <- v3_final_run(setup, frozen, seed, runtime, ls0 = ls0)
+OK            [PROOF.md] v3_run.R:226-226 sha=e7f953169c | ro <- v3_run_settings(setup, frozen, ls0)
+OK            [PROOF.md] v3_run.R:96-97 sha=3d2a5aa0a1 | if (!is.numeric(le) || length(le) != 1 || !is.finite(le) || le < 0 || le != round(le) || le > 1e6)
+OK            [PROOF.md] v3_run.R:93-102 sha=c2e6cb9d5c | if (isTRUE(ls0)) {
+OK            [PROOF.md] v3_preprocess.R:15-15 sha=e2818be336 | v3_ceil_log2 <- function(x) { c <- 0; while (2^c < x) c <- c + 1; c }   # smallest c with 2^c >= x
+OK            [PROOF.md] v3_preprocess.R:23-23 sha=88bf884342 | ell <- v3_ceil_log2(n + p + 1)
+OK            [PROOF.md] cpp/v3_core.cpp:400-404 sha=204fc2c252 | o.ls0 = ro.containsElementNamed("ls0") && as<bool>(ro["ls0"]);
+OK            [PROOF.md] cpp/v3_core.cpp:413-413 sha=679e98f285 | std::string status = "completed", message;
+OK            [PROOF.md] cpp/v3_core.cpp:451-451 sha=4c35f3f254 | if (res.back().partial) { status = "resource_limit"; break; }
+OK            [PROOF.md] cpp/v3_core.cpp:459-459 sha=53e30259eb | if (E.guard && E.guard->check(sec_local, "local_search", local_event(o.tier, -1))) status = "resource_limit";
+OK            [PROOF.md] cpp/v3_core.cpp:480-480 sha=3fe6e0943e | if (E.guard && E.guard->check(sec_ls0, "ls0", local_event(o.tier, -1, PH_LS0))) status = "resource_limit";
+OK            [PROOF.md] cpp/v3_core.cpp:484-484 sha=49d2a301c3 | status = "numerical_failure"; message = e.what();
+OK            [PROOF.md(cont)] cpp/v3_core.cpp:451-451 sha=4c35f3f254 | if (res.back().partial) { status = "resource_limit"; break; }
+OK            [PROOF.md(cont)] cpp/v3_core.cpp:459-459 sha=53e30259eb | if (E.guard && E.guard->check(sec_local, "local_search", local_event(o.tier, -1))) status = "resource_limit";
+OK            [PROOF.md(cont)] cpp/v3_core.cpp:480-480 sha=3fe6e0943e | if (E.guard && E.guard->check(sec_ls0, "ls0", local_event(o.tier, -1, PH_LS0))) status = "resource_limit";
+OK            [PROOF.md(cont)] cpp/v3_core.cpp:484-484 sha=49d2a301c3 | status = "numerical_failure"; message = e.what();
+OK            [PROOF.md] cpp/v3_core.cpp:453-453 sha=5bbef279dc | if (status == "completed") {
+OK            [PROOF.md] cpp/v3_core.cpp:465-465 sha=1ff0884dfd | if (o.ls0 && status == "completed") {
+OK            [PROOF.md] cpp/v3_core.cpp:456-456 sha=0049ecbb37 | LocalArchive A = E.local_search(led.hpmS, o.ell, o.tier, false);  // final local search from the global best (
+OK            [PROOF.md] cpp/v3_core.cpp:465-481 sha=0a142a081f | if (o.ls0 && status == "completed") {
+OK            [PROOF.md] cpp/v3_core.cpp:469-469 sha=35f7274942 | ModeResult m = start_mode(st, 1000000, o.ls0_tie_dp);
+OK            [PROOF.md] cpp/v3_core.cpp:473-475 sha=de7a6f4d88 | long long cap_ll = (long long)o.ls0_ell + (o.ls0_cap_plus_mode ? (long long)m.S.size() : 0LL);  // checked (R0
+OK            [PROOF.md] cpp/v3_core.cpp:474-474 sha=2efd1bb2f7 | if (o.ls0_ell < 0 || cap_ll > (long long)std::numeric_limits<int>::max()) stop("LS0 move cap out of range");
+OK            [PROOF.md] cpp/v3_core.cpp:476-476 sha=330866562b | LocalArchive A0 = E.local_search(m.S, ls0_cap, o.tier, true, -1, PH_LS0);
+OK            [PROOF.md] cpp/v3_engine.h:379-419 sha=3732af4b2f | LocalArchive local_search(const std::vector<int>& centre, int ell, int tier, bool emit_centre, int iter = -1, 
+OK            [PROOF.md] cpp/v3_engine.h:89-101 sha=68556fa6d5 | void eval(Particle& q, int mech, bool emit = true) {
+OK            [PROOF.md] cpp/v3_start.h:271-271 sha=c55fbc08a9 | inline ModeResult start_mode(const Start& st, long cap = 1000000, bool tie_dp = true) {
+OK            [PROOF.md] cpp/v3_core.cpp:480-480 sha=3fe6e0943e | if (E.guard && E.guard->check(sec_ls0, "ls0", local_event(o.tier, -1, PH_LS0))) status = "resource_limit";
+OK            [PROOF.md] cpp/v3_core.cpp:483-484 sha=e54dc24930 | } catch (NumericalFailure& e) {
+OK            [PROOF.md] cpp/v3_engine.h:410-410 sha=a9cdd9bcfd | A.local_limit = true; A.termination = "move_limit"; A.returned = best.S; A.returned_F = best.F; break;
+OK            [PROOF.md] cpp/v3_engine.h:414-414 sha=f1aa3bec5c | A.termination = "no_improvement"; A.local_certified = true; A.returned = C.S; A.returned_F = C.F; break;
+OK            [PROOF.md] cpp/v3_score.h:274-282 sha=ae80db72f8 | bool find(const std::vector<int>& S, uint64_t h, double& lm) {
+OK            [PROOF.md] cpp/v3_engine.h:91-94 sha=00f9095e12 | if (!(cache && cache->find(q.S, q.h, lm))) {
+OK            [PROOF.md] cpp/v3_engine.h:394-406 sha=5d7cc02a0a | for (int j = 0; j < p; ++j) {
+OK            [PROOF.md] cpp/v3_engine.h:396-397 sha=0fc824416f | if (bit_get(C.bits, j)) del_var(Q, j);
+OK            [PROOF.md] cpp/v3_engine.h:389-393 sha=578e7b8640 | auto consider = [&](Particle& q) {
+OK            [PROOF.md] cpp/v3_engine.h:392-392 sha=52d9b5a102 | if (!have || q.F > best.F || (q.F == best.F && lex_less(q.S, best.S))) { best = q; have = true; }
+OK            [PROOF.md] cpp/v3_util.h:117-119 sha=4efd2dd46c | inline bool lex_less(const std::vector<int>& a, const std::vector<int>& b) {
+OK            [PROOF.md] cpp/v3_engine.h:408-408 sha=8c75e5a5ab | if (have && best.F > C.F) {  // strict F improvement only (R14)
+OK            [PROOF.md] cpp/v3_engine.h:409-410 sha=39702cb17e | if (A.moves >= ell) {
+OK            [PROOF.md] cpp/v3_engine.h:412-412 sha=ea4cfe67de | C = best; A.moves++; A.path.push_back(C.S); A.path_F.push_back(C.F);
+OK            [PROOF.md] cpp/v3_engine.h:413-414 sha=5e3eff8160 | } else {
+OK            [PROOF.md] Theory_work/Wave1C/C-GROW/STATEMENT.md:68-71 sha=a4b7ce9cf5 | * **Method:** v3.1 with LS0 (SoP `02_method.tex:490-506`); local search M §6.10 (SoP `02_method.tex:463-467`):
+OK            [PROOF.md] cpp/v3_engine.h:382-382 sha=8d0e2acda2 | Particle C; set_model(C, centre); eval(C, ME_LOCAL, emit_centre);
+OK            [PROOF.md] cpp/v3_engine.h:382-382 sha=8d0e2acda2 | Particle C; set_model(C, centre); eval(C, ME_LOCAL, emit_centre);
+OK            [PROOF.md] cpp/v3_engine.h:391-391 sha=6ca551ad1a | eval(q, ME_LOCAL); A.n_eval++;
+OK            [PROOF.md] cpp/v3_engine.h:98-99 sha=01cc4ba286 | if (emit) {
+OK            [PROOF.md] cpp/v3_core.cpp:411-411 sha=91e5ffe715 | E.cache = &cache; E.led = &led; E.guard = runtime_ptr(runtime);
+OK            [PROOF.md] cpp/v3_ledger.h:104-113 sha=27165b2ce5 | inline void Ledger::event(const std::vector<int>& S, double F, double lg0, double logm, bool is_fresh, bool is
+OK            [PROOF.md] cpp/v3_ledger.h:84-94 sha=a3ba3e9392 | void offer_hpm(const std::vector<int>& S, double F, double logm, const EventCtx& ev, int mech) {
+OK            [PROOF.md] cpp/v3_core.cpp:409-409 sha=1d73cb80e9 | ScoreCache cache; cache.init(D.W, (size_t)o.cache_capacity);
+OK            [PROOF.md] Theory_work/Wave3/W3-SAMP/lemmas/CC_code_check.md:40-62 sha=bcf6a82212 | ## CC2 — the reported HPM is the hpm_better-maximum of every model scored in the final run
+OK            [PROOF.md] cpp/v3_core.cpp:510-510 sha=858e42b98e | _["hpm_before_local"] = hpm_before, _["ledger"] = ledger_to_list(led, D, o.ls0),
+OK            [PROOF.md] v3_run.R:142-142 sha=a15449aa09 | out$hpm <- led$hpm$model; out$hpm_F <- led$hpm$F; out$hpm_provenance <- led$hpm$provenance
+OK            [PROOF.md] cpp/v3_ledger.h:84-88 sha=90f89a13c7 | void offer_hpm(const std::vector<int>& S, double F, double logm, const EventCtx& ev, int mech) {
+OK            [PROOF.md] cpp/v3_util.h:121-126 sha=80b044a3de | inline bool hpm_better(double F1, const std::vector<int>& S1, double F2, const std::vector<int>& S2) {
+OK            [PROOF.md] cpp/v3_engine.h:97-97 sha=56a5950e55 | q.logm = lm; q.lg0 = D.logprior[k] + c; q.d = (lm - D.logm0) - c; q.F = D.logprior[k] + lm;
+OK            [PROOF.md] Theory_work/Wave1/W1-GEN/lemmas/L5_assembly.md:11-16 sha=4a5c81bb72 | * [OP] Operational closure: 𝒪̄ ∩ {S₀ ∉ 𝒮̄⁺} ⊆ {LS0 from S̃₀ does not score S₀}. Status: PROVED (by this seat,
+OK            [PROOF.md] Theory_work/Wave1/W1-GEN/lemmas/L5_assembly.md:44-45 sha=8c13c2ed75 | Wave-1 sibling result, not adopted by HQ). The remaining content of e4 here is the integration of LS0 itself (
+OK            [PROOF.md] cpp/v3_core.cpp:465-481 sha=0a142a081f | if (o.ls0 && status == "completed") {
+
+74 citations: 74 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+Not machine-checked: unbackticked references and the semantic match of each excerpt.
