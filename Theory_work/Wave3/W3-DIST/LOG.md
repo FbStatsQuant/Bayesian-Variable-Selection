@@ -368,3 +368,8 @@ checkpoint on WEAKER TC1–TC9, X exhausted, B2-core → Gaussian only, B0 → f
   (222 files, 20 extra inputs; verify OK). Sweep SW1 launched: gpt-6-astra (codex, reasoningEffort high), new agent,
   blind, `reviews/BRIEF_SW1_astra.md` (carries HQ's named point on Corollary C). From now nothing in the ticket folder
   is edited except `reviews/`, `LOG.md`, `CHECKPOINT_*.md`. D3 thread settled. Running: SW1 (Astra).
+- 03:09 — Manager: restore point for the sweep freeze theory/W3-DIST 05bc9ae0; R1 freeze a few hours after 09:00 accepted by HQ.
+  Rule D62 (POLICIES, 2026-11-16): briefs of unattended reviewers set no TMPDIR and write nothing outside the clone;
+  scratch in `.rc_tmp/` inside it, deleted at the end. Applied to `reviews/BRIEF_R1_TEMPLATE.md` (both seats; scratch at
+  the repo root, never in the frozen ticket folder). SW1 (launched before the rule, with the department tmp path) is
+  left running as instructed. Note for the manager: `.rc_tmp/` is not in `.gitignore` on main. Running: SW1 (Astra).

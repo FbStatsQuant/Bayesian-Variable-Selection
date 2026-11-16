@@ -5,8 +5,10 @@ sequential Monte Carlo). This file is your whole brief. Repo clone: `/home/fb31/
 are relative to the ticket folder `Theory_work/Wave3/W3-DIST/` unless they start with `Theory_work/`, `Scripts/`, `Docs/`
 or `Papers/` (then relative to the repo root). **Change no git state. Write exactly one file:** `reviews/@@OUT@@`
 (UTF-8). Edit nothing else. Start no agents. No cluster jobs. Effort high, not above. Any computation small, `nice`, at
-most 2 cores; temporary files only under `/home/fb31/SMC_Theory_Department/tmp/20261116-W3-DIST-R1-@@SEAT@@/` (never
-`/tmp`), removed when done; no script may write into the repository.
+most 2 cores. **Do not write any file outside the repo clone and set no TMPDIR.** Prefer inline computation with no
+files. If you need scratch files, put them only in `/home/fb31/Bayesian-Variable-Selection/.rc_tmp/W3-DIST-R1-@@SEAT@@/`
+(inside the clone, at its root; **never inside the ticket folder**, whose content is frozen, and never in `/tmp`), and
+delete that folder at the end. Do not add it to git. Never run a command that asks for an approval: nobody can answer it.
 
 ## What the ticket claims
 A distribution-level consistency theorem for the coded method, of the kind of Song–Liang (2015, Theorems 1–2):
