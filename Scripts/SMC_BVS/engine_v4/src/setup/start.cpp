@@ -42,12 +42,21 @@ void Start::draw_pi0(UniformSource& us, Address a, Model& S) const {
     r -= j;
   }
   S.clear();
+  thread_local std::vector<double> sc;
+  const bool stored = !T->sub_cum.empty();  // tests only; production setup.bin has no sampler tables (D-18)
   for (auto it = kb.rbegin(); it != kb.rend(); ++it) {
     int b = it->first, j = it->second;
     int64_t row = T->logprof_ptr[b] + j;
-    const double* c = &T->sub_cum[T->sub_ptr[row]];
-    int i = cat_draw_gt(c, &T->sub_cum[0] + T->sub_ptr[row + 1], U());
-    uint32_t code = T->codes_by_size[T->cbs_ptr[row] + i];
+    uint32_t code;
+    if (stored) {
+      const double* c = &T->sub_cum[T->sub_ptr[row]];
+      int i = cat_draw_gt(c, &T->sub_cum[0] + T->sub_ptr[row + 1], U());
+      code = T->codes_by_size[T->cbs_ptr[row] + i];
+    } else {  // D-18: the within-size law of this block and size, recomputed from logr (same bits as the stored arrays)
+      sub_cum_of(*T, b, P->size(b), j, sc);
+      int i = cat_draw_gt(sc.data(), sc.data() + sc.size(), U());
+      uint32_t n; code = codes_of_size(P->size(b), j, &n)[i];
+    }
     for (int t = 0; t < P->size(b); ++t) if (code & (1u << t)) S.push_back(P->block(b)[t]);
   }
   std::sort(S.begin(), S.end());
@@ -77,6 +86,7 @@ struct ModeDP {
 };
 ModeDP mode_dp(const Data& D, const Tables& T) {
   ModeDP dp; dp.J = T.J; dp.K = D.K; dp.T = &T;
+  auto P_size = [&](int b) { return __builtin_ctzll((unsigned long long)(T.code_ptr[b + 1] - T.code_ptr[b])); };  // 2^m codes
   const int J = T.J, K = D.K;
   const int64_t NR = T.logprof_ptr[J];
   dp.mb.assign(NR, NEG_INF);
@@ -86,8 +96,9 @@ ModeDP mode_dp(const Data& D, const Tables& T) {
     const double* lr = &T.logr[T.code_ptr[b]];
     for (int j = 0; j < dp.nj(b); ++j) {
       int64_t row = T.logprof_ptr[b] + j;
-      for (int64_t q = T.cbs_ptr[row]; q < T.cbs_ptr[row + 1]; ++q) {  // core/cpp/v3_start.h:204-209
-        uint32_t c = T.codes_by_size[q]; double v = lr[c];
+      uint32_t nc; const uint32_t* cs = codes_of_size(P_size(b), j, &nc);  // increasing code order (D-18)
+      for (uint32_t q = 0; q < nc; ++q) {  // core/cpp/v3_start.h:204-209
+        uint32_t c = cs[q]; double v = lr[c];
         if (v > dp.mb[row]) { dp.mb[row] = v; tmp[row].assign(1, c); }
         else if (v == dp.mb[row]) tmp[row].push_back(c);
       }

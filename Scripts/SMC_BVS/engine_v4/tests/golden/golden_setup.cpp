@@ -100,7 +100,8 @@ void golden_tables_start(const Fixture& F, V3& R, const Partition& P, const std:
   // v4
   TableStores S4; TableStats ts;
   Tables T = build_tables(D, P, stk::threads(), &S4, &ts);
-  build_start(D, P, T);
+  build_start(D, P, T, /*store_sampler=*/true);   // the stored sampler tables are compared with v3 below (G5)
+  Tables Tod = T; Tod.cbs_ptr.assign(1, 0); Tod.codes_by_size.clear(); Tod.sub_ptr.assign(1, 0); Tod.sub_cum.clear();  // D-18 form
   // G3 tables (logr bits, NaN pattern)
   bool ok = T.J == st.J;
   for (int b = 0; ok && b < T.J; ++b)
@@ -161,15 +162,20 @@ void golden_tables_start(const Fixture& F, V3& R, const Partition& P, const std:
   {
     XsSource a; a.g.seed_stream(7, 200);
     XsSource4 b4; b4.g.seed_stream(7, 200);
-    std::vector<int> S3; v4::Model S4m; bool o = true; int nd = full ? 20000 : 3000;
+    XsSource4 c4; c4.g.seed_stream(7, 200);
+    Start Sod = S; Sod.T = &Tod;   // D-18: sampler tables recomputed on demand
+    std::vector<int> S3; v4::Model S4m, S4od; bool o = true, od = true; int nd = full ? 20000 : 3000;
     for (int i = 0; o && i < nd; ++i) {
       v3::draw_pi0(st, a, S3);
       v4::Address ad; ad.particle = i + 1;
       S.draw_pi0(b4, ad, S4m);
+      Sod.draw_pi0(c4, ad, S4od);
+      od = od && S4od == S4m;
       o = std::vector<int>(S4m.begin(), S4m.end()) == S3 && stk::same_bits(S.comp(v4::ModelView(S4m)), st.comp(S3)) &&
           stk::same_bits(S.log_gamma0(v4::ModelView(S4m)), st.log_gamma0(S3));
     }
     SCHECK(o && a.g.count == b4.g.count, "pi_0 draws / comp differ: %s", t.c_str());
+    SCHECK(od && c4.g.count == b4.g.count, "D-18: on-demand sampler tables change the pi_0 draws: %s", t.c_str());
   }
   // G7 start mode (core/cpp/v3_start.h:178-305), every cap regime, every algorithm
   for (long cap : {1000000L, 2L, 3L, 5L, 17L, 1L})
@@ -178,7 +184,7 @@ void golden_tables_start(const Fixture& F, V3& R, const Partition& P, const std:
       v3::ModeResult m3 = v3::start_mode(st, cap, tie);
       for (ModeAlgo al : {ModeAlgo::Auto, ModeAlgo::Enumerate, ModeAlgo::CountThenTieDP}) {
         if (al == ModeAlgo::CountThenTieDP && !tie && m3.truncated) continue;  // needs the enumeration (documented)
-        ModeResult m4 = start_mode(D, P, T, cap, tie, al);
+        ModeResult m4 = start_mode(D, P, Tod, cap, tie, al);
         bool o = std::vector<int>(m4.S.begin(), m4.S.end()) == m3.S && stk::same_bits(m4.lg0, m3.lg0) && m4.ties == m3.ties &&
                  m4.truncated == m3.truncated && m4.tie_dp_used == m3.tie_dp_used;
         SCHECK(o, "start mode differs: %s cap=%ld tie=%d algo=%d (v3 ties=%ld trunc=%d)", t.c_str(), cap, (int)tie, (int)al, m3.ties, (int)m3.truncated);

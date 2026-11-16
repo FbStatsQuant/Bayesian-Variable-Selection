@@ -221,7 +221,6 @@ Tables build_tables(const Data& D, const Partition& P, int threads, TableStores*
 }
 
 // ---------------------------------------------------------------- start law
-namespace {
 // core/cpp/v3_start.h:21-32
 void cumulative_from_logs(const double* lp, size_t n, double* c) {
   double m = NEG_INF; for (size_t i = 0; i < n; ++i) m = std::max(m, lp[i]);
@@ -233,46 +232,70 @@ void cumulative_from_logs(const double* lp, size_t n, double* c) {
   for (size_t i = 0; i < n; ++i) { acc += e[i]; c[i] = (double)(acc / s); if (e[i] > 0) last = (int)i; }
   for (size_t i = (size_t)last; i < n; ++i) c[i] = 1.0;
 }
+
+// One table per block size m (computed once, thread-safe static): all codes sorted by (popcount, code), with the
+// offset of each popcount. Same order as core/cpp/v3_start.h:108-112 (increasing code within each size).
+namespace {
+struct CodeTable { std::vector<uint32_t> codes; uint32_t off[18]; };
+const CodeTable& code_table(int m) {
+  static const std::vector<CodeTable> tabs = [] {
+    std::vector<CodeTable> t(17);
+    for (int mm = 0; mm <= 16; ++mm) {
+      CodeTable& c = t[mm];
+      uint32_t cnt[18] = {0};
+      for (uint32_t code = 0; code < (1u << mm); ++code) cnt[__builtin_popcount(code) + 1]++;
+      c.off[0] = 0; for (int j = 0; j <= 16; ++j) c.off[j + 1] = c.off[j] + cnt[j + 1];
+      c.codes.assign(1u << mm, 0);
+      uint32_t fill[17]; for (int j = 0; j <= 16; ++j) fill[j] = c.off[j];
+      for (uint32_t code = 0; code < (1u << mm); ++code) c.codes[fill[__builtin_popcount(code)]++] = code;
+    }
+    return t;
+  }();
+  return tabs[m];
+}
 }  // namespace
+const uint32_t* codes_of_size(int m, int j, uint32_t* count) {
+  if (m < 0 || m > 16 || j < 0 || j > m) throw Error(Status::internal_error, "codes_of_size: m or j out of range");
+  const CodeTable& c = code_table(m);
+  *count = c.off[j + 1] - c.off[j];
+  return c.codes.data() + c.off[j];
+}
+void sub_cum_of(const Tables& T, int b, int m, int j, std::vector<double>& out) {
+  thread_local std::vector<double> lv;
+  uint32_t n; const uint32_t* codes = codes_of_size(m, j, &n);
+  const double* lr = &T.logr[T.code_ptr[b]];
+  lv.resize(n); for (uint32_t q = 0; q < n; ++q) lv[q] = lr[codes[q]];
+  out.resize(n);
+  cumulative_from_logs(lv.data(), n, out.data());  // core/cpp/v3_start.h:118
+}
 
 // core/cpp/v3_start.h:101-151, in flat arrays (row layouts in v4/setup.h).
-void build_start(const Data& D, const Partition& P, Tables& T) {
+void build_start(const Data& D, const Partition& P, Tables& T, bool store_sampler) {
   const int K = D.K, J = P.J;
   T.K = K; T.J = J;
   T.logprof_ptr.assign(J + 1, 0);
   for (int b = 0; b < J; ++b) T.logprof_ptr[b + 1] = T.logprof_ptr[b] + std::min(P.size(b), K) + 1;
   const int64_t NR = T.logprof_ptr[J];
   T.logprof.assign(NR, NEG_INF);
-  T.cbs_ptr.assign(NR + 1, 0);
+  T.cbs_ptr.assign(1, 0); T.codes_by_size.clear(); T.sub_ptr.assign(1, 0); T.sub_cum.clear();
+  std::vector<double> lv, sc;
   for (int b = 0; b < J; ++b) {
     int m = P.size(b), top = std::min(m, K);
-    for (uint32_t code = 0; code < (1u << m); ++code) { int j = __builtin_popcount(code); if (j <= top) T.cbs_ptr[T.logprof_ptr[b] + j + 1]++; }
-  }
-  for (int64_t r = 0; r < NR; ++r) T.cbs_ptr[r + 1] += T.cbs_ptr[r];
-  T.codes_by_size.assign(T.cbs_ptr[NR], 0);
-  T.sub_cum.assign(T.cbs_ptr[NR], 0.0);
-  {
-    std::vector<int64_t> fill(T.cbs_ptr.begin(), T.cbs_ptr.end() - 1);
-    for (int b = 0; b < J; ++b) {
-      int m = P.size(b), top = std::min(m, K);
-      for (uint32_t code = 0; code < (1u << m); ++code) {  // increasing code order within each size
-        int j = __builtin_popcount(code);
-        if (j <= top) T.codes_by_size[fill[T.logprof_ptr[b] + j]++] = code;
+    const double* lr = &T.logr[T.code_ptr[b]];
+    for (int j = 0; j <= top; ++j) {
+      int64_t row = T.logprof_ptr[b] + j;
+      uint32_t n; const uint32_t* codes = codes_of_size(m, j, &n);   // increasing code order (v3_start.h:108-112)
+      lv.resize(n); for (uint32_t q = 0; q < n; ++q) lv[q] = lr[codes[q]];
+      T.logprof[row] = log_sum_exp(lv);                              // core/cpp/v3_start.h:117
+      if (store_sampler) {                                           // tests only (D-18)
+        T.codes_by_size.insert(T.codes_by_size.end(), codes, codes + n);
+        sc.resize(n); cumulative_from_logs(lv.data(), n, sc.data());   // core/cpp/v3_start.h:118
+        T.sub_cum.insert(T.sub_cum.end(), sc.begin(), sc.end());
+        T.cbs_ptr.push_back((int64_t)T.codes_by_size.size());
       }
     }
   }
-  T.sub_ptr = T.cbs_ptr;
-  std::vector<double> lv;
-  for (int b = 0; b < J; ++b) {
-    int top = std::min(P.size(b), K);
-    const double* lr = &T.logr[T.code_ptr[b]];
-    for (int j = 0; j <= top; ++j) {
-      int64_t row = T.logprof_ptr[b] + j, o = T.cbs_ptr[row], e = T.cbs_ptr[row + 1];
-      lv.clear(); for (int64_t q = o; q < e; ++q) lv.push_back(lr[T.codes_by_size[q]]);
-      T.logprof[row] = log_sum_exp(lv);                         // core/cpp/v3_start.h:117
-      cumulative_from_logs(lv.data(), lv.size(), &T.sub_cum[o]);  // core/cpp/v3_start.h:118
-    }
-  }
+  if (store_sampler) T.sub_ptr = T.cbs_ptr;
   // core/cpp/v3_start.h:121-131
   T.logF.assign((size_t)(J + 1) * (K + 1), NEG_INF);
   T.logF[0] = 0.0;

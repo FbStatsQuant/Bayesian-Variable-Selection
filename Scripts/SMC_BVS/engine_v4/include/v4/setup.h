@@ -99,6 +99,8 @@ struct Tables {
   std::vector<double> size_logmass, size_cum;   // K + 1
   std::vector<int64_t> cond_ptr{0};        // row b*(K+1)+r
   std::vector<double> cond_cum;
+  // D-18: codes_by_size and sub_cum are NOT stored in setup.bin; draw_pi0 recomputes them for the blocks a draw selects
+  // (codes_of_size + sub_cum_of, same bits). build_start(..., store_sampler = true) fills these for tests only.
   std::vector<int64_t> cbs_ptr{0};         // row logprof_ptr[b] + j: codes of size j in increasing code order
   std::vector<uint32_t> codes_by_size;
   std::vector<int64_t> sub_ptr{0};         // = cbs_ptr (same row layout)
@@ -112,8 +114,15 @@ struct TableStats { uint64_t scored = 0, prefix_scored = 0, fallback_scored = 0,
 // Tables by depth-first enumeration with sorted-prefix reuse, threaded over blocks. Bits = core/cpp/v3_start.h:76-98.
 // If `stores` is given, the table top stores are built (then the per-code log m is dropped).
 Tables build_tables(const Data& D, const Partition& P, int threads, TableStores* stores = nullptr, TableStats* st = nullptr);
-// Size profiles, convolutions, log Zbar0, sampler tables: bits = core/cpp/v3_start.h:101-151.
-void build_start(const Data& D, const Partition& P, Tables& T);
+// Size profiles, convolutions, log Zbar0, size law, cond_cum: bits = core/cpp/v3_start.h:101-151. codes_by_size and
+// sub_cum are stored only if store_sampler (tests; D-18).
+void build_start(const Data& D, const Partition& P, Tables& T, bool store_sampler = false);
+// D-18 helpers. Codes 0..2^m-1 of popcount j in increasing code order (core/cpp/v3_start.h:108-112); m <= 16.
+const uint32_t* codes_of_size(int m, int j, uint32_t* count);
+// Within-size law of block b (size m) at size j: cumulative_from_logs over the codes' logr (core/cpp/v3_start.h:116-118).
+void sub_cum_of(const Tables& T, int b, int m, int j, std::vector<double>& out);
+// core/cpp/v3_start.h:21-32
+void cumulative_from_logs(const double* lp, size_t n, double* c);
 
 struct ModeResult { Model S; double lg0 = NEG_INF; long ties = 0; bool truncated = false; bool tie_dp_used = false; };
 enum class ModeAlgo : uint8_t { Auto = 0, Enumerate = 1, CountThenTieDP = 2 };

@@ -7,6 +7,7 @@
 #include "v4/setup.h"
 #include "v4/format.h"
 #include "v4/prep.h"
+#include "v4/provenance.h"
 #include "v4/threads.h"
 
 namespace v4::setup {
@@ -93,8 +94,7 @@ std::string write_setup_bin(const std::string& path, const Data& D, const SetupR
   W.add("logF", T.logF, (uint64_t)T.J + 1, (uint64_t)T.K + 1);
   W.add("size_logmass", T.size_logmass); W.add("size_cum", T.size_cum);
   W.add("cond_ptr", T.cond_ptr); W.add("cond_cum", T.cond_cum);
-  W.add("cbs_ptr", T.cbs_ptr); W.add("codes_by_size", T.codes_by_size);
-  W.add("sub_ptr", T.sub_ptr); W.add("sub_cum", T.sub_cum);
+  // D-18: no cbs_ptr / codes_by_size / sub_ptr / sub_cum (recomputed by draw_pi0 for the blocks a draw selects)
   W.add("mode_S", r.mode.S);
   put_store(W, "top", r.stores.top); put_store(W, "lead0", r.stores.lead0); put_store(W, "lead1", r.stores.lead1);
   // WP2-added sections (INTERFACES §5.1 allows additions): binary scalars, so the exact bits survive without JSON
@@ -111,7 +111,7 @@ std::string write_setup_bin(const std::string& path, const Data& D, const SetupR
   mo["tie_dp_used"] = r.mode.tie_dp_used; mo["size"] = (int64_t)r.mode.S.size(); m["start_mode"] = mo;
   m["cut_group"] = r.cut.rows() > 0; m["cut_group_count"] = r.cut.rows(); m["dup_components"] = r.corr.dup.rows();
   m["table_codes"] = T.code_ptr.back();
-  auto hx = [](uint64_t x) { char b[24]; std::snprintf(b, sizeof b, "0x%llx", (unsigned long long)x); return std::string(b); };  // u64 -> hex (§5.1)
+  auto hx = [](uint64_t x) { return hex64(x); };  // u64 -> hex string (§5.1)
   Json ts = Json::object(); ts["scored"] = hx(r.tstats.scored); ts["prefix"] = hx(r.tstats.prefix_scored); ts["fallback"] = hx(r.tstats.fallback_scored);
   Json rt = Json::array(); for (int q = 0; q < 3; ++q) rt.push(Json(hx(r.tstats.routes[q])));
   ts["routes"] = rt; m["table_stats"] = ts;
@@ -119,6 +119,7 @@ std::string write_setup_bin(const std::string& path, const Data& D, const SetupR
   Json tm = Json::array();
   for (auto& t : r.timings) { Json e = Json::object(); e["stage"] = t.name; e["seconds"] = t.seconds; e["peak_rss_mb"] = t.peak_rss_mb; tm.push(e); }
   m["timings"] = tm;
+  m["binary"] = binary_block();   // INTERFACES §5.3
   W.add_json("meta", m);
   return W.write(path);
 }
@@ -141,8 +142,6 @@ SetupResult read_setup_bin(const std::string& path, std::string* content_hash) {
   T.logprof_ptr = Rd.vec<int64_t>("logprof_ptr"); T.logprof = Rd.vec<double>("logprof");
   T.logF = Rd.vec<double>("logF"); T.size_logmass = Rd.vec<double>("size_logmass"); T.size_cum = Rd.vec<double>("size_cum");
   T.cond_ptr = Rd.vec<int64_t>("cond_ptr"); T.cond_cum = Rd.vec<double>("cond_cum");
-  T.cbs_ptr = Rd.vec<int64_t>("cbs_ptr"); T.codes_by_size = Rd.vec<uint32_t>("codes_by_size");
-  T.sub_ptr = Rd.vec<int64_t>("sub_ptr"); T.sub_cum = Rd.vec<double>("sub_cum");
   T.logZbar0 = sc[0];
   r.mode.S = Rd.vec<int32_t>("mode_S"); r.mode.lg0 = sc[1]; r.mode.ties = (long)isc[5]; r.mode.truncated = isc[6]; r.mode.tie_dp_used = isc[7];
   r.corr.rn = sc[2]; r.corr.tau = sc[3];
@@ -158,9 +157,7 @@ SetupResult read_setup_bin(const std::string& path, std::string* content_hash) {
 
 // The `setup` command (include/v4/stubs.h): data.bin -> setup.bin + record.
 Json run(const Json& args) {
-  // tables are bit-form: refuse where glibc would not select the FMA variants the v3 records assume (WP1 guard)
-  if (!pm::fma_variant_expected() && !(args.contains("allow_non_fma_libm") && args.at("allow_non_fma_libm").i64() != 0))
-    throw Error(Status::invalid_input, "setup: libm FMA variant not expected on this CPU (bit form; see tests/PMATH_REPORT.md)");
+  // the libm guard runs in main before every command (INTERFACES §6)
   std::string data_hash;
   Data D = prep::load_data(args.at("data").str(), &data_hash);
   SetupOptions o;
@@ -189,6 +186,7 @@ Json run(const Json& args) {
   rec["p"] = D.p; rec["n"] = D.n; rec["B"] = r.B; rec["J"] = r.part.J; rec["mode_size"] = (int64_t)r.mode.S.size();
   Json tm = Json::object(); for (auto& t : r.timings) tm[t.name] = t.seconds;
   rec["seconds"] = tm; rec["peak_rss_mb"] = peak_rss_mb();
+  rec["binary"] = binary_block();
   return rec;
 }
 
