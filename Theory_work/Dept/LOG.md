@@ -68,3 +68,4 @@
 - 20:32 — adjudication in (D31); HQ summary sent; Writing queue row added; adjudicator settled.
 - 20:34 — exact temp path per Engineering README (bvs_tmp/theory/<YYYYMMDD>-<ticket>-<what>; CI → bvs_tmp/ci) relayed to all 9; top-level bvs_tmp/<ticket> folders to move under theory/ when idle; RIDER_RULES updated.
 - 20:35 — POLICIES §13: Theory_work/Dept/PROTOCOL.md drafted (minimums kept; deviations B1–B10 with reasons and D-numbers); goes to HQ with the Thu proposal.
+- 20:35 — HQ: Engineering crew tracing the ENOSPC spike source; BNP/shared temp cleanup and CLAUDE_CODE_TMPDIR move are owner calls; leads already told retry + commit promptly + temp under bvs_tmp (manifests are written in worktrees on NFS). Any Wed CP3 slip from this → HQ at once.
