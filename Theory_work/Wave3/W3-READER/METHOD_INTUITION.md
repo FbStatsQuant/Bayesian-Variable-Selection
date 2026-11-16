@@ -67,8 +67,8 @@ programme over model sizes. *Problems solved:* (i) the sampler starts from i.i.d
 the target instead of from an arbitrary model; (ii) its exact normaliser anchors the evidence estimate; (iii) its mode
 $\tilde S_0$ is a data-driven, deterministic guess of the true model. *What it gets wrong:* a predictor in one block
 that imitates a truth in another block looks useful on its own, so $\pi_0$ may include it (leakage). Theorem 5 shows
-that, when such imitators are confined to a small set, $\pi_0$ already puts mass $1-n^{-c}$ ($c<\tfrac12$) on the right
-models.
+that, when such imitators are confined to a small set, $\pi_0$ puts mass $1-n^{-c}$ ($c<\tfrac12$) on the right models as
+$n$ grows.
 
 **4. Calibration (choosing the ladder, then freezing it).** The sampler moves from $\pi_0$ to $\pi$ through tempered
 distributions $\pi_\phi\propto\pi_0^{1-\phi}\pi^{\phi}$, $0=\phi_0<\phi_1<\dots<\phi_T=1$. Pilot runs choose the ladder
@@ -101,7 +101,10 @@ $S_0$, deleting at most $n^b$ columns, under their conditions); and certificatio
 **7. What is reported.** Every model scored anywhere — block tables, calibration, particles and their proposals, both
 local searches — is recorded, and the **reported model** $\hat S$ is the best-scoring one. The method also reports the
 pooled PIPs, the MPM ($\mathrm{PIP}>\tfrac12$), the evidence $\hat Z$ (with a one-sided lower bound), whether $\hat S$ is
-certified, and diagnostics (island disagreement, low effective sample size). If the run hits its time or memory
+certified, and diagnostics (island disagreement, low effective sample size). *What the output looks like at moderate
+$n$:* with many predictors, the posterior (and the method's output) is a mixture over the true model and its many
+one-variable supersets $S_0\cup\{j\}$. Each superset is individually light, but together they can weigh as much as
+$S_0$ itself, so $\pi(S_0\mid y)$ may be well below one at moderate $n$; the theorems describe the limit. If the run hits its time or memory
 allocation it stops, returns the best model scored so far, and marks the estimates unavailable.
 
 ## Which theorem speaks to which stage
@@ -134,7 +137,9 @@ imitator 5 sits in a different block from the truth it imitates.
 start law cannot see that predictor 1, in another block, already explains it. So the start mode is $\{1,3,5\}$:
 **leakage**. The proxy 2, which shares predictor 1's block, is correctly handled already by the block table. The true
 posterior, which sees all interactions, puts $0.69$ on $\{1,3\}$, and the PIPs are $(0.99,0.07,1.00,0.08,0.06,0.16)$, so
-the MPM and the HPM are $\{1,3\}$. The local search from the start mode makes one move — delete 5 — reaches $\{1,3\}$,
+the MPM and the HPM are $\{1,3\}$. (With six predictors the posterior is nearly concentrated; with thousands of
+predictors at moderate $n$ it is a mixture over $\{1,3\}$-like truths and their many one-variable supersets, each light,
+together comparable to the truth's own weight.) The local search from the start mode makes one move — delete 5 — reaches $\{1,3\}$,
 finds no improving neighbour and certifies it. In the theory, $Q=\{1,3,5\}$ is the leakage set, the lattice
 $\{\{1,3\},\{1,3,5\}\}$ is the route, and "delete the extras one at a time" is exactly what Theorems 6–7 prove happens
 in general.

@@ -116,7 +116,11 @@ $\|X\theta^*\|^2\le nM$ suffices. (v) Models of size $\ge 3(A+1)(s_0+1)\log n$ c
 no eigenvalue condition (size-tail lemma, which uses a coefficient bound instead; separate statement). (vi) *Scope of
 the rate* [H5-6]: on every design the posterior miss is at least of order $n^{-1/2}$ (Theorem 3(a)); the extra
 $\sqrt{\log n}$ is shown to be attained only on the witness designs of Theorem 3(b). No two-sided rate
-$\sqrt{\log n/n}$ on every design is claimed (open; post-freeze rider POST2-R1).
+$\sqrt{\log n/n}$ on every design is claimed (open; post-freeze rider POST2-R1). (vii) *What the posterior looks like at
+moderate $n$* [ENG-D17]: the miss $1-\pi(S_0\mid y)$ is carried mainly by the $p-s_0$ one-variable supersets
+$S_0\cup\{j\}$, each individually light (posterior odds of order $n^{-1/2}/p$ against $S_0$, times a $\chi^2_1$ factor), but
+numerous; together they can weigh as much as $S_0$ itself, so at moderate $n$ and large $p$ the posterior is a mixture
+over $S_0$ and many supersets. The theorem describes the limit $n\to\infty$.
 
 ### Why each assumption, and is it necessary
 - (A1) Gaussian errors give exact $\chi^2$ laws for the score differences. Necessity open; every comparable Bayesian
@@ -177,6 +181,7 @@ and give the formulas in an appendix, without numerical values [H5-6]. Named ope
 - v0.3 2026-11-16: [H5-1] re-based on W3-POST2 C (uniform expectation rate; conclusion STRONGER, same hypotheses) with
   Theorem 1′ (W3-POST2 E: identifiability margin, no floor off $S_0$, no beta-min) and remark (o) (W3-POST2 A1).
   Masters C/E/A1/A0 below PROVED-CHECKED until recorded.
+- v0.5 2026-11-16: [ENG-D17] remark (vii) on the moderate-$n$ shape of the posterior (EQUAL; description only).
 - v0.4 2026-11-16: [H5-6] consultant's conditions: "off $S_0$" wording for Theorem 1′; (A4′) floor line "sufficient;
   not known to be necessary (O3)"; no numerical constant values; rate-scope remark (vi) (EQUAL; wording).
 <!-- ROW thm1 END -->
@@ -743,8 +748,9 @@ per-island identity of the unbiasedness theorem by linearity).
 
 ### Why each assumption
 - (A2)–(A3) give posterior concentration (Theorem 2) and the start's small-set floor.
-- (A4)–(A5) make the start law concentrate on $S_0$ (Theorem 5): then the sampler has almost no mass to transport,
-  the evidence ratio $\hat Z/Z$ is close to one and the particles sit at $S_0$ — independently of the ladder length.
+- (A4)–(A5) make the start law concentrate on $S_0$ as $n\to\infty$ (Theorem 5): asymptotically the sampler then has
+  vanishing mass to transport and $\hat Z/Z\to1$, independently of the ladder length. (At moderate $n$ both $\pi_0$ and $\pi$
+  are mixtures over $S_0$ and its many one-variable supersets; Theorem 1, remark (vii).) [ENG-D17]
   This is the regime of the result; an alternative route with no condition on $\hat Z$ (a global-overlap condition)
   exists for the PIPs, MPM and HPM (remark).
 - (S5) idealises the random numbers and the coded kernels; they are not statistical assumptions.
@@ -771,6 +777,7 @@ slower than the posterior rate $\sqrt{\log n/n}$ by a factor $e^{C\sqrt{\log n}}
 
 #### Update log (thm10)
 - v0.3 2026-11-16: first version (manager's CP1 decision 4; bridge leg).
+- v0.4 2026-11-16: [ENG-D17] "why" line reworded: concentration is asymptotic; moderate-$n$ mixture noted (EQUAL).
 <!-- ROW thm10 END -->
 
 ---

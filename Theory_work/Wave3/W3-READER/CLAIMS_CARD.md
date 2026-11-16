@@ -92,5 +92,9 @@ Body: 3.2, 3.3, 3.5 (remark). Pillars 4–5: honest-status rows.
 * **Left out on purpose:** design-family theorems (`W2-FAC-*`, `W1-PXN`, `W2-LOC2`, `W2-UNI:UNI-0`) are examples under the
   presentation rule; `W3-RM:RM-F/RM-R` are special cases of 3.1–3.2; `W1-GEN`, `C-GROW` are historical routes; delivery
   (`C-DLV:Prop-F`, `W2-UNI:F-UNI`) is folded into 3.1–3.2.
+* **Moderate-$n$ description [ENG-D17].** All rows are asymptotic. At moderate $n$ and large $p$ the posterior and the
+  coded output are a mixture over $S_0$ and its many one-variable supersets (individually light, together comparable to
+  $S_0$); texts describe this as the shape of the posterior, not as a limitation, and never describe the output as a point
+  mass at moderate $n$ (Engineering measurement, `Docs/Experiments/P1M/DECISIONS.md` D-17).
 * **Readability (lead's verdict):** 1.1–1.4, 3.6, 3.7 read like Song–Liang-level statements; 3.1 is faithful but long
   (the "15" needs one sentence: block size minus one); 3.2 and 3.3 are honest-limit rows.
