@@ -300,3 +300,4 @@
 - 07:49 — Task U dry CLEAN: R2r 12bb52cd CITATION-ONLY (C-MIS SoP pointers via W3-EDIT 3c6062ec); 14 PC no conditions; START-R/IF-START (row 3.3) superseded free → STRONGER; 14 coexist (card 3 note closed); 516/0 ERROR; 129 ACTIVE accept PASS; 16/16 manifests. GO requested.
 - 07:50 — HQ GO task U real run (identical to dry; D80). Recorder queue: S4 real → U real → S4b → D80 re-verify → V dry. After U: START2-R thm row swap (READER).
 - 07:52 — s6:46 third Opus: FIX CONFIRMED → recorder S4b cleared (after S4 real; verbatim corrected sentence; D80; citecheck expect 6 pre-existing TOKEN-MISS). FINAL citecheck on main: 6 pre-existing line-drift misses (s1:20, s1:35, s3:16×2, s7:78, s8:6) → editorial batch.
+- 07:53 — D80 re-verify (recorder, read-only): S, S2, T, T re-anchors all OK (post-apply hashes = expected); READER swaps OK. → HQ.
