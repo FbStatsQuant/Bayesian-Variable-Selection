@@ -1,6 +1,6 @@
 # INTERFACES — engine v4 contract between WP1–WP5
 
-**v0.1.10 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-15. Source: ENGINEERING_SPEC §0-v2,
+**v0.1.11 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-15. Source: ENGINEERING_SPEC §0-v2,
 §1–§3, §6. Where this file is silent, the spec rules; where the spec is silent, `core/` (v3.1 / revision D) rules.
 Questions and change requests: to the WP1 owner through the manager. Line references `core/...:N` are to revision D.
 
@@ -25,6 +25,21 @@ Scripts/SMC_BVS/engine_v4/
   `-march=x86-64-v3`, FMA only through explicit intrinsics / `std::fma`), `smcbvs4` (CLI), `v4_tests` (all unit + golden
   tests, own minimal harness `tests/tk.h`; it also compiles the core/ headers unchanged with the v3 flags for golden
   comparisons; links libquadmath), tools `v4_pmath_check`, `v4_bench_score`. C++20, GCC ≥ 11. OpenMP required. No network at configure or build time.
+- **`smcbvs4 merge` argument forms** (WP4, PR #33):
+  - **Driver form:** `merge --manifest merge.json --out fit.bin [--threads k] [--mem-budget BYTES]`. The manifest is
+    authoritative:
+    - R′ = `params.Rp`; the mode is the manifest's `mode`;
+    - inputs are found by base name among the manifest's `inputs`: `data.bin`, `setup.bin`, `calib.bin` and
+      `island_<r>.bin` for r = 1…R′ (leading zeros allowed, at most 9 digits);
+    - any explicit `--Rp`, `--islands`, `--data`, `--setup`, `--calib` or `--mode` that **disagrees** with the manifest
+      is refused (`invalid_input`, exit 13), in either argument order; agreeing ones are accepted.
+  - **Explicit form:** `merge --data D --setup S --calib C --islands i1,…,iR --Rp R --mode compat|law|V --out fit.bin
+    [--threads k] [--mem-budget BYTES]`. `--islands` is a comma list or a JSON array of exactly R′ distinct paths;
+    island r = position r.
+  - In both forms `--out` is required. `--mem-budget` is a whole number of bytes in [0, 2⁵⁰] (0 = off; `--mem-budget-gb`
+    is an alias; giving both is refused).
+  - Exit codes (§7): 0 completed, 11 `resource_limit` (including not admitted), 13 `invalid_input`, 14 `io_error` (a
+    missing island file).
 - Test runner: `engine_v4/tests/run_tests.sh [--quick|--full] [--threads k] [--fixtures]` = configure + build (`make -j3`,
   `nice -n 19`, build dir under `$TMPDIR`, which must be set) + run `v4_tests`. Golden comparisons against `core/` are
   inside `v4_tests` (core headers compiled unchanged, and fixtures written by R-compiled `core/` via
@@ -462,3 +477,6 @@ point, so all WPs link from day one: `setup::run`, `island::run`, `calib::run`, 
   X, z, diag(G), sort scratch, staging growth, the leader stores when on, one stale snapshot, and the caller-supplied
   setup input size. Admission uses calibration's mean |S| when given; the step-boundary check uses the store's actual
   size.
+- v0.1.11 (2026-11-16, WP1; WP4 PR #33) — §1: `smcbvs4 merge` argument forms (driver form with an authoritative
+  manifest, where a disagreeing explicit argument exits 13; explicit form; base-name input rules; `--mem-budget` range;
+  exit codes).

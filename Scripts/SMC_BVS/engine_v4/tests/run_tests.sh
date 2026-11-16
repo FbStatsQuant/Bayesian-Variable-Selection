@@ -1,18 +1,19 @@
 #!/usr/bin/env bash
 # run_tests.sh -- one-command test runner for engine_v4 (INTERFACES §1).
-#   tests/run_tests.sh [--quick|--full] [--threads k] [--build-dir DIR] [--fixtures] [--allow-missing-fixtures]
+#   tests/run_tests.sh [--quick|--full] [--threads k] [--build-dir DIR] [--fixtures] [--allow-missing-fixtures] [--keep]
 # TMPDIR must be set (never /tmp; the build goes to $TMPDIR/v4_build by default). Configures and builds (nice -n 19,
 # make -j3), runs v4_tests, prints machine / compiler / binary block. Exit 0 iff every test passes. --fixtures first
 # regenerates tests/fixtures from core/ (needs R with Rcpp, digest, jsonlite). A missing fixture is a FAIL.
 set -euo pipefail
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 if [[ -z "${TMPDIR:-}" ]]; then echo "run_tests.sh: set TMPDIR (department tmp folder; never /tmp)" >&2; exit 2; fi
-mode=quick; threads=3; build="$TMPDIR/v4_build"; fixtures=0; allow=()
+mode=quick; threads=3; build="$TMPDIR/v4_build"; fixtures=0; allow=(); keep=()
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --quick) mode=quick ;; --full) mode=full ;;
     --threads) threads="$2"; shift ;; --build-dir) build="$2"; shift ;; --fixtures) fixtures=1 ;;
     --allow-missing-fixtures) allow=(--allow-missing-fixtures) ;;
+    --keep) keep=(--keep) ;;   # keep the WP4 golden work dir ($TMPDIR/wp4_golden) for debugging
     *) echo "unknown option $1" >&2; exit 2 ;;
   esac; shift
 done
@@ -45,7 +46,8 @@ if command -v Rscript > /dev/null; then
 fi
 # WP4 golden bit tests against core/ (calibration coded rule, T9 merge, T10 paths); needs R with Rcpp.
 if command -v Rscript > /dev/null; then
-  nice -n 19 Rscript "$here/tests/golden/wp4_golden.R" "$here/../core" "$here" "${TMPDIR:-$build}/wp4_golden" "$mode" "$threads" || rc=1
+  nice -n 19 Rscript "$here/tests/golden/wp4_golden.R" "$here/../core" "$here" "${TMPDIR:-$build}/wp4_golden" "$mode" "$threads" "${keep[@]}" || rc=1
+  [[ ${#keep[@]} -eq 0 ]] && rm -rf "${TMPDIR:-$build}/wp4_golden"   # clean-tmp rule (also after a failure)
 else
   echo "R not found: WP4 golden tests NOT RUN"
 fi
