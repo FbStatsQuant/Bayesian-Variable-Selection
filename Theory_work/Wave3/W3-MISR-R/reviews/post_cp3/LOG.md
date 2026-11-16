@@ -1,0 +1,4 @@
+# W3-MISR-R post-CP3 log (D63: writes only in reviews/post_cp3/)
+- 2026-11-16 04:10 CST — Post-CP3 task start (manager; HQ H5 card 10 AGREED): A. base KL verdict; B. READER_DELTA v0.4.
+- 2026-11-16 04:12 CST — A: BASE_KL_VERDICT.md (FALSE for non-deterministic intercept; TRUE for deterministic; existing reviewed counterexample L1-1/K1-1; no new mathematics → no Sol check) and ERRATUM_W3-MISR_KL.md written.
+- 2026-11-16 04:12 CST — B: READER_DELTA_v0.4.md (title by what it proves; 'misspecified' only in the Example heading; Relation to Theorem 2 remark + bridge B4.5; Honest limits line; Song–Liang line for CLAIMS_CARD row 1.4; theorem statement unchanged) and READER_DELTA_v0.3_to_v0.4.diff (+22 -3 lines). MANIFEST_R3 verify OK (folder untouched outside reviews/post_cp3/). No helper, no Sol call.

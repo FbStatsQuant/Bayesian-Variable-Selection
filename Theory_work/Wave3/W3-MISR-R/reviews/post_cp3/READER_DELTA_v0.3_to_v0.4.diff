@@ -1,0 +1,62 @@
+--- READER_DELTA.md (v0.3, MANIFEST_R3)
++++ reviews/post_cp3/READER_DELTA_v0.4.md (v0.4)
+@@ -1,4 +1,4 @@
+-# W3-MISR-R — READER_DELTA (draft v0.3, 2026-11-16; v0.3 = council R1 faithfulness fixes [R1]; v0.2 = manager's CP1 wording rules applied; for W3-READER `READER_VERSIONS.md` row "thm4", card row 1.4)
++# W3-MISR-R — READER_DELTA (draft v0.4, 2026-11-16; v0.4 = post-CP3 presentation items of HQ card 10 [P4]: title, honest limits, relation to Theorem 2, Song–Liang line; theorem statement unchanged. v0.3 = council R1/R2 faithfulness fixes [R1], passed council R3; v0.2 = manager's CP1 wording rules applied; for W3-READER `READER_VERSIONS.md` row "thm4", card row 1.4)
+ 
+ Source read (read only): `/home/fb31/BVS-wt/W3-READER/Theory_work/Wave3/W3-READER/READER_VERSIONS.md`, row thm4 (between
+ `<!-- ROW thm4 BEGIN -->` and `END`), section version 0.2 / update log v0.3 (2026-11-16). This draft proposes the delta;
+@@ -20,7 +20,7 @@
+ 
+ ## 2. Proposed reader statement (replaces "### Reader statement" of row thm4)
+ 
+-**Theorem 4** (fitting the candidates only, with predictors missing). The method is run on the candidate predictors
++**Theorem 4** (candidate-only fitting with omitted Gaussian predictors; no condition on how $\Sigma$, $\beta$, $\sigma^2$ vary with $n$) [P4]. The method is run on the candidate predictors
+ $x_{\mathcal C}$ and the response $y^{\mathrm r}$ only ($p$ = number of candidates). Assume:
+ - **(A0) Model.** The candidate rows $x_{\mathcal C,1},\dots,x_{\mathcal C,n}$ are i.i.d. $N_p(m,\Sigma)$, and, given the
+   candidate design, the responses are independent with
+@@ -38,7 +38,7 @@
+ E\big[1-\pi(S_0^{\mathcal C}\mid y)\big]=O\Big(\sqrt{\tfrac{\log n}{n}}\Big),\qquad
+ P\big(\mathrm{HPM}\neq S_0^{\mathcal C}\big)=O\Big(\sqrt{\tfrac{\log n}{n}}\Big).
+ $$
+-*Example (omitted predictors).* If the rows $(x_{\mathcal C,i},x_{\mathcal M,i})$ are i.i.d. Gaussian with
++*Example (omitted predictors: the full model is misspecified for the candidate-only fit) [P4].* If the rows $(x_{\mathcal C,i},x_{\mathcal M,i})$ are i.i.d. Gaussian with
+ $\Sigma_{\mathcal C\mathcal C}$ invertible and
+ $y^{\mathrm r}_i=\alpha+x_{\mathcal C,i}^\top\beta_{\mathcal C}+x_{\mathcal M,i}^\top\beta_{\mathcal M}+\varepsilon_i$ with
+ $\varepsilon\sim N_n(0,\sigma^2I)$ independent of the rows, then (A0) holds with
+@@ -56,6 +56,15 @@
+ (with the energy bound and a floor on $S_0^{\mathcal C}$); it holds uniformly over any class of fixed-design configurations with
+ common constants and bounded support size on which this convergence is uniform. A fixed-design version of the theorem, uniform
+ over the residual variance, also holds (remarks in the paper; same status).
++*Relation to Theorem 2 [P4].* With no omitted predictors ($\beta^{\mathcal C}=\beta$, $\sigma^2_{\mathcal C}=\sigma^2$), the
++assumptions of Theorem 2 imply (A0)–(A3): Theorem 2's floor is on larger sets, and a correlation-matrix covariance, a fixed
++$s$, coefficients $b_{\mathrm{lo}}\le|\beta_j|\le b_{\mathrm{hi}}$ and a fixed $\sigma^2$ give the energy bound and a diverging
++beta-min. So in that case Theorem 4 gives Theorem 2's conclusions for $1-\pi(S_0\mid y)$ and the HPM in the stronger
++expectation form, and also when $\Sigma$, $\beta$, $\sigma^2$ vary with $n$; Theorem 2's PIP and MPM clauses then follow from
++the deterministic bounds $\max_j|\mathrm{PIP}_j-\mathbf 1\{j\in S_0\}|\le1-\pi(S_0\mid y)$ and
++$\{\mathrm{MPM}\neq S_0\}\subseteq\{1-\pi(S_0\mid y)\ge\tfrac12\}$. Theorem 2 does not give Theorem 4 (it fixes $\sigma^2$ and has
++no omitted predictors). The two theorems rest on different masters with their own conditions, and this comparison is a
++bridge (B4.5), not a separate claim.
+ 
+ ## 3. "Why each assumption" (replaces the row's list)
+ - (A0) is a convenient sufficient form. The proof uses only a weaker condition: given the candidates, the coordinates of
+@@ -81,6 +90,19 @@
+ | B4.2 | (A3) = CorGb-plus's signal conditions (→ ∞ branch of its liminf condition) | identity | `STATEMENT.md` §3 |
+ | B4.3 | POST2 C, E, A1, A0 (and D for the remark) | EXISTS-UNCHECKED (unchanged) | as the current row |
+ | B4.4 | Remark ⇒ CorH-U (RD) with 𝒦^♭_n := 𝒦^λ_n(s, A, 2M₀+1, (c_R/8)^{1/2}, C_OS, c) ((UP) by MIS(i) + Markov) and the events 𝒜_n of CorGb-plus's proof (P(𝒜_n) → 1); contraction sentence for a fixed design ⇒ CorH-plus (a′), (KL), with the premise δ_n → 0 in probability; uniform sentence ⇒ CorH-U (U-a), with its premise (UP); "fixed-design version of the theorem, uniform over the residual variance" ⇒ W3-MISR:MIS(i)@1.0.0 (BASE `STATEMENT.md:110-114`, constants free of v) | NEW (composition; the random-design part is `CorH-U` clause (G), STATEMENT §5) | the Hellinger rate M_n/√n and KL rate M_n/n are the sets H^a, K^a; the reference is centred (STATEMENT §1: μ(κ) = Cxβ) [R1] |
++| B4.5 | Relation to Theorem 2 (remark) ⇒ masters | NEW (comparison; for W3-READER's fidelity read) [P4] | Theorem 2 (row thm2: (A1)–(A3), `READER_VERSIONS.md:255-262` at W3-READER 45d39fb4) with no omitted predictors ⇒ CorGb-plus hypotheses: floor on \|S\| ≤ 5(A+1)(s₀+1)log n ⊇ the sets of (A2) here; energy β'Σβ ≤ λ_max(Σ_SS)‖β_S‖² ≤ s²b_hi² (correlation entries ≤ 1), so M₀ = s²b_hi²/σ²; beta-min n b_lo²/(σ² log n) → ∞; (S1) gives (A0) with constant α′. Conclusions: CorGb-plus display; PIP/MPM by the deterministic consequences of W3-MISR STATEMENT.md:119-120 (MIS-R (i), items 1–2, "for every data set"). Not implied: Theorem 4 by Theorem 2. Masters differ: W3-MISR-R:CorGb-plus vs W3-POST:Thm-1 item 6 + W2-APP:POST |
++
++
++## Honest limits (replaces the row's "### Honest limits") [P4]
++Nothing is claimed when, given the candidates, $y$ is not Gaussian with a mean linear in the candidates and a constant
++variance (beyond the contrast form described under (A0) in §3). Status: the masters' statuses, verbatim in §5, with their
++conditions.
++
++## Song–Liang line (proposed text for CLAIMS_CARD row 1.4, column "Buys vs the literature") [P4]
++"Analogue of Song–Liang (2015) Theorem 4 and Corollary 2 in their omitted-Gaussian-predictor setting, where the
++candidate-only conditional model is correctly specified: exact selection of the best candidate predictor's support with
++rate $\sqrt{\log n/n}$, no condition on how $\Sigma$, $\beta$, $\sigma^2$ vary with $n$; the coded method is exactly invariant
++to shifts and rescaling of $y$." (Replaces "Song–Liang Theorem 4 analogue with a rate and no fixed variance", CLAIMS_CARD.md:41.)
+ 
+ ## 5. Master-theorem paragraph (delta)
+ Replace "`W3-MISR:Cor-G(b)@1.0.0` … status verbatim" by `W3-MISR-R:CorGb-plus` (with `W3-MISR-R:CorG-min` for the
