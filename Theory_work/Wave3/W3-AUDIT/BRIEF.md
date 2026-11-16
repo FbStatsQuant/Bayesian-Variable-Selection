@@ -52,6 +52,18 @@ leakage-set sizes, local-regression margins, and so on, with n and p growing.
 - The question is whether the data look inside the assumptions, and whether that improves with n.
 - Small budget: ≤ 150 core-h on NOTS through Engineering, or Owls for small runs. Pre-announce the plan to HQ.
 
+## Track D: sharpness, i.e. could we do better? (owner's sub-optimality rollback, made systematic)
+For each core theorem, one sharpness record of at most a page, using the same tables as A and B:
+- **Each assumption:** NECESSARY (counterexample or known lower bound, cited), LIKELY WEAKENABLE (with a concrete
+  route), or UNKNOWN.
+- **The conclusion:** rate or constant OPTIMAL (lower bound, e.g. row 1.3) or a GAP, against Song–Liang and the best
+  known result.
+- **Pre-filled from existing lists:** W3-DIST UNHARVESTED_STRENGTH (11 items), the MISR/SCR better-theorem notes,
+  rider P1, check X, IDEAL-W⁺ binding, and the sharp2/sharp3 triage.
+
+The consultant then ranks the improvements. Each one adopted becomes a ticket with a kill budget, and a success
+supersedes the weaker result (rollback to the better theorem, as today with Cor-G(a) → CorG-min and START-R).
+
 ## Output and timing
 - `Theory_work/Wave3/W3-AUDIT/AUDIT.md`: one table per core theorem, giving each assumption, its track (A/B), its
   status or dossier, and the Song–Liang comparison.
