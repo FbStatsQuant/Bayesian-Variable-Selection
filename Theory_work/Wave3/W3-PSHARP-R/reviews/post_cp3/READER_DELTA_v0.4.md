@@ -57,7 +57,8 @@ is present **in expectation for every p**, bounded p included (with p = n^a the 
 probability whenever log p ≍ log n**. The rate √(log n/n) of Theorem 1 is exact in the following named cases:
 - **in expectation**, on fully orthogonal designs (all columns mutually orthogonal, any p with s₀ < p ≤ n − 1, bounded or
   growing) with fixed nonzero coefficients: these designs satisfy the assumptions of Theorem 1 and of (b), so
-  E[1 − π(S₀ | y)] is of exact order √(log n/n) (conditional on Theorem 1);
+  E[1 − π(S₀ | y)] is of exact order √(log n/n), with constants depending only on s₀, the coefficients and the noise
+  variance (conditional on Theorem 1);
 - **in probability**, on fully orthogonal designs with p = min(n − 1, ⌊n^a⌋) and on raw designs with i.i.d. N(0, 1)
   entries and p = ⌊n^a⌋, both with fixed nonzero coefficients (conditional on Theorems 1 and 2).
 The extra √(log n) in expectation at bounded p comes from rare large gains of a single extra variable, not from the
@@ -99,6 +100,6 @@ attained at fixed p, `numerics/ae_fixed_p_out.txt`.)
 | B3.5 | expectation display ⇐ Cor A1-E (`STATEMENT.md:74-84`) | EXISTS, council-passed (R2), pending recorded acceptance | display = A1-E main line; under (N-gauss) via the random-(X_{S₀}, θ*) clause (`STATEMENT.md:70-72`) with P(𝒜_n) → 1 (= 1 if the energy and coefficient bounds are assumed surely). Headline constant: (s₀ + 1)·2(p − s₀)/(2p − 1 − s₀) ≥ 2 for s₀ ≥ 1, ≥ (s₀ + 1)/2 for s₀ ≤ p/2, and ℓ_n ≥ ½ log n (B3.8 step 3) |
 | B3.6 | in-probability display needs p → ∞ | EXISTS-CHECKED | `W3-PSHARP:A`@1.0.0, Cor A1 (PARENT STATEMENT :71-73), unchanged |
 | B3.7 | remark (ii) ⇐ Cor A2-E(ii) (`STATEMENT.md:86-92`); remark (iii) ⇐ A2C (`STATEMENT.md:94-100`) | EXISTS, council-passed (R2), pending recorded acceptance | A2-E: all nulls, s₀ ≤ p/2, s₀ + 1 ≤ K, fixed (σ*², M, M′), and (N-orth) or (N-gauss) with X^r_{S₀} (hence θ*) deterministic; (log p)² = o(n) from (S2) or from p ≤ 2n. A2C: (N-orth), p → ∞, s₀/p → 0, Λ_n = (1 + o(1))(s₀ + 1)√(log p/(πn)) → λ |
-| B3.8 | fully orthogonal designs, fixed nonzero coefficients, s₀ < p ≤ n − 1 ⇒ Theorem 1 (A1)–(A6) and (b); hence exact order √(log n/n) in expectation | NEW, `reviews/post_cp3/BRIDGE_orth_thm1.md`; Sol line check L05 (`reviews/post_cp3/L05_bridge_sol.md`) | (A1)–(A6) with A = 1, θ̄ = max|θ*_j|, φ₀ = 1, g₀ = 1, second form of (A6); upper half carries Theorem 1's master status (row 1.1) |
+| B3.8 | fully orthogonal designs, fixed nonzero coefficients, s₀ < p ≤ n − 1 ⇒ Theorem 1 (A1)–(A6) and (b); hence exact order √(log n/n) in expectation | NEW, `reviews/post_cp3/BRIDGE_orth_thm1.md`; informal read L05 (low effort; GAP, repaired), Sol line check L06 high (`reviews/post_cp3/L06_bridge_sol.md`) | (A1)–(A6) with A = 1, θ̄ = max|θ*_j|, φ₀ = 1, g₀ = 1, second form of (A6); upper half carries Theorem 1's master status (row 1.1) |
 
 No internal ids appear in §3's reader text; (N-orth), (N-gauss), (S1), (S2), (A1)–(A6) are W3-READER's own labels.
