@@ -1,6 +1,6 @@
 # INTERFACES — engine v4 contract between WP1–WP5
 
-**v0.1.8 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-15. Source: ENGINEERING_SPEC §0-v2,
+**v0.1.9 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-15. Source: ENGINEERING_SPEC §0-v2,
 §1–§3, §6. Where this file is silent, the spec rules; where the spec is silent, `core/` (v3.1 / revision D) rules.
 Questions and change requests: to the WP1 owner through the manager. Line references `core/...:N` are to revision D.
 
@@ -391,8 +391,12 @@ Status fit_status(span<Status>);   // first that applies: invalid_input, interna
   schedule; (2) work is cut into **fixed chunks independent of the thread count** (default 64 items; label blocks and
   tiles are parameters, not part of the law); (3) floating-point reductions sum per-chunk partials, then combine chunk
   results serially in chunk order; no floating atomics, no `omp reduction` on floats; (4) **one `Ledger` (stores) per
-  island; one `ThreadLedger` per worker with bounded offer buffers, absorbed at stage ends in thread-index order;
-  quick rejects against the island store's monotone cut-off (§4.2)**; (5) uniforms come only from addresses, never from thread state; (6) the stage barrier
+  island (or merge job). Island stages: one `ThreadLedger` per worker with bounded offer buffers, absorbed at stage
+  ends in thread-index order; quick rejects against the island store's monotone cut-off (§4.2). The tail (final local
+  search, LS0): no `ThreadLedger`, because its early flushes are irrevocable. Instead it uses chunk-ordered wave
+  buffers of at most 4·threads·chunk offers, filtered by `v ≥ cutoff()` read at the wave start, and applied in chunk
+  order after each wave. On a numerical failure, the failing chunk's earlier offers are applied and later ones are
+  dropped. This is exact and thread-invariant, including on the failure path (HPM incomplete)**; (5) uniforms come only from addresses, never from thread state; (6) the stage barrier
   (weights, LSE, ESS, resampling) is serial in particle order (`core/cpp/v3_engine.h:316-327`).
 
 ## 8. Owned by WP1 and delivered with the skeleton
@@ -440,3 +444,6 @@ point, so all WPs link from day one: `setup::run`, `island::run`, `calib::run`, 
 - v0.1.8 (2026-11-16, WP1; PR21 review m1) — §5.1 `island_r.bin` aligned with WP3's code (no code change): `st_moves`
   T × 12 (`gibbs_cap`), `rb_round` Hm × p, terminal supports N, and the sections `grid`, `term_moves`, `term_distinct`,
   `hpm_val`, `hpm_ev`; estimate sections (incl. `st_inc`, `st_cum`) only when completed.
+- v0.1.9 (2026-11-16, WP1; PR16 re-check) — §7(4): the tail (final local search, LS0) uses chunk-ordered wave buffers
+  (≤ 4·threads·chunk offers) with the cut-off filter instead of `ThreadLedger`; exact and thread-invariant on the
+  failure path. Island stages keep `ThreadLedger`.

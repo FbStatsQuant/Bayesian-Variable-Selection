@@ -7,7 +7,13 @@
 
 ## Verdict: **MERGE** (ACCEPT; 0 CRITICAL, 0 MAJOR, 3 MINOR, 4 INFO; none blocks the merge)
 
-__TESTS_SUMMARY__
+- All claimed numbers reproduce. `v4_tests`: **67/67** with the default (quick) set and 70/70 with `--full`. `wp4_golden.R full 3`: **833,549 checks, 0 failures**.
+- Every fix in the disposition is in, and the D-26 bounded rule is implemented and tested per path.
+- **F3 deviation:** I accept it. The argument is right. The wave-buffer tail is exact, thread-invariant and bounded, and my own probe confirms the exactness on the failure path, which the PR does not test.
+- **Remaining:** three MINOR findings, fixable in slice 2 (they touch the slice-2 reader and admission) or as a small follow-up:
+  - m-1: the terminal reader can read out of bounds on corrupt offsets. Reproduced as a segfault.
+  - m-2: the memory admission assumes no leader stores without enforcing it.
+  - m-3: the F3 failure-path test is missing.
 
 ## Claims, one by one
 
@@ -152,4 +158,16 @@ __TESTS_SUMMARY__
 
 ## Test runs (MEASURED; Owls, Xeon Gold 6148, GCC 11.5.0, R 4.6.0, `nice -n 19`, ≤ 3 threads, 2026-11-16)
 
-__TEST_TABLE__
+Temp folder `/home/fb31/SMC_Engineering_Department/tmp/20261116-recheck-16`, removed afterwards.
+
+| # | what | result |
+|---|---|---|
+| 1 | `tests/run_tests.sh --full --threads 3` at head `083014d2` (build: `-O2 -fno-math-errno -ffp-contract=off -march=x86-64-v2`) | `v4_tests --full` **70 cases, 0 failed**. WP5 Slurm driver: 12 tests OK. WP5 competitor harness: OK. **`wp4_golden.R full 3`: 833,549 checks, 0 failures** (7 cases, p = 30 … 2,000). Wall 31 min 49 s (00:30:09 → 01:01:58), load 24–42 |
+| 2 | `v4_tests` (default set), same build | **67 cases, 0 failed** (= the PR's claim) |
+| 3 | probe: tail failure several waves in vs a serial scan stopped at the failure; threads {1, 3} × chunk {3, 7, 64}, 8 problems | **48/48 ledgers equal** (HPM model, F bits and EventKey; top store; counters); every run threw `NumericalFailure` |
+| 4 | probe: `read_terminal_supports` on `ptr = {0, 10⁸, 2}`, pool of 2 | **segmentation fault** (m-1) |
+| 5 | PR merged onto the current base `cded552` (`git merge-tree` tree `634b301a`, extracted by `git archive`), `run_tests.sh --quick --threads 3` | `v4_tests` 67 cases with 1 failure on the first run: WP1's `prep_from_r_equals_cpp_path`, whose `rm -r` of its own tmp dir hit "Directory not empty" (an NFS `.nfs*` leftover; not WP4 code). **Re-run: 67/67.** WP5 driver 17 tests OK; install script 23 checks OK; competitor harness OK. **WP4 golden quick: 231,999 checks, 0 failures** |
+
+- The golden count drops from 1,048,592 to 833,549 because of the v0.1.7 exclusion of v3's final-run leader stores.
+- In its place, each final comparison now asserts that the v4 final leaders are absent.
+- The golden asserts that every forced path was actually reached, so the count is not padded with vacuous checks.
