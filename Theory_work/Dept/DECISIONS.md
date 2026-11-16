@@ -80,3 +80,12 @@
 - 4(b) approved (conditional-on + @hyp). 4(a) with HQ's consultant (H5), condition: W3-READER candidate rows keep flags
   until the claims card is decided. Recorder told: dry runs for C and D, two variants for 4(a) (flags kept / cleared off
   the candidate list); no real run until HQ. Forward W3-READER CP1 claims card to HQ as soon as Sol S1 lands.
+
+## 2026-11-15 19:52 CT — HQ verdict 4(a): clear all 44 headline flags; strength gates scheduled
+- Recorder task F (dry runs): clear all 44 tool-set flags; HEADLINE_CANDIDATES.md (cleared ids, why candidate,
+  pending gates, citation rule); staged acceptance POST2 + W2-APP with 4(b); find Ex-STAR/ENUM real block. Real runs: HQ.
+- **D17. Strength gates for the five-pillar rows = W3-READER leg 2** (draft `drafts/W3-READER_LEG2_GATES.md`):
+  outside the lead cap, same lead that already owns the card and the per-assumption necessity lines. better: gates
+  cite the blind API sharpness audits (sharp1/1b/2 + triage dispositions) where they cover a row; fresh Opus reviews for
+  uncovered rows; Codex kept for DIST and riders. Deadline Thu 11-19 18:00 CT → recorder enters gates before the Fri freeze.
+  W3-DIST gates in its own chain; rider rows at their CP1.

@@ -27,7 +27,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 ## To plan (charter §8)
 | item | note |
 |---|---|
-| strength gates for headline candidates (lit / necessity / better, LIFECYCLE §4.2) | POST2 A1–E and W2-APP POST/Thm-LOC rows block acceptance without them (recorder task D); scope after HQ's answer on tool-set headline flags |
+| strength gates for headline candidates (lit / necessity / better, LIFECYCLE §4.2) | D17: W3-READER leg 2 after its CP1, five-pillar rows by Thu 11-19 18:00 CT (draft drafts/W3-READER_LEG2_GATES.md); 44 tool-set flags cleared per HQ/consultant (recorder task F) |
 
 ## Named open items (no tickets; for the chapter's open-problems section)
 RM2-R aggregated leak (D) · START MIS with a general μ (D) · Ex-Equi b < 3/8 if not done in W3-RM2-R (O4′) · START2-O1 count (17 − s₀).
