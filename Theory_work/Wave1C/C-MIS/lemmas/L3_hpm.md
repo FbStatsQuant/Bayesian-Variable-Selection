@@ -3,7 +3,7 @@
 Status (per claim): Corollary H, Corollary D — R02 VERIFIED; Corollary D′ (optional instance) — R02
 VERIFIED-WITH-AMENDMENTS (applied). Sweep R06 fixes applied. Council pending.
 Inputs (verbatim statuses): M5(0) = T38-(0) "PROVED (SF: VERIFIED (W3-VT38E); XF: VERIFIED* (A-REV5))" (SoP
-`04_theory.tex:466`); Theorem GEN: "PROVED-CHECKED" (`Theory_work/Wave1/W1-GEN/REPORT.md:20`), with its premises (incl. e4;
+`04_theory.tex:469`); Theorem GEN: "PROVED-CHECKED" (`Theory_work/Wave1/W1-GEN/REPORT.md:20`), with its premises (incl. e4;
 N3 "OPEN" as a general invariant, GEN REPORT flag 4).
 Notation (M5/T38): 𝒪 output-available event, U = 𝒪ᶜ; 𝒮⁺ the all-scored set; Ŝ⁺ its ≻-maximum under (F, −|S|, lex);
 barred objects refer to the potential uninterrupted run (Lemma RO, GUARD-W) — T38 proof
