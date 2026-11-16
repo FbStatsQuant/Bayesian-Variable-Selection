@@ -15,3 +15,6 @@
 - 2026-11-15 20:28 CST — manager: temp convention: TMPDIR=/home/fb31/bvs_tmp/W3-RM2-R for all temp-writing commands; never /tmp; clean up. Noted.
 - 2026-11-15 20:34 CST — manager: exact temp path TMPDIR=/home/fb31/bvs_tmp/theory/<YYYYMMDD>-W3-RM2-R-<what> (CI: /home/fb31/bvs_tmp/ci); supersedes previous path; rules /home/fb31/bvs_tmp/README.md. Noted.
 - 2026-11-15 20:38 CST — manager: FINAL temp location TMPDIR=/home/fb31/SMC_Theory_Department/tmp/<YYYYMMDD>-W3-RM2-R-<what> (CI: /home/fb31/SMC_Theory_Department/ci); replaces bvs_tmp notes. Noted.
+- 2026-11-15 21:43 CST — SL1 returned: DO NOT LOCK (5 findings: S1 length(y)=n; F2 literal guards ls0_ell≤1e6 and INT_MAX cap guard not covered by IDEAL-W; F3 T2(c) coded-start event; F4 DLV-0⇒Prop-F edge qualify; E5 pointers). T4 parts, T2(b), Ex-Proxy-d pass. Saved verbatim reviews/SL1_statement_lock_sol.md.
+- 2026-11-15 21:45 CST — applied SL1 findings 1–5 → STATEMENT v0.2 (disposition reviews/SL1_disposition.md; PLAN Q5 updated). Diff v0.1(c0b61cb)→v0.2 saved reviews/SC1_diff_v0.1_v0.2.diff; brief reviews/BRIEF_SC1_sol.md saved before launch.
+- 2026-11-15 21:47 CST — launched SC1 statement-change check (codex gpt-6.1-sol high, new agent; brief reviews/BRIEF_SC1_sol.md). Settled the finished SL1 reviewer thread (POLICIES §10).

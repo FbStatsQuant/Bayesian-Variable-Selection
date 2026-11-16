@@ -1,8 +1,9 @@
 # W3-RM2-R — STATEMENT v0.1 (delta over W3-RM2 v1.4 and W3-RM RM-0: constant-level signals, the mode interface, delivery)
 
 Ticket W3-RM2-R (Tier B rider), Theory Wave 3. Lead: Claude Opus 5.5 (Claude Third, effort high). Protocol:
-`Theory_work/Wave3/PROTOCOL_v4.md` with `RIDER_RULES.md` of this folder. Status of this file: **v0.1.1, draft for the
-statement lock** (2026-11-15; v0.1.1 = v0.1 with the C-DLV law-free inputs listed in (C-D) after R-AUD1, record only). All results are asymptotic (n → ∞) unless marked *deterministic*.
+`Theory_work/Wave3/PROTOCOL_v4.md` with `RIDER_RULES.md` of this folder. Status of this file: **v0.2** (2026-11-15) = v0.1.1 with the five
+findings of statement-lock review SL1 applied (`reviews/SL1_statement_lock_sol.md`: DO NOT LOCK; disposition
+`reviews/SL1_disposition.md`; markers [SL1-#]); v0.1.1 = v0.1 with the C-DLV law-free inputs listed in (C-D) after R-AUD1. All results are asymptotic (n → ∞) unless marked *deterministic*.
 
 **This is a delta statement.** PARENT := `Theory_work/Wave3/W3-RM2/` (STATEMENT v1.4, recorded on main);
 RM := `Theory_work/Wave3/W3-RM/` (STATEMENT v1.2.1; claim W3-RM:RM-0@1.0.0 at RM `STATEMENT.md:160-176`).
@@ -60,19 +61,34 @@ Since π(S) ∝ exp F(S) on Ω, {π(S₀) > ½} ⊆ 𝓜_n; hence P(𝓜_nᶜ) �
 |Q| ≤ K) that is **down-closed in 𝓛** (T ∈ 𝓛′ and S₀ ⊆ T′ ⊆ T imply T′ ∈ 𝓛′):
 NA(𝓛′) := {F(T ∪ {l}) < F(T) for all T ∈ 𝓛′ with |T| < K and all l ∉ T};
 TL(𝓛′) := {F(A) < F(T) for every T ∈ 𝓛′ and every feasible neighbour A of T with S₀ ⊄ A};
-Sand_n(𝓛′) := {S̃ ∈ 𝓛′ for every maximiser S̃ of γ₀ on Ω}. (With 𝓛′ = 𝓛 these are NA(𝓛), TL(𝓛), Sand_n(Q).)
+St_n(𝓛′) := {S̃₀ ∈ 𝓛′}, S̃₀ the coded start mode (a function of the data, W3-RM:E4@1.0.0) [SL1-3]; sufficient:
+Sand_n(𝓛′) := {S̃ ∈ 𝓛′ for every maximiser S̃ of γ₀ on Ω} ⊆ St_n(𝓛′) (E4: S̃₀ is a maximiser). Since 𝓛′ ⊆ 𝓛, St_n(𝓛′)
+implies S₀ ⊆ S̃₀, and by down-closure St_n(𝓛′) = {[S₀, S̃₀] ⊆ 𝓛′} (the BRIEF's form). (With 𝓛′ = 𝓛:
+NA(𝓛), TL(𝓛), and Sand_n(Q) ⊆ St_n(𝓛).)
 
 **Delivery premises (D) (T2(a)).** In addition to the implementation premises and configuration of §1:
-IDEAL-W, EX-A as a unit-cost model, MACH(τ, τ₀, β, β₀), CONFIG and TDP-IMPL exactly as in DLV `STATEMENT.md:21-39`,
+**IDEAL-W⁺** (below), EX-A as a unit-cost model, MACH(τ, τ₀, β, β₀), CONFIG and TDP-IMPL exactly as in DLV
+`STATEMENT.md:21-42` [SL1-5],
 with CONFIG read at the shipped configuration (the configuration of §1, the tier-1 grid fallback
 `grid_fallback = TRUE`, its default under `ls0 = TRUE`, `Scripts/SMC_BVS/core/v3_calib.R:141-144`, `v3_fit.R:151`;
 declared R′ = 4k with k fixed; fixed worker count; default 𝓗 list), and the **declared allocation** 𝒜_n: `allocation$mem_gb`
 and `allocation$hours` at least the polynomial envelopes of DLV Corollary R (DLV `lemmas/L1_resources.md:129-143`)
 re-derived for the shipped code — LS0 cap ℓ_n + |S̃₀| (at most ℓ_n + K + 1 scans of ≤ p + p²/4 score requests each) and
 the shipped preflight charge — evaluated at (n, p_raw). CAL is not assumed.
-**Valid non-degenerate input:** n ≥ 3; X^r a finite real n × p_raw matrix with at least one non-constant column;
-y^r a finite real vector that is not constant; a valid declared seed (integer in [1, 2³¹ − 1]) and allocation (a list
-with finite positive `mem_gb`, `hours`) (DLV `STATEMENT.md:40-41`).
+**IDEAL-W⁺ [SL1-2].** DLV's IDEAL-W (an unbounded-word/address machine: integer, index, stream-id and allocation
+arithmetic never overflow, so `unsupported_size` never fires; DLV `STATEMENT.md:22-23`), read so that it also lifts the
+**representability guards**: explicit comparisons of a size-derived quantity with a fixed machine limit. At the pin
+these are at least (i) the LS0 base-cap validator `ls0_ell ≤ 1e6` (`Scripts/SMC_BVS/core/v3_run.R:95-97`), which the
+default ℓ_n = ⌈log₂(n + p + 1)⌉ exceeds once n + p + 1 > 2^{10⁶}, and (ii) the LS0 cap-range guard
+ℓ_n + |S̃₀| ≤ INT_MAX (`cpp/v3_core.cpp:473-474`); the DLV-0 audit lists every such guard. Under IDEAL-W⁺ these
+guards pass. **Without the lift**, DLV-0 holds on the supported domain 𝔇 := {n + p_raw + 1 ≤ 2^{10⁶} and
+⌈log₂(n + p_raw + 1)⌉ + ⌊n/2⌋ ≤ 2³¹ − 1} (together with whatever further guards the audit lists); 𝔇 contains every
+input that fits in the memory of any physical machine, but it is a bounded set, so the asymptotic conclusions of
+(c⁺), (C1⁺), (C2⁺) are stated under IDEAL-W⁺, an idealisation of the same kind as EX-A.
+**Valid non-degenerate input [SL1-1]:** n ≥ 3; X^r a finite numeric n × p_raw matrix with at least one non-constant
+column; y^r a finite numeric vector **of length n** (no dim attribute) that is not constant; a **scalar** seed, a whole
+number in [1, 2³¹ − 1]; an allocation that is a list with scalar finite positive `mem_gb`, `hours` — i.e. no input
+validator fires (`v3_fit.R:88-92`, `v3_preprocess.R:7-11, 97-115`; DLV `STATEMENT.md:43-44` [SL1-5]).
 
 **(T1-F♭) Theorem 1's conditions at the constant beta-min level (T4).** (H0) of GROW (GROW `STATEMENT.md:84-88`, as
 quoted at RM `STATEMENT.md:91-92`) with BM-∞ replaced by **"BM-∞, or BM(c): θ*²_min ≥ cσ² log n/(nφ₀²) for a fixed
@@ -100,16 +116,17 @@ All other hypotheses are PARENT's, unchanged.
 **(C0⁺) Theorem RM0-plus (core; any design; deterministic statement plus one inequality).** Let Q ⊇ S₀ be
 deterministic with |Q| ≤ K. Under the implementation premises and configuration of §1 and the hypotheses of Lemma E4:
 (a) RM-0(a) as stated at RM `STATEMENT.md:162-167` (unchanged).
-(a′) [T2(c)] For every deterministic 𝓛′ ⊆ 𝓛 down-closed in 𝓛: on Sand_n(𝓛′) ∩ NA(𝓛′) ∩ TL(𝓛′), LS0 from the coded
+(a′) [T2(c)] For every deterministic 𝓛′ ⊆ 𝓛 down-closed in 𝓛: on St_n(𝓛′) ∩ NA(𝓛′) ∩ TL(𝓛′) [SL1-3], LS0 from the coded
 start mode S̃₀ performs exactly |S̃₀ ∖ S₀| moves, each deleting one element of S̃₀ ∖ S₀, visits only sets T with
 S₀ ⊆ T ⊆ S̃₀ (all in 𝓛′), and ends at S₀ with a completed scan that finds no strict improvement; the cap ℓ_n + |S̃₀| is
-not binding; the archive statement of RM-0(a) holds. Hence 𝒦_nᶜ ⊆ Sand_n(𝓛′)ᶜ ∪ NA(𝓛′)ᶜ ∪ TL(𝓛′)ᶜ.
+not binding; the archive statement of RM-0(a) holds. Hence 𝒦_nᶜ ⊆ St_n(𝓛′)ᶜ ∪ NA(𝓛′)ᶜ ∪ TL(𝓛′)ᶜ, and
+St_n(𝓛′) may be replaced by its sufficient form Sand_n(𝓛′).
 (b⁺) [T2(b)] For n with s₀ ≤ K, pathwise, for every admissible run (every seed, N_e, R′ and calibration outcome):
   𝒪 ∩ {Ŝ⁺ ≠ S₀} ⊆ 𝓜_nᶜ ∪ 𝒦_nᶜ,
 a data event. With 𝒢⁺_n := 𝓜_n ∩ 𝒦_n, every admissible output run reports Ŝ⁺ = S₀ on 𝒢⁺_n, and
   P(𝒪 ∩ {Ŝ⁺ ≠ S₀}) ≤ P(𝒢⁺_nᶜ) ≤ P(𝓜_nᶜ) + P(𝒦_nᶜ),  P(𝓜_nᶜ) ≤ 2E[1 − π(S₀)],
-  P(𝒦_nᶜ) ≤ P(Sand_n(𝓛′)ᶜ) + P(NA(𝓛′)ᶜ) + P(TL(𝓛′)ᶜ) for every 𝓛′ as in (a′) (in particular 𝓛′ = 𝓛),
-uniformly over the run parameters. Under [MODE] and P(Sand_n(𝓛′) ∩ NA(𝓛′) ∩ TL(𝓛′)) → 1 for some such 𝓛′ (in
+  P(𝒦_nᶜ) ≤ P(St_n(𝓛′)ᶜ) + P(NA(𝓛′)ᶜ) + P(TL(𝓛′)ᶜ) for every 𝓛′ as in (a′) (in particular 𝓛′ = 𝓛),
+uniformly over the run parameters. Under [MODE] and P(St_n(𝓛′) ∩ NA(𝓛′) ∩ TL(𝓛′)) → 1 for some such 𝓛′ (in
 particular under [SAND(Q)], [NA(Q)], [TL(Q)]): P(𝒢⁺_n) → 1 and P(𝒪 ∩ {Ŝ⁺ = S₀}) = 1 − P(U_n) − o(1). On enumeration
 branches 𝒦_n refers to the hypothetical search, and there 𝒪 ∩ {Ŝ⁺ ≠ S₀} ⊆ 𝓜_nᶜ. RM-0(b) is the special case that
 uses {π(S₀) > ½} ⊆ 𝓜_n.
@@ -124,7 +141,8 @@ valid and non-degenerate with probability one.
 
 **(C-D) Lemma DLV-0 (deterministic delivery).** Under the implementation premises and configuration of §1 and the
 delivery premises (D): for every valid non-degenerate input, every seed and every realisation of the method's
-uniform streams, the coded fit (`v3_fit`, core as pinned in §1) returns with `estimates_available = TRUE`. No data
+uniform streams, the coded fit (`v3_fit`, core as pinned in §1) returns with `estimates_available = TRUE`; without
+the representability lift of IDEAL-W⁺, the same holds for every such input in the supported domain 𝔇 of §2. No data
 law, no model and no design class enters. DLV-0 is a delivery statement only; it asserts nothing about Ŝ⁺.
 **Law-free inputs, cited (and only these):** the exit walk of Theorem D (DLV `lemmas/L4_delivery.md:13-42`), in which the
 data law enters only through Lemma S.1's null sets for A3–A5 (`lemmas/L2_degenerate.md:5-18`) — replaced here by the
@@ -196,7 +214,7 @@ PARENT (C4) (`STATEMENT.md:236-240`), RM2-F-plus ⇒ W3-RM:RM-F and RM2-R-plus �
 | new claim | ⇒ parent claim | why (one line) |
 |---|---|---|
 | W3-RM2-R:RM0-plus | W3-RM:RM-0@1.0.0 | {π(S₀) > ½} ⊆ 𝓜_n; (a) identical; (a′) with 𝓛′ = 𝓛 is (a) |
-| W3-RM2-R:DLV-0 | C-DLV:Prop-F@1.0.0, **delivery half only** (R-AUD1 restatement, first sentence) | every input ⇒ almost every input; the patched calibration law of Prop F is the shipped default; Prop F's consistency sentence is not implied (and not consumed) |
+| W3-RM2-R:DLV-0 | **no registry implication edge** [SL1-4]; it *recovers the delivery conclusion* of C-DLV:Prop-F@1.0.0 (R-AUD1 restatement, first sentence) and of W2-UNI:F-UNI@1.1.0 Step 2 **under (D)** | the method differs from Prop F's (LS0 cap ℓ_n + \|S̃₀\| instead of ℓ_n; allocation re-derived for that cap and the shipped preflight; IDEAL-W⁺), so it is not an implication of the registered parent; every input ⇒ almost every input for the delivery half; Prop F's consistency sentence is neither implied nor consumed |
 | W3-RM2-R:RM2-F-plus | W3-RM2:RM2-F@1.0.0 | (T1-F) ⇒ (T1-F♭), (V) ⇒ (V♭), (BM-W) ⇒ (BM-W⁺); conclusions ⊇ |
 | W3-RM2-R:RM2-R-plus | W3-RM2:RM2-R@1.0.0 | same hypotheses; conclusions ⊇ |
 | W3-RM2-R:SAND-F-c | W3-RM2:SAND-F-b@1.0.0 | (V_b) ⇒ (V_b♭) |
@@ -233,3 +251,4 @@ Implementation premises (named, not proved): §1 and (D).
 |---|---|---|---|---|---|
 | v0.1 | all | — | draft for the statement lock | — | — |
 | v0.1.1 | (C-D), dependency row DLV-0 | EQUAL | consumed C-DLV steps listed; Prop F consistency sentence excluded (manager input, R-AUD1) | `Theory_work/Wave3/API_AUDIT/pass1/R-AUD1_sol.md` | SL1 disposition |
+| v0.2 | (D), input definition, (a′)/(b⁺) start event, DLV-0 dependency row, pointers | pre-lock repair | SL1 findings 1–5 (markers [SL1-#]) | `reviews/SL1_statement_lock_sol.md` | `reviews/SC1_statement_change_sol.md` (to run) |
