@@ -270,3 +270,9 @@
   then re-frozen START/MISR manifests with seat carriers; (b) EXT-at-freeze-commit tool change after Friday. Cont-F/R recorded
   as-is (implication lemmas; by design). PROTOCOL.md: manifest-impact check before any merge (§C) + B11 (Opus diff checks
   for citation-only changes). CP3-blocking status report from the recorder by Tue 12:00.
+
+## 2026-11-15 21:48 CT — W3-START2-R CP1: GO
+- **D40.** Target approved (16 claims; (iii) under (L-gain-0); F2⁺⁺/OVL⁺⁺ restated). T9/T11 not adopted (open items).
+  Helpers A (Opus, T8) and B (Sonnet, numerics) approved. Priority: headline clauses (T3⁺⁺)(b), IF-START⁺⁺, (T1⁺⁺) first;
+  restatements drop to a post-freeze rider if Wed 18:00 is tight. H5 input to HQ. READER row thm5.
+- PSMC-S0 FR1 (Sol) > 2 h — flagged to HQ (low priority, off the critical path).

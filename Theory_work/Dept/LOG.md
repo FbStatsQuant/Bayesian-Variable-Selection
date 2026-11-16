@@ -99,3 +99,4 @@
 - 21:41 — task J: platform bug + citefix broke START/MISR manifests (my miss) — escalated to HQ with options; recorder holds those, continues H + C.
 - 21:43 — HQ decisions on J (D39); Opus diff check launched; recorder told; PROTOCOL.md updated.
 - 21:45 — Opus diff check of C-MIS citefix: PC-VERDICT CITATION-ONLY (7 line-number re-points, byte-identical cited ranges; pre-existing one-line offset in two L1_reduction cites noted). Recorder may re-freeze START/MISR manifests with seat carriers. Reviewer settled.
+- 21:48 — heartbeat: START2-R CP1 → GO (D40); RM2-R lock done → SC1; MISR-R lock back; W3-EDIT Sol S1 back; PSMC-S0 FR1 > 2 h flagged.
