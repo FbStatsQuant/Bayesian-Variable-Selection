@@ -38,3 +38,8 @@
 - 2026-11-16 02:20 CST — **LC-C returned: VERIFIED, 0 GAP, 0 ERROR** (C6–C10, Assembly T03S.1–.5, completeness of the change lists,
   [P3] §§6–7; N1 J_n^∞ confirmed harmless, N6 same-A confirmed (no A ≥ 1 used; feasibility forces A ≥ 0), N7 p = 1 confirmed).
   DEPS rows C6–C10, ASM, ASM2, P3.under, P3.main → OK. API slip A4 dispositioned; ERRATA.md E1. LC-C reviewer settled.
+- 2026-11-16 02:22 CST — **LC-A returned: VERIFIED, 0 GAP, 0 ERROR** (E1(a),(b),(d), m♯_n, E2(i), den′ re-derived from the proof
+  of lem:den, T02(i♯) with its sup_m quantifier; [P1] setting, lem:slab, lem:IGint, lem:spec(a)–(e), lem:prior(a)–(d), lem:chi,
+  prop:closed, thm:T01i, thm:T01ii, thm:T01iii, thm:Ta, lem:num, lem:den, thm:T02i). N1 p = 1 confirmed; N2 R_m for m < 0
+  confirmed; N3 moot; N4 no use of p ≤ n^A or A ≥ 1. API slips A1, A3 dispositioned (ERRATA E2, E3). DEPS rows → OK.
+  LC-A reviewer settled.
