@@ -352,3 +352,7 @@
   recorder's repair now (new full CHECKPOINT_5 verbatim + Cont-R extended; correct-status; re-record). Task L: only an
   evidence pointer (implies edge already exists). POST2:C Prop-LB condition drop deferred post-freeze into one POST2
   checkpoint rewrite with L1a′/TH128. PROTOCOL §C rule added (never move a status source off a council checkpoint).
+
+## 2026-11-15 23:45 CT — HQ GO on the RM2 repair
+- **D53.** CHECKPOINT_5 repair GO with dry-run gates (A4 all RM2 rows; RM2-R re-validates; check 0 ERROR; suite; DIST
+  staged acceptance) → real; Task L GO (notes pointer); POST2:C Prop-LB deferred. PROTOCOL §C: pre-merge A4 sweep rule.
