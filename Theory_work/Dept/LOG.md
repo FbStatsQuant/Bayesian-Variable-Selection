@@ -142,3 +142,4 @@
 - 23:41 — Opus implication check: IMPL-VERDICT IMPLIES (PSHARP:B ⇒ W3-POST:Prop-LB; δ ≥ 1/(1+√n) on Prop-LB's whole domain). Reviewer settled; recorder to record the implies edge (HQ-approved).
 - 23:44 — D52: RM2 CHECKPOINT_4 A4 breakage escalated with repair recommendation; PROTOCOL rule added.
 - 23:45 — HQ GO on CHECKPOINT_5 repair (gated) + Task L; PROTOCOL pre-merge A4 sweep rule; recorder told (D53).
+- 00:05 — heartbeat: T03ACC CP1 → GO (D54); PSHARP-R in council R1 (Opus seat FAIL on F-1 → diff round, lead handling); START2-R REPORT written; RM2-R numerics done; MISR-R council prep; DIST D1 back.
