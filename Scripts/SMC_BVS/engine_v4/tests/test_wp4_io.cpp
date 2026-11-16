@@ -105,7 +105,7 @@ Fx make_fx(const std::string& tag, int R, uint32_t mode = fmt::M_COMPAT) {
     I.pip.resize(p); I.rb_acc.resize(p);
     for (int j = 0; j < p; ++j) { I.pip[j] = std::fmod(0.017 * (j + 1) * (r + 3), 1.0); I.rb_acc[j] = I.pip[j] * 200; }
     I.rb_round.assign(4, std::vector<double>(p, 1.0));
-    LedgerConfig ic = cfg; ic.leaders = false; I.led.init(ic);
+    LedgerConfig ic = cfg; ic.leaders = false; ic.islands = std::max(4, R); I.led.init(ic);
     for (int t = 0; t < 400; ++t) {
       Model M = random_model(g, p, 5); double lm, lg0, dd, F; ev(M, lm, lg0, dd, F);
       EventCtx e; e.phase = PH_MEASURED; e.mech = ME_GIBBS_FLIP; e.phi = 1; e.key.seg = SG_FINAL; e.key.unit = (uint32_t)r; e.key.xph = X_MEASURED;
@@ -358,7 +358,15 @@ TEST(wp4_io_island_layout_vs_wp3) {
 
 #include <sys/wait.h>
 namespace {
-int run_cmd(const std::string& cmd) { int rc = std::system((cmd + " > /dev/null 2>&1").c_str()); return WIFEXITED(rc) ? WEXITSTATUS(rc) : -1; }
+// runs a command; on an exit code other than `expect` (when given) its output is printed for the diagnosis
+int run_cmd(const std::string& cmd, int expect = -1) {
+  const std::string log = tmp_path("cli_cmd.log");
+  int rc = std::system((cmd + " > '" + log + "' 2>&1").c_str());
+  int code = WIFEXITED(rc) ? WEXITSTATUS(rc) : -1;
+  if (expect >= 0 && code != expect) { std::ifstream f(log); std::string l; while (std::getline(f, l)) std::printf("    | %s\n", l.c_str()); }
+  std::remove(log.c_str());
+  return code;
+}
 std::string q(const std::string& s) { return "'" + s + "'"; }
 struct DirGuard { std::string d; ~DirGuard() { if (!d.empty()) run_cmd("rm -rf " + q(d)); } };
 }
@@ -371,7 +379,7 @@ TEST(wp4_io_merge_cli_and_driver_manifest) {
   const std::string base = bin + " merge --data " + q(f.dpath) + " --setup " + q(f.spath) + " --calib " + q(f.cpath) + " --mode V --threads 2";
   auto out = [&](const std::string& n) { return dg.d + "/" + n; };
   // explicit arguments: --islands as the CLI passes it (one comma-separated string), R' from --Rp
-  CHECK_EQ(run_cmd(base + " --islands " + q(isl) + " --Rp 16 --out " + q(out("fit_ok.bin"))), 0);
+  CHECK_EQ(run_cmd(base + " --islands " + q(isl) + " --Rp 16 --out " + q(out("fit_ok.bin")), 0), 0);
   { fmt::Reader R(out("fit_ok.bin")); Json m = R.json("meta");
     CHECK(m.at("status").str() == "completed" && (int)m.at("Rp").num() == 16 && std::isfinite(m.at("logZ").num()) && R.has("pip_eq"));
     CHECK(m.at("inputs").at("island_1.bin").str() == wp4io::head_island(f.ipath[0], 1, wp4io::Expect{fmt::M_V, f.dhash, f.shash, f.chash}, nullptr).content_hash); }
@@ -414,6 +422,21 @@ TEST(wp4_io_merge_cli_and_driver_manifest) {
   for (auto& [k, v] : M.at("inputs").items()) if (k.find("island_16.bin") == std::string::npos) in2[k] = v;
   M["inputs"] = in2; write_json_file(dg.d + "/merge_15.json", M);
   CHECK_EQ(run_cmd(bin + " merge --manifest " + q(dg.d + "/merge_15.json") + " --threads 2 --out " + q(rundir + "/fit_15.bin")), 13);
+  // re-check n-3: with a manifest, an explicit argument that disagrees is refused, whatever the argument order
+  std::string isl_m; for (int r = 1; r <= 15; ++r) isl_m += (r > 1 ? "," : "") + rundir + "/island_" + std::to_string(r) + ".bin";
+  CHECK_EQ(run_cmd(bin + " merge --manifest " + q(man) + " --Rp 15 --islands " + q(isl_m) + " --out " + q(rundir + "/fit_n3a.bin")), 13);
+  CHECK_EQ(run_cmd(bin + " merge --Rp 15 --islands " + q(isl_m) + " --manifest " + q(man) + " --out " + q(rundir + "/fit_n3b.bin")), 13);
+  CHECK_EQ(run_cmd(bin + " merge --manifest " + q(man) + " --islands " + q(isl_m) + " --out " + q(rundir + "/fit_n3c.bin")), 13);
+  CHECK_EQ(run_cmd(bin + " merge --manifest " + q(man) + " --data " + q(f.dpath) + " --out " + q(rundir + "/fit_n3d.bin")), 13);
+  CHECK_EQ(run_cmd(bin + " merge --manifest " + q(man) + " --mode law --out " + q(rundir + "/fit_n3e.bin")), 13);
+  CHECK_EQ(run_cmd(bin + " merge --manifest " + q(man) + " --Rp 16 --out " + q(rundir + "/fit_n3f.bin"), 0), 0);   // agreeing: fine
+  // re-check n-4: an oversized island index and bad budgets -> invalid_input (13); 0 = off
+  { Json M2 = read_json_file(man); Json in3 = M2.at("inputs"); in3[rundir + "/island_99999999999.bin"] = in3.at(rundir + "/island_1.bin").str();
+    M2["inputs"] = in3; write_json_file(dg.d + "/merge_big.json", M2); }
+  CHECK_EQ(run_cmd(bin + " merge --manifest " + q(dg.d + "/merge_big.json") + " --out " + q(rundir + "/fit_n4a.bin")), 13);
+  for (const char* b : {"-5", "1e30", "1.5", "nan"})
+    CHECK_MSG(run_cmd(bin + " merge --manifest " + q(man) + " --mem-budget " + b + " --out " + q(rundir + "/fit_n4b.bin")) == 13, std::string("--mem-budget ") + b);
+  CHECK_EQ(run_cmd(bin + " merge --manifest " + q(man) + " --mem-budget 0 --out " + q(rundir + "/fit_n4c.bin"), 0), 0);
   cleanup(f);
 }
 
@@ -515,6 +538,17 @@ TEST(wp4_io_hostile_files_refused) {
     {"S5 setup mode_S p+1e8", 20, "mode_S", set_all<int32_t>({p + 100000000}), 0},
     {"S6 setup blk out of range", 20, "blk", set_at<int32_t>(0, 1000000), 0},
     {"S7 setup logr NaN", 20, "logr", set_at<double>(1, std::numeric_limits<double>::quiet_NaN()), 0},
+    // review PR20 re-check n-1 / n-2
+    {"N1 top_hash wrong (all XORed)", 0, "top_hash", [](Bytes& b, uint64_t&, uint64_t&) { for (size_t i = 0; i < b.size() / 8; ++i) ((uint64_t*)b.data())[i] ^= 0x5A5A5A5A5A5A5A5AULL; }, 0},
+    {"N1b setup tstore hash wrong", 20, "tstore_top_hash", [](Bytes& b, uint64_t&, uint64_t&) { ((uint64_t*)b.data())[0] ^= 1; }, 0},
+    {"N2 st_ess NaN", 0, "st_ess", set_at<double>(0, std::numeric_limits<double>::quiet_NaN()), 0},
+    {"N2b st_ess -5", 0, "st_ess", set_at<double>(0, -5.0), 0},
+    {"N2c st_ess 1e9 > N", 0, "st_ess", set_at<double>(0, 1e9), 0},
+    {"N3 own island_best 1e300", 0, "island_best", set_at<double>(1, 1e300), 0},
+    {"N3b own island_best -inf", 0, "island_best", set_at<double>(1, -std::numeric_limits<double>::infinity()), 0},
+    {"N4 hpm log m +inf", 0, "hpm_val", set_at<double>(1, std::numeric_limits<double>::infinity()), 0},
+    {"N5 hpm_ev tier 1 (calib tier 0)", 0, "hpm_ev", [](Bytes& b, uint64_t&, uint64_t&) { ((int64_t*)b.data())[1] = 1; }, 0},
+    {"N5b hpm_ev sub 300", 0, "hpm_ev", [](Bytes& b, uint64_t&, uint64_t&) { ((int64_t*)b.data())[9] = 300; }, 0},
   };
   (void)h0; (void)hF;
   for (auto& c : cases) {
