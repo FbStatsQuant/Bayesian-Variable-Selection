@@ -34,6 +34,22 @@ Run under PROTOCOL_v4 (Tier B unless a new key lemma appears), Opus, after W3-DI
 - Headline statements that would change (stronger): START2 (T1⁺)/(T3⁺)(b) with IF-START⁺, PSHARP Cor A1, RM2-F
   (via T4). HQ decides under v4 §8 and informs the owner.
 
+## ADVISOR REPORT (owner, 2026-11-15): end-of-semester progress report, due ~3 weeks (~Dec 4–6; exact date TBC)
+Contents (owner):
+1. the 2,400-fit study: posterior-estimation accuracy and BVS results;
+2. a concrete list of the most important theorems as of then (from the headline claims card);
+3. a concrete plan for the p = 1M experiment (from the Experiment department's EXP-CP1).
+
+Plan:
+- start Mon 11-23, after the theory freeze;
+- writer: the Owls briefing thread (it built the 11-13 status PDF);
+- LaTeX PDF, ~15–20 pages;
+- one fidelity check of numbers vs sources (Sol);
+- draft to Felipe ~11-30, final ~12-03.
+
+Open: does the 2,400-fit study need the v3.2 rerun (RERUN_SPEC: the published tables use pip_plain and the cost
+column, which v3.1 does not emit; ~910 core-h), or can the report use the existing results with a version note?
+
 ## STRIKE PLAN week of 11-16 (owner: theory basically DONE by end of week, then p = 1M experiment)
 Definition of done: 11 main results recorded PROVED-CHECKED; D1 settled (theorem or stated limit); chapter v2.0
 council-passed and frozen; editorial pass merged. Anything else = named open problem in the paper.
