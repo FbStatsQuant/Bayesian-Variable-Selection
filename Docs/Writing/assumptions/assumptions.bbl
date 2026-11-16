@@ -1,0 +1,15 @@
+\begin{thebibliography}{1}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Song and Liang(2015)]{SongLiang2015}
+Q.~Song and F.~Liang.
+\newblock A split-and-merge {B}ayesian variable selection approach for
+  ultrahigh dimensional regression.
+\newblock \emph{Journal of the Royal Statistical Society: Series B (Statistical
+  Methodology)}, 77\penalty0 (5):\penalty0 947--972, 2015.
+
+\end{thebibliography}

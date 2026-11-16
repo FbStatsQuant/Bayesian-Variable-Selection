@@ -29,3 +29,4 @@
 - 2026-11-16 10:10 CST HQ told first; CODEX CALL #4 (D1 re-check, same Sol session, diff-only): .rc_tmp/d1_recheck_brief.md, .rc_tmp/d1_fix_diff.patch (reconstructed as-read text .rc_tmp/d1_as_read.tex) → reviews/D1_codex_recheck.md.
 - 2026-11-16 10:11 CST Sol D1 re-check: RECHECK: ALL-RESOLVED. D1 v1 FINAL for the owner's review (methodology/smc_bvs_method_v1.pdf).
 - 2026-11-16 10:12 CST HQ: keep advisor thread open (not settled); department idle, nothing new until the owner's feedback. Theory items routed by HQ at the resume.
+- 2026-11-16 16:57 CST Received from_theory/ANSWERS_2026-11-16.md (C* explicit, 32s0 explained, …) and AUDIT_NOTE_2026-11-16.md; queued for D2 v2 (after owner feedback). ASSIGNMENT 2 started (advisor-report section 'Are the assumptions reasonable?').
