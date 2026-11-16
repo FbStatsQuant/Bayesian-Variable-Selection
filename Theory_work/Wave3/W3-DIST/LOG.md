@@ -373,3 +373,8 @@ checkpoint on WEAKER TC1–TC9, X exhausted, B2-core → Gaussian only, B0 → f
   scratch in `.rc_tmp/` inside it, deleted at the end. Applied to `reviews/BRIEF_R1_TEMPLATE.md` (both seats; scratch at
   the repo root, never in the frozen ticket folder). SW1 (launched before the rule, with the department tmp path) is
   left running as instructed. Note for the manager: `.rc_tmp/` is not in `.gitignore` on main. Running: SW1 (Astra).
+- 03:27 — Manager's D62 precision received: Codex scratch in <clone root>/.rc_tmp/ (ignored through .git/info/exclude; verified),
+  never in the ticket folder; no .gitignore added. Template already conforms. **SW1 at 2 h** (launched 01:28): no report
+  file, no notice; manager told at 03:28 (asked to check pending requests; SW1's brief predates D62) together with the
+  04:00 estimate: R1 freeze between 08:00 and 11:00 CT if the sweep returns by about 05:00 with local repairs only.
+  MANIFEST_SW1 verify: OK. HOLDS read: none. Running: SW1 (Astra).
