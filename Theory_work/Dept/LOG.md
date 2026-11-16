@@ -32,3 +32,4 @@
 - 19:55 — Eng THEORY-5 pins relayed to recorder (task E).
 - 19:55 — W3-READER: memo received; pooled-PIP fix complete (cd569b2): equal weights, OD-4 cited, no reader statement names a weighted PIP.
 - 19:56 — owner scope clarification: D18 (premise tickets downgraded; PSMC-S0 Part 1 only; T-MERGE kept pending owner).
+- 19:57 — Eng confirms scope change; THEORY-2 dates void; A/B + Check C still wanted (non-blocking).
