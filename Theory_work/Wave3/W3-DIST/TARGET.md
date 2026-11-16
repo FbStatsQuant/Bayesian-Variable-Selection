@@ -74,14 +74,18 @@ vector of p predictors and y is a real response. The number of predictors p may 
 than n; the law of (x, y) may change with n.
 
 *What the method does.* (1) It removes the predictors that are constant in the sample, and centres and scales every
-other predictor, and the response, by its sample mean and sample standard deviation. (2) On the standardised data it
-uses one fixed prior, with no tuning parameter: the set S of included predictors has the beta-binomial BB(1, p)
-distribution restricted to sets of at most min(p, ⌊n/2⌋) predictors; given S and the noise variance, the coefficients
-of the predictors in S are jointly normal with mean zero and covariance n × (noise variance) × (G_S + I)⁻¹, where G_S is
-the sample Gram matrix of the standardised predictors in S and I is the identity matrix; the noise variance has an
+other predictor, and the response, by its sample mean and sample standard deviation. Let r be the number of predictors
+that remain (r ≤ p). (2) On the standardised data it uses one fixed prior, with no tuning parameter: the number of
+included predictors has the beta-binomial BB(1, r) distribution restricted to at most min(r, ⌊n/2⌋), and given that
+number all sets S of that size are equally likely; given S and the noise variance, the coefficients of the predictors
+in S are jointly normal with mean zero and covariance n × (noise variance) × (G_S + I)⁻¹, where G_S is the sample Gram
+matrix of the standardised predictors in S and I is the identity matrix of the same size; the noise variance has an
 inverse-gamma prior with shape 0.01 and rate 0.01. (3) The posterior is mapped back to the original units.
 Π(· | D_n) denotes the resulting posterior distribution of (S, β, σ²): S is the set of included predictors, β ∈ ℝ^p the
-coefficient vector in the original units (zero outside S), and σ² the noise variance in the original units.
+coefficient vector in the original units (zero outside S and for removed predictors), and σ² the noise variance in the
+original units. If fewer than two predictors remain, or the response is constant in the sample, the posterior is not
+defined here; under the assumptions below such data sets have probability smaller than the exceptional probabilities
+in the theorems and are counted in them (in particular r = p outside them).
 
 *The distribution attached to a posterior draw.* A draw (S, β, σ²) defines a joint density f for a new pair (x, y): x
 has its true distribution and, given x, y is normal with mean ȳ + (x − x̄)ᵀβ and variance σ², where ȳ and x̄ are the
@@ -99,7 +103,8 @@ The *window* is
 
     q_n = min{ p, ⌈C_q·M·log n⌉ },   where C_q = 2(s(A + 2) + 4)/log 2.
 
-It is the largest number of predictors that assumptions (A3) and (A4) constrain jointly; it is of order log n.
+It is the largest number of predictors that assumptions (A3) and (A4) constrain jointly; for a fixed level M it is of
+order log n. (K below is the constant of (A3); the cap on the model size is always written min(r, ⌊n/2⌋).)
 
 **Assumptions.**
 - **(A1) Gaussian linear model.** y = α* + xᵀβ* + ε, where ε is normal with mean 0 and variance σ*² > 0 and is independent
@@ -109,8 +114,9 @@ It is the largest number of predictors that assumptions (A3) and (A4) constrain 
   nonzero entries and every real λ:   E exp(λ·uᵀz) ≤ exp(K²λ²·Var(uᵀz)/2).
 - **(A4) No near-exact collinearity.** For every set T of at most q_n predictors:   λ_min(Corr(x_T)) ≥ c_ψ/n.
 - **(A5) Bounded signal.** |β*_j|·sd(x_j) ≤ b̄·σ* for every j.
-No lower bound on the nonzero coefficients is assumed, and no identifiability condition: highly correlated predictors
-are allowed.
+No lower bound on the nonzero coefficients is assumed (no beta-min condition), and no fixed lower bound on
+eigenvalues: under (A4) predictors may be correlated up to 1 − c_ψ/n. ((A4) still makes sparse coefficient vectors
+distinguishable in principle; the statement without (A4) below needs no such condition.)
 
 **Theorem A (the posterior recovers the joint distribution of predictors and response).** There are constants c > 0,
 C₁, M₀ and n₀, depending only on (s, A, K, c_ψ, b̄), such that the following holds whenever n ≥ n₀, M₀ ≤ M ≤ √n/log n and
@@ -124,44 +130,50 @@ In words. (i) Except on a set of data sets of probability at most n^{−cM}, the
 n^{−cM} to joint distributions farther than √(M log n/n) from the truth in Hellinger distance: the posterior contracts
 at the rate √(log n/n). (ii) On the same data sets the posterior gives probability at most n^{−cM} to models with more
 than s + C₁M predictors. Statement (ii) bounds the number of selected predictors; it does not say that they are the
-true ones. The bounds are uniform over all laws of the data that satisfy (A1)–(A5) with the given constants.
+true ones. The two exceptional sets of data sets can be taken to be the same set. The bounds are uniform over all laws
+of the data that satisfy (A1)–(A5) with the given constants.
 
 *Without (A4).* If (A4) is dropped, and (A3) is required only for single predictors (vectors u with one nonzero
 entry), then (i) holds with the radius √(M·log n·log(p ∨ n)/n), which is larger by the factor √(log(p ∨ n)), and (ii) holds
 with s + C₁·M·log n in place of s + C₁·M. (Here p ∨ n is the larger of p and n.)
 
-*Example.* Gaussian predictors satisfy (A3) with K = 1; independent predictors satisfy it with the constant K of a
-single predictor. (A4) holds for all large n whenever every q_n × q_n principal block of the correlation matrix has
+*Example.* Jointly Gaussian predictors satisfy (A3) with K = 1; independent predictors satisfy it when each of them
+satisfies it with a common constant K. (A4) holds for all large n whenever every q_n × q_n principal block of the correlation matrix has
 smallest eigenvalue at least a fixed ψ > 0: for instance correlation ρ^{|j−k|} with |ρ| < 1, or equal correlation
 ρ ∈ [0, 1).
 
 **Theorem B (parametric rate when the true predictors are detectable).** Assume (A1)–(A5) with the window q_n of M = 1
 and with exactly s ≥ 1 nonzero coordinates of β*, **and in addition**
 - **(A6) Detectable signal.** (a) λ_min(Corr(x_T)) ≥ ψ for a constant ψ > 0 and every set T of at most (2A + 3)s + 2
-  predictors; (b) min{ |β*_j|·sd(x_j)/σ* : β*_j ≠ 0 } ≥ b_n, where b_n²·n/log n → ∞.
+  predictors; (b) min{ |β*_j|·sd(x_j)/σ* : β*_j ≠ 0 } ≥ b_n, where b_n > 0 and b_n²·n/log n → ∞.
 Then for every sequence M_n → ∞:
 
     Π( d_H(f, f*) > M_n/√n | D_n ) → 0   in P*-probability.
 
 **Corollary C (the output of the sampler).** The method computes the posterior by a sequential Monte Carlo sampler
-(small problems that it solves by exact enumeration are not covered here). A run is *completed* when the sampler
-finishes and returns its output. The output contains a list 𝒯 of at most 40p + 1 distinct models — the best-scoring
-models among all models the run evaluated — each with its unnormalised posterior weight, which we take to be
-computed in exact arithmetic; it contains no draws of (β, σ²). Let π(𝒯) be the posterior probability of the list, and
-let Π̂ be the posterior restricted to the list: the models in 𝒯, weighted in proportion to their returned weights, each
-with its exact conditional posterior distribution of (β, σ²). Under the conditions of Theorem A, with P*-probability
-at least 1 − n^{−cM} over the data, **every** completed run (whatever its random numbers) with π(𝒯) ≥ n^{−cM/2} satisfies
+(small problems that it solves by exact enumeration are not covered here). A run is *completed* when the method
+reports the status "completed"; runs that stop early are not covered. The output of a completed run contains a list 𝒯
+of at most 40r + 1 distinct models: the best-scoring models among those offered to the final run of the sampler —
+the models scored in that run, together with models the method scored earlier and carries into it (its precomputed
+tables for small groups of predictors, and models kept from its calibration stage). Each model in the list comes with
+the logarithm of its unnormalised posterior weight, which we take to be computed in exact arithmetic. The output
+contains no draws of (β, σ²). Let π(𝒯) be the posterior probability of the list, and let Π̂ — not computed by the method —
+be the posterior restricted to the list: the models in 𝒯, weighted in proportion to the exponentials of their returned
+log-weights, each with its exact conditional posterior distribution of (β, σ²). Under the conditions of Theorem A,
+with P*-probability at least 1 − n^{−cM} over the data, **every** completed run (whatever its random numbers) with
+π(𝒯) ≥ n^{−cM/2} satisfies
 
     Π̂( d_H(f, f*) > √(M·log n / n) ) ≤ n^{−cM/2}.
 
-If a completed run evaluated the true model {j : β*_j ≠ 0} and the posterior probability of that model exceeds ½, then
-the list contains it and π(𝒯) > ½. In general, whether the list carries enough posterior probability is a property
-of the run that this corollary does not assert.
+If a completed run scored the true model {j : β*_j ≠ 0} and the posterior probability of that model exceeds ½, then the
+list contains it, it is the model the method reports as most probable, and π(𝒯) > ½. In general, whether the list
+carries enough posterior probability is a property of the run: this corollary does not assert it, and the output does
+not certify it.
 
 **Notation table.**
 | symbol | meaning |
 |---|---|
-| n, p | number of observations; number of predictors (p ≤ n^A, possibly p ≫ n) |
+| n, p, r | number of observations; number of predictors (p ≤ n^A, possibly p ≫ n); number of predictors not constant in the sample |
 | (x, y), D_n | a predictor vector and its response; the n observed pairs |
 | α*, β*, σ* | true intercept, coefficient vector and noise standard deviation |
 | s | maximal number of nonzero coordinates of β* |
@@ -174,7 +186,7 @@ of the run that this corollary does not assert.
 | z_j, z | standardised predictor (x_j − E x_j)/sd(x_j); the vector of all of them |
 | x_T, λ_min | sub-vector of x for a set T of predictors; smallest eigenvalue |
 | M, q_n | the level (M ≥ 1, chosen by the reader); the window min{p, ⌈C_q M log n⌉} |
-| K, c_ψ, b̄, ψ, b_n | constants of (A3), (A4), (A5); eigenvalue bound and beta-min level of (A6) |
+| K, c_ψ, b̄, ψ, b_n | constants of (A3), (A4), (A5); eigenvalue bound and beta-min level (b_n > 0) of (A6) |
 | c, C₁, M₀, n₀ | constants of Theorem A, depending only on (s, A, K, c_ψ, b̄) |
 | 𝒯, π(𝒯), Π̂ | the sampler's returned list of models; its posterior probability; the posterior restricted to it |
 
@@ -182,15 +194,18 @@ of the run that this corollary does not assert.
 ### One line per assumption: why it is there, and whether it is necessary
 | assumption | why it is there | necessary? |
 |---|---|---|
-| (A1) Gaussian linear model, noise independent of x, any σ* > 0 | it is the model under which the method's likelihood is correct; it gives the posterior a closed form given the predictors and χ² tails. σ* is free because the posterior does not change when the response is rescaled | not known to be necessary; sub-Gaussian noise is open and is not a target |
-| (A2) at most s nonzero coefficients; p ≤ n^A | posterior model size is controlled relative to s; the constants depend on s and A | some sparsity is needed for a rate of order log p/n; exact sparsity and the polynomial bound on p are proof devices (stretch items: approximate sparsity, exponential p) |
-| (A3) sub-Gaussian predictors | only to make the sample variances of the predictors and the sample covariances of small groups of predictors track their population values, with probability 1 − n^{−cM} | **not necessary**: the general (master) theorem needs only three properties of the sample, whatever the tails, and the passage from the sample to the population distance uses no tail condition; simulations with infinite fourth moments show no degradation. No primitive statement under weaker tails is claimed |
-| (A4) no near-exact collinearity (eigenvalue ≥ c_ψ/n on groups of order log n) | keeps the prior's penalty for each extra predictor (a factor of order n^{−1/2}) in force; this gives the rate √(log n/n), the exponent n^{−cM} and the bounded model size | **not necessary for consistency**: without it the rate loses one logarithm (stated under the theorem). Whether it is needed for the sharp rate is open. Any fixed ψ > 0 satisfies it. It is not an identifiability condition |
-| (A5) bounded signal per predictor | bounds the signal in units of the noise; excludes huge coefficients that cancel, for which the prior (scaled to the response) is badly centred | needed by the proof in a weaker form (bounded sample signal energy and standardised coefficient norm at most const·√n); a counterexample with cancelling coefficients of size n breaks the weaker form |
+| (A1) Gaussian linear model, noise independent of x, any σ* > 0 | it is the model under which the method's likelihood is correct; it gives the posterior a closed form given the predictors and χ² tails. σ* is free because, when the response is rescaled, the posterior over models does not change and the posterior of (β, σ²) rescales with it | not known to be necessary; sub-Gaussian noise is open and is not a target |
+| (A2) at most s nonzero coefficients; p ≤ n^A | posterior model size is controlled relative to s; the constants depend on s and A | over a class of designs as general as this one, some sparsity is needed for a rate of order log p/n (not for every particular design); exact sparsity and the polynomial bound on p are proof devices (stretch items: approximate sparsity, exponential p) |
+| (A3) sub-Gaussian predictors | only to make the sample variances of the predictors and the sample covariances of small groups of predictors track their population values, with probability 1 − n^{−cM} | **not necessary**: the general (master) theorem needs only three properties of the sample, whatever the tails, and the passage from the sample to the population distance uses no tail condition; simulations with infinite fourth moments show no degradation (finite-n evidence only). This is a statement about the master theorem's interface form; no primitive statement under weaker tails is claimed |
+| (A4) no near-exact collinearity (eigenvalue ≥ c_ψ/n on groups of order log n) | keeps the prior's penalty for each extra predictor (a factor of order n^{−1/2}) in force; this gives the rate √(log n/n), the exponent n^{−cM} and the bounded model size | **not necessary for consistency**: without it the rate loses one logarithm (stated under the theorem). Whether it is needed for the sharp rate is open. Any fixed ψ > 0 satisfies it. It is far weaker than a fixed eigenvalue bound, but it does make sparse coefficient vectors distinguishable in principle |
+| (A5) bounded signal per predictor | bounds the signal in units of the noise; excludes huge coefficients that cancel, for which the prior (scaled to the response) is badly centred | the proof needs it in a weaker form (bounded sample signal energy and standardised coefficient norm at most const·√n). When cancelling coefficients of size n break that weaker form, the proof's interface fails and simulations show n·d² growing like n; this is evidence about the proof's condition, not a necessity theorem |
 | (A6) detectable signal (Theorem B only) | makes the posterior select the true model, which removes the logarithm | selection consistency is what this route to the rate 1/√n uses; Theorem A's rate holds without it |
 
 ### Proposed additional target clauses
 - **TC9 (reader Theorem A).** Assumptions (A1)–(A5) as written; displays (i) and (ii) with radius √(M log n/n), size bound
   s + C₁M and level n^{−cM} for M₀ ≤ M ≤ √n/log n; the sentence without (A4). Faithfulness: Theorem A = DIST-1/DIST-2 + B0, B1, B2.
+  **Fixed by HQ at CP1.** v1.4 (after the blind read S2) changes the Setup's description of the prior (r, the number of
+  non-constant predictors, in place of p) and one descriptive sentence ("no identifiability condition"); assumptions
+  (A1)–(A5), displays (i), (ii) and the sentence without (A4) are unchanged.
 - **TC10 (reader Theorem B and Corollary C), if HQ makes them headline.** As written; Theorem B conditional on
   W3-POST:Thm-1; Corollary C with its premise on the returned list stated in the display.

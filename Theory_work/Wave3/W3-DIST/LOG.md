@@ -197,3 +197,40 @@ checkpoint on WEAKER TC1–TC9, X exhausted, B2-core → Gaussian only, B0 → f
   consumes S or V; their line check L5 runs in parallel). HOLDS read: none.
 - 19:47 — Owner memo (via the Theory Dept manager; POLICIES.md §4) received and adopted: technical problems are solved inside the ticket; Opus/Sonnet helpers within the brief; a new Fable expert (including the possible second Fable for S-FIT) needs permission requested through the department manager; big problems reported to the manager at once. One-line confirmation with the L1 result sent to the department thread. HOLDS read: none.
 - 19:52 — Owner's final rule on helpers noted (POLICIES §4, §8): Opus/Sonnet/Haiku helpers free within the brief; a new Fable needs the owner's green light, requested through the department manager (problem, why Opus is not enough, how many, size/duration, account). No change to the plan. HOLDS read: none.
+- 20:00 — POLICIES §9 noted (requests for expensive resources go to the department manager in ≤ 10 lines; nothing expensive starts before the answer). No request made now: the main line needs none; S-FIT is decided after the resubmitted API attempts (dist1b) are read. HOLDS read: none.
+- 20:03 — Owner rule (POLICIES §10) noted: never settle, archive, cancel, interrupt or delete any thread or agent; unneeded
+  results are ignored and logged. (None has been cancelled on this ticket.)
+- 20:03 — Blind read S2 back (`reviews/S2_sol.md`): REPAIR REQUIRED; 3 MAJOR / 4 MINOR. Theorem B and bridge B3
+  FALSE-AS-STATED (b_n > 0 missing; counterexample with b_n = −1) — repaired; B2/B3 window inequalities false for small p —
+  repaired (same as stream E's request); reader Setup wrote the prior with p instead of the retained count — repaired
+  (r). No counterexample to Theorem A's displays; B1, B2-core SOUND. Part 2: changelog tags checked (several pre-CP1
+  EQUAL tags contested as literal tags). **STATEMENT v1.4** written (S2 dispositions + all queued edits from streams B,
+  D, E and pre-checks P3–P6): sha f4087ea62b6ea654; TARGET §6 synced; `reviews/S2_disposition.md`; DEPS.tsv sha of
+  STATEMENT-based rows refreshed. DEPS note: STATEMENT changed after L1 — rows X, X′ keep OK (their object is
+  lemmas/X.md, unchanged; the statements of Lemma X, X′ in STATEMENT §3 are unchanged in v1.4).
+  No WEAKER change to the mathematics of TC1–TC9 relative to the CP1 baseline; S2-03 edits the Setup of the headline
+  reader theorem (description of the prior) → reported to the department manager now. HOLDS read: none.
+- 20:04 — Owner rule (POLICIES §10, final) noted: never cancel or interrupt running work; finished own helpers may be
+  settled (not archived or deleted). None cancelled on this ticket.
+- 20:04 — Resubmitted API attempts read (`work/api_attempts/dist1b/`; H3: proof material, unchecked). **F-b-r2 claims a
+  counterexample to stretch item S-FIT in its exponential form**: explicit design (anchor + ⌊√n⌋ near-copies at
+  τ² ≍ log n/n², s₀ = 0, μ = 0) on which, w.p. ≥ 0.6, Π(‖μ̂ − μ‖² ≥ (k/24) log n | y) ≥ c(k)/n — so the distance clause of Lemma X
+  cannot hold under (E), (C) alone: (ND) or a substitute is needed for the exponential form at the sharp rate, not only
+  for the size clause. It does **not** contradict any target (TC2–TC4 assume (ND); TC6's radius is tℓ_n) and does not
+  break the in-probability form. F-a-r2: in-probability sharp-rate bound proved for supersets without (ND) (complete for
+  s₀ = 0); F-c-r2 and X-c-r2: partial (non-supersets open; a weaker "fit–Occam" interface in place of (ND)).
+  Lead's reading: S-FIT (exponential) is dead if F-b-r2 survives checking — which turns the "short of Song–Liang" row
+  for (ND) into a proved limitation of the coded prior; S-FIT (in probability) stays open. Pre-check P7 on F-b-r2
+  launched (Opus 5.5, Claude Third; `briefs/BRIEF_P7_NEC_precheck.md`). No second-Fable request for now. HOLDS read: none.
+- 20:05 — Line check L3 back (`reviews/L3_sol_B.md`; gpt-6.1-sol, codex, high; sha H 1ca0d39c24eebd49, T 193cdc8145e724e8,
+  DIST3 4240189593efcb4d): **Lemma H VERIFIED; Lemma T VERIFIED; Theorem DIST-3 VERIFIED; no finding at any severity.**
+  Lemma T: exact range and remainder of the statement, success probability 1 − δ/2, self-contained (no external
+  inequality) — the open citation question is closed. The wording requests of T.md and DIST3.md judged EQUAL (already
+  applied in STATEMENT v1.4). Not verified by L3 (outside its packet): the locked identification of the coded
+  posterior (P-T01) and the external selection theorems. DEPS.tsv: H, T, TC/DIST-3 → OK. Kill budgets H, T: 1 attempt
+  each, passed. The L1 completion notice (Astra, Lemma X) also arrived; already processed. HOLDS read: none.
+- 20:10 — Manager's reading of the S2 tags applied to the changelog (STATEMENT v1.4, tags only): Theorem B "b_n > 0" →
+  WEAKER on a companion, non-target clause (reported at the next checkpoint; no early checkpoint); bridge remarks
+  (B2/B3 windows, B3 positivity, B0 domain) → WEAKER, non-target, split from the EQUAL row for Lemmas T and V. TC9: EQUAL
+  for the mathematics (manager's view; HQ decides on an H5 card). The Sol diff check v1.3.1 → v1.4 will confirm or
+  correct every tag. S2's completion notice also arrived (already processed). HOLDS read: none.
