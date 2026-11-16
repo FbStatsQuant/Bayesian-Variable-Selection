@@ -107,3 +107,11 @@ the registry change. Newest entries at the bottom. Format:
 - 2026-11-16 correctness event (rollback history, W2-FAC-XA): W2-FAC-XA:X4 ACTIVE -> SUSPECT (status, hash and version unchanged). Cause: every-n delivery; shipped validators `le ≤ 10⁶` (v3_run.R:96) / `ℓ+|S̃₀| ≤ INT_MAX` (v3_core.cpp:474) not covered by IDEAL-W. Same event as W2-UNI:F-UNI (task S1). Batch NARROW (A:IDEAL-W⁺ or (D)) as task S4. Issue folder Theory_work/INFRA/issues/2026-11-16_suspect_S3_method-pin. HQ GO (task S3).
 
 - 2026-11-16 correctness event (rollback history, W2-LOC2): W2-LOC2:F-LOC2, W2-LOC2:F-LOC2.exp, W2-LOC2:F-LOC2.poly ACTIVE -> SUSPECT (status, hash and version unchanged). Cause: every-n delivery; shipped validators `le ≤ 10⁶` (v3_run.R:96) / `ℓ+|S̃₀| ≤ INT_MAX` (v3_core.cpp:474) not covered by IDEAL-W. Same event as W2-UNI:F-UNI (task S1). Batch NARROW (A:IDEAL-W⁺ or (D)) as task S4. Issue folder Theory_work/INFRA/issues/2026-11-16_suspect_S3_method-pin. HQ GO (task S3).
+
+## 2026-11-16 — NARROW W2-UNI:F-UNI
+
+- decided by: HQ
+- reason: HQ GO real run (task S2, 2026-11-16): NARROW of F-UNI, correctness event. Every-n delivery cited Prop-F's cap-ℓ_n method; shipped cap ℓ_n+|S̃₀| not covered (TR1: transfer NO, Theory_work/Dept/research/FUNI_transfer/TR1_sol.md). Narrowed: (a) delivery under IDEAL-W on the bounded domain 𝔇; (b) every n and P(Ŝ⁺ = S₀) → 1 under A:IDEAL-W⁺. Statement-change check Theory_work/Dept/research/FUNI_NARROW/DIFF_sol.md@fc30c749 (Sol DIFF PASS, WEAKER, 1.1.0 -> 2.0.0). Clear to 2.1.0 in S4 with W2-FAC-A:Prop-F-FAC (manager 11-16).
+- 6 dependents SUSPECT; restored: —
+
+- 2026-11-16 correctness event (rollback history, W2-UNI): W2-UNI:F-UNI 1.1.0 SUSPECT (task S1) -> NARROWED 2.0.0 (task S2); clear to ACTIVE 2.1.0 in S4 with W2-FAC-A:Prop-F-FAC. Cause: every-n delivery cited Prop-F's cap-ℓ_n method (transfer NO: Theory_work/Dept/research/FUNI_transfer/TR1_sol.md). Narrow: (a) IDEAL-W on 𝔇, (b) A:IDEAL-W⁺ (new assumption; IDEAL-W unchanged). Statement-change check: Theory_work/Dept/research/FUNI_NARROW/DIFF_sol.md@fc30c749 (Sol DIFF PASS, WEAKER). UNI-0/UNI-1 stay SUSPECT (S4); SAND-R, SAND-Rp, RM-R, Examples stay SUSPECT via UNI-0 (noted). HQ GO (task S2).
