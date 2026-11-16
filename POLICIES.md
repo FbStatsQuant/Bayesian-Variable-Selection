@@ -194,3 +194,13 @@ HQ adds its recommendation and forwards it to the owner the same day. Nothing ex
   **non-department thread** (ticket lead, helper, reviewer, recorder task, expert) has **finished**, its manager
   **settles** it (`t3_thread_organize` action `settle`), so the sidebar shows only HQ, the departments and work in
   progress. Department threads and HQ are never settled. Nothing is archived or deleted unless the owner asks.
+
+## 11. Overnight mode (owner, 2026-11-15; times in US Central)
+When the owner says he is going to bed or leaving HQ working overnight, **HQ is in charge of all decisions** until he
+says he is back. That includes the owner-reserved items (Fable requests, extra resources, account allocation), which HQ
+decides with its Fable consultant for anything important. Limits:
+- stay within the budget envelopes and accounts already in use;
+- nothing irreversible or outward-facing: no repo visibility change, no deletion, no external publication;
+- every decision is logged in `HQ_DECISIONS.md` with a "(overnight)" tag.
+
+When the owner is back, HQ gives a short morning brief: what was decided, what moved, and what needs him.
