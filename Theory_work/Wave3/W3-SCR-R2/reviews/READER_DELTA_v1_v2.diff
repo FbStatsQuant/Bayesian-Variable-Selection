@@ -26,7 +26,7 @@
  **Masters.** `W3-SCR:A1@1.0.0` (`Theory_work/Wave3/W3-SCR/STATEMENT.md:158-163`) for Theorem 8; `W3-SCR:A-inf@1.0.0`
  (`STATEMENT.md:87-90`, definitions at §1 `:49-63`) for Theorem 8′. Both were ACCEPTed by both seats in R2 (MANIFEST_R2
  `96488f34…`) and in R3 (MANIFEST_R3 `19847f54…`), with all gates PASS in R3. STATEMENT.md is unchanged between the two
-@@ -17,66 +19,139 @@
+@@ -17,66 +19,140 @@
  
  ## 1. Current reader text (thm8 v0.5): what it already says
  - Theorem 8 (A1)–(A3), lines 731–747: the floor κ, signal minimum b₀, ℓ¹ bound M and noise variance σ*² are **named as
@@ -179,7 +179,8 @@
 +  field. Designs: `Theory_work/Wave3/W3-P6/DESIGN.md:13-14`.
 +- **SCR N1.** `Theory_work/Wave3/W3-SCR/REPORT.md:87-100` (table and totals) and `numerics/SUMMARY_N1_N2.md:18`. The
 +  equicorrelated and 3-factor strong cells are conditional on finishing (5/10 and 7/10 finished, `REPORT.md:95, 97, 108-111`).
-+- Search notes: `/home/fb31/BVS-wt/W3-SCR-R2/.rc_tmp/certfreq_search.md` (helper, Sonnet 5.5; not committed: scratch).
++- Search notes: `CERT_FREQ_SEARCH.md` (this folder; helper Sonnet 5.5, read-only search; W3-P6 and production counts
++  re-checked by the coordinator).
 +
 +**Worst strong-factor cells (W3-P6, n = 50; all certified and small):**
 +- cs ρ = .5, p = 250, s₀ = 8: 0/20 contain S₀.

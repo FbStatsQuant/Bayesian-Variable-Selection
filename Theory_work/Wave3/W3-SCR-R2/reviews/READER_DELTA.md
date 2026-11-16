@@ -126,7 +126,8 @@ Sources (file:line):
   field. Designs: `Theory_work/Wave3/W3-P6/DESIGN.md:13-14`.
 - **SCR N1.** `Theory_work/Wave3/W3-SCR/REPORT.md:87-100` (table and totals) and `numerics/SUMMARY_N1_N2.md:18`. The
   equicorrelated and 3-factor strong cells are conditional on finishing (5/10 and 7/10 finished, `REPORT.md:95, 97, 108-111`).
-- Search notes: `/home/fb31/BVS-wt/W3-SCR-R2/.rc_tmp/certfreq_search.md` (helper, Sonnet 5.5; not committed: scratch).
+- Search notes: `CERT_FREQ_SEARCH.md` (this folder; helper Sonnet 5.5, read-only search; W3-P6 and production counts
+  re-checked by the coordinator).
 
 **Worst strong-factor cells (W3-P6, n = 50; all certified and small):**
 - cs ρ = .5, p = 250, s₀ = 8: 0/20 contain S₀.
