@@ -225,3 +225,12 @@ When the owner is back, HQ gives a short morning brief: what was decided, what m
 
 Owner: the SMC - Engineering Department runs the crews (cleaning, transfer, organization). The Theory Department follows the
 same rules for anything it runs.
+7. **Be calm on the machines: no swarming** (owner, 2026-11-15; two weeks ago his NOTS account was flagged as possibly
+   hacked).
+   - SSH: one multiplexed connection per agent session (`ControlMaster auto`, `ControlPersist`), never bursts of
+     parallel logins. Polling every 5 minutes at most; prefer one `squeue`/`sacct` call that covers many jobs.
+   - Job submission: in planned batches (job arrays, not hundreds of separate `sbatch` calls in a burst), within the
+     150-task cap.
+   - No port scans, no unusual tools, no scripted login loops, no logins from unfamiliar hosts beyond Owls and HQ's desktop.
+   - Owls: no sudden spikes. Ramp up gradually and keep within the core cap.
+   - If anything looks like it could trigger a security alert, ask HQ first.
