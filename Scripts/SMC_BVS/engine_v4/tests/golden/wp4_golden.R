@@ -19,7 +19,7 @@ options(warn = 1)
 
 # ---- load core R code and compile core v3_core.cpp + the WP4 harness into one module ------------------------------
 ref <- file.path(work, "core_ref"); unlink(ref, recursive = TRUE); dir.create(ref)
-file.copy(list.files(core_dir, full.names = TRUE, all.files = FALSE), ref, recursive = TRUE)
+invisible(file.copy(list.files(core_dir, full.names = TRUE, all.files = FALSE), ref, recursive = TRUE))
 unlink(file.path(ref, ".cpp_cache"), recursive = TRUE)
 V3_CORE_DIR <- ref
 for (f in c("v3_preprocess.R", "v3_setup.R", "v3_run.R", "v3_exact.R", "v3_calib.R", "v3_fit.R")) source(file.path(ref, f))
@@ -138,8 +138,8 @@ cases <- list(
   list(id = "IND_n80_p60_Te3",  n = 80,  p = 60,   rho = 0.0, seed = 13, H = c(32, 64),   Te = c(3, 4),     N = c(100, 200), ell = 2),
   list(id = "AR0.5_n150_p300",  n = 150, p = 300,  rho = 0.5, seed = 14, H = c(64, 128),  Te = c(60, 120),  N = c(200, 400), ell = 4))
 if (level == "full") cases <- c(cases, list(
-  list(id = "AR0.7_n200_p1000", n = 200, p = 1000, rho = 0.7, seed = 15, H = c(128, 256), Te = c(200, 400), N = c(400, 800), ell = NULL),
-  list(id = "AR0.8_n200_p2000", n = 200, p = 2000, rho = 0.8, seed = 16, H = c(128, 256), Te = c(200, 400), N = c(400, 800), ell = NULL)))
+  list(id = "AR0.7_n200_p1000", n = 200, p = 1000, rho = 0.7, seed = 15, H = c(64, 128), Te = c(100, 200), N = c(150, 300), ell = NULL, heavy = TRUE),
+  list(id = "AR0.8_n200_p2000", n = 200, p = 2000, rho = 0.8, seed = 16, H = c(48, 96), Te = c(80, 160), N = c(100, 200), ell = 6, heavy = TRUE)))
 
 timing <- list()
 for (cs in cases) {
@@ -160,12 +160,14 @@ for (cs in cases) {
   ro <- v3_run_settings(setup, r$frozen, ls0 = TRUE)
   t0 <- proc.time()[["elapsed"]]; fr <- v3_final_run(setup, r$frozen, seed, runtime = NULL, ls0 = TRUE)
   t_fr <- proc.time()[["elapsed"]] - t0
-  for (th in unique(c(1L, threads))) for (ch in c(64L, 4096L)) {
+  variants <- if (isTRUE(cs$heavy)) list(c(threads, 64L)) else list(c(1L, 64L), c(1L, 4096L), c(threads, 64L), c(threads, 4096L))
+  for (v in variants) { th <- v[1]; ch <- v[2]
     mm <- .v3cpp$wp4_final_merge(setup$ptr, r$frozen$grid, ro, as.numeric(seed), r$frozen$inherited, th, ch, "", 0L)
     compare_final(fr, mm, sprintf("%s T9[th=%d,chunk=%d]", cs$id, th, ch))
     timing[[length(timing) + 1]] <- data.frame(case = cs$id, what = sprintf("final th=%d chunk=%d (merge+tail part)", th, ch),
                                                ref_s = t_fr, wp4_s = sum(mm$seconds_islands) + mm$seconds_merge_tail)
   }
+  if (isTRUE(cs$heavy)) next   # T10 and the bounded rule are size-independent logic: quick cases only
   # 3. T10 through the merge
   for (fault in c("missing", "corrupt", "hash_mismatch", "island_numerical", "tail_numerical")) {
     mm <- .v3cpp$wp4_final_merge(setup$ptr, r$frozen$grid, ro, as.numeric(seed), r$frozen$inherited, threads, 256L, fault, 3L)

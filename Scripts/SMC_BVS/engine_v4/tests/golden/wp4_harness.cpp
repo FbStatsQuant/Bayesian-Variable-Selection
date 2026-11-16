@@ -7,9 +7,9 @@
 #include <v4/calib.h>
 #include <v4/merge.h>
 // WP1 library sources used by the WP4 headers (compiled into this test TU; no R dependency)
-#include "../../src/common/status.cpp"
-#include "../../src/common/store.cpp"
-#include "../../src/common/ledger.cpp"
+#include "v4/../../src/common/status.cpp"
+#include "v4/../../src/common/store.cpp"
+#include "v4/../../src/common/ledger.cpp"
 
 namespace wp4h {
 
