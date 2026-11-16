@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <map>
 #include <random>
 #include "tk.h"
 #include "v4/store.h"
@@ -76,4 +77,41 @@ TEST(store_cutoff_monotone_and_exact) {
   std::vector<std::pair<double, Model>> want;
   for (auto& e : ref.s) want.push_back({e.v, Model(e.S.begin(), e.S.end())});
   CHECK(dump(s) == want);
+}
+
+// INTERFACES §4.1 (v0.1.13, R7): class-A values are path-dependent maxima, so one model may be offered with different
+// values. The store keeps each model once, with its best value; content = top-c of distinct models by best value,
+// independent of offer order, splitting and merge order (the WP4 merge of island stores relies on it).
+TEST(store_one_entry_per_model_best_value) {
+  Zobrist z; z.init(30);
+  std::mt19937_64 g(5);
+  std::vector<Offer> offers;
+  for (int i = 0; i < 6000; ++i) {
+    Model S; int k = (int)(g() % 4);
+    while ((int)S.size() < k) { int j = (int)(g() % 30); if (!std::binary_search(S.begin(), S.end(), j)) sorted_insert(S, j); }
+    offers.push_back({(double)(g() % 40) * 0.25, S});   // same model, many different values
+  }
+  for (Order ord : {Order::HPM, Order::LEX})
+    for (uint64_t cap : {1ull, 9ull, 120ull, 100000ull}) {
+      // reference: best value per model, then the strict order, then the first cap
+      std::map<Model, double> best;
+      for (auto& o : offers) { auto it = best.find(o.S); if (it == best.end() || o.v > it->second) best[o.S] = o.v; }
+      Store tmp(1, ord);
+      std::vector<std::pair<double, Model>> all;
+      for (auto& [S, v] : best) all.push_back({v, S});
+      std::sort(all.begin(), all.end(), [&](auto& a, auto& b) { return tmp.better(a.first, a.second, b.first, b.second); });
+      if (all.size() > cap) all.resize(cap);
+      for (int perm = 0; perm < 3; ++perm) {
+        std::mt19937_64 gp(100 + perm); if (perm) std::shuffle(offers.begin(), offers.end(), gp);
+        Store s(cap, ord);
+        for (auto& o : offers) s.offer(o.v, o.S, z.hash(o.S));
+        s.compact();
+        CHECK(s.check_invariants()); CHECK(dump(s) == all);
+        Store a(cap, ord), b(cap, ord), c(cap, ord);   // per-"island" stores, merged in two orders
+        for (size_t i = 0; i < offers.size(); ++i) (i % 3 == 0 ? a : i % 3 == 1 ? b : c).offer(offers[i].v, offers[i].S, z.hash(offers[i].S));
+        Store m1(cap, ord); m1.merge(a); m1.merge(b); m1.merge(c);
+        Store m2(cap, ord); m2.merge(c); m2.merge(b); m2.merge(a);
+        CHECK(dump(m1) == all); CHECK(dump(m2) == all); CHECK(m1.check_invariants());
+      }
+    }
 }
