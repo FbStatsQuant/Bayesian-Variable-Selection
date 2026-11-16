@@ -162,7 +162,8 @@ TEST(wp4_io_calib_island_roundtrip) {
   const merge::IslandIn& a = s.isl; const merge::IslandIn& b = f.isl[0];
   CHECK(a.r == 1 && a.N == 50 && same_bits(a.logZ, b.logZ) && a.pip == b.pip && a.ess == b.ess && a.terminal == b.terminal);
   CHECK(a.led.top.size() == b.led.top.size() && a.led.top.content_hash() == b.led.top.content_hash());
-  CHECK(a.led.hpmS == b.led.hpmS && a.led.hpm_ev.key == b.led.hpm_ev.key && a.led.island_best == b.led.island_best);
+  CHECK(a.led.hpmS == b.led.hpmS && a.led.hpm_ev.key == b.led.hpm_ev.key && same_bits(a.led.island_best[1], b.led.island_best[1]) &&
+        a.rb_round.size() == 4 && a.rb_round[0].size() == (size_t)f.D.p && a.led.lead0.cap == 0);
   bool lg = true; for (int x = 0; x < N_PHASE; ++x) for (int y = 0; y < N_MECH; ++y) lg = lg && a.led.logical[x][y] == b.led.logical[x][y];
   CHECK(lg && blk.contains("git_commit"));
   wp4io::SetupView S2 = wp4io::read_setup(f.spath);
@@ -247,6 +248,20 @@ TEST(wp4_io_merge_command_e2e) {
   { Json dirty = clean_block(); dirty["git_commit"] = std::string(40, 'a') + "-dirty";   // theory mode refuses a dirty build
     wp4io::write_island(f.ipath[1], fmt::M_COMPAT, f.isl[1], in, &dirty); refused(tmp_path("e2e_fit_dirty.bin"), Status::invalid_input);
     wp4io::write_island(f.ipath[1], fmt::M_COMPAT, f.isl[1], in, &clean_block()); }
+  { // --mem-budget admission through the command: refused before any island store is loaded
+    Json a2 = merge_args(f, tmp_path("e2e_fit_mem.bin"), 1); a2["mem_budget_gb"] = 1e-6;
+    Json r = merge::run(a2);
+    fmt::Reader R(tmp_path("e2e_fit_mem.bin")); Json meta = R.json("meta");
+    CHECK(r.at("status").str() == "resource_limit" && meta.at("fit_state").str() == "not_admitted" && !R.has("pip_eq") && meta.contains("mem_estimate"));
+    std::remove(tmp_path("e2e_fit_mem.bin").c_str());
+  }
+  { // v0.1.8: a non-completed island file carries no estimate section
+    merge::IslandIn bad = f.isl[0]; bad.status = Status::numerical_failure;
+    std::string bp = tmp_path("e2e_bad_island.bin"); wp4io::write_island(bp, fmt::M_COMPAT, bad, in, &clean_block());
+    fmt::Reader R(bp);
+    CHECK(!R.has("logZ") && !R.has("pip_r") && !R.has("rb_acc") && !R.has("rb_round") && !R.has("terminal_S") && !R.has("st_inc") && R.has("st_ess") && R.has("hpm_ev"));
+    std::remove(bp.c_str());
+  }
   // the merge's own inputs: a manifest hash mismatch for calib.bin refuses the whole job (invalid_input thrown)
   Json man = Json::object(); man["inputs"]["calib.bin"] = "00ff"; std::string mp = tmp_path("e2e_manifest.json"); write_json_file(mp, man);
   Json a = merge_args(f, tmp_path("e2e_fit_bad.bin"), 1); a["manifest"] = mp;

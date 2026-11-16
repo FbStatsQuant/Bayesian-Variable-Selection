@@ -46,25 +46,49 @@ struct CalibIn {
 };
 CalibIn read_calib(const std::string& path);
 
-// ---- island_r.bin --------------------------------------------------------------------------------------------------
-// Sections (INTERFACES §5.1): st_phi, st_inc, st_ess, st_cum, rb_acc, rb_round (Hm x p), pip_r, top_* store, hpm_S,
-// island_best, logical, optional terminal_S_ptr/terminal_S; meta {r, N, T, L, Hm, logZ, status, message, inputs, binary}.
-// write_island is the reference layout (tests; WP3 may adopt it). The merge reads only what merge::IslandIn needs.
+// ---- island_r.bin (INTERFACES v0.1.8 §5.1 = WP3's include/v4/island/island_file.h) ---------------------------------
+// meta {schema, kind, mode, r, N, T, L, Hm, p, status, reason, inputs, binary, timings, logZ_hex, init_hash};
+// grid [T+1]; st_phi st_ess st_inc st_cum f64 [T], st_distinct_res st_distinct_moved i32 [T], st_moves u64 [T x 12],
+// term_moves u64 [(L+Hm) x 12], term_distinct i32 [L+Hm]; top_{v,hash,off,len,pool}; hpm_S i32, hpm_val f64 [F, log m],
+// hpm_ev i64 [12] (seg, tier, iter, unit, xph, stage, round, particle, position, sub, phase, mech); island_best f64
+// [r+1]; logical u64; completed only: logZ f64 [1], rb_acc, pip_r f64 [p], rb_round f64 [Hm x p], terminal_S_ptr i64
+// [N+1] + terminal_S i32 (N supports after the last measured round). No leader stores (v0.1.7).
+// hpm_ev has no phi: it is reconstructed from `grid` and the phase (INIT 0, BRIDGE grid[stage], BURN / MEASURED 1),
+// v3's values (core/cpp/v3_engine.h:274-372).
+// write_island: a reference writer of that layout (tests and the golden harness, until WP3's writer is merged).
 std::string write_island(const std::string& path, uint32_t mode, const merge::IslandIn& isl, const Json& inputs,
-                         const Json* binary_override = nullptr /* tests only */);
+                         const Json* binary_override = nullptr /* tests only */, const std::vector<double>* grid = nullptr);
 // Expected identities of the merge's inputs (manifest).
 struct Expect {
   uint32_t mode = fmt::M_COMPAT;
   std::string data_hash, setup_hash, calib_hash;   // content hashes of the inputs actually opened by the merge
   std::vector<std::string> island_hash;            // per island r = 1..R': manifest content hash ("" = not given)
 };
-// Loads island r (1-based). Classification (spec §6, T10): no file -> missing; unreadable / bad header / bad section
-// hash / wrong kind or mode -> corrupt; content hash != manifest, or meta.inputs != the merge's data/setup/calib
-// content hashes -> hash_mismatch. Never throws for these.
+// Pass-1 head of island r (1-based): header, every section hash, kind/mode, content hash vs the manifest, meta.inputs
+// vs the merge's data/setup/calib content hashes, and the meta scalars. Classification (spec §6, T10): no file ->
+// missing; unreadable / bad hash / wrong kind or mode -> corrupt; content or inputs hash -> hash_mismatch. Never throws.
+merge::IslandHead head_island(const std::string& path, int r, const Expect& ex, Json* binary_out);
+// Full load (pass 2) of a file whose head was ok: the IslandIn the streaming merge needs (store, HPM + provenance,
+// counters, island_best sized for R', estimates, terminal supports). Throws Error(invalid_input) on a malformed file.
+merge::IslandIn load_island_full(const std::string& path, int Rp, int p);
+// Slot form (head + load in one), used by tests.
 merge::IslandSlot load_island(const std::string& path, int r, const Expect& ex, int p, Json* binary_out);
 // Every island ran a compatible binary/libm block (INTERFACES §5.1 binary consistency; provenance.h): islands whose
-// block is not compatible with island 1's are marked binary_mismatch. use = MergeV (mode V) or MergeTheory.
+// block is not compatible with the first ok island's are marked binary_mismatch. use = MergeV (mode V) or MergeTheory.
 void check_binaries(std::vector<merge::IslandSlot>& slots, const std::vector<Json>& blocks, uint32_t mode);
+void check_binaries(std::vector<merge::IslandHead>& heads, const std::vector<Json>& blocks, uint32_t mode);
+// The streaming merge's source over island files: pass 1 (heads + binary check) at construction, one island loaded
+// per load(r) call (the merge frees it after merging).
+class FileIslandSource : public merge::IslandSource {
+ public:
+  FileIslandSource(std::vector<std::string> paths, const Expect& ex, int Rp, int p);
+  int count() const override { return (int)paths_.size(); }
+  merge::IslandHead head(int r) override { return heads_[(size_t)r - 1]; }
+  merge::IslandIn load(int r) override;
+  const std::vector<merge::IslandHead>& heads() const { return heads_; }
+ private:
+  std::vector<std::string> paths_; std::vector<merge::IslandHead> heads_; int Rp_, p_;
+};
 
 // ---- setup view (until WP2's reader lands): the sections the merge needs --------------------------------------------
 struct SetupView {

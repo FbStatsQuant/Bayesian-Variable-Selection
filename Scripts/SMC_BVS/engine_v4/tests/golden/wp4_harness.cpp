@@ -475,7 +475,7 @@ List wp4_files_merge(SEXP setup, NumericVector grid, List ro, double seed, SEXP 
     I.pip = res.pip; I.rb_round = res.rb_round;
     I.led = wp4h::ledger_from_v3(led, p, R, false, D.zob);
     std::string ip = dir + "/island_" + std::to_string(r) + ".bin";
-    v4::wp4io::write_island(ip, v4::fmt::M_COMPAT, I, in, &clean);
+    v4::wp4io::write_island(ip, v4::fmt::M_COMPAT, I, in, &clean, &g);   // grid: phi of hpm_ev (v0.1.8 layout)
     il.push(ip);
   }
   // merge command

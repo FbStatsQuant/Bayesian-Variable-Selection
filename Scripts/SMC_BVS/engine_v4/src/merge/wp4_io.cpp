@@ -9,6 +9,8 @@
 #include "v4/prep.h"
 #include "v4/provenance.h"
 #include "v4/stubs.h"
+#include "v4/wp4_terminal.h"
+#include <cstring>
 
 namespace v4::wp4io {
 
@@ -169,64 +171,161 @@ CalibIn read_calib(const std::string& path) {
 }
 
 // ----------------------------------------------------------------------------------------------------------- island
-std::string write_island(const std::string& path, uint32_t mode, const merge::IslandIn& isl, const Json& inputs, const Json* binary_override) {
+std::string write_island(const std::string& path, uint32_t mode, const merge::IslandIn& isl, const Json& inputs, const Json* binary_override,
+                         const std::vector<double>* grid) {
   fmt::Writer W(fmt::K_ISLAND, mode);
+  const bool done = isl.status == Status::completed;
+  const size_t T = isl.ess.size();
   Json meta = Json::object();
-  meta["r"] = isl.r; meta["N"] = isl.N; meta["T"] = isl.T; meta["L"] = isl.L; meta["Hm"] = isl.Hm; meta["logZ"] = isl.logZ;
-  meta["status"] = status_name(isl.status); meta["message"] = isl.message;
-  W.add("st_ess", isl.ess); W.add("rb_acc", isl.rb_acc); W.add("pip_r", isl.pip);
-  std::vector<double> rr; for (auto& x : isl.rb_round) rr.insert(rr.end(), x.begin(), x.end());
-  add_vec_copy(W, "rb_round", rr, isl.rb_round.size(), isl.rb_round.empty() ? 0 : isl.rb_round[0].size());
-  add_store(W, meta, "top", isl.led.top);
-  add_ledger_tally(W, meta, isl.led);
-  if (!isl.terminal.empty()) add_models(W, "terminal_S", isl.terminal);
-  meta["inputs"] = inputs; meta["binary"] = binary_override ? *binary_override : binary_block(); meta["mode"] = fmt::mode_name(mode);
+  meta["schema"] = "smcbvs4.island/1"; meta["kind"] = "island"; meta["mode"] = fmt::mode_name(mode);
+  meta["r"] = isl.r; meta["N"] = isl.N; meta["T"] = (int)T; meta["L"] = isl.L; meta["Hm"] = isl.Hm; meta["p"] = (int)isl.pip.size();
+  meta["status"] = status_name(isl.status); meta["reason"] = isl.message; meta["inputs"] = inputs;
+  meta["binary"] = binary_override ? *binary_override : binary_block();
+  { uint64_t b; std::memcpy(&b, &isl.logZ, 8); if (done) { meta["logZ"] = isl.logZ; meta["logZ_hex"] = hex64(b); } }
   W.add_json("meta", meta);
+  std::vector<double> g = grid ? *grid : std::vector<double>(T + 1, 0.0), zf(T, 0.0);
+  std::vector<int32_t> zi(T, 0); std::vector<uint64_t> mv(T * 12, 0), tmv((size_t)(isl.L + isl.Hm) * 12, 0);
+  std::vector<int32_t> td((size_t)(isl.L + isl.Hm), 0);
+  add_vec_copy(W, "grid", g); add_vec_copy(W, "st_phi", zf); add_vec_copy(W, "st_ess", isl.ess);
+  add_vec_copy(W, "st_distinct_res", zi); add_vec_copy(W, "st_distinct_moved", zi);
+  add_vec_copy(W, "st_moves", mv, T, 12); add_vec_copy(W, "term_moves", tmv, (uint64_t)(isl.L + isl.Hm), 12); add_vec_copy(W, "term_distinct", td);
+  const Store& top = isl.led.top;
+  if (top.staging() != 0) throw Error(Status::internal_error, "write_island: store not compacted");
+  W.add("top_v", top.v); W.add("top_hash", top.hash); W.add("top_off", top.off); W.add("top_len", top.len); W.add("top_pool", top.pool);
+  add_vec_copy(W, "hpm_S", isl.led.hpmS);
+  std::vector<double> hv{isl.led.hpmF, isl.led.hpm_logm}; add_vec_copy(W, "hpm_val", hv);
+  const EventKey& k = isl.led.hpm_ev.key;
+  std::vector<int64_t> ev{k.seg, k.tier, k.iter, (int64_t)k.unit, k.xph, (int64_t)k.stage, (int64_t)k.round, (int64_t)k.particle,
+                          (int64_t)k.position, k.sub, isl.led.hpm_ev.phase, isl.led.hpm_ev.mech};
+  add_vec_copy(W, "hpm_ev", ev);
+  std::vector<double> ib((size_t)std::max(0, isl.r) + 1, NEG_INF); if (isl.r >= 0 && (size_t)isl.r < isl.led.island_best.size()) ib[(size_t)isl.r] = isl.led.island_best[(size_t)isl.r];
+  add_vec_copy(W, "island_best", ib);
+  std::vector<uint64_t> lg((size_t)N_PHASE * N_MECH);
+  for (int a = 0; a < N_PHASE; ++a) for (int b = 0; b < N_MECH; ++b) lg[(size_t)a * N_MECH + b] = isl.led.logical[a][b];
+  add_vec_copy(W, "logical", lg, N_PHASE, N_MECH);
+  if (done) {   // GUARD-W: estimates only for a completed island
+    std::vector<double> lz{isl.logZ}; add_vec_copy(W, "logZ", lz);
+    add_vec_copy(W, "st_inc", zf); add_vec_copy(W, "st_cum", zf);
+    add_vec_copy(W, "rb_acc", isl.rb_acc); add_vec_copy(W, "pip_r", isl.pip);
+    std::vector<double> rr; for (auto& x : isl.rb_round) rr.insert(rr.end(), x.begin(), x.end());
+    add_vec_copy(W, "rb_round", rr, isl.rb_round.size(), isl.rb_round.empty() ? 0 : isl.rb_round[0].size());
+    std::vector<int64_t> tptr{0}; std::vector<int32_t> tS;   // WP3 names: terminal_S_ptr i64 [N+1], terminal_S i32
+    for (auto& S : isl.terminal) { tS.insert(tS.end(), S.begin(), S.end()); tptr.push_back((int64_t)tS.size()); }
+    add_vec_copy(W, "terminal_S_ptr", tptr); add_vec_copy(W, "terminal_S", tS);
+  }
   return W.write(path);
 }
-merge::IslandSlot load_island(const std::string& path, int r, const Expect& ex, int p, Json* binary_out) {
-  merge::IslandSlot s;
-  if (!file_exists(path)) { s.load = merge::Load::missing; s.detail = path + ": missing"; return s; }
+
+merge::IslandHead head_island(const std::string& path, int r, const Expect& ex, Json* binary_out) {
+  merge::IslandHead h; h.r = 0;
+  if (!file_exists(path)) { h.load = merge::Load::missing; h.detail = path + ": missing"; return h; }
   try {
-    fmt::Reader R(path);   // verifies the header hashes and every section hash
-    if (R.kind() != fmt::K_ISLAND || R.mode() != ex.mode) { s.load = merge::Load::corrupt; s.detail = path + ": wrong kind or mode"; return s; }
-    if ((size_t)r <= ex.island_hash.size() && !ex.island_hash[r - 1].empty() && ex.island_hash[r - 1] != R.content_hash()) {
-      s.load = merge::Load::hash_mismatch; s.detail = path + ": content hash differs from the manifest"; return s;
+    fmt::Reader R(path);   // header hashes and every section hash
+    if (R.kind() != fmt::K_ISLAND || R.mode() != ex.mode) { h.load = merge::Load::corrupt; h.detail = path + ": wrong kind or mode"; return h; }
+    if ((size_t)r <= ex.island_hash.size() && !ex.island_hash[(size_t)r - 1].empty() && ex.island_hash[(size_t)r - 1] != R.content_hash()) {
+      h.load = merge::Load::hash_mismatch; h.detail = path + ": content hash differs from the manifest"; return h;
     }
     Json meta = R.json("meta");
     const Json& in = meta.at("inputs");
     if (str_or(in, "data.bin", "") != ex.data_hash || str_or(in, "setup.bin", "") != ex.setup_hash || str_or(in, "calib.bin", "") != ex.calib_hash) {
-      s.load = merge::Load::hash_mismatch; s.detail = path + ": meta.inputs differ from the merge's data/setup/calib"; return s;
+      h.load = merge::Load::hash_mismatch; h.detail = path + ": meta.inputs differ from the merge's data/setup/calib"; return h;
     }
-    merge::IslandIn& I = s.isl;
-    I.r = (int32_t)meta.at("r").num(); I.N = (int32_t)meta.at("N").num(); I.T = (int32_t)meta.at("T").num();
-    I.L = (int32_t)meta.at("L").num(); I.Hm = (int32_t)meta.at("Hm").num(); I.logZ = meta.at("logZ").num();
-    I.status = status_from_name(meta.at("status").str()); I.message = str_or(meta, "message", "");
-    I.ess = R.vec<double>("st_ess"); I.rb_acc = R.vec<double>("rb_acc"); I.pip = R.vec<double>("pip_r");
-    if ((int)I.pip.size() != p) { s.load = merge::Load::corrupt; s.detail = path + ": pip_r has the wrong length"; return s; }
-    LedgerConfig cfg; cfg.p = p; cfg.islands = 0; cfg.leaders = false; cfg.fresh_counters = false;
-    I.led.init(cfg);
-    read_store(R, meta, "top", I.led.top);
-    read_ledger_tally(R, meta, I.led);
-    I.led.cfg.islands = (int32_t)I.led.island_best.size() - 1;
-    if (R.has("terminal_S_ptr")) I.terminal = read_models(R, "terminal_S");
+    h.r = (int32_t)meta.at("r").num(); h.N = (int32_t)meta.at("N").num(); h.p = (int32_t)meta.at("p").num();
+    h.status = status_from_name(meta.at("status").str());
+    h.logZ = h.status == Status::completed ? R.vec<double>("logZ").at(0) : 0.0;
     if (binary_out) *binary_out = meta.at("binary");
-    s.load = merge::Load::ok;
+    h.load = merge::Load::ok;
   } catch (const std::exception& e) {
-    s = merge::IslandSlot(); s.load = merge::Load::corrupt; s.detail = path + ": " + e.what();
+    h = merge::IslandHead(); h.load = merge::Load::corrupt; h.detail = path + ": " + e.what();
   }
+  return h;
+}
+
+merge::IslandIn load_island_full(const std::string& path, int Rp, int p) {
+  fmt::Reader R(path);
+  Json meta = R.json("meta");
+  merge::IslandIn I;
+  I.r = (int32_t)meta.at("r").num(); I.N = (int32_t)meta.at("N").num(); I.T = (int32_t)meta.at("T").num();
+  I.L = (int32_t)meta.at("L").num(); I.Hm = (int32_t)meta.at("Hm").num();
+  I.status = status_from_name(meta.at("status").str()); I.message = str_or(meta, "reason", "");
+  if ((int)meta.at("p").num() != p) throw Error(Status::invalid_input, path + ": p differs from data.bin");
+  std::vector<double> grid = R.vec<double>("grid");
+  I.ess = R.vec<double>("st_ess");
+  LedgerConfig cfg; cfg.p = p; cfg.islands = Rp; cfg.leaders = false; cfg.fresh_counters = false;   // v0.1.7: no leaders
+  I.led.init(cfg);
+  { uint64_t n = 0, no = 0, nl = 0, nh = 0, np = 0;
+    const double* v = R.get<double>("top_v", &n); const uint64_t* off = R.get<uint64_t>("top_off", &no);
+    const uint16_t* len = R.get<uint16_t>("top_len", &nl); const uint64_t* hh = R.get<uint64_t>("top_hash", &nh);
+    const int32_t* pool = R.get<int32_t>("top_pool", &np);
+    if (no != n || nl != n || nh != n || n > I.led.top.cap) throw Error(Status::invalid_input, path + ": inconsistent top store");
+    for (uint64_t i = 0; i < n; ++i) {
+      if (off[i] + len[i] > np) throw Error(Status::invalid_input, path + ": top pool out of range");
+      I.led.top.offer(v[i], ModelView(pool + off[i], len[i]), hh[i]);
+    }
+    I.led.top.compact();
+    if (I.led.top.size() != n || !I.led.top.check_invariants()) throw Error(Status::invalid_input, path + ": top store not sorted / unique (I1)");
+  }
+  { std::vector<int32_t> hs = R.vec<int32_t>("hpm_S"); std::vector<double> hv = R.vec<double>("hpm_val"); std::vector<int64_t> ev = R.vec<int64_t>("hpm_ev");
+    if (hv.size() != 2 || ev.size() != 12) throw Error(Status::invalid_input, path + ": hpm_val / hpm_ev size");
+    I.led.has_hpm = I.led.top.size() > 0; I.led.hpmS = Model(hs.begin(), hs.end()); I.led.hpmF = hv[0]; I.led.hpm_logm = hv[1];
+    EventKey& k = I.led.hpm_ev.key;
+    k.seg = (uint8_t)ev[0]; k.tier = (uint8_t)ev[1]; k.iter = (int8_t)ev[2]; k.unit = (uint32_t)ev[3]; k.xph = (uint8_t)ev[4];
+    k.stage = (uint32_t)ev[5]; k.round = (uint32_t)ev[6]; k.particle = (uint32_t)ev[7]; k.position = (uint32_t)ev[8]; k.sub = (uint8_t)ev[9];
+    I.led.hpm_ev.phase = (int)ev[10]; I.led.hpm_ev.mech = (int)ev[11];
+    // phi is not in hpm_ev: v3's values by phase (INIT 0, BRIDGE grid[stage], BURN / MEASURED 1)
+    I.led.hpm_ev.phi = k.xph == X_BRIDGE && k.stage < grid.size() ? grid[k.stage] : (k.xph == X_BURN || k.xph == X_MEASURED) ? 1.0 : 0.0;
+  }
+  { std::vector<double> ib = R.vec<double>("island_best");
+    for (size_t i = 0; i < ib.size() && i < I.led.island_best.size(); ++i) I.led.island_best[i] = ib[i]; }
+  { uint64_t n = 0; const uint64_t* lg = R.get<uint64_t>("logical", &n);
+    if (n != (uint64_t)N_PHASE * N_MECH) throw Error(Status::invalid_input, path + ": logical size");
+    for (int a = 0; a < N_PHASE; ++a) for (int b = 0; b < N_MECH; ++b) I.led.logical[a][b] = lg[(size_t)a * N_MECH + b]; }
+  if (I.status == Status::completed) {
+    I.logZ = R.vec<double>("logZ").at(0);
+    I.rb_acc = R.vec<double>("rb_acc"); I.pip = R.vec<double>("pip_r");
+    if ((int)I.pip.size() != p) throw Error(Status::invalid_input, path + ": pip_r has the wrong length");
+    std::vector<double> rr = R.vec<double>("rb_round");
+    if (p > 0 && rr.size() != (size_t)I.Hm * (size_t)p) throw Error(Status::invalid_input, path + ": rb_round is not Hm x p");
+    for (int h = 0; h < I.Hm; ++h) I.rb_round.emplace_back(rr.begin() + (size_t)h * p, rr.begin() + (size_t)(h + 1) * p);
+    I.terminal = merge::read_terminal_supports(R, I.N, p);
+  }
+  return I;
+}
+
+merge::IslandSlot load_island(const std::string& path, int r, const Expect& ex, int p, Json* binary_out) {
+  merge::IslandSlot s;
+  merge::IslandHead h = head_island(path, r, ex, binary_out);
+  s.load = h.load; s.detail = h.detail;
+  if (h.load != merge::Load::ok) return s;
+  try { s.isl = load_island_full(path, std::max(1, h.r), p); }
+  catch (const std::exception& e) { s = merge::IslandSlot(); s.load = merge::Load::corrupt; s.detail = path + ": " + e.what(); }
   return s;
 }
-void check_binaries(std::vector<merge::IslandSlot>& slots, const std::vector<Json>& blocks, uint32_t mode) {
+void check_binaries(std::vector<merge::IslandHead>& heads, const std::vector<Json>& blocks, uint32_t mode) {
   const BinaryUse use = mode == fmt::M_V ? BinaryUse::MergeV : BinaryUse::MergeTheory;
   int ref = -1;
-  for (size_t i = 0; i < slots.size(); ++i) if (slots[i].load == merge::Load::ok) { ref = (int)i; break; }
+  for (size_t i = 0; i < heads.size(); ++i) if (heads[i].load == merge::Load::ok) { ref = (int)i; break; }
   if (ref < 0) return;
-  for (size_t i = 0; i < slots.size(); ++i) {
-    if (slots[i].load != merge::Load::ok) continue;
+  for (size_t i = 0; i < heads.size(); ++i) {
+    if (heads[i].load != merge::Load::ok) continue;
     BinaryCheck bc = binary_compatible(blocks[(size_t)ref], blocks[i], use);
-    if (!bc.ok) { slots[i].load = merge::Load::binary_mismatch; slots[i].detail = "island " + std::to_string(i + 1) + ": " + bc.reason; }
+    if (!bc.ok) { heads[i].load = merge::Load::binary_mismatch; heads[i].detail = "island " + std::to_string(i + 1) + ": " + bc.reason; }
   }
+}
+void check_binaries(std::vector<merge::IslandSlot>& slots, const std::vector<Json>& blocks, uint32_t mode) {
+  std::vector<merge::IslandHead> h(slots.size());
+  for (size_t i = 0; i < slots.size(); ++i) h[i].load = slots[i].load;
+  check_binaries(h, blocks, mode);
+  for (size_t i = 0; i < slots.size(); ++i) if (h[i].load == merge::Load::binary_mismatch) { slots[i].load = h[i].load; slots[i].detail = h[i].detail; }
+}
+FileIslandSource::FileIslandSource(std::vector<std::string> paths, const Expect& ex, int Rp, int p) : paths_(std::move(paths)), Rp_(Rp), p_(p) {
+  std::vector<Json> blocks(paths_.size());
+  for (size_t r = 1; r <= paths_.size(); ++r) heads_.push_back(head_island(paths_[r - 1], (int)r, ex, &blocks[r - 1]));
+  check_binaries(heads_, blocks, ex.mode);
+}
+merge::IslandIn FileIslandSource::load(int r) {
+  try { return load_island_full(paths_[(size_t)r - 1], Rp_, p_); }
+  catch (const std::exception& e) { merge::IslandIn bad; bad.r = -1; bad.message = e.what(); return bad; }   // refused by the merge
 }
 
 // ------------------------------------------------------------------------------------------------------------ setup
@@ -332,6 +431,9 @@ std::string write_fit(const std::string& path, const FitWrite& f, Json* record) 
   Json meta = Json::object();
   meta["status"] = status_name(fo.status); meta["fit_state"] = fo.fit_state; meta["reason"] = fo.reason;
   meta["estimates_available"] = fo.estimates_available; meta["Rp"] = ms.Rp; meta["N"] = ms.N; meta["tier"] = ms.tier;
+  { Json me = Json::object(); me["merged"] = u64_json(fo.mem.merged); me["one_island"] = u64_json(fo.mem.one_island);
+    me["small"] = u64_json(fo.mem.small); me["tail"] = u64_json(fo.mem.tail); me["total"] = u64_json(fo.mem.total);
+    me["label"] = "ESTIMATE (streaming merge memory model)"; me["budget"] = u64_json(ms.mem_budget_bytes); meta["mem_estimate"] = me; }
   Json ist = Json::array(); for (Status s : fo.island_status) ist.push(status_name(s)); meta["island_status"] = ist;
   meta["missing_islands"] = Json::array_of(fo.missing); meta["invalid_islands"] = Json::array_of(fo.invalid);
   if (fo.has_hpm) {
@@ -445,12 +547,9 @@ Json run(const Json& args) {
   const int R = (int)il.size();
   wp4io::Expect ex; ex.mode = mode; ex.data_hash = dhash; ex.setup_hash = S.content_hash; ex.calib_hash = C.content_hash;
   for (int r = 0; r < R; ++r) ex.island_hash.push_back(want(il.at((size_t)r).str(), "island_" + std::to_string(r + 1) + ".bin"));
-  std::vector<IslandSlot> slots; std::vector<Json> blocks((size_t)R);
-  for (int r = 1; r <= R; ++r) slots.push_back(wp4io::load_island(il.at((size_t)r - 1).str(), r, ex, D.p, &blocks[(size_t)r - 1]));
-  wp4io::check_binaries(slots, blocks, mode);
-  for (auto& s : slots) if (s.load == Load::ok) { s.isl.led.cfg.islands = R; s.isl.led.island_best.resize((size_t)R + 1, NEG_INF); }
-  const bool leaders = mode == fmt::M_COMPAT;
-  LedgerConfig cfg; cfg.p = D.p; cfg.islands = R; cfg.leaders = leaders; cfg.fresh_counters = false;
+  std::vector<std::string> paths; for (int r = 0; r < R; ++r) paths.push_back(il.at((size_t)r).str());
+  wp4io::FileIslandSource src(paths, ex, R, D.p);   // pass 1: heads + binary check
+  LedgerConfig cfg; cfg.p = D.p; cfg.islands = R; cfg.leaders = false; cfg.fresh_counters = false;   // v0.1.7: no final-run leaders
   Ledger pre(cfg);
   wp4io::offer_tables(pre, S, D.K, D.zob);
   offer_inherited(pre, C.inherited, C.has_hpm, C.hpm, C.hpm_ev, D.zob);
@@ -460,10 +559,11 @@ Json run(const Json& args) {
   ms.ell = (int)nget(args, "ell", ceil_log2((double)D.n + D.p + 1));
   ms.ls0 = true; ms.ls0_ell = ms.ell; ms.log_m0 = D.logm0;
   ms.threads = (int)nget(args, "threads", 1); ms.chunk = (size_t)nget(args, "chunk", 2048); ms.zob = &D.zob;
+  ms.mem_budget_bytes = (uint64_t)(nget(args, "mem_budget_gb", 0) * 1073741824.0);   // --mem-budget (GiB); 0 = off
   BitFactory fac{&D, &S};
-  FitOut fo = merge_and_tail(slots, std::move(pre), S.mode_S, fac, ms);
+  FitOut fo = merge_stream(src, std::move(pre), S.mode_S, fac, ms);
   std::string why;
-  for (auto& s : slots) if (s.load != Load::ok) why += (why.empty() ? "" : "; ") + s.detail;
+  for (auto& h : src.heads()) if (h.load != Load::ok) why += (why.empty() ? "" : "; ") + h.detail;
   if (!why.empty()) fo.reason += " [" + why + "]";
   wp4io::FitWrite fw; fw.mode = mode; fw.fo = &fo; fw.ms = &ms;
   fw.inputs["data.bin"] = dhash; fw.inputs["setup.bin"] = S.content_hash; fw.inputs["calib.bin"] = C.content_hash;
