@@ -37,7 +37,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 
 ## W3-AUDIT (top priority, resume 11-16)
 - Running: audit Fable (#5 feasibility note), track C lead (Owls pilot), track A lemmas lead (GW, BLK, OPC, ENC, CAL-C, START-X, KER, OVL, TDP, P1/S.3; then X1/X3/X5), audit-calc checker.
-- Post-freeze tickets (D85, from Sat 11-21, after the check): T-D2 check X (1 d / kill 1.5 d) → T-D3 sub-Gaussian Thm 2 (2 d / kill 3 d) → T-D1 group-relative no-leakage (3 d / kill 4 d; may be replaced by #5).
+- Post-freeze tickets (D85, from Sat 11-21, after the check): T-D2 check X (1 d / kill 1.5 d) → T-D3 sub-Gaussian Thm 2 (2 d / kill 3 d) → T-D5′ store-restricted clause (1–2 d / kill 3 d; replaces #1, D86). #1, #4 deferred.
 - X2, X4: relabelling (recorder, post-freeze). P6 method version: Engineering reconciliation pending. RERUN_SPEC: open (HQ).
 
 ## Post-freeze riders (queued)
