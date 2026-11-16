@@ -135,12 +135,13 @@ Json run(const Json& args) {
   wp4io::offer_tables(led, S, D.K, D.zob);   // the calibration ledger starts with the tables (core v3_core.cpp:613)
   merge::TailSettings ts; ts.threads = s.threads; ts.chunk = 64; ts.K = D.K; ts.p = D.p; ts.zob = &D.zob;
   CalibFactory fac{&D, &S};
-  // INTERFACES §7 (whole task): every island is admitted against the budget left after the calibration's own state
-  const uint64_t island_budget = budget ? budget - plan.resident : 0;
+  // INTERFACES §7 (whole task), WP4's N-1 rule: every island gets the task budget unchanged and the calibration's own
+  // state without the inputs (calibration ledger + export); the island's plan counts X, z, diag(G) and the setup inputs
+  const uint64_t resident_own = plan.ledger + plan.export_, island_budget = budget;
   auto t0 = std::chrono::steady_clock::now();
   CalibOutcome oc;
-  if (mode == fmt::M_V) { island::CalibIslandRunner<island::Arith::ClassA> run(D, st, nb, rc); oc = calibrate_with(run, std::move(led), fac, s, ts, plan.resident, island_budget); }
-  else { island::CalibIslandRunner<island::Arith::Bit> run(D, st, nb, rc); oc = calibrate_with(run, std::move(led), fac, s, ts, plan.resident, island_budget); }
+  if (mode == fmt::M_V) { island::CalibIslandRunner<island::Arith::ClassA> run(D, st, nb, rc); oc = calibrate_with(run, std::move(led), fac, s, ts, resident_own, island_budget); }
+  else { island::CalibIslandRunner<island::Arith::Bit> run(D, st, nb, rc); oc = calibrate_with(run, std::move(led), fac, s, ts, resident_own, island_budget); }
   const CalibOut& co = oc.co;
   rec["status"] = cal_status_name(co.status); rec["tier_final"] = co.tier_final;
   rec["seconds"] = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();

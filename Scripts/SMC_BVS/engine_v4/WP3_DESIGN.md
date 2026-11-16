@@ -214,6 +214,14 @@ This is the API that WP4's `calib::IslandRunner` calls. It is built after the PR
     search (CALIB, e, k, UNIT_LOCAL). There is no local search inside the island.
   - Also returned: `forced` (forced pilot steps), the schedule used, stages, logZ, pip, init_hash, and the stream
     positions (start, end) in compat.
+- **Admission (WP4's N-1 rule, `IslandSpec`).**
+  - `mem_budget` is the whole calibration task's budget, passed unchanged to every island.
+  - `resident_bytes` is the calibration process's own state: the calibration ledger at its staging peak and the
+    inherited export. It excludes X / z / diag(G) and the setup inputs, which the island's plan counts itself.
+  - The runner adds `resident_bytes` to the plan's caller-supplied inputs term, so an island is admitted iff
+    resident_bytes + plan ≤ mem_budget. No byte is counted twice.
+  - `calib_run` passes resident = ledger + export (WP4's plan without its inputs term) and budget = the task's budget.
+  - Test `calibration_admission_n1_rule`: refused at plan − 1, admitted at plan.
 - **Stops.**
   - resource_limit returns core's partial output: the schedule so far, `forced`, the stages so far, logZ so far and
     `partial = true`.
