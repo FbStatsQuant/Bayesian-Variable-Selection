@@ -48,7 +48,7 @@ if(V4_TESTS)
   set(V3_CORE_CPP ${CMAKE_CURRENT_SOURCE_DIR}/../core/cpp)
   add_executable(v4_tests tests/test_main.cpp tests/test_sha256.cpp tests/test_rng.cpp tests/test_format.cpp
     tests/test_store.cpp tests/test_ledger.cpp tests/test_score.cpp tests/test_gen.cpp tests/test_prep.cpp
-    tests/test_pmath.cpp tests/test_cli.cpp
+    tests/test_pmath.cpp tests/test_cli.cpp tests/test_wp4.cpp
     tests/wp5/test_eval.cpp tests/wp5/test_golden_v3.cpp tests/wp5/test_post_e2e.cpp tests/wp5/test_t7.cpp tests/wp5/test_scale.cpp)
   target_include_directories(v4_tests PRIVATE tests tests/wp5 src ${V3_CORE_CPP})
   target_compile_definitions(v4_tests PRIVATE V3_CORE_CPP_DIR="${V3_CORE_CPP}"
@@ -62,6 +62,9 @@ if(V4_TESTS)
   add_executable(v4_bench_store tools/bench_store.cpp)
   target_compile_options(v4_bench_store PRIVATE ${V4_BIT_FLAGS})
   target_link_libraries(v4_bench_store PRIVATE v4_bit)
+  add_executable(v4_bench_wp4_fv tools/bench_wp4_fv.cpp)
+  target_compile_options(v4_bench_wp4_fv PRIVATE ${V4_BIT_FLAGS})
+  target_link_libraries(v4_bench_wp4_fv PRIVATE v4_bit)
   add_executable(v4_bench_score tools/bench_score.cpp)
   target_compile_options(v4_bench_score PRIVATE ${V4_BIT_FLAGS})
   target_link_libraries(v4_bench_score PRIVATE v4_bit)

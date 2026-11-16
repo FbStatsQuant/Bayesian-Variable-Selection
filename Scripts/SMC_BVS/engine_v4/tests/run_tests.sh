@@ -43,4 +43,10 @@ if command -v Rscript > /dev/null; then
   if TMPDIR="${TMPDIR:-$build}" nice -n 19 "$here/tools/competitors/test_install_script.sh" > "$build/wp5_install.log" 2>&1; then
     echo "WP5 install script: OK ($(grep -c '^  ok ' "$build/wp5_install.log") checks; $(tail -1 "$build/wp5_install.log"))"; else echo "WP5 install script: FAILED ($build/wp5_install.log)"; rc=1; fi
 fi
+# WP4 golden bit tests against core/ (calibration coded rule, T9 merge, T10 paths); needs R with Rcpp.
+if command -v Rscript > /dev/null; then
+  nice -n 19 Rscript "$here/tests/golden/wp4_golden.R" "$here/../core" "$here" "${TMPDIR:-$build}/wp4_golden" "$mode" "$threads" || rc=1
+else
+  echo "R not found: WP4 golden tests NOT RUN"
+fi
 exit $rc
