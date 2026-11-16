@@ -676,3 +676,10 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - **Row 3.6 needs A5 (no leakage): only IND/S1 inside; AR, the 1M primary, is outside.** HQ: no correctness event; the headline wording states the A5 scope plainly; the repair "leaks inside a method block are harmless" is track D candidate #1.
   - P6 version conflict (Theory: v3.1 with LS0; Engineering: v2.2): Engineering to reconcile.
   - RERUN_SPEC left open until Writing restructures.
+- 2026-11-16 ~17:45 CT. CI green (a14ce83b; issue #41 closed). Task V GO, with the 6 free supersessions as a small follow-up task. P6 confirmed v3.1 with LS0 (Engineering corrected); only the 2,400-fit study is v2.2.1.
+- W3-AUDIT CP2 (track D): candidate #1 (group-relative no-leakage) reaches S3/S4/S6 only, not AR or the 1M BLK. AR needs #5 (non-collapse; Fable feasibility note pending).
+  - HQ order, post-freeze (from Sat 11-21), after the Opus check of the audit-calc lines:
+    - #2 check X: 1 d, kill at 1.5 d;
+    - #3 sub-Gaussian Thm 2: 2 d, kill at 3 d;
+    - #1 group no-leakage: 3 d, kill at 4 d.
+  - #4 deferred; #5 decided on the note (may replace #1).
