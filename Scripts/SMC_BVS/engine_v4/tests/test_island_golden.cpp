@@ -361,8 +361,8 @@ TEST(golden_calibration_islands_compat_vs_core) {
     v4::calib::IslandOut o = run.run(sp);
     char tag[64]; std::snprintf(tag, sizeof tag, "compat %s e%d k%d r%d", pilot ? "pilot" : "diag", sp.tier, sp.iter, sp.island);
     compare_cal(c, o, sp.island, true, tag);
-    CHECKF(o.position_start == (double)p0 && o.position_end == (double)rs.g.count, "[%s] stream positions %.0f..%.0f vs %llu..%llu", tag,
-           o.position_start, o.position_end, (unsigned long long)p0, (unsigned long long)rs.g.count);
+    CHECKF(o.position_start == p0 && o.position_end == rs.g.count && o.init_hash == c.R3.init_hash, "[%s] stream positions %llu..%llu vs %llu..%llu, init hash", tag,
+           (unsigned long long)o.position_start, (unsigned long long)o.position_end, (unsigned long long)p0, (unsigned long long)rs.g.count);
     ++n;
   }
   std::printf("  %d calibration islands (compat, streams 0-5 continued) = core, ledgers included\n", n);
@@ -421,7 +421,7 @@ TEST(golden_calibration_failure_ledger_so_far) {
       CHECKF(c.failed && o.status == v4::Status::numerical_failure, "compat %d: core failed %d, island %s", variant, (int)c.failed, v4::status_name(o.status));
       std::printf("   compat island: %s\n", o.message.c_str());
       compare_cal_ledger(*c.L3, o.led, sp.island, "compat failure");
-      CHECKF(o.position_end == (double)rs.g.count, "compat %d: stream position %.0f vs %llu", variant, o.position_end, (unsigned long long)rs.g.count);
+      CHECKF(o.position_end == rs.g.count, "compat %d: stream position %llu vs %llu", variant, (unsigned long long)o.position_end, (unsigned long long)rs.g.count);
     }
     // law: particle-major 1 and 3 threads, label-major 3 threads, against core with the addressed uniforms
     for (int kern = 0; kern < 2; ++kern) for (int th : {1, 3}) {

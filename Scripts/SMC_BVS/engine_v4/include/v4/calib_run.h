@@ -6,7 +6,6 @@
 // The command (`smcbvs4 calibrate`, src/calib/calib_run.cpp) wires data.bin / setup.bin / calib.bin around it; the
 // island runner comes from WP3 (calibration roles) and is the only part not yet available.
 #pragma once
-#include <set>
 #include <vector>
 #include "v4/calib.h"
 #include "v4/calib_backend.h"
@@ -33,41 +32,79 @@ inline Budgets budgets(int64_t n, int64_t p) {
   for (int e = 0; e < 2; ++e) { const int m = e ? 4 : 1; b.N[e] = m * b.N0; b.H[e] = m * b.H0; b.T[e] = m * b.T0; }
   return b;
 }
+// V-1M (D-1, D-26): no tier escalation; the calibration islands have H = 512 particles and the final islands N = 2,500,
+// whatever p. Theory mode (coded rule) keeps v3's budgets (tiers e = 0, 1).
+constexpr int V_H = 512, V_N = 2500;
 inline Settings settings_from(const Budgets& b, Rule rule) {
   Settings s; s.rule = rule;
   for (int e = 0; e < 2; ++e) { s.tiers[e].tier = e; s.tiers[e].H = b.H[e]; s.tiers[e].Te = b.T[e]; s.tiers[e].L = b.L; s.tiers[e].Hm = 4; s.tiers[e].ell = b.ell; }
-  if (rule == Rule::bounded) { s.sum_mode = SumMode::Blocked; s.I_max = std::min(s.I_max, b.ell); }
+  if (rule == Rule::bounded) {
+    s.sum_mode = SumMode::Blocked;
+    s.tiers[0].H = V_H;               // D-26
+    s.tiers[1] = TierSettings();      // no tier 1 in V
+    s.tiers[1].tier = 1;
+    // I_max is NOT clamped to ell here (review PR37 m-5): the Driver refuses I_max > ell (D-26)
+  }
   return s;
 }
+// The final islands' N frozen with the grid: v3's N_e of the frozen tier (coded), or V_N (bounded).
+inline int frozen_N(const Budgets& b, Rule rule, int tier) { return rule == Rule::bounded ? V_N : b.N[tier]; }
+
+// Inherited models as flat arrays (review PR37 m-6): no per-model heap allocation at 8.10^7 models.
+struct InheritedFlat {
+  std::vector<int64_t> ptr{0}; std::vector<int32_t> idx; std::vector<double> F, lg0, logm, d;
+  size_t size() const { return F.size(); }
+  ModelView model(size_t i) const { return ModelView(idx.data() + ptr[i], (uint32_t)(ptr[i + 1] - ptr[i])); }
+};
 
 struct CalibOutcome {
   CalibOut co;
   Ledger led;                                   // the calibration ledger at the end (stores, HPM + provenance, counters)
   std::vector<StageRecord> stages;
-  std::vector<merge::InheritedModel> inherited; // models of top u lead0 u lead1 (lexicographic), scored
+  InheritedFlat inherited;                      // models of top u lead0 u lead1 (lexicographic), scored (F, lg0, log m, d)
+  double k_store = 0;                           // mean |S| of the calibration top store (INTERFACES v0.1.12 §7 admission)
 };
 
+// Memory plan of the calibration process (review PR37 M-5; ESTIMATE, bytes): the calibration ledger's three stores at
+// their staging peak (2.5 x entries), one island ledger in flight (returned compacted, then merged: 2.5 x), the flat V /
+// export (pool + offsets + 4 values + a view each), the setup inputs and data (mapped). kbar = mean model size.
+struct CalibMemPlan { uint64_t ledger = 0, island_ledger = 0, export_ = 0, inputs = 0, resident = 0, total = 0; };
+inline CalibMemPlan calib_memory_plan(int64_t p, double kbar, uint64_t inputs_bytes) {
+  const double entries = 40.0 * p + 1 + 2 * 20.0 * p, entry = 26.0 + 4.0 * kbar;
+  CalibMemPlan m;
+  m.ledger = (uint64_t)(2.5 * entries * entry);
+  m.island_ledger = (uint64_t)(2.5 * entries * entry);
+  m.export_ = (uint64_t)(entries * (4.0 * kbar + 8 + 4 * 8 + 16));
+  m.inputs = inputs_bytes;
+  m.resident = m.ledger + m.export_ + m.inputs;   // held while an island runs (the export only at the end; counted conservatively)
+  m.total = m.resident + m.island_ledger;
+  return m;
+}
+
 // led: the calibration ledger with the tables already offered (leaders on, cfg.islands = 4). The evaluator factory
-// scores V, the local searches and the inherited export.
+// scores V, the local searches and the inherited export. resident / budget: passed to every island (INTERFACES §7).
 template <class Factory>
-CalibOutcome calibrate_with(IslandRunner& runner, Ledger&& led, Factory& fac, const Settings& s, const merge::TailSettings& ts) {
+CalibOutcome calibrate_with(IslandRunner& runner, Ledger&& led, Factory& fac, const Settings& s, const merge::TailSettings& ts,
+                            uint64_t resident_bytes = 0, uint64_t island_budget = 0, bool test_force_local_limit_pilot = false) {
   CalibOutcome out;
   out.led = std::move(led);
   LedgerBackend<Factory> be(runner, out.led, fac, ts, s.threads);
+  be.resident_bytes = resident_bytes; be.mem_budget = island_budget; be.test_force_local_limit_pilot = test_force_local_limit_pilot;
   Driver drv(be, s);
   out.co = drv.run();
   out.stages = be.stages();
   out.led.compact();
   // inherited export (core/cpp/v3_core.cpp:728-736): every model of the three stores, lexicographic, scored
-  std::set<Model> U;
-  for (const Store* st : {&out.led.top, &out.led.lead0, &out.led.lead1})
-    for (size_t i = 0; i < st->size(); ++i) { ModelView v = st->model(i); U.insert(Model(v.begin(), v.end())); }
-  std::vector<Model> Um(U.begin(), U.end());
-  out.inherited.resize(Um.size());
-  for_chunks(Um.size(), 256, s.threads, [&](size_t, size_t b, size_t e) {
-    auto ev = fac.make(); double d;
-    for (size_t i = b; i < e; ++i) { auto& m = out.inherited[i]; m.S = Um[i]; ev(m.S, m.logm, m.lg0, d, m.F); }
+  std::vector<ModelView> U = sorted_unique_models({&out.led.top, &out.led.lead0, &out.led.lead1}, false);
+  InheritedFlat& f = out.inherited;
+  for (auto& v : U) { f.idx.insert(f.idx.end(), v.begin(), v.end()); f.ptr.push_back((int64_t)f.idx.size()); }
+  f.F.assign(U.size(), 0); f.lg0.assign(U.size(), 0); f.logm.assign(U.size(), 0); f.d.assign(U.size(), 0);
+  for_chunks(U.size(), 256, s.threads, [&](size_t, size_t b, size_t e) {
+    auto ev = fac.make(); Model S;
+    for (size_t i = b; i < e; ++i) { ModelView v = f.model(i); S.assign(v.begin(), v.end()); ev(S, f.logm[i], f.lg0[i], f.d[i], f.F[i]); }
   });
+  const Store& t = out.led.top;
+  out.k_store = t.size() ? (double)t.pool.size() / (double)t.size() : 0.0;
   return out;
 }
 

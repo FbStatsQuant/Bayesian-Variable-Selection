@@ -360,9 +360,9 @@ class TestCells(Base):
             self.assertLessEqual(P["n_tasks"], 150)
             planned_ids |= {x["run_id"] for x in json.load(open(f))["fits"]}
         # PR #19 MINOR-6: the fit count (TSV data rows) and the planned count (all but the 20 block-costed T8 rows)
-        self.assertEqual(len(rows), 258)   # H-9
+        self.assertEqual(len(rows), 259)   # H-9 258 + the H-10 gated AR-weak 1M cell
         self.assertEqual(len(planned_ids), len(rows) - 20)
-        self.assertEqual(len(written), 47)
+        self.assertEqual(len(written), 48)   # H-10: + the gated AR-weak 1M plan
 
     def test_precision_seeds_independent(self):
         """PR #19 MAJOR-1 (Sol F6): every precision arm has its own final and calibration seed, shared with no other fit."""
