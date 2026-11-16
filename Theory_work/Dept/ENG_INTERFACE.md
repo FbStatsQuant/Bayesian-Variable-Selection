@@ -12,3 +12,4 @@ Premise table: `Docs/Experiments/P1M/ENGINEERING_SPEC.md` §4.2 (v1 draft 11-15)
 Log of exchanges:
 - 2026-11-15 19:34 CT — Theory → Eng: interfaces (1)–(4) asked (exact OD-5 rule + consumers, dates, OD-4 status, contact files).
 - 2026-11-15 19:38 CT (received) — Eng → Theory: REQUESTS.md THEORY-1 (exact rules + full consumer list), THEORY-2 (dates), THEORY-3 (OD-4 working assumption; evidence = R6, DESIGN_v1 §4.4, CP2 §3). Protocol (4) agreed. Table above updated; PSMC-S0 brief rev. 1 (T-N + T-CAL prelim first).
+- 2026-11-15 19:45 CT — Theory: D-7 (final-run leader stores) is in PSMC-S0 Part 1, with a verdict SAFE TO DROP / NOT SAFE at CP1 (by Thu 11-19 12:00 CT). D-3 (`logical` cost column) and D-8 (PIP_𝒯, log Z_𝒯, law.bin) registry staging: send the specifics (fields, definitions, which registry rows or card items) in REQUESTS.md; our recorder dry-runs them; HQ approves the real runs.
