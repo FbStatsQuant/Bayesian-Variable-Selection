@@ -18,8 +18,9 @@ $\hat Z_1,\dots,\hat Z_4$, and the reported evidence is the equal-weight mean $\
 (code: `Scripts/SMC_BVS/core/v3_run.R:154`, `log_Z = log_sum_exp(logZr) - log(R)`, with `islands = 4L` at `:91`;
 as recorded at `Theory_work/Wave3/W3-SAMP/STATEMENT.md:52-53`, with $R'=4$ at :42). $Z=\sum_{S\in\Omega}\varpi(S)m(S)$.
 
-**Claim.** Almost surely on $\mathcal A$: $\ E[\hat Z\mid\mathcal C]=Z$. Equivalently $E[\hat Z/Z\mid\mathcal C]=1$ on
-$\mathcal A$, and $E[\mathbf 1_{\mathcal A}\hat Z]=E[\mathbf 1_{\mathcal A}Z]$. No condition on the design or the data.
+**Claim.** Data fixed (probability over the final streams), almost surely on $\mathcal A$: $\ E[\hat Z\mid\mathcal C]=Z$, i.e.
+$E[\hat Z/Z\mid\mathcal C]=1$ on $\mathcal A$. Consequently, under the joint law with the H-U/SI idealisation used in the proof,
+$E[\mathbf 1_{\mathcal A}\hat Z]=E[\mathbf 1_{\mathcal A}Z]$ [R1-E9]. No condition on the design or the data.
 
 *Proof.* `W1-N1:Thm-N1@1.0.0` ("PROVED-CHECKED"; `W1-N1/STATEMENT.md:98-104`) gives, for each fixed $r\ge1$, almost surely
 on $\mathcal A\cap\{r\le R'\}$, $E[W_r\mid\mathcal C]=1$ with $W_r:=\hat Z_r/Z$ (its "in particular" clause, :104). On
@@ -41,5 +42,5 @@ average, and are covered by `W3-SAMP:LT#` (LT-d) and `W3-SAMP:C`. (iii) The iden
 |---|---|---|---|
 | R1 | set-size and elementary bridges B1.1, B1.2, B1.3, B2.1, B3.2, B4.1, B6.1 | `lemmas/R1_set_sizes.md` | Thms 1, 2, 3, 4, 6 |
 | R2 | local regressions ⇒ variance clause (population R2.1; sample R2.2) | `lemmas/R2_local_regression.md` | Thms 6, 7 |
-| R3 | delivery assembly: RM2 conclusions ⇒ F-UNI premises (S), (P), (V); operational premises carried as (S4) | `lemmas/R3_delivery_assembly.md` | Thms 6, 7 |
+| R3 | (historical) delivery assembly: RM2 conclusions ⇒ F-UNI premises (S), (P), (V); operational premises carried as (S4) | `lemmas/R3_delivery_assembly.md` | former Thms 6, 7 only (current ones use B6.6′, B7.5) [R1-F2] |
 | R4 | printed outputs consistent: Thm 2 + Thm 5 ($Q=S_0$) + `W3-SAMP:C` (C-v) | `lemmas/R4_printed_outputs.md` | Thm 10 (row 3.6) |

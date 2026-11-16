@@ -7,7 +7,7 @@ Claims and proofs: `STATEMENT.md`, `lemmas/R1`–`R4`. Reader versions: `READER_
 
 ```
 REGISTRY
-claim: W3-READER:PoolZ | kind: corollary | statement: STATEMENT.md:12-37 | premises: Theory_work/Wave1/W1-N1/STATEMENT.md §2
+claim: W3-READER:PoolZ | kind: corollary | statement: STATEMENT.md:12-39 | premises: Theory_work/Wave1/W1-N1/STATEMENT.md §2
 name: Corollary PoolZ (the pooled evidence estimate is unbiased given the calibration)
 status: PROVED (by this seat, unchecked) | status_source: STATEMENT.md:13
 conclusion: identity: E[Zhat | C] = Z a.s. on the calibration-success event A, Zhat = (1/4) sum_r Zhat_r (equal-weight island mean, v3_run.R:154) | scope: SMC branch, any design, any data, N1 premises
@@ -16,7 +16,7 @@ method: Scripts/SMC_BVS/core/v3_run.R:91,154
 gates: correct:PENDING(bridge-leg Sol line check)
 
 REGISTRY
-claim: W3-READER:R1 | kind: lemma | statement: lemmas/R1_set_sizes.md:1-59 | premises: READER_VERSIONS.md (Thms 1, 2, 4, 6)
+claim: W3-READER:R1 | kind: lemma | statement: lemmas/R1_set_sizes.md:1-59 | premises: READER_VERSIONS.md (Thms 1, 2, 3, 4, 6, 10)
 name: Lemma R1 (set-size and elementary bridges to the posterior and main-theorem hypotheses)
 status: PROVED (by this seat, unchecked) | status_source: lemmas/R1_set_sizes.md:3
 conclusion: identity: s0+j0 <= (2A+2)s0+2; s0+m#_n <= 3(A+1)(s0+1)log n; kbar_n <= 5(A+1)(s0+1)log n; 16+s0 <= 5(A+1)(s0+1)log n (n >= 3); bounded coefficients => energy; Gaussian nulls => (W-sph) | scope: n >= 3, A >= 1, s0 >= 1
@@ -31,15 +31,15 @@ conclusion: inequality: Var(W_l | W_A) <= (1 + L^2/c) Var(W_l | W_T) for A subse
 gates: correct:PENDING(bridge-leg Sol line check; S1: population form passes)
 
 REGISTRY
-claim: W3-READER:R3 | kind: lemma | statement: lemmas/R3_delivery_assembly.md:1-54 | premises: READER_VERSIONS.md (S4)
-name: Lemma R3 (delivery assembly for the reported-model theorems)
+claim: W3-READER:R3 | kind: lemma | statement: lemmas/R3_delivery_assembly.md:1-63 | premises: READER_VERSIONS.md (S4)
+name: Lemma R3 (historical: delivery assembly for the former reader hypotheses of the reported-model theorems = those of W3-RM2:RM2-R / RM2-F; not used by the current Theorems 6–7) [R1-F2]
 status: PROVED (by this seat, unchecked) | status_source: lemmas/R3_delivery_assembly.md:3
-conclusion: implication: RM2-R / RM2-F conclusions + (S4) => premises (V), (S), (P) and the method/premise/allocation paragraph of W2-UNI:F-UNI; hence P(no output) = 0 on the bounded domain D under IDEAL-W, and for every admissible n >= 3 under A:IDEAL-W+, with P(Shat = S0) -> 1 under A:IDEAL-W+ [F-UNI narrowed to 2.1.0, task S2]
+conclusion: implication (under the hypotheses of W3-RM2:RM2-R / RM2-F): their conclusions + (S4) => premises (V), (S), (P) and the method/premise/allocation paragraph of W2-UNI:F-UNI; hence P(no output) = 0 on the bounded domain D under IDEAL-W, and for every admissible n >= 3 under A:IDEAL-W+, with P(Shat = S0) -> 1 under A:IDEAL-W+ [F-UNI narrowed to 2.1.0, task S2]
 depends_on: W2-UNI:F-UNI@2.1.0 ; W3-RM2:RM2-R@1.0.3 ; W3-RM2:RM2-F@1.0.3 (history: superseded for the shipped method by B6.6′/B7.5 = W3-RM2-R:DLV-0 premises)
 gates: correct:PENDING(bridge-leg Sol line check)
 
 REGISTRY
-claim: W3-READER:R4 | kind: lemma | statement: lemmas/R4_printed_outputs.md:1-49 | premises: lemmas/R4_printed_outputs.md (Claim)
+claim: W3-READER:R4 | kind: lemma | statement: lemmas/R4_printed_outputs.md:1-51 | premises: lemmas/R4_printed_outputs.md (Claim)
 name: Lemma R4 (printed PIPs, MPM, HPM and evidence estimate are consistent: assembly)
 status: PROVED (by this seat, unchecked) | status_source: lemmas/R4_printed_outputs.md:3
 conclusion: rate: 1_A max(o0, o1) = O_P(n^{-1/2} exp(C_R sqrt(log n))); hence Zhat/Z - 1, log Zhat - log Z, ||pip_primary - 1_S0||_inf = O_P(that) on A; P(A and MPM != S0) -> 0; P(completed and Shat != S0) -> 0 | scope: Gaussian rows, standardised-signal convention, Q = S0 (no leakage outside the true model, e.g. independent predictors; AR and block designs not covered)

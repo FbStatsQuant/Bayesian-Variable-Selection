@@ -48,8 +48,9 @@ tables, start law) differently from the stochastic ones (SMC) and the determinis
 ## Stage by stage: what problem each stage solves
 
 **1. Standardisation and the score.** Every predictor is centred and scaled, and so is the response; the intercept is
-removed by centring. Under the shipped prior (a beta-binomial prior on the model, which charges about
-$\log(2p/(k+1))+\tfrac12\log n$ for adding a variable to a model of size $k$; a ridge-stabilised $g$-prior with $g=n$ on
+removed by centring. Under the shipped prior (a beta-binomial prior on the model, which charges exactly
+$\log((2p-1-k)/(k+1))\approx\log(2p/(k+1))$ for adding a variable to a model of size $k$, `cpp/v3_score.h:62-71`; for a
+well-conditioned added direction the marginal likelihood adds an Occam cost of about $\tfrac12\log n$ [R1-F4]; a ridge-stabilised $g$-prior with $g=n$ on
 the coefficients; an inverse-gamma prior on the noise variance) the score $F(S)$ is a closed-form function of
 $X_S^\top X_S$ and $X_S^\top y$. *Problem solved:* the posterior is known up to one constant, and results do not
 depend on the units of $y$. When the model space is small enough, the method simply enumerates it and returns the
@@ -67,15 +68,16 @@ programme over model sizes. *Problems solved:* (i) the sampler starts from i.i.d
 the target instead of from an arbitrary model; (ii) its exact normaliser anchors the evidence estimate; (iii) its mode
 $\tilde S_0$ is a data-driven, deterministic guess of the true model. *What it gets wrong:* a predictor in one block
 that imitates a truth in another block looks useful on its own, so $\pi_0$ may include it (leakage). Theorem 5 shows
-that, when there are no such imitators, $\pi_0$ puts mass $1-n^{-c}$ ($c<\tfrac12$) on the true model as $n$ grows, and when
-they are confined to a set of size $n^{1/2-\epsilon}$ it puts mass $1-n^{-c}$ ($c<\epsilon$) on the models between the truth
+that, when there are no such imitators, $\pi_0$ puts mass $1-n^{-c}$ ($c<\tfrac12$) on the true model with probability tending to one as $n$ grows, and when
+they are confined to a set of size $n^{1/2-\epsilon}$ it puts mass $1-n^{-c}$ ($c<\epsilon$), again with probability tending to one, on the models between the truth
 and that set.
 
 **4. Calibration (choosing the ladder, then freezing it).** The sampler moves from $\pi_0$ to $\pi$ through tempered
 distributions $\pi_\phi\propto\pi_0^{1-\phi}\pi^{\phi}$, $0=\phi_0<\phi_1<\dots<\phi_T=1$. Pilot runs choose the ladder
-adaptively (each step keeps an effective sample size of $90\%$), then refine it on the set of good models already
+adaptively (pilot steps target an effective sample size of at least $90\%$, except recorded forced minimum steps of
+$1/T_e$, `cpp/v3_calib.h:25-44`; candidate-grid steps are checked against the restricted ESS criterion) [R1-F4], then refine it on the set of good models already
 found until it stops changing; if diagnostics fail, the whole calibration is repeated once with four times the effort.
-If no acceptable ladder is built, the pilot's own ladder is used, so the run always proceeds. *Problems solved:* the
+If no acceptable ladder is built at the final calibration tier, the last successful construction is used, else the pilot's schedule (`v3_calib.R:120-124`), so the run proceeds unless another stop occurs or the allocation is insufficient [R1-E10, R1-F4]. *Problems solved:* the
 ladder is fitted to this data set, and it is **frozen before the final run draws any random number**, so the final run
 is a standard SMC sampler with a fixed schedule — this is what makes its evidence estimate unbiased and its outputs
 analysable. Together with the fallback ladder, freezing is what lets a run with enough computing allocation produce output (the
@@ -88,7 +90,8 @@ of $\pi_0$. At each rung of the ladder the particles are reweighted by how much 
 resampled, and moved by MCMC steps that leave the current distribution invariant: a Gibbs update of every coordinate,
 random swaps, swaps with correlated neighbours, and independence proposals drawn from $\pi_0$. At $\phi=1$ the PIPs are
 averaged from the Gibbs inclusion probabilities (Rao–Blackwellisation) and pooled with **equal weights** across islands (islands are not weighted by their evidence);
-the evidence $\hat Z$ is the product of the average reweighting factors, averaged across islands. *Problems solved:*
+each island multiplies $m(\emptyset)\bar Z_0$ by the average reweighting factors (`cpp/v3_engine.h:299, 316-322`), and $\hat Z$
+is the equal-weight mean of those four products [R1-F4]. *Problems solved:*
 moving from an easy distribution to the hard one in small steps avoids getting trapped; the independence and
 neighbour-swap moves let particles jump between near-equivalent models; independent islands give a check of
 stability.
@@ -99,16 +102,19 @@ one, add one, swap one for one) and moves to the best one only if it strictly im
 no neighbour improves has **certified** its end point as a local optimum. *Problems solved:* the search from the start
 mode undoes leakage: spurious members of $\tilde S_0$ are deleted one per move (Theorems 6–7 show it lands exactly on
 $S_0$, deleting at most $n^b$ columns, under their conditions); and certification gives a checkable guarantee
-(Theorem 8: certified small models contain $S_0$).
+(Theorem 8: the chance that a run certifies a small model missing a truth tends to zero) [R1-E10].
 
-**7. What is reported.** Every model scored anywhere — block tables, calibration, particles and their proposals, both
-local searches — is recorded, and the **reported model** $\hat S$ is the best-scoring one. The method also reports the
+**7. What is reported.** The **reported model** $\hat S$ is the best model among those offered to the run's statistical
+ledger — block tables, retained calibration models, particle and proposal score events, both local searches (preflight
+timing scores are not recorded) [R1-F4]. The method also reports the
 pooled PIPs, the MPM ($\mathrm{PIP}>\tfrac12$), the evidence $\hat Z$ (with a one-sided lower bound), whether $\hat S$ is
-certified, and diagnostics (island disagreement, low effective sample size). *What the output looks like at moderate
-$n$:* with many predictors, the posterior (and the method's output) is a mixture over the true model and its many
-one-variable supersets $S_0\cup\{j\}$. Each superset is individually light, but together they can weigh as much as
-$S_0$ itself, so $\pi(S_0\mid y)$ may be well below one at moderate $n$; the theorems describe the limit. If the run hits its time or memory
-allocation it stops, returns the best model scored so far, and marks the estimates unavailable.
+certified, and diagnostics (island disagreement, low effective sample size). *What was observed at moderate
+$n$ (an observation, not a theorem):* in the measured Engineering configurations (decision D-17), with many predictors
+substantial mass of the posterior and of the method's output sat on the true model and its one-variable supersets
+$S_0\cup\{j\}$, each individually light but together comparable to $S_0$; no general finite-$n$ statement is proved, and
+the theorems describe the limit [R1-F3]. If the run hits its time or memory
+allocation it stops and its estimates are unavailable; the best recorded model is returned when such a record exists
+(a preflight stop returns before any is recorded, `v3_fit.R:115-118`) [R1-F4].
 
 ## Which theorem speaks to which stage
 
@@ -119,7 +125,7 @@ allocation it stops, returns the best model scored so far, and marks the estimat
 | local search from $\tilde S_0$ + reported model | does the software report $S_0$? | 6 (random design), 7 (fixed design) |
 | certificate | what does a certified small model guarantee without any structural condition? | 8 |
 | calibration freezing | does a run always produce output? | delivery result, used inside 6–7 |
-| SMC estimates | are the printed PIPs and $\hat Z$ consistent / unbiased? | sampler results (body of the paper; not on the headline card): consistency for designs with no leakage outside the true model, such as independent predictors (not AR or block designs; there, 6 for the reported model and unbiasedness of $\hat Z$, which holds for every design) |
+| SMC estimates | are the PIPs and $\hat Z$ computed from the uninterrupted island records consistent / unbiased (they equal the printed fields on completed runs)? | sampler results (body of the paper; not on the headline card): consistency for designs with no leakage outside the true model, such as independent predictors (not AR or block designs as such; for particular AR or block designs that satisfy Theorem 6's conditions, 6 gives the reported model); expectation $Z$ of the potential pooled evidence for every design, with no unbiasedness conditional on completion [R1-F1, R1-F5] |
 
 ## A toy example
 
@@ -141,8 +147,8 @@ start law cannot see that predictor 1, in another block, already explains it. So
 **leakage**. The proxy 2, which shares predictor 1's block, is correctly handled already by the block table. The true
 posterior, which sees all interactions, puts $0.69$ on $\{1,3\}$, and the PIPs are $(0.99,0.07,1.00,0.08,0.06,0.16)$, so
 the MPM and the HPM are $\{1,3\}$. (With six predictors the posterior is nearly concentrated; with thousands of
-predictors at moderate $n$ it is a mixture over $\{1,3\}$-like truths and their many one-variable supersets, each light,
-together comparable to the truth's own weight.) The local search from the start mode makes one move — delete 5 — reaches $\{1,3\}$,
+predictors at moderate $n$, the measured Engineering configurations showed substantial mass on one-variable supersets
+of the truth — an observation, not a theorem [R1-F3].) The local search from the start mode makes one move — delete 5 — reaches $\{1,3\}$,
 finds no improving neighbour and certifies it. In the theory, $Q=\{1,3,5\}$ is the leakage set, the lattice
 $\{\{1,3\},\{1,3,5\}\}$ is the route, and "delete the extras one at a time" is exactly what Theorems 6–7 prove happens
 in general.

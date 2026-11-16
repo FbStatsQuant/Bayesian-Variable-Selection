@@ -20,8 +20,8 @@ the **bridges** from the reader assumptions to the master's hypotheses, each mar
 here, with an effort estimate); and **honest limits**. Reader statements are deliberately *stronger in hypotheses*
 than the masters where that buys clarity; nothing in a conclusion goes beyond the master.
 
-Status conventions (binding): statuses are quoted verbatim from `Theory_work/INFRA/registry/claims.tsv` (as of this
-branch, base c04db8b); long council suffixes are cut after the first clause and marked "…". Nothing below
+Status conventions (binding): statuses are quoted verbatim from `Theory_work/INFRA/registry/claims.tsv` (requoted at
+main 14892123); long council suffixes are cut after the first clause and marked "…". Nothing below
 PROVED-CHECKED is called checked; "conditional on …" is carried.
 
 **Standing assumptions and conventions** (used by every theorem below; stated once in the paper's setup section).
@@ -145,20 +145,19 @@ fail without beta-min (numerical counterexample). (iii) $c_0(s_0,A)$ is an expli
 [H5-6]. (iv) (A3) is used only through the energy bound $\|X\theta^*\|^2\le n s_0^2\bar\theta^2$; any bound
 $\|X\theta^*\|^2\le nM$ suffices. (v) Models of size $\ge 3(A+1)(s_0+1)\log n$ carry posterior mass $O_P(n^{-1/2})$ with
 no eigenvalue condition (size-tail lemma, which uses a coefficient bound instead; separate statement). (vi) *Scope of
-the rate* [H5-6]: on every design the posterior miss is at least of order $n^{-1/2}$ (Theorem 3(a)); the extra
+the rate* [H5-6]: on every design with $s_0\le\min(K-1,p/2)$ the posterior miss is at least of order $n^{-1/2}$ (Theorem 3(a); $s_0<p$ suffices by Prop. LB) [R1-S3]; the extra
 $\sqrt{\log n}$ has been shown to be attained on the witness designs of Theorem 3(b); on other designs it is not known
 [S3-N5]. No two-sided rate on every design is claimed: a matching lower bound $E[1-\pi(S_0\mid y)]\gtrsim\sqrt{\log n/n}$ in
 expectation, under a floor on $S_0\cup\{j\}$, is open (post-freeze rider POST2-R1); in probability the $\sqrt{\log n}$
-factor is shown only when $\log p\asymp\log n$ (Theorem 3(b)) [S3-N4]. (vii) *What the posterior looks like at
-moderate $n$* [ENG-D17]: the miss $1-\pi(S_0\mid y)$ is carried mainly by the $p-s_0$ one-variable supersets
-$S_0\cup\{j\}$, each individually light (posterior odds of order $n^{-1/2}/p$ against $S_0$, times a $\chi^2_1$ factor), but
-numerous; together they can weigh as much as $S_0$ itself, so at moderate $n$ and large $p$ the posterior is a mixture
-over $S_0$ and many supersets. The theorem describes the limit $n\to\infty$.
+factor is shown only when $\log p\asymp\log n$ (Theorem 3(b)) [S3-N4]. (vii) *What was observed at
+moderate $n$ (an observation, not a theorem)* [ENG-D17, R1-F3]: in the Engineering configurations measured for decision D-17 (Engineering working file `Docs/Experiments/P1M/DECISIONS.md` in the main checkout, not git-tracked), substantial posterior mass sat on $S_0$ and its one-variable
+supersets $S_0\cup\{j\}$, each individually light but together comparable to $S_0$. No general finite-$n$ statement about
+the shape of the posterior or of the output is proved here; the theorem describes the limit $n\to\infty$.
 
 ### Why each assumption, and is it necessary
 - (A1) Gaussian errors give exact $\chi^2$ laws for the score differences. Necessity open; every comparable Bayesian
   selection theorem assumes it. $p\le n^A$ enters through union bounds over models of size $O(\log n)$; open.
-- (A2) Fixed $s_0$ keeps combinatorial constants bounded. Close to necessary for this rate: on *every* design the rate
+- (A2) Fixed $s_0$ keeps combinatorial constants bounded. Close to necessary for this rate: on *every* design with $s_0\le\min(K-1,p/2)$ the rate
   $\sqrt{\log n/n}$ forces $s_0=O(\sqrt{\log n})$, and $\pi(S_0\mid y)\to1$ forces $s_0=o(\sqrt n)$ (Theorem 3).
 - (A3) Bounded signal energy keeps the posterior of the noise variance on scale. Believed improvable (sub-linear growth);
   some control of the coefficients is necessary for the size-tail step (explicit counterexample).
@@ -250,6 +249,7 @@ as a post-freeze rider — it would make "no eigenvalue condition off $S_0$" lit
   (HQ order; CP3 picks on W3-T03ACC) (EQUAL).
 - v1.0 2026-11-16: [REG-33e1] Form A no longer carries an SL0 condition; `W2-APP:POST` conditional on SOP:TH09 only (EQUAL).
 - FRZ-RQ 2026-11-16: [REG-6cd6] freeze requote (main 14892123): `SOP:TH09@1.0.2` PROVED-CHECKED (W3-T03ACC accepted, 6cd699dd); POST2 C/E/A1/A0 @1.0.5 with TH09/TH128 dropped; Form A applies. Statuses only (EQUAL).
+- R1 2026-11-16: council R1 fixes — [R1-S3] lower-bound remark (vi) and (A2) line restricted to $s_0\le\min(K-1,p/2)$ (WEAKER: restores the master's domain); [R1-F3] remark (vii) relabelled an Engineering observation, mechanism sentence removed (WEAKER); [R1-E5] status base line (EQUAL).
 <!-- ROW thm1 END -->
 
 ---
@@ -297,7 +297,7 @@ with `W2-APP:POST@1.0.7`, `Theory_work/Wave2/W2-APP/lemmas/L1_POST.md:27-33`, st
 ### Bridges
 | # | Bridge | Mark | Detail |
 |---|---|---|---|
-| B2.1 | (A3) ⇒ LSF (i) and (ii) with $\psi_n=\varphi^2$ | NEW arithmetic | LSF asks the floor on $|S|\le\min(p,s_0+j_0)$ and on $|S|\le\bar k_n=\min\{p,s_0+\max(j_0,\bar m_n)\}$, $\bar m_n=\lceil[s_0(A\log n+\log2)+\log2+\tfrac{s_0+2}2\log n]/\log\tfrac32\rceil$ (L1_POST.md:20-25). For $n\ge3$: $\bar k_n\le(2.47As_0+3.7s_0+5.9)\log n\le5(A+1)(s_0+1)\log n$, and $s_0+j_0\le(2A+2)s_0+2$ is smaller. Checked numerically (LOG). |
+| B2.1 | (A3) ⇒ LSF (i) and (ii) with $\psi_n=\varphi^2$ | NEW arithmetic | LSF asks the floor on $|S|\le\min(p,s_0+j_0)$ and on $|S|\le\bar k_n=\min\{p,s_0+\max(j_0,\bar m_n)\}$, $\bar m_n=\lceil[s_0(A\log n+\log2)+\log2+\tfrac{s_0+2}2\log n]/\log\tfrac32\rceil$ (L1_POST.md:20-25). For $n\ge3$: $\bar k_n<(2.4664As_0+3.6996s_0+4.9327)\log n\le5(A+1)(s_0+1)\log n$ (R1) [R1-E6], and $s_0+j_0\le(2A+2)s_0+2$ is smaller. Checked numerically (LOG). |
 | B2.2 | LSF + Gaussian rows + fixed coefficients ⇒ events $\mathcal A_n$, $P(\mathcal A_n)\to1$, carrying (E), (F_λ), (F_w), BM-∞ with common constants | EXISTS-CHECKED | `W2-APP:POST@1.0.7` part (a), "PROVED-CHECKED" (accepted at W2-APP's CP3, main f526e45b; SOP:TH09 discharged, main 6cd699dd) [REG-f526, REG-6cd6]. Raw-scale coefficients are covered (L1_POST.md:12-15, event $\mathcal H_n$). Theorems 2, 6 and 10 depend on it; Theorem 4 does not (its master uses its own Gaussian-design transfer [S1-F12]). |
 | B2.3 | events ⇒ conclusions under the joint law | inside the master | Theorem 1 item 6 (diagonal transfer). |
 
@@ -315,6 +315,7 @@ row 1.1 applies here too.
   mark and honest limits updated (EQUAL).
 - v0.4 2026-11-16: [REG-33e1] SL0 cleared: `W2-APP:POST@1.0.6` conditional on SOP:TH09 only (EQUAL).
 - FRZ-RQ 2026-11-16: [REG-6cd6] `W2-APP:POST@1.0.7` "PROVED-CHECKED"; T03♯ discharged; Form A. Statuses only (EQUAL).
+- R1 2026-11-16: [R1-E6] B2.1 constant harmonised with R1 (EQUAL).
 <!-- ROW thm2 END -->
 
 ---
@@ -410,7 +411,7 @@ PASS, opus=9.2 PASS"** (each). Named exactness case in expectation: bridge B3.8.
 | B3.5 | expectation display ⇐ Cor A1-E (W3-PSHARP-R `STATEMENT.md:74-84`) | EXISTS-CHECKED | `W3-PSHARP-R:AE@1.0.0` "PROVED-CHECKED; council R2, …". Under (N-gauss) via the random-$(X_{S_0},\theta^*)$ clause (:70-72) with $P(\mathcal A_n)\to1$. Headline constant: $(s_0+1)\cdot2(p-s_0)/(2p-1-s_0)\ge2$ for $s_0\ge1$, $\ge(s_0+1)/2$ for $s_0\le p/2$, and $\log(p\sqrt n/(s_0+1))\ge\frac12\log n$ (B3.8 step 3). |
 | B3.6 | in-probability display needs $p\to\infty$ | EXISTS-CHECKED | `W3-PSHARP:A@1.0.0`, Cor A1 (`W3-PSHARP/STATEMENT.md:71-73`), unchanged. |
 | B3.7 | remark (ii) ⇐ Cor A2-E(ii) (:86-92); remark (iii) ⇐ A2C (:94-100) | EXISTS-CHECKED | `W3-PSHARP-R:AE`, `W3-PSHARP-R:A2C` "PROVED-CHECKED; council R2, …". |
-| B3.8 | fully orthogonal designs, fixed nonzero coefficients, $s_0<p\le n-1$ ⇒ Theorem 1 (A1)–(A6) and the hypotheses of the expectation display of (b); hence exact order $\sqrt{\log n/n}$ in expectation, every such $p$ | NEW, checked: `/home/fb31/BVS-wt/W3-PSHARP-R/Theory_work/Wave3/W3-PSHARP-R/reviews/post_cp3/BRIDGE_orth_thm1.md` (sha256 d54a2a7a…); Sol line check L06 (CORRECT-WITH-FIXES, C 0, one S applied) and Sol confirm L07 (YES, 0 findings), theory/W3-PSHARP-R @ 8e22c756 | (A1)–(A6) with $A=1$, $\bar\theta=\max|\theta^*_j|$, $\varphi_0=1$, $g_0=1$, second form of (A6); the upper half carries Theorem 1's master status (row 1.1). |
+| B3.8 | fully orthogonal designs, fixed nonzero coefficients, $s_0<p\le n-1$ ⇒ Theorem 1 (A1)–(A6) and the hypotheses of the expectation display of (b); hence exact order $\sqrt{\log n/n}$ in expectation, every such $p$ | NEW, checked: `lemmas/B3_8_orth_witness.md` (verbatim copy of theory/W3-PSHARP-R @34d56f5b `reviews/post_cp3/BRIDGE_orth_thm1.md`) [R1-E11] (sha256 d54a2a7a…); Sol line check L06 (CORRECT-WITH-FIXES, C 0, one S applied) and Sol confirm L07 (YES, 0 findings), theory/W3-PSHARP-R @ 8e22c756 | (A1)–(A6) with $A=1$, $\bar\theta=\max|\theta^*_j|$, $\varphi_0=1$, $g_0=1$, second form of (A6); the upper half carries Theorem 1's master status (row 1.1). |
 
 ### Honest limits
 The $\sqrt{\log n}$ lower bounds hold on the two witness designs only; on every design only order $n^{-1/2}$ is proved
@@ -433,6 +434,7 @@ display is attained is not proved. Status: the expectation display and remarks (
 - S4 tag record 2026-11-16 [S4-S3]: v0.4 is EQUAL to its delta (W3-PSHARP-R v0.4). Against the S3 text: STRONGER for the
   every-$p$ expectation display, the fully orthogonal expectation exactness, the growing-$s_0$ expectation obstruction and the
   critical-scale $e^{-\lambda}$ bound; EQUAL for the original probability clauses and size-domain consequences.
+- R1 2026-11-16: [R1-E11] B3.8 check record copied into `lemmas/B3_8_orth_witness.md` (EQUAL).
 <!-- ROW thm3 END -->
 
 ---
@@ -595,8 +597,8 @@ The exponent $\tfrac12$ cannot be improved: $1-\pi_0(S_0)\ge\tfrac13(n+1)^{-1/2}
 $n\ge4$ and $s_0<K$ (hence for all large $n$) [S1-F4]; **so the rate under (A6) is optimal up to the factor
 $\sqrt{\log n}$.**
 
-*With leakage (remark or second display).* If (A5) holds with $S_0$ replaced by a deterministic $Q\supseteq S_0$,
-$|Q|\le K$ (columns outside $Q$ do not leak), then
+*With leakage (remark or second display).* If (A5) holds with "$l\notin S_0$" replaced by "$l\notin Q$" for a deterministic $Q\supseteq S_0$ ($H_l$ and the truths $j$
+unchanged), $|Q|\le K$ (columns outside $Q$ do not leak) [R1-E1], then
 $P\big(\pi_0(\mathcal L(Q))\ge1-(|Q|+1)n^{-1/2}e^{C\sqrt{\log n}}\big)\to1$; for $|Q|\le n^{1/2-\epsilon}$ this is
 $\ge1-n^{-c}$ for every $c<\epsilon$.
 
@@ -648,6 +650,7 @@ abstract.
   W3-START2-R:START-R/BR.**
 - v0.3 applied 2026-11-16 [manager signal; recorder task U, main b48fd0a1]: statuses requoted verbatim from `claims.tsv`
   at b48fd0a1 (STRONGER, H5 card 14 (A)).
+- R1 2026-11-16: [R1-E1] leakage form: only "$l\notin S_0$" becomes "$l\notin Q$" ($H_l$, truths unchanged), as in the master (EQUAL; removes a literal-reading contradiction).
 <!-- ROW thm5 END -->
 
 ---
@@ -694,7 +697,7 @@ The guarantees describe the run as if uninterrupted; a run stopped by its time g
 *Remarks.* (o) [RM2R-3] Under (S4), for every seed and calibration outcome,
 $P(\hat S\neq S_0)\le P(S_0\text{ is not the unique maximiser of the score})+P(\text{the local search from the start mode
 does not reach }S_0)$. *(Interpretation, not part of the theorem [D71]: the two terms are the posterior-mode error and the
-search error.)* (i) On $\mathcal G_n$ the local search from the start mode only deletes the spurious members of the start
+search error.)* (i) $\mathcal G_n$ can be chosen ($\mathcal M_n\cap\mathrm{Sand}_n(Q)\cap\mathrm{NA}\cap\mathrm{TL}$) so that on it the local search from the start mode only deletes the spurious members of the start
 mode, one per move, at most $n^b$ moves, and certifies $S_0$; its move cap never binds. (ii) The polylogarithmic case
 $|Q|\le(\log n)^{\kappa}$ is a special case (the earlier version of the theorem). (iii) Examples (never hypotheses):
 metric-local correlation, polynomial correlation decay of exponent $\alpha>2$ (example status unchecked), one-factor
@@ -741,10 +744,8 @@ blocks.
    `claims.tsv` at the freeze (history only).
    **Abstract [H5-2]:** the delivery clause ("always produces output; $P(\hat S=S_0)\to1$") stays out of the abstract
    until the F-UNI gate is resolved; the abstract states the common-data-event clause.
-   **Method drift [RM2R-2, HQ D74]:** `C-DLV:Prop-F`'s method uses the LS0 move cap $\ell_n$, not the shipped cap
-   $\ell_n+|\tilde S_0|$, so the delivery bridges through Prop-F and F-UNI (B6.6) were not about the shipped
-   configuration as registered. Delivery for the shipped method rests on `W3-RM2-R:DLV-0` (item 0); items 1–3 are kept
-   as the history of the row. The abstract still leads with the common-data-event clause (H5 card 14).
+   **Delivery route [RM2R-2, HQ D74, R1-F6]:** the original `C-DLV:Prop-F` configuration used the LS0 cap $\ell_n$; the frozen `W2-UNI:F-UNI@2.1.0` states the shipped cap $\ell_n+|\tilde S_0|$ and the amended allocation (`W2-UNI/lemmas/L5_delivery.md:8-12`); the active delivery route here is `W3-RM2-R:DLV-0`, whose shipped-code audit and conditions are carried explicitly [R1-F6] (item 0). Items 1–3 and the bridge B6.6 / lemma R3 are kept as the history of the row
+   and are not used by the current statement. The abstract still leads with the common-data-event clause (H5 card 14).
 
 ### Bridges
 | # | Bridge | Mark | Detail |
@@ -754,7 +755,7 @@ blocks.
 | B6.3 | (A6) + (A5) ⇒ (D-loc^b) incl. its variance clause | **NEW** (one paragraph; proof below) | (D-loc^b) = RM (D-loc) (RM STATEMENT.md:154-156) with $L_n^2\log(|Q|+1)=o(\log n)$; its second clause $\operatorname{Var}(W_l\mid W_{T\cap N_l})\le(1+\eta_n)\operatorname{Var}(W_l\mid W_T)$, $\eta_n\to0$, follows from (A6) and (A5): see proof. |
 | B6.4 | (D-loc^b) ⇒ (D-R^b) ⇒ (W-R) | EXISTS-CHECKED | `W3-RM2:D-to-W@1.0.3`, "PROVED-CHECKED; council R1, …" (STATEMENT.md:256, (C3)/(P9)). |
 | B6.5 | (T1-R) ⇒ posterior input [POST] | EXISTS-CHECKED, conditional | `W3-RM2:POST-R@1.0.3`, "PROVED-CHECKED, conditional on W2-APP:POST; …" ⇐ B2.2 (EXISTS-CHECKED; `W2-APP:POST@1.0.7` "PROVED-CHECKED", main 6cd699dd) [S4-F1, REG-6cd6]. |
-| B6.6 | RM2-R conclusions ⇒ F-UNI premises (S), (P), (V); F-UNI's operational premises carried as (S4) | **NEW** (assembly; (V)/(S)/(P) part passed S1) | (S): $P(\mathrm{Sand}\cap\mathrm{NA}\cap\mathrm{TL})\ge1-\sum P(\cdot^c)\to1$ from [SAND(Q)], [NA(Q)], [TL(Q)]; (P) = [POST]; (V) = "(R) with $\lambda_{\min}(\Sigma_n)>0$". LS0 cap and default-on tier-1 fallback match (`v3_calib.R:141-144`). F-UNI's method/premise/allocation paragraph (`L5_delivery.md:7-12`: EX-A as cost model, IDEAL-W, EX-S, SR, e4/TDP-IMPL, GUARD-W, MACH, CONFIG, valid seed, allocation and preflight inequalities at $(n,p_{\mathrm{raw}})$; P1/S.3 "AUDITED (code reading)") is **not derived**: it is carried as (S4) [S1-F2]. Premise-by-premise table: proof leg (`lemmas/R3_delivery_assembly.md`). |
+| B6.6 | RM2-R conclusions ⇒ F-UNI premises (S), (P), (V); F-UNI's operational premises carried as (S4) | **NEW** (assembly; (V)/(S)/(P) part passed S1) | (S): $P(\mathrm{Sand}\cap\mathrm{NA}\cap\mathrm{TL})\ge1-\sum P(\cdot^c)\to1$ from [SAND(Q)], [NA(Q)], [TL(Q)]; (P) = [POST]; (V) = "(R) with $\lambda_{\min}(\Sigma_n)>0$". LS0 cap and default-on tier-1 fallback match (`v3_calib.R:141-144`). F-UNI's method/premise/allocation paragraph (`L5_delivery.md:7-12`: EX-A as cost model, IDEAL-W, EX-S, SR, e4/TDP-IMPL, GUARD-W, MACH, CONFIG, valid seed, allocation and preflight inequalities at $(n,p_{\mathrm{raw}})$; P1/S.3 "AUDITED (code reading)") is **not derived**: it is carried as (S4) [S1-F2]. Premise-by-premise table: proof leg (`lemmas/R3_delivery_assembly.md`). **Historical** (former hypotheses only; superseded by B6.6′) [R1-F2]. |
 | B6.6′ | (S4) ⇔ delivery premises (D) of RM2-R-plus; RM2-R-plus's conclusions are the reader conclusions | identity [RM2R-2] | (S4)(i)–(iv) state in words `W3-RM2-R/STATEMENT.md:71-93` (IDEAL-W⁺, EX-A, MACH, CONFIG at the shipped configuration, TDP-IMPL, allocation 𝒜_n, valid non-degenerate input). No assembly with F-UNI is needed; B6.6 is kept for the record and superseded by B6.6′ for the shipped method. Needs one line check with the bridges leg. |
 | B6.7 | standardised-signal convention | limit | The masters take $\theta^*$ deterministic (Setting R). A raw-scale version (fixed $\beta^*$) would need a **NEW** bridge (medium; the population conditions involve $\theta^*$). Not proposed for CP1. |
 
@@ -800,6 +801,7 @@ regressions are local. HQ choices: keep them as stated (faithful), or state Theo
   Supersedes the [FUNI-N] delivery wording of v0.7: delivery now rests on DLV-0 (method drift [D74]); (S4)(v) folded into (S4)(i) as IDEAL-W⁺, and $\mathfrak D$ is stated in the [RM2R-5] sentence.
 - FRZ-RQ 2026-11-16: [REG-6cd6] RM2-R @1.0.3 (ACTIVE, supersession deferred), POST-R/D-to-W @1.0.3, `W2-APP:POST@1.0.7` "PROVED-CHECKED", F-UNI @2.1.0 (history), RM-R @1.2.0 SUPERSEDED-VALID; row conditions now only the two delivery-path audits. Statuses only (EQUAL).
 - v0.9 2026-11-16: [GUARD-W] (HQ YES 11-16; W3-AUDIT track A T1 GUARD-W, theory/W3-AUDIT 58e24245, `track_A/T1_GW/`) sentence added after the delivery display, with a pointer to the meaning of "output" (code: `v3_fit.R:84`, `v3_run.R:142-145`): "The guarantees describe the run as if uninterrupted; a run stopped by its time guard reports status `resource_limit` and no output." Presentation (EQUAL).
+- R1 2026-11-16: [R1-F6] delivery-route sentence corrected (frozen F-UNI@2.1.0 states the shipped cap; only C-DLV Prop-F used $\ell_n$); [R1-F2] B6.6 / R3 marked historical; [R1-E7] $\mathcal G_n$ choice in remark (i) (EQUAL; corrections of descriptions).
 <!-- ROW thm6 END -->
 
 ---
@@ -840,7 +842,7 @@ $$
 The delivery statement idealises two fixed integer limits in the code (a base search cap of $10^6$, `v3_run.R:96`, and a 32-bit integer bound $2^{31}-1$ on the search cap, `cpp/v3_core.cpp:474`): the first can bind only when $n+p+1$ exceeds $2^{10^6}$, the second only when the starting model has more than about $2.1\times10^9$ variables, which needs $n\gtrsim4.3\times10^9$ since $|\tilde S_0|\le\lfloor n/2\rfloor$; without the idealisation, delivery holds on the bounded domain $\mathfrak D=\{\lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil\le10^6,\ \lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil+\lfloor n/2\rfloor\le2^{31}-1\}$, and with it (IDEAL-W⁺) for every $n$ [RM2R-5]. Neither limit can bind unless $n+p+1>2^{10^6}$ or $n\gtrsim4\times10^9$, that is, at no feasible problem size [RM2R-6].
 
 *Remarks* [RM2R-4]. (a) *Constants.* With $C_R:=3(M+\sigma_*^2)$ ($\|X\theta^*\|^2\le nM$): (A3) holds with any
-$M_V>(\sigma_*\sqrt{2A}+\sqrt{(2A+1)C_R})^2$; the clause of (A5)(b) holds as soon as
+$M_V>(\sigma_*\sqrt{2A}+\sqrt{(2A+1)C_R})^2$; (A5)(b)'s signal clause may be replaced by the master's (BM-Q♭) [R1-E2]:
 $(n-1)\varphi_0^2\theta^{*2}_{\min}/\sigma_*^2\ge32(|Q|+1)+64\log(2p)+c\log n$ with a fixed $c>\max\{16,\,8(A+1)+4(2A+1)C_R/\sigma_*^2\}$;
 under (A5)(a) the beta-min of (A1) suffices with $C_\beta^2\varphi_0^2>\max\{c_0(s_0,A),\,8(A+1)+4(2A+1)C_R/\sigma_*^2,\,8(1+\sqrt{D/2})^2\}$
 for a fixed $D>2+4A$. These are proof constants, not sharp. (b) Under (S4), for every seed and calibration outcome,
@@ -865,7 +867,7 @@ reach }S_0)$. *(Interpretation, not part of the theorem [D71]: posterior-mode er
 conclusion with [MODE] and, under (D), delivery and the error split; conditions of the row: two
 code-reading audits of the delivery path (T03♯ discharged, main 6cd699dd), `C-DLV:L2-S3` and `C-DLV:P1-Inventory` [RM2R-7]), status verbatim **"PROVED-CHECKED, conditional on C-DLV:L2-S3, C-DLV:P1-Inventory; council R3, MANIFEST 5d6d3c90… (= R3 b06a8588 re-frozen as R3r), sol=9.5 PASS, opus=9.4 PASS"** (main 5d3a8a70, task V) [REG-5d3a]; the two conditions are code-reading audits of the delivery path (`C-DLV:L2-S3`, `C-DLV:P1-Inventory`, each "AUDITED (code reading)"), which DLV-0 takes as hypotheses [RM2R-7]; with `W3-RM2-R:RM0-plus`
 and `W3-RM2-R:DLV-0` as in §6. It implies the previous master (`W3-RM2-R:Cont-plus`), kept below for the record (supersession deferred post-freeze; `W3-RM2:RM2-F` stays ACTIVE).
-Method drift: as §6 [HQ D74].
+Delivery route: as §6 [HQ D74, R1-F6].
 Previous master: `W3-RM2:RM2-F@1.0.3` (ACTIVE), `Theory_work/Wave3/W3-RM2/STATEMENT.md:206-214` (assumptions :126-170), status verbatim
 **"PROVED-CHECKED; council R1, MANIFEST 00bbeab8…, astra=9.5 PASS, opus=8.8 PASS; …"** [REG-6cd6]; with `W3-RM:RM-0@1.0.0` and `W2-UNI:F-UNI@2.1.0` as in §6 (input validity "(E) with
 nonconstant raw columns").
@@ -887,10 +889,12 @@ nonconstant raw columns").
 (A3)–(A5) are **sample-level conditions on $(X,\theta^*)$**: partial signal gains $\delta^2_{U,j}$ and sample regressions.
 They are interpretable but not reducible to eigenvalue floors and beta-min: visibility fails on well-conditioned designs
 where truths cancel (masking), and the lattice condition (A5) is a condition on the *search route*, not on the
-posterior. What exists instead: (i) the intuition paragraphs above, one per condition; (ii) Theorem 6, which shows the
-same conditions hold with probability $\to1$ under population analogues; (iii) the examples table (polylog: every
-example of the earlier version; polynomial: one truth with $n^b$ weak proxies — checked, conditional on the posterior
-theorem; one equicorrelated group, $b<3/10$ — checked, conditional; polynomial decay $\alpha>2$ — unchecked).
+posterior. What exists instead: (i) the intuition paragraphs above, one per condition; (ii) Theorem 6, which gives the
+same conclusion under population analogues of these conditions [R1-S6]; (iii) the examples table (polylog: every
+example of the earlier version; polynomial: one truth with $n^b$ weak proxies, `W3-RM2:Ex-Proxy@1.0.3` "PROVED-CHECKED; council R1, …"; one
+equicorrelated group, $b<3/10$, `W3-RM2:Ex-Equi@1.0.3` "PROVED-CHECKED; council R1, …"; polynomial decay $\alpha>2$,
+`W3-RM2:Ex-PolyF@1.0.3` "PROVED; line-checked LC2-C; Astra seat ACCEPT; not examined by the Opus seat — next council round;
+conditional on W2-LOC2:Lemma-BC, W2-LOC2:Lemma-IR; …") [R1-E8].
 **Not available:** the theorem without any lattice condition (open problem: control of the actual search path), and
 any $b\ge\tfrac12$. Recommendation: present (A5)(a) in the main text (fully explicit) and (b) as the strengthening.
 
@@ -910,6 +914,7 @@ any $b\ge\tfrac12$. Recommendation: present (A5)(a) in the main text (fully expl
   edge to `C-DLV:Prop-F` is withdrawn.
   Supersedes the [FUNI-N] delivery wording of v0.5: delivery now rests on DLV-0 (method drift [D74]); (S4)(v) folded into (S4)(i) as IDEAL-W⁺, and $\mathfrak D$ is stated in the [RM2R-5] sentence.
 - FRZ-RQ 2026-11-16: [REG-6cd6] previous master RM2-F @1.0.3 "PROVED-CHECKED; …" (ACTIVE), W-suff @1.0.3, F-UNI @2.1.0 (history); T03♯ discharged. Statuses only (EQUAL).
+- R1 2026-11-16: [R1-S6] honest limits (ii): Theorem 6 gives the same conclusion under population analogues (WEAKER); [R1-E8] example statuses verbatim; [R1-E2] Remark (a) reworded as the master's (BM-Q♭) replacement; [R1-F6] delivery-route label (EQUAL).
 <!-- ROW thm7 END -->
 
 ---
@@ -948,9 +953,10 @@ which leaves null-null correlations free; the full floor (A1) does constrain the
 - **Body:** Theorem 8′ (signals that may vary with $n$; master `W3-SCR:A-inf`), plain.
 
 **Theorem 8′ (body; certified screening with signals that may vary with $n$).** Let the design be fixed and assume (S1),
-(S3). For $S\subseteq[p]$ and $t\notin S$ let $\gamma(t\mid S)$ be the *noiseless gain* of $t$ given $S$: the decrease of
-the method's ridge-regularised residual quadratic form when $t$ joins $S$ and the response is replaced by its mean
-$\mu$. Let $\Gamma_n(q):=\min\{\max_{t\in S_0\setminus S}\gamma(t\mid S):|S|\le q,\ S\not\supseteq S_0\}$ (every model of
+(S3). For $S\subseteq[p]$ and $t\notin S$ let $\gamma(t\mid S)$ be the *noiseless gain* of $t$ given $S$,
+$\gamma(t\mid S):=(x_t^\top R_S\mu)^2/(x_t^\top R_Sx_t+\tfrac1{n+1})$ with $R_S:=I-X_S(G_S+\tfrac1{n+1}I)^{-1}X_S^\top$ (`W3-SCR/STATEMENT.md:51-56`);
+equivalently $\tfrac{n+1}n$ times the decrease of the method's quadratic form $Q^\mu_S$ when $t$ joins $S$ and the response is
+replaced by its mean $\mu$ [R1-E2]. Let $\Gamma_n(q):=\min\{\max_{t\in S_0\setminus S}\gamma(t\mid S):|S|\le q,\ S\not\supseteq S_0\}$ (every model of
 size $\le q$ that misses a truth has some missing truth with gain at least $\Gamma_n(q)$), and
 $\tau_n^2:=\sigma_*^2+\|\mu\|^2/(n-1)$. If $q_n\in\{0,\dots,K-1\}$ and
 $$
@@ -1027,6 +1033,7 @@ certified models were small: all 376 strong-factor fits had at most $2s_0$ predi
 - v0.6.1 2026-11-16: [HQ card 11 follow-up] the delta's closing sentence "At these constants (A3) requires $n\gtrsim1{,}450$."
   restored verbatim in the certification-frequency line (HQ: "the (A3) n ≳ 1,450 fact stays"; supersedes the v0.6
   omission) (EQUAL).
+- R1 2026-11-16: [R1-E2(sol)] Theorem 8′: noiseless gain given by its exact formula (EQUAL).
 <!-- ROW thm8 END -->
 
 ---
@@ -1306,7 +1313,8 @@ per-island identity of the unbiasedness theorem by linearity). The guarantees de
 - (A2)–(A3) give posterior concentration (Theorem 2) and the start's small-set floor.
 - (A4)–(A5) make the start law concentrate on $S_0$ as $n\to\infty$ (Theorem 5): asymptotically the sampler then has
   vanishing mass to transport and $\hat Z/Z\to1$, independently of the ladder length. (At moderate $n$ the posterior $\pi$
-  is a mixture over $S_0$ and its many one-variable supersets; Theorem 1, remark (vii).) [ENG-D17, S3-N9]
+  had substantial mass on one-variable supersets of $S_0$ in the measured Engineering configurations — an observation
+  (Theorem 1, remark (vii)), not a proved finite-$n$ statement.) [ENG-D17, S3-N9, R1-F3]
   This is the regime of the result; an alternative route with no condition on $\hat Z$ (a global-overlap condition)
   exists for the PIPs, MPM and HPM (remark).
 - (S5) idealises the random numbers and the coded kernels; they are not statistical assumptions.
@@ -1360,6 +1368,7 @@ are "PROVED-CHECKED" since T03♯ was discharged (main 6cd699dd) [REG-6cd6]; the
   remark refers to (S4) as amended (EQUAL).
 - FRZ-RQ 2026-11-16: [REG-6cd6] `W3-SAMP:C/TR` @1.1.4/2.1.4 and `W2-APP:POST@1.0.7` "PROVED-CHECKED"; no open registry condition (R4, PoolZ unchecked). Statuses only (EQUAL).
 - v1.1 2026-11-16: [GUARD-W] (HQ YES 11-16; W3-AUDIT track A T1 GUARD-W, theory/W3-AUDIT 58e24245, `track_A/T1_GW/`) sentence added to Theorem 10 and to the row 3.5 remark: "The guarantees describe the run as if uninterrupted; a run stopped by its time guard reports status `resource_limit` and no output." Presentation (EQUAL).
+- R1 2026-11-16: [R1-F3] moderate-$n$ parenthesis relabelled an observation (WEAKER).
 <!-- ROW thm10 END -->
 
 ---
@@ -1370,7 +1379,8 @@ are "PROVED-CHECKED" since T03♯ was discharged (main 6cd699dd) [REG-6cd6]; the
 |---|---|---|---|---|
 | B2.2 `W2-APP:POST@1.0.7` | 2, 6, 10 | EXISTS-CHECKED | accepted at W2-APP CP3; SL0 cleared (main 33e1f0f5); SOP:TH09 discharged (main 6cd699dd) | none |
 | B4.3 / B1.7 POST2 C/E/A1/A0 | 1 (re-base), 1′, 4 | EXISTS-CHECKED, conditional (A0 unconditional; §1) | recorded at main f526e45b; @1.0.5 after main 6cd699dd | conditions quoted in §1 (C: W3-POST:Prop-LB, [L1a′], W2-APP:POST, W3-POST:Thm-1; E: W2-APP:POST, W3-POST:Thm-1; A1: W3-POST:Thm-1, W2-APP:POST) [S4-F1, REG-6cd6] |
-| B6.6 / B7.4 RM2 ⇒ delivery assembly; (S4) premise table | 6, 7 | NEW | `lemmas/R3_delivery_assembly.md` | high |
+| B6.6′ / B7.5 (S4) ⇔ delivery premises (D) of `W3-RM2-R:DLV-0` | 6, 7 | identity | `W3-RM2-R/STATEMENT.md:71-93` | low |
+| B6.6 / B7.4 RM2 ⇒ delivery assembly; (S4) premise table — **historical** (former hypotheses; not used by current 6, 7) [R1-F2] | — | NEW | `lemmas/R3_delivery_assembly.md` | — |
 | B6.3 local regressions ⇒ variance clause | 6 (7: B7.3) | NEW | `lemmas/R2_local_regression.md` | medium |
 | B1.1–B1.3, B2.1, B3.2, B4.1, B6.1 set sizes and elementary bridges | 1, 2, 3, 4, 6, 10 | NEW | `lemmas/R1_set_sizes.md` | medium |
 | B10.3 printed outputs assembly | 10 | NEW | `lemmas/R4_printed_outputs.md` | high (row 3.6) |

@@ -118,8 +118,9 @@ The method is a sequential Monte Carlo sampler over $\Omega$ with a deterministi
   current model (every single deletion, every single addition when the size is below $K$, and every swap of one member
   for one non-member), moves to the best neighbour if it strictly improves the score $F$, and stops when a complete scan
   finds no strict improvement or when a move cap of about $\log_2(n+p)+|\tilde S_0|$ moves is reached.
-* **The reported model $\hat S$.** Every model the run scores (by the sampler, by the local searches) is recorded; the
-  reported model is the best-scoring recorded model. It is reported as **certified** (the method's public certification flag) when either
+* **The reported model $\hat S$.** The reported model is the best model among those offered to the run's statistical
+  ledger (block tables, retained calibration models, particle and proposal score events, both local searches; preflight
+  timing scores are not recorded) [R1-F4]. It is reported as **certified** (the method's public certification flag) when either
   the model space was small enough to be enumerated exactly (then $\hat S$ is the exact maximiser of $F$), or $\hat S$ is
   the end point of a local search whose last complete scan found no strict improvement (i.e. it is verified to be a
   local optimum of $F$ in the neighbourhood above). The local search from the start mode also keeps its own record of
