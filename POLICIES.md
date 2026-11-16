@@ -195,6 +195,10 @@ HQ adds its recommendation and forwards it to the owner the same day. Nothing ex
   **settles** it (`t3_thread_organize` action `settle`), so the sidebar shows only HQ, the departments and work in
   progress. Department threads and HQ are never settled. Nothing is archived or deleted unless the owner asks.
 
+- **Where threads and agents run (owner, 2026-11-15):** only on **Owls** or the **desktop (DESKTOP-955G53S)**, which are
+  always on, so work continues 24/7. Never on the laptop (Felipe_Bedoya): it goes on and off. The laptop is only a data
+  mirror, reached by its own scheduled pull or by a short, explicitly approved one-off.
+
 ## 11. Overnight mode (owner, 2026-11-15; times in US Central)
 When the owner says he is going to bed or leaving HQ working overnight, **HQ is in charge of all decisions** until he
 says he is back. That includes the owner-reserved items (Fable requests, extra resources, account allocation), which HQ
