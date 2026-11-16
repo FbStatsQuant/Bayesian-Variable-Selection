@@ -18,7 +18,7 @@ W3-SCR, W1-N1, W2-UNI (`lemmas/L5_delivery.md`), C-DLV (`STATEMENT.md`), `Wave1C
 the registry `Theory_work/INFRA/registry/claims.tsv` (status column, for G4 only); the code `Scripts/SMC_BVS/core/`.
 **Do not read** anything under `Theory_work/Wave3/W3-READER/reviews/` (no earlier review, disposition, brief or score),
 nor `LOG.md`, nor `CHECKPOINT_*.md`. You may write and run code; keep it under
-`Theory_work/Wave3/W3-READER/reviews/R1_scratch_sol/`. Change no other file; do not commit; start no subagents.
+`/home/fb31/BVS-wt/W3-READER/.rc_tmp/R1_scratch_sol/` (git-ignored; D62). Change no other file; do not commit; start no subagents.
 
 ## What the ticket claims
 (1) Reader versions: each headline theorem restated with numbered assumptions in standard terms and a 1–3-display
@@ -33,6 +33,10 @@ and Theorem 8′ forms (a) / (b1)), review both. (2) New claims: `W3-READER:Pool
   is implied by the reader assumptions via a listed bridge or is a listed standing convention ((S1)–(S5)); no conclusion
   is stronger than the master (quantifiers, uniformity, expectation vs probability, localisation to events, branch and
   scope); card rows are faithful to their reader statements.
+- **Interpretive sentences (D71).** List every interpretive sentence in the reader statements and card rows ("hence …",
+  "so …", "i.e. …", readings such as "the posterior concentrates on the support of the best candidate predictor", remarks
+  that paraphrase a conclusion) and judge each: SUPPORTED by the master (cite the line) / OVERSTATED / UNSUPPORTED. An
+  overstated or unsupported reading is an S or F finding and counts under G3.
 - **G4 statuses and citations.** Statuses verbatim against `claims.tsv`; nothing below PROVED-CHECKED presented as
   checked; "conditional on …" carried; cited line ranges say what is claimed.
 - **G5 no hidden finite-n or scope claims.** No text claims a finite-n property the masters do not give, a two-sided rate
