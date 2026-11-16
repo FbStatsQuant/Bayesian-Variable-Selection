@@ -21,3 +21,4 @@
 - 19:45 — D13–D14: pooled-PIP fix routed (READER, W3-EDIT item 7 steer, Docs/Writing/QUEUE.md); D-7 → PSMC-S0 steer.
 - 19:46 — THEORY-4 from Engineering; recorder task E (A, B dry run) staged; Check C stays with PSMC-S0.
 - 19:48 — owner memo relayed to all leads (D15).
+- 19:49 — POLICIES §7–§8 read; daily report scheduled 08:30 CT (D16).

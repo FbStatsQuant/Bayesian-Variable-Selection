@@ -69,3 +69,9 @@
   owner permission via HQ (reason + size): EVAR in NEXT_CAMPAIGN updated; DIST's "second Fable" needs it too.
 - Check after relay: the three riders had ended their turns while waiting on async Sol statement locks (not at CP1);
   the memo turn only logged it. No checkpoint was skipped.
+
+## 2026-11-15 19:49 CT — operating rhythm (POLICIES §7–§8)
+- **D16.** Daily report to HQ by 09:00 CT (done / in progress / blocked / needs / budget used), scheduled 08:30 CT
+  daily (first 11-16), plus a report at every checkpoint; heartbeat every 45 min stays. Charter (§8) adds **strength
+  gates for headline candidates** (lit / necessity / better) to our remit: queued below, planned with the recorder's
+  task D blocker (POST2 / W2-APP headline rows lack lit/necessity/better PASS).

@@ -24,6 +24,11 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 |---|---|---|---|
 | W3-MISR-R | T13 Cor-G(a) minimal hypothesis; Cor-H(a) under δ_n →_P 0, uniform + conditional random-design forms | BVS-wt/W3-MISR-R · theory/W3-MISR-R (brief committed ef4f92a) | first free slot; output feeds W3-DIST (HQ) |
 
+## To plan (charter §8)
+| item | note |
+|---|---|
+| strength gates for headline candidates (lit / necessity / better, LIFECYCLE §4.2) | POST2 A1–E and W2-APP POST/Thm-LOC rows block acceptance without them (recorder task D); scope after HQ's answer on tool-set headline flags |
+
 ## Named open items (no tickets; for the chapter's open-problems section)
 RM2-R aggregated leak (D) · START MIS with a general μ (D) · Ex-Equi b < 3/8 if not done in W3-RM2-R (O4′) · START2-O1 count (17 − s₀).
 
