@@ -22,3 +22,4 @@
 - 2026-11-15 22:22 CST — Agent started: Sol (codex, gpt-6.1-sol, reasoningEffort high), new agent, blind to LOG/earlier reviews —
   role: K1 line check (4 lemmas) + statement-change check of changelog rows v1.1/v1.2 ([LA-1]); brief reviews/K1_brief.md
   (saved before launch); reply → reviews/K1_linecheck_sol.md.
+- 2026-11-15 22:25 CST — REPORT.md draft (4 REGISTRY blocks; DIST pointer HEURISTIC/OPEN), citecheck.py (copy/adaptation of BASE) → reviews/CITECHECK.txt: 151 checks, 0 failures. Staged ingest dry run: 0 problems; acceptance 17 ERROR, all A5 stale accept records on W3-MISR parents (recorder task J; not ours).
