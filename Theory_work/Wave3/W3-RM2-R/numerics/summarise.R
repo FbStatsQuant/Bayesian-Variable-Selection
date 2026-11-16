@@ -16,7 +16,7 @@ out <- do.call(rbind, lapply(split(d, key), function(x) data.frame(
   truth_incl = cnt(x$truth_incl), wk_in_start = cnt(x$wk_in_start), sandwich = cnt(x$sandwich),
   tl_S0_pos = cnt(x$tl_S0 > 0), tl_S0_med = round(median(x$tl_S0), 2), na_S0_neg = cnt(x$na_S0 < 0), tl_defined = cnt(x$n_tl > 0), tl_ok = cnt(x$tl_ok), tl_min_med = if (all(x$n_tl == 0)) NA_real_ else round(median(x$tl_min[x$n_tl > 0]), 2), tl_min_min = if (all(x$n_tl == 0)) NA_real_ else round(min(x$tl_min[x$n_tl > 0]), 2),
   end_S0_cert = cnt(x$end_ok), end_miss_truth = sum(x$final_miss > 0), end_extra = sum(x$final_extra > 0), certified = cnt(x$certified), all_del_extra = cnt(x$all_del_extra), n_other_moves = sum(x$n_other),
-  path_NA_ok = cnt(x$path_NA_ok), max_moves = max(x$moves),
+  path_lat_visited = cnt(is.finite(x$naC)), path_NA_ok = cnt(x$path_NA_ok), max_moves = max(x$moves),
   mm_le3_pos = if (all(is.na(x$mm_le3))) NA_character_ else cnt(x$mm_le3 > 0),
   mm_le3_med = if (all(is.na(x$mm_le3))) NA_real_ else round(median(x$mm_le3), 2),
   mm_le3_min = if (all(is.na(x$mm_le3))) NA_real_ else round(min(x$mm_le3), 2),
@@ -24,4 +24,4 @@ out <- do.call(rbind, lapply(split(d, key), function(x) data.frame(
 out <- out[order(out$design, out$n, out$b, out$kappa), ]
 write.csv(out, file.path(here, "summary.csv"), row.names = FALSE)
 options(width = 300); print(out[, 1:27], row.names = FALSE)
-print(out[, c(1:6, 28:33)], row.names = FALSE)
+print(out[, c(1:6, 28:34)], row.names = FALSE)
