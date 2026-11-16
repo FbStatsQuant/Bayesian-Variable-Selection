@@ -19,3 +19,4 @@ Log of exchanges:
 - 2026-11-15 19:55 CT — Eng THEORY-5: B(ii) pins (store F, γ₁, Ẑ_r start, Ω) → recorder to verify; B(i)/(iii) conditional on DIST-C(i) agreed; Check C scope clarified (only the returned leaders_gamma0/1 field and final-run structure; inherited models still offered at the merge). Thu 12:00 OK.
 - 2026-11-15 — Theory: owner scope clarification applied (see top). Check C (D-7) and the T-N/T-CAL notes still come with PSMC-S0 CP1 (tonight or by Thu 12:00). Entries A/B staging unaffected.
 - 2026-11-15 19:57 CT — Eng: scope change acknowledged on their side; THEORY-2 dates void as gates; still useful (non-blocking): Entries A/B, Check C (now about the 10⁴ method's outputs). Consistent with D18.
+- 2026-11-15 20:06 CT — Eng THEORY-6: τ_n, ≥/>, packing order are their design choices (overlap-rung validated); PSMC-S0 Part 1 notes feed their spec v2; T-MERGE follows the owner's answer via HQ.
