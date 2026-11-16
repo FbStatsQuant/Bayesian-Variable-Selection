@@ -102,3 +102,4 @@
 - 21:48 — heartbeat: START2-R CP1 → GO (D40); RM2-R lock done → SC1; MISR-R lock back; W3-EDIT Sol S1 back; PSMC-S0 FR1 > 2 h flagged.
 - 21:49 — HQ: START2-R GO confirmed; fallback order approved; PSMC-S0 FR1 left running; overnight level-1 rule: new non-critical reviews → Opus (READER, W3-EDIT told); critical (DIST, riders' CP3 paths, blind first reads, council OpenAI seats) stay on Codex. Re-freeze proceeds.
 - 21:55 — W3-EDIT CP1 final (a3d2f3d): manifest-impact check → split merge (D41).
+- 21:56 — Engineering finding (D-17, PR12 review): π(S₀) ≈ 0.45–0.65 at n=200, p=10⁴–10⁵ (mass on ~p one-null supersets); store law not near point mass. DIST lead + READER told to fix point-mass wording (mixture over many supersets at moderate n; no limitation framing) before their freezes.

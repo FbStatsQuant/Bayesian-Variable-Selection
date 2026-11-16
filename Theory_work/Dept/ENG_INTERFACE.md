@@ -22,3 +22,4 @@ Log of exchanges:
 - 2026-11-15 20:06 CT — Eng THEORY-6: τ_n, ≥/>, packing order are their design choices (overlap-rung validated); PSMC-S0 Part 1 notes feed their spec v2; T-MERGE follows the owner's answer via HQ.
 - 2026-11-15 20:34 CT — Eng: bvs_tmp convention (theory/ subfolder; CI via TMPDIR → bvs_tmp/ci). Applied to all Theory leads.
 - 2026-11-15 20:43 CT — Eng: NOTS scratch purge atime-keyed (NOTS_FACTS.md); records copy → SMC_Theory_Department/records/ (HQ-approved, D33); bvs_tmp now ours to absorb.
+- 2026-11-15 21:56 CT — Eng D-17 (store-law spread at n=200) received via HQ; relayed to W3-DIST and W3-READER for wording.
