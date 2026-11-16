@@ -313,7 +313,7 @@ too (see the row 1.1 forms).
 
 ## 3. Theorem 3 — The rate cannot be improved
 <!-- ROW thm3 BEGIN -->
-**Card row** 1.3 · **Section version** 0.3 (2026-11-16) · **Pending delta** W3-PSHARP-R READER_DELTA v0.3 (expectation display for every $p$), staged in `deltas/thm3_W3-PSHARP-R.md` — **pending W3-PSHARP-R CP3 (target Tue, latest Wed); not in force**
+**Card row** 1.3 · **Section version** 0.4 (2026-11-16) · **Pending delta** —
 
 
 ### Reader statement
@@ -322,46 +322,93 @@ model $S$ with $|S|\le\min(K-1,p/2)$,
 $$
 \pi(S\mid y)\ \le\ \Big(1+\frac{|S|+1}{3\sqrt n}\Big)^{-1}.
 $$
-(b) *(Orthogonal or Gaussian null columns.)* Assume (S1), $s_0$ fixed, $p\to\infty$, $\|X\theta^*\|^2\le nM$ and
+(b) *(Orthogonal or Gaussian null columns.)* Assume (S1), $s_0$ fixed, $\|X\theta^*\|^2\le nM$ and
 $\|\theta^*\|^2\le nM'$ with fixed $M,M'$, and either
 - **(N-orth)** the columns outside $S_0$ are mutually orthogonal and orthogonal to the columns in $S_0$; or
 - **(N-gauss)** the raw columns outside $S_0$ have i.i.d. $N(0,1)$ entries, independent of $X^{\mathrm r}_{S_0}$ and
   $\varepsilon$, and $p\le n^A$.
 
-Then
+Then, for every $p$ with $s_0<p$ (bounded or growing),
+$$
+\mathbb E\big[1-\pi(S_0\mid y)\big]\ \ge\ (1-o(1))\,(s_0+1)\,\frac{2(p-s_0)}{2p-1-s_0}\,\sqrt{\frac{\log\!\big(p\sqrt n/(s_0+1)\big)}{\pi n}},
+$$
+and, if moreover $p\to\infty$,
 $$
 1-\pi(S_0\mid y)\ \ge\ (1-o_P(1))\,(s_0+1)\sqrt{\frac{\log p}{\pi n}}.
 $$
 
-*Consequences (remarks), all for sequences with $s_0\le\min(K-1,p/2)$* [S1-F5]. By (a), no design gives a rate faster
-than $n^{-1/2}$ for such true models; $\pi(S_0\mid y)\to1$ requires $s_0=o(\sqrt n)$; the rate $\sqrt{\log n/n}$ requires
-$s_0=O(\sqrt{\log n})$. (Without the size restriction (a) is false: e.g. $S=[p]$ with $p=2$.) By (b) with $p=n^a$, the
-factor $\sqrt{\log n}$ is attained. On the two witness sequences that also satisfy the upper-bound assumptions —
-fully orthogonal designs with $p=\min(n-1,\lfloor n^a\rfloor)$, and raw designs with i.i.d. $N(0,1)$ entries and
-$p=\lfloor n^a\rfloor$, both with fixed nonzero coefficients — the rate $\sqrt{\log n/n}$ is exact (conditional on
-Theorems 1 and 2) [S1-F6]. On a general design only the order $n^{-1/2}$ of part (a) is proved as a lower bound; a
-matching lower bound $E[1-\pi(S_0\mid y)]\gtrsim\sqrt{\log n/n}$ in expectation, under a floor on $S_0\cup\{j\}$, is open
-(post-freeze rider POST2-R1) [H5-6, S3-N4].
+*In words (headline).* The rate of Theorem 1 cannot be improved under its assumptions: on orthogonal or Gaussian null
+columns, $E[1-\pi(S_0\mid y)]\ge c\cdot(s_0+1)\cdot\sqrt{\log n/n}$, for every $p$. Here $c>0$ depends only on $s_0$, and does
+not depend on $s_0$ when $s_0\le p/2$. The $\sqrt{\log n}$ bounds hold on these null-column designs only; on every design
+only the order $n^{-1/2}$ of part (a) is proved.
+
+*Remarks.*
+(i) *What is attained where.* By (a), for true models with $s_0\le\min(K-1,p/2)$, no design gives a rate faster than
+$n^{-1/2}$; $\pi(S_0\mid y)\to1$ requires $s_0=o(\sqrt n)$; the rate $\sqrt{\log n/n}$ requires $s_0=O(\sqrt{\log n})$.
+(Without the size restriction (a) is false: e.g. $S=[p]$ with $p=2$.) By (b), on orthogonal or Gaussian null columns,
+the factor $\sqrt{\log n}$ is present **in expectation for every $p$**, bounded $p$ included (with $p=n^a$ the constant is
+$\sqrt{(a+\frac12)/\pi}$), and **in probability whenever $\log p\asymp\log n$**. The rate $\sqrt{\log n/n}$ of Theorem 1 is
+exact in the following named cases:
+- **in expectation**, on fully orthogonal designs (all columns mutually orthogonal, any $p$ with $s_0<p\le n-1$, bounded
+  or growing) with fixed nonzero coefficients: these designs satisfy the assumptions of Theorem 1 and of the expectation
+  display in (b), so $E[1-\pi(S_0\mid y)]$ is of exact order $\sqrt{\log n/n}$, with constants depending only on $s_0$, the
+  coefficients and the noise variance (conditional on Theorem 1);
+- **in probability**, on fully orthogonal designs with $p=\min(n-1,\lfloor n^a\rfloor)$ and on raw designs with i.i.d.
+  $N(0,1)$ entries and $p=\lfloor n^a\rfloor$, both with fixed nonzero coefficients (conditional on Theorems 1 and 2).
+
+The extra $\sqrt{\log n}$ in expectation at bounded $p$ comes from rare large gains of a single extra variable, not from
+the number of competitors.
+
+(ii) *Growing $s_0$.* Keep the energy and coefficient bounds of (b), let all columns outside $S_0$ be null columns of
+type (N-orth), or of type (N-gauss) with the columns in $S_0$ and the coefficients fixed (nonrandom), and let $s_0\le p/2$
+grow with $n$. Then a posterior mean error $E[1-\pi(S_0\mid y)]$ of order $\sqrt{\log n/n}$ forces $s_0$ to stay bounded,
+for every $p$.
+
+(iii) *Critical scale (orthogonal null columns only).* Keep the energy and coefficient bounds of (b) and (N-orth), let
+$p\to\infty$ and let $s_0$ grow with $s_0/p\to0$ and $(s_0+1)\sqrt{\log p/(\pi n)}\to\lambda\in(0,\infty)$. Then
+$\pi(S_0\mid y)\le e^{-\lambda}+o_P(1)$.
+
+(iv) *What is open.* On a general design only the order $n^{-1/2}$ of part (a) is proved as a lower bound; a matching
+lower bound $E[1-\pi(S_0\mid y)]\gtrsim\sqrt{\log n/n}$ under a floor on $S_0\cup\{j\}$ is open (post-freeze rider
+POST2-R1). When $\log p=o(\log n)$, nothing is claimed **in probability**: the in-probability display gives only order
+$\sqrt{\log p/n}$, and whether the $\sqrt{\log n}$ is present in probability there is open. On raw Gaussian designs the
+matching upper bound **in expectation** is open (Theorem 2 is an in-probability statement). Whether the constant of the
+expectation display is attained is not proved.
 
 ### Why each assumption
 (a) has none: it is a deterministic property of the prior and the Occam factor (each of the $p-s_0$ one-variable
-supersets keeps posterior odds at least of order $n^{-1/2}/p$). (b): the witness conditions make the $p$ one-variable
-supersets behave as nearly independent $\chi^2_1$ competitors, whose maximum gives the $\sqrt{\log p}$; energy and
-coefficient bounds keep the variance posterior on scale. These are witnesses, not claimed necessary.
+supersets keeps posterior odds at least of order $n^{-1/2}/p$). (b): the witness conditions make the one-variable
+supersets behave as independent $\chi^2_1$ competitors; for the expectation display a single such competitor already
+suffices (its heavy upper tail gives the $\sqrt{\log n}$); for the in-probability display $p\to\infty$ competitors are
+used (the sum of their truncated fit factors gives the $\sqrt{\log p}$); energy and coefficient bounds keep the variance
+posterior on scale. These are witnesses, not claimed necessary.
 
 ### Master theorems
 `W3-PSHARP:B@1.0.0`, `Theory_work/Wave3/W3-PSHARP/STATEMENT.md:90-114` (display at :94-96, consequence (B1) at :99), and
 `W3-PSHARP:A@1.0.0`, same file :46-77 (Corollary A1 at :71-73; (N-gauss) is the example at :59-60 of (W-sph)). Status of
 both, verbatim: **"PROVED-CHECKED; council R2, MANIFEST 4513e05a…, sol=9.2 PASS, opus=9.3 PASS; …"**.
+Expectation display and remarks (ii)–(iii): `W3-PSHARP-R:AE@1.0.0` (`Theory_work/Wave3/W3-PSHARP-R/STATEMENT.md:61-92`;
+Corollary A1-E at :74-84, Cor A2-E(ii) at :86-92) and `W3-PSHARP-R:A2C@1.0.0` (:94-100), statuses verbatim (registry,
+main): **"PROVED-CHECKED; council R2, MANIFEST fdfd45629f8716ac00e9854310cc3265ead8ce60679290b8eb09089eddf3999e, sol=9.5
+PASS, opus=9.2 PASS"** (each). Named exactness case in expectation: bridge B3.8.
 
 ### Bridges
 | # | Bridge | Mark | Detail |
 |---|---|---|---|
 | B3.1 | (a) from Corollary B: $c(p,s_0)\ge(s_0+1)/3$ for $s_0\le p/2$ | EXISTS-CHECKED | Inside `W3-PSHARP:B` (:95, :99). Reader version renames $S_0$ to any $S$ (Corollary B holds for every subset, :92-93). |
-| B3.2 | (N-gauss) ⇒ (W-sph) | EXISTS-CHECKED (example in the claim text) + NEW one line | (W-sph) asks $(\log N_n)^2=o(n)$ and $(r_0+1)\log N_n=o(n)$; with $N_n\le p\le n^A$ and $s_0$ fixed both hold. |
+| B3.2 | (N-gauss) ⇒ (W-sph) | EXISTS-CHECKED (example in the claim text) + NEW one line | (W-sph) asks $(\log N_n)^2=o(n)$ and $(r_0+1)\log N_n=o(n)$; with $N_n\le p\le n^A$ and $s_0$ fixed both hold (R1). |
+| B3.3 | (N-orth), $s_0$ fixed ⇒ (W-orth-E) with $\mathcal N=[p]\setminus S_0$ | NEW one line (council-checked inside W3-PSHARP-R R2 as READER_DELTA v0.3) | (N-orth) gives $N=p-s_0\le n-1-r_0$, so $p\le2n$ and $(\log p)^2=o(n)$ (W3-PSHARP-R `STATEMENT.md` §2). |
+| B3.4 | (N-gauss), (S2) $p\le n^A$, $s_0$ fixed ⇒ (W-sph-E) | NEW one line (as B3.3) | $(\log p)^2\le A^2(\log n)^2=o(n)$; $(r_0+1)\log(pn)\le(s_0+1)(A+1)\log n=o(n)$; any number of null columns $\ge1$. |
+| B3.5 | expectation display ⇐ Cor A1-E (W3-PSHARP-R `STATEMENT.md:74-84`) | EXISTS-CHECKED | `W3-PSHARP-R:AE@1.0.0` "PROVED-CHECKED; council R2, …". Under (N-gauss) via the random-$(X_{S_0},\theta^*)$ clause (:70-72) with $P(\mathcal A_n)\to1$. Headline constant: $(s_0+1)\cdot2(p-s_0)/(2p-1-s_0)\ge2$ for $s_0\ge1$, $\ge(s_0+1)/2$ for $s_0\le p/2$, and $\log(p\sqrt n/(s_0+1))\ge\frac12\log n$ (B3.8 step 3). |
+| B3.6 | in-probability display needs $p\to\infty$ | EXISTS-CHECKED | `W3-PSHARP:A@1.0.0`, Cor A1 (`W3-PSHARP/STATEMENT.md:71-73`), unchanged. |
+| B3.7 | remark (ii) ⇐ Cor A2-E(ii) (:86-92); remark (iii) ⇐ A2C (:94-100) | EXISTS-CHECKED | `W3-PSHARP-R:AE`, `W3-PSHARP-R:A2C` "PROVED-CHECKED; council R2, …". |
+| B3.8 | fully orthogonal designs, fixed nonzero coefficients, $s_0<p\le n-1$ ⇒ Theorem 1 (A1)–(A6) and the hypotheses of the expectation display of (b); hence exact order $\sqrt{\log n/n}$ in expectation, every such $p$ | NEW, checked: `/home/fb31/BVS-wt/W3-PSHARP-R/Theory_work/Wave3/W3-PSHARP-R/reviews/post_cp3/BRIDGE_orth_thm1.md` (sha256 d54a2a7a…); Sol line check L06 (CORRECT-WITH-FIXES, C 0, one S applied) and Sol confirm L07 (YES, 0 findings), theory/W3-PSHARP-R @ 8e22c756 | (A1)–(A6) with $A=1$, $\bar\theta=\max|\theta^*_j|$, $\varphi_0=1$, $g_0=1$, second form of (A6); the upper half carries Theorem 1's master status (row 1.1). |
 
 ### Honest limits
-None. Note for the text: the expectation form of (b) for every $p$ (sharp2 rider T12) is not yet proved.
+The $\sqrt{\log n}$ lower bounds hold on the two witness designs only; on every design only order $n^{-1/2}$ is proved
+(part (a)). Exactness in expectation is shown on fully orthogonal designs only. Whether the constant of the expectation
+display is attained is not proved. Status: the expectation display and remarks (ii)–(iii) rest on `W3-PSHARP-R:AE`,
+`W3-PSHARP-R:A2C`, "PROVED-CHECKED; council R2, …" (registry, main).
 
 #### Update log (thm3)
 - v0.1 2026-11-15: first version (CP1).
@@ -369,6 +416,12 @@ None. Note for the text: the expectation form of (b) for every $p$ (sharp2 rider
 - v0.3 2026-11-16: [H5-6, S3-N4] scope sentence: on a general design only order $n^{-1/2}$; the open item is the
   expectation lower bound under a floor on $S_0\cup\{j\}$ (EQUAL: a non-claim, S3); header points to the staged,
   not-in-force W3-PSHARP-R delta.
+- v0.4 2026-11-16: [W3-PSHARP-R CP3; H5 card 8; HQ signal] swap to W3-PSHARP-R READER_DELTA v0.4
+  (`/home/fb31/BVS-wt/W3-PSHARP-R/Theory_work/Wave3/W3-PSHARP-R/reviews/post_cp3/READER_DELTA_v0.4.md`, theory/W3-PSHARP-R
+  @ 8e22c756): expectation display for every $p$ ("$p\to\infty$" only for the in-probability display); headline sentence
+  (HQ wording); remarks (i)–(iv) with named exactness cases; mechanism sentence corrected (sum of truncated fit factors);
+  bridges B3.3–B3.8 (B3.8 checked by Sol L06 + L07 confirm YES, 0 findings); masters' statuses verbatim
+  (AE, A2C PROVED-CHECKED, council R2) (STRONGER: new expectation display for every $p$; EQUAL elsewhere).
 <!-- ROW thm3 END -->
 
 ---
