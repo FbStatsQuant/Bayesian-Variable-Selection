@@ -212,15 +212,24 @@ List wp4_calibrate(SEXP setup, double seed, List settings) {
     List its(t.iterations.size());
     for (size_t k = 0; k < t.iterations.size(); ++k) {
       const auto& it = t.iterations[k];
+      // core/v3_calib.R:92-106: an iteration that stopped keeps only the island outputs it got (NULL if none); its
+      // checks (overall_best, E1-E3) are never set
+      auto nv = [](const std::vector<double>& v) { return v.empty() ? R_NilValue : (SEXP)NumericVector(v.begin(), v.end()); };
       its[k] = List::create(_["iteration"] = it.iter, _["grid"] = it.grid, _["rho_V"] = it.rho_V, _["grid_label"] = it.grid_label,
-                            _["log_Z_r"] = it.logZ_r, _["island_best"] = it.island_best, _["overall_best"] = it.overall_best,
-                            _["E1"] = it.E1, _["E2"] = it.E2, _["E3"] = it.E3, _["complete"] = it.complete);
+                            _["log_Z_r"] = nv(it.logZ_r), _["island_best"] = nv(it.island_best),
+                            _["overall_best"] = it.complete ? wrap(it.overall_best) : R_NilValue,
+                            _["E1"] = it.complete ? wrap(it.E1) : R_NilValue, _["E2"] = it.complete ? wrap(it.E2) : R_NilValue,
+                            _["E3"] = it.complete ? wrap(it.E3) : R_NilValue, _["complete"] = it.complete);
     }
     tiers[i] = List::create(_["tier"] = t.tier, _["status"] = v4::calib::cal_status_name(t.status), _["triggers"] = wp4h::trig_list(t),
                             _["schedule"] = t.pilot.schedule, _["forced_pilot_steps"] = t.pilot.forced,
-                            _["grids"] = grids, _["iterations"] = its, _["converged"] = t.converged, _["rebuilds"] = t.rebuilds,
+                            // core/v3_calib.R:33-43: a stopped tier (fail()) has no converged / rebuilds / grid_source
+                            _["grids"] = grids, _["iterations"] = its,
+                            _["converged"] = t.status == v4::calib::CalStatus::ok ? wrap(t.converged) : R_NilValue,
+                            _["rebuilds"] = t.status == v4::calib::CalStatus::ok ? wrap(t.rebuilds) : R_NilValue,
                             _["grid"] = wp4h::nullable(t.has_grid, t.grid), _["rho_V"] = wp4h::nullable(t.has_rho, t.rho_V),
-                            _["grid_label"] = t.has_grid ? (SEXP)wrap(t.grid_label) : R_NilValue, _["grid_source"] = t.grid_source,
+                            _["grid_label"] = t.has_grid ? (SEXP)wrap(t.grid_label) : R_NilValue,
+                            _["grid_source"] = t.status == v4::calib::CalStatus::ok ? wrap(t.grid_source) : R_NilValue,
                             _["has_fallback"] = t.has_fallback);
   }
   const auto& f = co.flags;
