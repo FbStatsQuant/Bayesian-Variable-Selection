@@ -29,6 +29,13 @@
   - At n = 200, p = 10⁴ that is ≈ 563 h on Owls, so a default fit returns resource_limit before setup. The README and the code comment (:25) say "memory-only".
   - Engineering: check how the overlap rung (10⁴) and the 1M plan set hours/ls0_cap, and which setting the 2,400-fit study and P6 used. Report the doc fix.
   - Theory is unaffected ((C2) assumes allocation ≥ the requirement formulas).
+- **OWNER 11-16, after reading D2 v1 (binding direction):**
+  - (1) A tight report and paper: the core theorems in the main text, the rest in a supplement with a one-line "why it matters", or cut. HQ's proposed core: rows 1.1/1.2, 2.1, 3.1, 3.6 (+ 3.5), and 1.3 as a remark. The owner's OK on the list is pending.
+  - (2) Niche results are motivated in one sentence or cut.
+  - (3) **Assumption audit.**
+    - Assumptions on abstract mathematical objects (distributions, divergences, prior or kernel properties) must be proved: small checked lemmas, and Lean targets.
+    - Design-matrix assumptions (and similar) get a **"why this is reasonable" dossier in the advisor report**: plain meaning, comparison with standard literature conditions, where they hold and fail, and whether our simulation designs and a typical user are plausibly inside. No empirical tracking.
+    - Theory leads it; Writing presents it. The consultant stress-tests the core list and the audit plan. HQ proposes moving the freeze to include the audit (owner's OK pending).
 - **On resume:** move the department threads to Claude Personal (t3_thread_configure), then send each manager "resume from RESUME card". Pending HQ items:
   - V (RM2-R) real-run GO after rule (b) and the dry run;
   - re-enable the 3 Theory scheduled tasks;
