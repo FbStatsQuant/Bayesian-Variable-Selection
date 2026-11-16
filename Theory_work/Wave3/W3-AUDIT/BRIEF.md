@@ -67,6 +67,15 @@ For each core theorem, one sharpness record of at most a page, using the same ta
   where the gain changes a headline statement: weaker assumptions on the design, a rate in log p, or the
   s₀-dependence.
 
+**Who (owner, 11-16): one Fable 5.2 runs track D,** because Fable has the best grasp of the mathematics ("precision
+strike machines, not bombs to throw everywhere"). It is a single Fable, high effort, a Theory child agent, on the
+account HQ names at the resume.
+- **Input:** the core theorems' STATEMENTs, the pre-filled lists above, and the track A/B tables.
+- **Output:** the per-theorem sharpness records, plus at most 5 ranked improvement candidates, each with its gain,
+  route and estimated cost.
+- **One pass, then one revision round only.** No proving: adopted candidates become separate tickets (Opus leads by
+  default, Fable only for a key lemma with HQ's OK).
+
 The consultant then ranks the improvements. Each one adopted becomes a ticket with a kill budget, and a success
 supersedes the weaker result (rollback to the better theorem, as today with Cor-G(a) → CorG-min and START-R).
 

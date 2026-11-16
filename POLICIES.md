@@ -64,7 +64,8 @@ PROGRAM Readability, with a fidelity check of every number.
     need to save tokens for future tasks"). If a problem is big enough to need it, the manager reports to HQ: the
     problem, why Opus is not enough, how many Fables, the expected size or duration, and the account. HQ decides,
     with the consultant when it is significant.
-    - Fables go only to hard key proofs, creative or architect reviews, writing advice, and headline cards. They are
+    - Fables are **precision tools, not volume tools** (owner, 11-16). They go only to hard key proofs, finding
+      improvement opportunities in core results, creative or architect reviews, writing advice, and headline cards. They are
       scoped with a kill budget and reused (the same thread across rounds) rather than re-spawned.
     - Opus is the default everywhere else.
     - HQ reports Fable use to the owner in the daily brief.
