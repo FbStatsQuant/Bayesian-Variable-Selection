@@ -846,3 +846,85 @@ TEST(pi0_fast_draw_equals_draw) {
     CHECK(same == total);
   }
 }
+
+// `smcbvs4 calibrate` end to end (WP4's calib::run with WP3's island runner plugged in; WP3_DESIGN §1.11): data.bin from
+// prep, a setup.bin with the partition, block tables, table stores and neighbour lists (WP4's write_setup_min sections
+// + nb_ptr / nb_idx), then the command in each mode. compat runs the bit form particle-major on the v3 streams, law the
+// bit form particle-major, V class A label-major. Checks: status ok, calib.bin readable (grid from 0 to 1, inherited
+// models), the island's start law equals the setup's (load_start), V the same for 1 and 3 threads.
+#include "v4/calib_run.h"
+#include "v4/island/setup_load.h"
+#include "v4/prep.h"
+#include "v4/stubs.h"
+#include "v4/wp4_io.h"
+TEST(calibrate_command_end_to_end) {
+  const int n = 60, p_raw = 30;
+  std::vector<double> X((size_t)n * p_raw), y(n);
+  { std::mt19937_64 g(41); std::normal_distribution<double> nd;
+    for (int i = 0; i < n; ++i) { double prev = 0; for (int j = 0; j < p_raw; ++j) { double x = 0.6 * prev + 0.8 * nd(g); X[(size_t)j * n + i] = x; prev = x; } }
+    for (int i = 0; i < n; ++i) y[i] = 1.2 * X[(size_t)2 * n + i] - 0.9 * X[(size_t)11 * n + i] + nd(g); }
+  v4::prep::Result pr = v4::prep::preprocess(X.data(), y.data(), n, p_raw);
+  CHECK(pr.status == "ok");
+  v4::Data D = v4::make_data(pr.own, n, pr.p);
+  const int p = D.p;
+  TmpGuard tg;
+  const std::string dpath = tg.add(wp3_tmp("cal_data.bin")), s0 = tg.add(wp3_tmp("cal_setup0.bin")), spath = tg.add(wp3_tmp("cal_setup.bin"));
+  const std::string dhash = v4::prep::write_data(dpath, D, pr, "B", v4::Json::object());
+  // setup: blocks of 3, the island's own tables (core's arithmetic), table stores over every table model
+  Start st; build_start(st, D, contiguous_blocks(p, 3));
+  Neighbours nb = window_neighbours(D, 6, 4);
+  v4::wp4io::SetupView S; S.blk = st.blk; S.pos = st.pos; S.blk_ptr.push_back(0);
+  S.ttop.init(40ull * p + 1, Order::HPM); S.tlead0.init(20ull * p, Order::LEX); S.tlead1.init(20ull * p, Order::LEX);
+  BitScorer sc(&D);
+  for (int b = 0; b < st.J; ++b) {
+    for (int j : st.blocks[b]) S.blk_members.push_back(j);
+    S.blk_ptr.push_back((int64_t)S.blk_members.size()); S.code_ptr.push_back((int64_t)S.logr.size());
+    for (uint32_t c = 0; c < st.logr[b].size(); ++c) {
+      S.logr.push_back(st.logr[b][c]);
+      Model U; for (size_t i = 0; i < st.blocks[b].size(); ++i) if (c & (1u << i)) U.push_back(st.blocks[b][i]);
+      if ((int)U.size() > D.K) continue;
+      double F = D.logprior[U.size()] + sc.score(U).logm, lg0 = D.logprior[U.size()] + st.logr[b][c];
+      S.ttop.offer(F, U, D.zob.hash(U)); S.tlead0.offer(lg0, U, D.zob.hash(U)); S.tlead1.offer(F, U, D.zob.hash(U));
+    }
+  }
+  S.ttop.compact(); S.tlead0.compact(); S.tlead1.compact();
+  S.mode_S = Model(S.ttop.model(0).begin(), S.ttop.model(0).end());
+  v4::Json sin = v4::Json::object(); sin["data.bin"] = dhash;
+  v4::wp4io::write_setup_min(s0, S, sin);
+  { v4::fmt::Reader R(s0); v4::fmt::Writer W(v4::fmt::K_SETUP, v4::fmt::M_COMPAT);   // + the neighbour lists (WP2's sections)
+    for (const auto& e : R.sections()) {
+      const std::string nm(e.name);
+      if (e.dtype == v4::fmt::D_JSON) { W.add_json(nm, R.json(nm)); continue; }
+      const void* q = e.dtype == v4::fmt::D_F64 ? (const void*)R.get<double>(nm) : e.dtype == v4::fmt::D_I32 ? (const void*)R.get<int32_t>(nm)
+                    : e.dtype == v4::fmt::D_U32 ? (const void*)R.get<uint32_t>(nm) : e.dtype == v4::fmt::D_I64 ? (const void*)R.get<int64_t>(nm)
+                    : e.dtype == v4::fmt::D_U64 ? (const void*)R.get<uint64_t>(nm) : e.dtype == v4::fmt::D_U16 ? (const void*)R.get<uint16_t>(nm)
+                    : (const void*)R.get<uint8_t>(nm);
+      W.add_copy(nm, e.dtype, q, e.length, e.dims[0], e.dims[1]);
+    }
+    W.add("nb_ptr", nb.ptr); W.add("nb_idx", nb.idx); W.add("size_cum", st.size_cum); W.write(spath); }
+  { Start st2 = load_start(spath, D); Neighbours nb2 = load_neighbours(spath, p);
+    CHECK(st2.size_cum == st.size_cum && st2.logZbar0 == st.logZbar0 && st2.blocks == st.blocks && nb2.ptr == nb.ptr && nb2.idx == nb.idx); }
+  auto calibrate = [&](const std::string& mode, int threads, const std::string& out) {
+    v4::Json a = v4::Json::object(); a["data"] = dpath; a["setup"] = spath; a["out"] = out; a["mode"] = mode; a["seed"] = 77.0; a["threads"] = (double)threads;
+    return v4::calib::run(a);
+  };
+  std::map<std::string, v4::wp4io::CalibIn> got;
+  for (auto [mode, th] : std::vector<std::pair<std::string, int>>{{"compat", 1}, {"law", 3}, {"V", 1}, {"V", 3}}) {
+    const std::string out = tg.add(wp3_tmp("cal_" + mode + std::to_string(th) + ".bin"));
+    double t0 = omp_get_wtime();
+    v4::Json rec = calibrate(mode, th, out);
+    CHECKF(rec.at("status").str() == "ok", "%s threads %d: status %s", mode.c_str(), th, rec.at("status").str().c_str());
+    if (rec.at("status").str() != "ok") continue;
+    v4::wp4io::CalibIn ci = v4::wp4io::read_calib(out, p, D.K);
+    CHECKF(ci.grid.size() >= 2 && ci.grid.front() == 0.0 && ci.grid.back() == 1.0 && !ci.inherited.empty() && ci.has_hpm, "%s: calib.bin", mode.c_str());
+    std::printf("  calibrate %-6s threads %d: %.1f s, tier %d, T = %zu, %zu inherited models, HPM |S| = %zu\n", mode.c_str(), th, omp_get_wtime() - t0,
+                ci.tier, ci.grid.size() - 1, ci.inherited.size(), ci.hpm.size());
+    const std::string key = mode + (mode == "V" ? "" : std::to_string(th));
+    if (got.count(key)) {   // V with 1 and 3 threads: the same calibration
+      const auto& o = got[key];
+      bool same = o.grid == ci.grid && o.tier == ci.tier && o.inherited.size() == ci.inherited.size() && o.hpm == ci.hpm;
+      for (size_t i = 0; same && i < ci.inherited.size(); ++i) same = o.inherited[i].S == ci.inherited[i].S && same_bits(o.inherited[i].F, ci.inherited[i].F);
+      CHECKF(same, "%s: calibration differs between runs / thread counts", mode.c_str());
+    } else got[key] = ci;
+  }
+}
