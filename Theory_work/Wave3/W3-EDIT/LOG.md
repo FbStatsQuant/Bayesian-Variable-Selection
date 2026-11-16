@@ -16,3 +16,6 @@
 - 2026-11-15 20:11 CST. Manager request: triage of the 59 NOT-EDITORIAL MINORs → TRIAGE_MINORS.md: (iii) 20, (ii) 30, (i) 9; ★ 15 (from HEADLINE_CANDIDATES.md on recorder/staging-1115 ac5754d), incl. 6 ★ in (iii): M27, M30, M35, M57, M58, M61. Nothing applied.
 - 2026-11-15 20:22 CST. POLICIES §12: removed my /tmp CI outputs, test builds and scratch files (the throwaway merge worktrees were already removed); kept CP1 draft + py shim.
 - 2026-11-15 20:22 CST. Leftover-check: /tmp/bvs-ci-sandboxes/sb-w91e8vqb is a live run_ci.py (pid 2708093, not mine) on 25f2655 'registry: rehash C-MIS ×3 --bump patch' (HQ recorder); left untouched.
+- 2026-11-15 20:28 CST. Temp convention: moved CP1 draft and py shim to /home/fb31/bvs_tmp/W3-EDIT/; nothing of mine left in /tmp.
+- 2026-11-15 20:34 CST. Temp path: moved to /home/fb31/bvs_tmp/theory/20261115-W3-EDIT-cp1 (CI runs will use TMPDIR=/home/fb31/bvs_tmp/ci).
+- 2026-11-15 20:39 CST. FINAL temp location: moved to /home/fb31/SMC_Theory_Department/tmp/20261115-W3-EDIT-cp1; the old bvs_tmp folders are gone (CI: TMPDIR=/home/fb31/SMC_Theory_Department/ci).
