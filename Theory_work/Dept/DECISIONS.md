@@ -29,7 +29,7 @@
   PSMC-S0 and W3-EDIT do not wait behind the riders; default order if refused: MISR-R → W3-EDIT → PSMC-S0.
 - **D9. W3-EDIT brief final** (`drafts/W3-EDIT_BRIEF.md`): citation fixes first (unblock PR #10); rehash table for the recorder.
 
-## 2026-11-15 19:47 CT — Engineering dates (REQUESTS THEORY-1..3)
+## 2026-11-15 19:38 CT — Engineering dates (REQUESTS THEORY-1..3)
 - **D10. PSMC-S0 re-scoped:** Part 1 = T-N audit + T-CAL preliminary → CP1 Thu 11-19 12:00 CT (owner OD-1/OD-2 batch,
   soft 11-20); Part 2 = T-PART audit over Engineering's full consumer list (THEORY-1) → CP2 Tue 11-24 (soft 11-25).
   T-STREAM (soft 11-27) is the campaign's first ticket after the freeze; T-MERGE (soft 11-30, hard 12-18) its main one.

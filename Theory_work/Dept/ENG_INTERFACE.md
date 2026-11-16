@@ -11,4 +11,4 @@ Premise table: `Docs/Experiments/P1M/ENGINEERING_SPEC.md` §4.2 (v1 draft 11-15)
 | T-MERGE | R′ = 16 process islands + merge (L / new functions) | O1, O10, O19–O21; pooling under evidence-weight degeneracy; OD-4 is a label switch (all PIPs returned) | claims wording before G-C | 11-30 soft / 12-18 hard | campaign (main theory ticket) |
 Log of exchanges:
 - 2026-11-15 19:34 CT — Theory → Eng: interfaces (1)–(4) asked (exact OD-5 rule + consumers, dates, OD-4 status, contact files).
-- 2026-11-15 ~19:45 CT — Eng → Theory: REQUESTS.md THEORY-1 (exact rules + full consumer list), THEORY-2 (dates), THEORY-3 (OD-4 working assumption; evidence = R6, DESIGN_v1 §4.4, CP2 §3). Protocol (4) agreed. Table above updated; PSMC-S0 brief rev. 1 (T-N + T-CAL prelim first).
+- 2026-11-15 19:38 CT (received) — Eng → Theory: REQUESTS.md THEORY-1 (exact rules + full consumer list), THEORY-2 (dates), THEORY-3 (OD-4 working assumption; evidence = R6, DESIGN_v1 §4.4, CP2 §3). Protocol (4) agreed. Table above updated; PSMC-S0 brief rev. 1 (T-N + T-CAL prelim first).
