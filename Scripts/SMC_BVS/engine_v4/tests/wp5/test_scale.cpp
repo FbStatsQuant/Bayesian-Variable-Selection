@@ -9,14 +9,15 @@
 
 #include "v4/eval.h"
 #include "v4/gen.h"
+#include "v4/prep.h"
 #include "wp5_tk.h"
 
 using namespace v4;
 using namespace v4::eval;
 
 namespace {
-Truth gen_truth(const std::string& design, int32_t p, uint32_t seed, double rho = 0.6, int32_t b = 20) {
-  Json sp = Json::object(); sp["design"] = design; sp["n"] = 200; sp["p"] = p; sp["seed"] = (int64_t)seed; sp["rho"] = rho; sp["b"] = b; sp["s0"] = 5; sp["a"] = 1.0;
+Truth gen_truth(const std::string& design, int32_t p, uint32_t seed, double rho = 0.6, int32_t b = 20, double amp = 1.0) {
+  Json sp = Json::object(); sp["design"] = design; sp["n"] = 200; sp["p"] = p; sp["seed"] = (int64_t)seed; sp["rho"] = rho; sp["b"] = b; sp["s0"] = 5; sp["a"] = amp;
   gen::Spec s = gen::spec_from_json(sp);
   gen::Truth t = gen::truth(s);
   Json tj = Json::object(); tj["spec"] = gen::spec_to_json(s); tj["S0"] = Json::array_of(t.S0); tj["beta"] = Json::array_of(t.beta); tj["sigma"] = 1.0;
@@ -176,4 +177,105 @@ TEST_SLOW(wp5_T7prime_scale) {
     CHECK_MSG(wall <= l.wall_s, "T7': dist_metrics wall above the driver limit");
     CHECK_MSG(rss <= l.rss_gb, "T7': peak RSS above the driver limit");
   }
+}
+
+// ---- Sol F9: numerical error of the predictive integrals below a PRE-DECLARED absolute tolerance -------------------------
+// Declared before the run (2026-11-16): doubling the Gauss–Hermite order (64 → 128) at fixed x rows changes d_H² and KL by
+// at most 1e-8 (quadrature error); doubling the x draws (4,000 → 8,000) changes them by at most 5 x-MC SE of the
+// 4,000-row estimate (the x error is Monte Carlo and is reported as h2_se_x / kl_se_x).
+TEST(wp5_predictive_numerical_error_doubling) {
+  constexpr double QUAD_TOL = 1e-8, K_SE = 5.0;
+  Truth T = gen_truth("AR", 500, 31);
+  gen::Spec sp = gen::spec_from_json(T.gen_spec);
+  std::vector<double> X, y; gen::generate(sp, X, y);
+  Data D = data_from_raw(X.data(), y.data(), sp.n, sp.p);
+  Model S0; for (int32_t o : T.S0) S0.push_back(o - 1);
+  Law L; L.name = "T";
+  std::vector<ModelPost> mp; mp.push_back(model_post(D, S0));
+  for (int32_t j : {0, 7, 50, 120, 333}) { Model m = S0; if (!std::binary_search(m.begin(), m.end(), j)) { sorted_insert(m, j); mp.push_back(model_post(D, m)); } }
+  Model sm = S0; sm.erase(sm.begin()); mp.push_back(model_post(D, sm));   // a false negative
+  double fmax = -INFINITY; for (auto& m : mp) fmax = std::max(fmax, m.F);
+  double ws = 0; std::vector<double> w; for (auto& m : mp) { w.push_back(std::exp(0.3 * (m.F - fmax))); ws += w.back(); }
+  for (size_t i = 0; i < mp.size(); ++i) L.comps.push_back(component_from_post(D, mp[i], w[i] / ws));
+  DistOpts o; o.n_draws = 200; o.n_x = 4000; o.n_test = 200; o.threads = 3; o.seed = 3;
+  DistOpts oq = o; oq.n_gh = 128;
+  DistOpts ox = o; ox.n_x = 8000;
+  Json a = dist_metrics(L, T, D.n, o, 2), q = dist_metrics(L, T, D.n, oq, 2), x = dist_metrics(L, T, D.n, ox, 2);
+  const Json &pa = a.at("predictive"), &pq = q.at("predictive"), &px = x.at("predictive");
+  const double dq_h = std::fabs(pa.at("h2").num() - pq.at("h2").num()), dq_k = std::fabs(pa.at("kl").num() - pq.at("kl").num());
+  const double dx_h = std::fabs(pa.at("h2").num() - px.at("h2").num()), dx_k = std::fabs(pa.at("kl").num() - px.at("kl").num());
+  std::printf("    predictive d_H^2 %.6f: GH 64->128 changes it by %.1e (KL %.1e); x 4000->8000 by %.1e (KL %.1e) vs x-SE %.1e (KL %.1e)\n",
+              pa.at("h2").num(), dq_h, dq_k, dx_h, dx_k, pa.at("h2_se_x").num(), pa.at("kl_se_x").num());
+  CHECK(pa.at("exact").boolean());
+  CHECK_MSG(dq_h <= QUAD_TOL && dq_k <= QUAD_TOL, "GH quadrature error above the declared 1e-8");
+  CHECK_MSG(dx_h <= K_SE * pa.at("h2_se_x").num() && dx_k <= K_SE * pa.at("kl_se_x").num(), "x-draw doubling outside 5 x-MC SE");
+}
+
+// ---- Sol F9 fixtures: empty support / zero signal --------------------------------------------------------------------
+TEST(wp5_fixture_empty_support_zero_signal) {
+  Truth T = gen_truth("AR", 300, 17, 0.6, 20, 0.0);   // a = 0: S0 = ∅, y = noise
+  CHECK(T.S0.empty());
+  gen::Spec sp = gen::spec_from_json(T.gen_spec);
+  std::vector<double> X, y; gen::generate(sp, X, y);
+  Data D = data_from_raw(X.data(), y.data(), sp.n, sp.p);
+  ModelPost m0 = model_post(D, Model{});
+  CHECK(m0.theta_bar.empty() && m0.LH.empty() && m0.logm == D.logm0);
+  Law L; L.name = "oracle"; L.comps.push_back(component_from_post(D, m0, 1.0));
+  // plug-in: b = β* = ∅ ⇒ s² = 0, m = ȳ − 0: d_H² = H²(N(ȳ, v̄), N(0, σ²)) exactly
+  DistOpts o; o.n_draws = 500; o.n_x = 500; o.n_test = 500; o.threads = 2;
+  Json j = dist_metrics(L, T, D.n, o, 3);
+  const Component& C = L.comps[0];
+  CHECK_NEAR(j.at("plugin").at("h2").num(), h2_normals(C.a_mean(), C.v_mean(), 0.0, T.sigma2_eff()), 1e-15);
+  CHECK(j.at("plugin").at("s2").num() == 0.0 && j.at("weighted_plugin").at("h2").num() == j.at("plugin").at("h2").num());
+  // predictive at x (the k = 0 Student-t does not depend on x) against Simpson
+  XSample xs = make_rows(T, {1, 2}, 0, 3, 1, false);
+  std::vector<double> t, w; gauss_hermite(64, t, w);
+  double aff, kl; predictive_at_x(L, T, xs, 1, t, w, &aff, &kl);
+  double q = 0; const int Mq = 40000; const double lo = -30, hi = 30, hq = (hi - lo) / Mq;
+  for (int i = 0; i <= Mq; ++i) { double yy = lo + i * hq, f = std::exp(0.5 * (log_pred_density(L, xs, 1, yy) - 0.5 * std::log(2 * M_PI) - 0.5 * yy * yy)); q += f * hq * (i == 0 || i == Mq ? 0.5 : 1.0); }
+  CHECK_NEAR(aff, q, 1e-9);
+  // selection with S0 = ∅ and the empty HPM: correct; PIP metrics with no truths
+  Json sel = selection_metrics(Model{}, Model{}, m0.F, Model{}, m0.F, D);
+  CHECK(sel.at("outcome_class").str() == "correct" && sel.at("hpm_hamming").num() == 0);
+  std::vector<double> pip(D.p, 0.01);
+  Json pm = pip_metrics(pip, Model{}, D.p);
+  CHECK(pm.at("min_true").is_null() && pm.at("n_null_gt_0.1").num() == 0);
+}
+
+// ---- Sol F9 fixtures: the near-constant (anchored) preprocessing branch (core/v3_preprocess.R:35-67) and unequal column
+// scales, through the raw-scale map: â + Σ b_j x_raw = ȳ + s_y Σ θ̄_j z_j at every row, and x_raw = x̄ + ŝ z.
+TEST(wp5_fixture_anchored_branch_unequal_scales) {
+  const int n = 150, p = 4;
+  std::mt19937_64 g(41); std::normal_distribution<double> N(0, 1);
+  std::vector<double> X((size_t)n * p), y(n);
+  for (int i = 0; i < n; ++i) {
+    const double e0 = N(g), e1 = N(g), e2 = N(g), e3 = N(g);
+    X[0 * n + i] = 1.0 + 1e-9 * e0;     // near-constant: max|x/max − mean| ≤ √eps ⇒ the anchored two-pass branch
+    X[1 * n + i] = 3e4 * e1;            // large scale
+    X[2 * n + i] = 5.0 + 2e-3 * e2;     // small scale, nonzero centre
+    X[3 * n + i] = e3;
+    y[i] = 2.0 + 0.8 * e0 - 0.6 * e1 + 0.5 * e2 + N(g);
+  }
+  std::vector<double> z0(n);
+  prep::ColStd cs = prep::standardise(X.data(), (size_t)n, z0.data());
+  CHECK_MSG(cs.anchored, "column 0 did not take the anchored branch");
+  Data D = data_from_raw(X.data(), y.data(), n, p);
+  CHECK(D.p == 4);
+  ModelPost mp = model_post(D, {0, 1, 2});
+  Component c = component_from_post(D, mp, 1.0);
+  const std::vector<double> b = c.b_mean(); const double a0 = c.a_mean();
+  double worst_pred = 0, worst_z = 0;
+  for (int i = 0; i < n; ++i) {
+    double lhs = a0, rhs = ybar(D);
+    for (int t = 0; t < 3; ++t) {
+      const int j = mp.S[t]; const double xr = X[(size_t)j * n + i], z = D.col(j)[i];
+      lhs += b[t] * xr; rhs += sy(D) * mp.theta_bar[t] * z;
+      worst_z = std::max(worst_z, std::fabs((xr - xbar(D, j)) / xsd(D, j) - z));
+    }
+    worst_pred = std::max(worst_pred, std::fabs(lhs - rhs) / std::max(1.0, std::fabs(rhs)));
+  }
+  std::printf("    anchored + unequal scales: max |(x - xbar)/sd - z| = %.1e, max rel |raw - standardised predictor| = %.1e\n", worst_z, worst_pred);
+  // cancellation x_raw − x̄ at x ≈ 1 with ŝ ≈ 1e-9 costs ≈ eps/1e-9 ≈ 2e-7 in z: declared tolerances 1e-6 (z) and 1e-5 (predictor)
+  CHECK(worst_z <= 1e-6);
+  CHECK(worst_pred <= 1e-5);
 }

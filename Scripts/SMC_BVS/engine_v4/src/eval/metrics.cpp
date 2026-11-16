@@ -87,8 +87,8 @@ Json pip_metrics(const std::vector<double>& pip, const Model& S0, int32_t p) {
     bn[b]++; bt[b] += tru[j]; bs[b] += q;
   }
   brier = (double)(br / p);
-  J["sup_null"] = (S0.size() < (size_t)p ? sup_null : NAN); J["argsup_null"] = (arg_sup);
-  J["min_true"] = (S0.empty() ? NAN : min_true); J["argmin_true"] = (arg_min);
+  J["sup_null"] = S0.size() < (size_t)p ? Json(sup_null) : Json(); J["argsup_null"] = (arg_sup);   // null: no null column
+  J["min_true"] = S0.empty() ? Json() : Json(min_true); J["argmin_true"] = (arg_min);   // null: S0 empty
   J["brier"] = (brier); J["n_null_gt_0.1"] = (n01); J["n_null_gt_0.5"] = (n05);
   Json rel = Json::array();   // reliability bins of width 0.05 (pooled across fits downstream)
   for (int b = 0; b < NB; ++b) {

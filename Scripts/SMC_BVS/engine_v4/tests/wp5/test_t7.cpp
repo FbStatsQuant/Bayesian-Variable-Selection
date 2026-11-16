@@ -1,11 +1,13 @@
 // test_t7.cpp -- gate T7 (ENGINEERING_SPEC §5; plan G-A): the closed forms of the evaluator against brute-force Monte
-// Carlo on 20 fixtures (+ 3 added after review PR12 MINOR-6: shifted intercept, v/σ² ∈ {0.5, 2}), to 3 significant digits. Declared before the run (src/eval/README_WP5.md):
+// Carlo on 20 fixtures (+ 3 added after review PR12 MINOR-6: shifted intercept, v/σ² ∈ {0.5, 2}). Declared before the run
+// (src/eval/README_WP5.md; Sol F9: PRE-DECLARED ABSOLUTE tolerances, replacing "3 significant digits" of v1):
 //   T7a  plug-in d_H² (closed form, plan §3.3 item 1) vs MC over x ~ ν_x (mt19937_64, independent of the eval's Philox),
 //        the y-integral by the normal–normal affinity (checked against quadrature in test h2_normals_vs_quadrature);
 //   T7b  prediction error m² + s² vs MC over x of (â + xᵀb − α* − xᵀβ*)²;
-//   pass: |closed − MC| ≤ ½ unit of the 3rd significant digit of the closed form, with the MC standard error ≤ ⅓ of that
-//        tolerance (the MC size doubles from 2²⁰ up to 2²⁷ draws until the SE condition holds; failing it is a FAIL).
-//   T7c  (sanity, not part of the 3-digit criterion) joint (x, y) MC of d_H² within 4 SE, 2²² draws.
+//   pass (declared constants below): the MC standard error is at most SE_MAX (d_H²: 1e-5; prediction error: 2.5e-4),
+//        AND |closed − MC| ≤ max(5 · SE, 1e-6). The MC size doubles from 2²⁰ up to 2²⁸ draws until SE ≤ SE_MAX;
+//        failing either condition is a FAIL. (The v1 relative criterion is still printed, informational only.)
+//   T7c  (sanity, not part of the criterion) joint (x, y) MC of d_H² within 4 SE, 2²² draws.
 // Fixtures: the posterior-mean plug-in of a model near S₀ on generated data, 4 designs × n ∈ {100, 200, 400} × models
 // with false positives / false negatives, so (m, s², v) cover the range seen in practice. Output: TSV in $TMPDIR.
 #include <unistd.h>
@@ -65,6 +67,11 @@ Fixture make_fixture(int id) {
   return f;
 }
 
+// ---- PRE-DECLARED ABSOLUTE TOLERANCES (Sol F9; fixed before the run, 2026-11-16) ----
+constexpr double T7_SE_MAX_H2 = 1e-5;     // MC standard error required for d_H²
+constexpr double T7_SE_MAX_PE = 2.5e-4;   // MC standard error required for the prediction error
+constexpr double T7_K_SE = 5.0;           // |closed − MC| ≤ max(T7_K_SE · SE, T7_FLOOR)
+constexpr double T7_FLOOR = 1e-6;
 double tol3(double x) { double e = std::floor(std::log10(std::fabs(x))); return 0.5 * std::pow(10.0, e - 2); }
 
 // MC over x: returns mean and SE of g(Δ(x)) using `draws` draws in chunks (3 threads, one engine per chunk; deterministic)
@@ -104,7 +111,7 @@ void mc_x(const Fixture& f, G gfun, uint64_t draws, uint64_t seed, double& mean,
 TEST_SLOW(wp5_gate_T7_closed_forms_vs_monte_carlo) {
   const std::string tsv = std::string(std::getenv("TMPDIR") ? std::getenv("TMPDIR") : ".") + "/T7_result.tsv";
   FILE* fo = std::fopen(tsv.c_str(), "w");
-  std::fprintf(fo, "fixture\tquantity\tclosed\tmc\tmc_se\ttol3\tdraws\tpass\n");
+  std::fprintf(fo, "fixture\tquantity\tclosed\tmc\tmc_se\tse_max\ttol_abs\tdraws\tpass\ttol3_v1_info\n");
   int pass = 0, total = 0;
   for (int id = 0; id < 23; ++id) {
     Fixture f = make_fixture(id);
@@ -112,22 +119,23 @@ TEST_SLOW(wp5_gate_T7_closed_forms_vs_monte_carlo) {
     LinErr e = lin_error(f.T, f.orig, f.b, f.a);
     const double h2c = h2_plugin(e, f.v, s2t), pec = pred_error(e);
     // T7a: E_x[1 − affinity(N(Δ, v), N(0, σ²))] = 1 − E_x affinity; MC the affinity's complement directly
-    struct Q { const char* name; double closed; std::function<double(double)> g; };
-    const Q qs[2] = {{"plugin_h2", h2c, [&](double D) { return h2_normals(D, f.v, 0.0, s2t); }},
-                     {"pred_error", pec, [&](double D) { return D * D; }}};
+    struct Q { const char* name; double closed; double se_max; std::function<double(double)> g; };
+    const Q qs[2] = {{"plugin_h2", h2c, T7_SE_MAX_H2, [&](double D) { return h2_normals(D, f.v, 0.0, s2t); }},
+                     {"pred_error", pec, T7_SE_MAX_PE, [&](double D) { return D * D; }}};
     for (const Q& q : qs) {
-      const double tol = tol3(q.closed);
       double m = 0, se = 0; uint64_t draws = 1ull << 20;
       while (true) {
         mc_x(f, q.g, draws, 17 + id, m, se);
-        if (se <= tol / 3 || draws >= (1ull << 27)) break;
+        if (se <= q.se_max || draws >= (1ull << 28)) break;
         draws *= 2;
       }
-      const bool ok = se <= tol / 3 && std::fabs(q.closed - m) <= tol;
+      const double tol = std::max(T7_K_SE * se, T7_FLOOR);
+      const bool ok = se <= q.se_max && std::fabs(q.closed - m) <= tol;
       ++total; pass += ok;
-      std::fprintf(fo, "%s\t%s\t%.10g\t%.10g\t%.3g\t%.3g\t%llu\t%d\n", f.name.c_str(), q.name, q.closed, m, se, tol, (unsigned long long)draws, ok);
-      std::printf("    %-16s %-10s closed=%.6g mc=%.6g se=%.2g tol=%.2g draws=2^%d %s\n", f.name.c_str(), q.name, q.closed, m, se, tol,
-                  (int)std::log2((double)draws), ok ? "PASS" : "FAIL");
+      std::fprintf(fo, "%s\t%s\t%.10g\t%.10g\t%.3g\t%.3g\t%.3g\t%llu\t%d\t%.3g\n", f.name.c_str(), q.name, q.closed, m, se, q.se_max, tol,
+                   (unsigned long long)draws, ok, tol3(q.closed));
+      std::printf("    %-16s %-10s closed=%.6g mc=%.6g se=%.2g (max %.1g) |diff|=%.2g tol=%.2g draws=2^%d %s\n", f.name.c_str(), q.name, q.closed, m, se,
+                  q.se_max, std::fabs(q.closed - m), tol, (int)std::log2((double)draws), ok ? "PASS" : "FAIL");
       CHECK_MSG(ok, f.name + " " + q.name);
     }
     // T7c: joint (x, y) MC of 1 − E √(f/f*) under y ~ f* (sanity, 4 SE)
@@ -152,6 +160,6 @@ TEST_SLOW(wp5_gate_T7_closed_forms_vs_monte_carlo) {
     }
   }
   std::fclose(fo);
-  std::printf("    gate T7: %d / %d closed-form checks pass (3 significant digits); table: %s\n", pass, total, tsv.c_str());
+  std::printf("    gate T7: %d / %d closed-form checks pass (absolute: SE <= 1e-5 / 2.5e-4, |diff| <= max(5 SE, 1e-6)); table: %s\n", pass, total, tsv.c_str());
   CHECK(pass == total && total == 46);
 }

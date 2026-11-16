@@ -163,8 +163,7 @@ std::vector<double> draw_y(const Truth& T, const XSample& xs, uint32_t seed, uin
 }
 
 // ------------------------------------------------------------------------------------------------ streamed rows
-// Copied from src/common/gen.cpp:80-84 (powi): exponentiation by squaring, so the AR bridge equals gen's bits.
-static double powi_gen(double x, int64_t d) { double r = 1.0, b = x; while (d > 0) { if (d & 1) r *= b; b *= b; d >>= 1; } return r; }
+static double powi_sq(double x, int64_t d) { double r = 1.0, b = x; while (d > 0) { if (d & 1) r *= b; b *= b; d >>= 1; } return r; }
 
 static double test_normal(uint32_t seed, uint8_t xph, uint32_t row, uint32_t col) {   // non-gen designs: Philox, role TEST
   Address a; a.seed = seed; a.role = R_TEST; a.xph = xph; a.stage = 7; a.particle = row; a.position = col;
@@ -173,14 +172,25 @@ static double test_normal(uint32_t seed, uint8_t xph, uint32_t row, uint32_t col
 
 XSample make_rows(const Truth& T, const std::vector<int32_t>& cols_in, uint32_t row0, uint32_t nrows, uint32_t seed, bool with_y) {
   XSample xs;
+  xs.m = nrows;
+  if (!T.gen_spec.is_null()) {
+    // gen designs: WP1's gen::generate_test_rows (PR #17): rows [row0, row0 + nrows) of the test design, bit-identical to
+    // generate_test, only the requested columns (∪ S0). Column-major result, transposed to the row-major XSample.
+    const gen::Spec sp = gen::spec_from_json(T.gen_spec);
+    std::vector<double> Xt, yt;
+    gen::generate_test_rows(sp, (int64_t)row0, (int64_t)row0 + nrows, cols_in, xs.cols, Xt, yt);
+    const size_t m = xs.cols.size();
+    xs.X.assign((size_t)nrows * m, 0.0);
+    for (size_t c = 0; c < m; ++c) for (uint32_t r = 0; r < nrows; ++r) xs.X[(size_t)r * m + c] = Xt[c * (size_t)nrows + r];
+    if (with_y) xs.y = yt;
+    return xs;
+  }
+  // non-gen designs (FAC, MIS, intercept): the same Markov / factor constructions on eval-seeded Philox normals
   xs.cols = cols_in; xs.cols.insert(xs.cols.end(), T.S0.begin(), T.S0.end());
   std::sort(xs.cols.begin(), xs.cols.end()); xs.cols.erase(std::unique(xs.cols.begin(), xs.cols.end()), xs.cols.end());
   const size_t m = xs.cols.size();
-  xs.m = nrows; xs.X.assign((size_t)nrows * m, 0.0);
+  xs.X.assign((size_t)nrows * m, 0.0);
   if (with_y) xs.y.assign(nrows, 0.0);
-  const bool use_gen = !T.gen_spec.is_null();
-  gen::Spec sp; if (use_gen) sp = gen::spec_from_json(T.gen_spec);
-  if (use_gen) for (int32_t j : xs.cols) if (j < 1 || j > sp.p) throw Error(Status::invalid_input, "make_rows: column out of range");
   std::vector<int> ps(T.S0.size()); for (size_t k = 0; k < T.S0.size(); ++k) ps[k] = xs.pos(T.S0[k]);
   const std::string& d = T.design;
   const bool ar = d == "AR" || d == "ADJ-OPP";
@@ -188,27 +198,14 @@ XSample make_rows(const Truth& T, const std::vector<int32_t>& cols_in, uint32_t 
     const uint32_t i = row0 + r;
     double* row = &xs.X[(size_t)r * m];
     double prev = 0; int64_t jprev = -1;
-    double fac = 0; if (!use_gen && d == "FAC") fac = test_normal(seed, X_TEST_FACTOR, i, 0);
+    const double fac = d == "FAC" ? test_normal(seed, X_TEST_FACTOR, i, 0) : 0.0;
     for (size_t c = 0; c < m; ++c) {
       const uint32_t j0 = (uint32_t)(xs.cols[c] - 1);
       double x;
-      if (use_gen) {
-        // src/common/gen.cpp generate_test (lines 128-147), copied: same addresses, same arithmetic
-        if (sp.design == gen::Design::AR || sp.design == gen::Design::ADJOPP) {
-          double e = gen::normal_at(sp.seed, X_TEST_X, i, j0);
-          if (jprev < 0) x = e;
-          else { double rd = powi_gen(sp.rho, (int64_t)j0 - jprev); x = rd * prev + pm::sqrt(1.0 - rd * rd) * e; }
-          prev = x; jprev = j0;
-        } else if (sp.design == gen::Design::BLK) {
-          x = pm::sqrt(sp.rho) * gen::normal_at(sp.seed, X_TEST_FACTOR, i, j0 / (uint32_t)sp.b) +
-              pm::sqrt(1.0 - sp.rho) * gen::normal_at(sp.seed, X_TEST_X, i, j0);
-        } else {
-          x = gen::normal_at(sp.seed, X_TEST_X, i, j0);
-        }
-      } else if (ar) {
+      if (ar) {
         double e = test_normal(seed, X_TEST_X, i, j0);
         if (jprev < 0) x = e;
-        else { double rd = powi_gen(T.rho, (int64_t)j0 - jprev); x = rd * prev + std::sqrt(1.0 - rd * rd) * e; }
+        else { double rd = powi_sq(T.rho, (int64_t)j0 - jprev); x = rd * prev + std::sqrt(1.0 - rd * rd) * e; }
         prev = x; jprev = j0;
       } else if (d == "BLK") {
         x = std::sqrt(T.rho) * test_normal(seed, X_TEST_FACTOR, i, j0 / (uint32_t)T.block) + std::sqrt(1.0 - T.rho) * test_normal(seed, X_TEST_X, i, j0);
@@ -220,10 +217,9 @@ XSample make_rows(const Truth& T, const std::vector<int32_t>& cols_in, uint32_t 
       row[c] = x;
     }
     if (with_y) {
-      double mu = use_gen ? 0.0 : T.alpha;
+      double mu = T.alpha;
       for (size_t k = 0; k < T.S0.size(); ++k) mu += T.beta[k] * row[ps[k]];
-      xs.y[r] = use_gen ? mu + sp.sigma * gen::normal_at(sp.seed, X_TEST_NOISE, i, 0)
-                        : mu + std::sqrt(T.sigma2_eff()) * test_normal(seed, X_TEST_NOISE, i, 0);
+      xs.y[r] = mu + std::sqrt(T.sigma2_eff()) * test_normal(seed, X_TEST_NOISE, i, 0);
     }
   }
   return xs;
@@ -457,7 +453,7 @@ Json dist_metrics(const Law& L, const Truth& T, int32_t n_obs, const DistOpts& o
   J["object"] = L.name;
   J["n_components"] = (uint64_t)M;
   J["dropped_mass"] = L.dropped_mass;
-  if (L.dropped_mass > 0) {
+  if (L.store_law) {
     // Sol F9-b: the law is a truncated approximation of the store BMA; the omitted (summed) mass δ enters as error terms.
     // f̄_store = (1 − δ) f̄_law + δ f̄_omitted ⇒ H²(f̄_store, f̄_law) ≤ 1 − √(1 − δ) ≤ δ, so every d_H of a law object is
     // within √δ of the store object's; weighted means of d_H² ∈ [0, 1] are within δ.

@@ -97,6 +97,7 @@ struct Law {
   std::string name;
   std::vector<Component> comps;
   double dropped_mass = 0;
+  bool store_law = false;            // Π̂^𝒯 from the store / law.bin: labelled a truncated approximation (Sol F9-b)
 };
 Component component_from_post(const Data& D, const ModelPost& mp, double w);
 Component component_gaussian(const std::vector<int32_t>& orig, const std::vector<double>& b, double a, double sigma2, double w = 1.0);
@@ -123,8 +124,8 @@ struct XSample {
 XSample draw_x(const Truth& T, const std::vector<int32_t>& cols, size_t m, uint32_t seed, uint32_t stage);
 std::vector<double> draw_y(const Truth& T, const XSample& xs, uint32_t seed, uint32_t stage);
 // Rows row0 … row0 + nrows − 1 of a row-addressable stream, only the columns `cols` (∪ S0), O(|cols|) per row (D-17 item 5).
-//   gen designs (truth.json has a gen spec): exactly gen::generate_test's definition (src/common/gen.cpp, copied below
-//   with gen::normal_at), rows 0 … n_x − 1 for the predictive integrals and n_x … for the test rows;
+//   gen designs (truth.json has a gen spec): gen::generate_test_rows (WP1, PR #17; bit-identical to generate_test),
+//   rows 0 … n_x − 1 for the predictive integrals and n_x … for the test rows;
 //   otherwise (FAC, MIS, intercept): the same Markov / factor constructions with Philox normals (role TEST, eval seed).
 XSample make_rows(const Truth& T, const std::vector<int32_t>& cols, uint32_t row0, uint32_t nrows, uint32_t seed, bool with_y);
 // dᵀΣd for d on sorted original columns, O(|cols|) for IND / AR / ADJ-OPP / BLK / FAC (no |cols|² matrix).

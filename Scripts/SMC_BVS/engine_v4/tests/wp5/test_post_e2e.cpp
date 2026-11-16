@@ -138,6 +138,12 @@ TEST(wp5_e2e_post_and_eval) {
   CHECK(e1.at("dist").at("ratio_to_oracle").at("H").at("predictive_h2").num() == 1.0);
   const Json& st = e1.at("store");
   CHECK(st.at("pi_T_hat").num() > 0.5 && st.at("size").num() == 40 * 12 + 1);
+  // Sol F9-a/b: unclipped, labelled ratio; truncation carried into the distance metrics; law labelled
+  CHECK(st.contains("pi_T_hat_note") && st.contains("pi_T_hat_gt_1") && st.contains("deterministic_bound"));
+  CHECK(e1.at("pip").at("eq_T_target").num() == 0.01 + (1.0 - st.at("pi_T_hat").num()));
+  { const Json& tr = e1.at("dist").at("T").at("law_truncation");
+    CHECK(tr.at("label").str() == "truncated approximation of the store BMA" && tr.at("dH_bound_truncation").num() == std::sqrt(tr.at("omitted_mass").num())); }
+  { fmt::Reader B(d + "/law.bin"); CHECK(B.json("meta").at("label").str() == "truncated approximation of the store BMA"); }
   // log Ẑ_occ with exact occupancies recovers the exact log Z (rounding of the counts only)
   CHECK_NEAR(e1.at("evidence").at("logZ_occ").at("M10").num(), s.logZ, 2e-3);
   CHECK(e1.at("evidence").at("R_eff").num() > 1 && e1.at("evidence").at("R_eff").num() <= 16);

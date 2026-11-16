@@ -53,7 +53,7 @@ LawFile build_law(const Data& D, const eval::StoreView& s, double rel_cut, size_
 }
 
 eval::Law to_eval_law(const LawFile& L, const std::string& name) {
-  eval::Law out; out.name = name; out.dropped_mass = L.dropped_mass;
+  eval::Law out; out.name = name; out.dropped_mass = L.dropped_mass; out.store_law = true;
   for (size_t m = 0; m < L.models.size(); ++m) {
     const eval::ModelPost& mp = L.models[m];
     eval::Component c; c.w = L.w[m]; c.gaussian = false; c.n = L.n; c.alpha_n = mp.alpha_n; c.beta_n = mp.beta_n;
