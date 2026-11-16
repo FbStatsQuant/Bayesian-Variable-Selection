@@ -59,8 +59,8 @@ against :87–90 and :49–63).
 of size q_n+s₀, the true coefficients satisfy θ*_min ≥ b and ‖θ*‖₁ ≤ M, the constants κ, b, M and the noise variance
 σ*² are fixed in n, q_n is below the method's model-size cap min(p, ⌊n/2⌋), and (q_n+1) log p + log n ≤ c₁n with an
 explicit constant c₁ depending only on κ, b, M, σ*, then the probability that a run produces output, certifies a
-reported model of size at most q_n, and that model misses a true predictor tends to zero — with no visibility,
-leakage, start or block condition."*
+reported model of size at most q_n ("certifies": the run's local-optimality flag is set for that model), and that
+model misses a true predictor tends to zero — with no visibility, leakage, start or block condition."*
 
 **Theorem 8 (body):** keep lines 731–747 unchanged. (A2) names the four constants as fixed in n; (A3) gives the
 formula for c₁ and q_n ∈ {0, …, K−1}.
@@ -135,19 +135,23 @@ Sources (file:line):
 - cs ρ = .5, s₀ = 4: p = 250 10/21; p = 500 11/21.
 - At n ≥ 75 and p ≥ 188: 49/51 contain S₀.
 
-**Certification-frequency line for the reader (next to row 3.7; numerics, not a theorem):** *"In existing numerics the
-method certified a small reported model in essentially every completed run (2,394 of 2,394 in the 2,400-fit study at
-n = 200; 376 of 376 in the strong-factor experiment with n ≤ 150 and p up to 10n; 71 of 71 in the screening study at
-n = 100). On strong-factor designs (equicorrelation ρ ≥ 0.5) at n = 50 and p ≥ 2.5n, the certified small model missed a
-true predictor in 61 of 122 fits. Theorem 8 holds asymptotically under (A1)–(A3); at these constants (A3) requires
-n ≳ 1,450."*
+**Certification-frequency line for the reader (next to row 3.7; numerics, not a theorem; card 11):** *"A run certifies
+a model when its local-optimality flag is set. In existing numerics the method certified a small reported model in
+every completed run: 2,394 of 2,394 in the 2,400-fit study (n = 200); 376 of 376 in the strong-factor experiment
+(n ≤ 150, p up to 10n); 71 of 71 in the screening study (n = 100). On strong-factor designs (equicorrelation
+ρ ∈ {0.5, 0.7}, p ≥ 2.5n, s₀ ∈ {4, 8}) the certified model contained every true predictor in 61 of 122 fits at n = 50,
+18 of 20 at n = 75 and 30 of 30 at n = 100. At these constants (A3) requires n ≳ 1,450."*
+(Counts recomputed by the manager from `/home/fb31/SMC_Theory_Department/records/theory_w3/*/raw/fits.jsonl`, 376
+completed fits, fields `local_certified`, `hpm`, `S0`; cells n = 50: p ∈ {125, 250, 500}; n = 75: p ∈ {188, 750};
+n = 100: p ∈ {250, 1000}.)
 
 **Consequence for the card (W3-READER decides the wording).**
 - `CLAIMS_CARD.md:60` says row 3.7 "holds where 3.1–3.2 may fail (strong factors, masking)". As a theorem statement
   this is true, because its hypotheses involve no visibility condition.
-- Scope statement for the card (neutral wording, owner rule):
-  "asymptotically, under (A1)–(A3), row 3.7 holds where 3.1–3.2 may fail", with the certification numbers above
-  stated as facts next to the row (H5 card 11).
+- **Card row 3.7 text (H5 card 11, AGREED, binding):** replace "holds where 3.1–3.2 may fail" with *"needs no
+  visibility, leakage, start or block condition, so its assumptions can hold on designs (strong factors included)
+  where those of 3.1–3.2 do not"*; keep "under (A1)–(A3)"; no "asymptotically" on this row (the card's setting line
+  covers it); certification numbers stated as facts in the body (line above). W3-READER applies it with the swap.
 - No small-run proposal is drafted, because data exist (card 9 condition 4 asks for one only if no data has it).
 - Gaps, if HQ wants them closed: the production study has no per-fit HPM size, and no strong-factor run has n ≥ 200.
 
