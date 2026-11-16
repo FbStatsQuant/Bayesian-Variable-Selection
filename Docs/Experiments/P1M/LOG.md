@@ -10,3 +10,6 @@
 - 2026-11-15 17:37 CST — Fragmentation read: 41 SPR nodes ≥ 64 free CPUs, 25 ≥ 96. Memory-per-node check pending.
 - 2026-11-15 17:50 CST — Owner Q 'how many CPUs': request unit 96-CPU tasks, ≤ 16 concurrent (= cap). Corrected calibration parallelism (1 node per task): single fit ≈ 6.5 h, pipelined ≈ 2.5–3 h per fit.
 - 2026-11-15 18:51 CST — HQ note: home 66% (6,770 MB) at 18:52; no action. Earlier 99% was the home row of the owner's screenshot (likely freed since). NOTS_FACTS updated.
+- 2026-11-15 18:57 CST — Owner Q (engineering strategy, C++). Wrote ENGINEERING_STRATEGY.md v0.1: standalone C++ binary, subcommand pipeline, hot-path angles, particle threading with a compat mode, gates T1–T7, 3-week split. Owner: ~10 GB of home available at deploy.
+- 2026-11-15 19:03 CST — HQ: owner requests an independent Fable review + spec skeleton. Brief saved to briefs/BRIEF_fable_review.md; spawning Fable 5.2 (claude_third, high).
+- 2026-11-15 19:03 CST — Fable 5.2 reviewer started (delegate_task, async, shared checkout; helpers in use: 1 Fable per HQ + 0 of 2 Opus/Sonnet). Waiting for completion; then REVIEW_disposition.md, ENGINEERING_SPEC.md v1, OWNER_DECISIONS update.
