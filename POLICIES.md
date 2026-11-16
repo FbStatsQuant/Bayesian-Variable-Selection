@@ -122,8 +122,9 @@ A department that expects to exceed its envelope asks HQ first.
 **Cadence**
 - **Daily**, by 09:00 CT and whenever a checkpoint lands: each manager sends HQ a report of at most 10 lines. Format:
   done / in progress / blocked / needs (HQ or owner) / budget used.
-- **Owner:** HQ messages the owner only for launches, finished milestones and decisions he must make, plus a short
-  **weekly digest** (Friday): claims-card changes, milestones, budget burn, next week, decisions pending.
+- **Owner (board):** the owner talks to HQ several times a day, the way a board calls its CEO. HQ is always ready
+  with current status (kept in `HQ_NOW.md`). Between calls, HQ messages the owner only for launches, finished milestones
+  and decisions he must make. There is no separate weekly digest.
 - **Escalation:** a big problem goes to HQ at once (§2 of the memo, §4); anything that needs the owner goes up the same
   day, with a recommendation.
 

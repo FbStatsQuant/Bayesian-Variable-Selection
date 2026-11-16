@@ -1,5 +1,10 @@
 # HQ now (resume card; HQ keeps this current)
 
+## PRIORITY ORDER (owner 2026-11-15, evening)
+1. All consistency results (selection + distribution / W3-DIST) **and their Lean parts** come first.
+2. Parallel-method theory (T-MERGE, EVAR, POOL) is NOT a priority now; parked for the scaling paper.
+3. Engineering: plan for 1M (any SMC BVS scheme), or an irrefutable NOTS-infrastructure proof.
+
 ## TOP PRIORITY (owner 2026-11-15): W3-DIST — distribution consistency (Song–Liang Thm 1–2 parity)
 "It needs to happen." It outranks W3-PATH, T7 and the riders in every resource conflict. Lead: Fable 5.2 on Claude Third
 (Owls, thread mcp:launch:75635c1f…); team of Opus/Sonnet workers on Claude Third after CP1; parity checklist = BRIEF
