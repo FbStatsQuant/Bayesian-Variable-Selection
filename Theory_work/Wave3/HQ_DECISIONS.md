@@ -450,3 +450,12 @@ Changes:
 - MISR flag on MIS(i)/(ii), Cor-G(b) as the reader version;
 - setting line states the Gaussian rows;
 - add 3.7 certified screening to the abstract; 3.6 a candidate; 2.2 POST2:D the pillar-2 fallback.
+
+## 2026-11-15 ~23:00 CT — Lean Department launch set for Thu 11-19; Theory 6th slot
+- From the Theory Department's LEAN_READINESS.md:
+  - Level 1 ready now: SL0, LT♯ sup-norm core, T01 prior counting, DIST Lemma H (≈3–4 lead-days); then a shared score base
+    (≈1–1.5 wk);
+  - Level 2 order: DIST-1, W3-POST:Thm-1, RM2-F.
+- **HQ: launch the SMC - Lean Department Thu 11-19** (inventory + Level-1 batch). Level 2 from Mon 11-23. Owner priority:
+  "consistency results and even their lean parts".
+- Theory gets a temporary 6th lead slot for W3-MISR-R until PSMC-S0 closes.
