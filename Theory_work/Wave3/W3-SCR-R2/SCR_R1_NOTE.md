@@ -20,6 +20,6 @@ paths under `Theory_work/Wave3/W3-SCR/`.
    precondition n² ≥ 4s₀ fails while the growth condition can hold. The SCR-A conclusion still holds there by direct
    computation of Γ_n(0), but not by the A1 argument.
 5. So SCR-R1 = SCR-A(A∞) + B2d + L3:70–75 read per n, provided the rider adds "κ_n b_n²(n²−1) ≥ 4M_n² for all large
-   n", or the equivalent κ_n ≤ 50(n²−1)log n/n, or q_n ≥ s₀−1. The polynomial-p clause (L3:76, STATEMENT.md:162–163)
+   n", or the sufficient κ_n ≤ 50(n²−1)log n/n, or q_n ≥ s₀−1. The polynomial-p clause (L3:76, STATEMENT.md:162–163)
    needs c₁ bounded below and does not carry over: there the rider keeps only the explicit growth condition.
    This is a reading, not a checked proof: the rider still needs its own line check before it carries any label.
