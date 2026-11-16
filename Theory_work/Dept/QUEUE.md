@@ -17,6 +17,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 | W3-DIST (TOP PRIORITY) | Fable 5.2, mcp:launch:75635c1f… (root clone folder; snapshot → theory/W3-DIST) | CP2 (soft) met, CONTINUE (D38): BR1 NOT BROKEN; all line checks VERIFIED; L6 (DIST12) running → diff check → sweep → council → CP3 | CP2 = Lemma X + S + V line-checked → Astra break review |
 | W3-READER | Opus, mcp:launch:2a4462b2… (BVS-wt/W3-READER) | bridge leg written (R1–R4, PoolZ); card v0.5 (H5 actions applied); Sol S2 running; gates tables in triage | CP1 → me → claims card to HQ (H5); READER_DELTA rows: thm3 PSHARP, thm4 MISR, thm5 START2, thm7 RM2-F |
 | recorder | Opus, mcp:launch:563aa9b9… | task C (W2-APP PC1 Sol) running; task D (POST2) on hold | HQ decision on headline flags + conditional statuses |
+| W3-T03ACC | council acceptance of T03♯ (SOP:TH09), root of rows 1.1/1.2/3.1 (HQ order, D49) | child node …t03acc-lead-1 | BVS-wt/W3-T03ACC · theory/W3-T03ACC | → CP1 (lock) | CP3 Thu 11-19 18:00 |
 
 ## Ready (launch as a slot frees)
 | ticket | contents | worktree / branch | note |
@@ -45,7 +46,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 | NARROW batch | 12 statement-precision narrowings (LIFECYCLE §3, priced) + H5 card for GEN C4 / FAC-CS C1 / SAMP:Pkg | ADJ_MINORS_iii.md (D31) |
 | W2-APP Family-map diff round | F1–F4 + M57/M58 patches | PC1, D31 |
 | errata batch | CHAPTER-ONLY errata held for riders (W3-EDIT CP1 groups) + F-UNI "eventually" (H5) | D19, D31 |
-| SL0 PC check | C-PACK:SL0: diff check of the 5 files changed since the C1 snapshot → record SL0 → drop SL0 from 11 conditional statuses | D48 |
+| SL0 PC check (RUNNING, pre-freeze per HQ) | C-PACK:SL0: diff check of the 5 files changed since the C1 snapshot → record SL0 → drop SL0 from 11 conditional statuses | D48 |
 | accept-identity follow-ups | NB-3 sunset of the legacy Windows fallback; NB-4 compute identity once | CR_accept_identity_opus.md |
 | record-format package | 38 rows free-text → file-path evidence | recorder task I |
 | NOTS move | theory_w2/w3, /scratch theory_w2|3, P6 outputs → /home/fb31/SMC_Theory_Department on NOTS (+ scratch link, INDEX.md); one calm session; copies only, no deletion before Owls copy verified | D32/D33 (HQ approved) |

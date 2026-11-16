@@ -328,3 +328,9 @@
   conditions) + registry/HQ_CONDITIONAL_STATUSES.md. C: W2-APP 10 rows on MANIFEST_PC1 (acceptance PASS dry). Real runs
   relayed to the recorder under HQ's earlier approvals; HQ informed. READER to quote the new conditional statuses
   (row 3.6 SAMP, RM-R) once recorded. Post-freeze: SL0 PC-style diff check.
+
+## 2026-11-15 23:31 CT — HQ: T03♯ acceptance before Friday
+- **D49.** W3-T03ACC opened (Tier B council acceptance of T03♯ = SOP:TH09 on its existing proof: W1-T03R PROOF.md
+  @7e14d6f on [P1]/[P3]); child-agent lead (5th slot); Sol lock + 2–3 Sol line checks + Astra/Opus council; CP3 Thu 18:00.
+  SL0 PC check (Sol) launched now. TH05.0 not under an abstract row → post-freeze. API card file list sent to HQ (blind:
+  no SF/XF reports). READER prepares row 1.1 forms A/B and conditional wording for rows 1.2/3.1.
