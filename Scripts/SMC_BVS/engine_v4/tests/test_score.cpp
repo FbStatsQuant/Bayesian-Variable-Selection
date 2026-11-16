@@ -25,7 +25,8 @@ int compare_models(const Data& D, const v3::Data& R, const std::vector<Model>& m
     if (ta != tb) { ++bad; continue; }
     if (ta) continue;
     if (!same_bits(x.logm, y.logm) || !same_bits(x.Q, y.Q) || x.route != y.route || x.q_recomputed != y.q_recomputed ||
-        !same_bits(x.logdetH, y.logdetH) || !same_bits(x.logdetA, y.logdetA) || !same_bits(x.cond_H, y.cond_H)) ++bad;
+        !same_bits(x.logdetH, y.logdetH) || !same_bits(x.logdetA, y.logdetA) || !same_bits(x.cond_H, y.cond_H) ||
+        !same_bits(x.cond_A, y.cond_A)) ++bad;
     if (routes_seen) routes_seen[x.route]++;
   }
   return bad;

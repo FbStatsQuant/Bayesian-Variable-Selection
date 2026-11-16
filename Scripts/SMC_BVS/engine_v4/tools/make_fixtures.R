@@ -36,7 +36,7 @@ for (g in gen_specs) {
   rd <- v4_read(raw)
   X <- matrix(rd$get("X_cm"), g$n, g$p); y <- rd$get("y")
   rec <- jsonlite::fromJSON(paste0(raw, ".json"))
-  cases[[length(cases) + 1]] <- c(g, list(p_raw = g$p, X = X, y = y, stored = FALSE, raw_sha256 = rec$raw_content_sha256))
+  cases[[length(cases) + 1]] <- c(g, list(p_raw = g$p, X = X, y = y, stored = FALSE, X_sha256 = rec$X_sha256, y_sha256 = rec$y_sha256))
 }
 
 # ---- prep golden ----
@@ -49,7 +49,7 @@ for (cs in cases) {
   wf64(c(pr$col_max, pr$col_mean, pr$col_sd, pr$y_max, pr$y_mean, pr$y_sd_scaled), file.path(fx, "prep", paste0(cs$name, "_stats.f64")))
   e <- list(name = cs$name, n = cs$n, p_raw = cs$p_raw, p = pr$p, kept = as.list(pr$kept), stored_X = cs$stored,
             anchored = sum(!vapply(pr$stable_centering$columns %||% list(), is.null, TRUE)))
-  if (!cs$stored) e <- c(e, list(design = cs$design, seed = cs$seed, raw_sha256 = cs$raw_sha256))
+  if (!cs$stored) e <- c(e, list(design = cs$design, seed = cs$seed, X_sha256 = cs$X_sha256, y_sha256 = cs$y_sha256))
   idx[[length(idx) + 1]] <- e
   cs$pr <- pr
   assign(paste0("PR_", cs$name), pr)

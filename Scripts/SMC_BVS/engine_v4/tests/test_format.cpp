@@ -25,6 +25,10 @@ TEST(format_roundtrip_and_alignment) {
   // same content -> same content hash
   CHECK(w.write(f + "2") == h);
   std::remove((f + "2").c_str());
+  // the header (kind / mode) is covered by the content hash: a changed mode byte is detected
+  { std::fstream io(f, std::ios::in | std::ios::out | std::ios::binary); io.seekp(16); uint32_t m = fmt::M_COMPAT; io.write((char*)&m, 4); }
+  CHECK_THROWS(fmt::Reader tampered(f));
+  CHECK(w.write(f) == h);
   // a flipped byte in a section is detected
   { std::fstream io(f, std::ios::in | std::ios::out | std::ios::binary); io.seekp((std::streamoff)r.entry("c_cm").offset + 17); char z = 0x5A; io.write(&z, 1); }
   CHECK_THROWS(fmt::Reader bad(f));

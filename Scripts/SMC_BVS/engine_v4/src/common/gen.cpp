@@ -4,7 +4,9 @@
 #include <cmath>
 #include "v4/format.h"
 #include "v4/pmath.h"
+#include "v4/provenance.h"
 #include "v4/rng.h"
+#include "v4/sha256.h"
 #include "v4/status.h"
 
 namespace v4::gen {
@@ -158,6 +160,11 @@ static Json truth_json(const Spec& s, const Truth& t) {
   j["S0"] = Json::array_of(t.S0); j["beta"] = Json::array_of(t.beta); j["sigma"] = s.sigma;
   return j;
 }
+static Json file_meta(const Spec& s, const Truth& t) {
+  Json j = truth_json(s, t);
+  j["kind"] = "raw"; j["mode"] = "none"; j["inputs"] = Json::object(); j["binary"] = binary_block();
+  return j;
+}
 
 Json run(const Json& args) {
   Spec s = spec_from_json(args.at("spec"));
@@ -168,13 +175,15 @@ Json run(const Json& args) {
   fmt::Writer w(fmt::K_RAW, fmt::M_NONE);
   w.add("X_cm", X, (uint64_t)s.n, (uint64_t)s.p);
   w.add("y", y);
-  Json meta = truth_json(s, t);
-  w.add_json("meta", meta);
+  w.add_json("meta", file_meta(s, t));
   std::string h = w.write(out);
-  Json tj = meta; tj["raw_content_sha256"] = h;
+  // data identity (independent of the binary block in meta): the section hashes of X_cm and y
+  std::string hx = hex(sha256(X.data(), X.size() * 8)), hy = hex(sha256(y.data(), y.size() * 8));
+  Json tj = truth_json(s, t); tj["raw_content_sha256"] = h; tj["X_sha256"] = hx; tj["y_sha256"] = hy;
   if (args.contains("truth")) write_json_file(args.at("truth").str(), tj);
   Json rec = Json::object();
-  rec["status"] = "completed"; rec["raw"] = out; rec["raw_content_sha256"] = h; rec["truth"] = tj;
+  rec["status"] = "completed"; rec["raw"] = out; rec["raw_content_sha256"] = h; rec["X_sha256"] = hx; rec["y_sha256"] = hy;
+  rec["truth"] = tj;
   return rec;
 }
 
@@ -188,7 +197,7 @@ Json run_test(const Json& args) {
   fmt::Writer w(fmt::K_RAW, fmt::M_NONE);
   w.add("Xt_cm", Xt, (uint64_t)nt, (uint64_t)oc.size());
   w.add("yt", yt); w.add("cols", oc);
-  Json meta = truth_json(s, truth(s)); meta["ntest"] = nt;
+  Json meta = file_meta(s, truth(s)); meta["ntest"] = nt; meta["kind"] = "test_rows";
   w.add_json("meta", meta);
   std::string h = w.write(args.at("out").str());
   Json rec = Json::object(); rec["status"] = "completed"; rec["content_sha256"] = h; rec["ncols"] = (int64_t)oc.size();

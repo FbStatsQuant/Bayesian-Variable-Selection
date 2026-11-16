@@ -5,6 +5,8 @@
 #include <array>
 #include <cstdint>
 #include <stdexcept>
+#include <tuple>
+#include <unordered_set>
 #include "v4/model.h"
 
 namespace v4 {
@@ -39,6 +41,8 @@ struct Address {
   uint32_t seed = 0; uint8_t role = 0, tier = 0, iter = 0; uint32_t island = 0;   // key
   uint8_t xph = 0; uint32_t stage = 0; uint32_t particle = 0, position = 0, slot = 0;  // counter
 };
+// Independence step: the pi_0 draw uses slots 0..u-1 (u = uniforms it consumes), the accept test this fixed slot.
+constexpr uint32_t SLOT_ACCEPT = 0xFFFFFFFFu;
 inline Key2 address_key(const Address& a) {
   if (a.island >= (1u << 20) || a.iter >= 64 || a.tier >= 4 || a.role >= 16) throw std::out_of_range("address key field out of range");
   return Key2{a.seed, ((uint32_t)a.role << 28) | ((uint32_t)a.tier << 26) | ((uint32_t)a.iter << 20) | a.island};
@@ -83,8 +87,11 @@ struct Xoshiro256ss {
 // v3 stream map (core/v3_run.R:8-11, core/cpp/v3_core.cpp:444): pilot 5e, diag 5e + r (r = 1..4), final 9 + r.
 inline uint64_t compat_stream(uint8_t role, uint8_t tier, uint32_t island) {
   switch (role) {
-    case R_PILOT: return 5ull * tier;
-    case R_DIAG: if (island < 1 || island > 4) throw std::out_of_range("compat diag island"); return 5ull * tier + island;
+    case R_PILOT: if (tier > 1) throw std::out_of_range("compat pilot tier (v3 has tiers 0, 1)"); return 5ull * tier;
+    case R_DIAG:
+      if (tier > 1) throw std::out_of_range("compat diag tier (v3 has tiers 0, 1)");
+      if (island < 1 || island > 4) throw std::out_of_range("compat diag island");
+      return 5ull * tier + island;
     case R_FINAL: if (island < 1 || island > 4) throw std::out_of_range("compat final island"); return 9ull + island;
     case R_TEST: return 200;
     default: throw std::out_of_range("role has no compat stream");
@@ -106,6 +113,46 @@ struct CompatSource final : public UniformSource {
   Xoshiro256ss g;
   CompatSource(uint64_t seed, uint64_t stream) { g.seed_stream(seed, stream); }
   double u(const Address&) override { return g.uniform(); }
+};
+
+// ---------------------------------------------------------------------------------------------------------------
+// Invariant I5 (INTERFACES §3): CheckedSource wraps any source and checks every address it is asked for.
+//   UNIQUE     (production): no address is used twice;
+//   INCREASING (compat, one per stream): addresses arrive strictly increasing in serial_less, the v3 serial order
+//              within one unit: calibration iteration, then INIT < (stage t: RESAMPLE < BRIDGE round) < BURN < MEASURED
+//              < POST, then particle, position, slot.
+// A violation throws std::logic_error (callers map it to internal_error).
+// ---------------------------------------------------------------------------------------------------------------
+inline auto serial_key(const Address& a) {
+  int rank = a.xph == X_INIT ? 0 : (a.xph == X_RESAMPLE || a.xph == X_BRIDGE) ? 1 : a.xph == X_BURN ? 2 : a.xph == X_MEASURED ? 3 : 4 + a.xph;
+  int sub = a.xph == X_BRIDGE ? 1 : 0;
+  return std::make_tuple(a.seed, a.role, a.tier, a.iter, a.island, rank, a.stage, sub, a.particle, a.position, a.slot);
+}
+inline bool serial_less(const Address& a, const Address& b) { return serial_key(a) < serial_key(b); }
+
+struct CheckedSource final : public UniformSource {
+  enum Mode { UNIQUE, INCREASING };
+  UniformSource& inner; Mode mode; uint64_t checked = 0;
+  CheckedSource(UniformSource& in, Mode m) : inner(in), mode(m) {}
+  double u(const Address& a) override {
+    if (mode == INCREASING) {
+      if (checked > 0 && !serial_less(last_, a)) throw std::logic_error("I5: address not increasing in the serial order");
+      last_ = a;
+    } else {
+      Key2 k = address_key(a); Ctr4 c = address_ctr(a);
+      if (!seen_.insert(Packed{k, c}).second) throw std::logic_error("I5: address used twice");
+    }
+    ++checked;
+    return inner.u(a);
+  }
+ private:
+  struct Packed { Key2 k; Ctr4 c; bool operator==(const Packed& o) const { return k == o.k && c == o.c; } };
+  struct PackedHash { size_t operator()(const Packed& p) const {
+    uint64_t x = ((uint64_t)p.k[0] << 32 | p.k[1]) ^ 0x9E3779B97F4A7C15ULL;
+    for (uint32_t w : p.c) { x ^= w; x = splitmix64(x); }
+    return (size_t)x; } };
+  std::unordered_set<Packed, PackedHash> seen_;
+  Address last_;
 };
 
 }  // namespace v4

@@ -11,6 +11,7 @@ struct Case { const char* name; std::function<void()> fn; const char* tags; };
 inline std::vector<Case>& registry() { static std::vector<Case> r; return r; }
 inline int& failures() { static int f = 0; return f; }
 inline std::string& current() { static std::string c; return c; }
+inline bool& allow_missing_fixtures() { static bool a = false; return a; }   // --allow-missing-fixtures
 struct Reg { Reg(const char* n, const char* tags, std::function<void()> f) { registry().push_back({n, std::move(f), tags}); } };
 inline void fail(const char* file, int line, const std::string& msg) {
   ++failures();

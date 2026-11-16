@@ -1,10 +1,11 @@
 {
-  "generated": "2026-11-15T21:16:04-0600",
+  "generated": "2026-11-15T21:44:12-0600",
   "host": "owls.stat.rice.edu",
   "R": "R version 4.6.0 (2026-04-24)",
   "core_cpp_key": "9413042ffd4db2b7ef2aa41365bbb8b73ff97684b5251ba26d67753e538b9b5e",
-  "smcbvs4": "9f503501443fc162eaa11f98ad7bfb91ae43cbcdab6294aa80e7e208719ab169",
+  "smcbvs4": "22cd7fb97407add6ecaba217a868a35c0f69a92556485cfb36724fe5c336faa6",
   "files": {
+    "pmath_owls_glibc234_fma.json": "c38e2e52473c143297e7ee00cb134391019893e6974e20e0c1937ca45936e556",
     "prep/adj500_stats.f64": "7128152294b8cf158c89186479803dc46a3376f03f8ff3f11ccb6952caa82330",
     "prep/adj500_Xs.f64": "973ed21c1e717e7466c016b7c67010465c417bcebea14fb161bed3774b984dd4",
     "prep/adj500_ys.f64": "44daed8330dcfd988ff05636dbcae3581534a61dbeceba838f19a0eac0c7fcd9",
@@ -17,7 +18,7 @@
     "prep/ind300_stats.f64": "dac7d529d10564ca4a4d1d32249842348f7059e57eb098987c5b4d89c48dad46",
     "prep/ind300_Xs.f64": "4403ac422550b2ad3e72255cb3f9b911a3c075b75f018510ecccd54eece25200",
     "prep/ind300_ys.f64": "075ea0f0eb2ba11c6f81caafbf3f302ae78862e0003482e64012a467c5fff7e3",
-    "prep/index.json": "e84f75c37d255c9e79bc73da6dfc123409dce7c0e774580026a1c8b78d4b73e7",
+    "prep/index.json": "e55bc7bb4933cc89da23756e3fa7196efa48e03a8269b34eb0709103f5e0ea12",
     "prep/scaled_stats.f64": "75ee9b78d862a4f6540d76f3387275c4e5d9267df43c98f7405cea99838186c4",
     "prep/scaled_X.f64": "6a495645df353270e1c569853d32573827730d6307be9217b5dfe6c65557bdb5",
     "prep/scaled_Xs.f64": "073079eac94a38b30e21e164401f759bc935bf2ff85ea66e3be41a1d96757169",

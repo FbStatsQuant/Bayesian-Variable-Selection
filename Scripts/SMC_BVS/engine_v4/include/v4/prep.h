@@ -1,6 +1,6 @@
 // prep.h -- preprocessing (ENGINEERING_SPEC §1 row 1): drop exactly-constant columns, standardise X and y with the
 // arithmetic of core/v3_preprocess.R:24-51 (v3_standardise; R's long-double two-pass mean and long-double sum),
-// build data.bin. Class B against R by test (tests/test_prep.cpp + tests/golden/prep_golden.R). If a platform ever
+// build data.bin. Class B against R by test (tests/test_prep.cpp on fixtures written by tools/make_fixtures.R). If a platform ever
 // fails that test, `prep --from-r <dir>` takes the R-standardised X instead and the C++ path is declared class A.
 #pragma once
 #include <cstdint>

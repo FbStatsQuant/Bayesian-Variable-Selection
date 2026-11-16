@@ -58,3 +58,22 @@ TEST(store_cap_zero_and_would_enter) {
   CHECK(!t.would_enter(1.0, Model{0, 5}));              // tie on F: larger model is worse under the HPM order
   CHECK(t.better(1.0, Model{0}, 1.0, Model{1}));
 }
+
+TEST(store_cutoff_monotone_and_exact) {
+  Zobrist z; z.init(40);
+  auto offers = random_offers(3, 20000, 40, 50);
+  Store s(100, Order::HPM); double last = s.cutoff();
+  CHECK(last == -__builtin_huge_val());
+  for (size_t i = 0; i < offers.size(); ++i) {
+    s.offer(offers[i].v, offers[i].S, z.hash(offers[i].S));
+    if (i % 997 == 0) { s.compact(); CHECK(s.cutoff() >= last); last = s.cutoff(); }
+  }
+  s.compact();
+  CHECK(s.check_invariants() && s.size() == 100 && s.cutoff() == s.v.back());
+  // exactness: the same top-c as the reference with no quick rejects at all
+  v3::TopStore ref; ref.init(100, true);
+  for (auto& o : offers) ref.offer(o.v, std::vector<int>(o.S.begin(), o.S.end()));
+  std::vector<std::pair<double, Model>> want;
+  for (auto& e : ref.s) want.push_back({e.v, Model(e.S.begin(), e.S.end())});
+  CHECK(dump(s) == want);
+}

@@ -1,6 +1,7 @@
 #include <random>
 #include "tk.h"
 #include "v4/ledger.h"
+#include "v4/threads.h"
 using namespace v4;
 
 namespace {
@@ -53,8 +54,44 @@ TEST(ledger_island_best_and_counters) {
   Ledger L(cfg); Zobrist z; z.init(5);
   EventCtx c; c.phase = PH_LOCAL; c.mech = ME_LOCAL; c.key.unit = UNIT_LOCAL;
   Model S{1}; L.event(S, z.hash(S), 3.0, 0, 3.0, c, true);
-  CHECK(L.island_best[0] == Ledger::NEG_INF_L() && L.island_best[1] == Ledger::NEG_INF_L());   // local events are not island events
+  CHECK(L.island_best[0] == LEDGER_NEG_INF && L.island_best[1] == LEDGER_NEG_INF);   // local events are not island events
   c.phase = PH_MEASURED; c.mech = ME_GIBBS_HELD; c.key.unit = 2; L.event(S, z.hash(S), 3.0, 0, 3.0, c, false);
   CHECK(L.island_best[2] == 3.0); CHECK(L.logical[PH_MEASURED][ME_GIBBS_HELD] == 1); CHECK(L.fresh[PH_MEASURED][ME_GIBBS_HELD] == 0);
   CHECK(L.lead0.cap == 0 && L.top.cap == 201);
+}
+
+// INTERFACES §4.2 island protocol: worker ThreadLedgers (bounded buffers, cut-off rejects, flushes under the lock while
+// other threads run) absorbed at "stage ends" in thread-index order give exactly the serial ledger.
+TEST(thread_ledgers_equal_serial_ledger) {
+  const int p = 30; auto ev = events(9, 20000, p);
+  Zobrist z; z.init(p);
+  for (bool small_caps : {false, true}) {
+    LedgerConfig cfg; cfg.p = small_caps ? 2 : p; cfg.islands = 4;   // p = 2: caps 81 / 40 -> the cut-off is active
+    Ledger serial(cfg);
+    for (auto& e : ev) serial.event(e.S, z.hash(e.S), e.F, e.lg0, e.F, e.ctx, true);
+    serial.compact();
+    for (int nth : {1, 2, 3}) for (size_t buf : {1ul, 7ul, 65536ul}) {
+      Ledger isl(cfg);
+      std::vector<ThreadLedger> tl; tl.reserve(nth);
+      for (int t = 0; t < nth; ++t) tl.emplace_back(isl, buf);
+      uint64_t dropped = 0;
+      const size_t stage = 5000;   // absorb every 5,000 events ("stage end")
+      for (size_t a = 0; a < ev.size(); a += stage) {
+        size_t b = std::min(ev.size(), a + stage);
+#pragma omp parallel for num_threads(nth) schedule(dynamic, 64)
+        for (long i = (long)a; i < (long)b; ++i) {
+          auto& e = ev[(size_t)i]; int t = omp_get_thread_num();
+          tl[(size_t)t].event(e.S, z.hash(e.S), e.F, e.lg0, e.F, e.ctx, true);
+        }
+        double cut_before = isl.top.cutoff();
+        for (int t = 0; t < nth; ++t) isl.absorb(tl[(size_t)t]);
+        isl.compact();
+        CHECK(isl.top.cutoff() >= cut_before);   // monotone
+      }
+      for (auto& t : tl) { dropped += t.dropped_by_cutoff; CHECK(t.buffered() == 0); }
+      CHECK(same_ledger(serial, isl));
+      CHECK(isl.top.check_invariants() && isl.lead0.check_invariants() && isl.lead1.check_invariants());
+      if (small_caps && nth == 3 && buf == 1) { std::printf("    small caps: %llu offers dropped by the cut-off\n", (unsigned long long)dropped); CHECK(dropped > 0); }
+    }
+  }
 }

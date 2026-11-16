@@ -10,6 +10,9 @@
 
 namespace v4 {
 
+Json::Json(uint64_t v) : t_(NUM), d_((double)v) {
+  if (v > 9007199254740992ULL) throw Error(Status::internal_error, "json: u64 above 2^53 must be written as a hex string");
+}
 Json& Json::operator[](const std::string& k) {
   if (t_ == NUL) t_ = OBJ;
   if (t_ != OBJ) throw Error(Status::internal_error, "json: not an object");

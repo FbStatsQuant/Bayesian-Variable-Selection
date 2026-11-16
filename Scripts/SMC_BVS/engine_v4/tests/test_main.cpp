@@ -5,7 +5,12 @@
 
 int main(int argc, char** argv) {
   bool full = false; std::string filter;
-  for (int i = 1; i < argc; ++i) { std::string a = argv[i]; if (a == "--full") full = true; else filter = a; }
+  for (int i = 1; i < argc; ++i) {
+    std::string a = argv[i];
+    if (a == "--full") full = true;
+    else if (a == "--allow-missing-fixtures") tk::allow_missing_fixtures() = true;
+    else filter = a;
+  }
   int ran = 0, failed_cases = 0;
   for (auto& c : tk::registry()) {
     if (!filter.empty() && std::string(c.name).find(filter) == std::string::npos) continue;

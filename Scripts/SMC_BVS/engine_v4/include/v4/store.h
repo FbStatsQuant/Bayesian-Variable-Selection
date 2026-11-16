@@ -1,7 +1,12 @@
 // store.h -- top-c store of distinct models under a strict total order, flat arrays + integer pool (INTERFACES §4.1).
 // Content after compact() = the top-c of everything ever offered, independent of offer order (core/cpp/v3_ledger.h:35-66
 // semantics: TopCmp order, distinct models, capacity c; but no std::set and no per-model heap allocation).
+// Layout: [0, nkept) the kept run (sorted, unique); [nkept, size) the staging run (unsorted offers). compact() sorts the
+// staging run and merges it into the kept run (peak about 2.5 c entries with the max(c/4, 4096) staging trigger).
+// cutoff(): -inf until c entries are kept, then the worst kept value; monotone non-decreasing; atomic (other threads
+// may read it while this store is being filled under its owner's lock).
 #pragma once
+#include <atomic>
 #include <cstdint>
 #include <vector>
 #include "v4/model.h"
@@ -17,21 +22,26 @@ class Store {
 
   Store() = default;
   Store(uint64_t c, Order o) { init(c, o); }
+  Store(const Store& o) { *this = o; }
+  Store& operator=(const Store& o);
   void init(uint64_t c, Order o);
-  void offer(double value, ModelView S, uint64_t h);    // may trigger compact(); quick reject when provably out
-  void compact();                                       // sort, dedupe, truncate to cap; pool rebuilt in sorted order
+  void offer(double value, ModelView S, uint64_t h);    // quick reject if provably out; may trigger compact()
+  void compact();                                       // staging sorted + merged into the kept run; truncate to cap
   void merge(const Store& o);                           // offer every entry of o, then compact()
+  double cutoff() const { return cut_.load(std::memory_order_relaxed); }
   bool would_enter(double value, ModelView S) const;    // valid after compact()
-  size_t size() const { return v.size(); }              // valid as "number kept" after compact()
+  size_t size() const { return v.size(); }              // = number kept after compact()
+  size_t staging() const { return v.size() - nkept_; }
   ModelView model(size_t i) const { return ModelView(pool.data() + off[i], len[i]); }
   bool better(double v1, ModelView S1, double v2, ModelView S2) const;   // strict order of this store
-  bool check_invariants() const;                         // I1 (after compact): sorted strictly, no duplicates, size <= cap
-  uint64_t content_hash() const;                          // order-sensitive digest of (v bits, S) for tests
+  bool check_invariants() const;                        // I1 (after compact): strictly sorted, no duplicates, size <= cap
+  uint64_t content_hash() const;                        // order-sensitive digest of (v bits, S), for tests
+  size_t bytes_reserved() const;                        // capacity of all arrays, in bytes (memory accounting)
 
  private:
-  bool compacted_ = true;   // v[] is sorted/deduped/truncated
-  bool full_ = false;       // compacted and size == cap
-  size_t since_compact_ = 0;
+  size_t nkept_ = 0;                                    // kept run = [0, nkept_)
+  std::atomic<double> cut_{-__builtin_huge_val()};
+  uint64_t trigger() const { return cap / 4 > 4096 ? cap / 4 : 4096; }
 };
 
 }  // namespace v4
