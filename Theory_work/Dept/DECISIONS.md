@@ -340,3 +340,8 @@
   staged → HQ approval asked.
 - **D50.** W3-SCR:A1 (abstract row 3.7) has post-council v3.4 edits never re-scored → Sol PC check launched now
   (research/PC_SCR_sol.md) before A1 is cited in the abstract.
+
+## 2026-11-15 23:37 CT — HQ on row 1.1 forms
+- **D51.** Form A if T03ACC passes, else B1 (B2 rejected). Thm 1′ in the body. Opus implication check PSHARP:B ⇒
+  W3-POST:Prop-LB launched (research/IMPL_PSHARPB_PROPLB_opus.md) → recorder records the implies edge. Lemma-1a′ and
+  SOP:TH128 acceptances post-freeze unless T03ACC finishes early and capacity is idle before Thu noon (my call).

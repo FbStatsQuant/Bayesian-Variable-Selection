@@ -46,6 +46,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 | NARROW batch | 12 statement-precision narrowings (LIFECYCLE §3, priced) + H5 card for GEN C4 / FAC-CS C1 / SAMP:Pkg | ADJ_MINORS_iii.md (D31) |
 | W2-APP Family-map diff round | F1–F4 + M57/M58 patches | PC1, D31 |
 | errata batch | CHAPTER-ONLY errata held for riders (W3-EDIT CP1 groups) + F-UNI "eventually" (H5) | D19, D31 |
+| L1a′ + TH128 acceptance | W3-POST Lemma-1a′ and SOP:TH128: council acceptances → frees POST2:C (Thm 1′) for the abstract later; post-freeze unless T03ACC finishes early (D51) | D51 |
 | SL0 PC check (RUNNING, pre-freeze per HQ) | C-PACK:SL0: diff check of the 5 files changed since the C1 snapshot → record SL0 → drop SL0 from 11 conditional statuses | D48 |
 | accept-identity follow-ups | NB-3 sunset of the legacy Windows fallback; NB-4 compute identity once | CR_accept_identity_opus.md |
 | record-format package | 38 rows free-text → file-path evidence | recorder task I |
