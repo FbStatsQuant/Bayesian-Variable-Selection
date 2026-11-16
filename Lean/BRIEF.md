@@ -17,11 +17,9 @@ and on Owls; HQ decides when you start.
   for conventions only.
 - Share the machine: `lake build -j 8` at most, and `nice -n 10` for long builds.
 
-## Model to follow
-The owner's own Lean formalization of Bedoya & Li (Large series priors), at Owls `/home/fb31/Large-Prior-Official-Repo/lean`
-(48 files, ~9.5k lines; Theorem 1 and Corollary 1 verified, formal statements matching the paper). Read its structure,
-statement style and README before Phase 0, and reuse its conventions. The paper is in
-`Papers/Own_work/` (local, gitignored).
+## Standard
+Formal statements must match the paper statements, and those must be clear and intelligible (PROGRAM.md "Readability").
+Proof complexity is fair game as long as it compiles in Lean. Nothing is copied from other projects.
 
 ## Levels (decided by HQ with the owner)
 - **Level 1: deterministic cores, fully certified.** No `sorry`, and `#print axioms` shows only `propext`,
