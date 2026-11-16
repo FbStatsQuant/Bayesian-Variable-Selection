@@ -1,0 +1,5 @@
+# External sources the C2 diff round needs (inherited definitions and the proofs E0, D3 and the intercept remark cite)
+Theory_work/Wave3/W3-POST/STATEMENT.md
+Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/W1-T03R/PROOF.md
+Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/main@c4ef0dc/Docs/Theory/proofs/T03_A2_selection_consistency/PROOF_v2.tex
+Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/main@c4ef0dc/Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex
