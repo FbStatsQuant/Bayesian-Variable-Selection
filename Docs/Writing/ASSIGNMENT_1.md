@@ -19,6 +19,23 @@ Clarity is the main measure of these documents. Accuracy is the floor; clarity i
   statistician new to the project. It lists every sentence it had to read twice, every symbol it met before its
   definition, and every step it could not follow. Fix them all, then deliver.
 
+## Paper standard (owner, binding: "as if it was the official paper")
+Write both documents as sections of the final journal paper, not as internal notes.
+- **One notation system, fixed once.** D1 §1 introduces the paper's notation formally ("Notation." paragraph:
+  vectors, matrices, models S, |S|, X_S, norms, asymptotic symbols O, o, O_P, ≍, ≲). D2 uses exactly the same
+  notation and refers back to it, introducing nothing ad hoc. Where the code or internal docs use other names,
+  the paper's notation wins, and the mapping goes in D1's code-location column only.
+- **Paper structure and conventions:**
+  - numbered sections, definitions, assumptions, theorems, propositions and remarks;
+  - assumptions named once and cited by name, e.g. (A1);
+  - a citation for every outside result (Song & Liang 2015, etc.) as in a journal bibliography;
+  - consistent tense and voice ("we show", "the method").
+- **Statements in final form.** Each theorem reads as it would in the published paper: setting, assumptions,
+  conclusion, with no hedging prose inside the statement. The status line ("proved and independently checked" etc.)
+  sits outside the theorem environment as a marginal note for the owner, so it is easy to drop for submission.
+- **Typesetting:** amsthm environments, bibtex, the notation table as an appendix. It should compile cleanly and
+  look like a statistics journal manuscript.
+
 ## D1. Methodology: "The SMC-BVS method, as coded" (LaTeX → PDF)
 Cover the method the theory is about: the shipped serial code at `Scripts/SMC_BVS/core/` (v3.x; R + C++). This is
 NOT the p = 10⁶ engine. That engine's changes go in a separate short appendix, taken from
