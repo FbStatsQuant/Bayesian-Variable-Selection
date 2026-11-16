@@ -3,12 +3,13 @@
 Status: **PROVED (by this seat, unchecked)**. S1 checked the (V)/(S)/(P) part ("B6.6/B7.4 pass only for (V)/(S)/(P)")
 and required the operational premises to be carried, with a premise-by-premise table (F2). This file is that table.
 
-**Narrowed 2026-11-16 [FUNI-N]** (F-UNI SUSPECT at main 4e08096d, narrowed to `@2.1.0`): IDEAL-W does not lift the code's two
-rejections (`v3_run.R:96`, `cpp/v3_core.cpp:474`). The target below holds for $(n,p_{\mathrm{raw}})$ in the bounded domain
-$\mathfrak D$ of (S4)(v) under (S4)(i)–(iv), and for every admissible $n\ge3$ under A:IDEAL-W⁺; the limit statement uses the latter.
+**Narrowed 2026-11-16 [FUNI-N]** (F-UNI narrowed to `@2.1.0`, recorder task S2): IDEAL-W does not lift the code's two
+rejections (`v3_run.R:96`, `cpp/v3_core.cpp:474`), so A:IDEAL-W⁺ (or the domain $\mathfrak D$) is a hypothesis wherever F-UNI's
+delivery is used below.
 
-**Target.** Under the hypotheses of Theorem 6 (resp. 7) and the delivery conventions (S4): for every admissible
-$n\ge3$, $P(\text{no output})=0$, and $P(\hat S=S_0)\to1$ under the joint design/noise law (resp. the noise law),
+**Target.** Under the hypotheses of Theorem 6 (resp. 7) and the delivery conventions (S4)(i)–(iv): $P(\text{no output})=0$
+for every admissible $n\ge3$ with $(n,p_{\mathrm{raw}})\in\mathfrak D$; if in addition A:IDEAL-W⁺ ((S4)(v)) holds, for every
+admissible $n\ge3$, $P(\text{no output})=0$, and $P(\hat S=S_0)\to1$ under the joint design/noise law (resp. the noise law),
 together with the algorithm's randomness.
 
 **Source.** `W2-UNI:F-UNI@1.1.0` (`Theory_work/Wave2/W2-UNI/lemmas/L5_delivery.md:15-21`; registry "PROVED-CHECKED";
@@ -42,7 +43,8 @@ in Step 3 (via C-GROW L1.2 and C-DLV Corollary D′).
 
 ## Assembly
 Under Theorem 6's hypotheses: (V) by row 1; (S) and (P) by rows 3–4; every method/premise/allocation item by (S4) or
-by the shipped code as pinned. F-UNI then gives, for every admissible $n\ge3$, $P(\text{no output})=0$ and
+by the shipped code as pinned. F-UNI (`@2.1.0`) then gives $P(\text{no output})=0$ for every admissible $n\ge3$ with
+$(n,p_{\mathrm{raw}})\in\mathfrak D$, and, under A:IDEAL-W⁺, for every admissible $n\ge3$, with
 $P(\hat S=S_0)\to1$ under the joint law. Theorem 7: the same with row 2 for (V) and the noise law. The common-data-event
 clause of Theorems 6–7 does not use F-UNI (it is RM-0(b) with RM2's interfaces) and needs none of (S4). ∎
 

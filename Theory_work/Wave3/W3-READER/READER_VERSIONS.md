@@ -57,7 +57,8 @@ TDP-IMPL, valid inputs, declared allocation) and the amended allocation of `Theo
 `cpp/v3_core.cpp:474` (`cap_ll > INT_MAX`); $\mathfrak D:=\{(n,p_{\mathrm{raw}}):\lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil\le10^6,\ \lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil+\lfloor n/2\rfloor\le2^{31}-1\}$
 (sufficient, not necessary); A:IDEAL-W⁺ as defined in `reviews/carriers/A_IDEALW_PLUS.md` (verbatim copy of
 dept/theory fc30c749 `Theory_work/Dept/research/FUNI_NARROW/A_IDEALW_PLUS.md`); F-UNI narrowed to `@2.1.0` (every $n$ under
-A:IDEAL-W⁺; $\mathfrak D$ under IDEAL-W) [FUNI-N].
+A:IDEAL-W⁺; $\mathfrak D$ under IDEAL-W; recorder task S2) [FUNI-N]. The two limits in words: the sentence [RM2R-5] after the
+delivery displays of Theorems 6 and 7.
 (S5) *Sampler conventions* (used only by Theorem 10 and the pooled-evidence remark) [R4, S2-F2] — the sampler contract,
 incorporated by reference and stated in words: exact arithmetic; within each random stream, fresh independent ideal
 uniforms; the final run's stream for each island independent of the data and of the calibration's streams [S3-N1]; the coded start sampler
@@ -660,6 +661,7 @@ reached. If in addition IDEAL-W⁺ holds ((S4)(v): the two limits lifted),
 $$
 P(\text{the run produces output})=1\ \ \text{for every admissible }n\ge3,\qquad P(\hat S=S_0)\to1 .
 $$
+The delivery statement idealises two fixed integer limits in the code (a base search cap of $10^6$, `v3_run.R:96`, and a 32-bit integer bound $2^{31}-1$ on the search cap, `cpp/v3_core.cpp:474`): the first can bind only when $n+p+1$ exceeds $2^{10^6}$, the second only when the starting model has more than about $2.1\times10^9$ variables, which needs $n\gtrsim4.3\times10^9$ since $|\tilde S_0|\le\lfloor n/2\rfloor$; without the idealisation, delivery holds on the bounded domain $\mathfrak D=\{\lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil\le10^6,\ \lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil+\lfloor n/2\rfloor\le2^{31}-1\}$, and with it (IDEAL-W⁺) for every $n$ [RM2R-5].
 
 *Remarks.* (i) On $\mathcal G_n$ the local search from the start mode only deletes the spurious members of the start
 mode, one per move, at most $n^b$ moves, and certifies $S_0$; its move cap never binds. (ii) The polylogarithmic case
@@ -696,10 +698,10 @@ blocks.
    finding on the "eventually" wording of its (S) is in progress. Inherited qualifications, verbatim
    (`L5_delivery.md:39-40`): "[OP] "PROVED (by this seat, unchecked)"; e4 rests on N3, "OPEN" (only "some maximiser" is
    used for consistency; delivery keeps e4 with TDP-IMPL as in Proposition F); S.3 is a code-reading audit." [R3]
-   **Registry state [FUNI-N]:** SUSPECT since main 4e08096d (correctness event: the every-$n$ delivery cited a proof for a
-   different local-search cap than the shipped $\ell_n+|\tilde S_0|$); being NARROWED to `@2.1.0` (every $n$ under A:IDEAL-W⁺;
-   the bounded domain $\mathfrak D$ under IDEAL-W; Dept FUNI_NARROW, Sol DIFF PASS @fc30c749). The delivery sentences above
-   follow the narrowed form; requote and repin at freeze.
+   **Narrowing [FUNI-N]:** F-UNI is NARROWED to `@2.1.0` (recorder task S2; Dept FUNI_NARROW, Sol DIFF PASS @fc30c749):
+   delivery for every $n$ under A:IDEAL-W⁺, and on the bounded domain $\mathfrak D$ under IDEAL-W. The delivery sentences above
+   follow the narrowed statement. **Requote F-UNI from `claims.tsv` once S2 lands (commit from the manager); nothing that
+   quotes F-UNI is frozen before that.**
    **Abstract [H5-2]:** the delivery clause ("always produces output; $P(\hat S=S_0)\to1$") stays out of the abstract
    until the F-UNI gate is resolved; the abstract states the common-data-event clause.
 
@@ -746,7 +748,7 @@ regressions are local. HQ choices: keep them as stated (faithful), or state Theo
 - v0.5 2026-11-16: [REG-f526] RM2-R's input `W2-APP:POST@1.0.6` status and the RM-R special-case status quoted (EQUAL).
 - v0.6 2026-11-16: [REG-33e1] SL0 cleared: row 3.1 conditional on T03♯ only; RM2-R/POST-R @1.0.2, RM-R @1.1.2 (EQUAL).
 - v0.7 2026-11-16: [FUNI-N] delivery clause narrowed with F-UNI 2.1.0: bounded domain $\mathfrak D$ under (S4)(i)–(iv), every $n$
-  under IDEAL-W⁺ ((S4)(v)); F-UNI registry state SUSPECT quoted. Tag: **WEAKER** for the delivery clause (follows the
+  under IDEAL-W⁺ ((S4)(v)); F-UNI narrowing to 2.1.0 noted; sentence [RM2R-5] added after the display. Tag: **WEAKER** for the delivery clause (follows the
   master's narrowing); common-data-event clause EQUAL.
 <!-- ROW thm6 END -->
 
@@ -784,6 +786,7 @@ reached. If in addition IDEAL-W⁺ holds ((S4)(v): the two limits lifted),
 $$
 P(\text{the run produces output})=1\ \ \text{for every admissible }n\ge3,\qquad P(\hat S=S_0)\to1 .
 $$
+The delivery statement idealises two fixed integer limits in the code (a base search cap of $10^6$, `v3_run.R:96`, and a 32-bit integer bound $2^{31}-1$ on the search cap, `cpp/v3_core.cpp:474`): the first can bind only when $n+p+1$ exceeds $2^{10^6}$, the second only when the starting model has more than about $2.1\times10^9$ variables, which needs $n\gtrsim4.3\times10^9$ since $|\tilde S_0|\le\lfloor n/2\rfloor$; without the idealisation, delivery holds on the bounded domain $\mathfrak D=\{\lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil\le10^6,\ \lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil+\lfloor n/2\rfloor\le2^{31}-1\}$, and with it (IDEAL-W⁺) for every $n$ [RM2R-5].
 
 ### Intuition for each condition (for the paper's text)
 - *Visibility (A3).* Each truth, added alone to any small model that misses it, explains $\gg\log n$ more signal —
