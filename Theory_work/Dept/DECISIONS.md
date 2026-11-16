@@ -62,3 +62,10 @@
 - Owner's standing rule: departments self-sufficient; HQ only for gates, budget, merges, API, cross-department. EVAR
   Fable decided in-department (reported to HQ).
 - Lesson: send to a *running* lead with mode steer (queue waits for the run to end).
+
+## 2026-11-15 19:48 CT — owner memo (POLICIES 34ce461a) relayed
+- **D15.** Memo passed to all 8 leads (DIST, READER, recorder; START2-R, RM2-R, PSHARP-R, PSMC-S0, W3-EDIT), with the
+  reporting line restated to DIST/READER/recorder and the pooled-PIP code fix to READER. A Fable expert now needs
+  owner permission via HQ (reason + size): EVAR in NEXT_CAMPAIGN updated; DIST's "second Fable" needs it too.
+- Check after relay: the three riders had ended their turns while waiting on async Sol statement locks (not at CP1);
+  the memo turn only logged it. No checkpoint was skipped.

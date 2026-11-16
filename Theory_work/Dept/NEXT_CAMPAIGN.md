@@ -28,7 +28,7 @@ T-CAL and T-N share the audit and one lead.
 ## 3. Phase B — the evidence-variance problem (scaling paper)
 | ticket | content | tier | when |
 |---|---|---|---|
-| **EVAR** | (i) an upper bound on P(\|log Ẑ_r − log Z\| > u \| 𝒞) that does not depend on N, T or p, and vanishes when start or posterior concentrate (restatement from C-iii); (ii) an honest limit: an abstract (π, π₀, grid) construction, design-agnostic, p ≤ n^A, where posterior mass ≥ c is unreached by fixed-N islands, so σ(log Ẑ_r) is unbounded and R_eff/R′ → 0 at fixed N and calibration | A for (ii) (new key lemma; Fable lead, reason to HQ) | from ~11-30 |
+| **EVAR** | (i) an upper bound on P(\|log Ẑ_r − log Z\| > u \| 𝒞) that does not depend on N, T or p, and vanishes when start or posterior concentrate (restatement from C-iii); (ii) an honest limit: an abstract (π, π₀, grid) construction, design-agnostic, p ≤ n^A, where posterior mass ≥ c is unreached by fixed-N islands, so σ(log Ẑ_r) is unbounded and R_eff/R′ → 0 at fixed N and calibration | A for (ii) (new key lemma; a Fable lead needs owner permission via HQ: reason + size, per the 11-15 memo) | from ~11-30 |
 | **POOL** | robust evidence pooling: trimmed or tempered weights declared before the final streams, consistency as R′ → ∞ using only E[W_r \| 𝒞] = 1, bias and MSE bounds; never worse than equal weights in the concentrated regime (with P2) | B | after EVAR (i) |
 | numerics | coordinate with Engineering's rung A stage-level re-run (5k/10k) and the 64-island census (Full tier): what to record (mode occupancy per stage) so EVAR (ii) can be tested | — | spec to Engineering by 11-30 |
 
@@ -41,7 +41,7 @@ Approximate sparsity and exponential p for W3-DIST.
 
 ## 5. Resources and schedule (3 leads from Thu 11-19)
 - Week of 11-23: lead 1 T-N + T-CAL; lead 2 T-STREAM; lead 3 PSMC-S0 Part 2 → T-PART.
-- Week of 11-30: T-MERGE (as T-N/T-STREAM land); EVAR (Fable, Tier A); POOL after EVAR (i).
+- Week of 11-30: T-MERGE (as T-N/T-STREAM land); EVAR (Tier A; Fable only with owner permission, else Opus with a kill budget); POOL after EVAR (i).
 - Codex (NORMAL): Tier B ≈ 4 reviews × 5 tickets ≈ 20; EVAR Tier A ≈ 11. DIST keeps priority.
 
 ## 6. Found while scoping (for HQ)

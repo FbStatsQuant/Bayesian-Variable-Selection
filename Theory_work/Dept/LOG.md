@@ -20,3 +20,4 @@
 - 19:43 — handover: W3-DIST, W3-READER, recorder now ours (D12). Read DIST CHECKPOINT_1, LOG tail, API_CARDS; READER LOG; recorder's last report. Messages sent to the three.
 - 19:45 — D13–D14: pooled-PIP fix routed (READER, W3-EDIT item 7 steer, Docs/Writing/QUEUE.md); D-7 → PSMC-S0 steer.
 - 19:46 — THEORY-4 from Engineering; recorder task E (A, B dry run) staged; Check C stays with PSMC-S0.
+- 19:48 — owner memo relayed to all leads (D15).
