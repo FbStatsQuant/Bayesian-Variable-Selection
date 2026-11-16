@@ -18,6 +18,7 @@
 #include <vector>
 #include <algorithm>
 #include "v4/pmath.h"
+#include "v4/status.h"
 #include "wp4_par.h"
 
 namespace v4 {
@@ -190,7 +191,7 @@ inline bool check_grid(const std::vector<double>& g) {
 
 // Grid refinement x m (D-12): every interval (u, v) of the frozen grid is split into m equal parts,
 // points u + (v - u) * (k / m), k = 1..m-1 (k/m in double). m = 1 returns the grid unchanged. Throws if the result is
-// not a valid grid (an interval too small to split in double), which the caller reports as internal_error.
+// not a valid grid (an interval too small to split in double): Error(internal_error), reported by the caller.
 inline std::vector<double> refine_grid(const std::vector<double>& g, int m) {
   if (m < 1) throw std::invalid_argument("refine_grid: m must be >= 1");
   if (m == 1) return g;
@@ -201,7 +202,7 @@ inline std::vector<double> refine_grid(const std::vector<double>& g, int m) {
     for (int k = 1; k < m; ++k) out.push_back(u + (v - u) * ((double)k / (double)m));
     out.push_back(v);
   }
-  if (!check_grid(out)) throw std::runtime_error("refine_grid: refined grid is not strictly increasing");
+  if (!check_grid(out)) throw Error(Status::internal_error, "refine_grid: an interval is too short to split into m parts");
   return out;
 }
 

@@ -55,7 +55,12 @@ inline v4::calib::CalStatus cal_status(const std::string& s) {
 // as core/cpp/v3_core.cpp:705-708, re-scored by v4::calib::rescore_V (threaded).
 struct CoreBackend : v4::calib::Backend {
   SEXP state; CPtr c; int threads;
+  // fault hooks (test only), mirrored on the R side by wrappers of the same core entry points:
+  bool preflight = false, force_ll_pilot = false; int fail_V_at = 0, fail_diag_at = 0, stop_grid_at = 0;
+  int n_V = 0, n_diag = 0, n_grid = 0;
   CoreBackend(SEXP s, int th) : state(s), c(s), threads(th) {}
+  bool preflight_exceeds(int) override { return preflight; }
+  bool grid_stop(double, int, int) override { return ++n_grid == stop_grid_at; }
   v4::calib::PilotOut pilot(const v4::calib::TierSettings& ts) override {
     List r = cpp_cal_pilot(state, ts.tier, ts.H, ts.Te, ts.L, ts.Hm, ts.ell);
     v4::calib::PilotOut o; o.status = cal_status(as<std::string>(r["status"]));
@@ -64,12 +69,13 @@ struct CoreBackend : v4::calib::Backend {
     if (r.containsElementNamed("forced_pilot_steps")) { o.forced = as<int>(r["forced_pilot_steps"]); o.has_forced = true; }
     if (r.containsElementNamed("best_before_local")) {
       o.best_before_F = as<double>(List(r["best_before_local"])["F"]); o.best_after_F = as<double>(List(r["best_after_local"])["F"]);
-      o.local_limit = as<bool>(List(r["local_search"])["local_limit"]);
+      o.local_limit = as<bool>(List(r["local_search"])["local_limit"]) || force_ll_pilot;
     }
     return o;
   }
   v4::calib::DiagOut diag(const v4::calib::TierSettings& ts, const std::vector<double>& grid, int iter) override {
     List r = cpp_cal_diag(state, ts.tier, NumericVector(grid.begin(), grid.end()), ts.H, ts.L, ts.Hm, ts.ell, iter);
+    if (++n_diag == fail_diag_at) { v4::calib::DiagOut f; f.status = v4::calib::CalStatus::numerical_failure; f.message = "forced"; return f; }
     v4::calib::DiagOut o; o.status = cal_status(as<std::string>(r["status"]));
     if (r.containsElementNamed("message")) o.message = as<std::string>(r["message"]);
     if (r.containsElementNamed("log_Z_r")) { NumericVector z = r["log_Z_r"]; o.logZ_r.assign(z.begin(), z.end()); }
@@ -81,6 +87,7 @@ struct CoreBackend : v4::calib::Backend {
     return o;
   }
   v4::calib::VOut candidate_set() override {
+    if (++n_V == fail_V_at) { v4::calib::VOut f; f.status = v4::calib::CalStatus::numerical_failure; f.message = "forced"; return f; }
     std::set<std::vector<int>> V;   // core/cpp/v3_core.cpp:705-708
     V.insert(std::vector<int>());
     for (auto& e : c->led->lead0.s) V.insert(e.S);
@@ -182,15 +189,22 @@ List wp4_calibrate(SEXP setup, double seed, List settings) {
   s.I_max = as<int>(settings["I_max"]); s.refine_m = as<int>(settings["refine_m"]);
   s.sum_mode = as<std::string>(settings["sum_mode"]) == "blocked" ? v4::calib::SumMode::Blocked : v4::calib::SumMode::Serial;
   s.threads = threads;
+  if (settings.containsElementNamed("force_build_failure")) s.test_force_build_failure = as<int>(settings["force_build_failure"]);
+  if (settings.containsElementNamed("preflight")) be.preflight = as<bool>(settings["preflight"]);
+  if (settings.containsElementNamed("force_ll_pilot")) be.force_ll_pilot = as<bool>(settings["force_ll_pilot"]);
+  if (settings.containsElementNamed("fail_V_at")) be.fail_V_at = as<int>(settings["fail_V_at"]);
+  if (settings.containsElementNamed("fail_diag_at")) be.fail_diag_at = as<int>(settings["fail_diag_at"]);
+  if (settings.containsElementNamed("stop_grid_at")) be.stop_grid_at = as<int>(settings["stop_grid_at"]);
   List tl = settings["tiers"];
   for (int e = 0; e < 2; ++e) {
     List t = tl[e];
     s.tiers[e].tier = e; s.tiers[e].H = as<int>(t["H"]); s.tiers[e].Te = as<int>(t["T_e"]); s.tiers[e].L = as<int>(t["L"]);
     s.tiers[e].Hm = as<int>(t["Hm"]); s.tiers[e].ell = as<int>(t["ell"]);
   }
-  v4::calib::Driver drv(be, s);
+  v4::calib::CalibOut co;
   auto t0 = Clock::now();
-  v4::calib::CalibOut co = drv.run();
+  try { v4::calib::Driver drv(be, s); co = drv.run(); }
+  catch (const v4::Error& e) { return List::create(_["status"] = "refused", _["task_status"] = v4::status_name(e.st), _["message"] = std::string(e.what())); }
   double secs = secs_since(t0);
   List tiers(co.tiers.size());
   for (size_t i = 0; i < co.tiers.size(); ++i) {
@@ -199,15 +213,24 @@ List wp4_calibrate(SEXP setup, double seed, List settings) {
     List its(t.iterations.size());
     for (size_t k = 0; k < t.iterations.size(); ++k) {
       const auto& it = t.iterations[k];
+      // core/v3_calib.R:92-106: an iteration that stopped keeps only the island outputs it got (NULL if none); its
+      // checks (overall_best, E1-E3) are never set
+      auto nv = [](const std::vector<double>& v) { return v.empty() ? R_NilValue : (SEXP)NumericVector(v.begin(), v.end()); };
       its[k] = List::create(_["iteration"] = it.iter, _["grid"] = it.grid, _["rho_V"] = it.rho_V, _["grid_label"] = it.grid_label,
-                            _["log_Z_r"] = it.logZ_r, _["island_best"] = it.island_best, _["overall_best"] = it.overall_best,
-                            _["E1"] = it.E1, _["E2"] = it.E2, _["E3"] = it.E3, _["complete"] = it.complete);
+                            _["log_Z_r"] = nv(it.logZ_r), _["island_best"] = nv(it.island_best),
+                            _["overall_best"] = it.complete ? wrap(it.overall_best) : R_NilValue,
+                            _["E1"] = it.complete ? wrap(it.E1) : R_NilValue, _["E2"] = it.complete ? wrap(it.E2) : R_NilValue,
+                            _["E3"] = it.complete ? wrap(it.E3) : R_NilValue, _["complete"] = it.complete);
     }
     tiers[i] = List::create(_["tier"] = t.tier, _["status"] = v4::calib::cal_status_name(t.status), _["triggers"] = wp4h::trig_list(t),
                             _["schedule"] = t.pilot.schedule, _["forced_pilot_steps"] = t.pilot.forced,
-                            _["grids"] = grids, _["iterations"] = its, _["converged"] = t.converged, _["rebuilds"] = t.rebuilds,
+                            // core/v3_calib.R:33-43: a stopped tier (fail()) has no converged / rebuilds / grid_source
+                            _["grids"] = grids, _["iterations"] = its,
+                            _["converged"] = t.status == v4::calib::CalStatus::ok ? wrap(t.converged) : R_NilValue,
+                            _["rebuilds"] = t.status == v4::calib::CalStatus::ok ? wrap(t.rebuilds) : R_NilValue,
                             _["grid"] = wp4h::nullable(t.has_grid, t.grid), _["rho_V"] = wp4h::nullable(t.has_rho, t.rho_V),
-                            _["grid_label"] = t.has_grid ? (SEXP)wrap(t.grid_label) : R_NilValue, _["grid_source"] = t.grid_source,
+                            _["grid_label"] = t.has_grid ? (SEXP)wrap(t.grid_label) : R_NilValue,
+                            _["grid_source"] = t.status == v4::calib::CalStatus::ok ? wrap(t.grid_source) : R_NilValue,
                             _["has_fallback"] = t.has_fallback);
   }
   const auto& f = co.flags;
@@ -245,7 +268,7 @@ List wp4_final_merge(SEXP setup, NumericVector grid, List ro, double seed, SEXP 
   wp4h::CoreFactory fac{&D, &st};
   v4::Zobrist zob; zob.init(D.p);
   // 1. pre-island ledger: tables (core/cpp/v3_core.cpp:372-387), inherited (419-441)
-  v4::LedgerConfig lcfg; lcfg.p = D.p; lcfg.islands = R; lcfg.leaders = true; lcfg.fresh_counters = false;
+  v4::LedgerConfig lcfg; lcfg.p = D.p; lcfg.islands = R; lcfg.leaders = false; lcfg.fresh_counters = false;   // v0.1.7: no final-run leaders
   v4::Ledger pre(lcfg);
   {
     std::vector<int> U;
@@ -303,7 +326,7 @@ List wp4_final_merge(SEXP setup, NumericVector grid, List ro, double seed, SEXP 
       s.isl.logZ = res.logZ; s.isl.ess = res.ess; s.isl.rb_acc = res.rb_acc; s.isl.pip = res.pip; s.isl.rb_round = res.rb_round;
     } catch (v3::NumericalFailure& e) { s.isl.status = v4::Status::numerical_failure; s.isl.message = e.what(); s.isl.pip.assign(D.p, 0); }
     s.isl.r = r; s.isl.N = N; s.isl.L = L; s.isl.Hm = Hm;
-    s.isl.led = wp4h::ledger_from_v3(led, D.p, R, true, zob);
+    s.isl.led = wp4h::ledger_from_v3(led, D.p, R, false, zob);
     island_secs[r - 1] = secs_since(t0);
   }
   if (fault_island >= 1 && fault_island <= R) {
@@ -326,9 +349,9 @@ List wp4_final_merge(SEXP setup, NumericVector grid, List ro, double seed, SEXP 
     bad = tmp.hpmS;
     if (std::binary_search(bad.begin(), bad.end(), 0)) bad.erase(bad.begin()); else bad.insert(bad.begin(), 0);
     wp4h::FaultFactory ff{&D, &st, bad};
-    fo = v4::merge::merge_and_tail(slots, pre, m.S, ff, ms);
+    fo = v4::merge::merge_and_tail(slots, std::move(pre), m.S, ff, ms);
   } else {
-    fo = v4::merge::merge_and_tail(slots, pre, m.S, fac, ms);
+    fo = v4::merge::merge_and_tail(slots, std::move(pre), m.S, fac, ms);
   }
   double merge_secs = secs_since(t1);
   List out = List::create(_["status"] = v4::status_name(fo.status), _["fit_state"] = fo.fit_state, _["reason"] = fo.reason,

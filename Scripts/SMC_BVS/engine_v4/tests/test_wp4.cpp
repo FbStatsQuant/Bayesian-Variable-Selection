@@ -2,6 +2,7 @@
 // threaded tail against a serial reference (thread and chunk invariance, tie rules), merge assembly, GUARD-W / T10.
 // Part of v4_tests (tk harness).
 #include <cstdio>
+#include <limits>
 #include <random>
 #include "tk.h"
 #include "v4/calib.h"
@@ -113,15 +114,33 @@ TEST(wp4_calib_driver) {
     Mock m2 = m; calib::Driver drv2(m2, mk(calib::Rule::coded, 200, 9)); auto o2 = drv2.run();
     CHECK(o2.tiers.size() == 2 && o2.escalated);
   }
-  {  // construction failure at both tiers: coded and bounded escalate, then the C-DLV fallback (pilot schedule)
+  {  // construction failure: coded escalates then takes the C-DLV fallback; bounded (D-26) never escalates and installs
+     // the pilot schedule at tier 0; both flag grid_fallback and give output
     for (auto rule : {calib::Rule::coded, calib::Rule::bounded}) {
       Mock m = base; calib::Driver drv(m, mk(rule, 1, 3)); auto o = drv.run();
-      CHECK(o.status == calib::CalStatus::ok && o.tiers.size() == 2 && o.flags.grid_fallback == "pilot_schedule");
-      CHECK(o.frozen.grid == std::vector<double>({0, 0.02, 0.1, 0.3, 0.6, 1.0}) && !o.frozen.has_rho);
+      CHECK(o.status == calib::CalStatus::ok && o.tiers.size() == (rule == calib::Rule::coded ? 2u : 1u) && o.flags.grid_fallback == "pilot_schedule");
+      CHECK(o.frozen.grid == std::vector<double>({0, 0.02, 0.1, 0.3, 0.6, 1.0}) && !o.frozen.has_rho && o.frozen.tier == 0 + (rule == calib::Rule::coded));
+    }
+    {  // D-26: a rebuild fails after a successful construction -> the last good grid; grid_fallback forced on
+      calib::Settings s = mk(calib::Rule::bounded, 200, 9, 3); s.test_force_build_failure = 2; s.grid_fallback = false;
+      Mock m = base; m.drift = 0.01; calib::Driver drv(m, s); auto o = drv.run();
+      CHECK(o.status == calib::CalStatus::ok && o.tiers.size() == 1 && o.flags.grid_fallback == "last_successful_construction");
+      CHECK(o.frozen.grid == o.tiers[0].grids[0].grid && o.frozen.grid_label == "preliminary" && o.frozen.has_rho);
+    }
+    {  // D-26 / F7 refusals: I_max > ell, bounded tier0 = 1, coded with blocked sums or refinement
+      calib::Settings s = mk(calib::Rule::bounded, 200, 2, 3); Mock m = base;
+      CHECK_THROWS(calib::Driver(m, s));
+      s = mk(calib::Rule::bounded, 200, 9, 3); s.tier0 = 1; CHECK_THROWS(calib::Driver(m, s));
+      s = mk(calib::Rule::coded, 200, 9); s.sum_mode = calib::SumMode::Blocked; CHECK_THROWS(calib::Driver(m, s));
+      s = mk(calib::Rule::coded, 200, 9); s.refine_m = 4; CHECK_THROWS(calib::Driver(m, s));
+    }
+    {  // F8: a non-finite log Z_r in a diagnostic island is a numerical failure (R's sd would be NA)
+      Mock m = base; m.logZ_r = {-10, std::numeric_limits<double>::quiet_NaN(), -9, -10}; calib::Driver drv(m, mk(calib::Rule::coded, 200, 3)); auto o = drv.run();
+      CHECK(o.status == calib::CalStatus::numerical_failure && !o.has_frozen);
     }
     calib::Settings s = mk(calib::Rule::coded, 1, 3); s.grid_fallback = false;
     Mock m = base; calib::Driver drv(m, s); auto o = drv.run();
-    CHECK(o.status == calib::CalStatus::schedule_limit && !o.has_frozen && calib::task_status(o.status) == Status::resource_limit);
+    CHECK(o.status == calib::CalStatus::schedule_limit && !o.has_frozen && calib::task_status(o.status) == Status::schedule_limit);
   }
   {  // numerical failure in V; preflight blocks the escalation
     Mock m = base; m.v_fail = true; calib::Driver drv(m, mk(calib::Rule::coded, 200, 3)); auto o = drv.run();
@@ -132,6 +151,7 @@ TEST(wp4_calib_driver) {
   {  // refinement applied to the frozen grid
     Mock m = base; calib::Settings s = mk(calib::Rule::bounded, 200, 9, 1); s.refine_m = 4; calib::Driver drv(m, s); auto o = drv.run();
     CHECK(o.frozen.grid.size() == 4 * (o.frozen.grid_unrefined.size() - 1) + 1 && calib::check_grid(o.frozen.grid));
+    CHECK(o.frozen.intervals_refined == (int)o.frozen.grid.size() - 1 && o.frozen.rho_V.size() == o.frozen.grid_unrefined.size() - 1);
   }
 }
 
@@ -254,7 +274,7 @@ TEST(wp4_merge_guardw_t10) {
       EventCtx e; e.phase = PH_MEASURED; e.mech = ME_GIBBS_FLIP; e.key.seg = SG_FINAL; e.key.unit = (uint32_t)r; e.key.xph = X_MEASURED;
       e.key.stage = 30; e.key.round = 1 + t / 100; e.key.particle = 1 + t % 100; e.key.position = 1 + (uint32_t)(g() % 70);
       I.led.event(S, zob().hash(S), F, lg0, lm, e, true);
-      I.terminal.push_back(S);
+      if (t >= 300) I.terminal.push_back(S);   // the last measured round: N = 100 supports
     }
     I.led.compact();
     return I;
@@ -269,7 +289,7 @@ TEST(wp4_merge_guardw_t10) {
   CHECK(same_ledger(a, b));
   merge::MergeSettings ms; ms.Rp = R; ms.N = 100; ms.p = p; ms.K = 8; ms.ell = 5; ms.threads = 3; ms.chunk = 16; ms.occ_M = {1, 10}; ms.zob = &zob();
   Ledger pre = mkled(p, R, false);
-  auto fo = merge::merge_and_tail(slots, pre, Model{1, 2}, fac, ms);
+  auto fo = merge::merge_and_tail(slots, Ledger(pre), Model{1, 2}, fac, ms);
   CHECK(fo.status == Status::completed && fo.estimates_available);
   CHECK(fo.hpm == fo.local.returned || fo.hpm == fo.ls0.returned);
   double lz = calib::lse_cal(fo.logZ_r);
@@ -279,7 +299,7 @@ TEST(wp4_merge_guardw_t10) {
   CHECK(fo.occ_available && fo.occ.size() == 2 && fo.occ[0].M_used == 1 && fo.occ[0].occ_r.size() == 4);
   {  // per-model counts agree with the M-set occupancies
     uint64_t in10 = 0; for (size_t i = 0; i < fo.occ_top.size(); ++i) in10 += fo.occ_top[i];
-    CHECK(fo.occ_top.size() == 10 && fo.occ_total == 1600 && fo.occ_total_r.size() == 4 && fo.occ_top_r.size() == 40);
+    CHECK(fo.occ_top.size() == 10 && fo.occ_total == 400 && fo.occ_total_r == std::vector<uint64_t>(4, 100) && fo.occ_top_r.size() == 40);
     CHECK(same_bits((double)in10 / (double)fo.occ_total, fo.occ[1].occ));
   }
   CHECK(fo.log_Z_T >= fo.hpm_F);   // lower bound contains the HPM's mass
@@ -293,7 +313,7 @@ TEST(wp4_merge_guardw_t10) {
     if (which == 4) s2[2].isl.status = Status::resource_limit;
     if (which == 5) s2.pop_back();
     if (which == 6) s2[2].isl.r = 1;   // wrong island id
-    return merge::merge_and_tail(s2, pre, Model{1, 2}, fac, ms);
+    return merge::merge_and_tail(s2, Ledger(pre), Model{1, 2}, fac, ms);
   };
   Status want[] = {Status::io_error, Status::invalid_input, Status::invalid_input, Status::numerical_failure, Status::resource_limit,
                    Status::invalid_input, Status::invalid_input};
@@ -307,13 +327,119 @@ TEST(wp4_merge_guardw_t10) {
     Model bad = tmp.hpmS; bad.insert(std::lower_bound(bad.begin(), bad.end(), 59), 59);
     if (std::adjacent_find(bad.begin(), bad.end()) != bad.end()) bad.erase(std::find(bad.begin(), bad.end(), 59));
     ff.bad = bad;
-    auto o = merge::merge_and_tail(slots, pre, Model{1, 2}, ff, ms);
+    auto o = merge::merge_and_tail(slots, Ledger(pre), Model{1, 2}, ff, ms);
     CHECK(o.status == Status::numerical_failure && !o.estimates_available && o.hpm_incomplete && o.pip_eq.empty());
   }
   {  // runtime guard in the tail
-    auto o = merge::merge_and_tail(slots, pre, Model{1, 2}, fac, ms, [](double, const std::string& c) { return c == "ls0"; });
+    auto o = merge::merge_and_tail(slots, Ledger(pre), Model{1, 2}, fac, ms, [](double, const std::string& c) { return c == "ls0"; });
     CHECK(o.status == Status::resource_limit && !o.estimates_available && o.has_ls0);
+  }
+  {  // F8: a non-finite island log Z_r -> numerical_failure, no estimates
+    auto s2 = slots; s2[1].isl.logZ = std::numeric_limits<double>::infinity();
+    auto o = merge::merge_and_tail(s2, Ledger(pre), Model{1, 2}, fac, ms);
+    CHECK(o.status == Status::numerical_failure && !o.estimates_available && o.pip_eq.empty());
+  }
+  {  // memory admission (--mem-budget): refused before any island store is loaded
+    merge::MergeSettings m2 = ms; m2.mem_budget_bytes = 1000;
+    auto o = merge::merge_and_tail(slots, Ledger(pre), Model{1, 2}, fac, m2);
+    CHECK(o.status == Status::resource_limit && o.fit_state == "not_admitted" && !o.estimates_available && !o.has_hpm);
+    m2.mem_budget_bytes = o.mem.total; auto o2 = merge::merge_and_tail(slots, Ledger(pre), Model{1, 2}, fac, m2);
+    CHECK(o2.status == Status::completed);
+    merge::MergeSettings big; big.p = 1000000; big.Rp = 16; big.N = 2500; big.threads = 96; big.chunk = 2048;
+    merge::MemEstimate e = merge::estimate_merge_memory(big);
+    CHECK(e.total < 16ull << 30);   // ESTIMATE at 10^6, V mode: ~11.7 GB <= the 16 GB target
+  }
+  {  // F5: zero occupancy -> NA row (no +Inf), zero islands excluded from the sd and the chi-square
+    auto s2 = slots;
+    for (auto& sl : s2) sl.isl.terminal.assign(100, Model{0, 1, 2, 3, 4, 5, 6, 7});   // N supports, none in any store
+    s2[0].isl.terminal[0] = fo.hpm;                                                      // island 1 only: one HPM particle
+    auto o = merge::merge_and_tail(s2, Ledger(pre), Model{1, 2}, fac, ms);
+    CHECK(o.occ_available && o.occ[0].available && o.occ[0].n_zero_islands == 3 && std::isnan(o.occ[0].log_Z_occ_r[1]) &&
+          std::isfinite(o.occ[0].log_Z_occ) && std::isnan(o.occ[0].sd_log_Z_occ_r) && o.occ[0].chi2_df == 0);
+    for (auto& sl : s2) sl.isl.terminal.assign(100, Model{0, 1, 2, 3, 4, 5, 6, 7});
+    auto o3 = merge::merge_and_tail(s2, Ledger(pre), Model{1, 2}, fac, ms);
+    CHECK(!o3.occ[0].available && std::isnan(o3.occ[0].log_Z_occ) && o3.occ[0].n_zero_islands == 4);
+  }
+  {  // streaming: an island that changes between the head check and its load -> refused (no subset pooled)
+    struct Flaky : merge::VectorSource { using VectorSource::VectorSource; merge::IslandIn load(int r) override { auto I = VectorSource::load(r); if (r == 3) I.r = 9; return I; } };
+    Flaky src(slots);
+    auto o = merge::merge_stream(src, Ledger(pre), Model{1, 2}, fac, ms);
+    CHECK(o.status == Status::invalid_input && o.fit_state == "incomplete" && !o.estimates_available);
   }
   CHECK(fit_status({Status::completed, Status::io_error, Status::numerical_failure}) == Status::numerical_failure);
   CHECK(fit_status({Status::resource_limit, Status::invalid_input}) == Status::invalid_input);
+}
+
+TEST(wp4_inherited_provenance_v016) {
+  // INTERFACES v0.1.6: the calibration HPM model is offered with its CALIBRATION EventCtx. Three cases (core/cpp/
+  // v3_core.cpp:416-441): (i) also a table model -> table key; (ii) inherited only -> calibration key; (iii) neither ->
+  // never offered. Other inherited models carry INHERITED keys with their input index.
+  LedgerConfig cfg; cfg.p = 10; cfg.islands = 4; cfg.leaders = false; cfg.fresh_counters = false;
+  Zobrist z; z.init(10);
+  EventCtx cal; cal.phase = PH_DIAG; cal.mech = ME_USWAP; cal.key.seg = SG_CALIB; cal.key.iter = 2; cal.key.unit = 3; cal.key.stage = 4;
+  Model T{2, 3}, A{1, 5};
+  auto run = [&](bool table_has, const std::vector<merge::InheritedModel>& inh, const Model& chpm) {
+    Ledger L(cfg);
+    if (table_has) L.event(T, z.hash(T), 5.0, 1.0, 4.0, merge::table_event(1, 3), true);
+    merge::offer_inherited(L, inh, true, chpm, cal, z);
+    return L;
+  };
+  merge::InheritedModel iT{T, 5.0, 1.0, 4.0}, iA{A, 4.0, 1.0, 3.0};
+  Ledger L1 = run(true, {iA, iT}, T);    // (i)
+  CHECK(L1.hpmS == T && L1.hpm_ev.phase == PH_TABLE && L1.hpm_ev.key.seg == SG_TABLE && L1.hpm_ev.key.position == 3);
+  Ledger L2 = run(false, {iA, iT}, T);   // (ii)
+  CHECK(L2.hpmS == T && L2.hpm_ev.key == cal.key && L2.hpm_ev.phase == PH_DIAG);
+  Ledger L3 = run(false, {iA}, T);       // (iii)
+  CHECK(L3.hpmS == A && L3.hpm_ev.phase == PH_INHERITED && L3.hpm_ev.key.particle == 0);
+  Ledger L4 = run(false, {iA, iT}, A);   // another model is the calibration HPM: T keeps its INHERITED key, index 1
+  CHECK(L4.hpmS == T && L4.hpm_ev.phase == PH_INHERITED && L4.hpm_ev.key.particle == 1);
+  // order-free: the island events of the same model (FINAL, later key) never take the provenance
+  EventCtx fin; fin.phase = PH_MEASURED; fin.mech = ME_GIBBS_FLIP; fin.key.seg = SG_FINAL; fin.key.unit = 1;
+  Ledger L5 = run(false, {iA, iT}, T); L5.event(T, z.hash(T), 5.0, 1.0, 4.0, fin, true);
+  CHECK(L5.hpm_ev.key == cal.key);
+}
+
+#include "tutil.h"
+#include "v4/format.h"
+#include "v4/wp4_terminal.h"
+TEST(wp4_terminal_supports_wp3_layout) {
+  // island_r.bin terminal sections exactly as WP3 writes them (PR #21 island_file.cpp:60-64): N + 1 i64 offsets, i32 pool,
+  // particle order, the last measured round only. Round trip through the WP1 container, then the merge's occupancy.
+  const int N = 6, p = 20;
+  std::vector<Model> sup = {{1, 4}, {}, {1, 4}, {2, 3, 19}, {1, 4}, {7}};
+  std::vector<int64_t> tptr{0}; std::vector<int32_t> tS;
+  for (auto& S : sup) { tS.insert(tS.end(), S.begin(), S.end()); tptr.push_back((int64_t)tS.size()); }
+  std::string path = tmp_path("wp4_terminal_island.bin");
+  {
+    fmt::Writer w(fmt::K_ISLAND, fmt::M_LAW);
+    Json m = Json::object(); m["N"] = N; m["p"] = p; w.add_json("meta", m);
+    w.add_copy("terminal_S_ptr", fmt::D_I64, tptr.data(), tptr.size() * 8, tptr.size(), 0);
+    w.add_copy("terminal_S", fmt::D_I32, tS.data(), tS.size() * 4, tS.size(), 0);
+    w.write(path);
+  }
+  {
+    fmt::Reader R(path);
+    std::vector<Model> got = merge::read_terminal_supports(R, N, p);
+    CHECK(got == sup);
+    CHECK_THROWS(merge::read_terminal_supports(R, N + 1, p));   // Hm x N or any other count is refused
+    CHECK_THROWS(merge::read_terminal_supports(R, N, 10));      // index out of range
+  }
+  std::remove(path.c_str());
+  // the merge requires exactly N supports per island (or none)
+  std::vector<double> w(p); for (int j = 0; j < p; ++j) w[j] = 0.25 * ((j * 7) % 11) - 1;
+  ToyFactory fac{&w}; ToyEval ev = fac.make();
+  const int R = 2;
+  std::vector<merge::IslandSlot> slots(R);
+  for (int r = 1; r <= R; ++r) {
+    merge::IslandIn& I = slots[r - 1].isl; slots[r - 1].load = merge::Load::ok;
+    I.r = r; I.N = N; I.logZ = -5 - r; I.ess = {5, 6}; I.pip.assign(p, 0.1 * r); I.led = mkled(p, R, false);
+    for (auto& S : sup) { double lm, lg0, d, F; ev(S, lm, lg0, d, F); EventCtx e; e.phase = PH_MEASURED; e.mech = ME_GIBBS_FLIP; e.key.seg = SG_FINAL; e.key.unit = (uint32_t)r; I.led.event(S, zob().hash(S), F, lg0, lm, e, true); }
+    I.led.compact(); I.terminal = sup;
+  }
+  merge::MergeSettings ms; ms.Rp = R; ms.N = N; ms.p = p; ms.K = 5; ms.ell = 2; ms.occ_M = {1, 10}; ms.zob = &zob();
+  auto o = merge::merge_and_tail(slots, mkled(p, R, false), Model{}, fac, ms);
+  CHECK(o.status == Status::completed && o.occ_total == (uint64_t)(R * N) && o.occ_total_r == std::vector<uint64_t>({N, N}));
+  slots[1].isl.terminal.push_back(Model{1, 4});   // N + 1 supports (e.g. a writer that kept more than the last round)
+  auto o2 = merge::merge_and_tail(slots, mkled(p, R, false), Model{}, fac, ms);
+  CHECK(o2.status == Status::invalid_input && !o2.estimates_available);
 }

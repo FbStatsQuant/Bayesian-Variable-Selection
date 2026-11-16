@@ -132,8 +132,9 @@ compare_final <- function(r, m, tag) {
           "ls0_local_limit", "ls0_improved", "ls0_hpm_changed")
   same(r$flags[fl], m$flags[fl], paste(tag, "flags"))
   same(r$top_store, m$top_store, paste(tag, "top store"))
-  same(r$leaders_gamma0, m$leaders_gamma0, paste(tag, "leaders gamma0"))
-  same(r$leaders_gamma1, m$leaders_gamma1, paste(tag, "leaders gamma1"))
+  # v3's final-run leader stores (r$leaders_gamma0/1) are on the exclusion list: INTERFACES v0.1.7 -- final-run leaders
+  # are not outputs in any mode (final ledgers use leaders = false). Calibration leaders are compared in compare_calib.
+  n_checks <<- n_checks + 1L; if (m$leaders_gamma0$capacity != 0 || length(m$leaders_gamma0$models)) { failures <<- c(failures, paste(tag, "final leaders present")); cat("  FAIL:", tag, "final leaders present\n") }
   same(r$score_counts$logical, m$logical, paste(tag, "logical counters"))
 }
 
@@ -166,6 +167,73 @@ provenance_cases <- function(setup, frozen, seed, fr, tag) {
   }
 }
 
+# ---- coded-rule paths not reached by the plain cases (review PR16 F2), each compared bit for bit with v3_calibrate on
+# the same forced inputs: the R reference runs with wrappers around the same core entry points that the harness backend
+# perturbs (pilot local_limit, V numerical failure, diagnostic failure, grid-runtime stop, a forced construction failure).
+with_faults <- function(f, opts) {
+  saved <- list(pilot = .v3cpp$cpp_cal_pilot, V = .v3cpp$cpp_cal_V, diag = .v3cpp$cpp_cal_diag, rt = .v3cpp$cpp_runtime_check, bg = v3_build_grid)
+  on.exit({ assign("cpp_cal_pilot", saved$pilot, envir = .v3cpp); assign("cpp_cal_V", saved$V, envir = .v3cpp)
+            assign("cpp_cal_diag", saved$diag, envir = .v3cpp); assign("cpp_runtime_check", saved$rt, envir = .v3cpp)
+            assign("v3_build_grid", saved$bg, envir = globalenv()) })
+  n <- new.env(); n$V <- 0; n$diag <- 0; n$rt <- 0; n$bg <- 0
+  if (isTRUE(opts$force_ll_pilot)) assign("cpp_cal_pilot", function(...) { x <- saved$pilot(...); if (!is.null(x$local_search)) x$local_search$local_limit <- TRUE; x }, envir = .v3cpp)
+  if (!is.null(opts$fail_V_at)) assign("cpp_cal_V", function(...) { n$V <- n$V + 1; if (n$V == opts$fail_V_at) list(status = "numerical_failure", message = "forced") else saved$V(...) }, envir = .v3cpp)
+  if (!is.null(opts$fail_diag_at)) assign("cpp_cal_diag", function(...) { x <- saved$diag(...); n$diag <- n$diag + 1; if (n$diag == opts$fail_diag_at) list(status = "numerical_failure", message = "forced") else x }, envir = .v3cpp)
+  if (!is.null(opts$stop_grid_at)) assign("cpp_runtime_check", function(...) { n$rt <- n$rt + 1; n$rt == opts$stop_grid_at }, envir = .v3cpp)
+  if (!is.null(opts$force_build_failure)) assign("v3_build_grid", function(...) { g <- saved$bg(...); n$bg <- n$bg + 1; if (n$bg == opts$force_build_failure) { g$ok <- FALSE; g$reason <- "forced" }; g }, envir = globalenv())
+  f()
+}
+coded_path <- function(setup, seed, tag, opts = list(), expect_status = NULL) {
+  rt <- if (!is.null(opts$stop_grid_at)) .v3cpp$cpp_runtime_new(24, 0) else NULL
+  pf <- if (isTRUE(opts$preflight)) function(e) TRUE else NULL
+  r <- with_faults(function() v3_calibrate(setup, seed, tier = opts$tier0 %||% 0, preflight = pf, runtime = rt, grid_fallback = opts$grid_fallback %||% TRUE), opts)
+  st <- settings_for(setup); st$tier0 <- as.integer(opts$tier0 %||% 0L); st$grid_fallback <- opts$grid_fallback %||% TRUE
+  for (k in c("preflight", "force_ll_pilot")) if (!is.null(opts[[k]])) st[[k]] <- opts[[k]]
+  for (k in c("fail_V_at", "fail_diag_at", "stop_grid_at", "force_build_failure")) if (!is.null(opts[[k]])) st[[k]] <- as.integer(opts[[k]])
+  m <- .v3cpp$wp4_calibrate(setup$ptr, seed, st)
+  compare_calib(r, m, tag)
+  if (!is.null(expect_status)) expect(identical(r$status, expect_status), sprintf("%s reaches %s (got %s)", tag, expect_status, r$status))
+  invisible(list(r = r, m = m))
+}
+extra_coded_paths <- function(setup, seed, id, r0) {
+  coded_path(setup, seed, paste(id, "P2 tier-1 start"), list(tier0 = 1L))
+  sb <- setup; sb$budgets$ell <- 1L; coded_path(sb, seed, paste(id, "P4 ell=1"))
+  sb$budgets$ell <- 0L; coded_path(sb, seed, paste(id, "P5 ell=0"))
+  x <- coded_path(setup, seed, paste(id, "local_limit (forced)"), list(force_ll_pilot = TRUE))
+  expect(isTRUE(x$r$tiers[[1]]$triggers$local_limit) && x$r$escalated, paste(id, "local_limit fires and escalates"))
+  k <- length(x$r$tiers[[1]]$grids) + 2L     # the tier-1 rebuild_1 construction (after a tier-1 preliminary)
+  y <- coded_path(setup, seed, paste(id, "last_successful_construction"), list(force_ll_pilot = TRUE, force_build_failure = k))
+  expect(identical(y$r$flags$grid_fallback, "last_successful_construction"), paste(id, "fallback = last_successful_construction"))
+  coded_path(setup, seed, paste(id, "grid-runtime stop"), list(stop_grid_at = 2L), "resource_limit")
+  coded_path(setup, seed, paste(id, "V numerical failure"), list(fail_V_at = 2L), "numerical_failure")
+  coded_path(setup, seed, paste(id, "diagnostic numerical failure"), list(fail_diag_at = 1L), "numerical_failure")
+  coded_path(setup, seed, paste(id, "P3 preflight blocks escalation"), list(force_ll_pilot = TRUE, preflight = TRUE), "resource_limit")
+  # bounded (Serial, I_max = ell) equals the coded tier 0 when tier 0 constructs every grid (reviewer's check)
+  if (!isTRUE(r0$tiers[[1]]$triggers$grid_failure)) {
+    b <- .v3cpp$wp4_calibrate(setup$ptr, seed, settings_for(setup, rule = "bounded", I_max = setup$budgets$ell))
+    a <- r0$tiers[[1]]; t <- b$tiers[[1]]; tg <- paste(id, "bounded(I_max=ell) == coded tier 0")
+    same(a$triggers, t$triggers, paste(tg, "triggers")); same(a$converged, t$converged, paste(tg, "converged")); same(a$rebuilds, t$rebuilds, paste(tg, "rebuilds"))
+    same(length(a$grids), length(t$grids), paste(tg, "n grids"))
+    for (g in seq_len(min(length(a$grids), length(t$grids)))) same(a$grids[[g]]$grid, t$grids[[g]]$grid, paste(tg, "grid", g))
+    same(a$grid, b$frozen$grid, paste(tg, "frozen grid"))
+  }
+  # D-26 paths of the bounded rule (no core reference: V's variant rule), one test each
+  b <- .v3cpp$wp4_calibrate(setup$ptr, seed, c(settings_for(setup, rule = "bounded", I_max = 2L), list(force_build_failure = 1L)))
+  expect(b$status == "ok" && length(b$tiers) == 1L && identical(b$flags$grid_fallback, "pilot_schedule") &&
+         identical(b$frozen$grid, b$tiers[[1]]$schedule), paste(id, "D-26 preliminary failure -> pilot schedule, no escalation"))
+  b <- .v3cpp$wp4_calibrate(setup$ptr, seed, c(settings_for(setup, rule = "bounded", I_max = 2L), list(force_build_failure = 2L)))
+  expect(b$status == "ok" && length(b$tiers) == 1L && identical(b$flags$grid_fallback, "last_successful_construction") &&
+         identical(b$frozen$grid, b$tiers[[1]]$grids[[1]]$grid), paste(id, "D-26 rebuild failure -> last good grid"))
+  b <- .v3cpp$wp4_calibrate(setup$ptr, seed, c(settings_for(setup, rule = "bounded", I_max = 2L), list(force_ll_pilot = TRUE)))
+  expect(b$status == "ok" && length(b$tiers) == 1L && isTRUE(b$tiers[[1]]$triggers$local_limit), paste(id, "D-26 triggers recorded, no escalation"))
+  b <- .v3cpp$wp4_calibrate(setup$ptr, seed, c(settings_for(setup, rule = "bounded", I_max = setup$budgets$ell + 1L)))
+  expect(identical(b$status, "refused") && identical(b$task_status, "invalid_input"), paste(id, "D-26 I_max > ell refused"))
+  b <- .v3cpp$wp4_calibrate(setup$ptr, seed, settings_for(setup, rule = "coded", sum_mode = "blocked"))
+  expect(identical(b$status, "refused"), paste(id, "F7 coded + blocked refused"))
+  b <- .v3cpp$wp4_calibrate(setup$ptr, seed, settings_for(setup, rule = "coded", refine_m = 4L))
+  expect(identical(b$status, "refused"), paste(id, "F7 coded + refine_m > 1 refused"))
+}
+
 cases <- list(
   list(id = "AR0.9_n100_p30_s34", n = 100, p = 30,   rho = 0.9, seed = 21, H = c(48, 96),   Te = c(40, 80),   N = c(100, 200), ell = NULL, s0 = c(3, 4), beta = c(2, 1.5), prov = TRUE),
   list(id = "AR0.6_n100_p40",   n = 100, p = 40,   rho = 0.6, seed = 11, H = c(64, 128),  Te = c(60, 120),  N = c(150, 300), ell = NULL),
@@ -191,6 +259,9 @@ for (cs in cases) {
   }
   cat(sprintf("   calibration: status %s, tier %d, escalated %s, triggers {%s}, fallback %s\n", r$status, r$tier_final,
               r$escalated, paste(r$flags$triggers_fired, collapse = ","), r$flags$grid_fallback %||% "none"))
+  if (cs$id == "AR0.6_n100_p40") extra_coded_paths(setup, seed, cs$id, r)
+  if (cs$id == "IND_n80_p60_Te3") coded_path(setup, seed, paste(cs$id, "P1 no fallback"), list(grid_fallback = FALSE), "schedule_limit")
+  if (cs$id == "AR0.9_n120_p120") coded_path(setup, seed, paste(cs$id, "P3 preflight blocks escalation"), list(preflight = TRUE), "resource_limit")
   if (r$status != "ok") next
   ro <- v3_run_settings(setup, r$frozen, ls0 = TRUE)
   t0 <- proc.time()[["elapsed"]]; fr <- v3_final_run(setup, r$frozen, seed, runtime = NULL, ls0 = TRUE)
@@ -203,7 +274,7 @@ for (cs in cases) {
                                                ref_s = t_fr, wp4_s = sum(mm$seconds_islands) + mm$seconds_merge_tail)
   }
   if (isTRUE(cs$prov) || cs$id == "AR0.6_n100_p40") provenance_cases(setup, r$frozen, seed, fr, cs$id)
-  # T9 through files: data/setup/calib/island files -> smcbvs4 merge (in process) -> fit.bin read back == v3
+  # T9 through files: data/setup/calib/island files -> smcbvs4 merge (in process, streaming) -> fit.bin read back == v3
   fdir <- file.path(work, paste0("files_", cs$id)); unlink(fdir, recursive = TRUE); dir.create(fdir)
   mf <- .v3cpp$wp4_files_merge(setup$ptr, r$frozen$grid, ro, as.numeric(seed), r$frozen$inherited, fdir, threads)
   tg <- paste(cs$id, "T9-files")
@@ -234,15 +305,14 @@ for (cs in cases) {
   }
   # 4. bounded rule and blocked sums: run, structural checks only
   for (im in c(0L, 1L)) {
-    b <- .v3cpp$wp4_calibrate(setup$ptr, seed, settings_for(setup, rule = "bounded", I_max = im, refine_m = 4L, sum_mode = "blocked", th = threads))
+    b <- .v3cpp$wp4_calibrate(setup$ptr, seed, settings_for(setup, rule = "bounded", I_max = min(im, setup$budgets$ell), refine_m = 4L, sum_mode = "blocked", th = threads))
     expect(b$status == "ok", sprintf("%s bounded I_max=%d status %s", cs$id, im, b$status))
     if (b$status == "ok") {
       expect(b$I_used <= im, sprintf("%s bounded I_used <= I_max", cs$id))
       expect(length(b$frozen$grid) == 4L * (length(b$frozen$grid_unrefined) - 1L) + 1L, sprintf("%s refine x4 length", cs$id))
       expect(all(diff(b$frozen$grid) > 0) && b$frozen$grid[1] == 0 && tail(b$frozen$grid, 1) == 1, sprintf("%s refined grid valid", cs$id))
       expect(all(b$frozen$grid_unrefined %in% b$frozen$grid), sprintf("%s refined grid contains the calibrated grid", cs$id))
-      ntiers_esc <- vapply(b$tiers, function(t) isTRUE(t$triggers$grid_failure), TRUE)
-      expect(length(b$tiers) == 1L || ntiers_esc[1], sprintf("%s bounded escalates only on grid failure", cs$id))
+      expect(length(b$tiers) == 1L, sprintf("%s bounded never escalates (D-26)", cs$id))
       last_gf <- isTRUE(b$tiers[[length(b$tiers)]]$triggers$grid_failure)
       if (im == 0L && !last_gf) expect(isTRUE(b$flags$grid_unconverged), sprintf("%s bounded I_max=0 flags grid_unconverged", cs$id))
     }

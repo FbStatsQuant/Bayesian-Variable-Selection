@@ -4,9 +4,12 @@
 //  * Rule::coded   (theory mode T) = core/v3_calib.R:28-193 (v3_cal_tier + v3_calibrate) exactly: pilot, preliminary
 //    grid, up to ell rebuilds with bitwise grid convergence, the seven triggers (E1, E2, E3, forced_pilot_steps,
 //    grid_failure, grid_unconverged, local_limit), at most one escalation (preflight before it), the C-DLV fallback.
-//  * Rule::bounded (V-1M) = pilot + preliminary grid + at most I_max rebuilds (default 3); the only escalation is on a
-//    grid-construction failure; otherwise the last grid is frozen with flag grid_unconverged; every trigger is still
-//    recorded. Grid refinement x m (default 1) is applied to the frozen grid.
+//  * Rule::bounded (V-1M; D-2, D-26) = pilot + preliminary grid + at most I_max rebuilds (default 3, I_max <= ell
+//    required); NO tier escalation (N = 2,500, H = 512 always: tier 0 only); a construction failure installs the last
+//    successfully constructed grid, else the pilot schedule (the coded fallback path, core/v3_calib.R:122-124), flag
+//    grid_fallback -- never "no output"; otherwise the last grid is frozen, flag grid_unconverged if not converged;
+//    every trigger is still recorded. Grid refinement x m (default 1) is applied to the frozen grid.
+//  Mode guard (review PR16 F7): the coded rule (theory mode) refuses SumMode::Blocked and refine_m > 1.
 //
 // The islands (pilot, diagnostic islands with their local searches) and the candidate set V are supplied by a Backend
 // (WP3's island in compat or law mode; in the golden tests: the core/ engine itself). V is re-scored by the threaded
@@ -34,14 +37,19 @@ inline const char* cal_status_name(CalStatus s) {
   static const char* nm[] = {"ok", "resource_limit", "numerical_failure", "schedule_limit", "grid_failure_no_escalation"};
   return nm[(int)s];
 }
-// schedule_limit / grid_failure_no_escalation (no valid grid after the coded rules) have no spec §6 status; they map to
-// resource_limit (the schedule budget T_e is a resource) -- open issue for the manager.
+// INTERFACES v0.1.7 §7: Status::schedule_limit (6, exit 16) = the theory / compat calibration ended without a grid
+// (core/v3_calib.R:170: tier-1 construction failure and no fallback). grid_failure_no_escalation (the same end at tier 0,
+// v3_calib.R:170; unreachable when calibration starts at tier 0, since a grid failure escalates or is blocked by the
+// preflight) maps to it as well; records keep the exact v3 name (cal_status_name). The bounded rule cannot reach either
+// (D-26: it always installs a fallback grid).
 inline Status task_status(CalStatus s) {
   switch (s) {
     case CalStatus::ok: return Status::completed;
     case CalStatus::numerical_failure: return Status::numerical_failure;
-    default: return Status::resource_limit;
+    case CalStatus::resource_limit: return Status::resource_limit;
+    case CalStatus::schedule_limit: case CalStatus::grid_failure_no_escalation: return Status::schedule_limit;
   }
+  return Status::internal_error;
 }
 
 struct TierSettings { int tier = 0, H = 0, Te = 0, L = 0, Hm = 4, ell = 0; };   // core/v3_calib.R:9-13
@@ -55,6 +63,7 @@ struct Settings {
   SumMode sum_mode = SumMode::Serial;   // T: Serial (class B); V: Blocked (class C)
   int threads = 1;
   std::array<TierSettings, 2> tiers;    // budgets of tier 0 and tier 1
+  int test_force_build_failure = 0;     // TEST ONLY: the k-th grid construction (1-based, over all tiers) reports ok = false
 };
 
 // ---- what the backend returns ---------------------------------------------------------------------------------------
@@ -124,10 +133,11 @@ struct Flags {
   int forced_pilot_steps = 0; bool grid_unconverged = false;
   std::vector<std::string> triggers_fired; std::string grid_fallback;   // "" = absent
 };
-struct Frozen {
+struct Frozen {   // rho_V belongs to grid_unrefined (one value per calibrated interval); refined intervals have none
   std::vector<double> grid;            // after refinement x m (what the final islands use)
   std::vector<double> grid_unrefined;  // the calibrated grid
   int tier = 0, refine_m = 1; std::vector<double> rho_V; bool has_rho = false; std::string grid_label, source = "calibration";
+  int intervals_refined = 0; bool refined_exceeds_Te = false;   // D-12 is silent on T_e: recorded, not enforced (manager)
 };
 struct CalibOut {
   CalStatus status = CalStatus::ok; Rule rule = Rule::coded; int tier_final = 0; bool escalated = false;
@@ -159,7 +169,14 @@ VOut rescore_V(const std::vector<Model>& V, Factory& fac, int threads, size_t ch
 // ---- the driver -----------------------------------------------------------------------------------------------------
 class Driver {
  public:
-  Driver(Backend& b, const Settings& s) : be_(b), s_(s) {}
+  Driver(Backend& b, const Settings& s) : be_(b), s_(s) {
+    if (s_.rule == Rule::coded && (s_.sum_mode != SumMode::Serial || s_.refine_m != 1))
+      throw Error(Status::invalid_input, "coded calibration (theory mode) requires SumMode::Serial and refine_m = 1");
+    if (s_.rule == Rule::bounded && s_.tier0 != 0) throw Error(Status::invalid_input, "bounded calibration has no tier escalation: tier0 must be 0 (D-26)");
+    if (s_.rule == Rule::bounded && (s_.I_max < 0 || s_.I_max > s_.tiers[0].ell))
+      throw Error(Status::invalid_input, "bounded calibration requires 0 <= I_max <= ell (D-26)");
+    if (s_.refine_m < 1) throw Error(Status::invalid_input, "refine_m must be >= 1");
+  }
 
   // core/v3_calib.R:28-137 (v3_cal_tier), with the rebuild cap ell (coded) or I_max (bounded).
   TierOut run_tier(int tier) {
@@ -184,6 +201,7 @@ class Driver {
       auto tg = std::chrono::steady_clock::now();
       FV fv(V.lg0, V.d, s_.sum_mode, s_.threads);
       r.g = build_grid(fv, pil.schedule, cs.Te);
+      if (++n_build_ == s_.test_force_build_failure) { r.g.ok = false; r.g.reason = "forced"; }
       double sec = std::chrono::duration<double>(std::chrono::steady_clock::now() - tg).count();
       GridRecord rec; rec.label = label; rec.grid = r.g.grid; rec.rho = r.g.rho; rec.ok = r.g.ok; rec.reason = r.g.reason;
       rec.evals = r.g.evals; rec.seconds = sec; rec.V_size = V.lg0.size();
@@ -208,6 +226,8 @@ class Driver {
         if (dg.status != CalStatus::ok) return fail(dg.status, dg.message);
         bool E1 = false;
         for (double ib : dg.island_best) if (ib < dg.best_after_F - 1) E1 = true;    // core/v3_calib.R:101
+        for (double z : dg.logZ_r)   // review PR16 F8: R's sd would be NA and v3_calibrate would stop
+          if (!std::isfinite(z)) return fail(CalStatus::numerical_failure, "non-finite log Z_r in a diagnostic island");
         bool E2 = r_sd(dg.logZ_r) > 1;                                                // core/v3_calib.R:102
         bool E3it = dg.best_after_F > dg.best_before_F;
         Iteration& last = out.iterations.back();
@@ -224,7 +244,9 @@ class Driver {
       if (!trig.grid_failure && !converged) trig.grid_unconverged = true;
     }
     // C-DLV B (core/v3_calib.R:120-125): fallback grid on a tier-1 construction failure
-    if (s_.grid_fallback && trig.grid_failure && tier == 1) {
+    // D-26: the bounded rule takes the same fallback at its only tier (0)
+    const bool fb = s_.grid_fallback || s_.rule == Rule::bounded;   // D-26: always on in the bounded rule (never "no output")
+    if (fb && trig.grid_failure && (tier == 1 || s_.rule == Rule::bounded)) {
       out.has_fallback = true;
       if (g.g.ok) { out.fallback_grid = g.g.grid; out.fallback_rho = g.g.rho; out.fallback_has_rho = true; out.fallback_label = g.label; out.fallback_source = "last_successful_construction"; }
       else { out.fallback_grid = pil.schedule; out.fallback_has_rho = false; out.fallback_label = "pilot_schedule"; out.fallback_source = "pilot_schedule"; }
@@ -243,14 +265,15 @@ class Driver {
       TierOut a = run_tier(e);
       co.tiers.push_back(a);
       if (a.status != CalStatus::ok) { status = a.status; co.message = a.message; break; }
-      bool fired = s_.rule == Rule::coded ? a.triggers.any() : a.triggers.grid_failure;
+      bool fired = s_.rule == Rule::coded && a.triggers.any();   // D-26: the bounded rule never escalates
       if (!fired || e == 1) break;
       if (be_.preflight_exceeds(1)) { status = CalStatus::resource_limit; blocked = "resource_limit"; break; }
       e = 1;
     }
     TierOut& last = co.tiers.back();
     std::string fallback;
-    if (status == CalStatus::ok && !last.has_grid && e == 1 && s_.grid_fallback && last.has_fallback && check_grid(last.fallback_grid)) {
+    if (status == CalStatus::ok && !last.has_grid && (e == 1 || s_.rule == Rule::bounded) && (s_.grid_fallback || s_.rule == Rule::bounded) && last.has_fallback &&
+        check_grid(last.fallback_grid)) {
       fallback = last.fallback_source;
       last.has_grid = true; last.has_rho = last.fallback_has_rho; last.grid = last.fallback_grid; last.rho_V = last.fallback_rho; last.grid_label = last.fallback_label;
       last.grid_source = "fallback: " + fallback;
@@ -270,6 +293,8 @@ class Driver {
       co.frozen.refine_m = s_.refine_m;
       co.frozen.grid = refine_grid(last.grid, s_.refine_m);   // throws (internal_error) only for an unsplittable interval
       co.frozen.tier = e; co.frozen.rho_V = last.rho_V; co.frozen.has_rho = last.has_rho;
+      co.frozen.intervals_refined = (int)co.frozen.grid.size() - 1;
+      co.frozen.refined_exceeds_Te = co.frozen.intervals_refined > s_.tiers[e].Te;
       co.frozen.grid_label = last.grid_label;
       co.I_used = last.rebuilds;
     }
@@ -279,6 +304,7 @@ class Driver {
  private:
   Backend& be_;
   Settings s_;
+  int n_build_ = 0;
 };
 
 }  // namespace calib

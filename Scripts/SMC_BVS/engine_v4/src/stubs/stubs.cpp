@@ -7,7 +7,5 @@ namespace v4 {
 V4_STUB(setup, "WP2")
 V4_STUB(island, "WP3")
 V4_STUB(calib, "WP4")
-V4_STUB(eval, "WP5")
-V4_STUB(post, "WP5")
 #undef V4_STUB
 }  // namespace v4
