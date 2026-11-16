@@ -48,3 +48,4 @@
 - 20:09 — W3-EDIT: C-DLV edit reverted (78d18c5); two more rider-consumed files found and routed CHAPTER-ONLY (W2-UNI L5_delivery.md → RM2-R; W3-PSHARP ASSUMPTION_MAP rows 9-17 → PSHARP-R, E7 reverted). Item 1 ledgered (1afa61d): 73 API-audit MINORs → 3 in place, 9 no change, 59 NOT-EDITORIAL (23 statement-level, 36 proof-level) — to triage at its CP1. Next: Sol editorial-only diff check → CP1.
 - 20:10 — DIST S2: 3 MAJOR fixed (Thm B b_n>0; bridge remarks; prior BB(1,r) as coded); D25 tags; HQ and READER informed.
 - 20:11 — W3-READER CP1 answered (D26); card v0.3 to HQ for H5; leg 2 brief delivered.
+- 20:12 — HQ approved recorder real runs D, E, F(+tool fix); C and H dry runs; recorder instructed.

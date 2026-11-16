@@ -151,3 +151,9 @@
   version in the bridge leg (consistency of printed outputs = owner priority); 3.5 one-line remark. Bridge leg GO
   (Tier B), one Sol review for bridges + v0.1→v0.2 diff. MISR → pillar 1 (row 1.4), recommended to HQ. Leg 2 (gates)
   brief placed in READER's folder (BRIEF_LEG2_GATES.md). Card v0.3 forwarded to HQ for H5. CP3 council target Fri a.m.
+
+## 2026-11-15 20:12 CT — HQ approves recorder real runs
+- Order: (G citefix branch) → D (POST2, two record fixes) → E (D-3/D-8; D-7 placeholder) → F + assemble.py tool fix
+  (candidate blocks labelled "headline admission pending (strength gates)", regression test) → C dry run (10 ACCEPT
+  rows bound to MANIFEST_PC1; Family-map excluded) → HQ → C real → H root-fix dry run (TH09/SL0/TH05.0; else honest
+  re-status of 10 consumers). Commit hash + check totals after each, relayed to HQ.
