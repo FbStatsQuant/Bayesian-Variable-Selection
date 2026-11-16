@@ -1,0 +1,35 @@
+3c3
+< Status: **PROVED (by this seat, unchecked)**, relative to the code-reading audits it inherits (C-DLV P1 inventory and
+---
+> Status: **PROVED (by this seat, unchecked)**; LC-B (Sol) VERIFIED-WITH-AMENDMENTS, amendments [LCB-1..3] applied (re-check pending); relative to the code-reading audits it inherits (C-DLV P1 inventory and
+26,27c26
+<   OK-WITH-FIXES), as consumed by W2-UNI:F-UNI@1.1.0 ("PROVED-CHECKED"), `Theory_work/Wave2/W2-UNI/lemmas/L5_delivery.md:7-12, 23-24`
+<   (its Step 2, "design-free: P(no output) = 0"). From these we take **the allocation 𝒜_n**: the inequalities of FIN
+---
+>   OK-WITH-FIXES), as consumed by W2-UNI:F-UNI@1.1.0 ("PROVED-CHECKED"), `Theory_work/Wave2/W2-UNI/lemmas/L5_delivery.md:8-12, 27` (method/allocation; its Step 2, "design-free: P(no output) = 0") [LCB-3]. From these we take **the allocation 𝒜_n**: the inequalities of FIN
+73,74c72,73
+< standardisation yᵀy = n − 1 > 0 because y^r is not constant (E1). The k > K invariant throw (`cpp/v3_core.cpp:112`;
+< S.2's last paragraph) is unreachable. So on the exact branch `e$status = "exact"` and `estimates_available = TRUE`
+---
+> standardisation yᵀy = n − 1 > 0 because y^r is not constant (E1). The k > K invariant throw of the production scorer (`cpp/v3_score.h:230`; S.2's last paragraph) is unreachable [LCB-2]
+> (the separate throw at `cpp/v3_core.cpp:112` belongs to the auxiliary `cpp_score` entry point, not on the `v3_fit` path). So on the exact branch `e$status = "exact"` and `estimates_available = TRUE`
+112,113c111,122
+< lengths, `|S| ≤ K`, equal-length vectors); they are part of the inherited P1/S.3 audit and are unreachable on the
+< `v3_fit` path (each object is built by the preceding production call with the property checked).
+---
+> lengths, `|S| ≤ K`, equal-length vectors); they are part of the inherited P1/S.3 audit and are unreachable on the `v3_fit` path (each object is built by the preceding production call with the property checked). Likewise `nth_nonmember out of range`
+> (`cpp/v3_engine.h:143`) is excluded by DLV S.3(v) (`L2_degenerate.md:53`) [LCB-2].
+> **MACH exits [LCB-1].** Three kinds of call-graph exit are not mathematics and are excluded by the premise MACH
+> exactly as stated in DLV `STATEMENT.md:28-31` ("every heap, stack and worker allocation succeeds whenever the live bytes
+> stay within the declared memory …; the build, its lock/cache and runtime dependencies (Rcpp, digest) succeed; no
+> user/external interruption, no worker crash"), and are recorded in the inherited P1 inventory: (i) user interrupts, e.g.
+> `Rcpp::checkUserInterrupt()` during exact enumeration (`cpp/v3_core.cpp:552`; the catch at `:556` handles only
+> `NumericalFailure`) — excluded by "no user/external interruption"; (ii) runtime-dependency failures, e.g.
+> `digest::digest()` in `v3_frozen` (`v3_run.R:73`) and the Rcpp build/load — excluded by "runtime dependencies (Rcpp,
+> digest) succeed"; (iii) allocation failures anywhere (preprocessing, context construction, setup tables, calibration,
+> final run, serialisation of the fit) — excluded by MACH's allocation clause together with the memory envelope of 𝒜_n
+> in (E2) (live bytes ≤ β·(words held) + β₀ ≤ declared memory, by Lemma R's word bound).
+125c134
+< the input, (E2) holds for every realisation by Lemma R / Corollary R, (E3)–(E7) are deterministic under EX-A). With DLV's
+---
+> the input, (E2) holds for every realisation by Lemma R / Corollary R, (E3)–(E7) are deterministic under EX-A, and the MACH exits of (E7) are excluded by premise for every run). With DLV's

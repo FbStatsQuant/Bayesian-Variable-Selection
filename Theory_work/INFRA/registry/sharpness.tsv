@@ -263,3 +263,5 @@ W3-PSHARP-R:AE	A:PSHARP-WSPH-E	ARTEFACT	Theory_work/Wave3/W3-PSHARP-R/TARGET.md:
 W3-DIST:DIST-1	A:DIST-ND	NECESSARY-FOR-ROUTE	Theory_work/Wave3/W3-DIST/lemmas/NEC.md:8	ingested
 W3-DIST:DIST-1	A:P-POLY	ARTEFACT	Theory_work/Wave3/W3-DIST/ASSUMPTION_MAP.md:13	ingested
 W3-DIST:X	A:DIST-ND	NECESSARY-FOR-ROUTE	Theory_work/Wave3/W3-DIST/lemmas/NEC.md:8	ingested
+W3-RM2-R:RM2-F-plus	A:RM2-V-FLAT	ARTEFACT	Theory_work/Wave3/W3-RM2-R/lemmas/Q1_sandF_c.md:158	ingested
+W3-RM2-R:RM2-F-plus	A:RM2-BM-W-PLUS	ARTEFACT	Theory_work/Wave3/W3-RM2-R/lemmas/Q2_TL_c.md:113	ingested

@@ -1,0 +1,194 @@
+--- R1/TARGET.md
++++ R2/TARGET.md
+@@ -1,13 +1,13 @@
+ # W3-RM2-R — TARGET (CP1; one page; PROTOCOL_v4 §3.2, RIDER_RULES §2)
+ 
+-Statement: `STATEMENT.md` v0.1 (delta). Only changed hypotheses and clauses are mapped; everything else is PARENT
++Statement: `STATEMENT.md` v1.0 (delta, locked). Only changed hypotheses and clauses are mapped; everything else is PARENT
+ `W3-RM2/ASSUMPTION_MAP.md`, `SHARPNESS.md`.
+ 
+ ## 1. Assumption map of the changed hypotheses
+ 
+ | hypothesis | enters (lemma / step) | how | property used | necessity reading | signal |
+ |---|---|---|---|---|---|
+-| (T1-F♭): Theorem 1 with BM(c), c > c₀ | Q2 (Q3 part) | SOP:TH09 item 1 at its BM(c) branch | [POST] ⇒ [MODE] | order √(log n/n) necessary by numerics/heuristic (W3-POST); c₀ proof artefact | artefact-threshold |
++| (T1-F♭): Theorem 1 with BM(c), c > c₀ | Q2 (Q3 part) | SOP:TH09 item 1 at its BM(c) branch | [POST] ⇒ [MODE] | HEURISTIC: the order √(log n/n) is suggested by numerics and a leading-order heuristic (W3-POST); necessity is not proved here; c₀ proof artefact [R1-sol-2] | artefact-threshold |
+ | (V♭): δ²_{U,j} ≥ M_V log n, M_V > M_V⁰ | Q1 Step 2(a) only | one comparison S̃ vs S̃ ∪ {j}: gain (√M_V − σ√(2A))² log n against prior + Occam (A + ½) log n, scaled by 2C_R | every truth in every start mode | order log n natural (one variable's cost); W3-RM SHARPNESS §2: masked truths show (V) not necessary for the conclusion on some designs; M_V⁰ artefact (C_R from a crude RSS bound) | artefact-threshold |
+ | (BM-W⁺): √λ_n ≥ 2(d_n + √(2 log n)), λ_n ≥ c_TL log n | Q2 (TL step) | exact identity (4.1) of PARENT L2: the truth's square ≥ σ²λ_n/4 beats the addition statistic (2A + 2)σ² log n and the score cost | [TL(Q)] | the additive floor at d_n² + log n is what the identity needs; c_TL⁰ artefact | artefact-threshold |
+ | (D) delivery premises | Q5, Q4(c⁺) | exit walk of `v3_fit` at the pin; fallback grid; resource envelopes | 𝒪 for every valid non-degenerate input | premises are idealisations (EX-A, IDEAL-W, MACH): engineering, not mathematics | — |
+@@ -21,7 +21,7 @@
+ 
+ | clause | (a) PROGRAM goals | (b) closest published theorem | (c) our best registered result | verdict |
+ |---|---|---|---|---|
+-| beta-min in RM2-F | design-agnostic, p ≫ n, method as coded: unchanged | Yang–Wainwright–Jordan (2016, Ann. Statist.), MCMC selection: θ²_min ≳ σ² log p/n with a constant; Narisetty–He (2014): same order; Song–Liang (2015) Thm 1–2: same order | RM2-F: θ²_min n/log n → ∞ (BM-∞) and (BM-W) ratio → ∞ | **matches** the order and the constant-level form; constant not sharp (all three sources have unsharp constants too) |
++| beta-min in RM2-F | design-agnostic, p ≫ n, method as coded: unchanged | Yang–Wainwright–Jordan (2016, Ann. Statist.), MCMC selection: θ²_min ≳ σ² log p/n with a constant [R1-sol-1: the Song–Liang (2015) and Narisetty–He (2014) comparisons are withdrawn — Song–Liang Thm 1–2 are Hellinger contraction results, and neither was re-verified here] | RM2-F: θ²_min n/log n → ∞ (BM-∞) and (BM-W) ratio → ∞ | **matches** YWJ's order and constant-level form; constants not sharp in either |
+ | visibility constant | as above | no published analogue for a search started at a block start mode; GROW/RM had M_n → ∞ | RM2-F: M_n → ∞ | **beats** our registered form; no published comparator |
+ | truth-removal floor at polynomial \|Q\| | as above | YWJ need θ²_min ≳ log p/n and bounded-size neighbourhoods; no lattice of size n^b | RM2-F: (BM-W), λ_n/(d_n² + log n) → ∞ | **beats** (c) (constant level); vs (b): our floor is ≍ (d_n² + log n)/n, equal to theirs when d_n² = O(log n) (Ex-Proxy-d: d_n = O(1)), larger when the removal directions are rich — **short** in that case, reason: the route must beat the removal width; recorded |
+ | delivery | method as coded | published MCMC theorems do not claim the algorithm returns (they analyse a chain, not code) | W2-UNI:F-UNI: P(no output) = 0 under model G on the instance classes | **beats** (c): every input, no law; n/a for (b) |
+@@ -29,10 +29,10 @@
+ 
+ ## 3. Boundary numerics (weakened hypotheses (V♭), (BM-W⁺), (T1-F♭))
+ 
+-Planned (`PLAN.md` §2, helper after CP1; results in `numerics/RESULTS.md` before line checks): sweep
+-θ_n² = κσ² log n/n, κ ∈ {0.5, …, 16}, on Ex-Proxy (b ∈ {0.3, 0.45}) and one polynomial-Q design; record start-mode
+-inclusion, TL/NA at probed lattice sets, LS0 endpoint, mode = S₀. Expected: failure only at κ far below κ₀ (the
+-sufficient constants are large); this documents that the constants are artefacts, not that the order is necessary.
++Done (`numerics/RESULTS.md`, `numerics/SPEC.md`; 336 runs) [R1-sol-5]: sweep θ_n² = κσ² log n/n, κ ∈ {0.5, …, 32}, on
++Ex-Proxy (b ∈ {0.3, 0.45}) and one Gaussian-row design with a weak second truth; recorded start-mode inclusion, truth
++removal and NA at visited sets, LS0 endpoint, and a mode-margin proxy on a candidate list (not the exact mode). Observed: failures only for κ ≤ 4 (n = 400) and κ ≤ 2 (n = 1600), far below κ₀ — the
++constants are artefacts; nothing here shows that the order is necessary.
+ No numerics are planned for (D) or 𝓜_n (deterministic code facts / an inclusion of events).
+ 
+ ## 4. Better-theorem input
+--- R1/REPORT.md
++++ R2/REPORT.md
+@@ -29,9 +29,9 @@
+ | W3-RM2-R:DLV-0 | `STATEMENT.md:144-163` | `lemmas/Q5_dlv0.md` | PROVED (by this seat, unchecked), relative to the C-DLV P1/S.3 audits; LC-B VERIFIED-WITH-AMENDMENTS, applied; RC1 VERIFIED |
+ | W3-RM2-R:RM2-F-plus | `STATEMENT.md:166-176` | `lemmas/Q6_assembly.md` §1 | PROVED (by this seat, unchecked); conditional on SOP:TH09@1.0.0; LC-B VERIFIED |
+ | W3-RM2-R:RM2-R-plus | `STATEMENT.md:177-182` | `lemmas/Q6_assembly.md` §2 | PROVED (by this seat, unchecked); conditional on W2-APP:POST@1.0.1; LC-B VERIFIED |
+-| W3-RM2-R:SAND-F-c | `Theory_work/Wave3/W3-RM2-R/STATEMENT.md:183-194` (Q1 row) | `lemmas/Q1_sandF_c.md` | PROVED (by this seat, unchecked); LC-A VERIFIED-WITH-AMENDMENTS (1 E → ERRATA E1) |
+-| W3-RM2-R:TL-F-c | `Theory_work/Wave3/W3-RM2-R/STATEMENT.md:183-194` (Q2, Q3 rows) | `lemmas/Q2_TL_c.md` §4, §6 | PROVED (by this seat, unchecked); §6 conditional on SOP:TH09@1.0.0; LC-A VERIFIED |
+-| W3-RM2-R:Ex-Proxy-d | `STATEMENT.md:197-205` | `lemmas/Q7_proxy_d.md` | PROVED (by this seat, unchecked); LC-A VERIFIED |
++| W3-RM2-R:SAND-F-c | `Theory_work/Wave3/W3-RM2-R/STATEMENT.md:188` (Q1 row) | `lemmas/Q1_sandF_c.md` | PROVED (by this seat, unchecked); LC-A VERIFIED-WITH-AMENDMENTS (1 E → ERRATA E1) |
++| W3-RM2-R:TL-F-c | `Theory_work/Wave3/W3-RM2-R/STATEMENT.md:189` (Q2 row) | `lemmas/Q2_TL_c.md` §4 | PROVED (by this seat, unchecked); LC-A VERIFIED |
++| W3-RM2-R:Ex-Proxy-d | `STATEMENT.md:197-205` | `lemmas/Q7_proxy_d.md` | PROVED (by this seat, unchecked); conditional on SOP:TH09@1.0.0; LC-A VERIFIED |
+ | W3-RM2-R:Cont-plus | `STATEMENT.md:206-213` | `lemmas/Q6_assembly.md` §3 | PROVED (by this seat, unchecked); LC-B VERIFIED |
+ 
+ ## 3. Sharpness and open items (HEURISTIC where not proved)
+@@ -43,7 +43,11 @@
+ 
+ ## 4. Council
+ 
+-Pending (R1: Sol seat + Opus 5.5 seat; manifest `reviews/MANIFEST_R1.txt`).
++R1 (manifest `reviews/MANIFEST_R1.txt`, MANIFEST 4c2183ce…cd402): both seats ACCEPT every claim and pass the
++correctness gate; both FAIL other gates on findings in derived texts only — Opus 8.7 (`reviews/R1_council_opus.md`:
++F1 REPORT conditions vs STATEMENT, F2 READER bridge R7.2), Sol 8.5 (`reviews/R1_council_sol.md`: F1 Song–Liang
++attribution in TARGET, S2 TARGET necessity wording). Dispositions: `reviews/R1_disposition.md`. Diff round R2:
++manifest `reviews/MANIFEST_R2.txt`; result recorded here when complete.
+ 
+ ## 5. REGISTRY
+ 
+@@ -59,8 +63,9 @@
+ rate: none claimed
+ scope: fixed design; s0 fixed; p <= n^A (p >> n allowed); |Q| <= n^b
+ depends_on: W3-RM2-R:RM0-plus@stmt ; W3-RM2-R:DLV-0@stmt ; W3-RM2-R:SAND-F-c@stmt ; W3-RM2-R:TL-F-c@stmt ; W3-RM2:NA-W@stmt ; W3-RM:E4@stmt ; SOP:TH09@hyp
++notes: the posterior/mode step POST/MODE-F (Theorem RM2-F-plus input; Theory_work/Wave3/W3-RM2-R/STATEMENT.md:190, bridge (Q3); proof lemmas/Q2_TL_c.md §6) is recorded under this claim, which carries its condition SOP:TH09 [R1-opus-F1]
+ implies: W3-RM2:RM2-F (weaker hypotheses, conclusions contain; proved in W3-RM2-R:Cont-plus)
+-sharpness: A:RM2-V-FLAT = ARTEFACT (evidence: lemmas/Q1_sandF_c.md:128) ; A:RM2-BM-W-PLUS = ARTEFACT (evidence: lemmas/Q2_TL_c.md:103)
++sharpness: A:RM2-V-FLAT = ARTEFACT (evidence: lemmas/Q1_sandF_c.md:158) ; A:RM2-BM-W-PLUS = ARTEFACT (evidence: lemmas/Q2_TL_c.md:113)
+ gates: correct:PENDING(reviews/LCB_line_check_sol.md) ; lit:PENDING(TARGET.md) ; necessity:PENDING(TARGET.md) ; better:PENDING(TARGET.md)
+ council: none yet
+ ```
+@@ -92,13 +97,14 @@
+ REGISTRY
+ claim: W3-RM2-R:DLV-0 | kind: lemma | statement: STATEMENT.md:144-163 | premises: STATEMENT.md:71-93
+ status: PROVED (by this seat, unchecked), relative to the C-DLV P1/S.3 audits; LC-B VERIFIED-WITH-AMENDMENTS, applied; RC1 VERIFIED | status_source: REPORT.md:29
+-depends_on: C-DLV:Thm-D@proof ; C-DLV:L2-S2@stmt ; C-DLV:L1-R@stmt ; C-DLV:Cor-R@stmt ; C-DLV:L3-3.3@stmt ; C-DLV:L3-3.4@stmt ; W2-UNI:F-UNI@proof ; W3-RM:E4@stmt
++depends_on: C-DLV:Thm-D@proof ; C-DLV:L2-S2@stmt ; C-DLV:L1-R@stmt ; C-DLV:Cor-R@stmt ; C-DLV:L3-3.3@stmt ; C-DLV:L3-3.4@stmt ; C-DLV:Prop-F@proof ; C-DLV:P1-Inventory@stmt ; C-DLV:L2-S3@stmt ; W2-UNI:F-UNI@proof ; W3-RM:E4@stmt
++notes: the allocation A_n is taken from FINAL s6_delivery.tex:33-44 (HQ audits A1/A4; not a registry claim); C-DLV:Prop-F is used for its delivery half only (R-AUD1 restatement) [R1-opus-E3]
+ council: none yet
+ ```
+ 
+ ```
+ REGISTRY
+-claim: W3-RM2-R:SAND-F-c | kind: lemma | statement: STATEMENT.md:183-194 | premises: STATEMENT.md:52-115
++claim: W3-RM2-R:SAND-F-c | kind: lemma | statement: STATEMENT.md:188 | premises: STATEMENT.md:52-115
+ status: PROVED (by this seat, unchecked); LC-A VERIFIED-WITH-AMENDMENTS (1 E → ERRATA E1) | status_source: REPORT.md:32
+ depends_on: W3-RM2:SAND-F-b@proof ; W3-RM2:Toolkit-b@stmt
+ implies: W3-RM2:SAND-F-b ((V_b) implies (V_b-flat))
+@@ -107,9 +113,9 @@
+ 
+ ```
+ REGISTRY
+-claim: W3-RM2-R:TL-F-c | kind: lemma | statement: STATEMENT.md:183-194 | premises: STATEMENT.md:52-115
+-status: PROVED (by this seat, unchecked); §6 conditional on SOP:TH09@1.0.0; LC-A VERIFIED | status_source: REPORT.md:33
+-depends_on: W3-RM2:TL-F-b@proof ; W3-RM2:Toolkit-b@stmt ; W3-RM2:NA-W@stmt ; SOP:TH09@hyp
++claim: W3-RM2-R:TL-F-c | kind: lemma | statement: STATEMENT.md:189 | premises: STATEMENT.md:52-115
++status: PROVED (by this seat, unchecked); LC-A VERIFIED | status_source: REPORT.md:33
++depends_on: W3-RM2:TL-F-b@proof ; W3-RM2:Toolkit-b@stmt ; W3-RM2:NA-W@stmt
+ implies: W3-RM2:TL-F-b ((BM-W) implies (BM-W-plus))
+ council: none yet
+ ```
+@@ -117,8 +123,8 @@
+ ```
+ REGISTRY
+ claim: W3-RM2-R:Ex-Proxy-d | kind: proposition | statement: STATEMENT.md:197-205 | premises: STATEMENT.md:52-115
+-status: PROVED (by this seat, unchecked); LC-A VERIFIED | status_source: REPORT.md:34
+-depends_on: W3-RM2:Ex-Proxy@proof
++status: PROVED (by this seat, unchecked); conditional on SOP:TH09@1.0.0; LC-A VERIFIED | status_source: REPORT.md:34
++depends_on: W3-RM2:Ex-Proxy@proof ; SOP:TH09@hyp
+ implies: W3-RM2:Ex-Proxy (constant theta is a special case of part (b))
+ council: none yet
+ ```
+--- R1/READER_DELTA.md
++++ R2/READER_DELTA.md
+@@ -1,4 +1,4 @@
+-# W3-RM2-R — READER_DELTA (v0.2, after CP1; RIDER_RULES §5)
++# W3-RM2-R — READER_DELTA (v0.3, council R1 diff round; RIDER_RULES §5)
+ 
+ Source of the current reader versions (read only): `/home/fb31/BVS-wt/W3-READER/Theory_work/Wave3/W3-READER/READER_VERSIONS.md`
+ draft v0.1 (W3-READER CP1, 2026-11-15), §6 "Theorem 6" (Gaussian rows; master RM2-R) and §7 "Theorem 7" (fixed
+@@ -58,14 +58,14 @@
+ | # | bridge | mark | detail |
+ |---|---|---|---|
+ | R7.1 | (A1) ⇒ (T1-F♭) | identity + B1.1–B1.3 of READER §1 | (A6) of Theorem 1 is BM(c) with c = C_β²φ₀², or BM-∞ (READER B1.4) |
+-| R7.2 | (A1) (beta-min with C_β²φ₀² ≥ max{c_TL, 8(1 + √(D/2))²} where d_n² ≤ D log n) ⇒ (BM-W⁺) under (A5)(a) | NEW (two lines) | under (A5)(a), |Q| ≤ s₀ + log n, so d_n² ≤ 2(|Q| + 1) + 4 log(2p) ≤ (2 + 4A + o(1)) log n =: D log n; STATEMENT §2 last sentence of (BM-W⁺) |
++| R7.2 | (A1) ⇒ (BM-W⁺) under (A5)(a) | NEW (two lines) [R1-opus-F2, R1-sol-4] | fix a constant D > 2 + 4A; under (A5)(a), \|Q\| ≤ s₀ + log n, so d_n² ≤ 2(\|Q\| + 1) + 4 log(2p) ≤ D log n for n ≥ n₀. If C_β²φ₀² > max{c_TL⁰, 8(1 + √(D/2))²} (strict), choose c_TL with c_TL⁰ < c_TL and max{c_TL, 8(1 + √(D/2))²} < C_β²φ₀²(1 − 1/n₀); then λ_n = (n − 1)φ₀²θ*²_min/σ² ≥ (1 − 1/n)C_β²φ₀² log n ≥ max{c_TL, 8(1 + √(D/2))²} log n for n ≥ n₀, which is (BM-W⁺) by STATEMENT §2 (last sentence of (BM-W⁺)) |
+ | R7.3 | (A5)(b) signal clause ⇒ (BM-W⁺) | identity | it is (BM-Q♭) of STATEMENT §2 |
+ | R7.4 | (A3) = (V♭) | identity | STATEMENT §2 |
+ | R6/7.5 | conclusions | master | W3-RM2-R:RM2-F-plus, RM2-R-plus with (D) = (S3) (standing conventions of NOTATION §5: "sufficient allocation" must be read as 𝒜_n of STATEMENT §2, re-audited at v3.2) |
+ 
+-R7.2 needs one more look before the final: under (A5)(a), (A1) at BM(c) level gives (BM-W⁺) only if C_β is large
+-enough relative to c_TL⁰ and D; the reader text should then say "with C_β large enough (explicit in the remark)" — HQ
+-choice between that and keeping θ*_min√(n/log n) → ∞ as the simple sufficient form in the main text.
++R7.2 (as corrected): under (A5)(a), (A1) at the BM(c) level gives (BM-W⁺) once C_β²φ₀² exceeds the explicit
++constant above; the reader text can say "with C_β large enough (explicit in a remark)" — HQ choice between that and
++keeping θ*_min√(n/log n) → ∞ as the simple sufficient form in the main text.
+ 
+ ## 4. Open for HQ / W3-READER
+ 
+--- R1/H5_SUMMARY.md
++++ R2/H5_SUMMARY.md
+@@ -11,14 +11,14 @@
+ P(Ŝ ≠ S₀) ≤ P(mode failure) + P(search failure). The posterior input is mode consistency (implied by [POST]).
+ 
+ **What it buys the paper.** Signal conditions at the standard σ√(log n/n) scale with constants, as in the comparable
+-literature (Yang–Wainwright–Jordan 2016, Narisetty–He 2014); a reported-model theorem without "on output"; a clean
++literature (Yang–Wainwright–Jordan 2016) [R1-sol-1]; a reported-model theorem without "on output"; a clean
+ error decomposition matching what experiment P6 measures (mode failures vs search failures).
+ 
+ **Assumptions that moved.** Weakened: (V), beta-min in (T1-F), (BM-W) (Form F only). Added for the delivery half only:
+ the delivery premises (D), incl. IDEAL-W⁺. Nothing else.
+ 
+-**Evidence.** Statement lock SL1 + SC1 (Sol); line checks LC-A, LC-B (Sol; pending at the time of writing); council R1
+-(Sol + Opus) before CP3. Conditional on SOP:TH09 (Form F) / W2-APP:POST (Form R), as the parents.
++**Evidence.** Statement lock SL1 + SC1 (Sol); line checks LC-A, LC-B and re-check RC1 (Sol), all VERIFIED; council R1
++(Sol 8.5, Opus 8.7): every claim ACCEPT, correctness gate PASS, derived-text findings fixed in the diff round R2. Conditional on SOP:TH09 (Form F) / W2-APP:POST (Form R), as the parents.
+ 
+ **Engineering note (IDEAL-W⁺; for HQ / Engineering, no method change requested).** The delivery theorem needs two fixed
+ upper bounds in the shipped code to be treated as lifted: (i) `v3_run.R:96` rejects the LS0 base cap `le > 1e6`, and
+--- R1/ERRATA.md
++++ R2/ERRATA.md
+@@ -3,3 +3,9 @@
+ | # | source | file:line | finding | planned fix |
+ |---|---|---|---|---|
+ | E1 | LC-A finding 1 (E) | `lemmas/Q1_sandF_c.md:171` | Remark 3 (inherited) says the text differs from its sources only in Step 2(b)'s last line and the toolkit; Step 2(a) [R-3] now also differs | add "and in Step 2(a) [R-3] (constant-level visibility)" to Remark 3 |
++| E2 | R1 Opus E1 | `STATEMENT.md:80-81` | "two upper-bound predicates, which are treated as true" reads as if the rejection predicates fire | "the two bounds are treated as satisfied (the rejection predicates `le > 1e6`, `cap_ll > INT_MAX` never fire)" |
++| E3 | R1 Opus E2 | `lemmas/Q5_dlv0.md:3` | status line says "re-check pending"; RC1 VERIFIED | update to "RC1 (Sol) VERIFIED" |
++| E4 | R1 Opus E4 | `STATEMENT.md` (C-D); `lemmas/Q5_dlv0.md` §1 | DLV-0 uses Lemma E4 (to exclude the tie-DP throw) but does not name "the hypotheses of Lemma E4" | add "and the hypotheses of Lemma E4" to (C-D) and Q5 §1 |
++| E5 | R1 Opus E5 | `lemmas/Q4_core_plus.md` (a′) | the identity St_n(𝓛′) = {S₀ ⊆ S̃₀} ∩ {[S₀, S̃₀] ⊆ 𝓛′} (STATEMENT:66-67) is not written out | add: "⊆: S̃₀ ∈ 𝓛′ ⊆ 𝓛 gives S₀ ⊆ S̃₀, and down-closure gives [S₀, S̃₀] ⊆ 𝓛′; ⊇: S̃₀ ∈ [S₀, S̃₀]" |
++| E6 | R1 Opus E7 | `STATEMENT.md:135-142` (c⁺) | "for n with s₀ ≤ K" not restated | add "(for n with s₀ ≤ K, as in (b⁺))" |
++| E7 | R1 Opus E9 | `STATEMENT.md` (C1⁺) vs `lemmas/Q6_assembly.md` §1 | (FL_b) vs (G3a) for the same block-relative floor | use one name, "(FL_b) = (G3a) + (FL-Q)" |
+--- R1/numerics/RESULTS.md
++++ R2/numerics/RESULTS.md
+@@ -155,8 +155,8 @@
+ 
+ ## 4. Reading (plain language; finite-n observations only)
+ 
+-**Design P.** The three events — truth inclusion S₀ ⊆ S̃₀, truth removal not beating the truth (F(S₀) > F(∅) is the only
+-truth-removing competitor, so the margin at T = S₀ is F(S₀) − F(∅)), and LS0 ending at S₀ — coincide run by run in all 224
++**Design P.** The three events — truth inclusion S₀ ⊆ S̃₀, truth removal not beating the truth (the empty set is the binding
++truth-removing competitor in these runs [R1-sol-3], so the margin at T = S₀ equals F(S₀) − F(∅)), and LS0 ending at S₀ — coincide run by run in all 224
+ P runs. At n = 400 they hold in all 10 seeds from κ = 8, in 9/10 at κ = 4 (the failing seed has F(∅) > F(S₀) by 2.5 and
+ the start mode is empty), in 1/10 at κ = 2 and in 0/10 at κ ≤ 1. At n = 1600 they hold in all 6 seeds from κ = 4 and in
+ 0/6 at κ ≤ 2 (κ = 3 was not run). The mode-margin proxy over |S| ≤ 3 follows the same pattern (positive in 9/10 at κ = 4,
