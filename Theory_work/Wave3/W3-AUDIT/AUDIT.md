@@ -242,11 +242,16 @@ Ranked candidates (gain · cost · kill budget in `TRACK_D.md` §2):
 5. **Printed estimates on leaky designs** (what AR needs): a non-collapse lemma for the tempered sampler. Tier A, high
    risk; feasibility note first.
 
-**HQ order (2026-11-16):** #2 → #3 → #1 (kill budgets 1.5, 3 and 4 days), at most three tickets, post-freeze from Sat
-11-21 and only after the independent check of the [audit calc] lines; #4 deferred. #5: the feasibility note
-(`TRACK_D.md` §5a) ends NO-GO for replacing #1 — no realistic route to a clause on the printed PIPs, MPM or Ẑ on AR —
-so row 3.6 stays scoped as worded and AR coverage stays with Theorem 6 and row 3.5. A store-restricted clause on AR
-(list-based PIPs and evidence sum; not printed fields) is reachable at Tier B and is listed as an optional item #5′.
+**HQ final order (2026-11-16; supersedes the earlier #2 → #3 → #1):** #2 check X (kill 1.5 days) → #3 sub-Gaussian
+rows for Theorem 2 (kill 3 days) → **#5′ store-restricted clause (kill 3 days), which replaces #1.** All post-freeze, from
+Sat 11-21, after the independent check of the [audit calc] lines. #1 and #4 are deferred. No G1/G2 gate: the printed
+PIPs, MPM and Ẑ on AR stay NO-GO and scoped as worded, with AR covered by Theorem 6 and row 3.5.
+- **#5′** (`TRACK_D.md` §5a): on every design inside Theorem 6 (S2–S4, S6, AR, BLK), the PIPs, median model and evidence
+  sum computed from the returned list are within 1 − π(S₀ | y) of the truth. Tier B, 1–2 Opus days; two named links to
+  close. These are functions of the output, not printed fields.
+- **Alignment (HQ):** once #5′ is proved, Engineering's overlap-rung and 1M analysis reports these store-derived
+  summaries next to the printed fields. Post-processing only, no algorithm change, so the theorem covers numbers
+  reported on AR and BLK.
 
 X1–X5: X1, X3, X5 are lemmas (Tier B); X2, X4 are relabellings (recorder). The [audit calc] lines on which a verdict
 depends are listed in `TRACK_D.md` §4.
