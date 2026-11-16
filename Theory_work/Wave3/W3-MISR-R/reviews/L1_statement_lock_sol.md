@@ -40,7 +40,7 @@ For (E1), the Moore–Penrose formulas are correct. Positive semidefiniteness of
 
 Every nonempty covariance submatrix needed for the sparse Gaussian concentration argument is positive definite by the stated floor. Joint positive definiteness of the entire candidate covariance is unnecessary. The floor on the support also supplies the positive signal variance needed in the energy step. The same SD and sparse-eigenvalue events give φ₀²=c_R/8 and (F_w;1); A0 supplies a common C_OS. On the SD event,
 
-min_j θ_j² nφ₀²/(σ²_𝒞 log n) ≥ (c_R/16)ρ_n^{BM}.
+min_{j∈supp β^𝒞} θ_j² nφ₀²/(σ²_𝒞 log n) ≥ (c_R/16)ρ_n^{BM}.
 
 Thus the strict liminf threshold permits a fixed c>c₀, with the branch in PLAN G2 satisfying the eventual inequality. The sequence-dependent threshold n* is legitimate. C is the class constant at the selected c, so it may depend on the sequence through that choice of c; no uniformity over arbitrary liminf gaps is asserted. Intersecting the three design events gives exactly (2+2k_n)n⁻²+n⁻¹. Conditioning on that intersection gives the stated HPM bound with one copy of this failure probability. Since k_n=O(log n), both bounds are O(r_n).
 
