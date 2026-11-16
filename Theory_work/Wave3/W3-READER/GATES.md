@@ -1,4 +1,7 @@
-# W3-READER leg 2 — strength gates for the five-pillar theorem rows (LIFECYCLE §4.2) — v0.1, 2026-11-16
+# W3-READER leg 2 — strength gates for the five-pillar theorem rows (LIFECYCLE §4.2) — v0.2, 2026-11-16
+
+v0.2 = v0.1 with the SHARP3 results triaged (`TRIAGE_SHARP3.md`): rows 3.6 and 3.7 better gates closed; row 3.6
+necessity of P-START revised (NECESSARY-FOR-ROUTE in Theorem C's scope; ARTEFACT at production budgets).
 
 Scope: `BRIEF_LEG2_GATES.md` (rows 1.1–1.4, 3.1–3.3, 3.5–3.7 of `CLAIMS_CARD.md` v0.5). Detailed tables (hypothesis by
 hypothesis, with file:line evidence) are in the helper files, read and spot-checked by the lead:
@@ -20,8 +23,8 @@ review has a recorded triage disposition or a rider ticket (G1 :9-29; G2 :20-41)
 | 3.2 | `W3-RM2:RM2-F` (+ RM-0, F-UNI) | PASS | PASS | PASS (sharp2 f03 A1 → rider T4) |
 | 3.3 | `W3-START2:START-R`, `W3-START:FLOOR` | PASS | PASS | PASS (sharp2 f09 A2 → T10; f04 SHARP) |
 | 3.5 | `W1-N1:Thm-N1` (+ `W3-READER:PoolZ`) | PASS (credit Del Moral) | PASS | PASS (sharp1 f01, class B park) |
-| 3.6 | `W3-SAMP:C`, `TR`, `LT#`, `D` | PASS | **PASS (resolved here)** | **PENDING (SHARP3 g00–g03, submitted)** |
-| 3.7 | `W3-SCR:A1` | **PASS (resolved here; comparators partly recalled)** | PASS | **PENDING (SHARP3 g04, submitted)** |
+| 3.6 | `W3-SAMP:C`, `TR`, `LT#`, `D` | PASS | **PASS (resolved here; P-START revised after SHARP3)** | **PASS (SHARP3 triaged; rider SAMP-R1 post-freeze)** |
+| 3.7 | `W3-SCR:A1` | **PASS (resolved here; comparators partly recalled)** | PASS | **PASS (SHARP3 triaged; rider SCR-R1 post-freeze)** |
 
 ---
 
@@ -99,19 +102,23 @@ included" (card v0.6 change). `W3-READER:PoolZ` adds only the equal-weight pooli
 
 ## Row 3.6 — printed outputs consistent (Thm 10)
 - **lit: PASS** — G2 :275-295 (no published result about the coded fields; SMC consistency literature compared).
-- **necessity: PASS (resolved by the lead).** G2 :296-311 classifies every hypothesis; one item was left OPEN:
-  **P-START ($\mathbf 1_{\mathcal A}o_0\to0$) for the $\hat Z/Z\to1$ clause → ARTEFACT** (keeps `improvable`). Written
-  reason: P-START is the regime that Theorem C's T-free route needs (W3-SAMP STATEMENT.md:163, "the regime in which the
-  start already concentrates on S₀; the bridge has no mass to transport"); it is not a property any consistent evidence
-  estimator requires — SMC evidence ratios are consistent along tempering paths without start concentration under
-  stability conditions on the kernels (the standard SMC route; Del Moral 2004, **recalled, not re-read**), which the
-  project has not proved for the coded kernels. The trap example (`sharpness.tsv:213`, $\pi_0(S_0)=1.5\cdot10^{-8}$ with
-  P-CONC true, failing at fixed small $L$) is finite-$n$ and shows that *some* start or mixing condition is needed in
-  kind, not that P-START is. For the PIP/MPM/HPM clauses P-START is ARTEFACT already (TR route under P-OVL∞).
+- **necessity: PASS (resolved by the lead; revised after SHARP3).** G2 :296-311 classifies every hypothesis; one item
+  was left OPEN: **P-START ($\mathbf 1_{\mathcal A}o_0\to0$) for the $\hat Z/Z\to1$ clause.** SHARP3 f02 settles it
+  (checked against `W3-SAMP/lemmas/C_theorem.md:34-52`; `TRIAGE_SHARP3.md` C1–C2): re-centring Theorem C's telescoping at
+  $\log(\bar Z_1/\bar Z_0)$ gives $E[|W_r-1|\mid\mathcal C]\le2\,\mathrm{TV}(\pi,\pi_0)$, attained exactly at $N_e=T=1$
+  (where the coded $\hat Z$ is the importance-sampling average of the initial draws). Hence, in Theorem C's stated scope
+  (any frozen parameters), $\hat Z/Z\to1$ forces $\mathrm{TV}(\pi,\pi_0)\to0$, which under P-CONC is P-START:
+  **NECESSARY-FOR-ROUTE (C's any-parameter scope)**. At production budgets ($N_e\ge\max(2500,n,p)$, Theorem 10's setting)
+  it is **ARTEFACT** (keeps `improvable`): an $N_e$-dependent bound under an overlap condition would avoid it (f02 C8–C9,
+  open). For the PIP/MPM/HPM clauses P-START is ARTEFACT already (TR route under P-OVL∞; D for the HPM).
   G2 caution 2 (registry `sharpness.tsv:208` reads `W3-SAMP:LT# / P:POST-CONC = NECESSARY`, its source says sharpness of
   the bound only) → recorder: correct to NECESSARY-FOR-ROUTE.
-- **better: PENDING** — SHARP3 g00–g03 (submitted by HQ); sharp1b f20 partial items (P-MAP localisable to $\mathcal A$;
-  pooled non-collapse may suffice in LT♯) to be confirmed there.
+- **better: PASS (SHARP3 triaged).** Verdicts `api/sharp3/VERDICTS.tsv` (= `API_AUDIT/sharp3/`, main 55d37840): D, LT♯,
+  C, TR all IMPROVABLE-EASY. Triage `TRIAGE_SHARP3.md`: no correctness problem; credible proposals and dispositions —
+  D1 truth-free D (A1), C1 TV re-centring (A1), T1 hybrid TR bound (A1), L7 rate under NC_r (A1), L2/L3/L8, C3–C5, T2, D2
+  (A2) → **post-freeze rider SAMP-R1** (READER_DELTA to row thm10); "NC_r for every island" (L1) and P-MAP localisation
+  (D6) are restatements (C; W3-SAMP errata); D4, D7, L5, L6, L10, C9, T4, T5 open (D); C6–C7, C10, L4, L9, T3, T6, D3, D5
+  cosmetic/restatement (C). The two manager questions are settled in `TRIAGE_SHARP3.md` §0.
 
 ## Row 3.7 — certified screening (Thm 8)
 - **lit: PASS (resolved by the lead; part of the comparators recalled).** G1 :225-240 compares with Song–Liang
@@ -129,7 +136,11 @@ included" (card v0.6 change). `W3-READER:PoolZ` adds only the equal-weight pooli
   guarantee is about a different algorithm). Flag for the manager: the SIS and splicing comparisons are from memory /
   abstracts, not re-read; a re-read would upgrade this to a fully cited table (≤ 1 h; not blocking).
 - **necessity: PASS** — G1 :241-250.
-- **better: PENDING** — SHARP3 g04 (submitted).
+- **better: PASS (SHARP3 triaged).** Verdict `api/sharp3/f04.md`: IMPROVABLE-EASY. Triage `TRIAGE_SHARP3.md` §5:
+  S1 drop "fixed" (only use at `W3-SCR/lemmas/L3_screening.md:69`), S2 $\ell^1$ → bounded total signal (A1); S3 remove
+  $M^2$ from $c_1$, S4 exponential rate (A2) → **post-freeze rider SCR-R1** (READER_DELTA to row thm8: beta-min at rate
+  $\sigma\kappa^{-1}\sqrt{L_n/n}$); S5, S7 constants/wording (C); S6 necessity at $q=0$ (linear cap in $\log p$,
+  $\kappa^2b^2/\sigma^2$, $s_0L_n\lesssim n$ via SCR-N) adopted as sharpness remarks.
 
 ## Recorder notes (from the helpers; not gates)
 `sharpness.tsv` inconsistencies (G1 :21-26): FIXED-S0 "NONE" although W3-PSHARP proves bounded $s_0$ necessary for the

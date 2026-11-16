@@ -18,8 +18,8 @@ W3-START2:START-R	PASS	PASS	PASS	sharp2 f09 IMPROVABLE-EASY: A2 -> T10 (START2 v
 W3-START:FLOOR	PASS	PASS	PASS	sharp2 f04 SHARP (agreed)	GATES.md row 3.3; API_AUDIT/sharp2/TRIAGE.md:49
 W1-N1:Thm-N1	PASS	PASS	PASS	sharp1 f01 IMPROVABLE-EASY: B (park), handed to W3-SCALE; R'=4k C; lit: credit Del Moral (classical identity, coded instance)	GATES.md row 3.5; helpers/GATES_G2.md:225-274; API_AUDIT/sharp1/TRIAGE.md:32
 W3-READER:PoolZ	PASS	PASS	PASS	no proposal (linearity corollary of N1)	GATES.md row 3.5; STATEMENT.md
-W3-SAMP:C	PASS	PASS	PENDING	SHARP3 g00 (submitted)	GATES.md row 3.6 (P-START -> ARTEFACT, written reason); helpers/GATES_G2.md:275-330
-W3-SAMP:TR	PASS	PASS	PENDING	SHARP3 g01 (submitted)	GATES.md row 3.6
-W3-SAMP:LT#	PASS	PASS	PENDING	SHARP3 g02 (submitted); sharp1b f20 partial: pooled non-collapse may suffice (to confirm)	GATES.md row 3.6; API_AUDIT/sharp1b/TRIAGE.md:83-91
-W3-SAMP:D	PASS	PASS	PENDING	SHARP3 g03 (submitted); sharp1b f20 partial: P-MAP localisable to A (to confirm)	GATES.md row 3.6; API_AUDIT/sharp1b/TRIAGE.md:83-91
-W3-SCR:A1	PASS	PASS	PENDING	SHARP3 g04 (submitted)	GATES.md row 3.7 (SIS / splicing comparators partly recalled); helpers/GATES_G1.md:225-270
+W3-SAMP:C	PASS	PASS	PASS	SHARP3 f02 IMPROVABLE-EASY: C1 TV re-centring A1, C3-C5 A2 -> post-freeze rider SAMP-R1; C2 sharpness record adopted (P-START NECESSARY-FOR-ROUTE in C's scope); C6,C7,C10 C; C8 B*; C9 D	GATES.md row 3.6; TRIAGE_SHARP3.md §3; api/sharp3/f02.md
+W3-SAMP:TR	PASS	PASS	PASS	SHARP3 f03 IMPROVABLE-EASY: T1 hybrid TV bound A1, T2 A2 -> rider SAMP-R1; T3,T6 C; T4,T5 D	GATES.md row 3.6; TRIAGE_SHARP3.md §4; api/sharp3/f03.md
+W3-SAMP:LT#	PASS	PASS	PASS	SHARP3 f01 IMPROVABLE-EASY: L7 rate under NC_r A1, L2,L3,L8 A2 -> rider SAMP-R1; L1 'every r' C (islands identically distributed, v3_core.cpp:444); L4,L9 C; L5,L6,L10 D	GATES.md row 3.6; TRIAGE_SHARP3.md §2, §0(1); api/sharp3/f01.md
+W3-SAMP:D	PASS	PASS	PASS	SHARP3 f00 IMPROVABLE-EASY: D1 truth-free D A1 -> rider SAMP-R1; D2 A2; D6 P-MAP localisation C (restatement, errata); D3,D5 C; D4,D7 D	GATES.md row 3.6; TRIAGE_SHARP3.md §1, §0(2); api/sharp3/f00.md
+W3-SCR:A1	PASS	PASS	PASS	SHARP3 f04 IMPROVABLE-EASY: S1 drop 'fixed', S2 l1->total signal A1; S3,S4 A2 -> post-freeze rider SCR-R1; S5,S7 C; S6 necessity remarks adopted	GATES.md row 3.7; TRIAGE_SHARP3.md §5; api/sharp3/f04.md
