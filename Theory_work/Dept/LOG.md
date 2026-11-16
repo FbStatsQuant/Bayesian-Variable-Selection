@@ -159,3 +159,4 @@
 - 02:19 — SL0 PC = EDITORIAL-ONLY (D57); recorder task N staged; HQ GO asked.
 - 02:19 — SL0 PC reviewer settled; side finding: SUBSTANTIVE post-C1 change in C-PACK I1 e4′(i) (outside SL0, not headline) → queued post-freeze targeted re-check (with M55).
 - 02:20 — HQ GO for task N real run (SL0 record + drop SL0 from conditional statuses; gates a–d); recorder told.
+- 02:42 — task N dry run: all gates pass except literal (a) on 10 HQ-file rows (pre-existing A4, no regression) → HQ asked to accept 'no regression + checkpoint rows clean'; Cont-F/R edge fix now on RM2-R CP3 path (Cont-plus 7 ERR) → HQ asked to move it right after N.
