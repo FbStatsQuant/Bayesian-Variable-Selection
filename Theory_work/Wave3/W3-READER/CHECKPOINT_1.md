@@ -33,7 +33,7 @@ posterior). HQ decides.
 ## 2. Bridges, ranked by importance and cost
 | Rank | Bridge | Theorems | Mark | Importance | Cost | Who |
 |---|---|---|---|---|---|---|
-| 1 | `W2-APP:POST@1.0.1` (LSF ⇒ posterior events, Gaussian rows) | 2, 4, 6 | EXISTS-UNCHECKED | critical: every random-design headline | 1 Sol line check (84-line lemma) | **HQ-queued** (HQ_NOW sharp2 riders) |
+| 1 | `W2-APP:POST@1.0.1` (LSF ⇒ posterior events, Gaussian rows) | 2, 6 | EXISTS-UNCHECKED | critical: every random-design headline | 1 Sol line check (84-line lemma) | **HQ-queued** (HQ_NOW sharp2 riders) |
 | 2 | POST2 C/E/A1/A0 council diff round | 4 | EXISTS-UNCHECKED | high | council diff round on a frozen manifest | **HQ** (identified 11-15) |
 | 3 | `SOP:TH09`/`W3-POST:Thm-1` registry label | 1, 7 | label | high (headline 1 reads "label pending") | HQ attestation (council C3 passed) | **HQ** |
 | 4 | Delivery assembly (B6.6, B7.4): RM2 conclusions ⇒ F-UNI premises (S), (P), (V); method-premise table | 6, 7 | NEW | high: turns "if output then $S_0$" into $P(\hat S=S_0)\to1$ | ~1 page + premise table | W3-READER (Opus) |
@@ -55,7 +55,16 @@ posterior). HQ decides.
 5. Not ours but gating the card: ranks 1–3 (HQ).
 
 ## 4. Sol fidelity read (S1)
-*Pending at the time of writing; filled in below when `reviews/S1_fidelity_sol.md` arrives.*
+Sol (gpt-6.1-sol, high) on the frozen v0.1 (`reviews/S1_fidelity_sol.md`): **"S1-VERDICT: NOT-FAITHFUL AS WRITTEN —
+repair F1–F7 before acceptance; the set-size arithmetic and B6.3 are valid, and the remaining mathematical reductions
+pass subject to the explicitly identified premises and inherited statuses."** 2 FATAL (both literal omissions of the
+master's own restriction: $C_\beta>0$ in Thm 1; the size domain of the universal bound on the card), 4 MAJOR (delivery
+premises in Thms 6–7; common envelopes in Thm 6; finite-n domain of the start floor; growing-$Q$ exponent on the card),
+6 MINOR. Theorem 2 FAITHFUL as written. **All 12 accepted and applied** (`reviews/S1_disposition.md`): READER_VERSIONS
+v0.2, NOTATION v0.2, CLAIMS_CARD v0.3. Main consequence: the "always produces output" clauses of Thms 6–7 now rest
+explicitly on the delivery conventions (S4) — idealised machine, covered configuration, sufficient declared allocation —
+which are operational premises, as in the delivery proposition; the common-data-event conclusion needs none of them.
+No master theorem or registry status is affected. The v0.2 text is unchecked until a diff check / CP3 council.
 
 ## 5. Decisions for HQ
 1. **Headline list** (owner via consultant, H5): abstract-level rows 3.1, 1.1–1.3, 3.4, 2.1 (when proved); body rows 3.2, 3.3, 3.5–3.7; pillars 4–5 as honest-status rows?

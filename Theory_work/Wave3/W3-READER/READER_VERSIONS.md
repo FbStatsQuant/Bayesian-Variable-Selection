@@ -1,4 +1,7 @@
-# Reader versions of the headline theorems — draft v0.1 (W3-READER, CP1, 2026-11-15)
+# Reader versions of the headline theorems — draft v0.2 (W3-READER, CP1, 2026-11-15)
+
+v0.2 = v0.1 with all twelve findings of the Sol fidelity read S1 applied (`reviews/S1_fidelity_sol.md`,
+`reviews/S1_disposition.md`); markers [S1-F#].
 
 **How to read this file.** Each section has: the **reader statement** (numbered assumptions in standard terms, a
 conclusion in 1–3 displays, notation from `NOTATION.md` only); **one line per assumption** (why it is there, whether it
@@ -16,7 +19,15 @@ PROVED-CHECKED is called checked; "conditional on …" is carried.
 (S1) Model of §1 of the notation: Gaussian errors with fixed variance $\sigma_*^2>0$, independent of the design.
 (S2) Asymptotics: $n\to\infty$, $p=p_n$ with $2\le p\le n^A$ for a fixed $A\ge1$ ($p\gg n$ allowed).
 (S3) "The method" means the method as coded, under the standing conventions of `NOTATION.md` §5 (exact arithmetic,
-shipped configuration, sufficient allocation). (S3) matters only for Theorems 5–8.
+shipped configuration, admissible runs). (S3) matters only for Theorems 5–8.
+(S4) *Delivery conventions* (used only by the "always produces output" clauses of Theorems 6–7) [S1-F2]: an idealised
+machine (exact unit-cost arithmetic; no integer or index overflow; every memory and worker allocation within the
+declared memory succeeds; the build and its dependencies work; no external interruption or worker crash); the
+covered configuration (production core with the local search from the start mode and the tie-aware start-mode
+fallback; default summaries only; serial execution or a fixed number of workers; fixed number of islands); a valid
+seed; and a declared memory and time allocation at least the method's polynomial envelopes in $(n,p_{\mathrm{raw}})$,
+including its preflight bounds (listed in the paper's appendix). These are operational assumptions; they are not
+consequences of (S1)–(S3) or of any design condition.
 
 
 **Row structure (for in-place updates).** Each theorem section is one card row, delimited by
@@ -40,7 +51,7 @@ Numbering of the headline theorems (proposal; see `CLAIMS_CARD.md`):
 
 ## 1. Theorem 1 — Posterior concentration (fixed design)
 <!-- ROW thm1 BEGIN -->
-**Card row** 1.1 · **Section version** 0.1 (2026-11-15) · **Pending delta** —
+**Card row** 1.1 · **Section version** 0.2 (2026-11-15) · **Pending delta** —
 
 
 ### Reader statement
@@ -52,8 +63,8 @@ Numbering of the headline theorems (proposal; see `CLAIMS_CARD.md`):
   $|S|\le 2(A+1)s_0+2$, for a fixed $\varphi_0\in(0,1]$.
 - **(A5) No near-collinearity among $O(\log n)$ columns.** $\lambda_{\min}(X_S^\top X_S)\ge g_0$ for every $S$ with
   $|S|\le 3(A+1)(s_0+1)\log n$, for a fixed $g_0>0$.
-- **(A6) Beta-min.** $\theta^*_{\min}\ge C_\beta\,\sigma_*\sqrt{\log n/n}$ with a fixed $C_\beta$ such that
-  $C_\beta^2\varphi_0^2>c_0(s_0,A)$; or $\theta^*_{\min}\sqrt{n/\log n}\to\infty$.
+- **(A6) Beta-min.** $\theta^*_{\min}\ge C_\beta\,\sigma_*\sqrt{\log n/n}$ with a fixed $C_\beta>0$ such that
+  $C_\beta^2\varphi_0^2>c_0(s_0,A)$ [S1-F1]; or $\theta^*_{\min}\sqrt{n/\log n}\to\infty$.
 
 Then
 $$
@@ -91,7 +102,9 @@ no eigenvalue condition at all (size-tail lemma; separate statement).
 ### Master theorem
 `W3-POST:Thm-1@1.0.0` (= `SOP:TH09@1.0.0`, T03♯ with the SL0/SL1 consequences), `Theory_work/Wave3/W3-POST/STATEMENT.md:61-100`
 (hypotheses :63-75; conclusions 1–3 at :80-85).
-Registry status, verbatim: **"T03♯: PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2)"**. Council W3-POST C3 passed
+Registry status of `W3-POST:Thm-1@1.0.0`, verbatim: **"T03♯: PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2)"**.
+Registry status of `SOP:TH09@1.0.0`, verbatim: **"T03♯: PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2). T02(i♯),
+T02(ii♯): PROVED; SF/XF VERIFIED. T01–T03: PROVED-LOCKED (wave 3; external review queued), SAME-FAMILY-ONLY"** [S1-F9]. Council W3-POST C3 passed
 (Astra 8.8 / Opus 8.7; briefing 11-13), but the registry label is **not** PROVED-CHECKED. Theorem 1 is therefore
 "proved, verified same-family and cross-family, council-passed; registry label pending".
 
@@ -113,13 +126,14 @@ in the statement and give $c_0$ in a remark.
 
 #### Update log (thm1)
 - v0.1 2026-11-15: first version (CP1).
+- v0.2 2026-11-15: S1 fixes [S1-F1] C_β>0 (STRONGER hypothesis, i.e. corrected); [S1-F9] statuses.
 <!-- ROW thm1 END -->
 
 ---
 
 ## 2. Theorem 2 — Posterior concentration (random Gaussian design)
 <!-- ROW thm2 BEGIN -->
-**Card row** 1.2 · **Section version** 0.1 (2026-11-15) · **Pending delta** —
+**Card row** 1.2 · **Section version** 0.2 (2026-11-15) · **Pending delta** —
 
 
 ### Reader statement
@@ -161,7 +175,7 @@ unchecked); R02 VERIFIED-WITH-AMENDMENTS, applied"**, and its restatement `W3-PO
 | # | Bridge | Mark | Detail |
 |---|---|---|---|
 | B2.1 | (A3) ⇒ LSF (i) and (ii) with $\psi_n=\varphi^2$ | NEW arithmetic | LSF asks the floor on $|S|\le\min(p,s_0+j_0)$ and on $|S|\le\bar k_n=\min\{p,s_0+\max(j_0,\bar m_n)\}$, $\bar m_n=\lceil[s_0(A\log n+\log2)+\log2+\tfrac{s_0+2}2\log n]/\log\tfrac32\rceil$ (L1_POST.md:20-25). For $n\ge3$: $\bar k_n\le(2.47As_0+3.7s_0+5.9)\log n\le5(A+1)(s_0+1)\log n$, and $s_0+j_0\le(2A+2)s_0+2$ is smaller. Checked numerically (LOG). |
-| B2.2 | LSF + Gaussian rows + fixed coefficients ⇒ events $\mathcal A_n$, $P(\mathcal A_n)\to1$, carrying (E), (F_λ), (F_w), BM-∞ with common constants | **EXISTS-UNCHECKED** | `W2-APP:POST@1.0.1` part (a). Raw-scale coefficients are covered (L1_POST.md:12-15, event $\mathcal H_n$). **The weak point of every random-design headline** (Theorems 2, 4b, 6 depend on it). Already queued by HQ: Tier-B Sol line check of `L1_POST.md`. |
+| B2.2 | LSF + Gaussian rows + fixed coefficients ⇒ events $\mathcal A_n$, $P(\mathcal A_n)\to1$, carrying (E), (F_λ), (F_w), BM-∞ with common constants | **EXISTS-UNCHECKED** | `W2-APP:POST@1.0.1` part (a). Raw-scale coefficients are covered (L1_POST.md:12-15, event $\mathcal H_n$). **The weak point of every random-design headline** (Theorems 2 and 6 depend on it; Theorem 4 does not — its master uses its own Gaussian-design transfer [S1-F12]). Already queued by HQ: Tier-B Sol line check of `L1_POST.md`. |
 | B2.3 | events ⇒ conclusions under the joint law | inside the master | Theorem 1 item 6 (diagonal transfer). |
 
 **Effort:** B2.1 half a page; B2.2 one Sol line check (~84-line lemma), HQ-scheduled.
@@ -172,13 +186,14 @@ presented as "proved; one input lemma not yet independently checked".
 
 #### Update log (thm2)
 - v0.1 2026-11-15: first version (CP1).
+- v0.2 2026-11-15: S1 fixes none needed (S1: FAITHFUL); [S1-F12] dependency note.
 <!-- ROW thm2 END -->
 
 ---
 
 ## 3. Theorem 3 — The rate cannot be improved
 <!-- ROW thm3 BEGIN -->
-**Card row** 1.3 · **Section version** 0.1 (2026-11-15) · **Pending delta** PSHARP Cor A1 (rider T12, via Theory Dept)
+**Card row** 1.3 · **Section version** 0.2 (2026-11-15) · **Pending delta** PSHARP Cor A1 (rider T12, via Theory Dept)
 
 
 ### Reader statement
@@ -198,10 +213,13 @@ $$
 1-\pi(S_0\mid y)\ \ge\ (1-o_P(1))\,(s_0+1)\sqrt{\frac{\log p}{\pi n}}.
 $$
 
-*Consequences (remarks).* By (a), no design gives a rate faster than $n^{-1/2}$; $\pi(S_0\mid y)\to1$ requires
-$s_0=o(\sqrt n)$; the rate $\sqrt{\log n/n}$ requires $s_0=O(\sqrt{\log n})$. By (b) with $p=n^a$, the factor
-$\sqrt{\log n}$ is attained: on these designs, which satisfy the assumptions of Theorems 1–2, the rate
-$\sqrt{\log n/n}$ is exact whenever $\log p\asymp\log n$ (this last sentence is conditional on Theorems 1 and 2).
+*Consequences (remarks), all for sequences with $s_0\le\min(K-1,p/2)$* [S1-F5]. By (a), no design gives a rate faster
+than $n^{-1/2}$ for such true models; $\pi(S_0\mid y)\to1$ requires $s_0=o(\sqrt n)$; the rate $\sqrt{\log n/n}$ requires
+$s_0=O(\sqrt{\log n})$. (Without the size restriction (a) is false: e.g. $S=[p]$ with $p=2$.) By (b) with $p=n^a$, the
+factor $\sqrt{\log n}$ is attained. On the two witness sequences that also satisfy the upper-bound assumptions —
+fully orthogonal designs with $p=\min(n-1,\lfloor n^a\rfloor)$, and raw designs with i.i.d. $N(0,1)$ entries and
+$p=\lfloor n^a\rfloor$, both with fixed nonzero coefficients — the rate $\sqrt{\log n/n}$ is exact (conditional on
+Theorems 1 and 2) [S1-F6].
 
 ### Why each assumption
 (a) has none: it is a deterministic property of the prior and the Occam factor (each of the $p-s_0$ one-variable
@@ -225,13 +243,14 @@ None. Note for the text: the expectation form of (b) for every $p$ (sharp2 rider
 
 #### Update log (thm3)
 - v0.1 2026-11-15: first version (CP1).
+- v0.2 2026-11-15: S1 fixes [S1-F5] domain on remarks; [S1-F6] named witnesses (EQUAL).
 <!-- ROW thm3 END -->
 
 ---
 
 ## 4. Theorem 4 — Omitted variables (misspecification)
 <!-- ROW thm4 BEGIN -->
-**Card row** 3.4 · **Section version** 0.1 (2026-11-15) · **Pending delta** MISR Cor-G(a)/Cor-H (rider T13, via Theory Dept)
+**Card row** 3.4 · **Section version** 0.2 (2026-11-15) · **Pending delta** MISR Cor-G(a)/Cor-H (rider T13, via Theory Dept)
 
 
 ### Reader statement
@@ -279,7 +298,10 @@ Inputs below PROVED-CHECKED, verbatim: `W3-POST2:C@1.0.0`, `W3-POST2:E@1.0.0`, `
 `W3-POST2:A0@1.0.0`: **"PROVED (by this seat, unchecked)"** (council C1 8.6/8.6, but acceptance STOPPED 11-15: no
 frozen C1 manifest, and the repaired D(b) post-dates C1 — HQ_DECISIONS 2026-11-15); `C-MIS:Prop-P@1.0.0`: **"R02
 VERIFIED; R04 wording fixes checked in R05; council PASS"**; `C-MIS:GD(b)@1.0.0`: **"R02 VERIFIED-WITH-AMENDMENTS
-(applied); council PASS"**; `SOP:TH09`, `SOP:TH128` as in §1.
+(applied); council PASS"**; `SOP:TH09` as in §1; `SOP:TH128@1.0.0`: **"PROVED (candidate) (W1-T03R); SF VERIFIED
+(W2-VT03R, no GAP/ERROR in the mathematics); XF VERIFIED under exactly its hypotheses (A-REV2); VERIFIED core (A-REV5,
+onset gloss ERROR); LIT-STAT: modest extension of Rossell 2022, clause (iii) known; final card: PROVED; SF VERIFIED
+(W2-VT03R); XF VERIFIED (A-REV2)"** [S1-F9].
 Fixed-design form: `W3-MISR:MIS(i)@1.0.0` (:110-123), **"PROVED-CHECKED, conditional on W3-POST2:C; …"**.
 
 ### Bridges
@@ -295,13 +317,14 @@ council-passed but not accepted posterior refinements". The card must say so unt
 
 #### Update log (thm4)
 - v0.1 2026-11-15: first version (CP1).
+- v0.2 2026-11-15: S1 fixes [S1-F9] TH128 status; [S1-F12] no W2-APP:POST dependency (EQUAL).
 <!-- ROW thm4 END -->
 
 ---
 
 ## 5. Theorem 5 — The start law already concentrates
 <!-- ROW thm5 BEGIN -->
-**Card row** 3.3 · **Section version** 0.1 (2026-11-15) · **Pending delta** START2 (T1⁺)/(T3⁺)(b)/IF-START⁺ (rider START2 v1.5, via Theory Dept)
+**Card row** 3.3 · **Section version** 0.2 (2026-11-15) · **Pending delta** START2 (T1⁺)/(T3⁺)(b)/IF-START⁺ (rider START2 v1.5, via Theory Dept)
 
 
 ### Reader statement
@@ -324,7 +347,8 @@ Then for every $c<\tfrac12$,
 $$
 P\big(\pi_0(S_0)\ge1-n^{-c}\big)\to1,
 $$
-and the exponent $\tfrac12$ cannot be improved: $1-\pi_0(S_0)\ge\tfrac13(n+1)^{-1/2}$ for every data set.
+and the exponent $\tfrac12$ cannot be improved: $1-\pi_0(S_0)\ge\tfrac13(n+1)^{-1/2}$ for every valid data set with
+$n\ge4$ and $s_0<K$ (hence for all large $n$) [S1-F4].
 
 *With leakage (remark or second display).* If (A5) holds with $S_0$ replaced by a deterministic $Q\supseteq S_0$,
 $|Q|\le K$ (columns outside $Q$ do not leak), then
@@ -349,7 +373,7 @@ $\ge1-n^{-c}$ for every $c<\epsilon$.
 | # | Bridge | Mark | Detail |
 |---|---|---|---|
 | B5.1 | (A3)–(A5) = (FL-R16), (V-R), (L-R⁺) with $Q=S_0$ | identity | word for word. |
-| B5.2 | floor $\tfrac13(n+1)^{-1/2}$ | EXISTS-CHECKED | (T0) holds when $s_0<K$, i.e. for all large $n$ since $p>s_0$. |
+| B5.2 | floor $\tfrac13(n+1)^{-1/2}$ | EXISTS-CHECKED | (T0) holds for valid data with $n\ge4$ and $|S|<K$; with $S=S_0$ this is all large $n$ since $p>s_0$ (statement restricted accordingly [S1-F4]). |
 
 ### Honest limits
 The statement is in population terms but (A5) is long. Two presentation options for HQ: (i) state the theorem with
@@ -361,13 +385,14 @@ abstract.
 
 #### Update log (thm5)
 - v0.1 2026-11-15: first version (CP1).
+- v0.2 2026-11-15: S1 fixes [S1-F4] floor restricted to n≥4, s₀<K (WEAKER clause, now faithful).
 <!-- ROW thm5 END -->
 
 ---
 
 ## 6. Theorem 6 — The reported model equals the truth (random Gaussian design; main theorem)
 <!-- ROW thm6 BEGIN -->
-**Card row** 3.1 · **Section version** 0.1 (2026-11-15) · **Pending delta** —
+**Card row** 3.1 · **Section version** 0.2 (2026-11-15) · **Pending delta** —
 
 
 ### Reader statement
@@ -381,24 +406,26 @@ $b\in(0,\tfrac12)$ and $\rho>0$ with $15\rho+b<\tfrac12$. Assume
   $U\not\ni j$ with $|U|\le15$.
 - **(A4) Polynomial leakage set.** There is a deterministic $Q\supseteq S_0$ with $|Q|\le n^b$ and, for large $n$,
   $|Q|\le K$ and ($Q=[p]$ or $K\ge2|Q|+32s_0+1$), such that:
-  (i) *(no leak outside $Q$)* $|\operatorname{Cov}(W_l,W_j\mid W_U)|=o\big(\sqrt{\log n/n}\big)$ uniformly over
-  $l\notin Q$, $j\in S_0\setminus U$, $|U|\le15$;
-  (ii) *(locality)* every $l\notin Q$ has a deterministic $H_l\supseteq\{l\}\cup S_0$, $|H_l|\le n^{\rho}$, such that
-  for every $U\not\ni l$ with $|U|\le15$ and $U_0:=U\cap H_l$: $|\operatorname{Cov}(W_l,W_v\mid W_{U_0})|\to0$ and
-  $|\operatorname{Cov}(W_j,W_v\mid W_{U_0})|\to0$ uniformly over $v\in U\setminus H_l$, $j\in S_0\setminus U_0$.
+  (i) *(no leak outside $Q$)* there is a deterministic $\varpi_n$ with $\varpi_n\sqrt{n/\log n}\to0$ such that
+  $|\operatorname{Cov}(W_l,W_j\mid W_U)|\le\varpi_n$ for all $l\notin Q$, $j\in S_0\setminus U$, $|U|\le15$;
+  (ii) *(locality)* there is a deterministic $r_n\to0$, and every $l\notin Q$ has a deterministic
+  $H_l\supseteq\{l\}\cup S_0$, $|H_l|\le n^{\rho}$, such that for all $l\notin Q$, all $U\not\ni l$ with $|U|\le15$
+  and $U_0:=U\cap H_l$: $|\operatorname{Cov}(W_l,W_v\mid W_{U_0})|\le r_n$ and
+  $|\operatorname{Cov}(W_j,W_v\mid W_{U_0})|\le r_n$ for all $v\in U\setminus H_l$, $j\in S_0\setminus U_0$ [S1-F3].
 - **(A5) Population sparse eigenvalue floor.** $\lambda_{\min}(\Sigma_{n,S})\ge c>0$ for every $S$ with
   $|S|\le5(A+1)(s_0+1)\log n$ and for every $S=Q\cup\{l\}$, $l\in[p]$.
-- **(A6) Local regressions within $Q$.** For every $l\in[p]$ there is $N_l\subseteq Q\setminus\{l\}$ with
-  $|N_l|=o(\log n)$ such that
+- **(A6) Local regressions within $Q$.** There are deterministic sequences $\nu_n=o(\log n)$ and $L_n$, and for every
+  $l\in[p]$ a deterministic $N_l\subseteq Q\setminus\{l\}$ with $|N_l|\le\nu_n$ [S1-F3], such that
   $\|\bar\beta_{T,l}-\bar\beta_{T\cap N_l,l}\|_1\le L_n$ for every $T$ with $S_0\subseteq T\subseteq Q$, $l\notin T$,
   where $L_n\to0$ and $L_n^2\log(|Q|+1)=o(\log n)$ (bars: population regression coefficients, zero-padded).
 
-Then, under the joint law of design and noise and for every seed,
+Then, under the joint law of design and noise, there are data events $\mathcal G_n$ with $P(\mathcal G_n)\to1$ on
+which **every** admissible run that produces output reports $\hat S=S_0$, whatever its seed and the outcome of its
+internal calibration; in particular $P(\text{output and }\hat S\neq S_0)\to0$. If moreover the delivery conventions
+(S4) hold [S1-F2],
 $$
-P(\text{the run produces output})=1\ \ \text{for every }n,\qquad P(\hat S=S_0)\to1 ,
+P(\text{the run produces output})=1\ \ \text{for every admissible }n\ge3,\qquad P(\hat S=S_0)\to1 .
 $$
-and more strongly there are data events $\mathcal G_n$ with $P(\mathcal G_n)\to1$ on which **every** run that produces
-output reports $\hat S=S_0$, whatever its seed and the outcome of its internal calibration.
 
 *Remarks.* (i) On $\mathcal G_n$ the local search from the start mode only deletes the spurious members of the start
 mode, one per move, at most $n^b$ moves, and certifies $S_0$; its move cap never binds. (ii) The polylogarithmic case
@@ -438,7 +465,7 @@ blocks.
 | B6.3 | (A6) + (A5) ⇒ (D-loc^b) incl. its variance clause | **NEW** (one paragraph; proof below) | (D-loc^b) = RM (D-loc) (RM STATEMENT.md:154-156) with $L_n^2\log(|Q|+1)=o(\log n)$; its second clause $\operatorname{Var}(W_l\mid W_{T\cap N_l})\le(1+\eta_n)\operatorname{Var}(W_l\mid W_T)$, $\eta_n\to0$, follows from (A6) and (A5): see proof. |
 | B6.4 | (D-loc^b) ⇒ (D-R^b) ⇒ (W-R) | EXISTS-CHECKED | `W3-RM2:D-to-W@1.0.0`, "PROVED-CHECKED; council R1, …" (STATEMENT.md:256, (C3)/(P9)). |
 | B6.5 | (T1-R) ⇒ posterior input [POST] | EXISTS-CHECKED, conditional | `W3-RM2:POST-R@1.0.0`, "PROVED-CHECKED, conditional on W2-APP:POST; …" ⇐ B2.2 (**EXISTS-UNCHECKED**). |
-| B6.6 | RM2-R conclusions ⇒ F-UNI premises (S), (P); (V) input validity from "$\Sigma_n$ positive definite" | **NEW** (assembly, one paragraph) | (S): $P(\mathrm{Sand}\cap\mathrm{NA}\cap\mathrm{TL})\ge1-\sum P(\cdot^c)\to1$ from [SAND(Q)], [NA(Q)], [TL(Q)]; (P) = [POST]; (V) = "(R) with $\lambda_{\min}(\Sigma_n)>0$". Must also check that F-UNI's method premises (tier-1 fallback freezing, LS0 cap $\ell_n+|\tilde S_0|$, allocation inequalities) match (S3) and RM2's configuration; the fallback is the shipped default (`v3_calib.R:141-144`). |
+| B6.6 | RM2-R conclusions ⇒ F-UNI premises (S), (P), (V); F-UNI's operational premises carried as (S4) | **NEW** (assembly; (V)/(S)/(P) part passed S1) | (S): $P(\mathrm{Sand}\cap\mathrm{NA}\cap\mathrm{TL})\ge1-\sum P(\cdot^c)\to1$ from [SAND(Q)], [NA(Q)], [TL(Q)]; (P) = [POST]; (V) = "(R) with $\lambda_{\min}(\Sigma_n)>0$". LS0 cap and default-on tier-1 fallback match (`v3_calib.R:141-144`). F-UNI's method/premise/allocation paragraph (`L5_delivery.md:7-12`: EX-A as cost model, IDEAL-W, EX-S, SR, e4/TDP-IMPL, GUARD-W, MACH, CONFIG, valid seed, allocation and preflight inequalities at $(n,p_{\mathrm{raw}})$; P1/S.3 "AUDITED (code reading)") is **not derived**: it is carried as (S4) [S1-F2]. Premise-by-premise table: proof leg (`lemmas/R3_delivery_assembly.md`). |
 | B6.7 | standardised-signal convention | limit | The masters take $\theta^*$ deterministic (Setting R). A raw-scale version (fixed $\beta^*$) would need a **NEW** bridge (medium; the population conditions involve $\theta^*$). Not proposed for CP1. |
 
 **Proof of B6.3.** Fix $l$ and $T$ in the lattice with $l\notin T$, put $A:=T\cap N_l\subseteq T$ and
@@ -463,13 +490,14 @@ regressions are local. HQ choices: keep them as stated (faithful), or state Theo
 
 #### Update log (thm6)
 - v0.1 2026-11-15: first version (CP1).
+- v0.2 2026-11-15: S1 fixes [S1-F2] delivery under (S4); [S1-F3] common envelopes (STRONGER hypotheses; WEAKER unconditional clause).
 <!-- ROW thm6 END -->
 
 ---
 
 ## 7. Theorem 7 — The reported model equals the truth (fixed design)
 <!-- ROW thm7 BEGIN -->
-**Card row** 3.2 · **Section version** 0.1 (2026-11-15) · **Pending delta** RM2-F (rider T4, via Theory Dept)
+**Card row** 3.2 · **Section version** 0.2 (2026-11-15) · **Pending delta** RM2-F (rider T4, via Theory Dept)
 
 
 ### Reader statement (two sufficient versions)
@@ -491,10 +519,11 @@ regressions are local. HQ choices: keep them as stated (faithful), or state Theo
   $\|\hat\beta_{T,l}-\hat\beta_{T\cap N_l,l}\|_1\le L_n$ for every $T$ with $S_0\subseteq T\subseteq Q$, $|T|<K$,
   $l\notin T$.
 
-Then there are data events $\mathcal G_n$, $P(\mathcal G_n)\to1$, on which every run that produces output reports
-$\hat S=S_0$, for every seed and calibration outcome; and
+Then there are data events $\mathcal G_n$, $P(\mathcal G_n)\to1$, on which every admissible run that produces output
+reports $\hat S=S_0$, for every seed and calibration outcome; in particular $P(\text{output and }\hat S\neq S_0)\to0$.
+If moreover the delivery conventions (S4) hold [S1-F2],
 $$
-P(\text{the run produces output})=1,\qquad P(\hat S=S_0)\to1 .
+P(\text{the run produces output})=1\ \ \text{for every admissible }n\ge3,\qquad P(\hat S=S_0)\to1 .
 $$
 
 ### Intuition for each condition (for the paper's text)
@@ -521,7 +550,7 @@ nonconstant raw columns").
 | B7.1 | (A1) ⇒ (T1-F) | as B1.1–B1.4 (with BM-∞) | (T1-F) uses BM-∞ (RM STATEMENT.md:91-92). |
 | B7.2 | (A5)(a) ⇒ (L-size^b) for every small $b>0$, (W) via (W-χ), (BM-W) = BM-∞ | EXISTS-CHECKED | `W3-RM2:W-suff@1.0.0` (C3)(c) "(W-χ) ⇒ (W-δ)"; (BM-W) reduces to BM-∞ when $d_n^2=O(\log n)$ (STATEMENT.md:137-139). $b<\beta(\eta,A)$ is possible because $\eta<\eta_A$. |
 | B7.3 | (A5)(b) ⇒ (W) via (W-loc) ⇒ (W-ref) ⇒ (W-unif) ⇒ (W-δ) | EXISTS-CHECKED | `W3-RM2:W-suff@1.0.0`; the variance clause of (W-loc) follows from $L_n\to0$ under the floor on $Q\cup\{l\}$ (STATEMENT.md:164). $\theta^{*2}_{\min}n/(|Q|+\log n)\to\infty$ is (BM-Q) ⇒ (BM-W) (:138-139). |
-| B7.4 | RM2-F conclusions ⇒ F-UNI premises | **NEW** (assembly) | as B6.6, fixed-design input validity. |
+| B7.4 | RM2-F conclusions ⇒ F-UNI premises (S), (P), (V) | **NEW** (assembly) | as B6.6, fixed-design input validity ((E) with nonconstant raw columns); operational premises carried as (S4) [S1-F2]. |
 
 ### Honest limits (the case the brief names)
 (A3)–(A5) are **sample-level conditions on $(X,\theta^*)$**: partial signal gains $\delta^2_{U,j}$ and sample regressions.
@@ -536,13 +565,14 @@ any $b\ge\tfrac12$. Recommendation: present (A5)(a) in the main text (fully expl
 
 #### Update log (thm7)
 - v0.1 2026-11-15: first version (CP1).
+- v0.2 2026-11-15: S1 fixes [S1-F2] delivery under (S4) (WEAKER unconditional clause).
 <!-- ROW thm7 END -->
 
 ---
 
 ## 8. Theorem 8 — Certified screening
 <!-- ROW thm8 BEGIN -->
-**Card row** 3.7 · **Section version** 0.1 (2026-11-15) · **Pending delta** —
+**Card row** 3.7 · **Section version** 0.2 (2026-11-15) · **Pending delta** —
 
 
 ### Reader statement
@@ -550,14 +580,15 @@ any $b\ge\tfrac12$. Recommendation: present (A5)(a) in the main text (fully expl
 - **(A1) Sparse eigenvalue floor.** $\lambda_{\min}(\hat R_S)\ge\kappa$ for every $S$ with $|S|\le q_n+s_0$;
 - **(A2) Fixed signals.** $\theta^*_{\min}\ge b_0>0$ and $\|\theta^*\|_1\le M$ (fixed $\kappa,b_0,M,\sigma_*$);
 - **(A3) Size budget.** $(q_n+1)\log p+\log n\le c_1n$, $c_1:=\kappa^2b_0^2/(200(M^2+\sigma_*^2))$, with
-  $q_n\le K-1$.
+  $q_n\in\{0,\dots,K-1\}$ [S1-F8].
 
 Then
 $$
 P\big(\text{output},\ \hat S\text{ certified},\ |\hat S|\le q_n,\ S_0\not\subseteq\hat S\big)\to0 .
 $$
-In particular this holds for $p\le n^A$ and every $q_n=o(n/\log n)$. No condition on the start, leakage, blocks,
-visibility, or on correlations among null columns is used; $p\le n^A$ is not needed.
+In particular this holds for $p\le n^A$ and every $q_n=o(n/\log n)$. No condition on the start, leakage, blocks or
+visibility is used beyond (A1)–(A3), and $p\le n^A$ is not needed. (The master needs only a weaker directional floor,
+which leaves null-null correlations free; the full floor (A1) does constrain them [S1-F8].)
 
 ### Why each assumption
 (A1) only the realised combination of missing truths must keep a fraction of its energy outside any small model (the
@@ -579,13 +610,14 @@ certificate needs a near-orthogonality floor (`W3-SCR:SCR-C`, PROVED-CHECKED), w
 
 #### Update log (thm8)
 - v0.1 2026-11-15: first version (CP1).
+- v0.2 2026-11-15: S1 fixes [S1-F8] q_n range and null-correlation wording (EQUAL).
 <!-- ROW thm8 END -->
 
 ---
 
 ## 9. Theorem 9 — Distribution-level consistency (placeholder)
 <!-- ROW thm9 BEGIN -->
-**Card row** 2.1 · **Section version** 0.1 (2026-11-15) · **Pending delta** W3-DIST CP2/CP3
+**Card row** 2.1 · **Section version** 0.2 (2026-11-15) · **Pending delta** W3-DIST CP2/CP3
 
 
 Ticket W3-DIST is at its CP1 (read-only here; not touched). Candidate master: "Theorem DIST-1" in
@@ -597,6 +629,7 @@ is written here.
 
 #### Update log (thm9)
 - v0.1 2026-11-15: first version (CP1).
+- v0.2 2026-11-15: S1 fixes none.
 <!-- ROW thm9 END -->
 
 ---
@@ -605,7 +638,7 @@ is written here.
 
 | Bridge | Theorem | Mark | Importance | Cost |
 |---|---|---|---|---|
-| B2.2 `W2-APP:POST` line check | 2, 4, 6 | EXISTS-UNCHECKED | **critical** (every random-design headline) | 1 Sol line check, HQ-queued |
+| B2.2 `W2-APP:POST` line check | 2, 6 | EXISTS-UNCHECKED | **critical** (every random-design headline) | 1 Sol line check, HQ-queued |
 | B4.3 POST2 C/E/A1/A0 council diff round | 4 | EXISTS-UNCHECKED | high (misspecification headline) | council diff round (HQ identified) |
 | B6.6 / B7.4 RM2 ⇒ delivery assembly | 6, 7 | NEW | high (turns "if output, then $S_0$" into "$P(\hat S=S_0)\to1$") | ~1 page + Sol line check |
 | B6.3 local regressions ⇒ variance clause (+ "$L_n\to0$") | 6 | NEW | medium | ½ page + Sol |

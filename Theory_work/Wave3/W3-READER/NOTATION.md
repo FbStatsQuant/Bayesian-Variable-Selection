@@ -63,7 +63,9 @@ The prior is a hierarchical conjugate prior on $(S,\beta_S,\sigma^2)$ for the st
 2. **Coefficients (ridge-stabilised $g$-prior, $g=n$).** Given $S$ and $\sigma^2$,
    $\beta_S\sim N\big(0,\;n\sigma^2(G_S+I)^{-1}\big)$.
 3. **Noise variance.** $\sigma^2\sim\mathrm{IG}(a_0,b_0)$ with $a_0=b_0=0.01$.
-4. **Intercept.** Removed by centring (equivalent to a flat prior on the intercept).
+4. **Intercept.** Removed by centring the data before scoring; the working likelihood below is the $n$-dimensional
+   Gaussian one on the centred, standardised data (this is not the same as integrating a flat intercept prior, which
+   would give $a_0+(n-1)/2$ in place of $\nu=a_0+n/2$).
 
 The working likelihood is $y\mid S,\beta_S,\sigma^2\sim N_n(X_S\beta_S,\sigma^2 I_n)$. It is a *working* model: the
 theorems are proved under the true model of §1, not under the prior.
@@ -111,9 +113,11 @@ The method is a sequential Monte Carlo sampler over $\Omega$ with a deterministi
   for one non-member), moves to the best neighbour if it strictly improves the score $F$, and stops when a complete scan
   finds no strict improvement or when a move cap of about $\log_2(n+p)+|\tilde S_0|$ moves is reached.
 * **The reported model $\hat S$.** Every model the run scores (by the sampler, by the local searches) is recorded; the
-  reported model is the best-scoring recorded model. It is reported as **certified** when it is the end point of a
-  local search whose last complete scan found no strict improvement (i.e. it is verified to be a local optimum of $F$
-  in the neighbourhood above).
+  reported model is the best-scoring recorded model. It is reported as **certified** (the method's public certification flag) when either
+  the model space was small enough to be enumerated exactly (then $\hat S$ is the exact maximiser of $F$), or $\hat S$ is
+  the end point of a local search whose last complete scan found no strict improvement (i.e. it is verified to be a
+  local optimum of $F$ in the neighbourhood above). The local search from the start mode also keeps its own record of
+  whether its end point was certified; that record is distinct from the public flag of the reported model.
 * **Estimated summaries.** The sampler runs $R=4$ independent islands. Each island $r$ produces Rao–Blackwellised
   inclusion probabilities $\widehat{\mathrm{PIP}}_{r,j}$ and an evidence estimate $\hat Z_r$. The method pools them
   with **equal weights**: $\widehat{\mathrm{PIP}}_j:=\frac1R\sum_{r=1}^R\widehat{\mathrm{PIP}}_{r,j}$ and
@@ -125,9 +129,15 @@ computing allocation is exhausted). $\mathcal O$ denotes the event that a run pr
 
 **Standing conventions about "the method as coded".** All statements about what the method returns assume: (i) exact
 arithmetic (scores and comparisons computed without rounding error); (ii) the shipped configuration (in particular the
-local search from the start mode is switched on, with the move cap above); (iii) a computing allocation large enough
-that the run is not stopped by its resource guard. Statements hold for every random seed and every outcome of the
-method's internal calibration unless said otherwise.
+local search from the start mode is switched on, with the move cap above); (iii) admissible runs
+(valid inputs and seed, the method's execution conventions). Statements hold for every admissible seed and every
+outcome of the method's internal calibration unless said otherwise. **Delivery conventions** (used only where a theorem
+says the run *always produces output*): an idealised machine (exact unit-cost arithmetic, no integer or index
+overflow, every allocation within the declared memory succeeds, the build and its dependencies work, no external
+interruption or worker crash), the covered configuration (production core with the start-mode search and its
+tie-aware fallback, default summaries, serial execution or a fixed number of workers), a valid seed, and a declared
+memory and time allocation at least the method's polynomial envelopes in $(n,p_{\mathrm{raw}})$, preflight bounds
+included. These are operational assumptions, not consequences of any statistical condition.
 
 ## 6. Design quantities used in the assumptions
 
