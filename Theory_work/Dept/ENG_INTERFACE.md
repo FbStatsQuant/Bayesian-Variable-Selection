@@ -24,3 +24,4 @@ Log of exchanges:
 - 2026-11-15 20:43 CT — Eng: NOTS scratch purge atime-keyed (NOTS_FACTS.md); records copy → SMC_Theory_Department/records/ (HQ-approved, D33); bvs_tmp now ours to absorb.
 - 2026-11-15 21:56 CT — Eng D-17 (store-law spread at n=200) received via HQ; relayed to W3-DIST and W3-READER for wording.
 - 2026-11-15 23:21 CT — Theory → Eng: PSMC-S0 CP1 final delivered (D-7 SAFE TO DROP with condition; OD-1 correction; calibration questions; overlap-rung notes per change). Recorder stages the D-7 registry entry.
+- 2026-11-15 23:22 CT — Eng THEORY-7: D-7 SAFE TO DROP accepted (calibration keeps feeding V + inherited models); OD-1 wording fixed (p ≤ 2,500 and n ≤ 2,500); calibration answers D-26: V-1M no tier escalation (N = 2,500, H = 512), I_max ≤ ℓ required, construction failure installs last good grid else pilot schedule (flag grid_fallback), never 'no output'; theory mode keeps coded rule. Overlap-rung notes adopted.
