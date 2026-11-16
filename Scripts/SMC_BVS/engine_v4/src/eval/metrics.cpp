@@ -125,6 +125,7 @@ Json evidence_metrics(double logZ, const std::vector<double>& lr, double logZ_T)
   J["logZ"] = (logZ);
   J["logZ_r"] = (Json::array_of(lr));
   J["logZ_lower95"] = (std::log(0.05) + logZ);   // Markov bound, core/v3_run.R:155
+  J["logZ_lower95_note"] = "Markov lower confidence bound log(0.05 Zhat); gives no upper bound on Z (Sol F9)";
   if (R) {
     double m = 0; for (double v : lr) m += v; m /= R;
     double ss = 0; for (double v : lr) ss += (v - m) * (v - m);
@@ -145,6 +146,7 @@ Json evidence_metrics(double logZ, const std::vector<double>& lr, double logZ_T)
   }
   J["logZ_T"] = (logZ_T);
   J["logZ_minus_logZ_T"] = (logZ - logZ_T);
+  J["logZ_T_note"] = "log Z_T = log sum_store e^F is a deterministic lower bound on log Z (the only one); logZ_minus_logZ_T compares it with the noisy estimate";
   return J;
 }
 

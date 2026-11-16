@@ -457,6 +457,17 @@ Json dist_metrics(const Law& L, const Truth& T, int32_t n_obs, const DistOpts& o
   J["object"] = L.name;
   J["n_components"] = (uint64_t)M;
   J["dropped_mass"] = L.dropped_mass;
+  if (L.dropped_mass > 0) {
+    // Sol F9-b: the law is a truncated approximation of the store BMA; the omitted (summed) mass δ enters as error terms.
+    // f̄_store = (1 − δ) f̄_law + δ f̄_omitted ⇒ H²(f̄_store, f̄_law) ≤ 1 − √(1 − δ) ≤ δ, so every d_H of a law object is
+    // within √δ of the store object's; weighted means of d_H² ∈ [0, 1] are within δ.
+    Json Tr = Json::object();
+    Tr["label"] = "truncated approximation of the store BMA";
+    Tr["omitted_mass"] = L.dropped_mass;
+    Tr["dH_bound_truncation"] = std::sqrt(L.dropped_mass);
+    Tr["weighted_h2_bound_truncation"] = L.dropped_mass;
+    J["law_truncation"] = Tr;
+  }
 
   // 1. plug-in at the law's posterior mean (b̄ over the union of supports, ā, v̄) — closed form, O(Σk log Σk)
   {
@@ -572,6 +583,9 @@ Json dist_metrics(const Law& L, const Truth& T, int32_t n_obs, const DistOpts& o
     Q["exact"] = sp.exact; Q["top_k"] = (uint64_t)sp.top.size(); Q["tail_components"] = (uint64_t)sp.tail.size();
     Q["tail_r"] = (uint64_t)(G * (size_t)sp.Rg); Q["tail_groups"] = (uint64_t)G; Q["tail_mass"] = sp.tau;
     Q["h2_topK"] = 1.0 - aK; Q["dH_topK"] = std::sqrt(std::max(0.0, 1.0 - aK)); Q["dH_bound"] = std::sqrt(sp.tau);
+    // review R-3: when √τ ≥ the estimate itself the bound says nothing; cite the estimate ± SE instead
+    Q["dH_bound_vacuous"] = std::sqrt(sp.tau) >= std::sqrt(std::max(0.0, 1.0 - am));
+    Q["note"] = sp.exact ? "exact mixture" : "estimate = top-K exact + stratified tail sample (unbiased density); cite h2 +- h2_se_tail (t with tail_groups - 1 df) and h2_se_x";
     Q["kl_topK"] = kK;
     Q["n_x"] = o.n_x; Q["n_gh"] = o.n_gh; Q["block_rows"] = (uint64_t)B; Q["max_block_columns"] = (uint64_t)max_cols;
     Q["rows"] = gen_rows ? "gen_test" : "eval_philox";

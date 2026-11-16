@@ -83,6 +83,8 @@ std::string write_law(const LawFile& L, const std::string& path, int n_draws, ui
   }
   Json meta = Json::object();
   meta["schema"] = ("smcbvs4.law/1");
+  meta["label"] = "truncated approximation of the store BMA";   // Sol F9-b
+  meta["truncation"] = "models with relative weight >= rel_cut (at most max_models); dropped_mass = summed omitted relative mass; d_H error <= sqrt(dropped_mass)";
   meta["n"] = (L.n); meta["p"] = (L.p); meta["M"] = ((int64_t)M); meta["C"] = ((int64_t)C);
   meta["rel_cut"] = (L.rel_cut); meta["vmax"] = (L.vmax); meta["logZ_T"] = (L.logZ_T);
   meta["dropped_mass"] = (L.dropped_mass); meta["n_store"] = (eval::hex_u64(L.n_store));

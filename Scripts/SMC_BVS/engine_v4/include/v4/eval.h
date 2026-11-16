@@ -136,7 +136,7 @@ struct DistOpts {
   int threads = 1;
   int top_k = 1000;            // exact components of the mixture predictive (D-17 item 4)
   int tail_r = 1000;           // stratified tail importance sample per row block, in tail_groups independent groups
-  int tail_groups = 4;
+  int tail_groups = 8;         // 8 groups (7 df) for the tail SE (review R-1)
   int block_rows = 500;        // rows per block; the tail sample is refreshed per block
   std::vector<double> eps_c = {0.5, 1, 2, 4, 8};
 };

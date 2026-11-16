@@ -48,7 +48,7 @@ DistOpts dist_opts(const Json& a, const Truth& T) {
   o.threads = (int)io::arg_num(a, "threads", 1);
   o.top_k = (int)io::arg_num(a, "top_k", 1000);
   o.tail_r = (int)io::arg_num(a, "tail_r", 1000);
-  o.tail_groups = (int)io::arg_num(a, "tail_groups", 4);
+  o.tail_groups = (int)io::arg_num(a, "tail_groups", 8);
   o.block_rows = (int)io::arg_num(a, "block_rows", 500);
   if (o.top_k < 1 || o.tail_r < 2 || o.tail_groups < 2 || o.block_rows < 1) throw Error(Status::invalid_input, "eval: bad mixture-predictive sizes");
   if (o.n_draws < 1 || o.n_x < 2 || o.n_gh < 8 || o.n_test < 2 || o.threads < 1) throw Error(Status::invalid_input, "eval: bad Monte Carlo sizes");
@@ -166,7 +166,14 @@ Json run(const Json& a) {
   const double logZ = jnum_or(ff.meta, "logZ", NAN);
   Json st = Json::object();
   st["size"] = (uint64_t)ff.top.size; st["logZ_T"] = sm.logZ_T;
-  st["pi_T_hat"] = std::exp(sm.logZ_T - logZ);                 // π̂(𝒯) = Σ_𝒯 e^F / Ẑ (ratio of estimates)
+  // Sol F9-a: Z_𝒯 / Ẑ is a ratio of a deterministic store sum and a noisy estimate. It is reported UNCLIPPED (it can exceed
+  // 1) and is never a bound on the store mass; it does not certify P-STORE. The only deterministic bound is Z_𝒯 ≤ Z.
+  const double pi_T_hat = std::exp(sm.logZ_T - logZ);
+  st["pi_T_hat"] = pi_T_hat;
+  st["pi_T_hat_gt_1"] = pi_T_hat > 1.0;
+  st["pi_T_hat_note"] = "noisy diagnostic Z_T/Zhat (ratio of estimates), unclipped; not a bound on the store mass; never certifies P-STORE";
+  st["deterministic_bound"] = "log Z_T <= log Z (Z_T = sum over the store of e^F); no deterministic upper bound on Z";
+  st["law_label"] = "truncated approximation of the store BMA (models with relative weight >= rel_cut, at most max_models)";
   st["law_models"] = law_M; st["dropped_mass"] = law_dropped;
   st["max_abs_dF_law"] = law_dF;
   rec["store"] = st;
@@ -180,8 +187,9 @@ Json run(const Json& a) {
   if (!pip_Z.empty()) { double m = 0; for (int32_t j = 0; j < D.p; ++j) m = std::max(m, std::fabs(pip_Z[j] - pip_eq[j])); pip["max_abs_Z_minus_eq"] = m; }
   if (!pip_T.empty()) {
     double m = 0; for (int32_t j = 0; j < D.p; ++j) m = std::max(m, std::fabs(pip_T[j] - pip_eq[j]));
-    const double tgt = 0.01 + (1.0 - std::min(1.0, std::exp(sm.logZ_T - logZ)));   // §0-v2.3
+    const double tgt = 0.01 + (1.0 - pi_T_hat);   // §0-v2.3, from the UNCLIPPED ratio (Sol F9-a): a diagnostic, not a certificate
     pip["max_abs_eq_minus_T"] = m; pip["eq_T_target"] = tgt; pip["eq_T_target_met"] = m <= tgt;
+    pip["eq_T_target_note"] = "target uses the noisy, unclipped Z_T/Zhat (store.pi_T_hat); diagnostic only";
   }
   if (FB.has("pip_r")) {
     const fmt::SectionEntry& e = FB.entry("pip_r");
