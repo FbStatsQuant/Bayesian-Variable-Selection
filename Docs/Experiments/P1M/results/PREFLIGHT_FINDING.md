@@ -9,7 +9,7 @@ again at :145 before escalation), so the LS0 worst-case time is charged against 
 | study | code | preflight in effect | affected? |
 |---|---|---|---|
 | 2,400-fit study, 2026-10-28 campaign | `Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2*/` | memory-only: the v2.2 / v2.2.1 cores contain no LS0 code (0 matches for `ls0`) | no |
-| P6 (vetting) numerics, low-p adapter/runner | v2.2.1 (campaign DECISIONS D14) | memory-only | no |
+| **W3-P6** (corrected 11-16; my first entry wrongly read PLAN.md phase P6 / campaign D14 as this ticket) | `Theory_work/Wave3/W3-P6/scripts/p6_fit.R:56` calls `v3_fit` on core = `git archive` of main 2252d57 (DESIGN.md:10; core identical to 11dc9b7 and to the pin 4676af6 / 72785fe8), LS0 on, arms mr1 (cap ℓ_n + \|S̃₀\|) and wide (`v3.ls0_ell` = ℓ_n + K, :55), allocation hours = 22.5, mem 8–12 GB | **v3.1 with LS0: the LS0 worst-case charge WAS in effect** (DESIGN.md:20, :34: the preflight charges ℓ_n + K + 1 LS0 scans); P6 sized its hours for it | not a doc victim; it used the charge knowingly |
 | G0 stage runs (5k / 10k) | `g0/stage/stage_measure.R`: calls the core internals, `v3_run_settings(..., ls0 = FALSE)`, own `--hours` guard (23 h) | no `v3_fit` preflight | no |
 | 10⁴ overlap rung (T = law mode and V) and the 1M plan | engine v4 (`smcbvs4`), driver `tools/slurm/p1m_driver.py` | **memory admission only** (`--mem-budget` = 90% of the task; INTERFACES §7), per-task wall limits from the driver (no task above `max_task_hours` = 2 h; worst case = Σ CPUs × limit). No LS0 worst-case charge (EXPERIMENT_PLAN R8 / O14). LS0 runs in `merge` with cap ℓ + \|S̃₀\| (`merge.h:83`, C-GROW MR1) | no |
 
