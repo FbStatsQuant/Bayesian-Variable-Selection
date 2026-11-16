@@ -149,3 +149,13 @@ A department that expects to exceed its envelope asks HQ first.
 3. If impossibility is approved: the **closest variant of the current strategy** that reaches 10⁶, with each change
    to the method stated and its effect on the theorems (via the Theory Department's premise tickets).
 4. If no such variant exists: say so, with the argument. HQ approves, and HQ reports to the owner.
+
+**Scope of the theory vs the 1M run (owner, 2026-11-15).** The theory stays about the method as described and coded (the
+algorithm that runs at 10⁴). To make p = 10⁶ feasible and very precise, Engineering **may modify the algorithm**. That has
+no implication for the theory, which is unchanged; the 1M run is the "cherry on top". Requirements on a modified 1M
+variant:
+- (a) every change from the theory's method is documented;
+- (b) on an overlap rung (10⁴, and 10⁵ where possible), the variant and the theory's method are run on the same datasets
+  and their outputs compared (selection, PIPs, evidence), so the 1M result is anchored to the method the theorems cover;
+- (c) the paper describes the 1M run as an engineered variant validated against the theorem-covered method, not as a
+  theorem-covered run.
