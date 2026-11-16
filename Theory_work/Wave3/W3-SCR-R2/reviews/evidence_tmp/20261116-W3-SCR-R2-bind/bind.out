@@ -1,0 +1,5 @@
+NOT BOUND Theory_work/Wave3/W3-SCR-R2/reviews/R2_council_sol.md: verdict gates=FAIL (not all gates PASS)
+NOT BOUND Theory_work/Wave3/W3-SCR-R2/reviews/R2_council_sol.md: verdict score 7.9 not in [8.0, 10]
+NOT BOUND Theory_work/Wave3/W3-SCR-R2/reviews/R2_council_opus.md: verdict gates=FAIL (not all gates PASS)
+bind: REFUSED (3 problem(s)); every council review needs exactly one line `COUNCIL-VERDICT round=R<k> manifest=<digest> seat=<seat> score=<x.y> gates=PASS`
+exit=1

@@ -1,0 +1,18 @@
+CODE HASH AUDIT
+v3_fit.R: production/copy same after newline normalization; recorded hash matches LF or CRLF serialization
+v3_run.R: production/copy same after newline normalization; recorded hash matches LF or CRLF serialization
+v3_exact.R: production/copy same after newline normalization; recorded hash matches LF or CRLF serialization
+v3_preprocess.R: production/copy same after newline normalization; recorded hash matches LF or CRLF serialization
+cpp/v3_engine.h: production/copy same after newline normalization; recorded hash matches LF or CRLF serialization
+cpp/v3_core.cpp: production/copy same after newline normalization; recorded hash matches LF or CRLF serialization
+cpp/v3_ledger.h: production/copy same after newline normalization; recorded hash matches LF or CRLF serialization
+cpp/v3_score.h: production/copy same after newline normalization; recorded hash matches LF or CRLF serialization
+
+UNCONDITIONAL IMPROVEMENT COUNTEREXAMPLE
+n=100, p=2, duplicated columns, theta=(1,-1), sigma=1, H={empty}, x=3.0
+Mean=0; at centered standardized y orthogonal to x1: F(singleton)-F(empty)=-3.401197381662
+Report master-event probability lower bound=0.800851726529
+Exact Gaussian probability of any truth addition strictly improving=0.009630322866
+
+A1 squared-ratio constant: 3.125
+All scratch checks passed.
