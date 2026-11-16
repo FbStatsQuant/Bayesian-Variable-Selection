@@ -99,3 +99,9 @@
 - **Kept, pending the owner's answer** on whether islands + merge are part of the theorem-covered method: T-MERGE's
   "any convex pooling inherits PIP/MPM consistency" (cheap assembly; also makes OD-4 a theorem for the coded 4-island
   equal-weight pooling). EVAR / POOL (evidence variance) move to the scaling paper; re-planned in the Thu proposal.
+
+## 2026-11-15 19:57 CT — W3-EDIT vs riders
+- **D19.** Errata in parent files consumed by running riders (STATEMENT.md, lemmas/ of PSHARP, START2, START, MISR,
+  RM2, RM) are CHAPTER-ONLY now (no in-place edit while riders hash them in DEPS); W3-EDIT CP1 groups them by parent;
+  each rider absorbs the ones its delta restates; the rest go to a post-freeze in-place batch after the riders' CP3.
+  In-place edits only in files no rider consumes. W3-EDIT told to take timestamps from `date` (stamped 20:45 at 19:57).

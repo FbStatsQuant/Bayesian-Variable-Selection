@@ -33,3 +33,4 @@
 - 19:55 — W3-READER: memo received; pooled-PIP fix complete (cd569b2): equal weights, OD-4 cited, no reader statement names a weighted PIP.
 - 19:56 — owner scope clarification: D18 (premise tickets downgraded; PSMC-S0 Part 1 only; T-MERGE kept pending owner).
 - 19:57 — Eng confirms scope change; THEORY-2 dates void; A/B + Check C still wanted (non-blocking).
+- 19:57 — W3-EDIT: item 7 done (f40c5b7); D19 errata routing approved (a)+(b).
