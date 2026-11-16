@@ -77,7 +77,7 @@ PROGRAM Readability, with a fidelity check of every number.
   - commit secrets, API keys, the owner's email in new files, or unpublished papers (`Papers/Own_work/` is
     gitignored, and so are copyrighted PDFs);
   - touch another department's folder or branch without HQ;
-  - touch `/home/fb31/projects/BVS/SMC_BVS_v3/deploy/` or `/projects/ml75` on NOTS.
+  - touch the SMC_BVS_v3 deploy folder (`/home/fb31/projects/BVS/Others/SMC_BVS_v3_history_Oct2026/deploy/`) or `/projects/ml75` on NOTS.
 - **Restore points:** HQ's snapshot cron commits each department or ticket folder every 15 min
   (`~/.config/bvs-hq/snap/`). Commit your own meaningful states too.
 - **Holds:** read `Theory_work/Wave3/HOLDS.md` before each checkpoint, launch or freeze.
@@ -207,7 +207,7 @@ When the owner is back, HQ gives a short morning brief: what was decided, what m
 
 ## 12. Compute discipline on NOTS and Owls (owner, 2026-11-15): "military order and discipline"
 1. **Use NOTS as much as needed, 24/7**, professionally: every job batch is sized, logged (ids, actual core-h) and inside an
-   approved budget. Never touch `/home/fb31/projects/BVS/SMC_BVS_v3/deploy/` or `/projects/ml75`.
+   approved budget. Never touch the SMC_BVS_v3 deploy folder (now `/home/fb31/projects/BVS/Others/SMC_BVS_v3_history_Oct2026/deploy/`, moved 11-04; formerly `projects/BVS/SMC_BVS_v3/deploy/`) or `/projects/ml75`.
 2. **The home folder never clogs** (10 GB quota). Heavy data is never written to home; it goes to `/scratch/fb31/`. A cleaning
    crew checks home every day (guard threshold 8 GB, target below 7 GB) and cleans caches, logs and temp files.
 3. **Heavy experiment data, when an experiment is done**, is downloaded to the owner's laptop (Felipe_Bedoya) at
