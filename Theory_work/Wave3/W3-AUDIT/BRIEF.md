@@ -2,6 +2,16 @@
 
 **Owner, 11-16:** "That would be the first question we will receive and we should try to solve it beforehand."
 
+**Fable allocation (HQ, owner mandate 11-16: HQ manages Fables for two targets, the assumptions and meaningful
+improvements of the results).**
+- **One Fable 5.2, the "audit Fable"** (high effort, Claude Work, which has the most Fable headroom; a Theory child),
+  works sequentially on the same context:
+  1. **assumptions:** the track A classification check, then the track B dossiers against Song–Liang;
+  2. **improvements:** track D, using its own assumption analysis as input.
+- **Opus helpers do the mechanical parts:** the track A inventory and lemma proofs (Fable only for a hard key lemma,
+  with HQ's OK), and the track C simulations.
+- No second Fable unless HQ approves one for a specific key lemma.
+
 Owner: Theory Department, which leads. Writing presents the result in the advisor report. Engineering supplies NOTS
 time for track C. Start at the resume, as the first priority after the in-flight recordings.
 
@@ -67,7 +77,7 @@ For each core theorem, one sharpness record of at most a page, using the same ta
   where the gain changes a headline statement: weaker assumptions on the design, a rate in log p, or the
   s₀-dependence.
 
-**Who (owner, 11-16): one Fable 5.2 runs track D,** because Fable has the best grasp of the mathematics ("precision
+**Who (owner, 11-16): the same audit Fable runs track D,** because Fable has the best grasp of the mathematics ("precision
 strike machines, not bombs to throw everywhere"). It is a single Fable, high effort, a Theory child agent, on the
 account HQ names at the resume.
 - **Input:** the core theorems' STATEMENTs, the pre-filled lists above, and the track A/B tables.
