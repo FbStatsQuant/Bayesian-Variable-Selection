@@ -7,11 +7,10 @@
 //                plan includes the data, and the caller adds the setup inputs through inputs_bytes (INTERFACES §7 note,
 //                requested from WP1).
 //   x_tiles      label-major: the tiled row-major copy of X                      ntile * tile * n * 8
-//   store        kept run (old, while a compaction runs) + new kept run         2 c e + s 4k (pool over-reservation)
-//                staging, vector capacity at the next power of two x 1.5         1.5 pow2(s) e        (s = c/2 deferred, c/4 serial)
-//                sort refs + the parallel mergesort's temporary copy             s 64,  flags s + c, alive list 4 c
-//                hash indexes, old + new                                         2 * 4 pow2(2c + 2)
-//                one stale snapshot generation held by a worker mid-tile        c e + 4 pow2(2c + 2)
+//   store        store_peak_bytes(): deferred (label-major): old + new kept run 2 c e, staging reserved at c/2: (c/2) e,
+//                sort refs + the sort scratch of psort_noalloc (c/2) 64, flags, alive list 5 c, two indexes 2 * 4 pow2(2c + 2);
+//                serial (particle-major): staging c/4, refs 32, pool over-reservation (c/4) 4k, + one stale generation
+//   k            the plan's mean stored |S|: max(8, q90(pi_0 size) + 1, k_store) -- round 1 stores pi_0-sized models
 //   leaders      (calibration islands, option `leaders`) two stores of cap 20p, serial compaction at cap/4, same terms
 //   worker_bufs  T offer buffers per store, capacity pow2(65,536) x 1.5          T * 98,304 * e * (1 or 3)
 //   rb           u128 accumulators 32 p (+ particle-major 16 p T) (+ compat 8 p) + rb_round Hm p 8 + rb_acc, pip 16 p
@@ -41,27 +40,32 @@ struct MemSizes {
 
 inline uint64_t pow2_at_least(uint64_t x) { uint64_t n = 16; while (n < x) n <<= 1; return n; }
 
-inline double store_peak_bytes(uint64_t c, uint64_t s, double k) {
+// Peak of one store during a compaction. Deferred (label-major, review P2): the staging area is reserved at its hard
+// limit and never reaches it (bounded waves), the parallel path allocates the new pool exactly and runs after all workers
+// released their snapshots: old + new kept run + staging + sort refs and the sort scratch + flags + two indexes.
+// Serial (particle-major, or a store without deferral): staging at its limit, std::sort refs, the new pool over-reserved
+// by the staged pool, and one stale snapshot generation held by another worker.
+inline double store_peak_bytes(uint64_t c, bool deferred, double k) {
   const double e = 26.0 + 4.0 * k, idx = 4.0 * (double)pow2_at_least(2 * c + 2);
-  return 2.0 * c * e + s * 4.0 * k            // old + new kept runs, pool over-reservation
-         + 1.5 * (double)pow2_at_least(s) * e   // staging capacity incl. reallocation
-         + s * 64.0 + (double)s + (double)c + 4.0 * c   // sort refs + temporary copy, flags, alive list
-         + 2.0 * idx                            // old + new index
-         + c * e + idx;                         // one stale snapshot generation
+  if (deferred) {
+    const uint64_t s = std::max<uint64_t>(8192, c / 2);
+    return 2.0 * c * e + (double)s * e + s * 64.0 + (double)s + 5.0 * c + 2.0 * idx;
+  }
+  const uint64_t s = std::max<uint64_t>(4096, c / 4);
+  return 2.0 * c * e + (double)s * e + s * 32.0 + s * 4.0 * k + (double)s + 5.0 * c + 2.0 * idx + c * e + idx;
 }
 
 inline MemPlan island_memory(const MemSizes& z, double k) {
   MemPlan m; m.G = z.G; m.k = k;
   const double e = 26.0 + 4.0 * k, kq = std::min<double>(z.K, 3.0 * k);
   const uint64_t c = z.cap, m_lab = (uint64_t)z.p + (uint64_t)z.B + 2;
-  const uint64_t s = z.deferred ? std::max<uint64_t>(8192, c / 2) : std::max<uint64_t>(4096, c / 4);
   const double T = std::max(1, z.threads), G = z.G, p = z.p, n = z.n;
   const uint64_t ntile = ((uint64_t)z.p + z.tile - 1) / z.tile;
   auto add = [&](const char* nm, double b) { m.items.push_back({nm, (uint64_t)b}); m.total += (uint64_t)b; };
   add("inputs", n * p * 8 + 16 * p + z.inputs_bytes);
   if (z.label_major) add("x_tiles", (double)ntile * z.tile * n * 8);
-  add("store", store_peak_bytes(c, s, k));
-  if (z.leaders) { const uint64_t cl = 20ULL * (uint64_t)z.p; add("leaders", 2.0 * store_peak_bytes(cl, std::max<uint64_t>(4096, cl / 4), k)); }
+  add("store", store_peak_bytes(c, z.deferred, k));
+  if (z.leaders) { const uint64_t cl = 20ULL * (uint64_t)z.p; add("leaders", 2.0 * store_peak_bytes(cl, false, k)); }
   add("worker_bufs", T * 1.5 * (double)pow2_at_least(65536) * e * (z.leaders ? 3 : 1));
   add("rb", 32 * p + (z.label_major ? 0.0 : 16 * p * T) + (z.compat ? 8 * p : 0.0) + (double)z.Hm * p * 8 + 16 * p);
   if (z.label_major) {

@@ -76,10 +76,13 @@ inline constexpr bool kHasFMA() {
 
 // Philox4x32-10 (v4::philox4x32_10, rng.h) for 8 counters that differ only in word 1 (the position): the uniforms of
 // one particle at 8 positions. Same words, same bits as uniform_at (tested lane by lane).
-inline void philox8_positions(const uint32_t ctr[4], const uint32_t key[2], const uint32_t pos[8], double out[8]) {
+// Philox4x32-10 (v4::philox4x32_10, rng.h) for 8 counters that differ only in one word (`word`: 0 = slot, 1 = position):
+// e.g. one particle's uniforms at 8 positions, or 8 slots of one step. Same words, same bits as uniform_at (tested).
+inline void philox8_word(const uint32_t ctr[4], const uint32_t key[2], int word, const uint32_t vals[8], double out[8]) {
   const v8u M = {0xFFFFFFFFull, 0xFFFFFFFFull, 0xFFFFFFFFull, 0xFFFFFFFFull, 0xFFFFFFFFull, 0xFFFFFFFFull, 0xFFFFFFFFull, 0xFFFFFFFFull};
   v8u c0, c1, c2, c3;
-  for (int l = 0; l < 8; ++l) { c0[l] = ctr[0]; c1[l] = pos[l]; c2[l] = ctr[2]; c3[l] = ctr[3]; }
+  for (int l = 0; l < 8; ++l) { c0[l] = ctr[0]; c1[l] = ctr[1]; c2[l] = ctr[2]; c3[l] = ctr[3]; }
+  if (word == 0) for (int l = 0; l < 8; ++l) c0[l] = vals[l]; else for (int l = 0; l < 8; ++l) c1[l] = vals[l];
   uint32_t k0 = key[0], k1 = key[1];
   for (int r = 0; r < 10; ++r) {
     if (r) { k0 += 0x9E3779B9u; k1 += 0xBB67AE85u; }
@@ -90,6 +93,9 @@ inline void philox8_positions(const uint32_t ctr[4], const uint32_t key[2], cons
   v8u w = ((c1 << 32) | c0) >> 11;
   v8d u = __builtin_convertvector(w, v8d) * 0x1.0p-53;
   store8(out, u);
+}
+inline void philox8_positions(const uint32_t ctr[4], const uint32_t key[2], const uint32_t pos[8], double out[8]) {
+  philox8_word(ctr, key, 1, pos, out);
 }
 
 inline v8d select8(v8l mask, v8d a, v8d b) { return (v8d)(((v8l)a & mask) | ((v8l)b & ~mask)); }
