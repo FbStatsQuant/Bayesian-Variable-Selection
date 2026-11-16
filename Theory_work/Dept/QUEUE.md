@@ -1,6 +1,6 @@
 # Theory Department — queue (manager keeps this current)
 
-Updated 2026-11-15 20:25 CT. Cap: ≤ 3 ticket leads running at once (Claude Third, Opus 5.5 high).
+Updated 2026-11-15 19:38 CT. Cap: ≤ 3 ticket leads running at once (Claude Third, Opus 5.5 high).
 Cut-off for riders: theory content freeze Wed 11-18 (aim CP3 Wed 18:00 CT; HQ to confirm). W3-DIST has priority on codex.
 
 ## Running

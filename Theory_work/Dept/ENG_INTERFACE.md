@@ -11,4 +11,4 @@ Premise table: `Docs/Experiments/P1M/ENGINEERING_SPEC.md` §4.2 (v1 draft 11-15)
 | T-MERGE | R′ = 16 process islands + merge; pooled outputs (L / new functions) | O1 merge consistency, O10 union stores, O19 lower bound, O20 flags at R′ ≠ 4, O21 card items on merged HPM; pooling under evidence-weight degeneracy (R_eff 16 → 1.6–4.2 at p ≥ 5k) | WP4 merge rule final (~11-30); OD-4 | ~11-30 (rule), proofs before results | campaign; scoping early in week of 11-23 |
 
 Log of exchanges:
-- 2026-11-15 20:15 CT — Theory → Eng: interfaces (1)–(4) asked (exact OD-5 rule + consumers, dates, OD-4 status, contact files).
+- 2026-11-15 19:34 CT — Theory → Eng: interfaces (1)–(4) asked (exact OD-5 rule + consumers, dates, OD-4 status, contact files).

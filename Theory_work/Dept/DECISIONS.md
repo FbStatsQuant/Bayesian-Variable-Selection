@@ -1,6 +1,6 @@
 # Theory Department — decisions log
 
-## 2026-11-15 19:35 CT — riders queue set up
+## 2026-11-15 19:28 CT — riders queue set up
 - **D1. Rider tickets are new folders `<PARENT>-R` with delta statements.** Parent folders stay read-only: their
   STATEMENT/lemma lines and CHECKPOINT_<k>.md files are hashed in the registry (sha256, status_sha256, check.py C12),
   so in-place edits would break recorded claims and v4 principle 2. Pattern = START2 v1.4 over START v1.3.4. New claim
@@ -16,7 +16,7 @@
 - **D5. Snapshot cron** commit-in-place (SNAP_WT=1) for the 4 rider worktrees at :01/:03/:06/:08 +15.
 - **D6. Not taken:** W2-APP:POST@1.0.1 line check (HQ_NOW lists it; HQ's recorder already handles W2-APP PC1) — asked HQ.
 
-## 2026-11-15 20:25 CT — HQ answers; premise tickets; early scoping leg
+## 2026-11-15 19:36 CT — HQ answers; premise tickets; early scoping leg
 - HQ approved D1, the Wed 18:00 CT rider cut-off (freeze Fri 11-20; a late rider ships at its last checked state),
   the W3-EDIT recording path (HQ merges + recorder rehash), H5 cards + READER_DELTA at each CP1. W2-APP PC1 is the
   recorder's (not ours). D6 closed.
