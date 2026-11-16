@@ -36,5 +36,5 @@ RM2-R aggregated leak (D) · START MIS with a general μ (D) · Ex-Equi b < 3/8 
 W3-PATH, T7, P6/D1 (HQ). Real recorder runs, CP3 acceptance, merges: HQ approves.
 
 ## Next campaign (proposal to HQ by Thu 11-19)
-Parallel-SMC theory + evidence-variance problem σ̂(log Ẑ_r) ≈ 1 at p ≥ 5k, coordinated with Engineering's spec and
-output-preservation contract, with the five premise tickets T-N, T-PART, T-STREAM, T-CAL, T-MERGE (ENG_INTERFACE.md). Stretch: approximate sparsity, exponential p for W3-DIST (after it closes). Draft: `NEXT_CAMPAIGN.md`.
+Consistency results first (owner, 11-15 evening) + Lean readiness of their deterministic cores; parallel-SMC theory parked (T-MERGE, EVAR/POOL). Draft v1: `NEXT_CAMPAIGN.md`.
+

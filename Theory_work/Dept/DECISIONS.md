@@ -133,3 +133,9 @@
   record the 10 ACCEPT rows on the C3 snapshot (RM2 precedent), Family-map excluded; F1–F4 later diff round.
 - **D23.** A3 cascade (Ex-STAR/ENUM + 10 consumers): fix the root — recorder task H dry-runs W3-POST:Thm-1 (=SOP:TH09)
   acceptance on its C3 council and checks C-PACK:SL0, SOP:TH05.0; fallback honest re-status. No "checked-class by fiat".
+
+## 2026-11-15 20:08 CT — owner priority: consistency results + their Lean parts
+- **D24.** Campaign re-planned (NEXT_CAMPAIGN v1): (a) finish all consistency results (DIST CP3, riders, strength
+  gates, reader versions, acceptance backlog); (b) Lean readiness list (child helper → research/LEAN_READINESS.md:
+  Level-1 deterministic cores, stability vs this week's tickets, ready dates; Level-2 targets). T-MERGE parked;
+  EVAR/POOL scaling paper. D18 approved by HQ.
