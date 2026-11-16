@@ -1,4 +1,4 @@
-# MANIFEST_CELLS — the executable cell / seed manifest of the P1M experiment (DRAFT v0.1, WP5, 2026-11-16)
+# MANIFEST_CELLS — the executable cell / seed manifest of the P1M experiment (DRAFT v0.2, WP5, 2026-11-16; v0.2 = the PR #19 review fixes)
 
 **Status: DRAFT for the Engineering manager.** It answers Sol F7 and the F3 disposition: "one costed cell/seed manifest
 replaces the tier totals". Sources:
@@ -13,10 +13,11 @@ replaces the tier totals". Sources:
 the owner sheet). The manager re-costs after the SPR sweep and gate T5 replace them with measured core-h per fit.
 
 **Executable form:** `Scripts/SMC_BVS/engine_v4/tools/slurm/p1m_cells.py` (PR #19) holds this table as code.
-- It expands the table into **265 fits**, one row each: run id, data seed, engine seed, mode, N, R′, parameters,
-  planning cost (`--tsv`).
-- It also writes **48 Slurm-driver plans**: ≤ 150 tasks each, one resource shape each, all validated by `p1m_driver.py`
-  (`--plans`).
+- It expands the table into **259 fits**, one row each: run id, data seed, engine seed, mode, N, R′, parameters,
+  planning cost (`--tsv`; 260 lines with the header). v0.1 said 265: that was `wc -l` with the header; the v0.1 count
+  was 264, and v0.2 removes the 5 unpaired A3 BLK fits (§2).
+- It also writes **47 Slurm-driver plans** holding **239 fits** (every fit except the 20 T8 rows, which are costed as a
+  block and not planned): ≤ 150 tasks each, one resource shape each, all validated by `p1m_driver.py` (`--plans`).
 - `p1m_cells.py --summary` prints the totals below.
 
 ## 1. Seeds, run ids, reuse
@@ -24,9 +25,15 @@ the owner sheet). The manager re-costs after the SPR sweep and gate T5 replace t
   - R = log₁₀ p (1 marks the p ≤ 25 exact block);
   - D: 1 IND, 2 AR-strong, 3 AR-weak, 4 BLK, 5 ADJ-OPP, 6 NULL.
 
-  The rule is deterministic and collision-free, and every seed is < 2³¹ − 1.
-- **Engine seed**: seed 1 = the data seed; seed 2 = data seed + 50 (same data). **Calibration seed** (precision study) =
-  data seed + 70 + c.
+  The rule is deterministic, and every seed is < 2³¹ − 1.
+- **Engine-side seeds** = data seed + 100·k on the same data, k = the role: k = 0 engine seed 1 (= the data seed; role
+  GEN is its own Philox domain); k = 1 engine seed 2; k = 10 + a the final seed of precision arm a (a = 0…7);
+  k = 20 + a the calibration seed of precision arm a.
+- **Collision-free by construction**: rep ∈ 1…99 and k ∈ 0…99 occupy their own decimal digits, as do n/100, D and R, so
+  (R, D, n, k, rep) ↔ seed is one-to-one. `p1m_cells.py` asserts the field ranges, and that data seeds, seed-2 values,
+  precision final seeds and calibration seeds are disjoint sets. The only shared (data, engine) seed pairs are the
+  intended pairings: T vs V, A3 vs the default partition, the 1M N = 10⁴ self-check. (v0.1 used +50 / +70 + c, which was
+  collision-free only for rep ≤ 20 and gave all 8 precision arms of a dataset the same final seed.)
 - **Run id**: `<rung>-<design>-n<n>-r<rep>-<arm>-s<seed>`, e.g. `6-AR-n200-r01-V-s1` (the 1M pilot).
 - **Shared datasets are run once.** The 10⁴ overlap datasets are replicates 1–4 (AR), 1–2 (AR-weak, ADJ-OPP) and 1 (IND,
   NULL) of the 10⁴ science cells; their V fits are costed to the overlap. The precision study runs on overlap rep 1 of
@@ -60,11 +67,14 @@ Modes:
 ### Precision study (Sol F6, mandatory, before G-B): 64 islands
 | datasets | arms | fits | core-h |
 |---|---|---|---|
-| overlap rep 1 of AR-strong, AR-weak, ADJ-OPP | N ∈ {2,500, 10⁴} × grid refinement m ∈ {1, 4} × 2 independent calibration seeds (final seeds independent) | 24 | 2,117 (N = 2,500 ≈ 35 per fit; N = 10⁴ ≈ 141) |
+| overlap rep 1 of AR-strong, AR-weak, ADJ-OPP | N ∈ {2,500, 10⁴} × grid refinement m ∈ {1, 4} × 2 replicates; **every arm has its own calibration seed and its own final seed** (§1), shared with no other fit | 24 | 2,117 (N = 2,500 ≈ 35 per fit; N = 10⁴ ≈ 141) |
 
-The engine parameter names (`grid_refine_m`, `calib_seed`) are placeholders until WP4 fixes them. I_max ∈ {0, 3} and
-systematic resampling (D-2, D-14) are compared on the N = 2,500 arms. The settings are frozen from this study before
-the final runs.
+The engine parameter names (`grid_refine_m`, `calib_seed`) are placeholders until WP4 fixes them. The settings are
+frozen from this study before the final runs.
+
+**OPEN (WP4 open item 1; §6 item 1): I_max ∈ {0, 3} and systematic resampling (D-2, D-14) have no arms in this manifest
+and are not costed.** Either WP4 shows they can be read off the arms above (then say how), or they get their own arms:
+each extra N = 2,500 arm costs ≈ 35 core-h per dataset, ≈ 106 over the 3 datasets (ESTIMATE, before contingency).
 
 ### 10⁴ science (n-trend, designs, null, second seed, A3 partition), V
 | design | n | reps | note | fits | core-h |
@@ -75,8 +85,8 @@ the final runs.
 | BLK(20, 0.5) | 100 / 200 / 400 | 5 | | 5 / 5 / 5 | 35 / 50 / 80 |
 | ADJ-OPP | 200 / 400 | 5 | mandatory at 10⁴ (Sol F7) | 3 + (2) / 5 | 30 / 80 |
 | NULL | 200 | 5 | null control | 4 + (1) | 40 |
-| A3 partition | 200 | 10 AR + 10 BLK | exact complete linkage on the same data as the 1M rule (`partition = exact_linkage`) | 20 | 200 |
-| **total** | | | | **161** | **2,060** |
+| A3 partition | 200 | 10 AR + 5 BLK | exact complete linkage on the same data as the 1M rule (`partition = exact_linkage`); every A3 fit is paired with the default V fit (seed 1) on its dataset, asserted in code. v0.1 had 10 BLK reps, but BLK n = 200 has only 5 default fits | 15 | 150 |
+| **total** | | | | **156** | **2,010** |
 
 ### 10⁵ rung, V (12 fits)
 | design | n | reps | core-h |
@@ -101,16 +111,20 @@ the final runs.
 ### Other blocks
 | block | core-h |
 |---|---|
-| ablations (start mode / + LS0 / pilot + local), once per distinct 10⁴–10⁶ dataset (ESTIMATE: 6% of its V fit) | 485 |
+| ablations (start mode / + LS0 / pilot + local), once per distinct 10⁴–10⁶ dataset (ESTIMATE: 6% of its V fit) | 482 |
 | competitors at all rungs + the acceptance runs (Sol F8; `tools/competitors/ACCEPTANCE.md`; 1M = lasso + 1 variational + SIS, D-21) | 400 |
 
 ## 3. Totals (PLANNING VALUES) against H-1
 | | core-h |
 |---|---|
-| planned, excluding option D | 18,252 |
-| with 25% contingency | 22,815 |
+| planned, excluding option D | 18,199 |
+| with 25% contingency | 22,749 |
 | option D (with contingency) | 3,300 (4,125) |
-| **A + D with contingency** | **26,940**, against the H-1 envelope ≈ 24.6k: **+9.5%** |
+| **A + D with contingency** | **26,874**, against the H-1 envelope ≈ 24.6k: **+9.2%** |
+
+v0.2 change: A3 on BLK cut from 10 to 5 reps (the cheaper of the two pairing fixes; raising science BLK n = 200 to 10
+reps instead would have cost +53 planned): −50 core-h of fits and −3 of ablations, so −53 planned, **−66 with
+contingency** (26,940 → 26,874). The new precision seeds change no cost.
 
 The excess is below H-1's 15% report threshold, but it is reported here. Sources of the excess:
 1. The precision study is now mandatory at 64 islands with 2 calibration seeds: 2,117, against 950 in §0-v2.8.
@@ -119,11 +133,11 @@ The excess is below H-1's 15% report threshold, but it is reported here. Sources
 
 **Trims, if the envelope must hold (largest first):**
 - T costed at the measured lower end, 52: −1.26k (−1.6k with contingency).
-- The second calibration seed only on the N = 2,500 precision arms: −0.85k.
+- The second replicate only on the N = 2,500 precision arms (drops the 6 N = 10⁴ c2 fits): −0.85k (−1.06k with contingency).
 - AR-weak at n = 400 / 800 with 5 reps: −0.22k.
 - AR-strong at n = 800 with 5 reps: −0.14k.
 
-The first two alone give ≈ 24.5k.
+The first two alone, both with contingency: 26,874 − 1,575 − 1,058 ≈ **24.2k**.
 
 ## 4. Analysis conventions fixed with the manifest (Sol F7)
 - **PIP reliability curve**: labelled a *repeated-sampling diagnostic* under a fixed truth, not Bayesian calibration.
@@ -140,14 +154,15 @@ The first two alone give ≈ 24.5k.
   R′ = 64.
 - Batches are released stage by stage at the gates G-A → G-B → G-C → G-C2. Each batch gets a ledger row with its
   worst case = Σ allocated CPUs × time limit.
-- At the driver's planning time limits the 48 plans sum to ≈ 53k worst case, against 18k planned. Those limits are
+- At the driver's planning time limits the 47 plans sum to ≈ 53.0k worst case (52,968), against 18.2k planned. Those limits are
   deliberately generous until T5. Tighten them from measured stage times before submitting; otherwise the admission
   check reserves too much of the envelope.
 - **Memory moves** (REVIEW_disposition_sol): island tasks 24–32 GB, calibration 48–64 GB at 10⁶. Option D (n = 1,000):
   X 8 GB and logr ≤ 9.4 GB under D-19, so 64 GB per island task.
 
 ## 6. Open (for the manager)
-1. Engine parameter names for the precision arms (grid refinement, calibration seed, I_max, resampling): WP4.
+1. Engine parameter names for the precision arms (grid refinement, calibration seed), and whether I_max ∈ {0, 3} and
+   systematic resampling need arms of their own (§2, OPEN, not costed): WP4.
 2. Pilot-replacement rule wording, and whether the 1M second seed (963) is bought from the trims.
 3. Re-cost after the SPR sweep / T5: replace the per-fit planning values in `p1m_cells.py` (COST_V, COST_T, n-scaling)
    and regenerate.
