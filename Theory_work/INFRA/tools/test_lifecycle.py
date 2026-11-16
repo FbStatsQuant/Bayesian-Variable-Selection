@@ -1992,38 +1992,65 @@ try:
                         and hl["id"] in blk and lab not in txt(hl["id"])))
         os.remove(hc_path)
 
-    if True:  # INFRA J (2026-11-15): the accept identity must not depend on the platform
+    if True:  # INFRA J (2026-11-15): the accept identity must not depend on the platform (+ Opus CR NB-1, NB-2)
         rows_j = R.load_claims(); by_j = R.index(rows_j); g_j = R.Graph(rows_j); al_j = R.load_aliases()
-        rec_j = R.accept_records()
-        cand_j = [r["id"] for r in rows_j if rec_j.get(r["id"]) and r.get("council") and r["state"] == "ACTIVE"]
-        cid_j = next(c for c in cand_j if R.accept_stamp(c, by_j, g_j, al_j)
+        rec_j = R.accept_records(); leg_j = R.legacy_boundary()[0]
+
+        def consumer_of(c):  # a direct dependent whose edge to c is not a declared @hyp condition (A5 examines c)
+            for d, pth in g_j.dependents(c).items():
+                if len(pth) == 2 and "hyp" not in g_j.uses.get((d, c), set()):
+                    return d
+            return None
+        cand_j = [r["id"] for r in rows_j if rec_j.get(r["id"]) and r.get("council") and r["state"] == "ACTIVE"
+                  and R.status_strength(r.get("status", "")) == 3
+                  and (r["id"], r.get("version", ""), r.get("sha256", "")) not in leg_j]
+        cid_j = next(c for c in cand_j if consumer_of(c) and R.accept_stamp(c, by_j, g_j, al_j)
                      != R.accept_stamp(c, by_j, g_j, al_j, fold=True))
+        cons_j = consumer_of(cid_j)
         folded = R.accept_stamp(cid_j, by_j, g_j, al_j, fold=True)
         plain = R.accept_stamp(cid_j, by_j, g_j, al_j)
+        ev = os.path.join(INFRA, "registry", "events.log")
+
+        def set_records(stamps):  # replace cid_j's accept events by the given stamps
+            keep = [ln for ln in open(ev, encoding="utf-8").read().splitlines()
+                    if not (ln.split("\t")[2:3] == ["accept"] and ln.split("\t")[3:4] == [cid_j])]
+            keep += ["\t".join(["2026-11-12T00:00:00Z", "TEST", "accept", cid_j, "", s_, "test record"]) for s_ in stamps]
+            open(ev, "w", encoding="utf-8", newline="\n").write("\n".join(keep) + "\n")
+
+        def a5_flags():  # does the consumer's A5 flag cid_j?
+            return any(x[0] == cid_j for x in R.unaccepted_inputs(cons_j, by_j, g_j, al_j, set(), R.accept_records(),
+                                                                   leg_j, None))
         # 1. a record written on Windows (case-folded artifact paths) matches on Linux
         ok_legacy = R.accept_stamp_matches(cid_j, by_j, g_j, al_j, {folded}) and \
             R.accept_stamp_matches(cid_j, by_j, g_j, al_j, {plain}) and \
             not R.accept_stamp_matches(cid_j, by_j, g_j, al_j, {"v0.0.0 fp2:000000000000000000000000"})
-        # 2. a consumer's A5 accepts the legacy Windows record: replace the claim's records by the folded stamp only
-        ev = os.path.join(INFRA, "registry", "events.log")
-        keep = [ln for ln in open(ev, encoding="utf-8").read().splitlines()
-                if not (ln.split("\t")[2:3] == ["accept"] and ln.split("\t")[3:4] == [cid_j])]
-        keep.append("\t".join(["2026-11-12T00:00:00Z", "TEST", "accept", cid_j, "", folded, "windows record (test)"]))
-        open(ev, "w", encoding="utf-8", newline="\n").write("\n".join(keep) + "\n")
-        cons = [d for d, p in g_j.dependents(cid_j).items() if len(p) == 2]
-        a5_ok = all(not any(x[0] == cid_j for x in R.unaccepted_inputs(d, by_j, g_j, al_j, set(), R.accept_records(),
-                                                                       R.legacy_boundary()[0], None))
-                    for d in cons) if cons else True
+        # 2. (NB-2, non-vacuous) the consumer's A5 flags cid_j with no record, and accepts the folded record alone
+        set_records([])
+        a5_control = a5_flags()
+        set_records([folded])
+        a5_ok = a5_control and not a5_flags()
+        # NB-1: a folded legacy record does NOT match once a cited artifact's content changed (direct and via A5)
+        art = next(a.split(" -> ", 1)[1].rsplit(" ", 1)[0] for a in R.accept_artifacts(by_j[cid_j],
+                   R.ticket_folders().get(by_j[cid_j]["ticket"], "")) if " -> " in a)
+        art_path = os.path.join(TMP, art.split("@")[0])
+        orig_art = open(art_path, "rb").read()
+        open(art_path, "ab").write(b"\nedited after acceptance (test)\n")
+        nb1 = (not R.accept_stamp_matches(cid_j, by_j, g_j, al_j, {folded})) and a5_flags()
+        open(art_path, "wb").write(orig_art)
+        nb1 = nb1 and R.accept_stamp_matches(cid_j, by_j, g_j, al_j, {folded})  # restored -> matches again
         # 3. a new record is case-preserving (the stamp check.py --record writes)
         rc_r = subprocess.run([sys.executable, os.path.join(INFRA, "tools", "check.py"), "--acceptance", cid_j,
                                "--record"], capture_output=True, text=True, encoding="utf-8", errors="replace",
                               cwd=TMP).returncode
         last = [ln.split("\t")[5] for ln in open(ev, encoding="utf-8").read().splitlines()
                 if ln.split("\t")[2:4] == ["accept", cid_j]][-1]
-        results.append((f"INFRA J: accept identity is platform-independent ({cid_j}): a record written with "
-                        "Windows-folded artifact paths matches on Linux (direct and through a consumer's A5), and a "
-                        "new --record writes the case-preserving stamp",
-                        ok_legacy and a5_ok and rc_r == 0 and last == plain and plain != folded))
+        results.append((f"INFRA J: accept identity is platform-independent ({cid_j}, consumer {cons_j}): a record "
+                        "written with Windows-folded artifact paths matches on Linux, directly and through the "
+                        "consumer's A5 (which flags the claim when it has no record), and a new --record writes the "
+                        "case-preserving stamp", ok_legacy and a5_ok and rc_r == 0 and last == plain and plain != folded))
+        results.append((f"INFRA J (CR NB-1): a folded legacy record of {cid_j} does NOT match once a cited artifact "
+                        f"({art}) changed, directly and through the consumer's A5; restoring the file restores the match",
+                        nb1))
 
 finally:
     SB.__exit__(None, None, None)
