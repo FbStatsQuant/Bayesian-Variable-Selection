@@ -219,7 +219,25 @@ This is the API that WP4's `calib::IslandRunner` calls. It is built after the PR
     `partial = true`.
   - The ledger so far is also returned, because core's shared ledger keeps a partial island's events. WP4 decides
     whether to merge it.
-  - numerical_failure returns status and message only (`v3_core.cpp:637-651, 673-681`).
+  - numerical_failure returns status and message, plus the ledger so far (WP4, 11-16).
+    - Core's shared ledger keeps the events up to the failure, and `v3_calibrate`'s exported HPM-so-far includes them.
+      WP4 merges the ledger so far in both stop cases.
+    - Meaning: the serial prefix. That is every event of the earlier rounds; in the failing round (or the initial
+      draw), the events of particles 1…i−1; and the events of the failing particle i at positions before the failing
+      score.
+    - Label-major processes a round's particles together, so the prefix is rebuilt exactly as follows.
+      - At each round start in a calibration role, after the step-boundary compaction, the island keeps:
+        - the published kept runs, which are immutable `shared_ptr`s, so keeping them is O(1);
+        - copies of the tallies;
+        - the particles' states.
+      - On a failure, it restores that state and replays the round's prefix particle-major, serially, at the same
+        addresses, so the events and offers are identical.
+      - The replay stops at the failing score.
+    - The cost is one partial particle-major round, and only on failure. The compat island is already serial
+      particle-major, so its ledger is the prefix directly.
+    - Tests: in compat, ledger so far = CoreRunner's ledger after the failure, bit for bit. In law mode, label-major =
+      particle-major (threads 1 and 3). The failure is forced at the initial draw and at a Gibbs flip in a bridge
+      round (the existing failure fixtures).
   - There are no island checkpoints in calibration.
 - **Compat.**
   - Streams are caller-owned: `IslandConfig::compat_src` is a `v4::CompatSource*` that is required for calibration
