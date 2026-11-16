@@ -252,7 +252,9 @@ require the line (`templates/COUNCIL_BRIEF.md`).
 
 Acceptance (A4) requires: exactly one `R<k>` and one `MANIFEST`; at least two seats with distinct names and distinct
 review files; every seat ≥ 8.0 and `PASS`; every review file resolving like gate evidence; the digest equal to the
-header of an existing `reviews/MANIFEST_*.txt` of the ticket (tickets.tsv `folder`, else the statement file's folder)
+header of an existing `reviews/MANIFEST_*.txt` of the ticket (tickets.tsv `folder`, else the statement file's folder;
+for an external row with a council record whose status source is a `CHECKPOINT_<k>.md`, that checkpoint's folder —
+the HQ carrier's ticket, task T 2026-11-16)
 and `manifest.py verify` of that manifest passing on the CURRENT tree (content changed after the round → refused);
 and in every review file exactly one `COUNCIL-VERDICT` line for that digest, matching the cell's round, seat and
 score, with `gates=PASS` and score ≥ 8.0, and no malformed or contradictory verdict line. `manifest.py bind

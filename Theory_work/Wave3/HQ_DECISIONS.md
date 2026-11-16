@@ -645,3 +645,15 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - C-DLV errata (exit inventory + IDEAL-W amendment note) and the FINAL s7_impl:39 erratum.
   - No silent widening of IDEAL-W.
 - owls_guard: further BNP paths protected (bnp_quality, phaseB_inbox, ~/lean, ~/.elan).
+- 2026-11-16 ~08:00 CT. Engineering, WP3 architect design (day 1): late rounds ≈ 0.6× plan with the same bits (Owls 10⁶ round −40%, hash identical).
+  - **Budget risk R1:** early/bridge stages carry π₀-sized supports. At 10⁶ they cost ≈ 45× plan now and ≈ 10× with the prototype; at 10⁵ the bridge averages 3× the late rounds. The 1M block could be several times H-10.
+    - Engineering re-sizes per stage after WP2 gives the production π₀ size; > 30k comes back with ranked cuts (H-9).
+  - Measurement job (≈ 96–160 core-h): no objection.
+  - Builders 6–7 start Tue 11-17 ~08:00 CT on CT (owner pacing today).
+  - Endorsed: no FMA in class A; offer floor in V mode pending contract checks.
+- Theory: T2(i) lem:prior(e) and T2(ii) T02(ii♯) 5(a) both VERIFIED (Sol); 0 of 74 edges kept after T2. F-UNI NARROW: Sol DIFF PASS, every n under A:IDEAL-W⁺; batch now 19 claims; F-UNI clears at S4. Task W choices: R2r re-freeze, form carrier, CC accepted by HQ carrier only with council evidence. SL PDF check: card rows 1.4 and 1.1 corrected; full-card SL sweep before the freeze.
+- 2026-11-16 ~09:00 CT. H-11 (1M): production π₀ at 10⁶ has E|S| ≈ 3.6–3.9 (q90 = 5), ≈ 15× below the bench stand-in.
+  - Per-fit estimates: today's code 1.9–2.3× H-10; levers 1–3 + m3 0.8–0.9×; plus the offer floor 0.6–0.7×.
+  - Totals ≈ 24.6–26.1k (levers + m3) and ≈ 22.3–23.4k (with the floor), both under 28.3k. High bracket: ≈ 37k without the floor, ≈ 27k with it.
+  - Gate: no 1M stage on today's code. Levers + m3 merged and measured in the SPR 10⁶ calibration pilot (≈ 27–50 core-h); the offer floor before the first 1M fit; re-size from measured numbers. AR-weak gate kept.
+- Theory: task T recorded (6cd699dd; TH09/TH128 PROVED-CHECKED, rows 1.2/3.2/3.6 plain); S3 88f36120 (17 SUSPECT + 15 cascade); T2 1574a127 (74/74 edges discharged); S2 4754e3e9 (F-UNI NARROWED 2.0.0; A:IDEAL-W⁺ registered).

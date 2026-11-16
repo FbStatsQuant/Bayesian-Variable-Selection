@@ -1,0 +1,2 @@
+store invariant and retention: OK, 3000 trials
+Lemma P6 (a), (b): OK, 2000 trials

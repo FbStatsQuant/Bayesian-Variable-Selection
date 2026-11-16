@@ -1,0 +1,8 @@
+# W3-DIST — blind read S2: external inputs of the reader versions and bridges (repo-relative; no wave documents, no registry tables)
+Theory_work/Wave3/W3-MISR/STATEMENT.md
+Theory_work/Wave3/W3-POST/STATEMENT.md
+Theory_work/Wave3/W3-POST2/STATEMENT.md
+Theory_work/Wave3/W3-POST2/lemmas/A_occam.md
+Theory_work/Wave2/W2-APP/lemmas/L1_POST.md
+Scripts/SMC_BVS/core/v3_run.R
+Scripts/SMC_BVS/core/cpp/v3_ledger.h

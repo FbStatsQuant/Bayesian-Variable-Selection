@@ -742,6 +742,29 @@ def status_token(status: str) -> str:
     return m.group(0) if m else ""
 
 
+_CODE_CHECKED = re.compile(r"^CODE-CHECKED(?![\w-])")
+
+
+def carrier_checked(row: dict) -> bool:
+    """HQ 11-16 (task W): an IMPLEMENTATION row whose status is CODE-CHECKED counts as checked ONLY when it is accepted
+    through an HQ carrier: its status source is a CHECKPOINT_<k>.md and it has a council record. A4 then checks that
+    council on the row itself (manifest, seats, per-claim ACCEPT, checkpoint route), and A5 requires its accept record
+    from every consumer that uses it through a statement / proof edge. Used @hyp it stays a condition (weak_or_invalid
+    keeps status_strength). Nothing else about CODE-CHECKED changes (not checked in general)."""
+    if row.get("kind") != "implementation" or not _CODE_CHECKED.match(_norm_status(row.get("status", ""))):
+        return False
+    if not (row.get("council") or "").strip():
+        return False
+    # the status source must be the row's OWN ticket's CHECKPOINT_<k>.md (the carrier sits in the row's ticket)
+    return bool(own_checkpoint(row, ticket_folders().get(row.get("ticket", ""), "")))
+
+
+def row_strength(row: dict):
+    """status_strength of a row's status, plus the carrier rule for CODE-CHECKED implementation rows (carrier_checked)."""
+    s = status_strength(row.get("status", ""))
+    return 3 if s is None and carrier_checked(row) else s
+
+
 def status_strength(status: str):
     s = _norm_status(status)
     if not s:
@@ -1714,7 +1737,12 @@ def manifest_tool():
 
 def ticket_dir(row: dict, folder: str = "") -> str:
     """The ticket folder whose reviews/MANIFEST_*.txt holds a claim's council manifest: tickets.tsv `folder`, else the
-    folder of the claim's statement file."""
+    folder of the claim's statement file. An EXTERNAL row (no tickets.tsv folder) whose status is carried by a council
+    CHECKPOINT and which has a council record: the folder of that checkpoint (the HQ carrier's ticket; task T, 2026-11-16)."""
+    if not folder and row.get("kind") == "external" and (row.get("council") or "").strip():
+        raw = (row.get("status_source", "") or "").rpartition(":")[0]
+        if raw and _CKPT_NAME.match(os.path.basename(raw)):
+            return _pkey(os.path.dirname(raw))
     return _pkey(folder or os.path.dirname(row.get("file", "")) or "")
 
 
@@ -2092,7 +2120,7 @@ def unaccepted_inputs(cid: str, by: dict, g, aliases: dict, now: set, records=No
             seen.add(d)
             q.append((d, path + [d]))
             dr = by[d]
-            if dr.get("state") not in VALID or status_strength(dr.get("status", "")) != 3 or d in now:
+            if dr.get("state") not in VALID or row_strength(dr) != 3 or d in now:
                 continue
             if (d, dr.get("version", ""), dr.get("sha256", "")) in legacy:
                 continue
@@ -2149,7 +2177,7 @@ def conditional_on(status: str, names) -> str | None:
 
 def weak_or_invalid(dr: dict) -> bool:
     """An @hyp input needs the conditional-result treatment if it is below checked assurance or not ACTIVE."""
-    s = status_strength(dr.get("status", ""))
+    s = status_strength(dr.get("status", ""))   # NOT row_strength: a declared @hyp condition stays a condition (fail-closed)
     return (s != 3 and s != "NEG") or dr.get("state") != "ACTIVE"
 
 

@@ -1,4 +1,4 @@
-# L5 — Proposition F-UNI (design-agnostic delivery reduction, R4)
+# L5 — Proposition F-UNI (design-agnostic delivery reduction, R4; v2 2026-11-16: delivery narrowed to 𝔇, or every n under A:IDEAL-W⁺ [TR1]; final remark)
 
 Status: **PROVED (by this seat, unchecked)** — v1, 2026-11-09. Template: W2-FAC-A `lemmas/L7_delivery.md` (Proposition F-FAC,
 "PROVED (by this seat, unchecked)", R04 VERIFIED-WITH-AMENDMENTS) and W2-LOC2 `lemmas/L7_delivery.md` (Proposition F-LOC2,
@@ -12,13 +12,13 @@ worker count), valid declared seed, the complete allocation inequalities of FIN 
 preflight bounds, LS0 score count ≤ 1 + (ℓ_n + K + 1)q(p), evaluated at (n, p_raw). CAL not assumed. P1/S.3 keep "AUDITED
 (code reading)".
 
-**Proposition F-UNI.** Let a design sequence satisfy:
- (V) input validity: (R) with λ_min(Σ_n) > 0 for every n, or (E) with nonconstant raw columns;
- (S) for a deterministic Q_n ⊇ S₀ with 𝓛_n := {T : S₀ ⊆ T ⊆ Q_n} ⊆ Ω (|Q_n| ≤ K_n):
-     P(Sand_n(Q_n) ∩ NA(𝓛_n) ∩ TL(𝓛_n)) → 1;
+**Proposition F-UNI.** Let a design sequence satisfy: (V) input validity: (R) with λ_min(Σ_n) > 0 for every n, or (E) with nonconstant raw columns;
+ (S) for a deterministic Q_n ⊇ S₀ with 𝓛_n := {T : S₀ ⊆ T ⊆ Q_n} ⊆ Ω (|Q_n| ≤ K_n): P(Sand_n(Q_n) ∩ NA(𝓛_n) ∩ TL(𝓛_n)) → 1;
  (P) E[1 − π(S₀)] → 0 (under the law of the setting).
-Then, under the method, premises and allocation above: for every admissible n ≥ 3, P(no output) = 0; and P(Ŝ⁺ = S₀) → 1
-(joint design/noise law under (R), noise law under (E)), together with the algorithm's randomness.
+Then, under the method, premises and allocation above: (a) for every admissible n ≥ 3 with (n, p_raw) ∈ 𝔇 := {ℓ_raw ≤ 10⁶ and ℓ_raw + ⌊n/2⌋ ≤
+2³¹ − 1}, ℓ_raw := ⌈log₂(n + p_raw + 1)⌉, P(no output) = 0; (b) under A:IDEAL-W⁺ in place of IDEAL-W (IDEAL-W, and the two shipped rejection predicates
+`le > 10⁶` (Scripts/SMC_BVS/core/v3_run.R:96) and `ℓ + |S̃₀| > INT_MAX` (Scripts/SMC_BVS/core/cpp/v3_core.cpp:474) are false): for every admissible n ≥ 3,
+P(no output) = 0; and P(Ŝ⁺ = S₀) → 1 (joint design/noise law under (R), noise law under (E)), together with the algorithm's randomness.
 
 *Proof.* Step 1 (input validity) — FACA L7 Step 1 uses only (V): under (R) each raw column has iid nondegenerate Gaussian
 entries (Var = Σ_jj = 1 > 0) [R03-4], so no column is dropped, retained p = p_raw a.s., and the allocation depends on
@@ -38,3 +38,12 @@ UNI-1: (V) from λ_min(Σ_n) ≥ c (R) or by (E); (S) with Q_n = [p] (L4_k1; K =
 (fixed design, FACA L4 Note (5)) or UNI-P / FACA L5.1's every-sequence argument (R).
 Qualifications inherited verbatim from FACA L7: [OP] "PROVED (by this seat, unchecked)"; e4 rests on N3, "OPEN" (only "some
 maximiser" is used for consistency; delivery keeps e4 with TDP-IMPL as in Proposition F); S.3 is a code-reading audit.
+**Remark (v2 narrowing, 2026-11-16; outside the statement).** v1.1.0 asserted P(no output) = 0 for every admissible n ≥ 3 under IDEAL-W. Sol review TR1
+(`Theory_work/Dept/research/FUNI_transfer/TR1_sol.md` §1–§2) found two shipped validators outside Theorem D's exit walk that can throw on the SMC branch:
+`le ≤ 1e6` (`Scripts/SMC_BVS/core/v3_run.R:96-97`, le = ℓ_n under the method above) and ℓ_n + |S̃₀| ≤ INT_MAX (`Scripts/SMC_BVS/core/cpp/v3_core.cpp:474`). Steps 1–3
+are otherwise unchanged (TR1 §1 table), and Step 2's "P(no output) = 0" is read where neither check fires: on 𝔇, ℓ_n ≤ ℓ_raw ≤ 10⁶ (p ≤ p_raw) and
+ℓ_n + |S̃₀| ≤ ℓ_raw + K_n ≤ ℓ_raw + ⌊n/2⌋ ≤ 2³¹ − 1 (the exact branch reaches neither check); under A:IDEAL-W⁺ both predicates are false. The allocation that
+TR1 §2 requires for the shipped cap and preflight (W_G, M_G, P_e + A, P̄_LS0) is already the premise at :11-12. 𝔇 is sufficient, not necessary (TR1's larger
+D_K uses min(p_raw, ⌊n/2⌋)), and it is bounded, so (a) carries no asymptotic conclusion. Wording aligned with W3-RM2-R Lemma DLV-0 (W3-RM2-R
+`STATEMENT.md:80-90, 144-150`); its "treated as true" for the lifted predicates is read as "are false" (TR1 §2). A:IDEAL-W⁺ is a registered assumption;
+IDEAL-W itself (C-DLV `STATEMENT.md:24-25`) is unchanged.
