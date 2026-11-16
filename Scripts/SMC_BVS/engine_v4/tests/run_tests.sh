@@ -29,4 +29,24 @@ if [[ "$fixtures" == 1 ]]; then
   nice -n 19 Rscript "$here/tools/make_fixtures.R" "$here" "$build/smcbvs4" "$TMPDIR/v4_fixwork"
 fi
 args=("${allow[@]}"); [[ "$mode" == full ]] && args+=(--full)
-nice -n 19 "$build/v4_tests" "${args[@]}"
+rc=0
+nice -n 19 "$build/v4_tests" "${args[@]}" || rc=1
+# WP5 extras: dry-run Slurm driver (Python, stdlib) and the competitor harness (R, base + v4_read.R), when present
+if command -v python3 > /dev/null; then
+  if TMPDIR="${TMPDIR:-$build}" nice -n 19 python3 "$here/tools/slurm/test_p1m_driver.py" > "$build/wp5_driver_tests.log" 2>&1; then
+    echo "WP5 Slurm-driver tests: OK ($(grep -E '^Ran' "$build/wp5_driver_tests.log"))"; else echo "WP5 Slurm-driver tests: FAILED ($build/wp5_driver_tests.log)"; rc=1; fi
+fi
+if command -v Rscript > /dev/null; then
+  if TMPDIR="${TMPDIR:-$build}" "$here/tools/competitors/test_competitors.sh" "$build" > "$build/wp5_competitors.log" 2>&1; then
+    echo "WP5 competitor harness: OK ($(grep 'packages missing' "$build/wp5_competitors.log" | sed 's/^ *//'))"; else echo "WP5 competitor harness: FAILED ($build/wp5_competitors.log)"; rc=1; fi
+  # install script guards + offline route on dummy packages (PR #19 MINOR-1..3; no network, nothing outside TMPDIR)
+  if TMPDIR="${TMPDIR:-$build}" nice -n 19 "$here/tools/competitors/test_install_script.sh" > "$build/wp5_install.log" 2>&1; then
+    echo "WP5 install script: OK ($(grep -c '^  ok ' "$build/wp5_install.log") checks; $(tail -1 "$build/wp5_install.log"))"; else echo "WP5 install script: FAILED ($build/wp5_install.log)"; rc=1; fi
+fi
+# WP4 golden bit tests against core/ (calibration coded rule, T9 merge, T10 paths); needs R with Rcpp.
+if command -v Rscript > /dev/null; then
+  nice -n 19 Rscript "$here/tests/golden/wp4_golden.R" "$here/../core" "$here" "${TMPDIR:-$build}/wp4_golden" "$mode" "$threads" || rc=1
+else
+  echo "R not found: WP4 golden tests NOT RUN"
+fi
+exit $rc

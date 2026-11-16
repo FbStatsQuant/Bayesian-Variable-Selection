@@ -5,7 +5,7 @@
 //   pm::log, pm::exp, pm::lgamma, pm::sqrt -- BIT FORM. Their bits equal on Owls and NOTS (MEASURED, 2·10^6 arguments
 //       each, results/PMATH_NOTS.md) although the libm files differ; checked at start by pm::self_test().
 //   pm::logl, pm::expl -- BIT FORM (x87 long double; log_sum_exp -> log W_K -> log varpi -> every F, and WP2's
-//       cumulative_from_logs). Self-test rows "expl" / "logl" (80-bit results hashed); Owls reference, NOTS re-run pending.
+//       cumulative_from_logs). Self-test rows "expl" / "logl" (80-bit results hashed); equal on Owls and NOTS (job 2747875).
 //   pm::machine::log1p, pm::machine::expm1 -- CLASS A ONLY. Their bits differ between Owls and NOTS (NOTS's libm takes
 //       the SSE2 code for them). Bit-form code must not call them (core/ never does: log_add and log1mexp_v3 in
 //       core/cpp/v3_util.h:67-86 are unused); their results never enter a fixture or a bit test.

@@ -194,7 +194,7 @@ TEST(prep_from_r_equals_cpp_path) {
   Json a1 = Json::object(); a1["in"] = raw; a1["out"] = d1;
   Json r1 = prep::run(a1);
   // the R-standardised directory
-  std::string cmd = "mkdir -p '" + rdir + "'"; CHECK(std::system(cmd.c_str()) == 0);
+  { std::error_code ec; std::filesystem::create_directories(rdir, ec); CHECK_MSG(!ec, "cannot create " + rdir); }
   auto stats = read_f64(dir + "/prep/" + name + "_stats.f64", 3 * (size_t)p + 3);
   auto wf = [&](const std::string& f, const double* q, size_t m) { std::ofstream o(rdir + "/" + f, std::ios::binary); o.write((const char*)q, (std::streamsize)(m * 8)); };
   auto Xs = read_f64(dir + "/prep/" + name + "_Xs.f64", (size_t)n * p), ys = read_f64(dir + "/prep/" + name + "_ys.f64", (size_t)n);
@@ -209,6 +209,7 @@ TEST(prep_from_r_equals_cpp_path) {
   Json a2 = Json::object(); a2["from_r"] = rdir; a2["out"] = d2;
   Json r2 = prep::run(a2);
   CHECK(r2.at("prep_class").str() == "B(R-standardised input)");
+  {   // every mapping of d1 / d2 is released at the end of this scope, before the cleanup (NFS: no .nfs* placeholders)
   fmt::Reader f1(d1), f2(d2);
   bool same = true;
   for (const char* sec : {"Xs_cm", "ys", "z", "diagG", "col_max", "col_mean", "col_sd", "logw", "logprior"})
@@ -225,8 +226,8 @@ TEST(prep_from_r_equals_cpp_path) {
   CHECK(D.n == n && D.p == p && D.p_raw == p_raw);
   BitScorer s1(&D); Data D0 = data_from_R(name, n, p); BitScorer s0(&D0);
   CHECK(same_bits(s1.score(Model{0, 3, 7}).logm, s0.score(Model{0, 3, 7}).logm));
-  std::string rmcmd = "rm -rf '" + rdir + "' '" + raw + "' '" + d1 + "' '" + d2 + "' '" + d1 + ".json'";
-  CHECK(std::system(rmcmd.c_str()) == 0);
+  }
+  remove_quietly({rdir, raw, d1, d2, d1 + ".json", d2 + ".json"});
 }
 
 // The pinned reference (Sol F10): the fixtures name the exact core/ they were made from; if core/ changes, the golden
