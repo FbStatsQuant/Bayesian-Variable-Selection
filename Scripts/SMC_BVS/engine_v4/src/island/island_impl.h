@@ -361,6 +361,14 @@ class IslandEngine {
     std::vector<int> act;                        // active columns
     avec<double> XA;                             // |act| x n
     std::vector<double> lbuf, obuf;              // nsup x p
+    // [arch] Gram rows of active columns kept across the passes of a group (and across groups and rounds while the
+    // column stays active): row r = X^T x_col, p entries with the bits of tile_products. A column gets a slot the first
+    // pass it is active (its row is computed by that pass's tile sweep) and loses it when no active particle holds it.
+    avec<double> GR; int gr_slots = 0;
+    std::vector<int> slot_col;                   // column of each slot, -1 = free
+    std::vector<const double*> act_gr;           // per active column: its cached row (computed in an earlier pass) or nullptr
+    std::vector<int> act_local, act_newslot;     // per active column: tile-local product row (-1: cached); slot to fill (-1: none)
+    std::vector<int> loc;                        // the active columns computed in this pass (new first, then no-slot)
   };
   GroupBuf gb;
 
@@ -425,8 +433,29 @@ class IslandEngine {
         auto& c = gb.sup[s]; c.arow.assign(c.k, 0);
         if (c.fast && c.add_ok) for (int a = 0; a < c.k; ++a) c.arow[a] = (int)(std::lower_bound(gb.act.begin(), gb.act.end(), c.S[a]) - gb.act.begin());
       }
-      gb.XA.resize((size_t)nA * D.n);
-      for (int a = 0; a < nA; ++a) std::memcpy(&gb.XA[(size_t)a * D.n], D.col(gb.act[a]), sizeof(double) * D.n);
+      gb.act_gr.assign(nA, nullptr); gb.act_local.assign(nA, -1); gb.act_newslot.assign(nA, -1); gb.loc.clear();
+      const bool use_gr = cfg.gram_slots > 0 && cfg.bounded_scoring;
+      if (use_gr) {
+        if (gb.gr_slots == 0) { gb.gr_slots = cfg.gram_slots; gb.GR.resize((size_t)gb.gr_slots * p); gb.slot_col.assign(gb.gr_slots, -1); }
+        for (int r = 0; r < gb.gr_slots; ++r) if (gb.slot_col[r] >= 0) {   // keep the slots of columns still active
+          auto it = std::lower_bound(gb.act.begin(), gb.act.end(), gb.slot_col[r]);
+          if (it != gb.act.end() && *it == gb.slot_col[r]) gb.act_gr[it - gb.act.begin()] = &gb.GR[(size_t)r * p]; else gb.slot_col[r] = -1;
+        }
+        int fr = 0; std::vector<int> noslot;
+        for (int a = 0; a < nA; ++a) if (!gb.act_gr[a]) {
+          while (fr < gb.gr_slots && gb.slot_col[fr] >= 0) ++fr;
+          if (fr < gb.gr_slots) { gb.slot_col[fr] = gb.act[a]; gb.act_newslot[a] = fr; gb.loc.push_back(a); KS.gram_rows_new++; }
+          else { noslot.push_back(a); KS.gram_rows_noslot++; }
+        }
+        gb.loc.insert(gb.loc.end(), noslot.begin(), noslot.end());
+        KS.gram_rows_reused += (uint64_t)(nA - (int)gb.loc.size());
+      } else {
+        for (int a = 0; a < nA; ++a) gb.loc.push_back(a);
+      }
+      const int nLoc = (int)gb.loc.size();
+      for (int t = 0; t < nLoc; ++t) gb.act_local[gb.loc[t]] = t;
+      gb.XA.resize((size_t)nLoc * D.n);
+      for (int t = 0; t < nLoc; ++t) std::memcpy(&gb.XA[(size_t)t * D.n], D.col(gb.act[gb.loc[t]]), sizeof(double) * D.n);
       if (gb.lbuf.size() < (size_t)nsup * p) {   // sized once to G p (review P2 / L5: growing re-zero-fills and reallocates)
         const size_t full = (size_t)std::max(nsup, std::min(cfg.G, cfg.N)) * p;
         gb.lbuf.clear(); gb.lbuf.shrink_to_fit(); gb.obuf.clear(); gb.obuf.shrink_to_fit();
@@ -458,7 +487,7 @@ class IslandEngine {
       {
         BitScorer& sc = *scorers[omp_get_thread_num()];
         avec<double>& Pp = scratch_P[omp_get_thread_num()];   // persistent per thread (no allocation per pass)
-        if (Pp.size() < (size_t)std::max(1, nA) * Bk + 8) Pp.resize((size_t)std::max(1, nA) * Bk + 8);
+        if (Pp.size() < (size_t)std::max(1, nLoc) * Bk + 8) Pp.resize((size_t)std::max(1, nLoc) * Bk + 8);
         std::vector<uint8_t> inm(Bk); std::vector<uint64_t> needw((size_t)Bk / 64); std::vector<int> nlist(Bk + 1); double tprod = 0; uint64_t nflip = 0;
         #pragma omp for schedule(dynamic, 1) nowait
         for (int ti = 0; ti < ntile; ++ti) oom_guard([&] {
@@ -467,7 +496,14 @@ class IslandEngine {
           const double* Xtile = &Xt[(size_t)ti * Bk * D.n];
           // products P[a][jj] = sum_i x_{i,a} x_{i,j}, sequential in i (bits of the Gram entry)
           const double tp0 = omp_get_wtime();
-          tile_products(gb.XA.data(), nA, D.n, Xtile, Bk, Pp.data(), products_block_of(cfg));
+          if (nLoc > 0) {
+            if (products_fma()) tile_products_fma4(gb.XA.data(), nLoc, D.n, Xtile, Bk, Pp.data());   // [arch] class A only
+            else tile_products(gb.XA.data(), nLoc, D.n, Xtile, Bk, Pp.data(), products_block_of(cfg));
+          }
+          if (use_gr) for (int t = 0; t < nLoc; ++t) {   // [arch] new columns: this tile's part of their Gram rows
+            const int sl = gb.act_newslot[gb.loc[t]]; if (sl < 0) break;   // new columns come first
+            std::memcpy(&gb.GR[(size_t)sl * p + j0], &Pp[(size_t)t * Bk], sizeof(double) * nbv);
+          }
           tprod += omp_get_wtime() - tp0;
           for (int s = 0; s < nsup; ++s) {
             const SupportCache& c = gb.sup[s];
@@ -500,7 +536,8 @@ class IslandEngine {
                 int32_t j8[8], jj8[8];
                 for (int l = 0; l < 8; ++l) { jj8[l] = nlist[c0 + std::min(l, nl - 1)]; j8[l] = j0 + jj8[l]; }
                 for (int a = 0; a < c.k; ++a) {
-                  const double* row = &Pp[(size_t)c.arow[a] * Bk];
+                  const int ai = c.arow[a];
+                  const double* row = gb.act_gr[ai] ? gb.act_gr[ai] + j0 : &Pp[(size_t)gb.act_local[ai] * Bk];
                   v8d g; for (int l = 0; l < 8; ++l) g[l] = row[jj8[l]];
                   u[a] = g;
                 }
@@ -528,7 +565,7 @@ class IslandEngine {
                 for (int l = 0; l < 8; ++l) { int j = j0 + v + l; if (v + l < nbv && !inm[v + l]) valid |= 1u << l; j8[l] = std::min(j, p - 1); }
                 if (!valid) continue;
                 nflip += (uint64_t)__builtin_popcount(valid);
-                for (int a = 0; a < c.k; ++a) u[a] = load8(&Pp[(size_t)c.arow[a] * Bk + v]);
+                for (int a = 0; a < c.k; ++a) u[a] = load8(&Pp[(size_t)gb.act_local[c.arow[a]] * Bk + v]);   // dense path: no row cache
                 double lm8[8], o8[8];
                 if constexpr (A == Arith::ClassA) {
                   eval8_add<A>(D, st, sc, c, 0, u, j8, valid, lm8, o8);
@@ -553,6 +590,27 @@ class IslandEngine {
               const uint32_t i1 = (uint32_t)(g0 + gi) + 1;
               Address a0 = addr(rc.xph, rc.ustage, i1, 0, SLOT_ACCEPT);   // lanes set the position
               v4::Ctr4 ctr = v4::address_ctr(a0); v4::Key2 key = v4::address_key(a0);
+              if (cfg.bounded_scoring && c.fast && c.add_ok) {
+                // [arch] the non-member labels of the tile with q < position < best, packed 8 to a Philox call (members
+                // were tested by the deletion pre-scan with the same uniforms)
+                std::fill(needw.begin(), needw.end(), 0ull);
+                or_range_bits(inv + j0, nbv, qi, best, needw.data());
+                for (auto it = mlo; it != mhi; ++it) needw[(*it - j0) >> 6] &= ~(1ull << ((*it - j0) & 63));
+                int cnt = 0;
+                for (size_t w = 0; w < needw.size(); ++w) for (uint64_t b = needw[w]; b; b &= b - 1) nlist[cnt++] = (int)(w * 64) + __builtin_ctzll(b);
+                for (int c0 = 0; c0 < cnt; c0 += 8) {
+                  const int nl = std::min(8, cnt - c0); uint32_t pos8[8]; double u8[8];
+                  for (int l = 0; l < 8; ++l) pos8[l] = inv[j0 + nlist[c0 + std::min(l, nl - 1)]];
+                  philox8_positions(ctr.data(), key.data(), pos8, u8);
+                  for (int l = 0; l < nl; ++l) {
+                    const double oj = ob[j0 + nlist[c0 + l]];   // ODDS_FAILED (< 0): a failed score is an event at its position
+                    if ((oj < 0 || u8[l] < oj) && pos8[l] < best) best = pos8[l];
+                  }
+                }
+                uint32_t cur = gb.fmin[gi].load(std::memory_order_relaxed);
+                while (best < cur && !gb.fmin[gi].compare_exchange_weak(cur, best, std::memory_order_relaxed)) {}
+                continue;
+              }
               for (int v = 0; v < nbv; v += 8) {
                 uint32_t pos8[8]; unsigned need = 0;
                 for (int l = 0; l < 8; ++l) {
@@ -801,7 +859,8 @@ class IslandEngine {
   uint64_t fingerprint() const {
     Fnv f; f.pod(cfg.seed); f.pod(cfg.island); f.pod(cfg.tier); f.pod(cfg.N); f.vec(cfg.grid); f.pod(cfg.L); f.pod(cfg.Hm); f.pod(cfg.B);
     f.pod(top.cap); f.pod(D.n); f.pod(D.p); f.pod(D.yty); f.pod(st.logZbar0); f.pod(st.J); f.pod((int)A); f.pod(cfg.compat); f.pod(cfg.leaders);
-    const std::string bb = v4::binary_block_no_self_test().dump(); f.bytes(bb.data(), bb.size());
+    // [arch] benchmarks only: compare builds of different prototypes on the same checkpointed state (never in a real run)
+    if (!cfg.test_ckpt_any_binary) { const std::string bb = v4::binary_block_no_self_test().dump(); f.bytes(bb.data(), bb.size()); }
     return f.h;
   }
   // Streamed checkpoint I/O (manager Q6): no byte image of the store; the checksum is computed while streaming.
@@ -941,6 +1000,7 @@ class IslandEngine {
   // ---- the island ---------------------------------------------------------------------------------------------
   IslandRun run() {
     auto tstart = std::chrono::steady_clock::now();
+    products_fma() = cfg.products_fma && A == Arith::ClassA;   // [arch] prototype switch (one island per process)
     last_ckpt = tstart;
     const int N = cfg.N, L = cfg.L, Hm = cfg.Hm;
     // adaptive schedule (benchmarks / pilot-like grids): T is known only when phi reaches 1
@@ -1060,6 +1120,9 @@ class IslandEngine {
                          step, k.t_orders - ks_prev.t_orders, k.t_build - ks_prev.t_build, k.t_phaseA - ks_prev.t_phaseA, k.t_products - ks_prev.t_products,
                          k.t_walk - ks_prev.t_walk, k.t_phaseB - ks_prev.t_phaseB, k.t_compact_pass - ks_prev.t_compact_pass, k.t_apply - ks_prev.t_apply,
                          k.t_check - ks_prev.t_check);
+            std::fprintf(stderr, "  [arch] step %d: Gram rows (column x pass): computed %llu, reused %llu, no slot %llu\n", step,
+                         (unsigned long long)(k.gram_rows_new - ks_prev.gram_rows_new), (unsigned long long)(k.gram_rows_reused - ks_prev.gram_rows_reused),
+                         (unsigned long long)(k.gram_rows_noslot - ks_prev.gram_rows_noslot));
             std::fprintf(stderr, "  [arch] step %d: flip evaluations %.4g = %.3f per step (pairs %.3f per step)\n", step, (double)(k.flip_evals - ks_prev.flip_evals),
                          steps > 0 ? (double)(k.flip_evals - ks_prev.flip_evals) / steps : 0.0, steps > 0 ? pairs / steps : 0.0);
             ks_prev = k; ks_prev.t_store_compact = top.t_compact;

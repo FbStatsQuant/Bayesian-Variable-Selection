@@ -6,21 +6,22 @@
 # checkpoint; every variant then resumes from that checkpoint and runs the 2 measured rounds. Variants differ only in
 # execution parameters (never in the law), so every variant must print the SAME output hash (checked here).
 # Run inside ONE allocation of one whole socket: 96 CPUs of one socket + its memory (the H-9 island shape).
-#   sbatch --nodes=1 --ntasks=1 --cpus-per-task=96 --mem=60G --time=00:40:00 --constraint=<SPR 8468> ...
+#   sbatch --nodes=1 --ntasks=1 --cpus-per-task=96 --mem=72G --time=00:45:00 --constraint=<SPR 8468> ...
 # Usage: tools/nots_bench_arch.sh <build-dir> [variants]
-#   variants (space separated, default "ref check bounded all"):
-#     ref      PR #26 head behaviour: L5, dense scoring, I1 check after every step
-#     check    ref without the per-step I1 check                      (lever 1: the check)
-#     bounded  check + bounded scoring and the one-particle phase B   (lever 2)
-#     all      bounded + every other [arch] switch that is on by default in this build
-#     g64      `all` at G = 64      smt48  `all` with 48 threads (one per core)
-# Cost ESTIMATE at p = 10^6 (from job 2748756: transient 656 s, measured rounds 29-31 s each at G = 256): transient ~11 min,
-# each variant ~2.5 min (data + setup 20 s, checkpoint load, 2 rounds) -> 4 variants ~ 21 min x 96 CPUs ~ 34 core-h.
+#   variants (space separated, default "ref check bounded gram fma"):
+#     ref      PR #26 head behaviour: L5, dense scoring, I1 check after every step (this build's Philox multiply included)
+#     check    ref without the per-step I1 check                               (lever 1: the check)
+#     bounded  check + bounded scoring, bounded scan, one-particle phase B     (lever 2; same output hash)
+#     gram     bounded + Gram rows of active columns kept across passes        (lever 3; same output hash; + 5.1 GB)
+#     fma      gram + FMA in the class-A tile products                         (other class-A bits: its hash differs)
+#     g64      `gram` at G = 64          smt48  `gram` with 48 threads (one per core)
+# Cost ESTIMATE at p = 10^6 (from job 2748756: transient 656 s, measured rounds 29-31 s each at G = 256): transient ~10 min,
+# each variant ~2.5 min (data + setup 20 s, checkpoint load, 2 rounds) -> 5 variants ~ 23 min x 96 CPUs ~ 37 core-h.
 # Requires TMPDIR and a build directory under the department folders (tools/nots_guard.sh); logs in <build-dir>/logs.
 set -euo pipefail
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$here/tools/nots_guard.sh"
-build="${1:?build dir}"; variants="${2:-ref check bounded all}"; p="${V4_BENCH_P:-1000000}"
+build="${1:?build dir}"; variants="${2:-ref check bounded gram fma}"; p="${V4_BENCH_P:-1000000}"
 nots_guard "$build"
 cmake -S "$here" -B "$build" -DCMAKE_BUILD_TYPE=Release -DV4_TESTS=OFF -DV4_ISLAND_ISA="${V4_ISLAND_ISA_BUILD:-sapphirerapids}" > "$LOGDIR/cmake.log"
 make -C "$build" -j "${V4_MAKE_J:-16}" v4_bench_island v4_bench_arch > "$LOGDIR/make.log" 2>&1 || { tail -30 "$LOGDIR/make.log" >&2; exit 5; }
@@ -41,17 +42,19 @@ for v in $variants; do
   case "$v" in
     ref)     envs=(V4_NO_BOUNDED=1) ;;
     check)   envs=(V4_NO_BOUNDED=1 V4_NO_CHECK_STORE=1) ;;
-    bounded) envs=(V4_NO_CHECK_STORE=1 V4_ARCH_ONLY_BOUNDED=1) ;;
-    all)     envs=(V4_NO_CHECK_STORE=1) ;;
-    g64)     envs=(V4_NO_CHECK_STORE=1); g=64 ;;
-    smt48)   envs=(V4_NO_CHECK_STORE=1 OMP_PLACES=cores); nt=48 ;;
+    bounded) envs=(V4_NO_CHECK_STORE=1) ;;
+    gram)    envs=(V4_NO_CHECK_STORE=1 V4_GRAM_SLOTS=640) ;;
+    fma)     envs=(V4_NO_CHECK_STORE=1 V4_GRAM_SLOTS=640 V4_PRODUCTS_FMA=1) ;;
+    g64)     envs=(V4_NO_CHECK_STORE=1 V4_GRAM_SLOTS=640); g=64 ;;
+    smt48)   envs=(V4_NO_CHECK_STORE=1 V4_GRAM_SLOTS=640 OMP_PLACES=cores); nt=48 ;;
     *) echo "unknown variant $v" >&2; exit 2 ;;
   esac
   echo "== variant $v: G=$g threads=$nt ${envs[*]}  $(date +%T)"
   env "${envs[@]}" V4_CKPT="$ck" OMP_NUM_THREADS=$nt $pre "$B" island "$p" "$N" "$nt" A lm "$g" 128 "$GRID" "$L" "$HM" > "$LOGDIR/variant_$v.log" 2>&1 \
     || { tail -5 "$LOGDIR/variant_$v.log" >&2; exit 7; }
   grep -E "\[round\]|\[arch\]|resumed after|output hash|peak RSS" "$LOGDIR/variant_$v.log" || true
-  hashes+=("$(grep -o "output hash [0-9a-f]*" "$LOGDIR/variant_$v.log" | head -1)")
+  h="$(grep -o "output hash [0-9a-f]*" "$LOGDIR/variant_$v.log" | head -1)"
+  if [[ "$v" == fma ]]; then echo "   (fma: class-A bits differ by design: $h)"; else hashes+=("$h"); fi
 done
 uniq_h=$(printf '%s\n' "${hashes[@]}" | sort -u | wc -l)
 if [[ "$uniq_h" -ne 1 || -z "${hashes[0]}" ]]; then echo "ERROR: the variants' output hashes differ or are missing: ${hashes[*]}" >&2; exit 8; fi

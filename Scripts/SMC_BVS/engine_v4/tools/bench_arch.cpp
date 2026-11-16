@@ -7,6 +7,8 @@
 //        ns per multiply-add of the tile products: block 1, block 4 (the engine's bits) and block 4 with FMA (class A only).
 //   fy <m> <threads> <reps>
 //        Fisher-Yates round order + inverse: the L5 code against deeper look-ahead (identical permutations).
+//   comp <p> <bsz> <nsup> <threads> <scatter:0|1>
+//        the composite-table read of comp_add with production-sized tables (blocks of bsz), and with a singleton array.
 #include <omp.h>
 #include <cstdio>
 #include <cstdlib>
@@ -62,38 +64,6 @@ static void bench_check(uint64_t cap, int k, int T) {
 // ---- products: per multiply-add cost of the tile products, mul + add (the engine's bits) against FMA (class A only) ----
 // block 4 with fma8: s = fma(x_a[i], x_j[i], s), sequential in i per lane. Not the bits of core's Gram entry (one rounding
 // per term instead of two); usable only in class A, and only if the particle-major reference (eval1) does the same.
-static void tile_products_fma4(const double* XA, int nA, int n, const double* Xtile, int Bk, double* P) {
-  int a = 0;
-  for (; a + 4 <= nA; a += 4) {
-    const double *x0 = XA + (size_t)a * n, *x1 = x0 + n, *x2 = x1 + n, *x3 = x2 + n;
-    for (int c0 = 0; c0 < Bk; c0 += 32) {
-      v8d a00 = bc(0), a01 = bc(0), a02 = bc(0), a03 = bc(0), a10 = bc(0), a11 = bc(0), a12 = bc(0), a13 = bc(0);
-      v8d a20 = bc(0), a21 = bc(0), a22 = bc(0), a23 = bc(0), a30 = bc(0), a31 = bc(0), a32 = bc(0), a33 = bc(0);
-      const double* rp = Xtile + c0;
-      for (int i = 0; i < n; ++i, rp += Bk) {
-        const v8d r0 = load8(rp), r1 = load8(rp + 8), r2 = load8(rp + 16), r3 = load8(rp + 24);
-        const v8d b0 = bc(x0[i]), b1 = bc(x1[i]), b2 = bc(x2[i]), b3 = bc(x3[i]);
-        a00 = fma8(b0, r0, a00); a01 = fma8(b0, r1, a01); a02 = fma8(b0, r2, a02); a03 = fma8(b0, r3, a03);
-        a10 = fma8(b1, r0, a10); a11 = fma8(b1, r1, a11); a12 = fma8(b1, r2, a12); a13 = fma8(b1, r3, a13);
-        a20 = fma8(b2, r0, a20); a21 = fma8(b2, r1, a21); a22 = fma8(b2, r2, a22); a23 = fma8(b2, r3, a23);
-        a30 = fma8(b3, r0, a30); a31 = fma8(b3, r1, a31); a32 = fma8(b3, r2, a32); a33 = fma8(b3, r3, a33);
-      }
-      double* p0 = P + (size_t)a * Bk + c0; double* p1 = p0 + Bk; double* p2 = p1 + Bk; double* p3 = p2 + Bk;
-      store8(p0, a00); store8(p0 + 8, a01); store8(p0 + 16, a02); store8(p0 + 24, a03);
-      store8(p1, a10); store8(p1 + 8, a11); store8(p1 + 16, a12); store8(p1 + 24, a13);
-      store8(p2, a20); store8(p2 + 8, a21); store8(p2 + 16, a22); store8(p2 + 24, a23);
-      store8(p3, a30); store8(p3 + 8, a31); store8(p3 + 16, a32); store8(p3 + 24, a33);
-    }
-  }
-  for (; a < nA; ++a) {
-    const double* xa = XA + (size_t)a * n; double* Pa = P + (size_t)a * Bk;
-    for (int c0 = 0; c0 < Bk; c0 += 8) {
-      v8d s0 = bc(0); const double* rp = Xtile + c0;
-      for (int i = 0; i < n; ++i, rp += Bk) s0 = fma8(bc(xa[i]), load8(rp), s0);
-      store8(Pa + c0, s0);
-    }
-  }
-}
 // products <nA> <ntile> <threads> [n] [tile]: ntile distinct tiles (ntile * tile * n * 8 bytes: choose it larger than the
 // caches to include the DRAM stream of X, as in a pass), T threads each sweeping all of them
 static void bench_products(int nA, int ntile, int T, int n, int Bk) {
@@ -193,12 +163,81 @@ static void bench_fy(int m, int T, int reps) {
   }
 }
 
+// ---- composite sum of an addition (comp_add): cost of the table read with production-sized tables ----
+// The benches use a stand-in partition (blocks of 4: 16 codes per block, a 32 MB table at 1e6). WP2's partition packs
+// blocks to a mean of 13.2 of B_V = 14 (D-18/D-19: ~850 codes per column, ~7 GB at 1e6), and comp_add reads the
+// singleton code logr[code_ptr[b] + (1 << pos)] of every scored label: one random read into that table per flip.
+// comp <p> <bsz> <nsup> <threads> <scatter:0|1>: synthetic tables (random values; timing only) for blocks of bsz,
+// contiguous (scatter 0: AR-like clusters) or with labels assigned to blocks at random (scatter 1); nsup supports of 6
+// random members; ns per (support, label) of comp_add as coded, and with a p-indexed array of the singleton terms
+// lr1[j] = logr[blk[j]][1 << pos[j]] (same doubles, same additions in the same order: identical results, checked).
+static void bench_comp(int p, int bsz, int nsup, int T, int scatter) {
+  Start st; st.J = (p + bsz - 1) / bsz;
+  st.blk.assign(p, 0); st.pos.assign(p, 0);
+  std::vector<int> perm(p); for (int j = 0; j < p; ++j) perm[j] = j;
+  std::mt19937_64 g(99);
+  if (scatter) std::shuffle(perm.begin(), perm.end(), g);
+  std::vector<int> bsize(st.J, 0);
+  for (int t = 0; t < p; ++t) { const int j = perm[t], b = t / bsz; st.blk[j] = b; st.pos[j] = bsize[b]++; }
+  st.code_ptr.assign(st.J + 1, 0);
+  for (int b = 0; b < st.J; ++b) st.code_ptr[b + 1] = st.code_ptr[b] + ((int64_t)1 << bsize[b]);
+  double t0 = now();
+  st.logr_flat.resize((size_t)st.code_ptr[st.J]);
+  #pragma omp parallel for num_threads(T) schedule(static)
+  for (int64_t i = 0; i < st.code_ptr[st.J]; ++i) { uint64_t x = (uint64_t)i; st.logr_flat[i] = -1e-3 * (double)(splitmix64(x) >> 44); }
+  std::vector<double> lr1(p);
+  for (int j = 0; j < p; ++j) lr1[j] = st.lr(st.blk[j], 1u << st.pos[j]);
+  std::printf("# comp tables p=%d blocks of %d (%s): %.2f GB of logr, built in %.1f s\n", p, bsz, scatter ? "labels scattered over blocks" : "contiguous blocks",
+              (double)st.logr_flat.size() * 8 / 1073741824.0, now() - t0);
+  std::vector<SupportCache> sup(nsup);
+  for (auto& c : sup) {   // the composite-block part of build_support (kernel.h), on random supports of 6 members
+    Model S; while ((int)S.size() < 6) { int j = (int)(g() % p); if (!contains(S, j)) sorted_insert(S, j); }
+    c.S = S; c.k = 6;
+    std::vector<std::pair<int, int>> pr; for (int j : S) pr.push_back({st.blk[j], st.pos[j]});
+    std::sort(pr.begin(), pr.end());
+    c.bb.clear(); c.bcode.clear(); c.bterm.clear(); c.bpre.assign(1, 0.0);
+    for (size_t i = 0; i < pr.size();) {
+      int b = pr[i].first; uint32_t code = 0;
+      while (i < pr.size() && pr[i].first == b) { code |= 1u << pr[i].second; ++i; }
+      c.bb.push_back(b); c.bcode.push_back(code); c.bterm.push_back(st.lr(b, code)); c.bpre.push_back(c.bpre.back() + c.bterm.back());
+    }
+  }
+  const int Bk = 128, ntile = p / Bk; double tt[2]; uint64_t chk[2] = {0, 0};
+  for (int var = 0; var < 2; ++var) {
+    uint64_t acc = 0; t0 = now();   // order-free check: the sum of the results' bit patterns
+    #pragma omp parallel for num_threads(T) schedule(dynamic, 4) reduction(+ : acc)
+    for (int ti = 0; ti < ntile; ++ti) {
+      const int j0 = ti * Bk;
+      for (const auto& c : sup) {
+        for (int jj = 0; jj < Bk; ++jj) {
+          const int j = j0 + jj;
+          if (std::binary_search(c.S.begin(), c.S.end(), j)) continue;
+          double v;
+          if (var == 0) v = comp_add(st, c, j);
+          else {   // the same sum with the singleton term from the p-indexed array when the label's block does not meet S
+            const int b = st.blk[j];
+            size_t mm = std::lower_bound(c.bb.begin(), c.bb.end(), b) - c.bb.begin();
+            if (mm < c.bb.size() && c.bb[mm] == b) v = comp_add(st, c, j);
+            else { v = c.bpre[mm] + lr1[j]; for (; mm < c.bb.size(); ++mm) v += c.bterm[mm]; }
+          }
+          uint64_t bits; std::memcpy(&bits, &v, 8); acc += bits;
+        }
+      }
+    }
+    tt[var] = now() - t0; chk[var] = acc;
+  }
+  const double pairs = (double)ntile * Bk * nsup;
+  std::printf("comp p=%d bsz=%d scatter=%d supports=%d threads=%d: comp_add %.1f ns per (support,label) (thread-time); with the singleton array %.1f ns; "
+              "sums %s\n", p, bsz, scatter, nsup, T, 1e9 * tt[0] * T / pairs, 1e9 * tt[1] * T / pairs, chk[0] == chk[1] ? "identical" : "DIFFERENT");
+}
+
 int main(int argc, char** argv) {
   if (argc < 2) { std::fprintf(stderr, "see header\n"); return 1; }
   std::string mode = argv[1];
   if (mode == "check" && argc >= 5) bench_check(strtoull(argv[2], 0, 10), atoi(argv[3]), atoi(argv[4]));
   else if (mode == "products" && argc >= 5) bench_products(atoi(argv[2]), atoi(argv[3]), atoi(argv[4]), argc > 5 ? atoi(argv[5]) : 200, argc > 6 ? atoi(argv[6]) : 128);
   else if (mode == "fy" && argc >= 5) bench_fy(atoi(argv[2]), atoi(argv[3]), atoi(argv[4]));
+  else if (mode == "comp" && argc >= 7) bench_comp(atoi(argv[2]), atoi(argv[3]), atoi(argv[4]), atoi(argv[5]), atoi(argv[6]));
   else { std::fprintf(stderr, "unknown mode or missing arguments (see header)\n"); return 1; }
   return 0;
 }

@@ -107,6 +107,43 @@ inline void tile_products(const double* XA, int nA, int n, const double* Xtile, 
   }
 }
 
+// [arch] prototype: class-A products with FMA, s = fma(x_a[i], x_j[i], s), sequential in i per lane. NOT the bits of
+// core's Gram entry (one rounding per term instead of two): class A only, and the particle-major reference (eval1)
+// must do the same so that T3 holds. Process-wide switch, set by the island from IslandConfig::products_fma.
+inline bool& products_fma() { static bool on = false; return on; }
+inline void tile_products_fma4(const double* XA, int nA, int n, const double* Xtile, int Bk, double* P) {
+  int a = 0;
+  for (; a + 4 <= nA; a += 4) {
+    const double *x0 = XA + (size_t)a * n, *x1 = x0 + n, *x2 = x1 + n, *x3 = x2 + n;
+    for (int c0 = 0; c0 < Bk; c0 += 32) {
+      v8d a00 = bc(0), a01 = bc(0), a02 = bc(0), a03 = bc(0), a10 = bc(0), a11 = bc(0), a12 = bc(0), a13 = bc(0);
+      v8d a20 = bc(0), a21 = bc(0), a22 = bc(0), a23 = bc(0), a30 = bc(0), a31 = bc(0), a32 = bc(0), a33 = bc(0);
+      const double* rp = Xtile + c0;
+      for (int i = 0; i < n; ++i, rp += Bk) {
+        const v8d r0 = load8(rp), r1 = load8(rp + 8), r2 = load8(rp + 16), r3 = load8(rp + 24);
+        const v8d b0 = bc(x0[i]), b1 = bc(x1[i]), b2 = bc(x2[i]), b3 = bc(x3[i]);
+        a00 = fma8(b0, r0, a00); a01 = fma8(b0, r1, a01); a02 = fma8(b0, r2, a02); a03 = fma8(b0, r3, a03);
+        a10 = fma8(b1, r0, a10); a11 = fma8(b1, r1, a11); a12 = fma8(b1, r2, a12); a13 = fma8(b1, r3, a13);
+        a20 = fma8(b2, r0, a20); a21 = fma8(b2, r1, a21); a22 = fma8(b2, r2, a22); a23 = fma8(b2, r3, a23);
+        a30 = fma8(b3, r0, a30); a31 = fma8(b3, r1, a31); a32 = fma8(b3, r2, a32); a33 = fma8(b3, r3, a33);
+      }
+      double* p0 = P + (size_t)a * Bk + c0; double* p1 = p0 + Bk; double* p2 = p1 + Bk; double* p3 = p2 + Bk;
+      store8(p0, a00); store8(p0 + 8, a01); store8(p0 + 16, a02); store8(p0 + 24, a03);
+      store8(p1, a10); store8(p1 + 8, a11); store8(p1 + 16, a12); store8(p1 + 24, a13);
+      store8(p2, a20); store8(p2 + 8, a21); store8(p2 + 16, a22); store8(p2 + 24, a23);
+      store8(p3, a30); store8(p3 + 8, a31); store8(p3 + 16, a32); store8(p3 + 24, a33);
+    }
+  }
+  for (; a < nA; ++a) {
+    const double* xa = XA + (size_t)a * n; double* Pa = P + (size_t)a * Bk;
+    for (int c0 = 0; c0 < Bk; c0 += 8) {
+      v8d s0 = bc(0); const double* rp = Xtile + c0;
+      for (int i = 0; i < n; ++i, rp += Bk) s0 = fma8(bc(xa[i]), load8(rp), s0);
+      store8(Pa + c0, s0);
+    }
+  }
+}
+
 // Composite sum of S ∪ {j} (j ∉ S) and S \ {j} (j ∈ S), same additions in the same order as Start::comp.
 inline double comp_add(const Start& st, const SupportCache& s, int j) {
   int b = st.blk[j]; uint32_t bit = 1u << st.pos[j];
@@ -318,6 +355,9 @@ inline void eval1(const Data& D, const Start& st, BitScorer& sc, const SupportCa
     thread_local std::vector<v8d> ub; if (ub.size() < (size_t)std::max(1, s.k)) ub.resize((size_t)std::max(1, s.k));
     v8d* u = ub.data();
     const double* xj = D.col(j);
+    if (A == Arith::ClassA && products_fma()) {   // [arch] the same FMA sum as tile_products_fma4, one lane
+      for (int a = 0; a < s.k; ++a) { const double* xa = D.col(s.S[a]); v8d g = bc(0); for (int i = 0; i < D.n; ++i) g = fma8(bc(xa[i]), bc(xj[i]), g); u[a] = g; }
+    } else
     for (int a = 0; a < s.k; ++a) { const double* xa = D.col(s.S[a]); double g = 0; for (int i = 0; i < D.n; ++i) g += xa[i] * xj[i]; u[a] = bc(g); }
     eval8_add<A>(D, st, sc, s, q, u, j8, 1u, lm8, o8);
   } else {

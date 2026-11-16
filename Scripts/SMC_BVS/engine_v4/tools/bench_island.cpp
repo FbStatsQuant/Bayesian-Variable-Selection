@@ -129,11 +129,14 @@ static int bench_island(int p, int N, const std::vector<int>& thr, KernelKind kk
   c.store_parallel_compact = std::getenv("V4_SERIAL_COMPACT") == nullptr; c.allow_test_kernels = true;
   if (std::getenv("V4_NO_CHECK_STORE")) c.check_store = false;
   if (std::getenv("V4_NO_BOUNDED")) c.bounded_scoring = false;   // [arch] A/B of bounded scoring
+  if (std::getenv("V4_PRODUCTS_FMA")) c.products_fma = true;     // [arch] class A: FMA products (other class-A bits)
+  if (const char* e = std::getenv("V4_GRAM_SLOTS")) c.gram_slots = std::atoi(e);   // [arch] Gram-row cache (rows of p doubles)
   // [arch] checkpointed A/B: V4_CKPT=<path> writes/reads <path>.a/.b; V4_STOP_AFTER=<step> stops after that step (status 1 is
   // then the expected outcome). A second run with V4_CKPT alone resumes after that step: variants (execution parameters
   // only: threads, G, tile, V4_NO_BOUNDED, V4_NO_CHECK_STORE, ...) are compared on the same remaining rounds without
   // repeating the transient. The fingerprint includes the binary: use one binary for the whole comparison.
   const bool stop_run = std::getenv("V4_STOP_AFTER") != nullptr;
+  if (std::getenv("V4_CKPT_ANY_BINARY")) c.test_ckpt_any_binary = true;   // Owls prototyping: resume with another build
   if (const char* e = std::getenv("V4_CKPT")) { c.ckpt_path = e; c.ckpt_every_s = 1e18; if (stop_run) c.stop_after_step = std::atoi(std::getenv("V4_STOP_AFTER")); }   // [arch] A/B of the per-step I1 check
   c.seed = 2026; c.island = 1; c.N = N; c.L = L; c.Hm = Hm; c.B = 14; c.kernel = kk; c.G = G; c.tile = Bk; c.store_cap = cap;
   // environment overrides AFTER the defaults (the island id was reset to 1 before: manager 11-16 note 1)
