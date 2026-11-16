@@ -665,3 +665,7 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - Tests + Opus review; fallback (a) per-row carriers; (c) refused.
   - Rows 3.1/3.2 newly conditional on C-DLV:L2-S3 / P1-Inventory (code-reading audits), stated plainly.
   - Post-freeze: check those audits for council evidence.
+- 2026-11-16 (owner, during the pause). The Writing Department started early on Claude Work (thread switched from CP), paced until 16:00 CT (≤ 1 helper).
+  - Codex/Astra allowed for review, efficiently: one end-of-draft read per document.
+  - **One Fable 5.2 writing advisor approved** (CW, high, a Writing child): style and clarity only, never math or statuses. If CW hits its 5-h limit: stop and wait, no account switching.
+  - 1M fast-track pilot (before Dec 4) approved, no delay to the main plan; queued for the resume.
