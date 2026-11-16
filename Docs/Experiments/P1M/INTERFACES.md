@@ -319,9 +319,15 @@ Sections (names fixed; WPs may add sections, never rename):
 - `setup.bin` (WP2): `nb_ptr` i64, `nb_idx` i32, `dup_ptr/dup_idx`, `cut_ptr/cut_idx`, `blk_ptr/blk_members`, `blk`,
   `pos`, `code_ptr`, `logr`, `logprof_ptr/logprof`, `logF`, `size_logmass`, `size_cum`, `cond_ptr/cond_cum`,
   `mode_S`, table top stores `tstore_{top,lead0,lead1}_{v,off,len,hash,pool}`, `meta`.
-- `calib.bin` (WP4): `grid`, `meta` {tier, N, L, Hm, I_used, flags, triggers, **`k_store`** (the calibration top
-  store's mean |S|; the k of §7's admission rule; present iff the calibration completed, status ok)}, `grids_all_ptr/grids_all`, stage
-  records, calibration stores (as stores), HPM (`hpm_S`, `hpm_ev`), `logical` u64 N_PHASE×N_MECH.
+- `calib.bin` (WP4):
+  - `grid`, `grids_all_ptr/grids_all`, stage records, the calibration stores (as stores), HPM (`hpm_S`, `hpm_ev`),
+    `logical` u64 [N_PHASE × N_MECH];
+  - `meta` {tier, N, L, Hm, I_used, flags, triggers, ...}, including:
+    - **`k_store`** (double): the calibration top store's mean stored |S|, i.e. the k of §7's admission rule; present
+      only when the status is ok;
+    - **`iterations`**: per rebuild, logZ_r, island_best, overall_best and E1–E3;
+  - **`stage_stream`**: the initial-draws hash and the stream positions (start and end) of each calibration island;
+  - **`inh_d`**: d of each inherited model.
 - `island_r.bin` (WP3; `include/v4/island/island_file.h`):
   - `meta` holds r, N, T, L, Hm, p, status, reason, inputs, binary, timings, `logZ_hex` and `init_hash`.
   - Schedule: `grid` f64 [T+1].
@@ -430,6 +436,13 @@ Status fit_status(span<Status>);   // first that applies: invalid_input, interna
 
   Over budget, admission refuses deterministically with `resource_limit`, before any allocation. The check at every step boundary uses the store's **actual** size. With G = 0
   the island chooses the largest G ≤ 256 that fits. The merge applies the same rule to its own plan (`merge.h`, WP4).
+- **Calibration memory rule** (WP4):
+  - Calibration islands receive `mem_budget` = the whole task's budget, and `resident_bytes` = the calibration
+    process's own state: the calibration ledger plus the inherited export. Data and setup inputs are excluded, because
+    the island's own plan counts them.
+  - A calibration island is admitted iff resident_bytes + its plan ≤ mem_budget.
+  - `calibrate` refuses up front (`resource_limit`, before any allocation) iff resident + inputs + one island ledger >
+    `--mem-budget`. Its plan's k = max(8, q90(π₀ size) + 1), from setup.bin `size_logmass`.
 - **Data outcomes of `prep`** (v3 returns them as fit outcomes with an empty HPM, `core/v3_preprocess.R:111-114`):
   `no_predictors` and `y_constant`. The task status is `completed`, the record has `prep_status` and `hpm: []`, no
   `data.bin` is written, and the exit code is **20** (`no_predictors`) or **21** (`y_constant`). The driver (WP5) ends
@@ -509,5 +522,6 @@ point, so all WPs link from day one: `setup::run`, `island::run`, `calib::run`, 
   entry per model with its best value (the reference `Store` now de-duplicates by model; deterministic, T3-invariant).
 - v0.1.14 (2026-11-16, WP1; PR40 review follow-ups) — §4.1: `Store::load_unique_sorted` (verified bulk load of a valid
   store, used for island records / island files / stored sections; same bits as offer + compact); I1 includes one entry
-  per model, checked independently of the index; entry cost 30 + 4k bytes. §5.1: `meta.k_store` present iff the
-  calibration completed.
+  per model, checked independently of the index; entry cost 30 + 4k bytes. §5.1 (WP4 PR #37 re-check): `calib.bin`
+  `meta.k_store` (only when the status is ok), `meta.iterations`, the `stage_stream` and `inh_d` sections. §7: the
+  calibration memory rule (islands get the task budget plus resident bytes; up-front refusal; plan k from setup).
