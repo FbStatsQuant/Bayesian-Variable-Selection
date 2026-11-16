@@ -50,3 +50,5 @@
   ERRATA source column reworded to cite line checks only (audit stays outside the manifest).
 - 2026-11-16 02:28 CST — `reviews/MANIFEST_R1.txt` frozen: MANIFEST 9714aea441df09c3caedff6179232fd84cce9e6aa631050ddfeb9c1cec86b3c6
   (41 files + 2 extra: v3_score.h, v3_preprocess.R). Briefs `reviews/BRIEF_R1_astra.md`, `reviews/BRIEF_R1_opus.md` saved.
+- 2026-11-16 02:29 CST — Agents started (council R1, fresh, blind, async): **Astra seat** = codex gpt-6-astra, reasoningEffort high
+  (task w3-t03acc-r1-astra-20261116); **Opus seat** = claudeAgent_claude_third claude-opus-5-5, effort high (task w3-t03acc-r1-opus-20261116).
