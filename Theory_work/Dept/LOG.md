@@ -10,3 +10,6 @@
 - 19:35 — parallel-SMC scoping digest delegated (Opus helper, Claude Third; → Theory_work/Dept/research/PSMC_DIGEST.md).
   W3-EDIT brief drafted (Theory_work/Dept/drafts/), launch after HQ answers on the rehash path. Heartbeat scheduled
   every 45 min (bound to this thread) to answer checkpoints and fill slots.
+- 20:00–20:25 — HQ approvals received (D1, cut-off, W3-EDIT path, H5). Read POLICIES.md, ENGINEERING_SPEC v1 §0/§3–§5,
+  OWNER_DECISIONS v0.2, EXPERIMENT_PLAN §8, W3-SCALE DESIGN_v1 obligations O1–O21. Message to the Engineering manager
+  (interfaces 1–4). ENG_INTERFACE.md, PSMC-S0 brief, W3-EDIT brief final. D7–D9.

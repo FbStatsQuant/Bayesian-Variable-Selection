@@ -15,3 +15,16 @@
   Optional items (T9, T11, Ex-Equi 3/8, quantile (W)) decided at each CP1 against the Wed 18:00 CT cut-off.
 - **D5. Snapshot cron** commit-in-place (SNAP_WT=1) for the 4 rider worktrees at :01/:03/:06/:08 +15.
 - **D6. Not taken:** W2-APP:POST@1.0.1 line check (HQ_NOW lists it; HQ's recorder already handles W2-APP PC1) — asked HQ.
+
+## 2026-11-15 20:25 CT — HQ answers; premise tickets; early scoping leg
+- HQ approved D1, the Wed 18:00 CT rider cut-off (freeze Fri 11-20; a late rider ships at its last checked state),
+  the W3-EDIT recording path (HQ merges + recorder rehash), H5 cards + READER_DELTA at each CP1. W2-APP PC1 is the
+  recorder's (not ours). D6 closed.
+- **D7. Premise tickets** (ENGINEERING_SPEC §4.2: T-N, T-PART, T-STREAM, T-CAL, T-MERGE) go into the parallel-SMC
+  campaign proposal (Thu). Blocking analysis (to confirm with Engineering): T-PART blocks OD-5 and WP2 setup (11-23);
+  T-N de-risks OD-1 (owner, ~11-20); T-STREAM/T-CAL needed before G-A (~12-07); T-MERGE's pooling rule before WP4's
+  merge is final (~11-30). Interface file `ENG_INTERFACE.md`.
+- **D8. Early scoping leg PSMC-S0 = T-PART + T-N premise audits to CP1 by Thu 11-19 12:00 CT** (brief
+  `drafts/PSMC-S0_BRIEF.md`; ~5–7 Opus h; 1 Sol fidelity read). Asked HQ for a temporary 4th/5th slot so that
+  PSMC-S0 and W3-EDIT do not wait behind the riders; default order if refused: MISR-R → W3-EDIT → PSMC-S0.
+- **D9. W3-EDIT brief final** (`drafts/W3-EDIT_BRIEF.md`): citation fixes first (unblock PR #10); rehash table for the recorder.

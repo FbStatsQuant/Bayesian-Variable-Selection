@@ -1,4 +1,4 @@
-# W3-EDIT — the editorial pass (Theory Department, DRAFT 2026-11-15; launch after HQ OK on the recording path)
+# W3-EDIT — the editorial pass (Theory Department, 2026-11-15; recording path approved by HQ)
 
 Lead: Claude Opus 5.5, effort high, Claude Third, on Owls. Editorial only (v4 §0.1: nothing here changes a hypothesis,
 a conclusion or a proof step). Worktree `/home/fb31/BVS-wt/W3-EDIT`, branch `theory/W3-EDIT`, ledger folder
@@ -33,5 +33,12 @@ of a ticket not yet accepted, never W3-DIST / W3-READER / Docs / Lean.
 3. One Sol review, "editorial only" diff check (v4 §5.3): the full diff + LEDGER; does any edit change mathematics?
 4. `CHECKPOINT_1.md` (= final): ledger summary, Sol verdict, the list of registry rows needing `registry.py rehash`
    (patch bump) for the HQ recorder, the CHAPTER-ONLY list for the Writing Department. End your run.
+
+## Recording path (HQ, 2026-11-15)
+You never run `registry.py rehash`, `--record` or any write to `claims.tsv`. HQ merges `theory/W3-EDIT` and its recorder
+rehashes the listed rows (patch bump, LIFECYCLE §1 "patch = editorial"). To make that a mechanical step, CHECKPOINT_1
+gives a table `claim id | file | old sha256 (from claims.tsv) | lines touched | ledger rows`, and a dry run of
+`check.py --quiet` on your branch showing that the only new findings are hash mismatches on exactly those rows.
+The citation fixes in item 6 unblock PR #10: put them first and say when they are done (the manager tells HQ).
 
 Budget ~4–6 Opus hours; 1 helper allowed (Sonnet 5.5 for citecheck bookkeeping).
