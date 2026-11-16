@@ -418,3 +418,4 @@
 - **D75.** (05:34) W2-UNI:F-UNI method drift (row 3.1): SUSPECT + correctness event; Sol TR1 decides erratum/PATCH vs NARROW; row 3.1 card delivery clause under (D), IDEAL-W⁺ unless TR1 YES.
 - **D76.** (05:40) Card 13: W3-DIST row 2.1 proved on recording; Song–Liang analogue = display (i) only; T01 condition per LC-A coverage. Post-freeze sharpness order (consultant/HQ): item 1 ((A4) via narrower (ND)), 8(a)+10 (log(p∨n) rate, explicit A), 9 (linear s₀ in (iii), uniform); 8(b) with kill budget.
 - **D77.** (05:44) Task T GO: alias split T01–T03/T02→TH09; edges to LC-verified steps discharge (Lemma-1a), rows T01–T03 not upgraded. T2: Sol line checks of lem:prior(e) and T02(ii♯) 5(a); VERIFIED → HQ carrier + re-discharge; else stay conditional.
+- **D78.** (05:46) IDEAL-W⁺ correctness event: F-UNI + 17 delivery claims SUSPECT, then NARROWED before the freeze with registered assumption A:IDEAL-W⁺ (or (D)); C-DLV errata + FINAL s7:39 fix; no redefinition of IDEAL-W.
