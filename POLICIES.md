@@ -100,3 +100,34 @@ he talks to you first; if he does, answer him and tell HQ what he decided.
 Report to HQ at each checkpoint and daily: at most 10 lines with `t3_thread_send`, mode queue, covering what moved,
 what is blocked, and what you need. Escalate at once: a counterexample to a target, a WEAKER change to a target clause,
 a hold on a consumed claim, a budget overrun, or anything touching a headline claim.
+
+## 7. Operating rhythm (owner, 2026-11-15: "run this like a company")
+**Decision rights**
+
+| who | decides |
+|---|---|
+| Owner (Felipe) | direction, budget tiers, account and budget for every Fable, paper claims, framing and competitors, org changes |
+| CEO (HQ) | priorities across departments, resource allocation inside the owner's budget, gates (CP3 acceptance, headline cards with the consultant), merges to main, API submission, launching and closing departments and tickets |
+| Department manager | technical decisions (HQ confirms), staffing with Opus/Sonnet inside the allowance, ticket planning and schedule, reviews per PROTOCOL_v4 |
+
+**Budget envelopes** (set by HQ inside the owner's budget, reviewed weekly):
+- Claude Third: Theory and Engineering departments, at most 5 + 3 concurrent leads (Theory 5 until Wed 18:00, then 3).
+- Claude Personal: HQ and Writing.
+- Codex reviews: priority order W3-DIST > riders > the rest.
+- NOTS core-hours: per approved batch.
+- API credits: HQ only.
+
+A department that expects to exceed its envelope asks HQ first.
+
+**Cadence**
+- **Daily**, by 09:00 CT and whenever a checkpoint lands: each manager sends HQ a report of at most 10 lines. Format:
+  done / in progress / blocked / needs (HQ or owner) / budget used.
+- **Owner:** HQ messages the owner only for launches, finished milestones and decisions he must make, plus a short
+  **weekly digest** (Friday): claims-card changes, milestones, budget burn, next week, decisions pending.
+- **Escalation:** a big problem goes to HQ at once (§2 of the memo, §4); anything that needs the owner goes up the same
+  day, with a recommendation.
+
+**Records**
+- Each department keeps `DECISIONS.md` and `LOG.md` in its folder.
+- HQ keeps `HQ_DECISIONS.md` (decisions) and `HQ_NOW.md` (roster, queue, owner batch).
+- Nothing important lives only in a chat.
