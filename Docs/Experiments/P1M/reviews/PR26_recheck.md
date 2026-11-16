@@ -27,8 +27,8 @@ Reviewer: Opus 5.5 (high), independent of the author. Date: 2026-11-16.
 - **Tests:**
   - **100 of 100 pass** in the default build, plus WP5 (17), the competitor harness, the install script (23) and WP4
     golden (231,999 checks, 0 failures); rc 0.
-  - x86-64-v4 build: see test run 2.
-  - T3: bit `44a15bfc6fb8d233`, A `d2df149413596a19`.
+  - **100 of 100 pass in the x86-64-v4 build**, also rc 0.
+  - T3: bit `44a15bfc6fb8d233`, A `d2df149413596a19` (v2) and `e9cc4ab39f8a72db` (v4).
 
 Counts: CRITICAL 0 · MAJOR 0 · MINOR 3 · nits 4.
 
@@ -42,7 +42,9 @@ Counts: CRITICAL 0 · MAJOR 0 · MINOR 3 · nits 4.
      - `k_store_required_at_1e5`;
      - `pi0_fast_draw_equals_draw`: 3,000 / 3,000 draws for each of 2 partitions;
      - `mem_plan_bounds_measured_peak_2e4`: 217/243, 341/459, 230/355 and 410/571 MiB.
-2. **Same runner, x86-64-v4 build** (`-DV4_ISLAND_ISA=x86-64-v4`): RESULT_V4.
+2. **Same runner, x86-64-v4 build** (`-DV4_ISLAND_ISA=x86-64-v4`): **100 test cases, 0 failed**.
+   - WP5, the competitor harness, the install script and WP4 golden (231,999 checks, 0 failures) all pass; rc 0.
+   - T3 A hash `e9cc4ab39f8a72db` (as in the PR).
 3. **Island hashes before/after** (`v4_bench_island island 20000 300 1,3 {A,bit} {lm,pm} 64 128 geo:4 1 1`; and
    `… A lm 256 128 geo:6 2 2`). Builds: `32b11a91` (pre-L5) and `5c8ab8a5`. MEASURED.
 

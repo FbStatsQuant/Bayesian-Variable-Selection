@@ -13,7 +13,7 @@ Rules:
 |---|---|---|---|---|---|---|
 | 2026-11-15 20:53 CST | G0 kernel benchmark (1 SPR node, 96 CPUs, 5 min) | gated (HQ go 11-15) | 2747371 | 8.0 | **0.88** | COMPLETED (33 s; benchmark segfault after the T = 1 offer test, results kept) |
 | 2026-11-15 20:53 CST | G0 stage-level re-runs (5k: 16 islands, 7 h limit; 10k: 8 islands, 17.5 h), revision D unmodified | gated (HQ go 11-15) | 2747372_[1-2] | 49.0 | task 1: 0.001 (FAILED in 2 s: invalid `timeout 6h57m`); task 2 running | task 1 failed, task 2 RUNNING |
-| 2026-11-15 22:10 CST | G0 stage task 1 rerun (5k, 16 islands; timeout fixed to 417m) | gated (within the G0 approval) | 2747799_[1] | 14.0 (replaces task 1's reservation) | — | submitted |
+| 2026-11-15 22:10 CST | G0 stage task 1 rerun (5k, 16 islands; timeout fixed to 417m) | gated (within the G0 approval) | 2747799_[1] | 14.0 (replaces task 1's reservation) | 9.67 | COMPLETED (4 h 50 min; 16/16 islands; HPM = truth; sd(log Z_r) 0.755) |
 
 | 2026-11-15 21:28 CST | pmath bind check (WP1 PR #11 v4_pmath_check on SPR; 1 CPU, 15 min) | exploratory (standing authority) | 2747501 | 0.5 | 0.003 | FAILED (5 s; module load missing Lmod init; no compile) |
 | 2026-11-15 21:40 CST | pmath bind check, rerun with the G0 module init | exploratory | 2747524 | 0.5 | 0.001 | FAILED (1 s; CMake 3.27.6 needs GCCcore 13.2; nothing compiled) |
@@ -27,4 +27,5 @@ Rules:
 | 2026-11-15 23:3x CST | WP3 fixed-rounds island on SPR (cd1a7e02, PR #21): p = 10⁶, G = 64, transient island (3 stages + 1 round) at 48 then 96 threads; 96 CPUs, 50 min | exploratory (HQ sweep + standing authority) | 2748105 | 80.0 | 67.1 | COMPLETED (42 min; MaxRSS 32.6 GB; hashes equal) |
 
 | 2026-11-16 01:xx CST | WP3 10⁶ lever batch (efc0dfd0, pre-#24-fix, leaders unused): one exclusive SPR node, socket 0 G = 64 / socket 1 G = 256, block 4, parallel compaction; 192 CPUs, 35 min | exploratory (HQ GO ≤ 112) | 2748756 | 112.0 | 48.3 | COMPLETED (15.1 min; MaxRSS 58.7 GB both islands; G-invariance hash PASS) |
-**Totals (2026-11-16 02:xx):** actual ≈ 146.2 core-h closed (G0 kernel 0.88 + pmath 0.10 + WP3 bench 19.5 + SPR sweep 77.4 + lever batch 48.3) · open: G0 stage tasks 2747372_2 / 2747799_1 · remaining ≈ 28,150 of the re-sized envelope (H-9 ≈ 28.3k; manifest v0.3 plans 28,398 with contingency).
+| 2026-11-16 08:xx CST | WP3 L5 measurement (be24e9d = exp/P1M-engine after #26): one exclusive SPR node, two G = 256 islands (ids 1, 2), k_store 8, socket-local; 192 CPUs, 30 min | exploratory (standing authority) | 2749328 | 96.0 | — | PENDING (Resources) |
+**Totals (2026-11-16 09:xx):** actual ≈ 155.9 core-h closed (G0 kernel 0.88 + G0 5k stage 9.67 + pmath 0.10 + WP3 bench 19.5 + SPR sweep 77.4 + lever batch 48.3) · open: G0 10k stage 2747372_2, L5 batch 2749328 · remaining ≈ 28,140 of the re-sized envelope (H-9 ≈ 28.3k; manifest v0.3 plans 28,398 with contingency).
