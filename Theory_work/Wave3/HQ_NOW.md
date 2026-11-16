@@ -40,6 +40,9 @@ Contents (owner):
 2. a concrete list of the most important theorems as of then (from the headline claims card);
 3. a concrete plan for the p = 1M experiment (from the Experiment department's EXP-CP1).
 
+Also (owner): an **intuitive explanation of the whole methodology** before the formal setup: what problem each stage
+solves (start tables / start mode, the tempered SMC stages, calibration, local search LS0, islands and pooling, the
+reported outputs), with a pipeline figure and a small worked toy example; then the formal definitions.
 Standard: thorough setup and notation section; every symbol defined before use; notation table; no internal ids;
 intelligible to peers (PROGRAM "Readability" → notation).
 
