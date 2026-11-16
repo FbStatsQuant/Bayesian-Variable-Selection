@@ -49,6 +49,12 @@ eigenvalue. For a population correlation matrix, $\Sigma_{n,S}$ is the principal
 
 ## 3. The prior, as coded
 
+**Which $p$.** Throughout, $p$ is the number of predictors that are *not constant in the sample* (the retained
+columns); the method computes its prior, its size cap and every score from these columns only, so the raw column
+count $p_{\mathrm{raw}}$ never enters the prior. (In particular the model prior below is $\mathrm{BB}(1,p)$ with this $p$,
+capped at $\min(p,\lfloor n/2\rfloor)$; some documents write $r$ for this number.) This convention holds for every
+theorem.
+
 The model space is the set of models with at most $K$ predictors,
 $$
 \Omega:=\{S\subseteq[p]:|S|\le K\},\qquad K:=\min(p,\lfloor n/2\rfloor).
@@ -225,6 +231,11 @@ $\beta^*$ and $S_0$ may change with $n$; $s_0$ is fixed unless said otherwise.
 * Prior, score, $K$, $\nu$, $H_S$, $a_0=b_0=0.01$, $\log w(k)=-\log2-\log\binom{2p-1}{k}$:
   `Scripts/SMC_BVS/core/cpp/v3_score.h:40-71, 196-224` (W3-POST STATEMENT.md:21-29). Working-model reading
   (coefficient prior $N(0,n\sigma^2(G_S+I)^{-1})$, IG(0.01, 0.01)): W3-POST STATEMENT.md:26-29.
+* "Which $p$": the scorer is initialised with $p$ = number of columns of the preprocessed design
+  (`Scripts/SMC_BVS/core/v3_fit.R:118`, `ctx <- v3_context(pre$X, pre$y, orig = pre$kept, ...)`), and
+  `cpp/v3_score.h:40` sets $K=\min(p,\lfloor n/2\rfloor)$ and $w(k)$ from that $p$; constant columns are dropped first
+  (`v3_preprocess.R:111-113`). Same convention as W3-DIST STATEMENT v1.4:142 ("BB(1, r)", r = predictors not constant
+  in the sample). Sync from the Theory Dept manager, 2026-11-15.
 * Beta-binomial identity: under $q\sim\mathrm{Beta}(1,p)$ and independent inclusion, a given model of size $k$ has
   probability $B(k+1,2p-k)/B(1,p)=\tfrac12/\binom{2p-1}{k}$ (direct computation; code comment `cpp/v3_score.h:15`;
   "capped BB(1, p)" in W3-POST STATEMENT.md:23).

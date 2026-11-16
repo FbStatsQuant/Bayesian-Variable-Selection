@@ -32,7 +32,7 @@ marked · **long** = primitive but lengthy · **limit** = no primitive version; 
 
 | # | Result, in words | Master and status | Buys | Reader version |
 |---|---|---|---|---|
-| 2.1 (Thm 9) | **Distribution-level consistency (in progress).** Joint $(x,y)$ Hellinger contraction of the posterior at rate $\sqrt{\log n/n}$, exponential form (Song–Liang Theorems 1–2 analogue). | W3-DIST "Theorem DIST-1": candidate statement at its scoping checkpoint; **not proved; no registry row**. | Song–Liang Theorems 1–2 parity; owner's top priority. | not yet (W3-DIST proposes "master + bridges B0–B2") |
+| 2.1 (Thm 9) | **Distribution-level consistency (in progress).** Joint $(x,y)$ Hellinger contraction of the posterior at rate $\sqrt{\log n/n}$, exponential form (Song–Liang Theorems 1–2 analogue); no beta-min and no fixed lower bound on eigenvalues (W3-DIST v1.4 wording). | W3-DIST "Theorem DIST-1": candidate statement at its scoping checkpoint; **not proved; no registry row**. | Song–Liang Theorems 1–2 parity; owner's top priority. | not yet (W3-DIST proposes "master + bridges B0–B2") |
 | 2.2 | *Already available, not headline:* in-sample (fixed-design) Hellinger contraction of the parameter posterior, rate $M_n/\sqrt n$ with selection, $\log n/n$ without beta-min. | `W3-POST2:D@1.1.0`: "PROVED (by this seat, unchecked)" (council C1 passed; acceptance stopped 11-15). | Partial Song–Liang parity; input to 2.1. | remark only |
 
 ## Pillar 3 — The coded algorithm delivers that posterior

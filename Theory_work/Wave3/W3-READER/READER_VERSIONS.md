@@ -627,6 +627,13 @@ statement at a scoping checkpoint; not proved; no registry row.** Its CP1 alread
 theorem + bridges B0, B1, B2" (:119). W3-READER will take that proposal over at W3-DIST's CP2/CP3; no reader version
 is written here.
 
+*Sync with W3-DIST STATEMENT v1.4 (root clone, read only; manager's note 2026-11-15).* The current master text is
+"Theorem A" (`/home/fb31/Bayesian-Variable-Selection/Theory_work/Wave3/W3-DIST/STATEMENT.md:184`; reader-version
+mapping :127). When this row is written: (1) the prior is described as $\mathrm{BB}(1,p)$ with $p$ the number of
+predictors not constant in the sample, capped at $\min(p,\lfloor n/2\rfloor)$ (= the convention of `NOTATION.md` §3; DIST
+writes $r$); (2) the assumption summary says **"no beta-min and no fixed lower bound on eigenvalues"** (:180) — never
+"no identifiability condition"; (3) DIST's Theorem B (:208) requires $b_n>0$ in its (A6).
+
 #### Update log (thm9)
 - v0.1 2026-11-15: first version (CP1).
 - v0.2 2026-11-15: S1 fixes none.

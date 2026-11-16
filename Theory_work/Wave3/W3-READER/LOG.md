@@ -16,3 +16,4 @@
 - 2026-11-15 20:05 CST POLICIES §10 final: may settle own finished reviewers/helpers; never cancel/archive/delete. S1 (Sol) report received: NOT-FAITHFUL AS WRITTEN (F1 FATAL C_beta>0; F5 FATAL card domain; F2,F3,F4,F7 MAJOR; F6,F8-F12 MINOR); arithmetic bridges + B6.3 pass. All accepted; applying fixes (v0.2).
 - 2026-11-15 20:06 CST S1 disposition written (12/12 accepted); READER_VERSIONS v0.2, NOTATION v0.2, CLAIMS_CARD v0.3; CP1 §4 filled. CP1 complete.
 - 2026-11-15 20:06 CST CP1 sent to Theory Dept manager (queue). Run ends at CP1; waiting for the manager's answer and the leg 2 brief.
+- 2026-11-15 20:10 CST Sync from W3-DIST v1.4 (via manager): 'which p' made explicit once in NOTATION §3 (p = predictors not constant in the sample; code v3_fit.R:118, v3_score.h:40 confirm; = DIST's r); DIST row (RV §9, card 2.1) carries 'no beta-min and no fixed lower bound on eigenvalues', Theorem B b_n>0 noted. No 'no identifiability' phrase existed for DIST.
