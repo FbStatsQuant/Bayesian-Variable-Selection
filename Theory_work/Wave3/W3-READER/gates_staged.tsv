@@ -1,8 +1,8 @@
 id	lit	necessity	better	better-proposals	file refs
 W3-POST:Thm-1	PASS	PASS	PASS	sharp1 f15 IMPROVABLE-EASY: class B; residual A -> W3-PSHARP (done); proposals = W3-POST2 A1/E/C (adopted as row 1.1 re-base)	GATES.md row 1.1; helpers/GATES_G1.md:31-79; API_AUDIT/sharp1/TRIAGE.md:42
 SOP:TH09	PASS	PASS	PASS	as W3-POST:Thm-1 (same content)	GATES.md row 1.1; helpers/GATES_G1.md:31-79
-W3-POST2:C	PASS	PASS	PENDING-DISPOSITION	R03b (in-ticket, gpt-6-astra): C+ adopted (HQ approval pending); A+ (weaker OS), E-floor+, B+ open -> HQ; blind API: SHARP3 addendum g05 requested	GATES.md row 1.1; W3-POST2/REPORT.md:173,184-187; W3-POST2/ASSUMPTION_MAP.md
-W3-POST2:E	PASS	PASS	PENDING-DISPOSITION	R03b: E+ (c1 ~ 54), E-floor+ ((F0) -> bounded ridge cost) open -> HQ; blind API: SHARP3 addendum g06 requested	GATES.md row 1.1; W3-POST2/REPORT.md:184-187
+W3-POST2:C	PASS	PASS	PENDING-DISPOSITION	SHARP3b f00 IMPROVABLE-EASY; proposed (CARD_ROW11_R03b.md, awaiting HQ+consultant): A+ defer POST2-O1, E+ defer POST2-O2, E-floor+ defer POST2-O3, B+ reject (no bearing); N1 matching expectation lower bound -> rider T12 scope or post-freeze POST2-R1	GATES.md row 1.1; W3-POST2/REPORT.md:173,184-187; W3-POST2/ASSUMPTION_MAP.md
+W3-POST2:E	PASS	PASS	PENDING-DISPOSITION	SHARP3b f01 IMPROVABLE-EASY; proposed (CARD_ROW11_R03b.md, awaiting HQ+consultant): E+/graded margin defer POST2-O2, E-floor+/vanishing floor defer POST2-O3; rate sqrt((1+log p)/n) = existing PSHARP open item	GATES.md row 1.1; W3-POST2/REPORT.md:184-187
 W2-APP:POST	PASS	PASS	PASS	sharp1 f06 IMPROVABLE-EASY: class B (B* residual -> T5 Cor 1R v2, not launched)	GATES.md row 1.2; helpers/GATES_G1.md:80-126; API_AUDIT/sharp1/TRIAGE.md:37
 W3-PSHARP:A	PASS	PASS	PASS	sharp2 f02 IMPROVABLE-EASY: A1 adopted -> rider T12 (expectation lower bound, every p); rest B (park); K01 P2 adopted	GATES.md row 1.3; helpers/GATES_G1.md:127-173; API_AUDIT/sharp2/TRIAGE.md:43,80
 W3-PSHARP:B	PASS	PASS	PASS	sharp2 f02 SHARP (agreed); K01 P1 adopted	GATES.md row 1.3; API_AUDIT/sharp2/TRIAGE.md:44

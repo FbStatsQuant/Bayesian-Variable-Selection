@@ -46,9 +46,9 @@ review has a recorded triage disposition or a rider ticket (G1 :9-29; G2 :20-41)
   proposals (F_w)→(OS), (F_λ)→margin, expectation rate are exactly POST2 A1/E/C, now adopted as the re-base (G1 :66-76).
   **Re-based masters POST2 C/E:** in-ticket better review R03b (gpt-6-astra high; `W3-POST2/REPORT.md:173`), proposals C+
   and D+ adopted (HQ approval noted pending), A+ (weaker (OS)), E+ ($c_1\approx54$), E-floor+ ((F₀) → bounded ridge
-  cost), B+ open (`W3-POST2/REPORT.md:184-187`) → **HQ to disposition**. Blind API verdict: sharp1/1b f18 returned no
-  text; **SHARP3 addendum g05–g06 requested** (manager, 2026-11-16). Gate: PASS for the $O_P$ form; PENDING-DISPOSITION
-  for the re-based form.
+  cost), B+ open (`W3-POST2/REPORT.md:184-187`) → **HQ to disposition**. Blind API verdicts: SHARP3b `api/sharp3b/f00.md` (C) and `f01.md` (E), both IMPROVABLE-EASY. Proposed dispositions of
+  the four R03b items and the SHARP3b items: `CARD_ROW11_R03b.md` (awaiting HQ + consultant). Gate: PASS for the $O_P$
+  form; PENDING-DISPOSITION for the re-based form; proposed outcome PASS with named open items POST2-O1–O3.
 
 ## Row 1.2 — random Gaussian design (Thm 2)
 lit PASS, necessity PASS, better PASS — G1 :80-123 (sharp1 f06 class B; superseded parts covered by POST2; T5
