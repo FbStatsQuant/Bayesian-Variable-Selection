@@ -6,11 +6,14 @@
 # output hash that must be the same for every thread count (T3 on SPR).
 set -euo pipefail
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+source "$here/tools/nots_guard.sh"
 build="${1:?build dir}"; thr="${2:-1,24,48,96}"; thr5="${3:-24,48,96}"   # no 1-thread run at 1e5 (ESTIMATE ~30 min)
-cmake -S "$here" -B "$build" -DCMAKE_BUILD_TYPE=Release -DV4_TESTS=OFF -DV4_ISLAND_ISA=sapphirerapids > "$build.cmake.log"
+nots_guard "$build"   # TMPDIR set, build dir and TMPDIR under the department folders (B4)
+cmake -S "$here" -B "$build" -DCMAKE_BUILD_TYPE=Release -DV4_TESTS=OFF -DV4_ISLAND_ISA=sapphirerapids > "$LOGDIR/cmake.log"
 make -C "$build" -j 16 v4_bench_island 2>&1 | grep -E "error|warning" || true
 B="$build/v4_bench_island"
 export OMP_PROC_BIND=spread OMP_PLACES=threads
+export V4_K_STORE="${V4_K_STORE:-8}"   # calibration-measured mean stored |S| at 1e6 (6-8; review PR26 B1)
 lscpu | grep -E "Model name|^CPU\(s\)|Socket|NUMA node\(s\)"
 # p = 1e4: N = 2500, calibrated-like adaptive grid (ESS >= 0.9 N per stage), L = 8, Hm = 4
 $B island 10000 2500 "$thr" A lm 256 128 adaptive:200 8 4
