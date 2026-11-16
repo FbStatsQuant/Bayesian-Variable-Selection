@@ -22,3 +22,6 @@ Concretely: the conclusion at stake is F-UNI's "P(no output) = 0 for every admis
 
 ## Output
 `TRANSFER: YES | NO | YES-WITH-CHANGES`, the step table (≤ 25 lines, file:line), and, if YES-WITH-CHANGES, the exact changes needed.
+
+## Addendum (consultant via HQ, sent as a steer to the running TR1 session at 05:36)
+Question 2: is an every-n delivery claim for cap ℓ_n + |S̃₀| possible under IDEAL-W alone, or only on a restricted domain / under IDEAL-W⁺ with the re-derived allocation (cf. W3-RM2-R DLV-0, STATEMENT:219)? Final line `EVERY-N UNDER IDEAL-W: YES | NO`.
