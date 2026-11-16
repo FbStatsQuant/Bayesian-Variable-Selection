@@ -463,3 +463,9 @@ Changes:
 ## 2026-11-15 ~21:45 CT — OVERNIGHT MODE ON (owner: "until tomorrow morning, you have full authority for any decision")
 HQ decides everything under POLICIES §11 limits: within existing envelopes and accounts; nothing irreversible or
 outward-facing; every decision tagged "(overnight)"; morning brief for the owner.
+- (overnight) ~22:00 CT, task J: approved a case-preserving accept-identity tool fix (bvsreg `_pkey`; Windows-recorded paths
+  read stale on Linux; 49 of 57 records match once fixed) with a regression test, an Opus review, and a Linux re-record
+  (PSHARP first). Manifest drift from the citefix merge (4 line-number re-points in C-MIS EXT inputs of START/MISR
+  manifests): Opus diff check + re-frozen manifests with HQ seat carriers now; tool change (EXT inputs verified at their
+  freeze commit) after Friday. Cont-F/R recorded as-is (implication lemmas consume RM-F/R by design). New Theory protocol
+  rule: a manifest-impact check before merging edits to files listed in accepted manifests.
