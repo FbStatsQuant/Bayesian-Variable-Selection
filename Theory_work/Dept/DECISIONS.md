@@ -321,3 +321,10 @@
 - **D47.** RM2-R CP1 → GO: targets fixed (RM0-plus, DLV-0, RM2-F-plus / RM2-R-plus STRONGER, bridges, Ex-Proxy-d,
   Cont-plus with targets in implies); O-Wq and O4′ named open items; Ex-PolyR/F targeted review post-freeze; READER_DELTA
   shaped to the card rule (abstract: convention-free clause; body: delivery + error split). CP3 by Wed 18:00.
+
+## 2026-11-15 23:27 CT — H + C dry runs; real runs relayed (HQ-approved)
+- **D48.** H: no root clears (TH09 no council; SL0 C1 snapshot stale on 5/10 files → post-freeze PC check; TH05.0
+  author-only) → honest fallback: 11 consumers re-statused conditional (incl. Cont-R; extend, don't replace, its
+  conditions) + registry/HQ_CONDITIONAL_STATUSES.md. C: W2-APP 10 rows on MANIFEST_PC1 (acceptance PASS dry). Real runs
+  relayed to the recorder under HQ's earlier approvals; HQ informed. READER to quote the new conditional statuses
+  (row 3.6 SAMP, RM-R) once recorded. Post-freeze: SL0 PC-style diff check.

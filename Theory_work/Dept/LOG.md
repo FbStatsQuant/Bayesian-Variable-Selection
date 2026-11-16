@@ -128,3 +128,4 @@
 - 23:22 — Eng accepted PSMC-S0 results (THEORY-7, D-26); D-7 entry cleared for the recorder.
 - 23:22 — HQ merged accept-identity-case-v2 → main 9a5f23aa (468/0). NB-3/NB-4 post-freeze. PSMC-S0 closed.
 - 23:25 — Claude Third reset: resumed; HOLDS none; no failed child agents to re-launch. RM2-R CP1 → GO (D47).
+- 23:27 — recorder H + C dry runs; real runs relayed (D48); SL0 PC check queued post-freeze.
