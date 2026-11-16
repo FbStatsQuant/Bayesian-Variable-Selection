@@ -18,6 +18,13 @@ CEO, reporting to the owner. Department managers report to HQ; **you are the man
 may talk to you directly; tell HQ what he decides. Report to HQ with `t3_thread_send` (mode queue), at most 10 lines,
 at each checkpoint.
 
+## Mandate (owner, 2026-11-15, final; POLICIES.md §8)
+Deliver exactly one of:
+1. **A plan** that runs an SMC BVS scheme at p = 10⁶ on NOTS, feasibly and very precisely. You may modify the algorithm;
+   validate it against the theorem-covered method on an overlap rung.
+2. **An irrefutable proof** that **no** SMC BVS scheme is feasible at 10⁶ on NOTS because of NOTS infrastructure limits,
+   with numbers and lower bounds valid for every SMC BVS scheme. Method choices, cost or difficulty are not reasons.
+
 ## The goal (owner)
 Show that the method runs, and works, at **p = 10⁶**, a scale where joint (non-split) Bayesian variable selection has
 not been run. Feasibility comes first. The owner's standing requirements:
