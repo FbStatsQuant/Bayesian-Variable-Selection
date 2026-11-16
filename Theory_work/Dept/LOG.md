@@ -62,3 +62,4 @@
 - 20:25 — W3-READER blocked by intermittent ENOSPC (shell); root fs 87% now; READER told to retry + commit; HQ told (spike source unknown; propose Engineering crew / CLAUDE_CODE_TMPDIR on restart). READER: H5 actions in progress, R1–R4 + SHARP3 written; helpers G1/G2 on lit/necessity.
 - 20:26 — W3-MISR-R launched as child agent (D30); Lean launch Thu 11-19 noted.
 - 20:28 — temp convention /home/fb31/bvs_tmp/<ticket> (TMPDIR) adopted (HQ + Engineering); relayed to all 9 leads incl. MISR-R child; recorder's _scratch note replaced; RIDER_RULES updated.
+- 20:30 — /tmp/hq1115-* count 0 (both gone, ~1.06 GB); root 86% / 9.9 GB free; recorder in bvs_tmp (1.5 GB). Task I: F-UNI gate stale (fix after M27); 38/44 candidates have free-text correct:PASS evidence (post-freeze record-format cleanup proposed). HQ told.
