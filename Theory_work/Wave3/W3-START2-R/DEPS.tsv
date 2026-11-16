@@ -18,7 +18,7 @@ S:START-R	STATEMENT.md:226-240	S:BR;S:START-F	196f08d0e5871ed8	196f08d0e5871ed8	
 S:IF-START	STATEMENT.md:241-246	S:START-F;S:START-R	d48345d21e88961b	d48345d21e88961b	reviews/SL1_statement_lock_sol.md	OK
 L:R1_VIS	lemmas/R1_VIS.md	S:D3;S:VIS-c;S:VIS-m;S:START-F	38ba2e7353ba301d	38ba2e7353ba301d	reviews/LC1_line_check_sol.md	OK
 L:R2_NEC	lemmas/R2_NEC.md	S:NEC-b;S:NEC;S:F4	23a3aebba000c606	23a3aebba000c606	reviews/LC1_line_check_sol.md	OK
-L:R3_RATE	lemmas/R3_RATE.md	S:D4;S:D5;S:BR;S:START-R;S:IF-START;L:R1_VIS	43dadcf5eebb7109	(LC2 version, snapshot 68f470b0)	reviews/LC2_line_check_sol.md	STALE
-L:R4_TRANSFER_COR	lemmas/R4_TRANSFER_COR.md	S:TRANSFER;S:F1-F3;S:OVL;S:MIS;L:R1_VIS	bf1e103c04c83c21	(LC2 version, snapshot 68f470b0)	reviews/LC2_line_check_sol.md	STALE
-L:R5_EX	lemmas/R5_EX.md	S:EX;L:R1_VIS;L:R2_NEC;L:R3_RATE;L:R4_TRANSFER_COR	eadc0894a8f87d00	(LC2 version, snapshot 68f470b0)	reviews/LC2_line_check_sol.md	STALE
-R:REPORT	REPORT.md	all S:*	926d06aba1935197	-	(council)	UNCHECKED
+L:R3_RATE	lemmas/R3_RATE.md	S:D4;S:D5;S:BR;S:START-R;S:IF-START;L:R1_VIS	43dadcf5eebb7109	43dadcf5eebb7109	reviews/LC2_line_check_sol.md;reviews/RC1_recheck_sol.md	OK
+L:R4_TRANSFER_COR	lemmas/R4_TRANSFER_COR.md	S:TRANSFER;S:F1-F3;S:OVL;S:MIS;L:R1_VIS	bf1e103c04c83c21	bf1e103c04c83c21	reviews/LC2_line_check_sol.md;reviews/RC1_recheck_sol.md	OK
+L:R5_EX	lemmas/R5_EX.md	S:EX;L:R1_VIS;L:R2_NEC;L:R3_RATE;L:R4_TRANSFER_COR	806cdf4e0a99d783	806cdf4e0a99d783	reviews/LC2_line_check_sol.md;reviews/RC1_recheck_sol.md;reviews/RC2_recheck_sol.md	OK
+R:REPORT	REPORT.md	all S:*	926d06aba1935197	-	(council)	UNCHECKED (council)

@@ -14,7 +14,7 @@ Designs: BASE `lemmas/L11_EXAMPLES.md:17-18` (F-1; the frame of `:10-12` exists 
 * (E), (GF-16): BASE `:19` (F-1; g_* = 1), `:32-34` (F-3; g_* = d²/2).
 * Null gains δ_{U,l} = 0 for every null l and every U: BASE `:20` (F-1), `:35-36` (F-3). So η′ = 0 in F2⁺⁺, and
   𝔏_n(S₀) ≤ √(2/π)z̄_n (BASE `lemmas/L6_COROLLARIES.md:42-45`), hence n^{−1/2}𝔏_n(S₀)² = O(log n/√n) → 0.
-* (V-cp) for every fixed c_V > 1: δ²_{U,j} = Nθ*_j² for j ∈ S₀ and U ∌ j (F-1: BASE `:21`; F-3: `:37`, where S₀ = {1}) and
+* (V-cp) for every fixed c_V > 1: δ²_{U,j} = Nθ*_j² for j ∈ S₀ and U ∌ j (F-1: BASE `lemmas/L11_EXAMPLES.md:21`; F-3: BASE `lemmas/L11_EXAMPLES.md:37`, where S₀ = {1}) and
   τ²_U ≤ σ² + s₀θ_hi², so δ²_{U,j}/τ²_U ≥ Nθ_lo²/(σ² + s₀θ_hi²) ≥ (c_V + 2A) log n ≥ c_V log n + 2 log p for n large. So
   κ_V = (c_V − 1)/2 can be taken > ½.
 * λ_min(R̂_{S₀}) = 1 (F-1: X_{S₀}ᵀX_{S₀} = N·I; F-3: S₀ = {1}, R̂ = 1): F2⁺⁺ with φ₀ = 1.
@@ -61,7 +61,7 @@ Setting R with Σ_n = I_p, s₀ ≥ 1, s₀ < p ≤ n^A (p ≫ n allowed), |θ*_
 a_V = θ_lo: BASE `lemmas/L11_EXAMPLES.md:80`. (L-R⁺⁺) with Q = S₀, H_l := {l} ∪ S₀, C_L = 0, r_n = 0: the covariance identities
 of BASE `:81-83`; |H_l| = s₀ + 1 =: H̄_n, and log(s₀ + 1) ≤ κ_H√log n for all large n, for any κ_H > 0. (L-gain-0) with C₀ = 0:
 Cov(W_l, W_j) = 0 for l ≠ j (`STATEMENT.md` (D5), C₀ = 0 form). By (T3⁺⁺)(b)(iii) (`lemmas/R3_RATE.md` R3.6):
-**o₀ = O_P(√(log n/n))**, hence 1 − π₀(S₀) = O_P(√(log n/n)), for every p ≤ n^A. (BASE `:85-86` noted this sharper rate
+**o₀ = O_P(√(log n/n))**, hence 1 − π₀(S₀) = O_P(√(log n/n)), for every p ≤ n^A. (BASE `lemmas/L11_EXAMPLES.md:85-86` noted this sharper rate
 and did not claim it.) ∎
 
 ## R5.4 G-2 (block-diagonal Σ_n, one truth per group): 1 − π₀(𝓛(Q)) = O_P(√(log n/n))
@@ -70,4 +70,4 @@ Design and verification of (FL-R16), (V-R), (L-gain-R) with C_L = 0 and (L-loc-R
 `lemmas/L11_EXAMPLES.md:90-98`, with Q := ∪_{j∈S₀}G(j) (|Q| ≤ s₀ḡ ≤ K for n large) and H_l := G(l) ∪ Q, |H_l| ≤ (s₀ + 1)ḡ =: H̄_n
 (bounded, so log H̄_n ≤ κ_H√log n for large n and any κ_H > 0). This is (L-R⁺⁺) with C_L = 0, and N̄_n = (1 + H̄_n)^{15} is a
 constant. By (T3⁺⁺)(b)(ii) (`lemmas/R3_RATE.md` R3.5): 1 − π₀(𝓛(Q)) = O_P((|Q| + 1)N̄_n√(log n/n)) = **O_P(√(log n/n))**. Nothing
-is claimed about π₀(S₀) itself (BASE `:100`). ∎
+is claimed about π₀(S₀) itself (BASE `lemmas/L11_EXAMPLES.md:100`). ∎

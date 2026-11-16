@@ -18,3 +18,10 @@ either version. The repair re-check RC1 therefore covers: the diff `reviews/RC1_
 contains the 21:58 edits, → current) and every explicit-path citation of R3–R5 (citecheck output).
 
 Re-check: RC1 (Sol, new agent), brief `reviews/BRIEF_RC1_sol.md`.
+
+## Re-checks
+* RC1 (first agent; reported stalled, completed late; `reviews/RC1_recheck_sol_late.md`) and RC1b (relaunch, re-check of
+  record; `reviews/RC1_recheck_sol.md`): LC2 findings 1–3 resolved; R3 PASS, R4 PASS; R5 FAIL on one E finding (four short
+  citations at R5:17, :64, :73 continued the wrong file). Accepted; replaced by explicit BASE `lemmas/L11_EXAMPLES.md`
+  citations (`reviews/RC2_repair.diff`).
+* RC2 (`reviews/RC2_recheck_sol.md`): R5 PASS, no findings.

@@ -1,0 +1,1103 @@
+W3-START2-R CITECHECK: 438 citations (332 with line ranges, 106 path-only); MISSING/OUT-OF-RANGE: 0
+EXISTS           [STATEMENT.md] reviews/SL1_disposition.md -> Theory_work/Wave3/W3-START2-R/reviews/SL1_disposition.md
+EXISTS           [STATEMENT.md] LOG.md -> Theory_work/Wave3/W3-START2-R/LOG.md
+EXISTS           [STATEMENT.md] Theory_work/Wave3/PROTOCOL_v4.md -> Theory_work/Wave3/PROTOCOL_v4.md
+EXISTS           [STATEMENT.md] PARENT STATEMENT.md -> Theory_work/Wave3/W3-START2/STATEMENT.md
+EXISTS           [STATEMENT.md] BASE STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [STATEMENT.md] PLAN.md -> Theory_work/Wave3/W3-START2-R/PLAN.md
+OK 099f4adeabe1 [STATEMENT.md] BASE STATEMENT.md:140-151 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: * **Visibility [A:START-V]**, one of:
+      last:  does not.) For Q = S₀, R = ∅.
+OK ea642b314b14 [STATEMENT.md] BASE STATEMENT.md:235-236 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: | (B-V1) | (V-c), [TK], [LEAK(Q)], (AL) ⇒ P(e_n > n^{−κ}) → 0 and, by (AGG-d), [VIS(κ; Q)]
+      last:  | (B-V2) | (V-m), [TK] ⇒ [VIS(κ; Q)], every κ < c_m/2 | new |
+OK 60c5f4581572 [STATEMENT.md] PARENT STATEMENT.md:93-117 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: **(T1⁺) Theorem START-F (fixed design).** Setting F, the start as coded. Assume (E), (GF-1
+      last:  be bounded, as long as p > s₀.)
+OK ca4030f94e25 [STATEMENT.md] PARENT STATEMENT.md:181-189 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: * **Proposition OVL⁺ (start mass under a bounded leakage set).** Setting F, (E), (GF-16), 
+      last:  (T1⁺)(a); the truth-deletion functional e_n is not used.)
+OK fa3d4e2b21a5 [STATEMENT.md] BASE STATEMENT.md:268-277 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: * **F1 (uniform leakage; RM's (L-gain) form).** If δ²_{U,l} ≤ η·τ²_U·log n for every l ∉ Q
+      last:  fixed C₁: P(1 − π₀(𝓛(Q)) ≤ (|Q| + 1)n^{−1/2}e^{C₂√log n} + n^{−κ}) → 1 for every κ < κ_V, 
+OK 8ca1d65a1e3a [STATEMENT.md] BASE STATEMENT.md:221-226 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: **(C2) Lemma NEC-b (component diagnostics; Setting F, (E), [TK]).** With Ā := limsup log p
+      last:  P(π₀(S₀) ≤ n^{−κ′}) → 1 for every κ′ < (1 + 2A̲ − c)/2.
+OK 6fb64c79c364 [STATEMENT.md] BASE STATEMENT.md:278-287 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: * **F4 (isolated leaking columns; non-default levels).** Let I_n ⊆ [p] ∖ Q be deterministi
+      last:  necessary threshold for the default functional.)
+OK 6088142a02a1 [STATEMENT.md] PARENT STATEMENT.md:154-173 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: **(T4⁺) Proposition NEC (limits; Setting F, (E), (GF-16)).** Ā := limsup log p/log n, A̲ :
+      last:  (C2).)
+OK 41fbb4e30439 [STATEMENT.md] PARENT STATEMENT.md:63-73 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: **(D2) (L-R⁺) [A:START2-R-L]** (Gaussian rows; replaces (L-R)). Fixed constants C_L ≥ 0 an
+      last:  H_l only. (L-R) implies (L-R⁺).)
+OK 1709453415b4 [STATEMENT.md] PARENT STATEMENT.md:134-152 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: * (b) **Gaussian rows.** Setting R with p > s₀ for all large n (nothing is claimed when p 
+      last:  claimed). (This is (B-R) of version 1.3.4 under (L-R⁺) instead of (L-R).)
+OK 762599887b86 [STATEMENT.md] PARENT STATEMENT.md:176-180 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: * **IF-START⁺.** Under (T1⁺) with (AL) at Q = S₀ and level vector h: for every event 𝒜 and
+      last:  start interface is supplied: P-CONC, P-MAP and SAMP's algorithm premises are not.
+OK d744aea88ee1 [STATEMENT.md] PARENT STATEMENT.md:119-133 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: **(T3⁺) Theorem START-R (random design).**
+      last:  (This is clause (a) of version 1.3.4 with 𝔏^♯_n(h) in place of 𝔏⁰_n(h) in the hypothesis o
+OK 82e0ee775fbf [STATEMENT.md] BASE STATEMENT.md:346-371 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: **(T6) Corollary MIS (misspecified candidate set)**. Setting of MIS `STATEMENT.md:39-58` w
+      last:  visibility fails); strong factors at p > K.
+OK fcae9866b82e [STATEMENT.md] PARENT STATEMENT.md:86-88 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: bound is uniform in (X, θ*, h). (This sharpens the T₁ clause of [LEAK(S₀)], which has 𝔏^{b
+      last:  such columns a fixed cut-off of the Gaussian tail replaces the level z_n, at the price of 
+OK fc6bc689282b [STATEMENT.md] BASE STATEMENT.md:39-126 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: ## 1. Objects, code pins, settings
+      last:  κ_V is (c_V − 1 − 2A)/2 under (V-c) and c_m/2 under (V-m) (§3.1).
+OK adac4ac1c9b6 [STATEMENT.md] PARENT STATEMENT.md:52-61 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: **(D1) Sharp leading functional** (Q = S₀; a deterministic function of (X, θ*, σ) and of t
+      last:  statements.)
+OK ace80faf5605 [STATEMENT.md] PARENT STATEMENT.md:82-89 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: **Lemma LEAK-0 (the leading term of the start odds).** Setting F, (E), (GF-16), **s₀ ≥ 1**
+      last:  the allowed failure probability decreases.)
+OK 6232a7731886 [STATEMENT.md] BASE STATEMENT.md:135-139 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: * **(E) [A:START-E]** ‖μ‖² ≤ Mn; p ≤ n^A; s₀ fixed; p > s₀ for all large n (at least one n
+      last:  1/n, for example two columns at Euclidean distance of order 1.)
+OK 37c640ed5c60 [STATEMENT.md] BASE STATEMENT.md:152-157 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: * **(AL) [A:START-AL]** averaged leakage outside a deterministic Q ⊇ S₀ with |Q| ≤ K: ther
+      last:  sufficient forms are in Corollary F1–F3; F4 uses non-default levels.)
+OK a31c71ab766b [STATEMENT.md] BASE STATEMENT.md:160-162 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: * **(FL-R16) [A:START-R-FL]** λ_min(Σ_{n,S}) ≥ c_Σ for every S with |S| ≤ 16 + s₀ — the sm
+      last:  * **(V-R) [A:START-R-V]** = PTV(a_V): |Cov(W_j, Σ_{k∈S₀}θ*_kW_k | W_U)| ≥ a_V for every j 
+OK 71d2d2d5eca1 [STATEMENT.md] BASE STATEMENT.md:63-73 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: the partition are used: it is a function of X alone, and |C_b| ≤ 16.
+      last:  In both settings μ, ε, RSS_U := ‖(C − P_U)Y‖² and every quantity of §2 refer to the **unsc
+OK 016d0677f56f [STATEMENT.md] BASE STATEMENT.md:169-172 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: ### 3.3 Implementation premises (named, not proved)
+      last:  sampler, random-number, LS0 or delivery premise is used by any claim about π₀.
+OK c34221774f75 [STATEMENT.md] BASE STATEMENT.md:130-132 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: Fixed constants: A > 0, M < ∞, g_* > 0, s₀, and c_V or (c_m, ε₀) (Corollary F2 has its own
+      last:  C_L ≥ 0 and a polylogarithm exponent κ_Q ≥ 1 (these are distinct from the scorer's a₀ = b₀
+OK 32b14d1155e8 [STATEMENT.md] BASE STATEMENT.md:174-191 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: ## 4. Interface properties (PROTOCOL item 5)
+      last:  same constants. Lemma ASM (C1) needs only the interface properties [LEAK(Q)] and [VIS(κ; Q
+OK df56d73f3292 [STATEMENT.md] BASE STATEMENT.md:46-48 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: **The start, as coded** (EX-A: exact arithmetic). Pins: the CORE tree as of commit 72785fe
+      last:  * score and prior: CORE `cpp/v3_score.h:39-72` (K = min(p, ⌊n/2⌋); w(k) = ½/C(2p − 1, k);
+OK 8dce8f3133d4 [STATEMENT.md] BASE STATEMENT.md:197-219 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: **(C0) Lemma AGG (table identities; deterministic, any data).** Let n ≥ 4, valid inputs, E
+      last:  (Composition of (C0) with the interface properties; no other input.)
+OK 2f6244c1fe06 [STATEMENT.md] BASE STATEMENT.md:232-234 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: | (B1) | (GF-16), (V-c), (V-m) and the functionals 𝔏_n(Q; h), 𝔏⁰_n(h) imply / dominate the
+      last:  | (B-L) | [TK] ⇒ [LEAK(Q)]: on 𝓔^blk and {\|Z_{T,l}\| ≤ h_l for all block pairs (T, l) wit
+OK 7188c024fd11 [STATEMENT.md] BASE STATEMENT.md:241-243 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: **(T0) Theorem FLOOR (deterministic).** For every valid data set (n ≥ 4, EX-A) and every m
+      last:  p > s₀): o₀ ≥ T₁ ≥ f_n(s₀) ≥ ½(n + 1)^{−1/2}: no condition on the design can give a start-
+OK ace80faf5605 [STATEMENT.md] PARENT STATEMENT.md:82-89 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: **Lemma LEAK-0 (the leading term of the start odds).** Setting F, (E), (GF-16), **s₀ ≥ 1**
+      last:  the allowed failure probability decreases.)
+OK c1c44e9e0f01 [STATEMENT.md] PARENT STATEMENT.md:77-78 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: Setting, notation and assumptions as in §1–§2. "X_n = O_P(a_n) + o_P(n^{−κ})" means X_n ≤ 
+      last:  n^κB_n → 0 in probability.
+OK 099f4adeabe1 [STATEMENT.md] BASE STATEMENT.md:140-151 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: * **Visibility [A:START-V]**, one of:
+      last:  does not.) For Q = S₀, R = ∅.
+OK daff715104a6 [STATEMENT.md] BASE STATEMENT.md:81 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: 𝓛(Q) := {T : S₀ ⊆ T ⊆ Q} ⊆ Ω, and c_Q := |Q| + 15s₀. o₀ := (1 − π₀(S₀))/π₀(S₀). Logarithms
+      last:  𝓛(Q) := {T : S₀ ⊆ T ⊆ Q} ⊆ Ω, and c_Q := |Q| + 15s₀. o₀ := (1 − π₀(S₀))/π₀(S₀). Logarithms
+OK dff06d8cef74 [STATEMENT.md] BASE STATEMENT.md:93 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: ω^Q(U) := (2p)^{(d−a)₊}·(c_Q/p)^{(a−d)₊}. Then
+      last:  ω^Q(U) := (2p)^{(d−a)₊}·(c_Q/p)^{(a−d)₊}. Then
+OK 41fbb4e30439 [STATEMENT.md] PARENT STATEMENT.md:63-73 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: **(D2) (L-R⁺) [A:START2-R-L]** (Gaussian rows; replaces (L-R)). Fixed constants C_L ≥ 0 an
+      last:  H_l only. (L-R) implies (L-R⁺).)
+OK ace80faf5605 [STATEMENT.md] PARENT STATEMENT.md:82-89 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: **Lemma LEAK-0 (the leading term of the start odds).** Setting F, (E), (GF-16), **s₀ ≥ 1**
+      last:  the allowed failure probability decreases.)
+OK 35fceeb32437 [STATEMENT.md] PARENT STATEMENT.md:57-58 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: (Only **proper** subsets of the truth are conditioned on. For s₀ ≥ 1 this is 𝔏⁰_n(h) of ve
+      last:  last term: 𝔏^♯_n(h) = 𝔏⁰_n(h) − 15√(2/π)z_n/p. Elementary facts (proof file: `lemmas/P1_LE
+OK 4d7990a1f7db [STATEMENT.md] BASE STATEMENT.md:183 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: | [LEAK(Q)] | for a level vector h with b_n(h) → 0: if (|Q| + 1)n^{−1/2}𝔏^b_n(Q; h) → 0 th
+      last:  | [LEAK(Q)] | for a level vector h with b_n(h) → 0: if (|Q| + 1)n^{−1/2}𝔏^b_n(Q; h) → 0 th
+OK 5e92767d9f18 [STATEMENT.md] PARENT STATEMENT.md:86-87 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: bound is uniform in (X, θ*, h). (This sharpens the T₁ clause of [LEAK(S₀)], which has 𝔏^{b
+      last:  right. The at most 15 null columns that share a block with every truth have zero mean gain
+OK 35086463cacf [STATEMENT.md] BASE STATEMENT.md:187-191 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: **Quantitative form of [TK].** The bridges (B-L), (B-V1), (B-V2) and the diagnostics (C2) 
+      last:  same constants. Lemma ASM (C1) needs only the interface properties [LEAK(Q)] and [VIS(κ; Q
+OK 8bbf3a1bd9be [STATEMENT.md] BASE STATEMENT.md:235 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: | (B-V1) | (V-c), [TK], [LEAK(Q)], (AL) ⇒ P(e_n > n^{−κ}) → 0 and, by (AGG-d), [VIS(κ; Q)]
+      last:  | (B-V1) | (V-c), [TK], [LEAK(Q)], (AL) ⇒ P(e_n > n^{−κ}) → 0 and, by (AGG-d), [VIS(κ; Q)]
+OK a43a639f06de [STATEMENT.md] BASE lemmas/L4_VIS.md:12 -> Theory_work/Wave3/W3-START/lemmas/L4_VIS.md
+      first: **𝓧 := {‖(P_W − P_U)ε‖² ≤ σ²ζ_n for every truth block b and all U ⊆ W ⊆ C_b}.**
+      last:  **𝓧 := {‖(P_W − P_U)ε‖² ≤ σ²ζ_n for every truth block b and all U ⊆ W ⊆ C_b}.**
+OK 76ef4c6932c9 [STATEMENT.md] BASE STATEMENT.md:236 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: | (B-V2) | (V-m), [TK] ⇒ [VIS(κ; Q)], every κ < c_m/2 | new |
+      last:  | (B-V2) | (V-m), [TK] ⇒ [VIS(κ; Q)], every κ < c_m/2 | new |
+OK 7661a00fa985 [STATEMENT.md] PARENT STATEMENT.md:93-110 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: **(T1⁺) Theorem START-F (fixed design).** Setting F, the start as coded. Assume (E), (GF-1
+      last:  ((B1), (B-TK), (B-L), (B-V1)/(B-V2), (C0)), with Lemma LEAK-0 in place of the T₁ clause of
+OK 4fae3920a5f8 [STATEMENT.md] BASE STATEMENT.md:268-271 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: * **F1 (uniform leakage; RM's (L-gain) form).** If δ²_{U,l} ≤ η·τ²_U·log n for every l ∉ Q
+      last:  With η = 0 (no column outside Q gains anything): 1 − π₀(𝓛(Q)) = O_P((|Q| + 1)√(log n/n)) +
+OK e717247b67db [STATEMENT.md] PARENT STATEMENT.md:112-117 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: **F2⁺ (Corollary; strong signals; Q = S₀).** Setting F, (E), (GF-16), visibility with expo
+      last:  be bounded, as long as p > s₀.)
+OK db5e8c7957a2 [STATEMENT.md] BASE STATEMENT.md:276-277 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: * **F3 (bounded gains).** If δ²_{U,l} ≤ C₀τ²_U for every l ∉ Q, |U| ≤ 15, and (|Q| + 1)n^{
+      last:  fixed C₁: P(1 − π₀(𝓛(Q)) ≤ (|Q| + 1)n^{−1/2}e^{C₂√log n} + n^{−κ}) → 1 for every κ < κ_V, 
+OK 8690f573bfe8 [STATEMENT.md] BASE STATEMENT.md:266 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: **(T2) Corollaries (sufficient conditions for (AL); Setting F, (E), (GF-16), visibility wi
+      last:  **(T2) Corollaries (sufficient conditions for (AL); Setting F, (E), (GF-16), visibility wi
+OK 234a46ba308e [STATEMENT.md] PARENT STATEMENT.md:112 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: **F2⁺ (Corollary; strong signals; Q = S₀).** Setting F, (E), (GF-16), visibility with expo
+      last:  **F2⁺ (Corollary; strong signals; Q = S₀).** Setting F, (E), (GF-16), visibility with expo
+OK 35086463cacf [STATEMENT.md] BASE STATEMENT.md:187-191 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: **Quantitative form of [TK].** The bridges (B-L), (B-V1), (B-V2) and the diagnostics (C2) 
+      last:  same constants. Lemma ASM (C1) needs only the interface properties [LEAK(Q)] and [VIS(κ; Q
+OK 0f9d0745abc6 [STATEMENT.md] PARENT STATEMENT.md:160-166 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: **Scope of (N2⁺).** For s₀ ≥ 16 this is (N2) of version 1.3.4 (one null; every V ⊆ S₀ with
+      last:  one-column threshold is (C2)(i).
+OK 737a55240b70 [STATEMENT.md] PARENT STATEMENT.md:169-170 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: * (N4) **outside the hypotheses.** As BASE `STATEMENT.md:329-331` (masked truths: PXN (S) 
+      last:  family; strong-factor designs at p > K: nothing is claimed).
+OK a62cdcee6a4b [STATEMENT.md] PARENT STATEMENT.md:172-173 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: ((N1), (N3), (N4) are those of version 1.3.4, word for word, with F2⁺ for F2 in (N1). (N2⁺
+      last:  (C2).)
+OK e06f4ad51a61 [STATEMENT.md] PARENT STATEMENT.md:120-133 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: * (a) **transfer (any design law; design-measurable targets).** Let X^r be a random raw de
+      last:  (This is clause (a) of version 1.3.4 with 𝔏^♯_n(h) in place of 𝔏⁰_n(h) in the hypothesis o
+OK dbb62bdb3fa5 [STATEMENT.md] BASE STATEMENT.md:301-305 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: coefficients or sets Q selected using the response are not covered.) *Convention off the d
+      last:  on invalid inputs. The same convention applies in (T3)(b) and in the random-candidate clau
+OK b0f31c2ac5a8 [STATEMENT.md] BASE STATEMENT.md:346-357 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: **(T6) Corollary MIS (misspecified candidate set)**. Setting of MIS `STATEMENT.md:39-58` w
+      last:  response are not covered.
+OK ade290d2d0a8 [STATEMENT.md] BASE STATEMENT.md:349-350 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: follow model G with (p, β, σ²) := (p_𝒞, β^𝒞, σ_𝒞²), truth S₀^𝒞 = supp β^𝒞. Hence each of (
+      last:  holds for the start π₀^𝒞 of the method re-run on the candidate data **provided all of that
+OK 4e4fa30a5858 [STATEMENT.md] BASE STATEMENT.md:359-371 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: **(T7) Examples table** (families verifying the hypotheses; none is a hypothesis). **Examp
+      last:  visibility fails); strong factors at p > K.
+EXISTS           [STATEMENT.md] BASE lemmas/L11_EXAMPLES.md -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+OK ca4030f94e25 [STATEMENT.md] PARENT STATEMENT.md:181-189 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: * **Proposition OVL⁺ (start mass under a bounded leakage set).** Setting F, (E), (GF-16), 
+      last:  (T1⁺)(a); the truth-deletion functional e_n is not used.)
+OK 2bf5f0867365 [STATEMENT.md] BASE STATEMENT.md:141 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: **(V-c)** (constant level): for every j ∈ S₀ and every U ⊆ [p] ∖ {j} with |U| ≤ 15: δ²_{U,
+      last:  **(V-c)** (constant level): for every j ∈ S₀ and every U ⊆ [p] ∖ {j} with |U| ≤ 15: δ²_{U,
+OK 4278fc705c5f [STATEMENT.md] PARENT STATEMENT.md:147-152 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: **(B-R⁺) Bridge (Gaussian rows).** Setting R with p > s₀ for all large n, (FL-R16), (V-R),
+      last:  claimed). (This is (B-R) of version 1.3.4 under (L-R⁺) instead of (L-R).)
+OK cd4eb98948b4 [STATEMENT.md] PARENT STATEMENT.md:138-139 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: if |Q| ≤ n^{1/2−ε_Q} for a fixed ε_Q ∈ (0, ½): P(π₀(𝓛(Q)) ≥ 1 − n^{−c}) → 1 for every c < 
+      last:  population leakage): 1 − π₀(𝓛(Q)) = O_P((|Q| + 1)·n^{−1/2}·(log n)^{15κ_Q+1/2}).
+OK d2aa1fe5dcca [STATEMENT.md] PARENT STATEMENT.md:140-144 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: (At each n where the right side of the first display is ≥ 1 its event is sure, because the
+      last:  tend to zero — for example when |Q| ≤ n^{1/2−ε_Q}, where version 1.3.4 required |Q| ≤ (log
+OK f519ad3dbabc [STATEMENT.md] PARENT STATEMENT.md:179-180 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: applies with 1_𝒜δ̄ = O_P(max(r_n, r^{post}_n)) whenever P-CONC holds with a deterministic 
+      last:  start interface is supplied: P-CONC, P-MAP and SAMP's algorithm premises are not.
+OK eac9183af663 [STATEMENT.md] PARENT STATEMENT.md:191-201 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: ## 4. Not claimed (changes to BASE `STATEMENT.md:373-384`)
+      last:  (GF-16); sharpness of exp(C_R√log n); growing s₀; non-Gaussian noise; response-selected ta
+OK 14f34a8a4b0a [STATEMENT.md] BASE STATEMENT.md:380 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: * A matching lower bound of order √(log p/n) when 𝔏⁰_n ≍ √log n (shown only in examples/nu
+      last:  * A matching lower bound of order √(log p/n) when 𝔏⁰_n ≍ √log n (shown only in examples/nu
+OK a26c62382259 [STATEMENT.md] PARENT STATEMENT.md:211 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: **Consumers.** W3-SAMP:C@1.1.1 "PROVED-CHECKED", W3-SAMP:D@2.1.1 "PROVED-CHECKED" (premise
+      last:  **Consumers.** W3-SAMP:C@1.1.1 "PROVED-CHECKED", W3-SAMP:D@2.1.1 "PROVED-CHECKED" (premise
+EXISTS           [STATEMENT.md] reviews/SL1_statement_lock_sol.md -> Theory_work/Wave3/W3-START2-R/reviews/SL1_statement_lock_sol.md
+EXISTS           [STATEMENT.md] reviews/LC1_line_check_sol.md -> Theory_work/Wave3/W3-START2-R/reviews/LC1_line_check_sol.md
+EXISTS           [STATEMENT.md] reviews/LC1_line_check_sol.md -> Theory_work/Wave3/W3-START2-R/reviews/LC1_line_check_sol.md
+EXISTS           [STATEMENT.md] reviews/LC1_line_check_sol.md -> Theory_work/Wave3/W3-START2-R/reviews/LC1_line_check_sol.md
+EXISTS           [STATEMENT.md] reviews/LC1_line_check_sol.md -> Theory_work/Wave3/W3-START2-R/reviews/LC1_line_check_sol.md
+EXISTS           [REPORT.md] STATEMENT.md -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+EXISTS           [REPORT.md] PARENT STATEMENT.md -> Theory_work/Wave3/W3-START2/STATEMENT.md
+EXISTS           [REPORT.md] BASE STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [REPORT.md] lemmas/R1_VIS.md -> Theory_work/Wave3/W3-START2-R/lemmas/R1_VIS.md
+EXISTS           [REPORT.md] lemmas/R2_NEC.md -> Theory_work/Wave3/W3-START2-R/lemmas/R2_NEC.md
+EXISTS           [REPORT.md] lemmas/R3_RATE.md -> Theory_work/Wave3/W3-START2-R/lemmas/R3_RATE.md
+EXISTS           [REPORT.md] lemmas/R4_TRANSFER_COR.md -> Theory_work/Wave3/W3-START2-R/lemmas/R4_TRANSFER_COR.md
+EXISTS           [REPORT.md] lemmas/R5_EX.md -> Theory_work/Wave3/W3-START2-R/lemmas/R5_EX.md
+OK ee13c74a5c32 [REPORT.md] STATEMENT.md:17-32 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: ## 0. What changes, in one table
+      last:  restated at the level log n + 2 log p; (T3⁺⁺)(a) allows |S₀| ≤ s̄; (T3⁺⁺)(b)(iii) uses (L-
+OK c9dcf10fd25b [REPORT.md] STATEMENT.md:234-235 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: * (iii) **No leakage, uncorrelated nulls.** If Q = S₀ and (L-gain-0) holds (for instance C
+      last:  Q = S₀): **o₀ = O_P(√(log n/n))**, hence 1 − π₀(S₀) = O_P(√(log n/n)).
+OK 87ccda392443 [REPORT.md] STATEMENT.md:82-87 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **(D5) (L-gain-0) [A:START2R-R-L0]** (Gaussian rows; no leakage given proper subsets of th
+      last:  
+OK 307410ebe42a [REPORT.md] STATEMENT.md:223 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: * (iii) Under (FL-R16) and (L-gain-0) alone (no (V-R), no (L-R⁺⁺)): **𝔏^♯_n = O_P(√log n)*
+      last:  * (iii) Under (FL-R16) and (L-gain-0) alone (no (V-R), no (L-R⁺⁺)): **𝔏^♯_n = O_P(√log n)*
+OK de12f1a7e1ac [REPORT.md] STATEMENT.md:70-81 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **(D4) (L-R⁺⁺) [A:START2R-R-L]** (Gaussian rows; replaces (L-R⁺) of PARENT `:63-73`). Fixe
+      last:  
+OK b6ce2cba1a34 [REPORT.md] STATEMENT.md:228-233 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: * (i) there is C_R < ∞, depending only on the fixed constants and κ_H, with
+      last:  C_L = 0 of PARENT `:138-139`; with bounded H̄_n it is O_P((|Q| + 1)√(log n/n)).)
+OK 9b551107b73c [REPORT.md] STATEMENT.md:241-245 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[IF-START] (T5⁺⁺) IF-START⁺⁺.** Under (T1⁺⁺) with (AL) at Q = S₀ and level vector h: for
+      last:  holds with a deterministic rate r^{post}_n. Only the start interface is supplied (as PAREN
+EXISTS           [REPORT.md] lemmas/R3_RATE.md -> Theory_work/Wave3/W3-START2-R/lemmas/R3_RATE.md
+OK 1926c73604ff [REPORT.md] STATEMENT.md:51-69 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **(D3) Visibility at the level of the actual p [A:START2R-V]** (replaces (V-c), (V-m) of B
+      last:  
+OK c3aa98eb8fd7 [REPORT.md] STATEMENT.md:113-128 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[START-F] (T1⁺⁺) Theorem START-F (fixed design).** Setting F, the start as coded. Assume
+      last:  
+OK 0f367b33fd86 [REPORT.md] STATEMENT.md:101-112 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[VIS-c] (B-V1⁺⁺).** Setting F, a deterministic Q ⊇ S₀ with |Q| ≤ K. (V-cp), [TK] (in the
+      last:  
+OK 00bbc36b742d [REPORT.md] STATEMENT.md:145-166 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[NEC-b] (C2⁺⁺) Lemma NEC-b (component diagnostics; Setting F, (E), [TK] in the quantitat
+      last:  
+OK 1871fe333092 [REPORT.md] STATEMENT.md:134-144 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[F4] (Corollary F4⁺⁺; isolated leaking columns, non-default levels).** Setting F, (E), (
+      last:  
+EXISTS           [REPORT.md] lemmas/R1_VIS.md -> Theory_work/Wave3/W3-START2-R/lemmas/R1_VIS.md
+EXISTS           [REPORT.md] lemmas/R2_NEC.md -> Theory_work/Wave3/W3-START2-R/lemmas/R2_NEC.md
+OK e43598c08337 [REPORT.md] STATEMENT.md:162-163 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: for every κ′ < (1 − c)/2. If (1 − c_n)√log n → ∞: π₀(S₀) → 0 in probability. So the consta
+      last:  (V-cp), and in (V-mp) for the instances D = {j}, N = ∅, cannot be lowered, for every seque
+OK 24d409e06ed0 [REPORT.md] STATEMENT.md:167-188 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[TRANSFER] (T3⁺⁺)(a) Theorem START-R, transfer (any design law; design-measurable target
+      last:  
+OK a1ac28237ffc [REPORT.md] STATEMENT.md:129-133 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[F1], [F2], [F3] (Corollaries F1⁺⁺, F2⁺⁺, F3⁺⁺).** F1 (BASE `:268-271`), F2⁺ (PARENT `:1
+      last:  
+OK 4a8b55794154 [REPORT.md] STATEMENT.md:212-214 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[OVL] (OVL⁺⁺) Proposition OVL.** OVL⁺ of PARENT `:181-189`, word for word, with "visibil
+      last:  
+OK 7bbe1662c41a [REPORT.md] STATEMENT.md:189-198 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[MIS] (T6⁺⁺) Corollary MIS.** BASE (T6) (`:346-357`) with the claims of version 1.5 in p
+      last:  
+OK 6ce34a2e1d51 [REPORT.md] STATEMENT.md:199-211 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[EX] (T7⁺⁺) Examples table.** BASE (T7) (`:359-371`) and BASE `lemmas/L11_EXAMPLES.md`, 
+      last:  
+EXISTS           [REPORT.md] lemmas/R4_TRANSFER_COR.md -> Theory_work/Wave3/W3-START2-R/lemmas/R4_TRANSFER_COR.md
+EXISTS           [REPORT.md] lemmas/R5_EX.md -> Theory_work/Wave3/W3-START2-R/lemmas/R5_EX.md
+OK b87374cf5325 [REPORT.md] STATEMENT.md:92-97 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: ### 3.0 A remark of version 1.4, stated correctly (no claim changes)
+      last:  of PARENT `:86-87` is to be read in this sense.
+OK db5cef80a384 [REPORT.md] Theory_work/Wave3/API_AUDIT/sharp2/TRIAGE.md:29-31 -> Theory_work/Wave3/API_AUDIT/sharp2/TRIAGE.md
+      first: - **One honest-reading point.** START2's P1 gain (dropping 15√(2/π)z_n/p) is a rate gain o
+      last:  chapter should not sell P1 as a p ≫ n improvement.
+EXISTS           [REPORT.md] BRIEF.md -> Theory_work/Wave3/W3-START2-R/BRIEF.md
+OK b87374cf5325 [REPORT.md] STATEMENT.md:92-97 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: ### 3.0 A remark of version 1.4, stated correctly (no claim changes)
+      last:  of PARENT `:86-87` is to be read in this sense.
+OK 30171685f8a7 [REPORT.md] STATEMENT.md:101-107 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[VIS-c] (B-V1⁺⁺).** Setting F, a deterministic Q ⊇ S₀ with |Q| ≤ K. (V-cp), [TK] (in the
+      last:  
+EXISTS           [REPORT.md] lemmas/R1_VIS.md -> Theory_work/Wave3/W3-START2-R/lemmas/R1_VIS.md
+OK 116629e09ece [REPORT.md] lemmas/R1_VIS.md:3 -> Theory_work/Wave3/W3-START2-R/lemmas/R1_VIS.md
+      first: Status: **PROVED (by this seat)**. The check record is kept outside this file (the ticket'
+      last:  Status: **PROVED (by this seat)**. The check record is kept outside this file (the ticket'
+OK 8d2dd2e02921 [REPORT.md] STATEMENT.md:108-112 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[VIS-m] (B-V2⁺⁺).** Setting F, a deterministic Q ⊇ S₀ with |Q| ≤ K. (V-mp) with this Q, 
+      last:  
+EXISTS           [REPORT.md] lemmas/R1_VIS.md -> Theory_work/Wave3/W3-START2-R/lemmas/R1_VIS.md
+OK c3aa98eb8fd7 [REPORT.md] STATEMENT.md:113-128 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[START-F] (T1⁺⁺) Theorem START-F (fixed design).** Setting F, the start as coded. Assume
+      last:  
+EXISTS           [REPORT.md] lemmas/R1_VIS.md -> Theory_work/Wave3/W3-START2-R/lemmas/R1_VIS.md
+OK a1ac28237ffc [REPORT.md] STATEMENT.md:129-133 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[F1], [F2], [F3] (Corollaries F1⁺⁺, F2⁺⁺, F3⁺⁺).** F1 (BASE `:268-271`), F2⁺ (PARENT `:1
+      last:  
+EXISTS           [REPORT.md] lemmas/R4_TRANSFER_COR.md -> Theory_work/Wave3/W3-START2-R/lemmas/R4_TRANSFER_COR.md
+OK 116629e09ece [REPORT.md] lemmas/R4_TRANSFER_COR.md:3 -> Theory_work/Wave3/W3-START2-R/lemmas/R4_TRANSFER_COR.md
+      first: Status: **PROVED (by this seat)**. The check record is kept outside this file (the ticket'
+      last:  Status: **PROVED (by this seat)**. The check record is kept outside this file (the ticket'
+OK 1871fe333092 [REPORT.md] STATEMENT.md:134-144 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[F4] (Corollary F4⁺⁺; isolated leaking columns, non-default levels).** Setting F, (E), (
+      last:  
+EXISTS           [REPORT.md] lemmas/R2_NEC.md -> Theory_work/Wave3/W3-START2-R/lemmas/R2_NEC.md
+OK 116629e09ece [REPORT.md] lemmas/R2_NEC.md:3 -> Theory_work/Wave3/W3-START2-R/lemmas/R2_NEC.md
+      first: Status: **PROVED (by this seat)**. The check record is kept outside this file (the ticket'
+      last:  Status: **PROVED (by this seat)**. The check record is kept outside this file (the ticket'
+OK 02dcf31bd5bb [REPORT.md] STATEMENT.md:145-153 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[NEC-b] (C2⁺⁺) Lemma NEC-b (component diagnostics; Setting F, (E), [TK] in the quantitat
+      last:  
+EXISTS           [REPORT.md] lemmas/R2_NEC.md -> Theory_work/Wave3/W3-START2-R/lemmas/R2_NEC.md
+OK 9399fff81f02 [REPORT.md] STATEMENT.md:154-166 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[NEC] (T4⁺⁺) Proposition NEC (limits; Setting F, (E), (GF-16)).**
+      last:  
+EXISTS           [REPORT.md] lemmas/R2_NEC.md -> Theory_work/Wave3/W3-START2-R/lemmas/R2_NEC.md
+OK 24d409e06ed0 [REPORT.md] STATEMENT.md:167-188 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[TRANSFER] (T3⁺⁺)(a) Theorem START-R, transfer (any design law; design-measurable target
+      last:  
+EXISTS           [REPORT.md] lemmas/R4_TRANSFER_COR.md -> Theory_work/Wave3/W3-START2-R/lemmas/R4_TRANSFER_COR.md
+OK 7bbe1662c41a [REPORT.md] STATEMENT.md:189-198 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[MIS] (T6⁺⁺) Corollary MIS.** BASE (T6) (`:346-357`) with the claims of version 1.5 in p
+      last:  
+EXISTS           [REPORT.md] lemmas/R4_TRANSFER_COR.md -> Theory_work/Wave3/W3-START2-R/lemmas/R4_TRANSFER_COR.md
+OK 6ce34a2e1d51 [REPORT.md] STATEMENT.md:199-211 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[EX] (T7⁺⁺) Examples table.** BASE (T7) (`:359-371`) and BASE `lemmas/L11_EXAMPLES.md`, 
+      last:  
+EXISTS           [REPORT.md] lemmas/R5_EX.md -> Theory_work/Wave3/W3-START2-R/lemmas/R5_EX.md
+OK 116629e09ece [REPORT.md] lemmas/R5_EX.md:3 -> Theory_work/Wave3/W3-START2-R/lemmas/R5_EX.md
+      first: Status: **PROVED (by this seat)**. The check record is kept outside this file (the ticket'
+      last:  Status: **PROVED (by this seat)**. The check record is kept outside this file (the ticket'
+OK 4a8b55794154 [REPORT.md] STATEMENT.md:212-214 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[OVL] (OVL⁺⁺) Proposition OVL.** OVL⁺ of PARENT `:181-189`, word for word, with "visibil
+      last:  
+EXISTS           [REPORT.md] lemmas/R4_TRANSFER_COR.md -> Theory_work/Wave3/W3-START2-R/lemmas/R4_TRANSFER_COR.md
+OK b6bcb8a70b29 [REPORT.md] STATEMENT.md:217-225 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[BR] (B-R⁺⁺) Bridge (Gaussian rows).** Setting R with p > s₀ for all large n.
+      last:  
+EXISTS           [REPORT.md] lemmas/R3_RATE.md -> Theory_work/Wave3/W3-START2-R/lemmas/R3_RATE.md
+OK 116629e09ece [REPORT.md] lemmas/R3_RATE.md:3 -> Theory_work/Wave3/W3-START2-R/lemmas/R3_RATE.md
+      first: Status: **PROVED (by this seat)**. The check record is kept outside this file (the ticket'
+      last:  Status: **PROVED (by this seat)**. The check record is kept outside this file (the ticket'
+OK ca0477016d9c [REPORT.md] STATEMENT.md:226-240 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[START-R] (T3⁺⁺)(b) Theorem START-R, Gaussian rows.** Setting R with p > s₀ for all larg
+      last:  
+EXISTS           [REPORT.md] lemmas/R3_RATE.md -> Theory_work/Wave3/W3-START2-R/lemmas/R3_RATE.md
+OK 68d8b45a4bfc [REPORT.md] STATEMENT.md:241-246 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[IF-START] (T5⁺⁺) IF-START⁺⁺.** Under (T1⁺⁺) with (AL) at Q = S₀ and level vector h: for
+      last:  
+EXISTS           [REPORT.md] lemmas/R3_RATE.md -> Theory_work/Wave3/W3-START2-R/lemmas/R3_RATE.md
+OK 1926c73604ff [REPORT.md] STATEMENT.md:51-69 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **(D3) Visibility at the level of the actual p [A:START2R-V]** (replaces (V-c), (V-m) of B
+      last:  
+OK de12f1a7e1ac [REPORT.md] STATEMENT.md:70-81 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **(D4) (L-R⁺⁺) [A:START2R-R-L]** (Gaussian rows; replaces (L-R⁺) of PARENT `:63-73`). Fixe
+      last:  
+OK 87ccda392443 [REPORT.md] STATEMENT.md:82-87 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **(D5) (L-gain-0) [A:START2R-R-L0]** (Gaussian rows; no leakage given proper subsets of th
+      last:  
+OK 8bb5b97a175f [REPORT.md] STATEMENT.md:34-48 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: ## 1. Taken from version 1.4 unchanged
+      last:  
+OK 5f8860e872d0 [REPORT.md] STATEMENT.md:258-286 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: ## 5. Dependencies and supersession
+      last:  | EX (T7⁺⁺) | W3-START:EX | each row's conclusion contains the version-1.3.4 one |
+EXISTS           [REPORT.md] lemmas/R2_NEC.md -> Theory_work/Wave3/W3-START2-R/lemmas/R2_NEC.md
+OK 4ea9844d1393 [REPORT.md] STATEMENT.md:236-237 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: (At each n where the right side of (i) is ≥ 1 its event is sure; the O_P statements need n
+      last:  PARENT `:140-144`. By (T0), o₀ ≥ ½(n + 1)^{−1/2} on every data set, so (iii) is optimal up
+OK 14f34a8a4b0a [REPORT.md] BASE STATEMENT.md:380 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: * A matching lower bound of order √(log p/n) when 𝔏⁰_n ≍ √log n (shown only in examples/nu
+      last:  * A matching lower bound of order √(log p/n) when 𝔏⁰_n ≍ √log n (shown only in examples/nu
+EXISTS           [REPORT.md] lemmas/R3_RATE.md -> Theory_work/Wave3/W3-START2-R/lemmas/R3_RATE.md
+EXISTS           [REPORT.md] lemmas/R3_RATE.md -> Theory_work/Wave3/W3-START2-R/lemmas/R3_RATE.md
+EXISTS           [REPORT.md] lemmas/R3_RATE.md -> Theory_work/Wave3/W3-START2-R/lemmas/R3_RATE.md
+EXISTS           [REPORT.md] lemmas/R2_NEC.md -> Theory_work/Wave3/W3-START2-R/lemmas/R2_NEC.md
+EXISTS           [REPORT.md] lemmas/R5_EX.md -> Theory_work/Wave3/W3-START2-R/lemmas/R5_EX.md
+EXISTS           [REPORT.md] numerics/RESULTS.md -> Theory_work/Wave3/W3-START2-R/numerics/RESULTS.md
+EXISTS           [REPORT.md] numerics/run_numerics.R -> Theory_work/Wave3/W3-START2-R/numerics/run_numerics.R
+EXISTS           [REPORT.md] numerics/r_common.R -> Theory_work/Wave3/W3-START2-R/numerics/r_common.R
+EXISTS           [REPORT.md] numerics/gens.R -> Theory_work/Wave3/W3-START2-R/numerics/gens.R
+EXISTS           [REPORT.md] numerics/summarise.R -> Theory_work/Wave3/W3-START2-R/numerics/summarise.R
+EXISTS           [REPORT.md] numerics/make_tables.R -> Theory_work/Wave3/W3-START2-R/numerics/make_tables.R
+OK 65205ff0c66f [REPORT.md] STATEMENT.md:253-254 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: deterministic on the standardised scale); MIS for a general deterministic μ ∉ span X_𝒞 wit
+      last:  item W3-START2R-O1); the optional items T9 (F1 with the exact Laplace exponent, F3 with G_
+OK eac9183af663 [REPORT.md] PARENT STATEMENT.md:191-201 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: ## 4. Not claimed (changes to BASE `STATEMENT.md:373-384`)
+      last:  (GF-16); sharpness of exp(C_R√log n); growing s₀; non-Gaussian noise; response-selected ta
+OK eecf1052eabc [REPORT.md] STATEMENT.md:247-256 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: ## 4. Not claimed (changes to PARENT `:191-201`)
+      last:  * Everything else on that list stays not claimed.
+EXISTS           [REPORT.md] STATEMENT.md -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+EXISTS           [REPORT.md] REPORT.md -> Theory_work/Wave3/W3-START2-R/REPORT.md
+EXISTS           [REPORT.md] TARGET.md -> Theory_work/Wave3/W3-START2-R/TARGET.md
+EXISTS           [REPORT.md] READER_DELTA.md -> Theory_work/Wave3/W3-START2-R/READER_DELTA.md
+EXISTS           [REPORT.md] PLAN.md -> Theory_work/Wave3/W3-START2-R/PLAN.md
+EXISTS           [REPORT.md] BRIEF.md -> Theory_work/Wave3/W3-START2-R/BRIEF.md
+EXISTS           [REPORT.md] RIDER_RULES.md -> Theory_work/Wave3/W3-START2-R/RIDER_RULES.md
+EXISTS           [REPORT.md] citecheck.py -> Theory_work/Wave3/W3-START2-R/citecheck.py
+EXISTS           [REPORT.md] DEPS.tsv -> Theory_work/Wave3/W3-START2-R/DEPS.tsv
+EXISTS           [REPORT.md] lemmas/R1_VIS.md -> Theory_work/Wave3/W3-START2-R/lemmas/R1_VIS.md
+EXISTS           [REPORT.md] lemmas/R5_EX.md -> Theory_work/Wave3/W3-START2-R/lemmas/R5_EX.md
+EXISTS           [REPORT.md] LOG.md -> Theory_work/Wave3/W3-START2-R/LOG.md
+OK cf5f4d9eb976 [lemmas/R1_VIS.md] STATEMENT.md:51-68 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **(D3) Visibility at the level of the actual p [A:START2R-V]** (replaces (V-c), (V-m) of B
+      last:  When p is smaller than the envelope, or log p/log n oscillates, both forms of (D3) ask les
+OK 638d4261142d [lemmas/R1_VIS.md] STATEMENT.md:101-106 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[VIS-c] (B-V1⁺⁺).** Setting F, a deterministic Q ⊇ S₀ with |Q| ≤ K. (V-cp), [TK] (in the
+      last:  𝓔^blk ∩ 𝓧 ∩ {c_QU_Q ≤ 1}: Ξ(Q) ≤ n^{−κ}.
+OK 952fbd5e703b [lemmas/R1_VIS.md] STATEMENT.md:108-111 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[VIS-m] (B-V2⁺⁺).** Setting F, a deterministic Q ⊇ S₀ with |Q| ≤ K. (V-mp) with this Q, 
+      last:  for n ≥ n₃, on 𝓔^blk ∩ 𝓧: Ξ(Q) ≤ n^{−κ}.
+OK 1b692c2c242e [lemmas/R1_VIS.md] STATEMENT.md:113-127 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[START-F] (T1⁺⁺) Theorem START-F (fixed design).** Setting F, the start as coded. Assume
+      last:  for (T1⁺), with VIS-c⁺⁺ / VIS-m⁺⁺ in place of (B-V1) / (B-V2).)
+OK b56d2fae87f5 [lemmas/R1_VIS.md] STATEMENT.md:271-273 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: | START-F (T1⁺⁺) | W3-START2:START-F | (V-c) ⇒ (V-cp) with c_V − 2A, same κ_V; (V-m) ⇒ (V-
+      last:  | VIS-m (B-V2⁺⁺) | W3-START:VIS-m | same |
+OK 4af34d3827d1 [lemmas/R1_VIS.md] BASE lemmas/L2_TK.md:32-98 -> Theory_work/Wave3/W3-START/lemmas/L2_TK.md
+      first: **Lemma L2.1.** P((𝓔^blk)ᶜ) ≤ 2e^{−n^{1/3}} + 2/n. With p ≤ n^A: t_n ≤ 4(A + 1) log n + 67
+      last:  the same constants (A, M, σ², g_*): this is what (T1)(d) uses.
+OK eb44170073f1 [lemmas/R1_VIS.md] BASE lemmas/L4_VIS.md:7-87 -> Theory_work/Wave3/W3-START/lemmas/L4_VIS.md
+      first: ## L4.0 Setting and the event 𝓧
+      last:  cruder bound σ²t_n of 𝒟₂ would cost a constant multiple of log n and is not used here.
+OK 76182ded38c1 [lemmas/R1_VIS.md] BASE lemmas/L1_AGG_FLOOR.md:103-109 -> Theory_work/Wave3/W3-START/lemmas/L1_AGG_FLOOR.md
+      first: **(AGG-d).** Let c_QU_Q ≤ 1, b ∈ 𝔹* (so s₀ ≥ 1, c_Q ≥ 1, U_Q ≤ 1). Fix T′ with U*_b ⊆ T′ ⊆
+      last:  There are at most 2^{16} sets U ⊆ C_b, and e_n^d ≤ max(e_n, e_n^{16}); hence **Ξ_b(Q) ≤ 2^
+OK b034bed26f65 [lemmas/R1_VIS.md] BASE lemmas/L3_LEAK.md:34 -> Theory_work/Wave3/W3-START/lemmas/L3_LEAK.md
+      first: (i) 𝔏^b_n(Q; h) ≤ 𝔏_n(Q; h): for l ∉ Q the sets {T : U*_{b(l)} ⊆ T ⊆ C_{b(l)} ∖ {l}} satis
+      last:  (i) 𝔏^b_n(Q; h) ≤ 𝔏_n(Q; h): for l ∉ Q the sets {T : U*_{b(l)} ⊆ T ⊆ C_{b(l)} ∖ {l}} satis
+OK cc69039eb95b [lemmas/R1_VIS.md] BASE lemmas/L5_ASM_STARTF.md:11 -> Theory_work/Wave3/W3-START/lemmas/L5_ASM_STARTF.md
+      first: **(e1)** c_Q + 1 = |Q| + 15s₀ + 1 ≤ 16s₀′(|Q| + 1), and c_Q ≤ 16s₀′(|Q| + 1).
+      last:  **(e1)** c_Q + 1 = |Q| + 15s₀ + 1 ≤ 16s₀′(|Q| + 1), and c_Q ≤ 16s₀′(|Q| + 1).
+OK 009a01f4447c [lemmas/R1_VIS.md] BASE lemmas/L5_ASM_STARTF.md:37-89 -> Theory_work/Wave3/W3-START/lemmas/L5_ASM_STARTF.md
+      first: ## L5.2 Theorem START-F, explicit uniform form: (T1)(d)
+      last:  **(d)** is Proposition L5.2 (with the constant max(C, C′) in both displays). ∎
+OK bdf461f28810 [lemmas/R1_VIS.md] BASE lemmas/L6_COROLLARIES.md:9-26 -> Theory_work/Wave3/W3-START/lemmas/L6_COROLLARIES.md
+      first: ## L6.0 How n₀ in Proposition L5.2 depends on ε; high-probability form
+      last:  So C_n, C′_n = O((log n)²) and 1/c_{0,n} = O(log n): every polynomial or exp(C√log n) slac
+OK ca73484d4696 [lemmas/R1_VIS.md] PARENT lemmas/P1_LEADING.md:80-126 -> Theory_work/Wave3/W3-START2/lemmas/P1_LEADING.md
+      first: ## P1.4 Theorem START-F, uniform form: (T1⁺)(d)
+      last:  **(d)** is Proposition P1.4, with the constant max(C, C^♯) in both displays. ∎
+OK 8ce2278d389f [lemmas/R1_VIS.md] STATEMENT.md:260-264 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **Consumed** (statement and proof lines; statuses as in the registry at CP1, to be quoted 
+      last:  `:211` (W3-SAMP:C, W3-SAMP:D: premises P-START, P-OVL).
+OK 35086463cacf [lemmas/R1_VIS.md] BASE STATEMENT.md:187-191 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: **Quantitative form of [TK].** The bridges (B-L), (B-V1), (B-V2) and the diagnostics (C2) 
+      last:  same constants. Lemma ASM (C1) needs only the interface properties [LEAK(Q)] and [VIS(κ; Q
+OK f3aa1bc3a226 [lemmas/R1_VIS.md] STATEMENT.md:63-68 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: *Relation to version 1.4.* (V-c) with c_V > 1 + 2A implies (V-cp) with c_V − 2A in place o
+      last:  When p is smaller than the envelope, or log p/log n oscillates, both forms of (D3) ask les
+OK c77d2ef416e4 [lemmas/R1_VIS.md] BASE STATEMENT.md:65-68 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: **Setting F (fixed design)** = GROW `STATEMENT.md:51-64` (D0, model G), with s₀ ≥ 0 and an
+      last:  θ* := D_xβ; S₀ := supp β, s₀ := |S₀| fixed; p = p_n ≤ n^A, A > 0 fixed. Probability is ove
+OK 28ac3b13baa2 [lemmas/R1_VIS.md] BASE STATEMENT.md:47-49 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: base d6da494):
+      last:  W_K := Σ_{k=0}^{K} C(p, k)·w(k); ϖ(k) = w(k)/W_K),
+OK e06a77fb7f77 [lemmas/R1_VIS.md] BASE STATEMENT.md:80-81 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: 𝔹* := {b : U*_b ≠ ∅} (the truth blocks; at most s₀). For a deterministic Q with S₀ ⊆ Q, |Q
+      last:  𝓛(Q) := {T : S₀ ⊆ T ⊆ Q} ⊆ Ω, and c_Q := |Q| + 15s₀. o₀ := (1 − π₀(S₀))/π₀(S₀). Logarithms
+OK 99549fd7957f [lemmas/R1_VIS.md] BASE STATEMENT.md:125-126 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: **Exponents.** κ_L(η, a) := ½ − η/2 − √(2aη), which is > 0 iff η < η_a := (√(2a + 1) − √(2
+      last:  κ_V is (c_V − 1 − 2A)/2 under (V-c) and c_m/2 under (V-m) (§3.1).
+OK ea98c51d42d1 [lemmas/R1_VIS.md] STATEMENT.md:65-68 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: π_n(d, a; Q) ≤ (1 + 2A)(d − a)₊ log n, because p/c_Q ≥ 1/(16s₀)). When log p/log n → A the
+      last:  When p is smaller than the envelope, or log p/log n oscillates, both forms of (D3) ask les
+OK b56d2fae87f5 [lemmas/R1_VIS.md] STATEMENT.md:271-273 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: | START-F (T1⁺⁺) | W3-START2:START-F | (V-c) ⇒ (V-cp) with c_V − 2A, same κ_V; (V-m) ⇒ (V-
+      last:  | VIS-m (B-V2⁺⁺) | W3-START:VIS-m | same |
+OK ea642b314b14 [lemmas/R1_VIS.md] BASE STATEMENT.md:235-236 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: | (B-V1) | (V-c), [TK], [LEAK(Q)], (AL) ⇒ P(e_n > n^{−κ}) → 0 and, by (AGG-d), [VIS(κ; Q)]
+      last:  | (B-V2) | (V-m), [TK] ⇒ [VIS(κ; Q)], every κ < c_m/2 | new |
+OK 7661a00fa985 [lemmas/R1_VIS.md] PARENT STATEMENT.md:93-110 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: **(T1⁺) Theorem START-F (fixed design).** Setting F, the start as coded. Assume (E), (GF-1
+      last:  ((B1), (B-TK), (B-L), (B-V1)/(B-V2), (C0)), with Lemma LEAK-0 in place of the T₁ clause of
+OK be319aee1990 [lemmas/R1_VIS.md] BASE lemmas/L4_VIS.md:7-20 -> Theory_work/Wave3/W3-START/lemmas/L4_VIS.md
+      first: ## L4.0 Setting and the event 𝓧
+      last:  block of size ≤ 16) are among them, for every partition with blocks of size ≤ 16.
+OK 7247f2fae68b [lemmas/R1_VIS.md] BASE lemmas/L4_VIS.md:11-15 -> Theory_work/Wave3/W3-START/lemmas/L4_VIS.md
+      first: ζ_n := 4 log(2^8·3^{16}·s₀·log n)   (= 4 log log n + O(1)),
+      last:  In particular, on 𝓧: Z²_{U,j} ≤ ζ_n for every truth block b, U ⊆ C_b, j ∈ C_b ∖ U.
+OK 46ad510757b9 [lemmas/R1_VIS.md] BASE lemmas/L4_VIS.md:16-17 -> Theory_work/Wave3/W3-START/lemmas/L4_VIS.md
+      first: For vectors a, b and ε₁ ∈ (0, 1): **(Q±)** (1 − ε₁)‖a‖² − (1/ε₁ − 1)‖b‖² ≤ ‖a + b‖² ≤ (1 +
+      last:  (from 2|⟨a, b⟩| ≤ ε₁‖a‖² + ‖b‖²/ε₁).
+OK f70d220bda7c [lemmas/R1_VIS.md] BASE lemmas/L4_VIS.md:19-20 -> Theory_work/Wave3/W3-START/lemmas/L4_VIS.md
+      first: **(B1), visibility.** (GF-16), (V-c) and (V-m) quantify over all small sets of [p]; the se
+      last:  block of size ≤ 16) are among them, for every partition with blocks of size ≤ 16.
+OK 35086463cacf [lemmas/R1_VIS.md] BASE STATEMENT.md:187-191 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: **Quantitative form of [TK].** The bridges (B-L), (B-V1), (B-V2) and the diagnostics (C2) 
+      last:  same constants. Lemma ASM (C1) needs only the interface properties [LEAK(Q)] and [VIS(κ; Q
+OK 4d7760664d76 [lemmas/R1_VIS.md] BASE lemmas/L2_TK.md:32 -> Theory_work/Wave3/W3-START/lemmas/L2_TK.md
+      first: **Lemma L2.1.** P((𝓔^blk)ᶜ) ≤ 2e^{−n^{1/3}} + 2/n. With p ≤ n^A: t_n ≤ 4(A + 1) log n + 67
+      last:  **Lemma L2.1.** P((𝓔^blk)ᶜ) ≤ 2e^{−n^{1/3}} + 2/n. With p ≤ n^A: t_n ≤ 4(A + 1) log n + 67
+OK 1a7f1acb9968 [lemmas/R1_VIS.md] BASE lemmas/L2_TK.md:44-90 -> Theory_work/Wave3/W3-START/lemmas/L2_TK.md
+      first: Let n₁ = n₁(A) be such that ω̄_n ≤ ½ for n ≥ n₁. Everything below holds **on 𝓔^blk, for n 
+      last:  ν/RSS_U ≤ (1 + ϑ_n)/(2τ²_U). ∎
+OK 0cb10bfbea82 [lemmas/R1_VIS.md] BASE lemmas/L2_TK.md:78-81 -> Theory_work/Wave3/W3-START/lemmas/L2_TK.md
+      first: **(TK-e) RSS differences** (identities, valid everywhere). For U ⊆ W in 𝔉, Π := P_W − P_U 
+      last:  *Proof.* RSS_U − RSS_W = ‖(P_W − P_U)Y‖² and ΠY = Π(μ + Cε) = Π(μ + ε); ‖Πμ‖² = ‖(I − P_U)
+OK 010cdce1761d [lemmas/R1_VIS.md] BASE lemmas/L2_TK.md:94-98 -> Theory_work/Wave3/W3-START/lemmas/L2_TK.md
+      first: Under Setting F (s₀ ≥ 0), (E) and (GF-16): P(𝓔^blk) ≥ 1 − 2e^{−n^{1/3}} − 2/n → 1, and on 
+      last:  the same constants (A, M, σ², g_*): this is what (T1)(d) uses.
+OK 19b57e5503a0 [lemmas/R1_VIS.md] BASE lemmas/L4_VIS.md:22-55 -> Theory_work/Wave3/W3-START/lemmas/L4_VIS.md
+      first: ## L4.1 Bridge (B-V2): margin visibility
+      last:  *Step 7.* For fixed T′ the sum defining Ξ_b(Q) has at most 2^{16} terms (U ⊆ C_b), each ≤ 
+OK fc6538356173 [lemmas/R1_VIS.md] STATEMENT.md:57-58 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **(Λ_U − Λ_W)/τ²_U ≥ π_n(d, a; Q) + c_m·log n + (1 + ε₀)·(Λ_T − Λ_W)/τ²_W,**
+      last:  **π_n(d, a; Q) := (d − a)₊·(log n + 2 log p) − (a − d)₊·(log n + 2 log(p/c_Q)),** c_Q = |Q
+OK dff06d8cef74 [lemmas/R1_VIS.md] BASE STATEMENT.md:93 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: ω^Q(U) := (2p)^{(d−a)₊}·(c_Q/p)^{(a−d)₊}. Then
+      last:  ω^Q(U) := (2p)^{(d−a)₊}·(c_Q/p)^{(a−d)₊}. Then
+OK 00c1989824a2 [lemmas/R1_VIS.md] BASE lemmas/L4_VIS.md:57-73 -> Theory_work/Wave3/W3-START/lemmas/L4_VIS.md
+      first: ## L4.2 Bridge (B-V1): constant-level visibility
+      last:  c_QU_Q ≤ 1) gives Ξ_b(Q) ≤ 2^{16}max(e_n, e_n^{16}) = 2^{16}e_n ≤ n^{−κ}. ∎
+OK 76182ded38c1 [lemmas/R1_VIS.md] BASE lemmas/L1_AGG_FLOOR.md:103-109 -> Theory_work/Wave3/W3-START/lemmas/L1_AGG_FLOOR.md
+      first: **(AGG-d).** Let c_QU_Q ≤ 1, b ∈ 𝔹* (so s₀ ≥ 1, c_Q ≥ 1, U_Q ≤ 1). Fix T′ with U*_b ⊆ T′ ⊆
+      last:  There are at most 2^{16} sets U ⊆ C_b, and e_n^d ≤ max(e_n, e_n^{16}); hence **Ξ_b(Q) ≤ 2^
+OK 6d2cabe5360e [lemmas/R1_VIS.md] BASE lemmas/L4_VIS.md:75-78 -> Theory_work/Wave3/W3-START/lemmas/L4_VIS.md
+      first: **Corollary L4.3 ([VIS(κ; Q)] under (V-c)).** If moreover (AL) holds for Q with level vect
+      last:  (The explicit form is in `lemmas/L5_ASM_STARTF.md`.)
+OK b034bed26f65 [lemmas/R1_VIS.md] BASE lemmas/L3_LEAK.md:34 -> Theory_work/Wave3/W3-START/lemmas/L3_LEAK.md
+      first: (i) 𝔏^b_n(Q; h) ≤ 𝔏_n(Q; h): for l ∉ Q the sets {T : U*_{b(l)} ⊆ T ⊆ C_{b(l)} ∖ {l}} satis
+      last:  (i) 𝔏^b_n(Q; h) ≤ 𝔏_n(Q; h): for l ∉ Q the sets {T : U*_{b(l)} ⊆ T ⊆ C_{b(l)} ∖ {l}} satis
+OK 4d7990a1f7db [lemmas/R1_VIS.md] BASE STATEMENT.md:183 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: | [LEAK(Q)] | for a level vector h with b_n(h) → 0: if (|Q| + 1)n^{−1/2}𝔏^b_n(Q; h) → 0 th
+      last:  | [LEAK(Q)] | for a level vector h with b_n(h) → 0: if (|Q| + 1)n^{−1/2}𝔏^b_n(Q; h) → 0 th
+OK cc69039eb95b [lemmas/R1_VIS.md] BASE lemmas/L5_ASM_STARTF.md:11 -> Theory_work/Wave3/W3-START/lemmas/L5_ASM_STARTF.md
+      first: **(e1)** c_Q + 1 = |Q| + 15s₀ + 1 ≤ 16s₀′(|Q| + 1), and c_Q ≤ 16s₀′(|Q| + 1).
+      last:  **(e1)** c_Q + 1 = |Q| + 15s₀ + 1 ≤ 16s₀′(|Q| + 1), and c_Q ≤ 16s₀′(|Q| + 1).
+OK 638d4261142d [lemmas/R1_VIS.md] STATEMENT.md:101-106 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[VIS-c] (B-V1⁺⁺).** Setting F, a deterministic Q ⊇ S₀ with |Q| ≤ K. (V-cp), [TK] (in the
+      last:  𝓔^blk ∩ 𝓧 ∩ {c_QU_Q ≤ 1}: Ξ(Q) ≤ n^{−κ}.
+OK 952fbd5e703b [lemmas/R1_VIS.md] STATEMENT.md:108-111 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[VIS-m] (B-V2⁺⁺).** Setting F, a deterministic Q ⊇ S₀ with |Q| ≤ K. (V-mp) with this Q, 
+      last:  for n ≥ n₃, on 𝓔^blk ∩ 𝓧: Ξ(Q) ≤ n^{−κ}.
+OK e3647a38dbc7 [lemmas/R1_VIS.md] BASE lemmas/L4_VIS.md:84-85 -> Theory_work/Wave3/W3-START/lemmas/L4_VIS.md
+      first: 2. Both propositions hold on 𝓔^blk ∩ 𝓧, an event that does not depend on (κ, c_V, c_m, ε₀)
+      last:  only on the fixed constants. This gives the uniformity used in (T1)(d).
+OK a9bc54cdf597 [lemmas/R1_VIS.md] BASE lemmas/L5_ASM_STARTF.md:37-67 -> Theory_work/Wave3/W3-START/lemmas/L5_ASM_STARTF.md
+      first: ## L5.2 Theorem START-F, explicit uniform form: (T1)(d)
+      last:  by (B1): 𝔏^{b,0}_n(h) ≤ 𝔏⁰_n(h), 𝔏^b_n(S₀; h) ≤ 𝔏_n(S₀; h). ∎
+OK 878795216161 [lemmas/R1_VIS.md] PARENT lemmas/P1_LEADING.md:80-104 -> Theory_work/Wave3/W3-START2/lemmas/P1_LEADING.md
+      first: ## P1.4 Theorem START-F, uniform form: (T1⁺)(d)
+      last:  o₀ ≤ C^♯[n^{−1/2}𝔏^♯_n(h) + n^{−1}𝔏_n(S₀; h)²] + n^{−κ} on 𝒢^♯. ∎
+OK b9325e0c2307 [lemmas/R1_VIS.md] BASE lemmas/L5_ASM_STARTF.md:39 -> Theory_work/Wave3/W3-START/lemmas/L5_ASM_STARTF.md
+      first: **Proposition L5.2.** Fix (A, M, σ², g_*, s₀) and either c_V > 1 + 2A (κ_V := (c_V − 1 − 2
+      last:  **Proposition L5.2.** Fix (A, M, σ², g_*, s₀) and either c_V > 1 + 2A (κ_V := (c_V − 1 − 2
+OK fde6d50310b2 [lemmas/R1_VIS.md] BASE lemmas/L5_ASM_STARTF.md:45 -> Theory_work/Wave3/W3-START/lemmas/L5_ASM_STARTF.md
+      first: ‖μ‖² ≤ Mn, (GF-16), the visibility condition ((V-c) with c_V, or (V-m) with (c_m, ε₀)) and
+      last:  ‖μ‖² ≤ Mn, (GF-16), the visibility condition ((V-c) with c_V, or (V-m) with (c_m, ε₀)) and
+OK 4bc321faf3a9 [lemmas/R1_VIS.md] BASE lemmas/L5_ASM_STARTF.md:49 -> Theory_work/Wave3/W3-START/lemmas/L5_ASM_STARTF.md
+      first: *Proof.* Let n₀ ≥ max(n₂, n₃ or n₄ (for the exponent κ′), 2s₀ + 2) be such that for n ≥ n₀
+      last:  *Proof.* Let n₀ ≥ max(n₂, n₃ or n₄ (for the exponent κ′), 2s₀ + 2) be such that for n ≥ n₀
+OK 4797a2714bc7 [lemmas/R1_VIS.md] BASE lemmas/L5_ASM_STARTF.md:51 -> Theory_work/Wave3/W3-START/lemmas/L5_ASM_STARTF.md
+      first: (X, θ*, Q, h). By (B1), (GF-16) holds on the block family, the visibility condition holds 
+      last:  (X, θ*, Q, h). By (B1), (GF-16) holds on the block family, the visibility condition holds 
+OK 5647759f7d5e [lemmas/R1_VIS.md] BASE lemmas/L5_ASM_STARTF.md:61 -> Theory_work/Wave3/W3-START/lemmas/L5_ASM_STARTF.md
+      first: By Proposition L4.1 (under (V-m)) or L4.2 (under (V-c); c_QU_Q ≤ 1), with exponent κ′: Ξ(Q
+      last:  By Proposition L4.1 (under (V-m)) or L4.2 (under (V-c); c_QU_Q ≤ 1), with exponent κ′: Ξ(Q
+OK 3cf6099caa0d [lemmas/R1_VIS.md] BASE lemmas/L5_ASM_STARTF.md:72-89 -> Theory_work/Wave3/W3-START/lemmas/L5_ASM_STARTF.md
+      first: ## L5.3 Theorem START-F (T1)(a)–(c)
+      last:  **(d)** is Proposition L5.2 (with the constant max(C, C′) in both displays). ∎
+OK bdf461f28810 [lemmas/R1_VIS.md] BASE lemmas/L6_COROLLARIES.md:9-26 -> Theory_work/Wave3/W3-START/lemmas/L6_COROLLARIES.md
+      first: ## L6.0 How n₀ in Proposition L5.2 depends on ε; high-probability form
+      last:  So C_n, C′_n = O((log n)²) and 1/c_{0,n} = O(log n): every polynomial or exp(C√log n) slac
+OK ca73484d4696 [lemmas/R1_VIS.md] PARENT lemmas/P1_LEADING.md:80-126 -> Theory_work/Wave3/W3-START2/lemmas/P1_LEADING.md
+      first: ## P1.4 Theorem START-F, uniform form: (T1⁺)(d)
+      last:  **(d)** is Proposition P1.4, with the constant max(C, C^♯) in both displays. ∎
+OK bc0d85111325 [lemmas/R1_VIS.md] BASE lemmas/L5_ASM_STARTF.md:49-50 -> Theory_work/Wave3/W3-START/lemmas/L5_ASM_STARTF.md
+      first: *Proof.* Let n₀ ≥ max(n₂, n₃ or n₄ (for the exponent κ′), 2s₀ + 2) be such that for n ≥ n₀
+      last:  2e^{−n^{1/3}} + 2/n + 1/log n ≤ ε/2, 2s₀n^{−κ′}(4/3)^{16s₀+1} ≤ n^{−κ}, and s₀n^{−κ′} ≤ ½.
+OK 492acde7f804 [lemmas/R1_VIS.md] BASE lemmas/L5_ASM_STARTF.md:60 -> Theory_work/Wave3/W3-START/lemmas/L5_ASM_STARTF.md
+      first: *On 𝒢.* By (e1): (c_Q + 1)U_Q ≤ 16s₀′(|Q| + 1)λn^{−1/2}𝔏^b_n(Q; h) = 16s₀′λa^b ≤ 16s₀′λc₀ 
+      last:  *On 𝒢.* By (e1): (c_Q + 1)U_Q ≤ 16s₀′(|Q| + 1)λn^{−1/2}𝔏^b_n(Q; h) = 16s₀′λa^b ≤ 16s₀′λc₀ 
+OK f94429ba9977 [lemmas/R1_VIS.md] BASE lemmas/L6_COROLLARIES.md:11-17 -> Theory_work/Wave3/W3-START/lemmas/L6_COROLLARIES.md
+      first: **Lemma L6.0.** In Proposition L5.2 the threshold n₀(ε, κ) can be taken as max(n*(κ), n_ε)
+      last:  paragraph of the proof); ε enters only through the last one. ∎
+OK 3ab59c18a314 [lemmas/R1_VIS.md] BASE lemmas/L6_COROLLARIES.md:19-26 -> Theory_work/Wave3/W3-START/lemmas/L6_COROLLARIES.md
+      first: **Corollary L6.0′ (high-probability form).** Put ε_n := 4/log n, λ_n := 4c_L/ε_n = c_L log
+      last:  So C_n, C′_n = O((log n)²) and 1/c_{0,n} = O(log n): every polynomial or exp(C√log n) slac
+OK 6c02f3f51399 [lemmas/R1_VIS.md] PARENT lemmas/P1_LEADING.md:106-111 -> Theory_work/Wave3/W3-START2/lemmas/P1_LEADING.md
+      first: **Dependence of n₀ on ε, and the high-probability form.** The requirements on n₀ are those
+      last:  unchanged.
+OK abfeb8f0348a [lemmas/R1_VIS.md] STATEMENT.md:113-125 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[START-F] (T1⁺⁺) Theorem START-F (fixed design).** Setting F, the start as coded. Assume
+      last:  P(o₀ > C·[n^{−1/2}·𝔏^♯_n(h) + n^{−1}·𝔏_n(S₀; h)²] + n^{−κ}) ≤ ε + b_n(h).
+OK 010cdce1761d [lemmas/R1_VIS.md] BASE lemmas/L2_TK.md:94-98 -> Theory_work/Wave3/W3-START/lemmas/L2_TK.md
+      first: Under Setting F (s₀ ≥ 0), (E) and (GF-16): P(𝓔^blk) ≥ 1 − 2e^{−n^{1/3}} − 2/n → 1, and on 
+      last:  the same constants (A, M, σ², g_*): this is what (T1)(d) uses.
+OK c877c6dabe42 [lemmas/R1_VIS.md] PARENT lemmas/P1_LEADING.md:113-126 -> Theory_work/Wave3/W3-START2/lemmas/P1_LEADING.md
+      first: ## P1.5 Theorem START-F (T1⁺)(a)–(d)
+      last:  **(d)** is Proposition P1.4, with the constant max(C, C^♯) in both displays. ∎
+OK 9d68397c1242 [lemmas/R1_VIS.md] BASE lemmas/L5_ASM_STARTF.md:76-79 -> Theory_work/Wave3/W3-START/lemmas/L5_ASM_STARTF.md
+      first: **(a)** Let X_n := 1 − π₀(𝓛(Q)) and ε ∈ (0, 1). Apply L5.2(i) with (ε, κ″): for all n larg
+      last:  **1 − π₀(𝓛(Q)) = O_P(ϱ_n(Q; h)) + o_P(n^{−κ}).**
+OK 0c808a404ba1 [lemmas/R1_VIS.md] BASE lemmas/L5_ASM_STARTF.md:84-88 -> Theory_work/Wave3/W3-START/lemmas/L5_ASM_STARTF.md
+      first: **(c)** Q = S₀, κ_V > ½, n^{−1/2}𝔏_n(S₀; h)² → 0. Fix κ′ ∈ (½, κ_V), ε ∈ (0, 1), and the e
+      last:  limsup_n P(|o₀/T₁ − 1| > η) ≤ ε; ε is arbitrary. **o₀/T₁ → 1 in probability.**
+OK b4ea6fffb177 [lemmas/R2_NEC.md] STATEMENT.md:145-152 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[NEC-b] (C2⁺⁺) Lemma NEC-b (component diagnostics; Setting F, (E), [TK] in the quantitat
+      last:  (1 − c_n)·√log n → ∞: π₀(S₀) → 0 in probability.
+OK c9ebf582c0bc [lemmas/R2_NEC.md] STATEMENT.md:154-165 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[NEC] (T4⁺⁺) Proposition NEC (limits; Setting F, (E), (GF-16)).**
+      last:  ((N2⁺⁺) and (N3⁺⁺) follow from (C2⁺⁺) as (N2⁺), (N3) follow from (C2) (PARENT `:172-173`; 
+OK 4a0863302a58 [lemmas/R2_NEC.md] STATEMENT.md:134-143 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[F4] (Corollary F4⁺⁺; isolated leaking columns, non-default levels).** Setting F, (E), (
+      last:  above τ²(c·log n + 2 log p) with c > 1 destroys the start mass: the two thresholds meet at
+OK 439a392e95a4 [lemmas/R2_NEC.md] STATEMENT.md:277-279 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: | F4 (F4⁺⁺) | W3-START:F4 | c′ < 1 + 2A̲ in the old premise gives the new one with c = c′ 
+      last:  | NEC (T4⁺⁺) | W3-START2:NEC | same, clause by clause; (N1), (N4) identical |
+OK 4af34d3827d1 [lemmas/R2_NEC.md] BASE lemmas/L2_TK.md:32-98 -> Theory_work/Wave3/W3-START/lemmas/L2_TK.md
+      first: **Lemma L2.1.** P((𝓔^blk)ᶜ) ≤ 2e^{−n^{1/3}} + 2/n. With p ≤ n^A: t_n ≤ 4(A + 1) log n + 67
+      last:  the same constants (A, M, σ², g_*): this is what (T1)(d) uses.
+OK 12bd3e1a9a15 [lemmas/R2_NEC.md] BASE lemmas/L1_AGG_FLOOR.md:15-16 -> Theory_work/Wave3/W3-START/lemmas/L1_AGG_FLOOR.md
+      first: **(P1)** w(k + 1)/w(k) = (k + 1)/(2p − 1 − k) for 0 ≤ k ≤ 2p − 2; it is ≤ (k + 1)/p when k
+      last:  **(P2)** w(k − 1)/w(k) = (2p − k)/k for 1 ≤ k ≤ 2p − 1; it is ≤ 2p, and it is ≥ p/k when k
+OK 7ad09f96a3cf [lemmas/R2_NEC.md] BASE lemmas/L7_NEC.md:8-65 -> Theory_work/Wave3/W3-START/lemmas/L7_NEC.md
+      first: Setting: Setting F, (E), (GF-16) (the quantitative form of [TK]), the actual partition (bl
+      last:  not consumed; strong-factor designs at p > K: nothing is claimed). Nothing is proved here.
+OK 64af38f65cc4 [lemmas/R2_NEC.md] BASE lemmas/L3_LEAK.md:18-19 -> Theory_work/Wave3/W3-START/lemmas/L3_LEAK.md
+      first: **(J2)** J_h(d, t) ≤ √(2/π)·h·exp(d²/(2t²) + |d|σh/t²).
+      last:  *Proof.* On |z| ≤ h: exp(dσz/t²) ≤ exp(|d|σh/t²) and exp(az²/2)φ(z) ≤ exp(z²/2)φ(z) = (2π)
+OK febde06d8cbf [lemmas/R2_NEC.md] BASE lemmas/L3_LEAK.md:95-105 -> Theory_work/Wave3/W3-START/lemmas/L3_LEAK.md
+      first: ## L3.5 Corollary F4 (arithmetic of the non-default levels)
+      last:  using p ≥ n^{A̲−o(1)}. So (AL) holds with this h when ϱ^{−I}_n(Q) → 0 and (|Q| + 1)n^{−κ₁}
+OK f5f631611e39 [lemmas/R2_NEC.md] PARENT lemmas/P3_NEC.md:13-36 -> Theory_work/Wave3/W3-START2/lemmas/P3_NEC.md
+      first: ## P3.1 A counting fact
+      last:  uses 𝓔^blk and one Gaussian variable at the deterministic witness.) ∎
+OK 89314c0a6403 [lemmas/R2_NEC.md] PARENT lemmas/P3_NEC.md:44-64 -> Theory_work/Wave3/W3-START2/lemmas/P3_NEC.md
+      first: **Example P3.3** (an example, not a hypothesis of any claim). Fix s := s₀ ∈ {1, …, 15}, r 
+      last:  with (E) and (GF-16); (N2⁺) gives P(π₀(S₀) ≤ n^{−κ′}) → 1 for every κ′ < (c − 1)/2. ∎
+EXISTS           [lemmas/R2_NEC.md] lemmas/R1_VIS.md -> Theory_work/Wave3/W3-START2-R/lemmas/R1_VIS.md
+OK 8ce2278d389f [lemmas/R2_NEC.md] STATEMENT.md:260-264 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **Consumed** (statement and proof lines; statuses as in the registry at CP1, to be quoted 
+      last:  `:211` (W3-SAMP:C, W3-SAMP:D: premises P-START, P-OVL).
+EXISTS           [lemmas/R2_NEC.md] lemmas/R1_VIS.md -> Theory_work/Wave3/W3-START2-R/lemmas/R1_VIS.md
+OK 35086463cacf [lemmas/R2_NEC.md] BASE STATEMENT.md:187-191 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: **Quantitative form of [TK].** The bridges (B-L), (B-V1), (B-V2) and the diagnostics (C2) 
+      last:  same constants. Lemma ASM (C1) needs only the interface properties [LEAK(Q)] and [VIS(κ; Q
+OK a0ec15ef9fad [lemmas/R2_NEC.md] BASE lemmas/L7_NEC.md:9-10 -> Theory_work/Wave3/W3-START/lemmas/L7_NEC.md
+      first: Ā := limsup log p/log n, A̲ := liminf log p/log n. π₀(S₀) ≤ γ₀(S₀)/γ₀(S′) for every S′ ∈ Ω
+      last:  contains both terms).
+OK 0cb10bfbea82 [lemmas/R2_NEC.md] BASE lemmas/L2_TK.md:78-81 -> Theory_work/Wave3/W3-START/lemmas/L2_TK.md
+      first: **(TK-e) RSS differences** (identities, valid everywhere). For U ⊆ W in 𝔉, Π := P_W − P_U 
+      last:  *Proof.* RSS_U − RSS_W = ‖(P_W − P_U)Y‖² and ΠY = Π(μ + Cε) = Π(μ + ε); ‖Πμ‖² = ‖(I − P_U)
+OK 51b9c170d5ca [lemmas/R2_NEC.md] BASE lemmas/L7_NEC.md:12-26 -> Theory_work/Wave3/W3-START/lemmas/L7_NEC.md
+      first: ## L7.1 (C2)(i): one leaking null on the actual partition
+      last:  ≥ κ′ log n for large n. Thus π₀(S₀) ≤ γ₀(S₀)/γ₀(S′) ≤ n^{−κ′} on 𝒢. ∎
+OK de1a1c3548c8 [lemmas/R2_NEC.md] BASE lemmas/L7_NEC.md:28-44 -> Theory_work/Wave3/W3-START/lemmas/L7_NEC.md
+      first: ## L7.2 (C2)(ii): one weakly visible truth on the actual partition
+      last:  for large n ((1 + ε₁)c/2 ≤ c/2 + ϵ/2). Thus π₀(S₀) ≤ n^{−κ′} on 𝒢. ∎
+OK 81c7928ed3fc [lemmas/R2_NEC.md] BASE lemmas/L7_NEC.md:46-48 -> Theory_work/Wave3/W3-START/lemmas/L7_NEC.md
+      first: *Remarks.* (1) Each claim uses one Gaussian variable, at a deterministic witness; no union
+      last:  O(log n). (3) Both hold for every partition with blocks ≤ 16 that is a function of X.
+OK c9ebf582c0bc [lemmas/R2_NEC.md] STATEMENT.md:154-165 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[NEC] (T4⁺⁺) Proposition NEC (limits; Setting F, (E), (GF-16)).**
+      last:  ((N2⁺⁺) and (N3⁺⁺) follow from (C2⁺⁺) as (N2⁺), (N3) follow from (C2) (PARENT `:172-173`; 
+OK 010cdce1761d [lemmas/R2_NEC.md] BASE lemmas/L2_TK.md:94-98 -> Theory_work/Wave3/W3-START/lemmas/L2_TK.md
+      first: Under Setting F (s₀ ≥ 0), (E) and (GF-16): P(𝓔^blk) ≥ 1 − 2e^{−n^{1/3}} − 2/n → 1, and on 
+      last:  the same constants (A, M, σ², g_*): this is what (T1)(d) uses.
+OK 0ba9a0ee3106 [lemmas/R2_NEC.md] BASE lemmas/L7_NEC.md:53-55 -> Theory_work/Wave3/W3-START/lemmas/L7_NEC.md
+      first: **(N1).** (T0) (`lemmas/L1_AGG_FLOOR.md` L1.5): o₀ ≥ ½(n + 1)^{−1/2} whenever s₀ < K, for 
+      last:  (`lemmas/L6_COROLLARIES.md` L6.2(v)).
+OK d691277fc083 [lemmas/R2_NEC.md] PARENT lemmas/P3_NEC.md:73-75 -> Theory_work/Wave3/W3-START2/lemmas/P3_NEC.md
+      first: **(N1)** is BASE `lemmas/L7_NEC.md:53-55` with (T1⁺)–(T3⁺) and F2⁺ in place of (T1)–(T3) a
+      last:  (`lemmas/P1_LEADING.md` P1.6(v)). **(N3)** and **(N4)**: BASE `lemmas/L7_NEC.md:60-65`, un
+OK 71f7ebec94fe [lemmas/R2_NEC.md] STATEMENT.md:129-132 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[F1], [F2], [F3] (Corollaries F1⁺⁺, F2⁺⁺, F3⁺⁺).** F1 (BASE `:268-271`), F2⁺ (PARENT `:1
+      last:  still the exponent of p ≤ n^A.)
+OK 21a65a2743f7 [lemmas/R2_NEC.md] PARENT lemmas/P1_LEADING.md:140-141 -> Theory_work/Wave3/W3-START2/lemmas/P1_LEADING.md
+      first: (v) If η′ = 0 and κ_V > ½: take κ ∈ (½, κ_V): o₀ = O_P(n^{−1/2}); and o₀ ≥ ½(n + 1)^{−1/2}
+      last:  s₀ < K for large n (p > s₀ by (E)). So o₀ is of exact order n^{−1/2}. ∎
+EXISTS           [lemmas/R2_NEC.md] lemmas/R1_VIS.md -> Theory_work/Wave3/W3-START2-R/lemmas/R1_VIS.md
+OK 4cb31c889e46 [lemmas/R2_NEC.md] PARENT lemmas/P3_NEC.md:26-31 -> Theory_work/Wave3/W3-START2/lemmas/P3_NEC.md
+      first: *Proof.* Let n be large enough for the hypothesis. Choose a witness l_n ∈ I_n as follows.
+      last:  
+OK 3c8ef3a8f52e [lemmas/R2_NEC.md] PARENT lemmas/P3_NEC.md:15-18 -> Theory_work/Wave3/W3-START2/lemmas/P3_NEC.md
+      first: **Lemma P3.1.** Let 1 ≤ s₀ ≤ 15 and let I ⊆ [p] ∖ S₀ have 17 − s₀ elements. Then some l ∈ 
+      last:  s₀ + (17 − s₀) = 17 elements, but |C| ≤ 16: a contradiction. ∎
+OK 0f9d0745abc6 [lemmas/R2_NEC.md] PARENT STATEMENT.md:160-166 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: **Scope of (N2⁺).** For s₀ ≥ 16 this is (N2) of version 1.3.4 (one null; every V ⊆ S₀ with
+      last:  one-column threshold is (C2)(i).
+OK 89314c0a6403 [lemmas/R2_NEC.md] PARENT lemmas/P3_NEC.md:44-64 -> Theory_work/Wave3/W3-START2/lemmas/P3_NEC.md
+      first: **Example P3.3** (an example, not a hypothesis of any claim). Fix s := s₀ ∈ {1, …, 15}, r 
+      last:  with (E) and (GF-16); (N2⁺) gives P(π₀(S₀) ≤ n^{−κ′}) → 1 for every κ′ < (c − 1)/2. ∎
+OK 737a55240b70 [lemmas/R2_NEC.md] PARENT STATEMENT.md:169-170 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: * (N4) **outside the hypotheses.** As BASE `STATEMENT.md:329-331` (masked truths: PXN (S) 
+      last:  family; strong-factor designs at p > K: nothing is claimed).
+OK 6706b96eb586 [lemmas/R2_NEC.md] BASE STATEMENT.md:329-331 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: * (N4) **outside the hypotheses.** Masked truths: PXN (S), "π₀(S₀) = p^{−c}n^{−c/2}e^{O_P(
+      last:  `BRIEF.md:20-21`) are outside the proved hypotheses and nothing is claimed for them.
+OK 30ab9a3fb0da [lemmas/R2_NEC.md] BASE lemmas/L6_COROLLARIES.md:42-44 -> Theory_work/Wave3/W3-START/lemmas/L6_COROLLARIES.md
+      first: **(iv) η = 0.** Then δ_{U,l} = 0 and J_n(0, τ_U) = E[exp(σ²Z²/(2τ²_U)); |Z| ≤ z_n] ≤ E[e^{
+      last:  (κ₁ < ½). By (T1)(a): 1 − π₀(𝓛(Q)) = O_P((|Q| + 1)√(log n/n)) + o_P(n^{−κ}) for every κ < 
+OK 06e5e021347a [lemmas/R2_NEC.md] BASE lemmas/L2_TK.md:36-37 -> Theory_work/Wave3/W3-START/lemmas/L2_TK.md
+      first: 𝒟₁: ‖Cε‖²/σ² ~ χ²_{n−1}; Laurent–Massart (P(χ²_k ≥ k + 2√(kx) + 2x) ≤ e^{−x}, P(χ²_k ≤ k −
+      last:  x = n^{1/3}. 𝒟₂: ‖P_Uε‖²/σ² ~ χ²_d with d = |U| ≤ 16 and E exp(χ²_d/4) = 2^{d/2} ≤ 2^8, so
+OK febde06d8cbf [lemmas/R2_NEC.md] BASE lemmas/L3_LEAK.md:95-105 -> Theory_work/Wave3/W3-START/lemmas/L3_LEAK.md
+      first: ## L3.5 Corollary F4 (arithmetic of the non-default levels)
+      last:  using p ≥ n^{A̲−o(1)}. So (AL) holds with this h when ϱ^{−I}_n(Q) → 0 and (|Q| + 1)n^{−κ₁}
+EXISTS           [lemmas/R2_NEC.md] lemmas/R1_VIS.md -> Theory_work/Wave3/W3-START2-R/lemmas/R1_VIS.md
+OK 5f7fd98873a0 [lemmas/R2_NEC.md] STATEMENT.md:142-143 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: and (|Q| + 1)n^{−κ₁} → 0 for some κ₁ < (1 − c)/2. (By (C2⁺⁺)(i) a column whose gain given 
+      last:  above τ²(c·log n + 2 log p) with c > 1 destroys the start mass: the two thresholds meet at
+OK 439a392e95a4 [lemmas/R2_NEC.md] STATEMENT.md:277-279 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: | F4 (F4⁺⁺) | W3-START:F4 | c′ < 1 + 2A̲ in the old premise gives the new one with c = c′ 
+      last:  | NEC (T4⁺⁺) | W3-START2:NEC | same, clause by clause; (N1), (N4) identical |
+OK 4475130a719b [lemmas/R2_NEC.md] BASE STATEMENT.md:223-224 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: (i) if for all large n some null l = l_n has δ²_{U,l} ≥ c·τ²_U·log n at U = U*_{b(l)}, c >
+      last:  P(π₀(S₀) ≤ n^{−κ′}) → 1 for every κ′ < (c − 1 − 2Ā)/2;
+OK 47d324d9cc6a [lemmas/R2_NEC.md] BASE STATEMENT.md:225-226 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: (ii) if for all large n some truth j = j_n has δ²_{U,j} ≤ c·τ²_U·log n at U = U*_{b(j)} ∖ 
+      last:  P(π₀(S₀) ≤ n^{−κ′}) → 1 for every κ′ < (1 + 2A̲ − c)/2.
+OK 35086463cacf [lemmas/R2_NEC.md] BASE STATEMENT.md:187-191 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: **Quantitative form of [TK].** The bridges (B-L), (B-V1), (B-V2) and the diagnostics (C2) 
+      last:  same constants. Lemma ASM (C1) needs only the interface properties [LEAK(Q)] and [VIS(κ; Q
+OK f86f18f29ea7 [lemmas/R2_NEC.md] PARENT STATEMENT.md:156-159 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: * (N2⁺) **leaking nulls.** Let **s₀ ≥ 1** and r(s₀) := max(1, 17 − s₀). Suppose that for a
+      last:  κ′ < (c − 1 − 2Ā)/2.
+OK 018eeb03da51 [lemmas/R2_NEC.md] PARENT STATEMENT.md:167-168 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: * (N3) **one weakly visible truth.** If for all large n some truth j = j_n has δ²_{V,j} ≤ 
+      last:  V ⊆ S₀ ∖ {j} with |V| ≤ 15, with a fixed c < 1 + 2A̲, then P(π₀(S₀) ≤ n^{−κ′}) → 1 for eve
+OK 1cf5ee95cc01 [lemmas/R2_NEC.md] STATEMENT.md:271-282 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: | START-F (T1⁺⁺) | W3-START2:START-F | (V-c) ⇒ (V-cp) with c_V − 2A, same κ_V; (V-m) ⇒ (V-
+      last:  | START-R (T3⁺⁺)(b) | W3-START2:START-R | same, with (ii) at H̄_n = (log n)^{κ_Q} |
+OK 6ead5f0cdaed [lemmas/R2_NEC.md] BASE STATEMENT.md:278-280 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: * **F4 (isolated leaking columns; non-default levels).** Let I_n ⊆ [p] ∖ Q be deterministi
+      last:  c < 1 + 2A̲ (A̲ := liminf log p/log n). Put h_l := min(z_n, √(4 log log n)) for l ∈ I_n an
+EXISTS           [lemmas/R3_RATE.md] STATEMENT.md -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+EXISTS           [lemmas/R3_RATE.md] STATEMENT.md -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+OK b6bcb8a70b29 [lemmas/R3_RATE.md] STATEMENT.md:217-225 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[BR] (B-R⁺⁺) Bridge (Gaussian rows).** Setting R with p > s₀ for all large n.
+      last:  
+OK ca0477016d9c [lemmas/R3_RATE.md] STATEMENT.md:226-240 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[START-R] (T3⁺⁺)(b) Theorem START-R, Gaussian rows.** Setting R with p > s₀ for all larg
+      last:  
+OK 68d8b45a4bfc [lemmas/R3_RATE.md] STATEMENT.md:241-246 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[IF-START] (T5⁺⁺) IF-START⁺⁺.** Under (T1⁺⁺) with (AL) at Q = S₀ and level vector h: for
+      last:  
+EXISTS           [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+EXISTS           [lemmas/R3_RATE.md] BASE lemmas/L8_TRANSFER.md -> Theory_work/Wave3/W3-START/lemmas/L8_TRANSFER.md
+EXISTS           [lemmas/R3_RATE.md] BASE lemmas/L6_COROLLARIES.md -> Theory_work/Wave3/W3-START/lemmas/L6_COROLLARIES.md
+EXISTS           [lemmas/R3_RATE.md] BASE lemmas/L10_INTERFACES.md -> Theory_work/Wave3/W3-START/lemmas/L10_INTERFACES.md
+EXISTS           [lemmas/R3_RATE.md] PARENT lemmas/P4_BR.md -> Theory_work/Wave3/W3-START2/lemmas/P4_BR.md
+EXISTS           [lemmas/R3_RATE.md] PARENT lemmas/P1_LEADING.md -> Theory_work/Wave3/W3-START2/lemmas/P1_LEADING.md
+EXISTS           [lemmas/R3_RATE.md] lemmas/R1_VIS.md -> Theory_work/Wave3/W3-START2-R/lemmas/R1_VIS.md
+EXISTS           [lemmas/R3_RATE.md] STATEMENT.md -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+OK 2ce42953a052 [lemmas/R3_RATE.md] BASE STATEMENT.md:69-72 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: **Setting R (Gaussian rows)** = RM `STATEMENT.md:41-44`: raw rows iid N(m_n, Σ_n), Σ_n uni
+      last:  (X, ε). W denotes a population row.
+OK 539e8e659993 [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:12-20 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: Setting R (`STATEMENT.md` §1): raw rows iid N(m_n, Σ_n), Σ = Σ_n unit-diagonal; W_j ∈ ℝⁿ t
+      last:  "For n large" below always means n ≥ a threshold depending only on the fixed constants and
+OK 800a7ff56df6 [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:65-70 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: **J_n(δ_{U,l}, τ_U) = F(g_{U,l}, a_U),   F(g, a) := E[exp((√(1 − a)g + √aZ)²/2)·1{|Z| ≤ z_
+      last:  (|√(1 − a′) − √(1 − a)| ≤ |a′ − a|/(2√(1 − ā)), |√a′ − √a| ≤ |a′ − a|/(2√a̲)). So |w′² − w
+OK 41fbb4e30439 [lemmas/R3_RATE.md] PARENT STATEMENT.md:63-73 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: **(D2) (L-R⁺) [A:START2-R-L]** (Gaussian rows; replaces (L-R)). Fixed constants C_L ≥ 0 an
+      last:  H_l only. (L-R) implies (L-R⁺).)
+OK e74d886e0646 [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:94 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: Reference family: for l ∉ Q, **I_l := {U₀ ⊆ H_l ∖ {l} : |U₀| ≤ 15, S₀ ⊄ U₀}** (determinist
+      last:  Reference family: for l ∉ Q, **I_l := {U₀ ⊆ H_l ∖ {l} : |U₀| ≤ 15, S₀ ⊄ U₀}** (determinist
+OK 1341e3e712f9 [lemmas/R3_RATE.md] PARENT lemmas/P4_BR.md:16-34 -> Theory_work/Wave3/W3-START2/lemmas/P4_BR.md
+      first: **Claim.** Every statement of BASE L9.1–L9.6 (BASE `lemmas/L9_BR.md:22-152`) holds under (
+      last:  (`:139-141`). If Q = [p] the sums over l ∉ Q are empty and 𝔏_n(Q) = 0. ∎
+OK b0cd9332d5ea [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:95 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: |I_l| ≤ N_ref := (1 + (log n)^{κ_Q})^{15}. Fix l ∉ Q and U₀ ∈ I_l; D := U₀ ∪ S₀ (l ∉ D; |D
+      last:  |I_l| ≤ N_ref := (1 + (log n)^{κ_Q})^{15}. Fix l ∉ Q and U₀ ∈ I_l; D := U₀ ∪ S₀ (l ∉ D; |D
+OK 93a27bd62fbd [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:130 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: **E := E_cov ∩ ⋂{E_R(l, U₀) ∩ E_ξ(l, U₀) : l ∉ Q, U₀ ∈ I_l}.** P(Eᶜ) ≤ 4n^{−2} + p·N_ref·3
+      last:  **E := E_cov ∩ ⋂{E_R(l, U₀) ∩ E_ξ(l, U₀) : l ∉ Q, U₀ ∈ I_l}.** P(Eᶜ) ≤ 4n^{−2} + p·N_ref·3
+OK 19b1e0b3ea61 [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:138 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: on E:  **𝔏_n(Q) ≤ √(2/π)z̄_n + e^{ς′_n}Ψ_n**,   Ψ_n := p⁻¹Σ_{l∉Q}Σ_{U₀∈I_l}F(g_{U₀,l}, a_{
+      last:  on E:  **𝔏_n(Q) ≤ √(2/π)z̄_n + e^{ς′_n}Ψ_n**,   Ψ_n := p⁻¹Σ_{l∉Q}Σ_{U₀∈I_l}F(g_{U₀,l}, a_{
+OK b0cd9332d5ea [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:95 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: |I_l| ≤ N_ref := (1 + (log n)^{κ_Q})^{15}. Fix l ∉ Q and U₀ ∈ I_l; D := U₀ ∪ S₀ (l ∉ D; |D
+      last:  |I_l| ≤ N_ref := (1 + (log n)^{κ_Q})^{15}. Fix l ∉ Q and U₀ ∈ I_l; D := U₀ ∪ S₀ (l ∉ D; |D
+OK 93a27bd62fbd [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:130 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: **E := E_cov ∩ ⋂{E_R(l, U₀) ∩ E_ξ(l, U₀) : l ∉ Q, U₀ ∈ I_l}.** P(Eᶜ) ≤ 4n^{−2} + p·N_ref·3
+      last:  **E := E_cov ∩ ⋂{E_R(l, U₀) ∩ E_ξ(l, U₀) : l ∉ Q, U₀ ∈ I_l}.** P(Eᶜ) ≤ 4n^{−2} + p·N_ref·3
+OK 19b1e0b3ea61 [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:138 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: on E:  **𝔏_n(Q) ≤ √(2/π)z̄_n + e^{ς′_n}Ψ_n**,   Ψ_n := p⁻¹Σ_{l∉Q}Σ_{U₀∈I_l}F(g_{U₀,l}, a_{
+      last:  on E:  **𝔏_n(Q) ≤ √(2/π)z̄_n + e^{ς′_n}Ψ_n**,   Ψ_n := p⁻¹Σ_{l∉Q}Σ_{U₀∈I_l}F(g_{U₀,l}, a_{
+OK 3b247f829992 [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:140 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: **P(𝔏_n(Q) > √(2/π)z̄_n + e·λ·N_ref·Φ_n) ≤ P(Eᶜ) + 1/λ.**                                 
+      last:  **P(𝔏_n(Q) > √(2/π)z̄_n + e·λ·N_ref·Φ_n) ≤ P(Eᶜ) + 1/λ.**                                 
+OK abca84f0d26c [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:141-143 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: **(a) General C_L.** z̄_n² ≤ (2A + 1) log n for n large, so Φ_n ≤ exp((2d̄√(2A + 1)/a̲)√lo
+      last:  **𝔏_n(Q) ≤ exp(C_B√log n),   C_B := 2d̄√(2A + 1)/a̲ + 1**   (n large).
+OK 9c1ed580590e [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:102 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: On **CN := {‖CW_j‖² ≤ 2N for all j ∈ S₀}**: ‖m‖ ≤ ‖γ²‖·√s₀·√(2N) ≤ m̄ := √2·s₀C_L/c_Σ. (E_
+      last:  On **CN := {‖CW_j‖² ≤ 2N for all j ∈ S₀}**: ‖m‖ ≤ ‖γ²‖·√s₀·√(2N) ≤ m̄ := √2·s₀C_L/c_Σ. (E_
+OK b0eeeb0e7ad6 [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:107 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: components); |d₀| ≤ d̄ := m̄/√c_Σ on CN. Since x̃_l = (m + ẽ)/t_l, ρ̂_{U₀,l} = ⟨m + ẽ, v⟩/
+      last:  components); |d₀| ≤ d̄ := m̄/√c_Σ on CN. Since x̃_l = (m + ẽ)/t_l, ρ̂_{U₀,l} = ⟨m + ẽ, v⟩/
+OK fdd962adcf8c [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:144-146 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: **(b) C_L = 0.** Then d̄ = 0, Φ_n ≤ 2√(2/a̲)√(2/π)z̄_n for n large, N_ref ≤ 2^{15}(log n)^
+      last:  **𝔏_n(Q) = O_P((log n)^{15κ_Q+1/2})** — a tightness statement. (The first-moment estimate 
+OK 340b590b431b [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:146-148 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: **𝔏_n(Q) = O_P((log n)^{15κ_Q+1/2})** — a tightness statement. (The first-moment estimate 
+      last:  one is not established by this proof, and is not claimed.) ∎
+OK 088af5dc4f56 [lemmas/R3_RATE.md] PARENT STATEMENT.md:53-55 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: * If s₀ ≥ 1: **𝔏^♯_n(h) := p⁻¹·Σ_{l∉S₀} max{J_{h_l}(δ_{U,l}, τ_U) : U ⊊ S₀, |U| ≤ 15}.**
+      last:  * 𝔏^♯_n := 𝔏^♯_n(z_n) (default levels).
+OK 0b9f76723551 [lemmas/R3_RATE.md] BASE lemmas/L3_LEAK.md:20 -> Theory_work/Wave3/W3-START/lemmas/L3_LEAK.md
+      first: **(J3)** J_h(0, σ) = ∫_{−h}^{h}e^{z²/2}φ(z)dz = √(2/π)·h. ∎
+      last:  **(J3)** J_h(0, σ) = ∫_{−h}^{h}e^{z²/2}φ(z)dz = √(2/π)·h. ∎
+OK 6c99b385923f [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:62-65 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: Put a_U := σ²/τ²_U ∈ [a̲, ā],
+      last:  **J_n(δ_{U,l}, τ_U) = F(g_{U,l}, a_U),   F(g, a) := E[exp((√(1 − a)g + √aZ)²/2)·1{|Z| ≤ z_
+OK d496cf8ba537 [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:94-123 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: Reference family: for l ∉ Q, **I_l := {U₀ ⊆ H_l ∖ {l} : |U₀| ≤ 15, S₀ ⊄ U₀}** (determinist
+      last:  (1 − s′²)^{−1/2} ≤ √(2/a̲). Take expectations over 𝒲. ∎
+OK 19d9286b252f [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:96-123 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: *Population regression.* W_l − m_l1 = (W_{U₀} − 1m_{U₀}ᵀ)γ¹ + (W_{S₀∖U₀} − 1m_{S₀∖U₀}ᵀ)γ² 
+      last:  (1 − s′²)^{−1/2} ≤ √(2/a̲). Take expectations over 𝒲. ∎
+OK 500d098e02ef [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:101-107 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: (I − P_{U₀})CW_l = m + ẽ,   m := ΠW_{S₀∖U₀}γ²,   ẽ := Πe.
+      last:  components); |d₀| ≤ d̄ := m̄/√c_Σ on CN. Since x̃_l = (m + ẽ)/t_l, ρ̂_{U₀,l} = ⟨m + ẽ, v⟩/
+OK 474a9786aa74 [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:125-126 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: *What is and is not conditioned on.* Only W_D is conditioned on (it fixes the true columns
+      last:  innovation e is independent of W_D. No law is asserted given E_cov or given a sample covar
+OK cc25f8383da6 [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:110-112 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: *Events.* x_n¹ := (A + 2) log n; η_n := 16/N + 2√(x_n¹/N); **E_R(l, U₀) := {R ≥ N(1 − η_n)
+      last:  P(E_R(l, U₀)ᶜ | 𝒲) ≤ n^{−(A+2)} and P(E_ξ(l, U₀)ᶜ | 𝒲) ≤ 2n^{−(A+2)}. On E_R: g² ≤ κ_n²(ξ 
+OK 1f6051a2195c [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:114-123 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: **Lemma L9.5.** For n large (η_n ≤ a̲/2), for every l ∉ Q and U₀ ∈ I_l:
+      last:  (1 − s′²)^{−1/2} ≤ √(2/a̲). Take expectations over 𝒲. ∎
+OK 7240b2bd0c10 [lemmas/R3_RATE.md] Theory_work/Wave3/API_AUDIT/sharp2/TRIAGE.md:57 -> Theory_work/Wave3/API_AUDIT/sharp2/TRIAGE.md
+      first: | W3-START:START-R | EASY | **A1 → T10** (apply in START2) | Checked `L9_BR.md:94-96`: the
+      last:  | W3-START:START-R | EASY | **A1 → T10** (apply in START2) | Checked `L9_BR.md:94-96`: the
+OK 3f0db4135807 [lemmas/R3_RATE.md] PARENT lemmas/P4_BR.md:47-69 -> Theory_work/Wave3/W3-START2/lemmas/P4_BR.md
+      first: **Claim.** With **C_R := C_B + 1** and a_n := (|Q_n| + 1)·n^{−1/2}·exp(C_R√log n): P(1 − π
+      last:  No assumption is made on how the two cases alternate along the sequence: the bound holds a
+OK 297461c9a932 [lemmas/R3_RATE.md] BASE lemmas/L8_TRANSFER.md:37-50 -> Theory_work/Wave3/W3-START/lemmas/L8_TRANSFER.md
+      first: **Proposition L8.2.** Let ε ∈ (0, 1), κ ∈ (0, κ_V), and C, C′, c₀, n₀ = n₀(ε, κ) as in Pro
+      last:  (ϱ_n(S₀; h) ≤ ϱ̄ ≤ c₀ is part of the hypothesis on 𝒳). The last sentence: use L6.0′ instea
+OK 3ab59c18a314 [lemmas/R3_RATE.md] BASE lemmas/L6_COROLLARIES.md:19-26 -> Theory_work/Wave3/W3-START/lemmas/L6_COROLLARIES.md
+      first: **Corollary L6.0′ (high-probability form).** Put ε_n := 4/log n, λ_n := 4c_L/ε_n = c_L log
+      last:  So C_n, C′_n = O((log n)²) and 1/c_{0,n} = O(log n): every polynomial or exp(C√log n) slac
+OK df47db665c5f [lemmas/R3_RATE.md] PARENT lemmas/P4_BR.md:59-67 -> Theory_work/Wave3/W3-START2/lemmas/P4_BR.md
+      first: *Two cases at a fixed n ≥ n_R.*
+      last:  **P(1 − π₀(𝓛(Q)) > a_n) ≤ 4/log n + 1/(32 log n) + P(X^r ∉ 𝒳_n) → 0.** ∎
+OK 27faba1ce1f2 [lemmas/R3_RATE.md] PARENT lemmas/P4_BR.md:71-74 -> Theory_work/Wave3/W3-START2/lemmas/P4_BR.md
+      first: **Consequences.** (1) Q = S₀: a_n = (s₀ + 1)n^{−1/2}exp(C_R√log n) ≤ n^{−c} eventually for
+      last:  P(π₀(𝓛(Q)) ≥ 1 − n^{−c}) → 1.
+EXISTS           [lemmas/R3_RATE.md] lemmas/R1_VIS.md -> Theory_work/Wave3/W3-START2-R/lemmas/R1_VIS.md
+OK 5e198e7713f0 [lemmas/R3_RATE.md] PARENT lemmas/P4_BR.md:78-90 -> Theory_work/Wave3/W3-START2/lemmas/P4_BR.md
+      first: **Claim.** If C_L = 0: 1 − π₀(𝓛(Q)) = O_P(b^Q_n), b^Q_n := (|Q_n| + 1)·n^{−1/2}·(log n)^{1
+      last:  In both cases P(1 − π₀(𝓛(Q)) > T_ε·b^Q_n) ≤ ε/4 + 1/(32 log n) + P(X^r ∉ 𝒳_n^ε), whose lim
+OK 135a7804ff7d [lemmas/R3_RATE.md] PARENT lemmas/P4_BR.md:84-90 -> Theory_work/Wave3/W3-START2/lemmas/P4_BR.md
+      first: Let C := C(ε/4), c₀ := c₀(ε/4), n₀ := n₀(ε/4, 1) be the constants of BASE Proposition L5.2
+      last:  In both cases P(1 − π₀(𝓛(Q)) > T_ε·b^Q_n) ≤ ε/4 + 1/(32 log n) + P(X^r ∉ 𝒳_n^ε), whose lim
+OK cd4eb98948b4 [lemmas/R3_RATE.md] PARENT STATEMENT.md:138-139 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: if |Q| ≤ n^{1/2−ε_Q} for a fixed ε_Q ∈ (0, ½): P(π₀(𝓛(Q)) ≥ 1 − n^{−c}) → 1 for every c < 
+      last:  population leakage): 1 − π₀(𝓛(Q)) = O_P((|Q| + 1)·n^{−1/2}·(log n)^{15κ_Q+1/2}).
+OK 0e40586b899b [lemmas/R3_RATE.md] BASE lemmas/L3_LEAK.md:31 -> Theory_work/Wave3/W3-START/lemmas/L3_LEAK.md
+      first: *Default levels.* h ≡ z_n: b_n(h) ≤ 2^{16}p·exp(−log(2^{21}p) − log log n) = 1/(32 log n).
+      last:  *Default levels.* h ≡ z_n: b_n(h) ≤ 2^{16}p·exp(−log(2^{21}p) − log log n) = 1/(32 log n).
+OK 1be5784e86a2 [lemmas/R3_RATE.md] BASE lemmas/L8_TRANSFER.md:22-25 -> Theory_work/Wave3/W3-START/lemmas/L8_TRANSFER.md
+      first: **Admissible designs at n** (for fixed constants A, M, g_*, s₀ and c_V or (c_m, ε₀)): a re
+      last:  Proposition L5.2 on (X, θ*, Q, h).
+OK f16fe15b0ad6 [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:158-160 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: *Design set.* Fixed constants for (T1)(d): A, M = s₀²θ_hi², g_* = c_Σ/2, s₀, and (V-c) wit
+      last:  P(X^r ∈ 𝒳_n) → 1, every design of 𝒳_n is admissible at n in the sense of `lemmas/L8_TRANSF
+OK 2d61714ee4e2 [lemmas/R3_RATE.md] PARENT lemmas/P1_LEADING.md:82 -> Theory_work/Wave3/W3-START2/lemmas/P1_LEADING.md
+      first: **Proposition P1.4.** Fix the constants, ε ∈ (0, 1), κ ∈ (0, κ_V), and κ′, λ := 4c_L/ε, c₀
+      last:  **Proposition P1.4.** Fix the constants, ε ∈ (0, 1), κ ∈ (0, κ_V), and κ′, λ := 4c_L/ε, c₀
+OK 69cee74c854e [lemmas/R3_RATE.md] PARENT lemmas/P1_LEADING.md:147-151 -> Theory_work/Wave3/W3-START2/lemmas/P1_LEADING.md
+      first: BASE Proposition L8.2 (BASE `lemmas/L8_TRANSFER.md:37-50`) holds with (ii) in the form: *i
+      last:  s₀ = 0, 𝔏^♯_n(h) = 𝔏⁰_n(h).) Theorem (T3⁺)(a) then follows as in BASE L8.3 (`:57-66`), wor
+OK 7188c024fd11 [lemmas/R3_RATE.md] BASE STATEMENT.md:241-243 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: **(T0) Theorem FLOOR (deterministic).** For every valid data set (n ≥ 4, EX-A) and every m
+      last:  p > s₀): o₀ ≥ T₁ ≥ f_n(s₀) ≥ ½(n + 1)^{−1/2}: no condition on the design can give a start-
+OK 26ce695c1155 [lemmas/R3_RATE.md] PARENT lemmas/P1_LEADING.md:155-158 -> Theory_work/Wave3/W3-START2/lemmas/P1_LEADING.md
+      first: (a) *Fixed design.* Under (T1⁺) with (AL) at Q = S₀ and level vector h, 0 < κ < κ_V,
+      last:  of BASE `lemmas/L10_INTERFACES.md:11-15` with (T1⁺)(b).
+EXISTS           [lemmas/R3_RATE.md] lemmas/R1_VIS.md -> Theory_work/Wave3/W3-START2-R/lemmas/R1_VIS.md
+OK 85fd146a4c5e [lemmas/R3_RATE.md] BASE lemmas/L10_INTERFACES.md:16-18 -> Theory_work/Wave3/W3-START/lemmas/L10_INTERFACES.md
+      first: **(b) Gaussian rows.** Under (T3)(b) with Q = S₀: with probability → 1, 1 − π₀(S₀) ≤ ρ_n :
+      last:  r_n := n^{−1/2}exp(C_R√log n).
+OK 153aa4c13743 [lemmas/R3_RATE.md] BASE lemmas/L10_INTERFACES.md:19-24 -> Theory_work/Wave3/W3-START/lemmas/L10_INTERFACES.md
+      first: **(c) What the consumer gets.** SAMP Theorem C (C-v) reads: "if moreover 1_𝒜δ̄ = O_P(r_n) 
+      last:  no statement is made about δ̄ beyond what SAMP's (C-v) derives from its two premises. ∎
+OK b0cd9332d5ea [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:95 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: |I_l| ≤ N_ref := (1 + (log n)^{κ_Q})^{15}. Fix l ∉ Q and U₀ ∈ I_l; D := U₀ ∪ S₀ (l ∉ D; |D
+      last:  |I_l| ≤ N_ref := (1 + (log n)^{κ_Q})^{15}. Fix l ∉ Q and U₀ ∈ I_l; D := U₀ ∪ S₀ (l ∉ D; |D
+OK 93a27bd62fbd [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:130 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: **E := E_cov ∩ ⋂{E_R(l, U₀) ∩ E_ξ(l, U₀) : l ∉ Q, U₀ ∈ I_l}.** P(Eᶜ) ≤ 4n^{−2} + p·N_ref·3
+      last:  **E := E_cov ∩ ⋂{E_R(l, U₀) ∩ E_ξ(l, U₀) : l ∉ Q, U₀ ∈ I_l}.** P(Eᶜ) ≤ 4n^{−2} + p·N_ref·3
+OK 19b1e0b3ea61 [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:138 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: on E:  **𝔏_n(Q) ≤ √(2/π)z̄_n + e^{ς′_n}Ψ_n**,   Ψ_n := p⁻¹Σ_{l∉Q}Σ_{U₀∈I_l}F(g_{U₀,l}, a_{
+      last:  on E:  **𝔏_n(Q) ≤ √(2/π)z̄_n + e^{ς′_n}Ψ_n**,   Ψ_n := p⁻¹Σ_{l∉Q}Σ_{U₀∈I_l}F(g_{U₀,l}, a_{
+OK 3b247f829992 [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:140 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: **P(𝔏_n(Q) > √(2/π)z̄_n + e·λ·N_ref·Φ_n) ≤ P(Eᶜ) + 1/λ.**                                 
+      last:  **P(𝔏_n(Q) > √(2/π)z̄_n + e·λ·N_ref·Φ_n) ≤ P(Eᶜ) + 1/λ.**                                 
+OK abca84f0d26c [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:141-143 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: **(a) General C_L.** z̄_n² ≤ (2A + 1) log n for n large, so Φ_n ≤ exp((2d̄√(2A + 1)/a̲)√lo
+      last:  **𝔏_n(Q) ≤ exp(C_B√log n),   C_B := 2d̄√(2A + 1)/a̲ + 1**   (n large).
+OK fdd962adcf8c [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:144-146 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: **(b) C_L = 0.** Then d̄ = 0, Φ_n ≤ 2√(2/a̲)√(2/π)z̄_n for n large, N_ref ≤ 2^{15}(log n)^
+      last:  **𝔏_n(Q) = O_P((log n)^{15κ_Q+1/2})** — a tightness statement. (The first-moment estimate 
+OK d496cf8ba537 [lemmas/R3_RATE.md] BASE lemmas/L9_BR.md:94-123 -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+      first: Reference family: for l ∉ Q, **I_l := {U₀ ⊆ H_l ∖ {l} : |U₀| ≤ 15, S₀ ⊄ U₀}** (determinist
+      last:  (1 − s′²)^{−1/2} ≤ √(2/a̲). Take expectations over 𝒲. ∎
+OK 3f0db4135807 [lemmas/R3_RATE.md] PARENT lemmas/P4_BR.md:47-69 -> Theory_work/Wave3/W3-START2/lemmas/P4_BR.md
+      first: **Claim.** With **C_R := C_B + 1** and a_n := (|Q_n| + 1)·n^{−1/2}·exp(C_R√log n): P(1 − π
+      last:  No assumption is made on how the two cases alternate along the sequence: the bound holds a
+OK 5e198e7713f0 [lemmas/R3_RATE.md] PARENT lemmas/P4_BR.md:78-90 -> Theory_work/Wave3/W3-START2/lemmas/P4_BR.md
+      first: **Claim.** If C_L = 0: 1 − π₀(𝓛(Q)) = O_P(b^Q_n), b^Q_n := (|Q_n| + 1)·n^{−1/2}·(log n)^{1
+      last:  In both cases P(1 − π₀(𝓛(Q)) > T_ε·b^Q_n) ≤ ε/4 + 1/(32 log n) + P(X^r ∉ 𝒳_n^ε), whose lim
+EXISTS           [lemmas/R4_TRANSFER_COR.md] STATEMENT.md -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+EXISTS           [lemmas/R4_TRANSFER_COR.md] STATEMENT.md -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+OK 24d409e06ed0 [lemmas/R4_TRANSFER_COR.md] STATEMENT.md:167-188 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[TRANSFER] (T3⁺⁺)(a) Theorem START-R, transfer (any design law; design-measurable target
+      last:  
+OK a1ac28237ffc [lemmas/R4_TRANSFER_COR.md] STATEMENT.md:129-133 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[F1], [F2], [F3] (Corollaries F1⁺⁺, F2⁺⁺, F3⁺⁺).** F1 (BASE `:268-271`), F2⁺ (PARENT `:1
+      last:  
+OK 4a8b55794154 [lemmas/R4_TRANSFER_COR.md] STATEMENT.md:212-214 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[OVL] (OVL⁺⁺) Proposition OVL.** OVL⁺ of PARENT `:181-189`, word for word, with "visibil
+      last:  
+OK 7bbe1662c41a [lemmas/R4_TRANSFER_COR.md] STATEMENT.md:189-198 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[MIS] (T6⁺⁺) Corollary MIS.** BASE (T6) (`:346-357`) with the claims of version 1.5 in p
+      last:  
+EXISTS           [lemmas/R4_TRANSFER_COR.md] lemmas/R1_VIS.md -> Theory_work/Wave3/W3-START2-R/lemmas/R1_VIS.md
+EXISTS           [lemmas/R4_TRANSFER_COR.md] BASE lemmas/L8_TRANSFER.md -> Theory_work/Wave3/W3-START/lemmas/L8_TRANSFER.md
+EXISTS           [lemmas/R4_TRANSFER_COR.md] BASE lemmas/L6_COROLLARIES.md -> Theory_work/Wave3/W3-START/lemmas/L6_COROLLARIES.md
+EXISTS           [lemmas/R4_TRANSFER_COR.md] BASE lemmas/L10_INTERFACES.md -> Theory_work/Wave3/W3-START/lemmas/L10_INTERFACES.md
+EXISTS           [lemmas/R4_TRANSFER_COR.md] PARENT lemmas/P1_LEADING.md -> Theory_work/Wave3/W3-START2/lemmas/P1_LEADING.md
+EXISTS           [lemmas/R4_TRANSFER_COR.md] PARENT lemmas/P2_OVL.md -> Theory_work/Wave3/W3-START2/lemmas/P2_OVL.md
+OK fb08dbe2c3d1 [lemmas/R4_TRANSFER_COR.md] STATEMENT.md:167-175 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[TRANSFER] (T3⁺⁺)(a) Theorem START-R, transfer (any design law; design-measurable target
+      last:  * (a1) **conditional form.** For every ε ∈ (0, 1) and κ ∈ (0, κ_V) there are C < ∞, c₀ > 0
+OK bc7c8f2daf8f [lemmas/R4_TRANSFER_COR.md] BASE lemmas/L8_TRANSFER.md:16-20 -> Theory_work/Wave3/W3-START/lemmas/L8_TRANSFER.md
+      first: **Convention off the admissible designs.** The design law is constrained only on the sets 
+      last:  coded start on invalid inputs.
+EXISTS           [lemmas/R4_TRANSFER_COR.md] lemmas/R1_VIS.md -> Theory_work/Wave3/W3-START2-R/lemmas/R1_VIS.md
+OK 68b62ba6ec58 [lemmas/R4_TRANSFER_COR.md] BASE lemmas/L8_TRANSFER.md:27-31 -> Theory_work/Wave3/W3-START/lemmas/L8_TRANSFER.md
+      first: ## L8.1 The conditional law is Setting F
+      last:  X^r is N_n(0, σ²I). For a fixed x, f_B(x) is the probability of B under **Setting F with t
+OK 3d3d709b6f08 [lemmas/R4_TRANSFER_COR.md] STATEMENT.md:45-48 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: * Notation used below: **x_n = O_P(a_n)** for random a_n ≥ 0 means: for every ε > 0 there 
+      last:  
+OK e06f4ad51a61 [lemmas/R4_TRANSFER_COR.md] PARENT STATEMENT.md:120-133 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: * (a) **transfer (any design law; design-measurable targets).** Let X^r be a random raw de
+      last:  (This is clause (a) of version 1.3.4 with 𝔏^♯_n(h) in place of 𝔏⁰_n(h) in the hypothesis o
+OK 4995c17c318f [lemmas/R4_TRANSFER_COR.md] STATEMENT.md:63-69 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: *Relation to version 1.4.* (V-c) with c_V > 1 + 2A implies (V-cp) with c_V − 2A in place o
+      last:  
+EXISTS           [lemmas/R4_TRANSFER_COR.md] lemmas/R1_VIS.md -> Theory_work/Wave3/W3-START2-R/lemmas/R1_VIS.md
+OK d221f959ca4b [lemmas/R4_TRANSFER_COR.md] BASE lemmas/L6_COROLLARIES.md:28-45 -> Theory_work/Wave3/W3-START/lemmas/L6_COROLLARIES.md
+      first: ## L6.1 Corollary F1 (uniform leakage)
+      last:  
+OK e86419ceb831 [lemmas/R4_TRANSFER_COR.md] BASE lemmas/L6_COROLLARIES.md:62-72 -> Theory_work/Wave3/W3-START/lemmas/L6_COROLLARIES.md
+      first: ## L6.3 Corollary F3 (bounded gains)
+      last:  
+OK 55eef359231c [lemmas/R4_TRANSFER_COR.md] PARENT lemmas/P1_LEADING.md:128-144 -> Theory_work/Wave3/W3-START2/lemmas/P1_LEADING.md
+      first: ## P1.6 Corollary F2⁺
+      last:  
+OK ed803a5d09e5 [lemmas/R4_TRANSFER_COR.md] BASE lemmas/L6_COROLLARIES.md:37-41 -> Theory_work/Wave3/W3-START/lemmas/L6_COROLLARIES.md
+      first: **(iii) Conclusion.** Let κ < min{κ_L(η, A), κ_V} and κ₃ ∈ (κ, κ_V). By (ii), ϱ_n(Q) ≤ [(|
+      last:  (C_n = O(log n), κ < κ_L, κ < κ₃). This is the display of F1.
+EXISTS           [lemmas/R4_TRANSFER_COR.md] lemmas/R1_VIS.md -> Theory_work/Wave3/W3-START2-R/lemmas/R1_VIS.md
+OK e7ff419693e6 [lemmas/R4_TRANSFER_COR.md] BASE lemmas/L6_COROLLARIES.md:42-45 -> Theory_work/Wave3/W3-START/lemmas/L6_COROLLARIES.md
+      first: **(iv) η = 0.** Then δ_{U,l} = 0 and J_n(0, τ_U) = E[exp(σ²Z²/(2τ²_U)); |Z| ≤ z_n] ≤ E[e^{
+      last:  
+OK e86419ceb831 [lemmas/R4_TRANSFER_COR.md] BASE lemmas/L6_COROLLARIES.md:62-72 -> Theory_work/Wave3/W3-START/lemmas/L6_COROLLARIES.md
+      first: ## L6.3 Corollary F3 (bounded gains)
+      last:  
+OK 51fd44be8e08 [lemmas/R4_TRANSFER_COR.md] PARENT lemmas/P1_LEADING.md:133-142 -> Theory_work/Wave3/W3-START2/lemmas/P1_LEADING.md
+      first: (ii) For l ∉ S₀ and U ⊊ S₀ with |U| ≤ 15: J_n(δ_{U,l}, τ_U) ≤ C_Fn^{η′/2}, C_F := √(1 + σ²
+      last:  *Bounded p.* No step of (T1⁺) or of this proof uses p → ∞: Proposition P1.4 holds for ever
+OK 6f9c9f723634 [lemmas/R4_TRANSFER_COR.md] BASE lemmas/L3_LEAK.md:9-23 -> Theory_work/Wave3/W3-START/lemmas/L3_LEAK.md
+      first: For d ∈ ℝ, t ≥ σ > 0, h ≥ 1 and Z ~ N(0, 1): J_h(d, t) := E[exp((d + σZ)²/(2t²))·1{|Z| ≤ h
+      last:  ## L3.2 Level vectors, the event 𝓩_h, and bridge (B1) for the functionals
+OK 3ab59c18a314 [lemmas/R4_TRANSFER_COR.md] BASE lemmas/L6_COROLLARIES.md:19-26 -> Theory_work/Wave3/W3-START/lemmas/L6_COROLLARIES.md
+      first: **Corollary L6.0′ (high-probability form).** Put ε_n := 4/log n, λ_n := 4c_L/ε_n = c_L log
+      last:  So C_n, C′_n = O((log n)²) and 1/c_{0,n} = O(log n): every polynomial or exp(C√log n) slac
+OK f94429ba9977 [lemmas/R4_TRANSFER_COR.md] BASE lemmas/L6_COROLLARIES.md:11-17 -> Theory_work/Wave3/W3-START/lemmas/L6_COROLLARIES.md
+      first: **Lemma L6.0.** In Proposition L5.2 the threshold n₀(ε, κ) can be taken as max(n*(κ), n_ε)
+      last:  paragraph of the proof); ε enters only through the last one. ∎
+EXISTS           [lemmas/R4_TRANSFER_COR.md] lemmas/R1_VIS.md -> Theory_work/Wave3/W3-START2-R/lemmas/R1_VIS.md
+EXISTS           [lemmas/R4_TRANSFER_COR.md] PARENT lemmas/P2_OVL.md -> Theory_work/Wave3/W3-START2/lemmas/P2_OVL.md
+OK 7dd454197358 [lemmas/R4_TRANSFER_COR.md] PARENT lemmas/P2_OVL.md:45-47 -> Theory_work/Wave3/W3-START2/lemmas/P2_OVL.md
+      first: *P(𝓐) → 1.* The hypotheses of (T1⁺)(a) hold — (E), (GF-16), visibility ((V-c), or (V-m) fo
+      last:  probability. This is the only place where visibility and (AL) are used.
+OK e1a7b8697173 [lemmas/R4_TRANSFER_COR.md] PARENT lemmas/P2_OVL.md:50-58 -> Theory_work/Wave3/W3-START2/lemmas/P2_OVL.md
+      first: This is step (iii) of the BASE proof of L10.2 (BASE `lemmas/L10_INTERFACES.md:44-50`). It 
+      last:  and P(𝓔^blk ∩ 𝓨 ∩ 𝓐) → 1. ∎
+OK 620a604e4a10 [lemmas/R4_TRANSFER_COR.md] BASE lemmas/L10_INTERFACES.md:63-87 -> Theory_work/Wave3/W3-START/lemmas/L10_INTERFACES.md
+      first: ## L10.3 Lemma R′ and Corollary MIS (T6)
+      last:  conditions). Candidate sets, supports or coefficients selected using the response are not 
+OK bebcf131b707 [lemmas/R4_TRANSFER_COR.md] BASE lemmas/L10_INTERFACES.md:71-73 -> Theory_work/Wave3/W3-START/lemmas/L10_INTERFACES.md
+      first: **Lemma R′.** Under (GR): y^r = (α + a)1 + X^r_𝒞β^𝒞 + ε′ with β^𝒞 := β_𝒞 + γ and ε′ := ε +
+      last:  *Proof.* Substitute ω; a sum of independent centred Gaussian vectors with covariances σ²I 
+OK 2a91495a89ce [lemmas/R4_TRANSFER_COR.md] BASE lemmas/L10_INTERFACES.md:77-83 -> Theory_work/Wave3/W3-START/lemmas/L10_INTERFACES.md
+      first: **Corollary MIS, fixed candidate design.** By Lemma R′ the candidate data follow Setting F
+      last:  π₀^𝒞(S′) ≤ 1 − π₀^𝒞(S₀^𝒞) → 0.
+OK e3e02c1b823c [lemmas/R4_TRANSFER_COR.md] BASE lemmas/L10_INTERFACES.md:84-87 -> Theory_work/Wave3/W3-START/lemmas/L10_INTERFACES.md
+      first: **Random candidate design.** Conditionally on X^r_𝒞: y^r = (α + a(X^r_𝒞))1 + X^r_𝒞β^𝒞(X^r_
+      last:  conditions). Candidate sets, supports or coefficients selected using the response are not 
+OK 879dfeae0639 [lemmas/R4_TRANSFER_COR.md] Theory_work/Wave1C/C-MIS/STATEMENT.md:54-56 -> Theory_work/Wave1C/C-MIS/STATEMENT.md
+      first: **(GR).** Conditionally on X^r_𝒞 (for a fixed candidate design: unconditionally), ω = a1 +
+      last:  and ε ~ N_n(0, σ²I). The method's uniforms are independent of (X^r, ε, ξ).
+EXISTS           [lemmas/R5_EX.md] STATEMENT.md -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+EXISTS           [lemmas/R5_EX.md] STATEMENT.md -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+OK 6ce34a2e1d51 [lemmas/R5_EX.md] STATEMENT.md:199-211 -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+      first: **[EX] (T7⁺⁺) Examples table.** BASE (T7) (`:359-371`) and BASE `lemmas/L11_EXAMPLES.md`, 
+      last:  
+EXISTS           [lemmas/R5_EX.md] BASE lemmas/L11_EXAMPLES.md -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+EXISTS           [lemmas/R5_EX.md] BASE lemmas/L11_EXAMPLES.md -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+EXISTS           [lemmas/R5_EX.md] lemmas/R1_VIS.md -> Theory_work/Wave3/W3-START2-R/lemmas/R1_VIS.md
+EXISTS           [lemmas/R5_EX.md] lemmas/R4_TRANSFER_COR.md -> Theory_work/Wave3/W3-START2-R/lemmas/R4_TRANSFER_COR.md
+EXISTS           [lemmas/R5_EX.md] lemmas/R2_NEC.md -> Theory_work/Wave3/W3-START2-R/lemmas/R2_NEC.md
+EXISTS           [lemmas/R5_EX.md] lemmas/R3_RATE.md -> Theory_work/Wave3/W3-START2-R/lemmas/R3_RATE.md
+OK d6e484db54f4 [lemmas/R5_EX.md] PARENT STATEMENT.md:57-61 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: (Only **proper** subsets of the truth are conditioned on. For s₀ ≥ 1 this is 𝔏⁰_n(h) of ve
+      last:  statements.)
+OK e47b73787b5c [lemmas/R5_EX.md] BASE lemmas/L11_EXAMPLES.md:17-18 -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+      first: x_j := e_j for all j; S₀ fixed with s₀ ≥ 1; θ*_j fixed and nonzero on S₀ (θ_lo ≤ |θ*_j| ≤ 
+      last:  sufficiently large n.
+OK 9fcf42468957 [lemmas/R5_EX.md] BASE lemmas/L11_EXAMPLES.md:10-12 -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+      first: Let n ≥ 18, 17 ≤ p ≤ n − 1, N := n − 1. Since dim 1^⊥ = N ≥ p there are e₁, …, e_p ∈ ℝⁿ wi
+      last:  1, so it is its own standardisation: X = X^r, D_x = I, θ* = β. σ² > 0 fixed; p = p_n with 
+OK db5a9bc782eb [lemmas/R5_EX.md] BASE lemmas/L11_EXAMPLES.md:29-31 -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+      first: Fix d ∈ (0, 2] and m_n ≥ 1 with 1 + 2m_n ≤ p. x₁ := e₁ (the only truth, θ*₁ ≠ 0 fixed). Fo
+      last:  columns x_j := e_j.
+OK 1452ac296d65 [lemmas/R5_EX.md] BASE lemmas/L11_EXAMPLES.md:19 -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+      first: * (E): ‖μ‖² = N‖θ*‖² ≤ s₀θ_hi²n. (GF-16): X_TᵀX_T = N·I, so g_* = 1 works (even the normal
+      last:  * (E): ‖μ‖² = N‖θ*‖² ≤ s₀θ_hi²n. (GF-16): X_TᵀX_T = N·I, so g_* = 1 works (even the normal
+OK b6c1120d387e [lemmas/R5_EX.md] BASE lemmas/L11_EXAMPLES.md:32-34 -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+      first: * (GF-16): for any T the Gram matrix X_TᵀX_T is block diagonal with blocks N (single colum
+      last:  λ_min(X_TᵀX_T) ≥ min(N, d²/2) = d²/2 =: g_* for all T. The normalised floor fails: λ_min(R
+OK aecde754efe2 [lemmas/R5_EX.md] BASE lemmas/L11_EXAMPLES.md:20 -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+      first: * Null gains: for a null l and any U ∌ l, (I − P_U)x_l = e_l ⊥ μ, so δ_{U,l} = 0: F1's hyp
+      last:  * Null gains: for a null l and any U ∌ l, (I − P_U)x_l = e_l ⊥ μ, so δ_{U,l} = 0: F1's hyp
+OK eb2f9c6398cb [lemmas/R5_EX.md] BASE lemmas/L11_EXAMPLES.md:35-36 -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+      first: * Null gains: every null column and every set U ∌ 1 lie in span{e_i : i ≥ 2} ⊥ μ = θ*₁e₁, 
+      last:  1 ∈ U then (I − P_U)μ = 0. Hence δ_{U,l} = 0 for every null l and every U: η = 0.
+OK e7ff419693e6 [lemmas/R5_EX.md] BASE lemmas/L6_COROLLARIES.md:42-45 -> Theory_work/Wave3/W3-START/lemmas/L6_COROLLARIES.md
+      first: **(iv) η = 0.** Then δ_{U,l} = 0 and J_n(0, τ_U) = E[exp(σ²Z²/(2τ²_U)); |Z| ≤ z_n] ≤ E[e^{
+      last:  
+OK 70e70aa5d3bb [lemmas/R5_EX.md] BASE lemmas/L11_EXAMPLES.md:21 -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+      first: * (V-c) for every c_V: for j ∈ S₀ and U ∌ j, δ²_{U,j} = Nθ*_j² and τ²_U ≤ σ² + ‖θ*‖²; so δ
+      last:  * (V-c) for every c_V: for j ∈ S₀ and U ∌ j, δ²_{U,j} = Nθ*_j² and τ²_U ≤ σ² + ‖θ*‖²; so δ
+OK 6a98d07dbb9e [lemmas/R5_EX.md] BASE lemmas/L11_EXAMPLES.md:37 -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+      first: * (E), (V-c) (δ²_{U,1} = Nθ*₁² for U ∌ 1), (AL): as in F-1.
+      last:  * (E), (V-c) (δ²_{U,1} = Nθ*₁² for U ∌ 1), (AL): as in F-1.
+EXISTS           [lemmas/R5_EX.md] lemmas/R4_TRANSFER_COR.md -> Theory_work/Wave3/W3-START2-R/lemmas/R4_TRANSFER_COR.md
+OK 55eef359231c [lemmas/R5_EX.md] PARENT lemmas/P1_LEADING.md:128-144 -> Theory_work/Wave3/W3-START2/lemmas/P1_LEADING.md
+      first: ## P1.6 Corollary F2⁺
+      last:  
+OK a1a03e53b6f0 [lemmas/R5_EX.md] BASE lemmas/L11_EXAMPLES.md:43-50 -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+      first: Fix A ∈ [0.1, 1], p := min(⌊n^A⌋, n − 1) (so log p/log n → A and A̲ = Ā = A), ρ² := 0.4, c
+      last:  So **Λ_N = cσ² log n·q_k**, with q₁ = 0.6, q₁₅ = 0.6/6.6 = 1/11, q_k decreasing; and σ² ≤ 
+OK 76c37201bee5 [lemmas/R5_EX.md] BASE lemmas/L11_EXAMPLES.md:51-53 -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+      first: * **(E):** ‖μ‖² = cσ² log n ≤ Mn. **(GF-16):** the 16 columns x₁, …, x₁₆ equal (e₁, …, e₁₆
+      last:  is block diagonal with a principal submatrix of N·BᵀB and N·I. So λ_min(X_TᵀX_T) ≥ Nγ_B ≥ 
+OK 3ec1df79c127 [lemmas/R5_EX.md] BASE lemmas/L11_EXAMPLES.md:54-58 -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+      first: * **(V-m) holds, Q = S₀, with c_m := (1 + 2A)/6 and any ε₀ > 0.** The instances are V = D 
+      last:  So κ_V = c_m/2 = (1 + 2A)/12.
+OK 87f383c9c269 [lemmas/R5_EX.md] BASE lemmas/L11_EXAMPLES.md:61-63 -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+      first: * **F4 applies with I_n := {2, …, 16}, ī = 15, level c′ := 0.8(1 + 2A) < 1 + 2A̲.** Let l 
+      last:  k ≥ 1, q_k − q_{k+1} = (1 − ρ²)ρ²/((1 + (k − 1)ρ²)(1 + kρ²)) ≤ 0.24/1.4 < 0.4. So δ²_{U,l}
+OK eafc33237989 [lemmas/R5_EX.md] BASE lemmas/L11_EXAMPLES.md:64 -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+      first: For a null l ≥ 17: x_l = e_l is orthogonal to every other column and to μ, so δ_{U,l} = 0 
+      last:  For a null l ≥ 17: x_l = e_l is orthogonal to every other column and to μ, so δ_{U,l} = 0 
+OK 8427d75a618d [lemmas/R5_EX.md] BASE lemmas/L11_EXAMPLES.md:64-65 -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+      first: For a null l ≥ 17: x_l = e_l is orthogonal to every other column and to μ, so δ_{U,l} = 0 
+      last:  ϱ^{−I}_n(S₀) ≤ 2n^{−1/2}√(2/π)z_n → 0, and |Q| + 1 = 2. By L3.5/L6.4, (AL) holds with the 
+EXISTS           [lemmas/R5_EX.md] lemmas/R2_NEC.md -> Theory_work/Wave3/W3-START2-R/lemmas/R2_NEC.md
+OK aec7cd07af24 [lemmas/R5_EX.md] PARENT STATEMENT.md:59 -> Theory_work/Wave3/W3-START2/STATEMENT.md
+      first: p > s₀, **(p − s₀)/(4p) ≤ 𝔏^♯_n(h) ≤ 𝔏_n(S₀; h)**; hence, still for s₀ ≥ 1 and p > s₀, 1/p
+      last:  p > s₀, **(p − s₀)/(4p) ≤ 𝔏^♯_n(h) ≤ 𝔏_n(S₀; h)**; hence, still for s₀ ≥ 1 and p > s₀, 1/p
+OK b19864833b56 [lemmas/R5_EX.md] BASE lemmas/L11_EXAMPLES.md:80 -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+      first: * (FL-R16): c_Σ = 1. (V-R): for j ∈ S₀, U ∌ j: Cov(W_j, Σ_kθ*_kW_k | W_U) = θ*_j (independ
+      last:  * (FL-R16): c_Σ = 1. (V-R): for j ∈ S₀, U ∌ j: Cov(W_j, Σ_kθ*_kW_k | W_U) = θ*_j (independ
+OK 3db69eca0fb5 [lemmas/R5_EX.md] BASE lemmas/L11_EXAMPLES.md:81-83 -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+      first: * (L-R) with Q := S₀ (|Q| = s₀ ≤ min(K, (log n)^{κ_Q}) for n large, κ_Q := 1) and H_l := {
+      last:  Cov(W_j, W_v | W_{U₀}) = 0 (r_n = 0).
+EXISTS           [lemmas/R5_EX.md] STATEMENT.md -> Theory_work/Wave3/W3-START2-R/STATEMENT.md
+EXISTS           [lemmas/R5_EX.md] lemmas/R3_RATE.md -> Theory_work/Wave3/W3-START2-R/lemmas/R3_RATE.md
+OK 4e7fc13e6b43 [lemmas/R5_EX.md] BASE lemmas/L11_EXAMPLES.md:85-86 -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+      first: for every p ≤ n^A, p ≫ n included. (Here |I_l| ≤ 2^{s₀} is bounded, so the proof of L9.6(b
+      last:  𝔏_n(S₀) = O_P(√log n) and 1 − π₀(S₀) = O_P(√(log n/n)); only the stated rate is claimed.) 
+OK c03cac378b4a [lemmas/R5_EX.md] BASE lemmas/L11_EXAMPLES.md:90-98 -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+      first: Setting R with p > s₀; [p] is partitioned into groups of size ≤ ḡ (fixed); Σ_n is block di
+      last:  * (L-loc-R): v ∈ U ∖ H_l is neither in G(l) nor in a truth group, so Cov(W_l, W_v | W_{U₀}
+EXISTS           [lemmas/R5_EX.md] lemmas/R3_RATE.md -> Theory_work/Wave3/W3-START2-R/lemmas/R3_RATE.md
+OK 25c3676bdd71 [lemmas/R5_EX.md] BASE lemmas/L11_EXAMPLES.md:100 -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+      first: p ≤ n^A is the only restriction on p. Nothing is claimed about π₀(S₀) itself: the nulls in
+      last:  p ≤ n^A is the only restriction on p. Nothing is claimed about π₀(S₀) itself: the nulls in
