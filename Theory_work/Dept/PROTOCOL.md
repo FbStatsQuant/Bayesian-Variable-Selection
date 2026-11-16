@@ -26,13 +26,19 @@ row, the baseline applies to it. Every later change to this file goes to HQ befo
 | B7 | **Audit findings that may touch a statement get an independent adjudication** (fresh Opus, blind to the triage) before any LIFECYCLE §3 operation; NARROW items run as one priced batch after the freeze; headline-candidate rows via H5 | LIFECYCLE §3 starts from a finding; no adjudication step specified | separates "looks statement-level" from real narrowing before touching the registry; avoids piecemeal registry churn during a freeze week | D27, D31 (HQ approved) |
 | B8 | **Recorder tasks are staged as dry runs by the department; HQ approves every real run**; clones in `bvs_tmp`, one at a time | RECORD_BRIEF: HQ runs or delegates recording | handover of the recorder to the department (owner, 11-15); HQ keeps the gate | D12, D29 |
 | B9 | **Checkpoint files continue the parent's integer numbering only inside new folders** (`CHECKPOINT_1.md`, `CHECKPOINT_3.md`); never `CHECKPOINT_R1` | — (tool convention) | registry tools read only `CHECKPOINT_<digit>.md` | D1 / RIDER_RULES |
+| B11 | **Diff checks of citation-only or wording-only changes may be done by a fresh Opus reviewer** (not Codex) when the change touches no mathematical text; the reviewer must confirm, line by line, the same cited content | v4 §2A: statement-change / diff checks by an OpenAI reviewer | citation re-points have no mathematical content; saves Codex for line checks and councils | HQ 11-15 (C-MIS manifest drift) |
 | B10 | **Sweep duties of Tier B tickets go into the council briefs** (no separate sweep) — as v4 §2 already allows for Tier B; stated here so the briefs carry the named duties | v4 §2 | — (clarification) | RIDER_RULES §3 |
 
 ## C. Operating rules this department adds (not deviations; stricter than baseline)
+- **Manifest-impact check before any merge (HQ, 11-15, after the citefix incident):** before an edit to any file is
+  merged, grep **every** `MANIFEST_*` and `INPUTS*` in the repo (accepted tickets included) and every running ticket's
+  DEPS/STATEMENT for that file. If an accepted manifest lists it, the edit needs an impact plan first (diff check +
+  re-frozen manifest with seat carriers, or defer). If a running ticket consumes it, route CHAPTER-ONLY until that
+  ticket's CP3 (B6).
 - Timestamps only from `date` (two leads mis-stamped on 11-15).
 - Codex order W3-DIST > riders > the rest; any review queued > 2 h is reported to HQ.
 - Leads are child agents of the department thread (POLICIES §10); never cancelled; settled when finished.
 - A rider reads `HOLDS.md` on `origin/main` at each checkpoint and before each freeze.
 
 ## D. Open for HQ
-- Approve B1–B10 (B1, B3, B4, B7 already approved in substance; listed for the record).
+- Approve B1–B11 (B1, B3, B4, B7, B11 already approved in substance; listed for the record).

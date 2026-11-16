@@ -97,3 +97,4 @@
 - 21:34 — recorder: E/F/D real runs on main (68d48f4, 70644a2+cec478b, 8efc627); HQ told.
 - 21:35 — HQ (overnight): J before F-UNI gate and CI venv; H + C together (H first if needed). Owner away until morning; HQ decides; escalate only what can't wait. Recorder re-ordered: J → H+C → F-UNI gate → venv → I.
 - 21:41 — task J: platform bug + citefix broke START/MISR manifests (my miss) — escalated to HQ with options; recorder holds those, continues H + C.
+- 21:43 — HQ decisions on J (D39); Opus diff check launched; recorder told; PROTOCOL.md updated.

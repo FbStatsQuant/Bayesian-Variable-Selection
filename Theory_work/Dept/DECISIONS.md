@@ -263,3 +263,10 @@
   Lesson: before merging an edit to any file, grep **all** MANIFEST_* (accepted ones too) for it, not only running riders.
   Proposed (a) PC-style diff check + re-frozen manifests with seat carriers now; (b) EXT-at-freeze-commit tool change post-freeze.
 - 8 genuinely stale rows re-record after (2); Cont-F/R re-point is HQ's call.
+
+## 2026-11-15 21:43 CT — HQ on task J
+- **D39.** Case-folding tool fix approved (case-preserving _pkey + regression test + narrow Opus code review), then one
+  Linux re-record of the 49, PSHARP first. Manifest drift: (a) now — Opus diff check (running: research/PC_CMIS_CITEFIX_opus.md)
+  then re-frozen START/MISR manifests with seat carriers; (b) EXT-at-freeze-commit tool change after Friday. Cont-F/R recorded
+  as-is (implication lemmas; by design). PROTOCOL.md: manifest-impact check before any merge (§C) + B11 (Opus diff checks
+  for citation-only changes). CP3-blocking status report from the recorder by Tue 12:00.
