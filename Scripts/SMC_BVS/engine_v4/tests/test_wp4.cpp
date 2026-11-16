@@ -366,6 +366,13 @@ TEST(wp4_merge_guardw_t10) {
     auto o = merge::merge_stream(src, Ledger(pre), Model{1, 2}, fac, ms);
     CHECK(o.status == Status::invalid_input && o.fit_state == "incomplete" && !o.estimates_available);
   }
+  {  // re-check m-2: a pre-island ledger with leader stores is refused (the admission assumes none, v0.1.7)
+    auto o = merge::merge_and_tail(slots, mkled(p, R, true), Model{1, 2}, fac, ms);
+    CHECK(o.status == Status::invalid_input && !o.estimates_available && !o.has_hpm);
+    auto s2 = slots; s2[2].isl.led.lead0.init(20 * p, Order::LEX);
+    auto o2 = merge::merge_and_tail(s2, Ledger(pre), Model{1, 2}, fac, ms);
+    CHECK(o2.status == Status::invalid_input && !o2.estimates_available);
+  }
   CHECK(fit_status({Status::completed, Status::io_error, Status::numerical_failure}) == Status::numerical_failure);
   CHECK(fit_status({Status::resource_limit, Status::invalid_input}) == Status::invalid_input);
 }
@@ -424,6 +431,15 @@ TEST(wp4_terminal_supports_wp3_layout) {
     CHECK_THROWS(merge::read_terminal_supports(R, N + 1, p));   // Hm x N or any other count is refused
     CHECK_THROWS(merge::read_terminal_supports(R, N, 10));      // index out of range
   }
+  {  // re-check m-1: an offset that overshoots the pool and comes back ({0, 1e8, 2}) is refused before any read
+    std::vector<int64_t> bp{0, 100000000, 2}; std::vector<int32_t> bs{1, 2};
+    fmt::Writer w(fmt::K_ISLAND, fmt::M_LAW); Json m = Json::object(); w.add_json("meta", m);
+    w.add_copy("terminal_S_ptr", fmt::D_I64, bp.data(), bp.size() * 8, bp.size(), 0);
+    w.add_copy("terminal_S", fmt::D_I32, bs.data(), bs.size() * 4, bs.size(), 0);
+    w.write(path);
+    fmt::Reader R(path);
+    CHECK_THROWS(merge::read_terminal_supports(R, 2, 1000000));
+  }
   std::remove(path.c_str());
   // the merge requires exactly N supports per island (or none)
   std::vector<double> w(p); for (int j = 0; j < p; ++j) w[j] = 0.25 * ((j * 7) % 11) - 1;
@@ -442,4 +458,33 @@ TEST(wp4_terminal_supports_wp3_layout) {
   slots[1].isl.terminal.push_back(Model{1, 4});   // N + 1 supports (e.g. a writer that kept more than the last round)
   auto o2 = merge::merge_and_tail(slots, mkled(p, R, false), Model{}, fac, ms);
   CHECK(o2.status == Status::invalid_input && !o2.estimates_available);
+}
+
+
+TEST(wp4_tail_failure_path_equals_serial) {
+  // re-check m-3: the F3 property -- on a numerical failure several waves into a scan, the offers before the failing
+  // position are applied and nothing after, so stores, HPM + provenance and counters equal the serial run stopped at the
+  // failure (ties included), for every thread count and chunk size.
+  for (int trial = 0; trial < 4; ++trial) {
+    std::mt19937_64 g(500 + trial);
+    const int p = 120 + 13 * trial, K = 10;
+    std::vector<double> w(p); for (auto& x : w) x = 0.25 * (double)((int)(g() % 41) - 20);   // exact ties
+    Model c0{3, 17, 40};
+    // the failing model: a swap late in the first scan (member 17 out, label p - 2 in), i.e. many waves in
+    Model bad{3, 40, p - 2};
+    ToyFactory ff{&w, bad, true};
+    auto fresh = [&]() { Ledger L = mkled(p, 4, true); L.top.init(50, Order::HPM); L.lead0.init(30, Order::LEX); L.lead1.init(30, Order::LEX); return L; };
+    Ledger ref = fresh(); bool ref_threw = false;
+    try { serial_local(c0, 5, trial % 2 == 0, trial % 2 == 0 ? PH_LS0 : PH_LOCAL, ref, ff, p, K, 0); } catch (const NumericalFailure&) { ref_threw = true; }
+    ref.compact();
+    CHECK(ref_threw);
+    for (int th : {1, 3}) for (size_t ch : {size_t(3), size_t(7), size_t(64)}) {
+      Ledger L = fresh(); merge::TailSettings ts; ts.threads = th; ts.chunk = ch; ts.K = K; ts.p = p; ts.zob = &zob();
+      bool threw = false;
+      try { merge::local_search(c0, 5, trial % 2 == 0, trial % 2 == 0 ? PH_LS0 : PH_LOCAL, L, ff, ts); } catch (const NumericalFailure&) { threw = true; }
+      L.compact();
+      CHECK(threw);
+      CHECK(same_ledger(L, ref));   // stores, HPM + key, island_best, logical counters
+    }
+  }
 }

@@ -13,6 +13,7 @@ args <- commandArgs(TRUE)
 core_dir <- normalizePath(args[1]); eng_dir <- normalizePath(args[2]); work <- args[3]
 level <- if (length(args) >= 4) args[4] else "quick"
 threads <- if (length(args) >= 5) as.integer(args[5]) else 3L
+only <- if (length(args) >= 6) args[6] else ""   # optional: run one case id only (debugging)
 dir.create(work, recursive = TRUE, showWarnings = FALSE); work <- normalizePath(work)
 `%||%` <- function(a, b) if (is.null(a)) b else a
 options(warn = 1)
@@ -245,6 +246,7 @@ if (level == "full") cases <- c(cases, list(
   list(id = "AR0.8_n200_p2000", n = 200, p = 2000, rho = 0.8, seed = 16, H = c(48, 96), Te = c(80, 160), N = c(100, 200), ell = 6, heavy = TRUE)))
 
 timing <- list()
+if (nzchar(only)) cases <- Filter(function(cs) cs$id == only, cases)
 for (cs in cases) {
   cat(sprintf("== case %s\n", cs$id))
   fx <- if (is.null(cs$s0)) fixture(cs$n, cs$p, cs$rho, cs$seed) else fixture(cs$n, cs$p, cs$rho, cs$seed, cs$s0, cs$beta)

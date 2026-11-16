@@ -296,3 +296,45 @@ TEST(wp4_io_chi2_and_inherited_provenance) {
   Ledger L4 = run(false, {iT, iA}, A);   // another inherited model keeps its INHERITED key (input index 0)
   CHECK(L4.hpmS == T && L4.hpm_ev.phase == PH_INHERITED && L4.hpm_ev.key.particle == 0);
 }
+
+#include "v4/island/island_file.h"
+TEST(wp4_io_island_layout_vs_wp3) {
+  // INTERFACES v0.1.8: island_r.bin as WP3 writes it. (a) WP3's write_island_file -> WP4's head_island + load_island_full;
+  // (b) WP4's reference write_island -> WP3's read_island_file. Every field the merge reads must agree.
+  Fx f = make_fx("x3", 2, fmt::M_LAW);
+  const merge::IslandIn& I = f.isl[1];
+  island::IslandRun run;
+  run.status = 0; run.r = I.r; run.N = I.N; run.T = (int)I.ess.size(); run.L = I.L; run.Hm = I.Hm; run.p = f.D.p; run.logZ = I.logZ;
+  run.grid = {0, 0.3, 0.7, 1};
+  for (double e : I.ess) { StageRow sr; sr.ess = e; run.stages.push_back(sr); }
+  run.terminal_moves.resize((size_t)(I.L + I.Hm)); run.terminal_distinct.assign((size_t)(I.L + I.Hm), 0);
+  run.rb_acc = I.rb_acc; run.pip = I.pip; run.rb_round = I.rb_round;
+  for (int a = 0; a < N_PHASE; ++a) for (int b = 0; b < N_MECH; ++b) run.logical[a][b] = I.led.logical[a][b];
+  run.island_best = I.led.island_best[(size_t)I.r];
+  run.hpm.has = true; run.hpm.S = I.led.hpmS; run.hpm.F = I.led.hpmF; run.hpm.logm = I.led.hpm_logm; run.hpm.key = I.led.hpm_ev.key;
+  run.hpm.phase = I.led.hpm_ev.phase; run.hpm.mech = I.led.hpm_ev.mech;
+  run.top_v = I.led.top.v; run.top_hash = I.led.top.hash; run.top_off = I.led.top.off; run.top_len = I.led.top.len; run.top_pool = I.led.top.pool;
+  run.terminal = I.terminal;
+  Json in = Json::object(); in["data.bin"] = f.dhash; in["setup.bin"] = f.shash; in["calib.bin"] = f.chash;
+  std::string pa = tmp_path("x3_wp3_island.bin");
+  island::write_island_file(pa, run, island::Arith::Bit, in);
+  wp4io::Expect ex; ex.mode = fmt::M_LAW; ex.data_hash = f.dhash; ex.setup_hash = f.shash; ex.calib_hash = f.chash;
+  merge::IslandHead h = wp4io::head_island(pa, 2, ex, nullptr);
+  CHECK_MSG(h.load == merge::Load::ok && h.r == 2 && h.N == I.N && h.p == f.D.p && same_bits(h.logZ, I.logZ), h.detail);
+  merge::IslandIn A = wp4io::load_island_full(pa, 4, f.D.p);
+  CHECK(A.r == 2 && same_bits(A.logZ, I.logZ) && A.pip == I.pip && A.ess == I.ess && A.terminal == I.terminal && A.rb_round == I.rb_round);
+  CHECK(A.led.top.content_hash() == I.led.top.content_hash() && A.led.hpmS == I.led.hpmS && A.led.hpm_ev.key == I.led.hpm_ev.key &&
+        same_bits(A.led.hpmF, I.led.hpmF) && same_bits(A.led.island_best[2], I.led.island_best[2]) && A.led.island_best.size() == 5);
+  // phi from the grid: the HPM event is MEASURED in this fixture -> 1
+  CHECK(A.led.hpm_ev.phi == 1.0);
+  // (b) WP4's writer read by WP3's reader
+  std::string pb = tmp_path("x3_wp4_island.bin");
+  std::vector<double> grid{0, 0.3, 0.7, 1};
+  wp4io::write_island(pb, fmt::M_LAW, I, in, nullptr, &grid);
+  island::IslandFile F = island::read_island_file(pb);
+  CHECK(F.rec.r == 2 && F.rec.N == I.N && F.rec.Hm == I.Hm && same_bits(F.rec.logZ, I.logZ) && F.rec.pip == I.pip && F.terminal == I.terminal);
+  CHECK(F.rec.rb_round == I.rb_round && F.rec.led.top.content_hash() == I.led.top.content_hash() && F.rec.led.hpmS == I.led.hpmS &&
+        F.rec.led.hpm_ev.key == I.led.hpm_ev.key && F.grid == grid);
+  std::remove(pa.c_str()); std::remove(pb.c_str());
+  cleanup(f);
+}

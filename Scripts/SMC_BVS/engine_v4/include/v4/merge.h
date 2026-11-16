@@ -231,6 +231,11 @@ FitOut merge_stream(IslandSource& src, Ledger&& pre, const Model& mode_S, Factor
     out.reason = "merge not admitted: estimated peak " + std::to_string(out.mem.total) + " B > --mem-budget " + std::to_string(ms.mem_budget_bytes) + " B";
     return out;
   }
+  if (pre.lead0.cap != 0 || pre.lead1.cap != 0) {   // v0.1.7: no final-run leaders; the admission assumes none (re-check m-2)
+    out.status = Status::invalid_input; out.fit_state = "incomplete";
+    out.reason = "merge refused: the pre-island ledger has leader stores (final-run ledgers need leaders = false, INTERFACES v0.1.7)";
+    return out;
+  }
   const int R = ms.Rp, p = ms.p;
   // 3. pass 2: stream the islands into the one merged ledger (order-free), keep the small fields
   Ledger led = std::move(pre);
@@ -241,7 +246,14 @@ FitOut merge_stream(IslandSource& src, Ledger&& pre, const Model& mode_S, Factor
     if (I.r != r || (int)I.pip.size() != p || I.N != ms.N || I.status != Status::completed || !std::isfinite(I.logZ)) {
       out = FitOut(); out.mem = estimate_merge_memory(ms);
       out.status = Status::invalid_input; out.fit_state = "incomplete";
-      out.reason = "merge refused (GUARD-W): island " + std::to_string(r) + " changed between the head check and its load";
+      out.reason = "merge refused (GUARD-W): island " + std::to_string(r) + " changed between the head check and its load" +
+                   (I.message.empty() ? std::string() : " (" + I.message + ")");
+      return out;
+    }
+    if (I.led.lead0.cap != 0 || I.led.lead1.cap != 0) {   // final-run island ledgers carry no leaders (v0.1.7)
+      out = FitOut(); out.mem = estimate_merge_memory(ms);
+      out.status = Status::invalid_input; out.fit_state = "incomplete";
+      out.reason = "merge refused (GUARD-W): island " + std::to_string(r) + " has leader stores (INTERFACES v0.1.7)";
       return out;
     }
     if (!I.terminal.empty() && (int64_t)I.terminal.size() != (int64_t)I.N) {   // N supports (last measured round) or none

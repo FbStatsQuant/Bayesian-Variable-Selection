@@ -209,9 +209,12 @@ std::string write_island(const std::string& path, uint32_t mode, const merge::Is
     add_vec_copy(W, "rb_acc", isl.rb_acc); add_vec_copy(W, "pip_r", isl.pip);
     std::vector<double> rr; for (auto& x : isl.rb_round) rr.insert(rr.end(), x.begin(), x.end());
     add_vec_copy(W, "rb_round", rr, isl.rb_round.size(), isl.rb_round.empty() ? 0 : isl.rb_round[0].size());
-    std::vector<int64_t> tptr{0}; std::vector<int32_t> tS;   // WP3 names: terminal_S_ptr i64 [N+1], terminal_S i32
-    for (auto& S : isl.terminal) { tS.insert(tS.end(), S.begin(), S.end()); tptr.push_back((int64_t)tS.size()); }
-    add_vec_copy(W, "terminal_S_ptr", tptr); add_vec_copy(W, "terminal_S", tS);
+    if (!isl.terminal.empty()) {   // WP3 names: terminal_S_ptr i64 [N+1], terminal_S i32 (omitted when the source has none,
+                                   // e.g. core's islands in the golden harness; the merge then reports no occupancy)
+      std::vector<int64_t> tptr{0}; std::vector<int32_t> tS;
+      for (auto& S : isl.terminal) { tS.insert(tS.end(), S.begin(), S.end()); tptr.push_back((int64_t)tS.size()); }
+      add_vec_copy(W, "terminal_S_ptr", tptr); add_vec_copy(W, "terminal_S", tS);
+    }
   }
   return W.write(path);
 }
