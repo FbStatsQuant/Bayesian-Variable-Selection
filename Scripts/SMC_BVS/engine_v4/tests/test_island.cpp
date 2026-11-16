@@ -5,6 +5,7 @@
 #include <map>
 #include <random>
 #include <set>
+#include <unistd.h>
 #include "tk.h"
 #include "tutil_island.h"
 #include "v4/island/island.h"
@@ -78,7 +79,7 @@ TEST(flip_bit_equals_scorer) {
     for (int j0 = 0; j0 < F.D.p; j0 += 8) {
       int32_t j8[8]; unsigned valid = 0;
       for (int l = 0; l < 8; ++l) { j8[l] = j0 + l; if (!contains(S, j0 + l)) valid |= 1u << l; }
-      v8d u[KM];
+      std::vector<v8d> ub(64); v8d* u = ub.data();
       for (int a = 0; a < k; ++a) for (int l = 0; l < 8; ++l) u[a][l] = gram(F.D, S[a], j8[l]);
       double lm8[8] = {0}, o8[8] = {0};
       unsigned rest = valid;
@@ -394,4 +395,45 @@ TEST(store_one_worker_all_winners) {
     std::printf("  one worker, all winners: buffer %zu -> %llu flushes, %llu compactions, content = reference: %d\n", lim,
                 (unsigned long long)st.n_flushes, (unsigned long long)st.n_merges, (int)ok);
   }
+}
+
+// T6 (Sol F5, manager item 7; D-21: stage boundaries): kills during a checkpoint write leave a temporary file and/or a
+// torn newest generation -> the older generation is used; repeated resubmission; a checkpoint of another
+// configuration is refused (invalid_input), never silently ignored.
+TEST(t6_kill_during_write_resubmit_and_refusal) {
+  Fixture F(100, 300, 25);
+  IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = 2; c.G = 16;
+  const uint64_t h0 = run_island<Arith::ClassA>(F.D, F.st, F.nb, c).hash();
+  const std::string base = tmpdir() + "/wp3_t6k";
+  auto clean = [&]() { for (const char* s : {".a", ".b", ".b.tmp.12345", ".a.tmp.12345"}) std::remove((base + s).c_str()); };
+  // (1) checkpoint every step, stop after step 4 (writes 0 a, 1 b, 2 a, 3 b, 4 a); then a "kill" during the next
+  //     write: a partial temporary file, and the newest generation torn to half its length
+  clean();
+  IslandConfig a = c; a.ckpt_path = base; a.ckpt_every_s = 0; a.stop_after_step = 4;
+  CHECK(run_island<Arith::ClassA>(F.D, F.st, F.nb, a).status == 1);
+  { FILE* f = std::fopen((base + ".b.tmp.12345").c_str(), "wb"); std::fputs("partial", f); std::fclose(f); }
+  { FILE* f = std::fopen((base + ".a").c_str(), "rb"); std::fseek(f, 0, SEEK_END); long n = std::ftell(f); std::fclose(f);
+    CHECK(::truncate((base + ".a").c_str(), n / 2) == 0); }
+  IslandConfig b = a; b.stop_after_step = -1; b.threads = 3; b.G = 7;
+  IslandRun r = run_island<Arith::ClassA>(F.D, F.st, F.nb, b);
+  CHECKF(r.status == 0 && r.resumed_from_step == 3 && r.hash() == h0, "torn newest: resumed %d", r.resumed_from_step);
+  // (2) repeated resubmission: stop at 2, resume and stop at 6, resume to the end
+  clean();
+  a.stop_after_step = 2; a.ckpt_every_s = 1e9;
+  CHECK(run_island<Arith::ClassA>(F.D, F.st, F.nb, a).status == 1);
+  IslandConfig a2 = a; a2.stop_after_step = 6; a2.kernel = KernelKind::ParticleMajor;
+  IslandRun r2 = run_island<Arith::ClassA>(F.D, F.st, F.nb, a2);
+  CHECK(r2.status == 1 && r2.resumed_from_step == 2);
+  IslandConfig a3 = a; a3.stop_after_step = -1; a3.threads = 1; a3.G = 48;
+  IslandRun r3 = run_island<Arith::ClassA>(F.D, F.st, F.nb, a3);
+  CHECKF(r3.status == 0 && r3.resumed_from_step == 6 && r3.hash() == h0, "resubmission: resumed %d", r3.resumed_from_step);
+  // (3) a checkpoint of another configuration (seed) is refused
+  clean();
+  a.stop_after_step = 2;
+  run_island<Arith::ClassA>(F.D, F.st, F.nb, a);
+  IslandConfig other = a; other.seed = a.seed + 1; other.stop_after_step = -1;
+  bool refused = false;
+  try { run_island<Arith::ClassA>(F.D, F.st, F.nb, other); } catch (const v4::Error& e) { refused = e.st == v4::Status::invalid_input; }
+  CHECK(refused);
+  clean();
 }

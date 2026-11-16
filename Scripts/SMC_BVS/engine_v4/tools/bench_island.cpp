@@ -71,7 +71,7 @@ static void bench_kernel(int p, int T, int nsup, int k, int div, int Bk) {
       }
       double tb = now();
       for (auto& c : sup) {
-        v8d u[KM];
+        std::vector<v8d> ub(64); v8d* u = ub.data();
         for (int v = 0; v < nbv; v += 8) {
           int32_t j8[8]; unsigned valid = 0;
           for (int l = 0; l < 8; ++l) { int j = std::min(j0 + v + l, p - 1); j8[l] = j; if (v + l < nbv && !contains(c.S, j0 + v + l)) valid |= 1u << l; }
@@ -115,7 +115,7 @@ static void bench_island(int p, int N, const std::vector<int>& thr, KernelKind k
   Start st; build_start(st, D, contiguous_blocks(p, 4));
   Neighbours nb = window_neighbours(D, 14, 8);
   std::printf("# data AR(0.6) n=%d p=%d (stand-in partition: blocks of 4; window neighbours, B=14): %.1f s wall\n", n, p, now() - t0);
-  IslandConfig c; c.store_dup_filter = std::getenv("V4_NO_DUP_FILTER") == nullptr; c.allow_test_kernels = true; c.seed = 2026; c.island = 1; c.N = N; c.L = L; c.Hm = Hm; c.B = 14; c.kernel = kk; c.G = G; c.tile = Bk; c.store_cap = cap;
+  IslandConfig c; c.store_dup_filter = std::getenv("V4_NO_DUP_FILTER") == nullptr; c.verbose = std::getenv("V4_VERBOSE") != nullptr; c.allow_test_kernels = true; c.seed = 2026; c.island = 1; c.N = N; c.L = L; c.Hm = Hm; c.B = 14; c.kernel = kk; c.G = G; c.tile = Bk; c.store_cap = cap;
   if (gspec.rfind("geo:", 0) == 0) {
     int Tst = std::atoi(gspec.c_str() + 4);
     c.grid.push_back(0.0); for (int t = 1; t < Tst; ++t) c.grid.push_back(std::pow(10.0, -3.0 * (1.0 - (double)t / (Tst - 1))) * ((double)t / Tst));

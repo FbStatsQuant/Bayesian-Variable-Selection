@@ -28,9 +28,9 @@
 namespace v4::island {
 inline namespace V4_ISLAND_ISA_NS {
 
-typedef double v8d __attribute__((vector_size(64), aligned(64)));
-typedef int64_t v8l __attribute__((vector_size(64), aligned(64)));
-typedef uint64_t v8u __attribute__((vector_size(64), aligned(64)));
+typedef double v8d __attribute__((vector_size(64)));   // natural alignment 64
+typedef int64_t v8l __attribute__((vector_size(64)));   // natural alignment 64
+typedef uint64_t v8u __attribute__((vector_size(64)));   // natural alignment 64
 
 // 64-byte aligned allocator: the tile, product and gathered-column buffers are read with 64-byte vector loads, which
 // cost about twice as much when they straddle cache lines (measured: 0.166 vs 0.085 ns per product multiply-add).

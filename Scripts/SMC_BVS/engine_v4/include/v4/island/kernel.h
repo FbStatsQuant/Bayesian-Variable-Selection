@@ -22,15 +22,31 @@ using namespace v4::island::dep;
 inline namespace V4_ISLAND_ISA_NS {
 
 enum class Arith { Bit, ClassA };
-constexpr int KM = 24;  // largest support handled by the vector paths; larger supports take the scalar path
+// Matrices and lane buffers are sized by the support (no size cap: supports up to K take the vector paths; the
+// earlier fixed cap of 24 sent large pi_0 supports to a per-label full-score path, MEASURED 50 us per label at p = 1e5).
+struct Mat {   // k x k row-major
+  std::vector<double> a; int ld = 0;
+  void resize(int k) { ld = k; a.assign((size_t)k * k, 0.0); }
+  double* operator[](int r) { return a.data() + (size_t)r * ld; }
+  const double* operator[](int r) const { return a.data() + (size_t)r * ld; }
+};
+struct VMat {  // rows of 8-lane vectors, ld columns
+  v8d* p; int ld;
+  v8d* operator[](int r) const { return p + (size_t)r * ld; }
+};
+inline std::vector<v8d>& lane_scratch(int which, size_t n) {   // per-thread scratch: 0 L, 1 w, 2 vH, 3 vA
+  thread_local std::vector<v8d> buf[4];
+  if (buf[which].size() < n) buf[which].resize(n);
+  return buf[which];
+}
 
 struct SupportCache {
   Model S; int k = 0; uint64_t h = 0;
   double logm = 0, lg0 = 0, d = 0, phi = 0, lgphi = 0;  // the particle's path values at this state
-  bool fast = false;    // vector path usable (k <= KM and both Cholesky factors of S exist)
+  bool fast = false;    // vector path usable (both Cholesky factors of S exist)
   bool add_ok = false;  // k < K (core/cpp/v3_engine.h:116)
-  alignas(64) double MH[KM][KM], MA[KM][KM], LH[KM][KM], LA[KM][KM];
-  double zS[KM], wH[KM], rLH[KM], rLA[KM], preH[KM + 1], preA[KM + 1], preQ[KM + 1];
+  Mat MH, MA, LH, LA;
+  std::vector<double> zS, wH, rLH, rLA, preH, preA, preQ;
   // composite sum of S by blocks in increasing block order (core/cpp/v3_start.h:54-66)
   std::vector<int> bb; std::vector<uint32_t> bcode; std::vector<double> bterm, bpre;
   // deletions S \ S[a]
@@ -68,7 +84,10 @@ inline void build_support(const Data& D, const Start& st, BitScorer& sc, Support
   std::vector<double> G((size_t)k * k);
   for (int a = 0; a < k; ++a) for (int b = 0; b <= a; ++b) { double g = gram(D, S[a], S[b]); G[a * k + b] = g; G[b * k + a] = g; }
   s.fast = false;
-  if (k <= KM) {
+  s.MH.resize(k); s.MA.resize(k); s.LH.resize(k); s.LA.resize(k);
+  s.zS.assign(k, 0.0); s.wH.assign(k, 0.0); s.rLH.assign(k, 0.0); s.rLA.assign(k, 0.0);
+  s.preH.assign(k + 1, 0.0); s.preA.assign(k + 1, 0.0); s.preQ.assign(k + 1, 0.0);
+  {
     // core/cpp/v3_score.h:180-184: H = (n+1) G_S + I, A = G_S + I, factors by chol_inplace
     std::vector<double> bH((size_t)k * k), bA((size_t)k * k);
     for (int a = 0; a < k; ++a) for (int b = 0; b < k; ++b) {
@@ -118,11 +137,11 @@ inline void build_support(const Data& D, const Start& st, BitScorer& sc, Support
 // --- Bit form: 8 labels sharing the sorted insertion position q. Returns the mask of lanes with a valid result. ---
 inline unsigned flip8_bit(const Data& D, const SupportCache& s, int q, const v8d* u, v8d gjj, v8d zj, v8d& logm) {
   const int k = s.k, kk = k + 1; const double n1 = D.n + 1.0;
-  v8d L[KM + 1][KM + 1]; v8d ld[2]; v8d w[KM + 1]; v8d quad = bc(0.0);
+  VMat L{lane_scratch(0, (size_t)kk * kk).data(), kk}; v8d ld[2]; v8d* w = lane_scratch(1, (size_t)kk).data(); v8d quad = bc(0.0);
   unsigned ok = 0xFFu;
   for (int which = 0; which < 2; ++which) {
-    const double (*Ls)[KM] = which == 0 ? s.LH : s.LA;
-    const double (*Ms)[KM] = which == 0 ? s.MH : s.MA;
+    const Mat& Ls = which == 0 ? s.LH : s.LA;
+    const Mat& Ms = which == 0 ? s.MH : s.MA;
     auto Mlab = [&](int a) { return which == 0 ? bc(n1) * u[a] + bc(0.0) : u[a] + bc(0.0); };
     for (int c = 0; c < q; ++c) {   // row q (the label), columns before it
       v8d x = Mlab(c);
@@ -173,7 +192,7 @@ inline unsigned flip8_bit(const Data& D, const SupportCache& s, int q, const v8d
 // --- Class A: bordered update, label appended last. ---
 inline unsigned flip8_A(const Data& D, const SupportCache& s, const v8d* u, v8d gjj, v8d zj, v8d& logm) {
   const int k = s.k; const double n1 = D.n + 1.0;
-  v8d vH[KM], vA[KM];
+  v8d* vH = lane_scratch(2, (size_t)std::max(1, k)).data(); v8d* vA = lane_scratch(3, (size_t)std::max(1, k)).data();
   v8d dH = fma8(bc(n1), gjj, bc(1.0)), dA = gjj + bc(1.0), wz = zj;
   for (int c = 0; c < k; ++c) {
     v8d x = bc(n1) * u[c], y = u[c];
@@ -238,7 +257,8 @@ inline void eval1(const Data& D, const Start& st, BitScorer& sc, const SupportCa
   int32_t j8[8]; for (int l = 0; l < 8; ++l) j8[l] = j;
   double lm8[8], o8[8];
   if (s.fast) {
-    v8d u[KM];
+    thread_local std::vector<v8d> ub; if (ub.size() < (size_t)std::max(1, s.k)) ub.resize((size_t)std::max(1, s.k));
+    v8d* u = ub.data();
     const double* xj = D.col(j);
     for (int a = 0; a < s.k; ++a) { const double* xa = D.col(s.S[a]); double g = 0; for (int i = 0; i < D.n; ++i) g += xa[i] * xj[i]; u[a] = bc(g); }
     eval8_add<A>(D, st, sc, s, q, u, j8, 1u, lm8, o8);

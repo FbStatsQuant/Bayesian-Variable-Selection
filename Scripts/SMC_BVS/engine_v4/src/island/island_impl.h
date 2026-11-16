@@ -6,6 +6,7 @@
 #include <cstdio>
 #include <memory>
 #include "v4/island/island.h"
+#include "v4/provenance.h"
 
 namespace v4::island {
 
@@ -89,38 +90,10 @@ v4::IslandResult to_record(const IslandRun& r) {
 #endif
 
 // ---------------------------------------------------------------------------------------------------------------
-// Checkpoint byte stream (provisional container: magic, generation, length, FNV-1a checksum; WP1's kind-8 file with
-// SHA-256 sections replaces it when format.h lands).
+// Checkpoint container (provisional: magic, generation, length, FNV-1a checksum, streamed payload; WP1's kind-8 file
+// with SHA-256 sections may replace it). Streaming I/O: IslandEngine::save_ckpt / load_ckpt.
 // ---------------------------------------------------------------------------------------------------------------
-struct Bytes {
-  std::vector<unsigned char> b; size_t rd = 0; bool bad = false;
-  template <class T> void put(const T& x) { const unsigned char* c = (const unsigned char*)&x; b.insert(b.end(), c, c + sizeof(T)); }
-  template <class T> void putv(const std::vector<T>& v) { uint64_t n = v.size(); put(n); const unsigned char* c = (const unsigned char*)v.data(); b.insert(b.end(), c, c + n * sizeof(T)); }
-  template <class T> void get(T& x) { if (rd + sizeof(T) > b.size()) { bad = true; return; } std::memcpy(&x, &b[rd], sizeof(T)); rd += sizeof(T); }
-  template <class T> void getv(std::vector<T>& v) {
-    uint64_t n = 0; get(n); if (bad || n > (b.size() - rd) / std::max<size_t>(1, sizeof(T))) { bad = true; return; }
-    v.resize(n); if (n) std::memcpy(v.data(), &b[rd], n * sizeof(T)); rd += n * sizeof(T);
-  }
-};
 static const char kCkptMagic[8] = {'S', 'M', 'C', 'V', '4', 'C', 'K', 'P'};
-
-inline bool write_file_atomic(const std::string& path, const std::vector<unsigned char>& data) {
-  std::string tmp = path + ".tmp." + std::to_string((long)getpid());
-  int fd = ::open(tmp.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
-  if (fd < 0) return false;
-  size_t done = 0;
-  while (done < data.size()) { ssize_t w = ::write(fd, data.data() + done, data.size() - done); if (w <= 0) { ::close(fd); return false; } done += (size_t)w; }
-  if (::fsync(fd) != 0) { ::close(fd); return false; }
-  ::close(fd);
-  return std::rename(tmp.c_str(), path.c_str()) == 0;
-}
-inline bool read_file(const std::string& path, std::vector<unsigned char>& data) {
-  FILE* f = std::fopen(path.c_str(), "rb"); if (!f) return false;
-  std::fseek(f, 0, SEEK_END); long n = std::ftell(f); std::fseek(f, 0, SEEK_SET);
-  if (n < 0) { std::fclose(f); return false; }
-  data.resize((size_t)n); size_t r = n ? std::fread(data.data(), 1, (size_t)n, f) : 0; std::fclose(f);
-  return r == (size_t)n;
-}
 
 // ---------------------------------------------------------------------------------------------------------------
 template <Arith A>
@@ -390,7 +363,8 @@ class IslandEngine {
             } else if (!c.fast) {
               for (int jj = 0; jj < nbv; ++jj) if (!inm[jj]) eval1<A>(D, st, sc, c, j0 + jj, lb[j0 + jj], ob[j0 + jj]);
             } else {
-              v8d u[KM];
+              thread_local std::vector<v8d> ub; if (ub.size() < (size_t)std::max(1, c.k)) ub.resize((size_t)std::max(1, c.k));
+              v8d* u = ub.data();
               for (int v = 0; v < nbv; v += 8) {
                 int32_t j8[8]; unsigned valid = 0;
                 for (int l = 0; l < 8; ++l) { int j = j0 + v + l; if (v + l < nbv && !inm[v + l]) valid |= 1u << l; j8[l] = std::min(j, p - 1); }
@@ -583,14 +557,31 @@ class IslandEngine {
   MoveStats take_moves() { MoveStats ms = master.ms; master.ms = MoveStats(); return ms; }
 
   // ---- checkpoint ---------------------------------------------------------------------------------------------
+  // Configuration + binary fingerprint (not threads, G, tile or kernel: a resume may change them). INTERFACES v0.1.3:
+  // a restart refuses a different binary block.
   uint64_t fingerprint() const {
-    Fnv f; f.pod(cfg.seed); f.pod(cfg.island); f.pod(cfg.N); f.vec(cfg.grid); f.pod(cfg.L); f.pod(cfg.Hm); f.pod(cfg.B);
+    Fnv f; f.pod(cfg.seed); f.pod(cfg.island); f.pod(cfg.tier); f.pod(cfg.N); f.vec(cfg.grid); f.pod(cfg.L); f.pod(cfg.Hm); f.pod(cfg.B);
     f.pod(top.cap); f.pod(D.n); f.pod(D.p); f.pod(D.yty); f.pod(st.logZbar0); f.pod(st.J); f.pod((int)A);
+    const std::string bb = v4::binary_block_no_self_test().dump(); f.bytes(bb.data(), bb.size());
     return f.h;
   }
-  void save_ckpt(int step) {
-    auto t0 = std::chrono::steady_clock::now();
-    Bytes w;
+  // Streamed checkpoint I/O (manager Q6): no byte image of the store; the checksum is computed while streaming.
+  struct CkptOut {
+    FILE* f = nullptr; Fnv ck; uint64_t len = 0; bool bad = false;
+    void raw(const void* q, size_t n) { if (n && std::fwrite(q, 1, n, f) != n) bad = true; ck.bytes(q, n); len += n; }
+    template <class T> void put(const T& x) { raw(&x, sizeof(T)); }
+    template <class T> void putv(const std::vector<T>& v) { uint64_t n = v.size(); put(n); raw(v.data(), n * sizeof(T)); }
+  };
+  struct CkptIn {
+    FILE* f = nullptr; uint64_t left = 0; bool bad = false;
+    void raw(void* q, size_t n) { if (bad || n > left || (n && std::fread(q, 1, n, f) != n)) { bad = true; return; } left -= n; }
+    template <class T> void get(T& x) { raw(&x, sizeof(T)); }
+    template <class T> void getv(std::vector<T>& v) {
+      uint64_t n = 0; get(n); if (bad || n > left / std::max<size_t>(1, sizeof(T))) { bad = true; return; }
+      v.resize(n); raw(v.data(), n * sizeof(T));
+    }
+  };
+  template <class W> void ckpt_payload(W& w, int step) {
     w.put(fingerprint()); w.put(step); w.put(logZ); w.put(res.init_hash);
     uint64_t np = P.size(); w.put(np);
     for (auto& x : P) { w.putv(x.S); w.put(x.h); w.put(x.logm); w.put(x.lg0); w.put(x.d); w.put(x.F); }
@@ -600,39 +591,77 @@ class IslandEngine {
     w.put(master.logical); w.put(master.island_best);
     w.put(master.hpm.has); w.putv(master.hpm.S); w.put(master.hpm.F); w.put(master.hpm.logm); w.put(master.hpm.key); w.put(master.hpm.phase); w.put(master.hpm.mech);
     w.putv(top.k->v); w.putv(top.k->hash); w.putv(top.k->off); w.putv(top.k->len); w.putv(top.k->pool);
+  }
+  // Two generations <path>.a/.b, alternately: header placeholder, streamed payload, header (generation, length,
+  // checksum) rewritten in place, fflush + fsync, rename from <file>.tmp.<pid>. A kill at any point leaves the other
+  // generation intact (tests: truncated / leftover temporary / corrupt newest).
+  void save_ckpt(int step) {
+    auto t0 = std::chrono::steady_clock::now();
+    std::string path = cfg.ckpt_path + ((ckpt_writes & 1) ? ".b" : ".a");
+    std::string tmp = path + ".tmp." + std::to_string((long)getpid());
+    FILE* f = std::fopen(tmp.c_str(), "wb");
+    if (!f) throw std::runtime_error("io_error: cannot open checkpoint " + tmp);
+    std::setvbuf(f, nullptr, _IOFBF, 1 << 20);
+    uint64_t zero[3] = {0, 0, 0};
+    bool ok = std::fwrite(kCkptMagic, 1, 8, f) == 8 && std::fwrite(zero, 8, 3, f) == 3;
+    CkptOut w; w.f = f;
+    ckpt_payload(w, step);
     uint64_t gen = (uint64_t)(step + 1) * 1024 + (uint64_t)(ckpt_writes & 1023);
-    Fnv ck; ck.bytes(w.b.data(), w.b.size());
-    Bytes out; out.b.insert(out.b.end(), kCkptMagic, kCkptMagic + 8); out.put(gen); uint64_t len = w.b.size(); out.put(len); out.put(ck.h);
-    out.b.insert(out.b.end(), w.b.begin(), w.b.end());
-    std::string path = cfg.ckpt_path + ((ckpt_writes++ & 1) ? ".b" : ".a");   // alternate generations
-    if (!write_file_atomic(path, out.b)) throw std::runtime_error("io_error: checkpoint write failed: " + path);
+    ok = ok && !w.bad && std::fseek(f, 8, SEEK_SET) == 0 && std::fwrite(&gen, 8, 1, f) == 1 && std::fwrite(&w.len, 8, 1, f) == 1 &&
+         std::fwrite(&w.ck.h, 8, 1, f) == 1 && std::fflush(f) == 0 && ::fsync(fileno(f)) == 0;
+    ok = (std::fclose(f) == 0) && ok;
+    if (!ok || std::rename(tmp.c_str(), path.c_str()) != 0) { std::remove(tmp.c_str()); throw std::runtime_error("io_error: checkpoint write failed: " + path); }
+    ++ckpt_writes;
     last_ckpt = std::chrono::steady_clock::now();
     res.ks.t_ckpt += std::chrono::duration<double>(last_ckpt - t0).count();
   }
-  // returns the step to continue after, or -1
+  // returns the step to continue after, or -1 (no valid checkpoint). A valid checkpoint (checksum ok) of another
+  // configuration or binary is refused (invalid_input), never silently ignored.
   int load_ckpt() {
-    int best_step = -1; uint64_t best_gen = 0; std::vector<unsigned char> best;
+    int best_step = -1; uint64_t best_gen = 0; std::string best; bool foreign = false;
     for (const char* sfx : {".a", ".b"}) {
-      std::vector<unsigned char> f;
-      if (!read_file(cfg.ckpt_path + sfx, f) || f.size() < 32 || std::memcmp(f.data(), kCkptMagic, 8) != 0) continue;
-      uint64_t gen, len, ck; std::memcpy(&gen, &f[8], 8); std::memcpy(&len, &f[16], 8); std::memcpy(&ck, &f[24], 8);
-      if (len != f.size() - 32) continue;
-      Fnv c; c.bytes(&f[32], len); if (c.h != ck) continue;
-      uint64_t fp; std::memcpy(&fp, &f[32], 8); if (fp != fingerprint()) continue;
-      if (best_step < 0 || gen > best_gen) { best_gen = gen; best.assign(f.begin() + 32, f.end()); int s; std::memcpy(&s, &f[40], 4); best_step = s; }
+      std::string path = cfg.ckpt_path + sfx;
+      FILE* f = std::fopen(path.c_str(), "rb"); if (!f) continue;
+      char mg[8]; uint64_t gen = 0, len = 0, ck = 0;
+      bool ok = std::fread(mg, 1, 8, f) == 8 && std::memcmp(mg, kCkptMagic, 8) == 0 && std::fread(&gen, 8, 1, f) == 1 &&
+                std::fread(&len, 8, 1, f) == 1 && std::fread(&ck, 8, 1, f) == 1;
+      if (ok) { std::fseek(f, 0, SEEK_END); ok = (uint64_t)std::ftell(f) == 32 + len && len >= 12; std::fseek(f, 32, SEEK_SET); }
+      uint64_t fp = 0; int s = -1;
+      if (ok) {   // pass 1: checksum by streaming
+        Fnv c; std::vector<unsigned char> buf(1 << 20); uint64_t left = len, pos = 0;
+        while (left && ok) {
+          size_t n = (size_t)std::min<uint64_t>(left, buf.size());
+          if (std::fread(buf.data(), 1, n, f) != n) { ok = false; break; }
+          if (pos == 0 && n >= 12) { std::memcpy(&fp, buf.data(), 8); std::memcpy(&s, buf.data() + 8, 4); }
+          c.bytes(buf.data(), n); left -= n; pos += n;
+        }
+        ok = ok && c.h == ck;
+      }
+      std::fclose(f);
+      if (!ok) continue;
+      if (fp != fingerprint()) { foreign = true; continue; }
+      if (best_step < 0 || gen > best_gen) { best_gen = gen; best = path; best_step = s; }
     }
-    if (best_step < 0) return -1;
-    Bytes r; r.b.swap(best);
+    if (best_step < 0) {
+      if (foreign) throw v4::Error(v4::Status::invalid_input, "checkpoint " + cfg.ckpt_path + " belongs to another configuration or binary");
+      return -1;
+    }
+    FILE* f = std::fopen(best.c_str(), "rb"); if (!f) return -1;
+    uint64_t len = 0; std::fseek(f, 16, SEEK_SET); if (std::fread(&len, 8, 1, f) != 1) { std::fclose(f); return -1; }
+    std::fseek(f, 32, SEEK_SET);
+    CkptIn r; r.f = f; r.left = len;
     uint64_t fp; int step; r.get(fp); r.get(step); r.get(logZ); r.get(res.init_hash);
-    uint64_t np; r.get(np); if (np != (uint64_t)cfg.N) return -1;
+    uint64_t np; r.get(np); if (r.bad || np != (uint64_t)cfg.N) { std::fclose(f); return -1; }
     P.assign(np, Particle());
     for (auto& x : P) { r.getv(x.S); r.get(x.h); r.get(x.logm); r.get(x.lg0); r.get(x.d); r.get(x.F); }
     r.getv(res.stages); r.getv(res.terminal_moves); r.getv(res.terminal_distinct);
-    uint64_t nr; r.get(nr); res.rb_round.assign(nr, {}); for (auto& v : res.rb_round) r.getv(v);
+    uint64_t nr = 0; r.get(nr); if (r.bad || nr > 1u << 20) { std::fclose(f); return -1; }
+    res.rb_round.assign(nr, {}); for (auto& v : res.rb_round) r.getv(v);
     r.getv(rb_tot);
     r.get(master.logical); r.get(master.island_best);
     r.get(master.hpm.has); r.getv(master.hpm.S); r.get(master.hpm.F); r.get(master.hpm.logm); r.get(master.hpm.key); r.get(master.hpm.phase); r.get(master.hpm.mech);
     { auto nk = std::make_shared<Kept>(); r.getv(nk->v); r.getv(nk->hash); r.getv(nk->off); r.getv(nk->len); r.getv(nk->pool); top.k = nk; }
+    std::fclose(f);
     if (r.bad) return -1;
     top.publish_loaded();
     return step;
@@ -723,6 +752,15 @@ class IslandEngine {
           std::vector<double> rr(p); for (int j = 0; j < p; ++j) { rr[j] = unfix63(rb_cur[j]); rb_tot[j] += rb_cur[j]; }
           res.rb_round.push_back(rr);
           sync_ledgers(); res.terminal_moves.push_back(take_moves()); res.terminal_distinct.push_back(distinct());
+        }
+        if (cfg.verbose) {
+          const auto& k = res.ks;
+          static thread_local double prev_t = 0; double now_t = std::chrono::duration<double>(std::chrono::steady_clock::now() - tstart).count();
+          std::fprintf(stderr, "  [island] step %d (+%.1f s) done %.1f s: passes %llu supports %llu slow %llu | phaseA %.1f B %.1f walk %.1f build %.1f orders %.1f | store %zu merges %llu buffered %llu\n",
+                       step, now_t - prev_t, now_t, (unsigned long long)k.passes,
+                       (unsigned long long)k.supports, (unsigned long long)k.slow_supports, k.t_phaseA, k.t_phaseB, k.t_walk, k.t_build, k.t_orders,
+                       top.size(), (unsigned long long)top.n_merges, (unsigned long long)top.n_buffered);
+          prev_t = now_t;
         }
         if (!(top.check_invariant())) throw std::runtime_error("internal_error: store invariant I1 violated");
         maybe_ckpt(step, stop);
