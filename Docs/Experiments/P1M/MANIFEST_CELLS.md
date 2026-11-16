@@ -122,6 +122,12 @@ each extra N = 2,500 arm costs ≈ 35 core-h per dataset, ≈ 106 over the 3 dat
 | option D (with contingency) | 4,072 (5,090) |
 | **A + D with contingency** | **27,608**, against the H-9 envelope ≈ 28.3k |
 
+**R1 brackets (H-11 gate, 11-16; results/R1_RESIZE.md; production π₀ E|S| ≈ 3.6–3.9 at 10⁶):** per 1M fit, against the
+1,188 used above: levers 1–3 + m3 ≈ 1,000–1,100 (0.8–0.9×; bracket 740–1,980); + offer floor ≈ 770–860 (0.6–0.7×; bracket
+700–1,090); today's code 2,300–2,700 (not allowed: H-11 gate). A + D with contingency ≈ **24.6k–26.1k** (levers + m3) or
+**≈ 22.3k–23.4k** (+ floor), against the planned 27,608 here. The plan's numbers are kept until the 10⁶ calibration pilot
+measures them.
+
 v0.4 change (H-10, HQ 11-16): 10⁶ costs × 1.234 (MEASURED after L5, `results/WP3_L5_SPR.md`); AR-weak at 1M bought back
 as the gated last cell (1,188 planned). Fits 258 → 259, plans 47 → 48. If the m3 fix (≈ 223 ns·CPU/pair, ESTIMATE) lands
 before T5, re-cost again with it. After T5 prices M: if the total incl. M exceeds ≈ 28.3k, the gated cell drops.

@@ -16,9 +16,16 @@ starting point, on branch `exp/P1M-wp3-arch`.
 - **K1** bounded scoring, bounded uniform scan, one-particle phase B (port from the prototype). Include the NaN-row test of
   §2.1.
 - **K2** the Philox 32×32 multiply, inverse-only round orders, I-step proposals in the order phase.
-- **K3** Gram rows of active columns kept across passes: slot allocator, memory-plan term, G following the support size.
-- **K4** large supports (lever 7): full 8-label groups across tiles, several groups per flip call.
+- **K3** Gram rows of active columns kept across passes: slot allocator and memory-plan term. With the production start
+  law (E|S| ≈ 3.6–3.9 at 10⁶, n = 200; review §9), a fixed 640 slots at G = 256 should cover every stage, so no
+  G-following-support logic is needed unless the pilot shows otherwise.
+- **K4** large supports (lever 7): **dropped for now** (review §9: production supports are small). It returns only if
+  WP2's n = 400 / 1,000 start-law sizes are large.
 - **K5** rolling admission (lever 5).
+
+## Benches
+From now on, measure with the production setup (WP2's setup.bin), not the stand-in partition: the stand-in overstates
+supports 15× and understates the late M (review §9). Until WP2's PR #13 and WP3's StartView land, say which you used.
 
 ## Gates, for every package
 - **Bits:** output hashes unchanged in both arithmetic forms (Bit and class A), both kernels, 1 and 3 threads, G = 64 and

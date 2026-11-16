@@ -1,0 +1,51 @@
+plan: 600 ns CPU per step x 132 rounds = 55 core-h per island; H-10: 1,188 core-h per fit
+late anchors: today 921 ns CPU per step (MEASURED 918), levers 1-3 453 (MEASURED 452)
+
+== late M = 3.9 (stand-in at 1e6)
+E0   state                        fit core-h: central [low, high]   x H-10 | 16 islands  calibration | mean M | pi_0-like stage, ns CPU per step: kernel + compaction
+3.6  today (be24e9d)                 2273 [  1704,   4247]    1.9   |    1711       562    |  3.9   |     740 +   348
+3.6  levers 1-3                      1415 [   886,   3266]    1.2   |    1112       303    |  3.9   |     373 +   348
+3.6  levers 1-3 + sort fix (m3)       995 [   741,   1881]    0.8   |     807       188    |  3.9   |     373 +   123
+3.6  + offer floor (with m3)          766 [   696,    993]    0.6   |     578       188    |  3.9   |     323 +    20
+3.9  today (be24e9d)                 2284 [  1715,   4256]    1.9   |    1720       564    |  3.9   |     755 +   352
+3.9  levers 1-3                      1422 [   893,   3274]    1.2   |    1118       304    |  3.9   |     381 +   352
+3.9  levers 1-3 + sort fix (m3)      1002 [   748,   1890]    0.8   |     812       190    |  3.9   |     381 +   127
+3.9  + offer floor (with m3)          771 [   703,    997]    0.6   |     582       190    |  3.9   |     331 +    21
+10   today (be24e9d)                 2575 [  1916,   4699]    2.2   |    1965       610    |  4.1   |    1231 +   442
+10   levers 1-3                      1579 [   993,   3576]    1.3   |    1244       335    |  4.1   |     576 +   442
+10   levers 1-3 + sort fix (m3)      1159 [   848,   2192]    1.0   |     938       221    |  4.1   |     576 +   216
+10   + offer floor (with m3)          895 [   797,   1168]    0.8   |     675       221    |  4.1   |     526 +    36
+25   today (be24e9d)                 4136 [  2791,   7051]    3.5   |    3280       857    |  5.8   |    4389 +   661
+25   levers 1-3                      2029 [  1219,   4551]    1.7   |    1607       422    |  5.8   |    1182 +   661
+25   levers 1-3 + sort fix (m3)      1609 [  1074,   3167]    1.4   |    1302       307    |  5.8   |    1182 +   436
+25   + offer floor (with m3)         1264 [  1013,   1749]    1.1   |     957       307    |  5.8   |    1132 +    73
+56   today (be24e9d)                 9937 [  5962,  15250]    8.4   |    8165      1772    |  9.3   |   17656 +  1114
+56   levers 1-3                      3044 [  1730,   6677]    2.6   |    2430       614    |  9.3   |    2736 +  1114
+56   levers 1-3 + sort fix (m3)      2624 [  1585,   5293]    2.2   |    2125       499    |  9.3   |    2736 +   889
+56   + offer floor (with m3)         2112 [  1503,   3060]    1.8   |    1613       499    |  9.3   |    2686 +   148
+
+== late M = 5.5 (G0, real data at 5k-10k)
+E0   state                        fit core-h: central [low, high]   x H-10 | 16 islands  calibration | mean M | pi_0-like stage, ns CPU per step: kernel + compaction
+3.6  today (be24e9d)                 2705 [  2128,   4687]    2.3   |    2074       630    |  5.5   |     953 +   348
+3.6  levers 1-3                      1504 [   975,   3354]    1.3   |    1187       317    |  5.5   |     424 +   348
+3.6  levers 1-3 + sort fix (m3)      1084 [   830,   1970]    0.9   |     881       202    |  5.5   |     424 +   123
+3.6  + offer floor (with m3)          855 [   785,   1081]    0.7   |     652       202    |  5.5   |     374 +    20
+3.9  today (be24e9d)                 2718 [  2143,   4699]    2.3   |    2085       633    |  5.5   |     974 +   352
+3.9  levers 1-3                      1511 [   981,   3363]    1.3   |    1192       318    |  5.5   |     432 +   352
+3.9  levers 1-3 + sort fix (m3)      1091 [   837,   1978]    0.9   |     887       204    |  5.5   |     432 +   127
+3.9  + offer floor (with m3)          860 [   791,   1086]    0.7   |     656       204    |  5.5   |     382 +    21
+10   today (be24e9d)                 2991 [  2348,   5103]    2.5   |    2315       676    |  5.5   |    1403 +   442
+10   levers 1-3                      1655 [  1073,   3648]    1.4   |    1307       347    |  5.5   |     602 +   442
+10   levers 1-3 + sort fix (m3)      1234 [   928,   2264]    1.0   |    1002       233    |  5.5   |     602 +   216
+10   + offer floor (with m3)          971 [   877,   1239]    0.8   |     738       233    |  5.5   |     552 +    36
+25   today (be24e9d)                 4511 [  3212,   7400]    3.8   |    3596       916    |  6.9   |    4389 +   661
+25   levers 1-3                      2091 [  1291,   4606]    1.8   |    1660       432    |  6.9   |    1182 +   661
+25   levers 1-3 + sort fix (m3)      1671 [  1146,   3222]    1.4   |    1354       317    |  6.9   |    1182 +   436
+25   + offer floor (with m3)         1327 [  1085,   1803]    1.1   |    1009       317    |  6.9   |    1132 +    73
+56   today (be24e9d)                10404 [  6464,  15712]    8.8   |    8557      1846    | 10.4   |   17656 +  1114
+56   levers 1-3                      3107 [  1803,   6733]    2.6   |    2484       624    | 10.4   |    2736 +  1114
+56   levers 1-3 + sort fix (m3)      2687 [  1658,   5349]    2.3   |    2178       509    | 10.4   |    2736 +   889
+56   + offer floor (with m3)         2175 [  1576,   3116]    1.8   |    1666       509    | 10.4   |    2686 +   148
+
+mean pi_0-like share over the stages: {'G0 5k grid': 0.21, 'G0 10k grid': 0.36, '1e5 stand-in bridge': 0.43}
+sensitivity (E0 = 25, late M = 3.9, levers 1-3 + m3), fit core-h by stage profile at the central offer rate: {'G0 5k grid': 1401, 'G0 10k grid': 1661, '1e5 stand-in bridge': 1765}
