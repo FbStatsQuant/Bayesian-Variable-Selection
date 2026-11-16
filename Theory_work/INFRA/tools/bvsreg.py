@@ -2098,6 +2098,78 @@ def write_legacy_boundary() -> int:
     return 0
 
 
+# HQ 11-16 (task V, rule (b), fail-closed): a legacy-accepted row NARROWED by a recorded NARROW keeps its legacy
+# acceptance only if (1) a file in that NARROW's issue folder carries the Sol verdict line
+#   NARROW-CHAIN-VERIFIED: <claim id> sha256=<64-hex> chain=OWN
+# (the narrowed statement is proved by the row's own existing chain), (2) that sha256 equals the row's CURRENT statement
+# hash, and (3) the row's council cell is unchanged since the legacy tag. Any NARROW-CHAIN-NOT-VERIFIED line for the row,
+# any VERIFIED line with another hash, or anything missing -> not accepted.
+_NC_OK = re.compile(r"^NARROW-CHAIN-VERIFIED: (\S+) sha256=([0-9a-f]{64}) chain=OWN\s*$")
+_NC_NO = re.compile(r"^NARROW-CHAIN-NOT-VERIFIED: (\S+)(?:\s|$)")
+_NC_CACHE = None
+
+
+def _nc_index():
+    """-> (legacy rows at the tag {id: row}, ids with a recorded `narrow` event, {id: [(kind, sha|None, file)]}) for the
+    verdict lines found in files under an INFRA issue folder of a NARROW of that id (cached per process)."""
+    global _NC_CACHE
+    if _NC_CACHE is None:
+        import glob as _glob
+        tag, commit, rows, probs = load_legacy()
+        at_tag = {}
+        if rows and legacy_boundary()[0] and commit:
+            rc, txt = git("show", f"{commit}:Theory_work/INFRA/registry/claims.tsv")
+            if rc == 0:
+                ids = {r[0] for r in legacy_boundary()[0]}
+                at_tag = {r["id"]: r for r in read_tsv_text(txt) if r["id"] in ids}
+        narrowed = {e.get("id", "") for e in read_tsv(EVENTS)[1] if e.get("action") == "narrow"}
+        lines = defaultdict(list)
+        # the REPOSITORY's issues/ (a staged copy has none; review S1), as for LEGACY_FILE
+        idir_ = os.path.join(os.path.dirname(TOOLS), "issues")
+        for f in sorted(_glob.glob(os.path.join(idir_, "**", "*"), recursive=True)):
+            if not os.path.isfile(f):
+                continue
+            parts = os.path.relpath(f, idir_).replace(os.sep, "/").split("/")[:-1]
+            try:
+                text = open(f, encoding="utf-8", errors="replace").read().splitlines()   # review S3: never skip a file
+            except OSError:
+                continue
+            is_sol = os.path.basename(f).endswith("_sol.md")
+            for ln in text:
+                # review S2: a VERIFIED line counts only unindented and only in a Sol check file (*_sol.md); a
+                # NOT-VERIFIED line counts anywhere in the folder (fail closed)
+                m = _NC_OK.match(ln.rstrip()) if is_sol and not ln[:1].isspace() else None
+                n = _NC_NO.match(ln.strip())
+                cid_ = (m or n).group(1) if (m or n) else None
+                if not cid_:
+                    continue
+                # only an issue folder of a NARROW of THIS row: a folder named ..._narrow_<safe id> or a sub-folder
+                # <safe id> of a ..._narrow_... folder
+                sid = safe(cid_)
+                own = any(("_narrow_" in p_ and p_.endswith("_" + sid)) for p_ in parts) or (
+                    len(parts) >= 2 and "_narrow_" in parts[0] and sid in parts[1:])
+                if own:
+                    lines[cid_].append(("ok" if m else "no", m.group(2) if m else None,
+                                        os.path.relpath(f, os.path.dirname(os.path.dirname(os.path.dirname(TOOLS))))))
+        _NC_CACHE = (at_tag, narrowed, dict(lines))
+    return _NC_CACHE
+
+
+def narrow_kept_legacy(row: dict) -> str:
+    """'' or the repository path of the Sol verdict file that keeps this NARROWED legacy row's acceptance (rule (b))."""
+    at_tag, narrowed, lines = _nc_index()
+    cid = row.get("id", "")
+    old = at_tag.get(cid)
+    if old is None or cid not in narrowed:
+        return ""
+    if (row.get("council") or "").strip() != (old.get("council") or "").strip():
+        return ""
+    found = lines.get(cid, [])
+    if not found or any(k == "no" for k, _, _ in found) or any(h != row.get("sha256", "") for k, h, _ in found if k == "ok"):
+        return ""
+    return found[0][2]
+
+
 def unaccepted_inputs(cid: str, by: dict, g, aliases: dict, now: set, records=None, legacy=None, revalidate=None,
                       folders=None):
     """R03-N1 / R04-N1: checked claims cid consumes (stmt / proof / bound-bridge edges, transitively; an @hyp edge too
@@ -2122,7 +2194,7 @@ def unaccepted_inputs(cid: str, by: dict, g, aliases: dict, now: set, records=No
             dr = by[d]
             if dr.get("state") not in VALID or row_strength(dr) != 3 or d in now:
                 continue
-            if (d, dr.get("version", ""), dr.get("sha256", "")) in legacy:
+            if (d, dr.get("version", ""), dr.get("sha256", "")) in legacy or narrow_kept_legacy(dr):
                 continue
             have = records.get(d, set())
             if accept_stamp_matches(d, by, g, aliases, have, folders):

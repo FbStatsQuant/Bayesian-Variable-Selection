@@ -5,7 +5,7 @@ HEAD, a strict child of the tool's sandbox root, owned through a held lock file)
 Theory_work/INFRA folder (working copy) into it, runs real propagate.py / registry.py operations there, and removes
 the sandbox at the end (also on errors; a killed run leaves a stale sandbox that the next Sandbox cleans up).
 Run: python Theory_work/INFRA/tools/test_lifecycle.py   (exit code 1 if any scenario fails)"""
-import importlib.util, os, shutil, subprocess, sys, unicodedata
+import glob, importlib.util, os, shutil, subprocess, sys, unicodedata
 sys.dont_write_bytecode = True  # never write __pycache__
 
 LIVE_INFRA = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -2189,6 +2189,58 @@ try:
                         "stays a condition (an unconditional descendant gets A3-condition); with an invalid council cell "
                         "its own acceptance is refused (A4) and the consumer is refused (A5)",
                         "A3-condition" in e_hyp and rc_bad != 0 and bad_is_council and e_badcouncil == {"A5-accepted"}))
+
+        # ---------------- task V (HQ 11-16, rule (b)): a NARROWED legacy row keeps legacy acceptance only with a Sol verdict
+        # line in its NARROW's issue folder whose sha256 is the current statement hash, and an unchanged council cell
+        _leg = R.legacy_boundary()[0]
+        _byL = R.index(R.load_claims())
+        LX = next(r["id"] for r in R.load_claims() if (r["id"], r["version"], r["sha256"]) in _leg and r["state"] == "ACTIVE"
+                  and r["kind"] != "external" and R.status_strength(r["status"]) == 3 and not r["depends_on"].strip())
+        put("Theory_work/WaveT/LGT/STATEMENT.md", "Theorem LY. Uses the legacy row.\n")
+        put("Theory_work/WaveT/LGT/LOG.md", "# LGT\n\nPROVED-CHECKED\n")
+        run("registry.py", "add", "TEST:LY", "--file", "Theory_work/WaveT/LGT/STATEMENT.md", "--lines", "1-1", "--kind",
+            "theorem", "--name", "LY", "--status", "PROVED-CHECKED", "--source", "Theory_work/WaveT/LGT/LOG.md:3",
+            "--field", f"depends_on={LX}@stmt", "--reason", "t")
+
+        def ly_a5():
+            return any(f[1] == "A5-accepted" and LX in f[3] for f in acc_errs("TEST:LY"))
+        a5_before = ly_a5()                                   # legacy row, unchanged: accepted via the boundary
+        run("propagate.py", "narrow", LX, "--still-covers", "", "--reason", "t (rule b)")
+        run("propagate.py", "clear", LX, "--reason", "t")
+        a5_nofile = ly_a5()                                   # narrowed, no verdict line -> not accepted
+        idir = next(d for d in glob.glob(os.path.join(INFRA, "issues", "*_narrow_" + R.safe(LX))))
+        shaX = R.index(R.load_claims())[LX]["sha256"]
+        # a correct verdict for LX in ANOTHER row's NARROW folder does not count
+        _other = os.path.join(INFRA, "issues", "2026-11-16_narrow_TEST_OTHER")
+        put(os.path.relpath(os.path.join(_other, "NC_sol.md"), TMP),
+            f"NARROW-CHAIN-VERIFIED: {LX} sha256={R.index(R.load_claims())[LX]['sha256']} chain=OWN\n")
+        a5_wrongdir = ly_a5()
+        shutil.rmtree(_other)
+        # an indented verdict line, or one in a non-Sol file (e.g. a brief quoting it), does not count
+        put(os.path.relpath(os.path.join(idir, "BRIEF_NC.md"), TMP),
+            f"NARROW-CHAIN-VERIFIED: {LX} sha256={R.index(R.load_claims())[LX]['sha256']} chain=OWN\n")
+        put(os.path.relpath(os.path.join(idir, "NC_sol.md"), TMP),
+            f"    NARROW-CHAIN-VERIFIED: {LX} sha256={R.index(R.load_claims())[LX]['sha256']} chain=OWN\n")
+        a5_notsol = ly_a5()
+        os.remove(os.path.join(idir, "BRIEF_NC.md"))
+        put(os.path.relpath(os.path.join(idir, "NC_sol.md"), TMP), f"NARROW-CHAIN-VERIFIED: {LX} sha256={'0' * 64} chain=OWN\n")
+        a5_badsha = ly_a5()                                   # verdict for another hash -> not accepted
+        put(os.path.relpath(os.path.join(idir, "NC_sol.md"), TMP), f"NARROW-CHAIN-VERIFIED: {LX} sha256={shaX} chain=OWN\n")
+        a5_pass = ly_a5()                                     # all three conditions -> legacy acceptance kept
+        put(os.path.relpath(os.path.join(idir, "NC_other.md"), TMP), f"NARROW-CHAIN-NOT-VERIFIED: {LX} reason=t\n")
+        a5_conflict = ly_a5()                                 # any NOT-VERIFIED line -> fail closed
+        os.remove(os.path.join(idir, "NC_other.md"))
+        cX = R.index(R.load_claims())[LX]["council"]
+        run("registry.py", "set", LX, "council=R9; changed for the test", "--reason", "t")
+        a5_council = ly_a5()                                  # council cell changed -> not accepted
+        run("registry.py", "set", LX, f"council={cX}", "--reason", "t")
+        a5_back = ly_a5()
+        results.append((f"task V rule (b): a NARROWED legacy row ({LX}) keeps its legacy acceptance for a consumer only with "
+                        "a NARROW-CHAIN-VERIFIED line in its NARROW issue folder at its current sha256 and an unchanged "
+                        "council cell; no verdict / a verdict in another row's folder / an indented or non-Sol-file line / another hash / "
+                        "a NOT-VERIFIED line / a changed council -> A5 refuses",
+                        not a5_before and a5_nofile and a5_wrongdir and a5_notsol and a5_badsha and not a5_pass
+                        and a5_conflict and a5_council and not a5_back))
 
 finally:
     SB.__exit__(None, None, None)
