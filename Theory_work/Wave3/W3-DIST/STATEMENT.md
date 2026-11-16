@@ -1,6 +1,7 @@
-# W3-DIST — STATEMENT (candidate statements; v1.2, 2026-11-15; lead: Claude Fable 5.2, Claude Third, high)
+# W3-DIST — STATEMENT (candidate statements; v1.3, 2026-11-15; lead: Claude Fable 5.2, Claude Third, high)
 
-**Status of everything in this file: CANDIDATE (scoping leg; nothing here is proved).** v1.2 = v1.1 + reader versions
+**Status of everything in this file: CANDIDATE (scoping leg; nothing here is proved).** v1.3 = v1.2 with the dispositions of the same-family pre-check P1 (`reviews/P1_opus_precheck.md`,
+`reviews/P1_disposition.md`) and the lead's final form of the reader versions. v1.2 = v1.1 + reader versions
 (§1R) and precise bridges (§3), after HQ steer A5. v1.1 = v1.0.2 with the
 dispositions of the blind read S1 (`reviews/S1_astra.md`, `reviews/S1_disposition.md`). Changelog: table at the foot
 (PROTOCOL_v4 §4.2). Target clauses: `TARGET.md` §5. Statuses of consumed results are verbatim from their files, from
@@ -116,66 +117,132 @@ exponential control of the term δ_n, which is why the second display is in prob
 
 ## 1R. Reader versions (PROGRAM "Readability"; PROTOCOL_v4 H6) — candidates; corollaries of §1–2 through the bridges of §3
 
-Reader version = master theorem + bridges. Theorem A = DIST-1 (second sentence: DIST-2) + bridges B0, B1, B2.
-Theorem B = DIST-3 + bridges B0, B1, B2, B3, **conditional on W3-POST:Thm-1@1.0.0** (selection consistency of the exact
-posterior; status "T03♯: PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2)"). Corollary C = DIST-C (C-0), (C-i),
-(C-ii)(α) + Theorem A. The text between the rules is the proposed main-text wording (no internal ids).
+Reader version = master theorem + bridges. Theorem A (i), (ii) = DIST-1 (1.1) + bridges B0, B1, B2; its "without (A4)"
+sentence = DIST-2 (1.2) + B0, B1 (size clause from Lemma X′). Theorem B = DIST-3 + B0, B1, B2, B3, **conditional on
+W3-POST:Thm-1@1.0.0** (selection consistency of the exact posterior; status "T03♯: PROVED; SF VERIFIED (W2-VT03R); XF
+VERIFIED (A-REV2)"). Corollary C = DIST-C (C-0), (C-i), (C-ii)(α) + Theorem A. The form is the lead's choice (HQ's
+settled note of 2026-11-15); the text between the rules is the proposed main-text wording, with no internal ids.
+Same-family pre-check: `reviews/P1_opus_precheck.md` (REPAIRABLE; all findings applied, `reviews/P1_disposition.md`).
+Cross-family check: pending.
 
 ---
-**Setup (complete for the three statements).** Data D_n = {(x_i, y_i) : i ≤ n}, i.i.d. pairs with x_i ∈ ℝ^p. The method
-standardises the predictors and the response in the sample and uses, with no tuning: a beta-binomial BB(1, p) prior on
-the set S of included predictors (at most min(p, ⌊n/2⌋) of them), a Gaussian prior on their coefficients with
-covariance n·σ²·(G_S + I)⁻¹ (G_S the sample Gram matrix of the standardised predictors in S), and an inverse-gamma
-IG(0.01, 0.01) prior on the noise variance σ². Π(· | D_n) is the resulting exact posterior of (S, β, σ²) (coefficients on
-the original scale; the intercept is estimated by the sample means). Each (S, β, σ²) defines a joint density f of
-(x, y): x has its true law and y | x ~ N(intercept + xᵀβ, σ²). f* is the true joint density. d_H(f, g) = (1 − ∫√(fg))^{1/2}
-is the Hellinger distance. sd(·), Var(·), Corr(·) are population quantities; z_j := (x_j − E x_j)/sd(x_j) are the
-standardised predictors; λ_min is the smallest eigenvalue; P* is the law of the data.
+**Setup.** We observe D_n = {(x_i, y_i) : i = 1, …, n}: n independent copies of a pair (x, y), where x ∈ ℝ^p is a
+vector of p predictors and y is a real response. The number of predictors p may grow with n and may be much larger
+than n; the law of (x, y) may change with n.
 
-**Assumptions.** s ≥ 0 and A ≥ 1 are fixed integers/constants; K ≥ 1, b̄ > 0, c_ψ > 0 are constants.
-- **(A1) Gaussian linear model.** y = α* + xᵀβ* + ε, where ε ~ N(0, σ*²) is independent of x and σ* > 0.
-- **(A2) Sparsity and dimension.** β* has at most s nonzero entries, and 2 ≤ p ≤ n^A (p may be much larger than n).
-- **(A3) Sub-Gaussian predictors.** Every predictor has positive variance, and for every vector u with at most q_n
-  nonzero entries and every real λ: E exp(λ·uᵀz) ≤ exp(K²λ²·Var(uᵀz)/2).
-- **(A4) No near-exact collinearity.** For every set T of at most q_n predictors, λ_min(Corr(x_T)) ≥ c_ψ/n.
+*What the method does.* (1) It removes the predictors that are constant in the sample, and centres and scales every
+other predictor, and the response, by its sample mean and sample standard deviation. (2) On the standardised data it
+uses one fixed prior, with no tuning parameter: the set S of included predictors has the beta-binomial BB(1, p)
+distribution restricted to sets of at most min(p, ⌊n/2⌋) predictors; given S and the noise variance, the coefficients
+of the predictors in S are jointly normal with mean zero and covariance n × (noise variance) × (G_S + I)⁻¹, where G_S is
+the sample Gram matrix of the standardised predictors in S and I is the identity matrix; the noise variance has an
+inverse-gamma prior with shape 0.01 and rate 0.01. (3) The posterior is mapped back to the original units.
+Π(· | D_n) denotes the resulting posterior distribution of (S, β, σ²): S is the set of included predictors, β ∈ ℝ^p the
+coefficient vector in the original units (zero outside S), and σ² the noise variance in the original units.
+
+*The distribution attached to a posterior draw.* A draw (S, β, σ²) defines a joint density f for a new pair (x, y): x
+has its true distribution and, given x, y is normal with mean ȳ + (x − x̄)ᵀβ and variance σ², where ȳ and x̄ are the
+sample means of the response and of the predictors. f* is the true joint density of (x, y).
+
+*Notation.* d_H(f, g) = (1 − ∫√(fg))^{1/2} is the Hellinger distance between two densities. P* is the distribution of the
+data D_n. sd(·), Var(·) and Corr(·) are population standard deviations, variances and correlation matrices.
+z_j = (x_j − E x_j)/sd(x_j) is the j-th standardised predictor and z = (z_1, …, z_p). For a set T of predictors, x_T is
+the sub-vector of x. λ_min(·) is the smallest eigenvalue of a symmetric matrix. |S| is the number of predictors in S.
+log is the natural logarithm.
+
+**Constants, the level M and the window q_n.** s ≥ 0 is an integer and A ≥ 1, K ≥ 1, c_ψ > 0, b̄ > 0 are constants; none
+depends on n. Fix a number M ≥ 1, the *level*: a larger M gives a larger ball and a smaller exceptional probability.
+The *window* is
+
+    q_n = min{ p, ⌈C_q·M·log n⌉ },   where C_q = 2(s(A + 2) + 4)/log 2.
+
+It is the largest number of predictors that assumptions (A3) and (A4) constrain jointly; it is of order log n.
+
+**Assumptions.**
+- **(A1) Gaussian linear model.** y = α* + xᵀβ* + ε, where ε is normal with mean 0 and variance σ*² > 0 and is independent
+  of x. (α*, β*, σ* and the law of x may depend on n.)
+- **(A2) Sparsity and dimension.** At most s coordinates of β* are nonzero, and 2 ≤ p ≤ n^A.
+- **(A3) Sub-Gaussian predictors.** Every predictor has positive variance, and for every vector u ∈ ℝ^p with at most q_n
+  nonzero entries and every real λ:   E exp(λ·uᵀz) ≤ exp(K²λ²·Var(uᵀz)/2).
+- **(A4) No near-exact collinearity.** For every set T of at most q_n predictors:   λ_min(Corr(x_T)) ≥ c_ψ/n.
 - **(A5) Bounded signal.** |β*_j|·sd(x_j) ≤ b̄·σ* for every j.
-Here q_n := ⌈C_q·M·log n⌉, with M the constant in the conclusion and C_q := 2(s(A + 2) + 4)/log 2.
-There is **no** lower bound on the nonzero coefficients and **no** identifiability condition.
+No lower bound on the nonzero coefficients is assumed, and no identifiability condition: highly correlated predictors
+are allowed.
 
-**Theorem A (distribution consistency of the exact posterior).** Assume (A1)–(A5). There are constants c > 0, M₀ and n₀,
-depending only on (s, A, K, c_ψ, b̄), such that for every n ≥ n₀ and every M with M₀ ≤ M ≤ √n:
+**Theorem A (the posterior recovers the joint distribution of predictors and response).** There are constants c > 0,
+C₁, M₀ and n₀, depending only on (s, A, K, c_ψ, b̄), such that the following holds whenever n ≥ n₀, M₀ ≤ M ≤ √n/log n and
+(A1)–(A5) hold with the window q_n of this M:
 
-    P*[ Π( d_H(f, f*) > √(M·log n / n) | D_n ) > n^{−cM} ] ≤ n^{−cM}.
+    (i)   P*[ Π( d_H(f, f*) > √(M·log n / n) | D_n ) > n^{−cM} ] ≤ n^{−cM},
 
-In words: except on an event of probability at most n^{−cM}, the posterior puts mass at most n^{−cM} on joint laws
-farther than √(M log n/n) from the truth. The rate is √(log n/n) (of order √((1 + s) log p/n) when p = n^A).
-*Without (A4)* (and with (A3) required only for single predictors): the same display holds with radius
-√(M·log n·log(p ∨ n)/n).
+    (ii)  P*[ Π( |S| > s + C₁·M | D_n ) > n^{−cM} ] ≤ n^{−cM}.
 
-**Theorem B (parametric rate when the true predictors are detectable).** Assume (A1)–(A5) with s ≥ 1 nonzero entries
-exactly, with (A4) strengthened to λ_min(Corr(x_T)) ≥ ψ for a constant ψ > 0 and every set T of at most (2A + 3)s + 2
-predictors, and
-- **(A6) Beta-min.** min{|β*_j|·sd(x_j)/σ* : β*_j ≠ 0} ≥ b_n with b_n²·n/log n → ∞.
-Then for every sequence M_n → ∞:   Π( d_H(f, f*) > M_n/√n | D_n ) → 0 in P*-probability.
+In words. (i) Except on a set of data sets of probability at most n^{−cM}, the posterior gives probability at most
+n^{−cM} to joint distributions farther than √(M log n/n) from the truth in Hellinger distance: the posterior contracts
+at the rate √(log n/n). (ii) On the same data sets the posterior gives probability at most n^{−cM} to models with more
+than s + C₁M predictors. Statement (ii) bounds the number of selected predictors; it does not say that they are the
+true ones. The bounds are uniform over all laws of the data that satisfy (A1)–(A5) with the given constants.
 
-**Corollary C (what the sampler returns).** The sampler returns a list 𝒯 of at most 40p + 1 models with their exact
-unnormalised posterior weights, and no parameter draws. Let Π̂ be the posterior restricted to the returned models:
-models in 𝒯 weighted in proportion to their returned weights, each with its exact conditional posterior of (β, σ²).
-Under the assumptions of Theorem A, for every n ≥ n₀ and M₀ ≤ M ≤ √n, with probability at least 1 − n^{−cM}: every
-completed run whose list carries posterior mass π(𝒯) ≥ n^{−cM/2} satisfies
+*Without (A4).* If (A4) is dropped, and (A3) is required only for single predictors (vectors u with one nonzero
+entry), then (i) holds with the radius √(M·log n·log(p ∨ n)/n), which is larger by the factor √(log(p ∨ n)), and (ii) holds
+with s + C₁·M·log n in place of s + C₁·M. (Here p ∨ n is the larger of p and n.)
+
+*Example.* Gaussian predictors satisfy (A3) with K = 1; independent predictors satisfy it with the constant K of a
+single predictor. (A4) holds for all large n whenever every q_n × q_n principal block of the correlation matrix has
+smallest eigenvalue at least a fixed ψ > 0: for instance correlation ρ^{|j−k|} with |ρ| < 1, or equal correlation
+ρ ∈ [0, 1).
+
+**Theorem B (parametric rate when the true predictors are detectable).** Assume (A1)–(A5) with the window q_n of M = 1
+and with exactly s ≥ 1 nonzero coordinates of β*, **and in addition**
+- **(A6) Detectable signal.** (a) λ_min(Corr(x_T)) ≥ ψ for a constant ψ > 0 and every set T of at most (2A + 3)s + 2
+  predictors; (b) min{ |β*_j|·sd(x_j)/σ* : β*_j ≠ 0 } ≥ b_n, where b_n²·n/log n → ∞.
+Then for every sequence M_n → ∞:
+
+    Π( d_H(f, f*) > M_n/√n | D_n ) → 0   in P*-probability.
+
+**Corollary C (the output of the sampler).** The method computes the posterior by a sequential Monte Carlo sampler
+(small problems that it solves by exact enumeration are not covered here). A run is *completed* when the sampler
+finishes and returns its output. The output contains a list 𝒯 of at most 40p + 1 distinct models — the best-scoring
+models among all models the run evaluated — each with its unnormalised posterior weight, which we take to be
+computed in exact arithmetic; it contains no draws of (β, σ²). Let π(𝒯) be the posterior probability of the list, and
+let Π̂ be the posterior restricted to the list: the models in 𝒯, weighted in proportion to their returned weights, each
+with its exact conditional posterior distribution of (β, σ²). Under the conditions of Theorem A, with P*-probability
+at least 1 − n^{−cM} over the data, **every** completed run (whatever its random numbers) with π(𝒯) ≥ n^{−cM/2} satisfies
 
     Π̂( d_H(f, f*) > √(M·log n / n) ) ≤ n^{−cM/2}.
 
-If the list contains the true model and the posterior probability of the true model exceeds ½, then π(𝒯) > ½.
-Whether a run's list carries enough mass is a property of the run; the theorem does not assert it.
+If a completed run evaluated the true model {j : β*_j ≠ 0} and the posterior probability of that model exceeds ½, then
+the list contains it and π(𝒯) > ½. In general, whether the list carries enough posterior probability is a property
+of the run that this corollary does not assert.
+
+**Notation table.**
+| symbol | meaning |
+|---|---|
+| n, p | number of observations; number of predictors (p ≤ n^A, possibly p ≫ n) |
+| (x, y), D_n | a predictor vector and its response; the n observed pairs |
+| α*, β*, σ* | true intercept, coefficient vector and noise standard deviation |
+| s | maximal number of nonzero coordinates of β* |
+| S, β, σ² | a set of included predictors, a coefficient vector and a noise variance (a posterior draw) |
+| Π(· \| D_n) | the posterior distribution of (S, β, σ²) under the method's prior |
+| f, f* | joint density of (x, y) defined by a posterior draw; true joint density |
+| d_H | Hellinger distance, d_H(f, g) = (1 − ∫√(fg))^{1/2} |
+| P* | distribution of the data |
+| sd, Var, Corr | population standard deviation, variance, correlation matrix |
+| z_j, z | standardised predictor (x_j − E x_j)/sd(x_j); the vector of all of them |
+| x_T, λ_min | sub-vector of x for a set T of predictors; smallest eigenvalue |
+| M, q_n | the level (M ≥ 1, chosen by the reader); the window min{p, ⌈C_q M log n⌉} |
+| K, c_ψ, b̄, ψ, b_n | constants of (A3), (A4), (A5); eigenvalue bound and beta-min level of (A6) |
+| c, C₁, M₀, n₀ | constants of Theorem A, depending only on (s, A, K, c_ψ, b̄) |
+| 𝒯, π(𝒯), Π̂ | the sampler's returned list of models; its posterior probability; the posterior restricted to it |
 
 ---
-Remarks (not part of the reader statements). (1) General radii: the display of Theorem A holds for every ε_n with
-M₀ log n/n ≤ ε_n² ≤ n^{−1/2}·log n in the form P*[Π(d_H > ε_n | D_n) > e^{−c nε_n²}] ≤ e^{−c nε_n²} (master (1.1)). (2) (A4) with any
-fixed ψ > 0 in place of c_ψ/n is a special case. (3) M ≤ √n is the range t = M log n ≤ n^{1−κ₀} of (1.1) with κ₀ = 0.4.
-(4) Under (A3), with probability ≥ 1 − 4p·e^{−cn/K⁴} no column is constant in the sample, so p_ret = p and s₀ = |supp β*|.
-(5) The HPM/MPM plug-in versions of Corollary C are DIST-C (C-iii), (C-iv). (6) Why each assumption is there and
-whether it is necessary: TARGET.md §6.
+Remarks (not part of the reader statements). (1) General radii: (i) holds for every ε_n with M₀ log n/n ≤ ε_n² ≤ n^{−1/2}
+in the form P*[Π(d_H > ε_n | D_n) > e^{−c nε_n²}] ≤ e^{−c nε_n²} (master (1.1)). (2) M ≤ √n/log n is the range t = M log n ≤ n^{1−κ₀} of
+(1.1) with κ₀ = ½ [P1-10]. (3) Under (A3), with probability ≥ 1 − 4p·e^{−cn/K⁴} no column is constant in the sample, so
+p_ret = p and s₀ = |supp β*|. (4) C₁ = C′/C² in terms of (1.1)'s constants, using s₀ ≤ s. (5) The dependence of M₀ on
+(s, A, b̄, K, c_ψ) is not made explicit; no "(1 + s) log p" claim is made in the reader text [P1-13]. (6) The HPM/MPM
+plug-in versions of Corollary C are DIST-C (C-iii), (C-iv). (7) Why each assumption is there and whether it is
+necessary: TARGET.md §6.
 
 ## 2. Candidate theorem for the method as coded (target (ii); P6)
 
@@ -274,25 +341,26 @@ displacement O(tℓ_n/n) is absorbed in C√(t/n) since √(t/n)·ℓ_n → 0 on
 𝔅 := {S : Π(B | S, D_n) > a}: π(𝔅) ≤ Π(B | D_n)/a [S1-11].
 
 **Bridges (candidates; on the critical path of the reader versions since HQ steer A5; z_j := (x_j − E x_j)/sd(x_j)).**
-- **B0 (scale).** The image of Π(· | x, y^r) under (S, θ, v) ↦ (S, θ/σ*, v/σ*²) has the law it has in the unit-noise model
-  with coefficients β*/σ* (W3-MISR:R′@1.0.0, clauses (a′), (b); status "PROVED-CHECKED; council R2"), and d_H(f, f*) is
-  unchanged by this map applied to both arguments. Hence σ* = 1 without loss of generality, with (E), (C) read in units
-  of σ*².
+- **B0 (scale; pathwise) [P1-05].** Put ỹ := (y^r − α*1)/σ*; it follows the unit-noise model with coefficients β*/σ* and
+  intercept 0. By W3-MISR:R′@1.0.0 (a′) ("PROVED-CHECKED; council R2"), Π(· | x, y^r) is the image of Π(· | x, ỹ) under
+  (S, θ, v) ↦ (S, σ*θ, σ*²v), for every data set; the plug-in intercepts satisfy â(y^r) = α* + σ*·â(ỹ). Hence, draw by
+  draw, d_H between the density built from (x, y^r) and f* equals d_H between the density built from (x, ỹ) and the
+  unit-noise truth. So σ* = 1 without loss of generality (σ* may depend on n), with (E), (C) read in units of σ*².
 - **B1 ((A3) for single coordinates, (A5) ⇒ 𝒟_n, (E), (C)).** If E exp(λz_j) ≤ exp(K²λ²/2) for all j ≤ p and λ ∈ ℝ, then
-  with probability ≥ 1 − 4p·exp(−c₁n/K⁴) (c₁ absolute): ½ ≤ ŝ_j²/Var(x_j) ≤ 2 for every j ≤ p. On this event no column is
-  dropped (p_ret = p ≥ 2, s₀ = |supp β*|), and under (A5): ‖μ‖² ≤ 2s²b̄²σ*²·n and ‖θ*‖² ≤ 2sb̄²σ*², i.e. (E; 2s²b̄²) and
+  for n ≥ 3, with probability ≥ 1 − 4p·exp(−c₁n/K⁴) (c₁ absolute): ½ ≤ ŝ_j²/Var(x_j) ≤ 2 for every j ≤ p. On this event no
+  column is dropped (p_ret = p ≥ 2, s₀ = |supp β*|), and under (A5): ‖μ‖² ≤ 2s²b̄²σ*²·n and ‖θ*‖² ≤ 2sb̄²σ*², i.e. (E; 2s²b̄²) and
   (C; 2sb̄²) in units of σ*². (Triangle inequality ‖μ‖ ≤ Σ_j|β*_j|·ŝ_j√(n−1).) For DIST-2 only the coordinates in supp β*
-  and two others are needed.
-- **B1′ (alternative to (A5)) [S1-05].** Uniformly sub-Gaussian coefficient-weighted true coordinates β*_j(x_j − E x_j)/σ*.
-  (v1.0's version, with sub-Gaussian raw coordinates and signal only, is **false**: S1-05.)
-- **B2-core (sparse lower bound for the sample covariance, with centring).** Under (A3) with sparsity q, if
-  q·log(ep/q) + log n ≤ c₂n/K⁴ then with probability ≥ 1 − exp(−c₂n/K⁴): for all a ∈ ℝ and all u with at most q nonzero
-  entries, n⁻¹Σ_i(a + uᵀz_i)² ≥ ½(a² + Var(uᵀz)); in particular uᵀΣ̂^z u ≥ ½·uᵀCorr(x)u for the centred sample covariance Σ̂^z
-  of the z's. (Standard net-plus-Bernstein argument; the intercept is handled by augmenting z with a constant.)
+  and two others are needed. (P1: "SOUND-AS-STATED"; a same-family pre-check, not a line check. v1.0's B1 was false,
+  S1-05; v1.2's variant B1′ is dropped — it implied (A5) and was not an alternative, P1-14.)
+- **B2-core (sparse lower bound for the sample second moments, with an intercept) [P1-07].** Under (A3) with sparsity q,
+  put q′ := min(q, p). If q′·log(ep/q′) ≤ c₂n/K⁴ then with probability ≥ 1 − exp(−c₂n/K⁴): for all a ∈ ℝ and all u with at
+  most q nonzero entries, n⁻¹Σ_i(a + uᵀz_i)² ≥ ½(a² + Var(uᵀz)); in particular uᵀΣ̂^z u ≥ ½·uᵀCorr(x)u for the centred sample
+  covariance Σ̂^z of the z's. (Net-plus-Bernstein argument; the intercept is handled by augmenting z with a constant.)
 - **B2 ((A3), (A4) ⇒ (ND)).** On the events of B1 and B2-core, for every T with |T| ≤ q:
   λ_min(G_T) = (n − 1)·λ_min(R̂_T) ≥ (n − 1)·λ_min(Σ̂^z_T)/max_j(ŝ_j²/Var(x_j)) ≥ (n − 1)c_ψ/(4n) ≥ c_ψ/8. This is [W3P] (F_w; g₀) with
-  g₀ = c_ψ/8 on all sets of size ≤ q, hence (DG) and (ND; c_D, m) with c_D = g₀/(1 + g₀) for every m ≤ q − s
-  ([P2] A0, re-derived: one-column determinant ratio ((n+1)γ + 1)/(γ + 1) with Schur complement γ ≥ g₀). With
+  g₀ = c_ψ/8 on all sets of size ≤ q, hence (DG) and (ND; c_D, m) with c_D = g₀/(1 + g₀) for every m ≤ q − s:
+  by eigenvalue interlacing, D_{S∪{j}}/D_S ≥ φ(λ_min(G_{S∪{j}})) ≥ (n+1)g₀/(1+g₀), φ(λ) := ((n+1)λ + 1)/(λ + 1) increasing
+  ([P2] A0's route; the Schur-complement formula of v1.2 was wrong, P1-04). With
   q = q_n ≥ m_n(M log n) + s this is the (ND) of (1.1) at t = M log n. For Gaussian rows compare W3-POST Corollary 1R, which
   needs ψ_n√n/(log n)^{3/2} → ∞; the multiplicative bound of B2-core is what allows ψ_n ≍ 1/n.
 - **B3 (for Theorem B).** On the same events with the fixed floor ψ on sets of size ≤ (2A + 3)s + 2: (i) (TR₀; 2) holds
@@ -301,7 +369,7 @@ displacement O(tℓ_n/n) is absorbed in C√(t/n) since √(t/n)·ℓ_n → 0 on
   size ≤ m♯_n + s (≤ q_n for n large), and BM-∞ with the deterministic envelope b_n²nφ₀²/(2 log n) → ∞ (θ*_j = ŝ_jβ*_j,
   ŝ_j² ≥ Var(x_j)/2). Hence δ_n → 0 in P*-probability (conditional on W3-POST:Thm-1), and (L₀) from (E), (C).
 - Failure probabilities of B1–B3 are ≤ 5p·exp(−c n/K⁴) ≤ n^{−cM} for n ≥ n₀ uniformly in M ≤ √n, which is what turns the
-  remainder of (1.1) into the display of Theorem A.
+  remainder of (1.1) into the displays of Theorem A, with one n₀ for all M ≤ √n/log n.
 
 ## 4. Consumes table (claim id, recorded status, exact statement used)
 
@@ -351,4 +419,11 @@ posterior with the contrast model (locked T01, [P1] `thm:T01i`, `lem:spec`, `lem
 | 1.2 | §1R reader versions: Theorem A, Theorem B, Corollary C | NEW-CLAIM (corollaries of §1–2 + bridges) | owner's readability rule | HQ steer A5 (PROGRAM "Readability", PROTOCOL_v4 H6) | pending (`reviews/P1_*`: Opus pre-check; cross-family check to be ordered) |
 | 1.2 | bridges B0, B1 (primitive form), B2-core, B2, B3 stated; B1 of v1.1 kept as B1′ | NEW-CLAIM (B0, B2-core, B3); STRONGER (B1, B2 made precise) | bridges are on the critical path | HQ steer A5 | pending |
 | 1.2 | consumes: W3-MISR:R′@1.0.0 added; W3-POST:Thm-1 is a premise of Theorem B | EQUAL (master); conditional status of Theorem B stated | B0; Theorem B | HQ steer A5 | pending |
-No WEAKER row touches a target clause (TARGET.md §5).
+| 1.3 | Theorem B: "(A4) and, in addition, (A6)" | EQUAL (intended meaning made explicit; the v1.2 wording was false if read as a replacement) | counterexample under the replacement reading | `reviews/P1_opus_precheck.md` P1-01 | pending (cross-family) |
+| 1.3 | Theorem A: M fixed before the assumptions; window q_n = min{p, ⌈C_qM log n⌉}; one n₀ | EQUAL | quantifier order | P1-03, P1-07 | pending |
+| 1.3 | Theorem A, Corollary C: range M ≤ √n/log n (was M ≤ √n) | WEAKER (reader clause, not yet fixed at CP1; range only — κ₀ = ½ gives a realistic n₀) | P1-10 | P1-10 | pending |
+| 1.3 | Theorem A: display (ii) on posterior model size added | STRONGER (from the size clause of (1.1)) | lead (clarity of what is proved) | — | pending |
+| 1.3 | Setup: constant columns removed; σ² in original units; intercept ȳ + (x − x̄)ᵀβ per draw; triangular arrays; notation table | EQUAL | P1-06, P1-13 | P1-06, P1-13 | pending |
+| 1.3 | Corollary C: "completed", exact arithmetic, scope, run-uniform wording; retention sentence restored | EQUAL / STRONGER (retention: an evaluated true model with posterior probability > ½ is kept) | P1-09, P1-12 | P1-09, P1-12 | pending |
+| 1.3 | bridges: B0 pathwise; B1 n ≥ 3; B2-core with q ∧ p; B2 by interlacing; B1′ dropped | EQUAL (B0, B1, B2-core); repair of a wrong formula with the same conclusion (B2) | P1-04, P1-05, P1-07, P1-11, P1-14 | as listed | pending |
+No WEAKER row touches a target clause fixed so far (TARGET.md §5); the reader clauses TC9/TC10 are proposed at CP1 in their v1.3 form.

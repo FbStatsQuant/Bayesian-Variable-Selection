@@ -51,3 +51,11 @@ probe the dangerous scale found by H1 (unnormalised Schur eigenvalue ≍ log n/n
 τ² = n⁻² probes the constant-penalty scale and τ² = log n/n is far above it. **To add in the proof leg:**
 τ² ∈ {log n/n², c·log n/n²} and a per-replication (nested) tail estimate with ≥ 10⁵ draws. (3) No simulation is used to
 discharge a theorem premise; S1 did not audit the scripts.
+
+## 4. Reader-version assumptions (A1)–(A6) (HQ steer A5)
+The primitive assumptions of the reader versions (STATEMENT §1R) map to the interfaces through the bridges:
+(A3 for single coordinates) + (A5) ⇒ 𝒟_n, (E), (C) [B1]; (A3) + (A4) ⇒ (ND) [B2-core, B2]; (A1) with any σ* ⇒ unit noise
+[B0]; (A4 with fixed ψ on small sets) + (A6) ⇒ δ_n → 0 and (TR₀) [B3, conditional on W3-POST:Thm-1]. Necessity lines:
+TARGET.md §6. Boundary evidence: N2 (heavy tails: (A3) violated, no degradation), N4 ((A4) violated at τ² = n⁻²: no
+degradation), N3 (no beta-min: Theorem A's rate, not Theorem B's). No simulation tests (A5)'s violation yet
+(cancelling large coefficients) — to add in the proof leg.

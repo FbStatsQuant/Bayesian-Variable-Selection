@@ -85,6 +85,30 @@ transfer is needed for the exponential form. *Low.* (For DIST-3: the diagonal tr
 [W3P] item 6.)
 **DIST-2:** Steps 1–5 with d_t := m_n(t) and no X4(b),(c); the rate is (m_n(t) log p + t)/n ≍ t log p/n.
 
+## 2b. Route for the reader versions (bridges; on the critical path since HQ steer A5)
+Theorem A = (1.1) + B0 + B1 + B2 (second sentence: (1.2) + B0 + B1). All three bridges are standard probability:
+- **B0**: W3-MISR Lemma R′ (a′) (PROVED-CHECKED), used pathwise with ỹ = (y − α*)/σ*, plus the transformation of the
+  plug-in intercept (P1-05: a statement about the law of the posterior alone would not suffice, because d_H also
+  depends on ȳ and x̄). *Low.*
+- **B1**: Bernstein for the squares of sub-Gaussian variables, union over p ≤ n^A columns; then the triangle
+  inequality for ‖μ‖ and the definition of θ*. *Low.* *Failure point:* none seen; the S1-05 counterexample is excluded by
+  (A5) (bounded standardised coefficients), not by tails.
+- **B2-core**: one-sided (lower) uniform bound for sparse sample second moments with an intercept: net on the unit
+  sphere of ℝ^{q+1} for each of C(p, q) supports, Bernstein for sub-exponential (a + uᵀz)², union; needs
+  q log(ep/q) ≤ c n/K⁴, true for q = q_n, M ≤ √n. *Low–medium.* *Failure points:* (1) the sub-Gaussian assumption must be
+  the ψ₂–L₂ form on sparse directions ((A3) as written), not marginal sub-Gaussianity of coordinates — with marginal
+  tails only, a sparse direction can have tiny variance and heavy relative tails; (2) centring by the sample mean
+  (handled by the augmented vector (1, z)); (3) exact constants.
+- **B2**: algebra from B1 and B2-core to (F_w; c_ψ/8), then eigenvalue interlacing for the one-column determinant
+  ratio (≥ (n+1)g₀/(1+g₀)) to (DG) and (ND). *Low.*
+  *Failure point:* the range — (ND) is needed on |J| ≤ m_n(t), so (A3), (A4) are needed on sets of size
+  q_n = O(M log n); this is why q_n depends on M in the reader statement.
+- **B3** (Theorem B only): the same events give (TR₀; 2), (F_λ), (F_w), BM-∞ with common constants; then W3-POST Theorem 1
+  item 6 (consumed; Theorem B is conditional on it). *Low.* *Failure point:* W3-POST Theorem 1 is stated for fixed σ*²
+  and s₀ ≥ 1: use B0 and assume exactly s ≥ 1 nonzero coefficients.
+If B2-core failed in the stated generality, the fallback is Gaussian rows (W3-POST Corollary 1R's argument, with a
+stronger eigenvalue requirement) — a WEAKER change to the reader target clause, hence an early checkpoint.
+
 ## 3. Route for Theorem DIST-3 (oracle bound; v1.1 after S1 Better-theorem 1–2)
 Given S = S₀ only one support is involved, so no union over models and no logarithm: [D] D1 gives
 ‖M_{S₀}y_c − μ_c‖² ≤ 2‖P_{S₀}e‖² + 2L_{S₀} ≤ C(s₀ + u + B) outside probability e^{−u}; the conditional fitted-mean

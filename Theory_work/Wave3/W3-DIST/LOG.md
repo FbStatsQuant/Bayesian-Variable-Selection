@@ -47,3 +47,25 @@ Claude inference tally: all on Claude Third (lead + 2 helpers). OpenAI: 1 Astra 
   S1 gpt-6-astra (codex, high). No other agents. No git command beyond `git pull --ff-only` (4 times) and read-only
   `git log`/`rev-parse`/`diff --stat`/`branch --show-current`.
 - 17:53 — Completion notice of the S1 Astra task received; its summary matches the report file already dispositioned (5 MAJOR, 5 MINOR, 1 NIT; GO-WITH-REPAIRS). No change to CHECKPOINT_1.md or any statement. HOLDS read: none.
+- 18:10 — HQ steer A5 (owner: readability; reader versions; bridges on the critical path) and its correction (clarity,
+  not a copy of Song–Liang's form). `git pull --ff-only` twice (→ aa79ecd): PROGRAM "Readability" and PROTOCOL_v4 H6
+  read. HOLDS read: none.
+- 18:15 — STATEMENT v1.2: §1R reader versions (Theorem A, Theorem B, Corollary C; assumptions (A1)–(A6)); bridges B0,
+  B1 (primitive form), B2-core, B2, B3 stated; W3-MISR:R′@1.0.0 consumed for B0 (σ* arbitrary). TARGET §6 (reader
+  versions, one line per assumption, TC9/TC10); ROUTES §2b; API_CARDS card B; ASSUMPTION_MAP §4; DEPS.tsv rows and sha
+  refreshed (DEPS.md v1.3). Changelog rows tagged NEW-CLAIM / STRONGER / EQUAL; no target clause weakened.
+- 18:16 — Same-family pre-check P1 launched: Claude Opus 5.5, Claude Third, high (brief
+  `briefs/BRIEF_P1_reader_precheck.md`; output `reviews/P1_opus_precheck.md`). It is a filter, not a review layer; the
+  cross-family check of the reader versions and of the v1.1/v1.2 tags stays with HQ to order. CHECKPOINT_1.md will be
+  revised after P1 returns.
+- 18:17–18:20 — HQ notes on presentation (house style; then "nothing taken from other papers"; then the settled
+  note: the two papers mark the level of clarity only, the form is the lead's choice). Pulls → 965af2a. A draft
+  modelled on the owner's paper was written in the scratchpad only and deleted; nothing from it entered the ticket.
+- 18:28 — P1 back (`reviews/P1_opus_precheck.md`): REPAIRABLE; 3 MAJOR (wording), 6 MINOR, 7 NIT; no reader clause
+  false under its faithful reading. DEPS: B2's v1.2 determinant formula wrong (same conclusion by interlacing) —
+  repaired, dependents unchanged. STATEMENT v1.3 (final reader form: setup, (A1)–(A5), Theorem A with displays (i),
+  (ii), statement without (A4), example, Theorem B with (A6), Corollary C, notation table; bridges repaired);
+  TARGET §6 rewritten; ROUTES §2b, API_CARDS card B, DEPS.tsv sha refreshed (DEPS.md v1.4); `reviews/P1_disposition.md`.
+- 18:35 — CHECKPOINT_1.md revised (reader theorem first; bridges in kill budgets and plan; TC9/TC10). HOLDS read: none.
+  Run ends with the revised CP1 as the final message. Agents this leg: lead Fable 5.2; H1 Opus 5.5; H2 Sonnet 5.5;
+  P1 Opus 5.5 (all Claude Third); S1 gpt-6-astra (codex, high).

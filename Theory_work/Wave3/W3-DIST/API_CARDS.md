@@ -89,6 +89,19 @@ eigenvalue γ ≍ log n/n (near-copies with τ² ≍ log n/n²) on which Π(‖�
 or ≥ n^{−c} for large M. F-c: non-supersets — replace the comparison with S₀ (cost n^{(A+½)s₀}) by a comparison with
 the best submodel T ⊆ S₀ and control ρ′_T.
 
+## Card B — bridge B2-core (sparse lower bound for the sample covariance; critical path of the reader version)
+**Statement.** z₁, …, z_n i.i.d. in ℝ^p with E z = 0, Var(z_j) = 1 for all j, and for every u with at most q nonzero
+entries and every real λ: E exp(λuᵀz) ≤ exp(K²λ²Var(uᵀz)/2). There are absolute constants c₂, C₂ such that if
+q′ log(ep/q′) ≤ c₂n/K⁴ (q′ := min(q, p)) then with probability ≥ 1 − exp(−c₂n/K⁴): for all a ∈ ℝ and all u with at most q
+nonzero entries, n⁻¹Σ_i(a + uᵀz_i)² ≥ ½(a² + Var(uᵀz)). Consequence to prove with it (B1 + B2): on this event and on
+{½ ≤ ŝ_j²/Var(x_j) ≤ 2 ∀j}, if λ_min(Corr(x_T)) ≥ c_ψ/n for all |T| ≤ q then λ_min(X_TᵀX_T) ≥ c_ψ/8 for the sample-standardised
+columns (‖x_j‖² = n − 1) and all |T| ≤ q, hence, by eigenvalue interlacing, D_{S∪{j}}/D_S ≥ g₀(n+1)/(1+g₀) with g₀ = c_ψ/8 for |S| < q.
+**Context:** `W3-DIST/STATEMENT.md` §1R, §3 (B1, B2-core, B2); `W3-POST/STATEMENT.md` Corollary 1R and
+`Theory_work/Wave2/W2-APP/lemmas/L1_POST.md` (the Gaussian-rows bridge with additive Weyl transfer, for comparison).
+**Routes.** B-a: ε-net + Bernstein per support + union. B-b: small-ball / Paley–Zygmund lower bound (would weaken (A3)
+to a fourth-moment condition for this bridge; B1 still needs tails for the p sample variances). B-c (adversarial):
+degenerate sparse directions (Var(uᵀz) = 0), q close to its limit, atoms.
+
 ## Cards for the other stretch items (lower priority)
 - **S-APX:** Lemma X and DIST-1 with a reference (T, ϑ), B_T(ϑ) ≤ B, bias ‖μ − X_Tϑ‖² ≤ nΔ_n²; the population part of the
   bias (Lemma T applied to the tail coefficients, which are not sparse) is the open step.
