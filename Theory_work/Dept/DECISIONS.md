@@ -401,3 +401,5 @@
 - **D61.** R2 diff round PASS (Sol 9.5, Opus 9.2; bind/verify OK). Sent to HQ for acceptance + H5 card (row 1.3, Cor A1
   expectation every p). Recorder task O stages the acceptance on current main + implies AE ⇒ PSHARP:A. 11 E → post-freeze
   editorial batch. START2-R's RC1 (Sol) > 2 h flagged to HQ.
+
+- **D62.** (03:08) Codex reviewers never write outside their worktree. Codex (Sol/Astra) reviewers run sandboxed: a write outside the worktree raises an approval request nobody can answer and the review stalls with no output (START2-R RC1, ~3 h lost). Rule: every Codex brief says "no TMPDIR, no writes outside the worktree; scratch only in a git-ignored `.rc_tmp/` inside the worktree, deleted at the end". The POLICIES §12 temp folder applies to Claude agents and CI only. RIDER_RULES §6 updated; all leads told. A reviewer with pendingRequestCount > 0 is relaunched fresh (never cancelled) and logged.
