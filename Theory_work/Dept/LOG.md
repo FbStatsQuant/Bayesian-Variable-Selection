@@ -58,3 +58,4 @@
 - 20:19 — Lean readiness list in (research/LEAN_READINESS.md); NEXT_CAMPAIGN (b) filled; helper settled; sent HQ (+ ask: MISR-R as 6th lead while all 5 wait on Codex). Transient ENOSPC on Owls root fs (/tmp): 88–90% used; recorder clones in /tmp (~0.5 GB each) are a peak source.
 - 20:22 — §12 relayed (D29); recorder scratch location corrected; DIST arrays confirmed ignored.
 - 20:23 — HQ: CP3 Sol seat with FIDELITY line counts as the fresh read; pooled-Ẑ claim approved; task I go, tied to M27 (recorder told: no F-UNI fix before the verdict); SHARP3 batch submitted (msgbatch_01BYKCfJ…), results go to READER.
+- 20:24 — §12 rule 7 (calm usage, no swarming) relayed to all 8 leads; department has no NOTS access by design (any NOTS need via me).
