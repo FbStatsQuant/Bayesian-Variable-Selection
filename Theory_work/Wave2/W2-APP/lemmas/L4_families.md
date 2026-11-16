@@ -142,7 +142,7 @@ geometrically decaying loadings can give Σ ∈ LOC (R05-1 example b_j = 2^{−j
 under PTV). One-factor with |b_l| ≥ b₀ on a null set 𝒩_n and |b_{S₀}ᵀθ*| ≥ β₀ (all V4 floors): GEN obstructed if
 |𝒩_n| → ∞, GROW/LOC if min(K, |𝒩_n|)/log n → ∞. Cancellation — including WEIGHTED factor cancellation
 b_{S₀}ᵀθ* = 0 with Σ_kθ*_k ≠ 0 (R06-2: θ* = (1, 1), b = (½, −½) on S₀, b_l = ½ on nulls, Ψ = ¾I: every null has zero partial
-correlation with the response) — weak exposure, multi-factor: **no claim**.
+correlation with the response given any conditioning set disjoint from S₀, the VNF quantifier; not given a set containing exactly one truth) — weak exposure, multi-factor: **no claim**.
 Study S5 (0.3 common, 0.7 within groups of 5): Σ_S5 = 0.3·11ᵀ + 0.4H + 0.3I has correlation floor 0.3, so **POST holds**
 for the study sequence's S5 (R06); GEN's sufficient class excludes the study sequence (GEN L6 (d), cited);
 GROW frontier (C-GROW (C6), "Frontier (with evidence, not proved)"). Reported model on pervasive designs:

@@ -1,4 +1,4 @@
-# W3-EDIT item 6: citation fixes are done (2026-11-15 ~19:55 CST)
+# W3-EDIT item 6: citation fixes are done (2026-11-15 19:45 CST, time of commit 0b72e39; corrected from a hand-typed "~19:55")
 
 Fix commit: `1a198e6` on `theory/W3-EDIT`. Ledger rows C6-01 to C6-11 (`LEDGER.tsv`). Wording and citations only.
 
