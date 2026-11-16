@@ -469,3 +469,6 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   manifests): Opus diff check + re-frozen manifests with HQ seat carriers now; tool change (EXT inputs verified at their
   freeze commit) after Friday. Cont-F/R recorded as-is (implication lemmas consume RM-F/R by design). New Theory protocol
   rule: a manifest-impact check before merging edits to files listed in accepted manifests.
+- (overnight) ~22:05 CT: W3-START2-R CP1 GO. Start-mass rate √(log n/n), optimal up to √log n; the visibility threshold exactly 1.
+  H5 card at CP3. Codex congested (BNP's review push): for the rest of the night, new **non-critical** reviews go to Opus.
+  This is a level-1 call for non-critical work only; DIST and rider CP3 paths stay on Codex.
