@@ -5,13 +5,19 @@ Theory_work/Wave3/W3-POST2/STATEMENT.md
 Theory_work/Wave3/W3-POST2/lemmas
 Theory_work/Wave2/W2-APP/lemmas/L1_POST.md
 Theory_work/Wave3/W3-PSHARP/STATEMENT.md
+Theory_work/Wave3/W3-PSHARP-R/STATEMENT.md
 Theory_work/Wave3/W3-MISR/STATEMENT.md
+Theory_work/Wave3/W3-MISR-R/STATEMENT.md
 Theory_work/Wave3/W3-START/STATEMENT.md
 Theory_work/Wave3/W3-START2/STATEMENT.md
+Theory_work/Wave3/W3-START2-R/STATEMENT.md
 Theory_work/Wave3/W3-RM/STATEMENT.md
 Theory_work/Wave3/W3-RM2/STATEMENT.md
+Theory_work/Wave3/W3-RM2-R/STATEMENT.md
+Theory_work/Wave3/W3-RM2-R/lemmas
 Theory_work/Wave3/W3-SAMP/STATEMENT.md
 Theory_work/Wave3/W3-SCR/STATEMENT.md
+Theory_work/Wave3/W3-DIST/STATEMENT.md
 Theory_work/Wave1/W1-N1/STATEMENT.md
 Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md
 Theory_work/Wave2/W2-UNI/lemmas/L5_delivery.md
@@ -19,5 +25,5 @@ Theory_work/Wave1C/C-DLV/STATEMENT.md
 Theory_work/Wave1C/FINAL/sections/s6_delivery.tex
 Theory_work/Wave1C/C-PACK/lemmas/I4_SL_corollaries.md
 Scripts/SMC_BVS/core
-# carrier: verbatim copy of dept/theory fc30c749 Theory_work/Dept/research/FUNI_NARROW/A_IDEALW_PLUS.md (A:IDEAL-W+ definition; not on main yet)
-Theory_work/Wave3/W3-READER/reviews/carriers/A_IDEALW_PLUS.md
+Theory_work/INFRA/registry/claims.tsv
+Theory_work/INFRA/registry/assumptions.tsv

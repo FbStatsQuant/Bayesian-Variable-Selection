@@ -86,7 +86,7 @@ Numbering of the headline theorems (proposal; see `CLAIMS_CARD.md`):
 6. The reported model, random Gaussian design (main theorem) — §6
 7. The reported model, fixed design — §7 (honest limits: sample-level conditions)
 8. Certified screening — §8
-9. Distribution-level consistency — §9 (placeholder; ticket in progress)
+9. Distribution-level consistency — §9
 10. The printed outputs are consistent, for designs with no leakage outside the true model such as independent predictors (card row 3.6) — §10; with the pooled-evidence remark (row 3.5)
 
 ---
@@ -196,7 +196,7 @@ W2-APP:POST, W3-POST:Thm-1"**; `W3-POST2:A1@1.0.5` **"PROVED-CHECKED, conditiona
   Theorem 1′ are stated in the body with their own conditions until those are cleared: the expectation route
   (`W3-POST2:C`) also lists `W3-POST:Prop-LB` (author-only; implied by the checked `W3-PSHARP:B` — recorder item),
   `[L1a′]` (unchecked) and `W2-APP:POST` (now "PROVED-CHECKED"; `SOP:TH128` discharged, main 6cd699dd).
-- **Form B — W3-T03ACC misses Thu 18:00.** Two variants:
+- **Form B — not used (W3-T03ACC passed; kept for the record).** Two variants:
   - **B1 (abstract, condition stated verbatim in reader words):** *"Conditional on the posterior concentration theorem
     for the coded prior — verified independently by reviewers of the same and of a different model family, but without
     a council review yet — the posterior …"*, stated **once** for the abstract rows that rest on it (1.1, 1.2, 3.1).

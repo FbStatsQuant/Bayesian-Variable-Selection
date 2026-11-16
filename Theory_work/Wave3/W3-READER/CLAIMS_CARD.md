@@ -105,7 +105,7 @@ may carry an unchecked "conditional on" input only if the abstract states it [H5
   body statement, with the delivery conventions (S4) of C-DLV: on the bounded domain, and for every $n$ only under
   IDEAL-W⁺ [H5-7.3, FUNI-N].
 - **3.2**, wherever it is cited (body by default): the same order of clauses as 3.1 [H5-7.3].
-- **1.1** posterior concentration in Theorem 1's $O_P$ form (Form A / B1 above; the expectation display and Theorem 1′ stay in
+- **1.1** posterior concentration in Theorem 1's $O_P$ form (Form A above, in force; the expectation display and Theorem 1′ stay in
   the body with their conditions), **1.2**, **1.3** [S4-E1].
   Theorem 1′ is never called "the design-agnostic form"; its exact description is: *it drops the fixed floor (A4) off
   $S_0$ but keeps the vanishing floor (A5), which still excludes exact linear dependence among $O(\log n)$ columns,

@@ -1,18 +1,18 @@
 id	file[:lines]	uses	sha (sha256, first 16 hex)	checked_sha	checked_by	state
-W3-READER:PoolZ	STATEMENT.md §Claim PoolZ	W1-N1:Thm-N1@1.0.0	58b1dee88d776364	58b1dee88d776364	reviews/S2_linecheck_sol.md (pending)	PENDING-CHECK
-W3-READER:R1	lemmas/R1_set_sizes.md	SOP:TH09 ([T03R] E2(ii))	4176c9b32407ba95	1e514a39e6b455fe	reviews/S2_linecheck_sol.md (pending)	STALE
-W3-READER:R2	lemmas/R2_local_regression.md	-	6f70b56635abab50	6f70b56635abab50	reviews/S2_linecheck_sol.md (pending)	PENDING-CHECK
-W3-READER:R3	lemmas/R3_delivery_assembly.md	W2-UNI:F-UNI@1.1.0; W3-RM2:RM2-R/F@1.0.0	5df2d033cd436742	e52707a923e46fd6	reviews/S2_linecheck_sol.md (pending)	STALE
-W3-READER:R4	lemmas/R4_printed_outputs.md	W3-SAMP:C@1.1.1; W3-START2:IF-START@1.0.0; W2-APP:POST@1.0.1	eff51d1b99a6c19a	9f48e8421ee95559	reviews/S2_linecheck_sol.md (pending)	STALE
-NOTATION	NOTATION.md	code pins (Scripts/SMC_BVS/core)	ca6c6e516278521b	ca6c6e516278521b	reviews/S2_linecheck_sol.md (pending)	PENDING-CHECK
-RV/thm1	READER_VERSIONS.md ROW thm1	W3-POST:Thm-1@1.0.0; SOP:TH09@1.0.0; W3-POST2:C@1.0.0; W3-POST2:E@1.0.0; W3-POST2:A0@1.0.0; W3-POST2:A1@1.0.0; W3-READER:R1	53ff2931e0821fb1	03c8fbb31d6bc715	reviews/S2_linecheck_sol.md (pending)	STALE
-RV/thm2	READER_VERSIONS.md ROW thm2	W3-POST:Thm-1@1.0.0 item 6; W2-APP:POST@1.0.1; W3-READER:R1	24d2f6cda3440971	d8840bb2f04fbf76	reviews/S2_linecheck_sol.md (pending)	STALE
-RV/thm3	READER_VERSIONS.md ROW thm3	W3-PSHARP:A@1.0.0; W3-PSHARP:B@1.0.0; W3-READER:R1 (B3.2)	959000a6c11debbd	5e52f08a3a976193	reviews/S2_linecheck_sol.md (pending)	STALE
-RV/thm4	READER_VERSIONS.md ROW thm4	W3-MISR:MIS(i)@1.0.0; MIS(i')@1.0.0; MIS(ii)@1.0.0; Cor-G(b)@1.0.0; W3-READER:R1 (B4.1)	ba1c4481990b98ce	4f5bcff00c63edf8	reviews/S2_linecheck_sol.md (pending)	STALE
-RV/thm5	READER_VERSIONS.md ROW thm5	W3-START2:START-R@1.0.0; W3-START2:BR@1.0.0; W3-START:FLOOR@1.0.0	a72e5a2098855325	a72e5a2098855325	reviews/S2_linecheck_sol.md (pending)	PENDING-CHECK
-RV/thm6	READER_VERSIONS.md ROW thm6	W3-RM2:RM2-R@1.0.0; W3-RM:RM-0@1.0.0; W3-RM:E4@1.0.0; W2-UNI:F-UNI@1.1.0; W3-RM2:D-to-W@1.0.0; W3-RM2:POST-R@1.0.0; W3-READER:R1, R2, R3	06db53465245346b	df820383aab3cb7d	reviews/S2_linecheck_sol.md (pending)	STALE
-RV/thm7	READER_VERSIONS.md ROW thm7	W3-RM2:RM2-F@1.0.0; W3-RM2:W-suff@1.0.0; W3-RM:RM-0@1.0.0; W2-UNI:F-UNI@1.1.0; W3-READER:R1, R2, R3	d11344c886a54503	783a5b85c53e5d16	reviews/S2_linecheck_sol.md (pending)	STALE
-RV/thm8	READER_VERSIONS.md ROW thm8	W3-SCR:A1@1.0.0	5d02c01aaecbcca5	cfcae3fc04a35b49	reviews/S2_linecheck_sol.md (pending)	STALE
-RV/thm9	READER_VERSIONS.md ROW thm9	(placeholder; W3-DIST)	fe9183d270dcb8e4	fe9183d270dcb8e4	reviews/S2_linecheck_sol.md (pending)	PENDING-CHECK
-RV/thm10	READER_VERSIONS.md ROW thm10	W3-SAMP:C@1.1.1; W3-START2:IF-START@1.0.0; W3-POST:Thm-1@1.0.0; W2-APP:POST@1.0.1; W3-READER:R4, PoolZ	a1c77daac07dc8a8	9728e269fdf67549	reviews/S2_linecheck_sol.md (pending)	STALE
-CARD	CLAIMS_CARD.md	RV/thm1-thm10	e89a5b877d9de766	8ccf947f42e8654a	reviews/S2_linecheck_sol.md (pending)	STALE
+W3-READER:PoolZ	STATEMENT.md §Claim PoolZ	W1-N1:Thm-N1@1.0.0	58b1dee88d776364	58b1dee88d776364	reviews/R1_council (CP3, pending)	PENDING-CHECK
+W3-READER:R1	lemmas/R1_set_sizes.md	SOP:TH09@1.0.2 ([T03R] E2(ii))	a13895c43c2ba870	1e514a39e6b455fe	reviews/R1_council (CP3, pending)	STALE
+W3-READER:R2	lemmas/R2_local_regression.md	-	6f70b56635abab50	6f70b56635abab50	reviews/R1_council (CP3, pending)	PENDING-CHECK
+W3-READER:R3	lemmas/R3_delivery_assembly.md	W2-UNI:F-UNI@2.1.0; W3-RM2:RM2-R/F@1.0.3 (history)	4d4086e0355d33b6	e52707a923e46fd6	reviews/R1_council (CP3, pending)	STALE
+W3-READER:R4	lemmas/R4_printed_outputs.md	W3-SAMP:C@1.1.4; W3-START2-R:IF-START@1.0.0; W3-START2-R:START-R@1.0.0; W2-APP:POST@1.0.7	861bd76216b15280	9f48e8421ee95559	reviews/R1_council (CP3, pending)	STALE
+NOTATION	NOTATION.md	code pins (Scripts/SMC_BVS/core)	71277b4d10f15984	ca6c6e516278521b	reviews/R1_council (CP3, pending)	STALE
+RV/thm1	READER_VERSIONS.md ROW thm1	W3-POST:Thm-1@1.0.0; SOP:TH09@1.0.2; W3-POST2:C@1.0.5; W3-POST2:E@1.0.5; W3-POST2:A0@1.0.5; W3-POST2:A1@1.0.5; W3-READER:R1	d3165573f1882855	03c8fbb31d6bc715	reviews/R1_council (CP3, pending)	STALE
+RV/thm2	READER_VERSIONS.md ROW thm2	W3-POST:Thm-1@1.0.0 item 6; W2-APP:POST@1.0.7; W3-READER:R1	c7ca38764c3d8b68	d8840bb2f04fbf76	reviews/R1_council (CP3, pending)	STALE
+RV/thm3	READER_VERSIONS.md ROW thm3	W3-PSHARP:A@1.0.0; W3-PSHARP:B@1.0.0; W3-PSHARP-R:AE@1.0.0; W3-PSHARP-R:A2C@1.0.0; W3-READER:R1 (B3.2)	8a60f0de2f20be2e	5e52f08a3a976193	reviews/R1_council (CP3, pending)	STALE
+RV/thm4	READER_VERSIONS.md ROW thm4	W3-MISR:MIS(i)@1.0.1; MIS(i')@1.0.1; MIS(ii)@1.0.1; W3-MISR-R:CorGb-plus@1.0.1; CorG-min@1.0.1; CorH-plus@1.0.1; CorH-U@1.0.1; W3-READER:R1 (B4.1)	1a5681907a066940	4f5bcff00c63edf8	reviews/R1_council (CP3, pending)	STALE
+RV/thm5	READER_VERSIONS.md ROW thm5	W3-START2-R:START-R@1.0.0; W3-START2-R:BR@1.0.0; W3-START:FLOOR@1.0.0	f37528febcff75c9	a72e5a2098855325	reviews/R1_council (CP3, pending)	STALE
+RV/thm6	READER_VERSIONS.md ROW thm6	W3-RM2-R:RM2-R-plus@1.0.0; RM0-plus@1.0.0; DLV-0@1.0.0; Cont-plus@1.0.0; W3-RM2:RM2-R@1.0.3; W3-RM:RM-0@1.0.0; W3-RM:E4@1.0.0; W3-RM2:D-to-W@1.0.3; W3-RM2:POST-R@1.0.3; W3-READER:R1, R2	18d2d66db0be8321	df820383aab3cb7d	reviews/R1_council (CP3, pending)	STALE
+RV/thm7	READER_VERSIONS.md ROW thm7	W3-RM2-R:RM2-F-plus@1.0.0; RM0-plus@1.0.0; DLV-0@1.0.0; W3-RM2:RM2-F@1.0.3; W3-RM2:W-suff@1.0.3; W3-RM:RM-0@1.0.0; W3-READER:R1, R2	0b6f15709f7b9029	783a5b85c53e5d16	reviews/R1_council (CP3, pending)	STALE
+RV/thm8	READER_VERSIONS.md ROW thm8	W3-SCR:A1@1.0.0	1374486358ad75bc	cfcae3fc04a35b49	reviews/R1_council (CP3, pending)	STALE
+RV/thm9	READER_VERSIONS.md ROW thm9	W3-DIST:Thm-A@1.0.0; Thm-B@1.0.0; Cor-C@1.0.0; DIST-1@1.0.0; DIST-2@1.0.0; B3@1.0.0	d9a04e5cf46a7d30	fe9183d270dcb8e4	reviews/R1_council (CP3, pending)	STALE
+RV/thm10	READER_VERSIONS.md ROW thm10	W3-SAMP:C@1.1.4; W3-SAMP:TR@2.1.4; W3-START2-R:IF-START@1.0.0; W3-POST:Thm-1@1.0.0; W2-APP:POST@1.0.7; W1-N1:Thm-N1@1.0.0; W3-READER:R4, PoolZ	29db8708883b5c7e	9728e269fdf67549	reviews/R1_council (CP3, pending)	STALE
+CARD	CLAIMS_CARD.md	RV/thm1-thm10	9c640228a18221ef	8ccf947f42e8654a	reviews/R1_council (CP3, pending)	STALE

@@ -114,7 +114,7 @@ allocation it stops, returns the best model scored so far, and marks the estimat
 
 | Stage | Question | Theorem |
 |---|---|---|
-| target $\pi$ | does the exact posterior find the truth, and how fast? | 1, 2 (rate), 3 (optimality), 4 (omitted variables), 9 (distributions; in progress) |
+| target $\pi$ | does the exact posterior find the truth, and how fast? | 1, 2 (rate), 3 (optimality), 4 (omitted variables), 9 (distributions) |
 | start law $\pi_0$ | does the cheap block approximation already point at the truth? | 5 |
 | local search from $\tilde S_0$ + reported model | does the software report $S_0$? | 6 (random design), 7 (fixed design) |
 | certificate | what does a certified small model guarantee without any structural condition? | 8 |
