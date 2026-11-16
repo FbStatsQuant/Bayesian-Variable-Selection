@@ -788,9 +788,17 @@ static long status_kb(const char* key) {
 }
 static void plan_bounds_peak(int p, int N, std::initializer_list<int> Gs) {
   Fixture F(200, p, 36);
-  for (int G : Gs) for (bool lead : {false, true}) {
-    IslandConfig c = small_cfg(); c.N = N; c.kernel = KernelKind::LabelMajor; c.threads = 3; c.G = G; c.leaders = lead;
+  // rows: label-major for each G (leaders off / on); particle-major, 3 threads (re-check m1; leaders off / on); a
+  // calibration diagnostic island, label-major (leaders and the round-start snapshot)
+  std::vector<std::tuple<int, int, bool, bool>> rows;   // kernel (0 PM, 1 LM), G, leaders, calibration
+  for (int G : Gs) for (bool lead : {false, true}) rows.emplace_back(1, G, lead, false);
+  for (bool lead : {false, true}) rows.emplace_back(0, 1, lead, false);
+  rows.emplace_back(1, *Gs.begin(), true, true);
+  for (auto [kern, G, lead, cal] : rows) {
+    IslandConfig c = small_cfg(); c.N = kern || !lead ? N : N / 2;   // PM with leaders: N / 2 (time)
+    c.kernel = kern ? KernelKind::LabelMajor : KernelKind::ParticleMajor; c.threads = 3; c.G = G; c.leaders = lead;
     c.grid = {0.0, 0.3, 0.7, 1.0}; c.L = 0; c.Hm = 1; c.k_store = 8.0;   // as calib.bin would give (r1)
+    if (cal) { c.role = IslandRole::Diag; c.island = 1; c.iter = 1; }
     { FILE* cr = std::fopen("/proc/self/clear_refs", "w"); if (cr) { std::fputs("5", cr); std::fclose(cr); } }
     const long rss0 = status_kb("VmRSS:");
     IslandRun r = run_island<Arith::ClassA>(F.D, F.st, F.nb, c);
@@ -801,9 +809,10 @@ static void plan_bounds_peak(int p, int N, std::initializer_list<int> Gs) {
     uint64_t inputs = 0; for (auto& it : mp.items) if (it.name == "inputs") inputs = it.bytes;
     const double plan_mb = (double)(mp.total - inputs) / 1048576.0, meas_mb = (double)(hwm - rss0) / 1024.0;
     std::printf("  (stored mean |S| at the end %.2f; the plan's k %.2f)\n", k, k_plan);
-    std::printf("  p %d N %d G %3d leaders %d: island peak increment %.0f MiB, plan %.0f MiB (k %.2f) -> %s\n", p, N, G, (int)lead, meas_mb, plan_mb, k,
-                plan_mb >= meas_mb ? "bound holds" : "BOUND FAILS");
-    CHECKF(r.status == 0 && rss0 > 0 && hwm > 0 && plan_mb >= meas_mb, "p %d G %d leaders %d: measured %.0f MiB > plan %.0f MiB", p, G, (int)lead, meas_mb, plan_mb);
+    std::printf("  p %d N %d %s G %3d leaders %d%s: island peak increment %.0f MiB, plan %.0f MiB (k %.2f) -> %s\n", p, c.N, kern ? "LM" : "PM", G, (int)lead,
+                cal ? " calibration" : "", meas_mb, plan_mb, k, plan_mb >= meas_mb ? "bound holds" : "BOUND FAILS");
+    CHECKF(r.status == 0 && rss0 > 0 && hwm > 0 && plan_mb >= meas_mb, "p %d %s G %d leaders %d cal %d: measured %.0f MiB > plan %.0f MiB", p, kern ? "LM" : "PM", G,
+           (int)lead, (int)cal, meas_mb, plan_mb);
   }
 }
 TEST(mem_plan_bounds_measured_peak_2e4) { plan_bounds_peak(20000, 500, {64, 256}); }

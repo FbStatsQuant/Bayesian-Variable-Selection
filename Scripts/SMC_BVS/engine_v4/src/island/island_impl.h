@@ -1,5 +1,7 @@
 // island_impl.h -- template implementation of v4::island::run_island (included by island_bit.cpp, island_a.cpp).
 #pragma once
+#include <malloc.h>
+#include <mutex>
 #include <omp.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -1098,7 +1100,8 @@ MemPlan plan_island(const Data& D, const Start& st, const IslandConfig& cfg, Mem
   const bool lm = cfg.kernel == KernelKind::LabelMajor;
   MemSizes z; z.n = D.n; z.p = D.p; z.K = D.K; z.N = cfg.N; z.B = cfg.B; z.Hm = cfg.Hm; z.threads = cfg.threads;
   z.tile = std::max(64, (cfg.tile + 63) / 64 * 64); z.cap = cap; z.label_major = lm;
-  z.deferred = cfg.store_parallel_compact && cfg.threads > 1 && lm; z.leaders = cfg.leaders; z.compat = cfg.compat; z.inputs_bytes = cfg.inputs_bytes;
+  z.deferred = cfg.store_parallel_compact && cfg.threads > 1 && lm; z.leaders = cfg.leaders || cfg.role != IslandRole::Final; z.compat = cfg.compat; z.inputs_bytes = cfg.inputs_bytes;
+  z.calib = cfg.role != IslandRole::Final;
   int G = cfg.G ? cfg.G : 256;
   z.G = G; MemPlan mp = island_memory(z, k_est);
   if (cfg.mem_budget && cfg.G == 0) {
@@ -1111,8 +1114,18 @@ MemPlan plan_island(const Data& D, const Start& st, const IslandConfig& cfg, Mem
 }
 #endif
 
+// glibc: a fixed mmap threshold (no dynamic raise), so large arrays are mmapped and given back to the system when freed,
+// whichever thread's arena frees them (re-check m1). Process-wide, set once; small allocations are unaffected. Only for
+// islands whose store compacts on worker threads (particle-major with threads > 1): label-major compacts on the main
+// thread, where freed kept runs are reused in place, and fresh mmaps would add page faults to every compaction.
+inline void fix_mmap_threshold() {
+  static std::once_flag once;
+  std::call_once(once, [] { mallopt(M_MMAP_THRESHOLD, 4 << 20); });
+}
+
 template <Arith A>
 IslandRun run_island(const Data& D, const Start& st, const Neighbours& nb, const IslandConfig& cfg_in) {
+  if (cfg_in.kernel == KernelKind::ParticleMajor && cfg_in.threads > 1) fix_mmap_threshold();
   IslandConfig cfg = cfg_in;
   const bool calib = cfg.role != IslandRole::Final;
   if (calib) {   // WP3_DESIGN §1.11 (agreed with WP4)
@@ -1149,6 +1162,7 @@ IslandRun run_island(const Data& D, const Start& st, const Neighbours& nb, const
   IslandEngine<A> E(D, st, nb, c2);
   E.k_est = k_est; E.msz = z; E.res.G_used = G; E.res.mem_plan = mem_plan_text(mp);
   E.top.reserve_staging(k_est);   // no reallocation transients of the staging area (the plan counts its full capacity)
+  if (cfg.leaders) { E.lead0.reserve_staging(k_est); E.lead1.reserve_staging(k_est); }
   return E.run();
 }
 

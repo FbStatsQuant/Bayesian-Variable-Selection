@@ -172,8 +172,10 @@ class TopStore {
     if (b.size() >= buf_limit) flush(b);
   }
   // capacity of the staging area reserved once (virtual until touched): the deferred hard limit (or the serial limit)
+  // serial mode: one flush appends up to buf_limit entries before the limit check, so the reserve is limit + buf_limit
+  // (review PR26 re-check m1: the vectors reallocated to 2x once per cycle before)
   void reserve_staging(double k) {
-    const size_t n = defer ? stage_hard : stage_limit;
+    const size_t n = defer ? stage_hard : stage_limit + buf_limit;
     stage.v.reserve(n); stage.h.reserve(n); stage.off.reserve(n); stage.len.reserve(n); stage.pool.reserve((size_t)(n * std::max(1.0, k)));
   }
   void flush(StoreBuffer& b) {
