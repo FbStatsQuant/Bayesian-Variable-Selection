@@ -248,6 +248,15 @@ same rules for anything it runs.
 10. **Engineering uses NOTS heavily** (owner, 2026-11-15: "they are an engineering department, not theoreticians"). It
     measures rather than estimates. It holds a standing authorization for exploratory batches up to ~200 core-h each inside
     the approved budget, each logged and reported. Bigger batches and the gated stages go to HQ.
+11. **Owner preemption of NOTS** (owner to Engineering, 2026-11-15). The fb31 per-user cap (1,536 CPUs, 2,304 GB) is shared
+    with the owner's other projects. On his word, departments **clear the way**:
+    - no new submissions; pending tasks held;
+    - report the running jobs (ids, CPUs, expected end, checkpointed or not);
+    - if he needs the capacity now, cancel the blocking jobs (his explicit request);
+    - log it as "owner preemption", not a failure;
+    - resume when he says the way is clear.
+
+    Design consequence: jobs stay ≤ ~6 h and checkpoint at stage boundaries.
 
 ## 13. Department protocols: tailored, but in order (owner, 2026-11-15)
 Each department may tailor the review, process and rollback protocols to its needs. Order is kept this way:
