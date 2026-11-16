@@ -14,3 +14,5 @@
 - 2026-11-15 20:00 CST. Sol S1 'editorial only' diff check: brief saved (reviews/S1_editorial_check_brief.md, diff reviews/S1_diff.patch, 17 files); launching codex gpt-6.1-sol high (delegate_task).
 - 2026-11-15 20:04 CST. POLICIES §10 (final) noted. Settled the finished helper H1 (extraction thread). Sol S1 is still running; not touched.
 - 2026-11-15 20:11 CST. Manager request: triage of the 59 NOT-EDITORIAL MINORs → TRIAGE_MINORS.md: (iii) 20, (ii) 30, (i) 9; ★ 15 (from HEADLINE_CANDIDATES.md on recorder/staging-1115 ac5754d), incl. 6 ★ in (iii): M27, M30, M35, M57, M58, M61. Nothing applied.
+- 2026-11-15 20:22 CST. POLICIES §12: removed my /tmp CI outputs, test builds and scratch files (the throwaway merge worktrees were already removed); kept CP1 draft + py shim.
+- 2026-11-15 20:22 CST. Leftover-check: /tmp/bvs-ci-sandboxes/sb-w91e8vqb is a live run_ci.py (pid 2708093, not mine) on 25f2655 'registry: rehash C-MIS ×3 --bump patch' (HQ recorder); left untouched.
