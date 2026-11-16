@@ -1,6 +1,6 @@
 # Q5 — Lemma DLV-0: deterministic delivery at the pinned code (claim W3-RM2-R:DLV-0; STATEMENT (C-D))
 
-Status: **PROVED (by this seat, unchecked)**, relative to the code-reading audits it inherits (C-DLV P1 inventory and
+Status: **PROVED (by this seat, unchecked)**; LC-B (Sol) VERIFIED-WITH-AMENDMENTS, amendments [LCB-1..3] applied (re-check pending); relative to the code-reading audits it inherits (C-DLV P1 inventory and
 Lemma S.3, "AUDITED (code reading)") and to the re-audit of §2 below (a code reading by this seat) — 2026-11-16, lead
 Claude Opus 5.5. Ticket W3-RM2-R; statement: `../STATEMENT.md` v1.0 §2 ((D), IDEAL-W⁺, 𝔇, valid non-degenerate input),
 §3 (C-D). New file; no new mathematics: it restates the design-free delivery step of the cited sources as a statement
@@ -23,8 +23,7 @@ about every input and re-audits the exits against the code as pinned.
   is **not** used (`Theory_work/Wave3/API_AUDIT/pass1/TRIAGE.md:23-28`).
 * The extension of that delivery half to the C-GROW cap a_n = ℓ_n + |S̃₀| with total fallback and the LS0 preflight:
   FIN `s6_delivery.tex:29-46` (HQ audit A1 corrected statement, council round 3 passed; A4 preflight addition,
-  OK-WITH-FIXES), as consumed by W2-UNI:F-UNI@1.1.0 ("PROVED-CHECKED"), `Theory_work/Wave2/W2-UNI/lemmas/L5_delivery.md:7-12, 23-24`
-  (its Step 2, "design-free: P(no output) = 0"). From these we take **the allocation 𝒜_n**: the inequalities of FIN
+  OK-WITH-FIXES), as consumed by W2-UNI:F-UNI@1.1.0 ("PROVED-CHECKED"), `Theory_work/Wave2/W2-UNI/lemmas/L5_delivery.md:8-12, 27` (method/allocation; its Step 2, "design-free: P(no output) = 0") [LCB-3]. From these we take **the allocation 𝒜_n**: the inequalities of FIN
   `s6_delivery.tex:33-44` (A1's envelopes W_G, M_G and A4's additions P̄_LS0, P_e + A), evaluated at (n, p_raw).
 * Lemma E4 (W3-RM:E4@1.0.0, "PROVED-CHECKED"; RM `STATEMENT.md:219-230`): on every accepted input `start_mode` returns a
   maximiser of γ₀, for both values of `tie_dp`.
@@ -70,8 +69,8 @@ Lemma R's cap.
 **(E3) Numerical exits.** `v3_setup` failure (`v3_fit.R:134-138`), calibration and final-run `numerical_failure`
 (`v3_calib.R:57, 80, 100, 112`; `cpp/v3_core.cpp:484`), exact-branch `numerical_failure` (`cpp/v3_core.cpp:556`). All
 originate in `Scorer::score` (`NumericalFailure`); by Lemma S.2 it never throws under EX-A when yᵀy > 0, and after
-standardisation yᵀy = n − 1 > 0 because y^r is not constant (E1). The k > K invariant throw (`cpp/v3_core.cpp:112`;
-S.2's last paragraph) is unreachable. So on the exact branch `e$status = "exact"` and `estimates_available = TRUE`
+standardisation yᵀy = n − 1 > 0 because y^r is not constant (E1). The k > K invariant throw of the production scorer (`cpp/v3_score.h:230`; S.2's last paragraph) is unreachable [LCB-2]
+(the separate throw at `cpp/v3_core.cpp:112` belongs to the auxiliary `cpp_score` entry point, not on the `v3_fit` path). So on the exact branch `e$status = "exact"` and `estimates_available = TRUE`
 (`v3_fit.R:120-131`).
 
 **(E4) Calibration without a grid.** `v3_calib.R:170`: `schedule_limit` (final tier 1, no grid) or
@@ -109,8 +108,18 @@ supplied-block validator `cpp/v3_core.cpp:148` is not on the production setup pa
 `v3_calib.R:19` affect archives only; local-search and grid-interval caps are size-dependent budgets (Lemma R.1).
 The R-level helpers that `stop` on malformed internal objects (`cpp/v3_core.cpp:18-55, 212-257, 393, 425, 578`) check
 invariants of objects the production path constructs itself (pointers, retained indices, block coverage, table
-lengths, `|S| ≤ K`, equal-length vectors); they are part of the inherited P1/S.3 audit and are unreachable on the
-`v3_fit` path (each object is built by the preceding production call with the property checked).
+lengths, `|S| ≤ K`, equal-length vectors); they are part of the inherited P1/S.3 audit and are unreachable on the `v3_fit` path (each object is built by the preceding production call with the property checked). Likewise `nth_nonmember out of range`
+(`cpp/v3_engine.h:143`) is excluded by DLV S.3(v) (`L2_degenerate.md:53`) [LCB-2].
+**MACH exits [LCB-1].** Three kinds of call-graph exit are not mathematics and are excluded by the premise MACH
+exactly as stated in DLV `STATEMENT.md:28-31` ("every heap, stack and worker allocation succeeds whenever the live bytes
+stay within the declared memory …; the build, its lock/cache and runtime dependencies (Rcpp, digest) succeed; no
+user/external interruption, no worker crash"), and are recorded in the inherited P1 inventory: (i) user interrupts, e.g.
+`Rcpp::checkUserInterrupt()` during exact enumeration (`cpp/v3_core.cpp:552`; the catch at `:556` handles only
+`NumericalFailure`) — excluded by "no user/external interruption"; (ii) runtime-dependency failures, e.g.
+`digest::digest()` in `v3_frozen` (`v3_run.R:73`) and the Rcpp build/load — excluded by "runtime dependencies (Rcpp,
+digest) succeed"; (iii) allocation failures anywhere (preprocessing, context construction, setup tables, calibration,
+final run, serialisation of the fit) — excluded by MACH's allocation clause together with the memory envelope of 𝒜_n
+in (E2) (live bytes ≤ β·(words held) + β₀ ≤ declared memory, by Lemma R's word bound).
 
 **(E8) The final run and LS0.** `v3_final_run` (`v3_run.R:223-229`, assembling through `v3_assemble_final`, `:119-221`): its only non-"completed" statuses are
 `resource_limit` (E2) and `numerical_failure` (E3) (`cpp/v3_core.cpp:413-486`); a completed LS0 that stops at its move
@@ -122,7 +131,7 @@ On "completed", `v3_assemble_final` sets `estimates_available = TRUE` (DLV `L4_d
 **Conclusion.** For a valid non-degenerate input satisfying 𝒜_n, every branch of the walk either returns with
 `estimates_available = TRUE` (exact branch at (E3); SMC branch at (E8)) or would pass through an exit that (E1)–(E7)
 exclude, for every seed and every realisation of the uniforms (none of the exclusions depends on them: (E1) is about
-the input, (E2) holds for every realisation by Lemma R / Corollary R, (E3)–(E7) are deterministic under EX-A). With DLV's
+the input, (E2) holds for every realisation by Lemma R / Corollary R, (E3)–(E7) are deterministic under EX-A, and the MACH exits of (E7) are excluded by premise for every run). With DLV's
 IDEAL-W only, (E5) is the only place where IDEAL-W⁺ was used, and on 𝔇 it is not needed. ∎
 
 ## 3. Remarks

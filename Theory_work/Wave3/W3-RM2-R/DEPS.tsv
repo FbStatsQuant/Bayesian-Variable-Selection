@@ -16,6 +16,6 @@ parent:RM-L0_core.md	../W3-RM/lemmas/L0_core.md	-	51676910b103dac6	51676910b103d
 lemma:Q1_sandF_c	lemmas/Q1_sandF_c.md	stmt:bridges;parent:L1_sandF_b.md	2726f96107ee560f	2726f96107ee560f	reviews/LCA_line_check_sol.md	OK
 lemma:Q2_TL_c	lemmas/Q2_TL_c.md	stmt:bridges;parent:L2_width.md	6a3282368f400720	6a3282368f400720	reviews/LCA_line_check_sol.md	OK
 lemma:Q7_proxy_d	lemmas/Q7_proxy_d.md	stmt:C5p;parent:L6_examples.md	82bb402991fb6873	82bb402991fb6873	reviews/LCA_line_check_sol.md	OK
-lemma:Q4_core_plus	lemmas/Q4_core_plus.md	stmt:C0p;parent:RM-L0_core.md;lemma:Q5_dlv0	d89a356936ca2953	-	(LC-B running)	UNCHECKED
-lemma:Q5_dlv0	lemmas/Q5_dlv0.md	stmt:CD	8b23f9ef5bd348eb	-	(LC-B running)	UNCHECKED
-lemma:Q6_assembly	lemmas/Q6_assembly.md	stmt:C1p;stmt:C2p;stmt:C4p;lemma:Q1_sandF_c;lemma:Q2_TL_c;lemma:Q4_core_plus;lemma:Q5_dlv0;lemma:Q7_proxy_d	83b8f28a681fffba	-	(LC-B running)	UNCHECKED
+lemma:Q4_core_plus	lemmas/Q4_core_plus.md	stmt:C0p;parent:RM-L0_core.md;lemma:Q5_dlv0	d89a356936ca2953	d89a356936ca2953	reviews/LCB_line_check_sol.md	OK
+lemma:Q5_dlv0	lemmas/Q5_dlv0.md	stmt:CD	23a4baf6e10f5648	8b23f9ef5bd348eb	reviews/LCB_line_check_sol.md (repair: RC1 pending)	STALE
+lemma:Q6_assembly	lemmas/Q6_assembly.md	stmt:C1p;stmt:C2p;stmt:C4p;lemma:Q1_sandF_c;lemma:Q2_TL_c;lemma:Q4_core_plus;lemma:Q5_dlv0;lemma:Q7_proxy_d	83b8f28a681fffba	83b8f28a681fffba	reviews/LCB_line_check_sol.md	OK
