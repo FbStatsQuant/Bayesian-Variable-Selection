@@ -52,6 +52,9 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 | SL0 PC check (RUNNING, pre-freeze per HQ) | C-PACK:SL0: diff check of the 5 files changed since the C1 snapshot → record SL0 → drop SL0 from 11 conditional statuses | D48 |
 | accept-identity follow-ups | NB-3 sunset of the legacy Windows fallback; NB-4 compute identity once | CR_accept_identity_opus.md |
 | Cont-R TH05.0 condition | Cont-R still lists SOP:TH05.0 (inherited via the removed RM-R edge); drop via a new full RM2 checkpoint | recorder note 11-16; HQ 11-16: conservative (extra condition only), post-freeze package together with TH05.0's own acceptance |
+| MISR-R REPORT §3 DIST note → W3-DIST lead | HEURISTIC/OPEN note (`W3-MISR-R/REPORT.md` §3) as input only; hand over **after the DIST R1 freeze** (HQ 11-16) | HQ 11-16 |
+| MISR-R E1–E6 | ERRATA.md of W3-MISR-R → post-freeze editorial batch | HQ 11-16 |
+| MISR-R supersession + thm4 reader swap | wait for H5 card 10 (consultant); no supersession edge before | HQ 11-16 |
 | Non-council manifests list claims.tsv | W3-RM2 BT1/SC1/RC1/RC2/MP1/LC1/SL1, W3-START BT1/SC4/SW1 take claims.tsv as input → stop verifying at every registry write; drop claims.tsv from future freezes, mark these as historical | recorder note 11-16 (task O); post-freeze format package |
 | record-format package | 38 rows free-text → file-path evidence | recorder task I |
 | NOTS move | theory_w2/w3, /scratch theory_w2|3, P6 outputs → /home/fb31/SMC_Theory_Department on NOTS (+ scratch link, INDEX.md); one calm session; copies only, no deletion before Owls copy verified | D32/D33 (HQ approved) |
