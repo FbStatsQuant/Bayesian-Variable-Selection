@@ -80,8 +80,8 @@ pathwise Claim above. (The proof uses the premises EX-A, EX-S, SR, OP-LS0, e4 as
 Suppose that whenever a tier-1 construction fails, calibration froze the tier-1 pilot schedule (φ₀, …, φ_k) as the
 grid (instead of returning `schedule_limit`) — or, alternatively, the last successful construction of that tier when
 one exists (it also starts at 0, ends at 1, is strictly increasing, has ≤ T₁ intervals and passes `v3_check_grid`, by
-L3 Lemma 3.4). Then under the premises of Theorem D, P(𝒰_n) = 0 for every n ≥ 3.
-On the classes of Corollary D′, under the respective hypotheses of its cited posterior-concentration and deterministic-LS0-discovery results, P(Ŝ⁺ = S₀) → 1 under the original unconditioned data law, without conditioning on delivery or calibration success and without assuming CAL.
+L3 Lemma 3.4). Then under the premises of Theorem D, P(𝒰_n) = 0 for every n ≥ 3, and on
+the classes above P(Ŝ⁺ = S₀) → 1 unconditionally.
 *Proof.* The pilot schedule starts at 0, ends at 1, is strictly increasing and has k ≤ T₁ intervals (Lemma 3.3), so it
 passes `v3_check_grid` (`v3_run.R:77-82`) and respects the T_e cap of the calibration contract; it is frozen before any
 final randomness (it is a function of streams 0–9). The rest of the proof of Theorem D applies verbatim with 𝒮ℒ_n = ∅
