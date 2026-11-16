@@ -27,8 +27,8 @@ static double ulps(double a, double b) {   // distance in units in the last plac
 struct Fn { const char* name; double (*f)(double); __float128 (*q)(__float128); double lo, hi; bool logscale; };
 static double f_log(double x) { return pm::log(x); }
 static double f_exp(double x) { return pm::exp(x); }
-static double f_log1p(double x) { return pm::log1p(x); }
-static double f_expm1(double x) { return pm::expm1(x); }
+static double f_log1p(double x) { return pm::machine::log1p(x); }
+static double f_expm1(double x) { return pm::machine::expm1(x); }
 static double f_lgamma(double x) { return pm::lgamma(x); }
 
 int main(int argc, char** argv) {
@@ -44,13 +44,7 @@ int main(int argc, char** argv) {
   std::printf("{\"libm\":\"%s\",\"libm_sha256\":\"%s\",\"glibc\":\"%s\",\"N\":%zu,\"functions\":[\n", li.path.c_str(), li.sha256.c_str(), li.gnu_libc_version.c_str(), N);
   bool first = true;
   for (auto& F : fns) {
-    std::mt19937_64 g(12345);
-    std::vector<double> x(N), y(N);
-    for (size_t i = 0; i < N; ++i) {
-      double u = (double)(g() >> 11) * 0x1.0p-53;
-      x[i] = F.logscale ? std::exp(std::log(F.lo) + u * (std::log(F.hi) - std::log(F.lo))) : F.lo + u * (F.hi - F.lo);
-      if (std::strcmp(F.name, "lgamma_int") == 0) x[i] = std::floor(x[i]);
-    }
+    std::vector<double> x = pm::check_arguments(F.name, N), y(N);
     auto t0 = std::chrono::steady_clock::now();
     for (size_t i = 0; i < N; ++i) y[i] = F.f(x[i]);
     double ns = std::chrono::duration<double, std::nano>(std::chrono::steady_clock::now() - t0).count() / (double)N;
@@ -63,6 +57,18 @@ int main(int argc, char** argv) {
     std::printf("%s {\"fn\":\"%s\",\"range\":[%g,%g],\"sha256\":\"%s\",\"not_correctly_rounded\":%zu,\"max_ulp_vs_quad\":%g,\"ns_per_call\":%.2f}\n",
                 first ? " " : ",", F.name, F.lo, F.hi, hex(h).c_str(), notcr, maxu, ns);
     first = false;
+  }
+  // x87 long double rows (INTERFACES v0.1.4): reference = libquadmath rounded to long double; 10 significant bytes compared
+  struct FnL { const char* name; long double (*f)(long double); __float128 (*q)(__float128); };
+  FnL fl[] = {{"expl", [](long double x) { return pm::expl(x); }, expq}, {"logl", [](long double x) { return pm::logl(x); }, logq}};
+  for (auto& F : fl) {
+    std::vector<long double> x = pm::check_arguments_l(F.name, N), y(N);
+    auto t0 = std::chrono::steady_clock::now();
+    for (size_t i = 0; i < N; ++i) y[i] = F.f(x[i]);
+    double ns = std::chrono::duration<double, std::nano>(std::chrono::steady_clock::now() - t0).count() / (double)N;
+    size_t notcr = 0;
+    for (size_t i = 0; i < N; ++i) { long double r = (long double)F.q((__float128)x[i]); if (std::memcmp(&r, &y[i], 10) != 0) ++notcr; }
+    std::printf(", {\"fn\":\"%s\",\"sha256\":\"%s\",\"not_correctly_rounded\":%zu,\"ns_per_call\":%.2f}\n", F.name, pm::sha256_ld(y).c_str(), notcr, ns);
   }
   std::printf("]}\n");
   return 0;

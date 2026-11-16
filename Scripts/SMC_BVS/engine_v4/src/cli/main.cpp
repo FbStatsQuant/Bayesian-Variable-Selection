@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
       else args[key] = number_or_string(val);
     }
     if (args.contains("threads")) set_threads((int)args.at("threads").i64());
-    if (cmd != "info" && cmd != "version") require_fma_variant();   // INTERFACES §6
+    if (cmd != "info" && cmd != "version") require_bit_libm();   // INTERFACES §6
     auto spec_from_args = [&]() {
       Json s = Json::object();
       for (const char* f : {"design", "n", "p", "seed", "rho", "b", "a", "s0", "sigma"}) if (args.contains(f)) s[f] = args.at(f);
@@ -106,7 +106,7 @@ int main(int argc, char** argv) {
     st = Status::internal_error; rec = Json::object(); rec["reason"] = e.what();
   }
   rec["status"] = status_name(st); rec["command"] = cmd;
-  try { rec["binary"] = binary_block(); } catch (...) {}
+  try { rec["binary"] = cmd == "info" ? binary_block_no_self_test() : binary_block(); } catch (...) {}
   // INTERFACES §7: prep data outcomes (no data.bin) exit 20 / 21, never 0
   int code = exit_code(st);
   if (st == Status::completed && rec.contains("prep_status")) {

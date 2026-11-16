@@ -42,6 +42,10 @@ void generate(const Spec& s, std::vector<double>& X, std::vector<double>& y);
 // ntest test rows on the sorted 1-based column set cols u S0 (returned in out_cols); Xt ntest x |out_cols| col-major.
 void generate_test(const Spec& s, int32_t ntest, const std::vector<int32_t>& cols, std::vector<int32_t>& out_cols,
                    std::vector<double>& Xt, std::vector<double>& yt);
+// Rows [a, b) of the same test design (global row i uses the address of row i): bit-identical to the corresponding
+// rows of generate_test(s, nt >= b, ...); Xt is (b - a) x |out_cols| col-major. For chunked evaluation (WP5).
+void generate_test_rows(const Spec& s, int64_t a, int64_t b, const std::vector<int32_t>& cols, std::vector<int32_t>& out_cols,
+                        std::vector<double>& Xt, std::vector<double>& yt);
 // gen command: writes raw.bin (X_cm, y, meta) and truth.json; returns the record (hashes included).
 Json run(const Json& args);
 Json run_test(const Json& args);   // writes test.bin (Xt_cm, yt, cols, meta)

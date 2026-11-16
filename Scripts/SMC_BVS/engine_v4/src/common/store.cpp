@@ -34,6 +34,7 @@ bool Store::would_enter(double value, ModelView S) const {
 
 void Store::offer(double value, ModelView S, uint64_t h) {
   if (cap == 0) return;
+  if (value != value) throw Error(Status::internal_error, "store: NaN value (breaks the strict order)");
   if (value < cutoff()) return;                            // strictly worse than c entries already offered
   if (nkept_ == cap && !better(value, S, v[nkept_ - 1], model(nkept_ - 1))) return;   // not better than the worst kept
   if (S.k > 65535) throw Error(Status::internal_error, "store: model too large");
