@@ -1,5 +1,5 @@
 --- READER_DELTA.md	2026-11-16 01:25:52.192676472 -0600
-+++ reviews/post_cp3/READER_DELTA_v0.4.md	2026-11-16 03:58:57.127299359 -0600
++++ reviews/post_cp3/READER_DELTA_v0.4.md	2026-11-16 04:24:47.815949552 -0600
 @@ -1,28 +1,36 @@
 -# READER_DELTA.md — W3-PSHARP-R (draft v0.3, 2026-11-15, after CP1 conditions; rebased on W3-READER section 0.2 @88f5dec; RIDER_RULES §5, PROTOCOL_v4 H6)
 +# READER_DELTA.md — W3-PSHARP-R (draft v0.4, 2026-11-16, post-CP3, HQ items 1–6 of 11-16; rebased on W3-READER §3 section 0.3 @e20d287f; RIDER_RULES §5, PROTOCOL_v4 H6)
@@ -56,7 +56,7 @@
  
  ## 3. New reader text (proposed)
  
-@@ -36,42 +44,62 @@
+@@ -36,42 +44,63 @@
  1-\pi(S_0\mid y)\ \ge\ (1-o_P(1))\,(s_0+1)\sqrt{\frac{\log p}{\pi n}}.
  $$
  
@@ -99,7 +99,8 @@
 +is present **in expectation for every p**, bounded p included (with p = n^a the constant is √((a+½)/π)), and **in
 +probability whenever log p ≍ log n**. The rate √(log n/n) of Theorem 1 is exact in the following named cases:
 +- **in expectation**, on fully orthogonal designs (all columns mutually orthogonal, any p with s₀ < p ≤ n − 1, bounded or
-+  growing) with fixed nonzero coefficients: these designs satisfy the assumptions of Theorem 1 and of (b), so
++  growing) with fixed nonzero coefficients: these designs satisfy the assumptions of Theorem 1 and of the expectation
++  display in (b), so
 +  E[1 − π(S₀ | y)] is of exact order √(log n/n), with constants depending only on s₀, the coefficients and the noise
 +  variance (conditional on Theorem 1);
 +- **in probability**, on fully orthogonal designs with p = min(n − 1, ⌊n^a⌋) and on raw designs with i.i.d. N(0, 1)
@@ -148,7 +149,7 @@
  | B3.6 | in-probability display needs p → ∞ | EXISTS-CHECKED | `W3-PSHARP:A`@1.0.0, Cor A1 (PARENT STATEMENT :71-73), unchanged |
 -| B3.7 | "s₀ bounded" remark ⇐ Cor A2-E(ii); critical-scale remark ⇐ A2C | EXISTS (at CP3) | (N-orth), or (N-gauss) with X^r_{S₀} deterministic, with 𝒩 = [p]∖S₀ and s₀ ≤ p/2 [R1-F2]; A2C: (N-orth), p → ∞ |
 +| B3.7 | remark (ii) ⇐ Cor A2-E(ii) (`STATEMENT.md:86-92`); remark (iii) ⇐ A2C (`STATEMENT.md:94-100`) | EXISTS, council-passed (R2), pending recorded acceptance | A2-E: all nulls, s₀ ≤ p/2, s₀ + 1 ≤ K, fixed (σ*², M, M′), and (N-orth) or (N-gauss) with X^r_{S₀} (hence θ*) deterministic; (log p)² = o(n) from (S2) or from p ≤ 2n. A2C: (N-orth), p → ∞, s₀/p → 0, Λ_n = (1 + o(1))(s₀ + 1)√(log p/(πn)) → λ |
-+| B3.8 | fully orthogonal designs, fixed nonzero coefficients, s₀ < p ≤ n − 1 ⇒ Theorem 1 (A1)–(A6) and (b); hence exact order √(log n/n) in expectation | NEW, `reviews/post_cp3/BRIDGE_orth_thm1.md`; informal read L05 (low effort; GAP, repaired), Sol line check L06 high (`reviews/post_cp3/L06_bridge_sol.md`) | (A1)–(A6) with A = 1, θ̄ = max|θ*_j|, φ₀ = 1, g₀ = 1, second form of (A6); upper half carries Theorem 1's master status (row 1.1) |
++| B3.8 | fully orthogonal designs, fixed nonzero coefficients, s₀ < p ≤ n − 1 ⇒ Theorem 1 (A1)–(A6) and the hypotheses of the expectation display of (b) (the in-probability display needs p → ∞ in addition); hence exact order √(log n/n) in expectation, every such p | NEW, `reviews/post_cp3/BRIDGE_orth_thm1.md`; informal read L05 (low effort; GAP, repaired), Sol line check L06 high (`reviews/post_cp3/L06_bridge_sol.md`): CORRECT-WITH-FIXES, C 0, its one S (scope of Claim 2, p → ∞) applied verbatim | (A1)–(A6) with A = 1, θ̄ = max|θ*_j|, φ₀ = 1, g₀ = 1, second form of (A6); upper half carries Theorem 1's master status (row 1.1) |
  
 -No internal ids appear in §3's reader text; (N-orth), (N-gauss), (S1), (S2) are W3-READER's own labels.
 +No internal ids appear in §3's reader text; (N-orth), (N-gauss), (S1), (S2), (A1)–(A6) are W3-READER's own labels.
