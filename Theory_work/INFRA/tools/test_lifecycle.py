@@ -1992,6 +1992,39 @@ try:
                         and hl["id"] in blk and lab not in txt(hl["id"])))
         os.remove(hc_path)
 
+    if True:  # INFRA J (2026-11-15): the accept identity must not depend on the platform
+        rows_j = R.load_claims(); by_j = R.index(rows_j); g_j = R.Graph(rows_j); al_j = R.load_aliases()
+        rec_j = R.accept_records()
+        cand_j = [r["id"] for r in rows_j if rec_j.get(r["id"]) and r.get("council") and r["state"] == "ACTIVE"]
+        cid_j = next(c for c in cand_j if R.accept_stamp(c, by_j, g_j, al_j)
+                     != R.accept_stamp(c, by_j, g_j, al_j, fold=True))
+        folded = R.accept_stamp(cid_j, by_j, g_j, al_j, fold=True)
+        plain = R.accept_stamp(cid_j, by_j, g_j, al_j)
+        # 1. a record written on Windows (case-folded artifact paths) matches on Linux
+        ok_legacy = R.accept_stamp_matches(cid_j, by_j, g_j, al_j, {folded}) and \
+            R.accept_stamp_matches(cid_j, by_j, g_j, al_j, {plain}) and \
+            not R.accept_stamp_matches(cid_j, by_j, g_j, al_j, {"v0.0.0 fp2:000000000000000000000000"})
+        # 2. a consumer's A5 accepts the legacy Windows record: replace the claim's records by the folded stamp only
+        ev = os.path.join(INFRA, "registry", "events.log")
+        keep = [ln for ln in open(ev, encoding="utf-8").read().splitlines()
+                if not (ln.split("\t")[2:3] == ["accept"] and ln.split("\t")[3:4] == [cid_j])]
+        keep.append("\t".join(["2026-11-12T00:00:00Z", "TEST", "accept", cid_j, "", folded, "windows record (test)"]))
+        open(ev, "w", encoding="utf-8", newline="\n").write("\n".join(keep) + "\n")
+        cons = [d for d, p in g_j.dependents(cid_j).items() if len(p) == 2]
+        a5_ok = all(not any(x[0] == cid_j for x in R.unaccepted_inputs(d, by_j, g_j, al_j, set(), R.accept_records(),
+                                                                       R.legacy_boundary()[0], None))
+                    for d in cons) if cons else True
+        # 3. a new record is case-preserving (the stamp check.py --record writes)
+        rc_r = subprocess.run([sys.executable, os.path.join(INFRA, "tools", "check.py"), "--acceptance", cid_j,
+                               "--record"], capture_output=True, text=True, encoding="utf-8", errors="replace",
+                              cwd=TMP).returncode
+        last = [ln.split("\t")[5] for ln in open(ev, encoding="utf-8").read().splitlines()
+                if ln.split("\t")[2:4] == ["accept", cid_j]][-1]
+        results.append((f"INFRA J: accept identity is platform-independent ({cid_j}): a record written with "
+                        "Windows-folded artifact paths matches on Linux (direct and through a consumer's A5), and a "
+                        "new --record writes the case-preserving stamp",
+                        ok_legacy and a5_ok and rc_r == 0 and last == plain and plain != folded))
+
 finally:
     SB.__exit__(None, None, None)
 for name, ok in results:

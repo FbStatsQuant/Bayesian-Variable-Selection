@@ -1893,7 +1893,15 @@ def _digest(lines) -> str:
     return hashlib.sha256("\n".join(lines).encode("utf-8", errors="replace")).hexdigest()
 
 
-def accept_artifacts(row: dict, folder: str = "") -> list[str]:
+def _akey(relpath: str, fold: bool = False) -> str:
+    """Path as written into the acceptance identity: case-preserving `_pkey` on every platform (INFRA J, 2026-11-15:
+    `_pcase` folded case on Windows only, so the same claim had two identities). `fold=True` reproduces the legacy
+    Windows identity, used only to MATCH records written before the fix (accept_stamp_matches), never to write one."""
+    k = _pkey(relpath)
+    return k.lower() if fold else k
+
+
+def accept_artifacts(row: dict, folder: str = "", fold: bool = False) -> list[str]:
     """The artifacts a claim's acceptance rests on, each as `<reference> -> <repo path>[@pin] <content digest>` (or
     `<reference> MISSING`): every gate evidence reference (whatever the result), every council seat's review file and
     each `<ticket>/reviews/MANIFEST_*.txt` whose header is the council digest."""
@@ -1915,7 +1923,7 @@ def accept_artifacts(row: dict, folder: str = "") -> list[str]:
                 out.add(f"{tok} MISSING")
                 continue
             lines = read_lines_at(path, pin) if pin else read_lines(path)
-            out.add(f"{tok} -> {_pcase(path)}{'@' + pin if pin else ''} "
+            out.add(f"{tok} -> {_akey(path, fold)}{'@' + pin if pin else ''} "
                     + (_digest(lines) if lines is not None else "UNREADABLE"))
     d = ticket_dir(row, folder)
     for dg in mans:
@@ -1925,14 +1933,14 @@ def accept_artifacts(row: dict, folder: str = "") -> list[str]:
                 rel = os.path.relpath(mp, ROOT).replace(os.sep, "/")
                 lines = read_lines(rel)
                 if lines and lines[0].strip() == f"MANIFEST {dg}":
-                    out.add(f"MANIFEST {dg} -> {_pcase(rel)} {_digest(lines)}")
+                    out.add(f"MANIFEST {dg} -> {_akey(rel, fold)} {_digest(lines)}")
                     hit = True
         if not hit:
             out.add(f"MANIFEST {dg} MISSING")
     return sorted(out)
 
 
-def accept_identity(cid: str, by: dict, g, aliases: dict, folders: dict | None = None) -> list[str]:
+def accept_identity(cid: str, by: dict, g, aliases: dict, folders: dict | None = None, fold: bool = False) -> list[str]:
     """The acceptance identity of a claim (see above) as a list of lines; accept_stamp fingerprints it."""
     row = by[cid]
     folders = ticket_folders() if folders is None else folders
@@ -1944,15 +1952,23 @@ def accept_identity(cid: str, by: dict, g, aliases: dict, folders: dict | None =
         tr = by.get(t, {})
         ident.append(f"input={t}@{','.join(sorted(g.uses[(cid, t)]))} v{tr.get('version', '')} "
                      f"{tr.get('sha256', '')} {tr.get('status', '')}")
-    ident += [f"artifact={a}" for a in accept_artifacts(row, folder)]
+    ident += [f"artifact={a}" for a in accept_artifacts(row, folder, fold)]
     return ident
 
 
-def accept_stamp(cid: str, by: dict, g, aliases: dict, folders: dict | None = None) -> str:
+def accept_stamp(cid: str, by: dict, g, aliases: dict, folders: dict | None = None, fold: bool = False) -> str:
     """`v<version> fp2:<24 hex>`: what an accept event records. The fingerprint covers the whole acceptance identity
     (row fields, ticket folder, effective inputs, names, artifact contents), so ANY later change makes it stale."""
-    fp = hashlib.sha256("\x1f".join(accept_identity(cid, by, g, aliases, folders)).encode()).hexdigest()[:24]
+    fp = hashlib.sha256("\x1f".join(accept_identity(cid, by, g, aliases, folders, fold)).encode()).hexdigest()[:24]
     return f"v{by[cid].get('version', '')} {ACCEPT_FORMAT}:{fp}"
+
+
+def accept_stamp_matches(cid: str, by: dict, g, aliases: dict, have: set, folders: dict | None = None) -> bool:
+    """True if a recorded accept event matches the claim's CURRENT identity: the case-preserving stamp (every record
+    written from INFRA J on), or the legacy Windows-folded stamp of a record written on Windows before the fix."""
+    if accept_stamp(cid, by, g, aliases, folders) in have:
+        return True
+    return accept_stamp(cid, by, g, aliases, folders, fold=True) in have
 
 
 def accept_records() -> dict[str, set]:
@@ -2081,7 +2097,7 @@ def unaccepted_inputs(cid: str, by: dict, g, aliases: dict, now: set, records=No
             if (d, dr.get("version", ""), dr.get("sha256", "")) in legacy:
                 continue
             have = records.get(d, set())
-            if accept_stamp(d, by, g, aliases, folders) in have:
+            if accept_stamp_matches(d, by, g, aliases, have, folders):
                 probs = revalidate(d) if revalidate else []
                 if probs:
                     out.append((d, path + [d], "its accept record matches, but it no longer passes acceptance on the "
