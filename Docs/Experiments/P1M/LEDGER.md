@@ -23,4 +23,7 @@ Rules:
 | 2026-11-16 00:2x CST | pmath check 2 (PR #15 5e3d5bf: + expl/logl rows) on SPR | exploratory | 2747875 | 0.5 | 0.05 | COMPLETED (83 s; expl/logl equal; all 8 guarded rows match) |
 | 2026-11-16 00:3x CST | WP3 class-A island bench on SPR (820bd30; p = 10⁴ adaptive + geo:30 at 24/48/96 threads; p = 10⁵ at 48/96; 96 CPUs, 12 min) | exploratory | 2747881 | 19.2 | 19.5 | TIMEOUT at 12 min (p = 10⁴ runs complete; p = 10⁵ not reached) |
 
-**Totals:** actual 0.883 · reserved (worst case, open) 49.5 · remaining ≈ 24,543 (admission check: 0 + 57.0 ≤ the G0 cap of 71.5 and ≤ the envelope).
+| 2026-11-15 23:3x CST | WP3 fixed-rounds island on SPR (cd1a7e02, PR #21): p = 10⁵, G = 256, transient + near-stationary islands at 24/48/96 threads; 96 CPUs, 20 min | exploratory (HQ sweep ≈ 40) | 2748104 | 32.0 | — | PENDING |
+| 2026-11-15 23:3x CST | WP3 fixed-rounds island on SPR (cd1a7e02, PR #21): p = 10⁶, G = 64, transient island (3 stages + 1 round) at 48 then 96 threads; 96 CPUs, 50 min | exploratory (HQ sweep + standing authority) | 2748105 | 80.0 | — | PENDING |
+
+**Totals:** actual 0.883 · reserved (worst case, open) 161.5 (expected for the sweep ≈ 40–55) · remaining ≈ 24,543 (admission check: 0 + 57.0 ≤ the G0 cap of 71.5 and ≤ the envelope).
