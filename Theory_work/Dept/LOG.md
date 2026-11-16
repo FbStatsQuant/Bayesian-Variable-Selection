@@ -85,3 +85,4 @@
 - 20:50 — row 1.1 card forwarded to HQ (D35); POST2-R1 queued post-freeze.
 - 20:52 — H5 card 6 agreed (D36); conditions sent to READER; post-freeze order O3 → N1+O2 queued.
 - 20:55 — READER applied H5 card 6 (32a8b59); row 1.1 gate PASS-with-open-items. Post-S2 edits STALE: told to run one short Sol diff check (batched with any S2 repairs) before the CP3 freeze (v4 §4.1 freeze rule).
+- 20:58 — recorder task G done: theory/W3-EDIT-citefix head 25f2655 (check 0 ERROR, assemble current, citechecks OK, tl 173/0, throwaway merge with PR #10 check/paper/cite PASS); sent to HQ for merge then PR #10. Recorder pushed c639c95 (rename MANIFEST_C2_extra → INPUTS_C2) to main — reported to HQ; told to clear other main pushes with me first; venv out of /tmp.
