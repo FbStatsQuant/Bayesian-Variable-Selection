@@ -1,0 +1,7 @@
+s0=0: c1/c0=0.9103 (no underfits; relation vacuous)
+grid s0=1..20, A=1..10 step .01: min c1/c0 = 1.2278 at (1, 10.0)
+s0=A=1: c0=128.0 c1=160.77
+E0 exact check (cases where (4B)^-B > n^-(s0+2)/2): violations = 0 []
+p=2,s0=1,n=50: (m#,K)= (2, 2)
+p=2,s0=1,n=1000: (m#,K)= (2, 2)
+intercept: max |sum(ebar+muhat-mu)^2 - (n ebar^2 + ||muhat-mu||^2)| = 1.1368683772161603e-13

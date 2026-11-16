@@ -386,3 +386,38 @@ real runs only on 0 problems.
   - `Lean/BRIEF.md`; the lake project `Lean/BVSCert` (BNP toolchain v4.35.0-rc2, Mathlib 0653561);
   - Owls worktree /home/fb31/BVS-wt/LEAN, branch lean/BVSCert, snapshot cron;
   - Level 1 deterministic cores, Level 2 axiom-named skeletons, a fidelity check per statement.
+
+## 2026-11-15 ~18:45 CT — clarity measures (owner: "take all the measures needed")
+- **W3-READER opened** (Opus 5.5 high, Claude Third, Owls; Tier B). Thread mcp:launch:2a4462b2…, worktree
+  /home/fb31/BVS-wt/W3-READER, branch theory/W3-READER, snapshot commit-in-place (SNAP_WT=1) at :04/:19/:34/:49.
+  Deliverables to CP1:
+  - claims card (6–10 headline results);
+  - reader versions, each with its master theorem and the bridges needed (existing-checked / unchecked / new);
+  - NOTATION.md and METHOD_INTUITION.md;
+  - one Sol fidelity read.
+- **W2-APP:POST is not unchecked in substance.** W2-APP passed council C3 (Sol 9.1, Opus 9.1, all gates;
+  REPORT l.3), but the registry still carries the lemma-header status. The recorder is told to diff since C3 and
+  record the acceptance under v4 §7 (missing manifest / verdict line = form), or refuse with reasons.
+- The snapshot script gained a commit-in-place mode for worktree-based tickets. The rsync mode would have deleted a
+  lead's work; caught before the first run.
+
+## 2026-11-15 ~19:10 CT — W3-DIST CP1: GO (restore point RP W3-DIST CHECKPOINT_1, theory/W3-DIST @ 8eec1b5)
+- Reader **Theorem A**, under (A1) Gaussian linear model, (A2) sparsity with p ≤ n^A, (A3) sub-Gaussian predictors on
+  sparse directions, (A4) λ_min(Corr) ≥ c_ψ/n on small sets, (A5) bounded signal:
+  - (i) the posterior of the coded prior puts mass ≤ n^{−cM} outside a √(M log n/n) Hellinger ball of the true joint law,
+    except with probability ≤ n^{−cM};
+  - (ii) the model size is bounded.
+
+  No beta-min, no identifiability. Without (A4): one extra log p. Parity:
+  - matches Song–Liang on metric, form, coded prior and sparsity;
+  - beats them on rate (no diverging factor) and on coded output;
+  - short on second-moment-only predictors, approximate sparsity and exponential p.
+- **HQ decisions:**
+  - TC1–TC9 fixed; Theorem B and Corollary C are companions, with headline status via W3-READER + consultant (H5);
+  - kill budgets approved;
+  - Sol cross-family read of the reader version + bridges, which also serves as the §4.2 tag check;
+  - team streams A–F on Claude Third (Fable lead A; Opus B–E; Sonnet F); bridges (stream E) start now;
+  - a second Fable is decided after the S-FIT attempts.
+- **API proof attempts:** batch msgbatch_01BEGZfGBtUEbs5hCBdvQEaG.
+  - 21 requests, cards X×6, S×3, T×3, V×3, F×3, B×3; ≤ $32;
+  - tool `API_AUDIT/dist_attempts.py`; outputs in `API_AUDIT/dist1/`, which HQ copies to the lead's `work/api_attempts/`.
