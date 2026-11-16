@@ -10,7 +10,10 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
+#include <cstdlib>
 #include <cstring>
+#include <new>
+#include <vector>
 #if defined(__AVX512F__) || defined(__FMA__)
 #include <immintrin.h>
 #endif
@@ -29,14 +32,27 @@ typedef double v8d __attribute__((vector_size(64), aligned(64)));
 typedef int64_t v8l __attribute__((vector_size(64), aligned(64)));
 typedef uint64_t v8u __attribute__((vector_size(64), aligned(64)));
 
+// 64-byte aligned allocator: the tile, product and gathered-column buffers are read with 64-byte vector loads, which
+// cost about twice as much when they straddle cache lines (measured: 0.166 vs 0.085 ns per product multiply-add).
+template <class T> struct Aligned64 {
+  using value_type = T;
+  Aligned64() = default;
+  template <class U> Aligned64(const Aligned64<U>&) {}
+  T* allocate(size_t n) { void* p = std::aligned_alloc(64, ((n * sizeof(T) + 63) / 64) * 64); if (!p) throw std::bad_alloc(); return (T*)p; }
+  void deallocate(T* p, size_t) { std::free(p); }
+  template <class U> bool operator==(const Aligned64<U>&) const { return true; }
+  template <class U> bool operator!=(const Aligned64<U>&) const { return false; }
+};
+template <class T> using avec = std::vector<T, Aligned64<T>>;
+
 inline v8d bc(double x) { return v8d{x, x, x, x, x, x, x, x}; }
 inline v8d load8(const double* p) { v8d v; std::memcpy(&v, p, 64); return v; }
 inline void store8(double* p, v8d v) { std::memcpy(p, &v, 64); }
 inline v8d sqrt8(v8d x) { v8d r; for (int l = 0; l < 8; ++l) r[l] = std::sqrt(x[l]); return r; }
-// bitmask of lanes with x > 0 and finite (the pivot test of core/cpp/v3_score.h:80)
-inline unsigned pos_finite_mask(v8d x) {
-  unsigned m = 0; for (int l = 0; l < 8; ++l) m |= (unsigned)((x[l] > 0) && std::isfinite(x[l])) << l; return m;
-}
+inline unsigned lanemask(v8l m) { unsigned r = 0; for (int l = 0; l < 8; ++l) r |= (unsigned)(m[l] != 0) << l; return r; }
+inline bool any8(v8l m) { int64_t a = 0; for (int l = 0; l < 8; ++l) a |= m[l]; return a != 0; }
+// bitmask of lanes with x > 0 and finite (the pivot test of core/cpp/v3_score.h:80); NaN fails both compares
+inline unsigned pos_finite_mask(v8d x) { return lanemask((x > bc(0.0)) & (x < bc(__builtin_inf()))); }
 
 inline v8d fma8(v8d a, v8d b, v8d c) {
 #if defined(__AVX512F__)
@@ -56,6 +72,24 @@ inline constexpr bool kHasFMA() {
 #else
   return false;
 #endif
+}
+
+// Philox4x32-10 (v4::philox4x32_10, rng.h) for 8 counters that differ only in word 1 (the position): the uniforms of
+// one particle at 8 positions. Same words, same bits as uniform_at (tested lane by lane).
+inline void philox8_positions(const uint32_t ctr[4], const uint32_t key[2], const uint32_t pos[8], double out[8]) {
+  const v8u M = {0xFFFFFFFFull, 0xFFFFFFFFull, 0xFFFFFFFFull, 0xFFFFFFFFull, 0xFFFFFFFFull, 0xFFFFFFFFull, 0xFFFFFFFFull, 0xFFFFFFFFull};
+  v8u c0, c1, c2, c3;
+  for (int l = 0; l < 8; ++l) { c0[l] = ctr[0]; c1[l] = pos[l]; c2[l] = ctr[2]; c3[l] = ctr[3]; }
+  uint32_t k0 = key[0], k1 = key[1];
+  for (int r = 0; r < 10; ++r) {
+    if (r) { k0 += 0x9E3779B9u; k1 += 0xBB67AE85u; }
+    v8u p0 = c0 * 0xD2511F53ull, p1 = c2 * 0xCD9E8D57ull;     // 32 x 32 -> 64 (lanes hold 32-bit values)
+    v8u n0 = (p1 >> 32) ^ c1 ^ (uint64_t)k0, n2 = (p0 >> 32) ^ c3 ^ (uint64_t)k1;
+    c1 = p1 & M; c3 = p0 & M; c0 = n0; c2 = n2;
+  }
+  v8u w = ((c1 << 32) | c0) >> 11;
+  v8d u = __builtin_convertvector(w, v8d) * 0x1.0p-53;
+  store8(out, u);
 }
 
 inline v8d select8(v8l mask, v8d a, v8d b) { return (v8d)(((v8l)a & mask) | ((v8l)b & ~mask)); }
@@ -82,10 +116,9 @@ inline v8d alog8(v8d x) {
   v8d hfsq = bc(0.5) * f * f;
   v8d dk = __builtin_convertvector(e, v8d);
   v8d r = dk * bc(ln2_hi) - ((hfsq - (s * (hfsq + R) + dk * bc(ln2_lo))) - f);
-  for (int l = 0; l < 8; ++l) {
-    uint64_t ex = ((uint64_t)bits[l] >> 52) & 0x7FF;
-    if (bits[l] <= 0 || ex == 0 || ex == 0x7FF) r[l] = std::log(x[l]);
-  }
+  v8l ex = (bits >> 52) & 0x7FF;
+  v8l special = (bits <= 0) | (ex == 0) | (ex == 0x7FF);   // zero, negative, subnormal, inf, NaN: scalar (rare)
+  if (any8(special)) for (int l = 0; l < 8; ++l) if (special[l]) r[l] = std::log(x[l]);
   return r;
 }
 // exp(x) (fdlibm e_exp.c reduction and polynomial); x > 709.7 -> +inf, x < -745.2 -> 0, NaN -> NaN (scalar lanes).
@@ -93,8 +126,8 @@ inline v8d aexp8(v8d x) {
   const double ln2_hi = 6.93147180369123816490e-01, ln2_lo = 1.90821492927058770002e-10, inv_ln2 = 1.44269504088896338700e+00;
   const double P1 = 1.66666666666666019037e-01, P2 = -2.77777777770155933842e-03, P3 = 6.61375632143793436117e-05,
                P4 = -1.65339022054652515390e-06, P5 = 4.13813679705723846039e-08;
-  v8d xc = x;
-  for (int l = 0; l < 8; ++l) { if (!(xc[l] > -745.0)) xc[l] = -745.0; if (xc[l] > 709.0) xc[l] = 709.0; }
+  v8l special = ~(x > bc(-745.0)) | (x > bc(709.0));          // underflow, overflow, NaN: scalar (rare)
+  v8d xc = select8(special, bc(0.0), x);
   const double shifter = 0x1.8p52;
   v8d kd = (xc * bc(inv_ln2) + bc(shifter)) - bc(shifter);           // round to nearest
   v8d hi = xc - kd * bc(ln2_hi);
@@ -107,9 +140,7 @@ inline v8d aexp8(v8d x) {
   v8l k1 = k >> 1, k2 = k - k1;                                      // two factors keep 2^k normal down to -1074
   v8d s1 = (v8d)((k1 + 1023) << 52), s2 = (v8d)((k2 + 1023) << 52);
   v8d res = (y * s1) * s2;
-  for (int l = 0; l < 8; ++l) {
-    if (!(x[l] > -745.0) || x[l] > 709.0) res[l] = std::exp(x[l]);
-  }
+  if (any8(special)) for (int l = 0; l < 8; ++l) if (special[l]) res[l] = std::exp(x[l]);
   return res;
 }
 

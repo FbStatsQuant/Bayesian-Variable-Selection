@@ -40,6 +40,17 @@ struct StoreBuffer {
   }
 };
 
+// One top store per island (INTERFACES v0.1.2 design: bounded per-thread buffers, one island store, a shared
+// monotone cut-off). Memory: per thread O(buf_limit) (default 65,536 entries); per island O(cap) for the store, its
+// hash index and a staging area of at most stage_limit entries (default max(cap/4, 4096)).
+//   offer():   v < tau -> dropped (tau = worst kept value once the store is full, -inf before; atomic, monotone);
+//              else appended to the thread's buffer; a full buffer is flushed.
+//   flush():   appends a buffer to the island staging area under the mutex; a full staging area is compacted.
+//   compact(): staged entries sorted and de-duplicated by model (largest value kept), matched against the store by a
+//              hash index (a store copy with a smaller value is replaced), sorted under ord and merged linearly with
+//              the store, truncated to cap; pool, index and tau rebuilt. O(cap + s log s).
+// The content after compact() is the top-c of the set of offers (largest value per model), whatever the thread
+// count, flush timing or merge order (proof: src/island/README.md, "Store").
 class TopStore {
  public:
   uint64_t cap = 0; Order ord = Order::HPM;
@@ -47,29 +58,39 @@ class TopStore {
   std::vector<double> v; std::vector<uint64_t> hash, off; std::vector<uint16_t> len; std::vector<int32_t> pool;
   std::atomic<double> tau{NEG_INF};
   std::mutex mu;
-  uint64_t n_merges = 0, n_buffered = 0;
-  size_t buf_limit = 1 << 16;
+  uint64_t n_merges = 0, n_buffered = 0, n_flushes = 0;
+  size_t buf_limit = 1 << 14, stage_limit = 1 << 16;
+  StoreBuffer stage;                         // island staging area (guarded by mu)
+  std::vector<uint32_t> index; uint64_t imask = 0;   // open-addressing hash index over the compacted entries (idx + 1)
 
   void init(uint64_t c, Order o) {
     cap = c; ord = o; v.clear(); hash.clear(); off.clear(); len.clear(); pool.clear(); tau.store(NEG_INF);
-    n_merges = n_buffered = 0;
-    buf_limit = (size_t)std::max<uint64_t>(1 << 16, std::min<uint64_t>(c / 4 + 1, 1 << 22));
+    stage.clear(); index.clear(); imask = 0;
+    n_merges = n_buffered = n_flushes = 0;
+    buf_limit = 65536;                                             // INTERFACES v0.1.2 §4.2 OfferBuffer default
+    stage_limit = (size_t)std::max<uint64_t>(4096, c / 4);          // §4.1: staging compacted at max(cap/4, 4096)
   }
   size_t size() const { return v.size(); }
-  // hot path, called by any thread on its own buffer
+  double cutoff() const { return tau.load(std::memory_order_acquire); }   // INTERFACES §4.1: monotone, atomic
+  // hot path, any thread, its own buffer
   inline void offer(StoreBuffer& b, double val, const int32_t* S, uint32_t k, uint64_t hsh) {
     if (cap == 0 || val < tau.load(std::memory_order_relaxed)) return;
     b.push(val, S, k, hsh);
-    if (b.size() >= buf_limit) merge_buffer(b);
+    if (b.size() >= buf_limit) flush(b);
   }
-  void merge_buffer(StoreBuffer& b) {
+  void flush(StoreBuffer& b) {
     if (b.size() == 0) return;
     std::lock_guard<std::mutex> lk(mu);
-    merge_locked(b.v, b.h, b.off, b.len, b.pool);
-    n_buffered += b.size(); ++n_merges;
+    const uint64_t base = stage.pool.size();
+    for (size_t i = 0; i < b.size(); ++i) { stage.v.push_back(b.v[i]); stage.h.push_back(b.h[i]); stage.off.push_back(base + b.off[i]); stage.len.push_back(b.len[i]); }
+    stage.pool.insert(stage.pool.end(), b.pool.begin(), b.pool.end());
+    n_buffered += b.size(); ++n_flushes;
     b.clear();
+    if (stage.size() >= stage_limit) compact_locked();
   }
-  // Entry views for sorting
+  void merge_buffer(StoreBuffer& b) { flush(b); }     // (name kept for callers)
+  void compact() { std::lock_guard<std::mutex> lk(mu); compact_locked(); }
+
   struct Ref { double v; uint64_t h; const int32_t* S; uint16_t k; };
   bool ord_less(const Ref& a, const Ref& b) const {   // strict order of the store
     if (a.v != b.v) return a.v > b.v;
@@ -77,13 +98,25 @@ class TopStore {
     return lex_less(a.S, a.k, b.S, b.k);
   }
   static bool same_model(const Ref& a, const Ref& b) { return a.h == b.h && a.k == b.k && std::equal(a.S, a.S + a.k, b.S); }
-  void merge_locked(const std::vector<double>& bv, const std::vector<uint64_t>& bh, const std::vector<uint64_t>& boff,
-                    const std::vector<uint16_t>& blen, const std::vector<int32_t>& bpool) {
-    std::vector<Ref> r; r.reserve(v.size() + bv.size());
-    for (size_t i = 0; i < v.size(); ++i) r.push_back({v[i], hash[i], pool.data() + off[i], len[i]});
-    for (size_t i = 0; i < bv.size(); ++i) r.push_back({bv[i], bh[i], bpool.data() + boff[i], blen[i]});
-    // one entry per model: its largest value
-    std::sort(r.begin(), r.end(), [](const Ref& a, const Ref& b) {
+  Ref ref(size_t i) const { return Ref{v[i], hash[i], pool.data() + off[i], len[i]}; }
+  int64_t find(const Ref& e) const {
+    if (index.empty()) return -1;
+    for (uint64_t s = e.h & imask;; s = (s + 1) & imask) {
+      uint32_t x = index[s]; if (!x) return -1;
+      if (same_model(ref(x - 1), e)) return (int64_t)x - 1;
+    }
+  }
+  void rebuild_index() {
+    uint64_t n = 16; while (n < 2 * v.size() + 2) n <<= 1;
+    index.assign(n, 0); imask = n - 1;
+    for (size_t i = 0; i < v.size(); ++i) { uint64_t s = hash[i] & imask; while (index[s]) s = (s + 1) & imask; index[s] = (uint32_t)i + 1; }
+  }
+  void compact_locked() {
+    if (stage.size() == 0) return;
+    ++n_merges;
+    std::vector<Ref> r; r.reserve(stage.size());
+    for (size_t i = 0; i < stage.size(); ++i) r.push_back({stage.v[i], stage.h[i], stage.pool.data() + stage.off[i], stage.len[i]});
+    std::sort(r.begin(), r.end(), [](const Ref& a, const Ref& b) {   // by model, then value desc
       if (a.h != b.h) return a.h < b.h;
       if (a.k != b.k) return a.k < b.k;
       int c = std::memcmp(a.S, b.S, sizeof(int32_t) * a.k);
@@ -91,34 +124,43 @@ class TopStore {
       return a.v > b.v;
     });
     size_t w = 0;
-    for (size_t i = 0; i < r.size(); ++i) if (w == 0 || !same_model(r[w - 1], r[i])) r[w++] = r[i];
+    std::vector<uint8_t> dead(v.size(), 0);
+    for (size_t i = 0; i < r.size(); ++i) {
+      if (w > 0 && same_model(r[w - 1], r[i])) continue;           // same model staged twice: keep the largest
+      int64_t at = find(r[i]);
+      if (at >= 0) { if (v[at] >= r[i].v) continue; dead[at] = 1; } // store copy at least as large: drop the staged one
+      r[w++] = r[i];
+    }
     r.resize(w);
-    size_t keep = std::min<size_t>(r.size(), cap);
-    std::partial_sort(r.begin(), r.begin() + keep, r.end(), [this](const Ref& a, const Ref& b) { return ord_less(a, b); });
-    r.resize(keep);
-    std::vector<double> nv(keep); std::vector<uint64_t> nh(keep), no(keep); std::vector<uint16_t> nl(keep); std::vector<int32_t> np;
-    size_t tot = 0; for (auto& e : r) tot += e.k; np.reserve(tot);
-    for (size_t i = 0; i < keep; ++i) { nv[i] = r[i].v; nh[i] = r[i].h; nl[i] = r[i].k; no[i] = np.size(); np.insert(np.end(), r[i].S, r[i].S + r[i].k); }
+    std::sort(r.begin(), r.end(), [this](const Ref& a, const Ref& b) { return ord_less(a, b); });
+    std::vector<double> nv; std::vector<uint64_t> nh, no; std::vector<uint16_t> nl; std::vector<int32_t> np;
+    size_t keep = std::min<size_t>(cap, v.size() + r.size());
+    nv.reserve(keep); nh.reserve(keep); no.reserve(keep); nl.reserve(keep); np.reserve(pool.size() + stage.pool.size());
+    size_t i = 0, j = 0;
+    auto put = [&](const Ref& e) { nv.push_back(e.v); nh.push_back(e.h); nl.push_back(e.k); no.push_back(np.size()); np.insert(np.end(), e.S, e.S + e.k); };
+    while (nv.size() < cap) {
+      while (i < v.size() && dead[i]) ++i;
+      bool hs = i < v.size(), hr = j < r.size();
+      if (!hs && !hr) break;
+      if (hs && (!hr || ord_less(ref(i), r[j]))) { put(ref(i)); ++i; } else { put(r[j]); ++j; }
+    }
     v.swap(nv); hash.swap(nh); off.swap(no); len.swap(nl); pool.swap(np);
+    stage.clear();
+    rebuild_index();
     tau.store(v.size() >= cap ? v.back() : NEG_INF);
   }
-  // I1 check: strictly sorted, no duplicates, size <= cap
+  // I1 check: strictly sorted, no duplicates, size <= cap (valid after compact())
   bool check_invariant() const {
     if (v.size() > cap) return false;
-    for (size_t i = 1; i < v.size(); ++i) {
-      Ref a{v[i - 1], hash[i - 1], pool.data() + off[i - 1], len[i - 1]}, b{v[i], hash[i], pool.data() + off[i], len[i]};
-      if (!ord_less(a, b)) return false;
-    }
+    for (size_t i = 1; i < v.size(); ++i) if (!ord_less(ref(i - 1), ref(i))) return false;
     std::vector<std::pair<uint64_t, size_t>> hs; for (size_t i = 0; i < v.size(); ++i) hs.push_back({hash[i], i});
     std::sort(hs.begin(), hs.end());
     for (size_t i = 1; i < hs.size(); ++i)
-      if (hs[i].first == hs[i - 1].first) {
-        size_t x = hs[i].second, y = hs[i - 1].second;
-        if (len[x] == len[y] && std::equal(pool.data() + off[x], pool.data() + off[x] + len[x], pool.data() + off[y])) return false;
-      }
+      if (hs[i].first == hs[i - 1].first && same_model(ref(hs[i].second), ref(hs[i - 1].second))) return false;
     return true;
   }
   Model model(size_t i) const { return Model(pool.data() + off[i], pool.data() + off[i] + len[i]); }
+  size_t bytes() const { return v.capacity() * 8 + hash.capacity() * 8 + off.capacity() * 8 + len.capacity() * 2 + pool.capacity() * 4 + index.capacity() * 4; }
 };
 
 // ---------------------------------------------------------------------------------------------------------------

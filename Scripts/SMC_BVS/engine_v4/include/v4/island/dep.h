@@ -75,6 +75,8 @@ struct Start {
   std::vector<double> size_logmass, size_cum;
   std::vector<std::vector<std::vector<double>>> cond_cum, sub_cum;
   std::vector<std::vector<std::vector<int>>> codes_by_size;
+  std::vector<int64_t> code_ptr; std::vector<double> logr_flat;   // flat copy (INTERFACES §2 Tables layout)
+  inline double lr(int b, uint32_t code) const { return logr_flat[code_ptr[b] + code]; }
   // core/cpp/v3_start.h:54-66: blocks met by S, increasing block order, sum from 0.
   double comp(const Model& S) const {
     std::pair<int, int> sc[128]; std::vector<std::pair<int, int>> big;
@@ -110,6 +112,9 @@ inline void build_start(Start& st, const Data& D, const std::vector<std::vector<
       st.logr[b][code] = (code == 0) ? 0.0 : o.logm - D.logm0;
     }
   }
+  st.code_ptr.assign(J + 1, 0);
+  for (int b = 0; b < J; ++b) st.code_ptr[b + 1] = st.code_ptr[b] + (int64_t)st.logr[b].size();
+  st.logr_flat.clear(); for (int b = 0; b < J; ++b) st.logr_flat.insert(st.logr_flat.end(), st.logr[b].begin(), st.logr[b].end());
   st.logprof.assign(J, {}); st.codes_by_size.assign(J, {}); st.sub_cum.assign(J, {});
   for (int b = 0; b < J; ++b) {
     int m = (int)blocks[b].size(), top = std::min(m, K);

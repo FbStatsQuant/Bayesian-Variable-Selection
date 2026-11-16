@@ -43,8 +43,8 @@ inline double comp_add(const Start& st, const SupportCache& s, int j) {
   int b = st.blk[j]; uint32_t bit = 1u << st.pos[j];
   size_t m = std::lower_bound(s.bb.begin(), s.bb.end(), b) - s.bb.begin();
   double c = s.bpre[m];
-  if (m < s.bb.size() && s.bb[m] == b) { c += st.logr[b][s.bcode[m] | bit]; ++m; }
-  else c += st.logr[b][bit];
+  if (m < s.bb.size() && s.bb[m] == b) { c += st.lr(b, s.bcode[m] | bit); ++m; }
+  else c += st.lr(b, bit);
   for (; m < s.bb.size(); ++m) c += s.bterm[m];
   return c;
 }
@@ -53,7 +53,7 @@ inline double comp_del(const Start& st, const SupportCache& s, int j) {
   size_t m = std::lower_bound(s.bb.begin(), s.bb.end(), b) - s.bb.begin();
   double c = s.bpre[m];
   uint32_t nc = s.bcode[m] & ~bit;
-  if (nc) c += st.logr[b][nc];
+  if (nc) c += st.lr(b, nc);
   for (++m; m < s.bb.size(); ++m) c += s.bterm[m];
   return c;
 }
@@ -166,8 +166,7 @@ inline unsigned flip8_bit(const Data& D, const SupportCache& s, int q, const v8d
   v8d arg = bc(2 * D.b0) + Q;
   v8d la; for (int l = 0; l < 8; ++l) la[l] = pm::log(arg[l]);
   logm = (bc(D.logCn) - bc(0.5) * (ldH - ldA)) - bc(D.nu) * la;
-  for (int l = 0; l < 8; ++l)
-    if (!(Q[l] >= 1e-8 * D.yty) || !(arg[l] > 0) || !std::isfinite(logm[l])) ok &= ~(1u << l);
+  ok &= lanemask((Q >= bc(1e-8 * D.yty)) & (arg > bc(0.0)) & (logm > bc(-__builtin_inf())) & (logm < bc(__builtin_inf())));
   return ok;
 }
 
@@ -187,8 +186,7 @@ inline unsigned flip8_A(const Data& D, const SupportCache& s, const v8d* u, v8d 
   v8d Q = fnma8(bc((double)D.n), quad, bc(D.yty));
   v8d t1 = alog8(dH / dA), t2 = alog8(bc(2 * D.b0) + Q);
   logm = bc(D.logCn - (s.preH[k] - s.preA[k])) - fma8(bc(D.nu), t2, bc(0.5) * t1);
-  for (int l = 0; l < 8; ++l)
-    if (!(Q[l] >= 1e-8 * D.yty) || !std::isfinite(logm[l])) ok &= ~(1u << l);
+  ok &= lanemask((Q >= bc(1e-8 * D.yty)) & (logm > bc(-__builtin_inf())) & (logm < bc(__builtin_inf())));
   return ok;
 }
 

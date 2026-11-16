@@ -30,6 +30,17 @@ TEST(philox_known_answers) {
   v4::Key2 k = v4::address_key(a); v4::Ctr4 c = v4::address_ctr(a);
   CHECK(k[0] == 7 && k[1] == 3 && c[0] == 2 && c[1] == 13 && c[2] == 11 && c[3] == ((2u << 24) | 5u));
   double u = uniform_at(a); CHECK(u >= 0 && u < 1);
+  // the 8-lane Philox of the label-major kernel equals uniform_at lane by lane
+  std::mt19937_64 g(1); bool ok = true;
+  for (int rep = 0; rep < 2000; ++rep) {
+    Address b; b.seed = (uint32_t)g(); b.island = (uint32_t)(g() % 1000); b.xph = (uint8_t)(g() % 5); b.stage = (uint32_t)(g() % 5000);
+    b.particle = (uint32_t)g(); b.slot = rep % 3 ? 0 : (uint32_t)g();
+    uint32_t pos[8]; for (auto& x : pos) x = (uint32_t)g();
+    v4::Ctr4 c = v4::address_ctr(b); v4::Key2 kk = v4::address_key(b); double u8[8];
+    philox8_positions(c.data(), kk.data(), pos, u8);
+    for (int l = 0; l < 8; ++l) { Address e = b; e.position = pos[l]; ok = ok && same_bits(u8[l], uniform_at(e)); }
+  }
+  CHECK(ok);
 }
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -171,7 +182,7 @@ TEST(store_order_free_multithread) {
     auto ref = reference_top(offers, cap);
     for (int threads : {1, 3}) for (size_t lim : {(size_t)1, (size_t)37, (size_t)100000}) {
       if ((double)offers.size() / lim * (double)cap > 3e8) continue;   // keep the merge count affordable
-      TopStore st; st.init(cap, Order::HPM); st.buf_limit = lim;
+      TopStore st; st.init(cap, Order::HPM); st.buf_limit = lim; st.stage_limit = std::max<size_t>(1, lim * 3);
       std::vector<StoreBuffer> bufs(threads);
       #pragma omp parallel for num_threads(threads) schedule(dynamic, 97)
       for (size_t i = 0; i < offers.size(); ++i) {
@@ -179,7 +190,8 @@ TEST(store_order_free_multithread) {
         uint64_t h = 0; for (int j : o.second) h ^= key[j];
         st.offer(bufs[omp_get_thread_num()], o.first, o.second.data(), (uint32_t)o.second.size(), h);
       }
-      for (auto& b : bufs) st.merge_buffer(b);
+      for (auto& b : bufs) st.flush(b);
+      st.compact();
       bool ok = st.check_invariant() && st.size() == ref.size();
       for (size_t i = 0; ok && i < ref.size(); ++i) ok = same_bits(st.v[i], std::get<0>(ref[i])) && st.model(i) == std::get<1>(ref[i]);
       CHECKF(ok, "cap %zu threads %d buf %zu: size %zu vs %zu", cap, threads, lim, st.size(), ref.size());
@@ -200,7 +212,7 @@ TEST(store_equals_wp1_reference_store) {
     offers.push_back(S);
   }
   for (auto ord : {Order::HPM, Order::LEX}) for (uint64_t cap : {1ull, 13ull, 2000ull, 30000ull}) {
-    v4::Store ref(cap, ord); TopStore st; st.init(cap, ord); st.buf_limit = 4096;
+    v4::Store ref(cap, ord); TopStore st; st.init(cap, ord); st.buf_limit = 512; st.stage_limit = 3000;
     std::vector<StoreBuffer> bufs(3);
     for (auto& S : offers) ref.offer(val[S], S, D_hash(key, S));
     ref.compact();
@@ -209,7 +221,8 @@ TEST(store_equals_wp1_reference_store) {
       const Model& S = offers[offers.size() - 1 - i];
       st.offer(bufs[omp_get_thread_num()], val.at(S), S.data(), (uint32_t)S.size(), D_hash(key, S));
     }
-    for (auto& b : bufs) st.merge_buffer(b);
+    for (auto& b : bufs) st.flush(b);
+    st.compact();
     bool ok = ref.size() == st.size() && st.check_invariant() && ref.check_invariants();
     for (size_t i = 0; ok && i < ref.size(); ++i) ok = same_bits(ref.v[i], st.v[i]) && Model(ref.model(i).begin(), ref.model(i).end()) == st.model(i);
     CHECKF(ok, "order %d cap %llu: sizes %zu vs %zu", (int)ord, (unsigned long long)cap, ref.size(), st.size());

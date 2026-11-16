@@ -13,6 +13,8 @@ using u128 = unsigned __int128;
 inline uint64_t fix63(double o) { return (uint64_t)(o * 0x1.0p63); }   // o in [0, 1]
 inline double unfix63(u128 a) { return (double)a * 0x1.0p-63; }
 
+constexpr uint32_t SLOT_ACCEPT = 0xFFFFFFFFu;   // INTERFACES v0.1.2 §3 (I step accept)
+
 struct Fnv { uint64_t h = 0xcbf29ce484222325ULL;
   void bytes(const void* p, size_t n) { const unsigned char* c = (const unsigned char*)p; for (size_t i = 0; i < n; ++i) { h ^= c[i]; h *= 0x100000001b3ULL; } }
   template <class T> void pod(const T& x) { bytes(&x, sizeof(T)); }
@@ -102,7 +104,7 @@ class IslandEngine {
   std::vector<std::vector<u128>> rb_thread;        // particle-major reference with threads
   IslandRun res;
   // tiled row-major copy of X for the label-major products: tile t holds columns [t*Bk, t*Bk + Bk) as n rows of Bk
-  std::vector<double> Xt; int Bk = 128, ntile = 0;
+  avec<double> Xt; int Bk = 128, ntile = 0;
   double logZ = 0;
   uint64_t ckpt_writes = 0;
   std::chrono::steady_clock::time_point last_ckpt;
@@ -181,7 +183,7 @@ class IslandEngine {
     offer_particle(L, out, rc.phase, ME_INDEP, key(rc, i1, pos));
     double la = rc.phi * (out.d - Pc.d);
     double alpha = (la >= 0) ? 1.0 : pm::exp(la);
-    if (U(slot) < alpha) { L.ms.in_acc++; return true; }
+    if (U(SLOT_ACCEPT) < alpha) { L.ms.in_acc++; return true; }   // INTERFACES v0.1.2 §3: fixed accept slot
     return false;
   }
 
@@ -235,7 +237,7 @@ class IslandEngine {
     std::vector<SupportCache> sup; std::vector<int> sup_of;
     std::vector<std::vector<int>> sup_parts;     // particles (group-local, ascending) per support
     std::vector<int> act;                        // active columns
-    std::vector<double> XA;                      // |act| x n
+    avec<double> XA;                             // |act| x n
     std::vector<double> lbuf, obuf;              // nsup x p
   };
   GroupBuf gb;
@@ -309,7 +311,7 @@ class IslandEngine {
       #pragma omp parallel num_threads(NT)
       {
         BitScorer& sc = *scorers[omp_get_thread_num()];
-        std::vector<double> Pp((size_t)std::max(1, nA) * Bk + 8);
+        avec<double> Pp((size_t)std::max(1, nA) * Bk + 8);
         std::vector<uint8_t> inm(Bk);
         #pragma omp for schedule(dynamic, 1)
         for (int ti = 0; ti < ntile; ++ti) {
@@ -369,12 +371,22 @@ class IslandEngine {
               const uint32_t* inv = &gb.inv[(size_t)gi * m];
               const uint32_t qi = gb.q[gi]; uint32_t best = gb.fmin[gi].load(std::memory_order_relaxed);
               const uint32_t i1 = (uint32_t)(g0 + gi) + 1;
-              for (int jj = 0; jj < nbv; ++jj) {
-                uint32_t pos = inv[j0 + jj];
-                if (pos <= qi || pos >= best) continue;
-                double u = uniform_at(addr(rc.xph, rc.ustage, i1, pos, 0));
-                bool change = inm[jj] ? !(u < ob[j0 + jj]) : (u < ob[j0 + jj]);
-                if (change) best = pos;
+              Address a0 = addr(rc.xph, rc.ustage, i1, 0, 0);
+              v4::Ctr4 ctr = v4::address_ctr(a0); v4::Key2 key = v4::address_key(a0);
+              for (int v = 0; v < nbv; v += 8) {
+                uint32_t pos8[8]; unsigned need = 0;
+                for (int l = 0; l < 8; ++l) {
+                  uint32_t pos = (v + l < nbv) ? inv[j0 + v + l] : 0;
+                  pos8[l] = pos; if (pos > qi && pos < best) need |= 1u << l;
+                }
+                if (!need) continue;
+                double u8[8];
+                philox8_positions(ctr.data(), key.data(), pos8, u8);   // = uniform_at(addr(.., pos, slot 0)) per lane
+                for (int l = 0; l < 8; ++l) if ((need >> l) & 1u) {
+                  const int jj = v + l;
+                  bool change = inm[jj] ? !(u8[l] < ob[j0 + jj]) : (u8[l] < ob[j0 + jj]);
+                  if (change && pos8[l] < best) best = pos8[l];
+                }
               }
               uint32_t cur = gb.fmin[gi].load(std::memory_order_relaxed);
               while (best < cur && !gb.fmin[gi].compare_exchange_weak(cur, best, std::memory_order_relaxed)) {}
@@ -404,6 +416,7 @@ class IslandEngine {
       {
         ThreadLedger& L = *tl[omp_get_thread_num()];
         Model T;
+        std::vector<uint32_t> ncons_v(Bk), fpos_v(Bk); std::vector<int> first_v(Bk);
         #pragma omp for schedule(dynamic, 1)
         for (int ti = 0; ti < ntile; ++ti) {
           const int j0 = ti * Bk, nbv = std::min(Bk, p - j0);
@@ -412,15 +425,20 @@ class IslandEngine {
             const double* lb = &gb.lbuf[(size_t)s * p]; const double* ob = &gb.obuf[(size_t)s * p];
             const auto& parts = gb.sup_parts[s];
             const double prior_add = c.add_ok ? D.logprior[c.k + 1] : 0.0, prior_del = c.k > 0 ? D.logprior[c.k - 1] : 0.0;
+            // consumption counts per label: particles in ascending order, each reading its own inverse order row
+            std::fill(ncons_v.begin(), ncons_v.begin() + nbv, 0u); std::fill(first_v.begin(), first_v.begin() + nbv, -1);
+            for (int gi : parts) {
+              const uint32_t* inv = &gb.inv[(size_t)gi * m + j0]; const uint32_t qi = gb.q[gi], ei = gb.e[gi];
+              for (int jj = 0; jj < nbv; ++jj) {
+                uint32_t pos = inv[jj];
+                if (pos > qi && pos <= ei) { if (first_v[jj] < 0) { first_v[jj] = gi; fpos_v[jj] = pos; } ++ncons_v[jj]; }
+              }
+            }
             for (int jj = 0; jj < nbv; ++jj) {
               const int j = j0 + jj;
-              uint32_t ncons = 0; int first = -1; uint32_t fpos = 0;
-              const uint64_t fx = rc.measured ? fix63(ob[j]) : 0;
-              for (int gi : parts) {
-                uint32_t pos = gb.inv[(size_t)gi * m + j];
-                if (pos > gb.q[gi] && pos <= gb.e[gi]) { if (first < 0) { first = gi; fpos = pos; } ++ncons; }
-              }
+              const uint32_t ncons = ncons_v[jj]; const int first = first_v[jj]; const uint32_t fpos = fpos_v[jj];
               if (!ncons) continue;
+              const uint64_t fx = rc.measured ? fix63(ob[j]) : 0;
               if (rc.measured) rb_cur[j] += (u128)fx * ncons;
               L.logical[rc.phase][ME_GIBBS_HELD] += ncons; L.ms.gibbs += ncons;
               const double lm = lb[j];
@@ -510,7 +528,8 @@ class IslandEngine {
   }
   // merge thread ledgers and flush store buffers (step boundary; order-free)
   void sync_ledgers() {
-    for (auto& t : tl) { top.merge_buffer(t->buf); master.merge_from(*t); t->reset_counters(); }
+    for (auto& t : tl) { top.flush(t->buf); master.merge_from(*t); t->reset_counters(); }
+    top.compact();   // one island store, compacted at every step boundary (content order-free)
   }
   MoveStats take_moves() { MoveStats ms = master.ms; master.ms = MoveStats(); return ms; }
 
@@ -566,6 +585,7 @@ class IslandEngine {
     r.get(master.hpm.has); r.getv(master.hpm.S); r.get(master.hpm.F); r.get(master.hpm.logm); r.get(master.hpm.key); r.get(master.hpm.phase); r.get(master.hpm.mech);
     r.getv(top.v); r.getv(top.hash); r.getv(top.off); r.getv(top.len); r.getv(top.pool);
     if (r.bad) return -1;
+    top.rebuild_index();
     top.tau.store(top.v.size() >= top.cap ? top.v.back() : NEG_INF);
     return step;
   }

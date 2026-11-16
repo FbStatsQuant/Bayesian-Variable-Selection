@@ -37,15 +37,15 @@ static void bench_kernel(int p, int T, int nsup, int k, int div, int Bk) {
   std::sort(act.begin(), act.end()); act.erase(std::unique(act.begin(), act.end()), act.end());
   int nA = (int)act.size();
   for (auto& s : sup) { s.arow.resize(s.k); for (int a = 0; a < s.k; ++a) s.arow[a] = (int)(std::lower_bound(act.begin(), act.end(), s.S[a]) - act.begin()); }
-  std::vector<double> XA((size_t)nA * n); for (int a = 0; a < nA; ++a) std::memcpy(&XA[(size_t)a * n], D.col(act[a]), 8 * n);
-  int ntile = (p + Bk - 1) / Bk; std::vector<double> Xt((size_t)ntile * Bk * n, 0.0);
+  avec<double> XA((size_t)nA * n); for (int a = 0; a < nA; ++a) std::memcpy(&XA[(size_t)a * n], D.col(act[a]), 8 * n);
+  int ntile = (p + Bk - 1) / Bk; avec<double> Xt((size_t)ntile * Bk * n, 0.0);
   for (int ti = 0; ti < ntile; ++ti) for (int jj = 0; jj < Bk && ti * Bk + jj < p; ++jj) for (int i = 0; i < n; ++i) Xt[(size_t)ti * Bk * n + (size_t)i * Bk + jj] = D.col(ti * Bk + jj)[i];
   double tprod = 0, tflip = 0; long pairs = 0; double chk = 0;
   double w0 = now();
   #pragma omp parallel num_threads(T) reduction(+ : tprod, tflip, pairs, chk)
   {
     BitScorer scl(&D);
-    std::vector<double> Pp((size_t)nA * Bk); std::vector<double> lb(Bk), ob(Bk);
+    avec<double> Pp((size_t)nA * Bk); std::vector<double> lb(Bk), ob(Bk);
     #pragma omp for schedule(dynamic, 4)
     for (int ti = 0; ti < ntile; ++ti) {
       int j0 = ti * Bk, nbv = std::min(Bk, p - j0); const double* Xtile = &Xt[(size_t)ti * Bk * n];
@@ -138,7 +138,8 @@ static void bench_store(uint64_t cap, int T, long per) {
     #pragma omp for
     for (long i = 0; i < (long)cap; ++i) { int32_t S[3] = {(int32_t)(i % 1000000), (int32_t)(1000000 + i / 1000000), 2100000}; st.offer(bufs[omp_get_thread_num()], nd(g), S, 3, splitmix64(*(uint64_t*)&i)); }
   }
-  for (auto& b : bufs) st.merge_buffer(b);
+  for (auto& b : bufs) st.flush(b);
+  st.compact();
   double tfill = now() - t0;
   // phase 2: mix: 90% far below tau, 10% re-offers of stored models (duplicates)
   t0 = now();
@@ -151,7 +152,8 @@ static void bench_store(uint64_t cap, int T, long per) {
       else { size_t e = g() % st.size(); st.offer(bufs[omp_get_thread_num()], st.v[e], st.pool.data() + st.off[e], st.len[e], st.hash[e]); }
     }
   }
-  for (auto& b : bufs) st.merge_buffer(b);
+  for (auto& b : bufs) st.flush(b);
+  st.compact();
   double tmix = now() - t0;
   std::printf("store cap=%llu threads=%d: fill %.1f ns per offer (thread-time), mix(90%% reject, 10%% duplicate) %.1f ns per offer; merges %llu; invariant %d\n",
               (unsigned long long)cap, T, 1e9 * tfill * T / cap, 1e9 * tmix * T / (per * T), (unsigned long long)st.n_merges, (int)st.check_invariant());

@@ -46,13 +46,20 @@ particle-serial execution; `KernelKind::ParticleMajor` is core's serial round wr
    integer `floor(o_j · 2^63)` into unsigned 128-bit accumulators. The sum is exact, so it is independent of particle,
    pass and thread order (stronger than a declared order). Against core's double sum it is class A: error ≤ 2⁻⁶³ per
    term (golden test: ≤ 1e-12 relative on `rb_acc`, `rb_round`, `pip`). Memory 16 B × p per accumulator.
-2. **Store (INTERFACES §4.1).** `TopStore` keeps, for each model, its largest offered value; content = top-c under
-   the order. Threads append to private buffers; full buffers merge under a mutex; an offer with `v < tau` is dropped,
-   `tau` = value of the c-th entry once c distinct models are held (else −∞).
+2. **Store (INTERFACES §4.1; v0.1.2 design: bounded per-thread buffers, one island store, shared cut-off).**
+   `TopStore` keeps, for each model, its largest offered value; content = top-c under the order. Threads append to
+   private buffers of at most `buf_limit` = 65,536 entries (INTERFACES v0.1.2 default) (O(buffer) per thread, never O(40p)); a full buffer is appended
+   to the island's staging area under a mutex; a staging area above `stage_limit` = max(c/4, 4,096) entries, and every
+   step boundary, triggers `compact()`: staged entries sorted and de-duplicated by model, matched against the store
+   through a hash index (a smaller store copy is replaced), sorted under the order and merged linearly with the store
+   (O(c + s log s)). An offer with `v < tau` is dropped in the kernel, `tau` = the worst kept value once c distinct
+   models are held (else −∞), an atomic that only increases.
    *Why dropping never changes the result:* at the time of the drop the store holds c distinct models, each with
    value ≥ tau; values only grow, so the final c-th value is ≥ tau > v. If the model ends in the final store its
    final value is ≥ tau > v, so v was not its maximum. Equal values are never dropped (ties are decided by size/lex).
-   Tested against WP1's reference `v4::Store` (bit-identical content) and under 3 threads.
+   Hence content is independent of flush timing, thread count and merge order. Tested against WP1's reference
+   `v4::Store` (bit-identical content) and under 3 threads with buffer/staging limits from 1 to 10⁵.
+   Memory per island: store entries (≈ 26 B + 4k B) × c, hash index 4 B × 2c…4c, staging ≤ c/4 entries; at every step boundary the thread ledgers are absorbed in thread-index order.
 3. **Class A path values.** Class-A flip scores (bordered update from S) can differ in the last bits from the score
    of the same model reached otherwise. The particle carries the value it was given; supports are keyed by
    (S, log m bits); the store keeps the largest value per model; the HPM order adds the event key after (F, |S|, lex).

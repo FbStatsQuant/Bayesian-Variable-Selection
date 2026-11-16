@@ -97,7 +97,8 @@ struct AddrSource : public v3::VariateSource {
     }
     auto cur = std::make_tuple(ev.phase, ev.stage, ev.round, ev.particle, ev.position);
     if (cur != last) { last = cur; slot = 0; }
-    a.particle = (uint32_t)ev.particle; a.position = (uint32_t)ev.position; a.slot = slot++;
+    a.particle = (uint32_t)ev.particle; a.position = (uint32_t)ev.position;
+    a.slot = std::strcmp(purpose, "indep_accept") == 0 ? 0xFFFFFFFFu : slot++;   // INTERFACES v0.1.2 §3
     return uniform_at(a);
   }
 };
