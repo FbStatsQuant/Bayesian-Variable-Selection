@@ -59,9 +59,8 @@ PROGRAM Readability, with a fidelity check of every number.
   - start reviewers and helpers within their brief's allowance.
 - **Expert agents (owner, 2026-11-15):** for engineering and technical questions, departments spawn Opus 5.5 and/or
   Fable 5.2 experts themselves (Claude Third; effort high), rather than escalating to the owner with partial
-  information. Technical decisions are made by the department with its experts, and confirmed by HQ. The owner keeps
-  budget tiers, paper claims and big-picture direction. (Fable 5.2 is the newest Fable available; there is no 5.3 on
-  any account as of 11-15.)
+  information ("technical experts of each area need to sort things out"). Technical decisions are made by the department with its experts, and confirmed by HQ. The owner keeps
+  budget tiers, paper claims and big-picture direction.
 - **HQ only:** merges to `main`, registry acceptance (CP3 / `--record`), headline changes, protocol amendments,
   supersessions, API batch credits (the Console key stays on HQ's desktop: send HQ "API cards"), and NOTS job
   submission unless HQ delegates it for a named ticket.
