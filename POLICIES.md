@@ -110,6 +110,9 @@ a hold on a consumed claim, a budget overrun, or anything touching a headline cl
 | CEO (HQ) | priorities across departments, resource allocation inside the owner's budget, gates (CP3 acceptance, headline cards with the consultant), merges to main, API submission, launching and closing departments and tickets |
 | Department manager | technical decisions (HQ confirms), staffing with Opus/Sonnet inside the allowance, ticket planning and schedule, reviews per PROTOCOL_v4 |
 
+Escalation ladder: manager → HQ (CEO) → HQ's Fable consultant for important or hard operational decisions → owner, only for
+the overall direction of the paper and for extra resources.
+
 **Budget envelopes** (set by HQ inside the owner's budget, reviewed weekly):
 - Claude Third: Theory and Engineering departments, at most 5 + 3 concurrent leads (Theory 5 until Wed 18:00, then 3).
 - Claude Personal: HQ and Writing.
