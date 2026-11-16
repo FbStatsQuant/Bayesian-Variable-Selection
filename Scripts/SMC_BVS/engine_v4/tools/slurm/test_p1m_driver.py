@@ -174,6 +174,7 @@ STUB = r"""#!/bin/bash
 # input is a path whose content hash matches (as WP1's main does)
 cmd=$1; shift; out=""; man=""; truth=""
 while [[ $# -gt 0 ]]; do case $1 in --out) out=$2; shift 2;; --manifest) man=$2; shift 2;; --truth) truth=$2; shift 2;; *) shift 2;; esac; done
+if [[ $cmd == prep && -n ${STUB_PREP_RC:-} ]]; then printf '{"status":"completed","prep_status":"no_predictors","hpm":[]}' > "$out.json"; exit $STUB_PREP_RC; fi
 python3 - "$out" "$man" "$cmd" <<'PY' || exit 13
 import hashlib, json, struct, sys
 out, man, cmd = sys.argv[1:4]
@@ -184,8 +185,8 @@ if man:
     m = json.load(open(man))
     for path, h in m["inputs"].items():
         assert chash(path) == h, (path, h)
-tag = cmd.encode()[:64].ljust(64, b"\0")
-hdr = b"SMCBVS4\0" + struct.pack("<IIIIQ", 1, 6, 3, 0, 128) + hashlib.sha256(b"").digest() + tag
+tag = cmd.encode()[:32].ljust(32, b"\0")   # in `reserved` (v0.1.1-style file: content field zero)
+hdr = b"SMCBVS4\0" + struct.pack("<IIIIQ", 1, 6, 3, 0, 128) + hashlib.sha256(b"").digest() + b"\0" * 32 + tag
 open(out, "wb").write(hdr)
 json.dump({"status": "completed", "command": cmd}, open(out + ".json", "w"))
 PY
@@ -208,6 +209,8 @@ class TestLocalChain(Base):
         with open(os.path.join(scr, "bin", "smcbvs4"), "w") as fh:
             fh.write(STUB)
         os.chmod(os.path.join(scr, "bin", "smcbvs4"), 0o755)
+        with open(os.path.join(scr, "env.sh"), "w") as fh:   # no module system on Owls
+            fh.write("true\n")
         for d in ("scratch/slurm_out", "scratch/tmp", "scratch/runs/A2_pilot"):
             os.makedirs(os.path.join(dept, d))
         base = dict(os.environ, SLURM_JOB_ID="77", SLURM_CPUS_PER_TASK="2")
@@ -243,6 +246,42 @@ class TestLocalChain(Base):
         self.assertEqual(os.listdir(os.path.join(dept, "scratch", "tmp")), [])   # TMPDIR removed on exit
 
 
+class TestPrepOutcome(TestLocalChain):
+    """prep exit 20 (no_predictors): setup ends the pipeline cleanly, later stages exit 0, eval records the outcome."""
+
+    def test_chain(self):
+        os.environ["STUB_PREP_RC"] = "20"
+        try:
+            dept = os.path.join(self.tmp, "SMC_Engineering_Department")
+            pl = load_example(); pl["fits"] = pl["fits"][:1]; pl["fits"][0]["Rp"] = 2
+            rc, out = self.gen(pl, dept=dept)
+            scr = os.path.join(dept, "scripts", "A2_pilot")
+            shutil.copytree(out, scr); os.makedirs(os.path.join(scr, "bin"))
+            with open(os.path.join(scr, "bin", "smcbvs4"), "w") as fh:
+                fh.write(STUB)
+            os.chmod(os.path.join(scr, "bin", "smcbvs4"), 0o755)
+            with open(os.path.join(scr, "env.sh"), "w") as fh:
+                fh.write("true\n")
+            for d in ("scratch/slurm_out", "scratch/tmp", "scratch/runs/A2_pilot"):
+                os.makedirs(os.path.join(dept, d))
+            env = dict(os.environ, SLURM_JOB_ID="78", SLURM_CPUS_PER_TASK="2")
+            for st, task, arg in (("setup", 1, None), ("calibrate", 1, None), ("islands", 1, 1), ("islands", 2, 1), ("merge", None, 1), ("eval", None, 1)):
+                e = dict(env)
+                if task is not None:
+                    e["SLURM_ARRAY_TASK_ID"] = str(task)
+                r = subprocess.run(["bash", os.path.join(scr, "stage_%s.sbatch" % st)] + ([str(arg)] if arg else []), env=e,
+                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+                self.assertEqual(r.returncode, 0, "%s: %s" % (st, r.stderr))
+            rd = os.path.join(dept, "scratch", "runs", "A2_pilot", "A2_ARs_n200_r1")
+            self.assertEqual(open(os.path.join(rd, "OUTCOME")).read().strip(), "no_predictors")
+            self.assertFalse(os.path.exists(os.path.join(rd, "setup.bin")))
+            ev = json.load(open(os.path.join(rd, "eval.bin.json")))
+            self.assertEqual(ev["fit_status"], "prep_no_predictors")
+            self.assertEqual(ev["hpm"], [])
+        finally:
+            os.environ.pop("STUB_PREP_RC")
+
+
 class TestManifest(Base):
     def test_refuses_incomplete_or_bad_input(self):
         import hashlib, struct
@@ -265,6 +304,21 @@ class TestManifest(Base):
         open(binp, "r+b").write(b"SMCBVS4\0" + struct.pack("<IIIIQ", 1, 2, 0, 1, 256) + b"\1" * 32)   # corrupt table hash
         with self.assertRaises(SystemExit):
             p1m_manifest.main(["fill", "--template", t, "--out", out])
+
+
+class TestContentHashV012(Base):
+    def test_v012_header(self):
+        import hashlib, struct
+        sec = b"y" * 128
+        th = hashlib.sha256(sec).digest()
+        head = b"SMCBVS4\0" + struct.pack("<IIIIQ", 1, 2, 0, 1, 256)
+        ch = hashlib.sha256(head + b"\0" * 64 + b"\0" * 32 + sec).digest()
+        pth = os.path.join(self.tmp, "x.bin")
+        open(pth, "wb").write(head + th + ch + b"\0" * 32 + sec)
+        self.assertEqual(p1m_manifest.content_hash(pth), ch.hex())
+        open(pth, "wb").write(head + th + b"\2" * 32 + b"\0" * 32 + sec)
+        with self.assertRaises(SystemExit):
+            p1m_manifest.content_hash(pth)
 
 
 class TestCost(Base):

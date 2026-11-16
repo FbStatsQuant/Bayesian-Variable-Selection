@@ -91,7 +91,7 @@ void write_fit_bin(const Synthetic& s, const std::string& path, const std::strin
   W.add("occ_top", occ);
   double mx = *std::max_element(lr.begin(), lr.end()); double sw = 0; for (double x : lr) sw += std::exp(x - mx);
   Json m = Json::object();
-  m["status"] = (status); m["logZ"] = (mx + std::log(sw / R)); m["hpm_F"] = (s.F[ord[0]]); m["Rp"] = (R); m["occ_total"] = (tot);
+  m["status"] = (status); m["logZ"] = (mx + std::log(sw / R)); m["hpm_F"] = (s.F[ord[0]]); m["Rp"] = (R); m["occ_total"] = (hex_u64(tot));
   m["hpm_phase"] = ("measured"); m["local_certified"] = (true);
   Json tm = Json::object(); tm["islands_s"] = (12.5); m["timings"] = (tm);
   W.add_json("meta", m);

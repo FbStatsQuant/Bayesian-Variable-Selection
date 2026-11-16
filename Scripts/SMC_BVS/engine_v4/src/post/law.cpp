@@ -78,7 +78,7 @@ std::string write_law(const LawFile& L, const std::string& path, int n_draws, ui
   meta["schema"] = ("smcbvs4.law/1");
   meta["n"] = (L.n); meta["p"] = (L.p); meta["M"] = ((int64_t)M); meta["C"] = ((int64_t)C);
   meta["rel_cut"] = (L.rel_cut); meta["vmax"] = (L.vmax); meta["logZ_T"] = (L.logZ_T);
-  meta["dropped_mass"] = (L.dropped_mass); meta["n_store"] = (L.n_store);
+  meta["dropped_mass"] = (L.dropped_mass); meta["n_store"] = (eval::hex_u64(L.n_store));
   meta["ybar"] = (L.ybar); meta["sy"] = (L.sy); meta["a0"] = (L.a0); meta["b0"] = (L.b0); meta["max_abs_dF"] = (L.max_abs_dF);
   for (auto& kv : L.meta_extra.items()) meta[kv.first] = kv.second;
   fmt::Writer W(fmt::K_LAW, fmt::M_V);
@@ -123,7 +123,7 @@ LawFile read_law(const std::string& path, std::string* content_hash) {
   LawFile L;
   L.n = (int32_t)meta.at("n").num(); L.p = (int32_t)meta.at("p").num();
   L.rel_cut = meta.at("rel_cut").num(); L.vmax = meta.at("vmax").num(); L.logZ_T = meta.at("logZ_T").num();
-  L.dropped_mass = meta.at("dropped_mass").num(); L.n_store = (uint64_t)meta.at("n_store").num();
+  L.dropped_mass = meta.at("dropped_mass").num(); L.n_store = eval::ju64_or(meta, "n_store", 0);
   L.ybar = meta.at("ybar").num(); L.sy = meta.at("sy").num(); L.a0 = meta.at("a0").num(); L.b0 = meta.at("b0").num();
   L.max_abs_dF = eval::jnum_or(meta, "max_abs_dF", NAN);
   const size_t M = (size_t)meta.at("M").num();

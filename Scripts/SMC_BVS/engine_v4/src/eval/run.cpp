@@ -183,7 +183,7 @@ Json run(const Json& a) {
   Json occ = Json::object();
   if (FB.has("occ_top")) {   // terminal occupancy of the top-1000 store models (D-13), pooled and per island
     uint64_t c = 0; const uint64_t* oc = FB.get<uint64_t>("occ_top", &c);
-    const uint64_t tot = (uint64_t)jnum_or(ff.meta, "occ_total", 0);
+    const uint64_t tot = ju64_or(ff.meta, "occ_total", 0);
     for (size_t M : {1, 10, 100, 1000}) {
       if (M > c || M > ff.top.size) continue;
       uint64_t s = 0; for (size_t i = 0; i < M; ++i) s += oc[i];
@@ -193,7 +193,7 @@ Json run(const Json& a) {
       const fmt::SectionEntry& e = FB.entry("occ_top_r");
       const uint64_t* ocr = FB.get<uint64_t>("occ_top_r");
       const size_t R = e.dims[0], W = e.dims[1];
-      const uint64_t tr = (uint64_t)jnum_or(ff.meta, "occ_total_r", 0);
+      const uint64_t tr = ju64_or(ff.meta, "occ_total_r", 0);
       Json sdj = Json::object();
       for (size_t M : {1, 10, 100, 1000}) {
         if (M > W || M > ff.top.size) continue;

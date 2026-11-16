@@ -13,6 +13,7 @@
 // with ȳ = y_max·y_mean, s_y = y_max·y_sd_scaled, x̄_j = col_max·col_mean, ŝ_j = col_max·col_sd (v3_preprocess.R:24-51).
 #pragma once
 #include <cstdint>
+#include <cstdio>
 #include <string>
 #include <vector>
 
@@ -27,6 +28,15 @@ namespace v4::eval {
 // ------------------------------------------------------------------------------------------------ small helpers
 inline const Json* jfind(const Json& j, const std::string& k) { return j.contains(k) ? &j.at(k) : nullptr; }
 inline double jnum_or(const Json& j, const std::string& k, double d) { const Json* p = jfind(j, k); return (p && p->type() == Json::NUM) ? p->num() : d; }
+// INTERFACES §5.1 (v0.1.2): u64 values are hex strings "0x…" in JSON; plain numbers are accepted too
+inline uint64_t ju64_or(const Json& j, const std::string& k, uint64_t d) {
+  const Json* p = jfind(j, k);
+  if (!p) return d;
+  if (p->type() == Json::STR) { const std::string& s = p->str(); return std::stoull(s, nullptr, (s.rfind("0x", 0) == 0 || s.rfind("0X", 0) == 0) ? 16 : 10); }
+  if (p->type() == Json::NUM) return (uint64_t)p->num();
+  return d;
+}
+inline std::string hex_u64(uint64_t v) { char b[24]; std::snprintf(b, sizeof b, "0x%llx", (unsigned long long)v); return b; }
 inline std::string jstr_or(const Json& j, const std::string& k, const std::string& d) { const Json* p = jfind(j, k); return (p && p->type() == Json::STR) ? p->str() : d; }
 
 // response map of Data (INTERFACES §2; prep writes col_* and y_* as v3_standardise returns them)

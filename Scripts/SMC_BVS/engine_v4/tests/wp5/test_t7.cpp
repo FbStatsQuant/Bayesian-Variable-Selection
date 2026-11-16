@@ -1,5 +1,5 @@
 // test_t7.cpp -- gate T7 (ENGINEERING_SPEC §5; plan G-A): the closed forms of the evaluator against brute-force Monte
-// Carlo on 20 fixtures, to 3 significant digits. Declared before the run (tests/wp5/README_T7.md):
+// Carlo on 20 fixtures, to 3 significant digits. Declared before the run (src/eval/README_WP5.md):
 //   T7a  plug-in d_H² (closed form, plan §3.3 item 1) vs MC over x ~ ν_x (mt19937_64, independent of the eval's Philox),
 //        the y-integral by the normal–normal affinity (checked against quadrature in test h2_normals_vs_quadrature);
 //   T7b  prediction error m² + s² vs MC over x of (â + xᵀb − α* − xᵀβ*)²;

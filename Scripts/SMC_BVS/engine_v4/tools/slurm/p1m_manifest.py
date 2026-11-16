@@ -28,17 +28,27 @@ def sha256_file(path):
 
 
 def content_hash(path):
-    """INTERFACES §5.1: content hash = SHA-256 of the section table (n_sections x 128 B after the 128 B header)."""
+    """Content hash of an engine container (INTERFACES §5.1).
+    v0.1.2: FileHeader.content_sha256 (bytes 64..96) = SHA-256(header with table_sha256 and content_sha256 zeroed || table).
+    v0.1.1 files (content field all zero): the SHA-256 of the section table. The table hash (bytes 32..64) is checked in
+    both cases."""
     with open(path, "rb") as fh:
         hdr = fh.read(128)
         if len(hdr) < 128 or hdr[:8] != b"SMCBVS4\0":
             raise SystemExit("p1m_manifest: %s is not an engine container: refusing to start" % path)
         ns = struct.unpack_from("<I", hdr, 20)[0]
         table = fh.read(128 * ns)
-    h = hashlib.sha256(table).digest()
-    if h != hdr[32:64]:   # FileHeader: magic 8, 4 x u32, u64 file_bytes, then table_sha256
+    th = hashlib.sha256(table).digest()
+    if th != hdr[32:64]:   # FileHeader: magic 8, 4 x u32, u64 file_bytes, table_sha256, content_sha256, reserved
         raise SystemExit("p1m_manifest: %s: section table hash mismatch: refusing to start" % path)
-    return h.hex()
+    stored = hdr[64:96]
+    if stored == b"\0" * 32:
+        return th.hex()
+    zeroed = hdr[:32] + b"\0" * 64 + hdr[96:128]
+    ch = hashlib.sha256(zeroed + table).digest()
+    if ch != stored:
+        raise SystemExit("p1m_manifest: %s: content hash mismatch: refusing to start" % path)
+    return ch.hex()
 
 
 def check_record(path):

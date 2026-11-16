@@ -178,7 +178,29 @@ BIN=$SCR/{binary}
 export TMPDIR=$DEPT/scratch/tmp/${{SLURM_JOB_ID}}
 mkdir -p "$TMPDIR"; trap 'rm -rf "$TMPDIR"' EXIT
 export OMP_NUM_THREADS=${{SLURM_CPUS_PER_TASK}}
-[[ -f $SCR/env.sh ]] && source "$SCR/env.sh"
+set +u; source "$SCR/env.sh"; set -u          # NOTS modules (GCC 14.3.0 runtime); see env.sh
+"""
+
+# NOTS module environment (manager's lesson, 11-15: CMake 3.27.6 sits under GCCcore 13.2 and fails; use these)
+ENV_SH = """# env.sh -- NOTS module environment for batch {batch} (GENERATED). Sourced by every stage and by build.sh.
+source /etc/profile.d/modules.sh
+module use /opt/apps/modules/Core
+module purge
+module load GCC/14.3.0 CMake/3.31.8
+"""
+
+BUILD_SH = """#!/usr/bin/env bash
+# build.sh -- build the frozen engine for batch {batch} into $SCR/bin (GENERATED). Run ON NOTS by the manager, after the
+# frozen code (`git archive` of commit {commit}) is unpacked in $SCR/code. nice, 3 jobs (POLICIES §12).
+set -euo pipefail
+SCR=${{P1M_DEPT:-{dept}}}/scripts/{batch}
+set +u; source "$SCR/env.sh"; set -u
+B=$SCR/build; mkdir -p "$B" "$SCR/bin"
+nice -n 19 cmake -S "$SCR/code/Scripts/SMC_BVS/engine_v4" -B "$B" -DCMAKE_BUILD_TYPE=Release -DV4_TESTS=OFF > "$B/cmake.log"
+nice -n 19 make -C "$B" -j3 smcbvs4
+cp "$B/smcbvs4" "$SCR/bin/smcbvs4"
+"$SCR/bin/smcbvs4" version
+sha256sum "$SCR/bin/smcbvs4" | tee "$SCR/bin/smcbvs4.sha256"
 """
 
 FIT_TABLE = """# fit table: index (1-based) -> run_id
@@ -189,6 +211,10 @@ RUNS=({runs})
 def fit_selector(by_array):
     sel = "${SLURM_ARRAY_TASK_ID}" if by_array else "${1:?fit index}"
     return ("FIT=%s\nRUN_ID=${RUNS[$((FIT-1))]}\nRUN=$DEPT/scratch/runs/%s/$RUN_ID\nMAN=$SCR/manifests/$RUN_ID\n" % (sel, "{batch}"))
+
+
+SKIP_IF_OUTCOME = ('if [[ -e $RUN/OUTCOME ]]; then echo "prep outcome $(cat "$RUN/OUTCOME"): nothing to do"; '
+                   'printf \'{{"stage":"%s","run_id":"%s","skipped":"prep_outcome"}}\\n\' "{stage}" "$RUN_ID" >> "$DEPT/scratch/runs/{batch}/ends.jsonl"; exit 0; fi\n')
 
 
 def stage_body(stage):
@@ -202,7 +228,10 @@ def stage_body(stage):
                 + fill.format(cmd="gen", suffix="") + "\n"
                 + run.format(cmd="gen", suffix="", extra=' --truth "$RUN/truth.json"', out="raw.bin")
                 + fill.format(cmd="prep", suffix="") + "\n"
-                + run.format(cmd="prep", suffix="", extra=' --in "$RUN/raw.bin"', out="data.bin")
+                # INTERFACES §7: prep exit 20 (no_predictors) / 21 (y_constant) are data outcomes: record, end the pipeline
+                + "rc=0\n" + run.format(cmd="prep", suffix="", extra=' --in "$RUN/raw.bin"', out="data.bin").rstrip("\n") + " || rc=$?\n"
+                + 'if [[ $rc == 20 || $rc == 21 ]]; then echo $([[ $rc == 20 ]] && echo no_predictors || echo y_constant) > "$RUN/OUTCOME"; exit 0; fi\n'
+                + '[[ $rc == 0 ]] || exit $rc\n'
                 + fill.format(cmd="setup", suffix="") + "\n"
                 + run.format(cmd="setup", suffix="", extra=' --threads "$OMP_NUM_THREADS"', out="setup.bin"))
     if stage == "calibrate":
@@ -216,7 +245,9 @@ def stage_body(stage):
         return (fill.format(cmd="merge", suffix="") + "\n"
                 + run.format(cmd="merge", suffix="", extra=' --threads "$OMP_NUM_THREADS"', out="fit.bin"))
     if stage == "eval":
-        return ('"$BIN" eval --fit "$RUN/fit.bin" --data "$RUN/data.bin" --truth "$RUN/truth.json" --threads "$OMP_NUM_THREADS" '
+        return ('if [[ -e $RUN/OUTCOME ]]; then printf \'{"status":"completed","command":"eval","fit_status":"prep_%s","prep_status":"%s","hpm":[]}\\n\' '
+                '"$(cat "$RUN/OUTCOME")" "$(cat "$RUN/OUTCOME")" > "$RUN/eval.bin.json"; exit 0; fi\n'
+                '"$BIN" eval --fit "$RUN/fit.bin" --data "$RUN/data.bin" --truth "$RUN/truth.json" --threads "$OMP_NUM_THREADS" '
                 '--n-draws "$NDRAWS" --n-x "$NX" --n-test "$NTEST" --out "$RUN/eval.bin" > "$RUN/log/eval.log" 2>&1\n'
                 'if [[ $POST == 1 ]]; then "$BIN" post --fit "$RUN/fit.bin" --data "$RUN/data.bin" --out "$RUN/law.bin" > "$RUN/log/post.log" 2>&1; fi\n')
     raise ValueError(stage)
@@ -257,11 +288,17 @@ def generate(P, out, dept):
             txt += "NDRAWS=%d\nNX=%d\nNTEST=%d\nPOST=%d\n" % (e.get("n_draws", 10000), e.get("n_x", 4000), e.get("n_test", 10000),
                                                            1 if e.get("post", True) else 0)
         txt += 'printf \'{"stage":"%s","run_id":"%%s","job":"%%s","task":"%%s","host":"%%s","start":"%%s"}\\n\' "$RUN_ID" "${SLURM_JOB_ID}" "${SLURM_ARRAY_TASK_ID:-}" "$(hostname -s)" "$(date -u +%%FT%%TZ)" >> "$DEPT/scratch/runs/%s/starts.jsonl"\n' % (st, batch)
+        if st in ("calibrate", "islands", "merge"):
+            txt += SKIP_IF_OUTCOME.format(stage=st, batch=batch)
         txt += stage_body(st)
         txt += 'printf \'{"stage":"%s","run_id":"%%s","job":"%%s","task":"%%s","end":"%%s"}\\n\' "$RUN_ID" "${SLURM_JOB_ID}" "${SLURM_ARRAY_TASK_ID:-}" "$(date -u +%%FT%%TZ)" >> "$DEPT/scratch/runs/%s/ends.jsonl"\n' % (st, batch)
         write(os.path.join(out, name), txt, 0o755)
         files.append(name)
         del n_per_fit
+    write(os.path.join(out, "env.sh"), ENV_SH.format(batch=batch))
+    files.append("env.sh")
+    write(os.path.join(out, "build.sh"), BUILD_SH.format(batch=batch, dept=dept, commit=P["code_commit"]), 0o755)
+    files.append("build.sh")
     # manifests (templates + one run manifest per run)
     for f in P["fits"]:
         md = os.path.join(out, "manifests", f["run_id"])
