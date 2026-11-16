@@ -96,3 +96,4 @@
 - 21:26 — owner rule (POLICIES §10): threads/agents only on Owls or the desktop. Department complies: all leads, children and helpers run on Owls (environment b18966a3; leads' delegate_task children inherit it). No relay needed.
 - 21:34 — recorder: E/F/D real runs on main (68d48f4, 70644a2+cec478b, 8efc627); HQ told.
 - 21:35 — HQ (overnight): J before F-UNI gate and CI venv; H + C together (H first if needed). Owner away until morning; HQ decides; escalate only what can't wait. Recorder re-ordered: J → H+C → F-UNI gate → venv → I.
+- 21:41 — task J: platform bug + citefix broke START/MISR manifests (my miss) — escalated to HQ with options; recorder holds those, continues H + C.

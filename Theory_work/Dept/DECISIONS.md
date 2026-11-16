@@ -253,3 +253,13 @@
 - E 68d48f4 (Engineering D-3/D-8), F 70644a2 + cec478b (assemble.py candidate blocks + 44 flags cleared +
   HEADLINE_CANDIDATES.md), D 8efc627 (W3-POST2 10 rows PROVED-CHECKED conditional). check.py 468 / 0 ERROR; tl 174/0.
   Next: C dry run (cascade until H; H may precede C's real run), F-UNI gate, CI venv, I, J.
+
+## 2026-11-15 21:41 CT — task J findings (escalated)
+- Platform bug: _pcase lower-cases accept artifact paths on Windows → 57 stale 11-12 records (49 match after folding).
+  Proposed: one-line tool fix (case-preserving _pkey) + regression test + narrow Opus code review + one Linux re-record.
+- **My miss:** the citefix merge (66b67f7) changed C-MIS files that W3-START and W3-MISR council manifests list as EXT
+  inputs → manifest verify fails (A4 START 21, MISR 7; A5 START2). W3-EDIT had flagged the drift; I judged it harmless
+  because the tickets were accepted, without checking the EXT-input consequence for re-record and downstream CP3s.
+  Lesson: before merging an edit to any file, grep **all** MANIFEST_* (accepted ones too) for it, not only running riders.
+  Proposed (a) PC-style diff check + re-frozen manifests with seat carriers now; (b) EXT-at-freeze-commit tool change post-freeze.
+- 8 genuinely stale rows re-record after (2); Cont-F/R re-point is HQ's call.
