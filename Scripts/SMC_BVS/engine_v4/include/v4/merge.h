@@ -30,8 +30,8 @@ namespace v4 {
 namespace merge {
 
 // In-memory island record (INTERFACES §5.2 IslandResult; fields WP4 reads). `terminal` = the optional terminal
-// supports (`terminal_S_ptr/terminal_S`): ASSUMED to be the N particle supports after each measured round (Hm x N
-// entries) -- to be confirmed by WP3.
+// supports (`terminal_S_ptr/terminal_S`): the supports of the N particles after the LAST measured round (manager
+// decision 2026-11-15; WP3 writes them). The merge counts whatever list it is given.
 struct IslandIn {
   Status status = Status::completed; std::string message;
   int32_t r = 0, N = 0, T = 0, L = 0, Hm = 4;
