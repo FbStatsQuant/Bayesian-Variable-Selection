@@ -162,3 +162,13 @@ and note m_n(t′) ≤ m_n(t)).
   orthogonal to col X, a duplicated column in a third of the draws) and the assembled inequality (4.1) by exact
   enumeration of all models (p = 8) on 𝓑_n, for every m ≥ |T|. check_Bn_tail: Monte Carlo of P(𝓑_nᶜ) against (6.1)
   (the bound is far from tight for small n; it is only needed as an exponential rate). Results: `c_checks_out.txt`.
+
+## Amendments (lead, 2026-11-15, after the same-family pre-check; part of this file)
+A-1 (Corollary S.1, practical range). The same proof gives the corollary in the form: for every n ≥ max{3, 2s₀^r, ⌈4C_S²⌉} and
+every t ≥ max{log n, (2C_S + 1)²}, m = m_n(t) qualifies. The form stated above (all t ≥ log n) follows for n ≥ e^{(2C_S+1)²}; that
+threshold is correct but astronomically large, and the form with t ≥ max{log n, (2C_S + 1)²} is the one to use.
+A-2 (Step 7, nesting). When R^T_{m*} = 0 the quantity Θ^{(1)}_{m*} is not defined; in that case π(|S| > m*) = 0 and the event in
+question is certain.
+A-3 (Corollary S.2). The "equivalently" form also requires ct ≤ n^{1−κ₀} and n ≥ n_S′.
+A-4 (definition of R^T_m). R^T_m is summed up to K; summing to K is the weaker hypothesis on m, so the lemma covers both
+readings of the statement (sum to K or to p).

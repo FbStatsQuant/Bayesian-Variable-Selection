@@ -164,3 +164,13 @@ checkpoint on WEAKER TC1–TC9, X exhausted, B2-core → Gaussian only, B0 → f
   `ASSEMBLY.md`; `reviews/P5_disposition.md`; DEPS.tsv bridge and reader rows refreshed.
   Line check L4 launched: gpt-6.1-sol, codex, high (`reviews/BRIEF_L4_sol_E.md`). HOLDS read: none.
   Agent tally this leg: 11 Claude (Claude Third) + 5 codex (Sol S2, Astra L1, Sol L2, L3, L4).
+- 21:00 — Pre-check P6 back (`reviews/P6_opus_precheck_C.md`): VERIFIED-WITH-AMENDMENTS, no mathematical error, 2 MINOR /
+  5 NIT. Lemma V, X1, X2, facts F1–F7 VERIFIED; Lemma S VERIFIED-WITH-AMENDMENTS (range statement of Corollary S.1).
+  C-7 (queued STATEMENT edit): §0's sentence "(C) is used only through (L₀)" is false for Lemma V(a) and step X4, which
+  use ρ′ — to be restricted to Lemma S and DIST-3 (no lemma statement is affected: Lemma X keeps (C)). Amendments
+  appended to `work/C_size/S.md`; `reviews/P6_disposition.md`; DEPS.tsv rows S, V refreshed, row X12 added (not on the
+  path). Line check L5 launched: gpt-6-astra, codex, high (`reviews/BRIEF_L5_astra_SV.md`; Lemma S and Lemma V).
+  All five streams now have proofs written and pre-checked; cross-family line checks running: L1 (Astra, X/X′),
+  L2 (Sol, D), L3 (Sol, B), L4 (Sol, E), L5 (Astra, S/V); blind read S2 (Sol) running. HOLDS read: none.
+  Agent tally this leg: 11 Claude (Claude Third) + 6 codex.
+- 19:21 — HQ notes: organization (W3-DIST directly under HQ until CP3; lead = manager of the ticket and its team) and `POLICIES.md` (main dfbdf2c) read in full: access (may read everything, run tools, commit/push own branch theory/W3-DIST; shared root clone must not switch branch — the snapshot cron stays the restore mechanism for this folder, so no git by the lead beyond pulls), resources (Claude Third default; Codex shared, NORMAL mode), reporting (≤ 10 lines to HQ at checkpoints via t3_thread_send; escalate at once on a counterexample to a target, a WEAKER change to a target clause, a hold on a consumed claim, a budget overrun). HOLDS read: none.
