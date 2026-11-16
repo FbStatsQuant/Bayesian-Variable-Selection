@@ -588,3 +588,10 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - Order: a registry hold now → Sol diff check → apply before the DIST R1 freeze → re-freeze carriers (MISR-R R1–R3, W3-MISR R1/R2/R2r).
   - DIST SW1 drift is logged as an EXT-input change, conditional on the DIST lead's answer.
   - If Sol isn't back by 07:30, the freeze goes ahead on the current file and the correction lands after it.
+- 2026-11-16 ~05:30 CT. W3-T03ACC CP3 council R1 PASS (astra 9.5 / opus 9.4, MANIFEST 9714aea4); formfix ingest OK (v4 §7). Row 3.7 v4 signed off, with a conditional GO after task R is clean.
+- H5 card 12 (T03♯ root): the consultant AGREES. Conditions:
+  - discharge by edge type (@stmt yes; @proof or internal-step only if verified in LC-A/B/C);
+  - the carrier is scoped to T03♯ only (T01–T03 and T02(i♯)/(ii♯) are not upgraded; the Scope paragraph is kept);
+  - acceptance binds to 9714aea4 (E items wait or get a diff check);
+  - statuses are recomputed by the tool; other conditions stay.
+  - The real run waits for HQ's GO on the dry-run edge table.
