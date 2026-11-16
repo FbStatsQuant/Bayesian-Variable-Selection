@@ -328,3 +328,9 @@ checkpoint on WEAKER TC1–TC9, X exhausted, B2-core → Gaussian only, B0 → f
   consumed text of W3-MISR STATEMENT (lines 70–72, 75–77) is unchanged. Staged ingest rerun: 20 claims, 0 problems,
   0 ERROR introduced, **acceptance PASS, 0 acceptance ERROR**. L6's late completion notice arrived (already processed;
   thread settled). Running: D1 (Sol), D2 (Sol). HOLDS read: none.
+- 22:39 — L7's completion notice arrived. The reviewer was still in its final verification when I read its file at
+  22:07 and amended `lemmas/NEC.md` (I took the written file for a finished review; from now on I act on a review only
+  after its completion notice). It noticed the change, re-read v0.2 (sha 54340e87b89336a1 = current) and rewrote its
+  report: three findings RESOLVED, **overall VERIFIED, no outstanding finding**. DEPS row NEC → **OK**. D2 (new Sol agent
+  on the same three hunks) is left to finish as a second reading; it is not cancelled. L7 thread settled.
+  Running: D1 (Sol), D2 (Sol). HOLDS read: none.
