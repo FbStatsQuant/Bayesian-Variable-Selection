@@ -14,10 +14,11 @@ but, as much as possible, they should not be weird-looking statements. They have
 clear to the reader what the assumptions are and what the proven statements are." Song–Liang (2015) Theorems 1–2 are an
 *example* of statements a reader understands from the statement alone. They are not a template to copy (owner). The owner again: "I don't want a bunch of alien-looking theorems. The proof might be as tough as needed, I don't care."
 Proof difficulty and length are free; **statement clarity is not negotiable**.
-**The standard (owner, 2026-11-15; "do we have an agreement").** What the method does and what each statement says
-must be clear and intelligible to peers. Proof complexity is fair game, provided the proof can be checked (in Lean
-where we certify). Song–Liang (2015) and the owner's own papers were cited only as *examples* of meeting this standard.
-**Nothing is to be taken from them**: no template, no structure, no wording.
+**The standard (owner, 2026-11-15).** What the method does and what each statement says must be clear and intelligible
+to peers. Proof complexity is fair game, provided the proof can be checked (in Lean where we certify). Song–Liang (2015)
+and the owner's paper Bedoya & Li (local copy `Papers/Own_work/`, gitignored, never commit) mark the **level of
+clarity** wanted. Borrowing from them is neither required nor forbidden. HQ and the leads choose how to present our
+specific model and results first; the owner then weighs in.
 
 Every headline theorem therefore has a **reader version**:
 - the assumptions are a short numbered list (A1)–(Ak), each in standard, primitive terms a reader recognises: i.i.d.

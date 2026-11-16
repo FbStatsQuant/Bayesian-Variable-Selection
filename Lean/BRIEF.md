@@ -19,7 +19,8 @@ and on Owls; HQ decides when you start.
 
 ## Standard
 Formal statements must match the paper statements, and those must be clear and intelligible (PROGRAM.md "Readability").
-Proof complexity is fair game as long as it compiles in Lean. Nothing is copied from other projects.
+Proof complexity is fair game as long as it compiles in Lean. Reusing conventions from other Lean projects (e.g. the
+owner's Large-Prior repo on Owls, `/home/fb31/Large-Prior-Official-Repo/lean`) is allowed where useful, not required.
 
 ## Levels (decided by HQ with the owner)
 - **Level 1: deterministic cores, fully certified.** No `sorry`, and `#print axioms` shows only `propext`,
