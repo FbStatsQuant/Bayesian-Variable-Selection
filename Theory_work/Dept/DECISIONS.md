@@ -223,3 +223,8 @@
 - Owls → NOTS works (`ssh nots`, key ~/.ssh/id_ed25519_nots; POLICIES §5). The department runs its own NOTS move after
   the Wed freezes under §12: one multiplexed session, idle data only, INDEX.md on NOTS, no deletion without a verified
   copy on Owls (records/ copy by Engineering today; verify + index on arrival). Plan: Thu 11-19 or later, one session.
+
+## 2026-11-15 20:50 CT — row 1.1 card (R03b + SHARP3b)
+- **D35.** Card forwarded to HQ (consultant): A+, E+, E-floor+ DEFER as POST2-O1..O3; B+ REJECT (no bearing); gate PASS
+  with named open items. New expectation lower bound on every design → **post-freeze rider POST2-R1** (not a widening of
+  T12: W3-PSHARP-R is in its statement lock; one step unverified). Queued.

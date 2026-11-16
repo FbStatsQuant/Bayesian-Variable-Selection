@@ -33,6 +33,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 | ticket | contents | source |
 |---|---|---|
 | SAMP-R1 | truth-free D; TV re-centring of C; hybrid TR bound; LT rate under NC_r | SHARP3 triage (W3-READER TRIAGE_SHARP3.md) |
+| POST2-R1 | matching expectation lower bound E δ_n ≳ √(log n/n) on every design with a floor (Thm 1 two-sided); one unverified step; kill budget | row 1.1 card (D35) |
 | SCR-R1 | drop "fixed" signals (only use L3:69); ℓ¹ → total signal; exponential rate | SHARP3 triage |
 | NARROW batch | 12 statement-precision narrowings (LIFECYCLE §3, priced) + H5 card for GEN C4 / FAC-CS C1 / SAMP:Pkg | ADJ_MINORS_iii.md (D31) |
 | W2-APP Family-map diff round | F1–F4 + M57/M58 patches | PC1, D31 |
