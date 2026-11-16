@@ -21,11 +21,12 @@ static const char* status_str(int s) { return s == 0 ? "completed" : (s == 2 ? "
 std::string write_island_file(const std::string& path, const IslandRun& r, Arith arith, const Json& inputs) {
   if (r.status == 1)   // `interrupted` (stop_after_step) is a test outcome, never a file (review m3)
     throw Error(Status::internal_error, "write_island_file: an interrupted island (stop_after_step) has no island file");
-  fmt::Writer w(fmt::K_ISLAND, arith == Arith::ClassA ? fmt::M_V : fmt::M_LAW);
+  fmt::Writer w(fmt::K_ISLAND, r.compat ? fmt::M_COMPAT : (arith == Arith::ClassA ? fmt::M_V : fmt::M_LAW));
   const bool done = r.status == 0;
   uint64_t lz; std::memcpy(&lz, &r.logZ, 8);
   Json m = Json::object();
-  m["schema"] = "smcbvs4.island/1"; m["kind"] = "island"; m["mode"] = arith == Arith::ClassA ? "V" : "law";
+  m["schema"] = "smcbvs4.island/1"; m["kind"] = "island"; m["mode"] = r.compat ? "compat" : (arith == Arith::ClassA ? "V" : "law");
+  if (r.compat) m["stream_count"] = hex64(r.stream_count);
   m["r"] = r.r; m["N"] = r.N; m["T"] = r.T; m["L"] = r.L; m["Hm"] = r.Hm; m["p"] = r.p;
   m["status"] = status_str(r.status); m["reason"] = r.reason; m["inputs"] = inputs; m["binary"] = binary_block();
   m["init_hash"] = hex64(r.init_hash); m["output_hash"] = hex64(r.hash());
@@ -46,6 +47,7 @@ std::string write_island_file(const std::string& path, const IslandRun& r, Arith
   w.add("term_distinct", r.terminal_distinct);
   // ledger
   w.add("top_v", r.top_v); w.add("top_hash", r.top_hash); w.add("top_off", r.top_off); w.add("top_len", r.top_len); w.add("top_pool", r.top_pool);
+  // no leader stores in island_r.bin, in any mode (INTERFACES v0.1.7 §4.1/§5.1; D-7)
   w.add("hpm_S", r.hpm.S);
   double hv[2] = {r.hpm.F, r.hpm.logm}; w.add_copy("hpm_val", fmt::D_F64, hv, 16, 2, 0);
   const EventKey& k = r.hpm.key;

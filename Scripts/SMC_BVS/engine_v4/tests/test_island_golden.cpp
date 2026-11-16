@@ -9,6 +9,7 @@
 //    bits; RB arrays and PIPs to 1e-12 relative (class A: the island sums them exactly in fixed point, core in double).
 #include <cstring>
 #include <random>
+#include <set>
 // core/cpp/v3_runtime.h uses three R symbols in one helper the tests never call; shim them (core/ stays untouched).
 typedef void* SEXP;
 inline bool Rf_isNull(SEXP x) { return x == nullptr; }
@@ -195,3 +196,48 @@ TEST(golden_island_vs_core_engine) {
   }
 }
 
+
+// COMPAT (manager Q2; the <= 5k bit anchor): the island with core's serial v3 stream 9 + r (WP1 CompatSource), the
+// particle-major bit path and core's double RB sum, against core's Engine::run_island with its own RngSource on the same
+// stream: every output in bits (RB, rb_round and PIPs included) and the stream position at the end. The leader stores
+// (not outputs: INTERFACES v0.1.7) are compared too, with the test-only option `leaders`.
+TEST(golden_compat_island_vs_core_serial_stream) {
+  for (int variant = 0; variant < 3; ++variant) {   // variant 2: n = 12 (K = 6), the Gibbs cap is reached (review m6)
+    int n = variant == 2 ? 12 : (variant ? 80 : 100), p = variant == 2 ? 60 : (variant ? 150 : 220), N = variant ? 40 : 30;
+    Twin W(n, p, 60 + variant, variant ? 5 : 4);
+    std::vector<double> grid = variant ? std::vector<double>{0.0, 0.02, 0.1, 0.3, 0.6, 1.0} : std::vector<double>{0.0, 0.1, 0.4, 1.0};
+    int L = 2, Hm = 3, B = 14, r = 3; uint32_t seed = 17 + variant;
+    v3::Engine E(W.D3, W.st3, W.Nb3, B);
+    v3::Ledger L3(&W.D3, 4);
+    v3::RngSource src; src.g.seed_stream(seed, 9 + r);
+    E.led = &L3; E.vs = &src; E.cache = nullptr;
+    v3::IslandResult R3 = E.run_island(r, N, grid, L, Hm, 0, nullptr);
+    IslandConfig c; c.compat = true; c.leaders = true; /* test-only: compares core's leader stores */ c.kernel = KernelKind::ParticleMajor; c.threads = 1; c.seed = seed; c.island = (uint32_t)r;
+    c.N = N; c.grid = grid; c.L = L; c.Hm = Hm; c.B = B;
+    IslandRun R = run_island<Arith::Bit>(W.D, W.st, W.nb, c);
+    compare_island(R3, L3, R, r, "compat");
+    bool rb_bits = R.rb_acc.size() == R3.rb_acc.size();
+    for (size_t j = 0; rb_bits && j < R.rb_acc.size(); ++j) {
+      rb_bits = same_bits(R.rb_acc[j], R3.rb_acc[j]) && same_bits(R.pip[j], R3.pip[j]);
+      for (size_t h = 0; rb_bits && h < R.rb_round.size(); ++h) rb_bits = same_bits(R.rb_round[h][j], R3.rb_round[h][j]);
+    }
+    CHECKF(rb_bits, "compat %d: RB / rb_round / PIP not bit-identical", variant);
+    auto same_store = [](const std::set<v3::TopEntry, v3::TopCmp>& s3, const std::vector<double>& v, const std::vector<uint64_t>& off,
+                         const std::vector<uint16_t>& len, const std::vector<int32_t>& pool) {
+      if (s3.size() != v.size()) return false;
+      size_t i = 0;
+      for (auto it = s3.begin(); it != s3.end(); ++it, ++i) {
+        Model S(it->S.begin(), it->S.end());
+        if (!same_bits(it->v, v[i]) || S != Model(pool.begin() + off[i], pool.begin() + off[i] + len[i])) return false;
+      }
+      return true;
+    };
+    CHECKF(same_store(L3.lead0.s, R.lead0_v, R.lead0_off, R.lead0_len, R.lead0_pool), "compat %d: lead0 (%zu vs %zu)", variant, L3.lead0.s.size(), R.lead0_v.size());
+    CHECKF(same_store(L3.lead1.s, R.lead1_v, R.lead1_off, R.lead1_len, R.lead1_pool), "compat %d: lead1 (%zu vs %zu)", variant, L3.lead1.s.size(), R.lead1_v.size());
+    CHECKF(src.g.count == R.stream_count, "compat %d: stream position %llu vs %llu", variant, (unsigned long long)src.g.count, (unsigned long long)R.stream_count);
+    uint64_t cap = 0; for (auto& sr : R.stages) cap += sr.moves.gibbs_cap; for (auto& tm : R.terminal_moves) cap += tm.gibbs_cap;
+    if (variant == 2) CHECKF(cap > 0, "compat %d: the cap was never reached", variant);
+    std::printf("  compat %d: logZ %.12f, %llu draws, store %zu, lead0 %zu, lead1 %zu, cap steps %llu\n", variant, R.logZ, (unsigned long long)R.stream_count,
+                R.top_v.size(), R.lead0_v.size(), R.lead1_v.size(), (unsigned long long)cap);
+  }
+}

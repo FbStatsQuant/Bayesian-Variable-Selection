@@ -22,6 +22,7 @@
 #include <string>
 #include "v4/island/kernel.h"
 #include "v4/island/store.h"
+#include "v4/island/memory.h"
 
 namespace v4::island {
 
@@ -32,7 +33,11 @@ struct IslandConfig {
   int N = 2500; std::vector<double> grid; int L = 8; int Hm = 4;
   int B = 14;                               // number of N-swap labels (core: labels N1..NB)
   KernelKind kernel = KernelKind::LabelMajor;
-  int G = 256; int tile = 128; int threads = 1;   // execution parameters: never part of the law
+  int G = 256; int tile = 128; int threads = 1;   // execution parameters: never part of the law (G = 0: largest G <= 256 that fits mem_budget)
+  double k_store = 0;                       // admission: calibration-measured mean stored |S| (0: estimate from pi_0)
+  double inputs_bytes = 0;                  // admission: setup / calib inputs mapped by the caller (X, z, diag(G) are in the plan)
+  int test_oom_pass = -1;                   // tests only: throw std::bad_alloc inside phase A at this pass (resource_limit path)
+  uint64_t mem_budget = 0;                  // bytes; 0 = no admission check (--mem-budget; manager Q3/Q4)
   uint64_t store_cap = 0;                   // 0: 40 p + 1 (OD-13)
   std::string ckpt_path;                    // empty: no checkpoints; else <path>.a / <path>.b
   double ckpt_every_s = 600;                // spec §6: at most every 10 min
@@ -41,7 +46,12 @@ struct IslandConfig {
   bool keep_terminal = true;               // terminal supports (N, after the last measured round) -> island_r.bin
   uint32_t tier = 0;                        // frozen calibration tier (event key, INTERFACES v0.1.5 §4.2)
   bool allow_test_kernels = false;          // tests only: the bit-form label-major kernel (manager Q1)
+  bool compat = false;                      // v3 serial streams (CompatSource 9 + r), core's double RB sum;
+                                            // requires Arith::Bit, particle-major, 1 thread (manager Q2: the <= 5k bit anchor)
+  bool leaders = false;                     // leader stores (lead0 log gamma_0, lead1 F): NEVER in a final run (INTERFACES
+                                            // v0.1.7, D-7); calibration islands and golden tests only; never written to island_r.bin
   bool store_dup_filter = true;             // exact snapshot duplicate filter (execution parameter; content unchanged)
+  bool store_parallel_compact = true;       // compaction at pass/step boundaries with all threads (content unchanged)
   bool check_store = true;                  // I1 after every step (linear; O(c) hash lookups)
   bool verbose = false;                     // progress line per step on stderr (benchmarks)
   // adaptive schedule (core's pilot rule: largest phi' with population ESS >= 0.9 H, floor 1/Te). Benchmarks and
@@ -53,7 +63,8 @@ using v4::StageRow;
 
 struct KernelStats {   // execution statistics (not part of the law, not hashed)
   uint64_t particle_rounds = 0, particle_sweeps = 0, passes = 0, support_label_pairs = 0, supports = 0;
-  uint64_t slow_supports = 0, store_merges = 0, store_buffered = 0, store_dup_dropped = 0;
+  uint64_t slow_supports = 0, store_merges = 0, store_buffered = 0, store_dup_dropped = 0, store_serial_merges = 0;
+  double t_store_compact = 0, t_compact_pass = 0;   // wall seconds compacting (all paths) / at pass boundaries
   int kept_live_max = 0;   // most kept runs alive at once in this process (M2 bound; process-wide counter)
   double t_products = 0;   // thread-seconds inside phase A spent on the tile products
   double t_init = 0, t_orders = 0, t_build = 0, t_phaseA = 0, t_walk = 0, t_phaseB = 0, t_apply = 0, t_barrier = 0,
@@ -63,7 +74,7 @@ struct KernelStats {   // execution statistics (not part of the law, not hashed)
 struct Particle { Model S; uint64_t h = 0; double logm = 0, lg0 = 0, d = 0, F = 0; };
 
 struct IslandRun {
-  int status = 0;   // 0 completed, 1 interrupted (stop_after_step), 2 numerical_failure
+  int status = 0;   // 0 completed, 1 interrupted (stop_after_step), 2 numerical_failure, 3 resource_limit (mem_budget)
   std::string reason;
   int r = 0, N = 0, T = 0, L = 0, Hm = 0, p = 0;
   double logZ = NEG_INF; uint64_t init_hash = 0;
@@ -75,6 +86,11 @@ struct IslandRun {
   std::vector<double> top_v; std::vector<uint64_t> top_hash, top_off; std::vector<uint16_t> top_len; std::vector<int32_t> top_pool;
   std::vector<Model> terminal;
   int resumed_from_step = -1;
+  int G_used = 0; std::string mem_plan;
+  bool compat = false; uint64_t stream_count = 0;   // compat: xoshiro draws consumed
+  bool leaders = false;                              // lead0_* / lead1_* filled (in memory only)
+  std::vector<double> lead0_v, lead1_v; std::vector<uint64_t> lead0_hash, lead0_off, lead1_hash, lead1_off;
+  std::vector<uint16_t> lead0_len, lead1_len; std::vector<int32_t> lead0_pool, lead1_pool;      // admission: the group size used and the peak-live plan (text)
   KernelStats ks;
   uint64_t hash() const;   // FNV-1a over every law output (T3 / T6 comparisons)
 };
