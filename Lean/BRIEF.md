@@ -17,6 +17,10 @@ and on Owls; HQ decides when you start.
   for conventions only.
 - Share the machine: `lake build -j 8` at most, and `nice -n 10` for long builds.
 
+## Standard
+Formal statements must match the paper statements, and those must be clear and intelligible (PROGRAM.md "Readability").
+Proof complexity is fair game as long as it compiles in Lean. Nothing is copied from other projects.
+
 ## Levels (decided by HQ with the owner)
 - **Level 1: deterministic cores, fully certified.** No `sorry`, and `#print axioms` shows only `propext`,
   `Classical.choice` and `Quot.sound`. Candidates (Phase 0 confirms and extends this list):
