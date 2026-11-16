@@ -139,3 +139,9 @@
   gates, reader versions, acceptance backlog); (b) Lean readiness list (child helper → research/LEAN_READINESS.md:
   Level-1 deterministic cores, stability vs this week's tickets, ready dates; Level-2 targets). T-MERGE parked;
   EVAR/POOL scaling paper. D18 approved by HQ.
+
+## 2026-11-15 20:10 CT — W3-DIST S2 (Sol read of reader versions)
+- **D25.** Tags: TC9 Theorem A EQUAL (Setup faithfulness: prior BB(1, r), r = non-constant predictors, cap min(r, n/2);
+  "no identifiability condition" withdrawn → "no beta-min and no fixed lower bound on eigenvalues"); my view to HQ:
+  no H5 card needed, HQ decides. Theorem B: "b_n > 0" added = WEAKER on a non-target companion (changelog row, reported
+  at next CP). Sol diff check v1.3.1 → v1.4 owed before the next freeze. READER synced (prior as coded for all theorems).

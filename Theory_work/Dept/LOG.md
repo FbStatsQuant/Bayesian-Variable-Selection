@@ -46,3 +46,4 @@
 - 20:07 — recorder package relayed to HQ (F/D/E clean; C PC1 FAIL; cascade). Recorder tasks H (root fix) and C′ (C3 snapshot) staged after G.
 - 20:08 — owner priority (consistency + Lean): NEXT_CAMPAIGN v1; Lean readiness helper launched as a child (D24).
 - 20:09 — W3-EDIT: C-DLV edit reverted (78d18c5); two more rider-consumed files found and routed CHAPTER-ONLY (W2-UNI L5_delivery.md → RM2-R; W3-PSHARP ASSUMPTION_MAP rows 9-17 → PSHARP-R, E7 reverted). Item 1 ledgered (1afa61d): 73 API-audit MINORs → 3 in place, 9 no change, 59 NOT-EDITORIAL (23 statement-level, 36 proof-level) — to triage at its CP1. Next: Sol editorial-only diff check → CP1.
+- 20:10 — DIST S2: 3 MAJOR fixed (Thm B b_n>0; bridge remarks; prior BB(1,r) as coded); D25 tags; HQ and READER informed.
