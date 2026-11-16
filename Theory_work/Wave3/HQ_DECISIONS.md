@@ -496,3 +496,8 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - fallback: row 1.1 states its condition or moves to the body.
 
   C (W2-APP) and the conditional re-status of 11 consumers approved.
+- (overnight) ~00:40 CT 11-16: the record damage from H's fallback (Cont-R status source moved off W3-RM2/CHECKPOINT_4
+  broke A4 for every CP4-sourced RM2 row; accept records of POST2:A1, RM2-R and POST-R stale). Repair GO:
+  CHECKPOINT_5 = a verbatim copy of CP4 with only Cont-R's extended status; re-point; re-record (dry run first; must show
+  A4 PASS, RM2-R re-validating, check 0 ERROR, suite pass, DIST still passing). Task L GO. Prop-LB re-point deferred to the
+  post-freeze POST2 checkpoint rewrite. Protocol lesson added to the Theory variant.
