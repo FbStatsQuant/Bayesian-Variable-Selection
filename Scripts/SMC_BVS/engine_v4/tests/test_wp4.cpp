@@ -274,7 +274,7 @@ TEST(wp4_merge_guardw_t10) {
       EventCtx e; e.phase = PH_MEASURED; e.mech = ME_GIBBS_FLIP; e.key.seg = SG_FINAL; e.key.unit = (uint32_t)r; e.key.xph = X_MEASURED;
       e.key.stage = 30; e.key.round = 1 + t / 100; e.key.particle = 1 + t % 100; e.key.position = 1 + (uint32_t)(g() % 70);
       I.led.event(S, zob().hash(S), F, lg0, lm, e, true);
-      I.terminal.push_back(S);
+      if (t >= 300) I.terminal.push_back(S);   // the last measured round: N = 100 supports
     }
     I.led.compact();
     return I;
@@ -299,7 +299,7 @@ TEST(wp4_merge_guardw_t10) {
   CHECK(fo.occ_available && fo.occ.size() == 2 && fo.occ[0].M_used == 1 && fo.occ[0].occ_r.size() == 4);
   {  // per-model counts agree with the M-set occupancies
     uint64_t in10 = 0; for (size_t i = 0; i < fo.occ_top.size(); ++i) in10 += fo.occ_top[i];
-    CHECK(fo.occ_top.size() == 10 && fo.occ_total == 1600 && fo.occ_total_r.size() == 4 && fo.occ_top_r.size() == 40);
+    CHECK(fo.occ_top.size() == 10 && fo.occ_total == 400 && fo.occ_total_r == std::vector<uint64_t>(4, 100) && fo.occ_top_r.size() == 40);
     CHECK(same_bits((double)in10 / (double)fo.occ_total, fo.occ[1].occ));
   }
   CHECK(fo.log_Z_T >= fo.hpm_F);   // lower bound contains the HPM's mass
@@ -351,12 +351,12 @@ TEST(wp4_merge_guardw_t10) {
   }
   {  // F5: zero occupancy -> NA row (no +Inf), zero islands excluded from the sd and the chi-square
     auto s2 = slots;
-    for (auto& sl : s2) { sl.isl.terminal.clear(); sl.isl.terminal.push_back(Model{0, 1, 2, 3, 4, 5, 6, 7}); }   // not in any store
-    s2[0].isl.terminal.push_back(fo.hpm);                                                           // island 1 only: the HPM
+    for (auto& sl : s2) sl.isl.terminal.assign(100, Model{0, 1, 2, 3, 4, 5, 6, 7});   // N supports, none in any store
+    s2[0].isl.terminal[0] = fo.hpm;                                                      // island 1 only: one HPM particle
     auto o = merge::merge_and_tail(s2, Ledger(pre), Model{1, 2}, fac, ms);
     CHECK(o.occ_available && o.occ[0].available && o.occ[0].n_zero_islands == 3 && std::isnan(o.occ[0].log_Z_occ_r[1]) &&
           std::isfinite(o.occ[0].log_Z_occ) && std::isnan(o.occ[0].sd_log_Z_occ_r) && o.occ[0].chi2_df == 0);
-    for (auto& sl : s2) sl.isl.terminal = {Model{0, 1, 2, 3, 4, 5, 6, 7}};
+    for (auto& sl : s2) sl.isl.terminal.assign(100, Model{0, 1, 2, 3, 4, 5, 6, 7});
     auto o3 = merge::merge_and_tail(s2, Ledger(pre), Model{1, 2}, fac, ms);
     CHECK(!o3.occ[0].available && std::isnan(o3.occ[0].log_Z_occ) && o3.occ[0].n_zero_islands == 4);
   }
@@ -397,4 +397,49 @@ TEST(wp4_inherited_provenance_v016) {
   EventCtx fin; fin.phase = PH_MEASURED; fin.mech = ME_GIBBS_FLIP; fin.key.seg = SG_FINAL; fin.key.unit = 1;
   Ledger L5 = run(false, {iA, iT}, T); L5.event(T, z.hash(T), 5.0, 1.0, 4.0, fin, true);
   CHECK(L5.hpm_ev.key == cal.key);
+}
+
+#include "tutil.h"
+#include "v4/format.h"
+#include "v4/wp4_terminal.h"
+TEST(wp4_terminal_supports_wp3_layout) {
+  // island_r.bin terminal sections exactly as WP3 writes them (PR #21 island_file.cpp:60-64): N + 1 i64 offsets, i32 pool,
+  // particle order, the last measured round only. Round trip through the WP1 container, then the merge's occupancy.
+  const int N = 6, p = 20;
+  std::vector<Model> sup = {{1, 4}, {}, {1, 4}, {2, 3, 19}, {1, 4}, {7}};
+  std::vector<int64_t> tptr{0}; std::vector<int32_t> tS;
+  for (auto& S : sup) { tS.insert(tS.end(), S.begin(), S.end()); tptr.push_back((int64_t)tS.size()); }
+  std::string path = tmp_path("wp4_terminal_island.bin");
+  {
+    fmt::Writer w(fmt::K_ISLAND, fmt::M_LAW);
+    Json m = Json::object(); m["N"] = N; m["p"] = p; w.add_json("meta", m);
+    w.add_copy("terminal_S_ptr", fmt::D_I64, tptr.data(), tptr.size() * 8, tptr.size(), 0);
+    w.add_copy("terminal_S", fmt::D_I32, tS.data(), tS.size() * 4, tS.size(), 0);
+    w.write(path);
+  }
+  {
+    fmt::Reader R(path);
+    std::vector<Model> got = merge::read_terminal_supports(R, N, p);
+    CHECK(got == sup);
+    CHECK_THROWS(merge::read_terminal_supports(R, N + 1, p));   // Hm x N or any other count is refused
+    CHECK_THROWS(merge::read_terminal_supports(R, N, 10));      // index out of range
+  }
+  std::remove(path.c_str());
+  // the merge requires exactly N supports per island (or none)
+  std::vector<double> w(p); for (int j = 0; j < p; ++j) w[j] = 0.25 * ((j * 7) % 11) - 1;
+  ToyFactory fac{&w}; ToyEval ev = fac.make();
+  const int R = 2;
+  std::vector<merge::IslandSlot> slots(R);
+  for (int r = 1; r <= R; ++r) {
+    merge::IslandIn& I = slots[r - 1].isl; slots[r - 1].load = merge::Load::ok;
+    I.r = r; I.N = N; I.logZ = -5 - r; I.ess = {5, 6}; I.pip.assign(p, 0.1 * r); I.led = mkled(p, R, false);
+    for (auto& S : sup) { double lm, lg0, d, F; ev(S, lm, lg0, d, F); EventCtx e; e.phase = PH_MEASURED; e.mech = ME_GIBBS_FLIP; e.key.seg = SG_FINAL; e.key.unit = (uint32_t)r; I.led.event(S, zob().hash(S), F, lg0, lm, e, true); }
+    I.led.compact(); I.terminal = sup;
+  }
+  merge::MergeSettings ms; ms.Rp = R; ms.N = N; ms.p = p; ms.K = 5; ms.ell = 2; ms.occ_M = {1, 10}; ms.zob = &zob();
+  auto o = merge::merge_and_tail(slots, mkled(p, R, false), Model{}, fac, ms);
+  CHECK(o.status == Status::completed && o.occ_total == (uint64_t)(R * N) && o.occ_total_r == std::vector<uint64_t>({N, N}));
+  slots[1].isl.terminal.push_back(Model{1, 4});   // N + 1 supports (e.g. a writer that kept more than the last round)
+  auto o2 = merge::merge_and_tail(slots, mkled(p, R, false), Model{}, fac, ms);
+  CHECK(o2.status == Status::invalid_input && !o2.estimates_available);
 }

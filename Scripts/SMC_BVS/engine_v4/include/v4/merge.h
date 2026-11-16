@@ -244,6 +244,13 @@ FitOut merge_stream(IslandSource& src, Ledger&& pre, const Model& mode_S, Factor
       out.reason = "merge refused (GUARD-W): island " + std::to_string(r) + " changed between the head check and its load";
       return out;
     }
+    if (!I.terminal.empty() && (int64_t)I.terminal.size() != (int64_t)I.N) {   // N supports (last measured round) or none
+      out = FitOut(); out.mem = estimate_merge_memory(ms);
+      out.status = Status::invalid_input; out.fit_state = "incomplete";
+      out.reason = "merge refused (GUARD-W): island " + std::to_string(r) + " has " + std::to_string(I.terminal.size()) +
+                   " terminal supports, expected N = " + std::to_string(I.N) + " (the last measured round)";
+      return out;
+    }
     led.merge(I.led);
     out.logZ_r.push_back(I.logZ);
     out.pip_r.push_back(std::move(I.pip));
