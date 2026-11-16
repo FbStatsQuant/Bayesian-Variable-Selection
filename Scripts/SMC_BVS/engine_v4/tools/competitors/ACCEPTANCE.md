@@ -9,8 +9,10 @@ the real API correctly (the mocks of `mock_packages.R` check only our extraction
 inside the department folder; R's temp files go to `$DEPT/tmp/r-install-*`, removed after). Library:
 `$DEPT/R/4.5.2/library`; the user library `~/R/...` is not used. Versions: one dated CRAN
 snapshot (`--snapshot 2026-11-02`); at that snapshot (MEASURED from the snapshot index, 2026-11-16): glmnet 5.2,
-ncvreg 3.16.0, biglasso 1.7.2, bigmemory 4.6.6, L0Learn 2.1.0, susieR 0.14.2, varbvs 2.6-10, BAS 2.0.2 (+ 19 dependencies,
-fewer if the R/4.5.2 module library already has them). glmnet 5 and BAS 2 are major versions above the API the harness
+ncvreg 3.16.0, biglasso 1.7.2, bigmemory 4.6.6, L0Learn 2.1.0, susieR 0.14.2, varbvs 2.6-10, BAS 2.0.2. A bare R plans **the 10 listed packages + 42
+dependencies** (52 in all, incl. the ggplot2 stack that varbvs pulls in; MEASURED by the dry `--resolve` on Owls, R 4.6.0
+without a user library, 2026-11-15); fewer if the R/4.5.2 module library already has some. (The "+ 19" of v0.1 was
+measured with the user library visible.) glmnet 5 and BAS 2 are major versions above the API the harness
 was written against: the acceptance run is where that is checked. The lock file records every package of the installed
 closure with its version and library path (target library or the R module's own). A package installed below its API
 floor is reinstalled; the run fails if any floor is unmet afterwards.

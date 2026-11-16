@@ -135,7 +135,7 @@ def expand():
                         params["calib_seed"] = data_seed + 100 * (K_PREC_CALIB + arm["prec_arm"])
                     else:
                         seed = data_seed + (100 * K_SEED2 if s == 2 else 0)
-                    p = 25 if rung == 1 else (5000 if rung == 3 else 10**rung)
+                    p = 25 if rung == 1 else 10**rung   # (the 5k anchor is block-costed, no rung-3 cell)
                     gdesign = "AR" if design == "AR-weak" else design
                     signal = "weak" if design == "AR-weak" else ("null" if design == "NULL" else "strong")
                     rid = "%s-%s-n%d-r%02d-%s-s%d" % ({1: "x", 4: "4", 5: "5", 6: "6"}[rung], design.replace("-", ""), n, rep, arm["tag"], s)

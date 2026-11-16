@@ -6,7 +6,7 @@
 set -euo pipefail
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 S="$here/install_competitor_packages.sh"
-ROOT=$(realpath -m "$HOME/SMC_Engineering_Department")
+ROOT=$(realpath -m "$(getent passwd "$(id -u)" | cut -d: -f6)/SMC_Engineering_Department")   # as the script: passwd home
 : "${TMPDIR:?set TMPDIR (department tmp folder)}"
 W=$(mktemp -d "$TMPDIR/wp5_install_XXXXXX"); trap 'rm -rf "$W"' EXIT
 fail=0
@@ -22,6 +22,10 @@ expect 64 "--dept sibling prefix refused" -- "$S" --no-modules --dept "${ROOT}_x
 expect 64 "P1M_TEST_ROOT bypass removed" -- env P1M_TEST_ROOT="$HOME" "$S" --no-modules --dept "$HOME/not_dept"
 expect 64 "--download-only outside refused" -- "$S" --no-modules --download-only /tmp/x
 expect 64 "--from-dir outside refused" -- "$S" --no-modules --from-dir /tmp/x
+# PR #19 re-check R-1: the root comes from passwd, so a fake $HOME is refused (and creates nothing)
+expect 64 "HOME override refused" -- env HOME="$W/fakehome" "$S" --no-modules --dept "$W/fakehome/SMC_Engineering_Department"
+[[ ! -e $W/fakehome ]] && echo "  ok   HOME override created nothing" || { echo "  FAIL HOME override created $W/fakehome"; fail=1; }
+expect 2 "empty --download-only refused" -- "$S" --no-modules --download-only ""
 case "$(realpath -m "$W")" in
   "$ROOT"/*) inside=1 ;; *) inside=0 ;;
 esac
@@ -50,7 +54,7 @@ printf 'package\tmin_version\tsnapshot_test\tmethods\tapi\tnotes\naaadep\t0.3\t0
 RV=$(Rscript --vanilla -e 'cat(as.character(getRversion()))'); L="$W/dept/R/$RV/library"
 expect 0 "dry --resolve --from-dir plans the closure" -- "$S" --no-modules --dept "$W/dept" --list "$W/list1.tsv" --resolve --from-dir "$W/from1"
 grep -q zzzbase "$W/out.txt" && echo "  ok   closure lists zzzbase" || { echo "  FAIL closure misses zzzbase"; fail=1; }
-[[ ! -e $W/dept/R ]] && echo "  ok   dry run wrote no library" || { echo "  FAIL dry run created $W/dept/R"; fail=1; }
+[[ ! -e $W/dept ]] && echo "  ok   dry run created nothing in --dept (no library, no tmp/)" || { echo "  FAIL dry run created $W/dept"; ls -R "$W/dept"; fail=1; }
 expect 0 "--apply --from-dir installs in dependency order" -- env CONFIRM=yes "$S" --no-modules --ncpus 1 --dept "$W/dept" --list "$W/list1.tsv" --apply --from-dir "$W/from1"
 [[ -f $L/aaadep/DESCRIPTION && -f $L/zzzbase/DESCRIPTION ]] && echo "  ok   aaadep and zzzbase in the department library" || { echo "  FAIL not installed"; fail=1; }
 lock="$W/dept/R/$RV/competitor_packages.lock.tsv"
