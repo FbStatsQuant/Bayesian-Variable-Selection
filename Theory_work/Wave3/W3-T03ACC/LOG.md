@@ -1,0 +1,18 @@
+# W3-T03ACC — LOG (timestamps from `date`, US Central)
+
+- 2026-11-15 23:30 CST — Lead started (Claude Opus 5.5, effort high, Claude Third; child of the Theory Department
+  manager). Read BRIEF, RIDER_RULES, POLICIES §10/§12/§14, PROTOCOL_v4, PROGRAM. HOLDS.md (origin/main): no holds.
+- 23:33 — Sources copied into `sources/` and pinned (`sources/PINS.md`): W1-T03R @7e14d6f (PROOF/REPORT/NOTES/BRIEF/
+  scripts), [P1] PROOF_v3.tex, [P3] PROOF_v2.tex (+ STATEMENT/FINAL_REPORT/STATUS), 00_COMMON.md, statement of record
+  W6-FIXREV2 STATEMENTS.md (@be2d456), TLF 434–499 (@37b4d2b), SoP TH09 card, registry row. The locked proofs' review/
+  folders went to `reviews/context/` (outside manifests). SF/XF reports pinned only (PINS §D), not copied.
+- 23:35 — STATEMENT.md v1.0, PLAN.md, TARGET.md, READER_DELTA.md written.
+- 23:38 — `reviews/BRIEF_SL1_sol.md` saved; `reviews/MANIFEST_SL1.txt` frozen: MANIFEST
+  161f3f56ef7ac80be898702f1dce94e1470d3f019c5caba65df1cdf88fa1c977 (34 files).
+- 23:38 — Agent started: **SL1 statement lock**, Sol = codex gpt-6.1-sol, reasoningEffort high, fresh, blind, mode async
+  (Codex congested until ~midday 11-16; queued). Task `w3-t03acc-sl1-sol-20261115`.
+- 23:38 — Manager note received: HQ's blind API Fable audit of the T03♯ proof will land in `api/`. Proof material only
+  (v4 H3); every FATAL/MAJOR to be dispositioned before the council freeze; never given to blind seats. Since
+  `manifest.py freeze` covers every file of the folder except `reviews/`, `api/` will be moved to `reviews/api/`
+  before any later freeze.
+- 23:40 — CHECKPOINT_1.md written; run ends (manager answers CP1).
