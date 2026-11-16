@@ -132,3 +132,4 @@
 - 23:31 — D49: W3-T03ACC launched (child); SL0 PC check (Sol) launched; READER told forms A/B; HQ answered (TH05.0 not under abstract rows; API file list).
 - 23:32 — recorder: C + H fallback real runs on main f526e45b (W2-APP 10 rows recorded conditional; 11 consumers re-statused; Cont-R extended); check 468/0. D-7 staged (469/0) → HQ approval asked. READER told the new verbatim statuses.
 - 23:33 — HQ: blind Fable audit of T03♯ submitted (2 samples, 64k); results → W3-T03ACC/api/ (not a review layer; dispositions before council freeze; not given to blind seats) — lead told. TH05.0 post-freeze agreed.
+- 23:33 — HQ approved D-7 real run; recorder told (then F-UNI gate; Cont-F/R after CP3s).
