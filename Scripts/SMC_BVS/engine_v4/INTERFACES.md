@@ -1,6 +1,6 @@
 # INTERFACES — engine v4 contract between WP1–WP5
 
-**v0.1.7 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-15. Source: ENGINEERING_SPEC §0-v2,
+**v0.1.8 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-15. Source: ENGINEERING_SPEC §0-v2,
 §1–§3, §6. Where this file is silent, the spec rules; where the spec is silent, `core/` (v3.1 / revision D) rules.
 Questions and change requests: to the WP1 owner through the manager. Line references `core/...:N` are to revision D.
 
@@ -290,9 +290,20 @@ Sections (names fixed; WPs may add sections, never rename):
   `mode_S`, table top stores `tstore_{top,lead0,lead1}_{v,off,len,hash,pool}`, `meta`.
 - `calib.bin` (WP4): `grid`, `meta` {tier, N, L, Hm, I_used, flags, triggers}, `grids_all_ptr/grids_all`, stage
   records, calibration stores (as stores), HPM (`hpm_S`, `hpm_ev`), `logical` u64 N_PHASE×N_MECH.
-- `island_r.bin` (WP3): stage table (`st_phi, st_inc, st_ess, st_cum, st_distinct_res, st_distinct_moved`, moves
-  u64 T×11), `logZ` in meta, `rb_acc` p, `rb_round` 4×p, `pip_r` p, `top_*` (flat store, sorted), `hpm_*`,
-  `island_best`, `logical`, `status`/timings in meta; optional `terminal_S_ptr/terminal_S`.
+- `island_r.bin` (WP3; `include/v4/island/island_file.h`):
+  - `meta` holds r, N, T, L, Hm, p, status, reason, inputs, binary, timings, `logZ_hex` and `init_hash`.
+  - Schedule: `grid` f64 [T+1].
+  - Stage table (f64 / i32 [T]): `st_phi`, `st_ess`, `st_inc`, `st_cum`, `st_distinct_res`, `st_distinct_moved`.
+  - Moves: `st_moves` u64 [T × 12] (MoveStats in records.h field order, `gibbs_cap` included); `term_moves` u64
+    [(L + Hm) × 12] (burn-in rounds, then measured rounds); `term_distinct` i32 [L + Hm].
+  - Store: `top_v`, `top_hash`, `top_off`, `top_len`, `top_pool` (compacted, sorted).
+  - HPM: `hpm_S` i32 [k]; `hpm_val` f64 [2] (F, log m); `hpm_ev` i64 [12] (seg, tier, iter, unit, xph, stage, round,
+    particle, position, sub, phase, mech).
+  - `island_best` f64 [r + 1] (entry r = this island's maximum, the others −inf); `logical` u64 [N_PHASE × N_MECH].
+  - Estimates, written only if status = completed (GUARD-W): `logZ` f64 [1], `st_inc`, `st_cum`, `rb_acc` and `pip_r`
+    f64 [p], `rb_round` f64 [**Hm** × p].
+  - Terminal supports, also completed only: `terminal_S_ptr` i64 [N + 1] and `terminal_S` i32, the N supports after the
+    last measured round, in particle order (WP4: occupancy, Ẑ_occ).
 - `fit.bin` + `fit.json` (WP4): merged `top_*`, `hpm_*` + provenance, `hpm_before_local_*`, local-search archive,
   `mode_S`, LS0, near ties, `logZ_r`, `pip_eq`, `pip_Z`, `pip_T`, `rb_*`, flags; `fit.json` scalars and hashes only.
   No leader stores in `island_r.bin` or `fit.bin`, in any mode (§4.1; on the compat exclusion list).
@@ -426,3 +437,6 @@ point, so all WPs link from day one: `setup::run`, `island::run`, `calib::run`, 
 - v0.1.7 (2026-11-15, WP1; D-26, D-7 / PSMC-S0) — §7: status `schedule_limit` (6, exit 16; theory/compat calibration
   only; fit precedence after `resource_limit`). §4.1/§5.1: final-run leader stores are not outputs in any mode; compat
   comparisons exclude them.
+- v0.1.8 (2026-11-16, WP1; PR21 review m1) — §5.1 `island_r.bin` aligned with WP3's code (no code change): `st_moves`
+  T × 12 (`gibbs_cap`), `rb_round` Hm × p, terminal supports N, and the sections `grid`, `term_moves`, `term_distinct`,
+  `hpm_val`, `hpm_ev`; estimate sections (incl. `st_inc`, `st_cum`) only when completed.
