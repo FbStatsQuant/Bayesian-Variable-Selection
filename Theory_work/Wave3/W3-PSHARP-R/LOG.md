@@ -11,3 +11,7 @@
 - 2026-11-15 19:38 CST — Drafts STATEMENT.md v1.0 (delta), PLAN.md v1.0 written. Brief saved: reviews/BRIEF_L01_sol.md. Launching L01 statement lock: codex gpt-6.1-sol, reasoningEffort high (role: statement lock, fresh, blind).
 - 2026-11-15 19:40 CST — L01 launched (codex gpt-6.1-sol, high; task node …0ff55cf4). Meanwhile: TARGET.md, READER_DELTA.md v0.1, DEPS.tsv (by hand, sha256sum) written. No lemma written before CP1 (v4 §3.2).
 - 2026-11-15 19:48 CST — Manager memo received (owner memo via HQ, POLICIES.md 34ce461a): Opus/Sonnet helpers within the brief's allowance; Fable expert only with permission; report big problems at once. No change to this ticket's plan (no Fable needed). L01 still running.
+- 2026-11-15 19:53 CST — Manager: owner's final rule (POLICIES §4, §8): Opus/Sonnet/Haiku helpers free within brief; new Fable needs owner green light. No change here. L01 still running.
+- 2026-11-15 20:01 CST — Manager: POLICIES §9 (expensive resources by ≤10-line request). Not needed for this ticket. L01 still running.
+- 2026-11-15 20:03 CST — Manager: POLICIES §10 (never shut down/cancel/settle any thread or agent). Noted; L01 left running. 
+- 2026-11-15 20:04 CST — Manager: FINAL POLICIES §10 — never cancel/interrupt running work; settle own finished reviewers/helpers allowed; never archive/delete. L01 still running.
