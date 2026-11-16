@@ -156,8 +156,12 @@ headline clause changes for the paper as planned): a lower bound √(log n/n) on
 | 4 | Theorem 9 sharpness bundle (order already set, card 13) | Row 2.1: (A4) on a smaller window, averaged (item 1); level in log(p ∨ n) with A explicit (8(a) + 10); radius linear in s in display (iii) (item 9, the s³ flag) | As costed in `UNHARVESTED_STRENGTH.md`; each is constant or restatement work in `lemmas/X.md`, `DIST12.md` | Opus lead ≈ 3 days in all; Tier B; statement-change checks | item 8(b) (constant free of A) excluded: it may be false; item 9: 2 attempts |
 | 5 | Printed estimates on leaky designs (what AR needs) | Row 3.6 on AR and BLK: PIP and MPM clauses without start concentration | New key lemma: non-collapse of the evidence weight (NC_r) for the tempered sampler when the start law sits on the lattice of a small leakage set, then `W3-SAMP:LT#` (LT-e) as recorded. No recorded route; sharp3 lists it as open (C9, L10, T5) | Opus lead ≥ 5 days, Fable for the key lemma with HQ's OK; Tier A; high risk | 3 attempts on the key lemma (STUCK rule); go only after a half-day feasibility note |
 
-**My ranking by value per cost:** 2, 3, 1, 4, 5. HQ fixed #1 first; I keep that order in the table. If only three tickets
-are opened (BRIEF), I recommend 1, 2, 3, with 5 as a feasibility note only.
+**Order (recorded 2026-11-16).**
+
+| | Order | Notes |
+|---|---|---|
+| **HQ decision** | **#2 → #3 → #1**; #4 deferred; #5 decided on the note in §5a | at most 3 tickets, post-freeze from Sat 11-21, and only after the Opus check confirms the [audit calc] lines. Kill budgets set by HQ: #2 1.5 days (estimate 1), #3 3 days (estimate ≈ 2), #1 4 days (estimate ≈ 3). #5 may replace #1 only if §5a shows a realistic route to a printed-output clause on AR; otherwise row 3.6 stays scoped as worded and AR coverage stays with Theorem 6 and row 3.5 |
+| My value-per-cost order | 2, 3, 1, 4, 5 | the same first three; the table above keeps the numbering of the first pass (HQ's #1 scoped first) |
 
 **Considered, not ranked.** Aggregated leak for row 3.1 (real, small, but no design of ours moves); the equicorrelated
 group up to b = 3/8; SAMP-R1 and the row 3.6 rate swap to √(log n/n) (already queued riders; restatements); POST2-R1;
@@ -253,5 +257,14 @@ If both pass: Tier A, Fable for the key lemma with HQ's OK, 3 attempts (STUCK ru
   and Ẑ are sampler averages. Printing the list-based quantities would be a code change (Engineering and HQ).
 - The printed MPM alone is **not** reachable without at least (OCC): it depends on where the final particles are.
 
-**Recommendation.** Open the store-restricted clause as a cheap ticket (call it #5′); buy the G1/G2 gate only if HQ wants
-the printed fields themselves on AR.
+**Answer to HQ's question: does this note show a realistic route to a printed-output clause on AR?**
+- For the **printed fields** (the sampler's PIPs, MPM and Ẑ): **no, not today.** The route above is a plan with two
+  untested steps (G1, G2), no recorded mixing or variance result to stand on, and a new key lemma after that. It is
+  plausible, not realistic within a kill budget of a few days.
+- The printed **reported model** on AR is already covered (Theorem 6), and the printed evidence is unbiased (row 3.5).
+- The store-restricted clause is realistic (Tier B, 1–2 days) but it is a statement about quantities computed from the
+  returned list, **not** about printed fields. It is a separate cheap item (#5′), not a substitute for #1.
+
+**Go / no-go (one line): NO-GO for #5 replacing #1 — there is no realistic route to a clause on the printed PIPs, MPM or
+Ẑ on AR; keep row 3.6 scoped as worded, with AR covered by Theorem 6 and row 3.5; optional: #5′ (store-restricted
+clause) and, only if HQ wants to keep the question alive, the 2-day G1/G2 gate.**

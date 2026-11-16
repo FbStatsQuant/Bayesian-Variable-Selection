@@ -242,5 +242,11 @@ Ranked candidates (gain · cost · kill budget in `TRACK_D.md` §2):
 5. **Printed estimates on leaky designs** (what AR needs): a non-collapse lemma for the tempered sampler. Tier A, high
    risk; feasibility note first.
 
+**HQ order (2026-11-16):** #2 → #3 → #1 (kill budgets 1.5, 3 and 4 days), at most three tickets, post-freeze from Sat
+11-21 and only after the independent check of the [audit calc] lines; #4 deferred. #5: the feasibility note
+(`TRACK_D.md` §5a) ends NO-GO for replacing #1 — no realistic route to a clause on the printed PIPs, MPM or Ẑ on AR —
+so row 3.6 stays scoped as worded and AR coverage stays with Theorem 6 and row 3.5. A store-restricted clause on AR
+(list-based PIPs and evidence sum; not printed fields) is reachable at Tier B and is listed as an optional item #5′.
+
 X1–X5: X1, X3, X5 are lemmas (Tier B); X2, X4 are relabellings (recorder). The [audit calc] lines on which a verdict
 depends are listed in `TRACK_D.md` §4.
