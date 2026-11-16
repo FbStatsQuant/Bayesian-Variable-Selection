@@ -1,0 +1,21 @@
+# External inputs for the W3-READER CP3 council (repo-relative; manifest.py --extra)
+Theory_work/Wave3/W3-POST/STATEMENT.md
+Theory_work/Wave3/W3-POST/lemmas
+Theory_work/Wave3/W3-POST2/STATEMENT.md
+Theory_work/Wave3/W3-POST2/lemmas
+Theory_work/Wave2/W2-APP/lemmas/L1_POST.md
+Theory_work/Wave3/W3-PSHARP/STATEMENT.md
+Theory_work/Wave3/W3-MISR/STATEMENT.md
+Theory_work/Wave3/W3-START/STATEMENT.md
+Theory_work/Wave3/W3-START2/STATEMENT.md
+Theory_work/Wave3/W3-RM/STATEMENT.md
+Theory_work/Wave3/W3-RM2/STATEMENT.md
+Theory_work/Wave3/W3-SAMP/STATEMENT.md
+Theory_work/Wave3/W3-SCR/STATEMENT.md
+Theory_work/Wave1/W1-N1/STATEMENT.md
+Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md
+Theory_work/Wave2/W2-UNI/lemmas/L5_delivery.md
+Theory_work/Wave1C/C-DLV/STATEMENT.md
+Theory_work/Wave1C/FINAL/sections/s6_delivery.tex
+Theory_work/Wave1C/C-PACK/lemmas/I4_SL_corollaries.md
+Scripts/SMC_BVS/core
