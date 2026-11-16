@@ -92,16 +92,20 @@ Fx make_fx(const std::string& tag, int R, uint32_t mode = fmt::M_COMPAT) {
   std::sort(f.inh.begin(), f.inh.end(), [](const merge::InheritedModel& a, const merge::InheritedModel& b) { return lex_less(a.S, b.S); });
   f.calib_hpm = cl.hpmS; f.calib_ev = cl.hpm_ev;
   calib::CalibOut co; co.status = calib::CalStatus::ok; co.tier_final = 0; co.has_frozen = true;
+  co.rule = mode == fmt::M_V ? calib::Rule::bounded : calib::Rule::coded;   // V: bounded rule, N = 2,500 (D-1, D-26)
+  const int Nfx = mode == fmt::M_V ? calib::V_N : 50;
+  static calib::Settings cset; cset.rule = co.rule; cset.I_max = 1; cset.tiers[0].ell = 3; cset.tiers[0].H = 64; cset.tiers[0].Te = 40;
   co.frozen.grid = f.grid; co.frozen.grid_unrefined = co.frozen.grid; co.frozen.grid_label = "rebuild_1"; co.I_used = 1;
   calib::TierOut t0; t0.tier = 0; t0.has_triggers = true; calib::GridRecord gr; gr.label = "preliminary"; gr.grid = f.grid; t0.grids.push_back(gr);
   co.tiers.push_back(t0);
-  wp4io::CalibWrite cw; cw.mode = mode; cw.co = &co; cw.led = &cl; cw.inherited = f.inh; cw.N = 50; cw.L = 4; cw.Hm = 4;
+  wp4io::CalibWrite cw; cw.mode = mode; cw.co = &co; cw.led = &cl; cw.inherited = f.inh; cw.N = Nfx; cw.L = 4; cw.Hm = 4;
+  cw.settings = &cset; cw.k_store = 2.0;
   cw.inputs["data.bin"] = f.dhash; cw.inputs["setup.bin"] = f.shash;
   f.cpath = tmp_path(tag + "_calib.bin");
   f.chash = wp4io::write_calib(f.cpath, cw);
   // islands
   for (int r = 1; r <= R; ++r) {
-    merge::IslandIn I; I.r = r; I.N = 50; I.T = 3; I.L = 4; I.Hm = 4; I.logZ = -30 + 0.07 * r; I.ess = {40, 45, 48};
+    merge::IslandIn I; I.r = r; I.N = Nfx; I.T = 3; I.L = 4; I.Hm = 4; I.logZ = -30 + 0.07 * r; I.ess = {40, 45, 48};
     I.pip.resize(p); I.rb_acc.resize(p);
     for (int j = 0; j < p; ++j) { I.pip[j] = std::fmod(0.017 * (j + 1) * (r + 3), 1.0); I.rb_acc[j] = I.pip[j] * 200; }
     I.rb_round.assign(4, std::vector<double>(p, 1.0));
@@ -112,6 +116,7 @@ Fx make_fx(const std::string& tag, int R, uint32_t mode = fmt::M_COMPAT) {
       e.key.stage = 3; e.key.round = 1 + t / 100; e.key.particle = 1 + t % 100; e.key.position = 1 + (uint32_t)(g() % 30); e.key.sub = 1;
       I.led.event(M, f.D.zob.hash(M), F, lg0, lm, e, true);
       if (t >= 350) I.terminal.push_back(M);
+      if (t == 399) while ((int)I.terminal.size() < Nfx) I.terminal.push_back(I.terminal[I.terminal.size() % 50]);   // N supports
     }
     I.led.compact();
     f.isl.push_back(I);
