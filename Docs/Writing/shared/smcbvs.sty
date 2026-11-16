@@ -1,0 +1,109 @@
+% smcbvs.sty -- shared notation and environments for the SMC-BVS paper sections
+% (Writing Department). Used by D1 (methodology) and D2 (results). One notation system:
+% every symbol defined here is introduced in the text of D1, Section 1, and recalled in D2, Section 2.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{smcbvs}[2026/11/16 SMC-BVS shared notation]
+
+\RequirePackage{amsmath,amssymb,amsthm,mathtools,bm}
+\RequirePackage{xcolor}
+\RequirePackage{enumitem}
+\RequirePackage{booktabs,longtable,array,tabularx}
+\RequirePackage[hidelinks]{hyperref}
+% cleveref not installed on Owls
+
+% ---------------------------------------------------------------- toggles
+% Status notes are for the owner and HQ; \showstatusfalse removes them for submission.
+\newif\ifshowstatus \showstatustrue
+
+% ---------------------------------------------------------------- theorem environments
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% Named assumptions: \begin{assumption}{BM}{Beta-min} ... \end{assumption}
+% The label is printed as (BM) and can be cited with \as{BM}; \label is automatic (asm:BM).
+\newenvironment{assumption}[2]{%
+  \par\smallskip\noindent
+  \phantomsection\label{asm:#1}%
+  \textbf{Assumption (#1)} \textit{(#2).}\ \ignorespaces}{\par\smallskip}
+\newcommand{\as}[1]{\hyperref[asm:#1]{\textup{(#1)}}}
+% "What it rules out" line, inside an assumption.
+\newcommand{\rulesout}[1]{\par\noindent\hspace*{1.5em}{\small\textit{What it rules out:} #1}}
+
+% In-words paragraph before a formal statement.
+\newcommand{\inwords}[1]{\par\medskip\noindent\textit{In words.} #1\par}
+
+% Status note (outside the theorem environment).
+\newcommand{\status}[1]{\ifshowstatus\par\noindent
+  \fcolorbox{gray!60}{gray!8}{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule}{\footnotesize
+  \textsf{Status (internal note, removed for submission):} #1}}\par\medskip\fi}
+
+% ---------------------------------------------------------------- sets and numbers
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\one}{\mathbf{1}}
+\newcommand{\ind}[1]{\mathbf{1}\{#1\}}
+\newcommand{\set}[1]{[#1]}                 % [p] = {1,...,p}
+\newcommand{\abs}[1]{\lvert #1\rvert}
+\newcommand{\norm}[1]{\lVert #1\rVert}
+
+% ---------------------------------------------------------------- probability
+\DeclareMathOperator{\E}{\mathbb{E}}
+\renewcommand{\P}{\mathbb{P}}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Corr}{Corr}
+\DeclareMathOperator{\sd}{sd}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\Normal}{\mathrm{N}}
+\newcommand{\IG}{\mathrm{IG}}
+\newcommand{\BetaDist}{\mathrm{Beta}}
+\newcommand{\BB}{\mathrm{BB}}
+\newcommand{\OP}{O_{\P}}
+\newcommand{\oP}{o_{\P}}
+\newcommand{\lmin}{\lambda_{\min}}
+
+% ---------------------------------------------------------------- data and model
+\newcommand{\yr}{y^{\mathrm r}}            % raw response
+\newcommand{\Xr}{X^{\mathrm r}}            % raw design
+\newcommand{\praw}{p_{\mathrm{raw}}}       % raw number of columns
+\newcommand{\sigs}{\sigma_*}               % true noise s.d.
+\newcommand{\bstar}{\beta^*}
+\newcommand{\tstar}{\theta^*}
+\newcommand{\tmin}{\theta^*_{\min}}
+\newcommand{\Sz}{S_0}
+\newcommand{\sz}{s_0}
+\newcommand{\Rhat}{\hat R}
+\newcommand{\Sig}{\Sigma_n}
+\newcommand{\rate}{r_n}                    % reference rate sqrt(log n / n)
+\newcommand{\rn}{\sqrt{\log n/n}}
+
+% ---------------------------------------------------------------- prior and posterior
+\newcommand{\Om}{\Omega}
+\newcommand{\post}{\pi(\cdot\mid y)}
+\newcommand{\pis}[1]{\pi(#1\mid y)}
+\newcommand{\PIP}{\mathrm{PIP}}
+\newcommand{\HPM}{\mathrm{HPM}}
+\newcommand{\MPM}{\mathrm{MPM}}
+\newcommand{\miss}{\delta_n}               % posterior miss 1 - pi(S0|y)
+
+% ---------------------------------------------------------------- the method
+\newcommand{\tSz}{\tilde S_0}              % start mode
+\newcommand{\Shat}{\hat S}                 % reported model
+\newcommand{\Zhat}{\hat Z}
+\newcommand{\PIPhat}{\widehat{\mathrm{PIP}}}
+\newcommand{\MPMhat}{\widehat{\mathrm{MPM}}}
+\newcommand{\Lat}{\mathcal L}              % lattice of a leakage set
+\newcommand{\Dom}{\mathfrak D}             % bounded delivery domain
+\newcommand{\Out}{\mathcal O}              % event: the run produces output
+\newcommand{\Acal}{\mathcal A}
+
+\endinput
