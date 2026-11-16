@@ -195,7 +195,9 @@ abstract form (Form A / Form B below).
     for the coded prior — verified independently by reviewers of the same and of a different model family, but without
     a council review yet — the posterior …"*, stated **once** for the abstract rows that rest on it (1.1, 1.2, 3.1).
   - **B2 (body):** row 1.1 moves to the body; then rows 1.2 and 3.1, which rest on the same theorem, move with it.
-  - **Recommendation: B1.** Row 1.1 is the foundation of pillar 1, and rows 1.2 and 3.1 (the main theorem) rest on
+  - **HQ decision (2026-11-16): Form A if W3-T03ACC passes, B1 otherwise (sentence approved as written); B2 rejected;
+    the expectation display and Theorem 1′ stay in the body with their conditions; the abstract uses Theorem 1's $O_P$
+    form.** Lead's earlier recommendation: B1. Row 1.1 is the foundation of pillar 1, and rows 1.2 and 3.1 (the main theorem) rest on
     the same theorem; B2 would empty the abstract of its main results, while B1 keeps them with an honest, single
     condition sentence that the reader can check against the statuses.
 

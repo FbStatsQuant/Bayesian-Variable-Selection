@@ -84,8 +84,9 @@ may carry an unchecked "conditional on" input only if the abstract states it [H5
   ($O_P$ form), 1.2 and 3.1 as below, with SL0's condition stated until the Sol PC check clears it. **Form B** (it
   misses): **B1, recommended** — one sentence states the shared condition in reader words, *"conditional on the
   posterior concentration theorem for the coded prior, which has been verified independently by reviewers of the same
-  and of a different model family but has not yet passed a council review"*, for rows 1.1, 1.2 and 3.1; **B2** — rows
-  1.1, 1.2 and 3.1 move to the body together (they rest on the same theorem). Reader words for SL0, while it is open:
+  and of a different model family but has not yet passed a council review"*, for rows 1.1, 1.2 and 3.1; ~~B2~~ (rejected by HQ, 2026-11-16). **HQ decision:** Form A if
+  W3-T03ACC passes, B1 otherwise; the abstract uses Theorem 1's $O_P$ form; the expectation display and Theorem 1′ stay
+  in the body with their conditions. Reader words for SL0, while it is open:
   *"and on the elementary lemma that turns the posterior mass of the true model into statements about the HPM, MPM and
   PIPs, which has a cross-family check"*.
 - **3.1** main theorem. The abstract leads with the clause that needs no delivery convention: *"on one data event of
