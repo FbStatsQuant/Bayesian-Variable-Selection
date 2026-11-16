@@ -202,8 +202,8 @@ TEST(golden_island_vs_core_engine) {
 // stream: every output in bits (RB, rb_round and PIPs included) and the stream position at the end. The leader stores
 // (not outputs: INTERFACES v0.1.7) are compared too, with the test-only option `leaders`.
 TEST(golden_compat_island_vs_core_serial_stream) {
-  for (int variant = 0; variant < 2; ++variant) {
-    int n = variant ? 80 : 100, p = variant ? 150 : 220, N = variant ? 40 : 30;
+  for (int variant = 0; variant < 3; ++variant) {   // variant 2: n = 12 (K = 6), the Gibbs cap is reached (review m6)
+    int n = variant == 2 ? 12 : (variant ? 80 : 100), p = variant == 2 ? 60 : (variant ? 150 : 220), N = variant ? 40 : 30;
     Twin W(n, p, 60 + variant, variant ? 5 : 4);
     std::vector<double> grid = variant ? std::vector<double>{0.0, 0.02, 0.1, 0.3, 0.6, 1.0} : std::vector<double>{0.0, 0.1, 0.4, 1.0};
     int L = 2, Hm = 3, B = 14, r = 3; uint32_t seed = 17 + variant;
@@ -235,7 +235,9 @@ TEST(golden_compat_island_vs_core_serial_stream) {
     CHECKF(same_store(L3.lead0.s, R.lead0_v, R.lead0_off, R.lead0_len, R.lead0_pool), "compat %d: lead0 (%zu vs %zu)", variant, L3.lead0.s.size(), R.lead0_v.size());
     CHECKF(same_store(L3.lead1.s, R.lead1_v, R.lead1_off, R.lead1_len, R.lead1_pool), "compat %d: lead1 (%zu vs %zu)", variant, L3.lead1.s.size(), R.lead1_v.size());
     CHECKF(src.g.count == R.stream_count, "compat %d: stream position %llu vs %llu", variant, (unsigned long long)src.g.count, (unsigned long long)R.stream_count);
-    std::printf("  compat %d: logZ %.12f, %llu draws, store %zu, lead0 %zu, lead1 %zu\n", variant, R.logZ, (unsigned long long)R.stream_count,
-                R.top_v.size(), R.lead0_v.size(), R.lead1_v.size());
+    uint64_t cap = 0; for (auto& sr : R.stages) cap += sr.moves.gibbs_cap; for (auto& tm : R.terminal_moves) cap += tm.gibbs_cap;
+    if (variant == 2) CHECKF(cap > 0, "compat %d: the cap was never reached", variant);
+    std::printf("  compat %d: logZ %.12f, %llu draws, store %zu, lead0 %zu, lead1 %zu, cap steps %llu\n", variant, R.logZ, (unsigned long long)R.stream_count,
+                R.top_v.size(), R.lead0_v.size(), R.lead1_v.size(), (unsigned long long)cap);
   }
 }

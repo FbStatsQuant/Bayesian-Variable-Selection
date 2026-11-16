@@ -43,9 +43,14 @@ inline bool same_model_ref(const StoreRef& a, const StoreRef& b) { return a.h ==
 // Live kept runs (current + being built + snapshots still held), counted for the memory bound (review PR21 M2).
 inline std::atomic<int>& kept_live() { static std::atomic<int> n{0}; return n; }
 inline std::atomic<int>& kept_live_max() { static std::atomic<int> n{0}; return n; }
-struct Kept {
-  Kept() { int v = ++kept_live(); int m = kept_live_max().load(); while (v > m && !kept_live_max().compare_exchange_weak(m, v)) {} }
-  ~Kept() { --kept_live(); }
+struct Kept {   // counted only once it holds entries (empty placeholders are not kept runs; review PR24 m4)
+  bool counted = false;
+  Kept() = default;
+  void count_live() {
+    if (counted || v.empty()) return;
+    counted = true; int c = ++kept_live(); int m = kept_live_max().load(); while (c > m && !kept_live_max().compare_exchange_weak(m, c)) {}
+  }
+  ~Kept() { if (counted) --kept_live(); }
   Kept(const Kept&) = delete; Kept& operator=(const Kept&) = delete;
   std::vector<double> v; std::vector<uint64_t> hash, off; std::vector<uint16_t> len; std::vector<int32_t> pool;
   std::vector<uint32_t> index; uint64_t imask = 0;   // open addressing over the entries (slot value = entry + 1)
@@ -192,6 +197,7 @@ class TopStore {
       if (hs && (!hr || ord_less(K.ref(i), r[j]))) { put(K.ref(i)); ++i; } else { put(r[j]); ++j; }
     }
     nk->rebuild_index();
+    nk->count_live();
     stage.clear();
     { std::lock_guard<std::mutex> lk(snap_mu); k = nk; }
     gen.fetch_add(1, std::memory_order_acq_rel);
@@ -287,6 +293,7 @@ class TopStore {
         sl = (sl + 1) & mask;
       }
     }
+    nk->count_live();
     stage.clear();
     { std::lock_guard<std::mutex> lk2(snap_mu); k = nk; }
     gen.fetch_add(1, std::memory_order_acq_rel);
@@ -294,7 +301,7 @@ class TopStore {
     t_compact += std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
   }
   // after loading a kept run (checkpoint): index, tau, generation
-  void publish_loaded() { k->rebuild_index(); gen.fetch_add(1); tau.store(k->size() >= cap ? k->v.back() : NEG_INF); }
+  void publish_loaded() { k->rebuild_index(); k->count_live(); gen.fetch_add(1); tau.store(k->size() >= cap ? k->v.back() : NEG_INF); }
   // I1 check: strictly sorted, no duplicates, size <= cap (valid after compact())
   // I1, linear and allocation-free (review m8a): strictly sorted (=> no exact duplicates of (v, S)), size <= cap, and
   // no model twice (every entry's hash-index lookup returns the entry itself).
