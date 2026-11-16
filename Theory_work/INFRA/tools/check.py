@@ -192,7 +192,7 @@ def run(acceptance=None, consumed=None):
     for r in rows:
         cid = r["id"]
         acks = set(R.split_list(r.get("acks", "")))
-        s_me = R.status_strength(r.get("status", ""))
+        s_me = R.row_strength(r)
         for d in g.deps.get(cid, []):
             dr = by[d]
             if r["state"] in R.VALID and dr["state"] in BLOCKING and d not in acks:
@@ -201,7 +201,7 @@ def run(acceptance=None, consumed=None):
             elif dr["state"] == "SUPERSEDED-VALID":
                 add("INFO", "C4-lifecycle", cid, f"uses {d}, SUPERSEDED-VALID by {dr.get('superseded_by')} "
                     "(still true; re-point after a check: propagate.py confirm-repoint)")
-            s_d = R.status_strength(dr.get("status", ""))
+            s_d = R.row_strength(dr)
             if isinstance(s_me, int) and isinstance(s_d, int) and s_me == 3 and s_d <= 1 and d not in acks:
                 add("WARN", "C5-strength", cid, f"status {R.status_token(r['status'])!r} rests on {d} "
                     f"({dr.get('status', '')[:90]!r})")
@@ -526,7 +526,7 @@ def claim_checks(cid, r, fold, by, aliases, g, memo, add):
                 "proposal as better-proposal:<label>(<review>) with better-disposition:<label>=...(<evidence>)")
     else:
         add("INFO", "A1-gates", cid, "not a headline (headline != yes): strength gates not required")
-    if R.status_strength(r.get("status", "")) != 3:
+    if R.row_strength(r) != 3:
         return
     # F2 / R10: correctness evidence and a CP3-PASS council record for EVERY checked claim
     cprobs = R.council_problems(r, fold, list(by.values()))
@@ -541,7 +541,7 @@ def claim_checks(cid, r, fold, by, aliases, g, memo, add):
     for d in g.deps.get(cid, []):
         dr = by[d]
         uses = g.uses[(cid, d)]
-        s_d = R.status_strength(dr.get("status", ""))
+        s_d = R.row_strength(dr)
         if uses == {"hyp"}:
             if not R.weak_or_invalid(dr):
                 continue
@@ -576,7 +576,7 @@ def claim_checks(cid, r, fold, by, aliases, g, memo, add):
                 f"<{w} or its name>'")
     for e_, path in sorted(R.consumers(cid, g).items()):
         er = by[e_]
-        if er["state"] in R.DEAD or R.status_strength(er.get("status", "")) != 3:
+        if er["state"] in R.DEAD or R.row_strength(er) != 3:
             continue
         for w in sorted(own):
             if not R.conditional_on(er.get("status", ""), R.claim_names(w, by, aliases)):
