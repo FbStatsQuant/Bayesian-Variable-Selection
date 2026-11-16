@@ -52,6 +52,8 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 | SL0 PC check (RUNNING, pre-freeze per HQ) | C-PACK:SL0: diff check of the 5 files changed since the C1 snapshot → record SL0 → drop SL0 from 11 conditional statuses | D48 |
 | accept-identity follow-ups | NB-3 sunset of the legacy Windows fallback; NB-4 compute identity once | CR_accept_identity_opus.md |
 | Cont-R TH05.0 condition | Cont-R still lists SOP:TH05.0 (inherited via the removed RM-R edge); drop via a new full RM2 checkpoint | recorder note 11-16; HQ 11-16: conservative (extra condition only), post-freeze package together with TH05.0's own acceptance |
+| Post-freeze item 1 (first week): 6 SUSPECT delivery dependents | W2-FAC-X X6.X6.4, X7; W2-FAC-S5F:C4; HQ_AUDIT-W2 B1/B3/B4 (+ W2-FAC-X:Cor-FAC-NCS if confirmed): in-span narrowing to 𝔇 / A:IDEAL-W⁺ | HQ 11-16 (D79) |
+| Post-freeze: HQ_AUDIT-W1C:A2 allocation | A2's allocation lacks A4's LS0 preflight terms | HQ 11-16 |
 | Post-freeze tool list: manifest.py honours .gitignore | MANIFEST_R2 of W3-DIST hashed git-ignored numerics (R2r CITATION-ONLY used) | HQ 11-16 |
 | Post-freeze DIST sharpness review (order HQ/consultant) | 1: (A4) via narrower (ND), design-agnostic tie-break; 2: 8(a)+10 log(p∨n) rate with explicit A; 3: 9 linear s₀ in (iii), uniform in s₀; 8(b) kill budget | card 13, 11-16 |
 | Post-freeze: IDEAL-W⁺ ceilings | settled by arithmetic (never bind: n+p+1 > 2^(10⁶) or n ≳ 4e9) — state in body as fact (RM2-R reader delta); optional log grep for the two stop messages, one Haiku read-only pass, only if free | HQ card 14, 11-16 |
