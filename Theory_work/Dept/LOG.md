@@ -318,3 +318,4 @@
 - W3-AUDIT: worktree /home/fb31/BVS-wt/W3-AUDIT (theory/W3-AUDIT @ a7fc5093). Launched the audit Fable 5.2 high (delegate 48b73dad) and the Opus track A inventory (delegate ccb6403d). Track C plan (Sonnet) after the inventory lands. Song–Liang PDF not on Owls (Windows path only): the Fable uses SONG_LIANG_MAP + the public paper.
 - Writing open items (C*, 32s₀, moderate-n Remark 3.7, noiseless gain/SS): Opus helper (delegate 263f2e2b) → WRITING/Docs/Writing/from_theory/ANSWERS_2026-11-16.md + copy in Dept/writing_answers/.
 - Slots: recorder + 2 Opus helpers = 3; audit Fable outside the cap. Codex: none before 16:20; one read per gate.
+- 2026-11-16 16:08 CST HQ: Song & Liang 2015 PDF on Owls at /home/fb31/SMC_Theory_Department/refs/Song_Liang_2015.pdf (sha256 315c247c…; out of git). Audit Fable steered: track B must cite the paper itself (thm/eq/page); the map is a finding aid only.
