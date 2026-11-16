@@ -10,3 +10,6 @@
 - 2026-11-15 20:01 CST — manager: POLICIES §9 (expensive-resource requests, ≤10 lines via manager). Noted; none needed so far.
 - 2026-11-15 20:03 CST — manager: POLICIES §10 (never shut down/cancel/settle any thread or agent; ignore and log instead). Noted.
 - 2026-11-15 20:04 CST — manager: FINAL POLICIES §10 (replaces previous): never cancel/interrupt running work; finished own reviewers/helpers may be settled (t3_thread_organize settle); never archive/delete. Noted.
+- 2026-11-15 20:22 CST — manager: POLICIES §12 compute discipline (no files outside worktree; nice, ≤16 cores; clean temp; numerics arrays in an ignored ticket folder). Noted for the numerics helper brief.
+- 2026-11-15 20:24 CST — manager: POLICIES §12 rule 7 (no NOTS; no bursts; ramp gradually ≤16 cores; few agents at once). Noted: one numerics helper only, staggered.
+- 2026-11-15 20:28 CST — manager: temp convention: TMPDIR=/home/fb31/bvs_tmp/W3-RM2-R for all temp-writing commands; never /tmp; clean up. Noted.
