@@ -408,7 +408,9 @@ real runs only on 0 problems.
     except with probability ≤ n^{−cM};
   - (ii) the model size is bounded.
 
-  No beta-min, no identifiability. Without (A4): one extra log p. Parity:
+  No beta-min, no fixed lower bound on eigenvalues ("no identifiability" withdrawn per Sol S2: (A4) makes sparse
+  coefficients distinguishable; correction 11-15). Prior as coded: BB(1, r), r = non-constant predictors. Without (A4): one
+  extra log p. Parity:
   - matches Song–Liang on metric, form, coded prior and sparsity;
   - beats them on rate (no diverging factor) and on coded output;
   - short on second-moment-only predictors, approximate sparsity and exponential p.
@@ -421,3 +423,7 @@ real runs only on 0 problems.
 - **API proof attempts:** batch msgbatch_01BEGZfGBtUEbs5hCBdvQEaG.
   - 21 requests, cards X×6, S×3, T×3, V×3, F×3, B×3; ≤ $32;
   - tool `API_AUDIT/dist_attempts.py`; outputs in `API_AUDIT/dist1/`, which HQ copies to the lead's `work/api_attempts/`.
+
+- 2026-11-15 ~21:30 CT: W3-DIST Sol S2 (reader versions) REPAIR REQUIRED 3M/4m, fixed in STATEMENT v1.4. Theorem A unchanged
+  (EQUAL, faithfulness wording; no H5 card). The 19:10 entry corrected. Companion Theorem B false as written ((A6) needed b_n > 0):
+  WEAKER on a non-target clause, reported at the next checkpoint. Lemma X/X′ line-checked VERIFIED.
