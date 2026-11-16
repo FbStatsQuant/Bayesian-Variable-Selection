@@ -162,7 +162,7 @@ headline clause changes for the paper as planned): a lower bound √(log n/n) on
 | | Order | Notes |
 |---|---|---|
 | **HQ final decision** | **#2 → #3 → #5′**; #1 and #4 deferred; #5 (printed fields on AR) NO-GO | post-freeze from Sat 11-21, and only after the checker confirms the [audit calc] lines. Kill budgets set by HQ: #2 1.5 days, #3 3 days, #5′ 3 days. #5′ replaces #1. No G1/G2 gate: the printed fields on AR stay NO-GO and scoped as worded (Theorem 6 and row 3.5). Supersedes the earlier order #2 → #3 → #1 |
-| My value-per-cost order (first pass, before #5′ existed) | 2, 3, 1, 4, 5 | the same first three; the table above keeps the numbering of the first pass (HQ's #1 scoped first) |
+| My value-per-cost order (first pass, before #5′ existed) | 2, 3, 1, 4, 5 | same first two as HQ; I had recommended #5′ as an optional cheap item |
 
 **Considered, not ranked.** Aggregated leak for row 3.1 (real, small, but no design of ours moves); the equicorrelated
 group up to b = 3/8; SAMP-R1 and the row 3.6 rate swap to √(log n/n) (already queued riders; restatements); POST2-R1;
@@ -267,7 +267,8 @@ If both pass: Tier A, Fable for the key lemma with HQ's OK, 3 attempts (STUCK ru
   plausible, not realistic within a kill budget of a few days.
 - The printed **reported model** on AR is already covered (Theorem 6), and the printed evidence is unbiased (row 3.5).
 - The store-restricted clause is realistic (Tier B, 1–2 days) but it is a statement about quantities computed from the
-  returned list, **not** about printed fields. It is a separate cheap item (#5′), not a substitute for #1.
+  returned list, **not** about printed fields. It is a separate cheap item (#5′). It does not give what #1
+  would (the printed fields on bounded-group designs); HQ chose it as the third ticket in place of #1.
 
 **Go / no-go (one line): NO-GO for #5 — there is no realistic route to a clause on the printed PIPs, MPM or Ẑ on AR;
 row 3.6 stays scoped as worded, with AR covered by Theorem 6 and row 3.5. HQ final decision (2026-11-16): #5′, the
