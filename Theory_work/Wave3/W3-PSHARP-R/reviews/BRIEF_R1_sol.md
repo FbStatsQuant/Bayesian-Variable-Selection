@@ -1,10 +1,10 @@
-# BRIEF R1 — council seat `@SEAT@` (blind first read) — W3-PSHARP-R
+# BRIEF R1 — council seat `sol` (blind first read) — W3-PSHARP-R
 
-You are one of two independent council seats (@MODEL@). You decide whether the frozen content below is correct and
+You are one of two independent council seats (gpt-6.1-sol, reasoning effort high; OpenAI seat). You decide whether the frozen content below is correct and
 honestly reported. Be adversarial: a pass from you means you re-derived the mathematics, not that it read well.
 Work in the checkout `/home/fb31/BVS-wt/W3-PSHARP-R` (paths relative to it).
 
-## Content under review (frozen as `MANIFEST @DIGEST@`, file `Theory_work/Wave3/W3-PSHARP-R/reviews/MANIFEST_R1.txt`)
+## Content under review (frozen as `MANIFEST fd8b32a5540e5afcfdb73b94048ba7a1324f30a89ade786508ea04e9295bfc30`, file `Theory_work/Wave3/W3-PSHARP-R/reviews/MANIFEST_R1.txt`)
 Everything in `Theory_work/Wave3/W3-PSHARP-R/` **except** `reviews/`, `LOG.md`, `CHECKPOINT_*.md`: `STATEMENT.md` (v1.1,
 a **delta** over the parent ticket W3-PSHARP), `lemmas/AE_expectation.md`, `lemmas/A2C_critical.md`, `REPORT.md` (with its
 REGISTRY blocks), `TARGET.md`, `READER_DELTA.md` (proposed reader text for the paper's Theorem 3), `DEPS.tsv`, `PLAN.md`,
@@ -17,8 +17,8 @@ the audit rows behind the change, `Theory_work/Wave3/API_AUDIT/sharp2/TRIAGE.md`
 **Do not read** anything else under `Theory_work/Wave3/W3-PSHARP-R/reviews/` (no other brief, review, disposition, scratch,
 score; `INPUTS.txt`, `MANIFEST_R1.txt` and `CITECHECK.txt` are allowed), nor `LOG.md`, nor `CHECKPOINT_*.md`. You may write
 and run code (python3 with numpy; numpy is in the user site, so no `-I`); keep it under
-`Theory_work/Wave3/W3-PSHARP-R/reviews/R1_scratch_@SEAT@/`. Temporary files only under
-`/home/fb31/SMC_Theory_Department/tmp/20261116-W3-PSHARP-R-R1@SEAT@/` (export TMPDIR; delete it at the end). Change no
+`Theory_work/Wave3/W3-PSHARP-R/reviews/R1_scratch_sol/`. Temporary files only under
+`/home/fb31/SMC_Theory_Department/tmp/20261116-W3-PSHARP-R-R1sol/` (export TMPDIR; delete it at the end). Change no
 other file; no git operations; start no subagents.
 
 ## What the ticket claims
@@ -53,7 +53,7 @@ Prop A-E; A2C and AE use parent steps); (4) REPORT and its REGISTRY blocks again
 (recompute at least two sha256 values and compare).
 
 ## Output
-Write your review to `Theory_work/Wave3/W3-PSHARP-R/reviews/R1_council_@SEAT@.md`:
+Write your review to `Theory_work/Wave3/W3-PSHARP-R/reviews/R1_council_sol.md`:
 - a per-claim table `| id | decision |` with ACCEPT / REJECT / NOT-EXAMINED for `W3-PSHARP-R:AE` and `W3-PSHARP-R:A2C`;
 - the six gate verdicts with reasons, and the sweep-duty results;
 - findings, each tagged **C** (correctness: a step wrong or unproved), **S** (strength: the text claims more than is
@@ -66,11 +66,11 @@ Write your review to `Theory_work/Wave3/W3-PSHARP-R/reviews/R1_council_@SEAT@.md
 
 ## Verdict line (mandatory, machine-checked)
 
-You are reviewing the content frozen as `MANIFEST @DIGEST@` (round R1, seat `@SEAT@`). End your review with
+You are reviewing the content frozen as `MANIFEST fd8b32a5540e5afcfdb73b94048ba7a1324f30a89ade786508ea04e9295bfc30` (round R1, seat `sol`). End your review with
 exactly ONE line of its own, in exactly this form (no other text on the line; backticks around it are allowed):
 
 ```
-COUNCIL-VERDICT round=R1 manifest=@DIGEST@ seat=@SEAT@ score=<x.y> gates=PASS|FAIL
+COUNCIL-VERDICT round=R1 manifest=fd8b32a5540e5afcfdb73b94048ba7a1324f30a89ade786508ea04e9295bfc30 seat=sol score=<x.y> gates=PASS|FAIL
 ```
 
 - `score` is your overall score (one decimal, 0.0–10.0); `gates=PASS` only if EVERY gate passes on exactly this

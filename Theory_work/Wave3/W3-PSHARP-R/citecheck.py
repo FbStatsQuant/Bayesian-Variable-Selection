@@ -11,7 +11,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = subprocess.run(["git", "-C", HERE, "rev-parse", "--show-toplevel"], capture_output=True, text=True).stdout.strip()
 W = "Theory_work/Wave3/"
 PST, PA, PS = W + "W3-PSHARP/STATEMENT.md", W + "W3-PSHARP/lemmas/A_log_factor.md", W + "W3-PSHARP/lemmas/S_one_step.md"
-RV = "/home/fb31/BVS-wt/W3-READER/Theory_work/Wave3/W3-READER/READER_VERSIONS.md"
+RV = "git:88f5dec:Theory_work/Wave3/W3-READER/READER_VERSIONS.md"  # pinned commit (branch theory/W3-READER), read with git show
 CHECKS = [  # (file, first, last, tokens, cited in)
     (PST, 16, 30, ["δ_n := 1 − π(S₀)", "γ_j := (Q_{S₀} − Q_{S₀∪{j}})/(2b₀ + Q_{S₀})"], "STATEMENT §1"),
     (PST, 21, 21, ["w(k) = ½/C(2p − 1, k)"], "A2C §2"),
@@ -61,9 +61,15 @@ CHECKS = [  # (file, first, last, tokens, cited in)
 ]
 miss = 0
 for f, a, b, toks, where in CHECKS:
-    path = f if f.startswith("/") else os.path.join(ROOT, f)
     try:
-        lines = open(path, encoding="utf-8").read().splitlines()
+        if f.startswith("git:"):
+            _, rev, rel = f.split(":", 2)
+            r = subprocess.run(["git", "-C", ROOT, "show", f"{rev}:{rel}"], capture_output=True, text=True, encoding="utf-8")
+            if r.returncode:
+                raise OSError(r.stderr)
+            lines = r.stdout.splitlines()
+        else:
+            lines = open(os.path.join(ROOT, f), encoding="utf-8").read().splitlines()
     except OSError:
         print(f"MISS  {f}: file not found  [{where}]"); miss += 1; continue
     seg = "\n".join(lines[a - 1:b])
