@@ -67,3 +67,12 @@ and basenames) found no rider citing any of these files.
 - Agents: H1 (Sonnet 5.5 high, Claude Third: MINOR extraction, bookkeeping only); S1 (Sol gpt-6.1-sol high: diff check);
   S1b (Opus 5.5 high, Claude Third: one-line re-check, overnight rule). All three have finished and are settled. Briefs and
   replies are in `reviews/`.
+
+## 7. Addendum (2026-11-15 21:56 CST): manager's CP1 answer (manifest-impact check)
+Four accepted council manifests list in-place files: W2-APP MANIFEST_PC1 (L4_families.md); W3-MISR MANIFEST_R1/R2
+(ASSUMPTION_MAP, REPORT, N5 script); W3-PSHARP MANIFEST_R1/R2 (PLAN, REPORT); W3-START2 MANIFEST_R1 (REPORT). I checked
+this myself against every MANIFEST_* on origin/main. Those 15 rows are now **POST-FREEZE (manifest)**: still applied on
+`theory/W3-EDIT`, held from the merge until the manifest re-freeze / EXT-at-freeze batch. **Merge now** (branch
+`theory/W3-EDIT-now`, cut from origin/main): 02_method.tex (E7-01), W1-N3 LFP:63 (M45), W1-PXN CR_corr_tails:46 (M47), and
+this folder. Routes now: 14 IN-PLACE (11 of them already on main), 15 POST-FREEZE, 12 CHAPTER-ONLY, 10 NO CHANGE,
+62 NOT APPLIED. The rehash row is unchanged (W1-PXN:CR.R-prime).
