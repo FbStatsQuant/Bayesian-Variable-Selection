@@ -89,3 +89,13 @@
   cite the blind API sharpness audits (sharp1/1b/2 + triage dispositions) where they cover a row; fresh Opus reviews for
   uncovered rows; Codex kept for DIST and riders. Deadline Thu 11-19 18:00 CT → recorder enters gates before the Fri freeze.
   W3-DIST gates in its own chain; rider rows at their CP1.
+
+## 2026-11-15 19:56 CT — owner scope clarification (POLICIES end of §8)
+- **D18.** Theory stays about the method as coded at 10⁴; Engineering may modify the algorithm for 1M (documented,
+  validated on an overlap rung). Premise tickets T-N, T-PART, T-STREAM, T-CAL are **downgraded to Engineering's choice**
+  (no theory ticket). PSMC-S0: Part 1 finishes (Sol FR1 already running; useful to Engineering: D-7, OD-1 correction,
+  calibration questions), reframed as Engineering-facing notes; **Part 2 (T-PART) cancelled**. Its slot goes to
+  W3-MISR-R as soon as PSMC-S0 writes CHECKPOINT_1.
+- **Kept, pending the owner's answer** on whether islands + merge are part of the theorem-covered method: T-MERGE's
+  "any convex pooling inherits PIP/MPM consistency" (cheap assembly; also makes OD-4 a theorem for the coded 4-island
+  equal-weight pooling). EVAR / POOL (evidence variance) move to the scaling paper; re-planned in the Thu proposal.

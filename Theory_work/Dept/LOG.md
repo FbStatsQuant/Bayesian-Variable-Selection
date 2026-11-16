@@ -31,3 +31,4 @@
 - 19:54 — W3-DIST: Astra L1 line check: Lemma X and X′ VERIFIED, no finding (reviews/L1_astra_X.md); DEPS X, X′ OK. CP2 Astra break review launched 19:46 (on the line-checked key lemma; L5 S/V, L2–L4, S2 still running). Memo adopted.
 - 19:55 — Eng THEORY-5 pins relayed to recorder (task E).
 - 19:55 — W3-READER: memo received; pooled-PIP fix complete (cd569b2): equal weights, OD-4 cited, no reader statement names a weighted PIP.
+- 19:56 — owner scope clarification: D18 (premise tickets downgraded; PSMC-S0 Part 1 only; T-MERGE kept pending owner).

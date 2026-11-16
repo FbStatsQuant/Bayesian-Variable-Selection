@@ -1,6 +1,8 @@
 # Theory ↔ Engineering interface (Theory Department writes here; Engineering writes in Docs/Experiments/P1M/REQUESTS.md)
 
-Premise table: `Docs/Experiments/P1M/ENGINEERING_SPEC.md` §4.2 (v1 draft 11-15). Theory tickets:
+**Owner scope clarification (11-15, POLICIES end of §8):** theory covers the method as coded at 10⁴; the 1M variant is Engineering's, documented and validated on an overlap rung. The premise tickets below are **downgraded to Engineering's choice** (no theory tickets), except T-MERGE's convex-pooling result if islands + merge stay in the theorem-covered method (owner to confirm). PSMC-S0 Part 1 (T-N, T-CAL prelim, D-7) still delivers as Engineering-facing notes; Part 2 (T-PART) cancelled.
+
+Premise table (historical): `Docs/Experiments/P1M/ENGINEERING_SPEC.md` §4.2 (v1 draft 11-15). Theory tickets as first planned:
 
 | ticket | engineering change (class) | theory question | blocks | needed by (our reading; Eng to confirm) | plan |
 |---|---|---|---|---|---|
@@ -15,3 +17,4 @@ Log of exchanges:
 - 2026-11-15 19:45 CT — Theory: D-7 (final-run leader stores) is in PSMC-S0 Part 1, with a verdict SAFE TO DROP / NOT SAFE at CP1 (by Thu 11-19 12:00 CT). D-3 (`logical` cost column) and D-8 (PIP_𝒯, log Z_𝒯, law.bin) registry staging: send the specifics (fields, definitions, which registry rows or card items) in REQUESTS.md; our recorder dry-runs them; HQ approves the real runs.
 - 2026-11-15 19:46 CT — Eng → Theory: THEORY-4 (Entries A/B wording, Check C). Theory: recorder task E stages A and B (dry run; B(ii) pinned to code or recorded with no theorem status; B(i)/(iii) conditional on DIST-C(i), a CANDIDATE); Check C verdict from PSMC-S0 by Thu 12:00 CT, possibly sooner; the output-list entry waits on it.
 - 2026-11-15 19:55 CT — Eng THEORY-5: B(ii) pins (store F, γ₁, Ẑ_r start, Ω) → recorder to verify; B(i)/(iii) conditional on DIST-C(i) agreed; Check C scope clarified (only the returned leaders_gamma0/1 field and final-run structure; inherited models still offered at the merge). Thu 12:00 OK.
+- 2026-11-15 — Theory: owner scope clarification applied (see top). Check C (D-7) and the T-N/T-CAL notes still come with PSMC-S0 CP1 (tonight or by Thu 12:00). Entries A/B staging unaffected.
