@@ -63,7 +63,7 @@ struct CalibOutcome {
   CalibOut co;
   Ledger led;                                   // the calibration ledger at the end (stores, HPM + provenance, counters)
   std::vector<StageRecord> stages;
-  InheritedFlat inherited;                      // models of top u lead0 u lead1 (lexicographic), scored (F, lg0, log m, d)
+  InheritedFlat inherited;                      // models of top u lead0 u lead1 (lexicographic), scored (F, lg0, log m, d); ok only
   double k_store = 0;                           // mean |S| of the calibration top store (INTERFACES v0.1.12 §7 admission)
 };
 
@@ -110,15 +110,20 @@ CalibOutcome calibrate_with(IslandRunner& runner, Ledger&& led, Factory& fac, co
   out.co = drv.run();
   out.stages = be.stages();
   out.led.compact();
-  // inherited export (core/cpp/v3_core.cpp:728-736): every model of the three stores, lexicographic, scored
-  std::vector<ModelView> U = sorted_unique_models({&out.led.top, &out.led.lead0, &out.led.lead1}, false);
-  InheritedFlat& f = out.inherited;
-  for (auto& v : U) { f.idx.insert(f.idx.end(), v.begin(), v.end()); f.ptr.push_back((int64_t)f.idx.size()); }
-  f.F.assign(U.size(), 0); f.lg0.assign(U.size(), 0); f.logm.assign(U.size(), 0); f.d.assign(U.size(), 0);
-  for_chunks(U.size(), 256, s.threads, [&](size_t, size_t b, size_t e) {
-    auto ev = fac.make(); Model S;
-    for (size_t i = b; i < e; ++i) { ModelView v = f.model(i); S.assign(v.begin(), v.end()); ev(S, f.logm[i], f.lg0[i], f.d[i], f.F[i]); }
-  });
+  // inherited export (core/cpp/v3_core.cpp:728-736): every model of the three stores, lexicographic, scored -- only for
+  // a completed calibration: a non-ok calib.bin carries no inherited models (wp4_io.h), and scoring them after a stop
+  // could replace the stop's status with a scorer failure (review PR37 N-3: a data-level numerical failure stops the
+  // pilot while the stores hold table models that the scorer would now fail on). Core's export only lists the models.
+  if (out.co.status == CalStatus::ok) {
+    std::vector<ModelView> U = sorted_unique_models({&out.led.top, &out.led.lead0, &out.led.lead1}, false);
+    InheritedFlat& f = out.inherited;
+    for (auto& v : U) { f.idx.insert(f.idx.end(), v.begin(), v.end()); f.ptr.push_back((int64_t)f.idx.size()); }
+    f.F.assign(U.size(), 0); f.lg0.assign(U.size(), 0); f.logm.assign(U.size(), 0); f.d.assign(U.size(), 0);
+    for_chunks(U.size(), 256, s.threads, [&](size_t, size_t b, size_t e) {
+      auto ev = fac.make(); Model S;
+      for (size_t i = b; i < e; ++i) { ModelView v = f.model(i); S.assign(v.begin(), v.end()); ev(S, f.logm[i], f.lg0[i], f.d[i], f.F[i]); }
+    });
+  }
   const Store& t = out.led.top;
   out.k_store = t.size() ? (double)t.pool.size() / (double)t.size() : 0.0;
   return out;

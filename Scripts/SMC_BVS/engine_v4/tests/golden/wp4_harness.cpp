@@ -223,7 +223,7 @@ List wp4_calibrate(SEXP setup, double seed, List settings) {
                             _["E3"] = it.complete ? wrap(it.E3) : R_NilValue, _["complete"] = it.complete);
     }
     tiers[i] = List::create(_["tier"] = t.tier, _["status"] = v4::calib::cal_status_name(t.status), _["triggers"] = wp4h::trig_list(t),
-                            _["schedule"] = t.pilot.schedule, _["forced_pilot_steps"] = t.pilot.forced,
+                            _["schedule"] = t.pilot.schedule.empty() ? R_NilValue : (SEXP)wrap(t.pilot.schedule), _["forced_pilot_steps"] = t.pilot.forced,
                             // core/v3_calib.R:33-43: a stopped tier (fail()) has no converged / rebuilds / grid_source
                             _["grids"] = grids, _["iterations"] = its,
                             _["converged"] = t.status == v4::calib::CalStatus::ok ? wrap(t.converged) : R_NilValue,
@@ -632,7 +632,8 @@ List wp4_calibrate_ledger(SEXP setup, double seed, List settings, std::string ca
                             _["E3"] = it.complete ? wrap(it.E3) : R_NilValue, _["complete"] = it.complete);
     }
     tiers[i] = List::create(_["tier"] = t.tier, _["status"] = v4::calib::cal_status_name(t.status), _["triggers"] = wp4h::trig_list(t),
-                            _["schedule"] = t.pilot.schedule, _["forced_pilot_steps"] = t.pilot.forced, _["grids"] = grids, _["iterations"] = its,
+                            _["schedule"] = t.pilot.schedule.empty() ? R_NilValue : (SEXP)wrap(t.pilot.schedule),   // core: no schedule after a pilot failure
+                            _["forced_pilot_steps"] = t.pilot.forced, _["grids"] = grids, _["iterations"] = its,
                             _["converged"] = t.status == v4::calib::CalStatus::ok ? wrap(t.converged) : R_NilValue,
                             _["rebuilds"] = t.status == v4::calib::CalStatus::ok ? wrap(t.rebuilds) : R_NilValue,
                             _["grid"] = wp4h::nullable(t.has_grid, t.grid), _["rho_V"] = wp4h::nullable(t.has_rho, t.rho_V),
@@ -697,4 +698,43 @@ List wp4_calibrate_ledger(SEXP setup, double seed, List settings, std::string ca
                       _["tiers"] = tiers, _["flags"] = flags, _["frozen"] = frozen, _["I_used"] = co.I_used, _["hpm"] = hpm, _["ledger"] = ledger,
                       _["inherited"] = List::create(_["models"] = inh, _["hpm"] = hpm), _["inherited_values"] = inh_vals, _["stages"] = stg,
                       _["k_store"] = oc.k_store, _["calib_bin"] = cb, _["seconds"] = secs);
+}
+
+// review PR37 N-3 (a): a data-level numerical failure through UNMODIFIED core (the way WP3's test_island
+// numerical_failure_in_flip_deterministic forces it). A copy of the setup in which the columns `cols` (1-based original
+// indices) are scaled by `scale` (X; G and z recomputed for them) and pi_0 (practically) never draws them: every table
+// entry that contains one gets log r - 1000 (finite, as setup.bin requires for |U| <= K; its log m and route stay the
+// table's, so both sides ingest the same table events), then core's build_start re-runs on the edited tables. Core's scorer
+// throws NumericalFailure for every model containing a scaled column (Cholesky, refactor and QR all fail), so the first
+// Gibbs flip onto one stops the island -- in core's calibration (cpp_cal_pilot / cpp_cal_diag catch it) and in
+// CoreRunner alike. Used on both sides, so both see the same data.
+// [[Rcpp::export]]
+SEXP wp4_fault_setup(SEXP setup, IntegerVector cols, double scale) {
+  HPtr h = get_holder(setup);
+  const Data& D = *h->D;
+  std::vector<int> bad;
+  for (int c : cols) {
+    int j = -1; for (int a = 0; a < D.p; ++a) if (D.orig[a] == c) j = a;
+    if (j < 0) stop("wp4_fault_setup: column %d not kept by preprocessing", c);
+    bad.push_back(j);
+  }
+  auto D2 = std::make_shared<Data>(D);
+  const int n = D.n, p = D.p;
+  for (int j : bad) for (int i = 0; i < n; ++i) D2->X[(size_t)j * n + i] *= scale;
+  for (int j : bad) {
+    const double* xj = D2->col(j);
+    for (int a = 0; a < p; ++a) { const double* xa = D2->col(a); double s = 0; for (int i = 0; i < n; ++i) s += xa[i] * xj[i]; D2->G[(size_t)j * p + a] = s; D2->G[(size_t)a * p + j] = s; }
+    double s = 0; for (int i = 0; i < n; ++i) s += xj[i] * D2->y[i]; D2->z[j] = s;
+  }
+  auto st2 = std::make_shared<Start>(*h->st); st2->D = D2.get();
+  for (int j : bad) {
+    const int b = st2->blk[j];
+    for (size_t code = 0; code < st2->logr[b].size(); ++code)
+      if ((code & (1u << st2->pos[j])) && !std::isnan(st2->logr[b][code])) {
+        st2->logr[b][code] -= 1000.0;
+      }
+  }
+  build_start(*st2);
+  Holder* g = new Holder(*h); g->D = D2; g->st = st2;
+  return HPtr(g, true);
 }
