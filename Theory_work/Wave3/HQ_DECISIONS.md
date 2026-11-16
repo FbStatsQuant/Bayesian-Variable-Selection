@@ -683,3 +683,6 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
     - #3 sub-Gaussian Thm 2: 2 d, kill at 3 d;
     - #1 group no-leakage: 3 d, kill at 4 d.
   - #4 deferred; #5 decided on the note (may replace #1).
+- 2026-11-16 ~18:15 CT. Track D: #5′ (store-restricted printed-output clause on every Thm 6 design, AR and BLK included; Tier B, 1–2 d, kill at 3 d) REPLACES #1.
+  - Final order: #2 → #3 → #5′, post-freeze. No G1/G2 gate; printed fields on AR stay NO-GO.
+  - After #5′: Engineering reports the store-derived summaries in the overlap/1M analysis (post-processing only).
