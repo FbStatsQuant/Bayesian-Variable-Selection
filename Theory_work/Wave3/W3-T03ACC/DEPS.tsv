@@ -7,30 +7,30 @@ P1.T01ii	sources/P1/PROOF_v3.tex:211-222	P1.T01i	0a3d77deb4714536	0a3d77deb47145
 P1.T01iii	sources/P1/PROOF_v3.tex:232-252	P1.prelim	ae45a98ac59b19b6	ae45a98ac59b19b6	reviews/LC_A_line_check_sol.md	OK
 P1.Ta	sources/P1/PROOF_v3.tex:253-268	P1.T01i;P1.T01ii;P1.T01iii	37f9f20e8481be59	37f9f20e8481be59	reviews/LC_A_line_check_sol.md	OK
 P1.T02i	sources/P1/PROOF_v3.tex:313-384	P1.prelim;P1.T01iii;P1.Ta	bed863c47015b5e5	bed863c47015b5e5	reviews/LC_A_line_check_sol.md	OK
-P3.set	sources/P3/PROOF_v2.tex:1-52		6601abbd479af77e			UNCHECKED
-P3.red	sources/P3/PROOF_v2.tex:53-86	P3.set	a3586a3cceb19280			UNCHECKED
-P3.det	sources/P3/PROOF_v2.tex:87-168	P3.red	873e461cb6317a48			UNCHECKED
-P3.good	sources/P3/PROOF_v2.tex:169-224	P3.det	567800bdcb2c6235			UNCHECKED
-P3.sup	sources/P3/PROOF_v2.tex:225-279	P3.good	e2bff5d24ee02c17			UNCHECKED
-P3.under	sources/P3/PROOF_v2.tex:280-331	P3.good;P3.det	d700568cbe89aadf	d700568cbe89aadf	reviews/LC_C_line_check_sol.md	DOWNSTREAM
-P3.main	sources/P3/PROOF_v2.tex:332-396	P3.sup;P3.under	0b736fad6058531e	0b736fad6058531e	reviews/LC_C_line_check_sol.md	DOWNSTREAM
+P3.set	sources/P3/PROOF_v2.tex:1-52		6601abbd479af77e	6601abbd479af77e	reviews/LC_B_line_check_sol.md	OK
+P3.red	sources/P3/PROOF_v2.tex:53-86	P3.set	a3586a3cceb19280	a3586a3cceb19280	reviews/LC_B_line_check_sol.md	OK
+P3.det	sources/P3/PROOF_v2.tex:87-168	P3.red	873e461cb6317a48	873e461cb6317a48	reviews/LC_B_line_check_sol.md#lem:signal proof in reviews/LC_C_line_check_sol.md	OK
+P3.good	sources/P3/PROOF_v2.tex:169-224	P3.det	567800bdcb2c6235	567800bdcb2c6235	reviews/LC_B_line_check_sol.md	OK
+P3.sup	sources/P3/PROOF_v2.tex:225-279	P3.good	e2bff5d24ee02c17	e2bff5d24ee02c17	reviews/LC_B_line_check_sol.md	OK
+P3.under	sources/P3/PROOF_v2.tex:280-331	P3.good;P3.det	d700568cbe89aadf	d700568cbe89aadf	reviews/LC_C_line_check_sol.md	OK
+P3.main	sources/P3/PROOF_v2.tex:332-396	P3.sup;P3.under	0b736fad6058531e	0b736fad6058531e	reviews/LC_C_line_check_sol.md	OK
 E1	sources/W1-T03R/PROOF.md:19-40	P1.prelim	0e4d5a8af187e494	0e4d5a8af187e494	reviews/LC_A_line_check_sol.md	OK
 MSHARP	sources/W1-T03R/PROOF.md:44-47	E1	ba356bbb141db4d3	ba356bbb141db4d3	reviews/LC_A_line_check_sol.md	OK
 E2i	sources/W1-T03R/PROOF.md:49-59	E1;MSHARP	639563b5541966dd	639563b5541966dd	reviews/LC_A_line_check_sol.md	OK
 DENp	sources/W1-T03R/PROOF.md:89-91	P1.T02i	6a68acebc0bbc14f	6a68acebc0bbc14f	reviews/LC_A_line_check_sol.md	OK
 T02is	sources/W1-T03R/PROOF.md:74-101	E1;MSHARP;DENp;P1.Ta;P1.T01iii;P1.T02i	076465257285ef40	076465257285ef40	reviews/LC_A_line_check_sol.md	OK
-SE	sources/W1-T03R/PROOF.md:127-134		b75ee87c6ebde023			UNCHECKED
-LemI	sources/W1-T03R/PROOF.md:136		acb4b3e361ca5dbd			UNCHECKED
-LemB	sources/W1-T03R/PROOF.md:138-145	SE;LemI;P1.prelim;P3.det	e3b93b3bde456994			UNCHECKED
-C1	sources/W1-T03R/PROOF.md:170-172	E2i;P3.set	ad94782909c83c47			UNCHECKED
-C2	sources/W1-T03R/PROOF.md:174	LemB;P3.good	f73c1d36d655035e			UNCHECKED
-C3	sources/W1-T03R/PROOF.md:176	LemB;P3.good	feb156572291a59d			UNCHECKED
-C4	sources/W1-T03R/PROOF.md:178-181	LemB;C3;P3.sup	e7a052a604f01a62			UNCHECKED
-C5	sources/W1-T03R/PROOF.md:183-185	C4;P3.sup	e2c3ff53d51ee3a2			UNCHECKED
-C6	sources/W1-T03R/PROOF.md:187-190	LemB;C3;P3.under	9416bc03f5205eef	9416bc03f5205eef	reviews/LC_C_line_check_sol.md	DOWNSTREAM
-C7	sources/W1-T03R/PROOF.md:192	LemB;C6;P3.det;P3.under	5c833a4a8aa79e6c	5c833a4a8aa79e6c	reviews/LC_C_line_check_sol.md	DOWNSTREAM
-C8	sources/W1-T03R/PROOF.md:194-197	C5;C6;P3.under	5768eda55380921e	5768eda55380921e	reviews/LC_C_line_check_sol.md	DOWNSTREAM
+SE	sources/W1-T03R/PROOF.md:127-134		b75ee87c6ebde023	b75ee87c6ebde023	reviews/LC_B_line_check_sol.md	OK
+LemI	sources/W1-T03R/PROOF.md:136		acb4b3e361ca5dbd	acb4b3e361ca5dbd	reviews/LC_B_line_check_sol.md	OK
+LemB	sources/W1-T03R/PROOF.md:138-145	SE;LemI;P1.prelim;P3.det	e3b93b3bde456994	e3b93b3bde456994	reviews/LC_B_line_check_sol.md	OK
+C1	sources/W1-T03R/PROOF.md:170-172	E2i;P3.set	ad94782909c83c47	ad94782909c83c47	reviews/LC_B_line_check_sol.md	OK
+C2	sources/W1-T03R/PROOF.md:174	LemB;P3.good	f73c1d36d655035e	f73c1d36d655035e	reviews/LC_B_line_check_sol.md	OK
+C3	sources/W1-T03R/PROOF.md:176	LemB;P3.good	feb156572291a59d	feb156572291a59d	reviews/LC_B_line_check_sol.md	OK
+C4	sources/W1-T03R/PROOF.md:178-181	LemB;C3;P3.sup	e7a052a604f01a62	e7a052a604f01a62	reviews/LC_B_line_check_sol.md	OK
+C5	sources/W1-T03R/PROOF.md:183-185	C4;P3.sup	e2c3ff53d51ee3a2	e2c3ff53d51ee3a2	reviews/LC_B_line_check_sol.md	OK
+C6	sources/W1-T03R/PROOF.md:187-190	LemB;C3;P3.under	9416bc03f5205eef	9416bc03f5205eef	reviews/LC_C_line_check_sol.md	OK
+C7	sources/W1-T03R/PROOF.md:192	LemB;C6;P3.det;P3.under	5c833a4a8aa79e6c	5c833a4a8aa79e6c	reviews/LC_C_line_check_sol.md	OK
+C8	sources/W1-T03R/PROOF.md:194-197	C5;C6;P3.under	5768eda55380921e	5768eda55380921e	reviews/LC_C_line_check_sol.md	OK
 C9	sources/W1-T03R/PROOF.md:199	T02is	a28e6976a90f29a1	a28e6976a90f29a1	reviews/LC_C_line_check_sol.md	OK
-C10	sources/W1-T03R/PROOF.md:201	C7;C8;P3.main	3591fe74477ce7d8	3591fe74477ce7d8	reviews/LC_C_line_check_sol.md	DOWNSTREAM
+C10	sources/W1-T03R/PROOF.md:201	C7;C8;P3.main	3591fe74477ce7d8	3591fe74477ce7d8	reviews/LC_C_line_check_sol.md	OK
 ASM	sources/W1-T03R/PROOF.md:160-168		cba07aea58f7cf60	cba07aea58f7cf60	reviews/LC_C_line_check_sol.md	OK
-ASM2	sources/W1-T03R/PROOF.md:203-207	C1;C2;C3;C4;C5;C6;C7;C8;C9;C10;P3.main	460e8824b4c74b71	460e8824b4c74b71	reviews/LC_C_line_check_sol.md	DOWNSTREAM
+ASM2	sources/W1-T03R/PROOF.md:203-207	C1;C2;C3;C4;C5;C6;C7;C8;C9;C10;P3.main	460e8824b4c74b71	460e8824b4c74b71	reviews/LC_C_line_check_sol.md	OK

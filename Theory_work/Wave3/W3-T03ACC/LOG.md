@@ -44,3 +44,9 @@
   confirmed; N3 moot; N4 no use of p ≤ n^A or A ≥ 1. API slips A1, A3 dispositioned (ERRATA E2, E3). DEPS rows → OK.
   LC-A reviewer settled.
 - 2026-11-16 02:23 CST — REPORT.md draft (registry block, 5 claims, status_source REPORT.md:17-23); citecheck 69 citations, 0 MISS. Waiting on LC-B.
+- 2026-11-16 02:28 CST — **LC-B returned: VERIFIED, 0 GAP, 0 ERROR** (SE hyps, Lemma I, Lemma B, (C1)–(C5); [P3] §§1–5;
+  N1 p = 1, N2 moot (s₀ ≥ 1), N3, N4, N5 same-A confirmed). LC-B settled. All API slips dispositioned (A1 confirmed → ERRATA E2,
+  A2 moot, A3 confirmed → E3, A4 confirmed → E1). DEPS 35/35 OK. citecheck 69 citations, 0 MISS. HOLDS: none on TH09/T03.
+  ERRATA source column reworded to cite line checks only (audit stays outside the manifest).
+- 2026-11-16 02:28 CST — `reviews/MANIFEST_R1.txt` frozen: MANIFEST 9714aea441df09c3caedff6179232fd84cce9e6aa631050ddfeb9c1cec86b3c6
+  (41 files + 2 extra: v3_score.h, v3_preprocess.R). Briefs `reviews/BRIEF_R1_astra.md`, `reviews/BRIEF_R1_opus.md` saved.

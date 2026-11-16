@@ -19,7 +19,7 @@ Definitions: `STATEMENT.md:22-41`; readings: `STATEMENT.md:92-117`; consumed res
 |---|---|---|---|---|
 | statement lock SL1 | STATEMENT v1.0 → v1.1 | Sol (gpt-6.1-sol, high), fresh, blind | "LOCK WITH CHANGES" (CRITICAL 1 F, MAJOR 1 E, MINOR 1 E; all applied in v1.1) | `reviews/SL1_statement_lock_sol.md`, `reviews/SL1_disposition.md` |
 | line check LC-A | E1(a),(b),(d), m♯_n, E2(i), den′, T02(i♯); [P1] setting, `lem:slab`, `lem:IGint`, `lem:spec`(a)–(e), `lem:prior`(a)–(d), `lem:chi`, `prop:closed`, `thm:T01i`, `thm:T01ii`, `thm:T01iii`, `thm:Ta`, `lem:num`, `lem:den`, `thm:T02i` | Sol, new agent, blind | "Overall: VERIFIED" (0 GAP, 0 ERROR) | `reviews/LC_A_line_check_sol.md` |
-| line check LC-B | SE_λ/SE_w, Lemma I, Lemma B, (C1)–(C5); [P3] §§1–5 | Sol, new agent, blind | PENDING | `reviews/LC_B_line_check_sol.md` |
+| line check LC-B | SE_λ/SE_w, Lemma I, Lemma B, (C1)–(C5); [P3] §§1–5 | Sol, new agent, blind | "Overall: VERIFIED" (0 GAP, 0 ERROR) | `reviews/LC_B_line_check_sol.md` |
 | line check LC-C | (C6)–(C10), Assembly (T03S.1–.5), completeness of the change lists; [P3] §§6–7 | Sol, new agent, blind | "Overall: VERIFIED" (0 GAP, 0 ERROR) | `reviews/LC_C_line_check_sol.md` |
 Every row of `DEPS.tsv` under a claim must be OK before the council freeze. [P1] `lem:prior`(e) lies inside the row
 `P1.prelim` but is not used by T03♯ (it serves [P1] §T02(ii)); LC-A did not check it.

@@ -165,6 +165,6 @@ OK 93b05aaa48d2 [REPORT.md] STATEMENT.md:85-91 -> Theory_work/Wave3/W3-T03ACC/ST
 OK 4bc1eb547642 [REPORT.md] sources/statement/W6-FIXREV2_STATEMENTS.md:63-81 -> Theory_work/Wave3/W3-T03ACC/sources/statement/W6-FIXREV2_STATEMENTS.md
       first: **Scope (must accompany the theorem).**
       last:  to the integer.)
-OK 3fb42bd17f2d [REPORT.md] REPORT.md:17-23 -> Theory_work/Wave3/W3-T03ACC/REPORT.md
+OK 428ff2a688e7 [REPORT.md] REPORT.md:17-23 -> Theory_work/Wave3/W3-T03ACC/REPORT.md
       first: ## 2. Checks (review files; verdicts verbatim)
       last:  | line check LC-C | (C6)–(C10), Assembly (T03S.1–.5), completeness of the change lists; [P
