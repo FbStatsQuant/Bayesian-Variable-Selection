@@ -234,3 +234,11 @@ same rules for anything it runs.
    - No port scans, no unusual tools, no scripted login loops, no logins from unfamiliar hosts beyond Owls and HQ's desktop.
    - Owls: no sudden spikes. Ramp up gradually and keep within the core cap.
    - If anything looks like it could trigger a security alert, ask HQ first.
+8. **The Engineering Department works only inside its folders** (owner, 2026-11-15):
+   - **Owls:** `/home/fb31/SMC_Engineering_Department/`.
+   - **NOTS:** `/home/fb31/SMC_Engineering_Department/`, created by the owner, with heavy data under
+     `/home/fb31/SMC_Engineering_Department/scratch`, a symlink to `/scratch/fb31/SMC_Engineering_Department/`.
+
+   No Engineering file anywhere else: temp files, logs, job scripts, outputs and crews all live inside. The exceptions are
+   its git worktree on Owls (repo code only) and Slurm's own spool. Existing SMC-BVS material is moved in by the
+   reorganization plan (idle data only).
