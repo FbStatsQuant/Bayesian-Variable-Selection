@@ -21,7 +21,8 @@ void load_fit(const std::string& path, FitFile& o) {
   s.len = B.get<uint16_t>("top_len", &c); if (c != n) throw Error(Status::invalid_input, "fit.bin: top_len size");
   s.hash = B.get<uint64_t>("top_hash", &c); if (c != n) throw Error(Status::invalid_input, "fit.bin: top_hash size");
   s.pool = B.get<int32_t>("top_pool", &c);
-  for (size_t i = 0; i < n; ++i) if (s.off[i] + s.len[i] > c) throw Error(Status::invalid_input, "fit.bin: store entry beyond pool");
+  for (size_t i = 0; i < n; ++i)   // overflow-safe (PR45 review INFO-1): no off + len wrap-around
+    if (s.len[i] > c || s.off[i] > c - s.len[i]) throw Error(Status::invalid_input, "fit.bin: store entry beyond pool");
   for (size_t i = 1; i < n; ++i) if (s.v[i] > s.v[i - 1]) throw Error(Status::invalid_input, "fit.bin: top store not sorted (I1)");
   // I1, one entry per model (INTERFACES §4.1 v0.1.13; PR40 review #6): a fit.bin merged before that rule (V mode) may
   // hold a model twice, which double counts it in log Z_T, PIP_T and the occupancy sets. Refuse such files.

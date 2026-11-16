@@ -34,8 +34,11 @@ class Store {
   void merge(const Store& o);                           // offer every entry of o, then compact()
   // Bulk load of an already valid store into this EMPTY store, without compactions: O(n) verification (strict order,
   // models sorted, pool ranges, n <= cap) plus one (hash, index) pair sort for the model index, which also verifies one
-  // entry per model. Content = what offering every entry and compacting gives. Throws Error(invalid_input) when the
-  // input is not a valid store (e.g. a corrupt file). For island records, island files and stored sections.
+  // entry per model, ASSUMING the given hashes are the models' hashes (callers that read untrusted files check them
+  // against the Zobrist keys: WP4 read_store / load_island_full, WP3 read_island_file). Preconditions: this store is
+  // empty (else Error(internal_error)); n > cap is refused, not truncated. Content = what offering every entry and
+  // compacting gives, for valid input. Throws Error(invalid_input) when the input is not a valid store (e.g. a corrupt
+  // file) and leaves this store empty. For island records, island files and stored sections.
   void load_unique_sorted(size_t n, const double* v, const uint64_t* hash, const uint64_t* off, const uint16_t* len,
                           const int32_t* pool, size_t pool_n);
   double cutoff() const { return cut_.load(std::memory_order_relaxed); }
@@ -45,7 +48,8 @@ class Store {
   ModelView model(size_t i) const { return ModelView(pool.data() + off[i], len[i]); }
   bool better(double v1, ModelView S1, double v2, ModelView S2) const;   // strict order of this store
   // I1 (after compact): strictly sorted, size <= cap, cut-off = worst value when full, ONE ENTRY PER MODEL (checked by
-  // a fresh (hash, model) sort, independent of the index), and the index is a valid permutation in key order.
+  // a fresh (hash, model) sort, independent of the index but assuming correct stored hashes), and the index is a valid
+  // permutation in key order.
   bool check_invariants() const;
   uint64_t content_hash() const;                        // order-sensitive digest of (v bits, S), for tests
   size_t bytes_reserved() const;                        // capacity of all arrays, in bytes (memory accounting)
