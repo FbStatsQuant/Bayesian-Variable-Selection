@@ -78,3 +78,4 @@
 - 2026-11-16 17:16 CST R2 freeze: MANIFEST_R2 3af23c35… (92 files, 28 extra); briefs R2 sol/opus with previous-round summary. Launching council R2.
 - 2026-11-16 17:26 CST COUNCIL PASSED R2: sol 9.3 PASS (FIDELITY: FAITHFUL), opus 9.3 PASS; manifest.py bind OK on MANIFEST_R2 3af23c35 (reviews/BIND_R2.txt). Council cell: R2; MANIFEST 3af23c35…; sol=9.3 PASS; opus=9.3 PASS. 12 editorial items (opus 10, sol 2) not applied (would change the bound content): staged as reviews/R2_editorial.patch pending manager decision.
 - 2026-11-16 17:35 CST Manager: option (b). Applied reviews/R2_editorial.patch (13 items) + Thm 7 / row 3.2 GUARD-W sentence (Thm 7 guarantee concerns a run's output). Card v1.12. R3 = diff-only confirmation round.
+- 2026-11-16 17:36 CST R3 freeze: MANIFEST_R3 7aebdf2e… (92 files, 28 extra); diff-only briefs (14 tagged items). Launching R3 (sol, opus).
