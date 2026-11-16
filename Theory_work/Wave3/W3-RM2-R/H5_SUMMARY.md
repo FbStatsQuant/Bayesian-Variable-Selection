@@ -18,7 +18,8 @@ error decomposition matching what experiment P6 measures (mode failures vs searc
 the delivery premises (D), incl. IDEAL-W⁺. Nothing else.
 
 **Evidence.** Statement lock SL1 + SC1 (Sol); line checks LC-A, LC-B and re-check RC1 (Sol), all VERIFIED; council R1
-(Sol 8.5, Opus 8.7): every claim ACCEPT, correctness gate PASS, derived-text findings fixed in the diff round R2. Conditional on SOP:TH09 (Form F) / W2-APP:POST (Form R), as the parents.
+(Sol 8.5, Opus 8.7): every claim ACCEPT, correctness gate PASS; derived-text findings addressed in the diff round R2 (both seats 9.0,
+every claim ACCEPT, one remaining F in a TARGET numerics sentence, fixed for an HQ-ordered re-check; see CHECKPOINT_3). Conditional on SOP:TH09 (Form F) / W2-APP:POST (Form R), as the parents.
 
 **Engineering note (IDEAL-W⁺; for HQ / Engineering, no method change requested).** The delivery theorem needs two fixed
 upper bounds in the shipped code to be treated as lifted: (i) `v3_run.R:96` rejects the LS0 base cap `le > 1e6`, and

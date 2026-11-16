@@ -46,8 +46,11 @@ Statuses below are as of this draft; the council result is recorded in §4 and i
 R1 (manifest `reviews/MANIFEST_R1.txt`, MANIFEST 4c2183ce…cd402): both seats ACCEPT every claim and pass the
 correctness gate; both FAIL other gates on findings in derived texts only — Opus 8.7 (`reviews/R1_council_opus.md`:
 F1 REPORT conditions vs STATEMENT, F2 READER bridge R7.2), Sol 8.5 (`reviews/R1_council_sol.md`: F1 Song–Liang
-attribution in TARGET, S2 TARGET necessity wording). Dispositions: `reviews/R1_disposition.md`. Diff round R2:
-manifest `reviews/MANIFEST_R2.txt`; result recorded here when complete.
+attribution in TARGET, S2 TARGET necessity wording). Dispositions: `reviews/R1_disposition.md`. Diff round R2
+(manifest `reviews/MANIFEST_R2.txt`, MANIFEST e71637e0…190b): both seats resolve their R1 findings, ACCEPT every claim,
+score 9.0, and FAIL the faithfulness gate on one new F — the TARGET §3 numerics sentence (start-mode inclusion in
+design G) — introduced by the lead in R2 (`reviews/R2_council_sol.md`, `reviews/R2_council_opus.md`). Fixed with the
+seats' wording; a re-check of that sentence needs HQ's order (PROTOCOL_v4 §5.8): candidate `reviews/MANIFEST_R3.txt`.
 
 ## 5. REGISTRY
 

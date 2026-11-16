@@ -31,8 +31,10 @@ Gaussian rows; p ≤ n^A; |Q| ≤ n^b).
 
 Done (`numerics/RESULTS.md`, `numerics/SPEC.md`; 336 runs) [R1-sol-5]: sweep θ_n² = κσ² log n/n, κ ∈ {0.5, …, 32}, on
 Ex-Proxy (b ∈ {0.3, 0.45}) and one Gaussian-row design with a weak second truth; recorded start-mode inclusion, truth
-removal and NA at visited sets, LS0 endpoint, and a mode-margin proxy on a candidate list (not the exact mode). Observed: failures only for κ ≤ 4 (n = 400) and κ ≤ 2 (n = 1600), far below κ₀ — the
-constants are artefacts; nothing here shows that the order is necessary.
+removal and NA at visited sets, LS0 endpoint, and a mode-margin proxy on a candidate list (not the exact mode). Observed [R2-sol-F1, R2-opus-F3]: truth removal at S₀ and the LS0 endpoint fail only for κ ≤ 4 (n = 400) and κ ≤ 2
+(n = 1600), in both designs. Start-mode inclusion follows the same pattern in design P, but in design G the weak truth
+is not in the coded start mode up to κ = 16 (5/10 and 5/6 at κ = 32), while LS0 still recovers S₀. All of these levels
+are far below κ₀. The constants are artefacts, and nothing here shows that the order is necessary.
 No numerics are planned for (D) or 𝓜_n (deterministic code facts / an inclusion of events).
 
 ## 4. Better-theorem input
