@@ -52,7 +52,8 @@ outside. Visibility can also fail on its
 own when true effects of mixed signs cancel.
 
 \paragraph{The printed-estimates theorem.} The theorem that the printed inclusion probabilities, median model and
-estimate of the evidence (the normalising constant of the posterior) are consistent (Theorem~5.19) needs one more condition, \emph{no leakage}: every null predictor nearly uncorrelated
+estimate of the evidence (the normalising constant of the posterior) are consistent on the event that the method uses the sampler and its calibration succeeds (Theorem~5.19; it
+asserts no lower bound on the probability of that event, and exact enumeration is outside it) needs one more condition, \emph{no leakage}: every null predictor nearly uncorrelated
 with every true one. Of our designs, only the independent ones satisfy it. On our block and autoregressive designs the
 reported-model theorem still holds; on every design the posterior theorems hold and the evidence estimate is unbiased
 (proved for each of the four independent sampler runs that the method pools, its \emph{islands}, and for the pooled
@@ -142,7 +143,7 @@ exponent is the $10^6$ plan at $n=200$: $A=\log10^6/\log200\approx2.6$.}
 
 \ahead{Fixed true model size}{\lab{SP}}{Same as \SL{} (their strict sparsity (4), p.~950, used by their Theorems~2
 and~3).}
-\ev{It cannot be dropped: on every design $\pis{\Sz}\le\{1+(\sz+1)/(3\sqrt n)\}^{-1}$ (Theorem~3.13(a)), so a posterior miss of order $\rn$
+\ev{It cannot be dropped: on every design with $\sz\le\min(K-1,p/2)$, $\pis{\Sz}\le\{1+(\sz+1)/(3\sqrt n)\}^{-1}$ (Theorem~3.13(a)), so a posterior miss of order $\rn$
 is possible only if $\sz=O(\sqrt{\log n})$.}
 \ro{True models whose size grows with $n$.}
 
@@ -209,7 +210,7 @@ this theorem. Such a user may still be inside the posterior theorems.}
 
 \ahead{Polynomial leakage set}{Assumption~5.6(a)}{Comparable to \SL, where the same requirement is an informal remark, not a
 condition (p.~958, remark (a)).}
-\ev{They write: ``if there are $p_n$ predictors correlated with the true predictors $X_t$, $p_n\prec P_n$, then there are
+\ev{They write: ``if there are $p_n$ predictors correlated with the true predictor $X_t$, $p_n\prec P_n$, then there are
 at most $cp_n$ predictors to be selected'' (p.~958). They prove nothing on their sampler's output, so there is no formal
 counterpart to compare levels with. We state the requirement as a hypothesis with a rate: the null predictors whose
 conditional covariance with a true predictor exceeds a level $\varpi_n=o(\rn)$ must lie in a set of at most $n^b$
@@ -224,7 +225,7 @@ FAC.}
 do not analyse.}
 \ev{It follows from the global floor \lab{EFS} plus a locality property of $\Sig$: for block, banded and AR structures,
 take as local set the block-mates or the nearest leakage-set neighbours. A fixed-design version needs nothing of the kind
-when the leakage set has fewer than $\log n$ extra predictors (Theorem~5.12, case (d1)).}
+when the leakage set has at most $(1-\delta)\log n$ extra predictors, for a fixed $\delta\in(0,1)$ (Theorem~5.12, case (d1)).}
 \ro{Leakage sets inside which regressions depend on many members at once.}
 \ds{As for the polynomial leakage set; not applicable where that fails.}
 
