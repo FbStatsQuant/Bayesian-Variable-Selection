@@ -17,4 +17,4 @@ are bit-equal to core/ (golden tests in PR #13).
 | BLK | 200 | 100 | 96,183 | 3.352 | 3 / 5 / 6 | 0.00036 | 3.352 | 3.330 / 3.330 | 22 min, 7.0 GB |
 | ADJ-OPP | 200 | 100 | 74,726 | 2.835 | 3 / 4 / 6 | 3.4e-13 | 2.835 | 2.800 / 2.800 | 26 min, 9.6 GB |
 
-Updated 2026-11-16T07:45 (rows are added as runs finish; pending: see the WP2 report).
+Updated 2026-11-16T16:08 (rows are added as runs finish; n = 400 and 1,000 deferred until after PR #13 and D-31, per manager option D).
