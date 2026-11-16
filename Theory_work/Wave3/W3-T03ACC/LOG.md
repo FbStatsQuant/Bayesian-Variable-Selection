@@ -16,3 +16,7 @@
   `manifest.py freeze` covers every file of the folder except `reviews/`, `api/` will be moved to `reviews/api/`
   before any later freeze.
 - 23:40 — CHECKPOINT_1.md written; run ends (manager answers CP1).
+- 2026-11-15 23:40 CST — Manager: API Fable audit in `api/`: two samples, both VERDICT=MINOR, 0 GAP/ERROR. Read both.
+  Four distinct slips (A1 p = 1 remark at PROOF.md:9, both samples; A2 n ≥ 5 side condition for s₀ = 0; A3 R_m for m < 0;
+  A4 J_n^∞ without "j ∈ S₀"), recorded in `reviews/API_dispositions.md` with the line-check batch that gets each as a
+  named point. PLAN.md not edited (it is in the SL1 manifest while SL1 runs). `api/` not moved yet (CP1 ask (b) open).
