@@ -297,3 +297,4 @@
 - 07:48 — READER D80 re-verify: four swaps OK (absent patch lines = deliberate requotes). Found: thm8 '(A3) requires n ≳ 1,450' sentence still missing (restore request dropped) → re-sent (HQ ruled it stays).
 - 07:49 — s6:46 fresh Opus: FIX CORRECTED (premise = Theorem D's; class hypotheses/qualifications + unconditioned law restored). Third short Opus confirm (B11, author ≠ checker) launched before S4b.
 - 07:49 — READER restored '(A3) requires n ≳ 1,450' in thm8 (578168a9, v0.6.1; D80 hash check).
+- 07:49 — Task U dry CLEAN: R2r 12bb52cd CITATION-ONLY (C-MIS SoP pointers via W3-EDIT 3c6062ec); 14 PC no conditions; START-R/IF-START (row 3.3) superseded free → STRONGER; 14 coexist (card 3 note closed); 516/0 ERROR; 129 ACTIVE accept PASS; 16/16 manifests. GO requested.
