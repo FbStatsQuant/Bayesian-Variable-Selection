@@ -11,6 +11,13 @@
 - When: BNP sends a "quiet window" (expected 11-16 early afternoon CST). HQ pauses SMC departments' leads, restarts, verifies, then messages BNP back. BNP launches nothing until confirmed.
 - BNP already moved its temp to /home/fb31/bnp_tmp and removed 73 stale sandboxes (11-15).
 
+## USAGE NOTE (owner, 11-15 ~21:30 CT; all times Central)
+- Tonight: keep the rhythm. Tomorrow (11-16) probably pace down a bit: Claude Third is burning about a week of Ultra in
+  about 2.5 days (new account, odd reset schedule). The two companies together used ~2B tokens in ~4 h; this pace is not
+  the norm.
+- HQ on 11-16 morning: check the account and Codex meters, then propose a pacing plan to the owner (concurrency per
+  department, account split, Codex level) before the departments ramp up.
+
 ## CODEX PACING LEVEL (owner sets; POLICIES §14): **0 (normal)** since 2026-11-15
 
 ## ACCOUNT ALLOCATION (owner sets; HQ relays to all managers)
