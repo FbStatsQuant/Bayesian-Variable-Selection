@@ -1,6 +1,7 @@
 // test_wp4_io.cpp -- WP4 files: calib.bin / island_r.bin / fit.bin round trips, input validation by content hash and
 // binary block (T10 through real files), and the merge command end to end (thread invariance of fit.bin).
 #include <cstdio>
+#include <dirent.h>
 #include <fstream>
 #include <random>
 #include "tk.h"
@@ -138,6 +139,21 @@ void flip_byte(const std::string& path, const std::string& section) {   // one b
   std::fstream fs(path, std::ios::in | std::ios::out | std::ios::binary);
   fs.seekg((long)at); char c; fs.read(&c, 1); c ^= 0x5A; fs.seekp((long)at); fs.write(&c, 1);
 }
+// Removes every file this process created for a test tag (tmp_path prefix), at scope exit -- also when a test throws.
+struct TmpGuard {
+  std::string prefix;
+  explicit TmpGuard(const std::string& tag) : prefix(tmp_path(tag + "_")) {}
+  ~TmpGuard() {
+    std::string dir = prefix.substr(0, prefix.find_last_of('/')), base = prefix.substr(prefix.find_last_of('/') + 1);
+    if (DIR* d = opendir(dir.c_str())) {
+      while (dirent* e = readdir(d)) {
+        std::string n = e->d_name;
+        if (n.rfind(base, 0) == 0) std::remove((dir + "/" + n).c_str());
+      }
+      closedir(d);
+    }
+  }
+};
 void cleanup(const Fx& f) {
   std::remove(f.dpath.c_str()); std::remove(f.spath.c_str()); std::remove(f.cpath.c_str());
   for (auto& p : f.ipath) std::remove(p.c_str());
@@ -145,7 +161,7 @@ void cleanup(const Fx& f) {
 }  // namespace
 
 TEST(wp4_io_calib_island_roundtrip) {
-  Fx f = make_fx("rt", 2);
+  TmpGuard tmp_guard("rt"); Fx f = make_fx("rt", 2);
   wp4io::CalibIn c = wp4io::read_calib(f.cpath);
   CHECK(c.status == "ok" && c.grid == std::vector<double>({0, 0.3, 1}) && c.N == 50 && c.L == 4 && c.tier == 0 && c.content_hash == f.chash);
   CHECK(c.has_hpm && c.hpm == f.calib_hpm && c.hpm_ev.key.seg == SG_CALIB && c.hpm_ev.key.stage == f.calib_ev.key.stage &&
@@ -173,7 +189,7 @@ TEST(wp4_io_calib_island_roundtrip) {
 }
 
 TEST(wp4_io_load_island_t10) {
-  Fx f = make_fx("t10", 4);
+  TmpGuard tmp_guard("t10"); Fx f = make_fx("t10", 4);
   wp4io::Expect ex; ex.mode = fmt::M_COMPAT; ex.data_hash = f.dhash; ex.setup_hash = f.shash; ex.calib_hash = f.chash;
   auto load = [&](int r, const wp4io::Expect& e) { Json b; return wp4io::load_island(f.ipath[r - 1], r, e, f.D.p, &b).load; };
   CHECK(load(1, ex) == merge::Load::ok);
@@ -202,7 +218,7 @@ TEST(wp4_io_load_island_t10) {
 }
 
 TEST(wp4_io_merge_command_e2e) {
-  Fx f = make_fx("e2e", 4);
+  TmpGuard tmp_guard("e2e"); Fx f = make_fx("e2e", 4);
   std::string o1 = tmp_path("e2e_fit1.bin"), o3 = tmp_path("e2e_fit3.bin");
   Json r1 = merge::run(merge_args(f, o1, 1));
   Json r3 = merge::run(merge_args(f, o3, 3));
@@ -301,7 +317,7 @@ TEST(wp4_io_chi2_and_inherited_provenance) {
 TEST(wp4_io_island_layout_vs_wp3) {
   // INTERFACES v0.1.8: island_r.bin as WP3 writes it. (a) WP3's write_island_file -> WP4's head_island + load_island_full;
   // (b) WP4's reference write_island -> WP3's read_island_file. Every field the merge reads must agree.
-  Fx f = make_fx("x3", 2, fmt::M_LAW);
+  TmpGuard tmp_guard("x3"); Fx f = make_fx("x3", 2, fmt::M_LAW);
   const merge::IslandIn& I = f.isl[1];
   island::IslandRun run;
   run.status = 0; run.r = I.r; run.N = I.N; run.T = (int)I.ess.size(); run.L = I.L; run.Hm = I.Hm; run.p = f.D.p; run.logZ = I.logZ;
