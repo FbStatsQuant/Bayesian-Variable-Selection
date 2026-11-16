@@ -95,4 +95,4 @@ the new text, and the bridges it needs. The manager passes it to HQ for W3-READE
   target file's sha256 against the expected post-apply hash from the dry run (or the prepared LINES_CHECK); any mismatch → stop.
 - Do not touch: `Theory_work/Wave3/W3-DIST/`, `W3-READER/`, `PROTOCOL_REVIEW/`, `Docs/`, `Lean/`, `Theory_work/Dept/`.
 
-- **HQ 11-16 (17:07): better-theorem review skip.** Code-reading lemmas with no CP1 target (W3-AUDIT track A T1–T5, T10) skip the better-theorem review. Record "skipped (HQ 11-16)" in each CHECK.md.
+- **HQ 11-16 (17:07): better-theorem review skip.** Code-reading lemmas with no CP1 target (W3-AUDIT track A T1–T5, T10; extended by HQ to T6–T9 at 17:58, premise-closers) skip the better-theorem review. Record "skipped (HQ 11-16)" in each CHECK.md.
