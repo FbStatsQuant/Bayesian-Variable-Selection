@@ -3,7 +3,7 @@ diff --git a/Theory_work/Wave2/W2-UNI/lemmas/L5_delivery.md b/Theory_work/Wave2/
 +++ b/Theory_work/Wave2/W2-UNI/lemmas/L5_delivery.md
 @@ -1,4 +1,4 @@
 -# L5 — Proposition F-UNI (design-agnostic delivery reduction, R4)
-+# L5 — Proposition F-UNI (design-agnostic delivery reduction, R4; v2 2026-11-16: delivery narrowed to 𝔇 or IDEAL-W⁺ [TR1], final remark)
++# L5 — Proposition F-UNI (design-agnostic delivery reduction, R4; v2 2026-11-16: delivery narrowed to 𝔇, or every n under A:IDEAL-W⁺ [TR1]; final remark)
  
  Status: **PROVED (by this seat, unchecked)** — v1, 2026-11-09. Template: W2-FAC-A `lemmas/L7_delivery.md` (Proposition F-FAC,
  "PROVED (by this seat, unchecked)", R04 VERIFIED-WITH-AMENDMENTS) and W2-LOC2 `lemmas/L7_delivery.md` (Proposition F-LOC2,
@@ -21,13 +21,13 @@ diff --git a/Theory_work/Wave2/W2-UNI/lemmas/L5_delivery.md b/Theory_work/Wave2/
 -Then, under the method, premises and allocation above: for every admissible n ≥ 3, P(no output) = 0; and P(Ŝ⁺ = S₀) → 1
 -(joint design/noise law under (R), noise law under (E)), together with the algorithm's randomness.
 +Then, under the method, premises and allocation above: (a) for every admissible n ≥ 3 with (n, p_raw) ∈ 𝔇 := {ℓ_raw ≤ 10⁶ and ℓ_raw + ⌊n/2⌋ ≤
-+2³¹ − 1}, ℓ_raw := ⌈log₂(n + p_raw + 1)⌉, P(no output) = 0; (b) with IDEAL-W strengthened to IDEAL-W⁺ (IDEAL-W plus the lift of exactly the two LS0
-+cap rejection predicates `le > 1e6`, `core/v3_run.R:96`, and `cap_ll > INT_MAX`, `core/cpp/v3_core.cpp:474`, which never fire; all other checks kept):
-+for every admissible n ≥ 3, P(no output) = 0; and P(Ŝ⁺ = S₀) → 1 (joint design/noise law under (R), noise law under (E)), together with the algorithm's randomness.
++2³¹ − 1}, ℓ_raw := ⌈log₂(n + p_raw + 1)⌉, P(no output) = 0; (b) under A:IDEAL-W⁺ in place of IDEAL-W (IDEAL-W, and the two shipped rejection predicates
++`le > 10⁶` (Scripts/SMC_BVS/core/v3_run.R:96) and `ℓ + |S̃₀| > INT_MAX` (Scripts/SMC_BVS/core/cpp/v3_core.cpp:474) are false): for every admissible n ≥ 3,
++P(no output) = 0; and P(Ŝ⁺ = S₀) → 1 (joint design/noise law under (R), noise law under (E)), together with the algorithm's randomness.
  
  *Proof.* Step 1 (input validity) — FACA L7 Step 1 uses only (V): under (R) each raw column has iid nondegenerate Gaussian
  entries (Var = Σ_jj = 1 > 0) [R03-4], so no column is dropped, retained p = p_raw a.s., and the allocation depends on
-@@ -38,3 +38,11 @@
+@@ -38,3 +38,12 @@
  (fixed design, FACA L4 Note (5)) or UNI-P / FACA L5.1's every-sequence argument (R).
  Qualifications inherited verbatim from FACA L7: [OP] "PROVED (by this seat, unchecked)"; e4 rests on N3, "OPEN" (only "some
  maximiser" is used for consistency; delivery keeps e4 with TDP-IMPL as in Proposition F); S.3 is a code-reading audit.
@@ -35,7 +35,8 @@ diff --git a/Theory_work/Wave2/W2-UNI/lemmas/L5_delivery.md b/Theory_work/Wave2/
 +(`Theory_work/Dept/research/FUNI_transfer/TR1_sol.md` §1–§2) found two shipped validators outside Theorem D's exit walk that can throw on the SMC branch:
 +`le ≤ 1e6` (`Scripts/SMC_BVS/core/v3_run.R:96-97`, le = ℓ_n under the method above) and ℓ_n + |S̃₀| ≤ INT_MAX (`Scripts/SMC_BVS/core/cpp/v3_core.cpp:474`). Steps 1–3
 +are otherwise unchanged (TR1 §1 table), and Step 2's "P(no output) = 0" is read where neither check fires: on 𝔇, ℓ_n ≤ ℓ_raw ≤ 10⁶ (p ≤ p_raw) and
-+ℓ_n + |S̃₀| ≤ ℓ_raw + K_n ≤ ℓ_raw + ⌊n/2⌋ ≤ 2³¹ − 1 (the exact branch reaches neither check); under IDEAL-W⁺ both predicates are false. The allocation that
++ℓ_n + |S̃₀| ≤ ℓ_raw + K_n ≤ ℓ_raw + ⌊n/2⌋ ≤ 2³¹ − 1 (the exact branch reaches neither check); under A:IDEAL-W⁺ both predicates are false. The allocation that
 +TR1 §2 requires for the shipped cap and preflight (W_G, M_G, P_e + A, P̄_LS0) is already the premise at :11-12. 𝔇 is sufficient, not necessary (TR1's larger
 +D_K uses min(p_raw, ⌊n/2⌋)), and it is bounded, so (a) carries no asymptotic conclusion. Wording aligned with W3-RM2-R Lemma DLV-0 (W3-RM2-R
-+`STATEMENT.md:80-90, 144-150`); its "treated as true" for the lifted predicates is read as "never fire" (TR1 §2).
++`STATEMENT.md:80-90, 144-150`); its "treated as true" for the lifted predicates is read as "are false" (TR1 §2). A:IDEAL-W⁺ is a registered assumption;
++IDEAL-W itself (C-DLV `STATEMENT.md:24-25`) is unchanged.
