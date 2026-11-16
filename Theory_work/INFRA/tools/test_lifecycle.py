@@ -2052,6 +2052,47 @@ try:
                         f"({art}) changed, directly and through the consumer's A5; restoring the file restores the match",
                         nb1))
 
+        # ---------------- task T (HQ 11-16): an EXTERNAL row accepted through an HQ carrier checkpoint ----------------
+        # bvsreg.ticket_dir: for an external row (no tickets.tsv folder) with a council record whose status source is a
+        # CHECKPOINT_<k>.md, A4's ticket folder is that checkpoint's folder (the carrier's ticket), where the frozen
+        # manifest and the seat reviews are; before the fix it was the statement file's folder. Other rows: unchanged.
+        TX = "Theory_work/WaveT/EXTT"
+        STX = "PROVED-CHECKED (external anchor; council R1)"
+        put(f"{TX}/STATEMENT.md", "Theorem TX. T holds.\n")
+        put(f"{TX}/sources/row.tsv", "TX9\tTheorem TX\tsupp-card\tT holds.\n")
+        put(f"{TX}/CHECKPOINT_4.md", f"# EXTT carrier\n\n{STX}\n")
+        put(f"{TX}/LOG.md", f"# EXTT log\n\n{STX}\n")
+        os.makedirs(os.path.join(TMP, TX, "reviews"), exist_ok=True)
+        man("freeze", TX, f"{TX}/reviews/MANIFEST_R1.txt")
+        dgX = open(os.path.join(TMP, TX, "reviews", "MANIFEST_R1.txt"), encoding="utf-8").readline().split()[1]
+        for seat_ in ("sol", "opus"):
+            put(f"{TX}/reviews/R1_council_{seat_}.md", f"Council R1 ({seat_}).\n\n| id | decision |\n|---|---|\n"
+                "| SOP:TX9 | ACCEPT |\n\n" + vline(dgX, seat_))
+        cellX = f"R1; MANIFEST {dgX}; sol=8.5 PASS(reviews/R1_council_sol.md); opus=8.5 PASS(reviews/R1_council_opus.md)"
+        run("registry.py", "add", "SOP:TX9", "--file", f"{TX}/sources/row.tsv", "--lines", "1-1", "--kind", "external",
+            "--name", "TX", "--status", STX, "--source", f"{TX}/CHECKPOINT_4.md:3", "--reason", "t")
+        run("registry.py", "set", "SOP:TX9", f"council={cellX}",
+            f"gates=correct:PASS({TX}/reviews/R1_council_sol.md, {TX}/reviews/R1_council_opus.md)", "--reason", "t")
+        tdir_ok = R.ticket_dir(R.index(R.load_claims())["SOP:TX9"]) == TX
+        e_ok = acc_errs("SOP:TX9")
+        # the status moved to a non-checkpoint file: the old rule (statement file's folder) -> no manifest there -> A4
+        run("registry.py", "correct-status", "SOP:TX9", "--status", STX, "--source", f"{TX}/LOG.md:3", "--reason", "t")
+        e_log = acc_errs("SOP:TX9")
+        tdir_log = R.ticket_dir(R.index(R.load_claims())["SOP:TX9"]) == f"{TX}/sources"
+        run("registry.py", "correct-status", "SOP:TX9", "--status", STX, "--source", f"{TX}/CHECKPOINT_4.md:3", "--reason", "t")
+        # a non-external row in the same arrangement keeps the old rule -> A4
+        run("registry.py", "set", "SOP:TX9", "kind=theorem", "--reason", "t")
+        e_kind = acc_errs("SOP:TX9")
+        tdir_kind = R.ticket_dir(R.index(R.load_claims())["SOP:TX9"]) == f"{TX}/sources"
+        run("registry.py", "set", "SOP:TX9", "kind=external", "--reason", "t")
+        e_back = acc_errs("SOP:TX9")
+        results.append(("task T: an external row with a council record and a CHECKPOINT status source is checked "
+                        "against its carrier ticket's manifest and seats (A4 passes); with a non-checkpoint status "
+                        "source, or as a non-external row, the statement file's folder is used (A4 refuses); restored "
+                        "-> passes again",
+                        tdir_ok and not e_ok and tdir_log and tdir_kind and "A4-council" in {f[1] for f in e_log}
+                        and "A4-council" in {f[1] for f in e_kind} and not e_back))
+
 finally:
     SB.__exit__(None, None, None)
 for name, ok in results:

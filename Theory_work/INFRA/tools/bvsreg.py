@@ -1714,7 +1714,12 @@ def manifest_tool():
 
 def ticket_dir(row: dict, folder: str = "") -> str:
     """The ticket folder whose reviews/MANIFEST_*.txt holds a claim's council manifest: tickets.tsv `folder`, else the
-    folder of the claim's statement file."""
+    folder of the claim's statement file. An EXTERNAL row (no tickets.tsv folder) whose status is carried by a council
+    CHECKPOINT and which has a council record: the folder of that checkpoint (the HQ carrier's ticket; task T, 2026-11-16)."""
+    if not folder and row.get("kind") == "external" and (row.get("council") or "").strip():
+        raw = (row.get("status_source", "") or "").rpartition(":")[0]
+        if raw and _CKPT_NAME.match(os.path.basename(raw)):
+            return _pkey(os.path.dirname(raw))
     return _pkey(folder or os.path.dirname(row.get("file", "")) or "")
 
 
