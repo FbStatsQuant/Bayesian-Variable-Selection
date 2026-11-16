@@ -94,6 +94,7 @@ struct Start {
   }
 };
 // core/cpp/v3_start.h:76-98 (tables) and :101-157 (start), with the stand-in scorer.
+inline void build_sampler(Start& st, const Data& D);
 inline void build_start(Start& st, const Data& D, const std::vector<std::vector<int>>& blocks) {
   st.D = &D; st.blocks = blocks; st.J = (int)blocks.size();
   int K = D.K, J = st.J;
@@ -112,12 +113,17 @@ inline void build_start(Start& st, const Data& D, const std::vector<std::vector<
       st.logr[b][code] = (code == 0) ? 0.0 : o.logm - D.logm0;
     }
   }
+  build_sampler(st, D);
+}
+// The sampler tables and log Zbar_0 from st.logr (second half of core/cpp/v3_start.h:101-157); tests may edit logr first.
+inline void build_sampler(Start& st, const Data& D) {
+  const int K = D.K, J = st.J;
   st.code_ptr.assign(J + 1, 0);
   for (int b = 0; b < J; ++b) st.code_ptr[b + 1] = st.code_ptr[b] + (int64_t)st.logr[b].size();
   st.logr_flat.clear(); for (int b = 0; b < J; ++b) st.logr_flat.insert(st.logr_flat.end(), st.logr[b].begin(), st.logr[b].end());
   st.logprof.assign(J, {}); st.codes_by_size.assign(J, {}); st.sub_cum.assign(J, {});
   for (int b = 0; b < J; ++b) {
-    int m = (int)blocks[b].size(), top = std::min(m, K);
+    int m = (int)st.blocks[b].size(), top = std::min(m, K);
     st.codes_by_size[b].assign(top + 1, {});
     for (uint32_t code = 0; code < (1u << m); ++code) { int j = __builtin_popcount(code); if (j <= top) st.codes_by_size[b][j].push_back(code); }
     st.logprof[b].assign(top + 1, NEG_INF); st.sub_cum[b].assign(top + 1, {});

@@ -19,6 +19,8 @@ static MoveStats moves_from(const uint64_t* f) {
 static const char* status_str(int s) { return s == 0 ? "completed" : (s == 2 ? "numerical_failure" : "resource_limit"); }
 
 std::string write_island_file(const std::string& path, const IslandRun& r, Arith arith, const Json& inputs) {
+  if (r.status == 1)   // `interrupted` (stop_after_step) is a test outcome, never a file (review m3)
+    throw Error(Status::internal_error, "write_island_file: an interrupted island (stop_after_step) has no island file");
   fmt::Writer w(fmt::K_ISLAND, r.compat ? fmt::M_COMPAT : (arith == Arith::ClassA ? fmt::M_V : fmt::M_LAW));
   const bool done = r.status == 0;
   uint64_t lz; std::memcpy(&lz, &r.logZ, 8);
@@ -37,8 +39,8 @@ std::string write_island_file(const std::string& path, const IslandRun& r, Arith
   for (size_t i = 0; i < T; ++i) { auto& s = r.stages[i]; phi[i] = s.phi; inc[i] = s.inc; ess[i] = s.ess; cum[i] = s.cum; dr[i] = s.distinct_res; dm[i] = s.distinct_moved; moves_row(s.moves, mv); }
   for (auto& x : r.terminal_moves) moves_row(x, tmv);
   w.add_copy("grid", fmt::D_F64, r.grid.data(), r.grid.size() * 8, r.grid.size(), 0);
-  w.add_copy("st_phi", fmt::D_F64, phi.data(), T * 8, T, 0); w.add_copy("st_inc", fmt::D_F64, inc.data(), T * 8, T, 0);
-  w.add_copy("st_ess", fmt::D_F64, ess.data(), T * 8, T, 0); w.add_copy("st_cum", fmt::D_F64, cum.data(), T * 8, T, 0);
+  w.add_copy("st_phi", fmt::D_F64, phi.data(), T * 8, T, 0); w.add_copy("st_ess", fmt::D_F64, ess.data(), T * 8, T, 0);
+  if (done) { w.add_copy("st_inc", fmt::D_F64, inc.data(), T * 8, T, 0); w.add_copy("st_cum", fmt::D_F64, cum.data(), T * 8, T, 0); }   // estimates: GUARD-W (m2)
   w.add_copy("st_distinct_res", fmt::D_I32, dr.data(), T * 4, T, 0); w.add_copy("st_distinct_moved", fmt::D_I32, dm.data(), T * 4, T, 0);
   w.add_copy("st_moves", fmt::D_U64, mv.data(), mv.size() * 8, T, MOVE_FIELDS);
   w.add_copy("term_moves", fmt::D_U64, tmv.data(), tmv.size() * 8, r.terminal_moves.size(), MOVE_FIELDS);
@@ -79,7 +81,9 @@ IslandFile read_island_file(const std::string& path, bool verify) {
   o.L = (int32_t)f.meta.at("L").i64(); o.Hm = (int32_t)f.meta.at("Hm").i64();
   const int p = (int)f.meta.at("p").i64();
   f.grid = rd.vec<double>("grid");
-  auto phi = rd.vec<double>("st_phi"), inc = rd.vec<double>("st_inc"), ess = rd.vec<double>("st_ess"), cum = rd.vec<double>("st_cum");
+  auto phi = rd.vec<double>("st_phi"), ess = rd.vec<double>("st_ess");
+  std::vector<double> inc(phi.size(), 0.0), cum(phi.size(), 0.0);
+  if (rd.has("st_inc")) { inc = rd.vec<double>("st_inc"); cum = rd.vec<double>("st_cum"); }
   auto dr = rd.vec<int32_t>("st_distinct_res"), dm = rd.vec<int32_t>("st_distinct_moved");
   auto mv = rd.vec<uint64_t>("st_moves"), tmv = rd.vec<uint64_t>("term_moves");
   for (size_t i = 0; i < phi.size(); ++i) { StageRow s; s.phi = phi[i]; s.inc = inc[i]; s.ess = ess[i]; s.cum = cum[i]; s.distinct_res = dr[i]; s.distinct_moved = dm[i]; s.moves = moves_from(&mv[i * MOVE_FIELDS]); o.stages.push_back(s); }

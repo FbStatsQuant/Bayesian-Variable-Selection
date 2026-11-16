@@ -360,8 +360,8 @@ TEST(island_file_roundtrip_and_terminal_supports) {
   std::remove((a.ckpt_path + ".a").c_str()); std::remove((a.ckpt_path + ".b").c_str());
   IslandRun ri = run_island<Arith::Bit>(F.D, F.st, F.nb, a);
   std::string path = tmpdir() + "/wp3_island_rt_int.bin";
-  write_island_file(path, ri, Arith::Bit, v4::Json::object());
-  { v4::fmt::Reader rd(path); CHECK(!rd.has("logZ") && !rd.has("rb_acc") && !rd.has("pip_r") && !rd.has("terminal_S") && rd.has("st_phi")); }
+  bool refused = false; try { write_island_file(path, ri, Arith::Bit, v4::Json::object()); } catch (const v4::Error&) { refused = true; }
+  CHECK(refused);   // an interrupted island is a test outcome, never a file (review m3)
   std::remove(path.c_str()); std::remove((a.ckpt_path + ".a").c_str()); std::remove((a.ckpt_path + ".b").c_str());
 }
 
@@ -417,6 +417,7 @@ TEST(t6_kill_during_write_resubmit_and_refusal) {
   IslandConfig b = a; b.stop_after_step = -1; b.threads = 3; b.G = 7;
   IslandRun r = run_island<Arith::ClassA>(F.D, F.st, F.nb, b);
   CHECKF(r.status == 0 && r.resumed_from_step == 3 && r.hash() == h0, "torn newest: resumed %d", r.resumed_from_step);
+  { FILE* lf = std::fopen((base + ".b.tmp.12345").c_str(), "rb"); CHECK(lf == nullptr); if (lf) std::fclose(lf); }   // m4b: leftover removed
   // (2) repeated resubmission: stop at 2, resume and stop at 6, resume to the end
   clean();
   a.stop_after_step = 2; a.ckpt_every_s = 1e9;
@@ -554,4 +555,114 @@ TEST(compat_restart_file_and_refusals) {
   }
   bool refusedA = false; try { run_island<Arith::ClassA>(F.D, F.st, F.nb, c); } catch (const std::exception&) { refusedA = true; }
   CHECK(refusedA);
+}
+
+// M1 (review PR21): a numerical failure inside the kernels returns status numerical_failure (no abort), deterministically:
+// the same reason for the particle-major and the label-major kernel at 1 and 3 threads; no estimate and no store in the
+// result or the island file. Columns scaled by 1e200 make Cholesky, refactor and QR fail for every model containing them.
+TEST(numerical_failure_status_deterministic) {
+  Fixture F(100, 300, 28);
+  auto own = std::make_shared<v4::DataOwned>();
+  own->X.assign(F.D.Xs, F.D.Xs + (size_t)F.D.n * F.D.p); own->y.assign(F.D.ys, F.D.ys + F.D.n);
+  for (int j : {37, 151, 222}) for (int i = 0; i < F.D.n; ++i) own->X[(size_t)j * F.D.n + i] *= 1e200;
+  v4::Data D2 = v4::make_data(own, F.D.n, F.D.p);
+  for (int arith = 0; arith < 2; ++arith) {
+    std::string reason0;
+    for (int kern = 0; kern < 2; ++kern) for (int th : {1, 3}) {
+      IslandConfig c = small_cfg(); c.kernel = kern ? KernelKind::LabelMajor : KernelKind::ParticleMajor; c.threads = th; c.G = 16;
+      IslandRun r = arith ? run_island<Arith::ClassA>(D2, F.st, F.nb, c) : run_island<Arith::Bit>(D2, F.st, F.nb, c);
+      bool ok = r.status == 2 && r.reason.find("numerical_failure") != std::string::npos && r.top_v.empty() && r.rb_acc.empty() && r.pip.empty();
+      if (reason0.empty()) { reason0 = r.reason; std::printf("  [%s] %s\n", arith ? "A" : "bit", r.reason.c_str()); }
+      CHECKF(ok && r.reason == reason0, "arith %d kernel %d threads %d: status %d reason '%s' vs '%s'", arith, kern, th, r.status, r.reason.c_str(), reason0.c_str());
+      if (kern == 1 && th == 3) {
+        std::string path = tmpdir() + "/wp3_nf.bin";
+        write_island_file(path, r, arith ? Arith::ClassA : Arith::Bit, v4::Json::object());
+        v4::fmt::Reader rd(path);
+        CHECK(rd.json("meta").at("status").str() == "numerical_failure" && !rd.has("logZ") && !rd.has("rb_acc") && !rd.has("pip_r") &&
+              !rd.has("terminal_S") && !rd.has("st_cum") && rd.has("st_phi"));
+        std::remove(path.c_str());
+      }
+    }
+  }
+}
+
+// M1, kernel path: pi_0 never draws the scaled columns (their table entries set to -inf), so the failure is a consumed
+// Gibbs flip (label-major: phase-A flag, walk; particle-major: eval1 flag) -- same reason for every kernel and thread count.
+TEST(numerical_failure_in_flip_deterministic) {
+  Fixture F(100, 300, 32);
+  const std::vector<int> bad = {37, 151, 222};
+  auto own = std::make_shared<v4::DataOwned>();
+  own->X.assign(F.D.Xs, F.D.Xs + (size_t)F.D.n * F.D.p); own->y.assign(F.D.ys, F.D.ys + F.D.n);
+  for (int j : bad) for (int i = 0; i < F.D.n; ++i) own->X[(size_t)j * F.D.n + i] *= 1e200;
+  v4::Data D2 = v4::make_data(own, F.D.n, F.D.p);
+  Start st2 = F.st;
+  for (int j : bad) { int b = st2.blk[j]; for (size_t code = 0; code < st2.logr[b].size(); ++code) if (code & (1u << st2.pos[j])) st2.logr[b][code] = NEG_INF; }
+  build_sampler(st2, F.D);
+  for (int arith = 0; arith < 2; ++arith) {
+    std::string reason0;
+    for (int kern = 0; kern < 2; ++kern) for (int th : {1, 3}) {
+      IslandConfig c = small_cfg(); c.kernel = kern ? KernelKind::LabelMajor : KernelKind::ParticleMajor; c.threads = th; c.G = 16;
+      IslandRun r = arith ? run_island<Arith::ClassA>(D2, st2, F.nb, c) : run_island<Arith::Bit>(D2, st2, F.nb, c);
+      if (reason0.empty()) { reason0 = r.reason; std::printf("  [%s] %s\n", arith ? "A" : "bit", r.reason.c_str()); }
+      CHECKF(r.status == 2 && r.reason == reason0 && r.reason.find("Gibbs label") != std::string::npos && r.top_v.empty(),
+             "arith %d kernel %d threads %d: status %d reason '%s' vs '%s'", arith, kern, th, r.status, r.reason.c_str(), reason0.c_str());
+    }
+  }
+}
+
+// M2 (review PR21): kept runs held by worker snapshots are released at step boundaries and on flush: after an island
+// none is alive, and at most a few were alive at once (current + new during a compaction + snapshots in a tile).
+TEST(store_snapshots_released) {
+  Fixture F(100, 300, 29);
+  kept_live_max().store(kept_live().load());
+  const int before = kept_live().load();
+  IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = 3; c.G = 16; c.store_cap = 2000;   // many compactions
+  IslandRun r = run_island<Arith::ClassA>(F.D, F.st, F.nb, c);
+  CHECK(r.status == 0);
+  std::printf("  kept runs alive: before %d, max during the island %d, after %d (merges %llu)\n", before, r.ks.kept_live_max, kept_live().load(),
+              (unsigned long long)r.ks.store_merges);
+  CHECK(kept_live().load() == before);
+  CHECK(r.ks.kept_live_max - before <= 4);
+}
+
+// m6a: flips at supports k > 24 (the uncapped vector path), k = 25, 40, 99 at K = 100: bit form = scorer bits (both entry
+// points), class A <= 1e-9 relative.
+TEST(flip_large_supports) {
+  Fixture F(200, 400, 30);
+  BitScorer sc(&F.D);
+  std::mt19937_64 g(8);
+  long checked = 0, mism = 0; double worstA = 0;
+  for (int k : {25, 40, 99}) {
+    Model S = random_support(g, F.D.p, k);
+    double lm = sc.score(S).logm, cc = F.st.comp(S);
+    SupportCache s; build_support(F.D, F.st, sc, s, S, zobrist(F.D, S), lm, F.D.logprior[k] + cc, (lm - F.D.logm0) - cc, 1.0);
+    CHECK(s.fast);
+    for (int j = 0; j < F.D.p; ++j) {
+      Model T = S; if (contains(S, j)) sorted_erase(T, j); else sorted_insert(T, j);
+      double ref = sc.score(T).logm, l1, o1, la, oa;
+      eval1<Arith::Bit>(F.D, F.st, sc, s, j, l1, o1);
+      eval1<Arith::ClassA>(F.D, F.st, sc, s, j, la, oa);
+      ++checked; if (!same_bits(ref, l1)) ++mism;
+      if (!contains(S, j)) worstA = std::max(worstA, std::fabs(la - ref) / std::fabs(ref));
+    }
+  }
+  std::printf("  k = 25/40/99: %ld flips, %ld bit mismatches, class A max relative %.2e\n", checked, mism, worstA);
+  CHECK(mism == 0); CHECK(worstA <= 1e-9);
+}
+
+// m6c: the Gibbs cap |S| = K is reached (n = 12 -> K = 6): I4 by mechanism holds, PM = LM in both forms.
+TEST(gibbs_cap_island) {
+  Fixture F(12, 80, 31);
+  for (int arith = 0; arith < 2; ++arith) {
+    IslandConfig c = small_cfg(); c.kernel = KernelKind::ParticleMajor;
+    IslandRun r0 = arith ? run_island<Arith::ClassA>(F.D, F.st, F.nb, c) : run_island<Arith::Bit>(F.D, F.st, F.nb, c);
+    c.kernel = KernelKind::LabelMajor; c.threads = 3; c.G = 16;
+    IslandRun r1 = arith ? run_island<Arith::ClassA>(F.D, F.st, F.nb, c) : run_island<Arith::Bit>(F.D, F.st, F.nb, c);
+    uint64_t cap = 0; MoveStats mb; for (auto& s : r1.stages) { cap += s.moves.gibbs_cap; add_moves(mb, s.moves); }
+    for (auto& s : r1.terminal_moves) cap += s.gibbs_cap;
+    CHECKF(r0.status == 0 && r1.status == 0 && r0.hash() == r1.hash(), "arith %d: PM vs LM", arith);
+    CHECKF(cap > 0, "arith %d: the cap was never reached", arith);
+    CHECK(v4::i4_holds(mb, r1.logical[PH_FINAL_BRIDGE]));
+    std::printf("  [%s] K = %d: %llu Gibbs steps at the cap\n", arith ? "A" : "bit", F.D.K, (unsigned long long)cap);
+  }
 }

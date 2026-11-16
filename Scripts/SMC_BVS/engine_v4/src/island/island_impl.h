@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <cstdio>
+#include <filesystem>
 #include <memory>
 #include "v4/island/island.h"
 #include "v4/provenance.h"
@@ -74,6 +75,7 @@ uint64_t IslandRun::hash() const {
 
 v4::IslandResult to_record(const IslandRun& r) {
   v4::IslandResult o;
+  if (r.status == 1) throw v4::Error(v4::Status::internal_error, "to_record: an interrupted island (stop_after_step) has no record");
   o.status = r.status == 0 ? v4::Status::completed : (r.status == 2 ? v4::Status::numerical_failure : v4::Status::resource_limit);
   o.r = r.r; o.N = r.N; o.T = r.T; o.L = r.L; o.Hm = r.Hm; o.logZ = r.logZ; o.init_hash = r.init_hash;
   o.stages = r.stages; o.terminal_moves = r.terminal_moves; o.terminal_distinct = r.terminal_distinct;
@@ -124,6 +126,32 @@ class IslandEngine {
   std::chrono::steady_clock::time_point last_ckpt;
 
   struct RoundCtx { uint8_t xph; uint32_t ustage; uint32_t ev_stage, ev_round; int phase; double phi; bool measured; };
+
+  // ---- numerical failures (review PR21 M1) -------------------------------------------------------------------
+  // An island fails at the first CONSUMED event whose score fails. Inside an OpenMP region nothing throws: failures are
+  // recorded here (the smallest particle index wins, so the choice does not depend on the schedule) and rethrown after
+  // the region. Particle-major rounds record every particle's first failure; label-major groups run in particle order
+  // and stop after the first group with a failure: both report the round's smallest failing particle, same text.
+  struct FailSlot {
+    std::mutex mu; bool has = false, internal = false; uint32_t particle = 0; std::string msg;
+    void record(uint32_t i, const std::string& m, bool intern = false) {
+      std::lock_guard<std::mutex> lk(mu);
+      if (!has || i < particle) { has = true; particle = i; msg = m; internal = intern; }
+    }
+  } fail;
+  static const char* xph_name(uint8_t x) { return x == X_INIT ? "init" : x == X_BRIDGE ? "bridge stage" : x == X_BURN ? "burn-in round" : x == X_MEASURED ? "measured round" : "?"; }
+  std::string fail_msg(const RoundCtx& rc, uint32_t i1, uint32_t pos, const std::string& what) const {
+    return std::string(xph_name(rc.xph)) + " " + std::to_string(rc.ustage) + ", particle " + std::to_string(i1) + ", position " +
+           std::to_string(pos) + ": " + what;
+  }
+  static std::string gibbs_fail(int j) { return "Gibbs label " + std::to_string(j) + ": score failed after Cholesky, refactor and augmented QR"; }
+  void throw_if_failed() {
+    std::lock_guard<std::mutex> lk(fail.mu);
+    if (!fail.has) return;
+    std::string m = fail.msg; bool in = fail.internal; fail.has = false;
+    if (in) throw v4::Error(v4::Status::internal_error, m);
+    throw v4::NumericalFailure(m);
+  }
 
   IslandEngine(const Data& d, const Start& s, const Neighbours& n, const IslandConfig& c) : D(d), st(s), nb(n), cfg(c) {
     p = D.p; m = p + cfg.B + 2; NT = std::max(1, cfg.threads);
@@ -233,8 +261,11 @@ class IslandEngine {
     std::vector<uint32_t> ord(m); draw_order(rc, i, ord.data());
     Particle& Pi = P[i]; const uint32_t i1 = (uint32_t)i + 1;
     SupportCache s; bool cache_ok = false; Particle tmp;
+    uint32_t pos_cur = 0;
+    try {
     for (int pos0 = 0; pos0 < m; ++pos0) {
       const uint32_t pos = (uint32_t)pos0 + 1; int lab = (int)ord[pos0];
+      pos_cur = pos;
       if (lab < p) {
         // Gibbs (core/cpp/v3_engine.h:113-132): held state counted, other configuration scored and offered
         L.ms.gibbs++; L.logical[rc.phase][ME_GIBBS_HELD]++;
@@ -242,6 +273,7 @@ class IslandEngine {
         bool in = contains(Pi.S, lab);
         double lm = 0, o = 0;
         eval1<A>(D, st, sc, s, lab, lm, o);
+        if (o < 0) { fail.record((uint32_t)i, fail_msg(rc, i1, pos, gibbs_fail(lab))); return; }   // consumed failed score
         bool has_other = in || s.add_ok;
         if (!has_other) L.ms.gibbs_cap++;   // addition refused at |S| = K: one event (held), INTERFACES v0.1.5 §4.2
         Model T;
@@ -259,6 +291,7 @@ class IslandEngine {
         if (step_nongibbs(lab, Pi, i, pos, rc, L, sc, tmp)) { Pi = tmp; cache_ok = false; }
       }
     }
+    } catch (const v4::NumericalFailure& e) { fail.record((uint32_t)i, fail_msg(rc, i1, pos_cur, e.what())); }
   }
 
   // --- label-major round for the particles [g0, g0 + gN) ------------------------------------------------------
@@ -421,7 +454,8 @@ class IslandEngine {
                 philox8_positions(ctr.data(), key.data(), pos8, u8);   // = uniform_at(addr(.., pos, slot 0)) per lane
                 for (int l = 0; l < 8; ++l) if ((need >> l) & 1u) {
                   const int jj = v + l;
-                  bool change = inm[jj] ? !(u8[l] < ob[j0 + jj]) : (u8[l] < ob[j0 + jj]);
+                  const double oj = ob[j0 + jj];   // ODDS_FAILED (< 0): a failed score is an event at its position
+                  bool change = oj < 0 || (inm[jj] ? !(u8[l] < oj) : (u8[l] < oj));
                   if (change && pos8[l] < best) best = pos8[l];
                 }
               }
@@ -442,11 +476,20 @@ class IslandEngine {
         uint32_t f = gb.fmin[gi].load(std::memory_order_relaxed);
         gb.etype[gi] = 0; gb.e[gi] = (uint32_t)m;
         if (f != UINT32_MAX) { gb.etype[gi] = 1; gb.e[gi] = f; }
-        for (auto& pl : gb.ng[gi]) {
-          if (pl.first <= gb.q[gi]) continue;
-          if (pl.first >= f) break;
-          if (step_nongibbs(pl.second, P[g0 + gi], g0 + gi, pl.first, rc, L, sc, gb.pending[gi])) { gb.etype[gi] = 2; gb.e[gi] = pl.first; break; }
-        }
+        const uint32_t i1 = (uint32_t)(g0 + gi) + 1; uint32_t pos_cur = 0;
+        try {
+          for (auto& pl : gb.ng[gi]) {
+            if (pl.first <= gb.q[gi]) continue;
+            if (pl.first >= f) break;
+            pos_cur = pl.first;
+            if (step_nongibbs(pl.second, P[g0 + gi], g0 + gi, pl.first, rc, L, sc, gb.pending[gi])) { gb.etype[gi] = 2; gb.e[gi] = pl.first; break; }
+          }
+          if (gb.etype[gi] == 1) {   // the event at f: a Gibbs change, or a consumed failed score
+            int j = (int)gb.ord[(size_t)gi * m + f - 1];
+            if (gb.obuf[(size_t)gb.sup_of[gi] * p + j] < 0) { fail.record(i1 - 1, fail_msg(rc, i1, f, gibbs_fail(j))); gb.etype[gi] = 3; }
+          }
+        } catch (const v4::NumericalFailure& e) { fail.record(i1 - 1, fail_msg(rc, i1, pos_cur, e.what())); gb.etype[gi] = 3; }
+        if (gb.etype[gi] == 3) gb.e[gi] = gb.q[gi];   // a failed particle consumes nothing more (the round's events are discarded)
       }
       lap(KS.t_walk);
 
@@ -463,6 +506,7 @@ class IslandEngine {
         std::vector<uint32_t> ncons_v(Bk), fpos_v(Bk); std::vector<int> first_v(Bk);
         #pragma omp for schedule(dynamic, 1)
         for (int ti = w0; ti < w1; ++ti) {
+          if (L.buf.snap && L.buf.snap_gen != top.gen.load(std::memory_order_relaxed)) { L.buf.snap.reset(); L.buf.snap_gen = ~0ull; }   // M2
           const int j0 = ti * Bk, nbv = std::min(Bk, p - j0);
           for (int s = 0; s < nsup; ++s) {
             const SupportCache& c = gb.sup[s];
@@ -517,13 +561,13 @@ class IslandEngine {
           const SupportCache& c = gb.sup[gb.sup_of[gi]];
           double lm = gb.lbuf[(size_t)gb.sup_of[gi] * p + j];
           Model T = c.S; if (std::binary_search(T.begin(), T.end(), j)) sorted_erase(T, j); else sorted_insert(T, j);
-          fill(x, T, canonical(*scorers[0], T, lm));
-          tl[0]->ms.gibbs_change++;
+          try { fill(x, T, canonical(*scorers[0], T, lm)); tl[0]->ms.gibbs_change++; }
+          catch (const v4::NumericalFailure& e) { fail.record((uint32_t)(g0 + gi), fail_msg(rc, (uint32_t)(g0 + gi) + 1, gb.e[gi], e.what())); gb.etype[gi] = 3; }
         } else if (gb.etype[gi] == 2) {
           x = gb.pending[gi];
         }
         gb.q[gi] = gb.e[gi];
-        if (gb.e[gi] == (uint32_t)m) gb.done[gi] = 1;
+        if (gb.e[gi] == (uint32_t)m || gb.etype[gi] == 3) gb.done[gi] = 1;
       }
       lap(KS.t_apply);
     }
@@ -533,7 +577,7 @@ class IslandEngine {
     if (rc.measured) std::fill(rb_cur.begin(), rb_cur.end(), (u128)0);
     if (cfg.kernel == KernelKind::LabelMajor) {
       int G = std::max(1, cfg.G);
-      for (int g0 = 0; g0 < cfg.N; g0 += G) lm_group(g0, std::min(G, cfg.N - g0), rc);
+      for (int g0 = 0; g0 < cfg.N; g0 += G) { lm_group(g0, std::min(G, cfg.N - g0), rc); throw_if_failed(); }
     } else {
       auto t0 = std::chrono::steady_clock::now();
       if (rc.measured) for (auto& v : rb_thread) std::fill(v.begin(), v.end(), (u128)0);
@@ -542,6 +586,7 @@ class IslandEngine {
         int th = omp_get_thread_num();
         pm_round(i, rc, *tl[th], *scorers[th], rc.measured ? &rb_thread[th] : nullptr);
       }
+      throw_if_failed();
       if (rc.measured) for (auto& v : rb_thread) for (int j = 0; j < p; ++j) rb_cur[j] += v[j];
       res.ks.particle_rounds += cfg.N;
       res.ks.t_pm += std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
@@ -583,6 +628,7 @@ class IslandEngine {
     if (cfg.leaders) { lead0.compact(); lead1.compact(); }
     release_snapshots();
     if (top.defer) top.compact_parallel(NT); else top.compact();   // one island store, compacted at every step boundary
+    if (top.nan_offered.load()) throw v4::Error(v4::Status::internal_error, "store: a NaN value was offered (INTERFACES v0.1.3)");
   }
   // workers drop their kept-run snapshots before a boundary compaction: at most two kept runs are ever alive
   void release_snapshots() { for (auto& t : tl) { t->buf.snap.reset(); t->buf.snap_gen = ~0ull; } }
@@ -623,6 +669,9 @@ class IslandEngine {
       v.resize(n); raw(v.data(), n * sizeof(T));
     }
   };
+  // the event key field by field (no padding bytes in the checkpoint; review m4d)
+  static void key_io(CkptOut& w, const EventKey& k) { w.put(k.seg); w.put(k.tier); w.put(k.iter); w.put(k.unit); w.put(k.xph); w.put(k.stage); w.put(k.round); w.put(k.particle); w.put(k.position); w.put(k.sub); }
+  static void key_io(CkptIn& r, EventKey& k) { r.get(k.seg); r.get(k.tier); r.get(k.iter); r.get(k.unit); r.get(k.xph); r.get(k.stage); r.get(k.round); r.get(k.particle); r.get(k.position); r.get(k.sub); }
   template <class W> void ckpt_payload(W& w, int step) {
     w.put(fingerprint()); w.put(step); w.put(logZ); w.put(res.init_hash);
     uint64_t np = P.size(); w.put(np);
@@ -631,7 +680,7 @@ class IslandEngine {
     uint64_t nr = res.rb_round.size(); w.put(nr); for (auto& v : res.rb_round) w.putv(v);
     w.putv(rb_tot);
     w.put(master.logical); w.put(master.island_best);
-    w.put(master.hpm.has); w.putv(master.hpm.S); w.put(master.hpm.F); w.put(master.hpm.logm); w.put(master.hpm.key); w.put(master.hpm.phase); w.put(master.hpm.mech);
+    w.put(master.hpm.has); w.putv(master.hpm.S); w.put(master.hpm.F); w.put(master.hpm.logm); key_io(w, master.hpm.key); w.put(master.hpm.phase); w.put(master.hpm.mech);
     w.putv(top.k->v); w.putv(top.k->hash); w.putv(top.k->off); w.putv(top.k->len); w.putv(top.k->pool);
     if (csrc) { w.put(csrc->g.s); w.put(csrc->g.count); w.putv(rb_d); }   // compat: xoshiro state + position, double RB
     if (cfg.leaders) for (TopStore* L : {&lead0, &lead1}) { w.putv(L->k->v); w.putv(L->k->hash); w.putv(L->k->off); w.putv(L->k->len); w.putv(L->k->pool); }
@@ -644,7 +693,7 @@ class IslandEngine {
     std::string path = cfg.ckpt_path + ((ckpt_writes & 1) ? ".b" : ".a");
     std::string tmp = path + ".tmp." + std::to_string((long)getpid());
     FILE* f = std::fopen(tmp.c_str(), "wb");
-    if (!f) throw std::runtime_error("io_error: cannot open checkpoint " + tmp);
+    if (!f) throw v4::Error(v4::Status::io_error, "cannot open checkpoint " + tmp);
     std::setvbuf(f, nullptr, _IOFBF, 1 << 20);
     uint64_t zero[3] = {0, 0, 0};
     bool ok = std::fwrite(kCkptMagic, 1, 8, f) == 8 && std::fwrite(zero, 8, 3, f) == 3;
@@ -654,7 +703,13 @@ class IslandEngine {
     ok = ok && !w.bad && std::fseek(f, 8, SEEK_SET) == 0 && std::fwrite(&gen, 8, 1, f) == 1 && std::fwrite(&w.len, 8, 1, f) == 1 &&
          std::fwrite(&w.ck.h, 8, 1, f) == 1 && std::fflush(f) == 0 && ::fsync(fileno(f)) == 0;
     ok = (std::fclose(f) == 0) && ok;
-    if (!ok || std::rename(tmp.c_str(), path.c_str()) != 0) { std::remove(tmp.c_str()); throw std::runtime_error("io_error: checkpoint write failed: " + path); }
+    if (!ok || std::rename(tmp.c_str(), path.c_str()) != 0) { std::remove(tmp.c_str()); throw v4::Error(v4::Status::io_error, "checkpoint write failed: " + path); }
+    {   // the rename is durable only once the directory entry is (review m4a; INTERFACES §5.1)
+      std::string dir = path.substr(0, path.find_last_of('/') == std::string::npos ? 0 : path.find_last_of('/'));
+      int dfd = ::open(dir.empty() ? "." : dir.c_str(), O_RDONLY | O_DIRECTORY);
+      if (dfd < 0 || ::fsync(dfd) != 0) { if (dfd >= 0) ::close(dfd); throw v4::Error(v4::Status::io_error, "directory fsync failed for " + path); }
+      ::close(dfd);
+    }
     ++ckpt_writes;
     last_ckpt = std::chrono::steady_clock::now();
     res.ks.t_ckpt += std::chrono::duration<double>(last_ckpt - t0).count();
@@ -662,6 +717,15 @@ class IslandEngine {
   // returns the step to continue after, or -1 (no valid checkpoint). A valid checkpoint (checksum ok) of another
   // configuration or binary is refused (invalid_input), never silently ignored.
   int load_ckpt() {
+    {   // leftover temporary files of killed writers (review m4b): <path>.{a,b}.tmp.<pid>
+      std::filesystem::path base(cfg.ckpt_path); std::error_code ec;
+      std::filesystem::path dir = base.has_parent_path() ? base.parent_path() : std::filesystem::path(".");
+      const std::string stem = base.filename().string();
+      for (auto& de : std::filesystem::directory_iterator(dir, ec)) {
+        const std::string fn = de.path().filename().string();
+        if (fn.rfind(stem + ".a.tmp.", 0) == 0 || fn.rfind(stem + ".b.tmp.", 0) == 0) std::filesystem::remove(de.path(), ec);
+      }
+    }
     int best_step = -1; uint64_t best_gen = 0; std::string best; bool foreign = false;
     for (const char* sfx : {".a", ".b"}) {
       std::string path = cfg.ckpt_path + sfx;
@@ -690,25 +754,28 @@ class IslandEngine {
       if (foreign) throw v4::Error(v4::Status::invalid_input, "checkpoint " + cfg.ckpt_path + " belongs to another configuration or binary");
       return -1;
     }
-    FILE* f = std::fopen(best.c_str(), "rb"); if (!f) return -1;
-    uint64_t len = 0; std::fseek(f, 16, SEEK_SET); if (std::fread(&len, 8, 1, f) != 1) { std::fclose(f); return -1; }
+    // pass 2. The file passed its checksum: a parse failure now is an internal inconsistency, never a silent fresh start
+    // over partially overwritten state (review m4c).
+    auto corrupt = [&](FILE* fp) { if (fp) std::fclose(fp); throw v4::Error(v4::Status::internal_error, "checkpoint " + best + ": checksum valid but payload unreadable"); };
+    FILE* f = std::fopen(best.c_str(), "rb"); if (!f) corrupt(nullptr);
+    uint64_t len = 0; std::fseek(f, 16, SEEK_SET); if (std::fread(&len, 8, 1, f) != 1) corrupt(f);
     std::fseek(f, 32, SEEK_SET);
     CkptIn r; r.f = f; r.left = len;
     uint64_t fp; int step; r.get(fp); r.get(step); r.get(logZ); r.get(res.init_hash);
-    uint64_t np; r.get(np); if (r.bad || np != (uint64_t)cfg.N) { std::fclose(f); return -1; }
+    uint64_t np; r.get(np); if (r.bad || np != (uint64_t)cfg.N) corrupt(f);
     P.assign(np, Particle());
     for (auto& x : P) { r.getv(x.S); r.get(x.h); r.get(x.logm); r.get(x.lg0); r.get(x.d); r.get(x.F); }
     r.getv(res.stages); r.getv(res.terminal_moves); r.getv(res.terminal_distinct);
-    uint64_t nr = 0; r.get(nr); if (r.bad || nr > 1u << 20) { std::fclose(f); return -1; }
+    uint64_t nr = 0; r.get(nr); if (r.bad || nr > 1u << 20) corrupt(f);
     res.rb_round.assign(nr, {}); for (auto& v : res.rb_round) r.getv(v);
     r.getv(rb_tot);
     r.get(master.logical); r.get(master.island_best);
-    r.get(master.hpm.has); r.getv(master.hpm.S); r.get(master.hpm.F); r.get(master.hpm.logm); r.get(master.hpm.key); r.get(master.hpm.phase); r.get(master.hpm.mech);
+    r.get(master.hpm.has); r.getv(master.hpm.S); r.get(master.hpm.F); r.get(master.hpm.logm); key_io(r, master.hpm.key); r.get(master.hpm.phase); r.get(master.hpm.mech);
     { auto nk = std::make_shared<Kept>(); r.getv(nk->v); r.getv(nk->hash); r.getv(nk->off); r.getv(nk->len); r.getv(nk->pool); top.k = nk; }
     if (csrc) { r.get(csrc->g.s); r.get(csrc->g.count); r.getv(rb_d); }
     if (cfg.leaders) for (TopStore* L : {&lead0, &lead1}) { auto nk = std::make_shared<Kept>(); r.getv(nk->v); r.getv(nk->hash); r.getv(nk->off); r.getv(nk->len); r.getv(nk->pool); L->k = nk; L->publish_loaded(); }
+    if (r.bad) corrupt(f);
     std::fclose(f);
-    if (r.bad) return -1;
     top.publish_loaded();
     return step;
   }
@@ -748,10 +815,12 @@ class IslandEngine {
         for (int i = 0; i < N; ++i) {
           int th = omp_get_thread_num(); Model S;
           draw_pi0(st, [&](uint32_t slot) { return U(addr(X_INIT, 0, (uint32_t)i + 1, 0, slot)); }, S);
-          fill(P[i], S, scorers[th]->score(S).logm);
+          try { fill(P[i], S, scorers[th]->score(S).logm); }
+          catch (const v4::NumericalFailure& e) { fail.record((uint32_t)i, "initial draw, particle " + std::to_string(i + 1) + ": " + e.what()); continue; }
           EventKey k; k.seg = SG_FINAL; k.tier = (uint8_t)cfg.tier; k.iter = -1; k.unit = cfg.island; k.xph = X_INIT; k.particle = (uint32_t)i + 1;
           offer_particle(*tl[th], P[i], PH_FINAL_INIT, ME_INIT, k);
         }
+        throw_if_failed();
         uint64_t hh = 0x243F6A8885A308D3ULL;
         for (int i = 0; i < N; ++i) { uint64_t x = hh ^ P[i].h ^ (uint64_t)(i + 1); hh = splitmix64(x); }
         res.init_hash = hh;
@@ -811,7 +880,7 @@ class IslandEngine {
                        top.size(), (unsigned long long)top.n_merges, (unsigned long long)top.n_buffered);
           prev_t = now_t;
         }
-        if (!(top.check_invariant())) throw std::runtime_error("internal_error: store invariant I1 violated");
+        if (cfg.check_store && !(top.check_invariant())) throw v4::Error(v4::Status::internal_error, "store invariant I1 violated");
         if (over_budget(step)) { stop = true; break; }
         maybe_ckpt(step, stop);
       }
@@ -828,7 +897,11 @@ class IslandEngine {
     }
     std::memcpy(res.logical, master.logical, sizeof(res.logical));
     res.island_best = master.island_best; res.hpm = master.hpm;
-    res.top_v = top.k->v; res.top_hash = top.k->hash; res.top_off = top.k->off; res.top_len = top.k->len; res.top_pool = top.k->pool;
+    if (res.status != 2) {   // a failed island reports no store: workers may have flushed part of the failing round
+      Kept& K = *top.k;      // moved, not copied (review m8b; the run is over)
+      res.top_v = std::move(K.v); res.top_hash = std::move(K.hash); res.top_off = std::move(K.off); res.top_len = std::move(K.len); res.top_pool = std::move(K.pool);
+    }
+    res.ks.kept_live_max = kept_live_max().load();
     if (cfg.keep_terminal) for (auto& x : P) res.terminal.push_back(x.S);
     if (csrc) { res.compat = true; res.stream_count = csrc->g.count; }
     if (cfg.leaders) {
@@ -840,20 +913,21 @@ class IslandEngine {
     res.ks.store_serial_merges = top.n_serial_merges; res.ks.t_store_compact = top.t_compact;
     for (auto& t : tl) res.ks.store_dup_dropped += t->buf.n_dup_dropped;
     res.ks.t_total = std::chrono::duration<double>(std::chrono::steady_clock::now() - tstart).count();
-    return res;
+    return std::move(res);
   }
 };
 
 template <Arith A>
 IslandRun run_island(const Data& D, const Start& st, const Neighbours& nb, const IslandConfig& cfg) {
-  if (!cfg.adaptive && (cfg.grid.size() < 2 || cfg.grid.front() != 0.0 || cfg.grid.back() != 1.0)) throw std::invalid_argument("run_island: grid must run from 0 to 1");
-  for (size_t i = 1; i < cfg.grid.size(); ++i) if (!(cfg.grid[i] > cfg.grid[i - 1])) throw std::invalid_argument("run_island: grid not strictly increasing (I3)");
-  if (cfg.adaptive && !cfg.ckpt_path.empty()) throw std::invalid_argument("run_island: the adaptive schedule has no checkpoints");
+  if (!cfg.adaptive && (cfg.grid.size() < 2 || cfg.grid.front() != 0.0 || cfg.grid.back() != 1.0)) throw v4::Error(v4::Status::invalid_input, "run_island: grid must run from 0 to 1");
+  for (size_t i = 1; i < cfg.grid.size(); ++i) if (!(cfg.grid[i] > cfg.grid[i - 1])) throw v4::Error(v4::Status::invalid_input, "run_island: grid not strictly increasing (I3)");
+  if (cfg.adaptive && !cfg.ckpt_path.empty()) throw v4::Error(v4::Status::invalid_input, "run_island: the adaptive schedule has no checkpoints");
   if (cfg.compat && (A != Arith::Bit || cfg.kernel != KernelKind::ParticleMajor || cfg.threads != 1 || cfg.adaptive))
-    throw std::invalid_argument("run_island: compat mode needs Arith::Bit, the particle-major kernel, 1 thread and a fixed grid (serial v3 streams)");
+    throw v4::Error(v4::Status::invalid_input, "run_island: compat mode needs Arith::Bit, the particle-major kernel, 1 thread and a fixed grid (serial v3 streams)");
   if (A == Arith::Bit && cfg.kernel == KernelKind::LabelMajor && !cfg.allow_test_kernels)
-    throw std::invalid_argument("run_island: the bit-form label-major kernel is test-only (D-21, manager Q1); theory mode runs particle-major");
-  if (cfg.G < 0 || cfg.G > 256) throw std::invalid_argument("run_island: G must be in 0..256 (0 = chosen by mem_budget; manager Q3)");
+    throw v4::Error(v4::Status::invalid_input, "run_island: the bit-form label-major kernel is test-only (D-21, manager Q1); theory mode runs particle-major");
+  if (cfg.stop_after_step >= 0 && cfg.ckpt_path.empty()) throw v4::Error(v4::Status::invalid_input, "run_island: stop_after_step needs a checkpoint path");
+  if (cfg.G < 0 || cfg.G > 256) throw v4::Error(v4::Status::invalid_input, "run_island: G must be in 0..256 (0 = chosen by mem_budget; manager Q3)");
   // admission (manager Q3/Q4): k estimated as max(8, 2 E_pi0|S| + 2); G = the largest value <= 256 that fits
   double Ek = 0; for (size_t k = 0; k < st.size_logmass.size(); ++k) Ek += (double)k * std::exp(st.size_logmass[k]);
   const double k_est = std::max(8.0, 2.0 * Ek + 2.0);
