@@ -1,6 +1,6 @@
 # INTERFACES — engine v4 contract between WP1–WP5
 
-**v0.1.2 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-15. Source: ENGINEERING_SPEC §0-v2,
+**v0.1.3 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-15. Source: ENGINEERING_SPEC §0-v2,
 §1–§3, §6. Where this file is silent, the spec rules; where the spec is silent, `core/` (v3.1 / revision D) rules.
 Questions and change requests: to the WP1 owner through the manager. Line references `core/...:N` are to revision D.
 
@@ -103,8 +103,8 @@ Unused slots (self-loops, empty N(j)\S) are simply not read. Calibration uses ro
 therefore get fresh addresses (law-equivalent to v3's continued streams; class L). Final islands: role FINAL, island r
 = 1…R′, tier/iter = 0. `post` draws: role POST, xph POST. Invariant I5 is checked by `CheckedSource` (rng.h, WP1):
 it wraps any source and asserts that each address is used once (production) or that addresses arrive strictly
-increasing in the serial order `serial_less` (compat; per stream). WP3/WP4 wrap their sources with it in tests and in
-builds with `-DV4_CHECK_ADDRESSES=ON`.
+increasing in the serial order `serial_less` (compat; per stream). WP3/WP4 wrap their sources with it in tests, and
+always when `v4::kCheckAddresses` is true (CMake option `-DV4_CHECK_ADDRESSES=ON`, compile definition of that name).
 
 **Compat mode** (`CompatSource`): ignores the address and returns the next `Xoshiro256ss::uniform()` of the unit's v3
 stream (`core/cpp/v3_util.h:43-61`, copied), seeded `seed_stream(seed, stream)` with stream = 0 pilot tier 0, 1–4 diag
@@ -204,9 +204,17 @@ struct SectionEntry {             // 128 bytes
 Hash of a file "by content" = `content_sha256`: it covers the header (magic, version, kind, mode, sizes) and the section
 table, which contains every section hash. Readers verify both header hashes and every section hash. SHA-256 is bundled
 (`src/common/sha256.cpp`). A `meta` json section in every file holds scalars, its inputs' content hashes, the mode and
-the binary block (§5.3), so the content hash changes with the binary. **Data identity** (e.g. regenerated data) is
-checked by section hashes: `gen` records `X_sha256` and `y_sha256` (the section hashes of `X_cm` and `y`). JSON numbers
-are doubles: every u64 value (hashes, Zobrist keys, large counters) is written as a hex string `"0x…"`.
+the binary block (§5.3), so the content hash changes with the binary. Three identities, never mixed:
+- **File identity = `content_sha256`, always**: manifests, the merge's input validation, restart from a checkpoint.
+  The merge checks that every island's `meta.inputs` equal its manifest's `data/setup/calib` content hashes (part of the
+  meaning of engine files lives in `meta`: calib N, L, tier; island logZ, status).
+- **Data identity across builds = named data sections only**: `X_cm`, `y` of `raw.bin` (`gen` records `X_sha256`,
+  `y_sha256`) and `Xs_cm`, `ys`, `kept` of `data.bin`. Never used for setup, calib, island, fit or law files.
+- **Cross-machine bit identity (T2)** compares the section hashes of all sections except `meta`, or the fit fingerprint;
+  never content hashes.
+- **Binary consistency**: the merge refuses islands whose binary blocks differ in libm self-test, flags or (theory mode,
+  T bit identity) git commit; a checkpoint restart refuses a different binary block.
+JSON numbers are doubles: every u64 value (hashes, Zobrist keys, large counters) is written as a hex string `"0x…"`.
 Sections (names fixed; WPs may add sections, never rename):
 - `raw.bin` (gen): `X_cm` f64 n×p, `y` f64 n, `meta`. `truth.json`: design, params, seed, S₀ (1-based), β*, σ*.
 - `data.bin` (prep): `Xs_cm`, `ys`, `z`, `diagG`, `col_max`, `col_mean`, `col_sd`, `kept` i32 (1-based), `dropped`
@@ -264,11 +272,18 @@ Bit form: each entry equal in bits to `score(S △ j)` (sorted-prefix reuse allo
 operation order, spec §1). Class A: same exact-arithmetic map, any rounding; agreement target ≤ 1e-9 relative on logm
 against Bit; fallback to the Bit form whenever the class-A Cholesky pivot test fails (so routes are identical). The
 kernel (WP3) is templated on `Arith`; T always instantiates `Bit`, V `ClassA`. Pinned transcendental functions:
-all scorer/engine code calls `v4::pm::log, exp, log1p, expm1, lgamma` (`include/v4/pmath.h`), never `std::` directly.
-**Binding (v0.1.1): glibc 2.34 libm, FMA/AVX2 ifunc variants** (the v3.1 records' bits; a correctly rounded libm would
-change them). Every command except `info`/`version` calls `pm::require_fma_variant()` at start (→ `invalid_input`
-when FMA/AVX2 are absent or masked); the binary block records libm path, SHA-256, glibc version and `fma_variant`.
-Evidence: `engine_v4/tests/PMATH_REPORT.md`.
+all scorer/engine code calls `v4::pm::*` (`include/v4/pmath.h`), never `std::` directly. **Binding: glibc 2.34 libm
+(no bundling)**; a correctly rounded libm would change the v3.1 bits.
+- **Bit form uses only `pm::log, exp, lgamma, sqrt`** (and the x87 `pm::logl, expl` of `log_sum_exp`). Their bits are
+  equal on Owls and NOTS, although the libm files differ (MEASURED, `results/PMATH_NOTS.md`).
+- **`log1p` / `expm1` never appear in bit-form paths.** They exist only as `pm::machine::log1p, expm1` for class A; their
+  bits differ between Owls and NOTS, and their results never enter a fixture or a bit test. (`core/` never calls them:
+  `log_add` and `log1mexp_v3` are unused.)
+- **Guard**: every command except `info`/`version` calls `require_bit_libm()` (`provenance.h`; `require_fma_variant()`
+  is an alias). It runs `pm::self_test()`: log, exp and lgamma on the six fixed rows of `v4_pmath_check` (2·10⁶
+  arguments each) must reproduce the measured reference hashes, otherwise `invalid_input`. It keys on function results,
+  not on the libm file hash. The binary block records the libm path, its SHA-256, the glibc version, `fma_variant` and
+  the self-test result. Evidence: `engine_v4/tests/PMATH_REPORT.md`.
 
 ## 7. Statuses, errors, threads (`include/v4/status.h`, `threads.h`)
 ```cpp
@@ -312,3 +327,9 @@ point, so all WPs link from day one: `setup::run`, `island::run`, `calib::run`, 
   compat tiers 0–1 only. §5.1: header `content_sha256` covers header + table (the file content hash); mode 0 = none;
   u64 in JSON as hex strings; data identity by section hashes (`X_sha256`, `y_sha256`). §5.3/§6: binary block in every record and meta; `require_fma_variant()` at every command.
   §7: prep data outcomes exit 20/21. §1/§8: file names and runner description corrected (no `types.h`).
+- v0.1.3 (2026-11-15, WP1; re-check R1, R2; NOTS libm result) — §5.1: file identity = content hash (manifests, merge
+  input validation, restart); data identity across builds = named data sections of raw/data files only; T2 compares
+  non-meta section hashes; the merge checks binary consistency across islands; restart refuses a different binary
+  block. §3: CMake option `V4_CHECK_ADDRESSES` → `v4::kCheckAddresses`. §6: bit form uses only log/exp/lgamma/sqrt;
+  log1p/expm1 are class A only (`pm::machine::`); the guard is `require_bit_libm()` = function-result self-test, not
+  the libm file hash. Store/ThreadLedger refuse NaN values (internal_error).

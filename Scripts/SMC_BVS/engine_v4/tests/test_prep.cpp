@@ -125,7 +125,7 @@ TEST(score_bits_equal_R_cpp_score) {
   for (auto& cs : idx.at("cases").elems()) {
     std::string nm = cs.at("name").str(); int n = (int)cs.at("n").i64(), p = (int)cs.at("p").i64();
     Data D = data_from_R(nm, n, p);
-    auto consts = read_f64(dir + nm + "_consts.f64");
+    auto consts = read_f64(dir + nm + "_consts.f64", 4);
     CHECK_MSG(same_bits(consts[0], D.logCn) && same_bits(consts[1], D.logm0) && same_bits(consts[2], D.logWK) && same_bits(consts[3], D.yty), nm + " constants");
     auto ptr = read_i32(dir + nm + "_ptr.i32"), idxs = read_i32(dir + nm + "_idx.i32"), route = read_i32(dir + nm + "_route.i32");
     const size_t nm_models = (size_t)cs.at("models").i64();
