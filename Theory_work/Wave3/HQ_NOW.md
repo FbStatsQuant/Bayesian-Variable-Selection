@@ -43,6 +43,9 @@
 - **OWNER 11-16: at the resume, ON THE OWNER'S ORDER (wait for his word),** the Fable consultant reviews the **sub-optimality policies** for improvements:
   - the sharpness gate, the S findings and better-theorem notes, supersession/rollback to better theorems, the optimizer, and the new W3-AUDIT track D;
   - sources: PROTOCOL_v4 (§ supersession, sharpness), memory optimality-risk-feedback, W3-AUDIT/BRIEF.md.
+- **OWNER 11-16 (scope):** the theory is nearly done; the core analysis rests on what we have.
+  - Improvement work covers only the core theorems and key components; track D is light, with ≤ 3 tickets and kill budgets, and no effort on niche results.
+  - The Fable policy review is aimed at **the company playbook for future papers** (the owner is on board with protocol optimisation); it does not reopen this paper's theory.
 - **On resume:** move the department threads to Claude Personal (t3_thread_configure), then send each manager "resume from RESUME card". Pending HQ items:
   - V (RM2-R) real-run GO after rule (b) and the dry run;
   - re-enable the 3 Theory scheduled tasks;
