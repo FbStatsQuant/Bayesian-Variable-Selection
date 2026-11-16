@@ -32,7 +32,7 @@ quota -s 2>/dev/null; df -h /scratch/fb31 /home/fb31/projects/BVS 2>/dev/null; d
 ```
 Why: stores, RB arrays and checkpoints at 1M (several GB per island and fit) go to /scratch; we must plan the cleanup.
 
-## R5 Per-phase records of the B3 runs (already on NOTS; read-only)
+## R5 Per-phase records of the B3 runs (already on NOTS; read-only) — ANSWERED by Engineering via ssh nots (NOTS_FACTS.md)
 ```
 ls /scratch/fb31/w3scale/out/b3_p*/res | head; sacct -j 2698178,2698179,2698180 -o JobID,Elapsed,MaxRSS,NodeList -X
 ```
@@ -152,3 +152,60 @@ The neighbour graph (`v3_blocks.h:149-170`) does **not** depend on the partition
   - W3-SCALE DESIGN_v1 §4.4 (25 saved fits with R = 4; diagnostic-island σ̂; the P6 E2 table);
   - CP2 §3.
 - Rung A adds the stage-level re-run at 5k / 10k (REVIEW_disposition R4.1) and the 64-island census (Full tier).
+
+## THEORY-4 Registry wording (HQ-confirmed decisions D-3, D-8) and one consumer check (D-7). Staged by SMC-Theory; HQ approves the recording run.
+**Entry A: D-3, cost column (kind: implementation / reporting rule; no change to any estimate).**
+> In runs of the large-p engine (v4, production and compat modes), the published cost measure is `score_counts$logical`:
+> the number of logical score events per phase and mechanism, defined exactly as in v3.1 (`cpp/v3_ledger.h:74`; every
+> evaluated or held configuration counts once, cache or not). `score_counts$fresh` and cache statistics are
+> implementation-dependent. They are reported only with a declared fixed cache capacity, labelled "implementation
+> counter", and never enter a published table or theorem check. Published v3.1 tables (EVIDENCE §8, RERUN_SPEC cost
+> column, `evidence_h2.py:98-105, 139-141`) keep their values and their definition.
+> Scope: W3-SCALE ruling O17, case (a) by redefinition (option B2-3).
+
+**Entry B: D-8, new returned outputs (kind: implementation; additions only; every existing output unchanged).**
+Notation: 𝒯 = the merged `top_store`, i.e. the 40p + 1 best-scored distinct models offered to the final ledger(s),
+merged over R′ islands as the top-c of the union (O10). F(S) = log ϖ(S) + log m(S), exact scores (CC2).
+> (i) `pip_store[j]` = Σ_{S∈𝒯, j∈S} e^{F(S)} / Σ_{S∈𝒯} e^{F(S)}: the store-renormalised PIP. It needs no island weights
+>     and is the j-th marginal of Π̂^𝒯 (W3-DIST DIST-C(i)).
+> (ii) `log_Z_store` = log Σ_{S∈𝒯} e^{F(S)}. Under EX-A, log_Z_store ≤ log Z deterministically (F is the log of the
+>     unnormalised posterior mass of S, and 𝒯 ⊆ Ω).
+> (iii) `law.bin`: the store-BMA law Π̂^𝒯, truncated at relative weight 10⁻¹² (the dropped relative mass is reported).
+>     Per model it stores S, F(S) and the conjugate posterior parameters of (θ_S, v) on the standardised scale, plus the
+>     column standardisation constants. It is the object of DIST-C(i). Draws from it, if requested, use streams disjoint
+>     from the engine's.
+> (iv) Terminal particle supports (after the last measured round), archived as a **diagnostic**, explicitly not an
+>     estimate. No theorem covers a particle-based law.
+
+**Check C: D-7, leader stores.** Please confirm that no theorem, claim or check consumes the **final-run** leader stores
+`leaders_gamma0` / `leaders_gamma1` (`v3_run.R:210`; built in `cpp/v3_ledger.h:72-78`).
+- Engineering's search:
+  - 0 hits for "leader" in `Theory_work/INFRA/registry/claims.tsv`;
+  - the only script reference is the study schema listing the field (`Scripts/SMC_BVS/study/SCHEMA.md:146, 148`);
+  - in calibration they feed the set V for the grid (`cpp/v3_core.cpp:703-716`), and that use is kept.
+- Proposed: final islands do not build them, and the fit does not return them. This is a change to the output list; the
+  registry entry follows your confirmation.
+
+## THEORY-5 Pins for Entry B(ii) and for Check C (answers to Theory's caveats, 11-15)
+**B(ii): log_Z_store ≤ log Z. File:line chain, core at daa08a3.**
+1. Score of a model: `cpp/v3_engine.h:97`, `q.F = D.logprior[k] + lm`, with lm = log m(S) and
+   logprior[k] = log w(k) − log W_K = log ϖ(S) (`cpp/v3_score.h:62-70`).
+   This F is what the ledger stores: `led->event(q.S, q.F, …)` (`v3_engine.h:99`) → `offer_stores(S, F, …)`
+   (`cpp/v3_ledger.h:89, 112`). For inherited and table models: `cpp/v3_core.cpp:426-427` (`D.logprior[S.size()] + lm`).
+2. The target of the bridge at φ = 1: log γ_φ(S) = lg0 + φ d (`v3_engine.h:14`), lg0 = logprior + comp, d = (lm − logm0) − comp
+   (`:97`). So at φ = 1, log γ₁(S) = logprior[k] + lm − logm0 = F(S) − log m(∅).
+3. The island estimate: it starts at `logZ = D.logm0 + st.logZbar0` (`v3_engine.h:299`), where Z̄₀ = Σ_S γ₀(S), the exact
+   normaliser of the start law (`cpp/v3_start.h:131-135`). It then adds the stage increments (`:319-322`). So Ẑ_r estimates
+   m(∅)·Σ_S γ₁(S) = Σ_{S∈Ω} e^{F(S)} =: Z. Pooled: `v3_run.R:154`.
+4. Ω = {|S| ≤ K}: the prior is capped (`v3_score.h:62-70`), and Gibbs blocks |S| > K (`v3_engine.h:116-119`).
+
+Hence Z = Σ_{S∈Ω} e^{F(S)} with the same F as in the store. For any 𝒯 ⊆ Ω,
+log Σ_{S∈𝒯} e^{F(S)} ≤ log Z, under EX-A (the F values are floating-point evaluations of the exact scores).
+
+**Check C, inherited stores (02_method.tex:357-359).** Correct. The frozen calibration record carries its top store and
+both leader stores. The final run *offers their models* to its own ledger with provenance "inherited"
+(`cpp/v3_core.cpp:418-428`: score, then `offer_stores` to the top store, both leader stores and the HPM). Under D-7 that
+offering stays: in the large-p engine the inherited models are offered once, at the merge, to the top store and the HPM
+(ENGINEERING_SPEC §4.2, "class B for stores and HPM"). What D-7 drops is only the *final-run* leader stores as a data
+structure and as a returned field (`v3_run.R:210`). The question for Theory is therefore whether any result reads the
+returned `leaders_gamma0/1` of the final run. The inherited models' effect on the top store and the HPM is unchanged.

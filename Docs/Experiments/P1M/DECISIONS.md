@@ -1,0 +1,57 @@
+# DECISIONS — SMC - Engineering Department (technical decisions; HQ confirms)
+
+Rule (owner, 2026-11-15; POLICIES.md §4, e0bde16):
+- The department decides technical questions with its experts; HQ confirms.
+- A decision that changes the method's law or a theorem premise is final only when the Theory Department's premise ticket
+  agrees.
+- The owner keeps OD-7 (budget tier), OD-10 (competitors, framing), OD-12 (the paper's parallel-method claim) and
+  anything big-picture. Those go to the owner as one short sheet after the Sol review and the feasibility study.
+
+> **Scope change (owner, 2026-11-15; POLICIES §8 end, 6b1cfd5).** The 1M run is an **engineered variant** and may
+> modify the algorithm. The theory stays about the method as coded at 10⁴ and is unaffected.
+> Requirements:
+> - (a) every change from the theory's method is documented: `VARIANT_CHANGES` table, in ENGINEERING_SPEC v2;
+> - (b) an overlap rung (10⁴, and 10⁵ where possible) runs the variant and the theory's method on the same datasets and
+>   compares selection, PIPs and evidence;
+> - (c) the paper presents 1M as a validated engineered variant.
+>
+> Consequences for this file:
+> - Output preservation and equality in law are no longer gates for the variant. The premise tickets (T-N, T-PART,
+>   T-STREAM, T-CAL, T-MERGE) no longer gate any decision below. Their gate is replaced by **overlap-rung validation**.
+> - D-1, D-2, D-4, D-5 and D-6 become variant design choices, now optimised for **precision as well as feasibility**.
+>   They are re-opened for the feasibility study [FS].
+
+Status codes:
+- **DECIDED**: the department's decision; awaits HQ confirmation.
+- **DECIDED-PENDING-<X>**: decided subject to the named ticket or measurement.
+- **CONFIRMED**: HQ confirmed (and theory agreed where needed).
+
+Expert input so far:
+- **[RV]** independent Fable 5.2 review: `REVIEW_fable.md`, `SPEC_SKELETON_fable.md`, `REVIEW_disposition.md`;
+- **[FS]** Fable 5.2 feasibility study: `FEASIBILITY_fable.md`, *running*;
+- **[R6]** HQ's read of the B3 records (`REQUESTS.md` R6);
+- **[SCALE]** W3-SCALE CP2 / DESIGN_v1.
+
+The Sol review of EXP-CP1 is running. Every item below is revisited when [FS] and Sol return.
+
+| D | item (OWNER_DECISIONS id) | decision | class | evidence / expert input | gate to final | status |
+|---|---|---|---|---|---|---|
+| D-1 | particles per island (OD-1) | **fixed N = 2,500 per island at every p** (equal to v3.1 for p ≤ 2,500) | [Δlaw] | N_e = p gives 1.6 years per 1M island [SCALE DESIGN_v1 §7]; RM-0 is pathwise in N_e; LT♯ and TR hold for any N_e; [RV] agrees | **T-N** (PSMC-S0 Part 1, Thu 11-19 12:00); [FS] may propose a different N profile (e.g. more particles early) | DECIDED-PENDING-T-N, FS |
+| D-2 | large-p calibration (OD-2) | **bounded calibration**: no escalation except grid-construction failure (C-DLV fallback kept); at most I_max rebuilds, then freeze the last grid with flag `grid_unconverged`; all triggers recorded. I_max fixed before rung A by the three-arm test at 10⁴ (coded-without-escalation / I_max = 3 / pilot only); spec default 3 | [Δ𝒞] | 7 escalation triggers (`v3_calib.R:60-61, 115-118, 154`) [RV R1]; B3: `grid_unconverged` at 10k/20k, E2 from 5k, so the coded rule escalates at every p ≥ 5k measured [R6] | **T-CAL** preliminary (Part 1, 11-19); three-arm test (rung A) | DECIDED-PENDING-T-CAL, FS |
+| D-3 | cost column (OD-3, B2-3) | **publish `logical` score counts as the cost measure**; `fresh` only under a declared fixed cache capacity, as a labelled secondary quantity; old tables keep their values | reporting; no law change | B2-1 trace replay is ≈ 30 TB per 1M fit (impossible); B2-2 leaves large-p fits without a cost column; [RV] R2d (no global cache) | registry entry staged by SMC-Theory (wording: REQUESTS THEORY-4); HQ approves the recording run | **CONFIRMED (HQ 11-15)**; registry pending |
+| D-4 | partition at large p (OD-5) | **complete linkage truncated at height 1 − τ_n on the sparse graph {\|r\| ≥ τ_n}, τ_n = r_n; R13 ties; the coded top-down cut for clusters > B; next-fit packing by minimum index**; one rule for the whole large-p mode; A3 paired comparison against exact linkage at 10⁴ | [Δlaw] on π₀ and every consumer of it (REQUESTS THEORY-1) | exact linkage needs 4 TB at 1M; the v0.1 component rule fails on AR(0.6) [RV R3]; T11 equality gate | **T-PART** (Part 2, Tue 11-24); sub-choice ≥ vs > from Theory | DECIDED-PENDING-T-PART |
+| D-5 | random numbers in production (OD-8) | **position-addressed counter-based uniforms** (address = seed, role, phase, stage or round, particle, position, slot); compat mode keeps v3.1's serial streams; any execution order gives identical bytes (gate T3) | [OP-law] | wall-time limit (owner: no multi-day runs); only particle-level parallelism uses ≈ 1,500 CPUs; [RV R2b] | **T-STREAM** (11-27 / 12-04); T4 law gate | DECIDED-PENDING-T-STREAM |
+| D-6 | islands (OD-9) | **R′ = 16 at every rung**; no R′ = 8 lever | law of pooled outputs (T-MERGE) | R_eff 1.6–4.2 of 16 at p ≥ 5k [R6]; [RV R4] | [FS] on (b) degeneracy may change the island design; **T-MERGE** (11-30 / 12-18) | DECIDED-PENDING-FS |
+| D-7 | store capacities, leader stores (OD-13) | **top store 40p + 1 kept** (DIST-C names it); calibration set V as coded; **leader stores computed in calibration only, not in final islands and not returned** | reporting change (returned fields) | leader stores = 4·10⁷ more entries at 1M with no consumer found [RV R6] | SMC-Theory confirms that no theorem or output consumer reads the final-run leader stores (THEORY-4); then the registry entry | **CONFIRMED (HQ 11-15), conditional on the Theory check** |
+| D-8 | new returned objects (OD-15) | **return** PIP_𝒯 (store-renormalised) and log Z_𝒯 (deterministic lower bound); **return** `law.bin` (store-BMA law = Π̂^𝒯 of DIST-C(i)) as the distribution output; **archive** terminal particle supports as a labelled diagnostic | additions; existing outputs unchanged | [RV §3, R4] | registry entry staged by SMC-Theory (wording: THEORY-4); W3-DIST lead informed of `law.bin` | **CONFIRMED (HQ 11-15)**; registry pending |
+| D-9 | kernel prototype (OD-16) | **build and measure a label-major kernel prototype on Owls at 10⁵** in parallel with the engine skeleton. The engine is particle-major first; the label-major kernel replaces it only if ≥ 2× faster (identical bytes by T3) | none beyond D-5 | bandwidth floor ≈ 168 TB of X reads per 1M island [RV R2]; [FS] is measuring | [FS] result; gate T5 | DECIDED-PENDING-FS |
+| D-10 | design cells (OD-6, OD-14) | n = 200 at 1M (n-decay shown at 10⁴: 100–800, and 10⁵: 200, 400); s₀ = 5; β* = a·(1, −0.8, 0.9, −0.7, 0.6), a = 1 strong, 0.6 weak. Designs: AR(0.6) primary, IND, BLK(20, 0.5), ADJ-OPP. **1M cells: AR-strong × 3, ADJ-OPP × 1, AR-weak × 1.** Ablations, a null control, a second seed, the exact reference at p ≤ 25 | design | [RV R5]; table memory at n ≥ 256 (≈ 2·10⁹ codes) | the owner's budget tier (OD-7) sets the replicate counts | **CONFIRMED (HQ 11-15)**; counts follow OD-7 |
+
+| D-11 | primary PIP (OD-4) | **equal-weight `pip_primary` stays primary** (`v3_run.R:162`); PIP_Z (with R_eff and max W_r) and PIP_𝒯 are returned alongside | none (matches the code) | LT♯/TR are proved for the equal-weight RB PIP; R_eff 1.6–4.2 of 16 at p ≥ 5k [R6]; T-MERGE to show that convex pooling inherits PIP/MPM consistency | T-MERGE (for the claim wording) | **CONFIRMED (HQ 11-15; classified dept + HQ)** |
+
+OD-11 (who builds) is an HQ assignment.
+
+## Log of decision changes
+- 2026-11-15 — D-1 … D-10 recorded (first version), after [RV] and [R6]; [FS] and Sol pending.
+- 2026-11-15 — Owner scope change (6b1cfd5): the 1M variant may modify the algorithm; premise tickets no longer gate D-1/2/4/5/6; overlap-rung validation replaces them; OD-12 answered by the owner (1M = engineered variant validated against the theorem-covered method).
+- 2026-11-15 — HQ confirmed D-3, D-7 (conditional on Theory's leader-store check), D-8, D-10. OD-4 was classified dept + HQ and recorded as D-11, CONFIRMED. Registry entries for D-3 and D-8 go through SMC-Theory (REQUESTS THEORY-4).

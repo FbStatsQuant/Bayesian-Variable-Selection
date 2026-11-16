@@ -34,3 +34,10 @@
   No action on home. Our earlier 10,159M was read from the `nfs1:/export/nots/home` row of the owner's screenshot, so it was the
   home line at that moment. The ~3.4 GB difference is most likely space freed between the two readings, or quota reporting lag.
   ea14 (16 TB, at limit) is a separate project allocation. Plan outputs go to /scratch only (unchanged).
+- **Direct read-only access from Owls (`ssh nots`) is live** (HQ, 11-15; POLICIES §5 220b4901). Submission still needs HQ's go per batch.
+- First own read (11-15 ~21:20 CT, loginx3), memory-aware fragmentation: 70 SPR nodes. With ≥ 32 GB of *unallocated*
+  memory: 19 have ≥ 64 free CPUs and **only 10 have ≥ 96 free CPUs**.
+  → Free memory, not CPUs, binds. 16 island tasks of 96 CPUs + 32 GB would not all start now; 64-CPU tasks (19 nodes) would.
+  Default island task: 64 CPUs (32 cores) + 32 GB; 96 only when available. Load: SPR 8,742 / 4,506 idle / 192 / 13,440.
+- B3 jobs (sacct, REQUESTS R5): 5k 15:30:05 elapsed, MaxRSS 1.22 GB (ReqMem 16G); 10k 10:29:18, 2.38 GB (20G);
+  20k 15:29:51, 6.64 GB (36G). All 2 CPUs. The 20k RSS includes the Gram (p² doubles = 3.2 GB).

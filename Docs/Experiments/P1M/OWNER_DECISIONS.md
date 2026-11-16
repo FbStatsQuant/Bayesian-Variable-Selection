@@ -1,12 +1,15 @@
 # OWNER_DECISIONS — p = 10⁶ experiment (draft v0.2, after the Fable review; EXP-CP1, 2026-11-15)
 
+> **Routing (owner rule, 2026-11-15):** technical items are decided by the department with its experts and confirmed by HQ
+> (see `DECISIONS.md`). The owner keeps OD-7, OD-10, OD-12 and anything big-picture. Each header carries its route.
+
 Each item: options, consequences, recommendation. "HQ" = decisions with a budget, compute or code-on-main impact,
 which HQ carries. Numbers are from `EXPERIMENT_PLAN.md` §6 (billed core-h, pessimistic per-step cost c = 2 µs unless stated).
 Ranking: **OD-1, OD-2, OD-3, OD-5 block the 1M rung**; the others shape it.
 
 ---
 
-## OD-1 Particle count per island at large p (W3-SCALE reserved item (i); obligation O4) — BLOCKING
+## OD-1 Particle count per island at large p (W3-SCALE reserved item (i); obligation O4) — BLOCKING  **→ dept + HQ** (DECISIONS.md D-1)
 | option | 1M island (formula; T = 30) | theory | consequence |
 |---|---|---|---|
 | (a) keep N_e = max(2500, n, p) | 1.6 years; particle memory 233 GiB | as delivered | **1M impossible**; 10⁵ at about 6 days per island |
@@ -17,7 +20,7 @@ Ranking: **OD-1, OD-2, OD-3, OD-5 block the 1M rung**; the others shape it.
 (p ≤ 2.5k), and every headline selection and PIP theorem is stated for arbitrary N_e. Rung A1 measures the law change
 directly at 10⁴ (old law against fixed N on the same 10 datasets).
 
-## OD-2 Large-p calibration rule (escalation and rebuild loop) — BLOCKING for the budget (rewritten v0.2 after REVIEW R1)
+## OD-2 Large-p calibration rule (escalation and rebuild loop) — BLOCKING for the budget (rewritten v0.2 after REVIEW R1)  **→ dept + HQ** (DECISIONS.md D-2)
 The coded rule (`v3_calib.R:60-61, 102, 115-118, 154`) escalates once to tier 1 (N, H and the T ceiling × 4) if **any** of
 **seven** triggers fires: E1, E2 (sd(log Ẑ_r) > 1 over 4 diagnostic islands), E3, forced pilot steps, grid failure,
 **`grid_unconverged`** (the rebuild loop reached its cap ℓ without a bitwise-identical grid) and **`local_limit`**.
@@ -46,7 +49,7 @@ T. Spec default: I_max = 3.
 Owner question (REVIEW Q1): may the large-p method use a declared bounded calibration, given that the theorems hold for any
 frozen schedule?
 
-## OD-3 Cost column (B2-3) and `fresh` counters — BLOCKING for G6 and G8(a)
+## OD-3 Cost column (B2-3) and `fresh` counters — BLOCKING for G6 and G8(a)  **→ dept + HQ** (DECISIONS.md D-3)
 O17 requires identical published quantities. `fresh` depends on the whole ordered cache history.
 | option | at 1M | consequence |
 |---|---|---|
@@ -57,7 +60,7 @@ O17 requires identical published quantities. `fresh` depends on the whole ordere
 **Recommendation: B2-3, with `logical` as the published cost measure.** Combine it with B2-1 only for the p ≤ 2k
 equivalence build if HQ wants that proof.
 
-## OD-4 Primary PIP (W3-SCALE reserved item (ii))
+## OD-4 Primary PIP (W3-SCALE reserved item (ii))  **→ dept + HQ: CONFIRMED equal-weight primary** (DECISIONS.md D-11)
 **Recommendation: keep equal-weight `pip_primary` as primary; report PIP_Z, R_eff/R′ and max W_r alongside.** Reasons:
 - in all 6 B3 runs and all 25 saved fits the islands agree (max |PIP_Z − PIP_eq| ≤ 0.0023);
 - LT♯ and TR are proved for the coded equal-weight RB PIP;
@@ -66,7 +69,7 @@ equivalence build if HQ wants that proof.
 Revisit only if a rung shows islands disagreeing on the PIPs or the HPM. HQ's "hybrid" (union HPM, evidence-weighted
 PIPs with fallback) remains available as a secondary output.
 
-## OD-5 Block partition above about 150k (G3) — BLOCKING for 1M; theory ticket T-PART (rewritten v0.2 after REVIEW R3)
+## OD-5 Block partition above about 150k (G3) — BLOCKING for 1M; theory ticket T-PART (rewritten v0.2 after REVIEW R3)  **→ dept + HQ** (DECISIONS.md D-4)
 Exact complete linkage holds dense 16p²-byte arrays: 4 TB even condensed at 1M. It fits a 251 GB node only to about 180k
 (full) or 260k (condensed); the 515 GB nodes reach about 360k.
 v0.1's rule (connected components of {|r| ≥ τ_n}, exact linkage inside each component) **fails on the primary design**.
@@ -81,7 +84,7 @@ Under AR(0.6), the lag-1 correlation 0.6 > r_n = 0.372 (n = 200), so the graph i
 **Recommendation: (c)**, τ_n = r_n = √(2 log p / n) (the method's neighbour-graph threshold) unless T-PART prefers
 another. T-PART is asked about exactly this rule, including the packing order.
 
-## OD-6 Design choices
+## OD-6 Design choices  **→ dept + HQ** (DECISIONS.md D-10)
 **Recommendation:**
 - **n.** n = 200 at 1M (A = 2.6). Reasons: B = 14 keeps the tables at about 2·10⁸ codes (about 2·10⁹ at n ≥ 256); per-step
   cost is lowest; X is 1.6 GB. n = 400 at 1M only in the Full tier. The n-trend comes from 10⁴ (n = 100–800) and 10⁵
@@ -95,7 +98,7 @@ another. T-PART is asked about exactly this rule, including the packing order.
   and 10⁵ (n = 200, 400), and one point at 10⁶ (n = 200). Owner: is that acceptable? The alternative is n = 400 at 10⁶:
   tables ≈ 2·10⁹ codes (≈ 16 GB `logr`), ≈ 1.35× the cost per fit, and a table-memory check first.
 
-## OD-7 Budget tier (HQ carries)
+## OD-7 Budget tier (HQ carries)  **→ OWNER** (owner sheet after Sol + feasibility)
 | tier | total billed core-h | what it shows |
 |---|---|---|
 | Minimal | ≈ 11k | existence proof: 2 AR-strong fits + 1 ADJ-OPP fit at 1M; a thin 10⁴/10⁵ ladder |
@@ -111,7 +114,7 @@ The direct-engine target (c ≈ 1.2 µs) would lower all tiers by about 40%. A l
 much more, but that is a guess and no tier depends on it. **Recommendation:** approve Standard as a
 ceiling, released stage by stage at the gates. Each gate re-sizes the rest from measured costs (as P6's ledger rule did).
 
-## OD-8 Parallelism inside an island (G8)
+## OD-8 Parallelism inside an island (G8)  **→ dept + HQ** (DECISIONS.md D-5)
 | option | tag | gain | note |
 |---|---|---|---|
 | (a) speculative batched Gibbs scoring, serial commit (**rec.**) | [OP-bit] | 5–10× on 16 threads (UNVERIFIED) | output bits unchanged; Amdahl limit set by the serial commit. Needs OD-3 = B2-3 to drop the cache from the serial path |
@@ -126,7 +129,7 @@ uniform has a fixed address (island, phase, stage or round, particle, position, 
 - Any execution order (threads, particle groups, label-major) then gives the same bytes; gate T3.
 - Theory ticket T-STREAM (O5, O18).
 
-## OD-9 Number of islands R′
+## OD-9 Number of islands R′  **→ dept + HQ** (DECISIONS.md D-6)
 **Recommendation:**
 - R′ = 16 at every rung, enough for σ̂ with 15 degrees of freedom and a union store.
 - A 64-island census on 2 datasets each at 10⁴ and 10⁵, to chart σ̂ and R_eff against p (≈ 150 core-h at 10⁴ and
@@ -134,7 +137,7 @@ uniform has a fixed address (island, phase, stage or round, particle, position, 
 - ~~At 1M, R′ = 8 is the first budget lever~~ **withdrawn (v0.2, REVIEW R4):** at σ ≈ 1, R_eff/R′ ≈ 0.37, which leaves
   about 3 effective islands for PIP_Z and the evidence. R′ = 16 stays at every rung.
 
-## OD-10 Competitors and framing
+## OD-10 Competitors and framing  **→ OWNER** (owner sheet after Sol + feasibility)
 **Recommendation:**
 - Competitors: lasso-CV, MCP/SCAD (biglasso), L0Learn, SuSiE, varbvs, BAS (10⁴), millipede/wTGS on CPU (10⁴–10⁵) and
   SIS → BVS as the split/screen category.
@@ -144,7 +147,7 @@ uniform has a fixed address (island, phase, stage or round, particle, position, 
   rows 1–4) has a joint model-space sampler at 7.5·10⁵ (GPU, independent noise columns), mixture MCMC at 2·10⁶ (a′) and
   split-and-merge at 5·10⁵. So "not found in the literature", never "first".
 
-## OD-11 Who builds the engine
+## OD-11 Who builds the engine  **→ HQ**
 **Recommendation:**
 - The W3-SCALE leg-C team builds G1–G12 and G14 on its branch (it owns the engine and its gates).
 - This department builds G13 (generator, DIST evaluator, competitor harness, analysis) and specifies the acceptance tests.
@@ -174,7 +177,7 @@ not 4 × 384 (corrected from the earlier answer). Proposed request unit: **tasks
 ---
 ## New items from the Fable review (v0.2; REVIEW_fable.md §6, REVIEW_disposition.md)
 
-## OD-12 What the paper claims for the parallel (shipped) method (REVIEW Q2)
+## OD-12 What the paper claims for the parallel (shipped) method (REVIEW Q2)  **→ ANSWERED by the owner (POLICIES §8, 6b1cfd5): 1M is an engineered variant validated on an overlap rung against the theorem-covered method; the theory is unchanged**
 The 1M method differs from v3.1 **in law** in five places:
 1. fixed N (OD-1);
 2. R′ = 16 with process islands and a merge;
@@ -187,7 +190,7 @@ It is not "output-identical". v3.1's bits are kept only in compat mode (one bina
 change". The premise table is ENGINEERING_SPEC §4.2. Theory tickets for SMC-Theory: T-N, T-PART, T-STREAM, T-CAL,
 T-MERGE (O1, O10, O19–O21).
 
-## OD-13 Capacities that scale with p (REVIEW Q3, Q8)
+## OD-13 Capacities that scale with p (REVIEW Q3, Q8)  **→ dept + HQ** (DECISIONS.md D-7)
 - **Coded capacities.** Top store 40p + 1; leader stores 2 × 20p; calibration set V ≤ 40p + 1. At 1M: 4·10⁷ + 4·10⁷
   entries, about 2–5 GB per ledger in flat storage, plus minutes per grid build.
 - **Which outputs depend on them.** DIST-C names the 40p + 1 top store. The final-run leader stores are returned
@@ -198,7 +201,7 @@ T-MERGE (O1, O10, O19–O21).
   - **drop the leader stores from final islands and from the output.** They feed V (calibration) only. This is a
     reporting change; please confirm nobody reads them.
 
-## OD-14 Cells at 10⁶ (REVIEW Q4, R5)
+## OD-14 Cells at 10⁶ (REVIEW Q4, R5)  **→ dept + HQ** (DECISIONS.md D-10)
 As designed, 1M has only strong, isolated, evenly spaced truths. There the start mode plus LS0 probably already finds S₀,
 and screening ties with the joint method.
 **Recommendation (Standard): five fits at 1M, all n = 200:**
@@ -211,7 +214,7 @@ IND moves to 10⁴/10⁵ only.
 Ablations run on every dataset: start mode / + LS0 / pilot + local / full.
 C2 at 1M is stated as feasibility plus agreement with the trend of the lower rungs (3 of 3 gives a 95% lower bound of only 0.37).
 
-## OD-15 New returned objects (REVIEW Q5, §3)
+## OD-15 New returned objects (REVIEW Q5, §3)  **→ dept + HQ** (DECISIONS.md D-8)
 | object | cost | class | recommendation |
 |---|---|---|---|
 | PIP_𝒯 (store-renormalised, weight-free) and log Z_𝒯 (deterministic lower bound on log Z) | seconds | addition; existing outputs [OP-bit] | **return** |
@@ -221,7 +224,7 @@ C2 at 1M is stated as feasibility plus agreement with the trend of the lower run
 
 New returned fields change the method's output list, so they need a registry entry (HQ).
 
-## OD-16 One week for a kernel prototype before the engine kernel is fixed (REVIEW Q6, R2)
+## OD-16 One week for a kernel prototype before the engine kernel is fixed (REVIEW Q6, R2)  **→ dept + HQ** (DECISIONS.md D-9)
 At 1M a Gram-free step reads 1.6 KB of X (≈ 168 TB per island), so memory bandwidth, not code quality, may bound the
 direct design. A **label-major** kernel (one pass over X serves a group of particles; same class as OD-8 thanks to
 position addressing) might cut a 1M fit from ≈ 1,600–2,700 to a few hundred core-h. That figure is the reviewer's guess.
