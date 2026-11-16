@@ -18,7 +18,6 @@
 #include <limits>
 #include <memory>
 #include <omp.h>
-#include <parallel/algorithm>
 #include <chrono>
 #include <mutex>
 #include <tuple>
@@ -33,6 +32,56 @@ using v4::ME_INIT; using v4::ME_GIBBS_HELD; using v4::ME_GIBBS_FLIP; using v4::M
 inline void add_moves(MoveStats& a, const MoveStats& o) {
   a.gibbs += o.gibbs; a.gibbs_change += o.gibbs_change; a.us_exec += o.us_exec; a.us_acc += o.us_acc; a.us_self += o.us_self;
   a.ns_exec += o.ns_exec; a.ns_acc += o.ns_acc; a.ns_noscore += o.ns_noscore; a.ns_self += o.ns_self; a.in_exec += o.in_exec; a.in_acc += o.in_acc; a.gibbs_cap += o.gibbs_cap;
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// Parallel sort without allocation inside the parallel region (review PR26 r2: __gnu_parallel::sort allocates inside
+// its own OpenMP region, where a std::bad_alloc cannot be caught and aborts the process). The caller's scratch `tmp`
+// (same size) is allocated outside every region, so an out-of-memory surfaces as a catchable std::bad_alloc here,
+// before the region. `threads` chunks are sorted with std::sort, then merged in log2(threads) rounds of pairwise
+// std::merge (neither allocates). Every round keeps all threads busy (review m3, SPR batch 2749328: with one task per
+// pair the last rounds ran on 1, 2, 4 ... threads, so a compaction's sorts were nearly serial at 96 threads): each
+// pair's output is cut into equal segments at merge-path splits, and each segment is one std::merge of the two
+// sub-ranges that produce it -- the same sequence as the whole merge (stable: A before B on ties).
+// `less` must be a strict weak order whose equivalent elements are identical in content (both store orders are), so
+// the sorted sequence is unique and independent of `threads`.
+template <class T, class Less>
+inline size_t merge_path_split(const T* A, size_t na, const T* B, size_t nb, size_t d, Less less) {
+  // the number i of A-elements among the first d outputs of the stable merge of A and B (A first on ties)
+  size_t lo = d > nb ? d - nb : 0, hi = std::min(d, na);
+  while (lo < hi) { const size_t mid = (lo + hi) / 2; if (!less(B[d - 1 - mid], A[mid])) lo = mid + 1; else hi = mid; }
+  return lo;
+}
+template <class T, class Less>
+inline void psort_noalloc(std::vector<T>& a, std::vector<T>& tmp, Less less, int threads) {
+  const size_t n = a.size();
+  if (threads <= 1 || n < 4096) { std::sort(a.begin(), a.end(), less); return; }
+  tmp.resize(n);                                     // outside any region (may throw std::bad_alloc: caught by the owner)
+  const int C = threads;
+  std::vector<size_t> b(C + 1);
+  for (int c = 0; c <= C; ++c) b[c] = n * (size_t)c / (size_t)C;
+  #pragma omp parallel for num_threads(threads) schedule(static, 1)
+  for (int c = 0; c < C; ++c) std::sort(a.begin() + b[c], a.begin() + b[c + 1], less);
+  T* src = a.data(); T* dst = tmp.data();
+  for (size_t width = 1; width < (size_t)C; width *= 2) {
+    const int npairs = (int)((C + 2 * width - 1) / (2 * width));
+    const int S = (C + npairs - 1) / npairs;         // segments per pair: npairs * S >= threads tasks
+    #pragma omp parallel for num_threads(threads) schedule(static, 1)
+    for (int task = 0; task < npairs * S; ++task) {
+      const int q = task / S, sg = task % S;
+      const size_t lo = b[std::min<size_t>(C, 2 * width * q)], mid = b[std::min<size_t>(C, 2 * width * q + width)],
+                   hi = b[std::min<size_t>(C, 2 * width * (q + 1))];
+      const size_t na = mid - lo, nb = hi - mid, nt = na + nb;
+      const size_t d0 = nt * (size_t)sg / (size_t)S, d1 = nt * (size_t)(sg + 1) / (size_t)S;
+      const size_t i0 = merge_path_split(src + lo, na, src + mid, nb, d0, less), i1 = merge_path_split(src + lo, na, src + mid, nb, d1, less);
+      std::merge(src + lo + i0, src + lo + i1, src + mid + (d0 - i0), src + mid + (d1 - i1), dst + lo + d0, less);
+    }
+    std::swap(src, dst);
+  }
+  if (src != a.data()) {
+    #pragma omp parallel for num_threads(threads) schedule(static)
+    for (int c = 0; c < C; ++c) std::copy(src + b[c], src + b[c + 1], a.data() + b[c]);
+  }
 }
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -108,13 +157,15 @@ class TopStore {
   size_t buf_limit = 1 << 14, stage_limit = 1 << 16, stage_hard = 1 << 17;
   bool defer = false;          // true: flush() never compacts below stage_hard; the owner calls compact_parallel()
   double t_compact = 0;        // wall seconds spent compacting (any path)
+  double t_sort = 0;           // of which: the two parallel sorts of compact_parallel (wall seconds)
   bool dup_filter = true;
+  int64_t test_oom_merge = -1; // tests only: compact_parallel throws std::bad_alloc from this merge on (review PR26 r2)
   StoreBuffer stage;                                     // island staging area (guarded by mu)
 
   void init(uint64_t c, Order o) {
     cap = c; ord = o; k = std::make_shared<Kept>(); tau.store(NEG_INF); gen.store(0);
     stage.clear();
-    n_merges = n_buffered = n_flushes = n_serial_merges = 0; t_compact = 0;
+    n_merges = n_buffered = n_flushes = n_serial_merges = 0; t_compact = 0; t_sort = 0;
     buf_limit = 65536;                                             // INTERFACES v0.1.2 §4.2 OfferBuffer default
     stage_limit = (size_t)std::max<uint64_t>(4096, c / 4);          // §4.1: staging compacted at max(cap/4, 4096)
     stage_hard = (size_t)std::max<uint64_t>(8192, c / 2);           // deferred mode: in-pass serial fallback (peak ~2.5c)
@@ -139,6 +190,13 @@ class TopStore {
     }
     b.push(val, S, kk, hsh);
     if (b.size() >= buf_limit) flush(b);
+  }
+  // capacity of the staging area reserved once (virtual until touched): the deferred hard limit (or the serial limit)
+  // serial mode: one flush appends up to buf_limit entries before the limit check, so the reserve is limit + buf_limit
+  // (review PR26 re-check m1: the vectors reallocated to 2x once per cycle before)
+  void reserve_staging(double k) {
+    const size_t n = defer ? stage_hard : stage_limit + buf_limit;
+    stage.v.reserve(n); stage.h.reserve(n); stage.off.reserve(n); stage.len.reserve(n); stage.pool.reserve((size_t)(n * std::max(1.0, k)));
   }
   void flush(StoreBuffer& b) {
     if (b.size() == 0) return;
@@ -205,7 +263,7 @@ class TopStore {
   }
   // Parallel compaction (pass boundaries and step boundaries; all `threads` workers are free). Same content as
   // compact_locked() -- a function of the set of offers -- for every thread count and flush order:
-  //   1. staged refs sorted by (hash, |S|, S, v desc) with __gnu_parallel::sort (the order is total on content, so the
+  //   1. staged refs sorted by (hash, |S|, S, v desc) with psort_noalloc (the order is total on content, so the
   //      sorted sequence is unique); 2. first entry per model kept (sequential scan); 3. each survivor matched against
   //      the kept index in parallel (a kept copy >= drops it, a smaller kept copy is marked dead); 4. survivors sorted
   //      under the store order (parallel); 5. merge-path parallel merge of the alive kept run and the survivors, both
@@ -229,7 +287,11 @@ class TopStore {
       if (c != 0) return lex_less(a.S, a.k, b.S, b.k);
       return a.v > b.v;
     };
-    __gnu_parallel::sort(r.begin(), r.end(), by_model, __gnu_parallel::default_parallel_tag(threads));
+    if (test_oom_merge >= 0 && (int64_t)n_merges >= test_oom_merge) throw std::bad_alloc();   // test hook (r2)
+    std::vector<StoreRef> scratch;   // sort scratch, allocated outside every parallel region (r2)
+    auto ts0 = std::chrono::steady_clock::now();
+    psort_noalloc(r, scratch, by_model, threads);
+    t_sort += std::chrono::duration<double>(std::chrono::steady_clock::now() - ts0).count();
     size_t w = 0;
     for (size_t i = 0; i < s; ++i) if (w == 0 || !same_model_ref(r[w - 1], r[i])) r[w++] = r[i];
     r.resize(w);
@@ -242,7 +304,9 @@ class TopStore {
     size_t w2 = 0; for (size_t i = 0; i < w; ++i) if (!drop[i]) r[w2++] = r[i];
     r.resize(w2);
     auto ordl = [this](const StoreRef& a, const StoreRef& b) { return ord_less(a, b); };
-    __gnu_parallel::sort(r.begin(), r.end(), ordl, __gnu_parallel::default_parallel_tag(threads));
+    ts0 = std::chrono::steady_clock::now();
+    psort_noalloc(r, scratch, ordl, threads);
+    t_sort += std::chrono::duration<double>(std::chrono::steady_clock::now() - ts0).count();
     std::vector<uint32_t> alive; alive.reserve(K.size());
     for (size_t i = 0; i < K.size(); ++i) if (!dead[i]) alive.push_back((uint32_t)i);
     const size_t na = alive.size(), nb = r.size(), keep = std::min<size_t>(cap, na + nb);
@@ -299,6 +363,15 @@ class TopStore {
     gen.fetch_add(1, std::memory_order_acq_rel);
     tau.store(k->size() >= cap ? k->v.back() : NEG_INF);
     t_compact += std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
+  }
+  // restore a previously published kept run (calibration: the round-start state before a prefix replay); the staging
+  // area is discarded. The caller has cleared every worker buffer.
+  void restore(std::shared_ptr<Kept> kr) {
+    std::lock_guard<std::mutex> lk(mu);
+    stage.clear();
+    { std::lock_guard<std::mutex> lk2(snap_mu); k = std::move(kr); }
+    gen.fetch_add(1, std::memory_order_acq_rel);
+    tau.store(k->size() >= cap ? k->v.back() : NEG_INF);
   }
   // after loading a kept run (checkpoint): index, tau, generation
   void publish_loaded() { k->rebuild_index(); k->count_live(); gen.fetch_add(1); tau.store(k->size() >= cap ? k->v.back() : NEG_INF); }

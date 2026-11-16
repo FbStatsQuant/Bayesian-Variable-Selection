@@ -59,6 +59,54 @@ struct SupportCache {
   std::vector<int> arow;  // row of each member in the pass's active-column product matrix (label-major only)
 };
 
+// Tile products P[a][jj] = sum_i x_{i,a} x_{i,j} for the nA gathered active columns XA (n each, contiguous) and the Bk
+// labels of a row-major tile (n rows of Bk). Every lane is the sequential sum s = s + x_a[i] * x_j[i], i = 0..n-1, with
+// no contraction: the bits of the Gram entry (core/cpp/v3_score.h:45-53) whatever the blocking.
+//   block = 1: one active column x 64 labels per sweep of the tile (8 accumulators; the tile is re-read nA times);
+//   (an 8-column x 16-label variant measured slower on Owls: 125 vs 83 ns per pair; not kept)
+//   block = 4: four active columns x 32 labels (16 accumulators): 4 multiply-adds per tile load instead of 1, the tile is
+//              re-read nA/4 times (L2 traffic / 4). Same per-lane operation sequence, same bits (T3 hashes unchanged).
+inline void tile_products(const double* XA, int nA, int n, const double* Xtile, int Bk, double* P, int block) {
+  int a = 0;
+  if (block >= 4) {
+    for (; a + 4 <= nA; a += 4) {
+      const double *x0 = XA + (size_t)a * n, *x1 = x0 + n, *x2 = x1 + n, *x3 = x2 + n;
+      for (int c0 = 0; c0 < Bk; c0 += 32) {
+        v8d a00 = bc(0), a01 = bc(0), a02 = bc(0), a03 = bc(0), a10 = bc(0), a11 = bc(0), a12 = bc(0), a13 = bc(0);
+        v8d a20 = bc(0), a21 = bc(0), a22 = bc(0), a23 = bc(0), a30 = bc(0), a31 = bc(0), a32 = bc(0), a33 = bc(0);
+        const double* rp = Xtile + c0;
+        for (int i = 0; i < n; ++i, rp += Bk) {
+          const v8d r0 = load8(rp), r1 = load8(rp + 8), r2 = load8(rp + 16), r3 = load8(rp + 24);
+          const v8d b0 = bc(x0[i]), b1 = bc(x1[i]), b2 = bc(x2[i]), b3 = bc(x3[i]);
+          a00 = a00 + b0 * r0; a01 = a01 + b0 * r1; a02 = a02 + b0 * r2; a03 = a03 + b0 * r3;
+          a10 = a10 + b1 * r0; a11 = a11 + b1 * r1; a12 = a12 + b1 * r2; a13 = a13 + b1 * r3;
+          a20 = a20 + b2 * r0; a21 = a21 + b2 * r1; a22 = a22 + b2 * r2; a23 = a23 + b2 * r3;
+          a30 = a30 + b3 * r0; a31 = a31 + b3 * r1; a32 = a32 + b3 * r2; a33 = a33 + b3 * r3;
+        }
+        double* p0 = P + (size_t)a * Bk + c0; double* p1 = p0 + Bk; double* p2 = p1 + Bk; double* p3 = p2 + Bk;
+        store8(p0, a00); store8(p0 + 8, a01); store8(p0 + 16, a02); store8(p0 + 24, a03);
+        store8(p1, a10); store8(p1 + 8, a11); store8(p1 + 16, a12); store8(p1 + 24, a13);
+        store8(p2, a20); store8(p2 + 8, a21); store8(p2 + 16, a22); store8(p2 + 24, a23);
+        store8(p3, a30); store8(p3 + 8, a31); store8(p3 + 16, a32); store8(p3 + 24, a33);
+      }
+    }
+  }
+  for (; a < nA; ++a) {
+    const double* xa = XA + (size_t)a * n; double* Pa = P + (size_t)a * Bk;
+    for (int c0 = 0; c0 < Bk; c0 += 64) {
+      v8d s0 = bc(0), s1 = bc(0), s2 = bc(0), s3 = bc(0), s4 = bc(0), s5 = bc(0), s6 = bc(0), s7 = bc(0);
+      const double* rp = Xtile + c0;
+      for (int i = 0; i < n; ++i, rp += Bk) {
+        v8d xi = bc(xa[i]);
+        s0 = s0 + xi * load8(rp);      s1 = s1 + xi * load8(rp + 8);  s2 = s2 + xi * load8(rp + 16); s3 = s3 + xi * load8(rp + 24);
+        s4 = s4 + xi * load8(rp + 32); s5 = s5 + xi * load8(rp + 40); s6 = s6 + xi * load8(rp + 48); s7 = s7 + xi * load8(rp + 56);
+      }
+      store8(Pa + c0, s0); store8(Pa + c0 + 8, s1); store8(Pa + c0 + 16, s2); store8(Pa + c0 + 24, s3);
+      store8(Pa + c0 + 32, s4); store8(Pa + c0 + 40, s5); store8(Pa + c0 + 48, s6); store8(Pa + c0 + 56, s7);
+    }
+  }
+}
+
 // Composite sum of S ∪ {j} (j ∉ S) and S \ {j} (j ∈ S), same additions in the same order as Start::comp.
 inline double comp_add(const Start& st, const SupportCache& s, int j) {
   int b = st.blk[j]; uint32_t bit = 1u << st.pos[j];

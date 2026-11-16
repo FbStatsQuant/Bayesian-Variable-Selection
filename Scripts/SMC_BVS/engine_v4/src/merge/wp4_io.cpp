@@ -163,6 +163,21 @@ std::string write_calib(const std::string& path, const CalibWrite& c) {
     tiers.push(tj);
   }
   meta["tiers"] = tiers; meta["grids_all_labels"] = Json::array_of(labels);
+  // per-iteration diagnostics (review PR37 m-2): log Z_r, island_best, overall best, E1-E3 of every rebuild
+  { Json its = Json::array();
+    for (auto& t : co.tiers) for (auto& it : t.iterations) {
+      Json j = Json::object(); j["tier"] = t.tier; j["iteration"] = it.iter; j["grid_label"] = it.grid_label; j["complete"] = it.complete;
+      j["logZ_r"] = Json::array_of(it.logZ_r); Json ib = Json::array(); for (double x : it.island_best) ib.push(std::isfinite(x) ? Json(x) : Json()); j["island_best"] = ib;
+      if (it.complete) { j["overall_best"] = it.overall_best; j["E1"] = it.E1; j["E2"] = it.E2; j["E3"] = it.E3; }
+      its.push(j);
+    }
+    meta["iterations"] = its; }
+  if (c.settings) {
+    meta["I_max"] = c.settings->I_max; meta["ell"] = c.settings->tiers[(size_t)co.tier_final].ell;
+    meta["sum_mode"] = c.settings->sum_mode == calib::SumMode::Serial ? "serial" : "blocked";
+    meta["H"] = c.settings->tiers[(size_t)co.tier_final].H; meta["T_e"] = c.settings->tiers[(size_t)co.tier_final].Te;
+  }
+  if (co.status == calib::CalStatus::ok) meta["k_store"] = c.k_store;
   if (co.has_frozen) {
     meta["refine_m"] = co.frozen.refine_m; meta["grid_label"] = co.frozen.grid_label;
     add_vec_copy(W, "grid", co.frozen.grid); add_vec_copy(W, "grid_unrefined", co.frozen.grid_unrefined);
@@ -171,20 +186,56 @@ std::string write_calib(const std::string& path, const CalibWrite& c) {
   std::vector<int64_t> gptr{0}; std::vector<double> gall;
   for (auto& g : grids_all) { gall.insert(gall.end(), g.begin(), g.end()); gptr.push_back((int64_t)gall.size()); }
   add_vec_copy(W, "grids_all_ptr", gptr); add_vec_copy(W, "grids_all", gall);
-  if (c.led) {
+  // stores, HPM and inherited models only for a completed calibration (review PR37 m-3); otherwise the HPM so far is
+  // recorded in meta, labelled incomplete
+  const bool ok = co.status == calib::CalStatus::ok;
+  if (c.led && ok) {
     add_store(W, meta, "cstore_top", c.led->top);
     if (c.led->lead0.cap) add_store(W, meta, "cstore_lead0", c.led->lead0);
     if (c.led->lead1.cap) add_store(W, meta, "cstore_lead1", c.led->lead1);
     add_ledger_tally(W, meta, *c.led);
+  } else if (c.led) {
+    meta["has_hpm"] = false;
+    if (c.led->has_hpm) { meta["hpm_incomplete"] = true; meta["hpm_so_far_F"] = c.led->hpmF; meta["hpm_so_far_ev"] = event_json(c.led->hpm_ev); }
   } else meta["has_hpm"] = false;
-  std::vector<Model> im; std::vector<double> iF, ilg0, ilogm;
-  for (auto& m : c.inherited) { im.push_back(m.S); iF.push_back(m.F); ilg0.push_back(m.lg0); ilogm.push_back(m.logm); }
-  add_models(W, "inh", im); add_vec_copy(W, "inh_F", iF); add_vec_copy(W, "inh_lg0", ilg0); add_vec_copy(W, "inh_logm", ilogm);
+  if (ok && c.inherited_flat) {
+    const calib::InheritedFlat& f = *c.inherited_flat;
+    add_vec_copy(W, "inh_ptr", f.ptr); add_vec_copy(W, "inh_idx", f.idx);
+    add_vec_copy(W, "inh_F", f.F); add_vec_copy(W, "inh_lg0", f.lg0); add_vec_copy(W, "inh_logm", f.logm); add_vec_copy(W, "inh_d", f.d);
+  } else if (ok) {
+    std::vector<Model> im; std::vector<double> iF, ilg0, ilogm;
+    for (auto& m : c.inherited) { im.push_back(m.S); iF.push_back(m.F); ilg0.push_back(m.lg0); ilogm.push_back(m.logm); }
+    add_models(W, "inh", im); add_vec_copy(W, "inh_F", iF); add_vec_copy(W, "inh_lg0", ilg0); add_vec_copy(W, "inh_logm", ilogm);
+  }
+  // stage records (spec §1 row 3): one row block per calibration island, in run order
+  if (!c.stages.empty()) {
+    std::vector<int32_t> sm; std::vector<int64_t> sp{0}; std::vector<double> lz, phi, inc, ess, cum; std::vector<int32_t> dr, dm; std::vector<uint64_t> mv, sx;
+    for (auto& st : c.stages) {
+      sm.insert(sm.end(), {st.tier, st.iter, st.island, st.partial ? 1 : 0}); lz.push_back(st.logZ);
+      sx.insert(sx.end(), {st.init_hash, st.position_start, st.position_end});
+      for (auto& row : st.stages) {
+        phi.push_back(row.phi); inc.push_back(row.inc); ess.push_back(row.ess); cum.push_back(row.cum);
+        dr.push_back(row.distinct_res); dm.push_back(row.distinct_moved);
+        const MoveStats& m = row.moves;
+        mv.insert(mv.end(), {m.gibbs, m.gibbs_change, m.us_exec, m.us_acc, m.us_self, m.ns_exec, m.ns_acc, m.ns_noscore, m.ns_self, m.in_exec, m.in_acc, m.gibbs_cap});
+      }
+      sp.push_back((int64_t)phi.size());
+    }
+    add_vec_copy(W, "stage_meta", sm, c.stages.size(), 4); add_vec_copy(W, "stage_logZ", lz); add_vec_copy(W, "stage_ptr", sp);
+    add_vec_copy(W, "stage_stream", sx, c.stages.size(), 3);   // init_hash, stream position start, end (compat)
+    add_vec_copy(W, "stage_phi", phi); add_vec_copy(W, "stage_inc", inc); add_vec_copy(W, "stage_ess", ess); add_vec_copy(W, "stage_cum", cum);
+    add_vec_copy(W, "stage_distinct_res", dr); add_vec_copy(W, "stage_distinct_moved", dm); add_vec_copy(W, "stage_moves", mv, phi.size(), 12);
+    meta["stage_meta_columns"] = Json::array_of(std::vector<std::string>{"tier", "iter", "island", "partial"});
+  }
+  for (auto& [k, v] : c.extra.items()) {   // reserved keys are never overwritten (review PR37 m-2)
+    if (meta.contains(k) || k == "inputs" || k == "binary" || k == "mode") throw Error(Status::internal_error, "write_calib: extra meta key " + k + " is reserved");
+    meta[k] = v;
+  }
   meta["inputs"] = c.inputs; meta["binary"] = binary_block(); meta["mode"] = fmt::mode_name(c.mode);
   W.add_json("meta", meta);
   return W.write(path);
 }
-CalibIn read_calib(const std::string& path, int32_t p, int32_t K) {
+CalibIn read_calib(const std::string& path, int32_t p, int32_t K, const std::string& data_hash, const std::string& setup_hash) {
   fmt::Reader R(path);
   if (R.kind() != fmt::K_CALIB) throw Error(Status::invalid_input, path + ": not a calib file");
   CalibIn c; c.content_hash = R.content_hash(); c.mode = R.mode(); c.meta = R.json("meta");
@@ -194,6 +245,24 @@ CalibIn read_calib(const std::string& path, int32_t p, int32_t K) {
   if (c.N < 1 || c.L < 0 || c.Hm < 1 || c.tier < 0 || c.tier > 1) throw Error(Status::invalid_input, path + ": calib meta N / L / Hm / tier out of range");
   if (R.has("grid")) c.grid = R.vec<double>("grid");
   if (c.status == "ok" && !calib::check_grid(c.grid)) throw Error(Status::invalid_input, path + ": frozen grid is not a valid grid");
+  c.rule = c.meta.contains("rule") ? c.meta.at("rule").str() : "";
+  c.I_used = c.meta.contains("I_used") ? (int32_t)c.meta.at("I_used").num() : 0;
+  c.I_max = c.meta.contains("I_max") ? (int32_t)c.meta.at("I_max").num() : -1;
+  c.ell = c.meta.contains("ell") ? (int32_t)c.meta.at("ell").num() : -1;
+  if (c.mode == fmt::M_V) {   // V-1M (D-1, D-26): bounded rule, tier 0, N = 2,500, I_used <= I_max <= ell
+    if (c.rule != "bounded" || c.tier != 0 || c.N != calib::V_N) throw Error(Status::invalid_input, path + ": a V calib.bin must have the bounded rule, tier 0 and N = 2500 (D-1, D-26)");
+    if (c.I_max < 0 || c.ell < 0 || c.I_used > c.I_max || c.I_max > c.ell) throw Error(Status::invalid_input, path + ": I_used <= I_max <= ell violated");
+  } else if (c.rule != "coded") throw Error(Status::invalid_input, path + ": a theory-mode calib.bin must have the coded rule");
+  if (!data_hash.empty() || !setup_hash.empty()) {
+    const Json& in = c.meta.at("inputs");
+    if ((!data_hash.empty() && str_or(in, "data.bin", "") != data_hash) || (!setup_hash.empty() && str_or(in, "setup.bin", "") != setup_hash))
+      throw Error(Status::invalid_input, path + ": meta.inputs differ from the data / setup in use");
+  }
+  if (c.status == "ok") {
+    if (!c.meta.contains("k_store") || !std::isfinite(c.meta.at("k_store").num()) || !(c.meta.at("k_store").num() > 0))
+      throw Error(Status::invalid_input, path + ": k_store (calibration mean stored |S|) missing or not finite and > 0");
+    c.k_store = c.meta.at("k_store").num();
+  } else return c;   // a non-ok calib.bin exposes no inherited models
   c.has_hpm = c.meta.at("has_hpm").boolean();
   if (c.has_hpm) {
     c.hpm = R.vec<int32_t>("hpm_S"); check_model(c.hpm, p, K, path + ": hpm_S");
@@ -445,6 +514,7 @@ SetupView read_setup(const std::string& path, int32_t p, int32_t K, const Zobris
   if (R.kind() != fmt::K_SETUP) throw Error(Status::invalid_input, path + ": not a setup file");
   SetupView s; s.content_hash = R.content_hash();
   Json meta = R.json("meta");
+  if (meta.contains("inputs") && meta.at("inputs").contains("data.bin") && meta.at("inputs").at("data.bin").type() == Json::STR) s.data_hash = meta.at("inputs").at("data.bin").str();
   s.blk = R.vec<int32_t>("blk"); s.pos = R.vec<int32_t>("pos"); s.code_ptr = R.vec<int64_t>("code_ptr"); s.logr = R.vec<double>("logr");
   s.blk_ptr = R.vec<int64_t>("blk_ptr"); s.blk_members = R.vec<int32_t>("blk_members"); s.mode_S = R.vec<int32_t>("mode_S");
   // shapes (review PR20 M-2): blk / pos / members over p columns; blocks of 1..20 members (B <= 16, table codes < 2^20);
@@ -750,7 +820,7 @@ Json run(const Json& args) {
   std::string dhash;
   Data D = prep::load_data(in.data, &dhash);
   wp4io::SetupView S = wp4io::read_setup(in.setup, D.p, D.K, &D.zob);
-  wp4io::CalibIn C = wp4io::read_calib(in.calib, D.p, D.K);
+  wp4io::CalibIn C = wp4io::read_calib(in.calib, D.p, D.K, dhash, S.content_hash);   // calib.bin tied to this data / setup (PR37 m-3)
   for (auto pr : {std::make_pair(in.data, dhash), std::make_pair(in.setup, S.content_hash), std::make_pair(in.calib, C.content_hash)}) {
     std::string w = want(pr.first);
     if (!w.empty() && w != pr.second) throw Error(Status::invalid_input, pr.first + ": content hash differs from the manifest");

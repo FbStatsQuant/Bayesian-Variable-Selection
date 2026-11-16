@@ -27,16 +27,28 @@
 namespace v4::island {
 
 enum class KernelKind : int { LabelMajor = 0, ParticleMajor = 1 };
+// Calibration roles (WP3_DESIGN §1.11, agreed with WP4): addresses role PILOT / DIAG with tier e, iter k, island r
+// (pilot 0, diagnostic 1..4); every event labelled PH_PILOT / PH_DIAG with key (CALIB, e, k, r, ...), MEASURED round
+// L + h (core/cpp/v3_engine.h:269-372 phase_override); leaders on; the ledger so far is returned on a stop.
+enum class IslandRole : int { Final = 0, Pilot = 1, Diag = 2 };
 
 struct IslandConfig {
-  uint32_t seed = 1; uint32_t island = 1;  // final island r = 1..R'
+  uint32_t seed = 1; uint32_t island = 1;  // final island r = 1..R'; calibration: pilot 0, diagnostic 1..4
+  IslandRole role = IslandRole::Final;
+  uint32_t iter = 0;                        // calibration rebuild iteration k (pilot 0); final islands: 0
   int N = 2500; std::vector<double> grid; int L = 8; int Hm = 4;
   int B = 14;                               // number of N-swap labels (core: labels N1..NB)
   KernelKind kernel = KernelKind::LabelMajor;
   int G = 256; int tile = 128; int threads = 1;   // execution parameters: never part of the law (G = 0: largest G <= 256 that fits mem_budget)
-  double k_store = 0;                       // admission: calibration-measured mean stored |S| (0: estimate from pi_0)
+  double k_store = 0;                       // admission: calibration-measured mean stored |S| (calib.bin). A FINAL island
+                                            // with a memory budget at p >= 1e5 requires it (review PR24 r1 / PR26 m2);
+                                            // calibration islands run before calib.bin exists and plan with
+                                            // max(8, q90(pi_0 size) + 1, k_store if given) from the setup alone
+  bool k_store_optional = false;            // tests / benchmarks only: a final island at p >= 1e5 without k_store
   double inputs_bytes = 0;                  // admission: setup / calib inputs mapped by the caller (X, z, diag(G) are in the plan)
+  double test_admission_k = 0;              // tests only: force the admission's k (forces a step-boundary refusal)
   int test_oom_pass = -1;                   // tests only: throw std::bad_alloc inside phase A at this pass (resource_limit path)
+  int test_oom_merge = -1;                  // tests only: throw std::bad_alloc in the parallel compaction from this merge on
   uint64_t mem_budget = 0;                  // bytes; 0 = no admission check (--mem-budget; manager Q3/Q4)
   uint64_t store_cap = 0;                   // 0: 40 p + 1 (OD-13)
   std::string ckpt_path;                    // empty: no checkpoints; else <path>.a / <path>.b
@@ -48,16 +60,32 @@ struct IslandConfig {
   bool allow_test_kernels = false;          // tests only: the bit-form label-major kernel (manager Q1)
   bool compat = false;                      // v3 serial streams (CompatSource 9 + r), core's double RB sum;
                                             // requires Arith::Bit, particle-major, 1 thread (manager Q2: the <= 5k bit anchor)
+  v4::CompatSource* compat_src = nullptr;   // compat: the caller's stream (required for calibration roles: streams 0 / 5
+                                            // pilot, 1-4 / 6-9 diagnostic, continued across rebuilds by the caller); the
+                                            // island draws from it and leaves it advanced. Null: a final island's own 9 + r
   bool leaders = false;                     // leader stores (lead0 log gamma_0, lead1 F): NEVER in a final run (INTERFACES
                                             // v0.1.7, D-7); calibration islands and golden tests only; never written to island_r.bin
   bool store_dup_filter = true;             // exact snapshot duplicate filter (execution parameter; content unchanged)
   bool store_parallel_compact = true;       // compaction at pass/step boundaries with all threads (content unchanged)
   bool check_store = true;                  // I1 after every step (linear; O(c) hash lookups)
+  int products_block = 0;                   // tile products: 4 = 4 active columns x 32 labels per sweep, 1 = the original loop
+                                            // (same bits); 0 = auto: 4 when the island ISA has AVX-512, else 1 (review PR26
+                                            // B2, MEASURED: block 4 is -27% on AVX-512 and +17% on x86-64-v2)
   bool verbose = false;                     // progress line per step on stderr (benchmarks)
   // adaptive schedule (core's pilot rule: largest phi' with population ESS >= 0.9 H, floor 1/Te). Benchmarks and
   // pilot-like grids only; production islands use the frozen grid from calib.bin.
   bool adaptive = false; double adaptive_H = 0; int adaptive_Te = 30;
 };
+
+// the products block a configuration uses (0 = auto by the island ISA; review PR26 B2)
+inline int products_block_of(const IslandConfig& c) {
+  if (c.products_block > 0) return c.products_block;
+#if defined(__AVX512F__)
+  return 4;
+#else
+  return 1;
+#endif
+}
 
 using v4::StageRow;
 
@@ -76,6 +104,10 @@ struct Particle { Model S; uint64_t h = 0; double logm = 0, lg0 = 0, d = 0, F = 
 struct IslandRun {
   int status = 0;   // 0 completed, 1 interrupted (stop_after_step), 2 numerical_failure, 3 resource_limit (mem_budget)
   std::string reason;
+  IslandRole role = IslandRole::Final; uint32_t tier = 0, iter = 0;
+  int forced = 0;                    // adaptive schedule: forced (floor 1/T_e) steps (core's res.forced)
+  bool partial = false;              // calibration role stopped by resource_limit: schedule, stages, logZ and ledger so far
+  uint64_t stream_start = 0;         // compat: stream position (xoshiro draws) at the island's start
   int r = 0, N = 0, T = 0, L = 0, Hm = 0, p = 0;
   double logZ = NEG_INF; uint64_t init_hash = 0;
   std::vector<double> grid;   // the schedule used (= cfg.grid, or the adaptive one)
@@ -98,6 +130,10 @@ struct IslandRun {
 // The INTERFACES §5.2 record (records.h): stage table, RB arrays, Ledger (HPM + provenance, island_best, logical
 // counters, top store as a compacted v4::Store). Leader stores are absent in final islands (D-7).
 v4::IslandResult to_record(const IslandRun& r);
+
+// The --mem-budget admission plan of an island (manager Q3/Q4, review PR24 P2): the group size it would use (largest
+// G <= 256 that fits mem_budget when cfg.G == 0), the plan's k, the sizes. Used by run_island and by the bench.
+MemPlan plan_island(const Data& D, const Start& st, const IslandConfig& cfg, MemSizes* z = nullptr, double* k = nullptr, int* G = nullptr);
 
 template <Arith A>
 IslandRun run_island(const Data& D, const Start& st, const Neighbours& nb, const IslandConfig& cfg);

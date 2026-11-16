@@ -5,6 +5,5 @@
 namespace v4 {
 #define V4_STUB(ns, wp) namespace ns { Json run(const Json&) { throw Error(Status::internal_error, #ns ": not implemented (" wp ")"); } }
 V4_STUB(island, "WP3")
-V4_STUB(calib, "WP4")
 #undef V4_STUB
 }  // namespace v4

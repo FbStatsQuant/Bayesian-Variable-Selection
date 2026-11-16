@@ -47,6 +47,11 @@ struct TailSettings {
   int p = 0;
   int tier = 0;
   const Zobrist* zob = nullptr;   // model hashes for the stores (Data::zob)
+  // Event keys (INTERFACES v0.1.5 §4.2): the final search uses (LOCAL, frozen tier, -1, UNIT_LOCAL), LS0 (LS0, ...). A
+  // calibration search (core/cpp/v3_core.cpp:642, 689: after the pilot / the diagnostic islands of rebuild k) uses
+  // (CALIB, tier e, iter k, UNIT_LOCAL): set calib = true and iter = k.
+  bool calib = false;
+  int iter = -1;
 };
 
 namespace detail {
@@ -64,10 +69,10 @@ template <class Factory>
 LocalArchive local_search(const Model& centre, int ell, bool emit_centre, int phase, Ledger& led, Factory& fac,
                           const TailSettings& ts) {
   LocalArchive A;
-  const uint8_t seg = phase == PH_LS0 ? SG_LS0 : SG_LOCAL;
+  const uint8_t seg = ts.calib ? SG_CALIB : phase == PH_LS0 ? SG_LS0 : SG_LOCAL;
   auto make_ev = [&](uint32_t stage, uint32_t round, uint32_t position) {
     EventCtx ev; ev.phase = phase; ev.mech = ME_LOCAL; ev.phi = 1.0;
-    ev.key.seg = seg; ev.key.tier = (uint8_t)ts.tier; ev.key.iter = -1; ev.key.unit = UNIT_LOCAL; ev.key.xph = X_INIT;
+    ev.key.seg = seg; ev.key.tier = (uint8_t)ts.tier; ev.key.iter = (int8_t)(ts.calib ? ts.iter : -1); ev.key.unit = UNIT_LOCAL; ev.key.xph = X_INIT;
     ev.key.stage = stage; ev.key.round = round; ev.key.position = position;
     return ev;
   };

@@ -169,7 +169,9 @@ VOut rescore_V(const std::vector<Model>& V, Factory& fac, int threads, size_t ch
 // ---- the driver -----------------------------------------------------------------------------------------------------
 class Driver {
  public:
-  Driver(Backend& b, const Settings& s) : be_(b), s_(s) {
+  Driver(Backend& b, const Settings& s) : be_(b), s_(s) { validate(s_); }
+  // The settings checks of the constructor, callable before any island runs (review PR37 m-4).
+  static void validate(const Settings& s_) {
     if (s_.rule == Rule::coded && (s_.sum_mode != SumMode::Serial || s_.refine_m != 1))
       throw Error(Status::invalid_input, "coded calibration (theory mode) requires SumMode::Serial and refine_m = 1");
     if (s_.rule == Rule::bounded && s_.tier0 != 0) throw Error(Status::invalid_input, "bounded calibration has no tier escalation: tier0 must be 0 (D-26)");

@@ -2,11 +2,13 @@
 // log/exp, the concurrent store (order-free, multi-thread), T3 execution invariance, T6 restart.
 #include <omp.h>
 #include <cstdio>
+#include <filesystem>
 #include <map>
 #include <random>
 #include <set>
 #include <unistd.h>
 #include "tk.h"
+#include "tutil.h"
 #include "tutil_island.h"
 #include "v4/island/island.h"
 #include "v4/island/island_file.h"
@@ -14,7 +16,29 @@
 
 using namespace v4::island;
 
-static std::string tmpdir() { const char* t = std::getenv("TMPDIR"); return t ? t : "."; }
+// Temporary files (manager 11-16): pid-suffixed names under $TMPDIR through tests/tutil.h tmp_path(), never "." -- the
+// island tests refuse to run without TMPDIR -- and every file is removed when the test ends (TmpGuard), even on failure.
+static std::string wp3_tmp(const std::string& name) {
+  const char* t = std::getenv("TMPDIR");
+  if (!t || !*t) throw std::runtime_error("TMPDIR is not set: the island tests write temporary files only under $TMPDIR");
+  return tmp_path("wp3_" + name);
+}
+// removes a file, or a checkpoint base's generations <base>.a/.b and any leftover <base>.{a,b}.tmp.<pid>
+static void wp3_rm(const std::string& base) {
+  std::error_code ec;
+  for (const char* sfx : {"", ".a", ".b"}) std::filesystem::remove(base + sfx, ec);
+  std::filesystem::path bp(base);
+  const std::string stem = bp.filename().string();
+  for (auto& de : std::filesystem::directory_iterator(bp.parent_path(), ec)) {
+    const std::string fn = de.path().filename().string();
+    if (fn.rfind(stem + ".a.tmp.", 0) == 0 || fn.rfind(stem + ".b.tmp.", 0) == 0 || fn.rfind(stem + ".tmp.", 0) == 0) std::filesystem::remove(de.path(), ec);
+  }
+}
+struct TmpGuard {
+  std::vector<std::string> paths;
+  const std::string& add(const std::string& p) { paths.push_back(p); return paths.back(); }
+  ~TmpGuard() { for (auto& p : paths) wp3_rm(p); }
+};
 
 // ---------------------------------------------------------------------------------------------------------------
 TEST(philox_known_answers) {
@@ -298,12 +322,13 @@ TEST(logical_counts_and_invariants) {
 
 // T6: interrupt after a checkpoint at several steps, resume (with other threads / G / kernel): identical bytes.
 TEST(t6_restart_bit_identical) {
+  TmpGuard tg;
   Fixture F(100, 300, 23);
   IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = 2; c.G = 16;
   uint64_t h0 = run_island<Arith::Bit>(F.D, F.st, F.nb, c).hash();
   int Tsteps = (int)c.grid.size() - 1 + c.L + c.Hm;
   for (int stop : {0, 2, 5, 6, Tsteps - 1}) {
-    IslandConfig a = c; a.ckpt_path = tmpdir() + "/wp3_t6_" + std::to_string(stop); a.ckpt_every_s = 1e9; a.stop_after_step = stop;
+    IslandConfig a = c; a.ckpt_path = tg.add(wp3_tmp("t6_" + std::to_string(stop))); a.ckpt_every_s = 1e9; a.stop_after_step = stop;
     std::remove((a.ckpt_path + ".a").c_str()); std::remove((a.ckpt_path + ".b").c_str());
     IslandRun r1 = run_island<Arith::Bit>(F.D, F.st, F.nb, a);
     CHECK(r1.status == 1);
@@ -315,7 +340,7 @@ TEST(t6_restart_bit_identical) {
   }
   // two generations: checkpoint every step; corrupt the newest; resume from the older one
   {
-    IslandConfig a = c; a.ckpt_path = tmpdir() + "/wp3_t6_gen"; a.ckpt_every_s = 0; a.stop_after_step = 4;
+    IslandConfig a = c; a.ckpt_path = tg.add(wp3_tmp("t6_gen")); a.ckpt_every_s = 0; a.stop_after_step = 4;
     std::remove((a.ckpt_path + ".a").c_str()); std::remove((a.ckpt_path + ".b").c_str());
     run_island<Arith::Bit>(F.D, F.st, F.nb, a);
     // step 4 was the 5th write (steps 0..4) -> file .a; corrupt one byte in its payload
@@ -333,12 +358,13 @@ TEST(t6_restart_bit_identical) {
 // island_r.bin: write, read back, compare with the run (record fields, store, HPM key, terminal supports); an
 // interrupted run writes no estimate section (GUARD-W).
 TEST(island_file_roundtrip_and_terminal_supports) {
+  TmpGuard tg;
   Fixture F(100, 300, 24);
   IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = 3; c.G = 16;
   for (int arith = 0; arith < 2; ++arith) {
     IslandRun r = arith ? run_island<Arith::ClassA>(F.D, F.st, F.nb, c) : run_island<Arith::Bit>(F.D, F.st, F.nb, c);
     CHECK(r.status == 0 && (int)r.terminal.size() == c.N);
-    std::string path = tmpdir() + "/wp3_island_rt.bin";
+    std::string path = tg.add(wp3_tmp("island_rt.bin"));
     v4::Json inputs = v4::Json::object(); inputs["data.bin"] = "test";
     write_island_file(path, r, arith ? Arith::ClassA : Arith::Bit, inputs);
     IslandFile f = read_island_file(path);
@@ -356,10 +382,10 @@ TEST(island_file_roundtrip_and_terminal_supports) {
     std::remove(path.c_str());
   }
   // interrupted run (stop after a checkpoint): no logZ / rb / pip / terminal sections
-  IslandConfig a = c; a.ckpt_path = tmpdir() + "/wp3_island_rt_ck"; a.ckpt_every_s = 1e9; a.stop_after_step = 2;
+  IslandConfig a = c; a.ckpt_path = tg.add(wp3_tmp("island_rt_ck")); a.ckpt_every_s = 1e9; a.stop_after_step = 2;
   std::remove((a.ckpt_path + ".a").c_str()); std::remove((a.ckpt_path + ".b").c_str());
   IslandRun ri = run_island<Arith::Bit>(F.D, F.st, F.nb, a);
-  std::string path = tmpdir() + "/wp3_island_rt_int.bin";
+  std::string path = tg.add(wp3_tmp("island_rt_int.bin"));
   bool refused = false; try { write_island_file(path, ri, Arith::Bit, v4::Json::object()); } catch (const v4::Error&) { refused = true; }
   CHECK(refused);   // an interrupted island is a test outcome, never a file (review m3)
   std::remove(path.c_str()); std::remove((a.ckpt_path + ".a").c_str()); std::remove((a.ckpt_path + ".b").c_str());
@@ -404,7 +430,7 @@ TEST(t6_kill_during_write_resubmit_and_refusal) {
   Fixture F(100, 300, 25);
   IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = 2; c.G = 16;
   const uint64_t h0 = run_island<Arith::ClassA>(F.D, F.st, F.nb, c).hash();
-  const std::string base = tmpdir() + "/wp3_t6k";
+  TmpGuard tg; const std::string base = tg.add(wp3_tmp("t6k"));
   auto clean = [&]() { for (const char* s : {".a", ".b", ".b.tmp.12345", ".a.tmp.12345"}) std::remove((base + s).c_str()); };
   // (1) checkpoint every step, stop after step 4 (writes 0 a, 1 b, 2 a, 3 b, 4 a); then a "kill" during the next
   //     write: a partial temporary file, and the newest generation torn to half its length
@@ -502,9 +528,7 @@ TEST(mem_budget_admission) {
   Fixture F(100, 300, 26);
   IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = 3;
   const uint64_t h0 = run_island<Arith::ClassA>(F.D, F.st, F.nb, c).hash();
-  double Ek = 0; for (size_t k = 0; k < F.st.size_logmass.size(); ++k) Ek += (double)k * std::exp(F.st.size_logmass[k]);
-  const double k_est = std::max(8.0, 2.0 * Ek + 2.0);
-  auto plan = [&](int G) { return island_memory(sizes_of(F, c, G), k_est).total; };
+  auto plan = [&](int G) { IslandConfig cg = c; cg.G = G; return plan_island(F.D, F.st, cg).total; };
   // (1) refusal before any allocation: budget below the G = 1 plan; deterministic reason
   IslandConfig a = c; a.G = 0; a.mem_budget = plan(1) - 1;
   IslandRun r1 = run_island<Arith::ClassA>(F.D, F.st, F.nb, a);
@@ -517,13 +541,13 @@ TEST(mem_budget_admission) {
   // (3) a fixed G whose plan exceeds the budget is refused
   IslandConfig b = c; b.G = 48; b.mem_budget = plan(17);
   CHECK(run_island<Arith::ClassA>(F.D, F.st, F.nb, b).status == 3);
-  // (4) step-boundary refusal (review PR24 m1): the admission's k (k_store = 0.5) is far below the stored models' real
+  // (4) step-boundary refusal (review PR24 m1): the admission's k (forced to 0.5) is far below the stored models' real
   //     size, so the admission passes and the first step-boundary check (actual pool) refuses; no store is reported
-  IslandConfig d = c; d.k_store = 0.5;
-  d.mem_budget = island_memory(sizes_of(F, d, d.G), 0.5).total + 1024;
+  IslandConfig d = c; d.test_admission_k = 0.5;
+  d.mem_budget = plan_island(F.D, F.st, d).total + 1024;
   IslandRun r4 = run_island<Arith::ClassA>(F.D, F.st, F.nb, d);
   CHECKF(r4.status == 3 && r4.reason.find("after step") != std::string::npos && r4.top_v.empty() && r4.rb_acc.empty(), "step refusal: status %d '%s'", r4.status, r4.reason.c_str());
-  std::string path = tmpdir() + "/wp3_refused.bin";
+  TmpGuard tg; std::string path = tg.add(wp3_tmp("refused.bin"));
   write_island_file(path, r4, Arith::ClassA, v4::Json::object());
   { v4::fmt::Reader rd(path); uint64_t n = 0; rd.get<double>("top_v", &n);
     CHECK(rd.json("meta").at("status").str() == "resource_limit" && n == 0 && !rd.has("logZ") && !rd.has("terminal_S")); }
@@ -542,6 +566,24 @@ TEST(oom_in_region_is_resource_limit) {
     IslandConfig c = small_cfg(); c.kernel = kern ? KernelKind::LabelMajor : KernelKind::ParticleMajor; c.threads = th; c.G = 16; c.test_oom_pass = 2;
     IslandRun r = run_island<Arith::ClassA>(F.D, F.st, F.nb, c);
     CHECKF(r.status == 3 && r.reason.find("out of memory") != std::string::npos && r.top_v.empty(), "threads %d: status %d '%s'", th, r.status, r.reason.c_str());
+  }
+}
+
+// out of memory in the parallel compaction (review PR26 r2): the sort scratch is allocated outside every parallel
+// region (psort_noalloc), so the failure is a catchable std::bad_alloc -> resource_limit, never an abort
+TEST(oom_in_parallel_compaction_is_resource_limit) {
+  Fixture F(100, 300, 34);
+  IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = 3; c.G = 16; c.test_oom_merge = 1;
+  IslandRun r = run_island<Arith::ClassA>(F.D, F.st, F.nb, c);
+  CHECKF(r.status == 3 && r.reason.find("out of memory") != std::string::npos && r.top_v.empty(), "status %d '%s' (merges %llu)", r.status, r.reason.c_str(),
+         (unsigned long long)r.ks.store_merges);
+  // psort_noalloc = std::sort for every thread count (chunks + pairwise merges)
+  // (review m3: every merge round is cut into merge-path segments; uneven chunk and segment counts included)
+  std::mt19937_64 g(7);
+  for (size_t n : {(size_t)4100, (size_t)20011}) {
+    std::vector<uint64_t> a(n); for (auto& x : a) x = g() % 5000;
+    std::vector<uint64_t> ref = a; std::sort(ref.begin(), ref.end());
+    for (int th : {1, 2, 3, 4, 5, 7, 8}) { std::vector<uint64_t> b = a, tmp; psort_noalloc(b, tmp, std::less<uint64_t>(), th); CHECKF(b == ref, "n %zu threads %d", n, th); }
   }
 }
 
@@ -570,7 +612,7 @@ TEST(compat_restart_file_and_refusals) {
   IslandConfig c = small_cfg(); c.compat = true; c.kernel = KernelKind::ParticleMajor; c.threads = 1; c.island = 2;
   IslandRun r0 = run_island<Arith::Bit>(F.D, F.st, F.nb, c);
   CHECK(r0.status == 0 && r0.compat && r0.stream_count > 0 && !r0.leaders && r0.lead0_v.empty() && r0.lead1_v.empty());   // v0.1.7
-  const std::string base = tmpdir() + "/wp3_compat_ck";
+  TmpGuard tg; const std::string base = tg.add(wp3_tmp("compat_ck"));
   for (int stop : {0, 3, 6}) {
     std::remove((base + ".a").c_str()); std::remove((base + ".b").c_str());
     IslandConfig a = c; a.ckpt_path = base; a.ckpt_every_s = 1e9; a.stop_after_step = stop;
@@ -580,7 +622,7 @@ TEST(compat_restart_file_and_refusals) {
     CHECKF(r.status == 0 && r.resumed_from_step == stop && r.hash() == r0.hash() && r.stream_count == r0.stream_count, "compat resume after %d", stop);
   }
   std::remove((base + ".a").c_str()); std::remove((base + ".b").c_str());
-  std::string path = tmpdir() + "/wp3_compat_island.bin";
+  std::string path = tg.add(wp3_tmp("compat_island.bin"));
   write_island_file(path, r0, Arith::Bit, v4::Json::object());
   { v4::fmt::Reader rd(path); CHECK(rd.mode() == v4::fmt::M_COMPAT && !rd.has("lead0_v") && !rd.has("lead1_v") && rd.json("meta").at("mode").str() == "compat"); }
   // even an island run with the test-only leaders option writes no leader store (v0.1.7)
@@ -616,7 +658,7 @@ TEST(numerical_failure_status_deterministic) {
       if (reason0.empty()) { reason0 = r.reason; std::printf("  [%s] %s\n", arith ? "A" : "bit", r.reason.c_str()); }
       CHECKF(ok && r.reason == reason0, "arith %d kernel %d threads %d: status %d reason '%s' vs '%s'", arith, kern, th, r.status, r.reason.c_str(), reason0.c_str());
       if (kern == 1 && th == 3) {
-        std::string path = tmpdir() + "/wp3_nf.bin";
+        TmpGuard tg; std::string path = tg.add(wp3_tmp("nf.bin"));
         write_island_file(path, r, arith ? Arith::ClassA : Arith::Bit, v4::Json::object());
         v4::fmt::Reader rd(path);
         CHECK(rd.json("meta").at("status").str() == "numerical_failure" && !rd.has("logZ") && !rd.has("rb_acc") && !rd.has("pip_r") &&
@@ -750,22 +792,178 @@ static long status_kb(const char* key) {
 }
 static void plan_bounds_peak(int p, int N, std::initializer_list<int> Gs) {
   Fixture F(200, p, 36);
-  for (int G : Gs) for (bool lead : {false, true}) {
-    IslandConfig c = small_cfg(); c.N = N; c.kernel = KernelKind::LabelMajor; c.threads = 3; c.G = G; c.leaders = lead;
-    c.grid = {0.0, 0.3, 0.7, 1.0}; c.L = 0; c.Hm = 1;
+  // rows: label-major for each G (leaders off / on); particle-major, 3 threads (re-check m1; leaders off / on); a
+  // calibration diagnostic island, label-major (leaders and the round-start snapshot)
+  std::vector<std::tuple<int, int, bool, bool>> rows;   // kernel (0 PM, 1 LM), G, leaders, calibration
+  for (int G : Gs) for (bool lead : {false, true}) rows.emplace_back(1, G, lead, false);
+  for (bool lead : {false, true}) rows.emplace_back(0, 1, lead, false);
+  rows.emplace_back(1, *Gs.begin(), true, true);
+  for (auto [kern, G, lead, cal] : rows) {
+    IslandConfig c = small_cfg(); c.N = kern || !lead ? N : N / 2;   // PM with leaders: N / 2 (time)
+    c.kernel = kern ? KernelKind::LabelMajor : KernelKind::ParticleMajor; c.threads = 3; c.G = G; c.leaders = lead;
+    c.grid = {0.0, 0.3, 0.7, 1.0}; c.L = 0; c.Hm = 1; c.k_store = 8.0;   // as calib.bin would give (r1)
+    if (cal) { c.role = IslandRole::Diag; c.island = 1; c.iter = 1; }
     { FILE* cr = std::fopen("/proc/self/clear_refs", "w"); if (cr) { std::fputs("5", cr); std::fclose(cr); } }
     const long rss0 = status_kb("VmRSS:");
     IslandRun r = run_island<Arith::ClassA>(F.D, F.st, F.nb, c);
     const long hwm = status_kb("VmHWM:");
     double k = r.top_v.empty() ? 8.0 : (double)r.top_pool.size() / (double)r.top_v.size();
     if (lead && !r.lead0_v.empty()) k = std::max({k, (double)r.lead0_pool.size() / r.lead0_v.size(), (double)r.lead1_pool.size() / r.lead1_v.size()});
-    MemPlan mp = island_memory(sizes_of(F, c, G), k);
+    double k_plan = 0; MemPlan mp = plan_island(F.D, F.st, c, nullptr, &k_plan, nullptr);   // the admission's own plan
     uint64_t inputs = 0; for (auto& it : mp.items) if (it.name == "inputs") inputs = it.bytes;
     const double plan_mb = (double)(mp.total - inputs) / 1048576.0, meas_mb = (double)(hwm - rss0) / 1024.0;
-    std::printf("  p %d N %d G %3d leaders %d: island peak increment %.0f MiB, plan %.0f MiB (k %.2f) -> %s\n", p, N, G, (int)lead, meas_mb, plan_mb, k,
-                plan_mb >= meas_mb ? "bound holds" : "BOUND FAILS");
-    CHECKF(r.status == 0 && rss0 > 0 && hwm > 0 && plan_mb >= meas_mb, "p %d G %d leaders %d: measured %.0f MiB > plan %.0f MiB", p, G, (int)lead, meas_mb, plan_mb);
+    std::printf("  (stored mean |S| at the end %.2f; the plan's k %.2f)\n", k, k_plan);
+    std::printf("  p %d N %d %s G %3d leaders %d%s: island peak increment %.0f MiB, plan %.0f MiB (k %.2f) -> %s\n", p, c.N, kern ? "LM" : "PM", G, (int)lead,
+                cal ? " calibration" : "", meas_mb, plan_mb, k, plan_mb >= 1.10 * meas_mb ? "bound + 10 % holds" : "BOUND (+10 %) FAILS");
+    // the plan is an upper bound with headroom (manager 11-16): >= 10 % over the measured peak in every row
+    CHECKF(r.status == 0 && rss0 > 0 && hwm > 0 && plan_mb >= 1.10 * meas_mb, "p %d %s G %d leaders %d cal %d: measured %.0f MiB, plan %.0f MiB < 1.10 x measured", p,
+           kern ? "LM" : "PM", G, (int)lead, (int)cal, meas_mb, plan_mb);
   }
 }
 TEST(mem_plan_bounds_measured_peak_2e4) { plan_bounds_peak(20000, 500, {64, 256}); }
 TEST_TAGGED(mem_plan_bounds_measured_peak_1e5, "full") { plan_bounds_peak(100000, 500, {64, 256}); }
+
+// review PR24 r1 / PR26 B1: at p >= 1e5 an island without the calibration-measured k_store is invalid_input (no real
+// run plans from the pi_0 fallback); with k_store (or the test/bench override) it is admitted
+TEST(k_store_required_at_1e5) {
+  Fixture F(20, 100000, 37);
+  IslandConfig c = small_cfg(); c.kernel = KernelKind::ParticleMajor; c.threads = 1; c.N = 4; c.grid = {0.0, 1.0}; c.L = 0; c.Hm = 1;
+  c.mem_budget = 1ull << 40;   // the requirement is the admission's (final island with a budget; re-check m2)
+  bool refused = false;
+  try { (void)run_island<Arith::ClassA>(F.D, F.st, F.nb, c); } catch (const v4::Error& e) { refused = e.st == v4::Status::invalid_input && std::string(e.what()).find("k_store") != std::string::npos; }
+  CHECKF(refused, "p 1e5 without k_store was not refused");
+  c.k_store = 8.0; IslandRun r = run_island<Arith::ClassA>(F.D, F.st, F.nb, c); CHECKF(r.status == 0, "with k_store: status %d", r.status);
+  c.k_store = 0; c.k_store_optional = true; IslandRun r2 = run_island<Arith::ClassA>(F.D, F.st, F.nb, c); CHECKF(r2.status == 0 && r2.hash() == r.hash(), "override");
+  // re-check m2: without a budget there is no admission, and calibration islands plan from the setup (no calib.bin)
+  c.k_store_optional = false; c.mem_budget = 0; IslandRun r3 = run_island<Arith::ClassA>(F.D, F.st, F.nb, c); CHECKF(r3.status == 0, "no budget: status %d", r3.status);
+  c.mem_budget = 1ull << 40; c.role = IslandRole::Pilot; c.island = 0; c.adaptive = true; c.adaptive_H = c.N; c.adaptive_Te = 4; c.grid.clear();
+  IslandRun r4 = run_island<Arith::ClassA>(F.D, F.st, F.nb, c); CHECKF(r4.status == 0, "pilot at 1e5 without k_store: status %d '%s'", r4.status, r4.reason.c_str());
+}
+
+// L5: the vectorised pi_0 draw = the original draw (same uniforms per slot, same model), and philox8_word over slots
+// = uniform_at; checked for many particles, two partitions, and sizes up to K (n = 60 -> K = 30).
+TEST(pi0_fast_draw_equals_draw) {
+  for (int bsz : {4, 7}) {
+    Data D; make_ar_data(D, 60, 3000, 0.6, 51);
+    Start st; build_start(st, D, contiguous_blocks(3000, bsz));
+    long same = 0, total = 0; size_t maxk = 0;
+    for (uint32_t i = 1; i <= 3000; ++i) {
+      Address a0; a0.seed = 5; a0.island = 2; a0.xph = X_BRIDGE; a0.stage = 3; a0.particle = i; a0.position = 77;
+      auto nu = [&](uint32_t slot) { Address a = a0; a.slot = slot; return uniform_at(a); };
+      const v4::Ctr4 ctr = v4::address_ctr(a0); const v4::Key2 kk = v4::address_key(a0);
+      Model S1, S2;
+      draw_pi0(st, nu, S1);
+      draw_pi0_fast(st, nu, [&](const uint32_t* sl, double* out) { philox8_word(ctr.data(), kk.data(), 0, sl, out); }, S2);
+      ++total; if (S1 == S2) ++same; maxk = std::max(maxk, S1.size());
+    }
+    std::printf("  blocks of %d: %ld / %ld draws identical (largest |S| %zu)\n", bsz, same, total, maxk);
+    CHECK(same == total);
+  }
+}
+
+// calibration admission (WP4's N-1 rule, IslandSpec): mem_budget = the whole task's budget, resident_bytes = the
+// calibration's own state without the inputs; admitted iff resident_bytes + the island's plan <= mem_budget (to the byte)
+#include "v4/island/calib_runner.h"
+TEST(calibration_admission_n1_rule) {
+  Fixture F(100, 300, 38);
+  // a fixed G on both sides (G = 0 lets the admission shrink G until the plan fits)
+  CalibRunnerConfig rc; rc.seed = 3; rc.kernel = KernelKind::ParticleMajor; rc.threads = 1; rc.B = 14; rc.G = 1;
+  CalibIslandRunner<Arith::Bit> run(F.D, F.st, F.nb, rc);
+  v4::calib::IslandSpec sp; sp.role = v4::calib::IslandRole::Diag; sp.tier = 0; sp.iter = 1; sp.island = 1; sp.H = 30;
+  sp.grid = {0.0, 0.3, 1.0}; sp.L = 1; sp.Hm = 1; sp.resident_bytes = 123456789;
+  IslandConfig c; c.role = IslandRole::Diag; c.island = 1; c.iter = 1; c.N = sp.H; c.grid = sp.grid; c.L = 1; c.Hm = 1; c.B = 14;
+  c.kernel = KernelKind::ParticleMajor; c.threads = 1; c.G = 1; c.leaders = true; c.inputs_bytes = (double)sp.resident_bytes;
+  const uint64_t plan = plan_island(F.D, F.st, c).total;   // includes the resident bytes through the inputs term
+  sp.mem_budget = plan - 1;
+  v4::calib::IslandOut o1 = run.run(sp);
+  CHECKF(o1.status == v4::Status::resource_limit && !o1.partial, "budget = plan - 1: status %s partial %d", v4::status_name(o1.status), (int)o1.partial);
+  sp.mem_budget = plan;
+  v4::calib::IslandOut o2 = run.run(sp);
+  CHECKF(o2.status == v4::Status::completed, "budget = plan: status %s '%s'", v4::status_name(o2.status), o2.message.c_str());
+  sp.resident_bytes = 0; sp.mem_budget = plan - 123456789;   // the same island without the resident state fits exactly
+  v4::calib::IslandOut o3 = run.run(sp);
+  CHECKF(o3.status == v4::Status::completed, "no resident, budget = plan - resident: status %s", v4::status_name(o3.status));
+  std::printf("  plan with resident %llu B: refused at budget plan - 1, admitted at plan\n", (unsigned long long)plan);
+}
+
+// `smcbvs4 calibrate` end to end (WP4's calib::run with WP3's island runner plugged in; WP3_DESIGN §1.11): data.bin from
+// prep, a setup.bin with the partition, block tables, table stores and neighbour lists (WP4's write_setup_min sections
+// + nb_ptr / nb_idx), then the command in each mode. compat runs the bit form particle-major on the v3 streams, law the
+// bit form particle-major, V class A label-major. Checks: status ok, calib.bin readable (grid from 0 to 1, inherited
+// models), the island's start law equals the setup's (load_start), V the same for 1 and 3 threads.
+#include "v4/calib_run.h"
+#include "v4/island/setup_load.h"
+#include "v4/prep.h"
+#include "v4/stubs.h"
+#include "v4/wp4_io.h"
+TEST(calibrate_command_end_to_end) {
+  const int n = 60, p_raw = 30;
+  std::vector<double> X((size_t)n * p_raw), y(n);
+  { std::mt19937_64 g(41); std::normal_distribution<double> nd;
+    for (int i = 0; i < n; ++i) { double prev = 0; for (int j = 0; j < p_raw; ++j) { double x = 0.6 * prev + 0.8 * nd(g); X[(size_t)j * n + i] = x; prev = x; } }
+    for (int i = 0; i < n; ++i) y[i] = 1.2 * X[(size_t)2 * n + i] - 0.9 * X[(size_t)11 * n + i] + nd(g); }
+  v4::prep::Result pr = v4::prep::preprocess(X.data(), y.data(), n, p_raw);
+  CHECK(pr.status == "ok");
+  v4::Data D = v4::make_data(pr.own, n, pr.p);
+  const int p = D.p;
+  TmpGuard tg;
+  const std::string dpath = tg.add(wp3_tmp("cal_data.bin")), s0 = tg.add(wp3_tmp("cal_setup0.bin")), spath = tg.add(wp3_tmp("cal_setup.bin"));
+  const std::string dhash = v4::prep::write_data(dpath, D, pr, "B", v4::Json::object());
+  // setup: blocks of 3, the island's own tables (core's arithmetic), table stores over every table model
+  Start st; build_start(st, D, contiguous_blocks(p, 3));
+  Neighbours nb = window_neighbours(D, 6, 4);
+  v4::wp4io::SetupView S; S.blk = st.blk; S.pos = st.pos; S.blk_ptr.push_back(0);
+  S.ttop.init(40ull * p + 1, Order::HPM); S.tlead0.init(20ull * p, Order::LEX); S.tlead1.init(20ull * p, Order::LEX);
+  BitScorer sc(&D);
+  for (int b = 0; b < st.J; ++b) {
+    for (int j : st.blocks[b]) S.blk_members.push_back(j);
+    S.blk_ptr.push_back((int64_t)S.blk_members.size()); S.code_ptr.push_back((int64_t)S.logr.size());
+    for (uint32_t c = 0; c < st.logr[b].size(); ++c) {
+      S.logr.push_back(st.logr[b][c]);
+      Model U; for (size_t i = 0; i < st.blocks[b].size(); ++i) if (c & (1u << i)) U.push_back(st.blocks[b][i]);
+      if ((int)U.size() > D.K) continue;
+      double F = D.logprior[U.size()] + sc.score(U).logm, lg0 = D.logprior[U.size()] + st.logr[b][c];
+      S.ttop.offer(F, U, D.zob.hash(U)); S.tlead0.offer(lg0, U, D.zob.hash(U)); S.tlead1.offer(F, U, D.zob.hash(U));
+    }
+  }
+  S.ttop.compact(); S.tlead0.compact(); S.tlead1.compact();
+  S.mode_S = Model(S.ttop.model(0).begin(), S.ttop.model(0).end());
+  v4::Json sin = v4::Json::object(); sin["data.bin"] = dhash;
+  v4::wp4io::write_setup_min(s0, S, sin);
+  { v4::fmt::Reader R(s0); v4::fmt::Writer W(v4::fmt::K_SETUP, v4::fmt::M_COMPAT);   // + the neighbour lists (WP2's sections)
+    for (const auto& e : R.sections()) {
+      const std::string nm(e.name);
+      if (e.dtype == v4::fmt::D_JSON) { W.add_json(nm, R.json(nm)); continue; }
+      const void* q = e.dtype == v4::fmt::D_F64 ? (const void*)R.get<double>(nm) : e.dtype == v4::fmt::D_I32 ? (const void*)R.get<int32_t>(nm)
+                    : e.dtype == v4::fmt::D_U32 ? (const void*)R.get<uint32_t>(nm) : e.dtype == v4::fmt::D_I64 ? (const void*)R.get<int64_t>(nm)
+                    : e.dtype == v4::fmt::D_U64 ? (const void*)R.get<uint64_t>(nm) : e.dtype == v4::fmt::D_U16 ? (const void*)R.get<uint16_t>(nm)
+                    : (const void*)R.get<uint8_t>(nm);
+      W.add_copy(nm, e.dtype, q, e.length, e.dims[0], e.dims[1]);
+    }
+    W.add("nb_ptr", nb.ptr); W.add("nb_idx", nb.idx); W.add("size_cum", st.size_cum); W.write(spath); }
+  { Start st2 = load_start(spath, D); Neighbours nb2 = load_neighbours(spath, p);
+    CHECK(st2.size_cum == st.size_cum && st2.logZbar0 == st.logZbar0 && st2.blocks == st.blocks && nb2.ptr == nb.ptr && nb2.idx == nb.idx); }
+  auto calibrate = [&](const std::string& mode, int threads, const std::string& out) {
+    v4::Json a = v4::Json::object(); a["data"] = dpath; a["setup"] = spath; a["out"] = out; a["mode"] = mode; a["seed"] = 77.0; a["threads"] = (double)threads;
+    return v4::calib::run(a);
+  };
+  std::map<std::string, v4::wp4io::CalibIn> got;
+  for (auto [mode, th] : std::vector<std::pair<std::string, int>>{{"compat", 1}, {"law", 3}, {"V", 1}, {"V", 3}}) {
+    const std::string out = tg.add(wp3_tmp("cal_" + mode + std::to_string(th) + ".bin"));
+    double t0 = omp_get_wtime();
+    v4::Json rec = calibrate(mode, th, out);
+    CHECKF(rec.at("status").str() == "ok", "%s threads %d: status %s", mode.c_str(), th, rec.at("status").str().c_str());
+    if (rec.at("status").str() != "ok") continue;
+    v4::wp4io::CalibIn ci = v4::wp4io::read_calib(out, p, D.K);
+    CHECKF(ci.grid.size() >= 2 && ci.grid.front() == 0.0 && ci.grid.back() == 1.0 && !ci.inherited.empty() && ci.has_hpm, "%s: calib.bin", mode.c_str());
+    std::printf("  calibrate %-6s threads %d: %.1f s, tier %d, T = %zu, %zu inherited models, HPM |S| = %zu\n", mode.c_str(), th, omp_get_wtime() - t0,
+                ci.tier, ci.grid.size() - 1, ci.inherited.size(), ci.hpm.size());
+    const std::string key = mode + (mode == "V" ? "" : std::to_string(th));
+    if (got.count(key)) {   // V with 1 and 3 threads: the same calibration
+      const auto& o = got[key];
+      bool same = o.grid == ci.grid && o.tier == ci.tier && o.inherited.size() == ci.inherited.size() && o.hpm == ci.hpm;
+      for (size_t i = 0; same && i < ci.inherited.size(); ++i) same = o.inherited[i].S == ci.inherited[i].S && same_bits(o.inherited[i].F, ci.inherited[i].F);
+      CHECKF(same, "%s: calibration differs between runs / thread counts", mode.c_str());
+    } else got[key] = ci;
+  }
+}

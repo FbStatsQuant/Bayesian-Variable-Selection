@@ -488,3 +488,159 @@ TEST(wp4_tail_failure_path_equals_serial) {
     }
   }
 }
+
+#include "v4/calib_run.h"
+#include "v4/wp4_io.h"
+#include "v4/stubs.h"
+#include <sys/wait.h>
+namespace {
+// A deterministic toy island: events with calibration keys from the toy evaluator; optional stop at one (iter, island).
+struct ToyRunner : calib::IslandRunner {
+  const std::vector<double>* w; int p; int stop_iter = -1, stop_island = -1; Status stop = Status::completed;
+  bool admission_refusal = false;   // resource_limit before anything ran (partial = false)
+  bool leaders = true, table_events = false;   // a misconfigured island ledger (review PR37 M-3)
+  calib::IslandOut run(const calib::IslandSpec& sp) override {
+    calib::IslandOut o;
+    if (admission_refusal && sp.iter == stop_iter && sp.island == stop_island) { o.status = Status::resource_limit; o.partial = false; o.message = "admission"; return o; }
+    if (stop != Status::completed && stop != Status::resource_limit && stop != Status::numerical_failure && sp.iter == stop_iter && sp.island == stop_island) {
+      o.status = stop; o.message = "toy " + std::string(status_name(stop)); return o; }
+    LedgerConfig c; c.p = p; c.islands = 4; c.leaders = leaders; c.fresh_counters = false; o.led.init(c);
+    if (table_events) o.led.logical[PH_TABLE][ME_TABLE] = 1;
+    std::mt19937_64 g(1000003ull * (uint64_t)(sp.tier + 1) + 7919ull * (uint64_t)sp.iter + (uint64_t)sp.island);
+    ToyEval ev{w};
+    const int T = sp.role == calib::IslandRole::Pilot ? 4 : (int)sp.grid.size() - 1;
+    for (int t = 1; t <= T; ++t) {
+      double phi = sp.role == calib::IslandRole::Pilot ? (double)t / T : sp.grid[(size_t)t];
+      o.schedule.push_back(phi);
+      StageRow row; row.phi = phi; row.ess = sp.H * 0.8; row.inc = -0.1 * t; row.cum = -0.1 * t * (t + 1) / 2; o.stages.push_back(row);
+      for (int q = 0; q < 30; ++q) {
+        Model S; int k = 1 + (int)(g() % 3); for (int a = 0; a < k; ++a) S.push_back((int32_t)(g() % (uint64_t)p));
+        std::sort(S.begin(), S.end()); S.erase(std::unique(S.begin(), S.end()), S.end());
+        double lm, lg0, d, F; ev(S, lm, lg0, d, F);
+        EventCtx e; e.phase = sp.role == calib::IslandRole::Pilot ? PH_PILOT : PH_DIAG; e.mech = ME_GIBBS_FLIP; e.phi = phi;
+        e.key.seg = SG_CALIB; e.key.tier = (uint8_t)sp.tier; e.key.iter = (int8_t)sp.iter; e.key.unit = (uint32_t)sp.island;
+        e.key.stage = (uint32_t)t; e.key.round = (uint32_t)t; e.key.particle = 1 + (uint32_t)q; e.key.position = 1;
+        o.led.event(S, zob().hash(S), F, lg0, lm, e, true);
+        if (sp.iter == stop_iter && sp.island == stop_island && t == 2 && q == 10) {   // stop mid-island
+          o.led.compact(); o.status = stop; o.partial = stop == Status::resource_limit; o.message = "toy stop";
+          o.logZ = -10.0 - sp.island; return o;
+        }
+      }
+    }
+    o.led.compact();
+    o.logZ = -10.0 - 0.01 * sp.island - 0.001 * sp.iter; o.forced = sp.role == calib::IslandRole::Pilot ? 1 : 0;
+    o.pip.assign((size_t)p, 0.1);
+    return o;
+  }
+};
+calib::Settings toy_settings(calib::Rule rule, int threads) {
+  calib::Settings s; s.rule = rule; s.threads = threads; s.I_max = 2;
+  if (rule == calib::Rule::bounded) s.sum_mode = calib::SumMode::Blocked;
+  for (int e = 0; e < 2; ++e) { s.tiers[e].tier = e; s.tiers[e].H = 50; s.tiers[e].Te = 40; s.tiers[e].L = 4; s.tiers[e].Hm = 4; s.tiers[e].ell = 3; }
+  return s;
+}
+}  // namespace
+
+TEST(wp4_calib_backend_toy) {
+  const int p = 40;
+  std::vector<double> w(p); for (int j = 0; j < p; ++j) w[j] = 0.25 * ((j * 7) % 13) - 1.5;
+  ToyFactory fac{&w};
+  auto calib_once = [&](calib::Rule rule, int threads, ToyRunner& run) {
+    LedgerConfig c; c.p = p; c.islands = 4; c.leaders = true; c.fresh_counters = false;
+    Ledger led(c);
+    merge::TailSettings ts; ts.threads = threads; ts.chunk = 7; ts.K = 8; ts.p = p; ts.zob = &zob();
+    return calib::calibrate_with(run, std::move(led), fac, toy_settings(rule, threads), ts);
+  };
+  for (auto rule : {calib::Rule::coded, calib::Rule::bounded}) {
+    ToyRunner r1{}, r3{}; r1.w = r3.w = &w; r1.p = r3.p = p;
+    calib::CalibOutcome a = calib_once(rule, 1, r1), b = calib_once(rule, 3, r3);
+    CHECK(a.co.status == calib::CalStatus::ok && a.co.has_frozen && calib::check_grid(a.co.frozen.grid));
+    CHECK(same_bits_v(a.co.frozen.grid, b.co.frozen.grid) && same_ledger(a.led, b.led) && a.inherited.size() == b.inherited.size());   // threads
+    CHECK(a.led.has_hpm && a.led.lead0.size() > 0 && a.inherited.size() >= a.led.top.size());
+    bool lex = true; for (size_t i = 1; i < a.inherited.size(); ++i) lex = lex && lex_less(a.inherited.model(i - 1), a.inherited.model(i));
+    CHECK(lex);   // the export order of core v3_core.cpp:730-734
+    CHECK(a.stages.size() == 1 + 4 * (size_t)a.co.tiers.back().rebuilds + (a.co.tiers.size() == 2 ? 1 + 4 * (size_t)a.co.tiers[0].rebuilds : 0));
+    CHECK(a.led.logical[PH_LOCAL][ME_LOCAL] > 0);   // the calibration local searches ran on the calibration ledger
+    if (rule == calib::Rule::bounded) CHECK(a.co.tiers.size() == 1);
+    // calib.bin round trip with the stage records
+    std::string path = tmp_path("wp4_calib_toy.bin");
+    const calib::Settings st = toy_settings(rule, 1);
+    wp4io::CalibWrite cw; cw.mode = rule == calib::Rule::bounded ? fmt::M_V : fmt::M_COMPAT; cw.co = &a.co; cw.led = &a.led; cw.inherited_flat = &a.inherited;
+    cw.N = 2500; cw.L = 4; cw.stages = a.stages; cw.settings = &st; cw.k_store = a.k_store;
+    CHECK(a.k_store > 0 && std::isfinite(a.k_store));
+    wp4io::write_calib(path, cw);
+    wp4io::CalibIn ci = wp4io::read_calib(path, p, 8);
+    CHECK(same_bits_v(ci.grid, a.co.frozen.grid) && ci.N == 2500 && ci.inherited.size() == a.inherited.size() && ci.hpm == a.led.hpmS);
+    CHECK(same_bits(ci.k_store, a.k_store) && ci.rule == (rule == calib::Rule::bounded ? "bounded" : "coded"));
+    bool vals = true; for (size_t i = 0; i < ci.inherited.size(); ++i) vals = vals && same_bits(ci.inherited[i].F, a.inherited.F[i]) && same_model(ci.inherited[i].S, a.inherited.model(i));
+    CHECK(vals);
+    { fmt::Reader R(path); CHECK(R.entry("stage_meta").dims[0] == a.stages.size() && R.has("stage_phi") && R.has("stage_moves")); }
+    std::remove(path.c_str());
+  }
+  {  // a resource stop in diagnostic island 2 of rebuild 1: resource_limit, the island's events so far merged
+    ToyRunner r{}; r.w = &w; r.p = p; r.stop_iter = 1; r.stop_island = 2; r.stop = Status::resource_limit;
+    calib::CalibOutcome o = calib_once(calib::Rule::coded, 1, r);
+    CHECK(o.co.status == calib::CalStatus::resource_limit && !o.co.has_frozen && o.stages.size() == 3 && o.stages.back().partial);
+    const uint64_t T = o.co.tiers[0].iterations.at(0).grid.size() - 1;
+    CHECK(o.led.logical[PH_DIAG][ME_GIBBS_FLIP] == T * 30 + 30 + 11);   // island 1 complete (T stages x 30) + island 2 up to the stop
+  }
+  {  // a numerical failure: status numerical_failure, the ledger so far merged (core's shared ledger keeps those events)
+    ToyRunner r{}; r.w = &w; r.p = p; r.stop_iter = 0; r.stop_island = 0; r.stop = Status::numerical_failure;
+    calib::CalibOutcome o = calib_once(calib::Rule::coded, 1, r);
+    CHECK(o.co.status == calib::CalStatus::numerical_failure && o.led.logical[PH_PILOT][ME_GIBBS_FLIP] == 30 + 11);
+  }
+  {  // review PR37 M-2: an admission refusal stays resource_limit (task exit 11), never numerical_failure
+    ToyRunner r{}; r.w = &w; r.p = p; r.stop_iter = 1; r.stop_island = 3; r.admission_refusal = true;
+    calib::CalibOutcome o = calib_once(calib::Rule::coded, 1, r);
+    CHECK(o.co.status == calib::CalStatus::resource_limit && calib::task_status(o.co.status) == Status::resource_limit && !o.co.has_frozen);
+  }
+  for (Status bad : {Status::internal_error, Status::invalid_input, Status::io_error}) {   // ... and other statuses end the task with that status
+    ToyRunner r{}; r.w = &w; r.p = p; r.stop_iter = 1; r.stop_island = 2; r.stop = bad;
+    bool threw = false; Status got = Status::completed;
+    try { calib_once(calib::Rule::coded, 1, r); } catch (const Error& e) { threw = true; got = e.st; }
+    CHECK(threw && got == bad);
+  }
+  {  // review PR37 M-3: an island ledger without leaders, or with table events, is refused (internal_error)
+    for (int variant = 0; variant < 2; ++variant) {
+      ToyRunner r{}; r.w = &w; r.p = p; if (variant == 0) r.leaders = false; else r.table_events = true;
+      bool threw = false; Status got = Status::completed;
+      try { calib_once(calib::Rule::coded, 1, r); } catch (const Error& e) { threw = true; got = e.st; }
+      CHECK(threw && got == Status::internal_error);
+    }
+  }
+}
+
+TEST(wp4_calib_budgets_and_command) {
+  // core/v3_preprocess.R:19-33 (values from R: v3_budgets(200, 1000), v3_budgets(200, 1e6), v3_budgets(80, 60))
+  calib::Budgets b = calib::budgets(200, 1000);
+  CHECK(b.K == 100 && b.B == 14 && b.ell == 11 && b.L == 8 && b.N0 == 2500 && b.H0 == 512 && b.T0 == 1000 && b.N[1] == 10000 && b.H[1] == 2048 && b.T[1] == 4000);
+  b = calib::budgets(200, 1000000);
+  CHECK(b.K == 100 && b.B == 14 && b.ell == 20 && b.N0 == 1000000 && b.H0 == 204800 && b.T0 == 1000);
+  {  // review PR37 M-1: V uses D-1 / D-26 (H = 512, N = 2,500, tier 0 only) whatever p; T keeps v3's budgets
+    calib::Budgets bb = calib::budgets(200, 1000000);
+    calib::Settings sv = calib::settings_from(bb, calib::Rule::bounded), st = calib::settings_from(bb, calib::Rule::coded);
+    CHECK(sv.tiers[0].H == 512 && sv.tiers[1].H == 0 && calib::frozen_N(bb, calib::Rule::bounded, 0) == 2500 && sv.sum_mode == calib::SumMode::Blocked);
+    CHECK(st.tiers[0].H == 204800 && calib::frozen_N(bb, calib::Rule::coded, 0) == 1000000);
+    sv.I_max = 25; CHECK_THROWS(calib::Driver::validate(sv));   // review PR37 m-5: no silent clamp; ell = 20 at p = 10^6
+  }
+  b = calib::budgets(80, 60);
+  CHECK(b.K == 40 && b.B == 7 && b.ell == 8 && b.L == 7 && b.N0 == 2500 && b.H0 == 512);
+  // the command: inputs required; with valid inputs it refuses with internal_error until WP3's island runner lands
+  Json a = Json::object(); a["out"] = tmp_path("cal.bin");
+  CHECK_THROWS(calib::run(a));
+  try { calib::run(a); } catch (const Error& e) { CHECK(e.st == Status::invalid_input); }
+  // the built binary: --plan-only at p = 10^6 in V (D-1, D-26 settings) and the input checks (review PR37 M-1, M-5, m-4)
+  const std::string bin = V4_SMCBVS4, rec = tmp_path("cal_plan.json");
+  auto sh = [&](const std::string& c) { int rc = std::system((c + " > /dev/null 2>&1").c_str()); return WIFEXITED(rc) ? WEXITSTATUS(rc) : -1; };
+  CHECK_EQ(sh(bin + " calibrate --plan-only 1 --mode V --n 200 --p 1000000 --record '" + rec + "'"), 0);
+  { Json j = read_json_file(rec); const Json& t0 = j.at("settings").at("tiers").at(0);
+    CHECK(j.at("settings").at("rule").str() == "bounded" && (int)t0.at("H").num() == 512 && (int)t0.at("N_final").num() == 2500 &&
+          j.at("settings").at("tiers").size() == 1 && (int)t0.at("ell").num() == 20);
+    CHECK(j.at("mem_plan").at("resident").num() > 1e9 && j.at("mem_plan").at("total").num() > j.at("mem_plan").at("resident").num()); }
+  CHECK_EQ(sh(bin + " calibrate --plan-only 1 --mode V --n 200 --p 1000000 --mem-budget 1000 --record '" + rec + "'"), 11);
+  CHECK_EQ(sh(bin + " calibrate --plan-only 1 --mode none --n 200 --p 1000 --record '" + rec + "'"), 13);
+  CHECK_EQ(sh(bin + " calibrate --plan-only 1 --mode compat --I_max 2 --n 200 --p 1000 --record '" + rec + "'"), 13);
+  CHECK_EQ(sh(bin + " calibrate --plan-only 1 --mode V --I_max 25 --n 200 --p 1000000 --record '" + rec + "'"), 13);
+  CHECK_EQ(sh(bin + " calibrate --plan-only 1 --mode V --threads 2.5 --n 200 --p 1000 --record '" + rec + "'"), 13);
+  std::remove(rec.c_str());
+}

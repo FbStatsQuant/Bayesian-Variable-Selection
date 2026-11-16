@@ -85,7 +85,72 @@ settings_for <- function(setup, rule = "coded", I_max = 3L, refine_m = 1L, sum_m
   b <- setup$budgets
   tiers <- lapply(0:1, function(e) list(H = b$tiers$H[e + 1], T_e = b$tiers$T[e + 1], L = b$L, Hm = 4L, ell = b$ell))
   list(rule = rule, tier0 = 0L, grid_fallback = TRUE, I_max = as.integer(I_max), refine_m = as.integer(refine_m),
-       sum_mode = sum_mode, threads = as.integer(th), tiers = tiers)
+       sum_mode = sum_mode, threads = as.integer(th), tiers = tiers, N0 = as.integer(b$tiers$N[1]), N1 = as.integer(b$tiers$N[2]))
+}
+# The calibration through the v4 backend (core islands via CoreRunner; calibration ledger, local searches, V and the
+# inherited export in v4 code; calib.bin written and read back): equal to v3_calibrate, the ledger included.
+# Compared (review PR37 M-6): every compare_calib field (tiers, grids, triggers, iterations, flags, frozen, calibration
+# ledger), the calib.bin round trip, the stage records (phi, increments, ESS, cumulative log Z, distinct counts, all move
+# counts, partial), the stream id / positions / init hash of every calibration island, and the inherited F, log gamma_0,
+# log m, d (sampled, against core's R-level scorer). Excluded, with reason: `fresh` and cache statistics (OD-3, spec §4.1);
+# timings; the calibration local-search archives (path, scanned centres) -- compared through their effects (ledger, HPM,
+# E3, local_limit); V snapshots -- compared through every grid built from V; the calibration pip / ess "calibration
+# estimates" -- never reported, not in calib.bin.
+stream_id <- function(tier, island) (if (tier == 0) 0L else 5L) + as.integer(island)
+ledger_calib <- function(r, setup, seed, tag, st = settings_for(setup), th = 1L, guard_hours = -1, runner = "core") {
+  st$threads <- as.integer(th); st$runner <- runner
+  if (runner != "core") tag <- paste0(tag, " [", runner, " islands]")
+  cp <- file.path(work, paste0("calib_", gsub("[^A-Za-z0-9]", "_", tag), ".bin"))
+  c0 <- n_checks; f0 <- length(failures)
+  m <- .v3cpp$wp4_calibrate_ledger(setup$ptr, seed, st, cp, guard_hours)
+  compare_calib(r, m, paste(tag, "[v4 backend]"))
+  tg <- paste(tag, "[v4 backend]")
+  # stage records vs core's calibration stage table, island by island, in run order
+  stt <- r$stage_table
+  if (is.null(stt) || !nrow(stt)) same(length(m$stages), 0L, paste(tg, "no stage records")) else {
+    key <- paste(stt$tier, stt$iter, stt$island)
+    grp <- unique(key)
+    same(length(m$stages), length(grp), paste(tg, "stage records: one per calibration island"))
+    for (i in seq_len(min(length(grp), length(m$stages)))) {
+      a <- m$stages[[i]]; rows <- stt[key == grp[i], , drop = FALSE]; ti <- paste0(tg, " stage record ", i)
+      same(paste(a$tier, a$iter, a$island), grp[i], paste(ti, "identity"))
+      for (nm in c("phi", "log_increment", "ess", "cum_log_Z")) same(a[[nm]], rows[[nm]], paste(ti, nm))
+      same(as.integer(a$distinct_resampled), as.integer(rows$distinct_resampled), paste(ti, "distinct_resampled"))
+      same(as.integer(a$distinct_moved), as.integer(rows$distinct_moved), paste(ti, "distinct_moved"))
+      mc <- c("gibbs", "gibbs_state_changes", "uswap_exec", "uswap_acc", "uswap_self", "nswap_exec", "nswap_acc", "nswap_reject_noscore", "nswap_self", "indep_exec", "indep_acc")
+      same(unname(a$moves), unname(as.matrix(rows[, mc])) + 0, paste(ti, "move counts"))
+      same(isTRUE(a$partial), isTRUE(rows$partial[1]), paste(ti, "partial"))
+      # stream: pilot record, or the diagnostic iteration's streams table (core v3_core.cpp:633, 683)
+      tr <- r$tiers[[which(vapply(r$tiers, function(t) as.integer(t$tier), 1L) == a$tier)[1]]]
+      sr <- if (a$island == 0) tr$pilot$stream else { df <- tr$iterations[[a$iter]]$streams; as.list(df[df$island == a$island, ]) }
+      same(as.integer(sr$stream), stream_id(a$tier, a$island), paste(ti, "stream id"))
+      same(as.numeric(sr$position_start), a$position_start, paste(ti, "stream position start"))
+      same(as.numeric(sr$position_end), a$position_end, paste(ti, "stream position end"))
+      same(as.character(sr$init_draws_hash), a$init_draws_hash, paste(ti, "init draws hash"))
+    }
+  }
+  if (identical(r$status, "ok")) {
+    # inherited values vs core's R-level scorer (cpp_score / cpp_discrepancy), sampled
+    im <- m$inherited$models; iv <- m$inherited_values
+    idx <- unique(round(seq(1, length(im), length.out = min(60L, length(im)))))
+    for (i in idx) {
+      S <- as.integer(im[[i]]); sc <- v3_score(setup$ctx, S); dd <- v3_discrepancy(setup$ctx, setup$start, S)
+      same(iv$F[i], sc$F, paste(tg, "inherited F", i)); same(iv$logm[i], sc$log_m, paste(tg, "inherited log m", i))
+      same(iv$lg0[i], attr(dd, "log_gamma0"), paste(tg, "inherited log gamma0", i)); same(iv$d[i], as.numeric(dd), paste(tg, "inherited d", i))
+    }
+  }
+  if (identical(r$status, "ok") && length(m$calib_bin)) {
+    cb <- m$calib_bin; tg <- paste(tag, "[calib.bin]")
+    same(cb$grid, r$frozen$grid, paste(tg, "frozen grid")); same(as.integer(cb$tier), r$frozen$tier, paste(tg, "tier"))
+    same(as.integer(cb$N), as.integer(r$frozen$N), paste(tg, "N"))
+    same(cb$inherited, r$frozen$inherited$models, paste(tg, "inherited models (order and content)"))
+    same(cb$hpm, r$hpm$model, paste(tg, "calibration HPM")); same(cb$hpm_provenance, r$hpm$provenance, paste(tg, "calibration HPM provenance"))
+    nt <- sum(vapply(r$tiers, function(t) 1L + 4L * length(t$iterations), 1L))
+    same(as.integer(cb$n_stage_islands), as.integer(nt), paste(tg, "stage records: one per calibration island"))
+    unlink(cp)
+  }
+  if (runner != "core") cat(sprintf("   %s: calibration == v3_calibrate, %d checks, %d failures\n", tag, n_checks - c0, length(failures) - f0))
+  invisible(m)
 }
 
 # ---- 1. coded calibration vs v3_calibrate -----------------------------------------------------------------------------
@@ -207,9 +272,22 @@ coded_path <- function(setup, seed, tag, opts = list(), expect_status = NULL) {
 }
 extra_coded_paths <- function(setup, seed, id, r0) {
   coded_path(setup, seed, paste(id, "P2 tier-1 start"), list(tier0 = 1L))
+  { r2 <- v3_calibrate(setup, seed, tier = 1, grid_fallback = TRUE); st2 <- settings_for(setup); st2$tier0 <- 1L
+    ledger_calib(r2, setup, seed, paste(id, "P2 tier-1 start"), st2)
+    ledger_calib(r2, setup, seed, paste(id, "P2 tier-1 start"), st2, runner = "wp3") }
+  for (el in c(1L, 0L)) { sb <- setup; sb$budgets$ell <- el
+    ledger_calib(v3_calibrate(sb, seed, tier = 0, grid_fallback = TRUE), sb, seed, paste0(id, " P", 5L - el, " ell=", el)) }
   sb <- setup; sb$budgets$ell <- 1L; coded_path(sb, seed, paste(id, "P4 ell=1"))
   sb$budgets$ell <- 0L; coded_path(sb, seed, paste(id, "P5 ell=0"))
   x <- coded_path(setup, seed, paste(id, "local_limit (forced)"), list(force_ll_pilot = TRUE))
+  # stop paths through the v4 backend (review PR37 M-6): forced pilot local_limit (the same wrapper on core's side, the
+  # backend's test hook on v4's) and a pilot resource stop (runtime guard with a 0-hour allocation on both sides)
+  { rf <- with_faults(function() v3_calibrate(setup, seed, tier = 0, grid_fallback = TRUE), list(force_ll_pilot = TRUE))
+    stf <- settings_for(setup); stf$force_ll_pilot <- TRUE
+    ledger_calib(rf, setup, seed, paste(id, "local_limit (forced)"), stf) }
+  { rg <- v3_calibrate(setup, seed, tier = 0, runtime = .v3cpp$cpp_runtime_new(0, 0), grid_fallback = TRUE)
+    expect(identical(rg$status, "resource_limit"), paste(id, "guard stop reaches resource_limit"))
+    ledger_calib(rg, setup, seed, paste(id, "pilot resource stop"), guard_hours = 0) }
   expect(isTRUE(x$r$tiers[[1]]$triggers$local_limit) && x$r$escalated, paste(id, "local_limit fires and escalates"))
   k <- length(x$r$tiers[[1]]$grids) + 2L     # the tier-1 rebuild_1 construction (after a tier-1 preliminary)
   y <- coded_path(setup, seed, paste(id, "last_successful_construction"), list(force_ll_pilot = TRUE, force_build_failure = k))
@@ -263,6 +341,9 @@ for (cs in cases) {
   seed <- 1000L + cs$seed
   t0 <- proc.time()[["elapsed"]]; r <- v3_calibrate(setup, seed, tier = 0, preflight = NULL, runtime = NULL, grid_fallback = TRUE)
   t_ref <- proc.time()[["elapsed"]] - t0
+  for (th in unique(c(1L, threads))) ledger_calib(r, setup, seed, sprintf("%s calib[th=%d]", cs$id, th), th = th)
+  # WP3's production islands (compat, calibration roles) in place of core's: the whole calibration == v3_calibrate
+  ledger_calib(r, setup, seed, sprintf("%s calib[th=%d]", cs$id, threads), th = threads, runner = "wp3")
   for (th in unique(c(1L, threads))) {
     m <- .v3cpp$wp4_calibrate(setup$ptr, seed, settings_for(setup, th = th))
     compare_calib(r, m, sprintf("%s calib[th=%d]", cs$id, th))
@@ -271,7 +352,11 @@ for (cs in cases) {
   cat(sprintf("   calibration: status %s, tier %d, escalated %s, triggers {%s}, fallback %s\n", r$status, r$tier_final,
               r$escalated, paste(r$flags$triggers_fired, collapse = ","), r$flags$grid_fallback %||% "none"))
   if (cs$id == "AR0.6_n100_p40") extra_coded_paths(setup, seed, cs$id, r)
-  if (cs$id == "IND_n80_p60_Te3") coded_path(setup, seed, paste(cs$id, "P1 no fallback"), list(grid_fallback = FALSE), "schedule_limit")
+  if (cs$id == "IND_n80_p60_Te3") {
+    coded_path(setup, seed, paste(cs$id, "P1 no fallback"), list(grid_fallback = FALSE), "schedule_limit")
+    st1 <- settings_for(setup); st1$grid_fallback <- FALSE
+    ledger_calib(v3_calibrate(setup, seed, tier = 0, grid_fallback = FALSE), setup, seed, paste(cs$id, "P1 no fallback"), st1)
+  }
   if (cs$id == "AR0.9_n120_p120") coded_path(setup, seed, paste(cs$id, "P3 preflight blocks escalation"), list(preflight = TRUE), "resource_limit")
   if (r$status != "ok") next
   ro <- v3_run_settings(setup, r$frozen, ls0 = TRUE)
