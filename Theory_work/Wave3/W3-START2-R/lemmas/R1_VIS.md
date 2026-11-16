@@ -43,7 +43,8 @@ forms ask no more than the version-1.4 forms, and strictly less at such n. ∎
 **Supersession rows** (`STATEMENT.md:271-273`). A design satisfying (V-c) [resp. (V-m)] at n satisfies (V-cp) with c_V − 2A
 [resp. (V-mp) with (c_m, ε₀), n ≥ 256s₀²] at n, with the same κ_V; the conclusions of VIS-c⁺⁺, VIS-m⁺⁺, (T1⁺⁺) are those of
 (B-V1), (B-V2) (BASE `STATEMENT.md:235-236`) and (T1⁺) (PARENT `STATEMENT.md:93-110`) word for word; in (T1⁺⁺)(d) the
-threshold n₀ is at least 256s₀² (it is ≥ n₃ ≥ 256s₀², R1.2), so for n ≥ n₀ the implication (c) applies. Hence START-F⁺⁺ ⇒
+threshold n₀ in the margin case is ≥ n₃ ≥ 256s₀² (R1.2), so for n ≥ n₀ the implication (c) applies (the implication (a)
+needs no condition on n). Hence START-F⁺⁺ ⇒
 W3-START2:START-F, VIS-c⁺⁺ ⇒ W3-START:VIS-c, VIS-m⁺⁺ ⇒ W3-START:VIS-m.
 
 ## R1.1 Setting, the event 𝓧, and what is used of [TK]
