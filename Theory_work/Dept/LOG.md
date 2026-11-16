@@ -76,3 +76,4 @@
 - 20:41 — HQ approved C real run + F-UNI gate record fix; recorder told (order D→E→F→C→F-UNI gate).
 - 20:41 — D33: records/ created for Engineering's NOTS-scratch copy; verify + index on arrival.
 - 20:42 — SHARP3 triaged by READER (no correctness issue; gates PASS except 1.1 pending R03b dispositions); SAMP-R1, SCR-R1 queued post-freeze (D34).
+- 20:43 — Eng: purge is atime-keyed (mv doesn't reset; copy does); HQ already approved the records copy (D33); target ready; bvs_tmp to be absorbed as jobs go idle.
