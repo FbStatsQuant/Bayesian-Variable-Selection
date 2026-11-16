@@ -1,6 +1,6 @@
 # W3-MISR-R — TARGET (CP1 evidence; one page; v1.0, 2026-11-15)
 
-Statement: `STATEMENT.md` v1.0 (delta over W3-MISR v1.3). SL = Song & Liang (2015) §2.3, Theorem 4 and Corollary 2, as
+Statement: `STATEMENT.md` v1.2 (delta over W3-MISR v1.3; locked v1.1 + [LA-1]). SL = Song & Liang (2015) §2.3, Theorem 4 and Corollary 2, as
 summarised in `Theory_work/Wave1C/C-MIS/STATEMENT.md:17-24` (full Gaussian linear model, iid random design, fixed
 candidate subset; density consistency around the KL minimiser f₀, a.s.; support inclusion s̃ ⊆ ξ in probability).
 

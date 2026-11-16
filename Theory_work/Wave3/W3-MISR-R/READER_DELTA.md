@@ -73,7 +73,7 @@ uniformly over such configurations; a fixed-design version of the theorem unifor
 | B4.1 | (A2) size 3(A+1)(s+1)log n ⇒ CorGb-plus's \|T\| ≤ s + max(j₀, m♯_n) | NEW arithmetic (as current B4.1) | unchanged arithmetic; the floor is now on R |
 | B4.2 | (A3) = CorGb-plus's signal conditions (→ ∞ branch of its liminf condition) | identity | `STATEMENT.md` §3 |
 | B4.3 | POST2 C, E, A1, A0 (and D for the remark) | EXISTS-UNCHECKED (unchanged) | as the current row |
-| B4.4 | Remark ⇒ CorH-U (RD) with 𝒦^♭_n := 𝒦^λ_n(s, A, 2M₀+1, (c_R/8)^{1/2}, C_OS, c) ((UP) by MIS(i) + Markov) and the events 𝒜_n of CorGb-plus's proof (P(𝒜_n) → 1); fixed-design sentence ⇒ CorH-plus (a′), (KL) and CorH-U (U-a) | NEW (composition) | the Hellinger rate M_n/√n and KL rate M_n/n are the sets H^a, K^a; the composition is written in `lemmas/H2_uniform.md` |
+| B4.4 | Remark ⇒ CorH-U (RD) with 𝒦^♭_n := 𝒦^λ_n(s, A, 2M₀+1, (c_R/8)^{1/2}, C_OS, c) ((UP) by MIS(i) + Markov) and the events 𝒜_n of CorGb-plus's proof (P(𝒜_n) → 1); fixed-design sentence ⇒ CorH-plus (a′), (KL) and CorH-U (U-a) | NEW (composition; stated as `CorH-U` clause (G), STATEMENT §5) | the Hellinger rate M_n/√n and KL rate M_n/n are the sets H^a, K^a |
 
 ## 5. Master-theorem paragraph (delta)
 Replace "`W3-MISR:Cor-G(b)@1.0.0` … status verbatim" by `W3-MISR-R:CorGb-plus` (with `W3-MISR-R:CorG-min` for the

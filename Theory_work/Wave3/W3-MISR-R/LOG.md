@@ -10,3 +10,9 @@
   (first attempt failed: `python3 -I` hid numpy; rerun without -I).
 - 2026-11-15 20:41 CST — Agent started: Sol (codex, gpt-6.1-sol, reasoningEffort high), fresh, blind — role: L1 statement
   lock; brief reviews/L1_brief.md (saved before launch); reply → reviews/L1_statement_lock_sol.md.
+- 2026-11-15 22:02 CST — L1 reply received (Sol; reviews/L1_statement_lock_sol.md): LOCK-WITH-AMENDMENTS, L1-1 MAJOR, L1-2..4 MINOR.
+- 2026-11-15 22:11 CST — All L1 findings accepted (reviews/L1_disposition.md); STATEMENT v1.1 locked; v1.2 adds [LA-1]
+  (CorH-U (G), for READER_DELTA B4.4; statement-change check owed). PLAN v1.1, TARGET, READER_DELTA updated.
+  HOLDS.md (origin/main) re-read before CP1: 0 HOLD lines.
+  L1 reviewer finished; it will be settled after the manager's CP1 answer (no cancel/interrupt).
+- 2026-11-15 22:12 CST — CHECKPOINT_1.md written; run 1 ends (awaiting manager's CP1 answer).
