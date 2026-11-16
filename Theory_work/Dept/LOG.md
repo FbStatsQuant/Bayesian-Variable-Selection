@@ -29,3 +29,4 @@
 - 19:52 — HQ 4(a) verdict: clear 44 flags; recorder task F staged; D17 strength gates → W3-READER leg 2.
 - 19:54 — owner's final rule (POLICIES §4/§8) relayed to all 8 leads (Opus/Sonnet/Haiku free; new Fable = owner green light with problem, why not Opus, how many, size, account).
 - 19:54 — W3-DIST: Astra L1 line check: Lemma X and X′ VERIFIED, no finding (reviews/L1_astra_X.md); DEPS X, X′ OK. CP2 Astra break review launched 19:46 (on the line-checked key lemma; L5 S/V, L2–L4, S2 still running). Memo adopted.
+- 19:55 — Eng THEORY-5 pins relayed to recorder (task E).
