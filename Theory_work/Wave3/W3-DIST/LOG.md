@@ -334,3 +334,9 @@ checkpoint on WEAKER TC1–TC9, X exhausted, B2-core → Gaussian only, B0 → f
   report: three findings RESOLVED, **overall VERIFIED, no outstanding finding**. DEPS row NEC → **OK**. D2 (new Sol agent
   on the same three hunks) is left to finish as a second reading; it is not cancelled. L7 thread settled.
   Running: D1 (Sol), D2 (Sol). HOLDS read: none.
+- 23:20 — **D2 landed** (`reviews/D2_sol_NEC_diff.md`, Sol, second reading of NEC.md v0.2): hunks for the version line,
+  L7-01, L7-02 RESOLVED; L7-03 NOT RESOLVED: **D2-01 (MINOR)**, the numerical remark still asserted "slightly smaller"
+  full-posterior masses and the full-posterior event, which a calculation restricted to |S| ≤ 4 does not give.
+  Proposition and Corollary unaffected. Accepted; the reviewer's wording applied (`lemmas/NEC.md` v0.3, §8(d) only).
+  DEPS row NEC: STALE until that sentence is re-read; batched with whatever D1 returns into one short Sol check (D3).
+  D2 thread settled. Running: D1 (Sol). HOLDS read: none.

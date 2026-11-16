@@ -1,6 +1,6 @@
 # Proposition NEC — the non-degeneracy hypothesis cannot be dropped from Lemma X (W3-DIST; sharpness result, not a target clause)
 
-Status: **DRAFT**. v0.2, 2026-11-15 (v0.2: three presentation amendments marked [amended, L7-0x]; no change to the
+Status: **DRAFT**. v0.3, 2026-11-15 (v0.2: three presentation amendments marked [amended, L7-0x]; v0.3: the numerical remark §8(d) reworded per D2-01; no change to the
 Proposition, the Corollary, their constants or their proofs). Provenance: §1–§6 are the API proof attempt `../work/api_attempts/dist1b/F-b-r2.md`
 (Fable batch run by HQ; proof material), reproduced with three clarifications marked [amended]; §0 and §7–§8 are rewritten
 by the lead (the attempt's own commentary overstated what follows from the Proposition). Notation: `../API_CARDS.md`
@@ -178,6 +178,8 @@ replaced by windows ω_n → ∞ slowly and 𝓔₃ controlled by Chebyshev's in
 in-probability form. Whether Π(‖μ̂ − μ‖² > M_n σ*² log n | y) → 0 holds for every design under (E), (C) alone is open.
 (d) The threshold n₁ implicit in P(𝓔) ≥ 0.6 is large with the stated bounds (the term P(𝒯ᶜ) ≤ 1/√(πL)); explicit constants,
 not optimised. A numerical check on the posterior restricted to the models of size ≤ 4 (that is, conditional on |S| ≤ 4, computed
-exactly; larger models are not summed, so the full-posterior masses are slightly smaller [amended, L7-03]; n = 1600, 6400, 25600;
-200 noise draws each) shows n·π(𝒮₁) ≈ 2·10⁻², n·π(𝒮₂) ≈ 5·10⁻⁴, flat in n, and the event of the Proposition in every draw for k = 1, 2
+exactly; larger models are not summed, so these conditional family masses are upper bounds on their full-posterior
+counterparts [amended, L7-03, D2-01]; n = 1600, 6400, 25600; 200 noise draws each) shows n·π(𝒮₁ | |S| ≤ 4) ≈ 2·10⁻²,
+n·π(𝒮₂ | |S| ≤ 4) ≈ 5·10⁻⁴, flat in n, and the corresponding posterior-threshold check under the restricted posterior in every draw
+for k = 1, 2; this does not verify the full-posterior event, which is what the proof establishes
 (`../reviews/P7_opus_precheck_NEC.md` §3; evidence, not proof).
