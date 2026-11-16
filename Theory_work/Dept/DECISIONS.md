@@ -334,3 +334,9 @@
   @7e14d6f on [P1]/[P3]); child-agent lead (5th slot); Sol lock + 2–3 Sol line checks + Astra/Opus council; CP3 Thu 18:00.
   SL0 PC check (Sol) launched now. TH05.0 not under an abstract row → post-freeze. API card file list sent to HQ (blind:
   no SF/XF reports). READER prepares row 1.1 forms A/B and conditional wording for rows 1.2/3.1.
+
+## 2026-11-15 23:35 CT — F-UNI gate + D-7 recorded; SCR PC check
+- F-UNI correct: gate fixed (0a67282b); D-7 recorded (54447eec); 469/0 ERROR. Evidence-format fix for RM-0 and SCR:A1
+  staged → HQ approval asked.
+- **D50.** W3-SCR:A1 (abstract row 3.7) has post-council v3.4 edits never re-scored → Sol PC check launched now
+  (research/PC_SCR_sol.md) before A1 is cited in the abstract.
