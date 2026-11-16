@@ -149,3 +149,4 @@
 - 00:13 — recorder: RM2 CHECKPOINT_5 repair + re-records + task L on main a2a9044c (all 5 gates passed in dry run; real: A4 0 on 18 rows, record PASS, 469/0). Only Cont-F/R stale (post-CP3s). HQ told.
 - 00:48 — heartbeat: RM2-R LC-A back (Q1 V-w-A, Q2, Q7 VERIFIED); MISR-R council R1 launched (Sol + Opus, MANIFEST fadb67e8); PSHARP-R R1 Sol seat pending; T03ACC SL1 queued; DIST D3 running. No waits > 2 h on critical paths; no report needed.
 - 01:20 — SCR PC check: A1-SUBSTANTIVE (scope restriction, proof valid) → escalated (D55); reviewer settled.
+- 01:20 — HQ: row 3.7 → consultant (H5 card 7). Recorder task M = dry run of honest SCR:A1 record (WEAKER note + PC evidence; A4 sweep; no real run). READER prepares row 3.7 in both placements. SCR-R1 stays post-freeze.
