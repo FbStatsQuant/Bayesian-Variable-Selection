@@ -10,7 +10,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 | W3-RM2-R | T4 constant-level (V)/BM + additive (BM-W) floor + Ex-Proxy decaying θ; T2(a) DLV-0, (b) mode interface, (c) down-closed 𝓛′; Ex-Equi 3/8 optional; Ex-PolyR/F to council | mcp:launch:86440d0e… | BVS-wt/W3-RM2-R · theory/W3-RM2-R | → CP1 | CP1; H5 card (headline: RM2-F) |
 | W3-PSHARP-R | T12 Prop A/Cor A1 in expectation for every p, constant √((a+½)/π); A2 e^λ−1 on (W-orth) | mcp:launch:fab7385a… | BVS-wt/W3-PSHARP-R · theory/W3-PSHARP-R | → CP1 | CP1; H5 card (headline: Cor A1); before chapter sharpness section |
 | PSMC-S0 | Part 1 T-N + T-CAL prelim audits → CP1 Thu 11-19 12:00; Part 2 T-PART audit → CP2 Tue 11-24 | mcp:launch:c241a2d4… | BVS-wt/PSMC-S0 · theory/PSMC-S0 | → CP1 | CP1 summary ≤ 10 lines to HQ (owner OD-1/OD-2) |
-| W3-EDIT | editorial pass; citation fixes first (PR #10) | mcp:launch:950a7b4f… | BVS-wt/W3-EDIT · theory/W3-EDIT | citation fixes | ping HQ when CITEFIX_DONE; CP1 by Wed 18:00 |
+| W3-EDIT | editorial pass; citation fixes first (PR #10) | mcp:launch:950a7b4f… | BVS-wt/W3-EDIT · theory/W3-EDIT | citation fixes DONE (1a198e6), HQ pinged for PR #10; ledger in progress | CP1 by Wed 18:00 |
 
 ## Taken over from HQ (outside the lead cap)
 | ticket | lead | state | next |

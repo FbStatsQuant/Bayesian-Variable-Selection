@@ -25,3 +25,4 @@
 - 19:49 — W3-READER ack: reports to us; pooling fix applied (NOTATION §5, METHOD_INTUITION); READER_VERSIONS row markers thm3 PSHARP, thm4 MISR, thm5 START2, thm7 RM2-F for the deltas; CP1 waits on Sol S1 (theory/W3-READER e21c845).
 - 19:49 — HQ: 4(b) approved, 4(a) at consultant; recorder steered (dry runs, two variants).
 - 19:50 — W3-DIST ack (main 38b81e6 records the handover): clock fixed in LOG; all lemmas/bridges written + Opus pre-checked (no critical/major); Codex in flight S2 (since 18:47), L1 (landed), L2–L4, L5; STATEMENT bump queued after S2 (EQUAL wording, TC1–TC9 not weakened); next CP2. Watch: S2 passes 2 h at 20:47.
+- 19:50 — W3-EDIT citation fixes done (1a198e6; CITEFIX_DONE 0b72e39; verified file). Pinged HQ for PR #10: merge 1a198e6 + patch rehash C-MIS:Thm-MIS(i), Thm-MIS(ii), Cor-N; offered a recorder-prepared rehash commit.
