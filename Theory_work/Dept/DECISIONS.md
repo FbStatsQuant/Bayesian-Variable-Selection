@@ -390,3 +390,9 @@
   §2 summaries (F1–F4, faithfulness). Proposed to HQ: REPORT §2 → pointers to STATEMENT lines (v4 "REPORT restates
   nothing"; status lines byte-identical) + diff round (same seat models, fresh; Sol + Opus). Round-count question to HQ.
   Row 3.7 keeps the (b1) label until it passes. SCR-R1 = corollary of SCR-A + B2d with κ_n b_n²(n²−1) ≥ 4M_n².
+
+## 2026-11-16 02:56 CT — HQ GO on SCR REPORT fix + diff round
+- **D60.** R2 = HQ-ordered round; this is its one diff round (fail → stop, back to HQ). Leg 2 coordinator (child) launched:
+  REPORT §2 → STATEMENT pointers (status-source lines byte-identical/unmoved), manifest-impact check, MANIFEST_R3, diff
+  round (fresh Opus + Sol), bind → CHECKPOINT_2. Row 3.7 (b1) label until pass; then READER states κ, b, M, σ fixed in n
+  → H5 with the CP3 package. SCR-R1 queued as corollary of SCR-A + B2d with κ_n b_n²(n²−1) ≥ 4M_n².

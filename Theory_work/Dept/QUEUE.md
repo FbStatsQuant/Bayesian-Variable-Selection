@@ -18,7 +18,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 | W3-READER | Opus, mcp:launch:2a4462b2… (BVS-wt/W3-READER) | bridge leg written (R1–R4, PoolZ); card v0.5 (H5 actions applied); Sol S2 running; gates tables in triage | CP1 → me → claims card to HQ (H5); READER_DELTA rows: thm3 PSHARP, thm4 MISR, thm5 START2, thm7 RM2-F |
 | recorder | Opus, mcp:launch:563aa9b9… | task C (W2-APP PC1 Sol) running; task D (POST2) on hold | HQ decision on headline flags + conditional statuses |
 | W3-T03ACC | council acceptance of T03♯ (SOP:TH09), root of rows 1.1/1.2/3.1 (HQ order, D49) | child node …t03acc-lead-1 | BVS-wt/W3-T03ACC · theory/W3-T03ACC | CP1 GO (D54); SL1 lock running | CP3 Thu 11-19 18:00 |
-| W3-SCR-R2 | second SCR round (D56): all 21 ACCEPT, math clean; gates FAIL on REPORT §2 summaries only (D59) | coordinator settled | BVS-wt/W3-SCR-R2 · theory/W3-SCR-R2 | awaiting HQ: REPORT pointer fix + diff round | by Thu 18:00 |
+| W3-SCR-R2 | second SCR round (D56): all 21 ACCEPT, math clean; gates FAIL on REPORT §2 summaries only (D59) | coordinator settled | BVS-wt/W3-SCR-R2 · theory/W3-SCR-R2 | leg 2 running: REPORT pointer fix + diff round (D60) | by Thu 18:00 |
 
 ## Ready (launch as a slot frees)
 | ticket | contents | worktree / branch | note |
@@ -43,7 +43,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 | POST2-O3 | E-floor+: bounded ridge cost in place of the floor on S₀ (design-agnosticism; FIRST post-freeze, owner tie-break); kill budget | H5 card 6 (D36) |
 | POST2-O2 | E+: lower c₁; if c₁ < c₀, MIS(i′) covers C-MIS's inclusion range → C-MIS → MISR supersession (price the MISR rebuild); with POST2-R1; kill budget | H5 card 6 |
 | POST2-R1 | matching expectation lower bound E δ_n ≳ √(log n/n) on every design with a floor (Thm 1 two-sided); one unverified step; kill budget | row 1.1 card (D35) |
-| SCR-R1 | drop "fixed" signals (only use L3:69); ℓ¹ → total signal; exponential rate | SHARP3 triage |
+| SCR-R1 | corollary of SCR-A + B2d with κ_n b_n²(n²−1) ≥ 4M_n² (W3-SCR-R2 SCR_R1_NOTE); was: drop "fixed" signals (only use L3:69); ℓ¹ → total signal; exponential rate | SHARP3 triage |
 | NARROW batch | 12 statement-precision narrowings (LIFECYCLE §3, priced) + H5 card for GEN C4 / FAC-CS C1 / SAMP:Pkg | ADJ_MINORS_iii.md (D31) |
 | W2-APP Family-map diff round | F1–F4 + M57/M58 patches | PC1, D31 |
 | errata batch | CHAPTER-ONLY errata held for riders (W3-EDIT CP1 groups) + F-UNI "eventually" (H5) | D19, D31 |
