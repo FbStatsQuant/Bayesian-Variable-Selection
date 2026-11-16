@@ -595,3 +595,8 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - acceptance binds to 9714aea4 (E items wait or get a diff check);
   - statuses are recomputed by the tool; other conditions stay.
   - The real run waits for HQ's GO on the dry-run edge table.
+- 2026-11-16 05:17 CT. **W3-DIST council R2 PASSED** (astra 9.3 / opus 9.2, MANIFEST c5cd9cdd; all 20 claims ACCEPT; TC3 EQUAL confirmed by name). R1 (04:59) failed on status labels (TH09 @hyp) and the TC3 gloss only, with no C finding.
+  - Before recording: one Sol check of whether DIST-2's "best rate ≍ (1+s₀^r) log n·ℓ_n/n" sentence is in span and false (then a same-line-count correction, diff check and CORRECTION-ONLY carrier) or loose (then an erratum).
+  - Sharpness list: item 8 (log p form with an A-free constant) and item 9 (the true s₀-dependence).
+  - Recording waits for the Sol check, H5 card 13 (row 2.1) and the task T interplay.
+- Also on main: task R 8875eeba; row 3.7 interim-label removal d2b600ba; READER swaps thm3 f12828fd, thm4 45a18748, thm8 30991734. Cor-H correction 213e2115; MISR-R recorded 2b54cb3c.
