@@ -604,3 +604,12 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - AR-weak at 1M bought back conditionally (≈ 27.6k against the 28.3k envelope). Those are the last-released cells, run only after T5 prices M and the total stays ≤ 28.3k; otherwise they drop automatically.
   - The m3 fix (≈ 223 ns) gets a re-size when it lands.
 - DIST-2 rate sentence (RT1 Sol): LOOSE, in span. Erratum in the editorial batch, no correction. Item 9: proof gives ε_n² ≲ (1+s₀)³ log n·ℓ_n/n, against Song–Liang's linear s; for the sharpness review.
+- 2026-11-16 ~06:00 CT. START2-R and RM2-R CP3 accepted; all four riders through council.
+- H5 card 14: the consultant AGREES on both riders.
+  - **(A) START2-R, row 3.3, STRONGER.** Drop "equivalently"; merge the delta onto the current row, keeping the S1 floor restriction.
+  - **(B) RM2-R, rows 3.2 and 3.1, MIXED.**
+    - STRONGER: Thm 7 conditions; RM0-plus.
+    - WEAKER: IDEAL-W⁺; a narrower domain; the Prop-F implies edge withdrawn.
+    - Flag: Prop-F/F-UNI bridges used LS0 cap ℓ_n, not the shipped ℓ_n+|S̃₀|. The recorder lists consumers and re-points them to DLV-0; any headline row relying on them goes to HQ first.
+    - Row 3.1 (Thm 6) changes to RM2-R-plus, recorded as a row 3.1 change.
+  - Post-freeze: does IDEAL-W⁺ ever bind in existing runs?
