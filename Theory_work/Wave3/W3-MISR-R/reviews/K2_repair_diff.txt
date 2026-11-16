@@ -1,0 +1,35 @@
+diff --git a/Theory_work/Wave3/W3-MISR-R/lemmas/H1_plus.md b/Theory_work/Wave3/W3-MISR-R/lemmas/H1_plus.md
+index 0240624a..88222f9d 100644
+--- a/Theory_work/Wave3/W3-MISR-R/lemmas/H1_plus.md
++++ b/Theory_work/Wave3/W3-MISR-R/lemmas/H1_plus.md
+@@ -47,9 +47,9 @@ satisfies (E), (F₀), (OS; C_OS), the hypotheses of [POST2] D(b) (`:112-116`),
+ C_H(s, A) of STATEMENT §1; explicitly C_H = 8(C_A(s + j₀) + c₂) + 1 at σ*² = 1, [D] line 72, depending on (s, A) only) and,
+ for every M_n → ∞, Π̃(B̃^b_n | ỹ) → 0 and Π̃(h̄_n² > (1 + C_H/4) log n/n | ỹ) → 0 in P̃-probability (C′_H = 1 + C_H/4 at
+ σ*² = 1, [POST2] `:115`). By H1.0 the same holds for B^b_n(κ_n), H^b_n(κ_n) under P_{κ_n}.
+-*KL set.* Put M″_n := (log n)^{1/2}. Off B^b_n(κ_n) computed with M″_n: |v′/v_n − 1| ≤ (log n/n)^{1/2} ≤ ½ for n ≥ 5 and
++*KL set.* Put M″_n := (log n)^{1/2}. Off B^b_n(κ_n) computed with M″_n: |v′/v_n − 1| ≤ (log n/n)^{1/2} ≤ ½ for n ≥ 9 [K1-2] and
+ ‖μ̂ − μ(κ_n)‖² ≤ C_H v_n log n, so by (KL) k̄_n ≤ log n/n + C_H log n/(2n) = (1 + C_H/2) log n/n. Hence
+-K^b_n(κ_n) ⊆ B^b_n(κ_n)|_{M″_n} for n ≥ 5 and Π(K^b_n(κ_n) | x_n, y^r) → 0 in probability. ∎
++K^b_n(κ_n) ⊆ B^b_n(κ_n)|_{M″_n} for n ≥ 9 (log n/n decreases for n > e and log 9/9 < ¼) and Π(K^b_n(κ_n) | x_n, y^r) → 0 in probability. ∎
+ 
+ ## H1.3 Proof of (KL)
+ 
+diff --git a/Theory_work/Wave3/W3-MISR-R/lemmas/H2_uniform.md b/Theory_work/Wave3/W3-MISR-R/lemmas/H2_uniform.md
+index 6f58f133..4d4b901b 100644
+--- a/Theory_work/Wave3/W3-MISR-R/lemmas/H2_uniform.md
++++ b/Theory_work/Wave3/W3-MISR-R/lemmas/H2_uniform.md
+@@ -21,9 +21,11 @@ mixture over S ∈ Ω of π_𝒞(S | ·) = Φ(x, u)(S) (BASE (R1), `R_reduction.
+ the law of Π(· | x, y^r) — hence P_κ(Π(B) > η) for any set B fixed by κ — does not depend on which such law is used.
+ (ii) *Measurability.* For each n and each of the six set families B_n(κ) ∈ {B^a_n, H^a_n, K^a_n, B̄^b_n, H̄^b_n, K̄^b_n} put
+   g_n(κ, w) := Ψ(x, Uᵀxβ + √v w)(B_n(κ)) if Uᵀxβ + √v w ≠ 0, and g_n(κ, w) := 0 otherwise.
+-On each stratum {p = p′} of the configuration space 𝔎_n (BASE `STATEMENT.md:28-31`, `M_misr.md:133`), the indicator
+-1_{B_n(κ)}(S, θ, v′) is a Borel function of (κ, S, θ, v′) (each defining inequality compares continuous functions of
+-(x, β, v, S, θ, v′): μ̂ = X_Sθ with X continuous in x on 𝔛_n(p′), μ(κ), θ(κ), h̄_n, k̄_n), and the kernel Ψ(x, u)(dS dθ dv′)
++On each finer stratum {p = p′, supp β = T} of the configuration space 𝔎_n (a Borel set; finitely many T for each p′;
++BASE `STATEMENT.md:28-31`, `M_misr.md:133-138`) [K1-3], the indicator 1_{B_n(κ)}(S, θ, v′) is a Borel function of
++(κ, S, θ, v′): the event {S ≠ S₀(κ)} = {S ≠ T} is constant in κ there and S ranges over a finite set, and every other
++defining inequality compares continuous functions of (x, β, v, θ, v′) for fixed S (μ̂ = X_Sθ with X continuous in x on
++𝔛_n(p′), μ(κ), θ(κ), h̄_n, k̄_n); and the kernel Ψ(x, u)(dS dθ dv′)
+ has a density in (θ, v′) w.r.t. counting × Lebesgue that is jointly Borel in (x, u, S, θ, v′) on {u ≠ 0}. By Tonelli g_n is
+ Borel on 𝔎_n × ℝ^N [L1-4]. For fixed κ the set {w : Uᵀxβ + √v w = 0} is N_N(0, I)-null.
+ 

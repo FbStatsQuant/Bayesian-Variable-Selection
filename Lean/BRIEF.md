@@ -29,6 +29,16 @@ Formal statements must match the paper statements, and those must be clear and i
 Proof complexity is fair game as long as it compiles in Lean. Reusing conventions from other Lean projects (e.g. the
 owner's Large-Prior repo on Owls, `/home/fb31/Large-Prior-Official-Repo/lean`) is allowed where useful, not required.
 
+## Starting material (Theory Department, 2026-11-15)
+- Readiness list: `Theory_work/Dept/research/LEAN_READINESS.md` (branch dept/theory; refreshed after Wed's rider CP3s).
+- Old sorry-free snapshot, same toolchain and Mathlib rev: `Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/L-LEAN/`
+  (STATUS.md:3-11, REPORT.md). It contains `hpm_eq_truth`, `markov_half`, `t21_C1` and `T37Lattice` for RM-0, plus the T12Core
+  step algebra. Reuse them.
+- Launch: Thu 11-19. First jobs: the inventory, then Level 1 (SL0, the LT♯ sup-norm core, T01 prior counting, DIST Lemma H).
+  Level 2 from Mon 11-23, in the order DIST-1, W3-POST:Thm-1, RM2-F.
+- Folders: `/home/fb31/SMC_Lean_Department/` on Owls (and NOTS if needed), created at launch; work only there plus the
+  Lean worktree.
+
 ## Levels (decided by HQ with the owner)
 - **Level 1: deterministic cores, fully certified.** No `sorry`, and `#print axioms` shows only `propext`,
   `Classical.choice` and `Quot.sound`. Candidates (Phase 0 confirms and extends this list):

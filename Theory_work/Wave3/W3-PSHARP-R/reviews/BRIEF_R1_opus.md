@@ -1,0 +1,83 @@
+# BRIEF R1 — council seat `opus` (blind first read) — W3-PSHARP-R
+
+You are one of two independent council seats (Claude Opus 5.5, effort high; Claude seat). You decide whether the frozen content below is correct and
+honestly reported. Be adversarial: a pass from you means you re-derived the mathematics, not that it read well.
+Work in the checkout `/home/fb31/BVS-wt/W3-PSHARP-R` (paths relative to it).
+
+## Content under review (frozen as `MANIFEST fd8b32a5540e5afcfdb73b94048ba7a1324f30a89ade786508ea04e9295bfc30`, file `Theory_work/Wave3/W3-PSHARP-R/reviews/MANIFEST_R1.txt`)
+Everything in `Theory_work/Wave3/W3-PSHARP-R/` **except** `reviews/`, `LOG.md`, `CHECKPOINT_*.md`: `STATEMENT.md` (v1.1,
+a **delta** over the parent ticket W3-PSHARP), `lemmas/AE_expectation.md`, `lemmas/A2C_critical.md`, `REPORT.md` (with its
+REGISTRY blocks), `TARGET.md`, `READER_DELTA.md` (proposed reader text for the paper's Theorem 3), `DEPS.tsv`, `PLAN.md`,
+`BRIEF.md` and `RIDER_RULES.md` (the ticket's task and rules), `citecheck.py`, `numerics/` (script and output).
+External inputs (`reviews/INPUTS.txt`): the parent `Theory_work/Wave3/W3-PSHARP/STATEMENT.md` (council-checked, registered
+`W3-PSHARP:A/B/S`@1.0.0), its proof files `lemmas/A_log_factor.md` and `lemmas/S_one_step.md` whose steps are consumed by
+line, its `ASSUMPTION_MAP.md`; the definition of the coded target π, `Theory_work/Wave3/W3-POST/STATEMENT.md` lines 16-39;
+the audit rows behind the change, `Theory_work/Wave3/API_AUDIT/sharp2/TRIAGE.md` (lines 21-22, 43, 80, 111) and
+`Theory_work/Wave3/API_AUDIT/sharp2/results/f02.md`.
+**Do not read** anything else under `Theory_work/Wave3/W3-PSHARP-R/reviews/` (no other brief, review, disposition, scratch,
+score; `INPUTS.txt`, `MANIFEST_R1.txt` and `CITECHECK.txt` are allowed), nor `LOG.md`, nor `CHECKPOINT_*.md`. You may write
+and run code (python3 with numpy; numpy is in the user site, so no `-I`); keep it under
+`Theory_work/Wave3/W3-PSHARP-R/reviews/R1_scratch_opus/`. Temporary files only under
+`/home/fb31/SMC_Theory_Department/tmp/20261116-W3-PSHARP-R-R1opus/` (export TMPDIR; delete it at the end). Change no
+other file; no git operations; start no subagents.
+
+## What the ticket claims
+Two new sharpness records for the posterior of a Bayesian variable-selection method (exact coded target π), stated as a
+delta over the checked parent: `W3-PSHARP-R:AE` (Proposition A-E: an expectation lower bound on two witness design classes
+for every null-block size; Corollaries A1-E, A2-E) and `W3-PSHARP-R:A2C` (Proposition A2C: an e^{−λ} cap at the critical
+sparsity scale on the orthogonal witness). It also corrects two readings of the parent (STATEMENT §4; not claims) and
+proposes a reader version (READER_DELTA.md). Lower bounds only; no upper bound is claimed.
+
+## Gates (each PASS or FAIL, with reasons)
+- **G1 correctness.** Re-derive every step of both lemma files, including each parent step they consume by line (check
+  that the cited parent lines give what is used, under the parent's own hypotheses, and that no consumed step needs the
+  parent's N_n → ∞ where the new claim drops it). Try to refute each claim (bounded N, fixed p, huge p, growing s₀).
+- **G2 hypotheses used = stated.** Each proof uses exactly the hypotheses of its STATEMENT clause and proves exactly its
+  conclusion (quantifiers, uniformity, what n₀ depends on, expectation vs in probability); every clause of §3 is covered.
+- **G3 no hidden assumptions.** Domains (n, p, s₀, K, N ≥ 1, ranks), what is random and what is conditioned on, and the
+  independence actually available (in particular the decoupling in AE §4 and the event in AE §5).
+- **G4 statuses, citations, records.** Statuses verbatim and not inflated; cited line ranges say what is claimed; REPORT
+  restates nothing and its REGISTRY blocks match STATEMENT (claims, premises, conclusions, scope, implies edges); the §6
+  "implies" table is right.
+- **G5 constants and rates.** Λ^E_n and its normalisation; the constant √((a+½)/π) and the fixed-p constant in A1-E;
+  e^λ − 1 and e^{−λ} in A2C; the truncation level T = ϵ/(4c_n) and every explicit inequality.
+- **G6 faithfulness.** To the coded target; to the parent (the corrected readings §4.1, §4.2 are the right corrections of
+  the parent lines they name); to the numerics (they compute what is said; an observation is not used as a theorem); and the
+  **reader version**: READER_DELTA §3 = the master claims plus the bridges listed in its §5, with no sentence that reads as
+  a two-sided rate on every design, and no claim beyond the masters.
+
+## Sweep duties (Tier B: the sweep is folded into the council)
+Check explicitly and report on each: (1) every statement copy (in the lemmas, REPORT, TARGET, READER_DELTA) against
+STATEMENT; (2) quantifiers and uniformity; (3) each lemma's scope against every downstream use (Cor A1-E and A2-E use
+Prop A-E; A2C and AE use parent steps); (4) REPORT and its REGISTRY blocks against STATEMENT; (5) DEPS rows spot-checked
+(recompute at least two sha256 values and compare).
+
+## Output
+Write your review to `Theory_work/Wave3/W3-PSHARP-R/reviews/R1_council_opus.md`:
+- a per-claim table `| id | decision |` with ACCEPT / REJECT / NOT-EXAMINED for `W3-PSHARP-R:AE` and `W3-PSHARP-R:A2C`;
+- the six gate verdicts with reasons, and the sweep-duty results;
+- findings, each tagged **C** (correctness: a step wrong or unproved), **S** (strength: the text claims more than is
+  proved, or uses an unstated hypothesis), **F** (faithfulness: to the code, to cited sources, to STATEMENT in derived
+  text) or **E** (editorial: wording, notation, record form, citation form, presentation of numerics), each with
+  file:line, what fails, and the exact correction. Only C/S/F findings block; E findings never block and never lower the
+  score. "A stronger theorem is provable" is not a finding: list such proposals separately.
+- **You must give `gates=FAIL` if you hold any C, S or F finding of your own**, whatever severity you would give it.
+- an overall score (0.0–10.0, one decimal) that reflects C, S and F findings only (≥ 8.0: correct and honestly reported).
+
+## Verdict line (mandatory, machine-checked)
+
+You are reviewing the content frozen as `MANIFEST fd8b32a5540e5afcfdb73b94048ba7a1324f30a89ade786508ea04e9295bfc30` (round R1, seat `opus`). End your review with
+exactly ONE line of its own, in exactly this form (no other text on the line; backticks around it are allowed):
+
+```
+COUNCIL-VERDICT round=R1 manifest=fd8b32a5540e5afcfdb73b94048ba7a1324f30a89ade786508ea04e9295bfc30 seat=opus score=<x.y> gates=PASS|FAIL
+```
+
+- `score` is your overall score (one decimal, 0.0–10.0); `gates=PASS` only if EVERY gate passes on exactly this
+  manifest; otherwise `gates=FAIL`.
+- Write no other line containing `COUNCIL-VERDICT` (not for an older or newer manifest, not as an example, not in
+  prose). If you did not review exactly the content of this manifest, write `gates=FAIL`.
+- Quoting the digest elsewhere in the review does not count as a verdict; this line is what CP3 acceptance and
+  `manifest.py bind` read, and they refuse a review with zero, several, malformed or contradictory verdict lines.
+
+Reply with the per-claim table, your score, the gate verdicts and the counts of findings by tag.

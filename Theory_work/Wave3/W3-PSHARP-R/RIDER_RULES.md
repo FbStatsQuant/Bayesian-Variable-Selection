@@ -1,0 +1,83 @@
+# Rider tickets — common rules (Theory Department, 2026-11-15)
+
+Binding for every rider ticket the Theory Department opens (W3-START2-R, W3-RM2-R, W3-PSHARP-R, W3-MISR-R, W3-EDIT).
+On top of: `Theory_work/Wave3/PROTOCOL_v4.md` (H1–H6), `Theory_work/Wave3/PROGRAM.md` (presentation rule +
+**Readability**), `Theory_work/INFRA/LIFECYCLE.md` where v4 points to it. Your ticket's `BRIEF.md` says what to prove.
+
+## 1. Where you work
+- Your worktree is `/home/fb31/BVS-wt/<TICKET>` (branch `theory/<TICKET>`, cut from `origin/main`). Work **inside the
+  worktree**; write only in `Theory_work/Wave3/<TICKET>/`. Change no git state: the department's snapshot cron commits
+  your folder in place every 15 min and pushes (restore points; a new `CHECKPOINT_<k>.md` or `MANIFEST_*` gets an RP label).
+- **The parent ticket's folder is read-only.** Its `STATEMENT.md`, lemmas and `CHECKPOINT_<k>.md` files are hashed in
+  the registry (`claims.tsv` sha256, `status_sha256`); editing them breaks recorded claims. You restate and re-prove
+  in your own folder.
+- **Delta statement.** Your `STATEMENT.md` is a delta over the parent's recorded version, in the pattern of
+  `W3-START2/STATEMENT.md` v1.4 over W3-START v1.3.4: it states in full every definition, hypothesis and claim that
+  differs, takes everything else from the parent by `file:line`, and has a §"Dependencies and supersession" table
+  (new claim ⇒ parent claim, one line of why). It asserts no proof status. Claim ids are new (`<TICKET>:<name>`);
+  the recorder registers them with `implies` edges to the parents; supersession of headline rows goes through HQ and
+  the HQ consultant (v4 H5), not you.
+- New proofs go in new files under `lemmas/`. Where you reuse a parent lemma unchanged, cite it (`file:line`, the
+  registered id and version). Where you change a step, copy the lemma into your folder, mark the changed lines
+  `[R-#]`, and that copy is what gets line-checked.
+
+## 2. Files (v4 §1)
+`BRIEF.md` (from the department; do not edit) · `STATEMENT.md` (delta; changelog table at its foot, v4 §4.2) ·
+`TARGET.md` (one page: assumption map of the changed hypotheses, parity row per changed clause vs the parent and the
+closest published result, boundary numerics if a hypothesis is weakened) · `DEPS.tsv` (v4 §4.1, kept by hand with
+`sha256sum` until `deps.py` exists) · `PLAN.md` · `LOG.md` (timestamps from `date`, local time; every agent started,
+with model and role) · `lemmas/` · `numerics/` · `reviews/` (each brief saved **before** launch, each reply verbatim,
+each disposition) · `ERRATA.md` · `READER_DELTA.md` (§5) · `CHECKPOINT_<k>.md` (k = 1, 3; plain integers, the
+registry tools read only `CHECKPOINT_<digit>.md`) · `REPORT.md` with its REGISTRY block (template
+`Theory_work/INFRA/templates/ASSUMPTION_MAP.md`; REPORT restates nothing, v4 §3).
+
+## 3. Chain (Tier B, NORMAL mode)
+1. **Statement lock** — one Sol review, fresh, blind first read: delta STATEMENT + PLAN + the parent files you
+   consume + the triage rows that motivate the change. Fix, lock.
+2. **CP1 (hard)** — `CHECKPOINT_1.md`: locked delta statement, target clauses, which clauses change a headline
+   statement (STRONGER / NEW-CLAIM), `TARGET.md`, plan with hours, `READER_DELTA.md` draft. **End your run**; the
+   department manager answers CP1 (usually within the hour). No Astra better-theorem review unless the brief asks for
+   one: these targets come from a blind sharpness audit, which served as the better-theorem input.
+3. **Line checks** — Sol, 2–4 lemmas per review, new agent per batch, blind to LOG and earlier reviews. Repaired
+   lemma → re-check by a new Sol agent on the repair and every STALE DEPS row.
+4. (Tier B: no break review.) Sweep duties go into the council briefs (statement copies vs lemma statements;
+   quantifiers; each lemma's scope vs downstream uses; REPORT/registry block vs STATEMENT; DEPS rows spot-checked).
+5. **Citation check** 0 MISS (copy the parent's `citecheck.py` into your folder and point it at your files).
+6. **Council** — freeze `reviews/MANIFEST_R1.txt` with `python Theory_work/Wave3/tools/manifest.py freeze
+   Theory_work/Wave3/<TICKET> Theory_work/Wave3/<TICKET>/reviews/MANIFEST_R1.txt --extra <INPUTS.txt>` from the
+   worktree root, only when every DEPS row under a claim is OK. Two seats, fresh, blind first read: Sol (OpenAI seat)
+   and Opus 5.5 high on Claude Third (Claude seat). Each brief contains the block from
+   `Theory_work/INFRA/templates/COUNCIL_BRIEF.md`, asks for the per-claim table `| id | decision |`, findings tagged
+   C/S/F/E, the six gates, and states that a seat **must** give `gates=FAIL` when it holds a C, S or F finding of its own.
+   E findings go to `ERRATA.md` and never block. Accepted C/S/F findings → diff round (v4 §5.5).
+7. **CP3 (hard)** — `CHECKPOINT_3.md`: the passing round, `manifest.py bind` output, DEPS all OK, citecheck,
+   `python Theory_work/INFRA/tools/ingest.py claims Theory_work/Wave3/<TICKET>/REPORT.md --staged` output, per-claim
+   statuses verbatim. **End your run.** HQ does acceptance and recording; you never touch main or the registry.
+
+## 4. Agents
+- Reviews: `delegate_task`, provider `codex`, model `gpt-6.1-sol` (Sol) or `gpt-6-astra` (Astra), reasoningEffort
+  `high`, mode wait. If codex is unavailable or rate-limited, say so in LOG and to the manager; never substitute a
+  Claude reviewer for an OpenAI step. W3-DIST has priority on codex in any conflict.
+- Helpers: at most 2 at once, `delegate_task`, provider `claudeAgent_claude_third`, Opus 5.5 (or Sonnet 5.5 for
+  numerics/bookkeeping), effort high max. A helper never reviews what it wrote.
+- API proof attempts (Fable via the Console) only through the manager → HQ as an "API card"; they are proof material,
+  never reviews (v4 H3).
+
+## 5. Readability (owner rule; binding)
+Any claim that changes a headline statement (START2 (T1⁺)/(T3⁺)(b)/IF-START⁺, PSHARP Prop A / Cor A1, RM2-F) needs its
+**reader version** updated: numbered primitive assumptions, one to three displays with explicit rates, no internal ids
+in the reader text (PROGRAM "Readability"). Write `READER_DELTA.md`: the current reader version (from
+`/home/fb31/BVS-wt/W3-READER/Theory_work/Wave3/W3-READER/READER_VERSIONS.md` if it exists; read only), what changes,
+the new text, and the bridges it needs. The manager passes it to HQ for W3-READER. Do not write in W3-READER's folder.
+
+## 6. Stops and reporting
+- Read `Theory_work/Wave3/HOLDS.md` (on `origin/main`: `git show origin/main:Theory_work/Wave3/HOLDS.md`) at each
+  checkpoint and before each freeze.
+- Early checkpoint (end your run with a `CHECKPOINT_<k>.md`): a counterexample to a target clause; a WEAKER change to
+  a target clause; a new key lemma appears (this makes the ticket Tier A); a kill budget spent (3 failed attempts on
+  a lemma, each with a reviewer verdict); a hold on a consumed claim; you cannot finish before the cut-off.
+- **Cut-off:** theory content freezes **Wed 2026-11-18**. Aim for CP3 by **Wed 18:00 CT**. If a clause will not make
+  it, drop it to a named open item at the earliest checkpoint rather than run late.
+- Heartbeat in LOG.md at least every 2 h while working. Your final message at each checkpoint = the checkpoint's
+  content in ≤ 25 lines.
+- Do not touch: `Theory_work/Wave3/W3-DIST/`, `W3-READER/`, `PROTOCOL_REVIEW/`, `Docs/`, `Lean/`, `Theory_work/Dept/`.

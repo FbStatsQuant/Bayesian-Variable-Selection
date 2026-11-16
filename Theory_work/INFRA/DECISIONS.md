@@ -74,3 +74,20 @@ the registry change. Newest entries at the bottom. Format:
 - reason: card 1 (W3-RM -> W3-RM2): W3-RM2:RM2-R implies W3-RM:RM-R (implies W3-RM:RM-R = claim W3-RM2:Cont-R ((C4), Theory_work/Wave3/W3-RM2/STATEMENT.md:236-240), accepted by both council seats: Theory_work/Wave3/W3-RM2/reviews/C_R1_council_astra.md:50 and Theory_work/Wave3/W3-RM2/reviews/C_R1_council_opus.md:197 (re-checked :217); Theory_work/Wave3/W3-RM2/reviews/SW1_sweep_astra.md:51). approver: HQ consultant (Fable 5.2) AGREE on card 1, 2026-11-15, under PROTOCOL_v4 H5 (replaces the owner approval of LIFECYCLE §0); recorded per Theory_work/Wave3/ACCEPTANCE/RECORD_BRIEF_2026-11-15.md. Conditions match in substance (TH09 / W2-APP:POST); W2-APP:POST@1.0.1 is unchecked (weak point). RM-0 and E4 stay ACTIVE.
 - axes (Y vs X): assumptions=incomparable, conclusion=equal, rate=unknown, scope=unknown
 - class free; key step check: —; dependents: 2 direct
+
+## 2026-11-16 — NARROW W3-MISR:Cor-H
+
+- decided by: HQ
+- reason: HQ GO real run (2026-11-16) (task S): NARROW of Cor-H, correctness event. KL reading at STATEMENT.md:191-195 restricted to a deterministic intercept (false for a random intercept: W3-MISR-R reviews/L1_statement_lock_sol.md:7 L1-1, reviews/K1_linecheck_sol.md:7-11 K1-1). Statement-change check: Theory_work/Dept/research/MISR_NARROW/DIFF_sol.md@d890acb5 (Sol DIFF PASS, WEAKER). 0 dependents. HQ GO (Cor-H not headline; HQ authority).
+- 0 dependents SUSPECT; restored: —
+
+- 2026-11-16 correctness event (rollback history): W3-MISR:Cor-H 1.0.0 -> NARROWED 2.0.0 -> cleared ACTIVE 2.1.0. Cause: the KL reading (STATEMENT.md:191-195) was false for a random intercept (counterexample L1-1 / K1-1, W3-MISR-R reviews). Statement-change check: Theory_work/Dept/research/MISR_NARROW/DIFF_sol.md@d890acb5 (Sol DIFF PASS, WEAKER). 0 dependents. Erratum: Theory_work/Wave3/W3-MISR/reviews/ERRATA.md. HQ GO (task S).
+
+## 2026-11-16 — SUPERSEDE W3-MISR:Cor-G(a) / W3-MISR-R:CorG-min
+
+- decided by: HQ
+- reason: HQ GO real run (task Q, H5 card 10, 2026-11-16): free supersession (CorG-min implies Cor-G(a), STATEMENT §8 row 181, statement lock L1:59)
+- axes (Y vs X): assumptions=incomparable, conclusion=equal, rate=equal, scope=unknown
+- class free; key step check: —; dependents: 1 direct
+
+- 2026-11-16 correctness event (rollback history, W2-UNI): W2-UNI:F-UNI v1.1.0 ACTIVE -> SUSPECT (status and hash unchanged). Cause: every-n delivery cites Prop-F's cap-ℓ_n method; shipped cap ℓ_n+|S̃₀| not covered by the cited proof (W2-UNI lemmas/L5_delivery.md Step 2 via W2-FAC-A lemmas/L7_delivery.md:35-38 -> C-DLV:Prop-F, method cap ℓ_n, C-DLV lemmas/L4_delivery.md:7,53; W3-RM2-R STATEMENT.md:219). Sol transfer check (manager) decides: erratum + PATCH + clear, or NARROW (task S2). Consumers noted, no status change. HQ GO (task S1).

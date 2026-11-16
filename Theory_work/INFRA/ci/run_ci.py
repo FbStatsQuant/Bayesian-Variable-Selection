@@ -281,7 +281,7 @@ def run_in(sb, script_rel, args, timeout, logdir, report_path=None):
     terminated (all and only the processes of this run — Job membership is a kernel identity, never a recycled pid).
     POSIX: own session; on timeout the group is killed while its leader is still unreaped (so its id cannot have been
     recycled); orphans that outlive a normally exiting leader are not tracked on POSIX (documented limitation).
-    Returns (rc, secs, text, changed_files); text = the report file if given, else the output."""
+    Returns (rc, secs, text, changed_files); text = the report file if given and written by this run, else the output."""
     script = os.path.join(sb.path, script_rel)
     if os.path.isabs(script_rel) or ".." in script_rel.replace("\\", "/").split("/") or \
             not _strict_child(script, sb.path):
@@ -315,7 +315,9 @@ def run_in(sb, script_rel, args, timeout, logdir, report_path=None):
                     p.wait()
         secs = time.time() - t0
         rp = os.path.join(sb.path, report_path) if report_path else None
-        src = rp if rp and os.path.exists(rp) else logf
+        # the report file only counts if THIS run wrote it; a script that just prints to stdout leaves the committed
+        # report untouched, and reading that back would compare the baseline with itself
+        src = rp if rp and os.path.exists(rp) and os.path.getmtime(rp) >= t0 else logf
         with open(src, encoding="utf-8", errors="replace") as fh:
             text = fh.read()
         ticket_dir = "/".join(script_rel.replace("\\", "/").split("/")[:3])
@@ -411,7 +413,8 @@ def step_cite(out):
             rel = os.path.relpath(cc, sb.path).replace("\\", "/")
             d = os.path.dirname(cc)
             cands = [os.path.join(d, "CITECHECK.txt"), os.path.join(d, "reviews", "CITECHECK.txt"),
-                     os.path.join(os.path.dirname(d), "CITECHECK.txt")]
+                     os.path.join(os.path.dirname(d), "CITECHECK.txt"),
+                     os.path.join(os.path.dirname(d), "reviews", "CITECHECK.txt")]  # <ticket>/numerics/ + <ticket>/reviews/
             committed = next((c for c in cands if os.path.exists(c)), None)
             before = open(committed, encoding="utf-8", errors="replace").read() if committed else ""
             rep_rel = os.path.relpath(committed, sb.path) if committed else None
