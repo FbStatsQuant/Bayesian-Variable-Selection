@@ -166,3 +166,4 @@
 - 02:55 — SCR-R2: 21/21 ACCEPT, gates FAIL on REPORT §2 summaries only; coordinator settled; HQ asked (D59).
 - 02:56 — HQ GO (D60): SCR-R2 leg 2 launched (child coordinator).
 - 03:04 — heartbeat: PSHARP-R CP3 (council PASSED) → HQ (D61); recorder task O; START2-R RC1 > 2 h flagged; RM2-R R1 Opus seat FAIL on F1 (REPORT conditions) → diff round expected; MISR-R in diff round R2; T03ACC moving; READER CP3 briefs drafted.
+- 03:05 — Cont-F/R edge fix on main 435896a7: RM2-R staged ingest 8/8 PASS; 83/83 accept records current. Cont-R TH05.0 leftover queued post-freeze. HQ told.
