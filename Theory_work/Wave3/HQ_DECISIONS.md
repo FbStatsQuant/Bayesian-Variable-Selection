@@ -546,3 +546,8 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
     - fidelity check on the "forces s₀ bounded" remark.
   - HQ signs off v0.4 without a new card unless the headline sentence changes.
 - 2026-11-16 (overnight) Cont-F/R edge fix on main 435896a7. 83/83 accept records current. The TH05.0 leftover on Cont-R is deferred to post-freeze.
+- 2026-11-16 (overnight) W3-PSHARP-R:AE and :A2C are PROVED-CHECKED (main 5fff7740).
+  - Recorded with no implies edge; PSHARP:A stays ACTIVE as the in-probability record.
+  - The rider folder came onto main as a snapshot (POST2 precedent); the branch is kept as history.
+  - Accept records 86/86 current.
+  - Policy: §14 scratch rule refined (44238a06).
