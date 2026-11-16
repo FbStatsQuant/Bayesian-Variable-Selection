@@ -7,5 +7,5 @@ S:CorH-U	STATEMENT.md:134-155	S:CorH-plus,S:CorGb-plus	533cc312b9632e27	533cc312
 S:inputs-deps	STATEMENT.md:164-205		2b1ceff43dd69cd8	2b1ceff43dd69cd8	reviews/K1_linecheck_sol.md	OK
 L:G1_min	lemmas/G1_min.md	S:CorG-min	4915f1f44e6d09a8	4915f1f44e6d09a8	reviews/K1_linecheck_sol.md	OK
 L:G2_corr	lemmas/G2_corr.md	S:CorGb-plus,L:G1_min	3fea96051b137a2e	3fea96051b137a2e	reviews/K1_linecheck_sol.md	OK
-L:H1_plus	lemmas/H1_plus.md	S:CorH-plus,L:G1_min	697ee1475af3f701	9d056f33f53ea25d	reviews/K1_linecheck_sol.md	STALE
-L:H2_uniform	lemmas/H2_uniform.md	S:CorH-U,L:H1_plus,L:G2_corr	7757a8986d5306c9	75d8ba852a132b2c	reviews/K1_linecheck_sol.md	STALE
+L:H1_plus	lemmas/H1_plus.md	S:CorH-plus,L:G1_min	697ee1475af3f701	697ee1475af3f701	reviews/K1_linecheck_sol.md + reviews/K2_recheck_sol.md	OK
+L:H2_uniform	lemmas/H2_uniform.md	S:CorH-U,L:H1_plus,L:G2_corr	7757a8986d5306c9	7757a8986d5306c9	reviews/K1_linecheck_sol.md + reviews/K2_recheck_sol.md	OK
