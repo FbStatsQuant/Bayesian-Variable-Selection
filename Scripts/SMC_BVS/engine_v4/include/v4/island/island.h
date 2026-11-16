@@ -40,9 +40,10 @@ struct IslandConfig {
   bool resume = true;
   bool keep_terminal = true;               // terminal supports (N, after the last measured round) -> island_r.bin
   uint32_t tier = 0;                        // frozen calibration tier (event key, INTERFACES v0.1.5 §4.2)
-  bool allow_test_kernels = false;
-  bool store_dup_filter = true;
-  bool verbose = false;                     // progress line per step on stderr (benchmarks)             // exact snapshot duplicate filter (execution parameter; content unchanged)          // tests only: the bit-form label-major kernel (manager Q1)
+  bool allow_test_kernels = false;          // tests only: the bit-form label-major kernel (manager Q1)
+  bool store_dup_filter = true;             // exact snapshot duplicate filter (execution parameter; content unchanged)
+  bool check_store = true;                  // I1 after every step (linear; O(c) hash lookups)
+  bool verbose = false;                     // progress line per step on stderr (benchmarks)
   // adaptive schedule (core's pilot rule: largest phi' with population ESS >= 0.9 H, floor 1/Te). Benchmarks and
   // pilot-like grids only; production islands use the frozen grid from calib.bin.
   bool adaptive = false; double adaptive_H = 0; int adaptive_Te = 30;
@@ -53,6 +54,7 @@ using v4::StageRow;
 struct KernelStats {   // execution statistics (not part of the law, not hashed)
   uint64_t particle_rounds = 0, particle_sweeps = 0, passes = 0, support_label_pairs = 0, supports = 0;
   uint64_t slow_supports = 0, store_merges = 0, store_buffered = 0, store_dup_dropped = 0;
+  int kept_live_max = 0;   // most kept runs alive at once in this process (M2 bound; process-wide counter)
   double t_products = 0;   // thread-seconds inside phase A spent on the tile products
   double t_init = 0, t_orders = 0, t_build = 0, t_phaseA = 0, t_walk = 0, t_phaseB = 0, t_apply = 0, t_barrier = 0,
          t_pm = 0, t_ckpt = 0, t_total = 0;

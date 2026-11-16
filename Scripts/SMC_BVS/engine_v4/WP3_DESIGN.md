@@ -80,6 +80,19 @@ tau, 10 % duplicates of kept models) 213 ns per offer — the duplicates dominat
 p = 10⁴ islands, 5 % of consumed flip events pass tau (MEASURED, 53.7 M of 1.05·10⁹). Lever (Q5): a worker-side
 duplicate filter against an immutable snapshot of the index.
 
+**v0.1.1 (review PR21 M2).** Snapshot lifetime: a worker drops its snapshot when it flushes, at the start of every
+phase-B tile if a newer kept run was published, and every worker drops it at every step boundary. A worker therefore
+holds at most one stale generation, and only while it works through one tile. Kept runs alive at once ≤ 2 (current, and
+the new one during a compaction) + the stale generations held mid-tile; a compaction is triggered by c/4 staged offers,
+far more than all workers emit during one tile at production sizes (T · tile · G ≪ c/4 at 10⁶), so in practice ≤ 3.
+MEASURED: the counter `kept_live_max` (every `Kept` construction/destruction) reads 3 in the test island with 12
+compactions (cap 2,000) and 2 in the p = 10⁵ islands below; all kept runs are released after the island.
+MEASURED (Owls, 3 threads, `v4_bench_island island 100000 2500 3 A lm G 128 steps:0.3,0.7,1 0 1`, class A, n = 200,
+c = 4·10⁶, mean stored |S| = 6.0): kept run 200 MB + index 34 MB; **peak RSS 2.20 GB at G = 256, 1.82 GB at G = 64**
+(includes X 160 MB, tiled X 160 MB, rows 2Gp·8, orders 2Gm·4, tables, store compaction peak); same output hash.
+Corrected peak (reviewer): ≈ 6.7–7.1 GB at 10⁶, k = 7 for the compaction itself (old kept 2.7 + new kept 2.2 +
+over-reserved pool 0.3 + new index 0.5 + staging 0.7–1.1 + refs 0.3) + one stale generation (2.7) ≈ 9.4–9.8 GB.
+
 ### 1.6 `--mem-budget` admission (to implement; manager item 3)
 `island_memory(cfg, p, n, K)` sums, before any allocation: X tiles (n·p·8, a second tiled copy), store peak (§1.5 with
 k = the running mean support size, re-checked at every compaction with the real pool size), staging, index, worker

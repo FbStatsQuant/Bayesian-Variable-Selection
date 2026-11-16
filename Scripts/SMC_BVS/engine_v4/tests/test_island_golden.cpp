@@ -154,6 +154,9 @@ static void compare_island(const v3::IslandResult& R3, const v3::Ledger& L3, con
   bool hok = L3.has_hpm == R.hpm.has && Model(h3.begin(), h3.end()) == R.hpm.S && same_bits(L3.hpmF, R.hpm.F) && same_bits(L3.hpm_logm, R.hpm.logm) &&
              L3.hpm_ev.phase == R.hpm.phase && L3.hpm_mech == R.hpm.mech && (uint32_t)L3.hpm_ev.stage == R.hpm.key.stage &&
              (uint32_t)L3.hpm_ev.round == R.hpm.key.round && (uint32_t)L3.hpm_ev.particle == R.hpm.key.particle && (uint32_t)L3.hpm_ev.position == R.hpm.key.position;
+  // m6e: the key's xph (from the phase) and the within-step ordinal sub (flip 1, else 0)
+  uint8_t xph_exp = L3.hpm_ev.phase == v3::PH_FINAL_INIT ? X_INIT : L3.hpm_ev.phase == v3::PH_FINAL_BRIDGE ? X_BRIDGE : L3.hpm_ev.phase == v3::PH_BURN_IN ? X_BURN : X_MEASURED;
+  hok = hok && R.hpm.key.xph == xph_exp && R.hpm.key.sub == (L3.hpm_mech == v3::ME_GIBBS_FLIP ? 1 : 0) && R.hpm.key.seg == v4::SG_FINAL && R.hpm.key.unit == (uint32_t)r;
   CHECKF(hok, "[%s] HPM F %.17g vs %.17g; ev (%d,%d,%d,%d,%d) vs (%d,%u,%u,%u,%u)", tag, L3.hpmF, R.hpm.F, L3.hpm_ev.phase, L3.hpm_ev.stage,
             L3.hpm_ev.round, L3.hpm_ev.particle, L3.hpm_ev.position, R.hpm.phase, R.hpm.key.stage, R.hpm.key.round, R.hpm.key.particle, R.hpm.key.position);
   CHECK(same_bits(L3.island_best[r], R.island_best));

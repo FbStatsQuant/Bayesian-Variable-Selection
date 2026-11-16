@@ -154,6 +154,9 @@ static void bench_island(int p, int N, const std::vector<int>& thr, KernelKind k
     std::printf("  ns per step by phase (thread-time): orders %.1f build %.1f phaseA %.1f walk %.1f phaseB %.1f apply %.1f\n",
                 1e9 * k.t_orders * T / steps, 1e9 * k.t_build * T / steps, 1e9 * k.t_phaseA * T / steps, 1e9 * k.t_walk * T / steps,
                 1e9 * k.t_phaseB * T / steps, 1e9 * k.t_apply * T / steps);
+    { uint64_t pool = r.top_pool.size(), ne = r.top_v.size();
+      std::printf("  store: %llu entries, mean |S| %.2f, kept run %.1f MB (+ index %.1f MB); kept runs alive at most %d (process)\n", (unsigned long long)ne,
+                  ne ? (double)pool / ne : 0.0, (26.0 * ne + 4.0 * pool) / 1e6, 4.0 * (double)v4::island::pow2_ceil(2 * ne + 2) / 1e6, k.kept_live_max); }
     std::printf("  logZ %.6f  HPM |S|=%zu F=%.4f  peak RSS %.2f GB  output hash %016llx (%s across thread counts)\n", r.logZ, r.hpm.S.size(), r.hpm.F,
                 vm_hwm_kb() / 1048576.0, (unsigned long long)r.hash(), r.hash() == h0 ? "same" : "DIFFERENT");
     std::fflush(stdout);

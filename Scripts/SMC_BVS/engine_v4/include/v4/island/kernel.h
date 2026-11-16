@@ -13,6 +13,9 @@
 //   Arith::ClassA  bordered update with the label appended last, fma8, vector log/exp (amath.h). Same exact-arithmetic
 //                  value; ≤ 1e-9 relative to Bit (tested). Failing lanes fall back to the Bit scorer (INTERFACES §6).
 // Deletions (j ∈ S) are k full scores by WP1's Bit scorer (both forms), done once per support.
+// Numerical failures (review PR21 M1): a score that fails after every fallback never throws out of these primitives;
+// it is flagged as log m = NaN and odds = ODDS_FAILED (< 0). The island turns a flagged value into numerical_failure
+// only if the particle CONSUMES that label (spec §3 rule 2: scores of unconsumed labels are discarded).
 #pragma once
 #include "v4/island/amath.h"
 #include "v4/island/dep.h"
@@ -39,6 +42,8 @@ inline std::vector<v8d>& lane_scratch(int which, size_t n) {   // per-thread scr
   if (buf[which].size() < n) buf[which].resize(n);
   return buf[which];
 }
+
+constexpr double ODDS_FAILED = -1.0;   // flag: the score of this flip failed (odds are otherwise in [0, 1])
 
 struct SupportCache {
   Model S; int k = 0; uint64_t h = 0;
@@ -126,7 +131,9 @@ inline void build_support(const Data& D, const Start& st, BitScorer& sc, Support
   Model Sd;
   for (int a = 0; a < k; ++a) {
     Sd.clear(); for (int t = 0; t < k; ++t) if (t != a) Sd.push_back(S[t]);
-    double lm = sc.score(Sd).logm;   // WP1's Gram-free Bit scorer: the bits of core's score(S \ S[a])
+    double lm;
+    try { lm = sc.score(Sd).logm; }   // WP1's Gram-free Bit scorer: the bits of core's score(S \ S[a])
+    catch (const v4::NumericalFailure&) { s.del_logm[a] = std::numeric_limits<double>::quiet_NaN(); s.del_odds[a] = ODDS_FAILED; continue; }
     double c = comp_del(st, s, S[a]);
     double lg0d = D.logprior[k - 1] + c, dd = (lm - D.logm0) - c;
     s.del_logm[a] = lm;
@@ -237,13 +244,16 @@ inline void eval8_add(const Data& D, const Start& st, BitScorer& sc, const Suppo
   for (int l = 0; l < 8; ++l) { gjj[l] = D.diagG[j8[l]]; zj[l] = D.z[j8[l]]; }
   v8d lm;
   unsigned ok = (A == Arith::Bit) ? flip8_bit(D, s, q, u, gjj, zj, lm) : flip8_A(D, s, u, gjj, zj, lm);
-  unsigned bad = lanes & ~ok;
+  unsigned bad = lanes & ~ok, failed = 0;
   if (bad) {
     Model T;
-    for (int l = 0; l < 8; ++l) if (bad & (1u << l)) { T = s.S; sorted_insert(T, j8[l]); lm[l] = sc.score(T).logm; }
+    for (int l = 0; l < 8; ++l) if (bad & (1u << l)) {
+      T = s.S; sorted_insert(T, j8[l]);
+      try { lm[l] = sc.score(T).logm; } catch (const v4::NumericalFailure&) { lm[l] = std::numeric_limits<double>::quiet_NaN(); failed |= 1u << l; }
+    }
   }
   v8d o = odds_add8<A>(D, st, s, j8, lm);
-  for (int l = 0; l < 8; ++l) if (lanes & (1u << l)) { logm_out[l] = lm[l]; o_out[l] = o[l]; }
+  for (int l = 0; l < 8; ++l) if (lanes & (1u << l)) { logm_out[l] = lm[l]; o_out[l] = (failed >> l) & 1u ? ODDS_FAILED : o[l]; }
 }
 
 // One label, any support (the particle-major reference and the slow path of the label-major kernel).
@@ -264,7 +274,10 @@ inline void eval1(const Data& D, const Start& st, BitScorer& sc, const SupportCa
     eval8_add<A>(D, st, sc, s, q, u, j8, 1u, lm8, o8);
   } else {
     Model T = s.S; sorted_insert(T, j);
-    v8d lm = bc(sc.score(T).logm);
+    double l1;
+    try { l1 = sc.score(T).logm; }
+    catch (const v4::NumericalFailure&) { logm_out = std::numeric_limits<double>::quiet_NaN(); o_out = ODDS_FAILED; return; }
+    v8d lm = bc(l1);
     v8d o = odds_add8<A>(D, st, s, j8, lm);
     lm8[0] = lm[0]; o8[0] = o[0];
   }

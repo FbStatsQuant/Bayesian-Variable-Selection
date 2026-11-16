@@ -36,7 +36,13 @@ struct StoreRef { double v; uint64_t h; const int32_t* S; uint16_t k; };
 inline bool same_model_ref(const StoreRef& a, const StoreRef& b) { return a.h == b.h && a.k == b.k && std::equal(a.S, a.S + a.k, b.S); }
 
 // The kept run of an island store: immutable once published (workers read it without the lock).
+// Live kept runs (current + being built + snapshots still held), counted for the memory bound (review PR21 M2).
+inline std::atomic<int>& kept_live() { static std::atomic<int> n{0}; return n; }
+inline std::atomic<int>& kept_live_max() { static std::atomic<int> n{0}; return n; }
 struct Kept {
+  Kept() { int v = ++kept_live(); int m = kept_live_max().load(); while (v > m && !kept_live_max().compare_exchange_weak(m, v)) {} }
+  ~Kept() { --kept_live(); }
+  Kept(const Kept&) = delete; Kept& operator=(const Kept&) = delete;
   std::vector<double> v; std::vector<uint64_t> hash, off; std::vector<uint16_t> len; std::vector<int32_t> pool;
   std::vector<uint32_t> index; uint64_t imask = 0;   // open addressing over the entries (slot value = entry + 1)
   size_t size() const { return v.size(); }
@@ -55,6 +61,8 @@ struct Kept {
   }
   size_t bytes() const { return v.capacity() * 8 + hash.capacity() * 8 + off.capacity() * 8 + len.capacity() * 2 + pool.capacity() * 4 + index.capacity() * 4; }
 };
+
+inline uint64_t pow2_ceil(uint64_t x) { uint64_t n = 16; while (n < x) n <<= 1; return n; }
 
 struct StoreBuffer {
   std::vector<double> v; std::vector<uint64_t> h, off; std::vector<uint16_t> len; std::vector<int32_t> pool;
@@ -107,7 +115,10 @@ class TopStore {
     if (b.snap_gen != g) { b.snap = snapshot(); b.snap_gen = g; }
   }
   // hot path, any thread, its own buffer
+  std::atomic<bool> nan_offered{false};   // INTERFACES v0.1.3: a NaN value is refused (internal_error, raised by the owner
+                                          // outside any parallel region: check_nan())
   inline void offer(StoreBuffer& b, double val, const int32_t* S, uint32_t kk, uint64_t hsh) {
+    if (std::isnan(val)) { nan_offered.store(true, std::memory_order_relaxed); return; }
     if (cap == 0 || val < tau.load(std::memory_order_relaxed)) return;
     if (dup_filter) {
       refresh(b);
@@ -125,6 +136,7 @@ class TopStore {
     stage.pool.insert(stage.pool.end(), b.pool.begin(), b.pool.end());
     n_buffered += b.size(); ++n_flushes;
     b.clear();
+    b.snap.reset(); b.snap_gen = ~0ull;   // M2: a flushing worker releases its snapshot
     if (stage.size() >= stage_limit) compact_locked();
   }
   void merge_buffer(StoreBuffer& b) { flush(b); }
@@ -178,14 +190,13 @@ class TopStore {
   // after loading a kept run (checkpoint): index, tau, generation
   void publish_loaded() { k->rebuild_index(); gen.fetch_add(1); tau.store(k->size() >= cap ? k->v.back() : NEG_INF); }
   // I1 check: strictly sorted, no duplicates, size <= cap (valid after compact())
+  // I1, linear and allocation-free (review m8a): strictly sorted (=> no exact duplicates of (v, S)), size <= cap, and
+  // no model twice (every entry's hash-index lookup returns the entry itself).
   bool check_invariant() const {
     const Kept& K = *k;
     if (K.size() > cap) return false;
     for (size_t i = 1; i < K.size(); ++i) if (!ord_less(K.ref(i - 1), K.ref(i))) return false;
-    std::vector<std::pair<uint64_t, size_t>> hs; for (size_t i = 0; i < K.size(); ++i) hs.push_back({K.hash[i], i});
-    std::sort(hs.begin(), hs.end());
-    for (size_t i = 1; i < hs.size(); ++i)
-      if (hs[i].first == hs[i - 1].first && same_model_ref(K.ref(hs[i].second), K.ref(hs[i - 1].second))) return false;
+    for (size_t i = 0; i < K.size(); ++i) if (K.find(K.ref(i)) != (int64_t)i) return false;
     return true;
   }
   Model model(size_t i) const { const Kept& K = *k; return Model(K.pool.data() + K.off[i], K.pool.data() + K.off[i] + K.len[i]); }
