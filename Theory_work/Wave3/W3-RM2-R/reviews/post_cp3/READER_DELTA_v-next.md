@@ -54,3 +54,8 @@ Checked against Sol TR1 (`Theory_work/Dept/research/FUNI_transfer/TR1_sol.md` §
 the domain is written 𝔇, because in the master "(D)" names the delivery premises, not the domain (TR1 calls the same
 set D, and its D_K ⊇ 𝔇 with min(p_raw, ⌊n/2⌋) in place of ⌊n/2⌋). 𝔇 is sufficient, not necessary (TR1 §2: exact-branch
 inputs and small start modes outside 𝔇 also deliver). Not phrased as a limitation (owner rule).
+
+## 8. Addition [RM2R-6] (HQ on IDEALW_BINDING): stated in the body as fact, right after the [RM2R-5] sentence
+> Neither limit can bind unless $n+p+1>2^{10^6}$ or $n\gtrsim4\times10^9$, that is, at no feasible problem size [RM2R-6].
+
+By the arithmetic of `IDEALW_BINDING.md` (no log grep needed, per HQ).
