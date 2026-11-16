@@ -628,3 +628,13 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - Status: the TH09 (T01 part) discharge happens only if task T shows the cited T01 labels were LC-A verified; otherwise the row is recorded conditional.
   - Sharpness top 3: item 1 ((A4)/(ND)), 8(a)+10, 9; 8(b) gets a kill budget.
 - Owls: BNP installs today, guard at 10:13 CT and backup cron at 11:13 CT; SMC crontab freezes 10:05–10:30 and 11:05–11:30. Baseline crontab (15 lines) saved by HQ. Correction to BNP: SMC does have owls_guard (a load watchdog).
+- 2026-11-16 ~07:00 CT. Task T (T03♯ root) dry run clean: TH09 4/4 and TH128 5/5 covered; 74 edges, 73 discharged and 1 kept; 39 status changes.
+  - Headline: 1.2 plain (W2-APP:POST); 3.2 plain (RM2-F); 3.6 plain (SAMP); 1.1 POST2 drops TH09 but keeps POST/Thm-1; 3.1 unchanged.
+  - GO:
+    - alias split (T01–T03 and T02 keep their own status), then a re-dry-run; the real run proceeds only if the headline deltas are identical;
+    - 7-line A4 tool fix (suite, test case, Opus review);
+    - HQ carriers;
+    - re-anchor to 9714aea4;
+    - Lemma-1a edge discharged (LC-A:47-48 verified).
+  - Follow-up T2: Sol line checks of [P1] lem:prior(e) (W3-DIST X/V, row 2.1) and T02(ii♯) 5(a) (Thm-1, row 1.1).
+- F-UNI: TR1 Sol says transfer NO; NARROW to (D) / IDEAL-W⁺. Ceilings: le ≤ 10⁶ (binds at n+p > 2^(10⁶)) and INT_MAX (binds once the start model has ≳ 2×10⁹ variables). The sweep covers all every-n delivery claims about shipped code. owls_guard now protects BNP paths (HQ edit 06:3x CT).
