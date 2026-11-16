@@ -92,3 +92,4 @@
 - 21:05 — DIST CP2 met (D38); HQ informed; council-freeze date requested.
 - 21:06 — HQ approved DIST CP2 CONTINUE; owner rule: asymptotics never framed as a limitation — n₀ fact only as internal REPORT line 'explicit constants, not optimised'; DIST + READER told. Council-freeze date pending from DIST lead.
 - 21:07 — DIST council-freeze target Mon 11-16 09:00 CT (3 Codex calls before: L6, diff check, Astra sweep); lead freezes + launches council itself; I confirm RP commit on theory/W3-DIST before seats run. HQ told.
+- 21:12 — PSHARP-R: lemmas written (A2C restatement-level), L02 Sol running, citecheck 0 MISS, REPORT staged ingest 2 claims/0 problems; A5-accepted ERROR: parents W3-PSHARP:A/B/S accept records stale → recorder task J (diagnose + stage re-record; check other recorded tickets). READER_DELTA v0.3 → READER.
