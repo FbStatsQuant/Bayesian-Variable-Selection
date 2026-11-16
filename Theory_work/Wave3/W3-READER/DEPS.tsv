@@ -12,7 +12,7 @@ RV/thm4	READER_VERSIONS.md ROW thm4	W3-MISR:MIS(i)@1.0.0; MIS(i')@1.0.0; MIS(ii)
 RV/thm5	READER_VERSIONS.md ROW thm5	W3-START2:START-R@1.0.0; W3-START2:BR@1.0.0; W3-START:FLOOR@1.0.0	a72e5a2098855325	a72e5a2098855325	reviews/S2_linecheck_sol.md (pending)	PENDING-CHECK
 RV/thm6	READER_VERSIONS.md ROW thm6	W3-RM2:RM2-R@1.0.0; W3-RM:RM-0@1.0.0; W3-RM:E4@1.0.0; W2-UNI:F-UNI@1.1.0; W3-RM2:D-to-W@1.0.0; W3-RM2:POST-R@1.0.0; W3-READER:R1, R2, R3	019fbdf9a3fb66ef	df820383aab3cb7d	reviews/S2_linecheck_sol.md (pending)	STALE
 RV/thm7	READER_VERSIONS.md ROW thm7	W3-RM2:RM2-F@1.0.0; W3-RM2:W-suff@1.0.0; W3-RM:RM-0@1.0.0; W2-UNI:F-UNI@1.1.0; W3-READER:R1, R2, R3	d11344c886a54503	783a5b85c53e5d16	reviews/S2_linecheck_sol.md (pending)	STALE
-RV/thm8	READER_VERSIONS.md ROW thm8	W3-SCR:A1@1.0.0	9a01ad9cebb58c0c	cfcae3fc04a35b49	reviews/S2_linecheck_sol.md (pending)	STALE
+RV/thm8	READER_VERSIONS.md ROW thm8	W3-SCR:A1@1.0.0	374de2f85c1a9e57	cfcae3fc04a35b49	reviews/S2_linecheck_sol.md (pending)	STALE
 RV/thm9	READER_VERSIONS.md ROW thm9	(placeholder; W3-DIST)	fe9183d270dcb8e4	fe9183d270dcb8e4	reviews/S2_linecheck_sol.md (pending)	PENDING-CHECK
 RV/thm10	READER_VERSIONS.md ROW thm10	W3-SAMP:C@1.1.1; W3-START2:IF-START@1.0.0; W3-POST:Thm-1@1.0.0; W2-APP:POST@1.0.1; W3-READER:R4, PoolZ	f4339c1996f7aa9a	9728e269fdf67549	reviews/S2_linecheck_sol.md (pending)	STALE
-CARD	CLAIMS_CARD.md	RV/thm1-thm10	e09f56ddfdf32b14	8ccf947f42e8654a	reviews/S2_linecheck_sol.md (pending)	STALE
+CARD	CLAIMS_CARD.md	RV/thm1-thm10	fdbc34f35de4b592	8ccf947f42e8654a	reviews/S2_linecheck_sol.md (pending)	STALE

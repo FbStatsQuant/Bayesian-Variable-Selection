@@ -725,7 +725,7 @@ any $b\ge\tfrac12$. Recommendation: present (A5)(a) in the main text (fully expl
 
 ## 8. Theorem 8 — Certified screening
 <!-- ROW thm8 BEGIN -->
-**Card row** 3.7 · **Section version** 0.3 (2026-11-16) · **Pending delta** —
+**Card row** 3.7 · **Section version** 0.4 (2026-11-16) · **Pending delta** —
 
 
 ### Reader statement
@@ -746,14 +746,36 @@ In particular this holds for $p\le n^A$ and every $q_n=o(n/\log n)$. Signal size
 visibility is used beyond (A1)–(A3), and $p\le n^A$ is not needed. (The master needs only a weaker directional floor,
 which leaves null-null correlations free; the full floor (A1) does constrain them [S1-F8].)
 
-### Placements of row 3.7 (H5 card 7; the CP3 freeze picks per the consultant's verdict) [SCR-PC]
-- **(i) Abstract clause:** *"Certified screening: if the design has a sparse eigenvalue floor on models of size
-  $q_n+s_0$, the true coefficients are bounded below and above by constants fixed in $n$ (as are the floor and the noise
-  variance), and $(q_n+1)\log p+\log n\le c_1n$, then the probability that a run produces output, certifies a reported
-  model of size at most $q_n$, and that model misses a true predictor tends to zero — with no visibility, leakage, start
-  or block condition."*
-- **(ii) Body theorem:** Theorem 8 exactly as stated above, with (A1)–(A3) and the sentence "signal sizes or floors
-  that vary with $n$ are not covered (open item SCR-R1)".
+### Placements and forms of row 3.7 (H5 card 7 verdict, adopted by HQ; the CP3 freeze picks the form) [SCR-PC]
+- **Abstract (decided):** Theorem 8 as a clause, with **all four constants named as fixed in $n$**: *"Certified
+  screening: if the design has a sparse eigenvalue floor $\kappa$ on models of size $q_n+s_0$, the true coefficients
+  satisfy $\theta^*_{\min}\ge b$ and $\|\theta^*\|_1\le M$, the constants $\kappa$, $b$, $M$ and the noise variance
+  $\sigma_*^2$ are fixed in $n$, and $(q_n+1)\log p+\log n\le c_1n$, then the probability that a run produces output,
+  certifies a reported model of size at most $q_n$, and that model misses a true predictor tends to zero — with no
+  visibility, leakage, start or block condition."*
+- **Body (decided):** the general form for signals that vary with $n$, **Theorem 8′** below (master `W3-SCR:A-inf`).
+- **Form (a) — the second SCR council round passes (target Thu 18:00):** the abstract clause as above, plain.
+- **Form (b) — it misses Friday:** either **(b1)** the abstract clause followed by *"(reviewed by a council on an earlier
+  text; the later narrowing to constants fixed in $n$ was re-verified by an independent reviewer; a second council
+  review is pending)"*, or **(b2)** row 3.7 moves to the body. **Recommendation: (b1)** — the mathematics was
+  council-reviewed and the narrowing only adds premises (it weakens the statement) and has an independent check; the
+  label states exactly that, as the row 1.1 Form B1 does for its condition.
+
+**Theorem 8′ (body; certified screening with signals that may vary with $n$).** Let the design be fixed and assume (S1),
+(S3). For $S\subseteq[p]$ and $t\notin S$ let $\gamma(t\mid S)$ be the *noiseless gain* of $t$ given $S$: the decrease of
+the method's ridge-regularised residual quadratic form when $t$ joins $S$ and the response is replaced by its mean
+$\mu$. Let $\Gamma_n(q):=\min\{\max_{t\in S_0\setminus S}\gamma(t\mid S):|S|\le q,\ S\not\supseteq S_0\}$ (every model of
+size $\le q$ that misses a truth has some missing truth with gain at least $\Gamma_n(q)$), and
+$\tau_n^2:=\sigma_*^2+\|\mu\|^2/(n-1)$. If $q_n\in\{0,\dots,K-1\}$ and
+$$
+\liminf_{n\to\infty}\frac{\sqrt{\Gamma_n(q_n)}}{\tau_n\sqrt{2\log p+\log n}+\sigma_*\sqrt{2q_n\log p}}>1 ,
+$$
+then $P\big(\text{output},\ \hat S\text{ certified},\ |\hat S|\le q_n,\ S_0\not\subseteq\hat S\big)\to0$. No condition $p\le n^A$, no
+bound on $s_0$, and no condition on the start, leakage, blocks or the collinearity of the null columns is used.
+*Master:* `W3-SCR:A-inf@1.0.0`, `Theory_work/Wave3/W3-SCR/STATEMENT.md:87-90` (with the definitions at §1), status
+**"PROVED-CHECKED"**; its non-asymptotic form `W3-SCR:SCR-A@1.0.0` (:79-85, probability $\le3e^{-x}$ under a finite-$n$
+margin condition), **"PROVED-CHECKED"**. Theorem 8 is its corollary under fixed constants (`W3-SCR:A1`). *Bridge:* none
+(the quantities are the master's, described in words).
 
 ### Why each assumption
 (A1) only the realised combination of missing truths must keep a fraction of its energy outside any small model (the
@@ -782,6 +804,9 @@ certificate needs a near-orthogonality floor (`W3-SCR:SCR-C`, PROVED-CHECKED), w
   (the master's current text); n-dependent signals not covered (SCR-R1); A1° named as a separate claim; placements
   (i) abstract clause / (ii) body theorem for H5 card 7 (EQUAL to the current master; tag to be confirmed by the Sol
   statement-change check).
+- v0.4 2026-11-16: [H5 card 7 verdict] abstract clause names κ, b, M, σ as fixed in $n$; body Theorem 8′ (master
+  A-inf) for $n$-varying signals; forms (a)/(b1)/(b2) for the second SCR council round, (b1) recommended (NEW body
+  statement = master A-inf in words; EQUAL to its master).
 <!-- ROW thm8 END -->
 
 ---
