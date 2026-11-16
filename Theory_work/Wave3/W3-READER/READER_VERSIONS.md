@@ -933,7 +933,7 @@ experiment ($n\le150$, $p$ up to $10n$); 71 of 71 in the screening study ($n=100
 certified models were small: all 376 strong-factor fits had at most $2s_0$ predictors, all 71 screening fits at most 5
 (the 2,400-fit study records no per-fit size) [S4-F2]. On strong-factor designs
 (equicorrelation $\rho\in\{0.5,0.7\}$, $p\ge2.5n$, $s_0\in\{4,8\}$) the certified model contained every true predictor in
-61 of 122 fits at $n=50$, 18 of 20 at $n=75$ and 30 of 30 at $n=100$.
+61 of 122 fits at $n=50$, 18 of 20 at $n=75$ and 30 of 30 at $n=100$. At these constants (A3) requires $n\gtrsim1{,}450$.
 (Sources: `/home/fb31/BVS-wt/W3-SCR-R2/Theory_work/Wave3/W3-SCR-R2/reviews/READER_DELTA.md` §5, theory/W3-SCR-R2 @ 048b6b23.)
 
 #### Update log (thm8)
@@ -958,6 +958,9 @@ certified models were small: all 376 strong-factor fits had at most $2s_0$ predi
   intersection event and fixed-constant scope are WEAKER (restore `W3-SCR:SCR-A` :80-89, `A1` :158-163); Theorem 8′ is a
   STRONGER addition (EQUAL to `W3-SCR:A-inf`). S4 [S4-F2]: certification counts separated from size evidence (WEAKER, restores
   the cited measurements' scope).
+- v0.6.1 2026-11-16: [HQ card 11 follow-up] the delta's closing sentence "At these constants (A3) requires $n\gtrsim1{,}450$."
+  restored verbatim in the certification-frequency line (HQ: "the (A3) n ≳ 1,450 fact stays"; supersedes the v0.6
+  omission) (EQUAL).
 <!-- ROW thm8 END -->
 
 ---
