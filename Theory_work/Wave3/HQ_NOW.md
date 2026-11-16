@@ -10,6 +10,12 @@ budget, CP reset use) → ask Felipe at once, framed as "needed for W3-DIST". Ta
 Operating model (owner, 11-15): HQ = CEO; each big effort is a top-level "department" thread (brief + branch +
 restore points + checkpoints); the owner may talk to any department directly; HQ gates spend and launches.
 - W3-READER (Opus): mcp:launch:2a4462b2… → CP1 (claims card by the five pillars; reader versions; notation; method intuition).
+- **SMC - Theory Department** (running; Opus 5.5 high, Claude Third, Owls): mcp:launch:21e33dae…; brief `Theory_work/Dept/BRIEF.md`;
+  worktree /home/fb31/BVS-wt/THEORY-DEPT, branch dept/theory. Owns: riders queue, T-PART (with Engineering OD-5),
+  parallel-SMC campaign proposal by Thu. HQ keeps W3-DIST, W3-READER, CP3 acceptance, headlines, merges, API.
+- Handbook for everyone: `POLICIES.md` (repo root). Departments push their own branches and open PRs; HQ merges.
+- **Owner batch (when Felipe asks):** Engineering OD-1 fixed N, OD-2 E2 escalation, OD-3 B2-3 cost column, OD-5
+  partition (T-PART), OD-8(b) per-particle streams [OP-law] (dept recommendation); after ENGINEERING_SPEC v1.
 - **SMC - Writing Department** (set up, idle; Opus 5.5 high, **Claude Personal**, Owls): mcp:launch:e2cf7ee6…; brief
   `Docs/Writing/BRIEF.md`; worktree /home/fb31/BVS-wt/WRITING, branch writing/main, snapshot commit-in-place :02/:17/:32/:47.
   First assignments planned: chapter v2.0 (after the freeze), advisor report (from ~11-23).
