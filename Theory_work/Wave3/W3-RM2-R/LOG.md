@@ -13,3 +13,5 @@
 - 2026-11-15 20:22 CST — manager: POLICIES §12 compute discipline (no files outside worktree; nice, ≤16 cores; clean temp; numerics arrays in an ignored ticket folder). Noted for the numerics helper brief.
 - 2026-11-15 20:24 CST — manager: POLICIES §12 rule 7 (no NOTS; no bursts; ramp gradually ≤16 cores; few agents at once). Noted: one numerics helper only, staggered.
 - 2026-11-15 20:28 CST — manager: temp convention: TMPDIR=/home/fb31/bvs_tmp/W3-RM2-R for all temp-writing commands; never /tmp; clean up. Noted.
+- 2026-11-15 20:34 CST — manager: exact temp path TMPDIR=/home/fb31/bvs_tmp/theory/<YYYYMMDD>-W3-RM2-R-<what> (CI: /home/fb31/bvs_tmp/ci); supersedes previous path; rules /home/fb31/bvs_tmp/README.md. Noted.
+- 2026-11-15 20:38 CST — manager: FINAL temp location TMPDIR=/home/fb31/SMC_Theory_Department/tmp/<YYYYMMDD>-W3-RM2-R-<what> (CI: /home/fb31/SMC_Theory_Department/ci); replaces bvs_tmp notes. Noted.
