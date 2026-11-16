@@ -47,8 +47,8 @@ depends_on: W3-SAMP:C@1.1.1 ; W3-START2:IF-START@1.0.0 ; W3-START2:START-R@1.0.0
 gates: correct:PENDING(bridge-leg Sol line check)
 ```
 
-Notes for the ingest (HQ / recorder): R4 inherits "conditional on W2-APP:POST" (below PROVED-CHECKED) until that
-lemma's Sol check lands. R3 carries F-UNI's qualifications ([OP] author-only; e4/N3 OPEN; P1/S.3 code-reading audit).
+Notes for the ingest (HQ / recorder): R4 inherits the conditions of its inputs, "conditional on C-PACK:SL0, SOP:TH09"
+(through `W3-SAMP:C@1.1.2` and `W2-APP:POST@1.0.5`, main f526e45b). R3 carries F-UNI's qualifications ([OP] author-only; e4/N3 OPEN; P1/S.3 code-reading audit).
 The reader-version corollaries (Theorems 1–8, 10 of `READER_VERSIONS.md`) are not proposed as separate rows here;
 HQ decides whether each reader version gets a row (PROGRAM "Readability": "The reader version is a corollary with its
 bridges checked").
