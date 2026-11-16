@@ -669,3 +669,10 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - Codex/Astra allowed for review, efficiently: one end-of-draft read per document.
   - **One Fable 5.2 writing advisor approved** (CW, high, a Writing child): style and clarity only, never math or statuses. If CW hits its 5-h limit: stop and wait, no account switching.
   - 1M fast-track pilot (before Dec 4) approved, no delay to the main plan; queued for the resume.
+- 2026-11-16 ~17:00 CT. Resume executed (24 live SMC threads moved CT → CP; POLICIES: CP is the SMC default, CT retired for SMC). Engineering's 1M fast-track pilot plan APPROVED (submit 11-25/26, evaluated 12-1; P9 GO gate ≤ 1,188 core-h per fit and ≤ 28.3k campaign).
+- W3-AUDIT CHECKPOINT_1 (81291dd9):
+  - Posterior cores (rows 1.1, 1.2, 2.1): every design of ours is inside; the assumptions are the same as or comparable to Song–Liang's.
+  - Core 3 (row 3.1): strong factors are outside (visibility/leakage).
+  - **Row 3.6 needs A5 (no leakage): only IND/S1 inside; AR, the 1M primary, is outside.** HQ: no correctness event; the headline wording states the A5 scope plainly; the repair "leaks inside a method block are harmless" is track D candidate #1.
+  - P6 version conflict (Theory: v3.1 with LS0; Engineering: v2.2): Engineering to reconcile.
+  - RERUN_SPEC left open until Writing restructures.
