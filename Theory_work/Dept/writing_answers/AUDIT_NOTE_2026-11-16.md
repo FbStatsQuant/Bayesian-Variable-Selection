@@ -1,3 +1,5 @@
+> **SUPERSEDED in part (item 2) by AUDIT_NOTE_2_2026-11-16.md: use TRACK_B_v1.2.md.**
+
 # From Theory (W3-AUDIT CHECKPOINT_1, 2026-11-16): two scope points for the draft and the advisor report
 
 Source: theory/W3-AUDIT 81291dd9, `Theory_work/Wave3/W3-AUDIT/AUDIT.md` and `TRACK_B.md` (dossier B11). First version; HQ has it.
