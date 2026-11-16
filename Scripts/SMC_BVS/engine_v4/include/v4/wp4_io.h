@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 #include "v4/calib.h"
+#include "v4/calib_backend.h"
+#include "v4/calib_run.h"
 #include "v4/format.h"
 #include "v4/json.h"
 #include "v4/merge.h"
@@ -35,9 +37,14 @@ struct CalibWrite {
   uint32_t mode = fmt::M_COMPAT;
   const calib::CalibOut* co = nullptr;
   const Ledger* led = nullptr;                      // the calibration ledger (stores, HPM, counters)
-  std::vector<merge::InheritedModel> inherited;     // models of the three calibration stores with F, lg0, logm
+  std::vector<merge::InheritedModel> inherited;     // models of the three calibration stores with F, lg0, logm (or:)
+  const calib::InheritedFlat* inherited_flat = nullptr;   // the same, flat (calibrate_with's export; preferred; has d)
+  const calib::Settings* settings = nullptr;        // rule parameters recorded in meta (I_max, refine_m, ell, sum mode)
+  double k_store = 0;                               // calibration's mean stored |S| (INTERFACES v0.1.12 §7)
   int32_t N = 0, L = 0, Hm = 4;                     // final-run settings frozen with the grid
   Json inputs = Json::object();                     // {data.bin: hash, setup.bin: hash}
+  std::vector<calib::StageRecord> stages;           // pilot and diagnostic islands' stage tables (calib.bin `stage_*`)
+  Json extra = Json::object();                      // merged into meta (budgets, seed); reserved keys are refused
 };
 std::string write_calib(const std::string& path, const CalibWrite& c);   // returns the content hash
 struct CalibIn {
@@ -46,8 +53,12 @@ struct CalibIn {
   std::vector<double> grid; int32_t tier = 0, N = 0, L = 0, Hm = 4;
   bool has_hpm = false; Model hpm; EventCtx hpm_ev;
   std::vector<merge::InheritedModel> inherited;
+  std::string rule; int32_t I_used = 0, I_max = -1, ell = -1; double k_store = 0;
 };
-CalibIn read_calib(const std::string& path, int32_t p, int32_t K);   // every model, value, grid and meta range checked
+// Every model, value, grid and meta range checked. V mode: the bounded rule, tier 0, N = 2,500 (D-1, D-26) and
+// I_used <= I_max <= ell. A completed calibration must carry k_store (finite, > 0). When data_hash / setup_hash are
+// given, calib.bin's meta.inputs must name them (review PR37 m-3). A non-ok calib.bin exposes no inherited models.
+CalibIn read_calib(const std::string& path, int32_t p, int32_t K, const std::string& data_hash = "", const std::string& setup_hash = "");
 
 // ---- island_r.bin (INTERFACES v0.1.8 §5.1 = WP3's include/v4/island/island_file.h) ---------------------------------
 // meta {schema, kind, mode, r, N, T, L, Hm, p, status, reason, inputs, binary, timings, logZ_hex, init_hash};
@@ -99,7 +110,7 @@ class FileIslandSource : public merge::IslandSource {
 
 // ---- setup view (until WP2's reader lands): the sections the merge needs --------------------------------------------
 struct SetupView {
-  std::string content_hash;
+  std::string content_hash, data_hash;   // data_hash: setup.bin's meta.inputs["data.bin"] ("" if absent)
   std::vector<int32_t> blk, pos; std::vector<int64_t> code_ptr; std::vector<double> logr;
   std::vector<int64_t> blk_ptr; std::vector<int32_t> blk_members;
   Model mode_S;

@@ -238,7 +238,7 @@ List wp4_calibrate(SEXP setup, double seed, List settings) {
                             _["escalation_blocked"] = f.escalation_blocked.empty() ? R_NilValue : (SEXP)wrap(f.escalation_blocked),
                             _["checks_passed_calibration"] = f.checks_passed_calibration < 0 ? LogicalVector::create(NA_LOGICAL) : LogicalVector::create(f.checks_passed_calibration == 1),
                             _["forced_pilot_steps"] = (double)f.forced_pilot_steps, _["grid_unconverged"] = f.grid_unconverged,
-                            _["triggers_fired"] = f.triggers_fired,
+                            _["triggers_fired"] = co.tiers.back().has_triggers ? (SEXP)wrap(f.triggers_fired) : R_NilValue,   // core: names(NULL) after a stop before the triggers
                             _["grid_fallback"] = f.grid_fallback.empty() ? R_NilValue : (SEXP)wrap(f.grid_fallback));
   List frozen = co.has_frozen ? List::create(_["grid"] = co.frozen.grid, _["grid_unrefined"] = co.frozen.grid_unrefined,
                                              _["tier"] = co.frozen.tier, _["rho_V"] = wp4h::nullable(co.frozen.has_rho, co.frozen.rho_V),
@@ -457,6 +457,7 @@ List wp4_files_merge(SEXP setup, NumericVector grid, List ro, double seed, SEXP 
   v4::calib::CalibOut co; co.status = v4::calib::CalStatus::ok; co.tier_final = tier; co.has_frozen = true;
   co.frozen.grid.assign(grid.begin(), grid.end()); co.frozen.grid_unrefined = co.frozen.grid; co.frozen.tier = tier;
   v4::wp4io::CalibWrite cw; cw.mode = v4::fmt::M_COMPAT; cw.co = &co; cw.led = &cl; cw.inherited = im; cw.N = N; cw.L = L; cw.Hm = Hm;
+  { double ks = 0; for (auto& m : im) ks += (double)m.S.size(); cw.k_store = im.empty() ? 1.0 : std::max(1.0, ks / (double)im.size()); }
   cw.inputs["data.bin"] = dh; cw.inputs["setup.bin"] = sh;
   std::string ch = v4::wp4io::write_calib(cpath, cw);
   // islands (core engine; one ledger, one cache, one stream each) -> island_r.bin
@@ -512,4 +513,188 @@ List wp4_files_merge(SEXP setup, NumericVector grid, List ro, double seed, SEXP 
                               _["ls0_improved"] = fl.at("ls0_improved").boolean(), _["ls0_hpm_changed"] = fl.at("ls0_hpm_changed").boolean());
   out["fit_bin"] = rec.at("fit_bin").str();
   return out;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// The calibration over the v4 backend (calib_backend.h / calib_run.h): core's islands through an IslandRunner
+// (`CoreRunner`: core Engine::run_island_s per calibration island, one fresh v3 ledger and cache per island, the v3
+// streams 0-9 owned here and continued across rebuilds, core v3_core.cpp:593-596), the calibration ledger, the local
+// searches, V and the inherited export in v4 code. Compared with v3_calibrate, it tests the v4 calibration ledger.
+#include <v4/calib_run.h>
+namespace wp4h {
+v4::wp4io::SetupView setup_view_from_core(const v3::Start& st, const v3::Data& D3, const v4::Zobrist& zob) {
+  const int p = D3.p;
+  v4::wp4io::SetupView S;
+  S.blk = st.blk; S.pos = st.pos; S.blk_ptr.push_back(0);
+  S.ttop.init(40ull * p + 1, v4::Order::HPM); S.tlead0.init(20ull * p, v4::Order::LEX); S.tlead1.init(20ull * p, v4::Order::LEX);
+  for (int b = 0; b < st.J; ++b) {
+    int m = (int)st.blocks[b].size();
+    for (int j : st.blocks[b]) S.blk_members.push_back(j);
+    S.blk_ptr.push_back((int64_t)S.blk_members.size());
+    S.code_ptr.push_back((int64_t)S.logr.size());
+    for (uint32_t c = 0; c < (1u << m); ++c) {
+      S.logr.push_back(st.logr[b][c]);
+      if (std::isnan(st.logm_tab[b][c])) continue;
+      v4::Model U; for (int i = 0; i < m; ++i) if (c & (1u << i)) U.push_back(st.blocks[b][i]);
+      double F = D3.logprior[U.size()] + st.logm_tab[b][c], lg0 = D3.logprior[U.size()] + st.logr[b][c];
+      S.ttop.offer(F, U, zob.hash(U)); S.tlead0.offer(lg0, U, zob.hash(U)); S.tlead1.offer(F, U, zob.hash(U));
+    }
+  }
+  S.ttop.compact(); S.tlead0.compact(); S.tlead1.compact();
+  return S;
+}
+struct CoreRunner : v4::calib::IslandRunner {
+  Holder* h; const v3::Data& D; const v3::Start& st; uint64_t seed; const v4::Zobrist& zob;
+  std::map<int, RngSource> streams;
+  RuntimeGuard* guard = nullptr;   // optional (golden stop path): core's runtime guard, shared by all islands as CalState's
+  CoreRunner(Holder* hh, uint64_t s, const v4::Zobrist& z) : h(hh), D(*hh->D), st(*hh->st), seed(s), zob(z) {}
+  RngSource& stream(int k) {
+    auto it = streams.find(k);
+    if (it == streams.end()) { RngSource g; g.g.seed_stream(seed, (uint64_t)k); it = streams.emplace(k, g).first; }
+    return it->second;
+  }
+  v4::calib::IslandOut run(const v4::calib::IslandSpec& sp) override {
+    const bool pilot = sp.role == v4::calib::IslandRole::Pilot;
+    const int sid = (sp.tier == 0 ? 0 : 5) + (pilot ? 0 : sp.island);   // core v3_core.cpp:626, 667
+    v3::Ledger led(&D, 4);
+    ScoreCache cache; cache.init(D.W, (size_t)(500.0 * D.p));
+    Engine E(D, st, h->Nb, h->B); E.cache = &cache; E.led = &led; E.guard = guard;
+    RngSource& rs = stream(sid); E.vs = &rs;
+    v4::calib::IslandOut o; o.position_start = rs.g.count;
+    Engine::Schedule sch; std::vector<double> g = sp.grid;
+    if (pilot) { sch.adaptive = true; sch.H = sp.H; sch.Te = sp.Te; } else sch.grid = &g;
+    try {
+      IslandResult res = E.run_island_s(pilot ? 0 : sp.island, sp.H, sch, sp.L, sp.Hm, sp.tier, nullptr, pilot ? PH_PILOT : PH_DIAG, sp.iter);
+      o.partial = res.partial; o.status = res.partial ? v4::Status::resource_limit : v4::Status::completed;
+      o.logZ = res.logZ; o.schedule = res.phi; o.forced = res.forced; o.pip = res.pip; o.init_hash = res.init_hash;
+      for (size_t t = 0; t < res.phi.size(); ++t) {
+        v4::StageRow row; row.phi = res.phi[t]; row.inc = res.inc[t]; row.ess = res.ess[t]; row.cum = res.cum[t];
+        row.distinct_res = res.distinct_resampled[t]; row.distinct_moved = res.distinct_moved[t];
+        const MoveStats& m = res.stage_moves[t];
+        row.moves.gibbs = m.gibbs; row.moves.gibbs_change = m.gibbs_change; row.moves.us_exec = m.us_exec; row.moves.us_acc = m.us_acc;
+        row.moves.us_self = m.us_self; row.moves.ns_exec = m.ns_exec; row.moves.ns_acc = m.ns_acc; row.moves.ns_noscore = m.ns_noscore;
+        row.moves.ns_self = m.ns_self; row.moves.in_exec = m.in_exec; row.moves.in_acc = m.in_acc;
+        o.stages.push_back(row);
+      }
+    } catch (v3::NumericalFailure& e) { o.status = v4::Status::numerical_failure; o.message = e.what(); }
+    o.led = ledger_from_v3(led, D.p, 4, true, zob);   // the island's ledger (so far, on a stop)
+    o.position_end = rs.g.count;
+    return o;
+  }
+};
+}  // namespace wp4h
+
+// [[Rcpp::export]]
+List wp4_calibrate_ledger(SEXP setup, double seed, List settings, std::string calib_path, double guard_hours) {
+  HPtr h = get_holder(setup); const Data& D = *h->D; const Start& st = *h->st;
+  int threads = as<int>(settings["threads"]);
+  v4::Zobrist zob; zob.init(D.p);
+  v4::wp4io::SetupView S = wp4h::setup_view_from_core(st, D, zob);
+  v4::LedgerConfig cfg; cfg.p = D.p; cfg.islands = 4; cfg.leaders = true; cfg.fresh_counters = false;
+  v4::Ledger led(cfg);
+  v4::wp4io::offer_tables(led, S, D.K, zob);   // the calibration ledger starts with the tables (core v3_core.cpp:613)
+  v4::calib::Settings s;
+  s.rule = as<std::string>(settings["rule"]) == "bounded" ? v4::calib::Rule::bounded : v4::calib::Rule::coded;
+  s.tier0 = as<int>(settings["tier0"]); s.grid_fallback = as<bool>(settings["grid_fallback"]);
+  s.I_max = as<int>(settings["I_max"]); s.refine_m = as<int>(settings["refine_m"]);
+  s.sum_mode = as<std::string>(settings["sum_mode"]) == "blocked" ? v4::calib::SumMode::Blocked : v4::calib::SumMode::Serial;
+  s.threads = threads;
+  List tl = settings["tiers"];
+  for (int e = 0; e < 2; ++e) {
+    List t = tl[e];
+    s.tiers[e].tier = e; s.tiers[e].H = as<int>(t["H"]); s.tiers[e].Te = as<int>(t["T_e"]); s.tiers[e].L = as<int>(t["L"]);
+    s.tiers[e].Hm = as<int>(t["Hm"]); s.tiers[e].ell = as<int>(t["ell"]);
+  }
+  wp4h::CoreRunner runner(h.get(), (uint64_t)seed, zob);
+  RuntimeGuard guard; if (guard_hours >= 0) { guard.allocation = guard_hours * 3600; runner.guard = &guard; }
+  const bool force_ll = settings.containsElementNamed("force_ll_pilot") && as<bool>(settings["force_ll_pilot"]);
+  wp4h::CoreFactory fac{&D, &st};
+  v4::merge::TailSettings ts; ts.threads = threads; ts.chunk = 64; ts.K = D.K; ts.p = D.p; ts.zob = &zob;
+  auto t0 = Clock::now();
+  v4::calib::CalibOutcome oc;
+  try { oc = v4::calib::calibrate_with(runner, std::move(led), fac, s, ts, 0, 0, force_ll); }
+  catch (const v4::Error& e) { return List::create(_["status"] = "refused", _["task_status"] = v4::status_name(e.st), _["message"] = std::string(e.what())); }
+  double secs = secs_since(t0);
+  const v4::calib::CalibOut& co = oc.co;
+  // the same export as wp4_calibrate (tiers, flags, frozen) ...
+  List tiers(co.tiers.size());
+  for (size_t i = 0; i < co.tiers.size(); ++i) {
+    const auto& t = co.tiers[i];
+    List grids(t.grids.size()); for (size_t g = 0; g < t.grids.size(); ++g) grids[g] = wp4h::grid_rec(t.grids[g]);
+    List its(t.iterations.size());
+    for (size_t k = 0; k < t.iterations.size(); ++k) {
+      const auto& it = t.iterations[k];
+      auto nv = [](const std::vector<double>& v) { return v.empty() ? R_NilValue : (SEXP)NumericVector(v.begin(), v.end()); };
+      its[k] = List::create(_["iteration"] = it.iter, _["grid"] = it.grid, _["rho_V"] = it.rho_V, _["grid_label"] = it.grid_label,
+                            _["log_Z_r"] = nv(it.logZ_r), _["island_best"] = nv(it.island_best),
+                            _["overall_best"] = it.complete ? wrap(it.overall_best) : R_NilValue,
+                            _["E1"] = it.complete ? wrap(it.E1) : R_NilValue, _["E2"] = it.complete ? wrap(it.E2) : R_NilValue,
+                            _["E3"] = it.complete ? wrap(it.E3) : R_NilValue, _["complete"] = it.complete);
+    }
+    tiers[i] = List::create(_["tier"] = t.tier, _["status"] = v4::calib::cal_status_name(t.status), _["triggers"] = wp4h::trig_list(t),
+                            _["schedule"] = t.pilot.schedule, _["forced_pilot_steps"] = t.pilot.forced, _["grids"] = grids, _["iterations"] = its,
+                            _["converged"] = t.status == v4::calib::CalStatus::ok ? wrap(t.converged) : R_NilValue,
+                            _["rebuilds"] = t.status == v4::calib::CalStatus::ok ? wrap(t.rebuilds) : R_NilValue,
+                            _["grid"] = wp4h::nullable(t.has_grid, t.grid), _["rho_V"] = wp4h::nullable(t.has_rho, t.rho_V),
+                            _["grid_label"] = t.has_grid ? (SEXP)wrap(t.grid_label) : R_NilValue,
+                            _["grid_source"] = t.status == v4::calib::CalStatus::ok ? wrap(t.grid_source) : R_NilValue);
+  }
+  const auto& f = co.flags;
+  List flags = List::create(_["escalated"] = f.escalated,
+                            _["escalation_blocked"] = f.escalation_blocked.empty() ? R_NilValue : (SEXP)wrap(f.escalation_blocked),
+                            _["checks_passed_calibration"] = f.checks_passed_calibration < 0 ? LogicalVector::create(NA_LOGICAL) : LogicalVector::create(f.checks_passed_calibration == 1),
+                            _["forced_pilot_steps"] = (double)f.forced_pilot_steps, _["grid_unconverged"] = f.grid_unconverged,
+                            _["triggers_fired"] = co.tiers.back().has_triggers ? (SEXP)wrap(f.triggers_fired) : R_NilValue,   // core: names(NULL) after a stop before the triggers
+                            _["grid_fallback"] = f.grid_fallback.empty() ? R_NilValue : (SEXP)wrap(f.grid_fallback));
+  List frozen = co.has_frozen ? List::create(_["grid"] = co.frozen.grid, _["grid_unrefined"] = co.frozen.grid_unrefined, _["tier"] = co.frozen.tier,
+                                             _["rho_V"] = wp4h::nullable(co.frozen.has_rho, co.frozen.rho_V), _["grid_label"] = co.frozen.grid_label)
+                              : List();
+  // ... and the calibration ledger from v4 code (core's export names, v3_core.cpp:363-370, 616-618, 728-736)
+  const v4::Ledger& L = oc.led;
+  List hpm = L.has_hpm ? List::create(_["model"] = to_orig(D, std::vector<int>(L.hpmS.begin(), L.hpmS.end())), _["F"] = L.hpmF,
+                                      _["provenance"] = wp4h::ev_list(L.hpm_ev)) : List();
+  List ledger = List::create(_["top"] = wp4h::store_list(L.top, D), _["leaders_gamma0"] = wp4h::store_list(L.lead0, D),
+                             _["leaders_gamma1"] = wp4h::store_list(L.lead1, D),
+                             _["island_best"] = NumericVector(L.island_best.begin() + 1, L.island_best.end()),
+                             _["logical"] = wp4h::counters(L, false));
+  List inh(oc.inherited.size());
+  for (size_t i = 0; i < oc.inherited.size(); ++i) { v4::ModelView v = oc.inherited.model(i); inh[i] = to_orig(D, std::vector<int>(v.begin(), v.end())); }
+  List inh_vals = List::create(_["F"] = oc.inherited.F, _["lg0"] = oc.inherited.lg0, _["logm"] = oc.inherited.logm, _["d"] = oc.inherited.d);
+  // stage records and stream positions per calibration island (review PR37 M-6)
+  List stg(oc.stages.size());
+  for (size_t i = 0; i < oc.stages.size(); ++i) {
+    const auto& a = oc.stages[i];
+    const size_t T = a.stages.size();
+    NumericVector phi(T), inc(T), ess(T), cum(T), dr(T), dm(T);
+    NumericMatrix mv(T, 11);
+    for (size_t t = 0; t < T; ++t) {
+      const auto& w = a.stages[t]; phi[t] = w.phi; inc[t] = w.inc; ess[t] = w.ess; cum[t] = w.cum; dr[t] = w.distinct_res; dm[t] = w.distinct_moved;
+      const v4::MoveStats& m = w.moves; double q[11] = {(double)m.gibbs, (double)m.gibbs_change, (double)m.us_exec, (double)m.us_acc, (double)m.us_self,
+        (double)m.ns_exec, (double)m.ns_acc, (double)m.ns_noscore, (double)m.ns_self, (double)m.in_exec, (double)m.in_acc};
+      for (int c = 0; c < 11; ++c) mv(t, c) = q[c];
+    }
+    stg[i] = List::create(_["tier"] = a.tier, _["iter"] = a.iter, _["island"] = a.island, _["partial"] = a.partial, _["log_Z"] = a.logZ,
+                          _["init_draws_hash"] = hex64(a.init_hash), _["position_start"] = (double)a.position_start, _["position_end"] = (double)a.position_end,
+                          _["phi"] = phi, _["log_increment"] = inc, _["ess"] = ess, _["cum_log_Z"] = cum, _["distinct_resampled"] = dr,
+                          _["distinct_moved"] = dm, _["moves"] = mv);
+  }
+  // calib.bin round trip (writer + reader)
+  List cb;
+  if (!calib_path.empty() && co.status == v4::calib::CalStatus::ok) {
+    v4::wp4io::CalibWrite cw; cw.mode = v4::fmt::M_COMPAT; cw.co = &co; cw.led = &oc.led; cw.inherited_flat = &oc.inherited;
+    cw.settings = &s; cw.k_store = oc.k_store;
+    cw.N = co.tier_final == 0 ? as<int>(settings["N0"]) : as<int>(settings["N1"]); cw.L = s.tiers[co.tier_final].L; cw.Hm = 4; cw.stages = oc.stages;
+    std::string hsh = v4::wp4io::write_calib(calib_path, cw);
+    v4::wp4io::CalibIn ci = v4::wp4io::read_calib(calib_path, D.p, D.K);
+    List inh2(ci.inherited.size());
+    for (size_t i = 0; i < ci.inherited.size(); ++i) inh2[i] = to_orig(D, std::vector<int>(ci.inherited[i].S.begin(), ci.inherited[i].S.end()));
+    v4::fmt::Reader R(calib_path);
+    cb = List::create(_["content_hash"] = hsh, _["grid"] = ci.grid, _["tier"] = ci.tier, _["N"] = ci.N, _["inherited"] = inh2,
+                      _["hpm"] = to_orig(D, std::vector<int>(ci.hpm.begin(), ci.hpm.end())), _["hpm_provenance"] = wp4h::ev_list(ci.hpm_ev),
+                      _["n_stage_islands"] = (int)R.entry("stage_meta").dims[0], _["n_stage_rows"] = (double)R.entry("stage_phi").dims[0]);
+  }
+  return List::create(_["status"] = v4::calib::cal_status_name(co.status), _["tier_final"] = co.tier_final, _["escalated"] = co.escalated,
+                      _["tiers"] = tiers, _["flags"] = flags, _["frozen"] = frozen, _["I_used"] = co.I_used, _["hpm"] = hpm, _["ledger"] = ledger,
+                      _["inherited"] = List::create(_["models"] = inh, _["hpm"] = hpm), _["inherited_values"] = inh_vals, _["stages"] = stg,
+                      _["k_store"] = oc.k_store, _["calib_bin"] = cb, _["seconds"] = secs);
 }
