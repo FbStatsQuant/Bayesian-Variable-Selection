@@ -243,3 +243,8 @@
   readings A3′/B3′); hypothesis moves approved. Conditions: witness-only "sharp" scope (card 6), no extra displayed
   constants. H5 input sent to HQ; READER_DELTA staged in READER row thm3 as pending until CP3. CP3 target Tue, latest Wed.
 - W3-DIST: BR1 (Astra break review) NOT BROKEN, 3 MINOR; L2 back — CP2 report expected from the lead.
+
+## 2026-11-15 21:05 CT — W3-DIST CP2 (soft): CONTINUE
+- **D38.** BR1 NOT BROKEN (3 MINOR repaired); all line checks VERIFIED first attempt; DIST12.md in L6. TC9 EQUAL (HQ);
+  WEAKER non-target rows to CP3; n₀ remark in REPORT only; unverified premises carried as "conditional on …". Next: L6 →
+  Sol diff check → REPORT → Astra sweep → citecheck → council → CP3; council-freeze date requested from the lead.

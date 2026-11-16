@@ -89,3 +89,4 @@
 - 20:59 — HQ merged citefix (main 66b67f7d) then PR #10 (86191e17); GitHub Actions CI live. c639c95 confirmed. Recorder: shared CI venv in SMC_Theory_Department/ci (BVS_NUMERICS_PY); W3-EDIT told to rebase.
 - 21:03 — heartbeat: PSHARP-R CP1 → GO (D37); DIST BR1 NOT BROKEN; Codex waits < 2 h.
 - 21:04 — HQ confirms PSHARP-R GO; H5 card (Cor A1 supersession, row 1.3) at CP3 with passing council; in-probability reading explicit in reader text (lead told).
+- 21:05 — DIST CP2 met (D38); HQ informed; council-freeze date requested.
