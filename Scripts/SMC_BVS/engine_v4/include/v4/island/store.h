@@ -338,6 +338,15 @@ class TopStore {
     tau.store(k->size() >= cap ? k->v.back() : NEG_INF);
     t_compact += std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
   }
+  // restore a previously published kept run (calibration: the round-start state before a prefix replay); the staging
+  // area is discarded. The caller has cleared every worker buffer.
+  void restore(std::shared_ptr<Kept> kr) {
+    std::lock_guard<std::mutex> lk(mu);
+    stage.clear();
+    { std::lock_guard<std::mutex> lk2(snap_mu); k = std::move(kr); }
+    gen.fetch_add(1, std::memory_order_acq_rel);
+    tau.store(k->size() >= cap ? k->v.back() : NEG_INF);
+  }
   // after loading a kept run (checkpoint): index, tau, generation
   void publish_loaded() { k->rebuild_index(); k->count_live(); gen.fetch_add(1); tau.store(k->size() >= cap ? k->v.back() : NEG_INF); }
   // I1 check: strictly sorted, no duplicates, size <= cap (valid after compact())

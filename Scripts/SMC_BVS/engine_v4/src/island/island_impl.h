@@ -80,14 +80,26 @@ v4::IslandResult to_record(const IslandRun& r) {
   o.r = r.r; o.N = r.N; o.T = r.T; o.L = r.L; o.Hm = r.Hm; o.logZ = r.logZ; o.init_hash = r.init_hash;
   o.stages = r.stages; o.terminal_moves = r.terminal_moves; o.terminal_distinct = r.terminal_distinct;
   o.rb_acc = r.rb_acc; o.pip = r.pip; o.rb_round = r.rb_round;
-  v4::LedgerConfig lc; lc.p = r.p; lc.islands = std::max(1, r.r); lc.leaders = false; lc.fresh_counters = false;
+  // calibration islands (WP3_DESIGN §1.11): the calibration ledger's configuration (islands 4, leaders on, caps 40p + 1,
+  // 20p, 20p; Ledger::merge refuses a mismatch); the pilot (unit 0) has no island_best of its own (core v3_ledger.h:106)
+  const bool calib = r.role != IslandRole::Final;
+  v4::LedgerConfig lc; lc.p = r.p; lc.islands = calib ? 4 : std::max(1, r.r); lc.leaders = calib; lc.fresh_counters = false;
   o.led.init(lc);
   o.led.has_hpm = r.hpm.has; o.led.hpmS = r.hpm.S; o.led.hpmF = r.hpm.F; o.led.hpm_logm = r.hpm.logm;
   o.led.hpm_ev.phase = r.hpm.phase; o.led.hpm_ev.mech = r.hpm.mech; o.led.hpm_ev.key = r.hpm.key;
+  // phi of the HPM event (core's EventCtx::phi): 0 at the initial draw, phi_t in bridge stage t, 1 in the terminal rounds
+  if (r.hpm.has) {
+    const EventKey& k = r.hpm.key;
+    o.led.hpm_ev.phi = k.xph == X_INIT ? 0.0 : k.xph == X_BRIDGE ? (k.stage < r.grid.size() ? r.grid[k.stage] : 0.0) : 1.0;
+  }
   std::memcpy(o.led.logical, r.logical, sizeof(r.logical));
-  if (r.r >= 0 && (size_t)r.r < o.led.island_best.size()) o.led.island_best[r.r] = r.island_best;
+  if (r.r >= 1 && (size_t)r.r < o.led.island_best.size()) o.led.island_best[r.r] = r.island_best;
   for (size_t i = 0; i < r.top_v.size(); ++i) o.led.top.offer(r.top_v[i], v4::ModelView(r.top_pool.data() + r.top_off[i], r.top_len[i]), r.top_hash[i]);
-  o.led.top.compact();
+  if (calib) {
+    for (size_t i = 0; i < r.lead0_v.size(); ++i) o.led.lead0.offer(r.lead0_v[i], v4::ModelView(r.lead0_pool.data() + r.lead0_off[i], r.lead0_len[i]), r.lead0_hash[i]);
+    for (size_t i = 0; i < r.lead1_v.size(); ++i) o.led.lead1.offer(r.lead1_v[i], v4::ModelView(r.lead1_pool.data() + r.lead1_off[i], r.lead1_len[i]), r.lead1_hash[i]);
+  }
+  o.led.compact();
   o.t.total = r.ks.t_total;
   return o;
 }
@@ -116,8 +128,10 @@ class IslandEngine {
   // tiled row-major copy of X for the label-major products: tile t holds columns [t*Bk, t*Bk + Bk) as n rows of Bk
   std::vector<avec<double>> scratch_P;              // per-thread product buffers, grown on demand, kept across passes
   avec<double> Xt; int Bk = 128, ntile = 0;
-  // compat (manager Q2): every uniform is the next draw of the island's v3 stream, in core's serial call order
-  std::unique_ptr<v4::CompatSource> csrc;
+  // compat (manager Q2): every uniform is the next draw of the island's v3 stream, in core's serial call order. The
+  // stream is the caller's (calibration roles: WP4 keeps streams 0-9 across rebuilds) or the island's own (final 9 + r).
+  std::unique_ptr<v4::CompatSource> csrc_own;
+  v4::CompatSource* csrc = nullptr;
   TopStore lead0, lead1;
   std::vector<double> rb_d;   // compat: core's cumulative double RB accumulator (core/cpp/v3_engine.h:128, :350-364)
   inline double U(const Address& a) { return csrc ? csrc->u(a) : uniform_at(a); }
@@ -127,7 +141,14 @@ class IslandEngine {
   std::chrono::steady_clock::time_point last_ckpt;
 
   struct RoundCtx { uint8_t xph; uint32_t ustage; uint32_t ev_stage, ev_round; int phase; double phi; bool measured; };
-
+  // calibration roles (WP3_DESIGN §1.11)
+  bool calib = false; uint8_t role_addr = R_FINAL;
+  int phase_of(int ph) const { return cfg.role == IslandRole::Pilot ? PH_PILOT : cfg.role == IslandRole::Diag ? PH_DIAG : ph; }
+  // round-start state for the ledger so far on a numerical failure (calibration, law mode): the published kept runs
+  // (immutable), the particles; the master tally is only changed at step boundaries
+  struct RoundSnap { bool valid = false; bool init = false; RoundCtx rc{}; std::vector<Particle> P;
+                     std::shared_ptr<Kept> top, lead0, lead1; } snap;
+  uint32_t last_fail_particle = UINT32_MAX;
   // ---- numerical failures (review PR21 M1) -------------------------------------------------------------------
   // An island fails at the first CONSUMED event whose score fails. Inside an OpenMP region nothing throws: failures are
   // recorded here (the smallest particle index wins, so the choice does not depend on the schedule) and rethrown after
@@ -156,7 +177,7 @@ class IslandEngine {
   void throw_if_failed() {
     std::lock_guard<std::mutex> lk(fail.mu);
     if (!fail.has) return;
-    std::string m = fail.msg; int kd = fail.kind; fail.has = false;
+    std::string m = fail.msg; int kd = fail.kind; fail.has = false; last_fail_particle = fail.particle;
     if (kd == FK_INTERNAL) throw v4::Error(v4::Status::internal_error, m);
     if (kd == FK_RESOURCE) throw v4::Error(v4::Status::resource_limit, m);
     throw v4::NumericalFailure(m);
@@ -168,8 +189,11 @@ class IslandEngine {
     for (int t = 0; t < NT; ++t) { tl.emplace_back(new ThreadLedger()); tl.back()->top = &top; scorers.emplace_back(new BitScorer(&D)); }
     master.top = &top;
     if (cfg.compat) {
-      csrc.reset(new v4::CompatSource(cfg.seed, v4::compat_stream(R_FINAL, (uint8_t)cfg.tier, cfg.island)));
+      if (cfg.compat_src) csrc = cfg.compat_src;
+      else { csrc_own.reset(new v4::CompatSource(cfg.seed, v4::compat_stream(R_FINAL, (uint8_t)cfg.tier, cfg.island))); csrc = csrc_own.get(); }
     }
+    calib = cfg.role != IslandRole::Final;
+    role_addr = cfg.role == IslandRole::Pilot ? R_PILOT : cfg.role == IslandRole::Diag ? R_DIAG : R_FINAL;
     if (cfg.leaders) {   // calibration islands / golden tests only (INTERFACES v0.1.7: no final-run leader stores)
       lead0.init(20ULL * (uint64_t)p, Order::LEX); lead1.init(20ULL * (uint64_t)p, Order::LEX);   // core/cpp/v3_ledger.h:78
       for (auto& t : tl) { t->lead0 = &lead0; t->lead1 = &lead1; }
@@ -183,14 +207,19 @@ class IslandEngine {
 
   // --- addresses ---------------------------------------------------------------------------------------------
   inline Address addr(uint8_t xph, uint32_t ustage, uint32_t particle1, uint32_t position, uint32_t slot) const {
-    Address a; a.seed = cfg.seed; a.role = R_FINAL; a.tier = 0; a.iter = 0; a.island = cfg.island;
+    Address a; a.seed = cfg.seed; a.role = role_addr; a.tier = calib ? (uint8_t)cfg.tier : 0; a.iter = calib ? (uint8_t)cfg.iter : 0; a.island = cfg.island;
     a.xph = xph; a.stage = ustage; a.particle = particle1; a.position = position; a.slot = slot; return a;
   }
   // INTERFACES v0.1.5 §4.2: final island r: (FINAL, frozen tier, iter -1, r, xph, stage, round, particle, q, sub);
   // sub = within-step ordinal: Gibbs held 0 (never offered), flip 1; U / N / I proposals and the initial draw 0.
+  // calibration island: (CALIB, e, k, r, ...) with MEASURED round L + h (RoundCtx::ev_round).
   inline EventKey key(const RoundCtx& rc, uint32_t particle1, uint32_t position, uint8_t sub = 0) const {
-    EventKey k; k.seg = SG_FINAL; k.tier = (uint8_t)cfg.tier; k.iter = -1; k.unit = cfg.island; k.xph = rc.xph;
+    EventKey k = base_key(); k.xph = rc.xph;
     k.stage = rc.ev_stage; k.round = rc.ev_round; k.particle = particle1; k.position = position; k.sub = sub; return k;
+  }
+  inline EventKey base_key() const {
+    EventKey k; k.seg = calib ? v4::SG_CALIB : SG_FINAL; k.tier = (uint8_t)cfg.tier; k.iter = calib ? (int8_t)cfg.iter : (int8_t)-1; k.unit = cfg.island;
+    return k;
   }
   // Manager decision Q2b: every accepted state carries the full Bit score of its model (one value per model state;
   // removes class-A path dependence of particle states). Bit form: the flip score already has these bits.
@@ -628,6 +657,7 @@ class IslandEngine {
   }
 
   void round(const RoundCtx& rc) {
+    if (calib) { snap.valid = true; snap.init = false; snap.rc = rc; snap.P = P; snap.top = top.k; snap.lead0 = lead0.k; snap.lead1 = lead1.k; }
     if (rc.measured) std::fill(rb_cur.begin(), rb_cur.end(), (u128)0);
     if (cfg.kernel == KernelKind::LabelMajor) {
       int G = std::max(1, cfg.G);
@@ -637,6 +667,7 @@ class IslandEngine {
       if (rc.measured) for (auto& v : rb_thread) std::fill(v.begin(), v.end(), (u128)0);
       #pragma omp parallel for schedule(dynamic, 1) num_threads(NT)
       for (int i = 0; i < cfg.N; ++i) {
+        if (csrc && fail.has) continue;   // compat (serial): stop at the first failure, as core
         int th = omp_get_thread_num();
         pm_round(i, rc, *tl[th], *scorers[th], rc.measured ? &rb_thread[th] : nullptr);
       }
@@ -848,6 +879,49 @@ class IslandEngine {
     if (step == cfg.stop_after_step) stop = true;
   }
 
+  // initial draw of particle i (core/cpp/v3_engine.h:285-297): pi_0 draw, score, one INIT event. A failed score is
+  // recorded (no event), as core's eval throws before its event.
+  void init_particle(int i, ThreadLedger& L, BitScorer& sc) {
+    Model S;
+    if (csrc) draw_pi0(st, [&](uint32_t slot) { return U(addr(X_INIT, 0, (uint32_t)i + 1, 0, slot)); }, S);
+    else {
+      const Address a0 = addr(X_INIT, 0, (uint32_t)i + 1, 0, 0);
+      const v4::Ctr4 ctr = v4::address_ctr(a0); const v4::Key2 kk = v4::address_key(a0);
+      draw_pi0_fast(st, [&](uint32_t slot) { return U(addr(X_INIT, 0, (uint32_t)i + 1, 0, slot)); },
+                    [&](const uint32_t* sl, double* out) { philox8_word(ctr.data(), kk.data(), 0, sl, out); }, S);
+    }
+    try { fill(P[i], S, sc.score(S).logm); }
+    catch (const v4::NumericalFailure& e) { fail.record((uint32_t)i, "initial draw, particle " + std::to_string(i + 1) + ": " + e.what()); return; }
+    catch (const std::bad_alloc&) { fail.record(UINT32_MAX, "out of memory inside a parallel region", FK_RESOURCE); return; }
+    EventKey k = base_key(); k.xph = X_INIT; k.particle = (uint32_t)i + 1;
+    offer_particle(L, P[i], phase_of(PH_FINAL_INIT), ME_INIT, k);
+  }
+
+  // Ledger so far after a numerical failure (calibration roles; WP3_DESIGN §1.11): core's shared ledger holds the SERIAL
+  // prefix -- every event before the failing score in core's order (earlier rounds; particles 1..i-1 of the failing
+  // round or initial draw; particle i up to the failing score). The label-major (or threaded particle-major) round
+  // offered events of other particles too, so the round-start state is restored (published kept runs, tallies, the
+  // particles) and the prefix is replayed particle-major, serially, at the same addresses (same events and offers).
+  // Compat runs serially and stops at the first failure: its ledger is the prefix already.
+  void rebuild_prefix() {
+    const uint32_t fi = last_fail_particle;
+    for (auto& t : tl) {
+      t->buf.clear(); t->buf.snap.reset(); t->buf.snap_gen = ~0ull;
+      t->buf0.clear(); t->buf0.snap.reset(); t->buf0.snap_gen = ~0ull; t->buf1.clear(); t->buf1.snap.reset(); t->buf1.snap_gen = ~0ull;
+      t->reset_counters();
+    }
+    top.restore(snap.top);
+    if (cfg.leaders) { lead0.restore(snap.lead0); lead1.restore(snap.lead1); }
+    ThreadLedger& L = *tl[0]; BitScorer& sc = *scorers[0];
+    if (snap.init) {
+      for (uint32_t i = 0; i < fi && i < (uint32_t)cfg.N; ++i) init_particle((int)i, L, sc);
+    } else {
+      P = snap.P;
+      for (uint32_t i = 0; i <= fi && i < (uint32_t)cfg.N; ++i) pm_round((int)i, snap.rc, L, sc, nullptr);
+    }
+    { std::lock_guard<std::mutex> lk(fail.mu); fail.has = false; }   // the replay meets the same failure at particle fi
+  }
+
   // ---- the island ---------------------------------------------------------------------------------------------
   IslandRun run() {
     auto tstart = std::chrono::steady_clock::now();
@@ -858,6 +932,7 @@ class IslandEngine {
     std::vector<double> grid = cfg.adaptive ? std::vector<double>{0.0} : cfg.grid;
     res.r = (int)cfg.island; res.N = N; res.T = T; res.L = L; res.Hm = Hm; res.p = p;
     rb_cur.assign(p, 0); rb_tot.assign(p, 0); if (csrc) rb_d.assign(p, 0.0);
+    if (csrc) res.stream_start = csrc->g.count;
     if (cfg.kernel == KernelKind::ParticleMajor) rb_thread.assign(NT, std::vector<u128>(p, 0));
     if (cfg.kernel == KernelKind::LabelMajor) {   // tiled row-major X (zero-padded last tile)
       ntile = (p + Bk - 1) / Bk; Xt.assign((size_t)ntile * Bk * D.n, 0.0);
@@ -872,21 +947,12 @@ class IslandEngine {
       if (done_step < 0) {
         // initial draws (core/cpp/v3_engine.h:285-297)
         P.assign(N, Particle());
+        if (calib) { snap = RoundSnap(); snap.valid = true; snap.init = true; snap.top = top.k; snap.lead0 = lead0.k; snap.lead1 = lead1.k; }
         #pragma omp parallel for schedule(dynamic, 16) num_threads(NT)
         for (int i = 0; i < N; ++i) {
-          int th = omp_get_thread_num(); Model S;
-          if (csrc) draw_pi0(st, [&](uint32_t slot) { return U(addr(X_INIT, 0, (uint32_t)i + 1, 0, slot)); }, S);
-          else {
-            const Address a0 = addr(X_INIT, 0, (uint32_t)i + 1, 0, 0);
-            const v4::Ctr4 ctr = v4::address_ctr(a0); const v4::Key2 kk = v4::address_key(a0);
-            draw_pi0_fast(st, [&](uint32_t slot) { return U(addr(X_INIT, 0, (uint32_t)i + 1, 0, slot)); },
-                          [&](const uint32_t* sl, double* out) { philox8_word(ctr.data(), kk.data(), 0, sl, out); }, S);
-          }
-          try { fill(P[i], S, scorers[th]->score(S).logm); }
-          catch (const v4::NumericalFailure& e) { fail.record((uint32_t)i, "initial draw, particle " + std::to_string(i + 1) + ": " + e.what()); continue; }
-          catch (const std::bad_alloc&) { fail.record(UINT32_MAX, "out of memory inside a parallel region", FK_RESOURCE); continue; }
-          EventKey k; k.seg = SG_FINAL; k.tier = (uint8_t)cfg.tier; k.iter = -1; k.unit = cfg.island; k.xph = X_INIT; k.particle = (uint32_t)i + 1;
-          offer_particle(*tl[th], P[i], PH_FINAL_INIT, ME_INIT, k);
+          if (csrc && fail.has) continue;   // compat (serial): stop at the first failure, as core (no further draws)
+          int th = omp_get_thread_num();
+          init_particle(i, *tl[th], *scorers[th]);
         }
         throw_if_failed();
         uint64_t hh = 0x243F6A8885A308D3ULL;
@@ -905,7 +971,7 @@ class IslandEngine {
           if (cfg.adaptive) {   // core/cpp/v3_engine.h:309-313 with the pilot rule of core/cpp/v3_calib.h:30-46
             std::vector<double> dv(N); for (int i = 0; i < N; ++i) dv[i] = P[i].d;
             NextPhi np = pilot_next_phi(dv, phi_prev, cfg.adaptive_H > 0 ? cfg.adaptive_H : (double)N, cfg.adaptive_Te);
-            grid.push_back(np.phi);
+            grid.push_back(np.phi); if (np.forced) ++res.forced;
             if (np.phi == 1.0) T = t;   // the last bridge stage
           }
           double phi_new = grid[t], dphi = phi_new - phi_prev;
@@ -919,18 +985,18 @@ class IslandEngine {
           std::vector<Particle> Pn(N); for (int i = 0; i < N; ++i) Pn[i] = P[a[i]]; P.swap(Pn);
           StageRow row; row.phi = phi_new; row.inc = inc; row.ess = ess; row.cum = logZ; row.distinct_res = distinct();
           res.ks.t_barrier += std::chrono::duration<double>(std::chrono::steady_clock::now() - tb).count();
-          RoundCtx rc{X_BRIDGE, (uint32_t)t, (uint32_t)t, (uint32_t)t, PH_FINAL_BRIDGE, phi_new, false};
+          RoundCtx rc{X_BRIDGE, (uint32_t)t, (uint32_t)t, (uint32_t)t, phase_of(PH_FINAL_BRIDGE), phi_new, false};
           round(rc);
           sync_ledgers(); row.moves = take_moves(); row.distinct_moved = distinct();
           res.stages.push_back(row);
         } else if (step <= T + L) {   // burn-in round l
           int l = step - T;
-          RoundCtx rc{X_BURN, (uint32_t)l, (uint32_t)T, (uint32_t)l, PH_BURN_IN, 1.0, false};
+          RoundCtx rc{X_BURN, (uint32_t)l, (uint32_t)T, (uint32_t)l, phase_of(PH_BURN_IN), 1.0, false};
           round(rc);
           sync_ledgers(); res.terminal_moves.push_back(take_moves()); res.terminal_distinct.push_back(distinct());
         } else {   // measured round h with RB
           int h = step - T - L;
-          RoundCtx rc{X_MEASURED, (uint32_t)h, (uint32_t)T, (uint32_t)h, PH_MEASURED, 1.0, true};
+          RoundCtx rc{X_MEASURED, (uint32_t)h, (uint32_t)T, (uint32_t)(calib ? L + h : h), phase_of(PH_MEASURED), 1.0, true};
           std::vector<double> before; if (csrc) before = rb_d;
           round(rc);
           std::vector<double> rr(p);
@@ -976,11 +1042,16 @@ class IslandEngine {
       }
     } catch (const NumericalFailure& e) {
       res.status = 2; res.reason = e.what();
+      if (calib && !csrc && snap.valid) rebuild_prefix();   // the ledger so far = core's serial prefix
     } catch (const v4::Error& e) {
       if (e.st != v4::Status::resource_limit) throw;
       res.status = 3; res.reason = e.what();
     } catch (const std::bad_alloc&) {
       res.status = 3; res.reason = "resource_limit: out of memory";
+    }
+    if (calib && (res.status == 2 || res.status == 3)) {   // the ledger so far (WP4 merges it; core's ledger is shared)
+      try { sync_ledgers(); } catch (const std::bad_alloc&) { res.status = 3; res.reason = "resource_limit: out of memory"; }
+      res.partial = res.status == 3;
     }
     res.T = T; res.grid = grid;
     if (stop && res.status == 0) { res.status = 1; res.reason = "interrupted after checkpoint (stop_after_step)"; }
@@ -992,7 +1063,7 @@ class IslandEngine {
     }
     std::memcpy(res.logical, master.logical, sizeof(res.logical));
     res.island_best = master.island_best; res.hpm = master.hpm;
-    if (res.status == 0 || res.status == 1) {   // only a completed (or test-interrupted) island reports its store: a failed
+    if (res.status == 0 || res.status == 1 || calib) {   // only a completed (or test-interrupted) island reports its store: a failed
                                                 // or refused island may hold part of an unfinished round (GUARD-W, review m1)
       Kept& K = *top.k;      // moved, not copied (review m8b; the run is over)
       res.top_v = std::move(K.v); res.top_hash = std::move(K.hash); res.top_off = std::move(K.off); res.top_len = std::move(K.len); res.top_pool = std::move(K.pool);
@@ -1000,6 +1071,7 @@ class IslandEngine {
     res.ks.kept_live_max = kept_live_max().load();
     if (cfg.keep_terminal) for (auto& x : P) res.terminal.push_back(x.S);
     if (csrc) { res.compat = true; res.stream_count = csrc->g.count; }
+    res.role = cfg.role; res.tier = cfg.tier; res.iter = cfg.iter;
     if (cfg.leaders) {
       res.leaders = true;
       res.lead0_v = std::move(lead0.k->v); res.lead0_hash = std::move(lead0.k->hash); res.lead0_off = std::move(lead0.k->off); res.lead0_len = std::move(lead0.k->len); res.lead0_pool = std::move(lead0.k->pool);
@@ -1040,18 +1112,30 @@ MemPlan plan_island(const Data& D, const Start& st, const IslandConfig& cfg, Mem
 #endif
 
 template <Arith A>
-IslandRun run_island(const Data& D, const Start& st, const Neighbours& nb, const IslandConfig& cfg) {
+IslandRun run_island(const Data& D, const Start& st, const Neighbours& nb, const IslandConfig& cfg_in) {
+  IslandConfig cfg = cfg_in;
+  const bool calib = cfg.role != IslandRole::Final;
+  if (calib) {   // WP3_DESIGN §1.11 (agreed with WP4)
+    if (cfg.role == IslandRole::Pilot && (cfg.island != 0 || cfg.iter != 0)) throw v4::Error(v4::Status::invalid_input, "run_island: the pilot is island 0, iteration 0");
+    if (cfg.role == IslandRole::Diag && (cfg.island < 1 || cfg.island > 4 || cfg.iter < 1)) throw v4::Error(v4::Status::invalid_input, "run_island: a diagnostic island is 1..4 at iteration k >= 1");
+    if (cfg.tier > 3 || cfg.iter > 63) throw v4::Error(v4::Status::invalid_input, "run_island: calibration tier < 4 and iteration < 64 (INTERFACES §3)");
+    if (!cfg.ckpt_path.empty() || cfg.stop_after_step >= 0) throw v4::Error(v4::Status::invalid_input, "run_island: calibration islands have no checkpoints");
+    if (cfg.compat && !cfg.compat_src) throw v4::Error(v4::Status::invalid_input, "run_island: a compat calibration island needs the caller's stream (compat_src)");
+    cfg.leaders = true;   // the calibration leader stores feed V (D-7)
+  } else if (cfg.island < 1) throw v4::Error(v4::Status::invalid_input, "run_island: a final island is r >= 1");
   if (!cfg.adaptive && (cfg.grid.size() < 2 || cfg.grid.front() != 0.0 || cfg.grid.back() != 1.0)) throw v4::Error(v4::Status::invalid_input, "run_island: grid must run from 0 to 1");
   for (size_t i = 1; i < cfg.grid.size(); ++i) if (!(cfg.grid[i] > cfg.grid[i - 1])) throw v4::Error(v4::Status::invalid_input, "run_island: grid not strictly increasing (I3)");
   if (cfg.adaptive && !cfg.ckpt_path.empty()) throw v4::Error(v4::Status::invalid_input, "run_island: the adaptive schedule has no checkpoints");
-  if (cfg.compat && (A != Arith::Bit || cfg.kernel != KernelKind::ParticleMajor || cfg.threads != 1 || cfg.adaptive))
-    throw v4::Error(v4::Status::invalid_input, "run_island: compat mode needs Arith::Bit, the particle-major kernel, 1 thread and a fixed grid (serial v3 streams)");
+  if (cfg.compat && (A != Arith::Bit || cfg.kernel != KernelKind::ParticleMajor || cfg.threads != 1))
+    throw v4::Error(v4::Status::invalid_input, "run_island: compat mode needs Arith::Bit, the particle-major kernel and 1 thread (serial v3 streams)");
   if (A == Arith::Bit && cfg.kernel == KernelKind::LabelMajor && !cfg.allow_test_kernels)
     throw v4::Error(v4::Status::invalid_input, "run_island: the bit-form label-major kernel is test-only (D-21, manager Q1); theory mode runs particle-major");
   if (cfg.stop_after_step >= 0 && cfg.ckpt_path.empty()) throw v4::Error(v4::Status::invalid_input, "run_island: stop_after_step needs a checkpoint path");
   if (cfg.G < 0 || cfg.G > 256) throw v4::Error(v4::Status::invalid_input, "run_island: G must be in 0..256 (0 = chosen by mem_budget; manager Q3)");
-  if (D.p >= 100000 && !(cfg.k_store > 0) && !cfg.k_store_optional)   // review PR24 r1 / PR26 B1: no real run plans without it
-    throw v4::Error(v4::Status::invalid_input, "run_island: p >= 1e5 needs k_store (the calibration-measured mean stored |S|, calib.bin)");
+  // review PR24 r1 / PR26 B1, re-check m2: a final island admitted under a memory budget at p >= 1e5 needs calib.bin's
+  // measured k_store; calibration islands (before calib.bin exists) plan from the setup: max(8, q90(pi_0 size) + 1, k_store)
+  if (!calib && cfg.mem_budget && D.p >= 100000 && !(cfg.k_store > 0) && !cfg.k_store_optional)
+    throw v4::Error(v4::Status::invalid_input, "run_island: a final island at p >= 1e5 needs k_store (the calibration-measured mean stored |S|, calib.bin)");
   // admission (manager Q3/Q4, review PR24 P2): plan_island (k = max(8, q90(pi_0 size) + 1, k_store); G = the largest
   // value <= 256 that fits). The step-boundary re-check uses the store's actual pool.
   MemSizes z; double k_est = 0; int G = 0;
