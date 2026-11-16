@@ -570,3 +570,8 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - the honest-limit line is REQUIRED, with the intersection event made clear;
   - certification frequency from numerics, especially on strong-factor designs; until it is reported, the row is not called the remedy for 3.1.
   - One HQ GO covers label removal and the reader swap after the diff.
+- 2026-11-16 ~04:45 CT. W3-MISR-R CP3: R3 PASS (sol 10.0 / opus 9.6), acceptance staging GO.
+  - H5 card 10 (row 1.4): the consultant AGREES.
+  - Supersessions GO: Cor-G(a), Cor-G(b), and Cor-H (clauses (a),(b) only; tombstone notes the KL generic-intercept reading is not carried; erratum if the base was false).
+  - Reader thm4 v0.4: retitle to omitted Gaussian predictors; honest-limit line; relation of rows 1.2/1.4.
+  - Post-freeze: rider P1; check X (CorGb-plus as a row 1.2 master in place of W2-APP:POST?).
