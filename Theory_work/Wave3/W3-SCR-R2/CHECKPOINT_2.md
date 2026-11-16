@@ -86,3 +86,12 @@ files, **0 hits** (exit 1). No manifest under W3-SCR exists on main. The only li
 Both seat threads finished and settled; no agents cancelled. R3 seat scratch folders removed (Sol's was empty; Opus's
 held only a diff copy). Remaining temp: `/home/fb31/SMC_Theory_Department/tmp/20261116-W3-SCR-R2-leg2/` (before/after
 line-sha tables, `bind_R3.out`, `linesha.sh`); delete after the manager reads this. R2 temp folders as listed in CHECKPOINT.md.
+
+## CP3 package addendum: row 3.7 reader delta (2026-11-16 04:04 CST, manager request, after bind)
+`reviews/READER_DELTA.md`: row 3.7 (Theorem 8) for HQ → W3-READER via the H5 card.
+- Form (a): the abstract clause stays plain and names κ, b, M, σ as fixed in n, with c₁ defined in place. Theorem 8′ is
+  plain, since A-inf is ACCEPTed.
+- Both apply **only after acceptance**: until the recorder replaces the INTERIM LABEL, row 3.7 stays in form (b1).
+- No bridge; changelog tag EQUAL. Source pinned: READER_VERSIONS.md thm8 :727–816 @e20d287f, sha 8b956c02….
+- Nothing written in W3-READER or W3-SCR; MANIFEST_R3 re-verified after writing (below).
+``
