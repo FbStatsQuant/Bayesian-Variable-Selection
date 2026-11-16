@@ -1,4 +1,4 @@
-# W3-AUDIT — are our assumptions reasonable? AUDIT v1.2 (after the API triage, 2026-11-16)
+# W3-AUDIT — are our assumptions reasonable? AUDIT v1.3 (after reading the supplement, 2026-11-16)
 
 Author: audit Fable (Claude Fable 5.2, high). Branch `theory/W3-AUDIT`. Steps 1 (assumptions) and 2 (track D) of the brief, after
 one revision round. v1.1 applies the independent check of my own computations (`reviews/AUDITCALC_check_opus.md`, 2d7c2b90: none
@@ -8,18 +8,20 @@ refuted, four corrected) and cites track C (`track_C/RESULTS.md` @ 4f0f9a82, int
 @ 7eb818e6; **READER pre-freeze**, to be re-pinned to the READER commit of the CP3 freeze) and their masters. Statuses: `Theory_work/INFRA/registry/claims.tsv` of this worktree (main a7fc5093), quoted
 verbatim; council suffixes cut and marked "…". Track-A inventory: `work/A_inventory.md` (Opus helper, 2e6c7d86), checked in
 §6. Song and Liang (2015): the paper itself (JRSS-B 77(5), 947–972; `/home/fb31/SMC_Theory_Department/refs/Song_Liang_2015.pdf`,
-sha256 `315c247c236b5f33…`), journal pages; supplement not inspected. Track-B dossiers B1–B12: `TRACK_B.md`.
+sha256 `315c247c236b5f33…`), journal pages; the supplement (`Song_Liang_2015_supplement.pdf`, same folder, sha256 `a584b328c859c087…`) was read
+for v1.3 (pp. 13–16 as images; pp. 1, 4, 5, 6, 12, 17 as text), cited as "supp p.". Track-B dossiers B1–B12: `TRACK_B.md`.
 
 **Columns.** *Track*: **A** = mathematical object (prior, distribution, divergence, kernel or algorithm property; must be
 proved), **B** = design or data (must be explained), **M** = stated idealisation of the machine or the random numbers (not
 provable; disclosed). *Status or dossier*: for A, the claim that discharges it and its registry status; for B, the dossier.
 
 **One-paragraph answer.** All our simulation designs satisfy the assumptions of the two posterior theorems, strong
-factors included. Those assumptions are of the same kinds as Song–Liang's: two are the same (model, exact sparsity), and
-where the others differ ours are the stronger as stated — the range of p, a fixed instead of a vanishing eigenvalue
-floor, fixed nonzero coefficients, the row law, and a c/n collinearity floor that their Hellinger theorems do not have —
-for stronger conclusions; none of these differences excludes a design of ours (labels made precise in v1.2 after a
-blind second opinion, `TRACK_B.md` §T). The reported-model theorem adds two method-specific
+factors included. Those assumptions are of the same kinds as Song–Liang's and are neither uniformly stronger nor
+uniformly weaker. Against their selection theorem (Theorem S, supp p. 13) we ask a narrower range of p and a fixed
+floor on bounded sets, and less elsewhere: no upper eigenvalue bound, a 1/n-level floor on O(log n) columns and nothing
+on larger sets, no tuning of the prior, and smaller signals in the fixed-design theorem. Against their Hellinger
+theorems we add the range of p, a c/n collinearity floor and a row law. Our conclusions are stronger, and no
+difference excludes a design of ours (`TRACK_B.md` §S, §T, §T2). The reported-model theorem adds two method-specific
 design conditions with Song–Liang counterparts (their Condition 5 and their remark (a), p. 958); it excludes pervasive
 factors at p ≫ √n. The printed-estimates theorem (row 3.6) is correct as stated and has a narrow reach: its "no leakage"
 condition holds on independent designs only (B11; §9). On the mathematical side, rows 1.x and 2.1 have no open item; rows 3.1, 3.5
@@ -38,16 +40,16 @@ W3-POST:Thm-1"; Thm 1′ `W3-POST2:E@1.0.5` "PROVED-CHECKED, conditional on W2-A
 | Assumption | Track | Status or dossier | Song–Liang (2015) |
 |---|---|---|---|
 | Gaussian errors, fixed variance (S1) | B | B1 | same: model (1), density (2), p. 950 |
-| p ≤ n^A (S2) | B | B2 | stronger above (Cor 1, p. 954: P_n < exp(Cn^α)); weaker below (P_n ≻ n^θ, p. 950) |
+| p ≤ n^A (S2) | B | B2 | stronger above: by little against Theorem S (P_n < n^{κ log n}, supp p. 16), by much against Cor 1, p. 954 (Hellinger only); weaker below (P_n ≻ n^θ, p. 950) |
 | The prior as coded (a setting, not an assumption) | A | prior facts are proved inside `SOP:TH09` (status above); no open item | they tune: inclusion r_n/P_n, cap r̄_n, (6) p. 951, under conditions (9)–(14), p. 952; ours has no tuning |
 | s₀ fixed (Thm 1 (A2), Thm 2 (A2)) | B | B3 | same: (4), p. 950 |
 | Bounded coefficients (Thm 1 (A3)) | B | B4 | comparable to (3), p. 950, with \|x_i\| ≤ 1 (their Thm 1); stronger than what they state under (4) (no bound) |
-| Sparse eigenvalue floor on bounded sets (Thm 1 (A4)); floor on S₀ + residual-signal margin (Thm 1′ (A4′)); population floor (Thm 2 (A3)) | B | B5 | stronger than Condition 3, p. 955, in level (fixed against vanishing; sufficient forms pp. 955–956); set size not ordered for Thm 2 (larger than theirs when r̄_n ≺ log n; smaller for the bounded-set floors); stronger conclusion than their Thm 3 |
-| No near-collinearity among O(log n) columns (Thm 1 (A5)) | B | B6 | against Thm 3 / Condition 3, p. 955: weaker in level on sets containing a true predictor (g₀/n against ≻ ε_n²); additional on null-only sets, where they ask nothing (specificity not controlled, p. 956) |
-| Beta-min at √(log n/n) (Thm 1 (A6)); fixed nonzero signals (Thm 2 (A2)) | B | B4 | stronger than what they state: no beta-min and no size condition in Thm 3, p. 956 |
+| Sparse eigenvalue floor on bounded sets (Thm 1 (A4)); floor on S₀ + residual-signal margin (Thm 1′ (A4′)); population floor (Thm 2 (A3)) | B | B5 | against Theorem S (22)–(23), supp p. 13: not ordered — stronger in the fixed level on bounded sets; weaker in having no upper bound and nothing on larger sets. Against Condition 3, p. 955: stronger in level, set size not ordered |
+| No near-collinearity among O(log n) columns (Thm 1 (A5)) | B | B6 | against Theorem S (22): weaker (g₀/n against n·l_n with l_n ≻ r̄_n log P_n / n, all sets). Against Thm 3 / Condition 3, p. 955: weaker on sets with a true predictor, additional on null-only sets |
+| Beta-min at √(log n/n) (Thm 1 (A6)); fixed nonzero signals (Thm 2 (A2)) | B | B4 | fixed signals: same as the setting of their proofs (supp pp. 5, 15), not stated in their theorems; Thm 1's beta-min: weaker (smaller signals allowed) |
 | Rows i.i.d. Gaussian (Thm 2) | B | B7 | stronger than Condition 1, p. 953, on centred unit-variance predictors; not ordered on raw predictors (any mean m_n is allowed here) |
 | Fixed-to-random design transfer | A | `C-MIS:LemDR@1.0.0` "R02 VERIFIED; council R07/R08 PASS", used inside `W2-APP:POST` | not needed (random design throughout) |
-| HPM, MPM, PIPs from 1 − π(S₀ \| y) | A | `C-PACK:SL0@1.0.1` "PROVED-CHECKED"; `W3-T03ACC:T03S.2`, `T03S.3` "PROVED-CHECKED; council R1, …" | Thm 3 gives screening only; MAP consistency is their Theorem S (supplement, not inspected) |
+| HPM, MPM, PIPs from 1 − π(S₀ \| y) | A | `C-PACK:SL0@1.0.1` "PROVED-CHECKED"; `W3-T03ACC:T03S.2`, `T03S.3` "PROVED-CHECKED; council R1, …" | Thm 3 gives screening only; their Theorem S (supp p. 13) gives the posterior mode only, (24): max_{k≠t} π(k \| D_n)/π(t \| D_n) →_p 0, with no rate; ours implies it |
 
 Open on the mathematical side (claims, not assumptions): the expectation display of Thm 1 is conditional on
 `W3-POST:Prop-LB@1.0.0` and `W3-POST:Lemma-1a'@1.0.0`, both "PROVED (by this seat, unchecked)" (§6, items X2, X3).
@@ -66,7 +68,7 @@ W3-POST:Thm-1; council R2, …"; `W3-DIST:Cor-C@1.0.0` "PROVED-CHECKED, conditio
 | (A5) bounded standardised signal | B | B4 | comparable to (3) with \|x_i\| ≤ 1 (their Thm 1); stronger than what they state under (4) |
 | (A6) of Thm 9B: fixed floor on bounded sets; beta-min | B | B5, B4 | no parametric-rate result in SL |
 | Hellinger distance facts (averaged conditional = joint; d² = 2d_H²) | A | `W3-DIST:H@1.0.0` "PROVED-CHECKED; council R2, …" | same distance (§2.1.2, p. 952) |
-| Cor 9C: returned list and its log-weights are as described | A | code facts `W3-SAMP:CC@1.1.2` "CODE-CHECKED (lead; SL1, LC1, SW1, both council seats)"; Cor 9C uses only the deterministic clauses of `W3-DIST:DIST-C` (§6, X4) | none: SL prove nothing on their sampler's output (§3.2, p. 959) |
+| Cor 9C: returned list and its log-weights are as described | A | code facts `W3-SAMP:CC@1.1.2` "CODE-CHECKED (lead; SL1, LC1, SW1, both council seats)"; Cor 9C uses only the deterministic clauses of `W3-DIST:DIST-C` (§6, X4) | weaker counterpart: limits in the number of iterations at fixed data (supp pp. 12–13, 16–17); nothing at a finite budget or jointly in n |
 | Cor 9C: exact arithmetic (EX-A) | M | disclosed in the status | — |
 
 ## 3. Core theorem 3 — the coded algorithm reports the true model (row 3.1; Thm 6)
@@ -78,7 +80,7 @@ Masters: `W3-RM2:RM2-R@1.0.3` "PROVED-CHECKED, conditional on W2-APP:POST; input
 | Assumption | Track | Status or dossier | Song–Liang (2015) |
 |---|---|---|---|
 | Rows i.i.d. Gaussian; (S1), (S2) | B | B7, B1, B2 | stronger than Condition 1, p. 953, on centred unit-variance predictors; not ordered on raw predictors |
-| (A2) s₀ fixed, fixed nonzero signals | B | B3, B4 | sparsity: same as (4), p. 950; signal size: stronger than what they state (none) |
+| (A2) s₀ fixed, fixed nonzero signals | B | B3, B4 | sparsity: same as (4), p. 950; signal size: same as the setting of their proofs (supp pp. 5, 15), stronger than their statements |
 | (A3) visibility given ≤ 15 columns | B | B8 | stronger than Condition 5, p. 958 (its case U = ∅) |
 | (A4) leakage set \|Q\| ≤ n^b, no leak outside, locality | B | B9 | comparable: informal remark (a), p. 958 |
 | (A5) population floor on O(log n) sets and on Q ∪ {l} | B | B5, B10 | both parts: same kind as Condition 3, p. 955, stronger in level; the second part is on a different family of sets (Q ∪ {l}) |
@@ -180,11 +182,12 @@ invariant; T6; X1; T9.
 ## 7. Track B — summary
 
 Twelve dossiers and the summary table (assumption × Song–Liang × our designs) are in `TRACK_B.md`. Verdict counts:
-**same** 2 (B1, B3); **stronger than Song–Liang as stated** 6 (B2 upper range; B4 coefficient size; B5 level of the floor;
-B6 against their Thm 1–2; B7 on centred predictors; B8), each with one line on whether it matters for our designs (it
-does not for cores 1–2); **comparable** 1 (B9); **mixed** 1 (B10: floor of the same kind as Condition 3, local regressions
-without counterpart); **no counterpart** 2 (B11, B12). B6 against their Thm 3 is weaker in level on truth-containing
-sets and additional on null-only sets. The API triage behind these labels is `TRACK_B.md` §T (8 of 9 findings accepted). Two short implications are proposed as
+**same** 3 (B1, B3, and B4 in substance: fixed coefficients are implicit in their proofs, supp pp. 5, 15); **stronger**
+B2 (upper range), B7 (on centred predictors), B8, and B6 against their Thm 1–2; **not ordered** B5 (stronger than
+Condition 3 in level; against Theorem S stronger only on bounded sets, weaker elsewhere) and B6 against their
+selection results (weaker than Theorem S); **comparable** B9; **mixed** B10; **no counterpart** B11, B12. None of the
+differences matters for our designs in cores 1–2. Sources of the labels: API triage `TRACK_B.md` §T (8 of 9 findings
+accepted) and the supplement comparison §S, §T2 (v1.3). Two short implications are proposed as
 lemmas for the report: Thm 9 (A3) ⇒ their Condition 1, for every r, with δ = √(3/8)/L and M = log 2 on standardised
 predictors (dossier B7; checked, AUDITCALC_check_opus.md §4);
 Thm 6 (A3) ⇒ their Condition 5 (dossier B8). Candidate corollaries in primitive terms: Thm 2 and Thm 9 already are (their
