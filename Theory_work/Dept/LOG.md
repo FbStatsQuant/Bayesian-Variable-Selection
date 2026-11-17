@@ -391,3 +391,4 @@
 - 2026-11-16 22:05 CST HEARTBEAT: CI green (63144bc1); recorder running (Sonnet; relabel per D97); 1 dept agent; READER held (relabel not on main). No report.
 - 2026-11-16 22:20 CST Relabel dry run CLEAN (63144bc1 + rule (c); 165 accepted, 21/21). Pending: rule (c) final Opus confirm + D97 per-edge Opus checks (4 SAMP retargets) → one package → HQ GOs. TDP_E line fix deferred post-freeze. Next: D95 dry run.
 - 2026-11-16 22:38 CST Relabel package to HQ: rule (c) 4 Opus rounds (last fix not re-reviewed → recommended a short confirmation); D97 edges: ST SAME, D/MR×2 NOT-COVERED → R4 'conditional on W1-N1:B, W1-N1:F'; dry run clean. Post-freeze Tier B for W1-N1:B/F queued.
+- 2026-11-16 22:39 CST D98 relayed to the recorder.

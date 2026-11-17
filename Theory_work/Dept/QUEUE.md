@@ -42,7 +42,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 - X2, X4: relabelling (recorder, post-freeze). P6 method version: Engineering reconciliation pending. RERUN_SPEC: open (HQ).
 
 ## Post-freeze riders (queued)
-- (11-17, D97 result) Tier B line checks of the W1-N1 steps that stay as declared conditions on W3-SAMP:C → R4 / DIST-C / OVL: W1-N1:B (island control flow, stopping time, B-0/B-d; B-d MEAS) and W1-N1:F (the freezing extension beyond fixed c, T12 (iii)). When checked, R4/DIST-C/OVL discharge.
+- (11-17, D97 result; HQ D98: week of 11-23, after track D #2) Tier B line checks of the W1-N1 steps that stay as declared conditions on W3-SAMP:C → R4 / DIST-C / OVL: W1-N1:B (island control flow, stopping time, B-0/B-d; B-d MEAS) and W1-N1:F (the freezing extension beyond fixed c, T12 (iii)). When checked, R4/DIST-C/OVL discharge.
 - (HQ 11-16) Tool: manifest.py warns when an EXT input is a registry file (claims.tsv, assumptions.tsv, …); test included.
 - (D95) NARROW HQ_AUDIT-W1C:A1/A2 allocation wording (include the P̄_LS0 term or point to DLV-0's allocation); Opus diff check; non-core, no Codex.
 - (11-16, D89, FIRST in the recording batch) Relabel W3-POST:Thm-1 (legacy SF/XF → v4 carrier, card-12 style) to its post-T03♯ status and give W3-SAMP:C a v4 accept record. This discharges W3-READER:R4's two @hyp conditions (row 3.6).
