@@ -3,6 +3,8 @@
 Updated 2026-11-15 19:40 CT. Cap: ≤ 5 leads until Wed 11-18 18:00 CT (HQ temporary OK), then 3 (Claude Third, Opus 5.5 high).
 Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed by HQ; a late rider ships at its last checked state). W3-DIST has priority on codex.
 
+## FROZEN 2026-11-17 (tag theory-v2026-11-freeze → d40c9780). Idle until Mon 11-23 08:00 CT; post-freeze riders below.
+
 ## Running
 | ticket | contents | lead thread | worktree / branch | state | next |
 |---|---|---|---|---|---|
