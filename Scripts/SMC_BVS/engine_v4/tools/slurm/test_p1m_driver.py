@@ -344,6 +344,8 @@ class TestPilotBatch(Base):
         pp = p1m_driver.resolve(json.load(open(os.path.join(HERE, "examples", "plan_P7_pilot_1e6.json"))))
         self.assertEqual(pp["fits"][0]["run_id"], "6-AR-n200-r01-V-s1")
         self.assertLessEqual(pp["worst_case_pilot_core_h"], 150)
+        self.assertEqual(pp["fits"][0]["resources"]["merge"]["mem"], "128G")   # HQ H-14: the pilot fit's merge peaked at 75.1 GiB (sacct)
+        self.assertEqual(p1m_driver.DEFAULT_RES["1e6"]["merge"]["mem"], "128G")
 
     def test_isa_check(self):   # D-32: SPR constraint everywhere, comparison build, island re-run after the island array, compare
         pl = self.plan(); pl["isa_check"] = {"island": 1}

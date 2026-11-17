@@ -74,8 +74,10 @@ DEFAULT_RES = {
             "calibrate": {"cpus": 96, "mem": "128G", "time": "02:00:00"},
             # final island 24.5 / 33.8 GiB at n = 200, up to 46.8 GiB at n = 1,000 IND G 256 -> 64G (two per 257 GB SPR node).
             "islands": {"cpus": 96, "mem": "64G", "time": "02:00:00"},
-            # merge task 43.7 GiB at n = 200, 58.5 GiB at n = 1,000 IND (PR45 INFO-3: 2.5 x setup.bin before StartView) -> 80G.
-            "merge": {"cpus": 32, "mem": "80G", "time": "01:00:00"},
+            # merge task: planned 43.7 GiB at n = 200, 58.5 GiB at n = 1,000 IND (PR45 INFO-3: 2.5 x setup.bin before StartView), but the
+            # 10^6 pilot fit MEASURED 75.1 GiB (sacct MaxRSS), too close to the old 80G -> 128G (HQ H-14) until a measured 10^6
+            # peak_rss_kb (PR #65); 48G proposed after.
+            "merge": {"cpus": 32, "mem": "128G", "time": "01:00:00"},
             "eval": {"cpus": 8, "mem": "16G", "time": "01:00:00"}},
 }
 
