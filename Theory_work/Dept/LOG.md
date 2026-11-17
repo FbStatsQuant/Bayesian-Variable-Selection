@@ -387,3 +387,4 @@
 - 2026-11-16 20:44 CST D96 relayed to the recorder.
 - 2026-11-16 21:18 CST Must-do item 2 DONE: track A recorded main 63144bc1 (CI 44007612880 success; rows verified). T14 = W3-AUDIT-AX:REP recorded → Writing IDEALW_NOTE updated (card 16 wording, p_raw). Relabel rule (c) 181/181; Opus diff review next.
 - 2026-11-16 21:55 CST Relabel: rule (c) Opus-reviewed 3 rounds (holes fixed), suite re-running; dry run clean for Thm-1/Lemma-1a/X3/SL1.core (edge SL1→SL1.core retargeted). W3-SAMP:C blocked by 4 edges into W1-N1 → recommended (i) retarget to W3-AUDIT-A:KER / AX:FR with an Opus equivalence check. HQ call requested.
+- 2026-11-16 21:56 CST D97 relayed to the recorder.
