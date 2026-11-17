@@ -711,3 +711,7 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - **Next week:** track D (#2 → #3 → #5′, kill budgets), plus the **Lean Department launch Mon 11-23 for the 2–3 most important theorems only** (scoping first; Theory sends a ranked shortlist by Fri). The rest of Lean in December.
   - **Engineering:** continues, a steady medium share until Dec 1 (4-agent cap, fast-track pilot).
   - Deferred: the niche-results narrowing; parallel-method theory (scaling paper).
+- 2026-11-17. **OWNER pacing and allocation:**
+  - **This week:** the Theory Dept is paced: must-do only, ≤ 2 concurrent agents, Sonnet/Haiku routine, the audit Fable idle, no new tickets.
+  - **Next week:** SMC uses **1 Claude Ultra account + 1 reset** for track D's last strike + 2–3 Lean proofs; **BNP Lean gets the other Ultra**. The owner names the exact account at the start of the week; HQ re-points the SMC threads then.
+  - Engineering continues its steady medium share (unchanged).
