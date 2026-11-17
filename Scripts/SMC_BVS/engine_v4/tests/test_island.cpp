@@ -31,7 +31,10 @@ static std::atomic<uint64_t> g_new_calls{0}, g_new_bytes{0}, g_new_max{0};
 // every operator new on any thread increments g_allocs. Off for every other test.
 std::atomic<bool> g_count_allocs{false};
 std::atomic<uint64_t> g_allocs{0};
+static std::atomic<bool> g_order_phase{false};      // set by the island around the label-major order phase's parallel region
+static std::atomic<long> g_order_allocs{0};         // operator-new calls inside that region
 void* operator new(std::size_t n) {
+  if (g_order_phase.load(std::memory_order_relaxed) && omp_in_parallel()) g_order_allocs.fetch_add(1, std::memory_order_relaxed);
   if (g_new_track.load(std::memory_order_relaxed)) {
     g_new_calls.fetch_add(1); g_new_bytes.fetch_add(n);
     uint64_t m = g_new_max.load(); while (n > m && !g_new_max.compare_exchange_weak(m, n)) {}
@@ -96,6 +99,11 @@ TEST(philox_known_answers) {
     v4::Ctr4 c = v4::address_ctr(b); v4::Key2 kk = v4::address_key(b); double u8[8];
     philox8_positions(c.data(), kk.data(), pos, u8);
     for (int l = 0; l < 8; ++l) { Address e = b; e.position = pos[l]; ok = ok && same_bits(u8[l], uniform_at(e)); }
+    // K2: the slot word (philox8_word word 0), with extreme 32-bit lane values included
+    uint32_t sl[8]; for (int l = 0; l < 8; ++l) sl[l] = l < 2 ? (l ? 0xFFFFFFFFu : 0u) : (uint32_t)g();
+    b.position = (uint32_t)g(); c = v4::address_ctr(b); kk = v4::address_key(b);
+    philox8_word(c.data(), kk.data(), 0, sl, u8);
+    for (int l = 0; l < 8; ++l) { Address e = b; e.slot = sl[l]; ok = ok && same_bits(u8[l], uniform_at(e)); }
   }
   CHECK(ok);
 }
@@ -400,6 +408,75 @@ TEST(lm_alloc_failure_in_parallel_is_resource_limit) {
   CHECKF(hit >= 10, "only %d of %d runs reached the injected allocation", hit, runs);
   std::printf("  %d runs, %d with an injected in-region allocation failure: all resource_limit\n", runs, hit);
 }
+
+// K2: label-major draws and scores the I proposal in the order phase; a failed score must surface where core's serial
+// round fails (the walk reaching the I position), with the same reason as particle-major, any threads / G
+TEST(indep_proposal_failure_deferred_to_its_position) {
+  Fixture F(100, 300, 44);
+  for (int arith = 0; arith < 2; ++arith) for (int victim : {0, 5, 37}) {
+    std::string reason0;
+    struct Conf { KernelKind k; int threads, G; };
+    for (const Conf& cf : std::vector<Conf>{{KernelKind::ParticleMajor, 1, 1}, {KernelKind::LabelMajor, 1, 48}, {KernelKind::LabelMajor, 3, 16},
+                                            {KernelKind::LabelMajor, 3, 7}}) {
+      IslandConfig c = small_cfg(); c.kernel = cf.k; c.threads = cf.threads; c.G = cf.G; c.test_fail_indep = victim; c.test_fail_indep_stage = 2;
+      IslandRun r = arith ? run_island<Arith::ClassA>(F.D, F.st, F.nb, c) : run_island<Arith::Bit>(F.D, F.st, F.nb, c);
+      if (reason0.empty()) { reason0 = r.reason; std::printf("  [%s] victim %d: %s\n", arith ? "A" : "bit", victim, r.reason.c_str()); }
+      CHECKF(r.status == 2 && r.reason.find("test hook: I proposal") != std::string::npos && r.reason == reason0,
+             "arith %d victim %d kernel %d threads %d G %d: status %d '%s' vs '%s'", arith, victim, (int)cf.k, cf.threads, cf.G, r.status,
+             r.reason.c_str(), reason0.c_str());
+    }
+  }
+}
+
+// K5 (WP3_ARCH_REVIEW §2 lever 5): rolling admission (a finished particle's slot takes the next particle) gives the
+// output bits of groups run one after the other, both forms, threads 1 / 3, G < N, dense and bounded, with fewer passes
+template <Arith A>
+static void rolling_same_bits(const char* tag) {
+  Fixture F(100, 300, 45);
+  IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = 3; c.G = 16; c.rolling_admission = false;
+  IslandRun g = run_island<A>(F.D, F.st, F.nb, c);
+  CHECK(g.status == 0);
+  struct Conf { int threads, G; bool bounded; };
+  for (const Conf& cf : std::vector<Conf>{{3, 16, true}, {1, 7, true}, {3, 5, false}, {2, 48, true}, {3, 1, true}}) {
+    IslandConfig d = c; d.rolling_admission = true; d.threads = cf.threads; d.G = cf.G; d.bounded_scoring = cf.bounded; d.test_nan_rows = true;
+    IslandRun r = run_island<A>(F.D, F.st, F.nb, d);
+    d.rolling_admission = false; d.test_nan_rows = false; IslandRun r0 = run_island<A>(F.D, F.st, F.nb, d);
+    CHECKF(r.status == 0 && r.hash() == g.hash(), "[%s] threads %d G %d bounded %d: hash %016llx vs groups %016llx", tag, cf.threads, cf.G, (int)cf.bounded,
+           (unsigned long long)r.hash(), (unsigned long long)g.hash());
+    CHECKF(r.ks.particle_rounds == r0.ks.particle_rounds && r.ks.particle_sweeps == r0.ks.particle_sweeps, "[%s] G %d: rounds / sweeps differ", tag, cf.G);
+    if (cf.G < c.N && cf.G > 1) CHECKF(r.ks.passes < r0.ks.passes, "[%s] G %d: passes %llu (rolling) vs %llu (groups)", tag, cf.G,
+                                       (unsigned long long)r.ks.passes, (unsigned long long)r0.ks.passes);
+    std::printf("  [%s] threads %d G %2d bounded %d: hash %016llx = groups; passes %llu (groups %llu), supports per pass %.1f (groups %.1f)\n", tag,
+                cf.threads, cf.G, (int)cf.bounded, (unsigned long long)r.hash(), (unsigned long long)r.ks.passes, (unsigned long long)r0.ks.passes,
+                (double)r.ks.supports / std::max<uint64_t>(1, r.ks.passes), (double)r0.ks.supports / std::max<uint64_t>(1, r0.ks.passes));
+  }
+}
+TEST(rolling_admission_same_bits_bit) { rolling_same_bits<Arith::Bit>("bit"); }
+TEST(rolling_admission_same_bits_classA) { rolling_same_bits<Arith::ClassA>("A"); }
+
+// review PR53 MAJOR: the label-major order phase (inverse orders, nongibbs lists, the I proposals' pi_0 draws and scores)
+// allocates nothing inside its parallel region: everything is sized serially before it, cold and warm, both forms,
+// threads 1 / 3, G < N. Counted by the replaced operator new while the island's test flag is set.
+template <Arith A>
+static void order_phase_no_alloc(const char* tag) {
+  Fixture F(100, 300, 46);
+  // control: the counter sees an allocation made in a region while the flag is set (and not otherwise)
+  g_order_allocs = 0; g_order_phase = true;
+  #pragma omp parallel num_threads(3)
+  { int* q = new int[100]; asm volatile("" : : "r"(q) : "memory"); delete[] q; }
+  g_order_phase = false;
+  CHECKF(g_order_allocs.load() >= 3, "[%s] control: the counting hook did not see %ld in-region allocations", tag, g_order_allocs.load());
+  for (int th : {1, 3}) for (int G : {16, 48}) {
+    IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = th; c.G = G; c.test_order_phase = &g_order_phase;
+    g_order_allocs = 0;
+    IslandRun r = run_island<A>(F.D, F.st, F.nb, c);
+    const long n = g_order_allocs.exchange(0);
+    CHECKF(r.status == 0 && n == 0, "[%s] threads %d G %d: %ld allocations inside the order phase's parallel region (status %d)", tag, th, G, n, r.status);
+    std::printf("  [%s] threads %d G %2d: %llu particle-rounds, %ld allocations in the order phase's region\n", tag, th, G, (unsigned long long)r.ks.particle_rounds, n);
+  }
+}
+TEST(order_phase_allocates_nothing_in_parallel_bit) { order_phase_no_alloc<Arith::Bit>("bit"); }
+TEST(order_phase_allocates_nothing_in_parallel_classA) { order_phase_no_alloc<Arith::ClassA>("A"); }
 
 // negative control of the NaN-row test: bounded scoring that skips the position just below the running first change
 // (test_bound_shrink = 1) consumes unscored values; the test must catch it as an internal_error
@@ -1692,4 +1769,40 @@ TEST(time_stop_chain_equals_uninterrupted) {
   try { IslandConfig b = c; b.stop_after_s = 1.0; run_island<Arith::ClassA>(F.D, F.st, F.nb, b); } catch (const v4::Error& e) { r1 = e.st == v4::Status::invalid_input; }   // no checkpoint path
   try { IslandConfig b = a; b.stop_after_s = -1.0; run_island<Arith::ClassA>(F.D, F.st, F.nb, b); } catch (const v4::Error& e) { r2 = e.st == v4::Status::invalid_input; }
   CHECK(r1 && r2);
+}
+
+// WP7: `smcbvs4 info FILE --meta 1` reads the header, the table and the meta section only (a 2 GB island file at 10^6 took
+// 11-19 s per full verification, and the T5 report called it for every island). The file can be the first argument; the
+// meta section's hash is still checked; a damaged OTHER section is not seen by --meta alone and is refused by the
+// default (full) read and by --verify 1; a missing file argument is invalid_input.
+TEST(info_meta_only_reads_the_meta_section) {
+  TmpGuard tg;
+  Fixture F(100, 300, 63);
+  IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = 3; c.G = 16;
+  IslandRun r = run_island<Arith::ClassA>(F.D, F.st, F.nb, c);
+  const std::string path = tg.add(wp3_tmp("info_meta.bin")), rec = tg.add(wp3_tmp("info_rec"));
+  write_island_file(path, r, Arith::ClassA, v4::Json::object());
+  auto info = [&](const std::string& args) {
+    const std::string cmd = std::string(V4_SMCBVS4) + " info " + args + " --out " + rec + " > /dev/null 2>&1";
+    const int rc = std::system(cmd.c_str()); return WIFEXITED(rc) ? WEXITSTATUS(rc) : -1;
+  };
+  CHECK(info(path + " --meta 1") == 0);   // the file as the first argument
+  { v4::Json j = v4::read_json_file(rec + ".json");
+    CHECK(j.at("verified").type() == v4::Json::STR && j.at("verified_sections").str() == "meta" && j.at("meta").at("cost").at("rows").i64() == (int64_t)r.cost.size() &&
+          j.at("sections").size() > 10 && j.at("kind").str() == "island"); }
+  CHECK(info("--in " + path + " --meta 1") == 0);   // the driver's form
+  CHECK(info(path) == 0); CHECK(v4::read_json_file(rec + ".json").at("verified").boolean());   // default: every section
+  CHECK(info("--meta 1") == 13);                    // no file
+  // damage one byte inside top_v (not the meta section)
+  uint64_t top_off = 0, meta_off = 0;
+  { v4::fmt::Reader R(path, false); for (const auto& e : R.sections()) { if (std::string(e.name) == "top_v") top_off = e.offset; if (std::string(e.name) == "meta") meta_off = e.offset; } }
+  auto flip = [&](uint64_t at) { FILE* f = std::fopen(path.c_str(), "r+b"); std::fseek(f, (long)at + 3, SEEK_SET); int ch = std::fgetc(f); std::fseek(f, (long)at + 3, SEEK_SET); std::fputc(ch ^ 0x5A, f); std::fclose(f); };
+  CHECK(top_off > 0 && meta_off > 0);
+  flip(top_off);
+  CHECK(info(path) == 13);                          // full verification sees it
+  CHECK(info(path + " --meta 1 --verify 1") == 13);
+  CHECK(info(path + " --meta 1") == 0);             // meta-only does not read top_v (by design: header, table, meta)
+  flip(top_off);                                    // restore, then damage the meta section: the meta-only read refuses it
+  flip(meta_off);
+  CHECK(info(path + " --meta 1") == 13);
 }

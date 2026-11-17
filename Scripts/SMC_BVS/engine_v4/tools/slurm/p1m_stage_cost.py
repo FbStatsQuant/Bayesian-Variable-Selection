@@ -4,7 +4,8 @@
 Inputs (any mix):
   *.jsonl                       a sidecar (IslandConfig::cost_path; calibrate --cost-dir; v4_pilot_island --cost-dir):
                                 a {"cost_header": ...} line per job segment, then one row object per step
-  *.json                        a record holding meta.cost (`smcbvs4 info --in island_r.bin --meta 1 --out x` -> x.json),
+  *.json                        a record holding meta.cost (`smcbvs4 info --in island_r.bin --meta 1 --out x` -> x.json; --meta 1
+                                reads only the header, table and meta section: 0.04 s on a 2 GB 10^6 island file),
                                 or a bare meta.cost object (columns)
 
 Commands:
@@ -155,10 +156,20 @@ def print_summary(name, hdr, rows, fh=sys.stdout):
     return s
 
 
-def info_meta(binary, path):
+INFO_TIMEOUT_S = 300
+
+
+def info_meta(binary, path, timeout=INFO_TIMEOUT_S):
+    """`smcbvs4 info --in FILE --meta 1`: the header, the table and the meta section only (no pass over the sections, which
+    are GBs in an island file at 10^6). A binary from before WP7's info fix verifies every section: slow on a big file, so
+    the call has a timeout and says so instead of stalling a whole report."""
     with tempfile.TemporaryDirectory(dir=os.environ.get("TMPDIR")) as d:
         out = os.path.join(d, "info")
-        subprocess.run([binary, "info", "--in", path, "--meta", "1", "--out", out], check=True, stdout=subprocess.DEVNULL)
+        try:
+            subprocess.run([binary, "info", "--in", path, "--meta", "1", "--out", out], check=True, stdout=subprocess.DEVNULL, timeout=timeout)
+        except subprocess.TimeoutExpired:
+            raise RuntimeError("%s: `info --meta 1` took more than %d s (a binary from before the meta-only read verifies every section: "
+                               "rebuild, or read meta.cost with a current smcbvs4)" % (path, timeout))
         with open(out + ".json") as f:
             return json.load(f)
 

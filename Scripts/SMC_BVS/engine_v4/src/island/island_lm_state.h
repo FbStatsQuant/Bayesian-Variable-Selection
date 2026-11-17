@@ -2,6 +2,7 @@
 // so that the engine (island_run.h) can hold it as a member while the label-major code lives in island_lm.h.
 #pragma once
 #include <atomic>
+#include <exception>
 #include <memory>
 #include "v4/island/island.h"
 
@@ -13,16 +14,25 @@ struct LmScratch {
   std::vector<uint8_t> inm;                    // Bk: member flags of a tile
   std::vector<uint64_t> needw, consw;          // Bk / 64: needed (phase A) / consumed (phase B) label bits of a tile
   std::vector<int> nlist, first;               // Bk + 1: listed bits; Bk: first consuming particle per label
+  std::vector<uint32_t> ord;                   // m: one round order (K2: only the inverse is kept per particle)
   std::vector<uint32_t> ncons, fpos;           // Bk: consumption counts and positions per label
   std::vector<v8d> ub;                         // max k: one 8-lane Gram vector per member
+  Model imodel;                                // the I proposal's pi_0 draw (K2)
 };
 
 // --- label-major round for the particles [g0, g0 + gN) ------------------------------------------------------
 struct LmGroupBuf {
-  std::vector<uint32_t> ord, inv;             // gN x m
+  std::vector<int> pid;                        // particle of each slot (K5: slots are reused within a round)
+  std::vector<uint32_t> inv;                  // gN x m: 1-based position of each label (K2: the order itself is not kept)
   std::vector<std::vector<std::pair<uint32_t, int>>> ng;   // per particle: (position, label) of U/N/I labels, sorted
   std::vector<uint32_t> q, e; std::vector<uint8_t> done, etype; std::vector<Particle> pending;
-  std::vector<std::atomic<uint32_t>> fmin;
+  std::vector<int32_t> elab;                  // the label at e of a Gibbs event (etype 1)
+  // running first change per particle, packed (position << 32) | label (K2: positions are distinct, so the minimum by
+  // position carries its label and the order is not needed to find it); UINT64_MAX = none
+  std::vector<std::atomic<uint64_t>> fmin;
+  // the I step's proposal per particle, drawn and scored in the order phase (K2); a failed score is kept and raised
+  // only when the walk reaches the I position (the event that core would fail at)
+  std::vector<Particle> iprop; std::vector<std::exception_ptr> ierr;
   std::vector<SupportCache> sup; std::vector<int> sup_of;
   std::vector<std::vector<int>> sup_parts;     // particles (group-local, ascending) per support
   std::vector<int> act;                        // active columns

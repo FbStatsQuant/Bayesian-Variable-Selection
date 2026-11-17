@@ -262,7 +262,9 @@ class IslandEngine {
 
   // --- U, N_b, I steps at round position `pos` (core/cpp/v3_engine.h:146-192). Returns true if the state changed;
   //     the new state is written to `out`. ----------------------------------------------------------------------
-  bool step_nongibbs(int lab, const Particle& Pc, int i, uint32_t pos, const RoundCtx& rc, ThreadLedger& L, BitScorer& sc, Particle& out);   // island_pm.h
+  bool step_nongibbs(int lab, const Particle& Pc, int i, uint32_t pos, const RoundCtx& rc, ThreadLedger& L, BitScorer& sc, Particle& out,
+                     const Particle* pre = nullptr);   // island_pm.h (pre: the I step's proposal, drawn and scored ahead, K2)
+  void draw_indep(int i, uint32_t pos, const RoundCtx& rc, BitScorer& sc, Particle& out, LmScratch* Z = nullptr);   // island_pm.h
 
   // Round order (core/cpp/v3_engine.h:195-200): Fisher-Yates, uniform of step i at slot m-1-i.
   void draw_order(const RoundCtx& rc, int i, uint32_t* ord);   // island_pm.h
@@ -274,14 +276,15 @@ class IslandEngine {
   using GroupBuf = LmGroupBuf;
   GroupBuf gb;
 
-  void lm_group(int g0, int gN, const RoundCtx& rc);   // island_lm.h
+  void lm_group(int first, int count, int gN, const RoundCtx& rc);   // island_lm.h (count particles in gN slots)
 
   void round(const RoundCtx& rc) {
     if (calib) { snap.valid = true; snap.init = false; snap.rc = rc; snap.P = P; snap.top = top.k; snap.lead0 = lead0.k; snap.lead1 = lead1.k; }
     if (rc.measured) std::fill(rb_cur.begin(), rb_cur.end(), (u128)0);
     if (cfg.kernel == KernelKind::LabelMajor) {
       int G = std::max(1, cfg.G);
-      for (int g0 = 0; g0 < cfg.N; g0 += G) { lm_group(g0, std::min(G, cfg.N - g0), rc); throw_if_failed(); }
+      if (cfg.rolling_admission) { lm_group(0, cfg.N, G, rc); throw_if_failed(); }   // K5: one window of G slots for the round
+      else for (int g0 = 0; g0 < cfg.N; g0 += G) { const int gN = std::min(G, cfg.N - g0); lm_group(g0, gN, gN, rc); throw_if_failed(); }
     } else {
       auto t0 = std::chrono::steady_clock::now();
       if (rc.measured) for (auto& v : rb_thread) std::fill(v.begin(), v.end(), (u128)0);
