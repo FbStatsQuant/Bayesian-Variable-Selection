@@ -9,6 +9,7 @@ OK            [STATEMENT.md] Theory_work/State_of_Project/sections/02_method.tex
 OK            [STATEMENT.md] Theory_work/Wave1C/C-GROW/STATEMENT.md:57-57 sha=cbc10f9cb6 | * **G**: fixed raw design X^r (n × p, nonconstant columns), y^r = α1 + X^rβ + ε, ε ~ N_n(0, σ²I), σ² > 0 fixed
 OK            [STATEMENT.md] Theory_work/Wave3/W3-RM/STATEMENT.md:41-42 sha=4fcc27c486 | * **Setting R (Gaussian rows)** = UNI `STATEMENT.md` §1 design (R) / LOC2 `STATEMENT.md` §1: raw rows iid
 OK            [STATEMENT.md] cpp/v3_blocks.h:124-144 sha=425491de1e | inline std::vector<std::vector<int>> make_blocks(const Data& D, int B, Dendrogram* out_tree = nullptr) {
+OK            [STATEMENT.md] cpp/v3_core.cpp:143-143 sha=fbed2ff6c9 | static List blocks_to_R(const Data& D, const std::vector<std::vector<int>>& blocks) { return models_to_list(D,
 OK            [STATEMENT.md] v3_fit.R:99-103 sha=017e556e30 | if (pre$status != "ok") {
 OK            [STATEMENT.md] v3_fit.R:117-117 sha=9b407003b8 | if (pf$exceeds) { fit$status <- "resource_limit"; return(finish(fit)) }
 OK            [STATEMENT.md] v3_fit.R:120-133 sha=f91a78f989 | if (fit$branch_run == "exact") {
@@ -23,6 +24,7 @@ OK            [STATEMENT.md] cpp/v3_core.cpp:811-811 sha=268d625623 | std::set<i
 OK            [STATEMENT.md] v3_fit.R:141-142 sha=34e9882271 | cg <- .v3cpp$cpp_cut_group(setup$ptr)
 OK            [STATEMENT.md] v3_fit.R:172-172 sha=5420f83d39 | fit$flags$cut_group <- fit$cut_group
 OK            [STATEMENT.md] Theory_work/Wave3/W3-RM/STATEMENT.md:48-48 sha=0c9f69763f | |C_b| ≤ 16. Nothing else about the partition is used anywhere below.
+OK            [STATEMENT.md] cpp/v3_blocks.h:49-49 sha=1e31b90f7b | T.left.assign(2 * p - 1, -1); T.right.assign(2 * p - 1, -1); T.size.assign(2 * p - 1, 1); T.minidx.assign(2 * 
 OK            [STATEMENT.md] v3_preprocess.R:111-113 sha=43dfcf1070 | constant <- apply(X, 2, function(x) all(x == x[1]))   # dropped only if all entries are exactly equal
 OK            [PROOF.md] v3_fit.R:133-133 sha=0423b7855a | t0 <- proc.time()[["elapsed"]]; setup <- v3_setup(ctx)
 OK            [PROOF.md] v3_setup.R:67-70 sha=d5a3ca78fa | v3_setup <- function(ctx) {
@@ -78,7 +80,8 @@ OK            [PROOF.md] cpp/v3_core.cpp:469-469 sha=35f7274942 | ModeResult m =
 OK            [PROOF.md] Theory_work/Wave3/W3-SAMP/lemmas/CC_code_check.md:102-104 sha=65766bcaa0 | ## CC7 — B is bounded
 OK            [PROOF.md] cpp/v3_core.cpp:144-144 sha=d7275f1d0d | // Block width supported by the table codes (uint32 bit codes; 2^B entries per block): 1 <= B <= 20 (code revi
 OK            [PROOF.md] cpp/v3_core.cpp:145-146 sha=188a9bc8e8 | static const int B_MAX = 16;
+OK            [PROOF.md] cpp/v3_blocks.h:49-49 sha=1e31b90f7b | T.left.assign(2 * p - 1, -1); T.right.assign(2 * p - 1, -1); T.size.assign(2 * p - 1, 1); T.minidx.assign(2 * 
 OK            [PROOF.md] v3_preprocess.R:116-121 sha=d9d37204a6 | Xs <- matrix(0, n, length(kept)); cm <- cmu <- csd <- numeric(length(kept))
 
-81 citations: 81 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+84 citations: 84 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
 Not machine-checked: unbackticked references and the semantic match of each excerpt.

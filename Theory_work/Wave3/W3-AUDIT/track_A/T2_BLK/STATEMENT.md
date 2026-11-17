@@ -1,4 +1,4 @@
-# T2 · Lemma BLK (the coded partition: a function of X, blocks of at most 16 columns) — STATEMENT v4 (draft, not locked)
+# T2 · Lemma BLK (the coded partition: a function of X, blocks of at most 16 columns) — STATEMENT v5 (draft, not locked)
 
 Track A item T2 (`AUDIT.md` §6; CHECKPOINT_1 annex order 2). Tier B (code reading plus a finite combinatorial
 invariant; no key lemma). **Lean target: yes for (BLK-b) (the cut-and-pack invariant, a finite statement); no for the
@@ -29,7 +29,9 @@ Under a random design whose rows are i.i.d. and each of whose coordinates has an
 the columns are non-constant almost surely (n ≥ 2); on the null set C is extended by any fixed Borel choice, and nothing
 below depends on it.
 
-**The partition map.** C(X) = (C₁, …, C_J) := `make_blocks(D(X), B)` (`cpp/v3_blocks.h:124-144`) with
+**The partition map.** C(X) = (C₁, …, C_J) with C_b := {j + 1 : j ∈ `make_blocks(D(X), B)`[b]} (`cpp/v3_blocks.h:124-144`;
+the code's internal indices are 0-based, and with no dropped columns internal j is column j + 1; `st.blocks` is the
+internal representation, reported blocks use `D.orig` via `blocks_to_R` → `to_orig`, `cpp/v3_core.cpp:143`), with
 B := min(⌊√n⌋, ⌊√p⌋, 16), defined for every X in the setting. The coded run computes it only on the sampler branch
 (non-constant y, preflight passed: `v3_fit.R:99-103, 117, 120-133`), as `st.blocks` in `cpp_setup`
 (`cpp/v3_core.cpp:272-279`); there the same object is used by the block tables, the start law and sampler, the
@@ -53,7 +55,8 @@ tree); nothing about the clustering's optimality is claimed.
 - That the dendrogram is the textbook complete-linkage tree, or any property of the blocks beyond (BLK-a)–(BLK-c) (none is
   used by rows 3.1, 3.6: `Theory_work/Wave3/W3-RM/STATEMENT.md:48`).
 - Floating point in general (EX-A). The PROOF's last section also shows that (BLK-a) and (BLK-b) hold in binary64 as
-  coded; (BLK-c)'s "function of R̂" then holds with R̂ replaced by the computed correlation matrix.
+  coded, **provided the run executes successfully with every integer size, index and allocation size representable**
+  (e.g. `2 * p - 1` in `int` at `cpp/v3_blocks.h:49` overflows for p ≥ 2³⁰; such inputs are outside this remark); (BLK-c)'s "function of R̂" then holds with R̂ replaced by the computed correlation matrix.
 - Inputs with constant columns: the code drops them (`v3_preprocess.R:111-113`) and p then means the number kept.
 
 ## Changelog
@@ -65,5 +68,6 @@ tree); nothing about the clustering's optimality is claimed.
 | v2 | (BLK-c) setting-R clause (σ(X)-measurable, independent of ε) | STRONGER (retagged from EQUAL) | LC1r #12 | `reviews/LC1r_reply_opus.md` | pending (gate) |
 | v3 | setting R premise | EQUAL (premise stated exactly: atomless coordinate marginals) | LC1r #9 | `reviews/LC1r_reply_opus.md` | pending (gate) |
 | v3 | downstream list; binary64 (BLK-c) sentence | EQUAL (editorial) | LC1r #10, #11 | `reviews/LC1r_reply_opus.md` | pending (gate) |
+| v5 | C(X) defined with the internal → column index conversion; binary64 remark qualified by representability | EQUAL (definition made exact); WEAKER (binary64 remark, not a lemma clause) | SL1LC2 #2, #3 (Sol) | `reviews/SL1LC2_reply_sol.md` | pending (council batch) |
 | v4 | setting R premise (atomless marginals cover singular Σ_n; ε independence stated) | STRONGER (retag of the v3 row) | LC1r2 #8, #9 | `reviews/LC1r2_reply_opus.md` | pending (gate) |
 | v4 | (BLK-c) setting R: "σ(X)-measurable" → "σ(X^r)-measurable, a.s. a Borel function of X" | WEAKER (wording now matches the proof; downstream "X-measurable" uses are satisfied a.s.) | LC1r2 #10 | `reviews/LC1r2_reply_opus.md` | pending (gate) |

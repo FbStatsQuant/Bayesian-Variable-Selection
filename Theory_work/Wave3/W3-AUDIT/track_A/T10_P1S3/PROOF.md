@@ -1,4 +1,4 @@
-# T10 · Re-audit P1/S.3 — PROOF v2 (second-seat code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
+# T10 · Re-audit P1/S.3 — PROOF v2.1 (second-seat code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
 
 Method: (1) list every explicit `stop`, `stopifnot`, `throw`, `checkUserInterrupt` in `cpp/` and `*.R` (grep,
 2026-11-16), plus the implicit error sources of §2 (X2-imp), and
@@ -94,9 +94,19 @@ row above is one of them or an error without a fit object. So (P1′) holds.
   `cpp/v3_start.h:261` needs k̂ < 0 or a failed root `feasible()` with IN = OUT = ∅: impossible by T9 (TDP-e) under T4
   (ENC).
 - **X7, X8** are reachable only under IDEAL-W's unbounded reading of (n, p) and are then excluded by A:IDEAL-W⁺ or 𝔇,
-  as the erratum says (`Theory_work/Wave1C/C-DLV/INVENTORY.md:83-93`; `v3_run.R:95-97`, `cpp/v3_core.cpp:473-474`). For
-  inputs R can represent (n = `nrow`, p ≤ `ncol` ≤ 2³¹ − 1), ℓ_n = ⌈log₂(n + p + 1)⌉ ≤ 32 ≪ 10⁶ and
-  ℓ_n + |S̃₀| ≤ 32 + ⌊n/2⌋ ≤ 32 + 2³⁰ < 2³¹ − 1, so neither fires on the shipped path (a recorder note for the erratum).
+  as the erratum says (`Theory_work/Wave1C/C-DLV/INVENTORY.md:83-93`). **Exact bound for inputs R can represent.** The
+  R limit used is the matrix dimension: `nrow(X)` and `ncol(X)` are R integers ≤ 2³¹ − 1 (a `dim` attribute is an integer
+  vector; long vectors lift only the length n·p), and `cpp_context` reads them as C++ `int` (`int n = X.nrow(), p =
+  X.ncol()`, `cpp/v3_core.cpp:92`). So n ≤ 2³¹ − 1 and p ≤ p_raw ≤ 2³¹ − 1.
+  - X7 (`le > 1e6`, `v3_run.R:95-97`): with the option unset, `le = b$ell` = `v3_ceil_log2(n + p + 1)`
+    (`v3_preprocess.R:15, 23`), computed in double after `as.numeric` (`v3_preprocess.R:20`); n + p + 1 ≤ 2³² − 1, so
+    `le` ≤ 32 < 10⁶. The other conditions of that validator (numeric, length 1, finite, integral, ≥ 0) hold for this value.
+  - X8 (`cap_ll > INT_MAX`, `cpp/v3_core.cpp:473-474`): `o.ls0_ell` = `as<int>(ro["ls0_ell"])` ≤ 32 (`cpp/v3_core.cpp:402`),
+    and |S̃₀| ≤ K = min(p, ⌊n/2⌋) ≤ ⌊(2³¹ − 1)/2⌋ = 2³⁰ − 1 (`cpp/v3_score.h:40`; S̃₀ ∈ Ω); so
+    `cap_ll` ≤ 32 + 2³⁰ − 1 < 2³¹ − 1 = INT_MAX, and `o.ls0_ell < 0` is false.
+  So both lifted predicates of A:IDEAL-W⁺ are false on every input R can represent: there A:IDEAL-W⁺ reduces to IDEAL-W.
+  Caveat (not about these predicates): other `int` arithmetic on the path overflows earlier for very large p (e.g.
+  `2 * p - 1` at `cpp/v3_blocks.h:49` for p ≥ 2³⁰); such inputs are excluded by IDEAL-W itself, as before.
 
 ## 3. D1 at the pin
 `v3_cal_tier` records a fallback only when `grid_fallback` and `trig$grid_failure` and tier = 1 (`v3_calib.R:122-125`):

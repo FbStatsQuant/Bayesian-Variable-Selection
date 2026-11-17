@@ -166,8 +166,15 @@ OK            [PROOF.md] cpp/v3_start.h:272-272 sha=7a6fb31f17 | if (tie_dp && c
 OK            [PROOF.md] cpp/v3_core.cpp:469-469 sha=35f7274942 | ModeResult m = start_mode(st, 1000000, o.ls0_tie_dp);
 OK            [PROOF.md] cpp/v3_start.h:261-261 sha=9334c5c245 | if (dp.kbest < 0 || !feasible()) throw std::runtime_error("start_mode tie DP: no tight path from (J, kbest) (i
 OK            [PROOF.md] Theory_work/Wave1C/C-DLV/INVENTORY.md:83-93 sha=21f8c0bbef | ## X′. ERRATUM (2026-11-16; HQ D78; precedent R02 #5 `nth_nonmember`, added to L2 S.3's X2 list after R02)
+OK            [PROOF.md] cpp/v3_core.cpp:92-92 sha=e7fbc12288 | int n = X.nrow(), p = X.ncol();
 OK            [PROOF.md] v3_run.R:95-97 sha=75c7ca43aa | le <- getOption("v3.ls0_ell", b$ell)   # testing override of the LS0 base cap (R05 #2: validated)
+OK            [PROOF.md] v3_preprocess.R:15-15 sha=e2818be336 | v3_ceil_log2 <- function(x) { c <- 0; while (2^c < x) c <- c + 1; c }   # smallest c with 2^c >= x
+OK            [PROOF.md] v3_preprocess.R:23-23 sha=88bf884342 | ell <- v3_ceil_log2(n + p + 1)
+OK            [PROOF.md] v3_preprocess.R:20-20 sha=07654cb9af | n <- as.numeric(n); p <- as.numeric(p)
 OK            [PROOF.md] cpp/v3_core.cpp:473-474 sha=16c5ae9e75 | long long cap_ll = (long long)o.ls0_ell + (o.ls0_cap_plus_mode ? (long long)m.S.size() : 0LL);  // checked (R0
+OK            [PROOF.md] cpp/v3_core.cpp:402-402 sha=6520e449d4 | o.ls0_ell = ro.containsElementNamed("ls0_ell") ? as<int>(ro["ls0_ell"]) : o.ell;
+OK            [PROOF.md] cpp/v3_score.h:40-40 sha=3b222c88d0 | D.n = n; D.p = p; D.K = std::min(p, n / 2); D.W = nwords(p);
+OK            [PROOF.md] cpp/v3_blocks.h:49-49 sha=1e31b90f7b | T.left.assign(2 * p - 1, -1); T.right.assign(2 * p - 1, -1); T.size.assign(2 * p - 1, 1); T.minidx.assign(2 * 
 OK            [PROOF.md] v3_calib.R:122-125 sha=4501bbf810 | if (isTRUE(grid_fallback) && trig$grid_failure && tier == 1) {   # tier 0 failures escalate as in v3
 OK            [PROOF.md] v3_calib.R:163-169 sha=c7cee29631 | if (status == "ok" && is.null(last$grid) && e == 1 && isTRUE(grid_fallback) && !is.null(last$fallback_grid) &&
 OK            [PROOF.md] v3_calib.R:170-170 sha=0afbed03df | if (status == "ok" && is.null(last$grid)) status <- if (e == 1) "schedule_limit" else "grid_failure_no_escalat
@@ -175,5 +182,5 @@ OK            [PROOF.md] cpp/v3_core.cpp:636-636 sha=6516277c83 | std::vector<do
 OK            [PROOF.md] cpp/v3_calib.h:30-46 sha=1101193d76 | inline NextPhi pilot_next_phi(const std::vector<double>& d, double phi, double H, int Te) {
 OK            [PROOF.md] cpp/v3_engine.h:310-310 sha=93ce25565d | if (phi_prev == 1.0) break;
 
-176 citations: 176 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+183 citations: 183 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
 Not machine-checked: unbackticked references and the semantic match of each excerpt.

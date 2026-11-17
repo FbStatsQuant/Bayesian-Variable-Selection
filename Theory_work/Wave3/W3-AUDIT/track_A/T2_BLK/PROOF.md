@@ -1,4 +1,4 @@
-# T2 · Lemma BLK — PROOF v4 (code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
+# T2 · Lemma BLK — PROOF v5 (code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
 
 ## (BLK-a) The parameter B
 `v3_fit` calls `v3_setup(ctx)` (`v3_fit.R:133`), which sets `B <- b$B` with `b <- v3_budgets(ctx$n, ctx$p)`
@@ -38,7 +38,8 @@ if `|cur| + |c| > B` then `cur` is closed and emptied (`:137`), then c is append
 closed (`:140`). Invariant: |cur| ≤ B after each step — if no closing occurs, |cur| + |c| ≤ B; if it does, |cur| becomes
 |c| ≤ B. Every closed block is nonempty: closing at `:137` needs |cur| > B − |c| ≥ 0, and `:140` closes only a nonempty
 `cur`. Every cluster is appended to exactly one block, so the blocks are disjoint and cover {0, …, p − 1}; sorting within a
-block (`:141`) does not change it. Hence (BLK-b), and J·B ≥ Σ_b |C_b| = p.
+block (`:141`) does not change it. The shift j ↦ j + 1 maps this partition of {0, …, p − 1} bijectively onto a partition
+of {1, …, p} with the same block sizes. Hence (BLK-b), and J·B ≥ Σ_b |C_b| = p.
 
 ## (BLK-c) Function of X only
 The inputs of `make_blocks` are `D` and B. It reads `D` only through `correlation_matrix(D)`
@@ -73,6 +74,9 @@ in the open set where the standardisation map X^r ↦ X is continuous; composing
 because ε is independent of the rows.
 
 ## Binary64 (supports the "Not claimed" bullet)
+Qualification (Sol SL1LC2 #3): the following assumes the run executes with every integer size, index and allocation
+size representable (the C++ `int` arithmetic such as `2 * p - 1`, `cpp/v3_blocks.h:49`, does not overflow; this fails for
+p ≥ 2³⁰); it is a remark, not part of the lemma.
 (BLK-a): n and p are R integers ≤ 2³¹ − 1, so ⌊√n⌋, ⌊√p⌋ ≤ 46341 and every square in `v3_isqrt`'s correction loops
 is an integer below 2⁵³, computed exactly; hence `v3_isqrt` returns ⌊√x⌋ exactly and B is exact. (BLK-b): the tree
 argument uses only that each merge joins two distinct active slots (`best[i] ≠ i`, `best[i]` active), the integer size

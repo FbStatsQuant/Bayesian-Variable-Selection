@@ -1,4 +1,4 @@
-# T1 · Lemma GW — PROOF v4 (code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
+# T1 · Lemma GW — PROOF v5 (code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
 
 v1 → v2: LC1 findings #1–#9 applied (`reviews/LC1_reply_opus.md`, disposition `reviews/LC1_disposition.md`).
 v2 → v3: LC1r findings #1–#8 applied (`reviews/LC1r_reply_opus.md`, disposition `reviews/LC1r_disposition.md`).
@@ -117,10 +117,12 @@ every point and the run is in 𝒪 iff P°'s run is in 𝒪°. If some check fir
 
 ## Step 4 — the interface (GW-iv)
 In P° every Boolean is FALSE, so by (GW-i) every statistical field of P° is computed from the input and earlier
-statistical fields only, hence is a function of the input. The allocation enters statistical state only as
-`fit$allocation` and the normalised local `allocation` (`v3_fit.R:76, 92-95`); the latter is read only by `v3_fit.R:95`,
-by the check bodies (`v3_preflight` at `v3_fit.R:115, 145`) and by `cpp_runtime_new` (`v3_fit.R:96`), whose output, the
-guard, is an internal value. So every other statistical field of P° is a function of (X, y, seed) and the options.
+statistical fields only, hence is a function of the input. The allocation and its copies are internal values: the
+argument is copied into `fit$allocation` (`v3_fit.R:76, 95`) and the normalised local (`v3_fit.R:92`), which is read
+only by `v3_fit.R:95`, by the check bodies (`v3_preflight`, `v3_fit.R:115, 145`) and by `cpp_runtime_new` (`v3_fit.R:96`;
+parameters `hours`, `elapsed_before`, `cpp/v3_core.cpp:764-767`), whose only output is the guard. (Its validation at
+`v3_fit.R:91-94` can only stop an invalid input, which is outside the lemma.) No statistical field is assigned from
+them. So P°'s statistical state is a function of (X, y, seed) and the options.
 𝒜° = {𝓒° ≠ ⊥, status of 𝓒° = "ok"} ∈ σ(𝓒°), with ⊥ a value of 𝓒°.
 
 𝒜 = 𝒜° ∩ G (G as defined in the STATEMENT). The checks evaluated before `v3_calibrate` returns are (C1) and those inside

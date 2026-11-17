@@ -34,6 +34,10 @@ OK            [STATEMENT.md] cpp/v3_core.cpp:692-692 sha=eb9fd733f9 | return Lis
 OK            [STATEMENT.md] v3_calib.R:75-76 sha=c1dbbc7e8f | g$resource_limit <- !is.null(runtime) && .v3cpp$cpp_runtime_check(runtime,
 OK            [STATEMENT.md] v3_fit.R:96-96 sha=de56929df7 | runtime <- .v3cpp$cpp_runtime_new(allocation$hours, proc.time()[["elapsed"]] - t_start)
 OK            [STATEMENT.md] cpp/v3_runtime.h:14-17 sha=d4e8de4a8f | std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+OK            [STATEMENT.md] v3_fit.R:76-76 sha=c4db3d3bae | fit <- list(seed = seed, allocation = allocation, local_certified = FALSE, global_certified = FALSE,
+OK            [STATEMENT.md] v3_fit.R:95-95 sha=183c28a37c | fit$allocation <- allocation
+OK            [STATEMENT.md] v3_fit.R:92-92 sha=a3e89d0762 | allocation <- list(mem_gb = allocation[["mem_gb"]] %||% 8, hours = allocation[["hours"]] %||% 24)
+OK            [STATEMENT.md] cpp/v3_core.cpp:764-764 sha=f322e4465d | SEXP cpp_runtime_new(double hours, double elapsed_before) {
 OK            [STATEMENT.md] v3_run.R:143-149 sha=76b56d9035 | if (raw$status != "completed") {   # numerical_failure: best scored model so far, labelled incomplete (M §2)
 OK            [STATEMENT.md] v3_run.R:218-218 sha=1fd67826dd | out$estimates_available <- TRUE
 OK            [STATEMENT.md] v3_fit.R:171-171 sha=800c2b2b84 | for (nm in names(fr)) fit[[nm]] <- fr[[nm]]
@@ -41,8 +45,6 @@ OK            [STATEMENT.md] v3_fit.R:125-129 sha=0819f30fa5 | if (e$status == "
 OK            [STATEMENT.md] Theory_work/Wave1/W1-N1/STATEMENT.md:70-70 sha=ba34e79a75 | - **EX-A** exact scores and arithmetic (TLF:72).
 OK            [STATEMENT.md] v3_run.R:109-114 sha=c42d413dca | V3_ESTIMATE_FIELDS <- c("log_Z", "log_Z_r", "log_Z_lower95", "log_Z_rel_m0", "log_Z_r_rel_m0", "pip_primary", 
 OK            [STATEMENT.md] v3_fit.R:85-85 sha=fe9987db7e | if (isTRUE(ls0) && !isTRUE(fit$estimates_available)) fit <- v3_unavailable_estimates(fit)
-OK            [STATEMENT.md] v3_fit.R:92-95 sha=031b71d49e | allocation <- list(mem_gb = allocation[["mem_gb"]] %||% 8, hours = allocation[["hours"]] %||% 24)
-OK            [STATEMENT.md] v3_fit.R:95-95 sha=183c28a37c | fit$allocation <- allocation
 OK            [STATEMENT.md] Theory_work/Wave3/W3-SAMP/STATEMENT.md:39-41 sha=6a1d51a353 | `lemmas/CC_code_check.md` (CC1–CC7). Calibration record 𝓒, success event 𝒜 ∈ σ(𝓒) — in code terms 𝒜 = {SMC bra
 OK            [STATEMENT.md] cpp/v3_engine.h:379-419 sha=3732af4b2f | LocalArchive local_search(const std::vector<int>& centre, int ell, int tier, bool emit_centre, int iter = -1, 
 OK            [STATEMENT.md] Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:74-74 sha=14c49c6e7c | | Output contract | Potential uninterrupted final run first. GUARD-W identifies delivered statistical records 
@@ -201,11 +203,14 @@ OK            [PROOF.md] v3_calib.R:161-191 sha=7b12b32894 | last <- tiers[[leng
 OK            [PROOF.md] v3_calib.R:163-163 sha=7a8ff47d40 | if (status == "ok" && is.null(last$grid) && e == 1 && isTRUE(grid_fallback) && !is.null(last$fallback_grid) &&
 OK            [PROOF.md] v3_fit.R:163-173 sha=c71a3bb39e | fr$stage_table <- v3_bind_records(list(cal$stage_table, fr$stage_table))
 OK            [PROOF.md] v3_fit.R:76-76 sha=c4db3d3bae | fit <- list(seed = seed, allocation = allocation, local_certified = FALSE, global_certified = FALSE,
-OK            [PROOF.md] v3_fit.R:92-95 sha=031b71d49e | allocation <- list(mem_gb = allocation[["mem_gb"]] %||% 8, hours = allocation[["hours"]] %||% 24)
+OK            [PROOF.md] v3_fit.R:95-95 sha=183c28a37c | fit$allocation <- allocation
+OK            [PROOF.md] v3_fit.R:92-92 sha=a3e89d0762 | allocation <- list(mem_gb = allocation[["mem_gb"]] %||% 8, hours = allocation[["hours"]] %||% 24)
 OK            [PROOF.md] v3_fit.R:95-95 sha=183c28a37c | fit$allocation <- allocation
 OK            [PROOF.md] v3_fit.R:115-115 sha=0eb308dc81 | pf <- v3_preflight(n, p, b, fit$branch_run, allocation, time_fun = time_fun, ls0_worst_case = ls0_wc)
 OK            [PROOF.md] v3_fit.R:145-145 sha=518e001852 | pf <- v3_preflight(n, p, b, "smc", allocation, tier = e, time_fun = time_fun, ls0_worst_case = ls0_wc)
 OK            [PROOF.md] v3_fit.R:96-96 sha=de56929df7 | runtime <- .v3cpp$cpp_runtime_new(allocation$hours, proc.time()[["elapsed"]] - t_start)
+OK            [PROOF.md] cpp/v3_core.cpp:764-767 sha=87dd62ee91 | SEXP cpp_runtime_new(double hours, double elapsed_before) {
+OK            [PROOF.md] v3_fit.R:91-94 sha=0607c49393 | if (!is.list(allocation)) stop("allocation must be a list containing mem_gb and hours")
 OK            [PROOF.md] v3_fit.R:118-149 sha=a943b029cf | ctx <- v3_context(pre$X, pre$y, orig = pre$kept, return_gram = FALSE)
 OK            [PROOF.md] v3_calib.R:75-75 sha=5a3169eaaa | g$resource_limit <- !is.null(runtime) && .v3cpp$cpp_runtime_check(runtime,
 OK            [PROOF.md] v3_fit.R:117-117 sha=9b407003b8 | if (pf$exceeds) { fit$status <- "resource_limit"; return(finish(fit)) }
@@ -231,5 +236,5 @@ OK            [PROOF.md] cpp/v3_core.cpp:642-645 sha=cde362e017 | LocalArchive A
 OK            [PROOF.md] cpp/v3_core.cpp:689-692 sha=1cf7684feb | LocalArchive A = E.local_search(c->led->hpmS, ell, tier, false, iter);
 OK            [PROOF.md] Theory_work/Wave3/W3-SAMP/STATEMENT.md:39-41 sha=6a1d51a353 | `lemmas/CC_code_check.md` (CC1–CC7). Calibration record 𝓒, success event 𝒜 ∈ σ(𝓒) — in code terms 𝒜 = {SMC bra
 
-232 citations: 232 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+237 citations: 237 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
 Not machine-checked: unbackticked references and the semantic match of each excerpt.

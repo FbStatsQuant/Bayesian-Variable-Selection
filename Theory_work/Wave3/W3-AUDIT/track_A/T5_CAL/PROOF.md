@@ -23,8 +23,7 @@ streams are created inside `cpp_final_run` at `cpp/v3_core.cpp:444`, as `seed_st
 ## Step 2 — (CAL-b) 𝓒° is a function of (X, y) and U^{(0)}, …, U^{(9)}
 In P° every check's Boolean is FALSE, so by T1 (GW-i), (GW-iv) every statistical field is computed from the input, the
 options and earlier statistical fields; the only random inputs reaching statistical fields are uniforms (Step 1), and
-the allocation reaches only `fit$allocation` and the normalised local `allocation`, which `v3_calibrate` does not
-receive (`v3_fit.R:150-151` passes `setup`, `seed`, `preflight`, `runtime`, `grid_fallback`; `preflight` and `runtime`
+the allocation and its copies are internal values (T1 definitions), and `v3_calibrate` does not receive the allocation (`v3_fit.R:150-151` passes `setup`, `seed`, `preflight`, `runtime`, `grid_fallback`; `preflight` and `runtime`
 are check bodies and the guard). The seed enters `v3_calibrate` only through `cpp_cal_new(setup$ptr, cseed, …)` →
 `c->seed` (`v3_calib.R:146-148`; `cpp/v3_core.cpp:606`), i.e. only as the seed of the streams, and through
 `calibration_seed` (`v3_calib.R:171`), a copy of the input. The `setup` object is a function of (X, y) (`v3_setup.R:67-77`;

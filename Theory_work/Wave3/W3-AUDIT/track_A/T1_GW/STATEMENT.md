@@ -1,4 +1,4 @@
-# T1 · Lemma GW (GUARD-W: the run-time guard only stops) — STATEMENT v4 (draft, not locked)
+# T1 · Lemma GW (GUARD-W: the run-time guard only stops) — STATEMENT v5 (draft, not locked)
 
 Track A item T1 (`AUDIT.md` §6; CHECKPOINT_1 annex order 1). Tier B (code reading, no key lemma). **Lean target: no**
 (a code fact). Blocks rows 3.1, 3.5, 3.6.
@@ -42,7 +42,9 @@ allocation)` with `ls0 = TRUE` and the default options (`v3_fit.R:73`).
 - **Internal values** of the checks: every value a check body computes or writes, and the guard itself: the handle
   `runtime` and its C++ pointers (`guard`, `E.guard`, `c->guard`), every `RuntimeGuard` member (`start`,
   `elapsed_before`, `allocation`, `exceeded`, `records`; `cpp/v3_runtime.h:14-17`), the preflight record `pf` and its
-  fields, `tcache` and the benchmark output. (Values a body only *reads*, such as n, p or `ev`, are not internal values.)
+  fields, `tcache` and the benchmark output; and **the allocation**: the input argument and every copy of it (`fit$allocation`,
+  `v3_fit.R:76, 95`; the normalised local `allocation`, `v3_fit.R:92`; the parameters `hours` and `elapsed_before` of
+  `cpp_runtime_new`, `cpp/v3_core.cpp:764`). (Values a body only *reads*, such as n, p or `ev`, are not internal values.)
 - **Operational fields** 𝒱_op: the closure under assignment of the fields assigned from a clock reading, a
   machine-environment reading (`Sys.getenv`, `R.version`, `/proc/self/status`) or an internal value — where the value of
   a Boolean at its call site is a **cut**: it, and what is computed from it alone (e.g. a status set to
@@ -64,10 +66,10 @@ Assume EX-A (exact arithmetic; `Theory_work/Wave1/W1-N1/STATEMENT.md:70`). For e
 allocation) of the shipped `v3_fit` and every sequence of clock and environment readings:
 
 **(GW-i) Stop-only.** Every check body terminates normally and draws no uniform from any stream. From the statistical
-state it reads only n, p, the budgets, the branch, the tier, `ls0_worst_case`, the normalised allocation, the
+state it reads only n, p, the budgets, the branch, the tier, `ls0_worst_case`, the
 preprocessed (X, y) columns (timing benchmark, read only) and the event context passed to `check` (the engine's `ev` at
 bridge stages; otherwise one built from the tier and the iteration or grid index); it writes only internal values.
-Every statistical field is computed from the input (X, y, seed, allocation, options), earlier statistical fields and
+Every statistical field is computed from (X, y, seed, options), earlier statistical fields and
 Booleans only.
 
 **(GW-ii) A fired check gives no output.** If some check fires, the run is not in 𝒪: its status is
@@ -80,10 +82,8 @@ point of the execution equals P°'s on the same input: in particular the statist
 the frozen object, of every final island record, of the final local-search and LS0 archives, of the final ledger, and
 every reported statistical field.
 
-**(GW-iv) Interface.** P°'s statistical state is a function of the input (X, y, seed, allocation, options). The
-allocation enters statistical state only as `fit$allocation` and the normalised local `allocation` (`v3_fit.R:92-95`),
-which is read only by check bodies, by `cpp_runtime_new` (whose output, the guard, is operational) and by `v3_fit.R:95`;
-so every other statistical field of P° is a function of (X, y, seed) and the options. 𝒜° ∈ σ(𝓒°). Moreover
+**(GW-iv) Interface.** P°'s statistical state is a function of (X, y, seed) and the options (the allocation and all its
+copies are internal values). 𝒜° ∈ σ(𝓒°). Moreover
 𝒜 = 𝒜° ∩ G ⊆ 𝒜°, 𝒪 ⊆ 𝒪°, and for every event A defined by statistical state, with A° the same event for P°:
 𝒪 ∩ A ⊆ 𝒪° ∩ A° (pathwise). The "potential uninterrupted record" of `W1-N1` §2 and the potential run 𝒪̄ of TLF:86 are
 P°'s. `W3-SAMP`'s "𝒜 ∈ σ(𝓒)" (`Theory_work/Wave3/W3-SAMP/STATEMENT.md:39-41`) holds for the potential pair (𝒜°, 𝓒°);
@@ -115,6 +115,7 @@ run to its own termination rule.
 | v3 | (GW-iv) | WEAKER as to the input (allocation now named, reaching only `fit$allocation`); STRONGER (𝒜° ∈ σ(𝓒°)); 𝒜-equality corrected to include (C1) | LC1r #1, #3, #4 | `reviews/LC1r_reply_opus.md` | pending (gate) |
 | v4 | defs (Booleans = whole call-site expression; internal values incl. the guard handle and all members; cut rule), (GW-i), (GW-iii) wording | EQUAL in substance | LC1r2 #1, #4, #5 | `reviews/LC1r2_reply_opus.md` | pending (gate) |
 | v4 | (GW-iv) allocation clause; 𝓒° = ⊥ when not called; G defined | EQUAL in substance (wording repaired) | LC1r2 #2, #3 | `reviews/LC1r2_reply_opus.md` | pending (gate) |
+| v5 | internal values include the allocation and all its copies (incl. `cpp_runtime_new::hours`); (GW-i), (GW-iv): statistical state a function of (X, y, seed, options) | STRONGER (cleaner (GW-iv)); definitions EQUAL in substance | SL1LC2 #1 (Sol) | `reviews/SL1LC2_reply_sol.md` | pending (council batch) |
 
 Note on tags: (GW-iv) and (GW-v) are not CP1 target clauses (this is a Tier B code lemma with no CP1); the WEAKER tag of
 the v3 (GW-iv) row (input now names the allocation) needs only the statement-change check at the gate.

@@ -3,18 +3,19 @@
 Status (lead's label): **PROVED; Claude line check VERIFIED WITH AMENDMENTS (all applied); OpenAI layers pending at the
 gate.** Not "PROVED-CHECKED": PROTOCOL_v4 §2A requires the Sol lock, a Sol line check and the OpenAI council seat.
 
-Frozen text (sha256, first 12 hex, 2026-11-16 17:04 CST): STATEMENT v4 `6e83ae6c1e92`, PROOF v4 `87bbb1d6303c`.
+Frozen text (sha256, first 12 hex, 2026-11-16 18:00 CST, as frozen for council R1): STATEMENT `768f2bca679c`, PROOF `8f2a4651b5e0`.
 Code of record: `Scripts/SMC_BVS/core/` at 4676af6 (= HEAD for the core).
 
 | Tier B step (PROTOCOL_v4 §3, step 4 omitted) | who (NORMAL) | state | record |
 |---|---|---|---|
-| 1 statement lock | Sol, fresh | **pending (gate)** | — |
+| 1 statement lock | Sol, fresh | **LOCK WITH CHANGES** (Sol, 11-16), changes applied (v5) | `../reviews/SL1LC2_reply_sol.md`, `SL1LC2_disposition.md` |
 | 2 better-theorem review | — | skipped (HQ 11-16, RIDER_RULES) | — |
 | 3 line check | Sol (NORMAL); Codex held for the gate | Claude stand-in done: LC1 (Opus, blind) → LC1r → LC1r2 (Opus, new agents), all **VERIFIED WITH AMENDMENTS**, no C/F finding open | `../reviews/LC1_*`, `LC1r_*`, `LC1r2_*` (brief, reply verbatim, disposition) |
+| 3 line check (Sol) | Sol | **VERIFIED WITH AMENDMENTS** (Sol, 11-16), amendments applied; no C | `../reviews/SL1LC2_reply_sol.md` |
 | statement-change check (§4.2) for the changelog rows not EQUAL | Sol, new agent | **pending (gate)**; rows: v2 (GW-iv), (GW-v), (GW-i) termination STRONGER; v3 (GW-iv) WEAKER/STRONGER | STATEMENT changelog |
 | 5 sweep duties → council briefs | — | at council | — |
 | 6 citation check | script | **0 MISS** (232 citations) | `CITECHECK.txt` (track_A/citecheck.py) |
-| 7 council R1 | Sol (OpenAI seat, Tier B) + Opus (Claude seat), blind | **pending (gate)** | — |
+| 7 council R1 | Sol + Opus, blind | batch T1–T10, manifest `../reviews/MANIFEST_R1.txt`; outcome recorded in `../reviews/` and `../CHECKPOINT_3.md` (this file is frozen in the manifest) | — |
 
 What LC1 found that mattered (all applied, none a failing step): `fit$peak_memory_kb` and environment readings were not
 classed; the "statistical state" needed leaf-field granularity; the interface to W3-SAMP's 𝒜 and to CAL needed its

@@ -49,3 +49,4 @@ On valid declared inputs (seed an integer in [1, 2³¹ − 1], allocation a list
 | v1 | all | NEW-CLAIM (second-seat re-audit at the pin; adds X9, X10) | track A T10 | `AUDIT.md` §6 T10 | `CHECK.md` |
 | v2 | (S.3′) get_holder, X2-imp, X7/X8 for R inputs; (D1) binary64 | STRONGER (more sites covered) / EQUAL (citations) | LC2 #13–#19 | `reviews/LC2_reply_opus.md` | pending (gate) |
 | v2.1 | X2-imp stated as a class, more instances | STRONGER (scope of the audit made explicit) | LC4 S2, E3 | `reviews/LC4_reply_opus.md` | pending (gate) |
+| v2.2 | X7/X8: exact R-representability bound (n, p ≤ 2³¹ − 1 via `dim`/`int`); A:IDEAL-W⁺ reduces to IDEAL-W on R-representable inputs | STRONGER (made exact) | manager question 11-16 | — | pending (council batch) |
