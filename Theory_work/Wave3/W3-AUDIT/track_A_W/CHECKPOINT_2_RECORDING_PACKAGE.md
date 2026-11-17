@@ -1,6 +1,6 @@
 # CHECKPOINT 2 — Recording package — discharge of "conditional on W1-N1:B, W1-N1:F" (track A_W; for the recorder's dry run → HQ GO)
 
-Lead: W3-AUDIT track A lead (Opus 5.5). Branch `theory/W3-AUDIT` @ __COMMIT__. Registry read: origin/main 029bb748.
+Lead: W3-AUDIT track A lead (Opus 5.5). Branch `theory/W3-AUDIT` @ 125f93d8 (package written; items as bound at c7d63bda). Registry read: origin/main 029bb748.
 Code of record 4676af6. Owner standard D106: hardened (blind Opus line check + Sol lock/line check + council), stated at the
 pin, Lean targets tagged; API blind-audit card ready for HQ (`track_A_W/API_CARD/`).
 
