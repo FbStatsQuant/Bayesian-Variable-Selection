@@ -12,7 +12,7 @@ evaluated by Tue 12-1. That leaves ≈ 3 days of slack, enough for one failed at
 | P1 | lever 1 = O1 (store check off the step path) merged, reviewed, same bits | builder 7 | Wed 11-18 |
 | P2 | WP2 #13 merged, then D-31 (cond_cum on demand + scan table) | WP2 | Wed 11-18 / Fri 11-20 |
 | P3 | lever 2 = K1 (bounded scoring) merged, same bits | builder 6 | Fri 11-20 |
-| P4 | **T5 end-to-end at 10⁵** passes on NOTS (all stages via the driver; tail and LS0 seconds recorded) | builder 7 (O2 lean + O5), manager submits | Sat 11-21 – Mon 11-23 |
+| P4 | **T5 end-to-end at 10⁵** passes on NOTS (all stages via the driver; tail and LS0 seconds recorded). **Needs the `island` CLI command (WP3; a stub on exp/P1M-engine as of 11-16) and `setup` (WP2 #13)** | builder 7 (O2 lean + O5), WP3, WP2; manager submits | Sat 11-21 – Mon 11-23 |
 | P5 | WP3 StartView merged; `--plan-only` includes the island plan (#39 MAJOR); the driver re-sized from the printed real-table plan (island, calibrate **and merge** memory, PR45 INFO-3) | WP3, manager | Mon 11-23 |
 | P6 | lever 3 = K3 (Gram rows) merged, same bits | builder 6 | Mon 11-23 |
 | P7 | **H-11 measurement: the 10⁶ calibration pilot** on SPR with the production setup (levers 1–3 + m3), pre-announced | builder 7 command, manager submits | Tue 11-24 |

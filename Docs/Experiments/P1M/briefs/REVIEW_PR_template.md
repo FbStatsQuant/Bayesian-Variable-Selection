@@ -25,7 +25,7 @@ You run unattended: **no command may need a permission approval.**
   `/home/fb31/SMC_Engineering_Department/` and the main clone.
 - **Never delete anything:** no `rm -rf`, not even of `.rc_tmp/`. Leave `.rc_tmp/` in place; the manager removes the
   worktree.
-- Tests that need a writable root outside the worktree get `P1M_TEST_ROOT="$PWD/.rc_tmp/root"`.
+- Tests that need a writable root outside the worktree get `P1M_TEST_ROOT="$TMPDIR"` (TMPDIR already under `.rc_tmp/`; the driver-manifest test needs its dept dir under it).
 - Write the review to `<worktree>/.rc_tmp/PR<N>_review.md`; the manager copies it to `Docs/Experiments/P1M/reviews/`.
 - If something truly needs access outside the worktree, stop and say so in your final message; never request approval.
 
