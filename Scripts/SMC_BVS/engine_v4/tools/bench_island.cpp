@@ -14,7 +14,9 @@
 //   overheads <p> [n]                          per-call costs of the L5 levers, old vs new (1 thread)
 // Environment: V4_K_STORE (calibration-measured mean stored |S| -> IslandConfig::k_store; island and plan modes; without
 // it the island mode plans from pi_0 alone, which real runs refuse at p >= 1e5), V4_MEM_BUDGET_GB, V4_ISLAND_ID,
-// V4_PRODUCTS_BLOCK (default: 4 with AVX-512, else 1), V4_VERBOSE, V4_NO_DUP_FILTER, V4_SERIAL_COMPACT.
+// V4_PRODUCTS_BLOCK (default: 4 with AVX-512, else 1), V4_VERBOSE, V4_NO_DUP_FILTER, V4_SERIAL_COMPACT,
+// V4_NO_BOUNDED (WP6 K1: the dense label-major reference), V4_NO_CHECK_STORE (no I1 check at all, also not at checkpoints / the final write: O1),
+// V4_CKPT=<base> (checkpoints; resume from <base> when present) with V4_STOP_AFTER=<step> (stop after that step's checkpoint).
 // Exit status: non-zero when any island run is refused or does not complete (review PR26 B1).
 #include <omp.h>
 #include <chrono>
@@ -129,6 +131,7 @@ static int bench_island(int p, int N, const std::vector<int>& thr, KernelKind kk
   IslandConfig c; c.store_dup_filter = std::getenv("V4_NO_DUP_FILTER") == nullptr; c.verbose = std::getenv("V4_VERBOSE") != nullptr;
   if (const char* e = std::getenv("V4_PRODUCTS_BLOCK")) c.products_block = std::atoi(e);
   c.store_parallel_compact = std::getenv("V4_SERIAL_COMPACT") == nullptr; c.allow_test_kernels = true;
+  c.check_store_each_step = std::getenv("V4_CHECK_EACH_STEP") != nullptr;   // the pre-O1 behaviour (before/after comparisons)
   c.seed = 2026; c.island = 1; c.N = N; c.L = L; c.Hm = Hm; c.B = 14; c.kernel = kk; c.G = G; c.tile = Bk; c.store_cap = cap;
   // environment overrides AFTER the defaults (the island id was reset to 1 before: manager 11-16 note 1)
   if (const char* e = std::getenv("V4_ISLAND_ID")) c.island = (uint32_t)std::atoi(e);
@@ -136,6 +139,12 @@ static int bench_island(int p, int N, const std::vector<int>& thr, KernelKind kk
   if (const char* e = std::getenv("V4_K_STORE")) c.k_store = std::atof(e);   // calibration-measured mean stored |S| (B1)
   else c.k_store_optional = true;   // bench only: without V4_K_STORE the plan's k comes from pi_0 alone (r1 refuses this in real runs)
   c.inputs_bytes = inputs_extra;
+  c.bounded_scoring = std::getenv("V4_NO_BOUNDED") == nullptr; c.check_store = std::getenv("V4_NO_CHECK_STORE") == nullptr;
+  if (const char* e = std::getenv("V4_CKPT")) { c.ckpt_path = e; c.ckpt_every_s = 1e30; c.resume = true; }   // checkpoint only at V4_STOP_AFTER
+  if (const char* e = std::getenv("V4_STOP_AFTER")) c.stop_after_step = std::atoi(e);
+  std::printf("# bounded scoring %s, I1 store check %s%s\n", c.bounded_scoring ? "on" : "OFF (dense reference)",
+              !c.check_store ? "off" : c.check_store_each_step ? "after every step" : "at checkpoints and the final write (O1)",
+              c.ckpt_path.empty() ? "" : (", checkpoints " + c.ckpt_path).c_str());
   std::printf("# island id %u (address key), seed %u, k_store %s, products block %d\n", c.island, c.seed,
               c.k_store > 0 ? std::to_string(c.k_store).c_str() : "absent (pi_0 plan)", products_block_of(c));
   if (gspec.rfind("geo:", 0) == 0) {
@@ -177,6 +186,8 @@ static int bench_island(int p, int N, const std::vector<int>& thr, KernelKind kk
     std::printf("  memory plan (admission, ESTIMATE): %s | G used %d\n", r.mem_plan.c_str(), r.G_used);
     std::printf("  store compaction: %.2f s wall in total (%llu compactions, %llu serial in-pass fallbacks; %s)\n", k.t_store_compact,
                 (unsigned long long)k.store_merges, (unsigned long long)k.store_serial_merges, c.store_parallel_compact ? "parallel at pass/step boundaries" : "serial under the mutex");
+    std::printf("  store check (I1, parallel; O1): %llu checks, %.2f s wall (%s)\n", (unsigned long long)k.store_checks, k.t_check,
+                c.check_store_each_step ? "after every step: V4_CHECK_EACH_STEP" : "before checkpoints and the final write");
     std::printf("  wall s: init %.2f orders %.2f build %.2f phaseA %.2f walk %.2f phaseB %.2f apply %.2f barrier %.2f pm %.2f\n",
                 k.t_init, k.t_orders, k.t_build, k.t_phaseA, k.t_walk, k.t_phaseB, k.t_apply, k.t_barrier, k.t_pm);
     std::printf("  ns per step by phase (thread-time): orders %.1f build %.1f phaseA %.1f walk %.1f phaseB %.1f apply %.1f\n",
