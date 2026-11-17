@@ -55,6 +55,10 @@ TASK_CAP = 150
 INT31 = 2 ** 31 - 1          # seeds, p, n
 CPU_CAP = 1536
 STAGES = ["setup", "calibrate", "islands", "merge", "eval"]
+MODES = ("compat", "law", "V")
+DESIGNS = ("IND", "AR", "BLK", "ADJ-OPP", "NULL")     # NULL = AR with no signal
+SIGNALS = ("strong", "weak", "null")                  # amplitude 1.0 / 0.6 / 0.0 (the generator's `a`)
+STAGE_KEYS = ("cpus", "mem", "time")
 
 # PLANNING VALUES (ENGINEERING_SPEC §0-v2.5, §2, §7; NOTS_FACTS: island default 64 CPUs + 32 GB). Gate G0 / the 10^4-10^5
 # pilots replace them; every plan may override any entry. cpus = allocated (billed) CPUs = hardware threads.
@@ -126,6 +130,19 @@ def plan_pos(v, what):
     return v
 
 
+def plan_choice(v, what, allowed):
+    """An enumerated string: exactly one of `allowed` (case-sensitive: 'Weak' is not 'weak'), else refuse with the allowed set."""
+    if not isinstance(v, str) or v not in allowed:
+        raise PlanError("%s must be one of %s, got %r" % (what, ", ".join(allowed), v))
+    return v
+
+
+def plan_bool(v, what):
+    if not isinstance(v, bool):
+        raise PlanError("%s must be true or false, got %r" % (what, v))
+    return v
+
+
 def plan_mem(v, what):
     if not isinstance(v, str) or not re.fullmatch(r"\d+[MG]", v) or int(v[:-1]) < 1:
         raise PlanError("%s must be a positive size like 512M or 32G, got %r" % (what, v))
@@ -148,8 +165,7 @@ def resolve(plan):
     P = copy.deepcopy(plan)
     safe_id(P.get("batch", ""), "batch")
     P.setdefault("mode", "V")
-    if P["mode"] not in ("compat", "law", "V"):
-        raise PlanError("mode must be compat, law or V")
+    plan_choice(P["mode"], "mode", MODES)
     P.setdefault("binary", "bin/smcbvs4")          # relative to scripts/<batch>/ (deployed with the frozen code)
     P.setdefault("code_commit", "UNSET")
     P.setdefault("max_task_hours", 2.0)
@@ -163,6 +179,8 @@ def resolve(plan):
         plan_int(P["island_throttle"], "island_throttle", 1, TASK_CAP)
     if not isinstance(P["eval"], dict):
         raise PlanError("eval must be a JSON object, got %r" % (P["eval"],))
+    if "post" in P["eval"]:
+        plan_bool(P["eval"]["post"], "eval.post")
     for k in ("n_draws", "n_x", "n_test"):
         if k in P["eval"]:
             plan_int(P["eval"][k], "eval.%s" % k, 1, INT31)
@@ -174,7 +192,10 @@ def resolve(plan):
         raise PlanError("island_isa must be a -march name such as sapphirerapids")
     # D-32 (1): class-A values (V mode) use a true FMA in every FMA build and a*b + c without one (amath.h fma8), so a
     # V plan needs an island ISA with FMA, at least x86-64-v3; one fit = one FMA family (one binary for every stage)
-    v_plan = P["mode"] == "V" or any(f.get("mode", P["mode"]) == "V" for f in P.get("fits") or [])
+    for i, f in enumerate(P.get("fits") if isinstance(P.get("fits"), list) else []):
+        if isinstance(f, dict) and "mode" in f:
+            plan_choice(f["mode"], "fits[%d].mode" % i, MODES)
+    v_plan = P["mode"] == "V" or any(f.get("mode", P["mode"]) == "V" for f in P.get("fits") or [] if isinstance(f, dict))
     if v_plan and P["island_isa"] not in FMA_ISAS:
         raise PlanError("a V-mode plan needs island_isa with FMA (one of %s; D-32); got %r" % (", ".join(sorted(FMA_ISAS)), P["island_isa"]))
     # WP7 O4: the islands' resubmission chain (restart from island_r.ckpt.{a,b}); default: one attempt, no soft stop
@@ -189,6 +210,8 @@ def resolve(plan):
         if P.get("pilot_only"):
             raise PlanError("restart does not apply to a pilot_only batch")
     # WP7 O4: T6 by real kills (a t6_only batch: the island of a finished fit's inputs, nothing else)
+    if "t6_only" in P:
+        plan_bool(P["t6_only"], "t6_only")
     t6 = P.get("t6")   # no setdefault: a plan without the keys resolves to exactly what it did before O4 (plan.resolved.json)
     if P.get("t6_only") and t6 is None:
         raise PlanError("t6_only needs a t6 section")
@@ -215,6 +238,7 @@ def resolve(plan):
     # review PR55 MAJOR: a pilot-only batch (P7) generates setup + pilot and nothing that could launch the fit; its
     # worst case, cap and ledger row are the pilot's (the real fit later gets its own plan)
     P.setdefault("pilot_only", False)
+    plan_bool(P["pilot_only"], "pilot_only")
     if P["pilot_only"] and P.get("pilot") is None:
         raise PlanError("pilot_only needs a pilot section")
     if P["pilot_only"] and P.get("isa_check") is not None:
@@ -254,6 +278,8 @@ def resolve(plan):
         if h > QOS_WALL_H or h > P["max_task_hours"] + 1e-9:
             raise PlanError("pilot: %s exceeds max_task_hours = %.2f" % (pl["time"], P["max_task_hours"]))
         pl.setdefault("with_ledger", 1)
+        if isinstance(pl["with_ledger"], bool) or pl["with_ledger"] not in (0, 1):
+            raise PlanError("pilot.with_ledger must be one of 0, 1, got %r" % (pl["with_ledger"],))
     if P.get("isa_check") is not None:              # D-32: T2 across island ISAs (one island re-run with a comparison build)
         if not P["island_isa"]:
             raise PlanError("isa_check needs island_isa (the comparison build is the other side)")
@@ -264,8 +290,7 @@ def resolve(plan):
         # are those of every FMA build (x86-64-v3 = AVX2 + FMA matched AVX-512 on Owls) and differ from a build without
         # FMA ("portable" = x86-64-v2) by design; the bit form (theory/compat) is ISA-free
         P["isa_check"].setdefault("against", "x86-64-v3")
-        if P["isa_check"]["against"] not in FMA_ISAS:   # D-32 (3): the class-A comparison is within the FMA family
-            raise PlanError("isa_check.against must be an FMA ISA (one of %s)" % ", ".join(sorted(FMA_ISAS)))
+        plan_choice(P["isa_check"]["against"], "isa_check.against (an FMA ISA)", tuple(sorted(FMA_ISAS)))   # D-32 (3): the comparison is within the FMA family
         if P["isa_check"]["against"] == P["island_isa"]:   # review PR55 m5: the same ISA makes the comparison vacuous
             raise PlanError("isa_check.against equals island_isa: the class-A comparison would compare a build with itself")
         # its own time limit (review PR55 m5): one island re-run, two `info --meta` reads, three bit-form islands
@@ -288,8 +313,8 @@ def resolve(plan):
         if f["run_id"] in seen:
             raise PlanError("duplicate run_id %s" % f["run_id"])
         seen.add(f["run_id"])
-        if f["design"] not in ("IND", "AR", "BLK", "ADJ-OPP", "NULL"):
-            raise PlanError("fit %s: design %s is not generated by WP1 gen (IND, AR, BLK, ADJ-OPP, NULL)" % (f["run_id"], f["design"]))
+        plan_choice(f["design"], "fit %s: design" % f["run_id"], DESIGNS)
+        plan_choice(f["signal"], "fit %s: signal" % f["run_id"], SIGNALS)
         for k in ("seed", "data_seed"):
             plan_int(f[k], "fit %s: %s" % (f["run_id"], k), 1, INT31)
         plan_int(f["p"], "fit %s: p" % f["run_id"], 1, INT31)
@@ -299,15 +324,19 @@ def resolve(plan):
         plan_int(f["Rp"], "fit %s: Rp" % f["run_id"], 1, 2 ** 20 - 1)   # island r < 2^20 (INTERFACES §3)
         plan_int(f["N"], "fit %s: N" % f["run_id"], 1, 2 ** 24)
         f.setdefault("mode", P["mode"])
+        plan_choice(f["mode"], "fit %s: mode" % f["run_id"], MODES)
         res = copy.deepcopy(DEFAULT_RES[rung(f["p"])])
         for where, given in (("resources", P.get("resources")), ("fit %s resources" % f["run_id"], f.get("resources"))):
             if given is not None and not isinstance(given, dict):
                 raise PlanError("%s must be a JSON object, got %r" % (where, given))
             for st, over in (given or {}).items():
                 if st not in res:
-                    raise PlanError("unknown stage %r in %s" % (st, where))
+                    raise PlanError("unknown stage %r in %s: allowed %s" % (st, where, ", ".join(STAGES)))
                 if not isinstance(over, dict):
                     raise PlanError("%s.%s must be a JSON object, got %r" % (where, st, over))
+                for rk in over:
+                    if rk not in STAGE_KEYS:   # a typo such as "cpu" would otherwise be silently ignored
+                        raise PlanError("unknown key %r in %s.%s: allowed %s" % (rk, where, st, ", ".join(STAGE_KEYS)))
                 res[st].update(over)
         for st, r in res.items():
             what = "fit %s stage %s" % (f["run_id"], st)

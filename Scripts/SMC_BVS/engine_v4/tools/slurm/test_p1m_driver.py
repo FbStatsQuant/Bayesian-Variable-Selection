@@ -155,6 +155,54 @@ class TestResolve(Base):
                                ("ckpt_every_s", 0, "t6.ckpt_every_s must be a number > 0"), ("time", "00:00:00", "t6.time must be a time limit > 0")):
             self.refused(lambda pl, k=k, b=bad: pl.update({"t6_only": True, "t6": dict(t6, **{k: b})}), needle)
 
+    # ---- enumerated values: an unknown one is refused (exit 65), never defaulted: a typo such as "Weak" used to run AR-strong
+    def test_enum_signal(self):
+        for bad in ("Weak", "STRONG", "medium", "", " weak", 0.6, None, True):
+            self.refused(lambda pl, b=bad: pl["fits"][0].__setitem__("signal", b),
+                         "fit A2_ARs_n200_r1: signal must be one of strong, weak, null, got %r" % (bad,))
+        for ok in ("strong", "weak", "null"):
+            pl = load_example(); pl["fits"][0]["signal"] = ok
+            p1m_driver.resolve(pl)
+
+    def test_enum_design(self):
+        for bad in ("ar", "Ar", "AR ", "ADJ_OPP", "BLOCK", "", 1):
+            self.refused(lambda pl, b=bad: pl["fits"][0].__setitem__("design", b),
+                         "fit A2_ARs_n200_r1: design must be one of IND, AR, BLK, ADJ-OPP, NULL, got %r" % (bad,))
+        for ok in ("IND", "AR", "BLK", "ADJ-OPP", "NULL"):
+            pl = load_example(); pl["fits"][0]["design"] = ok
+            p1m_driver.resolve(pl)
+
+    def test_enum_mode(self):
+        for bad in ("v", "fast", "Law", "", 3, None):
+            self.refused(lambda pl, b=bad: pl.__setitem__("mode", b), "mode must be one of compat, law, V, got %r" % (bad,))
+            self.refused(lambda pl, b=bad: pl["fits"][1].__setitem__("mode", b), "fits[1].mode must be one of compat, law, V, got %r" % (bad,))
+        # a per-fit mode that is valid but differs from the plan's: fine (a law fit in a V plan keeps its own mode)
+        pl = load_example(); pl["fits"][1]["mode"] = "law"
+        self.assertEqual(p1m_driver.resolve(pl)["fits"][1]["mode"], "law")
+
+    def test_enum_isa(self):
+        # island_isa of a V plan, and the isa_check comparison build: the FMA family only, value and set named
+        for bad in ("portable", "x86-64-v2", "SapphireRapids", "", 3):
+            self.refused(lambda pl, b=bad: pl.__setitem__("island_isa", b), "got %r" % (bad,))
+        self.refused(lambda pl: pl.__setitem__("island_isa", "portable"), "x86-64-v3", "sapphirerapids")
+        for bad in ("portable", "x86-64-v2", "haswell", 5):
+            self.refused(lambda pl, b=bad: pl.update({"island_isa": "sapphirerapids", "isa_check": {"island": 1, "against": b}}),
+                         "isa_check.against (an FMA ISA) must be one of", "x86-64-v3", "got %r" % (bad,))
+
+    def test_enum_flags_and_stage_names(self):
+        for bad in ("false", "true", 0, 1, None):   # a string used to be truthy: "false" meant post = on
+            self.refused(lambda pl, b=bad: pl["eval"].__setitem__("post", b), "eval.post must be true or false, got %r" % (bad,))
+            self.refused(lambda pl, b=bad: pl.__setitem__("pilot_only", b), "pilot_only must be true or false, got %r" % (bad,))
+            self.refused(lambda pl, b=bad: pl.update({"t6_only": b}), "t6_only must be true or false, got %r" % (bad,))
+        for bad in (2, -1, "1", True):
+            self.refused(lambda pl, b=bad: pl.update({"pilot": {"cpus": 8, "mem": "8G", "time": "01:00:00", "with_ledger": b}}),
+                         "pilot.with_ledger must be one of 0, 1, got %r" % (bad,))
+        # resource stage names and their keys: a typo is refused, not ignored
+        self.refused(lambda pl: pl.__setitem__("resources", {"Islands": {"cpus": 8}}), "unknown stage 'Islands'", "allowed setup, calibrate, islands, merge, eval")
+        self.refused(lambda pl: pl["fits"][0].__setitem__("resources", {"island": {"cpus": 8}}), "unknown stage 'island'")
+        self.refused(lambda pl: pl.__setitem__("resources", {"islands": {"cpu": 8}}), "unknown key 'cpu'", "allowed cpus, mem, time")
+        self.refused(lambda pl: pl["fits"][0].__setitem__("resources", {"merge": {"memory": "8G"}}), "unknown key 'memory'")
+
     def test_value_rules_shapes(self):
         # structure errors are plan errors too, never a traceback
         pl = load_example()
