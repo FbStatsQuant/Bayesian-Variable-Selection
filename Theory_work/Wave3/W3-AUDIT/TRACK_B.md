@@ -217,7 +217,7 @@ to 15 other columns because the method's blocks have at most 16 columns.
 (W2-APP family map, "PTV automatic if ≤ 1 truth/block", `L4_families.md:165`). Fails for masked truths (zero marginal or
 partial covariance with y); those designs are treated by a separate theorem (W1-PXN), not by Thm 6. Track C gives two
 concrete failures at the population level: a pervasive factor with **mixed-sign** truths (its D14, D15: a set of ≤ 15
-columns cancels the truth's covariance with the signal) and the **clustered** placement of the riboflavin-like design (D18; on or within 10⁻⁸ of the bad set B). **Update (track V, Lemma VIS v1.5, W3-AUDIT-V:VIS, 11-17):** D18's **spread** placement is inside with a certified margin ≥ 0.1 for p ≥ 16352 (truths in different tiles; exact structural argument), and D18/D19, being built from one fixed matrix, have finitely many local patterns (VIS-d)(i).
+columns cancels the truth's covariance with the signal) and the **clustered** placement of the riboflavin-like design (D18; effectively on the bad set B: a 15-column U gives |Cov| ≤ 6.9 × 10⁻⁹, exact recomputation). **Update (track V, Lemma VIS v1.5, W3-AUDIT-V:VIS, 11-17):** D18's **spread** placement is inside with a certified margin a ≥ 0.1·min_k|θ_k| for p ≥ 16352 (truths in four different tiles, so every visibility direction is a coordinate vector; `track_V/reviews/D18/D18_VERDICT.md`), and D18/D19, being built from one fixed matrix, have finitely many local patterns (VIS-d)(i).
 **Designs** — checked (AUDITCALC_check_opus.md §5). Inside: S1–S4, S6, IND, AR, BLK (block or Markov structure: the
 covariance is θ_j Var(W_j | W_U) plus geometrically small terms, ≥ |θ_j| λ_min/2). cs(ρ) of P6: inside (aligned signs,
 positive partial covariances). **fac2 and s5 of P6: inside** (moved from "unclear" in v1.2). P6's truths have aligned
@@ -230,7 +230,7 @@ argument, API triage T8; I re-derived both computations; they agree with the che
 **Unclear, not upgraded:** S5 of the study (mixed signs; near-cancellation, worst ratio 0.0056) and FAC of 1M (0.16 in
 the checker's search, below the aligned-sign bound 0.7, so its signs are mixed). Track C agrees on all counts: visibility inside and rising with n for IND, AR(0.5), fixed
 blocks and S6; factor designs inside with aligned truths and outside with mixed-sign truths (its D14, D15); small for
-S5 (population 0.06). **Typical user (updated by Lemma VIS):** the riboflavin-like design is inside for spread truths (p ≥ 16352, margin ≥ 0.1) and outside for truths clustered in one tile; the FRED-QD-like tiles are inside by generic position (ϑ off one fixed closed null set).
+S5 (population 0.06). **Typical user (updated by Lemma VIS):** the riboflavin-like design is inside for spread truths (p ≥ 16352, a ≥ 0.1·min_k|θ_k|) and outside for truths clustered in one tile; the FRED-QD-like tiles are inside by generic position (ϑ off one fixed closed null set).
 **Corollary (primitive).** Block-diagonal Σ with λ_min ≥ c and at most one truth per block ⇒ (A3) with a = c·min|θ*_j|.
 
 ## B9. Polynomial leakage set with locality (Thm 6 (A4)): Q ⊇ S₀, |Q| ≤ n^b, b < ½
