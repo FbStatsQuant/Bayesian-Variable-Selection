@@ -18,4 +18,4 @@ averaged PIPs, MPM and $\hat Z$ is not claimed there."
 ## Tags vs the current card
 Row 3.1: STRONGER (added conclusions; hypotheses and data event unchanged). Row 3.6: unchanged (Option A) or NEW-CLAIM
 sentence (Option B). Row 3.5: unchanged (the list evidence is a deterministic sandwich, not an unbiasedness statement).
-HQ note D-15 / QUEUE: row 3.6 may be demoted to a remark after #5′; Option A is compatible with that.
+HQ (H5 card 15 D; dept/theory QUEUE.md, line 59): row 3.6 may be demoted to a remark after #5′; Option A is compatible with that.
