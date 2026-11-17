@@ -144,6 +144,24 @@ v4::IslandResult to_record(const IslandRun& r);
 // G <= 256 that fits mem_budget when cfg.G == 0), the plan's k, the sizes. Used by run_island and by the bench.
 MemPlan plan_island(const Data& D, const Start& st, const IslandConfig& cfg, MemSizes* z = nullptr, double* k = nullptr, int* G = nullptr);
 
+// The same plan from sizes alone (no data, no Start: `--plan-only` before the files exist; k is then the caller's):
+// plan_sizes() fills MemSizes exactly as plan_island does, plan_with_budget() applies its G rule (cfg.G = 0 and a
+// budget: the largest G <= 256 that fits). Test `plan_from_sizes_equals_plan_island` pins the two paths equal.
+inline MemSizes plan_sizes(int n, int p, int K, const IslandConfig& cfg) {
+  const bool lm = cfg.kernel == KernelKind::LabelMajor;
+  MemSizes z; z.n = n; z.p = p; z.K = K; z.N = cfg.N; z.B = cfg.B; z.Hm = cfg.Hm; z.threads = cfg.threads;
+  z.tile = std::max(64, (cfg.tile + 63) / 64 * 64); z.cap = cfg.store_cap ? cfg.store_cap : 40ULL * (uint64_t)p + 1; z.label_major = lm;
+  z.deferred = cfg.store_parallel_compact && cfg.threads > 1 && lm; z.leaders = cfg.leaders || cfg.role != IslandRole::Final;
+  z.compat = cfg.compat; z.inputs_bytes = cfg.inputs_bytes; z.calib = cfg.role != IslandRole::Final;
+  return z;
+}
+inline MemPlan plan_with_budget(MemSizes& z, double k, const IslandConfig& cfg) {
+  int G = cfg.G ? cfg.G : 256;
+  z.G = G; MemPlan mp = island_memory(z, k);
+  if (cfg.mem_budget && cfg.G == 0) while (G > 1 && mp.total > cfg.mem_budget) { --G; z.G = G; mp = island_memory(z, k); }
+  return mp;
+}
+
 template <Arith A>
 IslandRun run_island(const Data& D, const Start& st, const Neighbours& nb, const IslandConfig& cfg);
 

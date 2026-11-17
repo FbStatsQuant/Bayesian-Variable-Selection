@@ -66,7 +66,24 @@ Json plan_json(const CalibMemPlan& m, uint64_t budget, double kbar) {
   j["label"] = "ESTIMATE (calibration memory plan: 3 calibration stores, one island ledger in flight, flat V / export, inputs)";
   j["kbar"] = kbar; j["ledger"] = u(m.ledger); j["island_ledger"] = u(m.island_ledger); j["export"] = u(m.export_);
   j["inputs"] = u(m.inputs); j["resident"] = u(m.resident); j["total"] = u(m.total); j["budget"] = u(budget);
-  j["island_budget"] = u(budget > m.resident ? budget - m.resident : 0);
+  return j;
+}
+// The calibration island's own plan (review PR39 MAJOR-2; WP3_DESIGN §1.11): the largest island of the calibration (the
+// largest H and Hm over the tiers the rule can use), with the leader stores and the round-start snapshot, planned as
+// CalibIslandRunner admits it under WP4's N-1 rule: the caller-supplied term = the setup inputs (start_bytes) + the
+// calibration's resident state without the inputs (ledger + export); admitted iff that plan <= --mem-budget. With
+// setup.bin it is plan_island on the real Start; without it, sizes only (k = kbar, setup inputs 0: an ESTIMATE floor).
+Json island_plan_json(const island::MemPlan& mp, uint64_t floor, uint64_t budget, double setup_inputs, uint64_t resident_own, bool from_files) {
+  Json j = Json::object();
+  auto u = [](uint64_t x) { return Json((double)x); };
+  j["label"] = from_files ? "ESTIMATE (calibration island plan, memory.h, real setup; = the task's predicted peak under N-1)"
+                          : "ESTIMATE (calibration island plan from sizes: k = kbar, setup inputs NOT counted)";
+  Json it = Json::object(); for (const auto& x : mp.items) it[x.name] = u(x.bytes);
+  j["items"] = it; j["G"] = mp.G; j["k"] = mp.k; j["setup_inputs"] = setup_inputs; j["resident"] = u(resident_own);
+  // floor = the plan at G = 1: with a budget the island takes the largest G <= 256 that fits, so it is admitted iff
+  // floor <= --mem-budget (the smallest budget the calibration can run with; the driver sizes from it)
+  j["total"] = u(mp.total); j["floor"] = u(floor); j["budget"] = u(budget); j["admitted"] = budget == 0 || mp.total <= budget;
+  j["text"] = island::mem_plan_text(mp);
   return j;
 }
 }  // namespace
@@ -116,7 +133,33 @@ Json run(const Json& args) {
     rec["status"] = "resource_limit"; rec["reason"] = "calibrate not admitted: calibration state " + std::to_string(plan.resident) + " B >= --mem-budget";
     return rec;
   }
-  if (plan_only) { rec["status"] = "completed"; rec["plan_only"] = true; return rec; }
+  if (plan_only) {
+    island::IslandConfig ic; ic.role = island::IslandRole::Pilot; ic.island = 0; ic.leaders = true; ic.B = b.B; ic.G = 0; ic.mem_budget = budget;
+    ic.N = 1; ic.Hm = 1;
+    for (int e = 0; e < (rule == Rule::coded ? 2 : 1); ++e) { ic.N = std::max(ic.N, s.tiers[e].H); ic.Hm = std::max(ic.Hm, s.tiers[e].Hm); }
+    ic.compat = mode == fmt::M_COMPAT; ic.threads = ic.compat ? 1 : s.threads;
+    ic.kernel = mode == fmt::M_V ? island::KernelKind::LabelMajor : island::KernelKind::ParticleMajor;
+    const uint64_t resident_own = plan.ledger + plan.export_;
+    island::MemPlan ip, ip1; double setup_in = 0; const bool files = !dpath.empty() && !spath.empty();
+    island::IslandConfig ic1 = ic; ic1.G = 1; ic1.mem_budget = 0;
+    if (files) {
+      const island::Start st = island::load_start(spath, D);
+      const island::Neighbours nb = island::load_neighbours(spath, D.p);
+      setup_in = island::start_bytes(st, nb); ic.inputs_bytes = ic1.inputs_bytes = setup_in + (double)resident_own;
+      ip = island::plan_island(D, st, ic); ip1 = island::plan_island(D, st, ic1);
+    } else {
+      ic.inputs_bytes = ic1.inputs_bytes = (double)resident_own;
+      island::MemSizes z = island::plan_sizes((int)n, (int)p, (int)std::min<int64_t>(p, n / 2), ic), z1 = z;
+      ip = island::plan_with_budget(z, kbar, ic); ip1 = island::plan_with_budget(z1, kbar, ic1);
+    }
+    rec["island_plan"] = island_plan_json(ip, ip1.total, budget, setup_in, resident_own, files);
+    rec["plan_only"] = true;
+    if (budget && ip.total > budget) {
+      rec["status"] = "resource_limit";
+      rec["reason"] = "calibration island not admitted (N-1): resident + island plan " + std::to_string(ip.total) + " B > --mem-budget";
+    } else rec["status"] = "completed";
+    return rec;
+  }
   if (out.empty()) throw Error(Status::invalid_input, "calibrate: --out is required");
   const int64_t seed = whole_arg(args, "seed", -1, 1, 2147483647);
   if (seed < 1) throw Error(Status::invalid_input, "calibrate: --seed is required (a whole number in [1, 2^31 - 1])");
@@ -143,7 +186,11 @@ Json run(const Json& args) {
   if (mode == fmt::M_V) { island::CalibIslandRunner<island::Arith::ClassA> run(D, st, nb, rc); oc = calibrate_with(run, std::move(led), fac, s, ts, resident_own, island_budget); }
   else { island::CalibIslandRunner<island::Arith::Bit> run(D, st, nb, rc); oc = calibrate_with(run, std::move(led), fac, s, ts, resident_own, island_budget); }
   const CalibOut& co = oc.co;
-  rec["status"] = cal_status_name(co.status); rec["tier_final"] = co.tier_final;
+  // the record's `status` is the task status main() maps to the exit code (INTERFACES §7: "completed", 10 + status);
+  // the calibration's own v3 name (ok, schedule_limit, ...) is `cal_status`. Before, `status` held "ok", which
+  // status_from_name refuses: a successful `smcbvs4 calibrate` exited 13 with its record overwritten, and the driver's
+  // fill refused calib.bin (its producer record was not "completed").
+  rec["status"] = status_name(task_status(co.status)); rec["cal_status"] = cal_status_name(co.status); rec["tier_final"] = co.tier_final;
   rec["seconds"] = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
   if (co.status == CalStatus::ok) {
     wp4io::CalibWrite cw; cw.mode = mode; cw.co = &co; cw.led = &oc.led; cw.inherited_flat = &oc.inherited;
@@ -152,7 +199,7 @@ Json run(const Json& args) {
     cw.inputs["data.bin"] = dhash; cw.inputs["setup.bin"] = S.content_hash;
     cw.extra["seed"] = (double)seed; cw.extra["threads"] = s.threads;
     rec["calib_bin"] = wp4io::write_calib(out, cw);
-  } else rec["exit_status"] = status_name(task_status(co.status));
+  }
   return rec;
 }
 

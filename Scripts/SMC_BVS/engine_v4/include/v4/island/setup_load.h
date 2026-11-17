@@ -18,7 +18,7 @@ inline Start load_start(const std::string& path, const Data& D) {
   auto code_ptr = R.vec<int64_t>("code_ptr"); auto logr = R.vec<double>("logr");
   const std::string w = path + ": ";
   const size_t J = code_ptr.size();
-  if (blk_ptr.size() != J + 1 || members.size() != (size_t)D.p || blk_ptr[J] != D.p) throw Error(Status::invalid_input, w + "partition shape");
+  if (blk_ptr.size() != J + 1 || members.size() != (size_t)D.p || blk_ptr[0] != 0 || blk_ptr[J] != D.p) throw Error(Status::invalid_input, w + "partition shape");   // review PR39 m2: blk_ptr[0] = 0
   Start st; st.D = &D; st.J = (int)J; st.blocks.assign(J, {}); st.logr.assign(J, {});
   st.blk.assign(D.p, -1); st.pos.assign(D.p, -1);
   for (size_t b = 0; b < J; ++b) {
@@ -31,6 +31,7 @@ inline Start load_start(const std::string& path, const Data& D) {
     }
     st.logr[b].assign(logr.begin() + code_ptr[b], logr.begin() + code_ptr[b] + (1ll << m));
   }
+  for (int j = 0; j < D.p; ++j) if (st.blk[j] < 0) throw Error(Status::invalid_input, w + "blk_members is not a partition of 0..p-1 (variable " + std::to_string(j) + " in no block)");
   build_sampler(st, D);
   auto same = [](const std::vector<double>& a, const std::vector<double>& b) {
     if (a.size() != b.size()) return false;
