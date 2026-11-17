@@ -26,3 +26,13 @@ new (C3)(o) "every output run prints `pip_list`, `mpm_list` and a finite `log_Z_
 (o); NA mentions removed. Derived texts (REPORT registry block, CARD, READER_DELTA) follow. Tag: **STRONGER** (new clause
 (o); evidence clauses on every output run); the IMPL-LIST edit is EQUAL (SPEC's own row in the reading HQ confirmed;
 verified at the code-read). Check: one Opus statement-change check (`NA_check_opus.md`), as HQ ordered.
+
+**Check.** `NA_check_opus.md` (Opus 5.5 high, Claude Personal): ACCEPT-WITH-CHANGES — (o) true and proved, all qualifier
+removals justified, IMPL-LIST edit faithful to reading (1), reading (2) conflicts with no LIST-CODE clause, tags STRONGER /
+EQUAL-with-disclosure. Findings NA-C1–C9 (4 F/S: label "list fields", Step 0′ opening, REPORT pointers + A:IMPL-LIST text +
+status, tag disclosure; 5 E) **all applied** to the drafts and the patch (markers [NA-C#]). Verified: R3r patch then
+NA_DROP patch apply cleanly (`git apply --verbose`) on a copy of HEAD's ticket folder; all five post-apply sha256 match
+`NA_DROP_expected_sha256.txt`; `ingest.py claims` dry run on the resulting REPORT: 0 problems.
+**To apply at the code-read** (after the `method-v3.1-listpip` tag): confirm at the commit that the exact-branch path
+computes `log_Z_list` from `fit$exact$top` and that SPEC §4's NA rows are the only NA paths; then apply R3r + NA_DROP,
+re-pin `method_commit`, and hand the recorder the package.

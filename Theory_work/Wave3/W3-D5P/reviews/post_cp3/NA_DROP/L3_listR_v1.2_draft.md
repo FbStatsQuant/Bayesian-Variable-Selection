@@ -41,17 +41,20 @@ apply to the method with the list fields, and the new fields are SPEC's function
 The reader assumptions (A1)–(A6) of Theorem 6 imply these hypotheses through READER §6 bridges B6.1–B6.4 (this file
 does not re-prove them; the corollary is stated with "the hypotheses of RM2-R-plus").
 
-## Step 0′ — (o): no field is NA on an output run [NA-2]
-Fix any data set (valid, non-degenerate: the input of an output run) and an admissible run that returns output. By (0.5)
+## Step 0′ — (o): the list fields are never NA on an output run [NA-2, NA-C1]
+Fix any data set and an admissible run on it that returns output [NA-C2]. By (0.5)
 its existing fields are those of the pinned core. SPEC §4 makes a field NA (or absent) only in these rows: a status other
 than `completed` / `exact` (absent; not an output run); an empty list; a duplicate model (error; excluded by (0.5)); a
 NaN or +Inf score, or (HQ's confirmed reading) all scores −Inf; and, in the reading of STATEMENT §1 [NA-1], no exact-branch
 row any more (`log_Z_list` is computed from `fit$exact$top`). On the sampler branch the list 𝒯 is nonempty — it contains
 the hpm_better-maximum of the nonempty offered set 𝓜^run (L2 A4, (iii)) — and consists of distinct models with values
 F(S) (L2 (iii)); on the exact branch 𝒯^ex is nonempty — it contains the hpm_better-maximum of Ω (L2 (iv)) — and consists
-of distinct models of Ω with values F(S). Every F(S) is finite: ϖ(k) > 0 and, under EX-A, log m(S) is finite for every
+of distinct models of Ω with values F(S); and on the exact branch `pip_list` = `pip_primary` = PIP and `mpm_list` =
+`mpm` = MPM (L2 (iv)), real-valued under EX-A [NA-C5]. Every F(S) is finite: ϖ(k) > 0 (`logprior[k]` finite for 0 ≤ k ≤ K, `cpp/v3_score.h:60-70`) and, under EX-A, log m(S) is finite for every
 S ∈ Ω when yᵀy > 0 (Lemma S.2, RM2R `STATEMENT.md:151-152`; yᵀy > 0 on every output run, since a constant response
-returns `y_constant` before branching, `v3_fit.R:99-102`). So no NA row fires: `pip_list`, `mpm_list` and
+returns `y_constant` before branching — the test is `v3_preprocess.R:115`, routed at `v3_fit.R:99-102` — and the
+scorer's yᵀy is that of the standardised y, `v3_preprocess.R:123`, `cpp/v3_score.h:56`, nonzero when the raw y is not
+constant) [NA-C6]. So no NA row fires: `pip_list`, `mpm_list` and
 `log_Z_list` = F_max + log Σ e^{F − F_max} (finite: a finite maximum plus the log of a sum in [1, |𝒯|]) are printed.
 Nothing here uses the data event or a data law. ∎(o)
 
@@ -68,13 +71,13 @@ F(S) gives, for every retained column j, `pip_list[j]` = Σ_{S∈𝒯, j∈S} e^
 `mpm_list` = mpm_𝒯 and `log_Z_list` = F_max + log Σ_{S∈𝒯} e^{F(S)−F_max} = logZ_𝒯). SPEC §4's exceptional rows do not
 fire [LC1-7]: the values are F(S), finite under EX-A (the scorer never fails for yᵀy > 0: Lemma S.2, RM2R
 `STATEMENT.md:151-152`); 𝒯 ∋ S₀ is not empty; 𝒯 consists of distinct models (L2 (iii)). So the three fields are
-present and not NA on every output run of the sampler branch. LIST-K applies with this 𝒯
+present (not NA by Step 0′) [NA-C7]. LIST-K applies with this 𝒯
 (S₀ ∈ 𝒯 ⊆ Ω) and gives:
  max_j |pip_list[j] − 1{j ∈ S₀}| ≤ ε_n (LIST-K (a)); max_j |pip_list[j] − PIP_j| ≤ ε_n (LIST-K (b));
  log Z + log(1 − ε_n) ≤ log_Z_list ≤ log Z (LIST-K (d)); and if ε_n < ½, `mpm_list` = S₀ = MPM (LIST-K (c)), hence
  `mpm_list` = `hpm` = S₀ = MPM.
 *Exact branch.* By L2 (iv), `pip_primary` = PIP and `mpm` = MPM; by IMPL-LIST (SPEC §4), `pip_list` = PIP and
-`mpm_list` = MPM, and `log_Z_list` = logZ_{𝒯^ex} computed from `fit$exact$top` [NA-1]. LIST-K (e) (S₀ ∈ Ω, since s₀ ≤ K) gives max_j |PIP_j − 1{j ∈ S₀}| ≤ ε_n, and MPM = S₀ if ε_n < ½;
+`mpm_list` = MPM, and `log_Z_list` = logZ_{𝒯^ex} computed from `fit$exact$top` [NA-1] (not NA by Step 0′) [NA-C7]. LIST-K (e) (S₀ ∈ Ω, since s₀ ≤ K) gives max_j |PIP_j − 1{j ∈ S₀}| ≤ ε_n, and MPM = S₀ if ε_n < ½;
 trivially max_j |pip_list[j] − PIP_j| = 0 ≤ ε_n. On 𝓜_n, L2 (v) gives `hpm` = S₀ and S₀ ∈ 𝒯^ex. With 𝒯^ex ⊆ Ω distinct, values F(S) (L2 (iv)) and S₀ ∈ 𝒯^ex,
 LIST-K (d) gives log Z + log(1 − ε_n) ≤ log_Z_list ≤ log Z.
 No property of the seed, N_e, R′ or calibration outcome was used beyond admissibility, and the data event 𝒢⁺_n does not
@@ -107,7 +110,7 @@ Under (D), by (0.4) and (0.5), P(𝒪ᶜ) = 0 for every admissible run of the me
 P(𝒪 ∩ B), and Step 2 gives P(B₄) → 0 and P(B₁(t) ∪ B₂(t) ∪ B₃(t)) → 0 for every t ∈ (0, ½), and, when p ≥ 2 for all
 large n, P(B₁(t_n) ∪ B₂(t_n) ∪ B₃(t_n)) ≤ P(𝓜_nᶜ) + P(𝒦_nᶜ) + P(ε_n > t_n) → 0 for every deterministic t_n ∈ (0, ½) with
 t_n/r_n → ∞.
-*"i.e. O_P(r_n)".* Let X_n ≥ 0 be any of the three errors (for the evidence, X_n := ½|log_Z_list − log Z|), so that {X_n > t} ⊆ B₁(t) ∪ B₂(t) ∪ B₃(t). Suppose X_n ≠ O_P(r_n). Then there is η > 0 such that for every M and every N some n ≥ N has P(X_n > M r_n) ≥ η. Since r_n → 0, we can choose n₁ < n₂ < … such that, for every k, r_n ≤ min(k⁻², 1/16) for all n ≥ n_k and P(X_{n_k} > k r_{n_k}) ≥ η. Define t_n := k r_n for n_k ≤ n < n_{k+1}, and t_n := ¼ for n < n₁. For n_k ≤ n < n_{k+1}: t_n = k r_n ≤ k·k⁻¹√r_n = √r_n ≤ ¼ (as r_n ≤ k⁻²), so t_n ∈ (0, ½); and t_n/r_n = k → ∞ as n → ∞. But P(X_{n_k} > t_{n_k}) = P(X_{n_k} > k r_{n_k}) ≥ η for every k, contradicting P(B₁(t_n) ∪ B₂(t_n) ∪ B₃(t_n)) → 0. Hence each error is O_P(r_n). ∎(iii)
+*"i.e. O_P(r_n)".* Let X_n ≥ 0 be any of the three errors (for the evidence, X_n := ½|log_Z_list − log Z|; X_n := 0 on 𝒪ᶜ, a null event under (D)) [NA-C8], so that {X_n > t} ⊆ B₁(t) ∪ B₂(t) ∪ B₃(t). Suppose X_n ≠ O_P(r_n). Then there is η > 0 such that for every M and every N some n ≥ N has P(X_n > M r_n) ≥ η. Since r_n → 0, we can choose n₁ < n₂ < … such that, for every k, r_n ≤ min(k⁻², 1/16) for all n ≥ n_k and P(X_{n_k} > k r_{n_k}) ≥ η. Define t_n := k r_n for n_k ≤ n < n_{k+1}, and t_n := ¼ for n < n₁. For n_k ≤ n < n_{k+1}: t_n = k r_n ≤ k·k⁻¹√r_n = √r_n ≤ ¼ (as r_n ≤ k⁻²), so t_n ∈ (0, ½); and t_n/r_n = k → ∞ as n → ∞. But P(X_{n_k} > t_{n_k}) = P(X_{n_k} > k r_{n_k}) ≥ η for every k, contradicting P(B₁(t_n) ∪ B₂(t_n) ∪ B₃(t_n)) → 0. Hence each error is O_P(r_n). ∎(iii)
 
 ## Remarks for the checker
 - Step 1 is where the two DIST links are used: L2 (i) turns "the run returns output" into "status completed, and LS0
