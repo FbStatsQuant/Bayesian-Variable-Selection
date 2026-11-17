@@ -49,3 +49,18 @@ Tier B, NORMAL mode (Codex level 1: one Codex job at a time; 2 Codex reviews use
 - Errata after the freeze (not applied; manifest frozen): PROOF P5 cites `[R1] B2.1 (:38-40)`, the step is at `:36` (D1 seat).
 - Better-theorem proposals (R1 Opus seat; not adopted): fixed-level beta-min branch; random intercept; ξ_q and sup_{T≠S₀}
   bounds; hypotheses only for large n.
+
+## Post-CP3 addendum (2026-11-17): HQ API audit and FORM-ONLY re-freeze
+- HQ API blind audit `Theory_work/Wave3/API_AUDIT/auditD2_results/` (main): **FINDINGS=0** on W3-D2:Thm2X and W3-D2:Cor2X in both
+  samples; MINOR items only.
+- **Form fix applied (in span):** Cor2X's quoted recorded hypotheses now state "α*, β* non-random" (STATEMENT v1.5, line 53; same
+  line count; changelog row 1.5 EQUAL (form only)). Form check `reviews/F1_formcheck_opus.md` (Opus 5.5 high,
+  claudeAgent_personal): **FORM-ONLY**.
+- **Binding manifest now R2f:** `reviews/MANIFEST_R2f.txt` = MANIFEST 483928c2c3de579bba3827f90a25c928ee30461d4f501f2b766a1f26485a48a0;
+  carrier `reviews/R2f_record_opus.md` (round=R2) → `reviews/R2f_bind.txt`: **bind: OK**; council cell
+  `R2; MANIFEST 483928c2…; opus=9.6 PASS(reviews/R2f_record_opus.md)`. `verify` OK. Chain: D1 review → R2 carrier (f62740c7…,
+  form-only relabel) → R2f carrier (483928c2…, form-only re-freeze + F1 check).
+- Re-run on the final tree: citecheck 74/0; staged ingest 0 problems, acceptance PASS (`reviews/INGEST_staged.txt`); DEPS all OK.
+- **Editorial batch (not applied):** `POST_CP3_EDITORIAL.md` (13 items). F1's wording nits on that list (item 4 "L = ∞ branch",
+  item 11 `:36-38`, the span column should read "registered statement span" since PROOF rows are hashed in DEPS; optional
+  pointer to NOTATION §1 in §2) go with the batch; the file is frozen in R2f and not edited.
