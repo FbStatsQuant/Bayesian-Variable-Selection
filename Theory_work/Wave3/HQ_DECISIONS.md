@@ -706,3 +706,8 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
 - Engineering: T5/P7 worst cases accepted (≤ 400 / ≤ 144 core-h); P1 done.
 - 2026-11-16 late. **W3-READER CP3 RECORDED (main 128e6a9a, CI green). The theory freeze content is complete.** The freeze is Fri 11-20.
   - Post-freeze kick-off is Sat 08:00 CT: Thm-1/SAMP:C relabel → track A recording → L2-S3/P1-Inventory Sol check → T14 H5 card → track D #2 → READER editorial batch.
+- 2026-11-16 late. **OWNER token/schedule allocation (SMC vs BNP Lean):**
+  - **This week:** theory must-do (Thm-1/SAMP:C relabel, track A recording, L2-S3/P1-Inventory check, T14 card, READER editorial), all INTO the freeze; freeze target Fri 11-20 evening, slipping to Sat if needed.
+  - **Next week:** track D (#2 → #3 → #5′, kill budgets), plus the **Lean Department launch Mon 11-23 for the 2–3 most important theorems only** (scoping first; Theory sends a ranked shortlist by Fri). The rest of Lean in December.
+  - **Engineering:** continues, a steady medium share until Dec 1 (4-agent cap, fast-track pilot).
+  - Deferred: the niche-results narrowing; parallel-method theory (scaling paper).
