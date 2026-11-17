@@ -400,3 +400,4 @@
 - 2026-11-16 23:17 CST D95 dry run CLEAN (2676e71f): RM2-R ×5 discharge (no flags); P1-Inventory v1.1.1 CORRECTION, L2-S3 v1.0.1 CODE-CHECKED. Form choices to HQ (label CC rule yes; P1S3 relabel yes; Sol carrier with D99 wording; A1/A2 notes D100). Recorder preparing the re-dry.
 - 2026-11-16 23:17 CST D101 relayed to the recorder.
 - 2026-11-16 23:35 CST HEARTBEAT: CI green (2676e71f); recorder on the D95 real run; READER step 1 ready (a3dbcb62), idle until D95 lands (then one Opus diff round, D101). HQ told.
+- 2026-11-16 23:44 CST D95 RECORDED fe05ccec (CI 44025260819; verified): rows 3.1/3.2 fully discharged; P1-Inventory v1.1.1 CORRECTION A-7, L2-S3 v1.0.1 CODE-CHECKED; P1S3 CC; A1/A2 note (D100). READER GO step 2 (one Opus diff seat). HQ told.
