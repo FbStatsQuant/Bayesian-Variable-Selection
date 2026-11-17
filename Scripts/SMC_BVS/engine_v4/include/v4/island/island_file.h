@@ -2,7 +2,8 @@
 //
 // Sections (names fixed; WPs may add, never rename):
 //   meta                 json: schema, kind, mode, r, N, T, L, Hm, p, status, reason, tier, inputs, binary, timings,
-//                        logZ_hex (the bits of log Z), init_hash (hex)
+//                        logZ_hex (the bits of log Z), init_hash (hex); cost: the D-30 per-step execution record
+//                        (schema smcbvs4.cost/1, header + one column per StepCost field; not hashed; WP7 O2)
 //   logZ                 f64 [1]            log Ẑ_r (bits)
 //   grid                 f64 [T+1]          the schedule used
 //   st_phi st_inc st_ess st_cum             f64 [T]

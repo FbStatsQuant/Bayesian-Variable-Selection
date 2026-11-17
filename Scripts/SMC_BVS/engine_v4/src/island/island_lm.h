@@ -90,6 +90,7 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
     for (int s = 0; s < nsup; ++s) { auto& c = gb.sup[s]; if (c.fast && c.add_ok) gb.act.insert(gb.act.end(), c.S.begin(), c.S.end()); else if (!c.fast) KS.slow_supports++; }
     std::sort(gb.act.begin(), gb.act.end()); gb.act.erase(std::unique(gb.act.begin(), gb.act.end()), gb.act.end());
     const int nA = (int)gb.act.size();
+    KS.act_cols += (uint64_t)nA;   // D-30 counter (WP7 O2)
     for (int s = 0; s < nsup; ++s) {
       auto& c = gb.sup[s]; c.arow.assign(c.k, 0);
       if (c.fast && c.add_ok) for (int a = 0; a < c.k; ++a) c.arow[a] = (int)(std::lower_bound(gb.act.begin(), gb.act.end(), c.S[a]) - gb.act.begin());
