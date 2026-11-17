@@ -232,3 +232,8 @@ returned `leaders_gamma0/1` of the final run. The inherited models' effect on th
 Propose moving `Docs/Experiments/P1M/` out of the main clone into the Engineering worktree, with HQ's P1M snapshot line
 (cron :07/:22/:37/:52 → exp/P1M) re-pointed in commit-in-place mode (`SNAP_WT=1`). Until then: no new untracked files in
 the main clone outside `Docs/Experiments/P1M/`.
+
+## 2026-11-17 06:52 CST — PRE-ANNOUNCE to HQ (thread send failed twice: desktop DESKTOP-955G53S unreachable via the relay)
+P7, the 10⁶ calibration pilot (H-11 gate (2)), submitted now under HQ's standing approval (P7 approved 11-16; worst case ≤ 144 accepted 11-16).
+Cell 6-AR-n200-r01-V-s1, production setup → pilot island only (pilot_only plan), code exp/P1M-engine 2cfaa9e5. Expected 25–50 core-h,
+worst 144; stop rule at 75 (1.5×). The message is re-sent to HQ when the desktop answers.
