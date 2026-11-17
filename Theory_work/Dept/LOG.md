@@ -486,3 +486,4 @@
 - 2026-11-17 15:11 CST A1/A2 corrigendum LANDED 560194e9 (CI 44174655166). W discharge dry run clean (ISL/FRZ; R4 + 5 rows discharged; DIST-C/Cor-C EX-A only; ERRATA_W3-SAMP.md; R5r→R5r2) → HQ GO requested. All next-item details consolidated to the recorder.
 - 2026-11-17 15:11 CST HQ GO W discharge real (relayed); then Prop-LB → D2 → D3 → V.
 - 2026-11-17 15:19 CST IMPL-LIST close: Engineering PR #68 (1594a3b5); HQ tags method-v3.1-listpip. Spec readings confirmed to HQ (exact branch: fit$exact$top; all −Inf → NA + nonfinite_score). W3-D5P lead: LIST-CODE check of the readings + the NA-qualifier decision/statement change now; IMPL-LIST code-read after the tag.
+- 2026-11-17 15:28 CST W3-D5P: readings consistent with LIST-CODE; NA qualifier droppable (list fields never NA on output runs); v1.2 prepared (NA_DROP; Opus ACCEPT-W-C, 9 applied); applied at the IMPL-LIST code-read after the method-v3.1-listpip tag. HQ told.
