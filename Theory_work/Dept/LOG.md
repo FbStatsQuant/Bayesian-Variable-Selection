@@ -369,3 +369,4 @@
 - 2026-11-16 19:43 CST W3-READER CP3 RECORDED: main 128e6a9a (CI 43996890993 success, verified; registry rows checked). Freeze content complete; freeze Fri 11-20. HQ told.
 - 2026-11-16 19:59 CST D90 dispatched: recorder (1)+(2); track A lead (3)+(4); READER (5); audit Fable: Lean shortlist; kick-off schedule re-pointed to Mon 11-23 08:00 (track D). Leads: recorder, track A lead, READER = 3; Fable outside the cap.
 - 2026-11-16 20:01 CST Lean shortlist (Fable 148d9ee1) sent to HQ: next week Thm 3(a) LB, C-PACK:SL0 summaries, DIST domination transfer + Hellinger reduction; December closed form, row 3.5 unbiasedness; warm-ups T8/T2/T6/T9. Mathlib notes unverified (scoping step checks).
+- 2026-11-16 20:02 CST D91 Codex level 1 relayed to READER and the track A lead.
