@@ -379,3 +379,4 @@
 - 2026-11-16 20:19 CST Track A recording dry run CLEAN (d5e9eee7): 12 rows (W3-AUDIT-A ×10, W3-AUDIT-AX ×2), R2→R2r CITATION-ONLY; OVL conditional on W3-SAMP:D/PC (ask HQ to add them to the SAMP v4 carrier); riders as errata/registry-only; X2 deferred. Sent to HQ with endorsement.
 - 2026-11-16 20:21 CST D94 relayed to the recorder (order: rule (c) → carriers → relabel dry → GO → relabel real → track A real → payoff chain).
 - 2026-11-16 20:22 CST C1: Sol LOCK + VERIFIED-WITH-AMENDMENTS; A-7 complete; DLV-0 E2 excludes B1′. Consumers: only HQ_AUDIT-W1C:A1/A2 affected in text (A4 covers, not registered). Recommended CORRECTION to HQ. Council C-R1 (221ca4e1) GO.
+- 2026-11-16 20:23 CST D95 relayed to the recorder (A1/A2 SUSPECT; P1-Inventory CORRECTION after C-R1).
