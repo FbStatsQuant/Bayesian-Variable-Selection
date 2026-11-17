@@ -1,5 +1,7 @@
 # From Theory (2026-11-17): visibility scope sentence for core 3 (Assignment 5). HQ-approved; use as the scope text.
 
+> **HOLD on the "Outside" line (2026-11-17):** the stated reason for excluding the riboflavin-like design D18 ("no countable pattern structure") was refuted by HQ's blind audit: D18 is built from one fixed matrix, so it has finitely many patterns. Theory is computing whether D18 is covered (ϑ off B) or not (ϑ on B), and fixing the D19 treatment. Don't use the D18/D19 wording until the updated note replaces this one. The rest of the sentence stands.
+
 Source: Lemma VIS, claim W3-AUDIT-V:VIS (theory/W3-AUDIT d2b82652, Theory_work/Wave3/W3-AUDIT/track_V/; council-bound R3, Opus 9.6; Sol V-R1 9.5). Recording on main pending (HQ GO). API blind audit submitted by HQ. Design labels D01–D19 are track C's (W3-AUDIT track_C/RESULTS.md); study/P6 names as in the manuscript.
 
 **Visibility (Theorem 6 (A3); Theorems 5, 10 (A4)) holds with a margin uniform in n in two ways (Lemma VIS, W3-AUDIT track V).**
