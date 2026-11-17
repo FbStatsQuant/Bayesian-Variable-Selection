@@ -49,6 +49,7 @@ struct IslandConfig {
   double test_admission_k = 0;              // tests only: force the admission's k (forces a step-boundary refusal)
   int test_oom_pass = -1;                   // tests only: throw std::bad_alloc inside phase A at this pass (resource_limit path)
   int test_oom_merge = -1;                  // tests only: throw std::bad_alloc in the parallel compaction from this merge on
+  int test_corrupt_store_step = -1;         // tests only: break I1 of the top store's kept run after this step (O1 wiring test)
   uint64_t mem_budget = 0;                  // bytes; 0 = no admission check (--mem-budget; manager Q3/Q4)
   uint64_t store_cap = 0;                   // 0: 40 p + 1 (OD-13)
   std::string ckpt_path;                    // empty: no checkpoints; else <path>.a / <path>.b
@@ -67,7 +68,13 @@ struct IslandConfig {
                                             // v0.1.7, D-7); calibration islands and golden tests only; never written to island_r.bin
   bool store_dup_filter = true;             // exact snapshot duplicate filter (execution parameter; content unchanged)
   bool store_parallel_compact = true;       // compaction at pass/step boundaries with all threads (content unchanged)
-  bool check_store = true;                  // I1 after every step (linear; O(c) hash lookups)
+  bool check_store = true;                  // I1 on the top store (and the leader stores), in parallel over index ranges,
+                                            // before every checkpoint and on every exit of the run, whatever its status
+                                            // (before any island file can be written; review PR47 finding 1),
+                                            // whenever the store changed since the last check (WP3_ARCH_REVIEW R4, O1).
+                                            // The only run-time proof of I1: production never turns it off
+  bool check_store_each_step = false;       // tests / debugging: also after every step (the pre-O1 behaviour; ~5.7 s per
+                                            // step at 4e7 entries on SPR, MEASURED job 2749328)
   bool bounded_scoring = true;              // label-major (K1, WP3_ARCH_REVIEW §2.1): a (support, label) is scored only if a
                                             // particle on the support can still consume it; bounded uniform scan; one-particle
                                             // phase B. Execution parameter: outputs unchanged (false = the dense reference)
@@ -104,7 +111,9 @@ struct KernelStats {   // execution statistics (not part of the law, not hashed)
   int kept_live_max = 0;   // most kept runs alive at once in this process (M2 bound; process-wide counter)
   double t_products = 0;   // thread-seconds inside phase A spent on the tile products
   double t_init = 0, t_orders = 0, t_build = 0, t_phaseA = 0, t_walk = 0, t_phaseB = 0, t_apply = 0, t_barrier = 0,
-         t_pm = 0, t_ckpt = 0, t_total = 0, t_check = 0;   // t_check: the I1 store check after every step (wall)
+         t_pm = 0, t_ckpt = 0, t_total = 0;
+  double t_check = 0;      // wall seconds in the I1 store checks (O1; included in t_ckpt when the check precedes a checkpoint)
+  uint64_t store_checks = 0;   // I1 checks run (top store; leader stores counted with it)
 };
 
 struct Particle { Model S; uint64_t h = 0; double logm = 0, lg0 = 0, d = 0, F = 0; };

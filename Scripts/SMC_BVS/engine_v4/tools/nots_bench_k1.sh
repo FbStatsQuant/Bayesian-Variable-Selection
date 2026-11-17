@@ -3,8 +3,8 @@
 # One island (p = 1e6, N = 2500, G = 256, class A, label-major, tile 128, stand-in data of bench_island) runs
 # pi_0 -> phi = 1 in one stage + 2 burn-in rounds and checkpoints after step 3; then rounds 4-5 (2 measured rounds)
 # are resumed twice per variant, alternating: dense (V4_NO_BOUNDED=1, the merged behaviour) and bounded (K1).
-# The I1 store check is off in every variant (V4_NO_CHECK_STORE: builder 7's O1 moves it off the step path; it is
-# the same ~5.7 s per step in both variants, WP3_ARCH_REVIEW §1.1). Exit 3 unless all variants print one output hash.
+# The I1 store check is off in every variant (V4_NO_CHECK_STORE; since O1 it runs only before checkpoints and the
+# final write, the same in both variants). Exit 3 unless all variants print one output hash.
 # Read the [round] / [arch] lines of steps 4 and 5 in $LOGDIR/<variant>.err.
 # Usage: tools/nots_bench_k1.sh <build-dir> [threads, default 96]
 # Dry run elsewhere (Owls): V4_BENCH_P=20000 V4_BENCH_N=300 V4_BENCH_ISA=x86-64-v4 V4_MAKE_J=3 nice -n 19 ... <build> 3

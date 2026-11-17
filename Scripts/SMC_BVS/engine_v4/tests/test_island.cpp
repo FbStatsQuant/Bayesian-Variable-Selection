@@ -1047,3 +1047,158 @@ TEST(calibrate_command_end_to_end) {
     } else got[key] = ci;
   }
 }
+
+// ---------------------------------------------------------------------------------------------------------------
+// O1 (WP3_ARCH_REVIEW R4): the parallel I1 check is the serial predicate for every thread count, on valid stores and on
+// each kind of violation (order, a model twice, size > cap, a broken index), including violations at the boundaries of
+// the static thread ranges.
+static bool i1_all_agree(const TopStore& st, bool expect, const char* what) {
+  const bool ser = st.check_invariant();
+  bool ok = ser == expect;
+  for (int t : {1, 2, 3, 5, 8}) { const bool par = st.check_invariant_parallel(t); if (par != ser) ok = false; }
+  CHECKF(ok, "%s: serial %d, expected %d", what, (int)ser, (int)expect);
+  return ok;
+}
+TEST(store_check_parallel_equals_serial) {
+  std::mt19937_64 g(41);
+  std::vector<uint64_t> key(2000); uint64_t x = 13; for (auto& k : key) k = splitmix64(x);
+  for (auto ord : {Order::HPM, Order::LEX}) for (uint64_t cap : {1ull, 2ull, 9ull, 5000ull, 60000ull}) {
+    TopStore st; st.init(cap, ord);
+    std::vector<StoreBuffer> bufs(3);
+    #pragma omp parallel for num_threads(3) schedule(dynamic, 64)
+    for (int i = 0; i < 150000; ++i) {
+      std::mt19937_64 gi((uint64_t)i * 7 + 1);
+      Model S = random_support(gi, 2000, 1 + (int)(gi() % 6));
+      const double v = -std::floor((double)(gi() % 20000) / 3.0);   // value ties: the |S| / lex tie-breaks are checked
+      st.offer(bufs[omp_get_thread_num()], v, S.data(), (uint32_t)S.size(), D_hash(key, S));
+    }
+    for (auto& b : bufs) st.flush(b);
+    st.compact();
+    const size_t n = st.size();
+    char tag[96]; std::snprintf(tag, sizeof tag, "ord %d cap %llu valid", (int)ord, (unsigned long long)cap);
+    i1_all_agree(st, true, tag);
+    if (n < 3) continue;
+    Kept& K = *st.k;
+    for (size_t at : {(size_t)1, n / 2, n / 3, n - 1}) {   // n/2, n/3: static range boundaries at 2 and 3 threads
+      // (a) order: entry `at` better than its predecessor
+      { const double keep = K.v[at]; K.v[at] = K.v[at - 1] + 1.0;
+        std::snprintf(tag, sizeof tag, "ord %d cap %llu order at %zu", (int)ord, (unsigned long long)cap, at); i1_all_agree(st, false, tag);
+        K.v[at] = keep; }
+      // (b) a model twice: entry `at` gets the model of an earlier entry of the same size (order by value unchanged)
+      { size_t j = SIZE_MAX; for (size_t q = 0; q < at; ++q) if (K.len[q] == K.len[at] && K.v[q] > K.v[at]) { j = q; break; }
+        if (j != SIZE_MAX) {
+          std::vector<int32_t> saved(K.pool.begin() + K.off[at], K.pool.begin() + K.off[at] + K.len[at]); const uint64_t hs = K.hash[at];
+          std::copy(K.pool.begin() + K.off[j], K.pool.begin() + K.off[j] + K.len[j], K.pool.begin() + K.off[at]); K.hash[at] = K.hash[j];
+          K.rebuild_index();
+          std::snprintf(tag, sizeof tag, "ord %d cap %llu duplicate %zu=%zu", (int)ord, (unsigned long long)cap, at, j); i1_all_agree(st, false, tag);
+          std::copy(saved.begin(), saved.end(), K.pool.begin() + K.off[at]); K.hash[at] = hs; K.rebuild_index();
+        } }
+      // (d) a broken index: the slot of entry `at` cleared
+      { uint64_t s = K.hash[at] & K.imask; while (K.index[s] != (uint32_t)at + 1) s = (s + 1) & K.imask;
+        K.index[s] = 0;
+        std::snprintf(tag, sizeof tag, "ord %d cap %llu index at %zu", (int)ord, (unsigned long long)cap, at); i1_all_agree(st, false, tag);
+        K.rebuild_index(); }
+    }
+    // (c) size > cap
+    { const uint64_t c0 = st.cap; st.cap = n - 1; std::snprintf(tag, sizeof tag, "ord %d cap %llu size > cap", (int)ord, (unsigned long long)c0);
+      i1_all_agree(st, false, tag); st.cap = c0; }
+    i1_all_agree(st, true, "restored");
+  }
+}
+
+// O1 wiring: the check runs before every checkpoint and before the final write, once per store generation; the
+// output is the same bits with the check off, at checkpoints only (default) and after every step; a broken store is
+// refused (internal_error) before a checkpoint and before the final write, with and without leader stores.
+TEST(store_check_at_checkpoints_and_final_write) {
+  TmpGuard tg;
+  Fixture F(100, 300, 43);
+  for (bool leaders : {false, true}) {
+    IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = 3; c.G = 16; c.leaders = leaders;
+    IslandRun r0 = run_island<Arith::Bit>(F.D, F.st, F.nb, c);
+    const uint64_t h0 = r0.hash();
+    CHECKF(r0.status == 0 && r0.ks.store_checks == 1, "leaders %d: default, no checkpoints: %llu checks", (int)leaders, (unsigned long long)r0.ks.store_checks);
+    IslandConfig off = c; off.check_store = false;
+    IslandRun r1 = run_island<Arith::Bit>(F.D, F.st, F.nb, off);
+    CHECK(r1.hash() == h0 && r1.ks.store_checks == 0);
+    IslandConfig each = c; each.check_store_each_step = true;
+    IslandRun r2 = run_island<Arith::Bit>(F.D, F.st, F.nb, each);
+    const int Tsteps = (int)c.grid.size() - 1 + c.L + c.Hm;
+    CHECKF(r2.hash() == h0 && r2.ks.store_checks >= 1 && r2.ks.store_checks <= (uint64_t)Tsteps + 1, "leaders %d: each step: %llu checks",
+           (int)leaders, (unsigned long long)r2.ks.store_checks);
+    if (!leaders) {   // checkpoints at every step (leaders: final-role tests only, no checkpoint path needed)
+      IslandConfig ck = c; ck.ckpt_path = tg.add(wp3_tmp("o1_ck")); ck.ckpt_every_s = 0;
+      wp3_rm(ck.ckpt_path);
+      IslandRun r3 = run_island<Arith::Bit>(F.D, F.st, F.nb, ck);
+      // one check per checkpoint with a new store generation (steps 0..Tsteps); the final write then finds the last
+      // generation checked and does not check again
+      CHECKF(r3.hash() == h0 && r3.ks.store_checks >= 2 && r3.ks.store_checks <= (uint64_t)Tsteps + 1, "checkpoints: %llu checks", (unsigned long long)r3.ks.store_checks);
+      std::printf("  checkpoint every step: %llu checks (%.4f s), each-step mode %llu, default %llu, off %llu: hash %016llx in all\n",
+                  (unsigned long long)r3.ks.store_checks, r3.ks.t_check, (unsigned long long)r2.ks.store_checks, (unsigned long long)r0.ks.store_checks,
+                  (unsigned long long)r1.ks.store_checks, (unsigned long long)h0);
+      wp3_rm(ck.ckpt_path);
+      // a broken store: refused before the next checkpoint
+      IslandConfig bad = ck; bad.test_corrupt_store_step = 3;
+      bool threw = false;
+      try { run_island<Arith::Bit>(F.D, F.st, F.nb, bad); } catch (const v4::Error& e) { threw = e.st == v4::Status::internal_error && std::string(e.what()).find("I1") != std::string::npos; }
+      CHECK(threw);
+      wp3_rm(ck.ckpt_path);
+    }
+    // a broken store: refused before the final write (no checkpoints; corrupted after the last step)
+    IslandConfig bad = c; bad.test_corrupt_store_step = Tsteps;
+    bool threw = false;
+    try { run_island<Arith::Bit>(F.D, F.st, F.nb, bad); } catch (const v4::Error& e) { threw = e.st == v4::Status::internal_error && std::string(e.what()).find("I1") != std::string::npos; }
+    CHECK(threw);
+    // and with the check off it is not seen (the hook really breaks the store)
+    IslandConfig bad_off = bad; bad_off.check_store = false;
+    IslandRun rb = run_island<Arith::Bit>(F.D, F.st, F.nb, bad_off);
+    CHECK(rb.status == 0 && rb.hash() != h0);
+  }
+}
+
+// Review PR47 finding 1: I1 runs on every exit, whatever the status. The reviewer's case (a final island stopped by the
+// step-boundary memory budget after step 1) and a caught out-of-memory in the parallel compaction: a valid store is
+// checked once and the island returns resource_limit; a corrupted store raises internal_error, so no IslandRun and no
+// island file exist (INTERFACES §7: internal_error before resource_limit).
+TEST(store_check_on_failure_exits) {
+  TmpGuard tg;
+  Fixture F(100, 300, 43);
+  IslandConfig base = small_cfg(); base.kernel = KernelKind::LabelMajor; base.threads = 3; base.G = 16;
+  auto expect_i1_error = [&](const IslandConfig& c, const char* what) {
+    bool threw = false; std::string msg;
+    try { IslandRun r = run_island<Arith::ClassA>(F.D, F.st, F.nb, c);
+          msg = "returned status " + std::to_string(r.status) + " (" + r.reason + "), checks " + std::to_string(r.ks.store_checks); }
+    catch (const v4::Error& e) { threw = e.st == v4::Status::internal_error && std::string(e.what()).find("I1") != std::string::npos; msg = e.what(); }
+    CHECKF(threw, "%s: %s", what, msg.c_str());
+  };
+  // (a) step-boundary budget exit (the reviewer's reproducer)
+  IslandConfig b = base; b.test_admission_k = .5; b.mem_budget = plan_island(F.D, F.st, b).total + 1024;
+  {
+    IslandRun r = run_island<Arith::ClassA>(F.D, F.st, F.nb, b);
+    CHECKF(r.status == 3 && r.reason.find("mem_budget") != std::string::npos && r.ks.store_checks == 1, "budget exit, valid store: status %d checks %llu",
+           r.status, (unsigned long long)r.ks.store_checks);
+    std::string path = tg.add(wp3_tmp("pr47_budget.bin"));   // the failure file of a checked store is still written (no estimates)
+    write_island_file(path, r, Arith::ClassA, v4::Json::object());
+    CHECK(read_island_file(path).meta.at("status").str() == "resource_limit");
+  }
+  IslandConfig bc = b; bc.test_corrupt_store_step = 1;
+  expect_i1_error(bc, "budget exit, corrupted store");
+  // (b) a caught out-of-memory (inside phase A, the first pass of step 2: no compaction between the corruption after
+  //     step 1 and the failure)
+  uint64_t passes1 = 0;
+  {
+    IslandConfig a = base; a.ckpt_path = tg.add(wp3_tmp("pr47_ck")); a.ckpt_every_s = 1e9; a.stop_after_step = 1; wp3_rm(a.ckpt_path);
+    passes1 = run_island<Arith::ClassA>(F.D, F.st, F.nb, a).ks.passes;   // passes up to the end of step 1
+    wp3_rm(a.ckpt_path);
+  }
+  IslandConfig o = base; o.test_oom_pass = (int)passes1;   // throws in pass passes1 + 1
+  {
+    IslandRun r = run_island<Arith::ClassA>(F.D, F.st, F.nb, o);
+    CHECKF(r.status == 3 && r.reason.find("out of memory") != std::string::npos && r.ks.store_checks == 1 && r.ks.passes == passes1 + 1,
+           "oom exit, valid store: status %d '%s' checks %llu passes %llu", r.status, r.reason.c_str(), (unsigned long long)r.ks.store_checks,
+           (unsigned long long)r.ks.passes);
+  }
+  IslandConfig oc = o; oc.test_corrupt_store_step = 1;
+  expect_i1_error(oc, "oom exit, corrupted store");
+  // (c) numerical-failure exits are covered by the same call (it precedes every status branch); interrupted runs by the
+  //     checkpoint guard (store_check_at_checkpoints_and_final_write)
+}
