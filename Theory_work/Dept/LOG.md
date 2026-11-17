@@ -424,3 +424,4 @@
 - 2026-11-17 12:34 CST D108 relayed to the W3-D2 lead.
 - 2026-11-17 12:36 CST Track A_W CP1 (e8d30aa0): W1 ISL + W2 FRZ VERIFIED-W-A (no C); GO Sol read → council → recording package (+ API card).
 - 2026-11-17 12:38 CST Precedent notes DONE (Sonnet 8a8528b6): 7 assumptions + B3 line; 22/22 citations VERIFIED (arXiv); Opus check applied; 6 rewritten comparison sentences → second Opus re-check running (native agent). Slot freed → #5′ lead launched (Opus, worktree /home/fb31/BVS-wt/W3-D5P @ 029bb748; kill 3 d). Leads: track A, W3-D2, recorder, W3-D5P = 4.
+- 2026-11-17 12:38 CST W3-D2: X2 estimate Tier B ~2–3 h + Sol, but C-MIS:GDb/Prop-P remain conditions → recommended keeping X2 off the list; HQ's call. Line check running.
