@@ -115,6 +115,42 @@ v3_unavailable_estimates <- function(fit) {
 
 v3_model_key <- function(S) paste(S, collapse = ",")
 
+# List-renormalised PIP fields (SPEC_LIST_PIP.md, HQ order 2026-11-17; owner-approved, additive output only). The returned top
+# store T (models in ORIGINAL column indices, scores F(S) = log varpi(S) + log m(S)) read as a list: pip_list[j] =
+# sum_{S in T, j in S} u_S / sum_{S in T} u_S with u_S = exp(F(S) - max F); mpm_list = {j : pip_list[j] > 1/2} (strict);
+# log_Z_list = max F + log sum u_S. Computed LAST, no random numbers, no state change. Numerics (spec §3): subtract max F
+# before exp (F itself is never exponentiated); both sums run from the LAST store entry to the first in plain double
+# (explicit loop: R's sum() accumulates in long double); nothing is clamped (a column's numerator adds a subsequence of the
+# denominator's terms in the same order, so 0 <= pip_list <= 1 holds exactly in floating point).
+# `pip_names` = names(pip_primary) (the retained columns, same order); `orig` = their original indices. Returns a list with
+# pip_list, mpm_list, log_Z_list, list_size, list_full, pip_list_source = "store", pip_list_flag (NULL when clean).
+# Cases (§4): empty list -> NA and flag "empty_list" (must not occur); NaN or +Inf score -> NA and "nonfinite_score" (so does a
+# list whose scores are all -Inf: it has no finite weight); -Inf scores get weight 0; duplicate models -> stop (a store is a set).
+v3_list_fields <- function(top, orig, pip_names = as.character(orig)) {
+  p <- length(orig); m <- length(top$models)
+  res <- function(flag) list(pip_list = setNames(rep(NA_real_, p), pip_names), mpm_list = NA_integer_, log_Z_list = NA_real_,
+                             list_size = m, list_full = isTRUE(top$full), pip_list_source = "store", pip_list_flag = flag)
+  if (m == 0L) return(res("empty_list"))
+  F <- as.numeric(top$value)
+  if (length(F) != m) stop("list PIP: top store has ", m, " models and ", length(F), " scores")
+  if (anyNA(F) || any(F == Inf)) return(res("nonfinite_score"))
+  Fmax <- max(F)
+  if (Fmax == -Inf) return(res("nonfinite_score"))
+  if (anyDuplicated(vapply(top$models, paste, "", collapse = ","))) stop("list PIP: the top store holds a duplicate model")
+  lut <- integer(max(orig)); lut[orig] <- seq_len(p)
+  u <- exp(F - Fmax)
+  num <- numeric(p); den <- 0
+  for (i in m:1L) {
+    S <- top$models[[i]]; ui <- u[i]
+    den <- den + ui
+    if (length(S)) { j <- lut[S]; if (anyNA(j) || any(j == 0L)) stop("list PIP: a stored model has a column outside the retained set"); num[j] <- num[j] + ui }
+  }
+  pip <- num / den; names(pip) <- pip_names
+  list(pip_list = pip, mpm_list = as.integer(orig[pip > 0.5]), log_Z_list = Fmax + log(den), list_size = m,
+       list_full = isTRUE(top$full), pip_list_source = "store", pip_list_flag = NULL)
+}
+v3_add_list_fields <- function(fit, lf) { for (nm in names(lf)) if (!is.null(lf[[nm]])) fit[[nm]] <- lf[[nm]]; fit }
+
 # Assemble the reported outputs of a final run (CORE_SPEC §6, §7; M §§6.9-6.12).
 v3_assemble_final <- function(raw, setup, frozen, ro, seed) {
   isl <- raw$islands
@@ -216,7 +252,8 @@ v3_assemble_final <- function(raw, setup, frozen, ro, seed) {
   if (v31) out$timings$ls0 <- raw$seconds_ls0
   out$log_m0 <- raw$log_m0; out$log_Zbar0 <- raw$log_Zbar0
   out$estimates_available <- TRUE
-  out
+  # list-renormalised PIP fields (SPEC_LIST_PIP.md): last, from the returned top store; nothing above reads them
+  v3_add_list_fields(out, v3_list_fields(out$top_store, orig, names(out$pip_primary)))
 }
 
 # Fresh production final run. The runtime pointer shares the complete-fit clock with calibration.

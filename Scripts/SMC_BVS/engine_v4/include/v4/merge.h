@@ -12,7 +12,8 @@
 //      are kept. Peak = merged ledger + one island + small fields + bounded tail buffers;
 //   4. the tail: final local search from the merged HPM (cap ell), the start mode, LS0 (cap ell + |S~0|);
 //   5. assembly: log Z^ (LSE - log R'), PIP_eq (primary, equal weight), PIP_Z + R_eff + max W_r, log Z_T + PIP_T
-//      (store-renormalised), log Z^_occ for top-M sets, MPM, near ties, flags.
+//      (store-renormalised), log Z^_occ for top-M sets, MPM, near ties, flags; LAST: the list-renormalised fields
+//      (pip_list, mpm_list, log_Z_list; list_pip.h).
 // No estimate field is filled unless every island and the tail completed (GUARD-W, spec §4.3).
 #pragma once
 #include <cmath>
@@ -26,6 +27,7 @@
 #include <limits>
 #include "v4/calib_rules.h"
 #include "v4/ledger.h"
+#include "v4/list_pip.h"
 #include "v4/records.h"
 #include "v4/status.h"
 #include "v4/tail.h"
@@ -197,6 +199,8 @@ struct FitOut {
   std::vector<double> pip_eq, pip_Z, pip_T, W_r; double R_eff = 0, max_W = 0;
   double log_Z_T = 0;
   std::vector<int32_t> mpm;
+  // list-renormalised PIP fields (SPEC_LIST_PIP.md; list_pip.h): from the merged top store, computed last in the assembly
+  ListPip list_pip; bool has_list_pip = false;
   std::vector<OccRow> occ; bool occ_available = false;
   // per-model terminal occupancy of the first M_top = min(max occ_M, |store|) store models (WP5 fit.bin `occ_top`,
   // `occ_top_r` R' x M_top, meta `occ_total`, `occ_total_r`)
@@ -489,6 +493,9 @@ FitOut merge_stream(IslandSource& src, Ledger&& pre, const Model& mode_S, Factor
     bad.hpm_ev = out.hpm_ev; bad.hpm_incomplete = true; bad.island_status = out.island_status;
     return bad;
   }
+  // list-renormalised PIP fields (SPEC_LIST_PIP.md): LAST, from the merged top store; reads and changes nothing above (a
+  // duplicate model in the store throws Error(internal_error): never merged, never reported)
+  out.list_pip = compute_list_pip(led.top, p); out.has_list_pip = true;
   out.estimates_available = true;
   out.led = std::move(led);
   if (ms.phase_hook) ms.phase_hook("assembly_done");

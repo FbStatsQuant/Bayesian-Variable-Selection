@@ -16,6 +16,8 @@
 #include "v4/provenance.h"
 #include "v4/stubs.h"
 #include "v4/wp4_io.h"
+#include "v4/list_pip.h"
+#include "eval/io.h"
 
 using namespace v4;
 
@@ -289,6 +291,33 @@ TEST(wp4_io_merge_command_e2e) {
     CHECK(R.entry("occ_top_r").dims[0] == 4 && meta.at("occ_total").num() == 200 && meta.at("occ_total_r").num() == 50);
     CHECK(meta.contains("logZ") && meta.contains("hpm_F") && meta.at("status").str() == "completed" && meta.contains("hpm_ev"));
     CHECK(meta.at("flags").contains("occ_inhomogeneous") && meta.at("occ").size() == 4);
+    // SPEC_LIST_PIP: pip_list / mpm_list sections + scalars = the function applied to the stored top store; the tool reproduces them
+    {
+      CHECK(R.has("pip_list") && R.has("mpm_list") && R.entry("pip_list").dims[0] == (uint64_t)f.D.p);
+      CHECK(meta.contains("logZ_list") && meta.contains("list_size") && meta.contains("list_full") && meta.at("pip_list_source").str() == "store" && !meta.contains("pip_list_flag"));
+      eval::io::FitFile ff; eval::io::load_fit(o1, ff);
+      ListPipSrc ls; ls.n = ff.top.size; ls.v = ff.top.v; ls.off = ff.top.off; ls.len = ff.top.len; ls.hash = ff.top.hash; ls.pool = ff.top.pool;
+      ListPip lp = compute_list_pip(ls, f.D.p, (uint64_t)meta.at("stores").at("top").at("cap").num());
+      std::vector<double> sp = R.vec<double>("pip_list"); std::vector<int32_t> sm = R.vec<int32_t>("mpm_list");
+      bool eq = sp.size() == lp.pip_list.size() && sm == lp.mpm_list && same_bits(meta.at("logZ_list").num(), lp.log_Z_list);
+      for (size_t j = 0; eq && j < sp.size(); ++j) eq = same_bits(sp[j], lp.pip_list[j]);
+      CHECK(eq);
+      CHECK((uint64_t)meta.at("list_size").num() == ff.top.size && meta.at("list_full").boolean() == lp.list_full);
+      // invariants: 0 <= pip_list <= 1; mpm_list = {pip_list > 1/2}; log_Z_list <= log_Z_T + tiny (same store, different arithmetic)
+      bool inv2 = true; for (size_t j = 0; j < sp.size(); ++j) inv2 = inv2 && sp[j] >= 0 && sp[j] <= 1 && ((sp[j] > 0.5) == std::binary_search(sm.begin(), sm.end(), (int32_t)j));
+      CHECK(inv2 && std::fabs(lp.log_Z_list - meta.at("logZ_T").num()) <= 1e-9);
+      // pip_T is the existing long-double quantity: still within rounding of the new one on the same store
+      std::vector<double> pT = R.vec<double>("pip_T"); double md = 0; for (size_t j = 0; j < sp.size(); ++j) md = std::max(md, std::fabs(pT[j] - sp[j]));
+      CHECK(md <= 1e-12);
+      // fit.json
+      CHECK(r1.contains("logZ_list") && same_bits(r1.at("logZ_list").num(), lp.log_Z_list) && r1.at("pip_list_source").str() == "store" && !r1.contains("pip_list_flag"));
+      // the post-hoc tool: the same function on the stored store; matches the stored fields bit for bit
+      Json t = listpip::run([&] { Json a = Json::object(); a["in"] = o1; return a; }());
+      CHECK(t.at("status").str() == "completed" && t.at("matches_stored").boolean() && same_bits(t.at("log_Z_list").num(), lp.log_Z_list) && t.at("mpm_list").size() == lp.mpm_list.size());
+      Json d = listpip::run([&] { Json a = Json::object(); a["in"] = o1; a["full"] = 1; return a; }());
+      bool dd = d.at("pip_list").size() == sp.size(); for (size_t j = 0; dd && j < sp.size(); ++j) dd = same_bits(d.at("pip_list").at(j).num(), sp[j]);
+      CHECK(dd);
+    }
     // the pre-island ledger: table step (top stores + logical count) and the inherited step
     std::vector<uint64_t> lg = R.vec<uint64_t>("logical");
     CHECK(lg[(size_t)PH_TABLE * N_MECH + ME_TABLE] == f.S.table_event_count(f.D.K));
@@ -300,7 +329,10 @@ TEST(wp4_io_merge_command_e2e) {
   auto refused = [&](const std::string& out, Status want) {
     Json r = merge::run(merge_args(f, out, 3));
     fmt::Reader R(out); Json meta = R.json("meta");
-    bool none = !R.has("pip_eq") && !R.has("logZ_r") && !R.has("pip_r") && !meta.contains("logZ") && !meta.at("estimates_available").boolean();
+    bool none = !R.has("pip_eq") && !R.has("logZ_r") && !R.has("pip_r") && !meta.contains("logZ") && !meta.at("estimates_available").boolean() &&
+                !R.has("pip_list") && !R.has("mpm_list") && !meta.contains("logZ_list") && !meta.contains("list_size");   // SPEC_LIST_PIP §4: absent
+    { Json t = listpip::run([&] { Json a = Json::object(); a["in"] = out; return a; }());   // the tool: absent, not an error
+      none = none && t.at("status").str() == "completed" && !t.contains("pip_list") && !t.contains("pip_list_nonzero") && t.contains("reason"); }
     CHECK_MSG(r.at("status").str() == status_name(want) && none, out + ": " + r.at("status").str() + " / " + r.at("reason").str());
     std::remove(out.c_str());
   };

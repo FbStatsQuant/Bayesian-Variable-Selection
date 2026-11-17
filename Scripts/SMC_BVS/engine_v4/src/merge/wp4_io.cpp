@@ -880,6 +880,13 @@ std::string write_fit(const std::string& path, const FitWrite& f, Json* record) 
     for (int a = 0; a < N_PHASE; ++a) for (int b = 0; b < N_MECH; ++b) lg[(size_t)a * N_MECH + b] = fo.led.logical[a][b];
     add_vec_copy(W, "logical", lg, N_PHASE, N_MECH);
     add_vec_copy(W, "island_best", fo.led.island_best);
+    if (fo.has_list_pip) {   // SPEC_LIST_PIP.md: the list-renormalised fields, appended after every existing section
+      const ListPip& lp = fo.list_pip;
+      add_vec_copy(W, "pip_list", lp.pip_list); add_vec_copy(W, "mpm_list", lp.mpm_list);
+      meta["logZ_list"] = lp.log_Z_list; meta["list_size"] = u64_json(lp.list_size); meta["list_full"] = lp.list_full;
+      meta["pip_list_source"] = lp.source;
+      if (!lp.flag.empty()) meta["pip_list_flag"] = lp.flag;   // absent when clean
+    }
   }
   meta["inputs"] = f.inputs; meta["timings"] = f.timings; meta["binary"] = binary_block(); meta["mode"] = fmt::mode_name(f.mode);
   W.add_json("meta", meta);
@@ -892,6 +899,10 @@ std::string write_fit(const std::string& path, const FitWrite& f, Json* record) 
     rec["island_isa"] = binary_block().contains("island_isa") ? binary_block().at("island_isa") : Json("unknown");   // D-32 (4)
     if (fo.has_hpm) rec["hpm_F"] = fo.hpm_F;
     if (fo.estimates_available) { rec["logZ"] = fo.log_Z; rec["logZ_T"] = fo.log_Z_T; rec["R_eff"] = fo.R_eff; }
+    if (fo.estimates_available && fo.has_list_pip) {   // SPEC_LIST_PIP.md (the vectors are in fit.bin)
+      rec["logZ_list"] = fo.list_pip.log_Z_list; rec["list_size"] = u64_json(fo.list_pip.list_size); rec["list_full"] = fo.list_pip.list_full;
+      rec["pip_list_source"] = fo.list_pip.source; if (!fo.list_pip.flag.empty()) rec["pip_list_flag"] = fo.list_pip.flag;
+    }
   }
   return h;
 }

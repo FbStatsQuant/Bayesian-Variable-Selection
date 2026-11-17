@@ -369,6 +369,12 @@ List wp4_final_merge(SEXP setup, NumericVector grid, List ro, double seed, SEXP 
   out["log_Z_r_rel_m0"] = fo.log_Z_r_rel_m0; out["pip_r"] = P; out["pip_primary"] = pe; out["mpm"] = to_orig(D, fo.mpm);
   out["pip_Z"] = fo.pip_Z; out["W_r"] = fo.W_r; out["R_eff"] = fo.R_eff; out["max_W"] = fo.max_W;
   out["log_Z_T"] = fo.log_Z_T; out["pip_T"] = fo.pip_T;
+  if (fo.has_list_pip) {   // SPEC_LIST_PIP B12: the engine's list fields, compared by wp4_golden.R with core's
+    NumericVector pl(fo.list_pip.pip_list.begin(), fo.list_pip.pip_list.end()); pl.names() = onames;
+    out["pip_list"] = pl; out["mpm_list"] = to_orig(D, fo.list_pip.mpm_list); out["log_Z_list"] = fo.list_pip.log_Z_list;
+    out["list_size"] = (double)fo.list_pip.list_size; out["list_full"] = fo.list_pip.list_full;
+    out["pip_list_flag"] = fo.list_pip.flag.empty() ? R_NilValue : (SEXP)Rcpp::wrap(fo.list_pip.flag);
+  }
   out["near_ties"] = models_to_list(D, fo.near_ties); out["near_tie_F"] = fo.near_tie_F; out["near_tie_truncated"] = fo.near_tie_truncated;
   out["local_search"] = wp4h::local_list(fo.local, D);
   out["hpm_before_local"] = List::create(_["model"] = to_orig(D, fo.hpm_before_local), _["F"] = fo.hpm_before_local_F);
@@ -500,6 +506,12 @@ List wp4_files_merge(SEXP setup, NumericVector grid, List ro, double seed, SEXP 
   { NumericVector pe = vecd("pip_eq"); CharacterVector nm(p); for (int j = 0; j < p; ++j) nm[j] = std::to_string(D3.orig[j]); pe.names() = nm; out["pip_primary"] = pe; }
   { std::vector<double> pr2 = F.vec<double>("pip_r"); NumericMatrix P(p, R); for (int r = 0; r < R; ++r) for (int j = 0; j < p; ++j) P(j, r) = pr2[(size_t)r * p + j]; out["pip_r"] = P; }
   out["mpm"] = modl("mpm"); out["near_ties"] = models("near"); out["near_tie_F"] = vecd("near_F");
+  if (F.has("pip_list")) {   // SPEC_LIST_PIP: the fit.bin sections and meta scalars
+    NumericVector pl = vecd("pip_list"); CharacterVector nm(p); for (int j = 0; j < p; ++j) nm[j] = std::to_string(D3.orig[j]); pl.names() = nm;
+    out["pip_list"] = pl; out["mpm_list"] = modl("mpm_list"); out["log_Z_list"] = meta.at("logZ_list").num();
+    out["list_size"] = meta.at("list_size").num(); out["list_full"] = meta.at("list_full").boolean();
+    out["pip_list_flag"] = meta.contains("pip_list_flag") ? (SEXP)Rcpp::wrap(meta.at("pip_list_flag").str()) : R_NilValue;
+  }
   out["top_store"] = wp4h::store_list(top, D3); out["start_mode"] = modl("mode_S");
   out["hpm_before_local"] = List::create(_["model"] = modl("hpm_before_local_S"), _["F"] = meta.at("hpm_before_local_F").num());
   out["ls_scanned"] = models("ls_scanned"); out["ls_scanned_F"] = vecd("ls_scanned_F"); out["ls_path"] = models("ls_path");

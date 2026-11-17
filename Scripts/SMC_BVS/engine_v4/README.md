@@ -25,6 +25,7 @@ libquadmath (tests only). R (Rcpp, digest, jsonlite) is needed only to regenerat
 | `prep` (R's v3_standardise arithmetic, class B) + `--from-r` fallback | `prep.h`, `src/common/prep.cpp` | bit-equal to R `v3_preprocess` on 5 fixtures incl. an anchored column |
 | pinned libm decision | `pmath.h`, `tests/PMATH_REPORT.md` | glibc 2.34 FMA variant + run-time guard |
 | fixtures from core/ | `tests/fixtures/` (12.8 MB), `tools/make_fixtures.R`, `tools/v4_read.R` | MANIFEST.json with hashes |
+| list-renormalised PIPs (`pip_list`, `mpm_list`, `log_Z_list`, … of the merged top store; HQ order 2026-11-17) | `list_pip.h`, `src/common/list_pip.cpp`, `src/post/listpip.cpp` (`smcbvs4 listpip FIT.bin`) | `tests/test_list_pip.cpp`, merge e2e in `test_wp4_io.cpp`, v3 vs v4 in `tests/golden/wp4_golden.R` |
 | stubs for WP2–WP5 entry points | `include/v4/stubs.h`, `src/stubs/stubs.cpp` | link from day one |
 
 Fixtures for WP2 (setup objects from `v3_setup`: blocks, `log_r`, start law, neighbours, 2,000 π₀ draws on stream 200)

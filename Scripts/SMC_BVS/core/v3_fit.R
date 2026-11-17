@@ -127,6 +127,11 @@ v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24), ls0 = 
       fit$pip_primary <- e$pip; fit$mpm <- e$mpm
       fit$global_certified <- e$global_certified; fit$local_certified <- e$local_certified
       fit$estimates_available <- TRUE
+      # list-renormalised PIP fields (SPEC_LIST_PIP.md §4, exact branch): pip_list = pip_primary, mpm_list = mpm (both exact);
+      # log_Z_list from the enumeration's returned store (e$top, here, not fit$top_store) by the same formula
+      lf <- v3_list_fields(e$top, ctx$orig, names(e$pip))
+      fit <- v3_add_list_fields(fit, c(list(pip_list = fit$pip_primary, mpm_list = fit$mpm), lf[c("log_Z_list", "list_size", "list_full")],
+                                       list(pip_list_source = "exact", pip_list_flag = lf$pip_list_flag)))
     } else { fit$message <- e$message; fit$hpm_incomplete <- TRUE }
     return(finish(fit))
   }
