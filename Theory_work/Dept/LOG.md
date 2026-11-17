@@ -489,3 +489,4 @@
 - 2026-11-17 15:28 CST W3-D5P: readings consistent with LIST-CODE; NA qualifier droppable (list fields never NA on output runs); v1.2 prepared (NA_DROP; Opus ACCEPT-W-C, 9 applied); applied at the IMPL-LIST code-read after the method-v3.1-listpip tag. HQ told.
 - 2026-11-17 15:41 CST W discharge LANDED 20d01e52 (CI 44179766157): row 3.6/R4 + SAMP D/MR/LT#/C + OVL plain PROVED-CHECKED. Prop-LB relabel dry run clean (cascade: only W3-POST2:C loses Prop-LB; READER R5r2→R5r3) → HQ GO requested. Card narrative 'What blocks…Prop-LB' bullet → READER editorial round.
 - 2026-11-17 15:42 CST HQ GO Prop-LB relabel (relayed). manifest.py v2 (gitignore + live-log WARN; Opus PASS-W-N; suite 182/182) sent to HQ for a separate GO.
+- 2026-11-17 15:42 CST HQ GO manifest.py v2 (own commit; relayed).
