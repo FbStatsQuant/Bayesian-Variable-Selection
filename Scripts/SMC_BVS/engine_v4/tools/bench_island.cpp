@@ -7,13 +7,17 @@
 //        one island end to end on AR(0.6) data, once per thread count (same output hash required); grid geo:T = a
 //        geometric T-stage grid, adaptive:Te = core's pilot rule (ESS >= 0.9 N per stage, floor 1/Te) on the island's
 //        own population (a calibrated-like schedule). Prints ns per step, M, products, offers, phase times, peak RSS.
+//   sort <n> <threads> [k]                     the compaction sort: pairwise (PR26) vs merge-path (m3) vs __gnu_parallel
 //   store <cap> <threads> <offers_per_thread>
 //        cost of TopStore::offer under a realistic mix (most offers below tau, duplicates above it).
 //   plan <p> <N> <threads> <G list> [n]      the admission's memory plan (no island run)
 //   overheads <p> [n]                          per-call costs of the L5 levers, old vs new (1 thread)
 // Environment: V4_K_STORE (calibration-measured mean stored |S| -> IslandConfig::k_store; island and plan modes; without
 // it the island mode plans from pi_0 alone, which real runs refuse at p >= 1e5), V4_MEM_BUDGET_GB, V4_ISLAND_ID,
-// V4_PRODUCTS_BLOCK (default: 4 with AVX-512, else 1), V4_VERBOSE, V4_NO_DUP_FILTER, V4_SERIAL_COMPACT.
+// V4_PRODUCTS_BLOCK (default: 4 with AVX-512, else 1), V4_VERBOSE, V4_NO_DUP_FILTER, V4_SERIAL_COMPACT,
+// V4_NO_BOUNDED (WP6 K1: the dense label-major reference), V4_NO_CHECK_STORE (no I1 check at all, also not at checkpoints / the final write: O1),
+// V4_GRAM_SLOTS (WP6 K3: Gram-row slots, -1 = auto 5G/2, 0 = off),
+// V4_CKPT=<base> (checkpoints; resume from <base> when present) with V4_STOP_AFTER=<step> (stop after that step's checkpoint).
 // Exit status: non-zero when any island run is refused or does not complete (review PR26 B1).
 #include <omp.h>
 #include <chrono>
@@ -25,6 +29,7 @@
 #include <algorithm>
 #include <cmath>
 #include <random>
+#include <parallel/algorithm>
 #include "v4/island/island.h"
 
 using namespace v4::island;
@@ -127,6 +132,8 @@ static int bench_island(int p, int N, const std::vector<int>& thr, KernelKind kk
   IslandConfig c; c.store_dup_filter = std::getenv("V4_NO_DUP_FILTER") == nullptr; c.verbose = std::getenv("V4_VERBOSE") != nullptr;
   if (const char* e = std::getenv("V4_PRODUCTS_BLOCK")) c.products_block = std::atoi(e);
   c.store_parallel_compact = std::getenv("V4_SERIAL_COMPACT") == nullptr; c.allow_test_kernels = true;
+  c.check_store_each_step = std::getenv("V4_CHECK_EACH_STEP") != nullptr;   // the pre-O1 behaviour (before/after comparisons)
+  if (const char* e = std::getenv("V4_COST_PATH")) c.cost_path = e;   // D-30 per-step cost record (JSON lines; O2)
   c.seed = 2026; c.island = 1; c.N = N; c.L = L; c.Hm = Hm; c.B = 14; c.kernel = kk; c.G = G; c.tile = Bk; c.store_cap = cap;
   // environment overrides AFTER the defaults (the island id was reset to 1 before: manager 11-16 note 1)
   if (const char* e = std::getenv("V4_ISLAND_ID")) c.island = (uint32_t)std::atoi(e);
@@ -134,6 +141,13 @@ static int bench_island(int p, int N, const std::vector<int>& thr, KernelKind kk
   if (const char* e = std::getenv("V4_K_STORE")) c.k_store = std::atof(e);   // calibration-measured mean stored |S| (B1)
   else c.k_store_optional = true;   // bench only: without V4_K_STORE the plan's k comes from pi_0 alone (r1 refuses this in real runs)
   c.inputs_bytes = inputs_extra;
+  c.bounded_scoring = std::getenv("V4_NO_BOUNDED") == nullptr; c.check_store = std::getenv("V4_NO_CHECK_STORE") == nullptr;
+  if (const char* e = std::getenv("V4_CKPT")) { c.ckpt_path = e; c.ckpt_every_s = 1e30; c.resume = true; }   // checkpoint only at V4_STOP_AFTER
+  if (const char* e = std::getenv("V4_STOP_AFTER")) c.stop_after_step = std::atoi(e);
+  if (const char* e = std::getenv("V4_GRAM_SLOTS")) c.gram_slots = std::atoi(e);   // K3: -1 auto (default), 0 off
+  std::printf("# bounded scoring %s, Gram-row slots %d at G %d, I1 store check %s%s\n", c.bounded_scoring ? "on" : "OFF (dense reference)",
+              gram_slots_of(c, G, p), G, !c.check_store ? "off" : c.check_store_each_step ? "after every step" : "at checkpoints and the final write (O1)",
+              c.ckpt_path.empty() ? "" : (", checkpoints " + c.ckpt_path).c_str());
   std::printf("# island id %u (address key), seed %u, k_store %s, products block %d\n", c.island, c.seed,
               c.k_store > 0 ? std::to_string(c.k_store).c_str() : "absent (pi_0 plan)", products_block_of(c));
   if (gspec.rfind("geo:", 0) == 0) {
@@ -175,6 +189,8 @@ static int bench_island(int p, int N, const std::vector<int>& thr, KernelKind kk
     std::printf("  memory plan (admission, ESTIMATE): %s | G used %d\n", r.mem_plan.c_str(), r.G_used);
     std::printf("  store compaction: %.2f s wall in total (%llu compactions, %llu serial in-pass fallbacks; %s)\n", k.t_store_compact,
                 (unsigned long long)k.store_merges, (unsigned long long)k.store_serial_merges, c.store_parallel_compact ? "parallel at pass/step boundaries" : "serial under the mutex");
+    std::printf("  store check (I1, parallel; O1): %llu checks, %.2f s wall (%s)\n", (unsigned long long)k.store_checks, k.t_check,
+                c.check_store_each_step ? "after every step: V4_CHECK_EACH_STEP" : "before checkpoints and the final write");
     std::printf("  wall s: init %.2f orders %.2f build %.2f phaseA %.2f walk %.2f phaseB %.2f apply %.2f barrier %.2f pm %.2f\n",
                 k.t_init, k.t_orders, k.t_build, k.t_phaseA, k.t_walk, k.t_phaseB, k.t_apply, k.t_barrier, k.t_pm);
     std::printf("  ns per step by phase (thread-time): orders %.1f build %.1f phaseA %.1f walk %.1f phaseB %.1f apply %.1f\n",
@@ -188,6 +204,63 @@ static int bench_island(int p, int N, const std::vector<int>& thr, KernelKind kk
     std::fflush(stdout);
   }
   return rc;
+}
+
+// sort <n> <threads> [k]: the compaction's first sort (by model: hash, |S|, S, v desc) on n staged refs of mean size k,
+// old (one task per pair: PR26 r2) vs new (merge-path segments: review m3) vs __gnu_parallel::sort (pre-r2); same result
+template <class T, class Less>
+static void psort_pairwise_old(std::vector<T>& a, std::vector<T>& tmp, Less less, int threads) {
+  const size_t n = a.size(); tmp.resize(n); const int C = threads;
+  std::vector<size_t> b(C + 1); for (int c = 0; c <= C; ++c) b[c] = n * (size_t)c / (size_t)C;
+  #pragma omp parallel for num_threads(threads) schedule(static, 1)
+  for (int c = 0; c < C; ++c) std::sort(a.begin() + b[c], a.begin() + b[c + 1], less);
+  T* src = a.data(); T* dst = tmp.data();
+  for (size_t width = 1; width < (size_t)C; width *= 2) {
+    const int npairs = (int)((C + 2 * width - 1) / (2 * width));
+    #pragma omp parallel for num_threads(threads) schedule(static, 1)
+    for (int q = 0; q < npairs; ++q) {
+      const size_t lo = b[std::min<size_t>(C, 2 * width * q)], mid = b[std::min<size_t>(C, 2 * width * q + width)], hi = b[std::min<size_t>(C, 2 * width * (q + 1))];
+      std::merge(src + lo, src + mid, src + mid, src + hi, dst + lo, less);
+    }
+    std::swap(src, dst);
+  }
+  if (src != a.data()) std::copy(src, src + n, a.data());
+}
+static void bench_sort(size_t n, int T, int k) {
+  std::mt19937_64 g(5); std::vector<int32_t> pool; std::vector<StoreRef> r(n);
+  pool.reserve(n * (size_t)k);
+  std::vector<size_t> off(n);
+  for (size_t i = 0; i < n; ++i) {
+    off[i] = pool.size(); int kk = 1 + (int)(g() % (2 * k)); int32_t last = -1;
+    for (int a = 0; a < kk; ++a) { last += 1 + (int32_t)(g() % 1000); pool.push_back(last); }
+  }
+  for (size_t i = 0; i < n; ++i) {
+    size_t e = i + 1 < n ? off[i + 1] : pool.size(); uint16_t kk = (uint16_t)(e - off[i]);
+    uint64_t h = 1469598103934665603ull; for (size_t t = off[i]; t < e; ++t) h = (h ^ (uint64_t)pool[t]) * 1099511628211ull;
+    // ~1/3 of the refs repeat an earlier model with another value (duplicates are common in staging)
+    if (i > 10 && g() % 3 == 0) { size_t src = g() % i; r[i] = r[src]; r[i].v = std::normal_distribution<double>()(g); continue; }
+    r[i] = StoreRef{std::normal_distribution<double>()(g), h, pool.data() + off[i], kk};
+  }
+  auto by_model = [](const StoreRef& a, const StoreRef& b) {
+    if (a.h != b.h) return a.h < b.h;
+    if (a.k != b.k) return a.k < b.k;
+    int c = std::memcmp(a.S, b.S, sizeof(int32_t) * a.k);
+    if (c != 0) return lex_less(a.S, a.k, b.S, b.k);
+    return a.v > b.v;
+  };
+  auto same = [](const std::vector<StoreRef>& x, const std::vector<StoreRef>& y) {
+    for (size_t i = 0; i < x.size(); ++i) if (x[i].h != y[i].h || x[i].S != y[i].S || std::memcmp(&x[i].v, &y[i].v, 8)) return false;
+    return true;
+  };
+  std::vector<StoreRef> ref = r; std::sort(ref.begin(), ref.end(), by_model);
+  double t_old = 1e30, t_new = 1e30, t_gnu = 1e30; bool ok = true;
+  for (int rep = 0; rep < 3; ++rep) {
+    std::vector<StoreRef> a = r, tmp; double t0 = now(); psort_pairwise_old(a, tmp, by_model, T); t_old = std::min(t_old, now() - t0); ok = ok && same(a, ref);
+    a = r; tmp.clear(); t0 = now(); psort_noalloc(a, tmp, by_model, T); t_new = std::min(t_new, now() - t0); ok = ok && same(a, ref);
+    a = r; t0 = now(); __gnu_parallel::sort(a.begin(), a.end(), by_model, __gnu_parallel::default_parallel_tag(T)); t_gnu = std::min(t_gnu, now() - t0); ok = ok && same(a, ref);
+  }
+  std::printf("sort n=%zu threads=%d (best of 3, wall): pairwise (PR26) %.3f s, merge-path (m3) %.3f s, __gnu_parallel %.3f s; identical %d\n",
+              n, T, t_old, t_new, t_gnu, (int)ok);
 }
 
 static void bench_store(uint64_t cap, int T, long per) {
@@ -298,6 +371,8 @@ int main(int argc, char** argv) {
     { std::vector<double> a, b; a.resize((size_t)5 * p); b.resize((size_t)5 * p);
       double t0 = now(); a.resize((size_t)145 * p); b.resize((size_t)145 * p); double t1 = now();
       std::printf("score rows: growing 5 -> 145 supports re-zero-fills %.2f GB in %.3f s (per group, before the fix)\n", 2.0 * 140 * p * 8 / 1e9, t1 - t0); }
+  } else if (mode == "sort") {
+    bench_sort(strtoull(argv[2], 0, 10), atoi(argv[3]), argc > 4 ? atoi(argv[4]) : 7);
   } else if (mode == "store") {
     bench_store(strtoull(argv[2], 0, 10), atoi(argv[3]), atol(argv[4]));
   } else return 1;
