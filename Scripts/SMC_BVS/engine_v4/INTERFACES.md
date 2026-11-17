@@ -328,6 +328,26 @@ Sections (names fixed; WPs may add sections, never rename):
     f64 [p], `rb_round` f64 [**Hm** × p].
   - Terminal supports, also completed only: `terminal_S_ptr` i64 [N + 1] and `terminal_S` i32, the N supports after the
     last measured round, in particle order (WP4: occupancy, Ẑ_occ).
+  - `meta.cost` (D-30; WP7 O2, review PR49): **the authoritative per-step execution record**, schema `smcbvs4.cost/1`,
+    written when the island ran at least its initial draws (any status). Header: r, role, tier, iter, N, p, m (= p + B +
+    2), threads, G, tile, kernel, arith, segment. `rows` = the rows closed: completed = T + L + Hm + 2 (step 0 = the
+    initial draws, the T bridge stages, L burn-in and Hm measured rounds, then the exit row); a stopped island = its
+    closed steps + the exit row. `columns` = one array per `StepCost` field (`include/v4/island/island.h`), one entry
+    per row; `flips` = `KernelStats::flip_evals`, the addition flips evaluated on fast supports (K1: with bounded
+    scoring only those it scores). Rows are contiguous intervals of the island's lifetime: a row closes right after its step's ledger sync
+    (before that step's checkpoint, whose seconds go to the next row) and is final then; the exit row (kind 4) covers
+    the last checkpoint, a failed or interrupted partial step, the I1 check on exit and the result assembly. The
+    checkpoint carries the rows and the lifetime totals at the last close, so after a resume (segment = resumes before
+    the row) the rows sum exactly to the island's totals (counts) and to `t_total` (seconds). Values: counts are JSON
+    numbers (a bounded-count exception to the hex rule of this section: per-row counts are exact below 2^53, and the
+    writer refuses more); a field the row's kernel does not measure is `"NaN"` (the particle-major kernel measures
+    particle_rounds, t_pm, the store, check, checkpoint and memory fields; the label-major kernel all but t_pm).
+    Execution statistics only: not in `IslandRun::hash` / `meta.output_hash` nor in any non-meta section hash (T2, the
+    merge never reads it); like all of `meta` it is in the container's content hash.
+  - The sidecar `IslandConfig::cost_path` is a **non-authoritative progress log** of the same rows (a header line, one
+    JSON line per row, one `write()` each). At the start of every job segment it is rebuilt from the rows the run
+    continues from; a write failure cuts it back to whole lines and disables it without failing the island. Calibration
+    islands get it from `calibrate --cost-dir` (WP7 O5); until then only `IslandConfig::cost_path` sets it.
 - `fit.bin` + `fit.json` (WP4): merged `top_*`, `hpm_*` + provenance, `hpm_before_local_*`, local-search archive,
   `mode_S`, LS0, near ties, `logZ_r`, `pip_eq`, `pip_Z`, `pip_T`, `rb_*`, flags; `fit.json` scalars and hashes only.
   No leader stores in `island_r.bin` or `fit.bin`, in any mode (§4.1; on the compat exclusion list).
@@ -499,3 +519,8 @@ point, so all WPs link from day one: `setup::run`, `island::run`, `calib::run`, 
 - v0.1.13 (2026-11-16, WP1; WP4 PR #37, WP3_ARCH_REVIEW R7) — §5.1: `calib.bin` `meta.k_store` (calibration top store
   mean |S|), cross-referenced from §7 admission. §4.1: class-A values are path-dependent maxima; every store keeps one
   entry per model with its best value (the reference `Store` now de-duplicates by model; deterministic, T3-invariant).
+- v0.1.16 (2026-11-17, WP7 O2 for WP1; D-30; review PR49) — §5.1: `island_r.bin` `meta.cost`, the authoritative per-step
+  cost record (schema `smcbvs4.cost/1`; contiguous final rows + an exit row, lifetime totals across resume; counts as
+  bounded JSON numbers; unmeasured fields "NaN"; outside the scientific-output hashes, inside the container hash), and
+  the non-authoritative JSON-lines progress log. Numbering: WP1's v0.1.14–v0.1.15 (PR #45) precede it; D-29's O6 line
+  is v0.1.17. The header line moves to v0.1.16 when PR #45 lands (WP1).
