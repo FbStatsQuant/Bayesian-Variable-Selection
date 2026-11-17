@@ -3,6 +3,10 @@ ST	4	corollary ticket, Theory Wave 3. Lead: Claude Opus 5.5 (effort high). Proto
 ST	6	(`reviews/SL1_statement_lock_sol.md`: LOCK WITH CHANGES; disposition `reviews/SL1_disposition.md`; markers). It asserts no proof status.
 ST	161	| v1.1 | (C1) hypothesis "F real-valued on Ω (0 < Z < ∞)"; §1 convention for S₀ ∉ Ω; (C3) preamble: the reader-form sentence moved out of the claim span to §5 remark 5; P(𝒢⁺_n) → 1 attributed to RM0-plus (b⁺); (C3)(ii) reason for "every right side tends to 0" completed | EQUAL (hypothesis made explicit as already defined in §1; a convention that makes small-n cases trivially true; an unproved interpretive sentence moved out of the span; citations) | , , , , | `reviews/LC1_line_check_opus.md` | council R1 |
 ST	162	| v1.1.1 | §1 convention sentence narrowed to statements involving S₀, 𝓜_n or 𝒦_n; §5 remark 5 (outside claims) | EQUAL (wording) | , | `reviews/LC1R_recheck_opus.md` | fixes applied verbatim from LC1R |
+ST	163	| v1.1.2 | (C2) configuration gloss: `ls0_ell` = ℓ_n added (it is part of the imported shipped configuration, RM `STATEMENT.md:59-67`) | EQUAL (explicit form of an imported premise) | R1-opus-5 | `reviews/R1_council_opus.md` | council diff round R2 |
+L1	3	Claim: STATEMENT.md (C1), §2. Proof by the lead; line-checked by LC1 and LC1R (see REPORT §2). Written for a Lean transcription:
+L2	3	Claim: STATEMENT.md (C2), §3. Code reading by the lead; line-checked by LC1 and LC1R (see REPORT §2).
+L3	3	Claim: STATEMENT.md (C3), §4. Proof by the lead; line-checked by LC1 and LC1R (see REPORT §2); (0.5) added after council R1.
 SPEC	1	<!-- Carrier copy (read-only) of Theory_work/Wave3/W3-AUDIT/SPEC_LIST_PIP.md at theory/W3-AUDIT commit 523dda23, byte-identical below this line; frozen so the council reads the field definitions LIST-R is stated against. -->
 RM2R	3	Ticket W3-RM2-R (Tier B rider), Theory Wave 3. Lead: Claude Opus 5.5 (Claude Third, effort high). Protocol:
 RM2R	5	check SC1 applied (`reviews/SC1_statement_change_sol.md`: ACCEPT WITH CHANGES; markers; `reviews/SC1_disposition.md`).

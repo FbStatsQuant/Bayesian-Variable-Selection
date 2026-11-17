@@ -1,2 +1,2 @@
-Offline estimate (characters / 3.5): input ≈ 45075 tokens per request, 2 requests; output ≈ 16000 each (max 32000).
+Offline estimate (characters / 3.5): input ≈ 45536 tokens per request, 2 requests; output ≈ 16000 each (max 32000).
 Batch rate $4 / MTok in, $20 / MTok out: input $0.36, output $0.64 expected, $1.28 worst case. HQ `count` gives the exact input.

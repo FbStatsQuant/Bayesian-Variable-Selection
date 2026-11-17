@@ -2,10 +2,10 @@
 
 Material for a blind referee. Every excerpt is verbatim with its file and original line numbers; status labels and review markers have been removed.
 
-### [ST] `Theory_work/Wave3/W3-D5P/STATEMENT.md` @ e5cc7d60 — the statement file (claims (C1) LIST-K, (C2) LIST-CODE, (C3) LIST-R)
+### [ST] `Theory_work/Wave3/W3-D5P/STATEMENT.md` @ a2c465a4 — the statement file (claims (C1) LIST-K, (C2) LIST-CODE, (C3) LIST-R)
 lines 1–1:
 ```
-    1| # W3-D5P — STATEMENT v1.1.1 (locked v1.0 + changelog rows v1.1, v1.1.1): the list-restricted outputs on every Theorem 6 design
+    1| # W3-D5P — STATEMENT v1.1.2 (locked v1.0 + changelog rows v1.1–v1.1.2): the list-restricted outputs on every Theorem 6 design
 ```
 lines 10–154:
 ```
@@ -79,7 +79,7 @@ lines 10–154:
    77| ## 3. Lemma LIST-CODE (code reading at the pin)
    78| 
    79| **(C2) Lemma LIST-CODE.** Code of record as in the header; shipped configuration (`ls0 = TRUE`, cap
-   80| `"ell_n_plus_mode"`, `ls0_tie_dp = TRUE`); EX-A, EX-S, SR. Let 𝓜^run be the set of models offered to the final-run
+   80| `"ell_n_plus_mode"`, `ls0_ell` = ℓ_n, `ls0_tie_dp = TRUE`); EX-A, EX-S, SR. Let 𝓜^run be the set of models offered to the final-run
    81| ledger (`Ledger::offer_stores`, `cpp/v3_ledger.h:89-94`), as in SAMP `STATEMENT.md:59-60`.
    82| (i) *[Link 1: completed = output on the sampler branch.]* On the sampler branch, `fit$status == "completed"` if and only
    83|     if `fit$estimates_available` is TRUE, i.e. if and only if the run is in 𝒪. On such a run the final run executed LS0
@@ -156,12 +156,12 @@ lines 10–154:
   154| 
 ```
 
-### [L1] `Theory_work/Wave3/W3-D5P/lemmas/L1_listK.md` @ e5cc7d60 — proof of LIST-K
+### [L1] `Theory_work/Wave3/W3-D5P/lemmas/L1_listK.md` @ a2c465a4 — proof of LIST-K
 lines 1–58:
 ```
     1| # L1 — Lemma LIST-K (deterministic list algebra) — proof
     2| 
-    3| Claim: STATEMENT.md (C1), §2. Status: proof by the lead, not yet line-checked. Written for a Lean transcription:
+    3| [review record omitted]
     4| finite sums over a finite set, real arithmetic, one inequality for log; no measure theory.
     5| 
     6| ## Setting (all deterministic)
@@ -219,12 +219,12 @@ lines 1–58:
    58|   and the identity sup|D| = 1 − m by brute force over all 𝒜 when |Ω| ≤ 12).
 ```
 
-### [L2] `Theory_work/Wave3/W3-D5P/lemmas/L2_listCODE.md` @ e5cc7d60 — proof of LIST-CODE (code reading)
+### [L2] `Theory_work/Wave3/W3-D5P/lemmas/L2_listCODE.md` @ a2c465a4 — proof of LIST-CODE (code reading)
 lines 1–152:
 ```
     1| # L2 — Lemma LIST-CODE (code reading at the pin) — proof
     2| 
-    3| Claim: STATEMENT.md (C2), §3. Status: code reading by the lead, not yet line-checked.
+    3| [review record omitted]
     4| **Code of record:** `Scripts/SMC_BVS/core/` at 4676af6 = the core on main 029bb748 (`git diff 4676af6 029bb748 --
     5| Scripts/SMC_BVS/core` is empty; last change 72785fe). Paths below are relative to `Scripts/SMC_BVS/core/`; line
     6| numbers are those of this worktree (branch theory/W3-D5P). Premises: EX-A (every score is computed exactly), EX-S, SR,
@@ -376,12 +376,12 @@ lines 1–152:
   152|   `top_store` and `hpm` = S₀ whenever S₀ was the posterior mode (`numerics/e2e_small_out.txt`). It is falsification only.
 ```
 
-### [L3] `Theory_work/Wave3/W3-D5P/lemmas/L3_listR.md` @ e5cc7d60 — proof of LIST-R
-lines 1–93:
+### [L3] `Theory_work/Wave3/W3-D5P/lemmas/L3_listR.md` @ a2c465a4 — proof of LIST-R
+lines 1–107:
 ```
     1| # L3 — Corollary LIST-R (assembly) — proof
     2| 
-    3| Claim: STATEMENT.md (C3), §4. Status: proof by the lead, not yet line-checked.
+    3| [review record omitted]
     4| Consumed, statuses verbatim (registry, main 029bb748): `W3-RM2-R:RM2-R-plus@1.0.1`, `W3-RM2-R:RM0-plus@1.0.1`,
     5| `W3-RM2-R:DLV-0@1.0.1`: [status omitted]
     6|  (each); `W2-APP:POST@1.0.7`: [status omitted]. Internal: LIST-K (L1), LIST-CODE (L2); premise
@@ -406,75 +406,89 @@ lines 1–93:
    25| (0.4) (D) ⇒ every admissible run returns output for every valid non-degenerate input (DLV-0, RM2R
    26| `STATEMENT.md:144-147`), and under Setting R the input is valid and non-degenerate with probability one (RM0-plus (c⁺),
    27| RM2R `STATEMENT.md:138-143`, last sentence).
-   28| The reader assumptions (A1)–(A6) of Theorem 6 imply these hypotheses through READER §6 bridges B6.1–B6.4 (this file
-   29| does not re-prove them; the corollary is stated with "the hypotheses of RM2-R-plus").
-   30| 
-   31| ## Step 1 — (i): the pathwise statement on 𝒢⁺_n
-   32| Fix n with s₀ ≤ K, a data set in 𝒢⁺_n, and an admissible run (any seed, N_e, R′, calibration outcome) that returns
-   33| output (event 𝒪). Output occurs only on the two branches: `estimates_available` becomes TRUE only at
-   34| `v3_fit.R:129` (exact branch) or through `v3_fit.R:171` from `v3_run.R:218` (sampler branch), both after `branch_run` is set
-   35| (`v3_fit.R:106`); the earlier returns (`v3_fit.R:89`, `:102`) keep the initial FALSE (`v3_fit.R:78`). By L2 (i), on the sampler branch 𝒪 = {status "completed"}; on the exact branch 𝒪 = {status "exact"}
-   36| (`v3_fit.R:125-129`: `estimates_available` TRUE iff `e$status == "exact"`; otherwise `:130-131` returns with it FALSE).
-   37| *Sampler branch.* By L2 (i) (B4), since the data set is in 𝒦_n, S₀ ∈ 𝓜^run. Since it is in 𝓜_n, F(S₀) > F(S) for
-   38| every S ∈ Ω ∖ {S₀}; by L2 (v), S₀ ∈ 𝒯 and `hpm` = S₀. By L2 (iii), 𝒯 ⊆ Ω is a set of distinct models returned with the
-   39| values F(S). By IMPL-LIST and the identification of STATEMENT §1 (under EX-A, SPEC §2 applied to models with values
-   40| F(S) gives, for every retained column j, `pip_list[j]` = Σ_{S∈𝒯, j∈S} e^{F(S)−F_max} / Σ_{S∈𝒯} e^{F(S)−F_max} = pip_𝒯(j),
-   41| `mpm_list` = mpm_𝒯 and `log_Z_list` = F_max + log Σ_{S∈𝒯} e^{F(S)−F_max} = logZ_𝒯). SPEC §4's exceptional rows do not
-   42| fire: the values are F(S), finite under EX-A (the scorer never fails for yᵀy > 0: Lemma S.2, RM2R
-   43| `STATEMENT.md:151-152`); 𝒯 ∋ S₀ is not empty; 𝒯 consists of distinct models (L2 (iii)). So the three fields are
-   44| present and not NA on every output run of the sampler branch. LIST-K applies with this 𝒯
-   45| (S₀ ∈ 𝒯 ⊆ Ω) and gives:
-   46|  max_j |pip_list[j] − 1{j ∈ S₀}| ≤ ε_n (LIST-K (a)); max_j |pip_list[j] − PIP_j| ≤ ε_n (LIST-K (b));
-   47|  log Z + log(1 − ε_n) ≤ log_Z_list ≤ log Z (LIST-K (d)); and if ε_n < ½, `mpm_list` = S₀ = MPM (LIST-K (c)), hence
-   48|  `mpm_list` = `hpm` = S₀ = MPM.
-   49| *Exact branch.* By L2 (iv), `pip_primary` = PIP and `mpm` = MPM; by IMPL-LIST (SPEC §4), `pip_list` = PIP and
-   50| `mpm_list` = MPM. LIST-K (e) (S₀ ∈ Ω, since s₀ ≤ K) gives max_j |PIP_j − 1{j ∈ S₀}| ≤ ε_n, and MPM = S₀ if ε_n < ½;
-   51| trivially max_j |pip_list[j] − PIP_j| = 0 ≤ ε_n. On 𝓜_n, L2 (v) gives `hpm` = S₀ and S₀ ∈ 𝒯^ex. When `log_Z_list` is
-   52| not NA it is logZ_{𝒯^ex} (IMPL-LIST, SPEC §4) with 𝒯^ex ⊆ Ω distinct, values F(S) (L2 (iv)), S₀ ∈ 𝒯^ex; LIST-K (d)
-   53| gives log Z + log(1 − ε_n) ≤ log_Z_list ≤ log Z.
-   54| No property of the seed, N_e, R′ or calibration outcome was used beyond admissibility, and the data event 𝒢⁺_n does not
-   55| depend on them. ∎(i)
-   56| 
-   57| ## Step 2 — (ii): probability bounds
-   58| Fix t ∈ (0, ½) and an admissible run specification (seed, N_e, R′; the calibration outcome is then a function of the
-   59| data and the calibration streams). Consider a data set in 𝒢⁺_n ∩ {ε_n ≤ t} and a realisation of the run in 𝒪. By
-   60| Step 1, max_j |pip_list[j] − 1{j ∈ S₀}| ≤ ε_n ≤ t and max_j |pip_list[j] − PIP_j| ≤ ε_n ≤ t, so B₁(t), B₂(t) fail; if
-   61| `log_Z_list` is not NA, |log_Z_list − log Z| ≤ ε_n/(1 − ε_n) ≤ 2ε_n ≤ 2t (LIST-K (d) and its corollary; ε_n ≤ t < ½),
-   62| so B₃(t) fails. Hence, as sets of (data, run randomness),
-   63|   𝒪 ∩ (B₁(t) ∪ B₂(t) ∪ B₃(t)) ⊆ (𝒢⁺_nᶜ ∪ {ε_n > t}) × (run randomness),
-   64| and likewise, since on 𝒢⁺_n ∩ {ε_n < ½} ∩ 𝒪 Step 1 gives `mpm_list` = `hpm` = S₀,
-   65|   𝒪 ∩ B₄ ⊆ (𝒢⁺_nᶜ ∪ {ε_n ≥ ½}) × (run randomness).
-   66| Taking probabilities under the joint law (for the left sides: their probability, or outer probability if measurability
-   67| is not assumed — the right sides are data events): P(𝒪 ∩ (B₁(t) ∪ B₂(t) ∪ B₃(t))) ≤ P(𝓜_nᶜ) + P(𝒦_nᶜ) + P(ε_n > t) and
-   68| P(𝒪 ∩ B₄) ≤ P(𝓜_nᶜ) + P(𝒦_nᶜ) + P(ε_n ≥ ½), by (0.1). The right sides tend to 0: (0.1), and Markov's inequality with
-   69| (0.2): P(ε_n > t) ≤ E ε_n / t → 0 and P(ε_n ≥ ½) ≤ 2E ε_n → 0.
-   70| *Rate.* Let p ≥ 2 for all large n. (T1-R) is hypothesis LSF of POST (RM `STATEMENT.md:128-133` defines (T1-R) as
-   71| "the LSF conditions of APP L1_POST(b)"), Setting R is POST's setting with the standardised-signal convention
-   72| (`L1_POST.md:8-18`), and POST (b) (`L1_POST.md:31-33`) gives, under the joint law, 1 − π(S₀) = O_P(r_n), r_n = √(log n/n).
-   73| Let t_n ∈ (0, ½) be deterministic with t_n/r_n → ∞. Given η > 0, choose M and n₀ with P(ε_n > M r_n) < η for n ≥ n₀;
-   74| for n ≥ n₁ ≥ n₀, t_n ≥ M r_n, so P(ε_n > t_n) < η. Hence P(ε_n > t_n) → 0, and with 𝒢♯_n := 𝒢⁺_n ∩ {ε_n ≤ t_n},
-   75| P(𝒢♯_nᶜ) ≤ P(𝓜_nᶜ) + P(𝒦_nᶜ) + P(ε_n > t_n) → 0. On 𝒢♯_n, every admissible output run satisfies, by Step 1 and the
-   76| argument above with t = t_n: max_j |pip_list[j] − 1{j ∈ S₀}| ≤ t_n, max_j |pip_list[j] − PIP_j| ≤ t_n, |log_Z_list − log Z|
-   77| ≤ 2t_n when `log_Z_list` is not NA, and (ε_n ≤ t_n < ½) `mpm_list` = `hpm` = S₀. ∎(ii)
-   78| 
-   79| ## Step 3 — (iii): with delivery
-   80| Under (D), by (0.4), P(𝒪ᶜ) = 0 for every admissible run. Hence for any event B of the run, P(B) ≤ P(𝒪 ∩ B) + P(𝒪ᶜ) =
-   81| P(𝒪 ∩ B), and Step 2 gives P(B₄) → 0 and P(B₁(t) ∪ B₂(t) ∪ B₃(t)) → 0 for every t ∈ (0, ½), and, when p ≥ 2 for all
-   82| large n, P(B₁(t_n) ∪ B₂(t_n) ∪ B₃(t_n)) ≤ P(𝓜_nᶜ) + P(𝒦_nᶜ) + P(ε_n > t_n) → 0 for every deterministic t_n ∈ (0, ½) with
-   83| t_n/r_n → ∞.
-   84| *"i.e. O_P(r_n)".* Let X_n ≥ 0 be any of the three errors (for the evidence, X_n := ½|log_Z_list − log Z| on
-   85| {`log_Z_list` not NA}, and 0 otherwise), so that {X_n > t} ⊆ B₁(t) ∪ B₂(t) ∪ B₃(t). Suppose X_n ≠ O_P(r_n). Then there is η > 0 such that for every M and every N some n ≥ N has P(X_n > M r_n) ≥ η. Since r_n → 0, we can choose n₁ < n₂ < … such that, for every k, r_n ≤ min(k⁻², 1/16) for all n ≥ n_k and P(X_{n_k} > k r_{n_k}) ≥ η. Define t_n := k r_n for n_k ≤ n < n_{k+1}, and t_n := ¼ for n < n₁. For n_k ≤ n < n_{k+1}: t_n = k r_n ≤ k·k⁻¹√r_n = √r_n ≤ ¼ (as r_n ≤ k⁻²), so t_n ∈ (0, ½); and t_n/r_n = k → ∞ as n → ∞. But P(X_{n_k} > t_{n_k}) = P(X_{n_k} > k r_{n_k}) ≥ η for every k, contradicting P(B₁(t_n) ∪ B₂(t_n) ∪ B₃(t_n)) → 0. Hence each error is O_P(r_n). ∎(iii)
-   86| 
-   87| ## Remarks for the checker
-   88| - Step 1 is where the two DIST links are used: L2 (i) turns "the run returns output" into "status completed, and LS0
-   89|   ran in this run"; L2 (ii)–(iii) turn RM's Ŝ⁺ into the printed `hpm` and put S₀ into `top_store`.
-   90| - The only data-level inputs are (0.1)–(0.3) and POST (b); no sampler law (no W1-N1 premise) is used: the claim is
-   91|   pathwise in the run.
-   92| - IMPL-LIST is used only to identify the printed fields with pip_𝒯, mpm_𝒯, logZ_𝒯 (sampler branch) and with PIP, MPM,
-   93|   logZ_{𝒯^ex} (exact branch).
+   28| (0.5) *From the pinned core to the method with the list fields*. L2, RM0-plus and DLV-0 are statements
+   29| about the core of record (4676af6); LIST-R is about the method after the pending commit that adds the fields. By
+   30| IMPL-LIST (the commit computes the fields as SPEC §2 and §4 prescribe, from the returned list and values of the same
+   31| run, and changes no other field and no other state; SPEC §7 A.1–A.2) — and the returned list exists only after the
+   32| last runtime-guard consultation (`v3_fit.R:121-122` on the exact branch, after `v3_final_run` at `v3_fit.R:162` on the
+   33| sampler branch), after which `finish` (`v3_fit.R:79-87`) does not branch on the clock, so DLV-0's guard and MACH
+   34| accounting are unaffected — on every input and every
+   35| realisation of the run's uniforms the post-commit fit and the pinned fit execute the same computation up to the new
+   36| fields, and the new computation can end the fit with an error only through SPEC §4's duplicate-model row. That row
+   37| cannot fire on an output run: the sampler store `top_store` and the exact store 𝒯^ex hold distinct models (L2 (iii),
+   38| (iv)). Hence the post-commit fit returns if and only if the pinned fit returns, and 𝒪, `status`, `hpm`, `top_store`,
+   39| `fit$exact` (with its store) and every other existing field are those of core 4676af6. So L2, RM0-plus (b⁺) and DLV-0
+   40| apply to the method with the list fields, and the new fields are SPEC's functions of the pinned outputs.
+   41| The reader assumptions (A1)–(A6) of Theorem 6 imply these hypotheses through READER §6 bridges B6.1–B6.4 (this file
+   42| does not re-prove them; the corollary is stated with "the hypotheses of RM2-R-plus").
+   43| 
+   44| ## Step 1 — (i): the pathwise statement on 𝒢⁺_n
+   45| Fix n with s₀ ≤ K, a data set in 𝒢⁺_n, and an admissible run (any seed, N_e, R′, calibration outcome) that returns
+   46| output (event 𝒪); by (0.5) its existing fields are those of the pinned core, so L2 applies. Output occurs only on the two branches: `estimates_available` becomes TRUE only at
+   47| `v3_fit.R:129` (exact branch) or through `v3_fit.R:171` from `v3_run.R:218` (sampler branch), both after `branch_run` is set
+   48| (`v3_fit.R:106`); the earlier returns (`v3_fit.R:89`, `:102`) keep the initial FALSE (`v3_fit.R:78`). By L2 (i), on the sampler branch 𝒪 = {status "completed"}; on the exact branch 𝒪 = {status "exact"}
+   49| (`v3_fit.R:125-129`: `estimates_available` TRUE iff `e$status == "exact"`; otherwise `:130-131` returns with it FALSE).
+   50| *Sampler branch.* By L2 (i) (B4), since the data set is in 𝒦_n, S₀ ∈ 𝓜^run. Since it is in 𝓜_n, F(S₀) > F(S) for
+   51| every S ∈ Ω ∖ {S₀}; by L2 (v), S₀ ∈ 𝒯 and `hpm` = S₀. By L2 (iii), 𝒯 ⊆ Ω is a set of distinct models returned with the
+   52| values F(S). By IMPL-LIST and the identification of STATEMENT §1 (under EX-A, SPEC §2 applied to models with values
+   53| F(S) gives, for every retained column j, `pip_list[j]` = Σ_{S∈𝒯, j∈S} e^{F(S)−F_max} / Σ_{S∈𝒯} e^{F(S)−F_max} = pip_𝒯(j),
+   54| `mpm_list` = mpm_𝒯 and `log_Z_list` = F_max + log Σ_{S∈𝒯} e^{F(S)−F_max} = logZ_𝒯). SPEC §4's exceptional rows do not
+   55| fire: the values are F(S), finite under EX-A (the scorer never fails for yᵀy > 0: Lemma S.2, RM2R
+   56| `STATEMENT.md:151-152`); 𝒯 ∋ S₀ is not empty; 𝒯 consists of distinct models (L2 (iii)). So the three fields are
+   57| present and not NA on every output run of the sampler branch. LIST-K applies with this 𝒯
+   58| (S₀ ∈ 𝒯 ⊆ Ω) and gives:
+   59|  max_j |pip_list[j] − 1{j ∈ S₀}| ≤ ε_n (LIST-K (a)); max_j |pip_list[j] − PIP_j| ≤ ε_n (LIST-K (b));
+   60|  log Z + log(1 − ε_n) ≤ log_Z_list ≤ log Z (LIST-K (d)); and if ε_n < ½, `mpm_list` = S₀ = MPM (LIST-K (c)), hence
+   61|  `mpm_list` = `hpm` = S₀ = MPM.
+   62| *Exact branch.* By L2 (iv), `pip_primary` = PIP and `mpm` = MPM; by IMPL-LIST (SPEC §4), `pip_list` = PIP and
+   63| `mpm_list` = MPM. LIST-K (e) (S₀ ∈ Ω, since s₀ ≤ K) gives max_j |PIP_j − 1{j ∈ S₀}| ≤ ε_n, and MPM = S₀ if ε_n < ½;
+   64| trivially max_j |pip_list[j] − PIP_j| = 0 ≤ ε_n. On 𝓜_n, L2 (v) gives `hpm` = S₀ and S₀ ∈ 𝒯^ex. When `log_Z_list` is
+   65| not NA it is logZ_{𝒯^ex} (IMPL-LIST, SPEC §4) with 𝒯^ex ⊆ Ω distinct, values F(S) (L2 (iv)), S₀ ∈ 𝒯^ex; LIST-K (d)
+   66| gives log Z + log(1 − ε_n) ≤ log_Z_list ≤ log Z.
+   67| No property of the seed, N_e, R′ or calibration outcome was used beyond admissibility, and the data event 𝒢⁺_n does not
+   68| depend on them. ∎(i)
+   69| 
+   70| ## Step 2 — (ii): probability bounds
+   71| Fix t ∈ (0, ½) and an admissible run specification (seed, N_e, R′; the calibration outcome is then a function of the
+   72| data and the calibration streams). Consider a data set in 𝒢⁺_n ∩ {ε_n ≤ t} and a realisation of the run in 𝒪. By
+   73| Step 1, max_j |pip_list[j] − 1{j ∈ S₀}| ≤ ε_n ≤ t and max_j |pip_list[j] − PIP_j| ≤ ε_n ≤ t, so B₁(t), B₂(t) fail; if
+   74| `log_Z_list` is not NA, |log_Z_list − log Z| ≤ ε_n/(1 − ε_n) ≤ 2ε_n ≤ 2t (LIST-K (d) and its corollary; ε_n ≤ t < ½),
+   75| so B₃(t) fails. Hence, as sets of (data, run randomness),
+   76|   𝒪 ∩ (B₁(t) ∪ B₂(t) ∪ B₃(t)) ⊆ (𝒢⁺_nᶜ ∪ {ε_n > t}) × (run randomness),
+   77| and likewise, since on 𝒢⁺_n ∩ {ε_n < ½} ∩ 𝒪 Step 1 gives `mpm_list` = `hpm` = S₀,
+   78|   𝒪 ∩ B₄ ⊆ (𝒢⁺_nᶜ ∪ {ε_n ≥ ½}) × (run randomness).
+   79| Taking probabilities under the joint law (for the left sides: their probability, or outer probability if measurability
+   80| is not assumed — the right sides are data events): P(𝒪 ∩ (B₁(t) ∪ B₂(t) ∪ B₃(t))) ≤ P(𝓜_nᶜ) + P(𝒦_nᶜ) + P(ε_n > t) and
+   81| P(𝒪 ∩ B₄) ≤ P(𝓜_nᶜ) + P(𝒦_nᶜ) + P(ε_n ≥ ½), by (0.1). The right sides tend to 0: (0.1), and Markov's inequality with
+   82| (0.2): P(ε_n > t) ≤ E ε_n / t → 0 and P(ε_n ≥ ½) ≤ 2E ε_n → 0.
+   83| *Rate.* Let p ≥ 2 for all large n. (T1-R) is hypothesis LSF of POST (RM `STATEMENT.md:128-133` defines (T1-R) as
+   84| "the LSF conditions of APP L1_POST(b)"), Setting R is POST's setting with the standardised-signal convention
+   85| (`L1_POST.md:8-18`), and POST (b) (`L1_POST.md:31-33`) gives, under the joint law, 1 − π(S₀) = O_P(r_n), r_n = √(log n/n).
+   86| Let t_n ∈ (0, ½) be deterministic with t_n/r_n → ∞. Given η > 0, choose M and n₀ with P(ε_n > M r_n) < η for n ≥ n₀;
+   87| for n ≥ n₁ ≥ n₀, t_n ≥ M r_n, so P(ε_n > t_n) < η. Hence P(ε_n > t_n) → 0, and with 𝒢♯_n := 𝒢⁺_n ∩ {ε_n ≤ t_n},
+   88| P(𝒢♯_nᶜ) ≤ P(𝓜_nᶜ) + P(𝒦_nᶜ) + P(ε_n > t_n) → 0. On 𝒢♯_n, every admissible output run satisfies, by Step 1 and the
+   89| argument above with t = t_n: max_j |pip_list[j] − 1{j ∈ S₀}| ≤ t_n, max_j |pip_list[j] − PIP_j| ≤ t_n, |log_Z_list − log Z|
+   90| ≤ 2t_n when `log_Z_list` is not NA, and (ε_n ≤ t_n < ½) `mpm_list` = `hpm` = S₀. ∎(ii)
+   91| 
+   92| ## Step 3 — (iii): with delivery
+   93| Under (D), by (0.4) and (0.5), P(𝒪ᶜ) = 0 for every admissible run of the method with the list fields. Hence for any event B of the run, P(B) ≤ P(𝒪 ∩ B) + P(𝒪ᶜ) =
+   94| P(𝒪 ∩ B), and Step 2 gives P(B₄) → 0 and P(B₁(t) ∪ B₂(t) ∪ B₃(t)) → 0 for every t ∈ (0, ½), and, when p ≥ 2 for all
+   95| large n, P(B₁(t_n) ∪ B₂(t_n) ∪ B₃(t_n)) ≤ P(𝓜_nᶜ) + P(𝒦_nᶜ) + P(ε_n > t_n) → 0 for every deterministic t_n ∈ (0, ½) with
+   96| t_n/r_n → ∞.
+   97| *"i.e. O_P(r_n)".* Let X_n ≥ 0 be any of the three errors (for the evidence, X_n := ½|log_Z_list − log Z| on
+   98| {`log_Z_list` not NA}, and 0 otherwise), so that {X_n > t} ⊆ B₁(t) ∪ B₂(t) ∪ B₃(t). Suppose X_n ≠ O_P(r_n). Then there is η > 0 such that for every M and every N some n ≥ N has P(X_n > M r_n) ≥ η. Since r_n → 0, we can choose n₁ < n₂ < … such that, for every k, r_n ≤ min(k⁻², 1/16) for all n ≥ n_k and P(X_{n_k} > k r_{n_k}) ≥ η. Define t_n := k r_n for n_k ≤ n < n_{k+1}, and t_n := ¼ for n < n₁. For n_k ≤ n < n_{k+1}: t_n = k r_n ≤ k·k⁻¹√r_n = √r_n ≤ ¼ (as r_n ≤ k⁻²), so t_n ∈ (0, ½); and t_n/r_n = k → ∞ as n → ∞. But P(X_{n_k} > t_{n_k}) = P(X_{n_k} > k r_{n_k}) ≥ η for every k, contradicting P(B₁(t_n) ∪ B₂(t_n) ∪ B₃(t_n)) → 0. Hence each error is O_P(r_n). ∎(iii)
+   99| 
+  100| ## Remarks for the checker
+  101| - Step 1 is where the two DIST links are used: L2 (i) turns "the run returns output" into "status completed, and LS0
+  102|   ran in this run"; L2 (ii)–(iii) turn RM's Ŝ⁺ into the printed `hpm` and put S₀ into `top_store`.
+  103| - The only data-level inputs are (0.1)–(0.3) and POST (b); no sampler law (no W1-N1 premise) is used: the claim is
+  104|   pathwise in the run.
+  105| - IMPL-LIST is used twice: in (0.5), to carry L2, RM0-plus and DLV-0 from the pinned core to the method with
+  106|   the list fields ("changes no other field and no other state"); and in Step 1, to identify the printed fields with
+  107|   pip_𝒯, mpm_𝒯, logZ_𝒯 (sampler branch) and with PIP, MPM, logZ_{𝒯^ex} (exact branch).
 ```
 
-### [SPEC] `Theory_work/Wave3/W3-D5P/sources/SPEC_LIST_PIP_523dda23.md` @ e5cc7d60 — definition of the output fields
+### [SPEC] `Theory_work/Wave3/W3-D5P/sources/SPEC_LIST_PIP_523dda23.md` @ a2c465a4 — definition of the output fields
 lines 1–81:
 ```
     1| <!-- carrier copy of SPEC_LIST_PIP.md at commit 523dda23 -->
@@ -560,7 +574,7 @@ lines 1–81:
    81|     some pip_list[j] is within 1e−9 of 0.5 (report those cases).
 ```
 
-### [RM2R] `Theory_work/Wave3/W3-RM2-R/STATEMENT.md` @ e5cc7d60 — consumed: RM0-plus, DLV-0, RM2-R-plus (as stated)
+### [RM2R] `Theory_work/Wave3/W3-RM2-R/STATEMENT.md` @ a2c465a4 — consumed: RM0-plus, DLV-0, RM2-R-plus (as stated)
 lines 33–60:
 ```
    33| ## 1. Base (taken unchanged)
@@ -653,7 +667,7 @@ lines 177–182:
   182| 
 ```
 
-### [RM] `Theory_work/Wave3/W3-RM/STATEMENT.md` @ e5cc7d60 — consumed objects, events, configuration, Form R hypotheses
+### [RM] `Theory_work/Wave3/W3-RM/STATEMENT.md` @ a2c465a4 — consumed objects, events, configuration, Form R hypotheses
 lines 32–68:
 ```
    32| ## 1. Settings, method objects, events
@@ -741,7 +755,7 @@ lines 94–136:
   136|   |Cov(W_j, Σ_{k∈S₀}θ*_kW_k | W_U)| ≥ a₀.
 ```
 
-### [RM2] `Theory_work/Wave3/W3-RM2/STATEMENT.md` @ e5cc7d60 — code pins of the local search; interface table; Form R
+### [RM2] `Theory_work/Wave3/W3-RM2/STATEMENT.md` @ a2c465a4 — code pins of the local search; interface table; Form R
 lines 60–68:
 ```
    60| **Code pins** (the facts about the method used here; commit `9700e17` of this branch; the three files were last
@@ -817,7 +831,7 @@ lines 172–218:
   218| law of (X, ε): [SAND(Q)], [TL(Q)], [NA(Q)], [POST], hence all conclusions of RM-0 as in (C1).
 ```
 
-### [DLV4] `Theory_work/Wave1C/C-DLV/lemmas/L4_delivery.md` @ e5cc7d60 — the pathwise reporting step
+### [DLV4] `Theory_work/Wave1C/C-DLV/lemmas/L4_delivery.md` @ a2c465a4 — the pathwise reporting step
 lines 60–77:
 ```
    60| lemmas/LS_P6_repair.md:29-35; statuses verbatim in those reports: [status omitted]; for LH with exact Gram the W1-GEN instance row (C5)(a) records its
@@ -840,7 +854,7 @@ lines 60–77:
    77| 
 ```
 
-### [DLV2] `Theory_work/Wave1C/C-DLV/lemmas/L2_degenerate.md` @ e5cc7d60 — scorer never fails (Lemma S.2)
+### [DLV2] `Theory_work/Wave1C/C-DLV/lemmas/L2_degenerate.md` @ a2c465a4 — scorer never fails (Lemma S.2)
 lines 20–35:
 ```
    20| ## S.2 Numerical failures (C1–C5) are impossible under EX-A
@@ -861,7 +875,7 @@ lines 20–35:
    35| are empty under EX-A. (No claim is made for floating point; VAL-FP is a separate engineering check.)
 ```
 
-### [SAMP] `Theory_work/Wave3/W3-SAMP/STATEMENT.md` @ e5cc7d60 — objects of the sampler (𝓜, Ŝ)
+### [SAMP] `Theory_work/Wave3/W3-SAMP/STATEMENT.md` @ a2c465a4 — objects of the sampler (𝓜, Ŝ)
 lines 36–62:
 ```
    36| final streams 10–13 are idealised as independent of the data as well as of streams 0–9.
@@ -893,7 +907,7 @@ lines 36–62:
    62| ## 1. Premises (ids for the registry) and dependency statuses
 ```
 
-### [CC] `Theory_work/Wave3/W3-SAMP/lemmas/CC_code_check.md` @ e5cc7d60 — consumed code facts CC2, CC5
+### [CC] `Theory_work/Wave3/W3-SAMP/lemmas/CC_code_check.md` @ a2c465a4 — consumed code facts CC2, CC5
 lines 40–63:
 ```
    40| ## CC2 — the reported HPM is the hpm_better-maximum of every model scored in the final run
@@ -938,7 +952,7 @@ lines 88–100:
   100| (`v3_calib.R:122-124`). Hence on 𝒜, **1 ≤ T ≤ 4·max(1000, ⌈log₂(n+p+1)⌉²)**.
 ```
 
-### [POST] `Theory_work/Wave2/W2-APP/lemmas/L1_POST.md` @ e5cc7d60 — consumed posterior rate (Lemma POST)
+### [POST] `Theory_work/Wave2/W2-APP/lemmas/L1_POST.md` @ a2c465a4 — consumed posterior rate (Lemma POST)
 lines 1–33:
 ```
     1| # L1 — POST: the posterior-level hypotheses for random Gaussian designs
@@ -976,7 +990,7 @@ lines 1–33:
    33| deterministic q_n with r_n = o(min(q_n, 1 − q_n)) only, exact HPM, model size); without beta-min (θ*_j allowed to vary, some → 0) the inclusion clause for J_n(c) holds likewise.
 ```
 
-### [DIST] `Theory_work/Wave3/W3-DIST/STATEMENT.md` @ e5cc7d60 — context: the two links
+### [DIST] `Theory_work/Wave3/W3-DIST/STATEMENT.md` @ a2c465a4 — context: the two links
 lines 289–318:
 ```
   289| **Theorem DIST-C (coded output; under P⊗; jointly with output; conditional as labelled).** Let B_n be the bad set of
@@ -1011,7 +1025,7 @@ lines 289–318:
   318|   No statement is made about a particle approximation, because none is returned.
 ```
 
-### [READER] `Theory_work/Wave3/W3-READER/READER_VERSIONS.md` @ e5cc7d60 — reader Theorem 6 and its bridges
+### [READER] `Theory_work/Wave3/W3-READER/READER_VERSIONS.md` @ a2c465a4 — reader Theorem 6 and its bridges
 lines 660–712:
 ```
   660| **Card row** 3.1 · **Section version** 0.9 (2026-11-16) · **Pending delta** — (RM2-R rider merged, v0.8)
@@ -1081,7 +1095,7 @@ lines 752–760:
   760| | B6.7 | standardised-signal convention | limit | The masters take $\theta^*$ deterministic (Setting R). A raw-scale version (fixed $\beta^*$) would need a **NEW** bridge (medium; the population conditions involve $\theta^*$). Not proposed for CP1. |
 ```
 
-### [C:run] `Scripts/SMC_BVS/core/v3_run.R` @ e5cc7d60 — code
+### [C:run] `Scripts/SMC_BVS/core/v3_run.R` @ a2c465a4 — code
 lines 84–163:
 ```
    84| # Fixed production settings. The frozen tier is selected by calibration, before final randomness.
@@ -1194,7 +1208,7 @@ lines 205–229:
   229| }
 ```
 
-### [C:fit] `Scripts/SMC_BVS/core/v3_fit.R` @ e5cc7d60 — code
+### [C:fit] `Scripts/SMC_BVS/core/v3_fit.R` @ a2c465a4 — code
 lines 73–174:
 ```
    73| v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24), ls0 = getOption("v3.ls0", TRUE)) {
@@ -1301,7 +1315,7 @@ lines 73–174:
   174| }
 ```
 
-### [C:exact] `Scripts/SMC_BVS/core/v3_exact.R` @ e5cc7d60 — code
+### [C:exact] `Scripts/SMC_BVS/core/v3_exact.R` @ a2c465a4 — code
 lines 1–20:
 ```
     1| # v3_exact.R -- exact branch and exact references (CORE_SPEC v2 §7 `v3_enumerate`, §8 "Exact references"; M §6.2; R9).
@@ -1326,7 +1340,7 @@ lines 1–20:
    20| 
 ```
 
-### [C:pre] `Scripts/SMC_BVS/core/v3_preprocess.R` @ e5cc7d60 — code
+### [C:pre] `Scripts/SMC_BVS/core/v3_preprocess.R` @ a2c465a4 — code
 lines 97–120:
 ```
    97| v3_preprocess <- function(X, y, dup_components = TRUE) {
@@ -1355,7 +1369,7 @@ lines 97–120:
   120|     Xs[, a] <- s$z; cm[a] <- s$max; cmu[a] <- s$mean; csd[a] <- s$sd
 ```
 
-### [C:ledger] `Scripts/SMC_BVS/core/cpp/v3_ledger.h` @ e5cc7d60 — code
+### [C:ledger] `Scripts/SMC_BVS/core/cpp/v3_ledger.h` @ a2c465a4 — code
 lines 1–115:
 ```
     1| // v3_ledger.h -- operational HPM, stores, aggregate score counts and island maxima.
@@ -1475,7 +1489,7 @@ lines 1–115:
   115| }  // namespace v3
 ```
 
-### [C:engine] `Scripts/SMC_BVS/core/cpp/v3_engine.h` @ e5cc7d60 — code
+### [C:engine] `Scripts/SMC_BVS/core/cpp/v3_engine.h` @ a2c465a4 — code
 lines 86–110:
 ```
    86| 
@@ -1591,7 +1605,7 @@ lines 375–422:
   422| }  // namespace v3
 ```
 
-### [C:core] `Scripts/SMC_BVS/core/cpp/v3_core.cpp` @ e5cc7d60 — code
+### [C:core] `Scripts/SMC_BVS/core/cpp/v3_core.cpp` @ a2c465a4 — code
 lines 25–46:
 ```
    25|   std::vector<int> out;
@@ -1852,7 +1866,7 @@ lines 391–568:
   568| }
 ```
 
-### [C:score] `Scripts/SMC_BVS/core/cpp/v3_score.h` @ e5cc7d60 — code
+### [C:score] `Scripts/SMC_BVS/core/cpp/v3_score.h` @ a2c465a4 — code
 lines 36–72:
 ```
    36| };
@@ -1940,7 +1954,7 @@ lines 255–297:
   297| 
 ```
 
-### [C:start] `Scripts/SMC_BVS/core/cpp/v3_start.h` @ e5cc7d60 — code
+### [C:start] `Scripts/SMC_BVS/core/cpp/v3_start.h` @ a2c465a4 — code
 lines 75–97:
 ```
    75| // capped) and are not scored (entry NaN).
@@ -2042,7 +2056,7 @@ lines 255–308:
   308| 
 ```
 
-### [C:util] `Scripts/SMC_BVS/core/cpp/v3_util.h` @ e5cc7d60 — code
+### [C:util] `Scripts/SMC_BVS/core/cpp/v3_util.h` @ a2c465a4 — code
 lines 115–131:
 ```
   115| 
@@ -2064,7 +2078,7 @@ lines 115–131:
   131| 
 ```
 
-### [C:blocks] `Scripts/SMC_BVS/core/cpp/v3_blocks.h` @ e5cc7d60 — code
+### [C:blocks] `Scripts/SMC_BVS/core/cpp/v3_blocks.h` @ a2c465a4 — code
 lines 136–144:
 ```
   136|   for (auto& c : clusters) {
