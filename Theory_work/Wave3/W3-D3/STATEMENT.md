@@ -1,4 +1,4 @@
-# W3-D3 — STATEMENT v1.1 (2026-11-17; lead: Claude Opus 5.5, high; track D ticket #3, sub-Gaussian rows for Theorem 2)
+# W3-D3 — STATEMENT v1.2 (2026-11-17; lead: Claude Opus 5.5, high; track D ticket #3, sub-Gaussian rows for Theorem 2)
 
 Ticket W3-D3: Theorem 2 (claims card row 1.2, posterior concentration on a random design) with Gaussian rows replaced by
 rows that are sub-Gaussian along sparse directions, as a **coexisting** claim. The proof reuses W3-DIST's
@@ -6,7 +6,8 @@ population-to-sample bridge (owner condition D105/D112). Source: W3-AUDIT `TRACK
 theory/W3-AUDIT). Tier B (no new key lemma). Delta statement (RIDER_RULES §1) over the recorded reader Theorem 2
 ([RV] row thm2) and its master [W3P] Theorem 1 item 6. This file **asserts no proof status**: proofs in `lemmas/`,
 statuses in the checkpoints. Asymptotic (n → ∞) unless marked *deterministic*. No method change.
-v1.1 = v1.0 with the statement-lock amendments [L1-1]…[L1-6] (`reviews/L1_statement_lock_sol.md`, LOCK-WITH-AMENDMENTS;
+v1.2 = v1.1 with the line-check amendments [K1-1]…[K1-12] (`reviews/K1_linecheck_opus.md`;
+`reviews/K1_disposition.md`). v1.1 = v1.0 with the statement-lock amendments [L1-1]…[L1-6] (`reviews/L1_statement_lock_sol.md`, LOCK-WITH-AMENDMENTS;
 `reviews/L1_disposition.md`) and the HQ anchoring wording with the lead's queued edits Q1, Q2
 (`reviews/PENDING_LEAD_EDITS.md`).
 
@@ -47,7 +48,7 @@ correlation matrix, and assume
 - **(A2) Sparsity and fixed signals.** s₀ ≥ 1 is fixed and b_lo ≤ |β*_j| ≤ b_hi for j ∈ S₀, with fixed
   0 < b_lo ≤ b_hi < ∞.
 - **(A3) Population sparse eigenvalue floor.** λ_min(Σ_{n,S}) ≥ φ² for every S with |S| ≤ 5(A + 1)(s₀ + 1) log n, for a
-  fixed φ ∈ (0, 1].
+  fixed φ ∈ (0, 1] (for instance, λ_min(Σ_n) ≥ φ²).
 - **(A4) Sub-Gaussian predictors on sparse directions.** For a fixed L > 0, every u ∈ ℝ^p with at most
   5(A + 1)(s₀ + 1) log n nonzero entries and every λ ∈ ℝ:
   E exp(λ·uᵀ(x − m_n)) ≤ exp(L²λ²·uᵀΣ_nu/2).
@@ -69,13 +70,13 @@ and 𝒜_n := 𝓔₁ ∩ 𝓔₂(q_n). There is n₁ = n₁(s₀, A, L) ≥ max
     (ii) (E; M_E): ‖Xθ̃*‖² ≤ nM_E; (iii) (F_λ; φ₀) of [W3P] `:68-70`; (iv) (F_w; g₀) of [W3P] `:71-73`;
     (v) θ̃*²_min nφ₀²/log n ≥ M_n, and M_n → ∞;
 (b) P(𝒜_nᶜ) ≤ 4p·e^{−c₁n/L⁴} + e^{−c₂n/L⁴} → 0, with c₁ = 1/576, c₂ = 10⁻⁵;
-(c) [L1-2] **interface.** Let (X°, θ°) be the *completed pair*: (X°, θ°) := (X, θ̃*) on {p_ret = p}, and a fixed
-    deterministic centred standardised n × p matrix with a fixed truth supported on a set of size s₀ outside it. (X°, θ°) is a
-    Borel function of the raw design, hence independent of ε. Let 𝒜′_n be the set of outcomes on which (X°, θ°) satisfies
-    |supp θ°| = s₀, ‖X°θ°‖² ≤ nM_E, (F_λ; φ₀), (F_w; g₀) (with m♯_n computed from (n, p, s₀)) and θ°²_min nφ₀²/log n ≥ M_n.
-    Then 𝒜′_n is (X°, θ°)-measurable, 𝒜_n ⊆ 𝒜′_n ∩ {p_ret = p}, and so on the events 𝒜′_n the hypotheses of
-    [W3P] Theorem 1 item 6 hold for (X°, θ°, ε/σ*), in regime R1, with the common constants (M_E, φ₀, g₀) and the common
-    envelope M_n. (𝒜_n itself need not be (X, θ̃*)-measurable; it is used only for its probability.)
+(c) [L1-2] **interface.** Let (X°, θ°) be the *completed pair*: (X°, θ°) := (X, θ̃*) on {p_ret = p}, and, outside it, a fixed
+    deterministic centred standardised n × p matrix with a fixed truth θ⁰ with supp θ⁰ = S₀ [K1-1]. Then supp θ° = S₀ on every
+    outcome, and (X°, θ°) is a Borel function of the raw design, hence independent of ε. Let 𝒜′_n be the set of outcomes on
+    which (X°, θ°) satisfies ‖X°θ°‖² ≤ nM_E, (F_λ; φ₀), (F_w; g₀) (with m♯_n computed from (n, p, s₀)) and
+    θ°²_min nφ₀²/log n ≥ M_n. Then 𝒜′_n is (X°, θ°)-measurable and 𝒜_n ⊆ 𝒜′_n ∩ {p_ret = p}. Moreover (with (b):
+    P(𝒜′_nᶜ) ≤ P(𝒜_nᶜ) → 0) the hypotheses of [W3P] Theorem 1 item 6 hold for (X°, θ°, ε/σ*) in regime R1 with the events
+    𝒜′_n, the common constants (M_E, φ₀, g₀) and the common envelope M_n [K1-3].
 
 ## 3. Proposition ExSG — families satisfying (A4)
 
@@ -104,10 +105,12 @@ the constants are proof artefacts.
 (e) *Unit variances [L1-4].* The correlation-matrix assumption is the recorded one and is used as stated. Read as a
 normalisation of a design with arbitrary positive variances, it replaces β* by D_σβ* (D_σ = diag(sd(x_j))): the bounds of
 (A2) then apply to |sd(x_j)β*_j|, not to the raw slopes. No other generalisation is claimed.
+(f) *Measurability of 𝒜_n [K1-11].* 𝒜_n itself need not be (X, θ̃*)-measurable (𝓔₁ involves the sample scales of null
+columns, which standardisation discards); it is used only for its probability, through 𝒜′_n ⊇ 𝒜_n.
 
 ## 5. Class of the new hypothesis (owner rule D109; HQ ruling of 2026-11-17: class 1, stated precisely, with a 2b backup)
 
-(A4) is the only new hypothesis (L the only new constant); (A1)–(A3) are row 1.2's, verbatim.
+(A4) is the only new hypothesis (L the only new constant); (A1)–(A3) are row 1.2's, verbatim (including the parenthetical example of (A3), restored in v1.2 [K1-10]).
 **Class 1 (HQ wording, with the lead's precision in brackets [Q1]).** "Sub-Gaussian rows on sparse directions with
 arbitrary correlation. This contains Narisetty & He's (2014, Lemma 6.1) isotropic sub-Gaussian rows as the special case
 Σ = I [for centred rows, with L a fixed multiple of their sub-Gaussian constant], and implies Song & Liang's Condition 1
@@ -123,16 +126,18 @@ arbitrary correlation. This contains Narisetty & He's (2014, Lemma 6.1) isotropi
   and |a_i| ≤ δ for i = 1, …, r, we have E exp{(Σ_{i=1}^r a_i x_{ji}/r)²} ≤ exp(M), where the expectation is taken with
   respect to the distribution of the random variables x_{ji}." (Assumed in their Theorem 2, p. 953; verified there for a
   zero-mean Gaussian process with unit variances.) For z = x − m_n, (A4) applied to single coordinates implies Condition 1
-  for every r (`W3-AUDIT/TRACK_B.md:184-198`, `W3-AUDIT/reviews/AUDITCALC_check_opus.md` §4; also derived in
+  for every r (W3-AUDIT TRACK_B.md lines 184–198 and reviews/AUDITCALC_check_opus.md §4, branch theory/W3-AUDIT; also derived in
   `reviews/L1_statement_lock_sol.md`); the converse fails (bounded coordinates z₁ = R, z₂ = RB with a rare sign flip B:
-  Condition 1 holds, (A4) fails along z₁ − z₂ — `reviews/L1_statement_lock_sol.md`).
+  Condition 1 holds, (A4) fails along z₁ − z₂ — `reviews/L1_statement_lock_sol.md`; the example also has
+  Corr(z₁, z₂) → 1, so it violates (A3) as well [K1-9]).
 - **Residual (a report of the lead's search, not a non-existence claim) [L1].** No verified Bayesian variable-selection paper
   found states sub-Gaussian rows with a general correlation matrix; (A4) sits between NH14 (identity covariance) and
   Song–Liang's weaker Condition 1. Not a precedent: Rudelson & Zhou, arXiv 1106.1151v1, Def. 1.5/Thm 1.6 (anisotropic ψ₂
   form; compressed sensing). Checked negative: Yang, Wainwright & Jordan, arXiv 1505.07925v1 (Gaussian random rows only).
 - **2b backup [Q2].** "Light-tailed, correlated features are the ordinary situation: Gaussian predictors qualify, and so
   do correlated mixtures x = m + Bξ of independent features each confined to an interval of K standard deviations on
-  either side of its mean (for instance Rademacher features, K = 1; uniform features, K = √3)." (Proposition ExSG (a), (b).) HQ's first
+  either side of its mean (for instance Rademacher features, K = 1; uniform features, K = √3)." (Proposition ExSG (a), (b); "qualify" means "satisfy
+  (A4)"; Theorem 2SG also needs (A3) [K1-12].) HQ's first
   wording "(any bounded or Gaussian-like predictors qualify)" is not used: it is false for (A4) (remark (b)).
 
 ## 6. Inputs (registry id @ version; statuses verbatim from `Theory_work/INFRA/registry/claims.tsv` at main 029bb748)
@@ -144,7 +149,8 @@ arbitrary correlation. This contains Narisetty & He's (2014, Lemma 6.1) isotropi
   9719c81705729389283bcc99a31cdef06afe84bafef076cbfbadead951b9ed1a (= R2 c5cd9cdd re-frozen CITATION-ONLY as R2r),
   astra=9.3 PASS, opus=9.2 PASS".
 - `W3-DIST:B3@1.0.1` ([DIST] `:409-414`; proof [EB]`B3.md`, the template of Lemma B3w) — "PROVED-CHECKED, conditional on
-  W3-POST:Thm-1 (for its last sentence); council R2, MANIFEST 9719c817… (= R2 c5cd9cdd re-frozen CITATION-ONLY as R2r),
+  W3-POST:Thm-1 (for its last sentence); council R2, MANIFEST
+  9719c81705729389283bcc99a31cdef06afe84bafef076cbfbadead951b9ed1a (= R2 c5cd9cdd re-frozen CITATION-ONLY as R2r),
   astra=9.3 PASS, opus=9.2 PASS". (Its last sentence, δ_n → 0, is not used; W3-POST:Thm-1 is consumed directly above.)
 - `W3-READER:R1@1.0.2` ([R1] B1.2 `:15-17`, B1.3 `:19-31`) — "PROVED-CHECKED; council R3, MANIFEST
   7aebdf2eb126058719114df656d0eaf416adb1ae3d21138cb11b51d7075d2263, sol=9.5 PASS, opus=9.4 PASS".
@@ -176,8 +182,12 @@ HQ's decision). Status: every input is PROVED-CHECKED (§6).
 |---|---|---|---|---|---|
 | 1.0 | all | NEW-CLAIM | first version | ticket (manager GO, 2026-11-17) | `reviews/L1_statement_lock_sol.md` (LOCK-WITH-AMENDMENTS) |
 | 1.1 | symbols: L for the sub-Gaussian constant, K_cap for the cap (§0, §1 (A4), §2, §3) | EQUAL | B3w(i) "s₀ ≤ K" was false under the collision [L1-1] | L1-1 | lock amendment (fix specified by the lock reviewer) |
-| 1.1 | §2: raw bridge events vs (X°, θ°)-measurable interface events; completed pair; part (c) | EQUAL (the interface the proof uses, made explicit; B3 Step 6 / A-2) | [L1-2] | L1-2 | as above |
+| 1.1 | §2: raw bridge events vs (X°, θ°)-measurable interface events; completed pair; part (c) | **STRONGER on the companion claim B3w** (added conclusion (c), proved in B3w Step 6); EQUAL for Theorem 2SG (the interface its proof uses, made explicit; B3 Step 6 / A-2) [K1-8] | [L1-2] | L1-2 | `reviews/K1_linecheck_opus.md`: tag corrected per K1-8 |
 | 1.1 | §0: conventions when columns are removed (π(S₀) := 0, PIP_j := 0, p_ret = 0) | EQUAL (conventions off an event of probability → 0) | [L1-3] | L1-3 | as above |
 | 1.1 | §4 (e) unit variances; §5 centring qualifier; §2 heading and provenance moved out of the span | EQUAL (outside spans / editorial) | [L1-4], [L1-5], [L1-6] | L1-4..6 | as above |
 | 1.1 | §3 ExSG: B for the mixing matrix; **part (b) bounded features, L = K (Hoeffding)** | **STRONGER** on the companion claim ExSG (an added conclusion; Theorem 2SG unchanged) | support for HQ's 2b sentence [Q2] | HQ ruling via manager | statement-change check (pending; Opus diff round) |
 | 1.1 | §5 HQ class-1 and 2b wording; NH14 "journal version not checked" | EQUAL (outside spans) | HQ ruling [Q1], [Q2] | HQ ruling | — |
+| 1.1 | §2 bookkeeping (n₁ ≥ max(3, 2s₀), 𝓔₂(q_n) for 𝓔₂(w_n), p_ret in m♯_n, θ̃*); §4 (a), (b), (d); §6; §7; §8 [K1-7] | EQUAL (equal events and objects on 𝒜_n / outside spans; consumed scope narrowed to items 1–3) | L1, Q2 | K1-7 | `reviews/K1_linecheck_opus.md` |
+| 1.2 | §2 (c): θ⁰ with supp θ⁰ = S₀ (supp θ° = S₀ on every outcome); "and so" replaced by the explicit appeal to (b) and R1; the measurability remark moved to §4 (f) | EQUAL (the v1.1 conclusion with an arbitrary θ⁰ was stated for supp θ°; the proof's intended object is S₀, and the two agree on {p_ret = p}) | [K1-1], [K1-3], [K1-11] | K1 | diff round (pending) |
+| 1.2 | §1 (A3): the recorded parenthetical "(for instance, λ_min(Σ_n) ≥ φ²)" restored | EQUAL (an example, not a condition) | [K1-10] | K1 | diff round (pending) |
+| 1.2 | §5, §6 (outside spans): off-main paths written as plain text; B3 status quoted in full; Condition-1 example note; "qualify" glossed | EQUAL (outside spans) | [K1-9], [K1-12], citecheck | K1, lead | — |

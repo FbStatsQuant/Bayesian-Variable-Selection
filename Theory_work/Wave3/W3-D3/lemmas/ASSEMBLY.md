@@ -7,7 +7,7 @@ Aliases: [EB] = `Theory_work/Wave3/W3-DIST/work/E_bridges/`; [W3P] = `Theory_wor
 
 ## Inherited results used (statuses verbatim; registry at main 029bb748)
 - `W3-POST:Thm-1@1.0.1` ([W3P] `:61-100`) — "PROVED-CHECKED; council C3, MANIFEST 420c1cb0…, astra=8.8 PASS, opus=8.7
-  PASS". Used: item 6 (`:95-100`): "Let (X, θ*) be random with ε independent of (X, θ*), and suppose there are
+  PASS". Used: item 6 ([W3P] `:95-100`): "Let (X, θ*) be random with ε independent of (X, θ*), and suppose there are
   (X, θ*)-measurable events 𝒜_n with P(𝒜_n) → 1 on which |supp θ*| = s₀ and (E), (F_λ), (F_w) hold with common constants
   (M, φ₀, g₀) and (BM) holds with a common c > c₀ or a common deterministic envelope M_n → ∞. Then 1–4 hold under the
   joint law of (X, θ*, ε)"; item 1 "(Rate) Under (BM): δ_n = 1 − π(S₀) = O_P(r_n)"; item 2 "P(HPM = S₀) ≥ P(δ_n < ½) → 1
@@ -20,7 +20,7 @@ Aliases: [EB] = `Theory_work/Wave3/W3-DIST/work/E_bridges/`; [W3P] = `Theory_wor
 
 ## Theorem 2SG
 
-**Step 1 (scale).** Fix n and a data set with non-constant y^r (probability one: y^r has the Gaussian component ε) and
+**Step 1 (scale).** Fix n ≥ 3 [K1-5] and a data set with non-constant y^r (probability one: y^r has the Gaussian component ε) and
 p_ret ≥ 1 (this contains {p_ret = p}, as p ≥ 2; on {p_ret = 0} the outputs are the conventions of `STATEMENT.md` §0 and
 enter below only through P(p_ret ≠ p)). By B0 (a) the model posterior computed from (X^r, y^r) equals the one computed from
 (X^r, ỹ), ỹ := (y^r − α*1)/σ*. δ_n, PIP_j, HPM (with the same tie rule) and MPM are functions of the model posterior and of
@@ -36,8 +36,9 @@ Also P(p_ret ≠ p) ≤ P(𝒜_nᶜ) → 0, since 𝒜_n ⊆ {p_ret = p}.
 **Step 3 (item 6 and the dimension).** With the completed pair (X°, θ°) of B3w (c) (equal to (X, θ̃*) on {p_ret = p}), let δ°_n, PIP°_j, HPM°, MPM° be the outputs of the posterior
 computed from X° and the response Y° := X°θ° + Cε/σ* (on {p_ret = p}: Y° = Cỹ, the centred response the method uses, since
 μ̃ = Xθ̃*). (X°, θ°) is a function of the raw design, so ε is independent of it; the events 𝒜′_n are (X°, θ°)-measurable; and the posterior depends on the data only through (X°, Y°) ([W3P] §0 `:16-29`: the
-target is a function of the standardised design and the centred, scaled response). Item 6 applies to (X°, θ°, ε/σ*) and
-gives items 1–3 for the outputs with superscript °: δ°_n = O_P(r_n); P(HPM° = S₀) → 1 and P(MPM° = S₀) → 1; and
+target is a function of the standardised design and the centred, scaled response). supp θ° = S₀ on every outcome (B3w (c): on {p_ret = p}
+because all ŝ_j > 0, off it by the choice of θ⁰), so item 6's outputs refer to S₀, and in 𝒜′_n (F_λ) and (F_w) are anchored
+at supp θ° = S₀ [K1-1]. Item 6 applies to (X°, θ°, ε/σ*) and gives items 1–3 for the outputs with superscript °: δ°_n = O_P(r_n); P(HPM° = S₀) → 1 and P(MPM° = S₀) → 1; and
 max_j |PIP°_j − 1{j ∈ S₀}| ≤ δ°_n. On {p_ret = p} every output equals its counterpart with superscript ° (no column is
 removed, so the conventions of `STATEMENT.md` §0 for removed columns are not invoked), and P(p_ret ≠ p) → 0 (Step 2).
 

@@ -1,6 +1,6 @@
 # B3w — the events of W3-POST Theorem 1 item 6 under (A1)–(A4) of Theorem 2SG
 
-**Status: PROVED (by this seat, unchecked).** Ticket W3-D3 (Tier B rider). Target: `STATEMENT.md` §2 (v1.0).
+**Status: PROVED (by this seat, unchecked).** Ticket W3-D3 (Tier B rider). Target: `STATEMENT.md` §2 (v1.2) [K1-5].
 This file is a copy of `Theory_work/Wave3/W3-DIST/work/E_bridges/B3.md` (`W3-DIST:B3@1.0.1`, "PROVED-CHECKED, conditional
 on W3-POST:Thm-1 (for its last sentence); council R2, …"; its amendments A-1, A-2 included) with the window changed.
 Changed or new lines are marked **[R-#]**; unmarked steps are B3's argument specialised to the present setting.
@@ -43,17 +43,18 @@ is O((log n)²)). For n ≥ n₁:
 - [EB]`B0.md` (`W3-DIST:B0@1.0.1`), [EB]`B1.md` (`W3-DIST:B1@1.0.1`), [EB]`B2core.md` (`W3-DIST:B2core@1.0.1`),
   [EB]`B2.md` part (a) (`W3-DIST:B2@1.0.1`): each "PROVED-CHECKED; council R2, MANIFEST 9719c817… (= R2 c5cd9cdd re-frozen
   CITATION-ONLY as R2r), astra=9.3 PASS, opus=9.2 PASS". Statements used verbatim:
-  B1: "(SG₁) E exp(λz_j) ≤ exp(K²λ²/2) … (a) K ≥ 1, and for n ≥ 3: P(𝓔₁ᶜ) ≤ 4p·exp(−c₁n/L⁴) with c₁ = 1/576. (b) On 𝓔₁ no
+  B1: "(SG₁) E exp(λz_j) ≤ exp(K²λ²/2) … (a) K ≥ 1, and for n ≥ 3: P(𝓔₁ᶜ) ≤ 4p·exp(−c₁n/K⁴) with c₁ = 1/576. (b) On 𝓔₁ no
   column is constant in the sample: p_ret = p, … S₀ = supp β* … (c) Suppose in addition |supp β*| ≤ s and
   |β*_j|·sd(x_j) ≤ b̄σ* for every j … On 𝓔₁: ‖μ‖² ≤ … n·(2s²b̄²)σ*²", with 𝓔₁ := {½ ≤ ŝ_j²/Var(x_j) ≤ 2 for every j ≤ p}.
   B2-core: "(SG_q) … 𝓔₂(q) := {n⁻¹Σ_i(a + uᵀz_i)² ≥ ½(a² + Var(uᵀz)) for all a ∈ ℝ and all u with at most q nonzero
-  entries}. If q′·log(ep/q′) ≤ c₂n/L⁴ with c₂ = 10⁻⁵, then P(𝓔₂(q)) ≥ 1 − exp(−c₂n/L⁴). On 𝓔₂(q), for every u with at most
-  q nonzero entries, uᵀΣ̂^z u ≥ ½uᵀΓu" (q′ := min(q, p); z_i := x_i − m_n here, Γ = Σ_n).
+  entries}. If q′·log(ep/q′) ≤ c₂n/K⁴ with c₂ = 10⁻⁵, then P(𝓔₂(q)) ≥ 1 − exp(−c₂n/K⁴). On 𝓔₂(q), for every u with at most
+  q nonzero entries, uᵀΣ̂^z u ≥ ½uᵀΓu" (q′ := min(q, p); z_i := x_i − m_n here, Γ = Σ_n). Both quotations are read with
+  K := L [L1-1], [K1-2].
   B2 (a): under (SG_q) and "(A4_q) λ_min(Corr(x_T)) ≥ c_ψ/n for every T ⊆ [p] with 1 ≤ |T| ≤ q", "on 𝓔₁ ∩ 𝓔₂(q):
   (a) λ_min(G_T) ≥ c_ψ/4 ≥ g₀ for every T with 1 ≤ |T| ≤ q", g₀ := c_ψ/8; and its proof identity G_T = n·Λ_TΣ̂^z_TΛ_T,
   Λ_T = diag(sd(x_j)/ŝ_j : j ∈ T) ([EB]`B2.md:45-55`).
 - [R1] (`W3-READER:R1@1.0.2`, "PROVED-CHECKED; council R3, …"): **[R-4]** B1.2 "s + j₀ ≤ (2A + 2)s + 2" (`:15-17`) and
-  B1.3 "For s ≤ K: s + m♯_n ≤ 3(A + 1)(s + 1) log n" (`:19-31`), both for n ≥ 3, A ≥ 1, s = s₀ ≥ 1, p ≤ n^A.
+  B1.3 "For s ≤ K: s + m♯_n ≤ 3(A + 1)(s + 1) log n" ([R1] `:19-31`), both for n ≥ 3, A ≥ 1, s = s₀ ≥ 1, p ≤ n^A.
 - Definitions of (E), (F_λ), (F_w), (BM), R1, item 6: [W3P] `:63-75, 95-100` (definitions only); the consumed theorem
   `W3-POST:Thm-1@1.0.1` is applied in `ASSEMBLY.md`, not here.
 
@@ -62,8 +63,8 @@ is O((log n)²)). For n ≥ n₁:
 **Step 0 [R-5] (sizes covered by the window).** Let n ≥ 3. *Claim:* every set S₀ ∪ J ⊆ [p] with |J| ≤ j₀, and every set
 S₀ ∪ J ⊆ [p] with |J| ≤ m♯_n when s₀ ≤ K_cap and p_ret = p, has size ≤ w_n.
 (1) By [R1] B1.2, |S₀ ∪ J| ≤ s₀ + j₀ ≤ (2A + 2)s₀ + 2. And (2A + 2)s₀ + 2 ≤ W̄_n: since log n ≥ log 3 > 1.0986,
-W̄_n ≥ 5.49(As₀ + A + s₀ + 1) ≥ 2As₀ + 2s₀ + 2 (coefficient by coefficient; A ≥ 0). The left side is an integer, so it
-is ≤ ⌊W̄_n⌋ = q_n; and |S₀ ∪ J| ≤ p as a subset of [p]. Hence |S₀ ∪ J| ≤ w_n.
+W̄_n ≥ 5.49(As₀ + A + s₀ + 1) ≥ 2As₀ + 2s₀ + 2 (coefficient by coefficient; A ≥ 0). So |S₀ ∪ J| is an integer ≤ W̄_n, hence
+|S₀ ∪ J| ≤ ⌊W̄_n⌋ = q_n [K1-4]; and |S₀ ∪ J| ≤ p as a subset of [p]. Hence |S₀ ∪ J| ≤ w_n.
 (2) By [R1] B1.3 (its hypotheses: s₀ ≥ 1, s₀ ≤ K_cap (R1's K), p ≤ n^A for the dimension p = p_ret in which m♯_n is computed),
 s₀ + m♯_n ≤ 3(A + 1)(s₀ + 1) log n ≤ W̄_n, so s₀ + m♯_n ≤ q_n (integer), and |S₀ ∪ J| ≤ min{p, s₀ + m♯_n} ≤ w_n. ∎
 Also W̄_n ≥ 1, so (A4) contains every u = e_j, and W̄_n ≥ |S₀| = s₀.
@@ -97,19 +98,22 @@ sequence, and M_n → ∞ because b_lo, φ, σ*² are fixed and positive. (In th
 
 **Step 6 [R-11] (the completed pair; part (c)) [L1-2].** [W3P] `:95-98` asks for "(X, θ*)-measurable events 𝒜_n with
 P(𝒜_n) → 1 on which |supp θ*| = s₀ and (E), (F_λ), (F_w) hold with common constants (M, φ₀, g₀) and (BM) holds with … a
-common deterministic envelope M_n → ∞", in regime R1 (`:63-64`: s₀ ≥ 1 fixed, 2 ≤ p ≤ n^A, s₀ ≤ K eventually, σ*² > 0
+common deterministic envelope M_n → ∞", in regime R1 ([W3P] `:63-64`: s₀ ≥ 1 fixed, 2 ≤ p ≤ n^A, s₀ ≤ K eventually, σ*² > 0
 fixed, G) with ε independent of (X, θ*), the design being n × p with p fixed at each n. Two facts force a completion
 (B3 amendment A-2): off {p_ret = p} the standardised design X has p_ret ≠ p columns (p_ret may be 0 or 1 for discrete rows),
 and 𝓔₁ (scale ratios of null columns) is not determined by (X, θ̃*) since standardisation discards the sample scales.
 *Completion.* Fix, for each n, a deterministic n × p matrix X⁰ with centred columns of squared norm n − 1 and a deterministic
-θ⁰ ∈ ℝ^p with |supp θ⁰| = s₀ (any choice; the interface conditions need not hold for it). Put (X°, θ°) := (X, θ̃*) on
+θ⁰ ∈ ℝ^p with supp θ⁰ = S₀ (possible: β* is deterministic and |S₀| = s₀ ≤ p; otherwise any choice — the interface
+conditions need not hold for it) [K1-1]. Put (X°, θ°) := (X, θ̃*) on
 {p_ret = p} and (X°, θ°) := (X⁰, θ⁰) on {p_ret ≠ p}. The event {p_ret = p} = ∩_j {column j is not constant} and, on it,
 (X, θ̃*) are Borel functions of the raw design (centring, division by sample standard deviations, multiplication of β̃*
 by them); so (X°, θ°) is a Borel function of the raw design, and ε (independent of X^r by (S1)) is independent of it.
-*Events.* Let 𝒜′_n be the set of outcomes on which (X°, θ°) satisfies |supp θ°| = s₀, ‖X°θ°‖² ≤ nM_E, (F_λ; φ₀), (F_w; g₀)
-(m♯_n computed from (n, p, s₀)) and θ°²_min nφ₀²/log n ≥ M_n. Each condition is a finite collection of inequalities between
-continuous functions (norms, smallest eigenvalues of Gram submatrices) of (X°, θ°), indexed by the finitely many subsets
-of [p]; so 𝒜′_n is (X°, θ°)-measurable. On 𝒜_n, p_ret = p (Step 2), so (X°, θ°) = (X, θ̃*), m♯_n is computed with p_ret = p,
+supp θ° = S₀ on every outcome: on {p_ret = p} every ŝ_j > 0, so supp θ̃* = supp β* = S₀; off it by the choice of θ⁰.
+*Events.* Let 𝒜′_n be the set of outcomes on which (X°, θ°) satisfies ‖X°θ°‖² ≤ nM_E, (F_λ; φ₀), (F_w; g₀) anchored at
+S₀ = supp θ° (m♯_n computed from (n, p, s₀)) and min_{j∈S₀}θ°_j² nφ₀²/log n ≥ M_n (|supp θ°| = s₀ holds on every outcome).
+With the support fixed at S₀, each condition is a finite collection of inequalities between continuous functions (norms,
+smallest eigenvalues of Gram submatrices indexed by the finitely many sets S₀ ∪ J, coordinates of θ°) of (X°, θ°); so 𝒜′_n
+is (X°, θ°)-measurable [K1-6]. On 𝒜_n, p_ret = p (Step 2), so (X°, θ°) = (X, θ̃*), m♯_n is computed with p_ret = p,
 and Steps 2–5 give every condition: 𝒜_n ⊆ 𝒜′_n ∩ {p_ret = p} for n ≥ n₁.
 *R1 for the completed pair.* s₀ ≥ 1 fixed by (A2); 2 ≤ p ≤ n^A by (S2); s₀ ≤ min(p, ⌊n/2⌋) for n ≥ 2s₀ (p ≥ s₀ since
 S₀ ⊆ [p]); σ*² = 1 for ε/σ* ([EB]`B0.md` (e)); G: ε/σ* ~ N(0, I_n), independent of (X°, θ°). Hence the hypotheses of item 6

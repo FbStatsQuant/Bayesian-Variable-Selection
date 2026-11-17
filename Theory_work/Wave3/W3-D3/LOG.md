@@ -41,3 +41,9 @@
   (files under review); TARGET fixed now. deps_hand.py (header-anchored spans) → DEPS.tsv (all UNCHECKED). REPORT.md with 3
   REGISTRY blocks; staged ingest: 0 problems, acceptance PASS. API_CARD.md + api_request_build.py (test build in scratchpad:
   ~62 k chars, no status words; dropped lines only status quotations).
+- 13:30 — K1 reply (Opus): VERIFIED-WITH-AMENDMENTS (K1-1 C minor: completed truth support; K1-2 F; K1-3 S; K1-8 S tag;
+  8 E). All accepted (reviews/K1_disposition.md); STATEMENT v1.2, B3w and ASSEMBLY repaired (reviews/K1_repair.diff). citecheck
+  70/0; staged ingest 0 problems, acceptance PASS. DEPS: S:setting, S:ExSG, P:ExSG OK (K1); 7 rows to K2.
+- 13:30 — Agent started: Opus 5.5 high (providerInstanceId claudeAgent_personal), new agent — role: K2 re-check of K1
+  repairs, changed DEPS rows, REPORT registry blocks, statement-change check v1.1→v1.2; brief reviews/K2_brief.md; reply →
+  reviews/K2_recheck_opus.md.

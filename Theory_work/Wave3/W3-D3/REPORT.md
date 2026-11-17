@@ -42,7 +42,8 @@ once the three claims are recorded PROVED-CHECKED.
 ## 4. Chain record
 Statement lock L1 (Sol, NORMAL): `reviews/L1_statement_lock_sol.md`, disposition `reviews/L1_disposition.md`.
 Line check K1 (Opus 5.5 high, blind, claudeAgent_personal; with the statement-change check v1.0 → v1.1):
-`reviews/K1_linecheck_opus.md`, disposition `reviews/K1_disposition.md`.
+`reviews/K1_linecheck_opus.md` (VERIFIED-WITH-AMENDMENTS; 1 C minor, 2 S, 1 F, 8 E), disposition `reviews/K1_disposition.md`.
+Re-check K2 (Opus, new agent): `reviews/K2_recheck_opus.md`.
 Changelog: `STATEMENT.md` §9. DEPS: `DEPS.tsv` (`deps_hand.py`). Citation check: `citecheck.py` → `reviews/CITECHECK.txt`.
 Numerics: `numerics/N1_window.py` → `numerics/N1_out.txt` (size arithmetic, 1966 cases, 0 violations);
 `numerics/N2_subgauss_rows.py` → `numerics/N2_out.txt` (exact posteriors, non-Gaussian rows; sanity only).
@@ -59,15 +60,15 @@ API blind-audit card: `API_CARD.md` (`api_request_build.py`). Council: (filled a
 
 ```
 REGISTRY
-claim: W3-D3:B3w | kind: lemma | statement: STATEMENT.md:58-78 | premises: STATEMENT.md:22-38 ; STATEMENT.md:40-56
+claim: W3-D3:B3w | kind: lemma | statement: STATEMENT.md:59-79 | premises: STATEMENT.md:23-39 ; STATEMENT.md:41-57
 status: PROVED (by this seat, unchecked) | status_source: lemmas/B3w.md:3
-assumptions: A:GAUSS-NOISE ; A:P-POLY ; A:FIXED-S0 ; A:COEF-BOUNDED ; A:POP-FLOOR-5LOG (new | fixed population sparse eigenvalue floor on logarithmic sets | lambda_min(Sigma_n,S) >= phi^2 for every S of size at most 5(A+1)(s0+1) log n, fixed phi in (0,1], Sigma_n a correlation matrix | STATEMENT.md:40-56 | shared no | bridge W3-D3:B3w) ; A:SUBG-SPARSE-ROWS (new | sub-Gaussian predictors on sparse directions | E exp(lambda u'(x - m_n)) <= exp(L^2 lambda^2 u' Sigma_n u / 2) for every u with at most 5(A+1)(s0+1) log n nonzero entries, fixed L | STATEMENT.md:40-56 | shared no | bridge W3-D3:B3w)
+assumptions: A:GAUSS-NOISE ; A:P-POLY ; A:FIXED-S0 ; A:COEF-BOUNDED ; A:POP-FLOOR-5LOG (new | fixed population sparse eigenvalue floor on logarithmic sets | lambda_min(Sigma_n,S) >= phi^2 for every S of size at most 5(A+1)(s0+1) log n, fixed phi in (0,1], Sigma_n a correlation matrix | STATEMENT.md:41-57 | shared no | bridge W3-D3:B3w) ; A:SUBG-SPARSE-ROWS (new | sub-Gaussian predictors on sparse directions | E exp(lambda u'(x - m_n)) <= exp(L^2 lambda^2 u' Sigma_n u / 2) for every u with at most 5(A+1)(s0+1) log n nonzero entries, fixed L | STATEMENT.md:41-57 | shared no | bridge W3-D3:B3w)
 conclusion: posterior: random-design interface events of W3-POST Theorem 1 item 6; on E1 and E2(q_n) (probability >= 1 - 4p e^{-c1 n/L^4} - e^{-c2 n/L^4}) no column is constant and (E; M_E), (F_lambda; phi^2/4), (F_w; phi^2/8), BM-inf with envelope b_lo^2 n phi^2/(8 sigma^2 log n) hold; completed-pair (X, theta)-measurable events | rate: n/a | scope: iid rows with correlation-matrix covariance, (A1)-(A4), n >= n1(s0, A, L)
 depends_on: W3-DIST:B0@stmt ; W3-DIST:B1@stmt ; W3-DIST:B2core@stmt ; W3-DIST:B2@proof:part-(a) ; W3-DIST:B3@proof:template-Steps-1-6-and-A-2 ; W3-READER:R1@proof:B1.2-B1.3
 implies:
 
 REGISTRY
-claim: W3-D3:ExSG | kind: proposition | statement: STATEMENT.md:80-87 | premises: STATEMENT.md:22-38
+claim: W3-D3:ExSG | kind: proposition | statement: STATEMENT.md:81-88 | premises: STATEMENT.md:23-39
 status: PROVED (by this seat, unchecked) | status_source: lemmas/ASSEMBLY.md:3
 assumptions:
 conclusion: identity: x = m + B xi with independent mean-zero unit-variance L-sub-Gaussian coordinates satisfies (A4) with L for every direction; L = 1 for Gaussian, Rademacher, uniform[-sqrt3, sqrt3]; L = K for coordinates in an interval of length 2K (Hoeffding's lemma, proved in place) | rate: n/a | scope: any p, d
@@ -75,7 +76,7 @@ depends_on:
 implies:
 
 REGISTRY
-claim: W3-D3:Thm2SG | kind: theorem | statement: STATEMENT.md:40-56 | premises: STATEMENT.md:22-38
+claim: W3-D3:Thm2SG | kind: theorem | statement: STATEMENT.md:41-57 | premises: STATEMENT.md:23-39
 status: PROVED (by this seat, unchecked) | status_source: lemmas/ASSEMBLY.md:3
 assumptions: A:GAUSS-NOISE ; A:P-POLY ; A:FIXED-S0 ; A:COEF-BOUNDED ; A:POP-FLOOR-5LOG ; A:SUBG-SPARSE-ROWS
 conclusion: posterior: 1 - pi(S0 | y) = O_P(sqrt(log n/n)), P(HPM = MPM = S0) -> 1, max_j |PIP_j - 1{j in S0}| = O_P(sqrt(log n/n)) under the joint law of design and noise | rate: r_n = sqrt(log n / n) | scope: iid rows, mean m_n, correlation-matrix covariance, sub-Gaussian on sparse directions; 2 <= p <= n^A, s0 >= 1 fixed, b_lo <= |beta_j| <= b_hi on S0, sigma^2 fixed

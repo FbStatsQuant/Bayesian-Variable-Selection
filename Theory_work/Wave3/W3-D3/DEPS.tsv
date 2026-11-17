@@ -1,10 +1,11 @@
 id	file[:lines]	uses	sha	checked_sha	checked_by	state
-S:setting	STATEMENT.md:22-38		9d4cd72f9d19ff89			UNCHECKED
-S:Thm2SG	STATEMENT.md:40-56	S:setting	70538e99e31f8eea			UNCHECKED
-S:B3w	STATEMENT.md:58-78	S:setting	d34cbaee2d24879b			UNCHECKED
-S:ExSG	STATEMENT.md:80-87		6b83f9d40ce7fef1			UNCHECKED
-S:class	STATEMENT.md:108-136	S:ExSG	f0effe367610ce98			UNCHECKED
-S:inputs	STATEMENT.md:138-152		06b849ce567bcdb5			UNCHECKED
-P:B3w	lemmas/B3w.md:12-130	S:B3w,S:inputs	727fe73f57d8a8f4			UNCHECKED
-P:Thm2SG	lemmas/ASSEMBLY.md:21-51	S:Thm2SG,P:B3w,S:inputs	95a4ae7403012c0d			UNCHECKED
-P:ExSG	lemmas/ASSEMBLY.md:53-82	S:ExSG	0cd0673df06dbe0e			UNCHECKED
+S:setting	STATEMENT.md:23-39		9d4cd72f9d19ff89	9d4cd72f9d19ff89	reviews/K1_linecheck_opus.md	OK
+S:Thm2SG	STATEMENT.md:41-57	S:setting	243b77e0796f16e0			UNCHECKED
+S:B3w	STATEMENT.md:59-79	S:setting	3287fafe4da3041d			UNCHECKED
+S:ExSG	STATEMENT.md:81-88		6b83f9d40ce7fef1	6b83f9d40ce7fef1	reviews/K1_linecheck_opus.md	OK
+S:class	STATEMENT.md:111-141	S:ExSG	4da143855dff15dd			UNCHECKED
+S:inputs	STATEMENT.md:143-158		4da0091979c82106			UNCHECKED
+P:B3w	lemmas/B3w.md:12-134	S:B3w,S:inputs	05df235f65064abb			UNCHECKED
+P:Thm2SG	lemmas/ASSEMBLY.md:21-52	S:Thm2SG,P:B3w,S:inputs	5db2fe6b2eca4beb			UNCHECKED
+P:ExSG	lemmas/ASSEMBLY.md:54-83	S:ExSG	0cd0673df06dbe0e	0cd0673df06dbe0e	reviews/K1_linecheck_opus.md	OK
+R:registry	REPORT.md:59-86	S:Thm2SG,S:B3w,S:ExSG	5171aab785a78444			UNCHECKED
