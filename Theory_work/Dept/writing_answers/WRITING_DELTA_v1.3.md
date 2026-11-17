@@ -1,3 +1,5 @@
+> **SUPERSEDED by TRACK_B_v1.4.md + WRITING_DELTA_v1.4.md.**
+
 # Writing delta — assumptions section, TRACK_B v1.2 → v1.3 (audit Fable, 2026-11-16)
 
 Cause: Song–Liang's supplement was read (Theorem S on MAP consistency, supp p. 13; proofs). Source: `TRACK_B.md` §S, §T2.
