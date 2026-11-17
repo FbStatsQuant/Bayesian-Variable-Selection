@@ -1,6 +1,8 @@
 // test_setup.cpp -- WP2 unit tests, gate T11 (truncated linkage = exact dendrogram below 1 - tau_n), thread/tile
 // invariance (T3 for setup), setup.bin round trip, edge cases.
+#include <cmath>
 #include <map>
+#include <random>
 #include <unistd.h>
 #include "setup_tk.h"
 #include "v4/format.h"
@@ -187,12 +189,14 @@ TEST(unit_setup_bin_roundtrip) {
   std::string h2; SetupResult q = read_setup_bin(path, &h2);
   SCHECK(h == h2, "content hash differs on read");
   SCHECK(q.corr.nb.idx == r.corr.nb.idx && q.corr.nb.ptr == r.corr.nb.ptr && q.part.members == r.part.members && q.part.blk == r.part.blk &&
-        q.tab.logr.size() == r.tab.logr.size() && q.tab.cond_cum.size() == r.tab.cond_cum.size() && q.mode.S == r.mode.S &&
+        q.tab.logr.size() == r.tab.logr.size() && q.tab.cond0.size() == r.tab.cond0.size() && q.tab.cond_cum.empty() && q.mode.S == r.mode.S &&
         stk::same_bits(q.tab.logZbar0, r.tab.logZbar0) && q.stores.top.pool == r.stores.top.pool && q.stores.hpmS == r.stores.hpmS,
         "round trip differs");
   bool ok = true;
   for (size_t i = 0; i < r.tab.logr.size(); ++i) ok &= stk::same_bits(q.tab.logr[i], r.tab.logr[i]);
   SCHECK(ok, "logr round trip");
+  for (size_t i = 0; i < r.tab.cond0.size(); ++i) ok &= stk::same_bits(q.tab.cond0[i], r.tab.cond0[i]);
+  SCHECK(ok, "cond0 round trip (D-31)");
   // a flipped byte must be detected
   {
     long at; { v4::fmt::Reader rd(path); at = (long)rd.entry("logr").offset + 3; }   // a byte inside a hashed section
@@ -323,8 +327,10 @@ TEST(count_only_equals_production_and_accounting_exact) {
              c.corr.edges.size(), full.edges.size());
       SCHECK(c.part.bptr == r.part.bptr && c.part.members == r.part.members, "count-only partition differs (%s n=%d)", stk::design_name(d), n);
       const MemAccount& A = c.acc;
-      SCHECK(A.C == (int64_t)r.tab.logr.size() && A.NR == (int64_t)r.tab.logprof.size() && A.cond_vals == (int64_t)r.tab.cond_cum.size() &&
-             A.J == r.part.J, "accounting differs from the built arrays (%s n=%d)", stk::design_name(d), n);
+      int64_t cv = 0;
+      for (int b = 0; b < r.tab.J; ++b) for (int k = 0; k <= r.tab.K; ++k) cv += r.tab.cond_len(b, k);
+      SCHECK(A.C == (int64_t)r.tab.logr.size() && A.NR == (int64_t)r.tab.logprof.size() && A.cond_vals == cv &&
+             r.tab.cond0.size() == (size_t)A.J * (size_t)(A.K + 1) && r.tab.cond_cum.empty() && A.J == r.part.J, "accounting differs from the built arrays (%s n=%d)", stk::design_name(d), n);
       uint64_t sb = 0;
       for (const v4::Store* st : {&r.stores.top, &r.stores.lead0, &r.stores.lead1})
         sb += st->v.size() * 26 + st->pool.size() * 4;
@@ -437,6 +443,53 @@ TEST(cli_setup_pipeline) {
 
 // ---- setup.bin -> the island's Start / Neighbours (manager request; WP3 island, WP4 calibration)
 #include "v4/setup_island.h"
+// D-31: cond_row and the cond0 scan table against the stored rows (bits), and pi0_block_size against upper_bound on the
+// stored row at u = cond0, its two neighbours, every stored breakpoint and its neighbours, and random u.
+TEST(d31_cond_row_scan_table) {
+  for (auto d : {stk::AR, stk::IND, stk::BLK, stk::TIE})
+    for (int n : {100, 400}) {
+      Fixture F(d, n, 1200, 131);
+      SetupOptions o; o.threads = stk::threads();
+      SetupResult r = run_setup(F.D(), o);
+      SCHECK(r.status == v4::Status::completed, "%s", r.reason.c_str());
+      const Tables& T = r.tab;
+      Tables S = T; build_start(F.D(), r.part, S, /*store_sampler=*/true);
+      SCHECK(T.cond_cum.empty() && S.cond0.size() == T.cond0.size(), "production tables hold cond_cum (%s n=%d)", stk::design_name(d), n);
+      std::vector<double> c;
+      bool ok = true; long nrows = 0, nu = 0, nscan = 0;
+      std::mt19937_64 g(5);
+      for (int b = 0; ok && b < T.J; ++b)
+        for (int k = 0; ok && k <= T.K; ++k) {
+          const size_t row = (size_t)b * (T.K + 1) + k;
+          const double* s = &S.cond_cum[S.cond_ptr[row]]; const double* e = &S.cond_cum[0] + S.cond_ptr[row + 1];
+          cond_row(T, b, k, c);
+          ok = c.size() == (size_t)(e - s) && c.size() == (size_t)T.cond_len(b, k) && stk::same_bits(T.cond0[row], s[0]) && stk::same_bits(S.cond0[row], s[0]);
+          for (size_t q = 0; ok && q < c.size(); ++q) ok = stk::same_bits(c[q], s[q]);
+          std::vector<double> us = {T.cond0[row], std::nextafter(T.cond0[row], 0.0), std::nextafter(T.cond0[row], 1.0), 0.0,
+                                    std::nextafter(1.0, 0.0)};
+          for (const double* x = s; x < e; ++x) { us.push_back(*x); us.push_back(std::nextafter(*x, 0.0)); us.push_back(std::nextafter(*x, 1.0)); }
+          for (int i = 0; i < 4; ++i) us.push_back(std::uniform_real_distribution<double>(0.0, 1.0)(g));
+          for (double u : us) {
+            if (!(u >= 0.0 && u < 1.0)) continue;
+            const int j4 = pi0_block_size(T, b, k, u), js = pi0_block_size(S, b, k, u), jr = (int)(std::upper_bound(s, e, u) - s);
+            ok = ok && j4 == js && j4 == jr; ++nu; nscan += (u < T.cond0[row]);
+          }
+          ++nrows;
+        }
+      SCHECK(ok, "D-31: cond_row / cond0 / pi0_block_size differ from the stored rows (%s n=%d)", stk::design_name(d), n);
+      std::printf("    D-31 %s n=%d: %ld rows, %ld u values (%ld by the scan alone)\n", stk::design_name(d), n, nrows, nu, nscan);
+      // pi_0 draws: production (scan + cond_row) = stored rows, at the same Philox addresses
+      Start A; A.D = &F.D(); A.P = &r.part; A.T = &T; A.logZbar0 = T.logZbar0;
+      Start Bs = A; Bs.T = &S;
+      v4::AddressedSource as; v4::Model ma, mb; ok = true;
+      for (uint32_t i = 1; ok && i <= 4000; ++i) {
+        v4::Address ad; ad.seed = 31; ad.role = v4::R_FINAL; ad.island = 1; ad.xph = v4::X_INIT; ad.particle = i;
+        A.draw_pi0(as, ad, ma); Bs.draw_pi0(as, ad, mb); ok = ma == mb;
+      }
+      SCHECK(ok, "D-31: pi_0 draws differ between scan + cond_row and stored rows (%s n=%d)", stk::design_name(d), n);
+    }
+}
+
 TEST(island_loader_round_trip) {
   namespace dep = v4::island::dep;
   for (auto d : {stk::AR, stk::TIE}) {

@@ -72,9 +72,10 @@ MemAccount account(const Data& D, int coded_B, const Partition& P, int64_t edges
   add("logprof_ptr, logprof", "persistent", 8ull * (J + 1) + 8ull * A.NR, true, true);
   add("logF ((J+1) x (K+1) f64)", "persistent", 8ull * (J + 1) * (K + 1), true, true);
   add("size_logmass, size_cum", "persistent", 16ull * (K + 1), true, true);
-  add("cond_ptr, cond_cum", "persistent", 8ull * (J * (K + 1) + 1) + 8ull * A.cond_vals, true, true);
+  add("cond0 (D-31 scan table P(k_b = 0 | r), J x (K+1) f64)", "persistent", 8ull * J * (K + 1), true, true);
   add("static code tables (all m <= 16)", "persistent", 4ull * ((1u << 17) - 1));
   A.not_stored_d18 = 4ull * A.C_feasible + 8ull * A.C_feasible + 16ull * (A.NR + 1);
+  A.not_stored_d31 = 8ull * (J * (K + 1) + 1) + 8ull * A.cond_vals;   // cond_ptr + cond_cum, recomputed by cond_row
   // ---- start mode (transient)
   // arg: codes attaining each per-size maximum; bound C_feasible, estimate NR (one per row without exact ties)
   const uint64_t mode_fixed = 8ull * A.NR + 8ull * (A.NR + 1) + 24ull * A.NR + 8ull * (J + 1) * (K + 1) + 2ull * (J + 1) * (K + 1) + 16ull * J + A.NR;
@@ -131,7 +132,7 @@ Json MemAccount::to_json() const {
   j["stage_peak_estimate_bytes"] = se; j["peak_estimate_bytes"] = (int64_t)peak_est; j["setup_bin_estimate_bytes"] = (int64_t)setup_bin_est;
   j["peak_note"] = "peak_bytes: exact arrays + upper bounds (store pools at B_blocks per entry, start-mode ties at C_feasible); "
                    "peak_estimate_bytes: the same with measured factors (mean |S| 3.1 in the table stores, no exact ties). X is file-backed (data.bin mapping).";
-  j["d18_not_stored_bytes"] = (int64_t)not_stored_d18;
+  j["d18_not_stored_bytes"] = (int64_t)not_stored_d18; j["d31_not_stored_bytes"] = (int64_t)not_stored_d31;
   return j;
 }
 

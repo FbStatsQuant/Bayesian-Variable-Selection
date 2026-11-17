@@ -24,6 +24,17 @@ double Start::comp(ModelView S) const {
 // core/cpp/v3_start.h:18-20
 static inline int cat_draw_gt(const double* b, const double* e, double u) { return (int)(std::upper_bound(b, e, u) - b); }
 
+// core/cpp/v3_start.h:163-166 for one block. D-31: the scan table decides j = 0 (upper_bound returns 0 iff the row's
+// first entry exceeds u); otherwise the row is recomputed by cond_row. Stored rows (tests only) are used when present.
+int pi0_block_size(const Tables& T, int b, int r, double u) {
+  const size_t row = (size_t)b * (T.K + 1) + r;
+  if (!T.cond_cum.empty()) return cat_draw_gt(&T.cond_cum[T.cond_ptr[row]], &T.cond_cum[0] + T.cond_ptr[row + 1], u);
+  if (u < T.cond0[row]) return 0;
+  thread_local std::vector<double> cr;
+  cond_row(T, b, r, cr);
+  return cat_draw_gt(cr.data(), cr.data() + cr.size(), u);
+}
+
 // core/cpp/v3_start.h:158-176. Variate order: the total size; block sizes for b = J..1 while r > 0; sub-models for
 // b = 1..J with k_b > 0. Slots (INTERFACES v0.1.5 §3): PI0_SIZE 0; PI0_BLOCKSIZE b; PI0_SUBMODEL b. A compat
 // source ignores the address and returns the serial stream in this same order.
@@ -35,9 +46,7 @@ void Start::draw_pi0(UniformSource& us, Address a, Model& S) const {
   kb.clear();
   int r = k;
   for (int b = T->J - 1; b >= 0 && r > 0; --b) {
-    size_t row = (size_t)b * (K + 1) + r;
-    const double* c = &T->cond_cum[T->cond_ptr[row]];
-    int j = cat_draw_gt(c, &T->cond_cum[0] + T->cond_ptr[row + 1], U(SK_PI0_BLOCKSIZE, (uint32_t)b));
+    const int j = pi0_block_size(*T, b, r, U(SK_PI0_BLOCKSIZE, (uint32_t)b));
     if (j > 0) kb.push_back({b, j});
     r -= j;
   }

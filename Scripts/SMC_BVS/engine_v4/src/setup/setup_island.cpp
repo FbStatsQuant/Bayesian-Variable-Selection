@@ -27,11 +27,8 @@ void to_island(const SetupResult& r, const Data& D, island::dep::Start& st, isla
       sub_cum_of(T, b, m, j, sc);
       st.sub_cum[b][j] = sc;
     }
-    st.cond_cum[b].assign(K + 1, {});
-    for (int r0 = 0; r0 <= K; ++r0) {
-      const size_t row = (size_t)b * (K + 1) + r0;
-      st.cond_cum[b][r0].assign(T.cond_cum.begin() + T.cond_ptr[row], T.cond_cum.begin() + T.cond_ptr[row + 1]);
-    }
+    st.cond_cum[b].assign(K + 1, {});   // D-31: dep::Start keeps full rows; rebuilt by cond_row (same bits)
+    for (int r0 = 0; r0 <= K; ++r0) cond_row(T, b, r0, st.cond_cum[b][r0]);
   }
   st.logF.assign(J + 1, {});
   for (int b = 0; b <= J; ++b) st.logF[b].assign(T.logF.begin() + (size_t)b * (K + 1), T.logF.begin() + (size_t)(b + 1) * (K + 1));

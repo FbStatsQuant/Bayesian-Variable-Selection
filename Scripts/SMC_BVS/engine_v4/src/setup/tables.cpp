@@ -389,25 +389,35 @@ void build_start(const Data& D, const Partition& P, Tables& T, bool store_sample
   for (int k = 0; k <= K; ++k) T.size_logmass[k] = lk[k] - T.logZbar0;
   T.size_cum.assign(K + 1, 0.0);
   cumulative_from_logs(lk.data(), lk.size(), T.size_cum.data());
-  // core/cpp/v3_start.h:140-150
-  T.cond_ptr.assign((size_t)J * (K + 1) + 1, 0);
-  for (int b = 0; b < J; ++b) {
-    int npr = (int)(T.logprof_ptr[b + 1] - T.logprof_ptr[b]);
-    for (int r = 0; r <= K; ++r) { size_t row = (size_t)b * (K + 1) + r; T.cond_ptr[row + 1] = T.cond_ptr[row] + std::min(npr - 1, r) + 1; }
+  // core/cpp/v3_start.h:140-150. D-31: only the scan table cond0 persists; full rows are recomputed by cond_row.
+  T.cond0.assign((size_t)J * (K + 1), 0.0);
+  T.cond_ptr.assign(1, 0); T.cond_cum.clear();
+  if (store_sampler) {   // tests only
+    T.cond_ptr.assign((size_t)J * (K + 1) + 1, 0);
+    for (int b = 0; b < J; ++b)
+      for (int r = 0; r <= K; ++r) { size_t row = (size_t)b * (K + 1) + r; T.cond_ptr[row + 1] = T.cond_ptr[row] + T.cond_len(b, r); }
+    T.cond_cum.assign(T.cond_ptr.back(), 0.0);
   }
-  T.cond_cum.assign(T.cond_ptr.back(), 0.0);
-  std::vector<double> lj;
-  for (int b = 0; b < J; ++b) {
-    const double* pr = &T.logprof[T.logprof_ptr[b]];
-    int npr = (int)(T.logprof_ptr[b + 1] - T.logprof_ptr[b]);
-    const double* Fb = &T.logF[(size_t)b * (K + 1)];
+  std::vector<double> c;
+  for (int b = 0; b < J; ++b)
     for (int r = 0; r <= K; ++r) {
-      lj.clear();
-      for (int j = 0; j < npr && j <= r; ++j) lj.push_back(Fb[r - j] == NEG_INF ? NEG_INF : pr[j] + Fb[r - j]);
-      size_t row = (size_t)b * (K + 1) + r;
-      cumulative_from_logs(lj.data(), lj.size(), &T.cond_cum[T.cond_ptr[row]]);
+      const size_t row = (size_t)b * (K + 1) + r;
+      cond_row(T, b, r, c);
+      T.cond0[row] = c[0];
+      if (store_sampler) std::copy(c.begin(), c.end(), T.cond_cum.begin() + T.cond_ptr[row]);
     }
-  }
+}
+
+void cond_row(const Tables& T, int b, int r, std::vector<double>& out) {
+  thread_local std::vector<double> lj;
+  const int K = T.K;
+  const double* pr = &T.logprof[T.logprof_ptr[b]];
+  const int npr = (int)(T.logprof_ptr[b + 1] - T.logprof_ptr[b]);
+  const double* Fb = &T.logF[(size_t)b * (K + 1)];
+  lj.clear();
+  for (int j = 0; j < npr && j <= r; ++j) lj.push_back(Fb[r - j] == NEG_INF ? NEG_INF : pr[j] + Fb[r - j]);
+  out.resize(lj.size());
+  cumulative_from_logs(lj.data(), lj.size(), out.data());
 }
 
 }  // namespace v4::setup

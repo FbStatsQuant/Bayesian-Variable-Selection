@@ -81,6 +81,21 @@ static int startlaw_main(int argc, char** argv) {
   if (mc > 0) {   // Monte Carlo cross-check with pi_0 draws
     Start S; S.D = &D; S.P = &c.part; S.T = &T; S.logZbar0 = T.logZbar0;
     v4::AddressedSource as; v4::Model M; double ms = 0, mb = 0;
+    auto td = std::chrono::steady_clock::now();
+    for (int i = 1; i <= mc; ++i) { v4::Address ad; ad.seed = 9; ad.xph = v4::X_INIT; ad.particle = (uint32_t)i; S.draw_pi0(as, ad, M); }
+    rec["mc_us_per_draw"] = 1e6 * std::chrono::duration<double>(std::chrono::steady_clock::now() - td).count() / mc;   // D-31 path
+    if (argc > 8 && std::string(argv[8]) == "stored") {   // D-31 check: the stored rows (old layout) give the same draws; their cost
+      Tables Ts = T; build_start(D, c.part, Ts, /*store_sampler=*/true);
+      Ts.cbs_ptr.assign(1, 0); Ts.codes_by_size.clear(); Ts.sub_ptr.assign(1, 0); Ts.sub_cum.clear();   // D-18 as in production
+      Start S2 = S; S2.T = &Ts; v4::Model M2; bool same = true;
+      td = std::chrono::steady_clock::now();
+      for (int i = 1; i <= mc; ++i) { v4::Address ad; ad.seed = 9; ad.xph = v4::X_INIT; ad.particle = (uint32_t)i; S2.draw_pi0(as, ad, M2); }
+      rec["mc_us_per_draw_stored_rows"] = 1e6 * std::chrono::duration<double>(std::chrono::steady_clock::now() - td).count() / mc;
+      for (int i = 1; same && i <= mc; ++i) { v4::Address ad; ad.seed = 9; ad.xph = v4::X_INIT; ad.particle = (uint32_t)i; S.draw_pi0(as, ad, M); S2.draw_pi0(as, ad, M2); same = M == M2; }
+      rec["mc_same_draws_stored_rows"] = same;
+      rec["cond_cum_bytes_old"] = (int64_t)(8 * (Ts.cond_ptr.size() + Ts.cond_cum.size()));
+    }
+    rec["cond0_bytes"] = (int64_t)(8 * T.cond0.size());
     for (int i = 1; i <= mc; ++i) {
       v4::Address ad; ad.seed = 9; ad.xph = v4::X_INIT; ad.particle = (uint32_t)i;
       S.draw_pi0(as, ad, M);

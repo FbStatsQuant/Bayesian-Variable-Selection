@@ -99,8 +99,13 @@ struct Tables {
   std::vector<double> logF;                // (J + 1) x (K + 1), row-major
   double logZbar0 = 0;
   std::vector<double> size_logmass, size_cum;   // K + 1
-  std::vector<int64_t> cond_ptr{0};        // row b*(K+1)+r
-  std::vector<double> cond_cum;
+  // D-31: cond_cum is NOT stored in setup.bin. cond0[b*(K+1)+r] = the first entry of row (b, r), i.e. P(k_b = 0 | r)
+  // as a cumulative: the scan every pi_0 draw needs (j = 0 iff u < cond0). A full row is recomputed by cond_row(T, b, r)
+  // from logprof and logF (same bits). build_start(..., store_sampler = true) also fills cond_ptr/cond_cum (tests only).
+  std::vector<double> cond0;               // J x (K + 1), row-major
+  std::vector<int64_t> cond_ptr{0};        // row b*(K+1)+r (tests only)
+  std::vector<double> cond_cum;            // (tests only)
+  int cond_len(int b, int r) const { return std::min((int)(logprof_ptr[b + 1] - logprof_ptr[b]) - 1, r) + 1; }
   // D-18: codes_by_size and sub_cum are NOT stored in setup.bin; draw_pi0 recomputes them for the blocks a draw selects
   // (codes_of_size + sub_cum_of, same bits). build_start(..., store_sampler = true) fills these for tests only.
   std::vector<int64_t> cbs_ptr{0};         // row logprof_ptr[b] + j: codes of size j in increasing code order
@@ -116,13 +121,19 @@ struct TableStats { uint64_t scored = 0, prefix_scored = 0, fallback_scored = 0,
 // Tables by depth-first enumeration with sorted-prefix reuse, threaded over blocks. Bits = core/cpp/v3_start.h:76-98.
 // If `stores` is given, the table top stores are built (then the per-code log m is dropped).
 Tables build_tables(const Data& D, const Partition& P, int threads, TableStores* stores = nullptr, TableStats* st = nullptr);
-// Size profiles, convolutions, log Zbar0, size law, cond_cum: bits = core/cpp/v3_start.h:101-151. codes_by_size and
-// sub_cum are stored only if store_sampler (tests; D-18).
+// Size profiles, convolutions, log Zbar0, size law, cond0 (D-31): bits = core/cpp/v3_start.h:101-151. codes_by_size,
+// sub_cum, cond_ptr and cond_cum are stored only if store_sampler (tests; D-18, D-31).
 void build_start(const Data& D, const Partition& P, Tables& T, bool store_sampler = false);
 // D-18 helpers. Codes 0..2^m-1 of popcount j in increasing code order (core/cpp/v3_start.h:108-112); m <= 16.
 const uint32_t* codes_of_size(int m, int j, uint32_t* count);
 // Within-size law of block b (size m) at size j: cumulative_from_logs over the codes' logr (core/cpp/v3_start.h:116-118).
 void sub_cum_of(const Tables& T, int b, int m, int j, std::vector<double>& out);
+// D-31: row (b, r) of the conditional block-size law, cumulative over j = 0..min(top_b, r) (core/cpp/v3_start.h:140-150,
+// the same bits as the stored cond_cum row). out.size() == T.cond_len(b, r). Thread-safe.
+void cond_row(const Tables& T, int b, int r, std::vector<double>& out);
+// D-31: the pi_0 size of block b given r remaining (core/cpp/v3_start.h:163-166): j = 0 by the cond0 scan when u < cond0,
+// else upper_bound on cond_row(b, r). Same j as the stored row for every u. Used by Start::draw_pi0.
+int pi0_block_size(const Tables& T, int b, int r, double u);
 // core/cpp/v3_start.h:21-32
 void cumulative_from_logs(const double* lp, size_t n, double* c);
 
@@ -157,7 +168,7 @@ struct MemAccount {
   int64_t NR = 0, cond_vals = 0, table_models = 0;
   std::vector<MemItem> items;
   std::vector<std::pair<std::string, uint64_t>> stage_peak, stage_peak_est;   // bound / estimate per stage
-  uint64_t peak = 0, peak_est = 0, setup_bin = 0, setup_bin_est = 0, not_stored_d18 = 0;
+  uint64_t peak = 0, peak_est = 0, setup_bin = 0, setup_bin_est = 0, not_stored_d18 = 0, not_stored_d31 = 0;
   Json to_json() const;
 };
 MemAccount account(const Data& D, int coded_B, const Partition& P, int64_t edges, int64_t nb_nnz, int threads, PartMode mode);
