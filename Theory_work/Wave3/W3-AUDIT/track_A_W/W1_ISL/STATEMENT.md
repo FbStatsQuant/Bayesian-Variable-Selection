@@ -1,4 +1,4 @@
-# W1 · Lemma ISL (island control flow, stopping times, MEAS at the pin) — STATEMENT v1 (draft, not locked)
+# W1 · Lemma ISL (island control flow, stopping times, MEAS at the pin) — STATEMENT v1.1 (draft, not locked)
 
 Track A_W item W1 (manager 11-17; D97 edge verdicts, recorder package §2 edges 2 and 3). Tier B (line check of the cited
 steps of `W1-N1:B` at the code of record). **Lean target: yes** for (ISL-st) in abstract form ("a program that reads an
@@ -25,8 +25,10 @@ sequences); no for the code correspondence.
 
 ## Setting
 Fixed valid data on the SMC branch, `setup` built (T2 BLK, T4 ENC). A calibration value c in the success set A_s: grid
-0 = φ₀ < … < φ_T = 1 (T ≥ 1), integers N_e ≥ 1, L ≥ 0, Hm = 4, the tier (the final-run settings are functions of c and
-(n, p): T5 CAL-c). u = (u₁, u₂, …) ∈ Υ := [0, 1)^ℕ the island's stream; 𝓕_k := σ(u₁, …, u_k). The **potential run**
+0 = φ₀ < … < φ_T = 1 (T ≥ 1), the tier, Hm = 4; N_e(c), L(c) denote the values **actually executed**,
+`b$tiers$N[tier(c) + 1]` and `b$L` (`v3_run.R:90`; W3-SAMP's convention, `Theory_work/Wave3/W3-SAMP/STATEMENT.md:47-50`),
+integers N_e ≥ 1, L ≥ 0 (the final-run settings are functions of c and (n, p): T5 CAL-c). A_s ∈ 𝓔: it is the preimage
+under c ↦ (T, grid, tier) of a Borel set. u = (u₁, u₂, …) ∈ Υ := [0, 1)^ℕ the island's stream; 𝓕_k := σ(u₁, …, u_k). The **potential run**
 (T1: every guard Boolean FALSE). EX-A. The **statistical record** Φ(c, u) is `W1-N1:B`'s (`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:14-21`):
 log Ẑ_r, the population after the initial draws, after each stage-t resampling and each stage-t round, after each of the
 L + 4 rounds at φ = 1, and for each particle and round its order and within-round path; the **augmented record** Φ̃(c, u)
@@ -50,7 +52,9 @@ For every c ∈ A_s, on the potential run of final island r:
   for which c ↦ (T, grid, N_e, L, tier) is measurable and A_s ∈ 𝓔, and 𝓤 is the Borel σ-field of Υ; its values lie in a
   Polish space (a countable disjoint union of Euclidean spaces times finite sets). Every coordinate used by
   `W3-SAMP:MR` Step 2 (stage-t populations, post-terminal populations, Y^i_{q,ℓ} = particle i's state before its ℓ-step
-  in measured round q) and by `W3-SAMP:D` (the D_r(c) draws) is a measurable function of Φ̃.
+  in measured round q, the partial evidence Ẑ_t and W_r = Ẑ_r/Z) and by `W3-SAMP:D` (the D_r(c) draws) is a measurable
+  function of (c, Φ̃): Ẑ_t = Z₀∏_{s≤t}(1/N_e)Σ_i e^{Δ_s d(S_i^{(s−1)})} is a function of grid(c) and the populations
+  after the stage-(s − 1) rounds, which are coordinates of Φ.
 
 ## Use
 (ISL-0) + (ISL-st) are the "control-flow clause of (B-b)" and (B-0) as `W3-SAMP:D` (D-i) uses them; (ISL-d) is (B-d) as
@@ -65,3 +69,4 @@ For every c ∈ A_s, on the potential run of final island r:
 | version | clause | tag | reason | trigger | check |
 |---|---|---|---|---|---|
 | v1 | all | NEW-CLAIM (line check of `W1-N1:B` (B-0), (B-b) control flow, (B-d) at the pin) | track A_W W1 | manager 11-17; D97 edges 2, 3 | `CHECK.md` |
+| v1.1 | setting: executed N_e, L; A_s ∈ 𝓔; (ISL-d): Ẑ_t, W_r as functions of (c, Φ̃) | STRONGER (coverage) / EQUAL (convention) | WLC1 W1 #2, #3; W2 #3 | `reviews/WLC1_reply_opus.md` | Sol read |

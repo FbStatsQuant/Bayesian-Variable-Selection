@@ -1,4 +1,4 @@
-# W2 · Lemma FRZ (freezing on the calibration value, at general c, at the pin) — STATEMENT v1 (draft, not locked)
+# W2 · Lemma FRZ (freezing on the calibration value, at general c, at the pin) — STATEMENT v1.1 (draft, not locked)
 
 Track A_W item W2 (manager 11-17; D97 edge verdicts, recorder package §2 edge 4). Tier B (line check of `W1-N1:F`'s
 freezing step and of its use by `W3-SAMP:MR` at the code of record). **Lean target: yes** for (FRZ-a) (the freezing
@@ -19,8 +19,8 @@ for (FRZ-d) (a finite product bound); no for (FRZ-b), (FRZ-c) (code facts).
 ## Setting
 Fixed valid data on the SMC branch. Streams U^{(k)} as in T5 (`Theory_work/Wave3/W3-AUDIT/track_A/T5_CAL/STATEMENT.md`);
 H-U: the streams are independent i.i.d. U[0, 1) sequences. 𝓒° (calibration record of the potential fit P°) and
-𝒜° ∈ σ(𝓒°) as in T5 (CAL-b), a random element of a measurable space (E, 𝓔) on which c ↦ (T, grid, N_e, L, tier) is
-measurable. For r ∈ {1, …, 4}: U_r := U^{(9+r)} ∈ (Υ, 𝓤) = ([0, 1)^ℕ, Borel); Φ the island record map and A_s the
+𝒜° ∈ σ(𝓒°) as in T5 (CAL-b), a random element of a measurable space (E, 𝓔) on which c ↦ (T, grid, tier) is
+measurable, so that A_s ∈ 𝓔 (W1 setting); N_e(c), L(c) are the executed values of W1 (ISL). For r ∈ {1, …, 4}: U_r := U^{(9+r)} ∈ (Υ, 𝓤) = ([0, 1)^ℕ, Borel); Φ the island record map and A_s the
 success set of W1 (ISL). R′ = 4 (`v3_run.R:90-91`), so E₀ := 𝒜° ∩ {r ≤ R′} = 𝒜°. EX-A. Potential run (T1).
 
 ## Lemma FRZ
@@ -34,11 +34,14 @@ success set of W1 (ISL). R′ = 4 (`v3_run.R:90-91`), so E₀ := 𝒜° ∩ {r �
   for island r alone and read by nothing else, and the frozen grid lies in A_s.
 - **(FRZ-c) Conditioning at general c.** For every 𝓔 ⊗ 𝓤-measurable g with |g| ≤ B < ∞ and g(c, ·) = 0 for c ∉ A₀:
   E[1_{E₀} Y | 𝓒°] = 1_{E₀} ḡ(𝓒°) a.s. for every Y with 1_{E₀} Y = g(𝓒°, U_r) (localised form, `W1-N1:F`'s
-  convention). In particular `W1-N1:F`'s statement (terminal endpoints, h jointly measurable with a deterministic bound)
-  `W3-SAMP:MR` (MR-a)–(MR-c) and the freezing step of `W3-SAMP:D` (D-i) (g = 1{no draw of Φ̃ equals S₀}) given 𝓒 hold at the pin with (𝒜°, 𝓒°), the fixed-c values ḡ(c) being FR (FR-b), (FR-c).
-  On 𝒜 the actual record equals 𝓒° (T5 CAL-d), so they hold for the actual (𝒜, 𝓒) on 𝒜 in the sense T5 states.
+  convention). In particular `W1-N1:F`'s statement (terminal endpoints, h jointly measurable with a deterministic
+  bound), `W3-SAMP:MR` (MR-a)–(MR-c) and the freezing step of `W3-SAMP:D` (D-i) (g = 1{no draw of Φ̃ equals S₀}) given 𝓒
+  hold at the pin with (𝒜°, 𝓒°). The fixed-c values ḡ(c) are FR (FR-b), (FR-c) for F and MR, and for D the value
+  (1 − π₀(S₀))^{D_r(c)} of `Theory_work/Wave3/W3-SAMP/lemmas/D_theorem.md:8-20` (from (ISL-st) and T6 (S), (S′)).
+  The identities hold for (𝒜°, 𝓒°); for the actual pair (𝒜, 𝓒) only T5's transfer rules apply
+  (`Theory_work/Wave3/W3-AUDIT/track_A/T5_CAL/STATEMENT.md:45-54`).
 - **(FRZ-d) Evidence bounds.** For c ∈ A_s, t ≤ T, u ∈ Υ, with d_min := min_Ω d, d_max := max_Ω d (finite, Ω finite,
-  EX-A): Ẑ_t(Φ(c, u)) ∈ [Z₀e^{φ_t d_min}, Z₀e^{φ_t d_max}] and Z_t(c) ∈ the same interval, Z₀ = m(∅)Z̄₀; hence
+  EX-A): Ẑ_t(c, Φ(c, u)) (a function of (c, Φ), W1 ISL-d) ∈ [Z₀e^{φ_t d_min}, Z₀e^{φ_t d_max}] and Z_t(c) ∈ the same interval, Z₀ = m(∅)Z̄₀; hence
   0 < Ẑ_t/Z_t ≤ C_d := e^{d_max − d_min}, and Ẑ = Ẑ_T ≤ Z₀e^{d_max}, uniformly in (c, u). So the integrands of
   `W1-N1:F` and `W3-SAMP:MR` (with |h| ≤ B_h) are bounded by B_h·Z₀e^{d_max} and B_h·C_d.
 
@@ -50,3 +53,4 @@ success set of W1 (ISL). R′ = 4 (`v3_run.R:90-91`), so E₀ := 𝒜° ∩ {r �
 | version | clause | tag | reason | trigger | check |
 |---|---|---|---|---|---|
 | v1 | all | NEW-CLAIM (line check of `W1-N1:F`'s freezing step and `W3-SAMP:MR`'s extension at the pin) | track A_W W2 | manager 11-17; D97 edge 4 | `CHECK.md` |
+| v1.1 | (FRZ-c) D's fixed-c value attributed; actual pair: T5 transfer rules only; setting: A_s ∈ 𝓔, executed N_e, L; Ẑ_t(c, Φ) | WEAKER (actual-pair sentence) / EQUAL | WLC1 W2 #1–#3, #7; W1 #2 | `reviews/WLC1_reply_opus.md` | Sol read |

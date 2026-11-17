@@ -1,10 +1,10 @@
-# W1 · Lemma ISL — PROOF v1 (line check of `W1-N1:B` (B-0), (B-b) control flow, (B-d) at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
+# W1 · Lemma ISL — PROOF v1.1 (line check of `W1-N1:B` (B-0), (B-b) control flow, (B-d) at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
 
 Reuse: T1 GW (`Theory_work/Wave3/W3-AUDIT/track_A/T1_GW/STATEMENT.md`: guard bodies draw no uniform, the potential run's
 Booleans are FALSE), T5 CAL-C (`Theory_work/Wave3/W3-AUDIT/track_A/T5_CAL/STATEMENT.md`: final-run settings are functions
 of 𝓒°; streams), T6 START-X (S) (`Theory_work/Wave3/W3-AUDIT/track_A/T6_START/STATEMENT.md:30-31`: a `draw_pi0` call
 consumes a number of uniforms that is a function of the returned draw), T7 KER (`Theory_work/Wave3/W3-AUDIT/track_A/T7_KER/STATEMENT.md`:
-Step 0, exact scores whatever the cache history; (KER-c) order first; (KER-d) inputs fixed before the islands), FR (FR-a)
+(KER-c) order first; (KER-d) inputs fixed before the islands), FR (FR-a)
 (`Theory_work/Wave3/W3-AUDIT/track_A_X/X1_T12/PROOF.md`, Part 1: the island's control flow at the pin).
 
 ## Step 1 — the island's program at the pin
@@ -12,12 +12,12 @@ Island r is run serially with its own `RngSource` (`cpp/v3_core.cpp:443-446`): `
 `E.vs = &rng`, so every `vs->u(·)` call of the island reads the next value of stream 9 + r; `RngSource::u` returns
 `g.uniform()` and ignores its label (`cpp/v3_engine.h:20-22`). The island is `run_island` → `run_island_s` with a fixed
 grid (`cpp/v3_engine.h:269-273`; `sch.adaptive` false, T = grid size − 1, `cpp/v3_engine.h:280`), executing:
-1. N_e initial draws: `draw_start` = `draw_pi0` (`init_states` = nullptr; `cpp/v3_engine.h:287-292`, `cpp/v3_engine.h:108`), each followed by `eval`;
+1. N_e initial draws: `draw_start` = `draw_pi0` (`init_states` = nullptr; `cpp/v3_engine.h:286-292`, `cpp/v3_engine.h:108`), each followed by `eval`;
 2. for t = 1..T (`cpp/v3_engine.h:303-308`): weights lw_i = Δ_t d(S_i), increment, log Ẑ update (`cpp/v3_engine.h:316-322`),
    `resample(lw)` (`cpp/v3_engine.h:324`), copy, one `population_round` at φ_t (`cpp/v3_engine.h:331`), then the guard
    check (`cpp/v3_engine.h:335`), whose Boolean is FALSE in the potential run (T1);
 3. L rounds at φ = 1 (`cpp/v3_engine.h:343-347`); `rb_acc` reset (`cpp/v3_engine.h:350`); Hm = 4 measured rounds at
-   φ = 1 (`cpp/v3_engine.h:351-360`; Hm = `measured_rounds` = 4L, `v3_run.R:90`).
+   φ = 1 (`cpp/v3_engine.h:351-360`; Hm = `measured_rounds` = `4L`, the R integer literal 4, `v3_run.R:90`).
 A `population_round` runs `one_round` for i = 1..N_e in turn (`cpp/v3_engine.h:215-218`); `one_round` first draws the
 order (`draw_order`, `cpp/v3_engine.h:195-200, 203`), then applies the m labels in that order (`cpp/v3_engine.h:205-211`).
 
@@ -27,9 +27,12 @@ The uniform-reading sites of the island are exactly: `draw_pi0` (`cpp/v3_start.h
 `step_indep` (its `draw_start`, `cpp/v3_engine.h:184`, and `cpp/v3_engine.h:189`), `draw_order` (`cpp/v3_engine.h:199`) and `resample`
 (`cpp/v3_engine.h:250`); `eval`, `held`, the ledger and the cache read none (`cpp/v3_engine.h:89-105`), and the guard
 bodies draw no uniform (T1 GW-i). Each transition, accept decision and weight is computed from the current state, c (φ,
-N_e) and the data through `eval` (log m, lg0, d: `cpp/v3_engine.h:89-99`), whose score is exact whatever the cache history
-(T7 Step 0: a cache hit requires the same model; EX-A); the neighbour lists, B and `st` are fixed before the islands (T7
-KER-d). The clock reads (`cpp/v3_engine.h:284, 298, 304, 341, 348`) set only `seconds_*` and the guard argument. Engine
+N_e) and the data through `eval` (log m, lg0, d: `cpp/v3_engine.h:89-99`), whose score is exact whatever the cache history:
+`ScoreCache::find` hits only when the hash and the full model agree (`cpp/v3_score.h:271-281`), `insert` stores the
+scorer's value (`cpp/v3_score.h:282-293`), a capacity clear (`cpp/v3_score.h:284`) only causes later misses, and the scorer
+is a deterministic function of S under EX-A; the neighbour lists, B and `st` are fixed before the islands (T7
+KER-d). The clock reads (`cpp/v3_engine.h:284, 298, 304, 335, 336, 341, 348, 361`) set only `seconds_*` and the guard
+argument. Engine
 members shared across steps and islands (one `Engine`, `cpp/v3_core.cpp:410`) carry no information into a transition:
 `tmpQ` is written before it is read in each step (`step_gibbs` reads it only when `include != in`, which needs the branch
 `in || add_ok` that wrote it, `cpp/v3_engine.h:118-131`; the swaps and `step_indep` write it first, `cpp/v3_engine.h:152, 172, 185`);
@@ -68,8 +71,10 @@ grid-dependent weights Δ_t d(S). Under EX-A these are exact real functions, so 
 𝓔 ⊗ 𝓤-measurable on the countable measurable partition {𝒞} ∪ {A_s^c}. Its values (finitely many reals, finite
 sequences of subsets of [p] and permutations of [m]) lie in a countable disjoint union of Euclidean spaces times finite
 sets, a Polish space. The coordinates `W3-SAMP:MR` Step 2 uses are coordinates of Φ (stage-t populations, post-terminal
-populations) or a finite case split over the order (Y^i_{q,ℓ} = path of particle i in round L + q at position
-σ_i⁻¹(ℓ) − 1); the D_r(c) draws are coordinates of Φ̃. This is `W1-N1:B` (B-d)
+populations) or a finite case split over the order (Y^i_{q,ℓ} = path of particle i in post-terminal round L + q, the
+(T + L + q)-th `population_round` of the island, at position σ_i⁻¹(ℓ) − 1); the D_r(c) draws are coordinates of Φ̃; the
+partial evidence Ẑ_t = Z₀∏_{s≤t}(1/N_e)Σ_i e^{Δ_s d(S_i^{(s−1)})} (`cpp/v3_engine.h:299, 316-322`) is a Borel function of
+grid(c) and the populations after the stage-(s − 1) rounds (coordinates of Φ), and W_r = Ẑ_r/Z with Z a data constant. This is `W1-N1:B` (B-d)
 (`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:115-122`) at the pin. ∎
 
 ## Line-check verdict on the `W1-N1:B` steps

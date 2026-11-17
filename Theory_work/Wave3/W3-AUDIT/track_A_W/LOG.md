@@ -8,3 +8,4 @@ Times from `date` (CST). Write scope: `Theory_work/Wave3/W3-AUDIT/track_A_W/` (o
 - 2026-11-17 12:27 `git pull --rebase` (803dc983); main 4d65550a read. Items: W1_ISL ((B-0), (B-b) control
   flow, (B-d) at the pin) and W2_FRZ (T12 freezing lemma, SI/A₀/O_r at the pin, MR/F/D freezing steps, evidence bounds).
   STATEMENT/PROOF v1; citecheck 0 bad (W1 63, W2 29). Blind line check WLC1 (Opus, fresh) launched.
+- 2026-11-17 12:36 WLC1 returned: W1, W2 VERIFIED WITH AMENDMENTS, no C (3 S, 1 F, 9 E); all accepted → v1.1; citecheck 0 bad (73/37). CHECKPOINT_1 written; Sol read WSL1 ready, held for GO.
