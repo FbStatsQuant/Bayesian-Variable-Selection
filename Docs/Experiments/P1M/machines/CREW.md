@@ -143,8 +143,8 @@ Machines (daily check <date> <time>):
 - **Cleanliness sweep:** add BNP's watchdog alert file (path to follow from HQ) to the Owls sweep in the daily report;
   report any hits to HQ.
 - **BNP watchdog (HQ, 11-16):** alert file `/home/fb31/.config/bnp-eng/guard/ALERT`, with `guard.log` beside it (one line
-  per action). Installed ~10:13 CT 11-16. READ ONLY, never edit (an HQ-named exception to the folder scope). The daily
-  report shows new lines since the last report. Last seen guard.log line count: 0 (before install).
+  per action). **NOT installed** (HQ correction 11-17: BNP cancelled the 11-16 ~10:13 CT install, board pause; not re-scheduled). READ ONLY, never edit (an HQ-named exception to the folder scope). The daily
+  report shows new lines since the last report. Last seen guard.log line count: 0 (before install). Daily check 2026-11-17 08:40 CST: 0 (ALERT and guard.log still absent; not installed).
 - **Update (HQ, 11-16):** the 10:05–10:30 CT crontab freeze today is CANCELLED. BNP postponed the guard install (new slot
   TBA); the ALERT file does not exist yet, so the daily sweep reports "not installed" until it appears.
 - **VS Code ripgrep paths** (only if the sweep ever matches on rg): both
