@@ -1,0 +1,258 @@
+// setup_run.cpp -- the `setup` command body: stages, timings, statuses, and setup.bin (INTERFACES v0.1 §5.1, kind 3).
+#include <chrono>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <sstream>
+#include "v4/setup.h"
+#include "v4/format.h"
+#include "v4/prep.h"
+#include "v4/provenance.h"
+#include "v4/threads.h"
+
+namespace v4::setup {
+
+double peak_rss_mb() {
+  FILE* f = std::fopen("/proc/self/status", "r");
+  if (!f) return -1;
+  char line[256]; double kb = -1;
+  while (std::fgets(line, sizeof line, f)) if (std::strncmp(line, "VmHWM:", 6) == 0) { kb = std::atof(line + 6); break; }
+  std::fclose(f);
+  return kb / 1024.0;
+}
+
+// core/v3_preprocess.R:22: B = min(isqrt(n), isqrt(p), 16)
+int default_B(int n, int p) {
+  auto isqrt = [](long x) { long r = (long)std::floor(std::sqrt((double)x)); while ((r + 1) * (r + 1) <= x) ++r; while (r * r > x) --r; return r; };
+  return (int)std::min<long>(std::min(isqrt(n), isqrt(p)), 16);
+}
+
+SetupResult run_setup(const Data& D, const SetupOptions& o) {
+  SetupResult R;
+  auto t0 = std::chrono::steady_clock::now();
+  auto lap = [&](const char* name) {
+    auto t1 = std::chrono::steady_clock::now();
+    R.timings.push_back({name, std::chrono::duration<double>(t1 - t0).count(), peak_rss_mb()});
+    t0 = t1;
+  };
+  try {
+    R.B = o.B > 0 ? o.B : default_B(D.n, D.p);
+    // PR13 review m7: the exact partition needs a dense 8 p^2 distance matrix; refuse up front above the limit
+    const double lim_gb = o.mem_budget_gb > 0 ? o.mem_budget_gb : 32.0;
+    if (o.part.mode == PartMode::Exact && 8.0 * (double)D.p * (double)D.p / 1e9 > lim_gb) {
+      char b[200]; std::snprintf(b, sizeof b, "admission: exact partition needs 8 p^2 = %.1f GB > limit %.1f GB (use partition=truncated)",
+                                 8.0 * (double)D.p * (double)D.p / 1e9, lim_gb);
+      throw Error(Status::resource_limit, b);
+    }
+    CorrOptions co; co.B = R.B; co.threads = o.threads; co.tau = o.part.tau; co.keep_edges = true; co.max_edges = o.max_edges;
+    R.corr = correlation_pass(D, co);
+    lap("correlation");
+    PartitionOptions po = o.part; po.B = R.B; po.threads = o.threads;
+    R.part = make_partition(D, R.corr, po);
+    lap(po.mode == PartMode::Exact ? "partition_exact" : "partition_truncated");
+    // admission rule (Sol review F1 item 2): deterministic accounted peak (a function of the data and options only)
+    R.acc = account(D, R.B, R.part, (int64_t)R.corr.edges.size(), (int64_t)R.corr.nb.idx.size(), o.threads, po.mode);
+    if (o.mem_budget_gb > 0 && (double)R.acc.peak / 1e9 > o.mem_budget_gb) {
+      char b[240]; std::snprintf(b, sizeof b, "admission: accounted setup peak %.2f GB > mem_budget %.2f GB (C = %lld codes, J = %d, B_blocks = %d)",
+                                 (double)R.acc.peak / 1e9, o.mem_budget_gb, (long long)R.acc.C, R.part.J, R.part.B);
+      throw Error(Status::resource_limit, b);
+    }
+    R.cut = cut_groups(D.p, R.corr.edges, R.corr.rn, R.part);
+    std::vector<Edge>().swap(R.corr.edges);  // edges are not needed after the partition and the cut-group record
+    lap("cut_groups");
+    R.tab = build_tables(D, R.part, o.threads, o.table_stores ? &R.stores : nullptr, &R.tstats);
+    lap("tables");
+    build_start(D, R.part, R.tab);
+    lap("start_law");
+    R.mode = start_mode(D, R.part, R.tab, o.mode_cap, o.tie_dp);
+    lap("start_mode");
+  } catch (const Error& e) {
+    R.status = e.st; R.reason = e.what();
+  } catch (const std::bad_alloc&) {
+    R.status = Status::resource_limit; R.reason = "out of memory";
+  } catch (const std::exception& e) {
+    R.status = Status::internal_error; R.reason = e.what();
+  }
+  return R;
+}
+
+namespace {
+void put_store(fmt::Writer& W, const std::string& nm, const Store& s) {
+  W.add("tstore_" + nm + "_v", s.v); W.add("tstore_" + nm + "_off", s.off); W.add("tstore_" + nm + "_len", s.len);
+  W.add("tstore_" + nm + "_hash", s.hash); W.add("tstore_" + nm + "_pool", s.pool);
+}
+// Reads a stored table top store back through the public Store API (offer + compact: the stored content is already
+// the sorted top-c, so it is reproduced exactly).
+void get_store(const fmt::Reader& Rd, const std::string& nm, Store& s, uint64_t cap, Order ord) {
+  s.init(cap, ord);
+  auto v = Rd.vec<double>("tstore_" + nm + "_v"); auto off = Rd.vec<uint64_t>("tstore_" + nm + "_off");
+  auto len = Rd.vec<uint16_t>("tstore_" + nm + "_len"); auto h = Rd.vec<uint64_t>("tstore_" + nm + "_hash");
+  auto pool = Rd.vec<int32_t>("tstore_" + nm + "_pool");
+  for (size_t i = 0; i < v.size(); ++i) s.offer(v[i], ModelView(pool.data() + off[i], len[i]), h[i]);
+  s.compact();
+}
+const char* modename(PartMode m) { return m == PartMode::Exact ? "exact" : "truncated"; }
+}  // namespace
+
+std::string write_setup_bin(const std::string& path, const Data& D, const SetupResult& r, const SetupOptions& o, const std::string& data_hash) {
+  if (r.status != Status::completed) throw Error(Status::internal_error, "write_setup_bin: setup did not complete (GUARD-W)");
+  fmt::Writer W(fmt::K_SETUP, o.file_mode);
+  W.add("nb_ptr", r.corr.nb.ptr); W.add("nb_idx", r.corr.nb.idx);
+  W.add("dup_ptr", r.corr.dup.ptr); W.add("dup_idx", r.corr.dup.idx);
+  W.add("cut_ptr", r.cut.ptr); W.add("cut_idx", r.cut.idx);
+  W.add("blk_ptr", r.part.bptr); W.add("blk_members", r.part.members);
+  W.add("blk", r.part.blk); W.add("pos", r.part.pos);
+  const Tables& T = r.tab;
+  W.add("code_ptr", T.code_ptr); W.add("logr", T.logr);
+  W.add("logprof_ptr", T.logprof_ptr); W.add("logprof", T.logprof);
+  W.add("logF", T.logF, (uint64_t)T.J + 1, (uint64_t)T.K + 1);
+  W.add("size_logmass", T.size_logmass); W.add("size_cum", T.size_cum);
+  W.add("cond_ptr", T.cond_ptr); W.add("cond_cum", T.cond_cum);
+  // D-18: no cbs_ptr / codes_by_size / sub_ptr / sub_cum (recomputed by draw_pi0 for the blocks a draw selects)
+  W.add("mode_S", r.mode.S);
+  put_store(W, "top", r.stores.top); put_store(W, "lead0", r.stores.lead0); put_store(W, "lead1", r.stores.lead1);
+  // WP2-added sections (INTERFACES §5.1 allows additions): binary scalars, so the exact bits survive without JSON
+  std::vector<double> sc = {T.logZbar0, r.mode.lg0, r.corr.rn, r.corr.tau, r.stores.hpmF};
+  std::vector<int64_t> isc = {D.n, D.p, D.K, r.B, T.J, r.mode.ties, r.mode.truncated, r.mode.tie_dp_used,
+                              r.stores.hpm_block, (int64_t)r.stores.hpm_code, (int64_t)o.part.mode, (int64_t)o.part.pack, o.part.strict};
+  W.add("scalars_f64", sc); W.add("scalars_i64", isc);
+  Json m = Json::object();
+  m["kind"] = "setup"; m["index_base"] = "internal0"; m["mode"] = fmt::mode_name(o.file_mode);
+  m["n"] = D.n; m["p"] = D.p; m["K"] = D.K; m["B"] = r.B; m["B_blocks"] = r.part.B; m["bv_cap"] = o.part.bv_cap; m["J"] = T.J;
+  m["accounted_peak_bytes"] = (int64_t)r.acc.peak; m["mem_budget_gb"] = o.mem_budget_gb; m["C"] = r.acc.C;
+  m["partition"] = modename(o.part.mode); m["pack"] = o.part.pack == PackOrder::MinIndex ? "min_index" : "leaf_order";
+  m["strict"] = o.part.strict; m["r_n"] = r.corr.rn; m["tau"] = r.corr.tau; m["logZbar0"] = T.logZbar0;
+  Json mo = Json::object(); mo["lg0"] = r.mode.lg0; mo["ties"] = (int64_t)r.mode.ties; mo["truncated"] = r.mode.truncated;
+  mo["tie_dp_used"] = r.mode.tie_dp_used; mo["size"] = (int64_t)r.mode.S.size(); m["start_mode"] = mo;
+  m["cut_group"] = r.cut.rows() > 0; m["cut_group_count"] = r.cut.rows(); m["dup_components"] = r.corr.dup.rows();
+  m["table_codes"] = T.code_ptr.back();
+  auto hx = [](uint64_t x) { return hex64(x); };  // u64 -> hex string (§5.1)
+  Json ts = Json::object(); ts["scored"] = hx(r.tstats.scored); ts["prefix"] = hx(r.tstats.prefix_scored); ts["fallback"] = hx(r.tstats.fallback_scored);
+  Json rt = Json::array(); for (int q = 0; q < 3; ++q) rt.push(Json(hx(r.tstats.routes[q])));
+  ts["routes"] = rt; m["table_stats"] = ts;
+  Json in = Json::object(); in["data.bin"] = data_hash; m["inputs"] = in;
+  Json tm = Json::array();
+  for (auto& t : r.timings) { Json e = Json::object(); e["stage"] = t.name; e["seconds"] = t.seconds; e["peak_rss_mb"] = t.peak_rss_mb; tm.push(e); }
+  m["timings"] = tm;
+  m["binary"] = binary_block();   // INTERFACES §5.3
+  W.add_json("meta", m);
+  return W.write(path);
+}
+
+SetupResult read_setup_bin(const std::string& path, std::string* content_hash) {
+  fmt::Reader Rd(path);
+  if (Rd.kind() != fmt::K_SETUP) throw Error(Status::invalid_input, path + " is not a setup file");
+  SetupResult r;
+  r.corr.nb.ptr = Rd.vec<int64_t>("nb_ptr"); r.corr.nb.idx = Rd.vec<int32_t>("nb_idx");
+  r.corr.dup.ptr = Rd.vec<int64_t>("dup_ptr"); r.corr.dup.idx = Rd.vec<int32_t>("dup_idx");
+  r.cut.ptr = Rd.vec<int64_t>("cut_ptr"); r.cut.idx = Rd.vec<int32_t>("cut_idx");
+  r.part.bptr = Rd.vec<int64_t>("blk_ptr"); r.part.members = Rd.vec<int32_t>("blk_members");
+  r.part.blk = Rd.vec<int32_t>("blk"); r.part.pos = Rd.vec<int32_t>("pos");
+  auto sc = Rd.vec<double>("scalars_f64"); auto isc = Rd.vec<int64_t>("scalars_i64");
+  if (sc.size() < 5 || isc.size() < 13) throw Error(Status::invalid_input, "setup.bin: scalars missing");
+  Tables& T = r.tab;
+  T.J = (int32_t)isc[4]; T.K = (int32_t)isc[2]; r.B = (int)isc[3];
+  r.part.J = T.J; r.part.B = r.B;
+  T.code_ptr = Rd.vec<int64_t>("code_ptr"); T.logr = Rd.vec<double>("logr");
+  T.logprof_ptr = Rd.vec<int64_t>("logprof_ptr"); T.logprof = Rd.vec<double>("logprof");
+  T.logF = Rd.vec<double>("logF"); T.size_logmass = Rd.vec<double>("size_logmass"); T.size_cum = Rd.vec<double>("size_cum");
+  T.cond_ptr = Rd.vec<int64_t>("cond_ptr"); T.cond_cum = Rd.vec<double>("cond_cum");
+  T.logZbar0 = sc[0];
+  r.mode.S = Rd.vec<int32_t>("mode_S"); r.mode.lg0 = sc[1]; r.mode.ties = (long)isc[5]; r.mode.truncated = isc[6]; r.mode.tie_dp_used = isc[7];
+  r.corr.rn = sc[2]; r.corr.tau = sc[3];
+  const uint64_t p = (uint64_t)isc[1];
+  get_store(Rd, "top", r.stores.top, 40 * p + 1, Order::HPM);
+  get_store(Rd, "lead0", r.stores.lead0, 20 * p, Order::LEX);
+  get_store(Rd, "lead1", r.stores.lead1, 20 * p, Order::LEX);
+  r.stores.hpmF = sc[4]; r.stores.hpm_block = (int32_t)isc[8]; r.stores.hpm_code = (uint32_t)isc[9];
+  if (r.stores.top.size()) { ModelView h = r.stores.top.model(0); r.stores.hpmS.assign(h.begin(), h.end()); }
+  if (content_hash) *content_hash = Rd.content_hash();
+  return r;
+}
+
+// The `setup` command (include/v4/stubs.h): data.bin -> setup.bin + record.
+Json run(const Json& args) {
+  // the libm guard runs in main before every command (INTERFACES §6)
+  // Inputs (INTERFACES §1, §5.3): explicit --data, or the manifest's input named data.bin (main has verified its content
+  // hash). With a manifest, the manifest is the authority: an explicit --data that differs from it is refused.
+  const Json man = args.contains("manifest") && args.at("manifest").type() == Json::OBJ ? args.at("manifest") : Json::object();
+  std::string dpath;
+  if (man.contains("inputs")) {
+    for (auto& [k, v] : man.at("inputs").items()) {
+      const size_t s = k.find_last_of('/');
+      if ((s == std::string::npos ? k : k.substr(s + 1)) != "data.bin") continue;
+      if (!dpath.empty()) throw Error(Status::invalid_input, "setup: the manifest names data.bin twice");
+      dpath = k;
+    }
+  }
+  if (args.contains("data")) {
+    if (args.at("data").type() != Json::STR) throw Error(Status::invalid_input, "setup: --data must be a path");
+    const std::string a = args.at("data").str();
+    if (!dpath.empty() && a != dpath) throw Error(Status::invalid_input, "setup: --data differs from the manifest's data.bin");
+    dpath = a;
+  }
+  if (dpath.empty()) throw Error(Status::invalid_input, "setup: no data.bin (give --data or a manifest input data.bin)");
+  if (!args.contains("out") || args.at("out").type() != Json::STR) throw Error(Status::invalid_input, "setup: --out is required");
+  std::string data_hash;
+  Data D = prep::load_data(dpath, &data_hash);
+  for (const char* k : {"n", "p"})   // the manifest's params, when present, must describe this data
+    if (man.contains("params") && man.at("params").contains(k) && man.at("params").at(k).type() == Json::NUM &&
+        (int64_t)man.at("params").at(k).num() != (k[0] == 'n' ? (int64_t)D.n : (int64_t)D.p))
+      throw Error(Status::invalid_input, std::string("setup: the manifest's ") + k + " differs from data.bin");
+  SetupOptions o;
+  o.threads = args.contains("threads") ? (int)args.at("threads").i64() : threads_available();
+  if (args.contains("B")) o.B = (int)args.at("B").i64();
+  // the file mode: --file_mode, else the manifest's mode (compat | law | V), else law. A compat run uses the exact
+  // partition (v3 rule) unless --partition says otherwise (then it is refused below).
+  std::string fm = args.contains("file_mode") ? args.at("file_mode").str() : "";
+  if (fm.empty() && man.contains("mode")) {
+    if (man.at("mode").type() != Json::STR) throw Error(Status::invalid_input, "setup: the manifest's mode must be a string");
+    fm = man.at("mode").str();
+  }
+  if (fm == "compat" && !args.contains("partition")) { o.part.mode = PartMode::Exact; o.part.pack = PackOrder::LeafOrder; }
+  if (args.contains("partition")) {
+    const std::string& m = args.at("partition").str();
+    if (m == "exact") { o.part.mode = PartMode::Exact; o.part.pack = PackOrder::LeafOrder; }
+    else if (m != "truncated") throw Error(Status::invalid_input, "setup: partition must be truncated or exact");
+  }
+  if (args.contains("tau")) o.part.tau = args.at("tau").num();
+  if (args.contains("strict")) o.part.strict = args.at("strict").i64() != 0;
+  if (args.contains("mode_cap")) o.mode_cap = (long)args.at("mode_cap").i64();
+  if (args.contains("tie_dp")) o.tie_dp = args.at("tie_dp").i64() != 0;
+  if (args.contains("bv_cap")) o.part.bv_cap = (int)args.at("bv_cap").i64();
+  if (args.contains("mem_budget")) o.mem_budget_gb = args.at("mem_budget").num();
+  if (args.contains("max_edges")) o.max_edges = args.at("max_edges").i64();
+  o.file_mode = fm.empty() ? (uint32_t)fmt::M_LAW : fmt::mode_from_name(fm);
+  if (o.part.mode == PartMode::Truncated && o.file_mode == fmt::M_COMPAT)
+    throw Error(Status::invalid_input, "setup: compat mode uses the exact partition (v3 rule)");
+  Json rec = Json::object();
+  rec["partition"] = o.part.mode == PartMode::Exact ? "exact" : "truncated"; rec["file_mode"] = fmt::mode_name(o.file_mode);
+  rec["binary"] = binary_block();
+  if (args.contains("count_only") && args.at("count_only").i64() != 0) {   // Sol review F1 item 1: no tables allocated
+    const int B = o.B > 0 ? o.B : default_B(D.n, D.p);
+    CountResult c = count_only(D, o.part, B, o.threads);
+    rec["status"] = "completed"; rec["count_only"] = true;
+    rec["accounting"] = c.acc.to_json();
+    rec["edges_by"] = c.filter_used ? "float32 AVX-512 filter + exact double re-check" : "exact correlation pass";
+    rec["filter_candidates"] = (int64_t)c.candidates; rec["r_n"] = c.corr.rn; rec["tau"] = c.corr.tau;
+    rec["dup_components"] = c.corr.dup.rows();
+    Json sec = Json::object(); sec["edges"] = c.seconds_edges; sec["partition"] = c.seconds_partition; rec["seconds"] = sec;
+    rec["peak_rss_mb"] = peak_rss_mb();
+    rec["admission"] = (o.mem_budget_gb > 0) ? Json((double)c.acc.peak / 1e9 <= o.mem_budget_gb ? "admit" : "refuse") : Json("no budget");
+    return rec;
+  }
+  SetupResult r = run_setup(D, o);
+  rec["status"] = status_name(r.status);
+  if (r.status != Status::completed) { rec["reason"] = r.reason; return rec; }   // GUARD-W: no setup.bin
+  std::string out = args.at("out").str();
+  std::string h = write_setup_bin(out, D, r, o, data_hash);
+  Json outs = Json::object(); outs[out] = h; rec["outputs"] = outs;
+  Json in = Json::object(); in["data.bin"] = data_hash; rec["inputs"] = in;
+  rec["p"] = D.p; rec["n"] = D.n; rec["B"] = r.B; rec["J"] = r.part.J; rec["mode_size"] = (int64_t)r.mode.S.size();
+  Json tm = Json::object(); for (auto& t : r.timings) tm[t.name] = t.seconds;
+  rec["seconds"] = tm; rec["peak_rss_mb"] = peak_rss_mb();
+  rec["B_blocks"] = r.part.B; rec["C"] = r.acc.C; rec["accounted_peak_bytes"] = (int64_t)r.acc.peak;
+  return rec;
+}
+
+}  // namespace v4::setup

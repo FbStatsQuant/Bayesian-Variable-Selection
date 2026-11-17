@@ -29,6 +29,9 @@ test -x "$build/v4_tests" || { echo "build failed (see $build)"; exit 1; }
 if [[ "$fixtures" == 1 ]]; then
   nice -n 19 Rscript "$here/tools/make_fixtures.R" "$here" "$build/smcbvs4" "$TMPDIR/v4_fixwork"
 fi
+if [[ "$fixtures" == 1 ]]; then   # WP2: core/'s Rcpp dup components, cut group and cpp_setup -> tests/fixtures/setup_wp2
+  nice -n 19 Rscript "$here/tools/golden_setup_ref.R" "$here/../core" "$here/tests/fixtures/setup_wp2" "$TMPDIR/v4_fixwork_wp2"
+fi
 args=("${allow[@]}"); [[ "$mode" == full ]] && args+=(--full)
 rc=0
 nice -n 19 "$build/v4_tests" "${args[@]}" || rc=1
