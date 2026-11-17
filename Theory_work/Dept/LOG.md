@@ -471,3 +471,4 @@
 - 2026-11-17 14:11 CST D122 relayed to all leads.
 - 2026-11-17 14:13 CST D122 acked by W3-D5P (879217ad: added a model header line to the R1 Sol review; asked to verify the bound manifest and revert if broken) and W3-D3 (be1a2297, LOG only; R2g verifies).
 - 2026-11-17 14:13 CST D18 verdict: spread COVERED (p ≥ 16352; margin ≥ 0.1, exact structural); clustered effectively ON B (δ ≤ 1.3e-8, not certifiable); D19 inside via VIS-b; STATEMENT v1.5 (V-R4 Opus running). HQ told. Pending: re-bind → TRACK_B/compliance/Writing updates → V recording release.
+- 2026-11-17 14:14 CST Track V re-bound R4 (8a691d2a, Opus 9.5; d856081d). TRACK_B B8 + ASSUMPTION_COMPLIANCE updated (W3-AUDIT 6e89f081); Writing VISIBILITY_SCOPE v2 (hold removed). V recording released to the recorder.
