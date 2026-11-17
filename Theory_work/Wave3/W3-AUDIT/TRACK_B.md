@@ -1,4 +1,4 @@
-# W3-AUDIT — track B: are the design and data assumptions reasonable? (v1.3, after reading the supplement, 2026-11-16)
+# W3-AUDIT — track B: are the design and data assumptions reasonable? (v1.4, conditional-comparison format, 2026-11-16)
 
 Author: audit Fable. Each dossier: **verdict** against Song and Liang (2015) → **strongest evidence** → **holds / fails**
 → **our designs** → **candidate corollary** in primitive terms (Σ, β, σ², n, p). Nothing here is a registered result.
@@ -11,29 +11,31 @@ re-pinned to the READER commit of the CP3 freeze.
 
 ## Answer (for the owner's question)
 
-1. **The posterior theorems (core 1: the true model; core 2: the true distribution) hold on all our designs** — the
-   2,400-fit study, P6 with its strong factors, and the 1M plan. **Their assumptions are of the same kinds as
-   Song–Liang's, and are neither uniformly stronger nor uniformly weaker.** The same: the model (B1), exact sparsity
-   (B3) and nonzero coefficients that do not shrink (B4; explicit here, implicit in their proofs).
-   *Against their selection theorem (Theorem S, supp p. 13)* we ask more in two places — a narrower range of p (n^A
-   against n^{κ log n}, B2) and a fixed floor on bounded sets (B5) — and less in four: no upper eigenvalue bound, only a
-   1/n-level floor on O(log n) columns and nothing on larger sets (B5, B6), no tuning of the prior, and signals as
-   small as √(log n/n) in the fixed-design theorem.
-   *Against their Hellinger theorems (1–2)* we ask more: the range of p (B2), a c/n collinearity floor (B6) and the row
-   law (B7). **None of these differences excludes any of our designs**, and our conclusions are stronger (posterior
-   mass on the true model with a rate, which implies their mode statement (24); a radius of order √(log n/n)).
-2. **The reported-model theorem (core 3)** adds two method-specific conditions with Song–Liang counterparts: visibility
-   (stronger than their Condition 5, B8) and a leakage set (their remark (a), p. 958, B9). Inside: S1–S4, S6, IND, AR,
-   BLK. Outside: pervasive factors at p ≫ √n (S5, P6, FAC).
-3. **The printed-estimates theorem (row 3.6)** is correct as stated and has a narrow reach: its "no leakage" condition
-   (B11) holds on S1 and IND only. Outside it, Theorem 6 (reported model) and row 3.5 (unbiased evidence) still hold.
+**Format rule (HQ, v1.4).** A comparison with Song–Liang is written as one conditional sentence that names the regime,
+with their page and equation. One-word labels are used only where they are true in every regime of both papers, and the
+text says so. No overall "stronger" or "weaker" is claimed.
 
-| Core theorem | Assumptions against Song–Liang | Our designs inside |
-|---|---|---|
-| 1 and 2 (posterior) | same: B1, B3, B4 (implicit in their proofs); against Theorem S: stronger in B2 and in the fixed floor on bounded sets, weaker elsewhere (B5, B6); against Thm 1–2: stronger in B2, B6, B7 | **all** |
-| 3 (reported model) | + B8 (stronger than Condition 5), B9 (comparable to remark (a)), B10 (floor: same kind as Condition 3; local regressions: no counterpart) | S1–S4, S6, IND, AR, BLK; not S5, P6, FAC |
-| 4 (printed estimates, row 3.6) | + B11 (no counterpart) | S1, IND only |
-| 5 (rate lower bound) | witnesses only | — |
+1. **Same kinds of assumptions.** Our theorems and Song–Liang's rest on the same kinds of conditions: a Gaussian linear
+   model, exact sparsity, a bound on the dimension, a law for the predictors, eigenvalue floors on small sets of
+   columns, and nonzero coefficients that are not too small.
+2. **On the designs we study, ours hold.** The assumptions of the two posterior theorems (core 1: the true model;
+   core 2: the true distribution) hold on every design of the 2,400-fit study, of P6 (strong factors included) and of
+   the 1M plan. The reported-model theorem (core 3) holds on S1–S4, S6, IND, AR, BLK and not on pervasive factors at
+   p ≫ √n (S5, P6, FAC). The printed-estimates theorem (row 3.6) is correct as stated and reaches S1 and IND only;
+   outside it, Theorem 6 (reported model) and row 3.5 (unbiased evidence) still hold.
+3. **Where the papers differ, the direction depends on the regime** — chiefly on their model-size cap r̄_n, on whether
+   predictors are centred, on how their β* is read, and on which of their theorems is the comparator. The summary table
+   gives the comparison assumption by assumption.
+4. **Conclusions are compared per theorem** (§S), not globally: against their Theorem 3 ours add specificity and exact
+   selection at a polynomial rate while theirs gives sensitivity with an exponentially small error; against their
+   Theorem S the two statements concern different posteriors; for the distribution theorem the distance is the same.
+
+| Core theorem | Our designs inside |
+|---|---|
+| 1 and 2 (posterior) | **all** |
+| 3 (reported model) | S1–S4, S6, IND, AR, BLK; not S5, P6, FAC |
+| 4 (printed estimates, row 3.6) | S1, IND only |
+| 5 (rate lower bound) | — (witness designs) |
 
 **Song–Liang source.** Every "SL" reference is to the paper itself, read first-hand: Q. Song and F. Liang (2015),
 J. R. Statist. Soc. B 77(5), 947–972, local file `/home/fb31/SMC_Theory_Department/refs/Song_Liang_2015.pdf` (sha256
@@ -69,17 +71,19 @@ leakage set of size n^b). The explicit constants in the proofs are conservative 
 ---
 
 ## B1. Gaussian linear model with independent Gaussian errors (all theorems)
-**Verdict: same as Song–Liang** (their model (1) and density (2), p. 950).
+**Comparison: the same, in every regime** (a one-word label is kept because it holds uniformly). Their model (1) and
+density (2), p. 950; ours adds an intercept.
 **Evidence.** SL (2): f*(y, x) = φ(y; xᵀβ*, σ*) ν_x(dx). Ours: the same model with an intercept; Thm 9 lets σ* depend on n.
 **Holds / fails.** Fails for heavy-tailed or heteroscedastic errors; no theorem of ours or of SL covers them.
 **Designs.** All inside (Gaussian noise generated). **Corollary.** None needed.
 
 ## B2. Dimension p ≤ n^A (all theorems except Thm 3(a))
-**Verdict: stronger than Song–Liang on the upper range** (their Corollary 1, p. 954, allows P_n < exp(Cn^α), α ∈ (0, 1));
-**weaker on the lower range** (they assume P_n ≻ n^θ for some θ > 0, p. 950; we need no growth of p).
-*Against Theorem S (model selection; added in v1.3):* still stronger, by much less — their MAP consistency needs
-log(√n/r_n) ≻ √(log P_n) (supp p. 13, condition 2), hence log P_n ≺ (log n)²/4; Corollary S₁ (supp p. 16) states
-P_n < n^{κ log n}, κ ∈ (0, ¼). The range exp(Cn^α) belongs to their Hellinger theorem only.
+**Comparison (two ranges, two comparators).** *Upper range.* Their Hellinger results allow P_n < exp(Cn^α), α ∈ (0, 1)
+(Corollary 1, p. 954). Their selection result, Theorem S, needs log(√n/r_n) ≻ √(log P_n) (supp p. 13, condition 2),
+hence log P_n ≺ (log n)²/4; Corollary S₁ states P_n < n^{κ log n}, κ ∈ (0, ¼) (supp p. 16). Ours needs log p ≤ A log n.
+So ours admits fewer dimensions in both comparisons: far fewer than Corollary 1, slightly fewer than Theorem S.
+*Lower range.* They assume P_n ≻ n^θ (p. 950) and r_n ≺ P_n ((13), p. 952), so P_n → ∞; ours admits bounded p. Neither
+range contains the other.
 **Evidence.** The registry records it as a consequence of the prior and the proof technique, with exponential p "OPEN"
 (`assumptions.tsv` A:P-POLY). It enters through union bounds over models of O(log n) variables.
 **Holds / fails.** Holds for every polynomial regime, p ≫ n included. Fails only for log p of polynomial order in n.
@@ -87,8 +91,9 @@ P_n < n^{κ log n}, κ ∈ (0, ¼). The range exp(Cn^α) belongs to their Hellin
 **Corollary.** None; the constant A enters the other assumptions only through set sizes of order (A + 1)s₀ log n.
 
 ## B3. Exact sparsity with s₀ fixed (Thm 1, 2, 6, 10; Thm 9 with "at most s")
-**Verdict: same as Song–Liang** (their strict sparsity (4), p. 950, used by Theorems 2–3; their Theorem 1 alone allows
-the weaker (3)).
+**Comparison: the same as their strict sparsity (4), p. 950, which their Theorems 2, 3 and S use** (uniformly true for
+those theorems; label kept). Their Theorem 1 alone also allows (3), p. 950, under which the number of nonzero
+coefficients may grow; ours does not cover that case.
 **Evidence: it cannot be dropped.** Theorem 3(a) (`W3-PSHARP:B@1.0.0`, "PROVED-CHECKED; council R2, …"): on every design
 π(S₀ | y) ≤ (1 + (s₀ + 1)/(3√n))⁻¹, so π(S₀ | y) → 1 forces s₀ = o(√n), and the rate √(log n/n) forces s₀ = O(√log n).
 **Designs.** Inside as sequences with s₀ fixed. At the simulated sizes the same bound is informative [audit calc]:
@@ -98,16 +103,17 @@ posterior is a mixture over S₀ and its neighbours; that is its shape, not a fa
 
 ## B4. Signal size: bounded above, and fixed nonzero or beta-min at √(log n/n) below
 (Thm 1 (A3), (A6); Thm 2 (A2); Thm 6 / 10 (A2); Thm 9 (A5); none below in Thm 9.)
-**Verdict: stronger than what Song–Liang state** under strict sparsity (4), on both sides; comparable to their Theorem 1
-on the upper side only. Above: their (3) with |x_i| ≤ 1 (Theorem 1, p. 952) bounds the signal; under (4) alone their
-main text states no bound. Below: their Theorem 3 (p. 956) states **no** beta-min; a true predictor needs only to be
-"identifiable" (Condition 3, p. 955). **In substance the same as the setting their proofs use** (v1.3): the proof of
-their Theorem 3 gives d²(f*, f) ≥ min{1, β*_t²/(4σ*² + 4σ₂²)}·δ_n (supp p. 5), so "d(f*, f) ≥ ε_n" needs β*_t bounded away
-from zero; the proof of Theorem S uses the constant c = min_{i∈t}|β*_i| (supp p. 15). A coefficient of size 1/n
-satisfies (4) and their stated conditions, and violates ours — and their conclusions. Our fixed-design theorem goes
-below their implicit level, to √(log n/n). **Does it matter
-for our designs? No:** all have fixed nonzero coefficients.
-**Evidence.** Thm 2, 6, 10 assume only fixed nonzero coefficients, as SL's setting does. The explicit beta-min is used
+**Comparison (depends on how their β* is read).** Their theorems state no lower bound on the nonzero coefficients; their
+Theorem 1 bounds the coefficients above through (3) and (8) (pp. 950, 952). *(i) If β* is one fixed sequence* — the
+natural reading: every n-dependent quantity of theirs carries a subscript and β*, σ* carry none, and (3)–(4) are limits
+of partial sums (p. 950) — the nonzero coefficients are constants by their statement; then the fixed signals of our
+Theorems 2, 6, 10 ask the same, and Theorems 1 and 9, whose coefficients may vary with n, admit more. *(ii) If β* may
+vary with n*, their statements set no size condition, and their proof steps need rates: β*_t²δ_n ≥ 20σ*²ε_n² for Theorem
+3 (from d² ≥ min{δ_n, β*_t²δ_n/(20σ*²), 1 − √0.8}, supp p. 6) and n·l_n·c² ≻ r̄_n log P_n with c = min_{i∈t}|β*_i| for
+Theorem S (supp p. 15); then our fixed signals ask more than those steps use, and Theorem 1's beta-min,
+θ*²_min φ₀² n ≥ c₀σ*² log n, has the same form as their rates, at a fixed multiple of log n where theirs is a diverging
+multiple of r̄_n log P_n. **Does it matter for our designs? No:** all have fixed nonzero coefficients.
+**Evidence.** Thm 2, 6, 10 assume only fixed nonzero coefficients. The explicit beta-min is used
 only in the fixed-design Thm 1, at the usual order σ√(log n/n); Thm 1′ and Thm 9 have none. Without any lower bound
 specificity can fail (numerical counterexample, Thm 1 remark (ii)).
 **Designs.** All inside (fixed nonzero coefficients, far above the √(log n/n) scale as n grows). Track C: the beta-min
@@ -115,21 +121,25 @@ rate and the identifiability margin grow like n^0.7–1.15 in all 19 designs (P7
 **Corollary.** Thm 2 is already in primitive terms: b_lo ≤ |β*_j| ≤ b_hi on S₀.
 
 ## B5. Eigenvalue floor on small sets (Thm 1 (A4) / (A4′); Thm 2 (A3); Thm 6 / 10 floors; Thm 9B (A6a))
-**Verdict: stronger than Song–Liang's Condition 3 in level** (fixed against vanishing), for a stronger conclusion than
-their Theorem 3; **not ordered in set size.** Theorem 2's sets have O(log n) columns and theirs r̄_n + 1 with any
-r̄_n → ∞: ours are the larger when r̄_n ≺ log n (then, for Gaussian predictors, our floor implies their condition) and
-the smaller when r̄_n ≻ log n. Only the bounded-set floors (Thm 1 (A4), (A4′)) are on smaller sets throughout.
-**Does it matter for our designs? No:** all 13 have λ_min(Σ) ≥ 0.1, which gives both conditions.
+**Comparison (depends on r̄_n and on the theorem).** *Counterparts.* Condition 3 (p. 955), for their Theorem 3: on
+r̄_n + 1 columns that contain a true predictor, at a vanishing level δ_n ≻ ε_n². Conditions (22)–(23) (supp p. 13), for
+Theorem S: on models of |t| + r̄_n columns, n·l_n < ch′₁(X_ζᵀX_ζ) ≤ ch₁(X_ζᵀX_ζ) < n·l′_n with r̄_n log P_n ≺ n·l_n.
+Theorem S assumes only (12), 1 ≤ r_n ≤ r̄_n < P_n, so r̄_n may be bounded; Theorem 3 inherits r_n ≻ 1 from Theorem 2
+(p. 953). *(i) Where their sets are no larger than ours* (|t| + r̄_n ≤ 2(A + 1)s₀ + 2 against Theorem 1 (A4);
+r̄_n + 1 ≤ 5(A + 1)(s₀ + 1) log n against Theorem 2 (A3)): our fixed floor implies their condition (for (22)–(23), with
+standardised columns, take l_n = φ₀²/2 and l′_n = |ζ|; for Condition 3, with Gaussian predictors), and we also ask a
+floor on sets where they ask nothing. *(ii) Where their sets are larger than ours* (r̄_n ≻ log n): they constrain sets
+on which we ask nothing, at a vanishing level, and we ask a fixed level on our smaller sets; neither condition implies
+the other. *Upper half of (22):* no restriction for standardised columns (l′_n = |t| + r̄_n always works, and
+n·l_n ≻ l′_n then follows from (23)); it binds only for raw columns whose scale grows with n. In every regime both
+conditions follow from λ_min(Σ_n) ≥ c. **Does it matter for our designs? No:** all 13 have λ_min(Σ) ≥ 0.1.
 **Evidence.** SL Condition 3 (p. 955): E exp{−(x_k + Σ_{i ≤ r̄_n} b_i x_{j_i})²} ≤ 1 − δ_n with δ_n ≻ ε_n². Their own
 sufficient forms: for standard normal predictors var(x_k + Σ b_i x_{j_i}) ≻ ε_n², implied by ch′₁{var(x)} ≻ ε_n²
 (pp. 955–956); for bounded predictors ch′₁{var(x̃)} ≻ r̄_n ε_n² (p. 955). So SL ask a **vanishing** eigenvalue level on
 sets of r̄_n + 1 predictors, r̄_n → ∞ (Theorem 2 needs r_n ≻ 1 and (12) r_n ≤ r̄_n, pp. 952–953), anchored at each true
 predictor, and conclude **sure screening** only (p. 956: "the specificity is not controlled"). We ask a **fixed** level
 φ² on sets of O(log n) predictors (Thm 2; the master needs it fixed only on sets of (2A + 2)s₀ + 2 predictors) and
-conclude exact selection with a rate. *Against Theorem S (v1.3; details in §S):* **not ordered.** Its condition (22)–(23)
-(supp p. 13) is two-sided and on every model of |t| + r̄_n columns: n·l_n < ch′₁(X_ζᵀX_ζ) ≤ ch₁(X_ζᵀX_ζ) < n·l′_n with
-r̄_n log P_n ≺ n·l_n. Ours is stronger only in asking a fixed level on bounded sets; it is weaker in having no upper
-bound, a floor of order 1/n on O(log n) columns (B6) and nothing on larger sets. Both are implied by λ_min(Σ_n) ≥ c, the form a reader will check first. **No upper
+conclude exact selection with a rate. (Their Theorem S: §S.) Both are implied by λ_min(Σ_n) ≥ c, the form a reader will check first. **No upper
 eigenvalue bound is used**, so pervasive factors are allowed. Thm 1′ replaces the floor off S₀ by a residual-signal
 margin c σ*² log n; per observation this is c σ*² log n / n, below SL's level ε_n² ≻ r̄_n log P_n / n (their (10)) [audit
 reading; sample level against population level].
@@ -146,16 +156,17 @@ instance"; no new proof.
 
 ## B6. No near-exact collinearity among O(log n) columns
 (Thm 1 (A5): λ_min(X_SᵀX_S) ≥ g₀; Thm 9 (A4): λ_min(Corr(x_T)) ≥ c_ψ/n.)
-**Verdict, two comparators.** *Against their Theorems 1–2 (Hellinger; the comparator of Thm 9 (A4)):* **stronger** —
-they have no design eigenvalue condition. *Against their Theorem 3 (selection; the comparator of Thm 1 (A5)):*
-**weaker in level on sets that contain a true predictor, additional on sets of null columns only.** Condition 3
-(p. 955) is itself a no-near-collinearity requirement: since e^{−u} ≥ 1 − u it gives E(x_t + Σ b_i x_{j_i})² ≥ δ_n ≻ ε_n²
-for every r̄_n other predictors, a level far above 1/n (nε_n² → ∞, p. 953); ours is g₀/n. For null columns alone they
-ask nothing, because Theorem 3 does not control specificity. *Against Theorem S (v1.3):* **weaker** — its floor (22)
-covers every model of |t| + r̄_n columns, null-only ones included, at a level l_n ≻ r̄_n log P_n / n far above ours; so the
-"additional on null-only sets" holds against Theorem 3 only. The floor is very weak in absolute terms and of the same
-order as a ridge term SL put in their prior. Thm 1 (A5) is a condition on the sample Gram matrix; Thm 9 (A4) on the
-population correlation matrix. **Does it matter for our designs? No.**
+**Comparison (depends on the comparator and on r̄_n).** *(a) Their Theorems 1–2 (Hellinger)* have no eigenvalue condition
+on the design — (11) and (14), p. 952, are on the prior covariance V_ξ — so Thm 9 (A4) is a condition they do not have,
+in every regime. *(b) Condition 3 (their Theorem 3):* since e^{−u} ≥ 1 − u it gives E(x_t + Σ b_i x_{j_i})² ≥ δ_n ≻ ε_n²
+on r̄_n + 1 columns that contain a true predictor (p. 955), a level above our g₀/n; on sets of null columns only they
+ask nothing. *(c) Condition (22) (Theorem S)* asks the level l_n ≻ r̄_n log P_n / n on models of |t| + r̄_n columns,
+null-only ones included (supp p. 13). In (b) and (c): if their sets are at least as large as ours
+(r̄_n ≥ 3(A + 1)(s₀ + 1) log n), theirs gives ours on the sets they cover and ours asks less there; if their sets are
+smaller (r̄_n ≺ log n, allowed by (12) and by Corollary S₁ with k₁ < 1), ours constrains sets that theirs does not, and
+neither implies the other (log n null columns, one of them the normalised sum of the others, satisfy (22) with a
+constant l_n and violate (A5)). Thm 1 (A5) is on the sample Gram matrix, Thm 9 (A4) on the population correlation
+matrix. **Does it matter for our designs? No.**
 **Evidence.** SL's eigenvalue conditions (11) and (14) (p. 952) are on the prior covariance V_ξ. With their own "ridge"
 choice V_ξ⁻¹ = E(x_ξᵀx_ξ) + c_n I, c_n ∝ 1/n (p. 953), B̃_n ≤ c_n⁻¹ ∝ n and no design condition is left; the price
 is the rate, ε_n² ≻ r̄_n log P_n / n with r̄_n → ∞ (their (10)). Our floor c_ψ/n (correlation scale; g₀ unnormalised) is
@@ -169,15 +180,19 @@ after removing exact duplicates and exact linear dependences.
 λ_min ≥ c_ψ/n, at most s nonzero β_j with |β_j| sd(x_j) ≤ b̄σ, p ≤ n^A: display (i). This is the Example of Thm 9.
 
 ## B7. Law of the rows: i.i.d. Gaussian (Thm 2, 6, 10); sub-Gaussian on sparse directions (Thm 9 (A3))
-**Verdict: stronger than Song–Liang's Condition 1 on centred, unit-variance predictors (there Thm 9 (A3), and Gaussian
-rows, imply it); not ordered on raw predictors.** Our theorems allow any means m_n and have an intercept; Condition 1
-(p. 953) is a raw-moment bound with constants fixed in n, and SL verify it for a Gaussian process "with zero mean and
-var(x_i) = 1". Gaussian rows with Σ = I and mean n satisfy Theorems 2 and 6 and violate Condition 1; bounded,
-non-Gaussian predictors satisfy Condition 1 and not our row law. **Does it matter for our designs? No:** every generator
-draws centred Gaussian rows with unit variances, which satisfy Condition 1 itself. *Role, from the proofs (v1.3; label
-kept):* Condition 1 enters their proof once, in the prior-mass condition in the divergence d₁, for coefficient
-perturbations of order ε_n/r_n on one model of r_n columns that contains the true predictors (supp p. 4); ours enters
-the passage from sample to population covariances. The two conditions do different jobs.
+**Comparison (depends on centring and on which of their theorems).** *Counterparts:* |x_i| ≤ 1 (their Theorem 1, p. 952);
+Condition 1 (their Theorem 2, p. 953), a raw exponential-moment bound with constants fixed in n, which they verify for
+bounded predictors and for a Gaussian process "with zero mean and var(x_i) = 1"; Condition 2 (second moments, p. 954)
+for their limit form (16). *(i) On centred, unit-variance predictors* Gaussian rows and Thm 9 (A3) each imply
+Condition 1 (for every r; checked, AUDITCALC_check_opus.md §4); the converse fails (bounded, strongly dependent
+predictors). *(ii) On raw predictors* neither implies the other: we allow any means m_n (Gaussian rows with mean n
+satisfy Theorems 2 and 6 and violate Condition 1); bounded non-Gaussian predictors satisfy Condition 1 and not our
+row law. *(iii) Against |x_i| ≤ 1* neither implies the other: Gaussian predictors are unbounded; a bounded binary
+predictor with P(x = 1) → 0 violates (A3) for every fixed L. *Roles differ:* Condition 1 enters their proof in the
+prior-mass condition in the divergence d₁, for perturbations of order ε_n/r_n on one model that contains the true
+predictors (supp p. 4); ours enters the passage from sample to population covariances. Theorem 1 (fixed design) needs
+no row law. **Does it matter for our designs? No:** every generator draws centred Gaussian rows with unit variances,
+which satisfy Condition 1 itself.
 **Evidence.** SL Condition 1 (p. 953): E exp{(Σ_{i ≤ r} a_i x_{j_i}/r)²} ≤ exp(M) for r ≤ r̄_n, |a_i| ≤ δ; SL verify it
 for bounded predictors and for Gaussian ones with unit variance (p. 953). Our (A3) is E exp(λuᵀz) ≤ exp(L²λ²Var(uᵀz)/2)
 for q_n-sparse u. (A3) ⇒ Condition 1 for standardised predictors, **for every r** (no link between r̄_n and q_n is
@@ -192,8 +207,9 @@ as stated and inside SL's Condition 1; they are covered by the fixed-design Thm 
 **Corollary.** Candidate, not proved: Thm 2 for rows with independent sub-Gaussian coordinates after a linear map.
 
 ## B8. Visibility (Thm 6 (A3); Thm 10 (A4)): |Cov(W_j, Wᵀθ* | W_U)| ≥ a for every true j and every |U| ≤ 15
-**Verdict: stronger than Song–Liang's Condition 5** (p. 958: |cov(x_t, y)| > 0 for every true predictor), which is its
-case U = ∅ without the margin; same role (the cheap first stage must see every true predictor).
+**Comparison: ours implies their Condition 5, in every regime** (p. 958: |cov(x_t, y)| > 0 for every true predictor; it
+is our case U = ∅ without the margin). We ask more: a fixed margin, and up to 15 conditioning columns. Same role: the
+cheap first stage must see every true predictor.
 **Evidence.** U = ∅ in (A3) gives |Cov(W_j, y)| ≥ a [one line]. SL need Condition 5 so that their iterative subset
 screening "ensures that all true predictors that are contained in X_s will be selected" (p. 958). Ours conditions on up
 to 15 other columns because the method's blocks have at most 16 columns.
@@ -219,13 +235,14 @@ S5 (population 0.06). **Typical user:** the two real-data-like designs of track 
 **Corollary (primitive).** Block-diagonal Σ with λ_min ≥ c and at most one truth per block ⇒ (A3) with a = c·min|θ*_j|.
 
 ## B9. Polynomial leakage set with locality (Thm 6 (A4)): Q ⊇ S₀, |Q| ≤ n^b, b < ½
-**Verdict: comparable to Song–Liang, where the same requirement is an informal remark, not a condition.**
+**Comparison.** Song–Liang have no hypothesis of this kind. The nearest text is their informal remark (a), p. 958, which
+is not a condition of any of their theorems. Ours is a hypothesis with a rate (|Q| ≤ n^b). No ordering is claimed.
 **Evidence.** SL p. 958, remark (a): "all the predictors that are correlated with X_t will be selected … if all the
 predictors are linearly correlated, it is futile to apply this iterative procedure"; and "if there are p_n predictors
 correlated with the true predictors X_t, p_n ≺ P_n, then there are at most cp_n predictors to be selected". Ours states
 it as a hypothesis with a rate: nulls whose conditional covariance with a truth is above o(√(log n/n)) must lie in a set
-of at most n^b columns; correlations below that level do not count. SL's statements on their sampler's output are limits in the number of iterations at fixed data (supp pp. 12–13,
-16–17; §S), with no design condition of this kind
+of at most n^b columns; correlations below that level do not count. SL's statements on their sampler's output are limits in the number of iterations at fixed data (supp pp. 9–10,
+12–13, 16–17; §S), with no design condition of this kind
 (§3.2, p. 959, cites the SAMC algorithm), so there is no formal counterpart to compare levels with.
 **Holds / fails.** Holds: metric-local correlation and bounded blocks (`W3-RM2:Cont-R@1.0.4`, "PROVED-CHECKED, conditional
 on W2-APP:POST, SOP:TH05.0; …"); one truth with n^b weak proxies and one equicorrelated group of size n^b, b < 3/10
@@ -244,11 +261,12 @@ run that produces output reports S₀, on one data event of probability → 1. R
 block(l), N_l = block(l) ∩ Q, L_n = 0, ϖ_n = r_n = 0; then B8's corollary and Thm 6.
 
 ## B10. Floor on Q ∪ {l} and local regressions inside Q (Thm 6 (A5) second part, (A6))
-**Verdict.** *Floor on Q ∪ {l}:* **same kind as Song–Liang's Condition 3, stronger in level** (fixed against vanishing),
-on a different family of sets (ours: Q ∪ {l}, up to n^b + 1 columns, for every column l; theirs: every r̄_n + 1 columns
-containing a true predictor; their stage 2, p. 959 step (c), applies the same theory to the merged set, their analogue
-of Q). *Local regressions (A6):* **no Song–Liang counterpart** (they serve the search, which SL do not analyse). Both
-follow from B5's global floor plus a locality property of Σ. **Does it matter for our designs? No.**
+**Comparison.** *Floor on Q ∪ {l}:* an eigenvalue floor of the kind of Condition 3 (p. 955) and (22) (supp p. 13), at a
+fixed level, on the family Q ∪ {l} (up to n^b + 1 columns, for every column l). As in B5: where their sets are subsets
+of ours it implies their condition; otherwise the two constrain different sets. Their stage 2 applies their theory to
+the merged set (p. 959, step (c)), their analogue of Q. *Local regressions (A6):* Song–Liang have no condition of this
+kind (it serves the search, which they do not analyse). Both of ours follow from B5's global floor plus a locality
+property of Σ. **Does it matter for our designs? No.**
 **Evidence.** (A6) is a sufficient form of the lattice-width condition (W), and (W) is forced by this proof route (Thm 6
 why-line: if the width gap diverges the other way, the no-addition event fails w.p. → 1). The fixed-design master needs
 nothing of the kind when |Q ∖ S₀| ≤ (1 − δ) log n (`W3-RM2/STATEMENT.md:148`).
@@ -260,8 +278,8 @@ and the width proxy are inside for IND, AR(0.5), fixed blocks and S6, and unclea
 with spread truths. **Corollary.** Included in B9's.
 
 ## B11. No leakage (Thm 10 (A5) = Thm 5 (A5)): every null is conditionally uncorrelated with every truth, up to C n^{-1/2}
-**Verdict: no Song–Liang counterpart; narrow.** It is the one assumption of the core theorems that most of our own
-designs violate.
+**Comparison: Song–Liang have no condition of this kind** (uniformly: none of their theorems concerns a start law).
+Its reach is narrow: it is the one assumption of the core theorems that most of our own designs violate.
 **Evidence (counterexample to membership).** With U = ∅, (A5) asks |Cov(W_l, W_j)| ≤ C n^{-1/2} for every null l and truth
 j. In AR(1) with ρ = 0.5 the neighbour of a truth has covariance 0.5; in a block design every block-mate of a truth has
 covariance ≥ 0.4. For such designs the proved start result is concentration on the lattice of Q, not on S₀
@@ -283,40 +301,40 @@ checked (AUDITCALC_check_opus.md §1). At the 1M plan's sizes (n ≤ 400, p = 10
 nothing recorded bounds the start mass there in either direction.
 
 ## B12. Witness designs of Thm 3(b): orthogonal, or i.i.d. N(0, 1), null columns
-**Verdict: not an assumption to defend** (a lower bound needs one design; SL have no lower bound). Part (a) has no
+**Comparison: not an assumption to defend** (a lower bound needs one design; Song–Liang state no lower bound). Part (a) has no
 assumption. **Designs.** S1 and IND are of type (N-gauss) only if the truths are independent of the nulls (they are).
 
 ---
 
-## Summary table (assumption × Song–Liang × our designs)
+## Summary table (assumption × Song–Liang counterpart × comparison by regime × our designs)
 
-| # | Assumption (theorems) | Against Song–Liang (2015) | Study S1 / S2 / S3,4,6 / S5 | P6 | 1M IND / AR / BLK / FAC |
-|---|---|---|---|---|---|
-| B1 | Gaussian linear model (all) | same: (1)–(2), p. 950 | in / in / in / in | in | in / in / in / in |
-| B2 | p ≤ n^A (all) | stronger above: against Cor 1, p. 954 (Hellinger), by much; against Theorem S (selection), by little (n^{κ log n}, supp p. 16). Weaker below (P_n ≻ n^θ, p. 950) | in | in | in (A ≈ 2.6) |
-| B3 | s₀ fixed (all) | same: (4), p. 950 | in (as a sequence) | in | in |
-| B4 | signal bounded; fixed nonzero or beta-min (1, 2, 6, 10; 9 above only) | same as the setting of their proofs (coefficients treated as constants, supp pp. 5, 15); stronger than their statements, which give no size condition; Thm 1 allows smaller signals | in | in | in |
-| B5 | eigenvalue floor on small sets (1, 2, 6, 10, 9B) | against Condition 3 / Thm 3: stronger in level, set size not ordered. Against Theorem S (22)–(23), supp p. 13: not ordered — stronger only in the fixed level on bounded sets; no upper bound, nothing on larger sets | in | **in** | in |
-| B6 | no near-exact collinearity on O(log n) sets (1, 9) | against Thm 1–2: stronger (none there). Against Thm 3: weaker in level on sets with a true predictor, additional on null-only sets. Against Theorem S: weaker (their floor covers all sets at a higher level) | in | in | in |
-| B7 | Gaussian rows (2, 6, 10); sub-Gaussian sparse directions (9) | stronger than Condition 1, p. 953, on centred unit-variance predictors (implies it); not ordered on raw predictors (we allow any means) | in | in | in |
-| B8 | visibility, ≤ 15 conditioning columns (6, 10) | stronger than Condition 5, p. 958 (its case U = ∅) | in / in / in / unclear | **in** (cs, fac2, s5: aligned signs) | in / in / in / unclear |
-| B9 | leakage set \|Q\| ≤ n^b with locality (6) | comparable: informal remark (a), p. 958 | in / in / in / **out** | **out** | in / in / in / **out** |
-| B10 | floor on Q ∪ {l}, local regressions in Q (6) | floor: same kind as Condition 3, stronger in level, different sets; local regressions: no counterpart | in / in / in / n.a. | n.a. | in / in / in / n.a. |
-| B11 | no leakage (10) | no counterpart | in / **out** / **out** / **out** | **out** | in / **out** / **out** / **out** |
-| B12 | witness designs (3(b)) | no counterpart (no lower bound in SL) | — | — | — |
+The design columns are unchanged from v1.3. "supp" = their supplement.
 
-**Reading.** The two posterior theorems (core 1, core 2) hold on every one of our designs, strong factors included. Their
-assumptions are of the same kinds as Song–Liang's and are not ordered as a whole: against their selection theorem
-(Theorem S) ours ask a narrower range of p and a fixed floor on bounded sets, and less everywhere else; against their
-Hellinger theorems ours add the range of p, a c/n collinearity floor and the row law. Our conclusions are stronger, and
-none of the differences excludes a design of ours. The reported-model theorem (core 3) adds two
+| # | Assumption (theorems) | Song–Liang counterpart (page / eq) | Comparison, by regime | Study S1 / S2 / S3,4,6 / S5 | P6 | 1M IND / AR / BLK / FAC |
+|---|---|---|---|---|---|---|
+| B1 | Gaussian linear model (all) | model (1), density (2), p. 950 | the same in every regime | in / in / in / in | in | in / in / in / in |
+| B2 | p ≤ n^A (all) | Hellinger: P_n < exp(Cn^α), Cor 1, p. 954. Selection: log(√n/r_n) ≻ √(log P_n), supp p. 13; Cor S₁, supp p. 16. Lower: P_n ≻ n^θ, p. 950 | above, ours admits fewer dimensions (far fewer than Cor 1, slightly fewer than Theorem S); below, ours admits bounded p and theirs does not | in | in | in (A ≈ 2.6) |
+| B3 | s₀ fixed (all) | strict sparsity (4), p. 950; (3), p. 950, in their Thm 1 | the same as (4) (their Thms 2, 3, S); their Thm 1 also admits growing supports under (3), ours does not | in (as a sequence) | in | in |
+| B4 | signal bounded; fixed nonzero or beta-min (1, 2, 6, 10; 9 above only) | no lower bound stated; (3), (8) above in Thm 1, pp. 950, 952; proof rates supp pp. 6, 15 | if their β* is one fixed sequence (natural reading, p. 950): our Thms 2, 6, 10 ask the same, Thms 1 and 9 admit more; if β* may vary with n: their statements ask nothing, their proof steps need rates, and our fixed signals ask more than those steps | in | in | in |
+| B5 | eigenvalue floor on small sets (1, 2, 6, 10, 9B) | Condition 3, p. 955 (r̄_n + 1 columns with a true predictor, level ≻ ε_n²); (22)–(23), supp p. 13 (\|t\| + r̄_n columns, level l_n) | where their sets are no larger than ours (bounded r̄_n against Thm 1; r̄_n ≲ log n against Thm 2): ours implies theirs and asks more; where theirs are larger (r̄_n ≻ log n): different sets, neither implies the other; upper half of (22) is free for standardised columns | in | **in** | in |
+| B6 | no near-exact collinearity on O(log n) sets (1, 9) | none in Thms 1–2 ((11), (14), p. 952, are on V_ξ); Condition 3, p. 955; (22), supp p. 13 | against Thms 1–2: a condition they do not have. Against Condition 3 and (22): if r̄_n ≥ 3(A + 1)(s₀ + 1) log n theirs gives ours on the sets they cover; if r̄_n ≺ log n ours constrains sets theirs does not | in | in | in |
+| B7 | Gaussian rows (2, 6, 10); sub-Gaussian sparse directions (9) | \|x_i\| ≤ 1, Thm 1, p. 952; Condition 1, p. 953; Condition 2, p. 954 | on centred unit-variance predictors ours implies Condition 1; on raw predictors, and against \|x_i\| ≤ 1, neither implies the other | in | in | in |
+| B8 | visibility, ≤ 15 conditioning columns (6, 10) | Condition 5, p. 958 | ours implies theirs in every regime (theirs is our case U = ∅ without the margin) | in / in / in / unclear | **in** (cs, fac2, s5: aligned signs) | in / in / in / unclear |
+| B9 | leakage set \|Q\| ≤ n^b with locality (6) | no hypothesis; informal remark (a), p. 958 | no ordering claimed | in / in / in / **out** | **out** | in / in / in / **out** |
+| B10 | floor on Q ∪ {l}, local regressions in Q (6) | floor: Condition 3, p. 955; (22), supp p. 13. Local regressions: none | floor: as B5, on a different family of sets; local regressions: they have no such condition | in / in / in / n.a. | n.a. | in / in / in / n.a. |
+| B11 | no leakage (10) | none | they have no such condition (no start law in their theorems) | in / **out** / **out** / **out** | **out** | in / **out** / **out** / **out** |
+| B12 | witness designs (3(b)) | none (no lower bound stated) | — | — | — | — |
+
+**Reading.** The two posterior theorems (core 1, core 2) hold on every one of our designs, strong factors included. The
+assumptions are of the same kinds as Song–Liang's; where the papers differ, the direction depends on the regime, as the
+table shows, and nothing in the differences excludes a design of ours. The reported-model theorem (core 3) adds two
 method-specific conditions (B8, B9) whose Song–Liang counterparts are Condition 5 and remark (a); it excludes pervasive
 factors at p ≫ √n, which is where P6 sits. The printed-estimates theorem (core 4) rests on B11, which only the
 independent designs satisfy.
 
 ---
 
-## T. API triage (blind second opinion `Theory_work/Wave3/API_AUDIT/audit1_results/` on main 0eb08a4b; v1.2)
+## T. API triage 1 (blind second opinion `Theory_work/Wave3/API_AUDIT/audit1_results/` on main 0eb08a4b; v1.2; kept as a record — its one-word labels are superseded by v1.4)
 
 Each finding was read against the paper (journal pages) and our statements. Accepted findings changed labels only; no
 inside/outside verdict for cores 1–2 was challenged (all NO-FINDING), and core 2 had no finding.
@@ -337,7 +355,7 @@ one design entry (P6 fac2, s5: unclear → inside).
 
 ---
 
-## S. Song–Liang's Theorem S (MAP consistency) against core 1 and core 3 (v1.3)
+## S. Song–Liang's Theorem S (MAP consistency) against core 1 and core 3 (v1.4)
 
 **Theorem S, hypotheses and conclusion as printed (supp p. 13).** "Let D_n be a dataset generated from model (1) of the
 main text with a sparse true model t. Assume condition (12) of the main text and the following eigen-structure
@@ -350,41 +368,69 @@ model k, the posterior probability (7) of the main text satisfies: max_{k≠t} �
 Relation signs checked on the page image. Remarks (supp pp. 15–16): (22) "is hardly satisfied"; it may be replaced by
 the probabilistic (26), Pr{n·l_n > ch′₁(X_ζᵀX_ζ) or ch₁(X_ζᵀX_ζ) > n·l′_n} < e^{−nC} for |ζ| = r̄_n + |t|, which holds for a
 Gaussian process whose Var(x) has eigenvalues between l_n and l′_n. Corollary S₁ (supp p. 16): P_n < n^{κ log n},
-κ ∈ (0, ¼), r̄_n ≺ log^{k₁}(n) or r̄_n ≺ n^q with q ≤ ½ − √κ, l′_n = l_n⁻¹ = √n/log^{k₂}(n).
+κ ∈ (0, ¼), r̄_n ≺ log^{k₁}(n) or r̄_n ≺ n^q with q ≤ ½ − √κ, l′_n = l_n⁻¹ = √n/log^{k₂}(n). The cap r̄_n is free subject
+to (12), 1 ≤ r_n ≤ r̄_n < P_n: it may be bounded.
 
-**Against core 1** (Theorem 1 is the like-for-like: fixed design, sample conditions; Theorem 2 corresponds to (26)).
+**Against core 1** (Theorem 1 is the nearest: fixed design, sample conditions; Theorem 2 corresponds to (26)).
 
-| Item | Theorem S | Ours | Label for ours |
+| Item | Theorem S | Ours | Comparison, by regime |
 |---|---|---|---|
-| Model, sparsity | model (1), "sparse true model t" | Gaussian linear model, s₀ fixed | **same** |
-| Prior | (12): 1 ≤ r_n ≤ r̄_n < P_n; V_ξ⁻¹ = I or X_ξᵀX_ξ/n; r_n tied to n and P_n by condition 1 or 2 | the coded prior, no tuning | **weaker** (no condition on hyperparameters) |
-| Dimension | log(√n/r_n) ≻ √(log P_n); Cor S₁: P_n < n^{κ log n} | p ≤ n^A | **stronger**, by little |
-| Lower eigenvalue bound | (22)–(23): above n·l_n, l_n ≻ r̄_n log P_n / n, on every model of \|t\| + r̄_n columns | fixed φ₀² on sets of ≤ 2(A + 1)s₀ + 2 columns; g₀/n on O(log n) columns; nothing beyond | **not ordered**: stronger on bounded sets (fixed level), weaker on larger sets |
-| Upper eigenvalue bound | (22): below n·l′_n, with n·l_n ≻ l′_n (condition 2) | none | **weaker** |
-| Signal size | none stated; the proof uses c = min_{i∈t}\|β*_i\| as a constant and needs n·l_n·c² to dominate r̄_n log P_n (supp p. 15) | explicit; down to C_β σ√(log n/n) | **same** as their implicit setting for fixed signals; **weaker** in Theorem 1 |
-| Conclusion | (24): the posterior mode is t, in probability; no rate; no claim that π(t \| D_n) → 1 | 1 − π(S₀ \| y) = O_P(√(log n/n)); HPM = MPM = S₀; PIPs | **stronger** (ours implies (24)) |
+| Model, sparsity | model (1), "sparse true model t" | Gaussian linear model, s₀ fixed | the same in every regime |
+| Prior | (12); V_ξ⁻¹ = I or X_ξᵀX_ξ/n; r_n tied to n and P_n by condition 1 or 2 | the coded prior, no tuning | different posteriors: theirs is (7) under prior (6), ours the coded one; ours has no condition on hyperparameters |
+| Dimension | log(√n/r_n) ≻ √(log P_n); Cor S₁: P_n < n^{κ log n}; P_n → ∞ | p ≤ n^A, bounded p allowed | above, ours admits slightly fewer dimensions; below, ours admits bounded p |
+| Lower eigenvalue bound | (22)–(23): above n·l_n, r̄_n log P_n ≺ n·l_n, on models of \|t\| + r̄_n columns | fixed φ₀² on sets of ≤ 2(A + 1)s₀ + 2 columns; g₀ (unnormalised) on O(log n) columns | if \|t\| + r̄_n ≤ 2(A + 1)s₀ + 2: ours implies (22)–(23) (standardised columns, l_n = φ₀²/2) and asks a floor on larger sets where they ask nothing; if \|t\| + r̄_n exceeds our O(log n) sets: they constrain sets we do not, at a vanishing level; neither implies the other |
+| Upper eigenvalue bound | (22): below n·l′_n; n·l_n ≻ l′_n (condition 2) | none | no difference for standardised columns (l′_n = \|t\| + r̄_n works, and the l′ clauses follow from (23)); it binds only for raw columns whose scale grows with n |
+| Signal size | none stated; the proof step needs n·l_n·c² ≻ r̄_n log P_n, c = min_{i∈t}\|β*_i\| (supp p. 15) | Thm 1: θ*²_min φ₀² n ≥ c₀σ*² log n; Thms 2, 6: fixed signals | against the statement: ours asks a condition theirs does not state; against the proof step: the same form, ours at a fixed multiple of log n; if their β* is a fixed sequence, the same as our fixed signals |
+| Conclusion | (24): the mode of their posterior (7) is t, in probability; no rate; no claim that π(t \| D_n) → 1 | 1 − π(S₀ \| y) = O_P(√(log n/n)) for the coded posterior; HPM = MPM = S₀; PIPs | different posteriors, so neither statement implies the other; within one posterior, mass on the truth with a rate is a stronger form of statement than (24) |
 
-**Against core 3** (the reported model). Song–Liang's statement about what their sampler reports is: "use the sampled
-highest posterior probability model to estimate the MAP model. It follows from the following lemma that this estimator
-is consistent" (supp p. 16), where Lemma S₂(ii) says that the maximum of g over draws with a mutually independent
-subsequence converges in probability to the essential supremum of g (supp pp. 16–17); and "it follows from Liang (2009)
-that q̂_j → q_j almost surely as N → ∞" for the estimated inclusion probabilities (supp pp. 12–13). Both are limits in
-the number of iterations N at fixed data. **Label: Song–Liang have a weaker counterpart, not none.** Ours (Theorem 6) is
-about the coded run at its actual budget, jointly with n, for every seed. Earlier sentences of ours that say they
-"prove nothing about" the sampler's output are corrected in v1.3 to "prove nothing at a finite computational budget or
-jointly in n". Theorem S adds no condition of the visibility or leakage kind; those comparisons (B8, B9) are unchanged.
+**Against core 3** (the reported model). Song–Liang's statements about what their sampler reports hold for every fixed
+data set, with no design condition, as the number of iterations N → ∞: the weighted averages converge almost surely to
+posterior expectations (supp pp. 9–10, (13)–(15)); "q̂_j → q_j almost surely as N → ∞" (supp pp. 12–13, after (21)); and
+the sampled highest-probability model is a consistent estimate of the MAP model (supp p. 16, with Lemma S₂(ii),
+pp. 16–17). Ours (Theorem 6) says that the coded run, at its actual budget, reports S₀ on a data event of probability
+→ 1 under design conditions; it has no statement as iterations grow and none on convergence of sampler estimates to
+posterior quantities (Theorem 10 has, on S1 and IND only). **Neither implies the other:** theirs needs an infinite
+budget and covers every data set; ours holds at a finite budget, jointly with n, on designs that satisfy (A3)–(A6).
+So they do have statements about the sampler's output, and the earlier sentence "they prove nothing about its selection
+output" is replaced by this paragraph. Theorem S adds no condition of the visibility or leakage kind (B8, B9).
 
-## T2. Supplement: effect on the labels (v1.3)
+**Conclusions, per theorem (only what survived both blind audits).**
+- *Against their Theorem 3 (p. 956).* Theirs: each true predictor has posterior inclusion probability ≥ 1 − exp(−c₁nε_n²)
+  outside a data event of probability < exp(−c₁nε_n²); sensitivity only ("the specificity is not controlled"). Ours:
+  max_j|PIP_j − 1{j ∈ S₀}| ≤ 1 − π(S₀ | y) = O_P(√(log n/n)) and HPM = MPM = S₀. Ours adds specificity and exact
+  selection; theirs has the smaller error for sensitivity. Neither implies the other.
+- *Against their Theorems 1–2, (15) (pp. 952–953).* The same distance. Ours holds at radius √(M log n/n) for every level
+  M₀ ≤ M ≤ √n/log n with exceptional mass and probability n^{−cM} = exp(−c·nε²) at ε² = M log n/n: the same exponential
+  form as (15) inside that window. Their radius must satisfy nε_n² ≻ r̄_n log P_n ((10), with r_n ≻ 1 in Theorem 2), so
+  a constant multiple of √(log n/n) is outside their statement at polynomial p; radii with nε² > √n, and exponential p,
+  are outside ours.
+- *Against Theorem S, (24).* See the last row of the table.
 
-| Item | Label | Why (page / equation) |
+## T2. Supplement: what the proofs add (v1.4; replaces the v1.3 label table)
+
+| Item | Statement in v1.4 | Source (page / equation) |
 |---|---|---|
-| B1, B3 | kept (same) | Theorem S: model (1), "sparse true model t" (supp p. 13) |
-| B2 range of p | kept (stronger above); sharpened | against Theorem S the gap is small: log P_n ≺ (log n)²/4 from condition 2; Cor S₁ P_n < n^{κ log n} (supp pp. 13, 16) |
-| B4 signal size | **changed**: "stronger than what they state" → same as the setting of their proofs; stronger than their statements only | proof of their Thm 3: d² ≥ min{1, β*_t²/(4σ*² + 4σ₂²)}δ_n (supp p. 5); proof of Theorem S: c = min\|β*_i\| constant (supp p. 15) |
-| B5 eigenvalue floor | **changed against the new comparator**: stronger in level (against Condition 3) → not ordered against Theorem S | (22)–(23), supp p. 13: two-sided, vanishing level, on \|t\| + r̄_n columns |
-| B6 collinearity floor | **changed in part**: "additional on null-only sets" holds against Thm 3 only; against Theorem S ours is weaker | (22) covers every model ζ, null-only included |
-| B7 row law | kept; role sharpened | Condition 1 is used only for the prior mass in d₁, perturbations of order ε_n/r_n on one model containing t (supp p. 4) |
-| Core 2 distance | kept (same Hellinger distance) | d₀ (Kullback–Leibler) and d_t(f, f*) = t⁻¹(∫f*(f*/f)^t − 1) appear only in the prior-mass hypotheses of their Lemma 1.1 (supp p. 1), never in a conclusion; their Lemma 1.1 also gives an expectation bound of the same exponential form |
-| B8, B9, B10 | kept | no visibility or leakage condition in the supplement pages read |
-| Sampler output (core 3, core 4, Cor 9C) | **changed**: "no counterpart" → weaker counterpart | limits as N → ∞ at fixed data (supp pp. 12–13, 16–17) |
-| Misspecification (not core) | not revisited | Lemma 1.2 (supp p. 6) is de Blasi–Walker's Corollary 1; row 1.4 is outside this audit |
+| B2 range of p | the selection theorem itself needs log P_n ≺ (log n)²/4 | condition 2, supp p. 13; Cor S₁, supp p. 16 |
+| B4 signal size | their proof steps need rates, not constants: β*_t²δ_n ≥ 20σ*²ε_n² (Thm 3) and n·l_n·c² ≻ r̄_n log P_n (Theorem S); the wording of the proofs treats the coefficients as constants | supp p. 6 (display d² ≥ min{δ_n, β*_t²δ_n/(20σ*²), 1 − √0.8}); supp p. 15 |
+| B5, B6 eigenvalues | (22)–(23) concern models of \|t\| + r̄_n columns with r̄_n free under (12); the comparison with ours depends on r̄_n (dossiers B5, B6) | supp p. 13 |
+| B7 row law | Condition 1 is used once, for the prior mass in d₁ | supp p. 4 |
+| Core 2 distance | the same Hellinger distance; d₀ (Kullback–Leibler) and d_t(f, f*) = t⁻¹(∫f*(f*/f)^t − 1) appear only in the prior-mass hypotheses of their Lemma 1.1 | supp p. 1 |
+| Sampler output | they state limits as N → ∞ at fixed data; neither their statements nor ours imply the other | supp pp. 9–10, 12–13, 16–17 |
+| Misspecification (not core) | not revisited; their Lemma 1.2 is de Blasi–Walker's Corollary 1 | supp p. 6 |
+
+## T3. API triage 2 (`Theory_work/Wave3/API_AUDIT/audit2_results/` on main 0be3c352; v1.4)
+
+Each finding was read against the supplement (pp. 13–16 as page images; p. 6 and p. 10 as text) and our statements.
+
+| # | Finding (samples) | Decision | Reason and citation | Change made |
+|---|---|---|---|---|
+| U1 | B5.S (2/2): "not ordered" fails when r̄_n is small | **ACCEPT** | Theorem S assumes only (12) (supp p. 13), so r̄_n may be bounded (e.g. s₀ + 1); then Thm 1 (A4) implies (22)–(23) and asks more | B5 rewritten by regime; §S lower-bound row |
+| U2 | B6.S (2/2): "weaker" needs \|t\| + r̄_n ≥ our set size | **ACCEPT** | for r̄_n ≺ log n (allowed by (12), Cor S₁ with k₁ < 1, supp p. 16) a set of log n null columns can satisfy (22) and violate (A5) | B6 rewritten by regime |
+| U3 | SAMP.LABEL (2/2): "weaker counterpart" fails; "not none" stands | **ACCEPT** | theirs: N → ∞, every data set, convergence to posterior quantities (supp pp. 9–10, 12–13, 16–17); ours: finite budget, design conditions, a different object | §S core 3 paragraph; AUDIT rows |
+| U4 | HEAD.S (2/2), HEAD.H (1/2): the headline's "we ask less / we add" clauses | **ACCEPT** | they depend on r̄_n, on the reading of β*, on centring; their Hellinger theorems do carry a law for x (\|x_i\| ≤ 1, p. 952; Condition 1, p. 953) and a range for P_n | headline replaced by the HQ form; B2, B7 rewritten |
+| U5 | HEAD.CONC (2/2): "our conclusions are stronger" | **ACCEPT**; one clause rebutted | Thm 3's error exp(−c₁nε_n²) is below every power of n (p. 956): not implied by ours. Rebutted in part: Theorem 9's level-M form does give the exponential form up to M ≤ √n/log n (`W3-DIST:Thm-A`), so the Hellinger tails match inside that window | blanket claim dropped; per-theorem list in §S |
+| U6 | S.LOWER (2/2) | **ACCEPT** | as U1 | §S row |
+| U7 | S.UPPER (1/2): the upper half of (22) is not a real difference | **ACCEPT** | (22) is existential in l′_n; for columns of squared norm n − 1, l′_n = \|t\| + r̄_n works and n·l_n ≻ l′_n follows from (23) | §S row; B5 |
+| U8 | S.CONC (1/2): "ours implies (24)" compares two posteriors | **ACCEPT** | (24) is about their posterior (7) under prior (6) (p. 951; supp p. 13); ours about the coded posterior | §S conclusion row; AUDIT row |
+| U9 | B4.PROOFS (1/2): "needs β*_t bounded away from zero" | **ACCEPT** | the printed bound is on supp p. 6 and needs only a rate; likewise supp p. 15 | B4 rewritten; §T2 |
+| U10 | B4.STATED (unclear): may their β* vary with n? | **ACCEPT as open** | the texts read as one fixed sequence (p. 950) but do not say so | B4 states both readings; the "1/n" example is dropped |
