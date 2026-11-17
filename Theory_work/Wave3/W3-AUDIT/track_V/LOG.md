@@ -10,3 +10,4 @@ Times from `date` (CST). Write scope: `Theory_work/Wave3/W3-AUDIT/track_V/` (out
   patterns ⇒ a = c̲·δ), (VIS-c) B null/nowhere dense when patterns are countable, (VIS-d) finite-pattern block/factor/
   equicorrelation and stationary designs, (VIS-e) instances. STATEMENT/PROOF v1; citecheck 0 bad. CHECKPOINT_1;
   blind Opus line check VLC1 launched (claudeAgent_personal); Sol read held for GO.
+- 2026-11-17 13:34 VLC1 returned: V1 VERIFIED WITH AMENDMENTS, no C (random check of 3000 small designs: no violation); 10 findings (2 F, 3 S, 5 E) all accepted → v1.1 (VLC1_disposition.md); citecheck 0 bad. Sol read VSL1 brief ready; held for GO.

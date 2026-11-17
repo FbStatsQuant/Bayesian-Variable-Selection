@@ -1,6 +1,8 @@
-# V1 · Lemma VIS — PROOF v1
+# V1 · Lemma VIS — PROOF v1.1
 
-Fix n; Σ = Σ_n is a positive definite p × p correlation matrix, W ~ N_p(0, Σ). For U ⊆ [p] write U^c := [p] ∖ U.
+Fix n; Σ = Σ_n is a p × p correlation matrix with c₁₆ > 0 (positive definite in (VIS-a)), W ~ N_p(0, Σ). For U ⊆ [p]
+write U^c := [p] ∖ U. F1 is applied to positive definite matrices only: to Σ in (VIS-a), and to Σ_V with |V| ≤ 16
+(positive definite by c₁₆ > 0) elsewhere.
 
 ## Two standard facts (proved here)
 **F1 (Schur complement).** For U ⊆ [p] with U^c ≠ ∅, the matrix Γ^U := (Γ^U_{jk})_{j,k∈U^c} = Σ_{U^cU^c} − Σ_{U^cU}Σ_{UU}⁻¹Σ_{UU^c}
@@ -25,22 +27,24 @@ F1 applied to Σ_V (and the subset U of V) gives Var(W_j | W_U) = 1/((Σ_V⁻¹)
 
 ## (VIS-a)
 Let D be as stated and M := DΣ⁻¹D: symmetric positive definite (D² = I) with nonpositive off-diagonal entries. Fix j ∈ S₀,
-U ∌ j, and W := U^c. By F1, DΓ^UD restricted to W is (D_{WW})((Σ⁻¹)_{WW})⁻¹(D_{WW}) = ((DΣ⁻¹D)_{WW})⁻¹ = (M_{WW})⁻¹, and by
-F2 (M_{WW} is a principal submatrix of M) it is ≥ 0 entrywise: d_j d_k Γ^U_{jk} ≥ 0 for all j, k ∈ W.
+U ∌ j, and R := U^c (any |U|). By F1, DΓ^UD restricted to R is (D_{RR})((Σ⁻¹)_{RR})⁻¹(D_{RR}) = ((DΣ⁻¹D)_{RR})⁻¹ = (M_{RR})⁻¹, and by
+F2 (M_{RR} is a principal submatrix of M) it is ≥ 0 entrywise: d_j d_k Γ^U_{jk} ≥ 0 for all j, k ∈ R.
 *Components.* Permuting [p] so that the connected components of the graph of Σ⁻¹ are consecutive makes Σ⁻¹ block diagonal,
 hence Σ block diagonal with the same blocks; then Σ_{jU}Σ_{UU}⁻¹Σ_{Uk} = 0 and Σ_{jk} = 0 for j, k in different components
 (Σ_{UU} is block diagonal too), so Γ^U_{jk} = 0 for such j, k. Let C(j) be j's component.
 *Bound.* Let σ := d_j sgn(θ*_j). For k ∈ S₀ ∩ C(j), alignment gives d_k sgn(θ*_k) = σ, i.e. θ*_k = σ d_k |θ*_k|. Then
 Cov(W_j, Wᵀθ* | W_U) = Σ_{k∈S₀∩C(j)∖U} θ*_k Γ^U_{jk} = σ d_j Σ_{k∈S₀∩C(j)∖U} |θ*_k| (d_j d_k Γ^U_{jk}),
 a sign σd_j times a sum of nonnegative terms, one of which (k = j) is |θ*_j| Γ^U_{jj}. So
-|Cov(W_j, Wᵀθ* | W_U)| ≥ |θ*_j| Var(W_j | W_U) ≥ θ_lo c₁₆ by (VIS-0). ∎
+|Cov(W_j, Wᵀθ* | W_U)| ≥ |θ*_j| Var(W_j | W_U), which is ≥ θ_lo c₁₆ by (VIS-0) when |U| ≤ 15. ∎
 
 ## (VIS-b)
 *B is closed.* 𝒩 is a closed subset of the unit sphere, hence compact. Let θ_m ∈ B, θ_m → θ; choose ν_m ∈ 𝒩 with
 ⟨ν_m, θ_m⟩ = 0; a subsequence ν_m → ν ∈ 𝒩, and ⟨ν, θ⟩ = lim ⟨ν_m, θ_m⟩ = 0, so θ ∈ B.
 *Bound.* Fix n, j, U and let γ := γ(U, j). By (VIS-0) γ ≠ 0; ν := γ/|γ| ∈ 𝒩_n ⊆ 𝒩, so ν^⊥ ⊆ B and
 |⟨ν, ϑ⟩| = dist(ϑ, ν^⊥) ≥ dist(ϑ, B). Hence |Cov(W_j, Wᵀθ* | W_U)| = |γ|·|⟨ν, ϑ⟩| ≥ |γ_{i(j)}|·dist(ϑ, B) ≥ c₁₆·dist(ϑ, B).
-*Uniform constant.* For the sequence: |Cov(W_j, Wᵀθ*_n | W_U)| ≥ c₁₆(Σ_n)·dist(ϑ_n, B) ≥ c̲·δ for every n, j, U. If
+*Minimum attained.* ν ↦ |⟨ν, ϑ⟩| is continuous on the compact 𝒩, and dist(ϑ, B) = inf_{ν∈𝒩} dist(ϑ, ν^⊥) =
+inf_{ν∈𝒩} |⟨ν, ϑ⟩| (B = ∪_{ν∈𝒩} ν^⊥), so the infimum is a minimum; as B is closed, dist(ϑ, B) > 0 iff ϑ ∉ B.
+*Uniform constant.* For the sequence (n ≥ n₀): |Cov(W_j, Wᵀθ*_n | W_U)| ≥ c₁₆(Σ_n)·dist(ϑ_n, B) ≥ c̲·δ for every n, j, U. If
 ϑ_n ∈ Θ₀ compact with Θ₀ ∩ B = ∅, then δ ≥ dist(Θ₀, B) > 0 (a positive distance between a compact and a disjoint closed
 set). ∎
 
@@ -87,7 +91,9 @@ alignment of (VIS-a) is required only within a block. ∎
   Track C's aligned designs (IND, AR(0.5), blocks, cs, aligned factors; `Theory_work/Wave3/W3-AUDIT/track_C/RESULTS.md:63-68`)
   and B8's cs/fac-aligned/s5 cases are instances or (s5, fac2) have their own M-matrix/explicit computations in B8
   (`Theory_work/Wave3/W3-AUDIT/TRACK_B.md:222-228`).
-- Illustration of B (AR(ρ), two truths at distance g, U = ∅, j = k₁): γ = (1, ρ^g), so B ⊇ {θ₁ + ρ^gθ₂ = 0}, g ≥ 1; these
-  hyperplanes accumulate at {θ₁ = 0}, which |θ*_k| ≥ θ_lo keeps at distance; a fixed mixed-sign ϑ is visible with a
-  uniform margin unless it lies on one of the (countably many) hyperplanes of B.
+- Illustration of B (AR(ρ), two truths at distance g, U = ∅, j = k₁): γ = (1, ρ^g), so B ⊇ {θ₁ + ρ^gθ₂ = 0} for each gap g
+  that occurs along the sequence (all g ≥ 1 if the truths' gap ranges over ℕ; a single g if their positions are fixed);
+  U ≠ ∅ adds further hyperplanes (e.g. γ = (Var(W_{k₁} | W_U), 0) when U contains a column between the truths, by the
+  Markov property). The hyperplanes θ₁ + ρ^gθ₂ = 0 accumulate at {θ₁ = 0}, which |θ*_k| ≥ θ_lo keeps at distance; a
+  fixed mixed-sign ϑ is visible with a uniform margin unless it lies on one of the (countably many) hyperplanes of B.
 - Mixed-sign pervasive factors (track C D14, D15: population visibility 0) have ϑ on B: consistent with "Not claimed".
