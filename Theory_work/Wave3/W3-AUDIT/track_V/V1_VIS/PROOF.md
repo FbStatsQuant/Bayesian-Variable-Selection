@@ -1,4 +1,4 @@
-# V1 · Lemma VIS — PROOF v1.1
+# V1 · Lemma VIS — PROOF v1.2
 
 Fix n; Σ = Σ_n is a p × p correlation matrix with c₁₆ > 0 (positive definite in (VIS-a)), W ~ N_p(0, Σ). For U ⊆ [p]
 write U^c := [p] ∖ U. F1 is applied to positive definite matrices only: to Σ in (VIS-a), and to Σ_V with |V| ≤ 16
@@ -23,7 +23,8 @@ For j ∉ U: Cov(W_j, Wᵀθ* | W_U) = Σ_{k∈[p]} θ*_k Cov(W_j, W_k | W_U) by
 with k ∉ S₀ vanish (θ*_k = 0) and those with k ∈ U vanish (the residual of W_k on W_U is 0). So it equals
 Σ_{k∈S₀∖U} θ*_k Γ^U_{jk} = ⟨γ(U, j), ϑ⟩. The i(j)-th entry is Γ^U_{jj} = Var(W_j | W_U) (j ∈ S₀ ∖ U). With V := U ∪ {j},
 F1 applied to Σ_V (and the subset U of V) gives Var(W_j | W_U) = 1/((Σ_V⁻¹)_{jj}) ≥ 1/λ_max(Σ_V⁻¹) = λ_min(Σ_V) ≥ c₁₆, since
-|V| ≤ 16. (Γ^U_{jk} uses only the entries of Σ indexed by U ∪ {j, k}, so computing it from Σ_V or Σ is the same.) ∎
+|V| ≤ 16. (Γ^U_{jj} uses only the entries of Σ indexed by V, so computing it from Σ_V or Σ is the same; a general entry
+Γ^U_{jk} uses the entries indexed by U ∪ {j, k}.) ∎
 
 ## (VIS-a)
 Let D be as stated and M := DΣ⁻¹D: symmetric positive definite (D² = I) with nonpositive off-diagonal entries. Fix j ∈ S₀,
@@ -87,8 +88,11 @@ Block-diagonal: Σ⁻¹ is block diagonal, D blockwise, and the components of th
 alignment of (VIS-a) is required only within a block. ∎
 
 ## Remarks
-- (VIS-a) is the case of (VIS-b) in which the aligned orthant misses B; it gives the larger, simpler constant θ_lo c₁₆.
-  Track C's aligned designs (IND, AR(0.5), blocks, cs, aligned factors; `Theory_work/Wave3/W3-AUDIT/track_C/RESULTS.md:63-68`)
+- (VIS-a) and (VIS-b) are separate routes; neither contains the other. (VIS-a) works n by n (D_n and the alignment may
+  change with n), while B in (VIS-b) collects the hyperplanes of all n. Example (Sol, VSL1): S₀ = {1, 2},
+  Σ_n = [[1, r_n], [r_n, 1]] ⊕ I, alternating (r_n, ϑ_n) = (1/2, (1, 2)) and (−1/2, (1, −2)): (VIS-a) applies at every n
+  (D = I, resp. D = diag(1, −1, 1, …)) with margin ≥ 3/4, but B ⊇ {θ₁ + θ₂/2 = 0} ∪ {θ₁ − θ₂/2 = 0} contains every ϑ_n,
+  so δ = 0. (VIS-a) gives the explicit constant θ_lo c₁₆ directly. Track C's aligned designs (IND, AR(0.5), blocks, cs, aligned factors; `Theory_work/Wave3/W3-AUDIT/track_C/RESULTS.md:63-68`)
   and B8's cs/fac-aligned/s5 cases are instances or (s5, fac2) have their own M-matrix/explicit computations in B8
   (`Theory_work/Wave3/W3-AUDIT/TRACK_B.md:222-228`).
 - Illustration of B (AR(ρ), two truths at distance g, U = ∅, j = k₁): γ = (1, ρ^g), so B ⊇ {θ₁ + ρ^gθ₂ = 0} for each gap g

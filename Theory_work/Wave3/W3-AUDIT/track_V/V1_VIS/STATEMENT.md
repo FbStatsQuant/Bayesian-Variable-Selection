@@ -1,4 +1,4 @@
-# V1 · Lemma VIS (visibility with a margin uniform in n: a sign route and a generic-position route) — STATEMENT v1.1 (draft, not locked)
+# V1 · Lemma VIS (visibility with a margin uniform in n: a sign route and a generic-position route) — STATEMENT v1.2 (draft; Sol LOCK WITH CHANGES on v1.1, changes applied)
 
 Track V item V1 (manager 11-17, D112; owner + consultant requirement: a margin **uniform in n**, not "nonzero for almost
 every β"). Tier B (new lemma; pure linear algebra and topology, no code). **Lean target: yes** (finite-dimensional:
@@ -77,3 +77,4 @@ n ≥ n₀.
 |---|---|---|---|---|---|
 | v1 | all | NEW-CLAIM | track V V1 | manager 11-17, D112 | `CHECK.md` |
 | v1.1 | target quote (Σ_n PD only in Thm 6; theorem ↔ lines); (VIS-a) PD premise, |U| ≤ 15 for the c₁₆ bound; (VIS-b) ϑ ∉ B ⇔ δ > 0, min attained, n ≥ n₀; reading for Thm 5/6/10 floors; ρ = 0, equicorrelation ρ ≥ 0; "a.e." bullet | WEAKER (premises stated) / EQUAL | VLC1 #1–#7, #10 | `reviews/VLC1_disposition.md` | Sol read |
+| v1.2 | — (proof only: the false remark "(VIS-a) is a case of (VIS-b)" replaced by the two-route remark with Sol's example; (VIS-0) locality parenthetical) | EQUAL (no clause changed) | VSL1 Sol #1 (C, remark), #2 (E) | `reviews/VSL1_reply_sol.md` | council |
