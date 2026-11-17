@@ -420,3 +420,4 @@
 - 2026-11-17 12:28 CST FEAS_SMC_WORKS (Fable 1118f165): no route via existing lemmas; full target NO-GO (8–10 d, Tier A); 2-d G1/G2 gate available; cheap weak-leak corollary (Tier B, 1–2 d). Sent to HQ; recommended no ticket (D106). Fable → SPEC_LIST_PIP next.
 - 2026-11-17 12:30 CST D107 recorded; list closed.
 - 2026-11-17 12:31 CST SPEC_LIST_PIP (Fable 523dda23) sent to HQ for Engineering; log_Z_list kept as recommended (HQ to confirm). #5′ lead launches at the next free slot.
+- 2026-11-17 12:33 CST W3-D2 CP1 (282fd666): Thm2X locked (Sol L-W-A), STRONGER vs row 1.2 (smaller-set floor), conditional via CorGb-plus incl. Prop-LB (X2 unchecked). GO to line check → council → CP3 + API card. HQ: replace vs coexist (recommended coexist); X2 Prop-LB check would unconditionalize.
