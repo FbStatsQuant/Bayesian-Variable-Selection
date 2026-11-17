@@ -126,14 +126,15 @@ struct SetupView {
   EventCtx table_event_of(const Model& S) const;    // block b + 1, code of S in that block
 };
 SetupView read_setup(const std::string& path, int32_t p, int32_t K, const Zobrist* zob = nullptr);   // shapes, ranges and finite values checked
-// ---- bounded plan readers (review PR46 MAJOR-2; INTERFACES §7: admission refuses "before any allocation") ----------
-// Only the header, the section table and the named small sections are read, each small section against its SHA-256 in
-// the (header-authenticated) table; no column, table, partition or store section is read or copied. Allocation is
-// O(sections + meta + K), independent of p and of the tables. The full readers run only after admission.
+// The pi_0 size law of setup.bin (K + 1 log probabilities summing to 1); Error(invalid_input) otherwise. read_setup runs it;
+// calibrate runs it on the dimensions reader's copy before it plans.
+void check_size_logmass(const std::vector<double>& v, int32_t K, const std::string& what);
+// ---- bounded plan reader (review PR46 MAJOR-2; INTERFACES §7: admission refuses "before any allocation") -------------
+// data.bin: the header, the section table and `meta` (against its SHA-256 in the header-authenticated table); no column
+// is read. Allocation is O(sections + meta). setup.bin's dimensions come from WP3's island::read_setup_dims (setup_load.h).
+// The full readers run only after admission.
 struct DataPlanHead { std::string content_hash; int64_t n = 0, p = 0; int32_t K = 0; uint64_t file_bytes = 0; };
 DataPlanHead read_data_plan(const std::string& path);            // data.bin meta: n, p, K
-struct SetupPlanHead { std::string content_hash, data_hash; std::vector<double> size_logmass; uint64_t file_bytes = 0; };
-SetupPlanHead read_setup_plan(const std::string& path, int32_t K);   // setup.bin meta.inputs + size_logmass (checked as read_setup)
 std::string write_setup_min(const std::string& path, const SetupView& s, const Json& inputs);   // tests / harness
 // Table step of the merge ledger: the table top stores offered (top -> HPM + top, lead0, lead1) with their table event
 // keys, plus the logical TABLE count. Equal to ingesting every table code (core/cpp/v3_core.cpp:372-387) for the

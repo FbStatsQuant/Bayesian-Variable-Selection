@@ -11,6 +11,8 @@
 #include "tk.h"
 #include "tutil.h"
 #include "v4/merge.h"
+#include "v4/island/calib_runner.h"
+#include "v4/island/setup_load.h"
 #include "v4/provenance.h"
 #include "v4/stubs.h"
 #include "v4/wp4_io.h"
@@ -82,7 +84,7 @@ Fx make_fx(const std::string& tag, int R, uint32_t mode = fmt::M_COMPAT) {
       S.ttop.offer(F, U, f.D.zob.hash(U)); S.tlead0.offer(lg0, U, f.D.zob.hash(U)); S.tlead1.offer(F, U, f.D.zob.hash(U));
     }
   }
-  S.code_ptr.push_back((int64_t)S.logr.size());   // J + 1 entries; code_ptr[J] = |logr| (INTERFACES v0.1.18 §2/§5)
+  S.code_ptr.push_back((int64_t)S.logr.size());   // J + 1 entries; code_ptr[J] = |logr| (INTERFACES v0.1.19 §2/§5)
   S.ttop.compact(); S.tlead0.compact(); S.tlead1.compact();
   S.mode_S = Model(S.ttop.model(0).begin(), S.ttop.model(0).end());
   // pi_0 size law (setup.bin size_logmass; calibrate's plan k, review PR37 N-2): P(0) .5, P(1) .3, P(12) .15, P(13) .05
@@ -397,46 +399,29 @@ TEST(wp4_io_calib_refusals) {
 // review PR37 N-1 / N-2: the calibration plan's k comes from setup.bin's pi_0 size law (q90 + 1, floor 8, as WP3's
 // plan_island); resident excludes the inputs; the command refuses up front iff resident + inputs + one island ledger >
 // --mem-budget. setup.bin's size_logmass is validated.
-// Review PR46 MAJOR-2: the bounded plan readers return what the full readers return, and they check the sections they
-// read against the table's hashes (the Reader is opened without verify_all): a swapped size law or an altered meta byte
-// is refused by the plan read itself.
+// Review PR46 MAJOR-2: the bounded data plan reader returns what the full reader returns, and it checks `meta` against
+// the table's hash (the Reader is opened without verify_all): an altered meta byte is refused by the plan read itself.
+// (setup.bin's dimensions: WP3's island::read_setup_dims, exercised on WP2's real file below and by the admission probe.)
 TEST(wp4_io_plan_readers) {
   TmpGuard tmp_guard("prd"); Fx f = make_fx("prd", 1, fmt::M_V);
   const wp4io::DataPlanHead dh = wp4io::read_data_plan(f.dpath);
   CHECK(dh.n == f.D.n && dh.p == f.D.p && dh.K == f.D.K && dh.content_hash == f.dhash && dh.file_bytes > 0);
-  const wp4io::SetupPlanHead sh = wp4io::read_setup_plan(f.spath, f.D.K);
-  const wp4io::SetupView S = wp4io::read_setup(f.spath, f.D.p, f.D.K, &f.D.zob);
-  CHECK(sh.content_hash == S.content_hash && sh.data_hash == S.data_hash && sh.data_hash == f.dhash && sh.size_logmass == S.size_logmass);
   auto slurp = [](const std::string& path) { std::ifstream in(path, std::ios::binary); return std::string(std::istreambuf_iterator<char>(in), {}); };
   auto spit = [](const std::string& path, const std::string& b) { std::ofstream o(path, std::ios::binary); o.write(b.data(), (std::streamsize)b.size()); };
-  auto refused = [](auto fn, const char* what) {
-    try { fn(); } catch (const Error& e) { const bool ok = e.st == Status::invalid_input && std::string(e.what()).find("hash mismatch") != std::string::npos;
-                                          if (!ok) std::printf("    %s: %s\n", what, e.what());
-                                          CHECK(ok); return; }
-    std::printf("    %s: not refused\n", what); CHECK(false);
-  };
-  {  // size law: P(0) and P(1) swapped (still a law summing to 1; only the section hash catches it)
-    std::string b = slurp(f.spath); fmt::Reader R(f.spath); const fmt::SectionEntry& e = R.entry("size_logmass");
-    std::string t = b.substr(e.offset, 8); b.replace(e.offset, 8, b.substr(e.offset + 8, 8)); b.replace(e.offset + 8, 8, t);
-    const std::string bad = tmp_path("prd_swap.bin"); spit(bad, b);
-    refused([&] { wp4io::read_setup_plan(bad, f.D.K); }, "setup size_logmass swapped");
-  }
-  {  // meta: one byte altered (the hash is checked before the JSON is parsed)
-    for (const std::string& path : {f.spath, f.dpath}) {
-      std::string b = slurp(path); fmt::Reader R(path); const fmt::SectionEntry& e = R.entry("meta");
-      b[e.offset + e.length / 2] ^= 0x01;
-      const std::string bad = tmp_path("prd_meta.bin"); spit(bad, b);
-      if (path == f.spath) refused([&] { wp4io::read_setup_plan(bad, f.D.K); }, "setup meta altered");
-      else refused([&] { wp4io::read_data_plan(bad); }, "data meta altered");
-    }
-  }
+  std::string b = slurp(f.dpath); fmt::Reader R(f.dpath); const fmt::SectionEntry& e = R.entry("meta");
+  b[e.offset + e.length / 2] ^= 0x01;
+  const std::string bad = tmp_path("prd_meta.bin"); spit(bad, b);
+  try { wp4io::read_data_plan(bad); CHECK(false); }
+  catch (const Error& er) { const bool ok = er.st == Status::invalid_input && std::string(er.what()).find("hash mismatch") != std::string::npos;
+                            if (!ok) std::printf("    data meta altered: %s\n", er.what());
+                            CHECK(ok); }
 }
 
-// INTERFACES v0.1.18 (manager decision, review PR46 / WP3's finding): setup.bin carries no meta.stores (the table
+// INTERFACES v0.1.19 (manager decision, review PR46 / WP3's finding): setup.bin carries no meta.stores (the table
 // stores' caps and orders come from §4.1), and code_ptr has J + 1 entries like blk_ptr, code_ptr[J] = |logr|.
 // A copy of a setup.bin with some sections replaced and `meta` rebuilt by `meta_fn` (content hashes are rewritten).
 static std::string setup_rewrite(const std::string& in, const std::string& tag, const std::function<void(Json&)>& meta_fn,
-                                 const std::map<std::string, std::vector<int64_t>>& i64_repl = {}) {
+                                 const std::map<std::string, std::vector<int64_t>>& i64_repl = {}, bool add_nb = false) {
   fmt::Reader R(in); fmt::Writer W(fmt::K_SETUP, R.mode());
   for (const auto& e : R.sections()) {
     const std::string nm(e.name);
@@ -449,6 +434,11 @@ static std::string setup_rewrite(const std::string& in, const std::string& tag, 
                   : (const void*)R.get<uint8_t>(nm);
     W.add_copy(nm, e.dtype, q, e.length, e.dims[0], e.dims[1]);
   }
+  if (add_nb) {   // empty neighbour lists: calibrate's dimensions reader (WP3) needs the sections; read_setup ignores them
+    uint64_t p = 0; R.get<int32_t>("blk", &p);
+    const std::vector<int64_t> nbp((size_t)p + 1, 0); const std::vector<int32_t> nbi;
+    W.add("nb_ptr", nbp); W.add("nb_idx", nbi);
+  }
   const std::string out = tmp_path(tag + ".bin"); W.write(out); return out;
 }
 static bool setup_refused(const std::string& path, const Data& D, const char* what_contains) {
@@ -458,7 +448,7 @@ static bool setup_refused(const std::string& path, const Data& D, const char* wh
                            return ok; }
   std::printf("    '%s': not refused\n", what_contains); return false;
 }
-TEST(wp4_io_setup_contract_v0118) {
+TEST(wp4_io_setup_contract_v0119) {
   TmpGuard tmp_guard("sc18"); Fx f = make_fx("sc18", 1, fmt::M_V);
   {  // our own writer: no meta.stores; J + 1 code_ptr; reads back
     fmt::Reader R(f.spath); const Json m = R.json("meta");
@@ -505,8 +495,9 @@ TEST(wp4_io_reads_wp2_setup_bin) {
   CHECK(S.ttop.cap == 40ull * D.p + 1 && S.ttop.size() == 32 && S.tlead0.size() == 32 && S.tlead1.size() == 32);
   CHECK(S.size_logmass.size() == (size_t)D.K + 1 && !S.mode_S.empty() && S.data_hash == dhash);
   CHECK(S.ttop.check_invariants() && S.tlead0.check_invariants() && S.tlead1.check_invariants());
-  const wp4io::SetupPlanHead sh = wp4io::read_setup_plan(spath, D.K);
-  CHECK(sh.size_logmass == S.size_logmass && sh.content_hash == S.content_hash && sh.data_hash == dhash);
+  const island::SetupDims sd = island::read_setup_dims(spath, D.p, D.K, false);   // WP3's header-only dimensions reader
+  CHECK(sd.size_logmass == S.size_logmass && sd.content_hash == S.content_hash && sd.data_hash == dhash && sd.J == (int)J);
+  { const island::Start st = island::load_start(spath, D); CHECK(st.J == (int)J); }   // WP3's loader reads the same file
   {  // without WP2's meta.stores descriptors (the contract has none): the same stores
     TmpGuard tmp_guard("wp2fx");
     const std::string path = setup_rewrite(spath, "wp2fx_nostores", [](Json& m) { m = [&] { Json o = Json::object(); for (const auto& kv : m.items()) if (kv.first != "stores") o[kv.first] = kv.second; return o; }(); });
@@ -533,23 +524,29 @@ TEST(wp4_io_calib_plan_from_setup) {
   const calib::CalibMemPlan m = calib::calib_memory_plan(1000000, 8, 123456);
   CHECK(m.resident == m.ledger + m.export_ && m.total == m.resident + m.inputs + m.island_ledger && m.inputs == 123456);
   // the command (plan only) on the fixture's data / setup
-  Json a = Json::object(); a["data"] = f.dpath; a["setup"] = f.spath; a["mode"] = "V"; a["plan_only"] = 1;
+  const std::string spath_nb = setup_rewrite(f.spath, "cplan_nb", [](Json&) {}, {}, true);   // + empty neighbour lists
+  Json a = Json::object(); a["data"] = f.dpath; a["setup"] = spath_nb; a["mode"] = "V"; a["plan_only"] = 1;
   Json r = calib::run(a);
   const Json& mp = r.at("mem_plan");
   CHECK(r.at("status").str() == "completed" && mp.at("kbar").num() == 13.0);
   const double total = mp.at("total").num(), resident = mp.at("resident").num();
   CHECK(resident == mp.at("ledger").num() + mp.at("export").num() && total == resident + mp.at("inputs").num() + mp.at("island_ledger").num());
   auto with_budget = [&](double bytes) { Json b = a; b["mem_budget"] = bytes; return calib::run(b).at("status").str(); };
-  CHECK(with_budget(total) == "completed");                                       // total <= budget: admitted
-  CHECK(with_budget(total - 1) == "resource_limit");                              // N-2: refused up front
+  // up-front admission (N-1 / N-2, WP3's island plan from the dimensions): admitted iff the island plan at the largest G
+  // that fits is <= budget, i.e. iff budget >= the plan at G = 1 (`floor`); refused up front otherwise
+  const double floor = r.at("island_plan").at("floor").num();
+  CHECK(floor >= total && r.at("island_plan").at("resident").num() == resident);   // the island plan holds at least the old estimate
+  CHECK(with_budget(floor) == "completed");                                       // plan <= budget: admitted
+  CHECK(with_budget(floor - 1) == "resource_limit");                              // N-2: refused up front
   CHECK(with_budget(resident + 1) == "resource_limit");                           // resident fits, no island would
   // setup.bin without a size law, or with a malformed one
   auto setup_variant = [&](const std::vector<double>& lm) {
     wp4io::SetupView v = f.S; v.size_logmass = lm;
     Json sin = Json::object(); sin["data.bin"] = f.dhash;
-    const std::string sp = tmp_path("cplan_setup_v.bin"); wp4io::write_setup_min(sp, v, sin);
+    const std::string sp0 = tmp_path("cplan_setup_v0.bin"); wp4io::write_setup_min(sp0, v, sin);
+    const std::string sp = setup_rewrite(sp0, "cplan_setup_v", [](Json&) {}, {}, true);
     Status st = Status::completed;
-    try { wp4io::read_setup(sp, f.D.p, f.D.K, &f.D.zob); Json b = a; b["setup"] = sp; calib::run(b); } catch (const Error& e) { st = e.st; }
+    try { Json b = a; b["setup"] = sp; calib::run(b); } catch (const Error& e) { st = e.st; }   // the command itself refuses it
     return st;
   };
   CHECK(setup_variant({}) == Status::invalid_input);                                // read_setup accepts, calibrate refuses

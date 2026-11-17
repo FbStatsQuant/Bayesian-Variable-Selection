@@ -10,7 +10,10 @@
 #include <omp.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <cerrno>
 #include <cstdio>
+#include <cstring>
+#include <type_traits>
 #include <filesystem>
 #include <memory>
 #include "v4/island/island.h"
@@ -366,12 +369,119 @@ class IslandEngine {
     res.ks.t_check += std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
   }
 
+  // ---- per-step cost record (D-30, WP7 O2) ---------------------------------------------------------------------
+  // Rows are contiguous intervals of the island's lifetime (StepCost in island.h): cost_close() turns the interval since
+  // the previous close into a FINAL row; the checkpoint written after it carries the row and the lifetime totals at that
+  // close (cost_now), so a resume continues both exactly. The exit row (kind 4) closes the last interval.
+  struct CostMark {   // lifetime execution totals at one instant
+    KernelStats ks; double t_compact = 0; uint64_t merges = 0, buffered = 0, dup = 0, serial = 0; double elapsed = 0;
+  };
+  std::chrono::steady_clock::time_point t_start;   // start of run() in this process
+  double elapsed_base = 0;                          // lifetime seconds before this process (checkpoint)
+  uint64_t dup_base = 0;                            // snapshot-filter drops before this process (checkpoint)
+  CostMark cmark;                                   // the totals at the last close (= the checkpoint's totals)
+  int64_t cost_segment = 0;
+  uint64_t dup_dropped_now() const { uint64_t d = dup_base; for (auto& t : tl) d += t->buf.n_dup_dropped; return d; }
+  CostMark cost_now(std::chrono::steady_clock::time_point now) const {
+    CostMark c; c.ks = res.ks; c.t_compact = top.t_compact; c.merges = top.n_merges; c.buffered = top.n_buffered; c.dup = dup_dropped_now();
+    c.serial = top.n_serial_merges; c.elapsed = elapsed_base + std::chrono::duration<double>(now - t_start).count();
+    return c;
+  }
+  static void proc_mem_kb(uint64_t& rss, uint64_t& hwm) {
+    rss = hwm = 0;
+    if (FILE* fs = std::fopen("/proc/self/status", "r")) { char ln[256];
+      while (std::fgets(ln, sizeof ln, fs)) { if (!std::strncmp(ln, "VmRSS:", 6)) rss = (uint64_t)std::atol(ln + 6); if (!std::strncmp(ln, "VmHWM:", 6)) hwm = (uint64_t)std::atol(ln + 6); }
+      std::fclose(fs); }
+  }
+  void cost_close(int step, int kind, double phi) {
+    const CostMark cur = cost_now(std::chrono::steady_clock::now());
+    const KernelStats& k = cur.ks; const KernelStats& o = cmark.ks;
+    StepCost c; c.step = step; c.kind = kind; c.segment = cost_segment; c.kernel = cfg.kernel == KernelKind::LabelMajor ? 0 : 1; c.phi = phi;
+    c.wall = cur.elapsed - cmark.elapsed;
+    c.t_orders = k.t_orders - o.t_orders; c.t_build = k.t_build - o.t_build; c.t_phaseA = k.t_phaseA - o.t_phaseA; c.t_products = k.t_products - o.t_products;
+    c.t_walk = k.t_walk - o.t_walk; c.t_phaseB = k.t_phaseB - o.t_phaseB; c.t_apply = k.t_apply - o.t_apply; c.t_barrier = k.t_barrier - o.t_barrier; c.t_pm = k.t_pm - o.t_pm;
+    c.t_compact = cur.t_compact - cmark.t_compact; c.t_compact_pass = k.t_compact_pass - o.t_compact_pass;
+    c.t_check = k.t_check - o.t_check; c.t_ckpt = k.t_ckpt - o.t_ckpt;
+    double sS = 0; for (auto& x : P) sS += (double)x.S.size();
+    c.mean_S = P.empty() ? 0.0 : sS / (double)P.size();
+    c.store_mean_k = top.size() ? (double)top.k->pool.size() / (double)top.size() : 0.0;
+    c.particle_rounds = k.particle_rounds - o.particle_rounds; c.sweeps = k.particle_sweeps - o.particle_sweeps; c.passes = k.passes - o.passes;
+    c.supports = k.supports - o.supports; c.pairs = k.support_label_pairs - o.support_label_pairs; c.flips = k.flip_evals - o.flip_evals;
+    c.act_cols = k.act_cols - o.act_cols; c.slow_supports = k.slow_supports - o.slow_supports;
+    c.offers = cur.buffered - cmark.buffered; c.dup_dropped = cur.dup - cmark.dup; c.merges = cur.merges - cmark.merges; c.store_size = top.size();
+    proc_mem_kb(c.rss_kb, c.hwm_kb);
+    res.cost.push_back(c);
+    cmark = cur;
+    cost_log(c);
+  }
+  // the lifetime totals at the last close, in the checkpoint (field by field: no padding bytes; review m4d)
+  template <class W> static void mark_io(W& w, CostMark& c) {
+    KernelStats& k = c.ks;
+    for (uint64_t* x : {&k.particle_rounds, &k.particle_sweeps, &k.passes, &k.support_label_pairs, &k.supports, &k.slow_supports, &k.act_cols,
+                        &k.flip_evals, &k.store_checks, &c.merges, &c.buffered, &c.dup, &c.serial}) io1(w, *x);
+    for (double* x : {&k.t_compact_pass, &k.t_products, &k.t_init, &k.t_orders, &k.t_build, &k.t_phaseA, &k.t_walk, &k.t_phaseB, &k.t_apply,
+                      &k.t_barrier, &k.t_pm, &k.t_ckpt, &k.t_check, &c.t_compact, &c.elapsed}) io1(w, *x);
+  }
+  template <class W, class T> static void io1(W& w, T& x) {   // CkptOut::put / CkptIn::get (complete-class context)
+    if constexpr (std::is_same_v<W, CkptOut>) w.put(x); else w.get(x);
+  }
+  void cost_restore(const CostMark& c) {   // after load_ckpt: continue the lifetime totals
+    res.ks = c.ks; top.t_compact = c.t_compact; top.n_merges = c.merges; top.n_buffered = c.buffered; top.n_serial_merges = c.serial;
+    dup_base = c.dup; elapsed_base = c.elapsed;
+    cmark = cost_now(t_start);   // = c (elapsed: elapsed_base + 0)
+    cost_segment = res.cost.empty() ? 1 : res.cost.back().segment + 1;
+  }
+  v4::Json cost_header() const {
+    v4::Json h = v4::Json::object();
+    h["schema"] = "smcbvs4.cost/1"; h["r"] = (int)cfg.island; h["role"] = (int)cfg.role; h["tier"] = cfg.tier; h["iter"] = cfg.iter;
+    h["N"] = cfg.N; h["p"] = p; h["m"] = m; h["threads"] = NT; h["G"] = cfg.G; h["tile"] = cfg.tile; h["kernel"] = cfg.kernel == KernelKind::LabelMajor ? "lm" : "pm";
+    h["arith"] = A == Arith::ClassA ? "A" : "bit"; h["segment"] = (int64_t)cost_segment;
+    return h;
+  }
+  // The sidecar progress log (cfg.cost_path): best effort, never authoritative, never fails the island. At its first
+  // write in a process it is REBUILT -- header + every row already in res.cost (the rows the run continues from) --
+  // into <path>.tmp.<pid> and renamed over <path>, so rows of a dead segment beyond its checkpoint, missing rows and torn
+  // tails disappear. Then each row is one write() of one line on an O_APPEND descriptor; a short or failed write is cut
+  // back (ftruncate to the last whole line) and disables the log (res.cost_log_error).
+  int cost_fd = -1; bool cost_log_off = false; off_t cost_off = 0; int cost_lines = 0;
+  void cost_log_fail(const std::string& why) {
+    if (cost_fd >= 0) { if (::ftruncate(cost_fd, cost_off) != 0) {} ::close(cost_fd); cost_fd = -1; }
+    cost_log_off = true; res.cost_log_error = why;
+    std::fprintf(stderr, "  [cost] progress log %s disabled: %s (meta.cost is unaffected)\n", cfg.cost_path.c_str(), why.c_str());
+  }
+  bool cost_write_line(const std::string& ln) {
+    size_t n = ln.size();
+    if (cost_lines++ == cfg.test_cost_log_short) n = ln.size() / 2;   // tests only: a short write
+    const ssize_t w = ::write(cost_fd, ln.data(), n);
+    if (w != (ssize_t)ln.size()) { cost_log_fail(w < 0 ? std::string("write failed: ") + std::strerror(errno) : "short write"); return false; }
+    cost_off += (off_t)ln.size();
+    return true;
+  }
+  void cost_log(const StepCost& c) {
+    if (cfg.cost_path.empty() || cost_log_off) return;
+    if (cost_fd < 0) {   // rebuild from the rows the run continues from, then append
+      const std::string tmp = cfg.cost_path + ".tmp." + std::to_string((long)getpid());
+      std::string body = "{\"cost_header\":" + cost_header().dump() + "}\n";
+      for (size_t i = 0; i + 1 < res.cost.size(); ++i) body += cost_row_json(res.cost[i], m).dump() + "\n";
+      const int fd = ::open(tmp.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
+      const bool ok = fd >= 0 && ::write(fd, body.data(), body.size()) == (ssize_t)body.size();
+      if (fd >= 0) ::close(fd);
+      if (!ok || std::rename(tmp.c_str(), cfg.cost_path.c_str()) != 0) { std::remove(tmp.c_str()); cost_log_fail("cannot rebuild the log"); return; }
+      cost_fd = ::open(cfg.cost_path.c_str(), O_WRONLY | O_APPEND);
+      if (cost_fd < 0) { cost_log_fail("cannot open the log"); return; }
+      cost_off = (off_t)body.size();
+    }
+    cost_write_line(cost_row_json(c, m).dump() + "\n");
+  }
+  ~IslandEngine() { if (cost_fd >= 0) ::close(cost_fd); }
+
   // ---- checkpoint ---------------------------------------------------------------------------------------------
   // Configuration + binary fingerprint (not threads, G, tile or kernel: a resume may change them). INTERFACES v0.1.3:
   // a restart refuses a different binary block.
   uint64_t fingerprint() const {
     Fnv f; f.pod(cfg.seed); f.pod(cfg.island); f.pod(cfg.tier); f.pod(cfg.N); f.vec(cfg.grid); f.pod(cfg.L); f.pod(cfg.Hm); f.pod(cfg.B);
     f.pod(top.cap); f.pod(D.n); f.pod(D.p); f.pod(D.yty); f.pod(st.logZbar0); f.pod(st.J); f.pod((int)A); f.pod(cfg.compat); f.pod(cfg.leaders);
+    f.bytes(cfg.input_id.data(), cfg.input_id.size());   // the verified input hashes (PR52 MAJOR-1); empty adds nothing
     const std::string bb = v4::binary_block_no_self_test().dump(); f.bytes(bb.data(), bb.size());
     return f.h;
   }
@@ -406,6 +516,8 @@ class IslandEngine {
     w.putv(top.k->v); w.putv(top.k->hash); w.putv(top.k->off); w.putv(top.k->len); w.putv(top.k->pool);
     if (csrc) { w.put(csrc->g.s); w.put(csrc->g.count); w.putv(rb_d); }   // compat: xoshiro state + position, double RB
     if (cfg.leaders) for (TopStore* L : {&lead0, &lead1}) { w.putv(L->k->v); w.putv(L->k->hash); w.putv(L->k->off); w.putv(L->k->len); w.putv(L->k->pool); }
+    w.putv(res.cost);   // D-30 cost rows (final at their close) and the lifetime totals at the last close (O2)
+    mark_io(w, cmark);
   }
   // Two generations <path>.a/.b, alternately: header placeholder, streamed payload, header (generation, length,
   // checksum) rewritten in place, fflush + fsync, rename from <file>.tmp.<pid>. A kill at any point leaves the other
@@ -497,7 +609,10 @@ class IslandEngine {
     { auto nk = std::make_shared<Kept>(); r.getv(nk->v); r.getv(nk->hash); r.getv(nk->off); r.getv(nk->len); r.getv(nk->pool); top.k = nk; }
     if (csrc) { r.get(csrc->g.s); r.get(csrc->g.count); r.getv(rb_d); }
     if (cfg.leaders) for (TopStore* L : {&lead0, &lead1}) { auto nk = std::make_shared<Kept>(); r.getv(nk->v); r.getv(nk->hash); r.getv(nk->off); r.getv(nk->len); r.getv(nk->pool); L->k = nk; L->publish_loaded(); }
+    r.getv(res.cost);
+    CostMark cm; mark_io(r, cm);
     if (r.bad) corrupt(f);
+    cost_restore(cm);   // the rows after a resume belong to a new job segment; totals continue (O2)
     std::fclose(f);
     top.publish_loaded();
     return step;
@@ -557,6 +672,7 @@ class IslandEngine {
   IslandRun run() {
     auto tstart = std::chrono::steady_clock::now();
     last_ckpt = tstart;
+    t_start = tstart; cmark = cost_now(tstart);   // D-30: the first row starts here (load_ckpt continues the totals)
     const int N = cfg.N, L = cfg.L, Hm = cfg.Hm;
     // adaptive schedule (benchmarks / pilot-like grids): T is known only when phi reaches 1
     int T = cfg.adaptive ? (1 << 23) : (int)cfg.grid.size() - 1;
@@ -592,6 +708,7 @@ class IslandEngine {
         logZ = D.logm0 + st.logZbar0;
         sync_ledgers();
         res.ks.t_init += std::chrono::duration<double>(std::chrono::steady_clock::now() - tstart).count();
+        cost_close(0, 0, 0.0);
         done_step = 0; maybe_ckpt(0, stop);
       }
       std::vector<double> lw(N), lw2(N);
@@ -679,6 +796,7 @@ class IslandEngine {
         }
         if (step == cfg.test_corrupt_store_step && top.size() >= 2) top.k->v[1] = top.k->v[0] + 1.0;   // tests only (O1)
         if (cfg.check_store_each_step) check_stores();   // tests / debugging only (O1: production checks at checkpoints and the final write)
+        cost_close(step, step <= T ? 1 : (step <= T + L ? 2 : 3), step <= T ? grid[step] : 1.0);
         if (over_budget(step)) { stop = true; break; }
         maybe_ckpt(step, stop);
       }
@@ -711,6 +829,10 @@ class IslandEngine {
     }
     std::memcpy(res.logical, master.logical, sizeof(res.logical));
     res.island_best = master.island_best; res.hpm = master.hpm;
+    // D-30: the exit row closes the last interval (the last checkpoint, a failed or interrupted partial step, the I1 check
+    // on exit, the assembly above), before the store is moved out; the lifetime totals below are then exactly the sums
+    // of the rows (counts) and of their walls (t_total)
+    cost_close(res.cost.empty() ? 0 : (int)res.cost.back().step + 1, 4, std::numeric_limits<double>::quiet_NaN());
     if (res.status == 0 || res.status == 1 || calib) {   // only a completed (or test-interrupted) island reports its store: a failed
                                                 // or refused island may hold part of an unfinished round (GUARD-W, review m1)
       Kept& K = *top.k;      // moved, not copied (review m8b; the run is over)
@@ -725,10 +847,11 @@ class IslandEngine {
       res.lead0_v = std::move(lead0.k->v); res.lead0_hash = std::move(lead0.k->hash); res.lead0_off = std::move(lead0.k->off); res.lead0_len = std::move(lead0.k->len); res.lead0_pool = std::move(lead0.k->pool);
       res.lead1_v = std::move(lead1.k->v); res.lead1_hash = std::move(lead1.k->hash); res.lead1_off = std::move(lead1.k->off); res.lead1_len = std::move(lead1.k->len); res.lead1_pool = std::move(lead1.k->pool);
     }
-    res.ks.store_merges = top.n_merges; res.ks.store_buffered = top.n_buffered;
-    res.ks.store_serial_merges = top.n_serial_merges; res.ks.t_store_compact = top.t_compact;
-    for (auto& t : tl) res.ks.store_dup_dropped += t->buf.n_dup_dropped;
-    res.ks.t_total = std::chrono::duration<double>(std::chrono::steady_clock::now() - tstart).count();
+    res.ks.store_merges = cmark.merges; res.ks.store_buffered = cmark.buffered;
+    res.ks.store_serial_merges = cmark.serial; res.ks.t_store_compact = cmark.t_compact;
+    res.ks.store_dup_dropped = cmark.dup;
+    res.ks.t_total = cmark.elapsed;
+    res.cost_header = cost_header();
     return std::move(res);
   }
 };
@@ -742,17 +865,11 @@ MemPlan plan_island(const Data& D, const Start& st, const IslandConfig& cfg, Mem
   double k_pi0 = 0, acc = 0;
   for (size_t k = 0; k < st.size_logmass.size(); ++k) { acc += std::exp(st.size_logmass[k]); if (acc >= 0.90) { k_pi0 = (double)k; break; } }
   const double k_est = cfg.test_admission_k > 0 ? cfg.test_admission_k : std::max({8.0, k_pi0 + 1.0, cfg.k_store});
-  const uint64_t cap = cfg.store_cap ? cfg.store_cap : 40ULL * (uint64_t)D.p + 1;
-  const bool lm = cfg.kernel == KernelKind::LabelMajor;
-  MemSizes z; z.n = D.n; z.p = D.p; z.K = D.K; z.N = cfg.N; z.B = cfg.B; z.Hm = cfg.Hm; z.threads = cfg.threads;
-  z.tile = std::max(64, (cfg.tile + 63) / 64 * 64); z.cap = cap; z.label_major = lm;
-  z.deferred = cfg.store_parallel_compact && cfg.threads > 1 && lm; z.leaders = cfg.leaders || cfg.role != IslandRole::Final; z.compat = cfg.compat; z.inputs_bytes = cfg.inputs_bytes;
-  z.calib = cfg.role != IslandRole::Final;
-  int G = cfg.G ? cfg.G : 256;
-  z.G = G; z.gram_slots = gram_slots_of(cfg, G, D.p); MemPlan mp = island_memory(z, k_est);
-  if (cfg.mem_budget && cfg.G == 0) {
-    while (G > 1 && mp.total > cfg.mem_budget) { --G; z.G = G; z.gram_slots = gram_slots_of(cfg, G, D.p); mp = island_memory(z, k_est); }
-  }
+  // the sizes and the G rule are plan_sizes / plan_with_budget (island.h): one implementation for this admission and for the
+  // pre-load admission of the island command (which has the dimensions but no Start; PR52 MAJOR-2)
+  MemSizes z = plan_sizes(D.n, D.p, D.K, cfg);
+  MemPlan mp = plan_with_budget(z, k_est, cfg);
+  int G = z.G;
   if (zout) *zout = z;
   if (kout) *kout = k_est;
   if (Gout) *Gout = G;
@@ -802,6 +919,8 @@ IslandRun run_island(const Data& D, const Start& st, const Neighbours& nb, const
   IslandConfig c2 = cfg; c2.G = G;
   if (cfg.mem_budget && mp.total > cfg.mem_budget) {   // deterministic refusal before any allocation
     IslandRun r; r.status = 3; r.r = (int)cfg.island; r.N = cfg.N; r.p = D.p; r.L = cfg.L; r.Hm = cfg.Hm; r.G_used = G; r.mem_plan = mem_plan_text(mp);
+    r.role = cfg.role; r.tier = cfg.tier; r.iter = cfg.iter; r.compat = cfg.compat;   // the request's identity (review PR52 m6): the file's mode
+    r.grid = cfg.grid; r.T = cfg.grid.size() ? (int)cfg.grid.size() - 1 : 0;           // and schedule, as a later refusal carries them
     r.reason = "mem_budget: predicted peak " + std::to_string(mp.total >> 20) + " MiB > budget " + std::to_string(cfg.mem_budget >> 20) + " MiB [" + r.mem_plan + "]";
     return r;
   }

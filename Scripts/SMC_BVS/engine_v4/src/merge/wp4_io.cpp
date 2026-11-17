@@ -527,16 +527,21 @@ std::string setup_data_hash(const Json& meta) {
 }
 // the pi_0 size law (calibrate's memory plan, INTERFACES §7): K + 1 log masses summing to 1
 std::vector<double> checked_size_logmass(const double* q, uint64_t c, int32_t K, const std::string& w) {
-  if (c != (uint64_t)K + 1) throw Error(Status::invalid_input, w + "size_logmass length != K + 1");
   std::vector<double> v(q, q + c);
+  check_size_logmass(v, K, w);
+  return v;
+}
+}  // namespace
+void check_size_logmass(const std::vector<double>& v, int32_t K, const std::string& w) {
+  if (v.size() != (size_t)K + 1) throw Error(Status::invalid_input, w + "size_logmass length != K + 1");
   long double tot = 0;
   for (double x : v) {
     if (std::isnan(x) || x == std::numeric_limits<double>::infinity() || x > 1e-9) throw Error(Status::invalid_input, w + "size_logmass not a log probability");
     tot += std::exp((long double)x);
   }
   if (std::fabs((double)tot - 1.0) > 1e-6) throw Error(Status::invalid_input, w + "size_logmass does not sum to 1");
-  return v;
 }
+namespace {
 // One small section, checked against its table hash (the Reader was opened without verify_all). Refuses a section
 // longer than `max_bytes`, so a plan read stays bounded whatever the file claims.
 void check_small_section(const fmt::Reader& R, const std::string& name, const void* q, uint64_t max_bytes, const std::string& w) {
@@ -575,20 +580,6 @@ DataPlanHead read_data_plan(const std::string& path) {
   h.K = (int32_t)K;
   return h;
 }
-SetupPlanHead read_setup_plan(const std::string& path, int32_t K) {
-  fmt::Reader R(path, /*verify=*/false);
-  const std::string w = path + ": ";
-  if (R.kind() != fmt::K_SETUP) throw Error(Status::invalid_input, path + ": not a setup file");
-  SetupPlanHead h; h.content_hash = R.content_hash(); h.file_bytes = stat_bytes(path);
-  h.data_hash = setup_data_hash(small_json(R, path, "meta", w));
-  if (R.has("size_logmass")) {
-    uint64_t c = 0; const double* q = R.get<double>("size_logmass", &c);
-    check_small_section(R, "size_logmass", q, 8ull * ((uint64_t)K + 1), w);   // a length != K + 1 is refused here, unread
-    h.size_logmass = checked_size_logmass(q, c, K, w);
-  }
-  return h;
-}
-
 SetupView read_setup(const std::string& path, int32_t p, int32_t K, const Zobrist* zob) {
   fmt::Reader R(path);
   if (R.kind() != fmt::K_SETUP) throw Error(Status::invalid_input, path + ": not a setup file");
@@ -601,7 +592,7 @@ SetupView read_setup(const std::string& path, int32_t p, int32_t K, const Zobris
   // members[blk_ptr[b] + pos[j]] = j; each block's table fits in logr; logr finite for every code with |U| <= K
   const std::string w = path + ": ";
   if (s.blk.size() != (size_t)p || s.pos.size() != (size_t)p || s.blk_members.size() != (size_t)p) throw Error(Status::invalid_input, w + "blk / pos / blk_members length != p");
-  // INTERFACES v0.1.18 §2/§5: J blocks; blk_ptr and code_ptr both have J + 1 entries (CSR); code_ptr[0] = 0, block b's
+  // INTERFACES v0.1.19 §2/§5: J blocks; blk_ptr and code_ptr both have J + 1 entries (CSR); code_ptr[0] = 0, block b's
   // table is logr[code_ptr[b] .. code_ptr[b + 1]) = 2^m codes, code_ptr[J] = |logr|
   if (s.blk_ptr.empty() || s.code_ptr.size() != s.blk_ptr.size()) throw Error(Status::invalid_input, w + "code_ptr must have J + 1 entries like blk_ptr");
   const size_t J = s.blk_ptr.size() - 1;
@@ -624,7 +615,7 @@ SetupView read_setup(const std::string& path, int32_t p, int32_t K, const Zobris
   check_model(s.mode_S, p, K, w + "mode_S");
   if (R.has("size_logmass")) { uint64_t c = 0; const double* q = R.get<double>("size_logmass", &c); s.size_logmass = checked_size_logmass(q, c, K, w); }
   // table stores: caps and orders from INTERFACES §4.1 (top 40p + 1 HPM, lead0 / lead1 20p LEX); setup.bin carries no
-  // meta.stores (v0.1.18), the tstore_* sections are all there is. A stray meta.stores is ignored.
+  // meta.stores (v0.1.19), the tstore_* sections are all there is. A stray meta.stores is ignored.
   read_store_sections(R, "tstore_top", 40ull * (uint64_t)p + 1, Order::HPM, s.ttop, p, K, zob);
   if (R.has("tstore_lead0_v")) read_store_sections(R, "tstore_lead0", 20ull * (uint64_t)p, Order::LEX, s.tlead0, p, K, zob);
   if (R.has("tstore_lead1_v")) read_store_sections(R, "tstore_lead1", 20ull * (uint64_t)p, Order::LEX, s.tlead1, p, K, zob);
@@ -634,13 +625,13 @@ SetupView read_setup(const std::string& path, int32_t p, int32_t K, const Zobris
 }
 std::string write_setup_min(const std::string& path, const SetupView& s, const Json& inputs) {
   if (s.code_ptr.empty() || s.code_ptr.size() != s.blk_ptr.size() || s.code_ptr.back() != (int64_t)s.logr.size())
-    throw Error(Status::internal_error, "write_setup_min: code_ptr must have J + 1 entries with code_ptr[J] = |logr| (INTERFACES v0.1.18)");
+    throw Error(Status::internal_error, "write_setup_min: code_ptr must have J + 1 entries with code_ptr[J] = |logr| (INTERFACES v0.1.19)");
   fmt::Writer W(fmt::K_SETUP, fmt::M_COMPAT);
   Json meta = Json::object();
   W.add("blk", s.blk); W.add("pos", s.pos); W.add("code_ptr", s.code_ptr); W.add("logr", s.logr);
   W.add("blk_ptr", s.blk_ptr); W.add("blk_members", s.blk_members); W.add("mode_S", s.mode_S);
   if (!s.size_logmass.empty()) W.add("size_logmass", s.size_logmass);
-  add_store_sections(W, "tstore_top", s.ttop);   // no meta.stores in setup.bin (INTERFACES v0.1.18)
+  add_store_sections(W, "tstore_top", s.ttop);   // no meta.stores in setup.bin (INTERFACES v0.1.19)
   if (s.tlead0.cap) add_store_sections(W, "tstore_lead0", s.tlead0);
   if (s.tlead1.cap) add_store_sections(W, "tstore_lead1", s.tlead1);
   meta["inputs"] = inputs; meta["binary"] = binary_block(); meta["writer"] = "wp4 write_setup_min (test/harness; WP2 owns setup.bin)";

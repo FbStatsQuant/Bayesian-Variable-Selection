@@ -427,7 +427,7 @@ List wp4_files_merge(SEXP setup, NumericVector grid, List ro, double seed, SEXP 
       S.ttop.offer(F, U, D.zob.hash(U)); S.tlead0.offer(lg0, U, D.zob.hash(U)); S.tlead1.offer(F, U, D.zob.hash(U));
     }
   }
-  S.code_ptr.push_back((int64_t)S.logr.size());   // J + 1 entries; code_ptr[J] = |logr| (INTERFACES v0.1.18 §2/§5)
+  S.code_ptr.push_back((int64_t)S.logr.size());   // J + 1 entries; code_ptr[J] = |logr| (INTERFACES v0.1.19 §2/§5)
   S.ttop.compact(); S.tlead0.compact(); S.tlead1.compact();
   bool tie_dp = !ro.containsElementNamed("ls0_tie_dp") || as<bool>(ro["ls0_tie_dp"]);
   S.mode_S = start_mode(st, 1000000, tie_dp).S;
@@ -541,7 +541,7 @@ v4::wp4io::SetupView setup_view_from_core(const v3::Start& st, const v3::Data& D
       S.ttop.offer(F, U, zob.hash(U)); S.tlead0.offer(lg0, U, zob.hash(U)); S.tlead1.offer(F, U, zob.hash(U));
     }
   }
-  S.code_ptr.push_back((int64_t)S.logr.size());   // J + 1 entries; code_ptr[J] = |logr| (INTERFACES v0.1.18 §2/§5)
+  S.code_ptr.push_back((int64_t)S.logr.size());   // J + 1 entries; code_ptr[J] = |logr| (INTERFACES v0.1.19 §2/§5)
   S.ttop.compact(); S.tlead0.compact(); S.tlead1.compact();
   return S;
 }
