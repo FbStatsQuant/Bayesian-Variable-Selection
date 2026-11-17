@@ -1,0 +1,13 @@
+OK            [STATEMENT.md] Theory_work/Wave1/W1-N1/STATEMENT.md:98-104 sha=87f6b47b72 | Under §2, for every fixed index r ≥ 1, every q ∈ {1, …, 4} and every h as in §1, almost surely on 𝒜 ∩ {r ≤ R′}
+OK            [STATEMENT.md] Theory_work/Wave1/W1-N1/STATEMENT.md:104-104 sha=ff3f7a2491 | In particular, with W_r := Ẑ_r/Z, E[W_r | 𝓒] = 1 and E[W_r H_r(h) | 𝓒] = π(h). No regime assumption on X is ma
+OK            [STATEMENT.md] Scripts/SMC_BVS/core/v3_run.R:150-154 sha=ac2f10f772 | logZr <- vapply(isl, function(r) r$log_Z, 0)
+OK            [STATEMENT.md] Scripts/SMC_BVS/core/v3_run.R:91-91 sha=a2ae3dd4fd | islands = 4L, tier = as.integer(tier), ell = as.integer(b$ell),
+OK            [STATEMENT.md] Theory_work/Wave3/W3-SAMP/STATEMENT.md:52-53 sha=17b6b55007 | - Ẑ_r := exp(`log_Z_r`[r]) (the code stores log Ẑ_r: `cpp/v3_engine.h:299, 322, 365`); W_r := Ẑ_r/Z; reported 
+OK            [PROOF.md] Theory_work/Wave1/W1-N1/STATEMENT.md:98-104 sha=87f6b47b72 | Under §2, for every fixed index r ≥ 1, every q ∈ {1, …, 4} and every h as in §1, almost surely on 𝒜 ∩ {r ≤ R′}
+OK            [PROOF.md] Theory_work/Wave1/W1-N1/STATEMENT.md:94-96 sha=252a819b9f | *[Post-lock exposition note, council C1: island-r quantities are defined only on E₀ := 𝒜 ∩ {r ≤ R′} ∈ σ(𝓒);
+OK            [PROOF.md] Scripts/SMC_BVS/core/v3_run.R:91-91 sha=a2ae3dd4fd | islands = 4L, tier = as.integer(tier), ell = as.integer(b$ell),
+OK            [PROOF.md] Scripts/SMC_BVS/core/v3_run.R:150-154 sha=ac2f10f772 | logZr <- vapply(isl, function(r) r$log_Z, 0)
+OK            [PROOF.md] Theory_work/Wave3/W3-SAMP/STATEMENT.md:35-36 sha=fe4d5f6e6d | E[min(1, ρ)]. No claim is conditional on 𝒜 or on completion, and P(𝒜) → 1 is neither assumed nor claimed. Unde
+
+10 citations: 10 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+Not machine-checked: unbackticked references and the semantic match of each excerpt.
