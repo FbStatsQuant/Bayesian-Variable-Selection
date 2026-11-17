@@ -275,8 +275,9 @@ class Job:
 
 
 
-def run_in(sb, script_rel, args, timeout, logdir, report_path=None):
-    """Run one script inside the sandbox. The script path must resolve inside the sandbox. stdout/stderr go to a
+def run_in(sb, script_rel, args, timeout, logdir, report_path=None, at_root=False):
+    """Run one script inside the sandbox. The script path must resolve inside the sandbox. cwd = the script's own
+    directory (falsify scripts), or the sandbox's repo root when at_root=True (citechecks, see step_cite). stdout/stderr go to a
     file. Windows: the process starts SUSPENDED, joins a Job Object, then resumes; on every exit path the Job is
     terminated (all and only the processes of this run — Job membership is a kernel identity, never a recycled pid).
     POSIX: own session; on timeout the group is killed while its leader is still unreaped (so its id cannot have been
@@ -286,7 +287,8 @@ def run_in(sb, script_rel, args, timeout, logdir, report_path=None):
     if os.path.isabs(script_rel) or ".." in script_rel.replace("\\", "/").split("/") or \
             not _strict_child(script, sb.path):
         return "REFUSED (script path outside the sandbox)", 0.0, "", []
-    sdir = os.path.dirname(script)
+    sdir = sb.path if at_root else os.path.dirname(script)
+    sname = script_rel if at_root else os.path.basename(script)  # relative to the cwd chosen above
     logf = os.path.join(logdir, "_run.log")
     t0 = time.time()
     kw = ({"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP | 0x4}  # CREATE_SUSPENDED: assign to job first
@@ -295,7 +297,7 @@ def run_in(sb, script_rel, args, timeout, logdir, report_path=None):
     try:
         with open(logf, "w", encoding="utf-8", errors="replace") as fh:
             try:
-                p = subprocess.Popen([*PYNUM, os.path.basename(script), *args], cwd=sdir, stdout=fh,
+                p = subprocess.Popen([*PYNUM, sname, *args], cwd=sdir, stdout=fh,
                                      stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL,
                                      env={**os.environ, "PYTHONHASHSEED": "0", "MPLBACKEND": "Agg"}, **kw)
             except OSError as e:
@@ -401,7 +403,36 @@ def step_falsify(out, calibrate=False):
 
 
 def miss_count(text):
-    return sum(1 for ln in text.splitlines() if re.match(r"\s*(MISS|BAD|FAIL)", ln))
+    return sum(1 for ln in text.splitlines() if re.match(r"\s*(?:[A-Z]+-)?(MISS|BAD|FAIL)", ln))
+
+
+def cite_verdict(rc, before, after):
+    """(good, note, committed misses, misses now) for one citecheck. The script must have RUN: rc 0 or 1 only
+    (1 = the script reports misses), and an rc=1 must be explained by at least one counted MISS/BAD/FAIL line (else it
+    crashed or never ran, e.g. on a missing input: a bare 'MISS 0 -> 0' would otherwise pass). Never more misses than
+    the committed CITECHECK.txt."""
+    b, a = miss_count(before), miss_count(after)
+    if rc not in (0, 1):
+        return False, f"did not complete (rc={rc})", b, a
+    if rc == 1 and a == 0:
+        return False, "rc=1 but no MISS/BAD/FAIL line in the output: the check did not run (crash?)", b, a
+    return a <= b, "", b, a
+
+
+def cite_one(sb, rel, out):
+    """Run one citecheck from the repo root of the sandbox (several only work there; all others do not care) and
+    judge it. Returns (good, report line)."""
+    d = os.path.dirname(os.path.join(sb.path, rel))
+    cands = [os.path.join(d, "CITECHECK.txt"), os.path.join(d, "reviews", "CITECHECK.txt"),
+             os.path.join(os.path.dirname(d), "CITECHECK.txt"),
+             os.path.join(os.path.dirname(d), "reviews", "CITECHECK.txt")]  # <ticket>/numerics/ + <ticket>/reviews/
+    committed = next((c for c in cands if os.path.exists(c)), None)
+    before = open(committed, encoding="utf-8", errors="replace").read() if committed else ""
+    rep_rel = os.path.relpath(committed, sb.path) if committed else None
+    rc, secs, txt, changed = run_in(sb, rel, [], CAP, out, report_path=rep_rel, at_root=True)
+    good, note, b, a = cite_verdict(rc, before, txt)
+    return good, f"- {'PASS' if good else 'FAIL'} `{rel}`: MISS {b} committed -> {a} now (rc={rc})" + \
+        (f"; {note}" if note else "")
 
 
 def step_cite(out):
@@ -410,20 +441,9 @@ def step_cite(out):
     with Sandbox() as sb:
         for cc in sorted(glob.glob(os.path.join(sb.path, "Theory_work", "Wave*", "*", "**", "citecheck.py"),
                                    recursive=True)):
-            rel = os.path.relpath(cc, sb.path).replace("\\", "/")
-            d = os.path.dirname(cc)
-            cands = [os.path.join(d, "CITECHECK.txt"), os.path.join(d, "reviews", "CITECHECK.txt"),
-                     os.path.join(os.path.dirname(d), "CITECHECK.txt"),
-                     os.path.join(os.path.dirname(d), "reviews", "CITECHECK.txt")]  # <ticket>/numerics/ + <ticket>/reviews/
-            committed = next((c for c in cands if os.path.exists(c)), None)
-            before = open(committed, encoding="utf-8", errors="replace").read() if committed else ""
-            rep_rel = os.path.relpath(committed, sb.path) if committed else None
-            rc, secs, txt, changed = run_in(sb, rel, [], CAP, out, report_path=rep_rel)
-            after = txt
-            b, a = miss_count(before), miss_count(after)
-            good = rc in (0, 1) and a <= b
+            good, line = cite_one(sb, os.path.relpath(cc, sb.path).replace("\\", "/"), out)
             ok &= good
-            lines.append(f"- {'PASS' if good else 'FAIL'} `{rel}`: MISS {b} committed -> {a} now (rc={rc})")
+            lines.append(line)
     return ok, "\n".join(lines)
 
 

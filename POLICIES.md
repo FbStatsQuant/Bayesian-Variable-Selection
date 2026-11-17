@@ -309,4 +309,7 @@ level is recorded in `HQ_NOW.md`.
 **Unattended agents never wait on approvals (HQ, 2026-11-16; from Theory D62):**
 - A Codex or other unattended reviewer that triggers a sandbox approval request stalls forever, because no tool can answer it.
 - Briefs therefore never set TMPDIR or write outside the agent's own worktree or folder. Scratch goes in `<worktree>/.rc_tmp/` at the worktree root (git-ignored via the shared .git/info/exclude), never inside a ticket folder, because manifest.py walks ticket folders and stray files break freeze and bind. Never add a .gitignore inside a frozen folder.
+- **Codex agents never delete anything**, not even their own `.rc_tmp/`, since deletions trigger approval prompts.
+  They never write outside their worktree, either: reviews go to `.rc_tmp/`, and the manager copies them and cleans up
+  (Engineering, PR #47 incident, 11-16).
 - Managers check pending requests when a review runs over 2 h.
