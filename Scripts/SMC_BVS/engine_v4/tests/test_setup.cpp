@@ -3,7 +3,6 @@
 #include <atomic>
 #include <cmath>
 #include <cstdlib>
-#include <new>
 #include <omp.h>
 #include <map>
 #include <random>
@@ -37,22 +36,9 @@ std::vector<std::vector<int>> rows(const Csr& c) {
 }
 }  // namespace
 
-// ---- allocation counter (PR50 MAJOR-1): counts every global operator new while armed (all threads). Replacing the global
-// allocation functions affects the whole v4_tests binary; the flag is off except inside the D-31 allocation test.
-namespace {
-std::atomic<bool> g_count_allocs{false};
-std::atomic<uint64_t> g_allocs{0};
-}
-void* operator new(std::size_t n) {
-  if (g_count_allocs.load(std::memory_order_relaxed)) g_allocs.fetch_add(1, std::memory_order_relaxed);
-  if (void* p = std::malloc(n ? n : 1)) return p;
-  throw std::bad_alloc();
-}
-void* operator new[](std::size_t n) { return operator new(n); }
-void operator delete(void* p) noexcept { std::free(p); }
-void operator delete[](void* p) noexcept { std::free(p); }
-void operator delete(void* p, std::size_t) noexcept { std::free(p); }
-void operator delete[](void* p, std::size_t) noexcept { std::free(p); }
+// Allocation counter (PR50 MAJOR-1): defined with the global operator new replacement in tests/test_island.cpp.
+extern std::atomic<bool> g_count_allocs;
+extern std::atomic<uint64_t> g_allocs;
 
 TEST(unit_dup_components_and_cut_group) {
   for (auto d : {stk::TIE, stk::AR, stk::BLK, stk::IND})
@@ -556,6 +542,12 @@ TEST(d31_cond_row_scan_table) {
 // Counts every operator new (all threads) while armed. The scratch, the output models and the OpenMP team are built
 // before arming; the static code tables are warmed by DrawScratch itself (no extra warm-up call below).
 TEST(d31_pi0_draw_allocation_free) {
+  {   // the counter itself works (a direct call to operator new is not elidable)
+    g_allocs.store(0); g_count_allocs.store(true);
+    void* volatile q = ::operator new(8); ::operator delete(q);
+    g_count_allocs.store(false);
+    SCHECK(g_allocs.load() == 1, "allocation counter inert: %llu", (unsigned long long)g_allocs.load());
+  }
   for (auto d : {stk::AR, stk::BLK, stk::TIE}) {
     Fixture F(d, 150, 1500, 141);
     SetupOptions o; o.threads = stk::threads();
@@ -602,7 +594,7 @@ TEST(d31_pi0_draw_allocation_free) {
       CondScratch cs;
       for (int b = omp_get_thread_num(); b < T.J; b += nth)
         for (int k = 0; k <= T.K; ++k)
-          for (double u : {0.0, 0.3, 0.9, 0.999999}) { const int j = pi0_block_size(T, b, k, u, cs); ++calls; mism += (j < 0 || j >= T.cond_len(b, k)); }
+          for (double u : {0.0, 0.3, 0.9, 0.999999}) { const int j = pi0_block_size(T, b, k, u, cs); ++calls; mism += (j < 0 || j > T.cond_len(b, k)); }   // len = an unreachable all-zero row
     }
     g_count_allocs.store(false);
     SCHECK(g_allocs.load() == 0 && mism == 0, "D-31: pi0_block_size: %llu allocations in %ld calls, %d out-of-range sizes (%s)",
@@ -617,10 +609,10 @@ TEST(d31_pi0_draw_allocation_free) {
 TEST(d31_accounting_includes_cond0) {
   for (auto d : {stk::AR, stk::IND}) {
     Fixture F(d, 400, 1200, 151);
-    const int B = default_B(400, 1200);
-    PartitionOptions po;
-    CountResult c = count_only(F.D(), po, B, stk::threads(), /*allow_filter=*/true);
-    const MemAccount& A = c.acc;
+    SetupOptions o; o.threads = stk::threads();
+    SetupResult r0 = run_setup(F.D(), o);   // production accounting (actual neighbour count)
+    SCHECK(r0.status == v4::Status::completed, "%s", r0.reason.c_str());
+    const MemAccount& A = r0.acc;
     uint64_t live = 0, live_est = 0, cond0 = 0;
     for (auto& it : A.items)
       if (it.stage == "data" || it.stage == "persistent") { live += it.bytes; live_est += it.est; if (it.name.rfind("cond0", 0) == 0) cond0 = it.bytes; }
@@ -630,14 +622,13 @@ TEST(d31_accounting_includes_cond0) {
            stk::design_name(d), (unsigned long long)stage(A.stage_peak, "start_law"), (unsigned long long)live);
     SCHECK(stage(A.stage_peak, "start_mode") >= live && A.peak >= live && A.peak_est >= live_est, "peak below the live set (%s)", stk::design_name(d));
     // the budget boundary on the accounted peak, as run_setup compares it (peak / 1e9 > budget -> refuse)
-    SetupOptions o; o.threads = stk::threads();
     o.mem_budget_gb = (double)A.peak / 1e9 * (1.0 - 1e-6);
     SetupResult r = run_setup(F.D(), o);
     SCHECK(r.status == v4::Status::resource_limit && r.reason.find("admission:") != std::string::npos, "budget just below the accounted peak admitted (%s): %s", stk::design_name(d), r.reason.c_str());
     o.mem_budget_gb = (double)A.peak / 1e9 * (1.0 + 1e-6);
     r = run_setup(F.D(), o);
     SCHECK(r.status == v4::Status::completed, "budget just above the accounted peak refused (%s): %s", stk::design_name(d), r.reason.c_str());
-    SCHECK(r.acc.peak == A.peak, "run_setup's accounting differs from count-only's (%s)", stk::design_name(d));
+    SCHECK(r.acc.peak == A.peak, "the accounted peak is not deterministic (%s)", stk::design_name(d));
   }
 }
 

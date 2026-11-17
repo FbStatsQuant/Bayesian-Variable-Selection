@@ -65,8 +65,8 @@ void Start::draw_pi0(UniformSource& us, Address a, Model& S, DrawScratch& ds) co
       int i = cat_draw_gt(c, &T->sub_cum[0] + T->sub_ptr[row + 1], U(SK_PI0_SUBMODEL, (uint32_t)b));
       code = T->codes_by_size[T->cbs_ptr[row] + i];
     } else {  // D-18: the within-size law of this block and size, recomputed from logr (same bits as the stored arrays)
-      const int n = sub_cum_of(*T, b, P->size(b), j, ds);
-      int i = cat_draw_gt(ds.sc.data(), ds.sc.data() + n, U(SK_PI0_SUBMODEL, (uint32_t)b));
+      const int nsub = sub_cum_of(*T, b, P->size(b), j, ds);
+      int i = cat_draw_gt(ds.sc.data(), ds.sc.data() + nsub, U(SK_PI0_SUBMODEL, (uint32_t)b));
       uint32_t n; code = codes_of_size(P->size(b), j, &n)[i];
     }
     for (int t = 0; t < P->size(b); ++t) if (code & (1u << t)) S.push_back(P->block(b)[t]);

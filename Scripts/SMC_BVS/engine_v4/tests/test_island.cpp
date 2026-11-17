@@ -23,7 +23,12 @@ using namespace v4::island;
 // called inside an active OpenMP parallel region throws std::bad_alloc. Off (0) for every other test. A real failure at
 // an unguarded site inside a region escapes the structured block and aborts the whole test binary (std::terminate).
 static std::atomic<long> g_par_new_countdown{0};
+// Allocation counter for tests of allocation-free paths (PR50 MAJOR-1, tests/test_setup.cpp): while g_count_allocs is set,
+// every operator new on any thread increments g_allocs. Off for every other test.
+std::atomic<bool> g_count_allocs{false};
+std::atomic<uint64_t> g_allocs{0};
 void* operator new(std::size_t n) {
+  if (g_count_allocs.load(std::memory_order_relaxed)) g_allocs.fetch_add(1, std::memory_order_relaxed);
   if (g_par_new_countdown.load(std::memory_order_relaxed) > 0 && omp_in_parallel() && g_par_new_countdown.fetch_sub(1) == 1) {
     if (std::getenv("V4_DEBUG_INJECT")) { void* bt[32]; int nb = backtrace(bt, 32); std::fprintf(stderr, "== injected\n"); backtrace_symbols_fd(bt, nb, 2); }
     throw std::bad_alloc(); }
