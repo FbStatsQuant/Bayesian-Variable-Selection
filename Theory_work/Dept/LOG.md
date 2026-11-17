@@ -484,3 +484,4 @@
 - 2026-11-17 15:01 CST D124: SOL62 A/B prep (Sonnet) launched; the manager runs the 6.2 calls after the recordings.
 - 2026-11-17 15:07 CST SOL62 A/B prep done (b0eb16f1): 3 cases (Cor-H KL true finding; W3-D2 R1 Sol F1 lgamma finding, confirmed; W3-MISR-R K2 clean control), ~33.9k input tokens for 3 calls; TRACK_B case impossible (no 6.1 review of it); D18 case skipped. Runs after the current recordings (D124).
 - 2026-11-17 15:11 CST A1/A2 corrigendum LANDED 560194e9 (CI 44174655166). W discharge dry run clean (ISL/FRZ; R4 + 5 rows discharged; DIST-C/Cor-C EX-A only; ERRATA_W3-SAMP.md; R5r→R5r2) → HQ GO requested. All next-item details consolidated to the recorder.
+- 2026-11-17 15:11 CST HQ GO W discharge real (relayed); then Prop-LB → D2 → D3 → V.
