@@ -53,7 +53,7 @@ status. \\
 \subsection{Shared assumptions}\label{sec:standing}
 
 The assumptions below are used by several results; the others are stated with the result that uses them. Two words recur
-in Results~3 and~4. A true predictor is \emph{visible} if its signal does not cancel against any $15$ other predictors (the
+in Result~3. A true predictor is \emph{visible} if its signal does not cancel against any $15$ other predictors (the
 method's blocks hold at most $16$); a null predictor \emph{leaks} if, given up to $15$ others, it can imitate part of a
 true predictor's signal (Example~\ref{ex:leak}).
 
@@ -237,13 +237,14 @@ for all large $n$. Condition~\ref{asm:dist-nec} keeps the Occam factor of each e
 radius grows by one factor $\sqrt{\log(\praw\vee n)}$ (Proposition~\ref{prop:dist}). The same statement holds for every
 level $M$ up to $\sqrt n/\log n$, with the same constants. It also carries over to the list of models that a completed run returns,
 when that list holds posterior mass at least $n^{-c_{\mathrm H}M/2}$, a condition the run does not check
-(Corollary~\ref{cor:dist-output}).
+(Remark~\ref{cor:dist-output}).
 \end{remark}
 
 % =====================================================================================================
-\subsection{Result 3: the method, as coded, reports the true model}\label{sec:reported}
+\subsection{Result 3: the reported model is the true model, the theorem for block and moderate AR correlation}\label{sec:reported}
 
-\inwords{If every true predictor is visible to a block-by-block search, the predictors that can imitate the signal form a
+\inwords{This is the theorem for block and moderate AR correlation. If no true predictor is masked by $15$ or fewer
+others, the predictors that can imitate the signal form a
 set $Q$ of at most $n^b$ predictors with $b<\tfrac12$, and regressions within $Q$ are local, then there is an event,
 determined by the data alone and of probability tending to one, on which every run that produces output reports exactly
 the true model, whatever its seed and the outcome of its calibration. The mechanism is that of
@@ -268,17 +269,19 @@ of $\Xr$, a deterministic $\tstar$, $\sz\ge1$ fixed, and $\theta_{\mathrm{lo}}\l
 $j\in\Sz$, with fixed $0<\theta_{\mathrm{lo}}\le\theta_{\mathrm{hi}}$. \hfill [\SA{post}]
 \end{assumption}
 
-\begin{assumption}{V}{Visibility}
+\begin{assumption}{V}{Visibility: no true predictor masked by $\le15$ others}
 For every $j\in\Sz$ and every $U\not\ni j$ with $\abs{U}\le15$, $\abs{\Cov(W_j,W^\top\tstar\mid W_U)}\ge a$, for a fixed
 $a>0$. \hfill [\SA{rm}]
 \end{assumption}
 
 In \as{FSt} the raw coefficients $\bstar=D^{-1}\tstar$ depend on the design; \as{FSt} takes the place of \as{GL} and \as{SP}
-in Results~3 and~4.
+in Result~3 and in the supplement's remark on the reported estimates.
 
 Visibility excludes masking: if two true predictors with coefficients $1$ and $-1$ have correlation $\rho$, the
 signal of each, given nothing, is $1-\rho$, and it vanishes as $\rho\to1$. A null predictor whose correlation with
-a true one stays fixed must belong to the leakage set $Q$, as predictor $5$ does in Example~\ref{ex:leak}.
+a true one stays fixed must belong to the leakage set $Q$, as predictor $5$ does in Example~\ref{ex:leak}. The
+conditions fail for pervasive common factors with effects of mixed signs and for riboflavin-like data
+(Section~\ref{sec:who-outside}).
 
 Fix $b\in(0,\tfrac12)$ and $b_H>0$ with $15b_H+b<\tfrac12$.
 
@@ -335,27 +338,65 @@ independently checked}. Registry: Appendix~\ref{app:status}, row 3.1.}
 (i) \emph{Why $b<\tfrac12$.} At model size about $\sqrt n$ the prior-plus-Occam penalty of one more predictor
 ($\approx\log p+\tfrac12\log n$) stops dominating the best of $p$ noise gains ($\approx\log p$); for larger $b$ the key events of the argument are
 expected to fail (a heuristic; whether the conclusion fails is open).
-(ii) Designs that satisfy the assumptions include correlation that is local in a metric, and bounded blocks.
+(ii) Designs that satisfy the assumptions include block correlation and moderate AR correlation.
 \end{remark}
 
-\scope{The independent and locally correlated designs of our studies; not pervasive common factors with $p\gg\sqrt n$
-(Section~\ref{sec:who-outside}).}
+\scope{Block and moderate AR correlation, and independent predictors: the designs S1--S4, S6, IND, AR ($0.6$) and BLK of
+our studies; not pervasive common factors with $p\gg\sqrt n$ (Section~\ref{sec:who-outside}).}
 
 % =====================================================================================================
-\subsection{Result 4: the run's estimates}\label{sec:estimates}
+\subsection{Result 4: certified screening, the guarantee that needs neither condition}\label{sec:screen}
 
-\inwords{The method reports an evidence estimate, pooled inclusion probabilities and the median probability model they
-define. Given the calibration, the evidence estimate is unbiased, on every design. If, in addition, the rows are Gaussian, the signals fixed, every true predictor visible, and no
-null predictor correlated with a true one beyond order $n^{-1/2}$, even given $15$ others, the reported estimates are
-consistent: the errors of the evidence estimate (relative and log error) and of the inclusion probabilities, multiplied
-by the indicator that the method uses the sampler and its calibration succeeds, are of order
-$n^{-1/2}e^{C_\rho\sqrt{\log n}}=n^{-1/2+o(1)}$; the probability that this event occurs and the median model is wrong tends
-to zero, and so does the probability that the run completes and the reported model is wrong.}
+\inwords{If small sets of predictors have an eigenvalue floor and the true signals and coefficients are bounded by fixed
+constants, then the probability that a run produces output, certifies a reported model of at most $k_n$ predictors, and
+that model misses a true predictor tends to zero. The conclusion is weaker than that of Result~3: a certified small model
+misses no true predictor, but it may contain null ones. Neither visibility nor a leakage set is needed.}
 
-\why{The numbers a user reads come with guarantees: the evidence estimate is right on average on every design, and on
-designs without leakage, on the event that the calibration succeeds, the reported summaries converge to their targets.}
+\why{It needs neither condition of Result~3, so it covers designs where those conditions fail, with the weaker
+conclusion that no true predictor is missed.}
 
-\subsubsection{Unbiased evidence, on every design}\label{sec:unbiased}
+Here \emph{certified} means that the run set its local-optimality flag (Section~\ref{sec:outputs-method}): the reported
+model ends a local search whose last scan found no strict improvement, or the method enumerated $\Om$. The model-size
+budget $k_n$ is chosen by the analyst.
+
+\begin{theorem}[Certified screening]\label{thm:screen}
+Let the design be fixed and assume \as{GL} and Convention~\as{C1}; \as{SP} is not assumed. Let $k_n\in\{0,\dots,K-1\}$ be
+a model-size budget, and assume $\lmin(\Rhat_S)\ge\kappa$, for a fixed $\kappa>0$, for every $S$ with $\abs{S}\le k_n+\sz$, $\tmin\ge\tlow>0$ and
+$\norm{\tstar}_1\le M_1$, with $\kappa$, $\tlow$, $M_1$, $\sigs^2$ fixed, and $(k_n+1)\log p+\log n\le c_{\mathrm{SB}}\,n$, where
+$c_{\mathrm{SB}}:=\kappa^2\tlow^2/\{200(M_1^2+\sigs^2)\}$. Then
+\[
+  \P\big(\text{the run produces output},\ \Shat\text{ is certified},\ \abs{\Shat}\le k_n,\ \Sz\not\subseteq\Shat\big)\to0 .
+\]
+\end{theorem}
+
+\asmlist{(1)~\as{GL} [\SA{all}]; (2)~the eigenvalue floor on sets of $k_n+\sz$ predictors and the fixed signal bounds
+[\SA{scr}]; (3)~the size budget, chosen by the analyst; (4)~Convention \as{C1}.}
+
+\status{\textbf{Proved and independently checked}. Registry: Appendix~\ref{app:status}
+
+\scope{Every fixed design with the floor and the signal bounds; no visibility, leakage, start or block condition.}
+
+\begin{remark}[What is not claimed, and how often runs certify]\label{rem:screen}
+(i) The bound is on an intersection: a run produces output, certifies a small model, \emph{and} that model misses a true
+predictor. It is not a guarantee conditional on certification, and no run is claimed to certify a small model; nor is the
+certified model claimed to equal the true model.
+(ii) A second form replaces the signal bounds by a margin on the noiseless gain of a missing true predictor, with no
+condition on $p$, $\sz$ or the null predictors (also proved and independently checked).
+(iii) \emph{In existing numerics (not a theorem),} every completed run certified its reported model: 2,394 of 2,394 in the
+2,400-fit study, 376 of 376 in the strong-factor study, and 71 of 71 in a screening study. On the strong-factor designs with
+equicorrelation $\varrho\in\{0.5,0.7\}$, $p\ge2.5n$ and $\sz\in\{4,8\}$, the certified model missed at least one true
+predictor in 61 of 122 fits at $n=50$, 2 of 20 at $n=75$ and none of 30 at $n=100$; at the constants of these designs the
+size budget of Theorem~\ref{thm:screen} requires $n\gtrsim1{,}450$.
+\end{remark}
+
+% =====================================================================================================
+\subsection{Result 5: the evidence estimate is unbiased, on every design}\label{sec:estimates}\phantomsection\label{sec:unbiased}
+
+\inwords{The method reports an evidence estimate, the pooled average of its four islands' estimates. Given the
+calibration, it is unbiased for the evidence $Z$, on every design and every data set.}
+
+\why{It is the one reported number with a guarantee that needs no condition on the design; it also underlies the
+reported lower bound for $\log Z$ (Appendix~\ref{app:params}).}
 
 \begin{proposition}[Each island's evidence estimate is unbiased]\label{prop:unbiased}
 Under Convention~\as{C3}, given the calibration, each island's evidence estimate $\Zhat_r$ is unbiased for $Z$, for every
@@ -364,7 +405,9 @@ design and data set.
 
 \asmlist{Convention \as{C3} only; no condition on the design (Appendix~\ref{app:conventions}).}
 
-\status{\textbf{Proved and independently checked}. Registry: Appendix~\ref{app:status}, row 3.5.}
+\status{\textbf{Proved and independently checked} (registry). It uses two results on the coded sampler, recorded as
+proved under their named premises and independently checked under an earlier protocol; their final line check is
+running, and the status will be requoted when it is recorded. Registry: Appendix~\ref{app:status}, row 3.5.}
 
 This is the classical unbiasedness of sequential Monte Carlo estimates of normalising constants \citep{DelMoral2004},
 established for the method as coded, calibration included: the calibration is frozen before the final run draws its
@@ -374,54 +417,15 @@ $\E[\Zhat\mid\text{calibration}]=Z$.
 \status{Pooled form: \textbf{proved and independently checked}; the frozen-run identities behind both forms are
 proved and independently checked against the code of record. Registry: Appendix~\ref{app:status}, row 3.5.}
 
-\subsubsection{Consistent estimates, on designs without leakage}\label{sec:outputs}
+\scope{Every design.}
 
-\scope{Proposition~\ref{prop:unbiased}: every design. Theorem~\ref{thm:outputs}: only the independent designs of our
-studies, since it needs \as{NL} below, no leakage at all (Section~\ref{sec:who-outside}).}
+The consistency of the reported inclusion probabilities, median model and evidence estimate is proved only on designs
+without leakage, which only independent predictors satisfy; it is stated as a remark in the supplement
+(Remark~\ref{thm:outputs}).
 
-\begin{assumption}{NL}{No leakage, as seen by the start law}
-Every null predictor $l\notin\Sz$ has a deterministic \emph{neighbourhood} $\Hl_l\supseteq\{l\}\cup\Sz$ with
-$\abs{\Hl_l}\le e^{\kappa_H\sqrt{\log n}}$ for a fixed $\kappa_H$, such that, for every $U\not\ni l$ with $\abs{U}\le15$ and
-$U_0:=U\cap\Hl_l$: (i) \emph{no leak:} $\abs{\Cov(W_l,W_j\mid W_{U_0})}\le C_Ln^{-1/2}$ for every $j\in\Sz\setminus U_0$,
-with a fixed $C_L$; and (ii) \emph{locality:} $\abs{\Cov(W_l,W_v\mid W_{U_0})}\le r^\circ_n$ and
-$\abs{\Cov(W_j,W_v\mid W_{U_0})}\le r^\circ_n$ for every $v\in U\setminus\Hl_l$ and $j\in\Sz\setminus U_0$, where
-$r^\circ_n(n\log n)^{1/4}\to0$. \hfill [\SA{pe}]
-\end{assumption}
 
-The theorem concerns runs that use the sampler; enumeration is not covered. On the event $\Acal$ of
-Section~\ref{sec:conventions}, $\Zhat$, $\PIPhat$ and
-$\MPMhat$ denote the pooled values the four islands would produce if the run did not stop; on completed runs they
-are the reported values. Let $\rho_n:=n^{-1/2}e^{C_\rho\sqrt{\log n}}$, with $C_\rho$ depending only on the fixed quantities of the
-assumptions.
 
-\begin{theorem}[The reported estimates are consistent]\label{thm:outputs}
-Assume \as{GR}, \as{DIM} with $p>\sz$, \as{FSt}, \as{EFS}, \as{V}, \as{NL}, and Conventions~\as{C1} and~\as{C3}. Then,
-under the joint law of the design, the noise and the method's random numbers,
-\begin{gather}
-  \ind{\Acal}\Big(\big|\Zhat/Z-1\big|+\big|\log\Zhat-\log Z\big|+\max_{j\in\set{p}}\big|\PIPhat_j-\ind{j\in\Sz}\big|\Big)
-    =\OP(\rho_n),\label{eq:outputs-rate}\\
-  \P\big(\Acal\cap\{\MPMhat\neq\Sz\}\big)\to0,\qquad \P\big(\text{the run completes and }\Shat\neq\Sz\big)\to0,
-    \label{eq:outputs-sel}
-\end{gather}
-and~\eqref{eq:outputs-rate} also holds for the reported values multiplied by the indicator of a completed run.
-\end{theorem}
-
-\asmlist{(1)~\as{GR}, \as{FSt}, \as{EFS}, \as{V} as in Result~3; (2)~\as{DIM} [\SA{all}]; (3)~\as{NL} no leakage
-[\SA{pe}]; (4)~Conventions \as{C1}, \as{C3} (Appendix~\ref{app:conventions}).}
-
-\status{\textbf{Proved and checked, conditional on} \samplerconds. Registry: Appendix~\ref{app:status}, row 3.6.}
-
-\begin{remark}[What is not claimed]\label{rem:outputs}
-(i) No lower bound on $\P(\Acal)$ is asserted: the statements are about intersections with $\Acal$ or with completion, not
-conditional on them.
-(ii) The rate $\rho_n$ is the start law's rate; it is slower than the posterior rate $\rn$, by the factor
-$e^{C_\rho\sqrt{\log n}}/\sqrt{\log n}$.
-(iii) Pooling cannot make things worse: the pooled inclusion probabilities are never farther from the exact ones, in the
-largest coordinate, than those of the worst island (proved and checked, conditional on the same two sampler results as
-Theorem~\ref{thm:outputs}; registry row 4.1).
-\end{remark}
-
-\subsection{Result 5: the rate cannot be improved}\label{sec:sharp}
+\subsection{Result 6: the rate cannot be improved}\label{sec:sharp}
 
 \inwords{On every design, no model of at most $\min(K-1,p/2)$ predictors has posterior mass closer to one than about
 $(\abs{S}+1)/(3\sqrt n)$; on two families of designs the expected posterior miss is at least of order $\rn$. At simulated sizes the posterior spreads over the true model and

@@ -77,9 +77,13 @@ condition is placed on how $m_{\mathcal C}$, $\Sigma$, $\beta^{\mathcal C}$ or $
 lower-bound proposition, not yet independently checked) and on two lemmas on Gaussian designs that are independently
 verified. Registry: Appendix~\ref{app:status}, row 1.4.}
 
-For example, if candidates and omitted predictors are jointly Gaussian, $\beta^{\mathcal C}=\beta^*_{\mathcal C}+
-\Sigma_{\mathcal C\mathcal C}^{-1}\Sigma_{\mathcal C\mathcal M}\beta^*_{\mathcal M}$: each candidate absorbs the part of the
-omitted signal it can predict, and the rest is added to the noise variance $\sigma^2_{\mathcal C}$.
+\begin{example}[Omitted Gaussian predictors]\label{ex:omitted}
+If candidates and omitted predictors are jointly Gaussian, the response given the candidates is Gaussian with a linear
+mean, and $\beta^{\mathcal C}=\beta^*_{\mathcal C}+\Sigma_{\mathcal C\mathcal C}^{-1}\Sigma_{\mathcal C\mathcal M}\beta^*_{\mathcal M}$:
+each candidate absorbs the part of the omitted signal it can predict, and the rest is added to the noise variance
+$\sigma^2_{\mathcal C}$. This is an example of Assumption~\ref{asm:omitted}(a), not a claim that the assumption holds in
+ordinary data.
+\end{example}
 
 \subsection{The distribution}\label{sec:supp-dist}
 
@@ -115,26 +119,28 @@ $\Pi(d_H(f,f^*)>M_n/\sqrt n\mid\Dn)\to0$ in $\P^*$-probability, for every sequen
 
 \status{\textbf{Proved and independently checked}. Registry: Appendix~\ref{app:status}, row 2.1.}
 
-\why{The distribution guarantee carries over to the list of models that a completed run returns, whenever that list
-holds a non-negligible share of the posterior.}
+\why{The distribution guarantee carries over to the list of models that a completed run returns, provided that list
+holds a non-negligible share of the posterior, a premise that is not proved here; it is therefore stated as a conditional
+remark.}
 
 A completed run returns a list $\mathcal T$ of at most $40p+1$ distinct models with their log scores; let
 $\pi(\mathcal T\mid\Dn)$ be the posterior probability of the list, and $\hat\Pi$ the posterior restricted to it (the models
 of $\mathcal T$ weighted in proportion to their exponentiated log scores, each with its exact conditional posterior of
 $(\beta,\sigma^2)$; $\hat\Pi$ is not computed by the method).
 
-\begin{corollary}[The output of the sampler]\label{cor:dist-output}
+\begin{remark}[The output of the sampler, conditionally on the mass of its list]\label{cor:dist-output}
 Assume the conditions of Proposition~\ref{prop:dist}(i), and that the returned log scores are computed in exact
 arithmetic. With $\P^*$-probability at least $1-n^{-c_{\mathrm H}M}$, every completed run, whatever its random numbers, with
 $\pi(\mathcal T\mid\Dn)\ge n^{-c_{\mathrm H}M/2}$ satisfies $\hat\Pi(d_H(f,f^*)>\sqrt{M\log n/n})\le n^{-c_{\mathrm H}M/2}$. If a
 completed run scored $\Sz$ and $\pi(\Sz\mid\Dn)>\tfrac12$, then the list contains $\Sz$, $\Shat=\Sz$, and $\pi(\mathcal
 T\mid\Dn)>\tfrac12$.
-\end{corollary}
+\end{remark}
 
 \status{\textbf{Proved and checked, conditional on} exact arithmetic and on \samplerconds; the description of the
 output was checked against the code. Registry: Appendix~\ref{app:status}, row 2.1.}
 
-Whether the list carries enough posterior probability is a property of the run; the corollary does not assert it.
+Whether the list carries enough posterior probability is a property of the run; this remark does not assert it, and
+nothing in this paper proves it.
 
 \subsection{The method}\label{sec:supp-method}
 
@@ -192,35 +198,58 @@ clauses hold under \as{C2} on $\Dom$ and under \as{C2p} for every admissible $n\
 \status{\textbf{Proved and independently checked}, with no open condition: the version proved in the registry is a stronger form of
 this statement. Registry: Appendix~\ref{app:status}, row 3.2.}
 
-\why{A certified small model rarely misses a true predictor, under much weaker conditions than Result~3; it is the
-guarantee about the coded method that remains on pervasive-factor designs, which Result~3 excludes.}
+\subsection{The reported estimates are consistent, on designs without leakage}\label{sec:outputs}
 
-\begin{theorem}[Certified screening]\label{thm:screen}
-Let the design be fixed and assume \as{GL} and Convention~\as{C1}; \as{SP} is not assumed. Let $k_n\in\{0,\dots,K-1\}$ be
-a model-size budget, and assume $\lmin(\Rhat_S)\ge\kappa$, for a fixed $\kappa>0$, for every $S$ with $\abs{S}\le k_n+\sz$, $\tmin\ge\tlow>0$ and
-$\norm{\tstar}_1\le M_1$, with $\kappa$, $\tlow$, $M_1$, $\sigs^2$ fixed, and $(k_n+1)\log p+\log n\le c_{\mathrm{SB}}\,n$, where
-$c_{\mathrm{SB}}:=\kappa^2\tlow^2/\{200(M_1^2+\sigs^2)\}$. Then
-\[
-  \P\big(\text{the run produces output},\ \Shat\text{ is certified},\ \abs{\Shat}\le k_n,\ \Sz\not\subseteq\Shat\big)\to0 .
-\]
-\end{theorem}
+\why{It is the only result on the consistency of the reported inclusion probabilities, median model and evidence
+estimate; it needs no leakage at all, which only independent predictors satisfy, so it is stated as a remark.}
 
-\status{\textbf{Proved and independently checked}. Registry: Appendix~\ref{app:status}, row 3.7.}
 
-No visibility, leakage, start or block condition is used. A second form replaces the signal bounds by a margin on the
-noiseless gain of a missing true predictor, with no condition on $p$, $\sz$ or the null predictors (also proved and
-independently checked). The bound is on an intersection, not conditional on certification, and a run is not claimed to certify a small model
-with probability tending to one. In existing numerics (not a theorem) every completed run certified its reported model:
-2,394 of 2,394 in the 2,400-fit study, 376 of 376 in the strong-factor study, 71 of 71 in a screening study. On the
-strong-factor designs with equicorrelation $\varrho\in\{0.5,0.7\}$, $p\ge2.5n$ and $\sz\in\{4,8\}$, the certified model contained every true predictor in 61 of 122 fits at $n=50$, 18 of 20 at $n=75$
-and 30 of 30 at $n=100$; at the constants of these designs the size budget of Theorem~\ref{thm:screen} requires
-$n\gtrsim1{,}450$.
+\begin{assumption}{NL}{No leakage, as seen by the start law}
+Every null predictor $l\notin\Sz$ has a deterministic \emph{neighbourhood} $\Hl_l\supseteq\{l\}\cup\Sz$ with
+$\abs{\Hl_l}\le e^{\kappa_H\sqrt{\log n}}$ for a fixed $\kappa_H$, such that, for every $U\not\ni l$ with $\abs{U}\le15$ and
+$U_0:=U\cap\Hl_l$: (i) \emph{no leak:} $\abs{\Cov(W_l,W_j\mid W_{U_0})}\le C_Ln^{-1/2}$ for every $j\in\Sz\setminus U_0$,
+with a fixed $C_L$; and (ii) \emph{locality:} $\abs{\Cov(W_l,W_v\mid W_{U_0})}\le r^\circ_n$ and
+$\abs{\Cov(W_j,W_v\mid W_{U_0})}\le r^\circ_n$ for every $v\in U\setminus\Hl_l$ and $j\in\Sz\setminus U_0$, where
+$r^\circ_n(n\log n)^{1/4}\to0$. \hfill [\SA{pe}]
+\end{assumption}
+
+The remark concerns runs that use the sampler; enumeration is not covered. On the event $\Acal$ of
+Section~\ref{sec:conventions}, $\Zhat$, $\PIPhat$ and
+$\MPMhat$ denote the pooled values the four islands would produce if the run did not stop; on completed runs they
+are the reported values. Let $\rho_n:=n^{-1/2}e^{C_\rho\sqrt{\log n}}$, with $C_\rho$ depending only on the fixed quantities of the
+assumptions.
+
+\begin{remark}[The reported estimates are consistent]\label{thm:outputs}
+Assume \as{GR}, \as{DIM} with $p>\sz$, \as{FSt}, \as{EFS}, \as{V}, \as{NL}, and Conventions~\as{C1} and~\as{C3}. Then,
+under the joint law of the design, the noise and the method's random numbers,
+\begin{gather}
+  \ind{\Acal}\Big(\big|\Zhat/Z-1\big|+\big|\log\Zhat-\log Z\big|+\max_{j\in\set{p}}\big|\PIPhat_j-\ind{j\in\Sz}\big|\Big)
+    =\OP(\rho_n),\label{eq:outputs-rate}\\
+  \P\big(\Acal\cap\{\MPMhat\neq\Sz\}\big)\to0,\qquad \P\big(\text{the run completes and }\Shat\neq\Sz\big)\to0,
+    \label{eq:outputs-sel}
+\end{gather}
+and~\eqref{eq:outputs-rate} also holds for the reported values multiplied by the indicator of a completed run.
+\end{remark}
+
+\asmlist{(1)~\as{GR}, \as{FSt}, \as{EFS}, \as{V} as in Result~3; (2)~\as{DIM} [\SA{all}]; (3)~\as{NL} no leakage
+[\SA{pe}]; (4)~Conventions \as{C1}, \as{C3} (Appendix~\ref{app:conventions}).}
+
+\status{\textbf{Proved and checked, conditional on} \samplerconds. Registry: Appendix~\ref{app:status}, row 3.6.}
+
+\par\noindent\textit{What is not claimed.}\phantomsection\label{rem:outputs}
+(i) No lower bound on $\P(\Acal)$ is asserted: the statements are about intersections with $\Acal$ or with completion, not
+conditional on them.
+(ii) The rate $\rho_n$ is the start law's rate; it is slower than the posterior rate $\rn$, by the factor
+$e^{C_\rho\sqrt{\log n}}/\sqrt{\log n}$.
+(iii) Pooling cannot make things worse: the pooled inclusion probabilities are never farther from the exact ones, in the
+largest coordinate, than those of the worst island (proved and checked, conditional on the same two sampler results as
+Remark~\ref{thm:outputs}; registry row 4.1).
 
 \why{It is the only recorded route to the reported inclusion probabilities and median model that does not need \as{NL};
 its global-overlap premise is not yet derived from conditions on the design.}
 
 \begin{remark}[An alternative route for the estimates]\label{rem:alt-route}
-An argument that does not go through the evidence estimate gives the conclusions of Theorem~\ref{thm:outputs} for the
+An argument that does not go through the evidence estimate gives the conclusions of Remark~\ref{thm:outputs} for the
 inclusion probabilities and the median and highest posterior models under a global-overlap condition (stated in full with
 the proof).
 \end{remark}
@@ -358,7 +387,7 @@ None of these is needed for any statement above.
   \item Remove the vanishing floor \as{NC} from Theorem~\ref{thm:post-margin}, and weaken its floor on the true model.
   \item Prove $\E[1-\pis{\Sz}]\gtrsim\rn$ on every design with a floor on the sets $\Sz\cup\{j\}$.
   \item Whether Assumption~\ref{asm:dist}\ref{asm:dist-nec} is needed for the rate $\rn$ of Result~2.
-  \item Leakage sets of size $n^b$ with $b\ge\tfrac12$, and raw-scale signals in Results~3 and~4.
+  \item Leakage sets of size $n^b$ with $b\ge\tfrac12$, and raw-scale signals in Result~3 and Remark~\ref{thm:outputs}.
   \item Consistency of the reported estimates on designs with leakage (AR and block designs).
   \item The parallel method: an inheritance statement for an output-identical engine, and results for many islands and
     island weighting at very large $p$.
