@@ -5,18 +5,18 @@ Lead: Claude Opus 5.5 (effort high). Branch theory/W3-D5P (off main 029bb748). P
 Statuses below are as of this draft; the council result goes in §4 and in the REGISTRY blocks.
 
 ## 1. What the ticket delivers
-The three claims of `STATEMENT.md` §0 table (`STATEMENT.md:21-24`). Hypotheses of the corollary: those of Theorem 6
-(card row 3.1), with nothing added (D109): `STATEMENT.md:95-97`. Implementation premise IMPL-LIST (method commit
-pending): `STATEMENT.md:56-60`. The two links of `Theory_work/Wave3/W3-DIST/STATEMENT.md:297-303` are LIST-CODE (i)–(ii),
-`STATEMENT.md:78-84`.
+The three claims of `STATEMENT.md` §0 table (`STATEMENT.md:22-24`). Hypotheses of the corollary: those of Theorem 6
+(card row 3.1), with nothing added (D109): `STATEMENT.md:99-101`. Implementation premise IMPL-LIST (method commit
+pending): `STATEMENT.md:59-63`. The two links of `Theory_work/Wave3/W3-DIST/STATEMENT.md:297-303` are LIST-CODE (i)–(ii),
+`STATEMENT.md:82-88`.
 
 ## 2. Claims and where they are
 
 | claim id | statement | proof | status |
 |---|---|---|---|
-| W3-D5P:LIST-K | `STATEMENT.md:64-71` | `lemmas/L1_listK.md` | PROVED (by this seat, unchecked); LC1 pending |
-| W3-D5P:LIST-CODE | `STATEMENT.md:75-91` | `lemmas/L2_listCODE.md` | CODE-READ (by this seat, unchecked); LC1 pending |
-| W3-D5P:LIST-R | `STATEMENT.md:95-120` | `lemmas/L3_listR.md` | PROVED (by this seat, unchecked); conditional on IMPL-LIST; LC1 pending |
+| W3-D5P:LIST-K | `STATEMENT.md:67-75` | `lemmas/L1_listK.md` | PROVED (by this seat); LC1 VERIFIED-WITH-AMENDMENTS, applied; LC1R VERIFIED-WITH-AMENDMENTS (E only), applied |
+| W3-D5P:LIST-CODE | `STATEMENT.md:79-95` | `lemmas/L2_listCODE.md` | CODE-READ (by this seat); LC1 VERIFIED-WITH-AMENDMENTS, applied; LC1R VERIFIED-WITH-AMENDMENTS (E only), applied |
+| W3-D5P:LIST-R | `STATEMENT.md:99-125` | `lemmas/L3_listR.md` | PROVED (by this seat); conditional on IMPL-LIST; LC1 VERIFIED-WITH-AMENDMENTS, applied; LC1R VERIFIED-WITH-AMENDMENTS (E only), applied |
 
 ## 3. Evidence, limits, open items
 - Statement lock: `reviews/SL1_statement_lock_sol.md` (LOCK WITH CHANGES), `reviews/SL1_disposition.md`.
@@ -36,8 +36,8 @@ None yet.
 
 ```
 REGISTRY
-claim: W3-D5P:LIST-K | kind: lemma | statement: STATEMENT.md:64-71 | premises: STATEMENT.md:39-44
-status: PROVED (by this seat, unchecked); LC1 pending | status_source: REPORT.md:17
+claim: W3-D5P:LIST-K | kind: lemma | statement: STATEMENT.md:67-75 | premises: STATEMENT.md:39-47
+status: PROVED (by this seat); LC1 VERIFIED-WITH-AMENDMENTS, applied; LC1R VERIFIED-WITH-AMENDMENTS (E only), applied | status_source: REPORT.md:17
 conclusion: deterministic: for any list T of models containing S0, the list-renormalised PIPs are within 1 - pi(T) <= 1 - pi(S0|y) of the exact PIPs and within 1 - pi_T(S0) <= 1 - pi(S0|y) of the indicator of S0; the list median model is S0 when 1 - pi(S0|y) < 1/2; log Z_T = log Z + log pi(T)
 rate: none (deterministic)
 scope: any finite model space and any score
@@ -47,8 +47,8 @@ council: none yet
 
 ```
 REGISTRY
-claim: W3-D5P:LIST-CODE | kind: lemma | statement: STATEMENT.md:75-91 | premises: STATEMENT.md:29-37
-status: CODE-READ (by this seat, unchecked); LC1 pending | status_source: REPORT.md:18
+claim: W3-D5P:LIST-CODE | kind: lemma | statement: STATEMENT.md:79-95 | premises: STATEMENT.md:29-38
+status: CODE-READ (by this seat); LC1 VERIFIED-WITH-AMENDMENTS, applied; LC1R VERIFIED-WITH-AMENDMENTS (E only), applied | status_source: REPORT.md:18
 assumptions: A:OP ; A:EX-A
 conclusion: code fact at core 4676af6: on the sampler branch status completed iff estimates available (the output event), and LS0 ran in the final run with the evaluation sequence of the search in K_n; printed hpm = the HPM-order maximum of the models offered to the final-run ledger (= the reported model of RM/RM2R); top_store holds distinct offered models with their exact scores and contains that maximum; exact branch: the enumeration's store contains the HPM-order maximum of Omega, pip_primary/mpm are exact
 rate: none
@@ -60,9 +60,9 @@ council: none yet
 
 ```
 REGISTRY
-claim: W3-D5P:LIST-R | kind: corollary | statement: STATEMENT.md:95-120 | premises: STATEMENT.md:29-60
-status: PROVED (by this seat, unchecked); conditional on IMPL-LIST; LC1 pending | status_source: REPORT.md:19
-assumptions: the hypotheses of W3-RM2-R:RM2-R-plus (= Theorem 6, card row 3.1), nothing added ; A:OP ; A:EX-A ; IMPL-LIST (new | the printed list fields are computed as SPEC_LIST_PIP §2, §4 prescribe | code fact of the pending method commit | STATEMENT.md:56-60 | shared no | discharge: code reading) ; A:DELIV-D (clause (iii) only)
+claim: W3-D5P:LIST-R | kind: corollary | statement: STATEMENT.md:99-125 | premises: STATEMENT.md:29-63
+status: PROVED (by this seat); conditional on IMPL-LIST; LC1 VERIFIED-WITH-AMENDMENTS, applied; LC1R VERIFIED-WITH-AMENDMENTS (E only), applied | status_source: REPORT.md:19
+assumptions: the hypotheses of W3-RM2-R:RM2-R-plus (= Theorem 6, card row 3.1), nothing added ; A:OP ; A:EX-A ; IMPL-LIST (new | the printed list fields are computed as SPEC_LIST_PIP §2, §4 prescribe | code fact of the pending method commit | STATEMENT.md:59-63 | shared no | discharge: code reading) ; A:DELIV-D (clause (iii) only)
 conclusion: on Theorem 6's data event every admissible output run has S0 in its returned list, hpm = S0, list PIPs within 1 - pi(S0|y) of the truth and of the exact PIPs, log Z + log pi(S0|y) <= log_Z_list <= log Z, mpm_list = S0 when 1 - pi(S0|y) < 1/2; under (D) without "on output"
 rate: O_P(sqrt(log n / n)) (p >= 2)
 scope: Gaussian rows; every design inside Theorem 6 (AR and block designs included when they satisfy it); the list fields only (not the printed sampler averages)

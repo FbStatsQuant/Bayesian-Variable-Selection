@@ -1,4 +1,4 @@
-# W3-D5P — STATEMENT v1.1 (locked v1.0 + LC1 changelog row): the list-restricted outputs on every Theorem 6 design
+# W3-D5P — STATEMENT v1.1.1 (locked v1.0 + changelog rows v1.1, v1.1.1): the list-restricted outputs on every Theorem 6 design
 
 Ticket W3-D5P = track D ticket #5′ (owner GO, `Theory_work/Dept/DECISIONS.md` D105, dept/theory; standard D106), Tier B
 corollary ticket, Theory Wave 3. Lead: Claude Opus 5.5 (effort high). Protocol: `Theory_work/Wave3/PROTOCOL_v4.md` with
@@ -41,7 +41,8 @@ the coded size prior normalised on Ω (`cpp/v3_score.h:60-70`) and m the coded m
   Z := Σ_{S∈Ω} e^{F(S)},  π(S) := π(S | y) := e^{F(S)}/Z,  PIP_j := π({S : j ∈ S}),  MPM := {j : PIP_j > ½},
   ε_n := ε_n(y) := 1 − π(S₀ | y).
 *Convention* [LC1-2]: if S₀ ∉ Ω (i.e. s₀ > K), then π(S₀ | y) := 0, ε_n = 1, and 𝓜_n = 𝒦_n := ∅ (S₀ can then be
-neither the maximiser of F on Ω nor scored); every statement below holds trivially for such n.
+neither the maximiser of F on Ω nor scored); every statement below that involves S₀, 𝓜_n or 𝒦_n holds trivially for
+such n [LC1R-4].
 For a nonempty set 𝒯 ⊆ Ω: π(𝒯) := Σ_{S∈𝒯} π(S), Z_𝒯 := Σ_{S∈𝒯} e^{F(S)}, π_𝒯(S) := e^{F(S)}/Z_𝒯 (S ∈ 𝒯), and
   pip_𝒯(j) := π_𝒯({S ∈ 𝒯 : j ∈ S}),  mpm_𝒯 := {j : pip_𝒯(j) > ½},  logZ_𝒯 := log Z_𝒯.
 
@@ -137,8 +138,8 @@ r_n := √(log n/n).
 4. *Arithmetic.* EX-A throughout, as for Theorem 6. Binary64 agreement (1e−12 between engines; SPEC §3, §7) is an
    engineering acceptance test, not a theorem.
 5. *Reader form of the hypotheses* [LC1-3]. In reader form the hypotheses of LIST-R are those of Theorem 6 (READER §6,
-   (A1)–(A6)), which reach the hypotheses of RM2-R-plus through Theorem 6's own bridges B6.1–B6.4 with their recorded
-   marks (READER §6 bridge table). LIST-R consumes RM2-R-plus only; the reader corollary inherits exactly Theorem 6's
+   (A1)–(A6)), which reach the hypotheses of RM2-R-plus through Theorem 6's own bridges B6.1–B6.4 (B6.1 and B6.3 marked NEW
+   there) and the identities of (A1)–(A3) with Setting R and (V-R) (READER §6 bridge table) [LC1R-3]. LIST-R consumes RM2-R-plus only; the reader corollary inherits exactly Theorem 6's
    bridge record, so any change of Theorem 6's presented hypotheses carries over (D109).
 
 ## 6. Dependencies and supersession
@@ -158,3 +159,4 @@ No supersession. Card proposal (a new row next to 3.1, or an addition to 3.1/3.6
 | v0.1 | all | — | draft for the statement lock | — | — |
 | v1.0 | (C3)(ii)–(iii): evidence error events qualified "when `log_Z_list` is not NA"; t, t_n ∈ (0, ½) (was (0, ½]); rate clause under "p ≥ 2 for all large n"; error events named B₁–B₄; (C3) preamble "implied by" the reader assumptions | EQUAL (corrections of the draft before the lock) | SL1-1, SL1-2, SL1-3, SL1 table row "C3 preamble" | `reviews/SL1_statement_lock_sol.md` | applied as the reviewer's fixes; LOCK |
 | v1.1 | (C1) hypothesis "F real-valued on Ω (0 < Z < ∞)"; §1 convention for S₀ ∉ Ω; (C3) preamble: the reader-form sentence moved out of the claim span to §5 remark 5; P(𝒢⁺_n) → 1 attributed to RM0-plus (b⁺); (C3)(ii) reason for "every right side tends to 0" completed | EQUAL (hypothesis made explicit as already defined in §1; a convention that makes small-n cases trivially true; an unproved interpretive sentence moved out of the span; citations) | LC1-12, LC1-2, LC1-3, LC1-13, LC1-1 | `reviews/LC1_line_check_opus.md` | council R1 (tags to be confirmed by the seats) |
+| v1.1.1 | §1 convention sentence narrowed to statements involving S₀, 𝓜_n or 𝒦_n; §5 remark 5 (outside claims) | EQUAL (wording) | LC1R-4, LC1R-3 | `reviews/LC1R_recheck_opus.md` | fixes applied verbatim from LC1R |

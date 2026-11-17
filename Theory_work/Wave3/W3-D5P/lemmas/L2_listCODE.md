@@ -105,7 +105,8 @@ D2. *TopStore invariant.* `TopStore` (`cpp/v3_ledger.h:43-57`) holds a `std::set
 sizes and `lex_less(e.S, e′.S)` (`:37-41`). This is a strict total order on pairs (v, S), and it ranks entries exactly as
 `hpm_better` ranks (F, S) (`cpp/v3_util.h:121-126`). By A5 the value is a function of the model, and every model vector offered is in sorted (canonical) form [LC1-9a]:
 `to_internal` sorts (`cpp/v3_core.cpp:34`), blocks are sorted (`cpp/v3_blocks.h:141`, so table models are), `start_mode`
-sorts (`cpp/v3_start.h:287`), moves use `sorted_insert`/`sorted_erase` (`cpp/v3_util.h:129-130`), and the enumeration
+sorts (`cpp/v3_start.h:287`), moves use `sorted_insert`/`sorted_erase` (`cpp/v3_util.h:129-130`), π₀ draws sort (`cpp/v3_start.h:174`), the tie-DP
+fallback of `start_mode` appends increasing i (`cpp/v3_start.h:263-266`, used at `:303`) [LC1R-1], and the enumeration
 appends increasing j. Hence two entries are equivalent iff they carry the same model: the set holds distinct models. `offer(v, S)` (`:49-57`): (1) returns if cap = 0
 (not the case: cap = 40p + 1 ≥ 41, since p = p_ret ≥ 1 on both branches — a fit with no retained column returns
 `no_predictors` before branching, `v3_fit.R:99-102` [LC1-9b]); (2) rejects e = (v, S) if the set is full and e is not strictly before the last

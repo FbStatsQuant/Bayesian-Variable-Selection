@@ -13,13 +13,13 @@ X-measurable partition with blocks ≤ 16, and (T1-R), (FL-R), (V-R), (L-R^b) wi
 conclusions of RM0-plus (a), (b⁺) with 𝓛′ = 𝓛. We use:
 (0.1) for n with s₀ ≤ K: 𝓜_n (S₀ is the unique maximiser of F on Ω) and 𝒦_n are data events, and
 P(𝒢⁺_nᶜ) ≤ P(𝓜_nᶜ) + P(𝒦_nᶜ) → 0, 𝒢⁺_n := 𝓜_n ∩ 𝒦_n: this is RM0-plus (b⁺), a stated conclusion of RM2-R-plus
-(RM2R `STATEMENT.md:128-137`, :180): under [MODE], [SAND(Q)], [NA(Q)], [TL(Q)], P(𝒢⁺_n) → 1 (RM2R `STATEMENT.md:131-132`) [LC1-13];
+(RM2R `STATEMENT.md:126-134`, :180) [LC1R-5]: under [MODE], [SAND(Q)], [NA(Q)], [TL(Q)], P(𝒢⁺_n) → 1 (RM2R `STATEMENT.md:131-132`) [LC1-13];
 (0.2) [POST]: E ε_n → 0, where ε_n = 1 − π(S₀ | y) (RM `STATEMENT.md` §2 interface table, as imported);
 (0.3) s₀ ≤ K for all large n: S₀ ⊆ Q and |Q| ≤ K for n ≥ n₀ ((L-feas), RM `STATEMENT.md:98`, part of (L-R^b)); all
 statements below are for such n. For the finitely many n with s₀ > K, STATEMENT §1's convention gives 𝓜_n = 𝒦_n = ∅ and
 ε_n = 1, so (i) is vacuous and every probability bound of (ii) has right side ≥ 1 [LC1-2].
-(0.3a) p_ret = p almost surely [LC1-5]: under Setting R (rows i.i.d. Gaussian with a positive-definite covariance, n ≥ 3)
-no column is constant with probability one, and the code drops a column only when all its entries are exactly equal
+(0.3a) p_ret = p almost surely [LC1-5]: under Setting R (rows i.i.d. N(m_n, Σ_n) with unit diagonal, so each column has variance 1 and, with n ≥ 2 independent
+rows, is constant with probability 0) [LC1R-2] no column is constant almost surely, and the code drops a column only when all its entries are exactly equal
 (`v3_preprocess.R:111-112`). Hence, almost surely, Ω, K, ℓ_n, 𝒦_n and ε_n computed on the retained columns are those of
 the design's p, and POST, stated for the design's p, applies to ε_n.
 (0.4) (D) ⇒ every admissible run returns output for every valid non-degenerate input (DLV-0, RM2R
