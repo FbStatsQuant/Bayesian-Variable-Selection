@@ -1,0 +1,46 @@
+OK            [STATEMENT.md] Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md:21-23 sha=ec1e1356e4 | For every q ∈ {1, …, 4}, almost surely,
+OK            [STATEMENT.md(cont)] Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md:25-39 sha=64ff8c1798 | ## Proof
+OK            [STATEMENT.md] Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex:157-162 sha=891eadcf29 | \begin{lemma}[freezing]\label{lem:freeze}
+OK            [STATEMENT.md] Theory_work/Wave3/W3-SAMP/lemmas/MR_identities.md:51-67 sha=817c997eb2 | **Step 2 (measurability).** Each left-side integrand is g(c, U) for a function g on E × Υ defined, for c ∈ A₀ 
+OK            [STATEMENT.md] v3_run.R:90-91 sha=70b8fad2b5 | ro <- list(N = as.integer(b$tiers$N[tier + 1]), L = as.integer(b$L), measured_rounds = 4L,
+OK            [STATEMENT.md] Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex:157-162 sha=891eadcf29 | \begin{lemma}[freezing]\label{lem:freeze}
+OK            [STATEMENT.md] Theory_work/Wave3/W3-SAMP/lemmas/D_theorem.md:8-20 sha=a276f182e1 | Fix c ∈ A₀ (success set, index r ≤ R′) and run island r's potential record on an iid U[0,1) stream U₁, U₂, … (
+OK            [STATEMENT.md] Theory_work/Wave3/W3-AUDIT/track_A/T5_CAL/STATEMENT.md:45-54 sha=7f916839b7 | ## Where the T1 flag bites (carried, per the manager 11-16)
+OK            [STATEMENT.md] Theory_work/Wave3/W3-SAMP/lemmas/D_theorem.md:46-51 sha=d7de1d51f6 | *Probability.* {completed} ⊆ 𝒜 (no final run otherwise, `v3_fit.R` returns before `v3_final_run` when calibrat
+OK            [STATEMENT.md] Theory_work/Wave3/W3-SAMP/STATEMENT.md:35-36 sha=fe4d5f6e6d | E[min(1, ρ)]. No claim is conditional on 𝒜 or on completion, and P(𝒜) → 1 is neither assumed nor claimed. Unde
+OK            [PROOF.md] Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex:157-162 sha=891eadcf29 | \begin{lemma}[freezing]\label{lem:freeze}
+OK            [PROOF.md] cpp/v3_core.cpp:596-596 sha=838bbfb78b | if (it == streams.end()) { RngSource g; g.g.seed_stream(seed, (uint64_t)k); it = streams.emplace(k, g).first; 
+OK            [PROOF.md] cpp/v3_core.cpp:444-444 sha=d7d95c9f19 | RngSource rng; rng.g.seed_stream((uint64_t)seed, (uint64_t)(9 + r));  // final islands: streams 10..13 (M §6.1
+OK            [PROOF.md] cpp/v3_core.cpp:241-241 sha=d2ed02a0b3 | RngSource rng; rng.g.seed_stream((uint64_t)seed, (uint64_t)stream);
+OK            [PROOF.md] v3_fit.R:154-162 sha=49371e0dc4 | if (cal$status != "ok") {
+OK            [PROOF.md] v3_run.R:225-225 sha=df235c8d7a | v3_check_grid(frozen[["grid"]]); v3_check_seed(seed)
+OK            [PROOF.md] v3_run.R:77-82 sha=5f7d8b242f | v3_check_grid <- function(grid) {
+OK            [PROOF.md] v3_calib.R:185-186 sha=01d643de3f | N <- setup$budgets$tiers$N[e + 1]
+OK            [PROOF.md] v3_run.R:70-70 sha=6e0974ac6f | v3_check_grid(grid)
+OK            [PROOF.md] v3_calib.R:164-164 sha=27a2a1425a | isTRUE(tryCatch(v3_check_grid(last$fallback_grid$grid), error = function(err) FALSE))) {
+OK            [PROOF.md] v3_run.R:89-90 sha=1150fd360a | b <- setup$budgets; tier <- frozen[["tier"]] %||% 0L
+OK            [PROOF.md] v3_preprocess.R:24-25 sha=aaa5aab895 | L <- max(4, v3_ceil_log2(n + 1))
+OK            [PROOF.md] v3_preprocess.R:30-30 sha=95bafd3923 | tiers = data.frame(e = 0:1, N = c(N0, 4 * N0), H = c(H0, 4 * H0), T = c(T0, 4 * T0)),
+OK            [PROOF.md] v3_run.R:91-91 sha=a2ae3dd4fd | islands = 4L, tier = as.integer(tier), ell = as.integer(b$ell),
+OK            [PROOF.md] v3_run.R:226-227 sha=e242824ce3 | ro <- v3_run_settings(setup, frozen, ls0)
+OK            [PROOF.md] v3_run.R:90-90 sha=47ff3a71c8 | ro <- list(N = as.integer(b$tiers$N[tier + 1]), L = as.integer(b$L), measured_rounds = 4L,
+OK            [PROOF.md] v3_calib.R:185-186 sha=01d643de3f | N <- setup$budgets$tiers$N[e + 1]
+OK            [PROOF.md] cpp/v3_core.cpp:407-439 sha=13f67b9e02 | Ledger led(&D, o.islands);
+OK            [PROOF.md] cpp/v3_core.cpp:443-446 sha=855cede1e2 | for (int r = 1; r <= o.islands; ++r) {
+OK            [PROOF.md] v3_run.R:225-225 sha=df235c8d7a | v3_check_grid(frozen[["grid"]]); v3_check_seed(seed)
+OK            [PROOF.md] v3_run.R:95-97 sha=75c7ca43aa | le <- getOption("v3.ls0_ell", b$ell)   # testing override of the LS0 base cap (R05 #2: validated)
+OK            [PROOF.md] cpp/v3_core.cpp:425-425 sha=c62f00f2df | if ((int)S.size() > D.K) stop("inherited model larger than K");
+OK            [PROOF.md] cpp/v3_core.cpp:426-426 sha=0e96f1e192 | double lm = sc.score(S).logm; double c = st.comp(S);
+OK            [PROOF.md] Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md:29-31 sha=24cbbdf4be | dummy record o† is never evaluated).
+OK            [PROOF.md] Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md:25-39 sha=64ff8c1798 | ## Proof
+OK            [PROOF.md] Theory_work/Wave3/W3-SAMP/lemmas/MR_identities.md:51-58 sha=4449284730 | **Step 2 (measurability).** Each left-side integrand is g(c, U) for a function g on E × Υ defined, for c ∈ A₀ 
+OK            [PROOF.md] Theory_work/Wave3/W3-SAMP/lemmas/D_theorem.md:26-31 sha=6cc632d7af | (c, u) by the same control flow as Φ (W1-N1 Lemma B (B-0), (B-d)), so the augmented record Φ̃ is jointly measu
+OK            [PROOF.md] Theory_work/Wave3/W3-SAMP/lemmas/D_theorem.md:8-20 sha=a276f182e1 | Fix c ∈ A₀ (success set, index r ≤ R′) and run island r's potential record on an iid U[0,1) stream U₁, U₂, … (
+OK            [PROOF.md] Theory_work/Wave3/W3-AUDIT/track_A/T5_CAL/STATEMENT.md:45-54 sha=7f916839b7 | ## Where the T1 flag bites (carried, per the manager 11-16)
+OK            [PROOF.md] cpp/v3_engine.h:299-299 sha=0628731bc7 | double logZ = D.logm0 + st.logZbar0;
+OK            [PROOF.md] cpp/v3_engine.h:316-322 sha=cfafbaccbe | double dphi = phi_new - phi_prev;
+OK            [PROOF.md] Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md:34-36 sha=54a2b86411 | *Boundedness.* For c ∈ A₀ with grid (φ_t), every factor (1/N)Σ_i e^{Δ_t d(·)} lies in [e^{Δ_t min_Ω d}, e^{Δ_t
+OK            [PROOF.md] Theory_work/Wave3/W3-SAMP/lemmas/MR_identities.md:60-62 sha=0862ef15aa | **Step 3 (bound).** Ẑ_t ∈ [Z₀e^{φ_t min d}, Z₀e^{φ_t max d}] (each stage factor lies in [e^{Δ_s min d}, e^{Δ_s
+
+43 citations: 43 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+Not machine-checked: unbackticked references and the semantic match of each excerpt.

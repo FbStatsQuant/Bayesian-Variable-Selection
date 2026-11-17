@@ -1,0 +1,17 @@
+# External inputs of council round W-R1 (items W1 ISL, W2 FRZ, and the API card): the pinned code and the sources cited.
+Scripts/SMC_BVS/core
+Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md
+Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md
+Theory_work/Wave1/W1-N1/STATEMENT.md
+Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex
+Theory_work/Wave3/W3-SAMP/STATEMENT.md
+Theory_work/Wave3/W3-SAMP/lemmas/D_theorem.md
+Theory_work/Wave3/W3-SAMP/lemmas/MR_identities.md
+Theory_work/Wave3/W3-AUDIT/track_A/T1_GW/STATEMENT.md
+Theory_work/Wave3/W3-AUDIT/track_A/T4_ENC/STATEMENT.md
+Theory_work/Wave3/W3-AUDIT/track_A/T5_CAL/STATEMENT.md
+Theory_work/Wave3/W3-AUDIT/track_A/T6_START/STATEMENT.md
+Theory_work/Wave3/W3-AUDIT/track_A/T7_KER/STATEMENT.md
+Theory_work/Wave3/W3-AUDIT/track_A_X/X1_T12/STATEMENT.md
+Theory_work/Wave3/W3-AUDIT/track_A_X/X1_T12/PROOF.md
+Theory_work/Wave3/W3-AUDIT/track_A_C/C1_AUDITS/STATEMENT.md
