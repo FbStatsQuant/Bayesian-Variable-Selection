@@ -5,6 +5,7 @@
   one-word comparisons except the uniform ones listed, conditional sentences come from the TRACK_B summary table, and
   conclusions are compared per theorem only, never "our conclusions are stronger". The design inside/outside verdicts
   are unchanged throughout.
+- `IDEALW_NOTE_2026-11-16.md`: row 3.1's IDEAL-W⁺ costs nothing on real inputs (T14; recording after the freeze). Current.
 - `AG_NOTE_2026-11-16.md`: the (AG) condition (fixed-design branch only; not an assumption our designs must meet). Current.
 - `AUDIT_NOTE_2026-11-16.md`: row 3.6 scope (item 1 still current); item 2 superseded.
 - Superseded: `AUDIT_NOTE_2_2026-11-16.md`, `TRACK_B_v1.2.md`, `TRACK_B_v1.3.md`, `WRITING_DELTA_v1.3.md`.
