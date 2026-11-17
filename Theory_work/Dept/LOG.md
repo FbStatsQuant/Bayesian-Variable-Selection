@@ -371,3 +371,4 @@
 - 2026-11-16 20:01 CST Lean shortlist (Fable 148d9ee1) sent to HQ: next week Thm 3(a) LB, C-PACK:SL0 summaries, DIST domination transfer + Hellinger reduction; December closed form, row 3.5 unbiasedness; warm-ups T8/T2/T6/T9. Mathlib notes unverified (scoping step checks).
 - 2026-11-16 20:02 CST D91 Codex level 1 relayed to READER and the track A lead.
 - 2026-11-16 20:04 CST D92 applied (2 concurrent: recorder, track A lead; READER held; recorder/READER → Sonnet).
+- 2026-11-16 20:06 CST EARLY FLAG to HQ: relabel dry run stopped (Thm-1 A3: legacy inputs SOP:TH09-T02, W3-POST:Lemma-1a, C-PACK:SL1). Options a/b/c; recommended (a) with an H5 call on T02 (fallback (b) for T02 only). Decision needed by Wed for Fri. Recorder meanwhile on the task 2 dry run.
