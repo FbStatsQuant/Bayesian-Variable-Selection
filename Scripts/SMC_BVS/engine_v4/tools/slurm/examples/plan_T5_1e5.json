@@ -55,6 +55,7 @@
   ],
   "isa_check": {
     "island": 1,
-    "against": "x86-64-v3"
+    "against": "x86-64-v3",
+    "time": "00:40:00"
   }
 }

@@ -1417,6 +1417,12 @@ TEST(pilot_only_equals_calibrate_pilot) {
   // law-determined fields only: flips (K1's bounded count) and offers (the snapshot duplicate filter) depend on the schedule
   const char* keys[] = {"step", "kind", "phi", "particle_rounds", "sweeps", "pairs", "store_size", "mean_S", "act_cols", "passes"};
   std::vector<v4::Json> ref;
+  auto section_hashes = [](const std::string& path) {   // every section but meta
+    v4::fmt::Reader Rd(path); std::map<std::string, std::string> m;
+    for (auto& e : Rd.sections()) { if (std::string(e.name) == "meta") continue; std::string h; char x[3]; for (int i = 0; i < 32; ++i) { std::snprintf(x, 3, "%02x", e.sha256[i]); h += x; } m[e.name] = h; }
+    return m;
+  };
+  std::string cal3;   // the 3-thread calibrate run with --cost-dir (compared with a run without it below)
   for (int th : {1, 3}) {
     const std::string cdir = tg.add(wp3_tmp("pil_cal_cost" + std::to_string(th)));
     const std::string out = tg.add(wp3_tmp("pil_cal" + std::to_string(th) + ".bin"));
@@ -1424,6 +1430,7 @@ TEST(pilot_only_equals_calibrate_pilot) {
     a["threads"] = (double)th; a["cost_dir"] = cdir;
     v4::Json rec = v4::calib::run(a);
     CHECK(rec.at("status").str() == "ok");
+    if (th == 3) cal3 = out;
     int nfiles = 0, ndiag = 0;
     for (auto& de : std::filesystem::directory_iterator(cdir)) { ++nfiles; ndiag += de.path().filename().string().rfind("cost_diag_", 0) == 0; }
     CHECKF(nfiles >= 2 && ndiag >= 1, "threads %d: %d cost records, %d diagnostic", th, nfiles, ndiag);
@@ -1445,6 +1452,21 @@ TEST(pilot_only_equals_calibrate_pilot) {
     }
     std::printf("  threads %d: pilot T = %lld (%lld forced), %zu rows, %.2f s; calibrate wrote %d cost records (%d diagnostic)\n", th,
                 (long long)pr.at("T").i64(), (long long)pr.at("forced").i64(), pil.size(), pr.at("seconds_island").num(), nfiles, ndiag);
+    if (th == 3) {   // review PR55 INFO-8: the schedule-dependent counts, two pilot-only runs of one binary
+      const std::string pdir2 = tg.add(wp3_tmp("pil_only_cost3b"));
+      v4::Json pb = pa; pb["cost_dir"] = pdir2; int rc2 = -1; v4::Json pr2 = run_pilot_only(pb, rc2);
+      auto pil2 = rows_of(pr2.at("cost_record").str());
+      uint64_t f1 = 0, f2 = 0; for (auto& j : pil) f1 += j.at("flips").type() == v4::Json::NUM ? (uint64_t)j.at("flips").num() : 0;
+      for (auto& j : pil2) f2 += j.at("flips").type() == v4::Json::NUM ? (uint64_t)j.at("flips").num() : 0;
+      std::printf("  two pilot-only runs at 3 threads: flips %llu vs %llu (%s)\n", (unsigned long long)f1, (unsigned long long)f2,
+                  f1 == f2 ? "equal this time" : "run-to-run execution variation in one binary");
+    }
+  }
+  {   // review PR55 m7a: --cost-dir (and --verbose) leave calib.bin's sections unchanged
+    const std::string out = tg.add(wp3_tmp("pil_cal_nocost.bin"));
+    v4::Json a = v4::Json::object(); a["data"] = CI.dpath; a["setup"] = CI.spath; a["out"] = out; a["mode"] = "V"; a["seed"] = 77.0; a["threads"] = 3.0;
+    CHECK(v4::calib::run(a).at("status").str() == "ok");
+    CHECK(!cal3.empty() && section_hashes(out) == section_hashes(cal3));
   }
 }
 
@@ -1452,10 +1474,16 @@ TEST(pilot_only_equals_calibrate_pilot) {
 // theory merges are unaffected by the ISA field
 TEST(merge_refuses_mixed_fma_families) {
   v4::Json a = v4::binary_block(), b = v4::binary_block();
-  auto with = [](v4::Json j, const char* isa) { j["island_isa"] = isa; return j; };
+  auto with = [](v4::Json j, const char* isa) {   // a block of that ISA: the name and the class-A unit's own FMA flag
+    j["island_isa"] = isa; const std::string s(isa); j["island_fma"] = !(s == "portable" || s == "x86-64-v2"); return j;
+  };
   CHECK(v4::binary_compatible(with(a, "sapphirerapids"), with(b, "x86-64-v3"), v4::BinaryUse::MergeV).ok);
   CHECK(!v4::binary_compatible(with(a, "sapphirerapids"), with(b, "portable"), v4::BinaryUse::MergeV).ok);
   CHECK(!v4::binary_compatible(with(a, "x86-64-v2"), with(b, "x86-64-v4"), v4::BinaryUse::MergeV).ok);
   CHECK(v4::binary_compatible(with(a, "portable"), with(b, "portable"), v4::BinaryUse::MergeV).ok);
   CHECK(!a.at("island_isa").str().empty());
+  // island_fma (the class-A unit's answer) wins over the name: a V4_WIDE_ISA build labelled "x86-64-v3" with FMA
+  v4::Json w = a; w["island_isa"] = "portable"; w["island_fma"] = true;
+  CHECK(!v4::binary_compatible(w, with(b, "portable"), v4::BinaryUse::MergeV).ok);
+  CHECK(v4::binary_compatible(w, with(b, "x86-64-v3"), v4::BinaryUse::MergeV).ok);
 }

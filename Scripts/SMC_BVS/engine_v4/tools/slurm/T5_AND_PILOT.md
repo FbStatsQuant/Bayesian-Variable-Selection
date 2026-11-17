@@ -62,8 +62,8 @@ The report gives:
 | islands | 16 × 48 CPUs, 16G | 0:20 | 256 | ≈ 35–120 (≈ 1.8·10¹⁰ steps per island × 500–1,100 ns·CPU; 4–14 min each) |
 | merge (tail + LS0) | 16 CPUs, 16G | 0:30 | 8 | ≈ 1–4 (LS0 at 10⁵ is unmeasured: T5 measures it) |
 | eval + post | 8 CPUs, 16G | 0:45 | 6 | ≈ 1–3 |
-| isa check (D-32) | 48 CPUs, 16G | 0:20 | 16 | ≈ 3–8 (one island, x86-64-v3, + three bit-form islands at p = 2·10⁴, ≈ 1 min) |
-| **total** | 21 tasks | | **366** (driver, from the limits) | **≈ 55–160, central ≈ 90** (manifest T5 row: 200) |
+| isa check (D-32) | 48 CPUs, 16G | 0:40 (own limit, `isa_check.time`) | 32 | ≈ 3–8 (one island, x86-64-v3, + three bit-form islands at p = 2·10⁴, ≈ 1 min) |
+| **total** | 21 tasks | | **382** (driver, from the limits; cap 400) | **≈ 55–160, central ≈ 90** (manifest T5 row: 200) |
 
 Basis:
 - **Per-step cost:** ≈ 1,056 ns·CPU per step in late 10⁵ rounds on SPR today (MEASURED, job 2748104). O1 and K1 lower it (ESTIMATE −25 to −45%).
@@ -79,13 +79,18 @@ On NOTS (manager):
 cd ~/SMC_Engineering_Department/scripts/P7_pilot_1e6
 mkdir -p code && git -C <clone> archive <code_commit> | tar -x -C code
 bash build.sh                                   # builds smcbvs4 and v4_pilot_island
-CONFIRM=yes bash submit_pilot.sh                # setup[1] -> pilot[1] (aftercorr); NEVER submit.sh before HQ's GO
+CONFIRM=yes bash submit_pilot.sh                # setup[1] -> pilot[1] (aftercorr); the batch is pilot_only: there is no submit.sh
 ```
 After it ends:
 ```
 python3 p1m_stage_cost.py table ~/SMC_Engineering_Department/scratch/runs/P7_pilot_1e6/6-AR-n200-r01-V-s1/cost_pilot/cost_pilot_t0_k0_r0.jsonl
 cat .../6-AR-n200-r01-V-s1/pilot.json           # T, forced steps, seconds, peak RSS, settings
 ```
+The plan has `"pilot_only": true` (review PR55 MAJOR): the driver generates setup + pilot and `submit_pilot.sh` only (no
+full-fit `submit.sh`, calibrate, island, merge or eval scripts), and the printed worst case, `core_h_cap` (144, equal to
+the worst case: changing the setup or pilot limit needs a new cap) and `ledger_row.md` are the pilot's. The fit itself
+gets its own plan after HQ's GO; it reuses this run directory's setup.bin.
+
 What it runs:
 - `v4_pilot_island` (`include/v4/island/pilot_only.h`) is the first island of `calibrate --mode V`: the same settings, runner, IslandSpec and seed. The test `pilot_only_equals_calibrate_pilot` checks it step by step against calibrate's own pilot record.
 - With `--with-ledger 1` it also holds the calibration ledger with the table stores, so the task's memory is the calibration task's.
@@ -95,7 +100,7 @@ What it runs:
 |---|---|---|---|---|
 | setup (10⁶) | 48 CPUs, 48G | 1:00 | 48 | ≈ 5–15 |
 | pilot island | 96 CPUs (one socket), **128G** | 1:00 | 96 | ≈ 20–35 (WP3_ARCH_REVIEW §8.4: ≈ 27 with levers 1–3 at E₀ = 10; production E₀ = 3.6) |
-| **total** | 2 tasks | | **144** (driver) | **≈ 25–50** (H-11: 27–50 for the island; ceiling ≈ 100) |
+| **total** | 2 tasks | | **144** (driver: printed, `core_h_cap` 144, ledger row) | **≈ 25–50** (H-11: 27–50 for the island; ceiling ≈ 100) |
 
 Memory (WP3, 11-17):
 - **Plan:** WP3 plans the calibration island at 54.5 GiB at 10⁶ and G 256 (calibration state included). Gram rows add 4.9 and the setup inputs 4–14 GB, so 64G was too small; the default is now **128G**, which fits on a 257 GB SPR node.

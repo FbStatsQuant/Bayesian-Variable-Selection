@@ -223,6 +223,30 @@ TEST(wp4_io_load_island_t10) {
   cleanup(f);
 }
 
+// D-32 (review PR55 m7b): the merge command refuses islands of two FMA families (island vs island) and islands of
+// another family than calib.bin, through the files and the CLI (binary_mismatch -> invalid_input, no estimates)
+TEST(wp4_io_merge_refuses_mixed_fma_families) {
+  TmpGuard tmp_guard("isamix"); Fx f = make_fx("isamix", 3, fmt::M_V);
+  auto args = [&](const std::string& out) {
+    Json a = Json::object(); a["data"] = f.dpath; a["setup"] = f.spath; a["calib"] = f.cpath; a["out"] = out; a["mode"] = "V";
+    a["threads"] = 2; a["chunk"] = 7; a["ell"] = 3; a["Rp"] = (int)f.ipath.size();
+    Json il = Json::array(); for (auto& x : f.ipath) il.push(x); a["islands"] = il; return a;
+  };
+  Json in = Json::object(); in["data.bin"] = f.dhash; in["setup.bin"] = f.shash; in["calib.bin"] = f.chash;
+  const bool own_fma = binary_block().contains("island_fma") && binary_block().at("island_fma").boolean();
+  Json other = clean_block(); other["island_fma"] = !own_fma; other["island_isa"] = own_fma ? "portable" : "x86-64-v3";
+  { Json r = merge::run(args(tmp_path("isamix_fit0.bin")));   // the fixture as written: one family
+    CHECK_MSG(r.at("status").str() == "completed", r.dump()); }
+  wp4io::write_island(f.ipath[1], fmt::M_V, f.isl[1], in, &other, &f.grid);   // island 2 of the other family
+  { Json r = merge::run(args(tmp_path("isamix_fit1.bin")));
+    CHECK_MSG(r.at("status").str() == "invalid_input" && r.at("reason").str().find("families differ") != std::string::npos &&
+              !r.at("estimates_available").boolean(), r.dump()); }
+  for (size_t i = 0; i < f.ipath.size(); ++i) wp4io::write_island(f.ipath[i], fmt::M_V, f.isl[i], in, &other, &f.grid);   // all islands: calib.bin differs
+  { Json r = merge::run(args(tmp_path("isamix_fit2.bin")));
+    CHECK_MSG(r.at("status").str() == "invalid_input" && r.at("reason").str().find("calib.bin") != std::string::npos, r.dump()); }
+  for (const char* x : {"isamix_fit0.bin", "isamix_fit1.bin", "isamix_fit2.bin"}) { std::remove(tmp_path(x).c_str()); std::remove((tmp_path(x) + ".json").c_str()); }
+}
+
 TEST(wp4_io_merge_command_e2e) {
   TmpGuard tmp_guard("e2e"); Fx f = make_fx("e2e", 4);
   std::string o1 = tmp_path("e2e_fit1.bin"), o3 = tmp_path("e2e_fit3.bin");

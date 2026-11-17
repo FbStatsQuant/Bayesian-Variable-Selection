@@ -339,7 +339,7 @@ class TestPilotBatch(Base):
     def test_example_plans_resolve(self):
         t5 = p1m_driver.resolve(json.load(open(os.path.join(HERE, "examples", "plan_T5_1e5.json"))))
         self.assertLessEqual(t5["worst_case_core_h"], t5["core_h_cap"])
-        self.assertEqual(t5["isa_check"], {"island": 1, "against": "x86-64-v3"})
+        self.assertEqual(t5["isa_check"], {"island": 1, "against": "x86-64-v3", "time": "00:40:00"})
         self.assertEqual(t5["island_isa"], "sapphirerapids")
         pp = p1m_driver.resolve(json.load(open(os.path.join(HERE, "examples", "plan_P7_pilot_1e6.json"))))
         self.assertEqual(pp["fits"][0]["run_id"], "6-AR-n200-r01-V-s1")
@@ -350,7 +350,7 @@ class TestPilotBatch(Base):
         P = p1m_driver.resolve(pl)
         base = p1m_driver.resolve(self.plan())
         r = P["fits"][0]["resources"]["islands"]
-        self.assertAlmostEqual(P["worst_case_core_h"], round(base["worst_case_core_h"] + int(r["cpus"]) * p1m_driver.hours(r["time"]), 1))
+        self.assertAlmostEqual(P["worst_case_core_h"], round(base["worst_case_core_h"] + int(r["cpus"]) * p1m_driver.hours("00:40:00"), 1))   # own limit (PR55 m5)
         self.assertEqual(P["n_tasks"], base["n_tasks"] + 1)
         fake_dept = os.path.join(self.tmp, "dept")
         rc, out = self.gen(pl)
@@ -368,6 +368,7 @@ class TestPilotBatch(Base):
         with self.assertRaises(p1m_driver.PlanError):   # D-32 (3): the class-A comparison stays in the FMA family
             q = self.plan(); q["isa_check"] = {"island": 1, "against": "portable"}; p1m_driver.resolve(q)
         isa = open(os.path.join(out, "stage_isa_check.sbatch")).read()
+        self.assertIn("#SBATCH --time=00:40:00", isa)
         self.assertIn('"$SCR/bin/smcbvs4_isa_check" island', isa); self.assertIn("p1m_stage_cost.py\" isa", isa)
         self.assertIn('p1m_stage_cost.py" bitform', isa); self.assertIn("bit pm", isa); self.assertIn("v4_bench_island_portable", isa)
         self.assertTrue(os.path.exists(os.path.join(out, "p1m_stage_cost.py")))
@@ -395,6 +396,8 @@ class TestPilotBatch(Base):
         self.assertIn("--dependency=afterok:3002", lines[4])   # merge does not wait for the check
         os.remove(os.path.join(scr, "bin", "smcbvs4_isa_check"))
         self.assertEqual(subprocess.call(["bash", os.path.join(scr, "submit.sh")], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL), 66)
+        with self.assertRaises(p1m_driver.PlanError):   # the comparison build equal to the plan's ISA is vacuous (PR55 m5)
+            q = self.plan(); q["isa_check"] = {"island": 1, "against": "sapphirerapids"}; p1m_driver.resolve(q)
         with self.assertRaises(p1m_driver.PlanError):   # isa_check without island_isa
             q = self.plan(); q["island_isa"] = ""; q["isa_check"] = {"island": 1}; p1m_driver.resolve(q)
         with self.assertRaises(p1m_driver.PlanError):   # island beyond Rp
@@ -461,6 +464,38 @@ class TestPilotBatch(Base):
         ok, d = p1m_stage_cost.compare_isa(a, info("0x1", [("top_v", "aa"), ("pip_r", "bX")], "portable"))
         self.assertFalse(ok); self.assertEqual(d["differing_sections"], ["pip_r"])
         self.assertFalse(p1m_stage_cost.compare_isa(a, info("0x2", [("top_v", "aa"), ("pip_r", "bb")], "portable"))[0])
+
+    def test_pilot_only_batch(self):   # review PR55 MAJOR: setup + pilot only, the pilot's worst case printed, capped and in the ledger row
+        pl = self.plan(); pl["pilot_only"] = True
+        P = p1m_driver.resolve(pl)
+        want = round(8 * (20 / 60) + 96 * 1.0, 1)
+        self.assertEqual(P["worst_case_core_h"], want); self.assertEqual(P["n_tasks"], 2)
+        out_buf = os.path.join(self.tmp, "stdout.txt")
+        old = sys.stdout
+        with open(out_buf, "w") as fh:
+            sys.stdout = fh
+            try:
+                rc, out = self.gen(pl)
+            finally:
+                sys.stdout = old
+        self.assertEqual(rc, 0)
+        self.assertIn("worst case %.1f billed core-h" % want, open(out_buf).read())
+        files = set(os.listdir(out))
+        self.assertTrue({"stage_setup.sbatch", "stage_pilot.sbatch", "submit_pilot.sh", "build.sh"} <= files)
+        for absent in ("submit.sh", "stage_calibrate.sbatch", "stage_islands.sbatch", "stage_merge.sbatch", "stage_eval.sbatch"):
+            self.assertNotIn(absent, files)
+        self.assertIn("| %.1f |" % want, open(os.path.join(out, "ledger_row.md")).read())
+        for fn in ("stage_setup.sbatch", "stage_pilot.sbatch"):
+            self.assertIn("# Submitted only by submit_pilot.sh", open(os.path.join(out, fn)).read())
+        pl["core_h_cap"] = want   # the cap applies to the pilot figure: equal passes, below refuses
+        p1m_driver.resolve(pl)
+        pl["core_h_cap"] = want - 1
+        with self.assertRaises(p1m_driver.PlanError):
+            p1m_driver.resolve(pl)
+        with self.assertRaises(p1m_driver.PlanError):   # pilot_only without a pilot section
+            q = load_example(); q["pilot_only"] = True; p1m_driver.resolve(q)
+        P7 = p1m_driver.resolve(json.load(open(os.path.join(HERE, "examples", "plan_P7_pilot_1e6.json"))))
+        self.assertTrue(P7["pilot_only"]); self.assertEqual(P7["worst_case_core_h"], 144.0); self.assertEqual(P7["core_h_cap"], 144)
 
     def test_pilot_memory(self):   # WP3 11-17: default 128G; sized from a calibrate --plan-only record; refused above 240G
         pl = self.plan(); del pl["pilot"]["mem"]

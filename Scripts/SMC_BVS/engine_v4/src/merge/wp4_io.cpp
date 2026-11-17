@@ -472,9 +472,16 @@ void check_binaries(std::vector<merge::IslandSlot>& slots, const std::vector<Jso
   for (size_t i = 0; i < slots.size(); ++i) if (h[i].load == merge::Load::binary_mismatch) { slots[i].load = h[i].load; slots[i].detail = h[i].detail; }
 }
 FileIslandSource::FileIslandSource(std::vector<std::string> paths, const Expect& ex, int Rp, int p) : paths_(std::move(paths)), ex_(ex), Rp_(Rp), p_(p) {
-  std::vector<Json> blocks(paths_.size());
-  for (size_t r = 1; r <= paths_.size(); ++r) heads_.push_back(head_island(paths_[r - 1], (int)r, ex, &blocks[r - 1]));
-  check_binaries(heads_, blocks, ex.mode);
+  blocks_.assign(paths_.size(), Json());
+  for (size_t r = 1; r <= paths_.size(); ++r) heads_.push_back(head_island(paths_[r - 1], (int)r, ex, &blocks_[r - 1]));
+  check_binaries(heads_, blocks_, ex.mode);
+}
+void FileIslandSource::check_calib_isa(const Json& calib_block) {   // D-32 (review PR55 m3): calib.bin and the islands, one FMA family
+  for (size_t i = 0; i < heads_.size(); ++i) {
+    if (heads_[i].load != merge::Load::ok) continue;
+    const BinaryCheck bc = isa_family_compatible(calib_block, blocks_[i]);
+    if (!bc.ok) { heads_[i].load = merge::Load::binary_mismatch; heads_[i].detail = "island " + std::to_string(i + 1) + " vs calib.bin: " + bc.reason; }
+  }
 }
 merge::IslandIn FileIslandSource::load(int r) {
   try { return load_island_full(paths_[(size_t)r - 1], Rp_, p_, ex_); }
@@ -834,6 +841,7 @@ Json run(const Json& args) {
   ex.grid = C.grid; ex.L = C.L; ex.Hm = C.Hm; ex.K = D.K; ex.tier = C.tier; ex.zob = &D.zob;
   for (int r = 0; r < R; ++r) ex.island_hash.push_back(want(in.islands[(size_t)r]));
   wp4io::FileIslandSource src(in.islands, ex, R, D.p);   // pass 1: heads + binary check
+  if (mode == fmt::M_V && C.meta.contains("binary")) src.check_calib_isa(C.meta.at("binary"));   // D-32: the islands' family = calib.bin's
   LedgerConfig cfg; cfg.p = D.p; cfg.islands = R; cfg.leaders = false; cfg.fresh_counters = false;   // v0.1.7: no final-run leaders
   Ledger pre(cfg);
   wp4io::offer_tables(pre, S, D.K, D.zob);

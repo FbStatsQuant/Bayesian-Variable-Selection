@@ -300,7 +300,9 @@ the binary block (§5.3), so the content hash changes with the binary. Three ide
 - **Cross-machine bit identity (T2)** compares the section hashes of all sections except `meta`, or the fit fingerprint;
   never content hashes.
 - **Binary consistency** (one helper, `binary_compatible(a, b, use)` / `require_binary_compatible`, provenance.h): merge
-  (V) needs both libm self-tests passed and equal flags and libm binding; merge (theory mode) also needs equal git
+  (V) needs both libm self-tests passed, equal flags and libm binding, **and one class-A FMA family** (D-32, v0.1.18:
+  `island_fma`, else known `island_isa` names; the V merge also checks every island against calib.bin's block); merge
+  (theory mode) also needs equal git
   commits that are clean (no `-dirty`) and known; a checkpoint restart also needs the same executable (sha256) and git
   commit. `git_commit` = 40-hex HEAD + `-dirty` when tracked files differ, refreshed at every build.
 JSON numbers are doubles: every u64 value (hashes, Zobrist keys, large counters) is written as a hex string `"0x…"`.
@@ -356,6 +358,9 @@ Sections (names fixed; WPs may add sections, never rename):
     (`cost_<pilot|diag>_t<tier>_k<iter>_r<island>.jsonl`).
 - `fit.bin` + `fit.json` (WP4): merged `top_*`, `hpm_*` + provenance, `hpm_before_local_*`, local-search archive,
   `mode_S`, LS0, near ties, `logZ_r`, `pip_eq`, `pip_Z`, `pip_T`, `rb_*`, flags; `fit.json` scalars and hashes only.
+  v0.1.18 (WP7 O5): `fit.json` also carries `island_isa` (D-32 (4), the merge binary's) and `timings` (as fit.bin
+  `meta.timings`): `merge_tail_seconds` (the whole command), `merge_islands_seconds` (island stream + merge),
+  `tail_local_seconds` (final local search), `ls0_seconds` (LS0); execution statistics, not hashed (meta).
   No leader stores in `island_r.bin` or `fit.bin`, in any mode (§4.1; on the compat exclusion list).
 - `law.bin` (WP5): models (ptr/idx), weights, conjugate parameters, standardisation constants, dropped mass.
 - `island_r.ckpt.{a,b}` (WP3): kind 8; newest valid generation wins.
@@ -374,6 +379,7 @@ struct FitResult    { Status status; int32_t Rp; double logZ; std::vector<double
 ```json
 { "schema": "smcbvs4.manifest/1", "command": "island", "run_id": "...", "mode": "compat|law|V",
   "binary": {"sha256": "...", "git_commit": "...", "compiler": "g++ 11.5.0", "flags": "...",
+             "island_isa": "sapphirerapids", "island_fma": true,
              "libm": {"path": "...", "sha256": "...", "glibc": "2.34", "fma_variant": true}},
   "inputs": {"data.bin": "<content sha256>", "setup.bin": "...", "calib.bin": "..."},
   "params": {"seed": 1, "island": 3, "Rp": 16, "N": 2500, "threads": 48, "...": "..."},
@@ -530,3 +536,11 @@ point, so all WPs link from day one: `setup::run`, `island::run`, `calib::run`, 
   bounded JSON numbers; unmeasured fields "NaN"; outside the scientific-output hashes, inside the container hash), and
   the non-authoritative JSON-lines progress log. Numbering: WP1's v0.1.14–v0.1.15 (PR #45) precede it; D-29's O6 line
   is v0.1.17. The header line moves to v0.1.16 when PR #45 lands (WP1).
+- v0.1.18 (2026-11-17, WP7 O5 for WP1; D-32 revised 11-17; review PR55 m4, m6) — §5.3 binary block: `island_isa` (the
+  island sources' -march, "x86-64-v3" for a V4_WIDE_ISA build without one, else "portable") and `island_fma` (whether
+  class A uses a true FMA, from the class-A unit itself); binary consistency: the V merge needs one FMA family, island
+  against island and against calib.bin. §5.1 `fit.json`: `island_isa` and `timings` (merge, tail local search, LS0
+  seconds). §1 commands: `info --meta 1` prints a file's meta section; `calibrate --cost-dir DIR` (one D-30 progress
+  log per calibration island) and `--verbose 1` change no output bit (tested); the tool `v4_pilot_island`
+  (`include/v4/island/pilot_only.h`) runs the first island of `calibrate --mode V` alone (H-11's 10⁶ pilot). (O6's
+  offer-floor line is v0.1.17.)
