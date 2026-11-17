@@ -1,0 +1,458 @@
+REPLAY NOTICE (added for this replay; it is not part of the original brief). The repository checkout named in the
+brief is NOT available to you, and you cannot write files. The files the brief asks you to read are supplied inline after
+the brief, each between `<<<FILE path @commit [lines a-b] >>>` and `<<<END FILE>>>` markers, byte-for-byte as the original
+reviewer saw them (some are line-range excerpts; some listed files are not supplied). Treat the supplied text as the
+frozen inputs. Where the brief names a file or check that is not supplied, say "not supplied" for that item and do not guess
+its content. Ignore any instruction to write a file; return the complete reply as your final message, in the format the
+brief specifies. You may run code if you need to check arithmetic.
+
+===== ORIGINAL BRIEF (verbatim; text after the saved-before-launch header) =====
+
+You are the statement-lock reviewer for the rider ticket W3-MISR-R in the repository checkout
+`/home/fb31/BVS-wt/W3-MISR-R` (read-only for you, except the one reply file named below). You have never reviewed this
+ticket. Read only the files listed here (and files they cite by `file:line` when you need to check a citation).
+
+**Task.** Check the delta statement and plan against the sources: right target, faithfully stated, every hypothesis
+explicit, each claim plausibly provable as planned, each "implies" row of §8 true, citations correct. Try to break
+each claim: look for counterexamples, missing hypotheses (measurability, null events, non-constant columns, constants
+that silently depend on n or on the sequence, quantifier order, uniformity), over-claims, and mismatches between a
+clause and what the cited source states. Statement-level only: no lemma files exist yet; judge the proof sketches in
+`PLAN.md` §1 for viability.
+
+**Files to review (the frozen inputs).**
+1. `Theory_work/Wave3/W3-MISR-R/STATEMENT.md` (v1.0; the delta statement — the object of the lock).
+2. `Theory_work/Wave3/W3-MISR-R/PLAN.md` (proof sketches, §1).
+3. `Theory_work/Wave3/W3-MISR-R/BRIEF.md` (what the ticket was asked to do).
+4. Parent (BASE): `Theory_work/Wave3/W3-MISR/STATEMENT.md` (v1.3), `Theory_work/Wave3/W3-MISR/lemmas/G_corollaries.md`
+   (G.1–G.3), `Theory_work/Wave3/W3-MISR/lemmas/M_misr.md` (§M.3 and the (M0) display near the top),
+   `Theory_work/Wave3/W3-MISR/lemmas/R_reduction.md` (Lemma R′).
+5. Consumed upstream statements: `Theory_work/Wave3/W3-POST2/STATEMENT.md` (Notation, (OS) at :29-36, implications
+   :46-47, Claim D at :99-119), `Theory_work/Wave3/W3-POST2/lemmas/D_hellinger.md` (D0, D2, D3),
+   `Theory_work/Wave3/W3-POST2/lemmas/A_occam.md` (Lemma A0, :14-27), `Theory_work/Wave3/W3-POST/STATEMENT.md` (§0 :16-40,
+   regime R1 and hypotheses :63-78).
+6. Motivation: `Theory_work/Wave3/API_AUDIT/sharp2/TRIAGE.md` rows at :40-42, §2 row T13 (:81), §3 (:88-103).
+
+**Specific questions** (answer each):
+Q1. CorG-min (§2): is (a) true as stated (arbitrary candidate-design law; α arbitrary random; γ, τ² Borel in the
+    design)? Are (c) (necessity under Gaussian noise) and (d) (Cramér partial converse) true and correctly quantified?
+    Is (E1) with a singular Σ_𝒞𝒞 and the Moore–Penrose inverse correct?
+Q2. CorGb-plus (§3): does BASE G.2 go through with Gaussian candidate rows + (OV) (no joint Gaussianity), a floor on the
+    correlation matrix only on |T| ≤ k_n (no global Σ_𝒞𝒞 ≻ 0), and the liminf beta-min condition, with the stated
+    constants and explicit bound? Is the column-rescaling invariance of the coded target correctly used?
+Q3. CorH-plus (§4): does (a′) follow from [POST2] D(a) under exactly (SZ), (E^σ), (F₀), δ_n → 0 (no (OS))? Is the (KL)
+    display correct, and the KL reading (i)–(ii) correctly scoped?
+Q4. CorH-U (§5): is the subsequence-with-fillers argument (PLAN H0, (U-b), (U-a)) valid for turning the sequence
+    statements of [POST2] D(a)/D(b) into the uniform statements, including the constants it relies on (C_H depends only
+    on (s, A); D(a) has no constants in its conclusion; the filler class constants are n-free)? Is (RD) correct as a
+    freezing argument (measurability of the posterior functional; Π depends on y^r only through Uᵀy^r)?
+Q5. §8: is each "implies" row true? §7: are the inputs and statuses complete for what the claims use?
+Q6. Is anything in the statement stronger than the plan can deliver, or anything that should be weakened, dropped or
+    made explicit before the lock?
+
+**Output.** Write your full reply to `Theory_work/Wave3/W3-MISR-R/reviews/L1_statement_lock_sol.md` (create it; write
+nothing else anywhere). Format: findings numbered L1-1, L1-2, …, each with severity FATAL / MAJOR / MINOR / NIT, the
+clause and line, what fails, and a concrete fix; then the answers to Q1–Q6; then one final line
+`LOCK-VERDICT: LOCK | LOCK-WITH-AMENDMENTS | NO-LOCK`. Also return the same content as your final message.
+
+===== SUPPLIED INPUTS =====
+
+<<<FILE Theory_work/Wave3/W3-MISR-R/BRIEF.md @01873c40 (whole file) >>>
+# W3-MISR-R — T13: MISR Cor-G(a) / Cor-H restatements (Theory Department, 2026-11-15)
+
+Lead: Claude Opus 5.5, effort high, Claude Third, on Owls. **Tier B**, NORMAL mode. Worktree
+`/home/fb31/BVS-wt/W3-MISR-R`, branch `theory/W3-MISR-R`, folder `Theory_work/Wave3/W3-MISR-R/`.
+Read first, in full: `RIDER_RULES.md` (this folder; binding), then `Theory_work/Wave3/PROTOCOL_v4.md`,
+`Theory_work/Wave3/PROGRAM.md` (presentation rule + Readability).
+
+## Parent (read-only)
+`Theory_work/Wave3/W3-MISR/` v1.3 (recorded on main, 7 claims, six conditional on unchecked inputs).
+Motivation: `API_AUDIT/sharp2/TRIAGE.md` rows W3-MISR:Cor-G(a), Cor-G(b), Cor-H and §2 row T13, §3 (DIST hand-offs).
+
+## Targets
+1. **Cor-G(a), minimal hypothesis.** The proof uses only "ξ := X_𝓜β_𝓜 − a1 − X_𝒞γ ~ N(0, τ²I) independent of X_𝒞"
+   (`W3-MISR/lemmas/G_corollaries.md:26-31`). Restate: X_𝒞 arbitrary; given X_𝒞, X_𝓜β_𝓜 ~ N(a1 + X_𝒞γ, τ²I);
+   Σ_𝒞𝒞 ≻ 0 not needed; the Cramér partial converse as a remark.
+2. **Cor-H.** (a) under (SZ), (E^σ), (F₀) and δ_n →_P 0 (the margin is used only for δ_n →_P 0, then POST2 D(a)
+   whose premise is δ_n → 0; `W3-POST2/STATEMENT.md:107-111`); the uniform-over-class form and the conditional
+   random-design form by the freezing argument of `M_misr.md:143-149`; a KL remark. Expectation-rate (b) and BvM: not targets.
+3. Cor-G(b) cosmetics (liminf ρ^{BM} > 2c₀/φ₀²; correlation-matrix floor; explicit bound) only if trivial.
+Not yours: the MISR `ASSUMPTION_MAP.md:27` cross-cite to PSHARP (editorial ticket).
+
+**Bears on W3-DIST** (HQ's ticket): with the minimal Cor-G(a), a candidate run is itself an (RD) instance (triage §3
+item 1). Write that observation in REPORT as a HEURISTIC/OPEN pointer only; do not touch W3-DIST. The manager hands it
+to HQ when your CP3 lands.
+
+## Budget and agents
+~3 Opus hours. No helper needed. Sol: lock, one line-check batch, council seat. Kill budget 3.
+
+## Start
+`cd /home/fb31/BVS-wt/W3-MISR-R`, write `PLAN.md` and the delta `STATEMENT.md`, launch the Sol statement lock, then
+`CHECKPOINT_1.md` and end your run.
+<<<END FILE>>>
+
+<<<FILE Theory_work/Wave3/W3-MISR-R/STATEMENT.md @01873c40 (whole file) >>>
+# W3-MISR-R — STATEMENT v1.0 (delta over W3-MISR v1.3; 2026-11-15; lead: Claude Opus 5.5, high, Claude Third)
+
+Ticket W3-MISR-R (rider T13 of `Theory_work/Wave3/API_AUDIT/sharp2/TRIAGE.md` §2, row "T13 MISR-G/H"; motivation rows
+`TRIAGE.md:40-42` and §3). Tier B, NORMAL mode. Protocol: `Theory_work/Wave3/PROTOCOL_v4.md`, rider rules `RIDER_RULES.md`.
+
+**This is a delta statement.** BASE := `Theory_work/Wave3/W3-MISR/` (recorded on main; its `STATEMENT.md` is v1.3,
+registry version 1.0.0 of every W3-MISR claim, sha256 of BASE `STATEMENT.md` 797bca0e29ae2726…). This file states in
+full every definition, hypothesis and claim that differs from BASE v1.3, and takes everything else from BASE by
+`file:line`. It **asserts no proof status**: proofs go in `lemmas/` (plan: `PLAN.md`), statuses are recorded there and
+in the checkpoints. All results are asymptotic (n → ∞) unless marked *deterministic* or *finite n*. No method change.
+
+## 0. What changes, in one table
+
+| # | claim (this file) | replaces / extends (BASE `STATEMENT.md`) | what is gained |
+|---|---|---|---|
+| 1 | **W3-MISR-R:CorG-min** (§2) | Cor-G(a), `:162-170` | the candidate design is arbitrary (any law, dependent rows, no Σ_𝒞𝒞); only the omitted part, given the candidates, must be Gaussian with linear mean on the contrast scale; Σ_𝒞𝒞 ≻ 0 dropped; necessity under Gaussian noise; a Cramér partial converse |
+| 2 | **W3-MISR-R:CorGb-plus** (§3) | Cor-G(b), `:171-174` | Gaussian candidate rows plus the omitted-part condition of §2 instead of jointly Gaussian rows; floor on the correlation matrix (no variance bound C₀); beta-min may be a liminf condition; explicit finite-n bound |
+| 3 | **W3-MISR-R:CorH-plus** (§4) | Cor-H, `:176-197` | clause (a) needs only (SZ), (E^σ), (F₀) and δ_n → 0 in probability (no (OS), no margin); an in-sample Kullback–Leibler clause |
+| 4 | **W3-MISR-R:CorH-U** (§5) | new (no BASE counterpart) | uniform-over-class forms of Cor-H(a), (b); the conditional random-design form (as BASE §4 for MIS-R) |
+
+Unchanged and not restated: BASE §0 (`:17-66`, setting, configurations, (GR^c), hypotheses, classes, constants, laws),
+Lemma R′ (`:68-106`), MIS-R (i), (i′), (ii) (`:108-160`), Remarks SNR, P, U (`:199-220`), BASE §9 non-claims (`:259-266`)
+except where §6 below says otherwise.
+
+## 1. Notation added to BASE §0
+
+* **Designs.** 𝔛_n(p) := {x ∈ ℝ^{n×p} : every column non-constant} (a Borel subset of ℝ^{n×p}). A *random candidate
+  design* is a random n × p matrix X^r_𝒞 (p = p_n ≥ 1 deterministic) with P(X^r_𝒞 ∈ 𝔛_n(p)) = 1.
+* **Conditional laws.** For a random element Z of ℝ^k, a random design X and a probability kernel Q from ℝ^{n×p} to
+  ℝ^k, "conditionally on X, Z ~ Q(X)" means: E[h(X, Z) | X] = ∫ h(X, z) Q(X, dz) almost surely, for every bounded Borel
+  h on ℝ^{n×p} × ℝ^k. N_k(m, 0) := δ_m.
+* **Parameter posterior and distances.** Π(· | x, y^r) is the parameter posterior of BASE R′(a′) (`:75-77`) on
+  (S, θ, v′); for a configuration κ = (x, β, v): μ̂ := X_Sθ (X the standardised x),
+    h̄_n²(κ) := n⁻¹ Σ_i H²(N(μ̂_i, v′), N(μ_i(κ), v))   (as BASE `:180`),
+    k̄_n(κ) := n⁻¹ Σ_i KL(N(μ̂_i, v′) ‖ N(μ_i(κ), v)),   KL(P‖Q) := ∫ log(dP/dQ) dP.
+* **Bad sets** (sets of (S, θ, v′), depending on κ, n and a sequence M_n; θ zero-padded to ℝ^p; C_H = C_H(s, A) is
+  the constant of BASE Cor-H(b), `:181`, i.e. that of [POST2] Claim D(b) at σ*² = 1):
+    B^a_n(κ) := {‖μ̂ − μ(κ)‖² > M_n v} ∪ {|v′/v − 1| > M_n n^{−1/2}} ∪ {S ≠ S₀(κ)} ∪ {‖θ − θ(κ)‖ > M_n √(v/n)},
+    H^a_n(κ) := {h̄_n(κ) > M_n n^{−1/2}},  K^a_n(κ) := {k̄_n(κ) > M_n/n};
+    B^b_n(κ) := {‖μ̂ − μ(κ)‖² > C_H v log n} ∪ {|v′/v − 1| > M_n n^{−1/2}},
+    H^b_n(κ) := {h̄_n²(κ) > (1 + C_H/4) log n/n},  K^b_n(κ) := {k̄_n(κ) > (1 + C_H/2) log n/n}.
+  For s̄ ≥ 1, C̄_H := max_{s≤s̄} C_H(s, A), and B^b, H^b, K^b with C̄_H in place of C_H are written B̄^b, H̄^b, K̄^b.
+* **Floor-only class.** 𝒦^F_n(s, A, M, φ₀) := {κ : s(κ) = s, (SZ), (E^σ; M), (F₀; φ₀)} (BASE `:46-48`); so
+  𝒦⁰_n(s, A, M, φ₀, C_OS) = 𝒦^F_n ∩ {(OS; C_OS)} (BASE `:60`). Unions over s ≤ s̄ are written with s̄ in place of s:
+  𝒦^F_n(≤s̄, A, M, φ₀) := ∪_{s=1}^{s̄} 𝒦^F_n(s, A, M, φ₀), likewise 𝒦⁰_n(≤s̄, …). sup ∅ := 0.
+* δ(κ) := 1 − π_𝒞(S₀(κ) | x, y^r) (BASE `:118`).
+
+## 2. Corollary G-min (W3-MISR-R:CorG-min) — replaces BASE Cor-G(a), `:162-170`
+
+**Setting (at each n).** On (Ω*, 𝒢*, P): a random candidate design X^r_𝒞 (§1; **no other assumption on its law**: the
+rows need not be independent, identically distributed or Gaussian, and no moment or covariance is assumed); a random
+n × q matrix X^r_𝓜 of omitted columns (q = q_n ≥ 0); deterministic β_𝒞 ∈ ℝ^p, β_𝓜 ∈ ℝ^q; a real random variable α
+(any dependence on everything); a random vector ε ∈ ℝⁿ; and
+  y^r = α1 + X^r_𝒞β_𝒞 + X^r_𝓜β_𝓜 + ε.
+Hypotheses:
+- **(N)** ε ~ N_n(0, σ²I_n) with deterministic σ² ≥ 0, and ε is independent of (X^r_𝒞, X^r_𝓜).
+- **(OV^c)** there are Borel maps γ : ℝ^{n×p} → ℝ^p and τ² : ℝ^{n×p} → [0, ∞) such that, conditionally on X^r_𝒞,
+    Uᵀ(X^r_𝓜β_𝓜 − X^r_𝒞γ(X^r_𝒞)) ~ N_N(0, τ²(X^r_𝒞) I_N);
+  and σ²_𝒞(x) := σ² + τ²(x) > 0 for every x.
+
+Put β^𝒞(x) := β_𝒞 + γ(x) and κ_n := (X^r_𝒞, β^𝒞(X^r_𝒞), σ²_𝒞(X^r_𝒞)) on {X^r_𝒞 ∈ 𝔛_n(p)}, κ_n := a fixed reference
+configuration off it (a null event).
+**(a) Sufficiency.** Under (N) and (OV^c), (GR^c | σ(X^r_𝒞)) of BASE §4 (`:147`) holds for κ_n. Hence BASE MIS-R (ii)
+(`:150-160`) applies with 𝓕_n := σ(X^r_𝒞) and target S₀(κ_n) = supp(β_𝒞 + γ(X^r_𝒞)) (random when γ depends on the
+design; BASE §4(b) slices cover a random size).
+**(b) Full-vector sufficient form.** (OV^c) holds if there is moreover a Borel a : ℝ^{n×p} → ℝ such that, conditionally on
+X^r_𝒞, X^r_𝓜β_𝓜 ~ N_n(a(X^r_𝒞)1 + X^r_𝒞γ(X^r_𝒞), τ²(X^r_𝒞)I_n)   **(OV)**.
+If (N), (OV) hold and α = α(X^r_𝒞) is a Borel function of the design, then conditionally on X^r_𝒞,
+y^r ~ N_n((α + a)(X^r_𝒞)1 + X^r_𝒞β^𝒞(X^r_𝒞), σ²_𝒞(X^r_𝒞)I_n).
+**(c) Necessity under Gaussian noise.** Assume (N) and let γ, v : ℝ^{n×p} → ℝ^p × (0, ∞) be Borel. If (GR^c | σ(X^r_𝒞))
+holds for κ_n := (X^r_𝒞, β_𝒞 + γ(X^r_𝒞), v(X^r_𝒞)) (reference configuration off 𝔛_n(p)), then v(X^r_𝒞) ≥ σ² almost
+surely and (OV^c) holds with this γ and τ² := (v − σ²)₊ (conditionally on X^r_𝒞, almost surely). So under (N), (OV^c)
+is equivalent to (GR^c | σ(X^r_𝒞)) at κ_n.
+**(d) Cramér partial converse (noise law unknown).** Assume only that ε is independent of (X^r_𝒞, X^r_𝓜), with any law.
+If (GR^c | σ(X^r_𝒞)) holds for κ_n as in (c), then Uᵀε ~ N_N(b, Σ_ε) for some deterministic b ∈ ℝ^N, Σ_ε ⪰ 0, and,
+conditionally on X^r_𝒞, Uᵀ(X^r_𝓜β_𝓜 − X^r_𝒞γ(X^r_𝒞)) ~ N_N(−b, v(X^r_𝒞)I_N − Σ_ε) (in particular v(X^r_𝒞)I_N ⪰ Σ_ε a.s.).
+Neither the noise contrasts nor the omitted-part contrasts can be non-Gaussian; their covariances need only add to a
+scalar matrix.
+**(e) Examples (each a one-line check of (OV)).**
+  (E1) *Jointly Gaussian rows* (BASE `:164-165`): rows (x^r_{𝒞,i}, x^r_{𝓜,i}) iid N(m, Σ) with Σ_jj > 0 for j ∈ 𝒞 and n ≥ 2;
+  **Σ_𝒞𝒞 may be singular.** (OV) holds with deterministic γ := Σ_𝒞𝒞⁺Σ_𝒞𝓜β_𝓜 (Moore–Penrose inverse),
+  a := (m_𝓜 − Σ_𝓜𝒞Σ_𝒞𝒞⁺m_𝒞)ᵀβ_𝓜, τ² := β_𝓜ᵀ(Σ_𝓜𝓜 − Σ_𝓜𝒞Σ_𝒞𝒞⁺Σ_𝒞𝓜)β_𝓜. With Σ_𝒞𝒞 ≻ 0 these are BASE's γ, β^𝒞, τ², σ²_𝒞.
+  (E2) *Omitted columns linear in the candidates plus Gaussian noise*: X^r_𝓜 = 1m′ᵀ + X^r_𝒞Γ + Z, deterministic m′, Γ,
+  Z with iid N_q(0, Σ_Z) rows independent of X^r_𝒞; X^r_𝒞 of any law (binary, heavy-tailed, dependent rows). (OV) holds
+  with γ := Γβ_𝓜, a := m′ᵀβ_𝓜, τ² := β_𝓜ᵀΣ_Zβ_𝓜.
+  (E3) *Fixed design*: X^r_𝒞 ≡ x deterministic. Then (N) + (OV^c) is BASE's (GR^c) (`:36-43`) with β = β_𝒞 + γ(x),
+  v = σ² + τ²(x).
+**Remark (what β^𝒞 is; no claim).** Under (OV^c), E[Uᵀ X^r_𝓜β_𝓜 | X^r_𝒞] = UᵀX^r_𝒞γ(X^r_𝒞): β^𝒞 is the candidate
+coefficient of the conditional mean of the response contrasts given the candidates. As in BASE `:41-42`, β^𝒞 need
+not be unique when UᵀX^r_𝒞 has deficient column rank; statements are about the chosen γ.
+
+## 3. Corollary G(b)⁺ (W3-MISR-R:CorGb-plus) — replaces BASE Cor-G(b), `:171-174`
+
+Setting: rows x^r_{𝒞,i}, i ≤ n, iid N_p(m_𝒞, Σ_𝒞𝒞) with Σ_jj > 0 (j ∈ 𝒞; Σ_𝒞𝒞 ≻ 0 is not assumed beyond the floor
+below); (N) and (OV) of §2 with **deterministic**
+a, γ, τ² (e.g. (E1) with Σ_𝒞𝒞 ≻ 0, or (E2) with Gaussian candidate rows); β^𝒞 := β_𝒞 + γ, σ²_𝒞 := σ² + τ² > 0.
+Everything (m_𝒞, Σ_𝒞𝒞, β, γ, σ², τ², p) may depend on n. R := D_Σ^{−1/2}Σ_𝒞𝒞D_Σ^{−1/2}, D_Σ := diag(Σ_𝒞𝒞), is the
+correlation matrix of a candidate row. Assume: 2 ≤ p ≤ n^A; s := |supp β^𝒞| ≥ 1 fixed; with k_n := s + max(j₀, m♯_n)
+(m♯_n of BASE `:34` with p = |𝒞|),
+  λ_min(R_TT) ≥ c_R > 0 for every T ⊆ 𝒞 with |T| ≤ k_n;  β^𝒞ᵀΣ_𝒞𝒞β^𝒞 ≤ M₀σ²_𝒞;
+  ρ_n^{BM} := n·min_{j∈supp β^𝒞} Σ_jj(β^𝒞_j)²/(σ²_𝒞 log n) satisfies liminf_n ρ_n^{BM} > 16c₀(s, A)/c_R
+(c₀ of BASE `:63`; in particular if ρ_n^{BM} → ∞, BASE's condition). Then there are n* and C such that for every n ≥ n*, with δ_n := 1 − π_𝒞(supp β^𝒞 | X^r_𝒞, y^r):
+  E δ_n ≤ C r_n + (2 + 2k_n)n^{−2} + n^{−1},  P(HPM ≠ supp β^𝒞) ≤ 2C r_n + (2 + 2k_n)n^{−2} + n^{−1};
+so both are O(r_n). (C is the constant of BASE MIS-R (i) on 𝒦^λ_n for (s, A, 2M₀ + 1, φ₀ = (c_R/8)^{1/2}, C_OS, c), with
+C_OS of the bridge (F_w; 1) ⇒ (OS) and c > c₀(s, A) fixed by the beta-min branch; n* depends on the sequence.)
+With m_𝒞 = 0 and jointly Gaussian rows, supp β^𝒞 is SL's s̃ (BASE `:174`).
+
+## 4. Corollary H⁺ (W3-MISR-R:CorH-plus) — replaces BASE Cor-H, `:176-197`
+
+Fixed designs; s ≥ 1, A ≥ 1, M ≥ 0, 0 < φ₀ ≤ 1 fixed; a sequence of configurations κ_n ∈ 𝒦^F_n(s, A, M, φ₀) for all
+large n, laws P_{κ_n} (BASE `:65`); Π, μ̂, h̄_n, k̄_n as in §1; δ_n := δ(κ_n).
+**(a′) (selection premise only).** If δ_n → 0 in P_{κ_n}-probability, then for every M_n → ∞,
+  Π(B^a_n(κ_n) | x_n, y^r) → 0, Π(H^a_n(κ_n) | x_n, y^r) → 0 and Π(K^a_n(κ_n) | x_n, y^r) → 0 in probability.
+  ((OS) and the margin are not assumed; δ_n → 0 may come from any source, e.g. BASE MIS-R (i) on 𝒦_n, c > c₁(s, A),
+  or on 𝒦^λ_n, c > c₀(s, A), via Markov.)
+**(b) (no margin, no beta-min; = BASE Cor-H(b), `:181-183`).** If moreover κ_n ∈ 𝒦⁰_n(s, A, M, φ₀, C_OS) for all large n,
+then for every M_n → ∞, Π(B^b_n(κ_n) | x_n, y^r) → 0, Π(H^b_n(κ_n) | x_n, y^r) → 0 and Π(K^b_n(κ_n) | x_n, y^r) → 0 in
+probability.
+**(KL) (deterministic).** k̄_n(κ) = ½(v′/v − 1 − log(v′/v)) + ‖μ̂ − μ(κ)‖²/(2nv), and on {|v′/v − 1| ≤ ½}:
+  k̄_n(κ) ≤ (v′/v − 1)² + ‖μ̂ − μ(κ)‖²/(2nv).
+**The reference law** is BASE's (`:187-191`, unchanged). **Kullback–Leibler reading (replaces BASE `:191-195`).**
+(i) Fixed design, contrast scale: under (GR^c) at κ the law of Uᵀy^r is N_N(Uᵀxβ, vI_N), a member of the working
+contrast family {N_N(UᵀX b, wI_N) : b ∈ ℝ^p, w > 0}; so it is its own Kullback–Leibler projection onto that family
+(divergence 0). (ii) In the setting of §2(b) (with α a function of the design): the conditional law of y^r given the
+candidate design is N_n((α + a)1 + X^r_𝒞β^𝒞, σ²_𝒞I_n), a member of the candidate linear-Gaussian family, hence the
+Kullback–Leibler minimiser over it (divergence 0); for jointly Gaussian rows this is BASE's row-wise reading (SL's f₀,
+centred rows). k̄_n is the in-sample average divergence from the posterior's one-observation laws to the reference.
+No statement about the projection given the realised omitted columns ([MIS1] `L1_reduction.md:69-74`).
+Differences from SL's Theorem 4 as BASE `:196-197`.
+
+## 5. Corollary H-U (W3-MISR-R:CorH-U) — uniform and conditional random-design forms (new)
+
+Fix s̄ ≥ 1, A ≥ 1, M ≥ 0, 0 < φ₀ ≤ 1, C_OS < ∞, a sequence M_n → ∞ and η > 0. For every n and κ, write
+P_κ(Π(B) > η) for P_κ(Π(B | x, y^r) > η) (well defined, and the same for every law satisfying (GR^c) at κ).
+**(U-b) Uniform no-margin form.** lim_{n→∞} sup_{κ∈𝒦⁰_n(≤s̄, A, M, φ₀, C_OS)} P_κ(Π(B) > η) = 0 for B ∈ {B̄^b_n(κ), H̄^b_n(κ), K̄^b_n(κ)}.
+**(U-a) Uniform selection form.** Let 𝒦^♭_n ⊆ 𝒦^F_n(≤s̄, A, M, φ₀) be any classes with
+  lim_{n→∞} sup_{κ∈𝒦^♭_n} P_κ(δ(κ) > η′) = 0 for every η′ > 0   **(UP)**
+(e.g. 𝒦^♭_n = 𝒦_n(s, A, M, φ₀, C_OS, c) with c > c₁(s, A), or 𝒦^λ_n with c > c₀(s, A), by BASE §2 and Markov; unions of
+finitely many such). Then lim_{n→∞} sup_{κ∈𝒦^♭_n} P_κ(Π(B) > η) = 0 for B ∈ {B^a_n(κ), H^a_n(κ), K^a_n(κ)}.
+**(RD) Conditional random-design form.** In the setting of BASE §4 (`:144-149`: σ-fields 𝓕_n, 𝓕_n-measurable random
+configurations κ_n = (X^r_𝒞, β^𝒞, σ²_𝒞), response y^r with (GR^c | 𝓕_n)), let 𝒦♯_n be either 𝒦⁰_n(≤s̄, A, M, φ₀, C_OS)
+with B_n := any of B̄^b_n, H̄^b_n, K̄^b_n, or a class 𝒦^♭_n with (UP) with B_n := any of B^a_n, H^a_n, K^a_n; put
+ε_n := sup_{κ∈𝒦♯_n} P_κ(Π(B_n(κ)) > η) (→ 0 by (U-b), (U-a)). Then for every event 𝒜_n ∈ 𝓕_n with 𝒜_n ⊆ {κ_n ∈ 𝒦♯_n}:
+  P(Π(B_n(κ_n) | X^r_𝒞, y^r) > η | 𝓕_n) ≤ ε_n almost surely on 𝒜_n,  hence  P(Π(B_n(κ_n) | X^r_𝒞, y^r) > η) ≤ ε_n + P(𝒜_nᶜ).
+In particular Π(B_n(κ_n) | X^r_𝒞, y^r) → 0 in P-probability if P(𝒜_n) → 1; and, for the (a)-type sets B^a, H^a, K^a,
+also when for every η″ > 0 there are constants (s̄, A, M, φ₀)_{η″}, classes 𝒦^{♭,η″}_n with (UP) and events
+𝒜^{η″}_n ∈ 𝓕_n, 𝒜^{η″}_n ⊆ {κ_n ∈ 𝒦^{♭,η″}_n}, with limsup_n P((𝒜^{η″}_n)ᶜ) ≤ η″ (the form of BASE §4(c), `:157-160`).
+With §2 this applies to omitted-variable models with an arbitrary candidate design (𝓕_n = σ(X^r_𝒞)).
+
+## 6. Not claimed (additions to BASE §9, `:259-266`)
+
+An expectation rate for Cor-H(b) (posterior expectations of unbounded losses: BASE `D_hellinger.md` D4.3); a
+Bernstein–von Mises statement; Cor-G(b)⁺ with non-Gaussian (e.g. sub-Gaussian) candidate rows; anything about W3-DIST
+(the observation that a candidate run under §2(b) is an (RD) instance of W3-DIST is recorded in `REPORT.md` as
+HEURISTIC/OPEN only); the BASE `ASSUMPTION_MAP.md:27` cross-cite (editorial ticket W3-EDIT).
+
+## 7. Inputs (registry id @ version, ACTIVE on origin/main; statuses verbatim, in full)
+
+- W3-MISR:R'@1.0.0, W3-MISR:MIS(i)@1.0.0, W3-MISR:MIS(ii)@1.0.0, W3-MISR:Cor-G(b)@1.0.0, W3-MISR:Cor-H@1.0.0, by
+  statement; BASE `lemmas/G_corollaries.md` G.1–G.3 and `lemmas/M_misr.md` M.3 by line in the proofs. Statuses:
+  - W3-MISR:R' — "PROVED-CHECKED; council R2, MANIFEST 217d6708dfee945fa0416171268e08e359e0e7a3fde5bd169756431143c51103, sol=9.2 PASS, opus=8.9 PASS; correct:PASS(reviews/R2_council_sol.md, reviews/R2_council_opus.md, per-claim addenda: ACCEPT)";
+  - W3-MISR:MIS(i) — "PROVED-CHECKED, conditional on W3-POST2:C; council R2, MANIFEST 217d6708dfee945fa0416171268e08e359e0e7a3fde5bd169756431143c51103, sol=9.2 PASS, opus=8.9 PASS; correct:PASS(reviews/R2_council_sol.md, reviews/R2_council_opus.md, per-claim addenda: ACCEPT)";
+  - W3-MISR:MIS(ii) — "PROVED-CHECKED, conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1, SOP:TH09, SOP:TH128; input versions SOP:TH09@1.0.0, SOP:TH128@1.0.0; council R2, MANIFEST 217d6708dfee945fa0416171268e08e359e0e7a3fde5bd169756431143c51103, sol=9.2 PASS, opus=8.9 PASS; correct:PASS(reviews/R2_council_sol.md, reviews/R2_council_opus.md, per-claim addenda: ACCEPT)";
+  - W3-MISR:Cor-G(b) — "PROVED-CHECKED, conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1, W3-POST2:A0, C-MIS:Prop-P, SOP:TH09, SOP:TH128, C-MIS:GDb; input versions C-MIS:Prop-P@1.0.0, SOP:TH09@1.0.0, SOP:TH128@1.0.0, C-MIS:GD(b)@1.0.0 (C-MIS:GDb = alias of C-MIS:GD(b)); council R2, MANIFEST 217d6708dfee945fa0416171268e08e359e0e7a3fde5bd169756431143c51103, sol=9.2 PASS, opus=8.9 PASS; correct:PASS(reviews/R2_council_sol.md, reviews/R2_council_opus.md, per-claim addenda: ACCEPT)";
+  - W3-MISR:Cor-H — "PROVED-CHECKED, conditional on W3-POST2:D, W3-POST2:C; council R2, MANIFEST 217d6708dfee945fa0416171268e08e359e0e7a3fde5bd169756431143c51103, sol=9.2 PASS, opus=8.9 PASS; correct:PASS(reviews/R2_council_sol.md, reviews/R2_council_opus.md, per-claim addenda: ACCEPT)".
+- W3-POST2:D@1.1.0 (Claim D(a), D(b), by statement, `W3-POST2/STATEMENT.md:99-119`), W3-POST2:A0@1.0.0 (bridge
+  (F_w; g₀) ⇒ (OS), `:46-47`; `lemmas/A_occam.md` Lemma A0, `:14-15`), W3-POST2:C@1.0.0 (through MIS(i)) — each
+  "PROVED (by this seat, unchecked)": carried as declared hypotheses ("conditional on …") per BASE `:225-228`.
+- SOP:TH09@1.0.0 — "T03♯: PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2). T02(i♯), T02(ii♯): PROVED; SF/XF VERIFIED. T01–T03: PROVED-LOCKED (wave 3; external review queued), SAME-FAMILY-ONLY";
+  SOP:TH128@1.0.0 — "PROVED (candidate) (W1-T03R); SF VERIFIED (W2-VT03R, no GAP/ERROR in the mathematics); XF VERIFIED under exactly its hypotheses (A-REV2); VERIFIED core (A-REV5, onset gloss ERROR); LIT-STAT: modest extension of Rossell 2022, clause (iii) known; final card: PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2)"
+  (through Cor-G(b) and MIS(ii); quoted in full, absorbing erratum W3-EDIT I4-F2 for this delta).
+- C-MIS:Prop-P@1.0.0 — "R02 VERIFIED; R04 wording fixes checked in R05; council PASS"; C-MIS:GD(b)@1.0.0 — "R02
+  VERIFIED-WITH-AMENDMENTS (applied); council PASS" (through Cor-G(b)).
+- Code: as BASE `:15` (commit 16a7f85); Code facts used: the standardisation X = CxD_x⁻¹ (BASE `:22`, `v3_preprocess.R`
+  as cited at BASE `:79-81`), which makes π_𝒞 invariant under positive rescaling of candidate columns (used in §3).
+
+## 8. Dependencies and supersession (each new claim implies the BASE claim it replaces)
+
+| new claim | implies | why (one line) |
+|---|---|---|
+| W3-MISR-R:CorG-min | W3-MISR:Cor-G(a)@1.0.0 | BASE's Gaussian rows with Σ_𝒞𝒞 ≻ 0 are (E1), which gives (N) + (OV) with BASE's (γ, τ²); (a) then gives (GR^c | σ(X^r_𝒞)) with BASE's (β^𝒞, σ²_𝒞) |
+| W3-MISR-R:CorGb-plus | W3-MISR:Cor-G(b)@1.0.0 | jointly Gaussian rows ⇒ Gaussian candidate rows + (OV) (E1); λ_min(Σ_TT) ≥ c_pop and Σ_jj ≤ C₀ ⇒ λ_min(R_TT) ≥ c_pop/C₀; ρ_n^{BM} → ∞ is one branch; the explicit bound is O(r_n) |
+| W3-MISR-R:CorH-plus | W3-MISR:Cor-H@1.0.0 | 𝒦⁰_n ⊆ 𝒦^F_n; on 𝒦_n (c > c₁) or 𝒦^λ_n (c > c₀) BASE MIS-R (i) gives δ_n → 0, so (a′) gives BASE (a); (b) is BASE (b) |
+| W3-MISR-R:CorH-U | W3-MISR-R:CorH-plus (a′), (b) | a single sequence is the singleton classes 𝒦^♭_n := {κ_n} (then (UP) is δ_n → 0 in probability) and 𝒦⁰_n ∋ κ_n |
+
+Supersession of the BASE rows (the headline row Cor-G(b) included) is HQ's decision with the HQ consultant (v4 H5); the
+lead proposes it in `REPORT.md`. Consumers of BASE Cor-G(a), Cor-G(b), Cor-H: W3-READER row thm4 (via `READER_DELTA.md`).
+
+## 9. Assumption ids (for the registry block)
+
+A:MISR-OVC (new: (N) + (OV^c); implies A:MISR-GRC conditionally on σ(X^r_𝒞), equivalent to it under (N)); A:MISR-OV
+(new: full-vector (OV)); A:GAUSS-CAND-ROWS (new: iid Gaussian candidate rows; CorGb-plus only); A:CORR-FLOOR (new:
+correlation-matrix sparse floor; CorGb-plus); A:MISR-ESNR, A:POST2-F0, A:POST2-OS, A:FIXED-S0, A:P-POLY (BASE `:269-272`);
+A:SEL-P (new: premise δ_n → 0 in probability, resp. its uniform form (UP); CorH-plus (a′), CorH-U (U-a)).
+
+## 10. Changelog (v4 §4.2; rows after the lock)
+
+| version | clause | STRONGER / WEAKER / EQUAL / NEW-CLAIM | reason | trigger | check |
+|---|---|---|---|---|---|
+| 1.0 | all | — (pre-lock draft) | — | — | — |
+<<<END FILE>>>
+
+<<<FILE Theory_work/Wave3/W3-MISR-R/PLAN.md @01873c40 (whole file) >>>
+# W3-MISR-R — PLAN (v1.0, 2026-11-15)
+
+Tier B rider, NORMAL mode. Targets: `BRIEF.md` items 1–3; statement: `STATEMENT.md` v1.0 (delta over W3-MISR v1.3).
+No new key lemma: every proof is a short composition of checked or registered statements (BASE Lemma R′, MIS-R (i),
+(ii), Cor-G(b) proof G.2, the freezing step M.3; [POST2] Claim D(a), D(b); [POST2] bridge A0). Kill budget 3 (BRIEF).
+
+## 1. Lemma files and proof sketches
+
+| file | claim | proof sketch | depends on |
+|---|---|---|---|
+| `lemmas/G1_min.md` | CorG-min (a)–(e) | (a) W := Uᵀ(ξ̃ + ε)/σ_𝒞(X), ξ̃ := X_𝓜β_𝓜 − Xγ(X) (α1 and a1 vanish: Uᵀ1 = 0). By (N), ε ⊥ (X, ξ̃); the conditional characteristic function of Uᵀ(ξ̃ + ε) given X is e^{−(τ²(X)+σ²)‖t‖²/2}, at X-measurable arguments t = s/σ_𝒞(X) too (disintegration form of the §1 convention); so for every Borel D, Q_D(·) := P(W ∈ ·, X ∈ D)/P(X ∈ D) has cf e^{−‖s‖²/2}: W ~ N_N(0, I) independent of σ(X). κ_n Borel in X; null event handled as BASE G.1 (`G_corollaries.md:32-34`). (b) Uᵀ applied to (OV); convolution with (N) for the conditional law of y^r. (c) Divide conditional cfs (Gaussian cf never vanishes): E[e^{itᵀUᵀξ̃} | X] = e^{−(v(X)−σ²)‖t‖²/2}; \|cf\| ≤ 1 forces v ≥ σ²; a regular conditional law of Uᵀξ̃ given X exists (ℝ^N Polish), its cf agrees on a countable dense set of t a.s., hence everywhere by continuity. (d) For a.e. x, tᵀUᵀξ̃ and tᵀUᵀε are independent given X = x with Gaussian sum: Cramér's decomposition theorem ⇒ tᵀUᵀε Gaussian for every t ⇒ Uᵀε ~ N(b, Σ_ε) (Cramér–Wold); then divide cfs as in (c). (e) (E1) Gaussian conditioning with the Moore–Penrose inverse (range(Σ_𝒞𝓜) ⊆ range(Σ_𝒞𝒞) for a PSD joint covariance, so the residual is uncorrelated with, hence independent of, x_𝒞); (E2), (E3) direct. | BASE G.1, §0 (GR^c), §4 (GR^c \| 𝓕_n), MIS-R (ii) by statement |
+| `lemmas/G2_corr.md` | CorGb-plus | Copy of BASE G.2 (`G_corollaries.md:36-65`) with changed lines marked [R-#]: [R-1] column rescaling x_j ↦ x_j/√Σ_jj leaves X = CxD_x⁻¹, hence π_𝒞, unchanged, maps Σ_𝒞𝒞 ↦ R, β^𝒞_j ↦ √Σ_jj β^𝒞_j, (OV) to (OV) with γ_j ↦ √Σ_jj γ_j, and leaves supp β^𝒞, β^𝒞ᵀΣβ^𝒞 and ρ_n^{BM} unchanged; so run G.2 with (c_pop, C₀) = (c_R, 1), φ₀² = c_R/8; [R-2] Σ_𝒞𝒞 ≻ 0 replaced by the floor on supp β^𝒞 in step 3; [R-3] step 4 with c := c₀ + 1 if L := liminf ρ = ∞, c := (c₀ + c_R L/16)/2 otherwise; eventually (c_R/16)ρ_n ≥ c; [R-4] G.1 replaced by CorG-min (a) (deterministic γ, τ²); [R-5] the bound read off the last display (`:59-61`). | BASE G.2, MIS-R (ii)(a), POST2:A0, CorG-min |
+| `lemmas/H1_plus.md` | CorH-plus | (a′) as BASE G.3 (a) (`G_corollaries.md:83-87`) with the margin step replaced by the premise: by Lemma R′(b) (BASE `:90-93`, parameter part) the law of δ_n under P_{κ_n} equals its law in the unit-noise model, so δ̃_n → 0 in P̃-probability; the unit-noise array (x_n, β_n/√v_n, 1) satisfies R1 (s fixed, 2 ≤ p ≤ n^A, s ≤ K, σ*² = 1, G), (E; M), (F₀; φ₀): the hypotheses of [POST2] D(a) (`:107-111`); the scaling map T sends B^a_n, H^a_n to the unit-noise bad sets (BASE G.3 lines 74-87). K^a: off B^a_n(κ; M′_n) with M′_n := min(M_n^{1/2}/2, n^{1/4}) → ∞, the (KL) bound gives k̄_n ≤ M′_n²/n + M′_n/(2n) ≤ M_n/n for n ≥ 16, M_n ≥ 1. (b) BASE G.3 (b) verbatim, plus K^b: off B^b_n with M_n := (log n)^{1/2}, k̄_n ≤ log n/n + C_H log n/(2n). (KL) closed form of KL between normals; x − 1 − log x ≤ 2(x − 1)² for x ≥ ½ (Taylor, second derivative 1/ξ² ≤ 4). Reading (i): the true contrast law is in the working contrast family. | BASE R′(b), G.3; POST2:D |
+| `lemmas/H2_uniform.md` | CorH-U | **H0 (fillers).** For s ≥ 1, A ≥ 1 and n ≥ n_f(s, A): p_f := max(s, 2) orthogonal centred columns with ‖x_j‖² = n − 1, β := 1_{[s]}, v := 1. This κ^f_n lies in 𝒦^λ_n(s, A, s, 1, C_f, c) for every c (for n large), with C_f := C_OS(s, A, c_D = ½) of [POST2] A0 ((F_w; 1) holds: all Gram eigenvalues are n − 1). **(U-b)** If the claim fails there are ε > 0, s ≤ s̄ and n_k → ∞ with κ_{n_k} ∈ 𝒦⁰_{n_k}(s, …) and P_{κ_{n_k}}(Π(B) > η) > ε. Put κ_n := κ_{n_k} at n = n_k, κ^f_n elsewhere: an array with (E; max(M, s)), (F₀; φ₀), (OS; max(C_OS, C_f)) for all large n; CorH-plus (b) (C_H depends on (s, A) only) contradicts the subsequence. **(U-a)** Same, with CorH-plus (a′): along n_k, P(δ > η′) ≤ sup_{𝒦^♭} → 0 by (UP); along the fillers E δ ≤ C r_n by BASE MIS-R (i) on 𝒦^λ_n. **(RD)** Π(· \| x, y^r) is a function of (x, Uᵀy^r) ([POST2] `:101-103`; `D_hellinger.md:8-11`: it uses y_c = Uᵀy^r and s_y = ‖Uᵀy^r‖/√N); g_n(κ, w) := Π(B_n(κ) \| x, Uᵀxβ + √v w) is Borel on 𝔎_n × ℝ^N (Tonelli on each stratum, as BASE `M_misr.md:134-138`); freezing (`M_misr.md:143-149`): P(Π(B_n(κ_n)) > η \| 𝓕_n) = Ĝ_n(κ_n) with Ĝ_n(κ) = P_κ(Π(B_n(κ)) > η) ≤ ε_n on 𝒜_n; then the tail bound and the η-family as BASE M.3 (c). | CorH-plus, MIS-R (i), POST2:A0, BASE M.3 |
+
+Numerics: `numerics/N1_boundary.py` (exact enumeration of the coded target π_𝒞, formula of [W3P] §0, p = 5): inside
+CorG-min with a non-Gaussian (Bernoulli, dependent-row) candidate design; just outside (OV^c) — (i) heteroscedastic
+omitted part (covariance not scalar), (ii) omitted part non-linear in the candidates (no γ), (iii) non-Gaussian
+(Rademacher-mixture) omitted part. Reports E δ and P(HPM ≠ target) for n ∈ {100, 400, 1600}. Run with `nice`, one core,
+TMPDIR under `/home/fb31/SMC_Theory_Department/tmp/`.
+
+## 2. Chain and hours (Opus hours, lead)
+
+| step | what | hours |
+|---|---|---|
+| 1 | PLAN, STATEMENT, TARGET (incl. N1), READER_DELTA draft | 1.0 |
+| 2 | Sol statement lock (blind, fresh) → fixes → lock; CP1 | 0.3 + wait |
+| 3 | lemmas G1, G2, H1, H2 (after CP1 go) | 1.0 |
+| 4 | one Sol line-check batch (4 lemmas; a second agent only if the first finds a repair) | 0.3 + wait |
+| 5 | REPORT (+ DIST HEURISTIC/OPEN pointer), DEPS.tsv, citecheck (copy of BASE `citecheck.py`) | 0.4 |
+| 6 | council R1: Sol (OpenAI seat) + Opus 5.5 high (Claude seat), fresh, blind; diff round if needed | 0.3 + wait |
+| 7 | CP3 | 0.2 |
+Total lead ≈ 3.5 h. OpenAI reviews: lock, line check, council seat (3; 4–5 with a re-check or diff round).
+Cut-off: CP3 by Wed 2026-11-18 18:00 CT. Clause to drop first if time runs short: CorGb-plus (BRIEF item 3, "only if
+trivial") → named open item.
+
+## 3. Risks
+- (U-a)/(U-b) rest on the subsequence-with-fillers argument; H0 must give configurations in a class with constants
+  independent of n (checked in the line check). If a reviewer rejects it, fall back to (RD) and (U) for the
+  (a)-type sets only via a direct uniform re-run of [POST2] D2 (short: every term there has a class-uniform law) —
+  that would be a copied lemma with [R-#] marks, not a new key lemma.
+- §2(d) uses Cramér's decomposition theorem (Cramér 1936; e.g. Linnik & Ostrovskii 1977); stated as a remark-level clause.
+- Everything conditional on W3-POST2:D, :C, :A0 (unaccepted) as in BASE.
+<<<END FILE>>>
+
+<<<FILE Theory_work/Wave3/W3-MISR/STATEMENT.md @01873c40 lines 17-45 >>>
+## 0. Setting and notation
+
+* **Method on the candidates (D0, as [MIS1] §1).** 𝒞 is the candidate set. The method is re-run on (x, y^r), where x is
+  the n × p raw candidate design (n ≥ 3) and y^r the raw response; constant columns are dropped by the code, so
+  throughout x has p ≥ 1 non-constant columns. π_𝒞(· | x, y^r) is the coded target of [W3P] §0 (lines 16-29) computed
+  from (x, y^r): X = CxD_x⁻¹ (standardised columns, D_x the raw sample SDs), y = Cy^r/s_y, Ω = {S ⊆ [p] : |S| ≤ K},
+  K = min(p, ⌊n/2⌋), prior w(k) = ½/C(2p − 1, k), score m(S) ∝ D_S^{−1/2}(2b₀ + Q_S)^{−ν}. It is defined when y^r is
+  non-constant. PIP_j, HPM (any tie rule), MPM, ξ_q are the exact-posterior outputs of [W3P] §0. All statements are
+  about this real-arithmetic target, not about the sampler or floating point.
+* **Contrasts.** N := n − 1; U is a fixed (deterministic) n × N matrix at each n with UᵀU = I_N, UUᵀ = C (centring);
+  r_n := √(log n/n).
+* **Conventions [L01-Q1].** π_𝒞(T) := 0 for T ∉ Ω. HPM is a measurable selection of a posterior mode. Parameter
+  vectors θ_S are zero-padded to ℝ^p. The set of configurations (below) carries the Borel σ-field of the countable
+  disjoint union over p of the sets {x ∈ ℝ^{n×p} with non-constant columns} × ℝ^p × (0, ∞); p, S₀(κ) and the classes
+  below are then measurable.
+* **Configuration.** κ = (x, β, v): x as above, β ∈ ℝ^p, v ∈ (0, ∞). Derived objects: S₀(κ) := supp β,
+  s(κ) := |S₀(κ)|, θ(κ) := D_xβ, μ(κ) := Cxβ = Xθ(κ), μ_c := Uᵀμ(κ); for S ⊆ [p], M_S and
+  L_S(κ) := μ_cᵀ(I − M_S)μ_c as in [POST2] (lines 17, 40-41); j₀ := ⌈(2A + 1)s⌉ + 1; m♯_n as in [W3P] (lines 36-39)
+  with (p, s₀) := (p, s); 𝔉(κ) := {S ∈ Ω : S₀(κ) ⊄ S, |S∖S₀(κ)| ≤ j₀}.
+* **(GR^c) contrast-law Gaussian residual.** A law of y^r (x fixed) satisfies GR^c at κ = (x, β, v) if
+    Uᵀ(y^r − xβ) ~ N_N(0, v·I_N).
+  Nothing else is assumed about y^r: the intercept may be random and dependent on everything, and no decomposition of
+  the residual into "noise" and "omitted part" is needed. The decomposition of [MIS1]'s GR (lines 54-58), with
+  arbitrary (n-dependent) σ², τ² ≥ 0, σ² + τ² > 0 in place of its fixed σ² > 0 and fixed τ² [R1-F8], implies GR^c with
+  β = β^𝒞 = β_𝒞 + γ and v = σ² + τ². β need not be unique when the centred design has deficient
+  column rank; every statement is about a chosen representation satisfying the stated hypotheses.
+  Under GR^c, y^r is non-constant almost surely.
+
+**Hypotheses at a given n, in signal-to-noise form** (constants A ≥ 1, M ≥ 0, 0 < φ₀ ≤ 1, C_OS < ∞, c):
+<<<END FILE>>>
+
+<<<FILE Theory_work/Wave3/W3-MISR/STATEMENT.md @01873c40 lines 162-198 >>>
+## 5. Corollary G (example: jointly Gaussian rows; no fixed-variance requirement)
+
+Rows (x^r_{𝒞,i}, x^r_{𝓜,i}), i ≤ n, iid N(m, Σ) with Σ_𝒞𝒞 ≻ 0, 𝓜 the omitted active columns; y^r = α1 + X^r_𝒞β_𝒞 +
+X^r_𝓜β_𝓜 + ε with ε ~ N_n(0, σ²I) independent of X^r, σ² ≥ 0. Everything (m, Σ, β, σ², p) may depend on n.
+(a) With β^𝒞 := β_𝒞 + Σ_𝒞𝒞⁻¹Σ_𝒞𝓜β_𝓜, τ² := β_𝓜ᵀ(Σ_𝓜𝓜 − Σ_𝓜𝒞Σ_𝒞𝒞⁻¹Σ_𝒞𝓜)β_𝓜 and σ²_𝒞 := σ² + τ²: if σ²_𝒞 > 0 then
+    (GR^c | σ(X^r_𝒞)) holds at each n with the deterministic (β^𝒞, σ²_𝒞). So §4 applies with no condition on how
+    σ², τ² vary with n; [MIS1]'s requirement "τ_n² ≡ τ² fixed" (its lines 83-85) is not needed. (Example there: an
+    independent omitted column of variance n² gives τ_n² = n²; the theorem then applies exactly when the hypotheses hold
+    relative to σ²_𝒞 = σ² + n².)
+(b) (2 ≤ p_𝒞 ≤ n^A, possibly growing; sufficient population conditions.) Assume σ²_𝒞 > 0, s := |supp β^𝒞| ≥ 1 fixed, λ_min(Σ_TT) ≥ c_pop > 0
+    for T ⊆ 𝒞 with |T| ≤ s + max(j₀, m♯_n), max_j Σ_jj ≤ C₀, β^𝒞ᵀΣ_𝒞𝒞β^𝒞 ≤ M₀σ²_𝒞, and
+    n·min_{j∈supp β^𝒞} Σ_jj(β^𝒞_j)²/(σ²_𝒞 log n) → ∞. Then E δ_n = O(r_n), so P(HPM ≠ supp β^𝒞) = O(r_n).
+With centred rows (m = 0), supp β^𝒞 is SL's s̃ ([MIS1] Proposition P(b)).
+
+## 6. Corollary H (density contraction around the projected law — the analog of SL's Theorem 4)
+
+Fixed designs; a sequence of configurations κ_n ∈ 𝒦⁰_n(s, A, M, φ₀, C_OS) for all large n, laws P_{κ_n}. For the
+parameter posterior Π of R′(a′), the fitted centred mean μ̂ := X_Sθ and
+  h̄_n² := n⁻¹ Σ_i H²(N(μ̂_i, v′), N(μ_i(κ_n), v_n))   ((S, θ, v′) ~ Π; H² the squared Hellinger distance of [POST2] line 105):
+(b) (no margin, no beta-min) there is C_H depending only on (s, A) such that, for every M_n → ∞,
+    Π(‖μ̂ − μ(κ_n)‖² > C_H v_n log n or |v′/v_n − 1| > M_n n^{−1/2} | x, y^r) → 0 in probability; hence
+    Π(h̄_n² > (1 + C_H/4) log n/n | x, y^r) → 0 in probability.
+(a) (with the margin) if moreover κ_n ∈ 𝒦_n(…, c), c > c₁(s, A) (or 𝒦^λ_n, c > c₀(s, A)): for every M_n → ∞,
+    Π(‖μ̂ − μ(κ_n)‖² > M_n v_n or |v′/v_n − 1| > M_n n^{−1/2} or S ≠ S₀(κ_n) or ‖θ − θ(κ_n)‖ > M_n √(v_n/n) | x, y^r) → 0
+    in probability; hence Π(h̄_n > M_n n^{−1/2} | x, y^r) → 0 in probability.
+**The reference law [L01-3].** N(μ_i(κ), v) is the law of the i-th coordinate of μ(κ) + √v·ε̃, ε̃ ~ N_n(0, I_n): the
+unit-noise comparison model of R′(b) in response units. Under [MIS1]'s GR it is the conditional law, given the
+candidate design, of y^r_i − [α + a + n⁻¹Σ_l (xβ^𝒞)_l] (the response minus the sample average of its conditional
+mean); it is not the law of (Cy^r)_i, whose variance is v(1 − 1/n). The contraction statements need no further
+interpretation. **Kullback–Leibler reading, in the setting of Corollary G only:** there the conditional law of y_i
+given the candidate covariates x_{𝒞,i} (omitted covariates integrated out) is N(α′ + x_{𝒞,i}ᵀβ^𝒞, σ²_𝒞), which belongs to
+the candidate linear-Gaussian class and is therefore the Kullback–Leibler minimiser within it (SL's f₀, for centred
+rows); the reference is that law with its mean centred over the sample. No KL statement is made for fixed designs
+or for the projection given the realised omitted columns ([MIS1] `L1_reduction.md:69-74` keeps these apart).
+Differences from SL's Theorem 4: in-sample average distance, convergence in probability (not almost sure, not
+integrated over the design law), the shipped prior, p_𝒞 ≤ n^A with s fixed; a rate is given.
+
+<<<END FILE>>>
+
+<<<FILE Theory_work/Wave3/W3-MISR/lemmas/G_corollaries.md @01873c40 lines 24-35 >>>
+## G.1 Corollary G(a): Gaussian rows give GR^c at each n
+
+Fix n. Rows (x^r_{𝒞,i}, x^r_{𝓜,i}) iid N(m, Σ), Σ_𝒞𝒞 ≻ 0; ε ~ N_n(0, σ²I) independent of X^r, σ² ≥ 0. By Gaussian
+conditioning ([L2] lines 40-44, a computation at one n that uses neither σ² > 0 nor any relation between different
+n): ζ_i := x_{𝓜,i} − m_𝓜 − Σ_𝓜𝒞Σ_𝒞𝒞⁻¹(x_{𝒞,i} − m_𝒞), i ≤ n, are iid N(0, Σ_{𝓜·𝒞}) and independent of X^r_𝒞; with
+γ := Σ_𝒞𝒞⁻¹Σ_𝒞𝓜β_𝓜 and a := (m_𝓜 − Σ_𝓜𝒞Σ_𝒞𝒞⁻¹m_𝒞)ᵀβ_𝓜, X^r_𝓜β_𝓜 = a1 + X^r_𝒞γ + ξ, ξ_i := ζ_iᵀβ_𝓜 iid N(0, τ²). ε is independent of
+X^r, hence of (X^r_𝒞, ξ). So y^r − X^r_𝒞β^𝒞 = (α + a)1 + ξ + ε with ξ + ε ~ N_n(0, σ²_𝒞 I) independent of X^r_𝒞, and
+(Uᵀ1 = 0) W_n = Uᵀ(ξ + ε)/σ_𝒞 ~ N_N(0, UᵀU) = N_N(0, I_N), independent of σ(X^r_𝒞), provided σ²_𝒞 = σ² + τ² > 0.
+(β^𝒞, σ²_𝒞) are deterministic, so κ_n = (X^r_𝒞, β^𝒞, σ²_𝒞) is σ(X^r_𝒞)-measurable on the event that all candidate columns
+are non-constant (probability one, since Σ_𝒞𝒞 ≻ 0 and n ≥ 2); off that null event κ_n is set to a fixed reference
+configuration, so that it is a random configuration in the sense of STATEMENT §4 [R1-F7]. This is (GR^c | σ(X^r_𝒞)). ∎
+
+<<<END FILE>>>
+
+<<<FILE Theory_work/Wave3/W3-MISR/lemmas/G_corollaries.md @01873c40 lines 67-94 >>>
+## G.3 Corollary H: density contraction
+
+Let κ_n ∈ 𝒦⁰_n(s, A, M, φ₀, C_OS) for all large n, with laws P_{κ_n}. By table R.6 the unit-noise models
+(x_n, β_n/√v_n, 1) form an array in regime R1 ([W3P] lines 63-64: s₀ = s ≥ 1 fixed, 2 ≤ p ≤ n^A, s ≤ K, σ*² = 1 fixed, G)
+satisfying (E), (F₀), (OS) for all large n. [POST2] Claim D(b) (lines 112-116) gives C_H = C_H(s, A, σ*² = 1) such that for
+every M_n → ∞, with B̃_n := {(S, θ̃, ṽ) : ‖X_Sθ̃ − μ̃‖² > C_H log n or |ṽ − 1| > M_n n^{−1/2}},
+  Π(B̃_n | x_n, ỹ) → 0 in P̃-probability.
+Let B_n := {(S, θ, v′) : ‖X_Sθ − μ(κ_n)‖² > C_H v_n log n or |v′/v_n − 1| > M_n n^{−1/2}}. The scaling
+T := T_{1/√v_n} : (S, θ, v′) ↦ (S, θ/√v_n, v′/v_n) is a bijection with T(B_n) = B̃_n (‖X_Sθ/√v_n − μ(κ_n)/√v_n‖² =
+‖X_Sθ − μ(κ_n)‖²/v_n). Hence Π(B_n | x_n, y^r) = (T♯Π(· | x_n, y^r))(B̃_n), and by Lemma R′(b) (parameter-posterior part)
+the random measure T♯Π(· | x_n, y^r) under P_{κ_n} has the law of Π(· | x_n, ỹ) under P̃. So Π(B_n | x_n, y^r) has the law
+of Π(B̃_n | x_n, ỹ) and tends to 0 in probability. This is the first display of (b).
+Hellinger: for normals, H²(N(a, v′), N(b, w)) depends on (a, b, v′, w) only through v′/w and (a − b)²/(v′ + w)
+([D] line 12), so h̄_n² computed from (μ̂, v′) against (μ(κ_n), v_n) equals the unit-noise h̄_n² computed from
+(μ̂/√v_n, v′/v_n) against (μ̃, 1): the event {h̄_n² > (1 + C_H/4) log n/n} is mapped by T to the corresponding
+unit-noise event, whose posterior mass → 0 in probability by [POST2] line 114-115 (C_H′ = 1 + C_H/(4σ*²) at σ*² = 1).
+(a): if κ_n ∈ 𝒦_n(…, c), c > c₁(s, A) (or 𝒦^λ_n, c > c₀(s, A)), then δ_n → 0 in P̃-probability by MIS-R (i), and the
+array satisfies R1, G, (E), (F₀): the hypotheses of [POST2] Claim D(a) (lines 107-111). Its bad set, in unit-noise
+variables, {‖μ̃̂ − μ̃‖² > M_n or |ṽ − 1| > M_n n^{−1/2} or S ≠ S₀ or ‖θ̃ − θ̃*‖ > M_n n^{−1/2}}, is the image under T of
+{‖μ̂ − μ(κ_n)‖² > M_n v_n or |v′/v_n − 1| > M_n n^{−1/2} or S ≠ S₀(κ_n) or ‖θ − θ(κ_n)‖ > M_n√(v_n/n)} (θ zero-padded);
+conclude as for (b); the Hellinger clause likewise. ∎
+**Reference law.** N(μ_i(κ), v) is by definition the i-th marginal of μ(κ) + √v ε̃. Under [MIS1]'s GR
+([MIS1] lines 54-58): given x, y^r = (α + a)1 + xβ^𝒞 + ε′ with ε′ ~ N_n(0, vI); subtracting the constant
+α + a + n⁻¹Σ_l(xβ^𝒞)_l from y^r_i leaves (Cxβ^𝒞)_i + ε′_i ~ N(μ_i(κ), v). In contrast Cy^r = μ(κ) + Cε′ has covariance vC,
+whose diagonal entries are v(1 − 1/n). In the setting of Corollary G, G.1 shows y_i | x_{𝒞,i} ~ N(α + a + x_{𝒞,i}ᵀβ^𝒞, σ²_𝒞)
+independently over i; this conditional density is a member of the family {N(a₀ + x_𝒞ᵀb, w)}, so it minimises the
+Kullback–Leibler divergence from the true conditional law over that family (the minimum is 0).
+
+<<<END FILE>>>

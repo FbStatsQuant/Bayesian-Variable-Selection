@@ -1,0 +1,15 @@
+# Case 2 — KNOWN ANSWER (confirmed real finding; substitute for the TRACK_B label case, see SOL62_AB.md)
+
+**Reviewed object.** W3-D2 council round R1 package @ 934a2b43 (MANIFEST 6f8c05aa…). The numerics script `numerics/N1_floor_and_e2e.py` (INPUTS.md) computes the coded size cutoff m♯_n with `log_comb(a,b) = lgamma(a+1) − lgamma(b+1) − lgamma(a−b+1)` and reports "computed exactly in log space"; `N1_out.txt` / `TARGET.md:24` report "max over the grid of k_n / [3(A+1)(s0+1) log n] = 0.3942".
+
+**The answer (F1, tag F).** The `lgamma` differences lose precision at p = 10¹⁵ (the grid cap): e.g. `log_comb(2*p-1, 1)` returns **40.0** instead of log(2p−1) = **35.2319235755**. For A = 3, s₀ = 1, n = 10⁵, p = 10¹⁵ the script gives m♯_n = **95**; the defined cutoff is **76** (R₇₅/threshold ≈ 1.6741, R₇₆/threshold ≈ 0.8370 in 65-digit arithmetic). With the stable recurrence q_{k+1}/q_k = (p−k)/(2p−1−k), 19 of the 150 grid cutoffs change and the grid maximum is **≈ 0.3928391, not 0.3942**; so "computed exactly in log space" and the reported maximum are inaccurate. No claim depends on N1 (analytic claims Thm2X, Cor2X are correct: ACCEPT). Expected finding: F-tagged, numerics/N1_floor_and_e2e.py:27 (`log_comb`, used at :40-41), gates faithful/sweep FAIL → `gates=FAIL`.
+
+**Not catchable here (do not penalise a miss):** the 6.1 reply's E1 (REPORT.md:42 unlabelled "per the note"): REPORT.md is not supplied.
+
+**How we know.**
+1. Independent arithmetic: `python3 -I -c "import math;p=10**15;print(math.lgamma(2*p)-math.lgamma(2)-math.lgamma(2*p-1), math.log(2*p-1))"` → `40.0 35.23192357547063` (run by the Theory helper, 2026-11-17).
+2. Lead's fix + rerun (W3-D2 commit ba0f38f2): stable recurrence; `N1_out.txt` last grid line now `0.3928`; "only the grid max line changes … = the seat's independent 0.3928391; m♯_n(10⁵, 10¹⁵, 1) = 76 as the seat computed" (`W3-D2/reviews/R1_disposition.md`, row sol F1; `W3-D2/LOG.md` 13:06 entry).
+3. Opus seat R1 (9.6, PASS) and the final ticket: HQ blind API audit auditD2: "FINDINGS=0 on both claims in both samples" (`Theory_work/Wave3/API_AUDIT/auditD2_results/README.md`, main) — i.e. the analytic claims were right and the numerics defect was the only real problem.
+
+**Scoring rubric.** Caught = names the `lgamma` cancellation / m♯_n or the 0.3942 maximum as wrong (a correct recomputation, 76 vs 95 or 0.3928, is a bonus, not required). Both claims should be ACCEPT. Count: real findings caught (F1; Y/N); false findings (a C/S/F tag whose failure does not occur — e.g. rejecting Thm2X/Cor2X analytically); nitpicks (E-type wording, no maths). `gates=FAIL` is the correct verdict-line outcome (it follows from F1).
+**Not supplied (omitted for size):** READER_DELTA, REPORT, DEPS, API_CARD, PLAN, citecheck, and most external sources (W3-MISR-R G1/G2, W3-POST body, READER files, L1_POST); W3-MISR-R STATEMENT :88-108 and W3-POST STATEMENT :16-40 (the m♯_n / k_n definitions the script uses) are supplied. Duties that need the omitted files (sweep, DEPS spot-check, interpretive-sentence list for lines not supplied) should be answered "not supplied", which is correct behaviour.
