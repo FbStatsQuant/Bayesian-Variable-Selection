@@ -1,4 +1,4 @@
-# W3-D5P — STATEMENT v1.1.1 (locked v1.0 + changelog rows v1.1, v1.1.1): the list-restricted outputs on every Theorem 6 design
+# W3-D5P — STATEMENT v1.1.2 (locked v1.0 + changelog rows v1.1–v1.1.2): the list-restricted outputs on every Theorem 6 design
 
 Ticket W3-D5P = track D ticket #5′ (owner GO, `Theory_work/Dept/DECISIONS.md` D105, dept/theory; standard D106), Tier B
 corollary ticket, Theory Wave 3. Lead: Claude Opus 5.5 (effort high). Protocol: `Theory_work/Wave3/PROTOCOL_v4.md` with
@@ -77,7 +77,7 @@ with S₀ ∈ 𝒯. Then:
 ## 3. Lemma LIST-CODE (code reading at the pin)
 
 **(C2) Lemma LIST-CODE.** Code of record as in the header; shipped configuration (`ls0 = TRUE`, cap
-`"ell_n_plus_mode"`, `ls0_tie_dp = TRUE`); EX-A, EX-S, SR. Let 𝓜^run be the set of models offered to the final-run
+`"ell_n_plus_mode"`, `ls0_ell` = ℓ_n, `ls0_tie_dp = TRUE`) [R1-opus-5]; EX-A, EX-S, SR. Let 𝓜^run be the set of models offered to the final-run
 ledger (`Ledger::offer_stores`, `cpp/v3_ledger.h:89-94`), as in SAMP `STATEMENT.md:59-60`.
 (i) *[Link 1: completed = output on the sampler branch.]* On the sampler branch, `fit$status == "completed"` if and only
     if `fit$estimates_available` is TRUE, i.e. if and only if the run is in 𝒪. On such a run the final run executed LS0
@@ -160,3 +160,4 @@ No supersession. Card proposal (a new row next to 3.1, or an addition to 3.1/3.6
 | v1.0 | (C3)(ii)–(iii): evidence error events qualified "when `log_Z_list` is not NA"; t, t_n ∈ (0, ½) (was (0, ½]); rate clause under "p ≥ 2 for all large n"; error events named B₁–B₄; (C3) preamble "implied by" the reader assumptions | EQUAL (corrections of the draft before the lock) | SL1-1, SL1-2, SL1-3, SL1 table row "C3 preamble" | `reviews/SL1_statement_lock_sol.md` | applied as the reviewer's fixes; LOCK |
 | v1.1 | (C1) hypothesis "F real-valued on Ω (0 < Z < ∞)"; §1 convention for S₀ ∉ Ω; (C3) preamble: the reader-form sentence moved out of the claim span to §5 remark 5; P(𝒢⁺_n) → 1 attributed to RM0-plus (b⁺); (C3)(ii) reason for "every right side tends to 0" completed | EQUAL (hypothesis made explicit as already defined in §1; a convention that makes small-n cases trivially true; an unproved interpretive sentence moved out of the span; citations) | LC1-12, LC1-2, LC1-3, LC1-13, LC1-1 | `reviews/LC1_line_check_opus.md` | council R1 (tags to be confirmed by the seats) |
 | v1.1.1 | §1 convention sentence narrowed to statements involving S₀, 𝓜_n or 𝒦_n; §5 remark 5 (outside claims) | EQUAL (wording) | LC1R-4, LC1R-3 | `reviews/LC1R_recheck_opus.md` | fixes applied verbatim from LC1R |
+| v1.1.2 | (C2) configuration gloss: `ls0_ell` = ℓ_n added (it is part of the imported shipped configuration, RM `STATEMENT.md:59-67`) | EQUAL (explicit form of an imported premise) | R1-opus-5 | `reviews/R1_council_opus.md` | council diff round R2 |

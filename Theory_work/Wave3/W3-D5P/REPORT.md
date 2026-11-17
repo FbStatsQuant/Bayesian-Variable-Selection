@@ -1,7 +1,7 @@
 # W3-D5P — REPORT (track D ticket #5′: the list-restricted outputs on every Theorem 6 design)
 
 Lead: Claude Opus 5.5 (effort high). Branch theory/W3-D5P (off main 029bb748). Protocol: PROTOCOL_v4 + RIDER_RULES
-(dept/theory). **This file restates nothing**: statements are in `STATEMENT.md` (v1.0 LOCKED), proofs in `lemmas/`.
+(dept/theory). **This file restates nothing**: statements are in `STATEMENT.md` (v1.0 LOCKED, changelog v1.1–v1.1.2), proofs in `lemmas/`.
 Statuses below are as of this draft; the council result goes in §4 and in the REGISTRY blocks.
 
 ## 1. What the ticket delivers
@@ -40,16 +40,16 @@ claim: W3-D5P:LIST-K | kind: lemma | statement: STATEMENT.md:67-75 | premises: S
 status: PROVED (by this seat); LC1 VERIFIED-WITH-AMENDMENTS, applied; LC1R VERIFIED-WITH-AMENDMENTS (E only), applied | status_source: REPORT.md:17
 conclusion: deterministic: for any list T of models containing S0, the list-renormalised PIPs are within 1 - pi(T) <= 1 - pi(S0|y) of the exact PIPs and within 1 - pi_T(S0) <= 1 - pi(S0|y) of the indicator of S0; the list median model is S0 when 1 - pi(S0|y) < 1/2; log Z_T = log Z + log pi(T)
 rate: none (deterministic)
-scope: any finite model space and any score
+scope: any finite set of models Omega and any real-valued F on Omega (as (C1)); applied with Omega = {|S| <= K} and the coded F [R1-opus-4]
 depends_on: none
 council: none yet
 ```
 
 ```
 REGISTRY
-claim: W3-D5P:LIST-CODE | kind: lemma | statement: STATEMENT.md:79-95 | premises: STATEMENT.md:29-38
+claim: W3-D5P:LIST-CODE | kind: lemma | statement: STATEMENT.md:79-95 | premises: STATEMENT.md:29-38 ; STATEMENT.md:49-57
 status: CODE-READ (by this seat); LC1 VERIFIED-WITH-AMENDMENTS, applied; LC1R VERIFIED-WITH-AMENDMENTS (E only), applied | status_source: REPORT.md:18
-assumptions: A:OP ; A:EX-A
+assumptions: A:OP (EX-A, EX-S, SR, GUARD-W, OP-LS0, at the shipped configuration) ; A:EX-A [R1-opus-7]
 conclusion: code fact at core 4676af6: on the sampler branch status completed iff estimates available (the output event), and LS0 ran in the final run with the evaluation sequence of the search in K_n; printed hpm = the HPM-order maximum of the models offered to the final-run ledger (= the reported model of RM/RM2R); top_store holds distinct offered models with their exact scores and contains that maximum; exact branch: the enumeration's store contains the HPM-order maximum of Omega, pip_primary/mpm are exact
 rate: none
 scope: the method as coded (shipped configuration)
@@ -63,8 +63,8 @@ REGISTRY
 claim: W3-D5P:LIST-R | kind: corollary | statement: STATEMENT.md:99-125 | premises: STATEMENT.md:29-63
 status: PROVED (by this seat); conditional on IMPL-LIST; LC1 VERIFIED-WITH-AMENDMENTS, applied; LC1R VERIFIED-WITH-AMENDMENTS (E only), applied | status_source: REPORT.md:19
 assumptions: the hypotheses of W3-RM2-R:RM2-R-plus (= Theorem 6, card row 3.1), nothing added ; A:OP ; A:EX-A ; IMPL-LIST (new | the printed list fields are computed as SPEC_LIST_PIP §2, §4 prescribe | code fact of the pending method commit | STATEMENT.md:59-63 | shared no | discharge: code reading) ; A:DELIV-D (clause (iii) only)
-conclusion: on Theorem 6's data event every admissible output run has S0 in its returned list, hpm = S0, list PIPs within 1 - pi(S0|y) of the truth and of the exact PIPs, log Z + log pi(S0|y) <= log_Z_list <= log Z, mpm_list = S0 when 1 - pi(S0|y) < 1/2; under (D) without "on output"
-rate: O_P(sqrt(log n / n)) (p >= 2)
+conclusion: on Theorem 6's data event every admissible output run has S0 in its returned list (exact branch: in the enumeration's store, when returned), hpm = S0, pip_list within 1 - pi(S0|y) of the truth and of the exact PIPs (sampler: list-renormalised; exact branch: exact PIPs), log Z + log pi(S0|y) <= log_Z_list <= log Z when log_Z_list is not NA, mpm_list = S0 when 1 - pi(S0|y) < 1/2; under (D) without "on output" [R1-sol-1, R1-sol-3, R1-opus-2]
+rate: O_P(sqrt(log n / n)) for the two PIP errors and |log_Z_list - log Z| (when not NA) (p >= 2)
 scope: Gaussian rows; every design inside Theorem 6 (AR and block designs included when they satisfy it); the list fields only (not the printed sampler averages)
 depends_on: W3-D5P:LIST-K@stmt ; W3-D5P:LIST-CODE@stmt ; W3-RM2-R:RM2-R-plus@stmt ; W3-RM2-R:RM0-plus@stmt ; W3-RM2-R:DLV-0@stmt ; W2-APP:POST@stmt
 method: SMC-BVS v3.1 core + list fields | method_commit: pending (Engineering; D105)

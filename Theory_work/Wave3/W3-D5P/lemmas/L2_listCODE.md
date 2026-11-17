@@ -1,6 +1,6 @@
 # L2 — Lemma LIST-CODE (code reading at the pin) — proof
 
-Claim: STATEMENT.md (C2), §3. Status: code reading by the lead, not yet line-checked.
+Claim: STATEMENT.md (C2), §3. Code reading by the lead; line-checked by LC1 and LC1R (see REPORT §2).
 **Code of record:** `Scripts/SMC_BVS/core/` at 4676af6 = the core on main 029bb748 (`git diff 4676af6 029bb748 --
 Scripts/SMC_BVS/core` is empty; last change 72785fe). Paths below are relative to `Scripts/SMC_BVS/core/`; line
 numbers are those of this worktree (branch theory/W3-D5P). Premises: EX-A (every score is computed exactly), EX-S, SR,

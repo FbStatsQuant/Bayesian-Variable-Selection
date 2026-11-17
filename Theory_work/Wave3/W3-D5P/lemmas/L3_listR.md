@@ -1,6 +1,6 @@
 # L3 — Corollary LIST-R (assembly) — proof
 
-Claim: STATEMENT.md (C3), §4. Status: proof by the lead, not yet line-checked.
+Claim: STATEMENT.md (C3), §4. Proof by the lead; line-checked by LC1 and LC1R (see REPORT §2); (0.5) added after council R1.
 Consumed, statuses verbatim (registry, main 029bb748): `W3-RM2-R:RM2-R-plus@1.0.1`, `W3-RM2-R:RM0-plus@1.0.1`,
 `W3-RM2-R:DLV-0@1.0.1`: "PROVED-CHECKED; council R3, MANIFEST 5d6d3c90… (= R3 b06a8588 re-frozen as R3r), sol=9.5
 PASS, opus=9.4 PASS" (each); `W2-APP:POST@1.0.7`: "PROVED-CHECKED". Internal: LIST-K (L1), LIST-CODE (L2); premise
@@ -25,12 +25,22 @@ the design's p, and POST, stated for the design's p, applies to ε_n.
 (0.4) (D) ⇒ every admissible run returns output for every valid non-degenerate input (DLV-0, RM2R
 `STATEMENT.md:144-147`), and under Setting R the input is valid and non-degenerate with probability one (RM0-plus (c⁺),
 RM2R `STATEMENT.md:138-143`, last sentence).
+(0.5) *From the pinned core to the method with the list fields* [R1-opus-1]. L2, RM0-plus and DLV-0 are statements
+about the core of record (4676af6); LIST-R is about the method after the pending commit that adds the fields. By
+IMPL-LIST (the commit computes the fields as SPEC §2 and §4 prescribe, after everything else, from the returned list
+and values of the same run, and changes no other field and no other state; SPEC §7 A.1–A.2), on every input and every
+realisation of the run's uniforms the post-commit fit and the pinned fit execute the same computation up to the new
+fields, and the new computation can end the fit with an error only through SPEC §4's duplicate-model row. That row
+cannot fire on an output run: the sampler store `top_store` and the exact store 𝒯^ex hold distinct models (L2 (iii),
+(iv)). Hence the post-commit fit returns if and only if the pinned fit returns, and 𝒪, `status`, `hpm`, `top_store`,
+`fit$exact` (with its store) and every other existing field are those of core 4676af6. So L2, RM0-plus (b⁺) and DLV-0
+apply to the method with the list fields, and the new fields are SPEC's functions of the pinned outputs.
 The reader assumptions (A1)–(A6) of Theorem 6 imply these hypotheses through READER §6 bridges B6.1–B6.4 (this file
 does not re-prove them; the corollary is stated with "the hypotheses of RM2-R-plus").
 
 ## Step 1 — (i): the pathwise statement on 𝒢⁺_n
 Fix n with s₀ ≤ K, a data set in 𝒢⁺_n, and an admissible run (any seed, N_e, R′, calibration outcome) that returns
-output (event 𝒪). Output occurs only on the two branches [LC1-6]: `estimates_available` becomes TRUE only at
+output (event 𝒪); by (0.5) its existing fields are those of the pinned core, so L2 applies. Output occurs only on the two branches [LC1-6]: `estimates_available` becomes TRUE only at
 `v3_fit.R:129` (exact branch) or through `v3_fit.R:171` from `v3_run.R:218` (sampler branch), both after `branch_run` is set
 (`v3_fit.R:106`); the earlier returns (`v3_fit.R:89`, `:102`) keep the initial FALSE (`v3_fit.R:78`). By L2 (i), on the sampler branch 𝒪 = {status "completed"}; on the exact branch 𝒪 = {status "exact"}
 (`v3_fit.R:125-129`: `estimates_available` TRUE iff `e$status == "exact"`; otherwise `:130-131` returns with it FALSE).
@@ -77,7 +87,7 @@ argument above with t = t_n: max_j |pip_list[j] − 1{j ∈ S₀}| ≤ t_n, max_
 ≤ 2t_n when `log_Z_list` is not NA, and (ε_n ≤ t_n < ½) `mpm_list` = `hpm` = S₀. ∎(ii)
 
 ## Step 3 — (iii): with delivery
-Under (D), by (0.4), P(𝒪ᶜ) = 0 for every admissible run. Hence for any event B of the run, P(B) ≤ P(𝒪 ∩ B) + P(𝒪ᶜ) =
+Under (D), by (0.4) and (0.5), P(𝒪ᶜ) = 0 for every admissible run of the method with the list fields. Hence for any event B of the run, P(B) ≤ P(𝒪 ∩ B) + P(𝒪ᶜ) =
 P(𝒪 ∩ B), and Step 2 gives P(B₄) → 0 and P(B₁(t) ∪ B₂(t) ∪ B₃(t)) → 0 for every t ∈ (0, ½), and, when p ≥ 2 for all
 large n, P(B₁(t_n) ∪ B₂(t_n) ∪ B₃(t_n)) ≤ P(𝓜_nᶜ) + P(𝒦_nᶜ) + P(ε_n > t_n) → 0 for every deterministic t_n ∈ (0, ½) with
 t_n/r_n → ∞.
@@ -89,5 +99,6 @@ t_n/r_n → ∞.
   ran in this run"; L2 (ii)–(iii) turn RM's Ŝ⁺ into the printed `hpm` and put S₀ into `top_store`.
 - The only data-level inputs are (0.1)–(0.3) and POST (b); no sampler law (no W1-N1 premise) is used: the claim is
   pathwise in the run.
-- IMPL-LIST is used only to identify the printed fields with pip_𝒯, mpm_𝒯, logZ_𝒯 (sampler branch) and with PIP, MPM,
-  logZ_{𝒯^ex} (exact branch).
+- IMPL-LIST is used twice [R1-opus-1]: in (0.5), to carry L2, RM0-plus and DLV-0 from the pinned core to the method with
+  the list fields ("changes no other field and no other state"); and in Step 1, to identify the printed fields with
+  pip_𝒯, mpm_𝒯, logZ_𝒯 (sampler branch) and with PIP, MPM, logZ_{𝒯^ex} (exact branch).

@@ -1,4 +1,4 @@
-# W3-D5P — TARGET (one page; v0.1 with STATEMENT v0.1)
+# W3-D5P — TARGET (one page; v0.2 with STATEMENT v1.1.2)
 
 ## Target clauses (for CP1)
 - **T1 (LIST-R (i)).** Theorem 6's data event 𝒢⁺_n carries, for every admissible output run, S₀ ∈ returned list,
@@ -19,7 +19,7 @@
 ## Parity table
 | clause | (a) PROGRAM goals (design-agnostic within the theorem, p ≫ n, method as coded) | (b) closest published | (c) our best registered result | verdict |
 |---|---|---|---|---|
-| PIPs from the output on AR / block designs | method as coded, p ≫ n, at the coded budget: **matches** | Song–Liang (2015): sampler statements are limits in the iteration count at fixed data (supplement pp. 9–10, 12–13, 16–17), none at a coded budget | row 3.6: printed sampler PIPs, rate n^{−1/2}e^{C√log n}, **only without leakage (Thm 5's (A5)); AR/BLK not covered** | **beats** 3.6 in scope (AR/BLK) and rate, for a different (list-based) output |
+| PIPs from the output on AR / block designs | method as coded, p ≫ n, at the coded budget: **matches** | Song–Liang (2015): sampler statements are limits in the iteration count at fixed data (supplement pp. 9–10, 12–13, 16–17), none at a coded budget | row 3.6: printed sampler PIPs, rate n^{−1/2}e^{C√log n}, **only without leakage (Thm 5's (A5)); AR/BLK not covered** | **beats** 3.6 in scope (AR/BLK designs inside Theorem 6) and rate, for a different (list-based) output [R1-opus-9] |
 | median model from the output | as above: **matches** | as above | row 3.6: P(MPM wrong ∩ calibration success) → 0, no-leak designs only | **beats** in scope |
 | evidence from the output | as above | Del Moral unbiasedness (row 3.5) is not a consistency statement | row 3.5: E Ẑ = Z, any design (unbiased, no consistency); 3.6: |Ẑ/Z − 1| → 0 no-leak only | **new** (deterministic sandwich log Z + log π(S₀) ≤ log_Z_list ≤ log Z) |
 | reported model | — | — | row 3.1 | **equal** (re-derived on the same event, jointly) |
@@ -39,3 +39,4 @@ necessity): `numerics/listk_check_out.txt` (LIST-K, 20 000 random small Ω, 0 vi
 | Corollary 9C's list premise discharged on designs inside both Theorem 9 and Theorem 6 | one-line consequence of LIST-R (i) (π(𝒯) ≥ π(S₀) > ½); proposed to HQ at CP3 (STATEMENT §5 remark 3), not claimed: needs a bridge between the two theorems' hypotheses (no new scope, D106) |
 | The rate for p = 1 | omitted (POST covers p ≥ 2); the fixed-t clause holds for every p |
 | A binary64 version | out of scope (EX-A, as every theorem of the programme); SPEC §7 acceptance tests cover the numerics |
+| Drop the qualifier "when `log_Z_list` is not NA" (council R1, Opus note: under IMPL-LIST the exact branch's store is always returned at the pin, `v3_fit.R:122`, `cpp/v3_core.cpp:565`, so `log_Z_list` is never NA on an output run) | STRONGER; not adopted in this round (a STRONGER statement change needs HQ's go, PROTOCOL_v4 §4.2); proposed to HQ at CP3 together with the IMPL-LIST discharge, where it is checked against the method commit |

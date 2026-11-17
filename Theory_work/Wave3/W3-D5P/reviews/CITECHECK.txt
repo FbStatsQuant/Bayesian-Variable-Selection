@@ -1,4 +1,4 @@
-W3-D5P citecheck: 179 citations extracted from 9 files; 0 MISS; 6 resolved by the unique-file fallback
+W3-D5P citecheck: 183 citations extracted from 9 files; 0 MISS; 6 resolved by the unique-file fallback
 FALLBACK Theory_work/Wave3/W3-D5P/lemmas/L2_listCODE.md: CC_code_check.md -> Theory_work/Wave3/W3-SAMP/lemmas/CC_code_check.md
 FALLBACK Theory_work/Wave3/W3-D5P/lemmas/L2_listCODE.md: cpp/v3_core.cpp -> Scripts/SMC_BVS/core/cpp/v3_core.cpp
 FALLBACK Theory_work/Wave3/W3-D5P/lemmas/L2_listCODE.md: cpp/v3_engine.h -> Scripts/SMC_BVS/core/cpp/v3_engine.h

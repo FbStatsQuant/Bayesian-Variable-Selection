@@ -1,6 +1,6 @@
 # L1 — Lemma LIST-K (deterministic list algebra) — proof
 
-Claim: STATEMENT.md (C1), §2. Status: proof by the lead, not yet line-checked. Written for a Lean transcription:
+Claim: STATEMENT.md (C1), §2. Proof by the lead; line-checked by LC1 and LC1R (see REPORT §2). Written for a Lean transcription:
 finite sums over a finite set, real arithmetic, one inequality for log; no measure theory.
 
 ## Setting (all deterministic)
