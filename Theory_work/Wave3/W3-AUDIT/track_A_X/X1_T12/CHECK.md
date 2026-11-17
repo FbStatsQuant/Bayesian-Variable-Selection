@@ -7,7 +7,7 @@ Text (sha256, first 12 hex, 2026-11-16 18:32 CST): STATEMENT `163b0dc70ebf`, PRO
 | step | who | state | record |
 |---|---|---|---|
 | 1 statement lock | Sol | pending (Codex allotment) | — |
-| 2 better-theorem review | — | skipped (HQ 11-16, RIDER_RULES; re-check of an existing proof) — to be confirmed by HQ for the X items | — |
+| 2 better-theorem review | — | skipped (HQ 11-16 rationale, manager-confirmed; re-check of an existing proof) | — |
 | 3 line check | Sol (NORMAL); Claude stand-in | Claude LC2 (blind Opus): VERIFIED WITH AMENDMENTS, applied; no C | `../reviews/LC2_*` |
 | 6 citation check | script | 0 MISS | `CITECHECK.txt` |
 | 7 council | Sol + Opus | pending | — |
