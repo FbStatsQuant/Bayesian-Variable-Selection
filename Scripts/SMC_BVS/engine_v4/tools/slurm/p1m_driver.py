@@ -41,6 +41,7 @@ the `scratch` link); job arrays only.
 import argparse
 import copy
 import datetime
+import difflib
 import hashlib
 import json
 import math
@@ -59,6 +60,33 @@ MODES = ("compat", "law", "V")
 DESIGNS = ("IND", "AR", "BLK", "ADJ-OPP", "NULL")     # NULL = AR with no signal
 SIGNALS = ("strong", "weak", "null")                  # amplitude 1.0 / 0.6 / 0.0 (the generator's `a`)
 STAGE_KEYS = ("cpus", "mem", "time")
+# Required top-level keys (a missing one is a plan error: a typo in core_h_cap must not mean "no cap"). island_isa is also
+# required, but only for V-mode plans (checked where the mode is known).
+REQUIRED_KEYS = ("core_h_cap", "max_task_hours", "mode", "code_commit", "binary", "fits")
+# Keys the driver reads, plus the ones it writes into plan.resolved.json (so that a resolved plan can be fed back in).
+# Anything else is reported as a WARNING (other tools may add keys), or refused under --strict.
+KNOWN_KEYS = {"batch", "kind", "island_isa", "eval", "island_throttle", "restart", "t6", "t6_only", "pilot", "pilot_only",
+              "isa_check", "resources", "created_utc", "n_tasks", "worst_case_core_h", "worst_case_pilot_core_h", "warnings"} | set(REQUIRED_KEYS)
+KNOWN_FIT_KEYS = {"run_id", "design", "p", "n", "signal", "data_seed", "seed", "Rp", "N", "mode", "resources", "params"}
+
+
+def unknown_keys(plan):
+    """Warnings for top-level and per-fit keys the driver does not know, with a 'did you mean' where one is close."""
+    out = []
+    def hint(k, known):
+        m = difflib.get_close_matches(str(k), sorted(known), n=1, cutoff=0.6)
+        return " (did you mean %r?)" % m[0] if m else ""
+    for k in plan:
+        if k not in KNOWN_KEYS:
+            out.append("unknown top-level key %r%s" % (k, hint(k, KNOWN_KEYS)))
+    fits = plan.get("fits")
+    for i, f in enumerate(fits if isinstance(fits, list) else []):
+        if isinstance(f, dict):
+            name = f["run_id"] if isinstance(f.get("run_id"), str) else str(i)
+            for k in f:
+                if k not in KNOWN_FIT_KEYS:
+                    out.append("unknown key %r in fit %s%s" % (k, name, hint(k, KNOWN_FIT_KEYS)))
+    return out
 
 # PLANNING VALUES (ENGINEERING_SPEC §0-v2.5, §2, §7; NOTS_FACTS: island default 64 CPUs + 32 GB). Gate G0 / the 10^4-10^5
 # pilots replace them; every plan may override any entry. cpus = allocated (billed) CPUs = hardware threads.
@@ -164,17 +192,21 @@ def resolve(plan):
         raise PlanError("the plan must be a JSON object, got %s" % type(plan).__name__)
     P = copy.deepcopy(plan)
     safe_id(P.get("batch", ""), "batch")
-    P.setdefault("mode", "V")
+    missing = [k for k in REQUIRED_KEYS if k not in P]
+    if missing:
+        raise PlanError("required plan key%s missing: %s" % ("s" if len(missing) > 1 else "", ", ".join(missing)))
+    warn = unknown_keys(P)
     plan_choice(P["mode"], "mode", MODES)
-    P.setdefault("binary", "bin/smcbvs4")          # relative to scripts/<batch>/ (deployed with the frozen code)
-    P.setdefault("code_commit", "UNSET")
-    P.setdefault("max_task_hours", 2.0)
+    # (mode, binary, code_commit, max_task_hours, core_h_cap have no defaults any more: they are required, see REQUIRED_KEYS;
+    # binary is relative to scripts/<batch>/, deployed with the frozen code)
+    for k in ("binary", "code_commit"):
+        if not isinstance(P[k], str) or not P[k]:
+            raise PlanError("%s must be a non-empty string, got %r" % (k, P[k]))
     P.setdefault("eval", {"threads": None, "post": True, "n_draws": 10000, "n_x": 4000, "n_test": 10000})
     P.setdefault("island_throttle", None)           # optional %k on each island array
     P.setdefault("island_isa", "")                  # WP7 O5: -DV4_ISLAND_ISA for build.sh ("" = the portable default)
     plan_pos(P["max_task_hours"], "max_task_hours")
-    if P.get("core_h_cap") is not None:
-        plan_pos(P["core_h_cap"], "core_h_cap")
+    plan_pos(P["core_h_cap"], "core_h_cap")          # required; null is not "no cap"
     if P["island_throttle"] is not None:
         plan_int(P["island_throttle"], "island_throttle", 1, TASK_CAP)
     if not isinstance(P["eval"], dict):
@@ -196,6 +228,8 @@ def resolve(plan):
         if isinstance(f, dict) and "mode" in f:
             plan_choice(f["mode"], "fits[%d].mode" % i, MODES)
     v_plan = P["mode"] == "V" or any(f.get("mode", P["mode"]) == "V" for f in P.get("fits") or [] if isinstance(f, dict))
+    if v_plan and "island_isa" not in plan:
+        raise PlanError("required plan key missing: island_isa (a V-mode plan needs an FMA island_isa: one of %s)" % ", ".join(sorted(FMA_ISAS)))
     if v_plan and P["island_isa"] not in FMA_ISAS:
         raise PlanError("a V-mode plan needs island_isa with FMA (one of %s; D-32); got %r" % (", ".join(sorted(FMA_ISAS)), P["island_isa"]))
     # WP7 O4: the islands' resubmission chain (restart from island_r.ckpt.{a,b}); default: one attempt, no soft stop
@@ -369,6 +403,8 @@ def resolve(plan):
     if P.get("t6_only"):
         tasks = F                                        # one T6 task per fit
     P["n_tasks"] = tasks
+    if warn:
+        P["warnings"] = warn
     if tasks > TASK_CAP:
         raise PlanError("batch has %d tasks > the 150-task cap: split it into waves (fewer fits per batch)" % tasks)
     wc = 0.0
@@ -808,6 +844,10 @@ echo "submitted; ledger row: see ledger_row.md (fill job ids from $LOG)"
            % (now[:10], batch, F, P["n_tasks"], now, P.get("kind", "gated (needs HQ go)"), P["worst_case_core_h"]))
     write(os.path.join(out, "ledger_row.md"), row)
     files.append("ledger_row.md")
+    if P.get("warnings"):   # only for a plan with unknown keys: a clean plan's output is byte-identical to before
+        write(os.path.join(out, "PLAN_WARNINGS.txt"), "The plan has keys this driver does not know (ignored; --strict refuses them):\n"
+              + "".join("  - %s\n" % w for w in P["warnings"]))
+        files.append("PLAN_WARNINGS.txt")
     write(os.path.join(out, "plan.resolved.json"), json.dumps(P, indent=1, sort_keys=True) + "\n")
     files.append("plan.resolved.json")
     # SHA256SUMS last (covers everything submit.sh relies on)
@@ -837,6 +877,7 @@ def main(argv=None):
     ap.add_argument("--out", required=True, help="local directory = the future scripts/<batch>/ (deployed by the manager)")
     ap.add_argument("--dept", default=DEPT_DEFAULT, help="department root ON NOTS (paths written into the scripts)")
     ap.add_argument("--now", default=None, help="timestamp to record (tests); default: current UTC")
+    ap.add_argument("--strict", action="store_true", help="refuse (exit 65) a plan that has keys the driver does not know, instead of warning")
     a = ap.parse_args(argv)
     # PR12 MINOR-8: resolved (symlink-free), absolute containment checks. --dept and --out must lie inside the
     # department folder; tests may use P1M_TEST_ROOT, itself inside $TMPDIR (never a bare prefix match).
@@ -852,13 +893,19 @@ def main(argv=None):
         return 65
     try:
         P = resolve(plan)
+        for w in P.get("warnings", []):
+            print("plan warning: %s" % w, file=sys.stderr)
+        if a.strict and P.get("warnings"):
+            print("plan error: --strict: %d unknown plan key(s), see the warnings above" % len(P["warnings"]), file=sys.stderr)
+            return 65
         P["created_utc"] = a.now or datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
         files = generate(P, a.out, a.dept)
     except PlanError as e:
         print("plan error: %s" % e, file=sys.stderr)
         return 65
     print("dry run: wrote %d files to %s; %d fits, %d tasks, worst case %.1f billed core-h. Nothing was submitted."
-          % (len(files), a.out, len(P["fits"]), P["n_tasks"], P["worst_case_core_h"]))
+          % (len(files), a.out, len(P["fits"]), P["n_tasks"], P["worst_case_core_h"])
+          + ("" if not P.get("warnings") else " WARNING: %d unknown plan key(s), see PLAN_WARNINGS.txt." % len(P["warnings"])))
     return 0
 
 
