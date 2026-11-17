@@ -721,3 +721,4 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - relabel 2676e71f (only ST → KER; R4/SAMP:C/DIST-C/OVL conditional on W1-N1:B/F, to be line-checked post-freeze);
   - D95 fe05ccec: **rows 3.1/3.2 fully discharged**; P1-Inventory CORRECTION A-7; L2-S3 code-checked; A1/A2 note only.
   - The last item before the freeze is the READER editorial round (card 16 etc.).
+- 2026-11-17 THEORY FREEZE at d40c9780, tag theory-v2026-11-freeze (HQ); post-freeze queue from Mon 11-23 08:00 CT.
