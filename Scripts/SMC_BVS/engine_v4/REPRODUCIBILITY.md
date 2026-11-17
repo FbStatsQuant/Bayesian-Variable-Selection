@@ -1,10 +1,11 @@
 # Reproducibility: what "same bits" means, what pins it, how to check it, and how to restart
 
-Every command in `smcbvs4` is a deterministic function of its input files, its parameters and its binary. This document
-states exactly what that guarantees, what it does not, and how to verify it yourself. Examples were run on Owls (Intel
+Given the same input files, parameters and binary, the commands of `smcbvs4` return the same bits whatever the thread
+count, the thread schedule or a restart. This document states exactly what that guarantees and **where it has been shown**,
+what it does not guarantee, and how to verify it yourself. Examples were run on Owls (a Rice University server: Intel
 Xeon Gold 6148, glibc 2.34, GCC 11.5) at p = 2,000, n = 200, mode V, `--seed 1`, one island of R′ = 2; the build used
-`-DV4_ISLAND_ISA=x86-64-v3`. The commands run in the directory of [README.md](README.md) §3 A (`run2k`, with `data.bin`, `setup.bin`, `calib.bin`) and
-use `B=../build/smcbvs4`.
+`-DV4_ISLAND_ISA=x86-64-v3`. The commands run in the directory of [README.md](README.md) §3 A (`run2k`, with `data.bin`,
+`setup.bin`, `calib.bin`) and use `B=../build/smcbvs4`.
 
 The binding statements are in `INTERFACES.md` (§5.1 file identities, §6 scorer and libm pin, §7 threads and statuses).
 
@@ -16,16 +17,15 @@ refuses · 6 Stopping and restarting an island · 7 What is not guaranteed
 ## 1. The guarantees
 
 For a fixed **build** (same ISA family, flags and libm results, §3) and fixed **inputs** (`data.bin`, `setup.bin`,
-`calib.bin` and the parameters in them, the sampler seed, the island index r):
+`calib.bin` and the parameters in them, the sampler seed, the island index r), on **one machine**:
 
 | you change | the result changes? |
 |---|---|
 | the number of threads (`--threads`, `OMP_NUM_THREADS`) | **no** |
-| the thread schedule or the machine's load | **no** |
+| the thread schedule or the machine's load | **no** (the engine's loops use fixed schedules; runs at machine load 14–17 agreed) |
 | the particle group size `G`, the tile size, the kernel layout, whether store compaction runs serially or in parallel | **no** |
-| stopping the island and resuming it from its checkpoint, any number of times | **no** |
+| stopping the island and resuming it from its checkpoint, any number of times, with any thread count | **no** |
 | killing the island (SIGKILL) and resuming it from the last checkpoint | **no** |
-| the node it runs on, if its build and libm results are the same (§3) | **no** (the double-precision libm was bit-equal on Owls and NOTS; the production ISA-check task re-runs an island under a second build) |
 | the sampler seed, N, the φ-grid, the island index r, the data | **yes**, by design |
 | the island ISA family (`portable` against `x86-64-v3`), or `--mode` | **yes**; the engine refuses to mix them (§5) |
 
@@ -35,6 +35,20 @@ For a fixed **build** (same ISA family, flags and libm results, §3) and fixed *
   computed, its stores and its terminal state;
 - the SHA-256 of **every section of every `.bin` file except `meta`**. These are the bits of the science. The `meta`
   section holds execution statistics and the binary block (§4.3), so it is allowed to differ.
+
+**Where this is established, and what is not.**
+
+| claim | evidence |
+|---|---|
+| `island`, `merge`: same bits for any thread count, schedule, `G`, tile, restart | tests in the suite and the runs below, on one machine (Owls) |
+| `merge`, `post`, `eval`: same non-meta sections with 1 and with 3 threads | suite tests (`wp4_tail_threads_vs_serial`, `wp5_dist_metrics_thread_invariance_and_oracle`), one machine |
+| the same build on **another machine** gives the same island bits | **not measured.** The double-precision libm functions `exp`, `log`, `lgamma` and the x87 `expl`, `logl` were bit-equal on Owls and on the Rice cluster NOTS (`tests/PMATH_REPORT.md`), and the self-test (§3) refuses a machine where they are not. No island, merge or eval has been compared across two machines. The two machines also used different compilers (GCC 11.5, 14.3), which the engine does not compare |
+| `eval.bin` and `law.bin` give the same bits **on another machine** | **not guaranteed.** `eval` (and the code `post` shares with it) calls `log1p` and `expm1` directly. Those two functions differ in bits between Owls and NOTS (`tests/PMATH_REPORT.md`), and the self-test does not cover them |
+| the FMA ISA families give the same class-A bits (`x86-64-v3` = `x86-64-v4`) | measured on Owls; the Rice cluster check of `sapphirerapids` against `x86-64-v3` is in `tools/slurm/T5_AND_PILOT.md` |
+
+So: "same bits" is **shown for the island and merge pipeline across threads, schedules and restarts on one machine**.
+Across machines it is expected for islands and merges when the self-test passes, and it is **not** claimed for `eval.bin` and
+`law.bin`. A cross-machine comparison of a whole fit is on the release checklist, not yet done.
 
 Measured, island 1 of the p = 2,000 fit (`output_hash`):
 
@@ -59,8 +73,10 @@ The rules that make the thread count irrelevant (`INTERFACES.md` §7):
    (Philox 4x32-10), fixed by the control flow before the value is read. Which thread draws it, or in what order,
    cannot matter (`INTERFACES.md` §3).
 2. **Fixed chunks.** Work is cut into chunks whose size does not depend on the number of threads (64 items by default).
-3. **Ordered reductions.** Floating-point sums are formed per chunk and then combined serially in chunk order. There are
-   no floating-point atomics and no OpenMP floating-point reductions.
+3. **Ordered reductions.** Floating-point sums that enter a result are formed per chunk and then combined serially in
+   chunk order: no atomic floating-point accumulation and no OpenMP floating-point reductions. (Two harmless exceptions
+   exist: the stores' admission cut-offs are monotone atomics whose timing only decides which offers are dropped early,
+   and timing counters are statistics in `meta`.)
 4. **Stores are order-free.** A store keeps the top-c models of everything offered, with the largest value per model; its
    content does not depend on the order or the timing of offers. Thread buffers are absorbed in thread-index order at
    step ends.
@@ -83,14 +99,14 @@ python3 -c "import json; print([json.load(open('island_t%d.bin.json' % t))['outp
 Two arithmetic forms exist, and they are pinned differently.
 
 **The bit form** (the theory path: `compat` and `law` modes, the scorer used in `merge`, the tail local search and the
-evaluator). Its results are, bit for bit, those of the R reference implementation (revision D). It is built with
+evaluator). Its results are, bit for bit, those of the R reference implementation (revision D of the code in `Scripts/SMC_BVS/core/`). It is built with
 `-O2 -fno-math-errno -ffp-contract=off -march=x86-64-v2` in every build, so compiler fusing of multiply-adds is off.
 
 **Class A** (the engineered sampler, mode V): vectorised kernels with fused multiply-add. Its bits depend on:
 
 - **The island ISA family.** Class A uses a true FMA wherever the build has one and `a*b + c` otherwise, so FMA builds
-  agree with each other and differ from `portable` by design. Measured on Owls: `x86-64-v3`, `x86-64-v4` and
-  `sapphirerapids` give the same bits. A fit is run with **one** family end to end (`-DV4_ISLAND_ISA=...`, README §1.2).
+  agree with each other and differ from `portable` by design. Measured: `x86-64-v3` = `x86-64-v4` on Owls (§4.4);
+  `x86-64-v3` = `sapphirerapids` in a NOTS run recorded in `Docs/Experiments/P1M/results/T5_1e5.md`. A fit is run with **one** family end to end (`-DV4_ISLAND_ISA=...`, README §1.2).
 - **The libm.** `exp`, `log` and `lgamma` come from glibc, which is *not* correctly rounded and picks its routine by CPU
   features at load time. The engine therefore binds to glibc 2.34's FMA variant and runs a self-test at the start of every
   command (except `info` and `version`): `log`, `exp` and `lgamma` on fixed argument sets, plus the x87 `expl` and `logl`,
@@ -105,6 +121,8 @@ $B version        # compiler, flags, island_isa, island_fma, git_commit, libm {p
 ```
 
 `git_commit` is the 40-hex HEAD, with `-dirty` appended if tracked files differ from it, and is refreshed at every build.
+A build from a `git archive` tree has no `.git` and reports `unknown`; on the SLURM path the plan's `code_commit`, recorded
+in every manifest, is then the authoritative record of the code.
 
 ## 4. Verifying hashes
 
@@ -150,16 +168,37 @@ with the thread count, the machine's speed and the binary. **Never use it to com
 ### 4.4 The pinned reference values
 
 The test `t3_invariance_*` runs one fixed island (n = 100, p = 300) through the particle-major reference and many
-label-major configurations, 1 to 3 threads, and checks that all hashes agree. In the current engine the reference is:
+label-major configurations, 1 to 3 threads, and checks that all hashes agree. Its reference hashes, which **depend on
+the build** (§3):
 
-| form | hash |
-|---|---|
-| bit form | `44a15bfc6fb8d233` |
-| class A | `d2df149413596a19` |
+| form | build | reference hash |
+|---|---|---|
+| bit form | any | `44a15bfc6fb8d233` |
+| class A | `portable` (no `-DV4_ISLAND_ISA`; what `tests/run_tests.sh` builds) | `d2df149413596a19` |
+| class A | FMA family: `x86-64-v3`, `x86-64-v4` | `e9cc4ab39f8a72db` |
 
-Run it alone: `$TMPDIR/v4_build/v4_tests t3_invariance` (the suite's default build directory; `tests/run_tests.sh --quick` builds it).
-It prints `reference hash ...` for each form, and each configuration's hash. These values must not change in a release
-that does not intend to change the science; the freeze check compares them.
+(MEASURED on Owls, `logZ` equal to 15 digits in both class-A builds. `sapphirerapids` is the same FMA family and is
+expected to give `e9cc4ab39f8a72db`; no test tree has been built with it here.)
+
+Run it for the build you use. The default (`portable`) test tree:
+
+```sh
+export TMPDIR=<a scratch directory>
+Scripts/SMC_BVS/engine_v4/tests/run_tests.sh --quick        # builds $TMPDIR/v4_build/v4_tests (and runs the suite)
+$TMPDIR/v4_build/v4_tests t3_invariance
+```
+
+and a test tree for the FMA build:
+
+```sh
+cmake -S Scripts/SMC_BVS/engine_v4 -B $TMPDIR/v4_build_v3 -DCMAKE_BUILD_TYPE=Release -DV4_ISLAND_ISA=x86-64-v3
+make -C $TMPDIR/v4_build_v3 -j3 v4_tests
+$TMPDIR/v4_build_v3/v4_tests t3_invariance
+```
+
+The test prints `reference hash …` for each form, and each configuration's hash. These values must not change in a release
+that does not intend to change the science; the project's pre-release check compares them. If your values differ from the
+row for your build, the install is not producing the reference bits.
 
 `v4_pmath_check` (built by the suite) is the libm measurement tool: it prints a SHA-256 of `log`, `exp`, `log1p`,
 `expm1` and `lgamma` on fixed argument sets, to compare across machines or `GLIBC_TUNABLES` settings, the number of results
@@ -171,7 +210,7 @@ A refusal is `invalid_input` (exit 13) with a `reason` that names the files or v
 
 | situation | message (excerpt) |
 |---|---|
-| island ISA family differs between `calib.bin` and this binary | `island: calib.bin vs this binary: island ISA families differ (x86-64-v3 vs portable): class-A bits differ (D-32)` (measured) |
+| island ISA family differs between `calib.bin` and this binary | `island: calib.bin vs this binary: island ISA families differ (x86-64-v3 vs portable): class-A bits differ (D-32)` (measured; D-32 is the project's number for this rule) |
 | island sampler seed ≠ the calibration's | `--seed … differs from the calibration's seed …` |
 | N ≠ calib.bin's frozen N | `N differs from calib.bin's frozen N = …` |
 | `data.bin` or `setup.bin` is not the one `calib.bin` was made from | `calib.bin's meta.inputs differ from the data.bin / setup.bin in use` |
@@ -228,7 +267,7 @@ step in flight and the checkpoint write.
 A job killed at its time limit, a node failure or `kill -9` loses at most the work since the last checkpoint. The next run
 of the same command resumes from it; if the dead process left a `.tmp.<pid>` file, the resume removes it. (Measured:
 SIGKILL at 25 s with `--ckpt-every-s 5`, resumed from step 8 and from step 9 in two runs, same `output_hash`.) The kill-and-resume test used for the
-10⁵ gate kills a real island twice, once during a checkpoint write, and compares the final output with an uninterrupted
+p = 10⁵ release gate kills a real island twice, once during a checkpoint write, and compares the final output with an uninterrupted
 run: see `tools/slurm/T6_AND_RESTART.md` (MEASURED there at p = 2,000: both kills survived, output hash equal).
 
 ### 6.4 The rule: finish on the binary that started
@@ -239,8 +278,9 @@ one build is refused by another. In practice:
 - Build once; run every task of a fit, and every retry, with that binary (`bin/smcbvs4`).
 - Do not upgrade the code between a stop and its resume. The `restart` chain below uses the same `bin/smcbvs4` for all
   attempts.
-- Layouts change too: engine v0.1.25 added a column to the per-step cost rows stored in the checkpoint, so a chain
-  started on an older binary could not have been continued on the newer one even without the fingerprint.
+- Layouts change too: version 0.1.25 of the engine contract (`INTERFACES.md` changelog) added a column to the per-step cost
+  rows stored in the checkpoint, so a chain started on an older binary could not have been continued on the newer one even
+  without the fingerprint.
 
 ### 6.5 On SLURM: the `restart` key
 
@@ -268,6 +308,8 @@ one build is refused by another. In practice:
 - **`content_sha256`** across runs (§4.3).
 - **Bits across ISA families or modes.** `portable` and FMA builds differ in class A; V, `law` and `compat` are
   different methods. Neither is a bug.
+- **`eval.bin` and `law.bin` across machines** (§1): they use `log1p` and `expm1`, which differ between Owls and NOTS.
+- **Whole-fit identity across machines.** Not yet measured (§1).
 - **Bits on an unpinned libm.** A system whose `exp`/`log`/`lgamma` give other bits is refused (§3), not silently
   accepted. A node without AVX2 and FMA would select a different glibc routine and fail the self-test.
 - **Resuming across code versions** (§6.4).
