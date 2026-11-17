@@ -1981,6 +1981,10 @@ def accept_identity(cid: str, by: dict, g, aliases: dict, folders: dict | None =
         ident.append(f"input={t}@{','.join(sorted(g.uses[(cid, t)]))} v{tr.get('version', '')} "
                      f"{tr.get('sha256', '')} {tr.get('status', '')}")
     ident += [f"artifact={a}" for a in accept_artifacts(row, folder, fold)]
+    for t in sorted(g.deps.get(cid, [])):   # rule (c): LC-step evidence of the edge uses enters the identity (absent -> no line)
+        for u in sorted(g.uses[(cid, t)]):
+            if u.startswith("proof:") and (li := lc_step_identity(cid, t, u)):
+                ident.append(li)
     return ident
 
 
@@ -2168,6 +2172,146 @@ def narrow_kept_legacy(row: dict) -> str:
     if not found or any(k == "no" for k, _, _ in found) or any(h != row.get("sha256", "") for k, h, _ in found if k == "ok"):
         return ""
     return found[0][2]
+
+
+# ---------------------------------------------------------------- rule (c): an LC-verified @proof step (HQ 11-16, card 12 cond. 1)
+# A3 normally refuses a checked claim whose direct input is below that assurance. Card 12 (T03#) keeps rows such as T02(ii#)
+# un-upgraded but lets an edge into the VERIFIED STEP of such a row stand. An edge consumer -> input satisfies A3 only if EVERY
+# use of it is a named `proof:<step>` use AND each such use has exactly one row in registry/lc_steps.tsv
+# (consumer, input, use, file, lines, sha256, carrier) such that:
+#  * the cited file, the carrier and the review are regular repository files reached WITHOUT any symlink, `..`, absolute or
+#    scratch path component (realpath == the plain joined path); the carrier and the review are `*.md` under a `reviews/` folder;
+#  * `lines` is a valid range of the cited file and the file's content digest equals `sha256`;
+#  * the carrier is clean: every line that mentions LC-STEP in ANY spelling (NFKC, case-folded, any separator) is an exact
+#    `LC-STEP-VERIFIED: <consumer> | <input> | <use> | <file>:<a>-<b> | sha256=<64 hex> | review=<path> | verdict=<line>` line
+#    at column 0 (so a NOT-VERIFIED, indented, bulleted, re-spelled or malformed line anywhere refuses the whole carrier; a
+#    carrier may hold several edges' lines), and exactly ONE such line names this (consumer, input, use) - and it equals the
+#    tsv tuple (another range or hash for the same edge use refuses);
+#  * the review is a different file and contains a line EQUAL to the verdict (the verbatim review line; nothing stripped but
+#    surrounding whitespace), which holds the word VERIFIED and no negated / qualified form of it.
+# Anything else (no row, two rows, wrong or partial range, hash mismatch, missing or unclean carrier, review without the
+# verbatim verdict line, carrier = review) fails closed. The input row itself is NOT upgraded; check.py applies the rule only
+# to inputs that lc_input_eligible() admits (proved or unclassified-but-PROVED, never open / partial / negative).
+# Residual trust (as for the CC rule): the HQ recorder writes the tsv row and picks the review line; the tool binds them to
+# existing files, the cited hash and the exact line, it does not judge the mathematics. A later retraction written elsewhere
+# in the review is not seen (the review's digest is in the accept identity, so the record goes stale on any edit, and
+# re-acceptance is an HQ act). A carrier may hold no prose that mentions an LC step (fail closed).
+import unicodedata as _ud
+LC_STEPS = os.path.join(REG, "lc_steps.tsv")
+_LC_LINE = re.compile(r"^LC-STEP-VERIFIED: ([^|]+?) \| ([^|]+?) \| ([^|]+?) \| (\S+?):(\d+)-(\d+) \| sha256=([0-9a-f]{64}) \| "
+                      r"review=(\S+) \| verdict=(.+)$")
+_LC_LOOSE = re.compile(r"(?<![^\W_])lc[\W_]{0,6}step")
+_LC_NEG = re.compile(r"(?i)\b(?:not|un|non|partial\w*|yet|only|except)\b[\s-]*verified|\bun-?verified|verified\s*\?|"
+                     r"verified\s*\(\s*(?:false|wrong|gap)|verified\s+(?:with a gap|except|modulo|but)|"
+                     r"verified-with-(?!amendments\b)|verified\s+with\s+(?!amendments\b)|"
+                     r"\b(?:refut\w*|counterexample\w*|gaps?|fail\w*|false|wrong|incorrect|invalid|unsound|unchecked|pending)\b|"
+                     r"not\s+checked")
+# the verdict must BEGIN with VERIFIED (optionally -WITH-AMENDMENTS) or be a markdown table row with a cell equal to it
+_LC_ANCHOR = re.compile(r"VERIFIED(?:-WITH-AMENDMENTS)?(?:\s|$|[—–:-])|\|(?:[^|]*\|)*\s*VERIFIED(?:-WITH-AMENDMENTS)?\s*\|")
+_LC_BADINPUT = re.compile(r"(?i)\b(OPEN|GAP|REFUTED|STUCK|FALSE|SKETCH|PARTIAL|CONDITIONAL|SUSPECT|WRONG|COUNTEREXAMPLE|NOT)\b")
+
+
+def lc_input_eligible(dr: dict) -> bool:
+    """Rule (c) applies to an input that is proved but not checked (strength 2), or whose status is unclassified yet says
+    PROVED (a legacy label such as 'T02(i#), T02(ii#): PROVED; SF/XF VERIFIED'); never to open / partial / negative ones."""
+    st, s = dr.get("status", "") or "", row_strength(dr)
+    if s == 2:
+        return True
+    return s is None and bool(re.search(r"\bPROVED\b", st)) and not _LC_BADINPUT.search(st)
+
+
+def _repo_file(path: str, md_in_reviews: bool = False) -> bool:
+    """A repository-relative regular file path with NO symlink, `..`, absolute or scratch component (checked on the raw
+    path and on its resolution); `md_in_reviews`: also a `*.md` under a `reviews/` folder."""
+    if not path or os.path.isabs(path) or "\\" in path or ":" in path:
+        return False
+    parts = path.split("/")
+    if ".." in parts or "." in parts or "" in parts or any("scratch" in x.lower() for x in parts):
+        return False
+    if md_in_reviews and not (path.endswith(".md") and "reviews" in parts[:-1]):
+        return False
+    root_r = os.path.realpath(ROOT)
+    plain = os.path.normcase(os.path.normpath(os.path.join(root_r, *parts)))
+    return os.path.normcase(os.path.realpath(os.path.join(ROOT, *parts))) == plain and os.path.isfile(os.path.join(ROOT, *parts))
+
+
+def lc_steps_rows() -> list[dict]:
+    return read_tsv(LC_STEPS)[1] if os.path.isfile(LC_STEPS) else []
+
+
+def _lc_carrier(C, consumer, inp, use):
+    """-> (matches of THIS edge use in the carrier text C, unclean?): unclean = a line mentioning LC-STEP in any spelling
+    that is not an exact well-formed LC-STEP-VERIFIED line at column 0."""
+    mine, unclean = [], 0
+    for ln in C:
+        if not _LC_LOOSE.search(_ud.normalize("NFKC", ln).casefold()):
+            continue
+        m = _LC_LINE.match(ln.rstrip("\r\n")) if ln.startswith("LC-STEP-VERIFIED: ") else None
+        if not m:
+            unclean += 1
+        elif (m.group(1), m.group(2), m.group(3)) == (consumer, inp, use):
+            mine.append(m)
+    return mine, unclean
+
+
+def lc_step_check(consumer: str, inp: str, use: str) -> tuple[bool, str]:
+    """(ok, why): does the edge use `use` of consumer -> inp stand on a recorded, VERIFIED LC step (rule (c))?"""
+    if not use.startswith("proof:") or not use[len("proof:"):].strip() or "|" in consumer + inp + use:
+        return False, "not a named proof step"
+    hits = [r for r in lc_steps_rows() if (r.get("consumer"), r.get("input"), r.get("use")) == (consumer, inp, use)]
+    if len(hits) != 1:
+        return False, f"{len(hits)} lc_steps.tsv rows for this edge use (need exactly one)"
+    r = hits[0]
+    f, mr = r.get("file", ""), re.fullmatch(r"(\d+)-(\d+)", r.get("lines", "") or "")
+    if not mr or not _repo_file(f):
+        return False, "bad file (symlink / .. / scratch / missing) or line range in lc_steps.tsv"
+    a, b = int(mr.group(1)), int(mr.group(2))
+    L = read_lines(f)
+    if L is None or not 1 <= a <= b <= len(L):
+        return False, f"cited step {f}:{a}-{b} missing or out of range"
+    if _digest(L) != r.get("sha256", ""):
+        return False, f"source hash mismatch for {f} (changed since the step was line-checked)"
+    carrier = r.get("carrier", "")
+    if not _repo_file(carrier, True):
+        return False, "carrier is not a regular symlink-free *.md under a reviews/ folder"
+    C = read_lines(carrier)
+    if C is None:
+        return False, f"carrier {carrier} missing"
+    mine, unclean = _lc_carrier(C, consumer, inp, use)
+    if unclean:
+        return False, f"carrier {carrier}: {unclean} line(s) mention LC-STEP but are not exact LC-STEP-VERIFIED lines (any NOT-VERIFIED / malformed / indented line refuses the carrier)"
+    m = mine[0] if len(mine) == 1 else None
+    if m is None or (m.group(4), int(m.group(5)), int(m.group(6)), m.group(7)) != (f, a, b, r["sha256"]):
+        return False, (f"carrier {carrier}: {len(mine)} line(s) for this edge use, or one with another file / range / hash "
+                       "(wrong or partial range)")
+    review, verdict = m.group(8), m.group(9).strip()
+    if not _repo_file(review, True) or os.path.samefile(os.path.join(ROOT, review), os.path.join(ROOT, carrier)):
+        return False, "review must be a regular symlink-free *.md under a reviews/ folder, different from the carrier"
+    if len(verdict) < 24 or not _LC_ANCHOR.match(verdict) or _LC_NEG.search(verdict):
+        return False, "the recorded verdict is not a specific, unqualified VERIFIED line (must begin with VERIFIED or be a table row with a VERIFIED cell)"
+    RL = read_lines(review)
+    if RL is None or not any(x.strip() == verdict for x in RL):
+        return False, f"review {review} missing or has no line equal to the recorded verdict"
+    return True, f"{f}:{a}-{b} VERIFIED (carrier {carrier}; review {review})"
+
+
+def lc_step_identity(consumer: str, inp: str, use: str) -> str:
+    """Acceptance-identity line of an edge use with a recorded LC step ('' when there is none): the digests of the
+    cited file, the carrier and the review, so a later change to any of them makes the consumer's accept record stale."""
+    hits = [r for r in lc_steps_rows() if (r.get("consumer"), r.get("input"), r.get("use")) == (consumer, inp, use)]
+    if len(hits) != 1:
+        return ""
+    r = hits[0]
+    parts = [f"lcstep={consumer}|{inp}|{use}|{r.get('file', '')}:{r.get('lines', '')}|{r.get('sha256', '')}"]
+    C = read_lines(r.get("carrier", "")) if r.get("carrier") else None
+    review = ""
+    if C is not None:
+        mine, _ = _lc_carrier(C, consumer, inp, use)
+        review = mine[0].group(8) if len(mine) == 1 else ""
+    for path in (r.get("file", ""), r.get("carrier", ""), review):
+        L = read_lines(path) if path else None
+        parts.append(_digest(L) if L is not None else "UNREADABLE")
+    return " ".join(parts)
 
 
 def unaccepted_inputs(cid: str, by: dict, g, aliases: dict, now: set, records=None, legacy=None, revalidate=None,
