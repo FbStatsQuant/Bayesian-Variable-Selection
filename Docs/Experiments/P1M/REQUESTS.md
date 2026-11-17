@@ -237,3 +237,10 @@ the main clone outside `Docs/Experiments/P1M/`.
 P7, the 10⁶ calibration pilot (H-11 gate (2)), submitted now under HQ's standing approval (P7 approved 11-16; worst case ≤ 144 accepted 11-16).
 Cell 6-AR-n200-r01-V-s1, production setup → pilot island only (pilot_only plan), code exp/P1M-engine 2cfaa9e5. Expected 25–50 core-h,
 worst 144; stop rule at 75 (1.5×). The message is re-sent to HQ when the desktop answers.
+  - 2026-11-17 07:31 CST: delivered to HQ together with the P7 result (desktop reachable again).
+
+## 2026-11-17 07:32 CST — SUBMISSION NOTICE: the 1M pilot fit (P10), under HQ's P9 GO (11-17)
+Fit 6-AR-n200-r01-V-s1, batch F1M_pilot, code exp/P1M-engine 2cfaa9e5, island ISA sapphirerapids. 20 tasks: setup (48 CPUs, 48G, 1 h)
+→ calibrate (96, 128G, 2 h) → 16 islands (96, 64G, **1 h**; expected 11–13 min each) → merge (32, 80G, 1 h) → eval + post (8, 16G, 1 h).
+**Jobs 2761931–2761935 (submitted 13:33Z). Expected ≈ 450 core-h; stop rule ≈ 675 (1.5×); driver worst case 1,816 billed core-h (a limit, not an expectation).** Pilot rule
+(Sol F7): replicate 1 only if the frozen configuration is unchanged afterwards.
