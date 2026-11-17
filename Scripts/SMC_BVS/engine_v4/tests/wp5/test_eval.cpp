@@ -1,7 +1,10 @@
 // test_eval.cpp -- unit tests of the evaluator pieces (quadrature, closed forms, posterior, draws, metrics, invariance).
 #include <random>
 
+#include "eval/io.h"
+#include "tutil.h"
 #include "v4/eval.h"
+#include "v4/format.h"
 #include "wp5_tk.h"
 
 using namespace v4;
@@ -200,6 +203,37 @@ TEST(wp5_store_mass_find_occ) {
   CHECK(store_find(s, {1, 2}, zobrist_hash({1, 2}, 10)) == -1);
   CHECK_NEAR(logZ_occ(v.data(), 2, 30, 100), std::log(std::exp(-1.0) + std::exp(-1.5)) - std::log(0.3), 1e-14);
   CHECK(std::isnan(logZ_occ(v.data(), 2, 0, 100)));
+}
+
+// PR45 review MINOR-3 / INFO-1: load_fit refuses a top store that holds a model twice (I1, INTERFACES §4.1 v0.1.13)
+// and an entry whose offset + length would wrap past 2^64; the same store without the duplicate is accepted.
+TEST(wp5_load_fit_refuses_duplicate_model) {
+  v4::Zobrist zb; zb.init(10);
+  auto write = [&](const std::string& path, const std::vector<Model>& ms, const std::vector<double>& vs, uint64_t bad_off) {
+    std::vector<double> v; std::vector<uint64_t> off, hash; std::vector<uint16_t> len; std::vector<int32_t> pool;
+    for (size_t i = 0; i < ms.size(); ++i) {
+      v.push_back(vs[i]); off.push_back(pool.size()); len.push_back((uint16_t)ms[i].size()); hash.push_back(zb.hash(ms[i]));
+      pool.insert(pool.end(), ms[i].begin(), ms[i].end());
+    }
+    if (bad_off) off.back() = bad_off;
+    fmt::Writer W(fmt::K_FIT, fmt::M_V);
+    W.add("top_v", v); W.add("top_off", off); W.add("top_len", len); W.add("top_hash", hash); W.add("top_pool", pool);
+    Json m = Json::object(); m["status"] = "completed"; W.add_json("meta", m);
+    W.write(path);
+  };
+  auto status = [](const std::string& path) {
+    try { io::FitFile f; io::load_fit(path, f); } catch (const Error& e) { return e.st; }
+    return Status::completed;
+  };
+  const std::string ok = tmp_path("wp5_fit_unique.bin"), dup = tmp_path("wp5_fit_dup.bin"), wrap = tmp_path("wp5_fit_wrap.bin");
+  // {1,3} at 2.0 and again at 1.0, not adjacent, otherwise sorted
+  write(ok, {{1, 3}, {2}, {4, 5}}, {2.0, 1.5, 1.0}, 0);
+  write(dup, {{1, 3}, {2}, {1, 3}}, {2.0, 1.5, 1.0}, 0);
+  write(wrap, {{1, 3}, {2}, {4, 5}}, {2.0, 1.5, 1.0}, UINT64_MAX - 1);   // len 2: off + len wraps to 0
+  CHECK(status(ok) == Status::completed);
+  CHECK(status(dup) == Status::invalid_input);
+  CHECK(status(wrap) == Status::invalid_input);
+  for (const auto& f : {ok, dup, wrap}) std::remove(f.c_str());
 }
 
 TEST(wp5_selection_pip_evidence) {

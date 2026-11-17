@@ -101,8 +101,18 @@ IslandFile read_island_file(const std::string& path, bool verify) {
   o.led.init(lc);
   auto v = rd.vec<double>("top_v"); auto h = rd.vec<uint64_t>("top_hash"); auto off = rd.vec<uint64_t>("top_off");
   auto len = rd.vec<uint16_t>("top_len"); auto pool = rd.vec<int32_t>("top_pool");
-  for (size_t i = 0; i < v.size(); ++i) o.led.top.offer(v[i], ModelView(pool.data() + off[i], len[i]), h[i]);
-  o.led.top.compact();
+  if (h.size() != v.size() || off.size() != v.size() || len.size() != v.size()) throw Error(Status::invalid_input, path + ": inconsistent top store sections");
+  o.led.top.load_unique_sorted(v.size(), v.data(), h.data(), off.data(), len.data(), pool.data(), pool.size());   // verified bulk load
+  if (verify) {   // PR45 review MINOR-4: one entry per model holds only if every hash is its model's (labels in [0, p))
+    if (p <= 0) throw Error(Status::invalid_input, path + ": meta.p must be positive");
+    Zobrist zob; zob.init(p);
+    const Store& t = o.led.top;
+    for (size_t i = 0; i < t.size(); ++i) {
+      const ModelView S = t.model(i);
+      for (int32_t j : S) if (j < 0 || j >= p) throw Error(Status::invalid_input, path + ": top store label out of range");
+      if (t.hash[i] != zob.hash(S)) throw Error(Status::invalid_input, path + ": top store hash differs from the model's");
+    }
+  }
   auto hs = rd.vec<int32_t>("hpm_S"); auto hv = rd.vec<double>("hpm_val"); auto ev = rd.vec<int64_t>("hpm_ev");
   o.led.has_hpm = !v.empty() || !hs.empty(); o.led.hpmS = Model(hs.begin(), hs.end()); o.led.hpmF = hv[0]; o.led.hpm_logm = hv[1];
   EventKey& k = o.led.hpm_ev.key;

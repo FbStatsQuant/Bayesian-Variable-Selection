@@ -64,7 +64,7 @@ struct CalibOutcome {
   Ledger led;                                   // the calibration ledger at the end (stores, HPM + provenance, counters)
   std::vector<StageRecord> stages;
   InheritedFlat inherited;                      // models of top u lead0 u lead1 (lexicographic), scored (F, lg0, log m, d); ok only
-  double k_store = 0;                           // mean |S| of the calibration top store (INTERFACES v0.1.12 §7 admission)
+  double k_store = 0;                           // mean |S| of the calibration top store (INTERFACES v0.1.13 §5.1 meta.k_store; §7 admission)
 };
 
 // Memory plan of the calibration process (review PR37 M-5, N-1, N-2; ESTIMATE, bytes), on IslandSpec's rule:

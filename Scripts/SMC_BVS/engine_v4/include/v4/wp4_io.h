@@ -44,7 +44,7 @@ struct CalibWrite {
   std::vector<merge::InheritedModel> inherited;     // models of the three calibration stores with F, lg0, logm (or:)
   const calib::InheritedFlat* inherited_flat = nullptr;   // the same, flat (calibrate_with's export; preferred; has d)
   const calib::Settings* settings = nullptr;        // rule parameters recorded in meta (I_max, refine_m, ell, sum mode)
-  double k_store = 0;                               // calibration's mean stored |S| (INTERFACES v0.1.12 §7)
+  double k_store = 0;                               // calibration's mean stored |S| (INTERFACES v0.1.13 §5.1 meta.k_store; §7)
   int32_t N = 0, L = 0, Hm = 4;                     // final-run settings frozen with the grid
   Json inputs = Json::object();                     // {data.bin: hash, setup.bin: hash}
   std::vector<calib::StageRecord> stages;           // pilot and diagnostic islands' stage tables (calib.bin `stage_*`)
