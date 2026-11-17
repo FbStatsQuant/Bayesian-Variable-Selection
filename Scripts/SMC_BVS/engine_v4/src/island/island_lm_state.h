@@ -6,6 +6,16 @@
 
 namespace v4::island {
 
+// Per-thread label-major scratch (review PR48 finding 1): sized serially before the parallel regions, so no allocation
+// happens inside an OpenMP region outside the oom_guard (an escaping std::bad_alloc would std::terminate). Grows only.
+struct LmScratch {
+  std::vector<uint8_t> inm;                    // Bk: member flags of a tile
+  std::vector<uint64_t> needw, consw;          // Bk / 64: needed (phase A) / consumed (phase B) label bits of a tile
+  std::vector<int> nlist, first;               // Bk + 1: listed bits; Bk: first consuming particle per label
+  std::vector<uint32_t> ncons, fpos;           // Bk: consumption counts and positions per label
+  std::vector<v8d> ub;                         // max k: one 8-lane Gram vector per member
+};
+
 // --- label-major round for the particles [g0, g0 + gN) ------------------------------------------------------
 struct LmGroupBuf {
   std::vector<uint32_t> ord, inv;             // gN x m
@@ -17,6 +27,7 @@ struct LmGroupBuf {
   std::vector<int> act;                        // active columns
   avec<double> XA;                             // |act| x n
   std::vector<double> lbuf, obuf;              // nsup x p
+  std::vector<LmScratch> scr;                  // one per thread
 };
 
 }  // namespace v4::island

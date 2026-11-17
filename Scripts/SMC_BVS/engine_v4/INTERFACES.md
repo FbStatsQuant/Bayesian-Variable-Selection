@@ -333,7 +333,8 @@ Sections (names fixed; WPs may add sections, never rename):
     2), threads, G, tile, kernel, arith, segment. `rows` = the rows closed: completed = T + L + Hm + 2 (step 0 = the
     initial draws, the T bridge stages, L burn-in and Hm measured rounds, then the exit row); a stopped island = its
     closed steps + the exit row. `columns` = one array per `StepCost` field (`include/v4/island/island.h`), one entry
-    per row. Rows are contiguous intervals of the island's lifetime: a row closes right after its step's ledger sync
+    per row; `flips` = `KernelStats::flip_evals`, the addition flips evaluated on fast supports (K1: with bounded
+    scoring only those it scores). Rows are contiguous intervals of the island's lifetime: a row closes right after its step's ledger sync
     (before that step's checkpoint, whose seconds go to the next row) and is final then; the exit row (kind 4) covers
     the last checkpoint, a failed or interrupted partial step, the I1 check on exit and the result assembly. The
     checkpoint carries the rows and the lifetime totals at the last close, so after a resume (segment = resumes before
