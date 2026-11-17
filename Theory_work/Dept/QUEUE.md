@@ -5,8 +5,8 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 
 ## THEORY PUSH (owner greenlight 11-17, D104). Freeze tag theory-v2026-11-freeze → d40c9780 stands for recorded statements.
 - Running (4 leads + Fable): track A lead (W1-N1:B/F line checks), W3-D2 lead (check X), recorder (A1/A2 NARROW → tools → registry editorial), precedent notes (Sonnet); audit Fable (FEAS_SMC_WORKS).
-- Next free slot: READER editorial batch (R5's 3 items, R4 pointer, ER-1..11, XR1 items).
-- HOLD (owner): track D #3, #5′, any SMC-works ticket. After the owner's method sign-off: proof hardening for Lean (3 blueprints + hostile review).
+- Next free slots (D105, in order): #5′ lead (Opus; after the Fable's SPEC_LIST_PIP; kill 3 d) → #3 lead (Opus; plan-stage reuse check of W3-DIST's floor bridge; kill 3 d) → READER editorial batch.
+- DEFERRED (owner): 'SMC does work' (follow-up paper). Evidence spread dropped. After the owner's method sign-off: proof hardening for Lean (3 blueprints + hostile review).
 
 ## Running
 | ticket | contents | lead thread | worktree / branch | state | next |
