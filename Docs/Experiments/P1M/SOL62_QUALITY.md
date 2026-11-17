@@ -7,5 +7,6 @@ One row per 6.2 gate review. Each point is BETTER / SAME / WORSE than 6.1, judge
 
 | date | PR | bugs | FP | brief | speed/cost | reason |
 |---|---|---|---|---|---|---|
+| 2026-11-17 | #68 list-PIP (v3 + v4, gate) | BETTER | SAME | BETTER | SAME | Found a real public-output defect the golden could not see (v4 mpm_list in internal 0-based indices + logZ_list name), the v3 compute-before-finish leak into peak RSS, and that the R order oracle passed under a reversed sum (shown by its own negative control); built the pre-change binary for a byte-level old/new check. No false positives seen; ≈ 1.5 h wall, like 6.1 gate reviews. Final message terse (≤ 6 lines) but the file is thorough. |
 
-**Tally:** 0 reviews (BETTER / SAME / WORSE on substance: 0 / 0 / 0).
+**Tally:** 1 review; on substance (bugs, FP) BETTER 1 · SAME 1 · WORSE 0; no WORSE streak.

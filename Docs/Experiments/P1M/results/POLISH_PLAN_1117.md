@@ -20,4 +20,6 @@ tests/run_tests.sh --quick|--full; driver = tools/slurm/p1m_driver.py + p1m_cell
 | P-5 | Driver ergonomics: `plan validate`, `--dry-run` (task list + cost + memory before submit), `status`, `resume`; one example plan per use | 11-26 – 11-30 |
 | P-6 | Test suite: one `ctest`/`run_tests.sh` entry, quick suite time budget, test names by component, golden refresh procedure documented | 11-26 – 11-30 |
 | P-7 | Usability check: a fresh Haiku/Sonnet agent with ONLY the README builds and runs the example on Owls; every stumble → fix | ≈ 12-01 |
+| P-9 | Data importer: `smcbvs4 import` from CSV / R / numpy into raw.bin (a newcomer can only use `gen` today; needed for the real-data example) | after the freeze, ≈ 11-23 – 11-27 |
+| P-10 | Driver site config: NOTS account / partition / qos / modules / folder guard moved to a site file; a generic SLURM template | ≈ 11-27 – 12-01 |
 | P-8 | Release v4.0: CHANGELOG (from INTERFACES history), tag, API/file-format doc frozen; Codex release review | after the 1M block (≈ 12-08 – 12-10) |
