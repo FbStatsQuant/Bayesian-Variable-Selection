@@ -17,6 +17,7 @@ struct LmScratch {
   std::vector<uint32_t> ord;                   // m: one round order (K2: only the inverse is kept per particle)
   std::vector<uint32_t> ncons, fpos;           // Bk: consumption counts and positions per label
   std::vector<v8d> ub;                         // max k: one 8-lane Gram vector per member
+  Model imodel;                                // the I proposal's pi_0 draw (K2)
 };
 
 // --- label-major round for the particles [g0, g0 + gN) ------------------------------------------------------
