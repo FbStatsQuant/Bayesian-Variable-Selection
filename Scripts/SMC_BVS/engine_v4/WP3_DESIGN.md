@@ -365,9 +365,26 @@ This is the API that WP4's `calib::IslandRunner` calls. It is built after the PR
   `load_start` and flattened (`load_start_view(..., mappable = false)`; record `start_source`).
 - **Checks (O(p + J), no allocation).** Section shapes; every block 1..20 members with 2^m codes and min(m, K) + 1 profile rows;
   `members[blk_ptr[blk[j]] + pos[j]] = j` for every j (one partition); n, p, K equal the data's.
-- **Memory.** The plan's caller-supplied term is the mapped section bytes + the draw scratch + the neighbour lists
-  (`start_inputs_bytes`), from `read_setup_dims` before the load and equal to `StartView::bytes()` after it (checked:
-  internal_error otherwise). An admitted island no longer holds the expanded Start (closes PR52 MAJOR-2's remaining part).
+- **Memory.** The plan's caller-supplied term is the mapped section bytes + the draw scratch + the neighbour lists + a fixed
+  1 MiB (WP2's static code tables and the allocator's overhead; `start_inputs_bytes`), from `read_setup_dims` before the load
+  and equal to `StartView::bytes()` after it (checked: internal_error otherwise). An admitted island no longer holds the expanded
+  Start (closes PR52 MAJOR-2's remaining part). Verifying the file's sections pages the WHOLE setup.bin through the mapping
+  (RssFile ≈ the file, 10.4 GiB at AR 10⁶, not the 6.7 GiB of view sections the plan counts); these are clean, reclaimable file
+  pages, not anonymous memory, and the plan labels say so.
+- **`calibrate` also holds WP4's `SetupView`** (review PR57 MAJOR-1): `wp4io::read_setup` copies logr and the partition arrays
+  (and the three table stores) into owned vectors, and `CalibEval` reads them for the whole calibration. The plan counts them
+  (`setup_view_bytes`: 12 p + 16 (J+1) + 8 C + 8 (K+1) + 4 K + headers; MEASURED 687.3 MB counted vs 687 MB live at p = 10⁵),
+  and `calibrate` / the pilot release the three table stores (`release_table_stores`) once `offer_tables` has copied them into
+  the ledger. One function (`calib_plan.h` `calib_island_plans`) gives the plan to `calibrate`, `v4_pilot_island` and
+  `v4_plan_tables`. The cleaner fix, a SetupView that borrows the mapping, would remove the copy; it is WP4's type.
+- **Loader values** (review PR57 MAJOR-2). `map_start_view` checks what the hashes cannot: the size law is a non-decreasing
+  cumulative in [0, 1] ending at exactly 1 and equal, bit for bit, to the rebuild from logF and the prior; every cond0 entry is
+  in [0, 1] and equals row (b, r)'s first cumulative rebuilt from logprof and logF (D-31); logF, logprof, size_logmass have no
+  NaN or +inf. Cost 0.63 s (1 thread) / 0.23 s (3 threads) at p = 10⁵, about 10× at 10⁶. The draws also clamp (k ≤ K, j ≤ the
+  row, i ≤ the code count), which never acts on a valid file and bounds a malformed one.
+- **Identity** (review PR57 MINOR-3). `map_start_view` and `load_neighbours` take the content hash the plan read; the second
+  open must be that file. The mapping is `MAP_PRIVATE`, read-only. Engine files are written by rename, never in place; an
+  in-place rewrite of an input during a run is outside the contract (a truncation would raise SIGBUS).
 - **Bits.** Unchanged: T3 hashes bit `44a15bfc6fb8d233`, A `d2df149413596a19` (owned path), every core golden, WP4's R
   golden. On WP2's own setup.bin (`smcbvs4 setup`, AR and BLK): WP2's logprof, logF, size law, log Z̄₀ and cond0 equal the
   island's rebuild from logr bit for bit, every conditional and within-size row equals dep's, 3,000 draws per path equal
