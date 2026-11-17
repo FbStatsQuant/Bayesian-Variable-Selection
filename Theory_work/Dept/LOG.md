@@ -452,3 +452,4 @@
 - 2026-11-17 13:34 CST W3-D2 final 6d5dbe96: form fix (Cor2X 'α*, β* non-random'; Opus FORM-ONLY), re-bound R2f 483928c2; 13 MINORs → POST_CP3_EDITORIAL.md. Hash sent to the recorder. W3-D2 lead done.
 - 2026-11-17 13:34 CST W3-D5P paused at the round cap (R2 Opus 8.8; all claims ACCEPT; CARD.md faithfulness fix applied). Asked HQ for R3 (targeted Opus re-check; recommended) vs accept-as-fixed.
 - 2026-11-17 13:34 CST Track V (visibility) V1 v1.1 (3b4bce95): blind Opus VERIFIED-W-A (10 applied); uniform-in-n margin a = c̲·dist(ϑ, B) with closed null bad set B (VIS-b/c) + sign route θ_lo·c₁₆ (VIS-a). GO Sol read → council → package.
+- 2026-11-17 13:35 CST D116 relayed to the W3-D5P lead.
