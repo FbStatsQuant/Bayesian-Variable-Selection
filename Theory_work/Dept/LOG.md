@@ -491,3 +491,4 @@
 - 2026-11-17 15:42 CST HQ GO Prop-LB relabel (relayed). manifest.py v2 (gitignore + live-log WARN; Opus PASS-W-N; suite 182/182) sent to HQ for a separate GO.
 - 2026-11-17 15:42 CST HQ GO manifest.py v2 (own commit; relayed).
 - 2026-11-17 16:06 CST HEARTBEAT: Prop-LB LANDED 33bfcb9c (CI 44183677394 success). HQ told. Heartbeat prompt updated.
+- 2026-11-17 16:12 CST Prop-LB landed (33bfcb9c). W3-D2 dry run clean; to HQ: (1) R2f→R2f2 with a pure status requote in STATEMENT §5 (Opus PURE; recommend yes); (2) Sol carrier stating Sol's R1 gates=FAIL (recommend, as D3); (3) Thm2X's status mirrors CorGb-plus's stale condition list; tool derives only C-MIS:GD(b) → recommend refreshing CorGb-plus first.
