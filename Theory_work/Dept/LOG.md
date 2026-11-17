@@ -447,3 +447,4 @@
 - 2026-11-17 13:21 CST W3-D2 CP3 (687ce819): Thm2X/Cor2X council PASS (R1 both ACCEPT; Opus diff 9.6); bind form issue (D1→R2 carrier; D99-pattern Sol carrier proposed); API card fix pending; CP3 to HQ.
 - 2026-11-17 13:22 CST D115 recorded.
 - 2026-11-17 13:22 CST W3-D2 API card ready (b6e9015b) → HQ; W3-D2 recording queued with the recorder (dry run; after the W discharge and A1/A2 V2; no card changes). W3-D2 lead done → slot freed → generic-position lemma next.
+- 2026-11-17 13:23 CST Generic-position lemma (D112) launched → track A lead thread (track_V/; uniform-in-n margin; stop if only a.e.-β; kill 3 d). Leads: W3-D5P, W3-D3, recorder, track A lead (V) = 4.
