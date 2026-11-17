@@ -726,3 +726,6 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - **P9 re-size:** ≈ 390–440 core-h per 1M fit (high ≈ 660); campaign ≈ 18–21k.
   - **HQ P9 GO for the 1M pilot fit 6-AR-n200-r01-V-s1:** ≈ 450 expected, stop at ≈ 675; Sol F7 pilot rule kept. About a week ahead of the fast-track plan.
 - THEORY FREEZE declared: tag theory-v2026-11-freeze → d40c9780 (card v1.13); entries 40e02ae7.
+- 2026-11-17 10:38 CT. **FIRST 1M FIT COMPLETED** (6-AR-n200-r01-V-s1, p = 10⁶, n = 200): HPM = MPM = S₀ exactly; predictive h² = the oracle's; 437.4 core-h (budget 1,188); wall 3 h 04 min; 20 tasks, no retries.
+  - Anomalies: merge peak 75.1 GiB against a 43.7 GiB plan (re-size before the campaign); calibration 85 vs 55 min.
+  - Engineering is asked for a revised timeline and the owner's 20-replicate option.
