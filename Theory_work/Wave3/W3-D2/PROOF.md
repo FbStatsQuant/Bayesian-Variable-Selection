@@ -1,7 +1,7 @@
-# W3-D2 — PROOF of Theorem 2X and Corollary 2X (v1.1, 2026-11-17; v1.1 = K1 amendments [K1-1]–[K1-4], `reviews/K1_disposition.md`)
+# W3-D2 — PROOF of Theorem 2X and Corollary 2X (v1.2, 2026-11-17; v1.1 = K1 amendments [K1-1]–[K1-4], `reviews/K1_disposition.md`; v1.2 = K2 editorial [K2-E1], [K2-E2] and line 3 rewritten to carry the full conditional status verbatim [K3-E2])
 
-Status: **PROVED (by this seat, unchecked)**, conditional as carried from `W3-MISR-R:CorGb-plus@1.0.1` (STATEMENT §5).
-Statement: `STATEMENT.md` v1.1 (locked) §§0–3; clause (E) is the explicit form of §1. Aliases as there. Every step is either a citation (file:line, id@version) or
+Status: **PROVED (by this seat, unchecked), conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1, W3-POST2:A0, C-MIS:GDb, C-MIS:Prop-P** (conditions carried from `W3-MISR-R:CorGb-plus@1.0.1`, STATEMENT §5).
+Statement: `STATEMENT.md` v1.3 (v1.1 locked; v1.2–v1.3 EQUAL) §§0–3 [K2-E2]; clause (E) is the explicit form of §1. Aliases as there. Every step is either a citation (file:line, id@version) or
 elementary; no new estimate.
 
 ## P0. Deterministic facts (STATEMENT §3)
@@ -47,8 +47,8 @@ Conclusion of CorGb-plus ([MISR-R] `:104-107`): there are n* and C such that for
 C is the constant of MIS-R (i) on 𝒦^λ_n(s, A, 2M₀ + 1, (c_R/8)^{1/2}, C_OS, c′), C_OS = C_OS(s, A) from the bridge
 (F_w; 1) ⇒ (OS) and c′ = c₀(s, A) + 1 on the → ∞ branch (`lemmas/G2_corr.md`, [R-3]): it depends only on (s₀, A, M₀, c).
 n* depends on the sequence. (Take n* ≥ max(3, 2s₀) as well, for the floor step above.) This is legitimate [K1-1]:
-CorGb-plus's hypotheses, like its k_n, are required only for all large n (k_n is undefined for s > K), and its bounds at
-n concern the n-th law only (its proof checks class membership n by n, `lemmas/G2_corr.md` steps 1–5); so they hold here
+CorGb-plus's floor and energy hypotheses are used only at the current n ≥ n* (and beta-min only through a liminf; k_n is
+undefined for s > K) [K2-E1], and its bounds at n concern the n-th law only (its proof checks class membership n by n, `lemmas/G2_corr.md` steps 1–5); so they hold here
 for every n ≥ max(n*_master, 3, 2s₀).
 
 ## P2. The remaining displays of Theorem 2X
