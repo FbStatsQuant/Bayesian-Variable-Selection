@@ -1,0 +1,32 @@
+OK            [STATEMENT.md] Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md:21-23 sha=ec1e1356e4 | For every q ∈ {1, …, 4}, almost surely,
+OK            [STATEMENT.md(cont)] Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md:25-46 sha=e759227c19 | ## Proof
+OK            [STATEMENT.md] Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex:157-162 sha=891eadcf29 | \begin{lemma}[freezing]\label{lem:freeze}
+OK            [STATEMENT.md] Theory_work/Wave3/W3-SAMP/lemmas/MR_identities.md:57-79 sha=7e87f94fe4 | {T(c) ≥ t}). N_e(c), T(c), L(c) are measurable integer coordinates; the sums are measurable cell by cell on th
+OK            [STATEMENT.md] v3_run.R:90-91 sha=70b8fad2b5 | ro <- list(N = as.integer(b$tiers$N[tier + 1]), L = as.integer(b$L), measured_rounds = 4L,
+OK            [STATEMENT.md] Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex:157-162 sha=891eadcf29 | \begin{lemma}[freezing]\label{lem:freeze}
+OK            [PROOF.md] Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex:157-162 sha=891eadcf29 | \begin{lemma}[freezing]\label{lem:freeze}
+OK            [PROOF.md] cpp/v3_core.cpp:596-596 sha=838bbfb78b | if (it == streams.end()) { RngSource g; g.g.seed_stream(seed, (uint64_t)k); it = streams.emplace(k, g).first; 
+OK            [PROOF.md] cpp/v3_core.cpp:444-444 sha=d7d95c9f19 | RngSource rng; rng.g.seed_stream((uint64_t)seed, (uint64_t)(9 + r));  // final islands: streams 10..13 (M §6.1
+OK            [PROOF.md] cpp/v3_core.cpp:241-241 sha=d2ed02a0b3 | RngSource rng; rng.g.seed_stream((uint64_t)seed, (uint64_t)stream);
+OK            [PROOF.md] v3_fit.R:154-162 sha=49371e0dc4 | if (cal$status != "ok") {
+OK            [PROOF.md] v3_run.R:225-225 sha=df235c8d7a | v3_check_grid(frozen[["grid"]]); v3_check_seed(seed)
+OK            [PROOF.md] v3_run.R:77-82 sha=5f7d8b242f | v3_check_grid <- function(grid) {
+OK            [PROOF.md] v3_calib.R:164-164 sha=27a2a1425a | isTRUE(tryCatch(v3_check_grid(last$fallback_grid$grid), error = function(err) FALSE))) {
+OK            [PROOF.md] v3_run.R:89-90 sha=1150fd360a | b <- setup$budgets; tier <- frozen[["tier"]] %||% 0L
+OK            [PROOF.md] v3_preprocess.R:24-25 sha=aaa5aab895 | L <- max(4, v3_ceil_log2(n + 1))
+OK            [PROOF.md] v3_preprocess.R:30-30 sha=95bafd3923 | tiers = data.frame(e = 0:1, N = c(N0, 4 * N0), H = c(H0, 4 * H0), T = c(T0, 4 * T0)),
+OK            [PROOF.md] v3_run.R:91-91 sha=a2ae3dd4fd | islands = 4L, tier = as.integer(tier), ell = as.integer(b$ell),
+OK            [PROOF.md] v3_run.R:226-227 sha=e242824ce3 | ro <- v3_run_settings(setup, frozen, ls0)
+OK            [PROOF.md] cpp/v3_core.cpp:407-439 sha=13f67b9e02 | Ledger led(&D, o.islands);
+OK            [PROOF.md] cpp/v3_core.cpp:443-446 sha=855cede1e2 | for (int r = 1; r <= o.islands; ++r) {
+OK            [PROOF.md] Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md:29-31 sha=24cbbdf4be | dummy record o† is never evaluated).
+OK            [PROOF.md] Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md:25-39 sha=64ff8c1798 | ## Proof
+OK            [PROOF.md] Theory_work/Wave3/W3-SAMP/lemmas/MR_identities.md:57-65 sha=ee47e7777f | {T(c) ≥ t}). N_e(c), T(c), L(c) are measurable integer coordinates; the sums are measurable cell by cell on th
+OK            [PROOF.md] Theory_work/Wave3/W3-SAMP/lemmas/D_theorem.md:26-31 sha=6cc632d7af | (c, u) by the same control flow as Φ (W1-N1 Lemma B (B-0), (B-d)), so the augmented record Φ̃ is jointly measu
+OK            [PROOF.md] cpp/v3_engine.h:299-299 sha=0628731bc7 | double logZ = D.logm0 + st.logZbar0;
+OK            [PROOF.md] cpp/v3_engine.h:316-322 sha=cfafbaccbe | double dphi = phi_new - phi_prev;
+OK            [PROOF.md] Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md:34-36 sha=54a2b86411 | *Boundedness.* For c ∈ A₀ with grid (φ_t), every factor (1/N)Σ_i e^{Δ_t d(·)} lies in [e^{Δ_t min_Ω d}, e^{Δ_t
+OK            [PROOF.md] Theory_work/Wave3/W3-SAMP/lemmas/MR_identities.md:67-70 sha=0aefd8a736 | sides vanish. This is the localised form. ∎
+
+29 citations: 29 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+Not machine-checked: unbackticked references and the semantic match of each excerpt.
