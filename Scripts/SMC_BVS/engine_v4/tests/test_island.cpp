@@ -1718,3 +1718,39 @@ TEST(leader_stores_deferred_compaction_same_bits) {
     }
   }
 }
+
+// WP7: `smcbvs4 info FILE --meta 1` reads the header, the table and the meta section only (a 2 GB island file at 10^6 took
+// 11-19 s per full verification, and the T5 report called it for every island). The file can be the first argument; the
+// meta section's hash is still checked; a damaged OTHER section is not seen by --meta alone and is refused by the
+// default (full) read and by --verify 1; a missing file argument is invalid_input.
+TEST(info_meta_only_reads_the_meta_section) {
+  TmpGuard tg;
+  Fixture F(100, 300, 63);
+  IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = 3; c.G = 16;
+  IslandRun r = run_island<Arith::ClassA>(F.D, F.st, F.nb, c);
+  const std::string path = tg.add(wp3_tmp("info_meta.bin")), rec = tg.add(wp3_tmp("info_rec"));
+  write_island_file(path, r, Arith::ClassA, v4::Json::object());
+  auto info = [&](const std::string& args) {
+    const std::string cmd = std::string(V4_SMCBVS4) + " info " + args + " --out " + rec + " > /dev/null 2>&1";
+    const int rc = std::system(cmd.c_str()); return WIFEXITED(rc) ? WEXITSTATUS(rc) : -1;
+  };
+  CHECK(info(path + " --meta 1") == 0);   // the file as the first argument
+  { v4::Json j = v4::read_json_file(rec + ".json");
+    CHECK(j.at("verified").type() == v4::Json::STR && j.at("verified_sections").str() == "meta" && j.at("meta").at("cost").at("rows").i64() == (int64_t)r.cost.size() &&
+          j.at("sections").size() > 10 && j.at("kind").str() == "island"); }
+  CHECK(info("--in " + path + " --meta 1") == 0);   // the driver's form
+  CHECK(info(path) == 0); CHECK(v4::read_json_file(rec + ".json").at("verified").boolean());   // default: every section
+  CHECK(info("--meta 1") == 13);                    // no file
+  // damage one byte inside top_v (not the meta section)
+  uint64_t top_off = 0, meta_off = 0;
+  { v4::fmt::Reader R(path, false); for (const auto& e : R.sections()) { if (std::string(e.name) == "top_v") top_off = e.offset; if (std::string(e.name) == "meta") meta_off = e.offset; } }
+  auto flip = [&](uint64_t at) { FILE* f = std::fopen(path.c_str(), "r+b"); std::fseek(f, (long)at + 3, SEEK_SET); int ch = std::fgetc(f); std::fseek(f, (long)at + 3, SEEK_SET); std::fputc(ch ^ 0x5A, f); std::fclose(f); };
+  CHECK(top_off > 0 && meta_off > 0);
+  flip(top_off);
+  CHECK(info(path) == 13);                          // full verification sees it
+  CHECK(info(path + " --meta 1 --verify 1") == 13);
+  CHECK(info(path + " --meta 1") == 0);             // meta-only does not read top_v (by design: header, table, meta)
+  flip(top_off);                                    // restore, then damage the meta section: the meta-only read refuses it
+  flip(meta_off);
+  CHECK(info(path + " --meta 1") == 13);
+}

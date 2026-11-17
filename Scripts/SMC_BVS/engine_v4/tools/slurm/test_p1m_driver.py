@@ -772,6 +772,29 @@ exit $rc
             p1m_driver.resolve(q)
 
 
+class TestInfoMeta(Base):
+    """WP7: info_meta passes --in FILE --meta 1 and does not stall a report: a hung binary is cut off with an explanation."""
+
+    def test_timeout_message(self):
+        slow = os.path.join(self.tmp, "slowbin")
+        with open(slow, "w") as fh:
+            fh.write("#!/bin/sh\nsleep 30\n")
+        os.chmod(slow, 0o755)
+        with self.assertRaises(RuntimeError) as cm:
+            p1m_stage_cost.info_meta(slow, "x.bin", timeout=1)
+        self.assertIn("took more than 1 s", str(cm.exception)); self.assertIn("meta-only", str(cm.exception))
+
+    def test_arguments(self):
+        rec = os.path.join(self.tmp, "args.txt")
+        fake = os.path.join(self.tmp, "fakebin")
+        with open(fake, "w") as fh:
+            fh.write("#!/bin/bash\necho \"$*\" > %s\nout=\"\"; while [[ $# -gt 0 ]]; do [[ $1 == --out ]] && out=$2; shift; done\necho '{\"meta\":{}}' > \"$out.json\"\n" % rec)
+        os.chmod(fake, 0o755)
+        self.assertEqual(p1m_stage_cost.info_meta(fake, "/a/island_1.bin"), {"meta": {}})
+        a = open(rec).read().split()
+        self.assertEqual(a[:5], ["info", "--in", "/a/island_1.bin", "--meta", "1"])
+
+
 class TestPrepOutcome(TestLocalChain):
     """prep exit 20 (no_predictors): setup ends the pipeline cleanly, later stages exit 0, eval records the outcome."""
 
