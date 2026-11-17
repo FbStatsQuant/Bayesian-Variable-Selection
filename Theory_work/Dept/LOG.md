@@ -401,3 +401,4 @@
 - 2026-11-16 23:17 CST D101 relayed to the recorder.
 - 2026-11-16 23:35 CST HEARTBEAT: CI green (2676e71f); recorder on the D95 real run; READER step 1 ready (a3dbcb62), idle until D95 lands (then one Opus diff round, D101). HQ told.
 - 2026-11-16 23:44 CST D95 RECORDED fe05ccec (CI 44025260819; verified): rows 3.1/3.2 fully discharged; P1-Inventory v1.1.1 CORRECTION A-7, L2-S3 v1.0.1 CODE-CHECKED; P1S3 CC; A1/A2 note (D100). READER GO step 2 (one Opus diff seat). HQ told.
+- 2026-11-17 01:05 CST HEARTBEAT: CI green (HQ 8bec550d on fe05ccec). READER step 2: R4 Opus seat 7.9 FAIL (FAITHFUL; one status quote LT# + 6 wording items), fixes applied 7405a463, not bound → authorised one Opus read of the fix diff (R5), bind on PASS; fallback R3r3.
