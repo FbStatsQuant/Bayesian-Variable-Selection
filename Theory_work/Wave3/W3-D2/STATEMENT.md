@@ -1,4 +1,4 @@
-# W3-D2 — STATEMENT v1.4 (2026-11-17; lead: Claude Opus 5.5, high; track D ticket #2, "check X"; v1.1 = statement-lock amendments [L1-1], [L1-2], locked by `reviews/L1_statement_lock_sol.md` (LOCK-WITH-AMENDMENTS; `reviews/L1_disposition.md`); v1.2 = §7 caveats written out and §0 gloss (EQUAL); v1.3 = K2 wording amendments [K2-F1], [K2-F2], [K2-E6] (EQUAL); v1.4 = council R1 editorial (EQUAL))
+# W3-D2 — STATEMENT v1.5 (2026-11-17; lead: Claude Opus 5.5, high; track D ticket #2, "check X"; v1.1 = statement-lock amendments [L1-1], [L1-2], locked by `reviews/L1_statement_lock_sol.md` (LOCK-WITH-AMENDMENTS; `reviews/L1_disposition.md`); v1.2 = §7 caveats written out and §0 gloss (EQUAL); v1.3 = K2 wording amendments [K2-F1], [K2-F2], [K2-E6] (EQUAL); v1.4 = council R1 editorial (EQUAL); v1.5 = post-CP3 form fix in §2: α*, β* non-random stated (EQUAL, form only))
 
 Ticket W3-D2: Theorem 2 (claims card row 1.2, posterior concentration on a random Gaussian design) derived from the
 omitted-variables master `W3-MISR-R:CorGb-plus@1.0.1`, so that its eigenvalue floor is asked on smaller sets. Source:
@@ -50,7 +50,7 @@ and k_n = O(log n), so b_n = O(r_n).
 ## 2. Corollary 2X (W3-D2:Cor2X) — the recorded Theorem 2 hypotheses give Theorem 2X
 
 Let the recorded hypotheses of Theorem 2 hold ([RV] `:263-270`, row thm2 at FRZ-B): rows i.i.d. N_p(m_n, Σ_n) with Σ_n a
-correlation matrix; (S1) ε ~ N_n(0, σ*²I_n) independent of the design, σ*² > 0 fixed; (S2) 2 ≤ p ≤ n^A, A ≥ 1 fixed;
+correlation matrix; (S1) ε ~ N_n(0, σ*²I_n) independent of the design, σ*² > 0 fixed, α*, β* non-random; (S2) 2 ≤ p ≤ n^A, A ≥ 1 fixed;
 s₀ ≥ 1 fixed and b_lo ≤ |β_j| ≤ b_hi for j ∈ S₀ with fixed 0 < b_lo ≤ b_hi < ∞; λ_min(Σ_{n,S}) ≥ φ² for every S with
 |S| ≤ 5(A + 1)(s₀ + 1) log n, fixed φ ∈ (0, 1]. Then (A1)–(A3) of Theorem 2X hold with c := φ², M₀ := s₀²b_hi²/σ*², and
 ρ_n ≥ n b_lo²/(σ*² log n). Hence the four bounds of Theorem 2X's display hold, and with them the three conclusions of the recorded
@@ -123,3 +123,4 @@ Two things are not stronger and must travel with the tag [L1-2, CP1]:
 | 1.2 | §0 posterior line: coefficient prior written as coded (ridge form, not "g-prior"); citation on one line | EQUAL | wording of the verbal gloss; the definition is the [W3P] pointer | lead (citecheck) | `reviews/K2_recheck_opus.md` (K1 read v1.1) [K2-E6] |
 | 1.3 | §0 gloss (working variance v, standardised X); §7 caveat (b) subject corrected | EQUAL | wording [K2-F1], [K2-F2] (outside the claim spans) | K2 | `reviews/K3_recheck_opus.md` [K3-E3] |
 | 1.4 | §3 attribution sentence (inside the §3 span; content unchanged); §4(a), §7 wording; pointer to PROOF P5 | EQUAL | council R1 editorial [R1-opus-E1, E2, E3, E7] | `reviews/R1_council_opus.md` | diff round D1 |
+| 1.5 | §2 (Cor2X span): "α*, β* non-random" stated in the quoted recorded hypotheses | EQUAL (form only) | HQ API audit auditD2 s1-5, s2-4 (MINOR): the corollary used it as a reading of the recorded model (PROOF P3) | `Theory_work/Wave3/API_AUDIT/auditD2_results/` (main) | `reviews/F1_formcheck_opus.md` |
