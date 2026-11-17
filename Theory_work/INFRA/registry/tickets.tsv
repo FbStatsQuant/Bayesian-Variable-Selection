@@ -44,3 +44,4 @@ W3-READER	Wave3	Theory_work/Wave3/W3-READER	PROVED-CHECKED (CP3: PoolZ, R1-R4; c
 W3-AUDIT-A	Wave3	Theory_work/Wave3/W3-AUDIT/track_A	PROVED-CHECKED (track A lemmas; council R2)	Theory_work/Wave3/W3-AUDIT/track_A/CHECKPOINT_4.md			theory/W3-AUDIT		W3-AUDIT track A (T1-T10); HQ recorder task TA
 W3-AUDIT-AX	Wave3	Theory_work/Wave3/W3-AUDIT/track_A_X	PROVED-CHECKED (track A lemmas; council R2)	Theory_work/Wave3/W3-AUDIT/track_A_X/CHECKPOINT_1.md			theory/W3-AUDIT		W3-AUDIT track A (X1, T14); HQ recorder task TA
 W3-AUDIT-AW	Wave3	Theory_work/Wave3/W3-AUDIT/track_A_W	PROVED-CHECKED (track A_W lemmas; council W-R2)	Theory_work/Wave3/W3-AUDIT/track_A_W/CHECKPOINT_3.md			theory/W3-AUDIT		W3-AUDIT track A_W (W1 ISL, W2 FRZ: line checks of W1-N1:B / W1-N1:F at the pin); HQ recorder task W2
+W3-D2	Wave3						theory/W3-D2		added by ingest; fill folder/result

@@ -1,0 +1,75 @@
+OK   STATEMENT.md:25 -> Theory_work/Wave3/W3-POST/STATEMENT.md:16-29 (lines 127)
+OK   STATEMENT.md:27 -> Theory_work/Wave3/W3-POST/STATEMENT.md:31-34 (lines 127)
+OK   STATEMENT.md:45 -> Theory_work/Wave3/W3-POST/STATEMENT.md:36-39 (lines 127)
+OK   STATEMENT.md:52 -> Theory_work/Wave3/W3-READER/READER_VERSIONS.md:263-270 (lines 1408)
+OK   STATEMENT.md:57 -> Theory_work/Wave3/W3-READER/READER_VERSIONS.md:271-275 (lines 1408)
+OK   STATEMENT.md:63 -> Theory_work/Wave3/W3-MISR/STATEMENT.md:118-119 (lines 272)
+OK   STATEMENT.md:68 -> Theory_work/Wave3/W3-READER/READER_VERSIONS.md:449-466 (lines 1408)
+OK   STATEMENT.md:72 -> Theory_work/Wave2/W2-APP/lemmas/L1_POST.md:20-25 (lines 84)
+OK   STATEMENT.md:81 -> Theory_work/Wave3/W3-MISR-R/STATEMENT.md:94-108 (lines 221)
+OK   STATEMENT.md:83 -> Theory_work/Wave3/W3-READER/lemmas/R1_set_sizes.md:43-46 (lines 59)
+OK   STATEMENT.md:83 -> Theory_work/Wave3/W3-READER/lemmas/R1_set_sizes.md:19-31 (lines 59)
+OK   STATEMENT.md:84 -> Theory_work/Wave3/W3-POST/STATEMENT.md:16-39 (lines 127)
+OK   STATEMENT.md:84 -> Theory_work/Wave3/W3-MISR-R/STATEMENT.md:48-70 (lines 221)
+OK   STATEMENT.md:84 -> Theory_work/Wave3/W3-MISR-R/STATEMENT.md:31-31 (lines 221)
+OK   STATEMENT.md:93 -> Theory_work/Wave3/W3-READER/READER_VERSIONS.md:263-275 (lines 1408)
+OK   STATEMENT.md:96 -> Theory_work/Wave3/W3-READER/READER_VERSIONS.md:263-275 (lines 1408)
+OK   STATEMENT.md:96 -> Theory_work/Wave3/W3-READER/CLAIMS_CARD.md:55-55 (lines 166)
+OK   STATEMENT.md:98 -> Theory_work/Wave3/W3-READER/READER_VERSIONS.md:263-275 (lines 1408)
+OK   STATEMENT.md:101 -> Theory_work/Wave3/W3-READER/NOTATION.md:21-23 (lines 264)
+OK   PROOF.md:15 -> Theory_work/Wave3/W3-MISR/STATEMENT.md:118-119 (lines 272)
+OK   PROOF.md:20 -> Theory_work/Wave3/W3-MISR-R/STATEMENT.md:96-100 (lines 221)
+OK   PROOF.md:22 -> Theory_work/Wave3/W3-MISR-R/STATEMENT.md:51-54 (lines 221)
+OK   PROOF.md:23 -> Theory_work/Wave3/W3-MISR-R/STATEMENT.md:56-56 (lines 221)
+OK   PROOF.md:23 -> Theory_work/Wave3/W3-MISR-R/STATEMENT.md:19-19 (lines 221)
+OK   PROOF.md:23 -> Theory_work/Wave3/W3-MISR-R/STATEMENT.md:21-21 (lines 221)
+OK   PROOF.md:25 -> Theory_work/Wave3/W3-MISR-R/STATEMENT.md:67-68 (lines 221)
+OK   PROOF.md:26 -> Theory_work/Wave3/W3-MISR-R/STATEMENT.md:31-31 (lines 221)
+OK   PROOF.md:27 -> Theory_work/Wave3/W3-MISR-R/STATEMENT.md:97-98 (lines 221)
+OK   PROOF.md:30 -> Theory_work/Wave3/W3-MISR/STATEMENT.md:21-22 (lines 272)
+OK   PROOF.md:32 -> Theory_work/Wave3/W3-MISR-R/STATEMENT.md:96-96 (lines 221)
+OK   PROOF.md:32 -> Theory_work/Wave3/W3-MISR-R/STATEMENT.md:99-99 (lines 221)
+OK   PROOF.md:34 -> Theory_work/Wave3/W3-MISR-R/STATEMENT.md:100-104 (lines 221)
+OK   PROOF.md:37 -> Theory_work/Wave3/W3-READER/lemmas/R1_set_sizes.md:43-45 (lines 59)
+OK   PROOF.md:38 -> Theory_work/Wave3/W3-READER/lemmas/R1_set_sizes.md:25-25 (lines 59)
+OK   PROOF.md:43 -> Theory_work/Wave3/W3-MISR-R/STATEMENT.md:104-104 (lines 221)
+OK   PROOF.md:45 -> Theory_work/Wave3/W3-MISR-R/STATEMENT.md:104-107 (lines 221)
+OK   PROOF.md:63 -> Theory_work/Wave3/W3-READER/NOTATION.md:15-20 (lines 264)
+OK   PROOF.md:65 -> Theory_work/Wave3/W3-MISR-R/STATEMENT.md:52-53 (lines 221)
+OK   PROOF.md:80 -> Theory_work/Wave3/W3-MISR-R/STATEMENT.md:52-53 (lines 221)
+OK   PROOF.md:87 -> Theory_work/Wave2/W2-APP/lemmas/L1_POST.md:20-21 (lines 84)
+OK   PROOF.md:88 -> Theory_work/Wave3/W3-READER/lemmas/R1_set_sizes.md:45-45 (lines 59)
+OK   PROOF.md:89 -> Theory_work/Wave3/W3-READER/lemmas/R1_set_sizes.md:38-40 (lines 59)
+OK   REPORT.md:42 -> Theory_work/Wave3/W3-PSHARP/STATEMENT.md:90-114 (lines 156)
+OK   READER_DELTA.md:3 -> Theory_work/Wave3/W3-READER/READER_VERSIONS.md:263-282 (lines 1408)
+OK   token 'CorGb-plus' in Theory_work/Wave3/W3-MISR-R/STATEMENT.md:94-108
+OK   token 'N_k(m, 0) := δ_m' in Theory_work/Wave3/W3-MISR-R/STATEMENT.md:31-31
+OK   token '(N)' in Theory_work/Wave3/W3-MISR-R/STATEMENT.md:56-56
+OK   token '(OV)' in Theory_work/Wave3/W3-MISR-R/STATEMENT.md:67-68
+OK   token 'Σ_jj > 0' in Theory_work/Wave3/W3-MISR-R/STATEMENT.md:96-96
+OK   token 'may depend on n' in Theory_work/Wave3/W3-MISR-R/STATEMENT.md:99-99
+OK   token 'ρ_n^{BM} → ∞' in Theory_work/Wave3/W3-MISR-R/STATEMENT.md:104-104
+OK   token 'E δ_n ≤ C r_n + (2 + 2k_n)n^{−2} + n^{−1}' in Theory_work/Wave3/W3-MISR-R/STATEMENT.md:105-105
+OK   token 'q = q_n ≥ 0' in Theory_work/Wave3/W3-MISR-R/STATEMENT.md:52-52
+OK   token 'coded target of [W3P] §0' in Theory_work/Wave3/W3-MISR/STATEMENT.md:20-22
+OK   token 'for every data set' in Theory_work/Wave3/W3-MISR/STATEMENT.md:118-119
+OK   token 'MPM := {j : PIP_j > ½}' in Theory_work/Wave3/W3-POST/STATEMENT.md:33-33
+OK   token 'HPM := argmax_Ω π (any tie rule)' in Theory_work/Wave3/W3-POST/STATEMENT.md:33-33
+OK   token 'm♯_n(ω) := min' in Theory_work/Wave3/W3-POST/STATEMENT.md:37-37
+OK   token 'B4.1' in Theory_work/Wave3/W3-READER/lemmas/R1_set_sizes.md:43-45
+OK   token 's\\le K' in Theory_work/Wave3/W3-READER/lemmas/R1_set_sizes.md:44-44
+OK   token '**Theorem 2.**' in Theory_work/Wave3/W3-READER/READER_VERSIONS.md:263-263
+OK   token '5(A+1)(s_0+1)\\log n' in Theory_work/Wave3/W3-READER/READER_VERSIONS.md:269-269
+OK   token 'three conclusions' in Theory_work/Wave3/W3-READER/READER_VERSIONS.md:271-271
+OK   token '(S1)' in Theory_work/Wave3/W3-READER/READER_VERSIONS.md:28-28
+OK   token '(S2)' in Theory_work/Wave3/W3-READER/READER_VERSIONS.md:29-29
+OK   token '**Theorem 4**' in Theory_work/Wave3/W3-READER/READER_VERSIONS.md:449-449
+OK   token '\\alpha^*\\mathbf 1_n+X^{\\mathrm r}\\beta^*+\\varepsilon' in Theory_work/Wave3/W3-READER/NOTATION.md:15-20
+OK   token '| 1.2 (Thm 2) |' in Theory_work/Wave3/W3-READER/CLAIMS_CARD.md:55-55
+OK   token 'ψ_n' in Theory_work/Wave2/W2-APP/lemmas/L1_POST.md:20-25
+OK   token 'non-empty T' in Theory_work/Wave3/W3-MISR-R/lemmas/G2_corr.md:29-34
+OK   status W3-MISR-R:CorGb-plus@1.0.2 quoted verbatim in STATEMENT §5
+OK   status W3-READER:R1@1.0.3 quoted verbatim in STATEMENT §5
+OK   status W3-POST2:C@1.0.7 quoted verbatim in STATEMENT §5
+OK   status W3-POST:Prop-LB@1.0.1 quoted verbatim in STATEMENT §5
+W3-D2 citecheck: 74 checks, 0 failures

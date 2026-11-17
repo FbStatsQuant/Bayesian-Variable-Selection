@@ -1,0 +1,3 @@
+NOT BOUND Theory_work/Wave3/W3-D2/reviews/D1_council_opus.md: malformed COUNCIL-VERDICT line 'COUNCIL-VERDICT round=D1 manifest=f62740c74ee1740a4cfbbcd9d12e0c845dc8435fb0adde6e380ca9bda3469d2b seat=opus score=9.6 g' (expected exactly: COUNCIL-VERDICT round=R<k> manifest=<64-hex> seat=<seat> score=<x.y> gates=PASS|FAIL)
+NOT BOUND Theory_work/Wave3/W3-D2/reviews/D1_council_opus.md: no COUNCIL-VERDICT line for MANIFEST f62740c74ee1... (a mention of the digest is not a verdict)
+bind: REFUSED (2 problem(s)); every council review needs exactly one line `COUNCIL-VERDICT round=R<k> manifest=<digest> seat=<seat> score=<x.y> gates=PASS`
