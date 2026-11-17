@@ -364,6 +364,78 @@ This is the API that WP4's `calib::IslandRunner` calls. It is built after the PR
 - **Why.** WP2's ESTIMATE of the sections an island reads at 10⁶ is 4.4–14.1 GB, against 13–38 GB for `dep::Start`.
 - **When.** After WP2's PR #13 merges, built on its `setup.h` types.
 
+### 1.13 v0.7 (manager 11-16, 1M fast-track P4): the `island` command (`src/island/island_cmd.cpp`)
+- **What it runs.** One **final** island r of a fit. Pilot and diagnostic islands run inside `calibrate`, which owns
+  their streams and ledgers (§1.11); `--role` other than `final` is `invalid_input`.
+- **Argument forms** (the same rules as WP4's `merge`, INTERFACES §1; proposed for WP1 to copy into §1):
+  - **Driver form:** `island --manifest island_r.json --out island_r.bin [--threads k] [--mem-budget BYTES]`.
+    - The manifest is authoritative. Inputs are found by base name (`data.bin`, `setup.bin`, `calib.bin`) among its
+      `inputs`, and the mode is its `mode`.
+    - r = `params.id` (the driver's `--set params.id=$R`) or `params.island` (INTERFACES §5.3); seed = `params.seed`;
+      R′ = `params.Rp` (r ≤ R′ is checked).
+    - An explicit `--data/--setup/--calib/--mode/--seed/--island/--id/--Rp` that disagrees is refused (exit 13), in
+      either argument order; agreeing ones are accepted. A manifest whose `command` is not `island` is refused.
+  - **Explicit form:** `island --data D --setup S --calib C --island r --seed s --mode compat|law|V --out island_r.bin
+    [--Rp R] [--threads k] [--mem-budget BYTES | --mem-budget-gb G] [--G g] [--tile t] [--ckpt 0|1] [--ckpt-every-s s]`.
+  - **Plan only:** either form with `--plan-only 1` (no `--out`), which prints the admission plan and does not run.
+    Without files, `--plan-only 1 --mode M --n n --p p [--N --threads --G --k --inputs-bytes]` gives the same plan
+    from sizes (ESTIMATE).
+- **Settings come from calib.bin, never from the arguments:** grid, N, L, Hm, tier, k_store.
+  - The calibration's status must be `ok`; its mode must equal the command's mode.
+  - A given N or seed that differs from calib.bin's is refused.
+  - calib.bin's `meta.inputs` must equal the data.bin and setup.bin in use, and setup.bin's must equal data.bin.
+  - Only calib.bin's `meta` and `grid` are read; its stores (GBs at 10⁶) are not loaded. Every section hash is
+    still verified on open.
+- **Kernels (D-21).**
+  - compat: bit form, particle-major, 1 thread (forced), v3 stream 9 + r.
+  - law: bit form, particle-major.
+  - V: class A, label-major.
+- **Memory (INTERFACES §7).** `--mem-budget` is the whole task's memory.
+  - The plan is `plan_island`. Its caller-supplied term is the setup inputs (today `start_bytes` of `dep::Start` +
+    neighbour lists; StartView, §1.12, turns this into the mapped section lengths).
+  - k = max(8, q90(π₀ size) + 1, k_store).
+  - With `--G 0` (the default) and a budget, the island takes the largest G ≤ 256 that fits. It is then admitted iff
+    the G = 1 plan fits.
+  - Over budget, the result is `resource_limit` before the run. island_r.bin is still written with that status and
+    no estimate section (GUARD-W), and the exit code is 11.
+  - **Known gap until StartView:** the Start is expanded before the admission can count it (as in `calibrate`,
+    review PR39 m6).
+- **Output.**
+  - island_r.bin (island_file.h) with `meta.inputs` = the three content hashes, which is what the merge checks.
+  - island_r.bin is written in every status except `interrupted`.
+  - The record holds status, reason, r, N, T, L, Hm, tier, `mem_plan`, `G_used`, `output_hash` (FNV over the law
+    outputs, = `IslandRun::hash()`), `init_hash`, `logZ` (completed only), `resumed_from_step`, and the seconds
+    (load / island / ckpt / store check / total).
+- **Checkpoints.**
+  - Written to `<out without .bin>.ckpt.{a,b}` (INTERFACES §5.1), every `--ckpt-every-s` seconds (default 600).
+  - A rerun of the same command resumes from the newest valid generation. The fingerprint includes the binary, so a
+    resume needs the same executable.
+  - Both generations are removed once island_r.bin is written as completed. They are kept on any other status.
+- **`calibrate --plan-only` (review PR39 MAJOR-2).**
+  - It adds `island_plan`: the largest calibration island (max H and Hm over the tiers the rule can use, leaders, the
+    round-start snapshot), planned as `CalibIslandRunner` admits it under WP4's N-1 rule.
+  - The caller-supplied term is start_bytes + the calibration's resident state without the inputs (ledger + export).
+  - `total` is the plan at the G the budget allows; `floor` is the G = 1 plan. The calibration is admitted iff
+    `floor ≤ --mem-budget`, and the driver sizes from it. Over budget, the result is `resource_limit` (exit 11).
+  - Without setup.bin it plans from sizes (k = kbar, setup inputs **not** counted).
+  - `mem_plan.island_budget` (budget − resident with inputs; obsolete since N-1) is removed (review PR39 m6).
+- **Fixed on the way.** `calibrate`'s record held `status: "ok"`, which `main` cannot map: a successful
+  `smcbvs4 calibrate` exited 13 with its record overwritten, and the driver's fill would have refused calib.bin.
+  `status` is now the task status; `cal_status` is the v3 name (ok, schedule_limit, …).
+- **Link graph (review PR39 m4).** `calibrate` and `island` (both forms of the island) live in `v4_cmd`, which links
+  `v4_a` and `v4_bit`. There is no v4_bit ↔ v4_a cycle. WP4's R golden still links `libv4_bit.a` alone.
+- **Tests** (`tests/test_island_cmd.cpp`):
+  - `island_command_end_to_end`: calibrate → island → merge through the binary, per mode. The file equals
+    `run_island` (output hash). In V, 1 thread / G 7 / tile 64 gives the same sections as 3 threads. Theory-mode
+    merges need a clean commit (MergeTheory) and are expected refused on `-dirty` builds.
+  - `island_command_driver_manifest`: driver dry run → `p1m_manifest.py fill --set params.id=3` → the driver's
+    command line. Equal to the explicit form; manifest authority.
+  - `island_command_refusals_and_budget`: the invalid_input cases, admission to the byte, and plans (files, sizes,
+    calibrate N-1 floor).
+  - `island_command_resume`: resume from a checkpoint left by an interrupted island, with the same output; the
+    checkpoints are removed after completion.
+  - `plan_from_sizes_equals_plan_island`.
+
 ---
 
 ## 2. Addressed sampling
