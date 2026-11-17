@@ -23,3 +23,7 @@
   written. numerics: N1_window.py → N1_out.txt (1966 cases, 0 violations; max (s0+m#)/W = 0.226; n1 ~ 1e9–1e11, explicit
   constants, not optimised); N2_subgauss_rows.py (venv-numerics Py 3.11) → N2_out.txt (Gaussian/Rademacher/uniform AR(0.5)
   rows, p = 10: delta*sqrt(n/log n) ≈ 1.1–1.6, HPM=MPM=S0 freq 0.89 → 1.00).
+- 13:15 — HQ ruling (via manager): class 1 stated precisely + 2b backup sentence, wording given. Queued as
+  reviews/PENDING_LEAD_EDITS.md Q1, Q2 (STATEMENT is under the L1 lock read; applied in v1.1). HQ's 2b sentence ("any bounded
+  … predictors qualify") is false for (A4) (rare binary predictor); replacement proposed to the manager, backed by a new
+  ExSG (b) (Hoeffding's lemma). Sol L1 still running.
