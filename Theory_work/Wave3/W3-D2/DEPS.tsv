@@ -1,11 +1,11 @@
 id	file[:lines]	uses	sha	checked_sha	checked_by	state
 S:setting	STATEMENT.md:14-27		5fb8180db3f715a1			UNCHECKED
-S:Thm2X	STATEMENT.md:29-48	S:setting,S:det	c84965edd299de7e			UNCHECKED
-S:Cor2X	STATEMENT.md:50-58	S:Thm2X	0dc7f82d2dbdcb7f			UNCHECKED
-S:det	STATEMENT.md:60-63	S:setting	ab5b884b6923071e			UNCHECKED
-S:inputs	STATEMENT.md:76-84		591718af1bf47637			UNCHECKED
-P:P0	PROOF.md:7-17	S:det	1211dc4d154080dc			UNCHECKED
-P:P1	PROOF.md:18-49	S:setting,S:Thm2X,S:inputs	5260f4e8cec204ac			UNCHECKED
-P:P2	PROOF.md:50-55	P:P0,P:P1	8a89d37202db7624			UNCHECKED
-P:P3	PROOF.md:56-75	S:Cor2X,P:P2	612b90bd2fe79e6a			UNCHECKED
+S:Thm2X	STATEMENT.md:29-48	S:setting,S:det	c84965edd299de7e	c84965edd299de7e	reviews/K1_linecheck_opus.md	OK
+S:Cor2X	STATEMENT.md:50-58	S:Thm2X	0dc7f82d2dbdcb7f	0dc7f82d2dbdcb7f	reviews/K1_linecheck_opus.md	OK
+S:det	STATEMENT.md:60-63	S:setting	ab5b884b6923071e	ab5b884b6923071e	reviews/K1_linecheck_opus.md	OK
+S:inputs	STATEMENT.md:76-84		591718af1bf47637	591718af1bf47637	reviews/K1_linecheck_opus.md	OK
+P:P0	PROOF.md:7-17	S:det	1211dc4d154080dc	1211dc4d154080dc	reviews/K1_linecheck_opus.md	OK
+P:P1	PROOF.md:18-53	S:setting,S:Thm2X,S:inputs	4b73719bcbacce0b			UNCHECKED
+P:P2	PROOF.md:54-59	P:P0,P:P1	8a89d37202db7624	8a89d37202db7624	reviews/K1_linecheck_opus.md	OK
+P:P3	PROOF.md:60-80	S:Cor2X,P:P2	c21f8b008bac3c20			UNCHECKED
 R:registry	REPORT.md:57-76	S:Thm2X,S:Cor2X	731f3d391d1e2424			UNCHECKED

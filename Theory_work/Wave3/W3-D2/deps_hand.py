@@ -10,9 +10,9 @@ ROWS = [  # id, file, a, b, uses
     ("S:det", "STATEMENT.md", 60, 63, "S:setting"),
     ("S:inputs", "STATEMENT.md", 76, 84, ""),
     ("P:P0", "PROOF.md", 7, 17, "S:det"),
-    ("P:P1", "PROOF.md", 18, 49, "S:setting,S:Thm2X,S:inputs"),
-    ("P:P2", "PROOF.md", 50, 55, "P:P0,P:P1"),
-    ("P:P3", "PROOF.md", 56, 75, "S:Cor2X,P:P2"),
+    ("P:P1", "PROOF.md", 18, 53, "S:setting,S:Thm2X,S:inputs"),
+    ("P:P2", "PROOF.md", 54, 59, "P:P0,P:P1"),
+    ("P:P3", "PROOF.md", 60, 80, "S:Cor2X,P:P2"),
     ("R:registry", "REPORT.md", None, None, "S:Thm2X,S:Cor2X"),
 ]
 def span(f, a, b):

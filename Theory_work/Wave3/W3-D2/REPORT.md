@@ -14,32 +14,32 @@ kill point not reached. Tag against row 1.2's reader statement: STRONGER (`STATE
 ## 2. The two caveats (plainly; full text `STATEMENT.md` §7)
 - **(a) Status is conditional.** The claims inherit `W3-MISR-R:CorGb-plus@1.0.1`'s conditions (W3-POST2:C, E, A1, A0,
   C-MIS:GDb, C-MIS:Prop-P), including, through W3-POST2:C, `W3-POST:Prop-LB` "PROVED (by this seat, unchecked)". Row 1.2 as
-  recorded is clean. (Audit item X2 — record Prop-LB as implied by the checked `W3-PSHARP:B` — would remove that link; OPEN,
-  recorder's.)
+  recorded is clean. (Audit item X2 — Prop-LB implied by the checked `W3-PSHARP:B` — not added by HQ; estimate §3a.)
 - **(b) Incomparable with the old master on the large-set floor.** The old master (`W2-APP:POST`, LSF) lets the floor on
   sets of size ≤ k̄_n vanish slowly; Theorem 2X needs a fixed floor on its whole range. STRONGER holds against the
   constant-floor reader statement only (`STATEMENT.md` §4(b), §7).
 
-## 3. Card text for HQ — two options (proposal; HQ and the consultant choose, v4 H5)
-**Option (i) — replace.** Card row 1.2, "Statement" cell:
-> **Same for random Gaussian designs**: rows i.i.d. Gaussian, $p\le n^A$, fixed $s_0$; sparse eigenvalues of the row
-> correlation matrix bounded below on sets of size $3(A+1)(s_0+1)\log n$; energy and beta-min measured against the noise
-> variance (no upper eigenvalue bound; $\Sigma$, $\beta$, $\sigma^2$ may vary with $n$): $E[1-\pi(S_0\mid y)]=O(\sqrt{\log n/n})$,
-> and the HPM error, the MPM error and the expected maximal PIP error are $O(\sqrt{\log n/n})$.
+## 3. Card text (HQ decision 2026-11-17: row 1.2 COEXIST)
+Row 1.2 unchanged (statement, masters, "clean" mark, vanishing-floor remark). Added sentence under row 1.2 (body, not abstract):
+> *Smaller-set, expectation form.* Under the same model with the floor asked only on sets of size $3(A+1)(s_0+1)\log n$ (on
+> the correlation matrix of a row), and energy and beta-min measured against the noise variance ($\Sigma$, $\beta$,
+> $\sigma^2$ may vary with $n$), $E[1-\pi(S_0\mid y)]=O(\sqrt{\log n/n})$, and the HPM and MPM error probabilities and the
+> expected maximal PIP error are $O(\sqrt{\log n/n})$. This is Theorem 4 with no omitted predictors. It is conditional on the
+> inputs of Theorem 4's master, one of which (a deterministic rate lower bound used in the expectation route) has not yet had
+> an independent check.
 
-"Master" cell: `W3-D2:Thm2X`, `W3-D2:Cor2X` (statuses as recorded), via `W3-MISR-R:CorGb-plus@1.0.1` (conditional: W3-POST2:C,
-E, A1, A0, C-MIS:GDb, C-MIS:Prop-P; W3-POST2:C ← W3-POST:Prop-LB unchecked). "Mark" cell: **conditional** (no longer clean).
-Abstract: row 1.2 leaves Form A's single-root sentence until the conditions clear.
+"Master" cell for the added sentence: `W3-D2:Thm2X`, `W3-D2:Cor2X`, statuses as recorded at CP3, with the inherited
+conditions written out: W3-POST2:C (itself conditional on W3-POST:Prop-LB, "PROVED (by this seat, unchecked)"), W3-POST2:E,
+W3-POST2:A1, W3-POST2:A0, C-MIS:GDb, C-MIS:Prop-P. "Mark" cell for the added sentence: **conditional**. Row 1.2's own mark
+stays **clean**.
 
-**Option (ii) — coexist (manager's recommendation).** Row 1.2 unchanged (statement, masters, "clean"). Added sentence under
-row 1.2 (body, not abstract):
-> *Expectation form.* Under the same model with the floor asked only on sets of size $3(A+1)(s_0+1)\log n$ (on the
-> correlation matrix), and energy and beta-min measured against the noise variance, the error $1-\pi(S_0\mid y)$ is
-> $O(\sqrt{\log n/n})$ **in expectation**, and so are the HPM and MPM error probabilities and the expected maximal PIP error.
-> This is Theorem 4 with no omitted predictors; it is conditional on the inputs of Theorem 4's master.
-
-"Master" for the added sentence: `W3-D2:Thm2X`, `W3-D2:Cor2X` with their statuses. Row 1.2's existing masters and its
-vanishing-floor remark stay. When the conditions of caveat (a) clear, HQ can promote option (ii) to option (i).
+## 3a. X2 estimate (Prop-LB check; not added — HQ revisits only if ≤ ½ day Tier B)
+- **Tier / size:** Tier B re-check, ≈ 2–3 h lead time + one Sol review: line-check the existing implication note
+  `Theory_work/Dept/research/IMPL_PSHARPB_PROPLB_opus.md` (dept/theory; Opus, unchecked) and hand the recorder an `implies` edge.
+- **Inputs:** `W3-PSHARP:B@1.0.0` (PROVED-CHECKED, `W3-PSHARP/STATEMENT.md:90-114`), Prop-LB (`W3-POST/lemmas/LB_rate_lower_bound.md`,
+  40 lines), [W3P] §0; no new mathematics (B is strictly stronger on LB's domain, per the note).
+- **What it does not clear:** Thm2X would still be conditional through CorGb-plus on C-MIS:GDb and C-MIS:Prop-P (wave-1
+  labels, not PROVED-CHECKED), so X2 alone does not make the added sentence clean.
 
 ## 4. Chain record
 Statement lock L1 (Sol, NORMAL): `reviews/L1_statement_lock_sol.md`, disposition `reviews/L1_disposition.md`.

@@ -2,7 +2,7 @@
 
 **Current reader version:** `READER_VERSIONS.md:263-282` (Theorem 2, row 1.2, section v0.4 + FRZ-B).
 
-**What changes.** (A3) is asked on sets of size 3(A+1)(s₀+1) log n (was 5(A+1)(s₀+1) log n); Σ_n need not be a
+**What changes (as an added statement; see the HQ decision at the foot).** (A3) is asked on sets of size 3(A+1)(s₀+1) log n (was 5(A+1)(s₀+1) log n); Σ_n need not be a
 correlation matrix (floor on its correlation matrix); σ², Σ, β may vary with n, measured relative to σ²; the
 conclusions are in expectation. Tag: STRONGER (statement); status becomes conditional (see STATEMENT §7).
 
@@ -20,5 +20,6 @@ conclusions are in expectation. Tag: STRONGER (statement); status becomes condit
 
 **Bridges.** B2.1′ := `W3-D2:Thm2X` (STATEMENT §1; PROOF P1–P2: CorGb-plus with q = 0 + `W3-READER:R1` B4.1);
 B2.1″ := `W3-D2:Cor2X` (old hypotheses ⇒ new; PROOF P3). The old B2.1–B2.3 stay for the coexisting O_P master.
-**Open choice for HQ/consultant:** replace row 1.2's statement (conditional status) or keep the clean O_P statement and add
-the new one as a remark/body form until `W3-POST:Prop-LB` (audit X2) and CorGb-plus's other conditions clear.
+**HQ decision (2026-11-17): COEXIST.** Row 1.2's reader statement stays as it is; the text above is not swapped in. It goes
+into the paper as an added statement (a corollary or remark under Theorem 2, with its conditional status), card text in
+`REPORT.md` §3. The old B2.1–B2.3 stay unchanged.

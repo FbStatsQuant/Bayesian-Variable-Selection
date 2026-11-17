@@ -1,4 +1,4 @@
-# W3-D2 — PROOF of Theorem 2X and Corollary 2X (v1.0, 2026-11-17)
+# W3-D2 — PROOF of Theorem 2X and Corollary 2X (v1.1, 2026-11-17; v1.1 = K1 amendments [K1-1]–[K1-4], `reviews/K1_disposition.md`)
 
 Status: **PROVED (by this seat, unchecked)**, conditional as carried from `W3-MISR-R:CorGb-plus@1.0.1` (STATEMENT §5).
 Statement: `STATEMENT.md` v1.1 (locked) §§0–3; clause (E) is the explicit form of §1. Aliases as there. Every step is either a citation (file:line, id@version) or
@@ -20,13 +20,14 @@ non-constant almost surely (σ² > 0, n ≥ 2), so P0 holds almost surely.
 Map STATEMENT §0 to the setting of [MISR-R] §3 (`:96-100`) with candidate set 𝒞 := [p] and **no omitted columns**:
 - q := 0, X^r_𝓜 the n × 0 matrix, β_𝓜 ∈ ℝ⁰, so X^r_𝓜β_𝓜 = 0 ∈ ℝⁿ; X^r_𝒞 := X^r, β_𝒞 := β, m_𝒞 := m, Σ_𝒞𝒞 := Σ;
   α as in §0 (deterministic; [MISR-R] §2 allows any real random variable, `:51-54`).
-- **(N)** ([MISR-R] `:56`): ε ~ N_n(0, σ²I_n), σ² deterministic, independent of (X^r_𝒞, X^r_𝓜) = (X^r, empty) — this is §0.
+- **(N)** ([MISR-R] `:56`): ε ~ N_n(0, σ²I_n), σ² a deterministic (n-dependent) parameter (§0 `:19`, `:21`), independent of
+  (X^r_𝒞, X^r_𝓜) = (X^r, empty) — this is §0 [K1-3].
 - **(OV)** ([MISR-R] `:67-68`) with the deterministic choices a := 0, γ := 0, τ² := 0: conditionally on X^r,
   X^r_𝓜β_𝓜 = 0 has law δ₀ = N_n(0·1 + X^r·0, 0·I_n) (N_k(m, 0) := δ_m, [MISR-R] `:31`). So (OV) holds; a, γ, τ² are
   deterministic as [MISR-R] `:97-98` requires.
 - Then β^𝒞 = β_𝒞 + γ = β, σ²_𝒞 = σ² + τ² = σ² > 0, supp β^𝒞 = S₀, s = s₀, and
   π_𝒞(· | X^r_𝒞, y^r) = π(· | X^r, y^r): both are the coded target of [W3P] §0 computed from the same (X^r, y^r)
-  ([MISR] §0 `:20-22`: "π_𝒞(· | x, y^r) is the coded target of [W3P] §0 (lines 16-29) computed from (x, y^r)").
+  ([MISR] §0 `:21-22`: "π_𝒞(· | x, y^r) is the coded target of [W3P] §0 (lines 16-29) computed from (x, y^r)").
   So CorGb-plus's δ_n = 1 − π_𝒞(supp β^𝒞 | X^r_𝒞, y^r) is STATEMENT's δ_n, and its HPM is STATEMENT's HPM.
 - Rows: i.i.d. N_p(m, Σ) with Σ_jj > 0 ([MISR-R] `:96`) — §0. "Everything may depend on n" ([MISR-R] `:99`) — §0.
 
@@ -34,7 +35,7 @@ Hypotheses of CorGb-plus ([MISR-R] `:100-104`), with c_R := c:
 - 2 ≤ p ≤ n^A: (A1). s := |supp β^𝒞| = s₀ ≥ 1 fixed: (A1) and the fixed s₀ of STATEMENT §1.
 - *Floor.* CorGb-plus asks λ_min(R_TT) ≥ c_R for every T ⊆ 𝒞 with |T| ≤ k_n := s + max(j₀, m♯_n). For n ≥ max(3, 2s₀)
   we have s₀ ≤ K = min(p, ⌊n/2⌋) (p ≥ s₀ because S₀ ⊆ [p]), so `W3-READER:R1@1.0.2` B4.1 ([R1] `:43-45`, valid for
-  s ≤ K, n ≥ 3, A ≥ 1, s ≥ 1, with p = |𝒞| = p) gives k_n ≤ 3(A + 1)(s₀ + 1) log n. Every non-empty T with |T| ≤ k_n is
+  s ≤ K, n ≥ 3, A ≥ 1, s ≥ 1 and p ≤ n^A ((A1); used in B1.3, [R1] `:25`), with p = |𝒞| [K1-2]) gives k_n ≤ 3(A + 1)(s₀ + 1) log n. Every non-empty T with |T| ≤ k_n is
   therefore covered by (A2). (Empty T does not arise: CorGb-plus's proof uses non-empty T only, `lemmas/G2_corr.md`
   step 2; if the floor is read for T = ∅ it is vacuous.)
 - *Energy.* β^𝒞ᵀΣ_𝒞𝒞β^𝒞 = βᵀΣβ ≤ M₀σ² = M₀σ²_𝒞: (A3).
@@ -45,7 +46,10 @@ Conclusion of CorGb-plus ([MISR-R] `:104-107`): there are n* and C such that for
   E δ_n ≤ C r_n + (2 + 2k_n)n^{−2} + n^{−1} = b_n,  P(HPM ≠ S₀) ≤ 2C r_n + (2 + 2k_n)n^{−2} + n^{−1} ≤ 2b_n.
 C is the constant of MIS-R (i) on 𝒦^λ_n(s, A, 2M₀ + 1, (c_R/8)^{1/2}, C_OS, c′), C_OS = C_OS(s, A) from the bridge
 (F_w; 1) ⇒ (OS) and c′ = c₀(s, A) + 1 on the → ∞ branch (`lemmas/G2_corr.md`, [R-3]): it depends only on (s₀, A, M₀, c).
-n* depends on the sequence. (Take n* ≥ max(3, 2s₀) as well, for the floor step above.)
+n* depends on the sequence. (Take n* ≥ max(3, 2s₀) as well, for the floor step above.) This is legitimate [K1-1]:
+CorGb-plus's hypotheses, like its k_n, are required only for all large n (k_n is undefined for s > K), and its bounds at
+n concern the n-th law only (its proof checks class membership n by n, `lemmas/G2_corr.md` steps 1–5); so they hold here
+for every n ≥ max(n*_master, 3, 2s₀).
 
 ## P2. The remaining displays of Theorem 2X
 
@@ -56,7 +60,8 @@ By P0.1, E max_j |PIP_j − 1{j ∈ S₀}| ≤ E δ_n ≤ b_n. By P0.3 and Marko
 ## P3. Corollary 2X
 
 Assume the recorded hypotheses (STATEMENT §2). Then the §0 setting holds with m := m_n, Σ := Σ_n (Σ_jj = 1 > 0),
-σ² := σ*² > 0, α := α*, β := β* (deterministic: the model of `Theory_work/Wave3/W3-READER/NOTATION.md:15-20`).
+σ² := σ*² > 0, α := α*, β := β* (parameters of the model of `Theory_work/Wave3/W3-READER/NOTATION.md:15-20`, read as
+non-random as in the recorded fixed-signal setting; α* may even be random, [MISR-R] `:52-53`) [K1-3].
 - (A1): (S2) and s₀ ≥ 1.
 - (A2) with c := φ²: R = Σ_n (unit diagonal), and every T with 1 ≤ |T| ≤ 3(A + 1)(s₀ + 1) log n also has
   |T| ≤ 5(A + 1)(s₀ + 1) log n, where the recorded floor gives λ_min(Σ_{n,T}) ≥ φ². (If the recorded floor is asked only on
@@ -71,5 +76,5 @@ error is ≥ 0 with expectation O(r_n), hence O_P(r_n). ∎ (Corollary 2X)
 
 ## P4. What the proof does not use
 
-No upper eigenvalue bound on Σ; no condition on m or α; no fixed σ², Σ or β (only the fixed constants A, s₀, c, M₀ and
+No upper eigenvalue bound on Σ; no condition on m; α only deterministic (and even that is not used, [MISR-R] `:52-53`) [K1-3]; no fixed σ², Σ or β (only the fixed constants A, s₀, c, M₀ and
 ρ_n → ∞); no Gaussianity beyond the rows and the noise (both used only through CorGb-plus).
