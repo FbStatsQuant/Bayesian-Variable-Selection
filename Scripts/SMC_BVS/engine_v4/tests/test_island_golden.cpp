@@ -330,7 +330,8 @@ static void compare_cal(const CoreCal& c, const v4::calib::IslandOut& o, int r, 
   CHECKF(bits && w <= 1e-12, "[%s] PIP: %s, max deviation %.3e", tag, bits ? "sizes ok" : "not bit-identical", w);
   compare_cal_ledger(*c.L3, o.led, r, tag);
 }
-// the calibration sequence: tier-0 pilot, rebuilds 1 and 2 (4 diagnostic islands each), tier-1 pilot
+// the calibration sequence: tier-0 pilot, rebuilds 1 and 2 (4 diagnostic islands each), tier-1 pilot, tier-1 rebuild 1
+// (review PR39 m5: tier-1 diagnostic streams 6-9 / addresses tier 1)
 static std::vector<v4::calib::IslandSpec> cal_sequence(int H, int Te, int L, int Hm) {
   std::vector<v4::calib::IslandSpec> v;
   auto pilot = [&](int e) { v4::calib::IslandSpec s; s.role = v4::calib::IslandRole::Pilot; s.tier = e; s.iter = 0; s.island = 0; s.H = H; s.adaptive = true; s.Te = Te; s.L = L; s.Hm = Hm; return s; };
@@ -341,6 +342,10 @@ static std::vector<v4::calib::IslandSpec> cal_sequence(int H, int Te, int L, int
     v.push_back(s);
   }
   v.push_back(pilot(1));
+  for (int r = 1; r <= 4; ++r) {
+    v4::calib::IslandSpec s; s.role = v4::calib::IslandRole::Diag; s.tier = 1; s.iter = 1; s.island = r; s.H = H; s.grid = grids[1]; s.L = L; s.Hm = Hm;
+    v.push_back(s);
+  }
   return v;
 }
 
@@ -365,15 +370,15 @@ TEST(golden_calibration_islands_compat_vs_core) {
            (unsigned long long)o.position_start, (unsigned long long)o.position_end, (unsigned long long)p0, (unsigned long long)rs.g.count);
     ++n;
   }
-  std::printf("  %d calibration islands (compat, streams 0-5 continued) = core, ledgers included\n", n);
+  std::printf("  %d calibration islands (compat, streams 0-9 continued) = core, ledgers included\n", n);
 }
 
 TEST(golden_calibration_islands_law_vs_core) {
   Twin W(80, 150, 72, 5);
   const uint32_t seed = 29; const int B = 14;
-  for (int kern = 0; kern < 2; ++kern) {
+  for (int kern = 0; kern < 2; ++kern) for (int th : {1, 3}) {   // review PR39 m5: both kernels at 1 and 3 threads
     CalibRunnerConfig rc; rc.seed = seed; rc.B = B; rc.kernel = kern ? KernelKind::LabelMajor : KernelKind::ParticleMajor;
-    rc.threads = kern ? 3 : 1; rc.G = 8; rc.tile = 64; rc.allow_test_kernels = true;
+    rc.threads = th; rc.G = 8; rc.tile = 64; rc.allow_test_kernels = true;
     CalibIslandRunner<Arith::Bit> run(W.D, W.st, W.nb, rc);
     int n = 0;
     for (const auto& sp : cal_sequence(40, 8, 2, 2)) {
@@ -382,11 +387,11 @@ TEST(golden_calibration_islands_law_vs_core) {
       src.role = pilot ? v4::R_PILOT : v4::R_DIAG; src.tier = (uint8_t)sp.tier; src.iter = (uint8_t)sp.iter; src.L = sp.L;
       CoreCal c = core_cal(W.D3, W.st3, W.Nb3, B, src, &src, sp);
       v4::calib::IslandOut o = run.run(sp);
-      char tag[80]; std::snprintf(tag, sizeof tag, "law %s %s e%d k%d r%d", kern ? "LM" : "PM", pilot ? "pilot" : "diag", sp.tier, sp.iter, sp.island);
+      char tag[80]; std::snprintf(tag, sizeof tag, "law %s %dt %s e%d k%d r%d", kern ? "LM" : "PM", th, pilot ? "pilot" : "diag", sp.tier, sp.iter, sp.island);
       compare_cal(c, o, sp.island, false, tag);
       ++n;
     }
-    std::printf("  [%s] %d calibration islands (addressed: role, tier, iteration, island) = core\n", kern ? "label-major, 3 threads" : "particle-major, 1 thread", n);
+    std::printf("  [%s, %d thread%s] %d calibration islands (addressed: role, tier, iteration, island) = core\n", kern ? "label-major" : "particle-major", th, th > 1 ? "s" : "", n);
   }
 }
 

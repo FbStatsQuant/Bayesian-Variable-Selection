@@ -16,6 +16,7 @@
 // it the island mode plans from pi_0 alone, which real runs refuse at p >= 1e5), V4_MEM_BUDGET_GB, V4_ISLAND_ID,
 // V4_PRODUCTS_BLOCK (default: 4 with AVX-512, else 1), V4_VERBOSE, V4_NO_DUP_FILTER, V4_SERIAL_COMPACT,
 // V4_NO_BOUNDED (WP6 K1: the dense label-major reference), V4_NO_CHECK_STORE (no I1 check at all, also not at checkpoints / the final write: O1),
+// V4_GRAM_SLOTS (WP6 K3: Gram-row slots, -1 = auto 5G/2, 0 = off),
 // V4_CKPT=<base> (checkpoints; resume from <base> when present) with V4_STOP_AFTER=<step> (stop after that step's checkpoint).
 // Exit status: non-zero when any island run is refused or does not complete (review PR26 B1).
 #include <omp.h>
@@ -131,7 +132,8 @@ static int bench_island(int p, int N, const std::vector<int>& thr, KernelKind kk
   IslandConfig c; c.store_dup_filter = std::getenv("V4_NO_DUP_FILTER") == nullptr; c.verbose = std::getenv("V4_VERBOSE") != nullptr;
   if (const char* e = std::getenv("V4_PRODUCTS_BLOCK")) c.products_block = std::atoi(e);
   c.store_parallel_compact = std::getenv("V4_SERIAL_COMPACT") == nullptr; c.allow_test_kernels = true;
-  c.check_store_each_step = std::getenv("V4_CHECK_EACH_STEP") != nullptr;   // the pre-O1 behaviour (before/after comparisons)
+  c.check_store_each_step = std::getenv("V4_CHECK_EACH_STEP") != nullptr;
+  if (const char* e = std::getenv("V4_COST_PATH")) c.cost_path = e;   // D-30 per-step cost record (JSON lines; O2)   // the pre-O1 behaviour (before/after comparisons)
   c.seed = 2026; c.island = 1; c.N = N; c.L = L; c.Hm = Hm; c.B = 14; c.kernel = kk; c.G = G; c.tile = Bk; c.store_cap = cap;
   // environment overrides AFTER the defaults (the island id was reset to 1 before: manager 11-16 note 1)
   if (const char* e = std::getenv("V4_ISLAND_ID")) c.island = (uint32_t)std::atoi(e);
@@ -142,8 +144,9 @@ static int bench_island(int p, int N, const std::vector<int>& thr, KernelKind kk
   c.bounded_scoring = std::getenv("V4_NO_BOUNDED") == nullptr; c.check_store = std::getenv("V4_NO_CHECK_STORE") == nullptr;
   if (const char* e = std::getenv("V4_CKPT")) { c.ckpt_path = e; c.ckpt_every_s = 1e30; c.resume = true; }   // checkpoint only at V4_STOP_AFTER
   if (const char* e = std::getenv("V4_STOP_AFTER")) c.stop_after_step = std::atoi(e);
-  std::printf("# bounded scoring %s, I1 store check %s%s\n", c.bounded_scoring ? "on" : "OFF (dense reference)",
-              !c.check_store ? "off" : c.check_store_each_step ? "after every step" : "at checkpoints and the final write (O1)",
+  if (const char* e = std::getenv("V4_GRAM_SLOTS")) c.gram_slots = std::atoi(e);   // K3: -1 auto (default), 0 off
+  std::printf("# bounded scoring %s, Gram-row slots %d at G %d, I1 store check %s%s\n", c.bounded_scoring ? "on" : "OFF (dense reference)",
+              gram_slots_of(c, G, p), G, !c.check_store ? "off" : c.check_store_each_step ? "after every step" : "at checkpoints and the final write (O1)",
               c.ckpt_path.empty() ? "" : (", checkpoints " + c.ckpt_path).c_str());
   std::printf("# island id %u (address key), seed %u, k_store %s, products block %d\n", c.island, c.seed,
               c.k_store > 0 ? std::to_string(c.k_store).c_str() : "absent (pi_0 plan)", products_block_of(c));
