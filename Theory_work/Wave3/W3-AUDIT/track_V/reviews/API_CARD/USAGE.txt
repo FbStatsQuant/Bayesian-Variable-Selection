@@ -1,4 +1,4 @@
 AUDITV token and cost estimate (OFFLINE ESTIMATE: tokens ≈ characters / 3.5; not a count).
-chars/request 42177; est. input tokens/request 12051; 2 requests (samples).
+chars/request 43114; est. input tokens/request 12318; 2 requests (samples).
 Batch rates for Claude Fable 5.2: input $4.00 / MTok, output $20.00 / MTok.
 Input ≈ $0.10; output expected ≈ 20k tokens/request ≈ $0.80; worst case (max_tokens 128000) $5.12.

@@ -15,7 +15,7 @@ every θ" at each n), V:SCOPE (which designs are inside by which route).
 
 **Files.** `SYSTEM.md`, `REQ_V.md` (exact user message), `requests.json` (audit_batch.py shape), `REQUESTS.tsv`,
 `MANIFEST.tsv` (sha256 of every source blob), `USAGE.txt`, builder `build.py`
-(`python3 -I Theory_work/Wave3/W3-AUDIT/track_V/reviews/API_CARD/build.py build <commit>`; built on 7df2d81c).
+(`python3 -I Theory_work/Wave3/W3-AUDIT/track_V/reviews/API_CARD/build.py build <commit>`; built on 93cc6d0b (v1.5)).
 
 ## How HQ submits (run from the repo root)
 ```
@@ -26,5 +26,5 @@ python Theory_work/Wave3/API_AUDIT/audit_batch.py wait   Theory_work/Wave3/W3-AU
 The `AUDITV …` lines are in `results/*.md` (grep `^AUDITV `).
 
 ## Cost (estimate)
-≈ 12.1k input tokens per request; 2 requests ≈ $0.10 input; output ≈ 20k tokens/request ≈ $0.80; worst case at
+≈ 12.3k input tokens per request; 2 requests ≈ $0.10 input; output ≈ 20k tokens/request ≈ $0.80; worst case at
 max_tokens 128000 ≈ $5.12 output. **≈ $1 expected, ≤ $5.3 worst case.**
