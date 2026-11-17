@@ -4,7 +4,7 @@ Status (lead's label): **PROVED; Claude line check VERIFIED (after amendments); 
 (council batch T1–T10).** Not "PROVED-CHECKED" (needs the Sol lock, a Sol line check and the OpenAI council seat).
 Blocks row(s): 3.1 (via W3-RM:E4).
 
-Frozen text (sha256, first 12 hex, 2026-11-16 18:00 CST, as frozen for council R1): STATEMENT `e017496048cc`, PROOF `ccba8123f87d`.
+Frozen text (sha256, first 12 hex, 2026-11-16 18:18 CST, as frozen for the R1 diff round R1d): STATEMENT `0a249f656260`, PROOF `7273c57b2095`.
 Code of record: `Scripts/SMC_BVS/core/` at 4676af6 (= HEAD for the core).
 
 **What it says.** `cpp_setup` builds the `Start` object exactly as N3 (H1) strengthened (E4's hypothesis) requires; the object and its `Data` are never changed afterwards.

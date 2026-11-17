@@ -1,4 +1,4 @@
-# T4 · Lemma ENC (the start object is built as Lemma E4 assumes) — STATEMENT v2 (draft, not locked)
+# T4 · Lemma ENC (the start object is built as Lemma E4 assumes) — STATEMENT v3 (draft, not locked)
 
 Track A item T4 (`AUDIT.md` §6; CHECKPOINT_1 annex order 4). Tier B (code reading; registers N3's encoding premise as a
 code-check). **Lean target: no** (code fact). Blocks row 3.1 (through `W3-RM:E4`, the start-mode clause of RM-0).
@@ -20,7 +20,8 @@ code-check). **Lean target: no** (code fact). Blocks row 3.1 (through `W3-RM:E4`
 
 ## Setting
 A valid input on the sampler branch of the shipped `v3_fit`, so that `v3_setup` → `cpp_setup` completes
-(`v3_fit.R:133-138`; `v3_setup.R:67-77`). EX-A (exact scores and arithmetic). C(X) = (C₁, …, C_J) is the partition of
+(`v3_fit.R:133-138`; `v3_setup.R:67-77`), on an execution in which no C++ integer operation overflows and every
+allocation succeeds (T2 (BLK-d); IDEAL-W, MACH). EX-A (exact scores and arithmetic). C(X) = (C₁, …, C_J) is the partition of
 T2 (BLK); λ(k) := log ϖ(k) = log w(k) − log W_K, the capped BB(1, p) log-prior per model of size k; ρ_b(U) :=
 log m(U) − log m(∅) = log r_b(U).
 
@@ -52,3 +53,4 @@ Let `st` be the `Start` object `*g->st` built by `cpp_setup` (`cpp/v3_core.cpp:2
 |---|---|---|---|---|---|
 | v1 | all | NEW-CLAIM (code check of E4's (H1) strengthened) | track A T4 | `AUDIT.md` §6 T4 | `CHECK.md` |
 | v2 | (ENC-a) finiteness of λ; (ENC-b) the `Data` | STRONGER (two facts added) | LC2 #5, #8 | `reviews/LC2_reply_opus.md` | pending (gate) |
+| v3 | setting: executions as in T2 (BLK-d) (no integer overflow, allocations succeed) | WEAKER (execution premise made explicit, following T2 v6; it was implicit in "by T2 (BLK)") | R1 Sol #1 (dependent of T2) | `reviews/R1_council_sol.md` | diff round R1d |

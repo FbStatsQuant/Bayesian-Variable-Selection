@@ -4,7 +4,7 @@ Status (lead's label): **PROVED; Claude line check VERIFIED (after amendments); 
 (council batch T1–T10).** Not "PROVED-CHECKED" (needs the Sol lock, a Sol line check and the OpenAI council seat).
 Blocks row(s): 3.5, 3.6.
 
-Frozen text (sha256, first 12 hex, 2026-11-16 18:00 CST, as frozen for council R1): STATEMENT `66ece2fc43ed`, PROOF `e5404b7dc54d`.
+Frozen text (sha256, first 12 hex, 2026-11-16 18:18 CST, as frozen for the R1 diff round R1d): STATEMENT `0b5e2c57e5d9`, PROOF `e5404b7dc54d`.
 Code of record: `Scripts/SMC_BVS/core/` at 4676af6 (= HEAD for the core).
 
 **What it says.** `draw_pi0` draws exactly π₀ and `logZbar0` = log Z̄₀ (re-check of N9 Claims S, Z at the pin; no error in N9; one citation and the telescoping indices made explicit).

@@ -19,7 +19,7 @@ exact for a block-product weight under a global size cap; finite). Blocks rows 3
 cpp/v3_start.h` has its first hunk at line 178, after `draw_pi0`).
 
 ## Setting
-The `Start` object `st` of T4 (ENC) on a run that reaches the islands: blocks C₁, …, C_J = C(X) (T2), K, ϖ(k) = e^{λ(k)},
+The `Start` object `st` of T4 (ENC) on a run that reaches the islands: blocks C₁, …, C_J = C(X) (T2, on the executions of T4's Setting), K, ϖ(k) = e^{λ(k)},
 r_b(U) = e^{ρ_b(U)} > 0 for every U ⊆ C_b. γ₀(S) := ϖ(|S|)∏_b r_b(S ∩ C_b) on Ω = {S ⊆ [p] : |S| ≤ K};
 Z̄₀ := Σ_Ω γ₀; π₀ := γ₀/Z̄₀. EX-A (exact arithmetic) and H-U (the uniforms read by `draw_pi0` are i.i.d. U[0, 1)).
 
@@ -46,3 +46,4 @@ draws, which is `W3-SAMP:CC` CC4 ("CODE-CHECKED"); (S) alone is the law of one d
 |---|---|---|---|---|---|
 | v1 | all | NEW-CLAIM (re-states N9 rows 7–8 for the pin) | track A T6 | `AUDIT.md` §6 T6 | `CHECK.md` |
 | v2 | (Z) initialisation wording; reading START = (Z)+(S)+(S′)+CC4 | EQUAL (exact wording) | LC3 T6 #1, #5 | `reviews/LC3_reply_opus.md` | pending (gate) |
+| v2.1 | setting: blocks C(X) on the executions of T4's Setting | EQUAL (pointer to the execution premise now explicit in T4 v3) | R1 Sol #1 (dependent of T2) | `reviews/R1_council_sol.md` | diff round R1d |

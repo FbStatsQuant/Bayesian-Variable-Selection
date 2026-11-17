@@ -25,4 +25,5 @@ Repairs (both seats' findings):
 | Sol #3 (S) | T9 | (H4) restored for the compiled-code return claims; algorithmic and native readings separated; (TDP-e) scope vs T10's X9 stated | STATEMENT v3, PROOF v3 |
 | Sol #4 (E), Opus E6 | package | `STATUS_EXTRACT.md` (23 registry rows verbatim, registry sha recorded); T8 points to it | new file |
 | Opus E1, E4 (T1, T3, T10), E5, E6 (T3) | T1, T3, T10 | not applied (accepted items kept byte-identical); queued in `ERRATA.md` | — |
+| Sol #1, dependents | T4, T6 | T4 Setting: executions as in T2 (BLK-d); T6 points to it (T4's "by T2 (BLK)" relied on the code identification that T2 v6 makes conditional) | T4 STATEMENT/PROOF v3; T6 STATEMENT v2.1 |
 | HQ 11-16 (a) | T6–T9 CHECK.md | better-theorem line → "skipped (HQ 11-16, RIDER_RULES; premise-closer)" | CHECK.md only |

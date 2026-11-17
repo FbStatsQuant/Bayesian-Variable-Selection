@@ -4,7 +4,7 @@ Status (lead's label): **PROVED; Claude line check VERIFIED WITH AMENDMENTS (all
 (council batch T1–T10).** Not "PROVED-CHECKED" (needs the Sol lock, a Sol line check and the OpenAI council seat).
 Blocks row(s): 3.1 delivery.
 
-Frozen text (sha256, first 12 hex, 2026-11-16 18:17 CST, as frozen for the R1 diff round R1d): STATEMENT `ec3da65edd35`, PROOF `8eec9e60ec2b`.
+Frozen text (sha256, first 12 hex, 2026-11-16 18:18 CST, as frozen for the R1 diff round R1d): STATEMENT `ec3da65edd35`, PROOF `8eec9e60ec2b`.
 Code of record: `Scripts/SMC_BVS/core/` at 4676af6 (= HEAD for the core).
 
 **What it says.** `start_mode(st, cap ≥ 2, true)` returns lex_min E = S* (E = 𝒜* proved directly at the pin), the root check never fails (TDP-e), and the fallback and the fast path fit TDP-IMPL's operation and storage bounds (fast path with an explicit factor 10⁶). Re-check of `C-ENG:TDP_E`: mathematics correct; its claim (4) holds only for cap ≥ 2 at the pin; its line numbers are stale.

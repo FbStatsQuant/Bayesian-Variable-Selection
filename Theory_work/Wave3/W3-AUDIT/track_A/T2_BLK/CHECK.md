@@ -3,7 +3,7 @@
 Status (lead's label): **PROVED; Claude line check VERIFIED WITH AMENDMENTS (all applied); OpenAI layers pending at the
 gate.** Not "PROVED-CHECKED" (needs the Sol lock, a Sol line check and the OpenAI council seat).
 
-Frozen text (sha256, first 12 hex, 2026-11-16 18:17 CST, as frozen for the R1 diff round R1d): STATEMENT `2bc68097d046`, PROOF `59bb28806ce0`.
+Frozen text (sha256, first 12 hex, 2026-11-16 18:18 CST, as frozen for the R1 diff round R1d): STATEMENT `2bc68097d046`, PROOF `59bb28806ce0`.
 Code of record: `Scripts/SMC_BVS/core/` at 4676af6 (= HEAD for the core).
 
 | Tier B step (PROTOCOL_v4 §3, step 4 omitted) | who (NORMAL) | state | record |

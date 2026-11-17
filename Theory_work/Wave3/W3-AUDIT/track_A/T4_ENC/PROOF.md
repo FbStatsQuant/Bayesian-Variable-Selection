@@ -1,4 +1,4 @@
-# T4 · Lemma ENC — PROOF v2 (code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
+# T4 · Lemma ENC — PROOF v3 (code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
 
 Fix a valid input on the sampler branch with `cpp_setup` completing; assume EX-A.
 
@@ -10,7 +10,7 @@ Fix a valid input on the sampler branch with `cpp_setup` completing; assume EX-A
 every w(k) > 0 and W_K > 0.
 `cpp_setup` takes `D = *g->D` with `g->D = h->D` (`cpp/v3_core.cpp:275-276`) and sets `st.D = &D` (`cpp/v3_core.cpp:277`).
 
-*Blocks.* `st.blocks = make_blocks(D, B)` (`cpp/v3_core.cpp:279`): by T2 (BLK) this is C(X), each block nonempty with
+*Blocks.* `st.blocks = make_blocks(D, B)` (`cpp/v3_core.cpp:279`): by T2 (BLK-d), on the executions of the Setting, this is C(X), each block nonempty with
 1 ≤ |C_b| ≤ B ≤ min(16, K), and each block is sorted increasingly (`std::sort`, `cpp/v3_blocks.h:141`).
 
 *`build_tables`* (`cpp/v3_start.h:76-98`, called at `cpp/v3_core.cpp:283`): `st.J = st.blocks.size()` = J
