@@ -171,8 +171,9 @@ factors), $0.25$ (AR), $0.5$ (BLK) and $0.7$ (FAC).}
 \ro{Exact or asymptotic duplicates of a true predictor, and correlations tending to one with a true predictor.}
 \pr{\citet[Definition~2.3, p.~7]{CastilloSchmidtHieberVanDerVaart2015} and \citet[Assumption~B, RE($s$),
 p.~8]{YangWainwrightJordan2015} ask a fixed floor on sets whose size is a multiple of the sparsity, as ours does for the
-fixed-design theorem (for Gaussian rows ours asks the floor on larger, $O(\log n)$ sets); see also the sparse Riesz condition of \citet[(2.13), p.~6]{ZhangHuang2008} and
-\citet[Assumption~2, p.~8]{BickelRitovTsybakov2009}. Unlike the last two, ours bounds no largest eigenvalue.}
+fixed-design theorem (for random rows ours asks the floor on larger, $O(\log n)$ sets). Unlike the Lasso conditions
+of \citet[(2.13), p.~6]{ZhangHuang2008} and \citet[Assumption~2, p.~8]{BickelRitovTsybakov2009}, ours bounds no largest
+eigenvalue.}
 
 \ahead{No near-exact collinearity on sets of logarithmic size}{\lab{NC}, Assumption~\ref{asm:dist}(d)}{\emph{Against their Theorems~1--2:} a condition they do not have. \emph{Against
 their Condition~3 (p.~955) and (22) (supp.\ p.~13), if their sets are at least as large as ours}
@@ -194,32 +195,32 @@ eigenvalue); \citeauthor{NarisettyHe2014}'s may be lower than ours when $p$ is l
 eigenvalue and so allow exact duplicates, which ours excludes.}
 \tu{Inside after removing exact duplicates and exact linear dependences.}
 
-\ahead{Law of the rows}{\lab{GR}, Assumption~\ref{asm:dist}(c)}{On centred, unit-variance predictors, Gaussian rows and
-Assumption~\ref{asm:dist}(c) each imply \SL's Condition~1 (p.~953); on raw predictors, and against their $\abs{x_i}\le1$
-(Theorem~1, p.~952), neither implies the other.}
+\ahead{Law of the rows}{\lab{SGR}, \lab{GR}, Assumption~\ref{asm:dist}(c)}{On centred, unit-variance predictors,
+\lab{SGR} (Result~1), Gaussian rows (Result~3) and Assumption~\ref{asm:dist}(c) (Result~2) each imply \SL's Condition~1
+(p.~953); on raw predictors, and against their $\abs{x_i}\le1$ (Theorem~1, p.~952), neither implies the other.}
 \ev{For standardised predictors, Assumption~\ref{asm:dist}(c) implies their Condition~1 for every $r$, with $\delta=\sqrt{3/8}/L$
 and $M=\log2$ (their constants), $L$ being the sub-Gaussian constant of Assumption~\ref{asm:dist}(c) (a two-line computation, independently
 checked). On raw predictors, Gaussian rows with mean $n$
 satisfy our row law and violate Condition~1, which is a raw exponential-moment bound. Our generators draw centred
 Gaussian rows with unit variances, which satisfy Condition~1 itself.}
-\ro{Non-Gaussian rows for Theorems~\ref{thm:post-random} and~\ref{thm:reported} and Remark~\ref{thm:outputs}; heavy-tailed predictors for Result~2.}
-\pr{Gaussian rows are Song and Liang's own worked case: they verify their Condition~1 for a zero-mean Gaussian process
-(p.~953) and their (26) for a Gaussian process (supp.\ p.~16). Sub-Gaussian rows (Assumption~\ref{asm:dist}(c)):
-\citet[Lemma~6.1, p.~16]{NarisettyHe2014}, and \citet[Definition~1.5 and Theorem~1.6, pp.~5--6]{RudelsonZhou2011}; ours
-asks sub-Gaussianity only along sparse directions. In the Lasso literature, \citet[Proposition~2(i), p.~14]{ZhangHuang2008},
-\citet[Proposition~1, p.~10]{RaskuttiWainwrightYu2009} and \citet[Theorem~1, pp.~8--9]{Wainwright2006} take i.i.d.\
-Gaussian rows (with a population covariance condition in the first and third); ours also allows a nonzero mean and needs no
-upper eigenvalue bound.}
-\tu{Bounded data such as genotypes are outside the Gaussian-row results as stated, and inside \SL's Condition~1; they are
+\ro{Heavy-tailed predictors, and bounded predictors whose sparse combinations are not sub-Gaussian at their own scale,
+such as rare binary features, for Results~1 and~2; non-Gaussian rows for Result~3 and Remark~\ref{thm:outputs}.}
+\pr{\citet[Lemma~6.1, p.~16]{NarisettyHe2014}: rows that are independent isotropic sub-Gaussian vectors. For centred
+rows, \lab{SGR} contains theirs as the case $\Sig=I$, and asks sub-Gaussianity only along sparse directions. As a factual
+remark, for the centred predictors $x-m_n$ it implies Song and Liang's Condition~1, whose worked case is a zero-mean
+Gaussian process (p.~953). In ordinary data, \lab{SGR} holds for Gaussian rows ($L=1$) and for correlated mixtures of
+independent features with a common sub-Gaussian constant, such as features bounded on a common scale (Section~\ref{sec:model-result}).}
+\tu{Bounded data such as genotypes are outside Result~3 as stated (Gaussian rows); they meet \lab{SGR} when they are
+mixtures of independent features bounded on a common scale, but not when they include rare binary features; and they are
 covered by the fixed-design Theorem~\ref{thm:post-fixed} when the observed design meets its conditions.}
 
 \subsubsection{Further assumptions of Result 3}\label{sec:a-rm}
 
 \ahead{Visibility}{\lab{V}}{Ours implies \SL's Condition~5 (p.~958: $\abs{\operatorname{cov}(x_t,y)}>0$ for every true
 predictor) in every regime: theirs is our condition with no conditioning and no margin.}
-\ev{Visibility asks $\abs{\Cov(W_j,W^\top\tstar\mid W_U)}\ge a>0$ for every true predictor $j$, with $W$ the centred population row of Section~\ref{sec:setup} and $U$ any set of at most $15$ other columns: the start law (the distribution the sampler starts from) must
-see every true predictor, as their first stage must, and it conditions on up to $15$ columns because the start law works on groups of at most $16$ predictors. For bounded blocks with one true predictor each, and for AR
-designs, this covariance is $\theta^*_j\Var(W_j\mid W_U)$ plus geometrically small terms, at
+\ev{The start law must see every true predictor, as their first stage must; it conditions on up to $15$ columns because it
+works on groups of at most $16$ predictors (\as{V}, Section~\ref{sec:reported}). For bounded blocks with one true predictor
+each, and for autoregressive designs, the covariance in \as{V} is $\theta^*_j\Var(W_j\mid W_U)$ plus geometrically small terms, at
 least $\abs{\theta^*_j}\lmin(\Sig)/2$. When the true effects have aligned signs and every conditional covariance
 between columns outside $U$ is nonnegative, as in each design of the strong-factor study, it is at least
 $\theta^*_j\lmin(\Sig)$.}
@@ -237,9 +238,7 @@ and still inside Results~1 and~2.}
 informal remark (a), p.~958, which is not a condition of any of their theorems. No ordering is claimed.}
 \ev{They write: ``if there are $p_n$ predictors correlated with the true predictor $X_t$, $p_n\prec P_n$, then there are
 at most $cp_n$ predictors to be selected'' (p.~958). Their results on their sampler's output carry no design condition of
-this kind (supp.\ pp.~9--10, 12--13, 16--17). We state the requirement as a hypothesis with a rate: the null predictors
-whose conditional covariance with a true predictor exceeds a level $\varpi_n=o(\rn)$ must lie in a set of at most $n^b$
-columns, the leakage set $Q$, with $b<\tfrac12$.}
+this kind (supp.\ pp.~9--10, 12--13, 16--17). Ours is a hypothesis with a rate (Assumption~\ref{asm:reported}(a)).}
 \ro{Pervasive factors with $p\gg\sqrt n$: with no conditioning, every null predictor then has a fixed covariance with every
 true one, so the leakage set is all of $\set{p}$, and $\abs{Q}\le n^b$ would force $p\le n^b$.}
 \ds{\textbf{Inside:} S1 (no leakage set beyond the true model); S2 and AR (a neighbourhood of size $C\log n$ around the true

@@ -132,8 +132,7 @@ second local search starts from the start mode and does not depend on the partic
 
 \paragraph{Stage 1: inputs, the exact case and the check before the run.} The inputs are \emph{valid} when $n\ge3$, at
 least one predictor is given and every entry is finite; the seed is an integer in $[1,2^{31}-1]$. Invalid inputs stop the
-run, and so does a constant response or the removal of every predictor (the run then reports the empty model). With
-$N_0:=\max(2500,n,p)$ and $\Nc_0:=\lceil512N_0/2500\rceil$, if $\abs{\Om}\le(5\Nc_0+4N_0)\,p$ the method scores every model
+run. With $N_0:=\max(2500,n,p)$ and $\Nc_0:=\lceil512N_0/2500\rceil$, if $\abs{\Om}\le(5\Nc_0+4N_0)\,p$ the method scores every model
 and computes everything exactly. Otherwise it estimates the memory the run will need and the worst-case time of the local search from the start
 mode, and stops with status \texttt{resource\_limit} if the
 estimate exceeds the allocation (8\,GiB and 24 hours by default).
@@ -143,8 +142,8 @@ $B:=\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)$ predictors, by complet
 cutting the tree top-down until every cluster fits and packing whole clusters into blocks in leaf order. The partition is a
 deterministic function of $X$, and correlated predictors tend to share a block. Within each block it scores every subset
 $U$ with $\abs{U}\le K$ and stores the \emph{block table} $h_k(U):=m(U)/m(\emptyset)$, with $h_k(\emptyset)=1$; a block has
-at most $2^{16}$ subsets. It also builds a symmetric \emph{neighbour graph} for the swap moves: each predictor is linked to
-up to $B$ predictors with $\abs{\hat r_{jl}}>\sqrt{2\log p/n}$ (at least its most correlated one).
+at most $2^{16}$ subsets. It also builds a \emph{neighbour graph} of correlated predictors for the swap moves
+(Appendix~\ref{app:params}).
 
 \paragraph{Stage 3: the start law and the start mode.} The start law multiplies the size prior by the block tables,
 \begin{equation}\label{eq:startlaw}

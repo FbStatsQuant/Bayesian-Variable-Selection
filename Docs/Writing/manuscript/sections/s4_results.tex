@@ -18,9 +18,10 @@ Result & In words & Key assumptions & Status \\
 1.~The posterior finds the true model (Thms~\ref{thm:post-random}, \ref{thm:post-fixed}) &
 The posterior mass outside the true model is of order $\rn$; the highest posterior and median probability models equal
 the true model with probability tending to one. &
-Gaussian linear model; $p\le n^A$; a fixed number of fixed nonzero coefficients (for a fixed design, a beta-min
-condition instead); an eigenvalue floor on sets of $O(\log n)$ predictors. &
-Proved and checked; the fixed-design expectation bound rests on one supporting result not yet checked. \\
+Gaussian linear model; $p\le n^A$; rows sub-Gaussian along sparse directions; a fixed number of fixed nonzero
+coefficients (for a fixed design, a beta-min condition instead); an eigenvalue floor on sets of $O(\log n)$ predictors. &
+Proved and checked (the sub-Gaussian form not yet recorded); the fixed-design expectation bound rests on one supporting
+result not yet checked. \\
 2.~It finds the true distribution (Thm~\ref{thm:dist}) &
 The posterior contracts around the true conditional law of the response, at radius of order $\rn$ in the Hellinger distance. &
 i.i.d.\ observations; sparse Gaussian linear model; light-tailed predictors; no near-exact collinearity; no predictor with an unbounded
@@ -87,8 +88,9 @@ instance, $\lmin(\Sig)\ge\varphi^2$). \hfill [\SA{post}]
 \inwords{If the true model is small and its coefficients are fixed and nonzero, and no small group of predictors is
 collinear, then the posterior puts all but a fraction of order $\rn$ of its mass on the true model. The highest posterior
 model and the median probability model then equal the true model with probability tending to one, and every inclusion
-probability is within order $\rn$ of $1$ for a true predictor and of $0$ for a null one. We state this first for Gaussian
-rows, the case of our simulation designs, and then for a fixed design, with conditions on the sample.}
+probability is within order $\rn$ of $1$ for a true predictor and of $0$ for a null one. We state this first for random
+rows that are sub-Gaussian along sparse directions (Gaussian rows, the case of our simulation designs, included), and
+then for a fixed design, with conditions on the sample.}
 
 \why{It is the basic guarantee of a Bayesian selection method, here for the prior exactly as the software sets it: with
 enough data the posterior points to the right predictors, and its inclusion probabilities can be read as near-certain
@@ -98,28 +100,48 @@ inclusion or exclusion.}
 $b_{\mathrm{lo}}\le\abs{\beta^*_j}\le b_{\mathrm{hi}}$ for every $j\in\Sz$, with fixed $0<b_{\mathrm{lo}}\le b_{\mathrm{hi}}<\infty$. \hfill [\SA{post}]
 \end{assumption}
 
-\begin{theorem}[Posterior concentration, random Gaussian design]\label{thm:post-random}
-Assume \as{GL}, \as{DIM}, \as{SP}, \as{GR}, \as{FSb} and \as{EFS}. Then, under the joint law of the design and the noise,
+\begin{assumption}{SGR}{Sub-Gaussian rows on sparse directions}
+The rows of $\Xr$ are i.i.d.\ copies of a random vector $x$ with mean $m_n$ and covariance matrix $\Sig$, a correlation
+matrix, and, for a fixed $L>0$, $\E\exp\{\lambda u^\top(x-m_n)\}\le\exp\{L^2\lambda^2u^\top\Sig u/2\}$ for every $\lambda\in\R$
+and every $u\in\R^p$ with at most $5(A+1)(\sz+1)\log n$ nonzero entries. Gaussian rows \as{GR} are the case $L=1$.
+\hfill [\SA{post}]
+\end{assumption}
+
+\begin{theorem}[Posterior concentration, random sub-Gaussian design]\label{thm:post-random}
+Assume \as{GL}, \as{DIM}, \as{SP}, \as{SGR}, \as{FSb} and \as{EFS}. Then, under the joint law of the design and the noise,
 \begin{gather}
   1-\pis{\Sz}=\OP\Big(\sqrt{\frac{\log n}{n}}\Big),\qquad \P\big(\HPM=\MPM=\Sz\big)\to1,\label{eq:post-random}\\
   \max_{j\in\set{p}}\big|\PIP_j-\ind{j\in\Sz}\big|=\OP\Big(\sqrt{\frac{\log n}{n}}\Big).\nonumber
 \end{gather}
 \end{theorem}
 
-\asmlist{(1)~\as{GL} Gaussian linear model; (2)~\as{DIM} $p\le n^A$; (3)~\as{SP} fixed $\sz$ [\SA{all}]; (4)~\as{GR}
-Gaussian rows; (5)~\as{FSb} fixed nonzero coefficients; (6)~\as{EFS} population eigenvalue floor on sets of
+\asmlist{(1)~\as{GL} Gaussian linear model; (2)~\as{DIM} $p\le n^A$; (3)~\as{SP} fixed $\sz$ [\SA{all}]; (4)~\as{SGR}
+sub-Gaussian rows; (5)~\as{FSb} fixed nonzero coefficients; (6)~\as{EFS} population eigenvalue floor on sets of
 $O(\log n)$ predictors [\SA{post}].}
 \scope{Every design of our simulation studies, strong common factors included.}
 
-\status{\textbf{Proved and independently checked}: the fixed-design result it rests on (Theorem~\ref{thm:post-fixed},
-in-probability form) and the transfer from population to sample conditions are each proved and independently checked.
-Registry: Appendix~\ref{app:status}, row 1.2.}
+\status{Sub-Gaussian form, as stated: \textbf{proved, and passed its independent review; not yet recorded in the
+registry} (the note is requoted when it is). Its inputs are proved and independently checked. The Gaussian case $L=1$ is
+the recorded row 1.2: \textbf{proved and independently checked}. Registry: Appendix~\ref{app:status}, row 1.2.}
 
 No upper bound on the eigenvalues of $\Sig$ is needed, so strong common factors are allowed, and $p\gg n$ is allowed.
-Gaussian rows are Song and Liang's own worked case for their row condition (Section~\ref{sec:a-post}); a version of
-Theorem~\ref{thm:post-random} for sub-Gaussian rows is not yet proved. In
-primitive terms: a Gaussian linear model with i.i.d.\ Gaussian rows whose correlation matrix has smallest eigenvalue bounded below, a fixed number of
-fixed nonzero coefficients and $p\le n^A$ suffice.
+Besides Gaussian rows, \as{SGR} holds for correlated mixtures $x=m_n+B\xi$ of independent mean-zero, unit-variance
+features that are sub-Gaussian with one common constant $L$, for instance features confined to $K$ standard deviations of
+their mean with one common $K$, giving $L=K$.
+
+\begin{remark}[Smaller sets, in expectation]\label{rem:thm2x}
+Under the same model with the floor asked only on sets of size at most $3(A+1)(\sz+1)\log n$ (on the correlation matrix of
+a row), the noise variance allowed to depend on $n$, and energy and beta-min measured against the noise variance ($\Sig$ and
+$\bstar$ may also vary with $n$), $\E[1-\pis{\Sz}]=O(\rn)$, and the HPM and MPM error probabilities and the expected maximal
+PIP error are $O(\rn)$. This is Theorem~\ref{thm:omitted} with no omitted predictors, plus the deterministic consequences of
+Lemma~\ref{lem:summaries}. It asks a fixed floor, so on the floor it is not comparable with the result behind
+Theorem~\ref{thm:post-random}, which allows the floor on its larger sets to vanish slowly; against the constant floor of
+\as{EFS}, it asks the floor on smaller sets.
+\end{remark}
+
+\status{\textbf{Conditional:} it rests on the inputs of Theorem~\ref{thm:omitted}, one of which (a deterministic rate lower
+bound used in the expectation route) has not yet had an independent check, and two others are earlier-wave results;
+passed its independent review, not yet recorded in the registry.}
 
 \paragraph{Fixed design.} The same conclusions hold for a deterministic design under conditions on the sample. They
 use four more assumptions.
@@ -235,13 +257,11 @@ a rate.
 \end{remark}
 
 \begin{remark}[On the assumptions]\label{rem:dist-asm}
-No beta-min condition and no fixed lower bound on eigenvalues are assumed. Jointly Gaussian predictors satisfy Assumption~\ref{asm:dist}\ref{asm:dist-subg} with $L=1$, and every correlation matrix whose $q_n\times q_n$
-principal blocks have smallest eigenvalue at least a fixed $\psi>0$ satisfies Assumption~\ref{asm:dist}\ref{asm:dist-nec}
-for all large $n$. Condition~\ref{asm:dist-nec} keeps the Occam factor of each extra predictor in force; without it the
-radius grows by one factor $\sqrt{\log(\praw\vee n)}$ (Proposition~\ref{prop:dist}). The same statement holds for every
-level $M$ up to $\sqrt n/\log n$, with the same constants. It also carries over to the list of models that a completed run returns,
-when that list holds posterior mass at least $n^{-c_{\mathrm H}M/2}$, a condition the run does not check
-(Remark~\ref{cor:dist-output}).
+No beta-min condition and no fixed lower bound on eigenvalues are assumed; jointly Gaussian predictors satisfy
+Assumption~\ref{asm:dist}\ref{asm:dist-subg} with $L=1$. Without Assumption~\ref{asm:dist}\ref{asm:dist-nec} the radius grows
+by one factor $\sqrt{\log(\praw\vee n)}$ (Proposition~\ref{prop:dist}). The statement carries over to the list a completed run
+returns when that list holds posterior mass at least $n^{-c_{\mathrm H}M/2}$ (Remark~\ref{cor:dist-output},
+Corollary~\ref{cor:list}).
 \end{remark}
 
 % =====================================================================================================
@@ -338,12 +358,58 @@ The statement that the integer limits of \as{C2p} cannot be reached on any repre
 independently checked}. Registry: Appendix~\ref{app:status}, row 3.1.}
 
 \begin{remark}[On the assumptions]\label{rem:reported}
-(i) \emph{Why $b<\tfrac12$.} At model size about $\sqrt n$ the prior-plus-Occam penalty of one more predictor
-($\approx\log p+\tfrac12\log n$) stops dominating the best of $p$ noise gains ($\approx\log p$); for larger $b$ the key events of the argument are
-expected to fail (a heuristic; whether the conclusion fails is open).
+(i) \emph{Why $b<\tfrac12$} (a heuristic): at model size about $\sqrt n$ the penalty of one more predictor stops dominating
+the best of $p$ noise gains; whether the conclusion fails for larger $b$ is open.
 (ii) \emph{Moderate AR correlation} means autoregressive correlation bounded away from one, as the AR(1) correlations
 $0.5$ and $0.6$ of our designs.
 \end{remark}
+
+\paragraph{Estimates from the returned list.} For a set $\mathcal T\subseteq\Om$ of models, the \emph{list-renormalised}
+quantities are the posterior renormalised to $\mathcal T$ and its total weight:
+\[
+  Z_{\mathcal T}:=\sum_{S\in\mathcal T}e^{F(S)},\qquad
+  \mathrm{pip}_{\mathcal T}(j):=\frac{1}{Z_{\mathcal T}}\sum_{S\in\mathcal T,\,S\ni j}e^{F(S)},\qquad
+  \mathrm{mpm}_{\mathcal T}:=\{j:\mathrm{pip}_{\mathcal T}(j)>\tfrac12\}.
+\]
+They are computed from the list $\mathcal T$ that a run returns (Section~\ref{sec:outputs-method}) and its log scores.
+
+\begin{corollary}[List-renormalised estimates on the designs of Theorem~\ref{thm:reported}]\label{cor:list}
+Under the assumptions of Theorem~\ref{thm:reported}, there are data events of probability tending to one on which every
+admissible run that produces output, for every seed and calibration outcome, reports $\Shat=\Sz$ and has $\Sz$ in its
+returned list $\mathcal T$; and then, with $\varepsilon_n:=1-\pis{\Sz}$,
+\begin{gather}
+  \max_j\big|\mathrm{pip}_{\mathcal T}(j)-\ind{j\in\Sz}\big|\le\varepsilon_n,\qquad
+  \max_j\big|\mathrm{pip}_{\mathcal T}(j)-\PIP_j\big|\le\varepsilon_n,\label{eq:list-pip}\\
+  1-\varepsilon_n\ \le\ Z_{\mathcal T}/Z\ \le\ 1,\label{eq:list-z}\\
+  \mathrm{mpm}_{\mathcal T}=\Sz\quad\text{when }\varepsilon_n<\tfrac12 .\label{eq:list-mpm}
+\end{gather}
+Since $\varepsilon_n=\OP(\rn)$, these errors are $\OP(\rn)$ on output, and, under Convention~\as{C2p}, without
+``on output''. On exact enumeration, $\mathcal T$ is the enumeration's list where it is returned, and the inclusion
+probabilities and median model are the exact ones.
+\end{corollary}
+
+\status{\textbf{Proved, and passed its independent review; not yet recorded in the registry}; conditional on a code
+reading of the method commit that adds the corresponding output fields (pending). Its inputs, the masters of
+Theorem~\ref{thm:reported} and the posterior concentration result, are proved and independently checked.}
+
+By~\eqref{eq:list-z}, $\pi(\mathcal T\mid y)\ge1-\varepsilon_n$, so on the designs of Theorem~\ref{thm:reported} the
+corollary supplies the premise of Remark~\ref{cor:dist-output}, that the returned list carry a non-negligible share of
+the posterior. The averaged estimates $\PIPhat_j$, $\MPMhat$ and $\Zhat$ of~\eqref{eq:pool} are not covered by it; their
+consistency is proved only within the scope of Remark~\ref{thm:outputs}.
+
+\begin{remark}[When visibility holds]\label{rem:vis}
+Visibility holds with a margin that does not depend on $n$ (i) with \emph{aligned signs}: when the precision matrix,
+after flipping the signs of some columns, has nonpositive off-diagonal entries and, within each block, the true
+coefficients' signs agree with those flips (independent columns; autoregressive correlation or one factor with aligned
+coefficients; blocks with the true predictors in different blocks); and (ii) in \emph{generic position}: for designs with
+countably many local correlation patterns (block, factor and tile types; autoregressive, banded, Toeplitz), for every vector
+of true coefficients outside one fixed closed, Lebesgue-null set of hyperplanes, the same for every $n$. Not covered:
+strong-factor designs whose mixed-sign coefficients lie on that set, and designs without such a pattern structure, such
+as riboflavin-like data.
+\end{remark}
+
+\status{Lemma VIS: \textbf{proved, and passed its independent review; recording in the registry pending}. It gives
+sufficient conditions for \as{V}; it adds no assumption.}
 
 \scope{Block and moderate AR correlation, and independent predictors: the designs S1--S4, S6, IND, AR ($0.6$) and BLK of
 our studies; not pervasive common factors with $p\gg\sqrt n$ (Section~\ref{sec:who-outside}).}
@@ -384,9 +450,7 @@ $c_{\mathrm{SB}}:=\kappa^2\tlow^2/\{200(M_1^2+\sigs^2)\}$. Then
 (i) The bound is on an intersection: a run produces output, certifies a small model, \emph{and} that model misses a true
 predictor. It is not a guarantee conditional on certification, and no run is claimed to certify a small model; nor is the
 certified model claimed to equal the true model.
-(ii) A second form replaces the signal bounds by a margin on the noiseless gain of a missing true predictor, with no
-condition on $p$, $\sz$ or the null predictors (also proved and independently checked).
-(iii) \emph{In existing numerics (not a theorem),} every completed run certified its reported model: 2,394 of 2,394 in the
+(ii) \emph{In existing numerics (not a theorem),} every completed run certified its reported model: 2,394 of 2,394 in the
 2,400-fit study, 376 of 376 in the strong-factor study, and 71 of 71 in a screening study. On the strong-factor designs with
 equicorrelation $\varrho\in\{0.5,0.7\}$, $p\ge2.5n$ and $\sz\in\{4,8\}$, the certified model missed at least one true
 predictor in 61 of 122 fits at $n=50$, 2 of 20 at $n=75$ and none of 30 at $n=100$; at the constants of these designs the
@@ -467,11 +531,9 @@ orthogonal designs ($\sz<p\le n-1$) with fixed nonzero coefficients, the expecta
 too, so there $\E[1-\pis{\Sz}]$ is of exact order $\rn$.
 
 \textup{(c)} \emph{At moderate $n$} (a heuristic, not a theorem). The posterior miss is carried mainly by the models
-$\Sz\cup\{j\}$ that add one null predictor. Each has posterior odds against $\Sz$ of about
-$\frac{\sz+1}{2p}\,n^{-1/2}e^{T_j^2/2}$ (prior, Occam factor and fit), with $T_j^2$ approximately $\chi^2_1$. The factor
-$e^{T_j^2/2}$ has no finite mean; over $p$ null predictors the largest $T_j^2$ is about $2\log p$, and the $p$ factors
-average about $2\sqrt{\log p/\pi}$. Together these models therefore carry about $(\sz+1)\sqrt{\log p/(\pi n)}$ times the
-weight of $\Sz$: the expression of~(b), here as a ratio to the weight of $\Sz$ rather than a bound on the posterior miss. With $\sz=5$, $n=200$ and $p=10^4$ this is about $0.7$. In single
+$\Sz\cup\{j\}$ that add one null predictor; each is light, but together, since the fit factor $e^{T_j^2/2}$ ($T_j^2$
+approximately $\chi^2_1$) has no finite mean, they carry about $(\sz+1)\sqrt{\log p/(\pi n)}$ times the weight of $\Sz$:
+the expression of~(b), here as a ratio to the weight of $\Sz$. With $\sz=5$, $n=200$ and $p=10^4$ this is about $0.7$. In single
 synthetic draws (AR(0.6), $\sz=5$) the measured total weight of these models, relative to that of $\Sz$, was $1.0$--$1.2$
 at $n=200$ and $p=10^4$--$10^6$, and $0.52$ at $n=400$, $p=10^4$. So at simulated sizes the posterior is spread over $\Sz$
 and many one-predictor extensions of it.
