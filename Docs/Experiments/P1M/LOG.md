@@ -314,3 +314,4 @@
 - 2026-11-17 10:54 CST — T6 SUBMITTED: job 2763439.
 - 2026-11-17 10:56 CST — 1M fit report completed (the stage-cost tool finished after ≈ 1 h): final islands bridge 350 ns·CPU/step (P9 assumed 706), late ≈ 480; offer floor cut bridge offers to 0.0007/step (−98% vs calibration); peak RSS 27 GB per island. results/F1M_PILOT_FIT.md updated.
 - 2026-11-17 11:11 CST — Builder 6 (Sonnet): #53 K2 fix daae378a (order phase allocation-free, counting test + negative control; StartView adaptation; 183/183) and #61 K5 099e8ac6 (#53 merged; 185/185; hashes unchanged). ONE Opus review for both started (H-13: no second Codex).
+- 2026-11-17 11:50 CST — **T6 at 10⁵ PASS** (job 2763439, 3.23 core-h): two real SIGKILLs (after the second checkpoint; mid-write), resume from step 25 → output hash 0xc4fb97717604869d = reference = T5 island 1; all sections equal; checkpoints removed. results/T6_1e5.md. Builder 7 told.
