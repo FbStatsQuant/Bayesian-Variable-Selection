@@ -1,0 +1,3 @@
+# auditV results (HQ, 2026-11-17)
+- Blind Fable 5.2 audit of the track V visibility lemma (2 samples, end_turn, $0.87): VIS-0/a/b/c/d/e and UNIF NO-FINDING (both samples).
+- **V:SCOPE REFUTED (both samples):** the stated reason for excluding riboflavin-like D18 ("uncountable patterns, B may have interior") is false. D18 is built from one fixed 4088x4088 matrix, so it has finitely many local patterns and falls under (VIS-d)(i). Either theta is off B (then it is covered, contradicting the dossier "outside") or theta is on B (a D14/D15-type case). The texts do not establish which. D19 is treated inconsistently.
