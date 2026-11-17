@@ -11,16 +11,19 @@ namespace v4::island {
 // The I step's proposal at round position `pos`: a pi_0 draw from the step's own addresses, scored. It does not depend
 // on the particle's state, so the label-major order phase draws it ahead (K2, WP3_ARCH_REVIEW §2.3); same bits.
 template <Arith A>
-void IslandEngine<A>::draw_indep(int i, uint32_t pos, const RoundCtx& rc, BitScorer& sc, Particle& out) {
+void IslandEngine<A>::draw_indep(int i, uint32_t pos, const RoundCtx& rc, BitScorer& sc, Particle& out, LmScratch* Z) {
   const uint32_t i1 = (uint32_t)i + 1;
   auto U = [&](uint32_t slot) { return this->U(addr(rc.xph, rc.ustage, i1, pos, slot)); };
-  Model T;
+  // Z: the label-major order phase passes its thread's scratch (model and block list sized before the region); the
+  // particle-major reference and the compat path draw with a local model
+  Model Tl; Model& T = Z ? Z->imodel : Tl;
   if (csrc) draw_pi0(st, [&](uint32_t slot) { return U(slot); }, T);   // compat: core's serial consumption
   else {
     const Address a0 = addr(rc.xph, rc.ustage, i1, pos, 0);
     const v4::Ctr4 ctr = v4::address_ctr(a0); const v4::Key2 kk = v4::address_key(a0);
-    draw_pi0_fast(st, [&](uint32_t slot) { return U(slot); },
-                  [&](const uint32_t* sl, double* o8) { philox8_word(ctr.data(), kk.data(), 0, sl, o8); }, T);
+    auto nu8 = [&](const uint32_t* sl, double* o8) { philox8_word(ctr.data(), kk.data(), 0, sl, o8); };
+    if (Z) draw_pi0_fast(st, [&](uint32_t slot) { return U(slot); }, nu8, T, Z->nz);
+    else draw_pi0_fast(st, [&](uint32_t slot) { return U(slot); }, nu8, T);
   }
   if (cfg.test_fail_indep == i && rc.xph == X_BRIDGE && rc.ustage == (uint32_t)cfg.test_fail_indep_stage)   // test hook
     throw v4::NumericalFailure("score failed (test hook: I proposal)");

@@ -188,10 +188,10 @@ inline void draw_pi0(const Start& st, NextU&& nu, Model& S) {
 // for the blocks that take members. Lanes past the stopping point are computed but never used (a computed value is
 // not a consumed one). Not for serial streams (compat), whose consumption must stop exactly where core's does.
 template <class NextU, class NextU8>
-inline void draw_pi0_fast(const Start& st, NextU&& nu, NextU8&& nu8, Model& S) {
+inline void draw_pi0_fast(const Start& st, NextU&& nu, NextU8&& nu8, Model& S, std::vector<std::pair<int, int>>& nz) {
   const int J = st.J;
   int k = cat_draw_gt(st.size_cum, nu(v4::slot_of(v4::SK_PI0_SIZE, 0)));
-  thread_local std::vector<std::pair<int, int>> nz; nz.clear();   // (block, size) of the blocks taking members, b descending
+  nz.clear();   // (block, size) of the blocks taking members, b descending (caller-owned: no allocation inside a region, WP6 K2)
   int r = k, b = J - 1;
   uint32_t slots[8]; double u8[8];
   while (b >= 0 && r > 0) {
@@ -214,6 +214,12 @@ inline void draw_pi0_fast(const Start& st, NextU&& nu, NextU8&& nu8, Model& S) {
     for (size_t t = 0; t < st.blocks[bb].size(); ++t) if (code & (1u << t)) S.push_back(st.blocks[bb][t]);
   }
   std::sort(S.begin(), S.end());
+}
+
+template <class NextU, class NextU8>
+inline void draw_pi0_fast(const Start& st, NextU&& nu, NextU8&& nu8, Model& S) {
+  thread_local std::vector<std::pair<int, int>> nz;
+  draw_pi0_fast(st, nu, nu8, S, nz);
 }
 
 inline std::vector<std::vector<int>> contiguous_blocks(int p, int bsz) {

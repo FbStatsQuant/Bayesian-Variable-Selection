@@ -146,6 +146,13 @@ void BitScorer::finish_from_factors(ModelView S, const std::vector<double>& LH, 
   o.logm = (arg > 0) ? D->logCn - 0.5 * (ldH - ldA) - D->nu * pm::log(arg) : NEG_INF;
 }
 
+void BitScorer::reserve(int kmax) {
+  const size_t k2 = (size_t)kmax * (size_t)kmax;
+  for (std::vector<double>* v : {&Gs_, &bufH_, &bufA_, &LH_, &LA_}) v->reserve(k2);
+  for (std::vector<double>* v : {&w_, &beta_, &tmp_}) v->reserve((size_t)kmax);
+  flip_.reserve((size_t)kmax + 1);
+}
+
 // core/cpp/v3_score.h:227-239 (score), copied; counters are per scorer.
 ScoreOut BitScorer::score(ModelView S) {
   ScoreOut o;

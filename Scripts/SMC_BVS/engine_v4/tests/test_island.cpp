@@ -23,7 +23,10 @@ using namespace v4::island;
 // called inside an active OpenMP parallel region throws std::bad_alloc. Off (0) for every other test. A real failure at
 // an unguarded site inside a region escapes the structured block and aborts the whole test binary (std::terminate).
 static std::atomic<long> g_par_new_countdown{0};
+static std::atomic<bool> g_order_phase{false};      // set by the island around the label-major order phase's parallel region
+static std::atomic<long> g_order_allocs{0};         // operator-new calls inside that region
 void* operator new(std::size_t n) {
+  if (g_order_phase.load(std::memory_order_relaxed) && omp_in_parallel()) g_order_allocs.fetch_add(1, std::memory_order_relaxed);
   if (g_par_new_countdown.load(std::memory_order_relaxed) > 0 && omp_in_parallel() && g_par_new_countdown.fetch_sub(1) == 1) {
     if (std::getenv("V4_DEBUG_INJECT")) { void* bt[32]; int nb = backtrace(bt, 32); std::fprintf(stderr, "== injected\n"); backtrace_symbols_fd(bt, nb, 2); }
     throw std::bad_alloc(); }
@@ -411,6 +414,30 @@ TEST(indep_proposal_failure_deferred_to_its_position) {
     }
   }
 }
+
+// review PR53 MAJOR: the label-major order phase (inverse orders, nongibbs lists, the I proposals' pi_0 draws and scores)
+// allocates nothing inside its parallel region: everything is sized serially before it, cold and warm, both forms,
+// threads 1 / 3, G < N. Counted by the replaced operator new while the island's test flag is set.
+template <Arith A>
+static void order_phase_no_alloc(const char* tag) {
+  Fixture F(100, 300, 46);
+  // control: the counter sees an allocation made in a region while the flag is set (and not otherwise)
+  g_order_allocs = 0; g_order_phase = true;
+  #pragma omp parallel num_threads(3)
+  { int* q = new int[100]; asm volatile("" : : "r"(q) : "memory"); delete[] q; }
+  g_order_phase = false;
+  CHECKF(g_order_allocs.load() >= 3, "[%s] control: the counting hook did not see %ld in-region allocations", tag, g_order_allocs.load());
+  for (int th : {1, 3}) for (int G : {16, 48}) {
+    IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = th; c.G = G; c.test_order_phase = &g_order_phase;
+    g_order_allocs = 0;
+    IslandRun r = run_island<A>(F.D, F.st, F.nb, c);
+    const long n = g_order_allocs.exchange(0);
+    CHECKF(r.status == 0 && n == 0, "[%s] threads %d G %d: %ld allocations inside the order phase's parallel region (status %d)", tag, th, G, n, r.status);
+    std::printf("  [%s] threads %d G %2d: %llu particle-rounds, %ld allocations in the order phase's region\n", tag, th, G, (unsigned long long)r.ks.particle_rounds, n);
+  }
+}
+TEST(order_phase_allocates_nothing_in_parallel_bit) { order_phase_no_alloc<Arith::Bit>("bit"); }
+TEST(order_phase_allocates_nothing_in_parallel_classA) { order_phase_no_alloc<Arith::ClassA>("A"); }
 
 // negative control of the NaN-row test: bounded scoring that skips the position just below the running first change
 // (test_bound_shrink = 1) consumes unscored values; the test must catch it as an internal_error

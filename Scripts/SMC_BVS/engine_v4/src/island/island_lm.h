@@ -39,23 +39,35 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
   auto& KS = res.ks;
   auto t0 = std::chrono::steady_clock::now();
   auto lap = [&](double& acc) { auto t1 = std::chrono::steady_clock::now(); acc += std::chrono::duration<double>(t1 - t0).count(); t0 = t1; };
-  gb.inv.resize((size_t)gN * m); gb.ng.assign(gN, {});
+  gb.inv.resize((size_t)gN * m);
   const bool ipre = !csrc;   // K2: I proposals ahead (compat keeps core's serial stream order)
-  gb.iprop.resize(gN); gb.ierr.assign(gN, nullptr);
+  // Everything the order phase's parallel region touches is sized here, serially (review PR53: no allocation inside the
+  // region): the nongibbs-label lists, the proposal models, the per-thread order / model / block-list scratch, and the
+  // scorers' Cholesky buffers (up to the plan's support size kq; a larger draw grows them, under the oom_guard)
+  const int kmod = D.K + 1, kq = std::max(1, std::min<int>(D.K, (int)std::ceil(3.0 * std::max(1.0, k_est))));
+  gb.ng.resize(gN); for (auto& v : gb.ng) { v.clear(); v.reserve((size_t)(m - p)); }
+  gb.iprop.resize(gN); gb.ierr.assign(gN, nullptr); for (auto& x : gb.iprop) x.S.reserve((size_t)kmod);
   if ((int)gb.scr.size() < NT) gb.scr.resize(NT);
-  for (int t = 0; t < NT; ++t) if ((int)gb.scr[t].ord.size() < m) gb.scr[t].ord.resize(m);   // serial (K1 scratch rule)
+  for (int t = 0; t < NT; ++t) {
+    LmScratch& z = gb.scr[t];
+    if ((int)z.ord.size() < m) z.ord.resize(m);
+    z.imodel.reserve((size_t)kmod); z.nz.reserve((size_t)kmod);
+    scorers[t]->reserve(kq);
+  }
+  if (cfg.test_order_phase) cfg.test_order_phase->store(true);   // tests only (operator-new counting)
   #pragma omp parallel for schedule(dynamic, 1) num_threads(NT)
   for (int gi = 0; gi < gN; ++gi) oom_guard([&] {
     uint32_t* ord = gb.scr[omp_get_thread_num()].ord.data(); uint32_t* inv = &gb.inv[(size_t)gi * m];
     draw_order(rc, g0 + gi, ord);
     for (int t = 0; t < m; ++t) { if (t + 16 < m) __builtin_prefetch(&inv[ord[t + 16]], 1); inv[ord[t]] = (uint32_t)t + 1; }   // 1-based positions
-    for (int lab = p; lab < m; ++lab) gb.ng[gi].push_back({inv[lab], lab});
+    for (int lab = p; lab < m; ++lab) gb.ng[gi].push_back({inv[lab], lab});   // reserved above
     std::sort(gb.ng[gi].begin(), gb.ng[gi].end());
     if (ipre) {   // the I step's proposal: its addresses do not depend on the state (K2)
-      try { draw_indep(g0 + gi, inv[m - 1], rc, *scorers[omp_get_thread_num()], gb.iprop[gi]); }
+      try { draw_indep(g0 + gi, inv[m - 1], rc, *scorers[omp_get_thread_num()], gb.iprop[gi], &gb.scr[omp_get_thread_num()]); }
       catch (const v4::NumericalFailure&) { gb.ierr[gi] = std::current_exception(); }
     }
   });
+  if (cfg.test_order_phase) cfg.test_order_phase->store(false);
   if (fail_fatal()) return;
   gb.q.assign(gN, 0); gb.e.assign(gN, 0); gb.done.assign(gN, 0); gb.etype.assign(gN, 0); gb.pending.assign(gN, Particle());
   gb.elab.assign(gN, -1);
