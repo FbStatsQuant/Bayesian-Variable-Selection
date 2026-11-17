@@ -12,11 +12,16 @@ X-measurable partition with blocks ≤ 16, and (T1-R), (FL-R), (V-R), (L-R^b) wi
 `STATEMENT.md:177-182` gives, under the joint law of (X, ε): [SAND(Q)], [TL(Q)], [NA(Q)], [POST], [MODE], and all
 conclusions of RM0-plus (a), (b⁺) with 𝓛′ = 𝓛. We use:
 (0.1) for n with s₀ ≤ K: 𝓜_n (S₀ is the unique maximiser of F on Ω) and 𝒦_n are data events, and
-P(𝒢⁺_nᶜ) ≤ P(𝓜_nᶜ) + P(𝒦_nᶜ) → 0, 𝒢⁺_n := 𝓜_n ∩ 𝒦_n (RM0-plus (b⁺), RM2R `STATEMENT.md:128-137`; P(𝓜_nᶜ) → 0 by
-[MODE], P(𝒦_nᶜ) → 0 by (a′) with [SAND(Q)], [NA(Q)], [TL(Q)]);
+P(𝒢⁺_nᶜ) ≤ P(𝓜_nᶜ) + P(𝒦_nᶜ) → 0, 𝒢⁺_n := 𝓜_n ∩ 𝒦_n: this is RM0-plus (b⁺), a stated conclusion of RM2-R-plus
+(RM2R `STATEMENT.md:128-137`, :180): under [MODE], [SAND(Q)], [NA(Q)], [TL(Q)], P(𝒢⁺_n) → 1 (RM2R `STATEMENT.md:131-132`) [LC1-13];
 (0.2) [POST]: E ε_n → 0, where ε_n = 1 − π(S₀ | y) (RM `STATEMENT.md` §2 interface table, as imported);
 (0.3) s₀ ≤ K for all large n: S₀ ⊆ Q and |Q| ≤ K for n ≥ n₀ ((L-feas), RM `STATEMENT.md:98`, part of (L-R^b)); all
-statements below are for such n.
+statements below are for such n. For the finitely many n with s₀ > K, STATEMENT §1's convention gives 𝓜_n = 𝒦_n = ∅ and
+ε_n = 1, so (i) is vacuous and every probability bound of (ii) has right side ≥ 1 [LC1-2].
+(0.3a) p_ret = p almost surely [LC1-5]: under Setting R (rows i.i.d. Gaussian with a positive-definite covariance, n ≥ 3)
+no column is constant with probability one, and the code drops a column only when all its entries are exactly equal
+(`v3_preprocess.R:111-112`). Hence, almost surely, Ω, K, ℓ_n, 𝒦_n and ε_n computed on the retained columns are those of
+the design's p, and POST, stated for the design's p, applies to ε_n.
 (0.4) (D) ⇒ every admissible run returns output for every valid non-degenerate input (DLV-0, RM2R
 `STATEMENT.md:144-147`), and under Setting R the input is valid and non-degenerate with probability one (RM0-plus (c⁺),
 RM2R `STATEMENT.md:138-143`, last sentence).
@@ -25,13 +30,18 @@ does not re-prove them; the corollary is stated with "the hypotheses of RM2-R-pl
 
 ## Step 1 — (i): the pathwise statement on 𝒢⁺_n
 Fix n with s₀ ≤ K, a data set in 𝒢⁺_n, and an admissible run (any seed, N_e, R′, calibration outcome) that returns
-output (event 𝒪). By L2 (i), on the sampler branch 𝒪 = {status "completed"}; on the exact branch 𝒪 = {status "exact"}
+output (event 𝒪). Output occurs only on the two branches [LC1-6]: `estimates_available` becomes TRUE only at
+`v3_fit.R:129` (exact branch) or through `v3_fit.R:171` from `v3_run.R:218` (sampler branch), both after `branch_run` is set
+(`v3_fit.R:106`); the earlier returns (`v3_fit.R:89`, `:102`) keep the initial FALSE (`v3_fit.R:78`). By L2 (i), on the sampler branch 𝒪 = {status "completed"}; on the exact branch 𝒪 = {status "exact"}
 (`v3_fit.R:125-129`: `estimates_available` TRUE iff `e$status == "exact"`; otherwise `:130-131` returns with it FALSE).
 *Sampler branch.* By L2 (i) (B4), since the data set is in 𝒦_n, S₀ ∈ 𝓜^run. Since it is in 𝓜_n, F(S₀) > F(S) for
 every S ∈ Ω ∖ {S₀}; by L2 (v), S₀ ∈ 𝒯 and `hpm` = S₀. By L2 (iii), 𝒯 ⊆ Ω is a set of distinct models returned with the
 values F(S). By IMPL-LIST and the identification of STATEMENT §1 (under EX-A, SPEC §2 applied to models with values
 F(S) gives, for every retained column j, `pip_list[j]` = Σ_{S∈𝒯, j∈S} e^{F(S)−F_max} / Σ_{S∈𝒯} e^{F(S)−F_max} = pip_𝒯(j),
-`mpm_list` = mpm_𝒯 and `log_Z_list` = F_max + log Σ_{S∈𝒯} e^{F(S)−F_max} = logZ_𝒯). LIST-K applies with this 𝒯
+`mpm_list` = mpm_𝒯 and `log_Z_list` = F_max + log Σ_{S∈𝒯} e^{F(S)−F_max} = logZ_𝒯). SPEC §4's exceptional rows do not
+fire [LC1-7]: the values are F(S), finite under EX-A (the scorer never fails for yᵀy > 0: Lemma S.2, RM2R
+`STATEMENT.md:151-152`); 𝒯 ∋ S₀ is not empty; 𝒯 consists of distinct models (L2 (iii)). So the three fields are
+present and not NA on every output run of the sampler branch. LIST-K applies with this 𝒯
 (S₀ ∈ 𝒯 ⊆ Ω) and gives:
  max_j |pip_list[j] − 1{j ∈ S₀}| ≤ ε_n (LIST-K (a)); max_j |pip_list[j] − PIP_j| ≤ ε_n (LIST-K (b));
  log Z + log(1 − ε_n) ≤ log_Z_list ≤ log Z (LIST-K (d)); and if ε_n < ½, `mpm_list` = S₀ = MPM (LIST-K (c)), hence

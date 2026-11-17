@@ -1,4 +1,4 @@
-# W3-D5P — STATEMENT v1.0 LOCKED: the list-restricted outputs on every Theorem 6 design
+# W3-D5P — STATEMENT v1.1 (locked v1.0 + LC1 changelog row): the list-restricted outputs on every Theorem 6 design
 
 Ticket W3-D5P = track D ticket #5′ (owner GO, `Theory_work/Dept/DECISIONS.md` D105, dept/theory; standard D106), Tier B
 corollary ticket, Theory Wave 3. Lead: Claude Opus 5.5 (effort high). Protocol: `Theory_work/Wave3/PROTOCOL_v4.md` with
@@ -40,6 +40,8 @@ retained columns, indexed by their original indices); S₀ = supp θ*, s₀ = |S
 the coded size prior normalised on Ω (`cpp/v3_score.h:60-70`) and m the coded marginal likelihood (CC2: e^F ∝ π on Ω).
   Z := Σ_{S∈Ω} e^{F(S)},  π(S) := π(S | y) := e^{F(S)}/Z,  PIP_j := π({S : j ∈ S}),  MPM := {j : PIP_j > ½},
   ε_n := ε_n(y) := 1 − π(S₀ | y).
+*Convention* [LC1-2]: if S₀ ∉ Ω (i.e. s₀ > K), then π(S₀ | y) := 0, ε_n = 1, and 𝓜_n = 𝒦_n := ∅ (S₀ can then be
+neither the maximiser of F on Ω nor scored); every statement below holds trivially for such n.
 For a nonempty set 𝒯 ⊆ Ω: π(𝒯) := Σ_{S∈𝒯} π(S), Z_𝒯 := Σ_{S∈𝒯} e^{F(S)}, π_𝒯(S) := e^{F(S)}/Z_𝒯 (S ∈ 𝒯), and
   pip_𝒯(j) := π_𝒯({S ∈ 𝒯 : j ∈ S}),  mpm_𝒯 := {j : pip_𝒯(j) > ½},  logZ_𝒯 := log Z_𝒯.
 
@@ -61,7 +63,8 @@ open item until then); it is not a condition on the data, and nothing below depe
 
 ## 2. Lemma LIST-K (deterministic list algebra)
 
-**(C1) Lemma LIST-K.** *Deterministic.* Fix a data set with Z < ∞ and a set 𝒯 ⊆ Ω with S₀ ∈ 𝒯. Then:
+**(C1) Lemma LIST-K.** *Deterministic.* Fix a data set (F real-valued on Ω, so 0 < Z < ∞) [LC1-12] and a set 𝒯 ⊆ Ω
+with S₀ ∈ 𝒯. Then:
 (a) max_j |pip_𝒯(j) − 1{j ∈ S₀}| ≤ 1 − π_𝒯(S₀) ≤ ε_n, the maximum over all retained columns j;
 (b) sup_{𝒜 ⊆ Ω} |π_𝒯(𝒜 ∩ 𝒯) − π(𝒜)| = 1 − π(𝒯) ≤ ε_n; in particular max_j |pip_𝒯(j) − PIP_j| ≤ ε_n;
 (c) if ε_n < ½, then mpm_𝒯 = S₀ = MPM;
@@ -93,8 +96,8 @@ ledger (`Ledger::offer_stores`, `cpp/v3_ledger.h:89-94`), as in SAMP `STATEMENT.
 ## 4. Corollary LIST-R (Gaussian rows; every design inside Theorem 6)
 
 **(C3) Corollary LIST-R.** Setting R, the method as coded, the premises and configuration of §1 and IMPL-LIST. Assume
-the hypotheses of RM2-R-plus (RM2R `STATEMENT.md:177-182` = those of RM2-R, W3-RM2 `STATEMENT.md:216-218`; they are
-implied by the reader assumptions (A1)–(A6) of Theorem 6 through its bridges B6.1–B6.4 and the identities of (A1)–(A3) with Setting R and (V-R), READER §6) [SL1-T]. Let 𝒢⁺_n = 𝓜_n ∩ 𝒦_n, so that P(𝒢⁺_n) → 1 (RM2-R-plus). Write
+the hypotheses of RM2-R-plus (RM2R `STATEMENT.md:177-182` = those of RM2-R, W3-RM2 `STATEMENT.md:216-218`; reader
+form: §5 remark 5) [LC1-3]. Let 𝒢⁺_n = 𝓜_n ∩ 𝒦_n, so that P(𝒢⁺_n) → 1 (RM2-R-plus, through RM0-plus (b⁺)) [LC1-13]. Write
 r_n := √(log n/n).
 (i) *Common data event, pathwise.* On 𝒢⁺_n, every admissible run that returns output — every seed, N_e, R′ and
     calibration outcome, either branch — has S₀ in its list (𝒯, or 𝒯^ex when returned), reports `hpm` = S₀, and its
@@ -107,7 +110,8 @@ r_n := √(log n/n).
       B₃(t) := {`log_Z_list` is not NA and |log_Z_list − log Z| > 2t},  B₄ := {`mpm_list` ≠ S₀ or `hpm` ≠ S₀}.
     For every t ∈ (0, ½), for every admissible run (every seed, N_e, R′ and calibration outcome) [SL1-2]:
       P(𝒪 ∩ (B₁(t) ∪ B₂(t) ∪ B₃(t))) ≤ P(𝓜_nᶜ) + P(𝒦_nᶜ) + P(ε_n > t),  P(𝒪 ∩ B₄) ≤ P(𝓜_nᶜ) + P(𝒦_nᶜ) + P(ε_n ≥ ½),
-    and every right side tends to 0, because E ε_n → 0 ([POST], a conclusion of RM2-R-plus).
+    and every right side tends to 0: P(𝓜_nᶜ) + P(𝒦_nᶜ) → 0 by RM2-R-plus (RM0-plus (b⁺)), and P(ε_n > t),
+    P(ε_n ≥ ½) ≤ E ε_n/min(t, ½) → 0 by [POST], a conclusion of RM2-R-plus [LC1-1].
     **Rate (p ≥ 2 for all large n) [SL1-3].** If p ≥ 2 for all large n, then ε_n = O_P(r_n) (hypothesis (T1-R) of
     RM2-R-plus is hypothesis LSF of POST, RM `STATEMENT.md:128-133`; POST (b), `L1_POST.md:31-33`), and for every
     deterministic sequence t_n ∈ (0, ½) with t_n/r_n → ∞ the data events 𝒢♯_n := 𝒢⁺_n ∩ {ε_n ≤ t_n} satisfy
@@ -132,6 +136,10 @@ r_n := √(log n/n).
    (`W3-DIST:Cor-C`) on designs that satisfy both Theorem 9 and Theorem 6 is proposed at CP3, not claimed here.
 4. *Arithmetic.* EX-A throughout, as for Theorem 6. Binary64 agreement (1e−12 between engines; SPEC §3, §7) is an
    engineering acceptance test, not a theorem.
+5. *Reader form of the hypotheses* [LC1-3]. In reader form the hypotheses of LIST-R are those of Theorem 6 (READER §6,
+   (A1)–(A6)), which reach the hypotheses of RM2-R-plus through Theorem 6's own bridges B6.1–B6.4 with their recorded
+   marks (READER §6 bridge table). LIST-R consumes RM2-R-plus only; the reader corollary inherits exactly Theorem 6's
+   bridge record, so any change of Theorem 6's presented hypotheses carries over (D109).
 
 ## 6. Dependencies and supersession
 
@@ -149,3 +157,4 @@ No supersession. Card proposal (a new row next to 3.1, or an addition to 3.1/3.6
 |---|---|---|---|---|---|
 | v0.1 | all | — | draft for the statement lock | — | — |
 | v1.0 | (C3)(ii)–(iii): evidence error events qualified "when `log_Z_list` is not NA"; t, t_n ∈ (0, ½) (was (0, ½]); rate clause under "p ≥ 2 for all large n"; error events named B₁–B₄; (C3) preamble "implied by" the reader assumptions | EQUAL (corrections of the draft before the lock) | SL1-1, SL1-2, SL1-3, SL1 table row "C3 preamble" | `reviews/SL1_statement_lock_sol.md` | applied as the reviewer's fixes; LOCK |
+| v1.1 | (C1) hypothesis "F real-valued on Ω (0 < Z < ∞)"; §1 convention for S₀ ∉ Ω; (C3) preamble: the reader-form sentence moved out of the claim span to §5 remark 5; P(𝒢⁺_n) → 1 attributed to RM0-plus (b⁺); (C3)(ii) reason for "every right side tends to 0" completed | EQUAL (hypothesis made explicit as already defined in §1; a convention that makes small-n cases trivially true; an unproved interpretive sentence moved out of the span; citations) | LC1-12, LC1-2, LC1-3, LC1-13, LC1-1 | `reviews/LC1_line_check_opus.md` | council R1 (tags to be confirmed by the seats) |

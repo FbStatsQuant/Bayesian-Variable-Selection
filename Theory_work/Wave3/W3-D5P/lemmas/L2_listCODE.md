@@ -18,7 +18,7 @@ run (`cpp/v3_ledger.h:89-94`). "Sampler branch" := `fit$branch_run == "smc"` (`v
 A1. `led.hpmS` is assigned only in `Ledger::offer_hpm` (`cpp/v3_ledger.h:84-88`; no other assignment to `hpmS` in
 `cpp/`), and it replaces the current value iff `hpm_better(F, S, hpmF, hpmS)` (`:85`). `offer_hpm` is called at
 `cpp/v3_ledger.h:90` (inside `offer_stores`) and at `cpp/v3_core.cpp:502`, which is inside the
-`catch (NumericalFailure&)` handler (`:483-507`), entered only after `status = "numerical_failure"` (`:484`).
+`catch (NumericalFailure&)` handler (`:483-508`) [LC1-8], entered only after `status = "numerical_failure"` (`:484`).
 A2. `led.top.offer` is called only at `cpp/v3_ledger.h:91`, inside `offer_stores`, immediately after `offer_hpm(S, F, …)`
 with the same (S, F). (The store at `cpp/v3_core.cpp:549` is the enumeration's own `top`, Step E.)
 A3. `offer_stores` is called from `Ledger::event` when `is_fresh` (`cpp/v3_ledger.h:112`) and directly for inherited
@@ -47,7 +47,7 @@ the sampler branch: `fit$status == "completed"` ⇔ `fit$estimates_available` is
 fit returns with `estimates_available = TRUE`" (DLV-0, `Theory_work/Wave3/W3-RM2-R/STATEMENT.md:144-147`).
 B2. *LS0 ran.* `status` is initialised to "completed" (`cpp/v3_core.cpp:413`) and changed only to "resource_limit"
 (`:451`, `:459`, `:480`) or "numerical_failure" (`:484`); it is never reset to "completed". If it is "completed" at the
-end, then: the island loop ran all four islands (`:443-452`); the block `:453-482` ran; in it the guard check after the
+end, then: the island loop ran all `o.islands` islands (`:443-452`; `o.islands` is read from `ro` at `:396` and is 4 at `v3_run.R:91`; the argument uses no property of this number) [LC1-10]; the block `cpp/v3_core.cpp:453-482` ran; in it the guard check after the
 final local search did not fire (`:459`), so the condition at `:465` (`o.ls0`, TRUE by `v3_run.R:94` and
 `cpp/v3_core.cpp:400`) held and LS0 ran: `start_mode(st, 1000000, o.ls0_tie_dp)` (`:469`) and
 `E.local_search(m.S, ls0_cap, o.tier, true, -1, PH_LS0)` (`:476`) returned (no exception: a `NumericalFailure` would
@@ -58,7 +58,7 @@ neighbour by `eval(q, ME_LOCAL)` (`emit = true`, `cpp/v3_engine.h:391`). In `eva
 scorer runs, `fresh = true`, the result is inserted in the cache (`:91-94`), and `led->event(…, fresh || !cache, …)`
 (`:99`) calls `offer_stores` (`cpp/v3_ledger.h:112`), so S ∈ 𝓜^run. On a cache hit, the entry was inserted by an earlier
 `eval` of the same model in this final run (the cache is created empty at `cpp/v3_core.cpp:409`, and `insert` is called
-only at `cpp/v3_engine.h:93`; `find` matches the model exactly, `cpp/v3_score.h:271-281`). That earlier `eval` either had
+only at `cpp/v3_engine.h:93`; `find` matches the model exactly, `cpp/v3_score.h:274-282` with `same` at `:271-273`) [LC1-8]. That earlier `eval` either had
 `emit = true` and was fresh, so it offered S, or had `emit = false`. The only `emit = false` call in the final run is the
 centre of the final local search, `E.local_search(led.hpmS, o.ell, o.tier, false)` (`cpp/v3_core.cpp:456`), whose centre
 is `led.hpmS`, a model already passed to `offer_hpm`, hence (A1, A3: before any numerical failure) already in 𝓜^run.
@@ -67,14 +67,16 @@ evaluates is in 𝓜^run. (This is CC2 (a), `CC_code_check.md:48-53`, specialise
 B4. *LS0 in the run is the search of 𝒦_n.* The control flow of `local_search` reads only the centre, the move cap, p, K
 (`cpp/v3_engine.h:384`), and the models and values F produced by `eval` (`:387-418`: scan order flips j = 0..p−1 then
 swaps in ascending order; best by larger F then `lex_less`; strict-improvement rule `:408`; cap rule `:409-411`). The
-event context `ev` (`:381, :386, :389`) is bookkeeping and is not read by the control flow. `eval` returns
+event context `ev` (`:381, :386, :390`) [LC1-8] is bookkeeping and is not read by the control flow. `eval` returns
 F = `D.logprior[k]` + lm, where lm is either a fresh scorer value or a cached scorer value of the same model; under
 EX-A both are log m(S) exactly (A5). The centre is `m.S` = `start_mode(st, 1000000, TRUE).S` (`cpp/v3_core.cpp:469`), a
 function of the data through the start tables `st` (setup, no uniforms), and the cap is ℓ_n + |m.S| (`:473`, with
 `o.ls0_ell` = ℓ_n). Hence the sequence of models LS0 evaluates, and its termination, are functions of the data alone and
-coincide with the deterministic LS0 of the definition of 𝒦_n (complete scans, cap ℓ_n + |S̃₀|, started from the coded
-start mode S̃₀ = `start_mode(...).S`; RM `STATEMENT.md:52-53` and the configuration paragraph `:59-67`; W3-RM:E4 for the
-centre). In particular, on 𝒦_n (that search scores S₀), S₀ is evaluated by LS0 in every completed run, so S₀ ∈ 𝓜^run
+coincide with the deterministic LS0 of the definition of 𝒦_n (RM `STATEMENT.md:52-53`: complete scans, cap ℓ_n + |S̃₀|,
+started from the coded start mode; configuration RM `STATEMENT.md:59-67`), whose scan order, tie rule and stop rules are
+those fixed by the code pins W3-RM2 `STATEMENT.md:60-67` (imported by RM2R `STATEMENT.md:39-41`): centre and cap
+`cpp/v3_core.cpp:465-476`, scan `cpp/v3_engine.h:394-406`, ties `:392`, strict improvement `:408`, stops `:409-414` —
+the very lines read above [LC1-4]. (W3-RM:E4 is context only: 𝒦_n is defined from the coded start mode itself.) In particular, on 𝒦_n (that search scores S₀), S₀ is evaluated by LS0 in every completed run, so S₀ ∈ 𝓜^run
 by B3. ∎(i)
 
 ## Step C — (ii) Link 2: `hpm` = Ŝ⁺
@@ -86,7 +88,10 @@ strict total order on distinct models with values given by A5: larger F, then sm
 CC2's conclusion "Ŝ = the hpm_better-maximum of 𝓜" (`CC_code_check.md:60-63`). RM and RM2R define Ŝ⁺ as the reported
 model (RM `STATEMENT.md:54`), and RM-0's pathwise step uses exactly this description: "the reported HPM Ŝ⁺ — the
 ≻-maximum of the scored set" (C-DLV `lemmas/L4_delivery.md:66-70`), with ≻ the HPM order and the scored set the set
-of models that joined the final run's all-scored set (= 𝓜^run, by A3 and B3). So `fit$hpm` = Ŝ⁺, written in original
+of models that joined the final run's all-scored set. That set is 𝓜^run [LC1-11]: every score event of the final run
+that is an `eval` or `held` event is offered or is a re-visit of an offered model (CC2 (a)–(b), `CC_code_check.md:48-54`),
+tables and inherited models are offered directly (CC2 "Other offers", `CC_code_check.md:55-57`); conversely every
+offered model was scored (tables `cpp/v3_start.h:93`, inherited `cpp/v3_core.cpp:426`, evaluations `cpp/v3_engine.h:92`). So `fit$hpm` = Ŝ⁺, written in original
 indices. 𝓜^run ⊆ Ω by A4. ∎(ii)
 
 ## Step D — (iii) The returned list
@@ -98,13 +103,17 @@ indices `pre$kept` (`v3_fit.R:118`), which are also the names of `pip_primary` (
 D2. *TopStore invariant.* `TopStore` (`cpp/v3_ledger.h:43-57`) holds a `std::set` ordered by `TopCmp` with
 `hpm_order = true` (`:46-47`, `:78`): e before e′ iff e.v > e′.v, or e.v = e′.v and |e.S| < |e′.S|, or equal values and
 sizes and `lex_less(e.S, e′.S)` (`:37-41`). This is a strict total order on pairs (v, S), and it ranks entries exactly as
-`hpm_better` ranks (F, S) (`cpp/v3_util.h:121-126`). By A5 the value is a function of the model, so two entries are
-equivalent iff they carry the same model: the set holds distinct models. `offer(v, S)` (`:49-57`): (1) returns if cap = 0
-(not the case: cap = 40p + 1 ≥ 41); (2) rejects e = (v, S) if the set is full and e is not strictly before the last
+`hpm_better` ranks (F, S) (`cpp/v3_util.h:121-126`). By A5 the value is a function of the model, and every model vector offered is in sorted (canonical) form [LC1-9a]:
+`to_internal` sorts (`cpp/v3_core.cpp:34`), blocks are sorted (`cpp/v3_blocks.h:141`, so table models are), `start_mode`
+sorts (`cpp/v3_start.h:287`), moves use `sorted_insert`/`sorted_erase` (`cpp/v3_util.h:129-130`), and the enumeration
+appends increasing j. Hence two entries are equivalent iff they carry the same model: the set holds distinct models. `offer(v, S)` (`:49-57`): (1) returns if cap = 0
+(not the case: cap = 40p + 1 ≥ 41, since p = p_ret ≥ 1 on both branches — a fit with no retained column returns
+`no_predictors` before branching, `v3_fit.R:99-102` [LC1-9b]); (2) rejects e = (v, S) if the set is full and e is not strictly before the last
 element; (3) returns if e is already present; (4) otherwise inserts e and, if the size then exceeds cap, erases the last
 element. *Invariant:* after every offer, the set contains only offered entries, has size ≤ cap, and contains the
 TopCmp-first entry e* among all entries offered so far. Induction on the offers. Initially the set is empty and nothing
-has been offered. Offer e. If e is not strictly before the current e*, then e* stays first; in cases (2) and (3) the set
+has been offered. *First offer* [LC1-9c]: the set is empty, so (2) and (3) do not apply; e is inserted, no erasure
+(1 ≤ cap), and e = e*. *Later offer* e (e* exists). If e is not strictly before the current e*, then e* stays first; in cases (2) and (3) the set
 is unchanged; in case (4) the only erased element is the last one of a set of size cap + 1 ≥ 42 ≥ 2, which is not its
 first element, and e* is first (it precedes every element of the set, all of which were offered); so e* stays. If e is
 strictly before e*, then e is strictly before every element of the set (e* precedes or equals each of them), in
@@ -118,12 +127,12 @@ D2, 𝒯 (the models of `top_store`) consists of distinct elements of 𝓜^run, 
 
 ## Step E — (iv) Exact branch
 On the exact branch `v3_fit` calls `v3_enumerate(ctx)` (`v3_fit.R:121`) = `cpp_enumerate` (`v3_exact.R:7`;
-`cpp/v3_core.cpp:524-570`). The recursion `rec` (`:539-555`) starts from S = ∅ (`rec(0)`, `:556`) and, from a sorted S
+`cpp/v3_core.cpp:524-568`). The recursion `rec` (`:537-555`) [LC1-8] starts from S = ∅ (`rec(0)`, `:556`) and, from a sorted S
 with |S| < K, calls itself on S ∪ {j} for every j greater than the last element of S (`:553-554`); it therefore visits
 every subset of [p] of size ≤ K exactly once, i.e. every S ∈ Ω (Ω = {|S| ≤ K}, K = `D.K` = min(p, ⌊n/2⌋),
-`cpp/v3_score.h:40`). At each visit it computes F = `D.logprior[|S|]` + logm (`cpp/v3_core.cpp:541`) and offers (F, S) to its own
+`cpp/v3_score.h:40`). At each visit it computes F = `D.logprior[|S|]` + logm (`cpp/v3_core.cpp:539`) [LC1-8] and offers (F, S) to its own
 `TopStore top` with cap 40p + 1 (`:531`, `:549`). If no `NumericalFailure` occurs, status is "exact" (`:536`, `:556`).
-Then: `pip[j]` = numer[j]/total (`:559`) where, by the rescaled streaming log-sum-exp (`:543-547`; each rescale
+Then: `pip[j]` = numer[j]/total (`:559`) where, by the rescaled streaming log-sum-exp (`:542-547`; each rescale
 multiplies numer and total by the same factor), numer[j]/total = Σ_{S∋j} e^{F(S)}/Σ_S e^{F(S)} = PIP_j under EX-A;
 `log_Z` = mx + log(total) = log Z (`:557`); `v3_enumerate` names `pip` by `ctx$orig` and sets `mpm` = the retained
 columns with pip > 0.5 (`v3_exact.R:8-13`), i.e. MPM; `hpm` is the running hpm_better-maximum over all S ∈ Ω (`cpp/v3_core.cpp:548`).

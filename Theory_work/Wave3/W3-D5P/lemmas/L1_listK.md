@@ -4,7 +4,8 @@ Claim: STATEMENT.md (C1), §2. Status: proof by the lead, not yet line-checked. 
 finite sums over a finite set, real arithmetic, one inequality for log; no measure theory.
 
 ## Setting (all deterministic)
-Ω is a finite set of models (subsets of [p] := {1, …, p}); F : Ω → ℝ; w(S) := e^{F(S)} > 0; Z := Σ_{S∈Ω} w(S) ∈ (0, ∞).
+Ω is a finite set of models (subsets of [p] := {1, …, p}); F : Ω → ℝ (real-valued: (C1)'s hypothesis; STATEMENT §1 defines
+F = log ϖ + log m, finite on Ω) [LC1-12]; w(S) := e^{F(S)} > 0; Z := Σ_{S∈Ω} w(S) ∈ (0, ∞).
 π(S) := w(S)/Z; for 𝒜 ⊆ Ω, π(𝒜) := Σ_{S∈𝒜} π(S); PIP_j := π(𝒜_j) with 𝒜_j := {S ∈ Ω : j ∈ S}; MPM := {j ∈ [p] : PIP_j > ½}.
 𝒯 ⊆ Ω with S₀ ∈ 𝒯 (so S₀ ∈ Ω). Z_𝒯 := Σ_{S∈𝒯} w(S); π_𝒯(S) := w(S)/Z_𝒯 for S ∈ 𝒯; for ℬ ⊆ 𝒯, π_𝒯(ℬ) := Σ_{S∈ℬ} π_𝒯(S);
 pip_𝒯(j) := π_𝒯(𝒜_j ∩ 𝒯); mpm_𝒯 := {j ∈ [p] : pip_𝒯(j) > ½}; logZ_𝒯 := log Z_𝒯; ε := 1 − π(S₀). Write m := π(𝒯).
@@ -14,6 +15,7 @@ pip_𝒯(j) := π_𝒯(𝒜_j ∩ 𝒯); mpm_𝒯 := {j ∈ [p] : pip_𝒯(j) > 
 (0.2) Z_𝒯 = Σ_{S∈𝒯} Z·π(S) = Z·m, hence m = Z_𝒯/Z ∈ (0, 1] (𝒯 ⊆ Ω, all terms positive) and π_𝒯(S) = π(S)/m for S ∈ 𝒯.
 (0.3) π(S₀) ≤ m ≤ 1 (S₀ ∈ 𝒯); hence 1 − m ≤ ε, and ε < 1 because π(S₀) > 0.
 (0.4) π_𝒯(S₀) = π(S₀)/m ≥ π(S₀) (by (0.2), (0.3)); hence 1 − π_𝒯(S₀) ≤ ε.
+(0.5) If 𝒯 = Ω, then m = 1 and π_Ω = π (by (0.2)); so pip_Ω(j) = π(𝒜_j) = PIP_j, mpm_Ω = MPM and Z_Ω = Z [LC1-12].
 
 ## (a)
 Fix j ∈ [p]. Always 0 ≤ pip_𝒯(j) ≤ π_𝒯(𝒯) = 1.
@@ -35,7 +37,7 @@ Assume ε < ½. By (0.4), π_𝒯(S₀) ≥ π(S₀) = 1 − ε > ½.
 - j ∈ S₀: pip_𝒯(j) ≥ π_𝒯(S₀) > ½ (proof of (a)), so j ∈ mpm_𝒯.
 - j ∉ S₀: pip_𝒯(j) ≤ 1 − π_𝒯(S₀) < ½ (proof of (a)), so j ∉ mpm_𝒯.
 Hence mpm_𝒯 = S₀ (both are subsets of [p]; S₀ ⊆ [p] because S₀ ∈ Ω). The same argument with 𝒯 = Ω (allowed: S₀ ∈ Ω),
-where pip_Ω = PIP and mpm_Ω = MPM by (e), gives MPM = S₀. ∎(c)
+where pip_Ω = PIP and mpm_Ω = MPM by (0.5), gives MPM = S₀. ∎(c)
 
 ## (d)
 By (0.2), logZ_𝒯 = log(Z·m) = log Z + log m. By (0.3), log π(S₀) ≤ log m ≤ 0, i.e.
@@ -44,7 +46,7 @@ log Z + log(1 − ε) ≤ logZ_𝒯 ≤ log Z, and 0 ≤ log Z − logZ_𝒯 = �
 *Corollary used in L3.* If ε ≤ t < ½ then |logZ_𝒯 − log Z| ≤ ε/(1 − ε) ≤ 2ε ≤ 2t (since 1 − ε > ½).
 
 ## (e)
-For 𝒯 = Ω: m = 1, π_Ω = π (by (0.2)), so pip_Ω(j) = π(𝒜_j) = PIP_j, mpm_Ω = MPM and Z_Ω = Z. Then (a) and (c) at 𝒯 = Ω
+For 𝒯 = Ω the identities are (0.5). Then (a) and (c) at 𝒯 = Ω
 read max_j |PIP_j − 1{j ∈ S₀}| ≤ 1 − π_Ω(S₀) = ε and, if ε < ½, MPM = S₀. ∎(e)
 
 ## Remarks for the checker
