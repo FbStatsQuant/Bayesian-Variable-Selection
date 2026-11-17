@@ -5,7 +5,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 
 ## THEORY PUSH (owner greenlight 11-17, D104). Freeze tag theory-v2026-11-freeze → d40c9780 stands for recorded statements.
 - Running (4 leads + Fable): track A lead (W1-N1:B/F line checks), W3-D2 lead (check X), recorder (A1/A2 NARROW → tools → registry editorial), precedent notes (Sonnet); audit Fable (FEAS_SMC_WORKS).
-- Running since 11-17: W3-D5P (#5′) and W3-D3 (#3, plan stage). Next free slot: READER editorial batch.
+- Running since 11-17: W3-D5P (#5′) and W3-D3 (#3, plan stage). Next free slot: **generic-position lemma** (visibility; uniform-in-n margin; Tier B, kill 3 d; D112), then the READER editorial batch.
 - DROPPED for this paper (owner D107): 'SMC does work' incl. the weak-leak corollary (FEAS_SMC_WORKS.md = follow-up material). Evidence spread dropped. **List CLOSED** (D107). After the owner's method sign-off: proof hardening for Lean (3 blueprints + hostile review).
 
 ## Running
