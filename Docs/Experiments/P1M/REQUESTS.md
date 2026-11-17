@@ -244,3 +244,6 @@ Fit 6-AR-n200-r01-V-s1, batch F1M_pilot, code exp/P1M-engine 2cfaa9e5, island IS
 → calibrate (96, 128G, 2 h) → 16 islands (96, 64G, **1 h**; expected 11–13 min each) → merge (32, 80G, 1 h) → eval + post (8, 16G, 1 h).
 **Jobs 2761931–2761935 (submitted 13:33Z). Expected ≈ 450 core-h; stop rule ≈ 675 (1.5×); driver worst case 1,816 billed core-h (a limit, not an expectation).** Pilot rule
 (Sol F7): replicate 1 only if the frozen configuration is unchanged afterwards.
+
+## 2026-11-17 10:53 CST — PRE-ANNOUNCE: T6 at 10⁵ (real-kill restart test, a campaign-freeze prerequisite in the approved timeline H-14)
+1 task, 48 CPUs, 24G, 50 min, SPR: worst 40 core-h, expected 5–16. Plan tools/slurm/examples/plan_T6_1e5.json; reuses T5's run dir. Exploratory standing authority (≤ 200).

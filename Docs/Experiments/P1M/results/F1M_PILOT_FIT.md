@@ -26,9 +26,15 @@ retries. Submitted 07:33 CT, eval ended 10:38 CT: **3 h 04 min**. HQ P9 GO; stop
 - **Calibration (4,808 s):** the pilot island + **12 diagnostic islands** (3 iterations k1–k3 × 4), each ≈ 300–317 s at N 512:
   bridge 27 rounds ≈ 1,720–1,860 ns·CPU per step, offers 0.034–0.036 per step; burn-in/measured ≈ 760–830 ns·CPU per step;
   M 3.5 → 4.4; mean |S| 5.0 → 6.4; peak RSS 53–55 GB.
-- **Final islands:** 526–792 s each on 96 threads (avg 16.8 core-h); peak RSS ≤ 34.7 GiB (request 64G). Per-round cost records
-  are in each island_r.bin's meta.cost (not extracted: `p1m_stage_cost.py t5` stalled on `smcbvs4 info --meta` at 10⁶ — tool issue
-  for builder 7).
+- **Final islands** (16 × 96 threads, N 2,500, G 256; O2 cost records via `p1m_stage_cost.py`, which finished after ≈ 1 h on the
+  login node: slow but working): 526–792 s each (avg 16.8 core-h); T = 27 bridge rounds + 8 burn-in + 4 measured.
+  | kind | ns·CPU per step (range, mean) | M | offers per step | wall s (mean) | compaction s | peak RSS GB |
+  |---|---|---|---|---|---|---|
+  | bridge (27) | 327–389, **350** | 3.58 | 0.00068 | 246 | 5.2 | 26.2 |
+  | burn-in (8) | 440–522, 474 | 4.34 | 0.00021 | 99 | 4.3 | 27.0 |
+  | measured (4) | 454–572, 495 | 4.35 | 0.00009 | 52 | 2.2 | 27.1 |
+  The offer floor works: bridge offers 0.0007 per step vs 0.035 in the (unfloored) calibration islands (−98%). The bridge cost per
+  step (350) is half the P9 estimate (706); the late cost (≈ 480) is close to it (578).
 - **Merge:** islands merged in 834 s; tail 1,215 s (final local search 4.0 s, **LS0 3.8 s**); **peak RSS 75.1 GiB of the 80G
   request vs WP3's plan 43.7 GiB** (under-count: see below).
 
@@ -39,4 +45,4 @@ retries. Submitted 07:33 CT, eval ended 10:38 CT: **3 h 04 min**. HQ P9 GO; stop
 2. **Calibration time** 85 min vs ≈ 55 estimated: the V calibration ran **3 iterations** (12 diagnostic islands), not the 2 (8) the
    estimate assumed from T5; the islands themselves cost what P7 predicted. O3 (parallel leader-store compaction, builder 7) cuts
    the per-island compaction (≈ 38 s of each ≈ 300 s).
-3. `p1m_stage_cost.py t5` / `smcbvs4 info --meta` on 10⁶ island files: stalls / invalid_input → fix before the campaign reports.
+3. `p1m_stage_cost.py t5` takes ≈ 1 h on 16 island files at 10⁶ (full-file reads), and `smcbvs4 info --meta` by hand returned invalid_input → builder 7 makes it read the meta section only.
