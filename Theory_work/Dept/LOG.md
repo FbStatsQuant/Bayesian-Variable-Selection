@@ -396,3 +396,4 @@
 - 2026-11-16 23:01 CST READER GO step 1 (prepare the editorial patch on its branch: card 16 edits, B2, AUD-S4 v1.4, Opus R3 items, requote); B1 + council seat wait for D95 (step 2; deadline Fri 12:00 CT). Agents: recorder + READER = 2.
 - 2026-11-16 23:01 CST D99 relayed to the recorder.
 - 2026-11-16 23:01 CST Recorder: A1/A2 SUSPECT can't be state-only (cascade to 25 ACTIVE incl. RM2-R ×5 via Prop-F-FAC → F-UNI → DLV-0). Recommended to HQ: (1) note + ERRATA entry now, NARROW post-freeze. D95 dry run continues with A1/A2 open.
+- 2026-11-16 23:02 CST D100 relayed to the recorder.
