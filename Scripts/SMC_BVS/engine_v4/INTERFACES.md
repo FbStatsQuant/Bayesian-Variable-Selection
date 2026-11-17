@@ -675,3 +675,9 @@ point, so all WPs link from day one: `setup::run`, `island::run`, `calib::run`, 
   recomputes a row with the core's bits; `pi0_block_size(T,b,r,u)` = 0 iff u < cond0, else `upper_bound` on the row; draws
   are allocation-free with caller scratch. A setup.bin without `cond0` is refused by the reader. Numbering: v0.1.15 (PR #45),
   v0.1.16 (O2), v0.1.17 (O6), v0.1.18 (O5), v0.1.19 (WP4's reader line) precede it; the header line moves with those PRs (WP1).
+
+- v0.1.21 (2026-11-17, WP7 for WP1; review PR59) — §5.1 `calib.bin` `tau_cal`: computed (writer and reader) by an
+  allocation-free radix select, bit-identical to the c-th largest value, with −0.0 treated as +0.0 (so the result is +0.0
+  for a ±0 tie). The writer refuses a non-finite inherited F (`internal_error`). The distinctness proof of the inherited
+  models is a linear scan for the exporter's canonical (strictly lexicographic) list, which has no size limit; any other
+  order needs an index sort and is refused above 2^24 inherited models (`invalid_input`).

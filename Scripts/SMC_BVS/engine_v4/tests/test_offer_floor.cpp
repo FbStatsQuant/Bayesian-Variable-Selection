@@ -168,8 +168,9 @@ TEST(offer_floor_merge_rule) {
       std::vector<double> sorted = v; std::sort(sorted.begin(), sorted.end(), [](double a, double b) { return a > b; });
       for (uint64_t c : {(uint64_t)1, (uint64_t)n, (uint64_t)(1 + g() % n), (uint64_t)(1 + g() % n)}) {
         const double r = v4::tau_cal_of(v, c), w = sorted[c - 1];
-        const bool zero = r == 0.0 && w == 0.0;   // +0 and -0 compare equal: the sort may pick either; the select is by key (-0 < +0)
+        const bool zero = r == 0.0 && w == 0.0;   // +0 and -0 compare equal: the sort may pick either; the select folds -0 into +0
         CHECKF(zero || v4::f64_hex(r) == v4::f64_hex(w), "n %zu c %llu: select %.17g vs sorted %.17g", n, (unsigned long long)c, r, w);
+        CHECK(!zero || v4::f64_hex(r) == v4::f64_hex(0.0));   // a +-0 tie gives +0.0 (review PR59 m3)
       }
       CHECK(std::isinf(v4::tau_cal_of(v, n + 1)) && v4::tau_cal_of(v, n + 1) < 0);
     }
@@ -367,5 +368,15 @@ TEST(offer_floor_end_to_end_merge) {
     CHECKF(v4::f64_hex(cr.tau_cal) == v4::f64_hex(tau), "reordered distinct models: tau_cal %.17g vs %.17g", cr.tau_cal, tau);
     bool refused = false; try { v4::wp4io::read_calib(sp, D.p, D.K); } catch (const v4::Error& e) { refused = e.st == v4::Status::invalid_input; }
     CHECK(refused);
+    // review PR59 m4: an UNORDERED list above the limit is refused (the limit is lowered here instead of building 2^24
+    // models); the canonical list has no limit; at the limit the unordered list is still proved distinct and accepted
+    const size_t lim0 = v4::wp4io::calib_unordered_limit();
+    v4::wp4io::calib_unordered_limit() = ni - 1;
+    bool big = false; try { v4::wp4io::read_calib(rv, D.p, D.K); } catch (const v4::Error& e) { big = e.st == v4::Status::invalid_input && std::string(e.what()).find("canonical") != std::string::npos; }
+    CHECK(big);
+    CHECK(v4::wp4io::read_calib(cpath, D.p, D.K).tau_cal == tau);   // the canonical list as written: no limit
+    v4::wp4io::calib_unordered_limit() = ni;
+    CHECK(v4::f64_hex(v4::wp4io::read_calib(rv, D.p, D.K).tau_cal) == v4::f64_hex(tau));
+    v4::wp4io::calib_unordered_limit() = lim0;
   }
 }

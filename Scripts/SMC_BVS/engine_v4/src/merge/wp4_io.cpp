@@ -209,9 +209,15 @@ std::string write_calib(const std::string& path, const CalibWrite& c) {
     if (c.led->has_hpm) { meta["hpm_incomplete"] = true; meta["hpm_so_far_F"] = c.led->hpmF; meta["hpm_so_far_ev"] = event_json(c.led->hpm_ev); }
   } else meta["has_hpm"] = false;
   if (ok && c.mode == fmt::M_V) {   // D-29 (v0.1.15 §5.1): tau_cal = the c-th best F over the exported distinct inherited models
-    std::vector<double> F;
-    if (c.inherited_flat) F = c.inherited_flat->F; else for (auto& m : c.inherited) F.push_back(m.F);
-    tau_cal_to_meta(meta, tau_cal_of(F, c.led ? c.led->top.cap : 0));   // c = the top-store capacity 40p + 1
+    // the flat export (calibrate's) is selected in place: no copy of the F values (review PR59 MAJOR); only the legacy
+    // vector-of-models path (tests, hand-made calibrations) builds a small array. Non-finite values are refused as
+    // the reader does (invalid_input there, internal_error here: a writer must not produce them)
+    std::vector<double> legacy;
+    const double* Fp; size_t nF;
+    if (c.inherited_flat) { Fp = c.inherited_flat->F.data(); nF = c.inherited_flat->F.size(); }
+    else { for (auto& m : c.inherited) legacy.push_back(m.F); Fp = legacy.data(); nF = legacy.size(); }
+    for (size_t i = 0; i < nF; ++i) if (!std::isfinite(Fp[i])) throw Error(Status::internal_error, "write_calib: a non-finite inherited F");
+    tau_cal_to_meta(meta, tau_cal_of(Fp, nF, c.led ? c.led->top.cap : 0));   // c = the top-store capacity 40p + 1
   }
   if (ok && c.inherited_flat) {
     const calib::InheritedFlat& f = *c.inherited_flat;
@@ -280,7 +286,7 @@ double check_calib_tau_cal(const fmt::Reader& R, const Json& meta, uint32_t mode
   if (!strict) {   // not the canonical order: distinctness by sorting the indices (small files / legacy lists only)
     // bounded: the exporter's flat list is canonical (the scan above); an unordered list is a legacy / hand-made file, and
     // its index sort must not become a large allocation before the island's admission (4 B per model)
-    if (n > (1ull << 24)) throw Error(Status::invalid_input, path + ": more than 2^24 inherited models and not in canonical (lexicographic) order");
+    if (n > calib_unordered_limit()) throw Error(Status::invalid_input, path + ": more than " + std::to_string(calib_unordered_limit()) + " inherited models and not in canonical (lexicographic) order");
     std::vector<uint32_t> ord(n); for (uint64_t i = 0; i < n; ++i) ord[i] = (uint32_t)i;
     std::sort(ord.begin(), ord.end(), [&](uint32_t a, uint32_t b) { return lex_less(M(a), M(b)); });
     for (uint64_t i = 1; i < n; ++i) if (!lex_less(M(ord[i - 1]), M(ord[i]))) throw Error(Status::invalid_input, path + ": inherited models are not distinct (D-29: tau_cal is over distinct models)");

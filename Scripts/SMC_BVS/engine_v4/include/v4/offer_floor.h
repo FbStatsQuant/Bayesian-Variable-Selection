@@ -29,15 +29,16 @@ inline double f64_of_hex(const std::string& h, const std::string& what) {
 }
 
 // The c-th largest of n finite doubles by a four-pass radix select on the order-preserving 64-bit key (16 bits per pass,
-// 65,536 counters): exact, deterministic, O(1) memory and no copy of the values (review PR54 re-check: the nth_element
-// copy was ~0.64 GB at 10^6, 8e7 inherited models, before the island's admission). Ties are value-exact: the answer is the
-// bits of one of the values (-0.0 orders below +0.0). 1 <= c <= n; callers have checked finiteness.
+// 65,536 counters): exact, deterministic, O(1) heap (the 512 KiB histogram is thread-local static storage: nothing is
+// allocated at call time, so nothing allocates before the island's admission), no copy of the values (review PR54
+// re-check: the nth_element copy was ~0.64 GB at 10^6, 8e7 inherited models). -0.0 is folded into +0.0 in the key, so
+// +-0 ties are well defined and the result is +0.0 (review PR59 m3). 1 <= c <= n; callers have checked finiteness.
 inline double kth_largest_f64(const double* F, size_t n, uint64_t c) {
-  auto key = [](double x) { uint64_t u; std::memcpy(&u, &x, 8); return (u >> 63) ? ~u : (u | 0x8000000000000000ull); };
-  std::vector<uint64_t> cnt(65536);
+  auto key = [](double x) { if (x == 0.0) x = 0.0; uint64_t u; std::memcpy(&u, &x, 8); return (u >> 63) ? ~u : (u | 0x8000000000000000ull); };
+  static thread_local uint64_t cnt[65536];
   uint64_t prefix = 0, rem = c;   // prefix: the chosen high bits so far; rem: the rank still to find among the keys with that prefix
   for (int shift = 48; shift >= 0; shift -= 16) {
-    std::fill(cnt.begin(), cnt.end(), 0);
+    std::memset(cnt, 0, sizeof cnt);
     const int hi = shift + 16;   // keys whose bits above `shift + 16` equal prefix
     for (size_t i = 0; i < n; ++i) {
       const uint64_t k = key(F[i]);
