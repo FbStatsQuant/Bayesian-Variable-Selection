@@ -751,3 +751,11 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - Afterwards: the method sign-off → proof hardening → Lean.
 - 2026-11-17. FEAS_SMC_WORKS (audit Fable): no route through existing lemmas. **OWNER: "SMC does work" DROPPED for this paper, including the weak-leak corollary** ("what we have is more than enough for a brand-new method"). Material kept for the follow-up paper. The theory push list is closed.
 - 2026-11-17. Owner: "SMC does work" may come back on the table **after the Lean proofs for the core theorems are done**; focus on the target now. #5′ spec forwarded to Engineering (3 fields incl. log_Z_list, kept by HQ).
+- 2026-11-17/18. **OWNER-approved ASSUMPTION COMPLIANCE decisions** (consultant AGREE with 4 tweaks).
+  - Core 3 is presented as the theorem for block and moderate AR correlation; visibility stated as "no true predictor masked by ≤ 15 others"; failures named.
+  - Certified screening (row 3.7) is promoted to the main text with the card-9/11 handling. Row 3.6 → supplement remark; row 3.5 stays main once the W1-N1 discharge is recorded.
+  - Cor 9C → a conditional remark until #5′. Row 1.4 stays in the supplement.
+  - Generic-position lemma required with a margin uniform in n. **#3 (sub-Gaussian Thm 2) is now required.**
+  - Gaussian rows and exact arithmetic/RNG are disclosed as SL-anchored conventions.
+- W1-N1:B/F line checks done (AW:ISL, AW:FRZ); retarget + W3-SAMP erratum (potential pair) approved; API blind audit submitted.
+- A1/A2: V2 corrigendum. #5′ statement locked (Corollary 6L).
