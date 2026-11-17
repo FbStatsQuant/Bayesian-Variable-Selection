@@ -195,7 +195,7 @@ Json run(const Json& args) {
   // run the bit form particle-major (D-21; compat: 1 thread, v3 streams 0-9 owned by the runner); V runs class A
   // label-major with every thread.
   const island::StartView st = island::load_start_view(spath, D, sdims.mappable);   // mapped: the start law is not expanded
-  const island::Neighbours nb = island::load_neighbours(spath, D.p);
+  const island::Neighbours nb = island::load_neighbours(spath, D.p, !sdims.mappable);   // the mapped loader verified the sections
   island::CalibRunnerConfig rc; rc.seed = (uint32_t)seed; rc.B = b.B; rc.threads = s.threads;
   rc.inputs_bytes = ipl.setup_in;   // the island's own setup inputs: the Start model of the plan above (StartView: the mapped lengths)
   if (mode == fmt::M_COMPAT) { rc.compat = true; rc.kernel = island::KernelKind::ParticleMajor; rc.threads = 1; }

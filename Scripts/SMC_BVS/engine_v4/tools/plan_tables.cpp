@@ -13,6 +13,9 @@
 //   v4_plan_tables --counts AR_n200.json [--q90 5] [--setup-bin-bytes B] [--island-threads 96] [--calib-threads 96]
 //                  [--merge-threads 32] [--Rp 16] [--k-store k]
 //   v4_plan_tables --setup setup.bin --n n --p p [same options]
+//   v4_plan_tables --setup setup.bin --data data.bin --load 1 [--island-threads T]   MEASURED: map the start law as an
+//                  admitted island does (data, StartView, neighbours, draw scratch for T threads) and print /proc/self/status
+//                  RSS split into anonymous (heap: what the island owns) and file-backed (mapped setup.bin / data.bin pages)
 // Output: one JSON object per G (64, 256) on stdout, then a Markdown table.
 #include <cstdio>
 #include <cstring>
@@ -22,22 +25,56 @@
 #include "v4/island/setup_load.h"
 #include "v4/json.h"
 #include "v4/merge.h"
+#include "v4/prep.h"
+#include <fstream>
 
 using namespace v4;
 using namespace v4::island;
 
 static double gib(double b) { return b / 1073741824.0; }
 
+static Json proc_status() {   // VmRSS, VmHWM, RssAnon, RssFile (kB -> bytes)
+  Json j = Json::object(); std::ifstream f("/proc/self/status"); std::string line;
+  while (std::getline(f, line))
+    for (const char* k : {"VmRSS", "VmHWM", "RssAnon", "RssFile"})
+      if (line.rfind(std::string(k) + ":", 0) == 0) j[k] = 1024.0 * std::stod(line.substr(std::strlen(k) + 1));
+  return j;
+}
+
 int main(int argc, char** argv) {
-  std::string counts, setup; int64_t n = 0, p = 0; double q90 = -1, setup_bin = -1, k_store = 0;
+  std::string counts, setup, data; int64_t n = 0, p = 0; double q90 = -1, setup_bin = -1, k_store = 0; int load = 0;
   int ti = 96, tc = 96, tm = 32, Rp = 16;
   for (int i = 1; i + 1 < argc; i += 2) {
     const std::string k = argv[i], v = argv[i + 1];
     if (k == "--counts") counts = v; else if (k == "--setup") setup = v; else if (k == "--n") n = std::stoll(v); else if (k == "--p") p = std::stoll(v);
     else if (k == "--q90") q90 = std::stod(v); else if (k == "--setup-bin-bytes") setup_bin = std::stod(v); else if (k == "--k-store") k_store = std::stod(v);
     else if (k == "--island-threads") ti = std::stoi(v); else if (k == "--calib-threads") tc = std::stoi(v); else if (k == "--merge-threads") tm = std::stoi(v);
-    else if (k == "--Rp") Rp = std::stoi(v);
+    else if (k == "--Rp") Rp = std::stoi(v); else if (k == "--data") data = v; else if (k == "--load") load = std::stoi(v);
     else { std::fprintf(stderr, "unknown option %s\n", k.c_str()); return 2; }
+  }
+  if (load) {   // MEASURED load of the start law as an admitted island holds it
+    if (setup.empty() || data.empty()) { std::fprintf(stderr, "--load needs --setup and --data\n"); return 2; }
+    const Json before = proc_status();
+    const Data D = prep::load_data(data);
+    const Json after_data = proc_status();
+    const SetupDims sd = read_setup_dims(setup, D.p, D.K, false);
+    const StartView v = map_start_view(setup, D, false);   // no section hash pass: measure what the island keeps, not the verification
+    const Neighbours nb = load_neighbours(setup, D.p);
+    v.prepare(ti);
+    const Json after = proc_status();
+    Json o = Json::object();
+    o["label"] = "MEASURED (/proc/self/status after mapping; bytes)"; o["n"] = D.n; o["p"] = D.p; o["J"] = v.J; o["max_block"] = v.max_m;
+    o["view_bytes_mapped"] = (double)v.bytes(); o["planned_setup_inputs"] = start_inputs_bytes(sd, ti); o["source"] = v.source;
+    o["before"] = before; o["after_data"] = after_data; o["after_start_view"] = after;
+    o["anon_added_by_start_view"] = after.at("RssAnon").num() - after_data.at("RssAnon").num();
+    if (load == 2) {   // the pre-StartView form, for comparison: the expanded dep::Start rebuilt from logr
+      const dep::Start st = load_start(setup, D);
+      const Json after_dep = proc_status();
+      o["after_dep_start"] = after_dep; o["anon_added_by_dep_start"] = after_dep.at("RssAnon").num() - after.at("RssAnon").num();
+      o["dep_start_bytes_counted"] = start_bytes(st, nb);
+    }
+    std::printf("%s\n", o.dump(1).c_str());
+    return 0;
   }
   SetupDims d; std::string design = "setup.bin";
   if (!counts.empty()) {

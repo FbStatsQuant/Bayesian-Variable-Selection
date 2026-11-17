@@ -246,8 +246,9 @@ inline double start_inputs_bytes(const SetupDims& d, int threads) {
   return (double)d.view_bytes + start_scratch_bytes(d.max_m, d.K, threads) + nb;
 }
 
-inline Neighbours load_neighbours(const std::string& path, int p) {
-  fmt::Reader R(path);
+// verify = false when the caller already verified the file's sections (the mapped StartView loader did)
+inline Neighbours load_neighbours(const std::string& path, int p, bool verify = true) {
+  fmt::Reader R(path, verify);
   if (!R.has("nb_ptr") || !R.has("nb_idx")) throw Error(Status::invalid_input, path + ": no neighbour lists (nb_ptr / nb_idx)");
   Neighbours nb; nb.ptr = R.vec<int64_t>("nb_ptr"); nb.idx = R.vec<int32_t>("nb_idx");
   if (nb.ptr.size() != (size_t)p + 1 || nb.ptr[0] != 0 || nb.ptr[(size_t)p] != (int64_t)nb.idx.size()) throw Error(Status::invalid_input, path + ": nb_ptr shape (" + std::to_string(nb.ptr.size()) + " entries for p = " + std::to_string(p) + ", ptr[0] = " + std::to_string(nb.ptr.empty() ? -1 : nb.ptr[0]) + ", ptr[p] = " + std::to_string(nb.ptr.size() > (size_t)p ? nb.ptr[(size_t)p] : -1) + ", |idx| = " + std::to_string(nb.idx.size()) + ")");
