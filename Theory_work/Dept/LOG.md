@@ -480,3 +480,4 @@
 - 2026-11-17 14:36 CST HEARTBEAT: XR2r landed on main d8a1334d (CI 44169043637 in progress); the recorder continues with the W discharge dry run. Heartbeat prompt updated to the current state (all push tickets at CP3; recording order).
 - 2026-11-17 14:41 CST XR2r confirmed landed (d8a1334d, CI 44169043637 success). A1/A2 corrected clause Opus re-check PASS (V3); the V2 dry run is running. W discharge details re-sent to the recorder in full.
 - 2026-11-17 14:50 CST A1/A2 V2 corrigendum dry run clean (2 files appended, no registry write; Opus V3 PASS) → HQ GO requested. Recorder → W discharge dry run.
+- 2026-11-17 14:51 CST HQ GO A1/A2 corrigendum real (relayed).
