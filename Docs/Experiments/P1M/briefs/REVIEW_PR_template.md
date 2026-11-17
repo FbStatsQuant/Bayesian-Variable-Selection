@@ -1,5 +1,7 @@
 # Independent PR review brief (SMC - Engineering; PROTOCOL §2). Reviewer: Opus 5.5, high, independent of the author.
 
+**Reviewer models (owner, 11-17):** Claude reviews run on Claude Work (`claudeAgent`): Opus 5.5 high for gate/concurrency/bit-identity, Sonnet otherwise (H-12). **Every Sol (Codex) gate review uses `gpt-6.2-sol`, reasoningEffort high** (provider `codex`); reviews already running when this was set finish on their original model.
+
 You review one pull request of the large-p engine (`Scripts/SMC_BVS/engine_v4/`) against its work-package brief, the
 binding `INTERFACES.md` and `ENGINEERING_SPEC.md` §0-v2. Docs are at `/home/fb31/Bayesian-Variable-Selection/Docs/Experiments/P1M/`.
 Checkout: your own worktree (`git fetch origin && git checkout --detach origin/<branch>`). Read only: never push, comment
