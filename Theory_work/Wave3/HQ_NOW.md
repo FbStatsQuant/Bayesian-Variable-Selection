@@ -80,7 +80,7 @@
 - HQ on 11-16 morning: check the account and Codex meters, then propose a pacing plan to the owner (concurrency per
   department, account split, Codex level) before the departments ramp up.
 
-## CODEX PACING LEVEL (owner sets; POLICIES §14): **0 (normal)** since 2026-11-15
+## CODEX PACING LEVEL (owner sets; POLICIES §14): **1 (light pacing)** since 2026-11-16 late (owner: "let's have a surplus to burn when we actually need it"; Codex at 95% with the weekly reset in 6d20h). Previously 0.
 
 ## ACCOUNT ALLOCATION (owner sets; HQ relays to all managers)
 - Current (2026-11-15): department agents on **Claude Third**, except Engineering WP2 + WP5 builders/reviewers on **Claude Work** (HQ overnight 11-15 ~23:18, pending the owner's review); HQ and the Writing Department on Claude Personal.

@@ -1,0 +1,3 @@
+consumer	input	use	file	lines	sha256	carrier
+W3-POST:Thm-1	SOP:TH09-T02	proof:item 5(a)	Theory_work/Wave3/W3-T03ACC/sources/W1-T03R/PROOF.md	149-149	cee4a6ca325415bc5acab968f5cbe73f71b09cee5540db723c2649c631bf3c59	Theory_work/Wave3/W3-POST/reviews/LC_edges_record.md
+W3-POST:Lemma-1a	SOP:TH09-T02	proof:[T03R] lines 79-97	Theory_work/Wave3/W3-T03ACC/sources/W1-T03R/PROOF.md	79-97	cee4a6ca325415bc5acab968f5cbe73f71b09cee5540db723c2649c631bf3c59	Theory_work/Wave3/W3-POST/reviews/LC_edges_record.md
