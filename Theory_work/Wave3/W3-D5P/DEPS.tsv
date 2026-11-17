@@ -1,0 +1,7 @@
+id	file[:lines]	uses (ids)	sha	checked_sha	checked_by	state
+STMT-C1	STATEMENT.md:§2	LIST-K	-	-	-	UNCHECKED
+STMT-C2	STATEMENT.md:§3	LIST-CODE	-	-	-	UNCHECKED
+STMT-C3	STATEMENT.md:§4	LIST-R	-	-	-	UNCHECKED
+LIST-K	lemmas/L1_listK.md	-	-	-	-	UNCHECKED
+LIST-CODE	lemmas/L2_listCODE.md	W3-SAMP:CC@1.1.2	-	-	-	UNCHECKED
+LIST-R	lemmas/L3_listR.md	LIST-K;LIST-CODE;W3-RM2-R:RM2-R-plus@1.0.1;W3-RM2-R:RM0-plus@1.0.1;W3-RM2-R:DLV-0@1.0.1;W2-APP:POST@1.0.7	-	-	-	UNCHECKED
