@@ -88,6 +88,7 @@ class Reader {
   Json json(const std::string& name) const;
   std::shared_ptr<const void> keep_alive() const;   // keeps the mapping alive (for Data views)
   void verify_all() const;
+  void verify_section(const std::string& name) const;   // one section's SHA-256 against the table (throws invalid_input)
  private:
   std::string path_, hash_;
   FileHeader hdr_{};
