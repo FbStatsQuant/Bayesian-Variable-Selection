@@ -56,3 +56,6 @@ finished reviewers are settled. Gate reviews (#46, #13 re-check, O1, K1, K3, Sta
 - **P7 measures above the R1 bracket (> 1.2k per fit):** no fit, HQ gets ranked cuts (H-11 (4)).
 - **LS0/tail time at 10⁶ is unmeasured (G0 ran with LS0 off):** T5 and P7 record it, and the merge task's limit is set from that.
 - **Queue wait for 16 × 96-CPU tasks:** submitted as one job array; the delay goes to the slack.
+
+
+**HQ 11-16 (cost note accepted):** T5 worst case ≤ 400 core-h, P7 ≤ 144, inside the envelope. Pre-announce each submission with its expected cost; a run that exceeds 1.5× its expected cost (T5 ≈ 128 on an 85 expectation; P7 75 on 50) is stopped and reported before any re-run.
