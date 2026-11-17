@@ -463,3 +463,4 @@
 - 2026-11-17 13:55 CST W3-D3 CP3 (057e7b05): Thm2SG/B3w/ExSG council R2 Opus 9.3 (R1 both ACCEPT claims, gates FAIL on prose S1, fixed), bound R2f c52866ef; all inputs PROVED-CHECKED (clean). Joint H5 card drafted: Theory_work/Dept/H5_CARD_PUSH_2026-11-17.md.
 - 2026-11-17 13:56 CST D119 relayed to the recorder. All push tickets at CP3; leads now: track V done, D2/D3/D5P done → only the recorder runs (+ W3-D5P waiting on Engineering).
 - 2026-11-17 13:58 CST D120 dispatched (recorder, W3-D3 lead, W3-D5P lead).
+- 2026-11-17 13:59 CST auditV: lemma CLEAN; V:SCOPE REFUTED (D18 exclusion reason false: finitely many patterns; D19 inconsistent). Track A lead: certified dist(ϑ_D18, B) + STATEMENT:70-71 fix (Opus diff, re-bind) + package scope update; V recording HELD. Then TRACK_B / compliance / Writing note updates by the manager.
