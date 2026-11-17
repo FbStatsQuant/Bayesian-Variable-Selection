@@ -56,8 +56,8 @@ By Step 1 (on {p_ret = p} the outputs for (X^r, y^r) and (X^r, ỹ) coincide) th
 *Claim* (`STATEMENT.md` §3). Let x = m + Bξ, m ∈ ℝ^p, B ∈ ℝ^{p×d} with BBᵀ = Σ a correlation matrix, ξ ∈ ℝ^d with independent
 coordinates, E ξ_k = 0, Var ξ_k = 1. (a) If E exp(λξ_k) ≤ exp(L²λ²/2) for all k and λ, then E x = m, Cov(x) = Σ and
 E exp(λuᵀ(x − m)) ≤ exp(L²λ²uᵀΣu/2) for all u ∈ ℝ^p, λ ∈ ℝ; in particular (A4) holds with this L. (b) The scalar hypothesis
-holds with L = 1 for standard Gaussian, Rademacher and uniform on [−√3, √3] coordinates, and with L = K when ξ_k takes its
-values in an interval of length 2K.
+holds with L = 1 for standard Gaussian, Rademacher and uniform on [−√3, √3] coordinates, and with L = K when every ξ_k
+takes its values in an interval of length 2K, the same K for all k [R1-opus-E4].
 
 *Proof of (a).* E x = m + B E ξ = m; Cov(x) = B Cov(ξ) Bᵀ = B I_d Bᵀ = Σ. Fix u, λ and put v := Bᵀu ∈ ℝ^d. Then
 uᵀ(x − m) = vᵀξ = Σ_k v_kξ_k, and by independence (each factor finite by hypothesis)

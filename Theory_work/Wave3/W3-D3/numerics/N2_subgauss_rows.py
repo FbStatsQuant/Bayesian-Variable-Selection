@@ -1,6 +1,6 @@
 """W3-D3 numerics N2 (sanity, not evidence for a claim): exact coded posterior (full enumeration, p = 10) on random
 designs with NON-Gaussian rows x = L xi, L = chol(Sigma), Sigma_jk = 0.5^|j-k| (AR(1) correlation), xi i.i.d. Gaussian /
-Rademacher / uniform[-sqrt3, sqrt3] (all satisfy (A4) with K = 1, Proposition ExSG). Truth: s0 = 2, beta = (1, -1, 0, ...),
+Rademacher / uniform[-sqrt3, sqrt3] (all satisfy (A4) with L = 1, Proposition ExSG). Truth: s0 = 2, beta = (1, -1, 0, ...),
 sigma = 1, intercept 0. Reports mean delta_n * sqrt(n / log n) and the frequency of HPM = MPM = S0 over R replicates.
 The Post class is copied verbatim from Theory_work/Wave3/W3-POST/numerics/post_exact.py (exact target as coded).
 Run: /home/fb31/SMC_Theory_Department/ci/venv-numerics/bin/python -I N2_subgauss_rows.py > N2_out.txt"""

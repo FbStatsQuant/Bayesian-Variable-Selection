@@ -32,7 +32,7 @@ probability tending to one; the posterior argument uses the observed design only
 **Assumption class (HQ ruling 2026-11-17: class 1, stated precisely, with a 2b backup).** Class 1: "Sub-Gaussian rows on
 sparse directions with arbitrary correlation. This contains Narisetty & He's (2014, Lemma 6.1) isotropic sub-Gaussian
 rows as the special case Σ = I [for centred rows, with L a fixed multiple of their sub-Gaussian constant], and implies
-Song & Liang's Condition 1." (NH14 cited from arXiv v1 pp. 16–17, journal version not checked; Song & Liang p. 953.)
+Song & Liang's Condition 1 [for the centred predictors z = x − m_n]." [R1-sol-S1] (NH14 cited from arXiv v1 pp. 16–17, journal version not checked; Song & Liang p. 953.)
 2b backup: "Light-tailed, correlated features are the ordinary situation: Gaussian predictors qualify, and so do
 correlated mixtures x = m + Bξ of independent features each confined to an interval of K standard deviations on either
 side of its mean (for instance Rademacher features, K = 1; uniform features, K = √3)." (HQ's first wording "any bounded … predictors

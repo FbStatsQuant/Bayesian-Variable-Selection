@@ -56,3 +56,12 @@
   (reviews/INGEST_staged.txt); HOLDS.md (origin/main) 0 HOLD lines. Council R1 manifest frozen: MANIFEST
   de19cf54f91f81defa8bc75a5b174e01a697ea75c3984f70106efaa23a39b768 (28 files, 12 extra). Briefs BRIEF_R1_sol.md, BRIEF_R1_opus.md
   saved before launch.
+- 13:39 — Agents started: council R1 seats — Sol (codex, gpt-6.1-sol, high; OpenAI seat) and Opus 5.5 high (providerInstanceId claudeAgent_personal; Claude seat), fresh, blind; replies → reviews/R1_council_{sol,opus}.md.
+- 13:48 — Council R1: Sol ACCEPT ×3, 8.5, gates=FAIL (S1: Song–Liang implication without centring, in REPORT/card/
+  READER_DELTA); Opus ACCEPT ×3, 8.8, gates=FAIL (S1: card drops common-constant and centring qualifiers; E1–E6). R1 not passed.
+  All accepted (reviews/R1_disposition.md): card, REPORT §2, READER_DELTA, PLAN, TARGET qualifiers restored; STATEMENT v1.3
+  (E4 common K in ExSG (b); E5 𝒜′_n := ∅ for n < n₁; both EQUAL). citecheck 70/0; staged ingest 0 problems, acceptance PASS;
+  HOLDS 0. Manifest R2 frozen: MANIFEST f559960469015b9c993e17cc82b3955ceee2890db189b8ae23e2aa2f1f4840a6; verify OK.
+- 13:48 — Agent started: Opus 5.5 high (providerInstanceId claudeAgent_personal), new thread — role: council diff round
+  R2 seat opus (judges Sol S1 and Opus S1, E1–E6; DEPS rows S:B3w, S:ExSG, P:B3w, P:ExSG, R:registry); brief
+  reviews/BRIEF_R2_opus.md; reply → reviews/R2_council_opus.md.

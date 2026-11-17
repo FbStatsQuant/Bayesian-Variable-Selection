@@ -1,4 +1,4 @@
-# W3-D3 — STATEMENT v1.2 (2026-11-17; lead: Claude Opus 5.5, high; track D ticket #3, sub-Gaussian rows for Theorem 2)
+# W3-D3 — STATEMENT v1.3 (2026-11-17; lead: Claude Opus 5.5, high; track D ticket #3, sub-Gaussian rows for Theorem 2)
 
 Ticket W3-D3: Theorem 2 (claims card row 1.2, posterior concentration on a random design) with Gaussian rows replaced by
 rows that are sub-Gaussian along sparse directions, as a **coexisting** claim. The proof reuses W3-DIST's
@@ -6,7 +6,7 @@ population-to-sample bridge (owner condition D105/D112). Source: W3-AUDIT `TRACK
 theory/W3-AUDIT). Tier B (no new key lemma). Delta statement (RIDER_RULES §1) over the recorded reader Theorem 2
 ([RV] row thm2) and its master [W3P] Theorem 1 item 6. This file **asserts no proof status**: proofs in `lemmas/`,
 statuses in the checkpoints. Asymptotic (n → ∞) unless marked *deterministic*. No method change.
-v1.2 = v1.1 with the line-check amendments [K1-1]…[K1-12] (`reviews/K1_linecheck_opus.md`;
+v1.3 = v1.2 with the council R1 dispositions (`reviews/R1_disposition.md`). v1.2 = v1.1 with the line-check amendments [K1-1]…[K1-12] (`reviews/K1_linecheck_opus.md`;
 `reviews/K1_disposition.md`). v1.1 = v1.0 with the statement-lock amendments [L1-1]…[L1-6] (`reviews/L1_statement_lock_sol.md`, LOCK-WITH-AMENDMENTS;
 `reviews/L1_disposition.md`) and the HQ anchoring wording with the lead's queued edits Q1, Q2
 (`reviews/PENDING_LEAD_EDITS.md`).
@@ -76,7 +76,8 @@ and 𝒜_n := 𝓔₁ ∩ 𝓔₂(q_n). There is n₁ = n₁(s₀, A, L) ≥ max
     which (X°, θ°) satisfies ‖X°θ°‖² ≤ nM_E, (F_λ; φ₀), (F_w; g₀) (with m♯_n computed from (n, p, s₀)) and
     θ°²_min nφ₀²/log n ≥ M_n. Then 𝒜′_n is (X°, θ°)-measurable and 𝒜_n ⊆ 𝒜′_n ∩ {p_ret = p}. Moreover (with (b):
     P(𝒜′_nᶜ) ≤ P(𝒜_nᶜ) → 0) the hypotheses of [W3P] Theorem 1 item 6 hold for (X°, θ°, ε/σ*) in regime R1 with the events
-    𝒜′_n, the common constants (M_E, φ₀, g₀) and the common envelope M_n [K1-3].
+    𝒜′_n, the common constants (M_E, φ₀, g₀) and the common envelope M_n [K1-3]. (For n < n₁ put 𝒜′_n := ∅; item 6
+    needs only P(𝒜′_n) → 1 [R1-opus-E5].)
 
 ## 3. Proposition ExSG — families satisfying (A4)
 
@@ -85,7 +86,8 @@ with independent coordinates, E ξ_k = 0 and Var ξ_k = 1.
 (a) If E exp(λξ_k) ≤ exp(L²λ²/2) for every k and every λ ∈ ℝ, then x has mean m and covariance Σ, and
     E exp(λuᵀ(x − m)) ≤ exp(L²λ²uᵀΣu/2) for **every** u ∈ ℝ^p and λ ∈ ℝ. In particular (A4) holds with this L.
 (b) The scalar hypothesis of (a) holds with L = 1 when ξ_k is standard Gaussian, Rademacher (±1 with probability ½) or
-    uniform on [−√3, √3]; and it holds with L = K whenever ξ_k takes its values in an interval of length 2K (K > 0).
+    uniform on [−√3, √3]; and it holds with L = K whenever every ξ_k takes its values in an interval of length 2K, with
+    the same K > 0 for all k [R1-opus-E4].
 
 ## 4. Remarks (not part of the registered spans)
 
@@ -185,9 +187,12 @@ HQ's decision). Status: every input is PROVED-CHECKED (§6).
 | 1.1 | §2: raw bridge events vs (X°, θ°)-measurable interface events; completed pair; part (c) | **STRONGER on the companion claim B3w** (added conclusion (c), proved in B3w Step 6); EQUAL for Theorem 2SG (the interface its proof uses, made explicit; B3 Step 6 / A-2) [K1-8] | [L1-2] | L1-2 | `reviews/K1_linecheck_opus.md`: tag corrected per K1-8 |
 | 1.1 | §0: conventions when columns are removed (π(S₀) := 0, PIP_j := 0, p_ret = 0) | EQUAL (conventions off an event of probability → 0) | [L1-3] | L1-3 | as above |
 | 1.1 | §4 (e) unit variances; §5 centring qualifier; §2 heading and provenance moved out of the span | EQUAL (outside spans / editorial) | [L1-4], [L1-5], [L1-6] | L1-4..6 | as above |
-| 1.1 | §3 ExSG: B for the mixing matrix; **part (b) bounded features, L = K (Hoeffding)** | **STRONGER** on the companion claim ExSG (an added conclusion; Theorem 2SG unchanged) | support for HQ's 2b sentence [Q2] | HQ ruling via manager | statement-change check (pending; Opus diff round) |
+| 1.1 | §3 ExSG: B for the mixing matrix; **part (b) bounded features, L = K (Hoeffding)** | **STRONGER** on the companion claim ExSG (an added conclusion; Theorem 2SG unchanged) | support for HQ's 2b sentence [Q2] | HQ ruling via manager | `reviews/K1_linecheck_opus.md`: CONFIRMED (STRONGER on ExSG) [R1-opus-E1] |
 | 1.1 | §5 HQ class-1 and 2b wording; NH14 "journal version not checked" | EQUAL (outside spans) | HQ ruling [Q1], [Q2] | HQ ruling | — |
 | 1.1 | §2 bookkeeping (n₁ ≥ max(3, 2s₀), 𝓔₂(q_n) for 𝓔₂(w_n), p_ret in m♯_n, θ̃*); §4 (a), (b), (d); §6; §7; §8 [K1-7] | EQUAL (equal events and objects on 𝒜_n / outside spans; consumed scope narrowed to items 1–3) | L1, Q2 | K1-7 | `reviews/K1_linecheck_opus.md` |
 | 1.2 | §2 (c): θ⁰ with supp θ⁰ = S₀ (supp θ° = S₀ on every outcome); "and so" replaced by the explicit appeal to (b) and R1; the measurability remark moved to §4 (f) | EQUAL for Theorem 2SG (the v1.1 conclusion with an arbitrary θ⁰ was stated for supp θ°; the proof's intended object is S₀, and the two agree on {p_ret = p}); on the companion claim B3w (c) the completion is specialised (supp θ⁰ = S₀ instead of any support of size s₀): **WEAKER in form, EQUAL in use** (ASSEMBLY needs one completion; the broader v1.1 completion is no longer claimed); 𝒜′_n drops '|supp θ°| = s₀', now automatic [K2-4] | [K1-1], [K1-3], [K1-11] | K1, K2 | `reviews/K2_recheck_opus.md` (tag per K2-4); `reviews/K3_recheck_opus.md`: CONFIRMED |
 | 1.2 | §1 (A3): the recorded parenthetical "(for instance, λ_min(Σ_n) ≥ φ²)" restored | EQUAL (an example, not a condition) | [K1-10] | K1 | `reviews/K2_recheck_opus.md`: CONFIRMED |
 | 1.2 | §5, §6 (outside spans): off-main paths written as plain text; B3 status quoted in full; Condition-1 example note; "qualify" glossed | EQUAL (outside spans) | [K1-9], [K1-12], citecheck | K1, lead | — |
+| 1.3 | §3 ExSG (b): "every ξ_k … with the same K > 0 for all k" | EQUAL (the reading (a) needs; a common constant was implicit) | [R1-opus-E4] | council R1 | diff round R2 |
+| 1.3 | §2 (c): "for n < n₁ put 𝒜′_n := ∅" | EQUAL (completes a definition; item 6 needs only P(𝒜′_n) → 1) | [R1-opus-E5] | council R1 | diff round R2 |
+| 1.3 | §9 check cell of the ExSG (b) row | EQUAL (bookkeeping) | [R1-opus-E1] | council R1 | — |

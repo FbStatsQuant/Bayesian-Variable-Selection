@@ -37,7 +37,7 @@ is O((log n)²)). For n ≥ n₁:
     (F_w; g₀) (m♯_n computed from (n, p, s₀)) and θ°²_min nφ₀²/log n ≥ M_n. Then 𝒜′_n is (X°, θ°)-measurable, 𝒜_n ⊆ 𝒜′_n ∩ {p_ret = p}, ε is independent of (X°, θ°), and
     the hypotheses of [W3P] Theorem 1 item 6 (`:95-100`) hold for (X°, θ°, ε/σ*) in regime R1 with the events 𝒜′_n, the
     common constants (M_E, φ₀, g₀) and the common envelope M_n. (𝒜_n need not be (X, θ̃*)-measurable; it is used only
-    for its probability, P(𝒜′_nᶜ) ≤ P(𝒜_nᶜ).)
+    for its probability, P(𝒜′_nᶜ) ≤ P(𝒜_nᶜ). For n < n₁ put 𝒜′_n := ∅; item 6 needs only P(𝒜′_n) → 1 [R1-opus-E5].)
 
 ## Inherited results used (statuses verbatim; registry at main 029bb748)
 - [EB]`B0.md` (`W3-DIST:B0@1.0.1`), [EB]`B1.md` (`W3-DIST:B1@1.0.1`), [EB]`B2core.md` (`W3-DIST:B2core@1.0.1`),

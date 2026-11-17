@@ -41,7 +41,7 @@ grid; small exact-posterior run with Rademacher/uniform correlated rows), `READE
   sparse eigenvalue floor. Their (centred, isotropic) rows satisfy (SG) with K = C·α (C absolute; standard ψ₂ ⇔ MGF
   equivalence, 3-line remark in TARGET.md); ours is weaker on sparse directions and allows any correlation Σ_n.
 - **SL's own condition: Song–Liang (2015) Condition 1** (Theorem 2, p. 953): an exponential-moment bound on averages of
-  ≤ r̄_n predictors, with their Gaussian example. Same family; (SG) ⇒ Condition 1 for every r (TRACK_B B7, confirmed in
+  ≤ r̄_n predictors, with their Gaussian example. Same family; (SG) ⇒ Condition 1 for every r, for the centred predictors x − m_n [R1-sol-S1] (TRACK_B B7, confirmed in
   `W3-AUDIT/reviews/AUDITCALC_check_opus.md` §4); the converse fails, so (SG) is the stronger of the two.
 - See also (not BVS, not an anchor): RZ Def. 1.5/Thm 1.6 — the anisotropic ψ₂ form ⟨x, y⟩ sub-Gaussian at its own scale,
   i.e. the correlated-row version of NH14's assumption. **Checked negative:** YWJ15 (arXiv 1505.07925v1) uses only

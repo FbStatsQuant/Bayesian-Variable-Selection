@@ -5,7 +5,7 @@
     "`path:a-b`" (path = a repo path, or a ticket-local file) must point to an existing file with 1 <= a <= b <= #lines.
     A bare "`:a-b`" with no alias earlier on its line is reported as UNRESOLVED (counted as a failure).
 (2) Token checks: TOKENS (a token that must occur in the cited range).
-(3) Status checks: every registry status quoted in STATEMENT §5 occurs verbatim in claims.tsv for that id@version.
+(3) Status checks: every registry status quoted in STATEMENT §6 occurs verbatim in claims.tsv for that id@version.
 Writes reviews/CITECHECK.txt. Run: python3 Theory_work/Wave3/W3-D3/citecheck.py
 """
 import csv

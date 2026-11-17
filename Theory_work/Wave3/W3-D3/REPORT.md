@@ -20,8 +20,8 @@ reached. Tag against row 1.2's reader statement: STRONGER (`STATEMENT.md` §8; c
   Theorem 2SG keeps the reader statement's fixed floor φ² (option o2, a floor of order 1/n through `W3-DIST:B2`, is OFF by
   HQ). Against the reader statement nothing is weaker.
 - **Assumption class.** (A4) is classed 1 by HQ's ruling (2026-11-17, D114): it contains Narisetty & He's (2014, Lemma 6.1)
-  isotropic sub-Gaussian rows as the case Σ = I (centred rows; L a fixed multiple of their constant) and implies Song & Liang's
-  Condition 1; no verified Bayesian-selection paper states sub-Gaussian rows with a general correlation matrix (a report of
+  isotropic sub-Gaussian rows as the case Σ = I (centred rows; L a fixed multiple of their constant) and, for the centred
+  predictors z = x − m_n, implies Song & Liang's Condition 1 [R1-sol-S1]; no verified Bayesian-selection paper states sub-Gaussian rows with a general correlation matrix (a report of
   the search). 2b backup sentence as approved (`STATEMENT.md` §5). NH14 cited from arXiv v1 pp. 16–17, journal version not checked.
 - **Constants.** Explicit, not optimised (threshold n₁ of order 10⁹–10¹¹ for L = 1 at the absolute constant c₂ = 10⁻⁵ of
   B2-core; `numerics/N1_out.txt`).
@@ -31,9 +31,11 @@ Row 1.2 unchanged (statement, masters, "clean" mark). Added sentence under row 1
 > *Sub-Gaussian predictors.* The same conclusions hold when the rows are i.i.d. with mean $m_n$ and correlation matrix
 > $\Sigma_n$ and, instead of being Gaussian, are sub-Gaussian along sparse directions: for a fixed $L$,
 > $E\exp\{\lambda u^\top(x-m_n)\}\le\exp\{L^2\lambda^2u^\top\Sigma_nu/2\}$ for every $u$ with at most $5(A+1)(s_0+1)\log n$
-> nonzero entries (Gaussian rows: $L=1$; correlated mixtures of independent features, each sub-Gaussian or bounded by a fixed multiple of its standard deviation, also qualify).
-> This contains the isotropic sub-Gaussian rows of Narisetty and He (2014, Lemma 6.1) and implies Song and Liang's
-> Condition 1.
+> nonzero entries (Gaussian rows: $L=1$; so do correlated mixtures $x=m_n+B\xi$ of independent mean-zero, unit-variance
+> features that are sub-Gaussian with one common constant $L$, for instance features confined to $K$ standard deviations
+> of their mean with one common $K$, giving $L=K$). For centred rows this contains the isotropic sub-Gaussian rows of
+> Narisetty and He (2014, Lemma 6.1), the case $\Sigma_n=I$; for the centred predictors $x-m_n$ it implies Song and
+> Liang's Condition 1. [R1-sol-S1, R1-opus-S1]
 
 "Master" cell for the added sentence: `W3-D3:Thm2SG` (with `W3-D3:B3w`, `W3-D3:ExSG`), statuses as recorded at CP3; inputs
 `W3-POST:Thm-1@1.0.1`, `W3-DIST:B0/B1/B2core/B2/B3@1.0.1`, `W3-READER:R1@1.0.2`, all PROVED-CHECKED. "Mark" cell: **clean**
@@ -63,7 +65,7 @@ API blind-audit card: `API_CARD.md` (`api_request_build.py`). Council: (filled a
 
 ```
 REGISTRY
-claim: W3-D3:B3w | kind: lemma | statement: STATEMENT.md:59-79 | premises: STATEMENT.md:23-39 ; STATEMENT.md:41-57
+claim: W3-D3:B3w | kind: lemma | statement: STATEMENT.md:59-80 | premises: STATEMENT.md:23-39 ; STATEMENT.md:41-57
 status: PROVED (by this seat, unchecked) | status_source: lemmas/B3w.md:3
 assumptions: A:GAUSS-NOISE ; A:P-POLY ; A:FIXED-S0 ; A:COEF-BOUNDED ; A:POP-FLOOR-5LOG (new | fixed population sparse eigenvalue floor on logarithmic sets | lambda_min(Sigma_n,S) >= phi^2 for every S of size at most 5(A+1)(s0+1) log n, fixed phi in (0,1], Sigma_n a correlation matrix | STATEMENT.md:41-57 | shared no | bridge W3-D3:B3w) ; A:SUBG-SPARSE-ROWS (new | sub-Gaussian predictors on sparse directions | E exp(lambda u'(x - m_n)) <= exp(L^2 lambda^2 u' Sigma_n u / 2) for every u with at most 5(A+1)(s0+1) log n nonzero entries, fixed L; variant of A:DIST-A3 on the window 5(A+1)(s0+1) log n | STATEMENT.md:41-57 | shared no | bridge W3-D3:B3w)
 conclusion: posterior: random-design interface events of W3-POST Theorem 1 item 6; on E1 and E2(q_n) (probability >= 1 - 4p e^{-c1 n/L^4} - e^{-c2 n/L^4}) no column is constant and (E; M_E), (F_lambda; phi0^2 = phi^2/4), (F_w; g0 = phi^2/8), BM-inf with envelope b_lo^2 n phi^2/(8 sigma^2 log n) hold; (X°, θ°)-measurable events A'_n ⊇ A_n of the completed pair on which the hypotheses of W3-POST Theorem 1 item 6 hold (regime R1) | rate: n/a | scope: iid rows with correlation-matrix covariance, (A1)-(A4), n >= n1(s0, A, L)
@@ -71,7 +73,7 @@ depends_on: W3-DIST:B0@stmt ; W3-DIST:B1@stmt ; W3-DIST:B2core@stmt ; W3-DIST:B2
 implies:
 
 REGISTRY
-claim: W3-D3:ExSG | kind: proposition | statement: STATEMENT.md:81-88 | premises: STATEMENT.md:23-39
+claim: W3-D3:ExSG | kind: proposition | statement: STATEMENT.md:82-90 | premises: STATEMENT.md:23-39
 status: PROVED (by this seat, unchecked) | status_source: lemmas/ASSEMBLY.md:3
 assumptions:
 conclusion: identity: x = m + B xi with independent mean-zero unit-variance L-sub-Gaussian coordinates satisfies (A4) with L for every direction; L = 1 for Gaussian, Rademacher, uniform[-sqrt3, sqrt3]; L = K for coordinates in an interval of length 2K (Hoeffding's lemma, proved in place) | rate: n/a | scope: any p, d
