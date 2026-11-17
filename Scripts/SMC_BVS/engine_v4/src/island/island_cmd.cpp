@@ -282,9 +282,9 @@ Json run(const Json& args) {
   // ---- read the arrays (the files are verified in full here), then run ------------------------------------------------
   Data D = prep::load_data(in.data, nullptr);
   if (D.n != n || D.p != p || D.K != K) throw Error(Status::invalid_input, std::string(W) + "data.bin changed between the metadata and the load");
-  const StartView st = load_start_view(in.setup, D, sd.mappable);   // mapped: nothing of the start law is expanded
+  const StartView st = load_start_view(in.setup, D, sd.mappable, sd.content_hash);   // mapped: nothing of the start law is expanded
   if (sd.mappable && st.bytes() != sd.view_bytes) throw Error(Status::internal_error, std::string(W) + "the mapped start law differs from the planned sections");
-  const Neighbours nb = load_neighbours(in.setup, D.p, !sd.mappable);   // the mapped loader verified every section already
+  const Neighbours nb = load_neighbours(in.setup, D.p, !sd.mappable, sd.content_hash);   // the mapped loader verified every section; same file as the plan
   const double t_load = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
   const IslandRun r = mode == fmt::M_V ? run_island<Arith::ClassA>(D, st, nb, c) : run_island<Arith::Bit>(D, st, nb, c);
   if (r.status == 1) throw Error(Status::internal_error, std::string(W) + "island interrupted without a stop request");

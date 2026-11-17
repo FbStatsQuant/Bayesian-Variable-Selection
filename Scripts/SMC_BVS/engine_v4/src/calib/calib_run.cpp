@@ -11,6 +11,7 @@
 #include <chrono>
 #include <filesystem>
 #include <cmath>
+#include "v4/calib_plan.h"
 #include "v4/calib_run.h"
 #include "v4/cmd_args.h"
 #include "v4/island/calib_runner.h"
@@ -75,40 +76,15 @@ Json plan_json(const CalibMemPlan& m, uint64_t budget, double kbar, const std::s
   j["inputs"] = u(m.inputs); j["resident"] = u(m.resident); j["total"] = u(m.total); j["budget"] = u(budget);
   return j;
 }
-// The calibration island's own plan (review PR39 MAJOR-2; WP3_DESIGN §1.11): the largest island of the calibration (the
-// largest H and Hm over the tiers the rule can use), with the leader stores and the round-start snapshot, planned as
-// CalibIslandRunner admits it under WP4's N-1 rule: the caller-supplied term = the setup inputs (start_bytes) + the
-// calibration's resident state without the inputs (ledger + export); admitted iff that plan <= --mem-budget. With
-// setup.bin it is plan_island on the real Start; without it, sizes only (k = kbar, setup inputs 0: an ESTIMATE floor).
-// The calibration island's plans (largest island of the calibration: max H and Hm over the tiers the rule can use, leaders,
-// round-start snapshot), planned as CalibIslandRunner admits it under the N-1 rule: the caller-supplied term = setup inputs +
-// the calibration's resident state without them. `ip` at the G the budget allows, `ip1` at G = 1 (the admission floor).
-// With the setup's dimensions (read_setup_dims: nothing expanded) k = q90 rule and the inputs = the Start model; without
-// them, sizes only (k = kbar, setup inputs 0). The same numbers drive --plan-only and the run's up-front refusal (PR52 MAJOR-2).
-struct IslandPlans { island::MemPlan ip, ip1; double setup_in = 0; };
-IslandPlans calib_island_plans(const Settings& s, Rule rule, uint32_t mode, int B, int K, int64_t n, int64_t p, uint64_t budget,
-                               uint64_t resident_own, const island::SetupDims* sd, double kbar) {
-  island::IslandConfig ic; ic.role = island::IslandRole::Pilot; ic.island = 0; ic.leaders = true; ic.B = B; ic.G = 0; ic.mem_budget = budget;
-  ic.N = 1; ic.Hm = 1;
-  for (int e = 0; e < (rule == Rule::coded ? 2 : 1); ++e) { ic.N = std::max(ic.N, s.tiers[e].H); ic.Hm = std::max(ic.Hm, s.tiers[e].Hm); }
-  ic.compat = mode == fmt::M_COMPAT; ic.threads = ic.compat ? 1 : s.threads;
-  ic.kernel = mode == fmt::M_V ? island::KernelKind::LabelMajor : island::KernelKind::ParticleMajor;
-  IslandPlans r; r.setup_in = sd ? island::start_inputs_bytes(*sd, ic.threads) : 0.0;   // mapped sections (StartView) or the rebuild model
-  ic.inputs_bytes = r.setup_in + (double)resident_own;
-  const double k = sd ? island::plan_k(sd->size_logmass, 0.0) : kbar;
-  island::IslandConfig ic1 = ic; ic1.G = 1; ic1.mem_budget = 0;
-  island::MemSizes z = island::plan_sizes((int)n, (int)p, K, ic), z1 = island::plan_sizes((int)n, (int)p, K, ic1);
-  r.ip = island::plan_with_budget(z, k, ic); r.ip1 = island::plan_with_budget(z1, k, ic1);
-  return r;
-}
-
-Json island_plan_json(const island::MemPlan& mp, uint64_t floor, uint64_t budget, double setup_inputs, uint64_t resident_own, bool from_files) {
+Json island_plan_json(const island::MemPlan& mp, uint64_t floor, uint64_t budget, double setup_inputs, double setup_copy, uint64_t resident_own, bool from_files) {
   Json j = Json::object();
   auto u = [](uint64_t x) { return Json((double)x); };
-  j["label"] = from_files ? "ESTIMATE (calibration island plan, memory.h, real setup; = the task's predicted peak under N-1)"
-                          : "ESTIMATE (calibration island plan from sizes: k = kbar, setup inputs NOT counted)";
+  j["label"] = from_files ? "ESTIMATE (calibration island plan, memory.h, real setup; = the task's predicted peak under N-1: the island's own setup inputs "
+                            "(mapped sections + scratch + neighbours), WP4's live setup copy (logr + partition), the calibration's ledger + export; "
+                            "the file's other pages touched by the section hash check are reclaimable page cache, not counted)"
+                          : "ESTIMATE (calibration island plan from sizes: k = kbar, setup inputs and the setup copy NOT counted)";
   Json it = Json::object(); for (const auto& x : mp.items) it[x.name] = u(x.bytes);
-  j["items"] = it; j["G"] = mp.G; j["k"] = mp.k; j["setup_inputs"] = setup_inputs; j["resident"] = u(resident_own);
+  j["items"] = it; j["G"] = mp.G; j["k"] = mp.k; j["setup_inputs"] = setup_inputs; j["setup_copy"] = setup_copy; j["resident"] = u(resident_own);
   // floor = the plan at G = 1: with a budget the island takes the largest G <= 256 that fits, so it is admitted iff
   // floor <= --mem-budget (the smallest budget the calibration can run with; the driver sizes from it)
   j["total"] = u(mp.total); j["floor"] = u(floor); j["budget"] = u(budget); j["admitted"] = budget == 0 || mp.total <= budget;
@@ -179,7 +155,7 @@ Json run(const Json& args) {
   const IslandPlans ipl = calib_island_plans(s, rule, mode, b.B, b.K, n, p, budget, resident_own, files ? &sdims : nullptr, kbar);
   const bool resident_ok = !(budget && plan.resident >= budget), island_ok = !(budget && ipl.ip.total > budget);
   if (plan_only) {
-    rec["island_plan"] = island_plan_json(ipl.ip, ipl.ip1.total, budget, ipl.setup_in, resident_own, files);
+    rec["island_plan"] = island_plan_json(ipl.ip, ipl.ip1.total, budget, ipl.setup_in, ipl.setup_copy, resident_own, files);
     rec["plan_only"] = true;
     if (!resident_ok) { rec["status"] = "resource_limit"; rec["reason"] = "calibrate not admitted: calibration state " + std::to_string(plan.resident) + " B >= --mem-budget"; }
     else if (!island_ok) {
@@ -193,7 +169,7 @@ Json run(const Json& args) {
     return rec;
   }
   if (!island_ok) {     // N-1: no calibration island can run beside the resident state: refuse BEFORE the Start is expanded
-    rec["island_plan"] = island_plan_json(ipl.ip, ipl.ip1.total, budget, ipl.setup_in, resident_own, files);
+    rec["island_plan"] = island_plan_json(ipl.ip, ipl.ip1.total, budget, ipl.setup_in, ipl.setup_copy, resident_own, files);
     rec["status"] = "resource_limit";
     rec["reason"] = "calibration island not admitted (N-1): resident + island plan " + std::to_string(ipl.ip.total) + " B > --mem-budget";
     return rec;
@@ -205,24 +181,25 @@ Json run(const Json& args) {
   std::string dhash;
   const Data D = prep::load_data(dpath, &dhash);
   if (dhash != dh.content_hash) throw Error(Status::invalid_input, "calibrate: data.bin changed between the plan and the load");
-  const wp4io::SetupView S = wp4io::read_setup(spath, D.p, D.K, &D.zob);
+  wp4io::SetupView S = wp4io::read_setup(spath, D.p, D.K, &D.zob);
   if (S.content_hash != sdims.content_hash) throw Error(Status::invalid_input, "calibrate: setup.bin changed between the plan and the load");
   // the island runner: WP3's island with calibration roles (PILOT / DIAG; WP3_DESIGN §1.11). Theory modes (compat, law)
   // run the bit form particle-major (D-21; compat: 1 thread, v3 streams 0-9 owned by the runner); V runs class A
   // label-major with every thread.
-  const island::StartView st = island::load_start_view(spath, D, sdims.mappable);   // mapped: the start law is not expanded
-  const island::Neighbours nb = island::load_neighbours(spath, D.p, !sdims.mappable);   // the mapped loader verified the sections
+  const island::StartView st = island::load_start_view(spath, D, sdims.mappable, sdims.content_hash);   // mapped: the start law is not expanded
+  const island::Neighbours nb = island::load_neighbours(spath, D.p, !sdims.mappable, sdims.content_hash);   // the mapped loader verified the sections
   island::CalibRunnerConfig rc; rc.seed = (uint32_t)seed; rc.B = b.B; rc.threads = s.threads;
   rc.cost_dir = str_arg(args, "cost_dir"); rc.verbose = whole_arg(args, "verbose", 0, 0, 1) == 1;   // execution records only (WP7 O5)
   if (!rc.cost_dir.empty()) { std::error_code ec; std::filesystem::create_directories(rc.cost_dir, ec);
     if (ec) throw Error(Status::io_error, "calibrate: cannot create --cost-dir " + rc.cost_dir + ": " + ec.message()); }
-  rc.inputs_bytes = ipl.setup_in;   // the island's own setup inputs: the Start model of the plan above (StartView: the mapped lengths)
+  rc.inputs_bytes = ipl.setup_in + ipl.setup_copy;   // the island's own setup inputs + WP4's live setup copy: the plan above
   if (mode == fmt::M_COMPAT) { rc.compat = true; rc.kernel = island::KernelKind::ParticleMajor; rc.threads = 1; }
   else if (mode == fmt::M_LAW) rc.kernel = island::KernelKind::ParticleMajor;
   else rc.kernel = island::KernelKind::LabelMajor;
   LedgerConfig lc; lc.p = D.p; lc.islands = 4; lc.leaders = true; lc.fresh_counters = false;
   Ledger led(lc);
   wp4io::offer_tables(led, S, D.K, D.zob);   // the calibration ledger starts with the tables (core v3_core.cpp:613)
+  release_table_stores(S);                    // in the ledger now; what stays live is what the plan counts (setup_view_bytes)
   merge::TailSettings ts; ts.threads = s.threads; ts.chunk = 64; ts.K = D.K; ts.p = D.p; ts.zob = &D.zob;
   CalibFactory fac{&D, &S};
   // INTERFACES §7 (whole task), WP4's N-1 rule: every island gets the task budget unchanged and the calibration's own

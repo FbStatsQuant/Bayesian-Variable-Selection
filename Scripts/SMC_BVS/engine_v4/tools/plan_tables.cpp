@@ -20,13 +20,17 @@
 #include <cstdio>
 #include <cstring>
 #include <string>
+#include "v4/calib_plan.h"
 #include "v4/calib_run.h"
 #include "v4/island/island.h"
 #include "v4/island/setup_load.h"
 #include "v4/json.h"
 #include "v4/merge.h"
 #include "v4/prep.h"
+#include "v4/wp4_io.h"
+#include <malloc.h>
 #include <fstream>
+#include <omp.h>
 
 using namespace v4;
 using namespace v4::island;
@@ -54,17 +58,38 @@ int main(int argc, char** argv) {
   }
   if (load) {   // MEASURED load of the start law as an admitted island holds it
     if (setup.empty() || data.empty()) { std::fprintf(stderr, "--load needs --setup and --data\n"); return 2; }
+    if (load == 3) {   // MEASURED: WP4's SetupView (read_setup) held beside the island, before and after the table stores are released
+      const Data D = prep::load_data(data);
+      const SetupDims sd = read_setup_dims(setup, D.p, D.K, false);
+      const Json b0 = proc_status();
+      wp4io::SetupView S = wp4io::read_setup(setup, D.p, D.K, &D.zob);
+      const Json b1 = proc_status();
+      calib::release_table_stores(S); malloc_trim(0);
+      const Json b2 = proc_status();
+      S = wp4io::SetupView(); malloc_trim(0);   // everything freed: what the allocator still holds is retention, not live data
+      const Json b3 = proc_status();
+      Json o = Json::object();
+      o["label"] = "MEASURED (RssAnon, bytes): WP4's SetupView after read_setup, and after the table stores are released";
+      o["p"] = D.p; o["logr_bytes"] = 8.0 * (double)sd.logr_len; o["setup_view_bytes_counted"] = setup_view_bytes(sd);
+      o["anon_with_table_stores"] = b1.at("RssAnon").num() - b0.at("RssAnon").num();
+      o["anon_after_release"] = b2.at("RssAnon").num() - b0.at("RssAnon").num();
+      o["anon_after_free_all"] = b3.at("RssAnon").num() - b0.at("RssAnon").num();   // allocator retention after everything is freed
+      std::printf("%s\n", o.dump(1).c_str());
+      return 0;
+    }
     const Json before = proc_status();
     const Data D = prep::load_data(data);
     const Json after_data = proc_status();
     const SetupDims sd = read_setup_dims(setup, D.p, D.K, false);
+    const double tm0 = omp_get_wtime();
     const StartView v = map_start_view(setup, D, false);   // no section hash pass: measure what the island keeps, not the verification
+    const double t_map = omp_get_wtime() - tm0;             // shapes + value checks (size law, cond0 rebuilt row by row)
     const Neighbours nb = load_neighbours(setup, D.p);
     v.prepare(ti);
     const Json after = proc_status();
     Json o = Json::object();
     o["label"] = "MEASURED (/proc/self/status after mapping; bytes)"; o["n"] = D.n; o["p"] = D.p; o["J"] = v.J; o["max_block"] = v.max_m;
-    o["view_bytes_mapped"] = (double)v.bytes(); o["planned_setup_inputs"] = start_inputs_bytes(sd, ti); o["source"] = v.source;
+    o["seconds_map_and_value_checks"] = t_map; o["view_bytes_mapped"] = (double)v.bytes(); o["planned_setup_inputs"] = start_inputs_bytes(sd, ti); o["source"] = v.source;
     o["before"] = before; o["after_data"] = after_data; o["after_start_view"] = after;
     o["anon_added_by_start_view"] = after.at("RssAnon").num() - after_data.at("RssAnon").num();
     if (load == 2) {   // the pre-StartView form, for comparison: the expanded dep::Start rebuilt from logr
@@ -103,31 +128,35 @@ int main(int argc, char** argv) {
   const double data_bytes = (double)n * p * 8 + 64.0 * p;   // data.bin: X + the per-column arrays (mapped by merge / calibrate)
   Json all = Json::array();
   std::string md = "| design | n | G | final island (" + std::to_string(ti) + " thr) | calibration island alone (" + std::to_string(tc) +
-                   " thr) | calibration island, N-1 | calibrate task | merge task (" + std::to_string(tm) + " thr) | setup inputs (mapped + scratch + nb) |\n|---|---|---|---|---|---|---|---|---|\n";
+                   " thr) | calibration island, N-1 | calibrate task (anonymous = N-1) | + reclaimable file pages | merge task (" + std::to_string(tm) +
+                   " thr) | setup inputs (mapped + scratch + nb) | WP4 setup copy |\n|---|---|---|---|---|---|---|---|---|---|---|\n";
   for (int G : {1, 64, 256}) {   // G = 1: the admission floor (with a budget the island takes the largest G that fits)
     IslandConfig f; f.role = IslandRole::Final; f.N = calib::V_N; f.Hm = s.tiers[0].Hm; f.B = b.B; f.kernel = KernelKind::LabelMajor; f.threads = ti; f.G = G;
     f.inputs_bytes = start_inputs_bytes(d, ti); f.k_store = k_store;
     MemSizes zf = plan_sizes((int)n, (int)p, b.K, f); const MemPlan pf = plan_with_budget(zf, k, f);
-    IslandConfig c; c.role = IslandRole::Pilot; c.island = 0; c.leaders = true; c.N = s.tiers[0].H; c.Hm = s.tiers[0].Hm; c.B = b.B;
-    c.kernel = KernelKind::LabelMajor; c.threads = tc; c.G = G; c.inputs_bytes = start_inputs_bytes(d, tc) + (double)resident_own;
-    MemSizes zc = plan_sizes((int)n, (int)p, b.K, c); const MemPlan pc = plan_with_budget(zc, k, c);
-    IslandConfig ca = c; ca.inputs_bytes = start_inputs_bytes(d, tc);   // the same island without the calibration's resident state (the pilot alone)
+    // the calibration island under N-1: calibrate's own plan function (calib_plan.h), so the numbers are what its admission uses
+    calib::Settings sc = s; sc.threads = tc;
+    const calib::IslandPlans ipl = calib::calib_island_plans(sc, calib::Rule::bounded, fmt::M_V, b.B, b.K, n, p, 0, resident_own, &d, k, G);
+    const MemPlan& pc = ipl.ip;
+    IslandConfig ca; ca.role = IslandRole::Pilot; ca.island = 0; ca.leaders = true; ca.N = s.tiers[0].H; ca.Hm = s.tiers[0].Hm; ca.B = b.B;
+    ca.kernel = KernelKind::LabelMajor; ca.threads = tc; ca.G = G; ca.inputs_bytes = start_inputs_bytes(d, tc);   // the pilot alone: no ledger, no setup copy
     MemSizes za = plan_sizes((int)n, (int)p, b.K, ca); const MemPlan pa = plan_with_budget(za, k, ca);
-    const double calib_task = (double)pc.total + setup_bin;
+    const double calib_task = (double)pc.total;                                          // anonymous memory the task must hold
+    const double file_pages = std::max(0.0, setup_bin - (double)d.view_bytes);            // the rest of setup.bin, paged in once by the hash check
     merge::MergeSettings ms; ms.Rp = Rp; ms.p = (int)p; ms.N = calib::V_N; ms.K = b.K; ms.threads = tm; ms.kbar = k;
     ms.extra_bytes = (uint64_t)(data_bytes + 2.5 * setup_bin);
     const merge::MemEstimate me = merge::estimate_merge_memory(ms);
     Json o = Json::object();
     o["design"] = design; o["n"] = (double)n; o["p"] = (double)p; o["G"] = G; o["k"] = k; o["B"] = b.B; o["J"] = d.J; o["max_block"] = d.max_m;
-    o["setup_view_bytes"] = (double)d.view_bytes; o["setup_inputs_island"] = f.inputs_bytes; o["setup_bin_bytes"] = setup_bin;
+    o["setup_view_bytes"] = (double)d.view_bytes; o["setup_inputs_island"] = f.inputs_bytes; o["setup_copy_wp4"] = ipl.setup_copy; o["setup_bin_bytes"] = setup_bin;
     o["final_island"] = (double)pf.total; o["final_island_text"] = mem_plan_text(pf);
     o["calibration_island_alone"] = (double)pa.total; o["calibration_island_n1"] = (double)pc.total; o["calibration_island_text"] = mem_plan_text(pc); o["calibration_resident"] = (double)resident_own;
-    o["calibrate_task"] = calib_task; o["merge_task"] = (double)me.total;
+    o["calibrate_task"] = calib_task; o["calibrate_file_pages"] = file_pages; o["merge_task"] = (double)me.total;
     o["label"] = "ESTIMATE (memory plans with the real setup tables' dimensions; bytes)";
     std::printf("%s\n", o.dump().c_str());
-    char row[512];
-    std::snprintf(row, sizeof row, "| %s | %lld | %d | %.1f GiB | %.1f GiB | %.1f GiB | %.1f GiB | %.1f GiB | %.2f GiB |\n", design.c_str(), (long long)n, G,
-                  gib((double)pf.total), gib((double)pa.total), gib((double)pc.total), gib(calib_task), gib((double)me.total), gib(f.inputs_bytes));
+    char row[640];
+    std::snprintf(row, sizeof row, "| %s | %lld | %d | %.1f GiB | %.1f GiB | %.1f GiB | %.1f GiB | %.1f GiB | %.1f GiB | %.2f GiB | %.2f GiB |\n", design.c_str(), (long long)n, G,
+                  gib((double)pf.total), gib((double)pa.total), gib((double)pc.total), gib(calib_task), gib(file_pages), gib((double)me.total), gib(f.inputs_bytes), gib(ipl.setup_copy));
     md += row;
   }
   std::printf("%s", md.c_str());

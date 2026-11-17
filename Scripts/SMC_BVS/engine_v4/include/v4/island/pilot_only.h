@@ -15,6 +15,7 @@
 #include <cstring>
 #include <filesystem>
 #include <string>
+#include "v4/calib_plan.h"
 #include "v4/calib_run.h"
 #include "v4/island/calib_runner.h"
 #include "v4/island/setup_load.h"
@@ -50,34 +51,52 @@ inline Json run_pilot_only(const Json& a, int& rc_exit) {
   rec["tool"] = "v4_pilot_island"; rec["binary"] = binary_block();
   try {
     auto t0 = std::chrono::steady_clock::now();
-    std::string dhash;
-    Data D = prep::load_data(dpath, &dhash);
-    // calib_run.cpp (calibrate --mode V), verbatim in what the pilot island sees
-    const calib::Budgets b = calib::budgets(D.n, D.p);
+    // Admission first, as calibrate (review PR57 MINOR-2; INTERFACES §7): n, p, K from data.bin's metadata and the setup's
+    // dimensions, the same k rule (q90 of the pi_0 size law) and the same plan function (calib_plan.h), BEFORE any array is
+    // read. The pilot island is planned as calibrate plans its first island: setup inputs + WP4's live setup copy + the
+    // calibration's resident state (N-1).
+    const wp4io::DataPlanHead dh = wp4io::read_data_plan(dpath);
+    const calib::Budgets b = calib::budgets(dh.n, dh.p);
     calib::Settings s = calib::settings_from(b, calib::Rule::bounded);
     s.threads = (int)threads;
+    const island::SetupDims sdims = island::read_setup_dims(spath, dh.p, dh.K, false);
+    if (!sdims.data_hash.empty() && sdims.data_hash != dh.content_hash) throw Error(Status::invalid_input, "setup.bin was built from another data.bin");
+    wp4io::check_size_logmass(sdims.size_logmass, dh.K, spath + ": ");
+    const double kbar = calib::calib_k_plan(sdims.size_logmass);
+    const calib::CalibMemPlan plan = calib::calib_memory_plan(dh.p, kbar, file_bytes(dpath) + file_bytes(spath));
+    const uint64_t resident_own = plan.ledger + plan.export_;
+    const calib::IslandPlans ipl = calib::calib_island_plans(s, calib::Rule::bounded, fmt::M_V, b.B, b.K, dh.n, dh.p, (uint64_t)budget, resident_own, &sdims, kbar);
+    if (budget && ipl.ip.total > (uint64_t)budget) {
+      rec["status"] = "resource_limit";
+      rec["message"] = "pilot island not admitted (N-1): resident + island plan " + std::to_string(ipl.ip.total) + " B > --mem-budget " + std::to_string(budget) + " B";
+      rec["island_plan_total"] = (double)ipl.ip.total; rec["island_plan_floor"] = (double)ipl.ip1.total;
+      rc_exit = 10 + (int)Status::resource_limit;
+      return rec;
+    }
+    // admitted: the full loads (every section verified); the files must be the ones the plan read
+    std::string dhash;
+    Data D = prep::load_data(dpath, &dhash);
+    if (dhash != dh.content_hash) throw Error(Status::invalid_input, "data.bin changed between the plan and the load");
     wp4io::SetupView S = wp4io::read_setup(spath, D.p, D.K, &D.zob);
-    if (!S.data_hash.empty() && S.data_hash != dhash) throw Error(Status::invalid_input, "setup.bin was built from another data.bin");
-    const double kbar = std::max(8.0, (double)S.mode_S.size() + 1);
-    const calib::CalibMemPlan plan = calib::calib_memory_plan(D.p, kbar, file_bytes(dpath) + file_bytes(spath));
+    if (S.content_hash != sdims.content_hash) throw Error(Status::invalid_input, "setup.bin changed between the plan and the load");
     // the start law as calibrate loads it (StartView, WP3_DESIGN §1.12): mapped from WP2's sections, nothing expanded
-    const island::SetupDims sdims = island::read_setup_dims(spath, D.p, D.K, false);
-    const island::StartView st = island::load_start_view(spath, D, sdims.mappable);
-    const island::Neighbours nb = island::load_neighbours(spath, D.p, !sdims.mappable);
+    const island::StartView st = island::load_start_view(spath, D, sdims.mappable, sdims.content_hash);
+    const island::Neighbours nb = island::load_neighbours(spath, D.p, !sdims.mappable, sdims.content_hash);
     std::error_code ec; std::filesystem::create_directories(cdir, ec);
     if (ec) throw Error(Status::io_error, "cannot create --cost-dir " + cdir);
     island::CalibRunnerConfig rc; rc.seed = (uint32_t)seed; rc.B = b.B; rc.threads = s.threads;
-    rc.inputs_bytes = island::start_inputs_bytes(sdims, s.threads);   // = calibrate: mapped sections + draw scratch + neighbours
+    rc.inputs_bytes = ipl.setup_in + ipl.setup_copy;   // = calibrate
     rc.kernel = island::KernelKind::LabelMajor;
     rc.cost_dir = cdir; rc.verbose = verbose;
     LedgerConfig lc; lc.p = D.p; lc.islands = 4; lc.leaders = true; lc.fresh_counters = false;
     Ledger led(lc);
     if (with_ledger) wp4io::offer_tables(led, S, D.K, D.zob);   // calibrate's ledger before its pilot (core v3_core.cpp:613)
+    calib::release_table_stores(S);   // as calibrate: in the ledger now (or not needed), so not live beside the island
     const double t_setup = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
     const calib::TierSettings& cs = s.tiers[0];
     calib::IslandSpec sp; sp.role = calib::IslandRole::Pilot; sp.tier = cs.tier; sp.iter = 0; sp.island = 0; sp.H = cs.H;
     sp.adaptive = true; sp.Te = cs.Te; sp.L = cs.L; sp.Hm = cs.Hm;
-    sp.resident_bytes = plan.ledger + plan.export_; sp.mem_budget = (uint64_t)budget;   // as calibrate (N-1 rule)
+    sp.resident_bytes = resident_own; sp.mem_budget = (uint64_t)budget;   // as calibrate (N-1 rule)
     island::CalibIslandRunner<island::Arith::ClassA> runner(D, st, nb, rc);
     auto t1 = std::chrono::steady_clock::now();
     calib::IslandOut io = runner.run(sp);

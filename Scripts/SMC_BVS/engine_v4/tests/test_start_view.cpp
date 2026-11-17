@@ -9,16 +9,18 @@
 //   * start_view_cli_mapped: `calibrate` and `island` through the binary on that setup.bin: the island reads the mapped
 //     view (record start_source), its output equals run_island on the rebuilt Start, and the plan's setup inputs are the
 //     mapped section bytes + the draw scratch + the neighbour lists.
+#include "v4/island/setup_load.h"   // first: the header must stand alone (review PR57 m5)
 #include <omp.h>
 #include <sys/wait.h>
 #include <cstring>
+#include <algorithm>
 #include <filesystem>
+#include <functional>
 #include "tk.h"
 #include "tutil.h"
 #include "tutil_island.h"
 #include "v4/calib_run.h"
 #include "v4/island/island.h"
-#include "v4/island/setup_load.h"
 #include "v4/prep.h"
 #include "v4/wp4_io.h"
 
@@ -97,6 +99,29 @@ uint64_t island_hash(const v4::Data& D, const StartView& v, const Neighbours& nb
   if (m == "law") { c.kernel = KernelKind::ParticleMajor; return run_island<Arith::Bit>(D, v, nb, c).hash(); }
   c.kernel = KernelKind::LabelMajor; return run_island<Arith::ClassA>(D, v, nb, c).hash();
 }
+// a copy of setup.bin `src` at `dst` with the named sections replaced (every hash recomputed by the Writer: the file is valid as
+// a file, malformed in its values)
+std::string rewrite_setup(const std::string& src, const std::string& dst, const std::vector<std::string>& drop, const std::function<void(v4::fmt::Writer&)>& add) {
+  v4::fmt::Reader R(src); v4::fmt::Writer W(R.kind(), R.mode());
+  for (const auto& e : R.sections()) {
+    const std::string nm(e.name);
+    if (std::find(drop.begin(), drop.end(), nm) != drop.end()) continue;
+    if (e.dtype == v4::fmt::D_JSON) { W.add_json(nm, R.json(nm)); continue; }
+    const void* qq = e.dtype == v4::fmt::D_F64 ? (const void*)R.get<double>(nm) : e.dtype == v4::fmt::D_I32 ? (const void*)R.get<int32_t>(nm)
+                   : e.dtype == v4::fmt::D_U32 ? (const void*)R.get<uint32_t>(nm) : e.dtype == v4::fmt::D_I64 ? (const void*)R.get<int64_t>(nm)
+                   : e.dtype == v4::fmt::D_U64 ? (const void*)R.get<uint64_t>(nm) : e.dtype == v4::fmt::D_U16 ? (const void*)R.get<uint16_t>(nm)
+                   : (const void*)R.get<uint8_t>(nm);
+    W.add_copy(nm, e.dtype, qq, e.length, e.dims[0], e.dims[1]);
+  }
+  add(W);
+  return W.write(dst);
+}
+// true iff the mapped loader refuses the file with invalid_input
+bool refused(const std::string& path, const v4::Data& D, const char* why) {
+  try { const StartView v = map_start_view(path, D); (void)v; }
+  catch (const v4::Error& e) { if (e.st == v4::Status::invalid_input) return true; std::printf("    %s: wrong status %s\n", why, v4::status_name(e.st)); return false; }
+  std::printf("    %s: ACCEPTED\n", why); return false;
+}
 // data.bin + setup.bin made by the binary: gen -> prep -> setup (WP2)
 bool wp2_files(const Dir& dir, const std::string& design, int n, int p, int seed, std::string& dpath, std::string& spath) {
   const std::string bin = V4_SMCBVS4, raw = dir("raw.bin");
@@ -146,6 +171,12 @@ TEST(start_view_mapped_wp2_setup) {
       const uint64_t hv = island_hash(D, v, nb, mode, 3), hd = island_hash(D, vd, nb, mode, 3);
       CHECKF(hv == hd, "%s %s: island hash mapped %016llx vs rebuilt %016llx", design.c_str(), mode, (unsigned long long)hv, (unsigned long long)hd);
       std::printf("    %-6s island hash %016llx (mapped = rebuilt)\n", mode, (unsigned long long)hv);
+      // pinned: the hashes of the engine before StartView (merge base 04d8d2b5, dep::Start loaded by load_start), measured
+      // independently by the PR57 review on the same files. The bit forms are ISA-independent; class A depends on the build.
+      const bool ar = design == "AR";
+      const uint64_t pin = std::string(mode) == "law" ? (ar ? 0x5298f6a5216f12dcull : 0xeb1d5b4e7f10b76cull)
+                         : std::string(mode) == "compat" ? (ar ? 0xc75513efe4d23803ull : 0xee17af9cce39896full) : 0ull;
+      if (pin) CHECKF(hv == pin, "%s %s: hash %016llx differs from the pre-StartView engine's %016llx", design.c_str(), mode, (unsigned long long)hv, (unsigned long long)pin);
     }
   }
 }
@@ -173,7 +204,98 @@ TEST(start_view_cli_mapped) {
   { const std::string pr = dir("plan.json");
     CHECK_EQ(sh(base + " --plan-only 1 --record " + q(pr)), 0);
     const double si = v4::read_json_file(pr).at("mem_plan").at("setup_inputs").num();
-    const double want = (double)sd.view_bytes + start_scratch_bytes(sd.max_m, D.K, 3) + 80.0 + (double)sd.nb_ptr_len * 8 + (double)sd.nb_idx_len * 4;
+    const double want = (double)sd.view_bytes + start_scratch_bytes(sd.max_m, D.K, 3) + 80.0 + (double)sd.nb_ptr_len * 8 + (double)sd.nb_idx_len * 4 + kStartFixedHeapBytes;
     CHECKF(si == want && si == start_inputs_bytes(sd, 3), "setup inputs %.0f vs mapped sections + scratch + neighbours %.0f", si, want);
     std::printf("  island plan setup inputs: %.1f KiB = mapped sections %.1f KiB + scratch + neighbours\n", si / 1024, sd.view_bytes / 1024.0); }
+}
+
+// calibrate's admission counts the live copy of setup.bin that WP4's reader keeps beside the mapped start law (review PR57
+// MAJOR-1): a budget between the plan without the copy and the complete plan is refused, by --plan-only and by the run
+// (no calib.bin), and the complete plan itself is admitted at its floor.
+TEST(start_view_calibrate_admission_counts_setup_copy) {
+  Dir dir("adm"); std::string dpath, spath;
+  CHECK(wp2_files(dir, "AR", 100, 400, 9, dpath, spath));
+  const std::string bin = V4_SMCBVS4, pr = dir("plan.json");
+  const v4::Data D = v4::prep::load_data(dpath);
+  const SetupDims sd = read_setup_dims(spath, D.p, D.K);
+  const std::string base = bin + " calibrate --data " + q(dpath) + " --setup " + q(spath) + " --mode V --threads 3";
+  CHECK_EQ(sh(base + " --plan-only 1 --record " + q(pr)), 0);
+  const Json P = v4::read_json_file(pr).at("island_plan");
+  const double copy = P.at("setup_copy").num();
+  CHECKF(copy == setup_view_bytes(sd) && copy > 12.0 * D.p + 8.0 * sd.logr_len, "setup copy %.0f B vs setup_view_bytes %.0f", copy, setup_view_bytes(sd));
+  const uint64_t floor_full = (uint64_t)P.at("floor").num(), floor_old = floor_full - (uint64_t)copy;   // the plan the PR admitted before the fix
+  CHECK(floor_old < floor_full);
+  CHECK_EQ(sh(base + " --plan-only 1 --mem-budget " + std::to_string(floor_full)), 0);
+  CHECK_EQ(sh(base + " --plan-only 1 --mem-budget " + std::to_string(floor_full - 1)), 11);
+  CHECK_EQ(sh(base + " --plan-only 1 --mem-budget " + std::to_string(floor_old)), 11);   // admitted before: refused now
+  const std::string c1 = dir("calib_refused.bin"), c2 = dir("calib_ok.bin");
+  CHECK_EQ(sh(base + " --seed 5 --mem-budget " + std::to_string(floor_old) + " --out " + q(c1)), 11);
+  CHECK(!std::filesystem::exists(c1));                                                     // refused before any calibration
+  CHECK_EQ(sh(base + " --seed 5 --mem-budget " + std::to_string(floor_full) + " --out " + q(c2)), 0);   // the complete plan is admitted (at G = 1)
+  CHECK(std::filesystem::exists(c2));
+}
+
+// map_start_view refuses a file whose hashes are valid but whose values break the invariants the draws' bounds depend on
+// (review PR57 MAJOR-2), and the draw itself stays in bounds if such arrays reach it (the clamps)
+TEST(start_view_malformed_values_refused) {
+  Dir dir("bad"); std::string dpath, spath;
+  CHECK(wp2_files(dir, "AR", 100, 400, 3, dpath, spath));
+  const v4::Data D = v4::prep::load_data(dpath);
+  const size_t K1 = (size_t)D.K + 1;
+  std::vector<double> sc, c0, lf, lp; std::vector<int32_t> blk, pos; std::vector<int64_t> cp;
+  { v4::fmt::Reader R(spath); sc = R.vec<double>("size_cum"); c0 = R.vec<double>("cond0"); lf = R.vec<double>("logF"); lp = R.vec<double>("logprof");
+    blk = R.vec<int32_t>("blk"); pos = R.vec<int32_t>("pos"); cp = R.vec<int64_t>("code_ptr"); }
+  { bool ok = true; try { const StartView v = map_start_view(spath, D); (void)v; } catch (const v4::Error&) { ok = false; }
+    CHECK_MSG(ok, "the untouched file must be accepted"); }
+  auto mk = [&](const char* name, const std::function<void(v4::fmt::Writer&)>& add, const std::vector<std::string>& drop) {
+    const std::string out = dir(std::string("bad_") + name + ".bin");
+    rewrite_setup(spath, out, drop, add); return out; };
+  // size law
+  { std::vector<double> z(K1, 0.0);
+    CHECK(refused(mk("size_zeros", [&](v4::fmt::Writer& W) { W.add("size_cum", z); }, {"size_cum"}), D, "size_cum all zeros"));
+    std::vector<double> h = sc; h[K1 - 1] = 0.5;
+    CHECK(refused(mk("size_end", [&](v4::fmt::Writer& W) { W.add("size_cum", h); }, {"size_cum"}), D, "size_cum ends at 0.5"));
+    std::vector<double> m = sc; std::swap(m[0], m[1]); if (m[0] != m[1]) CHECK(refused(mk("size_mono", [&](v4::fmt::Writer& W) { W.add("size_cum", m); }, {"size_cum"}), D, "size_cum not monotone"));
+    std::vector<double> t = sc; t[0] = std::nextafter(t[0], 1.0);   // one ulp off the rebuild: valid cumulative, wrong bits
+    CHECK(refused(mk("size_ulp", [&](v4::fmt::Writer& W) { W.add("size_cum", t); }, {"size_cum"}), D, "size_cum one ulp off the rebuild")); }
+  // scan table and profiles
+  { std::vector<double> a = c0; a[3] = 2.0;
+    CHECK(refused(mk("cond0_range", [&](v4::fmt::Writer& W) { W.add("cond0", a, (uint64_t)(c0.size() / K1), (uint64_t)K1); }, {"cond0"}), D, "cond0 entry 2.0"));
+    std::vector<double> u = c0; u[K1 + 5] = std::nextafter(u[K1 + 5], u[K1 + 5] > 0.5 ? 0.0 : 1.0);   // a valid probability, wrong bits
+    CHECK(refused(mk("cond0_ulp", [&](v4::fmt::Writer& W) { W.add("cond0", u, (uint64_t)(c0.size() / K1), (uint64_t)K1); }, {"cond0"}), D, "cond0 one ulp off the rebuilt row"));
+    std::vector<double> f = lf; f[7] = std::nan("");
+    CHECK(refused(mk("logF_nan", [&](v4::fmt::Writer& W) { W.add("logF", f, (uint64_t)(lf.size() / K1), (uint64_t)K1); }, {"logF"}), D, "logF NaN"));
+    std::vector<double> q2 = lp; q2[1] = std::nan("");
+    CHECK(refused(mk("logprof_nan", [&](v4::fmt::Writer& W) { W.add("logprof", q2); }, {"logprof"}), D, "logprof NaN")); }
+  // partition and offsets
+  { std::vector<int32_t> b2 = blk; b2[1] = b2[0] == b2[1] ? b2[1] : b2[0];
+    if (b2 != blk) CHECK(refused(mk("blk", [&](v4::fmt::Writer& W) { W.add("blk", b2); }, {"blk"}), D, "blk of a variable moved to another block"));
+    std::vector<int32_t> p2 = pos; p2[0] = p2[0] + 1;
+    CHECK(refused(mk("pos", [&](v4::fmt::Writer& W) { W.add("pos", p2); }, {"pos"}), D, "pos shifted"));
+    std::vector<int64_t> c2 = cp; c2[1] += 1;
+    CHECK(refused(mk("code_ptr", [&](v4::fmt::Writer& W) { W.add("code_ptr", c2); }, {"code_ptr"}), D, "code_ptr step not 2^m")); }
+  // identity: the second open must be the file the plan read (review PR57 m3)
+  { bool r1 = false, r2 = false;
+    try { map_start_view(spath, D, true, std::string(64, '0')); } catch (const v4::Error& e) { r1 = e.st == v4::Status::invalid_input; }
+    try { load_neighbours(spath, D.p, false, std::string(64, '0')); } catch (const v4::Error& e) { r2 = e.st == v4::Status::invalid_input; }
+    CHECK(r1 && r2);
+    const SetupDims sd = read_setup_dims(spath, D.p, D.K, false);
+    const StartView v = map_start_view(spath, D, true, sd.content_hash); (void)v;
+    const Neighbours nb = load_neighbours(spath, D.p, false, sd.content_hash); CHECK(nb.ptr.size() == (size_t)D.p + 1); }
+  // the draws stay in bounds on arrays the loader would have refused: a size law that never reaches 1, rows that never reach 1
+  { const dep::Start st = load_start(spath, D);   // the island's own rebuild
+    StartView v = StartView::from(st); v.prepare(1);
+    auto* o = const_cast<sv_detail::Owned*>(static_cast<const sv_detail::Owned*>(v.keep.get()));
+    std::fill(o->size_cum.begin(), o->size_cum.end(), 0.0);
+    std::fill(o->cond0.begin(), o->cond0.end(), 0.0);
+    for (size_t i = 0; i < o->logprof.size(); ++i) o->logprof[i] = v4::NEG_INF;   // every row all -inf: zeros after the cumulative
+    int bad = 0;
+    for (uint32_t i = 1; i <= 500; ++i) {
+      Address a0; a0.seed = 4; a0.island = 1; a0.particle = i;
+      auto nu = [&](uint32_t slot) { Address a = a0; a.slot = slot; return uniform_at(a); };
+      v4::Model S; draw_pi0(v, nu, S);
+      if ((int)S.size() > D.K) ++bad;
+      for (int j : S) if (j < 0 || j >= D.p) ++bad;
+    }
+    CHECKF(bad == 0, "%d malformed draws left the bounds (size <= K, members in [0, p))", bad); }
 }

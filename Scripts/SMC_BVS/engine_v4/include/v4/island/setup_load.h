@@ -11,6 +11,7 @@
 #include <string>
 #include "v4/format.h"
 #include "v4/island/dep.h"
+#include "v4/island/island.h"   // Neighbours, StartView (this header is self-contained: review PR57 m5)
 #include "v4/island/start_view.h"
 
 namespace v4::island {
@@ -87,6 +88,7 @@ struct SetupDims {
   // cond0, scalars_f64, code_ptr with J + 1 entries). Then the start law costs exactly these section bytes; otherwise
   // (minimal test fixtures) the island rebuilds it (dep::Start, then flattened).
   bool mappable = false; uint64_t view_bytes = 0; int max_m = 0;
+  uint64_t logr_len = 0;                                         // table codes C = sum 2^m (logr entries)
 };
 
 // verify = false: header and section-table hashes only (the admission needs the sizes; the sections are verified in full
@@ -111,6 +113,7 @@ inline SetupDims read_setup_dims(const std::string& path, int64_t p, int K, bool
     ++d.m_hist[(size_t)m];
   }
   for (int m = 20; m >= 1; --m) if (d.m_hist[(size_t)m]) { d.max_m = m; break; }
+  { uint64_t c = 0; R.get<double>("logr", &c); d.logr_len = c; }
   d.mappable = true;
   for (const char* nm : {"blk_members", "blk", "pos", "code_ptr", "logprof_ptr", "logprof", "logF", "size_cum", "cond0", "scalars_f64"}) d.mappable = d.mappable && R.has(nm);
   if (d.mappable) d.mappable = R.entry("code_ptr").length == 8 * blk_ptr.size();
@@ -178,7 +181,7 @@ inline SetupDims dims_from_sizes(int64_t p, int K, const std::vector<uint64_t>& 
     d.m_hist[(size_t)m] = m_hist[(size_t)m]; J += m_hist[(size_t)m]; C += m_hist[(size_t)m] << m; lp += m_hist[(size_t)m] * (uint64_t)(std::min(m, K) + 1);
     if (m_hist[(size_t)m]) d.max_m = m;
   }
-  d.J = (int)J;
+  d.J = (int)J; d.logr_len = C;
   const uint64_t K1 = (uint64_t)K + 1;
   d.view_bytes = 12 * (uint64_t)p + 3 * 8 * (J + 1) + 8 * C + 8 * lp + 8 * (J + 1) * K1 + 16 * K1 + 8 * J * K1;
   return d;
@@ -188,9 +191,12 @@ inline SetupDims dims_from_sizes(int64_t p, int K, const std::vector<uint64_t>& 
 // The flat start law over WP2's setup.bin sections, mapped (nothing expanded; StartView, WP3_DESIGN §1.12). Shapes and
 // the partition are checked in O(p + J) without allocation (every j: members[blk_ptr[blk[j]] + pos[j]] = j, a bijection);
 // the tables are WP2's bits (D-31: = core's; tests start_view_* compare them with the island's own rebuild).
-inline StartView map_start_view(const std::string& path, const Data& D, bool verify = true) {
+// expected_hash: the content hash the plan read (read_setup_dims); a different file is refused (review PR57 m3: the second
+// open of the path must be the file the admission planned from).
+inline StartView map_start_view(const std::string& path, const Data& D, bool verify = true, const std::string& expected_hash = "") {
   auto R = std::make_shared<fmt::Reader>(path, verify);
   if (R->kind() != fmt::K_SETUP) throw Error(Status::invalid_input, path + ": not a setup file");
+  if (!expected_hash.empty() && R->content_hash() != expected_hash) throw Error(Status::invalid_input, path + ": setup.bin changed between the plan and the load");
   const std::string w = path + ": ";
   const int K = D.K, p = D.p;
   StartView v; v.K = K; v.p = p; v.source = "mapped";
@@ -222,14 +228,45 @@ inline StartView map_start_view(const std::string& path, const Data& D, bool ver
     if (b < 0 || (size_t)b >= J || q < 0 || q >= v.size(b) || v.members[(size_t)v.blk_ptr[b] + q] != j)
       throw Error(Status::invalid_input, w + "blk / pos / blk_members are not one partition of 0..p-1 (variable " + std::to_string(j) + ")");
   }
+  // Values (review PR57 MAJOR-2). The hashes authenticate the bytes, not the invariants the draws' bounds depend on: a
+  // size law that does not end at 1 gives a model of K + 1 members, a conditional row that is not normalised gives a block
+  // size past the block. Checked here in O(J K): the size law is finite, non-decreasing, ends at exactly 1 and equals the
+  // rebuild from logF and the prior (what load_start checked); every scan entry cond0 is in [0, 1] and equals row (b, r)'s
+  // first cumulative, rebuilt from logprof and logF (D-31). A WP2 writer bug at a p the tests never reach is caught here.
+  const std::string vw = w + "start law values: ";
+  auto bad_prob = [](double x) { return !(x >= 0.0 && x <= 1.0); };   // NaN fails too
+  for (size_t k = 0; k < K1; ++k) {
+    if (bad_prob(v.size_cum[k]) || (k && v.size_cum[k] < v.size_cum[k - 1])) throw Error(Status::invalid_input, vw + "size_cum is not a non-decreasing cumulative in [0, 1] (index " + std::to_string(k) + ")");
+    if (std::isnan(v.size_logmass[k]) || v.size_logmass[k] == POS_INF) throw Error(Status::invalid_input, vw + "size_logmass has a NaN or +inf");
+  }
+  if (v.size_cum[K1 - 1] != 1.0) throw Error(Status::invalid_input, vw + "size_cum does not end at exactly 1");
+  for (size_t i = 0; i < v.logF.size(); ++i) if (std::isnan(v.logF[i]) || v.logF[i] == POS_INF) throw Error(Status::invalid_input, vw + "logF has a NaN or +inf");
+  for (size_t i = 0; i < v.logprof.size(); ++i) if (std::isnan(v.logprof[i]) || v.logprof[i] == POS_INF) throw Error(Status::invalid_input, vw + "logprof has a NaN or +inf");
+  { std::vector<double> lk(K1), cum(K1); std::vector<long double> e(K1);
+    const double* lf = &v.logF[J * K1];
+    for (size_t k = 0; k < K1; ++k) lk[k] = lf[k] == NEG_INF ? NEG_INF : D.logprior[k] + lf[k];
+    sv_detail::cumulative(lk.data(), K1, cum.data(), e.data());
+    if (std::memcmp(cum.data(), v.size_cum.data(), K1 * 8) != 0) throw Error(Status::invalid_input, vw + "size_cum differs from the rebuild from logF and the prior (core/cpp/v3_start.h:151)"); }
+  { int64_t bad = 0;
+    #pragma omp parallel for schedule(static) reduction(+ : bad)
+    for (int64_t b = 0; b < (int64_t)J; ++b) {
+      StartView::Scratch sc;   // fixed-size arrays; the vectors stay empty
+      for (int r = 0; r <= K; ++r) {
+        const double c0 = v.cond0[(size_t)b * K1 + r];
+        if (bad_prob(c0)) { ++bad; continue; }
+        v.cond_row((int)b, r, sc);
+        if (std::memcmp(&c0, &sc.row[0], 8) != 0) ++bad;
+      }
+    }
+    if (bad) throw Error(Status::invalid_input, vw + std::to_string(bad) + " scan entries of cond0 differ from the rows rebuilt from logprof and logF (D-31)"); }
   v.keep = R;
   return v;
 }
 
 // The island's start law from setup.bin: mapped when the file carries WP2's sections (production), else rebuilt from the
 // partition and logr (dep::Start, the minimal fixtures of the tests) and flattened.
-inline StartView load_start_view(const std::string& path, const Data& D, bool mappable) {
-  if (mappable) return map_start_view(path, D);
+inline StartView load_start_view(const std::string& path, const Data& D, bool mappable, const std::string& expected_hash = "") {
+  if (mappable) return map_start_view(path, D, true, expected_hash);
   return StartView::from(load_start(path, D));
 }
 
@@ -240,15 +277,30 @@ inline double start_scratch_bytes(int max_m, int K, int threads) {
 // The plan's caller-supplied term for the setup inputs, from the dimensions alone: the mapped sections + the draw scratch
 // + the owned neighbour lists when the file is mappable; the model of the expanded Start otherwise. The run uses the same
 // number (one admission decision before and after the load).
+// A small fixed heap the start law always holds: WP2's static code tables (codes_of_size, all m <= 16: 0.5 MiB) and the
+// allocator's overhead (MEASURED about 0.5 MiB over the other terms at p = 10^4 .. 10^5; review PR57 m4).
+constexpr double kStartFixedHeapBytes = 1048576.0;
+// What the plan counts for the setup inputs of ONE island: the mapped section bytes (the pages that stay resident while
+// the island runs; the file's other sections are read once, by the hash verification, and are reclaimable page cache),
+// + the draw scratch + the owned neighbour lists + the fixed heap.
 inline double start_inputs_bytes(const SetupDims& d, int threads) {
   const double nb = 2 * 40.0 + (double)d.nb_ptr_len * 8.0 + (double)d.nb_idx_len * 4.0;
   if (!d.mappable) return start_bytes_model(d);
-  return (double)d.view_bytes + start_scratch_bytes(d.max_m, d.K, threads) + nb;
+  return (double)d.view_bytes + start_scratch_bytes(d.max_m, d.K, threads) + nb + kStartFixedHeapBytes;
+}
+// WP4's SetupView (wp4io::read_setup) copies logr and the partition arrays into owned vectors that stay live for the whole
+// calibration beside the mapped StartView (review PR57 MAJOR-1). `calibrate` releases the table stores once they are in the
+// ledger (calib_plan.h release_table_stores), so what stays is: blk, pos, blk_members (12 p), blk_ptr and code_ptr (2 x
+// 8 (J + 1)), logr (8 C), size_logmass (8 (K + 1)), mode_S (<= 4 K) and the vector headers. Zero without a setup file.
+inline double setup_view_bytes(const SetupDims& d) {
+  return 12.0 * (double)d.p + 16.0 * ((double)d.J + 1) + 8.0 * (double)d.logr_len + 8.0 * ((double)d.K + 1) + 4.0 * (double)d.K + 8 * 40.0;
 }
 
-// verify = false when the caller already verified the file's sections (the mapped StartView loader did)
-inline Neighbours load_neighbours(const std::string& path, int p, bool verify = true) {
+// verify = false when the caller already verified the file's sections (the mapped StartView loader did); expected_hash: the
+// content hash that verification (or the plan) saw, so an unverified second open is the same file (review PR57 m3)
+inline Neighbours load_neighbours(const std::string& path, int p, bool verify = true, const std::string& expected_hash = "") {
   fmt::Reader R(path, verify);
+  if (!expected_hash.empty() && R.content_hash() != expected_hash) throw Error(Status::invalid_input, path + ": setup.bin changed between the plan and the load");
   if (!R.has("nb_ptr") || !R.has("nb_idx")) throw Error(Status::invalid_input, path + ": no neighbour lists (nb_ptr / nb_idx)");
   Neighbours nb; nb.ptr = R.vec<int64_t>("nb_ptr"); nb.idx = R.vec<int32_t>("nb_idx");
   if (nb.ptr.size() != (size_t)p + 1 || nb.ptr[0] != 0 || nb.ptr[(size_t)p] != (int64_t)nb.idx.size()) throw Error(Status::invalid_input, path + ": nb_ptr shape (" + std::to_string(nb.ptr.size()) + " entries for p = " + std::to_string(p) + ", ptr[0] = " + std::to_string(nb.ptr.empty() ? -1 : nb.ptr[0]) + ", ptr[p] = " + std::to_string(nb.ptr.size() > (size_t)p ? nb.ptr[(size_t)p] : -1) + ", |idx| = " + std::to_string(nb.idx.size()) + ")");

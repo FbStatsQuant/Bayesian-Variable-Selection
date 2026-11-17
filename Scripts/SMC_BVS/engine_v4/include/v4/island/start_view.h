@@ -124,7 +124,7 @@ struct StartView {
   int block_size(int b, int r, double u, Scratch& s) const {
     if (u < c0(b, r)) return 0;
     const int len = cond_row(b, r, s);
-    return sv_detail::upper(s.row, (size_t)len, u);
+    return std::min(sv_detail::upper(s.row, (size_t)len, u), len - 1);   // valid rows end at 1 > u: the clamp never acts (it bounds a malformed row)
   }
   // the within-size law of block b at size j into s.sc[0..n) and its codes (increasing order); returns n (dep: sub_cum[b][j],
   // codes_by_size[b][j]; D-18)
@@ -144,7 +144,7 @@ struct StartView {
   // the submodel of block b of size j for uniform u: appends its members to S
   void submodel(int b, int j, double u, Scratch& s, Model& S) const {
     const uint32_t* cs; const uint32_t nc = sub_row(b, j, s, cs);
-    const uint32_t code = cs[sv_detail::upper(s.sc.data(), nc, u)];
+    const uint32_t code = cs[std::min(sv_detail::upper(s.sc.data(), nc, u), (int)nc - 1)];
     const int m = size(b); const int32_t* mem = &members[(size_t)blk_ptr[b]];
     for (int t = 0; t < m; ++t) if (code & (1u << t)) S.push_back(mem[t]);
   }
@@ -207,7 +207,7 @@ inline StartView StartView::from(const dep::Start& st) {
 template <class NextU>
 inline void draw_pi0(const StartView& st, NextU&& nu, Model& S) {
   StartView::Scratch& s = st.scr();
-  const int k = sv_detail::upper(st.size_cum.data(), st.size_cum.size(), nu(v4::slot_of(v4::SK_PI0_SIZE, 0)));
+  const int k = std::min(sv_detail::upper(st.size_cum.data(), st.size_cum.size(), nu(v4::slot_of(v4::SK_PI0_SIZE, 0))), st.K);
   s.nz.clear();
   int r = k;
   for (int b = st.J - 1; b >= 0 && r > 0; --b) {
@@ -224,7 +224,7 @@ inline void draw_pi0(const StartView& st, NextU&& nu, Model& S) {
 template <class NextU, class NextU8>
 inline void draw_pi0_fast(const StartView& st, NextU&& nu, NextU8&& nu8, Model& S) {
   StartView::Scratch& s = st.scr();
-  const int k = sv_detail::upper(st.size_cum.data(), st.size_cum.size(), nu(v4::slot_of(v4::SK_PI0_SIZE, 0)));
+  const int k = std::min(sv_detail::upper(st.size_cum.data(), st.size_cum.size(), nu(v4::slot_of(v4::SK_PI0_SIZE, 0))), st.K);
   s.nz.clear();
   int r = k, b = st.J - 1;
   uint32_t slots[8]; double u8[8];
@@ -237,7 +237,7 @@ inline void draw_pi0_fast(const StartView& st, NextU&& nu, NextU8&& nu8, Model& 
     if (l == nl) { b -= nl; continue; }
     const int bb = b - l;
     const int len = st.cond_row(bb, r, s);
-    const int j = sv_detail::upper(s.row, (size_t)len, u8[l]);
+    const int j = std::min(sv_detail::upper(s.row, (size_t)len, u8[l]), len - 1);
     s.nz.push_back({bb, j}); r -= j; b = bb - 1;
   }
   S.clear();
