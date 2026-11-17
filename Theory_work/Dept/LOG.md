@@ -427,3 +427,4 @@
 - 2026-11-17 12:38 CST W3-D2: X2 estimate Tier B ~2–3 h + Sol, but C-MIS:GDb/Prop-P remain conditions → recommended keeping X2 off the list; HQ's call. Line check running.
 - 2026-11-17 12:39 CST HQ: X2 stays off the closed list (confirmed). W3-D2 proceeds: line check → council → CP3.
 - 2026-11-17 12:40 CST Precedent notes FINAL: Opus re-check of comparison sentences (3 OK, 5 fixed as proposed), applied; Writing copy + README updated.
+- 2026-11-17 12:49 CST D109 → audit Fable.
