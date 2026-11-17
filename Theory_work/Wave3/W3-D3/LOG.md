@@ -7,7 +7,7 @@
   W3-DIST work/E_bridges B1, B2core, B2, B3 (statements); registry rows W3-DIST:B0–B3 (all PROVED-CHECKED, council R2),
   W3-READER:R1@1.0.2 (PROVED-CHECKED); DEPS rows B1–B3 OK; PRECEDENTS_2026-11-17 B7b; ASSUMPTION_COMPLIANCE rows 27–31;
   W3-D2 STATEMENT v1.3 (Thm2X, Cor2X); PROTOCOL_v4 §§1–2A; RIDER_RULES §§1–3; PROGRAM Readability; Dept DECISIONS D105–D112.
-- 13:05 — PLAN.md v0.1 written. Verdict: reuse succeeds for every Gaussian step (G1–G5); no new probability theory.
+- 13:02 — PLAN.md v0.1 written (time corrected from `date` at commit 652ce7c1). Verdict: reuse succeeds for every Gaussian step (G1–G5); no new probability theory.
   Stopped at plan stage; awaiting manager GO. No agents started.
 - 13:03 — manager: #3 REQUIRED (HQ/owner); name the class-1 BVS precedents for sub-Gaussian rows. Lead re-verified NH14
   Lemma 6.1 against arXiv 1405.6545v1 (pp. 16–17, wording matches PREC B7b); checked YWJ15 (1505.07925v1): Gaussian random
