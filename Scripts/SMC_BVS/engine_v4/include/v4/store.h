@@ -29,6 +29,7 @@ class Store {
   Store(const Store& o) { *this = o; }
   Store& operator=(const Store& o);
   void init(uint64_t c, Order o);
+  void release();                                       // empties the store and RETURNS its memory (init() keeps the capacity)
   void offer(double value, ModelView S, uint64_t h);    // quick reject if provably out; may trigger compact()
   void compact();                                       // staging sorted + merged into the kept run; truncate to cap
   void merge(const Store& o);                           // offer every entry of o, then compact()

@@ -108,23 +108,61 @@ struct MergeSettings {
   // estimate_merge_memory(...).total exceeds it
   uint64_t mem_budget_bytes = 0;
   double kbar = 8;             // mean model size used by the estimate (merge::run: measured from the islands' store sections)
-  uint64_t extra_bytes = 0;    // the rest of the task (review PR20 m-2): data.bin X (mapped), setup arrays and table stores
+  uint64_t extra_bytes = 0;    // legacy: any other resident bytes the caller wants counted for the whole merge (default 0)
+  // The memory model's inputs (merge::run fills them from the files and the setup view; 0 = not counted). See
+  // estimate_merge_memory: data.bin and the files the merge maps whole (the section-hash check pages a file in), and what
+  // read_setup copies (setup_all) and keeps once the table stores are released (setup_resident).
+  uint64_t data_bytes = 0;       // data.bin: X mapped (resident as touched; counted whole)
+  uint64_t setup_bytes = 0;      // setup.bin on disk: mapped whole by read_setup's section-hash check
+  uint64_t setup_all = 0;        // what read_setup copies into the SetupView (logr, partition arrays, table stores)
+  uint64_t setup_resident = 0;   // what stays after the table stores are released (logr, partition arrays)
+  uint64_t calib_bytes = 0;      // calib.bin on disk: mapped whole by read_calib's hash check and again by the inherited offers
+  uint64_t island_bytes = 0;     // the largest island_r.bin: mapped whole while it is loaded (0 = c entries at 26 + 4 k)
+  uint64_t island_bytes_total = 0, out_bytes = 0;   // all island files, the fit.bin written: page cache only (sacct_upper)
+  std::function<void(const std::string&)> phase_hook;   // optional: called at phase boundaries (merge::run records RSS and seconds)
   // INTERFACES v0.1.7: final-run leader stores are not outputs in any mode; final-run ledgers use leaders = false
 };
 
-// Memory model of the streaming merge (ESTIMATE; bytes). A store entry costs 30 + 4 k bytes kept (v, off, hash, len,
-// pool: 26 + 4 k; the one-entry-per-model index: 4); a store peaks at 2.5 cap entries (kept + staging + new kept run,
-// INTERFACES §4.1), plus about 9 B per entry transient inside compact() (covered by the 2.5 factor's slack).
-struct MemEstimate { uint64_t merged = 0, one_island = 0, small = 0, tail = 0, extra = 0, total = 0; };
+// Memory model of the merge task (ESTIMATE; bytes), by phase; the task's peak is the largest phase, times a 1.15 margin plus 80 MiB
+// (review of the first 1M merge: phase records measured at p = 2e4, 5e4, 1e5 with the probe of tests/test_merge_mem.cpp, the
+// plan then bounding the measured VmHWM by >= 1.1 at each). RESIDENT counts anonymous memory AND mapped file pages
+// (RssFile), because the merge maps every input whole for its section-hash check and a process's RSS includes them:
+//   entry   = 30 + 4 k bytes per store entry (v, off, hash, len, pool: 26 + 4 k; the model index: 4); a store peaks at
+//             2.5 c entries (kept + staging + new kept run, INTERFACES §4.1) and KEEPS that capacity (merged, below);
+//   load_setup  = setup_all + setup_bytes + data          (read_setup copies the arrays while the file is mapped whole);
+//   load_calib  = setup_all + calib_bytes + data          (read_calib validates the inherited models in place: no copy);
+//   offers      = setup_all + 2.5 c entries + data        (the table stores into the ledger; then they are released) and
+//                 setup_resident + 2.5 c entries + calib_bytes + data (the inherited models from the mapped file);
+//   streaming   = setup_resident + merged (2.5 c entries) + one island (its file mapped + the loaded copy c (entry + 16): the
+//                 store's model index is built from a (hash, index) pair sort) + small + data;
+//   tail        = setup_resident + merged + small + tail wave + data.
+// `extra` = data + setup_resident, the part held through the whole merge. `total` = the largest phase (the bound).
+// `sacct_upper` = total + every file the task reads or writes (page cache: sacct's MaxRSS counts it until the cgroup
+// reclaims it, which is why a job at its limit reads 94% of the request; it is NOT memory the merge needs).
+struct MemEstimate {
+  uint64_t merged = 0, one_island = 0, small = 0, tail = 0, extra = 0, total = 0;
+  uint64_t load_setup = 0, load_calib = 0, offers = 0, streaming = 0, tail_phase = 0, load_peak = 0, sacct_upper = 0;
+};
 inline MemEstimate estimate_merge_memory(const MergeSettings& ms) {
   const double entry = 30.0 + 4.0 * ms.kbar, c = 40.0 * ms.p + 1, lead = 0.0;   // no final-run leaders (v0.1.7)
+  const double e2 = 2.5 * (c + lead) * entry, data = (double)ms.data_bytes, sres = (double)ms.setup_resident, sall = (double)std::max(ms.setup_all, ms.setup_resident);
   MemEstimate m;
-  m.merged = (uint64_t)(2.5 * (c + lead) * entry);
-  m.one_island = (uint64_t)(2.5 * c * entry);                                        // one island store while loaded
+  m.merged = (uint64_t)e2;
+  const double isl_file = ms.island_bytes ? (double)ms.island_bytes : c * (26.0 + 4.0 * ms.kbar);
+  m.one_island = (uint64_t)(isl_file + c * (entry + 16.0));
   m.small = (uint64_t)((double)ms.Rp * ms.p * 8.0 * 2 + (double)ms.Rp * ms.N * (24 + 4 * ms.kbar));   // pip_r (+ pip_eq/Z/T) + terminal supports
   m.tail = (uint64_t)((double)std::max(1, ms.threads) * 4 * (double)ms.chunk * (entry + 48));        // one wave of chunk buffers
-  m.extra = ms.extra_bytes;
-  m.total = m.merged + m.one_island + m.small + m.tail + m.extra;
+  m.extra = (uint64_t)(data + sres) + ms.extra_bytes;
+  const double xb = (double)ms.extra_bytes;
+  m.load_setup = (uint64_t)(sall + (double)ms.setup_bytes + data + xb);
+  m.load_calib = (uint64_t)(sall + (double)ms.calib_bytes + data + xb);
+  m.offers = (uint64_t)std::max(sall + e2 + data, sres + e2 + (double)ms.calib_bytes + data) + ms.extra_bytes;
+  m.streaming = m.merged + m.one_island + m.small + m.extra;
+  m.tail_phase = m.merged + m.small + m.tail + m.extra;
+  m.load_peak = std::max(m.load_setup, m.load_calib);
+  const double peak = (double)std::max({m.load_setup, m.load_calib, m.offers, m.streaming, m.tail_phase});
+  m.total = (uint64_t)(1.15 * peak) + (80ull << 20);   // + 80 MiB: the binary, libraries and the loader's high-water mark (measured: VmHWM 65 MB at start)
+  m.sacct_upper = m.total + ms.data_bytes + ms.setup_bytes + ms.calib_bytes + ms.island_bytes_total + ms.out_bytes;
   return m;
 }
 
@@ -296,13 +334,16 @@ FitOut merge_stream(IslandSource& src, Ledger&& pre, const Model& mode_S, Factor
                    " terminal supports, expected N = " + std::to_string(I.N) + " (the last measured round)";
       return out;
     }
+    if (ms.phase_hook) ms.phase_hook("island_" + std::to_string(r) + "_loaded");
     led.merge(I.led);
     out.logZ_r.push_back(I.logZ);
     out.pip_r.push_back(std::move(I.pip));
     ess_all.insert(ess_all.end(), I.ess.begin(), I.ess.end());
     terminal[(size_t)r - 1] = std::move(I.terminal);
+    if (ms.phase_hook) ms.phase_hook("island_" + std::to_string(r) + "_merged");
   }   // each IslandIn (its ledger and stores) is freed at the end of its iteration
   led.compact();
+  if (ms.phase_hook) ms.phase_hook("islands_compacted");
   const double t_islands_s = std::chrono::duration<double>(std::chrono::steady_clock::now() - t_isl0).count();
   // 4. tail
   TailSettings ts; ts.threads = ms.threads; ts.chunk = ms.chunk; ts.K = ms.K; ts.p = p; ts.tier = ms.tier; ts.zob = ms.zob;
@@ -334,6 +375,7 @@ FitOut merge_stream(IslandSource& src, Ledger&& pre, const Model& mode_S, Factor
     out.status = e.st; out.fit_state = "failed"; out.reason = e.what();
   }
   led.compact();
+  if (ms.phase_hook) ms.phase_hook("tail_done");
   out.t_islands = t_islands_s;
   out.has_hpm = led.has_hpm; out.hpm = led.hpmS; out.hpm_F = led.hpmF; out.hpm_logm = led.hpm_logm; out.hpm_ev = led.hpm_ev;
   if (out.status != Status::completed) {   // GUARD-W: no estimate field
@@ -449,6 +491,7 @@ FitOut merge_stream(IslandSource& src, Ledger&& pre, const Model& mode_S, Factor
   }
   out.estimates_available = true;
   out.led = std::move(led);
+  if (ms.phase_hook) ms.phase_hook("assembly_done");
   return out;
 }
 

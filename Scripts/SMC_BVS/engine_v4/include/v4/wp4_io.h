@@ -56,14 +56,22 @@ struct CalibIn {
   std::string status;                               // calibration status name (ok, schedule_limit, ...)
   std::vector<double> grid; int32_t tier = 0, N = 0, L = 0, Hm = 4;
   bool has_hpm = false; Model hpm; EventCtx hpm_ev;
-  std::vector<merge::InheritedModel> inherited;
+  std::vector<merge::InheritedModel> inherited;     // empty when read_calib was asked not to keep it (the merge streams it from the file)
+  uint64_t n_inherited = 0;                         // the number of inherited models, kept or not
   std::string rule; int32_t I_used = 0, I_max = -1, ell = -1; double k_store = 0;
   double tau_cal = -__builtin_huge_val();            // D-29: meta.tau_cal_hex (V mode; -inf when absent), checked against inh_F
 };
 // Every model, value, grid and meta range checked. V mode: the bounded rule, tier 0, N = 2,500 (D-1, D-26) and
 // I_used <= I_max <= ell. A completed calibration must carry k_store (finite, > 0). When data_hash / setup_hash are
 // given, calib.bin's meta.inputs must name them (review PR37 m-3). A non-ok calib.bin exposes no inherited models.
-CalibIn read_calib(const std::string& path, int32_t p, int32_t K, const std::string& data_hash = "", const std::string& setup_hash = "");
+// keep_inherited = false: the inherited models are validated in place (no per-model allocation) and NOT materialised
+// (`inherited` stays empty, `n_inherited` is set): at 10^6 there are about 8e7 of them, 146 B each as vector<InheritedModel>
+// (11.7 GB, held for the whole merge, review of the first 1M merge). offer_inherited_file offers them from the mapped file.
+CalibIn read_calib(const std::string& path, int32_t p, int32_t K, const std::string& data_hash = "", const std::string& setup_hash = "",
+                   bool keep_inherited = true);
+// merge::offer_inherited over the mapped calib.bin, the same offers in the same order (model i = inherited key i; the
+// calibration HPM model carries its CALIBRATION EventCtx). C must come from read_calib(path, ...) of the same file.
+void offer_inherited_file(Ledger& led, const std::string& path, const CalibIn& C, const Zobrist& zob);
 // D-29 (review PR54 MAJOR-1/2): tau_cal's semantic check, light (mapped arrays, no model copies): distinct inherited
 // models, tau_cal = the c-th best F (c = 40p + 1) bit for bit. read_calib and `smcbvs4 island` both call it.
 // The most inherited models an UNORDERED (non-canonical) list may have before the distinctness proof (an index sort, 4 B per
@@ -133,6 +141,7 @@ struct SetupView {
   // core/cpp/v3_start.h:54-66 (copied): ordered block sum of log r_b(S n C_b).
   double comp(const Model& S, std::vector<std::pair<int32_t, int32_t>>& scratch) const;
   uint64_t table_event_count(int32_t K) const;      // codes with |U| <= K (one logical TABLE event each)
+  uint64_t bytes_resident(bool tables) const;       // bytes held: the arrays, plus the three table stores when `tables`
   EventCtx table_event_of(const Model& S) const;    // block b + 1, code of S in that block
 };
 SetupView read_setup(const std::string& path, int32_t p, int32_t K, const Zobrist* zob = nullptr);   // shapes, ranges and finite values checked

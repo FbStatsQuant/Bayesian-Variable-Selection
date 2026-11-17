@@ -11,6 +11,7 @@
 #include <cmath>
 #include <limits>
 #include "v4/pmath.h"
+#include "v4/proc_mem.h"
 #include "v4/prep.h"
 #include "v4/provenance.h"
 #include "v4/sha256.h"
@@ -295,7 +296,29 @@ double check_calib_tau_cal(const fmt::Reader& R, const Json& meta, uint32_t mode
   if (f64_hex(t) != f64_hex(tau)) throw Error(Status::invalid_input, path + ": tau_cal is not the c-th best F of the distinct inherited models (D-29)");
   return tau;
 }
-CalibIn read_calib(const std::string& path, int32_t p, int32_t K, const std::string& data_hash, const std::string& setup_hash) {
+namespace {
+// The checks models_checked + read_calib's loop make on the inherited arrays, over the mapped sections without copying a
+// model: offsets cover the pool and are monotone, every model valid (sorted labels in [0, p), <= K), the four arrays of
+// one length, every value finite. Returns the number of models.
+uint64_t validate_inherited_in_place(const fmt::Reader& R, int32_t p, int32_t K, const std::string& path) {
+  uint64_t np = 0, ni = 0, nF = 0, nL = 0, nM = 0;
+  const int64_t* ptr = R.get<int64_t>("inh_ptr", &np);
+  const int32_t* idx = R.get<int32_t>("inh_idx", &ni);
+  const double* F = R.get<double>("inh_F", &nF); const double* L = R.get<double>("inh_lg0", &nL); const double* M = R.get<double>("inh_logm", &nM);
+  const uint64_t n = np ? np - 1 : 0;
+  if (np && (ptr[0] != 0 || (uint64_t)ptr[np - 1] != ni)) throw Error(Status::invalid_input, "inh: offsets do not cover the pool");
+  for (uint64_t i = 0; i < n; ++i)
+    if (ptr[i + 1] < ptr[i] || (uint64_t)ptr[i + 1] > ni) throw Error(Status::invalid_input, "inh: offsets not monotone or past the pool");
+  if (nF != n || nL != n || nM != n) throw Error(Status::invalid_input, "calib: inherited arrays differ in length");
+  for (uint64_t i = 0; i < n; ++i) {
+    check_model(ModelView(idx + ptr[i], (uint32_t)(ptr[i + 1] - ptr[i])), p, K, "inh");
+    need_finite(F[i], path + ": inh_F"); need_finite(L[i], path + ": inh_lg0"); need_finite(M[i], path + ": inh_logm");
+  }
+  return n;
+}
+}  // namespace
+
+CalibIn read_calib(const std::string& path, int32_t p, int32_t K, const std::string& data_hash, const std::string& setup_hash, bool keep_inherited) {
   fmt::Reader R(path);
   if (R.kind() != fmt::K_CALIB) throw Error(Status::invalid_input, path + ": not a calib file");
   CalibIn c; c.content_hash = R.content_hash(); c.mode = R.mode(); c.meta = R.json("meta");
@@ -329,15 +352,37 @@ CalibIn read_calib(const std::string& path, int32_t p, int32_t K, const std::str
     c.hpm = R.vec<int32_t>("hpm_S"); check_model(c.hpm, p, K, path + ": hpm_S");
     c.hpm_ev = event_from_json(c.meta.at("hpm_ev")); c.hpm_ev.key.seg = SG_CALIB;
   }
-  std::vector<Model> im = read_models(R, "inh", p, K);
-  std::vector<double> iF = R.vec<double>("inh_F"), ilg0 = R.vec<double>("inh_lg0"), ilogm = R.vec<double>("inh_logm");
-  if (iF.size() != im.size() || ilg0.size() != im.size() || ilogm.size() != im.size()) throw Error(Status::invalid_input, "calib: inherited arrays differ in length");
-  for (size_t i = 0; i < im.size(); ++i) {
-    need_finite(iF[i], path + ": inh_F"); need_finite(ilg0[i], path + ": inh_lg0"); need_finite(ilogm[i], path + ": inh_logm");
-    c.inherited.push_back({im[i], iF[i], ilg0[i], ilogm[i]});
+  if (!keep_inherited) c.n_inherited = validate_inherited_in_place(R, p, K, path);
+  else {
+    std::vector<Model> im = read_models(R, "inh", p, K);
+    std::vector<double> iF = R.vec<double>("inh_F"), ilg0 = R.vec<double>("inh_lg0"), ilogm = R.vec<double>("inh_logm");
+    if (iF.size() != im.size() || ilg0.size() != im.size() || ilogm.size() != im.size()) throw Error(Status::invalid_input, "calib: inherited arrays differ in length");
+    c.inherited.reserve(im.size());
+    for (size_t i = 0; i < im.size(); ++i) {
+      need_finite(iF[i], path + ": inh_F"); need_finite(ilg0[i], path + ": inh_lg0"); need_finite(ilogm[i], path + ": inh_logm");
+      c.inherited.push_back({std::move(im[i]), iF[i], ilg0[i], ilogm[i]});
+    }
+    c.n_inherited = c.inherited.size();
   }
   c.tau_cal = check_calib_tau_cal(R, c.meta, c.mode, p, K, path);   // D-29: over the DISTINCT inherited models (review PR54 MAJOR-1/2)
   return c;
+}
+
+// merge::offer_inherited (merge.h) over the mapped arrays: the same offers in the same order, no model copied.
+void offer_inherited_file(Ledger& led, const std::string& path, const CalibIn& C, const Zobrist& zob) {
+  if (C.n_inherited == 0) return;
+  fmt::Reader R(path, /*verify=*/false);   // read_calib hashed every section; the header hash must still be the one it saw
+  if (R.content_hash() != C.content_hash) throw Error(Status::invalid_input, path + ": calib.bin changed between the read and the inherited offers");
+  uint64_t np = 0, ni = 0, nF = 0, nL = 0, nM = 0;
+  const int64_t* ptr = R.get<int64_t>("inh_ptr", &np); const int32_t* idx = R.get<int32_t>("inh_idx", &ni);
+  const double* F = R.get<double>("inh_F", &nF); const double* L = R.get<double>("inh_lg0", &nL); const double* M = R.get<double>("inh_logm", &nM);
+  if (np != C.n_inherited + 1 || nF != C.n_inherited || nL != C.n_inherited || nM != C.n_inherited) throw Error(Status::invalid_input, path + ": inherited arrays changed");
+  for (uint64_t i = 0; i < C.n_inherited; ++i) {
+    const ModelView S(idx + ptr[i], (uint32_t)(ptr[i + 1] - ptr[i]));
+    bool is_hpm = C.has_hpm && S.k == C.hpm.size();
+    for (uint32_t a = 0; is_hpm && a < S.k; ++a) is_hpm = S.idx[a] == C.hpm[a];
+    led.offer_stores(S, zob.hash(S), F[i], L[i], M[i], is_hpm ? C.hpm_ev : merge::inherited_event((uint32_t)i));
+  }
 }
 
 // ----------------------------------------------------------------------------------------------------------- island
@@ -577,6 +622,13 @@ double SetupView::comp(const Model& S, std::vector<std::pair<int32_t, int32_t>>&
   }
   return s;
 }
+// Bytes this view holds: the arrays (logr, partition, code_ptr, mode, size law) and, with tables = true, the three table stores.
+uint64_t SetupView::bytes_resident(bool tables) const {
+  uint64_t b = (uint64_t)blk.capacity() * 4 + (uint64_t)pos.capacity() * 4 + (uint64_t)code_ptr.capacity() * 8 + (uint64_t)logr.capacity() * 8 +
+               (uint64_t)blk_ptr.capacity() * 8 + (uint64_t)blk_members.capacity() * 4 + (uint64_t)mode_S.capacity() * 4 + (uint64_t)size_logmass.capacity() * 8;
+  if (tables) b += ttop.bytes_reserved() + tlead0.bytes_reserved() + tlead1.bytes_reserved();
+  return b;
+}
 uint64_t SetupView::table_event_count(int32_t K) const {
   uint64_t n = 0;
   for (size_t b = 0; b + 1 < blk_ptr.size(); ++b) {
@@ -762,7 +814,12 @@ std::string write_fit(const std::string& path, const FitWrite& f, Json* record) 
   meta["estimates_available"] = fo.estimates_available; meta["Rp"] = ms.Rp; meta["N"] = ms.N; meta["tier"] = ms.tier;
   { Json me = Json::object(); me["merged"] = u64_json(fo.mem.merged); me["one_island"] = u64_json(fo.mem.one_island);
     me["small"] = u64_json(fo.mem.small); me["tail"] = u64_json(fo.mem.tail); me["total"] = u64_json(fo.mem.total);
-    me["label"] = "ESTIMATE (streaming merge memory model)"; me["budget"] = u64_json(ms.mem_budget_bytes); meta["mem_estimate"] = me; }
+    me["extra"] = u64_json(fo.mem.extra); me["load_setup"] = u64_json(fo.mem.load_setup); me["load_calib"] = u64_json(fo.mem.load_calib);
+    me["offers"] = u64_json(fo.mem.offers); me["streaming"] = u64_json(fo.mem.streaming); me["tail_phase"] = u64_json(fo.mem.tail_phase);
+    me["sacct_upper"] = u64_json(fo.mem.sacct_upper);
+    me["label"] = "ESTIMATE (merge memory model by phase: resident = anonymous + mapped file pages; total = 1.15 x the largest phase; "
+                  "sacct_upper adds the page cache of every file read or written)";
+    me["budget"] = u64_json(ms.mem_budget_bytes); meta["mem_estimate"] = me; }
   Json ist = Json::array(); for (Status s : fo.island_status) ist.push(status_name(s)); meta["island_status"] = ist;
   meta["missing_islands"] = Json::array_of(fo.missing); meta["invalid_islands"] = Json::array_of(fo.invalid);
   if (fo.has_hpm) {
@@ -847,6 +904,7 @@ struct BitEval {   // per-chunk evaluator: compat Bit scorer + comp(S) of the se
   }
 };
 struct BitFactory { const Data* D; const wp4io::SetupView* S; BitEval make() const { return BitEval(D, S); } };
+uint64_t file_bytes_of(const std::string& f) { struct stat st{}; return ::stat(f.c_str(), &st) == 0 ? (uint64_t)st.st_size : 0; }
 int ceil_log2(double x) { int c = 0; while (std::ldexp(1.0, c) < x) ++c; return c; }   // core/v3_preprocess.R:15
 double nget(const Json& a, const std::string& k, double d) { return a.contains(k) ? a.at(k).num() : d; }
 }  // namespace
@@ -972,10 +1030,53 @@ Json run(const Json& args) {
     for (auto& [k, v] : minp.items()) if (base_name(k) == base_name(path) && v.type() == Json::STR) { found = v.str(); ++n; }
     return n == 1 ? found : std::string();
   };
+  PhaseLog phases; phases.mark("start");   // seconds and RSS per phase -> fit.bin meta.timings.phases (review: the 1M merge peak)
+  // --mem-budget: bytes (INTERFACES §7), whole task; --mem-budget-gb: alias in GiB
+  // (review PR20 re-check n-4: a finite whole number of bytes in [0, 2^50]; 0 = off as INTERFACES §7 says; negative,
+  // fractional, NaN or absurd values are refused before any cast)
+  auto budget = [](const Json& v, double scale, const char* what) {
+    if (v.type() != Json::NUM) throw Error(Status::invalid_input, std::string("merge: ") + what + " must be a number");
+    const double x = v.num() * scale;
+    if (!std::isfinite(x) || x < 0 || x > 1125899906842624.0 || x != std::floor(x))
+      throw Error(Status::invalid_input, std::string("merge: ") + what + " must be a whole number of bytes in [0, 2^50] (0 = off)");
+    return (uint64_t)x;
+  };
+  uint64_t mem_budget = 0;
+  if (args.contains("mem_budget") && args.contains("mem_budget_gb")) throw Error(Status::invalid_input, "merge: give --mem-budget or --mem-budget-gb, not both");
+  if (args.contains("mem_budget")) mem_budget = budget(args.at("mem_budget"), 1.0, "--mem-budget");
+  else if (args.contains("mem_budget_gb")) mem_budget = budget(Json(std::floor(args.at("mem_budget_gb").num() * 1073741824.0)), 1.0, "--mem-budget-gb");
   std::string dhash;
   Data D = prep::load_data(in.data, &dhash);
+  phases.mark("data_loaded");
+  // The load phases are admitted before read_setup / read_calib allocate anything large (review PR46 MAJOR-2's rule, INTERFACES §7
+  // "before any allocation"): read_setup copies up to the file's size while the file is mapped whole, so its peak is about twice
+  // setup.bin; read_calib maps calib.bin whole beside the copy. Bounded by the files' sizes (the copies are no larger).
+  const uint64_t b_data = file_bytes_of(in.data), b_setup = file_bytes_of(in.setup), b_calib = file_bytes_of(in.calib);
+  {
+    merge::MergeSettings eo; eo.Rp = in.Rp; eo.p = D.p; eo.K = D.K; eo.data_bytes = b_data; eo.setup_bytes = b_setup; eo.setup_all = b_setup; eo.setup_resident = b_setup;
+    eo.calib_bytes = b_calib; eo.mem_budget_bytes = mem_budget;
+    const merge::MemEstimate early = merge::estimate_merge_memory(eo);
+    const uint64_t early_need = (uint64_t)(1.15 * (double)early.load_peak) + (80ull << 20);
+    if (mem_budget && early_need > mem_budget) {
+      merge::FitOut fo; fo.mem = early; fo.status = Status::resource_limit; fo.fit_state = "not_admitted";
+      fo.reason = "merge not admitted before the inputs are read: the load phases need about " + std::to_string(early_need) +
+                  " B (setup.bin copied while mapped whole, calib.bin mapped whole) > --mem-budget " + std::to_string(mem_budget) + " B";
+      wp4io::FitWrite fw; fw.mode = mode; fw.fo = &fo; fw.ms = &eo;
+      fw.inputs["data.bin"] = dhash;
+      fw.inputs["setup.bin"] = fmt::Reader(in.setup, false).content_hash(); fw.inputs["calib.bin"] = fmt::Reader(in.calib, false).content_hash();
+      Json rec = Json::object();
+      wp4io::write_fit(in.out, fw, &rec);
+      rec["command"] = "merge"; rec["Rp"] = in.Rp; rec["exit_status"] = status_name(fo.status);
+      return rec;
+    }
+  }
   wp4io::SetupView S = wp4io::read_setup(in.setup, D.p, D.K, &D.zob);
-  wp4io::CalibIn C = wp4io::read_calib(in.calib, D.p, D.K, dhash, S.content_hash);   // calib.bin tied to this data / setup (PR37 m-3)
+  phases.mark("setup_read");
+  const uint64_t setup_all_bytes = S.bytes_resident(true), setup_resident_bytes = S.bytes_resident(false);   // before / after the table stores are released
+  // calib.bin tied to this data / setup (PR37 m-3); the inherited models are validated in place and offered from the mapped
+  // file below (not materialised: 146 B each, 11.7 GB at 10^6 for the whole merge)
+  wp4io::CalibIn C = wp4io::read_calib(in.calib, D.p, D.K, dhash, S.content_hash, /*keep_inherited=*/false);
+  phases.mark("calib_read");
   for (auto pr : {std::make_pair(in.data, dhash), std::make_pair(in.setup, S.content_hash), std::make_pair(in.calib, C.content_hash)}) {
     std::string w = want(pr.first);
     if (!w.empty() && w != pr.second) throw Error(Status::invalid_input, pr.first + ": content hash differs from the manifest");
@@ -987,40 +1088,35 @@ Json run(const Json& args) {
   ex.grid = C.grid; ex.L = C.L; ex.Hm = C.Hm; ex.K = D.K; ex.tier = C.tier; ex.zob = &D.zob;
   for (int r = 0; r < R; ++r) ex.island_hash.push_back(want(in.islands[(size_t)r]));
   wp4io::FileIslandSource src(in.islands, ex, R, D.p);   // pass 1: heads + binary check
+  phases.mark("heads_checked");
   if (mode == fmt::M_V && C.meta.contains("binary")) src.check_calib_isa(C.meta.at("binary"));   // D-32: the islands' family = calib.bin's
   LedgerConfig cfg; cfg.p = D.p; cfg.islands = R; cfg.leaders = false; cfg.fresh_counters = false;   // v0.1.7: no final-run leaders
   Ledger pre(cfg);
   wp4io::offer_tables(pre, S, D.K, D.zob);
-  offer_inherited(pre, C.inherited, C.has_hpm, C.hpm, C.hpm_ev, D.zob);
+  phases.mark("tables_offered");
+  S.ttop.release(); S.tlead0.release(); S.tlead1.release();   // table stores are in the ledger now; the merge never reads them again (3.2 GB at 10^6)
+  phases.mark("tables_released");
+  wp4io::offer_inherited_file(pre, in.calib, C, D.zob);
+  phases.mark("inherited_offered");
   pre.compact();
+  phases.mark("pre_compacted");
   src.check_offer_floors(mode == fmt::M_V, C.content_hash, C.tau_cal, pre.top.cutoff());   // D-29: refused islands -> GUARD-W
   MergeSettings ms;
   ms.Rp = R; ms.N = C.N; ms.p = D.p; ms.K = D.K; ms.tier = C.tier;
   ms.ell = (int)nget(args, "ell", ceil_log2((double)D.n + D.p + 1));
   ms.ls0 = true; ms.ls0_ell = ms.ell; ms.log_m0 = D.logm0;
   ms.threads = (int)nget(args, "threads", 1); ms.chunk = (size_t)nget(args, "chunk", 2048); ms.zob = &D.zob;
-  // --mem-budget: bytes (INTERFACES §7), whole task; --mem-budget-gb: alias in GiB
-  // (review PR20 re-check n-4: a finite whole number of bytes in [0, 2^50]; 0 = off as INTERFACES §7 says; negative,
-  // fractional, NaN or absurd values are refused before any cast)
-  auto budget = [](const Json& v, double scale, const char* what) {
-    if (v.type() != Json::NUM) throw Error(Status::invalid_input, std::string("merge: ") + what + " must be a number");
-    const double x = v.num() * scale;
-    if (!std::isfinite(x) || x < 0 || x > 1125899906842624.0 || x != std::floor(x))
-      throw Error(Status::invalid_input, std::string("merge: ") + what + " must be a whole number of bytes in [0, 2^50] (0 = off)");
-    return (uint64_t)x;
-  };
-  if (args.contains("mem_budget") && args.contains("mem_budget_gb")) throw Error(Status::invalid_input, "merge: give --mem-budget or --mem-budget-gb, not both");
-  if (args.contains("mem_budget")) ms.mem_budget_bytes = budget(args.at("mem_budget"), 1.0, "--mem-budget");
-  else if (args.contains("mem_budget_gb")) ms.mem_budget_bytes = budget(Json(std::floor(args.at("mem_budget_gb").num() * 1073741824.0)), 1.0, "--mem-budget-gb");
-  // memory plan (review PR20 m-2): mean model size from the islands' store sections; the rest of the task = data.bin
-  // (X mapped) + setup.bin (arrays and table stores, x 2.5 for the stores' staging)
+  ms.mem_budget_bytes = mem_budget;
+  // memory plan inputs (review of the first 1M merge): the mean model size from the islands' store sections, and the files' and
+  // views' sizes the phase model counts (merge.h estimate_merge_memory)
   { double kb = 1;
     for (auto& h : src.heads()) if (h.store_entries) kb = std::max(kb, (double)h.store_pool / (double)h.store_entries);
     ms.kbar = kb;
-    struct stat a{}, b{};
-    uint64_t dsz = ::stat(in.data.c_str(), &a) == 0 ? (uint64_t)a.st_size : 0, ssz = ::stat(in.setup.c_str(), &b) == 0 ? (uint64_t)b.st_size : 0;
-    ms.extra_bytes = dsz + (uint64_t)(2.5 * (double)ssz); }
+    ms.data_bytes = b_data; ms.setup_bytes = b_setup; ms.calib_bytes = b_calib; ms.setup_all = setup_all_bytes; ms.setup_resident = setup_resident_bytes;
+    for (const auto& pth : in.islands) { const uint64_t b = file_bytes_of(pth); ms.island_bytes = std::max(ms.island_bytes, b); ms.island_bytes_total += b; }
+    ms.out_bytes = (uint64_t)(40.0 * D.p + 1) * (uint64_t)(26.0 + 4.0 * kb); }
   BitFactory fac{&D, &S};
+  ms.phase_hook = [&phases](const std::string& ph) { phases.mark(ph); };
   FitOut fo = merge_stream(src, std::move(pre), S.mode_S, fac, ms);
   std::string why;
   for (auto& h : src.heads()) if (h.load != Load::ok) why += (why.empty() ? "" : "; ") + h.detail;
@@ -1033,7 +1129,20 @@ Json run(const Json& args) {
   // T5 (WP7 O5): the parts -- island stream + merge, final local search (tail), LS0
   fw.timings["merge_islands_seconds"] = fo.t_islands; fw.timings["tail_local_seconds"] = fo.t_local; fw.timings["ls0_seconds"] = fo.t_ls0;
   Json rec = Json::object();
+  {   // phases: seconds since the start of run() and the process memory at each boundary (kB; -1 = unavailable)
+    phases.mark("before_write");
+    Json ph = Json::array();
+    for (const auto& x : phases.v) {
+      Json o = Json::object(); o["phase"] = x.phase; o["t"] = x.t;
+      o["rss_kb"] = (double)x.mem.rss_kb; o["anon_kb"] = (double)x.mem.anon_kb; o["file_kb"] = (double)x.mem.file_kb; o["hwm_kb"] = (double)x.mem.hwm_kb;
+      ph.push(o);
+    }
+    fw.timings["phases"] = ph;
+  }
+  const auto t_write0 = std::chrono::steady_clock::now();
   wp4io::write_fit(in.out, fw, &rec);
+  rec["write_fit_seconds"] = std::chrono::duration<double>(std::chrono::steady_clock::now() - t_write0).count();   // not in fit.bin's own meta
+  { const ProcMem pm_end = proc_mem(); rec["peak_rss_kb"] = (double)pm_end.hwm_kb; rec["end_rss_kb"] = (double)pm_end.rss_kb; rec["end_file_kb"] = (double)pm_end.file_kb; }
   rec["command"] = "merge"; rec["Rp"] = R;
   if (fo.status != Status::completed) rec["exit_status"] = status_name(fo.status);
   return rec;
