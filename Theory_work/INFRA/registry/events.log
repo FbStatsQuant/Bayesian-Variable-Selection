@@ -3061,3 +3061,9 @@ utc	actor	action	id	before	after	reason
 2026-11-17T22:53:53Z	INFRA	ingest	W3-D2:Cor2X		v1.0.0 PROVED-CHECKED, conditional on W2-APP:POST, C-MIS:GDb, C-MIS	ingested from W3-D2_CP3.jsonl
 2026-11-17T22:54:30Z	HQ	accept	W3-D2:Cor2X		v1.0.0 fp2:f49bffe5c101653857e87d9a	check.py --acceptance W3-D2:Thm2X W3-D2:Cor2X: PASS (0 ERROR)
 2026-11-17T22:54:30Z	HQ	accept	W3-D2:Thm2X		v1.0.0 fp2:6d7891da1f69c67910013092	check.py --acceptance W3-D2:Thm2X W3-D2:Cor2X: PASS (0 ERROR)
+2026-11-17T23:27:43Z	INFRA	ingest	W3-D3:B3w		v1.0.0 PROVED-CHECKED; council R2, MANIFEST 1c14a298ee1cea87f3ffcfb	ingested from W3-D3_CP3.jsonl
+2026-11-17T23:27:43Z	INFRA	ingest	W3-D3:ExSG		v1.0.0 PROVED-CHECKED; council R2, MANIFEST 1c14a298ee1cea87f3ffcfb	ingested from W3-D3_CP3.jsonl
+2026-11-17T23:27:43Z	INFRA	ingest	W3-D3:Thm2SG		v1.0.0 PROVED-CHECKED; council R2, MANIFEST 1c14a298ee1cea87f3ffcfb	ingested from W3-D3_CP3.jsonl
+2026-11-17T23:27:58Z	HQ	accept	W3-D3:B3w		v1.0.0 fp2:407e395021e91756c000edc9	check.py --acceptance W3-D3:B3w W3-D3:ExSG W3-D3:Thm2SG: PASS (0 ERROR)
+2026-11-17T23:27:58Z	HQ	accept	W3-D3:ExSG		v1.0.0 fp2:89f8caf48ce376791f9702df	check.py --acceptance W3-D3:B3w W3-D3:ExSG W3-D3:Thm2SG: PASS (0 ERROR)
+2026-11-17T23:27:58Z	HQ	accept	W3-D3:Thm2SG		v1.0.0 fp2:0ba6c25d72a1db226c5c32e1	check.py --acceptance W3-D3:B3w W3-D3:ExSG W3-D3:Thm2SG: PASS (0 ERROR)
