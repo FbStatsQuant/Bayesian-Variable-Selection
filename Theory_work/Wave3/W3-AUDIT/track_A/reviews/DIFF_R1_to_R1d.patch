@@ -60,7 +60,7 @@ index 00000000..a6c6f656
 +| `W3-START2-R:IF-START` | 1.0.0 | ACTIVE | PROVED-CHECKED; council R2, MANIFEST 12bb52cd32c6870e14de43b0918827bc0ca9364d1ff04d6f16122b8a2a951ff5 (= R2 90886d06 re-frozen CITATION-ONLY as R2r), sol=9.0 PASS, opus=9.3 PASS | Theory_work/Wave3/W3-START2-R/STATEMENT.md:241-246 |
 +| `W3-START2-R:OVL` | 1.0.0 | ACTIVE | PROVED-CHECKED; council R2, MANIFEST 12bb52cd32c6870e14de43b0918827bc0ca9364d1ff04d6f16122b8a2a951ff5 (= R2 90886d06 re-frozen CITATION-ONLY as R2r), sol=9.0 PASS, opus=9.3 PASS | Theory_work/Wave3/W3-START2-R/STATEMENT.md:212-214 |
 diff --git a/Theory_work/Wave3/W3-AUDIT/track_A/T2_BLK/CHECK.md b/Theory_work/Wave3/W3-AUDIT/track_A/T2_BLK/CHECK.md
-index 9568b647..ce623300 100644
+index 9568b647..fb16e048 100644
 --- a/Theory_work/Wave3/W3-AUDIT/track_A/T2_BLK/CHECK.md
 +++ b/Theory_work/Wave3/W3-AUDIT/track_A/T2_BLK/CHECK.md
 @@ -3,7 +3,7 @@
@@ -68,7 +68,7 @@ index 9568b647..ce623300 100644
  gate.** Not "PROVED-CHECKED" (needs the Sol lock, a Sol line check and the OpenAI council seat).
  
 -Frozen text (sha256, first 12 hex, 2026-11-16 18:00 CST, as frozen for council R1): STATEMENT `fdc7567672f6`, PROOF `7f686cf7b216`.
-+Frozen text (sha256, first 12 hex, 2026-11-16 18:17 CST, as frozen for the R1 diff round R1d): STATEMENT `2bc68097d046`, PROOF `59bb28806ce0`.
++Frozen text (sha256, first 12 hex, 2026-11-16 18:18 CST, as frozen for the R1 diff round R1d): STATEMENT `2bc68097d046`, PROOF `59bb28806ce0`.
  Code of record: `Scripts/SMC_BVS/core/` at 4676af6 (= HEAD for the core).
  
  | Tier B step (PROTOCOL_v4 §3, step 4 omitted) | who (NORMAL) | state | record |
@@ -236,10 +236,76 @@ index 7f66e0c5..62e15c04 100644
  | v4 | (BLK-c) setting R: "σ(X)-measurable" → "σ(X^r)-measurable, a.s. a Borel function of X" | WEAKER (wording now matches the proof; downstream "X-measurable" uses are satisfied a.s.) | LC1r2 #10 | `reviews/LC1r2_reply_opus.md` | pending (gate) |
 +| v5 | C(X) defined with the internal → column index conversion; binary64 remark qualified by representability | EQUAL (definition made exact); WEAKER (binary64 remark, not a lemma clause) | SL1LC2 #2, #3 (Sol) | `reviews/SL1LC2_reply_sol.md` | council R1 |
 +| v6 | C(X) := the abstract cut-and-pack map (IDEAL-W machine, EX-A); new (BLK-d): the compiled code computes C(X) on executions without integer overflow and with successful allocation | WEAKER for the code identification (now conditional on IDEAL-W/MACH executions); (BLK-a)–(BLK-c) EQUAL for the abstract map | R1 Sol #1 | `reviews/R1_council_sol.md` | diff round R1d |
+diff --git a/Theory_work/Wave3/W3-AUDIT/track_A/T4_ENC/CHECK.md b/Theory_work/Wave3/W3-AUDIT/track_A/T4_ENC/CHECK.md
+index c092d962..c0c7861a 100644
+--- a/Theory_work/Wave3/W3-AUDIT/track_A/T4_ENC/CHECK.md
++++ b/Theory_work/Wave3/W3-AUDIT/track_A/T4_ENC/CHECK.md
+@@ -4,7 +4,7 @@ Status (lead's label): **PROVED; Claude line check VERIFIED (after amendments);
+ (council batch T1–T10).** Not "PROVED-CHECKED" (needs the Sol lock, a Sol line check and the OpenAI council seat).
+ Blocks row(s): 3.1 (via W3-RM:E4).
+ 
+-Frozen text (sha256, first 12 hex, 2026-11-16 18:00 CST, as frozen for council R1): STATEMENT `e017496048cc`, PROOF `ccba8123f87d`.
++Frozen text (sha256, first 12 hex, 2026-11-16 18:18 CST, as frozen for the R1 diff round R1d): STATEMENT `0a249f656260`, PROOF `7273c57b2095`.
+ Code of record: `Scripts/SMC_BVS/core/` at 4676af6 (= HEAD for the core).
+ 
+ **What it says.** `cpp_setup` builds the `Start` object exactly as N3 (H1) strengthened (E4's hypothesis) requires; the object and its `Data` are never changed afterwards.
+diff --git a/Theory_work/Wave3/W3-AUDIT/track_A/T4_ENC/PROOF.md b/Theory_work/Wave3/W3-AUDIT/track_A/T4_ENC/PROOF.md
+index 4cbe870e..b184c426 100644
+--- a/Theory_work/Wave3/W3-AUDIT/track_A/T4_ENC/PROOF.md
++++ b/Theory_work/Wave3/W3-AUDIT/track_A/T4_ENC/PROOF.md
+@@ -1,4 +1,4 @@
+-# T4 · Lemma ENC — PROOF v2 (code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
++# T4 · Lemma ENC — PROOF v3 (code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
+ 
+ Fix a valid input on the sampler branch with `cpp_setup` completing; assume EX-A.
+ 
+@@ -10,7 +10,7 @@ Fix a valid input on the sampler branch with `cpp_setup` completing; assume EX-A
+ every w(k) > 0 and W_K > 0.
+ `cpp_setup` takes `D = *g->D` with `g->D = h->D` (`cpp/v3_core.cpp:275-276`) and sets `st.D = &D` (`cpp/v3_core.cpp:277`).
+ 
+-*Blocks.* `st.blocks = make_blocks(D, B)` (`cpp/v3_core.cpp:279`): by T2 (BLK) this is C(X), each block nonempty with
++*Blocks.* `st.blocks = make_blocks(D, B)` (`cpp/v3_core.cpp:279`): by T2 (BLK-d), on the executions of the Setting, this is C(X), each block nonempty with
+ 1 ≤ |C_b| ≤ B ≤ min(16, K), and each block is sorted increasingly (`std::sort`, `cpp/v3_blocks.h:141`).
+ 
+ *`build_tables`* (`cpp/v3_start.h:76-98`, called at `cpp/v3_core.cpp:283`): `st.J = st.blocks.size()` = J
+diff --git a/Theory_work/Wave3/W3-AUDIT/track_A/T4_ENC/STATEMENT.md b/Theory_work/Wave3/W3-AUDIT/track_A/T4_ENC/STATEMENT.md
+index 133411f1..b5185c0e 100644
+--- a/Theory_work/Wave3/W3-AUDIT/track_A/T4_ENC/STATEMENT.md
++++ b/Theory_work/Wave3/W3-AUDIT/track_A/T4_ENC/STATEMENT.md
+@@ -1,4 +1,4 @@
+-# T4 · Lemma ENC (the start object is built as Lemma E4 assumes) — STATEMENT v2 (draft, not locked)
++# T4 · Lemma ENC (the start object is built as Lemma E4 assumes) — STATEMENT v3 (draft, not locked)
+ 
+ Track A item T4 (`AUDIT.md` §6; CHECKPOINT_1 annex order 4). Tier B (code reading; registers N3's encoding premise as a
+ code-check). **Lean target: no** (code fact). Blocks row 3.1 (through `W3-RM:E4`, the start-mode clause of RM-0).
+@@ -20,7 +20,8 @@ code-check). **Lean target: no** (code fact). Blocks row 3.1 (through `W3-RM:E4`
+ 
+ ## Setting
+ A valid input on the sampler branch of the shipped `v3_fit`, so that `v3_setup` → `cpp_setup` completes
+-(`v3_fit.R:133-138`; `v3_setup.R:67-77`). EX-A (exact scores and arithmetic). C(X) = (C₁, …, C_J) is the partition of
++(`v3_fit.R:133-138`; `v3_setup.R:67-77`), on an execution in which no C++ integer operation overflows and every
++allocation succeeds (T2 (BLK-d); IDEAL-W, MACH). EX-A (exact scores and arithmetic). C(X) = (C₁, …, C_J) is the partition of
+ T2 (BLK); λ(k) := log ϖ(k) = log w(k) − log W_K, the capped BB(1, p) log-prior per model of size k; ρ_b(U) :=
+ log m(U) − log m(∅) = log r_b(U).
+ 
+@@ -52,3 +53,4 @@ Let `st` be the `Start` object `*g->st` built by `cpp_setup` (`cpp/v3_core.cpp:2
+ |---|---|---|---|---|---|
+ | v1 | all | NEW-CLAIM (code check of E4's (H1) strengthened) | track A T4 | `AUDIT.md` §6 T4 | `CHECK.md` |
+ | v2 | (ENC-a) finiteness of λ; (ENC-b) the `Data` | STRONGER (two facts added) | LC2 #5, #8 | `reviews/LC2_reply_opus.md` | pending (gate) |
++| v3 | setting: executions as in T2 (BLK-d) (no integer overflow, allocations succeed) | WEAKER (execution premise made explicit, following T2 v6; it was implicit in "by T2 (BLK)") | R1 Sol #1 (dependent of T2) | `reviews/R1_council_sol.md` | diff round R1d |
 diff --git a/Theory_work/Wave3/W3-AUDIT/track_A/T6_START/CHECK.md b/Theory_work/Wave3/W3-AUDIT/track_A/T6_START/CHECK.md
-index 3f1eba7a..e76c536e 100644
+index 3f1eba7a..74bfc996 100644
 --- a/Theory_work/Wave3/W3-AUDIT/track_A/T6_START/CHECK.md
 +++ b/Theory_work/Wave3/W3-AUDIT/track_A/T6_START/CHECK.md
+@@ -4,7 +4,7 @@ Status (lead's label): **PROVED; Claude line check VERIFIED (after amendments);
+ (council batch T1–T10).** Not "PROVED-CHECKED" (needs the Sol lock, a Sol line check and the OpenAI council seat).
+ Blocks row(s): 3.5, 3.6.
+ 
+-Frozen text (sha256, first 12 hex, 2026-11-16 18:00 CST, as frozen for council R1): STATEMENT `66ece2fc43ed`, PROOF `e5404b7dc54d`.
++Frozen text (sha256, first 12 hex, 2026-11-16 18:18 CST, as frozen for the R1 diff round R1d): STATEMENT `0b5e2c57e5d9`, PROOF `e5404b7dc54d`.
+ Code of record: `Scripts/SMC_BVS/core/` at 4676af6 (= HEAD for the core).
+ 
+ **What it says.** `draw_pi0` draws exactly π₀ and `logZbar0` = log Z̄₀ (re-check of N9 Claims S, Z at the pin; no error in N9; one citation and the telescoping indices made explicit).
 @@ -12,7 +12,7 @@ Code of record: `Scripts/SMC_BVS/core/` at 4676af6 (= HEAD for the core).
  | Tier B step (PROTOCOL_v4 §3, step 4 omitted) | who (NORMAL) | state | record |
  |---|---|---|---|
@@ -249,6 +315,24 @@ index 3f1eba7a..e76c536e 100644
  | 3 line check | Sol (NORMAL); Claude stand-in | Claude: LC3 → LC4 (VERIFIED); no C/F finding open | `../reviews/LC2_*`, `LC3_*`, `LC4_*` |
  | statement-change check (§4.2), rows not EQUAL | Sol, new agent | **pending (gate)**; none beyond wording | STATEMENT changelog |
  | 6 citation check | script | **0 MISS** (45 citations) | `CITECHECK.txt` |
+diff --git a/Theory_work/Wave3/W3-AUDIT/track_A/T6_START/STATEMENT.md b/Theory_work/Wave3/W3-AUDIT/track_A/T6_START/STATEMENT.md
+index 9ae66f6c..71eb8af9 100644
+--- a/Theory_work/Wave3/W3-AUDIT/track_A/T6_START/STATEMENT.md
++++ b/Theory_work/Wave3/W3-AUDIT/track_A/T6_START/STATEMENT.md
+@@ -19,7 +19,7 @@ exact for a block-product weight under a global size cap; finite). Blocks rows 3
+ cpp/v3_start.h` has its first hunk at line 178, after `draw_pi0`).
+ 
+ ## Setting
+-The `Start` object `st` of T4 (ENC) on a run that reaches the islands: blocks C₁, …, C_J = C(X) (T2), K, ϖ(k) = e^{λ(k)},
++The `Start` object `st` of T4 (ENC) on a run that reaches the islands: blocks C₁, …, C_J = C(X) (T2, on the executions of T4's Setting), K, ϖ(k) = e^{λ(k)},
+ r_b(U) = e^{ρ_b(U)} > 0 for every U ⊆ C_b. γ₀(S) := ϖ(|S|)∏_b r_b(S ∩ C_b) on Ω = {S ⊆ [p] : |S| ≤ K};
+ Z̄₀ := Σ_Ω γ₀; π₀ := γ₀/Z̄₀. EX-A (exact arithmetic) and H-U (the uniforms read by `draw_pi0` are i.i.d. U[0, 1)).
+ 
+@@ -46,3 +46,4 @@ draws, which is `W3-SAMP:CC` CC4 ("CODE-CHECKED"); (S) alone is the law of one d
+ |---|---|---|---|---|---|
+ | v1 | all | NEW-CLAIM (re-states N9 rows 7–8 for the pin) | track A T6 | `AUDIT.md` §6 T6 | `CHECK.md` |
+ | v2 | (Z) initialisation wording; reading START = (Z)+(S)+(S′)+CC4 | EQUAL (exact wording) | LC3 T6 #1, #5 | `reviews/LC3_reply_opus.md` | pending (gate) |
++| v2.1 | setting: blocks C(X) on the executions of T4's Setting | EQUAL (pointer to the execution premise now explicit in T4 v3) | R1 Sol #1 (dependent of T2) | `reviews/R1_council_sol.md` | diff round R1d |
 diff --git a/Theory_work/Wave3/W3-AUDIT/track_A/T7_KER/CHECK.md b/Theory_work/Wave3/W3-AUDIT/track_A/T7_KER/CHECK.md
 index 41982117..dc0508bf 100644
 --- a/Theory_work/Wave3/W3-AUDIT/track_A/T7_KER/CHECK.md
@@ -263,7 +347,7 @@ index 41982117..dc0508bf 100644
  | statement-change check (§4.2), rows not EQUAL | Sol, new agent | **pending (gate)**; none beyond wording | STATEMENT changelog |
  | 6 citation check | script | **0 MISS** (51 citations) | `CITECHECK.txt` |
 diff --git a/Theory_work/Wave3/W3-AUDIT/track_A/T8_OVL/CHECK.md b/Theory_work/Wave3/W3-AUDIT/track_A/T8_OVL/CHECK.md
-index e297d4da..9a35cdcb 100644
+index e297d4da..d2f698ad 100644
 --- a/Theory_work/Wave3/W3-AUDIT/track_A/T8_OVL/CHECK.md
 +++ b/Theory_work/Wave3/W3-AUDIT/track_A/T8_OVL/CHECK.md
 @@ -4,7 +4,7 @@ Status (lead's label): **PROVED; Claude line check VERIFIED WITH AMENDMENTS (all
@@ -271,7 +355,7 @@ index e297d4da..9a35cdcb 100644
  Blocks row(s): 3.6 (Thm D).
  
 -Frozen text (sha256, first 12 hex, 2026-11-16 18:00 CST, as frozen for council R1): STATEMENT `7c922e914cb5`, PROOF `1d6fbe9da0e1`.
-+Frozen text (sha256, first 12 hex, 2026-11-16 18:17 CST, as frozen for the R1 diff round R1d): STATEMENT `f03afc297221`, PROOF `d8fa0b36fde8`.
++Frozen text (sha256, first 12 hex, 2026-11-16 18:18 CST, as frozen for the R1 diff round R1d): STATEMENT `f03afc297221`, PROOF `d8fa0b36fde8`.
  Code of record: `Scripts/SMC_BVS/core/` at 4676af6 (= HEAD for the core).
  
  **What it says.** On 𝒜°, D_r ≥ max(2500, n, p)(L + 6) ≥ 10n; P-START on 𝒜° ⇒ P-OVL on 𝒜° (and on 𝒜). **Proved only under IF-START's hypotheses, in particular (A5)**; without (A5) the checked `W3-START2-R:OVL` route gives P-OVL's production form under its own hypotheses.
@@ -405,7 +489,7 @@ index 4fd368b8..306eea73 100644
 +| v3 | (OVL-d) uninterrupted-run check | STRONGER (makes explicit what (OVL-b), (OVL-c) and T5 give) | HQ 11-16 ruling (c) | manager message 11-16 | council R1 |
 +| v4 | Consequence for (D-iv): proof via the pathwise inclusion with 𝒜° and D-i for the uninterrupted island (no actual-𝒜 step); "executed" → "frozen" budget | EQUAL (same final bound; the invalid intermediate step removed) | R1 Sol #2 (C); R1 Opus E2, E3 | `reviews/R1_council_sol.md`, `reviews/R1_council_opus.md` | diff round R1d |
 diff --git a/Theory_work/Wave3/W3-AUDIT/track_A/T9_TDP/CHECK.md b/Theory_work/Wave3/W3-AUDIT/track_A/T9_TDP/CHECK.md
-index 03352d65..8ab37227 100644
+index 03352d65..d5fb9073 100644
 --- a/Theory_work/Wave3/W3-AUDIT/track_A/T9_TDP/CHECK.md
 +++ b/Theory_work/Wave3/W3-AUDIT/track_A/T9_TDP/CHECK.md
 @@ -4,7 +4,7 @@ Status (lead's label): **PROVED; Claude line check VERIFIED WITH AMENDMENTS (all
@@ -413,7 +497,7 @@ index 03352d65..8ab37227 100644
  Blocks row(s): 3.1 delivery.
  
 -Frozen text (sha256, first 12 hex, 2026-11-16 18:00 CST, as frozen for council R1): STATEMENT `5b51c977ec74`, PROOF `1d1c05e0bd00`.
-+Frozen text (sha256, first 12 hex, 2026-11-16 18:17 CST, as frozen for the R1 diff round R1d): STATEMENT `ec3da65edd35`, PROOF `8eec9e60ec2b`.
++Frozen text (sha256, first 12 hex, 2026-11-16 18:18 CST, as frozen for the R1 diff round R1d): STATEMENT `ec3da65edd35`, PROOF `8eec9e60ec2b`.
  Code of record: `Scripts/SMC_BVS/core/` at 4676af6 (= HEAD for the core).
  
  **What it says.** `start_mode(st, cap ≥ 2, true)` returns lex_min E = S* (E = 𝒜* proved directly at the pin), the root check never fails (TDP-e), and the fallback and the fast path fit TDP-IMPL's operation and storage bounds (fast path with an explicit factor 10⁶). Re-check of `C-ENG:TDP_E`: mathematics correct; its claim (4) holds only for cap ≥ 2 at the pin; its line numbers are stale.
