@@ -49,6 +49,8 @@
 - **Sol 6.2 final-text confirmation pass (≈ 6–8 calls):** every result whose last round was Opus-only (C1 code audit; READER card R4/R5; W3-D2; W3-D3; track V R4; #5′ / Cor 6L). Findings only, important points only.
 - **Astra adversarial "try to break it" read (≈ 3–4 calls):** Thm 9; the presented Thm 2 (Thm2SG); Thm 6 + Cor 6L; optionally the Thm 3 lower bound.
 - Drop Astra first if Codex is tight.
+- **Fable triage (owner, 11-17):** 1–2 Fables (the consultant + the audit Fable) judge each Sol/Astra point against the acceptance filter before any change is made.
+- **Trigger:** HQ tells the owner when the theory recordings are done. The owner then sets the Codex depth (budget or reset).
 - **Acceptance filter (owner, binding):** accept only (a) genuine flaws we missed, or (b) changes needed for the proof to compile in Lean. **No complexity growth; don't change what works; no nitpicks.** Everything else is logged and declined.
 
 ## OWNER 11-17: OPTIONAL CODEX REVIEW OF KEY THEOREMS (only on the owner's order; depends on his Codex situation)
