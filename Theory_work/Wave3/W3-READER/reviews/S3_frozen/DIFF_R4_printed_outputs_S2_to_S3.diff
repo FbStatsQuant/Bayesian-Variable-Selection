@@ -1,0 +1,12 @@
+--- reviews/S2_frozen/lemmas/R4_printed_outputs.md	2026-11-15 20:25:45.680336786 -0600
++++ reviews/S3_frozen/lemmas/R4_printed_outputs.md	2026-11-15 22:36:40.165692468 -0600
+@@ -1,6 +1,8 @@
+ # R4 — Printed outputs are consistent: assembly for card row 3.6 (Theorem 10) (W3-READER bridge leg, 2026-11-16)
+ 
+-Status: **PROVED (by this seat, unchecked)**. An assembly of checked results; no new probability.
++Status: **PROVED (by this seat, unchecked)**. An assembly conditional on `W2-APP:POST` (status quoted below); the
++other cited inputs are "PROVED-CHECKED"; no new probability [S2-F7]. Scope: the sampler branch; the (C-v) statements
++concern the potential records on $\mathcal A$ and equal the printed fields on completed runs (Lemma PC) [S2-F3].
+ 
+ ## Inputs (statuses verbatim, registry)
+ - `W3-SAMP:C@1.1.1` (Theorem C, `Theory_work/Wave3/W3-SAMP/STATEMENT.md:149-163`), "PROVED-CHECKED". Clause (C-v): under the

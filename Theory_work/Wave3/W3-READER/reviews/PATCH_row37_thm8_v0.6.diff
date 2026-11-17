@@ -1,0 +1,119 @@
+diff --git a/Theory_work/Wave3/W3-READER/CLAIMS_CARD.md b/Theory_work/Wave3/W3-READER/CLAIMS_CARD.md
+index b0ff6679..94987ceb 100644
+--- a/Theory_work/Wave3/W3-READER/CLAIMS_CARD.md
++++ b/Theory_work/Wave3/W3-READER/CLAIMS_CARD.md
+@@ -57,7 +57,7 @@ marked · **long** = primitive but lengthy · **limit** = no primitive version;
+ | 3.4 | *(moved to row 1.4, manager's CP1 decision 6)* | | | |
+ | 3.5 | **The evidence estimate is unbiased.** Given the frozen calibration, each island's evidence estimate, and hence the printed (equal-weight pooled) $\hat Z$, is unbiased for $Z$; no condition on the design. | `W1-N1:Thm-N1@1.0.0`: "PROVED-CHECKED"; pooled form `W3-READER:PoolZ` (this ticket): "PROVED (by this seat, unchecked)". | The classical unbiasedness of SMC normalising-constant estimates (Del Moral), established **for the method as coded, calibration included** (the calibration is frozen before the final run's randomness) [GATES row 3.5]. | body remark (Thm 10 remark) |
+ | 3.6 (Thm 10) | **The printed outputs are consistent** (Gaussian rows, sampler branch) [S2-F4, S2-F5]: in Theorem 10's setting — signal fixed on the standardised scale, Theorem 2's population floor, Theorem 5's visibility and no-leakage conditions — the errors $|\hat Z/Z-1|$, $|\log\hat Z-\log Z|$ and the sup-norm error of the pooled PIPs, multiplied by the indicator of calibration success, are $O_P(n^{-1/2}e^{C\sqrt{\log n}})$; the probabilities of "calibration succeeds and the MPM is wrong" and of "the run completes and the reported model is wrong" tend to zero. (Intersections, not conditioning: no lower bound on the probability of calibration success is claimed. On completed runs these are the printed fields.) | `W3-SAMP:C@1.1.3`, `TR@2.1.3`, `LT#@2.0.3`, `D@2.1.3`: "PROVED-CHECKED, conditional on SOP:TH09" (each) [REG-33e1]; start input `W3-START2:IF-START@1.0.0`: "PROVED-CHECKED"; posterior input `W2-APP:POST@1.0.6` (covers the standardised-signal convention): "PROVED-CHECKED, conditional on SOP:TH09". | Ties the theory to every number the software prints. | **clean**; NEW assembly R4; conditional on T03♯; body (H5 card 7) |
+-| 3.7 (Thm 8) | **Certified screening** [SCR-PC]: under a sparse eigenvalue floor on $(q_n+s_0)$-sets, with the floor constant κ, the signal minimum b, the coefficient bound M and the noise variance σ² all fixed in $n$, and $(q_n+1)\log p+\log n\le c_1n$ (any $q_n=o(n/\log n)$ when $p\le n^A$), the probability that a run produces output, certifies a reported model of size $\le q_n$, and that model misses a true predictor tends to zero; no start, leakage, block or visibility condition. Signals varying with $n$ are not covered (open item SCR-R1). | `W3-SCR:A1@1.0.0`: "PROVED-CHECKED". | The only coded-method guarantee with no visibility or leakage condition; holds where 3.1–3.2 may fail (strong factors, masking). | **clean**, no bridge |
++| 3.7 (Thm 8) | **Certified screening** [SCR-PC, SCR-R2]: under (A1)–(A3) of Theorem 8 — a sparse eigenvalue floor on $(q_n+s_0)$-sets, with the floor constant κ, the signal minimum b, the coefficient bound M and the noise variance σ² all fixed in $n$, $q_n$ below the model-size cap $\min(p,\lfloor n/2\rfloor)$, and $(q_n+1)\log p+\log n\le c_1n$ (any $q_n=o(n/\log n)$ when $p\le n^A$) — the probability that a run produces output, certifies (sets its local-optimality flag for) a reported model of size $\le q_n$, and that model misses a true predictor tends to zero; no start, leakage, block or visibility condition. Signals varying with $n$ are not covered (open item SCR-R1). | `W3-SCR:A1@1.0.0`: "PROVED-CHECKED". | The only coded-method guarantee that needs no visibility, leakage, start or block condition, so its assumptions can hold on designs (strong factors included) where those of 3.1–3.2 do not [H5-11]. | **clean**, no bridge |
+ 
+ ## Pillar 4 — The parallel method preserves it (mostly open)
+ 
+@@ -97,11 +97,9 @@ may carry an unchecked "conditional on" input only if the abstract states it [H5
+   $S_0$ but keeps the vanishing floor (A5), which still excludes exact linear dependence among $O(\log n)$ columns,
+   duplicated null columns included* [H5-7.1].
+ - **1.4** omitted variables — states its conditionality on the posterior refinements until they are recorded.
+-- **3.7** certified screening — **abstract (H5 card 7 verdict)**, the clause of `READER_VERSIONS.md` row thm8 naming
+-  κ, b, M and σ as fixed in $n$; the body carries Theorem 8′ (n-varying signals, master `W3-SCR:A-inf`). Form (a) if the
+-  second SCR council round passes; otherwise **(b1), recommended**: the clause plus "(reviewed by a council on an
+-  earlier text; the later narrowing to constants fixed in $n$ was re-verified by an independent reviewer; a second
+-  council review is pending)"; (b2) would move the row to the body [SCR-PC].
++- **3.7** certified screening — **abstract, form (a), plain** (second SCR council round passed; H5 cards 9, 11): the
++  clause of `READER_VERSIONS.md` row thm8 "Placements" ($\kappa$, $b$, $M$, $\sigma_*$ fixed in $n$; $q_n$ below the cap;
++  $c_1$ by name; "certifies" defined); the body carries Theorem 8′ (plain) [SCR-R2].
+ - **2.1** only after W3-DIST CP3; fallback **2.2** if it slips [H5-5].
+ Body: 3.2, 3.3, 3.5 (remark), **3.6** (the consultant withdrew its promotion; its premises do not fit one abstract
+ clause: Gaussian rows, population floor, visibility, no leakage, and the sampler conventions) [H5-7.4]. Pillars 4–5:
+diff --git a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+index e4647486..5773435a 100644
+--- a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
++++ b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+@@ -725,7 +725,7 @@ any $b\ge\tfrac12$. Recommendation: present (A5)(a) in the main text (fully expl
+ 
+ ## 8. Theorem 8 — Certified screening
+ <!-- ROW thm8 BEGIN -->
+-**Card row** 3.7 · **Section version** 0.5 (2026-11-16) · **Pending delta** —
++**Card row** 3.7 · **Section version** 0.6 (<date>) · **Pending delta** —
+ 
+ 
+ ### Reader statement
+@@ -746,20 +746,15 @@ In particular this holds for $p\le n^A$ and every $q_n=o(n/\log n)$. Signal size
+ visibility is used beyond (A1)–(A3), and $p\le n^A$ is not needed. (The master needs only a weaker directional floor,
+ which leaves null-null correlations free; the full floor (A1) does constrain them [S1-F8].)
+ 
+-### Placements and forms of row 3.7 (H5 card 7 verdict, adopted by HQ; the CP3 freeze picks the form) [SCR-PC]
+-- **Abstract (decided):** Theorem 8 as a clause, with **all four constants named as fixed in $n$**: *"Certified
+-  screening: if the design has a sparse eigenvalue floor $\kappa$ on models of size $q_n+s_0$, the true coefficients
+-  satisfy $\theta^*_{\min}\ge b$ and $\|\theta^*\|_1\le M$, the constants $\kappa$, $b$, $M$ and the noise variance
+-  $\sigma_*^2$ are fixed in $n$, and $(q_n+1)\log p+\log n\le c_1n$, then the probability that a run produces output,
+-  certifies a reported model of size at most $q_n$, and that model misses a true predictor tends to zero — with no
+-  visibility, leakage, start or block condition."*
+-- **Body (decided):** the general form for signals that vary with $n$, **Theorem 8′** below (master `W3-SCR:A-inf`).
+-- **Form (a) — the second SCR council round passes (target Thu 18:00):** the abstract clause as above, plain.
+-- **Form (b) — it misses Friday:** either **(b1)** the abstract clause followed by *"(reviewed by a council on an earlier
+-  text; the later narrowing to constants fixed in $n$ was re-verified by an independent reviewer; a second council
+-  review is pending)"*, or **(b2)** row 3.7 moves to the body. **Recommendation: (b1)** — the mathematics was
+-  council-reviewed and the narrowing only adds premises (it weakens the statement) and has an independent check; the
+-  label states exactly that, as the row 1.1 Form B1 does for its condition.
++### Placements of row 3.7 (form (a), plain: second SCR council round passed — W3-SCR-R2 R2 + diff round R3, MANIFEST_R3 `19847f54…`, both seats PASS; H5 cards 9 and 11; HQ acceptance) [SCR-R2]
++- **Abstract:** *"Certified screening: if the design has a sparse eigenvalue floor $\kappa$ on models of size $q_n+s_0$, the
++  true coefficients satisfy $\theta^*_{\min}\ge b$ and $\|\theta^*\|_1\le M$, the constants $\kappa$, $b$, $M$ and the noise
++  variance $\sigma_*^2$ are fixed in $n$, $q_n$ is below the method's model-size cap $\min(p,\lfloor n/2\rfloor)$, and
++  $(q_n+1)\log p+\log n\le c_1n$ with an explicit constant $c_1$ depending only on $\kappa,b,M,\sigma_*$, then the probability
++  that a run produces output, certifies a reported model of size at most $q_n$ ("certifies": the run's local-optimality
++  flag is set for that model), and that model misses a true predictor tends to zero — with no visibility, leakage, start
++  or block condition."* (The formula for $c_1$ stays in Theorem 8 (A3).)
++- **Body:** Theorem 8′ (signals that may vary with $n$; master `W3-SCR:A-inf`), plain.
+ 
+ **Theorem 8′ (body; certified screening with signals that may vary with $n$).** Let the design be fixed and assume (S1),
+ (S3). For $S\subseteq[p]$ and $t\notin S$ let $\gamma(t\mid S)$ be the *noiseless gain* of $t$ given $S$: the decrease of
+@@ -776,10 +771,7 @@ bound on $s_0$, and no condition on the start, leakage, blocks or the collineari
+ **"PROVED-CHECKED"**; its non-asymptotic form `W3-SCR:SCR-A@1.0.0` (:79-85, probability $\le3e^{-x}$ under a finite-$n$
+ margin condition), **"PROVED-CHECKED"**. Theorem 8 is its corollary under fixed constants (`W3-SCR:A1`). *Bridge:* none
+ (the quantities are the master's, described in words).
+-*Form dependency (manager, 2026-11-16):* `W3-SCR:A-inf` sits in the post-C1 tree that the second SCR council round
+-(W3-SCR-R2, per-claim table for all 21 rows) is re-reviewing. Theorem 8′ is stated **plain** if A-inf is ACCEPTed in that
+-round; otherwise it carries the (b1) label: *"(reviewed by a council on an earlier text; a second council review is
+-pending)"*. The CP3 freeze picks per the round's table.
++*Reviewed together with Theorem 8 in the second SCR council round; A-inf ACCEPTed by both seats (stated plain).*
+ 
+ ### Why each assumption
+ (A1) only the realised combination of missing truths must keep a fraction of its energy outside any small model (the
+@@ -797,10 +789,23 @@ None: the statement is the master's, with the floor named in standard terms (the
+ eigenvalue floor as the sufficient case, :158-159). "Certified" must be explained in words (NOTATION §5).
+ 
+ ### Honest limits
+-None. It is a one-sided guarantee (no false negatives among small certified models); exact recovery from the
++- The bound is on the probability of an intersection: a run produces output, certifies a small model, **and** that
++  model misses a true predictor. It is not a guarantee conditional on certification, and it does not say that the
++  method returns a superset of the true model with probability tending to one.
++- A run is not claimed to certify a small model with probability tending to one (`W3-SCR/STATEMENT.md:217-218`); how
++  often it does is reported from numerics (see the certification-frequency line).
++- It is one-sided: certified small models are not shown to equal the true model; exact recovery from the
+ certificate needs a near-orthogonality floor (`W3-SCR:SCR-C`, PROVED-CHECKED), which is not reader-friendly
+ ($\varphi_n(q_n)\ge2A/(2A+1)+\epsilon$) — keep it as a remark.
+ 
++### Certification frequency (numerics, not a theorem) [SCR-R2]
++A run certifies a model when its local-optimality flag is set. In existing numerics the method certified a small
++reported model in every completed run: 2,394 of 2,394 in the 2,400-fit study ($n=200$); 376 of 376 in the strong-factor
++experiment ($n\le150$, $p$ up to $10n$); 71 of 71 in the screening study ($n=100$). On strong-factor designs
++(equicorrelation $ho\in\{0.5,0.7\}$, $p\ge2.5n$, $s_0\in\{4,8\}$) the certified model contained every true predictor in
++61 of 122 fits at $n=50$, 18 of 20 at $n=75$ and 30 of 30 at $n=100$. At these constants (A3) requires $n\gtrsim1{,}450$.
++(Sources: `/home/fb31/BVS-wt/W3-SCR-R2/Theory_work/Wave3/W3-SCR-R2/reviews/READER_DELTA.md` §5, theory/W3-SCR-R2 @ 048b6b23.)
++
+ #### Update log (thm8)
+ - v0.1 2026-11-15: first version (CP1).
+ - v0.2 2026-11-15: S1 fixes [S1-F8] q_n range and null-correlation wording (EQUAL).
+@@ -813,6 +818,10 @@ certificate needs a near-orthogonality floor (`W3-SCR:SCR-C`, PROVED-CHECKED), w
+   statement = master A-inf in words; EQUAL to its master).
+ - v0.5 2026-11-16: Theorem 8′ form dependency on the W3-SCR-R2 per-claim table noted (plain if A-inf ACCEPT, else
+   (b1) label) (EQUAL).
++- v0.6 <date>: [W3-SCR-R2 CP3; H5 cards 9, 11] form (a) for row 3.7, plain (second SCR council round passed, R3 bind
++  OK 19847f54…); Theorem 8′ plain (A-inf ACCEPT); abstract: $c_1$ by name only (formula in body), $q_n$ below the cap
++  $\min(p,\lfloor n/2\rfloor)$ stated; honest limits: intersection event, certification not claimed w.p. → 1;
++  certification-frequency line (EQUAL). Source: W3-SCR-R2 `reviews/READER_DELTA.md` v4 @ 048b6b23.
+ <!-- ROW thm8 END -->
+ 
+ ---

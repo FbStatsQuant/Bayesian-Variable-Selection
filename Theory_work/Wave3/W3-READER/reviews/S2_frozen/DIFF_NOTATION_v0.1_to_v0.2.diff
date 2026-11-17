@@ -1,0 +1,95 @@
+--- reviews/S1_frozen/NOTATION.md	2026-11-15 18:38:18.461058207 -0600
++++ reviews/S2_frozen/NOTATION.md	2026-11-15 20:25:45.666336636 -0600
+@@ -49,6 +49,12 @@
+ 
+ ## 3. The prior, as coded
+ 
++**Which $p$.** Throughout, $p$ is the number of predictors that are *not constant in the sample* (the retained
++columns); the method computes its prior, its size cap and every score from these columns only, so the raw column
++count $p_{\mathrm{raw}}$ never enters the prior. (In particular the model prior below is $\mathrm{BB}(1,p)$ with this $p$,
++capped at $\min(p,\lfloor n/2\rfloor)$; some documents write $r$ for this number.) This convention holds for every
++theorem.
++
+ The model space is the set of models with at most $K$ predictors,
+ $$
+ \Omega:=\{S\subseteq[p]:|S|\le K\},\qquad K:=\min(p,\lfloor n/2\rfloor).
+@@ -63,7 +69,9 @@
+ 2. **Coefficients (ridge-stabilised $g$-prior, $g=n$).** Given $S$ and $\sigma^2$,
+    $\beta_S\sim N\big(0,\;n\sigma^2(G_S+I)^{-1}\big)$.
+ 3. **Noise variance.** $\sigma^2\sim\mathrm{IG}(a_0,b_0)$ with $a_0=b_0=0.01$.
+-4. **Intercept.** Removed by centring (equivalent to a flat prior on the intercept).
++4. **Intercept.** Removed by centring the data before scoring; the working likelihood below is the $n$-dimensional
++   Gaussian one on the centred, standardised data (this is not the same as integrating a flat intercept prior, which
++   would give $a_0+(n-1)/2$ in place of $\nu=a_0+n/2$).
+ 
+ The working likelihood is $y\mid S,\beta_S,\sigma^2\sim N_n(X_S\beta_S,\sigma^2 I_n)$. It is a *working* model: the
+ theorems are proved under the true model of §1, not under the prior.
+@@ -111,20 +119,31 @@
+   for one non-member), moves to the best neighbour if it strictly improves the score $F$, and stops when a complete scan
+   finds no strict improvement or when a move cap of about $\log_2(n+p)+|\tilde S_0|$ moves is reached.
+ * **The reported model $\hat S$.** Every model the run scores (by the sampler, by the local searches) is recorded; the
+-  reported model is the best-scoring recorded model. It is reported as **certified** when it is the end point of a
+-  local search whose last complete scan found no strict improvement (i.e. it is verified to be a local optimum of $F$
+-  in the neighbourhood above).
+-* **Estimated summaries.** The method also returns estimated PIPs, the MPM built from them, and an estimate of the
+-  normalising constant (the evidence) $\hat Z$.
++  reported model is the best-scoring recorded model. It is reported as **certified** (the method's public certification flag) when either
++  the model space was small enough to be enumerated exactly (then $\hat S$ is the exact maximiser of $F$), or $\hat S$ is
++  the end point of a local search whose last complete scan found no strict improvement (i.e. it is verified to be a
++  local optimum of $F$ in the neighbourhood above). The local search from the start mode also keeps its own record of
++  whether its end point was certified; that record is distinct from the public flag of the reported model.
++* **Estimated summaries.** The sampler runs $R=4$ independent islands. Each island $r$ produces Rao–Blackwellised
++  inclusion probabilities $\widehat{\mathrm{PIP}}_{r,j}$ and an evidence estimate $\hat Z_r$. The method pools them
++  with **equal weights**: $\widehat{\mathrm{PIP}}_j:=\frac1R\sum_{r=1}^R\widehat{\mathrm{PIP}}_{r,j}$ and
++  $\hat Z:=\frac1R\sum_{r=1}^R\hat Z_r$ (islands are *not* weighted by their evidence). The estimated MPM is
++  $\{j:\widehat{\mathrm{PIP}}_j>1/2\}$.
+ 
+ **Output.** A run either returns these estimates ("produces output") or stops without them (for example when its
+ computing allocation is exhausted). $\mathcal O$ denotes the event that a run produces output.
+ 
+ **Standing conventions about "the method as coded".** All statements about what the method returns assume: (i) exact
+ arithmetic (scores and comparisons computed without rounding error); (ii) the shipped configuration (in particular the
+-local search from the start mode is switched on, with the move cap above); (iii) a computing allocation large enough
+-that the run is not stopped by its resource guard. Statements hold for every random seed and every outcome of the
+-method's internal calibration unless said otherwise.
++local search from the start mode is switched on, with the move cap above); (iii) admissible runs
++(valid inputs and seed, the method's execution conventions). Statements hold for every admissible seed and every
++outcome of the method's internal calibration unless said otherwise. **Delivery conventions** (used only where a theorem
++says the run *always produces output*): an idealised machine (exact unit-cost arithmetic, no integer or index
++overflow, every allocation within the declared memory succeeds, the build and its dependencies work, no external
++interruption or worker crash), the covered configuration (production core with the start-mode search and its
++tie-aware fallback, default summaries, serial execution or a fixed number of workers), a valid seed, and a declared
++memory and time allocation at least the method's polynomial envelopes in $(n,p_{\mathrm{raw}})$, preflight bounds
++included. These are operational assumptions, not consequences of any statistical condition.
+ 
+ ## 6. Design quantities used in the assumptions
+ 
+@@ -212,8 +231,14 @@
+ * Prior, score, $K$, $\nu$, $H_S$, $a_0=b_0=0.01$, $\log w(k)=-\log2-\log\binom{2p-1}{k}$:
+   `Scripts/SMC_BVS/core/cpp/v3_score.h:40-71, 196-224` (W3-POST STATEMENT.md:21-29). Working-model reading
+   (coefficient prior $N(0,n\sigma^2(G_S+I)^{-1})$, IG(0.01, 0.01)): W3-POST STATEMENT.md:26-29.
+-* Beta-binomial identity: $\binom{p}{k}^{-1}\cdot$ BB(1,p) mass $=B(k+1,2p-k)/B(1,p)=\tfrac12/\binom{2p-1}{k}$ (direct
+-  computation; "capped BB(1, p)" in W3-POST STATEMENT.md:23).
++* "Which $p$": the scorer is initialised with $p$ = number of columns of the preprocessed design
++  (`Scripts/SMC_BVS/core/v3_fit.R:118`, `ctx <- v3_context(pre$X, pre$y, orig = pre$kept, ...)`), and
++  `cpp/v3_score.h:40` sets $K=\min(p,\lfloor n/2\rfloor)$ and $w(k)$ from that $p$; constant columns are dropped first
++  (`v3_preprocess.R:111-113`). Same convention as W3-DIST STATEMENT v1.4:142 ("BB(1, r)", r = predictors not constant
++  in the sample). Sync from the Theory Dept manager, 2026-11-15.
++* Beta-binomial identity: under $q\sim\mathrm{Beta}(1,p)$ and independent inclusion, a given model of size $k$ has
++  probability $B(k+1,2p-k)/B(1,p)=\tfrac12/\binom{2p-1}{k}$ (direct computation; code comment `cpp/v3_score.h:15`;
++  "capped BB(1, p)" in W3-POST STATEMENT.md:23).
+ * Partition (complete linkage on $1-|\hat r|$, cut at $\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)$, next-fit
+   packing), tables $r_b$, start law, start mode: W3-START STATEMENT.md:47-61 (pins `cpp/v3_blocks.h:124-144`,
+   `cpp/v3_start.h:68-137`, `v3_preprocess.R:22`); start mode is a maximiser of $\pi_0$: W3-RM:E4@1.0.0
+@@ -222,6 +247,11 @@
+   $\ell_n=\lceil\log_2(n+p+1)\rceil$: W3-RM2 STATEMENT.md:60-67 (pins `cpp/v3_engine.h:392-414`,
+   `cpp/v3_core.cpp:465-476`); W3-RM STATEMENT.md:45.
+ * Reported model = ≻-maximum of the scored set; certified set: W3-SCR STATEMENT.md:29-44; C-DLV `lemmas/L4_delivery.md:66-70`.
++* Equal-weight pooling (code wins over the documentation): `pip_primary = rowMeans(P)` at
++  `Scripts/SMC_BVS/core/v3_run.R:162`; $\log\hat Z$ = log of the plain mean of the $\hat Z_r$ at `v3_run.R:154`; MPM at
++  `:163`. `Theory_work/State_of_Project/sections/02_method.tex:440-451` says v3.1 made the $\hat Z$-weighted PIP primary;
++  the shipped code does not compute it (`Scripts/SMC_BVS/core/README.md:16`); $\log\hat Z$ = log-sum-exp of the $\log\hat Z_r$ minus $\log R$. Equal-weight primary confirmed by OD-4 (dept + HQ, 11-15); W3-EDIT adds the note in 02_method.tex. Flag raised by the Theory Dept manager,
++  2026-11-15.
+ * Output event, resource guard: `Scripts/SMC_BVS/core/README.md` (runtime guard; `resource_limit`); delivery fallback
+   (tier-1 grid freezing, default on): `Scripts/SMC_BVS/core/v3_calib.R:120-124, 141-151`.
+ * Standing conventions (i)–(iii) = implementation premises EX-A; OP-LS0 with configuration `ls0 = TRUE`,
