@@ -723,13 +723,12 @@ one-factor blocks [R2-O6].
   other way, no-addition fails w.p. $\to1$). Not known to be necessary for the conclusion.
 
 ### Master theorems
-0. [RM2R-2] `W3-RM2-R:RM2-R-plus@1.0.0`, `Theory_work/Wave3/W3-RM2-R/STATEMENT.md:177-182` (same hypotheses as RM2-R; conclusion
-   adds [MODE] and, under (D), delivery and $P(\hat S=S_0)\to1$ with the error split), status verbatim **"PROVED-CHECKED, conditional on C-DLV:L2-S3, C-DLV:P1-Inventory; council R3, MANIFEST 5d6d3c90… (= R3 b06a8588 re-frozen as R3r), sol=9.5 PASS, opus=9.4 PASS"** (main 5d3a8a70, task V) [REG-5d3a]; the two conditions are code-reading audits of the delivery path (`C-DLV:L2-S3`, `C-DLV:P1-Inventory`, each "AUDITED (code reading)"), which DLV-0 takes as hypotheses [RM2R-7].
-   With `W3-RM2-R:RM0-plus@1.0.0` (`STATEMENT.md:118-143`, mode form of the core) and `W3-RM2-R:DLV-0@1.0.0` (`STATEMENT.md:144-163`,
+0. [RM2R-2] `W3-RM2-R:RM2-R-plus@1.0.1`, `Theory_work/Wave3/W3-RM2-R/STATEMENT.md:177-182` (same hypotheses as RM2-R; conclusion
+   adds [MODE] and, under (D), delivery and $P(\hat S=S_0)\to1$ with the error split), status verbatim **"PROVED-CHECKED; council R3, MANIFEST 5d6d3c90… (= R3 b06a8588 re-frozen as R3r), sol=9.5 PASS, opus=9.4 PASS"** (main fe05ccec, D95) [REG-fe05]; DLV-0 takes the two C-DLV code-reading audits as hypotheses [RM2R-7]; `C-DLV:L2-S3@1.0.1` and `C-DLV:P1-Inventory@1.1.1` are now each **"CODE-CHECKED (second seat, code reading; holds at pin 4676af6 after amendments A-1–A-7); council R2, MANIFEST 12802ac7…, sol=9.3 PASS, opus=9.4 PASS"**.
+   With `W3-RM2-R:RM0-plus@1.0.1` (`STATEMENT.md:118-143`, mode form of the core) and `W3-RM2-R:DLV-0@1.0.1` (`STATEMENT.md:144-163`,
    deterministic delivery at the pinned code), each with the same status verbatim. RM2-R-plus implies RM2-R
-   (`W3-RM2-R:Cont-plus@1.0.0`, same status); the supersession is not applied (deferred post-freeze), so `W3-RM2:RM2-R` stays ACTIVE.
-   **Conditions of the row (current master) [RM2R-7]:** two code-reading audits of the delivery path (the posterior input
-   `W2-APP:POST@1.0.7` is "PROVED-CHECKED" since main 6cd699dd [REG-6cd6]): the audits (`C-DLV:L2-S3`, `C-DLV:P1-Inventory`); the recording shows
+   (`W3-RM2-R:Cont-plus@1.0.1`, same status); the supersession is not applied (deferred post-freeze), so `W3-RM2:RM2-R` stays ACTIVE.
+   **Conditions of the row (current master) [RM2R-7]:** none open: the posterior input `W2-APP:POST@1.0.7` is "PROVED-CHECKED" (main 6cd699dd [REG-6cd6]) and the two code-reading audits of the delivery path (`C-DLV:L2-S3`, `C-DLV:P1-Inventory`) were discharged at main fe05ccec (D95); before D95 the recording showed
    `W3-RM2-R:RM0-plus`, `RM2-R-plus` and `Cont-plus` with the latter two conditions.
 1. `W3-RM2:RM2-R@1.0.3` (ACTIVE; supersession by RM2-R-plus deferred post-freeze), `Theory_work/Wave3/W3-RM2/STATEMENT.md:216-218`
    (assumptions :172-202), status verbatim
@@ -809,6 +808,7 @@ regressions are local. HQ choices: keep them as stated (faithful), or state Theo
 - R2-ED 2026-11-16: [R2-O6] remark (iii) example status verbatim (EQUAL).
 - FRZ-B 2026-11-16: [B2] GUARD-W wording "returns no estimates; anything else … flagged incomplete and is not covered" with code lines (EQUAL).
 - FRZ-B 2026-11-16: [T14-REP] (H5 card 16, AGREED; `W3-AUDIT-AX:REP@1.0.0`; W3-AUDIT d727e7a3 `track_A_C/H5_T14_CARD.md` "Consultant edits") integer-limit passage: one sentence, then the caps, $\mathfrak D$, code lines with $p_{\mathrm{raw}}$; in the default configuration neither limit can be reached on any input R can represent; the other IDEAL-W obligations remain — **STRONGER** (informal remark [RM2R-6] → proved code fact; no premise added or dropped).
+- FRZ-B 2026-11-16: requote at main fe05ccec [REG-fe05] (D95): masters RM2-R-plus/RM0-plus/DLV-0/Cont-plus @1.0.1 plain "PROVED-CHECKED; council R3, …"; the two C-DLV audits "CODE-CHECKED"; row 3.1 carries no open registry condition; B1 moot (EQUAL, statuses only).
 <!-- ROW thm6 END -->
 
 ---
@@ -871,9 +871,8 @@ reach }S_0)$. *(Interpretation, not part of the theorem [D71]: posterior-mode er
 - *Floors (A2).* Regressions on blocks and on $Q\cup\{l\}$ are well posed.
 
 ### Master theorem
-[RM2R-2] `W3-RM2-R:RM2-F-plus@1.0.0`, `Theory_work/Wave3/W3-RM2-R/STATEMENT.md:166-176` (hypotheses §2 :95-112 and PARENT's;
-conclusion with [MODE] and, under (D), delivery and the error split; conditions of the row: two
-code-reading audits of the delivery path (T03♯ discharged, main 6cd699dd), `C-DLV:L2-S3` and `C-DLV:P1-Inventory` [RM2R-7]), status verbatim **"PROVED-CHECKED, conditional on C-DLV:L2-S3, C-DLV:P1-Inventory; council R3, MANIFEST 5d6d3c90… (= R3 b06a8588 re-frozen as R3r), sol=9.5 PASS, opus=9.4 PASS"** (main 5d3a8a70, task V) [REG-5d3a]; the two conditions are code-reading audits of the delivery path (`C-DLV:L2-S3`, `C-DLV:P1-Inventory`, each "AUDITED (code reading)"), which DLV-0 takes as hypotheses [RM2R-7]; with `W3-RM2-R:RM0-plus`
+[RM2R-2] `W3-RM2-R:RM2-F-plus@1.0.1`, `Theory_work/Wave3/W3-RM2-R/STATEMENT.md:166-176` (hypotheses §2 :95-112 and PARENT's;
+conclusion with [MODE] and, under (D), delivery and the error split; conditions of the row: none open (T03♯ discharged, main 6cd699dd; the two C-DLV code-reading audits discharged, main fe05ccec) [RM2R-7]), status verbatim **"PROVED-CHECKED; council R3, MANIFEST 5d6d3c90… (= R3 b06a8588 re-frozen as R3r), sol=9.5 PASS, opus=9.4 PASS"** (main fe05ccec, D95) [REG-fe05]; DLV-0 takes the two C-DLV code-reading audits as hypotheses [RM2R-7]; `C-DLV:L2-S3@1.0.1` and `C-DLV:P1-Inventory@1.1.1` are now each **"CODE-CHECKED (second seat, code reading; holds at pin 4676af6 after amendments A-1–A-7); council R2, MANIFEST 12802ac7…, sol=9.3 PASS, opus=9.4 PASS"**; with `W3-RM2-R:RM0-plus`
 and `W3-RM2-R:DLV-0` as in §6. It implies the previous master (`W3-RM2-R:Cont-plus`), kept below for the record (supersession deferred post-freeze; `W3-RM2:RM2-F` stays ACTIVE).
 Delivery route: as §6 [HQ D74, R1-F6].
 Previous master: `W3-RM2:RM2-F@1.0.3` (ACTIVE), `Theory_work/Wave3/W3-RM2/STATEMENT.md:206-214` (assumptions :126-170), status verbatim
@@ -926,6 +925,7 @@ any $b\ge\tfrac12$. Recommendation: present (A5)(a) in the main text (fully expl
 - R2-ED 2026-11-16: [GUARD-W] (manager 11-16: Theorem 7's guarantee concerns a run's output) time-guard sentence after the delivery display, as in Theorem 6 (EQUAL). [R2-O4] (A5)(b) $C_Q$ threshold example; [R2-E1] B7.2/B7.3 historical commentary labelled (EQUAL).
 - FRZ-B 2026-11-16: [B2] as Theorem 6 (EQUAL).
 - FRZ-B 2026-11-16: [T14-REP] as Theorem 6 — **STRONGER** (same delivery sentence).
+- FRZ-B 2026-11-16: requote at main fe05ccec [REG-fe05] as Theorem 6: RM2-F-plus @1.0.1 (EQUAL, statuses only).
 <!-- ROW thm7 END -->
 
 ---
