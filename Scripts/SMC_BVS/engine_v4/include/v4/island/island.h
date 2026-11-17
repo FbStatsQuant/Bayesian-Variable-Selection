@@ -67,6 +67,11 @@ struct IslandConfig {
   bool leaders = false;                     // leader stores (lead0 log gamma_0, lead1 F): NEVER in a final run (INTERFACES
                                             // v0.1.7, D-7); calibration islands and golden tests only; never written to island_r.bin
   bool store_dup_filter = true;             // exact snapshot duplicate filter (execution parameter; content unchanged)
+  double offer_floor = -__builtin_huge_val(); // D-29 (INTERFACES v0.1.15 §4.1, v0.1.17): the top store drops offers v < floor;
+                                            // > -inf only for a V-mode (Arith::ClassA) final island, never compat / leaders /
+                                            // calibration roles; finite or -inf (run_island refuses anything else).
+                                            // Value: calib.bin meta.tau_cal_hex (offer_floor_for(), island/offer_floor.h)
+  std::string offer_floor_calib;            // the content hash of the calib.bin the floor came from (required when floor > -inf)
   bool store_parallel_compact = true;       // compaction at pass/step boundaries with all threads (content unchanged)
   bool check_store = true;                  // I1 on the top store (and the leader stores), in parallel over index ranges,
                                             // before every checkpoint and on every exit of the run, whatever its status
@@ -122,6 +127,7 @@ struct KernelStats {   // execution statistics (not part of the law, not hashed)
                                                                              // computed into a slot / read from a slot / without a slot
   uint64_t flip_evals = 0;   // label-major: addition flips evaluated on fast supports (bounded scoring: the needed ones only)
   uint64_t slow_supports = 0, store_merges = 0, store_buffered = 0, store_dup_dropped = 0, store_serial_merges = 0;
+  uint64_t store_floor_dropped = 0;   // offers dropped by the D-29 offer floor (v < floor)
   double t_store_compact = 0, t_compact_pass = 0;   // wall seconds compacting (all paths) / at pass boundaries
   int kept_live_max = 0;   // most kept runs alive at once in this process (M2 bound; process-wide counter)
   double t_products = 0;   // thread-seconds inside phase A spent on the tile products
@@ -155,6 +161,7 @@ struct IslandRun {
   bool leaders = false;                              // lead0_* / lead1_* filled (in memory only)
   std::vector<double> lead0_v, lead1_v; std::vector<uint64_t> lead0_hash, lead0_off, lead1_hash, lead1_off;
   std::vector<uint16_t> lead0_len, lead1_len; std::vector<int32_t> lead0_pool, lead1_pool;      // admission: the group size used and the peak-live plan (text)
+  double offer_floor = -__builtin_huge_val(); std::string offer_floor_calib;   // D-29: the floor the store ran under (island_r.bin meta)
   KernelStats ks;
   uint64_t hash() const;   // FNV-1a over every law output (T3 / T6 comparisons)
 };

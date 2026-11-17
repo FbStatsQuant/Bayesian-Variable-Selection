@@ -54,6 +54,7 @@ struct CalibIn {
   bool has_hpm = false; Model hpm; EventCtx hpm_ev;
   std::vector<merge::InheritedModel> inherited;
   std::string rule; int32_t I_used = 0, I_max = -1, ell = -1; double k_store = 0;
+  double tau_cal = -__builtin_huge_val();            // D-29: meta.tau_cal_hex (V mode; -inf when absent), checked against inh_F
 };
 // Every model, value, grid and meta range checked. V mode: the bounded rule, tier 0, N = 2,500 (D-1, D-26) and
 // I_used <= I_max <= ell. A completed calibration must carry k_store (finite, > 0). When data_hash / setup_hash are
@@ -104,6 +105,8 @@ class FileIslandSource : public merge::IslandSource {
   merge::IslandHead head(int r) override { return heads_[(size_t)r - 1]; }
   merge::IslandIn load(int r) override;
   const std::vector<merge::IslandHead>& heads() const { return heads_; }
+  // D-29 (v0.1.15 §7): marks every island whose offer floor fails merge::offer_floor_refusal as floor_refused
+  void check_offer_floors(bool v_mode, const std::string& calib_hash, double tau_cal, double pre_cutoff);
  private:
   std::vector<std::string> paths_; std::vector<merge::IslandHead> heads_; Expect ex_; int Rp_, p_;
 };

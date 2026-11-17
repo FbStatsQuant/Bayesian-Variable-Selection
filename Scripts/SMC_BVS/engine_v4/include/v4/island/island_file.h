@@ -2,7 +2,8 @@
 //
 // Sections (names fixed; WPs may add, never rename):
 //   meta                 json: schema, kind, mode, r, N, T, L, Hm, p, status, reason, tier, inputs, binary, timings,
-//                        logZ_hex (the bits of log Z), init_hash (hex)
+//                        logZ_hex (the bits of log Z), init_hash (hex), offer_floor_hex / offer_floor / offer_floor_calib
+//                        (D-29: the floor the top store ran under; -inf and null calib without one)
 //   logZ                 f64 [1]            log Ẑ_r (bits)
 //   grid                 f64 [T+1]          the schedule used
 //   st_phi st_inc st_ess st_cum             f64 [T]
@@ -41,6 +42,7 @@ struct IslandFile {
   std::vector<double> grid;
   Json meta;
   std::string content_hash;
+  double offer_floor = -__builtin_huge_val(); std::string offer_floor_calib;   // D-29 (meta.offer_floor_hex; absent = -inf)
 };
 IslandFile read_island_file(const std::string& path, bool verify = true);
 

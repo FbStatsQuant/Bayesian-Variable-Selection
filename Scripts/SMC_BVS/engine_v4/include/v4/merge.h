@@ -22,6 +22,7 @@
 #include <vector>
 #include <algorithm>
 #include <chrono>
+#include <cstring>
 #include <limits>
 #include "v4/calib_rules.h"
 #include "v4/ledger.h"
@@ -46,13 +47,30 @@ struct IslandIn {
   std::vector<Model> terminal;           // optional
 };
 // How an island file was found by the loader (WP1 format reader / manifest / binary check).
-enum class Load : uint8_t { ok = 0, missing, corrupt, hash_mismatch, binary_mismatch };
+enum class Load : uint8_t { ok = 0, missing, corrupt, hash_mismatch, binary_mismatch, floor_refused };
 // Pass-1 view of an island: what GUARD-W needs, read from headers and meta only (no store is loaded).
 struct IslandHead {
   Load load = Load::missing; Status status = Status::completed; int32_t r = 0, N = 0, p = 0, T = 0, L = 0, Hm = 0; double logZ = 0;
   std::string detail, content_hash;            // content hash actually read (recorded in fit.bin meta.inputs)
   uint64_t store_entries = 0, store_pool = 0;  // section lengths of the island store (memory plan: mean model size)
+  double floor = -__builtin_huge_val(); std::string floor_calib;   // D-29 offer floor (meta.offer_floor_hex; absent = -inf)
 };
+// D-29 merge check (INTERFACES v0.1.15 §7; v0.1.17 = review PR45 MINOR-2/3), after the tables and the inherited models
+// are in the pre-island ledger and before any island is merged. An island's floor must be -inf, or: the merge is V
+// mode, the floor names this calib.bin, its bits equal calib.bin's tau_cal, and floor <= the pre-island cut-off (<=:
+// offers equal to the floor are kept). Then every offer the island dropped (v < floor) is below the merged store's
+// cut-off, and the merged store equals the unfloored merge. Returns "" or why the island is refused (invalid_input).
+inline std::string offer_floor_refusal(const IslandHead& h, bool v_mode, const std::string& calib_hash, double tau_cal, double pre_cutoff) {
+  const double ninf = -__builtin_huge_val();
+  if (std::isnan(h.floor) || h.floor == -ninf) return "offer floor NaN or +inf";
+  if (!(h.floor > ninf)) return "";
+  if (!v_mode) return "offer floor outside V mode (compat / law islands run without one)";
+  if (h.floor_calib != calib_hash) return "offer floor from another calib.bin";
+  uint64_t a, b; std::memcpy(&a, &h.floor, 8); std::memcpy(&b, &tau_cal, 8);
+  if (a != b) return "offer floor differs from calib.bin's tau_cal";
+  if (!(h.floor <= pre_cutoff)) return "offer floor above the pre-island cut-off (tables + inherited)";
+  return "";
+}
 // Where the streaming merge reads islands from: files (slice 2), memory (tests, golden harness).
 struct IslandSource {
   virtual ~IslandSource() = default;
@@ -193,7 +211,7 @@ inline Status load_status(Load l) {
   switch (l) {
     case Load::ok: return Status::completed;
     case Load::missing: return Status::io_error;
-    default: return Status::invalid_input;   // corrupt, hash_mismatch, binary_mismatch
+    default: return Status::invalid_input;   // corrupt, hash_mismatch, binary_mismatch, floor_refused
   }
 }
 }  // namespace detail

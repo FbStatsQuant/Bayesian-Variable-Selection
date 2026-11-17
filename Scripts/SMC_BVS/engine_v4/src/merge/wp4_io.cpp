@@ -1,5 +1,6 @@
 // wp4_io.cpp -- WP4 file I/O and the merge command (see include/v4/wp4_io.h).
 #include "v4/wp4_io.h"
+#include "v4/offer_floor.h"
 
 #include <sys/stat.h>
 #include <map>
@@ -197,6 +198,11 @@ std::string write_calib(const std::string& path, const CalibWrite& c) {
     meta["has_hpm"] = false;
     if (c.led->has_hpm) { meta["hpm_incomplete"] = true; meta["hpm_so_far_F"] = c.led->hpmF; meta["hpm_so_far_ev"] = event_json(c.led->hpm_ev); }
   } else meta["has_hpm"] = false;
+  if (ok && c.mode == fmt::M_V) {   // D-29 (v0.1.15 §5.1): tau_cal = the c-th best F over the exported distinct inherited models
+    std::vector<double> F;
+    if (c.inherited_flat) F = c.inherited_flat->F; else for (auto& m : c.inherited) F.push_back(m.F);
+    tau_cal_to_meta(meta, tau_cal_of(F, c.led ? c.led->top.cap : 0));   // c = the top-store capacity 40p + 1
+  }
   if (ok && c.inherited_flat) {
     const calib::InheritedFlat& f = *c.inherited_flat;
     add_vec_copy(W, "inh_ptr", f.ptr); add_vec_copy(W, "inh_idx", f.idx);
@@ -274,6 +280,16 @@ CalibIn read_calib(const std::string& path, int32_t p, int32_t K, const std::str
     need_finite(iF[i], path + ": inh_F"); need_finite(ilg0[i], path + ": inh_lg0"); need_finite(ilogm[i], path + ": inh_logm");
     c.inherited.push_back({im[i], iF[i], ilg0[i], ilogm[i]});
   }
+  // D-29: tau_cal (absent = -inf). In V mode it must be the c-th best F of the inherited models read above (c = 40p+1),
+  // bit for bit; any other mode carries no floor
+  c.tau_cal = tau_cal_of_meta(c.meta);
+  if (c.meta.contains("tau_cal_hex")) {
+    if (c.mode != fmt::M_V) { if (c.tau_cal > -__builtin_huge_val()) throw Error(Status::invalid_input, path + ": tau_cal outside V mode (D-29)"); }
+    else {
+      const double t = tau_cal_of(iF, 40ull * (uint64_t)p + 1);
+      if (f64_hex(t) != f64_hex(c.tau_cal)) throw Error(Status::invalid_input, path + ": tau_cal is not the c-th best F of the inherited models (D-29)");
+    }
+  }
   return c;
 }
 
@@ -346,6 +362,7 @@ merge::IslandHead head_island(const std::string& path, int r, const Expect& ex, 
     h.logZ = h.status == Status::completed ? R.vec<double>("logZ").at(0) : 0.0;
     h.content_hash = R.content_hash();
     { uint64_t ne = 0, npool = 0; R.get<uint16_t>("top_len", &ne); R.get<int32_t>("top_pool", &npool); h.store_entries = ne; h.store_pool = npool; }
+    { const OfferFloor of = offer_floor_of_meta(meta, path); h.floor = of.f; h.floor_calib = of.calib; }   // D-29 (malformed -> corrupt)
     if (binary_out) *binary_out = meta.at("binary");
     h.load = merge::Load::ok;
   } catch (const std::exception& e) {
@@ -470,6 +487,13 @@ void check_binaries(std::vector<merge::IslandSlot>& slots, const std::vector<Jso
   for (size_t i = 0; i < slots.size(); ++i) h[i].load = slots[i].load;
   check_binaries(h, blocks, mode);
   for (size_t i = 0; i < slots.size(); ++i) if (h[i].load == merge::Load::binary_mismatch) { slots[i].load = h[i].load; slots[i].detail = h[i].detail; }
+}
+void FileIslandSource::check_offer_floors(bool v_mode, const std::string& calib_hash, double tau_cal, double pre_cutoff) {
+  for (size_t i = 0; i < heads_.size(); ++i) {
+    if (heads_[i].load != merge::Load::ok) continue;
+    const std::string why = merge::offer_floor_refusal(heads_[i], v_mode, calib_hash, tau_cal, pre_cutoff);
+    if (!why.empty()) { heads_[i].load = merge::Load::floor_refused; heads_[i].detail = "island " + std::to_string(i + 1) + ": " + why + " (D-29)"; }
+  }
 }
 FileIslandSource::FileIslandSource(std::vector<std::string> paths, const Expect& ex, int Rp, int p) : paths_(std::move(paths)), ex_(ex), Rp_(Rp), p_(p) {
   std::vector<Json> blocks(paths_.size());
@@ -837,6 +861,7 @@ Json run(const Json& args) {
   wp4io::offer_tables(pre, S, D.K, D.zob);
   offer_inherited(pre, C.inherited, C.has_hpm, C.hpm, C.hpm_ev, D.zob);
   pre.compact();
+  src.check_offer_floors(mode == fmt::M_V, C.content_hash, C.tau_cal, pre.top.cutoff());   // D-29: refused islands -> GUARD-W
   MergeSettings ms;
   ms.Rp = R; ms.N = C.N; ms.p = D.p; ms.K = D.K; ms.tier = C.tier;
   ms.ell = (int)nget(args, "ell", ceil_log2((double)D.n + D.p + 1));
