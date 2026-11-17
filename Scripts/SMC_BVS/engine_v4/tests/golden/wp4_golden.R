@@ -92,10 +92,23 @@ settings_for <- function(setup, rule = "coded", I_max = 3L, refine_m = 1L, sum_m
 # Compared (review PR37 M-6): every compare_calib field (tiers, grids, triggers, iterations, flags, frozen, calibration
 # ledger), the calib.bin round trip, the stage records (phi, increments, ESS, cumulative log Z, distinct counts, all move
 # counts, partial), the stream id / positions / init hash of every calibration island, and the inherited F, log gamma_0,
-# log m, d (sampled, against core's R-level scorer). Excluded, with reason: `fresh` and cache statistics (OD-3, spec §4.1);
-# timings; the calibration local-search archives (path, scanned centres) -- compared through their effects (ledger, HPM,
-# E3, local_limit); V snapshots -- compared through every grid built from V; the calibration pip / ess "calibration
-# estimates" -- never reported, not in calib.bin.
+# log m, d (sampled, against core's R-level scorer). Stop paths through this backend (extra_coded_paths): a forced pilot
+# local_limit, a pilot resource stop (runtime guard, 0-hour allocation), and a numerical failure inside the pilot island
+# from data (wp4_fault_setup: columns scaled by 1e200 in unmodified core; the island's ledger so far is merged).
+# Excluded, with reason:
+#  * `fresh` and cache statistics (OD-3, spec §4.1); timings;
+#  * the calibration local-search archives (path, scanned centres) -- compared through their effects (ledger, HPM, E3,
+#    local_limit); V snapshots -- compared through every grid built from V; the calibration pip / ess "calibration
+#    estimates" -- never reported, not in calib.bin;
+#  * a diagnostic-island resource stop: core's guard is wall-clock, so the only deterministic stop (a 0-hour allocation)
+#    stops the pilot first; the diagnostic stop is compared through the core backend's forced paths (coded_path);
+#  * a numerical failure in a diagnostic island or in V / a calibration local search: the data-level fault stops the
+#    pilot first (its Gibbs sweep meets every column); the core backend covers the V and diagnostic failure statuses
+#    with the fault wrappers (coded_path), and the merge of an island's ledger so far is the same code for both roles;
+#  * the grid-runtime stop and the P3 preflight: LedgerBackend has neither (grid_stop / preflight_exceeds are the
+#    defaults: never), so they are not applicable; the core backend covers them (coded_path);
+#  * the bounded rule (D-26) against core: V's variant rule has no core reference; instead the ledger backend equals the
+#    core backend on it (extra_coded_paths, Blocked and Serial sums, same seed).
 stream_id <- function(tier, island) (if (tier == 0) 0L else 5L) + as.integer(island)
 ledger_calib <- function(r, setup, seed, tag, st = settings_for(setup), th = 1L, guard_hours = -1, runner = "core") {
   st$threads <- as.integer(th); st$runner <- runner
@@ -288,6 +301,19 @@ extra_coded_paths <- function(setup, seed, id, r0) {
   { rg <- v3_calibrate(setup, seed, tier = 0, runtime = .v3cpp$cpp_runtime_new(0, 0), grid_fallback = TRUE)
     expect(identical(rg$status, "resource_limit"), paste(id, "guard stop reaches resource_limit"))
     ledger_calib(rg, setup, seed, paste(id, "pilot resource stop"), guard_hours = 0) }
+  # a numerical failure inside a calibration island through unmodified core (review PR37 N-3 (a)): columns 2 and 20
+  # scaled by 1e200, pi_0 never drawing them (table entries weighted by e^-1000; wp4_fault_setup), the same data on both
+  # sides. The pilot's first Gibbs flip onto a scaled column throws in core's scorer: core's cpp_cal_pilot returns
+  # numerical_failure with the calibration
+  # ledger holding the tables and the pilot's events so far; the v4 backend merges CoreRunner's ledger so far (the
+  # calib_backend.h numerical_failure rule, WP3_DESIGN §1.11) -- ledger, HPM + provenance, counters compared bit for bit.
+  { fs <- setup; fs$ptr <- .v3cpp$wp4_fault_setup(setup$ptr, c(2L, 20L), 1e200)
+    rn <- v3_calibrate(fs, seed, tier = 0, grid_fallback = TRUE)
+    expect(identical(rn$status, "numerical_failure"), paste(id, "data-level failure reaches numerical_failure"))
+    lg <- rn$ledger$logical
+    expect(lg["pilot", "init_draw"] == setup$budgets$tiers$H[1] && lg["pilot", "gibbs_held"] + lg["pilot", "gibbs_flip"] > 0 &&
+           length(rn$tiers[[1]]$grids) == 0L, paste(id, "data-level failure: in the pilot's Gibbs sweep, after its pi_0 draws"))
+    ledger_calib(rn, fs, seed, paste(id, "pilot island numerical failure (data)")) }
   expect(isTRUE(x$r$tiers[[1]]$triggers$local_limit) && x$r$escalated, paste(id, "local_limit fires and escalates"))
   k <- length(x$r$tiers[[1]]$grids) + 2L     # the tier-1 rebuild_1 construction (after a tier-1 preliminary)
   y <- coded_path(setup, seed, paste(id, "last_successful_construction"), list(force_ll_pilot = TRUE, force_build_failure = k))
@@ -304,6 +330,34 @@ extra_coded_paths <- function(setup, seed, id, r0) {
     same(length(a$grids), length(t$grids), paste(tg, "n grids"))
     for (g in seq_len(min(length(a$grids), length(t$grids)))) same(a$grids[[g]]$grid, t$grids[[g]]$grid, paste(tg, "grid", g))
     same(a$grid, b$frozen$grid, paste(tg, "frozen grid"))
+  }
+  # the bounded rule (D-26) through the v4 calibration ledger (review PR37 N-3): no core reference exists (V's variant
+  # rule), so a self-consistency check -- LedgerBackend (CoreRunner islands, v4 ledger / searches / V) against the core
+  # backend (core's calibration state end to end), same seed, the production sum mode (Blocked) and I_max = 2
+  for (sm in c("blocked", "serial")) {
+    sb <- settings_for(setup, rule = "bounded", I_max = 2L, sum_mode = sm)
+    bc <- .v3cpp$wp4_calibrate(setup$ptr, seed, sb)
+    bl <- .v3cpp$wp4_calibrate_ledger(setup$ptr, seed, sb, "", -1)
+    tg <- paste0(id, " bounded[", sm, "] ledger backend == core backend")
+    for (nm in c("status", "tier_final", "escalated", "I_used")) same(bl[[nm]], bc[[nm]], paste(tg, nm))
+    same(length(bl$tiers), length(bc$tiers), paste(tg, "n_tiers"))
+    for (i in seq_len(min(length(bl$tiers), length(bc$tiers)))) {
+      a <- bc$tiers[[i]]; b <- bl$tiers[[i]]
+      for (nm in c("status", "triggers", "schedule", "forced_pilot_steps", "converged", "rebuilds", "grid", "rho_V", "grid_label", "grid_source"))
+        same(b[[nm]], a[[nm]], paste(tg, "tier", i - 1, nm))
+      same(length(b$grids), length(a$grids), paste(tg, "n_grids"))
+      for (g in seq_len(min(length(a$grids), length(b$grids))))
+        for (nm in c("label", "grid", "rho_appended", "ok", "reason", "intervals", "F_V_evaluations")) same(b$grids[[g]][[nm]], a$grids[[g]][[nm]], paste(tg, "grid", g, nm))
+      same(length(b$iterations), length(a$iterations), paste(tg, "n_iter"))
+      for (k in seq_len(min(length(a$iterations), length(b$iterations))))
+        for (nm in c("iteration", "grid", "rho_V", "grid_label", "log_Z_r", "island_best", "overall_best", "E1", "E2", "E3"))
+          same(b$iterations[[k]][[nm]], a$iterations[[k]][[nm]], paste(tg, "iter", k, nm))
+    }
+    for (nm in names(bc$flags)) same(bl$flags[[nm]], bc$flags[[nm]], paste(tg, "flags", nm))
+    for (nm in c("grid", "grid_unrefined", "tier", "rho_V", "grid_label")) same(bl$frozen[[nm]], bc$frozen[[nm]], paste(tg, "frozen", nm))
+    same(bl$hpm, bc$hpm, paste(tg, "HPM + provenance"))
+    for (nm in c("top", "leaders_gamma0", "leaders_gamma1", "logical", "island_best")) same(bl$ledger[[nm]], bc$ledger[[nm]], paste(tg, "ledger", nm))
+    same(bl$inherited$models, bc$inherited$models, paste(tg, "inherited models"))
   }
   # D-26 paths of the bounded rule (no core reference: V's variant rule), one test each
   b <- .v3cpp$wp4_calibrate(setup$ptr, seed, c(settings_for(setup, rule = "bounded", I_max = 2L), list(force_build_failure = 1L)))

@@ -19,9 +19,13 @@ namespace v4::wp4io {
 // A store as <prefix>_v f64, _off u64, _len u16, _hash u64, _pool i32 (INTERFACES §4.1 flat layout; entries sorted).
 // The store must be compacted and stay alive until Writer::write returns. Its cap and order go to meta["stores"].
 void add_store(fmt::Writer& W, Json& meta, const std::string& prefix, const Store& s);
+void add_store_sections(fmt::Writer& W, const std::string& prefix, const Store& s);   // the five sections only (setup.bin: no meta.stores)
 // Rebuilds a Store from the sections (offer + compact; checks I1). Throws Error(invalid_input) on a malformed store.
 void read_store(const fmt::Reader& R, const Json& meta, const std::string& prefix, Store& s, int32_t p, int32_t K,
                 const Zobrist* zob = nullptr /* hashes checked against the models when given */);
+// The same with the store's cap and order given (setup.bin: from INTERFACES §4.1, no meta.stores).
+void read_store_sections(const fmt::Reader& R, const std::string& prefix, uint64_t cap, Order order, Store& s, int32_t p, int32_t K,
+                         const Zobrist* zob = nullptr);
 // Content checks (review PR20 M-2): a model is strictly increasing, in [0, p), of size <= K; else Error(invalid_input).
 void check_model(ModelView S, int32_t p, int32_t K, const std::string& what);
 // A list of models as <prefix>_ptr i64 (n + 1) and <prefix>_idx i32 (copied).
@@ -121,6 +125,7 @@ struct SetupView {
   std::vector<int32_t> blk, pos; std::vector<int64_t> code_ptr; std::vector<double> logr;
   std::vector<int64_t> blk_ptr; std::vector<int32_t> blk_members;
   Model mode_S;
+  std::vector<double> size_logmass;                 // log P_pi0(|S| = k), k = 0..K (INTERFACES §5; empty if the file has none)
   Store ttop, tlead0, tlead1;                       // table top stores
   // core/cpp/v3_start.h:54-66 (copied): ordered block sum of log r_b(S n C_b).
   double comp(const Model& S, std::vector<std::pair<int32_t, int32_t>>& scratch) const;
@@ -128,6 +133,15 @@ struct SetupView {
   EventCtx table_event_of(const Model& S) const;    // block b + 1, code of S in that block
 };
 SetupView read_setup(const std::string& path, int32_t p, int32_t K, const Zobrist* zob = nullptr);   // shapes, ranges and finite values checked
+// The pi_0 size law of setup.bin (K + 1 log probabilities summing to 1); Error(invalid_input) otherwise. read_setup runs it;
+// calibrate runs it on the dimensions reader's copy before it plans.
+void check_size_logmass(const std::vector<double>& v, int32_t K, const std::string& what);
+// ---- bounded plan reader (review PR46 MAJOR-2; INTERFACES §7: admission refuses "before any allocation") -------------
+// data.bin: the header, the section table and `meta` (against its SHA-256 in the header-authenticated table); no column
+// is read. Allocation is O(sections + meta). setup.bin's dimensions come from WP3's island::read_setup_dims (setup_load.h).
+// The full readers run only after admission.
+struct DataPlanHead { std::string content_hash; int64_t n = 0, p = 0; int32_t K = 0; uint64_t file_bytes = 0; };
+DataPlanHead read_data_plan(const std::string& path);            // data.bin meta: n, p, K
 std::string write_setup_min(const std::string& path, const SetupView& s, const Json& inputs);   // tests / harness
 // Table step of the merge ledger: the table top stores offered (top -> HPM + top, lead0, lead1) with their table event
 // keys, plus the logical TABLE count. Equal to ingesting every table code (core/cpp/v3_core.cpp:372-387) for the
