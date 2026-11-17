@@ -29,3 +29,12 @@
 ## Boundary numerics
 None needed for weakened hypotheses (no hypothesis is weakened). Numerics planned (PLAN step 4): brute-force check of
 LIST-K on random small Ω, and one end-to-end small case through the real core (sampler branch vs exact enumeration).
+
+## §4 Better-theorem candidates and dispositions
+| candidate | disposition |
+|---|---|
+| Bounds in 1 − π(𝒯 \| y) (sharper than 1 − π(S₀ \| y); numerics show it far smaller at moderate n) | already proved for the PIP-vs-posterior error (LIST-K (b)); not a target for the "vs truth" error, whose scale 1 − π(S₀ \| y) is the posterior's own and is sharp up to √log n (W3-POST Thm-1 item 7); 1 − π(𝒯) is not certified by the output (DIST (C-ii)(β)) |
+| The printed sampler averages (`pip_primary`, `mpm`, `log_Z`) on AR/BLK | NO-GO by HQ (D86; TRACK_D §5a): needs a new non-collapse lemma; out of this ticket's scope |
+| Corollary 9C's list premise discharged on designs inside both Theorem 9 and Theorem 6 | one-line consequence of LIST-R (i) (π(𝒯) ≥ π(S₀) > ½); proposed to HQ at CP3 (STATEMENT §5 remark 3), not claimed: needs a bridge between the two theorems' hypotheses (no new scope, D106) |
+| The rate for p = 1 | omitted (POST covers p ≥ 2); the fixed-t clause holds for every p |
+| A binary64 version | out of scope (EX-A, as every theorem of the programme); SPEC §7 acceptance tests cover the numerics |
