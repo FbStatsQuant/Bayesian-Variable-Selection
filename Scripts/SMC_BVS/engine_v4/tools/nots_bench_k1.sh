@@ -16,8 +16,13 @@ build="${1:?build dir}"; thr="${2:-96}"
 p="${V4_BENCH_P:-1000000}"; N="${V4_BENCH_N:-2500}"; isa="${V4_BENCH_ISA:-sapphirerapids}"
 nots_guard "$build"
 cmake -S "$here" -B "$build" -DCMAKE_BUILD_TYPE=Release -DV4_TESTS=OFF -DV4_ISLAND_ISA="$isa" > "$LOGDIR/cmake.log"
-make -C "$build" -j "${V4_MAKE_J:-16}" v4_bench_island 2>&1 | grep -E "error|warning" || true
-B="$build/v4_bench_island"
+# build: fail hard (review PR48 MINOR-3: a masked failure would benchmark a stale executable); log kept, binary identity recorded
+B="$build/v4_bench_island"; rm -f "$B"; t0=$(date +%s)
+if ! make -C "$build" -j "${V4_MAKE_J:-16}" v4_bench_island > "$LOGDIR/build.log" 2>&1; then
+  grep -E "error" "$LOGDIR/build.log" | head -20 >&2; echo "build FAILED ($LOGDIR/build.log)" >&2; exit 4
+fi
+if [[ ! -x "$B" || $(stat -c %Y "$B") -lt $t0 ]]; then echo "no fresh $B after the build" >&2; exit 4; fi
+echo "== binary $(sha256sum "$B" | cut -c1-16) built from $(git -C "$here" rev-parse --short HEAD 2>/dev/null || echo '?')$(git -C "$here" diff --quiet 2>/dev/null || echo ' (+ local changes)')"
 export OMP_PROC_BIND=close OMP_PLACES=threads OMP_NUM_THREADS="$thr"
 export V4_K_STORE="${V4_K_STORE:-8}" V4_VERBOSE=1 V4_NO_CHECK_STORE=1 V4_CKPT="$TMPDIR/k1_ckpt"
 ARGS=(island "$p" "$N" "$thr" A lm 256 128 steps:1 2 2)

@@ -1,6 +1,9 @@
 // test_island.cpp -- WP3 unit tests: Philox KAT, flip kernels (bit form = scorer bits; class A <= 1e-9), class-A
 // log/exp, the concurrent store (order-free, multi-thread), T3 execution invariance, T6 restart.
 #include <omp.h>
+#include <execinfo.h>
+#include <atomic>
+#include <cstdlib>
 #include <cstdio>
 #include <filesystem>
 #include <map>
@@ -15,6 +18,20 @@
 #include "v4/format.h"
 
 using namespace v4::island;
+
+// Allocation-failure injection (review PR48 finding 1): while g_par_new_countdown > 0, the countdown-th operator new
+// called inside an active OpenMP parallel region throws std::bad_alloc. Off (0) for every other test. A real failure at
+// an unguarded site inside a region escapes the structured block and aborts the whole test binary (std::terminate).
+static std::atomic<long> g_par_new_countdown{0};
+void* operator new(std::size_t n) {
+  if (g_par_new_countdown.load(std::memory_order_relaxed) > 0 && omp_in_parallel() && g_par_new_countdown.fetch_sub(1) == 1) {
+    if (std::getenv("V4_DEBUG_INJECT")) { void* bt[32]; int nb = backtrace(bt, 32); std::fprintf(stderr, "== injected\n"); backtrace_symbols_fd(bt, nb, 2); }
+    throw std::bad_alloc(); }
+  if (void* q = std::malloc(n ? n : 1)) return q;
+  throw std::bad_alloc();
+}
+void operator delete(void* q) noexcept { std::free(q); }
+void operator delete(void* q, std::size_t) noexcept { std::free(q); }
 
 // Temporary files (manager 11-16): pid-suffixed names under $TMPDIR through tests/tutil.h tmp_path(), never "." -- the
 // island tests refuse to run without TMPDIR -- and every file is removed when the test ends (TmpGuard), even on failure.
@@ -318,6 +335,27 @@ static void bounded_same_bits(const char* tag) {
 }
 TEST(bounded_scoring_same_bits_bit) { bounded_same_bits<Arith::Bit>("bit"); }
 TEST(bounded_scoring_same_bits_classA) { bounded_same_bits<Arith::ClassA>("A"); }
+
+// review PR48 finding 1: an allocation failure anywhere inside the label-major parallel regions (the k-th allocation in a
+// region, for k over the run) ends the island with resource_limit, never std::terminate; bounded and dense paths
+TEST(lm_alloc_failure_in_parallel_is_resource_limit) {
+  Fixture F(100, 300, 43);
+  int hit = 0, runs = 0;
+  for (bool bounded : {true, false}) for (long k = 1; k <= 400000; k = k * 2 + 1) {
+    IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = 3; c.G = 16; c.bounded_scoring = bounded;
+    g_par_new_countdown.store(k);
+    IslandRun r; bool threw = false; std::string what;
+    try { r = run_island<Arith::ClassA>(F.D, F.st, F.nb, c); } catch (const std::exception& e) { threw = true; what = e.what(); }
+    const bool injected = g_par_new_countdown.exchange(0) <= 0;
+    ++runs;
+    if (!injected) { CHECKF(!threw && r.status == 0, "k %ld: no injection, status %d", k, r.status); continue; }
+    ++hit;
+    CHECKF(!threw && r.status == 3 && r.reason.find("out of memory") != std::string::npos, "bounded %d k %ld: threw %d ('%s') status %d '%s'",
+           (int)bounded, k, (int)threw, what.c_str(), r.status, r.reason.c_str());
+  }
+  CHECKF(hit >= 10, "only %d of %d runs reached the injected allocation", hit, runs);
+  std::printf("  %d runs, %d with an injected in-region allocation failure: all resource_limit\n", runs, hit);
+}
 
 // negative control of the NaN-row test: bounded scoring that skips the position just below the running first change
 // (test_bound_shrink = 1) consumes unscored values; the test must catch it as an internal_error

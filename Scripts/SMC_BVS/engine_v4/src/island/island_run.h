@@ -557,7 +557,7 @@ class IslandEngine {
         for (int i = 0; i < N; ++i) {
           if (csrc && fail.has) continue;   // compat (serial): stop at the first failure, as core (no further draws)
           int th = omp_get_thread_num();
-          init_particle(i, *tl[th], *scorers[th]);
+          oom_guard([&] { init_particle(i, *tl[th], *scorers[th]); });   // the pi_0 draw and the INIT offer allocate (review PR48 f1)
         }
         throw_if_failed();
         uint64_t hh = 0x243F6A8885A308D3ULL;
