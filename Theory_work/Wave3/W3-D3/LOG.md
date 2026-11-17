@@ -34,3 +34,10 @@
   All accepted (reviews/L1_disposition.md). STATEMENT v1.1 (symbols L, K_cap; B3w (a)/(b)/(c); conventions; §5 HQ wording;
   ExSG (b) added — STRONGER, flagged); B3w Step 6 rewritten (completed pair); ASSEMBLY Steps 1–4, ExSG (b) with Hoeffding's
   lemma proved; READER_DELTA, TARGET synced. Sol reviewer finished. CHECKPOINT_1.md written; run ends at CP1.
+- 13:20 — Manager: CP1 accepted, GO (D114: option A — 2b sentence + ExSG (b) approved; statement-change check of ExSG (b) by Opus with the line check).
+- 13:20 — Agent started: Opus 5.5 high (providerInstanceId claudeAgent_personal), fresh, blind — role: K1 line check of lemmas/B3w.md + lemmas/ASSEMBLY.md and statement-change check v1.0→v1.1 (incl. ExSG (b)); brief reviews/K1_brief.md (saved before launch); reply → reviews/K1_linecheck_opus.md.
+- 13:23 — While K1 runs: citecheck.py (from W3-D2, adapted) — 72 checks, 6 failures, all editorial (off-main W3-AUDIT
+  paths as backtick ranges; three bare `:a-b` without alias on the line; B3 status quoted with "…") — fixes queued until K1 returns
+  (files under review); TARGET fixed now. deps_hand.py (header-anchored spans) → DEPS.tsv (all UNCHECKED). REPORT.md with 3
+  REGISTRY blocks; staged ingest: 0 problems, acceptance PASS. API_CARD.md + api_request_build.py (test build in scratchpad:
+  ~62 k chars, no status words; dropped lines only status quotations).

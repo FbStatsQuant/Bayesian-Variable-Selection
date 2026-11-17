@@ -8,7 +8,7 @@
 |---|---|---|---|---|
 | row law | i.i.d. N_p(m_n, Σ_n), Σ_n a correlation matrix | i.i.d., mean m_n, covariance Σ_n a correlation matrix, and (A4) | B3w: sample SDs ([EB]`B1.md`), sparse sample Gram floors ([EB]`B2core.md`, `B2.md` (a)) | 1 (proposed; STATEMENT §5: between NH14 Lemma 6.1 and SL Condition 1) |
 | (A4) constant L | — (L = 1) | fixed L | B1, B2core exponents c₁n/L⁴, c₂n/L⁴; threshold n₁(s₀, A, L) | as above |
-| (A1)–(A3) | as recorded | verbatim | as in row 1.2 | as recorded (`ASSUMPTION_COMPLIANCE.md:27-29`) |
+| (A1)–(A3) | as recorded | verbatim | as in row 1.2 | as recorded (ASSUMPTION_COMPLIANCE.md lines 27–29, branch theory/W3-AUDIT) |
 
 No hypothesis is weakened below the recorded reader statement except the row law, so no boundary numerics are owed; a
 sanity run with non-Gaussian rows (Rademacher, uniform, and a correlated Rademacher mixture) is in `numerics/`.

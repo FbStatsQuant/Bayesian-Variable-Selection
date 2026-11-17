@@ -1,0 +1,73 @@
+OK   STATEMENT.md:18 -> Theory_work/Wave3/W3-READER/READER_VERSIONS.md:1097-1099 (lines 1408)
+OK   STATEMENT.md:22 -> Theory_work/Wave3/W3-READER/READER_VERSIONS.md:28-29 (lines 1408)
+OK   STATEMENT.md:24 -> Theory_work/Wave3/W3-READER/NOTATION.md:11-19 (lines 264)
+OK   STATEMENT.md:24 -> Theory_work/Wave3/W3-READER/READER_VERSIONS.md:28-29 (lines 1408)
+OK   STATEMENT.md:30 -> Theory_work/Wave3/W3-READER/NOTATION.md:22-25 (lines 264)
+OK   STATEMENT.md:33 -> Theory_work/Wave3/W3-POST/STATEMENT.md:16-29 (lines 127)
+OK   STATEMENT.md:34 -> Theory_work/Wave3/W3-POST/STATEMENT.md:31-34 (lines 127)
+OK   STATEMENT.md:63 -> Theory_work/Wave3/W3-POST/STATEMENT.md:36-37 (lines 127)
+OK   STATEMENT.md:69 -> Theory_work/Wave3/W3-POST/STATEMENT.md:68-70 (lines 127)
+OK   STATEMENT.md:69 -> Theory_work/Wave3/W3-POST/STATEMENT.md:71-73 (lines 127)
+OK   STATEMENT.md:92 -> Theory_work/Wave3/W3-READER/READER_VERSIONS.md:263-270 (lines 1408)
+FAIL STATEMENT.md:126 -> W3-AUDIT/TRACK_B.md:184-198 (lines None)
+OK   STATEMENT.md:140 -> Theory_work/Wave3/W3-POST/STATEMENT.md:61-100 (lines 127)
+OK   STATEMENT.md:142 -> Theory_work/Wave3/W3-DIST/STATEMENT.md:385-408 (lines 499)
+OK   STATEMENT.md:146 -> Theory_work/Wave3/W3-DIST/STATEMENT.md:409-414 (lines 499)
+OK   STATEMENT.md:149 -> Theory_work/Wave3/W3-READER/lemmas/R1_set_sizes.md:15-17 (lines 59)
+OK   STATEMENT.md:149 -> Theory_work/Wave3/W3-READER/lemmas/R1_set_sizes.md:19-31 (lines 59)
+OK   STATEMENT.md:152 -> Theory_work/Wave3/W3-POST/STATEMENT.md:16-39 (lines 127)
+OK   STATEMENT.md:152 -> Theory_work/Wave3/W3-READER/READER_VERSIONS.md:28-29 (lines 1408)
+OK   STATEMENT.md:163 -> Theory_work/Wave3/W3-READER/READER_VERSIONS.md:263-275 (lines 1408)
+OK   STATEMENT.md:163 -> Theory_work/Wave3/W3-READER/CLAIMS_CARD.md:55-55 (lines 166)
+OK   STATEMENT.md:168 -> Theory_work/Wave2/W2-APP/lemmas/L1_POST.md:20-25 (lines 84)
+OK   lemmas/B3w.md:25 -> Theory_work/Wave3/W3-POST/STATEMENT.md:36-37 (lines 127)
+OK   lemmas/B3w.md:30 -> Theory_work/Wave3/W3-POST/STATEMENT.md:68-70 (lines 127)
+OK   lemmas/B3w.md:31 -> Theory_work/Wave3/W3-POST/STATEMENT.md:71-73 (lines 127)
+OK   lemmas/B3w.md:38 -> Theory_work/Wave3/W3-POST/STATEMENT.md:95-100 (lines 127)
+OK   lemmas/B3w.md:54 -> Theory_work/Wave3/W3-DIST/work/E_bridges/B2.md:45-55 (lines 100)
+OK   lemmas/B3w.md:55 -> Theory_work/Wave3/W3-READER/lemmas/R1_set_sizes.md:15-17 (lines 59)
+UNRESOLVED lemmas/B3w.md:56 `:19-31`
+OK   lemmas/B3w.md:92 -> Theory_work/Wave3/W3-POST/STATEMENT.md:36-37 (lines 127)
+OK   lemmas/B3w.md:98 -> Theory_work/Wave3/W3-POST/STATEMENT.md:95-98 (lines 127)
+UNRESOLVED lemmas/B3w.md:100 `:63-64`
+OK   lemmas/ASSEMBLY.md:9 -> Theory_work/Wave3/W3-POST/STATEMENT.md:61-100 (lines 127)
+UNRESOLVED lemmas/ASSEMBLY.md:10 `:95-100`
+OK   lemmas/ASSEMBLY.md:38 -> Theory_work/Wave3/W3-POST/STATEMENT.md:16-29 (lines 127)
+FAIL TARGET.md:11 -> ASSUMPTION_COMPLIANCE.md:27-29 (lines None)
+OK   TARGET.md:26 -> Theory_work/Wave3/W3-READER/READER_VERSIONS.md:280-289 (lines 1408)
+OK   READER_DELTA.md:3 -> Theory_work/Wave3/W3-READER/READER_VERSIONS.md:263-282 (lines 1408)
+OK   token '## 2. Theorem 1' in Theory_work/Wave3/W3-POST/STATEMENT.md:61-61
+OK   token 'Regime R1' in Theory_work/Wave3/W3-POST/STATEMENT.md:63-64
+OK   token '(F_λ) anchored floor' in Theory_work/Wave3/W3-POST/STATEMENT.md:68-70
+OK   token '(F_w) anchored unnormalised floor' in Theory_work/Wave3/W3-POST/STATEMENT.md:71-73
+OK   token '(Random design, interface form)' in Theory_work/Wave3/W3-POST/STATEMENT.md:95-100
+OK   token 'm♯_n(ω) := min' in Theory_work/Wave3/W3-POST/STATEMENT.md:36-37
+OK   token 'MPM := {j : PIP_j > ½}' in Theory_work/Wave3/W3-POST/STATEMENT.md:31-34
+OK   token 'B0 (scale; pathwise)' in Theory_work/Wave3/W3-DIST/STATEMENT.md:385-390
+OK   token 'B1 ((A3) for single coordinates' in Theory_work/Wave3/W3-DIST/STATEMENT.md:391-395
+OK   token 'B2-core' in Theory_work/Wave3/W3-DIST/STATEMENT.md:396-399
+OK   token 'B2 ((A3), (A4) ⇒ (ND))' in Theory_work/Wave3/W3-DIST/STATEMENT.md:400-408
+OK   token 'B3 (for Theorem B)' in Theory_work/Wave3/W3-DIST/STATEMENT.md:409-414
+OK   token 's+j_0\\le(2A+2)s+2' in Theory_work/Wave3/W3-READER/lemmas/R1_set_sizes.md:15-17
+OK   token 's+m^\\sharp_n\\le3(A+1)(s+1)\\log n' in Theory_work/Wave3/W3-READER/lemmas/R1_set_sizes.md:19-31
+OK   token '**Theorem 2.**' in Theory_work/Wave3/W3-READER/READER_VERSIONS.md:263-263
+OK   token '(S1)' in Theory_work/Wave3/W3-READER/READER_VERSIONS.md:28-28
+OK   token '(S2)' in Theory_work/Wave3/W3-READER/READER_VERSIONS.md:29-29
+OK   token 'Sub-Gaussian predictors on sparse directions' in Theory_work/Wave3/W3-READER/READER_VERSIONS.md:1097-1099
+OK   token 'Gaussian linear model' in Theory_work/Wave3/W3-READER/NOTATION.md:11-19
+OK   token 'correlation matrix' in Theory_work/Wave3/W3-READER/NOTATION.md:22-25
+OK   token 'ψ_n' in Theory_work/Wave2/W2-APP/lemmas/L1_POST.md:20-25
+OK   token '| 1.2 (Thm 2) |' in Theory_work/Wave3/W3-READER/CLAIMS_CARD.md:55-55
+OK   token 'c₁ = 1/576' in Theory_work/Wave3/W3-DIST/work/E_bridges/B1.md:1-30
+OK   token 'c₂ = 10⁻⁵' in Theory_work/Wave3/W3-DIST/work/E_bridges/B2core.md:1-20
+OK   token 'G_T = Λ_TZ_TᵀCZ_TΛ_T = n·Λ_TΣ̂^z_TΛ_T' in Theory_work/Wave3/W3-DIST/work/E_bridges/B2.md:45-55
+OK   token 'A-2 (Step 6' in Theory_work/Wave3/W3-DIST/work/E_bridges/B3.md:95-104
+OK   token 'the model posteriors coincide' in Theory_work/Wave3/W3-DIST/work/E_bridges/B0.md:1-40
+OK   status W3-POST:Thm-1@1.0.1 quoted verbatim in STATEMENT §6
+OK   status W3-DIST:B0@1.0.1 quoted verbatim in STATEMENT §6
+OK   status W3-DIST:B1@1.0.1 quoted verbatim in STATEMENT §6
+OK   status W3-DIST:B2core@1.0.1 quoted verbatim in STATEMENT §6
+OK   status W3-DIST:B2@1.0.1 quoted verbatim in STATEMENT §6
+FAIL status W3-DIST:B3@1.0.1 quoted verbatim in STATEMENT §6
+OK   status W3-READER:R1@1.0.2 quoted verbatim in STATEMENT §6
+W3-D3 citecheck: 72 checks, 6 failures
