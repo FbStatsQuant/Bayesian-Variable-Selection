@@ -1076,14 +1076,46 @@ TEST(store_check_at_checkpoints_and_final_write) {
 }
 
 // ---------------------------------------------------------------------------------------------------------------
-// O2 (D-30): the per-step cost record. One row per step (init, T bridge stages, L burn-in, Hm measured rounds) whose
-// counts add up to the island's totals; the same rows in IslandRun::cost, the JSON-lines sidecar and island_r.bin
-// meta.cost; rows survive a checkpoint and resume (segment 0 before, 1 after); the output bits do not change.
+// O2 (D-30, review PR49): the per-step cost record. Rows are contiguous and final when they close; an exit row closes
+// the run; the rows sum exactly to the island's lifetime totals (counts) and to t_total (wall), uninterrupted, after a
+// resume and on a failure exit; checkpointed rows are bit-identical after the resume; meta.cost round-trips; the
+// sidecar is a progress log rebuilt from the rows the run continues from (no duplicate, missing or torn rows after a
+// repeated resume, a lost line or a torn tail; a short write disables it without failing the island); the
+// particle-major rows publish NaN for what that kernel does not measure; the output bits never change.
 static std::vector<v4::Json> read_jsonl(const std::string& path) {
   std::vector<v4::Json> out; FILE* f = std::fopen(path.c_str(), "r"); if (!f) return out;
   std::string ln; int ch;
   while ((ch = std::fgetc(f)) != EOF) { if (ch == '\n') { if (!ln.empty()) out.push_back(v4::Json::parse(ln)); ln.clear(); } else ln.push_back((char)ch); }
-  std::fclose(f); return out;
+  std::fclose(f);
+  if (!ln.empty()) out.push_back(v4::Json::parse(ln));   // a torn last line throws (invalid_input): the caller fails
+  return out;
+}
+static std::string slurp(const std::string& path) { std::string s; FILE* f = std::fopen(path.c_str(), "rb"); if (!f) return s; int c; while ((c = std::fgetc(f)) != EOF) s.push_back((char)c); std::fclose(f); return s; }
+// rows sum to the run's lifetime totals
+static bool cost_sums_match(const IslandRun& r, const char* what) {
+  uint64_t rounds = 0, sweeps = 0, pairs = 0, passes = 0, flips = 0, act = 0, offers = 0, merges = 0, dup = 0; double wall = 0, comp = 0, chk = 0, ck = 0;
+  for (const StepCost& q : r.cost) {
+    rounds += q.particle_rounds; sweeps += q.sweeps; pairs += q.pairs; passes += q.passes; flips += q.flips; act += q.act_cols;
+    offers += q.offers; merges += q.merges; dup += q.dup_dropped; wall += q.wall; comp += q.t_compact; chk += q.t_check; ck += q.t_ckpt;
+  }
+  const KernelStats& k = r.ks;
+  const bool ok = rounds == k.particle_rounds && sweeps == k.particle_sweeps && pairs == k.support_label_pairs && passes == k.passes &&
+                  flips == k.flip_evals && act == k.act_cols && offers == k.store_buffered && merges == k.store_merges && dup == k.store_dup_dropped &&
+                  std::abs(wall - k.t_total) <= 1e-9 * std::max(1.0, k.t_total) && std::abs(comp - k.t_store_compact) <= 1e-9 &&
+                  std::abs(chk - k.t_check) <= 1e-9 && std::abs(ck - k.t_ckpt) <= 1e-9 && !r.cost.empty() && r.cost.back().kind == 4;
+  CHECKF(ok, "%s: rows vs totals: rounds %llu/%llu sweeps %llu/%llu flips %llu/%llu offers %llu/%llu merges %llu/%llu wall %.9f/%.9f check %.9f/%.9f", what,
+         (unsigned long long)rounds, (unsigned long long)k.particle_rounds, (unsigned long long)sweeps, (unsigned long long)k.particle_sweeps,
+         (unsigned long long)flips, (unsigned long long)k.flip_evals, (unsigned long long)offers, (unsigned long long)k.store_buffered,
+         (unsigned long long)merges, (unsigned long long)k.store_merges, wall, k.t_total, chk, k.t_check);
+  return ok;
+}
+// the sidecar holds exactly a header and the run's rows (as JSON)
+static bool sidecar_equals(const std::string& path, const IslandRun& r, int m, const char* what) {
+  auto ln = read_jsonl(path);
+  bool ok = ln.size() == r.cost.size() + 1 && ln[0].contains("cost_header");
+  for (size_t i = 0; ok && i < r.cost.size(); ++i) ok = ln[i + 1].dump() == cost_row_json(r.cost[i], m).dump();
+  CHECKF(ok, "%s: sidecar %zu lines for %zu rows", what, ln.size(), r.cost.size());
+  return ok;
 }
 TEST(cost_record_per_step) {
   TmpGuard tg;
@@ -1092,70 +1124,105 @@ TEST(cost_record_per_step) {
   const int T = (int)c.grid.size() - 1, Tsteps = T + c.L + c.Hm, m = F.D.p + c.B + 2;
   IslandRun r0 = run_island<Arith::ClassA>(F.D, F.st, F.nb, c);
   const uint64_t h0 = r0.hash();
+  // (a) uninterrupted, with the sidecar: 1 + T + L + Hm step rows + the exit row; sums = totals; sidecar = rows
   IslandConfig cs = c; cs.cost_path = tg.add(wp3_tmp("o2_cost.jsonl")); wp3_rm(cs.cost_path);
   IslandRun r = run_island<Arith::ClassA>(F.D, F.st, F.nb, cs);
-  CHECK(r.status == 0 && r.hash() == h0);
-  CHECKF(r.cost.size() == (size_t)Tsteps + 1, "%zu rows", r.cost.size());
-  uint64_t rounds = 0, sweeps = 0, pairs = 0, passes = 0, flips = 0, act = 0, offers = 0, merges = 0; double wall = 0, comp = 0;
+  CHECK(r.status == 0 && r.hash() == h0 && r.cost_log_error.empty());
+  CHECKF(r.cost.size() == (size_t)Tsteps + 2, "%zu rows", r.cost.size());
   bool ok = true;
   for (size_t i = 0; i < r.cost.size(); ++i) {
     const StepCost& q = r.cost[i];
-    const int kind = i == 0 ? 0 : ((int)i <= T ? 1 : ((int)i <= T + c.L ? 2 : 3));
-    ok = ok && q.step == (int64_t)i && q.kind == kind && q.segment == 0 && q.wall >= 0 && q.mean_S > 0 && q.hwm_kb >= q.rss_kb && q.rss_kb > 0;
-    ok = ok && (kind == 0 ? q.phi == 0.0 : (kind == 1 ? q.phi == c.grid[i] : q.phi == 1.0));
-    if (kind > 0) ok = ok && q.particle_rounds == (uint64_t)c.N && q.sweeps >= q.particle_rounds && q.flips > 0 && q.act_cols > 0 && q.pairs >= q.flips;
-    rounds += q.particle_rounds; sweeps += q.sweeps; pairs += q.pairs; passes += q.passes; flips += q.flips; act += q.act_cols;
-    offers += q.offers; merges += q.merges; wall += q.wall; comp += q.t_compact;
+    const int kind = i == 0 ? 0 : ((int)i <= T ? 1 : ((int)i <= T + c.L ? 2 : ((int)i <= Tsteps ? 3 : 4)));
+    ok = ok && q.step == (int64_t)i && q.kind == kind && q.segment == 0 && q.kernel == 0 && q.wall >= 0 && q.mean_S > 0 && q.hwm_kb >= q.rss_kb && q.rss_kb > 0;
+    if (kind == 1) ok = ok && q.phi == c.grid[i];
+    if (kind >= 1 && kind <= 3) ok = ok && q.particle_rounds == (uint64_t)c.N && q.sweeps >= q.particle_rounds && q.flips > 0 && q.act_cols > 0 && q.pairs >= q.flips;
+    if (kind == 4) ok = ok && std::isnan(q.phi) && q.particle_rounds == 0 && q.t_check > 0;   // the I1 check on exit is in the exit row
   }
   CHECK(ok);
-  CHECK(rounds == r.ks.particle_rounds && sweeps == r.ks.particle_sweeps && pairs == r.ks.support_label_pairs && passes == r.ks.passes &&
-        flips == r.ks.flip_evals && act == r.ks.act_cols && offers == r.ks.store_buffered && merges == r.ks.store_merges);
-  CHECK(wall <= r.ks.t_total + 1e-6 && comp <= r.ks.t_store_compact + 1e-9);
-  CHECK(r.cost.back().store_size == r.top_v.size());
-  // the sidecar: a header, then the same rows
-  auto lines = read_jsonl(cs.cost_path);
-  CHECKF(lines.size() == r.cost.size() + 1 && lines[0].contains("cost_header"), "sidecar %zu lines", lines.size());
-  for (size_t i = 1; ok && i < lines.size(); ++i) {
-    const StepCost& q = r.cost[i - 1];
-    ok = lines[i].at("step").i64() == q.step && (uint64_t)lines[i].at("pairs").i64() == q.pairs && lines[i].at("wall").num() == q.wall;
-  }
-  CHECK(ok);
-  CHECK(lines.size() > 2 && std::abs(lines[2].at("M").num() - (double)r.cost[1].sweeps / (double)r.cost[1].particle_rounds) < 1e-12 &&
-        std::abs(lines[2].at("flips_per_step").num() - (double)r.cost[1].flips / ((double)r.cost[1].particle_rounds * m)) < 1e-12);
-  // island_r.bin meta.cost: header fields and one column per field
+  cost_sums_match(r, "uninterrupted");
+  CHECK(r.cost[Tsteps].store_size == r.top_v.size());
+  sidecar_equals(cs.cost_path, r, m, "uninterrupted");
+  // (b) island_r.bin meta.cost: header and every column round-trip; NaN stays NaN
   {
     std::string path = tg.add(wp3_tmp("o2_island.bin"));
     write_island_file(path, r, Arith::ClassA, v4::Json::object());
     IslandFile f = read_island_file(path);
     const v4::Json& mc = f.meta.at("cost");
     bool okf = mc.at("schema").str() == "smcbvs4.cost/1" && mc.at("m").i64() == m && mc.at("N").i64() == c.N && mc.at("threads").i64() == 3 &&
-               mc.at("rows").i64() == (int64_t)r.cost.size() && mc.at("columns").at("step").size() == r.cost.size();
-    for (size_t i = 0; okf && i < r.cost.size(); ++i)
-      okf = (uint64_t)mc.at("columns").at("sweeps").at(i).i64() == r.cost[i].sweeps && mc.at("columns").at("t_phaseA").at(i).num() == r.cost[i].t_phaseA;
+               mc.at("rows").i64() == (int64_t)r.cost.size();
+    for (size_t i = 0; okf && i < r.cost.size(); ++i) {
+      const v4::Json row = cost_row_json(r.cost[i], m);   // a named Json: items() refers into it
+      for (auto& kv : row.items()) okf = okf && mc.at("columns").at(kv.first).at(i).dump() == kv.second.dump();
+    }
     CHECK(okf);
-    CHECK(f.meta.at("output_hash").str() == read_island_file(path).meta.at("output_hash").str());
   }
-  // checkpoint and resume: rows 0..s from the first segment, s+1.. from the second; the sidecar has both
+  // (c) checkpoint and resume at steps 0 and 3: checkpointed rows bit-identical, segments 0 then 1, lifetime totals,
+  //     law-determined totals equal to the uninterrupted run's; the sidecar equals the final rows after: an orderly
+  //     resume, a lost last line (crash between the checkpoint and the append), a torn tail, and a second resume from the
+  //     same checkpoint (the first resume's rows beyond it discarded)
   for (int s : {0, 3}) {
     IslandConfig a = cs; a.ckpt_path = tg.add(wp3_tmp("o2_ck" + std::to_string(s))); a.ckpt_every_s = 1e9; a.stop_after_step = s;
     a.cost_path = tg.add(wp3_tmp("o2_cost_ck" + std::to_string(s) + ".jsonl"));
     wp3_rm(a.ckpt_path); wp3_rm(a.cost_path);
     IslandRun r1 = run_island<Arith::ClassA>(F.D, F.st, F.nb, a);
-    CHECK(r1.status == 1 && r1.cost.size() == (size_t)s + 1);
+    CHECK(r1.status == 1 && r1.cost.size() == (size_t)s + 2 && r1.cost.back().kind == 4);
+    cost_sums_match(r1, "interrupted");
     IslandConfig b = a; b.stop_after_step = -1;
-    IslandRun r2 = run_island<Arith::ClassA>(F.D, F.st, F.nb, b);
-    bool okr = r2.status == 0 && r2.hash() == h0 && r2.cost.size() == (size_t)Tsteps + 1;
-    for (size_t i = 0; okr && i < r2.cost.size(); ++i) okr = r2.cost[i].step == (int64_t)i && r2.cost[i].segment == ((int)i <= s ? 0 : 1);
-    for (int i = 0; okr && i <= s; ++i) okr = r2.cost[i].sweeps == r1.cost[i].sweeps && r2.cost[i].pairs == r1.cost[i].pairs;
-    auto ln = read_jsonl(a.cost_path);
-    int headers = 0; for (auto& j : ln) headers += j.contains("cost_header");
-    CHECKF(okr && headers == 2 && ln.size() == (size_t)Tsteps + 1 + 2, "resume at %d: rows %zu, sidecar %zu lines, %d headers", s, r2.cost.size(), ln.size(), headers);
+    for (int variant = 0; variant < 4; ++variant) {
+      if (variant == 1) {   // drop the sidecar's last line
+        std::string t = slurp(a.cost_path); t.pop_back(); t = t.substr(0, t.rfind('\n') + 1);
+        FILE* f = std::fopen(a.cost_path.c_str(), "wb"); std::fwrite(t.data(), 1, t.size(), f); std::fclose(f);
+      } else if (variant == 2) {   // a torn tail
+        FILE* f = std::fopen(a.cost_path.c_str(), "ab"); std::fputs("{\"step\":99,\"wa", f); std::fclose(f);
+      }
+      IslandRun r2 = run_island<Arith::ClassA>(F.D, F.st, F.nb, b);   // variant 3: the same checkpoint again
+      bool okr = r2.status == 0 && r2.hash() == h0 && r2.resumed_from_step == s && r2.cost.size() == (size_t)Tsteps + 2;
+      for (size_t i = 0; okr && i < r2.cost.size(); ++i) okr = r2.cost[i].step == (int64_t)i && r2.cost[i].segment == ((int)i <= s ? 0 : 1);
+      for (int i = 0; okr && i <= s; ++i) okr = std::memcmp(&r2.cost[i], &r1.cost[i], sizeof(StepCost)) == 0;   // every raw field
+      CHECKF(okr, "resume at %d (variant %d): rows %zu", s, variant, r2.cost.size());
+      cost_sums_match(r2, "resumed");
+      CHECK(r2.ks.particle_rounds == r.ks.particle_rounds && r2.ks.particle_sweeps == r.ks.particle_sweeps &&
+            r2.ks.support_label_pairs == r.ks.support_label_pairs && r2.ks.flip_evals == r.ks.flip_evals);
+      sidecar_equals(a.cost_path, r2, m, "resumed");
+    }
     wp3_rm(a.ckpt_path); wp3_rm(a.cost_path);
   }
-  std::printf("  %zu rows; bridge stage 1: wall %.3f s, M %.3f, mean |S| %.2f, flips/step %.3f, active columns/pass %.1f, offers %llu\n", r.cost.size(),
-              r.cost[1].wall, (double)r.cost[1].sweeps / r.cost[1].particle_rounds, r.cost[1].mean_S, (double)r.cost[1].flips / ((double)r.cost[1].particle_rounds * m),
-              (double)r.cost[1].act_cols / std::max<uint64_t>(1, r.cost[1].passes), (unsigned long long)r.cost[1].offers);
+  // (d) a short sidecar write: the log is cut back to whole lines and disabled; the island and meta.cost are unaffected
+  {
+    IslandConfig a = cs; a.cost_path = tg.add(wp3_tmp("o2_cost_short.jsonl")); a.test_cost_log_short = 3; wp3_rm(a.cost_path);
+    IslandRun rs = run_island<Arith::ClassA>(F.D, F.st, F.nb, a);
+    CHECK(rs.status == 0 && rs.hash() == h0 && !rs.cost_log_error.empty() && rs.cost.size() == (size_t)Tsteps + 2);
+    auto ln = read_jsonl(a.cost_path);   // throws on a torn line
+    CHECKF(ln.size() == 1 + 3, "short write: %zu whole lines", ln.size());
+    const std::string t = slurp(a.cost_path); CHECK(!t.empty() && t.back() == '\n');
+    cost_sums_match(rs, "short write");
+  }
+  // (e) a failure exit (memory budget after step 1): the exit row carries the rest; sums = totals
+  {
+    IslandConfig a = c; a.test_admission_k = .5; a.mem_budget = plan_island(F.D, F.st, a).total + 1024;
+    IslandRun rf = run_island<Arith::ClassA>(F.D, F.st, F.nb, a);
+    CHECK(rf.status == 3 && rf.cost.size() == 3 && rf.cost.back().kind == 4);
+    cost_sums_match(rf, "budget exit");
+  }
+  // (f) particle-major: label-major-only fields are NaN in the JSON (never 0); measured ones are numbers; sums hold
+  {
+    IslandConfig a = c; a.kernel = KernelKind::ParticleMajor; a.threads = 1;
+    IslandRun rp = run_island<Arith::Bit>(F.D, F.st, F.nb, a);
+    CHECK(rp.status == 0 && rp.cost.size() == (size_t)Tsteps + 2 && rp.cost[1].kernel == 1);
+    cost_sums_match(rp, "particle-major");
+    v4::Json j = cost_row_json(rp.cost[1], m);
+    bool okp = j.at("particle_rounds").num() == c.N && j.at("t_pm").type() == v4::Json::NUM && j.at("kernel").str() == "pm";
+    for (const char* k : {"sweeps", "passes", "pairs", "flips", "act_cols", "M", "flips_per_step", "act_cols_per_pass", "t_phaseA", "t_phaseB"})
+      okp = okp && j.at(k).type() == v4::Json::NUM && std::isnan(j.at(k).num());
+    CHECKF(okp, "particle-major row %s", j.dump().c_str());
+    CHECK(std::isnan(cost_row_json(r.cost[1], m).at("t_pm").num()));   // and the label-major row's t_pm
+  }
+  std::printf("  %zu rows; bridge stage 1: wall %.3f s, M %.3f, mean |S| %.2f, flips/step %.3f, active columns/pass %.1f, offers %llu; exit row %.4f s\n",
+              r.cost.size(), r.cost[1].wall, (double)r.cost[1].sweeps / r.cost[1].particle_rounds, r.cost[1].mean_S,
+              (double)r.cost[1].flips / ((double)r.cost[1].particle_rounds * m), (double)r.cost[1].act_cols / std::max<uint64_t>(1, r.cost[1].passes),
+              (unsigned long long)r.cost[1].offers, r.cost.back().wall);
 }
+
 // Review PR47 finding 1: I1 runs on every exit, whatever the status. The reviewer's case (a final island stopped by the
 // step-boundary memory budget after step 1) and a caught out-of-memory in the parallel compaction: a valid store is
 // checked once and the island returns resource_limit; a corrupted store raises internal_error, so no IslandRun and no
