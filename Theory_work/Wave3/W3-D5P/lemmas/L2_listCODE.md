@@ -28,8 +28,8 @@ models is 𝓜^run.
 A4. 𝓜^run ⊆ Ω (CC5; directly: tables only |U| ≤ K, `cpp/v3_start.h:91-93` and NaN entries skipped
 `cpp/v3_core.cpp:379`; inherited models checked `:425`; engine moves keep |S| ≤ K, CC5), and ∅ ∈ 𝓜^run (block-table code
 0, `cpp/v3_core.cpp:376-384`), so 𝓜^run is nonempty.
-A5. Every offered value is F(S): tables F = `D.logprior[|U|]` + `logm_tab` (`:382`) with `logm_tab` = the scorer's log m(U)
-(`cpp/v3_start.h:93`); inherited F = `D.logprior[|S|]` + `sc.score(S).logm` (`:426-427`); `eval` F = `D.logprior[k]` + lm
+A5. Every offered value is F(S): tables F = `D.logprior[|U|]` + `logm_tab` (`cpp/v3_core.cpp:382`) with `logm_tab` = the scorer's log m(U)
+(`cpp/v3_start.h:93`); inherited F = `D.logprior[|S|]` + `sc.score(S).logm` (`cpp/v3_core.cpp:426-427`); `eval` F = `D.logprior[k]` + lm
 with lm the scorer's or the cached scorer's value (`cpp/v3_engine.h:89-101`). `D.logprior[k]` = log ϖ(k), the size prior
 normalised on Ω (`cpp/v3_score.h:60-70`). Under EX-A each is exactly F(S) = log ϖ(|S|) + log m(S) (CC2 :46-47). In
 particular the value of an offer is a function of the model.
@@ -38,7 +38,7 @@ particular the value of an offer is a function of the model.
 B1. *Status and estimates.* On the sampler branch, `v3_fit` returns at `v3_fit.R:117` (status `resource_limit`), `:137`
 (`numerical_failure`), `:159` (`cal$status` ≠ "ok") with `estimates_available` FALSE (initial value `:78`; `finish`
 `:79-87` sets it only through `v3_unavailable_estimates`, which sets FALSE, `v3_run.R:110-114`), or after the final run
-at `:173`, where every field of `fr` is copied into `fit` (`:171`), including `status` (`v3_run.R:121`) and
+at `v3_fit.R:173`, where every field of `fr` is copied into `fit` (`v3_fit.R:171`), including `status` (`v3_run.R:121`) and
 `estimates_available`. In `v3_assemble_final`, if `raw$status != "completed"` the function returns with
 `estimates_available` FALSE (`v3_run.R:143-149`); otherwise it reaches `:218` and sets it TRUE. `finish` changes
 neither field when `estimates_available` is TRUE (`v3_fit.R:84` concerns `resource_limit` only; `:85` requires FALSE). An
@@ -52,8 +52,8 @@ final local search did not fire (`:459`), so the condition at `:465` (`o.ls0`, T
 `cpp/v3_core.cpp:400`) held and LS0 ran: `start_mode(st, 1000000, o.ls0_tie_dp)` (`:469`) and
 `E.local_search(m.S, ls0_cap, o.tier, true, -1, PH_LS0)` (`:476`) returned (no exception: a `NumericalFailure` would
 have set `numerical_failure`; any other exception aborts the fit, B1). `E.cache` = `&cache`, `E.led` = `&led` (`:411`).
-B3. *Every model LS0 evaluates is in 𝓜^run.* `local_search` (`cpp/v3_engine.h:379-424`) evaluates the centre by
-`eval(C, ME_LOCAL, emit_centre)` with `emit_centre = true` for LS0 (`:382`, `cpp/v3_core.cpp:476`) and every scanned
+B3. *Every model LS0 evaluates is in 𝓜^run.* `local_search` (`cpp/v3_engine.h:379-419`) evaluates the centre by
+`eval(C, ME_LOCAL, emit_centre)` with `emit_centre = true` for LS0 (`cpp/v3_engine.h:382`, `cpp/v3_core.cpp:476`) and every scanned
 neighbour by `eval(q, ME_LOCAL)` (`emit = true`, `cpp/v3_engine.h:391`). In `eval` (`:89-101`): on a cache miss the
 scorer runs, `fresh = true`, the result is inserted in the cache (`:91-94`), and `led->event(…, fresh || !cache, …)`
 (`:99`) calls `offer_stores` (`cpp/v3_ledger.h:112`), so S ∈ 𝓜^run. On a cache hit, the entry was inserted by an earlier
@@ -121,12 +121,12 @@ On the exact branch `v3_fit` calls `v3_enumerate(ctx)` (`v3_fit.R:121`) = `cpp_e
 `cpp/v3_core.cpp:524-570`). The recursion `rec` (`:539-555`) starts from S = ∅ (`rec(0)`, `:556`) and, from a sorted S
 with |S| < K, calls itself on S ∪ {j} for every j greater than the last element of S (`:553-554`); it therefore visits
 every subset of [p] of size ≤ K exactly once, i.e. every S ∈ Ω (Ω = {|S| ≤ K}, K = `D.K` = min(p, ⌊n/2⌋),
-`cpp/v3_score.h:40`). At each visit it computes F = `D.logprior[|S|]` + logm (`:541`) and offers (F, S) to its own
+`cpp/v3_score.h:40`). At each visit it computes F = `D.logprior[|S|]` + logm (`cpp/v3_core.cpp:541`) and offers (F, S) to its own
 `TopStore top` with cap 40p + 1 (`:531`, `:549`). If no `NumericalFailure` occurs, status is "exact" (`:536`, `:556`).
 Then: `pip[j]` = numer[j]/total (`:559`) where, by the rescaled streaming log-sum-exp (`:543-547`; each rescale
 multiplies numer and total by the same factor), numer[j]/total = Σ_{S∋j} e^{F(S)}/Σ_S e^{F(S)} = PIP_j under EX-A;
 `log_Z` = mx + log(total) = log Z (`:557`); `v3_enumerate` names `pip` by `ctx$orig` and sets `mpm` = the retained
-columns with pip > 0.5 (`v3_exact.R:8-13`), i.e. MPM; `hpm` is the running hpm_better-maximum over all S ∈ Ω (`:548`).
+columns with pip > 0.5 (`v3_exact.R:8-13`), i.e. MPM; `hpm` is the running hpm_better-maximum over all S ∈ Ω (`cpp/v3_core.cpp:548`).
 `v3_fit` copies `fit$pip_primary` = `e$pip`, `fit$mpm` = `e$mpm`, `fit$hpm` = `e$hpm`, and `fit$exact` = `e` (which
 contains `top` = `store_to_list(top, D)`, `:565`) (`v3_fit.R:122-127`). By the invariant D2 (same `TopStore` code), 𝒯^ex
 (the models of `fit$exact$top`) consists of distinct models of Ω with values F(S) (EX-A) and contains the
