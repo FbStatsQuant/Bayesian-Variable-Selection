@@ -1,0 +1,37 @@
+{
+  "batch": "P7_pilot_1e6",
+  "kind": "H-11 gate (2): 10^6 calibration pilot (standing authority, pre-announced); pilot_only: setup + pilot, no full-fit submit.sh (the fit gets its own plan after HQ GO). The cap equals the worst case: any change to the setup or pilot limit needs a new cap (review PR55 m2)",
+  "mode": "V",
+  "code_commit": "UNSET-fill-at-freeze",
+  "binary": "bin/smcbvs4",
+  "island_isa": "sapphirerapids",
+  "max_task_hours": 2.0,
+  "pilot_only": true,
+  "core_h_cap": 144,
+  "pilot": {
+    "cpus": 96,
+    "mem": "128G",
+    "time": "01:00:00",
+    "with_ledger": 1
+  },
+  "fits": [
+    {
+      "run_id": "6-AR-n200-r01-V-s1",
+      "design": "AR",
+      "p": 1000000,
+      "n": 200,
+      "signal": "strong",
+      "data_seed": 602020001,
+      "seed": 602020001,
+      "Rp": 16,
+      "N": 2500
+    }
+  ],
+  "resources": {
+    "setup": {
+      "cpus": 48,
+      "mem": "48G",
+      "time": "01:00:00"
+    }
+  }
+}
