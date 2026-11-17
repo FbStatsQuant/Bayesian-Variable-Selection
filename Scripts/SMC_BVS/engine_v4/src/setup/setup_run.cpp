@@ -117,15 +117,6 @@ std::string write_setup_bin(const std::string& path, const Data& D, const SetupR
                               r.stores.hpm_block, (int64_t)r.stores.hpm_code, (int64_t)o.part.mode, (int64_t)o.part.pack, o.part.strict};
   W.add("scalars_f64", sc); W.add("scalars_i64", isc);
   Json m = Json::object();
-  {   // store descriptors in the form every store-holding file uses (WP4 add_store / read_store: meta.stores.<prefix>)
-    Json sd = Json::object();
-    auto desc = [&](const char* prefix, const Store& s) {
-      Json d = Json::object(); d["cap"] = hex64(s.cap); d["order"] = s.ord == Order::HPM ? "HPM" : "LEX"; d["size"] = hex64(s.size());
-      sd[prefix] = d;
-    };
-    desc("tstore_top", r.stores.top); desc("tstore_lead0", r.stores.lead0); desc("tstore_lead1", r.stores.lead1);
-    m["stores"] = sd;
-  }
   m["kind"] = "setup"; m["index_base"] = "internal0"; m["mode"] = fmt::mode_name(o.file_mode);
   m["n"] = D.n; m["p"] = D.p; m["K"] = D.K; m["B"] = r.B; m["B_blocks"] = r.part.B; m["bv_cap"] = o.part.bv_cap; m["J"] = T.J;
   m["accounted_peak_bytes"] = (int64_t)r.acc.peak; m["mem_budget_gb"] = o.mem_budget_gb; m["C"] = r.acc.C;

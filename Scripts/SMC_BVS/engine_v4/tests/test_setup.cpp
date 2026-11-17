@@ -5,8 +5,6 @@
 #include <unistd.h>
 #include "setup_tk.h"
 #include "v4/format.h"
-#include "v4/store.h"
-#include "v4/wp4_io.h"
 
 using namespace v4::setup;
 using stk::Fixture;
@@ -455,11 +453,7 @@ TEST(cli_setup_pipeline) {
     SCHECK(same, "setup --manifest gives other data sections than setup --data");
     v4::Json mm = b.json("meta");
     SCHECK(mm.at("inputs").at("data.bin").str() == dh && mm.at("mode").str() == "law", "manifest-form setup.bin meta.inputs / mode");
-    // meta.stores: WP4's store descriptors; read back with WP4's own reader
-    for (const char* pf : {"tstore_top", "tstore_lead0", "tstore_lead1"}) {
-      v4::Store s; v4::wp4io::read_store(b, mm, pf, s, 400, 80, nullptr);
-      SCHECK(s.size() > 0 && s.size() == b.vec<double>(std::string(pf) + "_v").size(), "WP4 read_store on setup.bin %s", pf);
-    }
+    SCHECK(!mm.contains("stores"), "setup.bin meta has no stores block (manager decision: the contract's format)");
     SCHECK(run_cli("setup --manifest " + d + "_m.json --data " + d + "_raw.bin --out " + d + "_x.bin") == 13, "--data that differs from the manifest: exit 13");
     manifest(d + "_m2.json", "law", 401);
     SCHECK(run_cli("setup --manifest " + d + "_m2.json --out " + d + "_x.bin") == 13, "manifest p differs from data.bin: exit 13");
