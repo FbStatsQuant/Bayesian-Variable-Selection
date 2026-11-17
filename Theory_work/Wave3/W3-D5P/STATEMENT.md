@@ -1,8 +1,9 @@
-# W3-D5P — STATEMENT v0.1 (draft for the statement lock): the list-restricted outputs on every Theorem 6 design
+# W3-D5P — STATEMENT v1.0 LOCKED: the list-restricted outputs on every Theorem 6 design
 
 Ticket W3-D5P = track D ticket #5′ (owner GO, `Theory_work/Dept/DECISIONS.md` D105, dept/theory; standard D106), Tier B
 corollary ticket, Theory Wave 3. Lead: Claude Opus 5.5 (effort high). Protocol: `Theory_work/Wave3/PROTOCOL_v4.md` with
-`Theory_work/Dept/RIDER_RULES.md` (dept/theory). Status of this file: **v0.1, not locked**. It asserts no proof status.
+`Theory_work/Dept/RIDER_RULES.md` (dept/theory). Status of this file: **v1.0 LOCKED** (2026-11-17) = v0.1 with the three findings of the statement-lock review SL1 applied
+(`reviews/SL1_statement_lock_sol.md`: LOCK WITH CHANGES; disposition `reviews/SL1_disposition.md`; markers [SL1-#]). It asserts no proof status.
 All results are asymptotic (n → ∞) unless marked *deterministic*. **No method change is requested by this file**; it is
 about the new output fields defined in SPEC (below), which the method companion of D105 adds.
 
@@ -92,8 +93,8 @@ ledger (`Ledger::offer_stores`, `cpp/v3_ledger.h:89-94`), as in SAMP `STATEMENT.
 ## 4. Corollary LIST-R (Gaussian rows; every design inside Theorem 6)
 
 **(C3) Corollary LIST-R.** Setting R, the method as coded, the premises and configuration of §1 and IMPL-LIST. Assume
-the hypotheses of RM2-R-plus (RM2R `STATEMENT.md:177-182` = those of RM2-R, W3-RM2 `STATEMENT.md:216-218`; in reader
-form Theorem 6 (A1)–(A6), READER §6). Let 𝒢⁺_n = 𝓜_n ∩ 𝒦_n, so that P(𝒢⁺_n) → 1 (RM2-R-plus). Write
+the hypotheses of RM2-R-plus (RM2R `STATEMENT.md:177-182` = those of RM2-R, W3-RM2 `STATEMENT.md:216-218`; they are
+implied by the reader assumptions (A1)–(A6) of Theorem 6 through its bridges B6.1–B6.4 and the identities of (A1)–(A3) with Setting R and (V-R), READER §6) [SL1-T]. Let 𝒢⁺_n = 𝓜_n ∩ 𝒦_n, so that P(𝒢⁺_n) → 1 (RM2-R-plus). Write
 r_n := √(log n/n).
 (i) *Common data event, pathwise.* On 𝒢⁺_n, every admissible run that returns output — every seed, N_e, R′ and
     calibration outcome, either branch — has S₀ in its list (𝒯, or 𝒯^ex when returned), reports `hpm` = S₀, and its
@@ -101,20 +102,22 @@ r_n := √(log n/n).
       max_j |pip_list[j] − 1{j ∈ S₀}| ≤ ε_n,   max_j |pip_list[j] − PIP_j| ≤ ε_n,
       log Z + log(1 − ε_n) ≤ log_Z_list ≤ log Z   (when `log_Z_list` is not NA),
     and, on 𝒢⁺_n ∩ {ε_n < ½}, `mpm_list` = `hpm` = S₀ = MPM.
-(ii) *Rates.* E ε_n → 0 ([POST], a conclusion of RM2-R-plus), and ε_n = O_P(r_n) when p ≥ 2 for all large n
-    (hypothesis (T1-R) of RM2-R-plus is hypothesis LSF of POST, RM `STATEMENT.md:128-133`; POST (b),
-    `L1_POST.md:31-33`). Hence, for every deterministic t_n ∈ (0, ½]
-    with t_n/r_n → ∞, the data events 𝒢♯_n := 𝒢⁺_n ∩ {ε_n ≤ t_n} satisfy P(𝒢♯_n) → 1 and on 𝒢♯_n every admissible
-    output run has
-      max_j |pip_list[j] − 1{j ∈ S₀}| ≤ t_n,  max_j |pip_list[j] − PIP_j| ≤ t_n,  |log_Z_list − log Z| ≤ 2t_n,
-      `mpm_list` = `hpm` = S₀.
-    For every t ∈ (0, ½], uniformly over admissible runs, P(𝒪 ∩ {max_j |pip_list[j] − 1{j ∈ S₀}| > t}) ≤ P(𝓜_nᶜ) +
-    P(𝒦_nᶜ) + P(ε_n > t), and the same bound holds for the other three errors of the display (with 2t for log_Z_list)
-    and for {`mpm_list` ≠ S₀}.
-(iii) *With delivery.* Under in addition the delivery premises (D): every admissible run returns output (DLV-0), so
-    P(`mpm_list` = `hpm` = S₀) → 1 and max_j |pip_list[j] − 1{j ∈ S₀}|, max_j |pip_list[j] − PIP_j| and
-    |log_Z_list − log Z| (sampler branch, or exact branch when not NA) are O_P(r_n) (p ≥ 2), for every seed, N_e, R′
-    and calibration outcome, without "on output".
+(ii) *In probability, and rates.* Define, for t > 0, the error events of an output run
+      B₁(t) := {max_j |pip_list[j] − 1{j ∈ S₀}| > t},  B₂(t) := {max_j |pip_list[j] − PIP_j| > t},
+      B₃(t) := {`log_Z_list` is not NA and |log_Z_list − log Z| > 2t},  B₄ := {`mpm_list` ≠ S₀ or `hpm` ≠ S₀}.
+    For every t ∈ (0, ½), for every admissible run (every seed, N_e, R′ and calibration outcome) [SL1-2]:
+      P(𝒪 ∩ (B₁(t) ∪ B₂(t) ∪ B₃(t))) ≤ P(𝓜_nᶜ) + P(𝒦_nᶜ) + P(ε_n > t),  P(𝒪 ∩ B₄) ≤ P(𝓜_nᶜ) + P(𝒦_nᶜ) + P(ε_n ≥ ½),
+    and every right side tends to 0, because E ε_n → 0 ([POST], a conclusion of RM2-R-plus).
+    **Rate (p ≥ 2 for all large n) [SL1-3].** If p ≥ 2 for all large n, then ε_n = O_P(r_n) (hypothesis (T1-R) of
+    RM2-R-plus is hypothesis LSF of POST, RM `STATEMENT.md:128-133`; POST (b), `L1_POST.md:31-33`), and for every
+    deterministic sequence t_n ∈ (0, ½) with t_n/r_n → ∞ the data events 𝒢♯_n := 𝒢⁺_n ∩ {ε_n ≤ t_n} satisfy
+    P(𝒢♯_n) → 1; on 𝒢♯_n every admissible run that returns output has
+      max_j |pip_list[j] − 1{j ∈ S₀}| ≤ t_n,  max_j |pip_list[j] − PIP_j| ≤ t_n,  `mpm_list` = `hpm` = S₀,
+    and, when `log_Z_list` is not NA, |log_Z_list − log Z| ≤ 2t_n [SL1-1].
+(iii) *With delivery.* Assume in addition the delivery premises (D). Then every admissible run returns output (DLV-0),
+    so for every seed, N_e, R′ and calibration outcome, without "on output": P(B₄) → 0, and P(B₁(t) ∪ B₂(t) ∪ B₃(t)) → 0
+    for every t ∈ (0, ½); if moreover p ≥ 2 for all large n, then for every t_n as in (ii), P(B₁(t_n) ∪ B₂(t_n) ∪
+    B₃(t_n)) → 0, i.e. the two PIP errors and (where `log_Z_list` is not NA) the evidence error are O_P(r_n).
 
 ## 5. Remarks (not part of any claim; not registered)
 
@@ -145,3 +148,4 @@ No supersession. Card proposal (a new row next to 3.1, or an addition to 3.1/3.6
 | version | clause | STRONGER / WEAKER / EQUAL / NEW-CLAIM | reason | trigger (review file) | check (review file) |
 |---|---|---|---|---|---|
 | v0.1 | all | — | draft for the statement lock | — | — |
+| v1.0 | (C3)(ii)–(iii): evidence error events qualified "when `log_Z_list` is not NA"; t, t_n ∈ (0, ½) (was (0, ½]); rate clause under "p ≥ 2 for all large n"; error events named B₁–B₄; (C3) preamble "implied by" the reader assumptions | EQUAL (corrections of the draft before the lock) | SL1-1, SL1-2, SL1-3, SL1 table row "C3 preamble" | `reviews/SL1_statement_lock_sol.md` | applied as the reviewer's fixes; LOCK |
