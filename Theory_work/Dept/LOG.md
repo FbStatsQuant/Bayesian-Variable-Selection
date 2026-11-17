@@ -384,3 +384,4 @@
 - 2026-11-16 20:35 CST HQ: recorder sequence approved; the P1-Inventory/L2-S3 dry run must show the discharge of rows 3.1/3.2's two code-audit conditions (RM2-R ×5). Then item 5 READER (one diff round incl. card 16's 3 edits).
 - 2026-11-16 20:35 CST HEARTBEAT: CI green (main d5e9eee7); recorder running (Sonnet; rule (c)/carriers/relabel); track A lead idle; READER held until the relabel + T14 recording land (or Fri noon). Heartbeat prompt updated (items 3/4 done; READER GO condition). Nothing to report.
 - 2026-11-16 20:43 CST Track A dry run complete & clean (core + riders); assumptions.tsv edits held (READER R3r freezes it → drop the EXT in R3r2); asked HQ whether the core may run before the relabel.
+- 2026-11-16 20:44 CST D96 relayed to the recorder.
