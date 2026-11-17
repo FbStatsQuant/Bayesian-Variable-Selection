@@ -17,8 +17,14 @@ inline Start load_start(const std::string& path, const Data& D) {
   auto blk_ptr = R.vec<int64_t>("blk_ptr"); auto members = R.vec<int32_t>("blk_members");
   auto code_ptr = R.vec<int64_t>("code_ptr"); auto logr = R.vec<double>("logr");
   const std::string w = path + ": ";
-  const size_t J = code_ptr.size();
-  if (blk_ptr.size() != J + 1 || members.size() != (size_t)D.p || blk_ptr[0] != 0 || blk_ptr[J] != D.p) throw Error(Status::invalid_input, w + "partition shape");   // review PR39 m2: blk_ptr[0] = 0
+  // J blocks: blk_ptr has J + 1 entries; code_ptr has J (offsets) or J + 1 (CSR with the end marker = |logr|, as WP2's
+  // setup.bin writes it; INTERFACES §5.1 does not fix the length)
+  const size_t J = blk_ptr.empty() ? 0 : blk_ptr.size() - 1;
+  if (code_ptr.size() == J + 1) {
+    if (code_ptr[J] != (int64_t)logr.size()) throw Error(Status::invalid_input, path + ": code_ptr end marker != |logr|");
+    code_ptr.pop_back();
+  }
+  if (J == 0 || code_ptr.size() != J || members.size() != (size_t)D.p || blk_ptr[0] != 0 || blk_ptr[J] != D.p) throw Error(Status::invalid_input, w + "partition shape");   // review PR39 m2: blk_ptr[0] = 0
   Start st; st.D = &D; st.J = (int)J; st.blocks.assign(J, {}); st.logr.assign(J, {});
   st.blk.assign(D.p, -1); st.pos.assign(D.p, -1);
   for (size_t b = 0; b < J; ++b) {
