@@ -25,6 +25,7 @@ c_s = 30 + 60 n/200 ns), replaced after the SPR sweep and gate T5 by measured co
 """
 import argparse
 import json
+import math
 import os
 import sys
 from collections import OrderedDict
@@ -247,7 +248,7 @@ def plans(rows, outdir, only=None):
         for b in range(0, len(rs), cap):
             chunk = rs[b:b + cap]
             name = "%s_p%d_n%d_%s_N%d_R%d_b%d" % (block.replace(" ", "").replace("⁴", "4").replace("⁵", "5").replace("⁶", "6"), p, n, mode, N, Rp, b // cap + 1)
-            plan = {"batch": name[:64], "mode": mode, "code_commit": "UNSET-fill-at-freeze", "max_task_hours": 2.0,
+            plan = {"batch": name[:64], "mode": mode, "code_commit": "UNSET-fill-at-freeze", "binary": "bin/smcbvs4", "max_task_hours": 2.0,
                     **({"island_isa": "sapphirerapids"} if mode == "V" else {}),   # D-32: V plans need an FMA island ISA
                     "kind": "gated (needs HQ go)", "fits": []}
             for r in chunk:
@@ -257,6 +258,11 @@ def plans(rows, outdir, only=None):
                 if pr:
                     f["params"] = pr
                 plan["fits"].append(f)
+            # core_h_cap is a required plan key (the driver refuses a plan without it: a missing or misspelt cap must not mean
+            # "no cap"): the plan's own worst case, rounded up, so a later change of any limit trips the guard and needs a new cap
+            import p1m_driver
+            wc = p1m_driver.resolve(dict(plan, core_h_cap=1e12))["worst_case_core_h"]
+            plan = {**{k: v for k, v in plan.items() if k != "fits"}, "core_h_cap": math.ceil(wc + 0.05), "fits": plan["fits"]}
             path = os.path.join(outdir, name[:64] + ".json")
             with open(path, "w") as fh:
                 json.dump(plan, fh, indent=1)
