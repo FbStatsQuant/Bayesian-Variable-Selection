@@ -729,3 +729,7 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
 - 2026-11-17 10:38 CT. **FIRST 1M FIT COMPLETED** (6-AR-n200-r01-V-s1, p = 10⁶, n = 200): HPM = MPM = S₀ exactly; predictive h² = the oracle's; 437.4 core-h (budget 1,188); wall 3 h 04 min; 20 tasks, no retries.
   - Anomalies: merge peak 75.1 GiB against a 43.7 GiB plan (re-size before the campaign); calibration 85 vs 55 min.
   - Engineering is asked for a revised timeline and the owner's 20-replicate option.
+- 2026-11-17. **H-12 (1M campaign):**
+  - Timeline approved: campaign freeze 11-18/19; 10⁴ overlap 11-19..22; precision + 10⁴ science to 11-26; 10⁵ 11-27..30; **1M replicates from ≈ 12-01**.
+  - **The owner's 20-replicate option at 1M is approved within the 28.3k envelope** (≈ 24.6k without D / 26.5k with; ≈ 1.8k margin). It starts after the overlap and 10⁵ gates pass, 2 fits at a time.
+  - The pilot counts as replicate 1, subject to the freeze reproduction check.
