@@ -104,6 +104,11 @@ struct IslandConfig {
                                             // active columns kept across passes, one slot of p doubles each. -1 = auto
                                             // (gram_slots_of: 5 G / 2, 640 at G = 256); 0 = off. Execution parameter (same
                                             // bits); counted in the memory plan (gram_rows)
+  int test_lead_buf_limit = 0;              // tests only: the leader stores' worker-buffer flush size (default 65,536). At small p the staging hard
+                                            // limit (8192) is below one worker buffer, so every flush compacts serially and the deferred triggers
+                                            // never fire; a small buffer lets a small-p fixture reach them (same code path, same bits)
+  bool test_drop_leader_stage = false;      // tests only: the leader stores discard their staged offers at the deferred triggers instead of
+                                            // compacting (a deliberate bug: the negative control of leader_stores_deferred_compaction_same_bits)
   int test_bound_shrink = 0;                // tests only: bounded scoring skips the last s positions below the running first
                                             // change (a deliberate bug: the negative control of test_nan_rows)
   int products_block = 0;                   // tile products: 4 = 4 active columns x 32 labels per sweep, 1 = the original loop
@@ -151,6 +156,8 @@ struct KernelStats {   // execution statistics (not part of the law, not hashed)
   uint64_t store_floor_dropped = 0;   // offers dropped by the D-29 offer floor (v < floor)
   double t_store_compact = 0, t_compact_pass = 0;   // wall seconds compacting (all paths) / at pass boundaries
   double t_store_compact_lead = 0;                  // WP7 O3: wall seconds compacting the two leader stores (calibration islands)
+  uint64_t lead_compact_mid = 0, lead_compact_pass = 0, lead_serial_merges = 0;   // WP7 O3 (review PR64): leader compactions started between
+                                                    // waves / at a pass boundary (deferred), and the serial in-pass fallbacks inside flush() (both stores)
   int kept_live_max = 0;   // most kept runs alive at once in this process (M2 bound; process-wide counter)
   double t_products = 0;   // thread-seconds inside phase A spent on the tile products
   double t_init = 0, t_orders = 0, t_build = 0, t_phaseA = 0, t_walk = 0, t_phaseB = 0, t_apply = 0, t_barrier = 0,
@@ -180,8 +187,9 @@ struct StepCost {
   double wall = 0;                           // the row's interval (lifetime wall clock)
   double t_orders = 0, t_build = 0, t_phaseA = 0, t_products = 0 /* thread-seconds */, t_walk = 0, t_phaseB = 0, t_apply = 0,
          t_barrier = 0, t_pm = 0;
-  double t_compact = 0, t_compact_pass = 0;  // top store compaction, all paths / of which at pass boundaries
-  double t_compact_lead = 0;                 // the two leader stores' compaction (calibration islands; WP7 O3), wall seconds
+  double t_compact = 0, t_compact_pass = 0;  // top store compaction, all paths / of which at pass boundaries (the top store only)
+  double t_compact_lead = 0;                 // the two leader stores' compaction, all paths (WP7 O3; 0 without leader stores), wall seconds;
+                                             // its in-wave and pass-boundary seconds fall inside t_phaseB (not in t_compact_pass)
   double t_check = 0, t_ckpt = 0;            // I1 checks (O1) / checkpoint writes in the interval (t_ckpt includes its check)
   double mean_S = 0;                         // population mean |S| at the close
   double store_mean_k = 0;                   // mean |S| of the stored models at the close
@@ -272,6 +280,7 @@ inline MemSizes plan_sizes(int n, int p, int K, const IslandConfig& cfg) {
   MemSizes z; z.n = n; z.p = p; z.K = K; z.N = cfg.N; z.B = cfg.B; z.Hm = cfg.Hm; z.threads = cfg.threads;
   z.tile = std::max(64, (cfg.tile + 63) / 64 * 64); z.cap = cfg.store_cap ? cfg.store_cap : 40ULL * (uint64_t)p + 1; z.label_major = lm;
   z.deferred = cfg.store_parallel_compact && cfg.threads > 1 && lm; z.leaders = cfg.leaders || cfg.role != IslandRole::Final;
+  z.leaders_serial = !cfg.leaders_deferred;
   z.compat = cfg.compat; z.inputs_bytes = cfg.inputs_bytes; z.calib = cfg.role != IslandRole::Final;
   return z;
 }

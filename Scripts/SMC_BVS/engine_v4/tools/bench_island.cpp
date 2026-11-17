@@ -191,7 +191,8 @@ static int bench_island(int p, int N, const std::vector<int>& thr, KernelKind kk
     std::printf("  memory plan (admission, ESTIMATE): %s | G used %d\n", r.mem_plan.c_str(), r.G_used);
     std::printf("  store compaction: %.2f s wall in total (%llu compactions, %llu serial in-pass fallbacks; %s)\n", k.t_store_compact,
                 (unsigned long long)k.store_merges, (unsigned long long)k.store_serial_merges, c.store_parallel_compact ? "parallel at pass/step boundaries" : "serial under the mutex");
-    if (c.leaders) std::printf("  leader stores (V4_LEADERS): compaction %.2f s wall of %.2f s (top store %.2f s)\n", k.t_store_compact_lead, wall, k.t_store_compact);
+    if (c.leaders) std::printf("  leader stores (V4_LEADERS): compaction %.2f s wall of %.2f s (top store %.2f s); deferred compactions %llu between waves + %llu at pass boundaries, %llu serial in-pass fallbacks\n",
+                               k.t_store_compact_lead, wall, k.t_store_compact, (unsigned long long)k.lead_compact_mid, (unsigned long long)k.lead_compact_pass, (unsigned long long)k.lead_serial_merges);
     std::printf("  store check (I1, parallel; O1): %llu checks, %.2f s wall (%s)\n", (unsigned long long)k.store_checks, k.t_check,
                 c.check_store_each_step ? "after every step: V4_CHECK_EACH_STEP" : "before checkpoints and the final write");
     std::printf("  wall s: init %.2f orders %.2f build %.2f phaseA %.2f walk %.2f phaseB %.2f apply %.2f barrier %.2f pm %.2f\n",

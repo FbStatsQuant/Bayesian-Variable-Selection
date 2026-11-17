@@ -661,7 +661,7 @@ TEST(store_parallel_compaction_any_flush_order) {
 static MemSizes sizes_of(const Fixture& F, const IslandConfig& c, int G) {
   MemSizes z; z.n = F.D.n; z.p = F.D.p; z.K = F.D.K; z.N = c.N; z.B = c.B; z.Hm = c.Hm; z.threads = c.threads; z.G = G; z.tile = 128;
   z.cap = c.store_cap ? c.store_cap : 40ULL * F.D.p + 1; z.label_major = c.kernel == KernelKind::LabelMajor;
-  z.deferred = c.store_parallel_compact && c.threads > 1 && z.label_major; z.leaders = c.leaders; z.compat = c.compat; z.inputs_bytes = c.inputs_bytes;
+  z.deferred = c.store_parallel_compact && c.threads > 1 && z.label_major; z.leaders = c.leaders; z.leaders_serial = !c.leaders_deferred; z.compat = c.compat; z.inputs_bytes = c.inputs_bytes;
   return z;
 }
 TEST(mem_budget_admission) {
@@ -695,6 +695,8 @@ TEST(mem_budget_admission) {
   // (5) the plan grows with G, threads, k and leaders
   MemSizes z = sizes_of(F, c, 64); CHECK(island_memory(z, 8).total > island_memory(sizes_of(F, c, 1), 8).total);
   MemSizes zl = z; zl.leaders = true; CHECK(island_memory(zl, 8).total > island_memory(z, 8).total);
+  { MemSizes zs = zl; zs.deferred = true; zs.leaders_serial = true; MemSizes zd = zl; zd.deferred = true;   // review PR64 MINOR-5: serial leaders (leaders_deferred = false) cost more than deferred ones
+    CHECK(island_memory(zs, 8).total > island_memory(zd, 8).total); }
   MemSizes big; big.n = 200; big.p = 1000000; big.K = 100; big.N = 2500; big.B = 14; big.threads = 96; big.G = 64; big.cap = 40000001ULL;
   std::printf("  1M plan (G 64, 96 threads, k 7): %s\n", mem_plan_text(island_memory(big, 7)).c_str());
 }
@@ -1696,7 +1698,9 @@ TEST(time_stop_chain_equals_uninterrupted) {
 }
 
 // WP7 O3 (WP3_ARCH_REVIEW R2): the leader stores are compacted by the same deferred parallel merge as the top store (waves
-// bounded by the smallest store; compaction between waves and at pass boundaries; parallel at step boundaries). Their
+// bounded by the smallest store; compaction between waves and at pass boundaries; parallel at step boundaries). At this
+// size (p = 300, default buffers) only the step-boundary parallel compaction and the serial in-pass path run; the triggers are
+// covered by leader_deferred_triggers_fire_and_keep_the_bits below. Their
 // content is a function of their offers only: every thread count / group size / tile, the serial option and the
 // particle-major reference give the same island hash and the same two leader stores, in both arithmetic forms.
 TEST(leader_stores_deferred_compaction_same_bits) {
@@ -1716,6 +1720,44 @@ TEST(leader_stores_deferred_compaction_same_bits) {
       CHECKF(ok, "arith %d threads %d G %d tile %d parallel %d: leaders / hash differ from the particle-major reference", arith, cf.th, cf.G, cf.tile, (int)cf.par);
       if (cf.par && cf.th > 1) CHECK(r.ks.t_store_compact_lead > 0);
     }
+  }
+}
+
+// WP7 O3 (review PR64 MAJOR-1): the test above runs at p = 300 with the default 65,536-entry worker buffers, so every flush
+// passes the leaders' staging hard limit (8192) and compacts serially: the deferred triggers (between waves, at a pass
+// boundary) never fire, and a regression in them would pass. Here the leader worker buffers are small (test_lead_buf_limit),
+// so the staging area fills in small steps and the triggers do the compacting. The test ASSERTS that both fired
+// (KernelStats::lead_compact_mid / lead_compact_pass), that the deferred legs and the serial option give the particle-major
+// reference's island hash and leader stores, and that the negative control (test_drop_leader_stage: the staged leader offers
+// are discarded at the triggers, the planted bug of the PR64 review) CHANGES them.
+TEST(leader_deferred_triggers_fire_and_keep_the_bits) {
+  Fixture F(100, 300, 64);
+  for (int arith = 0; arith < 2; ++arith) {
+    auto run = [&](IslandConfig c) { return arith ? run_island<Arith::ClassA>(F.D, F.st, F.nb, c) : run_island<Arith::Bit>(F.D, F.st, F.nb, c); };
+    IslandConfig c = small_cfg(); c.leaders = true; c.N = 96; c.kernel = KernelKind::ParticleMajor; c.threads = 1;
+    const IslandRun ref = run(c);
+    CHECK(ref.leaders && !ref.lead0_v.empty() && !ref.lead1_v.empty());
+    auto same = [&](const IslandRun& r) {
+      bool ok = r.hash() == ref.hash() && r.lead0_pool == ref.lead0_pool && r.lead1_pool == ref.lead1_pool && r.lead0_v.size() == ref.lead0_v.size() && r.lead1_v.size() == ref.lead1_v.size();
+      for (size_t i = 0; ok && i < ref.lead0_v.size(); ++i) ok = same_bits(r.lead0_v[i], ref.lead0_v[i]);
+      for (size_t i = 0; ok && i < ref.lead1_v.size(); ++i) ok = same_bits(r.lead1_v[i], ref.lead1_v[i]);
+      return ok;
+    };
+    struct Cf { int th, G, tile, buf; bool defer; };
+    uint64_t mid_sum = 0;
+    for (Cf cf : {Cf{3, 16, 128, 256, true}, Cf{2, 7, 64, 256, true}, Cf{3, 96, 128, 64, true}, Cf{3, 16, 128, 256, false}}) {
+      IslandConfig d = c; d.kernel = KernelKind::LabelMajor; d.threads = cf.th; d.G = cf.G; d.tile = cf.tile; d.test_lead_buf_limit = cf.buf; d.leaders_deferred = cf.defer;
+      const IslandRun r = run(d);
+      std::printf("  arith %d threads %d G %d buf %d deferred %d: leader compactions mid %llu pass %llu, serial in-pass %llu\n", arith, cf.th, cf.G, cf.buf, (int)cf.defer,
+                  (unsigned long long)r.ks.lead_compact_mid, (unsigned long long)r.ks.lead_compact_pass, (unsigned long long)r.ks.lead_serial_merges);
+      CHECKF(same(r), "arith %d threads %d G %d buf %d deferred %d: leaders / hash differ from the particle-major reference", arith, cf.th, cf.G, cf.buf, (int)cf.defer);
+      if (cf.defer) { mid_sum += r.ks.lead_compact_mid; CHECKF(r.ks.lead_compact_pass > 0, "arith %d threads %d G %d: no pass-boundary leader compaction ran: the test no longer reaches the O3 path", arith, cf.th, cf.G); }
+      else CHECK(r.ks.lead_compact_mid == 0 && r.ks.lead_compact_pass == 0);
+    }
+    CHECKF(mid_sum > 0, "arith %d: no between-waves leader compaction ran in any deferred leg: the test no longer reaches that trigger", arith);
+    // the planted bug, both triggers live (G 96, 64-entry buffers: mid and pass fire)
+    IslandConfig d = c; d.kernel = KernelKind::LabelMajor; d.threads = 3; d.G = 96; d.tile = 128; d.test_lead_buf_limit = 64; d.test_drop_leader_stage = true;
+    CHECKF(!same(run(d)), "arith %d negative control: dropping the staged leader offers at the deferred triggers went unnoticed", arith);
   }
 }
 
