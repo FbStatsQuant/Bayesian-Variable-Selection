@@ -1,6 +1,6 @@
 # INTERFACES — engine v4 contract between WP1–WP5
 
-**v0.1.13 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-15. Source: ENGINEERING_SPEC §0-v2,
+**v0.1.20 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-17. (v0.1.17, the O6 offer-floor implementation line, is not merged yet.) Source: ENGINEERING_SPEC §0-v2,
 §1–§3, §6. Where this file is silent, the spec rules; where the spec is silent, `core/` (v3.1 / revision D) rules.
 Questions and change requests: to the WP1 owner through the manager. Line references `core/...:N` are to revision D.
 
@@ -171,14 +171,26 @@ struct Store {
   uint64_t cap; Order ord;
   std::vector<double> v; std::vector<uint64_t> off, hash; std::vector<uint16_t> len; std::vector<int32_t> pool;
   void offer(double v, ModelView S, uint64_t h);   // quick reject if v < cutoff(); else append to the staging run
-  void compact();     // sort the staging run, merge it with the kept run (drop exact duplicates), keep the first cap
+  void compact();     // sort the staging run, merge it with the kept run (one entry per model, its best value), keep the first cap
   void merge(const Store& o);                       // = offer every entry of o, then compact()
+  void load_unique_sorted(size_t n, const double* v, const uint64_t* hash, const uint64_t* off, const uint16_t* len,
+                          const int32_t* pool, size_t pool_n);   // bulk load of a valid store into an EMPTY one (n ≤ cap)
   double cutoff() const;                            // −inf until cap entries are kept, then the worst kept value
   bool would_enter(double v, ModelView S) const;    // after compact(): cap not reached or better than the worst kept
 };
 ```
-After `compact()`: entries strictly sorted under `ord`, no duplicates, size ≤ cap (invariant I1). Staging is compacted
-when it reaches max(cap/4, 4096) entries, so the peak is ≈ 2.5·cap entries (kept + staging + the new kept run with room).
+After `compact()`: entries strictly sorted under `ord`, **one entry per model**, size ≤ cap (invariant I1;
+`check_invariants` verifies one-per-model by an independent (hash, model) sort). One entry per model is verified
+**assuming correct hashes**: the readers named here check each stored hash against its model's Zobrist hash
+(WP4 `read_store` / `load_island_full`; WP3 `read_island_file` with `verify`); WP5's `load_fit` checks one entry per
+model by (hash, model) only and relies on fit.bin's own content hash (v0.1.17, review PR45 MINOR-4). Staging is compacted when it reaches
+max(cap/4, 4096) entries, so the peak is ≈ 2.5·cap entries (kept + staging + the new kept run with room). An entry
+costs **30 + 4k bytes** kept (26 + 4k data, plus 4 for the one-entry-per-model index), plus about 9 B per entry
+transient inside `compact()`. **Bulk load (v0.1.14):** a store that is already valid (island records and files,
+stored sections) is loaded with `load_unique_sorted`. It verifies the strict order, the pool ranges and one entry per
+model, refuses invalid input with `invalid_input` (the store is left empty), and runs no compaction. Preconditions:
+the target store is empty (else `internal_error`); n > cap is refused, never truncated (the offer path would
+truncate). For **valid** input its content equals the offer + compact path, bit for bit.
 `cutoff()` is **monotone non-decreasing** (the worst of the top-c of a growing set never decreases) and is published
 atomically, so other threads may read it at any time. Caps: top = 40p + 1 (HPM order, value F); lead0 = 20p (LEX,
 value lg0); lead1 = 20p (LEX, value F). Leader stores exist only inside calibration, where they feed V (D-7). **Final-run
@@ -193,6 +205,39 @@ list.
   larger value. This is deterministic and T3-invariant.
 - Every store (island, reference `Store`, merge) therefore holds **one entry per model, with its best offered value**,
   and its content is the top-c of distinct models by best value, independent of offer order.
+
+**Offer floor (v0.1.15; D-29; V-mode final islands only).** A V-mode final island may run its top store under an
+**offer floor** f = calib.bin `meta.tau_cal` (§5.1):
+- the store drops an offer iff v < f (**ties are kept**), in addition to its own cut-off rule. I1 is unchanged;
+- HPM and provenance, `logical` counters, `island_best` and every Tally field still see **every** event (V counts every
+  consumed score; a dropped offer still counts);
+- the island store is then "the top c of the offers with v ≥ f" and may hold **fewer than c** entries.
+
+**An island store under a floor has no standalone meaning.** It is not that island's top c, and no consumer may use an
+island store on its own (as a per-island log Z_T, PIP_T, top-c or occupancy). Only the **merged** store has meaning;
+it equals the unfloored merge because the merge's pre-island cut-off (tables + inherited) is ≥ τ_cal ≥ f (§7, merge
+check). f = −∞ means no floor and is required for compat and law islands and for every calibration island (pilot and
+diagnostic), whose ledgers define τ_cal.
+
+**Where the floor lives and where it comes from (v0.1.17; review PR45 MINOR-1, MINOR-2; WP7 O6):**
+- The floor is a constant of the island's **top** store only (`TopStore::floor`, set from `IslandConfig::offer_floor`
+  before the run). The effective reject threshold of an offer is max(`cutoff()`, f). `cutoff()` itself is unchanged
+  (still −∞ below c entries), and `compact`, `merge(Store)`, `load_unique_sorted`, `would_enter` and the duplicate filter
+  never apply the floor. Leader stores never have one.
+- A final island gets f from its calib.bin: f = `meta.tau_cal_hex` when the mode is V, else −∞; a calib.bin without
+  `tau_cal` (fewer than c inherited models, older files) gives −∞ (`include/v4/offer_floor.h` `offer_floor_from_calib`).
+  The `island` command passes it as `IslandConfig::offer_floor` with `offer_floor_calib` = that calib.bin's content hash,
+  **after the same semantic check `read_calib` makes** (`wp4io::check_calib_tau_cal`, light: mapped arrays): the
+  inherited models are **distinct** (strictly increasing in the exporter's lexicographic order, else proved by a sort;
+  duplicates → `invalid_input`) and `tau_cal_hex` is bit-equal to the c-th best F over those distinct models (c = 40p + 1;
+  −∞ below c). A tampered finite tau_cal is refused by the command before any island work (review PR54 MAJOR-1/2).
+- The island side enforces the roles: `run_island` refuses (`invalid_input`) a floor > −∞ unless the island is class A
+  (V), not compat, without leader stores and in the final role; it refuses a NaN or +∞ floor and a floor without its
+  calib hash. Calibration islands never write an `island_r.bin`, so this, not the merge, is their guard. The floor is
+  in the checkpoint fingerprint: a resume under another floor is refused.
+- Every `island_r.bin` field other than `top_*` is floor-independent: log Z_r, `pip_r`, `rb_*`, the stage table and
+  ess, terminal supports, HPM and provenance, `logical`, `island_best` (review PR45 INFO-3; island_run.h writes nothing
+  else derived from its store, and `meta.cost`'s store columns are execution statistics, not science).
 
 ### 4.2 Ledger (one per island) and ThreadLedger (one per worker thread)
 ```cpp
@@ -219,7 +264,8 @@ struct Ledger : Tally {                      // ONE per island (calibration proc
 struct ThreadLedger : Tally {                // one per worker thread; NO stores
   ThreadLedger(Ledger& island, size_t buf_cap = 65536);
   void event(ModelView S, uint64_t h, double F, double lg0, double logm, const EventCtx&, bool offer);
-  // offers: dropped if v < island.store.cutoff(); else appended to a bounded OfferBuffer (one per store);
+  // offers: dropped if v < max(island.store.cutoff(), floor) (floor: the top store's D-29 offer floor, else -inf);
+  // else appended to a bounded OfferBuffer (one per store);
   // a full buffer is flushed into the island store at once (under the island ledger's lock)
 };
 ```
@@ -326,11 +372,29 @@ Sections (names fixed; WPs may add sections, never rename):
   **`setup.bin` carries no `meta.stores`** (v0.1.19): the table stores' caps and orders are §4.1's (top 40p + 1 in HPM
   order, lead0 and lead1 20p in LEX order); a reader derives them and ignores any `meta.stores` it finds. (`calib.bin`,
   `island_r.bin` and `fit.bin` do carry `meta.stores`, as written by `add_store`.)
-- `calib.bin` (WP4): `grid`, `meta` {tier, N, L, Hm, I_used, flags, triggers, **`k_store`** (the calibration top
-  store's mean |S|; the k of §7's admission rule)}, `grids_all_ptr/grids_all`, stage
-  records, calibration stores (as stores), HPM (`hpm_S`, `hpm_ev`), `logical` u64 N_PHASE×N_MECH.
+- `calib.bin` (WP4):
+  - always: `grids_all_ptr/grids_all`, the stage records (when any island ran) and `meta`;
+  - **only when the status is ok:** the calibration stores (as stores), HPM (`hpm_S`, `hpm_ev`), `logical` u64
+    [N_PHASE × N_MECH] and the inherited models (`inh_*`); otherwise `meta.has_hpm` = false and the HPM so far is in
+    `meta`, labelled incomplete. `grid` (the frozen grid) when a grid was frozen;
+  - `meta` {tier, N, L, Hm, I_used, flags, triggers, ...}, including:
+    - **`k_store`** (double): the calibration top store's mean stored |S|, i.e. the k of §7's admission rule; present
+      only when the status is ok;
+    - **`iterations`**: one row per rebuild with `tier`, `iteration`, `grid_label`, `complete`, `logZ_r` and
+      `island_best` (null for −∞); `overall_best` and E1–E3 **only when `complete`**;
+    - **`tau_cal`** (v0.1.15, D-29; f64): the offer floor for V-mode final islands = the **c-th best F**, c = 40p + 1,
+      in HPM order, over the distinct inherited models that this calib.bin exports; **−∞ if there are fewer than c**
+      (no floor). Written only for a completed (status ok) V-mode calibration. Encoding: `tau_cal_hex` (the f64 bits,
+      "0x…", authoritative) and `tau_cal` (number, "-Inf" for −∞; for reading);
+  - **`stage_stream`**: the initial-draws hash and the stream positions (start and end) of each calibration island;
+  - **`inh_d`**: d of each inherited model, **on the flat-export path only** (`inh_ptr/inh_idx`); the legacy `inh`
+    model path has no `inh_d`.
 - `island_r.bin` (WP3; `include/v4/island/island_file.h`):
   - `meta` holds r, N, T, L, Hm, p, status, reason, inputs, binary, timings, `logZ_hex` and `init_hash`.
+  - **Offer floor (v0.1.15, D-29):** `meta.offer_floor_hex` (f64 bits, "0x…", authoritative), `meta.offer_floor`
+    (number, "-Inf" = no floor) and `meta.offer_floor_calib` (the content hash of the calib.bin whose `tau_cal` it is;
+    null when the floor is −∞). An island store written under a floor > −∞ is the top c of the offers v ≥ floor (§4.1)
+    and has no standalone meaning. A file without these keys has floor −∞.
   - Schedule: `grid` f64 [T+1].
   - Stage table (f64 / i32 [T]): `st_phi`, `st_ess`, `st_inc`, `st_cum`, `st_distinct_res`, `st_distinct_moved`.
   - Moves: `st_moves` u64 [T × 12] (MoveStats in records.h field order, `gibbs_cap` included); `term_moves` u64
@@ -369,7 +433,7 @@ Sections (names fixed; WPs may add sections, never rename):
     process rebuilds it; NIT-3); a write failure cuts it back to whole lines and disables it without failing the island. Calibration
     islands get it from `calibrate --cost-dir` (WP7 O5), one file per calibration island
     (`cost_<pilot|diag>_t<tier>_k<iter>_r<island>.jsonl`).
-- `fit.bin` + `fit.json` (WP4): merged `top_*`, `hpm_*` + provenance, `hpm_before_local_*`, local-search archive,
+- `fit.bin` + `fit.json` (WP4): merged `top_*` (the only store with meaning when islands ran under a floor, §4.1), `hpm_*` + provenance, `hpm_before_local_*`, local-search archive,
   `mode_S`, LS0, near ties, `logZ_r`, `pip_eq`, `pip_Z`, `pip_T`, `rb_*`, flags; `fit.json` scalars and hashes only.
   v0.1.18 (WP7 O5): `fit.json` also carries `island_isa` (D-32 (4), the merge binary's) and `timings` (as fit.bin
   `meta.timings`): `merge_tail_seconds` (the whole command), `merge_islands_seconds` (island stream + merge),
@@ -467,6 +531,28 @@ Status fit_status(span<Status>);   // first that applies: invalid_input, interna
 
   Over budget, admission refuses deterministically with `resource_limit`, before any allocation. The check at every step boundary uses the store's **actual** size. With G = 0
   the island chooses the largest G ≤ 256 that fits. The merge applies the same rule to its own plan (`merge.h`, WP4).
+- **Merge check of the offer floor (v0.1.15, D-29; WP4).** After the tables and the inherited models are offered to
+  the pre-island ledger, and before any island is merged, every island must have:
+  - floor = −∞ unless `meta.mode` = "V" (compat and law islands with a floor are refused; calibration islands are
+    refused on the island side, §4.1, since they write no `island_r.bin`; v0.1.17, MINOR-2);
+  - a floor is −∞ or finite (NaN, +∞ → `invalid_input`; v0.1.17, MINOR-3); an island's `meta.mode` must equal its
+    container header's mode, and a finite floor needs `meta.mode` = "V" (`head_island`; review PR54 MINOR);
+  - floor > −∞ only with `offer_floor_calib` = the island's `meta.inputs` calib content hash, **and `offer_floor_hex`
+    bit-equal to that calib.bin's `tau_cal_hex`** (v0.1.17, MINOR-3; `read_calib` also checks that `tau_cal` is the
+    c-th best F of the inherited models it reads);
+  - **floor ≤ `pre.top.cutoff()`** (`≤`, not `<`: offers equal to the floor are kept).
+
+  (`merge::offer_floor_refusal`; a refused island is `Load::floor_refused`.)
+
+  Otherwise the merge refuses with `invalid_input` and writes no estimate (GUARD-W). The merge's memory estimate is
+  unchanged (its kbar from the island store sections stays an upper bound).
+- **Calibration memory rule** (WP4; effective with WP4 PR #46, `exp/P1M-wp4-calib2`, review PR37 N-1/N-2):
+  - Calibration islands receive `mem_budget` = the whole task's budget, and `resident_bytes` = the calibration
+    process's own state: the calibration ledger plus the inherited export. Data and setup inputs are excluded, because
+    the island's own plan counts them.
+  - A calibration island is admitted iff resident_bytes + its plan ≤ mem_budget.
+  - `calibrate` refuses up front (`resource_limit`, before any allocation) iff resident + inputs + one island ledger >
+    `--mem-budget`. Its plan's k = max(8, q90(π₀ size) + 1), from setup.bin `size_logmass`.
 - **Data outcomes of `prep`** (v3 returns them as fit outcomes with an empty HPM, `core/v3_preprocess.R:111-114`):
   `no_predictors` and `y_constant`. The task status is `completed`, the record has `prep_status` and `hpm: []`, no
   `data.bin` is written, and the exit code is **20** (`no_predictors`) or **21** (`y_constant`). The driver (WP5) ends
@@ -544,11 +630,32 @@ point, so all WPs link from day one: `setup::run`, `island::run`, `calib::run`, 
 - v0.1.13 (2026-11-16, WP1; WP4 PR #37, WP3_ARCH_REVIEW R7) — §5.1: `calib.bin` `meta.k_store` (calibration top store
   mean |S|), cross-referenced from §7 admission. §4.1: class-A values are path-dependent maxima; every store keeps one
   entry per model with its best value (the reference `Store` now de-duplicates by model; deterministic, T3-invariant).
+- v0.1.14 (2026-11-16, WP1; PR40 review follow-ups) — §4.1: `Store::load_unique_sorted` (verified bulk load of a valid
+  store, used for island records / island files / stored sections; same bits as offer + compact); I1 includes one entry
+  per model, checked independently of the index; entry cost 30 + 4k bytes. §5.1 (WP4 PR #37 re-check): `calib.bin`
+  `meta.k_store` (only when the status is ok), `meta.iterations`, the `stage_stream` and `inh_d` sections. §7: the
+  calibration memory rule (islands get the task budget plus resident bytes; up-front refusal; plan k from setup).
+- v0.1.15 (2026-11-16, WP1; PR45 review MINOR-1–4; D-29 / reviews/D29_WP4_answer.md) — §4.1: `compact()` comment (one
+  entry per model, best value); `load_unique_sorted` preconditions (empty target, n ≤ cap, same bits for valid input);
+  one entry per model assumes correct hashes, and untrusted readers check hashes. §5.1 `calib.bin`: which sections are
+  conditional (status ok; `complete` rows; `inh_d` flat path only). **D-29 offer floor (contract; builder 7 implements,
+  O6):** `calib.bin` `meta.tau_cal`; `island_r.bin` `meta.offer_floor` + `offer_floor_calib` (drop only v < floor, ties
+  kept); §4.1 a floored island store has no standalone meaning; §7 merge refuses (`invalid_input`) unless
+  floor ≤ cut-off after tables and inherited, and floor = −∞ outside V final islands. §7's calibration memory rule
+  marked effective with WP4 PR #46.
 - v0.1.16 (2026-11-17, WP7 O2 for WP1; D-30; review PR49) — §5.1: `island_r.bin` `meta.cost`, the authoritative per-step
   cost record (schema `smcbvs4.cost/1`; contiguous final rows + an exit row, lifetime totals across resume; counts as
   bounded JSON numbers; unmeasured fields "NaN"; outside the scientific-output hashes, inside the container hash), and
   the non-authoritative JSON-lines progress log. Numbering: WP1's v0.1.14–v0.1.15 (PR #45) precede it; D-29's O6 line
   is v0.1.17. The header line moves to v0.1.16 when PR #45 lands (WP1).
+- v0.1.17 (2026-11-17, WP7 O6 for WP1; D-29; reviews/PR45_recheck.md MINOR-1–4, INFO-3) — §4.1: the floor is a constant
+  of the island's top store (effective threshold max(cutoff, f); the other store operations unchanged); its source
+  (calib.bin `tau_cal_hex` for V final islands, else −∞; `offer_floor.h`); `run_island` refuses a floor in compat, law,
+  leader or calibration islands and NaN / +∞ floors; the floor is in the checkpoint fingerprint; every `island_r.bin`
+  field but `top_*` is floor-independent. §4.2: the offer reject line names the floor. §7 merge check: V mode only, the
+  floor bit-equal to calib.bin's `tau_cal_hex`, NaN / +∞ refused, calibration islands guarded on the island side.
+  §4.1 hashes: the named readers check them; `load_fit` relies on fit.bin's content hash. (O2's `meta.cost` line is
+  v0.1.16.)
 - v0.1.18 (2026-11-17, WP7 O5 for WP1; D-32 revised 11-17; review PR55 m4, m6) — §5.3 binary block: `island_isa` (the
   island sources' -march, "x86-64-v3" for a V4_WIDE_ISA build without one, else "portable") and `island_fma` (whether
   class A uses a true FMA, from the class-A unit itself); binary consistency: the V merge needs one FMA family, island

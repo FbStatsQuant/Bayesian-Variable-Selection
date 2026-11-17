@@ -115,3 +115,41 @@ TEST(store_one_entry_per_model_best_value) {
       }
     }
 }
+
+// PR40 review follow-up: the bulk loader gives the same content (bits) as offer + compact, verifies its input, and the
+// stronger check_invariants catches a duplicated model (the old check did not).
+TEST(store_bulk_load_equals_offer_path_and_verifies) {
+  Zobrist z; z.init(40);
+  auto offers = random_offers(21, 5000, 40, 30);
+  for (Order ord : {Order::HPM, Order::LEX})
+    for (uint64_t cap : {1ull, 50ull, 400ull, 100000ull}) {
+      Store src(cap, ord);
+      for (auto& o : offers) src.offer(o.v, o.S, z.hash(o.S));
+      src.compact();
+      Store b(cap, ord);
+      b.load_unique_sorted(src.size(), src.v.data(), src.hash.data(), src.off.data(), src.len.data(), src.pool.data(), src.pool.size());
+      CHECK(b.check_invariants()); CHECK(b.content_hash() == src.content_hash()); CHECK(same_bits(b.cutoff(), src.cutoff()));
+      // a loaded store keeps working: later offers and merges equal the offer-only path
+      Store b2 = b, s2 = src;
+      for (size_t i = 0; i < 300; ++i) { b2.offer(offers[i].v + 0.125, offers[i].S, z.hash(offers[i].S)); s2.offer(offers[i].v + 0.125, offers[i].S, z.hash(offers[i].S)); }
+      b2.compact(); s2.compact();
+      CHECK(b2.content_hash() == s2.content_hash() && b2.check_invariants());
+      if (src.size() >= 3) {   // corrupt inputs are refused
+        std::vector<double> vv = src.v; std::swap(vv[0], vv[1]);
+        Store e(cap, ord);
+        if (vv[0] != vv[1]) CHECK_THROWS(e.load_unique_sorted(src.size(), vv.data(), src.hash.data(), src.off.data(), src.len.data(), src.pool.data(), src.pool.size()));
+        std::vector<uint64_t> oo = src.off; oo[2] = src.pool.size() + 5;
+        Store e2(cap, ord);
+        CHECK_THROWS(e2.load_unique_sorted(src.size(), src.v.data(), src.hash.data(), oo.data(), src.len.data(), src.pool.data(), src.pool.size()));
+      }
+      Store full(cap, ord); full.offer(1.0, Model{1}, z.hash(Model{1}));
+      CHECK_THROWS(full.load_unique_sorted(src.size(), src.v.data(), src.hash.data(), src.off.data(), src.len.data(), src.pool.data(), src.pool.size()));
+    }
+  // the same model twice, at two values (strictly sorted, so the old sorted-only check passed): refused and detected
+  Model S{3, 9}; uint64_t h = z.hash(S);
+  std::vector<double> v = {2.0, 1.5}; std::vector<uint64_t> hh = {h, h}, off = {0, 2}; std::vector<uint16_t> len = {2, 2};
+  std::vector<int32_t> pool = {3, 9, 3, 9};
+  Store d(10, Order::HPM);
+  CHECK_THROWS(d.load_unique_sorted(2, v.data(), hh.data(), off.data(), len.data(), pool.data(), pool.size()));
+  CHECK(d.size() == 0);
+}
