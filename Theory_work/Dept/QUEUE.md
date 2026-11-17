@@ -36,7 +36,8 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 | W3-EDIT | merge-now part merged: citefix 66b67f7d (+ PR #10 86191e17), W3-EDIT-now-rb 246587c3; 15 manifest-hit edits held on theory/W3-EDIT for the post-freeze batch; triage → adjudication D31. Thread settled. |
 
 ## W3-AUDIT (top priority, resume 11-16)
-- Running: audit Fable (#5 feasibility note), track C lead (Owls pilot), track A lemmas lead (GW, BLK, OPC, ENC, CAL-C, START-X, KER, OVL, TDP, P1/S.3; then X1/X3/X5), audit-calc checker.
+- DONE 11-16: AUDIT v1.4.1 (TRACK_B to Writing); track C closed (47.2 core-h); track A closed (T1–T10 R2 93b6cfc7, X1/X3/X5/T14 XR2 5db04d3a, bound).
+- Post-freeze: record track A (HQ GO; recorder); T14 STRONGER H5 card for row 3.1 (D88); editorial batch ER-1..11 + XR1.
 - Post-freeze tickets (D85, from Sat 11-21, after the check): T-D2 check X (1 d / kill 1.5 d) → T-D3 sub-Gaussian Thm 2 (2 d / kill 3 d) → T-D5′ store-restricted clause (1–2 d / kill 3 d; replaces #1, D86). #1, #4 deferred.
 - X2, X4: relabelling (recorder, post-freeze). P6 method version: Engineering reconciliation pending. RERUN_SPEC: open (HQ).
 
