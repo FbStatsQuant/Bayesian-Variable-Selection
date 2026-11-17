@@ -234,15 +234,11 @@ coefficient prior scale; ridge & $g$ & $n$; unit ridge & 200 \\
 inverse-gamma shape and scale & $a_0,b_0$ & $0.01$, $0.01$ & \\
 block size cap & $B$ & $\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)$ & 14 \\
 particles per island (tier $i$) & $N_i$ & $4^i\max(2500,n,p)$ & $10^4$; $4\cdot10^4$ \\
-islands; measured rounds & & $4$; $4$ & \\
 burn-in rounds at $\xi=1$ & $\Lbi$ & $\max(4,\lceil\log_2(n+1)\rceil)$ & 8 \\
-moves per round & & $p$ inclusion updates, $1$ uniform swap, $B$ neighbour swaps, $1$ independence move & 10,016 \\
-calibration grid target & & restricted effective-sample-size fraction $\ge0.90$ & \\
 exact-case threshold & & enumerate if $\abs{\Om}\le(5\Nc_0+4N_0)\,p$ & $5.0\times10^8$ \\
 base move cap & $\ell_n$ & $\lceil\log_2(n+p+1)\rceil$ & 14 \\
 move cap from the start mode & & $\ell_n+\abs{\tSz}$ & \\
 returned list & $\mathcal T$ & best $40p+1$ models by $F$ & 400,001 \\
-pooling of islands & & equal weights & \\
 \bottomrule
 \end{tabular}
 \end{table}

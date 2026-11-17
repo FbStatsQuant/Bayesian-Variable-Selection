@@ -72,7 +72,7 @@ supp.\ pp.~6, 15. By how their $\bstar$ is read (\S\ref{sec:a-post}). & \yes & \
 Eigenvalue floor \lab{EF}, \lab{EFS} & fixed floor on small sets & Cond.~3, p.~955; (22)--(23), supp.\ p.~13. By their
 model-size cap $\bar r_n$ (\S\ref{sec:a-post}). & \yes & \yes & \yes \\
 Near-exact collinearity \lab{NC} & floor of order $1/n$ on $O(\log n)$ sets & None in their Thms~1--2; Cond.~3, p.~955; (22), supp.\ p.~13. By comparator and $\bar r_n$ (\S\ref{sec:a-post}). & \yes & \yes & \yes \\
-Law of the rows \lab{GR} & Gaussian or sub-Gaussian & $\abs{x_i}\le1$, p.~952; Cond.~1, p.~953. By centring and comparator (\S\ref{sec:a-post}). & \yes & \yes & \yes \\
+Law of the rows \lab{SGR}, \lab{GR} & Gaussian or sub-Gaussian & $\abs{x_i}\le1$, p.~952; Cond.~1, p.~953. By centring and comparator (\S\ref{sec:a-post}). & \yes & \yes & \yes \\
 \midrule
 \multicolumn{6}{@{}l}{\textbf{Result 3 (the reported model), in addition}} \\
 Visibility \lab{V} & no true predictor cancelled by $\le15$ others & Cond.~5, p.~958. \emph{Ours implies theirs, in every
@@ -198,7 +198,8 @@ eigenvalue and so allow exact duplicates, which ours excludes.}
 \ahead{Law of the rows}{\lab{SGR}, \lab{GR}, Assumption~\ref{asm:dist}(c)}{On centred, unit-variance predictors,
 \lab{SGR} (Result~1), Gaussian rows (Result~3) and Assumption~\ref{asm:dist}(c) (Result~2) each imply \SL's Condition~1
 (p.~953); on raw predictors, and against their $\abs{x_i}\le1$ (Theorem~1, p.~952), neither implies the other.}
-\ev{For standardised predictors, Assumption~\ref{asm:dist}(c) implies their Condition~1 for every $r$, with $\delta=\sqrt{3/8}/L$
+\ev{For standardised predictors, Assumption~\ref{asm:dist}(c) implies their Condition~1 for every $r$ (the same computation
+applies to \lab{SGR} along single coordinates), with $\delta=\sqrt{3/8}/L$
 and $M=\log2$ (their constants), $L$ being the sub-Gaussian constant of Assumption~\ref{asm:dist}(c) (a two-line computation, independently
 checked). On raw predictors, Gaussian rows with mean $n$
 satisfy our row law and violate Condition~1, which is a raw exponential-moment bound. Our generators draw centred
@@ -209,9 +210,10 @@ such as rare binary features, for Results~1 and~2; non-Gaussian rows for Result~
 rows, \lab{SGR} contains theirs as the case $\Sig=I$, and asks sub-Gaussianity only along sparse directions. As a factual
 remark, for the centred predictors $x-m_n$ it implies Song and Liang's Condition~1, whose worked case is a zero-mean
 Gaussian process (p.~953). In ordinary data, \lab{SGR} holds for Gaussian rows ($L=1$) and for correlated mixtures of
-independent features with a common sub-Gaussian constant, such as features bounded on a common scale (Section~\ref{sec:model-result}).}
+independent features with a common sub-Gaussian constant, such as features each confined to $K$ standard deviations of its mean, with one common $K$ (Section~\ref{sec:model-result}).}
 \tu{Bounded data such as genotypes are outside Result~3 as stated (Gaussian rows); they meet \lab{SGR} when they are
-mixtures of independent features bounded on a common scale, but not when they include rare binary features; and they are
+mixtures of independent features each confined to $K$ standard deviations of its mean, with one common $K$, but not
+when they include rare binary features; and they are
 covered by the fixed-design Theorem~\ref{thm:post-fixed} when the observed design meets its conditions.}
 
 \subsubsection{Further assumptions of Result 3}\label{sec:a-rm}
@@ -231,7 +233,8 @@ not a hypothesis. Both conditions are argued here for block and moderate AR corr
 \textbf{Unclear:} S5 (mixed signs; a search found a near-cancellation) and FAC (its signs are mixed, so the aligned-sign
 bound does not apply; a search found a margin below it).}
 \tu{A numerical check of the conditions' population quantities, not yet complete, found visibility failing for a
-pervasive factor with effects of mixed signs and for a design modelled on the riboflavin gene-expression data; such a user may be outside Result~3
+pervasive factor with effects of mixed signs and for a design modelled on the riboflavin gene-expression data (the latter
+under re-examination); such a user may be outside Result~3
 and still inside Results~1 and~2.}
 
 \ahead{Polynomial leakage set,}{Assumption~\ref{asm:reported}(a)}{\SL{} have no hypothesis of this kind; the nearest text is their
@@ -264,7 +267,7 @@ eigenvalue floor and the signal bounds of Section~\ref{sec:a-post}; neither visi
 \ev{The floor is asked on sets of $k_n+\sz$ predictors, with the budget $k_n$ chosen by the analyst; the signals are
 bounded below and above by fixed constants. The size budget is a sufficient condition for a union bound over models of
 that size; at the constants of the strong-factor designs it requires $n\gtrsim1{,}450$ (Remark~\ref{rem:screen}).}
-\ro{Collinearity within sets of $k_n+\sz$ predictors, and signals that vary with $n$ (a second form allows the latter).}
+\ro{Collinearity within sets of $k_n+\sz$ predictors, and signals that vary with $n$ .}
 \pr{As for the eigenvalue floor and the signal size above, but on sets of $k_n+\sz$ predictors, which can be much larger
 than a multiple of the sparsity.}
 \ds{Not judged: it is a fixed-design theorem, and its size budget, at the constants of the strong-factor designs, needs
@@ -275,8 +278,9 @@ $n\gtrsim1{,}450$.}
 The assumptions of Results~1 and~2 hold on every design of our studies, strong common factors included. Result~3 is the
 theorem for block and moderate AR correlation: its assumptions hold on our independent designs and on those with block or
 moderate AR correlation (S1--S4, S6, IND, AR at $0.6$, BLK), and not on the pervasive-factor designs (S5, the strong-factor
-study, FAC), whose leakage set is all of $\set{p}$ when $p\gg\sqrt n$; visibility can also fail on its own, for pervasive
-factors with effects of mixed signs and for riboflavin-like data (Section~\ref{sec:a-rm}). What still holds outside
+study, FAC), whose leakage set is all of $\set{p}$ when $p\gg\sqrt n$; visibility can also fail on its own, for strong
+factors whose mixed-sign coefficients lie on a fixed null set of cancellations (Remark~\ref{rem:vis},
+Section~\ref{sec:a-rm}). What still holds outside
 Result~3: Results~1 and~2; Result~4, certified screening, which needs neither visibility nor a leakage set, when its own
 floor and signal bounds hold; and Result~5, the unbiasedness of the evidence estimate, on every design. The consistency of
 the reported inclusion probabilities, median model and evidence estimate (Remark~\ref{thm:outputs} in the supplement)

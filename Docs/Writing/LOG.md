@@ -67,3 +67,6 @@
 - 2026-11-17 A5 Codex (scoped): NOT-FAITHFUL 0C/1S/2F; all fixed (reviews/A5_codex_disposition.md). Waiting: advisor STYLE_A5_R1; then the Opus clarity read.
 - 2026-11-17 STYLE_A5_R1 applied (advisor/STYLE_A5_R1_disposition.md); main text ends p. 25; clean. Next: one Opus clarity read.
 - 2026-11-17 A5 Opus clarity read applied (advisor/CLARITY_A5_disposition.md). DELIVERED: manuscript/manuscript_A5_2026-11-17.pdf (§1–6 end p. 25; clean). Reported to HQ.
+- 2026-11-17 HQ additions to A5 (card 17; dept/theory 0fa47029): Thm 2 → sub-Gaussian (SGR; NH14 Lemma 6.1 only; SL Cond 1 as a factual remark; 2b sentence); Remark Thm2X; Corollary 6L (list-renormalised quantities, displays) + discharge note + averaged-fields sentence; Lemma VIS scope remark. None recorded on main yet (statuses say so). Main text now ends p. 27 with statuses (p. 26 without); the over-run is from the additions. Opus diff fidelity check launched (sources in .rc_tmp/a5b_src).
+- 2026-11-17 A5b Opus check: 13 issues, all fixed (reviews/A5b_disposition.md); one departs from HQ's wording (Cor 6L → Cor 9C premise: 'proposed, not yet claimed', per W3-D5P §5 rem. 3). DELIVERED manuscript/manuscript_A5b_2026-11-17.pdf: §1–6 end p. 26 with status boxes (see report for p. without).
+- 2026-11-17 HQ: future Codex fidelity reads use gpt-6.2-sol (high). Recorded as WD9.

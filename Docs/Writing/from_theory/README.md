@@ -5,6 +5,7 @@
   one-word comparisons except the uniform ones listed, conditional sentences come from the TRACK_B summary table, and
   conclusions are compared per theorem only, never "our conclusions are stronger". The design inside/outside verdicts
   are unchanged throughout.
+- `COR6L_9C_NOTE_2026-11-17.md`: Cor 6L ↔ Cor 9C is pathwise only (HQ wording). Current.
 - `VISIBILITY_SCOPE_2026-11-17.md`: core 3 visibility scope sentence (sign route / generic position / outside), HQ-approved for Assignment 5. Current.
 - `PRECEDENTS_2026-11-17.md`: literature precedents for each non-Song–Liang assumption of the posterior theorems (citations verified; comparisons independently re-checked). FINAL, for manuscript §5.
 - `ROW36_NOTE_2026-11-16.md`: row 3.6 stays core for now; may become a remark after #5′ (HQ). Current.
