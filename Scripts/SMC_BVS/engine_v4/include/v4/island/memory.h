@@ -15,12 +15,13 @@
 //                parallel compaction at pass boundaries, WP7 O3; serial for particle-major and with leaders_deferred = false)
 //   worker_bufs  T offer buffers per store, capacity pow2(65,536) x 1.5          T * 98,304 * e * (1 or 3)
 //   rb           u128 accumulators 32 p (+ particle-major 16 p T) (+ compat 8 p) + rb_round Hm p 8 + rb_acc, pip 16 p
-//   orders       label-major group: orders + inverse orders + U/N/I lists        2 G m 4 + G (B + 2) 8
+//   orders       label-major group: inverse orders + one order per thread (K2) + U/N/I lists   G m 4 + T m 4 + G (B + 2) 8
 //   rows         label-major group: log m and odds rows per support              2 G p 8
 //   gram_rows    label-major with bounded scoring (K3): Gram rows of active columns kept across passes   slots p 8
 //   supports     support caches (4 k_q^2 doubles each), gathered columns, per-thread product tiles
 //                with k_q = min(K, 3k): G (32 k_q^2) + G k_q n 8 + T G k_q tile 8
-//   lm_scratch   label-major per-thread scratch (sized before the parallel regions)  T (18 tile + 64 k_q + 64)
+//   lm_scratch   label-major per-thread scratch (sized before the parallel regions)  T (18 tile + 64 k_q + 64 + 40 k_q^2 + 24 k_q
+//                + 4 (K + 1)) + 4 G (K + 1)
 //   particles    two populations + pending + terminal supports                   (2N + G) (4k + 64) + N 4k
 //   ckpt         streamed checkpoint buffers                                     2 MiB
 //   headroom     12 % of every term except the inputs (allocator slack, run-to-run variation of the peak)
@@ -81,11 +82,13 @@ inline MemPlan island_memory(const MemSizes& z, double k) {
   add("worker_bufs", T * 1.5 * (double)pow2_at_least(65536) * e * (z.leaders ? 3 : 1));
   add("rb", 32 * p + (z.label_major ? 0.0 : 16 * p * T) + (z.compat ? 8 * p : 0.0) + (double)z.Hm * p * 8 + 16 * p);
   if (z.label_major) {
-    add("orders", 2.0 * G * m_lab * 4 + G * (z.B + 2) * 8);
+    add("orders", G * m_lab * 4 + T * m_lab * 4 + G * (z.B + 2) * 8);   // K2: inverse orders per particle + one order per thread
     add("rows", 2.0 * G * p * 8);
     if (z.gram_slots > 0) add("gram_rows", (double)z.gram_slots * p * 8);
     add("supports", G * 32.0 * kq * kq + G * kq * n * 8 + T * G * kq * z.tile * 8);
-    add("lm_scratch", T * (18.0 * z.tile + 64.0 * kq + 64.0));
+    // per thread: tile scratch (18 tile), support scratch (64 kq + 64), the order phase's scorer buffers (5 kq^2 + 3 kq doubles),
+    // proposal model (4 (K + 1)); per slot: the I proposal's model 4 (K + 1)
+    add("lm_scratch", T * (18.0 * z.tile + 64.0 * kq + 64.0 + 40.0 * kq * kq + 24.0 * kq + 4.0 * (z.K + 1.0)) + G * 4.0 * (z.K + 1.0));
   } else {
     add("supports", T * (32.0 * kq * kq + kq * n * 8));
   }

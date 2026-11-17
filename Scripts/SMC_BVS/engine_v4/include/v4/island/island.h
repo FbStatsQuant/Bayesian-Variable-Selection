@@ -18,6 +18,7 @@
 // the sum is exact, hence independent of the order of the particles (declared reduction; class A against core's
 // double sum, |error| <= 2^-63 per term). See src/island/README.md.
 #pragma once
+#include <atomic>
 #include <chrono>
 #include <limits>
 #include <string>
@@ -100,6 +101,9 @@ struct IslandConfig {
                                             // phase B. Execution parameter: outputs unchanged (false = the dense reference)
   bool test_nan_rows = false;               // tests only: poison the label-major score rows before every pass; any read of a
                                             // value not computed in the pass is an internal_error (review §2.1 NaN-row test)
+  bool rolling_admission = true;            // label-major (K5, WP3_ARCH_REVIEW §2 lever 5): a slot whose particle finished its
+                                            // round takes the next particle, so the passes stay full (false = groups of G one
+                                            // after the other). Execution parameter: outputs unchanged
   int gram_slots = -1;                      // label-major with bounded scoring (K3, WP3_ARCH_REVIEW §2.2): Gram rows X^T x_a of
                                             // active columns kept across passes, one slot of p doubles each. -1 = auto
                                             // (gram_slots_of: 5 G / 2, 640 at G = 256); 0 = off. Execution parameter (same
@@ -109,6 +113,11 @@ struct IslandConfig {
                                             // never fire; a small buffer lets a small-p fixture reach them (same code path, same bits)
   bool test_drop_leader_stage = false;      // tests only: the leader stores discard their staged offers at the deferred triggers instead of
                                             // compacting (a deliberate bug: the negative control of leader_stores_deferred_compaction_same_bits)
+
+  std::atomic<bool>* test_order_phase = nullptr;   // tests only: set true around the label-major order phase's parallel region
+                                            // (an operator-new counting test asserts that the region does not allocate)
+  int test_fail_indep = -1, test_fail_indep_stage = 1;   // tests only: the I proposal of particle i (0-based) in bridge stage
+                                            // s fails its score (K2: label-major draws it ahead and must fail where core does)
   int test_bound_shrink = 0;                // tests only: bounded scoring skips the last s positions below the running first
                                             // change (a deliberate bug: the negative control of test_nan_rows)
   int products_block = 0;                   // tile products: 4 = 4 active columns x 32 labels per sweep, 1 = the original loop
