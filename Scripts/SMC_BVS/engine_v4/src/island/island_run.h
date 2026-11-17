@@ -666,11 +666,13 @@ class IslandEngine {
                          (unsigned long long)(top.n_merges - merges_prev), top.t_sort - sort_prev, k.t_check - ks_prev.t_check, k.t_ckpt - ks_prev.t_ckpt);
             // [arch] (WP3_ARCH_REVIEW §6 / WP6): phases of the round and flip evaluations (the I1 check is on the [round] line, O1)
             std::fprintf(stderr, "  [arch] step %d: orders %.2f build %.2f phaseA %.2f (products %.2f thread-s) walk %.2f phaseB %.2f compact_pass %.2f apply %.2f"
-                         " | flip evaluations %.4g = %.3f per step\n",
+                         " | flip evaluations %.4g = %.3f per step | Gram rows (column x pass) computed %llu reused %llu no slot %llu\n",
                          step, k.t_orders - ks_prev.t_orders, k.t_build - ks_prev.t_build, k.t_phaseA - ks_prev.t_phaseA, k.t_products - ks_prev.t_products,
                          k.t_walk - ks_prev.t_walk, k.t_phaseB - ks_prev.t_phaseB, k.t_compact_pass - ks_prev.t_compact_pass, k.t_apply - ks_prev.t_apply,
                          (double)(k.flip_evals - ks_prev.flip_evals),
-                         steps > 0 ? (double)(k.flip_evals - ks_prev.flip_evals) / steps : 0.0);
+                         steps > 0 ? (double)(k.flip_evals - ks_prev.flip_evals) / steps : 0.0,
+                         (unsigned long long)(k.gram_rows_new - ks_prev.gram_rows_new), (unsigned long long)(k.gram_rows_reused - ks_prev.gram_rows_reused),
+                         (unsigned long long)(k.gram_rows_noslot - ks_prev.gram_rows_noslot));
             ks_prev = k; ks_prev.t_store_compact = top.t_compact; merges_prev = top.n_merges; sort_prev = top.t_sort;
           }
           prev_t = now_t;
@@ -747,9 +749,9 @@ MemPlan plan_island(const Data& D, const Start& st, const IslandConfig& cfg, Mem
   z.deferred = cfg.store_parallel_compact && cfg.threads > 1 && lm; z.leaders = cfg.leaders || cfg.role != IslandRole::Final; z.compat = cfg.compat; z.inputs_bytes = cfg.inputs_bytes;
   z.calib = cfg.role != IslandRole::Final;
   int G = cfg.G ? cfg.G : 256;
-  z.G = G; MemPlan mp = island_memory(z, k_est);
+  z.G = G; z.gram_slots = gram_slots_of(cfg, G, D.p); MemPlan mp = island_memory(z, k_est);
   if (cfg.mem_budget && cfg.G == 0) {
-    while (G > 1 && mp.total > cfg.mem_budget) { --G; z.G = G; mp = island_memory(z, k_est); }
+    while (G > 1 && mp.total > cfg.mem_budget) { --G; z.G = G; z.gram_slots = gram_slots_of(cfg, G, D.p); mp = island_memory(z, k_est); }
   }
   if (zout) *zout = z;
   if (kout) *kout = k_est;
