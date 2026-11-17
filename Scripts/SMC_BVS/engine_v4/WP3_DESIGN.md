@@ -459,8 +459,8 @@ This is the API that WP4's `calib::IslandRunner` calls. It is built after the PR
     (`IslandConfig::input_id`, `input_identity()`), checked before any state is read: a restart on other inputs is
     `invalid_input` (exit 13), the checkpoint stays on disk, no island file is written. Test `island_command_resume` changes only
     the neighbour graph (valid, normal checks all pass; calib.bin's inputs updated), so only the identity tells the runs apart.
-  - **Container (review PR52 m7).** The files are not kind-8 containers: they are a streamed payload (magic `SMCV4CKP`,
-    two generations, FNV checksum, atomic rename) because the store held by an island at 10⁶ is GBs and `fmt::Writer`
+  - **Container (review PR52 m7).** The files are not kind-8 containers: they are a streamed payload (magic `SMCV4CK2`,
+    two generations, the parallel block checksum of `ckpt_sum.h` (WP7 O4, INTERFACES v0.1.22), atomic rename) because the store held by an island at 10⁶ is GBs and `fmt::Writer`
     would hold a second copy of it (its `add_copy` owns its bytes). `smcbvs4 info` therefore cannot read them. A contract
     amendment to INTERFACES §5.1 (kind 8 = this streamed layout, or a Writer that streams) is requested from WP1 through the
     manager; no behaviour changes meanwhile.
@@ -607,7 +607,8 @@ lg0, d, F); stage table, terminal moves and distinct counts; `rb_round` so far; 
 (counters, island_best, HPM + key); the compacted store (v, hash, off, len, pool). No generator state (addresses are
 recomputed). Compat mode (not built by WP3) would add the xoshiro state.
 **Atomicity.** Two generations `<path>.a/.b` written alternately: payload → `<file>.tmp.<pid>`, `fsync`, `rename`.
-Header: magic, generation, length, FNV-1a checksum (provisional; WP1's kind-8 file with SHA-256 sections replaces it).
+Header: magic `SMCV4CK2`, generation, length, block checksum (1 MiB blocks by position, FNV-1a per block, combined with the length;
+thread-count independent: `ckpt_sum.h`, WP7 O4; provisional: WP1's kind-8 file with SHA-256 sections may replace it).
 A load reads both, keeps those with valid magic, length, checksum and fingerprint, takes the larger generation.
 **Equivalence.** Every output of the remaining steps is a function of exactly the checkpointed state and the
 addresses (store: top_c(top_c(A) ∪ B) = top_c(A ∪ B); tallies: sums/max/strict-order max; RB: exact integers), so a

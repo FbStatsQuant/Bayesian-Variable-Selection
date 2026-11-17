@@ -117,6 +117,8 @@ int main(int argc, char** argv) {
     const std::string& ps = rec.at("prep_status").str();
     if (ps == "no_predictors") code = 20; else if (ps == "y_constant") code = 21;
   }
+  // WP7 O4: the island's resumable time stop (a checkpoint, no island file) exits 22, like prep's data outcomes 20 / 21
+  if (st == Status::completed && rec.contains("island_status") && rec.at("island_status").type() == Json::STR && rec.at("island_status").str() == "interrupted_resumable") code = 22;
   if (record_path.empty() && args.contains("out") && args.at("out").type() == Json::STR) record_path = args.at("out").str() + ".json";
   try { if (!record_path.empty()) write_json_file(record_path, rec); } catch (...) { if (st == Status::completed) st = Status::io_error; }
   if (st != Status::completed) code = exit_code(st);

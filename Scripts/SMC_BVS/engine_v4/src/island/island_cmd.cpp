@@ -8,7 +8,8 @@
 //                  params.seed. The manifest is the authority: an explicit argument that disagrees is refused.
 //   Explicit form: smcbvs4 island --data D --setup S --calib C --island r --seed s --mode compat|law|V --out island_r.bin
 //                  [--Rp R] [--threads k] [--mem-budget BYTES | --mem-budget-gb G] [--G g] [--tile t]
-//                  [--ckpt 0|1] [--ckpt-every-s s] [--offer-floor 1|0 (D-29: V final islands drop store offers below calib.bin's
+//                  [--ckpt 0|1] [--ckpt-every-s s] [--stop-after-s S (WP7 O4: a soft stop: checkpoint at the first step boundary after S
+//                  seconds from the command's start and exit 22 `interrupted_resumable`; a rerun resumes)] [--offer-floor 1|0 (D-29: V final islands drop store offers below calib.bin's
 //                  tau_cal; 0 = no floor, the merged science is the same; WP7 O6)]
 //   Plan only:     the same with --plan-only 1 (no --out needed): the island's admission plan (memory.h), no run.
 //                  Without files: --plan-only 1 --mode M --n n --p p [--N N --threads k --G g --k k --inputs-bytes b]
@@ -299,7 +300,20 @@ Json run(const Json& args) {
   if (sd.mappable && st.bytes() != sd.view_bytes) throw Error(Status::internal_error, std::string(W) + "the mapped start law differs from the planned sections");
   const Neighbours nb = load_neighbours(in.setup, D.p, !sd.mappable, sd.content_hash);   // the mapped loader verified every section; same file as the plan
   const double t_load = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
+  // WP7 O4: --stop-after-s S is a SOFT time stop measured from the start of this command (the load counts): at the first
+  // step boundary after S seconds the island checkpoints and exits with the resumable outcome (exit 22, below)
+  if (args.contains("stop_after_s")) {
+    if (args.at("stop_after_s").type() != Json::NUM || !(args.at("stop_after_s").num() > 0)) throw Error(Status::invalid_input, std::string(W) + "--stop-after-s must be a number > 0");
+    c.stop_after_s = std::max(0.001, args.at("stop_after_s").num() - t_load);   // the engine counts from the start of run()
+  }
   const IslandRun r = mode == fmt::M_V ? run_island<Arith::ClassA>(D, st, nb, c) : run_island<Arith::Bit>(D, st, nb, c);
+  if (r.status == 1 && r.time_stopped) {   // not a failure and not finished: no island file; the checkpoint is the result
+    rec["status"] = "completed"; rec["island_status"] = "interrupted_resumable"; rec["reason"] = r.reason;
+    rec["stopped_after_step"] = r.stopped_after_step; rec["resumed_from_step"] = r.resumed_from_step; rec["T"] = (double)C.grid.size() - 1;
+    Json t = Json::object(); t["load"] = t_load; t["island"] = r.ks.t_total; t["ckpt"] = r.ks.t_ckpt;
+    t["total"] = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count(); rec["seconds"] = t;
+    return rec;
+  }
   if (r.status == 1) throw Error(Status::internal_error, std::string(W) + "island interrupted without a stop request");
   const std::string fhash = write_island_file(in.out, r, arith, inputs);
   const Status s = r.status == 0 ? Status::completed : r.status == 2 ? Status::numerical_failure : Status::resource_limit;

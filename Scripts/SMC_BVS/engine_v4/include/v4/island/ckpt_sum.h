@@ -5,7 +5,8 @@
 //   * every block gets an FNV-1a 64 hash of its bytes (independent: any thread, any order);
 //   * the checksum = FNV-1a 64 over (total length, block hash 0, block hash 1, ...) in block order.
 // So it does not depend on the number of threads, on how the writer cut the stream into write() calls, or on the reader's
-// buffer size: BlockSum::add may be fed any chunking, and of_stream / of_region give the same value (tested).
+// buffer size: BlockSum::add may be fed any chunking, and the whole-region form of_region (a test and mapped-file helper:
+// the engine itself streams) gives the same value (tested).
 #pragma once
 #include <omp.h>
 #include <cstdint>

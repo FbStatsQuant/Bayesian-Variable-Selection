@@ -1,6 +1,6 @@
 # INTERFACES — engine v4 contract between WP1–WP5
 
-**v0.1.20 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-17. (v0.1.17, the O6 offer-floor implementation line, is not merged yet.) Source: ENGINEERING_SPEC §0-v2,
+**v0.1.23 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-18. Source: ENGINEERING_SPEC §0-v2,
 §1–§3, §6. Where this file is silent, the spec rules; where the spec is silent, `core/` (v3.1 / revision D) rules.
 Questions and change requests: to the WP1 owner through the manager. Line references `core/...:N` are to revision D.
 
@@ -516,6 +516,13 @@ Status fit_status(span<Status>);   // first that applies: invalid_input, interna
   `10 + status`. `schedule_limit` (exit 16) is the theory/compat calibration outcome of `core/v3_calib.R:170`: tier-1 grid
   construction failed and no fallback grid exists. It cannot arise in V-1M (D-26). No estimate field is written unless status is `completed` (GUARD-W). Invariant violations (I1–I7) →
   `internal_error`. Hash or format mismatch at start → `invalid_input`. Write/rename failure → `io_error`.
+- **Resumable stop (v0.1.23, WP7 O4).** `smcbvs4 island --stop-after-s S` (S > 0 seconds, measured from the start of the
+  command; needs checkpoints) is a soft stop: at the first step boundary after S seconds, before the last step, the island
+  writes a checkpoint and exits with code **22**. Like the prep outcomes (20 / 21) it is not a failure and not a
+  completion: the record has `status` "completed", `island_status` = "interrupted_resumable" (also `stopped_after_step`,
+  `resumed_from_step`, `reason`), and **no `island_bin` and no island file**. A rerun with the same arguments resumes from
+  `island_r.ckpt.{a,b}`. `--stop-after-s` with `--ckpt 0` or S <= 0 is `invalid_input`. The WP5 driver's restart chain
+  (`restart` plan key) treats 22 as "attempt ended cleanly, resume next".
 - **Memory admission (`--mem-budget`, bytes; 0 = off).** It is the **whole task's** memory, not the island store's.
   The island's peak-live plan (`include/v4/island/memory.h`, WP3) counts:
   - X, z and diag(G);
@@ -686,3 +693,7 @@ point, so all WPs link from day one: `setup::run`, `island::run`, `calib::run`, 
   over the length and the block hashes in order): a function of the bytes alone, independent of thread count and of the
   write / read chunking, so a checkpoint written with k threads resumes with any other. Magic `SMCV4CK2`; a file with the
   earlier magic (`SMCV4CKP`, serial FNV-1a) is refused with `invalid_input`, never treated as "no checkpoint".
+- v0.1.23 (2026-11-18, WP7 O4 for WP1; R5) — §7: `island --stop-after-s S` and the resumable exit 22 (record `island_status`
+  "interrupted_resumable", no island file); the checkpoint written at the stop is the ordinary `island_r.ckpt.{a,b}`
+  (v0.1.22 checksum). Driver: plan keys `restart` (the islands' resubmission chain) and `t6` / `t6_only` (T6 by real kills,
+  `tools/slurm/p1m_t6.py`).

@@ -587,6 +587,191 @@ class TestStageCost(Base):
         self.assertIn("cost_pilot_t0_k0_r0.jsonl", rep["calibration"])
 
 
+class TestRestartAndT6(Base):
+    """WP7 O4: the islands' resubmission chain (plan key restart) and the T6 real-kill batch (t6_only)."""
+
+    def plan(self, attempts=3):
+        pl = load_example(); pl["fits"] = pl["fits"][:1]; pl["fits"][0]["Rp"] = 3
+        pl["restart"] = {"attempts": attempts, "margin_s": 60}
+        pl.pop("core_h_cap", None)   # the retry arrays count at their limits: a cap set for one attempt would refuse the chain (by design)
+        return pl
+
+    def test_resolve_and_default(self):
+        base = p1m_driver.resolve(load_example())
+        self.assertNotIn("restart", base)   # no chain unless asked: the default plan is unchanged
+        P = p1m_driver.resolve(self.plan(3))
+        self.assertEqual(P["n_tasks"], p1m_driver.resolve(dict(self.plan(1), restart=None))["n_tasks"] + 2 * 3)
+        r = P["fits"][0]["resources"]["islands"]
+        self.assertGreater(P["worst_case_core_h"], p1m_driver.resolve(dict(self.plan(1), restart=None))["worst_case_core_h"] + 1.9 * 3 * int(r["cpus"]) * p1m_driver.hours(r["time"]))
+        q = load_example(); q["restart"] = {"attempts": 2}; q.pop("core_h_cap", None)
+        self.assertEqual(p1m_driver.resolve(q)["restart"]["margin_s"], max(300, int(0.15 * p1m_driver.hours(p1m_driver.resolve(q)["fits"][0]["resources"]["islands"]["time"]) * 3600)))
+        q = load_example(); q["restart"] = {"attempts": 2}   # with the example's cap 200: the chain's worst case is refused
+        with self.assertRaises(p1m_driver.PlanError):
+            p1m_driver.resolve(q)
+        for bad in ({"attempts": 0}, {"attempts": 7}, {"attempts": 2, "margin_s": -1}, {"attempts": 2, "margin_s": 10 ** 6}):
+            q = load_example(); q["restart"] = bad; q.pop("core_h_cap", None)
+            with self.assertRaises(p1m_driver.PlanError):
+                p1m_driver.resolve(q)
+
+    def test_submit_graph(self):   # attempt k+1 after attempt k (afterany); merge / eval wait for the last attempt (afterok)
+        fake_dept = os.path.join(self.tmp, "dept")
+        rc, out = self.gen(self.plan(3)); self.assertEqual(rc, 0)
+        scr = os.path.join(fake_dept, "scripts", "A2_pilot"); shutil.copytree(out, scr)
+        os.makedirs(os.path.join(scr, "bin"))
+        with open(os.path.join(scr, "bin", "smcbvs4"), "w") as fh:
+            fh.write("#!/bin/sh\nexit 0\n")
+        os.chmod(os.path.join(scr, "bin", "smcbvs4"), 0o755)
+        for d in ("scratch/slurm_out", "scratch/tmp"):
+            os.makedirs(os.path.join(fake_dept, d))
+        fbin = os.path.join(self.tmp, "fakebin"); os.makedirs(fbin)
+        calls = os.path.join(self.tmp, "sbatch_calls.txt")
+        with open(os.path.join(fbin, "sbatch"), "w") as fh:
+            fh.write("#!/bin/bash\nn=$(( $(wc -l < %s 2>/dev/null || echo 0) + 4000 ))\necho \"$n $*\" >> %s\necho $n\n" % (calls, calls))
+        os.chmod(os.path.join(fbin, "sbatch"), 0o755)
+        env = dict(os.environ, PATH=os.pathsep.join([fbin, "/usr/bin", "/bin"]), SBATCH=os.path.join(fbin, "sbatch"), P1M_DEPT=fake_dept, P1M_TEST_ROOT=self.tmp, CONFIRM="yes")
+        self.assertEqual(subprocess.call(["bash", os.path.join(scr, "submit.sh")], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL), 0)
+        L = [l.split() for l in open(calls).read().splitlines()]
+        st = [next(a for a in l if a.endswith(".sbatch")) for l in L]
+        self.assertEqual(st, ["stage_setup.sbatch", "stage_calibrate.sbatch", "stage_islands.sbatch", "stage_islands.sbatch", "stage_islands.sbatch",
+                              "stage_merge.sbatch", "stage_eval.sbatch"])
+        self.assertEqual(L[2][-2:], ["1", "1"]); self.assertEqual(L[3][-2:], ["1", "2"]); self.assertEqual(L[4][-2:], ["1", "3"])   # fit index, attempt
+        self.assertIn("--dependency=afterany:4002", L[3]); self.assertIn("--dependency=afterany:4003", L[4])
+        self.assertIn("--dependency=afterok:4004", L[5])   # merge waits for the last attempt
+
+    def test_chain_scripts(self):   # the stage script with a stub binary: soft stop (22), done / failed markers, last attempt
+        dept = os.path.join(self.tmp, "SMC_Engineering_Department")
+        rc, out = self.gen(self.plan(3), dept=dept); self.assertEqual(rc, 0)
+        scr = os.path.join(dept, "scripts", "A2_pilot"); shutil.copytree(out, scr); os.makedirs(os.path.join(scr, "bin"))
+        stub = os.path.join(scr, "bin", "smcbvs4")
+        with open(stub, "w") as fh:   # `island`: take the next exit code from $STUB_RC_FILE (default 0); 0 writes the island file
+            fh.write("""#!/bin/bash
+cmd=$1; shift; out=""; man=""; stop=""
+while [[ $# -gt 0 ]]; do case $1 in --out) out=$2; shift 2;; --manifest) man=$2; shift 2;; --stop-after-s) stop=$2; shift 2;; *) shift 2;; esac; done
+echo "$cmd stop=$stop" >> "$STUB_LOG"
+rc=0
+if [[ $cmd == island && -s $STUB_RC_FILE ]]; then rc=$(head -1 "$STUB_RC_FILE"); sed -i 1d "$STUB_RC_FILE"; fi
+if [[ $rc == 0 ]]; then echo ok > "$out"; echo '{"status":"completed"}' > "$out.json"; fi
+exit $rc
+""")
+        os.chmod(stub, 0o755)
+        # a manifest-filler stub: the real one needs hashed inputs; the stage only needs the file to exist
+        with open(os.path.join(scr, "p1m_manifest.py"), "w") as fh:
+            fh.write("import sys\nout = sys.argv[sys.argv.index('--out') + 1]\nopen(out, 'w').write('{}')\n")
+        with open(os.path.join(scr, "env.sh"), "w") as fh:
+            fh.write("true\n")
+        for d in ("scratch/slurm_out", "scratch/tmp", "scratch/runs/A2_pilot/A2_ARs_n200_r1/manifests", "scratch/runs/A2_pilot/A2_ARs_n200_r1/log"):
+            os.makedirs(os.path.join(dept, d))
+        rd = os.path.join(dept, "scratch", "runs", "A2_pilot", "A2_ARs_n200_r1")
+        rcf, logf = os.path.join(self.tmp, "rc.txt"), os.path.join(self.tmp, "stub.log")
+
+        def attempt(task, att, codes):
+            with open(rcf, "w") as fh:
+                fh.write("".join("%s\n" % c for c in codes))
+            env = dict(os.environ, SLURM_JOB_ID="80", SLURM_CPUS_PER_TASK="2", SLURM_ARRAY_TASK_ID=str(task), STUB_RC_FILE=rcf, STUB_LOG=logf)
+            r = subprocess.run(["bash", os.path.join(scr, "stage_islands.sbatch"), "1", str(att)], env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+            return r.returncode
+        calls = lambda: open(logf).read().count("island") if os.path.exists(logf) else 0
+        # island 1: soft stop, soft stop, then finished: attempts 1, 2 end cleanly (exit 0), attempt 3 writes the file and the marker
+        self.assertEqual(attempt(1, 1, [22]), 0); self.assertFalse(os.path.exists(os.path.join(rd, "island_1.done")))
+        self.assertEqual(attempt(1, 2, [22]), 0)
+        self.assertEqual(attempt(1, 3, [0]), 0); self.assertTrue(os.path.exists(os.path.join(rd, "island_1.done")) and os.path.exists(os.path.join(rd, "island_1.bin")))
+        n = calls(); self.assertEqual(attempt(1, 4, [0]), 0); self.assertEqual(calls(), n)   # finished: no binary call
+        self.assertIn("stop=", open(logf).read()); self.assertRegex(open(logf).read().splitlines()[0], r"stop=\d+")
+        # island 2: soft stop in every attempt: the last attempt ends with 22 (the island did not finish)
+        self.assertEqual(attempt(2, 1, [22]), 0); self.assertEqual(attempt(2, 2, [22]), 0); self.assertEqual(attempt(2, 3, [22]), 22)
+        # island 3: a real failure (exit 11): marked, later attempts repeat it without calling the binary
+        self.assertEqual(attempt(3, 1, [11]), 11); self.assertTrue(os.path.exists(os.path.join(rd, "island_3.failed")))
+        n = calls(); self.assertEqual(attempt(3, 2, [0]), 11); self.assertEqual(calls(), n)
+        self.assertEqual(os.listdir(os.path.join(dept, "scratch", "tmp")), [])
+
+    def test_stop_s_in_the_command(self):
+        rc, out = self.gen(self.plan(2))
+        txt = open(os.path.join(out, "stage_islands.sbatch")).read()
+        self.assertIn("LIMIT_S=900; MARGIN_S=60", txt)   # the example plan's islands: 16 CPUs x 15 min
+        self.assertIn('--stop-after-s "$STOP_S"', txt); self.assertIn("STOP_S=$(( LIMIT_S - MARGIN_S - SECONDS ))", txt)
+        plain = open(os.path.join(self.gen(load_example(), name="plain")[1], "stage_islands.sbatch")).read()
+        self.assertNotIn("stop-after-s", plain)   # no chain, no soft stop: unchanged
+
+    def test_off_is_unchanged(self):   # review PR62 m4: no restart / t6 key -> nothing new in the batch directory
+        rc, out = self.gen(load_example(), name="off")
+        sub = open(os.path.join(out, "submit.sh")).read()
+        self.assertNotIn("\n\n", sub)                                   # no blank line from the empty retry block
+        self.assertNotIn("attempt", sub)
+        R = json.load(open(os.path.join(out, "plan.resolved.json")))
+        self.assertNotIn("t6_only", R); self.assertNotIn("restart", R); self.assertNotIn("t6", R)
+        self.assertNotIn("p1m_t6.py", os.listdir(out)); self.assertNotIn("p1m_t6.py", open(os.path.join(out, "SHA256SUMS")).read())
+        self.assertNotIn("stop-after-s", open(os.path.join(out, "stage_islands.sbatch")).read())
+        self.assertNotIn("end_record", open(os.path.join(out, "stage_islands.sbatch")).read())
+        # with the key on, p1m_t6.py appears only in a t6 batch
+        rc2, out2 = self.gen(self.plan(2), name="on")
+        self.assertNotIn("p1m_t6.py", os.listdir(out2))
+        q = json.load(open(os.path.join(HERE, "examples", "plan_T6_1e5.json")))
+        del q["t6_only"]
+        with self.assertRaises(p1m_driver.PlanError):   # a t6 section needs t6_only
+            p1m_driver.resolve(q)
+
+    def test_attempt_end_records(self):   # review PR62 m5: every attempt (finished, soft stop, failure, skip) leaves an ends.jsonl line
+        dept = os.path.join(self.tmp, "SMC_Engineering_Department")
+        rc, out = self.gen(self.plan(3), dept=dept)
+        scr = os.path.join(dept, "scripts", "A2_pilot"); shutil.copytree(out, scr); os.makedirs(os.path.join(scr, "bin"))
+        with open(os.path.join(scr, "bin", "smcbvs4"), "w") as fh:
+            fh.write("#!/bin/bash\ncmd=$1; shift; out=\"\"; while [[ $# -gt 0 ]]; do case $1 in --out) out=$2; shift 2;; *) shift 2;; esac; done\n"
+                     "rc=0; if [[ $cmd == island && -s $STUB_RC_FILE ]]; then rc=$(head -1 \"$STUB_RC_FILE\"); sed -i 1d \"$STUB_RC_FILE\"; fi\n"
+                     "if [[ $rc == 0 ]]; then echo ok > \"$out\"; fi; exit $rc\n")
+        os.chmod(os.path.join(scr, "bin", "smcbvs4"), 0o755)
+        with open(os.path.join(scr, "p1m_manifest.py"), "w") as fh:
+            fh.write("import sys\nopen(sys.argv[sys.argv.index('--out') + 1], 'w').write('{}')\n")
+        with open(os.path.join(scr, "env.sh"), "w") as fh:
+            fh.write("true\n")
+        for d in ("scratch/slurm_out", "scratch/tmp", "scratch/runs/A2_pilot/A2_ARs_n200_r1/manifests", "scratch/runs/A2_pilot/A2_ARs_n200_r1/log"):
+            os.makedirs(os.path.join(dept, d))
+        rcf = os.path.join(self.tmp, "rc.txt")
+        ends = os.path.join(dept, "scratch", "runs", "A2_pilot", "ends.jsonl")
+
+        def attempt(task, att, codes):
+            with open(rcf, "w") as fh:
+                fh.write("".join("%s\n" % c for c in codes))
+            env = dict(os.environ, SLURM_JOB_ID="81", SLURM_CPUS_PER_TASK="2", SLURM_ARRAY_TASK_ID=str(task), STUB_RC_FILE=rcf)
+            return subprocess.run(["bash", os.path.join(scr, "stage_islands.sbatch"), "1", str(att)], env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE).returncode
+        self.assertEqual(attempt(1, 1, [22]), 0); self.assertEqual(attempt(1, 2, [0]), 0); self.assertEqual(attempt(1, 3, [0]), 0)   # soft stop, finished, skipped
+        self.assertEqual(attempt(2, 1, [11]), 11); self.assertEqual(attempt(2, 2, [0]), 11)                                          # failure, repeated
+        self.assertEqual(attempt(3, 3, [22]), 22)                                                                                      # the last attempt, unfinished
+        L = [json.loads(l) for l in open(ends).read().splitlines()]
+        self.assertEqual([(x["task"], x["attempt"], x["rc"]) for x in L], [("1", 1, 0), ("1", 2, 0), ("1", 3, 0), ("2", 1, 11), ("2", 2, 11), ("3", 3, 22)])
+        self.assertTrue(all(x["stage"] == "islands" and x["job"] == "81" and x["run_id"] == "A2_ARs_n200_r1" and x["end"] for x in L))
+
+    def test_t6_tmp_is_the_killed_process_own(self):   # review PR62 m6
+        import p1m_t6
+        base = os.path.join(self.tmp, "island")
+        for n in ("island.ckpt.a.tmp.111", "island.ckpt.b.tmp.222", "island.ckpt.a"):
+            open(os.path.join(self.tmp, n), "w").write("x")
+        self.assertEqual(sorted(os.path.basename(t) for t in p1m_t6.ckpt_state(base, 222)[1]), ["island.ckpt.b.tmp.222"])
+        self.assertEqual(p1m_t6.ckpt_state(base, 333)[1], [])   # a stale tmp of another pid never fires the kill
+        self.assertEqual(len(p1m_t6.ckpt_state(base)[1]), 2)
+
+    def test_t6_batch(self):
+        P = p1m_driver.resolve(json.load(open(os.path.join(HERE, "examples", "plan_T6_1e5.json"))))
+        self.assertEqual(P["worst_case_core_h"], 40.0); self.assertEqual(P["core_h_cap"], 50); self.assertEqual(P["n_tasks"], 1)
+        rc, out = self.gen(json.load(open(os.path.join(HERE, "examples", "plan_T6_1e5.json"))), name="t6")
+        files = set(os.listdir(out))
+        self.assertTrue({"stage_t6.sbatch", "submit_t6.sh", "p1m_t6.py", "build.sh"} <= files)
+        for absent in ("submit.sh", "stage_setup.sbatch", "stage_calibrate.sbatch", "stage_islands.sbatch", "stage_merge.sbatch", "stage_eval.sbatch"):
+            self.assertNotIn(absent, files)
+        st = open(os.path.join(out, "stage_t6.sbatch")).read()
+        self.assertIn("#SBATCH --constraint=sapphirerapids", st); self.assertIn("#SBATCH --cpus-per-task=48", st); self.assertIn("#SBATCH --time=00:50:00", st)
+        self.assertIn("scratch/runs/T5_1e5/$RUN_ID", st); self.assertIn("--kills 2", st); self.assertIn("--ckpt-every-s 20", st)
+        self.assertIn("worst case 40.0 billed core-h", open(os.path.join(out, "submit_t6.sh")).read())
+        self.assertIn("| 40.0 |", open(os.path.join(out, "ledger_row.md")).read())
+        for bad in ({"source_batch": "T5_1e5", "cpus": 48, "mem": "24G"}, {"source_batch": "T5_1e5", "cpus": 48, "mem": "24G", "time": "03:00:00"},
+                    {"source_batch": "T5_1e5", "cpus": 48, "mem": "24G", "time": "00:50:00", "kills": 9}):
+            q = json.load(open(os.path.join(HERE, "examples", "plan_T6_1e5.json"))); q["t6"] = bad
+            with self.assertRaises(p1m_driver.PlanError):
+                p1m_driver.resolve(q)
+        q = json.load(open(os.path.join(HERE, "examples", "plan_T6_1e5.json"))); q["core_h_cap"] = 39
+        with self.assertRaises(p1m_driver.PlanError):
+            p1m_driver.resolve(q)
+
+
 class TestPrepOutcome(TestLocalChain):
     """prep exit 20 (no_predictors): setup ends the pipeline cleanly, later stages exit 0, eval records the outcome."""
 

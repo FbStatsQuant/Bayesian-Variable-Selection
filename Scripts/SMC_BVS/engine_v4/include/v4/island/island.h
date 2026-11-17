@@ -65,6 +65,10 @@ struct IslandConfig {
   std::string ckpt_path;                    // empty: no checkpoints; else <path>.a / <path>.b
   double ckpt_every_s = 600;                // spec §6: at most every 10 min
   int stop_after_step = -1;                 // testing (T6): write a checkpoint after step s and return `interrupted`
+  double stop_after_s = 0;                  // WP7 O4: a SOFT time stop. At the first step boundary after this many seconds of run()
+                                            // (before the last step) a checkpoint is written (unless this step's was) and the
+                                            // island returns status 1 with time_stopped = true: the resumable outcome of a task
+                                            // that must end before its Slurm limit. 0 = off. Needs a checkpoint path
   bool resume = true;
   bool keep_terminal = true;               // terminal supports (N, after the last measured round) -> island_r.bin
   uint32_t tier = 0;                        // frozen calibration tier (event key, INTERFACES v0.1.5 §4.2)
@@ -215,7 +219,9 @@ inline v4::Json cost_row_json(const StepCost& c, int m) {
 struct Particle { Model S; uint64_t h = 0; double logm = 0, lg0 = 0, d = 0, F = 0; };
 
 struct IslandRun {
-  int status = 0;   // 0 completed, 1 interrupted (stop_after_step), 2 numerical_failure, 3 resource_limit (mem_budget)
+  int status = 0;   // 0 completed, 1 interrupted (stop_after_step / stop_after_s), 2 numerical_failure, 3 resource_limit (mem_budget)
+  bool time_stopped = false;   // status 1 because of stop_after_s (a resumable stop), not stop_after_step (tests)
+  int stopped_after_step = -1; // the step whose checkpoint the interrupted island left
   std::string reason;
   IslandRole role = IslandRole::Final; uint32_t tier = 0, iter = 0;
   int forced = 0;                    // adaptive schedule: forced (floor 1/T_e) steps (core's res.forced)
