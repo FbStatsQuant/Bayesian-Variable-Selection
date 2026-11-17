@@ -11,6 +11,11 @@
 - When: BNP sends a "quiet window" (expected 11-16 early afternoon CST). HQ pauses SMC departments' leads, restarts, verifies, then messages BNP back. BNP launches nothing until confirmed.
 - BNP already moved its temp to /home/fb31/bnp_tmp and removed 73 stale sandboxes (11-15).
 
+## OWNER 11-17: LEAN GATE (binding)
+- **No line of Lean code** until **HQ, the consultant (VP) and the owner all agree** that the theory as it stands is virtually as good as it gets given our choices.
+- **Lean done = final:** we will not come back to change formalized theorems. Before the gate, specific localized theorem changes are fine (cheap).
+- The auto-launch of the Lean Department for Mon 11-23 is **DISABLED**. The launch happens only after the three-way sign-off, which follows Monday's HQ + consultant session.
+
 ## OWNER 11-17: THEORY BUDGET POLICY
 - Theory is **no longer the main activity or the largest token consumer**.
 - A genuine model or method improvement is welcome **only if** its theory impact is localized and its cost is modest (not hundreds of millions of tokens).
