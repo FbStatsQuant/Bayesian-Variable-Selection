@@ -749,3 +749,4 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - **New, owner-approved: re-run a representative subset of the 2,400-fit study on the FROZEN method** (v3 with LS0 + the new field). Engineering plans it within H-12 if possible.
   - Real-data example: Engineering reports the plan or a proposal.
   - Afterwards: the method sign-off → proof hardening → Lean.
+- 2026-11-17. FEAS_SMC_WORKS (audit Fable): no route through existing lemmas. **OWNER: "SMC does work" DROPPED for this paper, including the weak-leak corollary** ("what we have is more than enough for a brand-new method"). Material kept for the follow-up paper. The theory push list is closed.
