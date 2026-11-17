@@ -23,7 +23,7 @@ seats)"; W2-APP:POST@1.0.7 "PROVED-CHECKED". Hypotheses of LIST-R: those of RM2-
 **Record correction for HQ (record-only re-freeze R3r; no claim text changes).** `ingest.py claims REPORT.md` refused the
 frozen REGISTRY blocks on 8 format items (conclusion level tags; LIST-R hypotheses as prose instead of assumption ids;
 non-commit `method_commit` values; a marker inside an assumption list). Corrected blocks + DEPS LIST-R row (checked by R3,
-now OK) + `ERRATA.md` (R3's two E notes) are in `reviews/R3r_correction.patch` (`git apply --check` clean; expected
+now OK) + `ERRATA.md` (R3's two E notes; E3 added after CP3 from the Cor 9C check) are in `reviews/R3r_correction.patch` (`git apply --check` clean; expected
 post-apply sha256 in `reviews/R3r_expected_sha256.txt`). With it, `ingest.py claims … --staged`: 0 problems; staged
 check.py 0 ERROR; **acceptance PASS** for the 3 ids (`reviews/INGEST_staged_CP3.txt`). HQ applies it as a CORRECTION-ONLY
 re-freeze (precedent W3-RM2-R R3r) or tells me to.
@@ -56,3 +56,8 @@ USAGE.txt, SCRUB_LOG.tsv; builder `d5p_card_build.py`), built at the passing com
 fails otherwise); ≈ $1.0 expected, ≤ $1.7 worst case. For HQ to count/submit with `API_AUDIT/audit_batch.py`.
 
 **Budget.** Started 11-17 12:38 CST; CP3 the same day (≈ 0.4 of the 3-day kill budget).
+
+**Post-CP3 (H5 card 17 (b)).** Cor 9C implication note `reviews/post_cp3/COR9C_NOTE.md` v1.1, one Opus check
+(`reviews/post_cp3/COR9C_check_opus.md`: N1 IMPLIES, N2 IMPLIES, N3 AGREE; ACCEPT-WITH-CHANGES, F1–F8 applied): the list
+premise is discharged pathwise (LIST-CODE (i), (v)) and conditionally in probability; NOT on Theorem 6 designs as recorded
+(Theorem A's law and Setting R are disjoint; raw-scale bridge READER B6.7 open). Recording-package entry in the note §4.
