@@ -84,6 +84,8 @@ struct IslandConfig {
                                             // active columns kept across passes, one slot of p doubles each. -1 = auto
                                             // (gram_slots_of: 5 G / 2, 640 at G = 256); 0 = off. Execution parameter (same
                                             // bits); counted in the memory plan (gram_rows)
+  int test_fail_indep = -1, test_fail_indep_stage = 1;   // tests only: the I proposal of particle i (0-based) in bridge stage
+                                            // s fails its score (K2: label-major draws it ahead and must fail where core does)
   int test_bound_shrink = 0;                // tests only: bounded scoring skips the last s positions below the running first
                                             // change (a deliberate bug: the negative control of test_nan_rows)
   int products_block = 0;                   // tile products: 4 = 4 active columns x 32 labels per sweep, 1 = the original loop

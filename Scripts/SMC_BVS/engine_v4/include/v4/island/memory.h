@@ -14,7 +14,7 @@
 //   leaders      (calibration islands, option `leaders`) two stores of cap 20p, serial compaction at cap/4, same terms
 //   worker_bufs  T offer buffers per store, capacity pow2(65,536) x 1.5          T * 98,304 * e * (1 or 3)
 //   rb           u128 accumulators 32 p (+ particle-major 16 p T) (+ compat 8 p) + rb_round Hm p 8 + rb_acc, pip 16 p
-//   orders       label-major group: orders + inverse orders + U/N/I lists        2 G m 4 + G (B + 2) 8
+//   orders       label-major group: inverse orders + one order per thread (K2) + U/N/I lists   G m 4 + T m 4 + G (B + 2) 8
 //   rows         label-major group: log m and odds rows per support              2 G p 8
 //   gram_rows    label-major with bounded scoring (K3): Gram rows of active columns kept across passes   slots p 8
 //   supports     support caches (4 k_q^2 doubles each), gathered columns, per-thread product tiles
@@ -79,7 +79,7 @@ inline MemPlan island_memory(const MemSizes& z, double k) {
   add("worker_bufs", T * 1.5 * (double)pow2_at_least(65536) * e * (z.leaders ? 3 : 1));
   add("rb", 32 * p + (z.label_major ? 0.0 : 16 * p * T) + (z.compat ? 8 * p : 0.0) + (double)z.Hm * p * 8 + 16 * p);
   if (z.label_major) {
-    add("orders", 2.0 * G * m_lab * 4 + G * (z.B + 2) * 8);
+    add("orders", G * m_lab * 4 + T * m_lab * 4 + G * (z.B + 2) * 8);   // K2: inverse orders per particle + one order per thread
     add("rows", 2.0 * G * p * 8);
     if (z.gram_slots > 0) add("gram_rows", (double)z.gram_slots * p * 8);
     add("supports", G * 32.0 * kq * kq + G * kq * n * 8 + T * G * kq * z.tile * 8);

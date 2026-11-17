@@ -83,6 +83,11 @@ TEST(philox_known_answers) {
     v4::Ctr4 c = v4::address_ctr(b); v4::Key2 kk = v4::address_key(b); double u8[8];
     philox8_positions(c.data(), kk.data(), pos, u8);
     for (int l = 0; l < 8; ++l) { Address e = b; e.position = pos[l]; ok = ok && same_bits(u8[l], uniform_at(e)); }
+    // K2: the slot word (philox8_word word 0), with extreme 32-bit lane values included
+    uint32_t sl[8]; for (int l = 0; l < 8; ++l) sl[l] = l < 2 ? (l ? 0xFFFFFFFFu : 0u) : (uint32_t)g();
+    b.position = (uint32_t)g(); c = v4::address_ctr(b); kk = v4::address_key(b);
+    philox8_word(c.data(), kk.data(), 0, sl, u8);
+    for (int l = 0; l < 8; ++l) { Address e = b; e.slot = sl[l]; ok = ok && same_bits(u8[l], uniform_at(e)); }
   }
   CHECK(ok);
 }
@@ -386,6 +391,25 @@ TEST(lm_alloc_failure_in_parallel_is_resource_limit) {
   }
   CHECKF(hit >= 10, "only %d of %d runs reached the injected allocation", hit, runs);
   std::printf("  %d runs, %d with an injected in-region allocation failure: all resource_limit\n", runs, hit);
+}
+
+// K2: label-major draws and scores the I proposal in the order phase; a failed score must surface where core's serial
+// round fails (the walk reaching the I position), with the same reason as particle-major, any threads / G
+TEST(indep_proposal_failure_deferred_to_its_position) {
+  Fixture F(100, 300, 44);
+  for (int arith = 0; arith < 2; ++arith) for (int victim : {0, 5, 37}) {
+    std::string reason0;
+    struct Conf { KernelKind k; int threads, G; };
+    for (const Conf& cf : std::vector<Conf>{{KernelKind::ParticleMajor, 1, 1}, {KernelKind::LabelMajor, 1, 48}, {KernelKind::LabelMajor, 3, 16},
+                                            {KernelKind::LabelMajor, 3, 7}}) {
+      IslandConfig c = small_cfg(); c.kernel = cf.k; c.threads = cf.threads; c.G = cf.G; c.test_fail_indep = victim; c.test_fail_indep_stage = 2;
+      IslandRun r = arith ? run_island<Arith::ClassA>(F.D, F.st, F.nb, c) : run_island<Arith::Bit>(F.D, F.st, F.nb, c);
+      if (reason0.empty()) { reason0 = r.reason; std::printf("  [%s] victim %d: %s\n", arith ? "A" : "bit", victim, r.reason.c_str()); }
+      CHECKF(r.status == 2 && r.reason.find("test hook: I proposal") != std::string::npos && r.reason == reason0,
+             "arith %d victim %d kernel %d threads %d G %d: status %d '%s' vs '%s'", arith, victim, (int)cf.k, cf.threads, cf.G, r.status,
+             r.reason.c_str(), reason0.c_str());
+    }
+  }
 }
 
 // negative control of the NaN-row test: bounded scoring that skips the position just below the running first change

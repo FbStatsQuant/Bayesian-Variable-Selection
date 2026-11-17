@@ -4,6 +4,7 @@
 # pi_0 -> phi = 1 in one stage + 2 burn-in rounds and checkpoints after step 3; then rounds 4-5 (2 measured rounds)
 # are resumed twice per variant, alternating: dense (V4_NO_BOUNDED=1, the pre-K1 behaviour), k1 (bounded scoring,
 # V4_GRAM_SLOTS=0) and k3 (bounded scoring + Gram rows, auto slots: 640 at G = 256; the default since K3).
+# Exit 5 if a variant did not run its mode (from its own configuration and [arch] lines).
 # V4_BENCH_VARIANTS overrides the list (default "dense k1 k3 dense2 k1b k3b"; a name's prefix selects the variant).
 # The I1 store check is off in every variant (V4_NO_CHECK_STORE; since O1 it runs only before checkpoints and the
 # final write, the same in both variants). Exit 3 unless all variants print one output hash.
@@ -12,6 +13,9 @@
 # Dry run elsewhere (Owls): V4_BENCH_P=20000 V4_BENCH_N=300 V4_BENCH_ISA=x86-64-v4 V4_MAKE_J=3 nice -n 19 ... <build> 3
 # ESTIMATE: build 3 min, transient ~11 min, 6 resumes x ~2.5 min: ~30 min wall on one socket (96 CPUs) = ~50 core-h.
 set -euo pipefail
+# review PR51 MINOR: no inherited execution override may change a variant's mode (V4_NO_BOUNDED=0 still disables
+# bounded scoring); each variant sets its own, and check_mode asserts from the run's own lines that it ran that mode
+unset V4_NO_BOUNDED V4_GRAM_SLOTS V4_STOP_AFTER V4_CHECK_EACH_STEP
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$here/tools/nots_guard.sh"
 build="${1:?build dir}"; thr="${2:-96}"
@@ -31,16 +35,32 @@ ARGS=(island "$p" "$N" "$thr" A lm 256 128 steps:1 2 2)
 lscpu | grep -E "Model name|^CPU\(s\)|Socket|NUMA node\(s\)"
 rm -f "$V4_CKPT".a "$V4_CKPT".b
 echo "== transient: phi = 1 in one stage + 2 burn-in rounds, checkpoint after step 3 $(date +%T)"
-V4_STOP_AFTER=3 "$B" "${ARGS[@]}" > "$LOGDIR/transient.out" 2> "$LOGDIR/transient.err" || [[ $? -eq 21 ]]   # 21 = interrupted after checkpoint
+env V4_STOP_AFTER=3 "$B" "${ARGS[@]}" > "$LOGDIR/transient.out" 2> "$LOGDIR/transient.err" || [[ $? -eq 21 ]]   # 21 = interrupted after checkpoint
 variants=(${V4_BENCH_VARIANTS:-dense k1 k3 dense2 k1b k3b})
+# the mode a variant ran, from its own output: the bench's configuration line and the [arch] line of step 5
+check_mode() {
+  local v="$1" hdr arch b slots gc gr gn
+  hdr=$(grep -m1 "^# bounded scoring" "$LOGDIR/$v.out" || true); arch=$(grep -m1 "\[arch\] step 5" "$LOGDIR/$v.err" || true)
+  if [[ -z "$hdr" || -z "$arch" ]]; then echo "$v: no configuration line or no [arch] line of step 5" >&2; exit 5; fi
+  [[ "$hdr" == *"bounded scoring on"* ]] && b=1 || b=0
+  slots=$(sed -E 's/.*Gram-row slots ([0-9]+).*/\1/' <<<"$hdr")
+  read -r gc gr gn < <(sed -E 's/.*computed ([0-9]+) reused ([0-9]+) no slot ([0-9]+).*/\1 \2 \3/' <<<"$arch")
+  case $v in
+    dense*) [[ $b == 0 && $((gc + gr + gn)) == 0 ]] ;;
+    k1*)    [[ $b == 1 && $slots == 0 && $((gc + gr + gn)) == 0 ]] ;;
+    k3*)    [[ $b == 1 && $slots -gt 0 && $gr -gt 0 ]] ;;
+  esac || { echo "$v did NOT run its mode: bounded $b, slots $slots, Gram rows computed $gc reused $gr no slot $gn" >&2; exit 5; }
+  echo "   $v mode checked: bounded $b, slots $slots, Gram rows computed $gc reused $gr no slot $gn"
+}
 for v in "${variants[@]}"; do
   echo "== $v: rounds 4-5 from the checkpoint $(date +%T)"
   case $v in
-    dense*) env V4_NO_BOUNDED=1 "$B" "${ARGS[@]}" > "$LOGDIR/$v.out" 2> "$LOGDIR/$v.err" ;;
-    k1*)    env V4_GRAM_SLOTS=0 "$B" "${ARGS[@]}" > "$LOGDIR/$v.out" 2> "$LOGDIR/$v.err" ;;
-    k3*)    env V4_GRAM_SLOTS=-1 "$B" "${ARGS[@]}" > "$LOGDIR/$v.out" 2> "$LOGDIR/$v.err" ;;
+    dense*) env V4_NO_BOUNDED=1 V4_GRAM_SLOTS=0 "$B" "${ARGS[@]}" > "$LOGDIR/$v.out" 2> "$LOGDIR/$v.err" ;;
+    k1*)    env -u V4_NO_BOUNDED V4_GRAM_SLOTS=0 "$B" "${ARGS[@]}" > "$LOGDIR/$v.out" 2> "$LOGDIR/$v.err" ;;
+    k3*)    env -u V4_NO_BOUNDED V4_GRAM_SLOTS=-1 "$B" "${ARGS[@]}" > "$LOGDIR/$v.out" 2> "$LOGDIR/$v.err" ;;
     *) echo "unknown variant $v" >&2; exit 2 ;;
   esac
+  check_mode "$v"
   grep -E "\[round\] step [45]|\[arch\] step [45]" "$LOGDIR/$v.err" || true
   grep -E "output hash" "$LOGDIR/$v.out"
 done
