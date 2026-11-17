@@ -20,6 +20,8 @@
 
 using namespace v4::island;
 
+// (the predicates below use omp_get_level() > 0, not omp_in_parallel(): inside a num_threads(1) team the region is inactive and
+// omp_in_parallel() is false, so a 1-thread run would never count -- review PR53/61 MINOR A-1)
 // Allocation-failure injection (review PR48 finding 1): while g_par_new_countdown > 0, the countdown-th operator new
 // called inside an active OpenMP parallel region throws std::bad_alloc. Off (0) for every other test. A real failure at
 // an unguarded site inside a region escapes the structured block and aborts the whole test binary (std::terminate).
@@ -34,13 +36,13 @@ std::atomic<uint64_t> g_allocs{0};
 static std::atomic<bool> g_order_phase{false};      // set by the island around the label-major order phase's parallel region
 static std::atomic<long> g_order_allocs{0};         // operator-new calls inside that region
 void* operator new(std::size_t n) {
-  if (g_order_phase.load(std::memory_order_relaxed) && omp_in_parallel()) g_order_allocs.fetch_add(1, std::memory_order_relaxed);
+  if (g_order_phase.load(std::memory_order_relaxed) && omp_get_level() > 0) g_order_allocs.fetch_add(1, std::memory_order_relaxed);
   if (g_new_track.load(std::memory_order_relaxed)) {
     g_new_calls.fetch_add(1); g_new_bytes.fetch_add(n);
     uint64_t m = g_new_max.load(); while (n > m && !g_new_max.compare_exchange_weak(m, n)) {}
   }
   if (g_count_allocs.load(std::memory_order_relaxed)) g_allocs.fetch_add(1, std::memory_order_relaxed);
-  if (g_par_new_countdown.load(std::memory_order_relaxed) > 0 && omp_in_parallel() && g_par_new_countdown.fetch_sub(1) == 1) {
+  if (g_par_new_countdown.load(std::memory_order_relaxed) > 0 && omp_get_level() > 0 && g_par_new_countdown.fetch_sub(1) == 1) {
     if (std::getenv("V4_DEBUG_INJECT")) { void* bt[32]; int nb = backtrace(bt, 32); std::fprintf(stderr, "== injected\n"); backtrace_symbols_fd(bt, nb, 2); }
     throw std::bad_alloc(); }
   if (void* q = std::malloc(n ? n : 1)) return q;
@@ -407,6 +409,63 @@ TEST(lm_alloc_failure_in_parallel_is_resource_limit) {
   }
   CHECKF(hit >= 10, "only %d of %d runs reached the injected allocation", hit, runs);
   std::printf("  %d runs, %d with an injected in-region allocation failure: all resource_limit\n", runs, hit);
+}
+
+// review PR61 MINOR B-1: the phase-B consumer tie K5 depends on (the first consumer of a shared support is the smallest
+// PARTICLE, not the smallest slot) is observable. The log records, per (round, flip model), the smallest first consumer
+// (particle, position): what an event key's provenance is made of, and invariant under how the particles are grouped into
+// passes. It is equal between rolling admission and groups, and the deliberate bug (consumers in slot order) changes it. The
+// final hash alone does not see the tie (event keys reach it only through the HPM provenance).
+template <Arith A>
+static void rolling_consumer_digest(const char* tag) {
+  Fixture F(100, 300, 47);
+  auto run = [&](bool rolling, int G, int th, bool bug) {
+    ConsumerLog log;
+    IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = th; c.G = G; c.rolling_admission = rolling;
+    c.test_consumers = &log; c.test_consumers_by_slot = bug;
+    IslandRun r = run_island<A>(F.D, F.st, F.nb, c);
+    CHECK(r.status == 0);
+    uint64_t dg = 0; for (auto& [k, v] : log.first) { uint64_t x = k ^ (v * 0xD6E8FEB86659FD93ull); dg += v4::splitmix64(x); }
+    return std::make_tuple(dg, r.hash(), log.first.size());
+  };
+  int caught = 0;
+  for (int G : {5, 7, 16}) for (int th : {1, 3}) {
+    const auto g = run(false, G, th, false), r = run(true, G, th, false), bug = run(true, G, th, true);
+    CHECKF(std::get<0>(r) == std::get<0>(g) && std::get<1>(r) == std::get<1>(g) && std::get<2>(r) == std::get<2>(g),
+           "[%s] G %d threads %d: consumer log rolling %016llx (%zu models) vs groups %016llx (%zu)", tag, G, th, (unsigned long long)std::get<0>(r),
+           std::get<2>(r), (unsigned long long)std::get<0>(g), std::get<2>(g));
+    CHECKF(std::get<1>(bug) == std::get<1>(g), "[%s] G %d: the slot-order bug changed the output hash (it should only change the log)", tag, G);
+    if (std::get<0>(bug) != std::get<0>(g)) ++caught;
+    std::printf("  [%s] G %2d threads %d: %zu (round, model) entries, log %016llx rolling = groups; consumers-by-slot bug: %016llx%s\n", tag, G, th,
+                std::get<2>(g), (unsigned long long)std::get<0>(r), (unsigned long long)std::get<0>(bug), std::get<0>(bug) != std::get<0>(g) ? " (differs)" : " (same)");
+  }
+  CHECKF(caught >= 2, "[%s] the slot-order bug was caught in only %d of 6 legs", tag, caught);
+}
+TEST(rolling_consumer_order_observable_bit) { rolling_consumer_digest<Arith::Bit>("bit"); }
+TEST(rolling_consumer_order_observable_classA) { rolling_consumer_digest<Arith::ClassA>("A"); }
+
+// review PR61 MINOR B-2: after a numerical failure rolling admission admits no more particles (the groups kernel stops
+// after the failing group): the same status and reason, and no more particle-rounds than the first window
+TEST(rolling_stops_admitting_after_failure) {
+  Fixture F(100, 300, 32);
+  const std::vector<int> bad = {37, 151, 222};
+  auto own = std::make_shared<v4::DataOwned>();
+  own->X.assign(F.D.Xs, F.D.Xs + (size_t)F.D.n * F.D.p); own->y.assign(F.D.ys, F.D.ys + F.D.n);
+  for (int j : bad) for (int i = 0; i < F.D.n; ++i) own->X[(size_t)j * F.D.n + i] *= 1e200;
+  v4::Data D2 = v4::make_data(own, F.D.n, F.D.p);
+  Start st2 = F.st;
+  for (int j : bad) { int b = st2.blk[j]; for (size_t code = 0; code < st2.logr[b].size(); ++code) if (code & (1u << st2.pos[j])) st2.logr[b][code] = NEG_INF; }
+  build_sampler(st2, F.D);
+  for (int G : {5, 16}) for (int th : {1, 3}) {
+    IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = th; c.G = G;
+    c.rolling_admission = false; IslandRun g = run_island<Arith::ClassA>(D2, st2, F.nb, c);
+    c.rolling_admission = true; IslandRun r = run_island<Arith::ClassA>(D2, st2, F.nb, c);
+    CHECKF(g.status == 2 && r.status == 2 && r.reason == g.reason, "G %d threads %d: rolling '%s' vs groups '%s'", G, th, r.reason.c_str(), g.reason.c_str());
+    CHECKF(r.ks.particle_rounds <= (uint64_t)G, "G %d threads %d: rolling ran %llu particle-rounds after the failure (window %d, groups %llu)", G, th,
+           (unsigned long long)r.ks.particle_rounds, G, (unsigned long long)g.ks.particle_rounds);
+    std::printf("  G %2d threads %d: particle-rounds rolling %llu, groups %llu; same reason\n", G, th, (unsigned long long)r.ks.particle_rounds,
+                (unsigned long long)g.ks.particle_rounds);
+  }
 }
 
 // K2: label-major draws and scores the I proposal in the order phase; a failed score must surface where core's serial

@@ -20,6 +20,8 @@
 #pragma once
 #include <atomic>
 #include <chrono>
+#include <mutex>
+#include <unordered_map>
 #include <limits>
 #include <string>
 #include "v4/island/kernel.h"
@@ -38,6 +40,10 @@ enum class IslandRole : int { Final = 0, Pilot = 1, Diag = 2 };
 
 // the identity string the CLI binds into the checkpoint (IslandConfig::input_id): the three content hashes
 inline std::string input_identity(const std::string& data, const std::string& setup, const std::string& calib) { return data + "|" + setup + "|" + calib; }
+
+// tests only (IslandConfig::test_consumers): per (round, flip model) the smallest (particle << 32 | position) among the
+// first consumers of the phase-B events; invariant under how the particles are grouped into passes
+struct ConsumerLog { std::mutex mu; std::unordered_map<uint64_t, uint64_t> first; };
 
 struct IslandConfig {
   uint32_t seed = 1; uint32_t island = 1;  // final island r = 1..R'; calibration: pilot 0, diagnostic 1..4
@@ -111,6 +117,11 @@ struct IslandConfig {
                                             // (an operator-new counting test asserts that the region does not allocate)
   int test_fail_indep = -1, test_fail_indep_stage = 1;   // tests only: the I proposal of particle i (0-based) in bridge stage
                                             // s fails its score (K2: label-major draws it ahead and must fail where core does)
+  ConsumerLog* test_consumers = nullptr;    // tests only: records, per (round, flip model), the smallest (particle, position) that
+                                            // consumed it in the label-major phase B -- what an event key's provenance is made of;
+                                            // makes the K5 consumer tie observable
+  bool test_consumers_by_slot = false;      // tests only: a deliberate bug -- the consumers of a support in slot order, not
+                                            // particle order (the negative control of test_consumer_digest)
   int test_bound_shrink = 0;                // tests only: bounded scoring skips the last s positions below the running first
                                             // change (a deliberate bug: the negative control of test_nan_rows)
   int products_block = 0;                   // tile products: 4 = 4 active columns x 32 labels per sweep, 1 = the original loop

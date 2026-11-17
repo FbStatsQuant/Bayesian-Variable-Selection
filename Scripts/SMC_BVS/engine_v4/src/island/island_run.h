@@ -189,6 +189,7 @@ class IslandEngine {
   template <class Fn> void oom_guard(Fn&& f) {
     try { f(); } catch (const std::bad_alloc&) { fail.record(UINT32_MAX, "out of memory inside a parallel region", FK_RESOURCE); }
   }
+  bool fail_any() { std::lock_guard<std::mutex> lk(fail.mu); return fail.has; }
   bool fail_fatal() { std::lock_guard<std::mutex> lk(fail.mu); return fail.has && fail.kind != FK_NUMERICAL; }
   static const char* xph_name(uint8_t x) { return x == X_INIT ? "init" : x == X_BRIDGE ? "bridge stage" : x == X_BURN ? "burn-in round" : x == X_MEASURED ? "measured round" : "?"; }
   std::string fail_msg(const RoundCtx& rc, uint32_t i1, uint32_t pos, const std::string& what) const {
