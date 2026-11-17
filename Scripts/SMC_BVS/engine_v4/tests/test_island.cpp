@@ -997,6 +997,27 @@ TEST(calibration_admission_n1_rule) {
   std::printf("  plan with resident %llu B: refused at budget plan - 1, admitted at plan\n", (unsigned long long)plan);
 }
 
+// review PR39 m1: a step-boundary refusal through CalibIslandRunner (the admission's k forced below the real model size:
+// admitted, then refused at the first step boundary): resource_limit with partial = true, the schedule / stages so far
+// and the ledger so far (WP3_DESIGN §1.11), never an estimate of a completed island
+TEST(calibration_runner_step_boundary_partial) {
+  Fixture F(100, 300, 38);
+  CalibRunnerConfig rc; rc.seed = 3; rc.kernel = KernelKind::ParticleMajor; rc.threads = 1; rc.B = 14; rc.G = 1; rc.test_admission_k = 0.5;
+  CalibIslandRunner<Arith::Bit> run(F.D, F.st, F.nb, rc);
+  v4::calib::IslandSpec sp; sp.role = v4::calib::IslandRole::Diag; sp.tier = 0; sp.iter = 1; sp.island = 1; sp.H = 30;
+  sp.grid = {0.0, 0.3, 0.6, 1.0}; sp.L = 1; sp.Hm = 1; sp.resident_bytes = 1000000;
+  IslandConfig c; c.role = IslandRole::Diag; c.island = 1; c.iter = 1; c.N = sp.H; c.grid = sp.grid; c.L = 1; c.Hm = 1; c.B = 14;
+  c.kernel = KernelKind::ParticleMajor; c.threads = 1; c.G = 1; c.leaders = true; c.inputs_bytes = (double)sp.resident_bytes; c.test_admission_k = 0.5;
+  sp.mem_budget = plan_island(F.D, F.st, c).total + 1024;
+  v4::calib::IslandOut o = run.run(sp);
+  CHECKF(o.status == v4::Status::resource_limit && o.partial && o.message.find("after step") != std::string::npos,
+         "step boundary: status %s partial %d '%s'", v4::status_name(o.status), (int)o.partial, o.message.c_str());
+  CHECKF(!o.stages.empty() && o.schedule.size() == o.stages.size() && o.led.top.size() > 0 && o.led.logical[v4::PH_DIAG][ME_INIT] == (uint64_t)sp.H,
+         "ledger so far: %zu stages, %zu schedule points, %zu stored, INIT events %llu", o.stages.size(), o.schedule.size(), o.led.top.size(),
+         (unsigned long long)o.led.logical[v4::PH_DIAG][ME_INIT]);
+  std::printf("  refused %s; %zu stage(s) and %zu stored models so far\n", o.message.substr(0, o.message.find(" [")).c_str(), o.stages.size(), o.led.top.size());
+}
+
 // `smcbvs4 calibrate` end to end (WP4's calib::run with WP3's island runner plugged in; WP3_DESIGN §1.11): data.bin from
 // prep, a setup.bin with the partition, block tables, table stores and neighbour lists (WP4's write_setup_min sections
 // + nb_ptr / nb_idx), then the command in each mode. compat runs the bit form particle-major on the v3 streams, law the
@@ -1054,7 +1075,7 @@ static CalInputs make_cal_inputs(TmpGuard& tg, const std::string& tag) {
                     : (const void*)R.get<uint8_t>(nm);
       W.add_copy(nm, e.dtype, q, e.length, e.dims[0], e.dims[1]);
     }
-    W.add("nb_ptr", nb.ptr); W.add("nb_idx", nb.idx); W.add("size_cum", st.size_cum); W.write(spath); }
+    W.add("nb_ptr", nb.ptr); W.add("nb_idx", nb.idx); W.add("size_cum", st.size_cum); W.add("size_logmass", st.size_logmass); W.write(spath); }
   { Start st2 = load_start(spath, D); Neighbours nb2 = load_neighbours(spath, p);
     CHECK(st2.size_cum == st.size_cum && st2.logZbar0 == st.logZbar0 && st2.blocks == st.blocks && nb2.ptr == nb.ptr && nb2.idx == nb.idx); }
   CalInputs ci; ci.D = std::move(D); ci.dpath = dpath; ci.spath = spath; ci.p = p;
@@ -1073,8 +1094,8 @@ TEST(calibrate_command_end_to_end) {
     const std::string out = tg.add(wp3_tmp("cal_" + mode + std::to_string(th) + ".bin"));
     double t0 = omp_get_wtime();
     v4::Json rec = calibrate(mode, th, out);
-    CHECKF(rec.at("status").str() == "ok", "%s threads %d: status %s", mode.c_str(), th, rec.at("status").str().c_str());
-    if (rec.at("status").str() != "ok") continue;
+    CHECKF(rec.at("status").str() == "completed" && rec.at("cal_status").str() == "ok", "%s threads %d: status %s", mode.c_str(), th, rec.at("status").str().c_str());
+    if (rec.at("status").str() != "completed") continue;
     v4::wp4io::CalibIn ci = v4::wp4io::read_calib(out, p, D.K);
     CHECKF(ci.grid.size() >= 2 && ci.grid.front() == 0.0 && ci.grid.back() == 1.0 && !ci.inherited.empty() && ci.has_hpm, "%s: calib.bin", mode.c_str());
     std::printf("  calibrate %-6s threads %d: %.1f s, tier %d, T = %zu, %zu inherited models, HPM |S| = %zu\n", mode.c_str(), th, omp_get_wtime() - t0,
@@ -1429,7 +1450,7 @@ TEST(pilot_only_equals_calibrate_pilot) {
     v4::Json a = v4::Json::object(); a["data"] = CI.dpath; a["setup"] = CI.spath; a["out"] = out; a["mode"] = "V"; a["seed"] = 77.0;
     a["threads"] = (double)th; a["cost_dir"] = cdir;
     v4::Json rec = v4::calib::run(a);
-    CHECK(rec.at("status").str() == "ok");
+    CHECK(rec.at("status").str() == "completed" && rec.at("cal_status").str() == "ok");   // #52: task status + cal_status
     if (th == 3) cal3 = out;
     int nfiles = 0, ndiag = 0;
     for (auto& de : std::filesystem::directory_iterator(cdir)) { ++nfiles; ndiag += de.path().filename().string().rfind("cost_diag_", 0) == 0; }
@@ -1465,7 +1486,7 @@ TEST(pilot_only_equals_calibrate_pilot) {
   {   // review PR55 m7a: --cost-dir (and --verbose) leave calib.bin's sections unchanged
     const std::string out = tg.add(wp3_tmp("pil_cal_nocost.bin"));
     v4::Json a = v4::Json::object(); a["data"] = CI.dpath; a["setup"] = CI.spath; a["out"] = out; a["mode"] = "V"; a["seed"] = 77.0; a["threads"] = 3.0;
-    CHECK(v4::calib::run(a).at("status").str() == "ok");
+    CHECK(v4::calib::run(a).at("status").str() == "completed");
     CHECK(!cal3.empty() && section_hashes(out) == section_hashes(cal3));
   }
 }

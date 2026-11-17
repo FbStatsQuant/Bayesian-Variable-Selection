@@ -65,7 +65,8 @@ inline Json run_pilot_only(const Json& a, int& rc_exit) {
     std::error_code ec; std::filesystem::create_directories(cdir, ec);
     if (ec) throw Error(Status::io_error, "cannot create --cost-dir " + cdir);
     island::CalibRunnerConfig rc; rc.seed = (uint32_t)seed; rc.B = b.B; rc.threads = s.threads;
-    rc.inputs_bytes = island::start_bytes(st, nb); rc.kernel = island::KernelKind::LabelMajor;
+    rc.inputs_bytes = island::start_bytes_model(island::read_setup_dims(spath, D.p, D.K, false));   // = calibrate (PR52 MAJOR-2)
+    rc.kernel = island::KernelKind::LabelMajor;
     rc.cost_dir = cdir; rc.verbose = verbose;
     LedgerConfig lc; lc.p = D.p; lc.islands = 4; lc.leaders = true; lc.fresh_counters = false;
     Ledger led(lc);

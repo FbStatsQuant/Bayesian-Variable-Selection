@@ -37,6 +37,8 @@ int main(int argc, char** argv) {
   if (argc < 2) { usage(); return exit_code(Status::invalid_input); }
   std::string cmd = argv[1];
   Json args = Json::object();
+  Json cli = Json::object();   // the values given on the command line, whichever side of --manifest (review PR52 MAJOR-4): a
+                               // manifest's params are copied into `args` and overwrite an earlier explicit value there
   std::string record_path;
   Status st = Status::completed;
   Json rec = Json::object();
@@ -55,8 +57,9 @@ int main(int argc, char** argv) {
         args["manifest"] = m;
       }
       else if (key == "record") record_path = val;
-      else args[key] = number_or_string(val);
+      else { args[key] = number_or_string(val); cli[key] = args.at(key); }
     }
+    args["cli_explicit"] = cli;   // commands compare these with the manifest (cmd_args.h refuse_manifest_conflicts)
     if (args.contains("threads")) set_threads((int)args.at("threads").i64());
     if (cmd != "info" && cmd != "version") require_bit_libm();   // INTERFACES §6
     auto spec_from_args = [&]() {

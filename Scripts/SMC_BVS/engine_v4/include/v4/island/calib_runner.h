@@ -25,6 +25,7 @@ struct CalibRunnerConfig {
   bool allow_test_kernels = false;             // tests: the bit-form label-major kernel (LM = PM checks)
   std::string cost_dir;                        // D-30 (WP7 O5): per-island cost records <dir>/cost_<pilot|diag>_t<e>_k<k>_r<r>.jsonl
   bool verbose = false;                        // per-step progress lines on stderr (IslandConfig::verbose)
+  double test_admission_k = 0;                 // tests: force the admission's k (a step-boundary refusal; review PR39 m1)
 };
 // the cost-record file of one calibration island (WP7 O5; IslandConfig::cost_path)
 inline std::string calib_cost_path(const std::string& dir, bool pilot, int tier, int iter, int island) {
@@ -49,7 +50,7 @@ class CalibIslandRunner final : public v4::calib::IslandRunner {
     // resident bytes join the plan's caller-supplied term, so no byte is counted twice.
     c.k_store = c_.k_store; c.inputs_bytes = c_.inputs_bytes + (double)sp.resident_bytes;
     c.mem_budget = sp.mem_budget ? sp.mem_budget : c_.mem_budget;
-    c.keep_terminal = false; c.leaders = true;
+    c.keep_terminal = false; c.leaders = true; c.test_admission_k = c_.test_admission_k;
     if (!c_.cost_dir.empty()) c.cost_path = calib_cost_path(c_.cost_dir, pilot, sp.tier, sp.iter, sp.island);
     c.verbose = c_.verbose;
     if (pilot) { c.adaptive = true; c.adaptive_H = sp.H; c.adaptive_Te = sp.Te; } else c.grid = sp.grid;
