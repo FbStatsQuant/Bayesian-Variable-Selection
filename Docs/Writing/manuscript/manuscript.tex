@@ -12,6 +12,7 @@
 \bibliographystyle{abbrvnat}
 \setcitestyle{authoryear,round}
 \linespread{1.06}
+\renewcommand{\topfraction}{0.95}\renewcommand{\textfraction}{0.05}\renewcommand{\floatpagefraction}{0.75}
 \setlength{\emergencystretch}{3em}
 \usepackage{url}
 \makeatletter\g@addto@macro\UrlBreaks{\do\_\do\-\do\:}\makeatother
@@ -44,6 +45,8 @@ independently checked}
 \author{SMC-BVS project}
 \date{Draft, \today}
 
+\makeatletter\@removefromreset{theorem}{section}\makeatother
+\renewcommand{\thetheorem}{\arabic{theorem}}
 \begin{document}
 \maketitle
 
@@ -54,7 +57,7 @@ software with fixed defaults and read its output. We study SMC-BVS, a sequential
 variable selection in the Gaussian linear model with many more predictors than observations, exactly as its software
 implements it: a fixed beta-binomial and $g$-prior with no tuning, a start law built from exactly scored blocks of
 predictors, a tempered sampler on four islands, and two local searches. We prove that the posterior concentrates on the
-true model at the rate $\sqrt{\log n/n}$, which cannot be improved, and recovers the true conditional distribution of
+true model at the rate $\sqrt{\log n/n}$, a rate attained on two families of designs, and recovers the true conditional distribution of
 the response; that, with probability tending to one, every run that produces output reports exactly the true model, for every seed,
 when the predictors that can imitate the signal are few and local; and that the evidence estimate is unbiased on every
 design, while the reported estimates are consistent on designs without leakage, on the event that the calibration
@@ -73,6 +76,7 @@ strong common factors included.
 \bibliography{../shared/refs}
 
 \appendix
+\setcounter{theorem}{0}\counterwithin{theorem}{section}
 \input{sections/supplement}
 \input{sections/appendices}
 

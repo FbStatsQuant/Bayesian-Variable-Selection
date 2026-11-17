@@ -2,7 +2,7 @@
 \section{Notation}\label{app:notation}
 
 {\small
-\begin{longtable}{@{}p{0.27\linewidth}p{0.53\linewidth}l@{}}
+\begin{longtable}{@{}p{0.26\linewidth}p{0.5\linewidth}l@{}}
 \toprule
 Symbol & Meaning & Where \\ \midrule \endhead
 $n$; $p$; $\praw$ & sample size; retained (non-constant) predictors; raw predictors & \S\ref{sec:setup} \\
@@ -13,7 +13,7 @@ $X_S$, $G_S$, $\Rhat_S$, $\hat r_{jl}$, $P_S$, $z_S$ & columns in $S$; Gram matr
 $\Om$, $K$, $w(k)$, $\bar w_K$ & model space; size cap; model-size weight; its normaliser & \S\ref{sec:prior} \\
 $m(S)$, $H_S$, $\SSq_S$, $F(S)$, $Z$ & marginal likelihood and its ingredients; log score; evidence & \S\ref{sec:posterior} \\
 $\pis{S}$, $\PIP_j$, $\HPM$, $\MPM$ & posterior; inclusion probability; highest posterior and median probability models & \S\ref{sec:posterior} \\
-$B$; $C_b$, $J$, $h_b(U)$ & block size cap; blocks; number of blocks; block table $m(U)/m(\emptyset)$ & \S\ref{sec:algorithm} \\
+$B$; $C_k$, $J$, $h_k(U)$ & block size cap; blocks; number of blocks; block table $m(U)/m(\emptyset)$ & \S\ref{sec:algorithm} \\
 $\gamma_0$, $\bar Z_0$, $\pi_0$, $\tSz$ & unnormalised start law; its normaliser; start law; start mode & \S\ref{sec:algorithm} \\
 $\Delta(S)$; $\xi$, $\pi_\xi$, $\grid t$, $\Ts$ & discrepancy; temperature; path; grid; number of steps & \S\ref{sec:algorithm} \\
 $N_0$, $N_i$, $\Nc_i$, $\Lbi$, $\Tmax_i$ & particle numbers; burn-in rounds; step ceiling & \S\ref{sec:algorithm}, App.~\ref{sec:supp-cal} \\
@@ -35,7 +35,7 @@ The user sets only the seed and the allocation; the two switches marked ``on'' a
 relative to \code{Scripts/SMC_BVS/core/}.
 
 {\footnotesize\setlength{\tabcolsep}{3.5pt}
-\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.18\linewidth}>{\raggedright\arraybackslash}p{0.06\linewidth}>{\raggedright\arraybackslash}p{0.2\linewidth}>{\raggedright\arraybackslash}p{0.08\linewidth}>{\raggedright\arraybackslash}p{0.15\linewidth}>{\raggedright\arraybackslash}p{0.25\linewidth}@{}}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.18\linewidth}>{\raggedright\arraybackslash}p{0.075\linewidth}>{\raggedright\arraybackslash}p{0.19\linewidth}>{\raggedright\arraybackslash}p{0.08\linewidth}>{\raggedright\arraybackslash}p{0.15\linewidth}>{\raggedright\arraybackslash}p{0.245\linewidth}@{}}
 \caption{All constants of the method, with their code locations.}\label{tab:params-full}\\
 \toprule
 Parameter & Symbol & Value & {\scriptsize $n{=}200$, $p{=}10^4$} & Theory & Code \\ \endfirsthead
@@ -68,7 +68,7 @@ calibration particles & $\Nc_i$ & $4^i\lceil512N_0/2500\rceil$, $N_0:=\max(2500,
 step ceiling & $\Tmax_i$ & $4^i\max(1000,\ell_n^2)$ & 1,000; 4,000 & none & \code{v3_preprocess.R:27,30} (\code{T0}) \\
 tiers & $i$ & $i\in\{0,1\}$, factor $4^i$, at most one move to tier 1 & & none & \code{v3_preprocess.R:30}; \code{v3_calib.R:150-159} \\
 pilot effective-sample-size target & & $0.90\,\Nc_i$ & 1,843.2 (tier 0) & none & \code{cpp/v3_calib.h:31} \\
-pilot step floor & & $1/T_i$ & 0.001 (tier 0) & none & \code{cpp/v3_calib.h:38-43} \\
+pilot step floor & & $1/\Tmax_i$ & 0.001 (tier 0) & none & \code{cpp/v3_calib.h:38-43} \\
 grid target & & $\rho\ge0.90$ & & none & \code{cpp/v3_calib.h:79,84,92} \\
 bisections & & 60 & & none & \code{cpp/v3_calib.h:34,82} \\
 candidate set & $\mathcal V$ & $\emptyset$, best $20p$ by $\gamma_0$, best $20p$ by $F$ & up to 400,001 & none & \code{cpp/v3_core.cpp:699-724}; \code{cpp/v3_ledger.h:78} \\
@@ -152,7 +152,7 @@ statistical condition.
     the declared memory succeeds; the build and its dependencies work; no external interruption or worker crash.
   \item \emph{Covered configuration:} the default core of the software, with the local search from the start mode (cap
     $\ell_n+\abs{\tSz}$) and the rule that resolves ties in the start mode, implemented with
-    $O\big(p\sum_b(2^{\abs{C_b}}+(K+1)^2)\big)$ operations and $O\big(\sum_b2^{\abs{C_b}}+J(K+1)\big)$ storage; the local
+    $O\big(p\sum_k(2^{\abs{C_k}}+(K+1)^2)\big)$ operations and $O\big(\sum_k2^{\abs{C_k}}+J(K+1)\big)$ storage; the local
     search from the start mode starting at the smallest, lexicographically first maximiser of the start law; the default
     list of summaries only; certificate computations with declared polynomial operation and memory budgets, included in
     the allocation; serial execution or a fixed number of concurrent workers (memory envelope multiplied by that number);

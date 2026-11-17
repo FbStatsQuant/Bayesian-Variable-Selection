@@ -1,7 +1,8 @@
 % =====================================================================================================
 \section{The method, as coded}\label{sec:method}
 
-This section describes the method exactly as the software implements it in its default configuration. The user supplies
+This section describes the method exactly as the software (an R package with a C++ core) implements it in its default
+configuration. The user supplies
 the data, a random seed and a computing allocation; everything else is a numerical constant or a stated function of
 $(n,p)$. Table~\ref{tab:params} lists the constants that matter for the results, and Appendix~\ref{app:params} gives all
 of them with their code locations.
@@ -94,9 +95,9 @@ posterior $\pi(\cdot\mid y)$ & $0.042$ & $\mathbf{0.688}$ & $0.118$ & $0.051$ & 
 Within its own block, predictor $5$ explains much of $y$ because it carries part of predictor $1$'s signal, and the
 start law cannot see that predictor $1$, in another block, already explains it: predictor $5$ leaks, and the start mode is
 $\{1,3,5\}$. The proxy $2$, in predictor $1$'s own block, is handled correctly. The posterior puts $0.69$ on $\{1,3\}$, and
-the local search from the start mode makes one move, deleting $5$, and certifies $\{1,3\}$. Result~3 proves this picture
-in general: the start mode contains the true model and possibly some members of a small \emph{leakage set} (here
-$\{1,3,5\}$), and the search deletes the spurious ones. (Computed with an independent re-implementation of the coded score,
+the local search from the start mode makes one move, deleting $5$, and stops at $\{1,3\}$, which has no improving neighbour. Result~3 proves this picture
+in general: the start mode contains the true model and possibly some predictors that enter it wrongly (here
+predictor~$5$), all members of a small \emph{leakage set} (Section~\ref{sec:reported}), and the search deletes them. (Computed with an independent re-implementation of the coded score,
 start law and search on this data set; with six predictors the software itself would enumerate all $64$ models.)
 \end{example}
 
@@ -133,21 +134,21 @@ second local search starts from the start mode and does not depend on the partic
 least one predictor is given and every entry is finite; the seed is an integer in $[1,2^{31}-1]$. Invalid inputs stop the
 run, and so does a constant response or the removal of every predictor (the run then reports the empty model). With
 $N_0:=\max(2500,n,p)$ and $\Nc_0:=\lceil512N_0/2500\rceil$, if $\abs{\Om}\le(5\Nc_0+4N_0)\,p$ the method scores every model
-and computes everything exactly. Otherwise it estimates the memory and time the run will need (for the sampler, the
-memory and the worst-case time of the local search from the start mode) and stops with status ``resource limit'' if the
+and computes everything exactly. Otherwise it estimates the memory the run will need and the worst-case time of the local search from the start
+mode, and stops with status \texttt{resource\_limit} if the
 estimate exceeds the allocation (8\,GiB and 24 hours by default).
 
 \paragraph{Stage 2: blocks and block tables.} The method partitions the predictors into blocks $C_1,\dots,C_J$ of at most
 $B:=\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)$ predictors, by complete-linkage clustering on $1-\abs{\hat r_{jl}}$,
 cutting the tree top-down until every cluster fits and packing whole clusters into blocks in leaf order. The partition is a
 deterministic function of $X$, and correlated predictors tend to share a block. Within each block it scores every subset
-$U$ with $\abs{U}\le K$ and stores the \emph{block table} $h_b(U):=m(U)/m(\emptyset)$, with $h_b(\emptyset)=1$; a block has
+$U$ with $\abs{U}\le K$ and stores the \emph{block table} $h_k(U):=m(U)/m(\emptyset)$, with $h_k(\emptyset)=1$; a block has
 at most $2^{16}$ subsets. It also builds a symmetric \emph{neighbour graph} for the swap moves: each predictor is linked to
 up to $B$ predictors with $\abs{\hat r_{jl}}>\sqrt{2\log p/n}$ (at least its most correlated one).
 
 \paragraph{Stage 3: the start law and the start mode.} The start law multiplies the size prior by the block tables,
 \begin{equation}\label{eq:startlaw}
-  \pi_0(S)=\frac{\gamma_0(S)}{\bar Z_0},\qquad \gamma_0(S):=\frac{w(\abs{S})}{\bar w_K}\prod_{b=1}^J h_b(S\cap C_b),\qquad
+  \pi_0(S)=\frac{\gamma_0(S)}{\bar Z_0},\qquad \gamma_0(S):=\frac{w(\abs{S})}{\bar w_K}\prod_{k=1}^J h_k(S\cap C_k),\qquad
   \bar Z_0:=\sum_{S\in\Om}\gamma_0(S):
 \end{equation}
 the posterior one would have if the marginal likelihood, relative to the empty model, split into independent block
@@ -156,7 +157,7 @@ the blocks one at a time, computes $\bar Z_0$ exactly and gives an exact sampler
 the size of each block backwards, then a subset of each block). The \emph{start mode} $\tSz$ is a maximiser of $\pi_0$,
 computed by the same recursion with maxima: the smallest size among the maximisers, then the lexicographically smallest
 set. The posterior and the start law differ by the \emph{discrepancy}
-$\Delta(S):=\log\{m(S)/m(\emptyset)\}-\sum_b\log h_b(S\cap C_b)$, the part of the log marginal likelihood that comes from
+$\Delta(S):=\log\{m(S)/m(\emptyset)\}-\sum_k\log h_k(S\cap C_k)$, the part of the log marginal likelihood that comes from
 interactions between blocks: $\gamma_0(S)e^{\Delta(S)}=e^{F(S)}/m(\emptyset)$.
 
 \paragraph{Stages 4 and 5: the sampler.} The sampler moves through the distributions
@@ -164,24 +165,27 @@ interactions between blocks: $\gamma_0(S)e^{\Delta(S)}=e^{F(S)}/m(\emptyset)$.
   \pi_\xi\ \propto\ \gamma_0\,e^{\xi\Delta},\qquad 0\le\xi\le1,
 \end{equation}
 from the start law ($\xi=0$) to the posterior ($\xi=1$), along a grid of temperatures $0=\grid0<\dots<\grid{\Ts}=1$ fixed
-by the calibration. An island of $N$ particles starts from $N$ independent draws from $\pi_0$ and, at each step $t$,
-\emph{reweights} each particle by $\omega^{(t)}_s:=\exp\{(\grid t-\grid{t-1})\Delta(S_s)\}$, \emph{resamples} (multinomially,
-at every step), and \emph{moves} every particle by one round of Markov moves that leave $\pi_{\grid t}$ invariant: an
-inclusion update (Gibbs) for each predictor, one uniform swap, $B$ swaps along the neighbour graph, and one independence
-move that proposes a fresh draw from $\pi_0$. At $\xi=1$ it runs $\Lbi:=\max(4,\lceil\log_2(n+1)\rceil)$ burn-in rounds
+by the calibration. An island of $N$ particles starts from $N$ independent draws from $\pi_0$. At each step $t$ it
+\begin{enumerate}[label=(\alph*),leftmargin=2em,itemsep=0pt,topsep=2pt]
+  \item \emph{reweights} particle $v$ by $\omega^{(t)}_v:=\exp\{(\grid t-\grid{t-1})\Delta(S_v)\}$;
+  \item \emph{resamples} the particles multinomially, in proportion to these weights;
+  \item \emph{moves} every particle by one round of Markov moves that leave $\pi_{\grid t}$ invariant.
+\end{enumerate}
+A round is an inclusion update (Gibbs) for each predictor, one uniform swap, $B$ swaps along the neighbour graph, and one
+independence move that proposes a fresh draw from $\pi_0$. At $\xi=1$ it runs $\Lbi:=\max(4,\lceil\log_2(n+1)\rceil)$ burn-in rounds
 and four measured rounds. The island's inclusion-probability estimate $\PIPhat_{r,j}$ averages, over particles and measured
 rounds, the conditional inclusion probability of the Gibbs update rather than the 0/1 indicator; its evidence estimate is
-$\Zhat_r:=m(\emptyset)\,\bar Z_0\prod_{t=1}^{\Ts}\{N^{-1}\sum_s\omega^{(t)}_s\}$, the exact normaliser of the start law times
+$\Zhat_r:=m(\emptyset)\,\bar Z_0\prod_{t=1}^{\Ts}\{N^{-1}\sum_v\omega^{(t)}_v\}$, the exact normaliser of the start law times
 the product of the average reweighting factors.
 
 The \emph{calibration} (stage 4) chooses the grid and the effort before the final run, from one pilot island and a few
-rounds of four short diagnostic islands; the grid refines the pilot's temperatures so that each step keeps a restricted
-effective-sample-size fraction of at least $0.90$. Tier~$1$ multiplies the particles by four, and the calibration moves to
-it at most once, when a diagnostic trigger fires (Appendix~\ref{sec:supp-cal} gives the full
-procedure). Three facts are all that the results use: the calibration's outcome is a function of the data and of its own
+rounds of four short diagnostic islands; the grid refines the pilot's temperatures so that each step keeps an
+effective-sample-size fraction, computed on a set of candidate models, of at least $0.90$. The calibration starts at
+tier $i=0$ and moves at most once to tier $i=1$, which multiplies all particle numbers by four, when one of its
+diagnostics fires (Appendix~\ref{sec:supp-cal} gives the full procedure). Three facts are all that the results use: the calibration's outcome is a function of the data and of its own
 random numbers; it is \emph{frozen} before the final run draws any random number; and it \emph{succeeds} when it freezes a
 grid, by its main construction or a fallback (otherwise the run stops without estimates). The \emph{final run} (stage 5)
-consists of four independent \emph{islands} of $N=4^iN_0$ particles at the frozen tier $i$, on the frozen grid, each with
+consists of four independent \emph{islands} of $N_i=4^iN_0$ particles at the frozen tier $i$, on the frozen grid, each with
 its own random stream.
 
 \paragraph{Stage 6: the local searches.} Two models are \emph{neighbours} if one comes from the other by deleting a
@@ -196,7 +200,8 @@ $\ell_n:=\lceil\log_2(n+p+1)\rceil$; and from the start mode $\tSz$, with move c
 
 A run either \emph{produces output}, with status ``exact'' (enumeration) or ``completed'' (sampler; a \emph{completed
 run}), or stops without estimates. A run stopped by its time guard reports status \texttt{resource\_limit} and returns no
-estimates; anything else it returns is flagged incomplete, and the results do not cover it. The method records every model
+estimates; anything else such a run returns is flagged incomplete, and the results do not cover it. (A constant
+response, or no retained predictor, stops the run with the empty model; invalid inputs stop it with no model.) The method records every model
 it scores; the \emph{reported model} $\Shat$ is the best of them by log score (exact ties to the smaller model, then
 lexicographically). It is \emph{certified} when the method enumerated $\Om$, or when $\Shat$ ends a local search whose last
 scan found no strict improvement. An exact run reports $\Shat$, every $\PIP_j$, the median probability model and $\log Z$.
@@ -246,7 +251,8 @@ pooling of islands & & equal weights & \\
 
 The results of Section~\ref{sec:results} use five objects of a run: the start law and its mode (stage 3), the reported
 model and its certification (stages 6--7), the pooled estimates~\eqref{eq:pool}, the returned list $\mathcal T$, and the
-event $\Acal$ that the method uses the sampler and its calibration succeeds. Every completed run lies in $\Acal$. They also
+event $\Acal$ that the method uses the sampler and its calibration succeeds. A run in $\Acal$ may still stop later, at
+its time guard; every completed run lies in $\Acal$. They also
 use three conventions, which fix what ``the method'' means and idealise the computer; they are not statistical
 assumptions, and Appendix~\ref{app:params} lists them in full.
 \begin{itemize}[leftmargin=1.5em,itemsep=1pt]
@@ -254,9 +260,9 @@ assumptions, and Appendix~\ref{app:params} lists them in full.
     valid inputs and seed. A run that meets it is \emph{admissible}; a sample size $n$ is admissible if some data set of
     that size is valid. Statements hold for every valid seed and every outcome of the calibration.
   \item \phantomsection\label{asm:C2p}\emph{Convention \as{C2p} (delivery):} an idealised
-    machine that never overflows or fails, ideal random numbers, an allocation no smaller than the method's own polynomial
-    requirement formulas, and the code's two fixed integer limits on the move caps lifted. In the default configuration
-    neither limit can be reached on any input R can represent ($n,\praw\le2^{31}-1$).
+    machine that never overflows or fails, ideal random numbers, an allocation of at least the memory and time that the method's own polynomial
+    requirement formulas require, and the code's two fixed integer limits on the move caps lifted (see the remark after
+    Theorem~\ref{thm:reported}).
   \item \phantomsection\label{asm:C3}\emph{Convention \as{C3} (sampler):} exact arithmetic, ideal random numbers
     independent of the data and of the calibration, an exact start sampler, and Markov moves that do what their definitions
     say.

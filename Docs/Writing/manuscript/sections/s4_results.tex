@@ -5,7 +5,7 @@ Table~\ref{tab:results} lists the five results. Each is stated in the same forma
 matters, the statement, its assumptions with the place in Section~\ref{sec:assumptions} where each one is judged, a
 one-line scope (which of our designs are inside; Section~\ref{sec:who-outside}), and a status note.
 
-\begin{table}[ht]
+\begin{table}[!t]
 \centering\footnotesize
 \setlength{\tabcolsep}{3.5pt}
 \renewcommand{\arraystretch}{1.12}
@@ -34,7 +34,7 @@ Proved and checked; no open condition. \\
 4.~The run's estimates (Prop.~\ref{prop:unbiased}, Thm~\ref{thm:outputs}) &
 The evidence estimate is unbiased on every design. On designs without leakage the errors of the reported inclusion
 probabilities, median model and evidence estimate (relative and log error), multiplied by the indicator that the sampler
-is used and its calibration succeeds, tend to zero; no claim is made about how likely that event is. &
+is used and its calibration succeeds, tend to zero. &
 Unbiasedness: none on the design. Consistency: Gaussian rows, fixed signals, visibility, and no null predictor
 correlated with a true one beyond order $n^{-1/2}$, even given $15$ others. &
 Unbiasedness: proved and checked. Consistency: proved and checked, conditional on two results on the coded sampler that
@@ -93,7 +93,7 @@ enough data the posterior points to the right predictors, and its inclusion prob
 inclusion or exclusion.}
 
 \begin{assumption}{FSb}{Fixed signals, raw scale}
-$b_{\mathrm{lo}}\le\abs{\beta^*_j}\le b_{\mathrm{hi}}$ for every $j\in\Sz$, with fixed $0<b_{\mathrm{lo}}\le b_{\mathrm{hi}}<\infty$.
+$b_{\mathrm{lo}}\le\abs{\beta^*_j}\le b_{\mathrm{hi}}$ for every $j\in\Sz$, with fixed $0<b_{\mathrm{lo}}\le b_{\mathrm{hi}}<\infty$. \hfill [\SA{post}]
 \end{assumption}
 
 \begin{theorem}[Posterior concentration, random Gaussian design]\label{thm:post-random}
@@ -107,7 +107,7 @@ Assume \as{GL}, \as{DIM}, \as{SP}, \as{GR}, \as{FSb} and \as{EFS}. Then, under t
 \asmlist{(1)~\as{GL} Gaussian linear model; (2)~\as{DIM} $p\le n^A$; (3)~\as{SP} fixed $\sz$ [\SA{all}]; (4)~\as{GR}
 Gaussian rows; (5)~\as{FSb} fixed nonzero coefficients; (6)~\as{EFS} population eigenvalue floor on sets of
 $O(\log n)$ predictors [\SA{post}].}
-\scope{every design of our simulation studies, strong common factors included.}
+\scope{Every design of our simulation studies, strong common factors included.}
 
 \status{\textbf{Proved and independently checked}: the fixed-design result it rests on (Theorem~\ref{thm:post-fixed},
 in-probability form) and the transfer from population to sample conditions are each proved and independently checked.
@@ -162,59 +162,6 @@ bound~\eqref{eq:post-exp}: \textbf{proved and checked, conditional on one suppor
 bound on the posterior miss) \textbf{that is proved but not yet independently checked}; its other input, a lemma bounding
 the tail of the posterior model size, is now independently checked. Registry: Appendix~\ref{app:status}, row 1.1.}
 
-\subsection{Result 5: the rate cannot be improved}\label{sec:sharp}
-
-\inwords{On every design, no model of at most $\min(K-1,p/2)$ predictors has posterior mass closer to one than about
-$(\abs{S}+1)/(3\sqrt n)$; on two families of designs the expected posterior miss is at least of order $\rn$. At simulated sizes the posterior spreads over the true model and
-its one-predictor extensions.}
-
-\why{It shows that the rate of Result~1 is the right one, and why the posterior is not a point mass at simulated sizes
-such as $n=200$.}
-
-\begin{remark}[The rate cannot be improved, and what it means at moderate $n$]\label{rem:sharp}
-\textup{(a)} \emph{Every design.} For every $n\ge3$, every standardised design with $p\ge2$, every response and every
-model $S$ with $\abs{S}\le\min(K-1,p/2)$,
-\begin{equation}\label{eq:sharp-a}
-  \pis{S}\ \le\ \Big(1+\frac{\abs{S}+1}{3\sqrt n}\Big)^{-1}.
-\end{equation}
-So no model of that size, the true one included, can carry posterior mass closer to one than about
-$(\abs{S}+1)/(3\sqrt n)$. For true models with $\sz\le\min(K-1,p/2)$, no design gives a rate faster than
-$n^{-1/2}$, and a posterior miss of order $\rn$ is possible only if $\sz=O(\sqrt{\log n})$. The reason is that the prior and the Occam factor keep every one-predictor extension of a model
-alive.
-
-\textup{(b)} \emph{Witness designs.} Assume \as{GL}, that $\sz$ is fixed, the energy bounds $\norm{\mu}^2\le nM_\mu$ and
-$\norm{\tstar}^2\le nM_\theta$ for fixed $M_\mu$, $M_\theta$, and that the null predictors are either orthogonal (to each
-other and to the true ones) or have i.i.d.\ $\Normal(0,1)$ raw entries independent of the true predictors and of the noise, with $p\le n^A$.
-Then, for every $p>\sz$, bounded or growing,
-where $\pi=3.14\ldots$ (the number, not the posterior) in the next display,
-\begin{equation}\label{eq:sharp-b}
-  \E\big[1-\pis{\Sz}\big]\ \ge\ (1-o(1))\,(\sz+1)\,\frac{2(p-\sz)}{2p-1-\sz}\,
-  \sqrt{\frac{\log\!\big(p\sqrt n/(\sz+1)\big)}{\pi n}},
-\end{equation}
-and, if moreover $p\to\infty$, $1-\pis{\Sz}\ge(1-\oP(1))\,(\sz+1)\sqrt{\log p/(\pi n)}$. On fully
-orthogonal designs ($\sz<p\le n-1$) with fixed nonzero coefficients, the expectation bound~\eqref{eq:post-exp} applies
-too, so there $\E[1-\pis{\Sz}]$ is of exact order $\rn$.
-
-\textup{(c)} \emph{At moderate $n$} (a heuristic, not a theorem). The posterior miss is carried mainly by the models
-$\Sz\cup\{j\}$ that add one null predictor. Each has posterior odds against $\Sz$ of about
-$\frac{\sz+1}{2p}\,n^{-1/2}e^{T_j^2/2}$ (prior, Occam factor and fit), with $T_j^2$ approximately $\chi^2_1$. The factor
-$e^{T_j^2/2}$ has no finite mean; over $p$ null predictors the largest $T_j^2$ is about $2\log p$, and the $p$ factors
-average about $2\sqrt{\log p/\pi}$. Together these models therefore carry about $(\sz+1)\sqrt{\log p/(\pi n)}$ times the
-weight of $\Sz$: the expression of~(b), here as a ratio to the weight of $\Sz$ rather than a bound on the posterior miss. With $\sz=5$, $n=200$ and $p=10^4$ this is about $0.7$. In single
-synthetic draws (AR(0.6), $\sz=5$) the measured total weight of these models, relative to that of $\Sz$, was $1.0$--$1.2$
-at $n=200$ and $p=10^4$--$10^6$, and $0.52$ at $n=400$, $p=10^4$. So at simulated sizes the posterior is spread over $\Sz$
-and many one-predictor extensions of it.
-\end{remark}
-
-\asmlist{(a): none. (b): \as{GL}, a fixed $\sz$ [\SA{all}], and the witness designs, which describe where the rate is
-attained and are not conditions of consistency.}
-
-\status{(a) and (b): \textbf{proved and independently checked}; the exact-order statement after (b) uses the
-expectation bound~\eqref{eq:post-exp} and has its status. Registry: Appendix~\ref{app:status},
-row 1.3. (c): a heuristic computed by the Theory department, with one-draw measurements from the engineering
-experiments; no registry row.}
-
-% =====================================================================================================
 \subsection{Result 2: the posterior finds the true distribution}\label{sec:distribution}
 
 \inwords{Suppose the observations are i.i.d., the response follows a sparse Gaussian linear model, the predictors have light
@@ -269,6 +216,8 @@ sparsity and $\praw\le n^A$ [\SA{all}]; (3)~\ref{asm:dist-subg}: light-tailed pr
 (4)~\ref{asm:dist-nec}: no near-exact collinearity [\SA{post}]; (5)~\ref{asm:dist-bs}: bounded signal [\SA{post}, signal
 size].}
 
+\scope{Every design of our simulation studies (Section~\ref{sec:who-outside}).}
+
 \status{\textbf{Proved and independently checked}. Registry: Appendix~\ref{app:status}, row 2.1.}
 
 \begin{remark}[On the assumptions]\label{rem:dist-asm}
@@ -276,7 +225,7 @@ No beta-min condition and no fixed lower bound on eigenvalues are assumed. Joint
 principal blocks have smallest eigenvalue at least a fixed $\psi>0$ satisfies Assumption~\ref{asm:dist}\ref{asm:dist-nec}
 for all large $n$. Condition~\ref{asm:dist-nec} keeps the Occam factor of each extra predictor in force; without it the
 radius grows by one factor $\sqrt{\log(\praw\vee n)}$ (Proposition~\ref{prop:dist}). The same statement holds for every
-level $M$ up to $\sqrt n/\log n$, with the same constants, It also carries over to the list of models that a completed run returns,
+level $M$ up to $\sqrt n/\log n$, with the same constants. It also carries over to the list of models that a completed run returns,
 when that list holds posterior mass at least $n^{-c_{\mathrm H}M/2}$, a condition the run does not check
 (Corollary~\ref{cor:dist-output}).
 \end{remark}
@@ -291,7 +240,7 @@ the true model, whatever its seed and the outcome of its calibration. The mechan
 Example~\ref{ex:leak}: the start mode holds the true predictors and possibly some members of $Q$, and the local search
 from the start mode deletes the spurious ones.}
 
-\why{It is a guarantee about what the software prints, at the effort its own calibration chooses and for every seed, not only
+\why{It is a guarantee about what the software reports, at the effort its own calibration chooses and for every seed, not only
 about the posterior it targets.}
 
 \paragraph{How the signal looks to a block-by-block method.} The start law sees interactions within blocks of at most
@@ -317,8 +266,8 @@ $a>0$. \hfill [\SA{rm}]
 In \as{FSt} the raw coefficients $\bstar=D^{-1}\tstar$ depend on the design; \as{FSt} takes the place of \as{GL} and \as{SP}
 in Results~3 and~4.
 
-Visibility excludes masking: if two true predictors with coefficients $1$ and $-1$ have correlation $\varrho$, the
-signal of each, given nothing, is $1-\varrho$, and it vanishes as $\varrho\to1$. A null predictor whose correlation with
+Visibility excludes masking: if two true predictors with coefficients $1$ and $-1$ have correlation $\rho$, the
+signal of each, given nothing, is $1-\rho$, and it vanishes as $\rho\to1$. A null predictor whose correlation with
 a true one stays fixed must belong to the leakage set $Q$, as predictor $5$ does in Example~\ref{ex:leak}.
 
 Fix $b\in(0,\tfrac12)$ and $b_H>0$ with $15b_H+b<\tfrac12$.
@@ -367,7 +316,7 @@ visibility [\SA{rm}]; (5)~\as{EFS} population floor [\SA{post}]; (6)~Assumption~
 leakage set, and (b)--(c) floor and local regressions in it [\SA{rm}]; (7)~Conventions \as{C1}, and \as{C2p} for delivery
 (Appendix~\ref{app:conventions}).}
 
-\status{\textbf{Proved and independently checked}, with no open condition: the recorded master is a strengthening of
+\status{\textbf{Proved and independently checked}, with no open condition: the version proved in the registry is a stronger form of
 this statement, and the two code-reading audits that its delivery route takes as hypotheses are independently checked.
 The statement that the integer limits of \as{C2p} cannot be reached on any representable input: \textbf{proved and
 independently checked}. Registry: Appendix~\ref{app:status}, row 3.1.}
@@ -379,26 +328,22 @@ expected to fail (a heuristic; whether the conclusion fails is open).
 (ii) Designs that satisfy the assumptions include correlation that is local in a metric, and bounded blocks.
 \end{remark}
 
-\scope{the independent and locally correlated designs of our studies; not pervasive common factors with $p\gg\sqrt n$
+\scope{The independent and locally correlated designs of our studies; not pervasive common factors with $p\gg\sqrt n$
 (Section~\ref{sec:who-outside}).}
 
 % =====================================================================================================
 \subsection{Result 4: the run's estimates}\label{sec:estimates}
 
-\inwords{The method prints an evidence estimate, pooled inclusion probabilities and the median probability model they
+\inwords{The method reports an evidence estimate, pooled inclusion probabilities and the median probability model they
 define. Given the calibration, the evidence estimate is unbiased, on every design. If, in addition, the rows are Gaussian, the signals fixed, every true predictor visible, and no
 null predictor correlated with a true one beyond order $n^{-1/2}$, even given $15$ others, the reported estimates are
 consistent: the errors of the evidence estimate (relative and log error) and of the inclusion probabilities, multiplied
 by the indicator that the method uses the sampler and its calibration succeeds, are of order
 $n^{-1/2}e^{C_\rho\sqrt{\log n}}=n^{-1/2+o(1)}$; the probability that this event occurs and the median model is wrong tends
-to zero, and so does the probability that the run completes and the reported model is wrong. Nothing is claimed about how
-likely the event is, or conditionally on it.}
+to zero, and so does the probability that the run completes and the reported model is wrong.}
 
-\why{The numbers a user reads come with guarantees: the evidence estimate is right on average whatever the design, and
-on designs without leakage, on the event that the calibration succeeds, its relative error tends to zero, the
-inclusion probabilities tend to $0$ or $1$ and the median model equals the true model with probability tending to one,
-and a completed run reports the true model with probability tending to one (no claim is made about how likely that
-event is).}
+\why{The numbers a user reads come with guarantees: the evidence estimate is right on average on every design, and on
+designs without leakage, on the event that the calibration succeeds, the reported summaries converge to their targets.}
 
 \subsubsection{Unbiased evidence, on every design}\label{sec:unbiased}
 
@@ -417,7 +362,7 @@ random numbers. By linearity the equal-weight pooled estimate is then unbiased t
 $\E[\Zhat\mid\text{calibration}]=Z$.
 
 \status{Pooled form: \textbf{proved and independently checked}; the frozen-run identities behind both forms are
-proved and independently checked at the code of record. Registry: Appendix~\ref{app:status}, row 3.5.}
+proved and independently checked against the code of record. Registry: Appendix~\ref{app:status}, row 3.5.}
 
 \subsubsection{Consistent estimates, on designs without leakage}\label{sec:outputs}
 
@@ -433,8 +378,8 @@ $\abs{\Cov(W_j,W_v\mid W_{U_0})}\le r^\circ_n$ for every $v\in U\setminus\Hl_l$ 
 $r^\circ_n(n\log n)^{1/4}\to0$. \hfill [\SA{pe}]
 \end{assumption}
 
-The theorem concerns runs that use the sampler; enumeration is not covered. Every completed run lies in the event
-$\Acal$ of Section~\ref{sec:method}. On $\Acal$, $\Zhat$, $\PIPhat$ and
+The theorem concerns runs that use the sampler; enumeration is not covered. On the event $\Acal$ of
+Section~\ref{sec:conventions}, $\Zhat$, $\PIPhat$ and
 $\MPMhat$ denote the pooled values the four islands would produce if the run did not stop; on completed runs they
 are the reported values. Let $\rho_n:=n^{-1/2}e^{C_\rho\sqrt{\log n}}$, with $C_\rho$ depending only on the fixed quantities of the
 assumptions.
@@ -465,3 +410,58 @@ $e^{C_\rho\sqrt{\log n}}/\sqrt{\log n}$.
 largest coordinate, than those of the worst island (proved and checked, conditional on the same two sampler results as
 Theorem~\ref{thm:outputs}; registry row 4.1).
 \end{remark}
+
+\subsection{Result 5: the rate cannot be improved}\label{sec:sharp}
+
+\inwords{On every design, no model of at most $\min(K-1,p/2)$ predictors has posterior mass closer to one than about
+$(\abs{S}+1)/(3\sqrt n)$; on two families of designs the expected posterior miss is at least of order $\rn$. At simulated sizes the posterior spreads over the true model and
+its one-predictor extensions.}
+
+\why{It shows that the rate of Result~1 is the right one, and why the posterior is not a point mass at simulated sizes
+such as $n=200$.}
+\scope{(a) Every design; (b) the witness designs only.}
+
+\begin{remark}[The rate cannot be improved, and what it means at moderate $n$]\label{rem:sharp}
+\textup{(a)} \emph{Every design.} For every $n\ge3$, every standardised design with $p\ge2$, every response and every
+model $S$ with $\abs{S}\le\min(K-1,p/2)$,
+\begin{equation}\label{eq:sharp-a}
+  \pis{S}\ \le\ \Big(1+\frac{\abs{S}+1}{3\sqrt n}\Big)^{-1}.
+\end{equation}
+So no model of that size, the true one included, can carry posterior mass closer to one than about
+$(\abs{S}+1)/(3\sqrt n)$. For true models with $\sz\le\min(K-1,p/2)$, no design gives a rate faster than
+$n^{-1/2}$, and a posterior miss of order $\rn$ is possible only if $\sz=O(\sqrt{\log n})$. The reason is that the prior and the Occam factor keep every one-predictor extension of a model
+alive.
+
+\textup{(b)} \emph{Witness designs.} Assume \as{GL}, that $\sz$ is fixed, the energy bounds $\norm{\mu}^2\le nM_\mu$ and
+$\norm{\tstar}^2\le nM_\theta$ for fixed $M_\mu$, $M_\theta$, and that the null predictors are either orthogonal (to each
+other and to the true ones) or have i.i.d.\ $\Normal(0,1)$ raw entries independent of the true predictors and of the noise, with $p\le n^A$.
+Then, for every $p>\sz$, bounded or growing,
+where $\pi=3.14\ldots$ (the number, not the posterior) in the next display,
+\begin{equation}\label{eq:sharp-b}
+  \E\big[1-\pis{\Sz}\big]\ \ge\ (1-o(1))\,(\sz+1)\,\frac{2(p-\sz)}{2p-1-\sz}\,
+  \sqrt{\frac{\log\!\big(p\sqrt n/(\sz+1)\big)}{\pi n}},
+\end{equation}
+and, if moreover $p\to\infty$, $1-\pis{\Sz}\ge(1-\oP(1))\,(\sz+1)\sqrt{\log p/(\pi n)}$. On fully
+orthogonal designs ($\sz<p\le n-1$) with fixed nonzero coefficients, the expectation bound~\eqref{eq:post-exp} applies
+too, so there $\E[1-\pis{\Sz}]$ is of exact order $\rn$.
+
+\textup{(c)} \emph{At moderate $n$} (a heuristic, not a theorem). The posterior miss is carried mainly by the models
+$\Sz\cup\{j\}$ that add one null predictor. Each has posterior odds against $\Sz$ of about
+$\frac{\sz+1}{2p}\,n^{-1/2}e^{T_j^2/2}$ (prior, Occam factor and fit), with $T_j^2$ approximately $\chi^2_1$. The factor
+$e^{T_j^2/2}$ has no finite mean; over $p$ null predictors the largest $T_j^2$ is about $2\log p$, and the $p$ factors
+average about $2\sqrt{\log p/\pi}$. Together these models therefore carry about $(\sz+1)\sqrt{\log p/(\pi n)}$ times the
+weight of $\Sz$: the expression of~(b), here as a ratio to the weight of $\Sz$ rather than a bound on the posterior miss. With $\sz=5$, $n=200$ and $p=10^4$ this is about $0.7$. In single
+synthetic draws (AR(0.6), $\sz=5$) the measured total weight of these models, relative to that of $\Sz$, was $1.0$--$1.2$
+at $n=200$ and $p=10^4$--$10^6$, and $0.52$ at $n=400$, $p=10^4$. So at simulated sizes the posterior is spread over $\Sz$
+and many one-predictor extensions of it.
+\end{remark}
+
+\asmlist{(a): none. (b): \as{GL}, a fixed $\sz$ [\SA{all}], and the witness designs, which describe where the rate is
+attained and are not conditions of consistency.}
+
+\status{(a) and (b): \textbf{proved and independently checked}; the exact-order statement after (b) uses the
+expectation bound~\eqref{eq:post-exp} and has its status. Registry: Appendix~\ref{app:status},
+row 1.3. (c): a heuristic calculation, with single-draw measurements from engineering
+experiments; no registry row.}
+
+% =====================================================================================================

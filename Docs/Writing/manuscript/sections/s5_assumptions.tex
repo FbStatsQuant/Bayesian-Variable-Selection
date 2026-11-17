@@ -9,11 +9,11 @@ that are not too small. On the designs we study, the assumptions of our posterio
 included. Where the two papers differ, the direction depends on the regime --- their model-size cap, whether predictors
 are centred, and which of their theorems is the comparator --- and is given assumption by assumption in the table.
 
-For the coded method, Section~\ref{sec:who-outside} says which designs are outside Result~3 and what still
+Table~\ref{tab:a-summary} is that table. For the coded method, Section~\ref{sec:who-outside} says which designs are outside Result~3 and what still
 holds for them; conclusions are compared with Song and Liang theorem by theorem in Section~\ref{sec:SL-concl}, not as a
 whole.
 
-\subsection{Our designs, and what ``inside'' means}\label{sec:a-setting}
+\subsection{Our designs, what ``inside'' means, and how the conclusions compare}\label{sec:a-setting}
 
 \paragraph{The designs.} All our designs have i.i.d.\ Gaussian rows, noise variance $1$ and fixed nonzero coefficients.
 They fall into three classes.
@@ -37,11 +37,11 @@ constants of the proofs are conservative and are not part of the judgement. Page
 their model-size cap.
 
 
-\paragraph{How the conclusions compare.}\phantomsection\label{sec:SL-concl} Against their Theorem~3 (p.~956), our selection theorems add specificity and
+\paragraph{How the conclusions compare.}\phantomsection\label{sec:SL-concl} Against their Theorem~3 (p.~956), our selection results (Result~1) add specificity and
 exact selection at a polynomial rate, while theirs gives sensitivity with an exponentially small error; neither implies
 the other. Against their Theorem~S (supp.\ p.~13), the statements concern different posteriors, so neither implies the other; within one posterior,
 mass on the true model with a rate is a stronger form of statement than a statement about the posterior mode. The
-distribution theorem uses the same distance as their Theorems~1--2, with the same exponential form of the tail for
+distribution result (Result~2) uses the same distance as their Theorems~1--2, with the same exponential form of the tail for
 levels $M\le\sqrt n/\log n$ of the radius $\sqrt{M\log n/n}$; it reaches a radius of order $\rn$, which their conditions do not reach at polynomial $p$;
 larger radii and exponential $p$ are outside ours. For the reported model, their
 statements are limits in the number of iterations at fixed data, for every data set; ours hold at the coded budget
@@ -50,41 +50,37 @@ under design conditions; neither implies the other.
 \begin{table}[!t]
 \centering\footnotesize
 \setlength{\tabcolsep}{3.5pt}
-\renewcommand{\arraystretch}{1.0}\setlength{\abovecaptionskip}{4pt}
+\renewcommand{\arraystretch}{0.96}\setlength{\abovecaptionskip}{3pt}
 \caption{The assumptions, \SL{} (2015), and our designs, by class: independent, locally correlated, pervasive factor.
 \yes{} inside, \no{} outside, \unc{} unclear, \na{} not applicable. A comparison in one word appears only where it holds
-in every regime of both papers. ``Their sets'': the column sets of their eigenvalue conditions, growing with their model-size cap
-$\bar r_n$. ``No counterpart'': they assume nothing of the kind; ``neither implies the other'': both assume something,
-unordered.}\label{tab:a-summary}
-\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.18\linewidth}>{\raggedright\arraybackslash}p{0.16\linewidth}>{\raggedright\arraybackslash}p{0.43\linewidth}ccc@{}}
+in every regime of both papers; elsewhere the comparison depends on the regime and is given in Section~\ref{sec:a-each}.
+``No counterpart'': they assume nothing of the kind.}\label{tab:a-summary}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.18\linewidth}>{\raggedright\arraybackslash}p{0.16\linewidth}>{\raggedright\arraybackslash}p{0.40\linewidth}ccc@{}}
 \toprule
 Assumption & In words & \SL: counterpart, and comparison by regime & Indep. & Local & Factor \\
 \midrule
 \multicolumn{6}{@{}l}{\textbf{All results}} \\
 Gaussian linear model \lab{GL} & Gaussian noise, fixed variance & (1), p.~947; (2), p.~950. \emph{The same, in every regime.} & \yes & \yes & \yes \\
 Dimension \lab{DIM} & $p\le n^A$ & Cor.~1, p.~954; Thm~S, supp.\ pp.~13, 16; their $P_n\succ n^\theta$, p.~950.
-Upper range: ours covers less. Lower range: ours covers bounded $p$, theirs does not. & \yes & \yes & \yes \\
+By regime (\S\ref{sec:a-all}). & \yes & \yes & \yes \\
 Fixed true model size \lab{SP} & $\sz$ fixed & (4), p.~950. \emph{The same} for their Thms 2, 3, S; their Thm~1 also
 admits growing supports under (3). & \yes & \yes & \yes \\
 \midrule
 \multicolumn{6}{@{}l}{\textbf{Results 1 and 2 (the posterior)}} \\
-Signal size & bounded; nonzero (fixed in Thms \ref{thm:post-random}, \ref{thm:reported}, \ref{thm:outputs}; beta-min in Thm~\ref{thm:post-fixed}) & If their $\bstar$ does not change with $n$: the same as Thms \ref{thm:post-random}, \ref{thm:reported}, \ref{thm:outputs}; Thms \ref{thm:post-fixed}, \ref{thm:dist} admit more. If it may
-vary: ours asks more than their proof steps use (supp.\ pp.~6, 15). & \yes & \yes & \yes \\
-Eigenvalue floor \lab{EF}, \lab{EFS} & fixed floor on small sets & Cond.~3, p.~955; (22)--(23), supp.\ p.~13. Where their
-sets are no larger than ours, ours implies (22)--(23) for standardised columns and Cond.~3 for Gaussian predictors; where they are larger ($\bar r_n\succ\log n$), neither implies the
-other. & \yes & \yes & \yes \\
-Near-exact collinearity \lab{NC} & floor of order $1/n$ on $O(\log n)$ sets & None in their Thms~1--2. Against Cond.~3, p.~955, and (22), supp.\ p.~13: theirs gives ours, on the sets they cover, where
-their sets are at least as large; neither implies the other where they are smaller ($\bar r_n\prec\log n$). & \yes & \yes & \yes \\
-Law of the rows \lab{GR} & Gaussian or sub-Gaussian & $\abs{x_i}\le1$, p.~952; Cond.~1, p.~953. Centred, unit-variance
-predictors: ours implies Cond.~1. Raw predictors, or against $\abs{x_i}\le1$: neither implies the other. & \yes & \yes & \yes \\
+Signal size & bounded; nonzero (fixed in Thms \ref{thm:post-random}, \ref{thm:reported}, \ref{thm:outputs}; beta-min in Thm~\ref{thm:post-fixed}) & No lower bound stated; (3), (8), pp.~950, 952;
+supp.\ pp.~6, 15. By how their $\bstar$ is read (\S\ref{sec:a-post}). & \yes & \yes & \yes \\
+Eigenvalue floor \lab{EF}, \lab{EFS} & fixed floor on small sets & Cond.~3, p.~955; (22)--(23), supp.\ p.~13. By their
+model-size cap $\bar r_n$ (\S\ref{sec:a-post}). & \yes & \yes & \yes \\
+Near-exact collinearity \lab{NC} & floor of order $1/n$ on $O(\log n)$ sets & None in their Thms~1--2; Cond.~3, p.~955; (22), supp.\ p.~13. By comparator and $\bar r_n$ (\S\ref{sec:a-post}). & \yes & \yes & \yes \\
+Law of the rows \lab{GR} & Gaussian or sub-Gaussian & $\abs{x_i}\le1$, p.~952; Cond.~1, p.~953. By centring and comparator (\S\ref{sec:a-post}). & \yes & \yes & \yes \\
 \midrule
 \multicolumn{6}{@{}l}{\textbf{Result 3 (the reported model), in addition}} \\
 Visibility \lab{V} & no true predictor cancelled by $\le15$ others & Cond.~5, p.~958. \emph{Ours implies theirs, in every
 regime.} & \yes & \yes & \unc$^{a}$ \\
 Polynomial leakage set, \ref{asm:reported}(a) & at most $n^b$ nulls correlated with the signal & \emph{No hypothesis of this kind}; informal
 remark (a), p.~958. No ordering. & \yes & \yes & \no \\
-Floor and local regressions, \ref{asm:reported}(b),(c) & each regression in the set uses few members & Floor: as the eigenvalue floor,
-on other sets. Local regressions: \emph{no counterpart}. & \yes & \yes & \na \\
+Floor and local regressions, \ref{asm:reported}(b),(c) & each regression in the set uses few members & Floor: as the eigenvalue floor (\S\ref{sec:a-rm}).
+Local regressions: \emph{no counterpart}. & \yes & \yes & \na \\
 \midrule
 \multicolumn{6}{@{}l}{\textbf{Result~4 (Theorem~\ref{thm:outputs}), in addition}} \\
 No leakage \lab{NL} & null predictors nearly uncorrelated with true ones & \emph{No counterpart}, in every regime. & \yes
@@ -122,7 +118,7 @@ size, $\pis{\Sz}\le\{1+(\sz+1)/(3\sqrt n)\}^{-1}$
 (Remark~\ref{rem:sharp}(a)), so a posterior miss of order $\rn$ is possible only if $\sz=O(\sqrt{\log n})$.}
 \ro{True models whose size grows with $n$.}
 
-\subsubsection{Assumptions of Results 1 and 2}\label{sec:a-post}
+\subsubsection{Signal, eigenvalue and row-law assumptions (Results 1--4)}\label{sec:a-post}
 
 \ahead{Signal size}{\lab{BC}, \lab{FSb}, \lab{FSt} and Assumption~\ref{asm:dist}(e) bound the coefficients above; \lab{BM} is
 the beta-min}{\SL{} state no lower bound in their theorems. \emph{If their $\bstar$ does not change with $n$} (the natural
@@ -156,8 +152,8 @@ their Condition~3 (p.~955) and (22) (supp.\ p.~13), if their sets are at least a
 \ev{Their eigenvalue conditions (11) and (14) (p.~952) are on the prior covariance. With their own ridge choice, a ridge
 $c_n\propto1/n$ (p.~953), no design condition is left, and their rate carries the diverging factor $\bar r_n$:
 $\epsilon_n^2\succ\bar r_n\log P_n/n$ (their (10)). Our floor, $c_\psi/n$
-on the correlation scale, is of the same order as that ridge, on $O(\log n)$ sets only, and gives the distribution
-theorem its contraction radius $\sqrt{M\log n/n}$, for a fixed level $M$. Without it the distribution theorem still
+on the correlation scale, is of the same order as that ridge, on $O(\log n)$ sets only, and gives Result~2
+its contraction radius $\sqrt{M\log n/n}$, for a fixed level $M$. Without it Result~2 still
 holds, with an extra factor $\sqrt{\log(\praw\vee n)}$ in the radius, $\praw$ the number of raw predictors (Proposition~\ref{prop:dist}(ii)).}
 \ro{Duplicated columns (null duplicates included) and exact linear dependence, as in one-hot or compositional coding.}
 \tu{Inside after removing exact duplicates and exact linear dependences.}
@@ -166,19 +162,19 @@ holds, with an extra factor $\sqrt{\log(\praw\vee n)}$ in the radius, $\praw$ th
 Assumption~\ref{asm:dist}(c) each imply \SL's Condition~1 (p.~953); on raw predictors, and against their $\abs{x_i}\le1$
 (Theorem~1, p.~952), neither implies the other.}
 \ev{For standardised predictors, Assumption~\ref{asm:dist}(c) implies their Condition~1 for every $r$, with $\delta=\sqrt{3/8}/L$
-and $M=\log2$, $L$ being the sub-Gaussian constant of Assumption~\ref{asm:dist}(c) (a two-line computation, independently
+and $M=\log2$ (their constants), $L$ being the sub-Gaussian constant of Assumption~\ref{asm:dist}(c) (a two-line computation, independently
 checked). On raw predictors, Gaussian rows with mean $n$
 satisfy our row law and violate Condition~1, which is a raw exponential-moment bound. Our generators draw centred
 Gaussian rows with unit variances, which satisfy Condition~1 itself.}
-\ro{Non-Gaussian rows for Theorems~\ref{thm:post-random}, \ref{thm:reported} and~\ref{thm:outputs}; heavy-tailed predictors for the distribution theorem.}
-\tu{Bounded data such as genotypes are outside the Gaussian-row theorems as stated, and inside \SL's Condition~1; they are
+\ro{Non-Gaussian rows for Theorems~\ref{thm:post-random}, \ref{thm:reported} and~\ref{thm:outputs}; heavy-tailed predictors for Result~2.}
+\tu{Bounded data such as genotypes are outside the Gaussian-row results as stated, and inside \SL's Condition~1; they are
 covered by the fixed-design Theorem~\ref{thm:post-fixed} when the observed design meets its conditions.}
 
 \subsubsection{Further assumptions of Result 3}\label{sec:a-rm}
 
 \ahead{Visibility}{\lab{V}}{Ours implies \SL's Condition~5 (p.~958: $\abs{\operatorname{cov}(x_t,y)}>0$ for every true
 predictor) in every regime: theirs is our condition with no conditioning and no margin.}
-\ev{Visibility asks $\abs{\Cov(W_j,W^\top\tstar\mid W_U)}\ge a>0$ for every true predictor $j$, with $W$ a standardised row of the design and $U$ any set of at most $15$ other columns: the start law (the distribution the sampler starts from) must
+\ev{Visibility asks $\abs{\Cov(W_j,W^\top\tstar\mid W_U)}\ge a>0$ for every true predictor $j$, with $W$ the centred population row of Section~\ref{sec:setup} and $U$ any set of at most $15$ other columns: the start law (the distribution the sampler starts from) must
 see every true predictor, as their first stage must, and it conditions on up to $15$ columns because the start law works on groups of at most $16$ predictors. For bounded blocks with one true predictor each, and for AR
 designs, this covariance is $\theta^*_j\Var(W_j\mid W_U)$ plus geometrically small terms, at
 least $\abs{\theta^*_j}\lmin(\Sig)/2$. When the true effects have aligned signs and every conditional covariance
@@ -235,13 +231,11 @@ primary design of the $10^6$ plan.}
 
 \subsection{Who is outside Result 3, and what still holds}\label{sec:who-outside}
 
-The assumptions of Results~1 and~2 hold on every design of our studies, strong common factors included; those of Result~3 hold on the independent
-and locally correlated designs (S1--S4, S6, IND, AR, BLK) and not on the pervasive-factor designs (S5, the strong-factor
-study, FAC): with $p\gg\sqrt n$, every null predictor then has a fixed covariance with every true one, so the leakage set
-is all of $\set{p}$ (Section~\ref{sec:a-rm}). Visibility can also fail on its own when true effects of mixed signs cancel;
-a numerical check of the conditions' population quantities, not yet complete, found this for a pervasive factor with
-effects of mixed signs and for a riboflavin-like design. Theorem~\ref{thm:outputs} of Result~4 needs no leakage at all,
-which only the independent designs satisfy. What still holds outside:
+The assumptions of Results~1 and~2 hold on every design of our studies, strong common factors included. Those of
+Result~3 hold on the independent and locally correlated designs (S1--S4, S6, IND, AR, BLK), and not on the
+pervasive-factor designs (S5, the strong-factor study, FAC), whose leakage set is all of $\set{p}$ when $p\gg\sqrt n$;
+visibility can also fail on its own when true effects of mixed signs cancel (Section~\ref{sec:a-rm}). Theorem~\ref{thm:outputs} of Result~4 needs the condition
+\as{NL}, which only the independent designs satisfy. What still holds outside:
 \begin{itemize}[leftmargin=1.5em,itemsep=1pt]
   \item on the block and AR designs: Results~1, 2 and~3, and the unbiasedness of the evidence estimate
     (Proposition~\ref{prop:unbiased}); no theorem yet gives the consistency of the reported inclusion probabilities,
