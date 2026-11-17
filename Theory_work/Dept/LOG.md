@@ -470,3 +470,4 @@
 - 2026-11-17 14:08 CST W3-D5P Cor 9C note (0bf478fb): 6L gives Cor 9C's list-mass premise only PATHWISE; the probability form needs READER B6.7 (open; raw- vs standardised-scale incompatibility). Erratum E3 (empty class). HQ asked for card wording + B6.7 (recommended no ticket).
 - 2026-11-17 14:11 CST D122 relayed to all leads.
 - 2026-11-17 14:13 CST D122 acked by W3-D5P (879217ad: added a model header line to the R1 Sol review; asked to verify the bound manifest and revert if broken) and W3-D3 (be1a2297, LOG only; R2g verifies).
+- 2026-11-17 14:13 CST D18 verdict: spread COVERED (p ≥ 16352; margin ≥ 0.1, exact structural); clustered effectively ON B (δ ≤ 1.3e-8, not certifiable); D19 inside via VIS-b; STATEMENT v1.5 (V-R4 Opus running). HQ told. Pending: re-bind → TRACK_B/compliance/Writing updates → V recording release.
