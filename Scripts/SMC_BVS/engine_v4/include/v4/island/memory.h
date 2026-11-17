@@ -18,6 +18,7 @@
 //   rows         label-major group: log m and odds rows per support              2 G p 8
 //   supports     support caches (4 k_q^2 doubles each), gathered columns, per-thread product tiles
 //                with k_q = min(K, 3k): G (32 k_q^2) + G k_q n 8 + T G k_q tile 8
+//   lm_scratch   label-major per-thread scratch (sized before the parallel regions)  T (18 tile + 64 k_q + 64)
 //   particles    two populations + pending + terminal supports                   (2N + G) (4k + 64) + N 4k
 //   ckpt         streamed checkpoint buffers                                     2 MiB
 //   headroom     12 % of every term except the inputs (allocator slack, run-to-run variation of the peak)
@@ -79,6 +80,7 @@ inline MemPlan island_memory(const MemSizes& z, double k) {
     add("orders", 2.0 * G * m_lab * 4 + G * (z.B + 2) * 8);
     add("rows", 2.0 * G * p * 8);
     add("supports", G * 32.0 * kq * kq + G * kq * n * 8 + T * G * kq * z.tile * 8);
+    add("lm_scratch", T * (18.0 * z.tile + 64.0 * kq + 64.0));
   } else {
     add("supports", T * (32.0 * kq * kq + kq * n * 8));
   }
