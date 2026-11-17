@@ -6,7 +6,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 ## THEORY PUSH (owner greenlight 11-17, D104).
 - ONE H5 card (D115) for Thm2X + Thm 2SG (row 1.2, coexist) + Cor 6L (row 3.1, STRONGER) once all three reach CP3 → consultant, with Writing's restructure. No reader/card swap before AGREE. Freeze tag theory-v2026-11-freeze → d40c9780 stands for recorded statements.
 - Running (4 leads + Fable): track A lead (W1-N1:B/F line checks), W3-D2 lead (check X), recorder (A1/A2 NARROW → tools → registry editorial), precedent notes (Sonnet); audit Fable (FEAS_SMC_WORKS).
-- Running since 11-17: W3-D5P (#5′) and W3-D3 (#3, plan stage). Running: generic-position lemma (track A lead, track_V/; D112). Next free slot: READER editorial batch.
+- Running since 11-17: W3-D5P (#5′) and W3-D3 (#3, plan stage). Running: generic-position lemma (track A lead, track_V/; D112). READER editorial batch bundled with the joint H5 card swap (after AGREE; D115).
 - DROPPED for this paper (owner D107): 'SMC does work' incl. the weak-leak corollary (FEAS_SMC_WORKS.md = follow-up material). Evidence spread dropped. **List CLOSED** (D107). After the owner's method sign-off: proof hardening for Lean (3 blueprints + hostile review).
 
 ## Running
