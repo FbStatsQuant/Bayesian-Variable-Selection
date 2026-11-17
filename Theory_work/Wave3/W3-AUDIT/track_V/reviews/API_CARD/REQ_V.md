@@ -1,11 +1,11 @@
 # AUDITV — V1 (visibility with a margin uniform in n)
 
-Material for a blind review. Every excerpt is verbatim with its file and line numbers (the theorems and notation at commit 029bb748, the other texts at commit 91b0af45). Status labels have been replaced by [status omitted].
+Material for a blind review. Every excerpt is verbatim with its file and line numbers (the theorems and notation at commit 029bb748, the other texts at commit 7df2d81c). Status labels have been replaced by [status omitted].
 
 ## 1. V1 statement
-`Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md` @ 91b0af45, lines 1–74:
+`Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md` @ 7df2d81c, lines 1–76:
 ```
-    1| # V1 · Lemma VIS (visibility with a margin uniform in n: a sign route and a generic-position route) — STATEMENT v1.2 (draft; [status omitted] [status omitted] WITH CHANGES on v1.1, changes applied)
+    1| # V1 · Lemma VIS (visibility with a margin uniform in n: a sign route and a generic-position route) — STATEMENT v1.4 (draft; [status omitted] [status omitted] WITH CHANGES on v1.1, changes applied)
     2| 
     3| Track V item V1 (manager 11-17, D112; owner + consultant requirement: a margin **uniform in n**, not "nonzero for almost
     4| every β"). Tier B (new lemma; pure linear algebra and topology, no code). **Lean target: yes** (finite-dimensional:
@@ -15,7 +15,7 @@ Material for a blind review. Every excerpt is verbatim with its file and line nu
     8| ## Target condition
     9| The population visibility condition — Theorem 5 (A4) (lines 581-582), Theorem 6 (A3) (lines 672-673) and Theorem 10 (A4)
    10| (line 1292, "(A4) of Theorem 5") of `Theory_work/Wave3/W3-READER/READER_VERSIONS.md` on main 029bb748: for a fixed a > 0
-   11| and all large n,
+   11| and n ≥ n₀ (the theorems state the hypothesis with a fixed a; they are asymptotic, so n ≥ n₀ suffices),
    12|   |Cov(W_j, Wᵀθ* | W_U)| ≥ a  for every j ∈ S₀ and every U ⊆ [p] with j ∉ U, |U| ≤ 15,
    13| with W ~ N_p(0, Σ_n), Σ_n a correlation matrix (positive definite in Theorem 6; Theorems 5 and 10 assume only a
    14| correlation matrix with a small-set floor), Cov(·, · | W_U) the partial covariance
@@ -31,7 +31,7 @@ Material for a blind review. Every excerpt is verbatim with its file and line nu
    24| - **Visibility vector** of (U, j): γ(U, j) ∈ ℝ^{s₀}, γ_i := Γ^U_{j k_i} for k_i ∉ U and γ_i := 0 for k_i ∈ U.
    25| - c₁₆ := min_{|V| ≤ 16} λ_min(Σ_V) (the floor on sets of at most 16 columns).
    26| - 𝒩_n := {γ(U, j)/|γ(U, j)| : j ∈ S₀, U ∌ j, |U| ≤ 15} ⊆ S^{s₀−1} (well defined by (VIS-0)); for a design sequence,
-   27|   𝒩 := the closure of ∪_n 𝒩_n, and the **bad set** B := ∪_{ν∈𝒩} ν^⊥ ⊆ ℝ^{s₀}.
+   27|   𝒩 := the closure of ∪_{n≥n₀} 𝒩_n, and the **bad set** B := ∪_{ν∈𝒩} ν^⊥ ⊆ ℝ^{s₀} (n₀ as in (VIS-b)).
    28| 
    29| ## Lemma VIS
    30| - **(VIS-0) Reduction.** For j ∈ S₀ and U ∌ j with |U| ≤ 15: Cov(W_j, Wᵀθ* | W_U) = ⟨γ(U, j), ϑ⟩, and
@@ -40,7 +40,7 @@ Material for a blind review. Every excerpt is verbatim with its file and line nu
    33|   such that DΣ⁻¹D has nonpositive off-diagonal entries, and the truths are **aligned**: d_k·sgn(θ*_k) = d_j·sgn(θ*_j) for
    34|   every j, k ∈ S₀ in the same connected component of the graph of Σ⁻¹ (the graph with an edge {l, l′} iff (Σ⁻¹)_{ll′} ≠ 0).
    35|   Then for every j ∈ S₀ and U ∌ j: |Cov(W_j, Wᵀθ* | W_U)| ≥ |θ*_j|·Var(W_j | W_U), and this is ≥ θ_lo·c₁₆ when |U| ≤ 15.
-   36| - **(VIS-b) Generic-position route (explicit constant).** For every j ∈ S₀ and U ∌ j with |U| ≤ 15,
+   36| - **(VIS-b) Generic-position route (explicit constant).** For every n ≥ n₀, every j ∈ S₀ and U ∌ j with |U| ≤ 15,
    37|   |Cov(W_j, Wᵀθ* | W_U)| ≥ c₁₆ · dist(ϑ, B). B is closed, so for a fixed ϑ, ϑ ∉ B ⇔ dist(ϑ, B) > 0, and
    38|   dist(ϑ, B) = min_{ν∈𝒩} |⟨ν, ϑ⟩| (attained: 𝒩 is compact). Hence for a design sequence with
    39|   **c̲ := inf_{n≥n₀} c₁₆(Σ_n) > 0** and **δ := inf_{n≥n₀} dist(ϑ_n, B) > 0** (for instance ϑ_n in a fixed compact
@@ -52,39 +52,41 @@ Material for a blind review. Every excerpt is verbatim with its file and line nu
    45|   matrices with c_m := inf_{n≥n₀} min_{|V|≤15+s₀} λ_min(Σ_{n,V}) > 0; 𝒩 formed over n ≥ n₀):
    46|   (i) *finitely many local patterns*: the labelled matrices Σ_{n,V}, V = U ∪ S₀ (labels: which indices are U, which is
    47|   j, and the rank of each truth), take finitely many values over all n, j, U — e.g. block-diagonal Σ_n with blocks from
-   48|   a fixed finite list of correlation matrices; equicorrelation with a fixed ρ (ρ ∈ [0, 1) when p → ∞, for positive
-   49|   definiteness); factor models Σ_n = Ψ + ΛΛᵀ (unit
-   50|   diagonal) whose rows (λ_l, ψ_l) take finitely many values;
-   51|   (ii) *stationary designs*: Σ_{n,ll′} = r(|l − l′|) for a fixed function r with r(d) → 0 as d → ∞ (e.g. AR(ρ),
-   52|   |ρ| < 1, fixed; banded/MA(q)); also block-diagonal designs whose blocks are of this form, with finitely many r's.
-   53| - **(VIS-e) Instances of the sign route** (each with D and the floor): independent columns (D = I; c₁₆ = 1); AR(ρ), |ρ| < 1
-   54|   (d_l = s^l with s := sgn ρ, s := +1 if ρ = 0; c₁₆ ≥ (1 − |ρ|)/(1 + |ρ|)); equicorrelation ρ ∈ [0, 1) (D = I; c₁₆ ≥ 1 − ρ); one-factor
-   55|   Σ = Ψ + λλᵀ with Ψ diagonal positive (d_l = sgn(λ_l), sgn 0 := +1; c₁₆ ≥ min_l ψ_l); block-diagonal combinations of
-   56|   these (D blockwise; alignment is required only within a block).
-   57| 
-   58| ## Reading for the theorems
-   59| The floors are not new assumptions: Theorem 5 (A3) (|S| ≤ 16 + s₀) gives c₁₆, c_m ≥ c for every n; Theorem 6 (A5) and
-   60| Theorem 10 (A3) (|S| ≤ 5(A + 1)(s₀ + 1) log n) give them for n ≥ n₀ with 5(A + 1)(s₀ + 1) log n₀ ≥ 16 + s₀. The new
-   61| hypothesis is a condition on (Σ_n, ϑ_n) jointly: alignment (VIS-a; Σ_n positive definite, as in Theorem 6), or a fixed
-   62| distance from the bad set (VIS-b). Either gives Theorem 6 (A3) and Theorems 5, 10 (A4) with the stated constant, for every
-   63| n ≥ n₀.
-   64| 
-   65| ## Not claimed
-   66| - Anything when ϑ_n approaches B (dist(ϑ_n, B) → 0) or lies on it: there visibility may fail with no margin; this is the
-   67|   case of track C's strong factor with mixed-sign truths (D14, D15: population value 0).
-   68| - Designs whose local patterns are uncountable without a countable closure of 𝒩 (e.g. irregular or estimated
-   69|   correlation matrices such as track C's riboflavin-like D18): B may then have interior; no claim.
-   70| - Sample-level visibility (Theorem 7 (A3); W3-START2-R (D3); W3-RM2-R (V♭)) and the other hypotheses of Theorems 5, 6, 10.
-   71| - Avoiding, for each n separately, only that n's hyperplanes (ϑ_n ∉ ∪_{ν∈𝒩_n} ν^⊥, "nonzero for almost every β" at each n)
-   72|   is not enough and is not used: ϑ may then lie on a limit hyperplane ν^⊥, ν ∈ 𝒩 ∖ ∪_n 𝒩_n, where the margin tends to 0.
-   73|   B includes those limit hyperplanes.
-   74| 
+   48|   a fixed finite list of correlation matrices; block designs with equicorrelated blocks of a fixed ρ_b ∈ [0, 1) and any sizes
+   49|   (also growing), the entries depending only on block sharing; equicorrelation with a fixed ρ (ρ ∈ [0, 1) when p → ∞, for
+   50|   positive definiteness); factor models Σ_n = Ψ + ΛΛᵀ (unit
+   51|   diagonal) whose rows (λ_l, ψ_l) take finitely many values;
+   52|   (ii) *stationary designs*: Σ_{n,ll′} = r(|l − l′|) for a fixed function r with r(d) → 0 as d → ∞ (e.g. AR(ρ),
+   53|   |ρ| < 1, fixed; banded/MA(q)); also block-diagonal designs whose blocks are of this form, with finitely many r's.
+   54| - **(VIS-e) Instances of the sign route** (each with D and the floor): independent columns (D = I; c₁₆ = 1); AR(ρ), |ρ| < 1
+   55|   (d_l = s^l with s := sgn ρ, s := +1 if ρ = 0; alignment: s^k·sgn(θ*_k) is the same for every k ∈ S₀ — for ρ > 0 equal
+   56|   signs, for ρ < 0 sgn(θ*_k) = σ·(−1)^k for a common σ, i.e. the sign is fixed by the parity of k; c₁₆ ≥ (1 − |ρ|)/(1 + |ρ|)); equicorrelation ρ ∈ [0, 1) (D = I; c₁₆ ≥ 1 − ρ); one-factor
+   57|   Σ = Ψ + λλᵀ with Ψ diagonal positive (d_l = sgn(λ_l), sgn 0 := +1; c₁₆ ≥ min_l ψ_l); block-diagonal combinations of
+   58|   these (D blockwise; alignment is required only within a block).
+   59| 
+   60| ## Reading for the theorems
+   61| The floors are not new assumptions: Theorem 5 (A3) (|S| ≤ 16 + s₀) gives c₁₆, c_m ≥ c for every n; Theorem 6 (A5) and
+   62| Theorem 10 (A3) (|S| ≤ 5(A + 1)(s₀ + 1) log n) give them for n ≥ n₀ with 5(A + 1)(s₀ + 1) log n₀ ≥ 16 + s₀. The new
+   63| hypothesis is a condition on (Σ_n, ϑ_n) jointly: alignment (VIS-a; Σ_n positive definite, as in Theorem 6), or a fixed
+   64| distance from the bad set (VIS-b). Either gives Theorem 6 (A3) and Theorems 5, 10 (A4) with the stated constant, for every
+   65| n ≥ n₀.
+   66| 
+   67| ## Not claimed
+   68| - Anything when ϑ_n approaches B (dist(ϑ_n, B) → 0) or lies on it: there visibility may fail with no margin; this is the
+   69|   case of track C's strong factor with mixed-sign truths (D14, D15: population value 0).
+   70| - Designs whose local patterns are uncountable without a countable closure of 𝒩 (e.g. irregular or estimated
+   71|   correlation matrices such as track C's riboflavin-like D18): B may then have interior; no claim.
+   72| - Sample-level visibility (Theorem 7 (A3); W3-START2-R (D3); W3-RM2-R (V♭)) and the other hypotheses of Theorems 5, 6, 10.
+   73| - Avoiding, for each n separately, only that n's hyperplanes (ϑ_n ∉ ∪_{ν∈𝒩_n} ν^⊥, "nonzero for almost every β" at each n)
+   74|   is not enough and is not used: ϑ may then lie on a limit hyperplane ν^⊥, ν ∈ 𝒩 ∖ ∪_n 𝒩_n, where the margin tends to 0.
+   75|   B includes those limit hyperplanes.
+   76| 
 ```
 
 ## 2. V1 proof
-`Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/PROOF.md` @ 91b0af45, lines 1–103:
+`Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/PROOF.md` @ 7df2d81c, lines 1–113:
 ```
-    1| # V1 · Lemma VIS — PROOF v1.2
+    1| # V1 · Lemma VIS — PROOF v1.4
     2| 
     3| Fix n; Σ = Σ_n is a p × p correlation matrix with c₁₆ > 0 (positive definite in (VIS-a)), W ~ N_p(0, Σ). For U ⊆ [p]
     4| write U^c := [p] ∖ U. F1 is applied to positive definite matrices only: to Σ in (VIS-a), and to Σ_V with |V| ≤ 16
@@ -127,7 +129,7 @@ Material for a blind review. Every excerpt is verbatim with its file and line nu
    41| ## (VIS-b)
    42| *B is closed.* 𝒩 is a closed subset of the unit sphere, hence compact. Let θ_m ∈ B, θ_m → θ; choose ν_m ∈ 𝒩 with
    43| ⟨ν_m, θ_m⟩ = 0; a subsequence ν_m → ν ∈ 𝒩, and ⟨ν, θ⟩ = lim ⟨ν_m, θ_m⟩ = 0, so θ ∈ B.
-   44| *Bound.* Fix n, j, U and let γ := γ(U, j). By (VIS-0) γ ≠ 0; ν := γ/|γ| ∈ 𝒩_n ⊆ 𝒩, so ν^⊥ ⊆ B and
+   44| *Bound.* Fix n ≥ n₀, j, U and let γ := γ(U, j). By (VIS-0) γ ≠ 0; ν := γ/|γ| ∈ 𝒩_n ⊆ 𝒩, so ν^⊥ ⊆ B and
    45| |⟨ν, ϑ⟩| = dist(ϑ, ν^⊥) ≥ dist(ϑ, B). Hence |Cov(W_j, Wᵀθ* | W_U)| = |γ|·|⟨ν, ϑ⟩| ≥ |γ_{i(j)}|·dist(ϑ, B) ≥ c₁₆·dist(ϑ, B).
    46| *Minimum attained.* ν ↦ |⟨ν, ϑ⟩| is continuous on the compact 𝒩, and dist(ϑ, B) = inf_{ν∈𝒩} dist(ϑ, ν^⊥) =
    47| inf_{ν∈𝒩} |⟨ν, ϑ⟩| (B = ∪_{ν∈𝒩} ν^⊥), so the infimum is a minimum; as B is closed, dist(ϑ, B) > 0 iff ϑ ∉ B.
@@ -178,15 +180,25 @@ Material for a blind review. Every excerpt is verbatim with its file and line nu
    92|   change with n), while B in (VIS-b) collects the hyperplanes of all n. Example ([status omitted], VSL1): S₀ = {1, 2},
    93|   Σ_n = [[1, r_n], [r_n, 1]] ⊕ I, alternating (r_n, ϑ_n) = (1/2, (1, 2)) and (−1/2, (1, −2)): (VIS-a) applies at every n
    94|   (D = I, resp. D = diag(1, −1, 1, …)) with margin ≥ 3/4, but B ⊇ {θ₁ + θ₂/2 = 0} ∪ {θ₁ − θ₂/2 = 0} contains every ϑ_n,
-   95|   so δ = 0. (VIS-a) gives the explicit constant θ_lo c₁₆ directly. Track C's aligned designs (IND, AR(0.5), blocks, cs, aligned factors; `Theory_work/Wave3/W3-AUDIT/track_C/RESULTS.md:63-68`)
-   96|   and B8's cs/fac-aligned/s5 cases are instances or (s5, fac2) have their own M-matrix/explicit computations in B8
-   97|   (`Theory_work/Wave3/W3-AUDIT/TRACK_B.md:222-228`).
-   98| - Illustration of B (AR(ρ), two truths at distance g, U = ∅, j = k₁): γ = (1, ρ^g), so B ⊇ {θ₁ + ρ^gθ₂ = 0} for each gap g
-   99|   that occurs along the sequence (all g ≥ 1 if the truths' gap ranges over ℕ; a single g if their positions are fixed);
-  100|   U ≠ ∅ adds further hyperplanes (e.g. γ = (Var(W_{k₁} | W_U), 0) when U contains a column between the truths, by the
-  101|   Markov property). The hyperplanes θ₁ + ρ^gθ₂ = 0 accumulate at {θ₁ = 0}, which |θ*_k| ≥ θ_lo keeps at distance; a
-  102|   fixed mixed-sign ϑ is visible with a uniform margin unless it lies on one of the (countably many) hyperplanes of B.
-  103| - Mixed-sign pervasive factors (track C D14, D15: population visibility 0) have ϑ on B: consistent with "Not claimed".
+   95|   so δ = 0. (VIS-a) gives the explicit constant θ_lo c₁₆ directly.
+   96| - Track C's designs (`Theory_work/Wave3/W3-AUDIT/track_C/RESULTS.md:28-50`; spread placement signs + − + −, clustered
+   97|   placement four adjacent aligned truths). *(VIS-a) instances:* IND in both placements (components are singletons, so
+   98|   alignment is vacuous); the clustered (aligned) placement of AR(ρ), ρ > 0, of the block compound-symmetry designs, of
+   99|   the one-factor designs (D10, D12, D14) and of S5 (D16; s5-type M-matrix form, B8); the block compound-symmetry designs
+  100|   with the spread placement too, since track C's spread truths lie in different blocks (alignment is required only
+  101|   within a block). *(VIS-b) cases:* AR(ρ) with the spread placement (not aligned; there the (VIS-a) inequality itself can
+  102|   fail), Toeplitz in both placements (its precision matrix may well be a Stieltjes matrix, which would put the clustered
+  103|   placement under (VIS-a), but this is not [status omitted] here), the one-factor designs with the spread (mixed-sign) placement
+  104|   (D10, D12; D14's spread truths lie on B), the three-factor designs D11, D13, D15 (not covered by (VIS-e), which treats
+  105|   one factor), S5's spread placement, and the FRED-QD-like tiles (D19). B8's s5
+  106|   and fac2 (aligned truths) are shown inside by B8's own computations — s5 by the M-matrix form of Σ⁻¹, i.e. a (VIS-a)
+  107|   instance; fac2 by an explicit formula for the conditional covariances (`Theory_work/Wave3/W3-AUDIT/TRACK_B.md:222-228`).
+  108| - Illustration of B (AR(ρ), two truths at distance g, U = ∅, j = k₁): γ = (1, ρ^g), so B ⊇ {θ₁ + ρ^gθ₂ = 0} for each gap g
+  109|   that occurs along the sequence (all g ≥ 1 if the truths' gap ranges over ℕ; a single g if their positions are fixed);
+  110|   U ≠ ∅ adds further hyperplanes (e.g. γ = (Var(W_{k₁} | W_U), 0) when U contains a column between the truths, by the
+  111|   Markov property). The hyperplanes θ₁ + ρ^gθ₂ = 0 accumulate at {θ₁ = 0}, which |θ*_k| ≥ θ_lo keeps at distance; a
+  112|   fixed mixed-sign ϑ is visible with a uniform margin unless it lies on one of the (countably many) hyperplanes of B.
+  113| - Mixed-sign pervasive factors (track C D14, D15: population visibility 0) have ϑ on B: consistent with "Not claimed".
 ```
 
 ## 3. Theorem 5 (reader version)
@@ -319,7 +331,7 @@ Material for a blind review. Every excerpt is verbatim with its file and line nu
 ```
 
 ## 7. Design dossier B8 (visibility)
-`Theory_work/Wave3/W3-AUDIT/TRACK_B.md` @ 91b0af45, lines 209–233:
+`Theory_work/Wave3/W3-AUDIT/TRACK_B.md` @ 7df2d81c, lines 209–233:
 ```
   209| ## B8. Visibility (Thm 6 (A3); Thm 10 (A4)): |Cov(W_j, Wᵀθ* | W_U)| ≥ a for every true j and every |U| ≤ 15
   210| **Comparison: ours implies their Condition 5, in every regime** (p. 958: |cov(x_t, y)| > 0 for every true predictor; it
@@ -349,7 +361,7 @@ Material for a blind review. Every excerpt is verbatim with its file and line nu
 ```
 
 ## 8. Track C table (internal proxy computations)
-`Theory_work/Wave3/W3-AUDIT/track_C/RESULTS.md` @ 91b0af45, lines 22–51:
+`Theory_work/Wave3/W3-AUDIT/track_C/RESULTS.md` @ 7df2d81c, lines 22–51:
 ```
    22| p = 10n series unless marked. **IN↑** inside, improving; **IN** inside, bounded; **UNCL↑** unclear, moving toward inside;
    23| **UNCL** unclear; **OUT** outside. Searches give upper bounds on minima (they refute, never certify); population floors are
@@ -384,7 +396,7 @@ Material for a blind review. Every excerpt is verbatim with its file and line nu
 ```
 
 ## 9. Track C design definitions
-`Theory_work/Wave3/W3-AUDIT/work/C_PLAN.md` @ 91b0af45, lines 8–22:
+`Theory_work/Wave3/W3-AUDIT/work/C_PLAN.md` @ 7df2d81c, lines 8–22:
 ```
     8| ## 1. Designs (Gaussian rows N(0, Σ), standardised; s₀ = 4, σ = 1; 19 designs)
     9| Common truth, two placements per X: **spread** = study positions (`gen_dev_data.R:33`, step = ⌊p/s₀⌋), β = (1.4, −1.0, 1.8, −1.2); **clustered** = four consecutive columns inside one correlated group or block, aligned β = (1.4, 1.0, 1.8, 1.2) (the NEG regime of P6, `W3-P6/DESIGN.md` §1).
