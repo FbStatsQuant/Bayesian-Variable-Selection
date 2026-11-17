@@ -58,11 +58,15 @@ struct CalibIn {
   bool has_hpm = false; Model hpm; EventCtx hpm_ev;
   std::vector<merge::InheritedModel> inherited;
   std::string rule; int32_t I_used = 0, I_max = -1, ell = -1; double k_store = 0;
+  double tau_cal = -__builtin_huge_val();            // D-29: meta.tau_cal_hex (V mode; -inf when absent), checked against inh_F
 };
 // Every model, value, grid and meta range checked. V mode: the bounded rule, tier 0, N = 2,500 (D-1, D-26) and
 // I_used <= I_max <= ell. A completed calibration must carry k_store (finite, > 0). When data_hash / setup_hash are
 // given, calib.bin's meta.inputs must name them (review PR37 m-3). A non-ok calib.bin exposes no inherited models.
 CalibIn read_calib(const std::string& path, int32_t p, int32_t K, const std::string& data_hash = "", const std::string& setup_hash = "");
+// D-29 (review PR54 MAJOR-1/2): tau_cal's semantic check, light (mapped arrays, no model copies): distinct inherited
+// models, tau_cal = the c-th best F (c = 40p + 1) bit for bit. read_calib and `smcbvs4 island` both call it.
+double check_calib_tau_cal(const fmt::Reader& R, const Json& meta, uint32_t mode, int32_t p, int32_t K, const std::string& path);
 
 // ---- island_r.bin (INTERFACES v0.1.8 §5.1 = WP3's include/v4/island/island_file.h) ---------------------------------
 // meta {schema, kind, mode, r, N, T, L, Hm, p, status, reason, inputs, binary, timings, logZ_hex, init_hash};
@@ -108,6 +112,8 @@ class FileIslandSource : public merge::IslandSource {
   merge::IslandHead head(int r) override { return heads_[(size_t)r - 1]; }
   merge::IslandIn load(int r) override;
   const std::vector<merge::IslandHead>& heads() const { return heads_; }
+  // D-29 (v0.1.15 §7): marks every island whose offer floor fails merge::offer_floor_refusal as floor_refused
+  void check_offer_floors(bool v_mode, const std::string& calib_hash, double tau_cal, double pre_cutoff);
   void check_calib_isa(const Json& calib_block);   // D-32: an island of another FMA family than calib.bin -> binary_mismatch
  private:
   std::vector<std::string> paths_; std::vector<merge::IslandHead> heads_; std::vector<Json> blocks_; Expect ex_; int Rp_, p_;

@@ -8,7 +8,8 @@
 //                  params.seed. The manifest is the authority: an explicit argument that disagrees is refused.
 //   Explicit form: smcbvs4 island --data D --setup S --calib C --island r --seed s --mode compat|law|V --out island_r.bin
 //                  [--Rp R] [--threads k] [--mem-budget BYTES | --mem-budget-gb G] [--G g] [--tile t]
-//                  [--ckpt 0|1] [--ckpt-every-s s]
+//                  [--ckpt 0|1] [--ckpt-every-s s] [--offer-floor 1|0 (D-29: V final islands drop store offers below calib.bin's
+//                  tau_cal; 0 = no floor, the merged science is the same; WP7 O6)]
 //   Plan only:     the same with --plan-only 1 (no --out needed): the island's admission plan (memory.h), no run.
 //                  Without files: --plan-only 1 --mode M --n n --p p [--N N --threads k --G g --k k --inputs-bytes b]
 //                  (ESTIMATE: k given, setup inputs given or 0).
@@ -32,10 +33,12 @@
 #include "v4/island/island_file.h"
 #include "v4/island/setup_load.h"
 #include "v4/format.h"
+#include "v4/offer_floor.h"
 #include "v4/prep.h"
 #include "v4/provenance.h"
 #include "v4/stubs.h"
 #include "v4/threads.h"
+#include "v4/wp4_io.h"
 
 namespace v4::island {
 
@@ -127,7 +130,8 @@ Inputs parse_inputs(const Json& args, bool plan_only) {
 
 // the calib.bin fields a final island needs (meta + grid; the stores are not loaded: at 10^6 they are GBs)
 struct CalibHead { std::string hash, status, data_hash, setup_hash; uint32_t mode = 0; int32_t tier = 0, N = 0, L = 0, Hm = 4; double k_store = 0; int64_t seed = -1; std::vector<double> grid;
-                   Json binary; };   // calib.bin's binary block (D-32: the island refuses another class-A FMA family)
+                   OfferFloor floor;   // D-29: a V final island's offer floor = calib.bin's tau_cal (else -inf; WP7 O6)
+                   Json binary; };     // calib.bin's binary block (D-32: the island refuses another class-A FMA family)
 CalibHead read_calib_head(const std::string& path) {
   fmt::Reader R(path);   // every section hash verified (INTERFACES §5.1)
   if (R.kind() != fmt::K_CALIB) throw Error(Status::invalid_input, path + ": not a calib file");
@@ -144,6 +148,7 @@ CalibHead read_calib_head(const std::string& path) {
   const Json& in = m.at("inputs");
   if (in.contains("data.bin")) c.data_hash = in.at("data.bin").str();
   if (in.contains("setup.bin")) c.setup_hash = in.at("setup.bin").str();
+  c.floor = offer_floor_from_calib(m, c.mode == fmt::M_V, c.hash);   // INTERFACES v0.1.17 §4.1 (MINOR-1); the merge checks it again
   if (m.contains("binary")) c.binary = m.at("binary");
   c.grid = R.vec<double>("grid");
   if (c.grid.size() < 2 || c.grid.front() != 0.0 || c.grid.back() != 1.0) throw Error(Status::invalid_input, path + ": frozen grid does not run from 0 to 1");
@@ -222,6 +227,12 @@ Json run(const Json& args) {
     dhash = R.content_hash(); const Json m = R.json("meta");
     n = whole(m.at("n"), "data.bin n", 3, (int64_t)1 << 31); p = whole(m.at("p"), "data.bin p", 1, (int64_t)1 << 31); K = whole(m.at("K"), "data.bin K", 0, (int64_t)1 << 31); }
   const calib::Budgets bud = calib::budgets(n, p);   // B, K: the budgets the calibration ran with (calibrate uses the same helper)
+  // D-29 (review PR54 MAJOR-1/2): tau_cal is checked HERE, before any island work, by the check read_calib uses: distinct
+  // inherited models and tau_cal = the c-th best F, bit for bit. The mapped file was verified by read_calib_head already.
+  if (mode == fmt::M_V) {
+    fmt::Reader RC(in.calib, false); const Json cm = RC.json("meta");
+    wp4io::check_calib_tau_cal(RC, cm, C.mode, (int32_t)p, (int32_t)K, in.calib);
+  }
   if (bud.K != K) throw Error(Status::invalid_input, std::string(W) + "data.bin K = " + std::to_string(K) + " differs from min(p, n / 2) = " + std::to_string(bud.K));
   // B is part of the law (the N-swap labels per round: shuffled order, addresses, compat stream use). The calibration used
   // budgets(n, p).B, so the final islands must; a conflicting --B is refused (review PR52 MAJOR-3)
@@ -240,6 +251,8 @@ Json run(const Json& args) {
   c.mem_budget = budget; c.leaders = false; c.keep_terminal = true;
   // the checkpoint's identity includes the three verified input hashes (review PR52 MAJOR-1): a restart on other inputs is refused
   c.input_id = input_identity(dhash, sd.content_hash, C.hash);
+  // D-29 offer floor (V final islands; --offer-floor 0 runs without it: an execution switch, the merged science is the same)
+  if (whole_arg(args, "offer_floor", 1, 0, 1) == 1) { c.offer_floor = C.floor.f; c.offer_floor_calib = C.floor.calib; }
   const bool ckpt = whole_arg(args, "ckpt", 1, 0, 1) == 1;
   if (ckpt && !plan_only) {
     std::string b = in.out; if (b.size() > 4 && b.substr(b.size() - 4) == ".bin") b.resize(b.size() - 4);

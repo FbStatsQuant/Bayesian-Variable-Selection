@@ -217,6 +217,7 @@ class IslandEngine {
       for (auto& t : tl) { t->lead0 = &lead0; t->lead1 = &lead1; }
     }
     top.dup_filter = cfg.store_dup_filter;
+    top.floor = cfg.offer_floor;   // D-29: the top store only (run_island validated it); leader stores never have a floor
     top.test_oom_merge = cfg.test_oom_merge;
     top.defer = cfg.store_parallel_compact && NT > 1 && cfg.kernel == KernelKind::LabelMajor;   // PM has no boundaries (review m3)   // compaction at pass/step boundaries, all threads
     scratch_P.resize(NT);
@@ -487,6 +488,7 @@ class IslandEngine {
   uint64_t fingerprint() const {
     Fnv f; f.pod(cfg.seed); f.pod(cfg.island); f.pod(cfg.tier); f.pod(cfg.N); f.vec(cfg.grid); f.pod(cfg.L); f.pod(cfg.Hm); f.pod(cfg.B);
     f.pod(top.cap); f.pod(D.n); f.pod(D.p); f.pod(D.yty); f.pod(st.logZbar0); f.pod(st.J); f.pod((int)A); f.pod(cfg.compat); f.pod(cfg.leaders);
+    f.pod(cfg.offer_floor);   // D-29: a resume under another floor is refused (WP7 O6)
     f.bytes(cfg.input_id.data(), cfg.input_id.size());   // the verified input hashes (PR52 MAJOR-1); empty adds nothing
     const std::string bb = v4::binary_block_no_self_test().dump(); f.bytes(bb.data(), bb.size());
     return f.h;
@@ -856,6 +858,8 @@ class IslandEngine {
     res.ks.store_merges = cmark.merges; res.ks.store_buffered = cmark.buffered;
     res.ks.store_serial_merges = cmark.serial; res.ks.t_store_compact = cmark.t_compact;
     res.ks.store_dup_dropped = cmark.dup;
+    for (auto& t : tl) res.ks.store_floor_dropped += t->buf.n_floor_dropped;   // D-29: this process's floor drops
+    res.offer_floor = cfg.offer_floor; res.offer_floor_calib = cfg.offer_floor > NEG_INF ? cfg.offer_floor_calib : std::string();
     res.ks.t_total = cmark.elapsed;
     res.cost_header = cost_header();
     return std::move(res);
@@ -914,6 +918,16 @@ IslandRun run_island(const Data& D, const Start& st, const Neighbours& nb, const
     throw v4::Error(v4::Status::invalid_input, "run_island: the bit-form label-major kernel is test-only (D-21, manager Q1); theory mode runs particle-major");
   if (cfg.stop_after_step >= 0 && cfg.ckpt_path.empty()) throw v4::Error(v4::Status::invalid_input, "run_island: stop_after_step needs a checkpoint path");
   if (cfg.G < 0 || cfg.G > 256) throw v4::Error(v4::Status::invalid_input, "run_island: G must be in 0..256 (0 = chosen by mem_budget; manager Q3)");
+  // D-29 offer floor (INTERFACES v0.1.15 §4.1; v0.1.17, review PR45 MINOR-2/3): the island side of the rule. A floor
+  // > -inf only for a V-mode (class A) FINAL island; compat, law (Arith::Bit), leader stores and every calibration role
+  // run without one (their ledgers define tau_cal). A floor is -inf or finite, and names the calib.bin it came from.
+  if (std::isnan(cfg.offer_floor) || cfg.offer_floor == __builtin_huge_val())
+    throw v4::Error(v4::Status::invalid_input, "run_island: the offer floor must be -inf or finite (D-29)");
+  if (cfg.offer_floor > NEG_INF) {
+    if (A != Arith::ClassA || cfg.compat || cfg.leaders || calib)
+      throw v4::Error(v4::Status::invalid_input, "run_island: an offer floor is for V-mode final islands only (not compat, law, leaders or calibration roles; D-29)");
+    if (cfg.offer_floor_calib.empty()) throw v4::Error(v4::Status::invalid_input, "run_island: an offer floor needs the calib.bin content hash it came from (D-29)");
+  }
   // review PR24 r1 / PR26 B1, re-check m2: a final island admitted under a memory budget at p >= 1e5 needs calib.bin's
   // measured k_store; calibration islands (before calib.bin exists) plan from the setup: max(8, q90(pi_0 size) + 1, k_store)
   if (!calib && cfg.mem_budget && D.p >= 100000 && !(cfg.k_store > 0) && !cfg.k_store_optional)

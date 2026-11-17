@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <cstring>
 #include "v4/format.h"
+#include "v4/offer_floor.h"
 #include "v4/provenance.h"
 
 namespace v4::island {
@@ -32,6 +33,7 @@ std::string write_island_file(const std::string& path, const IslandRun& r, Arith
   m["init_hash"] = hex64(r.init_hash); m["output_hash"] = hex64(r.hash());
   if (done) { m["logZ"] = r.logZ; m["logZ_hex"] = hex64(lz); }
   Json t = Json::object(); t["total"] = r.ks.t_total; t["init"] = r.ks.t_init; m["timings"] = t;
+  { OfferFloor of; of.f = r.offer_floor; of.calib = r.offer_floor_calib; offer_floor_to_meta(m, of); }   // D-29 (v0.1.15 §5.1)
   if (!r.cost.empty()) {   // D-30 per-step cost record (WP7 O2; INTERFACES §5.1): the header plus one column per field
     Json c = r.cost_header.type() == Json::OBJ ? r.cost_header : Json::object();
     const int mm = c.contains("m") ? (int)c.at("m").i64() : 0;
@@ -82,6 +84,10 @@ IslandFile read_island_file(const std::string& path, bool verify) {
   fmt::Reader rd(path, verify);
   if (rd.kind() != fmt::K_ISLAND) throw Error(Status::invalid_input, path + ": not an island file");
   IslandFile f; f.content_hash = rd.content_hash(); f.meta = rd.json("meta");
+  { const OfferFloor of = offer_floor_of_meta(f.meta, path);   // D-29: NaN / +inf / a floor without its calib.bin -> invalid_input
+    if (of.f > -__builtin_huge_val() && (!f.meta.contains("mode") || f.meta.at("mode").str() != "V"))
+      throw Error(Status::invalid_input, path + ": an offer floor outside V mode (D-29)");
+    f.offer_floor = of.f; f.offer_floor_calib = of.calib; }
   auto& o = f.rec;
   const std::string st = f.meta.at("status").str();
   o.status = st == "completed" ? Status::completed : (st == "numerical_failure" ? Status::numerical_failure : Status::resource_limit);
