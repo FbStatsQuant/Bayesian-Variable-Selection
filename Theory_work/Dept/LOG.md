@@ -406,3 +406,4 @@
 - 2026-11-17 02:36 CST D102 relayed to the recorder (card v1.13 conditional real run → freeze tag + entries).
 - 2026-11-17 02:53 CST Card v1.13 dry run clean (8bec550d) but beyond the advance-GO scope: R5→R5r re-freeze, Sol carrier (D99-style wording), R1 1.0.2 re-anchor (R4 stale pointer kept). Sent to HQ for yes (recommended).
 - 2026-11-17 02:53 CST HQ yes to R5r / Sol carrier / re-anchors; GO real run of card v1.13 → freeze tag + entries (relayed to the recorder).
+- 2026-11-17 03:18 CST THEORY FREEZE: d40c9780 (CI 44052162002), tag theory-v2026-11-freeze, entries 40e02ae7 (CI 44053169293); verified; HQ told. Idle until Mon.
