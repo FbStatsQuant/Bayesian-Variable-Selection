@@ -544,6 +544,7 @@ is 97 MB and each island file several MB (MEASURED). Use `--mem-budget` (§7, mi
 instead of being killed.
 
 **Exit codes.** Exit `0` is success and `10 + status` is a failure, with the same words in the record's `status` and `reason`.
+[ERRORS.md](ERRORS.md) catalogues every status and exit code, the typical messages with what to do, and the driver's exits.
 **Test the exit code, not only `status`**: for exits 20, 21 and 22 the record says `completed`.
 
 | exit | status | meaning |
@@ -569,6 +570,7 @@ orphans every checkpoint of the old one; the SLURM driver is specific to Rice NO
 | file | for |
 |---|---|
 | [REPRODUCIBILITY.md](REPRODUCIBILITY.md) | what "same bits" guarantees (and where), the ISA and libm pins, how to verify hashes, the restart guide |
+| [ERRORS.md](ERRORS.md) | every status and exit code of the engine and the SLURM driver: meaning, typical messages, what to do |
 | [INTERFACES.md](INTERFACES.md) | the binding contract: file formats, record fields, statuses, the changelog |
 | [tools/slurm/T5_AND_PILOT.md](tools/slurm/T5_AND_PILOT.md) | the 10⁵ and 10⁶ commands, ISA rules, cost tables |
 | [tools/slurm/T6_AND_RESTART.md](tools/slurm/T6_AND_RESTART.md) | the restart chain and the kill-and-resume test |
