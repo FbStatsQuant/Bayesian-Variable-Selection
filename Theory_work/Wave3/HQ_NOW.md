@@ -11,6 +11,21 @@
 - When: BNP sends a "quiet window" (expected 11-16 early afternoon CST). HQ pauses SMC departments' leads, restarts, verifies, then messages BNP back. BNP launches nothing until confirmed.
 - BNP already moved its temp to /home/fb31/bnp_tmp and removed 73 stale sandboxes (11-15).
 
+## OWNER 11-17: THEORY PUSH PLAN (awaiting owner greenlight; deploy only on his word)
+- **Accounts:**
+  - push hard on **Claude Personal** (2–3 days), then the owner cashes in the CP reset (another 2–3 days), then the remainder on **Claude Third** (≈ 60% for 1–2 days);
+  - a Codex reset is available, but stay efficient (level 1; API credits for blind audits);
+  - Engineering stays at its pace (proposal: move it to CT after CT's weekly reset, to keep CP for theory).
+- **Order:**
+  1. the bounded "money on the table" session (HQ + consultant) on the known list;
+  2. HQ recommendation → owner decision;
+  3. the adopted items + track D survivors (#2, #5′; #3 possibly dropped);
+  4. the W1-N1:B/F line checks;
+  5. A1/A2 NARROW, precedent notes, editorial;
+  6. Writing updates the manuscript (CW);
+  7. the Lean gate sign-off → Lean on the Max reset next week.
+- Every item gets a cost estimate and a kill budget. When CP runs dry, nothing new starts until the reset.
+
 ## OWNER 11-17: LEAN GATE (binding)
 - **No line of Lean code** until **HQ, the consultant (VP) and the owner all agree** that the theory as it stands is virtually as good as it gets given our choices.
 - **Lean done = final:** we will not come back to change formalized theorems. Before the gate, specific localized theorem changes are fine (cheap).
