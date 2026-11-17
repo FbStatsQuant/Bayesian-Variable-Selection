@@ -1,4 +1,4 @@
-# C1 · Check of C-DLV:P1-Inventory and C-DLV:L2-S3 — PROOF v2 (code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
+# C1 · Check of C-DLV:P1-Inventory and C-DLV:L2-S3 — PROOF v2.1 (code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
 
 Reuse. T10 (`Theory_work/Wave3/W3-AUDIT/track_A/T10_P1S3/`, STATEMENT v2.2 / PROOF v2.1, council-bound R2:
 `Theory_work/Wave3/W3-AUDIT/track_A/reviews/MANIFEST_R2.txt`) re-audited P1/S.3 at this pin as a new claim (P1′, S.3′).
@@ -36,15 +36,16 @@ with an allocation too small for the estimate. On escalation the time term canno
 **1.2 Errors.** Every explicit `stop`, `stopifnot`, `throw`, `checkUserInterrupt` in `*.R` and `cpp/` at the pin
 (grep, 2026-11-16 20:00): `v3_run.R:78, 79, 80, 97, 224`; `v3_setup.R:8, 18, 49, 81`; `v3_preprocess.R:9`;
 `v3_fit.R:88, 91, 94`; `v3.R:55, 64`; `cpp/v3_score.h:230, 237`; `cpp/v3_start.h:261, 272`; `cpp/v3_engine.h:143`;
-`cpp/v3_core.cpp:18, 29, 31, 35, 54, 55, 112, 146, 148, 212, 213, 218, 219, 233, 240, 254, 257, 393, 425, 474, 552,
+`cpp/v3_core.cpp:18, 29, 31, 35, 54, 55, 112, 146, 148, 209, 212, 213, 218, 219, 233, 240, 254, 257, 393, 425, 474, 552,
 578`. This is T10 §1's list. Map: `v3_fit.R:88` caught (A1); `v3_preprocess.R:9` the seed check (A1, declared seed);
 `v3_fit.R:91, 94` A2; `v3.R:55, 64` X6; `cpp/v3_score.h:237` the `NumericalFailure` (C5, caught into C1–C4);
-`cpp/v3_core.cpp:552` X4; `v3_run.R:97` X7; `cpp/v3_core.cpp:474` X8; `cpp/v3_core.cpp:112, 148, 212-219, 233-257` and
+`cpp/v3_core.cpp:552` X4; `v3_run.R:97` X7; `cpp/v3_core.cpp:474` X8; `cpp/v3_core.cpp:112, 148, 209, 212-219, 233-257` (209: the bare rethrow in `cpp_start`) and
 `v3_setup.R:18, 49, 81` off the `v3_fit` call graph (T10 §1); all others are internal-invariant sites, X2 (§2).
 Implicit errors (Rcpp conversions, `XPtr`, name lookups, base-R shape errors) are the X2-imp class (T10 §2); allocation
 failures are X5; process-level events X1, X3, X4, X6 (MACH).
 
-**1.3 Call-graph nodes not named by T10.** `v3_fit` also calls, on every non-early-exit run:
+**1.3 Call-graph nodes not named by T10.** Additional nodes on the fit call graph, reached under the following conditions (`cpp_cut_group` on the SMC branch
+only; `cpp_runtime_report`, `cpp_numerical_routes` conditionally in `finish`):
 `cpp_runtime_new` (`v3_fit.R:96`; `cpp/v3_core.cpp:764-768`: no stop; an `XPtr` construction), `cpp_dup_components`
 (`v3_fit.R:119`; `cpp/v3_core.cpp:746-760`: `get_holder` then O(p²) reads of the Gram `D.G`, which `data_init` always
 allocates and fills, `cpp/v3_score.h:44-52`; no stop), `cpp_cut_group` (`v3_fit.R:141`; `cpp/v3_core.cpp:794-818`: `get_holder`, reads of

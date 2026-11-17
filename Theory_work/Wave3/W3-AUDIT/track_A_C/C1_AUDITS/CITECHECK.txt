@@ -25,6 +25,7 @@ OK            [STATEMENT.md] v3_fit.R:144-148 sha=a013da5a09 | pf_fun <- functio
 OK            [STATEMENT.md] v3_calib.R:157-157 sha=382f59a78e | if (!is.null(preflight) && isTRUE(preflight(1))) { status <- "resource_limit"; blocked <- "resource_limit"; br
 OK            [STATEMENT.md] v3_fit.R:43-47 sha=5a8a22a0fa | if (isTRUE(ls0_worst_case)) {
 OK            [STATEMENT.md] v3_fit.R:61-66 sha=6987ee1faa | if (branch != "exact" && isTRUE(ls0_worst_case)) {
+OK            [STATEMENT.md] cpp/v3_core.cpp:209-209 sha=51932e648e | try { check_blocks(st.blocks); } catch (...) { delete g; throw; }
 OK            [PROOF.md] v3_fit.R:76-78 sha=41fa37dc9c | fit <- list(seed = seed, allocation = allocation, local_certified = FALSE, global_certified = FALSE,
 OK            [PROOF.md] v3_fit.R:129-129 sha=3977b0a4d4 | fit$estimates_available <- TRUE
 OK            [PROOF.md] v3_fit.R:171-171 sha=800c2b2b84 | for (nm in names(fr)) fit[[nm]] <- fr[[nm]]
@@ -106,6 +107,7 @@ OK            [PROOF.md] cpp/v3_core.cpp:55-55 sha=a957bf04b6 | static int mech_
 OK            [PROOF.md] cpp/v3_core.cpp:112-112 sha=1c5ef09274 | if ((int)s.size() > D.K) stop("v3_score: |S| = %d > K = %d (infeasible model; callers never pass these, R1)", 
 OK            [PROOF.md] cpp/v3_core.cpp:146-146 sha=886abac455 | static void check_B(int B) { if (B < 1 || B > B_MAX) stop("block size B = %d outside the supported range 1..%d
 OK            [PROOF.md] cpp/v3_core.cpp:148-148 sha=7eb6a08f70 | for (auto& b : bl) if (b.empty() || (int)b.size() > B_MAX) stop("a block has %d members (supported 1..%d)", (i
+OK            [PROOF.md] cpp/v3_core.cpp:209-209 sha=51932e648e | try { check_blocks(st.blocks); } catch (...) { delete g; throw; }
 OK            [PROOF.md] cpp/v3_core.cpp:212-212 sha=d4ff531cb4 | for (int j = 0; j < g->D->p; ++j) if (st.blk[j] < 0) stop("blocks do not cover every column");
 OK            [PROOF.md] cpp/v3_core.cpp:213-213 sha=1f62fd29b5 | if (tables_R.size() != st.J) stop("v3_start: %d tables for %d blocks", (int)tables_R.size(), st.J);
 OK            [PROOF.md] cpp/v3_core.cpp:218-218 sha=ce1f8a8fcc | if (to_internal(*g->D, tb["members"]) != st.blocks[b]) stop("v3_start: table %d does not belong to block %d (m
@@ -131,6 +133,7 @@ OK            [PROOF.md] v3_run.R:97-97 sha=a4f73b2ecf | stop("option v3.ls0_ell
 OK            [PROOF.md] cpp/v3_core.cpp:474-474 sha=2efd1bb2f7 | if (o.ls0_ell < 0 || cap_ll > (long long)std::numeric_limits<int>::max()) stop("LS0 move cap out of range");
 OK            [PROOF.md] cpp/v3_core.cpp:112-112 sha=1c5ef09274 | if ((int)s.size() > D.K) stop("v3_score: |S| = %d > K = %d (infeasible model; callers never pass these, R1)", 
 OK            [PROOF.md] cpp/v3_core.cpp:148-148 sha=7eb6a08f70 | for (auto& b : bl) if (b.empty() || (int)b.size() > B_MAX) stop("a block has %d members (supported 1..%d)", (i
+OK            [PROOF.md] cpp/v3_core.cpp:209-209 sha=51932e648e | try { check_blocks(st.blocks); } catch (...) { delete g; throw; }
 OK            [PROOF.md] cpp/v3_core.cpp:212-219 sha=f3e5247962 | for (int j = 0; j < g->D->p; ++j) if (st.blk[j] < 0) stop("blocks do not cover every column");
 OK            [PROOF.md] cpp/v3_core.cpp:233-257 sha=b1786117e7 | HPtr h = get_holder(start); if (!h->has_start) stop("object has no start");
 OK            [PROOF.md] v3_setup.R:18-18 sha=98641f37f1 | if (!is.null(r$status)) stop(r$message)
@@ -221,5 +224,5 @@ OK            [PROOF.md(cont)] cpp/v3_core.cpp:261-261 sha=051a40e1a1 | _["log_g
 OK            [PROOF.md] cpp/v3_core.cpp:92-92 sha=e7fbc12288 | int n = X.nrow(), p = X.ncol();
 OK            [PROOF.md] Theory_work/Wave1C/C-DLV/STATEMENT.md:54-56 sha=da460f059c | **(P2) Lemma R** (L1; uses TDP-IMPL): for valid inputs (n ≥ 3, raw dimension p_raw), every seed and uniform re
 
-222 citations: 222 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+225 citations: 225 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
 Not machine-checked: unbackticked references and the semantic match of each excerpt.

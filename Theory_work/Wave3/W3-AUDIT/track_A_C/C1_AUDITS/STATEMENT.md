@@ -84,3 +84,4 @@ of two finite positive numbers. Premises as in C-DLV: EX-A, IDEAL-W, MACH; for X
 |---|---|---|---|---|---|
 | v1 | all | NEW-CLAIM (verdict on two registered audits at the pin) | track A_C C1 | manager 11-16 | `CHECK.md` |
 | v2 | (C1-a), (C1-c): A-7 (B1 trigger missing at the pin), DLV-0 (E2) covers it; configuration: all five options named; §1.3 nodes | WEAKER (P1 holds only after A-7) / STRONGER (options stated) | CLC1 #1 (C), #2 (S), #5 (E) | `reviews/CLC1_reply_opus.md` | Sol read (gate) |
+| v2 (PROOF v2.1) | — (proof only: `cpp/v3_core.cpp:209` rethrow listed; §1.3 call conditions) | EQUAL | CSL1 Sol E1, E2 | `reviews/CSL1_reply_sol.md` | council |
