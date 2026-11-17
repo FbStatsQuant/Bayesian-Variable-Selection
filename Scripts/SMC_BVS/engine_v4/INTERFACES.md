@@ -83,7 +83,9 @@ struct Data {                                                 // read-only after
   std::vector<int32_t> blk, pos; }` — block b = `members[bptr[b]..bptr[b+1])`, sorted, packing order; `blk[j], pos[j]`
   as `core/cpp/v3_start.h:38`. Plus the duplicate components and the cut-group record (CSR each).
 - **Tables** (WP2): `struct Tables { std::vector<int64_t> code_ptr; std::vector<double> logr; ... }` — block b's
-  `logr` for codes `0..2^{m_b}−1` at `logr[code_ptr[b] + code]`, NaN where |U| > K; code bit i ↔ i-th member
+  `logr` for codes `0..2^{m_b}−1` at `logr[code_ptr[b] + code]`, NaN where |U| > K. **`code_ptr` has J + 1 entries, like
+  `blk_ptr` and `nb_ptr` (CSR): `code_ptr[0] = 0`, `code_ptr[b+1] − code_ptr[b] = 2^{m_b}`, `code_ptr[J] = |logr|`
+  (v0.1.19).** Code bit i ↔ i-th member
   (`core/cpp/v3_start.h:76-98`). `logprof` (with `logprof_ptr`), `logF` ((J+1)×(K+1) row-major), `size_logmass` and
   `size_cum` retain the core values and bits (`core/cpp/v3_start.h:101-157`). **`cond_ptr` and `cond_cum` are not stored
   (D-31)**: `cond0` is f64 J×(K+1), b-major, with `cond0[b*(K+1)+r]` equal bit-for-bit to entry 0 of core's conditional
@@ -308,7 +310,9 @@ the binary block (§5.3), so the content hash changes with the binary. Three ide
 - **Cross-machine bit identity (T2)** compares the section hashes of all sections except `meta`, or the fit fingerprint;
   never content hashes.
 - **Binary consistency** (one helper, `binary_compatible(a, b, use)` / `require_binary_compatible`, provenance.h): merge
-  (V) needs both libm self-tests passed and equal flags and libm binding; merge (theory mode) also needs equal git
+  (V) needs both libm self-tests passed, equal flags and libm binding, **and one class-A FMA family** (D-32, v0.1.18:
+  `island_fma`, else known `island_isa` names; the V merge also checks every island against calib.bin's block); merge
+  (theory mode) also needs equal git
   commits that are clean (no `-dirty`) and known; a checkpoint restart also needs the same executable (sha256) and git
   commit. `git_commit` = 40-hex HEAD + `-dirty` when tracked files differ, refreshed at every build.
 JSON numbers are doubles: every u64 value (hashes, Zobrist keys, large counters) is written as a hex string `"0x…"`.
@@ -317,8 +321,11 @@ Sections (names fixed; WPs may add sections, never rename):
 - `data.bin` (prep): `Xs_cm`, `ys`, `z`, `diagG`, `col_max`, `col_mean`, `col_sd`, `kept` i32 (1-based), `dropped`
   i32, `meta` {n, p_raw, p, K, yty, logCn, logm0, logWK, y_max, y_mean, y_sd_scaled, prep_class: "B"|"A"}, `logw`, `logprior`.
 - `setup.bin` (WP2): `nb_ptr` i64, `nb_idx` i32, `dup_ptr/dup_idx`, `cut_ptr/cut_idx`, `blk_ptr/blk_members`, `blk`,
-  `pos`, `code_ptr`, `logr`, `logprof_ptr/logprof`, `logF`, `size_logmass`, `size_cum`, **`cond0`** (f64 J×(K+1), b-major; D-31),
-  `mode_S`, table top stores `tstore_{top,lead0,lead1}_{v,off,len,hash,pool}`, `meta`.
+  `pos`, `code_ptr` (J + 1 entries, `code_ptr[J] = |logr|`), `logr`, `logprof_ptr/logprof`, `logF`, `size_logmass`, `size_cum`,
+  **`cond0`** (f64 J×(K+1), b-major; D-31), `mode_S`, table top stores `tstore_{top,lead0,lead1}_{v,off,len,hash,pool}`, `meta`.
+  **`setup.bin` carries no `meta.stores`** (v0.1.19): the table stores' caps and orders are §4.1's (top 40p + 1 in HPM
+  order, lead0 and lead1 20p in LEX order); a reader derives them and ignores any `meta.stores` it finds. (`calib.bin`,
+  `island_r.bin` and `fit.bin` do carry `meta.stores`, as written by `add_store`.)
 - `calib.bin` (WP4): `grid`, `meta` {tier, N, L, Hm, I_used, flags, triggers, **`k_store`** (the calibration top
   store's mean |S|; the k of §7's admission rule)}, `grids_all_ptr/grids_all`, stage
   records, calibration stores (as stores), HPM (`hpm_S`, `hpm_ev`), `logical` u64 N_PHASE×N_MECH.
@@ -346,18 +353,27 @@ Sections (names fixed; WPs may add sections, never rename):
     (before that step's checkpoint, whose seconds go to the next row) and is final then; the exit row (kind 4) covers
     the last checkpoint, a failed or interrupted partial step, the I1 check on exit and the result assembly. The
     checkpoint carries the rows and the lifetime totals at the last close, so after a resume (segment = resumes before
-    the row) the rows sum exactly to the island's totals (counts) and to `t_total` (seconds). Values: counts are JSON
+    the row) the rows sum exactly to the island's totals (counts) and to `t_total` (seconds). After a resume these are
+    the totals of the work the result continues from: the dead job's work after its last row close (its last
+    checkpoint write, exit check and assembly, and any partial step) is in neither, so `t_total` is not the sum of the
+    job segments' wall times (use the scheduler's accounting for that; review PR49 re-check NIT-1). Values: counts are JSON
     numbers (a bounded-count exception to the hex rule of this section: per-row counts are exact below 2^53, and the
     writer refuses more); a field the row's kernel does not measure is `"NaN"` (the particle-major kernel measures
-    particle_rounds, t_pm, the store, check, checkpoint and memory fields; the label-major kernel all but t_pm).
+    particle_rounds, t_pm, the store, check, checkpoint and memory fields; the label-major kernel all but t_pm). The
+    exit row's `phi` is `"NaN"` too, as are the fields its kernel does not measure (NIT-2).
     Execution statistics only: not in `IslandRun::hash` / `meta.output_hash` nor in any non-meta section hash (T2, the
     merge never reads it); like all of `meta` it is in the container's content hash.
   - The sidecar `IslandConfig::cost_path` is a **non-authoritative progress log** of the same rows (a header line, one
-    JSON line per row, one `write()` each). At the start of every job segment it is rebuilt from the rows the run
-    continues from; a write failure cuts it back to whole lines and disables it without failing the island. Calibration
-    islands get it from `calibrate --cost-dir` (WP7 O5); until then only `IslandConfig::cost_path` sets it.
+    JSON line per row, one `write()` each). At the first row close of every process (job segment) it is rebuilt from
+    the rows the run continues from (a segment killed before its first close leaves the old file until the next
+    process rebuilds it; NIT-3); a write failure cuts it back to whole lines and disables it without failing the island. Calibration
+    islands get it from `calibrate --cost-dir` (WP7 O5), one file per calibration island
+    (`cost_<pilot|diag>_t<tier>_k<iter>_r<island>.jsonl`).
 - `fit.bin` + `fit.json` (WP4): merged `top_*`, `hpm_*` + provenance, `hpm_before_local_*`, local-search archive,
   `mode_S`, LS0, near ties, `logZ_r`, `pip_eq`, `pip_Z`, `pip_T`, `rb_*`, flags; `fit.json` scalars and hashes only.
+  v0.1.18 (WP7 O5): `fit.json` also carries `island_isa` (D-32 (4), the merge binary's) and `timings` (as fit.bin
+  `meta.timings`): `merge_tail_seconds` (the whole command), `merge_islands_seconds` (island stream + merge),
+  `tail_local_seconds` (final local search), `ls0_seconds` (LS0); execution statistics, not hashed (meta).
   No leader stores in `island_r.bin` or `fit.bin`, in any mode (§4.1; on the compat exclusion list).
 - `law.bin` (WP5): models (ptr/idx), weights, conjugate parameters, standardisation constants, dropped mass.
 - `island_r.ckpt.{a,b}` (WP3): kind 8; newest valid generation wins.
@@ -376,6 +392,7 @@ struct FitResult    { Status status; int32_t Rp; double logZ; std::vector<double
 ```json
 { "schema": "smcbvs4.manifest/1", "command": "island", "run_id": "...", "mode": "compat|law|V",
   "binary": {"sha256": "...", "git_commit": "...", "compiler": "g++ 11.5.0", "flags": "...",
+             "island_isa": "sapphirerapids", "island_fma": true,
              "libm": {"path": "...", "sha256": "...", "glibc": "2.34", "fma_variant": true}},
   "inputs": {"data.bin": "<content sha256>", "setup.bin": "...", "calib.bin": "..."},
   "params": {"seed": 1, "island": 3, "Rp": 16, "N": 2500, "threads": 48, "...": "..."},
@@ -532,6 +549,20 @@ point, so all WPs link from day one: `setup::run`, `island::run`, `calib::run`, 
   bounded JSON numbers; unmeasured fields "NaN"; outside the scientific-output hashes, inside the container hash), and
   the non-authoritative JSON-lines progress log. Numbering: WP1's v0.1.14–v0.1.15 (PR #45) precede it; D-29's O6 line
   is v0.1.17. The header line moves to v0.1.16 when PR #45 lands (WP1).
+- v0.1.18 (2026-11-17, WP7 O5 for WP1; D-32 revised 11-17; review PR55 m4, m6) — §5.3 binary block: `island_isa` (the
+  island sources' -march, "x86-64-v3" for a V4_WIDE_ISA build without one, else "portable") and `island_fma` (whether
+  class A uses a true FMA, from the class-A unit itself); binary consistency: the V merge needs one FMA family, island
+  against island and against calib.bin. §5.1 `fit.json`: `island_isa` and `timings` (merge, tail local search, LS0
+  seconds). §1 commands: `info --meta 1` prints a file's meta section; `calibrate --cost-dir DIR` (one D-30 progress
+  log per calibration island) and `--verbose 1` change no output bit (tested); the tool `v4_pilot_island`
+  (`include/v4/island/pilot_only.h`) runs the first island of `calibrate --mode V` alone (H-11's 10⁶ pilot). (O6's
+  offer-floor line is v0.1.17.)
+- v0.1.19 (2026-11-16, WP4; manager decision 11-16 on PR #46, WP3's finding that `read_setup` could not read WP2's real
+  setup.bin) — §2 Tables / §5.1 `setup.bin`: `code_ptr` has **J + 1 entries** like `blk_ptr` / `nb_ptr`, with
+  `code_ptr[0] = 0`, `code_ptr[b+1] − code_ptr[b] = 2^{m_b}` and `code_ptr[J] = |logr|`; `setup.bin` carries **no
+  `meta.stores`**, the table stores' caps and orders being those of §4.1. WP4's `read_setup` / `write_setup_min` adapt
+  (WP2's writer already conforms); WP3's `load_start` accepts the J + 1 form. (v0.1.14–v0.1.18 are in PRs #45, O2, O6 and
+  O5 (#55); this line is numbered after them.)
 - v0.1.20 (2026-11-17, WP2 for WP1; D-31; PR #50 re-check F1) — §2 / §5.1: `setup.bin` no longer stores `cond_ptr` /
   `cond_cum`; it stores `cond0` (f64 J×(K+1), b-major, entry 0 of each conditional row = P(k_b=0 | r)). `cond_row(T,b,r,out)`
   recomputes a row with the core's bits; `pi0_block_size(T,b,r,u)` = 0 iff u < cond0, else `upper_bound` on the row; draws

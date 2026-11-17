@@ -23,11 +23,18 @@ using namespace v4::island;
 // called inside an active OpenMP parallel region throws std::bad_alloc. Off (0) for every other test. A real failure at
 // an unguarded site inside a region escapes the structured block and aborts the whole test binary (std::terminate).
 static std::atomic<long> g_par_new_countdown{0};
+// Allocation probe (review PR46 MAJOR-2): while g_new_track is set, every operator new is counted (calls, bytes, largest).
+static std::atomic<bool> g_new_track{false};
+static std::atomic<uint64_t> g_new_calls{0}, g_new_bytes{0}, g_new_max{0};
 // Allocation counter for tests of allocation-free paths (PR50 MAJOR-1, tests/test_setup.cpp): while g_count_allocs is set,
 // every operator new on any thread increments g_allocs. Off for every other test.
 std::atomic<bool> g_count_allocs{false};
 std::atomic<uint64_t> g_allocs{0};
 void* operator new(std::size_t n) {
+  if (g_new_track.load(std::memory_order_relaxed)) {
+    g_new_calls.fetch_add(1); g_new_bytes.fetch_add(n);
+    uint64_t m = g_new_max.load(); while (n > m && !g_new_max.compare_exchange_weak(m, n)) {}
+  }
   if (g_count_allocs.load(std::memory_order_relaxed)) g_allocs.fetch_add(1, std::memory_order_relaxed);
   if (g_par_new_countdown.load(std::memory_order_relaxed) > 0 && omp_in_parallel() && g_par_new_countdown.fetch_sub(1) == 1) {
     if (std::getenv("V4_DEBUG_INJECT")) { void* bt[32]; int nb = backtrace(bt, 32); std::fprintf(stderr, "== injected\n"); backtrace_symbols_fd(bt, nb, 2); }
@@ -1033,7 +1040,11 @@ TEST(calibration_runner_step_boundary_partial) {
 #include "v4/prep.h"
 #include "v4/stubs.h"
 #include "v4/wp4_io.h"
-TEST(calibrate_command_end_to_end) {
+#include "v4/island/pilot_only.h"
+// calibration inputs at small p (data.bin + setup.bin with the neighbour lists): shared by the calibrate end-to-end
+// test and the pilot-only test (WP7 O5)
+struct CalInputs { v4::Data D; std::string dpath, spath; int p = 0; };
+static CalInputs make_cal_inputs(TmpGuard& tg, const std::string& tag) {
   const int n = 60, p_raw = 30;
   std::vector<double> X((size_t)n * p_raw), y(n);
   { std::mt19937_64 g(41); std::normal_distribution<double> nd;
@@ -1043,8 +1054,7 @@ TEST(calibrate_command_end_to_end) {
   CHECK(pr.status == "ok");
   v4::Data D = v4::make_data(pr.own, n, pr.p);
   const int p = D.p;
-  TmpGuard tg;
-  const std::string dpath = tg.add(wp3_tmp("cal_data.bin")), s0 = tg.add(wp3_tmp("cal_setup0.bin")), spath = tg.add(wp3_tmp("cal_setup.bin"));
+  const std::string dpath = tg.add(wp3_tmp(tag + "_data.bin")), s0 = tg.add(wp3_tmp(tag + "_setup0.bin")), spath = tg.add(wp3_tmp(tag + "_setup.bin"));
   const std::string dhash = v4::prep::write_data(dpath, D, pr, "B", v4::Json::object());
   // setup: blocks of 3, the island's own tables (core's arithmetic), table stores over every table model
   Start st; build_start(st, D, contiguous_blocks(p, 3));
@@ -1063,6 +1073,7 @@ TEST(calibrate_command_end_to_end) {
       S.ttop.offer(F, U, D.zob.hash(U)); S.tlead0.offer(lg0, U, D.zob.hash(U)); S.tlead1.offer(F, U, D.zob.hash(U));
     }
   }
+  S.code_ptr.push_back((int64_t)S.logr.size());   // J + 1 entries; code_ptr[J] = |logr| (INTERFACES v0.1.19 §2/§5)
   S.ttop.compact(); S.tlead0.compact(); S.tlead1.compact();
   S.mode_S = Model(S.ttop.model(0).begin(), S.ttop.model(0).end());
   v4::Json sin = v4::Json::object(); sin["data.bin"] = dhash;
@@ -1080,6 +1091,13 @@ TEST(calibrate_command_end_to_end) {
     W.add("nb_ptr", nb.ptr); W.add("nb_idx", nb.idx); W.add("size_cum", st.size_cum); W.add("size_logmass", st.size_logmass); W.write(spath); }
   { Start st2 = load_start(spath, D); Neighbours nb2 = load_neighbours(spath, p);
     CHECK(st2.size_cum == st.size_cum && st2.logZbar0 == st.logZbar0 && st2.blocks == st.blocks && nb2.ptr == nb.ptr && nb2.idx == nb.idx); }
+  CalInputs ci; ci.D = std::move(D); ci.dpath = dpath; ci.spath = spath; ci.p = p;
+  return ci;
+}
+TEST(calibrate_command_end_to_end) {
+  TmpGuard tg;
+  CalInputs CI = make_cal_inputs(tg, "cal");
+  const v4::Data& D = CI.D; const std::string& dpath = CI.dpath; const std::string& spath = CI.spath; const int p = CI.p;
   auto calibrate = [&](const std::string& mode, int threads, const std::string& out) {
     v4::Json a = v4::Json::object(); a["data"] = dpath; a["setup"] = spath; a["out"] = out; a["mode"] = mode; a["seed"] = 77.0; a["threads"] = (double)threads;
     return v4::calib::run(a);
@@ -1102,6 +1120,72 @@ TEST(calibrate_command_end_to_end) {
       for (size_t i = 0; same && i < ci.inherited.size(); ++i) same = o.inherited[i].S == ci.inherited[i].S && same_bits(o.inherited[i].F, ci.inherited[i].F);
       CHECKF(same, "%s: calibration differs between runs / thread counts", mode.c_str());
     } else got[key] = ci;
+  }
+}
+
+// Review PR46 MAJOR-2 (INTERFACES §7: admission refuses "before any allocation"): at p ~ 20,000 every full reader
+// allocates p-sized arrays (Zobrist keys, blk / pos / members, logr: >= 80 KB each), while the bounded plan readers
+// (read_data_plan, WP3's read_setup_dims) allocate the section table, meta, blk_ptr (J + 1 entries; blocks of 4 here)
+// and the size law. Every operator new during an over-budget `calib::run` is counted: none may reach 64 KiB, and the
+// total stays below 1 MiB (the old order, load_data + read_setup first, allocates 160,000 B at once).
+TEST(calibrate_admission_before_allocation) {
+  const int n = 8, p_raw = 20000;
+  std::vector<double> X((size_t)n * p_raw), y(n);
+  { std::mt19937_64 g(47); std::normal_distribution<double> nd;
+    for (auto& x : X) x = nd(g); for (auto& v : y) v = nd(g); }
+  v4::prep::Result pr = v4::prep::preprocess(X.data(), y.data(), n, p_raw);
+  CHECK(pr.status == "ok");
+  if (pr.status != "ok") return;
+  v4::Data D = v4::make_data(pr.own, n, pr.p);
+  const int p = D.p;
+  CHECK(p > 10000);
+  TmpGuard tg;
+  const std::string dpath = tg.add(wp3_tmp("adm_data.bin")), spath = tg.add(wp3_tmp("adm_setup.bin"));
+  const std::string dhash = v4::prep::write_data(dpath, D, pr, "B", v4::Json::object());
+  v4::wp4io::SetupView S;   // blocks of 4 columns (the last 1..4); logr = 0; the tables' empty model and {0}; size law P(0) = P(1) = 1/2
+  S.blk_ptr.push_back(0); S.code_ptr.push_back(0);
+  for (int j0 = 0; j0 < p; j0 += 4) {
+    const int m = std::min(4, p - j0), b = j0 / 4;
+    for (int i = 0; i < m; ++i) { S.blk.push_back(b); S.pos.push_back(i); S.blk_members.push_back(j0 + i); }
+    S.blk_ptr.push_back(j0 + m);
+    for (int c = 0; c < (1 << m); ++c) S.logr.push_back(0.0);
+    S.code_ptr.push_back((int64_t)S.logr.size());
+  }
+  S.ttop.init(40ull * p + 1, Order::HPM); S.tlead0.init(20ull * p, Order::LEX); S.tlead1.init(20ull * p, Order::LEX);
+  for (const Model& U : {Model{}, Model{0}}) {
+    const double F = D.logprior[U.size()] + (U.empty() ? 0.0 : -1.0);
+    S.ttop.offer(F, U, D.zob.hash(U)); S.tlead0.offer(F, U, D.zob.hash(U)); S.tlead1.offer(F, U, D.zob.hash(U));
+  }
+  S.ttop.compact(); S.tlead0.compact(); S.tlead1.compact();
+  S.mode_S = Model{0};
+  S.size_logmass.assign((size_t)D.K + 1, -std::numeric_limits<double>::infinity()); S.size_logmass[0] = S.size_logmass[1] = std::log(0.5);
+  v4::Json sin = v4::Json::object(); sin["data.bin"] = dhash;
+  const std::string s0 = tg.add(wp3_tmp("adm_setup0.bin"));
+  v4::wp4io::write_setup_min(s0, S, sin);
+  { v4::fmt::Reader R(s0); v4::fmt::Writer W(v4::fmt::K_SETUP, v4::fmt::M_COMPAT);   // + empty neighbour lists (the dimensions reader needs them)
+    for (const auto& e : R.sections()) {
+      const std::string nm(e.name);
+      if (e.dtype == v4::fmt::D_JSON) { W.add_json(nm, R.json(nm)); continue; }
+      const void* q = e.dtype == v4::fmt::D_F64 ? (const void*)R.get<double>(nm) : e.dtype == v4::fmt::D_I32 ? (const void*)R.get<int32_t>(nm)
+                    : e.dtype == v4::fmt::D_U32 ? (const void*)R.get<uint32_t>(nm) : e.dtype == v4::fmt::D_I64 ? (const void*)R.get<int64_t>(nm)
+                    : e.dtype == v4::fmt::D_U64 ? (const void*)R.get<uint64_t>(nm) : e.dtype == v4::fmt::D_U16 ? (const void*)R.get<uint16_t>(nm)
+                    : (const void*)R.get<uint8_t>(nm);
+      W.add_copy(nm, e.dtype, q, e.length, e.dims[0], e.dims[1]);
+    }
+    const std::vector<int64_t> nbp((size_t)p + 1, 0); const std::vector<int32_t> nbi;
+    W.add("nb_ptr", nbp); W.add("nb_idx", nbi); W.write(spath); }
+  for (int plan_only : {0, 1}) {
+    v4::Json a = v4::Json::object(); a["data"] = dpath; a["setup"] = spath; a["mode"] = "V"; a["mem_budget"] = 1.0;
+    a["plan_only"] = (double)plan_only; a["seed"] = 5.0; a["out"] = tg.add(wp3_tmp("adm_calib.bin"));
+    g_new_calls = 0; g_new_bytes = 0; g_new_max = 0;
+    g_new_track = true;
+    v4::Json r = v4::calib::run(a);
+    g_new_track = false;
+    const uint64_t calls = g_new_calls, bytes = g_new_bytes, mx = g_new_max;
+    std::printf("  plan_only %d: %llu allocations, %llu B, largest %llu B before the refusal\n", plan_only, (unsigned long long)calls,
+                (unsigned long long)bytes, (unsigned long long)mx);
+    CHECKF(r.at("status").str() == "resource_limit", "plan_only %d: status %s", plan_only, r.at("status").str().c_str());
+    CHECKF(mx < (64u << 10) && bytes < (1u << 20), "plan_only %d: largest %llu B, total %llu B", plan_only, (unsigned long long)mx, (unsigned long long)bytes);
   }
 }
 
@@ -1292,6 +1376,15 @@ TEST(cost_record_per_step) {
       for (auto& kv : row.items()) okf = okf && mc.at("columns").at(kv.first).at(i).dump() == kv.second.dump();
     }
     CHECK(okf);
+    // `smcbvs4 info --meta 1` exposes meta.cost (the T5 report reads island files this way) and the binary block's
+    // island ISA (D-32; WP7 O5)
+    const std::string rec = tg.add(wp3_tmp("o2_info"));
+    const std::string cmd = std::string(V4_SMCBVS4) + " info --in " + path + " --meta 1 --out " + rec + " > /dev/null 2>&1";
+    CHECK(std::system(cmd.c_str()) == 0);
+    v4::Json ij = v4::read_json_file(rec + ".json");
+    CHECK(ij.at("meta").at("cost").at("rows").i64() == (int64_t)r.cost.size());
+    CHECK(ij.at("meta").at("binary").at("island_isa").type() == v4::Json::STR && !ij.at("meta").at("binary").at("island_isa").str().empty());
+    std::remove((rec + ".json").c_str());
   }
   // (c) checkpoint and resume at steps 0 and 3: checkpointed rows bit-identical, segments 0 then 1, lifetime totals,
   //     law-determined totals equal to the uninterrupted run's; the sidecar equals the final rows after: an orderly
@@ -1409,4 +1502,88 @@ TEST(store_check_on_failure_exits) {
   expect_i1_error(oc, "oom exit, corrupted store");
   // (c) numerical-failure exits are covered by the same call (it precedes every status branch); interrupted runs by the
   //     checkpoint guard (store_check_at_checkpoints_and_final_write)
+}
+
+// WP7 O5: the pilot-only path (include/v4/island/pilot_only.h, tool v4_pilot_island) runs the same island as the first
+// island of `calibrate --mode V`: with the same seed, the per-step cost records of the two pilots agree step by step in
+// every law-determined field (phi, rounds, sweeps, pairs, passes, active columns, store size, mean |S|), at 1 and 3 threads.
+// Also: calibrate --cost-dir writes one record per calibration island (pilot + diagnostic islands).
+TEST(pilot_only_equals_calibrate_pilot) {
+  TmpGuard tg;
+  CalInputs CI = make_cal_inputs(tg, "pil");
+  auto rows_of = [](const std::string& path) {
+    std::vector<v4::Json> r; for (auto& j : read_jsonl(path)) if (!j.contains("cost_header")) r.push_back(j); return r;
+  };
+  // law-determined fields only: flips (K1's bounded count) and offers (the snapshot duplicate filter) depend on the schedule
+  const char* keys[] = {"step", "kind", "phi", "particle_rounds", "sweeps", "pairs", "store_size", "mean_S", "act_cols", "passes"};
+  std::vector<v4::Json> ref;
+  auto section_hashes = [](const std::string& path) {   // every section but meta
+    v4::fmt::Reader Rd(path); std::map<std::string, std::string> m;
+    for (auto& e : Rd.sections()) { if (std::string(e.name) == "meta") continue; std::string h; char x[3]; for (int i = 0; i < 32; ++i) { std::snprintf(x, 3, "%02x", e.sha256[i]); h += x; } m[e.name] = h; }
+    return m;
+  };
+  std::string cal3;   // the 3-thread calibrate run with --cost-dir (compared with a run without it below)
+  for (int th : {1, 3}) {
+    const std::string cdir = tg.add(wp3_tmp("pil_cal_cost" + std::to_string(th)));
+    const std::string out = tg.add(wp3_tmp("pil_cal" + std::to_string(th) + ".bin"));
+    v4::Json a = v4::Json::object(); a["data"] = CI.dpath; a["setup"] = CI.spath; a["out"] = out; a["mode"] = "V"; a["seed"] = 77.0;
+    a["threads"] = (double)th; a["cost_dir"] = cdir;
+    v4::Json rec = v4::calib::run(a);
+    CHECK(rec.at("status").str() == "completed" && rec.at("cal_status").str() == "ok");   // #52: task status + cal_status
+    if (th == 3) cal3 = out;
+    int nfiles = 0, ndiag = 0;
+    for (auto& de : std::filesystem::directory_iterator(cdir)) { ++nfiles; ndiag += de.path().filename().string().rfind("cost_diag_", 0) == 0; }
+    CHECKF(nfiles >= 2 && ndiag >= 1, "threads %d: %d cost records, %d diagnostic", th, nfiles, ndiag);
+    auto cal = rows_of(calib_cost_path(cdir, true, 0, 0, 0));
+    const std::string pdir = tg.add(wp3_tmp("pil_only_cost" + std::to_string(th)));
+    v4::Json pa = v4::Json::object(); pa["data"] = CI.dpath; pa["setup"] = CI.spath; pa["seed"] = 77.0; pa["threads"] = (double)th; pa["cost_dir"] = pdir;
+    int rc = -1;
+    v4::Json pr = run_pilot_only(pa, rc);
+    CHECKF(rc == 0 && pr.at("status").str() == "completed", "pilot-only threads %d: rc %d %s", th, rc, pr.dump().c_str());
+    auto pil = rows_of(pr.at("cost_record").str());
+    bool same = !cal.empty() && cal.size() == pil.size() && (int64_t)pil.size() == pr.at("T").i64() + 2 + pr.at("settings").at("L").i64() + pr.at("settings").at("Hm").i64();   // + the exit row
+    for (size_t i = 0; same && i < cal.size(); ++i) for (const char* k : keys) if (cal[i].at(k).dump() != pil[i].at(k).dump()) { same = false; std::printf("  step %zu key %s: %s vs %s\n", i, k, cal[i].at(k).dump().c_str(), pil[i].at(k).dump().c_str()); }
+    CHECKF(same, "threads %d: calibrate pilot %zu rows, pilot-only %zu rows", th, cal.size(), pil.size());
+    if (ref.empty()) ref = pil;
+    else {   // and the same island at 1 and 3 threads (T3 through the record)
+      bool t3 = ref.size() == pil.size();
+      for (size_t i = 0; t3 && i < ref.size(); ++i) for (const char* k : {"phi", "sweeps", "store_size", "mean_S"}) t3 = t3 && ref[i].at(k).dump() == pil[i].at(k).dump();
+      CHECK(t3);
+    }
+    std::printf("  threads %d: pilot T = %lld (%lld forced), %zu rows, %.2f s; calibrate wrote %d cost records (%d diagnostic)\n", th,
+                (long long)pr.at("T").i64(), (long long)pr.at("forced").i64(), pil.size(), pr.at("seconds_island").num(), nfiles, ndiag);
+    if (th == 3) {   // review PR55 INFO-8: the schedule-dependent counts, two pilot-only runs of one binary
+      const std::string pdir2 = tg.add(wp3_tmp("pil_only_cost3b"));
+      v4::Json pb = pa; pb["cost_dir"] = pdir2; int rc2 = -1; v4::Json pr2 = run_pilot_only(pb, rc2);
+      auto pil2 = rows_of(pr2.at("cost_record").str());
+      uint64_t f1 = 0, f2 = 0; for (auto& j : pil) f1 += j.at("flips").type() == v4::Json::NUM ? (uint64_t)j.at("flips").num() : 0;
+      for (auto& j : pil2) f2 += j.at("flips").type() == v4::Json::NUM ? (uint64_t)j.at("flips").num() : 0;
+      std::printf("  two pilot-only runs at 3 threads: flips %llu vs %llu (%s)\n", (unsigned long long)f1, (unsigned long long)f2,
+                  f1 == f2 ? "equal this time" : "run-to-run execution variation in one binary");
+    }
+  }
+  {   // review PR55 m7a: --cost-dir (and --verbose) leave calib.bin's sections unchanged
+    const std::string out = tg.add(wp3_tmp("pil_cal_nocost.bin"));
+    v4::Json a = v4::Json::object(); a["data"] = CI.dpath; a["setup"] = CI.spath; a["out"] = out; a["mode"] = "V"; a["seed"] = 77.0; a["threads"] = 3.0;
+    CHECK(v4::calib::run(a).at("status").str() == "completed");
+    CHECK(!cal3.empty() && section_hashes(out) == section_hashes(cal3));
+  }
+}
+
+// D-32 (2): the merge refuses islands of two FMA families in V mode (class-A bits differ); the same family is accepted;
+// theory merges are unaffected by the ISA field
+TEST(merge_refuses_mixed_fma_families) {
+  v4::Json a = v4::binary_block(), b = v4::binary_block();
+  auto with = [](v4::Json j, const char* isa) {   // a block of that ISA: the name and the class-A unit's own FMA flag
+    j["island_isa"] = isa; const std::string s(isa); j["island_fma"] = !(s == "portable" || s == "x86-64-v2"); return j;
+  };
+  CHECK(v4::binary_compatible(with(a, "sapphirerapids"), with(b, "x86-64-v3"), v4::BinaryUse::MergeV).ok);
+  CHECK(!v4::binary_compatible(with(a, "sapphirerapids"), with(b, "portable"), v4::BinaryUse::MergeV).ok);
+  CHECK(!v4::binary_compatible(with(a, "x86-64-v2"), with(b, "x86-64-v4"), v4::BinaryUse::MergeV).ok);
+  CHECK(v4::binary_compatible(with(a, "portable"), with(b, "portable"), v4::BinaryUse::MergeV).ok);
+  CHECK(!a.at("island_isa").str().empty());
+  // island_fma (the class-A unit's answer) wins over the name: a V4_WIDE_ISA build labelled "x86-64-v3" with FMA
+  v4::Json w = a; w["island_isa"] = "portable"; w["island_fma"] = true;
+  CHECK(!v4::binary_compatible(w, with(b, "portable"), v4::BinaryUse::MergeV).ok);
+  CHECK(v4::binary_compatible(w, with(b, "x86-64-v3"), v4::BinaryUse::MergeV).ok);
 }

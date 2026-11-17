@@ -16,8 +16,10 @@ target_compile_options(v4_cmd PRIVATE ${V4_BIT_FLAGS} ${V4_WARN})
 target_link_libraries(v4_cmd PUBLIC v4_a v4_bit)
 # every translation unit that calls run_island shares the island's ISA (the kernels live in an ISA inline namespace):
 # calib::run (WP4's calibrate command, which runs the calibration islands) and WP4's island-file test included
-set(V4_ISLAND_SOURCES ${V4_ISLAND_DIR}/island_bit.cpp ${V4_ISLAND_DIR}/island_a.cpp ${V4_ISLAND_DIR}/island_file.cpp tests/test_island.cpp tests/test_island_golden.cpp tools/bench_island.cpp
+set(V4_ISLAND_SOURCES ${V4_ISLAND_DIR}/island_bit.cpp ${V4_ISLAND_DIR}/island_a.cpp ${V4_ISLAND_DIR}/island_file.cpp tests/test_island.cpp tests/test_island_golden.cpp tools/bench_island.cpp tools/pilot_island.cpp
     src/calib/calib_run.cpp ${V4_ISLAND_DIR}/island_cmd.cpp tests/test_wp4_io.cpp tests/test_island_cmd.cpp tests/test_start_view.cpp tools/plan_tables.cpp)   # test_wp4_io writes island files (until m9 moves the API types out of the ISA namespace)
+# D-32 (WP7 O5): the binary block records the island ISA (provenance.cpp: "island_isa"; "portable" without the option)
+set_property(SOURCE src/common/provenance.cpp APPEND PROPERTY COMPILE_DEFINITIONS V4_ISLAND_ISA_STR="${V4_ISLAND_ISA}")
 # -Wno-psabi: the 64-byte vector types are passed between inline functions only (no ABI boundary)
 if(V4_ISLAND_ISA)
   set_source_files_properties(${V4_ISLAND_SOURCES} PROPERTIES COMPILE_OPTIONS "-march=${V4_ISLAND_ISA};-Wno-psabi")
@@ -37,3 +39,7 @@ target_compile_definitions(v4_bench_island PRIVATE V4_ISLAND_ISA_STR="${V4_ISLAN
 add_executable(v4_plan_tables tools/plan_tables.cpp)
 target_compile_options(v4_plan_tables PRIVATE ${V4_BIT_FLAGS})
 target_link_libraries(v4_plan_tables PRIVATE v4_a v4_bit)
+# the calibration pilot island alone on production inputs (WP7 O5; the H-11 10^6 pilot measurement)
+add_executable(v4_pilot_island tools/pilot_island.cpp)
+target_compile_options(v4_pilot_island PRIVATE ${V4_BIT_FLAGS})
+target_link_libraries(v4_pilot_island PRIVATE v4_a v4_bit)

@@ -23,8 +23,14 @@ struct CalibRunnerConfig {
   int threads = 1, G = 0, tile = 128, B = 14;  // B: number of N-swap labels (budgets B)
   double k_store = 0, inputs_bytes = 0; uint64_t mem_budget = 0;
   bool allow_test_kernels = false;             // tests: the bit-form label-major kernel (LM = PM checks)
+  std::string cost_dir;                        // D-30 (WP7 O5): per-island cost records <dir>/cost_<pilot|diag>_t<e>_k<k>_r<r>.jsonl
+  bool verbose = false;                        // per-step progress lines on stderr (IslandConfig::verbose)
   double test_admission_k = 0;                 // tests: force the admission's k (a step-boundary refusal; review PR39 m1)
 };
+// the cost-record file of one calibration island (WP7 O5; IslandConfig::cost_path)
+inline std::string calib_cost_path(const std::string& dir, bool pilot, int tier, int iter, int island) {
+  return dir + "/cost_" + (pilot ? "pilot" : "diag") + "_t" + std::to_string(tier) + "_k" + std::to_string(iter) + "_r" + std::to_string(island) + ".jsonl";
+}
 
 template <Arith A>
 class CalibIslandRunner final : public v4::calib::IslandRunner {
@@ -48,6 +54,8 @@ class CalibIslandRunner final : public v4::calib::IslandRunner {
     c.k_store = c_.k_store; c.inputs_bytes = c_.inputs_bytes + (double)sp.resident_bytes;
     c.mem_budget = sp.mem_budget ? sp.mem_budget : c_.mem_budget;
     c.keep_terminal = false; c.leaders = true; c.test_admission_k = c_.test_admission_k;
+    if (!c_.cost_dir.empty()) c.cost_path = calib_cost_path(c_.cost_dir, pilot, sp.tier, sp.iter, sp.island);
+    c.verbose = c_.verbose;
     if (pilot) { c.adaptive = true; c.adaptive_H = sp.H; c.adaptive_Te = sp.Te; } else c.grid = sp.grid;
     if (c_.compat) {
       c.compat = true;
