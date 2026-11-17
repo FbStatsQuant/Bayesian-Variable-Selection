@@ -417,3 +417,4 @@
 - 2026-11-17 12:23 CST D104 dispatched (4 leads + Fable).
 - 2026-11-17 12:24 CST D105: Fable queued for the #5′ spec after its FEAS note; #5′ and #3 leads into the next free slots.
 - 2026-11-17 12:28 CST D106 noted; carried into every new brief (#5′, #3, READER batch).
+- 2026-11-17 12:28 CST FEAS_SMC_WORKS (Fable 1118f165): no route via existing lemmas; full target NO-GO (8–10 d, Tier A); 2-d G1/G2 gate available; cheap weak-leak corollary (Tier B, 1–2 d). Sent to HQ; recommended no ticket (D106). Fable → SPEC_LIST_PIP next.
