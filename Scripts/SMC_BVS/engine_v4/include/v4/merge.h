@@ -106,6 +106,7 @@ struct MergeSettings {
   double near_tie_eps = 1e-9;
   int threads = 1; size_t chunk = 2048;
   const Zobrist* zob = nullptr;   // model hashes (Data::zob)
+  std::vector<int32_t> orig;      // kept -> original (1-based) column map (Data::orig); written to fit.bin, and mpm_list is in its index space
   // memory admission (review PR16 F1): 0 = off; else refuse with resource_limit before any island store is loaded if
   // estimate_merge_memory(...).total exceeds it
   uint64_t mem_budget_bytes = 0;

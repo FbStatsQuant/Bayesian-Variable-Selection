@@ -40,13 +40,13 @@ ListPip compute_list_pip(const ListPipSrc& s, int32_t p, uint64_t capacity) {
   ListPip r; r.list_size = s.n; r.list_full = capacity > 0 && s.n >= capacity; r.source = "store";
   auto flagged = [&](const char* f) { r.flag = f; r.pip_list.assign((size_t)p, NaN); r.mpm_list.clear(); r.log_Z_list = NaN; return r; };
   if (s.n == 0) return flagged("empty_list");
+  require_distinct(s);   // error precedence: a duplicate model is an error BEFORE any flag is set (a store is a set, whatever its scores are)
   double Fmax = -std::numeric_limits<double>::infinity();
   for (size_t i = 0; i < s.n; ++i) {
     if (std::isnan(s.v[i]) || s.v[i] == std::numeric_limits<double>::infinity()) return flagged("nonfinite_score");
     Fmax = std::max(Fmax, s.v[i]);
   }
-  if (Fmax == -std::numeric_limits<double>::infinity()) return flagged("nonfinite_score");   // no finite weight at all
-  require_distinct(s);
+  if (Fmax == -std::numeric_limits<double>::infinity()) return flagged("nonfinite_score");   // all -Inf: normaliser 0 (Theory-confirmed via HQ 11-17)
   std::vector<double> num((size_t)p, 0.0);
   double den = 0.0;
   for (size_t i = s.n; i-- > 0;) {   // last entry first (smallest weights first)

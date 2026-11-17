@@ -882,10 +882,19 @@ std::string write_fit(const std::string& path, const FitWrite& f, Json* record) 
     add_vec_copy(W, "island_best", fo.led.island_best);
     if (fo.has_list_pip) {   // SPEC_LIST_PIP.md: the list-renormalised fields, appended after every existing section
       const ListPip& lp = fo.list_pip;
-      add_vec_copy(W, "pip_list", lp.pip_list); add_vec_copy(W, "mpm_list", lp.mpm_list);
-      meta["logZ_list"] = lp.log_Z_list; meta["list_size"] = u64_json(lp.list_size); meta["list_full"] = lp.list_full;
-      meta["pip_list_source"] = lp.source;
-      if (!lp.flag.empty()) meta["pip_list_flag"] = lp.flag;   // absent when clean
+      // `orig`: the kept -> original (1-based) column map of the data (Data::orig), so that a fit.bin is self-describing: pip_eq, pip_list,
+      // pip_T are indexed by KEPT column j (position in `orig`), and mpm_list holds ORIGINAL column indices (v3's index space, the spec's)
+      const bool have_orig = (int32_t)ms.orig.size() == ms.p;
+      if (have_orig) add_vec_copy(W, "orig", ms.orig);
+      meta["list_size"] = u64_json(lp.list_size); meta["list_full"] = lp.list_full; meta["pip_list_source"] = lp.source;
+      meta["mpm_list_index_space"] = have_orig ? "original_1based" : "internal_0based";
+      if (!lp.flag.empty()) meta["pip_list_flag"] = lp.flag;   // flagged: no list section and no log_Z_list (an empty mpm_list would look valid)
+      else {
+        std::vector<int32_t> mpm = lp.mpm_list;
+        if (have_orig) for (auto& j : mpm) j = ms.orig[(size_t)j];   // increasing in j, orig increasing: stays increasing
+        add_vec_copy(W, "pip_list", lp.pip_list); add_vec_copy(W, "mpm_list", mpm);
+        meta["log_Z_list"] = lp.log_Z_list;
+      }
     }
   }
   meta["inputs"] = f.inputs; meta["timings"] = f.timings; meta["binary"] = binary_block(); meta["mode"] = fmt::mode_name(f.mode);
@@ -900,8 +909,9 @@ std::string write_fit(const std::string& path, const FitWrite& f, Json* record) 
     if (fo.has_hpm) rec["hpm_F"] = fo.hpm_F;
     if (fo.estimates_available) { rec["logZ"] = fo.log_Z; rec["logZ_T"] = fo.log_Z_T; rec["R_eff"] = fo.R_eff; }
     if (fo.estimates_available && fo.has_list_pip) {   // SPEC_LIST_PIP.md (the vectors are in fit.bin)
-      rec["logZ_list"] = fo.list_pip.log_Z_list; rec["list_size"] = u64_json(fo.list_pip.list_size); rec["list_full"] = fo.list_pip.list_full;
-      rec["pip_list_source"] = fo.list_pip.source; if (!fo.list_pip.flag.empty()) rec["pip_list_flag"] = fo.list_pip.flag;
+      // scalars only (fit.json's convention): the vectors pip_list / mpm_list are in fit.bin and in `smcbvs4 listpip`
+      rec["list_size"] = u64_json(fo.list_pip.list_size); rec["list_full"] = fo.list_pip.list_full; rec["pip_list_source"] = fo.list_pip.source;
+      if (!fo.list_pip.flag.empty()) rec["pip_list_flag"] = fo.list_pip.flag; else rec["log_Z_list"] = fo.list_pip.log_Z_list;
     }
   }
   return h;
@@ -1129,6 +1139,7 @@ Json run(const Json& args) {
   ms.ell = (int)nget(args, "ell", ceil_log2((double)D.n + D.p + 1));
   ms.ls0 = true; ms.ls0_ell = ms.ell; ms.log_m0 = D.logm0;
   ms.threads = (int)nget(args, "threads", 1); ms.chunk = (size_t)nget(args, "chunk", 2048); ms.zob = &D.zob;
+  ms.orig.assign(D.orig, D.orig + D.p);   // fit.bin `orig` (SPEC_LIST_PIP: mpm_list in original column indices)
   ms.mem_budget_bytes = mem_budget;
   // memory plan inputs (review of the first 1M merge): the mean model size from the islands' store sections, and the files' and
   // views' sizes the phase model counts (merge.h estimate_merge_memory)

@@ -7,8 +7,12 @@
 // Numerics (spec §3): subtract max F before exp (F itself is never exponentiated); both sums run from the LAST store entry to
 // the first, in plain double with no compensation (a column's numerator adds a subsequence of the denominator's terms in the
 // same order, so 0 <= pip_list <= 1 holds exactly in floating point; nothing is clamped); exp = pm::exp (bit form).
-// Cases (spec §4): m = 0 -> NA fields, flag "empty_list"; a NaN or +Inf score (or a list whose scores are all -Inf) -> NA fields,
-// flag "nonfinite_score"; -Inf scores get weight 0; duplicate models -> Error(internal_error) (a store is a set; never merged).
+// Cases (spec §4), in this order of precedence: m = 0 -> flag "empty_list"; duplicate models -> Error(internal_error) (a store is a set;
+// never merged; BEFORE any flag); a NaN or +Inf score, or a list whose scores are all -Inf (normaliser 0; Theory-confirmed via HQ 11-17)
+// -> flag "nonfinite_score"; -Inf scores get weight 0. A flagged result carries NaN pip_list / log_Z_list in memory, but the FILES carry
+// no field of it (fit.bin has neither list section nor log_Z_list, only the flag; `listpip` prints only the flag): an empty mpm_list would
+// look like a valid empty median model. NB: in a merge the legacy finite check (merge.h, GUARD-W) runs first and refuses an empty or all -Inf
+// top store with internal_error, so the two flags are reachable only through `listpip` on a hand-made or foreign fit.bin.
 #pragma once
 #include <cstdint>
 #include <string>

@@ -27,7 +27,8 @@ static void usage() {
     "  info  file.bin | --in file.bin       (header, sections, verified hashes: every section)\n"
     "  info  file.bin --meta 1              (header + table + the meta section only, the meta printed; no full-file read:\n"
     "                                        seconds on a multi-GB island file; --verify 1 adds every section hash)\n"
-    "  listpip FIT.bin [--full 1]           (list-renormalised PIP fields of an existing fit.bin: pip_list, mpm_list, log_Z_list, ...)\n"
+    "  listpip FIT.bin [--data data.bin] [--full 1]   (list-renormalised PIP fields of an existing fit.bin: pip_list, mpm_list, log_Z_list, ...;\n"
+    "                                        mpm_list in ORIGINAL column indices: from the fit's `orig` section, else from --data)\n"
     "  common: --threads k  --record out.json\n");
 }
 

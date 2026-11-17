@@ -448,16 +448,24 @@ Sections (names fixed; WPs may add sections, never rename):
   `end_rss_kb`, `end_file_kb` and `write_fit_seconds`. `meta.mem_estimate` carries the plan by phase (`load_setup`,
   `load_calib`, `offers`, `streaming`, `tail_phase`, `merged`, `one_island`, `small`, `extra`), `total` and `sacct_upper`
   (§7). A merge that is not admitted (§7) also carries the phases it reached, ending with `refused`. Execution statistics, not hashed.
-  v0.1.27 (WP4, list-renormalised PIPs; HQ order 2026-11-17, spec
-  `SPEC_LIST_PIP.md`): additive output of a COMPLETED merge, computed last from the merged `top` store (`include/v4/list_pip.h`):
-  sections `pip_list` (f64, p; internal columns, as `pip_eq`) and `mpm_list` (i32, internal 0-based, increasing; = {pip_list > 1/2}),
-  `meta` (and `fit.json`) `logZ_list`, `list_size`, `list_full` (|top| >= its capacity 40p + 1), `pip_list_source` = "store",
-  `pip_list_flag` (absent when clean; "empty_list" | "nonfinite_score" with NaN `pip_list` / `logZ_list`, empty `mpm_list`).
-  pip_list[j] = sum_{S in top, j in S} u_S / sum_{S in top} u_S, u_S = exp(F_S - max F); logZ_list = max F + log sum u_S; both sums
-  from the LAST store entry to the first in plain double (no compensation, `pm::exp`). `pip_T` and `logZ_T` are unchanged (long
-  double, forward order). No other section changes; a fit that is not completed carries none of the new fields.
-  `smcbvs4 listpip FIT.bin [--full 1]` (§1) prints the same fields from the fit's stored `top` store (same function; for a fit.bin
-  that carries them it reports `matches_stored`); a fit that is not completed: the fields are absent.
+  v0.1.27 (WP4, list-renormalised PIPs; HQ order 2026-11-17, spec `SPEC_LIST_PIP.md`; reviewed PR #68): additive output of a COMPLETED merge,
+  computed last from the merged `top` store (`include/v4/list_pip.h`). Sections `orig` (i32, p: the kept -> original (1-based) column map of
+  data.bin, so the file is self-describing), `pip_list` (f64, p; indexed by KEPT column j, label `orig[j]`, like `pip_eq`) and `mpm_list`
+  (i32; ORIGINAL 1-based column indices, increasing, = {orig[j] : pip_list[j] > 1/2}; v3's index space; `mpm` stays internal 0-based).
+  `meta` (and `fit.json`, scalars only: the vectors are in fit.bin and `listpip`) `log_Z_list`, `list_size`, `list_full` (|top| >= its capacity
+  40p + 1), `pip_list_source` = "store", `mpm_list_index_space` = "original_1based". pip_list[j] = sum_{S in top, j in S} u_S / sum_{S in top} u_S,
+  u_S = exp(F_S - max F); log_Z_list = max F + log sum u_S; both sums from the LAST store entry to the first in plain double (no compensation,
+  `pm::exp`). Cases, in this precedence: empty store -> flag "empty_list"; a duplicate model -> `internal_error` (never merged, BEFORE any flag);
+  a NaN / +Inf score, or all scores -Inf (normaliser 0; Theory-confirmed via HQ 11-17) -> flag "nonfinite_score"; -Inf scores get weight 0. A
+  FLAGGED result carries only `pip_list_flag` (+ `list_size`, `list_full`, `pip_list_source`): no `pip_list` / `mpm_list` section and no
+  `log_Z_list` (an empty `mpm_list` would look like a valid empty median model). In a merge the legacy finite check (GUARD-W) runs first and
+  refuses an empty or all -Inf top store with `internal_error`, so the two flags are reachable only through `listpip` on a hand-made or foreign
+  fit.bin. `pip_T` / `logZ_T` are unchanged (long double, forward order). No other section changes; a fit that is not completed carries none of
+  the new fields. `smcbvs4 listpip FIT.bin [--data data.bin] [--full 1]` (§1) prints the same fields from the fit's stored `top` store (same
+  function; `matches_stored` for a fit.bin that carries them). Index space of its output: `index_space` = "original_1based" with `mpm_list` and the
+  sparse `pip_list_nonzero.index` in ORIGINAL columns (`kept` = the kept index), from the fit's `orig` section or, for a fit.bin written before this
+  version (the pilot's, T5's), from the data.bin given with --data (checked against the fit's meta.inputs); else "internal_0based" (no original
+  index is printed). `--full 1` prints the dense `pip_list` (by kept column) with `columns_orig` as its labels.
   No leader stores in `island_r.bin` or `fit.bin`, in any mode (§4.1; on the compat exclusion list).
 - `law.bin` (WP5): models (ptr/idx), weights, conjugate parameters, standardisation constants, dropped mass.
 - `island_r.ckpt.{a,b}` (WP3): kind 8; newest valid generation wins.
@@ -755,5 +763,6 @@ point, so all WPs link from day one: `setup::run`, `island::run`, `calib::run`, 
   by phase with `sacct_upper`. §7: the merge's memory plan is by phase (resident = anonymous + mapped file pages), the
   load phases are admitted before anything is read, and the merge streams the inherited models from calib.bin and releases
   the table stores (no output bit changes). Numbers: results/MERGE_MEM.md (probe at p = 2e4 .. 1e5, projection to 10⁶).
-- v0.1.27 (2026-11-18, WP4; HQ order 2026-11-17, SPEC_LIST_PIP) — §5.1 `fit.bin` / `fit.json`: `pip_list`, `mpm_list`, `logZ_list`, `list_size`,
-  `list_full`, `pip_list_source`, `pip_list_flag` (additive; no existing section or field changes); §1: `smcbvs4 listpip FIT.bin`.
+- v0.1.27 (2026-11-18, WP4; HQ order 2026-11-17, SPEC_LIST_PIP; PR #68 review) — §5.1 `fit.bin` / `fit.json`: `orig` (kept -> original column map), `pip_list`,
+  `mpm_list` (ORIGINAL 1-based indices), `log_Z_list`, `list_size`, `list_full`, `pip_list_source`, `mpm_list_index_space`, `pip_list_flag` (additive; no existing
+  section or field changes; flagged results carry no list section); §1: `smcbvs4 listpip FIT.bin [--data data.bin] [--full 1]`.

@@ -374,6 +374,15 @@ List wp4_final_merge(SEXP setup, NumericVector grid, List ro, double seed, SEXP 
     out["pip_list"] = pl; out["mpm_list"] = to_orig(D, fo.list_pip.mpm_list); out["log_Z_list"] = fo.list_pip.log_Z_list;
     out["list_size"] = (double)fo.list_pip.list_size; out["list_full"] = fo.list_pip.list_full;
     out["pip_list_flag"] = fo.list_pip.flag.empty() ? R_NilValue : (SEXP)Rcpp::wrap(fo.list_pip.flag);
+    {  // B10 permutation (per golden): the same store read in REVERSED entry order must give the same fields to 1e-12
+      const v4::Store& T = fo.led.top; const size_t n = T.size();
+      std::vector<double> v(n); std::vector<uint64_t> off(n), hs(n); std::vector<uint16_t> len(n);
+      for (size_t i = 0; i < n; ++i) { const size_t k = n - 1 - i; v[i] = T.v[k]; off[i] = T.off[k]; hs[i] = T.hash[k]; len[i] = T.len[k]; }
+      v4::ListPipSrc src; src.n = n; src.v = v.data(); src.off = off.data(); src.len = len.data(); src.hash = hs.data(); src.pool = T.pool.data();
+      v4::ListPip lq = v4::compute_list_pip(src, D.p, T.cap);
+      NumericVector pq(lq.pip_list.begin(), lq.pip_list.end()); pq.names() = onames;
+      out["pip_list_permuted"] = pq; out["log_Z_list_permuted"] = lq.log_Z_list;
+    }
   }
   out["near_ties"] = models_to_list(D, fo.near_ties); out["near_tie_F"] = fo.near_tie_F; out["near_tie_truncated"] = fo.near_tie_truncated;
   out["local_search"] = wp4h::local_list(fo.local, D);
@@ -508,7 +517,11 @@ List wp4_files_merge(SEXP setup, NumericVector grid, List ro, double seed, SEXP 
   out["mpm"] = modl("mpm"); out["near_ties"] = models("near"); out["near_tie_F"] = vecd("near_F");
   if (F.has("pip_list")) {   // SPEC_LIST_PIP: the fit.bin sections and meta scalars
     NumericVector pl = vecd("pip_list"); CharacterVector nm(p); for (int j = 0; j < p; ++j) nm[j] = std::to_string(D3.orig[j]); pl.names() = nm;
-    out["pip_list"] = pl; out["mpm_list"] = modl("mpm_list"); out["log_Z_list"] = meta.at("logZ_list").num();
+    // fit.bin's mpm_list holds ORIGINAL column indices already (SPEC_LIST_PIP; the `orig` section is the kept -> original map): no to_orig here
+    out["pip_list"] = pl;
+    { std::vector<int32_t> mo = F.vec<int32_t>("mpm_list"); out["mpm_list"] = IntegerVector(mo.begin(), mo.end()); }
+    { std::vector<int32_t> ob = F.vec<int32_t>("orig"); out["fit_orig"] = IntegerVector(ob.begin(), ob.end()); }
+    out["log_Z_list"] = meta.at("log_Z_list").num();
     out["list_size"] = meta.at("list_size").num(); out["list_full"] = meta.at("list_full").boolean();
     out["pip_list_flag"] = meta.contains("pip_list_flag") ? (SEXP)Rcpp::wrap(meta.at("pip_list_flag").str()) : R_NilValue;
   }
