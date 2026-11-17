@@ -46,6 +46,6 @@ compatibility condition is needed: SAMP's $\pi$, $\pi_0$, $Z$ are the coded targ
 the same objects as in Theorems 2 and 5 (`NOTATION.md` §4–§5).
 
 **Not claimed.** $P(\mathcal A)\to1$ (calibration success) is not asserted by (C-v); under the delivery conventions (S4)
-(whose item (i) includes A:IDEAL-W⁺; without it, for $(n,p_{\mathrm{raw}})\in\mathfrak D$) as an added hypothesis [FUNI-N, R1-E3], runs complete with probability one (`W3-RM2-R:DLV-0`, deterministic delivery at the pinned code, conditional on the two code-reading audits C-DLV:L2-S3, C-DLV:P1-Inventory; history: F-UNI Step 2) [R3-O2] [R2-O7], which would remove the localisation to $\mathcal A$ —
+(whose item (i) includes A:IDEAL-W⁺; without it, for $(n,p_{\mathrm{raw}})\in\mathfrak D$) as an added hypothesis [FUNI-N, R1-E3], runs complete with probability one (`W3-RM2-R:DLV-0`, deterministic delivery at the pinned code; the two C-DLV audits it takes as hypotheses are discharged, main fe05ccec; history: F-UNI Step 2) [R2-O7, R3-O2], which would remove the localisation to $\mathcal A$ —
 recorded as a remark, not used. No claim about the estimated PIPs' distance to the *exact* posterior PIPs beyond what
 the triangle inequality with Theorem 2 gives.
