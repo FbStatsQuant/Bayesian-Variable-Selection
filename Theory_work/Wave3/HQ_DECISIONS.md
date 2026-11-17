@@ -704,3 +704,5 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
     - check C-DLV L2-S3 / P1-Inventory.
   - Row 3.6 is to be demoted to a remark once #5′ is proved (HQ, likely).
 - Engineering: T5/P7 worst cases accepted (≤ 400 / ≤ 144 core-h); P1 done.
+- 2026-11-16 late. **W3-READER CP3 RECORDED (main 128e6a9a, CI green). The theory freeze content is complete.** The freeze is Fri 11-20.
+  - Post-freeze kick-off is Sat 08:00 CT: Thm-1/SAMP:C relabel → track A recording → L2-S3/P1-Inventory Sol check → T14 H5 card → track D #2 → READER editorial batch.
