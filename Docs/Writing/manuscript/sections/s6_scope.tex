@@ -1,0 +1,13 @@
+% =====================================================================================================
+\section{Scope, and what is not claimed}\label{sec:scope}
+
+The results are asymptotic in $n$, with $p$ at most polynomial in $n$; one lower bound (Remark~\ref{rem:sharp}(a)) holds at
+every $n\ge3$. The explicit constants of the proofs are conservative. They cover the posterior that the software targets
+and, for Results~3 and~4, the software itself in its default configuration, under three idealising conventions: exact
+arithmetic, ideal random numbers, and an allocation large enough for the method's own requirement formulas. A run that
+stops early returns no estimates and is not covered. The statements about the run's estimates are about the event that the
+calibration succeeds, or that the run completes; no lower bound on the probability of that event is claimed, and nothing is
+claimed conditionally on it. Theorem~\ref{thm:outputs} does not cover designs with leakage, such as block or
+autoregressive designs (Section~\ref{sec:who-outside}). No theorem covers a parallel engine, runs with more than the four
+islands, or the engineered variant used at $p=10^6$ (Section~\ref{sec:supp-1m}); results about those are empirical and
+reported elsewhere.

@@ -1,0 +1,41 @@
+% =====================================================================================================
+\section{Setup and notation}\label{sec:setup}
+
+\paragraph{Notation.} For an integer $k\ge1$, $\set{k}:=\{1,\dots,k\}$. Vectors are columns; $\norm{v}$ and
+$\norm{v}_1$ are the Euclidean and $\ell_1$ norms; $I_n$ is the identity and $\one_n$ the vector of ones; $\lmin(\cdot)$
+is the smallest eigenvalue of a symmetric matrix; $\abs{S}$ is the size of a set; $a\vee b:=\max(a,b)$; $\ind{E}$ is an
+indicator. Logarithms are natural ($\log$) or binary ($\log_2$). A star marks a true value, and the superscript
+$\mathrm r$ marks raw, unstandardised data. For a matrix $\Lambda$ and sets $U,V$, $\Lambda_{UV}$ is the sub-matrix with
+rows in $U$ and columns in $V$, and $\Lambda_U:=\Lambda_{UU}$. For random variables, $V_n=\OP(a_n)$ means that
+$\abs{V_n}/a_n$ is bounded in probability and $V_n=\oP(a_n)$ that it tends to zero in probability; \emph{with probability
+tending to one} means that the probability of the event tends to one. For positive sequences, $a_n=O(b_n)$ (or
+$a_n\lesssim b_n$, $b_n\gtrsim a_n$) means $a_n\le Cb_n$ for a constant $C$; $a_n=o(b_n)$ means $a_n/b_n\to0$;
+$a_n\asymp b_n$ means both $a_n\lesssim b_n$ and $b_n\lesssim a_n$; and $a_n\gg b_n$ means $b_n=o(a_n)$. A quantity is
+\emph{fixed} if it does not depend on $n$. All results are asymptotic in $n\to\infty$, along a sequence of problems in
+which $p$, the design and the coefficients may change with $n$; every constant introduced in an assumption is fixed.
+
+\paragraph{Data and model.} We observe a response $\yr\in\R^n$ and $\praw$ predictors. The method removes every
+predictor that is constant in the sample (its effect is absorbed by the intercept); $\Xr$ is the $n\times p$ matrix of
+the $p$ retained predictors, and from here on $p$ always means this number. The data follow a Gaussian linear model with
+an intercept,
+\begin{equation}\label{eq:model}
+  \yr=\alpha^*\one_n+\Xr\bstar+\varepsilon,\qquad \varepsilon\sim\Normal_n(0,\sigs^2I_n),
+\end{equation}
+with $\sigs^2>0$ and $\varepsilon$ independent of $\Xr$. A \emph{model} is a set $S\subseteq\set{p}$; the \emph{true
+model} is $\Sz:=\{j:\beta^*_j\neq0\}$, of size $\sz$. Its members are the \emph{true predictors}, the others the
+\emph{null predictors}. In a \emph{fixed design} $\Xr$ is deterministic and probability refers to the noise. In a
+\emph{random Gaussian design} the rows of $\Xr$ are i.i.d.\ $\Normal_p(m_n,\Sig)$ and probability refers to the joint law
+of design and noise; $W=(W_1,\dots,W_p)\sim\Normal_p(0,\Sig)$ denotes a centred copy of one row, with sub-vectors $W_S$.
+
+\paragraph{Standardisation.} The method centres and scales every predictor and the response. With
+$P^\perp_{\one}:=I_n-n^{-1}\one\one^\top$ and $D$ the diagonal matrix of the column sample standard deviations (divisor
+$n-1$),
+\begin{equation}\label{eq:standardise}
+  X:=P^\perp_{\one}\Xr D^{-1},\qquad y:=P^\perp_{\one}\yr/s_y,\qquad s_y^2:=\norm{P^\perp_{\one}\yr}^2/(n-1),
+\end{equation}
+so every column $x_j$ of $X$ has mean zero and $\norm{x_j}^2=n-1$, and $y^\top y=n-1$. In these terms
+$P^\perp_{\one}\yr=X\tstar+P^\perp_{\one}\varepsilon$, with the \emph{standardised coefficients} $\tstar:=D\bstar$ (same
+support $\Sz$), the \emph{mean signal} $\mu:=X\tstar$, and $\tmin:=\min_{j\in\Sz}\abs{\theta^*_j}$. For a model $S$, $X_S$
+holds its columns, $G_S:=X_S^\top X_S$ is their Gram matrix, $\Rhat_S:=G_S/(n-1)$ their sample correlation matrix,
+$\hat r_{jl}$ the sample correlation of predictors $j$ and $l$, $P_S$ the projection onto their span ($P_\emptyset:=0$),
+and $z_S:=X_S^\top y$.

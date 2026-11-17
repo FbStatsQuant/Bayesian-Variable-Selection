@@ -1,0 +1,263 @@
+% =====================================================================================================
+\section{The method, as coded}\label{sec:method}
+
+This section describes the method exactly as the software implements it in its default configuration. The user supplies
+the data, a random seed and a computing allocation; everything else is a numerical constant or a stated function of
+$(n,p)$. Table~\ref{tab:params} lists the constants that matter for the results, and Appendix~\ref{app:params} gives all
+of them with their code locations.
+
+\subsection{The model and every prior}\label{sec:prior}
+
+\paragraph{Working model.} Given a model $S$, coefficients $\theta_S\in\R^{\abs{S}}$ and a variance $\sigma^2>0$, the
+method fits $y\mid S,\theta_S,\sigma^2\sim\Normal_n(X_S\theta_S,\sigma^2I_n)$ to the standardised data. Here $\theta_S$
+and $\sigma^2$ are working parameters; the intercept is removed by centring. The results of Section~\ref{sec:results} are
+proved under the true model~\eqref{eq:model}, not under this working model.
+
+\paragraph{Model space and model prior.} The method considers every model with at most $K$ predictors,
+\begin{equation}\label{eq:space}
+  \Om:=\{S\subseteq\set{p}:\abs{S}\le K\},\qquad K:=\min\big(p,\lfloor n/2\rfloor\big),
+\end{equation}
+and gives a model a prior probability that depends only on its size:
+\begin{equation}\label{eq:modelprior}
+  \text{prior of }S=\frac{w(\abs{S})}{\bar w_K},\qquad w(k):=\frac{1}{2\binom{2p-1}{k}},\qquad
+  \bar w_K:=\sum_{k=0}^{K}\binom{p}{k}w(k).
+\end{equation}
+This is the beta-binomial prior $\BB(1,p)$ \citep{ScottBerger2010} restricted to $\Om$: a probability $q$ is drawn from
+$\BetaDist(1,p)$, and given $q$ each predictor enters independently with probability $q$. Its mean model size is about
+one, and adding a predictor to a model of size $k$ multiplies the prior by $(k+1)/(2p-1-k)$, a cost of about
+$\log\{2p/(k+1)\}$ in log prior odds. For example, with $p=3$ and $n\ge6$ the empty model has prior probability $\tfrac12$,
+each one-predictor model $\tfrac1{10}$, and each larger model $\tfrac1{20}$.
+
+\paragraph{Coefficients and noise variance.} Given $S$ and $\sigma^2$, the coefficients have the ridge-stabilised
+$g$-prior \citep{Zellner1986} with $g=n$, and the variance an inverse-gamma prior:
+\begin{equation}\label{eq:slab}
+  \theta_S\mid S,\sigma^2\sim\Normal\big(0,\;n\sigma^2(G_S+I)^{-1}\big),\qquad \sigma^2\sim\IG(a_0,b_0),\quad a_0=b_0=0.01 .
+\end{equation}
+The factor $g=n$ makes the prior worth about one observation, and the unit ridge keeps it proper when $G_S$ is singular.
+
+\subsection{The posterior, in closed form}\label{sec:posterior}
+
+Integrating $\theta_S$ and $\sigma^2$ out gives the marginal likelihood of each model,
+\begin{equation}\label{eq:marglik}
+  m(S)=C_n\Big(\frac{\det H_S}{\det(G_S+I)}\Big)^{-1/2}(2b_0+\SSq_S)^{-\nu},\quad
+  H_S:=(n+1)G_S+I,\ \ \SSq_S:=y^\top y-n\,z_S^\top H_S^{-1}z_S,
+\end{equation}
+with $\nu:=a_0+n/2$ and $C_n:=(2b_0)^{a_0}\Gamma(a_0+n/2)/\{\pi^{n/2}\Gamma(a_0)\}$ (here $\pi=3.14\ldots$). $\SSq_S$ is a
+shrunken residual sum of squares; the determinant ratio is a penalty for size (an Occam factor), which in a
+well-conditioned model multiplies $m(S)$ by about $(n+1)^{-1/2}$ for each extra predictor. The \emph{log score} of a model
+and the \emph{posterior over models} are
+\begin{equation}\label{eq:posterior}
+  F(S):=\log\{w(\abs{S})/\bar w_K\}+\log m(S),\qquad \pis{S}=\frac{e^{F(S)}}{Z},\qquad Z:=\sum_{S'\in\Om}e^{F(S')} .
+\end{equation}
+The normalising constant $Z$ is the \emph{evidence}. Because $y$ is standardised, the posterior does not change if $\yr$
+is shifted or rescaled. The \emph{inclusion probability} of predictor $j$ is $\PIP_j:=\sum_{S\ni j}\pis{S}$; the
+\emph{highest posterior model} is $\HPM:=\argmax_S\pis{S}$; the \emph{median probability model} is
+$\MPM:=\{j:\PIP_j>1/2\}$ \citep{BarbieriBerger2004}; and the \emph{posterior miss} is $1-\pis{\Sz}$.
+
+\begin{lemma}[The posterior miss controls the summaries]\label{lem:summaries}
+For every data set, $\max_{j\in\set{p}}\abs{\PIP_j-\ind{j\in\Sz}}\le1-\pis{\Sz}$. If $\pis{\Sz}>1/2$, then
+$\HPM=\MPM=\Sz$.
+\end{lemma}
+
+The proof is two lines: every model that misses a true predictor, or contains a null one, differs from $\Sz$.
+
+\subsection{Why sequential Monte Carlo, and why this start law}\label{sec:intuition}
+
+The posterior is known up to one constant, so the difficulty is to find where its mass is in an enormous, rugged model
+space. It is rugged for two reasons: correlated predictors create near-ties between models that swap a true predictor for
+its proxy, and a predictor that is useless once the true ones are in can look useful on its own, because it \emph{leaks}
+part of their signal. Sequential Monte Carlo starts many models (\emph{particles}) from an easy distribution close to the
+target and moves them to the target in small steps, copying the particles the next distribution favours and spreading
+them with Markov moves. The \emph{start law} is that easy distribution: it scores every subset of each block of correlated
+predictors exactly, so it resolves a true predictor against its proxies, and it can be sampled exactly. What it gets wrong
+is leakage across blocks. The local search from its mode undoes that, deleting the spurious predictors one per move; it
+uses no random numbers, so it gives a second route to the true model that does not depend on how well the particles
+mixed.
+
+\begin{example}[Leakage, with six predictors]\label{ex:leak}
+Take $n=100$, true model $\{1,3\}$ with both coefficients $1$, and unit noise. Predictor $2$ is a proxy of $1$
+(correlation $0.93$); $4$ is moderately correlated with $3$ ($0.69$); $5$ is correlated with $1$ ($0.63$); and $6$ is a
+proxy of $5$ ($0.89$). With blocks $\{1,2\}$, $\{3,4\}$, $\{5,6\}$, the five models with the largest posterior mass are:
+
+\smallskip
+\centerline{\small
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+model & $\{1,3,5\}$ & $\{1,3\}$ & $\{1,3,6\}$ & $\{1,3,4\}$ & $\{1,2,3\}$ \\
+\midrule
+start law $\pi_0$ & $\mathbf{0.517}$ & $0.198$ & $0.067$ & $0.012$ & $0.008$ \\
+posterior $\pi(\cdot\mid y)$ & $0.042$ & $\mathbf{0.688}$ & $0.118$ & $0.051$ & $0.037$ \\
+\bottomrule
+\end{tabular}}
+\smallskip
+
+Within its own block, predictor $5$ explains much of $y$ because it carries part of predictor $1$'s signal, and the
+start law cannot see that predictor $1$, in another block, already explains it: predictor $5$ leaks, and the start mode is
+$\{1,3,5\}$. The proxy $2$, in predictor $1$'s own block, is handled correctly. The posterior puts $0.69$ on $\{1,3\}$, and
+the local search from the start mode makes one move, deleting $5$, and certifies $\{1,3\}$. Result~3 proves this picture
+in general: the start mode contains the true model and possibly some members of a small \emph{leakage set} (here
+$\{1,3,5\}$), and the search deletes the spurious ones. (Computed with an independent re-implementation of the coded score,
+start law and search on this data set; with six predictors the software itself would enumerate all $64$ models.)
+\end{example}
+
+\subsection{The algorithm, step by step}\label{sec:algorithm}
+
+A run has seven stages (Figure~\ref{fig:pipeline}). A \emph{step} is one move of the sampler from one temperature to the
+next.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[node distance=5mm, every node/.style={font=\footnotesize},
+  box/.style={draw, rounded corners, align=center, minimum height=10mm, text width=21mm},
+  exact/.style={box, fill=blue!12, line width=0.9pt}, stoch/.style={box, fill=orange!18, dashed, line width=0.9pt},
+  det/.style={box, fill=green!14, double}]
+\node[exact] (pre) {1. standardise;\\ small $\Om$: exact};
+\node[exact, right=of pre] (blk) {2. blocks of\\ $\le B$; tables};
+\node[exact, right=of blk] (start) {3. start law $\pi_0$};
+\node[stoch, right=of start] (cal) {4. calibrate,\\ then freeze};
+\node[stoch, below=12mm of cal] (smc) {5. four islands\\ from $\pi_0$ to $\pi_1$};
+\node[det, left=of smc] (ls) {6. two local\\ searches};
+\node[det, left=of ls] (out) {7. report};
+\draw[-{Stealth}] (pre)--(blk); \draw[-{Stealth}] (blk)--(start); \draw[-{Stealth}] (start)--(cal);
+\draw[-{Stealth}] (cal)--(smc); \draw[-{Stealth}] (smc)--(ls); \draw[-{Stealth}] (ls)--(out);
+\draw[-{Stealth}, dashed, thick] (start.south) -- node[right, pos=0.5]{start mode $\tSz$} (ls.north);
+\draw[-{Stealth}, dotted, thick] (pre.south) |- node[left, pos=0.3]{exact case} (out.west);
+\end{tikzpicture}
+\caption{The stages of a run. Exact computations: solid boxes (1--3). Random: dashed boxes (4--5). Deterministic given
+their inputs: double boxes (6--7). When $\Om$ is small the run goes from stage~1 straight to the report (dotted). The
+second local search starts from the start mode and does not depend on the particles (dashed arrow).}
+\label{fig:pipeline}
+\end{figure}
+
+\paragraph{Stage 1: inputs, the exact case and the check before the run.} The inputs are \emph{valid} when $n\ge3$, at
+least one predictor is given and every entry is finite; the seed is an integer in $[1,2^{31}-1]$. Invalid inputs stop the
+run, and so does a constant response or the removal of every predictor (the run then reports the empty model). With
+$N_0:=\max(2500,n,p)$ and $\Nc_0:=\lceil512N_0/2500\rceil$, if $\abs{\Om}\le(5\Nc_0+4N_0)\,p$ the method scores every model
+and computes everything exactly. Otherwise it estimates the memory and time the run will need (for the sampler, the
+memory and the worst-case time of the local search from the start mode) and stops with status ``resource limit'' if the
+estimate exceeds the allocation (8\,GiB and 24 hours by default).
+
+\paragraph{Stage 2: blocks and block tables.} The method partitions the predictors into blocks $C_1,\dots,C_J$ of at most
+$B:=\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)$ predictors, by complete-linkage clustering on $1-\abs{\hat r_{jl}}$,
+cutting the tree top-down until every cluster fits and packing whole clusters into blocks in leaf order. The partition is a
+deterministic function of $X$, and correlated predictors tend to share a block. Within each block it scores every subset
+$U$ with $\abs{U}\le K$ and stores the \emph{block table} $h_b(U):=m(U)/m(\emptyset)$, with $h_b(\emptyset)=1$; a block has
+at most $2^{16}$ subsets. It also builds a symmetric \emph{neighbour graph} for the swap moves: each predictor is linked to
+up to $B$ predictors with $\abs{\hat r_{jl}}>\sqrt{2\log p/n}$ (at least its most correlated one).
+
+\paragraph{Stage 3: the start law and the start mode.} The start law multiplies the size prior by the block tables,
+\begin{equation}\label{eq:startlaw}
+  \pi_0(S)=\frac{\gamma_0(S)}{\bar Z_0},\qquad \gamma_0(S):=\frac{w(\abs{S})}{\bar w_K}\prod_{b=1}^J h_b(S\cap C_b),\qquad
+  \bar Z_0:=\sum_{S\in\Om}\gamma_0(S):
+\end{equation}
+the posterior one would have if the marginal likelihood, relative to the empty model, split into independent block
+contributions. It sees every interaction within a block and none between blocks. A recursion over model sizes, combining
+the blocks one at a time, computes $\bar Z_0$ exactly and gives an exact sampler for $\pi_0$ (draw the total size, then
+the size of each block backwards, then a subset of each block). The \emph{start mode} $\tSz$ is a maximiser of $\pi_0$,
+computed by the same recursion with maxima: the smallest size among the maximisers, then the lexicographically smallest
+set. The posterior and the start law differ by the \emph{discrepancy}
+$\Delta(S):=\log\{m(S)/m(\emptyset)\}-\sum_b\log h_b(S\cap C_b)$, the part of the log marginal likelihood that comes from
+interactions between blocks: $\gamma_0(S)e^{\Delta(S)}=e^{F(S)}/m(\emptyset)$.
+
+\paragraph{Stages 4 and 5: the sampler.} The sampler moves through the distributions
+\begin{equation}\label{eq:path}
+  \pi_\xi\ \propto\ \gamma_0\,e^{\xi\Delta},\qquad 0\le\xi\le1,
+\end{equation}
+from the start law ($\xi=0$) to the posterior ($\xi=1$), along a grid of temperatures $0=\grid0<\dots<\grid{\Ts}=1$ fixed
+by the calibration. An island of $N$ particles starts from $N$ independent draws from $\pi_0$ and, at each step $t$,
+\emph{reweights} each particle by $\omega^{(t)}_s:=\exp\{(\grid t-\grid{t-1})\Delta(S_s)\}$, \emph{resamples} (multinomially,
+at every step), and \emph{moves} every particle by one round of Markov moves that leave $\pi_{\grid t}$ invariant: an
+inclusion update (Gibbs) for each predictor, one uniform swap, $B$ swaps along the neighbour graph, and one independence
+move that proposes a fresh draw from $\pi_0$. At $\xi=1$ it runs $\Lbi:=\max(4,\lceil\log_2(n+1)\rceil)$ burn-in rounds
+and four measured rounds. The island's inclusion-probability estimate $\PIPhat_{r,j}$ averages, over particles and measured
+rounds, the conditional inclusion probability of the Gibbs update rather than the 0/1 indicator; its evidence estimate is
+$\Zhat_r:=m(\emptyset)\,\bar Z_0\prod_{t=1}^{\Ts}\{N^{-1}\sum_s\omega^{(t)}_s\}$, the exact normaliser of the start law times
+the product of the average reweighting factors.
+
+The \emph{calibration} (stage 4) chooses the grid and the effort before the final run, from one pilot island and a few
+rounds of four short diagnostic islands; the grid refines the pilot's temperatures so that each step keeps a restricted
+effective-sample-size fraction of at least $0.90$. Tier~$1$ multiplies the particles by four, and the calibration moves to
+it at most once, when a diagnostic trigger fires (Appendix~\ref{sec:supp-cal} gives the full
+procedure). Three facts are all that the results use: the calibration's outcome is a function of the data and of its own
+random numbers; it is \emph{frozen} before the final run draws any random number; and it \emph{succeeds} when it freezes a
+grid, by its main construction or a fallback (otherwise the run stops without estimates). The \emph{final run} (stage 5)
+consists of four independent \emph{islands} of $N=4^iN_0$ particles at the frozen tier $i$, on the frozen grid, each with
+its own random stream.
+
+\paragraph{Stage 6: the local searches.} Two models are \emph{neighbours} if one comes from the other by deleting a
+predictor, adding one (while the size is below $K$), or swapping a member for a non-member. A local search scans every
+neighbour of the current model and moves to the best one (ties broken lexicographically) if its log score is strictly
+higher, for at most a capped number of moves. It stops at the first scan with no strict improvement and \emph{certifies}
+its end point; after its last allowed move it scans once more, and if a neighbour still improves it stops there,
+uncertified. Two searches run after the islands: from the best model found so far, with move cap
+$\ell_n:=\lceil\log_2(n+p+1)\rceil$; and from the start mode $\tSz$, with move cap $\ell_n+\abs{\tSz}$.
+
+\subsection{What a run reports}\label{sec:outputs-method}
+
+A run either \emph{produces output}, with status ``exact'' (enumeration) or ``completed'' (sampler; a \emph{completed
+run}), or stops without estimates. A run stopped by its time guard reports status \texttt{resource\_limit} and returns no
+estimates; anything else it returns is flagged incomplete, and the results do not cover it. The method records every model
+it scores; the \emph{reported model} $\Shat$ is the best of them by log score (exact ties to the smaller model, then
+lexicographically). It is \emph{certified} when the method enumerated $\Om$, or when $\Shat$ ends a local search whose last
+scan found no strict improvement. An exact run reports $\Shat$, every $\PIP_j$, the median probability model and $\log Z$.
+A completed run pools its islands with equal weights,
+\begin{equation}\label{eq:pool}
+  \PIPhat_j:=\frac14\sum_{r=1}^4\PIPhat_{r,j},\qquad \Zhat:=\frac14\sum_{r=1}^4\Zhat_r,
+\end{equation}
+and reports $\Shat$, the $\PIPhat_j$, the estimated median probability model $\MPMhat:=\{j:\PIPhat_j>1/2\}$, $\log\Zhat$,
+and a list $\mathcal T$ of at most $40p+1$ models with their log scores, the best among those it scored. Islands are not
+weighted by their evidence estimates. Diagnostics, which never change an output, are listed in
+Appendix~\ref{app:params}.
+
+\subsection{The constants}\label{sec:constants}
+
+Table~\ref{tab:params} lists the constants of the method that the results use or that a reader needs. Appendix~\ref{app:params}
+gives all of them, with their code locations.
+
+\begin{table}[ht]
+\centering\small
+\setlength{\tabcolsep}{4pt}
+\caption{The main constants of the method. Every one is a numerical constant or a function of $(n,p)$; the example
+column uses $n=200$, $p=10^4$.}\label{tab:params}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.34\linewidth}l>{\raggedright\arraybackslash}p{0.3\linewidth}r@{}}
+\toprule
+Constant & Symbol & Value & Example \\
+\midrule
+size cap & $K$ & $\min(p,\lfloor n/2\rfloor)$ & 100 \\
+model prior & $w(k)$ & $\tfrac12/\binom{2p-1}{k}$, renormalised to $\Om$ & \\
+coefficient prior scale; ridge & $g$ & $n$; unit ridge & 200 \\
+inverse-gamma shape and scale & $a_0,b_0$ & $0.01$, $0.01$ & \\
+block size cap & $B$ & $\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)$ & 14 \\
+particles per island (tier $i$) & $N_i$ & $4^i\max(2500,n,p)$ & $10^4$; $4\cdot10^4$ \\
+islands; measured rounds & & $4$; $4$ & \\
+burn-in rounds at $\xi=1$ & $\Lbi$ & $\max(4,\lceil\log_2(n+1)\rceil)$ & 8 \\
+moves per round & & $p$ inclusion updates, $1$ uniform swap, $B$ neighbour swaps, $1$ independence move & 10,016 \\
+calibration grid target & & restricted effective-sample-size fraction $\ge0.90$ & \\
+exact-case threshold & & enumerate if $\abs{\Om}\le(5\Nc_0+4N_0)\,p$ & $5.0\times10^8$ \\
+base move cap & $\ell_n$ & $\lceil\log_2(n+p+1)\rceil$ & 14 \\
+move cap from the start mode & & $\ell_n+\abs{\tSz}$ & \\
+returned list & $\mathcal T$ & best $40p+1$ models by $F$ & 400,001 \\
+pooling of islands & & equal weights & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{What the results use from the method}\label{sec:conventions}
+
+The results of Section~\ref{sec:results} use five objects of a run: the start law and its mode (stage 3), the reported
+model and its certification (stages 6--7), the pooled estimates~\eqref{eq:pool}, the returned list $\mathcal T$, and the
+event $\Acal$ that the method uses the sampler and its calibration succeeds. Every completed run lies in $\Acal$. They also
+use three conventions, which fix what ``the method'' means and idealise the computer; they are not statistical
+assumptions, and Appendix~\ref{app:params} lists them in full.
+\begin{itemize}[leftmargin=1.5em,itemsep=1pt]
+  \item \phantomsection\label{asm:C1}\emph{Convention \as{C1} (the method):} exact arithmetic, the default configuration,
+    valid inputs and seed. A run that meets it is \emph{admissible}; a sample size $n$ is admissible if some data set of
+    that size is valid. Statements hold for every valid seed and every outcome of the calibration.
+  \item \phantomsection\label{asm:C2p}\emph{Convention \as{C2p} (delivery):} an idealised
+    machine that never overflows or fails, ideal random numbers, an allocation no smaller than the method's own polynomial
+    requirement formulas, and the code's two fixed integer limits on the move caps lifted. In the default configuration
+    neither limit can be reached on any input R can represent ($n,\praw\le2^{31}-1$).
+  \item \phantomsection\label{asm:C3}\emph{Convention \as{C3} (sampler):} exact arithmetic, ideal random numbers
+    independent of the data and of the calibration, an exact start sampler, and Markov moves that do what their definitions
+    say.
+\end{itemize}
