@@ -397,3 +397,4 @@
 - 2026-11-16 23:01 CST D99 relayed to the recorder.
 - 2026-11-16 23:01 CST Recorder: A1/A2 SUSPECT can't be state-only (cascade to 25 ACTIVE incl. RM2-R ×5 via Prop-F-FAC → F-UNI → DLV-0). Recommended to HQ: (1) note + ERRATA entry now, NARROW post-freeze. D95 dry run continues with A1/A2 open.
 - 2026-11-16 23:02 CST D100 relayed to the recorder.
+- 2026-11-16 23:17 CST D95 dry run CLEAN (2676e71f): RM2-R ×5 discharge (no flags); P1-Inventory v1.1.1 CORRECTION, L2-S3 v1.0.1 CODE-CHECKED. Form choices to HQ (label CC rule yes; P1S3 relabel yes; Sol carrier with D99 wording; A1/A2 notes D100). Recorder preparing the re-dry.
