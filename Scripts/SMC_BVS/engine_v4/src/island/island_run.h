@@ -583,7 +583,7 @@ class IslandEngine {
         for (int i = 0; i < N; ++i) {
           if (csrc && fail.has) continue;   // compat (serial): stop at the first failure, as core (no further draws)
           int th = omp_get_thread_num();
-          init_particle(i, *tl[th], *scorers[th]);
+          oom_guard([&] { init_particle(i, *tl[th], *scorers[th]); });   // the pi_0 draw and the INIT offer allocate (review PR48 f1)
         }
         throw_if_failed();
         uint64_t hh = 0x243F6A8885A308D3ULL;
@@ -664,6 +664,13 @@ class IslandEngine {
                          pairs > 0 ? 1e9 * (k.t_products - ks_prev.t_products) / pairs : 0.0,
                          pairs > 0 ? 1e9 * (k.t_phaseA - ks_prev.t_phaseA) * NT / pairs : 0.0, k.t_phaseB - ks_prev.t_phaseB, top.t_compact - ks_prev.t_store_compact,
                          (unsigned long long)(top.n_merges - merges_prev), top.t_sort - sort_prev, k.t_check - ks_prev.t_check, k.t_ckpt - ks_prev.t_ckpt);
+            // [arch] (WP3_ARCH_REVIEW §6 / WP6): phases of the round and flip evaluations (the I1 check is on the [round] line, O1)
+            std::fprintf(stderr, "  [arch] step %d: orders %.2f build %.2f phaseA %.2f (products %.2f thread-s) walk %.2f phaseB %.2f compact_pass %.2f apply %.2f"
+                         " | flip evaluations %.4g = %.3f per step\n",
+                         step, k.t_orders - ks_prev.t_orders, k.t_build - ks_prev.t_build, k.t_phaseA - ks_prev.t_phaseA, k.t_products - ks_prev.t_products,
+                         k.t_walk - ks_prev.t_walk, k.t_phaseB - ks_prev.t_phaseB, k.t_compact_pass - ks_prev.t_compact_pass, k.t_apply - ks_prev.t_apply,
+                         (double)(k.flip_evals - ks_prev.flip_evals),
+                         steps > 0 ? (double)(k.flip_evals - ks_prev.flip_evals) / steps : 0.0);
             ks_prev = k; ks_prev.t_store_compact = top.t_compact; merges_prev = top.n_merges; sort_prev = top.t_sort;
           }
           prev_t = now_t;
