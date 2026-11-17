@@ -455,3 +455,4 @@
 - 2026-11-17 13:35 CST D116 relayed to the W3-D5P lead.
 - 2026-11-17 13:41 CST W3-D5P CP3 (21f0111f): R3 Opus 9.4 PASS, bound; LIST-K/CODE/R ACCEPT (LIST-R | IMPL-LIST); record fix patch (correction-only); API card D5P1 → HQ; recording dry run queued with the recorder.
 - 2026-11-17 13:42 CST Slot freed (W3-D5P at CP3). READER editorial batch HELD to bundle with the joint H5 card swap (D115: no reader/card change before AGREE), to avoid two rounds. Track A ER/XR1 editorial waits for the next track A manifest. Leads now: W3-D3, track V, recorder = 3.
+- 2026-11-17 13:42 CST D117 recorded.
