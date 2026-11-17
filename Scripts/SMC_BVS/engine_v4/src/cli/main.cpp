@@ -93,6 +93,7 @@ int main(int argc, char** argv) {
         s["sha256"] = hex(e.sha256, 32); secs.push(s);
       }
       rec["sections"] = secs; rec["verified"] = true;
+      if (args.contains("meta") && rd.has("meta")) rec["meta"] = rd.json("meta");   // --meta 1: the meta section (T5: island meta.cost; WP7 O5)
     } else if (cmd == "setup") rec = setup::run(args);
     else if (cmd == "calibrate") rec = calib::run(args);
     else if (cmd == "island") rec = island::run(args);

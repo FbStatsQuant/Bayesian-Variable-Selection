@@ -108,8 +108,9 @@ class FileIslandSource : public merge::IslandSource {
   merge::IslandHead head(int r) override { return heads_[(size_t)r - 1]; }
   merge::IslandIn load(int r) override;
   const std::vector<merge::IslandHead>& heads() const { return heads_; }
+  void check_calib_isa(const Json& calib_block);   // D-32: an island of another FMA family than calib.bin -> binary_mismatch
  private:
-  std::vector<std::string> paths_; std::vector<merge::IslandHead> heads_; Expect ex_; int Rp_, p_;
+  std::vector<std::string> paths_; std::vector<merge::IslandHead> heads_; std::vector<Json> blocks_; Expect ex_; int Rp_, p_;
 };
 
 // ---- setup view (until WP2's reader lands): the sections the merge needs --------------------------------------------

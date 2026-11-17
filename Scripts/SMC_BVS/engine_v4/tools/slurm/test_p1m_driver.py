@@ -20,6 +20,7 @@ import p1m_cells  # noqa: E402
 import p1m_cost  # noqa: E402
 import p1m_driver  # noqa: E402
 import p1m_manifest  # noqa: E402
+import p1m_stage_cost  # noqa: E402
 
 EXAMPLE = os.path.join(HERE, "examples", "plan_A2_pilot_1e4.json")
 
@@ -261,6 +262,329 @@ class TestLocalChain(Base):
         ends = open(os.path.join(dept, "scratch", "runs", "A2_pilot", "ends.jsonl")).read().splitlines()
         self.assertEqual(len(ends), 1 + 1 + 3 + 1 + 1)
         self.assertEqual(os.listdir(os.path.join(dept, "scratch", "tmp")), [])   # TMPDIR removed on exit
+
+
+class TestPilotBatch(Base):
+    """WP7 O5: plan key "pilot" -> stage_pilot.sbatch + submit_pilot.sh (setup -> pilot only), its own worst case, the
+    pilot binary in build.sh, island_isa in cmake, and calibrate's --cost-dir; the example plans resolve."""
+
+    def plan(self):
+        pl = load_example(); pl["fits"] = pl["fits"][:1]
+        pl["pilot"] = {"cpus": 96, "mem": "64G", "time": "01:00:00"}
+        pl["island_isa"] = "sapphirerapids"
+        return pl
+
+    def test_generate_and_submit(self):
+        fake_dept = os.path.join(self.tmp, "dept")
+        rc, out = self.gen(self.plan())
+        self.assertEqual(rc, 0)
+        P = json.load(open(os.path.join(out, "plan.resolved.json")))
+        self.assertAlmostEqual(P["worst_case_pilot_core_h"], round(8 * (20 / 60) + 96 * 1.0, 1))   # setup 8 x 20 min + pilot
+        build = open(os.path.join(out, "build.sh")).read()
+        self.assertIn("-DV4_ISLAND_ISA=sapphirerapids", build)
+        self.assertIn("make -C \"$B\" -j3 smcbvs4 v4_pilot_island", build)
+        self.assertIn('--cost-dir "$RUN/cost"', open(os.path.join(out, "stage_calibrate.sbatch")).read())
+        pil = open(os.path.join(out, "stage_pilot.sbatch")).read()
+        self.assertIn("#SBATCH --cpus-per-task=96", pil); self.assertIn("#SBATCH --time=01:00:00", pil)
+        self.assertIn('v4_pilot_island" --data "$RUN/data.bin" --setup "$RUN/setup.bin"', pil)
+        sums = open(os.path.join(out, "SHA256SUMS")).read()
+        self.assertIn("stage_pilot.sbatch", sums); self.assertIn("submit_pilot.sh", sums)
+        scr = os.path.join(fake_dept, "scripts", "A2_pilot")
+        shutil.copytree(out, scr)
+        os.makedirs(os.path.join(scr, "bin"))
+        for b in ("smcbvs4", "v4_pilot_island"):
+            with open(os.path.join(scr, "bin", b), "w") as fh:
+                fh.write("#!/bin/sh\nexit 0\n")
+            os.chmod(os.path.join(scr, "bin", b), 0o755)
+        for d in ("scratch/slurm_out", "scratch/tmp"):
+            os.makedirs(os.path.join(fake_dept, d))
+        fbin = os.path.join(self.tmp, "fakebin"); os.makedirs(fbin)
+        calls = os.path.join(self.tmp, "sbatch_calls.txt")
+        with open(os.path.join(fbin, "sbatch"), "w") as fh:
+            fh.write("#!/bin/bash\nn=$(( $(wc -l < %s 2>/dev/null || echo 0) + 2000 ))\necho \"$n $*\" >> %s\necho $n\n" % (calls, calls))
+        os.chmod(os.path.join(fbin, "sbatch"), 0o755)
+        env = dict(os.environ, PATH=os.pathsep.join([fbin, "/usr/bin", "/bin"]), SBATCH=os.path.join(fbin, "sbatch"), P1M_DEPT=fake_dept,
+                   P1M_TEST_ROOT=self.tmp)
+        sp = os.path.join(scr, "submit_pilot.sh")
+        self.assertEqual(subprocess.call(["bash", sp], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL), 64)   # no CONFIRM
+        env["CONFIRM"] = "yes"
+        self.assertEqual(subprocess.call(["bash", sp], env=env, stdout=subprocess.DEVNULL), 0)
+        lines = [l.split() for l in open(calls).read().splitlines()]
+        self.assertEqual(len(lines), 2)   # setup and pilot, nothing else
+        self.assertIn("stage_setup.sbatch", lines[0])
+        self.assertIn("stage_pilot.sbatch", lines[1]); self.assertIn("--dependency=aftercorr:2000", lines[1])
+        os.remove(os.path.join(scr, "bin", "v4_pilot_island"))   # build.sh not run: refused
+        self.assertEqual(subprocess.call(["bash", sp], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL), 66)
+
+    def test_pilot_stage_runs(self):
+        dept = os.path.join(self.tmp, "SMC_Engineering_Department")
+        rc, out = self.gen(self.plan(), dept=dept)
+        scr = os.path.join(dept, "scripts", "A2_pilot")
+        shutil.copytree(out, scr); os.makedirs(os.path.join(scr, "bin"))
+        args_log = os.path.join(self.tmp, "pilot_args.txt")
+        with open(os.path.join(scr, "bin", "v4_pilot_island"), "w") as fh:
+            fh.write("#!/bin/bash\necho \"$*\" > %s\nwhile [[ $# -gt 0 ]]; do [[ $1 == --out ]] && echo '{}' > \"$2\"; shift 2; done\n" % args_log)
+        os.chmod(os.path.join(scr, "bin", "v4_pilot_island"), 0o755)
+        with open(os.path.join(scr, "env.sh"), "w") as fh:
+            fh.write("true\n")
+        for d in ("scratch/slurm_out", "scratch/tmp", "scratch/runs/A2_pilot"):
+            os.makedirs(os.path.join(dept, d))
+        env = dict(os.environ, SLURM_JOB_ID="79", SLURM_CPUS_PER_TASK="2", SLURM_ARRAY_TASK_ID="1")
+        r = subprocess.run(["bash", os.path.join(scr, "stage_pilot.sbatch")], env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        a = open(args_log).read()
+        self.assertIn("--seed 1 ", a)   # the fit's engine seed (example plan: seed 1)
+        self.assertIn("--threads 2", a); self.assertIn("--with-ledger 1", a); self.assertIn("cost_pilot", a)
+
+    def test_example_plans_resolve(self):
+        t5 = p1m_driver.resolve(json.load(open(os.path.join(HERE, "examples", "plan_T5_1e5.json"))))
+        self.assertLessEqual(t5["worst_case_core_h"], t5["core_h_cap"])
+        self.assertEqual(t5["isa_check"], {"island": 1, "against": "x86-64-v3", "time": "00:40:00"})
+        self.assertEqual(t5["island_isa"], "sapphirerapids")
+        pp = p1m_driver.resolve(json.load(open(os.path.join(HERE, "examples", "plan_P7_pilot_1e6.json"))))
+        self.assertEqual(pp["fits"][0]["run_id"], "6-AR-n200-r01-V-s1")
+        self.assertLessEqual(pp["worst_case_pilot_core_h"], 150)
+
+    def test_isa_check(self):   # D-32: SPR constraint everywhere, comparison build, island re-run after the island array, compare
+        pl = self.plan(); pl["isa_check"] = {"island": 1}
+        P = p1m_driver.resolve(pl)
+        base = p1m_driver.resolve(self.plan())
+        r = P["fits"][0]["resources"]["islands"]
+        self.assertAlmostEqual(P["worst_case_core_h"], round(base["worst_case_core_h"] + int(r["cpus"]) * p1m_driver.hours("00:40:00"), 1))   # own limit (PR55 m5)
+        self.assertEqual(P["n_tasks"], base["n_tasks"] + 1)
+        fake_dept = os.path.join(self.tmp, "dept")
+        rc, out = self.gen(pl)
+        self.assertEqual(rc, 0)
+        for fn in os.listdir(out):
+            if fn.endswith(".sbatch"):
+                self.assertIn("#SBATCH --constraint=sapphirerapids", open(os.path.join(out, fn)).read(), fn)
+        build = open(os.path.join(out, "build.sh")).read()
+        self.assertIn("-DV4_ISLAND_ISA=sapphirerapids", build)
+        self.assertIn('cp "$BP/smcbvs4" "$SCR/bin/smcbvs4_isa_check"', build)
+        self.assertIn("-DV4_ISLAND_ISA=x86-64-v3", build.split("BP=$SCR/build_isa_check")[1])   # default comparison: an FMA build
+        self.assertIn('cp "$B/v4_bench_island" "$SCR/bin/v4_bench_island"', build)
+        self.assertIn('cp "$B2/v4_bench_island" "$SCR/bin/v4_bench_island_portable"', build)
+        self.assertNotIn("V4_ISLAND_ISA", build.split("B2=$SCR/build_portable_bench")[1])   # the bit-form check's portable side
+        with self.assertRaises(p1m_driver.PlanError):   # D-32 (3): the class-A comparison stays in the FMA family
+            q = self.plan(); q["isa_check"] = {"island": 1, "against": "portable"}; p1m_driver.resolve(q)
+        isa = open(os.path.join(out, "stage_isa_check.sbatch")).read()
+        self.assertIn("#SBATCH --time=00:40:00", isa)
+        self.assertIn('"$SCR/bin/smcbvs4_isa_check" island', isa); self.assertIn("p1m_stage_cost.py\" isa", isa)
+        self.assertIn('p1m_stage_cost.py" bitform', isa); self.assertIn("bit pm", isa); self.assertIn("v4_bench_island_portable", isa)
+        self.assertTrue(os.path.exists(os.path.join(out, "p1m_stage_cost.py")))
+        scr = os.path.join(fake_dept, "scripts", "A2_pilot")
+        shutil.copytree(out, scr); os.makedirs(os.path.join(scr, "bin"))
+        for b in ("smcbvs4", "smcbvs4_isa_check"):
+            with open(os.path.join(scr, "bin", b), "w") as fh:
+                fh.write("#!/bin/sh\nexit 0\n")
+            os.chmod(os.path.join(scr, "bin", b), 0o755)
+        for d in ("scratch/slurm_out", "scratch/tmp"):
+            os.makedirs(os.path.join(fake_dept, d))
+        fbin = os.path.join(self.tmp, "fakebin"); os.makedirs(fbin)
+        calls = os.path.join(self.tmp, "sbatch_calls.txt")
+        with open(os.path.join(fbin, "sbatch"), "w") as fh:
+            fh.write("#!/bin/bash\nn=$(( $(wc -l < %s 2>/dev/null || echo 0) + 3000 ))\necho \"$n $*\" >> %s\necho $n\n" % (calls, calls))
+        os.chmod(os.path.join(fbin, "sbatch"), 0o755)
+        env = dict(os.environ, PATH=os.pathsep.join([fbin, "/usr/bin", "/bin"]), SBATCH=os.path.join(fbin, "sbatch"), P1M_DEPT=fake_dept,
+                   P1M_TEST_ROOT=self.tmp, CONFIRM="yes")
+        self.assertEqual(subprocess.call(["bash", os.path.join(scr, "submit.sh")], env=env, stdout=subprocess.DEVNULL), 0)
+        lines = [l.split() for l in open(calls).read().splitlines()]
+        st = [next(a for a in l if a.endswith(".sbatch")) for l in lines]
+        self.assertEqual(st, ["stage_setup.sbatch", "stage_calibrate.sbatch", "stage_islands.sbatch", "stage_isa_check.sbatch",
+                              "stage_merge.sbatch", "stage_eval.sbatch"])
+        self.assertIn("--dependency=afterok:3002", lines[3])   # after the island array
+        self.assertIn("--dependency=afterok:3002", lines[4])   # merge does not wait for the check
+        os.remove(os.path.join(scr, "bin", "smcbvs4_isa_check"))
+        self.assertEqual(subprocess.call(["bash", os.path.join(scr, "submit.sh")], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL), 66)
+        with self.assertRaises(p1m_driver.PlanError):   # the comparison build equal to the plan's ISA is vacuous (PR55 m5)
+            q = self.plan(); q["isa_check"] = {"island": 1, "against": "sapphirerapids"}; p1m_driver.resolve(q)
+        with self.assertRaises(p1m_driver.PlanError):   # isa_check without island_isa
+            q = self.plan(); q["island_isa"] = ""; q["isa_check"] = {"island": 1}; p1m_driver.resolve(q)
+        with self.assertRaises(p1m_driver.PlanError):   # island beyond Rp
+            q = self.plan(); q["isa_check"] = {"island": 99}; p1m_driver.resolve(q)
+
+    def test_v_plan_needs_fma_isa(self):   # D-32 (1)
+        for bad in ("", "x86-64-v2", "portable"):
+            q = self.plan(); q["island_isa"] = bad
+            with self.assertRaises(p1m_driver.PlanError):
+                p1m_driver.resolve(q)
+        for ok in ("x86-64-v3", "x86-64-v4", "sapphirerapids"):
+            q = self.plan(); q["island_isa"] = ok
+            self.assertEqual(p1m_driver.resolve(q)["island_isa"], ok)
+        q = self.plan(); q["mode"] = "law"; q["island_isa"] = ""   # theory (bit form) plans are ISA-free
+        for f in q["fits"]:
+            f["mode"] = "law"
+        self.assertEqual(p1m_driver.resolve(q)["island_isa"], "")
+        q = self.plan(); q["mode"] = "law"; q["island_isa"] = ""; q["fits"][0]["mode"] = "V"   # one V fit is enough
+        with self.assertRaises(p1m_driver.PlanError):
+            p1m_driver.resolve(q)
+        # every generated cell plan resolves (the V ones carry island_isa)
+        d = os.path.join(self.tmp, "cells"); os.makedirs(d)
+        with open(os.devnull, "w") as dn:
+            old = sys.stdout; sys.stdout = dn
+            try:
+                p1m_cells.main(["--tsv", os.path.join(d, "c.tsv"), "--plans", d])
+            finally:
+                sys.stdout = old
+        plans = [fn for fn in os.listdir(d) if fn.endswith(".json")]
+        self.assertTrue(plans)
+        for fn in plans:
+            pl = json.load(open(os.path.join(d, fn)))
+            self.assertEqual(pl.get("island_isa", "") != "", pl["mode"] == "V", fn)
+            try:
+                p1m_driver.resolve(pl)
+            except p1m_driver.PlanError as e:   # only the generic limits (tasks, caps), never the ISA rule
+                self.assertNotIn("island_isa", str(e), fn)
+
+    def test_bitform(self):   # D-32 (3): fake benches print an output hash; equal -> exit 0, different -> exit 1
+        mk = []
+        for i, h in enumerate(("0123456789abcdef", "0123456789abcdef", "fedcba9876543210")):
+            b = os.path.join(self.tmp, "bench%d" % i)
+            with open(b, "w") as fh:
+                fh.write("#!/bin/sh\necho \"  logZ -1.0  output hash %s (same across thread counts)\"\n" % h)
+            os.chmod(b, 0o755); mk.append(b)
+        self.assertEqual(p1m_stage_cost.parse_output_hash("x output hash 0123456789abcdef y"), "0123456789abcdef")
+        j = os.path.join(self.tmp, "bf.json")
+        with open(os.devnull, "w") as dn:
+            old = sys.stdout; sys.stdout = dn
+            try:
+                self.assertEqual(p1m_stage_cost.main(["bitform", mk[0], mk[1], "--args", p1m_driver.BITFORM_ARGS, "--json", j]), 0)
+                self.assertTrue(json.load(open(j))["ok"])
+                self.assertEqual(p1m_stage_cost.main(["bitform", mk[0], mk[1], mk[2], "--args", p1m_driver.BITFORM_ARGS]), 1)
+            finally:
+                sys.stdout = old
+
+    def test_compare_isa(self):
+        def info(h, secs, isa):
+            return {"meta": {"output_hash": h, "status": "completed", "binary": {"island_isa": isa}},
+                    "sections": [{"name": "meta", "dtype": 9, "dims": [1], "sha256": isa}] + [{"name": n, "dtype": 1, "dims": [3], "sha256": x} for n, x in secs]}
+        a = info("0x1", [("top_v", "aa"), ("pip_r", "bb")], "sapphirerapids")
+        ok, d = p1m_stage_cost.compare_isa(a, info("0x1", [("top_v", "aa"), ("pip_r", "bb")], "portable"))
+        self.assertTrue(ok); self.assertEqual(d["island_isa"], ["sapphirerapids", "portable"])
+        ok, d = p1m_stage_cost.compare_isa(a, info("0x1", [("top_v", "aa"), ("pip_r", "bX")], "portable"))
+        self.assertFalse(ok); self.assertEqual(d["differing_sections"], ["pip_r"])
+        self.assertFalse(p1m_stage_cost.compare_isa(a, info("0x2", [("top_v", "aa"), ("pip_r", "bb")], "portable"))[0])
+
+    def test_pilot_only_batch(self):   # review PR55 MAJOR: setup + pilot only, the pilot's worst case printed, capped and in the ledger row
+        pl = self.plan(); pl["pilot_only"] = True
+        P = p1m_driver.resolve(pl)
+        want = round(8 * (20 / 60) + 96 * 1.0, 1)
+        self.assertEqual(P["worst_case_core_h"], want); self.assertEqual(P["n_tasks"], 2)
+        out_buf = os.path.join(self.tmp, "stdout.txt")
+        old = sys.stdout
+        with open(out_buf, "w") as fh:
+            sys.stdout = fh
+            try:
+                rc, out = self.gen(pl)
+            finally:
+                sys.stdout = old
+        self.assertEqual(rc, 0)
+        self.assertIn("worst case %.1f billed core-h" % want, open(out_buf).read())
+        files = set(os.listdir(out))
+        self.assertTrue({"stage_setup.sbatch", "stage_pilot.sbatch", "submit_pilot.sh", "build.sh"} <= files)
+        for absent in ("submit.sh", "stage_calibrate.sbatch", "stage_islands.sbatch", "stage_merge.sbatch", "stage_eval.sbatch"):
+            self.assertNotIn(absent, files)
+        self.assertIn("| %.1f |" % want, open(os.path.join(out, "ledger_row.md")).read())
+        for fn in ("stage_setup.sbatch", "stage_pilot.sbatch"):
+            self.assertIn("# Submitted only by submit_pilot.sh", open(os.path.join(out, fn)).read())
+        pl["core_h_cap"] = want   # the cap applies to the pilot figure: equal passes, below refuses
+        p1m_driver.resolve(pl)
+        pl["core_h_cap"] = want - 1
+        with self.assertRaises(p1m_driver.PlanError):
+            p1m_driver.resolve(pl)
+        with self.assertRaises(p1m_driver.PlanError):   # pilot_only without a pilot section
+            q = load_example(); q["pilot_only"] = True; p1m_driver.resolve(q)
+        P7 = p1m_driver.resolve(json.load(open(os.path.join(HERE, "examples", "plan_P7_pilot_1e6.json"))))
+        self.assertTrue(P7["pilot_only"]); self.assertEqual(P7["worst_case_core_h"], 144.0); self.assertEqual(P7["core_h_cap"], 144)
+
+    def test_pilot_memory(self):   # WP3 11-17: default 128G; sized from a calibrate --plan-only record; refused above 240G
+        pl = self.plan(); del pl["pilot"]["mem"]
+        self.assertEqual(p1m_driver.resolve(pl)["pilot"]["mem"], "128G")
+        rec = os.path.join(self.tmp, "plan.json")
+        json.dump({"island_plan": {"total": 54.5 * 2 ** 30, "setup_inputs": 0}}, open(rec, "w"))
+        pl = self.plan(); pl["pilot"]["mem_from_plan"] = {"record": rec, "setup_inputs_gb": 14}
+        P = p1m_driver.resolve(pl)
+        need = (54.5 * 2 ** 30 + 14e9) * 1.15 / 0.9 / 2 ** 30
+        self.assertEqual(P["pilot"]["mem"], "%dG" % (int((need + 7.999) // 8) * 8))
+        json.dump({"island_plan": {"total": 70 * 2 ** 30, "setup_inputs": 9e9}}, open(rec, "w"))   # real setup: no allowance
+        self.assertEqual(p1m_driver.resolve(pl)["pilot"]["mem_basis"]["setup_inputs_added"], 0.0)
+        json.dump({"island_plan": {"total": 200 * 2 ** 30, "setup_inputs": 9e9}}, open(rec, "w"))
+        with self.assertRaises(p1m_driver.PlanError):
+            p1m_driver.resolve(pl)
+        json.dump({"mem_plan": {"total": 1}}, open(rec, "w"))   # an older record without the island plan
+        with self.assertRaises(p1m_driver.PlanError):
+            p1m_driver.resolve(pl)
+
+    def test_bad_pilot(self):
+        for bad in ({"cpus": 96, "mem": "128G", "time": "01:00:00", "mem_from_plan": {"record": "/nonexistent"}}, {"cpus": 500, "mem": "64G", "time": "01:00:00"}, {"cpus": 96, "mem": "64G", "time": "03:00:00"}):
+            pl = self.plan(); pl["pilot"] = bad
+            with self.assertRaises(p1m_driver.PlanError):
+                p1m_driver.resolve(pl)
+        pl = self.plan(); pl["island_isa"] = "x; rm -rf /"
+        with self.assertRaises(p1m_driver.PlanError):
+            p1m_driver.resolve(pl)
+
+
+class TestStageCost(Base):
+    """WP7 O5: p1m_stage_cost.py reads D-30 cost records (JSON-lines with resumed segments; meta.cost columns) and sums
+    them per stage kind; the T5 report collects a run directory."""
+
+    def rows(self, seg, steps):
+        out = []
+        for st in steps:
+            kind = 0 if st == 0 else (1 if st <= 3 else (2 if st == 4 else 3))
+            out.append({"step": st, "kind": kind, "segment": seg, "phi": [0, .1, .5, 1, 1, 1][st], "wall": 1.0 + st, "particle_rounds": 0 if st == 0 else 10,
+                        "sweeps": 0 if st == 0 else 40, "passes": 4, "act_cols": 40, "flips": 0 if st == 0 else 2000, "offers": 100 * st, "merges": 1,
+                        "t_compact": .5, "t_check": 0.0, "t_ckpt": .1, "t_phaseA": .5, "t_phaseB": .1, "mean_S": 3.0 + st, "hwm_kb": 1048576 * st,
+                        "M": 4.0, "flips_per_step": 2.0, "act_cols_per_pass": 10.0, "store_mean_k": 4.0})
+        return out
+
+    def test_segments_summary_and_t5(self):
+        hdr = {"schema": "smcbvs4.cost/1", "m": 100, "threads": 2, "N": 10, "p": 98}
+        p = os.path.join(self.tmp, "c.jsonl")
+        with open(p, "w") as fh:   # segment 0 ran steps 0-3 (checkpoint after 2), segment 1 resumed at 3
+            fh.write(json.dumps({"cost_header": dict(hdr, segment=0)}) + "\n")
+            for r in self.rows(0, [0, 1, 2, 3]):
+                fh.write(json.dumps(r) + "\n")
+            fh.write(json.dumps({"cost_header": dict(hdr, segment=1)}) + "\n")
+            for r in self.rows(1, [3, 4, 5]):
+                fh.write(json.dumps(r) + "\n")
+        with open(p, "a") as fh:   # the exit row (kind 4), with a field the kernel does not measure ("NaN")
+            fh.write(json.dumps(dict(self.rows(1, [5])[0], step=6, kind=4, phi="NaN", particle_rounds=0, sweeps="NaN", wall=0.5)) + "\n")
+        (h, rows), = p1m_stage_cost.load(p)
+        self.assertEqual([r["step"] for r in rows], [0, 1, 2, 3, 4, 5, 6])
+        self.assertTrue(rows[6]["sweeps"] != rows[6]["sweeps"])   # "NaN" -> float nan
+        self.assertEqual(rows[3]["segment"], 1)   # the resumed segment's row wins
+        s = p1m_stage_cost.summary(h, rows)
+        self.assertEqual(s["bridge"]["steps"], 3)
+        self.assertAlmostEqual(s["bridge"]["M"], 4.0)
+        self.assertAlmostEqual(s["bridge"]["flips_per_step"], 2.0)   # 6000 flips / (30 rounds x m 100)
+        self.assertAlmostEqual(s["bridge"]["ns_cpu_per_step"], 1e9 * (2 + 3 + 4) * 2 / (30 * 100))
+        self.assertEqual(s["total"]["segments"], 2)
+        self.assertEqual(s["exit"]["steps"], 1); self.assertAlmostEqual(s["total"]["wall_s"], sum(1.0 + st for st in range(6)) + 0.5)
+        # meta.cost columns (island_r.bin via `smcbvs4 info --meta 1`)
+        cols = {}
+        for r in rows:
+            for k, v in r.items():
+                cols.setdefault(k, []).append(v)
+        j = os.path.join(self.tmp, "isl.json")
+        json.dump({"meta": {"cost": dict(hdr, rows=len(rows), columns=cols)}}, open(j, "w"))
+        (h2, rows2), = p1m_stage_cost.load(j)
+        self.assertEqual(json.dumps(rows2, sort_keys=True), json.dumps(rows, sort_keys=True))   # NaN != NaN: compare text
+        # T5 report of a run directory: calibration records + stage records (no island files here)
+        rd = os.path.join(self.tmp, "run"); os.makedirs(os.path.join(rd, "cost"))
+        shutil.copy(p, os.path.join(rd, "cost", "cost_pilot_t0_k0_r0.jsonl"))
+        json.dump({"status": "completed", "timings": {"tail_local_seconds": 3.0, "ls0_seconds": 4.0}}, open(os.path.join(rd, "fit.bin.json"), "w"))
+        out = os.path.join(self.tmp, "t5.json")
+        with open(os.devnull, "w") as dn:
+            old = sys.stdout; sys.stdout = dn
+            try:
+                p1m_stage_cost.main(["t5", rd, "--json", out])
+            finally:
+                sys.stdout = old
+        rep = json.load(open(out))
+        self.assertEqual(rep["stages"]["fit"]["timings"]["ls0_seconds"], 4.0)
+        self.assertIn("cost_pilot_t0_k0_r0.jsonl", rep["calibration"])
 
 
 class TestPrepOutcome(TestLocalChain):
