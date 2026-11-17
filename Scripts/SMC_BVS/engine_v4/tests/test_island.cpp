@@ -1044,6 +1044,7 @@ TEST(calibrate_command_end_to_end) {
       S.ttop.offer(F, U, D.zob.hash(U)); S.tlead0.offer(lg0, U, D.zob.hash(U)); S.tlead1.offer(F, U, D.zob.hash(U));
     }
   }
+  S.code_ptr.push_back((int64_t)S.logr.size());   // J + 1 entries; code_ptr[J] = |logr| (INTERFACES v0.1.18 §2/§5)
   S.ttop.compact(); S.tlead0.compact(); S.tlead1.compact();
   S.mode_S = Model(S.ttop.model(0).begin(), S.ttop.model(0).end());
   S.size_logmass = st.size_logmass;   // the pi_0 size law: calibrate's memory plan needs it (INTERFACES §7; review PR46 MAJOR-1)
@@ -1114,6 +1115,7 @@ TEST(calibrate_admission_before_allocation) {
     const double F = D.logprior[U.size()] + (U.empty() ? 0.0 : -1.0);
     S.ttop.offer(F, U, D.zob.hash(U)); S.tlead0.offer(F, U, D.zob.hash(U)); S.tlead1.offer(F, U, D.zob.hash(U));
   }
+  S.code_ptr.push_back((int64_t)S.logr.size());   // J + 1 entries; code_ptr[J] = |logr| (INTERFACES v0.1.18 §2/§5)
   S.ttop.compact(); S.tlead0.compact(); S.tlead1.compact();
   S.mode_S = Model{0};
   S.size_logmass.assign((size_t)D.K + 1, -std::numeric_limits<double>::infinity()); S.size_logmass[0] = S.size_logmass[1] = std::log(0.5);

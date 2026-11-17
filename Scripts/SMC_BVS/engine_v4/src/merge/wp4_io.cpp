@@ -65,16 +65,22 @@ std::vector<Model> models_checked(const int64_t* ptr, uint64_t np, const int32_t
 }  // namespace
 
 // ---------------------------------------------------------------------------------------------------- generic sections
-void add_store(fmt::Writer& W, Json& meta, const std::string& prefix, const Store& s) {
+void add_store_sections(fmt::Writer& W, const std::string& prefix, const Store& s) {
   if (s.staging() != 0) throw Error(Status::internal_error, "add_store: store " + prefix + " is not compacted");
   W.add(prefix + "_v", s.v); W.add(prefix + "_off", s.off); W.add(prefix + "_len", s.len);
   W.add(prefix + "_hash", s.hash); W.add(prefix + "_pool", s.pool);
+}
+void add_store(fmt::Writer& W, Json& meta, const std::string& prefix, const Store& s) {
+  add_store_sections(W, prefix, s);
   Json d = Json::object(); d["cap"] = u64_json(s.cap); d["order"] = s.ord == Order::HPM ? "HPM" : "LEX"; d["size"] = u64_json(s.size());
   meta["stores"][prefix] = d;
 }
 void read_store(const fmt::Reader& R, const Json& meta, const std::string& prefix, Store& s, int32_t p, int32_t K, const Zobrist* zob) {
   const Json& d = meta.at("stores").at(prefix);
-  s.init(u64_of(d.at("cap")), d.at("order").str() == "HPM" ? Order::HPM : Order::LEX);
+  read_store_sections(R, prefix, u64_of(d.at("cap")), d.at("order").str() == "HPM" ? Order::HPM : Order::LEX, s, p, K, zob);
+}
+void read_store_sections(const fmt::Reader& R, const std::string& prefix, uint64_t cap, Order order, Store& s, int32_t p, int32_t K, const Zobrist* zob) {
+  s.init(cap, order);
   uint64_t n = 0, no = 0, nl = 0, nh = 0, np = 0;
   const double* v = R.get<double>(prefix + "_v", &n);
   const uint64_t* off = R.get<uint64_t>(prefix + "_off", &no);
@@ -595,13 +601,18 @@ SetupView read_setup(const std::string& path, int32_t p, int32_t K, const Zobris
   // members[blk_ptr[b] + pos[j]] = j; each block's table fits in logr; logr finite for every code with |U| <= K
   const std::string w = path + ": ";
   if (s.blk.size() != (size_t)p || s.pos.size() != (size_t)p || s.blk_members.size() != (size_t)p) throw Error(Status::invalid_input, w + "blk / pos / blk_members length != p");
-  const size_t J = s.code_ptr.size();
-  if (s.blk_ptr.size() != J + 1 || s.blk_ptr[0] != 0 || s.blk_ptr[J] != p) throw Error(Status::invalid_input, w + "blk_ptr shape");
+  // INTERFACES v0.1.18 §2/§5: J blocks; blk_ptr and code_ptr both have J + 1 entries (CSR); code_ptr[0] = 0, block b's
+  // table is logr[code_ptr[b] .. code_ptr[b + 1]) = 2^m codes, code_ptr[J] = |logr|
+  if (s.blk_ptr.empty() || s.code_ptr.size() != s.blk_ptr.size()) throw Error(Status::invalid_input, w + "code_ptr must have J + 1 entries like blk_ptr");
+  const size_t J = s.blk_ptr.size() - 1;
+  if (J == 0 || s.blk_ptr[0] != 0 || s.blk_ptr[J] != p) throw Error(Status::invalid_input, w + "blk_ptr shape");
+  if (s.code_ptr[0] != 0 || s.code_ptr[J] != (int64_t)s.logr.size()) throw Error(Status::invalid_input, w + "code_ptr[0] != 0 or code_ptr[J] != |logr|");
   for (size_t b = 0; b < J; ++b) {
     const int64_t m = s.blk_ptr[b + 1] - s.blk_ptr[b];
     if (m < 1 || m > 20) throw Error(Status::invalid_input, w + "block size outside 1..20");
     const int64_t c0 = s.code_ptr[b];
     if (c0 < 0 || (uint64_t)c0 > s.logr.size() || (uint64_t)(1ull << m) > s.logr.size() - (uint64_t)c0) throw Error(Status::invalid_input, w + "code_ptr / logr out of range");
+    if (s.code_ptr[b + 1] - c0 != (int64_t)(1ull << m)) throw Error(Status::invalid_input, w + "code_ptr: block table length != 2^m");
     for (uint32_t c = 0; c < (1u << m); ++c) if (__builtin_popcount(c) <= K && !std::isfinite(s.logr[(size_t)c0 + c])) throw Error(Status::invalid_input, w + "logr not finite for a code with |U| <= K");
   }
   for (int32_t j = 0; j < p; ++j) {
@@ -612,22 +623,26 @@ SetupView read_setup(const std::string& path, int32_t p, int32_t K, const Zobris
   }
   check_model(s.mode_S, p, K, w + "mode_S");
   if (R.has("size_logmass")) { uint64_t c = 0; const double* q = R.get<double>("size_logmass", &c); s.size_logmass = checked_size_logmass(q, c, K, w); }
-  read_store(R, meta, "tstore_top", s.ttop, p, K, zob);
-  if (R.has("tstore_lead0_v")) read_store(R, meta, "tstore_lead0", s.tlead0, p, K, zob);
-  if (R.has("tstore_lead1_v")) read_store(R, meta, "tstore_lead1", s.tlead1, p, K, zob);
+  // table stores: caps and orders from INTERFACES §4.1 (top 40p + 1 HPM, lead0 / lead1 20p LEX); setup.bin carries no
+  // meta.stores (v0.1.18), the tstore_* sections are all there is. A stray meta.stores is ignored.
+  read_store_sections(R, "tstore_top", 40ull * (uint64_t)p + 1, Order::HPM, s.ttop, p, K, zob);
+  if (R.has("tstore_lead0_v")) read_store_sections(R, "tstore_lead0", 20ull * (uint64_t)p, Order::LEX, s.tlead0, p, K, zob);
+  if (R.has("tstore_lead1_v")) read_store_sections(R, "tstore_lead1", 20ull * (uint64_t)p, Order::LEX, s.tlead1, p, K, zob);
   for (const Store* st : {&s.ttop, &s.tlead0, &s.tlead1})   // table models lie within one block
     for (size_t i = 0; i < st->size(); ++i) { ModelView v = st->model(i); s.table_event_of(Model(v.begin(), v.end())); }
   return s;
 }
 std::string write_setup_min(const std::string& path, const SetupView& s, const Json& inputs) {
+  if (s.code_ptr.empty() || s.code_ptr.size() != s.blk_ptr.size() || s.code_ptr.back() != (int64_t)s.logr.size())
+    throw Error(Status::internal_error, "write_setup_min: code_ptr must have J + 1 entries with code_ptr[J] = |logr| (INTERFACES v0.1.18)");
   fmt::Writer W(fmt::K_SETUP, fmt::M_COMPAT);
   Json meta = Json::object();
   W.add("blk", s.blk); W.add("pos", s.pos); W.add("code_ptr", s.code_ptr); W.add("logr", s.logr);
   W.add("blk_ptr", s.blk_ptr); W.add("blk_members", s.blk_members); W.add("mode_S", s.mode_S);
   if (!s.size_logmass.empty()) W.add("size_logmass", s.size_logmass);
-  add_store(W, meta, "tstore_top", s.ttop);
-  if (s.tlead0.cap) add_store(W, meta, "tstore_lead0", s.tlead0);
-  if (s.tlead1.cap) add_store(W, meta, "tstore_lead1", s.tlead1);
+  add_store_sections(W, "tstore_top", s.ttop);   // no meta.stores in setup.bin (INTERFACES v0.1.18)
+  if (s.tlead0.cap) add_store_sections(W, "tstore_lead0", s.tlead0);
+  if (s.tlead1.cap) add_store_sections(W, "tstore_lead1", s.tlead1);
   meta["inputs"] = inputs; meta["binary"] = binary_block(); meta["writer"] = "wp4 write_setup_min (test/harness; WP2 owns setup.bin)";
   W.add_json("meta", meta);
   return W.write(path);

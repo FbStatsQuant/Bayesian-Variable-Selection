@@ -6,6 +6,7 @@
 #include <cmath>
 #include <functional>
 #include <limits>
+#include <map>
 #include <random>
 #include "tk.h"
 #include "tutil.h"
@@ -81,6 +82,7 @@ Fx make_fx(const std::string& tag, int R, uint32_t mode = fmt::M_COMPAT) {
       S.ttop.offer(F, U, f.D.zob.hash(U)); S.tlead0.offer(lg0, U, f.D.zob.hash(U)); S.tlead1.offer(F, U, f.D.zob.hash(U));
     }
   }
+  S.code_ptr.push_back((int64_t)S.logr.size());   // J + 1 entries; code_ptr[J] = |logr| (INTERFACES v0.1.18 §2/§5)
   S.ttop.compact(); S.tlead0.compact(); S.tlead1.compact();
   S.mode_S = Model(S.ttop.model(0).begin(), S.ttop.model(0).end());
   // pi_0 size law (setup.bin size_logmass; calibrate's plan k, review PR37 N-2): P(0) .5, P(1) .3, P(12) .15, P(13) .05
@@ -428,6 +430,94 @@ TEST(wp4_io_plan_readers) {
       else refused([&] { wp4io::read_data_plan(bad); }, "data meta altered");
     }
   }
+}
+
+// INTERFACES v0.1.18 (manager decision, review PR46 / WP3's finding): setup.bin carries no meta.stores (the table
+// stores' caps and orders come from §4.1), and code_ptr has J + 1 entries like blk_ptr, code_ptr[J] = |logr|.
+// A copy of a setup.bin with some sections replaced and `meta` rebuilt by `meta_fn` (content hashes are rewritten).
+static std::string setup_rewrite(const std::string& in, const std::string& tag, const std::function<void(Json&)>& meta_fn,
+                                 const std::map<std::string, std::vector<int64_t>>& i64_repl = {}) {
+  fmt::Reader R(in); fmt::Writer W(fmt::K_SETUP, R.mode());
+  for (const auto& e : R.sections()) {
+    const std::string nm(e.name);
+    if (e.dtype == fmt::D_JSON) { Json m = R.json(nm); if (nm == "meta") meta_fn(m); W.add_json(nm, m); continue; }
+    auto it = i64_repl.find(nm);
+    if (it != i64_repl.end()) { W.add(nm, it->second); continue; }
+    const void* q = e.dtype == fmt::D_F64 ? (const void*)R.get<double>(nm) : e.dtype == fmt::D_I32 ? (const void*)R.get<int32_t>(nm)
+                  : e.dtype == fmt::D_U32 ? (const void*)R.get<uint32_t>(nm) : e.dtype == fmt::D_I64 ? (const void*)R.get<int64_t>(nm)
+                  : e.dtype == fmt::D_U64 ? (const void*)R.get<uint64_t>(nm) : e.dtype == fmt::D_U16 ? (const void*)R.get<uint16_t>(nm)
+                  : (const void*)R.get<uint8_t>(nm);
+    W.add_copy(nm, e.dtype, q, e.length, e.dims[0], e.dims[1]);
+  }
+  const std::string out = tmp_path(tag + ".bin"); W.write(out); return out;
+}
+static bool setup_refused(const std::string& path, const Data& D, const char* what_contains) {
+  try { wp4io::read_setup(path, D.p, D.K, &D.zob); }
+  catch (const Error& e) { const bool ok = e.st == Status::invalid_input && std::string(e.what()).find(what_contains) != std::string::npos;
+                           if (!ok) std::printf("    expected '%s', got: %s\n", what_contains, e.what());
+                           return ok; }
+  std::printf("    '%s': not refused\n", what_contains); return false;
+}
+TEST(wp4_io_setup_contract_v0118) {
+  TmpGuard tmp_guard("sc18"); Fx f = make_fx("sc18", 1, fmt::M_V);
+  {  // our own writer: no meta.stores; J + 1 code_ptr; reads back
+    fmt::Reader R(f.spath); const Json m = R.json("meta");
+    CHECK(!m.contains("stores"));
+    const wp4io::SetupView S = wp4io::read_setup(f.spath, f.D.p, f.D.K, &f.D.zob);
+    CHECK(S.code_ptr.size() == S.blk_ptr.size() && S.code_ptr.back() == (int64_t)S.logr.size() && S.code_ptr.size() == f.S.code_ptr.size());
+    CHECK(S.ttop.cap == 40ull * f.D.p + 1 && S.ttop.ord == Order::HPM && S.tlead0.cap == 20ull * f.D.p && S.tlead0.ord == Order::LEX && S.tlead1.ord == Order::LEX);
+    CHECK(S.ttop.size() == f.S.ttop.size() && S.ttop.v == f.S.ttop.v && S.tlead0.v == f.S.tlead0.v && S.tlead1.v == f.S.tlead1.v);
+  }
+  {  // a stray meta.stores is ignored (the contract fixes cap and order)
+    const std::string path = setup_rewrite(f.spath, "sc18_stray", [](Json& m) { Json d = Json::object(); d["cap"] = 3.0; d["order"] = "LEX"; d["size"] = 1.0;
+                                                                                 m["stores"] = Json::object(); m["stores"]["tstore_top"] = d; });
+    const wp4io::SetupView S = wp4io::read_setup(path, f.D.p, f.D.K, &f.D.zob);
+    CHECK(S.ttop.cap == 40ull * f.D.p + 1 && S.ttop.v == f.S.ttop.v);
+  }
+  {  // code_ptr in the old shape (J entries), a wrong end marker, a block table of the wrong length: refused
+    const std::vector<int64_t> good = f.S.code_ptr;
+    std::vector<int64_t> j_entries(good.begin(), good.end() - 1);
+    CHECK(setup_refused(setup_rewrite(f.spath, "sc18_j", [](Json&) {}, {{"code_ptr", j_entries}}), f.D, "J + 1 entries"));
+    std::vector<int64_t> bad_end = good; bad_end.back() += 1;
+    CHECK(setup_refused(setup_rewrite(f.spath, "sc18_end", [](Json&) {}, {{"code_ptr", bad_end}}), f.D, "code_ptr[J] != |logr|"));
+    std::vector<int64_t> bad_mid = good; bad_mid[1] += 1;
+    CHECK(setup_refused(setup_rewrite(f.spath, "sc18_mid", [](Json&) {}, {{"code_ptr", bad_mid}}), f.D, "block table length"));
+    std::vector<int64_t> bad_start = good; bad_start[0] = 1;
+    CHECK(setup_refused(setup_rewrite(f.spath, "sc18_start", [](Json&) {}, {{"code_ptr", bad_start}}), f.D, "code_ptr[0] != 0"));
+  }
+  {  // the writer refuses the old shape
+    wp4io::SetupView S2 = f.S; S2.code_ptr.pop_back();
+    bool threw = false;
+    try { wp4io::write_setup_min(tmp_path("sc18_w.bin"), S2, Json::object()); } catch (const Error& e) { threw = e.st == Status::internal_error; }
+    CHECK(threw);
+  }
+}
+
+// A setup.bin written by WP2's real `setup` command (branch exp/P1M-wp2-setup at 9d8f9c25, p = 14, n = 40; data.bin from
+// `gen` + `prep`; the fixtures are copies of those two files): read_setup, the plan reader, `calibrate --plan-only`.
+TEST(wp4_io_reads_wp2_setup_bin) {
+  const std::string dir = std::string(V4_FIXTURE_DIR) + "/wp2_setup/", dpath = dir + "p14_data.bin", spath = dir + "p14_setup.bin";
+  std::string dhash; Data D = prep::load_data(dpath, &dhash);
+  CHECK(D.p == 14 && D.n == 40);
+  const wp4io::SetupView S = wp4io::read_setup(spath, D.p, D.K, &D.zob);
+  const size_t J = S.blk_ptr.size() - 1;
+  CHECK(J == 5 && S.code_ptr.size() == J + 1 && S.code_ptr.back() == (int64_t)S.logr.size() && S.code_ptr[0] == 0);
+  CHECK(S.ttop.cap == 40ull * D.p + 1 && S.ttop.size() == 32 && S.tlead0.size() == 32 && S.tlead1.size() == 32);
+  CHECK(S.size_logmass.size() == (size_t)D.K + 1 && !S.mode_S.empty() && S.data_hash == dhash);
+  CHECK(S.ttop.check_invariants() && S.tlead0.check_invariants() && S.tlead1.check_invariants());
+  const wp4io::SetupPlanHead sh = wp4io::read_setup_plan(spath, D.K);
+  CHECK(sh.size_logmass == S.size_logmass && sh.content_hash == S.content_hash && sh.data_hash == dhash);
+  {  // without WP2's meta.stores descriptors (the contract has none): the same stores
+    TmpGuard tmp_guard("wp2fx");
+    const std::string path = setup_rewrite(spath, "wp2fx_nostores", [](Json& m) { m = [&] { Json o = Json::object(); for (const auto& kv : m.items()) if (kv.first != "stores") o[kv.first] = kv.second; return o; }(); });
+    { fmt::Reader R(path); CHECK(!R.json("meta").contains("stores")); }
+    const wp4io::SetupView S2 = wp4io::read_setup(path, D.p, D.K, &D.zob);
+    CHECK(S2.ttop.v == S.ttop.v && S2.ttop.pool == S.ttop.pool && S2.tlead0.v == S.tlead0.v && S2.tlead1.v == S.tlead1.v && S2.logr.size() == S.logr.size());
+  }
+  // the command's admission path reads it (plan only)
+  Json a = Json::object(); a["data"] = dpath; a["setup"] = spath; a["mode"] = "V"; a["plan_only"] = 1;
+  Json r = calib::run(a);
+  CHECK(r.at("status").str() == "completed" && r.at("mem_plan").at("kbar").num() >= 8.0);
 }
 
 TEST(wp4_io_calib_plan_from_setup) {

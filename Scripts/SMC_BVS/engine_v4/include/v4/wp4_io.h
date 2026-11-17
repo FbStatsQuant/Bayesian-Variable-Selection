@@ -19,9 +19,13 @@ namespace v4::wp4io {
 // A store as <prefix>_v f64, _off u64, _len u16, _hash u64, _pool i32 (INTERFACES §4.1 flat layout; entries sorted).
 // The store must be compacted and stay alive until Writer::write returns. Its cap and order go to meta["stores"].
 void add_store(fmt::Writer& W, Json& meta, const std::string& prefix, const Store& s);
+void add_store_sections(fmt::Writer& W, const std::string& prefix, const Store& s);   // the five sections only (setup.bin: no meta.stores)
 // Rebuilds a Store from the sections (offer + compact; checks I1). Throws Error(invalid_input) on a malformed store.
 void read_store(const fmt::Reader& R, const Json& meta, const std::string& prefix, Store& s, int32_t p, int32_t K,
                 const Zobrist* zob = nullptr /* hashes checked against the models when given */);
+// The same with the store's cap and order given (setup.bin: from INTERFACES §4.1, no meta.stores).
+void read_store_sections(const fmt::Reader& R, const std::string& prefix, uint64_t cap, Order order, Store& s, int32_t p, int32_t K,
+                         const Zobrist* zob = nullptr);
 // Content checks (review PR20 M-2): a model is strictly increasing, in [0, p), of size <= K; else Error(invalid_input).
 void check_model(ModelView S, int32_t p, int32_t K, const std::string& what);
 // A list of models as <prefix>_ptr i64 (n + 1) and <prefix>_idx i32 (copied).

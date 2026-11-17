@@ -1,6 +1,6 @@
 # INTERFACES — engine v4 contract between WP1–WP5
 
-**v0.1.13 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-15. Source: ENGINEERING_SPEC §0-v2,
+**v0.1.18 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-15. Source: ENGINEERING_SPEC §0-v2,
 §1–§3, §6. Where this file is silent, the spec rules; where the spec is silent, `core/` (v3.1 / revision D) rules.
 Questions and change requests: to the WP1 owner through the manager. Line references `core/...:N` are to revision D.
 
@@ -83,7 +83,9 @@ struct Data {                                                 // read-only after
   std::vector<int32_t> blk, pos; }` — block b = `members[bptr[b]..bptr[b+1])`, sorted, packing order; `blk[j], pos[j]`
   as `core/cpp/v3_start.h:38`. Plus the duplicate components and the cut-group record (CSR each).
 - **Tables** (WP2): `struct Tables { std::vector<int64_t> code_ptr; std::vector<double> logr; ... }` — block b's
-  `logr` for codes `0..2^{m_b}−1` at `logr[code_ptr[b] + code]`, NaN where |U| > K; code bit i ↔ i-th member
+  `logr` for codes `0..2^{m_b}−1` at `logr[code_ptr[b] + code]`, NaN where |U| > K. **`code_ptr` has J + 1 entries, like
+  `blk_ptr` and `nb_ptr` (CSR): `code_ptr[0] = 0`, `code_ptr[b+1] − code_ptr[b] = 2^{m_b}`, `code_ptr[J] = |logr|`
+  (v0.1.18).** Code bit i ↔ i-th member
   (`core/cpp/v3_start.h:76-98`). `logprof`, `logF` ((J+1)×(K+1) row-major), `size_logmass`, `size_cum`, `cond_cum`:
   flat arrays + offsets, same values as `core/cpp/v3_start.h:101-157`. **`codes_by_size` and `sub_cum` are not stored
   (D-18)**: they are recomputed on demand for each block a π₀ draw selects, with the same values and bits —
@@ -309,8 +311,11 @@ Sections (names fixed; WPs may add sections, never rename):
 - `data.bin` (prep): `Xs_cm`, `ys`, `z`, `diagG`, `col_max`, `col_mean`, `col_sd`, `kept` i32 (1-based), `dropped`
   i32, `meta` {n, p_raw, p, K, yty, logCn, logm0, logWK, y_max, y_mean, y_sd_scaled, prep_class: "B"|"A"}, `logw`, `logprior`.
 - `setup.bin` (WP2): `nb_ptr` i64, `nb_idx` i32, `dup_ptr/dup_idx`, `cut_ptr/cut_idx`, `blk_ptr/blk_members`, `blk`,
-  `pos`, `code_ptr`, `logr`, `logprof_ptr/logprof`, `logF`, `size_logmass`, `size_cum`, `cond_ptr/cond_cum`,
-  `mode_S`, table top stores `tstore_{top,lead0,lead1}_{v,off,len,hash,pool}`, `meta`.
+  `pos`, `code_ptr` (J + 1 entries, `code_ptr[J] = |logr|`), `logr`, `logprof_ptr/logprof`, `logF`, `size_logmass`,
+  `size_cum`, `cond_ptr/cond_cum`, `mode_S`, table top stores `tstore_{top,lead0,lead1}_{v,off,len,hash,pool}`, `meta`.
+  **`setup.bin` carries no `meta.stores`** (v0.1.18): the table stores' caps and orders are §4.1's (top 40p + 1 in HPM
+  order, lead0 and lead1 20p in LEX order); a reader derives them and ignores any `meta.stores` it finds. (`calib.bin`,
+  `island_r.bin` and `fit.bin` do carry `meta.stores`, as written by `add_store`.)
 - `calib.bin` (WP4): `grid`, `meta` {tier, N, L, Hm, I_used, flags, triggers, **`k_store`** (the calibration top
   store's mean |S|; the k of §7's admission rule)}, `grids_all_ptr/grids_all`, stage
   records, calibration stores (as stores), HPM (`hpm_S`, `hpm_ev`), `logical` u64 N_PHASE×N_MECH.
@@ -499,3 +504,9 @@ point, so all WPs link from day one: `setup::run`, `island::run`, `calib::run`, 
 - v0.1.13 (2026-11-16, WP1; WP4 PR #37, WP3_ARCH_REVIEW R7) — §5.1: `calib.bin` `meta.k_store` (calibration top store
   mean |S|), cross-referenced from §7 admission. §4.1: class-A values are path-dependent maxima; every store keeps one
   entry per model with its best value (the reference `Store` now de-duplicates by model; deterministic, T3-invariant).
+- v0.1.18 (2026-11-16, WP4; manager decision 11-16 on PR #46, WP3's finding that `read_setup` could not read WP2's real
+  setup.bin) — §2 Tables / §5.1 `setup.bin`: `code_ptr` has **J + 1 entries** like `blk_ptr` / `nb_ptr`, with
+  `code_ptr[0] = 0`, `code_ptr[b+1] − code_ptr[b] = 2^{m_b}` and `code_ptr[J] = |logr|`; `setup.bin` carries **no
+  `meta.stores`**, the table stores' caps and orders being those of §4.1. WP4's `read_setup` / `write_setup_min` adapt
+  (WP2's writer already conforms); WP3's `load_start` accepts the J + 1 form. (v0.1.14–v0.1.17 are in PRs #45, O2 and
+  O6; this line is numbered after them.)
