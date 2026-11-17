@@ -433,3 +433,4 @@
 - 2026-11-17 12:55 CST A1/A2 NARROW dry-run findings → HQ: V1 (true NARROW; A5 fails for 6 rows until Sol rule-(b) verdicts; XR2r needed) vs V2 (dated corrigendum; no cascade); recommended V2 + Opus re-check + XR2r first. Recorder → tool items meanwhile.
 - 2026-11-17 12:55 CST D110 relayed to the recorder.
 - 2026-11-17 12:57 CST Track A_W DONE (a32f90e5): ISL/FRZ bound (Sol 9.4 W-R1, Opus 9.3 R2 d4f64540); discharge package → recorder (after XR2r); HQ: edge retarget + (𝒜°, 𝓒°) erratum calls; API card ready. Track A lead free.
+- 2026-11-17 12:57 CST Slot freed (track A lead done) → #3 lead launched (Opus, worktree /home/fb31/BVS-wt/W3-D3 @ 029bb748; PLAN stage first, stop if the W3-DIST bridge reuse fails; kill 3 d). Leads: W3-D2, W3-D5P, W3-D3, recorder = 4; audit Fable idle.
