@@ -14,3 +14,12 @@
   rows only — negative. Text extractions in the session scratchpad (not committed).
 - 13:06 — PLAN.md v0.2: anchors NH14 Lemma 6.1 (primary), SL Condition 1 (implied by (SG)); RZ see-also; residual
   judgement (general correlation) stated. Reuse verdict unchanged (no failing step). Awaiting GO.
+- 13:08 — Manager GO (plan v0.2 accepted; o1/o2 OFF; class-1 anchoring per point 5, verbatim with pages, in STATEMENT/REPORT).
+  Base main 029bb748; consumed files unchanged at origin/main 968f19d1 (only HQ_DECISIONS.md differs).
+  STATEMENT v1.0 (Thm2SG, B3w, ExSG), TARGET written. SL Condition 1 quoted from refs/Song_Liang_2015.pdf (p. 953).
+- 13:08 — Agent started: Sol (codex, gpt-6.1-sol, reasoningEffort high), fresh, blind — role: L1 statement lock;
+  brief reviews/L1_brief.md (saved before launch); reply → reviews/L1_statement_lock_sol.md. Codex jobs running: 1.
+- 13:14 — lemmas/B3w.md (copy of W3-DIST B3 with window w_n; [R-1]..[R-10]) and lemmas/ASSEMBLY.md (Thm2SG, ExSG)
+  written. numerics: N1_window.py → N1_out.txt (1966 cases, 0 violations; max (s0+m#)/W = 0.226; n1 ~ 1e9–1e11, explicit
+  constants, not optimised); N2_subgauss_rows.py (venv-numerics Py 3.11) → N2_out.txt (Gaussian/Rademacher/uniform AR(0.5)
+  rows, p = 10: delta*sqrt(n/log n) ≈ 1.1–1.6, HPM=MPM=S0 freq 0.89 → 1.00).
