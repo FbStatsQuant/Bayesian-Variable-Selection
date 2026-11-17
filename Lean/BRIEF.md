@@ -88,3 +88,16 @@ or with a WEAKER that HQ accepts as stated.
 - Reviewers: codex (Sol) for the fidelity checks only. That is the key check, so it stays on Codex under pacing level 1.
 - `Lean/LOG.md` heartbeat with real local time. Read `Theory_work/Wave3/HOLDS.md` at each phase start.
 - Protocol: `Theory_work/Wave3/PROTOCOL_v4.md`, where it applies (DEPS-style trace in CERTIFICATES.md; restore points).
+
+## December plan: Level 2 for Thm 1 (true model) and Thm 9 (distribution) (owner, 11-17)
+- **Level 2**, with two safeguards:
+  1. an **axiom audit**: each named axiom is stated exactly with its source (paper/theorem/equation), and Codex checks that our Lean axiom says the same thing as the published result;
+  2. **discharge cheap axioms**: when one is short to prove in Lean, prove it instead of assuming it.
+- Level 3 is out of scope.
+- **Staffing (owner: tokens are the constraint, not time). One theorem at a time, serial.**
+  - **Opus lead, in bursts only:** the formal statement, the blueprint (lemma decomposition with exact Lean signatures), the axiom list; and escalations when Sonnet fails twice on a step.
+  - **Sonnet worker, one at a time:** fills in lemma proofs against the blueprint, tactic search, compile-error fixing. This is the bulk of the work (≈ 70–80% of tokens).
+  - **Haiku:** lake builds, `#print axioms`, CERTIFICATES/LOG updates, mechanical renames.
+  - **Codex (Sol), gates only:** the statement-fidelity check and the axiom audit (≈ 2–4 calls per theorem).
+  - **Fable:** none, unless a step is genuinely stuck and HQ OKs it.
+- Reuse first: next week's deterministic pieces and one shared axiom file (Gaussian/χ² facts) serve both theorems. Keep compiler output to errors only; use the shared Mathlib cache.
