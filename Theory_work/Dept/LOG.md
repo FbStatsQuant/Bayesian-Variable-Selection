@@ -426,3 +426,4 @@
 - 2026-11-17 12:38 CST Precedent notes DONE (Sonnet 8a8528b6): 7 assumptions + B3 line; 22/22 citations VERIFIED (arXiv); Opus check applied; 6 rewritten comparison sentences → second Opus re-check running (native agent). Slot freed → #5′ lead launched (Opus, worktree /home/fb31/BVS-wt/W3-D5P @ 029bb748; kill 3 d). Leads: track A, W3-D2, recorder, W3-D5P = 4.
 - 2026-11-17 12:38 CST W3-D2: X2 estimate Tier B ~2–3 h + Sol, but C-MIS:GDb/Prop-P remain conditions → recommended keeping X2 off the list; HQ's call. Line check running.
 - 2026-11-17 12:39 CST HQ: X2 stays off the closed list (confirmed). W3-D2 proceeds: line check → council → CP3.
+- 2026-11-17 12:40 CST Precedent notes FINAL: Opus re-check of comparison sentences (3 OK, 5 fixed as proposed), applied; Writing copy + README updated.
