@@ -2414,6 +2414,83 @@ try:
                         "claim's identity is unchanged" + ("" if not bad_flags else f" [FAILED: {', '.join(bad_flags)}]"),
                         not bad_flags))
 
+        # ---------------- manifest.py (HQ 2026-11; Opus review): only per-directory .gitignore counts (a tracked file stays covered, global excludes are
+        # not read), freeze skips git-ignored untracked files and refuses an all-ignored ticket / listed directory, a listed ignored file
+        # still verifies and an unlisted one is not ADDED; registry / decision-log external inputs WARN (any spelling, on freeze and verify)
+        MGR = os.path.join(TMP, "mg_repo")
+        for _d in ("tk/out", "tk/reviews", "Theory_work/INFRA/registry", "data/num", "gen/tk2"):
+            os.makedirs(os.path.join(MGR, _d), exist_ok=True)
+        _gi = subprocess.run(["git", "init", "-q", MGR], capture_output=True)
+        _env = dict(os.environ, GIT_CONFIG_NOSYSTEM="1", GIT_CONFIG_GLOBAL=os.devnull, HOME=TMP)
+
+        def mg(rel, text):
+            with open(os.path.join(MGR, rel), "w", encoding="utf-8", newline="\n") as fh:
+                fh.write(text)
+
+        def mrun(*args, env=None):
+            return subprocess.run([sys.executable, MANP, *args], capture_output=True, text=True, cwd=MGR, env=env or _env)
+        mg(".gitignore", "tk/out/\ntk/ign.txt\ndata/num/\ngen/\n*.rds\n"); mg("tk/a.md", "a\n"); mg("tk/ign.txt", "i\n"); mg("tk/out/c.txt", "c\n")
+        mg("tk/tracked.rds", "t\n"); mg("data/num/n1.csv", "n\n"); mg("gen/tk2/a.md", "g\n"); mg("ext.md", "e\n")
+        mg("Theory_work/INFRA/registry/claims.tsv", "r\n"); mg("Theory_work/INFRA/DECISIONS.md", "d\n")
+        mg("L_ok.txt", "ext.md\n"); mg("L_dir.txt", "Theory_work\n"); mg("L_ign.txt", "data/num\n")
+        mg("L_live.txt", "./Theory_work/INFRA/DECISIONS.md\nTheory_work//INFRA/registry/claims.tsv\nTheory_work/INFRA/../INFRA/registry/claims.tsv\next.md\n")
+        ok_git = _gi.returncode == 0 and subprocess.run(["git", "-C", MGR, "add", "-f", "tk/tracked.rds"], capture_output=True, env=_env).returncode == 0
+        f_ok = mrun("freeze", "tk", "tk/reviews/M_ok.txt", "--extra", "L_ok.txt")
+        m_ok = open(os.path.join(MGR, "tk", "reviews", "M_ok.txt"), encoding="utf-8").read() if os.path.exists(os.path.join(MGR, "tk", "reviews", "M_ok.txt")) else ""
+        f_live = mrun("freeze", "tk", "tk/reviews/M_live.txt", "--extra", "L_live.txt")
+        f_dir = mrun("freeze", "tk", "tk/reviews/M_dir.txt", "--extra", "L_dir.txt")
+        v_dir = mrun("verify", "tk", "tk/reviews/M_dir.txt")
+        v_live = mrun("verify", "tk", "tk/reviews/M_live.txt")
+        f_ign = mrun("freeze", "tk", "tk/reviews/M_ign.txt", "--extra", "L_ign.txt")          # a listed directory that is entirely ignored
+        f_tk2 = mrun("freeze", "gen/tk2", "gen/tk2/M.txt")                                       # a ticket folder that is entirely ignored
+        # an untracked file that the USER's global excludes would hide is still covered (only .gitignore counts)
+        _gx = os.path.join(TMP, "mg_global_excludes"); open(_gx, "w", encoding="utf-8").write("*.md\n")
+        _gcfg = os.path.join(TMP, "mg_global_cfg"); open(_gcfg, "w", encoding="utf-8").write(f"[core]\n\texcludesFile = {_gx}\n")
+        mg("tk/notes.md", "untracked, hidden by the user's global excludes\n")
+        f_glob = mrun("freeze", "tk", "tk/reviews/M_glob.txt", "--extra", "L_ok.txt", env=dict(_env, GIT_CONFIG_GLOBAL=_gcfg))
+        m_glob = open(os.path.join(MGR, "tk", "reviews", "M_glob.txt"), encoding="utf-8").read() if os.path.exists(os.path.join(MGR, "tk", "reviews", "M_glob.txt")) else ""
+        os.remove(os.path.join(MGR, "tk", "notes.md"))
+        # an older manifest that hashed an ignored file: still verifies; CHANGED when it changes; an unlisted ignored file is not ADDED
+        _spec = importlib.util.spec_from_file_location("manifest_t", MANP); _M = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_M)
+        _rows = [f"{_M.sha(p)}  {n}" for p, n in _M.ticket_files(os.path.join(MGR, "tk"), False)]
+        with open(os.path.join(MGR, "tk", "reviews", "M_old.txt"), "w", encoding="utf-8", newline="\n") as fh:
+            fh.write(f"MANIFEST {_M.digest(_rows)}\n" + "\n".join(_rows) + "\n")
+        v_old = mrun("verify", "tk", "tk/reviews/M_old.txt")
+        mg("tk/out/new_ignored.txt", "n\n"); v_ok2 = mrun("verify", "tk", "tk/reviews/M_ok.txt")      # an unlisted ignored file: not ADDED
+        mg("tk/ign.txt", "i changed\n")
+        v_old2 = mrun("verify", "tk", "tk/reviews/M_old.txt"); v_ok3 = mrun("verify", "tk", "tk/reviews/M_ok.txt")
+        mg("tk/b.md", "an unignored new file\n"); v_ok4 = mrun("verify", "tk", "tk/reviews/M_ok.txt")   # ADDED
+        # a listed directory with one ignored and one unignored file: NOTE, and only the unignored one is frozen; the whole repo (".") and an
+        # absolute spelling of the decision log also WARN
+        mg("data/README", "r\n"); mg("L_part.txt", "data\n"); mg("L_all.txt", ".\n"); mg("L_abs.txt", os.path.join(MGR, "Theory_work", "INFRA", "DECISIONS.md") + "\n")
+        f_part = mrun("freeze", "tk", "tk/reviews/M_part.txt", "--extra", "L_part.txt")
+        m_part = open(os.path.join(MGR, "tk", "reviews", "M_part.txt"), encoding="utf-8").read() if os.path.exists(os.path.join(MGR, "tk", "reviews", "M_part.txt")) else ""
+        f_all = mrun("freeze", "tk", "M_all.txt", "--extra", "L_all.txt"); f_abs = mrun("freeze", "tk", "M_abs.txt", "--extra", "L_abs.txt")
+        # a git failure (not a work tree) excludes nothing: the old behaviour
+        import tempfile
+        _plain = tempfile.mkdtemp(prefix="mg_plain_"); os.makedirs(os.path.join(_plain, "tk"), exist_ok=True)   # outside any work tree (the sandbox is one)
+        open(os.path.join(_plain, "tk", "a.md"), "w").write("a\n"); open(os.path.join(_plain, "tk", "ign.txt"), "w").write("i\n")
+        open(os.path.join(_plain, ".gitignore"), "w").write("tk/ign.txt\n")
+        f_plain = subprocess.run([sys.executable, MANP, "freeze", "tk", "tk/M.txt"], capture_output=True, text=True, cwd=_plain, env=_env)   # no repo: exit 1
+        plain_lib = _M.ignored_paths(os.path.join(_plain, "tk")) == set() and {n for _, n in _M.ticket_files(os.path.join(_plain, "tk"))} == {"a.md", "ign.txt"}
+        shutil.rmtree(_plain, ignore_errors=True)
+        results.append(("manifest.py: only per-directory .gitignore counts (a tracked file matching a pattern stays covered; the user's global excludes "
+                        "are not read); freeze skips git-ignored untracked files and says how many, and REFUSES an all-ignored ticket folder or listed "
+                        "directory; an older manifest that listed an ignored file still verifies (CHANGED when it changes), an unlisted ignored file is "
+                        "not ADDED, an unignored one is; registry / decision-log external inputs WARN once per listed input in any spelling (./, //, "
+                        "..), also for a listed directory and on verify, exit code unchanged; an ordinary input does not; outside a work tree nothing is excluded (the library path; the CLI needs a repository)",
+                        ok_git and f_ok.returncode == 0 and "ign.txt" not in m_ok and "out/c.txt" not in m_ok and "tracked.rds" in m_ok
+                        and "NOTE: 2 git-ignored" in f_ok.stderr and "WARNING" not in f_ok.stderr
+                        and f_live.returncode == 0 and f_live.stderr.count("WARNING") == 3 and f_dir.returncode == 0 and f_dir.stderr.count("WARNING") == 1
+                        and v_dir.returncode == 0 and v_dir.stderr.count("WARNING") == 1 and v_live.returncode == 0 and v_live.stderr.count("WARNING") == 3
+                        and f_ign.returncode == 1 and "git-ignored" in f_ign.stderr and f_tk2.returncode == 1 and "empty manifest" in f_tk2.stderr
+                        and f_glob.returncode == 0 and "notes.md" in m_glob
+                        and v_old.returncode == 0 and v_ok2.returncode == 0 and v_old2.returncode == 1 and "CHANGED ign.txt" in v_old2.stdout
+                        and v_ok3.returncode == 0 and v_ok4.returncode == 1 and "ADDED b.md" in v_ok4.stdout
+                        and f_part.returncode == 0 and "NOTE: 1 git-ignored" in f_part.stderr and "EXT:data/README" in m_part and "n1.csv" not in m_part
+                        and f_all.returncode == 0 and f_all.stderr.count("WARNING") == 1 and f_abs.returncode == 0 and f_abs.stderr.count("WARNING") == 1
+                        and f_plain.returncode == 1 and "not inside a git repository" in f_plain.stderr and plain_lib))
+
 finally:
     SB.__exit__(None, None, None)
 for name, ok in results:
