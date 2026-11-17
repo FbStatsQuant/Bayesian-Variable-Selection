@@ -4,14 +4,15 @@
 The data are $n$ observations of a response and $p$ predictors, with $p$ possibly much larger than $n$; the response
 follows a sparse Gaussian linear model. The method is a sequential Monte Carlo sampler for the posterior over models
 under a fixed prior, followed by a local search; nothing in it is tuned by the user. We prove five results. Table~\ref{tab:results}
-lists them; Sections~\ref{sec:model-result}--\ref{sec:estimates} state them, one section each, in the same format: what
-the result says in words, why it matters, the statement, and its assumptions with the place in Section~A where each one is judged.
+lists them; Sections~\ref{sec:model-result}--\ref{sec:estimates} state them in the same format, with Result~5, a remark on
+the rate of Result~1, in Section~\ref{sec:sharp}: what
+the result says in words, why it matters, the statement, and its assumptions with the place in the assumptions section where each one is judged.
 
 \begin{table}[ht]
 \centering\footnotesize
 \setlength{\tabcolsep}{3.5pt}
 \renewcommand{\arraystretch}{1.12}
-\caption{The five results. ``Checked'' means independently checked; statuses are those of the project's registry.}\label{tab:results}
+\caption{The five results. Statuses are those of the project's registry; every check is independent of the author.}\label{tab:results}
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.17\linewidth}>{\raggedright\arraybackslash}p{0.3\linewidth}>{\raggedright\arraybackslash}p{0.26\linewidth}>{\raggedright\arraybackslash}p{0.2\linewidth}@{}}
 \toprule
 Result & In words & Key assumptions & Status \\
@@ -19,26 +20,29 @@ Result & In words & Key assumptions & Status \\
 1.~The posterior finds the true model (Thms~\ref{thm:post-random}, \ref{thm:post-fixed}) &
 The posterior mass outside the true model is of order $\rn$; the highest posterior and median probability models equal
 the true model with probability tending to one. &
-Gaussian linear model; $p\le n^A$; a fixed number of fixed nonzero coefficients; an eigenvalue floor on small sets of
-predictors. &
-Proved and checked; one bound in the fixed-design case rests on two supporting results not yet checked. \\
+Gaussian linear model; $p\le n^A$; a fixed number of fixed nonzero coefficients (for a fixed design, a beta-min
+condition instead); an eigenvalue floor on sets of $O(\log n)$ predictors. &
+In probability: proved and independently verified (two passes); random-design transfer: proved and checked;
+fixed-design expectation bound: rests on two supporting results not yet checked. \\
 2.~It finds the true distribution (Thm~\ref{thm:dist}) &
 The posterior contracts around the true conditional law of the response, at radius of order $\rn$ in the Hellinger distance. &
-i.i.d.\ observations; sparse Gaussian linear model; light-tailed predictors; no near-exact collinearity; no lower bound on
-the coefficients. &
+i.i.d.\ observations; sparse Gaussian linear model; light-tailed predictors; no near-exact collinearity; no predictor with an unbounded
+signal; no lower bound on the coefficients. &
 Proved and checked. \\
 3.~The method, as coded, reports the true model (Thm~\ref{thm:reported}) &
 With probability tending to one, every run that produces output reports exactly the true model, whatever its seed. &
-Gaussian rows; fixed signals; no true predictor masked by $15$ others; the predictors that can imitate the signal are few,
+Gaussian rows; fixed signals; every true predictor visible (its signal does not cancel against any $15$ others); the predictors that can imitate the signal are few,
 and local. &
 Proved and checked; a revision of the statement is pending. \\
 4.~The run's estimates (Prop.~\ref{prop:unbiased}, Thm~\ref{thm:outputs}) &
 The evidence estimate is unbiased on every design. On designs without leakage the printed inclusion probabilities,
 median model and evidence estimate are consistent. &
-Unbiasedness: none on the design. Consistency: as Result~3, and no null predictor correlated with a true one. &
+Unbiasedness: none on the design. Consistency: Gaussian rows, fixed signals, visibility, and no null predictor
+correlated with a true one beyond order $n^{-1/2}$, even given $15$ others. &
 Per island, proved and checked; the pooled form is not yet checked. Consistency: proved and checked. \\
 5.~The rate cannot be improved (Rem.~\ref{rem:sharp}) &
-No design gives a rate faster than $n^{-1/2}$; on two families of designs the rate $\rn$ is attained. &
+No design gives a rate faster than $n^{-1/2}$; on two families of designs the posterior miss is at least of order
+$\rn$, and on orthogonal designs of exactly that order. &
 None for the first part; orthogonal or Gaussian null predictors for the second. &
 Proved and checked. \\
 \bottomrule
@@ -46,10 +50,11 @@ Proved and checked. \\
 \end{table}
 
 \paragraph{What ``asymptotic'' means.} The results are statements as $n\to\infty$, with $p$ allowed to grow polynomially
-in $n$ and to exceed $n$. The constants in the proofs are explicit where they are displayed and conservative; they are
-not part of any assumption we judge. One lower bound, Remark~\ref{rem:sharp}(a), holds at every $n\ge3$. At moderate $n$ and
+in $n$ and to exceed $n$. The explicit constants of the proofs are conservative; the
+assumptions section judges the qualitative conditions, not the constants. One lower bound, Remark~\ref{rem:sharp}(a), holds at every $n\ge3$. At moderate $n$ and
 large $p$ the posterior is not close to a point mass (Remark~\ref{rem:sharp}(c)); the theorems describe the limit.
 
-\paragraph{What is not covered.} The parallel engine and runs with many islands are not covered by any theorem here; the
+\paragraph{What is not covered.} Parallel execution, and runs with more than the four independent sampler copies (the islands of
+Section~\ref{sec:method}), are not covered by any theorem here; the
 supplement (Section~\ref{sec:supp}) lists the further results we have, each with the reason it matters, and the open
 questions.

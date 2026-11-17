@@ -7,13 +7,14 @@ determined by the data alone and of probability tending to one, on which every r
 the true model, whatever its seed and the outcome of its calibration. The start mode contains every true predictor and
 possibly some members of $Q$; the local search from the start mode removes the spurious ones, one per move.}
 
-\why{It is a guarantee about what the software prints, at the budget it actually uses and for every seed, not only
+\why{It is a guarantee about what the software prints, at the effort its own calibration chooses and for every seed, not only
 about the posterior it targets.}
 
 \paragraph{How the signal looks to a block-by-block method.} The start law sees interactions within blocks of at most
 $16$ predictors only, so the conditions of this section are about partial covariances given at most $15$ other
 predictors. With $W\sim\Normal_p(0,\Sig)$, $\Cov(W_j,W_l\mid W_U)$ is the partial covariance given $(W_k)_{k\in U}$, and
-$\bar\beta_{U,l}:=\Sigma_{n,UU}^{-1}\Sigma_{n,Ul}$ is the population regression coefficient of $W_l$ on $W_U$. A
+$\bar\beta_{U,l}:=\Sigma_{n,UU}^{-1}\Sigma_{n,Ul}$ is the population regression coefficient of $W_l$ on $W_U$, padded
+with zeros to a vector indexed by a larger set when needed. A
 \emph{leakage set} is a deterministic $Q$ with $\Sz\subseteq Q\subseteq\set{p}$ that contains every predictor able to
 imitate part of the signal; its \emph{lattice} $\Lat(Q):=\{T:\Sz\subseteq T\subseteq Q\}$ is the set of models between the
 true model and $Q$. The signal is fixed on the scale the method sees:
@@ -90,14 +91,12 @@ revision of this statement, from a strengthening that has passed its review, is 
 and stated in the next revision. Registry: Appendix~\ref{app:status}, row 3.1.}
 
 \begin{remark}[On the assumptions]\label{rem:reported}
-(i) Under \as{C2} the delivery clause holds on the bounded domain $\Dom$; in practice $\Dom$ contains every feasible
-$(n,\praw)$ (Appendix~\ref{app:conventions}).
-(ii) On $\mathcal G_n$ the local search from the start mode only deletes the spurious members of the start mode, one per
-move, and certifies $\Sz$.
-(iii) \emph{Why $b<\tfrac12$.} At model size about $\sqrt n$ the prior-plus-Occam penalty of one more predictor
-($\approx\log p+\tfrac12\log n$) stops dominating the best of $p$ noise gains ($\approx\log p$).
-(iv) Designs that satisfy the assumptions include correlation that is local in a metric and bounded blocks; of our
-designs, the independent and locally correlated ones are inside (\SA{3.3}). They fail for pervasive common factors when
+(i) \emph{Why $b<\tfrac12$.} At model size about $\sqrt n$ the prior-plus-Occam penalty of one more predictor
+($\approx\log p+\tfrac12\log n$) stops dominating the best of $p$ noise gains ($\approx\log p$); for larger $b$ the key events of the argument are
+expected to fail (a heuristic; whether the conclusion fails is open).
+(ii) Designs that satisfy the assumptions include correlation that is local in a metric and bounded blocks; of our
+designs, the independent and locally correlated ones are inside (\SA{3.3}). The assumptions fail for pervasive common factors when
 $p\gg\sqrt n$, because every null predictor then imitates part of the signal. There Results~1 and~2 and the
-unbiasedness of Result~4 still hold, and certified screening (Theorem~\ref{thm:screen}) can still apply.
+unbiasedness of Result~4 still hold, and certified screening (Theorem~\ref{thm:screen}), which has no leakage
+condition, covers these designs when its own conditions hold.
 \end{remark}

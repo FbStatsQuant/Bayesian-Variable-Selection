@@ -1,13 +1,15 @@
 % =====================================================================================================
-\section{Result 4: unbiased evidence on every design; consistent estimates without leakage}\label{sec:estimates}
+\section{Result 4: the run's estimates}\label{sec:estimates}
 
 \inwords{The method prints an evidence estimate, pooled inclusion probabilities and the median probability model they
-define. Given the calibration, the evidence estimate is unbiased, on every design. If, in addition, the conditions of
-Result~3 hold with no leakage at all (no null predictor correlated with a true one), the printed estimates are
-consistent: their errors are of order $n^{-1/2}e^{C\sqrt{\log n}}$ on the event that the calibration succeeds.}
+define. Given the calibration, the evidence estimate is unbiased, on every design. If, in addition, the rows are Gaussian, the signals fixed, every true predictor visible, and no
+null predictor correlated with a true one beyond order $n^{-1/2}$, even given $15$ others, the printed estimates are
+consistent: their errors are of order $n^{-1/2}e^{C_\rho\sqrt{\log n}}=n^{-1/2+o(1)}$ on the event that the method uses
+the sampler and its calibration succeeds.}
 
 \why{The numbers a user reads come with guarantees: the evidence estimate is right on average whatever the design, and
-on designs without leakage every printed summary converges to the truth.}
+on designs without leakage it converges to the exact evidence, the inclusion probabilities to $0$ or $1$, and the median
+and reported models to the true model.}
 
 \subsection{Unbiased evidence, on every design}\label{sec:unbiased}
 
@@ -22,7 +24,8 @@ design and data set.
 
 This is the classical unbiasedness of sequential Monte Carlo estimates of normalising constants \citep{DelMoral2004},
 established for the method as coded, calibration included: the calibration is frozen before the final run draws its
-random numbers. By linearity the equal-weight pooled estimate $\Zhat=\frac14\sum_r\Zhat_r$ is then unbiased too.
+random numbers. By linearity the equal-weight pooled estimate is then unbiased too: on $\Acal$,
+$\E[\Zhat\mid\text{calibration}]=Z$.
 
 \status{Pooled form: \textbf{proved (a two-line argument), not yet independently checked}. Registry:
 Appendix~\ref{app:status}, row 3.5.}
@@ -31,7 +34,7 @@ Appendix~\ref{app:status}, row 3.5.}
 
 \paragraph{Scope.} The next theorem needs \as{NL} below: no null predictor leaks signal. Of our designs only the
 independent ones (S1 and IND) satisfy it. On our block and AR designs Result~3 and Proposition~\ref{prop:unbiased} hold,
-and no theorem yet covers the printed inclusion probabilities, median model and evidence estimate; on the factor designs
+and no theorem yet covers the consistency of the printed inclusion probabilities, median model and evidence estimate; on the factor designs
 only Results~1--2 and Proposition~\ref{prop:unbiased} hold (\SA{3.4}).
 
 \begin{assumption}{NL}{No leakage, as seen by the start law}
@@ -43,10 +46,10 @@ $\abs{\Cov(W_j,W_v\mid W_{U_0})}\le r^\circ_n$ for every $v\in U\setminus\Hl_l$ 
 $r^\circ_n(n\log n)^{1/4}\to0$. \hfill [\SA{3.4}]
 \end{assumption}
 
-The theorem concerns runs that use the sampler; enumeration is not covered. Let $\Acal$ be the event that the method uses
-the sampler and its calibration succeeds; every completed sampler run lies in $\Acal$. On $\Acal$, $\Zhat$, $\PIPhat$ and
-$\MPMhat$ denote the pooled values the four islands would produce if the run were not interrupted; on completed runs they
-are the printed values. Let $\rho_n:=n^{-1/2}e^{C_3\sqrt{\log n}}$, with $C_3$ depending only on the fixed quantities of the
+The theorem concerns runs that use the sampler; enumeration is not covered. Every completed run lies in the event
+$\Acal$ of Section~\ref{sec:method}. On $\Acal$, $\Zhat$, $\PIPhat$ and
+$\MPMhat$ denote the pooled values the four islands would produce if the run did not stop; on completed runs they
+are the printed values. Let $\rho_n:=n^{-1/2}e^{C_\rho\sqrt{\log n}}$, with $C_\rho$ depending only on the fixed quantities of the
 assumptions.
 
 \begin{theorem}[The printed estimates are consistent]\label{thm:outputs}
@@ -70,7 +73,7 @@ and~\eqref{eq:outputs-rate} also holds for the printed values multiplied by the 
 (i) No lower bound on $\P(\Acal)$ is asserted: the statements are about intersections with $\Acal$ or with completion, not
 conditional on them.
 (ii) The rate $\rho_n$ is the start law's rate; it is slower than the posterior rate $\rn$, by the factor
-$e^{C_3\sqrt{\log n}}/\sqrt{\log n}$.
+$e^{C_\rho\sqrt{\log n}}/\sqrt{\log n}$.
 (iii) Pooling cannot make things worse: the pooled inclusion probabilities are never farther from the exact ones, in the
 largest coordinate, than those of the worst island (proved and independently checked; registry row 4.1).
 \end{remark}

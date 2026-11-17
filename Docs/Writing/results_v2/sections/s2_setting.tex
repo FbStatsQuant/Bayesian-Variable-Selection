@@ -5,9 +5,11 @@ This section fixes the data, the model, the posterior and the few objects of the
 The methodology section describes the method in full; Appendix~\ref{app:notation} lists the symbols.
 
 \paragraph{Notation.} $\set{k}:=\{1,\dots,k\}$; $\norm{\cdot}$ is the Euclidean norm; $\lmin(\cdot)$ is the smallest
-eigenvalue of a symmetric matrix; $\abs{S}$ is the size of a set; $\ind{E}$ is an indicator. A star marks a true value,
-and the superscript $\mathrm r$ marks raw data. $V_n=\OP(a_n)$ means that $\abs{V_n}/a_n$ is bounded in probability;
-\emph{with probability tending to one} means that the probability of the event tends to one. A quantity is \emph{fixed} if
+eigenvalue of a symmetric matrix; $\abs{S}$ is the size of a set; $\ind{E}$ is an indicator; $a\vee b:=\max(a,b)$. A star marks a true value,
+and the superscript $\mathrm r$ marks raw data. $V_n=\OP(a_n)$ means that $\abs{V_n}/a_n$ is bounded in probability, and $V_n=\oP(a_n)$ that it tends to zero in
+probability; \emph{with probability tending to one} means that the probability of the event tends to one. For positive
+sequences, $a_n=O(b_n)$ (or $a_n\lesssim b_n$, $b_n\gtrsim a_n$) means $a_n\le Cb_n$ for a constant $C$, $a_n=o(b_n)$
+means $a_n/b_n\to0$, and $a_n\gg b_n$ means $b_n=o(a_n)$. A quantity is \emph{fixed} if
 it does not depend on $n$; all results are asymptotic in $n\to\infty$, along a sequence of problems in which $p$, the
 design and the coefficients may change with $n$.
 
@@ -32,15 +34,17 @@ standard deviations and $s_y$ that of the response. Then $P^\perp_{\one}\yr=X\ts
 $\tmin:=\min_{j\in\Sz}\abs{\theta^*_j}$. For a model $S$, $X_S$ holds its columns, $G_S:=X_S^\top X_S$, $\Rhat_S:=G_S/(n-1)$
 is its sample correlation matrix and $P_S$ the projection onto its column span.
 
-\paragraph{The prior and the posterior, as coded.} The method considers the models of at most $K:=\min(p,\lfloor
-n/2\rfloor)$ predictors, $\Om:=\{S:\abs{S}\le K\}$. It puts on them the beta-binomial prior $\BB(1,p)$ \citep{ScottBerger2010},
+\paragraph{The prior and the posterior, as coded.} The method fits a working Gaussian linear model,
+$y\mid S,\theta_S,\sigma^2\sim\Normal_n(X_S\theta_S,\sigma^2I_n)$, to the standardised data; the theorems are proved
+under the true model~\eqref{eq:model}, not under this working model. It considers the models of at most $K:=\min(p,\lfloor
+n/2\rfloor)$ predictors, $\Om:=\{S:\abs{S}\le K\}$, and puts on them the beta-binomial prior $\BB(1,p)$ \citep{ScottBerger2010},
 restricted to $\Om$; given $S$, a $g$-prior with $g=n$ and a unit ridge on the coefficients \citep{Zellner1986}; and an
 inverse-gamma prior $\IG(0.01,0.01)$ on the noise variance. Integrating out the coefficients and the variance gives each
 model a marginal likelihood $m(S)$ in closed form (methodology section, eq.~(6)), and the \emph{posterior over models}
 \begin{equation}\label{eq:posterior}
   \pis{S}=\frac{e^{F(S)}}{Z},\qquad F(S):=\log\{\text{prior of }S\}+\log m(S),\qquad Z:=\sum_{S'\in\Om}e^{F(S')} .
 \end{equation}
-The normalising constant $Z$ is the \emph{evidence}. Adding one predictor to a model of size $k$ multiplies the prior by
+$F(S)$ is the \emph{log score} of $S$, and the normalising constant $Z$ is the \emph{evidence}. Adding one predictor to a model of size $k$ multiplies the prior by
 $(k+1)/(2p-1-k)$, and, in a well-conditioned model, multiplies $m(S)$ by about $(n+1)^{-1/2}$ (an Occam factor) times a
 gain of fit.
 
@@ -57,27 +61,42 @@ The proof is two lines: every model that misses a true predictor, or contains a 
 
 \subsection{A run of the method, and what it returns}\label{sec:method}
 
-A \emph{run} is one call of the software on a data set, with a seed and a computing allocation. When $\Om$ is small
-enough the method enumerates it; otherwise it runs the sampler. A run either \emph{produces output} (status ``exact'' or
-``completed'') or stops without estimates. Four objects of a run appear in the results.
+A \emph{run} is one call of the software on a data set, with a seed and a computing allocation; a data set is
+\emph{valid} when $n\ge3$, at least one predictor is given and every entry is finite. When $\Om$ is small enough the
+method enumerates it; otherwise it runs the sampler. A run either \emph{produces output}, with status ``exact''
+(enumeration) or ``completed'' (sampler; a \emph{completed run}), or stops without estimates. Four objects of a run appear
+in the results.
 \begin{itemize}[leftmargin=1.5em,itemsep=1pt]
   \item \emph{The start law.} The method partitions the predictors into blocks of at most $16$, by clustering on sample
-    correlations, and scores every subset of each block exactly. The \emph{start law} $\pi_0$ is the posterior with all
-    interactions between blocks ignored; it can be sampled exactly. A maximiser of $\pi_0$ is a \emph{start mode} $\tSz$.
+    correlations, and scores every subset of each block exactly. The \emph{start law} is the posterior with all
+    interactions between blocks $C_1,\dots,C_J$ ignored,
+    $\pi_0(S)\propto w(\abs{S})\prod_{b=1}^{J}m(S\cap C_b)/m(\emptyset)$, where $w(\abs{S})$ is the prior weight of a
+    model of that size; it can be sampled exactly. A maximiser of $\pi_0$ is a \emph{start mode} $\tSz$.
   \item \emph{The sampler.} A population of models moves from $\pi_0$ to the posterior through intermediate
     distributions, with temperatures and effort chosen by an internal \emph{calibration} that is frozen before the final
-    run. The final run consists of four independent copies, the \emph{islands}.
+    run. The calibration \emph{succeeds} when it produces a sequence of temperatures (by its main construction or a
+    fallback); otherwise the run stops. We write $\Acal$ for the event that the method uses the sampler and its
+    calibration succeeds. The final run consists of four independent copies, the \emph{islands}.
   \item \emph{The reported model.} After the sampler, two local searches run (from the best model found, and from the
     start mode); each moves to the best neighbouring model (one predictor added, deleted or swapped) while that improves
-    the log score. The \emph{reported model} $\Shat$ is the best-scoring model the run has recorded.
+    the log score. The \emph{reported model} $\Shat$ is the best-scoring model the run has recorded. The method
+    \emph{certifies} $\Shat$ when no neighbour of it has a higher log score (or when it enumerated $\Om$).
   \item \emph{The estimates.} Island $r$ estimates the inclusion probabilities and the evidence; the method pools the
     four islands with equal weights into $\PIPhat_j$ and $\Zhat$, and reports $\MPMhat:=\{j:\PIPhat_j>1/2\}$.
 \end{itemize}
 
 \subsection{Shared assumptions and conventions}\label{sec:standing}
 
-The assumptions below are used by more than one result; an assumption used by one result only is stated with it.
-Section~A judges each of them and compares it with \citet{SongLiang2015}.
+The assumptions below are used across Sections~\ref{sec:model-result}--\ref{sec:estimates}; the others are stated
+where they are first used. Our simulation designs (S1--S6, the strong-factor study, and the designs IND, AR, BLK and FAC
+of the planned runs at $p=10^6$) are described in Assumptions~\S2: S1 and IND have independent predictors; S2--S4,
+S6, AR (autoregressive) and BLK (blocks) are locally correlated; S5, the strong-factor study and FAC have pervasive common
+factors.
+
+Two words recur in Results~3 and~4. A true predictor is \emph{visible} if its signal does not cancel against any $15$ other
+predictors (the method's blocks hold at most $16$); a null predictor \emph{leaks} if, given up to $15$ others, it can imitate
+part of a true predictor's signal. Sections~\ref{sec:reported} and~\ref{sec:estimates} make both precise.
+The assumptions section judges each of them and compares it with \citet{SongLiang2015}.
 
 \begin{assumption}{GL}{Gaussian linear model}
 The data follow~\eqref{eq:model}, with a fixed noise variance $\sigs^2>0$ and noise independent of the design. \hfill [\SA{3.1}]
@@ -102,11 +121,11 @@ instance, $\lmin(\Sig)\ge\varphi^2$). \hfill [\SA{3.2}]
 
 The conventions fix what ``the method'' means and idealise the computer; they are not statistical assumptions.
 \emph{Convention \as{C1}} (the method): exact arithmetic, the default configuration, valid inputs and seed; a run that
-meets it is \emph{admissible}, and statements hold for every valid seed and every outcome of the calibration.
+meets it is \emph{admissible}, a sample size $n$ is admissible if some data set of that size is valid, and statements
+hold for every valid seed and every outcome of the calibration.
 \phantomsection\label{asm:C1}%
 \emph{Convention \as{C2}} (delivery): an idealised machine that never overflows or fails, ideal random numbers, and an
-allocation at least the method's own polynomial requirement formulas; \emph{\as{C2p}} is the same with the code's two
-fixed integer limits on the local-search move caps lifted.\phantomsection\label{asm:C2}\phantomsection\label{asm:C2p}
+allocation of memory and time no smaller than the method's own polynomial requirement formulas ask for; \emph{\as{C2p}} also lifts two fixed integer limits of the code (Appendix~\ref{app:conventions}).\phantomsection\label{asm:C2}\phantomsection\label{asm:C2p}
 \emph{Convention \as{C3}} (sampler): exact arithmetic, ideal random numbers independent of the data and the calibration,
 an exact start sampler, and Markov moves that do what their definitions say.\phantomsection\label{asm:C3}
 Appendix~\ref{app:conventions} gives the full lists.

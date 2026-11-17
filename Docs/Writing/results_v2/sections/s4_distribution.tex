@@ -3,19 +3,21 @@
 
 \inwords{Suppose the observations are i.i.d., the response follows a sparse Gaussian linear model, the predictors have light
 tails, no small group of predictors is almost exactly collinear, and no single predictor carries an unbounded signal.
-Then, except on a set of data sets of probability at most $n^{-c_{\mathrm H}M}$, the posterior gives probability at most
-$n^{-c_{\mathrm H}M}$ to conditional laws of the response that are farther than $\sqrt{M\log n/n}$ from the true one. No
+Then, for every large enough level $M$, with probability at least $1-n^{-c_{\mathrm H}M}$ the posterior puts mass at
+most $n^{-c_{\mathrm H}M}$ on conditional laws of the response farther than $\sqrt{M\log n/n}$ from the true one, in the
+Hellinger distance. No
 lower bound on the coefficients is needed.}
 
-\why{Prediction from the posterior is reliable even when some true predictors are too weak to be selected, and the
-guarantee is in the distance used by \citet{SongLiang2015}.}
+\why{The posterior describes the response correctly even when some true predictors are too weak to be selected, so
+prediction does not depend on perfect selection.}
 
 \paragraph{Setting.} In this section only, the observations are $n$ i.i.d.\ copies $(x^{(i)},y^{(i)})$ of a pair $(x,y)$,
 with $x\in\R^{\praw}$ the vector of all observed predictors; $\Dn$ is the data set, $\P^*$ its law, and the method runs on
-the predictors that are not constant in the sample. A posterior draw $(S,\beta,\sigma^2)$, mapped back to the original
+the predictors that are not constant in the sample. The posterior is not defined if fewer than two predictors remain or
+the response is constant in the sample; such data sets are counted in the exceptional event of the theorem. A posterior draw $(S,\beta,\sigma^2)$, mapped back to the original
 units, defines the conditional law $\Normal(\bar y+(x-\bar x)^\top\beta,\sigma^2)$ of $y$ given $x$; the law of $x$ is not
-estimated. With $f$ the joint density in which $x$ has its true law and $y\mid x$ this law, and $f^*$ the true joint
-density, $d_H(f,f^*):=(1-\int\sqrt{ff^*})^{1/2}$ is the Hellinger distance between the fitted and the true conditional
+estimated. Let $f$ be the joint density of $(x,y)$ with $x$ from its true law and $y\mid x$ from this fitted law, and $f^*$
+the true joint density; then $d_H(f,f^*):=(1-\int\sqrt{ff^*})^{1/2}$ is the Hellinger distance between the fitted and the true conditional
 laws, averaged over a new $x$. $\Pi(\cdot\mid\Dn)$ is the posterior of $(S,\beta,\sigma^2)$, and
 $\zeta_j:=(x_j-\E x_j)/\sd(x_j)$. Fix a \emph{level} $M\ge1$; the \emph{window} $q_n:=\min\{\praw,\lceil C_qM\log
 n\rceil\}$, $C_q:=2(s(A+2)+4)/\log2$, is the largest number of predictors the conditions constrain jointly.
@@ -54,10 +56,11 @@ size].}
 \status{\textbf{Proved and independently checked}. Registry: Appendix~\ref{app:status}, row 2.1.}
 
 \begin{remark}[On the assumptions]\label{rem:dist-asm}
-No beta-min condition and no fixed lower bound on eigenvalues are assumed. Jointly Gaussian predictors satisfy (c) with
-$L=1$, and every correlation matrix whose $q_n\times q_n$ principal blocks have smallest eigenvalue at least a fixed $\psi>0$
-satisfies (d) for all large $n$. Condition (d) keeps the Occam factor of each extra predictor in force; without it the
+No beta-min condition and no fixed lower bound on eigenvalues are assumed. Jointly Gaussian predictors satisfy Assumption~\ref{asm:dist}\ref{asm:dist-subg} with $L=1$, and every correlation matrix whose $q_n\times q_n$
+principal blocks have smallest eigenvalue at least a fixed $\psi>0$ satisfies Assumption~\ref{asm:dist}\ref{asm:dist-nec}
+for all large $n$. Condition~\ref{asm:dist-nec} keeps the Occam factor of each extra predictor in force; without it the
 radius grows by one factor $\sqrt{\log(\praw\vee n)}$ (Proposition~\ref{prop:dist}). The same statement holds for every
-level $M$ up to $\sqrt n/\log n$, with the same constants, and it carries over to the list of models that a completed run
-returns (Corollary~\ref{cor:dist-output}).
+level $M$ up to $\sqrt n/\log n$, with the same constants, It also carries over to the list of models that a completed run returns,
+when that list holds posterior mass at least $n^{-c_{\mathrm H}M/2}$, a condition the run does not check
+(Corollary~\ref{cor:dist-output}).
 \end{remark}

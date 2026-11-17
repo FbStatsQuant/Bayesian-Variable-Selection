@@ -33,7 +33,7 @@ one by a reviewer of a different model family). The transfer from population to 
 independently checked}. \bridgepending{} Registry: Appendix~\ref{app:status}, row 1.2.}
 
 No upper bound on the eigenvalues of $\Sig$ is needed, so strong common factors are allowed, and $p\gg n$ is allowed. In
-primitive terms: i.i.d.\ Gaussian rows whose correlation matrix has smallest eigenvalue bounded below, a fixed number of
+primitive terms: a Gaussian linear model with i.i.d.\ Gaussian rows whose correlation matrix has smallest eigenvalue bounded below, a fixed number of
 fixed nonzero coefficients and $p\le n^A$ suffice.
 
 \paragraph{Fixed design.} The same conclusions hold for a deterministic design under conditions on the sample. They
@@ -64,17 +64,17 @@ sequence that satisfies these assumptions,
   \max_{j\in\set{p}}\big|\PIP_j-\ind{j\in\Sz}\big|\ \le\ 1-\pis{\Sz}\ =\ \OP\Big(\sqrt{\frac{\log n}{n}}\Big),\qquad
   \P\big(\HPM=\MPM=\Sz\big)\to1 .
 \end{equation}
-Moreover, there are $n_0$ and $C_1$, depending only on $(\sz,A,\sigs^2,\bar\theta,\varphi_0,g_0,C_\beta)$, such that for
+Moreover, there are $n_0$ and $C_{\mathrm E}$, depending only on $(\sz,A,\sigs^2,\bar\theta,\varphi_0,g_0,C_\beta)$, such that for
 every $n\ge n_0$ and every design and $\tstar$ that satisfy the assumptions at that $n$,
 \begin{equation}\label{eq:post-exp}
-  \E\big[1-\pis{\Sz}\big]\ \le\ C_1\sqrt{\frac{\log n}{n}},\qquad \P\big(\HPM=\MPM=\Sz\big)\ \ge\ 1-4C_1\sqrt{\frac{\log n}{n}} .
+  \E\big[1-\pis{\Sz}\big]\ \le\ C_{\mathrm E}\sqrt{\frac{\log n}{n}},\qquad \P\big(\HPM=\MPM=\Sz\big)\ \ge\ 1-4C_{\mathrm E}\sqrt{\frac{\log n}{n}} .
 \end{equation}
 The expectation is over the noise, with the design fixed. Under form (b) of \as{BM}, $n_0$ also depends on how fast
 $\tmin\sqrt{n/\log n}$ diverges.
 \end{theorem}
 
 \asmlist{(1)--(3)~\as{GL}, \as{DIM}, \as{SP} [\SA{3.1}]; (4)~\as{BC} bounded coefficients; (5)~\as{EF} eigenvalue floor
-on small sets; (6)~\as{NC} no near-exact collinearity; (7)~\as{BM} beta-min [\SA{3.2}].}
+on sets of bounded size; (6)~\as{NC} no near-exact collinearity; (7)~\as{BM} beta-min [\SA{3.2}].}
 
 \status{The in-probability conclusions~\eqref{eq:post-op}: \textbf{proved and independently verified} (two independent
 verification passes, as above). The expectation bound~\eqref{eq:post-exp}: \textbf{proved and checked, conditional on
@@ -82,7 +82,16 @@ two supporting results} (a proposition giving a lower bound on the posterior mis
 posterior model size) \textbf{that are proved but not yet independently checked}. \bridgepending{} Registry:
 Appendix~\ref{app:status}, row 1.1.}
 
-\begin{remark}[Result 5: the rate cannot be improved, and what it means at moderate $n$]\label{rem:sharp}
+\subsection{Result 5: the rate cannot be improved}\label{sec:sharp}
+
+\inwords{On every design, no model's posterior mass comes closer to one than about $(\abs{S}+1)/(3\sqrt n)$; on two families
+of designs the posterior miss is at least of order $\rn$. At simulated sizes the posterior spreads over the true model and
+its one-predictor extensions.}
+
+\why{It shows that the rate of Result~1 is the right one, and why the posterior is not a point mass at simulated sizes
+such as $n=200$.}
+
+\begin{remark}[The rate cannot be improved, and what it means at moderate $n$]\label{rem:sharp}
 \textup{(a)} \emph{Every design.} For every $n\ge3$, every standardised design with $p\ge2$, every response and every
 model $S$ with $\abs{S}\le\min(K-1,p/2)$,
 \begin{equation}\label{eq:sharp-a}
@@ -90,27 +99,28 @@ model $S$ with $\abs{S}\le\min(K-1,p/2)$,
 \end{equation}
 So no model of that size, the true one included, can carry posterior mass closer to one than about
 $(\abs{S}+1)/(3\sqrt n)$. For true models with $\sz\le\min(K-1,p/2)$, no design gives a rate faster than
-$n^{-1/2}$, and the rate $\rn$ requires $\sz=O(\sqrt{\log n})$. The reason is that the prior and the Occam factor keep every one-predictor extension of a model
+$n^{-1/2}$, and a posterior miss of order $\rn$ is possible only if $\sz=O(\sqrt{\log n})$. The reason is that the prior and the Occam factor keep every one-predictor extension of a model
 alive.
 
 \textup{(b)} \emph{Witness designs.} Assume \as{GL}, that $\sz$ is fixed, the energy bounds $\norm{\mu}^2\le nM_\mu$ and
 $\norm{\tstar}^2\le nM_\theta$ for fixed $M_\mu$, $M_\theta$, and that the null predictors are either orthogonal (to each
 other and to the true ones) or have i.i.d.\ $\Normal(0,1)$ raw entries independent of the true predictors and of the noise, with $p\le n^A$.
 Then, for every $p>\sz$, bounded or growing,
+where $\pi=3.14\ldots$ (the number, not the posterior) in the next display,
 \begin{equation}\label{eq:sharp-b}
   \E\big[1-\pis{\Sz}\big]\ \ge\ (1-o(1))\,(\sz+1)\,\frac{2(p-\sz)}{2p-1-\sz}\,
   \sqrt{\frac{\log\!\big(p\sqrt n/(\sz+1)\big)}{\pi n}},
 \end{equation}
-and, if moreover $p\to\infty$, $1-\pis{\Sz}\ge(1-\oP(1))\,(\sz+1)\sqrt{\log p/(\pi n)}$. Here $\pi=3.14\ldots$ On fully
+and, if moreover $p\to\infty$, $1-\pis{\Sz}\ge(1-\oP(1))\,(\sz+1)\sqrt{\log p/(\pi n)}$. On fully
 orthogonal designs ($\sz<p\le n-1$) with fixed nonzero coefficients, the expectation bound~\eqref{eq:post-exp} applies
 too, so there $\E[1-\pis{\Sz}]$ is of exact order $\rn$.
 
 \textup{(c)} \emph{At moderate $n$} (a heuristic, not a theorem). The posterior miss is carried mainly by the models
 $\Sz\cup\{j\}$ that add one null predictor. Each has posterior odds against $\Sz$ of about
-$\frac{\sz+1}{2p}\,n^{-1/2}e^{Z_j^2/2}$ (prior, Occam factor and fit), with $Z_j^2$ approximately $\chi^2_1$. The factor
-$e^{Z_j^2/2}$ has no finite mean; over $p$ null predictors the largest $Z_j^2$ is about $2\log p$, and the $p$ factors
+$\frac{\sz+1}{2p}\,n^{-1/2}e^{T_j^2/2}$ (prior, Occam factor and fit), with $T_j^2$ approximately $\chi^2_1$. The factor
+$e^{T_j^2/2}$ has no finite mean; over $p$ null predictors the largest $T_j^2$ is about $2\log p$, and the $p$ factors
 average about $2\sqrt{\log p/\pi}$. Together these models therefore carry about $(\sz+1)\sqrt{\log p/(\pi n)}$ times the
-weight of $\Sz$, the same quantity as in~(b). With $\sz=5$, $n=200$ and $p=10^4$ this is about $0.7$. In single
+weight of $\Sz$: the expression of~(b), here as a ratio to the weight of $\Sz$ rather than a bound on the posterior miss. With $\sz=5$, $n=200$ and $p=10^4$ this is about $0.7$. In single
 synthetic draws (AR(0.6), $\sz=5$) the measured total weight of these models, relative to that of $\Sz$, was $1.0$--$1.2$
 at $n=200$ and $p=10^4$--$10^6$, and $0.52$ at $n=400$, $p=10^4$. So at simulated sizes the posterior is spread over $\Sz$
 and many one-predictor extensions of it.

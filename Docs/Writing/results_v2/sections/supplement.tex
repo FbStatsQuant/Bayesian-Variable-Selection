@@ -1,0 +1,243 @@
+% =====================================================================================================
+\section{Supplement: further results}\label{sec:supp}
+
+Each result below comes with one line on why it matters. Statements are as in the first version of this section; the
+status notes give their standing.
+
+\subsection{The posterior}\label{sec:supp-post}
+
+\why{Without the beta-min condition, the posterior still rejects over-fitted models and still keeps every true predictor
+that is strong enough; specificity, however, can fail.}
+
+\begin{remark}[Without beta-min]\label{rem:no-betamin}
+Under the other assumptions of Theorem~\ref{thm:post-fixed}, the posterior mass of models that strictly contain $\Sz$ is
+$\OP(\rn)$, and every true predictor with $\theta_j^{*2}\ge c\,\sigs^2\log n/(n\varphi_0^2)$, $c>c_0(\sz,A)$, has
+$1-\PIP_j=\OP(\rn)$. Specificity can fail without beta-min: a numerical counterexample, reported with the proof, shows this.
+\end{remark}
+
+\status{Part of the posterior concentration result, with the status of the in-probability form of
+Theorem~\ref{thm:post-fixed}.}
+
+\why{It replaces the eigenvalue floor away from the true model, and the beta-min condition, by a floor on the true model
+alone and a margin on the unexplained signal; it keeps the vanishing floor \as{NC}.}
+
+\begin{localassumption}[Floor on the true model and an identifiability margin]\label{asm:margin}
+\begin{asmitems}
+  \item $\lmin(\Rhat_{\Sz})\ge\varphi_0^2$ for a fixed $\varphi_0\in(0,1]$.
+  \item Every model $S\in\Om$ that misses a true predictor and has at most $j_0:=\lceil(2A+1)\sz\rceil+1$ predictors
+    outside $\Sz$ leaves unexplained signal $\norm{(I-P_S)\mu}^2\ge c_{\mathrm{id}}\,\sigs^2\log n$, for a fixed
+    $c_{\mathrm{id}}>c_1(\sz,A)$, an explicit constant (Appendix~\ref{app:constants}).
+\end{asmitems}
+\end{localassumption}
+
+\begin{theorem}[Posterior concentration under an identifiability margin]\label{thm:post-margin}
+Let the design be fixed and assume \as{GL}, \as{DIM}, \as{SP}, \as{BC}, \as{NC} and Assumption~\ref{asm:margin}. Then
+the conclusions~\eqref{eq:post-op}--\eqref{eq:post-exp} of Theorem~\ref{thm:post-fixed} hold, the expectation bound with
+constants depending only on $(\sz,A,\sigs^2,\bar\theta,\varphi_0,g_0,c_{\mathrm{id}})$.
+\end{theorem}
+
+\status{\textbf{Proved and checked, conditional on the same two supporting results} (the lower-bound proposition and the
+size-tail lemma, not yet independently checked) as the expectation bound of Theorem~\ref{thm:post-fixed}.
+\bridgepending{} Registry: Appendix~\ref{app:status}, row 1.1.}
+
+Under \as{EF} and \as{BM}(a), Assumption~\ref{asm:margin} holds with $c_{\mathrm{id}}=C_\beta^2\varphi_0^2(1-1/n)$. So
+Theorem~\ref{thm:post-margin} contains Theorem~\ref{thm:post-fixed} when $C_\beta^2\varphi_0^2>c_1$; when
+$c_0<C_\beta^2\varphi_0^2\le c_1$, Theorem~\ref{thm:post-fixed} applies and Theorem~\ref{thm:post-margin} is not known to
+apply: the two coexist, and neither contains the other.
+
+\why{It says what the posterior selects when some true predictors are missing from the data: the predictors used by the
+best linear predictor built from the available ones.}
+
+In this result the method is run on the response $\yr$ and a set $\mathcal C$ of $p$ candidate predictors, with rows
+$x_{\mathcal C,i}$ collected in $x_{\mathcal C}$; $\Sigma$ and $R$ are the covariance and the correlation matrix of a
+candidate row.
+
+\begin{localassumption}[Candidate-only fitting]\label{asm:omitted}
+\begin{asmitems}
+  \item \emph{Model.} The candidate rows are i.i.d.\ $\Normal_p(m_{\mathcal C},\Sigma)$, and, given them, the responses are
+    independent with $\yr_i\mid x_{\mathcal C}\sim\Normal(\alpha'+x_{\mathcal C,i}^\top\beta^{\mathcal C},\sigma^2_{\mathcal C})$,
+    $\sigma^2_{\mathcal C}>0$. We write $\Sz^{\mathcal C}:=\supp\beta^{\mathcal C}$ and $s_{\mathcal C}:=\abs{\Sz^{\mathcal C}}$.
+  \item \emph{Floor.} $\lmin(R_T)\ge c_{\mathcal C}$ for every $T\subseteq\mathcal C$ with
+    $\abs{T}\le3(A+1)(s_{\mathcal C}+1)\log n$, for a fixed $c_{\mathcal C}>0$.
+  \item \emph{Signal relative to the residual variance.} $\beta^{\mathcal C\top}\Sigma\beta^{\mathcal C}\le
+    M_{\mathcal C}\sigma^2_{\mathcal C}$ for a fixed $M_{\mathcal C}$, and $n\min_{j\in\Sz^{\mathcal C}}\Sigma_{jj}(\beta^{\mathcal
+    C}_j)^2/(\sigma^2_{\mathcal C}\log n)\to\infty$.
+\end{asmitems}
+\end{localassumption}
+
+\begin{theorem}[Omitted variables]\label{thm:omitted}
+Assume \as{DIM} (with $p$ the number of candidates), Assumption~\ref{asm:omitted}, and that $s_{\mathcal C}\ge1$ is fixed. No
+condition is placed on how $m_{\mathcal C}$, $\Sigma$, $\beta^{\mathcal C}$ or $\sigma^2_{\mathcal C}$ vary with $n$. Then
+\[
+  \E\big[1-\pi(\Sz^{\mathcal C}\mid y)\big]=O\Big(\sqrt{\frac{\log n}{n}}\Big),\qquad
+  \P\big(\HPM\neq\Sz^{\mathcal C}\big)=O\Big(\sqrt{\frac{\log n}{n}}\Big).
+\]
+\end{theorem}
+
+\status{\textbf{Proved and checked, conditional on} the expectation bound of Theorem~\ref{thm:post-fixed} (hence on its two
+supporting results) and on two lemmas on Gaussian designs that are verified and passed a council review. \bridgepending{}
+Registry: Appendix~\ref{app:status}, row 1.4.}
+
+For example, if candidates and omitted predictors are jointly Gaussian, $\beta^{\mathcal C}=\beta^*_{\mathcal C}+
+\Sigma_{\mathcal C\mathcal C}^{-1}\Sigma_{\mathcal C\mathcal M}\beta^*_{\mathcal M}$: each candidate absorbs the part of the
+omitted signal it can predict, and the rest is added to the noise variance $\sigma^2_{\mathcal C}$.
+
+\subsection{The distribution}\label{sec:supp-dist}
+
+\why{It shows what the collinearity condition of Result~2 buys: dropping it costs one logarithmic factor in the radius,
+and the posterior also puts almost no mass on large models.}
+
+\begin{proposition}[Level-$M$ form, and the case without the collinearity condition]\label{prop:dist}
+\textup{(i)} There is a constant $C_{\mathrm s}$, depending only on $(s,A,L,c_\psi,\bar b)$, such that the following holds. The
+constants of Theorem~\ref{thm:dist} serve every level $M$ with $M_0\le M\le\sqrt n/\log n$, and $M$ may depend on $n$:
+whenever $n\ge n_0$ and Assumption~\ref{asm:dist} holds with the window $q_n$ of this $M$,~\eqref{eq:dist-i} holds, and also
+\begin{equation}\label{eq:dist-ii}
+  \P^*\Big[\,\Pi\big(\abs{S}>s+C_{\mathrm s}M\ \big|\ \Dn\big)>n^{-c_{\mathrm H} M}\Big]\ \le\ n^{-c_{\mathrm H} M}.
+\end{equation}
+The two exceptional sets can be taken to be the same, and the bounds are uniform over all laws of the data that satisfy
+Assumption~\ref{asm:dist} with the given constants.
+\textup{(ii)} If Assumption~\ref{asm:dist}\ref{asm:dist-nec} is dropped and Assumption~\ref{asm:dist}\ref{asm:dist-subg} is
+required only for single predictors, then~\eqref{eq:dist-i} holds with radius $\sqrt{M\log n\cdot\log(\praw\vee n)/n}$,
+and~\eqref{eq:dist-ii} with $s+C_{\mathrm s}M\log n$ in place of $s+C_{\mathrm s}M$.
+\end{proposition}
+
+\status{\textbf{Proved and independently checked} (part of the same result as Theorem~\ref{thm:dist}). Registry:
+Appendix~\ref{app:status}, row 2.1.}
+
+\why{With a fixed eigenvalue floor and every true signal above the detection scale, the distribution is learned at the
+parametric rate.}
+
+\begin{theorem}[Parametric rate when the true predictors are detectable]\label{thm:dist-param}
+Assume Assumption~\ref{asm:dist} with the window $q_n$ of level $M=1$, with exactly $s\ge1$ nonzero coordinates of $\bstar$;
+that $\lmin(\Corr(x_T))\ge\psi$ for a fixed $\psi>0$ and every set $T$ of at most $(2A+3)s+2$ predictors; and that
+$\min\{\abs{\beta^*_j}\sd(x_j)/\sigs:\beta^*_j\neq0\}\ge b_n$ with $b_n^2n/\log n\to\infty$. Then
+$\Pi(d_H(f,f^*)>M_n/\sqrt n\mid\Dn)\to0$ in $\P^*$-probability, for every sequence $M_n\to\infty$.
+\end{theorem}
+
+\status{\textbf{Proved and checked, conditional on} Theorem~\ref{thm:post-fixed} (in-probability form), which is proved
+and independently verified. Registry: Appendix~\ref{app:status}, row 2.1.}
+
+\why{The distribution guarantee carries over to the list of models that a completed run returns, whenever that list
+holds a non-negligible share of the posterior.}
+
+A completed run returns a list $\mathcal T$ of at most $40p+1$ distinct models with their log scores; let
+$\pi(\mathcal T\mid\Dn)$ be the posterior probability of the list, and $\hat\Pi$ the posterior restricted to it (the models
+of $\mathcal T$ weighted in proportion to their exponentiated log scores, each with its exact conditional posterior of
+$(\beta,\sigma^2)$; $\hat\Pi$ is not computed by the method).
+
+\begin{corollary}[The output of the sampler]\label{cor:dist-output}
+Assume the conditions of Proposition~\ref{prop:dist}(i), and that the returned log scores are computed in exact
+arithmetic. With $\P^*$-probability at least $1-n^{-c_{\mathrm H}M}$, every completed run, whatever its random numbers, with
+$\pi(\mathcal T\mid\Dn)\ge n^{-c_{\mathrm H}M/2}$ satisfies $\hat\Pi(d_H(f,f^*)>\sqrt{M\log n/n})\le n^{-c_{\mathrm H}M/2}$. If a
+completed run scored $\Sz$ and $\pi(\Sz\mid\Dn)>\tfrac12$, then the list contains $\Sz$, $\Shat=\Sz$, and $\pi(\mathcal
+T\mid\Dn)>\tfrac12$.
+\end{corollary}
+
+\status{\textbf{Proved and checked, under exact arithmetic}; the description of the output was checked against the code.
+Registry: Appendix~\ref{app:status}, row 2.1.}
+
+Whether the list carries enough posterior probability is a property of the run; the corollary does not assert it.
+
+\subsection{The method}\label{sec:supp-method}
+
+\why{It explains why the sampler starts in the right place: without leakage, the start law already concentrates on the
+true model.}
+
+\begin{theorem}[The start law concentrates]\label{thm:start}
+Assume \as{GR}, \as{DIM} with $p>\sz$, \as{FSt}, \as{V}, \as{NL}, and $\lmin(\Sigma_{n,S})\ge\varphi_{\mathrm b}^2$ for every
+$S$ with $\abs{S}\le16+\sz$, for a fixed $\varphi_{\mathrm b}>0$. Then $\P(\pi_0(\Sz)\ge1-n^{-c})\to1$ for every
+$c<\tfrac12$. If moreover $\Cov(W_l,W_j)=0$ for every null $l$ and true $j$, then $1-\pi_0(\Sz)=\OP(\rn)$. The exponent
+$\tfrac12$ cannot be improved: $1-\pi_0(\Sz)\ge\tfrac13(n+1)^{-1/2}$ for every valid data set with $n\ge4$ and $\sz<K$.
+\end{theorem}
+
+\status{\textbf{Proved and independently checked}. Registry: Appendix~\ref{app:status}, row 3.3.}
+
+With leakage, the start law concentrates instead on the models between the true model and the leakage set: if \as{NL}
+holds with $\Sz$ replaced by a deterministic $Q\supseteq\Sz$ with $\abs{Q}\le K$, then
+$\P\big(\pi_0(\Lat(Q))\ge1-(\abs{Q}+1)n^{-1/2}e^{C\sqrt{\log n}}\big)\to1$.
+
+\why{It is the only reported-model statement that does not assume Gaussian rows: its conditions are on the sample
+$(X,\tstar)$.}
+
+For a set $U$ and a predictor $l\notin U$, the \emph{signal gain} $\delta^2_{U,l}:=\norm{(P_{U\cup\{l\}}-P_U)\mu}^2$ is the
+increase in explained mean signal when $x_l$ joins $X_U$; the \emph{residual scale} is $\tau^2_U:=\sigs^2+\norm{(I-P_U)\mu}^2/(n-1)$;
+and $\hat\beta_{U,l}:=(X_U^\top X_U)^{-1}X_U^\top x_l$, padded with zeros.
+
+\begin{localassumption}[Fixed-design visibility and leakage]\label{asm:reported-fixed}
+\begin{asmitems}
+  \item\label{asm:rf-floor} \emph{Floors.} $\lmin(\Rhat_T)\ge\varphi_0^2$ for every $T$ with $\abs{T}\le16$ and for every
+    $T=Q\cup\{l\}$, $l\in\set{p}$, with $Q$ as in~\ref{asm:rf-leak}.
+  \item\label{asm:rf-vis} \emph{Visibility.} There is a deterministic $\omega_n\to\infty$ such that
+    $\delta^2_{U,j}\ge\omega_n\log n$ for every $j\in\Sz$ and every $U\not\ni j$ with $\abs{U}\le15$.
+  \item\label{asm:rf-leak} \emph{Bounded leakage.} There are a deterministic $Q\supseteq\Sz$ (with $\abs{Q}\le K$ and
+    ($Q=\set{p}$ or $K\ge2\abs{Q}+32\sz+1$) for large $n$) and a fixed $\eta\in[0,\eta_A)$,
+    $\eta_A:=(\sqrt{2A+1}-\sqrt{2A})^2$, such that $\delta^2_{U,l}\le\eta\,\tau^2_U\log n$ for every $l\notin Q$ and every
+    $U\not\ni l$ with $\abs{U}\le15$.
+  \item\label{asm:rf-size} \emph{Size of the leakage set.} One of: (d1) $\abs{Q\setminus\Sz}\le(1-\delta_Q)\log n$ for a
+    fixed $\delta_Q\in(0,1)$; or (d2) $\abs{Q}\le n^b$ with $b<\tfrac12-\tfrac\eta2-\sqrt{2A\eta}$,
+    $\theta^{*2}_{\min}n/(\abs{Q}+\log n)\to\infty$, and local regressions: for every $l$ a deterministic set
+    $N_l\subseteq Q\setminus\{l\}$ with $\abs{N_l}\le h\log_2n$, for a fixed $h$ with $h+b<\tfrac12$, and a deterministic $L_n\to0$ with
+    $L_n^2\log(\abs{Q}+1)=o(\log n)$, such that $\norm{\hat\beta_{T,l}-\hat\beta_{T\cap N_l,l}}_1\le L_n$ for every
+    $T\in\Lat(Q)$ with $\abs{T}<K$ and $l\notin T$.
+\end{asmitems}
+\end{localassumption}
+
+\begin{theorem}[The reported model equals the true model: fixed design]\label{thm:reported-fixed}
+Let the design be fixed, with no raw predictor constant in the sample (an input condition of the delivery result; then
+$p=\praw$). Assume \as{GL}, \as{DIM}, \as{SP}, \as{BC},
+\as{EF}, \as{NC}, \as{BM}(b), Assumption~\ref{asm:reported-fixed} and Convention~\as{C1}. Then the conclusions of
+Theorem~\ref{thm:reported} hold: there are data events $\mathcal G_n$ with $\P(\mathcal G_n)\to1$ on which every
+admissible run that produces output reports $\Shat=\Sz$, for every seed and calibration outcome; and the delivery
+clauses hold under \as{C2} on $\Dom$ and under \as{C2p} for every admissible $n\ge3$.
+\end{theorem}
+
+\status{\textbf{Proved and independently checked}. \bridgepending{} A revision of this statement, from a strengthening
+that has passed its review, is pending. Registry: Appendix~\ref{app:status}, row 3.2.}
+
+\why{A certified small model rarely misses a true predictor, under much weaker conditions than Result~3; it is the
+guarantee about the coded method that remains on pervasive-factor designs, which Result~3 excludes.}
+
+\begin{theorem}[Certified screening]\label{thm:screen}
+Let the design be fixed and assume \as{GL} and Convention~\as{C1}; \as{SP} is not assumed. Let $k_n\in\{0,\dots,K-1\}$ be
+a model-size budget, and assume $\lmin(\Rhat_S)\ge\kappa$ for every $S$ with $\abs{S}\le k_n+\sz$, $\tmin\ge\tlow>0$ and
+$\norm{\tstar}_1\le M_1$, with $\kappa$, $\tlow$, $M_1$, $\sigs^2$ fixed, and $(k_n+1)\log p+\log n\le c_{\mathrm{SB}}\,n$, where
+$c_{\mathrm{SB}}:=\kappa^2\tlow^2/\{200(M_1^2+\sigs^2)\}$. Then
+\[
+  \P\big(\text{the run produces output},\ \Shat\text{ is certified},\ \abs{\Shat}\le k_n,\ \Sz\not\subseteq\Shat\big)\to0 .
+\]
+\end{theorem}
+
+\status{\textbf{Proved and independently checked}. Registry: Appendix~\ref{app:status}, row 3.7.}
+
+No visibility, leakage, start or block condition is used. A second form replaces the signal bounds by a margin on the
+noiseless gain of a missing true predictor, with no condition on $p$, $\sz$ or the null predictors (also proved and
+independently checked). The bound is on an intersection, not conditional on certification, and a run is not claimed to certify a small model
+with probability tending to one. In existing numerics (not a theorem) every completed run certified its reported model:
+2,394 of 2,394 in the 2,400-fit study, 376 of 376 in the strong-factor study, 71 of 71 in a screening study. On the
+strong-factor designs the certified model contained every true predictor in 61 of 122 fits at $n=50$, 18 of 20 at $n=75$
+and 30 of 30 at $n=100$; at the constants of these designs the size budget of Theorem~\ref{thm:screen} requires
+$n\gtrsim1{,}450$.
+
+\why{It is the only recorded route to the printed inclusion probabilities and median model that does not need \as{NL};
+its global-overlap premise is not yet derived from conditions on the design.}
+
+\begin{remark}[An alternative route for the estimates]\label{rem:alt-route}
+An argument that does not go through the evidence estimate gives the conclusions of Theorem~\ref{thm:outputs} for the
+inclusion probabilities and the median and highest posterior models under a global-overlap condition (stated in full with
+the proof).
+\end{remark}
+
+\status{\textbf{Proved and independently checked}; its premise is open. Registry: Appendix~\ref{app:status}, row 3.6.}
+
+\subsection{Open questions}\label{sec:open}
+
+None of these is needed for any statement above.
+\begin{enumerate}[leftmargin=1.5em,itemsep=1pt]
+  \item Remove the vanishing floor \as{NC} from Theorem~\ref{thm:post-margin}, and weaken its floor on the true model.
+  \item Prove $\E[1-\pis{\Sz}]\gtrsim\rn$ on every design with a floor on the sets $\Sz\cup\{j\}$.
+  \item Whether Assumption~\ref{asm:dist}\ref{asm:dist-nec} is needed for the rate $\rn$ of Result~2.
+  \item Leakage sets of size $n^b$ with $b\ge\tfrac12$, and raw-scale signals in Results~3 and~4.
+  \item Consistency of the printed estimates on designs with leakage (AR and block designs).
+  \item The parallel method: an inheritance statement for an output-identical engine, and results for many islands and
+    island weighting at very large $p$.
+\end{enumerate}
