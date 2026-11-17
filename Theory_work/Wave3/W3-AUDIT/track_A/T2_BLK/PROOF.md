@@ -1,4 +1,7 @@
-# T2 · Lemma BLK — PROOF v5 (code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
+# T2 · Lemma BLK — PROOF v6 (code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
+
+v5 → v6 (council R1, Sol #1): (BLK-a)–(BLK-c) below read the code as an abstract program over unbounded integers and
+exact reals (the map 𝔪 of the STATEMENT); (BLK-d) identifies the compiled code with it.
 
 ## (BLK-a) The parameter B
 `v3_fit` calls `v3_setup(ctx)` (`v3_fit.R:133`), which sets `B <- b$B` with `b <- v3_budgets(ctx$n, ctx$p)`
@@ -57,6 +60,14 @@ function of X; `max` and `|·|` are continuous) or between index lists that do n
 {X : blocks(X) = (C₁, …, C_J)} is a finite union of finite intersections of sets of the form {f(X) < g(X)},
 {f(X) = g(X)} with f, g continuous: Borel. ∎
 
+## (BLK-d) The compiled code
+The compiled `make_blocks` executes the same statements as 𝔪 with C++ `int`/`size_t` arithmetic and heap allocation. A
+statement's native result equals its abstract result unless an integer operation leaves its type's range or an
+allocation fails; the comparisons and the max-update are on doubles, which EX-A reads as exact in both programs. So on an
+execution with no overflow and successful allocations, the native blocks equal 𝔪(X, B), hence C(X). Example of the
+range condition: `2 * p - 1` (`cpp/v3_blocks.h:49`) is in range iff p < 2³⁰; the arrays of `cpp/v3_blocks.h:12, 54`
+have p² entries. IDEAL-W and MACH (`Theory_work/Wave1C/C-DLV/STATEMENT.md:24-25`) give such executions. ∎
+
 ## Use downstream (faithfulness of "the method's partition")
 The same `st.blocks` (and `h->B` = B, `cpp/v3_core.cpp:275`) feed the block tables (`build_tables(st, sc)`,
 `cpp/v3_core.cpp:283`), the start law and sampler (`build_start(st)`, `cpp/v3_core.cpp:300`), the final engine
@@ -74,9 +85,8 @@ in the open set where the standardisation map X^r ↦ X is continuous; composing
 because ε is independent of the rows.
 
 ## Binary64 (supports the "Not claimed" bullet)
-Qualification (Sol SL1LC2 #3): the following assumes the run executes with every integer size, index and allocation
-size representable (the C++ `int` arithmetic such as `2 * p - 1`, `cpp/v3_blocks.h:49`, does not overflow; this fails for
-p ≥ 2³⁰); it is a remark, not part of the lemma.
+Qualification (Sol SL1LC2 #3; R1 Sol #1): on the executions of (BLK-d) (no integer overflow, allocations succeed); a
+remark, not part of the lemma.
 (BLK-a): n and p are R integers ≤ 2³¹ − 1, so ⌊√n⌋, ⌊√p⌋ ≤ 46341 and every square in `v3_isqrt`'s correction loops
 is an integer below 2⁵³, computed exactly; hence `v3_isqrt` returns ⌊√x⌋ exactly and B is exact. (BLK-b): the tree
 argument uses only that each merge joins two distinct active slots (`best[i] ≠ i`, `best[i]` active), the integer size

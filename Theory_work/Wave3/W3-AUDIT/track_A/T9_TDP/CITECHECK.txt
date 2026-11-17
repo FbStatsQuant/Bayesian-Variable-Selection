@@ -5,6 +5,8 @@ OK            [STATEMENT.md] Theory_work/Wave1C/C-ENG/lemmas/TDP_E.md:62-64 sha=
 OK            [STATEMENT.md] Theory_work/Wave1/W1-N3/STATEMENT.md:78-82 sha=d9a713ba62 | 
 OK            [STATEMENT.md] Scripts/SMC_BVS/core/cpp/v3_start.h:178-305 sha=ff0b2a0d2a | // Start mode S~_0 = argmax pi_0 (M §6.3; CORE_SPEC §3): max-plus convolution of per-block per-size maxima, su
 OK            [STATEMENT.md] Theory_work/Wave1C/C-ENG/lemmas/TDP_E.md:15-20 sha=04938a21af | ## The enumeration's visited set
+OK            [STATEMENT.md] Theory_work/Wave1C/C-ENG/lemmas/TDP_E.md:33-34 sha=e290f27efc | (Makevars.v3: `-ffp-contract=off`), every intermediate sum of `mode_dp` finite. (H4) integer counters fit, all
+OK            [STATEMENT.md] Theory_work/Wave1/W1-N3/STATEMENT.md:106-109 sha=ee5e8c4f15 | * (H4) **Execution** (for the claims about the frozen C++ only): cap is representable as a positive `long`; K 
 OK            [STATEMENT.md] cpp/v3_start.h:261-261 sha=9334c5c245 | if (dp.kbest < 0 || !feasible()) throw std::runtime_error("start_mode tie DP: no tight path from (J, kbest) (i
 OK            [STATEMENT.md] Theory_work/Wave1C/C-ENG/lemmas/TDP_E.md:34-36 sha=4e5c657fd8 | succeed. The claim is about the doubles the code computes; it makes **no** claim of lexicographic optimality o
 OK            [PROOF.md] cpp/v3_start.h:195-226 sha=753db63fe1 | inline ModeDP mode_dp(const Start& st) {
@@ -34,5 +36,5 @@ OK            [PROOF.md] cpp/v3_start.h:272-272 sha=7a6fb31f17 | if (tie_dp && c
 OK            [PROOF.md] cpp/v3_start.h:185-186 sha=6ee5b8dd0e | // C-PACK MR2: `truncated` is also set at count == cap (at cap = 1 even when the maximiser is unique), so the 
 OK            [PROOF.md] cpp/v3_start.h:281-300 sha=ad083eb7e8 | std::function<void(int, int)> rec = [&](int b, int r) {
 
-35 citations: 35 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+37 citations: 37 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
 Not machine-checked: unbackticked references and the semantic match of each excerpt.

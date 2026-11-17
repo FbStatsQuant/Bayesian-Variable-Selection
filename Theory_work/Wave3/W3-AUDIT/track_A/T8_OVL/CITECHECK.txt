@@ -18,7 +18,8 @@ OK            [PROOF.md] Theory_work/Wave3/W3-SAMP/STATEMENT.md:82-83 sha=3ddfaf
 OK            [PROOF.md] Theory_work/Wave3/W3-START2-R/STATEMENT.md:241-244 sha=c1bc18ec4c | **[IF-START] (T5⁺⁺) IF-START⁺⁺.** Under (T1⁺⁺) with (AL) at Q = S₀ and level vector h: for every event 𝒜 and e
 OK            [PROOF.md] Theory_work/Wave3/W3-START/lemmas/L10_INTERFACES.md:14-15 sha=5ee9e3102f | 0 ≤ 1_𝒜o₀ ≤ o₀, so **1_𝒜o₀ = O_P(r_n)** and in particular 1_𝒜o₀ → 0 in probability: this is P-START
 OK            [PROOF.md] Theory_work/Wave3/W3-START2-R/STATEMENT.md:241-244 sha=c1bc18ec4c | **[IF-START] (T5⁺⁺) IF-START⁺⁺.** Under (T1⁺⁺) with (AL) at Q = S₀ and level vector h: for every event 𝒜 and e
-OK            [PROOF.md] Theory_work/Wave3/W3-SAMP/STATEMENT.md:102-103 sha=c323a314e6 | - (D-iii) with Lemma PC, unconditionally: P(completed ∩ {Ŝ ≠ S₀}) ≤ P(S† ≠ S₀) + E[1_𝒜 (1 − π₀(S₀))^{D_r}] (ex
+OK            [PROOF.md] Theory_work/Wave3/W3-SAMP/lemmas/D_theorem.md:40-42 sha=f5b020d154 | *Deterministic step.* Let S† be the hpm_better-maximum of Ω (the exact HPM with the coded tie rule,
+OK            [PROOF.md] Theory_work/Wave3/W3-SAMP/STATEMENT.md:99-100 sha=7f1101de42 | - (D-i) island r's D_r π₀ draws are iid π₀; P(no π₀ draw of island r equals S₀ | 𝓒) = (1 − π₀(S₀))^{D_r} (equa
 
-21 citations: 21 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+22 citations: 22 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
 Not machine-checked: unbackticked references and the semantic match of each excerpt.

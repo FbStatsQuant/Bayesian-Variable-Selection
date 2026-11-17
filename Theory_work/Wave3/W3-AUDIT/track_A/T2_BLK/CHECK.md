@@ -3,7 +3,7 @@
 Status (lead's label): **PROVED; Claude line check VERIFIED WITH AMENDMENTS (all applied); OpenAI layers pending at the
 gate.** Not "PROVED-CHECKED" (needs the Sol lock, a Sol line check and the OpenAI council seat).
 
-Frozen text (sha256, first 12 hex, 2026-11-16 18:00 CST, as frozen for council R1): STATEMENT `fdc7567672f6`, PROOF `7f686cf7b216`.
+Frozen text (sha256, first 12 hex, 2026-11-16 18:17 CST, as frozen for the R1 diff round R1d): STATEMENT `2bc68097d046`, PROOF `59bb28806ce0`.
 Code of record: `Scripts/SMC_BVS/core/` at 4676af6 (= HEAD for the core).
 
 | Tier B step (PROTOCOL_v4 §3, step 4 omitted) | who (NORMAL) | state | record |
@@ -14,7 +14,7 @@ Code of record: `Scripts/SMC_BVS/core/` at 4676af6 (= HEAD for the core).
 | 3 line check (Sol) | Sol | **VERIFIED WITH AMENDMENTS** (Sol, 11-16), amendments applied; no C | `../reviews/SL1LC2_reply_sol.md` |
 | statement-change check (§4.2) | Sol, new agent | **pending (gate)**; rows: v2 (BLK-c) setting R STRONGER; v4 setting-R premise STRONGER, (BLK-c) σ(X^r) wording WEAKER | STATEMENT changelog |
 | 6 citation check | script | **0 MISS** (81 citations) | `CITECHECK.txt` |
-| 7 council R1 | Sol + Opus, blind | batch T1–T10, manifest `../reviews/MANIFEST_R1.txt`; outcome recorded in `../reviews/` and `../CHECKPOINT_3.md` (this file is frozen in the manifest) | — |
+| 7 council R1 | Sol + Opus, blind | R1 (`../reviews/MANIFEST_R1.txt`): Sol REJECT (repaired), Opus ACCEPT; diff round R1d (`../reviews/MANIFEST_R1d.txt`); outcome in `../reviews/` and `../CHECKPOINT_3.md` | — |
 
 All three checkers found (BLK-a)–(BLK-c) correct from the first read; the amendments concern the setting (partition map
 defined for every X; setting R premise: i.i.d. rows, atomless coordinate marginals, ε independent of the rows), the

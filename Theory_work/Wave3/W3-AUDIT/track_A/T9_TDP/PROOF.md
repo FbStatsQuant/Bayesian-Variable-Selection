@@ -1,4 +1,8 @@
-# T9 · Lemma TDP — PROOF v2 (second seat on `C-ENG/lemmas/TDP_E.md`; code `Scripts/SMC_BVS/core/cpp/v3_start.h`)
+# T9 · Lemma TDP — PROOF v3 (second seat on `C-ENG/lemmas/TDP_E.md`; code `Scripts/SMC_BVS/core/cpp/v3_start.h`)
+
+v2 → v3 (council R1, Sol #3): every step below that speaks of what the compiled routine returns assumes (H4) of the
+STATEMENT (counters and cap representable, allocations succeed, recursion completes); the algorithmic arguments do not
+need it.
 
 Each step of TDP_E is checked against the code; deviations are noted. Paths below are relative to `Scripts/SMC_BVS/core/`.
 
