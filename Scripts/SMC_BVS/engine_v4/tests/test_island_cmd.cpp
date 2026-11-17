@@ -28,6 +28,7 @@
 #include "v4/island/island.h"
 #include "v4/island/island_file.h"
 #include "v4/island/setup_load.h"
+#include "v4/offer_floor.h"
 #include "v4/format.h"
 #include "v4/prep.h"
 #include "v4/provenance.h"
@@ -170,6 +171,8 @@ TEST(island_command_end_to_end) {
       // the reference sets it by value, not from the CLI default (14, which is right only for n = 200)
       CHECK(f.D.n == 60 && f.D.p == 30 && v4::calib::budgets(f.D.n, f.D.p).B == 5);
       c.B = 5;
+      // D-29 (WP7 O6): the command gives a V final island calib.bin's tau_cal as its offer floor (-inf in other modes)
+      { const v4::OfferFloor of = v4::offer_floor_from_calib(ci.meta, mode == "V", ci.content_hash); c.offer_floor = of.f; c.offer_floor_calib = of.calib; }
       const IslandRun ref = mode == "V" ? run_island<Arith::ClassA>(f.D, st, nb, c) : run_island<Arith::Bit>(f.D, st, nb, c);
       char hx[19]; std::snprintf(hx, sizeof hx, "0x%016llx", (unsigned long long)ref.hash());
       CHECKF(rec.at("output_hash").str() == hx, "%s island %d: CLI output hash %s, run_island (B 5) %s", mode.c_str(), r, rec.at("output_hash").str().c_str(), hx);
@@ -215,6 +218,52 @@ TEST(island_command_end_to_end) {
       CHECK(m.at("status").str() == "completed" && (int)m.at("Rp").num() == Rp && std::isfinite(m.at("logZ").num()));
       std::printf("  %-6s merge: logZ = %.6f\n", mode.c_str(), m.at("logZ").num()); }
   }
+}
+
+// D-29 (WP7 O6) through the CLI: V islands take calib.bin's tau_cal as their offer floor (island_r.bin meta), --offer-floor 0
+// runs without it; every science section of the island files except the store (top_*) is identical, the floored store
+// is the unfloored store's prefix v >= floor, and the merged fit.bin is identical section by section.
+TEST(island_command_offer_floor_on_off) {
+  Dir dir("floor"); Fx f; make_fx(f, dir);
+  const std::string bin = V4_SMCBVS4, cal = dir("calib.bin");
+  CHECK_EQ(sh(bin + " calibrate --data " + q(f.dpath) + " --setup " + q(f.spath) + " --mode V --seed 77 --threads 3 --out " + q(cal)), 0);
+  const v4::wp4io::CalibIn ci = v4::wp4io::read_calib(cal, f.D.p, f.D.K, f.dhash, f.shash);
+  CHECKF(std::isfinite(ci.tau_cal), "tau_cal %g (the fixture needs a finite floor)", ci.tau_cal);
+  const int Rp = 3;
+  std::string isl[2];
+  for (int on = 0; on < 2; ++on) for (int r = 1; r <= Rp; ++r) {
+    const std::string out = dir("isl_" + std::to_string(on) + "_" + std::to_string(r) + ".bin");
+    CHECK_EQ(sh(bin + " island --data " + q(f.dpath) + " --setup " + q(f.spath) + " --calib " + q(cal) + " --mode V --seed 77 --island " + std::to_string(r) +
+                " --threads 3 --offer-floor " + std::to_string(on) + " --out " + q(out)), 0);
+    isl[on] += (r > 1 ? "," : "") + out;
+    const IslandFile F = read_island_file(out);
+    if (on) CHECK(v4::f64_hex(F.offer_floor) == v4::f64_hex(ci.tau_cal) && F.offer_floor_calib == ci.content_hash);
+    else CHECK(std::isinf(F.offer_floor) && F.offer_floor < 0 && F.meta.at("offer_floor_calib").is_null());
+  }
+  for (int r = 1; r <= Rp; ++r) {   // science sections equal; the store = the unfloored prefix v >= floor
+    const std::string a = dir("isl_0_" + std::to_string(r) + ".bin"), b = dir("isl_1_" + std::to_string(r) + ".bin");
+    v4::fmt::Reader Ra(a), Rb(b); bool same = true;
+    for (auto& e : Ra.sections()) {
+      const std::string nm(e.name);
+      if (nm == "meta" || nm.rfind("top_", 0) == 0) continue;
+      bool found = false; for (auto& g : Rb.sections()) if (std::string(g.name) == nm) { found = true; same = same && std::memcmp(e.sha256, g.sha256, 32) == 0; }
+      same = same && found;
+    }
+    const IslandFile Fa = read_island_file(a), Fb = read_island_file(b);
+    const v4::Store &sa = Fa.rec.led.top, &sb = Fb.rec.led.top;
+    size_t want = 0; while (want < sa.size() && sa.v[want] >= ci.tau_cal) ++want;
+    bool sto = sb.size() == want;
+    for (size_t i = 0; sto && i < want; ++i) sto = v4::f64_hex(sb.v[i]) == v4::f64_hex(sa.v[i]) && v4::same_model(sb.model(i), sa.model(i));
+    CHECKF(same && sto, "island %d: science sections equal %d, store %zu vs %zu above the floor", r, (int)same, sb.size(), want);
+  }
+  std::string fit[2];
+  for (int on = 0; on < 2; ++on) {
+    fit[on] = dir("fit_" + std::to_string(on) + ".bin");
+    CHECK_EQ(sh(bin + " merge --data " + q(f.dpath) + " --setup " + q(f.spath) + " --calib " + q(cal) + " --islands " + q(isl[on]) + " --Rp " +
+                std::to_string(Rp) + " --mode V --threads 2 --out " + q(fit[on])), 0);
+  }
+  CHECK(body_hash(fit[0]) == body_hash(fit[1]) && !body_hash(fit[0]).empty());
+  std::printf("  tau_cal %.6f: islands floored through the CLI; fit.bin identical with and without the floor\n", ci.tau_cal);
 }
 
 TEST(island_command_driver_manifest) {
