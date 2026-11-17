@@ -27,8 +27,9 @@
 | short rows | the printed sampler averages on AR/BLK: not reached (TRACK_D §5a NO-GO, HQ D86); not a target here | | | named limit, not an item |
 
 ## Boundary numerics
-None needed for weakened hypotheses (no hypothesis is weakened). Numerics planned (PLAN step 4): brute-force check of
-LIST-K on random small Ω, and one end-to-end small case through the real core (sampler branch vs exact enumeration).
+None needed for weakened hypotheses (no hypothesis is weakened). Falsification numerics (done; evidence only, not
+necessity): `numerics/listk_check_out.txt` (LIST-K, 20 000 random small Ω, 0 violations) and `numerics/e2e_small_out.txt`
+(27 small AR(ρ) cases through the core of record vs exact enumeration: S₀ ∈ `top_store` 27/27, every bound holds).
 
 ## §4 Better-theorem candidates and dispositions
 | candidate | disposition |
