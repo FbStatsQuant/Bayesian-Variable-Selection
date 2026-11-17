@@ -374,3 +374,4 @@
 - 2026-11-16 20:06 CST EARLY FLAG to HQ: relabel dry run stopped (Thm-1 A3: legacy inputs SOP:TH09-T02, W3-POST:Lemma-1a, C-PACK:SL1). Options a/b/c; recommended (a) with an H5 call on T02 (fallback (b) for T02 only). Decision needed by Wed for Fri. Recorder meanwhile on the task 2 dry run.
 - 2026-11-16 20:07 CST D93 relayed to the recorder (after the task 2 dry run).
 - 2026-11-16 20:08 CST Must-do item 4 DONE: T14 H5 card (STRONGER) ab1887be → HQ for the consultant. C1 blind Opus line check running; recorder on the task 2 dry run, then rule (c) + carriers.
+- 2026-11-16 20:09 CST H5 card 16 (T14 → row 3.1) AGREED with 3 binding edits (no overclaim / p_raw / one-sentence row; details to the reader note). Appended to the card (W3-AUDIT d727e7a3); queued for READER B3 (after T14 is recorded).
