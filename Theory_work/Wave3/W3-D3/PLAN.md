@@ -1,4 +1,4 @@
-# W3-D3 — PLAN (v0.1, 2026-11-17 13:05 CST; lead Claude Opus 5.5 high) — track D ticket #3, sub-Gaussian rows for Thm 2
+# W3-D3 — PLAN (v0.2, 2026-11-17 13:06 CST; v0.2 = class-1 anchors named (manager, #3 REQUIRED); lead Claude Opus 5.5 high) — track D ticket #3, sub-Gaussian rows for Thm 2
 
 Owner D105/D112 (#3 required; reuse W3-DIST's bridge). Tier B rider. **Plan stage: no proving before the manager's GO.**
 
@@ -31,11 +31,27 @@ lemma: x = m + Lξ, ξ independent unit-variance K-sub-Gaussian coordinates ⇒ 
 grid; small exact-posterior run with Rademacher/uniform correlated rows), `READER_DELTA.md`, DEPS, REPORT, API card.
 ≈ 1.5 days with checks (Sol lock; blind Opus line check; council Sol + Opus; Opus diff rounds; CP3 + API blind-audit card).
 
-**D109 classes of the hypotheses.** (SG) with constant K: **class 1** — same assumption and class as Thm 9 (A3)
-(`ASSUMPTION_COMPLIANCE.md:31`, PREC B7b: NH14 Lemma 6.1 sub-Gaussian rows; implies SL Condition 1, TRACK_B B7); 2b note:
-holds with K = 1 for Gaussian and Rademacher-mixed rows; fails for rare binary predictors (PREC B7b). Window w_n: same as
-Thm 2's floor window (class as row 1.2: 1 and 2b). All other hypotheses inherited verbatim from row 1.2 (classes at
-`ASSUMPTION_COMPLIANCE.md:27-29`). No new constant besides K.
+**D109 classes of the hypotheses.** (SG) with constant K: **class 1**, same assumption and class as Thm 9 (A3)
+(`ASSUMPTION_COMPLIANCE.md:31`). **Class-1 anchors (BVS for linear regression), cited by (SG):**
+- **Primary: NH14 Lemma 6.1** (Narisetty & He 2014, Ann. Statist. 42, arXiv 1405.6545v1 pp. 16–17): "Suppose that the rows
+  of X_{n×p_n} are independent isotropic sub-Gaussian random vectors in R^{p_n}. Then there exists a ν > 0 such that, with
+  probability greater than 1 − exp(−w′n), inf_{|k|≤m_n(ν)} φ_min(X_k′X_k/n) > 0", introduced as "this requirement is
+  satisfied with high probability if the design matrix consists of independent sub-Gaussian rows". Re-verified by the lead
+  against the arXiv PDF, 2026-11-17 13:03 (also PREC B7b, two Opus checks). Same use as ours: sub-Gaussian rows ⇒ sample
+  sparse eigenvalue floor. Their (centred, isotropic) rows satisfy (SG) with K = C·α (C absolute; standard ψ₂ ⇔ MGF
+  equivalence, 3-line remark in TARGET.md); ours is weaker on sparse directions and allows any correlation Σ_n.
+- **SL's own condition: Song–Liang (2015) Condition 1** (Theorem 2, p. 953): an exponential-moment bound on averages of
+  ≤ r̄_n predictors, with their Gaussian example. Same family; (SG) ⇒ Condition 1 for every r (TRACK_B B7, confirmed in
+  `W3-AUDIT/reviews/AUDITCALC_check_opus.md` §4); the converse fails, so (SG) is the stronger of the two.
+- See also (not BVS, not an anchor): RZ Def. 1.5/Thm 1.6 — the anisotropic ψ₂ form ⟨x, y⟩ sub-Gaussian at its own scale,
+  i.e. the correlated-row version of NH14's assumption. **Checked negative:** YWJ15 (arXiv 1505.07925v1) uses only
+  Gaussian random rows (pp. 566–572, 770 of the text extraction); not a sub-Gaussian precedent.
+- **Residual judgement (to state openly in TARGET.md):** no verified BVS paper states sub-Gaussian rows with a *general*
+  correlation matrix; NH14 does it for identity covariance, SL Condition 1 is a weaker condition under general correlation.
+  (SG) sits between them, as Thm 9 (A3) already does.
+2b note: K = 1 for Gaussian rows and for x = m + Lξ with Rademacher ξ; fails for rare binary predictors (PREC B7b).
+Window w_n: same as Thm 2's floor window (class as row 1.2: 1 and 2b). All other hypotheses inherited verbatim from row
+1.2 (classes at `ASSUMPTION_COMPLIANCE.md:27-29`). No new constant besides K.
 
 **Relation to W3-D2 (Thm2X).** Orthogonal axes, no duplication: Thm2X keeps Gaussian rows (its master `W3-MISR-R:CorGb-plus`
 uses Gaussian omitted predictors structurally) and upgrades the *conclusion* to expectation rates on a smaller window;

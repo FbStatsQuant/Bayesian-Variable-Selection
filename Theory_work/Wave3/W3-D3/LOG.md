@@ -9,3 +9,8 @@
   W3-D2 STATEMENT v1.3 (Thm2X, Cor2X); PROTOCOL_v4 §§1–2A; RIDER_RULES §§1–3; PROGRAM Readability; Dept DECISIONS D105–D112.
 - 13:05 — PLAN.md v0.1 written. Verdict: reuse succeeds for every Gaussian step (G1–G5); no new probability theory.
   Stopped at plan stage; awaiting manager GO. No agents started.
+- 13:03 — manager: #3 REQUIRED (HQ/owner); name the class-1 BVS precedents for sub-Gaussian rows. Lead re-verified NH14
+  Lemma 6.1 against arXiv 1405.6545v1 (pp. 16–17, wording matches PREC B7b); checked YWJ15 (1505.07925v1): Gaussian random
+  rows only — negative. Text extractions in the session scratchpad (not committed).
+- 13:06 — PLAN.md v0.2: anchors NH14 Lemma 6.1 (primary), SL Condition 1 (implied by (SG)); RZ see-also; residual
+  judgement (general correlation) stated. Reuse verdict unchanged (no failing step). Awaiting GO.
