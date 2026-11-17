@@ -26,9 +26,14 @@ OK            [PROOF.md] v3_run.R:101-101 sha=9dcf57e697 | ro$ls0_cap <- if (ide
 OK            [PROOF.md] cpp/v3_core.cpp:404-404 sha=1c3e134aae | o.ls0_cap_plus_mode = !ro.containsElementNamed("ls0_cap") || as<std::string>(ro["ls0_cap"]) != "ell_n";
 OK            [PROOF.md] cpp/v3_core.cpp:469-469 sha=35f7274942 | ModeResult m = start_mode(st, 1000000, o.ls0_tie_dp);
 OK            [PROOF.md] cpp/v3_start.h:220-224 sha=fc383d4a28 | for (int k = 0; k <= K; ++k) {
+OK            [PROOF.md] cpp/v3_start.h:281-301 sha=09dd494518 | std::function<void(int, int)> rec = [&](int b, int r) {
+OK            [PROOF.md] cpp/v3_start.h:111-111 sha=9b957391c6 | if (j <= top) st.codes_by_size[b][j].push_back(code);
+OK            [PROOF.md] cpp/v3_start.h:201-209 sha=769e681a34 | for (int b = 0; b < J; ++b) {
+OK            [PROOF.md] cpp/v3_start.h:261-261 sha=9334c5c245 | if (dp.kbest < 0 || !feasible()) throw std::runtime_error("start_mode tie DP: no tight path from (J, kbest) (i
+OK            [PROOF.md] cpp/v3_start.h:263-268 sha=ae0fe18066 | for (int i = 0; i < p; ++i) {
 OK            [PROOF.md] cpp/v3_score.h:40-40 sha=3b222c88d0 | D.n = n; D.p = p; D.K = std::min(p, n / 2); D.W = nwords(p);
 OK            [PROOF.md] cpp/v3_core.cpp:473-473 sha=eb29fd99a2 | long long cap_ll = (long long)o.ls0_ell + (o.ls0_cap_plus_mode ? (long long)m.S.size() : 0LL);  // checked (R0
 OK            [PROOF.md] cpp/v3_core.cpp:474-474 sha=2efd1bb2f7 | if (o.ls0_ell < 0 || cap_ll > (long long)std::numeric_limits<int>::max()) stop("LS0 move cap out of range");
 
-31 citations: 31 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+36 citations: 36 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
 Not machine-checked: unbackticked references and the semantic match of each excerpt.

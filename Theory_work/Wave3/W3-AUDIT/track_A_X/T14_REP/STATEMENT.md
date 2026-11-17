@@ -1,4 +1,4 @@
-# T14 · Lemma REP (IDEAL-W⁺ is vacuous on inputs R can represent) — STATEMENT v0 (DRAFT, post-freeze item; not locked; wording per manager 11-16: "IDEAL-W⁺ costs nothing on any input the software can receive (n, p ≤ 2³¹ − 1)")
+# T14 · Lemma REP (IDEAL-W⁺ is vacuous on inputs R can represent) — STATEMENT v1 (DRAFT, post-freeze item; not locked; wording per manager 11-16: "IDEAL-W⁺ costs nothing on any input the software can receive (n, p ≤ 2³¹ − 1)")
 
 HQ 11-16: approved as a small post-freeze item outside the track D cap; drafting allowed now; kill at 1 day; one Sol line
 check. Tier B (code reading). **Lean target: no** (a code fact; the arithmetic is trivial).
@@ -25,7 +25,7 @@ vectors raise only the length bound n·p_raw); the core reads both as C++ `int` 
 For every R-representable input of the shipped `v3_fit` that reaches the two sites:
 - **(REP-a)** at `Scripts/SMC_BVS/core/v3_run.R:95-97`, `le` = ℓ_n = ⌈log₂(n + p + 1)⌉ ≤ 32, so `le > 1e6` is false (and the
   other conditions of that validator hold, so it does not stop);
-- **(REP-b)** at `Scripts/SMC_BVS/core/cpp/v3_core.cpp:473-474`, `o.ls0_ell` = ℓ_n ∈ [2, 32] and
+- **(REP-b)** at `Scripts/SMC_BVS/core/cpp/v3_core.cpp:473-474`, `o.ls0_ell` = ℓ_n ∈ [3, 32] and
   `cap_ll` = ℓ_n + |S̃₀| ≤ 32 + ⌊n/2⌋ ≤ 2³⁰ + 31 < 2³¹ − 1 = INT_MAX, so neither disjunct of the guard holds.
 Hence the two predicates that A:IDEAL-W⁺ lifts are false on every R-representable input: **IDEAL-W⁺ costs nothing on any input the software
 can receive (n, p ≤ 2³¹ − 1)**: its two extra predicates are false there, so its extra clause holds vacuously.
@@ -36,3 +36,9 @@ can receive (n, p ≤ 2³¹ − 1)**: its two extra predicates are false there, 
 - That other `int` arithmetic is safe on all R-representable inputs (e.g. `2 * p - 1`, `cpp/v3_blocks.h:49`, overflows for
   p ≥ 2³⁰): that is IDEAL-W's own content, unchanged.
 - Non-default options (a user setting `v3.ls0_ell` > 10⁶ makes X7 fire by design).
+
+## Changelog
+| version | clause | tag | reason | trigger | check |
+|---|---|---|---|---|---|
+| v0 | all | NEW-CLAIM | HQ 11-16 post-freeze item | manager message 11-16 | Sol line check VERIFIED (`reviews/LC1_reply_sol_T14.md`) |
+| v1 | (REP-b) proof: structural size bound on the start mode (no T9, no EX-A/H2-FP); ℓ_n range [3, 32] | EQUAL (claim unchanged; proof made premise-free as stated) | XR1 Opus F1, E7, E8 | `reviews/XR1_council_opus.md` | diff round XR2 |
