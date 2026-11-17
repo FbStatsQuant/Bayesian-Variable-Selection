@@ -27,8 +27,11 @@ the design's p, and POST, stated for the design's p, applies to ε_n.
 RM2R `STATEMENT.md:138-143`, last sentence).
 (0.5) *From the pinned core to the method with the list fields* [R1-opus-1]. L2, RM0-plus and DLV-0 are statements
 about the core of record (4676af6); LIST-R is about the method after the pending commit that adds the fields. By
-IMPL-LIST (the commit computes the fields as SPEC §2 and §4 prescribe, after everything else, from the returned list
-and values of the same run, and changes no other field and no other state; SPEC §7 A.1–A.2), on every input and every
+IMPL-LIST (the commit computes the fields as SPEC §2 and §4 prescribe, from the returned list and values of the same
+run, and changes no other field and no other state; SPEC §7 A.1–A.2) — and the returned list exists only after the
+last runtime-guard consultation (`v3_fit.R:121-122` on the exact branch, after `v3_final_run` at `v3_fit.R:162` on the
+sampler branch), after which `finish` (`v3_fit.R:79-87`) does not branch on the clock, so DLV-0's guard and MACH
+accounting are unaffected [R2-E-2] — on every input and every
 realisation of the run's uniforms the post-commit fit and the pinned fit execute the same computation up to the new
 fields, and the new computation can end the fit with an error only through SPEC §4's duplicate-model row. That row
 cannot fire on an output run: the sampler store `top_store` and the exact store 𝒯^ex hold distinct models (L2 (iii),
