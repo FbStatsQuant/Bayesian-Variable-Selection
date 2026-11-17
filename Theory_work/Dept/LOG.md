@@ -501,3 +501,4 @@
 - 2026-11-17 17:26 CST W3-D2 LANDED 2e0decc8 (CI 44196881467). W3-D3 dry run clean (Thm2SG/B3w/ExSG clean; R2g2 PURE pin requote) → HQ GO requested. Recorder: manifest.py v2 (already GO'd) + V dry run.
 - 2026-11-17 17:27 CST HQ GO W3-D3 real (relayed); then V + manifest.py v2.
 - 2026-11-17 17:36 CST HEARTBEAT: W3-D3 on main 0eb1b6ef (CI 44200558590 in progress; the recorder reports). Heartbeat prompt updated.
+- 2026-11-17 17:57 CST W3-D3 0eb1b6ef CI green; manifest.py v2 landed a4c84736 (CI 44203328839 running). V dry clean, but VR4 EXT TRACK_B.md + track_C/RESULTS.md are not on main, so the recording brings them; HEAD TRACK_B chosen (frozen B8 contradicts VIS). Manager tightened B8 lines 220/233 to PROOF.md:107-109 wording (W3-AUDIT 349c1ee6, 0ae17b6a). Recorder told: use 0ae17b6a, honest VR4r label (dossier edit had no seat review), re-dry. HQ asked for conditional GO.
