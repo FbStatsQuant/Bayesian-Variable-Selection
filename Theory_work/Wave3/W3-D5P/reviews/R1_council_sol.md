@@ -1,3 +1,4 @@
+<!-- Council R1, seat sol: Codex gpt-6.1-sol, reasoningEffort high (pre-D122); brief reviews/BRIEF_R1_sol.md; MANIFEST 952d9840…; reply below verbatim -->
 | id | decision |
 |---|---|
 | W3-D5P:LIST-K | ACCEPT |
