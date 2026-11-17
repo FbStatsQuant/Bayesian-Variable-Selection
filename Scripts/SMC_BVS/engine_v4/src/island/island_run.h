@@ -132,7 +132,7 @@ static const char kCkptMagic[8] = {'S', 'M', 'C', 'V', '4', 'C', 'K', 'P'};
 template <Arith A>
 class IslandEngine {
  public:
-  const Data& D; const Start& st; const Neighbours& nb; IslandConfig cfg;
+  const Data& D; const StartView& st; const Neighbours& nb; IslandConfig cfg;
   int p, m, NT;
   std::vector<Particle> P;
   TopStore top;
@@ -201,7 +201,7 @@ class IslandEngine {
     throw v4::NumericalFailure(m);
   }
 
-  IslandEngine(const Data& d, const Start& s, const Neighbours& n, const IslandConfig& c) : D(d), st(s), nb(n), cfg(c) {
+  IslandEngine(const Data& d, const StartView& s, const Neighbours& n, const IslandConfig& c) : D(d), st(s), nb(n), cfg(c) {
     p = D.p; m = p + cfg.B + 2; NT = std::max(1, cfg.threads);
     top.init(cfg.store_cap ? cfg.store_cap : 40ULL * (uint64_t)p + 1, Order::HPM);
     for (int t = 0; t < NT; ++t) { tl.emplace_back(new ThreadLedger()); tl.back()->top = &top; scorers.emplace_back(new BitScorer(&D)); }
@@ -222,6 +222,7 @@ class IslandEngine {
     top.defer = cfg.store_parallel_compact && NT > 1 && cfg.kernel == KernelKind::LabelMajor;   // PM has no boundaries (review m3)   // compaction at pass/step boundaries, all threads
     scratch_P.resize(NT);
     Bk = std::max(64, (cfg.tile + 63) / 64 * 64);
+    st.prepare(NT);   // StartView: the pi_0 draws' per-thread scratch, built before any parallel region (no heap in a draw)
   }
 
   // --- addresses ---------------------------------------------------------------------------------------------
@@ -868,7 +869,7 @@ class IslandEngine {
 
 
 #ifdef V4_ISLAND_DEFINE_COMMON
-MemPlan plan_island(const Data& D, const Start& st, const IslandConfig& cfg, MemSizes* zout, double* kout, int* Gout) {
+MemPlan plan_island(const Data& D, const StartView& st, const IslandConfig& cfg, MemSizes* zout, double* kout, int* Gout) {
   // k for the plan (review P2 at 10^6): round 1 stores pi_0-sized models, so the stored mean size is bounded by the
   // pi_0 size distribution (exact, from setup) -- its 90 % quantile + 1 (flips add one member) -- and, later, by the
   // calibration-measured stored mean k_store
@@ -897,7 +898,7 @@ inline void fix_mmap_threshold() {
 }
 
 template <Arith A>
-IslandRun run_island(const Data& D, const Start& st, const Neighbours& nb, const IslandConfig& cfg_in) {
+IslandRun run_island(const Data& D, const StartView& st, const Neighbours& nb, const IslandConfig& cfg_in) {
   if (cfg_in.kernel == KernelKind::ParticleMajor && cfg_in.threads > 1) fix_mmap_threshold();
   IslandConfig cfg = cfg_in;
   const bool calib = cfg.role != IslandRole::Final;

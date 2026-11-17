@@ -108,7 +108,8 @@ inline void tile_products(const double* XA, int nA, int n, const double* Xtile, 
 }
 
 // Composite sum of S ∪ {j} (j ∉ S) and S \ {j} (j ∈ S), same additions in the same order as Start::comp.
-inline double comp_add(const Start& st, const SupportCache& s, int j) {
+// St: StartView (the engine) or dep::Start (tests): both give lr(b, code), blk[j], pos[j].
+template <class St> inline double comp_add(const St& st, const SupportCache& s, int j) {
   int b = st.blk[j]; uint32_t bit = 1u << st.pos[j];
   size_t m = std::lower_bound(s.bb.begin(), s.bb.end(), b) - s.bb.begin();
   double c = s.bpre[m];
@@ -117,7 +118,7 @@ inline double comp_add(const Start& st, const SupportCache& s, int j) {
   for (; m < s.bb.size(); ++m) c += s.bterm[m];
   return c;
 }
-inline double comp_del(const Start& st, const SupportCache& s, int j) {
+template <class St> inline double comp_del(const St& st, const SupportCache& s, int j) {
   int b = st.blk[j]; uint32_t bit = 1u << st.pos[j];
   size_t m = std::lower_bound(s.bb.begin(), s.bb.end(), b) - s.bb.begin();
   double c = s.bpre[m];
@@ -128,7 +129,7 @@ inline double comp_del(const Start& st, const SupportCache& s, int j) {
 }
 
 // Build the cache of support S with the particle's path values. BitScorer is per thread.
-inline void build_support(const Data& D, const Start& st, BitScorer& sc, SupportCache& s, const Model& S, uint64_t h,
+template <class St> inline void build_support(const Data& D, const St& st, BitScorer& sc, SupportCache& s, const Model& S, uint64_t h,
                           double logm, double lg0, double d, double phi) {
   s.S = S; s.k = (int)S.size(); s.h = h; s.logm = logm; s.lg0 = lg0; s.d = d; s.phi = phi;
   s.lgphi = lg0 + phi * d;  // core/cpp/v3_engine.h:14
@@ -171,7 +172,7 @@ inline void build_support(const Data& D, const Start& st, BitScorer& sc, Support
   for (size_t i = 0; i < pr.size();) {
     int b = pr[i].first; uint32_t code = 0;
     while (i < pr.size() && pr[i].first == b) { code |= 1u << pr[i].second; ++i; }
-    s.bb.push_back(b); s.bcode.push_back(code); s.bterm.push_back(st.logr[b][code]);
+    s.bb.push_back(b); s.bcode.push_back(code); s.bterm.push_back(st.lr(b, code));   // = logr[b][code] (StartView: the flat table)
     s.bpre.push_back(s.bpre.back() + s.bterm.back());
   }
   // deletions: score(S \ S[a]) from the cached Gram (bits of core's scorer), odds as core/cpp/v3_engine.h:124-126
@@ -265,8 +266,8 @@ inline unsigned flip8_A(const Data& D, const SupportCache& s, const v8d* u, v8d 
 }
 
 // Odds for additions: lane l is label j8[l] ∉ S with logm8[l] = log m(S ∪ j). core/cpp/v3_engine.h:97, :124-126.
-template <Arith A>
-inline v8d odds_add8(const Data& D, const Start& st, const SupportCache& s, const int32_t* j8, v8d logm8) {
+template <Arith A, class St>
+inline v8d odds_add8(const Data& D, const St& st, const SupportCache& s, const int32_t* j8, v8d logm8) {
   v8d c;
   for (int l = 0; l < 8; ++l) c[l] = comp_add(st, s, j8[l]);
   v8d lg0 = bc(D.logprior[s.k + 1]) + c;
@@ -285,8 +286,8 @@ inline v8d odds_add8(const Data& D, const Start& st, const SupportCache& s, cons
 
 // Additions for 8 labels: fills logm_out / o_out for the lanes in `lanes` (all non-members; for Bit they share the
 // insertion position q). u: Gram entries of the 8 labels with each member of S (lane-wise). Requires s.fast, s.add_ok.
-template <Arith A>
-inline void eval8_add(const Data& D, const Start& st, BitScorer& sc, const SupportCache& s, int q, const v8d* u,
+template <Arith A, class St>
+inline void eval8_add(const Data& D, const St& st, BitScorer& sc, const SupportCache& s, int q, const v8d* u,
                       const int32_t* j8, unsigned lanes, double* logm_out, double* o_out) {
   v8d gjj, zj;
   for (int l = 0; l < 8; ++l) { gjj[l] = D.diagG[j8[l]]; zj[l] = D.z[j8[l]]; }
@@ -306,8 +307,8 @@ inline void eval8_add(const Data& D, const Start& st, BitScorer& sc, const Suppo
 
 // One label, any support (the particle-major reference and the slow path of the label-major kernel).
 // Writes log m(S △ j) (NaN if the addition is infeasible) and o_j. Members: the cached deletion values.
-template <Arith A>
-inline void eval1(const Data& D, const Start& st, BitScorer& sc, const SupportCache& s, int j, double& logm_out, double& o_out) {
+template <Arith A, class St>
+inline void eval1(const Data& D, const St& st, BitScorer& sc, const SupportCache& s, int j, double& logm_out, double& o_out) {
   auto it = std::lower_bound(s.S.begin(), s.S.end(), j);
   int q = (int)(it - s.S.begin());
   if (it != s.S.end() && *it == j) { logm_out = s.del_logm[q]; o_out = s.del_odds[q]; return; }

@@ -24,6 +24,7 @@
 #include "v4/island/kernel.h"
 #include "v4/island/store.h"
 #include "v4/island/memory.h"
+#include "v4/island/start_view.h"
 #include "v4/json.h"
 
 namespace v4::island {
@@ -249,7 +250,10 @@ v4::IslandResult to_record(const IslandRun& r);
 
 // The --mem-budget admission plan of an island (manager Q3/Q4, review PR24 P2): the group size it would use (largest
 // G <= 256 that fits mem_budget when cfg.G == 0), the plan's k, the sizes. Used by run_island and by the bench.
-MemPlan plan_island(const Data& D, const Start& st, const IslandConfig& cfg, MemSizes* z = nullptr, double* k = nullptr, int* G = nullptr);
+MemPlan plan_island(const Data& D, const StartView& st, const IslandConfig& cfg, MemSizes* z = nullptr, double* k = nullptr, int* G = nullptr);
+inline MemPlan plan_island(const Data& D, const dep::Start& st, const IslandConfig& cfg, MemSizes* z = nullptr, double* k = nullptr, int* G = nullptr) {
+  return plan_island(D, StartView::from(st), cfg, z, k, G);   // tests: the stand-in Start, flattened
+}
 
 // The same plan from sizes alone (no data, no Start: `--plan-only` before the files exist; k is then the caller's):
 // plan_sizes() fills MemSizes exactly as plan_island does, plan_with_budget() applies its G rule (cfg.G = 0 and a
@@ -269,10 +273,18 @@ inline MemPlan plan_with_budget(MemSizes& z, double k, const IslandConfig& cfg) 
   return mp;
 }
 
+// The engine reads the start law through StartView (the flat tables: mapped setup.bin sections in production).
 template <Arith A>
-IslandRun run_island(const Data& D, const Start& st, const Neighbours& nb, const IslandConfig& cfg);
+IslandRun run_island(const Data& D, const StartView& st, const Neighbours& nb, const IslandConfig& cfg);
 
-extern template IslandRun run_island<Arith::Bit>(const Data&, const Start&, const Neighbours&, const IslandConfig&);
-extern template IslandRun run_island<Arith::ClassA>(const Data&, const Start&, const Neighbours&, const IslandConfig&);
+extern template IslandRun run_island<Arith::Bit>(const Data&, const StartView&, const Neighbours&, const IslandConfig&);
+extern template IslandRun run_island<Arith::ClassA>(const Data&, const StartView&, const Neighbours&, const IslandConfig&);
+
+// Tests, goldens and benchmarks build the stand-in dep::Start (core's arithmetic): flattened into an owned view per call.
+template <Arith A>
+inline IslandRun run_island(const Data& D, const dep::Start& st, const Neighbours& nb, const IslandConfig& cfg) {
+  const StartView v = StartView::from(st);
+  return run_island<A>(D, v, nb, cfg);
+}
 
 }  // namespace v4::island

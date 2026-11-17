@@ -106,7 +106,7 @@ Reader::Reader(const std::string& path, bool verify) : path_(path) {
   if (::fstat(fd, &st) != 0) { ::close(fd); throw Error(Status::io_error, "fstat " + path); }
   size_ = (size_t)st.st_size;
   if (size_ < sizeof(FileHeader)) { ::close(fd); throw Error(Status::invalid_input, "file too short: " + path); }
-  void* m = ::mmap(nullptr, size_, PROT_READ, MAP_SHARED, fd, 0);
+  void* m = ::mmap(nullptr, size_, PROT_READ, MAP_PRIVATE, fd, 0);   // read-only; private (review PR57 m3). Engine files are written by rename, never in place
   ::close(fd);
   if (m == MAP_FAILED) throw Error(Status::io_error, "mmap " + path);
   size_t sz = size_;

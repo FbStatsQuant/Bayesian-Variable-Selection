@@ -35,7 +35,10 @@ inline std::string calib_cost_path(const std::string& dir, bool pilot, int tier,
 template <Arith A>
 class CalibIslandRunner final : public v4::calib::IslandRunner {
  public:
-  CalibIslandRunner(const Data& D, const Start& st, const Neighbours& nb, const CalibRunnerConfig& c) : D_(D), st_(st), nb_(nb), c_(c) {}
+  CalibIslandRunner(const Data& D, const StartView& st, const Neighbours& nb, const CalibRunnerConfig& c) : D_(D), st_(st), nb_(nb), c_(c) {}
+  // tests / goldens: the stand-in dep::Start, flattened once and owned by the runner
+  CalibIslandRunner(const Data& D, const dep::Start& st, const Neighbours& nb, const CalibRunnerConfig& c)
+      : own_(std::make_shared<StartView>(StartView::from(st))), D_(D), st_(*own_), nb_(nb), c_(c) {}
 
   v4::calib::IslandOut run(const v4::calib::IslandSpec& sp) override {
     const bool pilot = sp.role == v4::calib::IslandRole::Pilot;
@@ -80,7 +83,8 @@ class CalibIslandRunner final : public v4::calib::IslandRunner {
   }
 
  private:
-  const Data& D_; const Start& st_; const Neighbours& nb_; CalibRunnerConfig c_;
+  std::shared_ptr<const StartView> own_;   // declared first: initialised before st_ refers to it
+  const Data& D_; const StartView& st_; const Neighbours& nb_; CalibRunnerConfig c_;
   std::map<uint64_t, std::unique_ptr<v4::CompatSource>> streams_;
 };
 
