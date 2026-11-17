@@ -1,9 +1,12 @@
 // test_setup.cpp -- WP2 unit tests, gate T11 (truncated linkage = exact dendrogram below 1 - tau_n), thread/tile
 // invariance (T3 for setup), setup.bin round trip, edge cases.
 #include <map>
+#include <sys/stat.h>
 #include <unistd.h>
 #include "setup_tk.h"
 #include "v4/format.h"
+#include "v4/store.h"
+#include "v4/wp4_io.h"
 
 using namespace v4::setup;
 using stk::Fixture;
@@ -426,6 +429,50 @@ TEST(cli_setup_pipeline) {
            !rd.has("codes_by_size"), "setup.bin sections / meta");
   }
   SCHECK(run_cli("info --in " + d + "_setup.bin") == 0, "info");
+  // driver form (WP3 pipeline, p = 2000): inputs from --manifest (data.bin by base name), as calibrate / island / merge
+  {
+    const std::string md = d + "_run";   // the driver's layout: <run>/data.bin (inputs are matched by base name)
+    SCHECK(run_cli("gen --design AR --n 80 --p 400 --seed 5 --out " + md + "_raw.bin") == 0, "gen 2");
+    mkdir(md.c_str(), 0700);
+    SCHECK(run_cli("prep --in " + md + "_raw.bin --out " + md + "/data.bin") == 0, "prep into <run>/data.bin");
+    const std::string dh = v4::fmt::Reader(md + "/data.bin").content_hash();
+    auto manifest = [&](const std::string& path, const std::string& mode, int p) {
+      v4::Json m = v4::Json::object(); m["schema"] = "smcbvs4.manifest/1"; m["command"] = "setup"; m["mode"] = mode;
+      v4::Json in = v4::Json::object(); in[md + "/data.bin"] = dh; m["inputs"] = in;
+      v4::Json pr = v4::Json::object(); pr["n"] = 80; pr["p"] = p; pr["seed"] = 3; pr["Rp"] = 4; pr["N"] = 100; m["params"] = pr;
+      FILE* f = std::fopen(path.c_str(), "w"); std::fputs(m.dump(1).c_str(), f); std::fclose(f);
+    };
+    manifest(d + "_m.json", "law", 400);
+    const int rcm = run_cli("setup --manifest " + d + "_m.json --threads 2 --out " + d + "_msetup.bin");
+    SCHECK(rcm == 0, "setup --manifest: exit %d, %s", rcm, v4::read_json_file(d + "_msetup.bin.json").at("reason").str().c_str());
+    if (rcm != 0) return;
+    v4::fmt::Reader a(d + "_setup.bin"), b(d + "_msetup.bin");
+    std::map<std::string, std::string> ha, hb;
+    for (auto& e : a.sections()) ha[e.name] = std::string((const char*)e.sha256, 32);
+    for (auto& e : b.sections()) hb[e.name] = std::string((const char*)e.sha256, 32);
+    ha.erase("meta"); hb.erase("meta");
+    const bool same = ha == hb && !ha.empty();
+    SCHECK(same, "setup --manifest gives other data sections than setup --data");
+    v4::Json mm = b.json("meta");
+    SCHECK(mm.at("inputs").at("data.bin").str() == dh && mm.at("mode").str() == "law", "manifest-form setup.bin meta.inputs / mode");
+    // meta.stores: WP4's store descriptors; read back with WP4's own reader
+    for (const char* pf : {"tstore_top", "tstore_lead0", "tstore_lead1"}) {
+      v4::Store s; v4::wp4io::read_store(b, mm, pf, s, 400, 80, nullptr);
+      SCHECK(s.size() > 0 && s.size() == b.vec<double>(std::string(pf) + "_v").size(), "WP4 read_store on setup.bin %s", pf);
+    }
+    SCHECK(run_cli("setup --manifest " + d + "_m.json --data " + d + "_raw.bin --out " + d + "_x.bin") == 13, "--data that differs from the manifest: exit 13");
+    manifest(d + "_m2.json", "law", 401);
+    SCHECK(run_cli("setup --manifest " + d + "_m2.json --out " + d + "_x.bin") == 13, "manifest p differs from data.bin: exit 13");
+    manifest(d + "_m3.json", "compat", 400);
+    SCHECK(run_cli("setup --manifest " + d + "_m3.json --threads 2 --out " + d + "_csetup.bin") == 0, "compat manifest");
+    v4::Json cr2 = v4::read_json_file(d + "_csetup.bin.json");
+    SCHECK(cr2.at("partition").str() == "exact" && cr2.at("file_mode").str() == "compat", "compat manifest: exact partition, compat file");
+    SCHECK(run_cli("setup --out " + d + "_x.bin") == 13, "no data: exit 13");
+    for (const char* sfx : {"_m.json", "_m2.json", "_m3.json", "_msetup.bin", "_msetup.bin.json", "_csetup.bin", "_csetup.bin.json", "_x.bin.json",
+                            "_run_raw.bin", "_run_raw.bin.json", "_run/data.bin", "_run/data.bin.json", "_truth.json"})
+      std::remove((d + sfx).c_str());
+    rmdir(md.c_str());
+  }
   SCHECK(run_cli("setup --data " + d + "_data.bin --out " + d + "_count --count-only 1 --threads 2") == 0, "count-only");
   v4::Json cr = v4::read_json_file(d + "_count.json");
   SCHECK(cr.at("count_only").boolean() && cr.at("accounting").at("C").i64() > 0, "count-only record");

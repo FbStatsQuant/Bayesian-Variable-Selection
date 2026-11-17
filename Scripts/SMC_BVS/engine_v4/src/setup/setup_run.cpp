@@ -117,6 +117,15 @@ std::string write_setup_bin(const std::string& path, const Data& D, const SetupR
                               r.stores.hpm_block, (int64_t)r.stores.hpm_code, (int64_t)o.part.mode, (int64_t)o.part.pack, o.part.strict};
   W.add("scalars_f64", sc); W.add("scalars_i64", isc);
   Json m = Json::object();
+  {   // store descriptors in the form every store-holding file uses (WP4 add_store / read_store: meta.stores.<prefix>)
+    Json sd = Json::object();
+    auto desc = [&](const char* prefix, const Store& s) {
+      Json d = Json::object(); d["cap"] = hex64(s.cap); d["order"] = s.ord == Order::HPM ? "HPM" : "LEX"; d["size"] = hex64(s.size());
+      sd[prefix] = d;
+    };
+    desc("tstore_top", r.stores.top); desc("tstore_lead0", r.stores.lead0); desc("tstore_lead1", r.stores.lead1);
+    m["stores"] = sd;
+  }
   m["kind"] = "setup"; m["index_base"] = "internal0"; m["mode"] = fmt::mode_name(o.file_mode);
   m["n"] = D.n; m["p"] = D.p; m["K"] = D.K; m["B"] = r.B; m["B_blocks"] = r.part.B; m["bv_cap"] = o.part.bv_cap; m["J"] = T.J;
   m["accounted_peak_bytes"] = (int64_t)r.acc.peak; m["mem_budget_gb"] = o.mem_budget_gb; m["C"] = r.acc.C;
@@ -173,11 +182,43 @@ SetupResult read_setup_bin(const std::string& path, std::string* content_hash) {
 // The `setup` command (include/v4/stubs.h): data.bin -> setup.bin + record.
 Json run(const Json& args) {
   // the libm guard runs in main before every command (INTERFACES §6)
+  // Inputs (INTERFACES §1, §5.3): explicit --data, or the manifest's input named data.bin (main has verified its content
+  // hash). With a manifest, the manifest is the authority: an explicit --data that differs from it is refused.
+  const Json man = args.contains("manifest") && args.at("manifest").type() == Json::OBJ ? args.at("manifest") : Json::object();
+  std::string dpath;
+  if (man.contains("inputs")) {
+    for (auto& [k, v] : man.at("inputs").items()) {
+      const size_t s = k.find_last_of('/');
+      if ((s == std::string::npos ? k : k.substr(s + 1)) != "data.bin") continue;
+      if (!dpath.empty()) throw Error(Status::invalid_input, "setup: the manifest names data.bin twice");
+      dpath = k;
+    }
+  }
+  if (args.contains("data")) {
+    if (args.at("data").type() != Json::STR) throw Error(Status::invalid_input, "setup: --data must be a path");
+    const std::string a = args.at("data").str();
+    if (!dpath.empty() && a != dpath) throw Error(Status::invalid_input, "setup: --data differs from the manifest's data.bin");
+    dpath = a;
+  }
+  if (dpath.empty()) throw Error(Status::invalid_input, "setup: no data.bin (give --data or a manifest input data.bin)");
+  if (!args.contains("out") || args.at("out").type() != Json::STR) throw Error(Status::invalid_input, "setup: --out is required");
   std::string data_hash;
-  Data D = prep::load_data(args.at("data").str(), &data_hash);
+  Data D = prep::load_data(dpath, &data_hash);
+  for (const char* k : {"n", "p"})   // the manifest's params, when present, must describe this data
+    if (man.contains("params") && man.at("params").contains(k) && man.at("params").at(k).type() == Json::NUM &&
+        (int64_t)man.at("params").at(k).num() != (k[0] == 'n' ? (int64_t)D.n : (int64_t)D.p))
+      throw Error(Status::invalid_input, std::string("setup: the manifest's ") + k + " differs from data.bin");
   SetupOptions o;
   o.threads = args.contains("threads") ? (int)args.at("threads").i64() : threads_available();
   if (args.contains("B")) o.B = (int)args.at("B").i64();
+  // the file mode: --file_mode, else the manifest's mode (compat | law | V), else law. A compat run uses the exact
+  // partition (v3 rule) unless --partition says otherwise (then it is refused below).
+  std::string fm = args.contains("file_mode") ? args.at("file_mode").str() : "";
+  if (fm.empty() && man.contains("mode")) {
+    if (man.at("mode").type() != Json::STR) throw Error(Status::invalid_input, "setup: the manifest's mode must be a string");
+    fm = man.at("mode").str();
+  }
+  if (fm == "compat" && !args.contains("partition")) { o.part.mode = PartMode::Exact; o.part.pack = PackOrder::LeafOrder; }
   if (args.contains("partition")) {
     const std::string& m = args.at("partition").str();
     if (m == "exact") { o.part.mode = PartMode::Exact; o.part.pack = PackOrder::LeafOrder; }
@@ -190,7 +231,7 @@ Json run(const Json& args) {
   if (args.contains("bv_cap")) o.part.bv_cap = (int)args.at("bv_cap").i64();
   if (args.contains("mem_budget")) o.mem_budget_gb = args.at("mem_budget").num();
   if (args.contains("max_edges")) o.max_edges = args.at("max_edges").i64();
-  o.file_mode = args.contains("file_mode") ? fmt::mode_from_name(args.at("file_mode").str()) : (uint32_t)fmt::M_LAW;
+  o.file_mode = fm.empty() ? (uint32_t)fmt::M_LAW : fmt::mode_from_name(fm);
   if (o.part.mode == PartMode::Truncated && o.file_mode == fmt::M_COMPAT)
     throw Error(Status::invalid_input, "setup: compat mode uses the exact partition (v3 rule)");
   Json rec = Json::object();
