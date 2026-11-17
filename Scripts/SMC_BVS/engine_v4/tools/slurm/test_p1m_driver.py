@@ -692,6 +692,63 @@ exit $rc
         plain = open(os.path.join(self.gen(load_example(), name="plain")[1], "stage_islands.sbatch")).read()
         self.assertNotIn("stop-after-s", plain)   # no chain, no soft stop: unchanged
 
+    def test_off_is_unchanged(self):   # review PR62 m4: no restart / t6 key -> nothing new in the batch directory
+        rc, out = self.gen(load_example(), name="off")
+        sub = open(os.path.join(out, "submit.sh")).read()
+        self.assertNotIn("\n\n", sub)                                   # no blank line from the empty retry block
+        self.assertNotIn("attempt", sub)
+        R = json.load(open(os.path.join(out, "plan.resolved.json")))
+        self.assertNotIn("t6_only", R); self.assertNotIn("restart", R); self.assertNotIn("t6", R)
+        self.assertNotIn("p1m_t6.py", os.listdir(out)); self.assertNotIn("p1m_t6.py", open(os.path.join(out, "SHA256SUMS")).read())
+        self.assertNotIn("stop-after-s", open(os.path.join(out, "stage_islands.sbatch")).read())
+        self.assertNotIn("end_record", open(os.path.join(out, "stage_islands.sbatch")).read())
+        # with the key on, p1m_t6.py appears only in a t6 batch
+        rc2, out2 = self.gen(self.plan(2), name="on")
+        self.assertNotIn("p1m_t6.py", os.listdir(out2))
+        q = json.load(open(os.path.join(HERE, "examples", "plan_T6_1e5.json")))
+        del q["t6_only"]
+        with self.assertRaises(p1m_driver.PlanError):   # a t6 section needs t6_only
+            p1m_driver.resolve(q)
+
+    def test_attempt_end_records(self):   # review PR62 m5: every attempt (finished, soft stop, failure, skip) leaves an ends.jsonl line
+        dept = os.path.join(self.tmp, "SMC_Engineering_Department")
+        rc, out = self.gen(self.plan(3), dept=dept)
+        scr = os.path.join(dept, "scripts", "A2_pilot"); shutil.copytree(out, scr); os.makedirs(os.path.join(scr, "bin"))
+        with open(os.path.join(scr, "bin", "smcbvs4"), "w") as fh:
+            fh.write("#!/bin/bash\ncmd=$1; shift; out=\"\"; while [[ $# -gt 0 ]]; do case $1 in --out) out=$2; shift 2;; *) shift 2;; esac; done\n"
+                     "rc=0; if [[ $cmd == island && -s $STUB_RC_FILE ]]; then rc=$(head -1 \"$STUB_RC_FILE\"); sed -i 1d \"$STUB_RC_FILE\"; fi\n"
+                     "if [[ $rc == 0 ]]; then echo ok > \"$out\"; fi; exit $rc\n")
+        os.chmod(os.path.join(scr, "bin", "smcbvs4"), 0o755)
+        with open(os.path.join(scr, "p1m_manifest.py"), "w") as fh:
+            fh.write("import sys\nopen(sys.argv[sys.argv.index('--out') + 1], 'w').write('{}')\n")
+        with open(os.path.join(scr, "env.sh"), "w") as fh:
+            fh.write("true\n")
+        for d in ("scratch/slurm_out", "scratch/tmp", "scratch/runs/A2_pilot/A2_ARs_n200_r1/manifests", "scratch/runs/A2_pilot/A2_ARs_n200_r1/log"):
+            os.makedirs(os.path.join(dept, d))
+        rcf = os.path.join(self.tmp, "rc.txt")
+        ends = os.path.join(dept, "scratch", "runs", "A2_pilot", "ends.jsonl")
+
+        def attempt(task, att, codes):
+            with open(rcf, "w") as fh:
+                fh.write("".join("%s\n" % c for c in codes))
+            env = dict(os.environ, SLURM_JOB_ID="81", SLURM_CPUS_PER_TASK="2", SLURM_ARRAY_TASK_ID=str(task), STUB_RC_FILE=rcf)
+            return subprocess.run(["bash", os.path.join(scr, "stage_islands.sbatch"), "1", str(att)], env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE).returncode
+        self.assertEqual(attempt(1, 1, [22]), 0); self.assertEqual(attempt(1, 2, [0]), 0); self.assertEqual(attempt(1, 3, [0]), 0)   # soft stop, finished, skipped
+        self.assertEqual(attempt(2, 1, [11]), 11); self.assertEqual(attempt(2, 2, [0]), 11)                                          # failure, repeated
+        self.assertEqual(attempt(3, 3, [22]), 22)                                                                                      # the last attempt, unfinished
+        L = [json.loads(l) for l in open(ends).read().splitlines()]
+        self.assertEqual([(x["task"], x["attempt"], x["rc"]) for x in L], [("1", 1, 0), ("1", 2, 0), ("1", 3, 0), ("2", 1, 11), ("2", 2, 11), ("3", 3, 22)])
+        self.assertTrue(all(x["stage"] == "islands" and x["job"] == "81" and x["run_id"] == "A2_ARs_n200_r1" and x["end"] for x in L))
+
+    def test_t6_tmp_is_the_killed_process_own(self):   # review PR62 m6
+        import p1m_t6
+        base = os.path.join(self.tmp, "island")
+        for n in ("island.ckpt.a.tmp.111", "island.ckpt.b.tmp.222", "island.ckpt.a"):
+            open(os.path.join(self.tmp, n), "w").write("x")
+        self.assertEqual(sorted(os.path.basename(t) for t in p1m_t6.ckpt_state(base, 222)[1]), ["island.ckpt.b.tmp.222"])
+        self.assertEqual(p1m_t6.ckpt_state(base, 333)[1], [])   # a stale tmp of another pid never fires the kill
+        self.assertEqual(len(p1m_t6.ckpt_state(base)[1]), 2)
+
     def test_t6_batch(self):
         P = p1m_driver.resolve(json.load(open(os.path.join(HERE, "examples", "plan_T6_1e5.json"))))
         self.assertEqual(P["worst_case_core_h"], 40.0); self.assertEqual(P["core_h_cap"], 50); self.assertEqual(P["n_tasks"], 1)

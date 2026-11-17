@@ -1,6 +1,6 @@
 # INTERFACES — engine v4 contract between WP1–WP5
 
-**v0.1.20 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-17. (v0.1.17, the O6 offer-floor implementation line, is not merged yet.) Source: ENGINEERING_SPEC §0-v2,
+**v0.1.23 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-18. Source: ENGINEERING_SPEC §0-v2,
 §1–§3, §6. Where this file is silent, the spec rules; where the spec is silent, `core/` (v3.1 / revision D) rules.
 Questions and change requests: to the WP1 owner through the manager. Line references `core/...:N` are to revision D.
 

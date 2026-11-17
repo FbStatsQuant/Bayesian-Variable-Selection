@@ -139,10 +139,11 @@ def resolve(plan):
         if P.get("pilot_only"):
             raise PlanError("restart does not apply to a pilot_only batch")
     # WP7 O4: T6 by real kills (a t6_only batch: the island of a finished fit's inputs, nothing else)
-    P.setdefault("t6_only", False)
-    t6 = P.get("t6")
-    if P["t6_only"] and t6 is None:
+    t6 = P.get("t6")   # no setdefault: a plan without the keys resolves to exactly what it did before O4 (plan.resolved.json)
+    if P.get("t6_only") and t6 is None:
         raise PlanError("t6_only needs a t6 section")
+    if t6 is not None and not P.get("t6_only"):
+        raise PlanError("a t6 section needs t6_only: true (a T6 batch is generated alone: its worst case and submit script are the T6's)")
     if t6 is not None:
         for k in ("source_batch", "cpus", "mem", "time"):
             if k not in t6:
@@ -272,7 +273,7 @@ def resolve(plan):
         tasks += sum(f["Rp"] for f in P["fits"]) * (rs["attempts"] - 1)   # the retry arrays (queued tasks count toward the cap)
     if P["pilot_only"]:
         tasks = 2 * F                                    # setup + pilot
-    if P["t6_only"]:
+    if P.get("t6_only"):
         tasks = F                                        # one T6 task per fit
     P["n_tasks"] = tasks
     if tasks > TASK_CAP:
@@ -293,7 +294,7 @@ def resolve(plan):
             wc += (rs["attempts"] - 1) * f["Rp"] * int(f["resources"]["islands"]["cpus"]) * hours(f["resources"]["islands"]["time"])
     if P["pilot_only"]:
         wc = P["worst_case_pilot_core_h"]
-    if P["t6_only"]:
+    if P.get("t6_only"):
         wc = sum(int(t6["cpus"]) * hours(t6["time"]) for _ in P["fits"])
     P["worst_case_core_h"] = round(wc, 1)
     cap = P.get("core_h_cap")
@@ -375,6 +376,12 @@ def fit_selector(by_array):
     return ("FIT=%s\nRUN_ID=${RUNS[$((FIT-1))]}\nRUN=$DEPT/scratch/runs/%s/$RUN_ID\nMAN=$SCR/manifests/$RUN_ID\n" % (sel, "{batch}"))
 
 
+# the restart-mode islands script leaves through exit 0 / 22 / rc: every attempt writes its end record (review PR62 m5), with
+# the attempt number and the exit code, to the batch's ends.jsonl (beside starts.jsonl)
+RESTART_END_TRAP = r'''end_record() { local rcx=$?; printf '{"stage":"islands","run_id":"%s","job":"%s","task":"%s","attempt":%s,"rc":%s,"end":"%s"}\n' "$RUN_ID" "${SLURM_JOB_ID}" "${SLURM_ARRAY_TASK_ID:-}" "$ATT" "$rcx" "$(date -u +%FT%TZ)" >> "$(dirname "$RUN")/ends.jsonl"; }
+trap 'end_record; rm -rf "$TMPDIR"' EXIT   # replaces the header's trap: keep its TMPDIR cleanup
+'''
+
 SKIP_IF_OUTCOME = ('if [[ -e $RUN/OUTCOME ]]; then echo "prep outcome $(cat "$RUN/OUTCOME"): nothing to do"; '
                    'printf \'{{"stage":"%s","run_id":"%s","skipped":"prep_outcome"}}\\n\' "{stage}" "$RUN_ID" >> "$DEPT/scratch/runs/{batch}/ends.jsonl"; exit 0; fi\n')
 
@@ -405,7 +412,7 @@ def stage_body(stage, restart=None, limit_s=0):
         # island checkpointed at the first step boundary after limit - margin seconds) ends this attempt cleanly and the next
         # attempt resumes from island_<r>.ckpt.{a,b}; a task killed at its limit leaves its last periodic checkpoint
         A = restart["attempts"]; margin = int(restart["margin_s"])
-        return ("R=${SLURM_ARRAY_TASK_ID}\nATT=${2:-1}\n"
+        return ("R=${SLURM_ARRAY_TASK_ID}\nATT=${2:-1}\n" + RESTART_END_TRAP +
                 'DONE="$RUN/island_$R.done"; FAILED="$RUN/island_$R.failed"\n'
                 'if [[ -e $DONE ]]; then echo "island $R: already finished"; exit 0; fi\n'
                 'if [[ -e $FAILED ]]; then rc=$(cat "$FAILED"); echo "island $R: failed in an earlier attempt (exit $rc)"; exit "$rc"; fi\n'
@@ -455,7 +462,7 @@ def generate(P, out, dept):
     runs = " ".join(f["run_id"] for f in P["fits"])
     files = []
     # one sbatch file per stage; per-fit resources must agree within a stage (one --cpus/--mem/--time per file)
-    for st in ([] if P["t6_only"] else (["setup"] if P["pilot_only"] else STAGES)):
+    for st in ([] if P.get("t6_only") else (["setup"] if P["pilot_only"] else STAGES)):
         rs = {json.dumps(f["resources"][st], sort_keys=True) for f in P["fits"]}
         if len(rs) != 1:
             raise PlanError("stage %s: all fits of one batch must share resources (split the batch by rung)" % st)
@@ -646,8 +653,7 @@ js=$("$SB" --parsable --array=1-{F} stage_setup.sbatch); log setup all "$js"
 jc=$("$SB" --parsable --array=1-{F} --dependency=aftercorr:$js stage_calibrate.sbatch); log calibrate all "$jc"
 for i in $(seq 1 {F}); do
   rp=$(sed -n "${{i}}p" fit_rp.txt)
-  ji=$("$SB" --parsable --array=1-$rp{thr} --dependency=afterok:${{jc}}_$i stage_islands.sbatch $i{att1}); log islands "${{RUNS[$((i-1))]}}" "$ji"
-{retry}
+  ji=$("$SB" --parsable --array=1-$rp{thr} --dependency=afterok:${{jc}}_$i stage_islands.sbatch $i{att1}); log islands "${{RUNS[$((i-1))]}}" "$ji"{retry}
 {isa_line}  jm=$("$SB" --parsable --dependency=afterok:$ji stage_merge.sbatch $i); log merge "${{RUNS[$((i-1))]}}" "$jm"
   je=$("$SB" --parsable --dependency=afterok:$jm stage_eval.sbatch $i); log eval "${{RUNS[$((i-1))]}}" "$je"
 done
@@ -655,15 +661,15 @@ echo "submitted; ledger row: see ledger_row.md (fill job ids from $LOG)"
 """.format(batch=batch, F=F, ntask=P["n_tasks"], wc=P["worst_case_core_h"], ncalls=2 + 3 * F, dept=dept,
            binary=P["binary"], runs=runs, thr=thr,
            att1=" 1" if (P.get("restart") or {}).get("attempts", 1) > 1 else "",
-           retry=('  for att in $(seq 2 %d); do   # WP7 O4: the restart chain, each attempt after the previous array (afterany)\n'
+           retry=('\n  for att in $(seq 2 %d); do   # WP7 O4: the restart chain, each attempt after the previous array (afterany)\n'
                   '    ji=$("$SB" --parsable --array=1-$rp%s --dependency=afterany:$ji stage_islands.sbatch $i $att); log "islands_attempt$att" "${RUNS[$((i-1))]}" "$ji"\n'
-                  '  done\n' % (P["restart"]["attempts"], thr)
+                  '  done' % (P["restart"]["attempts"], thr)
                   if (P.get("restart") or {}).get("attempts", 1) > 1 else ""),
            portable_check=('[[ -x $SCR/bin/smcbvs4_isa_check ]] || { echo "FATAL: binary $SCR/bin/smcbvs4_isa_check missing (build.sh, D-32 isa_check)" >&2; exit 66; }\n'
                            if P.get("isa_check") is not None else ""),
            isa_line=('  jx=$("$SB" --parsable --dependency=afterok:$ji stage_isa_check.sbatch $i); log isa_check "${RUNS[$((i-1))]}" "$jx"\n'
                      if P.get("isa_check") is not None else ""))
-    if not (P["pilot_only"] or P["t6_only"]):   # a pilot-only / T6-only batch has no full-fit submit.sh (review PR55 MAJOR)
+    if not (P["pilot_only"] or P.get("t6_only")):   # a pilot-only / T6-only batch has no full-fit submit.sh (review PR55 MAJOR)
         write(os.path.join(out, "submit.sh"), sub, 0o755)
         files.append("submit.sh")
     if P.get("pilot") is not None:   # setup -> pilot only (the fit itself waits for HQ's GO; its setup.bin is reused)
@@ -696,9 +702,10 @@ echo "submitted; ledger row: see ledger_row.md (fill job ids from $LOG)"
     with open(os.path.join(here, "p1m_manifest.py")) as fh:
         write(os.path.join(out, "p1m_manifest.py"), fh.read(), 0o755)
     files.append("p1m_manifest.py")
-    with open(os.path.join(here, "p1m_t6.py")) as fh:   # T6 by real kills (WP7 O4)
-        write(os.path.join(out, "p1m_t6.py"), fh.read(), 0o755)
-    files.append("p1m_t6.py")
+    if P.get("t6") is not None:   # T6 by real kills (WP7 O4): shipped only with a T6 batch (other batches are byte-identical to before)
+        with open(os.path.join(here, "p1m_t6.py")) as fh:
+            write(os.path.join(out, "p1m_t6.py"), fh.read(), 0o755)
+        files.append("p1m_t6.py")
     with open(os.path.join(here, "p1m_stage_cost.py")) as fh:   # T5 report and the D-32 isa check (WP7 O5)
         write(os.path.join(out, "p1m_stage_cost.py"), fh.read(), 0o755)
     files.append("p1m_stage_cost.py")

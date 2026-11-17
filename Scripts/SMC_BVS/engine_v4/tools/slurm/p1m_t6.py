@@ -44,8 +44,10 @@ def read_json(path):
         return json.load(f)
 
 
-def ckpt_state(base):
-    """(set of (path, mtime_ns) of finished generations, list of writer tmp files)."""
+def ckpt_state(base, pid=None):
+    """(set of (path, mtime_ns) of finished generations, list of writer tmp files). With `pid`, only the temporary file of THAT
+    process (`<base>.ckpt.{a,b}.tmp.<pid>`, the name island_run.h's save_ckpt gives it): a leftover tmp of an earlier killed
+    process is never mistaken for the current writer (review PR62 m6)."""
     gens = set()
     for sfx in (".a", ".b"):
         p = base + ".ckpt" + sfx
@@ -53,7 +55,8 @@ def ckpt_state(base):
             gens.add((p, os.stat(p).st_mtime_ns))
         except OSError:
             pass
-    tmps = glob.glob(base + ".ckpt.a.tmp.*") + glob.glob(base + ".ckpt.b.tmp.*")
+    suffix = "*" if pid is None else str(pid)
+    tmps = glob.glob(base + ".ckpt.a.tmp." + suffix) + glob.glob(base + ".ckpt.b.tmp." + suffix)
     return gens, tmps
 
 
@@ -71,7 +74,7 @@ def run_until_kill(a, out, kind, log_path, deadline):
             rc = proc.poll()
             if rc is not None:
                 return {"killed": False, "returncode": rc, "why": "the island ended before the kill condition (%s); lower --ckpt-every-s" % kind}
-            gens, tmps = ckpt_state(base)
+            gens, tmps = ckpt_state(base, proc.pid)   # the tmp file of THIS process only
             seen |= {g for g in gens if g not in before}
             if kind == "second_ckpt" and len(seen) >= 2:
                 why = "second checkpoint generation"
