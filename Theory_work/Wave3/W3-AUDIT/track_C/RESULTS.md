@@ -1,83 +1,94 @@
-# W3-AUDIT track C — RESULTS (internal; not for the paper)
+# W3-AUDIT track C — RESULTS (internal; not for the paper) — final
+
+## Final findings
+1. **Sparse floors (P1–P3) are inside and rise with n in all 19 designs**, both at p = n and at p = 10n. The floor at the size cutoff m♯ is ≈ 0.001–0.006 at (n, p) = (200, 2000) and recovers in every design (0.014–0.22 at n = 1600, slopes +1.1 to +1.8). Population floors are certified by λ_min(Σ) > 0.
+2. **Visibility at p = 10n recovers by n = 800–1600 in 16 of 19 designs (spread truth) and 18 of 19 (clustered).** It does not recover for the strong factor with the mixed-sign spread truth (D14 v̂ 0.10 at n = 1600, D15 ≈ 0; population value 0) or for the riboflavin-like design (D18, ≈ 0 in both placements). AR(0.95) spread recovers only at n = 1600 (small margin). Larger p/n (the p = 2·10⁴ cells) delays the recovery.
+3. **Leakage-set size:** bounded or ≈ log-growing for IND, AR(≤ 0.95), fixed blocks, Toeplitz α = 2, S6 and FRED-like tiles; ≈ n^0.4–0.5 for Toeplitz α = 1 and growing blocks; the whole design for factors with a ≥ 0.75, S5 and riboflavin-like. Weak factors (a = 0.5) give Q̂ = S₀ once the common correlation falls below √(log n/n) (from n = 200 at p = 10n).
+4. **Local regressions and lattice width follow the leakage split**: inside where Q̂ is small, outside where Q̂ = [p].
+5. **β_min rate, identifiability margin and the Occam term are inside in every design and both p/n ratios.** The (AG) operator bound is outside in every design (pre-announced).
+6. **No NOTS cell contradicts a TRACK_B inside/outside verdict.** Two Track-C sentences cited in TRACK_B are corrected: AR(0.95) leakage grows only ≈ n^0.1 (n^0.5 at p = n was an artefact of p = n = 200); and Q̂ = S₀ also for weak factors, not only for IND.
 
 Lead: Opus 5.5 (high), 2026-11-16. Plan `work/C_PLAN.md` v3 (HQ rule 11-16: qualitative conditions and their trend
 in n; explicit constants from the proof are conservative and are not tested). Proxy computations only, no SMC fits.
-**Status: Owls part complete** (p ≤ 2000: cells (n, p) = (200,200), (400,400), (800,800), (1600,1600), (200,2000);
-19 designs × 10 replicates × 2 truth placements; 0.30 core-h). **NOTS part pending** (p ≥ 4000, 6 cells; package
-`track_C/nots/`). The p = 10n trend columns are filled from NOTS later; pilot single-replicate hints are marked *(pilot)*.
-
-Data: `/home/fb31/SMC_Theory_Department/helpers/W3-AUDIT-C/owls_out/` (95 task CSVs) →
-`collect_owls/summary.csv` (median, q10, q90 over replicates) and `collect_owls/trend.csv` (log-log slope in n).
-Copies of both CSVs: `track_C/owls_summary.csv`, `track_C/owls_trend.csv`.
+**Data.** Owls part: 95 tasks (p ≤ 2000), 0.30 core-h. NOTS part: Engineering, jobs 2754535–2754540, 114/114 tasks rc 0,
+46.86 core-h billed (23.3 core-h inside the tasks). Outputs: `/home/fb31/SMC_Theory_Department/helpers/W3-AUDIT-C/`
+`owls_out/` and `nots_out/` (sha256 re-verified by the lead, 231/231 OK; package checksums match the frozen copy
+`nots_pkg/`, commit 8ad91fab). Combined: `collect_all/{summary,trend}.csv`; copies `track_C/all_summary.csv`,
+`track_C/all_trend.csv` (209 task files, 19 designs × 11 cells × 10 replicates × 2 placements).
 
 ## How to read
-Trend is along the p = n series, n = 200 → 1600 (log-log slope in brackets). **IN↑** = inside, improving with n;
-**IN** = inside, bounded/flat; **UNCL↑** = unclear now, moving toward inside; **UNCL** = unclear; **OUT** = outside.
-Search-based floors and visibility are upper bounds (they can refute, not certify); population floors are certified by
-λ_min(Σ) > 0; P5 leak sets are subsets (never "inside", only "not refuted"; written IN for brevity). sp = spread truth
-(study positions, signs + − + −), cl = clustered (four adjacent columns, aligned signs).
+Two n-series: **p = n** (n = 200, 400, 800, 1600) and **p = 10n** (2000, 4000, 8000, 16000); the cap p = 2·10⁴ at
+n = 200, 400, 800 gives the p/n comparison. Values are medians over 10 replicates; "a → b" = n = 200 → 1600 on the
+p = 10n series unless marked. **IN↑** inside, improving; **IN** inside, bounded; **UNCL↑** unclear, moving toward inside;
+**UNCL** unclear; **OUT** outside. Searches give upper bounds on minima (they refute, never certify); population floors are
+certified by λ_min(Σ); leak sets are subsets of the true ones ("IN" for P5 means "not refuted"). sp = spread truth (study
+positions, signs + − + −); cl = clustered (four adjacent columns, aligned signs). Visibility v̂ = δ̂²/log n (sample),
+pop = min δ² in the population (n-free).
 
-## Table (Owls part)
-| D | design | P1–P3 floors: sample φ̂²(k=16) at n=1600 [slope]; pop λ_min(Σ) | P4 visibility v̂ = δ̂²/log n (sample) / pop | P5 leak size \|Q̂\| (pop, ε=0.2), n=200→1600 | P6 local-regression ℓ¹ tail (ν=4, q99) | P9 width 𝔴̂⁰ | P7 BM rate, margin/log n | P8 𝒪¹/r_n | P10 |
+## Table: design × proxy × n trend (final)
+| D | design | P1–P3 floors (sample φ̂²(16); m♯ floor; pop λ_min(Σ)) | P4 visibility sp (sample; pop) | P4 visibility cl | P5 leak \|Q̂\| sp / cl | P6 ℓ¹ tail, P9 width (sp / cl) | P7 rate, margin | P8 Occam | P10 |
 |---|---|---|---|---|---|---|---|---|---|
-| 01 | IND | IN↑ 0.60 [+.42]; 1 | IN↑ both [+1.5] / 1 | IN 4 → 4 | IN 0 | IN −0.77 | IN↑ | IN | OUT |
-| 02 | AR0.5 | IN↑ 0.29 [+.28]; 0.33 | IN↑ both / 0.6 | IN sp 32→46, cl 8→10 (slow) | IN↑ 2.5→1.2 | IN↑ sp +.02→−.19 | IN↑ | IN | OUT |
-| 03 | AR0.8 | IN↑ 0.10 [+.19]; 0.11 | IN↑ (sp 0.005→26) / 0.22 | IN sp 109→137, cl 19→23 (slow) | IN↑ 18→6.5 | sp UNCL↑ +.54→+.02; cl IN | IN↑ | IN | OUT |
-| 04 | AR0.95 | IN↑ but small 0.024 [+.23]; 0.026 | sp UNCL↑ (≈0 to n=800, 0.7 at 1600); cl IN↑ / 0.05 | sp UNCL 200→585 (n^0.5); cl IN 70→87 | sp UNCL; cl IN↑ 22→8 | sp UNCL↑ +.79→+.52; cl IN↑ | IN↑ (margin small, 1.6→10) | IN | OUT |
-| 05 | BLK5-0.7 | IN↑ 0.22 [+.33]; 0.3 | IN↑ both / 0.37 | IN 20, 5 (bounded) | IN↑ 1.8→0.6 | IN | IN↑ | IN | OUT |
-| 06 | BLK5-0.85 | IN↑ 0.11 [+.33]; 0.15 | IN↑ both / 0.19 | IN 20, 5 | IN↑ | IN | IN↑ | IN | OUT |
-| 07 | BLK√p-0.5 | IN↑ 0.34 [+.39]; 0.5 | IN↑ both / 0.53 | UNCL sp 60→160, cl 15→40 (n^0.5 = block size √p, by design) | IN (flat ≈5 sp, ≈1 cl) | sp UNCL↑ +.26→+.07; cl IN | IN↑ | IN | OUT |
-| 08 | TOEP α=1 | IN↑ 0.34 [+.30]; 0.39 | IN↑ both / 0.61 | UNCL sp 180→508 (n^0.5), cl 33→76 (n^0.4) | sp UNCL ≈10–20; cl IN 2.6→2.1 | sp UNCL +.77→+.61; cl IN weak (−.02→−.11) | IN↑ | IN | OUT |
-| 09 | TOEP α=2 | IN↑ 0.52 [+.37]; 0.65 | IN↑ both / 0.88 | IN sp 32→53 (n^0.24), cl 8→11 | IN↑ | IN↑ | IN↑ | IN | OUT |
-| 10 | FAC a=.5 k=1 | IN↑ 0.59 [+.43]; 0.97–0.99 | IN↑ both / 0.79–0.99 | IN↑ Q̂ = [p] at n ≤ 400, = S₀ from n = 800 (weak factor falls below √(log n/n)) | IN (0 from n = 800) | IN from n = 800 | IN↑ | IN | OUT |
-| 11 | FAC a=.5 k=3 | IN↑ 0.59; 0.97–0.99 | IN↑ both / 0.79–0.99 | IN↑ as D10 | IN from n = 800 | IN from n = 800 | IN↑ | IN | OUT |
-| 12 | FAC a=.75 k=1 | IN↑ 0.56 [+.44]; 0.87–0.92 | IN↑ both / sp 0.38→0.58 | OUT Q̂ = [p] | OUT (≈9–17, flat) | OUT +0.84 flat | IN↑ | IN | OUT |
-| 13 | FAC a=.75 k=3 | IN↑ 0.56; 0.87–0.92 | IN↑ both / sp 0.38→0.58 | OUT Q̂ = [p] | OUT | OUT +0.83 | IN↑ | IN | OUT |
-| 14 | FAC a=1 k=1 (cs .5) | IN↑ 0.30 [+.40]; 0.5 | **sp OUT** (pop 0; sample 4e-4→0.13); cl IN↑ / 0.53 | OUT Q̂ = [p] | OUT | OUT +0.85 | IN↑ | IN | OUT |
-| 15 | FAC a=1 k=3 | IN↑ 0.32 [+.42]; 0.5 | **sp OUT** (pop 0; sample ≈1e-10, falling); cl IN↑ / 0.54 | OUT Q̂ = [p] | OUT | OUT +0.86 | IN↑ | IN | OUT |
-| 16 | S5 (0.3 global + block) | IN↑ 0.22 [+.32]; 0.3 | IN↑ both (sp 0.55→18) / sp 0.06, cl 0.36 | OUT Q̂ = [p] (global factor) | OUT | OUT +0.84 | IN↑ | IN | OUT |
-| 17 | S6 (blocks ρ .4–.9) | IN↑ 0.16 [+.34]; 0.1 | IN↑ both (sp ≈0 at n = 200 only) / 0.25–0.71 | IN 20, 5 | IN↑ 1.5→0.5 | IN | IN↑ | IN | OUT |
-| 18 | riboflavin-like | IN↑ but small 0.09 [+.21]; 0.1 | **OUT both** (pop ≈0; sample ≈0 at every n) | OUT Q̂ = [p] | OUT (≈13–21) | OUT +0.85 | IN↑ (margin 4→35) | IN | OUT |
-| 19 | FRED-QD-like | IN↑ but small 0.09 [+.23]; 0.1 | sp UNCL↑ (≈0 to n = 400, 10.7 at 1600; pop 0.15); cl IN↑ / 0.08 | UNCL whole 170-blocks: sp 170→672 (= 4 tiles × 170, then bounded), cl 170 | sp UNCL ≈17–19; cl IN↑ 17→8 | sp UNCL +.73→+.61; cl UNCL↑ +.75→+.13 | IN↑ | IN | OUT |
+| 01 | IND | IN↑ .15→.54; .006→.22; 1 | IN↑ .37→145; 1 | IN↑ .006→151 | IN 4 / 4 | IN 0; −.55→−.68 / −.54→−.71 | IN↑ | IN | OUT |
+| 02 | AR0.5 | IN↑ .12→.29; .005→.14; .33 | IN↑ ≈0→4.6→28→80; .6 | IN↑ 1.1→102 | IN 32→46 / 8→10 | IN↑ 2.5→1.2, +.01→−.17 / IN | IN↑ | IN | OUT |
+| 03 | AR0.8 | IN↑ .05→.10; .003→.056; .11 | IN↑ ≈0→.01→5.6→21; .22 | IN↑ .26→40 | IN 109→137 / 19→23 | UNCL↑ 18.6→6.5, +.50→+.005 / IN | IN↑ | IN | OUT |
+| 04 | AR0.95 | IN↑ small .013→.023; .001→.014; .026 | UNCL↑ ≈0 to n=800, .45 at 1600; .05 | IN↑ .41→8.8 | IN (slow) 466→585 [n^0.11] / 70→87 | sp UNCL 26→39, +.57→+.42 / cl IN↑ 23→8.5, −.01→−.26 | IN↑ (margin small) | IN | OUT |
+| 05 | BLK5-0.7 | IN↑ .08→.21; .004→.11; .3 | IN↑ ≈0→.9→12→40; .37 | IN↑ 7.4→73 | IN 20 / 5 | IN↑ 1.8→.6, −.20→−.45 / IN | IN↑ | IN | OUT |
+| 06 | BLK5-0.85 | IN↑ .04→.11; .003→.057; .15 | IN↑ ≈0→≈0→4.8→14; .19 | IN↑ 3.9→37 | IN 20 / 5 | IN↑ 2.5→.84, −.28→−.54 / IN | IN↑ | IN | OUT |
+| 07 | BLK√p-0.5 | IN↑ .10→.31; .006→.14; .5 | IN↑ ≈0→.4→14→55; .53 | IN↑ 10→104 | UNCL 180→508 / 45→127 [n^0.5 = √p block, by design] | sp UNCL 12→14, +.57→+.47 / cl IN 4.2→3.9, +.05→−.05 | IN↑ | IN | OUT |
+| 08 | TOEP α=1 | IN↑ .12→.32; .005→.15; .39 | IN↑ ≈0→7.5→27→80; .61 | IN↑ 5.4→120 | UNCL 207→508 [n^0.43] / 33→76 [n^0.40] | sp UNCL 10.6→12, +.67→+.57 / cl IN 2.6→2.1, +.04→−.06 | IN↑ | IN | OUT |
+| 09 | TOEP α=2 | IN↑ .15→.48; .005→.20; .65 | IN↑ ≈0→11→47→131; .88 | IN↑ 7.4→172 | IN 32→53 [n^0.24] / 8→11 | IN↑ 2.1→1.2, −.01→−.22 / IN | IN↑ | IN | OUT |
+| 10 | FAC a=.5 k=1 | IN↑ .15→.54; .006→.22; .97–.99 | IN↑ .003→139; .93→.97 | IN↑ ≈0→12→147 | IN 4 / 4 (= S₀ at every n at p = 10n; at p = n from n = 800) | IN 0; −.63→−.71 / IN | IN↑ | IN | OUT |
+| 11 | FAC a=.5 k=3 | IN↑ .15→.54; .006→.22; .97–.99 | IN↑ .08→149; .93→.97 | IN↑ ≈0→13→154 | IN 4 / 4 (as D10) | IN 0; −.61→−.74 / IN | IN↑ | IN | OUT |
+| 12 | FAC a=.75 k=1 | IN↑ .14→.52; .006→.21; .87–.92 | IN↑ ≈0→5.8→51→120; .60→.74 | IN↑ .39→169 | OUT [p] / [p] | OUT ≈9–17 flat, +.79→+.81 / OUT | IN↑ | IN | OUT |
+| 13 | FAC a=.75 k=3 | IN↑ .15→.52; .006→.21; .87–.92 | IN↑ ≈0→8.5→40→113; .60→.74 | IN↑ ≈0→7.8→57→156 | OUT 600→16000 (= p at 1600) / [p] | OUT / OUT | IN↑ | IN | OUT |
+| 14 | FAC a=1 k=1 (cs .5) | IN↑ .08→.27; .003→.11; .5 | **OUT** 5e-7→.012→.019→.10; pop 0 | IN↑ 2.9→100 | OUT [p] / [p] | OUT / OUT | IN↑ | IN | OUT |
+| 15 | FAC a=1 k=3 | IN↑ .09→.28; .003→.12; .5 | **OUT** ≈1e-11 at every n; pop 0 | IN↑ ≈0→1.5→13→51 | OUT [p] / [p] | OUT / OUT | IN↑ | IN | OUT |
+| 16 | S5 (0.3 global + blocks) | IN↑ .07→.21; .003→.10; .3 | IN↑ (small margin) ≈0→.9→6.9→16; .062 | IN↑ 7.8→72 | OUT [p] / [p] | OUT / OUT | IN↑ | IN | OUT |
+| 17 | S6 (blocks ρ .4–.9) | IN↑ .05→.09; .002→.044; .1 | IN↑ ≈0→5.7→5.0→67; .25–.49 | IN↑ 14→136 | IN 20 / 5 | IN↑ 1.5→.5, −.18→−.47 / IN | IN↑ | IN | OUT |
+| 18 | riboflavin-like | IN↑ small .04→.09; .002→.039; .1 | **OUT** ≈0 at every n; pop ≈0 | **OUT** ≈0 at every n; pop ≈0 | OUT [p] / [p] → one copy (4088) | OUT 13→25, +.74→+.77 / OUT | IN↑ (margin smaller) | IN | OUT |
+| 19 | FRED-QD-like | IN↑ small .05→.09; .002→.048; .1 | UNCL↑ ≈0→.19→5.2→42; pop .24–.30 | IN↑ (small margin) .11→14; pop .076 | IN (bounded by tiles) 628→679 / 170 | sp UNCL 14→19, +.77→+.60 / cl UNCL↑ 18→8.3, +.52→+.04 | IN↑ | IN | OUT |
 
-Rows P2 (unanchored floor at the size cutoff m♯_n, m♯ = 49–80) and P3 (FL-Q, where Q̂ fits the lattice cap) follow
-the P1 column: rising in n in all 19 designs (P2 slopes +0.46 to +0.68), at levels 0.017–0.35 at n = 1600.
-P7: BM rate θ_min²nφ̂₀²/log n and margin Δ̂/log n grow like n^0.7–1.15 in every design and placement; M̂ is bounded.
-P8: 𝒪¹_n/r_n (j = 1 and 2 terms) = 1.08 → 0.92, the same in every design (the j = 1 term is design-insensitive at
-p = n); bounded and decreasing, not refuted. P10: δ̂_n√(p log log n) grows like n^0.55–1.1 everywhere (pre-announced).
+Notes. P3 (floor on Q̂ ∪ {l}, computed where Q̂ fits the lattice cap) rises with n wherever computed (p = 10n slopes +0.07
+to +0.83). P7: the BM rate θ_min²nφ̂₀²/log n and the margin Δ̂/log n grow like n^1.1–1.4 along p = 10n and n^0.7–1.15
+along p = n, in every design and placement; M̂ is bounded. P8: 𝒪¹_n/r_n (j = 1, 2 terms) = 1.085 → 0.920 at p = 10n and
+1.08 → 0.92 at p = n, the same in every design; bounded and decreasing. P10: δ̂_n√(p log log n) grows like n^0.55–1.1.
+The p = n series agrees with the table on every verdict except where noted in the cells (D10/D11 leak set, which at
+p = n is [p] at n ≤ 400 and S₀ from n = 800; D19 spread, whose population visibility at p = n is ≈ 0 at n = 200 and
+0.15 at n = 1600, because the truths fall in one or several 170-column tiles depending on p).
 
-## p = 10n (Owls only n = 200; NOTS gives n = 400–1600)
-At (n, p) = (200, 2000) the sample visibility v̂ collapses to ≈ 0 (< 1e-4) in most designs (spread: 16 of 19; clustered: 5 of
-19), and the m♯-size floor is ≈ 0.001–0.006 in every design. Checked by explicit projections: a greedy masking set of
-≤ 15 columns from p ≫ n candidates cancels the truth column's gain ‖(P_{U∪j} − P_U)μ‖² (not a numerical artefact).
-*(pilot, 1 replicate)* At large p this recovers with n for IND (v̂ ≈ 0 → 67 → 180 at (n, p) = (200, 2·10⁴),
-(800, 2·10⁴), (1600, 16000); m♯ floor 0.0002 → 0.08 → 0.21) and block D05 (v̂ 38 at n = 1600), but not for the strong factor with the spread truth
-(D14: v̂ 0.012 at n = 1600). The NOTS cells settle this trend.
-
-## Top findings (Owls part)
-1. **Sparse floors are inside and improve with n in all 19 designs** (anchored k ≤ 16, at the size cutoff m♯, and Q̂ ∪ {l});
-   population floors are certified by λ_min(Σ) ≥ 0.026. Levels are small for AR(0.95), riboflavin- and FRED-like
-   designs (≈ 0.02–0.09 at n = 1600) but rising.
-2. **Visibility (V)/(V-R) = PTV fails at the population level for the strong-factor designs with the spread (mixed-sign)
-   truth (D14, D15) and for the riboflavin-like design (both placements):** a masking set drives the truth column's
-   conditional covariance with μ to 0 (sign cancellation), and the sample v̂ does not grow. Clustered aligned truths in
-   factor designs are inside. Same mechanism as the NEG regime of W3-P6.
-3. **Leakage size:** bounded for IND, fixed blocks, AR(≤ 0.8), Toeplitz α = 2, S6; growing like n^0.4–0.5 for
-   AR(0.95) spread, Toeplitz α = 1 and growing blocks; Q̂ = [p] for factors with a ≥ 0.75, S5 (global factor) and
-   riboflavin-like (pre-announced: global CS and strong factors). Weak factors (a = 0.5) move inside by n = 800.
-   The width (P9) and local regressions (P6) follow the same split.
-4. **β_min rate, margins, Occam term: inside everywhere** (rates grow ≈ n/log n; 𝒪¹/r_n bounded and decreasing).
-5. **(AG) operator bound is outside in every design** (pre-announced; ‖R̂ − Σ‖_op ≳ √(p/n)).
-6. **p ≫ n at small n:** visibility and the m♯ floor collapse at (200, 2000); pilot cells suggest recovery by
-   n = 800–1600 except in strong-factor spread designs. Pending NOTS.
+## The open question from the pilot: does visibility / the m♯ floor recover at p = 10n?
+- **m♯ floor: yes, in all 19 designs.** p = 10n: 0.001–0.006 at n = 200 → 0.014–0.22 at n = 1600 (log-log slopes
+  +1.1 to +1.8). Smallest at n = 1600: AR(0.95) 0.014, riboflavin-like 0.039, S6 0.044, FRED-like 0.048. Cap
+  p = 2·10⁴: 4e-5–3e-4 at n = 200 → 0.008–0.08 at n = 800, rising in every design.
+- **Visibility, spread truth: yes by n = 800 in 15 designs** (v̂ ≥ 4.8 at n = 800 and 14–149 at n = 1600: IND, AR(0.5),
+  AR(0.8), both fixed blocks, growing blocks, both Toeplitz, all four weak/medium factors, S5, S6, FRED-like), and at
+  n = 1600 only for AR(0.95) (0.45; population margin 0.05). **No for D14 and D15** (strong factor, mixed signs: 0.10
+  and ≈ 0 at n = 1600; population value 0, a masking set cancels the truth's covariance with the signal) **and D18**
+  (riboflavin-like; population ≈ 0).
+- **Visibility, clustered (aligned) truth: yes in 18 of 19** (including the strong factors, D14 2.9 → 100, D15 → 51);
+  **no for D18**.
+- **p/n matters for the onset.** At the cap p = 2·10⁴ (p/n = 100, 50, 25), spread v̂ is still < 0.05 at n = 400 in
+  10 designs (AR(0.8), AR(0.95), both fixed blocks, growing blocks, both strong factors, S6, riboflavin- and FRED-like),
+  and < 1 at n = 800 in AR(0.95), FAC a=1 k=1/k=3 and riboflavin-like. The mechanism at small n (checked by explicit projections, pilot): with p ≫ n, a greedy masking
+  set of ≤ 15 columns can cancel the gain ‖(P_{U∪j} − P_U)μ‖²; this sample effect fades as n grows unless the population
+  visibility is itself 0.
 
 ## Pre-announced items (plan §2)
-- Global CS / strong factors give Q̂ = [p]: **confirmed** (D12–D16, D18; also the medium factor a = 0.75).
-- (AG) outside for p ≥ n: **confirmed** (outside even at p = n).
-- Floors fail at the smallest n and recover: **confirmed for p = 10n at n = 200 (m♯ floor ≈ 0)**; at p = n they are positive
-  from n = 200.
+- Global CS / strong factors give Q̂ = [p]: **confirmed** (D12–D16, D18).
+- (AG) outside for p ≥ n: **confirmed** (outside in every design, at p = n as well).
+- Floors fail at the smallest n and recover with n: **confirmed** for the m♯ floor at p = 10n and at the cap.
 
-## NOTS cells (pending)
-Rows to add when Engineering returns `/scratch/fb31/SMC_Theory_Department/W3-AUDIT-C/out/`: p = 10n series
-(n = 400, 800, 1600) and the p = 2·10⁴ cap at n = 200, 400, 800. Collect with
-`python3 scripts/c_collect.py <owls_out> <nots_out> --to <dest>`.
+## Track B cross-check (lines handed to the audit Fable; also appended at the end of `TRACK_B.md`)
+- B5 floor: **confirms** "all inside" (sample floors rise with n at p = 10n and at the cap in all 19 designs).
+- B6 collinearity: **confirms** "all inside" (Occam term bounded and decreasing at p = 10n).
+- B8 visibility: **confirms** inside for IND, AR, blocks, S6, aligned factors; outside for mixed-sign strong factors and
+  riboflavin-like. Refines two "unclear" entries: S5-type (D16, 4 mixed-sign truths) has a small positive population
+  margin (0.06) and rising sample v̂; FRED-like is inside with tiled copies (population 0.08–0.30, sample rising).
+- B9 leakage: **confirms** inside/outside for every design it lists. **Corrects** the Track-C sentence on AR(0.95): at
+  p = 10n the leak set grows ≈ n^0.1 (466 → 585), not n^0.4–0.5 (that p = n value was capped by p = n = 200). Toeplitz
+  α = 1 (n^0.4) and growing blocks (n^0.5) are confirmed.
+- B10 floor on Q ∪ {l}, local regressions: **confirms** inside for IND, AR(0.5), blocks, S6; AR(0.8) spread unclear and
+  improving (width +0.50 → +0.005).
+- B11 no leakage: **confirms** inside only where Q̂ = S₀. **Corrects** "the leak set equals S₀ for IND only": it also
+  equals S₀ for the weak factors (a = 0.5; common correlation 0.5 p^{-1/2}) once that correlation is below √(log n/n)
+  (every n at p = 10n). None of the study, P6 or 1M designs is of that kind, so no design verdict changes.
