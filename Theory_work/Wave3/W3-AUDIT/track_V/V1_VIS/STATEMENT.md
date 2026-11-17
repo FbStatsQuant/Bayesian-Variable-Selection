@@ -1,4 +1,4 @@
-# V1 · Lemma VIS (visibility with a margin uniform in n: a sign route and a generic-position route) — STATEMENT v1.4 (draft; Sol LOCK WITH CHANGES on v1.1, changes applied)
+# V1 · Lemma VIS (visibility with a margin uniform in n: a sign route and a generic-position route) — STATEMENT v1.5 (draft; Sol LOCK WITH CHANGES on v1.1, changes applied)
 
 Track V item V1 (manager 11-17, D112; owner + consultant requirement: a margin **uniform in n**, not "nonzero for almost
 every β"). Tier B (new lemma; pure linear algebra and topology, no code). **Lean target: yes** (finite-dimensional:
@@ -67,8 +67,11 @@ n ≥ n₀.
 ## Not claimed
 - Anything when ϑ_n approaches B (dist(ϑ_n, B) → 0) or lies on it: there visibility may fail with no margin; this is the
   case of track C's strong factor with mixed-sign truths (D14, D15: population value 0).
-- Designs whose local patterns are uncountable without a countable closure of 𝒩 (e.g. irregular or estimated
-  correlation matrices such as track C's riboflavin-like D18): B may then have interior; no claim.
+- (VIS-c)'s smallness of B when the closure 𝒩 is uncountable. Every design sequence has countably many local patterns
+  (finitely many at each n); only their closure can be uncountable (e.g. local matrices whose entries are dense in an
+  interval), and then B may have interior. (VIS-b) still applies whenever δ > 0. Designs built from one fixed matrix —
+  track C's real-data-like D18 (riboflavin) and D19 (FRED-QD), sub-panels and block tilings of a fixed matrix — have
+  finitely many local patterns and fall under (VIS-d)(i).
 - Sample-level visibility (Theorem 7 (A3); W3-START2-R (D3); W3-RM2-R (V♭)) and the other hypotheses of Theorems 5, 6, 10.
 - Avoiding, for each n separately, only that n's hyperplanes (ϑ_n ∉ ∪_{ν∈𝒩_n} ν^⊥, "nonzero for almost every β" at each n)
   is not enough and is not used: ϑ may then lie on a limit hyperplane ν^⊥, ν ∈ 𝒩 ∖ ∪_n 𝒩_n, where the margin tends to 0.
@@ -82,3 +85,4 @@ n ≥ n₀.
 | v1.2 | — (proof only: the false remark "(VIS-a) is a case of (VIS-b)" replaced by the two-route remark with Sol's example; (VIS-0) locality parenthetical) | EQUAL (no clause changed) | VSL1 Sol #1 (C, remark), #2 (E) | `reviews/VSL1_reply_sol.md` | council |
 | v1.3 | — (proof remark on track C reworded: spread placements are (VIS-b) cases, clustered (VIS-a), three-factor not (VIS-e)); target: n ≥ n₀; B over n ≥ n₀; AR alignment written out; growing equicorrelated blocks in (VIS-d)(i) | EQUAL (no clause changed) / STRONGER ((VIS-d)(i) example) | V-R1 Opus F-1, E-1–E-5 | `reviews/VR1_council_opus.md` | diff round V-R2 (Opus) |
 | v1.4 | (VIS-b) per-n bound for n ≥ n₀ (𝒩 is formed over n ≥ n₀); ρ_b ∈ [0, 1); AR ρ < 0 parity wording; track C remark completed | WEAKER ((VIS-b) for n ≥ n₀ only, as used) / EQUAL | V-R2 Opus N-1–N-4 | `reviews/VR2_council_opus.md` | diff round V-R3 (Opus) |
+| v1.5 | "Not claimed": the false exclusion of D18 ("uncountable local patterns") replaced — every sequence has countably many patterns; only an uncountable closure 𝒩 escapes (VIS-c); D18, D19 fall under (VIS-d)(i) | STRONGER (scope: D18 covered by (VIS-d)(i)) / correctness of the scope text | HQ API audit V (V:SCOPE REFUTED, 2/2) | `reviews/D18/D18_VERDICT.md` | diff check V-R4 (Opus) |

@@ -1,4 +1,4 @@
-# V1 · Lemma VIS — PROOF v1.4
+# V1 · Lemma VIS — PROOF v1.5
 
 Fix n; Σ = Σ_n is a p × p correlation matrix with c₁₆ > 0 (positive definite in (VIS-a)), W ~ N_p(0, Σ). For U ⊆ [p]
 write U^c := [p] ∖ U. F1 is applied to positive definite matrices only: to Σ in (VIS-a), and to Σ_V with |V| ≤ 16
@@ -102,7 +102,12 @@ alignment of (VIS-a) is required only within a block. ∎
   fail), Toeplitz in both placements (its precision matrix may well be a Stieltjes matrix, which would put the clustered
   placement under (VIS-a), but this is not proved here), the one-factor designs with the spread (mixed-sign) placement
   (D10, D12; D14's spread truths lie on B), the three-factor designs D11, D13, D15 (not covered by (VIS-e), which treats
-  one factor), S5's spread placement, and the FRED-QD-like tiles (D19). B8's s5
+  one factor), S5's spread placement, and the real-data-like designs D18 (riboflavin) and D19 (FRED-QD), both built from
+  one fixed matrix (sub-panels, then block tilings) and so with finitely many local patterns ((VIS-d)(i)). For D18 the
+  finite computation (`Theory_work/Wave3/W3-AUDIT/track_V/reviews/D18/D18_VERDICT.md`): the spread placement has its four
+  truths in four different tiles for p ≥ 16352, so every visibility direction is a coordinate vector and a ≥ 0.1·min_k|θ_k|
+  (up to 5 × 10⁻¹⁴); the clustered placement is effectively on B (a 15-column U gives |Cov| ≤ 6.9 × 10⁻⁹, exact
+  recomputation), like D14, D15. B8's s5
   and fac2 (aligned truths) are shown inside by B8's own computations — s5 by the M-matrix form of Σ⁻¹, i.e. a (VIS-a)
   instance; fac2 by an explicit formula for the conditional covariances (`Theory_work/Wave3/W3-AUDIT/TRACK_B.md:222-228`).
 - Illustration of B (AR(ρ), two truths at distance g, U = ∅, j = k₁): γ = (1, ρ^g), so B ⊇ {θ₁ + ρ^gθ₂ = 0} for each gap g
