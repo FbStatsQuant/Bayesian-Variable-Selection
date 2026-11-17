@@ -35,8 +35,10 @@ TEST(cli_pipeline_exit_codes_and_records) {
   m["inputs"][data] = std::string(64, '0'); write_json_file(man, m);
   CHECK_EQ(run("info --manifest " + man + " --record " + man + ".rec"), 13);
   CHECK(read_json_file(man + ".rec").at("status").str() == "invalid_input");
-  // stubs: internal_error (exit 15)
-  CHECK_EQ(run("island --record " + man + ".rec"), 15);
+  // a command without its arguments: invalid_input (exit 13), recorded (island is WP3's command since PR "island CLI";
+  // it was the stub example here, exit 15)
+  CHECK_EQ(run("island --record " + man + ".rec"), 13);
+  CHECK(read_json_file(man + ".rec").at("status").str() == "invalid_input");
   // libm guard: masked FMA -> invalid_input before any work; info / version still run
   CHECK_EQ(run("gen --design AR --n 40 --p 60 --seed 3 --out " + raw + "2", "GLIBC_TUNABLES=glibc.cpu.hwcaps=-AVX2,-FMA"), 13);
   CHECK(!exists(raw + "2"));

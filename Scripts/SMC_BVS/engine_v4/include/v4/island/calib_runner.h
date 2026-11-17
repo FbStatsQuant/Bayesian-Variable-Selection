@@ -23,6 +23,7 @@ struct CalibRunnerConfig {
   int threads = 1, G = 0, tile = 128, B = 14;  // B: number of N-swap labels (budgets B)
   double k_store = 0, inputs_bytes = 0; uint64_t mem_budget = 0;
   bool allow_test_kernels = false;             // tests: the bit-form label-major kernel (LM = PM checks)
+  double test_admission_k = 0;                 // tests: force the admission's k (a step-boundary refusal; review PR39 m1)
 };
 
 template <Arith A>
@@ -43,7 +44,7 @@ class CalibIslandRunner final : public v4::calib::IslandRunner {
     // resident bytes join the plan's caller-supplied term, so no byte is counted twice.
     c.k_store = c_.k_store; c.inputs_bytes = c_.inputs_bytes + (double)sp.resident_bytes;
     c.mem_budget = sp.mem_budget ? sp.mem_budget : c_.mem_budget;
-    c.keep_terminal = false; c.leaders = true;
+    c.keep_terminal = false; c.leaders = true; c.test_admission_k = c_.test_admission_k;
     if (pilot) { c.adaptive = true; c.adaptive_H = sp.H; c.adaptive_Te = sp.Te; } else c.grid = sp.grid;
     if (c_.compat) {
       c.compat = true;

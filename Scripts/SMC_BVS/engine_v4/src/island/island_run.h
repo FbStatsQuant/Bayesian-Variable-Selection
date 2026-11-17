@@ -482,7 +482,9 @@ class IslandEngine {
   // a restart refuses a different binary block.
   uint64_t fingerprint() const {
     Fnv f; f.pod(cfg.seed); f.pod(cfg.island); f.pod(cfg.tier); f.pod(cfg.N); f.vec(cfg.grid); f.pod(cfg.L); f.pod(cfg.Hm); f.pod(cfg.B);
-    f.pod(top.cap); f.pod(cfg.offer_floor); f.pod(D.n); f.pod(D.p);   // D-29: a resume under another floor is refused f.pod(D.yty); f.pod(st.logZbar0); f.pod(st.J); f.pod((int)A); f.pod(cfg.compat); f.pod(cfg.leaders);
+    f.pod(top.cap); f.pod(D.n); f.pod(D.p); f.pod(D.yty); f.pod(st.logZbar0); f.pod(st.J); f.pod((int)A); f.pod(cfg.compat); f.pod(cfg.leaders);
+    f.pod(cfg.offer_floor);   // D-29: a resume under another floor is refused (WP7 O6)
+    f.bytes(cfg.input_id.data(), cfg.input_id.size());   // the verified input hashes (PR52 MAJOR-1); empty adds nothing
     const std::string bb = v4::binary_block_no_self_test().dump(); f.bytes(bb.data(), bb.size());
     return f.h;
   }
@@ -868,17 +870,11 @@ MemPlan plan_island(const Data& D, const Start& st, const IslandConfig& cfg, Mem
   double k_pi0 = 0, acc = 0;
   for (size_t k = 0; k < st.size_logmass.size(); ++k) { acc += std::exp(st.size_logmass[k]); if (acc >= 0.90) { k_pi0 = (double)k; break; } }
   const double k_est = cfg.test_admission_k > 0 ? cfg.test_admission_k : std::max({8.0, k_pi0 + 1.0, cfg.k_store});
-  const uint64_t cap = cfg.store_cap ? cfg.store_cap : 40ULL * (uint64_t)D.p + 1;
-  const bool lm = cfg.kernel == KernelKind::LabelMajor;
-  MemSizes z; z.n = D.n; z.p = D.p; z.K = D.K; z.N = cfg.N; z.B = cfg.B; z.Hm = cfg.Hm; z.threads = cfg.threads;
-  z.tile = std::max(64, (cfg.tile + 63) / 64 * 64); z.cap = cap; z.label_major = lm;
-  z.deferred = cfg.store_parallel_compact && cfg.threads > 1 && lm; z.leaders = cfg.leaders || cfg.role != IslandRole::Final; z.compat = cfg.compat; z.inputs_bytes = cfg.inputs_bytes;
-  z.calib = cfg.role != IslandRole::Final;
-  int G = cfg.G ? cfg.G : 256;
-  z.G = G; z.gram_slots = gram_slots_of(cfg, G, D.p); MemPlan mp = island_memory(z, k_est);
-  if (cfg.mem_budget && cfg.G == 0) {
-    while (G > 1 && mp.total > cfg.mem_budget) { --G; z.G = G; z.gram_slots = gram_slots_of(cfg, G, D.p); mp = island_memory(z, k_est); }
-  }
+  // the sizes and the G rule are plan_sizes / plan_with_budget (island.h): one implementation for this admission and for the
+  // pre-load admission of the island command (which has the dimensions but no Start; PR52 MAJOR-2)
+  MemSizes z = plan_sizes(D.n, D.p, D.K, cfg);
+  MemPlan mp = plan_with_budget(z, k_est, cfg);
+  int G = z.G;
   if (zout) *zout = z;
   if (kout) *kout = k_est;
   if (Gout) *Gout = G;
@@ -938,6 +934,8 @@ IslandRun run_island(const Data& D, const Start& st, const Neighbours& nb, const
   IslandConfig c2 = cfg; c2.G = G;
   if (cfg.mem_budget && mp.total > cfg.mem_budget) {   // deterministic refusal before any allocation
     IslandRun r; r.status = 3; r.r = (int)cfg.island; r.N = cfg.N; r.p = D.p; r.L = cfg.L; r.Hm = cfg.Hm; r.G_used = G; r.mem_plan = mem_plan_text(mp);
+    r.role = cfg.role; r.tier = cfg.tier; r.iter = cfg.iter; r.compat = cfg.compat;   // the request's identity (review PR52 m6): the file's mode
+    r.grid = cfg.grid; r.T = cfg.grid.size() ? (int)cfg.grid.size() - 1 : 0;           // and schedule, as a later refusal carries them
     r.reason = "mem_budget: predicted peak " + std::to_string(mp.total >> 20) + " MiB > budget " + std::to_string(cfg.mem_budget >> 20) + " MiB [" + r.mem_plan + "]";
     return r;
   }
