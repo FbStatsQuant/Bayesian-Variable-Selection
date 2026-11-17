@@ -414,3 +414,4 @@
 - 2026-11-17 08:35 CST HEARTBEAT (freeze): CI green; no Theory agents running; idle.
 - 2026-11-17 10:05 CST HEARTBEAT (freeze): CI green; no Theory agents running; idle.
 - 2026-11-17 11:35 CST HEARTBEAT (freeze): CI green (HQ commit 'Owner Lean gate: no Lean code until HQ+VP+owner agree theory is final'; the Mon kick-off reads HQ's latest). No Theory agents running; idle.
+- 2026-11-17 12:23 CST D104 dispatched (4 leads + Fable).

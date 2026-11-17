@@ -3,7 +3,10 @@
 Updated 2026-11-15 19:40 CT. Cap: ≤ 5 leads until Wed 11-18 18:00 CT (HQ temporary OK), then 3 (Claude Third, Opus 5.5 high).
 Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed by HQ; a late rider ships at its last checked state). W3-DIST has priority on codex.
 
-## FROZEN 2026-11-17 (tag theory-v2026-11-freeze → d40c9780). Idle until Mon 11-23 08:00 CT; post-freeze riders below.
+## THEORY PUSH (owner greenlight 11-17, D104). Freeze tag theory-v2026-11-freeze → d40c9780 stands for recorded statements.
+- Running (4 leads + Fable): track A lead (W1-N1:B/F line checks), W3-D2 lead (check X), recorder (A1/A2 NARROW → tools → registry editorial), precedent notes (Sonnet); audit Fable (FEAS_SMC_WORKS).
+- Next free slot: READER editorial batch (R5's 3 items, R4 pointer, ER-1..11, XR1 items).
+- HOLD (owner): track D #3, #5′, any SMC-works ticket. After the owner's method sign-off: proof hardening for Lean (3 blueprints + hostile review).
 
 ## Running
 | ticket | contents | lead thread | worktree / branch | state | next |
