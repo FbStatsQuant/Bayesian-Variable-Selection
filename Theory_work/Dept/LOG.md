@@ -496,3 +496,4 @@
 - 2026-11-17 16:20 CST CorGb-plus refresh dry run clean (expanded rule: → W2-APP:POST, C-MIS:GDb, C-MIS:Prop-P; CorH-U likewise); HQ GO requested. MIS family stale lists left (follow-up offer).
 - 2026-11-17 16:21 CST D126 relayed to the recorder.
 - 2026-11-17 16:48 CST CorGb-plus refresh LANDED 5912ce6e (CI 44190247392). W3-D2 re-dry clean (Thm2X/Cor2X conditional on W2-APP:POST, C-MIS:GDb, C-MIS:Prop-P; R2f2 bbe1e125 incl. caveat (a) requote, Opus PURE) → HQ final GO requested.
+- 2026-11-17 16:49 CST D127 relayed to the recorder.
