@@ -15,3 +15,4 @@
 - 2026-11-16 18:43 XR1 Sol seat: 9.4 PASS. Opus seat still running.
 - 2026-11-16 18:48 XR1 Opus seat: 8.5 FAIL (T14 F1: proof used T9 under EX-A/H2-FP, unstated); X1/X3/X5 ACCEPT; bind XR1 refused. T14 v1 structural repair (premise-free); XR2 manifest 5db04d3a…64d6; diff patch; briefs BRIEF_XR2_{sol,opus}. Opus diff seat launched; Sol diff seat awaits the manager (Codex budget).
 - 2026-11-16 18:49 XR2 Opus diff seat: 9.5 PASS (F1 resolved; all four ACCEPT). Sol diff seat pending the manager's Codex decision; bind not attempted.
+- 2026-11-16 18:50 Manager OK: Sol diff seat XR2 launched (delegate c4537cc0). Editorial items (D79/CASCADE cite for '19 claims'; code line for T14's structural bound) → next manifest.
