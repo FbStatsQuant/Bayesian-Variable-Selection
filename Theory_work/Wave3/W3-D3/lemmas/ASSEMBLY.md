@@ -1,7 +1,7 @@
 # ASSEMBLY — Theorem 2SG from Lemma B3w and W3-POST Theorem 1 item 6; Proposition ExSG
 
 **Status: PROVED (by this seat, unchecked).** Ticket W3-D3 (Tier B). Targets: `STATEMENT.md` §1 (Theorem 2SG) and §3
-(Proposition ExSG), v1.1 (symbols per [L1-1]: L = sub-Gaussian constant, K_cap = min(p_ret, ⌊n/2⌋)).
+(Proposition ExSG), v1.2 [K2-2] (symbols per [L1-1]: L = sub-Gaussian constant, K_cap = min(p_ret, ⌊n/2⌋)).
 
 Aliases: [EB] = `Theory_work/Wave3/W3-DIST/work/E_bridges/`; [W3P] = `Theory_work/Wave3/W3-POST/STATEMENT.md`.
 

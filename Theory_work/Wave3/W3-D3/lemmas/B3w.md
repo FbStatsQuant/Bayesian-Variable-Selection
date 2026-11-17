@@ -31,10 +31,10 @@ is O((log n)²)). For n ≥ n₁:
     (iv) (F_w; g₀) of [W3P] `:71-73`: λ_min(X_{S₀∪J}ᵀX_{S₀∪J}) ≥ g₀ for every J ⊆ [p]∖S₀ with |J| ≤ m♯_n;
     (v) BM-∞ with a common deterministic envelope: θ̃*²_min nφ₀²/log n ≥ M_n, and M_n → ∞.
 (b) P(𝒜_nᶜ) ≤ 4p·e^{−c₁n/L⁴} + e^{−c₂n/L⁴} ≤ 5n^A e^{−c₂n/L⁴} → 0 (c₁ = 1/576).
-(c) [L1-2] (Interface.) Let (X°, θ°) be the completed pair of Step 6 ((X, θ̃*) on {p_ret = p}; a fixed deterministic
-    centred standardised n × p matrix with a fixed truth of support size s₀ otherwise), and 𝒜′_n the set of outcomes on which
-    (X°, θ°) satisfies |supp θ°| = s₀, ‖X°θ°‖² ≤ nM_E, (F_λ; φ₀), (F_w; g₀) (m♯_n computed from (n, p, s₀)) and
-    θ°²_min nφ₀²/log n ≥ M_n. Then 𝒜′_n is (X°, θ°)-measurable, 𝒜_n ⊆ 𝒜′_n ∩ {p_ret = p}, ε is independent of (X°, θ°), and
+(c) [L1-2] (Interface.) Let (X°, θ°) be the completed pair of Step 6 ((X, θ̃*) on {p_ret = p}; outside it a fixed
+    deterministic centred standardised n × p matrix with a fixed truth θ⁰ with supp θ⁰ = S₀ [K1-1], [K2-1]). Then
+    supp θ° = S₀ on every outcome. Let 𝒜′_n be the set of outcomes on which (X°, θ°) satisfies ‖X°θ°‖² ≤ nM_E, (F_λ; φ₀),
+    (F_w; g₀) (m♯_n computed from (n, p, s₀)) and θ°²_min nφ₀²/log n ≥ M_n. Then 𝒜′_n is (X°, θ°)-measurable, 𝒜_n ⊆ 𝒜′_n ∩ {p_ret = p}, ε is independent of (X°, θ°), and
     the hypotheses of [W3P] Theorem 1 item 6 (`:95-100`) hold for (X°, θ°, ε/σ*) in regime R1 with the events 𝒜′_n, the
     common constants (M_E, φ₀, g₀) and the common envelope M_n. (𝒜_n need not be (X, θ̃*)-measurable; it is used only
     for its probability, P(𝒜′_nᶜ) ≤ P(𝒜_nᶜ).)
@@ -71,7 +71,7 @@ Also W̄_n ≥ 1, so (A4) contains every u = e_j, and W̄_n ≥ |S₀| = s₀.
 
 **Step 1 [R-6] (the hypotheses of B1 and B2-core).** Put z := x − m_n, z_i := x_i − m_n. Then E z = 0, Var(z_j) = Σ_{n,jj} = 1,
 Γ := E zzᵀ = Σ_n, Var(uᵀz) = uᵀΣ_nu, and z_j = (x_j − E x_j)/sd(x_j). (A4) with u = e_j (one nonzero entry ≤ W̄_n) is (SG₁) of
-B1 with the same K. (A4) restricted to u with at most q_n ≤ W̄_n nonzero entries is (SG_{q_n}) of B2-core with K := L. For n ≥ n₁:
+B1 with K := L [K2-3]. (A4) restricted to u with at most q_n ≤ W̄_n nonzero entries is (SG_{q_n}) of B2-core with K := L. For n ≥ n₁:
 q′ := min(q_n, p) = w_n ≥ 1, and log(ep/w_n) ≤ 1 + log p ≤ 1 + A log n (w_n ≥ 1, p ≤ n^A), so
 w_n log(ep/w_n) ≤ W̄_n(1 + A log n) ≤ c₂n/L⁴, which is B2-core's size condition. ∎
 
@@ -103,8 +103,8 @@ fixed, G) with ε independent of (X, θ*), the design being n × p with p fixed 
 (B3 amendment A-2): off {p_ret = p} the standardised design X has p_ret ≠ p columns (p_ret may be 0 or 1 for discrete rows),
 and 𝓔₁ (scale ratios of null columns) is not determined by (X, θ̃*) since standardisation discards the sample scales.
 *Completion.* Fix, for each n, a deterministic n × p matrix X⁰ with centred columns of squared norm n − 1 and a deterministic
-θ⁰ ∈ ℝ^p with supp θ⁰ = S₀ (possible: β* is deterministic and |S₀| = s₀ ≤ p; otherwise any choice — the interface
-conditions need not hold for it) [K1-1]. Put (X°, θ°) := (X, θ̃*) on
+θ⁰ ∈ ℝ^p with supp θ⁰ = S₀ (possible since β* is deterministic and S₀ ⊆ [p]; X⁰ and the nonzero values of θ⁰ are
+otherwise arbitrary, and the interface conditions need not hold for (X⁰, θ⁰)) [K1-1], [K2-6]. Put (X°, θ°) := (X, θ̃*) on
 {p_ret = p} and (X°, θ°) := (X⁰, θ⁰) on {p_ret ≠ p}. The event {p_ret = p} = ∩_j {column j is not constant} and, on it,
 (X, θ̃*) are Borel functions of the raw design (centring, division by sample standard deviations, multiplication of β̃*
 by them); so (X°, θ°) is a Borel function of the raw design, and ε (independent of X^r by (S1)) is independent of it.

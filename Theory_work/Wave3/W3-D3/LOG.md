@@ -47,3 +47,7 @@
 - 13:30 — Agent started: Opus 5.5 high (providerInstanceId claudeAgent_personal), new agent — role: K2 re-check of K1
   repairs, changed DEPS rows, REPORT registry blocks, statement-change check v1.1→v1.2; brief reviews/K2_brief.md; reply →
   reviews/K2_recheck_opus.md.
+- 13:36 — K2 reply (Opus): RESOLVED-WITH-AMENDMENTS (K2-1 S, K2-4 S, 4 E). All accepted (reviews/K2_disposition.md;
+  reviews/K2_repair.diff). DEPS: S:Thm2SG, S:B3w, S:class, S:inputs, P:Thm2SG checked by K2 (spans unchanged since K2 read them).
+- 13:36 — Agent started: Opus 5.5 high (providerInstanceId claudeAgent_personal), new agent — role: K3 re-check of the K2
+  repairs (B3w (c), changelog tag, REPORT B3w block); brief reviews/K3_brief.md; reply → reviews/K3_recheck_opus.md.
