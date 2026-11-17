@@ -105,7 +105,8 @@ void make_fx(Fx& f, const Dir& dir) {
                      : (const void*)R.get<uint8_t>(nm);
       W.add_copy(nm, e.dtype, qq, e.length, e.dims[0], e.dims[1]);
     }
-    W.add("nb_ptr", nb.ptr); W.add("nb_idx", nb.idx); W.add("size_cum", st.size_cum); f.shash = W.write(f.spath); }
+    // + size_logmass (WP4 #46: calibrate's plan k = max(8, q90(pi_0 size) + 1) from setup.bin requires it)
+    W.add("nb_ptr", nb.ptr); W.add("nb_idx", nb.idx); W.add("size_cum", st.size_cum); W.add("size_logmass", st.size_logmass); f.shash = W.write(f.spath); }
   std::remove(s0.c_str());
   // the producers' records (the driver's fill requires "completed")
   Json ok = Json::object(); ok["status"] = "completed";
