@@ -49,6 +49,22 @@ r <- LF(list(1L, c(1L, 2L)), c(0, -1), 3, full = TRUE); chk(r$list_full && r$pip
 # nonconsecutive original indices (retained columns after a dropped constant): names and positions
 r <- v3_list_fields(store(list(c(2L, 7L), 7L, 4L), c(0, -1, -2)), c(2L, 4L, 7L), c("2", "4", "7"))
 chk(identical(names(r$pip_list), c("2", "4", "7")) && identical(r$mpm_list, c(2L, 7L)) && r$pip_list[["4"]] > 0 && r$pip_list[["4"]] < 0.5, "original indices")
+# error precedence (review PR68 MINOR-4): a duplicate model stops even when a score is non-finite or all scores are -Inf
+chk(inherits(try(LF(list(1L, 2L, 1L), c(NaN, -1, -2), 3), silent = TRUE), "try-error"), "duplicate + NaN: stops")
+chk(inherits(try(LF(list(1L, 1L), c(-Inf, -Inf), 3), silent = TRUE), "try-error"), "duplicate + all -Inf: stops")
+# the flagged result is NA everywhere (mpm_list NA, never an empty vector = a valid empty MPM)
+r <- LF(list(1L, 2L), c(NaN, 0), 3); chk(identical(r$mpm_list, NA_integer_) && all(is.na(r$pip_list)) && is.na(r$log_Z_list), "flagged: mpm_list is NA_integer_")
+# the reviewer's fixed store (review PR68 MINOR-5): one unit weight and eight weights near 2^-54. Reverse order adds the small ones first
+# (8 x 2^-54 = 2^-51, then +1 = 1 + 2^-51); first-to-last order loses every one of them (1 + 2^-54 rounds to 1). The numerator of a column in
+# the unit model and four small ones: reverse 1 + 2^-52, first-to-last 1.
+Fs <- c(0, rep(-54 * log(2), 8)); Ms <- list(c(1L, 2L), c(2L, 3L), c(2L, 4L), c(2L, 5L), c(2L, 6L), c(3L, 7L), c(3L, 8L), c(3L, 9L), c(3L, 10L))
+r <- LF(Ms, Fs, 10)
+u <- exp(Fs - max(Fs)); rev_den <- 0; fwd_den <- 0; rev_n2 <- 0; fwd_n2 <- 0
+for (i in 9:1) { rev_den <- rev_den + u[i]; if (2L %in% Ms[[i]]) rev_n2 <- rev_n2 + u[i] }
+for (i in 1:9) { fwd_den <- fwd_den + u[i]; if (2L %in% Ms[[i]]) fwd_n2 <- fwd_n2 + u[i] }
+chk(rev_den > fwd_den && fwd_den == 1 && rev_n2 / rev_den != fwd_n2 / fwd_den, "the fixed store separates the two orders")
+chk(identical(r$log_Z_list, max(Fs) + log(rev_den)) && r$log_Z_list > 0, "fixed store: log_Z_list from the reverse-order denominator")
+chk(identical(unname(r$pip_list[2]), rev_n2 / rev_den), "fixed store: the numerator is also summed last to first")
 # summation order: plain double, last to first (differs from sum()'s long double in the last bit for adversarial weights)
 set.seed(1); Fv <- -rexp(2000) * 5; ms <- lapply(seq_along(Fv), function(i) sort(sample.int(30, sample(0:5, 1)))); ms <- ms[!duplicated(vapply(ms, paste, "", collapse = ","))]
 Fv <- Fv[seq_along(ms)]
@@ -76,6 +92,7 @@ for (id in 1:6) {
   if (fit$status == "exact") {
     n_exact <- n_exact + 1L
     chk(identical(fit$pip_list_source, "exact") && identical(fit$pip_list, fit$pip_primary) && identical(fit$mpm_list, fit$mpm), paste("exact: pip_list = pip_primary, fixture", id))
+    nmx <- names(fit); chk(max(match(setdiff(nmx, NEWF), nmx)) < min(match(NEWF[-7], nmx)) && match("peak_memory_kb", nmx) < match("pip_list", nmx), paste("exact: list fields after every legacy field, fixture", id))
     top <- fit$exact$top
     lf <- v3_list_fields(top, as.integer(names(fit$pip_primary)), names(fit$pip_primary))   # the formula of §2 on the store
     chk(identical(fit$log_Z_list, lf$log_Z_list) && fit$list_size == length(top$models) && identical(fit$list_full, isTRUE(top$full)) && is.null(fit$pip_list_flag),
@@ -117,6 +134,11 @@ chk(identical(fa$pip_list_source, "store") && fa$list_size == length(fa$top_stor
 chk(identical(names(fa$pip_list), names(fa$pip_primary)) && identical(fa$mpm_list, as.integer(as.integer(names(fa$pip_list))[fa$pip_list > .5])), "SMC names and mpm_list")
 chk(identical(fa[NEWF], fb[NEWF]), "A3 same seed twice: identical new fields")
 chk(all(fa$pip_list >= 0 & fa$pip_list <= 1) && fa$log_Z_list <= fa$log_Z + 50, "SMC bounds")
+# review PR68 MAJOR-2: the fields are added strictly LAST in v3_fit, after finish() sampled peak_memory_kb and the clock, and after every
+# legacy field; direct callers of v3_final_run keep getting them (default list_fields = TRUE)
+nm <- names(fa); chk(max(match(setdiff(nm, NEWF), nm)) < min(match(NEWF[-7], nm)) && match("peak_memory_kb", nm) < match("pip_list", nm) &&
+                     match("runtime_guard", nm) < match("pip_list", nm), "SMC fit: list fields after every legacy field")
+chk(identical(formals(v3_final_run)$list_fields, TRUE) && identical(formals(v3_assemble_final)$list_fields, TRUE), "direct v3_final_run callers keep the fields by default")
 # recomputation from the returned store reproduces the fit's fields, and the fields are removable without trace
 rr <- v3_list_fields(fa$top_store, as.integer(names(fa$pip_primary)), names(fa$pip_primary))
 chk(identical(rr$pip_list, fa$pip_list) && identical(rr$log_Z_list, fa$log_Z_list), "recomputation = the fit's fields")
