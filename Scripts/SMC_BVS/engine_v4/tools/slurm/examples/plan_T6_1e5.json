@@ -1,0 +1,18 @@
+{
+  "batch": "T6_1e5",
+  "kind": "gate T6 at 1e5: restart by REAL kills (WP7 O4); one island of the T5 fit's inputs; t6_only: no full-fit submit.sh",
+  "mode": "V",
+  "code_commit": "UNSET-fill-at-freeze",
+  "binary": "bin/smcbvs4",
+  "island_isa": "sapphirerapids",
+  "core_h_cap": 50,
+  "max_task_hours": 2.0,
+  "t6_only": true,
+  "t6": {"source_batch": "T5_1e5", "island": 1, "kills": 2, "ckpt_every_s": 20, "cpus": 48, "mem": "24G", "time": "00:50:00"},
+  "resources": {
+    "setup": {"cpus": 32, "mem": "16G", "time": "00:30:00"}
+  },
+  "fits": [
+    {"run_id": "5-AR-n200-r01-V-s1", "design": "AR", "p": 100000, "n": 200, "signal": "strong", "data_seed": 502020001, "seed": 502020001, "Rp": 16, "N": 2500}
+  ]
+}

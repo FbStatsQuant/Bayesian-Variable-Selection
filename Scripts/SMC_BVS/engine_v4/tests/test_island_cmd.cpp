@@ -267,6 +267,38 @@ TEST(island_command_offer_floor_on_off) {
   std::printf("  tau_cal %.6f: islands floored through the CLI; fit.bin identical with and without the floor\n", ci.tau_cal);
 }
 
+// WP7 O4: `island --stop-after-s S` is a soft stop: exit 22, record island_status = interrupted_resumable, no island file,
+// the checkpoint left; the rerun resumes. A chain of stops ends with the uninterrupted island's sections; invalid
+// values (S <= 0, S without checkpoints) are refused (13).
+TEST(island_command_time_stop_chain) {
+  Dir dir("tstop"); Fx f; make_fx(f, dir);
+  const std::string bin = V4_SMCBVS4, cal = dir("calib.bin");
+  CHECK_EQ(sh(bin + " calibrate --data " + q(f.dpath) + " --setup " + q(f.spath) + " --mode V --seed 77 --threads 3 --out " + q(cal)), 0);
+  const std::string base = bin + " island --data " + q(f.dpath) + " --setup " + q(f.spath) + " --calib " + q(cal) + " --mode V --seed 77 --island 1 --threads 3 ";
+  const std::string ref = dir("ref.bin"), out = dir("island_1.bin");
+  CHECK_EQ(sh(base + "--out " + q(ref)), 0);
+  struct stat sb{};
+  int attempts = 0, stops = 0, rc = -1; int last = -1;
+  while (attempts < 30) {
+    rc = sh(base + "--stop-after-s 0.4 --out " + q(out)); ++attempts;
+    if (rc == 0) break;
+    CHECKF(rc == 22, "attempt %d: exit %d", attempts, rc);
+    const Json rec = rec_of(out + ".json");
+    CHECK(rec.at("status").str() == "completed" && rec.at("island_status").str() == "interrupted_resumable" && !rec.contains("island_bin"));
+    CHECK(::stat(out.c_str(), &sb) != 0);   // no island file yet
+    CHECK(::stat((dir("island_1.ckpt.a")).c_str(), &sb) == 0 || ::stat((dir("island_1.ckpt.b")).c_str(), &sb) == 0);
+    const int after = (int)rec.at("stopped_after_step").num(); CHECKF(after > last, "attempt %d stopped after step %d (last %d)", attempts, after, last); last = after;
+    ++stops;
+  }
+  CHECKF(rc == 0 && stops >= 2, "exit %d after %d attempts (%d stops)", rc, attempts, stops);
+  CHECK(body_hash(out) == body_hash(ref));
+  CHECK(rec_of(out + ".json").at("resumed_from_step").num() == last);
+  CHECK(::stat(dir("island_1.ckpt.a").c_str(), &sb) != 0 && ::stat(dir("island_1.ckpt.b").c_str(), &sb) != 0);   // removed after the completed write
+  CHECK_EQ(sh(base + "--stop-after-s 0 --out " + q(dir("bad0.bin"))), 13);
+  CHECK_EQ(sh(base + "--stop-after-s 5 --ckpt 0 --out " + q(dir("bad1.bin"))), 13);
+  std::printf("  island command: %d attempts (%d soft stops, exit 22) -> the uninterrupted island's sections\n", attempts, stops);
+}
+
 // D-29 (review PR54 MAJOR-1/2): the island command validates tau_cal itself, before any island work, with the check
 // read_calib uses: a tampered finite tau_cal (next ulp, or far above every value) and inherited models that are not
 // distinct (one model repeated; two models alternating) are refused (13, no island file); the valid calib.bin runs.

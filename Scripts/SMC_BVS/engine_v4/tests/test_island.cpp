@@ -1661,3 +1661,35 @@ TEST(checkpoint_of_the_older_format_is_refused) {
   catch (const v4::Error& e) { refused = e.st == v4::Status::invalid_input; msg = e.what(); }
   CHECKF(refused && msg.find("older format") != std::string::npos, "old-format refusal: %s", msg.c_str());
 }
+
+// WP7 O4: the soft time stop. stop_after_s ends the run at a step boundary with a checkpoint (status 1, time_stopped);
+// a chain of such stops, each resuming from the last checkpoint with another thread count / group size, ends with the
+// uninterrupted island's hash; each attempt makes progress (at least one step); the last step is never stopped;
+// invalid values are refused.
+TEST(time_stop_chain_equals_uninterrupted) {
+  TmpGuard tg;
+  Fixture F(100, 300, 62);
+  IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = 3; c.G = 16;
+  const uint64_t h0 = run_island<Arith::ClassA>(F.D, F.st, F.nb, c).hash();
+  const int Tsteps = (int)c.grid.size() - 1 + c.L + c.Hm;
+  IslandConfig a = c; a.ckpt_path = tg.add(wp3_tmp("o4_chain")); a.ckpt_every_s = 1e9; a.stop_after_s = 1e-6; wp3_rm(a.ckpt_path);
+  int attempts = 0, last = -1; bool done = false;
+  while (attempts < Tsteps + 5 && !done) {
+    IslandConfig b = a; b.threads = 1 + attempts % 3; b.G = attempts % 2 ? 7 : 16;
+    IslandRun r = run_island<Arith::ClassA>(F.D, F.st, F.nb, b);
+    ++attempts;
+    if (r.status == 0) { done = true; CHECKF(r.hash() == h0 && r.resumed_from_step == last, "chain end: hash %016llx vs %016llx, resumed %d vs %d", (unsigned long long)r.hash(), (unsigned long long)h0, r.resumed_from_step, last); }
+    else {
+      CHECKF(r.status == 1 && r.time_stopped && r.stopped_after_step > last, "attempt %d: status %d stopped %d after %d", attempts, r.status, r.stopped_after_step, last);
+      CHECK(r.stopped_after_step < Tsteps);   // the final step is never stopped
+      last = r.stopped_after_step;
+    }
+  }
+  CHECKF(done && attempts >= 3, "the chain ended after %d attempts (done %d)", attempts, (int)done);
+  std::printf("  time-stop chain: %d attempts (threads 1/2/3, G 16/7), same hash as the uninterrupted island\n", attempts);
+  // refusals
+  bool r1 = false, r2 = false;
+  try { IslandConfig b = c; b.stop_after_s = 1.0; run_island<Arith::ClassA>(F.D, F.st, F.nb, b); } catch (const v4::Error& e) { r1 = e.st == v4::Status::invalid_input; }   // no checkpoint path
+  try { IslandConfig b = a; b.stop_after_s = -1.0; run_island<Arith::ClassA>(F.D, F.st, F.nb, b); } catch (const v4::Error& e) { r2 = e.st == v4::Status::invalid_input; }
+  CHECK(r1 && r2);
+}

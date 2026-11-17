@@ -637,12 +637,18 @@ class IslandEngine {
     top.publish_loaded();
     return step;
   }
-  void maybe_ckpt(int step, bool& stop) {
+  bool time_stop = false;   // set when stop_after_s ended the run (WP7 O4)
+  int last_ckpt_step = -1;  // the step of the last checkpoint written by this process
+  void maybe_ckpt(int step, bool& stop, bool last_step = false) {
     stop = false;
     if (cfg.ckpt_path.empty()) return;
-    double since = std::chrono::duration<double>(std::chrono::steady_clock::now() - last_ckpt).count();
-    if (step == cfg.stop_after_step || since >= cfg.ckpt_every_s) save_ckpt(step);
+    const auto now = std::chrono::steady_clock::now();
+    const double since = std::chrono::duration<double>(now - last_ckpt).count();
+    // the soft time stop: not at the final step (the island is about to finish and write its file)
+    const bool due_time = cfg.stop_after_s > 0 && !last_step && std::chrono::duration<double>(now - t_start).count() >= cfg.stop_after_s;
+    if (step == cfg.stop_after_step || since >= cfg.ckpt_every_s || due_time) { save_ckpt(step); last_ckpt_step = step; }
     if (step == cfg.stop_after_step) stop = true;
+    if (due_time) { stop = true; time_stop = true; }
   }
 
   // initial draw of particle i (core/cpp/v3_engine.h:285-297): pi_0 draw, score, one INIT event. A failed score is
@@ -818,7 +824,7 @@ class IslandEngine {
         if (cfg.check_store_each_step) check_stores();   // tests / debugging only (O1: production checks at checkpoints and the final write)
         cost_close(step, step <= T ? 1 : (step <= T + L ? 2 : 3), step <= T ? grid[step] : 1.0);
         if (over_budget(step)) { stop = true; break; }
-        maybe_ckpt(step, stop);
+        maybe_ckpt(step, stop, step == T + L + Hm);
       }
     } catch (const NumericalFailure& e) {
       res.status = 2; res.reason = e.what();
@@ -840,7 +846,10 @@ class IslandEngine {
     // fit_status order; §7 "Invariant violations (I1-I7) -> internal_error"). Skipped for a generation already checked.
     check_stores();
     res.T = T; res.grid = grid;
-    if (stop && res.status == 0) { res.status = 1; res.reason = "interrupted after checkpoint (stop_after_step)"; }
+    if (stop && res.status == 0) {
+      res.status = 1; res.time_stopped = time_stop; res.stopped_after_step = last_ckpt_step;
+      res.reason = time_stop ? "interrupted after checkpoint (stop_after_s: resumable)" : "interrupted after checkpoint (stop_after_step)";
+    }
     // outputs
     res.logZ = logZ;
     if (res.status == 0) {
@@ -929,6 +938,9 @@ IslandRun run_island(const Data& D, const StartView& st, const Neighbours& nb, c
   if (A == Arith::Bit && cfg.kernel == KernelKind::LabelMajor && !cfg.allow_test_kernels)
     throw v4::Error(v4::Status::invalid_input, "run_island: the bit-form label-major kernel is test-only (D-21, manager Q1); theory mode runs particle-major");
   if (cfg.stop_after_step >= 0 && cfg.ckpt_path.empty()) throw v4::Error(v4::Status::invalid_input, "run_island: stop_after_step needs a checkpoint path");
+  if (cfg.stop_after_s < 0 || std::isnan(cfg.stop_after_s)) throw v4::Error(v4::Status::invalid_input, "run_island: stop_after_s must be >= 0");
+  if (cfg.stop_after_s > 0 && (cfg.ckpt_path.empty() || calib || cfg.adaptive))
+    throw v4::Error(v4::Status::invalid_input, "run_island: stop_after_s needs a checkpoint path and a final island");
   if (cfg.G < 0 || cfg.G > 256) throw v4::Error(v4::Status::invalid_input, "run_island: G must be in 0..256 (0 = chosen by mem_budget; manager Q3)");
   // D-29 offer floor (INTERFACES v0.1.15 §4.1; v0.1.17, review PR45 MINOR-2/3): the island side of the rule. A floor
   // > -inf only for a V-mode (class A) FINAL island; compat, law (Arith::Bit), leader stores and every calibration role
