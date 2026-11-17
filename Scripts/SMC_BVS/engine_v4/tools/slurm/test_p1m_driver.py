@@ -462,8 +462,26 @@ class TestPilotBatch(Base):
         self.assertFalse(ok); self.assertEqual(d["differing_sections"], ["pip_r"])
         self.assertFalse(p1m_stage_cost.compare_isa(a, info("0x2", [("top_v", "aa"), ("pip_r", "bb")], "portable"))[0])
 
+    def test_pilot_memory(self):   # WP3 11-17: default 128G; sized from a calibrate --plan-only record; refused above 240G
+        pl = self.plan(); del pl["pilot"]["mem"]
+        self.assertEqual(p1m_driver.resolve(pl)["pilot"]["mem"], "128G")
+        rec = os.path.join(self.tmp, "plan.json")
+        json.dump({"island_plan": {"total": 54.5 * 2 ** 30, "setup_inputs": 0}}, open(rec, "w"))
+        pl = self.plan(); pl["pilot"]["mem_from_plan"] = {"record": rec, "setup_inputs_gb": 14}
+        P = p1m_driver.resolve(pl)
+        need = (54.5 * 2 ** 30 + 14e9) * 1.15 / 0.9 / 2 ** 30
+        self.assertEqual(P["pilot"]["mem"], "%dG" % (int((need + 7.999) // 8) * 8))
+        json.dump({"island_plan": {"total": 70 * 2 ** 30, "setup_inputs": 9e9}}, open(rec, "w"))   # real setup: no allowance
+        self.assertEqual(p1m_driver.resolve(pl)["pilot"]["mem_basis"]["setup_inputs_added"], 0.0)
+        json.dump({"island_plan": {"total": 200 * 2 ** 30, "setup_inputs": 9e9}}, open(rec, "w"))
+        with self.assertRaises(p1m_driver.PlanError):
+            p1m_driver.resolve(pl)
+        json.dump({"mem_plan": {"total": 1}}, open(rec, "w"))   # an older record without the island plan
+        with self.assertRaises(p1m_driver.PlanError):
+            p1m_driver.resolve(pl)
+
     def test_bad_pilot(self):
-        for bad in ({"cpus": 96, "mem": "64G"}, {"cpus": 500, "mem": "64G", "time": "01:00:00"}, {"cpus": 96, "mem": "64G", "time": "03:00:00"}):
+        for bad in ({"cpus": 96, "mem": "128G", "time": "01:00:00", "mem_from_plan": {"record": "/nonexistent"}}, {"cpus": 500, "mem": "64G", "time": "01:00:00"}, {"cpus": 96, "mem": "64G", "time": "03:00:00"}):
             pl = self.plan(); pl["pilot"] = bad
             with self.assertRaises(p1m_driver.PlanError):
                 p1m_driver.resolve(pl)

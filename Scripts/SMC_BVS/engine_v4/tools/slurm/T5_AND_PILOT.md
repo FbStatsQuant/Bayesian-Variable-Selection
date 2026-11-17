@@ -7,10 +7,10 @@ Every core-h figure below is an ESTIMATE unless it says MEASURED.
 | run | needs merged into `exp/P1M-engine` (then frozen as `code_commit`) |
 |---|---|
 | T5 at 10⁵ (gate P4) | `setup` (WP2 #13), the `island` command (WP3), O1 (#47), O2 (#49), O5 (this), K1 (#48) |
-| 10⁶ pilot (gate P7, H-11 (2)) | the T5 list + K3 (Gram rows) + WP3's StartView (`--plan-only` with the island plan); the pilot's `mem` re-set from the printed plan |
+| 10⁶ pilot (gate P7, H-11 (2)) | the T5 list + K3 (Gram rows) + WP3's StartView and island CLI (`calibrate --plan-only` with the island plan); pilot memory 128G or `mem_from_plan` |
 
 The `island` command (WP3) should:
-- checkpoint to `<out>.ckpt` (`IslandConfig::ckpt_path`, every 600 s) and resume on a rerun;
+- checkpoint to `island_<r>.ckpt.{a,b}` (INTERFACES §5.1; WP3's CLI derives it from `--out`: `<out without .bin>.ckpt`, every 600 s), resume on a rerun and remove the generations when the island completes. The D-32 rerun writes `island_<r>_isa_check.bin`, so its checkpoints (`island_<r>_isa_check.ckpt.{a,b}`) never meet the production island's;
 - write `island_r.bin` through `write_island_file`, which carries `meta.cost` (O2) automatically.
 
 T5 checks both.
@@ -94,8 +94,14 @@ What it runs:
 | stage | request | limit | worst case | expected (ESTIMATE) |
 |---|---|---|---|---|
 | setup (10⁶) | 48 CPUs, 48G | 1:00 | 48 | ≈ 5–15 |
-| pilot island | 96 CPUs (one socket), 64G | 1:00 | 96 | ≈ 20–35 (WP3_ARCH_REVIEW §8.4: ≈ 27 with levers 1–3 at E₀ = 10; production E₀ = 3.6) |
+| pilot island | 96 CPUs (one socket), **128G** | 1:00 | 96 | ≈ 20–35 (WP3_ARCH_REVIEW §8.4: ≈ 27 with levers 1–3 at E₀ = 10; production E₀ = 3.6) |
 | **total** | 2 tasks | | **144** (driver) | **≈ 25–50** (H-11: 27–50 for the island; ceiling ≈ 100) |
+
+Memory (WP3, 11-17):
+- **Plan:** WP3 plans the calibration island at 54.5 GiB at 10⁶ and G 256 (calibration state included). Gram rows add 4.9 and the setup inputs 4–14 GB, so 64G was too small; the default is now **128G**, which fits on a 257 GB SPR node.
+- **Sizing from a record:** with `"mem_from_plan": {"record": <calibrate --plan-only 1 record>, "setup_inputs_gb": 14}` the driver sizes the request as (island_plan.total + setup inputs if the record has none) × 1.15 / 0.9 and refuses above 240G.
+- **In the job:** the pilot stage first writes `pilot_plan.json` (`calibrate --plan-only 1` on the real data and setup), and the island's own admission refuses before any allocation if the plan exceeds `--mem-budget`.
+- **Cost:** NOTS bills CPUs, so the worst case stays 144 core-h.
 
 This run measures, at the target size with the real start law:
 - M(φ) and |S|(φ);

@@ -36,6 +36,7 @@ import copy
 import datetime
 import hashlib
 import json
+import math
 import os
 import re
 import stat
@@ -123,6 +124,28 @@ def resolve(plan):
         raise PlanError("a V-mode plan needs island_isa with FMA (one of %s; D-32); got %r" % (", ".join(sorted(FMA_ISAS)), P["island_isa"]))
     if P.get("pilot") is not None:                  # WP7 O5: {"cpus", "mem", "time", "with_ledger"} of the pilot task
         pl = P["pilot"]
+        # memory (WP3 11-17): the calibration island plans 54.5 GiB at G 256 at 10^6 before Gram rows (+4.9) and the setup
+        # inputs (4-14 GB), so 64G is too small: default 128G (one 257 GB SPR node holds two such tasks), or sized from a
+        # `smcbvs4 calibrate --plan-only 1` record: island_plan.total (+ setup_inputs_gb when the record was made from
+        # sizes only) x 1.15, / 0.9 because the task's --mem-budget is 90% of the allocation; refused above 240G
+        pl.setdefault("mem", "128G")
+        mfp = pl.get("mem_from_plan")
+        if mfp is not None:
+            try:
+                with open(mfp["record"]) as fh:
+                    rec = json.load(fh)
+            except (OSError, ValueError, KeyError, TypeError) as e:
+                raise PlanError("pilot.mem_from_plan: cannot read the plan record (%s)" % e)
+            ip = rec.get("island_plan")
+            if not ip or "total" not in ip:
+                raise PlanError("pilot.mem_from_plan: %s has no island_plan.total (calibrate --plan-only 1 with WP3's island plan)" % mfp["record"])
+            extra = 0.0 if ip.get("setup_inputs") else float(mfp.get("setup_inputs_gb", 14)) * 1e9
+            need = (float(ip["total"]) + extra) * 1.15 / 0.9
+            gib = int(math.ceil(need / 2 ** 30 / 8.0) * 8)
+            if gib > 240:
+                raise PlanError("pilot.mem_from_plan: %d G needed (> 240G of a 257 GB SPR node)" % gib)
+            pl["mem"] = "%dG" % gib
+            pl["mem_basis"] = {"island_plan_total": ip["total"], "setup_inputs_added": extra, "factor": "x1.15 / 0.9", "record": mfp["record"]}
         for k in ("cpus", "mem", "time"):
             if k not in pl:
                 raise PlanError("pilot: missing %r" % k)
@@ -376,6 +399,9 @@ def generate(P, out, dept):
         txt += ('# the same seed as calibrate (the manifest\'s engine seed); stops after the pilot island (no calib.bin)\n'
                 'SEED=$(python3 -c \'import json,sys; print(json.load(open(sys.argv[1]))["params"]["seed"])\' "$SCR/run_manifests/$RUN_ID.json")\n'
                 'mkdir -p "$RUN/log"\n'
+                '# the calibration island plan on the real inputs, for the record (the island\'s own admission refuses if it does not fit)\n'
+                '"$BIN" calibrate --plan-only 1 --mode V --data "$RUN/data.bin" --setup "$RUN/setup.bin" --threads "$OMP_NUM_THREADS" '
+                '--mem-budget "$MEMB" --out "$RUN/pilot_plan" > "$RUN/log/pilot_plan.log" 2>&1 || true\n'
                 '"$SCR/bin/v4_pilot_island" --data "$RUN/data.bin" --setup "$RUN/setup.bin" --seed "$SEED" --threads "$OMP_NUM_THREADS" '
                 '--mem-budget "$MEMB" --with-ledger %d --verbose 1 --cost-dir "$RUN/cost_pilot" --out "$RUN/pilot.json" '
                 '> "$RUN/log/pilot.log" 2>&1\n' % int(pl.get("with_ledger", 1)))
