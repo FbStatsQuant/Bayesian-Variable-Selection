@@ -60,8 +60,17 @@ BinaryCheck binary_compatible(const Json& a, const Json& b, BinaryUse use) {
   const std::string ga = field(a, "git_commit"), gb = field(b, "git_commit");
   auto unusable = [](const std::string& g) { return g.empty() || g == "unknown" || g.find("-dirty") != std::string::npos; };
   switch (use) {
-    case BinaryUse::MergeV:
+    case BinaryUse::MergeV: {
+      // D-32 (2): one fit = one FMA family. Class A uses a true FMA in every FMA build and a*b + c without one
+      // (island/amath.h fma8): islands of the two families carry different class-A bits
+      auto fma = [&](const Json& blk) {
+        const std::string isa = field(blk, "island_isa");
+        return !(isa == "portable" || isa == "x86-64" || isa == "x86-64-v2");   // absent (older binaries): unknown -> no check
+      };
+      if (a.contains("island_isa") && b.contains("island_isa") && fma(a) != fma(b))
+        return no("island ISA families differ (" + field(a, "island_isa") + " vs " + field(b, "island_isa") + "): class-A bits differ (D-32)");
       return {true, "ok"};
+    }
     case BinaryUse::MergeTheory:
       if (unusable(ga) || unusable(gb)) return no("theory mode needs a clean, known git commit (got '" + ga + "', '" + gb + "')");
       if (ga != gb) return no("git commits differ ('" + ga + "' vs '" + gb + "')");

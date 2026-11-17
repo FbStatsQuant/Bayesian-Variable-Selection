@@ -672,6 +672,7 @@ std::string write_fit(const std::string& path, const FitWrite& f, Json* record) 
     rec["status"] = status_name(fo.status); rec["fit_state"] = fo.fit_state; rec["reason"] = fo.reason;
     rec["estimates_available"] = fo.estimates_available; rec["fit_bin"] = h; rec["inputs"] = f.inputs;
     rec["timings"] = f.timings;   // seconds (T5: merge, tail local search, LS0; WP7 O5)
+    rec["island_isa"] = binary_block().contains("island_isa") ? binary_block().at("island_isa") : Json("unknown");   // D-32 (4)
     if (fo.has_hpm) rec["hpm_F"] = fo.hpm_F;
     if (fo.estimates_available) { rec["logZ"] = fo.log_Z; rec["logZ_T"] = fo.log_Z_T; rec["R_eff"] = fo.R_eff; }
   }

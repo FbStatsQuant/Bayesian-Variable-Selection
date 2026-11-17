@@ -1332,3 +1332,15 @@ TEST(pilot_only_equals_calibrate_pilot) {
                 (long long)pr.at("T").i64(), (long long)pr.at("forced").i64(), pil.size(), pr.at("seconds_island").num(), nfiles, ndiag);
   }
 }
+
+// D-32 (2): the merge refuses islands of two FMA families in V mode (class-A bits differ); the same family is accepted;
+// theory merges are unaffected by the ISA field
+TEST(merge_refuses_mixed_fma_families) {
+  v4::Json a = v4::binary_block(), b = v4::binary_block();
+  auto with = [](v4::Json j, const char* isa) { j["island_isa"] = isa; return j; };
+  CHECK(v4::binary_compatible(with(a, "sapphirerapids"), with(b, "x86-64-v3"), v4::BinaryUse::MergeV).ok);
+  CHECK(!v4::binary_compatible(with(a, "sapphirerapids"), with(b, "portable"), v4::BinaryUse::MergeV).ok);
+  CHECK(!v4::binary_compatible(with(a, "x86-64-v2"), with(b, "x86-64-v4"), v4::BinaryUse::MergeV).ok);
+  CHECK(v4::binary_compatible(with(a, "portable"), with(b, "portable"), v4::BinaryUse::MergeV).ok);
+  CHECK(!a.at("island_isa").str().empty());
+}

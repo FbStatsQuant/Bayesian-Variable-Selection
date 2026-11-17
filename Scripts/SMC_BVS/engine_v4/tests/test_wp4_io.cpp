@@ -234,6 +234,7 @@ TEST(wp4_io_merge_command_e2e) {
   for (auto& kv : h1) if (kv.first != "meta") inv = inv && h3.count(kv.first) && h3[kv.first] == kv.second;
   CHECK(inv);   // thread invariance: every section but meta (timings) identical
   // T5 timings (WP7 O5): merge, tail local search and LS0 seconds in the record and in meta
+  CHECK(r1.contains("island_isa") && r1.at("island_isa").str() == binary_block().at("island_isa").str());   // D-32 (4): fit.json
   for (const char* k : {"merge_tail_seconds", "merge_islands_seconds", "tail_local_seconds", "ls0_seconds"})
     CHECK_MSG(r1.contains("timings") && r1.at("timings").contains(k) && r1.at("timings").at(k).num() >= 0 &&
               fmt::Reader(o1).json("meta").at("timings").contains(k), std::string("timing ") + k);

@@ -13,6 +13,9 @@ Commands:
   p1m_stage_cost.py isa ISLAND_A ISLAND_B [--bin smcbvs4] [--json OUT]
                                        D-32: the same island from two island-ISA builds carries the same science
                                        (meta.output_hash and every non-meta section hash); exit 1 if not
+  p1m_stage_cost.py bitform BENCH... --args "island ..." [--json OUT]
+                                       D-32 (3): the same bit-form island (v4_bench_island) from several builds has
+                                       one output hash; exit 1 if not
   p1m_stage_cost.py t5 RUN_DIR [--bin smcbvs4] [--json OUT]
                                        T5 report of one fit run directory of the WP5 driver: calibration islands
                                        (RUN_DIR/cost/*.jsonl), final islands (island_*.bin meta.cost through
@@ -169,11 +172,12 @@ def t5(run_dir, binary, json_out):
                 r = json.load(f)
             rep["stages"][st] = {k: r[k] for k in ("status", "seconds", "timings", "tier_final") if k in r}
     print("# T5 report: %s" % run_dir)
-    ip = os.path.join(run_dir, "isa_check.json")
-    if os.path.exists(ip):
-        with open(ip) as f:
-            rep["isa_check"] = json.load(f)
-        print("isa check (D-32): %s" % json.dumps(rep["isa_check"], sort_keys=True))
+    for nm in ("isa_check", "isa_check_bitform"):
+        ip = os.path.join(run_dir, nm + ".json")
+        if os.path.exists(ip):
+            with open(ip) as f:
+                rep[nm] = json.load(f)
+            print("%s (D-32): %s" % (nm, json.dumps(rep[nm], sort_keys=True)))
     for st, v in rep["stages"].items():
         print("stage %-6s %s" % (st, json.dumps(v, sort_keys=True)))
     for p in sorted(glob.glob(os.path.join(run_dir, "cost", "*.jsonl"))):
@@ -216,6 +220,13 @@ def compare_isa(info_a, info_b):
                 "differing_sections": diff, "status": [ma.get("status"), mb.get("status")]}
 
 
+def parse_output_hash(text):
+    """v4_bench_island prints '... output hash <16 hex> ...' once per run."""
+    import re
+    m = re.findall(r"output hash ([0-9a-f]{16})", text)
+    return m[-1] if m else None
+
+
 def load_obj(c):
     cols = c["columns"]
     n = int(c.get("rows", len(cols.get("step", []))))
@@ -230,6 +241,7 @@ def main(argv=None):
     c = sub.add_parser("t5"); c.add_argument("run_dir"); c.add_argument("--bin", default="smcbvs4"); c.add_argument("--json")
     d = sub.add_parser("isa"); d.add_argument("island_a"); d.add_argument("island_b"); d.add_argument("--bin", default="smcbvs4")
     d.add_argument("--json")
+    e = sub.add_parser("bitform"); e.add_argument("benches", nargs="+"); e.add_argument("--args", required=True); e.add_argument("--json")
     args = ap.parse_args(argv)
     if args.cmd in ("table", "summary"):
         for p in args.files:
@@ -238,6 +250,19 @@ def main(argv=None):
                     table(hdr, rows)
                 print_summary(p, hdr, rows)
         return 0
+    if args.cmd == "bitform":   # D-32 (3): the same bit-form island from several builds -> one output hash
+        hashes = []
+        for b in args.benches:
+            cmd = [b] + args.args.replace("$OMP_NUM_THREADS", os.environ.get("OMP_NUM_THREADS", "1")).split()
+            r = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
+            hashes.append({"bench": b, "rc": r.returncode, "output_hash": parse_output_hash(r.stdout)})
+        ok = all(h["rc"] == 0 and h["output_hash"] for h in hashes) and len({h["output_hash"] for h in hashes}) == 1
+        det = {"ok": ok, "args": args.args, "runs": hashes}
+        print(json.dumps(det, sort_keys=True))
+        if args.json:
+            with open(args.json, "w") as f:
+                json.dump(det, f, indent=1, sort_keys=True)
+        return 0 if ok else 1
     if args.cmd == "isa":   # exit 0 iff the two island files carry the same science (D-32)
         ok, det = compare_isa(info_meta(args.bin, args.island_a), info_meta(args.bin, args.island_b))
         det["ok"] = ok

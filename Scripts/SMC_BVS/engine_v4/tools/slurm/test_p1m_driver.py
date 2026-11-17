@@ -362,11 +362,14 @@ class TestPilotBatch(Base):
         self.assertIn("-DV4_ISLAND_ISA=sapphirerapids", build)
         self.assertIn('cp "$BP/smcbvs4" "$SCR/bin/smcbvs4_isa_check"', build)
         self.assertIn("-DV4_ISLAND_ISA=x86-64-v3", build.split("BP=$SCR/build_isa_check")[1])   # default comparison: an FMA build
-        q = self.plan(); q["isa_check"] = {"island": 1, "against": "portable"}
-        rc2, out2 = self.gen(q, name="out_portable")
-        self.assertNotIn("V4_ISLAND_ISA", open(os.path.join(out2, "build.sh")).read().split("BP=$SCR/build_isa_check")[1])
+        self.assertIn('cp "$B/v4_bench_island" "$SCR/bin/v4_bench_island"', build)
+        self.assertIn('cp "$B2/v4_bench_island" "$SCR/bin/v4_bench_island_portable"', build)
+        self.assertNotIn("V4_ISLAND_ISA", build.split("B2=$SCR/build_portable_bench")[1])   # the bit-form check's portable side
+        with self.assertRaises(p1m_driver.PlanError):   # D-32 (3): the class-A comparison stays in the FMA family
+            q = self.plan(); q["isa_check"] = {"island": 1, "against": "portable"}; p1m_driver.resolve(q)
         isa = open(os.path.join(out, "stage_isa_check.sbatch")).read()
         self.assertIn('"$SCR/bin/smcbvs4_isa_check" island', isa); self.assertIn("p1m_stage_cost.py\" isa", isa)
+        self.assertIn('p1m_stage_cost.py" bitform', isa); self.assertIn("bit pm", isa); self.assertIn("v4_bench_island_portable", isa)
         self.assertTrue(os.path.exists(os.path.join(out, "p1m_stage_cost.py")))
         scr = os.path.join(fake_dept, "scripts", "A2_pilot")
         shutil.copytree(out, scr); os.makedirs(os.path.join(scr, "bin"))
@@ -396,6 +399,57 @@ class TestPilotBatch(Base):
             q = self.plan(); q["island_isa"] = ""; q["isa_check"] = {"island": 1}; p1m_driver.resolve(q)
         with self.assertRaises(p1m_driver.PlanError):   # island beyond Rp
             q = self.plan(); q["isa_check"] = {"island": 99}; p1m_driver.resolve(q)
+
+    def test_v_plan_needs_fma_isa(self):   # D-32 (1)
+        for bad in ("", "x86-64-v2", "portable"):
+            q = self.plan(); q["island_isa"] = bad
+            with self.assertRaises(p1m_driver.PlanError):
+                p1m_driver.resolve(q)
+        for ok in ("x86-64-v3", "x86-64-v4", "sapphirerapids"):
+            q = self.plan(); q["island_isa"] = ok
+            self.assertEqual(p1m_driver.resolve(q)["island_isa"], ok)
+        q = self.plan(); q["mode"] = "law"; q["island_isa"] = ""   # theory (bit form) plans are ISA-free
+        for f in q["fits"]:
+            f["mode"] = "law"
+        self.assertEqual(p1m_driver.resolve(q)["island_isa"], "")
+        q = self.plan(); q["mode"] = "law"; q["island_isa"] = ""; q["fits"][0]["mode"] = "V"   # one V fit is enough
+        with self.assertRaises(p1m_driver.PlanError):
+            p1m_driver.resolve(q)
+        # every generated cell plan resolves (the V ones carry island_isa)
+        d = os.path.join(self.tmp, "cells"); os.makedirs(d)
+        with open(os.devnull, "w") as dn:
+            old = sys.stdout; sys.stdout = dn
+            try:
+                p1m_cells.main(["--tsv", os.path.join(d, "c.tsv"), "--plans", d])
+            finally:
+                sys.stdout = old
+        plans = [fn for fn in os.listdir(d) if fn.endswith(".json")]
+        self.assertTrue(plans)
+        for fn in plans:
+            pl = json.load(open(os.path.join(d, fn)))
+            self.assertEqual(pl.get("island_isa", "") != "", pl["mode"] == "V", fn)
+            try:
+                p1m_driver.resolve(pl)
+            except p1m_driver.PlanError as e:   # only the generic limits (tasks, caps), never the ISA rule
+                self.assertNotIn("island_isa", str(e), fn)
+
+    def test_bitform(self):   # D-32 (3): fake benches print an output hash; equal -> exit 0, different -> exit 1
+        mk = []
+        for i, h in enumerate(("0123456789abcdef", "0123456789abcdef", "fedcba9876543210")):
+            b = os.path.join(self.tmp, "bench%d" % i)
+            with open(b, "w") as fh:
+                fh.write("#!/bin/sh\necho \"  logZ -1.0  output hash %s (same across thread counts)\"\n" % h)
+            os.chmod(b, 0o755); mk.append(b)
+        self.assertEqual(p1m_stage_cost.parse_output_hash("x output hash 0123456789abcdef y"), "0123456789abcdef")
+        j = os.path.join(self.tmp, "bf.json")
+        with open(os.devnull, "w") as dn:
+            old = sys.stdout; sys.stdout = dn
+            try:
+                self.assertEqual(p1m_stage_cost.main(["bitform", mk[0], mk[1], "--args", p1m_driver.BITFORM_ARGS, "--json", j]), 0)
+                self.assertTrue(json.load(open(j))["ok"])
+                self.assertEqual(p1m_stage_cost.main(["bitform", mk[0], mk[1], mk[2], "--args", p1m_driver.BITFORM_ARGS]), 1)
+            finally:
+                sys.stdout = old
 
     def test_compare_isa(self):
         def info(h, secs, isa):

@@ -15,6 +15,20 @@ The `island` command (WP3) should:
 
 T5 checks both.
 
+## ISA (D-32, revised 11-17)
+- **FMA rule:** class A (V mode) uses a true FMA in every build that has one and `a*b + c` without (`amath.h` `fma8`). So its bits are those of the FMA family (x86-64-v3 = x86-64-v4 = sapphirerapids, MEASURED on Owls) and differ by design from a portable x86-64-v2 build. The bit form (theory, compat) is the same in every build.
+- **Rule (1):** a V-mode plan must set `island_isa` to an FMA ISA (at least x86-64-v3); the driver refuses it otherwise. Production uses `sapphirerapids` with `--constraint=sapphirerapids` on every task.
+- **Rule (2), one fit = one FMA family:** one `smcbvs4` runs every stage.
+  - calibrate's class-A islands (`calib_run.cpp`) are compiled with the island ISA, and the ISA inline namespace makes a mismatch fail to link;
+  - merge, tail and LS0 score with the bit form;
+  - the V merge refuses islands of two FMA families (`binary_compatible`).
+- **Rule (3), T5's `stage_isa_check`:**
+  - island 1 is re-run by an x86-64-v3 build, and its `meta.output_hash` and every non-meta section hash must equal the sapphirerapids run's (`isa_check.json`);
+  - one bit-form particle-major island (`v4_bench_island island 20000 64 <threads> bit pm 1 128 geo:4 1 1`) must give one output hash in the sapphirerapids, x86-64-v3 and portable builds (`isa_check_bitform.json`).
+
+  Either mismatch fails the task.
+- **Rule (4):** `island_isa` is in the binary block, so it appears in every record and every file's meta, `island_r.bin` included. `fit.json` also has it as a top-level field.
+
 ## 1. T5 at 10⁵: the whole fit `5-AR-n200-r01-V-s1` (AR strong, n = 200, p = 10⁵, V, N = 2,500, R′ = 16)
 On Owls (dry run):
 ```
@@ -48,7 +62,8 @@ The report gives:
 | islands | 16 × 48 CPUs, 16G | 0:20 | 256 | ≈ 35–120 (≈ 1.8·10¹⁰ steps per island × 500–1,100 ns·CPU; 4–14 min each) |
 | merge (tail + LS0) | 16 CPUs, 16G | 0:30 | 8 | ≈ 1–4 (LS0 at 10⁵ is unmeasured: T5 measures it) |
 | eval + post | 8 CPUs, 16G | 0:45 | 6 | ≈ 1–3 |
-| **total** | 20 tasks | | **350** (driver, MEASURED from the limits) | **≈ 50–150, central ≈ 85** (manifest T5 row: 200) |
+| isa check (D-32) | 48 CPUs, 16G | 0:20 | 16 | ≈ 3–8 (one island, x86-64-v3, + three bit-form islands at p = 2·10⁴, ≈ 1 min) |
+| **total** | 21 tasks | | **366** (driver, from the limits) | **≈ 55–160, central ≈ 90** (manifest T5 row: 200) |
 
 Basis:
 - **Per-step cost:** ≈ 1,056 ns·CPU per step in late 10⁵ rounds on SPR today (MEASURED, job 2748104). O1 and K1 lower it (ESTIMATE −25 to −45%).

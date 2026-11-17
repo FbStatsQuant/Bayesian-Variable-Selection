@@ -72,6 +72,13 @@ DEFAULT_RES = {
 }
 
 
+# D-32: island ISAs with FMA (class A has the same bits in all of them: x86-64-v3 = x86-64-v4, MEASURED on Owls)
+FMA_ISAS = {"x86-64-v3", "x86-64-v4", "sapphirerapids", "icelake-server", "cascadelake", "skylake-avx512"}
+# D-32 (3): the bit-form check of stage_isa_check: one particle-major bit-form island (the theory path) on the
+# benchmark's AR(0.6) data, run by the plan-ISA, comparison and portable builds; the output hashes must be equal
+BITFORM_ARGS = "island 20000 64 $OMP_NUM_THREADS bit pm 1 128 geo:4 1 1"
+
+
 class PlanError(Exception):
     pass
 
@@ -109,6 +116,11 @@ def resolve(plan):
     P.setdefault("island_isa", "")                  # WP7 O5: -DV4_ISLAND_ISA for build.sh ("" = the portable default)
     if P["island_isa"] and not re.fullmatch(r"[A-Za-z0-9_.-]+", P["island_isa"]):
         raise PlanError("island_isa must be a -march name such as sapphirerapids")
+    # D-32 (1): class-A values (V mode) use a true FMA in every FMA build and a*b + c without one (amath.h fma8), so a
+    # V plan needs an island ISA with FMA, at least x86-64-v3; one fit = one FMA family (one binary for every stage)
+    v_plan = P["mode"] == "V" or any(f.get("mode", P["mode"]) == "V" for f in P.get("fits") or [])
+    if v_plan and P["island_isa"] not in FMA_ISAS:
+        raise PlanError("a V-mode plan needs island_isa with FMA (one of %s; D-32); got %r" % (", ".join(sorted(FMA_ISAS)), P["island_isa"]))
     if P.get("pilot") is not None:                  # WP7 O5: {"cpus", "mem", "time", "with_ledger"} of the pilot task
         pl = P["pilot"]
         for k in ("cpus", "mem", "time"):
@@ -130,8 +142,8 @@ def resolve(plan):
         # are those of every FMA build (x86-64-v3 = AVX2 + FMA matched AVX-512 on Owls) and differ from a build without
         # FMA ("portable" = x86-64-v2) by design; the bit form (theory/compat) is ISA-free
         P["isa_check"].setdefault("against", "x86-64-v3")
-        if not re.fullmatch(r"portable|[A-Za-z0-9_.-]+", P["isa_check"]["against"]):
-            raise PlanError("isa_check.against must be 'portable' or a -march name")
+        if P["isa_check"]["against"] not in FMA_ISAS:   # D-32 (3): the class-A comparison is within the FMA family
+            raise PlanError("isa_check.against must be an FMA ISA (one of %s)" % ", ".join(sorted(FMA_ISAS)))
     if not P.get("fits"):
         raise PlanError("plan has no fits")
     seen = set()
@@ -251,11 +263,11 @@ SCR=$DEPT/scripts/{batch}
 set +u; source "$SCR/env.sh"; set -u
 B=$SCR/build; mkdir -p "$B" "$SCR/bin"
 nice -n 19 cmake -S "$SCR/code/Scripts/SMC_BVS/engine_v4" -B "$B" -DCMAKE_BUILD_TYPE=Release -DV4_TESTS=OFF{isa} > "$B/cmake.log"
-nice -n 19 make -C "$B" -j3 smcbvs4{pilot_target}
+nice -n 19 make -C "$B" -j3 smcbvs4{pilot_target}{bench_target}
 cp "$B/smcbvs4" "$SCR/bin/smcbvs4"
 "$SCR/bin/smcbvs4" version
 sha256sum "$SCR/bin/smcbvs4" | tee "$SCR/bin/smcbvs4.sha256"
-{pilot_copy}{portable}"""
+{pilot_copy}{bench_copy}{portable}"""
 
 FIT_TABLE = """# fit table: index (1-based) -> run_id
 RUNS=({runs})
@@ -384,8 +396,14 @@ def generate(P, out, dept):
                   '--bin "$SCR/bin/smcbvs4_isa_check" --set params.id=$R\n'
                 + '"$SCR/bin/smcbvs4_isa_check" island --manifest "$RUN/manifests/island_${R}_isa_check.json" --threads "$OMP_NUM_THREADS" '
                   '--mem-budget "$MEMB" --out "$RUN/island_${R}_isa_check.bin" > "$RUN/log/island_${R}_isa_check.log" 2>&1\n'
+                + 'rc=0\n'
                 + 'python3 "$SCR/p1m_stage_cost.py" isa "$RUN/island_${R}.bin" "$RUN/island_${R}_isa_check.bin" --bin "$BIN" '
-                  '--json "$RUN/isa_check.json"\n')
+                  '--json "$RUN/isa_check.json" || rc=1\n'
+                + '# D-32 (3): the bit form is the same in the plan-ISA, comparison and portable builds\n'
+                + 'python3 "$SCR/p1m_stage_cost.py" bitform --json "$RUN/isa_check_bitform.json" --args "%s" '
+                  '"$SCR/bin/v4_bench_island" "$SCR/bin/v4_bench_island_isa_check" "$SCR/bin/v4_bench_island_portable" || rc=1\n'
+                  % BITFORM_ARGS
+                + '[[ $rc == 0 ]] || { echo "D-32 isa check FAILED (isa_check*.json)" >&2; exit 1; }\n')
         txt += 'printf \'{"stage":"isa_check","run_id":"%%s","job":"%%s","task":"%%s","end":"%%s"}\\n\' "$RUN_ID" "${SLURM_JOB_ID}" "${SLURM_ARRAY_TASK_ID:-}" "$(date -u +%%FT%%TZ)" >> "$DEPT/scratch/runs/%s/ends.jsonl"\n' % batch
         write(os.path.join(out, "stage_isa_check.sbatch"), txt, 0o755)
         files.append("stage_isa_check.sbatch")
@@ -396,14 +414,22 @@ def generate(P, out, dept):
         batch=batch, dept=dept, commit=P["code_commit"],
         isa=(" -DV4_ISLAND_ISA=" + P["island_isa"]) if P["island_isa"] else "",
         pilot_target=" v4_pilot_island" if has_pilot else "",
+        bench_target=" v4_bench_island" if P.get("isa_check") is not None else "",
+        bench_copy=('cp "$B/v4_bench_island" "$SCR/bin/v4_bench_island"\n' if P.get("isa_check") is not None else ""),
         pilot_copy=('cp "$B/v4_pilot_island" "$SCR/bin/v4_pilot_island"\nsha256sum "$SCR/bin/v4_pilot_island" | tee "$SCR/bin/v4_pilot_island.sha256"\n'
                     if has_pilot else ""),
         portable=(('# D-32: the comparison island build (isa_check.against = %s) for the cross-ISA island check (stage_isa_check)\n'
                    'BP=$SCR/build_isa_check; mkdir -p "$BP"\n'
                    'nice -n 19 cmake -S "$SCR/code/Scripts/SMC_BVS/engine_v4" -B "$BP" -DCMAKE_BUILD_TYPE=Release -DV4_TESTS=OFF%s > "$BP/cmake.log"\n'
-                   'nice -n 19 make -C "$BP" -j3 smcbvs4\n'
+                   'nice -n 19 make -C "$BP" -j3 smcbvs4 v4_bench_island\n'
                    'cp "$BP/smcbvs4" "$SCR/bin/smcbvs4_isa_check"\n'
-                   'sha256sum "$SCR/bin/smcbvs4_isa_check" | tee "$SCR/bin/smcbvs4_isa_check.sha256"\n')
+                   'cp "$BP/v4_bench_island" "$SCR/bin/v4_bench_island_isa_check"\n'
+                   'sha256sum "$SCR/bin/smcbvs4_isa_check" | tee "$SCR/bin/smcbvs4_isa_check.sha256"\n'
+                   '# D-32 (3): a portable (x86-64-v2) build of the benchmark only, for the bit-form check\n'
+                   'B2=$SCR/build_portable_bench; mkdir -p "$B2"\n'
+                   'nice -n 19 cmake -S "$SCR/code/Scripts/SMC_BVS/engine_v4" -B "$B2" -DCMAKE_BUILD_TYPE=Release -DV4_TESTS=OFF > "$B2/cmake.log"\n'
+                   'nice -n 19 make -C "$B2" -j3 v4_bench_island\n'
+                   'cp "$B2/v4_bench_island" "$SCR/bin/v4_bench_island_portable"\n')
                   % (P["isa_check"]["against"], "" if P["isa_check"]["against"] == "portable" else " -DV4_ISLAND_ISA=" + P["isa_check"]["against"])
                   if P.get("isa_check") is not None else "")), 0o755)
     files.append("build.sh")
