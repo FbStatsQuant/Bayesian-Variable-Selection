@@ -19,6 +19,7 @@
 //   gram_rows    label-major with bounded scoring (K3): Gram rows of active columns kept across passes   slots p 8
 //   supports     support caches (4 k_q^2 doubles each), gathered columns, per-thread product tiles
 //                with k_q = min(K, 3k): G (32 k_q^2) + G k_q n 8 + T G k_q tile 8
+//   lm_scratch   label-major per-thread scratch (sized before the parallel regions)  T (18 tile + 64 k_q + 64)
 //   particles    two populations + pending + terminal supports                   (2N + G) (4k + 64) + N 4k
 //   ckpt         streamed checkpoint buffers                                     2 MiB
 //   headroom     12 % of every term except the inputs (allocator slack, run-to-run variation of the peak)
@@ -82,6 +83,7 @@ inline MemPlan island_memory(const MemSizes& z, double k) {
     add("rows", 2.0 * G * p * 8);
     if (z.gram_slots > 0) add("gram_rows", (double)z.gram_slots * p * 8);
     add("supports", G * 32.0 * kq * kq + G * kq * n * 8 + T * G * kq * z.tile * 8);
+    add("lm_scratch", T * (18.0 * z.tile + 64.0 * kq + 64.0));
   } else {
     add("supports", T * (32.0 * kq * kq + kq * n * 8));
   }

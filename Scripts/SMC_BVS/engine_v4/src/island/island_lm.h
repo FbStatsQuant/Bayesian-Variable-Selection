@@ -99,7 +99,9 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
     const int nslots = gram_slots_of(cfg, cfg.G, p);   // 0 unless label-major with bounded scoring
     if (nslots > 0) {
       if (gb.gr_slots != nslots) {   // once per island (G is fixed by the admission)
-        gb.GR.clear(); gb.GR.shrink_to_fit(); gb.GR.resize((size_t)nslots * p); gb.slot_col.assign(nslots, -1); gb.gr_slots = nslots;
+        // uninitialised (no serial zero-fill of slots x p doubles: 5 GB at 10^6): a row is written by the tile sweep of the
+        // pass that gives its column the slot, before any read, and the pages are first touched there, in parallel
+        gb.GR.reset(); gb.GR.reset(new double[(size_t)nslots * p]); gb.slot_col.assign(nslots, -1); gb.gr_slots = nslots;
       }
       for (int r = 0; r < nslots; ++r) if (gb.slot_col[r] >= 0) {   // keep the slots of columns still active, free the others
         auto it = std::lower_bound(gb.act.begin(), gb.act.end(), gb.slot_col[r]);
@@ -161,16 +163,33 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
       }
     }
     const uint32_t shrink = (uint32_t)std::max(0, cfg.test_bound_shrink);
+    // per-thread scratch and product buffers, sized here (serial; a std::bad_alloc reaches run() as resource_limit) so that
+    // the parallel regions below do not allocate outside their oom_guard (review PR48 finding 1)
+    {
+      int kmax = 1; for (int s = 0; s < nsup; ++s) kmax = std::max(kmax, gb.sup[s].k);
+      if ((int)gb.scr.size() < NT) gb.scr.resize(NT);
+      for (int t = 0; t < NT; ++t) {
+        LmScratch& z = gb.scr[t];
+        if ((int)z.inm.size() < Bk) {
+          z.inm.resize(Bk); z.needw.resize(Bk / 64); z.consw.resize(Bk / 64); z.nlist.resize(Bk + 1); z.first.resize(Bk);
+          z.ncons.resize(Bk); z.fpos.resize(Bk);
+        }
+        if ((int)z.ub.size() < kmax) z.ub.resize(kmax);
+        avec<double>& Pp = scratch_P[t];
+        if (Pp.size() < (size_t)std::max(1, nLoc) * Bk + 8) Pp.resize((size_t)std::max(1, nLoc) * Bk + 8);   // computed columns only (K3)
+      }
+    }
     lap(KS.t_build);
 
     // ---- phase A: scores, odds, first change per particle -------------------------------------------------
     #pragma omp parallel num_threads(NT)
     {
       BitScorer& sc = *scorers[omp_get_thread_num()];
-      avec<double>& Pp = scratch_P[omp_get_thread_num()];   // persistent per thread (no allocation per pass)
-      if (Pp.size() < (size_t)std::max(1, nLoc) * Bk + 8) Pp.resize((size_t)std::max(1, nLoc) * Bk + 8);
+      avec<double>& Pp = scratch_P[omp_get_thread_num()];   // persistent per thread, sized before the region
+      LmScratch& Z = gb.scr[omp_get_thread_num()];
       const int nw = Bk / 64;   // Bk is a multiple of 64
-      std::vector<uint8_t> inm(Bk); std::vector<uint64_t> needw(nw); std::vector<int> nlist(Bk + 1); double tprod = 0; uint64_t nflip = 0;
+      std::vector<uint8_t>& inm = Z.inm; std::vector<uint64_t>& needw = Z.needw; std::vector<int>& nlist = Z.nlist;
+      double tprod = 0; uint64_t nflip = 0;
       #pragma omp for schedule(dynamic, 1) nowait
       for (int ti = 0; ti < ntile; ++ti) oom_guard([&] {
         if (cfg.test_oom_pass >= 0 && (int)KS.passes == cfg.test_oom_pass + 1 && ti == 0) throw std::bad_alloc();   // test hook
@@ -197,12 +216,13 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
           } else if (bounded) {
             // Bounded scoring (K1). A non-member label j is scored for support s only if some particle i on s can still
             // consume it: q_i < inv_i[j] < fmin_i, where fmin_i, the particle's running first change, only decreases and
-            // bounds its final e at any time. Every label a particle consumes (position <= e) passed the test when its tile
-            // was scored, so the scan, the walk, phase B and the apply step read only values computed in this pass; the
+            // bounds its final e at any time. Every non-member label a particle consumes (position <= e) passed the test
+            // when its tile was scored: a bound below its position means an earlier change (the label is not consumed),
+            // and a bound EQUAL to its position can only come from the label itself, which is set after its own (unique)
+            // tile is scored -- the pre-scan bound is a member's position (review PR48). So the scan, the walk, phase B and the apply step read only values computed in this pass; the
             // others are never read (spec §3 rule 2; the NaN-row test checks it). The needed labels are packed 8 to a
             // vector; a lane's result does not depend on the other lanes, so the bits are those of the dense path.
-            thread_local std::vector<v8d> ub; if (ub.size() < (size_t)std::max(1, c.k)) ub.resize((size_t)std::max(1, c.k));
-            v8d* u = ub.data();
+            v8d* u = Z.ub.data();   // sized to the largest k of the pass
             std::fill(needw.begin(), needw.end(), 0ull);
             for (int gi : gb.sup_parts[s]) {
               const uint32_t fm = gb.fmin[gi].load(std::memory_order_relaxed);
@@ -237,8 +257,7 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
               for (int l = 0; l < nl; ++l) { lb[j8[l]] = lm8[l]; ob[j8[l]] = o8[l]; }
             }
           } else {
-            thread_local std::vector<v8d> ub; if (ub.size() < (size_t)std::max(1, c.k)) ub.resize((size_t)std::max(1, c.k));
-            v8d* u = ub.data();
+            v8d* u = Z.ub.data();   // sized to the largest k of the pass
             for (int v = 0; v < nbv; v += 8) {
               int32_t j8[8]; unsigned valid = 0;
               for (int l = 0; l < 8; ++l) { int j = j0 + v + l; if (v + l < nbv && !inm[v + l]) valid |= 1u << l; j8[l] = std::min(j, p - 1); }
@@ -361,7 +380,8 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
     {
       ThreadLedger& L = *tl[omp_get_thread_num()];
       Model T;
-      std::vector<uint32_t> ncons_v(Bk), fpos_v(Bk); std::vector<int> first_v(Bk); std::vector<uint64_t> consw((size_t)Bk / 64);
+      LmScratch& Z = gb.scr[omp_get_thread_num()];   // sized before the region
+      std::vector<uint32_t>& ncons_v = Z.ncons; std::vector<uint32_t>& fpos_v = Z.fpos; std::vector<int>& first_v = Z.first; std::vector<uint64_t>& consw = Z.consw;
       #pragma omp for schedule(dynamic, 1)
       for (int ti = w0; ti < w1; ++ti) oom_guard([&] {
         if (L.buf.snap && L.buf.snap_gen != top.gen.load(std::memory_order_relaxed)) { L.buf.snap.reset(); L.buf.snap_gen = ~0ull; }   // M2

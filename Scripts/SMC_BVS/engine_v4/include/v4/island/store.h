@@ -385,6 +385,24 @@ class TopStore {
     for (size_t i = 0; i < K.size(); ++i) if (K.find(K.ref(i)) != (int64_t)i) return false;
     return true;
   }
+  // The same predicate over disjoint index ranges (WP3_ARCH_REVIEW R4, package O1; the prototype is
+  // tools/bench_arch.cpp of exp/P1M-wp3-arch): entry i is compared with entry i-1 under the store order and looked up
+  // in the hash index. Every pair (i-1, i) and every lookup is evaluated by exactly one thread, so the conjunction is
+  // the serial result for every thread count and schedule. Allocation-free, read-only on the published kept run; call
+  // it outside any parallel region with the store quiescent (step boundary: after sync_ledgers()).
+  bool check_invariant_parallel(int threads) const {
+    if (threads <= 1) return check_invariant();
+    const Kept& K = *k;
+    if (K.size() > cap) return false;
+    const int64_t n = (int64_t)K.size();
+    bool ok = true;
+    #pragma omp parallel for num_threads(threads) schedule(static) reduction(&& : ok)
+    for (int64_t i = 0; i < n; ++i) {
+      if (i > 0 && !ord_less(K.ref((size_t)i - 1), K.ref((size_t)i))) ok = false;
+      if (K.find(K.ref((size_t)i)) != i) ok = false;
+    }
+    return ok;
+  }
   Model model(size_t i) const { const Kept& K = *k; return Model(K.pool.data() + K.off[i], K.pool.data() + K.off[i] + K.len[i]); }
   double value(size_t i) const { return k->v[i]; }
   size_t bytes() const { return k->bytes() + stage.v.capacity() * 26 + stage.pool.capacity() * 4; }

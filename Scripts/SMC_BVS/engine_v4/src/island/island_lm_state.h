@@ -2,9 +2,20 @@
 // so that the engine (island_run.h) can hold it as a member while the label-major code lives in island_lm.h.
 #pragma once
 #include <atomic>
+#include <memory>
 #include "v4/island/island.h"
 
 namespace v4::island {
+
+// Per-thread label-major scratch (review PR48 finding 1): sized serially before the parallel regions, so no allocation
+// happens inside an OpenMP region outside the oom_guard (an escaping std::bad_alloc would std::terminate). Grows only.
+struct LmScratch {
+  std::vector<uint8_t> inm;                    // Bk: member flags of a tile
+  std::vector<uint64_t> needw, consw;          // Bk / 64: needed (phase A) / consumed (phase B) label bits of a tile
+  std::vector<int> nlist, first;               // Bk + 1: listed bits; Bk: first consuming particle per label
+  std::vector<uint32_t> ncons, fpos;           // Bk: consumption counts and positions per label
+  std::vector<v8d> ub;                         // max k: one 8-lane Gram vector per member
+};
 
 // --- label-major round for the particles [g0, g0 + gN) ------------------------------------------------------
 struct LmGroupBuf {
@@ -20,12 +31,13 @@ struct LmGroupBuf {
   // rounds while the column stays active. Row r = X^T x_col, p entries with the bits of tile_products. A column gets a
   // slot the first pass it is active (that pass's tile sweep writes the row) and loses it at the first pass in which no
   // fast support that can add holds it. Values depend on the column only, so nothing here is checkpointed.
-  avec<double> GR; int gr_slots = 0;           // gr_slots x p
+  std::unique_ptr<double[]> GR; int gr_slots = 0;   // gr_slots x p, uninitialised until a row's first pass writes it
   std::vector<int> slot_col;                   // column of each slot, -1 = free
   std::vector<const double*> act_gr;           // per active column: its row, computed in an earlier pass, or nullptr
   std::vector<int> act_local, act_newslot;     // per active column: product row in this pass (-1: cached); slot it fills (-1: none)
   std::vector<int> loc;                        // the active columns computed in this pass: new (with a slot) first, then no slot
   std::vector<double> lbuf, obuf;              // nsup x p
+  std::vector<LmScratch> scr;                  // one per thread
 };
 
 }  // namespace v4::island
