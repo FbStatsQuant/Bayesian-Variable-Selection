@@ -385,3 +385,4 @@
 - 2026-11-16 20:35 CST HEARTBEAT: CI green (main d5e9eee7); recorder running (Sonnet; rule (c)/carriers/relabel); track A lead idle; READER held until the relabel + T14 recording land (or Fri noon). Heartbeat prompt updated (items 3/4 done; READER GO condition). Nothing to report.
 - 2026-11-16 20:43 CST Track A dry run complete & clean (core + riders); assumptions.tsv edits held (READER R3r freezes it → drop the EXT in R3r2); asked HQ whether the core may run before the relabel.
 - 2026-11-16 20:44 CST D96 relayed to the recorder.
+- 2026-11-16 21:18 CST Must-do item 2 DONE: track A recorded main 63144bc1 (CI 44007612880 success; rows verified). T14 = W3-AUDIT-AX:REP recorded → Writing IDEALW_NOTE updated (card 16 wording, p_raw). Relabel rule (c) 181/181; Opus diff review next.
