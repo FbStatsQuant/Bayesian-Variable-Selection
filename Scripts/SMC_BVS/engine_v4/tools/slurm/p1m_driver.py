@@ -61,14 +61,14 @@ DEFAULT_RES = {
             "islands": {"cpus": 64, "mem": "8G", "time": "01:00:00"},
             "merge": {"cpus": 16, "mem": "8G", "time": "00:30:00"},
             "eval": {"cpus": 8, "mem": "16G", "time": "00:45:00"}},
-    "1e6": {"setup": {"cpus": 96, "mem": "48G", "time": "01:30:00"},
-            # D-27 / PR37 re-check INFO-2: the 10⁶ calibration plan is ≈ 37–39 GB + one island (job 2749483: a leader-bearing
-            # island peaked at 48.6 GB) -> one socket, 96 CPUs + 64G. Re-sized again from T5.
-            "calibrate": {"cpus": 96, "mem": "64G", "time": "02:00:00"},
-            # H-9 (job 2748756): one island per socket, 96 CPUs (48 cores x 2), G = 256, peak RSS 34.3 GB -> 40G.
-            # TODO(T5): guarantee socket placement (two islands per exclusive node, or one socket per task) + numactl membind.
-            "islands": {"cpus": 96, "mem": "48G", "time": "02:00:00"},   # D-27: real setup tables on top of the stand-in 34 GB peak
-            "merge": {"cpus": 32, "mem": "16G", "time": "01:00:00"},
+    "1e6": {"setup": {"cpus": 96, "mem": "48G", "time": "01:30:00"},   # WP2 --count-only peak: IND n = 1,000 ≈ 22.7 GB (D-31)
+            # P5 re-size (manager 11-17) from WP3's StartView plans, results/WP3_PLANS_1e6.md (--mem-budget = 90% of the request):
+            # calibrate task (N-1 rule + SetupView) 71.9 / 81.2 GiB at n = 200 (G 64 / 256), up to 97.7 GiB at n = 1,000 IND -> 128G.
+            "calibrate": {"cpus": 96, "mem": "128G", "time": "02:00:00"},
+            # final island 24.5 / 33.8 GiB at n = 200, up to 46.8 GiB at n = 1,000 IND G 256 -> 64G (two per 257 GB SPR node).
+            "islands": {"cpus": 96, "mem": "64G", "time": "02:00:00"},
+            # merge task 43.7 GiB at n = 200, 58.5 GiB at n = 1,000 IND (PR45 INFO-3: 2.5 x setup.bin before StartView) -> 80G.
+            "merge": {"cpus": 32, "mem": "80G", "time": "01:00:00"},
             "eval": {"cpus": 8, "mem": "16G", "time": "01:00:00"}},
 }
 
