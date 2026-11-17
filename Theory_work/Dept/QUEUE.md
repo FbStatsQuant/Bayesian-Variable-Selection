@@ -42,6 +42,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 - X2, X4: relabelling (recorder, post-freeze). P6 method version: Engineering reconciliation pending. RERUN_SPEC: open (HQ).
 
 ## Post-freeze riders (queued)
+- (11-17) W3-READER:R4 premise pointer (:28-32) stale after the v1.13 re-anchor (R4 kept @1.0.1); next editorial batch.
 - (11-17) W3-READER R5's 3 minor editorial items (reviews/R5_council_opus.md), next READER manifest.
 - (D100, low priority) Tool: propagate.py `suspect --no-cascade` with per-dependent acks (flag a defect that consumers don't use, without a false cascade).
 - (11-17, D97 result; HQ D98: week of 11-23, after track D #2) Tier B line checks of the W1-N1 steps that stay as declared conditions on W3-SAMP:C → R4 / DIST-C / OVL: W1-N1:B (island control flow, stopping time, B-0/B-d; B-d MEAS) and W1-N1:F (the freezing extension beyond fixed c, T12 (iii)). When checked, R4/DIST-C/OVL discharge.
