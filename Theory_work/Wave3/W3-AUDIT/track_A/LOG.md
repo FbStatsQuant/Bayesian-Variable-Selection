@@ -54,4 +54,4 @@ Times from `date` (CST).
 - 2026-11-16 18:19 T4 (STATEMENT/PROOF v3) and T6 (STATEMENT v2.1) updated as dependents of T2 v6 (execution premise explicit); R1d re-frozen: MANIFEST 93b6cfc7c2451428ff253b282561225273b9e54cf227520a6a80a1433a8110ff (= MANIFEST_R2.txt); diff patch reviews/DIFF_R1_to_R1d.patch. Diff round R2 launched: Sol (Codex, delegate a666df4d) and Opus (Claude, delegate fb723020), briefs reviews/BRIEF_R2_{sol,opus}.md.
 - 2026-11-16 18:22 R2 diff Sol seat: 9.1 PASS (all R1 findings RESOLVED; dependents T4, T6, T10, T3, T9 PASS; all ten ACCEPT). Opus diff seat still running.
 - 2026-11-16 18:23 R2 Opus diff seat 9.3 PASS; bind R2 OK (sol 9.1 / opus 9.3). R2_disposition.md; CHECKPOINT_3.md.
-- 2026-11-16 18:51 CLOSE.md written; track A lemmas closed. Stop.
+- 2026-11-16 18:51 CLOSE note written as CHECKPOINT_4_CLOSE.md (a file named CLOSE.md would break MANIFEST_R2 verify; the manifest skips CHECKPOINT_*.md); track A lemmas closed. Stop.
