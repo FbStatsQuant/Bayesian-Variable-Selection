@@ -1,4 +1,4 @@
-# From Theory (2026-11-17, v2): visibility scope sentence for core 3 (Assignment 5). HQ-approved; use as the scope text. Replaces v1 (D18 corrected).
+# From Theory (2026-11-17, v2, FINAL for the manuscript): visibility scope sentence for core 3 (Assignment 5). HQ-approved; blind re-audit auditV2 CLEAN (16/16, scope included). Replaces v1 (D18 corrected).
 
 Source: Lemma VIS v1.5, claim W3-AUDIT-V:VIS (theory/W3-AUDIT d856081d, Theory_work/Wave3/W3-AUDIT/track_V/; council-bound R4, Opus 9.5; Sol V-R1 9.5). HQ's blind audit found the lemma clean and refuted only the old D18 exclusion, which is fixed here. D18 verdict: the finite computation, independently reproduced. Recording on main pending (HQ GO). Design labels D01–D19 are track C's.
 
