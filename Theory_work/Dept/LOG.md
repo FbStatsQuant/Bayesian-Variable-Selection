@@ -482,3 +482,4 @@
 - 2026-11-17 14:50 CST A1/A2 V2 corrigendum dry run clean (2 files appended, no registry write; Opus V3 PASS) → HQ GO requested. Recorder → W discharge dry run.
 - 2026-11-17 14:51 CST HQ GO A1/A2 corrigendum real (relayed).
 - 2026-11-17 15:01 CST D124: SOL62 A/B prep (Sonnet) launched; the manager runs the 6.2 calls after the recordings.
+- 2026-11-17 15:07 CST SOL62 A/B prep done (b0eb16f1): 3 cases (Cor-H KL true finding; W3-D2 R1 Sol F1 lgamma finding, confirmed; W3-MISR-R K2 clean control), ~33.9k input tokens for 3 calls; TRACK_B case impossible (no 6.1 review of it); D18 case skipped. Runs after the current recordings (D124).
