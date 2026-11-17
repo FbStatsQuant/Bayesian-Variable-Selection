@@ -51,3 +51,17 @@ condition D105/D112: W3-DIST's bridge reused at every Gaussian step). Elapsed: a
 - Better-theorem proposals (not adopted; HQ OFF): smaller window 3(A+1)(s₀+1) log n (o1); floor of order 1/n on the window (o2);
   explicit failure probability (R1 Opus seat).
 - Errata after the freeze: none.
+
+## Post-CP3 addendum (2026-11-17): H5 card 17 and FORM-ONLY re-freeze R2g
+- H5 card 17 (consultant AGREE, binding): Thm2SG becomes the presented Theorem 2 once recorded and API-clean; the class-1 anchor
+  of (A4) is **Narisetty–He only**; the Song–Liang implication stays as a separate factual remark (centred rows).
+- Applied: STATEMENT v1.4 §5 (outside the claim spans; changelog row 1.4 EQUAL), REPORT §2 and §3 card, READER_DELTA, TARGET
+  class cell, PLAN supersession note; DEPS S:class re-hashed. No change in STATEMENT §§0–3, `lemmas/`, numerics, tools, inputs.
+- Form check `reviews/F2_formcheck_opus.md` (Opus 5.5 high, claudeAgent_personal): **FORM-ONLY**; no remaining anchor sentence.
+  Borderline sentence noted by the checker and kept (a statement of position, not an anchor): STATEMENT §5 residual bullet,
+  "(A4) sits between NH14 (identity covariance) and Song–Liang's weaker Condition 1".
+- **Binding manifest now R2g:** `reviews/MANIFEST_R2g.txt` = MANIFEST c41a5b3485d712770989cc3c82a621fe8f5690f976bb8bb0378a188efa40665f;
+  carrier `reviews/R2g_record_opus.md` → `reviews/R2g_bind.txt`: **bind: OK**; council cell
+  `R2; MANIFEST c41a5b3485d712770989cc3c82a621fe8f5690f976bb8bb0378a188efa40665f; opus=9.3 PASS(reviews/R2g_record_opus.md)`.
+  verify OK; citecheck 70/0; staged ingest 0 problems, acceptance PASS. Registry blocks: REPORT.md §6 (:65-92; content unchanged).
+- API request rebuilt under `unshare -rn`: identical (requests.json sha256 prefix 3491251a14d8b09c; STATEMENT §§0–4 unchanged).
