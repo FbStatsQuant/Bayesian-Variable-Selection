@@ -2,6 +2,7 @@
 // so that the engine (island_run.h) can hold it as a member while the label-major code lives in island_lm.h.
 #pragma once
 #include <atomic>
+#include <memory>
 #include "v4/island/island.h"
 
 namespace v4::island {
@@ -25,7 +26,16 @@ struct LmGroupBuf {
   std::vector<SupportCache> sup; std::vector<int> sup_of;
   std::vector<std::vector<int>> sup_parts;     // particles (group-local, ascending) per support
   std::vector<int> act;                        // active columns
-  avec<double> XA;                             // |act| x n
+  avec<double> XA;                             // |loc| x n: the columns whose products this pass computes
+  // K3 (WP3_ARCH_REVIEW §2.2): Gram rows of active columns kept across the passes of a group, and across groups and
+  // rounds while the column stays active. Row r = X^T x_col, p entries with the bits of tile_products. A column gets a
+  // slot the first pass it is active (that pass's tile sweep writes the row) and loses it at the first pass in which no
+  // fast support that can add holds it. Values depend on the column only, so nothing here is checkpointed.
+  std::unique_ptr<double[]> GR; int gr_slots = 0;   // gr_slots x p, uninitialised until a row's first pass writes it
+  std::vector<int> slot_col;                   // column of each slot, -1 = free
+  std::vector<const double*> act_gr;           // per active column: its row, computed in an earlier pass, or nullptr
+  std::vector<int> act_local, act_newslot;     // per active column: product row in this pass (-1: cached); slot it fills (-1: none)
+  std::vector<int> loc;                        // the active columns computed in this pass: new (with a slot) first, then no slot
   std::vector<double> lbuf, obuf;              // nsup x p
   std::vector<LmScratch> scr;                  // one per thread
 };

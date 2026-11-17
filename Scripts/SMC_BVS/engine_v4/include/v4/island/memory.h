@@ -16,6 +16,7 @@
 //   rb           u128 accumulators 32 p (+ particle-major 16 p T) (+ compat 8 p) + rb_round Hm p 8 + rb_acc, pip 16 p
 //   orders       label-major group: orders + inverse orders + U/N/I lists        2 G m 4 + G (B + 2) 8
 //   rows         label-major group: log m and odds rows per support              2 G p 8
+//   gram_rows    label-major with bounded scoring (K3): Gram rows of active columns kept across passes   slots p 8
 //   supports     support caches (4 k_q^2 doubles each), gathered columns, per-thread product tiles
 //                with k_q = min(K, 3k): G (32 k_q^2) + G k_q n 8 + T G k_q tile 8
 //   lm_scratch   label-major per-thread scratch (sized before the parallel regions)  T (18 tile + 64 k_q + 64)
@@ -42,6 +43,7 @@ struct MemPlan { std::vector<MemItem> items; uint64_t total = 0; int G = 0; doub
 struct MemSizes {
   int n = 0, p = 0, K = 0, N = 0, B = 0, Hm = 4, threads = 1, G = 1, tile = 128;
   uint64_t cap = 0; bool label_major = true, deferred = true, leaders = false, compat = false;
+  int gram_slots = 0;        // K3: Gram-row slots (gram_slots_of)
   double inputs_bytes = 0;   // setup / calib sections mapped by the caller (tables, neighbours)
   bool calib = false;        // calibration island: the round-start snapshot (one kept run per store + the particles)
 };
@@ -79,6 +81,7 @@ inline MemPlan island_memory(const MemSizes& z, double k) {
   if (z.label_major) {
     add("orders", 2.0 * G * m_lab * 4 + G * (z.B + 2) * 8);
     add("rows", 2.0 * G * p * 8);
+    if (z.gram_slots > 0) add("gram_rows", (double)z.gram_slots * p * 8);
     add("supports", G * 32.0 * kq * kq + G * kq * n * 8 + T * G * kq * z.tile * 8);
     add("lm_scratch", T * (18.0 * z.tile + 64.0 * kq + 64.0));
   } else {
