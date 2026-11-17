@@ -66,6 +66,9 @@ struct CalibIn {
 CalibIn read_calib(const std::string& path, int32_t p, int32_t K, const std::string& data_hash = "", const std::string& setup_hash = "");
 // D-29 (review PR54 MAJOR-1/2): tau_cal's semantic check, light (mapped arrays, no model copies): distinct inherited
 // models, tau_cal = the c-th best F (c = 40p + 1) bit for bit. read_calib and `smcbvs4 island` both call it.
+// The most inherited models an UNORDERED (non-canonical) list may have before the distinctness proof (an index sort, 4 B per
+// model) is refused: 2^24. The exporter's flat list is canonical and has no limit. A mutable default so a test can lower it.
+inline size_t& calib_unordered_limit() { static size_t n = (size_t)1 << 24; return n; }
 double check_calib_tau_cal(const fmt::Reader& R, const Json& meta, uint32_t mode, int32_t p, int32_t K, const std::string& path);
 
 // ---- island_r.bin (INTERFACES v0.1.8 §5.1 = WP3's include/v4/island/island_file.h) ---------------------------------
