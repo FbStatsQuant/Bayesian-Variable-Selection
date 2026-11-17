@@ -130,10 +130,32 @@ const uint32_t* codes_of_size(int m, int j, uint32_t* count);
 void sub_cum_of(const Tables& T, int b, int m, int j, std::vector<double>& out);
 // D-31: row (b, r) of the conditional block-size law, cumulative over j = 0..min(top_b, r) (core/cpp/v3_start.h:140-150,
 // the same bits as the stored cond_cum row). out.size() == T.cond_len(b, r). Thread-safe.
-void cond_row(const Tables& T, int b, int r, std::vector<double>& out);
+void cond_row(const Tables& T, int b, int r, std::vector<double>& out);   // convenience: setup time, loaders, tests
+// Allocation-free form (PR50 MAJOR-1). A conditional row has at most 17 entries (block sizes 0..16), so its scratch is a
+// fixed-size struct: no heap, nothing to size. Row (b, r) is left in s.row[0..len); returns len.
+struct CondScratch { static constexpr int kMax = 17; double lj[kMax]; long double e[kMax]; double row[kMax]; };
+int cond_row(const Tables& T, int b, int r, CondScratch& s);
 // D-31: the pi_0 size of block b given r remaining (core/cpp/v3_start.h:163-166): j = 0 by the cond0 scan when u < cond0,
-// else upper_bound on cond_row(b, r). Same j as the stored row for every u. Used by Start::draw_pi0.
-int pi0_block_size(const Tables& T, int b, int r, double u);
+// else upper_bound on cond_row(b, r). Same j as the stored row for every u. Allocation-free (CondScratch on the stack).
+int pi0_block_size(const Tables& T, int b, int r, double u, CondScratch& s);
+int pi0_block_size(const Tables& T, int b, int r, double u);   // convenience: a local CondScratch (still no heap)
+// Per-thread scratch for the whole pi_0 draw path (PR50 MAJOR-1; the pattern of the island's LmScratch): construct one per
+// thread BEFORE the parallel region (it also warms the static code tables), pass it to Start::draw_pi0. With it, and
+// a Model with capacity >= K, a draw performs no heap allocation. Sub-model rows use sub/lv/e (<= C(16, 8) = 12,870).
+struct DrawScratch {
+  static constexpr int kMaxSub = 12870;
+  CondScratch cond;
+  std::vector<double> lv, sc;
+  std::vector<long double> e;
+  std::vector<std::pair<int, int>> kb;
+  explicit DrawScratch(int K);
+};
+// sub_cum_of into caller scratch: the within-size law of block b (size m), size j, in s.sc[0..n); returns n.
+int sub_cum_of(const Tables& T, int b, int m, int j, DrawScratch& s);
+// Builds every static code table (all m <= 16) now, so no later call allocates. Idempotent, thread-safe.
+void warm_code_tables();
+// Same arithmetic as cumulative_from_logs with caller-provided scratch e[n] (long double) instead of a heap vector.
+void cumulative_from_logs(const double* lp, size_t n, double* c, long double* e);
 // core/cpp/v3_start.h:21-32
 void cumulative_from_logs(const double* lp, size_t n, double* c);
 
@@ -152,7 +174,9 @@ struct Start {
   double comp(ModelView S) const;            // core/cpp/v3_start.h:54-66 (same bits)
   double log_gamma0(ModelView S) const { return D->logprior[S.k] + comp(S); }
   // core/cpp/v3_start.h:158-176; uniform t of the draw is read at address `a` with slot = t.
-  void draw_pi0(UniformSource& us, Address a, Model& S) const;
+  void draw_pi0(UniformSource& us, Address a, Model& S) const;                 // thread_local scratch, allocated on first use
+  // Allocation-free draw (PR50 MAJOR-1): the caller's scratch, built before the parallel region; S.capacity() >= K.
+  void draw_pi0(UniformSource& us, Address a, Model& S, DrawScratch& ds) const;
 };
 
 // ---------------------------------------------------------------- memory accounting and admission (Sol review F1)

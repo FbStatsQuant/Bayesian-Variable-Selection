@@ -1,6 +1,10 @@
 // test_setup.cpp -- WP2 unit tests, gate T11 (truncated linkage = exact dendrogram below 1 - tau_n), thread/tile
 // invariance (T3 for setup), setup.bin round trip, edge cases.
+#include <atomic>
 #include <cmath>
+#include <cstdlib>
+#include <new>
+#include <omp.h>
 #include <map>
 #include <random>
 #include <unistd.h>
@@ -31,6 +35,23 @@ std::vector<std::vector<int>> rows(const Csr& c) {
   return r;
 }
 }  // namespace
+
+// ---- allocation counter (PR50 MAJOR-1): counts every global operator new while armed (all threads). Replacing the global
+// allocation functions affects the whole v4_tests binary; the flag is off except inside the D-31 allocation test.
+namespace {
+std::atomic<bool> g_count_allocs{false};
+std::atomic<uint64_t> g_allocs{0};
+}
+void* operator new(std::size_t n) {
+  if (g_count_allocs.load(std::memory_order_relaxed)) g_allocs.fetch_add(1, std::memory_order_relaxed);
+  if (void* p = std::malloc(n ? n : 1)) return p;
+  throw std::bad_alloc();
+}
+void* operator new[](std::size_t n) { return operator new(n); }
+void operator delete(void* p) noexcept { std::free(p); }
+void operator delete[](void* p) noexcept { std::free(p); }
+void operator delete(void* p, std::size_t) noexcept { std::free(p); }
+void operator delete[](void* p, std::size_t) noexcept { std::free(p); }
 
 TEST(unit_dup_components_and_cut_group) {
   for (auto d : {stk::TIE, stk::AR, stk::BLK, stk::IND})
@@ -488,6 +509,95 @@ TEST(d31_cond_row_scan_table) {
       }
       SCHECK(ok, "D-31: pi_0 draws differ between scan + cond_row and stored rows (%s n=%d)", stk::design_name(d), n);
     }
+}
+
+// PR50 MAJOR-1: the pi_0 draw path allocates nothing with caller scratch, from the very first call, on every thread.
+// Counts every operator new (all threads) while armed. The scratch, the output models and the OpenMP team are built
+// before arming; the static code tables are warmed by DrawScratch itself (no extra warm-up call below).
+TEST(d31_pi0_draw_allocation_free) {
+  for (auto d : {stk::AR, stk::BLK, stk::TIE}) {
+    Fixture F(d, 150, 1500, 141);
+    SetupOptions o; o.threads = stk::threads();
+    SetupResult r = run_setup(F.D(), o);
+    SCHECK(r.status == v4::Status::completed, "%s", r.reason.c_str());
+    const Tables& T = r.tab;
+    SCHECK(T.cond_cum.empty() && T.sub_cum.empty(), "production tables hold sampler rows");
+    Start S; S.D = &F.D(); S.P = &r.part; S.T = &T; S.logZbar0 = T.logZbar0;
+    const int nth = 3, per = 3000;
+    std::vector<DrawScratch> ds; for (int t = 0; t < nth; ++t) ds.emplace_back(T.K);
+    std::vector<v4::Model> out(nth); for (auto& m : out) m.reserve((size_t)T.K + 1);
+    std::vector<std::vector<v4::Model>> kept(nth);   // per-thread results, compared after the count
+    for (auto& k : kept) k.assign(per, v4::Model());
+    for (auto& k : kept) for (auto& m : k) m.reserve((size_t)T.K + 1);
+    #pragma omp parallel num_threads(nth)
+    { (void)omp_get_thread_num(); }   // the team exists before arming
+    g_allocs.store(0); g_count_allocs.store(true);
+    #pragma omp parallel num_threads(nth)
+    {
+      const int t = omp_get_thread_num();
+      v4::AddressedSource as;
+      for (int i = 0; i < per; ++i) {
+        v4::Address ad; ad.seed = 41; ad.role = v4::R_FINAL; ad.island = (uint32_t)t; ad.xph = v4::X_INIT; ad.particle = (uint32_t)i + 1;
+        S.draw_pi0(as, ad, out[t], ds[t]);
+        kept[t][i].assign(out[t].begin(), out[t].end());   // capacity reserved above: no allocation
+      }
+    }
+    g_count_allocs.store(false);
+    const uint64_t na = g_allocs.load();
+    SCHECK(na == 0, "D-31: %llu allocations in %d draws on %d threads (%s)", (unsigned long long)na, nth * per, nth, stk::design_name(d));
+    // the draws are the same as the 3-argument form's (thread_local scratch)
+    bool ok = true; v4::AddressedSource as; v4::Model m3;
+    for (int t = 0; ok && t < nth; ++t)
+      for (int i = 0; ok && i < per; i += 7) {
+        v4::Address ad; ad.seed = 41; ad.role = v4::R_FINAL; ad.island = (uint32_t)t; ad.xph = v4::X_INIT; ad.particle = (uint32_t)i + 1;
+        S.draw_pi0(as, ad, m3); ok = m3 == kept[t][i];
+      }
+    SCHECK(ok, "D-31: scratch-form draws differ from the 3-argument form (%s)", stk::design_name(d));
+    // pi0_block_size on every row length, the first call on a fresh thread included
+    g_allocs.store(0); g_count_allocs.store(true);
+    long calls = 0; int mism = 0;
+    #pragma omp parallel num_threads(nth) reduction(+ : calls, mism)
+    {
+      CondScratch cs;
+      for (int b = omp_get_thread_num(); b < T.J; b += nth)
+        for (int k = 0; k <= T.K; ++k)
+          for (double u : {0.0, 0.3, 0.9, 0.999999}) { const int j = pi0_block_size(T, b, k, u, cs); ++calls; mism += (j < 0 || j >= T.cond_len(b, k)); }
+    }
+    g_count_allocs.store(false);
+    SCHECK(g_allocs.load() == 0 && mism == 0, "D-31: pi0_block_size: %llu allocations in %ld calls, %d out-of-range sizes (%s)",
+           (unsigned long long)g_allocs.load(), calls, mism, stk::design_name(d));
+    std::printf("    D-31 allocation-free (%s): %d draws on %d threads, %ld block-size calls, 0 allocations\n", stk::design_name(d), nth * per, nth, calls);
+  }
+}
+
+// PR50 MAJOR-2: the stage peaks include every live persistent item (cond0 in D-31). The start-law and start-mode stages hold
+// all data and persistent items, so the overall peak can never be below that live set; and an admission budget just under
+// it refuses while one just above admits.
+TEST(d31_accounting_includes_cond0) {
+  for (auto d : {stk::AR, stk::IND}) {
+    Fixture F(d, 400, 1200, 151);
+    const int B = default_B(400, 1200);
+    PartitionOptions po;
+    CountResult c = count_only(F.D(), po, B, stk::threads(), /*allow_filter=*/true);
+    const MemAccount& A = c.acc;
+    uint64_t live = 0, live_est = 0, cond0 = 0;
+    for (auto& it : A.items)
+      if (it.stage == "data" || it.stage == "persistent") { live += it.bytes; live_est += it.est; if (it.name.rfind("cond0", 0) == 0) cond0 = it.bytes; }
+    SCHECK(cond0 == 8ull * A.J * (A.K + 1) && cond0 > 0, "cond0 item missing or wrong size (%s)", stk::design_name(d));
+    auto stage = [&](const std::vector<std::pair<std::string, uint64_t>>& v, const char* nm) { for (auto& x : v) if (x.first == nm) return x.second; return (uint64_t)0; };
+    SCHECK(stage(A.stage_peak, "start_law") == live && stage(A.stage_peak_est, "start_law") == live_est, "start_law stage != data + persistent items (%s): %llu vs %llu",
+           stk::design_name(d), (unsigned long long)stage(A.stage_peak, "start_law"), (unsigned long long)live);
+    SCHECK(stage(A.stage_peak, "start_mode") >= live && A.peak >= live && A.peak_est >= live_est, "peak below the live set (%s)", stk::design_name(d));
+    // the budget boundary on the accounted peak, as run_setup compares it (peak / 1e9 > budget -> refuse)
+    SetupOptions o; o.threads = stk::threads();
+    o.mem_budget_gb = (double)A.peak / 1e9 * (1.0 - 1e-6);
+    SetupResult r = run_setup(F.D(), o);
+    SCHECK(r.status == v4::Status::resource_limit && r.reason.find("admission:") != std::string::npos, "budget just below the accounted peak admitted (%s): %s", stk::design_name(d), r.reason.c_str());
+    o.mem_budget_gb = (double)A.peak / 1e9 * (1.0 + 1e-6);
+    r = run_setup(F.D(), o);
+    SCHECK(r.status == v4::Status::completed, "budget just above the accounted peak refused (%s): %s", stk::design_name(d), r.reason.c_str());
+    SCHECK(r.acc.peak == A.peak, "run_setup's accounting differs from count-only's (%s)", stk::design_name(d));
+  }
 }
 
 TEST(island_loader_round_trip) {

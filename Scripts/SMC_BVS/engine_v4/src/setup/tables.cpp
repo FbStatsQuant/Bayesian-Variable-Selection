@@ -293,10 +293,14 @@ Tables build_tables(const Data& D, const Partition& P, int threads, TableStores*
 // ---------------------------------------------------------------- start law
 // core/cpp/v3_start.h:21-32
 void cumulative_from_logs(const double* lp, size_t n, double* c) {
+  std::vector<long double> e(n);
+  cumulative_from_logs(lp, n, c, e.data());
+}
+void cumulative_from_logs(const double* lp, size_t n, double* c, long double* e) {
   double m = NEG_INF; for (size_t i = 0; i < n; ++i) m = std::max(m, lp[i]);
   for (size_t i = 0; i < n; ++i) c[i] = 0.0;
   if (m == NEG_INF) return;
-  long double s = 0; std::vector<long double> e(n);
+  long double s = 0;
   for (size_t i = 0; i < n; ++i) { e[i] = (lp[i] == NEG_INF) ? 0.0L : pm::expl((long double)(lp[i] - m)); s += e[i]; }
   long double acc = 0; int last = -1;
   for (size_t i = 0; i < n; ++i) { acc += e[i]; c[i] = (double)(acc / s); if (e[i] > 0) last = (int)i; }
@@ -324,6 +328,7 @@ const CodeTable& code_table(int m) {
   return tabs[m];
 }
 }  // namespace
+void warm_code_tables() { (void)code_table(0); }
 const uint32_t* codes_of_size(int m, int j, uint32_t* count) {
   if (m < 0 || m > 16 || j < 0 || j > m) throw Error(Status::internal_error, "codes_of_size: m or j out of range");
   const CodeTable& c = code_table(m);
@@ -337,6 +342,17 @@ void sub_cum_of(const Tables& T, int b, int m, int j, std::vector<double>& out) 
   lv.resize(n); for (uint32_t q = 0; q < n; ++q) lv[q] = lr[codes[q]];
   out.resize(n);
   cumulative_from_logs(lv.data(), n, out.data());  // core/cpp/v3_start.h:118
+}
+DrawScratch::DrawScratch(int K) : lv(kMaxSub), sc(kMaxSub), e(kMaxSub) {
+  warm_code_tables();
+  kb.reserve((size_t)std::max(K, 0) + 1);
+}
+int sub_cum_of(const Tables& T, int b, int m, int j, DrawScratch& s) {
+  uint32_t n; const uint32_t* codes = codes_of_size(m, j, &n);
+  const double* lr = &T.logr[T.code_ptr[b]];
+  for (uint32_t q = 0; q < n; ++q) s.lv[q] = lr[codes[q]];
+  cumulative_from_logs(s.lv.data(), n, s.sc.data(), s.e.data());   // core/cpp/v3_start.h:118
+  return (int)n;
 }
 
 // core/cpp/v3_start.h:101-151, in flat arrays (row layouts in v4/setup.h).
@@ -408,16 +424,21 @@ void build_start(const Data& D, const Partition& P, Tables& T, bool store_sample
     }
 }
 
-void cond_row(const Tables& T, int b, int r, std::vector<double>& out) {
-  thread_local std::vector<double> lj;
+int cond_row(const Tables& T, int b, int r, CondScratch& s) {
   const int K = T.K;
   const double* pr = &T.logprof[T.logprof_ptr[b]];
   const int npr = (int)(T.logprof_ptr[b + 1] - T.logprof_ptr[b]);
+  const int len = std::min(npr - 1, r) + 1;
+  if (len > CondScratch::kMax) throw Error(Status::internal_error, "cond_row: a block has more than 16 members");
   const double* Fb = &T.logF[(size_t)b * (K + 1)];
-  lj.clear();
-  for (int j = 0; j < npr && j <= r; ++j) lj.push_back(Fb[r - j] == NEG_INF ? NEG_INF : pr[j] + Fb[r - j]);
-  out.resize(lj.size());
-  cumulative_from_logs(lj.data(), lj.size(), out.data());
+  for (int j = 0; j < len; ++j) s.lj[j] = Fb[r - j] == NEG_INF ? NEG_INF : pr[j] + Fb[r - j];   // core/cpp/v3_start.h:145-147
+  cumulative_from_logs(s.lj, (size_t)len, s.row, s.e);
+  return len;
+}
+void cond_row(const Tables& T, int b, int r, std::vector<double>& out) {
+  CondScratch s;
+  const int len = cond_row(T, b, r, s);
+  out.assign(s.row, s.row + len);
 }
 
 }  // namespace v4::setup

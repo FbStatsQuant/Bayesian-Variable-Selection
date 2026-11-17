@@ -98,10 +98,10 @@ MemAccount account(const Data& D, int coded_B, const Partition& P, int64_t edges
     sp.push_back({"correlation", stage_sum(est, {"corr"}, {"X (", "ys, z"})});
     sp.push_back({"partition", stage_sum(est, {"partition"}, {"X (", "ys, z", "neighbours", "edges"})});
     sp.push_back({"tables", stage_sum(est, {"tables"}, {"X (", "ys, z", "neighbours", "partition (", "logr", "code_ptr", "table top stores kept"})});
-    sp.push_back({"start_law", stage_sum(est, {}, {"X (", "ys, z", "neighbours", "partition (", "logr", "code_ptr", "table top stores kept",
-                                                   "logprof", "logF", "size_", "cond_", "static"})});
-    sp.push_back({"start_mode", stage_sum(est, {"mode"}, {"X (", "ys, z", "neighbours", "partition (", "logr", "code_ptr", "table top stores kept",
-                                                          "logprof", "logF", "size_", "cond_", "static"})});
+    // PR50 MAJOR-2: selected by stage, not by display name, so a renamed or new persistent item (cond0 in D-31) cannot drop
+    // out of the live set: start law = every data item + every persistent item; start mode = those + the mode transient.
+    sp.push_back({"start_law", stage_sum(est, {"data", "persistent"}, {})});
+    sp.push_back({"start_mode", stage_sum(est, {"data", "persistent", "mode"}, {})});
     uint64_t pk = 0; for (auto& x : sp) pk = std::max(pk, x.second);
     (est ? A.peak_est : A.peak) = pk;
   }
