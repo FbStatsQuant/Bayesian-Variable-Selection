@@ -41,6 +41,6 @@ inline IslandPlans calib_island_plans(const Settings& s, Rule rule, uint32_t mod
 
 // The three table top stores of a SetupView are read once, into the calibration ledger (offer_tables copies every entry);
 // nothing after that reads them. Releasing them keeps the live copy to what setup_view_bytes counts.
-inline void release_table_stores(wp4io::SetupView& S) { S.ttop = Store(); S.tlead0 = Store(); S.tlead1 = Store(); }
+inline void release_table_stores(wp4io::SetupView& S) { S.release_tables(); }
 
 }  // namespace v4::calib

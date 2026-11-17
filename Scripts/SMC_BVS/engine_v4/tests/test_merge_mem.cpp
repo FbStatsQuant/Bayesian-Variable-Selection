@@ -189,11 +189,12 @@ Probe make_probe(const std::string& dir, int p_raw, int R, int n) {
 }
 
 // The merge as the CLI runs it; returns the exit code. The record (<out>.json) carries peak_rss_kb and meta.timings.phases.
-int run_merge(const Probe& P, const std::string& out, int threads, uint64_t mem_budget = 0) {
+int run_merge(const Probe& P, const std::string& out, int threads, uint64_t mem_budget = 0, const std::string& extra = "") {
   std::string isl; for (size_t i = 0; i < P.ipath.size(); ++i) isl += (i ? "," : "") + P.ipath[i];
   std::string cmd = std::string("'") + V4_SMCBVS4 + "' merge --data '" + P.dpath + "' --setup '" + P.spath + "' --calib '" + P.cpath + "' --mode V --threads " +
                     std::to_string(threads) + " --islands '" + isl + "' --Rp " + std::to_string(P.R) + " --out '" + out + "'";
   if (mem_budget) cmd += " --mem-budget " + std::to_string(mem_budget);
+  cmd += extra;
   cmd += " > '" + out + ".log' 2>&1";
   int rc = std::system(cmd.c_str());
   return WIFEXITED(rc) ? WEXITSTATUS(rc) : -1;
@@ -225,6 +226,14 @@ TEST(wp4_merge_mem_plan_bounds_peak) {
   CHECK(pk.status == "completed" && pk.peak > 0);
   CHECK(pk.total >= 1.1 * pk.peak);                 // the plan bounds the measured peak
   CHECK(pk.total <= 4.0 * pk.peak);                 // and is not absurd
+  // the VARIABLE part (review PR65 MINOR-2: the 80 MiB constant is 75% of the peak at this p): the largest planned phase bounds the
+  // process memory the merge adds to what the process holds at its start
+  { const Json& ph0 = pk.rec.at("timings").at("phases");
+    const double hwm0 = ph0.at(0).at("hwm_kb").num() * 1024.0;
+    const double planned_variable = ((double)pk.total - 83886080.0) / 1.15;       // the largest phase, without margin and constant
+    const double measured_variable = pk.peak - hwm0;
+    std::printf("  variable part: planned %.1f MB, measured %.1f MB (x%.2f)\n", planned_variable / 1e6, measured_variable / 1e6, planned_variable / std::max(1.0, measured_variable));
+    CHECK(planned_variable >= 1.0 * measured_variable); }
   CHECK(pk.sacct_upper > pk.total);
   // the phases the record carries: in order, with the process memory at each
   const Json& ph = pk.rec.at("timings").at("phases");
@@ -238,8 +247,35 @@ TEST(wp4_merge_mem_plan_bounds_peak) {
   CHECK(run_merge(P, out2, 2, std::max<uint64_t>(1, need / 2)) == 11);   // resource_limit
   { fmt::Reader R(out2); Json m = R.json("meta");
     CHECK(m.at("fit_state").str() == "not_admitted" && m.at("reason").str().find("before the inputs are read") != std::string::npos && !R.has("pip_eq")); }
+  // the FULL plan is admitted before the table and inherited offers (review PR65 MAJOR-1). The load phases dominate the plan of this
+  // probe, so a large --chunk (the tail's buffers, which only the full plan counts) makes the full plan the larger one: a budget
+  // above the load phases' need and below that plan refuses with the full-plan reason, after the island heads and before any offer.
+  { const std::string out3 = dir + "/fit_refused_full.bin";
+    CHECK(run_merge(P, out3, 2, 1000000000ull, " --chunk 5000000") == 11);   // 1 GB: above the load phases (~0.2 GB), below the tail buffers (~4 GB)
+    fmt::Reader R(out3); Json m = R.json("meta");
+    CHECK(m.at("fit_state").str() == "not_admitted" && !R.has("pip_eq"));
+    CHECK_MSG(m.at("reason").str().find("full plan") != std::string::npos, m.at("reason").str());
+    std::string seen; const Json& ph3 = m.at("timings").at("phases");
+    for (size_t i = 0; i < ph3.size(); ++i) seen += ph3.at(i).at("phase").str() + " ";
+    CHECK_MSG(seen.find("heads_checked") != std::string::npos && seen.find("tables_offered") == std::string::npos &&
+              seen.find("inherited_offered") == std::string::npos && seen.find("island_1_loaded") == std::string::npos, seen); }
   // a budget at the plan's total is admitted
-  CHECK(run_merge(P, dir + "/fit_ok.bin", 2, (uint64_t)pk.total + 1) == 0);
+  CHECK(run_merge(P, dir + "/fit_ok.bin", 2, (uint64_t)(1.02 * pk.total)) == 0);   // 2%: the early bound on the setup copy is 1.05 x the file (measured 1.026)
+}
+
+// --full only (about 45 s): the same bound at p = 2e4, R' = 4, where the variable part of the plan is most of the peak (review PR65 MINOR-2)
+TEST_TAGGED(wp4_merge_mem_plan_bounds_peak_2e4, "full") {
+  const std::string dir = tmp_path("mmplan2e4"); ::mkdir(dir.c_str(), 0755);
+  struct Cleanup { std::string d; ~Cleanup() { std::string cmd = "rm -rf '" + d + "'"; (void)std::system(cmd.c_str()); } } cl{dir};
+  Probe P = make_probe(dir, 20000, 4, 200);
+  const std::string out = dir + "/fit.bin";
+  CHECK(run_merge(P, out, 3) == 0);
+  const PlanAndPeak pk = read_plan_and_peak(out);
+  const double hwm0 = pk.rec.at("timings").at("phases").at(0).at("hwm_kb").num() * 1024.0;
+  const double planned_variable = ((double)pk.total - 83886080.0) / 1.15, measured_variable = pk.peak - hwm0;
+  std::printf("  p = 20000: measured peak %.1f MB, plan %.1f MB (x%.2f); variable part planned %.1f MB, measured %.1f MB (x%.2f)\n", pk.peak / 1e6, pk.total / 1e6,
+              pk.total / std::max(1.0, pk.peak), planned_variable / 1e6, measured_variable / 1e6, planned_variable / std::max(1.0, measured_variable));
+  CHECK(pk.status == "completed" && pk.total >= 1.1 * pk.peak && planned_variable >= measured_variable);
 }
 
 TEST(wp4_merge_mem_probe) {

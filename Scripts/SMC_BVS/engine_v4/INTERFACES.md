@@ -1,6 +1,6 @@
 # INTERFACES — engine v4 contract between WP1–WP5
 
-**v0.1.23 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-18. Source: ENGINEERING_SPEC §0-v2,
+**v0.1.26 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-18. Source: ENGINEERING_SPEC §0-v2,
 §1–§3, §6. Where this file is silent, the spec rules; where the spec is silent, `core/` (v3.1 / revision D) rules.
 Questions and change requests: to the WP1 owner through the manager. Line references `core/...:N` are to revision D.
 
@@ -438,14 +438,15 @@ Sections (names fixed; WPs may add sections, never rename):
   v0.1.18 (WP7 O5): `fit.json` also carries `island_isa` (D-32 (4), the merge binary's) and `timings` (as fit.bin
   `meta.timings`): `merge_tail_seconds` (the whole command), `merge_islands_seconds` (island stream + merge),
   `tail_local_seconds` (final local search), `ls0_seconds` (LS0); execution statistics, not hashed (meta).
-  v0.1.25 (WP4, first-1M-merge memory review): `meta.timings.phases` (also in `fit.json`) lists the merge's phases in order, each
-  `{phase, t, rss_kb, anon_kb, file_kb, hwm_kb}` (wall seconds since the command started and the process memory from
-  `/proc/self/status`, kB, −1 where unavailable): `start`, `data_loaded`, `setup_read`, `calib_read`, `heads_checked`,
+  v0.1.26 (WP4, first-1M-merge memory review): `meta.timings.phases` (also in `fit.json`) lists the merge's phases in order, each
+  `{phase, t, rss_kb, anon_kb, file_kb, hwm_kb}` (wall seconds since the command started and the process memory, kB: `/proc/self/smaps_rollup` (exact sums;
+  file = Rss − Anonymous) when the kernel has it, else `/proc/self/status` (approximate per the kernel's own documentation: a release
+  can show one phase late); −1 where unavailable. **Linux only**): `start`, `data_loaded`, `setup_read`, `calib_read`, `heads_checked`,
   `tables_offered`, `tables_released`, `inherited_offered`, `pre_compacted`, `island_<r>_loaded` / `island_<r>_merged`,
-  `islands_compacted`, `tail_done`, `assembly_done`, `before_write`; the command record adds `peak_rss_kb` (VmHWM at the end),
+  `islands_compacted`, `tail_done`, `assembly_done`, `before_write`; the command record adds `peak_rss_kb` (`getrusage` `ru_maxrss` at the end, kB on Linux),
   `end_rss_kb`, `end_file_kb` and `write_fit_seconds`. `meta.mem_estimate` carries the plan by phase (`load_setup`,
   `load_calib`, `offers`, `streaming`, `tail_phase`, `merged`, `one_island`, `small`, `extra`), `total` and `sacct_upper`
-  (§7). Execution statistics, not hashed.
+  (§7). A merge that is not admitted (§7) also carries the phases it reached, ending with `refused`. Execution statistics, not hashed.
   No leader stores in `island_r.bin` or `fit.bin`, in any mode (§4.1; on the compat exclusion list).
 - `law.bin` (WP5): models (ptr/idx), weights, conjugate parameters, standardisation constants, dropped mass.
 - `island_r.ckpt.{a,b}` (WP3): kind 8; newest valid generation wins.
@@ -546,15 +547,16 @@ Status fit_status(span<Status>);   // first that applies: invalid_input, interna
 
   Over budget, admission refuses deterministically with `resource_limit`, before any allocation. The check at every step boundary uses the store's **actual** size. With G = 0
   the island chooses the largest G ≤ 256 that fits. The merge applies the same rule to its own plan (`merge.h`, WP4).
-  **Merge plan (v0.1.25).** `estimate_merge_memory` is a plan by phase: the resident bytes of each phase (anonymous memory
+  **Merge plan (v0.1.26).** `estimate_merge_memory` is a plan by phase: the resident bytes of each phase (anonymous memory
   plus the input files the phase maps whole for its section-hash check, which a process's RSS counts), the largest phase
-  × 1.15 + 80 MiB = `total`. The phases: `load_setup` = copy of setup.bin (≤ its size) + setup.bin mapped + data.bin;
+  × 1.15 + 80 MiB = `total`. The phases: `load_setup` = copy of setup.bin (≤ 1.05 × its size: measured 1.026, the stores' model index is 4 B per entry the file does not hold) + setup.bin mapped + data.bin;
   `load_calib` = that copy + calib.bin mapped + data.bin; `offers` = the copy or its kept part + a store at its 2.5 c entries
   staging peak (entry = 30 + 4 k bytes) + calib.bin mapped; `streaming` = kept setup arrays + the merged store (2.5 c entries,
   capacity kept) + one island (its file mapped + the loaded copy c (entry + 16)) + the per-island vectors + data.bin;
   `tail_phase` = kept setup arrays + merged store + vectors + the tail's chunk buffers + data.bin. The load phases are
   admitted from the files' sizes BEFORE `read_setup` / `read_calib` allocate (`resource_limit`, `fit_state` "not_admitted",
-  reason "before the inputs are read"); the full plan is checked again once the islands' mean model size is known.
+  reason "before the inputs are read"); the FULL plan is checked as soon as the island heads are read (the islands' mean model
+  size is known then), before the table and inherited offers (the largest phase at 10⁶ is `offers`; reason "full plan"), and once more in `merge_stream`.
   `sacct_upper` adds every file the task reads or writes: sacct's MaxRSS counts the page cache of those files until the
   cgroup reclaims it, so a merge near its limit reads about 94% of the request without needing it. The merge reads the
   inherited models from the mapped calib.bin (validated in place, offered in the same order: no per-model copy) and
@@ -723,7 +725,7 @@ point, so all WPs link from day one: `setup::run`, `island::run`, `calib::run`, 
   the meta section's hashes are checked; the other sections are not read) and prints the meta; the record then has
   `verified` = "header+table+meta". Without `--meta` (or with `--verify 1`) every section hash is recomputed as before
   (`verified` = true). MEASURED on a real 10⁶ island file (2.1 GB): 0.04 s with `--meta 1`, 11–19 s full.
-- v0.1.25 (2026-11-18, WP4; the first 1M fit's merge peaked at 75.1 GiB sacct MaxRSS against a plan of 43.7 GiB) — §5.1 `fit.bin`
+- v0.1.26 (2026-11-18, WP4; the first 1M fit's merge peaked at 75.1 GiB sacct MaxRSS against a plan of 43.7 GiB) — §5.1 `fit.bin`
   / `fit.json`: `meta.timings.phases` (phase seconds and RSS), `peak_rss_kb`, `write_fit_seconds`, and `meta.mem_estimate`
   by phase with `sacct_upper`. §7: the merge's memory plan is by phase (resident = anonymous + mapped file pages), the
   load phases are admitted before anything is read, and the merge streams the inherited models from calib.bin and releases

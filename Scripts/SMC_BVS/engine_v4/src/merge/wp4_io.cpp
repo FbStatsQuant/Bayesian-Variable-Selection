@@ -377,7 +377,14 @@ void offer_inherited_file(Ledger& led, const std::string& path, const CalibIn& C
   const int64_t* ptr = R.get<int64_t>("inh_ptr", &np); const int32_t* idx = R.get<int32_t>("inh_idx", &ni);
   const double* F = R.get<double>("inh_F", &nF); const double* L = R.get<double>("inh_lg0", &nL); const double* M = R.get<double>("inh_logm", &nM);
   if (np != C.n_inherited + 1 || nF != C.n_inherited || nL != C.n_inherited || nM != C.n_inherited) throw Error(Status::invalid_input, path + ": inherited arrays changed");
+  // The mapping read_calib validated is not kept (a Reader is scoped to its function), so the bounds are re-checked here, O(1) per
+  // model beside the offer (review PR65 MINOR-3): the file is written by rename, so a change of the section bytes in place between
+  // the two mappings is a TOCTOU window, not a live path; it is refused, never read out of bounds.
+  if (ptr[0] != 0 || (uint64_t)ptr[np - 1] != ni) throw Error(Status::invalid_input, path + ": inherited offsets changed since they were validated");
+  const int32_t pdim = (int32_t)zob.key.size();
   for (uint64_t i = 0; i < C.n_inherited; ++i) {
+    if (ptr[i + 1] < ptr[i] || (uint64_t)ptr[i + 1] > ni) throw Error(Status::invalid_input, path + ": inherited offsets changed since they were validated");
+    for (int64_t a = ptr[i]; a < ptr[i + 1]; ++a) if (idx[a] < 0 || idx[a] >= pdim) throw Error(Status::invalid_input, path + ": an inherited model label changed since it was validated");
     const ModelView S(idx + ptr[i], (uint32_t)(ptr[i + 1] - ptr[i]));
     bool is_hpm = C.has_hpm && S.k == C.hpm.size();
     for (uint32_t a = 0; is_hpm && a < S.k; ++a) is_hpm = S.idx[a] == C.hpm[a];
@@ -1050,25 +1057,41 @@ Json run(const Json& args) {
   phases.mark("data_loaded");
   // The load phases are admitted before read_setup / read_calib allocate anything large (review PR46 MAJOR-2's rule, INTERFACES §7
   // "before any allocation"): read_setup copies up to the file's size while the file is mapped whole, so its peak is about twice
-  // setup.bin; read_calib maps calib.bin whole beside the copy. Bounded by the files' sizes (the copies are no larger).
+  // setup.bin; read_calib maps calib.bin whole beside the copy. The copy is bounded by 1.05 x the file (measured 1.026: per-entry state
+  // the file does not hold, the stores' model index at 4 B per entry; review PR65 MINOR-1).
   const uint64_t b_data = file_bytes_of(in.data), b_setup = file_bytes_of(in.setup), b_calib = file_bytes_of(in.calib);
+  const uint64_t b_setup_copy = (uint64_t)(1.05 * (double)b_setup);
+  // A refused merge writes its fit.bin (no estimate section) with the phases reached so far (review PR65 MAJOR-1: a refusal shows
+  // where it was decided).
+  auto phases_json = [&phases]() {
+    Json ph = Json::array();
+    for (const auto& x : phases.v) {
+      Json o = Json::object(); o["phase"] = x.phase; o["t"] = x.t;
+      o["rss_kb"] = (double)x.mem.rss_kb; o["anon_kb"] = (double)x.mem.anon_kb; o["file_kb"] = (double)x.mem.file_kb; o["hwm_kb"] = (double)x.mem.hwm_kb;
+      ph.push(o);
+    }
+    return ph;
+  };
+  auto refuse_not_admitted = [&](const merge::MemEstimate& est, const merge::MergeSettings& ems, const std::string& why) {
+    merge::FitOut fo; fo.mem = est; fo.status = Status::resource_limit; fo.fit_state = "not_admitted"; fo.reason = why;
+    wp4io::FitWrite fw; fw.mode = mode; fw.fo = &fo; fw.ms = &ems;
+    fw.inputs["data.bin"] = dhash;
+    fw.inputs["setup.bin"] = fmt::Reader(in.setup, false).content_hash(); fw.inputs["calib.bin"] = fmt::Reader(in.calib, false).content_hash();
+    phases.mark("refused");
+    fw.timings["phases"] = phases_json();
+    Json rec = Json::object();
+    wp4io::write_fit(in.out, fw, &rec);
+    rec["command"] = "merge"; rec["Rp"] = in.Rp; rec["exit_status"] = status_name(fo.status);
+    return rec;
+  };
   {
-    merge::MergeSettings eo; eo.Rp = in.Rp; eo.p = D.p; eo.K = D.K; eo.data_bytes = b_data; eo.setup_bytes = b_setup; eo.setup_all = b_setup; eo.setup_resident = b_setup;
+    merge::MergeSettings eo; eo.Rp = in.Rp; eo.p = D.p; eo.K = D.K; eo.data_bytes = b_data; eo.setup_bytes = b_setup; eo.setup_all = b_setup_copy; eo.setup_resident = b_setup_copy;
     eo.calib_bytes = b_calib; eo.mem_budget_bytes = mem_budget;
     const merge::MemEstimate early = merge::estimate_merge_memory(eo);
     const uint64_t early_need = (uint64_t)(1.15 * (double)early.load_peak) + (80ull << 20);
-    if (mem_budget && early_need > mem_budget) {
-      merge::FitOut fo; fo.mem = early; fo.status = Status::resource_limit; fo.fit_state = "not_admitted";
-      fo.reason = "merge not admitted before the inputs are read: the load phases need about " + std::to_string(early_need) +
-                  " B (setup.bin copied while mapped whole, calib.bin mapped whole) > --mem-budget " + std::to_string(mem_budget) + " B";
-      wp4io::FitWrite fw; fw.mode = mode; fw.fo = &fo; fw.ms = &eo;
-      fw.inputs["data.bin"] = dhash;
-      fw.inputs["setup.bin"] = fmt::Reader(in.setup, false).content_hash(); fw.inputs["calib.bin"] = fmt::Reader(in.calib, false).content_hash();
-      Json rec = Json::object();
-      wp4io::write_fit(in.out, fw, &rec);
-      rec["command"] = "merge"; rec["Rp"] = in.Rp; rec["exit_status"] = status_name(fo.status);
-      return rec;
-    }
+    if (mem_budget && early_need > mem_budget)
+      return refuse_not_admitted(early, eo, "merge not admitted before the inputs are read: the load phases need about " + std::to_string(early_need) +
+                  " B (setup.bin copied while mapped whole, calib.bin mapped whole) > --mem-budget " + std::to_string(mem_budget) + " B");
   }
   wp4io::SetupView S = wp4io::read_setup(in.setup, D.p, D.K, &D.zob);
   phases.mark("setup_read");
@@ -1090,17 +1113,6 @@ Json run(const Json& args) {
   wp4io::FileIslandSource src(in.islands, ex, R, D.p);   // pass 1: heads + binary check
   phases.mark("heads_checked");
   if (mode == fmt::M_V && C.meta.contains("binary")) src.check_calib_isa(C.meta.at("binary"));   // D-32: the islands' family = calib.bin's
-  LedgerConfig cfg; cfg.p = D.p; cfg.islands = R; cfg.leaders = false; cfg.fresh_counters = false;   // v0.1.7: no final-run leaders
-  Ledger pre(cfg);
-  wp4io::offer_tables(pre, S, D.K, D.zob);
-  phases.mark("tables_offered");
-  S.ttop.release(); S.tlead0.release(); S.tlead1.release();   // table stores are in the ledger now; the merge never reads them again (3.2 GB at 10^6)
-  phases.mark("tables_released");
-  wp4io::offer_inherited_file(pre, in.calib, C, D.zob);
-  phases.mark("inherited_offered");
-  pre.compact();
-  phases.mark("pre_compacted");
-  src.check_offer_floors(mode == fmt::M_V, C.content_hash, C.tau_cal, pre.top.cutoff());   // D-29: refused islands -> GUARD-W
   MergeSettings ms;
   ms.Rp = R; ms.N = C.N; ms.p = D.p; ms.K = D.K; ms.tier = C.tier;
   ms.ell = (int)nget(args, "ell", ceil_log2((double)D.n + D.p + 1));
@@ -1115,6 +1127,24 @@ Json run(const Json& args) {
     ms.data_bytes = b_data; ms.setup_bytes = b_setup; ms.calib_bytes = b_calib; ms.setup_all = setup_all_bytes; ms.setup_resident = setup_resident_bytes;
     for (const auto& pth : in.islands) { const uint64_t b = file_bytes_of(pth); ms.island_bytes = std::max(ms.island_bytes, b); ms.island_bytes_total += b; }
     ms.out_bytes = (uint64_t)(40.0 * D.p + 1) * (uint64_t)(26.0 + 4.0 * kb); }
+  // The FULL plan is admitted here, before the table and inherited offers (the plan's largest phase at 10^6 is `offers`; review PR65
+  // MAJOR-1): every input of it is known once the island heads are read. merge_stream re-checks it as a backstop.
+  { const merge::MemEstimate full = merge::estimate_merge_memory(ms);
+    if (mem_budget && full.total > mem_budget)
+      return refuse_not_admitted(full, ms, "merge not admitted: estimated peak " + std::to_string(full.total) + " B > --mem-budget " + std::to_string(mem_budget) +
+                                 " B (the full plan, checked before the table and inherited offers)");
+    phases.mark("plan_admitted"); }
+  LedgerConfig cfg; cfg.p = D.p; cfg.islands = R; cfg.leaders = false; cfg.fresh_counters = false;   // v0.1.7: no final-run leaders
+  Ledger pre(cfg);
+  wp4io::offer_tables(pre, S, D.K, D.zob);
+  phases.mark("tables_offered");
+  S.release_tables();   // table stores are in the ledger now; the merge never reads them again (3.2 GB at 10^6)
+  phases.mark("tables_released");
+  wp4io::offer_inherited_file(pre, in.calib, C, D.zob);
+  phases.mark("inherited_offered");
+  pre.compact();
+  phases.mark("pre_compacted");
+  src.check_offer_floors(mode == fmt::M_V, C.content_hash, C.tau_cal, pre.top.cutoff());   // D-29: refused islands -> GUARD-W
   BitFactory fac{&D, &S};
   ms.phase_hook = [&phases](const std::string& ph) { phases.mark(ph); };
   FitOut fo = merge_stream(src, std::move(pre), S.mode_S, fac, ms);
@@ -1131,18 +1161,14 @@ Json run(const Json& args) {
   Json rec = Json::object();
   {   // phases: seconds since the start of run() and the process memory at each boundary (kB; -1 = unavailable)
     phases.mark("before_write");
-    Json ph = Json::array();
-    for (const auto& x : phases.v) {
-      Json o = Json::object(); o["phase"] = x.phase; o["t"] = x.t;
-      o["rss_kb"] = (double)x.mem.rss_kb; o["anon_kb"] = (double)x.mem.anon_kb; o["file_kb"] = (double)x.mem.file_kb; o["hwm_kb"] = (double)x.mem.hwm_kb;
-      ph.push(o);
-    }
+    Json ph = phases_json();
     fw.timings["phases"] = ph;
   }
   const auto t_write0 = std::chrono::steady_clock::now();
   wp4io::write_fit(in.out, fw, &rec);
   rec["write_fit_seconds"] = std::chrono::duration<double>(std::chrono::steady_clock::now() - t_write0).count();   // not in fit.bin's own meta
-  { const ProcMem pm_end = proc_mem(); rec["peak_rss_kb"] = (double)pm_end.hwm_kb; rec["end_rss_kb"] = (double)pm_end.rss_kb; rec["end_file_kb"] = (double)pm_end.file_kb; }
+  { const ProcMem pm_end = proc_mem(); rec["peak_rss_kb"] = (double)peak_rss_kb_now();   // getrusage ru_maxrss (kB, Linux)
+    rec["end_rss_kb"] = (double)pm_end.rss_kb; rec["end_file_kb"] = (double)pm_end.file_kb; }
   rec["command"] = "merge"; rec["Rp"] = R;
   if (fo.status != Status::completed) rec["exit_status"] = status_name(fo.status);
   return rec;

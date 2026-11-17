@@ -141,6 +141,7 @@ struct SetupView {
   // core/cpp/v3_start.h:54-66 (copied): ordered block sum of log r_b(S n C_b).
   double comp(const Model& S, std::vector<std::pair<int32_t, int32_t>>& scratch) const;
   uint64_t table_event_count(int32_t K) const;      // codes with |U| <= K (one logical TABLE event each)
+  void release_tables() { ttop.release(); tlead0.release(); tlead1.release(); }   // the one helper that returns the table stores' memory
   uint64_t bytes_resident(bool tables) const;       // bytes held: the arrays, plus the three table stores when `tables`
   EventCtx table_event_of(const Model& S) const;    // block b + 1, code of S in that block
 };
