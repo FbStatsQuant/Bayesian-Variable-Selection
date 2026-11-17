@@ -33,7 +33,7 @@ is O((log n)²)). For n ≥ n₁:
 (b) P(𝒜_nᶜ) ≤ 4p·e^{−c₁n/L⁴} + e^{−c₂n/L⁴} ≤ 5n^A e^{−c₂n/L⁴} → 0 (c₁ = 1/576).
 (c) [L1-2] (Interface.) Let (X°, θ°) be the completed pair of Step 6 ((X, θ̃*) on {p_ret = p}; outside it a fixed
     deterministic centred standardised n × p matrix with a fixed truth θ⁰ with supp θ⁰ = S₀ [K1-1], [K2-1]). Then
-    supp θ° = S₀ on every outcome. Let 𝒜′_n be the set of outcomes on which (X°, θ°) satisfies ‖X°θ°‖² ≤ nM_E, (F_λ; φ₀),
+    supp θ° = S₀ on every outcome, and (X°, θ°) is a Borel function of the raw design, hence independent of ε [K3-1]. Let 𝒜′_n be the set of outcomes on which (X°, θ°) satisfies ‖X°θ°‖² ≤ nM_E, (F_λ; φ₀),
     (F_w; g₀) (m♯_n computed from (n, p, s₀)) and θ°²_min nφ₀²/log n ≥ M_n. Then 𝒜′_n is (X°, θ°)-measurable, 𝒜_n ⊆ 𝒜′_n ∩ {p_ret = p}, ε is independent of (X°, θ°), and
     the hypotheses of [W3P] Theorem 1 item 6 (`:95-100`) hold for (X°, θ°, ε/σ*) in regime R1 with the events 𝒜′_n, the
     common constants (M_E, φ₀, g₀) and the common envelope M_n. (𝒜_n need not be (X, θ̃*)-measurable; it is used only

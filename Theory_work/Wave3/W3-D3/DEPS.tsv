@@ -5,7 +5,7 @@ S:B3w	STATEMENT.md:59-79	S:setting	3287fafe4da3041d	3287fafe4da3041d	reviews/K2_
 S:ExSG	STATEMENT.md:81-88		6b83f9d40ce7fef1	6b83f9d40ce7fef1	reviews/K1_linecheck_opus.md	OK
 S:class	STATEMENT.md:111-141	S:ExSG	4da143855dff15dd	4da143855dff15dd	reviews/K2_recheck_opus.md	OK
 S:inputs	STATEMENT.md:143-158		4da0091979c82106	4da0091979c82106	reviews/K2_recheck_opus.md	OK
-P:B3w	lemmas/B3w.md:12-134	S:B3w,S:inputs	7156440ecd5666d2			UNCHECKED
+P:B3w	lemmas/B3w.md:12-134	S:B3w,S:inputs	67594826abbeb661	67594826abbeb661	reviews/K3_recheck_opus.md	OK
 P:Thm2SG	lemmas/ASSEMBLY.md:21-52	S:Thm2SG,P:B3w,S:inputs	5db2fe6b2eca4beb	5db2fe6b2eca4beb	reviews/K2_recheck_opus.md	OK
 P:ExSG	lemmas/ASSEMBLY.md:54-83	S:ExSG	0cd0673df06dbe0e	0cd0673df06dbe0e	reviews/K1_linecheck_opus.md	OK
-R:registry	REPORT.md:60-87	S:Thm2SG,S:B3w,S:ExSG	34ef8bbe5ce1b247			UNCHECKED
+R:registry	REPORT.md:62-89	S:Thm2SG,S:B3w,S:ExSG	34ef8bbe5ce1b247	34ef8bbe5ce1b247	reviews/K3_recheck_opus.md	OK

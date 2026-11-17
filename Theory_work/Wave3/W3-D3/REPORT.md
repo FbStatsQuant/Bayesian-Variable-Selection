@@ -45,6 +45,8 @@ Line check K1 (Opus 5.5 high, blind, claudeAgent_personal; with the statement-ch
 `reviews/K1_linecheck_opus.md` (VERIFIED-WITH-AMENDMENTS; 1 C minor, 2 S, 1 F, 8 E), disposition `reviews/K1_disposition.md`.
 Re-check K2 (Opus, new agent): `reviews/K2_recheck_opus.md` (RESOLVED-WITH-AMENDMENTS; 2 S, 4 E), disposition
 `reviews/K2_disposition.md`.
+Re-check K3 (Opus, new agent): `reviews/K3_recheck_opus.md` (RESOLVED-WITH-AMENDMENTS; 1 E), disposition `reviews/K3_disposition.md`.
+Staged ingest: `reviews/INGEST_staged.txt` (0 problems; acceptance PASS).
 Changelog: `STATEMENT.md` §9. DEPS: `DEPS.tsv` (`deps_hand.py`). Citation check: `citecheck.py` → `reviews/CITECHECK.txt`.
 Numerics: `numerics/N1_window.py` → `numerics/N1_out.txt` (size arithmetic, 1966 cases, 0 violations);
 `numerics/N2_subgauss_rows.py` → `numerics/N2_out.txt` (exact posteriors, non-Gaussian rows; sanity only).

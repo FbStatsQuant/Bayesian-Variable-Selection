@@ -51,3 +51,8 @@
   reviews/K2_repair.diff). DEPS: S:Thm2SG, S:B3w, S:class, S:inputs, P:Thm2SG checked by K2 (spans unchanged since K2 read them).
 - 13:36 — Agent started: Opus 5.5 high (providerInstanceId claudeAgent_personal), new agent — role: K3 re-check of the K2
   repairs (B3w (c), changelog tag, REPORT B3w block); brief reviews/K3_brief.md; reply → reviews/K3_recheck_opus.md.
+- 13:39 — K3 reply (Opus): RESOLVED-WITH-AMENDMENTS (K3-1 E: Borel clause in B3w (c); retag confirmed). Applied
+  (reviews/K3_disposition.md). DEPS all OK (10/10); citecheck 70/0; staged ingest 0 problems, acceptance PASS
+  (reviews/INGEST_staged.txt); HOLDS.md (origin/main) 0 HOLD lines. Council R1 manifest frozen: MANIFEST
+  de19cf54f91f81defa8bc75a5b174e01a697ea75c3984f70106efaa23a39b768 (28 files, 12 extra). Briefs BRIEF_R1_sol.md, BRIEF_R1_opus.md
+  saved before launch.
