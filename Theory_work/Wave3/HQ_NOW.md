@@ -45,6 +45,10 @@
 - **Mon 11-23, first item: an HQ + consultant ("VP") strategy session** on whether to do more about the algorithm theorem's novel assumptions (visibility, leakage set) beyond #5′. Options to weigh: weaker or primitive sufficient conditions, a design-family corollary, a different route for strong-factor data. Bring a recommendation to the owner.
 - **Queued for next week: a "precedent" note per non-Song–Liang assumption** (where the same type of condition appears in the literature). Theory verifies each citation against the paper (Sonnet/Haiku fetch + Opus check); Writing inserts it in the manuscript §5.
 
+## OWNER 11-17: OPTIONAL CODEX REVIEW OF KEY THEOREMS (only on the owner's order; depends on his Codex situation)
+- Later, **after the owner's explicit order:** Sol and/or Astra review the key theorems, especially those whose final diff rounds were Opus-only (D91/D99 carriers: C1, READER R4/R5, track D #2).
+- **Only important suggestions are accepted; no nitpicking.** Not before his word.
+
 ## POST-FREEZE QUEUE (HQ, collected)
 - Engineering doc batch: the preflight README/v3_fit comment fix; the v3_core.cpp:144 comment (says B ≤ 20, while 16 is enforced); the item1_um_checks.py Windows path.
 - Theory: the registry blocks-assumption source line (C-GROW 61 → 65–67); the 6 RM2 supersessions; the suspect-dependents NARROW batch; track D #2 → #3 → #5′ from Sat 11-21.
