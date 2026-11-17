@@ -477,3 +477,4 @@
 - 2026-11-17 14:23 CST auditV2 CLEAN 16/16 (V:SCOPE incl.); cite in the V carrier; Writing VISIBILITY_SCOPE v2 marked FINAL.
 - 2026-11-17 14:27 CST D123: SOL62_QUALITY.md created; leads told.
 - 2026-11-17 14:28 CST Track V R4 manifest fails verify on EXT TRACK_B.md (my B8 D18 update, W3-AUDIT 6e89f081); recorder to do a CITATION-ONLY R4 → R4r in the V recording. Lesson: check a file's manifest membership before post-freeze edits (as RIDER_RULES already says for ticket files).
+- 2026-11-17 14:36 CST HEARTBEAT: XR2r landed on main d8a1334d (CI 44169043637 in progress); the recorder continues with the W discharge dry run. Heartbeat prompt updated to the current state (all push tickets at CP3; recording order).
