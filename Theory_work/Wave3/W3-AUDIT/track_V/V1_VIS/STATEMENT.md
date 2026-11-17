@@ -1,4 +1,4 @@
-# V1 · Lemma VIS (visibility with a margin uniform in n: a sign route and a generic-position route) — STATEMENT v1.2 (draft; Sol LOCK WITH CHANGES on v1.1, changes applied)
+# V1 · Lemma VIS (visibility with a margin uniform in n: a sign route and a generic-position route) — STATEMENT v1.3 (draft; Sol LOCK WITH CHANGES on v1.1, changes applied)
 
 Track V item V1 (manager 11-17, D112; owner + consultant requirement: a margin **uniform in n**, not "nonzero for almost
 every β"). Tier B (new lemma; pure linear algebra and topology, no code). **Lean target: yes** (finite-dimensional:
@@ -8,7 +8,7 @@ bound).
 ## Target condition
 The population visibility condition — Theorem 5 (A4) (lines 581-582), Theorem 6 (A3) (lines 672-673) and Theorem 10 (A4)
 (line 1292, "(A4) of Theorem 5") of `Theory_work/Wave3/W3-READER/READER_VERSIONS.md` on main 029bb748: for a fixed a > 0
-and all large n,
+and n ≥ n₀ (the theorems state the hypothesis with a fixed a; they are asymptotic, so n ≥ n₀ suffices),
   |Cov(W_j, Wᵀθ* | W_U)| ≥ a  for every j ∈ S₀ and every U ⊆ [p] with j ∉ U, |U| ≤ 15,
 with W ~ N_p(0, Σ_n), Σ_n a correlation matrix (positive definite in Theorem 6; Theorems 5 and 10 assume only a
 correlation matrix with a small-set floor), Cov(·, · | W_U) the partial covariance
@@ -24,7 +24,7 @@ conditions with an explicit uniform constant.
 - **Visibility vector** of (U, j): γ(U, j) ∈ ℝ^{s₀}, γ_i := Γ^U_{j k_i} for k_i ∉ U and γ_i := 0 for k_i ∈ U.
 - c₁₆ := min_{|V| ≤ 16} λ_min(Σ_V) (the floor on sets of at most 16 columns).
 - 𝒩_n := {γ(U, j)/|γ(U, j)| : j ∈ S₀, U ∌ j, |U| ≤ 15} ⊆ S^{s₀−1} (well defined by (VIS-0)); for a design sequence,
-  𝒩 := the closure of ∪_n 𝒩_n, and the **bad set** B := ∪_{ν∈𝒩} ν^⊥ ⊆ ℝ^{s₀}.
+  𝒩 := the closure of ∪_{n≥n₀} 𝒩_n, and the **bad set** B := ∪_{ν∈𝒩} ν^⊥ ⊆ ℝ^{s₀} (n₀ as in (VIS-b)).
 
 ## Lemma VIS
 - **(VIS-0) Reduction.** For j ∈ S₀ and U ∌ j with |U| ≤ 15: Cov(W_j, Wᵀθ* | W_U) = ⟨γ(U, j), ϑ⟩, and
@@ -45,13 +45,15 @@ conditions with an explicit uniform constant.
   matrices with c_m := inf_{n≥n₀} min_{|V|≤15+s₀} λ_min(Σ_{n,V}) > 0; 𝒩 formed over n ≥ n₀):
   (i) *finitely many local patterns*: the labelled matrices Σ_{n,V}, V = U ∪ S₀ (labels: which indices are U, which is
   j, and the rank of each truth), take finitely many values over all n, j, U — e.g. block-diagonal Σ_n with blocks from
-  a fixed finite list of correlation matrices; equicorrelation with a fixed ρ (ρ ∈ [0, 1) when p → ∞, for positive
-  definiteness); factor models Σ_n = Ψ + ΛΛᵀ (unit
+  a fixed finite list of correlation matrices; block designs with equicorrelated blocks of a fixed ρ_b and any sizes
+  (also growing), the entries depending only on block sharing; equicorrelation with a fixed ρ (ρ ∈ [0, 1) when p → ∞, for
+  positive definiteness); factor models Σ_n = Ψ + ΛΛᵀ (unit
   diagonal) whose rows (λ_l, ψ_l) take finitely many values;
   (ii) *stationary designs*: Σ_{n,ll′} = r(|l − l′|) for a fixed function r with r(d) → 0 as d → ∞ (e.g. AR(ρ),
   |ρ| < 1, fixed; banded/MA(q)); also block-diagonal designs whose blocks are of this form, with finitely many r's.
 - **(VIS-e) Instances of the sign route** (each with D and the floor): independent columns (D = I; c₁₆ = 1); AR(ρ), |ρ| < 1
-  (d_l = s^l with s := sgn ρ, s := +1 if ρ = 0; c₁₆ ≥ (1 − |ρ|)/(1 + |ρ|)); equicorrelation ρ ∈ [0, 1) (D = I; c₁₆ ≥ 1 − ρ); one-factor
+  (d_l = s^l with s := sgn ρ, s := +1 if ρ = 0; alignment: s^k·sgn(θ*_k) is the same for every k ∈ S₀ — for ρ > 0 equal
+  signs, for ρ < 0 signs alternating with the column index; c₁₆ ≥ (1 − |ρ|)/(1 + |ρ|)); equicorrelation ρ ∈ [0, 1) (D = I; c₁₆ ≥ 1 − ρ); one-factor
   Σ = Ψ + λλᵀ with Ψ diagonal positive (d_l = sgn(λ_l), sgn 0 := +1; c₁₆ ≥ min_l ψ_l); block-diagonal combinations of
   these (D blockwise; alignment is required only within a block).
 
@@ -78,3 +80,4 @@ n ≥ n₀.
 | v1 | all | NEW-CLAIM | track V V1 | manager 11-17, D112 | `CHECK.md` |
 | v1.1 | target quote (Σ_n PD only in Thm 6; theorem ↔ lines); (VIS-a) PD premise, |U| ≤ 15 for the c₁₆ bound; (VIS-b) ϑ ∉ B ⇔ δ > 0, min attained, n ≥ n₀; reading for Thm 5/6/10 floors; ρ = 0, equicorrelation ρ ≥ 0; "a.e." bullet | WEAKER (premises stated) / EQUAL | VLC1 #1–#7, #10 | `reviews/VLC1_disposition.md` | Sol read |
 | v1.2 | — (proof only: the false remark "(VIS-a) is a case of (VIS-b)" replaced by the two-route remark with Sol's example; (VIS-0) locality parenthetical) | EQUAL (no clause changed) | VSL1 Sol #1 (C, remark), #2 (E) | `reviews/VSL1_reply_sol.md` | council |
+| v1.3 | — (proof remark on track C reworded: spread placements are (VIS-b) cases, clustered (VIS-a), three-factor not (VIS-e)); target: n ≥ n₀; B over n ≥ n₀; AR alignment written out; growing equicorrelated blocks in (VIS-d)(i) | EQUAL (no clause changed) / STRONGER ((VIS-d)(i) example) | V-R1 Opus F-1, E-1–E-5 | `reviews/VR1_council_opus.md` | diff round V-R2 (Opus) |

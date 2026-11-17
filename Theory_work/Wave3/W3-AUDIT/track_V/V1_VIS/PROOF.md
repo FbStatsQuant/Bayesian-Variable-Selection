@@ -1,4 +1,4 @@
-# V1 · Lemma VIS — PROOF v1.2
+# V1 · Lemma VIS — PROOF v1.3
 
 Fix n; Σ = Σ_n is a p × p correlation matrix with c₁₆ > 0 (positive definite in (VIS-a)), W ~ N_p(0, Σ). For U ⊆ [p]
 write U^c := [p] ∖ U. F1 is applied to positive definite matrices only: to Σ in (VIS-a), and to Σ_V with |V| ≤ 16
@@ -92,9 +92,16 @@ alignment of (VIS-a) is required only within a block. ∎
   change with n), while B in (VIS-b) collects the hyperplanes of all n. Example (Sol, VSL1): S₀ = {1, 2},
   Σ_n = [[1, r_n], [r_n, 1]] ⊕ I, alternating (r_n, ϑ_n) = (1/2, (1, 2)) and (−1/2, (1, −2)): (VIS-a) applies at every n
   (D = I, resp. D = diag(1, −1, 1, …)) with margin ≥ 3/4, but B ⊇ {θ₁ + θ₂/2 = 0} ∪ {θ₁ − θ₂/2 = 0} contains every ϑ_n,
-  so δ = 0. (VIS-a) gives the explicit constant θ_lo c₁₆ directly. Track C's aligned designs (IND, AR(0.5), blocks, cs, aligned factors; `Theory_work/Wave3/W3-AUDIT/track_C/RESULTS.md:63-68`)
-  and B8's cs/fac-aligned/s5 cases are instances or (s5, fac2) have their own M-matrix/explicit computations in B8
-  (`Theory_work/Wave3/W3-AUDIT/TRACK_B.md:222-228`).
+  so δ = 0. (VIS-a) gives the explicit constant θ_lo c₁₆ directly.
+- Track C's designs (`Theory_work/Wave3/W3-AUDIT/track_C/RESULTS.md:28-50`; spread placement signs + − + −, clustered
+  placement four adjacent aligned truths). *(VIS-a) instances:* IND in both placements (components are singletons, so
+  alignment is vacuous); the clustered (aligned) placement of AR(ρ), ρ > 0, of the block compound-symmetry designs and of
+  the one-factor designs (D10, D12, D14). Block designs with the spread placement are (VIS-a) instances only if the
+  truths lie in different blocks (alignment is required within a block); otherwise they are (VIS-b) cases. *(VIS-b)
+  cases:* AR(ρ) with the spread placement (not aligned; there the (VIS-a) inequality itself can fail), Toeplitz, the
+  three-factor designs D11, D13, D15 (not covered by (VIS-e), which treats one factor), S5's spread placement. B8's s5
+  and fac2 (aligned truths) are shown inside by B8's own computations — s5 by the M-matrix form of Σ⁻¹, i.e. a (VIS-a)
+  instance; fac2 by an explicit formula for the conditional covariances (`Theory_work/Wave3/W3-AUDIT/TRACK_B.md:222-228`).
 - Illustration of B (AR(ρ), two truths at distance g, U = ∅, j = k₁): γ = (1, ρ^g), so B ⊇ {θ₁ + ρ^gθ₂ = 0} for each gap g
   that occurs along the sequence (all g ≥ 1 if the truths' gap ranges over ℕ; a single g if their positions are fixed);
   U ≠ ∅ adds further hyperplanes (e.g. γ = (Var(W_{k₁} | W_U), 0) when U contains a column between the truths, by the
