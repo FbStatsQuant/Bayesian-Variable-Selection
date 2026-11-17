@@ -1,6 +1,6 @@
 # INTERFACES — engine v4 contract between WP1–WP5
 
-**v0.1.23 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-18. Source: ENGINEERING_SPEC §0-v2,
+**v0.1.25 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-18. Source: ENGINEERING_SPEC §0-v2,
 §1–§3, §6. Where this file is silent, the spec rules; where the spec is silent, `core/` (v3.1 / revision D) rules.
 Questions and change requests: to the WP1 owner through the manager. Line references `core/...:N` are to revision D.
 
@@ -412,7 +412,8 @@ Sections (names fixed; WPs may add sections, never rename):
     2), threads, G, tile, kernel, arith, segment. `rows` = the rows closed: completed = T + L + Hm + 2 (step 0 = the
     initial draws, the T bridge stages, L burn-in and Hm measured rounds, then the exit row); a stopped island = its
     closed steps + the exit row. `columns` = one array per `StepCost` field (`include/v4/island/island.h`), one entry
-    per row; `flips` = `KernelStats::flip_evals`, the addition flips evaluated on fast supports (K1: with bounded
+    per row (a new column `t_compact_lead` since v0.1.25: the wall seconds the two leader stores of a calibration island
+    spent compacting, all paths; 0 without leader stores, i.e. on final islands that do not keep leaders); `flips` = `KernelStats::flip_evals`, the addition flips evaluated on fast supports (K1: with bounded
     scoring only those it scores). Rows are contiguous intervals of the island's lifetime: a row closes right after its step's ledger sync
     (before that step's checkpoint, whose seconds go to the next row) and is final then; the exit row (kind 4) covers
     the last checkpoint, a failed or interrupted partial step, the I1 check on exit and the result assembly. The
@@ -702,3 +703,17 @@ point, so all WPs link from day one: `setup::run`, `island::run`, `calib::run`, 
   the meta section's hashes are checked; the other sections are not read) and prints the meta; the record then has
   `verified` = "header+table+meta". Without `--meta` (or with `--verify 1`) every section hash is recomputed as before
   (`verified` = true). MEASURED on a real 10⁶ island file (2.1 GB): 0.04 s with `--meta 1`, 11–19 s full.
+- v0.1.25 (2026-11-18, WP7 O3 for WP1) — §5.1 `meta.cost`: new column `t_compact_lead` (the calibration islands' two
+  leader stores' compaction seconds, all paths, a separate execution statistic; 0 without leader stores). `t_compact` and
+  `t_compact_pass` stay the top store's only; the leaders' in-wave and pass-boundary seconds fall inside `t_phaseB`.
+  Execution only: the leader stores of a label-major calibration island now compact by the same deferred parallel merge
+  as the top store (all threads, between waves and at pass boundaries); their content, the leader order and every output
+  bit are unchanged (tested against the particle-major serial reference, both arithmetics, at a size where the triggers
+  fire, with a planted-bug negative control). The island memory plan counts the leader stores with the deferred-store
+  peak when they are deferred and with the serial peak otherwise (`leaders_deferred = false`). **Checkpoint rows changed
+  (same magic):** the §5.1 `StepCost` rows now have 36 fields (the new `t_compact_lead`) and the lifetime totals carry the
+  leader seconds and three leader compaction counters; a checkpoint written by an earlier binary is refused (the
+  fingerprint covers the binary), so a `--stop-after-s` resume chain must finish on the binary that started it.
+  New execution counters (not in any file): `KernelStats::lead_compact_mid`, `lead_compact_pass` (deferred leader
+  compactions between waves / at a pass boundary) and `lead_serial_merges` (serial in-pass fallbacks of the two leader
+  stores; printed by `bench_island`).
