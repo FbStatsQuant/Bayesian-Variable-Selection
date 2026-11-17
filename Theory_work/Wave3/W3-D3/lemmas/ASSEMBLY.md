@@ -1,7 +1,7 @@
 # ASSEMBLY — Theorem 2SG from Lemma B3w and W3-POST Theorem 1 item 6; Proposition ExSG
 
 **Status: PROVED (by this seat, unchecked).** Ticket W3-D3 (Tier B). Targets: `STATEMENT.md` §1 (Theorem 2SG) and §3
-(Proposition ExSG), v1.0.
+(Proposition ExSG), v1.1 (symbols per [L1-1]: L = sub-Gaussian constant, K_cap = min(p_ret, ⌊n/2⌋)).
 
 Aliases: [EB] = `Theory_work/Wave3/W3-DIST/work/E_bridges/`; [W3P] = `Theory_work/Wave3/W3-POST/STATEMENT.md`.
 
@@ -20,51 +20,63 @@ Aliases: [EB] = `Theory_work/Wave3/W3-DIST/work/E_bridges/`; [W3P] = `Theory_wor
 
 ## Theorem 2SG
 
-**Step 1 (scale).** Fix n and a data set with non-constant y^r (probability one: y^r has the Gaussian component ε) and at
-least one retained column. By B0 (a) the model posterior computed from (X^r, y^r) equals the one computed from
+**Step 1 (scale).** Fix n and a data set with non-constant y^r (probability one: y^r has the Gaussian component ε) and
+p_ret ≥ 1 (this contains {p_ret = p}, as p ≥ 2; on {p_ret = 0} the outputs are the conventions of `STATEMENT.md` §0 and
+enter below only through P(p_ret ≠ p)). By B0 (a) the model posterior computed from (X^r, y^r) equals the one computed from
 (X^r, ỹ), ỹ := (y^r − α*1)/σ*. δ_n, PIP_j, HPM (with the same tie rule) and MPM are functions of the model posterior and of
 S₀ = supp β* = supp β̃*, so they coincide for the two data sets. By B0 (e), (X^r, ỹ) follows the model of (A1) with
 α* = 0, σ*² = 1, coefficients β̃*, and the same law of the rows. So it suffices to prove the three conclusions for the
 unit-noise model; (A2) for β̃* reads b_lo/σ* ≤ |β̃*_j| ≤ b_hi/σ* on S₀, with σ* fixed, which is how Lemma B3w is written.
 
-**Step 2 (events).** By Lemma B3w, for n ≥ n₁ the raw-design-measurable events 𝒜′_n (B3w Step 6) satisfy P(𝒜′_n) → 1,
-lie inside {p_ret = p}, and on them |supp θ̃*| = s₀ and (E; M_E), (F_λ; φ₀), (F_w; g₀) and BM-∞ with the common envelope
-M_n → ∞ hold, in regime R1, with ε independent of the raw design (hence of (X, θ̃*), which are functions of it).
+**Step 2 (events) [L1-2].** By Lemma B3w (b), (c), for n ≥ n₁: the completed pair (X°, θ°) is a Borel function of the raw
+design, independent of ε; the (X°, θ°)-measurable events 𝒜′_n satisfy P(𝒜′_nᶜ) ≤ P(𝒜_nᶜ) → 0; and on 𝒜′_n the hypotheses of
+item 6 hold for (X°, θ°, ε/σ*) in regime R1 with common constants (M_E, φ₀, g₀) and the common envelope M_n → ∞.
+Also P(p_ret ≠ p) ≤ P(𝒜_nᶜ) → 0, since 𝒜_n ⊆ {p_ret = p}.
 
-**Step 3 (item 6 and the dimension).** Let (X°, θ°) be the replaced design and truth of B3w Step 6 (equal to (X, θ̃*) on
-{p_ret = p}, a fixed admissible n × p pair otherwise), and let δ°_n, PIP°_j, HPM°, MPM° be the outputs of the posterior
+**Step 3 (item 6 and the dimension).** With the completed pair (X°, θ°) of B3w (c) (equal to (X, θ̃*) on {p_ret = p}), let δ°_n, PIP°_j, HPM°, MPM° be the outputs of the posterior
 computed from X° and the response Y° := X°θ° + Cε/σ* (on {p_ret = p}: Y° = Cỹ, the centred response the method uses, since
-μ̃ = Xθ̃*). (X°, θ°) is a function of the raw design, so ε is independent of it; the events 𝒜′_n are (X°, θ°)-measurable
-(on 𝒜′_n the pair equals (X, θ̃*)); and the posterior depends on the data only through (X°, Y°) ([W3P] §0 `:16-29`: the
-target is a function of the standardised design and the centred, scaled response). Item 6 applies to (X°, θ°, ε) and
+μ̃ = Xθ̃*). (X°, θ°) is a function of the raw design, so ε is independent of it; the events 𝒜′_n are (X°, θ°)-measurable; and the posterior depends on the data only through (X°, Y°) ([W3P] §0 `:16-29`: the
+target is a function of the standardised design and the centred, scaled response). Item 6 applies to (X°, θ°, ε/σ*) and
 gives items 1–3 for the outputs with superscript °: δ°_n = O_P(r_n); P(HPM° = S₀) → 1 and P(MPM° = S₀) → 1; and
 max_j |PIP°_j − 1{j ∈ S₀}| ≤ δ°_n. On {p_ret = p} every output equals its counterpart with superscript ° (no column is
-removed, so the conventions of `STATEMENT.md` §0 for removed columns are not invoked), and P(p_ret ≠ p) ≤ P(𝒜′_nᶜ) → 0.
+removed, so the conventions of `STATEMENT.md` §0 for removed columns are not invoked), and P(p_ret ≠ p) → 0 (Step 2).
 
 **Step 4 (conclusions).** (1) For every M > 0: P(δ_n > Mr_n) ≤ P(δ°_n > Mr_n) + P(p_ret ≠ p), so δ_n = O_P(r_n).
 (2) P(HPM = MPM = S₀) ≥ 1 − P(HPM° ≠ S₀) − P(MPM° ≠ S₀) − P(p_ret ≠ p) → 1.
 (3) For every data set with p_ret = p, max_j |PIP_j − 1{j ∈ S₀}| = max_j |PIP°_j − 1{j ∈ S₀}| ≤ δ°_n = δ_n; so for every
 M > 0, P(max_j |PIP_j − 1{j ∈ S₀}| > Mr_n) ≤ P(δ°_n > Mr_n) + P(p_ret ≠ p), and the maximum is O_P(r_n).
-By Step 1 these hold for the original data. ∎
+By Step 1 (on {p_ret = p} the outputs for (X^r, y^r) and (X^r, ỹ) coincide) these hold for the original data. ∎
 
 *Constants.* Item 6 needs common constants only; here M = M_E, φ₀² = φ²/4, g₀ = φ²/8 and the envelope M_n depend on
-(s₀, b_lo, b_hi, σ*², φ) and n; n₁ depends on (s₀, A, K). No constant depends on the law of the rows beyond K and φ.
+(s₀, b_lo, b_hi, σ*², φ) and n; n₁ depends on (s₀, A, L). No constant depends on the law of the rows beyond L and φ.
 
 ## Proposition ExSG
 
-*Claim* (`STATEMENT.md` §3). Let x = m + Lξ, m ∈ ℝ^p, L ∈ ℝ^{p×d} with LLᵀ = Σ a correlation matrix, ξ ∈ ℝ^d with independent
-coordinates, E ξ_k = 0, Var ξ_k = 1, E exp(λξ_k) ≤ exp(K²λ²/2) for all k and λ. Then E x = m, Cov(x) = Σ and
-E exp(λuᵀ(x − m)) ≤ exp(K²λ²uᵀΣu/2) for all u ∈ ℝ^p, λ ∈ ℝ. K = 1 for standard Gaussian, Rademacher and uniform on
-[−√3, √3] coordinates.
+*Claim* (`STATEMENT.md` §3). Let x = m + Bξ, m ∈ ℝ^p, B ∈ ℝ^{p×d} with BBᵀ = Σ a correlation matrix, ξ ∈ ℝ^d with independent
+coordinates, E ξ_k = 0, Var ξ_k = 1. (a) If E exp(λξ_k) ≤ exp(L²λ²/2) for all k and λ, then E x = m, Cov(x) = Σ and
+E exp(λuᵀ(x − m)) ≤ exp(L²λ²uᵀΣu/2) for all u ∈ ℝ^p, λ ∈ ℝ; in particular (A4) holds with this L. (b) The scalar hypothesis
+holds with L = 1 for standard Gaussian, Rademacher and uniform on [−√3, √3] coordinates, and with L = K when ξ_k takes its
+values in an interval of length 2K.
 
-*Proof.* E x = m + L E ξ = m; Cov(x) = L Cov(ξ) Lᵀ = L I_d Lᵀ = Σ. Fix u, λ and put v := Lᵀu ∈ ℝ^d. Then
+*Proof of (a).* E x = m + B E ξ = m; Cov(x) = B Cov(ξ) Bᵀ = B I_d Bᵀ = Σ. Fix u, λ and put v := Bᵀu ∈ ℝ^d. Then
 uᵀ(x − m) = vᵀξ = Σ_k v_kξ_k, and by independence (each factor finite by hypothesis)
-  E exp(λvᵀξ) = Π_k E exp((λv_k)ξ_k) ≤ Π_k exp(K²λ²v_k²/2) = exp(K²λ²‖v‖²/2),  ‖v‖² = uᵀLLᵀu = uᵀΣu.
-*Examples (each has mean 0 and variance 1).* Standard Gaussian: E e^{λξ} = e^{λ²/2}. Rademacher: E e^{λξ} = cosh λ =
-Σ_k λ^{2k}/(2k)! ≤ Σ_k (λ²/2)^k/k! = e^{λ²/2}, since (2k)! ≥ 2^k k! (true for k = 0; the ratio of consecutive terms of
-the left side, (2k + 2)(2k + 1), is ≥ 2(k + 1), that of the right side). Uniform on [−√3, √3]: variance (2√3)²/12 = 1, and
-for λ ≠ 0, E e^{λξ} = sinh(√3λ)/(√3λ) = Σ_k (3λ²)^k/(2k + 1)! ≤ Σ_k (λ²/2)^k/k! = e^{λ²/2}, since 3^k/(2k + 1)! ≤ 1/(2^k k!),
-i.e. 6^k k! ≤ (2k + 1)! (true for k = 0; consecutive ratios (2k + 3)(2k + 2) ≥ 6(k + 1) because 2k + 3 ≥ 3); λ = 0 is
-trivial. ∎
+  E exp(λvᵀξ) = Π_k E exp((λv_k)ξ_k) ≤ Π_k exp(L²λ²v_k²/2) = exp(L²λ²‖v‖²/2),  ‖v‖² = uᵀBBᵀu = uᵀΣu.
+This holds for every u, in particular for every u with at most 5(A + 1)(s₀ + 1) log n nonzero entries, which is (A4) when
+m = m_n and Σ = Σ_n. ∎(a)
 
-*Gaussian rows.* N_p(m, Σ) is the case L = Σ^{1/2} (d = p), ξ ~ N_p(0, I_p): (A4) holds with K = 1 for every u.
+*Proof of (b).* Each example has mean 0 and variance 1. Standard Gaussian: E e^{λξ} = e^{λ²/2}. Rademacher:
+E e^{λξ} = cosh λ = Σ_k λ^{2k}/(2k)! ≤ Σ_k (λ²/2)^k/k! = e^{λ²/2}, since (2k)! ≥ 2^k k! (equality at k = 0; going from k to
+k + 1 multiplies the left side by (2k + 2)(2k + 1) and the right side by 2(k + 1)). Uniform on [−√3, √3]: variance
+(2√3)²/12 = 1, and for λ ≠ 0, E e^{λξ} = sinh(√3λ)/(√3λ) = Σ_k (3λ²)^k/(2k + 1)! ≤ Σ_k (λ²/2)^k/k! = e^{λ²/2}, since
+(2k + 1)!/(2^k k!) = Π_{i=1}^k(2i + 1) ≥ 3^k; λ = 0 is trivial.
+*Bounded coordinates (Hoeffding's lemma, proved here for self-containment).* Let Y take values in [a, b], a < b, with
+E Y = 0 (so a ≤ 0 ≤ b), and let λ ∈ ℝ. By convexity of y ↦ e^{λy}, e^{λy} ≤ ((b − y)e^{λa} + (y − a)e^{λb})/(b − a) on [a, b];
+taking expectations, E e^{λY} ≤ (be^{λa} − ae^{λb})/(b − a). If a = 0 then b ≥ 0 = E Y forces Y = 0 a.s. and the bound below
+is trivial; likewise if b = 0. Otherwise put θ := −a/(b − a) ∈ (0, 1) and h := λ(b − a); then
+(be^{λa} − ae^{λb})/(b − a) = e^{−θh}(1 − θ + θe^h) = e^{ψ(h)}, ψ(h) := −θh + log(1 − θ + θe^h). ψ(0) = 0,
+ψ′(h) = −θ + θe^h/(1 − θ + θe^h), so ψ′(0) = 0, and ψ″(h) = ρ(1 − ρ) ≤ ¼ with ρ := θe^h/(1 − θ + θe^h) ∈ (0, 1). By Taylor's
+theorem with the Lagrange remainder, ψ(h) ≤ h²/8. Hence E e^{λY} ≤ exp(λ²(b − a)²/8). For ξ_k with values in an interval
+of length b − a = 2K: E e^{λξ_k} ≤ exp(λ²(2K)²/8) = exp(K²λ²/2). (Hoeffding 1963, J. Amer. Statist. Assoc. 58, 13–30,
+inequality (4.16), is this statement.) ∎(b)
+
+*Gaussian rows.* N_p(m, Σ) is the case B = Σ^{1/2} (d = p), ξ ~ N_p(0, I_p): (A4) holds with L = 1 for every u.

@@ -27,3 +27,10 @@
   reviews/PENDING_LEAD_EDITS.md Q1, Q2 (STATEMENT is under the L1 lock read; applied in v1.1). HQ's 2b sentence ("any bounded
   … predictors qualify") is false for (A4) (rare binary predictor); replacement proposed to the manager, backed by a new
   ExSG (b) (Hoeffding's lemma). Sol L1 still running.
+- 13:16 — Manager account rule: every Claude subagent (Opus line check, Opus council seat, Opus diff rounds) is
+  started with providerInstanceId claudeAgent_personal set explicitly. OpenAI (Sol) seats stay on providerInstanceId codex.
+  Running: Sol L1 (codex) only; no Claude subagent started so far.
+- 13:19 — L1 reply (Sol): LOCK-WITH-AMENDMENTS (L1-1 C: K collision; L1-2 S: interface events/completion; L1-3..6 E).
+  All accepted (reviews/L1_disposition.md). STATEMENT v1.1 (symbols L, K_cap; B3w (a)/(b)/(c); conventions; §5 HQ wording;
+  ExSG (b) added — STRONGER, flagged); B3w Step 6 rewritten (completed pair); ASSEMBLY Steps 1–4, ExSG (b) with Hoeffding's
+  lemma proved; READER_DELTA, TARGET synced. Sol reviewer finished. CHECKPOINT_1.md written; run ends at CP1.

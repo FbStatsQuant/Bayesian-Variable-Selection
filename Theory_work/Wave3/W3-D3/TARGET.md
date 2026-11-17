@@ -7,7 +7,7 @@
 | hypothesis | row 1.2 (recorded) | Theorem 2SG | used where | class (D109) |
 |---|---|---|---|---|
 | row law | i.i.d. N_p(m_n, Σ_n), Σ_n a correlation matrix | i.i.d., mean m_n, covariance Σ_n a correlation matrix, and (A4) | B3w: sample SDs ([EB]`B1.md`), sparse sample Gram floors ([EB]`B2core.md`, `B2.md` (a)) | 1 (proposed; STATEMENT §5: between NH14 Lemma 6.1 and SL Condition 1) |
-| (A4) constant K | — (K = 1) | fixed K | B1, B2core exponents c₁n/K⁴, c₂n/K⁴; threshold n₁(s₀, A, K) | as above |
+| (A4) constant L | — (L = 1) | fixed L | B1, B2core exponents c₁n/L⁴, c₂n/L⁴; threshold n₁(s₀, A, L) | as above |
 | (A1)–(A3) | as recorded | verbatim | as in row 1.2 | as recorded (`ASSUMPTION_COMPLIANCE.md:27-29`) |
 
 No hypothesis is weakened below the recorded reader statement except the row law, so no boundary numerics are owed; a
@@ -22,7 +22,7 @@ sanity run with non-Gaussian rows (Rademacher, uniform, and a correlated Rademac
 
 ## Why each assumption (one line each; for the reader version)
 - (A4) Only to make the sample standard deviations of the predictors and the sample correlation matrices of small groups
-  of predictors track their population values; the posterior argument itself never sees the law of the predictors.
+  of predictors track their population values; the fixed-design posterior theorem uses only the observed design.
 - (A1)–(A3) as row 1.2 ([RV] `:280-289`).
 
 ## Necessity (not claimed)
