@@ -750,3 +750,4 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - Real-data example: Engineering reports the plan or a proposal.
   - Afterwards: the method sign-off → proof hardening → Lean.
 - 2026-11-17. FEAS_SMC_WORKS (audit Fable): no route through existing lemmas. **OWNER: "SMC does work" DROPPED for this paper, including the weak-leak corollary** ("what we have is more than enough for a brand-new method"). Material kept for the follow-up paper. The theory push list is closed.
+- 2026-11-17. Owner: "SMC does work" may come back on the table **after the Lean proofs for the core theorems are done**; focus on the target now. #5′ spec forwarded to Engineering (3 fields incl. log_Z_list, kept by HQ).
