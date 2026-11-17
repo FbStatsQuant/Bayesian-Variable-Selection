@@ -124,8 +124,9 @@ v3_model_key <- function(S) paste(S, collapse = ",")
 # denominator's terms in the same order, so 0 <= pip_list <= 1 holds exactly in floating point).
 # `pip_names` = names(pip_primary) (the retained columns, same order); `orig` = their original indices. Returns a list with
 # pip_list, mpm_list, log_Z_list, list_size, list_full, pip_list_source = "store", pip_list_flag (NULL when clean).
-# Cases (§4): empty list -> NA and flag "empty_list" (must not occur); NaN or +Inf score -> NA and "nonfinite_score" (so does a
-# list whose scores are all -Inf: it has no finite weight); -Inf scores get weight 0; duplicate models -> stop (a store is a set).
+# Cases (§4), in this order of precedence: empty list -> NA and flag "empty_list" (must not occur); duplicate models -> stop (a store
+# is a set); NaN or +Inf score -> NA and "nonfinite_score" (so does a list whose scores are all -Inf: normaliser 0); -Inf scores get
+# weight 0. A flagged result is all NA (mpm_list = NA_integer_, never an empty vector, which is a valid empty MPM).
 v3_list_fields <- function(top, orig, pip_names = as.character(orig)) {
   p <- length(orig); m <- length(top$models)
   res <- function(flag) list(pip_list = setNames(rep(NA_real_, p), pip_names), mpm_list = NA_integer_, log_Z_list = NA_real_,
@@ -133,10 +134,11 @@ v3_list_fields <- function(top, orig, pip_names = as.character(orig)) {
   if (m == 0L) return(res("empty_list"))
   F <- as.numeric(top$value)
   if (length(F) != m) stop("list PIP: top store has ", m, " models and ", length(F), " scores")
+  # error precedence: a duplicate model stops BEFORE any flag is set (a store is a set, whatever its scores are)
+  if (anyDuplicated(vapply(top$models, paste, "", collapse = ","))) stop("list PIP: the top store holds a duplicate model")
   if (anyNA(F) || any(F == Inf)) return(res("nonfinite_score"))
   Fmax <- max(F)
-  if (Fmax == -Inf) return(res("nonfinite_score"))
-  if (anyDuplicated(vapply(top$models, paste, "", collapse = ","))) stop("list PIP: the top store holds a duplicate model")
+  if (Fmax == -Inf) return(res("nonfinite_score"))   # all -Inf: normaliser 0 (Theory-confirmed via HQ 11-17)
   lut <- integer(max(orig)); lut[orig] <- seq_len(p)
   u <- exp(F - Fmax)
   num <- numeric(p); den <- 0
@@ -152,7 +154,9 @@ v3_list_fields <- function(top, orig, pip_names = as.character(orig)) {
 v3_add_list_fields <- function(fit, lf) { for (nm in names(lf)) if (!is.null(lf[[nm]])) fit[[nm]] <- lf[[nm]]; fit }
 
 # Assemble the reported outputs of a final run (CORE_SPEC §6, §7; M §§6.9-6.12).
-v3_assemble_final <- function(raw, setup, frozen, ro, seed) {
+# list_fields = FALSE (v3_fit): the list fields are NOT added here; v3_fit adds them strictly last, after finish() has sampled the peak RSS
+# and the clock (review PR68 MAJOR-2). Direct callers of v3_final_run keep the default (TRUE) and get the fields as before.
+v3_assemble_final <- function(raw, setup, frozen, ro, seed, list_fields = TRUE) {
   isl <- raw$islands
   out <- list(status = raw$status, message = raw$message, seed = seed, settings = ro,
               frozen_sha256 = frozen[["sha256"]], grid = frozen[["grid"]], B = setup$B)
@@ -253,14 +257,15 @@ v3_assemble_final <- function(raw, setup, frozen, ro, seed) {
   out$log_m0 <- raw$log_m0; out$log_Zbar0 <- raw$log_Zbar0
   out$estimates_available <- TRUE
   # list-renormalised PIP fields (SPEC_LIST_PIP.md): last, from the returned top store; nothing above reads them
-  v3_add_list_fields(out, v3_list_fields(out$top_store, orig, names(out$pip_primary)))
+  if (isTRUE(list_fields)) out <- v3_add_list_fields(out, v3_list_fields(out$top_store, orig, names(out$pip_primary)))
+  out
 }
 
 # Fresh production final run. The runtime pointer shares the complete-fit clock with calibration.
-v3_final_run <- function(setup, frozen, seed, runtime = NULL, ls0 = getOption("v3.ls0", TRUE)) {
+v3_final_run <- function(setup, frozen, seed, runtime = NULL, ls0 = getOption("v3.ls0", TRUE), list_fields = TRUE) {
   stopifnot(inherits(setup, "v3_setup"), inherits(frozen, "v3_frozen"))
   v3_check_grid(frozen[["grid"]]); v3_check_seed(seed)
   ro <- v3_run_settings(setup, frozen, ls0)
   raw <- .v3cpp$cpp_final_run(setup$ptr, frozen[["grid"]], ro, as.numeric(seed), frozen[["inherited"]], runtime)
-  v3_assemble_final(raw, setup, frozen, ro, seed)
+  v3_assemble_final(raw, setup, frozen, ro, seed, list_fields = list_fields)
 }
