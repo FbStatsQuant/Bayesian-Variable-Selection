@@ -403,3 +403,4 @@
 - 2026-11-16 23:44 CST D95 RECORDED fe05ccec (CI 44025260819; verified): rows 3.1/3.2 fully discharged; P1-Inventory v1.1.1 CORRECTION A-7, L2-S3 v1.0.1 CODE-CHECKED; P1S3 CC; A1/A2 note (D100). READER GO step 2 (one Opus diff seat). HQ told.
 - 2026-11-17 01:05 CST HEARTBEAT: CI green (HQ 8bec550d on fe05ccec). READER step 2: R4 Opus seat 7.9 FAIL (FAITHFUL; one status quote LT# + 6 wording items), fixes applied 7405a463, not bound → authorised one Opus read of the fix diff (R5), bind on PASS; fallback R3r3.
 - 2026-11-17 02:35 CST Item 5: READER R5 PASS (Opus 9.6 FAITHFUL) bound MANIFEST_R5 9f110474 (6709d619); card v1.13. Recorder: dry run of the READER editorial recording onto main → HQ GO. 3 R5 editorial items → post-freeze.
+- 2026-11-17 02:36 CST D102 relayed to the recorder (card v1.13 conditional real run → freeze tag + entries).
