@@ -1,0 +1,112 @@
+% =====================================================================================================
+\section{Setting, the method, and the shared assumptions}\label{sec:setting}
+
+This section fixes the data, the model, the posterior and the few objects of the method that the results talk about.
+The methodology section describes the method in full; Appendix~\ref{app:notation} lists the symbols.
+
+\paragraph{Notation.} $\set{k}:=\{1,\dots,k\}$; $\norm{\cdot}$ is the Euclidean norm; $\lmin(\cdot)$ is the smallest
+eigenvalue of a symmetric matrix; $\abs{S}$ is the size of a set; $\ind{E}$ is an indicator. A star marks a true value,
+and the superscript $\mathrm r$ marks raw data. $V_n=\OP(a_n)$ means that $\abs{V_n}/a_n$ is bounded in probability;
+\emph{with probability tending to one} means that the probability of the event tends to one. A quantity is \emph{fixed} if
+it does not depend on $n$; all results are asymptotic in $n\to\infty$, along a sequence of problems in which $p$, the
+design and the coefficients may change with $n$.
+
+\subsection{Data, model and posterior}\label{sec:model}
+
+We observe a response $\yr\in\R^n$ and $\praw$ predictors. The method removes every predictor that is constant in the
+sample (its effect is absorbed by the intercept); $\Xr$ is the $n\times p$ matrix of the $p$ retained predictors. The data
+follow a Gaussian linear model with an intercept,
+\begin{equation}\label{eq:model}
+  \yr=\alpha^*\one_n+\Xr\bstar+\varepsilon,\qquad \varepsilon\sim\Normal_n(0,\sigs^2I_n),
+\end{equation}
+with $\sigs^2>0$ and $\varepsilon$ independent of $\Xr$. A \emph{model} is a set $S\subseteq\set{p}$; the \emph{true
+model} is $\Sz:=\{j:\beta^*_j\neq0\}$, of size $\sz$. Its members are the \emph{true predictors}; the others are
+\emph{null predictors}. In a \emph{fixed design} $\Xr$ is deterministic; in a \emph{random Gaussian design} its rows are
+i.i.d.\ $\Normal_p(m_n,\Sig)$, and $W=(W_1,\dots,W_p)\sim\Normal_p(0,\Sig)$ denotes a centred copy of one row, with
+sub-vectors $W_S$ and sub-matrices $\Sigma_{n,S}$.
+
+\paragraph{What the method sees.} The method centres and scales every predictor and the response: $X:=P^\perp_{\one}\Xr
+D^{-1}$ and $y:=P^\perp_{\one}\yr/s_y$, with $P^\perp_{\one}$ the centring matrix, $D$ the diagonal matrix of column sample
+standard deviations and $s_y$ that of the response. Then $P^\perp_{\one}\yr=X\tstar+P^\perp_{\one}\varepsilon$ with the
+\emph{standardised coefficients} $\tstar:=D\bstar$ (same support $\Sz$), the \emph{mean signal} $\mu:=X\tstar$, and
+$\tmin:=\min_{j\in\Sz}\abs{\theta^*_j}$. For a model $S$, $X_S$ holds its columns, $G_S:=X_S^\top X_S$, $\Rhat_S:=G_S/(n-1)$
+is its sample correlation matrix and $P_S$ the projection onto its column span.
+
+\paragraph{The prior and the posterior, as coded.} The method considers the models of at most $K:=\min(p,\lfloor
+n/2\rfloor)$ predictors, $\Om:=\{S:\abs{S}\le K\}$. It puts on them the beta-binomial prior $\BB(1,p)$ \citep{ScottBerger2010},
+restricted to $\Om$; given $S$, a $g$-prior with $g=n$ and a unit ridge on the coefficients \citep{Zellner1986}; and an
+inverse-gamma prior $\IG(0.01,0.01)$ on the noise variance. Integrating out the coefficients and the variance gives each
+model a marginal likelihood $m(S)$ in closed form (methodology section, eq.~(6)), and the \emph{posterior over models}
+\begin{equation}\label{eq:posterior}
+  \pis{S}=\frac{e^{F(S)}}{Z},\qquad F(S):=\log\{\text{prior of }S\}+\log m(S),\qquad Z:=\sum_{S'\in\Om}e^{F(S')} .
+\end{equation}
+The normalising constant $Z$ is the \emph{evidence}. Adding one predictor to a model of size $k$ multiplies the prior by
+$(k+1)/(2p-1-k)$, and, in a well-conditioned model, multiplies $m(S)$ by about $(n+1)^{-1/2}$ (an Occam factor) times a
+gain of fit.
+
+\paragraph{Posterior summaries.} The \emph{inclusion probability} of predictor $j$ is $\PIP_j:=\sum_{S\ni j}\pis{S}$;
+the \emph{highest posterior model} is $\HPM:=\argmax_S\pis{S}$; the \emph{median probability model} is
+$\MPM:=\{j:\PIP_j>1/2\}$ \citep{BarbieriBerger2004}; and the \emph{posterior miss} is $1-\pis{\Sz}$.
+
+\begin{lemma}[The posterior miss controls the summaries]\label{lem:summaries}
+For every data set, $\max_{j\in\set{p}}\abs{\PIP_j-\ind{j\in\Sz}}\le1-\pis{\Sz}$. If $\pis{\Sz}>1/2$, then
+$\HPM=\MPM=\Sz$.
+\end{lemma}
+
+The proof is two lines: every model that misses a true predictor, or contains a null one, differs from $\Sz$.
+
+\subsection{A run of the method, and what it returns}\label{sec:method}
+
+A \emph{run} is one call of the software on a data set, with a seed and a computing allocation. When $\Om$ is small
+enough the method enumerates it; otherwise it runs the sampler. A run either \emph{produces output} (status ``exact'' or
+``completed'') or stops without estimates. Four objects of a run appear in the results.
+\begin{itemize}[leftmargin=1.5em,itemsep=1pt]
+  \item \emph{The start law.} The method partitions the predictors into blocks of at most $16$, by clustering on sample
+    correlations, and scores every subset of each block exactly. The \emph{start law} $\pi_0$ is the posterior with all
+    interactions between blocks ignored; it can be sampled exactly. A maximiser of $\pi_0$ is a \emph{start mode} $\tSz$.
+  \item \emph{The sampler.} A population of models moves from $\pi_0$ to the posterior through intermediate
+    distributions, with temperatures and effort chosen by an internal \emph{calibration} that is frozen before the final
+    run. The final run consists of four independent copies, the \emph{islands}.
+  \item \emph{The reported model.} After the sampler, two local searches run (from the best model found, and from the
+    start mode); each moves to the best neighbouring model (one predictor added, deleted or swapped) while that improves
+    the log score. The \emph{reported model} $\Shat$ is the best-scoring model the run has recorded.
+  \item \emph{The estimates.} Island $r$ estimates the inclusion probabilities and the evidence; the method pools the
+    four islands with equal weights into $\PIPhat_j$ and $\Zhat$, and reports $\MPMhat:=\{j:\PIPhat_j>1/2\}$.
+\end{itemize}
+
+\subsection{Shared assumptions and conventions}\label{sec:standing}
+
+The assumptions below are used by more than one result; an assumption used by one result only is stated with it.
+Section~A judges each of them and compares it with \citet{SongLiang2015}.
+
+\begin{assumption}{GL}{Gaussian linear model}
+The data follow~\eqref{eq:model}, with a fixed noise variance $\sigs^2>0$ and noise independent of the design. \hfill [\SA{3.1}]
+\end{assumption}
+
+\begin{assumption}{DIM}{Dimension}
+$2\le p\le n^A$ for a fixed $A\ge1$. \hfill [\SA{3.1}]
+\end{assumption}
+
+\begin{assumption}{SP}{Sparsity}
+The true model size $\sz\ge1$ is fixed. \hfill [\SA{3.1}]
+\end{assumption}
+
+\begin{assumption}{GR}{Gaussian rows}
+The rows of $\Xr$ are i.i.d.\ $\Normal_p(m_n,\Sig)$, where $\Sig$ is a correlation matrix. \hfill [\SA{3.2}]
+\end{assumption}
+
+\begin{assumption}{EFS}{Population eigenvalue floor}
+$\lmin(\Sigma_{n,S})\ge\varphi^2$ for every $S$ with $\abs{S}\le5(A+1)(\sz+1)\log n$, for a fixed $\varphi\in(0,1]$ (for
+instance, $\lmin(\Sig)\ge\varphi^2$). \hfill [\SA{3.2}]
+\end{assumption}
+
+The conventions fix what ``the method'' means and idealise the computer; they are not statistical assumptions.
+\emph{Convention \as{C1}} (the method): exact arithmetic, the default configuration, valid inputs and seed; a run that
+meets it is \emph{admissible}, and statements hold for every valid seed and every outcome of the calibration.
+\phantomsection\label{asm:C1}%
+\emph{Convention \as{C2}} (delivery): an idealised machine that never overflows or fails, ideal random numbers, and an
+allocation at least the method's own polynomial requirement formulas; \emph{\as{C2p}} is the same with the code's two
+fixed integer limits on the local-search move caps lifted.\phantomsection\label{asm:C2}\phantomsection\label{asm:C2p}
+\emph{Convention \as{C3}} (sampler): exact arithmetic, ideal random numbers independent of the data and the calibration,
+an exact start sampler, and Markov moves that do what their definitions say.\phantomsection\label{asm:C3}
+Appendix~\ref{app:conventions} gives the full lists.

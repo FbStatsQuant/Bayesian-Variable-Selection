@@ -1,0 +1,76 @@
+% =====================================================================================================
+\section{Result 4: unbiased evidence on every design; consistent estimates without leakage}\label{sec:estimates}
+
+\inwords{The method prints an evidence estimate, pooled inclusion probabilities and the median probability model they
+define. Given the calibration, the evidence estimate is unbiased, on every design. If, in addition, the conditions of
+Result~3 hold with no leakage at all (no null predictor correlated with a true one), the printed estimates are
+consistent: their errors are of order $n^{-1/2}e^{C\sqrt{\log n}}$ on the event that the calibration succeeds.}
+
+\why{The numbers a user reads come with guarantees: the evidence estimate is right on average whatever the design, and
+on designs without leakage every printed summary converges to the truth.}
+
+\subsection{Unbiased evidence, on every design}\label{sec:unbiased}
+
+\begin{proposition}[Each island's evidence estimate is unbiased]\label{prop:unbiased}
+Under Convention~\as{C3}, given the calibration, each island's evidence estimate $\Zhat_r$ is unbiased for $Z$, for every
+design and data set.
+\end{proposition}
+
+\asmlist{Convention \as{C3} only; no condition on the design (Appendix~\ref{app:conventions}).}
+
+\status{\textbf{Proved and independently checked}. Registry: Appendix~\ref{app:status}, row 3.5.}
+
+This is the classical unbiasedness of sequential Monte Carlo estimates of normalising constants \citep{DelMoral2004},
+established for the method as coded, calibration included: the calibration is frozen before the final run draws its
+random numbers. By linearity the equal-weight pooled estimate $\Zhat=\frac14\sum_r\Zhat_r$ is then unbiased too.
+
+\status{Pooled form: \textbf{proved (a two-line argument), not yet independently checked}. Registry:
+Appendix~\ref{app:status}, row 3.5.}
+
+\subsection{Consistent estimates, on designs without leakage}\label{sec:outputs}
+
+\paragraph{Scope.} The next theorem needs \as{NL} below: no null predictor leaks signal. Of our designs only the
+independent ones (S1 and IND) satisfy it. On our block and AR designs Result~3 and Proposition~\ref{prop:unbiased} hold,
+and no theorem yet covers the printed inclusion probabilities, median model and evidence estimate; on the factor designs
+only Results~1--2 and Proposition~\ref{prop:unbiased} hold (\SA{3.4}).
+
+\begin{assumption}{NL}{No leakage, as seen by the start law}
+Every null predictor $l\notin\Sz$ has a deterministic \emph{neighbourhood} $\Hl_l\supseteq\{l\}\cup\Sz$ with
+$\abs{\Hl_l}\le e^{\kappa_H\sqrt{\log n}}$ for a fixed $\kappa_H$, such that, for every $U\not\ni l$ with $\abs{U}\le15$ and
+$U_0:=U\cap\Hl_l$: (i) \emph{no leak:} $\abs{\Cov(W_l,W_j\mid W_{U_0})}\le C_Ln^{-1/2}$ for every $j\in\Sz\setminus U_0$,
+with a fixed $C_L$; and (ii) \emph{locality:} $\abs{\Cov(W_l,W_v\mid W_{U_0})}\le r^\circ_n$ and
+$\abs{\Cov(W_j,W_v\mid W_{U_0})}\le r^\circ_n$ for every $v\in U\setminus\Hl_l$ and $j\in\Sz\setminus U_0$, where
+$r^\circ_n(n\log n)^{1/4}\to0$. \hfill [\SA{3.4}]
+\end{assumption}
+
+The theorem concerns runs that use the sampler; enumeration is not covered. Let $\Acal$ be the event that the method uses
+the sampler and its calibration succeeds; every completed sampler run lies in $\Acal$. On $\Acal$, $\Zhat$, $\PIPhat$ and
+$\MPMhat$ denote the pooled values the four islands would produce if the run were not interrupted; on completed runs they
+are the printed values. Let $\rho_n:=n^{-1/2}e^{C_3\sqrt{\log n}}$, with $C_3$ depending only on the fixed quantities of the
+assumptions.
+
+\begin{theorem}[The printed estimates are consistent]\label{thm:outputs}
+Assume \as{GR}, \as{DIM} with $p>\sz$, \as{FSt}, \as{EFS}, \as{V}, \as{NL}, and Conventions~\as{C1} and~\as{C3}. Then,
+under the joint law of the design, the noise and the method's random numbers,
+\begin{gather}
+  \ind{\Acal}\Big(\big|\Zhat/Z-1\big|+\big|\log\Zhat-\log Z\big|+\max_{j\in\set{p}}\big|\PIPhat_j-\ind{j\in\Sz}\big|\Big)
+    =\OP(\rho_n),\label{eq:outputs-rate}\\
+  \P\big(\Acal\cap\{\MPMhat\neq\Sz\}\big)\to0,\qquad \P\big(\text{the run completes and }\Shat\neq\Sz\big)\to0,
+    \label{eq:outputs-sel}
+\end{gather}
+and~\eqref{eq:outputs-rate} also holds for the printed values multiplied by the indicator of a completed run.
+\end{theorem}
+
+\asmlist{(1)~\as{GR}, \as{FSt}, \as{EFS}, \as{V} as in Result~3; (2)~\as{DIM} [\SA{3.1}]; (3)~\as{NL} no leakage
+[\SA{3.4}]; (4)~Conventions \as{C1}, \as{C3} (Appendix~\ref{app:conventions}).}
+
+\status{\textbf{Proved and independently checked}. \bridgepending{} Registry: Appendix~\ref{app:status}, row 3.6.}
+
+\begin{remark}[What is not claimed]\label{rem:outputs}
+(i) No lower bound on $\P(\Acal)$ is asserted: the statements are about intersections with $\Acal$ or with completion, not
+conditional on them.
+(ii) The rate $\rho_n$ is the start law's rate; it is slower than the posterior rate $\rn$, by the factor
+$e^{C_3\sqrt{\log n}}/\sqrt{\log n}$.
+(iii) Pooling cannot make things worse: the pooled inclusion probabilities are never farther from the exact ones, in the
+largest coordinate, than those of the worst island (proved and independently checked; registry row 4.1).
+\end{remark}
