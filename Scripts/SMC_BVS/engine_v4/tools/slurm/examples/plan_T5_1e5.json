@@ -1,0 +1,56 @@
+{
+  "batch": "T5_1e5",
+  "kind": "gate T5 (end-to-end NOTS gate at 1e5, all stages via the driver; MANIFEST_CELLS T5 row 200 core-h; worst case pre-announced)",
+  "mode": "V",
+  "code_commit": "UNSET-fill-at-freeze",
+  "binary": "bin/smcbvs4",
+  "island_isa": "sapphirerapids",
+  "core_h_cap": 400,
+  "max_task_hours": 2.0,
+  "eval": {
+    "post": true,
+    "n_draws": 10000,
+    "n_x": 4000,
+    "n_test": 10000
+  },
+  "resources": {
+    "setup": {
+      "cpus": 32,
+      "mem": "16G",
+      "time": "00:30:00"
+    },
+    "calibrate": {
+      "cpus": 64,
+      "mem": "24G",
+      "time": "01:00:00"
+    },
+    "islands": {
+      "cpus": 48,
+      "mem": "16G",
+      "time": "00:20:00"
+    },
+    "merge": {
+      "cpus": 16,
+      "mem": "16G",
+      "time": "00:30:00"
+    },
+    "eval": {
+      "cpus": 8,
+      "mem": "16G",
+      "time": "00:45:00"
+    }
+  },
+  "fits": [
+    {
+      "run_id": "5-AR-n200-r01-V-s1",
+      "design": "AR",
+      "p": 100000,
+      "n": 200,
+      "signal": "strong",
+      "data_seed": 502020001,
+      "seed": 502020001,
+      "Rp": 16,
+      "N": 2500
+    }
+  ]
+}

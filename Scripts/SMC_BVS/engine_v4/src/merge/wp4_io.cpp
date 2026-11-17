@@ -671,6 +671,7 @@ std::string write_fit(const std::string& path, const FitWrite& f, Json* record) 
     Json& rec = *record;
     rec["status"] = status_name(fo.status); rec["fit_state"] = fo.fit_state; rec["reason"] = fo.reason;
     rec["estimates_available"] = fo.estimates_available; rec["fit_bin"] = h; rec["inputs"] = f.inputs;
+    rec["timings"] = f.timings;   // seconds (T5: merge, tail local search, LS0; WP7 O5)
     if (fo.has_hpm) rec["hpm_F"] = fo.hpm_F;
     if (fo.estimates_available) { rec["logZ"] = fo.log_Z; rec["logZ_T"] = fo.log_Z_T; rec["R_eff"] = fo.R_eff; }
   }
@@ -873,6 +874,8 @@ Json run(const Json& args) {
   // review PR20 m-1: the content hash actually read ("" only for a file that could not be read)
   for (int r = 0; r < R; ++r) fw.inputs["island_" + std::to_string(r + 1) + ".bin"] = src.heads()[(size_t)r].content_hash;
   fw.timings["merge_tail_seconds"] = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
+  // T5 (WP7 O5): the parts -- island stream + merge, final local search (tail), LS0
+  fw.timings["merge_islands_seconds"] = fo.t_islands; fw.timings["tail_local_seconds"] = fo.t_local; fw.timings["ls0_seconds"] = fo.t_ls0;
   Json rec = Json::object();
   wp4io::write_fit(in.out, fw, &rec);
   rec["command"] = "merge"; rec["Rp"] = R;

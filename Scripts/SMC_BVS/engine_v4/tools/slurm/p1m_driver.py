@@ -12,6 +12,10 @@ Writes, for one batch, everything the manager deploys to NOTS `~/SMC_Engineering
                           p1m_manifest.py from the previous stage's <out>.json records
   run_manifests/<run_id>.json         ONE manifest per run (PROTOCOL §4), copied into the run dir before the first output
   submit.sh               the manager's submission script (sbatch --parsable, ids logged); NEVER run by this driver
+  stage_pilot.sbatch      (plan key "pilot" only; WP7 O5) job ARRAY over fits, aftercorr on the setup array: the
+                          calibration pilot island alone (v4_pilot_island; H-11's 10^6 calibration pilot), cost record
+                          in <run>/cost_pilot/
+  submit_pilot.sh         (plan key "pilot" only) submits setup -> pilot and nothing else; its own worst case
   ledger_row.md           the LEDGER.md row (worst case = sum of allocated CPUs x time limit, billed core-h)
   SHA256SUMS              hashes of every generated file (submit.sh verifies them first)
   plan.resolved.json      the plan with every default filled in
@@ -99,6 +103,20 @@ def resolve(plan):
     P.setdefault("max_task_hours", 2.0)
     P.setdefault("eval", {"threads": None, "post": True, "n_draws": 10000, "n_x": 4000, "n_test": 10000})
     P.setdefault("island_throttle", None)           # optional %k on each island array
+    P.setdefault("island_isa", "")                  # WP7 O5: -DV4_ISLAND_ISA for build.sh ("" = the portable default)
+    if P["island_isa"] and not re.fullmatch(r"[A-Za-z0-9_.-]+", P["island_isa"]):
+        raise PlanError("island_isa must be a -march name such as sapphirerapids")
+    if P.get("pilot") is not None:                  # WP7 O5: {"cpus", "mem", "time", "with_ledger"} of the pilot task
+        pl = P["pilot"]
+        for k in ("cpus", "mem", "time"):
+            if k not in pl:
+                raise PlanError("pilot: missing %r" % k)
+        if not (1 <= int(pl["cpus"]) <= 192) or not re.fullmatch(r"\d+[MG]", pl["mem"]):
+            raise PlanError("pilot: cpus in 1..192 and mem like 64G")
+        h = hours(pl["time"])
+        if h > QOS_WALL_H or h > P["max_task_hours"] + 1e-9:
+            raise PlanError("pilot: %s exceeds max_task_hours = %.2f" % (pl["time"], P["max_task_hours"]))
+        pl.setdefault("with_ledger", 1)
     if not P.get("fits"):
         raise PlanError("plan has no fits")
     seen = set()
@@ -149,6 +167,9 @@ def resolve(plan):
             n = f["Rp"] if st == "islands" else 1
             wc += n * int(r["cpus"]) * hours(r["time"])
     P["worst_case_core_h"] = round(wc, 1)
+    if P.get("pilot") is not None:                  # submit_pilot.sh: setup + pilot per fit
+        P["worst_case_pilot_core_h"] = round(sum(int(f["resources"]["setup"]["cpus"]) * hours(f["resources"]["setup"]["time"])
+                                                 + int(P["pilot"]["cpus"]) * hours(P["pilot"]["time"]) for f in P["fits"]), 1)
     cap = P.get("core_h_cap")
     if cap is not None and wc > cap + 1e-9:
         raise PlanError("worst case %.1f billed core-h exceeds the plan's core_h_cap %.1f" % (wc, cap))
@@ -206,12 +227,12 @@ in_dir "$DEPT" "$HOME/SMC_Engineering_Department" || {{ [[ -n ${{P1M_TEST_ROOT:-
 SCR=$DEPT/scripts/{batch}
 set +u; source "$SCR/env.sh"; set -u
 B=$SCR/build; mkdir -p "$B" "$SCR/bin"
-nice -n 19 cmake -S "$SCR/code/Scripts/SMC_BVS/engine_v4" -B "$B" -DCMAKE_BUILD_TYPE=Release -DV4_TESTS=OFF > "$B/cmake.log"
-nice -n 19 make -C "$B" -j3 smcbvs4
+nice -n 19 cmake -S "$SCR/code/Scripts/SMC_BVS/engine_v4" -B "$B" -DCMAKE_BUILD_TYPE=Release -DV4_TESTS=OFF{isa} > "$B/cmake.log"
+nice -n 19 make -C "$B" -j3 smcbvs4{pilot_target}
 cp "$B/smcbvs4" "$SCR/bin/smcbvs4"
 "$SCR/bin/smcbvs4" version
 sha256sum "$SCR/bin/smcbvs4" | tee "$SCR/bin/smcbvs4.sha256"
-"""
+{pilot_copy}"""
 
 FIT_TABLE = """# fit table: index (1-based) -> run_id
 RUNS=({runs})
@@ -246,7 +267,8 @@ def stage_body(stage):
                 + run.format(cmd="setup", suffix="", extra=' --threads "$OMP_NUM_THREADS"', out="setup.bin"))
     if stage == "calibrate":
         return (fill.format(cmd="calibrate", suffix="") + "\n"
-                + run.format(cmd="calibrate", suffix="", extra=' --threads "$OMP_NUM_THREADS" --mem-budget "$MEMB"', out="calib.bin"))
+                # D-30 / WP7 O5: one per-step cost record per calibration island in $RUN/cost/
+                + run.format(cmd="calibrate", suffix="", extra=' --threads "$OMP_NUM_THREADS" --mem-budget "$MEMB" --cost-dir "$RUN/cost"', out="calib.bin"))
     if stage == "islands":
         return ("R=${SLURM_ARRAY_TASK_ID}\n"
                 + fill.format(cmd="island", suffix="_$R") + " --set params.id=$R\n"
@@ -308,9 +330,32 @@ def generate(P, out, dept):
         write(os.path.join(out, name), txt, 0o755)
         files.append(name)
         del n_per_fit
+    if P.get("pilot") is not None:   # WP7 O5: the calibration pilot island alone (H-11 gate (2)), after setup
+        pl = P["pilot"]
+        wc = sum(int(pl["cpus"]) * hours(pl["time"]) for _ in P["fits"])
+        txt = HEADER.format(name="stage_pilot.sbatch", batch=batch, stage="pilot", wc=wc, cpus=pl["cpus"], mem=pl["mem"], time=pl["time"],
+                            dept=dept, binary=P["binary"])
+        txt += FIT_TABLE.format(runs=runs)
+        txt += fit_selector(True).replace("{batch}", batch)
+        txt += SKIP_IF_OUTCOME.format(stage="pilot", batch=batch)
+        txt += ('# the same seed as calibrate (the manifest\'s engine seed); stops after the pilot island (no calib.bin)\n'
+                'SEED=$(python3 -c \'import json,sys; print(json.load(open(sys.argv[1]))["params"]["seed"])\' "$SCR/run_manifests/$RUN_ID.json")\n'
+                'mkdir -p "$RUN/log"\n'
+                '"$SCR/bin/v4_pilot_island" --data "$RUN/data.bin" --setup "$RUN/setup.bin" --seed "$SEED" --threads "$OMP_NUM_THREADS" '
+                '--mem-budget "$MEMB" --with-ledger %d --verbose 1 --cost-dir "$RUN/cost_pilot" --out "$RUN/pilot.json" '
+                '> "$RUN/log/pilot.log" 2>&1\n' % int(pl.get("with_ledger", 1)))
+        txt += 'printf \'{"stage":"pilot","run_id":"%%s","job":"%%s","task":"%%s","end":"%%s"}\\n\' "$RUN_ID" "${SLURM_JOB_ID}" "${SLURM_ARRAY_TASK_ID:-}" "$(date -u +%%FT%%TZ)" >> "$DEPT/scratch/runs/%s/ends.jsonl"\n' % batch
+        write(os.path.join(out, "stage_pilot.sbatch"), txt, 0o755)
+        files.append("stage_pilot.sbatch")
     write(os.path.join(out, "env.sh"), ENV_SH.format(batch=batch))
     files.append("env.sh")
-    write(os.path.join(out, "build.sh"), BUILD_SH.format(batch=batch, dept=dept, commit=P["code_commit"]), 0o755)
+    has_pilot = P.get("pilot") is not None
+    write(os.path.join(out, "build.sh"), BUILD_SH.format(
+        batch=batch, dept=dept, commit=P["code_commit"],
+        isa=(" -DV4_ISLAND_ISA=" + P["island_isa"]) if P["island_isa"] else "",
+        pilot_target=" v4_pilot_island" if has_pilot else "",
+        pilot_copy=('cp "$B/v4_pilot_island" "$SCR/bin/v4_pilot_island"\nsha256sum "$SCR/bin/v4_pilot_island" | tee "$SCR/bin/v4_pilot_island.sha256"\n'
+                    if has_pilot else "")), 0o755)
     files.append("build.sh")
     # manifests (templates + one run manifest per run)
     for f in P["fits"]:
@@ -399,6 +444,19 @@ echo "submitted; ledger row: see ledger_row.md (fill job ids from $LOG)"
            binary=P["binary"], runs=runs, thr=thr)
     write(os.path.join(out, "submit.sh"), sub, 0o755)
     files.append("submit.sh")
+    if P.get("pilot") is not None:   # setup -> pilot only (the fit itself waits for HQ's GO; its setup.bin is reused)
+        # the preamble of submit.sh (guards, checksums, log) up to the fit table, without submit.sh's own comment lines
+        pre = sub[:sub.index("RUNS=(")]
+        pre = "\n".join(l for l in pre.split("\n")[1:] if not l.startswith(("# submit.sh", "# Job graph", "# sbatch calls")))
+        sp = ("# submit_pilot.sh -- P1M batch %s: setup -> calibration pilot island only (WP7 O5; H-11 gate (2)), %d fit(s), worst case "
+              "%.1f billed core-h. GENERATED (dry run). Never submits calibrate, islands, merge or eval.\n" % (batch, F, P["worst_case_pilot_core_h"]))
+        sp += pre + "RUNS=(%s)\n" % runs
+        sp += ('[[ -x $SCR/bin/v4_pilot_island ]] || { echo "FATAL: binary $SCR/bin/v4_pilot_island missing (build.sh)" >&2; exit 66; }\n'
+               'js=$("$SB" --parsable --array=1-%d stage_setup.sbatch); log setup all "$js"\n'
+               'jp=$("$SB" --parsable --array=1-%d --dependency=aftercorr:$js stage_pilot.sbatch); log pilot all "$jp"\n'
+               'echo "submitted setup + pilot; worst case %.1f core-h (ledger: fill job ids from $LOG)"\n' % (F, F, P["worst_case_pilot_core_h"]))
+        write(os.path.join(out, "submit_pilot.sh"), "#!/usr/bin/env bash\n" + sp, 0o755)
+        files.append("submit_pilot.sh")
     write(os.path.join(out, "fit_rp.txt"), "".join("%d\n" % f["Rp"] for f in P["fits"]))
     files.append("fit_rp.txt")
     # helper copied next to the scripts (stdlib-only Python, run on the compute node)
