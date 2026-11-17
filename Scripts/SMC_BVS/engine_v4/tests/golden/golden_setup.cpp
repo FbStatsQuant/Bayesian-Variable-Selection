@@ -102,6 +102,7 @@ void golden_tables_start(const Fixture& F, V3& R, const Partition& P, const std:
   Tables T = build_tables(D, P, stk::threads(), &S4, &ts);
   build_start(D, P, T, /*store_sampler=*/true);   // the stored sampler tables are compared with v3 below (G5)
   Tables Tod = T; Tod.cbs_ptr.assign(1, 0); Tod.codes_by_size.clear(); Tod.sub_ptr.assign(1, 0); Tod.sub_cum.clear();  // D-18 form
+  Tod.cond_ptr.assign(1, 0); Tod.cond_cum.clear();  // D-31 form: cond0 scan + cond_row
   // G3 tables (logr bits, NaN pattern)
   bool ok = T.J == st.J;
   for (int b = 0; ok && b < T.J; ++b)
@@ -151,6 +152,9 @@ void golden_tables_start(const Fixture& F, V3& R, const Partition& P, const std:
       size_t row = (size_t)b * (D.K + 1) + r;
       ok = (size_t)(T.cond_ptr[row + 1] - T.cond_ptr[row]) == st.cond_cum[b][r].size();
       for (size_t q = 0; ok && q < st.cond_cum[b][r].size(); ++q) ok = stk::same_bits(T.cond_cum[T.cond_ptr[row] + q], st.cond_cum[b][r][q]);
+      std::vector<double> cr; cond_row(Tod, b, r, cr);   // D-31: on-demand row and scan table vs v3
+      ok = ok && cr.size() == st.cond_cum[b][r].size() && stk::same_bits(Tod.cond0[row], st.cond_cum[b][r][0]);
+      for (size_t q = 0; ok && q < cr.size(); ++q) ok = stk::same_bits(cr[q], st.cond_cum[b][r][q]);
     }
   }
   for (int b = 0; ok && b <= T.J; ++b) for (int k = 0; ok && k <= D.K; ++k) ok = stk::same_bits(T.logF_at(b, k), st.logF[b][k]);
@@ -175,7 +179,7 @@ void golden_tables_start(const Fixture& F, V3& R, const Partition& P, const std:
           stk::same_bits(S.log_gamma0(v4::ModelView(S4m)), st.log_gamma0(S3));
     }
     SCHECK(o && a.g.count == b4.g.count, "pi_0 draws / comp differ: %s", t.c_str());
-    SCHECK(od && c4.g.count == b4.g.count, "D-18: on-demand sampler tables change the pi_0 draws: %s", t.c_str());
+    SCHECK(od && c4.g.count == b4.g.count, "D-18/D-31: on-demand sampler tables or cond rows change the pi_0 draws: %s", t.c_str());
   }
   // G7 start mode (core/cpp/v3_start.h:178-305), every cap regime, every algorithm
   for (long cap : {1000000L, 2L, 3L, 5L, 17L, 1L})

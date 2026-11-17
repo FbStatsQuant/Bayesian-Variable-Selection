@@ -72,9 +72,10 @@ MemAccount account(const Data& D, int coded_B, const Partition& P, int64_t edges
   add("logprof_ptr, logprof", "persistent", 8ull * (J + 1) + 8ull * A.NR, true, true);
   add("logF ((J+1) x (K+1) f64)", "persistent", 8ull * (J + 1) * (K + 1), true, true);
   add("size_logmass, size_cum", "persistent", 16ull * (K + 1), true, true);
-  add("cond_ptr, cond_cum", "persistent", 8ull * (J * (K + 1) + 1) + 8ull * A.cond_vals, true, true);
+  add("cond0 (D-31 scan table P(k_b = 0 | r), J x (K+1) f64)", "persistent", 8ull * J * (K + 1), true, true);
   add("static code tables (all m <= 16)", "persistent", 4ull * ((1u << 17) - 1));
   A.not_stored_d18 = 4ull * A.C_feasible + 8ull * A.C_feasible + 16ull * (A.NR + 1);
+  A.not_stored_d31 = 8ull * (J * (K + 1) + 1) + 8ull * A.cond_vals;   // cond_ptr + cond_cum, recomputed by cond_row
   // ---- start mode (transient)
   // arg: codes attaining each per-size maximum; bound C_feasible, estimate NR (one per row without exact ties)
   const uint64_t mode_fixed = 8ull * A.NR + 8ull * (A.NR + 1) + 24ull * A.NR + 8ull * (J + 1) * (K + 1) + 2ull * (J + 1) * (K + 1) + 16ull * J + A.NR;
@@ -97,10 +98,10 @@ MemAccount account(const Data& D, int coded_B, const Partition& P, int64_t edges
     sp.push_back({"correlation", stage_sum(est, {"corr"}, {"X (", "ys, z"})});
     sp.push_back({"partition", stage_sum(est, {"partition"}, {"X (", "ys, z", "neighbours", "edges"})});
     sp.push_back({"tables", stage_sum(est, {"tables"}, {"X (", "ys, z", "neighbours", "partition (", "logr", "code_ptr", "table top stores kept"})});
-    sp.push_back({"start_law", stage_sum(est, {}, {"X (", "ys, z", "neighbours", "partition (", "logr", "code_ptr", "table top stores kept",
-                                                   "logprof", "logF", "size_", "cond_", "static"})});
-    sp.push_back({"start_mode", stage_sum(est, {"mode"}, {"X (", "ys, z", "neighbours", "partition (", "logr", "code_ptr", "table top stores kept",
-                                                          "logprof", "logF", "size_", "cond_", "static"})});
+    // PR50 MAJOR-2: selected by stage, not by display name, so a renamed or new persistent item (cond0 in D-31) cannot drop
+    // out of the live set: start law = every data item + every persistent item; start mode = those + the mode transient.
+    sp.push_back({"start_law", stage_sum(est, {"data", "persistent"}, {})});
+    sp.push_back({"start_mode", stage_sum(est, {"data", "persistent", "mode"}, {})});
     uint64_t pk = 0; for (auto& x : sp) pk = std::max(pk, x.second);
     (est ? A.peak_est : A.peak) = pk;
   }
@@ -131,7 +132,7 @@ Json MemAccount::to_json() const {
   j["stage_peak_estimate_bytes"] = se; j["peak_estimate_bytes"] = (int64_t)peak_est; j["setup_bin_estimate_bytes"] = (int64_t)setup_bin_est;
   j["peak_note"] = "peak_bytes: exact arrays + upper bounds (store pools at B_blocks per entry, start-mode ties at C_feasible); "
                    "peak_estimate_bytes: the same with measured factors (mean |S| 3.1 in the table stores, no exact ties). X is file-backed (data.bin mapping).";
-  j["d18_not_stored_bytes"] = (int64_t)not_stored_d18;
+  j["d18_not_stored_bytes"] = (int64_t)not_stored_d18; j["d31_not_stored_bytes"] = (int64_t)not_stored_d31;
   return j;
 }
 

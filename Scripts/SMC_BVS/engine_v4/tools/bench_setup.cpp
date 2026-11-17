@@ -5,6 +5,8 @@
 //                                                             tiles J (spread over the range), projected to the full pass
 //   v4_setup_bench count <design> <p> <n> [threads=3] [seed=1] [bv_cap=14]   setup --count-only on WP1's generator
 //                                                             (AR | IND | BLK | ADJOPP), X standardised in place
+//   v4_setup_bench acct  <count.json>   the CURRENT accounting recomputed from a `count` record's partition summary (block
+//                                       histogram, J, edges, nb_nnz, threads): no data, no tables. Prints the stage peaks.
 #include <chrono>
 #include <cstdlib>
 #include <unistd.h>
@@ -81,6 +83,21 @@ static int startlaw_main(int argc, char** argv) {
   if (mc > 0) {   // Monte Carlo cross-check with pi_0 draws
     Start S; S.D = &D; S.P = &c.part; S.T = &T; S.logZbar0 = T.logZbar0;
     v4::AddressedSource as; v4::Model M; double ms = 0, mb = 0;
+    auto td = std::chrono::steady_clock::now();
+    for (int i = 1; i <= mc; ++i) { v4::Address ad; ad.seed = 9; ad.xph = v4::X_INIT; ad.particle = (uint32_t)i; S.draw_pi0(as, ad, M); }
+    rec["mc_us_per_draw"] = 1e6 * std::chrono::duration<double>(std::chrono::steady_clock::now() - td).count() / mc;   // D-31 path
+    if (argc > 8 && std::string(argv[8]) == "stored") {   // D-31 check: the stored rows (old layout) give the same draws; their cost
+      Tables Ts = T; build_start(D, c.part, Ts, /*store_sampler=*/true);
+      Ts.cbs_ptr.assign(1, 0); Ts.codes_by_size.clear(); Ts.sub_ptr.assign(1, 0); Ts.sub_cum.clear();   // D-18 as in production
+      Start S2 = S; S2.T = &Ts; v4::Model M2; bool same = true;
+      td = std::chrono::steady_clock::now();
+      for (int i = 1; i <= mc; ++i) { v4::Address ad; ad.seed = 9; ad.xph = v4::X_INIT; ad.particle = (uint32_t)i; S2.draw_pi0(as, ad, M2); }
+      rec["mc_us_per_draw_stored_rows"] = 1e6 * std::chrono::duration<double>(std::chrono::steady_clock::now() - td).count() / mc;
+      for (int i = 1; same && i <= mc; ++i) { v4::Address ad; ad.seed = 9; ad.xph = v4::X_INIT; ad.particle = (uint32_t)i; S.draw_pi0(as, ad, M); S2.draw_pi0(as, ad, M2); same = M == M2; }
+      rec["mc_same_draws_stored_rows"] = same;
+      rec["cond_cum_bytes_old"] = (int64_t)(8 * (Ts.cond_ptr.size() + Ts.cond_cum.size()));
+    }
+    rec["cond0_bytes"] = (int64_t)(8 * T.cond0.size());
     for (int i = 1; i <= mc; ++i) {
       v4::Address ad; ad.seed = 9; ad.xph = v4::X_INIT; ad.particle = (uint32_t)i;
       S.draw_pi0(as, ad, M);
@@ -124,9 +141,31 @@ static int count_main(int argc, char** argv) {
   return 0;
 }
 
+// The accounting depends on the partition only through J, the block-size histogram and P.B, and on the data only through
+// n, p, K: so a `count` record (histogram, edges, nb_nnz, threads) is enough to recompute it with the current code.
+static int acct_main(int, char** argv) {
+  v4::Json in = v4::read_json_file(argv[2]);
+  const v4::Json& a = in.contains("accounting") ? in.at("accounting") : in;
+  v4::Data D; D.n = (int32_t)a.at("n").i64(); D.p = (int32_t)a.at("p").i64(); D.K = (int32_t)a.at("K").i64();
+  Partition P; P.J = (int32_t)a.at("J").i64(); P.B = (int32_t)a.at("B_blocks").i64();
+  P.bptr.assign(1, 0);
+  for (int m = 0; m <= 16; ++m) {
+    const std::string k = std::to_string(m);
+    if (a.at("block_histogram").contains(k))
+      for (int64_t q = 0; q < a.at("block_histogram").at(k).i64(); ++q) P.bptr.push_back(P.bptr.back() + m);
+  }
+  if ((int)P.bptr.size() != P.J + 1 || P.bptr.back() != D.p) { std::fprintf(stderr, "histogram does not match J, p\n"); return 1; }
+  MemAccount A = account(D, (int)a.at("B_coded").i64(), P, a.at("edges").i64(), a.at("nb_nnz").i64(), (int)a.at("threads").i64(), PartMode::Truncated);
+  v4::Json rec = v4::Json::object(); rec["design"] = in.contains("design") ? in.at("design") : v4::Json("?");
+  rec["accounting"] = A.to_json();
+  std::printf("%s\n", rec.dump(1).c_str());
+  return 0;
+}
+
 int main(int argc, char** argv) {
   if (argc < 3) { std::fprintf(stderr, "usage: see header\n"); return 2; }
   std::string what = argv[1];
+  if (what == "acct") return acct_main(argc, argv);
   if (what == "count") return count_main(argc, argv);
   if (what == "startlaw") return startlaw_main(argc, argv);
   int p = std::atoi(argv[2]), n = argc > 3 ? std::atoi(argv[3]) : 200, th = argc > 4 ? std::atoi(argv[4]) : 3;

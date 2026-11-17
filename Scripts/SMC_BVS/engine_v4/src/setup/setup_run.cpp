@@ -107,7 +107,7 @@ std::string write_setup_bin(const std::string& path, const Data& D, const SetupR
   W.add("logprof_ptr", T.logprof_ptr); W.add("logprof", T.logprof);
   W.add("logF", T.logF, (uint64_t)T.J + 1, (uint64_t)T.K + 1);
   W.add("size_logmass", T.size_logmass); W.add("size_cum", T.size_cum);
-  W.add("cond_ptr", T.cond_ptr); W.add("cond_cum", T.cond_cum);
+  W.add("cond0", T.cond0, (uint64_t)T.J, (uint64_t)T.K + 1);   // D-31: scan table P(k_b = 0 | r); no cond_ptr / cond_cum
   // D-18: no cbs_ptr / codes_by_size / sub_ptr / sub_cum (recomputed by draw_pi0 for the blocks a draw selects)
   W.add("mode_S", r.mode.S);
   put_store(W, "top", r.stores.top); put_store(W, "lead0", r.stores.lead0); put_store(W, "lead1", r.stores.lead1);
@@ -156,7 +156,8 @@ SetupResult read_setup_bin(const std::string& path, std::string* content_hash) {
   T.code_ptr = Rd.vec<int64_t>("code_ptr"); T.logr = Rd.vec<double>("logr");
   T.logprof_ptr = Rd.vec<int64_t>("logprof_ptr"); T.logprof = Rd.vec<double>("logprof");
   T.logF = Rd.vec<double>("logF"); T.size_logmass = Rd.vec<double>("size_logmass"); T.size_cum = Rd.vec<double>("size_cum");
-  T.cond_ptr = Rd.vec<int64_t>("cond_ptr"); T.cond_cum = Rd.vec<double>("cond_cum");
+  T.cond0 = Rd.vec<double>("cond0");
+  if (T.cond0.size() != (size_t)T.J * (size_t)(T.K + 1)) throw Error(Status::invalid_input, "setup.bin: cond0 size differs from J x (K + 1)");
   T.logZbar0 = sc[0];
   r.mode.S = Rd.vec<int32_t>("mode_S"); r.mode.lg0 = sc[1]; r.mode.ties = (long)isc[5]; r.mode.truncated = isc[6]; r.mode.tie_dp_used = isc[7];
   r.corr.rn = sc[2]; r.corr.tau = sc[3];
