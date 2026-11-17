@@ -22,13 +22,17 @@ an evidence estimate (Section~\ref{sec:method}).
     median probability models are the true model with probability tending to one (Result~1);
   \item the posterior recovers the true conditional law of the response at radius of order $\rn$ in Hellinger distance,
     with no lower bound on the coefficients (Result~2);
-  \item with probability tending to one, every run that produces output reports exactly the true model, for every seed
-    and every outcome of its calibration, when the predictors that can imitate the signal are few and local; pervasive
-    common factors with $p\gg\sqrt n$ are excluded (Result~3);
-  \item the evidence estimate is unbiased on every design, and the reported inclusion probabilities, median model and
-    evidence estimate are consistent on designs without leakage, on the event that the calibration succeeds (Result~4);
+  \item for block and moderate AR correlation, with probability tending to one, every run that produces output reports
+    exactly the true model, for every seed and every outcome of its calibration. The conditions are that no true
+    predictor is masked by $15$ or fewer others (visibility) and that the predictors able to imitate the signal are few and
+    local. Both fail for pervasive common factors when $p\gg\sqrt n$; visibility also fails for factors with effects of
+    mixed signs and for data like the riboflavin gene-expression data (Result~3);
+  \item for a fixed design with an eigenvalue floor on small sets and fixed signal bounds, but with neither of those two
+    conditions, a run rarely certifies a reported model within a size budget $k_n$ of the analyst's choosing that misses
+    a true predictor (Result~4);
+  \item the evidence estimate is unbiased on every design (Result~5);
   \item no design allows a posterior rate faster than $n^{-1/2}$, and on two families of designs the rate $\rn$ of
-    Result~1 is attained (Result~5).
+    Result~1 is attained (Result~6).
 \end{enumerate}
 
 \paragraph{Earlier work.} The closest earlier analysis is that of \citet{SongLiang2015}, who prove selection and
@@ -48,7 +52,7 @@ $10^6$; this paper contains no simulation study. The posterior results cover all
 included.
 
 \paragraph{Organisation.} Section~\ref{sec:setup} sets up the data and the notation, and Section~\ref{sec:method}
-describes the method as coded. Section~\ref{sec:results} states the five results, Section~\ref{sec:assumptions} judges
+describes the method as coded. Section~\ref{sec:results} states the six results, Section~\ref{sec:assumptions} judges
 their assumptions, and Section~\ref{sec:scope} states what is not claimed. The supplement (Appendix~\ref{sec:supp})
 holds further results, and the appendices hold the notation, the full parameter table with its code locations, the
 explicit constants and the status of each result.

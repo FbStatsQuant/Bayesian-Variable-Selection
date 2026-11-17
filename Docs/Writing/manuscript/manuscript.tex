@@ -37,6 +37,7 @@ independently checked}
 \newcommand{\ahead}[3]{\par\smallskip\noindent\textbf{#1} #2. #3\par}
 \newcommand{\ev}[1]{\noindent\emph{Evidence.} #1\par}
 \newcommand{\ro}[1]{\noindent\emph{Rules out.} #1\par}
+\newcommand{\pr}[1]{\noindent\emph{Precedents.} #1\par}
 \newcommand{\ds}[1]{\noindent\emph{Our designs.} #1\par}
 \newcommand{\tu}[1]{\noindent\emph{A typical user.} #1\par}
 \newcommand{\yes}{$\bullet$}\newcommand{\no}{$\circ$}\newcommand{\unc}{?}\newcommand{\na}{--}
@@ -58,10 +59,9 @@ variable selection in the Gaussian linear model with many more predictors than o
 implements it: a fixed beta-binomial and $g$-prior with no tuning, a start law built from exactly scored blocks of
 predictors, a tempered sampler on four islands, and two local searches. We prove that the posterior concentrates on the
 true model at the rate $\sqrt{\log n/n}$, a rate attained on two families of designs, and recovers the true conditional distribution of
-the response; that, with probability tending to one, every run that produces output reports exactly the true model, for every seed,
-when the predictors that can imitate the signal are few and local; and that the evidence estimate is unbiased on every
-design, while the reported estimates are consistent on designs without leakage, on the event that the calibration
-succeeds. We compare every assumption with those of Song and
+the response; that, for block and moderate AR correlation, every run that produces output reports exactly the true model with
+probability tending to one, for every seed; that, without those conditions, a run rarely certifies a small reported model that
+misses a true predictor; and that the evidence estimate is unbiased on every design. We compare every assumption with those of Song and
 Liang (2015) and check it against the designs of our simulation studies: the posterior results cover all of them,
 strong common factors included.
 \end{abstract}

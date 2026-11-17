@@ -201,7 +201,8 @@ this statement. Registry: Appendix~\ref{app:status}, row 3.2.}
 \subsection{The reported estimates are consistent, on designs without leakage}\label{sec:outputs}
 
 \why{It is the only result on the consistency of the reported inclusion probabilities, median model and evidence
-estimate; it needs no leakage at all, which only independent predictors satisfy, so it is stated as a remark.}
+estimate; it needs the condition \as{NL}, which, of our designs, only the independent ones satisfy, so it is stated
+as a remark.}
 
 
 \begin{assumption}{NL}{No leakage, as seen by the start law}
@@ -244,6 +245,22 @@ $e^{C_\rho\sqrt{\log n}}/\sqrt{\log n}$.
 (iii) Pooling cannot make things worse: the pooled inclusion probabilities are never farther from the exact ones, in the
 largest coordinate, than those of the worst island (proved and checked, conditional on the same two sampler results as
 Remark~\ref{thm:outputs}; registry row 4.1).
+
+\paragraph{Is the no-leakage condition reasonable?}\phantomsection\label{sec:a-pe}
+
+\ahead{No leakage}{\lab{NL}}{In no regime do \SL{} have a condition of this kind: none of their theorems concerns a
+start law. Only our independent designs satisfy it.}
+\ev{With no conditioning, \lab{NL} asks $\abs{\Cov(W_l,W_j)}\le C_Ln^{-1/2}$ for every null predictor $l$ and true
+predictor $j$. In AR(1) with correlation $0.5$ the neighbour of a true predictor has covariance $0.5$; in a block design
+every block-mate of a true predictor has covariance at least $0.4$. For such designs the start law concentrates on the
+models between the true model and the leakage set, not on the true model alone. On AR and BLK the present proof route
+cannot be extended as $n\to\infty$, because the start law's mass on the true model then decays faster than any power of
+$n$; at the sizes of the $10^6$ plan this asymptotic decay says nothing, and we have no bound on this mass there in either
+direction. For S3, S4 and S6, a theorem under a weaker, group-relative form of \lab{NL} is a candidate; it is not
+proved.}
+\ro{Any null predictor correlated with a true one at a fixed level.}
+\ds{\textbf{Inside:} the independent designs only. \textbf{Outside:} all locally correlated and factor designs, including AR, the
+primary design of the $10^6$ plan.}
 
 \why{It is the only recorded route to the reported inclusion probabilities and median model that does not need \as{NL};
 its global-overlap premise is not yet derived from conditions on the design.}

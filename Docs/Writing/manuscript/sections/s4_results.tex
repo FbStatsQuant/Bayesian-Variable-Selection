@@ -1,7 +1,7 @@
 % =====================================================================================================
 \section{Main results}\label{sec:results}
 
-Table~\ref{tab:results} lists the five results. Each is stated in the same format: what it says in words, why it
+Table~\ref{tab:results} lists the six results. Each is stated in the same format: what it says in words, why it
 matters, the statement, its assumptions with the place in Section~\ref{sec:assumptions} where each one is judged, a
 one-line scope (which of our designs are inside; Section~\ref{sec:who-outside}), and a status note.
 
@@ -9,7 +9,7 @@ one-line scope (which of our designs are inside; Section~\ref{sec:who-outside}),
 \centering\footnotesize
 \setlength{\tabcolsep}{3.5pt}
 \renewcommand{\arraystretch}{1.12}
-\caption{The five results. Statuses are those of the project's registry as frozen at \texttt{theory-v2026-11-freeze};
+\caption{The six results. Statuses are those of the project's registry as frozen at \texttt{theory-v2026-11-freeze};
 every check is independent of the author.}\label{tab:results}
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.17\linewidth}>{\raggedright\arraybackslash}p{0.3\linewidth}>{\raggedright\arraybackslash}p{0.26\linewidth}>{\raggedright\arraybackslash}p{0.2\linewidth}@{}}
 \toprule
@@ -26,20 +26,22 @@ The posterior contracts around the true conditional law of the response, at radi
 i.i.d.\ observations; sparse Gaussian linear model; light-tailed predictors; no near-exact collinearity; no predictor with an unbounded
 signal; no lower bound on the coefficients. &
 Proved and checked. \\
-3.~The method, as coded, reports the true model (Thm~\ref{thm:reported}) &
+3.~The reported model is the true model, for block and moderate AR correlation (Thm~\ref{thm:reported}) &
 With probability tending to one, every run that produces output reports exactly the true model, whatever its seed. &
-Gaussian rows; fixed signals; every true predictor visible (its signal does not cancel against any $15$ others); the predictors that can imitate the signal are few,
-and local. &
+Gaussian rows; fixed signals; no true predictor masked by $15$ or fewer others; the predictors that can imitate the
+signal are few, and local. &
 Proved and checked; no open condition. \\
-4.~The run's estimates (Prop.~\ref{prop:unbiased}, Thm~\ref{thm:outputs}) &
-The evidence estimate is unbiased on every design. On designs without leakage the errors of the reported inclusion
-probabilities, median model and evidence estimate (relative and log error), multiplied by the indicator that the sampler
-is used and its calibration succeeds, tend to zero. &
-Unbiasedness: none on the design. Consistency: Gaussian rows, fixed signals, visibility, and no null predictor
-correlated with a true one beyond order $n^{-1/2}$, even given $15$ others. &
-Unbiasedness: proved and checked. Consistency: proved and checked, conditional on two results on the coded sampler that
-are themselves proved under named premises and checked. \\
-5.~The rate cannot be improved (Rem.~\ref{rem:sharp}) &
+4.~Certified screening (Thm~\ref{thm:screen}) &
+The probability that a run certifies a reported model of at most $k_n$ predictors \emph{and} that model misses a true
+predictor tends to zero; no guarantee conditional on certification. &
+Fixed design; Gaussian linear model; eigenvalue floor on sets of $k_n+\sz$ predictors; fixed signal bounds; size
+budget $k_n$; no visibility or leakage condition. &
+Proved and checked. \\
+5.~The evidence estimate is unbiased (Prop.~\ref{prop:unbiased}) &
+Given the calibration, the evidence estimate is unbiased for the evidence, on every design. &
+None on the design; the sampler conventions. &
+Proved and checked. \\
+6.~The rate cannot be improved (Rem.~\ref{rem:sharp}) &
 For true models of at most $\min(K-1,p/2)$ predictors no design gives a rate faster than $n^{-1/2}$; on two
 families of designs the expected posterior miss is at least of order $\rn$, and on orthogonal designs of exactly that
 order. &
@@ -113,7 +115,9 @@ $O(\log n)$ predictors [\SA{post}].}
 in-probability form) and the transfer from population to sample conditions are each proved and independently checked.
 Registry: Appendix~\ref{app:status}, row 1.2.}
 
-No upper bound on the eigenvalues of $\Sig$ is needed, so strong common factors are allowed, and $p\gg n$ is allowed. In
+No upper bound on the eigenvalues of $\Sig$ is needed, so strong common factors are allowed, and $p\gg n$ is allowed.
+Gaussian rows are Song and Liang's own worked case for their row condition (Section~\ref{sec:a-post}); a version of
+Theorem~\ref{thm:post-random} for sub-Gaussian rows is not yet proved. In
 primitive terms: a Gaussian linear model with i.i.d.\ Gaussian rows whose correlation matrix has smallest eigenvalue bounded below, a fixed number of
 fixed nonzero coefficients and $p\le n^A$ suffice.
 
@@ -225,7 +229,7 @@ size].}
 Theorem~1, p.~952; their Theorem~2 has the same form, p.~953), equals $n^{-cM}$; so~\eqref{eq:dist-i} is of the same
 exponential form, for levels $M\le\sqrt n/\log n$.
 (ii) The rate $\rn$ of Result~1 concerns the posterior miss $1-\pis{\Sz}$, and under its assumptions it cannot be improved
-for this prior (Result~5). Song and Liang give no rate for selecting the whole model: their Theorem~3 (p.~956) controls
+for this prior (Result~6). Song and Liang give no rate for selecting the whole model: their Theorem~3 (p.~956) controls
 sensitivity only, and their Theorem~S (supplement, p.~13, display (24)) states consistency of the posterior mode without
 a rate.
 \end{remark}
@@ -243,8 +247,7 @@ when that list holds posterior mass at least $n^{-c_{\mathrm H}M/2}$, a conditio
 % =====================================================================================================
 \subsection{Result 3: the reported model is the true model, the theorem for block and moderate AR correlation}\label{sec:reported}
 
-\inwords{This is the theorem for block and moderate AR correlation. If no true predictor is masked by $15$ or fewer
-others, the predictors that can imitate the signal form a
+\inwords{If no true predictor is masked by $15$ or fewer others, the predictors that can imitate the signal form a
 set $Q$ of at most $n^b$ predictors with $b<\tfrac12$, and regressions within $Q$ are local, then there is an event,
 determined by the data alone and of probability tending to one, on which every run that produces output reports exactly
 the true model, whatever its seed and the outcome of its calibration. The mechanism is that of
@@ -280,8 +283,8 @@ in Result~3 and in the supplement's remark on the reported estimates.
 Visibility excludes masking: if two true predictors with coefficients $1$ and $-1$ have correlation $\rho$, the
 signal of each, given nothing, is $1-\rho$, and it vanishes as $\rho\to1$. A null predictor whose correlation with
 a true one stays fixed must belong to the leakage set $Q$, as predictor $5$ does in Example~\ref{ex:leak}. The
-conditions fail for pervasive common factors with effects of mixed signs and for riboflavin-like data
-(Section~\ref{sec:who-outside}).
+conditions fail for pervasive common factors when $p\gg\sqrt n$, and visibility also fails for factors with effects of
+mixed signs and for data like the riboflavin gene-expression data (Section~\ref{sec:who-outside}).
 
 Fix $b\in(0,\tfrac12)$ and $b_H>0$ with $15b_H+b<\tfrac12$.
 
@@ -338,7 +341,8 @@ independently checked}. Registry: Appendix~\ref{app:status}, row 3.1.}
 (i) \emph{Why $b<\tfrac12$.} At model size about $\sqrt n$ the prior-plus-Occam penalty of one more predictor
 ($\approx\log p+\tfrac12\log n$) stops dominating the best of $p$ noise gains ($\approx\log p$); for larger $b$ the key events of the argument are
 expected to fail (a heuristic; whether the conclusion fails is open).
-(ii) Designs that satisfy the assumptions include block correlation and moderate AR correlation.
+(ii) \emph{Moderate AR correlation} means autoregressive correlation bounded away from one, as the AR(1) correlations
+$0.5$ and $0.6$ of our designs.
 \end{remark}
 
 \scope{Block and moderate AR correlation, and independent predictors: the designs S1--S4, S6, IND, AR ($0.6$) and BLK of
@@ -349,11 +353,11 @@ our studies; not pervasive common factors with $p\gg\sqrt n$ (Section~\ref{sec:w
 
 \inwords{If small sets of predictors have an eigenvalue floor and the true signals and coefficients are bounded by fixed
 constants, then the probability that a run produces output, certifies a reported model of at most $k_n$ predictors, and
-that model misses a true predictor tends to zero. The conclusion is weaker than that of Result~3: a certified small model
-misses no true predictor, but it may contain null ones. Neither visibility nor a leakage set is needed.}
+that model misses a true predictor tends to zero: a run rarely certifies a small model that misses a true predictor.
+The conclusion is weaker than that of Result~3: a certified model may contain null predictors, and nothing is claimed
+conditionally on certification. Neither visibility nor a leakage set is needed.}
 
-\why{It needs neither condition of Result~3, so it covers designs where those conditions fail, with the weaker
-conclusion that no true predictor is missed.}
+\why{It applies where the conditions of Result~3 fail, when its own conditions hold.}
 
 Here \emph{certified} means that the run set its local-optimality flag (Section~\ref{sec:outputs-method}): the reported
 model ends a local search whose last scan found no strict improvement, or the method enumerated $\Om$. The model-size
@@ -372,7 +376,7 @@ $c_{\mathrm{SB}}:=\kappa^2\tlow^2/\{200(M_1^2+\sigs^2)\}$. Then
 \asmlist{(1)~\as{GL} [\SA{all}]; (2)~the eigenvalue floor on sets of $k_n+\sz$ predictors and the fixed signal bounds
 [\SA{scr}]; (3)~the size budget, chosen by the analyst; (4)~Convention \as{C1}.}
 
-\status{\textbf{Proved and independently checked}. Registry: Appendix~\ref{app:status}
+\status{\textbf{Proved and independently checked}. Registry: Appendix~\ref{app:status}, row 3.7.}
 
 \scope{Every fixed design with the floor and the signal bounds; no visibility, leakage, start or block condition.}
 
@@ -395,8 +399,9 @@ size budget of Theorem~\ref{thm:screen} requires $n\gtrsim1{,}450$.
 \inwords{The method reports an evidence estimate, the pooled average of its four islands' estimates. Given the
 calibration, it is unbiased for the evidence $Z$, on every design and every data set.}
 
-\why{It is the one reported number with a guarantee that needs no condition on the design; it also underlies the
-reported lower bound for $\log Z$ (Appendix~\ref{app:params}).}
+\why{It is the one reported estimate with a guarantee that needs no condition on the design: the run reports $\log\Zhat$,
+and $\Zhat$ is unbiased for $Z$. It also underlies the reported lower bound $\log(0.05\,\Zhat)$ for $\log Z$
+(Appendix~\ref{app:params}).}
 
 \begin{proposition}[Each island's evidence estimate is unbiased]\label{prop:unbiased}
 Under Convention~\as{C3}, given the calibration, each island's evidence estimate $\Zhat_r$ is unbiased for $Z$, for every
@@ -419,15 +424,17 @@ proved and independently checked against the code of record. Registry: Appendix~
 
 \scope{Every design.}
 
-The consistency of the reported inclusion probabilities, median model and evidence estimate is proved only on designs
-without leakage, which only independent predictors satisfy; it is stated as a remark in the supplement
-(Remark~\ref{thm:outputs}).
+The consistency of the reported estimates (the inclusion probabilities, the median model, and $\Zhat/Z\to1$) is
+Remark~\ref{thm:outputs} in the supplement; it needs a no-leakage condition that, of our designs, only the independent
+ones satisfy (Section~\ref{sec:who-outside}).
 
 
 
 \subsection{Result 6: the rate cannot be improved}\label{sec:sharp}
 
-\inwords{On every design, no model of at most $\min(K-1,p/2)$ predictors has posterior mass closer to one than about
+\inwords{This result concerns the rate of Result~1. Its two parts differ by a factor $\sqrt{\log n}$: (a) rules out
+rates faster than $n^{-1/2}$ on every design, and (b) shows that the expected posterior miss reaches order $\rn$ on the
+witness designs. On every design, no model of at most $\min(K-1,p/2)$ predictors has posterior mass closer to one than about
 $(\abs{S}+1)/(3\sqrt n)$; on two families of designs the expected posterior miss is at least of order $\rn$. At simulated sizes the posterior spreads over the true model and
 its one-predictor extensions.}
 

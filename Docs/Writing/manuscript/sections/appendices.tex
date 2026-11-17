@@ -24,7 +24,7 @@ $\varphi_0,g_0,\bar\theta,C_\beta$; $\varphi$; $b_{\mathrm{lo}},b_{\mathrm{hi}}$
 $c_0(\sz,A)$, $c_1(\sz,A)$, $C_{\mathrm E}$ & beta-min and margin constants; rate constant & App.~\ref{app:constants} \\
 $\Dn$, $\Pi(\cdot\mid\Dn)$, $\P^*$, $\zeta$, $d_H$, $M$, $q_n$ & data, posterior and law of Result~2; standardised predictors; Hellinger distance; level; window & \S\ref{sec:distribution} \\
 $\Cov(\cdot,\cdot\mid W_U)$, $\bar\beta_{U,l}$; $Q$, $\Lat(Q)$, $\Hl_l$ & partial covariance; population regression coefficient; leakage set; its lattice; locality sets & \S\ref{sec:reported} \\
-$\mathcal G_n$; $\rho_n$ & data event of Result~3; rate of Result~4 & \S\ref{sec:reported}, \S\ref{sec:outputs} \\
+$\mathcal G_n$; $\rho_n$ & data event of Result~3; rate of Remark~\ref{thm:outputs} & \S\ref{sec:reported}, \S\ref{sec:outputs} \\
 \bottomrule
 \end{longtable}}
 
@@ -224,12 +224,14 @@ results on the coded sampler that are themselves proved under named premises and
 \paragraph{What remains after the freeze.}
 \begin{enumerate}[leftmargin=1.5em,itemsep=1pt]
   \item The lower-bound proposition behind~\eqref{eq:post-exp} awaits its independent check.
+  \item The two results on the coded sampler behind Result~5, Remark~\ref{cor:dist-output} and Remark~\ref{thm:outputs}
+    (W1-N1:B, W1-N1:F) await their final line check; the status notes are requoted when it is recorded.
   \item The superseded masters of Theorems~\ref{thm:reported} and~\ref{thm:reported-fixed} are retired in the registry
     (deferred past the freeze; no effect on the statements).
   \item The global-overlap premise of Remark~\ref{rem:alt-route} stays a named open premise.
-  \item \emph{Planned, not decided:} if the store-restricted result (track D, \#5$'$) is proved, Remark~\ref{thm:outputs}
-    may become a remark, and consistency of the summaries computed from the returned list would be stated on every
-    design of Result~3. Section~\ref{sec:estimates} is written so that this needs no other change.
+  \item \emph{Planned:} if the store-restricted result (track D, \#5$'$, Corollary 6L) is recorded, it would supply the
+    premise of Remark~\ref{cor:dist-output} and the consistency of the summaries computed from the returned list on
+    every design of Result~3; Remark~\ref{thm:outputs} is a remark until then.
 \end{enumerate}
 
 \paragraph{Assumptions on mathematical objects.} Premises about the prior, distributions, distances, Markov kernels and

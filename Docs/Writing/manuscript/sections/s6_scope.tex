@@ -3,10 +3,13 @@
 
 The results are asymptotic in $n$, with $p$ at most polynomial in $n$; one lower bound (Remark~\ref{rem:sharp}(a)) holds at
 every $n\ge3$. The explicit constants of the proofs are conservative. The results cover the posterior that the software targets
-and, for Results~3--5, the software itself in its default configuration, under Conventions \as{C1}--\as{C3}, which
+and, for Results~3--5, the software itself in its default configuration, under Conventions \as{C1}, \as{C2p} and \as{C3}, which
 idealise the arithmetic, the random numbers and the allocation. A run that
-stops early returns no estimates and is not covered. The statements about the run's estimates are about the event that the
-calibration succeeds, or that the run completes; no lower bound on the probability of that event is claimed, and nothing is
-claimed conditionally on it. Which designs are inside each result is in Section~\ref{sec:who-outside}. No theorem covers a parallel engine, runs with more than the four
+stops early returns no estimates and is not covered. Which designs are inside each result is in
+Section~\ref{sec:who-outside}. The consistency of the reported inclusion probabilities, median model and evidence estimate,
+and the guarantee for the list a run returns, are remarks in the supplement. Statements about a run's estimates concern the event that the
+calibration succeeds, or that the run completes; no lower bound on the probability of that event is claimed. Apart from
+Result~5, which holds given each calibration outcome that freezes a grid, nothing is claimed conditionally on success or
+on completion. No theorem covers a parallel engine, runs with more than the four
 islands, or the engineered variant used at $p=10^6$ (Section~\ref{sec:supp-1m}); results about those are empirical and
 reported elsewhere.

@@ -209,8 +209,9 @@ A completed run pools its islands with equal weights,
 \begin{equation}\label{eq:pool}
   \PIPhat_j:=\frac14\sum_{r=1}^4\PIPhat_{r,j},\qquad \Zhat:=\frac14\sum_{r=1}^4\Zhat_r,
 \end{equation}
-and reports $\Shat$, the $\PIPhat_j$, the estimated median probability model $\MPMhat:=\{j:\PIPhat_j>1/2\}$, $\log\Zhat$,
-and a list $\mathcal T$ of at most $40p+1$ models with their log scores, the best among those it scored. Islands are not
+and reports $\Shat$, the $\PIPhat_j$, the estimated median probability model $\MPMhat:=\{j:\PIPhat_j>1/2\}$, $\log\Zhat$
+with a one-sided $95\%$ lower bound $\log(0.05\,\Zhat)$ for $\log Z$ (Appendix~\ref{app:params}), a flag saying whether
+$\Shat$ is certified, and a list $\mathcal T$ of at most $40p+1$ models with their log scores, the best among those it scored. Islands are not
 weighted by their evidence estimates. Diagnostics, which never change an output, are listed in
 Appendix~\ref{app:params}.
 
@@ -254,7 +255,8 @@ model and its certification (stages 6--7), the pooled estimates~\eqref{eq:pool},
 event $\Acal$ that the method uses the sampler and its calibration succeeds. A run in $\Acal$ may still stop later, at
 its time guard; every completed run lies in $\Acal$. They also
 use three conventions, which fix what ``the method'' means and idealise the computer; they are not statistical
-assumptions, and Appendix~\ref{app:params} lists them in full.
+assumptions, and Appendix~\ref{app:params} lists them in full. Exact arithmetic and ideal random numbers are also
+presupposed by Song and Liang's statements about their own sampler (their supplement, pp.~9--10, 12--13).
 \begin{itemize}[leftmargin=1.5em,itemsep=1pt]
   \item \phantomsection\label{asm:C1}\emph{Convention \as{C1} (the method):} exact arithmetic, the default configuration,
     valid inputs and seed. A run that meets it is \emph{admissible}; a sample size $n$ is admissible if some data set of
