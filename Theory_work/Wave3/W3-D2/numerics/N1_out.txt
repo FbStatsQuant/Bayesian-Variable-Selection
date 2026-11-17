@@ -12,7 +12,7 @@ A=2    s0=1   n=10000   p=100000000    m#=48    j0=6    k_n=49    3(A+1)(s0+1)lo
 A=2    s0=5   n=100     p=10000        m#=50    j0=26   k_n=55    3(A+1)(s0+1)log n=   248.7  5(A+1)(s0+1)log n=   414.5
 A=2    s0=5   n=400     p=160000       m#=115   j0=26   k_n=120   3(A+1)(s0+1)log n=   323.5  5(A+1)(s0+1)log n=   539.2
 A=2    s0=5   n=10000   p=100000000    m#=178   j0=26   k_n=183   3(A+1)(s0+1)log n=   497.4  5(A+1)(s0+1)log n=   828.9
-# max over the grid of k_n / [3(A+1)(s0+1) log n] = 0.3942 (150 cases); must be <= 1
+# max over the grid of k_n / [3(A+1)(s0+1) log n] = 0.3928 (150 cases); must be <= 1
 
 # (ii) end-to-end exact enumeration, p = 6, R = 300 replications per n, seed 20261117
 n      rho_n   sigma2_n  E_delta   P(HPM!=S0)  P(MPM!=S0)  E_maxPIPerr  r_n     E_delta/r_n

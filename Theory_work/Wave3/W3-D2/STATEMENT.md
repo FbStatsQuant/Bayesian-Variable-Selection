@@ -1,4 +1,4 @@
-# W3-D2 — STATEMENT v1.3 (2026-11-17; lead: Claude Opus 5.5, high; track D ticket #2, "check X"; v1.1 = statement-lock amendments [L1-1], [L1-2], locked by `reviews/L1_statement_lock_sol.md` (LOCK-WITH-AMENDMENTS; `reviews/L1_disposition.md`); v1.2 = §7 caveats written out and §0 gloss (EQUAL); v1.3 = K2 wording amendments [K2-F1], [K2-F2], [K2-E6] (EQUAL))
+# W3-D2 — STATEMENT v1.4 (2026-11-17; lead: Claude Opus 5.5, high; track D ticket #2, "check X"; v1.1 = statement-lock amendments [L1-1], [L1-2], locked by `reviews/L1_statement_lock_sol.md` (LOCK-WITH-AMENDMENTS; `reviews/L1_disposition.md`); v1.2 = §7 caveats written out and §0 gloss (EQUAL); v1.3 = K2 wording amendments [K2-F1], [K2-F2], [K2-E6] (EQUAL); v1.4 = council R1 editorial (EQUAL))
 
 Ticket W3-D2: Theorem 2 (claims card row 1.2, posterior concentration on a random Gaussian design) derived from the
 omitted-variables master `W3-MISR-R:CorGb-plus@1.0.1`, so that its eigenvalue floor is asked on smaller sets. Source:
@@ -60,11 +60,13 @@ The same holds with the floor asked only on |S| ≤ 3(A + 1)(s₀ + 1) log n.
 ## 3. Deterministic facts used (inside the proof of Theorem 2X; not separate claims)
 
 For every data set: max_j |PIP_j − 1{j ∈ S₀}| ≤ δ_n; {HPM ≠ S₀} ⊆ {δ_n ≥ ½}; {MPM ≠ S₀} ⊆ {δ_n ≥ ½}.
-(As [MISR] MIS-R (i) consequence 1, `:118-119`, "for every data set".)
+(The PIP inequality is [MISR] MIS-R (i) consequence 1, `:118-119`, "for every data set"; the HPM/MPM inclusions are proved
+in PROOF P0 [R1-opus-E3].)
 
 ## 4. Remarks (not part of the registered spans)
 
-(a) *Relation to Theorem 4.* Theorem 2X is Theorem 4 ([RV] row thm4, `:449-466`) with no omitted predictors: in
+(a) *Relation to Theorem 4.* Theorem 2X is Theorem 4 ([RV] row thm4, `:449-466`) with no omitted predictors, plus the
+deterministic PIP/MPM consequences of §3 [R1-opus-E7]: in
 (A0) of Theorem 4 take 𝒞 = [p], β^𝒞 = β, σ²_𝒞 = σ², α′ = α. Its floor size 3(A + 1)(s₀ + 1) log n is that of Theorem 4.
 (b) *What is not carried over [L1-2].* The master of the recorded Theorem 2 (`W2-APP:POST`, LSF,
 `Theory_work/Wave2/W2-APP/lemmas/L1_POST.md:20-25`) keeps a fixed positive floor on sets of size ≤ min(p, s₀ + j₀) (LSF (i)),
@@ -95,7 +97,8 @@ bound ([R1] B4.1), with room (numerics N1 (i): k_n is at most 0.40 of it on the 
 
 **STRONGER** (statement, against the constant-floor reader statement [RV] `:263-275`): every hypothesis is implied by the
 recorded one (Corollary 2X); the floor is asked on sets of size 3(A + 1)(s₀ + 1) log n instead of 5(A + 1)(s₀ + 1) log n;
-Σ need not be a correlation matrix; the fixed absolute signal bounds b_lo ≤ |β_j| ≤ b_hi and the fixed σ*² are replaced by
+Σ is not normalised (the floor and the signal are stated on the correlation scale; a cosmetic gain, since the recorded
+model takes Σ_n a correlation matrix without loss of generality, `NOTATION.md:21-23`) [R1-opus-E2]; the fixed absolute signal bounds b_lo ≤ |β_j| ≤ b_hi and the fixed σ*² are replaced by
 the relative conditions (A3) (energy and beta-min measured against σ², which may vary with n) [L1-2]; and the conclusions
 are in expectation (rate for E δ_n, the PIP error and the HPM/MPM error probabilities) instead of O_P / w.p. → 1.
 Two things are not stronger and must travel with the tag [L1-2, CP1]:
@@ -105,7 +108,7 @@ Two things are not stronger and must travel with the tag [L1-2, CP1]:
 - **Caveat (b) — floor on the large sets [K2-F2].** Against the old **master** (W2-APP:POST with LSF), which allows the
   floor on the sets of size ≤ k̄_n to vanish slowly, Theorem 2X needs a fixed floor on all its sets. Its master CorGb-plus
   (fixed floor on |T| ≤ k_n) and the old master are incomparable on the floor hypotheses (remark (b)); Theorem 2X's own
-  (A2) is stronger than LSF on the floor (k̄_n ≤ 3(A + 1)(s₀ + 1) log n for every n ≥ 3, compared on R = Σ_n) [K3-E1]. The gain "smaller sets" is
+  (A2) is stronger than LSF on the floor (k̄_n ≤ 3(A + 1)(s₀ + 1) log n for every n ≥ 3, compared on R = Σ_n; proof in PROOF P5) [K3-E1, R1-opus-E1]. The gain "smaller sets" is
   measured against the reader statement's 5(A + 1)(s₀ + 1) log n. STRONGER holds against the constant-floor reader
   statement only.
 
@@ -119,3 +122,4 @@ Two things are not stronger and must travel with the tag [L1-2, CP1]:
 | 1.2 | §7 caveats (a), (b) written out (outside the registered spans) | EQUAL | manager's CP1 answer | CP1 | none needed (EQUAL, outside spans) |
 | 1.2 | §0 posterior line: coefficient prior written as coded (ridge form, not "g-prior"); citation on one line | EQUAL | wording of the verbal gloss; the definition is the [W3P] pointer | lead (citecheck) | `reviews/K2_recheck_opus.md` (K1 read v1.1) [K2-E6] |
 | 1.3 | §0 gloss (working variance v, standardised X); §7 caveat (b) subject corrected | EQUAL | wording [K2-F1], [K2-F2] (outside the claim spans) | K2 | `reviews/K3_recheck_opus.md` [K3-E3] |
+| 1.4 | §3 attribution sentence (inside the §3 span; content unchanged); §4(a), §7 wording; pointer to PROOF P5 | EQUAL | council R1 editorial [R1-opus-E1, E2, E3, E7] | `reviews/R1_council_opus.md` | diff round D1 |

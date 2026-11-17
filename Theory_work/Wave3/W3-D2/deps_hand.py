@@ -7,12 +7,13 @@ ROWS = [  # id, file, a, b, uses
     ("S:setting", "STATEMENT.md", 14, 27, ""),
     ("S:Thm2X", "STATEMENT.md", 29, 48, "S:setting,S:det"),
     ("S:Cor2X", "STATEMENT.md", 50, 58, "S:Thm2X"),
-    ("S:det", "STATEMENT.md", 60, 63, "S:setting"),
-    ("S:inputs", "STATEMENT.md", 76, 84, ""),
+    ("S:det", "STATEMENT.md", 60, 64, "S:setting"),
+    ("S:inputs", "STATEMENT.md", 81, 86, ""),
     ("P:P0", "PROOF.md", 7, 17, "S:det"),
     ("P:P1", "PROOF.md", 18, 53, "S:setting,S:Thm2X,S:inputs"),
     ("P:P2", "PROOF.md", 54, 59, "P:P0,P:P1"),
-    ("P:P3", "PROOF.md", 60, 80, "S:Cor2X,P:P2"),
+    ("P:P3", "PROOF.md", 60, 83, "S:Cor2X,P:P2"),
+    ("P:P5", "PROOF.md", 84, 97, ""),
     ("R:registry", "REPORT.md", None, None, "S:Thm2X,S:Cor2X"),
 ]
 def span(f, a, b):

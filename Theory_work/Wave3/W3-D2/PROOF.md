@@ -1,7 +1,7 @@
-# W3-D2 — PROOF of Theorem 2X and Corollary 2X (v1.2, 2026-11-17; v1.1 = K1 amendments [K1-1]–[K1-4], `reviews/K1_disposition.md`; v1.2 = K2 editorial [K2-E1], [K2-E2] and line 3 rewritten to carry the full conditional status verbatim [K3-E2])
+# W3-D2 — PROOF of Theorem 2X and Corollary 2X (v1.3, 2026-11-17; v1.3 = council R1 editorial [R1-opus-E1, E4] (P5 added, a remark); v1.1 = K1 amendments [K1-1]–[K1-4], `reviews/K1_disposition.md`; v1.2 = K2 editorial [K2-E1], [K2-E2] and line 3 rewritten to carry the full conditional status verbatim [K3-E2])
 
 Status: **PROVED (by this seat, unchecked), conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1, W3-POST2:A0, C-MIS:GDb, C-MIS:Prop-P** (conditions carried from `W3-MISR-R:CorGb-plus@1.0.1`, STATEMENT §5).
-Statement: `STATEMENT.md` v1.3 (v1.1 locked; v1.2–v1.3 EQUAL) §§0–3 [K2-E2]; clause (E) is the explicit form of §1. Aliases as there. Every step is either a citation (file:line, id@version) or
+Statement: `STATEMENT.md` v1.4 (v1.1 locked; v1.2–v1.4 EQUAL) §§0–3 [K2-E2]; clause (E) is the explicit form of §1. Aliases as there. Every step is either a citation (file:line, id@version) or
 elementary; no new estimate.
 
 ## P0. Deterministic facts (STATEMENT §3)
@@ -61,7 +61,8 @@ By P0.1, E max_j |PIP_j − 1{j ∈ S₀}| ≤ E δ_n ≤ b_n. By P0.3 and Marko
 
 Assume the recorded hypotheses (STATEMENT §2). Then the §0 setting holds with m := m_n, Σ := Σ_n (Σ_jj = 1 > 0),
 σ² := σ*² > 0, α := α*, β := β* (parameters of the model of `Theory_work/Wave3/W3-READER/NOTATION.md:15-20`, read as
-non-random as in the recorded fixed-signal setting; α* may even be random, [MISR-R] `:52-53`) [K1-3].
+non-random as in the recorded fixed-signal setting) [K1-3]. (Remark on the master, not on Theorem 2X: CorGb-plus allows a
+random α, [MISR-R] `:52-53` [R1-opus-E4].)
 - (A1): (S2) and s₀ ≥ 1.
 - (A2) with c := φ²: R = Σ_n (unit diagonal), and every T with 1 ≤ |T| ≤ 3(A + 1)(s₀ + 1) log n also has
   |T| ≤ 5(A + 1)(s₀ + 1) log n, where the recorded floor gives λ_min(Σ_{n,T}) ≥ φ². (If the recorded floor is asked only on
@@ -76,5 +77,21 @@ error is ≥ 0 with expectation O(r_n), hence O_P(r_n). ∎ (Corollary 2X)
 
 ## P4. What the proof does not use
 
-No upper eigenvalue bound on Σ; no condition on m; α only deterministic (and even that is not used, [MISR-R] `:52-53`) [K1-3]; no fixed σ², Σ or β (only the fixed constants A, s₀, c, M₀ and
+No upper eigenvalue bound on Σ; no condition on m; α deterministic as in §0 (the master itself would allow a random α, [MISR-R] `:52-53`; a remark on
+the master, not on Theorem 2X) [K1-3, R1-opus-E4]; no fixed σ², Σ or β (only the fixed constants A, s₀, c, M₀ and
 ρ_n → ∞); no Gaussianity beyond the rows and the noise (both used only through CorGb-plus).
+
+## P5. Supporting arithmetic for STATEMENT §7 caveat (b) (remark; not part of a claim) [R1-opus-E1]
+
+Claim: k̄_n := min{p, s₀ + max(j₀, m̄_n)} ≤ 3(A + 1)(s₀ + 1) log n for every n ≥ 3, A ≥ 1, s₀ ≥ 1, p ≤ n^A, with m̄_n of
+`Theory_work/Wave2/W2-APP/lemmas/L1_POST.md:20-21`. Write s := s₀, t := log n, d := 1/log(3/2) < 2.4664.
+- j₀ branch: s + j₀ ≤ (2A + 2)s + 2 ≤ 3(A + 1)(s + 1)t since t > 1 ([R1] B4.1, `:45`).
+- m̄_n branch: as in [R1] B2.1 (`:38-40`), s + m̄_n ≤ d(As + s/2 + 1)t + (1 + d log 2)(s + 1), and 1 + d log 2 = d log 3 < 2.7096.
+  So it suffices that t·[3(A + 1)(s + 1) − d(As + s/2 + 1)] ≥ 2.7096(s + 1). The bracket is
+  ≥ 0.5336As + 3A + 1.7668s + 0.5336 > 0, increasing in A.
+  - n ≥ 4 (t ≥ log 4 > 1.386): at A = 1 the left side is ≥ 1.386(2.3004s + 3.5336) ≥ 3.188s + 4.897 > 2.7096s + 2.7096,
+    and the left side increases with A.
+  - n = 3 (t = log 3 > 1.0986): the inequality holds if A(0.5862s + 3.2958) ≥ 0.7686s + 2.1239; for A ≥ 1.32 the left side
+    is ≥ 0.7737s + 4.350, which exceeds the right side for every s ≥ 1. For 1 ≤ A < 1.32 the cap gives k̄_n ≤ p ≤ 3^A < 4.27,
+    so k̄_n ≤ 4 < 3·2·2·1.0986 ≤ 3(A + 1)(s + 1) log 3.
+Numerical cross-check: council R1 Opus seat, 7 426 052 grid cases, 0 violations (`reviews/R1_council_opus.md`).

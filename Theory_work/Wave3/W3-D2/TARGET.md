@@ -21,7 +21,7 @@
 | status | — | — | **short**: conditional (CorGb-plus's conditions; W3-POST2:C ← W3-POST:Prop-LB unchecked) vs "clean" |
 
 ## Boundary numerics
-`numerics/N1_floor_and_e2e.py` → `N1_out.txt`: (i) exact k_n vs 3(…) and 5(…) log n on 150 grid cases: max ratio 0.394;
-(ii) end-to-end exact enumeration (p = 6) with Σ_n, σ_n² varying with n and Σ not a correlation matrix (outside the recorded
-Theorem 2, inside Theorem 2X): E δ_n / r_n = 2.14, 1.58, 1.12, 1.15, 1.08, 1.07 at n = 50…1600; P(HPM ≠ S₀) = 0 at n = 1600.
+`numerics/N1_floor_and_e2e.py` → `N1_out.txt`: (i) k_n (m♯_n from its definition) vs 3(…) and 5(…) log n on 150 grid cases: max ratio 0.393 (recomputed with the stable ratio recurrence after council R1 sol F1; first run 0.394 had a precision loss at p = 10¹⁵);
+(ii) end-to-end exact enumeration (p = 6) with Σ_n, σ_n² varying with n (σ_n² → ∞ is the genuine departure from the recorded Theorem 2; a non-unit diagonal of Σ is
+cosmetic) [R1-opus-E2] (inside Theorem 2X): E δ_n / r_n = 2.14, 1.58, 1.12, 1.15, 1.08, 1.07 at n = 50…1600; P(HPM ≠ S₀) = 0 at n = 1600.
 A floor-size boundary cannot be simulated at small p (3(A+1)(s₀+1) log n > p); the floor's size is a proof device.

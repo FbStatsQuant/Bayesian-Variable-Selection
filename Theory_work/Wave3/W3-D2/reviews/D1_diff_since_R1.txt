@@ -1,0 +1,270 @@
+diff --git a/Theory_work/Wave3/W3-D2/DEPS.tsv b/Theory_work/Wave3/W3-D2/DEPS.tsv
+index 91c14c47..c5cc7d73 100644
+--- a/Theory_work/Wave3/W3-D2/DEPS.tsv
++++ b/Theory_work/Wave3/W3-D2/DEPS.tsv
+@@ -2,10 +2,11 @@ id	file[:lines]	uses	sha	checked_sha	checked_by	state
+ S:setting	STATEMENT.md:14-27		4e4a43ab4a85892a	4e4a43ab4a85892a	reviews/K3_recheck_opus.md	OK
+ S:Thm2X	STATEMENT.md:29-48	S:setting,S:det	c84965edd299de7e	c84965edd299de7e	reviews/K1_linecheck_opus.md	OK
+ S:Cor2X	STATEMENT.md:50-58	S:Thm2X	0dc7f82d2dbdcb7f	0dc7f82d2dbdcb7f	reviews/K1_linecheck_opus.md	OK
+-S:det	STATEMENT.md:60-63	S:setting	ab5b884b6923071e	ab5b884b6923071e	reviews/K1_linecheck_opus.md	OK
+-S:inputs	STATEMENT.md:76-84		591718af1bf47637	591718af1bf47637	reviews/K1_linecheck_opus.md	OK
++S:det	STATEMENT.md:60-64	S:setting	2d04f4d7340d147c	2d04f4d7340d147c	reviews/D1_council_opus.md (diff round D1, in scope)	OK
++S:inputs	STATEMENT.md:81-86		f8b4273304092de0	f8b4273304092de0	reviews/D1_council_opus.md (diff round D1, in scope)	OK
+ P:P0	PROOF.md:7-17	S:det	1211dc4d154080dc	1211dc4d154080dc	reviews/K1_linecheck_opus.md	OK
+ P:P1	PROOF.md:18-53	S:setting,S:Thm2X,S:inputs	6e0d31edcc304018	6e0d31edcc304018	reviews/K3_recheck_opus.md	OK
+ P:P2	PROOF.md:54-59	P:P0,P:P1	8a89d37202db7624	8a89d37202db7624	reviews/K1_linecheck_opus.md	OK
+-P:P3	PROOF.md:60-80	S:Cor2X,P:P2	c21f8b008bac3c20	c21f8b008bac3c20	reviews/K3_recheck_opus.md	OK
+-R:registry	REPORT.md:61-81	S:Thm2X,S:Cor2X	24453117f6141397	24453117f6141397	reviews/K3_disposition.md (K3 fixes verbatim; council sweep)	OK
++P:P3	PROOF.md:60-83	S:Cor2X,P:P2	b2487f8789e613f9	b2487f8789e613f9	reviews/D1_council_opus.md (diff round D1, in scope)	OK
++P:P5	PROOF.md:84-97		8d16597bb9a8717d	8d16597bb9a8717d	reviews/D1_council_opus.md (diff round D1, in scope)	OK
++R:registry	REPORT.md:61-81	S:Thm2X,S:Cor2X	b2140e8277de6a99	b2140e8277de6a99	reviews/D1_council_opus.md (diff round D1, in scope)	OK
+diff --git a/Theory_work/Wave3/W3-D2/PROOF.md b/Theory_work/Wave3/W3-D2/PROOF.md
+index 35e2dce5..6c2bd86f 100644
+--- a/Theory_work/Wave3/W3-D2/PROOF.md
++++ b/Theory_work/Wave3/W3-D2/PROOF.md
+@@ -1,7 +1,7 @@
+-# W3-D2 — PROOF of Theorem 2X and Corollary 2X (v1.2, 2026-11-17; v1.1 = K1 amendments [K1-1]–[K1-4], `reviews/K1_disposition.md`; v1.2 = K2 editorial [K2-E1], [K2-E2] and line 3 rewritten to carry the full conditional status verbatim [K3-E2])
++# W3-D2 — PROOF of Theorem 2X and Corollary 2X (v1.3, 2026-11-17; v1.3 = council R1 editorial [R1-opus-E1, E4] (P5 added, a remark); v1.1 = K1 amendments [K1-1]–[K1-4], `reviews/K1_disposition.md`; v1.2 = K2 editorial [K2-E1], [K2-E2] and line 3 rewritten to carry the full conditional status verbatim [K3-E2])
+ 
+ Status: **PROVED (by this seat, unchecked), conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1, W3-POST2:A0, C-MIS:GDb, C-MIS:Prop-P** (conditions carried from `W3-MISR-R:CorGb-plus@1.0.1`, STATEMENT §5).
+-Statement: `STATEMENT.md` v1.3 (v1.1 locked; v1.2–v1.3 EQUAL) §§0–3 [K2-E2]; clause (E) is the explicit form of §1. Aliases as there. Every step is either a citation (file:line, id@version) or
++Statement: `STATEMENT.md` v1.4 (v1.1 locked; v1.2–v1.4 EQUAL) §§0–3 [K2-E2]; clause (E) is the explicit form of §1. Aliases as there. Every step is either a citation (file:line, id@version) or
+ elementary; no new estimate.
+ 
+ ## P0. Deterministic facts (STATEMENT §3)
+@@ -61,7 +61,8 @@ By P0.1, E max_j |PIP_j − 1{j ∈ S₀}| ≤ E δ_n ≤ b_n. By P0.3 and Marko
+ 
+ Assume the recorded hypotheses (STATEMENT §2). Then the §0 setting holds with m := m_n, Σ := Σ_n (Σ_jj = 1 > 0),
+ σ² := σ*² > 0, α := α*, β := β* (parameters of the model of `Theory_work/Wave3/W3-READER/NOTATION.md:15-20`, read as
+-non-random as in the recorded fixed-signal setting; α* may even be random, [MISR-R] `:52-53`) [K1-3].
++non-random as in the recorded fixed-signal setting) [K1-3]. (Remark on the master, not on Theorem 2X: CorGb-plus allows a
++random α, [MISR-R] `:52-53` [R1-opus-E4].)
+ - (A1): (S2) and s₀ ≥ 1.
+ - (A2) with c := φ²: R = Σ_n (unit diagonal), and every T with 1 ≤ |T| ≤ 3(A + 1)(s₀ + 1) log n also has
+   |T| ≤ 5(A + 1)(s₀ + 1) log n, where the recorded floor gives λ_min(Σ_{n,T}) ≥ φ². (If the recorded floor is asked only on
+@@ -76,5 +77,21 @@ error is ≥ 0 with expectation O(r_n), hence O_P(r_n). ∎ (Corollary 2X)
+ 
+ ## P4. What the proof does not use
+ 
+-No upper eigenvalue bound on Σ; no condition on m; α only deterministic (and even that is not used, [MISR-R] `:52-53`) [K1-3]; no fixed σ², Σ or β (only the fixed constants A, s₀, c, M₀ and
++No upper eigenvalue bound on Σ; no condition on m; α deterministic as in §0 (the master itself would allow a random α, [MISR-R] `:52-53`; a remark on
++the master, not on Theorem 2X) [K1-3, R1-opus-E4]; no fixed σ², Σ or β (only the fixed constants A, s₀, c, M₀ and
+ ρ_n → ∞); no Gaussianity beyond the rows and the noise (both used only through CorGb-plus).
++
++## P5. Supporting arithmetic for STATEMENT §7 caveat (b) (remark; not part of a claim) [R1-opus-E1]
++
++Claim: k̄_n := min{p, s₀ + max(j₀, m̄_n)} ≤ 3(A + 1)(s₀ + 1) log n for every n ≥ 3, A ≥ 1, s₀ ≥ 1, p ≤ n^A, with m̄_n of
++`Theory_work/Wave2/W2-APP/lemmas/L1_POST.md:20-21`. Write s := s₀, t := log n, d := 1/log(3/2) < 2.4664.
++- j₀ branch: s + j₀ ≤ (2A + 2)s + 2 ≤ 3(A + 1)(s + 1)t since t > 1 ([R1] B4.1, `:45`).
++- m̄_n branch: as in [R1] B2.1 (`:38-40`), s + m̄_n ≤ d(As + s/2 + 1)t + (1 + d log 2)(s + 1), and 1 + d log 2 = d log 3 < 2.7096.
++  So it suffices that t·[3(A + 1)(s + 1) − d(As + s/2 + 1)] ≥ 2.7096(s + 1). The bracket is
++  ≥ 0.5336As + 3A + 1.7668s + 0.5336 > 0, increasing in A.
++  - n ≥ 4 (t ≥ log 4 > 1.386): at A = 1 the left side is ≥ 1.386(2.3004s + 3.5336) ≥ 3.188s + 4.897 > 2.7096s + 2.7096,
++    and the left side increases with A.
++  - n = 3 (t = log 3 > 1.0986): the inequality holds if A(0.5862s + 3.2958) ≥ 0.7686s + 2.1239; for A ≥ 1.32 the left side
++    is ≥ 0.7737s + 4.350, which exceeds the right side for every s ≥ 1. For 1 ≤ A < 1.32 the cap gives k̄_n ≤ p ≤ 3^A < 4.27,
++    so k̄_n ≤ 4 < 3·2·2·1.0986 ≤ 3(A + 1)(s + 1) log 3.
++Numerical cross-check: council R1 Opus seat, 7 426 052 grid cases, 0 violations (`reviews/R1_council_opus.md`).
+diff --git a/Theory_work/Wave3/W3-D2/READER_DELTA.md b/Theory_work/Wave3/W3-D2/READER_DELTA.md
+index 52ad9df0..d08205a4 100644
+--- a/Theory_work/Wave3/W3-D2/READER_DELTA.md
++++ b/Theory_work/Wave3/W3-D2/READER_DELTA.md
+@@ -8,15 +8,15 @@ conclusions are in expectation. Tag: STRONGER (statement); status becomes condit
+ 
+ **New text (proposal).**
+ > **Theorem 2.** Let the rows of $X^{\mathrm r}$ be i.i.d. $N_p(m,\Sigma)$ with $\Sigma_{jj}>0$, and let $R$ be the
+-> correlation matrix of a row. Assume (S1) with any $\sigma^2>0$ and
++> correlation matrix of a row. Assume (S1) with $\sigma^2>0$ allowed to depend on $n$ [R1-opus-E6] and
+ > - **(A1) Dimension and sparsity.** $2\le p\le n^A$; $s_0\ge1$ fixed.
+-> - **(A2) Sparse eigenvalue floor.** $\lambda_{\min}(R_{TT})\ge c$ for every $T$ with $|T|\le3(A+1)(s_0+1)\log n$, for a fixed $c>0$.
++> - **(A2) Sparse eigenvalue floor.** $\lambda_{\min}(R_{TT})\ge c$ for every $T$ with $1\le|T|\le3(A+1)(s_0+1)\log n$, for a fixed $c>0$.
+ > - **(A3) Signal relative to the noise.** $\beta^\top\Sigma\beta\le M_0\sigma^2$ and $n\min_{j\in S_0}\Sigma_{jj}\beta_j^2/(\sigma^2\log n)\to\infty$.
+ >
+ > No condition is placed on how $m$, $\Sigma$, $\beta$ or $\sigma^2$ vary with $n$. Then
+ > $$E\big[1-\pi(S_0\mid y)\big]=O\Big(\sqrt{\tfrac{\log n}{n}}\Big),\quad P(\mathrm{HPM}\neq S_0)+P(\mathrm{MPM}\neq S_0)=O\Big(\sqrt{\tfrac{\log n}{n}}\Big),\quad E\max_j|\mathrm{PIP}_j-\mathbf 1\{j\in S_0\}|=O\Big(\sqrt{\tfrac{\log n}{n}}\Big).$$
+ > *Remarks.* Fixed $\sigma^2$, a correlation matrix $\Sigma$ and $b_{\mathrm{lo}}\le|\beta_j|\le b_{\mathrm{hi}}$ on $S_0$ give (A3)
+-> with $M_0=s_0^2b_{\mathrm{hi}}^2/\sigma^2$. This is Theorem 4 with no omitted predictors.
++> with $M_0=s_0^2b_{\mathrm{hi}}^2/\sigma^2$. This is Theorem 4 with no omitted predictors, plus the deterministic PIP/MPM consequences [R1-opus-E7].
+ 
+ **Bridges.** B2.1′ := `W3-D2:Thm2X` (STATEMENT §1; PROOF P1–P2: CorGb-plus with q = 0 + `W3-READER:R1` B4.1);
+ B2.1″ := `W3-D2:Cor2X` (old hypotheses ⇒ new; PROOF P3). The old B2.1–B2.3 stay for the coexisting O_P master.
+diff --git a/Theory_work/Wave3/W3-D2/REPORT.md b/Theory_work/Wave3/W3-D2/REPORT.md
+index b2af1646..e93d6ac7 100644
+--- a/Theory_work/Wave3/W3-D2/REPORT.md
++++ b/Theory_work/Wave3/W3-D2/REPORT.md
+@@ -24,11 +24,11 @@ kill point not reached. Tag against row 1.2's reader statement: STRONGER (`STATE
+ ## 3. Card text (HQ decision 2026-11-17: row 1.2 COEXIST)
+ Row 1.2 unchanged (statement, masters, "clean" mark, vanishing-floor remark). Added sentence under row 1.2 (body, not abstract):
+ > *Smaller-set, expectation form.* Under the same model with the floor asked only on sets of size at most $3(A+1)(s_0+1)\log n$ [K2-E5] (on
+-> the correlation matrix of a row), and energy and beta-min measured against the noise variance ($\Sigma$, $\beta$,
+-> $\sigma^2$ may vary with $n$), $E[1-\pi(S_0\mid y)]=O(\sqrt{\log n/n})$, and the HPM and MPM error probabilities and the
+-> expected maximal PIP error are $O(\sqrt{\log n/n})$. This is Theorem 4 with no omitted predictors. It is conditional on the
++> the correlation matrix of a row), the noise variance allowed to depend on $n$, and energy and beta-min measured against the noise variance ($\Sigma$ and $\beta$
++> may also vary with $n$) [R1-opus-E6], $E[1-\pi(S_0\mid y)]=O(\sqrt{\log n/n})$, and the HPM and MPM error probabilities and the
++> expected maximal PIP error are $O(\sqrt{\log n/n})$. This is Theorem 4 with no omitted predictors, plus the deterministic PIP/MPM consequences [R1-opus-E7]. It is conditional on the
+ > inputs of Theorem 4's master, one of which (a deterministic rate lower bound used in the expectation route) has not yet had
+-> an independent check.
++> an independent check; two others are wave-1 results [R1-opus-E5].
+ 
+ "Master" cell for the added sentence: `W3-D2:Thm2X`, `W3-D2:Cor2X`, statuses as recorded at CP3, with the inherited
+ conditions written out: W3-POST2:C (itself conditional on W3-POST:Prop-LB, "PROVED (by this seat, unchecked)"), W3-POST2:E,
+@@ -39,7 +39,7 @@ stays **clean**.
+ - **Tier / size:** Tier B re-check, ≈ 2–3 h lead time + one Sol review: line-check the existing implication note
+   `Theory_work/Dept/research/IMPL_PSHARPB_PROPLB_opus.md` (dept/theory; Opus, unchecked) and hand the recorder an `implies` edge.
+ - **Inputs:** `W3-PSHARP:B@1.0.0` (PROVED-CHECKED, `W3-PSHARP/STATEMENT.md:90-114`), Prop-LB (`W3-POST/lemmas/LB_rate_lower_bound.md`,
+-  40 lines), [W3P] §0; no new mathematics (B is strictly stronger on LB's domain, per the note).
++  40 lines), [W3P] §0; no new mathematics expected (OPEN, not checked here: the unchecked note says B is strictly stronger on LB's domain) [R1-sol-E1].
+ - **What it does not clear:** Thm2X would still be conditional through CorGb-plus on C-MIS:GDb and C-MIS:Prop-P (wave-1
+   labels, not PROVED-CHECKED), so X2 alone does not make the added sentence clean.
+ 
+@@ -62,7 +62,7 @@ Changelog: `STATEMENT.md` §8. DEPS: `DEPS.tsv`. Citation check: `citecheck.py`
+ 
+ ```
+ REGISTRY
+-claim: W3-D2:Thm2X | kind: theorem | statement: STATEMENT.md:29-48 | premises: STATEMENT.md:14-27 ; STATEMENT.md:60-63 ; STATEMENT.md:77-84
++claim: W3-D2:Thm2X | kind: theorem | statement: STATEMENT.md:29-48 | premises: STATEMENT.md:14-27 ; STATEMENT.md:60-64 ; STATEMENT.md:81-86
+ status: PROVED (by this seat, unchecked), conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1, W3-POST2:A0, C-MIS:GDb, C-MIS:Prop-P | status_source: PROOF.md:3
+ assumptions: A:IID-GAUSS-ROWS ; A:GAUSS-NOISE ; A:P-POLY ; A:FIXED-S0 ; A:CORR-FLOOR-LOG (new | log-size floor on the row correlation matrix | lambda_min(R_TT) >= c for every T of size at most 3(A+1)(s0+1) log n, fixed c > 0 | STATEMENT.md:35-36 | shared no | bridge W3-D2:Thm2X) ; A:POP-SNR (new | population signal relative to the noise variance | beta' Sigma beta <= M0 sigma^2 and n min over j in S0 of Sigma_jj beta_j^2 / (sigma^2 log n) -> infinity [K3-F2] | STATEMENT.md:37 | shared no | bridge W3-D2:Thm2X)
+ conclusion: posterior: E delta_n, P(HPM != S0), P(MPM != S0) and E max_j |PIP_j - 1{j in S0}| are O(r_n) under the joint law of design and noise; explicit bounds b_n (E delta_n, E PIP error) and 2 b_n (HPM, MPM) for n >= n*, b_n = C r_n + (2 + 2 k_n) n^-2 + n^-1 | rate: r_n = sqrt(log n / n) | scope: iid Gaussian rows, 2 <= p <= n^A, s0 >= 1 fixed; Sigma, beta, sigma^2 may vary with n
+diff --git a/Theory_work/Wave3/W3-D2/STATEMENT.md b/Theory_work/Wave3/W3-D2/STATEMENT.md
+index 0d05ccfa..b2b4b57a 100644
+--- a/Theory_work/Wave3/W3-D2/STATEMENT.md
++++ b/Theory_work/Wave3/W3-D2/STATEMENT.md
+@@ -1,4 +1,4 @@
+-# W3-D2 — STATEMENT v1.3 (2026-11-17; lead: Claude Opus 5.5, high; track D ticket #2, "check X"; v1.1 = statement-lock amendments [L1-1], [L1-2], locked by `reviews/L1_statement_lock_sol.md` (LOCK-WITH-AMENDMENTS; `reviews/L1_disposition.md`); v1.2 = §7 caveats written out and §0 gloss (EQUAL); v1.3 = K2 wording amendments [K2-F1], [K2-F2], [K2-E6] (EQUAL))
++# W3-D2 — STATEMENT v1.4 (2026-11-17; lead: Claude Opus 5.5, high; track D ticket #2, "check X"; v1.1 = statement-lock amendments [L1-1], [L1-2], locked by `reviews/L1_statement_lock_sol.md` (LOCK-WITH-AMENDMENTS; `reviews/L1_disposition.md`); v1.2 = §7 caveats written out and §0 gloss (EQUAL); v1.3 = K2 wording amendments [K2-F1], [K2-F2], [K2-E6] (EQUAL); v1.4 = council R1 editorial (EQUAL))
+ 
+ Ticket W3-D2: Theorem 2 (claims card row 1.2, posterior concentration on a random Gaussian design) derived from the
+ omitted-variables master `W3-MISR-R:CorGb-plus@1.0.1`, so that its eigenvalue floor is asked on smaller sets. Source:
+@@ -60,11 +60,13 @@ The same holds with the floor asked only on |S| ≤ 3(A + 1)(s₀ + 1) log n.
+ ## 3. Deterministic facts used (inside the proof of Theorem 2X; not separate claims)
+ 
+ For every data set: max_j |PIP_j − 1{j ∈ S₀}| ≤ δ_n; {HPM ≠ S₀} ⊆ {δ_n ≥ ½}; {MPM ≠ S₀} ⊆ {δ_n ≥ ½}.
+-(As [MISR] MIS-R (i) consequence 1, `:118-119`, "for every data set".)
++(The PIP inequality is [MISR] MIS-R (i) consequence 1, `:118-119`, "for every data set"; the HPM/MPM inclusions are proved
++in PROOF P0 [R1-opus-E3].)
+ 
+ ## 4. Remarks (not part of the registered spans)
+ 
+-(a) *Relation to Theorem 4.* Theorem 2X is Theorem 4 ([RV] row thm4, `:449-466`) with no omitted predictors: in
++(a) *Relation to Theorem 4.* Theorem 2X is Theorem 4 ([RV] row thm4, `:449-466`) with no omitted predictors, plus the
++deterministic PIP/MPM consequences of §3 [R1-opus-E7]: in
+ (A0) of Theorem 4 take 𝒞 = [p], β^𝒞 = β, σ²_𝒞 = σ², α′ = α. Its floor size 3(A + 1)(s₀ + 1) log n is that of Theorem 4.
+ (b) *What is not carried over [L1-2].* The master of the recorded Theorem 2 (`W2-APP:POST`, LSF,
+ `Theory_work/Wave2/W2-APP/lemmas/L1_POST.md:20-25`) keeps a fixed positive floor on sets of size ≤ min(p, s₀ + j₀) (LSF (i)),
+@@ -95,7 +97,8 @@ bound ([R1] B4.1), with room (numerics N1 (i): k_n is at most 0.40 of it on the
+ 
+ **STRONGER** (statement, against the constant-floor reader statement [RV] `:263-275`): every hypothesis is implied by the
+ recorded one (Corollary 2X); the floor is asked on sets of size 3(A + 1)(s₀ + 1) log n instead of 5(A + 1)(s₀ + 1) log n;
+-Σ need not be a correlation matrix; the fixed absolute signal bounds b_lo ≤ |β_j| ≤ b_hi and the fixed σ*² are replaced by
++Σ is not normalised (the floor and the signal are stated on the correlation scale; a cosmetic gain, since the recorded
++model takes Σ_n a correlation matrix without loss of generality, `NOTATION.md:21-23`) [R1-opus-E2]; the fixed absolute signal bounds b_lo ≤ |β_j| ≤ b_hi and the fixed σ*² are replaced by
+ the relative conditions (A3) (energy and beta-min measured against σ², which may vary with n) [L1-2]; and the conclusions
+ are in expectation (rate for E δ_n, the PIP error and the HPM/MPM error probabilities) instead of O_P / w.p. → 1.
+ Two things are not stronger and must travel with the tag [L1-2, CP1]:
+@@ -105,7 +108,7 @@ Two things are not stronger and must travel with the tag [L1-2, CP1]:
+ - **Caveat (b) — floor on the large sets [K2-F2].** Against the old **master** (W2-APP:POST with LSF), which allows the
+   floor on the sets of size ≤ k̄_n to vanish slowly, Theorem 2X needs a fixed floor on all its sets. Its master CorGb-plus
+   (fixed floor on |T| ≤ k_n) and the old master are incomparable on the floor hypotheses (remark (b)); Theorem 2X's own
+-  (A2) is stronger than LSF on the floor (k̄_n ≤ 3(A + 1)(s₀ + 1) log n for every n ≥ 3, compared on R = Σ_n) [K3-E1]. The gain "smaller sets" is
++  (A2) is stronger than LSF on the floor (k̄_n ≤ 3(A + 1)(s₀ + 1) log n for every n ≥ 3, compared on R = Σ_n; proof in PROOF P5) [K3-E1, R1-opus-E1]. The gain "smaller sets" is
+   measured against the reader statement's 5(A + 1)(s₀ + 1) log n. STRONGER holds against the constant-floor reader
+   statement only.
+ 
+@@ -119,3 +122,4 @@ Two things are not stronger and must travel with the tag [L1-2, CP1]:
+ | 1.2 | §7 caveats (a), (b) written out (outside the registered spans) | EQUAL | manager's CP1 answer | CP1 | none needed (EQUAL, outside spans) |
+ | 1.2 | §0 posterior line: coefficient prior written as coded (ridge form, not "g-prior"); citation on one line | EQUAL | wording of the verbal gloss; the definition is the [W3P] pointer | lead (citecheck) | `reviews/K2_recheck_opus.md` (K1 read v1.1) [K2-E6] |
+ | 1.3 | §0 gloss (working variance v, standardised X); §7 caveat (b) subject corrected | EQUAL | wording [K2-F1], [K2-F2] (outside the claim spans) | K2 | `reviews/K3_recheck_opus.md` [K3-E3] |
++| 1.4 | §3 attribution sentence (inside the §3 span; content unchanged); §4(a), §7 wording; pointer to PROOF P5 | EQUAL | council R1 editorial [R1-opus-E1, E2, E3, E7] | `reviews/R1_council_opus.md` | diff round D1 |
+diff --git a/Theory_work/Wave3/W3-D2/TARGET.md b/Theory_work/Wave3/W3-D2/TARGET.md
+index dd13be56..9c6f9c12 100644
+--- a/Theory_work/Wave3/W3-D2/TARGET.md
++++ b/Theory_work/Wave3/W3-D2/TARGET.md
+@@ -21,7 +21,7 @@
+ | status | — | — | **short**: conditional (CorGb-plus's conditions; W3-POST2:C ← W3-POST:Prop-LB unchecked) vs "clean" |
+ 
+ ## Boundary numerics
+-`numerics/N1_floor_and_e2e.py` → `N1_out.txt`: (i) exact k_n vs 3(…) and 5(…) log n on 150 grid cases: max ratio 0.394;
+-(ii) end-to-end exact enumeration (p = 6) with Σ_n, σ_n² varying with n and Σ not a correlation matrix (outside the recorded
+-Theorem 2, inside Theorem 2X): E δ_n / r_n = 2.14, 1.58, 1.12, 1.15, 1.08, 1.07 at n = 50…1600; P(HPM ≠ S₀) = 0 at n = 1600.
++`numerics/N1_floor_and_e2e.py` → `N1_out.txt`: (i) k_n (m♯_n from its definition) vs 3(…) and 5(…) log n on 150 grid cases: max ratio 0.393 (recomputed with the stable ratio recurrence after council R1 sol F1; first run 0.394 had a precision loss at p = 10¹⁵);
++(ii) end-to-end exact enumeration (p = 6) with Σ_n, σ_n² varying with n (σ_n² → ∞ is the genuine departure from the recorded Theorem 2; a non-unit diagonal of Σ is
++cosmetic) [R1-opus-E2] (inside Theorem 2X): E δ_n / r_n = 2.14, 1.58, 1.12, 1.15, 1.08, 1.07 at n = 50…1600; P(HPM ≠ S₀) = 0 at n = 1600.
+ A floor-size boundary cannot be simulated at small p (3(A+1)(s₀+1) log n > p); the floor's size is a proof device.
+diff --git a/Theory_work/Wave3/W3-D2/deps_hand.py b/Theory_work/Wave3/W3-D2/deps_hand.py
+index 25636be8..34cef6c9 100644
+--- a/Theory_work/Wave3/W3-D2/deps_hand.py
++++ b/Theory_work/Wave3/W3-D2/deps_hand.py
+@@ -7,12 +7,13 @@ ROWS = [  # id, file, a, b, uses
+     ("S:setting", "STATEMENT.md", 14, 27, ""),
+     ("S:Thm2X", "STATEMENT.md", 29, 48, "S:setting,S:det"),
+     ("S:Cor2X", "STATEMENT.md", 50, 58, "S:Thm2X"),
+-    ("S:det", "STATEMENT.md", 60, 63, "S:setting"),
+-    ("S:inputs", "STATEMENT.md", 76, 84, ""),
++    ("S:det", "STATEMENT.md", 60, 64, "S:setting"),
++    ("S:inputs", "STATEMENT.md", 81, 86, ""),
+     ("P:P0", "PROOF.md", 7, 17, "S:det"),
+     ("P:P1", "PROOF.md", 18, 53, "S:setting,S:Thm2X,S:inputs"),
+     ("P:P2", "PROOF.md", 54, 59, "P:P0,P:P1"),
+-    ("P:P3", "PROOF.md", 60, 80, "S:Cor2X,P:P2"),
++    ("P:P3", "PROOF.md", 60, 83, "S:Cor2X,P:P2"),
++    ("P:P5", "PROOF.md", 84, 97, ""),
+     ("R:registry", "REPORT.md", None, None, "S:Thm2X,S:Cor2X"),
+ ]
+ def span(f, a, b):
+diff --git a/Theory_work/Wave3/W3-D2/numerics/N1_floor_and_e2e.py b/Theory_work/Wave3/W3-D2/numerics/N1_floor_and_e2e.py
+index 8db09e2e..3464e22c 100644
+--- a/Theory_work/Wave3/W3-D2/numerics/N1_floor_and_e2e.py
++++ b/Theory_work/Wave3/W3-D2/numerics/N1_floor_and_e2e.py
+@@ -1,12 +1,13 @@
+ #!/usr/bin/env python3
+-"""N1 (W3-D2): (i) floor-size arithmetic of Lemma D2-B1; (ii) one end-to-end exact check of Theorem 2X.
++"""N1 (W3-D2): (i) floor-size arithmetic of `W3-READER:R1` B4.1 [R1-opus-E8]; (ii) one end-to-end exact check of Theorem 2X.
+ 
+ (i) For the coded size cutoff m#_n of [W3P] Theory_work/Wave3/W3-POST/STATEMENT.md:33-39
+     q_k = C(p, k) w(k), w(k) = 1/2 / C(2p - 1, k)  (0 <= k <= K = min(p, floor(n/2))),
+     R_m = sum_{k = max(m+1, 0)}^{K} q_k / w(s0),
+     m#_n = min{m >= s0 : R_m <= n^{-(s0+1)/2} e^{-omega}},  omega = (1/2) log n,
+     j0 = ceil((2A + 1) s0) + 1,  k_n = s0 + max(j0, m#_n)   (W3-MISR-R STATEMENT.md:96-100),
+-computed exactly in log space, and compared with 3(A+1)(s0+1) log n (Theorem 2X, (A2)) and with the recorded
++computed in log space by the exact ratio q_{k+1}/q_k = (p-k)/(2p-1-k) (council R1 F1: the earlier lgamma
++differences lost precision at p = 1e15), and compared with 3(A+1)(s0+1) log n (Theorem 2X, (A2)) and with the recorded
+ row-1.2 size 5(A+1)(s0+1) log n. Worst case over the grid uses p = floor(n^A) (largest allowed p).
+ 
+ (ii) Exact enumeration of the coded target pi of [W3P] :16-29 (p = 6) under random Gaussian designs with
+@@ -33,12 +34,20 @@ def logsumexp(v):
+     return m + math.log(sum(math.exp(x - m) for x in v))
+ 
+ 
++def log_comb_small(N, k):
++    """log C(N, k) for huge N and small k, without cancellation: sum of log(N - i) minus log k! (council R1 F1)."""
++    return sum(math.log(N - i) for i in range(k)) - math.lgamma(k + 1)
++
++
+ def m_sharp(n, p, s0):
+     K = min(p, n // 2)
+     if s0 > K:
+         return None
+-    logw_s0 = math.log(0.5) - log_comb(2 * p - 1, s0)
+-    logq = [log_comb(p, k) + math.log(0.5) - log_comb(2 * p - 1, k) for k in range(K + 1)]
++    logw_s0 = math.log(0.5) - log_comb_small(2 * p - 1, s0)
++    # q_0 = 1/2 and the exact ratio q_{k+1}/q_k = (p - k)/(2p - 1 - k) (council R1 F1: stable, no lgamma differences)
++    logq = [math.log(0.5)]
++    for k in range(K):
++        logq.append(logq[-1] + math.log(p - k) - math.log(2 * p - 1 - k))
+     thr = -((s0 + 1) / 2) * math.log(n) - 0.5 * math.log(n)
+     # tail sums from the top: T[m] = log sum_{k=m+1}^{K} q_k
+     tail = [-math.inf] * (K + 2)
+diff --git a/Theory_work/Wave3/W3-D2/numerics/N1_out.txt b/Theory_work/Wave3/W3-D2/numerics/N1_out.txt
+index c75c9efc..1b5c014b 100644
+--- a/Theory_work/Wave3/W3-D2/numerics/N1_out.txt
++++ b/Theory_work/Wave3/W3-D2/numerics/N1_out.txt
+@@ -12,7 +12,7 @@ A=2    s0=1   n=10000   p=100000000    m#=48    j0=6    k_n=49    3(A+1)(s0+1)lo
+ A=2    s0=5   n=100     p=10000        m#=50    j0=26   k_n=55    3(A+1)(s0+1)log n=   248.7  5(A+1)(s0+1)log n=   414.5
+ A=2    s0=5   n=400     p=160000       m#=115   j0=26   k_n=120   3(A+1)(s0+1)log n=   323.5  5(A+1)(s0+1)log n=   539.2
+ A=2    s0=5   n=10000   p=100000000    m#=178   j0=26   k_n=183   3(A+1)(s0+1)log n=   497.4  5(A+1)(s0+1)log n=   828.9
+-# max over the grid of k_n / [3(A+1)(s0+1) log n] = 0.3942 (150 cases); must be <= 1
++# max over the grid of k_n / [3(A+1)(s0+1) log n] = 0.3928 (150 cases); must be <= 1
+ 
+ # (ii) end-to-end exact enumeration, p = 6, R = 300 replications per n, seed 20261117
+ n      rho_n   sigma2_n  E_delta   P(HPM!=S0)  P(MPM!=S0)  E_maxPIPerr  r_n     E_delta/r_n

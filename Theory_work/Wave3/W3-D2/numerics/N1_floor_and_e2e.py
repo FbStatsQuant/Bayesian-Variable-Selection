@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""N1 (W3-D2): (i) floor-size arithmetic of Lemma D2-B1; (ii) one end-to-end exact check of Theorem 2X.
+"""N1 (W3-D2): (i) floor-size arithmetic of `W3-READER:R1` B4.1 [R1-opus-E8]; (ii) one end-to-end exact check of Theorem 2X.
 
 (i) For the coded size cutoff m#_n of [W3P] Theory_work/Wave3/W3-POST/STATEMENT.md:33-39
     q_k = C(p, k) w(k), w(k) = 1/2 / C(2p - 1, k)  (0 <= k <= K = min(p, floor(n/2))),
     R_m = sum_{k = max(m+1, 0)}^{K} q_k / w(s0),
     m#_n = min{m >= s0 : R_m <= n^{-(s0+1)/2} e^{-omega}},  omega = (1/2) log n,
     j0 = ceil((2A + 1) s0) + 1,  k_n = s0 + max(j0, m#_n)   (W3-MISR-R STATEMENT.md:96-100),
-computed exactly in log space, and compared with 3(A+1)(s0+1) log n (Theorem 2X, (A2)) and with the recorded
+computed in log space by the exact ratio q_{k+1}/q_k = (p-k)/(2p-1-k) (council R1 F1: the earlier lgamma
+differences lost precision at p = 1e15), and compared with 3(A+1)(s0+1) log n (Theorem 2X, (A2)) and with the recorded
 row-1.2 size 5(A+1)(s0+1) log n. Worst case over the grid uses p = floor(n^A) (largest allowed p).
 
 (ii) Exact enumeration of the coded target pi of [W3P] :16-29 (p = 6) under random Gaussian designs with
@@ -33,12 +34,20 @@ def logsumexp(v):
     return m + math.log(sum(math.exp(x - m) for x in v))
 
 
+def log_comb_small(N, k):
+    """log C(N, k) for huge N and small k, without cancellation: sum of log(N - i) minus log k! (council R1 F1)."""
+    return sum(math.log(N - i) for i in range(k)) - math.lgamma(k + 1)
+
+
 def m_sharp(n, p, s0):
     K = min(p, n // 2)
     if s0 > K:
         return None
-    logw_s0 = math.log(0.5) - log_comb(2 * p - 1, s0)
-    logq = [log_comb(p, k) + math.log(0.5) - log_comb(2 * p - 1, k) for k in range(K + 1)]
+    logw_s0 = math.log(0.5) - log_comb_small(2 * p - 1, s0)
+    # q_0 = 1/2 and the exact ratio q_{k+1}/q_k = (p - k)/(2p - 1 - k) (council R1 F1: stable, no lgamma differences)
+    logq = [math.log(0.5)]
+    for k in range(K):
+        logq.append(logq[-1] + math.log(p - k) - math.log(2 * p - 1 - k))
     thr = -((s0 + 1) / 2) * math.log(n) - 0.5 * math.log(n)
     # tail sums from the top: T[m] = log sum_{k=m+1}^{K} q_k
     tail = [-math.inf] * (K + 2)

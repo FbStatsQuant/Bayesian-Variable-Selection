@@ -24,11 +24,11 @@ kill point not reached. Tag against row 1.2's reader statement: STRONGER (`STATE
 ## 3. Card text (HQ decision 2026-11-17: row 1.2 COEXIST)
 Row 1.2 unchanged (statement, masters, "clean" mark, vanishing-floor remark). Added sentence under row 1.2 (body, not abstract):
 > *Smaller-set, expectation form.* Under the same model with the floor asked only on sets of size at most $3(A+1)(s_0+1)\log n$ [K2-E5] (on
-> the correlation matrix of a row), and energy and beta-min measured against the noise variance ($\Sigma$, $\beta$,
-> $\sigma^2$ may vary with $n$), $E[1-\pi(S_0\mid y)]=O(\sqrt{\log n/n})$, and the HPM and MPM error probabilities and the
-> expected maximal PIP error are $O(\sqrt{\log n/n})$. This is Theorem 4 with no omitted predictors. It is conditional on the
+> the correlation matrix of a row), the noise variance allowed to depend on $n$, and energy and beta-min measured against the noise variance ($\Sigma$ and $\beta$
+> may also vary with $n$) [R1-opus-E6], $E[1-\pi(S_0\mid y)]=O(\sqrt{\log n/n})$, and the HPM and MPM error probabilities and the
+> expected maximal PIP error are $O(\sqrt{\log n/n})$. This is Theorem 4 with no omitted predictors, plus the deterministic PIP/MPM consequences [R1-opus-E7]. It is conditional on the
 > inputs of Theorem 4's master, one of which (a deterministic rate lower bound used in the expectation route) has not yet had
-> an independent check.
+> an independent check; two others are wave-1 results [R1-opus-E5].
 
 "Master" cell for the added sentence: `W3-D2:Thm2X`, `W3-D2:Cor2X`, statuses as recorded at CP3, with the inherited
 conditions written out: W3-POST2:C (itself conditional on W3-POST:Prop-LB, "PROVED (by this seat, unchecked)"), W3-POST2:E,
@@ -39,7 +39,7 @@ stays **clean**.
 - **Tier / size:** Tier B re-check, ≈ 2–3 h lead time + one Sol review: line-check the existing implication note
   `Theory_work/Dept/research/IMPL_PSHARPB_PROPLB_opus.md` (dept/theory; Opus, unchecked) and hand the recorder an `implies` edge.
 - **Inputs:** `W3-PSHARP:B@1.0.0` (PROVED-CHECKED, `W3-PSHARP/STATEMENT.md:90-114`), Prop-LB (`W3-POST/lemmas/LB_rate_lower_bound.md`,
-  40 lines), [W3P] §0; no new mathematics (B is strictly stronger on LB's domain, per the note).
+  40 lines), [W3P] §0; no new mathematics expected (OPEN, not checked here: the unchecked note says B is strictly stronger on LB's domain) [R1-sol-E1].
 - **What it does not clear:** Thm2X would still be conditional through CorGb-plus on C-MIS:GDb and C-MIS:Prop-P (wave-1
   labels, not PROVED-CHECKED), so X2 alone does not make the added sentence clean.
 
@@ -62,7 +62,7 @@ Changelog: `STATEMENT.md` §8. DEPS: `DEPS.tsv`. Citation check: `citecheck.py` 
 
 ```
 REGISTRY
-claim: W3-D2:Thm2X | kind: theorem | statement: STATEMENT.md:29-48 | premises: STATEMENT.md:14-27 ; STATEMENT.md:60-63 ; STATEMENT.md:77-84
+claim: W3-D2:Thm2X | kind: theorem | statement: STATEMENT.md:29-48 | premises: STATEMENT.md:14-27 ; STATEMENT.md:60-64 ; STATEMENT.md:81-86
 status: PROVED (by this seat, unchecked), conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1, W3-POST2:A0, C-MIS:GDb, C-MIS:Prop-P | status_source: PROOF.md:3
 assumptions: A:IID-GAUSS-ROWS ; A:GAUSS-NOISE ; A:P-POLY ; A:FIXED-S0 ; A:CORR-FLOOR-LOG (new | log-size floor on the row correlation matrix | lambda_min(R_TT) >= c for every T of size at most 3(A+1)(s0+1) log n, fixed c > 0 | STATEMENT.md:35-36 | shared no | bridge W3-D2:Thm2X) ; A:POP-SNR (new | population signal relative to the noise variance | beta' Sigma beta <= M0 sigma^2 and n min over j in S0 of Sigma_jj beta_j^2 / (sigma^2 log n) -> infinity [K3-F2] | STATEMENT.md:37 | shared no | bridge W3-D2:Thm2X)
 conclusion: posterior: E delta_n, P(HPM != S0), P(MPM != S0) and E max_j |PIP_j - 1{j in S0}| are O(r_n) under the joint law of design and noise; explicit bounds b_n (E delta_n, E PIP error) and 2 b_n (HPM, MPM) for n >= n*, b_n = C r_n + (2 + 2 k_n) n^-2 + n^-1 | rate: r_n = sqrt(log n / n) | scope: iid Gaussian rows, 2 <= p <= n^A, s0 >= 1 fixed; Sigma, beta, sigma^2 may vary with n

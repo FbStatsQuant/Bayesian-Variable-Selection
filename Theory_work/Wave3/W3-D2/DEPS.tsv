@@ -2,10 +2,11 @@ id	file[:lines]	uses	sha	checked_sha	checked_by	state
 S:setting	STATEMENT.md:14-27		4e4a43ab4a85892a	4e4a43ab4a85892a	reviews/K3_recheck_opus.md	OK
 S:Thm2X	STATEMENT.md:29-48	S:setting,S:det	c84965edd299de7e	c84965edd299de7e	reviews/K1_linecheck_opus.md	OK
 S:Cor2X	STATEMENT.md:50-58	S:Thm2X	0dc7f82d2dbdcb7f	0dc7f82d2dbdcb7f	reviews/K1_linecheck_opus.md	OK
-S:det	STATEMENT.md:60-63	S:setting	ab5b884b6923071e	ab5b884b6923071e	reviews/K1_linecheck_opus.md	OK
-S:inputs	STATEMENT.md:76-84		591718af1bf47637	591718af1bf47637	reviews/K1_linecheck_opus.md	OK
+S:det	STATEMENT.md:60-64	S:setting	2d04f4d7340d147c	2d04f4d7340d147c	reviews/D1_council_opus.md (diff round D1, in scope)	OK
+S:inputs	STATEMENT.md:81-86		f8b4273304092de0	f8b4273304092de0	reviews/D1_council_opus.md (diff round D1, in scope)	OK
 P:P0	PROOF.md:7-17	S:det	1211dc4d154080dc	1211dc4d154080dc	reviews/K1_linecheck_opus.md	OK
 P:P1	PROOF.md:18-53	S:setting,S:Thm2X,S:inputs	6e0d31edcc304018	6e0d31edcc304018	reviews/K3_recheck_opus.md	OK
 P:P2	PROOF.md:54-59	P:P0,P:P1	8a89d37202db7624	8a89d37202db7624	reviews/K1_linecheck_opus.md	OK
-P:P3	PROOF.md:60-80	S:Cor2X,P:P2	c21f8b008bac3c20	c21f8b008bac3c20	reviews/K3_recheck_opus.md	OK
-R:registry	REPORT.md:61-81	S:Thm2X,S:Cor2X	24453117f6141397	24453117f6141397	reviews/K3_disposition.md (K3 fixes verbatim; council sweep)	OK
+P:P3	PROOF.md:60-83	S:Cor2X,P:P2	b2487f8789e613f9	b2487f8789e613f9	reviews/D1_council_opus.md (diff round D1, in scope)	OK
+P:P5	PROOF.md:84-97		8d16597bb9a8717d	8d16597bb9a8717d	reviews/D1_council_opus.md (diff round D1, in scope)	OK
+R:registry	REPORT.md:61-81	S:Thm2X,S:Cor2X	b2140e8277de6a99	b2140e8277de6a99	reviews/D1_council_opus.md (diff round D1, in scope)	OK
