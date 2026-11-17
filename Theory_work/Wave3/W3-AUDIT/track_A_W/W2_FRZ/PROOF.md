@@ -1,4 +1,4 @@
-# W2 · Lemma FRZ — PROOF v1.1 (line check of `W1-N1:F` and of `W3-SAMP:MR` Steps 2–4 at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
+# W2 · Lemma FRZ — PROOF v1.2 (line check of `W1-N1:F` and of `W3-SAMP:MR` Steps 2–4 at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
 
 Reuse: T5 CAL-C (`Theory_work/Wave3/W3-AUDIT/track_A/T5_CAL/STATEMENT.md`, (CAL-a)–(CAL-d)), T1 GW (potential run), W1
 ISL (`Theory_work/Wave3/W3-AUDIT/track_A_W/W1_ISL/STATEMENT.md`: (ISL-0), (ISL-d)), FR (`Theory_work/Wave3/W3-AUDIT/track_A_X/X1_T12/STATEMENT.md`:
@@ -26,8 +26,8 @@ H-U the streams are independent, so U_r = U^{(9+r)} ⊥ (U^{(0)}, …, U^{(9)}) 
 `v3_final_run` (`v3_fit.R:154-162`), which checks the frozen grid (`v3_run.R:225`, `v3_check_grid`, `v3_run.R:77-82`:
 finite, length ≥ 2, starts at exactly 0, ends at exactly 1, strictly increasing); this check is an X2 site, unreachable on
 𝒜°: the frozen object is built by `v3_frozen` (`v3_calib.R:185-186`), which runs the same `v3_check_grid` (`v3_run.R:70`)
-on a successful construction or on a fallback that passed it (`v3_calib.R:164`; C1 (C1-b) (vii),
-`Theory_work/Wave3/W3-AUDIT/track_A_C/C1_AUDITS/PROOF.md`). The executed N_e = `b$tiers$N[tier + 1]` ≥ N₀ ≥ 2500 and
+on a successful construction or on a fallback that passed it (`v3_calib.R:164`): if it failed there, `v3_calibrate` would
+stop with an error and not return "ok", so on 𝒜° the grid passed. The executed N_e = `b$tiers$N[tier + 1]` ≥ N₀ ≥ 2500 and
 L = `b$L` ≥ 4 are integers (`v3_run.R:89-90`; `v3_preprocess.R:24-25, 30`). So 𝓒° ∈ A_s on 𝒜°, and A₀ := A_𝒜 ∩ A_s ∈ 𝓔
 gives E₀ = 𝒜° = {𝓒° ∈ A₀} (R′ = `islands` = 4, `v3_run.R:91`, so {r ≤ R′} is the whole space for r ≤ 4).
 (iii) *O_r = Φ(𝓒°, U_r) on E₀.* `cpp_final_run` receives `frozen[["grid"]]` and `ro` (N_e, L, Hm = 4, tier, islands)
@@ -36,7 +36,15 @@ L(c) by definition (and agree with the frozen object's N, L, `v3_calib.R:185-186
 inherited models with the scorer only (`cpp/v3_core.cpp:407-439`): no uniform. The islands run serially; island r creates
 its `RngSource` seeded on stream 9 + r and runs `E.run_island(r, o.N, g, o.L, o.Hm, o.tier, nullptr)`
 (`cpp/v3_core.cpp:443-446`); no other code reads that source, and island r's record does not depend on islands < r (W1
-ISL-0: the shared cache and ledger do not feed transitions). In P° the guard Booleans are FALSE (T1), so island r's
+ISL-0: the shared cache and ledger do not feed transitions).
+*No error exit before or during island r on E₀.* `v3_final_run`'s prelude: `v3_check_seed` passes for the valid declared
+seed (`v3_run.R:225`); `v3_run_settings`' LS0 base-cap validator (`v3_run.R:95-97`) passes in the default configuration
+for every input R can represent (T14 REP (REP-a): `le` ≤ 32), and its other fields are fixed-type assignments. Inside
+`cpp_final_run` before the islands: the `setup required`, model-validation and provenance sites, and the inherited-model
+size `stop` (`cpp/v3_core.cpp:425`), are X2-class sites unreachable on valid internal state (C1 (C1-b),
+`Theory_work/Wave3/W3-AUDIT/track_A_C/C1_AUDITS/STATEMENT.md`; inherited models are calibration models in Ω); the scorer
+call (`cpp/v3_core.cpp:426`) returns the exact finite log m under EX-A. Islands 1, …, r − 1 and island r end normally (W1
+ISL-0, normal termination), and no guard stops them in P° (T1). So on E₀ island r runs to completion. In P° the guard Booleans are FALSE (T1), so island r's
 potential record is the W1 program run with c = 𝓒° on u = U_r: O_r = Φ(𝓒°, U_r), and likewise for Φ̃. ∎(FRZ-b)
 
 ## (FRZ-c) Conditioning at general c
@@ -48,7 +56,7 @@ on A₀, 0 off it: measurable (ISL-d; h jointly measurable; N_e(c) a measurable 
 by cell) and bounded by B_h Z₀e^{d_max} (FRZ-d). By (FRZ-b)(iii), g(𝓒°, U_r) = 1_{E₀}Ẑ_r η_{rq}(h(·; 𝓒°)). The fixed-c
 value ḡ(c) = ψ_q(c) is FR (FR-b) at c. This is L3's proof (`Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md:25-39`) with its
 three inputs re-established at the pin. Agrees.
-*`W3-SAMP:MR`.* Its Step 2 g's (`Theory_work/Wave3/W3-SAMP/lemmas/MR_identities.md:57-65`) are of the stated form: they
+*`W3-SAMP:MR`.* Its Step 2 g's (`Theory_work/Wave3/W3-SAMP/lemmas/MR_identities.md:51-58`) are of the stated form: they
 vanish off A₀ (and off the index range {T(c) ≥ t}, {s ≤ L(c) + 4}, measurable), are measurable by ISL-d (the stage-t
 population, the post-terminal populations and Y^i_{q,ℓ} are coordinates of Φ or a finite case split over the order), and
 are bounded by B_h C_d (FRZ-d; its Step 3). Their fixed-c values are FR (FR-b) (stage, post-terminal, prefix) and (FR-c)
@@ -66,8 +74,9 @@ inc_t = LSE(Δ_t d(S_i)) − log N_e (`cpp/v3_engine.h:316-322`), i.e. Ẑ_t = Z
 under EX-A (FR Part 1). Each factor lies in [e^{Δ_s d_min}, e^{Δ_s d_max}] (Δ_s > 0), and Σ_{s≤t} Δ_s = φ_t, so
 Ẑ_t ∈ [Z₀e^{φ_t d_min}, Z₀e^{φ_t d_max}]. Z_t = m(∅)Σ_Ω γ₀e^{φ_t d} with m(∅)Σ_Ω γ₀ = Z₀ lies in the same interval. Hence
 Ẑ_t/Z_t ≤ e^{φ_t(d_max − d_min)} ≤ C_d (φ_t ≤ 1), and Ẑ ≤ Z₀e^{d_max}. d is finite on the finite Ω under EX-A (log m
-finite, T4 ENC's finite tables). This is L3's bound (`Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md:34-36`) and MR's Step 3
-(`Theory_work/Wave3/W3-SAMP/lemmas/MR_identities.md:67-70`). Agrees. ∎
+finite for a valid input — n ≥ 3, a retained column, non-constant y, so m > 0, as in FR's hypothesis — and T4 ENC's finite
+tables). This is L3's bound (`Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md:34-36`) and MR's Step 3
+(`Theory_work/Wave3/W3-SAMP/lemmas/MR_identities.md:60-62`). Agrees. ∎
 
 ## Line-check verdict
 `W1-N1:F`'s freezing step and `W3-SAMP:MR`'s extension (Steps 2–4) hold at the pin, at general c ∈ A₀, with the

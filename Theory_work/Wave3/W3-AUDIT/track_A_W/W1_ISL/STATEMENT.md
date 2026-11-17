@@ -1,4 +1,4 @@
-# W1 · Lemma ISL (island control flow, stopping times, MEAS at the pin) — STATEMENT v1.1 (draft, not locked)
+# W1 · Lemma ISL (island control flow, stopping times, MEAS at the pin) — STATEMENT v1.2 (draft; Sol LOCK on v1.1)
 
 Track A_W item W1 (manager 11-17; D97 edge verdicts, recorder package §2 edges 2 and 3). Tier B (line check of the cited
 steps of `W1-N1:B` at the code of record). **Lean target: yes** for (ISL-st) in abstract form ("a program that reads an
@@ -11,12 +11,12 @@ sequences); no for the code correspondence.
   core, as used by
   - **`W3-SAMP:D`** (D-i, "used only through the control-flow clause of W1-N1 Lemma B (B-b)"; its freezing step uses
     (B-0), (B-d)): `Theory_work/Wave3/W3-SAMP/lemmas/D_theorem.md:6-31`;
-  - **`W3-SAMP:MR`** Step 2 (measurability of the augmented record, (B-d)): `Theory_work/Wave3/W3-SAMP/lemmas/MR_identities.md:57-65`.
+  - **`W3-SAMP:MR`** Step 2 (measurability of the augmented record, (B-d)): `Theory_work/Wave3/W3-SAMP/lemmas/MR_identities.md:51-58`.
   (B-a), (B-b)'s law statements (R1)–(R3) at the pin are `W3-AUDIT-AX:FR` (FR-a) (`Theory_work/Wave3/W3-AUDIT/track_A_X/X1_T12/STATEMENT.md:27-42`)
   and are not re-checked here.
-- The three steps: **(B-0)** the record is a function of (c, u) (`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:65-78`);
-  the **control-flow clause of (B-b)** — stopping times, bounded reads, fresh uniforms (`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:78-86`);
-  **(B-d)** MEAS (`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:115-122`).
+- The three steps: **(B-0)** the record is a function of (c, u) (`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:62-75`);
+  the **control-flow clause of (B-b)** — stopping times, bounded reads, fresh uniforms (`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:77-86`);
+  **(B-d)** MEAS (`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:119-125`).
 
 ## Code of record
 `Scripts/SMC_BVS/core/` at pin 4676af6 (= HEAD for the core); paths relative to it. Final island r:
@@ -27,8 +27,11 @@ sequences); no for the code correspondence.
 Fixed valid data on the SMC branch, `setup` built (T2 BLK, T4 ENC). A calibration value c in the success set A_s: grid
 0 = φ₀ < … < φ_T = 1 (T ≥ 1), the tier, Hm = 4; N_e(c), L(c) denote the values **actually executed**,
 `b$tiers$N[tier(c) + 1]` and `b$L` (`v3_run.R:90`; W3-SAMP's convention, `Theory_work/Wave3/W3-SAMP/STATEMENT.md:47-50`),
-integers N_e ≥ 1, L ≥ 0 (the final-run settings are functions of c and (n, p): T5 CAL-c). A_s ∈ 𝓔: it is the preimage
-under c ↦ (T, grid, tier) of a Borel set. u = (u₁, u₂, …) ∈ Υ := [0, 1)^ℕ the island's stream; 𝓕_k := σ(u₁, …, u_k). The **potential run**
+integers N_e ≥ 1, L ≥ 0 (the final-run settings are functions of c and (n, p): T5 CAL-c); tier ∈ {0, 1}. The calibration
+space E contains every value of the record, ⊥ and non-"ok" records included; (T, grid, tier) are defined on all of E
+(a dummy value where a record has none) and 𝓔-measurable, and A_s ∈ 𝓔: it is the preimage under c ↦ (T, grid, tier) of a
+Borel set. Executions: no C++ integer operation overflows and every allocation succeeds (IDEAL-W, MACH; as in T2 BLK-d,
+T4 ENC). u = (u₁, u₂, …) ∈ Υ := [0, 1)^ℕ the island's stream; 𝓕_k := σ(u₁, …, u_k). The **potential run**
 (T1: every guard Boolean FALSE). EX-A. The **statistical record** Φ(c, u) is `W1-N1:B`'s (`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:14-21`):
 log Ẑ_r, the population after the initial draws, after each stage-t resampling and each stage-t round, after each of the
 L + 4 rounds at φ = 1, and for each particle and round its order and within-round path; the **augmented record** Φ̃(c, u)
@@ -40,7 +43,7 @@ For every c ∈ A_s, on the potential run of final island r:
 - **(ISL-0) Function of (c, u).** Every value that feeds a state transition, an accept decision, a weight, a resampling
   or log Ẑ is a function of c, the fixed data and uniforms read from u; no other source (clock, guard, cache history,
   ledger, other islands' streams, persistent engine members) influences Φ̃(c, u). Uniforms are read only through the
-  island's `vs->u(·)`, sequentially.
+  island's `vs->u(·)`, sequentially. The island program ends normally (no error or exception) for every u ∈ Υ.
 - **(ISL-st) Stopping times and fresh uniforms.** The island's operations — each initial draw, each resampling, each
   particle-round, each elementary step, and each `draw_pi0` call — run in an order and read a number of uniforms that
   are decided by c, the data and the uniforms already read. Hence the index τ at which an operation starts is an
@@ -65,8 +68,15 @@ For every c ∈ A_s, on the potential run of final island r:
 - Binary64 / the 2⁻⁵³ grid (EX-A, H-U); interrupted runs (T1 GW).
 - Calibration-time islands (pilot, diagnostics), which run on streams 0–9 (T5 CAL-a).
 
+## Inputs reused (status as recorded)
+- T1 GW, T2 BLK, T4 ENC, T5 CAL-C, T6 START-X, T7 KER: registry `W3-AUDIT-A:{GW,BLK,ENC,CAL-C,START-X,KER}` "PROVED-CHECKED;
+  council R2" (main 029bb748). FR: `W3-AUDIT-AX:FR` "PROVED-CHECKED; council R2" (main 029bb748).
+- The steps re-checked: `W1-N1:B` "PROVED under the named premises of STATEMENT §2 — cross-family checked … council-passed"
+  (registry, main 029bb748).
+
 ## Changelog
 | version | clause | tag | reason | trigger | check |
 |---|---|---|---|---|---|
 | v1 | all | NEW-CLAIM (line check of `W1-N1:B` (B-0), (B-b) control flow, (B-d) at the pin) | track A_W W1 | manager 11-17; D97 edges 2, 3 | `CHECK.md` |
-| v1.1 | setting: executed N_e, L; A_s ∈ 𝓔; (ISL-d): Ẑ_t, W_r as functions of (c, Φ̃) | STRONGER (coverage) / EQUAL (convention) | WLC1 W1 #2, #3; W2 #3 | `reviews/WLC1_reply_opus.md` | Sol read |
+| v1.1 | setting: executed N_e, L; A_s ∈ 𝓔; (ISL-d): Ẑ_t, W_r as functions of (c, Φ̃) | STRONGER (coverage) / EQUAL (convention) | WLC1 W1 #2, #3; W2 #3 | `reviews/WLC1_disposition.md` | Sol read |
+| v1.2 | (ISL-0) normal termination; setting: E incl. ⊥, tier ∈ {0, 1}, IDEAL-W/MACH execution premise; locators; inputs' statuses | WEAKER (execution premise stated) / EQUAL (locators) | W-R1 Opus F1, F2, E2–E4; Sol E1 | `reviews/WR1_council_{opus,sol}.md` | diff round W-R2 (Opus) |

@@ -1,11 +1,11 @@
 OK            [STATEMENT.md] Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:33-43 sha=c5e38e8f3c | Under EX-A, START and KERNEL (STATEMENT §2):
 OK            [STATEMENT.md(cont)] Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:45-125 sha=5648056cf9 | ## Proof
 OK            [STATEMENT.md] Theory_work/Wave3/W3-SAMP/lemmas/D_theorem.md:6-31 sha=c79e5a4de8 | ## §1 The draws are iid π₀ given 𝓒 (D-i)
-OK            [STATEMENT.md] Theory_work/Wave3/W3-SAMP/lemmas/MR_identities.md:57-65 sha=ee47e7777f | {T(c) ≥ t}). N_e(c), T(c), L(c) are measurable integer coordinates; the sums are measurable cell by cell on th
+OK            [STATEMENT.md] Theory_work/Wave3/W3-SAMP/lemmas/MR_identities.md:51-58 sha=4449284730 | **Step 2 (measurability).** Each left-side integrand is g(c, U) for a function g on E × Υ defined, for c ∈ A₀ 
 OK            [STATEMENT.md] Theory_work/Wave3/W3-AUDIT/track_A_X/X1_T12/STATEMENT.md:27-42 sha=3ca30d8fbe | ## Lemma FR
-OK            [STATEMENT.md] Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:65-78 sha=fe4c7867ad | (`v3_engine.h:90-102`) takes log m(S) either from the scorer or from the cache; a cache hit requires equal has
-OK            [STATEMENT.md] Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:78-86 sha=f94387bbf2 | time through `vs->u(·)`; whether and how many uniforms an operation reads is decided by the values already rea
-OK            [STATEMENT.md] Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:115-122 sha=8be8007ee9 | P (`:360`) before the next round. The populations read are therefore those after post-terminal operations L + 
+OK            [STATEMENT.md] Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:62-75 sha=6c33e02c9f | **(B-0) The statistical record is a function of (c, u).** Every quantity that feeds a state transition, a weig
+OK            [STATEMENT.md] Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:77-86 sha=bf8f04a19c | **(B-b) Randomness.** Write F_k = σ(u₁, …, u_k). By (B-0) the record's variables are computed by reading unifo
+OK            [STATEMENT.md] Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:119-125 sha=9f715dbd1f | **(B-d) Measurability.** For fixed (T, N_e, L), by (B-0) and (B-b) the statistical record is computed by a fin
 OK            [STATEMENT.md] cpp/v3_core.cpp:443-446 sha=855cede1e2 | for (int r = 1; r <= o.islands; ++r) {
 OK            [STATEMENT.md] v3_run.R:90-90 sha=47ff3a71c8 | ro <- list(N = as.integer(b$tiers$N[tier + 1]), L = as.integer(b$L), measured_rounds = 4L,
 OK            [STATEMENT.md] Theory_work/Wave3/W3-SAMP/STATEMENT.md:47-50 sha=352cc13dd5 | (`v3_frozen`, `v3_run.R:68-82`; `cpp/v3_core.cpp:446`), but N_e and L are always the production budgets
@@ -45,6 +45,7 @@ OK            [PROOF.md] cpp/v3_engine.h:189-189 sha=26af9345b2 | double u = vs-
 OK            [PROOF.md] cpp/v3_engine.h:199-199 sha=5a00247bf2 | for (int i = m - 1; i >= 1; --i) { int jj = (int)std::floor(vs->u("order") * (i + 1)); std::swap(ord[i], ord[j
 OK            [PROOF.md] cpp/v3_engine.h:250-250 sha=a4362c764f | double u = vs->u("resample");
 OK            [PROOF.md] cpp/v3_engine.h:89-105 sha=9cec3d08d5 | void eval(Particle& q, int mech, bool emit = true) {
+OK            [PROOF.md] cpp/v3_ledger.h:104-113 sha=27165b2ce5 | inline void Ledger::event(const std::vector<int>& S, double F, double lg0, double logm, bool is_fresh, bool is
 OK            [PROOF.md] cpp/v3_engine.h:89-99 sha=b66d9ddce3 | void eval(Particle& q, int mech, bool emit = true) {
 OK            [PROOF.md] cpp/v3_score.h:271-281 sha=4494730306 | inline bool same(size_t s, const std::vector<int>& S) const {
 OK            [PROOF.md] cpp/v3_score.h:282-293 sha=dea48e74b6 | }
@@ -63,14 +64,19 @@ OK            [PROOF.md] cpp/v3_engine.h:152-152 sha=37250ebfe5 | tmpQ = P; del_
 OK            [PROOF.md] cpp/v3_engine.h:172-172 sha=37250ebfe5 | tmpQ = P; del_var(tmpQ, j); add_var(tmpQ, l);
 OK            [PROOF.md] cpp/v3_engine.h:185-185 sha=d1499a0660 | set_model(tmpQ, S);
 OK            [PROOF.md] cpp/v3_engine.h:251-251 sha=229021578b | double ue = (u > 0) ? u : std::numeric_limits<double>::denorm_min();
-OK            [PROOF.md] Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:65-78 sha=fe4c7867ad | (`v3_engine.h:90-102`) takes log m(S) either from the scorer or from the cache; a cache hit requires equal has
+OK            [PROOF.md] cpp/v3_score.h:237-237 sha=cbc5e7d275 | throw NumericalFailure("score failed after Cholesky, refactor and augmented QR for a model of size " + std::to
+OK            [PROOF.md] cpp/v3_score.h:230-230 sha=afffb5333d | if (k > D->K) throw std::runtime_error("v3_score: |S| > K (infeasible model; callers never pass these, R1)");
+OK            [PROOF.md] cpp/v3_engine.h:115-116 sha=8b0b795699 | bool in = bit_get(P.bits, j);
+OK            [PROOF.md] cpp/v3_engine.h:151-151 sha=ce616bc9be | int l = nth_nonmember(P.bits, (int)std::floor(vs->u("uswap_l") * (p - k)));
+OK            [PROOF.md] cpp/v3_engine.h:143-143 sha=b3ae01cfde | throw std::runtime_error("nth_nonmember out of range");
+OK            [PROOF.md] Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:62-75 sha=6c33e02c9f | **(B-0) The statistical record is a function of (c, u).** Every quantity that feeds a state transition, a weig
 OK            [PROOF.md] cpp/v3_engine.h:148-148 sha=c69a83a9be | if (k == 0 || k == p) { ms.us_self++; return; }
 OK            [PROOF.md] cpp/v3_engine.h:170-170 sha=553112adc1 | if (cand.empty()) { ms.ns_noscore++; return; }
 OK            [PROOF.md] cpp/v3_engine.h:211-211 sha=e563417cd1 | else { step_indep(P, phi); mech = ME_INDEP; }
-OK            [PROOF.md] Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:78-86 sha=f94387bbf2 | time through `vs->u(·)`; whether and how many uniforms an operation reads is decided by the values already rea
+OK            [PROOF.md] Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:77-86 sha=bf8f04a19c | **(B-b) Randomness.** Write F_k = σ(u₁, …, u_k). By (B-0) the record's variables are computed by reading unifo
 OK            [PROOF.md] cpp/v3_engine.h:299-299 sha=0628731bc7 | double logZ = D.logm0 + st.logZbar0;
 OK            [PROOF.md] cpp/v3_engine.h:316-322 sha=cfafbaccbe | double dphi = phi_new - phi_prev;
-OK            [PROOF.md] Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:115-122 sha=8be8007ee9 | P (`:360`) before the next round. The populations read are therefore those after post-terminal operations L + 
+OK            [PROOF.md] Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:119-125 sha=9f715dbd1f | **(B-d) Measurability.** For fixed (T, N_e, L), by (B-0) and (B-b) the statistical record is computed by a fin
 
-73 citations: 73 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+79 citations: 79 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
 Not machine-checked: unbackticked references and the semantic match of each excerpt.

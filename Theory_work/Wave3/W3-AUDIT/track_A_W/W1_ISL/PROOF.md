@@ -1,4 +1,4 @@
-# W1 · Lemma ISL — PROOF v1.1 (line check of `W1-N1:B` (B-0), (B-b) control flow, (B-d) at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
+# W1 · Lemma ISL — PROOF v1.2 (line check of `W1-N1:B` (B-0), (B-b) control flow, (B-d) at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
 
 Reuse: T1 GW (`Theory_work/Wave3/W3-AUDIT/track_A/T1_GW/STATEMENT.md`: guard bodies draw no uniform, the potential run's
 Booleans are FALSE), T5 CAL-C (`Theory_work/Wave3/W3-AUDIT/track_A/T5_CAL/STATEMENT.md`: final-run settings are functions
@@ -25,7 +25,8 @@ order (`draw_order`, `cpp/v3_engine.h:195-200, 203`), then applies the m labels 
 The uniform-reading sites of the island are exactly: `draw_pi0` (`cpp/v3_start.h:160, 164, 170`), `step_gibbs`
 (`cpp/v3_engine.h:129`), `step_uswap` (`cpp/v3_engine.h:150, 151, 156`), `step_nswap` (`cpp/v3_engine.h:167, 171, 177`),
 `step_indep` (its `draw_start`, `cpp/v3_engine.h:184`, and `cpp/v3_engine.h:189`), `draw_order` (`cpp/v3_engine.h:199`) and `resample`
-(`cpp/v3_engine.h:250`); `eval`, `held`, the ledger and the cache read none (`cpp/v3_engine.h:89-105`), and the guard
+(`cpp/v3_engine.h:250`); `eval`, `held`, the ledger and the cache read none (`cpp/v3_engine.h:89-105`; the ledger's
+`event` takes its inputs by value or const reference and writes only counters and stores, `cpp/v3_ledger.h:104-113`), and the guard
 bodies draw no uniform (T1 GW-i). Each transition, accept decision and weight is computed from the current state, c (φ,
 N_e) and the data through `eval` (log m, lg0, d: `cpp/v3_engine.h:89-99`), whose score is exact whatever the cache history:
 `ScoreCache::find` hits only when the hash and the full model agree (`cpp/v3_score.h:271-281`), `insert` stores the
@@ -38,8 +39,17 @@ members shared across steps and islands (one `Engine`, `cpp/v3_core.cpp:410`) ca
 `in || add_ok` that wrote it, `cpp/v3_engine.h:118-131`; the swaps and `step_indep` write it first, `cpp/v3_engine.h:152, 172, 185`);
 `rb_acc` is written only and reset before the measured rounds; `ms`, `ev` are bookkeeping; `scratch` is workspace of
 `st.comp`. The `resample` guard u = 0 ↦ the smallest positive double (`cpp/v3_engine.h:251`) changes the map only on
-{u_i = 0}, a null set under H-U. Hence Φ̃(c, u) is a function of (c, u) (data fixed). This is `W1-N1:B` (B-0)
-(`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:65-78`) at the pin; FR Part 1 lists the same facts.
+{u_i = 0}, a null set under H-U.
+*Normal termination.* The island program raises no error for any u ∈ Υ: under EX-A the scorer returns the exact, finite
+log m (valid input: m > 0), so its `NumericalFailure` throw (`cpp/v3_score.h:237`) is not reached; its |S| > K throw
+(`cpp/v3_score.h:230`) is not reached because every scored model lies in Ω (Gibbs adds only when |S| < K,
+`cpp/v3_engine.h:115-116`; the swaps preserve |S|; π₀ draws have |S| ≤ K, T6 (S)); `nth_nonmember` receives
+⌊u(p − k)⌋ ≤ p − k − 1 < the number of non-members (`cpp/v3_engine.h:151`), so its throw (`cpp/v3_engine.h:143`) is not
+reached; the categorical draws of `draw_pi0` return for every u ∈ [0, 1) (cumulative tables ending at 1 under EX-A, T6);
+allocations and integer ranges are the execution premise (IDEAL-W, MACH). These are the X2 sites of `C-DLV:L2-S3` as
+checked at the pin (`Theory_work/Wave3/W3-AUDIT/track_A_C/C1_AUDITS/STATEMENT.md`, (C1-b)) and S.2's EX-A argument.
+Hence Φ̃(c, u) is a function of (c, u) (data fixed). This is `W1-N1:B` (B-0) (`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:62-75`) at the pin; FR Part 1 lists
+the same facts.
 
 ## Step 3 — (ISL-st)
 *Order and counts decided by the past.* By Step 1 the program is a fixed nesting of loops whose bounds are c's integers
@@ -58,7 +68,7 @@ sequence is (u_{k+1}, …), independent of 𝓕_k; sum over the finitely many k)
 function of (c, u₁, …, u_τ) (Step 2), hence 𝓕_τ-measurable.
 *Draw count.* Each round has exactly one `I` label (`cpp/v3_engine.h:211`), so the π₀ draws are the N_e initial draws and
 one per particle per round over T + L + 4 rounds: D_r(c) = N_e(1 + T + L + 4) (as `W3-SAMP:CC` CC1).
-This is the control-flow clause of `W1-N1:B` (B-b) (`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:78-86`) at the pin, with
+This is the control-flow clause of `W1-N1:B` (B-b) (`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:77-86`) at the pin, with
 the same κ_max. ∎(ISL-st)
 
 ## Step 4 — (ISL-d)
@@ -75,7 +85,7 @@ populations) or a finite case split over the order (Y^i_{q,ℓ} = path of partic
 (T + L + q)-th `population_round` of the island, at position σ_i⁻¹(ℓ) − 1); the D_r(c) draws are coordinates of Φ̃; the
 partial evidence Ẑ_t = Z₀∏_{s≤t}(1/N_e)Σ_i e^{Δ_s d(S_i^{(s−1)})} (`cpp/v3_engine.h:299, 316-322`) is a Borel function of
 grid(c) and the populations after the stage-(s − 1) rounds (coordinates of Φ), and W_r = Ẑ_r/Z with Z a data constant. This is `W1-N1:B` (B-d)
-(`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:115-122`) at the pin. ∎
+(`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:119-125`) at the pin. ∎
 
 ## Line-check verdict on the `W1-N1:B` steps
 (B-0), the control-flow clause of (B-b) and (B-d) hold at the pin with the line numbers above; the v2.2.1 → pin changes on
