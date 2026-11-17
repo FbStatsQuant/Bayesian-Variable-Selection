@@ -467,3 +467,4 @@
 - 2026-11-17 14:02 CST W3-D3 form fix (card 17: NH14-only anchor) bound R2g c41a5b34 (a0fdcb66); hash sent to the recorder.
 - 2026-11-17 14:03 CST HQ GO XR2r real (stop on delta beyond the API-results paths); manifest.py v2 separate GO after a green suite; then the W discharge dry run. Relayed.
 - 2026-11-17 14:04 CST auditD3 CLEAN (FINDINGS=0, both samples; $1.79); cite in the D3 carrier; Thm2SG = presented Thm 2 once recorded (card 17). Relayed to the recorder.
+- 2026-11-17 14:08 CST W3-D5P Cor 9C note (0bf478fb): 6L gives Cor 9C's list-mass premise only PATHWISE; the probability form needs READER B6.7 (open; raw- vs standardised-scale incompatibility). Erratum E3 (empty class). HQ asked for card wording + B6.7 (recommended no ticket).
