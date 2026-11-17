@@ -127,13 +127,17 @@ v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24), ls0 = 
       fit$pip_primary <- e$pip; fit$mpm <- e$mpm
       fit$global_certified <- e$global_certified; fit$local_certified <- e$local_certified
       fit$estimates_available <- TRUE
-      # list-renormalised PIP fields (SPEC_LIST_PIP.md §4, exact branch): pip_list = pip_primary, mpm_list = mpm (both exact);
-      # log_Z_list from the enumeration's returned store (e$top, here, not fit$top_store) by the same formula
+    } else { fit$message <- e$message; fit$hpm_incomplete <- TRUE }
+    fit <- finish(fit)
+    if (identical(e$status, "exact")) {
+      # list-renormalised PIP fields (SPEC_LIST_PIP.md §4, exact branch; Theory-confirmed via HQ 11-17): strictly LAST, after finish()
+      # (peak RSS, clock, runtime guard) and every legacy field. pip_list = pip_primary, mpm_list = mpm (both exact); log_Z_list from the
+      # enumeration's returned store (e$top, here, not fit$top_store) by the same formula; list_size / list_full describe that store
       lf <- v3_list_fields(e$top, ctx$orig, names(e$pip))
       fit <- v3_add_list_fields(fit, c(list(pip_list = fit$pip_primary, mpm_list = fit$mpm), lf[c("log_Z_list", "list_size", "list_full")],
                                        list(pip_list_source = "exact", pip_list_flag = lf$pip_list_flag)))
-    } else { fit$message <- e$message; fit$hpm_incomplete <- TRUE }
-    return(finish(fit))
+    }
+    return(fit)
   }
   t0 <- proc.time()[["elapsed"]]; setup <- v3_setup(ctx)
   if (inherits(setup, "v3_setup_failed")) {
@@ -164,7 +168,7 @@ v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24), ls0 = 
     return(finish(fit))
   }
   frozen <- cal$frozen; fit$frozen <- frozen
-  t0 <- proc.time()[["elapsed"]]; fr <- v3_final_run(setup, frozen, seed, runtime, ls0 = ls0)
+  t0 <- proc.time()[["elapsed"]]; fr <- v3_final_run(setup, frozen, seed, runtime, ls0 = ls0, list_fields = FALSE)   # list fields: added last, below
   fr$stage_table <- v3_bind_records(list(cal$stage_table, fr$stage_table))
   fit$timings$final <- proc.time()[["elapsed"]] - t0; fit$timings$final_detail <- fr$timings; fr$timings <- NULL
   cf <- cal$flags
@@ -175,5 +179,8 @@ v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24), ls0 = 
   if (!is.null(cf$grid_fallback)) fr$flags$grid_fallback <- cf$grid_fallback
   for (nm in names(fr)) fit[[nm]] <- fr[[nm]]
   fit$flags$cut_group <- fit$cut_group
-  finish(fit)
+  fit <- finish(fit)
+  # list-renormalised PIP fields (SPEC_LIST_PIP.md): strictly LAST, after finish() has sampled peak_memory_kb, the clock and the
+  # runtime guard, so the new allocation cannot leak into a legacy field (review PR68 MAJOR-2)
+  v3_add_list_fields(fit, v3_list_fields(fit$top_store, ctx$orig, names(fit$pip_primary)))
 }
