@@ -129,7 +129,8 @@ Inputs parse_inputs(const Json& args, bool plan_only) {
 
 // the calib.bin fields a final island needs (meta + grid; the stores are not loaded: at 10^6 they are GBs)
 struct CalibHead { std::string hash, status, data_hash, setup_hash; uint32_t mode = 0; int32_t tier = 0, N = 0, L = 0, Hm = 4; double k_store = 0; int64_t seed = -1; std::vector<double> grid;
-                   OfferFloor floor; };   // D-29: a V final island's offer floor = calib.bin's tau_cal (else -inf; WP7 O6)
+                   OfferFloor floor;   // D-29: a V final island's offer floor = calib.bin's tau_cal (else -inf; WP7 O6)
+                   Json binary; };     // calib.bin's binary block (D-32: the island refuses another class-A FMA family)
 CalibHead read_calib_head(const std::string& path) {
   fmt::Reader R(path);   // every section hash verified (INTERFACES §5.1)
   if (R.kind() != fmt::K_CALIB) throw Error(Status::invalid_input, path + ": not a calib file");
@@ -147,6 +148,7 @@ CalibHead read_calib_head(const std::string& path) {
   if (in.contains("data.bin")) c.data_hash = in.at("data.bin").str();
   if (in.contains("setup.bin")) c.setup_hash = in.at("setup.bin").str();
   c.floor = offer_floor_from_calib(m, c.mode == fmt::M_V, c.hash);   // INTERFACES v0.1.17 §4.1 (MINOR-1); the merge checks it again
+  if (m.contains("binary")) c.binary = m.at("binary");
   c.grid = R.vec<double>("grid");
   if (c.grid.size() < 2 || c.grid.front() != 0.0 || c.grid.back() != 1.0) throw Error(Status::invalid_input, path + ": frozen grid does not run from 0 to 1");
   for (size_t i = 1; i < c.grid.size(); ++i) if (!(c.grid[i] > c.grid[i - 1])) throw Error(Status::invalid_input, path + ": frozen grid not strictly increasing");
@@ -209,6 +211,10 @@ Json run(const Json& args) {
   auto t0 = std::chrono::steady_clock::now();
   const CalibHead C = read_calib_head(in.calib);
   if (C.mode != mode) throw Error(Status::invalid_input, std::string(W) + "calib.bin's mode is " + fmt::mode_name(C.mode) + ", not " + in.mode);
+  if (mode == fmt::M_V && C.binary.type() == Json::OBJ) {   // D-32 (2), review PR55 m3: one fit = one class-A FMA family
+    const BinaryCheck bc = isa_family_compatible(C.binary, binary_block_no_self_test());
+    if (!bc.ok) throw Error(Status::invalid_input, std::string(W) + "calib.bin vs this binary: " + bc.reason);
+  }
   if (in.seed > 0 && C.seed > 0 && C.seed != in.seed)
     throw Error(Status::invalid_input, std::string(W) + "--seed " + std::to_string(in.seed) + " differs from the calibration's seed " + std::to_string(C.seed));
   if (args.contains("N") && whole(args.at("N"), "N", 1, 1 << 24) != C.N)

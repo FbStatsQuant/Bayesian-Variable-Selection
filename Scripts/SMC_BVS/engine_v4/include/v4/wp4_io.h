@@ -107,8 +107,9 @@ class FileIslandSource : public merge::IslandSource {
   const std::vector<merge::IslandHead>& heads() const { return heads_; }
   // D-29 (v0.1.15 §7): marks every island whose offer floor fails merge::offer_floor_refusal as floor_refused
   void check_offer_floors(bool v_mode, const std::string& calib_hash, double tau_cal, double pre_cutoff);
+  void check_calib_isa(const Json& calib_block);   // D-32: an island of another FMA family than calib.bin -> binary_mismatch
  private:
-  std::vector<std::string> paths_; std::vector<merge::IslandHead> heads_; Expect ex_; int Rp_, p_;
+  std::vector<std::string> paths_; std::vector<merge::IslandHead> heads_; std::vector<Json> blocks_; Expect ex_; int Rp_, p_;
 };
 
 // ---- setup view (until WP2's reader lands): the sections the merge needs --------------------------------------------

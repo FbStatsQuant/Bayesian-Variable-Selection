@@ -8,6 +8,11 @@
 
 #include "v4_git.h"   // generated at build time: V4_GIT_COMMIT = git rev-parse HEAD + "-dirty" if tracked files changed
 
+#ifndef V4_ISLAND_ISA_STR
+#define V4_ISLAND_ISA_STR ""
+#endif
+extern "C" int v4_class_a_fma() __attribute__((weak));   // island_a.cpp (D-32)
+
 namespace v4 {
 
 static Json make_block(bool with_self_test) {
@@ -17,6 +22,12 @@ static Json make_block(bool with_self_test) {
     j["git_commit"] = V4_GIT_COMMIT;
     j["compiler"] = std::string("g++ ") + __VERSION__;
     j["flags"] = V4_BIT_FLAGS_STR;
+    // D-32 (WP7 O5; review PR55 m4): island_fma = whether class A uses a true FMA in this binary (from the class-A
+    // translation unit itself; the family of every class-A bit), island_isa = the -march of the island sources (cmake
+    // -DV4_ISLAND_ISA), or "x86-64-v3" for a V4_WIDE_ISA class-A build without one, else "portable"
+    const bool has_fma = v4_class_a_fma && v4_class_a_fma() != 0;
+    if (v4_class_a_fma) j["island_fma"] = has_fma;
+    j["island_isa"] = !std::string(V4_ISLAND_ISA_STR).empty() ? std::string(V4_ISLAND_ISA_STR) : (has_fma ? std::string("x86-64-v3") : std::string("portable"));
     auto li = pm::libm_info();
     Json l = Json::object();
     l["path"] = li.path; l["sha256"] = li.sha256; l["glibc"] = li.gnu_libc_version; l["fma_variant"] = li.fma_variant;
@@ -45,6 +56,24 @@ static bool self_test_pass(const Json& b) {
   return l.contains("self_test") && l.at("self_test").type() == Json::OBJ && l.at("self_test").contains("pass") &&
          l.at("self_test").at("pass").type() == Json::BOOL && l.at("self_test").at("pass").boolean();
 }
+// D-32 (2): one fit = one FMA family. Class A uses a true FMA in every FMA build and a*b + c without one
+// (island/amath.h fma8), so blocks of the two families carry different class-A bits. The family is island_fma when
+// the block has it (the class-A unit's own answer), else known island_isa names; an unknown family is not refused.
+static int fma_family(const Json& blk) {   // 1 FMA, 0 no FMA, -1 unknown
+  if (blk.contains("island_fma") && blk.at("island_fma").type() == Json::BOOL) return blk.at("island_fma").boolean() ? 1 : 0;
+  const std::string isa = field(blk, "island_isa");
+  if (isa == "portable" || isa == "x86-64" || isa == "x86-64-v2") return 0;
+  static const char* fma_names[] = {"x86-64-v3", "x86-64-v4", "sapphirerapids", "icelake-server", "cascadelake", "skylake-avx512",
+                                    "haswell", "broadwell", "skylake", "znver2", "znver3", "znver4"};
+  for (const char* n : fma_names) if (isa == n) return 1;
+  return -1;
+}
+BinaryCheck isa_family_compatible(const Json& a, const Json& b) {
+  const int fa = fma_family(a), fb = fma_family(b);
+  if (fa >= 0 && fb >= 0 && fa != fb)
+    return {false, "island ISA families differ (" + field(a, "island_isa") + " vs " + field(b, "island_isa") + "): class-A bits differ (D-32)"};
+  return {true, "ok"};
+}
 BinaryCheck binary_compatible(const Json& a, const Json& b, BinaryUse use) {
   auto no = [](const std::string& why) { return BinaryCheck{false, why}; };
   if (!self_test_pass(a) || !self_test_pass(b)) return no("libm self-test not passed in both binary blocks");
@@ -55,7 +84,7 @@ BinaryCheck binary_compatible(const Json& a, const Json& b, BinaryUse use) {
   auto unusable = [](const std::string& g) { return g.empty() || g == "unknown" || g.find("-dirty") != std::string::npos; };
   switch (use) {
     case BinaryUse::MergeV:
-      return {true, "ok"};
+      return isa_family_compatible(a, b);
     case BinaryUse::MergeTheory:
       if (unusable(ga) || unusable(gb)) return no("theory mode needs a clean, known git commit (got '" + ga + "', '" + gb + "')");
       if (ga != gb) return no("git commits differ ('" + ga + "' vs '" + gb + "')");

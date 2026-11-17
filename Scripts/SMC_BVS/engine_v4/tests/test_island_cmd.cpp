@@ -266,6 +266,20 @@ TEST(island_command_offer_floor_on_off) {
   std::printf("  tau_cal %.6f: islands floored through the CLI; fit.bin identical with and without the floor\n", ci.tau_cal);
 }
 
+// D-32 (review PR55 m3): a V island refuses a calib.bin written by a binary of the other class-A FMA family
+TEST(island_command_refuses_other_fma_family_calib) {
+  Dir dir("isa"); Fx f; make_fx(f, dir);
+  const std::string bin = V4_SMCBVS4, cal = dir("calib.bin"), cal2 = dir("calib_other.bin");
+  CHECK_EQ(sh(bin + " calibrate --data " + q(f.dpath) + " --setup " + q(f.spath) + " --mode V --seed 77 --threads 3 --out " + q(cal)), 0);
+  { v4::fmt::Reader R(cal); v4::fmt::Writer W(R.kind(), R.mode());
+    Json m = R.json("meta"); const bool fma = m.at("binary").contains("island_fma") && m.at("binary").at("island_fma").boolean();
+    m["binary"]["island_fma"] = !fma; m["binary"]["island_isa"] = fma ? "portable" : "x86-64-v3";
+    W.add_json("meta", m); copy_sections(R, W, {"meta"}); W.write(cal2); }
+  const std::string base = bin + " island --data " + q(f.dpath) + " --setup " + q(f.spath) + " --mode V --seed 77 --island 1 --threads 3 --plan-only 1 --calib ";
+  CHECK_EQ(sh(base + q(cal)), 0);
+  CHECK_EQ(sh(base + q(cal2)), 13);
+}
+
 TEST(island_command_driver_manifest) {
   Dir dir("drv"); Fx f; make_fx(f, dir);
   const std::string bin = V4_SMCBVS4, tools = std::string(V4_FIXTURE_DIR) + "/../../tools/slurm";

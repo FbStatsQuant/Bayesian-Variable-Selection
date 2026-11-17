@@ -5,9 +5,11 @@
 //
 //   smcbvs4 calibrate --data D --setup S --seed s --mode compat|law|V --out calib.bin [--threads k] [--mem-budget BYTES]
 //                     [--I_max i --refine_m m (V only)]
+//                     [--cost-dir DIR (D-30: one JSON-lines cost record per calibration island)] [--verbose 1]
 //   smcbvs4 calibrate --plan-only 1 --mode M (--data D | --n n --p p) [--mem-budget BYTES]   settings + memory plan, no run
 #include <sys/stat.h>
 #include <chrono>
+#include <filesystem>
 #include <cmath>
 #include "v4/calib_run.h"
 #include "v4/cmd_args.h"
@@ -197,6 +199,9 @@ Json run(const Json& args) {
   const island::Start st = island::load_start(spath, D);
   const island::Neighbours nb = island::load_neighbours(spath, D.p);
   island::CalibRunnerConfig rc; rc.seed = (uint32_t)seed; rc.B = b.B; rc.threads = s.threads;
+  rc.cost_dir = str_arg(args, "cost_dir"); rc.verbose = whole_arg(args, "verbose", 0, 0, 1) == 1;   // execution records only (WP7 O5)
+  if (!rc.cost_dir.empty()) { std::error_code ec; std::filesystem::create_directories(rc.cost_dir, ec);
+    if (ec) throw Error(Status::io_error, "calibrate: cannot create --cost-dir " + rc.cost_dir + ": " + ec.message()); }
   rc.inputs_bytes = ipl.setup_in;   // the island's own setup inputs: the Start model of the plan above (StartView: the mapped lengths)
   if (mode == fmt::M_COMPAT) { rc.compat = true; rc.kernel = island::KernelKind::ParticleMajor; rc.threads = 1; }
   else if (mode == fmt::M_LAW) rc.kernel = island::KernelKind::ParticleMajor;
