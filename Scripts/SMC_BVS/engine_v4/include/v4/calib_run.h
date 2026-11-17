@@ -62,7 +62,7 @@ struct CalibOutcome {
   Ledger led;                                   // the calibration ledger at the end (stores, HPM + provenance, counters)
   std::vector<StageRecord> stages;
   InheritedFlat inherited;                      // models of top u lead0 u lead1 (lexicographic), scored (F, lg0, log m, d)
-  double k_store = 0;                           // mean |S| of the calibration top store (INTERFACES v0.1.12 §7 admission)
+  double k_store = 0;                           // mean |S| of the calibration top store (INTERFACES v0.1.13 §5.1 meta.k_store; §7 admission)
 };
 
 // Memory plan of the calibration process (review PR37 M-5; ESTIMATE, bytes): the calibration ledger's three stores at
@@ -70,7 +70,7 @@ struct CalibOutcome {
 // export (pool + offsets + 4 values + a view each), the setup inputs and data (mapped). kbar = mean model size.
 struct CalibMemPlan { uint64_t ledger = 0, island_ledger = 0, export_ = 0, inputs = 0, resident = 0, total = 0; };
 inline CalibMemPlan calib_memory_plan(int64_t p, double kbar, uint64_t inputs_bytes) {
-  const double entries = 40.0 * p + 1 + 2 * 20.0 * p, entry = 26.0 + 4.0 * kbar;
+  const double entries = 40.0 * p + 1 + 2 * 20.0 * p, entry = 30.0 + 4.0 * kbar;   // v4::Store: 26 + 4k data + 4 index
   CalibMemPlan m;
   m.ledger = (uint64_t)(2.5 * entries * entry);
   m.island_ledger = (uint64_t)(2.5 * entries * entry);

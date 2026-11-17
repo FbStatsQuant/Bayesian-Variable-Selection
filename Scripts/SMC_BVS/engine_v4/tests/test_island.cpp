@@ -491,6 +491,22 @@ TEST(island_file_roundtrip_and_terminal_supports) {
     // the terminal supports are the particles after the last measured round, in particle order
     CHECK(f.terminal.size() == (size_t)c.N && f.meta.at("mode").str() == (arith ? "V" : "law"));
     std::remove(path.c_str());
+    // PR45 review MINOR-4: the verifying reader checks every top-store hash against its model (Zobrist keys of meta.p)
+    // and every label against [0, p): a wrong hash or an out-of-range label is invalid_input; verify = false skips it.
+    if (arith == 0 && !r.top_v.empty() && r.top_len[0] > 0) {
+      auto status_of = [&](const std::string& pth, bool verify) {
+        try { read_island_file(pth, verify); } catch (const v4::Error& e) { return e.st; }
+        return v4::Status::completed;
+      };
+      IslandRun bh = r; bh.top_hash[0] ^= 1;
+      std::string ph = tg.add(wp3_tmp("island_rt_badhash.bin")); write_island_file(ph, bh, Arith::Bit, inputs);
+      CHECK(status_of(ph, true) == v4::Status::invalid_input);
+      CHECK(status_of(ph, false) == v4::Status::completed);
+      IslandRun bl = r; bl.top_pool[bl.top_off[0] + bl.top_len[0] - 1] = r.p;   // still sorted; label p is out of range
+      std::string pl = tg.add(wp3_tmp("island_rt_badlabel.bin")); write_island_file(pl, bl, Arith::Bit, inputs);
+      CHECK(status_of(pl, true) == v4::Status::invalid_input);
+      std::remove(ph.c_str()); std::remove(pl.c_str());
+    }
   }
   // interrupted run (stop after a checkpoint): no logZ / rb / pip / terminal sections
   IslandConfig a = c; a.ckpt_path = tg.add(wp3_tmp("island_rt_ck")); a.ckpt_every_s = 1e9; a.stop_after_step = 2;

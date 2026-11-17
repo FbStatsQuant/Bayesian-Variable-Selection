@@ -84,9 +84,8 @@ void read_store(const fmt::Reader& R, const Json& meta, const std::string& prefi
     check_model(ModelView(pool + off[i], len[i]), p, K, "store " + prefix);
     if (zob && h[i] != zob->hash(ModelView(pool + off[i], len[i]))) throw Error(Status::invalid_input, "store " + prefix + ": hash differs from the model's");
   }
-  for (uint64_t i = 0; i < n; ++i) s.offer(v[i], ModelView(pool + off[i], len[i]), h[i]);
-  s.compact();
-  if (s.size() != n || !s.check_invariants()) throw Error(Status::invalid_input, "store " + prefix + ": not a valid sorted store (I1)");
+  s.load_unique_sorted(n, v, h, off, len, pool, np);   // verifies strict order and one entry per model (I1)
+  if (s.size() != n) throw Error(Status::invalid_input, "store " + prefix + ": not a valid sorted store (I1)");
 }
 void add_models(fmt::Writer& W, const std::string& prefix, const std::vector<Model>& ms) {
   std::vector<int64_t> ptr{0}; std::vector<int32_t> idx;
@@ -387,9 +386,10 @@ merge::IslandIn load_island_full(const std::string& path, int Rp, int p, const E
       // review PR20 re-check n-1: a wrong hash would let duplicates of one model into the merged store
       if (ex.zob && hh[i] != ex.zob->hash(ModelView(pool + off[i], len[i]))) throw Error(Status::invalid_input, "top store: hash differs from the model's");
     }
-    for (uint64_t i = 0; i < n; ++i) I.led.top.offer(v[i], ModelView(pool + off[i], len[i]), hh[i]);
-    I.led.top.compact();
-    if (I.led.top.size() != n || !I.led.top.check_invariants()) throw Error(Status::invalid_input, "top store not sorted / unique (I1)");
+    // bulk load (PR40 review follow-up): an island file's store is already sorted and unique; load_unique_sorted verifies
+    // that (strict order, one entry per model) and throws invalid_input otherwise, with no compactions
+    I.led.top.load_unique_sorted(n, v, hh, off, len, pool, np);
+    if (I.led.top.size() != n) throw Error(Status::invalid_input, "top store not sorted / unique (I1)");
   }
   { std::vector<int32_t> hs = R.vec<int32_t>("hpm_S"); std::vector<double> hv = R.vec<double>("hpm_val"); std::vector<int64_t> ev = R.vec<int64_t>("hpm_ev");
     if (hv.size() != 2 || ev.size() != 12) throw Error(Status::invalid_input, "hpm_val / hpm_ev size");
