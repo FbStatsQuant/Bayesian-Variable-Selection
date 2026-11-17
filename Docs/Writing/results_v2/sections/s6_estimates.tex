@@ -4,12 +4,17 @@
 \inwords{The method prints an evidence estimate, pooled inclusion probabilities and the median probability model they
 define. Given the calibration, the evidence estimate is unbiased, on every design. If, in addition, the rows are Gaussian, the signals fixed, every true predictor visible, and no
 null predictor correlated with a true one beyond order $n^{-1/2}$, even given $15$ others, the printed estimates are
-consistent: their errors are of order $n^{-1/2}e^{C_\rho\sqrt{\log n}}=n^{-1/2+o(1)}$ on the event that the method uses
-the sampler and its calibration succeeds.}
+consistent: the errors of the evidence estimate (relative and log error) and of the inclusion probabilities, multiplied
+by the indicator that the method uses the sampler and its calibration succeeds, are of order
+$n^{-1/2}e^{C_\rho\sqrt{\log n}}=n^{-1/2+o(1)}$; the probability that this event occurs and the median model is wrong tends
+to zero, and so does the probability that the run completes and the reported model is wrong. Nothing is claimed about how
+likely the event is, or conditionally on it.}
 
 \why{The numbers a user reads come with guarantees: the evidence estimate is right on average whatever the design, and
-on designs without leakage it converges to the exact evidence, the inclusion probabilities to $0$ or $1$, and the median
-and reported models to the true model.}
+on designs without leakage, on the event that the calibration succeeds, its relative error tends to zero, the
+inclusion probabilities tend to $0$ or $1$ and the median model equals the true model with probability tending to one,
+and a completed run reports the true model with probability tending to one (no claim is made about how likely that
+event is).}
 
 \subsection{Unbiased evidence, on every design}\label{sec:unbiased}
 

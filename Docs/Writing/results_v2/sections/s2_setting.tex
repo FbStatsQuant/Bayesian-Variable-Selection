@@ -78,9 +78,12 @@ in the results.
     fallback); otherwise the run stops. We write $\Acal$ for the event that the method uses the sampler and its
     calibration succeeds. The final run consists of four independent copies, the \emph{islands}.
   \item \emph{The reported model.} After the sampler, two local searches run (from the best model found, and from the
-    start mode); each moves to the best neighbouring model (one predictor added, deleted or swapped) while that improves
-    the log score. The \emph{reported model} $\Shat$ is the best-scoring model the run has recorded. The method
-    \emph{certifies} $\Shat$ when no neighbour of it has a higher log score (or when it enumerated $\Om$).
+    start mode); each moves to the best neighbouring model (one predictor added, deleted or swapped) while that strictly
+    improves the log score, for at most a capped number of moves ($\ell_n:=\lceil\log_2(n+p+1)\rceil$ for the first search,
+    $\ell_n+\abs{\tSz}$ for the search from the start mode), and then scans the neighbours once more.
+    The \emph{reported model} $\Shat$ is the best-scoring model the run has recorded. The method \emph{certifies}
+    $\Shat$ (sets its local-optimality flag) when it enumerated $\Om$, or when $\Shat$ ends a local search whose last scan
+    found no strict improvement; a search that reaches its cap and still finds an improving neighbour stops uncertified.
   \item \emph{The estimates.} Island $r$ estimates the inclusion probabilities and the evidence; the method pools the
     four islands with equal weights into $\PIPhat_j$ and $\Zhat$, and reports $\MPMhat:=\{j:\PIPhat_j>1/2\}$.
 \end{itemize}
@@ -88,8 +91,8 @@ in the results.
 \subsection{Shared assumptions and conventions}\label{sec:standing}
 
 The assumptions below are used across Sections~\ref{sec:model-result}--\ref{sec:estimates}; the others are stated
-where they are first used. Our simulation designs (S1--S6, the strong-factor study, and the designs IND, AR, BLK and FAC
-of the planned runs at $p=10^6$) are described in Assumptions~\S2: S1 and IND have independent predictors; S2--S4,
+where they are first used. Our simulation designs (S1--S6, the strong-factor study, the designs IND, AR and BLK of the
+planned runs at $p=10^6$, and FAC, a contingent design planned at $p=10^4$ only) are described in Assumptions~\S2: S1 and IND have independent predictors; S2--S4,
 S6, AR (autoregressive) and BLK (blocks) are locally correlated; S5, the strong-factor study and FAC have pervasive common
 factors.
 

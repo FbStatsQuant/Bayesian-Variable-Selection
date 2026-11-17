@@ -110,7 +110,7 @@ parametric rate.}
 \begin{theorem}[Parametric rate when the true predictors are detectable]\label{thm:dist-param}
 Assume Assumption~\ref{asm:dist} with the window $q_n$ of level $M=1$, with exactly $s\ge1$ nonzero coordinates of $\bstar$;
 that $\lmin(\Corr(x_T))\ge\psi$ for a fixed $\psi>0$ and every set $T$ of at most $(2A+3)s+2$ predictors; and that
-$\min\{\abs{\beta^*_j}\sd(x_j)/\sigs:\beta^*_j\neq0\}\ge b_n$ with $b_n^2n/\log n\to\infty$. Then
+$\min\{\abs{\beta^*_j}\sd(x_j)/\sigs:\beta^*_j\neq0\}\ge b_n$, where $b_n>0$ and $b_n^2n/\log n\to\infty$. Then
 $\Pi(d_H(f,f^*)>M_n/\sqrt n\mid\Dn)\to0$ in $\P^*$-probability, for every sequence $M_n\to\infty$.
 \end{theorem}
 
@@ -152,9 +152,9 @@ $\tfrac12$ cannot be improved: $1-\pi_0(\Sz)\ge\tfrac13(n+1)^{-1/2}$ for every v
 
 \status{\textbf{Proved and independently checked}. Registry: Appendix~\ref{app:status}, row 3.3.}
 
-With leakage, the start law concentrates instead on the models between the true model and the leakage set: if \as{NL}
-holds with $\Sz$ replaced by a deterministic $Q\supseteq\Sz$ with $\abs{Q}\le K$, then
-$\P\big(\pi_0(\Lat(Q))\ge1-(\abs{Q}+1)n^{-1/2}e^{C\sqrt{\log n}}\big)\to1$.
+With leakage, the start law concentrates instead on the models between the true model and the leakage set: keep the
+other assumptions of Theorem~\ref{thm:start}, and let \as{NL} hold with $\Sz$ replaced by a deterministic $Q\supseteq\Sz$ with $\abs{Q}\le K$, so
+that only predictors outside $Q$ are required not to leak. Then $\P\big(\pi_0(\Lat(Q))\ge1-(\abs{Q}+1)n^{-1/2}e^{C\sqrt{\log n}}\big)\to1$.
 
 \why{It is the only reported-model statement that does not assume Gaussian rows: its conditions are on the sample
 $(X,\tstar)$.}
@@ -199,7 +199,7 @@ guarantee about the coded method that remains on pervasive-factor designs, which
 
 \begin{theorem}[Certified screening]\label{thm:screen}
 Let the design be fixed and assume \as{GL} and Convention~\as{C1}; \as{SP} is not assumed. Let $k_n\in\{0,\dots,K-1\}$ be
-a model-size budget, and assume $\lmin(\Rhat_S)\ge\kappa$ for every $S$ with $\abs{S}\le k_n+\sz$, $\tmin\ge\tlow>0$ and
+a model-size budget, and assume $\lmin(\Rhat_S)\ge\kappa$, for a fixed $\kappa>0$, for every $S$ with $\abs{S}\le k_n+\sz$, $\tmin\ge\tlow>0$ and
 $\norm{\tstar}_1\le M_1$, with $\kappa$, $\tlow$, $M_1$, $\sigs^2$ fixed, and $(k_n+1)\log p+\log n\le c_{\mathrm{SB}}\,n$, where
 $c_{\mathrm{SB}}:=\kappa^2\tlow^2/\{200(M_1^2+\sigs^2)\}$. Then
 \[
@@ -214,7 +214,7 @@ noiseless gain of a missing true predictor, with no condition on $p$, $\sz$ or t
 independently checked). The bound is on an intersection, not conditional on certification, and a run is not claimed to certify a small model
 with probability tending to one. In existing numerics (not a theorem) every completed run certified its reported model:
 2,394 of 2,394 in the 2,400-fit study, 376 of 376 in the strong-factor study, 71 of 71 in a screening study. On the
-strong-factor designs the certified model contained every true predictor in 61 of 122 fits at $n=50$, 18 of 20 at $n=75$
+strong-factor designs with equicorrelation $\varrho\in\{0.5,0.7\}$, $p\ge2.5n$ and $\sz\in\{4,8\}$, the certified model contained every true predictor in 61 of 122 fits at $n=50$, 18 of 20 at $n=75$
 and 30 of 30 at $n=100$; at the constants of these designs the size budget of Theorem~\ref{thm:screen} requires
 $n\gtrsim1{,}450$.
 

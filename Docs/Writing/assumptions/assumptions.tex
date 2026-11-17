@@ -42,7 +42,7 @@ For the method as coded, the assumptions of the theorem that the run reports the
 independent and locally correlated designs, and fail on pervasive common factors when $p$ is much larger than $\sqrt n$.
 The theorem that the printed estimates are consistent needs one more condition, \emph{no leakage} (null predictors
 nearly uncorrelated with true ones), which only our independent designs satisfy. Separately, given the calibration, the
-evidence estimate is unbiased on every design (Remark~5.22; two inputs await their check, Section~\ref{sec:a-math}).
+evidence estimate is unbiased on every design (Proposition~6.1 and Section~6.1; two inputs await their check, Section~\ref{sec:a-math}).
 Conclusions are compared with Song and Liang theorem by theorem (Section~\ref{sec:a-setting}), not as a whole;
 Table~\ref{tab:a-summary} compares the assumptions one by one.
 
@@ -68,7 +68,7 @@ Fixed true model size \lab{SP} & $\sz$ fixed & (4), p.~950. \emph{The same} for 
 admits growing supports under (3). & \yes & \yes & \yes \\
 \midrule
 \multicolumn{6}{@{}l}{\textbf{Posterior theorems}} \\
-Signal size & bounded; nonzero (fixed in Thms 3.9, 5.7, 5.19; beta-min in Thm~3.1) & If their $\bstar$ does not change with $n$: the same as Thms 3.9, 5.7, 5.19; Thms 3.1, 4.2 admit more. If it may
+Signal size & bounded; nonzero (fixed in Thms 3.1, 5.3, 6.2; beta-min in Thm~3.2) & If their $\bstar$ does not change with $n$: the same as Thms 3.1, 5.3, 6.2; Thms 3.2, 4.2 admit more. If it may
 vary: ours asks more than their proof steps use (supp.\ pp.~6, 15). & \yes & \yes & \yes \\
 Eigenvalue floor \lab{EF}, \lab{EFS} & fixed floor on small sets & Cond.~3, p.~955; (22)--(23), supp.\ p.~13. Where their
 sets are no larger than ours, ours implies (22)--(23) for standardised columns and Cond.~3 for Gaussian predictors; where they are larger ($\bar r_n\succ\log n$), neither implies the
@@ -81,9 +81,9 @@ predictors: ours implies Cond.~1. Raw predictors, or against $\abs{x_i}\le1$: ne
 \multicolumn{6}{@{}l}{\textbf{Reported-model theorem, in addition}} \\
 Visibility \lab{V} & no true predictor cancelled by $\le15$ others & Cond.~5, p.~958. \emph{Ours implies theirs, in every
 regime.} & \yes & \yes & \unc$^{a}$ \\
-Polynomial leakage set, 5.6(a) & at most $n^b$ nulls correlated with the signal & \emph{No hypothesis of this kind}; informal
+Polynomial leakage set, 5.2(a) & at most $n^b$ nulls correlated with the signal & \emph{No hypothesis of this kind}; informal
 remark (a), p.~958. No ordering. & \yes & \yes & \no \\
-Floor and local regressions, 5.6(b),(c) & each regression in the set uses few members & Floor: as the eigenvalue floor,
+Floor and local regressions, 5.2(b),(c) & each regression in the set uses few members & Floor: as the eigenvalue floor,
 on other sets. Local regressions: \emph{no counterpart}. & \yes & \yes & \na \\
 \midrule
 \multicolumn{6}{@{}l}{\textbf{Printed-estimates theorem, in addition}} \\
@@ -97,15 +97,15 @@ $^{a}$ Inside for every design of the strong-factor study (true effects of align
 
 \section{Theorems, designs, and what ``inside'' means}\label{sec:a-setting}
 
-\paragraph{The theorems.} Numbers refer to the companion section ``What we prove''. The \emph{posterior theorems} are
-the \emph{selection theorems} (the posterior finds the true model; Theorems~3.1, 3.4 and~3.9) and the
+\paragraph{The theorems.} Numbers refer to the companion section ``What we prove'' (second version). The \emph{posterior theorems} are
+the \emph{selection theorems} (the posterior finds the true model; Theorems~3.1, 3.2 and~A.3) and the
 \emph{distribution theorem} (it finds the true conditional law of the response; Theorem~4.2). The \emph{reported-model
-theorem} (Theorem~5.7) says that the method, as coded, reports the true model. The \emph{printed-estimates theorem}
-(Theorem~5.19) says that the printed inclusion probabilities, median model and estimate of the evidence (the
+theorem} (Theorem~5.3) says that the method, as coded, reports the true model. The \emph{printed-estimates theorem}
+(Theorem~6.2) says that the printed inclusion probabilities, median model and estimate of the evidence (the
 normalising constant of the posterior) are consistent, on the event that the method uses the sampler and its
 calibration succeeds.
 
-\paragraph{The primitive form.} Theorem~3.9 needs only a Gaussian linear model with i.i.d.\ Gaussian rows; a
+\paragraph{The primitive form.} Theorem~3.1 needs only a Gaussian linear model with i.i.d.\ Gaussian rows; a
 correlation matrix whose smallest eigenvalue is bounded below (its largest is free); a fixed number of nonzero
 coefficients that do not change with $n$; and $p\le n^A$.
 
@@ -167,29 +167,29 @@ $n=200$: $A=\log10^6/\log200\approx2.6$.}
 their Theorem~1 also allows growing supports under their (3), p.~950, which ours does not.}
 \ev{Growth of $\sz$ is tightly limited: on every design with $\sz\le\min(K-1,p/2)$, $K$ the prior's cap on model
 size, $\pis{\Sz}\le\{1+(\sz+1)/(3\sqrt n)\}^{-1}$
-(Theorem~3.13(a)), so a posterior miss of order $\rn$ is possible only if $\sz=O(\sqrt{\log n})$.}
+(Remark~3.3(a)), so a posterior miss of order $\rn$ is possible only if $\sz=O(\sqrt{\log n})$.}
 \ro{True models whose size grows with $n$.}
 
 \subsection{Assumptions of the posterior theorems}\label{sec:a-post}
 
 \ahead{Signal size}{\lab{BC}, \lab{FSb}, \lab{FSt} and Assumption~4.1(e) bound the coefficients above; \lab{BM} is
 the beta-min}{\SL{} state no lower bound in their theorems. \emph{If their $\bstar$ does not change with $n$} (the natural
-reading of p.~950): Theorems~3.9, 5.7 and~5.19 ask the same; Theorems~3.1 and~4.2, whose
+reading of p.~950): Theorems~3.1, 5.3 and~6.2 ask the same; Theorems~3.2 and~4.2, whose
 coefficients may vary with $n$, admit more. \emph{If it may vary with $n$:} their proof steps need rates (supp.\
 pp.~6, 15), and our fixed signals ask more than those steps use.}
 \ev{Our explicit beta-min \lab{BM}, at the usual order $\sigs\rn$,
-appears only in the fixed-design Theorem~3.1; it has the same form as their proof rates, with a fixed multiple of
+appears only in the fixed-design Theorem~3.2; it has the same form as their proof rates, with a fixed multiple of
 $\log n$ where theirs has a diverging multiple of $\bar r_n\log P_n$ (supp.\ p.~15). Their Theorem~1 bounds the
 coefficients above through (3) and (8) (pp.~950, 952). Without any lower bound, specificity can fail
-(Remark~3.2(ii)).}
-\ro{True coefficients below a constant times $\rn$ (Theorem~3.1 only), and signals that grow without bound.}
+(Remark~A.1).}
+\ro{True coefficients below a constant times $\rn$ (Theorem~3.2 only), and signals that grow without bound.}
 
-\ahead{Eigenvalue floor on small sets}{\lab{EF}, \lab{EFS}, Assumptions~3.3 and~4.5(a)}{\emph{Where \SL's sets are no larger than ours:} our fixed floor
+\ahead{Eigenvalue floor on small sets}{\lab{EF}, \lab{EFS}, Assumption~A.2(a) and the floor of Theorem~A.7}{\emph{Where \SL's sets are no larger than ours:} our fixed floor
 implies their (22)--(23) (supp.\ p.~13; standardised columns) and their Condition~3 (p.~955; Gaussian predictors), and we
 also ask a floor on sets where they ask nothing. \emph{Where their sets are larger} ($\bar r_n\succ\log n$): the two constrain different sets; neither implies
 the other.}
-\ev{``No larger'' means $\abs t+\bar r_n\le2(A+1)\sz+2$ ($\abs t$ their true-model size) against Theorem~3.1, and $\bar r_n+1\le5(A+1)(\sz+1)\log n$
-against Theorem~3.9. Condition~3 asks a \emph{vanishing} level $\delta_n\succ\epsilon_n^2$ ($\epsilon_n$ their contraction rate) on $\bar r_n+1$ columns that contain a true
+\ev{``No larger'' means $\abs t+\bar r_n\le2(A+1)\sz+2$ ($\abs t$ their true-model size) against Theorem~3.2, and $\bar r_n+1\le5(A+1)(\sz+1)\log n$
+against Theorem~3.1. Condition~3 asks a \emph{vanishing} level $\delta_n\succ\epsilon_n^2$ ($\epsilon_n$ their contraction rate) on $\bar r_n+1$ columns that contain a true
 predictor. We ask
 a \emph{fixed} level on sets of $(2A+2)\sz+2$ predictors (fixed design) or $O(\log n)$ predictors (Gaussian rows). In
 every regime both conditions follow from $\lmin(\Sig)\ge c$. No upper eigenvalue bound is used, so pervasive factors are allowed: the smallest eigenvalue of
@@ -206,7 +206,7 @@ $c_n\propto1/n$ (p.~953), no design condition is left, and their rate carries th
 $\epsilon_n^2\succ\bar r_n\log P_n/n$ (their (10)). Our floor, $c_\psi/n$
 on the correlation scale, is of the same order as that ridge, on $O(\log n)$ sets only, and gives the distribution
 theorem its contraction radius $\sqrt{M\log n/n}$, for a fixed level $M$. Without it the distribution theorem still
-holds, with an extra factor $\sqrt{\log(\praw\vee n)}$ in the radius, $\praw$ the number of raw predictors (Proposition~4.3(ii)).}
+holds, with an extra factor $\sqrt{\log(\praw\vee n)}$ in the radius, $\praw$ the number of raw predictors (Proposition~A.6(ii)).}
 \ro{Duplicated columns (null duplicates included) and exact linear dependence, as in one-hot or compositional coding.}
 \tu{Inside after removing exact duplicates and exact linear dependences.}
 
@@ -218,9 +218,9 @@ and $M=\log2$, $L$ being the sub-Gaussian constant of Assumption~4.1(c) (a two-l
 checked). On raw predictors, Gaussian rows with mean $n$
 satisfy our row law and violate Condition~1, which is a raw exponential-moment bound. Our generators draw centred
 Gaussian rows with unit variances, which satisfy Condition~1 itself.}
-\ro{Non-Gaussian rows for Theorems~3.9, 5.7 and 5.19; heavy-tailed predictors for the distribution theorem.}
+\ro{Non-Gaussian rows for Theorems~3.1, 5.3 and 6.2; heavy-tailed predictors for the distribution theorem.}
 \tu{Bounded data such as genotypes are outside the Gaussian-row theorems as stated, and inside \SL's Condition~1; they are
-covered by the fixed-design Theorem~3.1 when the observed design meets its conditions.}
+covered by the fixed-design Theorem~3.2 when the observed design meets its conditions.}
 
 \subsection{Further assumptions of the reported-model theorem}\label{sec:a-rm}
 
@@ -240,7 +240,7 @@ bound does not apply; a search found a margin below it).}
 pervasive factor with effects of mixed signs and for a riboflavin-like design; such a user may be outside this theorem
 and still inside the posterior theorems.}
 
-\ahead{Polynomial leakage set,}{Assumption~5.6(a)}{\SL{} have no hypothesis of this kind; the nearest text is their
+\ahead{Polynomial leakage set,}{Assumption~5.2(a)}{\SL{} have no hypothesis of this kind; the nearest text is their
 informal remark (a), p.~958, which is not a condition of any of their theorems. No ordering is claimed.}
 \ev{They write: ``if there are $p_n$ predictors correlated with the true predictor $X_t$, $p_n\prec P_n$, then there are
 at most $cp_n$ predictors to be selected'' (p.~958). Their results on their sampler's output carry no design condition of
@@ -253,13 +253,13 @@ true one, so the leakage set is all of $\set{p}$, and $\abs{Q}\le n^b$ would for
 predictors); S3, S4, S6 and BLK (the true predictors' blocks). \textbf{Outside:} S5, the whole strong-factor study, and
 FAC.}
 
-\ahead{Floor and local regressions inside the leakage set,}{Assumption~5.6(b),(c)}{\emph{Floor on $Q\cup\{l\}$,
+\ahead{Floor and local regressions inside the leakage set,}{Assumption~5.2(b),(c)}{\emph{Floor on $Q\cup\{l\}$,
 for every predictor $l$:} of the kind of \SL's Condition~3
 (p.~955) and (22) (supp.\ p.~13), on other sets; it compares as the eigenvalue floor does. \emph{Local regressions:} no
 counterpart (they serve the method's local search, which \SL{} do not analyse).}
 \ev{Both follow from the global floor \lab{EFS} plus a locality property of $\Sig$: for block, banded and AR structures,
 take as local set the block-mates or the nearest leakage-set neighbours. A fixed-design version needs nothing of the kind
-when the leakage set has at most $(1-\delta)\log n$ extra predictors, for a fixed $\delta\in(0,1)$ (Theorem~5.12, case
+when the leakage set has at most $(1-\delta)\log n$ extra predictors, for a fixed $\delta\in(0,1)$ (Theorem~A.11, case
 (d1)).}
 \ro{Leakage sets collinear with another predictor, or inside which regressions depend on many members.}
 \ds{As for the polynomial leakage set; not applicable where that fails.}
@@ -285,13 +285,13 @@ primary design of the $10^6$ plan.}
 
 \begin{itemize}[leftmargin=1.5em,itemsep=2pt]
   \item \emph{Posterior theorems.} The prior facts, the posterior-summary lemma (Lemma~2.1) and the Hellinger facts
-    are proved and independently checked, and the output description used by Corollary~4.7 is checked against the code.
-    Two lemmas behind the expectation bound of Theorem~3.1 await their independent check, and one reference in the
-    record of Corollary~4.7 is to be corrected.
+    are proved and independently checked, and the output description used by Corollary~A.8 is checked against the code.
+    Two lemmas behind the expectation bound of Theorem~3.2 await their independent check, and one reference in the
+    record of Corollary~A.8 is to be corrected.
   \item \emph{Theorems on the coded method.} The probabilistic events of the reported-model proof are proved and
     independently checked. Thirteen premises are stated and await their checks. Ten are code readings or short mathematical checks,
     for example that the run guard stops runs without changing them, that the start sampler is exact, and that the coded
-    moves are the stated kernels. Of the other three, one is used only by Remark~5.21 and needs a new key lemma; two
+    moves are the stated kernels. Of the other three, one is used only by Remark~A.13 and needs a new key lemma; two
     are used only by an older proof that the core theorems no longer use. The unbiasedness
     of the evidence estimate also rests on two inputs not yet checked under the current protocol: the identities of the
     final run once its calibration is fixed, and the two-line argument for the pooled form.
