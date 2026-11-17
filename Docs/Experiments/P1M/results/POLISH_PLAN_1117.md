@@ -22,4 +22,6 @@ tests/run_tests.sh --quick|--full; driver = tools/slurm/p1m_driver.py + p1m_cell
 | P-7 | Usability check: a fresh Haiku/Sonnet agent with ONLY the README builds and runs the example on Owls; every stumble → fix | ≈ 12-01 |
 | P-9 | Data importer: `smcbvs4 import` from CSV / R / numpy into raw.bin (a newcomer can only use `gen` today; needed for the real-data example) | after the freeze, ≈ 11-23 – 11-27 |
 | P-10 | Driver site config: NOTS account / partition / qos / modules / folder guard moved to a site file; a generic SLURM template | ≈ 11-27 – 12-01 |
+| P-11 | CLI strictness (code, after the freeze): unknown flags refused (today `--mem-budgt` is silently ignored); one `--mem-budget` unit for every command (setup reads GB, others bytes or ignore it); usage text for every subcommand | with P-4 |
+| P-12 | Cross-machine eval: eval/dist uses log1p/expm1, which differ Owls vs NOTS (PMATH_REPORT:47) → pin or document; one recorded two-machine run of the README example | ≈ 11-27 – 12-01 |
 | P-8 | Release v4.0: CHANGELOG (from INTERFACES history), tag, API/file-format doc frozen; Codex release review | after the 1M block (≈ 12-08 – 12-10) |
