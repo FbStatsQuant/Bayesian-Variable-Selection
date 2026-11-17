@@ -209,7 +209,7 @@ TEST(offer_floor_end_to_end_merge) {
                     : (const void*)R.get<uint8_t>(nm);
       W.add_copy(nm, e.dtype, q, e.length, e.dims[0], e.dims[1]);
     }
-    W.add("nb_ptr", nb.ptr); W.add("nb_idx", nb.idx); W.add("size_cum", st.size_cum); W.write(spath); }
+    W.add("nb_ptr", nb.ptr); W.add("nb_idx", nb.idx); W.add("size_cum", st.size_cum); W.add("size_logmass", st.size_logmass); W.write(spath); }
   { Start st2 = load_start(spath, D); Neighbours nb2 = load_neighbours(spath, p);
     CHECK(st2.size_cum == st.size_cum && st2.logZbar0 == st.logZbar0 && st2.blocks == st.blocks && nb2.ptr == nb.ptr && nb2.idx == nb.idx); }
   // calibration (V)

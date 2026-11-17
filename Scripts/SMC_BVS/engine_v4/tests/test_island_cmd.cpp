@@ -456,6 +456,7 @@ TEST(island_command_resume) {
     IslandConfig c; c.seed = 77; c.island = 2; c.tier = (uint32_t)ci.tier; c.N = ci.N; c.grid = ci.grid; c.L = ci.L; c.Hm = ci.Hm; c.B = 5; c.threads = 3;
     c.kernel = KernelKind::LabelMajor; c.ckpt_path = ckbase; c.ckpt_every_s = 1e9; c.stop_after_step = 2;
     c.input_id = input_identity(f.dhash, setup_hash, calib_hash);
+    { const v4::OfferFloor of = v4::offer_floor_from_calib(ci.meta, true, ci.content_hash); c.offer_floor = of.f; c.offer_floor_calib = of.calib; }   // = the command (D-29)
     return run_island<Arith::ClassA>(f.D, st, nb, c).status;
   };
   CHECK(interrupted(ck, f.shash, ci.content_hash, f.spath) == 1);
