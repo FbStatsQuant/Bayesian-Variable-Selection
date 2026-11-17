@@ -485,3 +485,4 @@
 - 2026-11-17 15:07 CST SOL62 A/B prep done (b0eb16f1): 3 cases (Cor-H KL true finding; W3-D2 R1 Sol F1 lgamma finding, confirmed; W3-MISR-R K2 clean control), ~33.9k input tokens for 3 calls; TRACK_B case impossible (no 6.1 review of it); D18 case skipped. Runs after the current recordings (D124).
 - 2026-11-17 15:11 CST A1/A2 corrigendum LANDED 560194e9 (CI 44174655166). W discharge dry run clean (ISL/FRZ; R4 + 5 rows discharged; DIST-C/Cor-C EX-A only; ERRATA_W3-SAMP.md; R5r→R5r2) → HQ GO requested. All next-item details consolidated to the recorder.
 - 2026-11-17 15:11 CST HQ GO W discharge real (relayed); then Prop-LB → D2 → D3 → V.
+- 2026-11-17 15:19 CST IMPL-LIST close: Engineering PR #68 (1594a3b5); HQ tags method-v3.1-listpip. Spec readings confirmed to HQ (exact branch: fit$exact$top; all −Inf → NA + nonfinite_score). W3-D5P lead: LIST-CODE check of the readings + the NA-qualifier decision/statement change now; IMPL-LIST code-read after the tag.
