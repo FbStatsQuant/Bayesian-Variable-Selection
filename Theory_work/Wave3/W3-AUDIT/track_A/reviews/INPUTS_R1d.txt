@@ -1,0 +1,29 @@
+# External inputs of the R1 diff round R1d (batch T1–T10): same as R1 (the pinned code and the sources the proofs cite).
+# Registry tables and wave/audit documents are not listed (PROTOCOL_v4 §4.1).
+Scripts/SMC_BVS/core
+Docs/Theory/proofs/T12_T8_frozen_run_identities/STATEMENT.md
+Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md
+Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/N9-KERNEL/PROOF.md
+Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/N9-KERNEL/REPORT.md
+Theory_work/State_of_Project/sections/02_method.tex
+Theory_work/Wave1/W1-GEN/lemmas/L5_assembly.md
+Theory_work/Wave1/W1-N1/STATEMENT.md
+Theory_work/Wave1/W1-N3/STATEMENT.md
+Theory_work/Wave1C/C-DLV/INVENTORY.md
+Theory_work/Wave1C/C-DLV/REPORT.md
+Theory_work/Wave1C/C-DLV/STATEMENT.md
+Theory_work/Wave1C/C-DLV/lemmas/L2_degenerate.md
+Theory_work/Wave1C/C-DLV/lemmas/L4_delivery.md
+Theory_work/Wave1C/C-ENG/lemmas/TDP_E.md
+Theory_work/Wave1C/C-GROW/STATEMENT.md
+Theory_work/Wave2/W2-UNI/lemmas/L5_delivery.md
+Theory_work/Wave3/W3-RM/STATEMENT.md
+Theory_work/Wave3/W3-RM2/STATEMENT.md
+Theory_work/Wave3/W3-SAMP/STATEMENT.md
+Theory_work/Wave3/W3-SAMP/lemmas/CC_code_check.md
+Theory_work/Wave3/W3-SAMP/lemmas/D_theorem.md
+Theory_work/Wave3/W3-SAMP/lemmas/PC_completed.md
+Theory_work/Wave3/W3-START/STATEMENT.md
+Theory_work/Wave3/W3-START/lemmas/L10_INTERFACES.md
+Theory_work/Wave3/W3-START2-R/STATEMENT.md
+Theory_work/Wave3/W3-START2/STATEMENT.md
