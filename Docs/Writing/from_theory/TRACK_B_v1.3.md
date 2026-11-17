@@ -1,3 +1,5 @@
+> **SUPERSEDED by TRACK_B_v1.4.md + WRITING_DELTA_v1.4.md.**
+
 # W3-AUDIT — track B: are the design and data assumptions reasonable? (v1.3, after reading the supplement, 2026-11-16)
 
 Author: audit Fable. Each dossier: **verdict** against Song and Liang (2015) → **strongest evidence** → **holds / fails**
