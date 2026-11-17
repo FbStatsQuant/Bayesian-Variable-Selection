@@ -42,7 +42,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 - X2, X4: relabelling (recorder, post-freeze). P6 method version: Engineering reconciliation pending. RERUN_SPEC: open (HQ).
 
 ## Post-freeze riders (queued)
-- (11-16, if option C) Relabel W3-POST:Thm-1 to its post-T03♯ status and give W3-SAMP:C a v4 accept record. This discharges W3-READER:R4's two @hyp conditions (row 3.6).
+- (11-16, D89, FIRST in the recording batch) Relabel W3-POST:Thm-1 (legacy SF/XF → v4 carrier, card-12 style) to its post-T03♯ status and give W3-SAMP:C a v4 accept record. This discharges W3-READER:R4's two @hyp conditions (row 3.6).
 - (HQ 11-16, card 15 B) READER editorial batch: (1) rows 3.1/3.2: say which clause C-DLV:L2-S3 / P1-Inventory attach to; if only delivery, the abstract's output-conditional clause must not read as conditional; (2) GUARD-W wording: 'returns no estimates; anything else it returns is flagged incomplete and is not covered' (partial_results / hpm_incomplete / estimates_available = FALSE in v3_fit.R/v3_run.R); (3) after T14 is recorded: compress row 3.1's integer-limit passage to one sentence; plus Opus R3's 2 items and [AUD-S4] (v1.4 wording).
 - (HQ 11-16, card 15 C) **Right after the recording batch:** Tier B Sol check of the two code-reading audits C-DLV:L2-S3 and C-DLV:P1-Inventory (the last unchecked input on row 3.1).
 - (HQ 11-16, card 15 D) Row 3.6 stays core for now; after #5′ is proved, HQ will likely demote it to a remark (Writing note ROW36_NOTE).
