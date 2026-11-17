@@ -20,7 +20,7 @@ $\Dn$, $\Pi(\cdot\mid\Dn)$, $\P^*$, $\zeta$, $d_H$ & data set; posterior of $(S,
 $M$, $q_n$, $c_{\mathrm H}$, $M_0$ & level, window and constants of the distribution theorem & \S\ref{sec:distribution} \\
 $\Cov(\cdot,\cdot\mid W_U)$, $\bar\beta_{U,l}$ & partial covariance; population regression coefficient & \S\ref{sec:reported} \\
 $Q$, $\Lat(Q)$, $\Hl_l$; $\theta_{\mathrm{lo}},\theta_{\mathrm{hi}}$ & leakage set; its lattice; locality sets; bounds on standardised coefficients & \S\ref{sec:reported} \\
-$\mathcal G_n$, $\Dom$ & data event of Result~3; delivery domain & \S\ref{sec:reported}, App.~\ref{app:conventions} \\
+$\mathcal G_n$; $\Dom$ & data event of Result~3; delivery domain & \S\ref{sec:reported}; App.~\ref{app:conventions} \\
 $\Acal$, $\rho_n$ & sampler used and calibration succeeds; rate $n^{-1/2}e^{C_\rho\sqrt{\log n}}$ & \S\ref{sec:outputs} \\
 \bottomrule
 \end{longtable}
@@ -61,8 +61,8 @@ statistical condition.
     the bounds on the records and time of the local searches.
 \end{enumerate}
 The code has two fixed integer limits: a run is rejected when the base cap $\ell_n$ exceeds a fixed ceiling, or when the
-move cap $\ell_n+\abs{\tSz}$ of the search from the start mode exceeds the integer range. Theorems~\ref{thm:reported}
-and~\ref{thm:reported-fixed} use (i)--(iv) on the domain $\Dom$ where neither limit is reached. \emph{Convention \as{C2p}} is the idealised machine of (i)
+move cap $\ell_n+\abs{\tSz}$ of the search from the start mode exceeds the integer range. Theorem~\ref{thm:reported-fixed} states its delivery clause under (i)--(iv) on the domain $\Dom$ where neither limit
+is reached; Theorem~\ref{thm:reported} states it under \as{C2p}. \emph{Convention \as{C2p}} is the idealised machine of (i)
 with these two limits lifted, everything else (other validators, the cap on the enumeration used to find the start mode, and its fallback, every
 method cap) kept as coded; under it the delivery clauses hold for every $n$. With the limits in place, (i)--(iv) give delivery only on $\Dom$, not for every
 $n$.
@@ -112,7 +112,7 @@ reader-form bridges are independently checked; the strengthened masters of Theor
 and~\ref{thm:reported-fixed} are recorded, and the code-reading audits behind the delivery route are checked, so neither
 theorem carries an open condition; the representability lemma is recorded, and the delivery clause of
 Theorem~\ref{thm:reported} takes its one-sentence form; the size-tail lemma, the frozen-run identities and the pooled
-evidence estimate are independently checked; Theorem~\ref{thm:dist-param} no longer depends on another result;
+evidence estimate are independently checked; Theorem~\ref{thm:dist-param} no longer carries a condition;
 Theorem~\ref{thm:outputs}, Corollary~\ref{cor:dist-output} and the worst-island bound now carry two explicit conditions,
 results on the coded sampler that are themselves proved under named premises and independently checked.
 
