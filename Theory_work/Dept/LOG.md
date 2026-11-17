@@ -464,3 +464,4 @@
 - 2026-11-17 13:56 CST D119 relayed to the recorder. All push tickets at CP3; leads now: track V done, D2/D3/D5P done → only the recorder runs (+ W3-D5P waiting on Engineering).
 - 2026-11-17 13:58 CST D120 dispatched (recorder, W3-D3 lead, W3-D5P lead).
 - 2026-11-17 13:59 CST auditV: lemma CLEAN; V:SCOPE REFUTED (D18 exclusion reason false: finitely many patterns; D19 inconsistent). Track A lead: certified dist(ϑ_D18, B) + STATEMENT:70-71 fix (Opus diff, re-bind) + package scope update; V recording HELD. Then TRACK_B / compliance / Writing note updates by the manager.
+- 2026-11-17 14:02 CST W3-D3 form fix (card 17: NH14-only anchor) bound R2g c41a5b34 (a0fdcb66); hash sent to the recorder.
