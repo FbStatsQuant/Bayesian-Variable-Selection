@@ -51,7 +51,7 @@ if(V4_TESTS)
   set(V3_CORE_CPP ${CMAKE_CURRENT_SOURCE_DIR}/../core/cpp)
   add_executable(v4_tests tests/test_main.cpp tests/test_sha256.cpp tests/test_rng.cpp tests/test_format.cpp
     tests/test_store.cpp tests/test_ledger.cpp tests/test_score.cpp tests/test_gen.cpp tests/test_prep.cpp
-    tests/test_pmath.cpp tests/test_cli.cpp tests/test_wp4.cpp tests/test_wp4_io.cpp
+    tests/test_pmath.cpp tests/test_cli.cpp tests/test_wp4.cpp tests/test_wp4_io.cpp tests/test_merge_mem.cpp
     tests/wp5/test_eval.cpp tests/wp5/test_golden_v3.cpp tests/wp5/test_post_e2e.cpp tests/wp5/test_t7.cpp tests/wp5/test_scale.cpp
     tests/test_setup.cpp tests/golden/golden_setup.cpp)
   target_include_directories(v4_tests PRIVATE tests tests/wp5 src ${V3_CORE_CPP})

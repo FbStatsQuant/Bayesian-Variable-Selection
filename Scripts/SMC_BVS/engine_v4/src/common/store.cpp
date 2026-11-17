@@ -19,6 +19,12 @@ void Store::init(uint64_t c, Order o) {
   cut_.store(-__builtin_huge_val(), std::memory_order_relaxed);
 }
 
+void Store::release() {
+  std::vector<double>().swap(v); std::vector<uint64_t>().swap(off); std::vector<uint64_t>().swap(hash); std::vector<uint16_t>().swap(len);
+  std::vector<int32_t>().swap(pool); std::vector<uint32_t>().swap(hidx_); nkept_ = 0;
+  cut_.store(-__builtin_huge_val(), std::memory_order_relaxed);
+}
+
 // core/cpp/v3_ledger.h:35-42 (TopCmp): a before b iff a.v > b.v; HPM order then smaller size; then lexicographic.
 bool Store::better(double v1, ModelView S1, double v2, ModelView S2) const {
   if (v1 != v2) return v1 > v2;

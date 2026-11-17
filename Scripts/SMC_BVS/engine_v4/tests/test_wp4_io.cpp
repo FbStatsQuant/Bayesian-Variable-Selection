@@ -540,6 +540,103 @@ TEST(wp4_io_reads_wp2_setup_bin) {
   CHECK(r.at("status").str() == "completed" && r.at("mem_plan").at("kbar").num() >= 8.0);
 }
 
+// Review of the first 1M merge: the merge no longer materialises the ~8e7 inherited models (146 B each as
+// vector<InheritedModel>); it validates them in place and offers them from the mapped calib.bin. Same ledger either way:
+// stores (content), HPM + provenance (the calibration HPM keeps its CALIBRATION event), counters; and the same refusals.
+TEST(wp4_io_inherited_streamed_equals_materialised) {
+  TmpGuard tmp_guard("istr"); Fx f = make_fx("istr", 1, fmt::M_V);
+  const wp4io::CalibIn kept = wp4io::read_calib(f.cpath, f.D.p, f.D.K, f.dhash, f.shash);
+  const wp4io::CalibIn lean = wp4io::read_calib(f.cpath, f.D.p, f.D.K, f.dhash, f.shash, /*keep_inherited=*/false);
+  CHECK(!kept.inherited.empty() && lean.inherited.empty() && lean.n_inherited == kept.n_inherited && kept.n_inherited == kept.inherited.size());
+  CHECK(lean.content_hash == kept.content_hash && lean.tau_cal == kept.tau_cal && lean.has_hpm == kept.has_hpm && lean.hpm == kept.hpm);
+  LedgerConfig cfg; cfg.p = f.D.p; cfg.islands = 1; cfg.leaders = false; cfg.fresh_counters = false;
+  Ledger a(cfg), b(cfg);
+  wp4io::offer_tables(a, f.S, f.D.K, f.D.zob); wp4io::offer_tables(b, f.S, f.D.K, f.D.zob);
+  merge::offer_inherited(a, kept.inherited, kept.has_hpm, kept.hpm, kept.hpm_ev, f.D.zob);
+  wp4io::offer_inherited_file(b, f.cpath, lean, f.D.zob);
+  a.compact(); b.compact();
+  CHECK(a.top.size() == b.top.size() && a.top.content_hash() == b.top.content_hash() && a.lead0.content_hash() == b.lead0.content_hash() &&
+        a.lead1.content_hash() == b.lead1.content_hash());
+  CHECK(a.hpmS == b.hpmS && same_bits(a.hpmF, b.hpmF) && same_bits(a.hpm_logm, b.hpm_logm) && a.hpm_ev.key == b.hpm_ev.key && a.hpm_ev.phase == b.hpm_ev.phase);
+  for (int x = 0; x < N_PHASE; ++x) for (int y = 0; y < N_MECH; ++y) CHECK(a.logical[x][y] == b.logical[x][y]);
+  // a copy of calib.bin with a marker in meta (another content hash), or with one inherited lg0 = NaN (hashes rewritten)
+  auto calib_copy = [&](const std::string& tag, bool marker, bool nan_lg0) {
+    const std::string out = tmp_path(tag);
+    fmt::Reader R(f.cpath); fmt::Writer W(fmt::K_CALIB, R.mode());
+    std::vector<double> lg0;
+    for (const auto& e : R.sections()) {
+      const std::string nm(e.name);
+      if (e.dtype == fmt::D_JSON) { Json m = R.json(nm); if (nm == "meta" && marker) m["istr_marker"] = 1.0; W.add_json(nm, m); continue; }
+      if (nan_lg0 && nm == "inh_lg0") { lg0 = R.vec<double>(nm); lg0[0] = std::nan(""); W.add(nm, lg0); continue; }
+      const void* q = e.dtype == fmt::D_F64 ? (const void*)R.get<double>(nm) : e.dtype == fmt::D_I32 ? (const void*)R.get<int32_t>(nm)
+                    : e.dtype == fmt::D_U32 ? (const void*)R.get<uint32_t>(nm) : e.dtype == fmt::D_I64 ? (const void*)R.get<int64_t>(nm)
+                    : e.dtype == fmt::D_U64 ? (const void*)R.get<uint64_t>(nm) : e.dtype == fmt::D_U16 ? (const void*)R.get<uint16_t>(nm)
+                    : (const void*)R.get<uint8_t>(nm);
+      W.add_copy(nm, e.dtype, q, e.length, e.dims[0], e.dims[1]);
+    }
+    W.write(out); return out;
+  };
+  {  // a different file than the one read: refused
+    const std::string other = calib_copy("istr_other.bin", true, false);
+    Ledger c2(cfg); bool refused = false;
+    try { wp4io::offer_inherited_file(c2, other, lean, f.D.zob); } catch (const Error& e) { refused = e.st == Status::invalid_input; }
+    CHECK(refused); std::remove(other.c_str());
+  }
+  {  // the in-place validation refuses what the materialising reader refuses: a non-finite inherited value
+    const std::string bad = calib_copy("istr_nan.bin", false, true);
+    for (bool keep : {true, false}) {
+      std::string what;
+      try { wp4io::read_calib(bad, f.D.p, f.D.K, f.dhash, f.shash, keep); } catch (const Error& er) { what = er.st == Status::invalid_input ? er.what() : "wrong status"; }
+      CHECK(what.find("inh_lg0: not finite") != std::string::npos);
+    }
+    std::remove(bad.c_str());
+  }
+  {  // review PR65 MINOR-6: the in-place validation refuses what the materialising reader refuses, mutation by mutation (hash-consistent
+     // rewritten copies: the vectors outlive Writer::write, which keeps pointers)
+    auto mutated = [&](const std::string& tag, int kind) {
+      const std::string out = tmp_path(tag);
+      fmt::Reader R(f.cpath); fmt::Writer W(fmt::K_CALIB, R.mode());
+      std::vector<int64_t> ptr = R.vec<int64_t>("inh_ptr"); std::vector<int32_t> idx = R.vec<int32_t>("inh_idx");
+      std::vector<double> F = R.vec<double>("inh_F"), lg0 = R.vec<double>("inh_lg0"), lm = R.vec<double>("inh_logm");
+      const size_t n = F.size();
+      switch (kind) {
+        case 0: ptr[0] = 1; break;                                        // offsets do not start at 0
+        case 1: ptr.back() -= 1; break;                                   // last offset short of the pool
+        case 2: ptr.back() += 1; break;                                   // last offset past the pool
+        case 3: if (n >= 3) std::swap(ptr[1], ptr[2]); break;             // not monotone
+        case 4: ptr[1] = (int64_t)1 << 40; break;                         // an offset far past the pool
+        case 5: idx[0] = f.D.p; break;                                    // a label >= p
+        case 6: idx[0] = -1; break;                                       // a negative label
+        case 7: F.pop_back(); break;                                      // a value array one short
+        case 8: lm.push_back(0.0); break;                                 // a value array one long
+        case 9: F[0] = std::numeric_limits<double>::infinity(); break;    // a non-finite value
+      }
+      for (const auto& e : R.sections()) {
+        const std::string nm(e.name);
+        if (e.dtype == fmt::D_JSON) { W.add_json(nm, R.json(nm)); continue; }
+        if (nm == "inh_ptr") { W.add(nm, ptr); continue; } if (nm == "inh_idx") { W.add(nm, idx); continue; }
+        if (nm == "inh_F") { W.add(nm, F); continue; } if (nm == "inh_lg0") { W.add(nm, lg0); continue; } if (nm == "inh_logm") { W.add(nm, lm); continue; }
+        const void* q = e.dtype == fmt::D_F64 ? (const void*)R.get<double>(nm) : e.dtype == fmt::D_I32 ? (const void*)R.get<int32_t>(nm)
+                      : e.dtype == fmt::D_U32 ? (const void*)R.get<uint32_t>(nm) : e.dtype == fmt::D_I64 ? (const void*)R.get<int64_t>(nm)
+                      : e.dtype == fmt::D_U64 ? (const void*)R.get<uint64_t>(nm) : e.dtype == fmt::D_U16 ? (const void*)R.get<uint16_t>(nm)
+                      : (const void*)R.get<uint8_t>(nm);
+        W.add_copy(nm, e.dtype, q, e.length, e.dims[0], e.dims[1]);
+      }
+      W.write(out); return out;
+    };
+    for (int kind = 0; kind < 10; ++kind) {
+      const std::string bad = mutated("istr_mut" + std::to_string(kind) + ".bin", kind);
+      for (bool keep : {true, false}) {
+        bool refused = false; std::string msg;
+        try { wp4io::read_calib(bad, f.D.p, f.D.K, f.dhash, f.shash, keep); } catch (const Error& er) { refused = er.st == Status::invalid_input; msg = er.what(); }
+        CHECK_MSG(refused, "mutation " + std::to_string(kind) + (keep ? " (materialised)" : " (in place)") + " not refused with invalid_input: " + msg);
+      }
+      std::remove(bad.c_str());
+    }
+  }
+  cleanup(f);
+}
+
 TEST(wp4_io_calib_plan_from_setup) {
   TmpGuard tmp_guard("cplan");
   Fx f = make_fx("cplan", 1, fmt::M_V);
