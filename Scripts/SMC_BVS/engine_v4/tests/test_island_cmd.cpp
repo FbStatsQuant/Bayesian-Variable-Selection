@@ -119,6 +119,7 @@ void make_fx(Fx& f, const Dir& dir, int bsz = 3) {
       S.ttop.offer(F, U, D.zob.hash(U)); S.tlead0.offer(lg0, U, D.zob.hash(U)); S.tlead1.offer(F, U, D.zob.hash(U));
     }
   }
+  S.code_ptr.push_back((int64_t)S.logr.size());   // J + 1 entries; code_ptr[J] = |logr| (INTERFACES v0.1.19 §2/§5)
   S.ttop.compact(); S.tlead0.compact(); S.tlead1.compact();
   S.mode_S = v4::Model(S.ttop.model(0).begin(), S.ttop.model(0).end());
   Json sin = Json::object(); sin["data.bin"] = f.dhash;

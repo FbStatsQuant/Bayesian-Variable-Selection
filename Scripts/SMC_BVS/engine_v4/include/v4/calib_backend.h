@@ -41,8 +41,14 @@ struct IslandSpec {
   bool adaptive = false; int Te = 0;        // pilot: core's adaptive rule (calib_rules.h pilot_next_phi), floor 1/Te
   std::vector<double> grid;                 // diag: the candidate grid (0 = phi_0 < ... < phi_T = 1)
   int L = 0, Hm = 4;
-  // memory (INTERFACES §7 "whole task"): the bytes this calibration process already holds (calibration ledger, tables,
-  // data) and the budget left for the island (0 = no admission check). The island's admission counts both.
+  // memory (INTERFACES §7 "whole task"; review PR37 N-1). One rule, each byte counted once:
+  //   mem_budget     = the WHOLE calibration task's budget (--mem-budget, unchanged; 0 = no admission check), the same
+  //                    meaning as IslandConfig::mem_budget;
+  //   resident_bytes = the calibration state this process holds outside the island: the calibration ledger (three
+  //                    stores at their staging peak) and the inherited export. It EXCLUDES X / z / diag(G) and the
+  //                    setup inputs, which the island's own plan already counts;
+  //   the island is admitted iff resident_bytes + island_plan.total <= mem_budget (island_plan as INTERFACES §7:
+  //   data, setup inputs, store, leaders, snapshots, working set).
   uint64_t resident_bytes = 0, mem_budget = 0;
 };
 // What an island returns.
@@ -95,7 +101,7 @@ class LedgerBackend : public Backend {
   LedgerBackend(IslandRunner& runner, Ledger& led, Factory& fac, const merge::TailSettings& ts, int threads)
       : run_(runner), led_(led), fac_(fac), ts_(ts), threads_(threads) {}
 
-  uint64_t resident_bytes = 0, mem_budget = 0;   // passed to every IslandSpec (calib_run.h's plan)
+  uint64_t resident_bytes = 0, mem_budget = 0;   // passed unchanged to every IslandSpec (IslandSpec's rule; calib_run.h's plan)
   bool test_force_local_limit_pilot = false;    // TEST ONLY (golden): the pilot's search reports local_limit (as core's R wrapper)
 
   PilotOut pilot(const TierSettings& cs) override {

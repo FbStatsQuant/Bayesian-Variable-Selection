@@ -583,11 +583,13 @@ TEST(wp4_calib_backend_toy) {
     CHECK(o.co.status == calib::CalStatus::resource_limit && !o.co.has_frozen && o.stages.size() == 3 && o.stages.back().partial);
     const uint64_t T = o.co.tiers[0].iterations.at(0).grid.size() - 1;
     CHECK(o.led.logical[PH_DIAG][ME_GIBBS_FLIP] == T * 30 + 30 + 11);   // island 1 complete (T stages x 30) + island 2 up to the stop
+    CHECK(o.inherited.size() == 0);
   }
   {  // a numerical failure: status numerical_failure, the ledger so far merged (core's shared ledger keeps those events)
     ToyRunner r{}; r.w = &w; r.p = p; r.stop_iter = 0; r.stop_island = 0; r.stop = Status::numerical_failure;
     calib::CalibOutcome o = calib_once(calib::Rule::coded, 1, r);
     CHECK(o.co.status == calib::CalStatus::numerical_failure && o.led.logical[PH_PILOT][ME_GIBBS_FLIP] == 30 + 11);
+    CHECK(o.inherited.size() == 0);   // review PR37 N-3: no inherited export (nor its scoring) after a stop
   }
   {  // review PR37 M-2: an admission refusal stays resource_limit (task exit 11), never numerical_failure
     ToyRunner r{}; r.w = &w; r.p = p; r.stop_iter = 1; r.stop_island = 3; r.admission_refusal = true;

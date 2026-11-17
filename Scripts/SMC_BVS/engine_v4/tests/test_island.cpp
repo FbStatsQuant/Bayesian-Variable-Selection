@@ -23,11 +23,18 @@ using namespace v4::island;
 // called inside an active OpenMP parallel region throws std::bad_alloc. Off (0) for every other test. A real failure at
 // an unguarded site inside a region escapes the structured block and aborts the whole test binary (std::terminate).
 static std::atomic<long> g_par_new_countdown{0};
+// Allocation probe (review PR46 MAJOR-2): while g_new_track is set, every operator new is counted (calls, bytes, largest).
+static std::atomic<bool> g_new_track{false};
+static std::atomic<uint64_t> g_new_calls{0}, g_new_bytes{0}, g_new_max{0};
 // Allocation counter for tests of allocation-free paths (PR50 MAJOR-1, tests/test_setup.cpp): while g_count_allocs is set,
 // every operator new on any thread increments g_allocs. Off for every other test.
 std::atomic<bool> g_count_allocs{false};
 std::atomic<uint64_t> g_allocs{0};
 void* operator new(std::size_t n) {
+  if (g_new_track.load(std::memory_order_relaxed)) {
+    g_new_calls.fetch_add(1); g_new_bytes.fetch_add(n);
+    uint64_t m = g_new_max.load(); while (n > m && !g_new_max.compare_exchange_weak(m, n)) {}
+  }
   if (g_count_allocs.load(std::memory_order_relaxed)) g_allocs.fetch_add(1, std::memory_order_relaxed);
   if (g_par_new_countdown.load(std::memory_order_relaxed) > 0 && omp_in_parallel() && g_par_new_countdown.fetch_sub(1) == 1) {
     if (std::getenv("V4_DEBUG_INJECT")) { void* bt[32]; int nb = backtrace(bt, 32); std::fprintf(stderr, "== injected\n"); backtrace_symbols_fd(bt, nb, 2); }
@@ -1066,6 +1073,7 @@ static CalInputs make_cal_inputs(TmpGuard& tg, const std::string& tag) {
       S.ttop.offer(F, U, D.zob.hash(U)); S.tlead0.offer(lg0, U, D.zob.hash(U)); S.tlead1.offer(F, U, D.zob.hash(U));
     }
   }
+  S.code_ptr.push_back((int64_t)S.logr.size());   // J + 1 entries; code_ptr[J] = |logr| (INTERFACES v0.1.19 §2/§5)
   S.ttop.compact(); S.tlead0.compact(); S.tlead1.compact();
   S.mode_S = Model(S.ttop.model(0).begin(), S.ttop.model(0).end());
   v4::Json sin = v4::Json::object(); sin["data.bin"] = dhash;
@@ -1112,6 +1120,72 @@ TEST(calibrate_command_end_to_end) {
       for (size_t i = 0; same && i < ci.inherited.size(); ++i) same = o.inherited[i].S == ci.inherited[i].S && same_bits(o.inherited[i].F, ci.inherited[i].F);
       CHECKF(same, "%s: calibration differs between runs / thread counts", mode.c_str());
     } else got[key] = ci;
+  }
+}
+
+// Review PR46 MAJOR-2 (INTERFACES §7: admission refuses "before any allocation"): at p ~ 20,000 every full reader
+// allocates p-sized arrays (Zobrist keys, blk / pos / members, logr: >= 80 KB each), while the bounded plan readers
+// (read_data_plan, WP3's read_setup_dims) allocate the section table, meta, blk_ptr (J + 1 entries; blocks of 4 here)
+// and the size law. Every operator new during an over-budget `calib::run` is counted: none may reach 64 KiB, and the
+// total stays below 1 MiB (the old order, load_data + read_setup first, allocates 160,000 B at once).
+TEST(calibrate_admission_before_allocation) {
+  const int n = 8, p_raw = 20000;
+  std::vector<double> X((size_t)n * p_raw), y(n);
+  { std::mt19937_64 g(47); std::normal_distribution<double> nd;
+    for (auto& x : X) x = nd(g); for (auto& v : y) v = nd(g); }
+  v4::prep::Result pr = v4::prep::preprocess(X.data(), y.data(), n, p_raw);
+  CHECK(pr.status == "ok");
+  if (pr.status != "ok") return;
+  v4::Data D = v4::make_data(pr.own, n, pr.p);
+  const int p = D.p;
+  CHECK(p > 10000);
+  TmpGuard tg;
+  const std::string dpath = tg.add(wp3_tmp("adm_data.bin")), spath = tg.add(wp3_tmp("adm_setup.bin"));
+  const std::string dhash = v4::prep::write_data(dpath, D, pr, "B", v4::Json::object());
+  v4::wp4io::SetupView S;   // blocks of 4 columns (the last 1..4); logr = 0; the tables' empty model and {0}; size law P(0) = P(1) = 1/2
+  S.blk_ptr.push_back(0); S.code_ptr.push_back(0);
+  for (int j0 = 0; j0 < p; j0 += 4) {
+    const int m = std::min(4, p - j0), b = j0 / 4;
+    for (int i = 0; i < m; ++i) { S.blk.push_back(b); S.pos.push_back(i); S.blk_members.push_back(j0 + i); }
+    S.blk_ptr.push_back(j0 + m);
+    for (int c = 0; c < (1 << m); ++c) S.logr.push_back(0.0);
+    S.code_ptr.push_back((int64_t)S.logr.size());
+  }
+  S.ttop.init(40ull * p + 1, Order::HPM); S.tlead0.init(20ull * p, Order::LEX); S.tlead1.init(20ull * p, Order::LEX);
+  for (const Model& U : {Model{}, Model{0}}) {
+    const double F = D.logprior[U.size()] + (U.empty() ? 0.0 : -1.0);
+    S.ttop.offer(F, U, D.zob.hash(U)); S.tlead0.offer(F, U, D.zob.hash(U)); S.tlead1.offer(F, U, D.zob.hash(U));
+  }
+  S.ttop.compact(); S.tlead0.compact(); S.tlead1.compact();
+  S.mode_S = Model{0};
+  S.size_logmass.assign((size_t)D.K + 1, -std::numeric_limits<double>::infinity()); S.size_logmass[0] = S.size_logmass[1] = std::log(0.5);
+  v4::Json sin = v4::Json::object(); sin["data.bin"] = dhash;
+  const std::string s0 = tg.add(wp3_tmp("adm_setup0.bin"));
+  v4::wp4io::write_setup_min(s0, S, sin);
+  { v4::fmt::Reader R(s0); v4::fmt::Writer W(v4::fmt::K_SETUP, v4::fmt::M_COMPAT);   // + empty neighbour lists (the dimensions reader needs them)
+    for (const auto& e : R.sections()) {
+      const std::string nm(e.name);
+      if (e.dtype == v4::fmt::D_JSON) { W.add_json(nm, R.json(nm)); continue; }
+      const void* q = e.dtype == v4::fmt::D_F64 ? (const void*)R.get<double>(nm) : e.dtype == v4::fmt::D_I32 ? (const void*)R.get<int32_t>(nm)
+                    : e.dtype == v4::fmt::D_U32 ? (const void*)R.get<uint32_t>(nm) : e.dtype == v4::fmt::D_I64 ? (const void*)R.get<int64_t>(nm)
+                    : e.dtype == v4::fmt::D_U64 ? (const void*)R.get<uint64_t>(nm) : e.dtype == v4::fmt::D_U16 ? (const void*)R.get<uint16_t>(nm)
+                    : (const void*)R.get<uint8_t>(nm);
+      W.add_copy(nm, e.dtype, q, e.length, e.dims[0], e.dims[1]);
+    }
+    const std::vector<int64_t> nbp((size_t)p + 1, 0); const std::vector<int32_t> nbi;
+    W.add("nb_ptr", nbp); W.add("nb_idx", nbi); W.write(spath); }
+  for (int plan_only : {0, 1}) {
+    v4::Json a = v4::Json::object(); a["data"] = dpath; a["setup"] = spath; a["mode"] = "V"; a["mem_budget"] = 1.0;
+    a["plan_only"] = (double)plan_only; a["seed"] = 5.0; a["out"] = tg.add(wp3_tmp("adm_calib.bin"));
+    g_new_calls = 0; g_new_bytes = 0; g_new_max = 0;
+    g_new_track = true;
+    v4::Json r = v4::calib::run(a);
+    g_new_track = false;
+    const uint64_t calls = g_new_calls, bytes = g_new_bytes, mx = g_new_max;
+    std::printf("  plan_only %d: %llu allocations, %llu B, largest %llu B before the refusal\n", plan_only, (unsigned long long)calls,
+                (unsigned long long)bytes, (unsigned long long)mx);
+    CHECKF(r.at("status").str() == "resource_limit", "plan_only %d: status %s", plan_only, r.at("status").str().c_str());
+    CHECKF(mx < (64u << 10) && bytes < (1u << 20), "plan_only %d: largest %llu B, total %llu B", plan_only, (unsigned long long)mx, (unsigned long long)bytes);
   }
 }
 

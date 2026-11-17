@@ -63,11 +63,15 @@ Json settings_json(const Settings& s, const Budgets& b, Rule rule) {
   j["tiers"] = t; j["K"] = b.K; j["B"] = b.B;
   return j;
 }
-Json plan_json(const CalibMemPlan& m, uint64_t budget, double kbar) {
+Json plan_json(const CalibMemPlan& m, uint64_t budget, double kbar, const std::string& k_src) {
   Json j = Json::object();
   auto u = [](uint64_t x) { return Json((double)x); };
-  j["label"] = "ESTIMATE (calibration memory plan: 3 calibration stores, one island ledger in flight, flat V / export, inputs)";
-  j["kbar"] = kbar; j["ledger"] = u(m.ledger); j["island_ledger"] = u(m.island_ledger); j["export"] = u(m.export_);
+  j["label"] = "ESTIMATE (calibration memory plan: 3 calibration stores + flat V / export = resident; inputs; one island ledger)";
+  j["rule"] = "islands get mem_budget = the whole budget and resident_bytes = resident; an island is admitted iff "
+              "resident + its plan (inputs included) <= mem_budget; refused up front iff resident >= budget or the island plan (island_plan) "
+              "exceeds it; total = resident + inputs + one island ledger is the least any island needs (a lower bound)";
+  j["kbar"] = kbar; j["kbar_source"] = k_src;
+  j["ledger"] = u(m.ledger); j["island_ledger"] = u(m.island_ledger); j["export"] = u(m.export_);
   j["inputs"] = u(m.inputs); j["resident"] = u(m.resident); j["total"] = u(m.total); j["budget"] = u(budget);
   return j;
 }
@@ -137,11 +141,14 @@ Json run(const Json& args) {
   const int threads = (int)whole_arg(args, "threads", 1, 1, 4096);
   const uint64_t budget = (uint64_t)whole_arg(args, "mem_budget", 0, 0, (int64_t)1 << 50);   // bytes, 0 = off (INTERFACES §7)
   const bool plan_only = whole_arg(args, "plan_only", 0, 0, 1) == 1;
-  // n, p: data.bin, or --n / --p for a plan
+  // Admission first (review PR46 MAJOR-2; INTERFACES §7 "before any allocation"): n, p, K from data.bin's meta
+  // (read_data_plan) and the setup's dimensions (WP3's read_setup_dims: the section table, blk_ptr, the neighbour lengths
+  // and the pi_0 size law; no table, partition array or store is read or copied). data.bin and setup.bin are loaded in
+  // full only after the plan is admitted.
   const std::string dpath = cmd::input_path(args, man, "data", "data.bin", "calibrate", false),
                     spath = cmd::input_path(args, man, "setup", "setup.bin", "calibrate", false), out = str_arg(args, "out");
-  Data D; std::string dhash; int64_t n = 0, p = 0;
-  if (!dpath.empty()) { D = prep::load_data(dpath, &dhash); n = D.n; p = D.p; }
+  wp4io::DataPlanHead dh; int64_t n = 0, p = 0; int K = 0;
+  if (!dpath.empty()) { dh = wp4io::read_data_plan(dpath); n = dh.n; p = dh.p; K = dh.K; }
   else if (plan_only) { n = whole_arg(args, "n", 0, 3, (int64_t)1 << 31); p = whole_arg(args, "p", 0, 1, (int64_t)1 << 31); }
   if (n < 3 || p < 1) throw Error(Status::invalid_input, "calibrate: --data is required (or --n and --p with --plan-only)");
   const Budgets b = budgets(n, p);
@@ -151,23 +158,24 @@ Json run(const Json& args) {
   }
   s.threads = threads;
   Driver::validate(s);   // e.g. I_max > ell -> invalid_input, before anything runs (review PR37 m-4)
-  // memory plan (review PR37 M-5): kbar = the largest of the start mode's size + 1 and 8 (ESTIMATE until calibration measures it)
-  wp4io::SetupView S; double kbar = 8;
+  // memory plan (review PR37 M-5, N-2): k = max(8, q90(pi_0 size) + 1) from setup.bin (INTERFACES §7, as WP3's plan);
+  // a plan from --n / --p alone has no setup and uses the floor 8 (labelled)
+  island::SetupDims sdims; double kbar = 8; std::string k_src = "floor 8 (no setup.bin)";
   if (!plan_only || (!spath.empty() && !dpath.empty())) {
     if (spath.empty()) throw Error(Status::invalid_input, "calibrate: --setup is required");
-    S = wp4io::read_setup(spath, D.p, D.K, &D.zob);
-    if (!S.data_hash.empty() && S.data_hash != dhash) throw Error(Status::invalid_input, "calibrate: setup.bin was built from another data.bin");
-    kbar = std::max(kbar, (double)S.mode_S.size() + 1);
+    sdims = island::read_setup_dims(spath, p, K, false);
+    if (!sdims.data_hash.empty() && sdims.data_hash != dh.content_hash) throw Error(Status::invalid_input, "calibrate: setup.bin was built from another data.bin");
+    wp4io::check_size_logmass(sdims.size_logmass, K, spath + ": ");
+    kbar = calib_k_plan(sdims.size_logmass); k_src = "max(8, q90(pi_0 size) + 1) from setup.bin";
   }
   const CalibMemPlan plan = calib_memory_plan(p, kbar, file_bytes(dpath) + file_bytes(spath));
   Json rec = Json::object();
-  rec["settings"] = settings_json(s, b, rule); rec["mem_plan"] = plan_json(plan, budget, kbar); rec["n"] = (double)n; rec["p"] = (double)p;
+  rec["settings"] = settings_json(s, b, rule); rec["mem_plan"] = plan_json(plan, budget, kbar, k_src); rec["n"] = (double)n; rec["p"] = (double)p;
   rec["mode"] = mode_s;
   const uint64_t resident_own = plan.ledger + plan.export_;
   const bool files = !dpath.empty() && !spath.empty();
   // the island plan from the dimensions (nothing of the setup expanded): printed on every plan-only outcome, admitted or not
   // (review PR52 m5), and the run's up-front refusal below
-  island::SetupDims sdims; if (files) sdims = island::read_setup_dims(spath, p, D.K, false);
   const IslandPlans ipl = calib_island_plans(s, rule, mode, b.B, b.K, n, p, budget, resident_own, files ? &sdims : nullptr, kbar);
   const bool resident_ok = !(budget && plan.resident >= budget), island_ok = !(budget && ipl.ip.total > budget);
   if (plan_only) {
@@ -193,6 +201,12 @@ Json run(const Json& args) {
   if (out.empty()) throw Error(Status::invalid_input, "calibrate: --out is required");
   const int64_t seed = whole_arg(args, "seed", -1, 1, 2147483647);
   if (seed < 1) throw Error(Status::invalid_input, "calibrate: --seed is required (a whole number in [1, 2^31 - 1])");
+  // admitted: the full loads (every section verified); the files must be the ones the plan read
+  std::string dhash;
+  const Data D = prep::load_data(dpath, &dhash);
+  if (dhash != dh.content_hash) throw Error(Status::invalid_input, "calibrate: data.bin changed between the plan and the load");
+  const wp4io::SetupView S = wp4io::read_setup(spath, D.p, D.K, &D.zob);
+  if (S.content_hash != sdims.content_hash) throw Error(Status::invalid_input, "calibrate: setup.bin changed between the plan and the load");
   // the island runner: WP3's island with calibration roles (PILOT / DIAG; WP3_DESIGN §1.11). Theory modes (compat, law)
   // run the bit form particle-major (D-21; compat: 1 thread, v3 streams 0-9 owned by the runner); V runs class A
   // label-major with every thread.
