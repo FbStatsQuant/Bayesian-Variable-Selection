@@ -421,3 +421,4 @@
 - 2026-11-17 12:30 CST D107 recorded; list closed.
 - 2026-11-17 12:31 CST SPEC_LIST_PIP (Fable 523dda23) sent to HQ for Engineering; log_Z_list kept as recommended (HQ to confirm). #5′ lead launches at the next free slot.
 - 2026-11-17 12:33 CST W3-D2 CP1 (282fd666): Thm2X locked (Sol L-W-A), STRONGER vs row 1.2 (smaller-set floor), conditional via CorGb-plus incl. Prop-LB (X2 unchecked). GO to line check → council → CP3 + API card. HQ: replace vs coexist (recommended coexist); X2 Prop-LB check would unconditionalize.
+- 2026-11-17 12:34 CST D108 relayed to the W3-D2 lead.
