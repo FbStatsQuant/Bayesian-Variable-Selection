@@ -512,7 +512,7 @@ TEST(wp4_io_setup_contract_v0119) {
   }
 }
 
-// A setup.bin written by WP2's real `setup` command (branch exp/P1M-wp2-setup at 9d8f9c25, p = 14, n = 40; data.bin from
+// A setup.bin written by WP2's real `setup` command (exp/P1M-engine at af2d3f60, after D-31: `cond0`; p = 14, n = 40; data.bin from
 // `gen` + `prep`; the fixtures are copies of those two files): read_setup, the plan reader, `calibrate --plan-only`.
 TEST(wp4_io_reads_wp2_setup_bin) {
   const std::string dir = std::string(V4_FIXTURE_DIR) + "/wp2_setup/", dpath = dir + "p14_data.bin", spath = dir + "p14_setup.bin";
