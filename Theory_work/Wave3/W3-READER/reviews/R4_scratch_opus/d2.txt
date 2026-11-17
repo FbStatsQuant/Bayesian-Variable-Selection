@@ -1,0 +1,160 @@
+@@ -290,7 +290,7 @@ version uses a constant for simplicity.
+   claimed).
+ 
+ ### Master theorem
+-`W3-POST:Thm-1@1.0.0` item 6 (random-design interface), `Theory_work/Wave3/W3-POST/STATEMENT.md:95-100`, status as in §1;
++`W3-POST:Thm-1@1.0.1` item 6 (random-design interface), `Theory_work/Wave3/W3-POST/STATEMENT.md:95-100`, status as in §1;
+ with `W2-APP:POST@1.0.7`, `Theory_work/Wave2/W2-APP/lemmas/L1_POST.md:27-33`, status verbatim **"PROVED-CHECKED"**
+ (main 6cd699dd) [REG-6cd6] (`C-PACK:SL0@1.0.1`, the posterior-summary lemma, is now "PROVED-CHECKED"), and its restatement `W3-POST:Cor-1R@1.0.0`
+ (`W3-POST/STATEMENT.md:106-118`), status **"PROVED (by this seat, unchecked)"**.
+@@ -314,9 +314,10 @@ row 1.1 applies here too.
+ - v0.2 2026-11-15: S1 fixes none needed (S1: FAITHFUL); [S1-F12] dependency note.
+ - v0.3 2026-11-16: [REG-f526] `W2-APP:POST@1.0.5` status refreshed (accepted, conditional on SOP:TH09, C-PACK:SL0); B2.2
+   mark and honest limits updated (EQUAL).
+-- v0.4 2026-11-16: [REG-33e1] SL0 cleared: `W2-APP:POST@1.0.6` conditional on SOP:TH09 only (EQUAL).
++- v0.4 2026-11-16: [REG-33e1] SL0 cleared: `W2-APP:POST@1.0.7` conditional on SOP:TH09 only (EQUAL).
+ - FRZ-RQ 2026-11-16: [REG-6cd6] `W2-APP:POST@1.0.7` "PROVED-CHECKED"; T03♯ discharged; Form A. Statuses only (EQUAL).
+ - R1 2026-11-16: [R1-E6] B2.1 constant harmonised with R1 (EQUAL).
++- FRZ-B 2026-11-16: requote at main 2676e71f [REG-2676] (relabel D97): `W3-POST:Thm-1@1.0.1`; EQUAL (statuses only).
+ <!-- ROW thm2 END -->
+ 
+ ---
+@@ -536,7 +537,7 @@ Fixed-design form: `W3-MISR:MIS(i)@1.0.1` (:110-123), **"PROVED-CHECKED, conditi
+ | B4.0 | (A0) ⇒ CorGb-plus setting | NEW (one line) | take no explicit omitted columns, ε := y^r − α′1 − X_𝒞β^𝒞: given X_𝒞 it is N_n(0, σ²_𝒞I), hence independent of X_𝒞 ((N) with q = 0; (OV) with γ = 0, τ² = 0). The Example is `CorG-min` (E1) (and (E2) for the linear-plus-noise sentence) |
+ | B4.1 | (A2) size 3(A+1)(s+1)log n ⇒ CorGb-plus's \|T\| ≤ s + max(j₀, m♯_n), for all large n | NEW arithmetic (as current B4.1) | unchanged arithmetic; the floor is now on R; sufficient for the O(·) conclusions |
+ | B4.2 | (A3) = CorGb-plus's signal conditions (→ ∞ branch of its liminf condition) | identity | `STATEMENT.md` §3 |
+-| B4.3 | POST2 C, E, A1, A0 (and D for the remark) | EXISTS-CHECKED, conditional (A0 unconditional) | recorded at main f526e45b; `SOP:TH09`/`TH128` discharged (main 6cd699dd); C still conditional on `W3-POST:Prop-LB`, [L1a′] (§1) [REG-f526, REG-6cd6] |
++| B4.3 | POST2 C, E, A1, A0 (and D for the remark) | EXISTS-CHECKED, conditional (A0 unconditional) | recorded at main f526e45b; `SOP:TH09`/`TH128` discharged (main 6cd699dd); C still conditional on `W3-POST:Prop-LB` (§1; [L1a′] no longer listed, main 2676e71f) [REG-f526, REG-6cd6] |
+ | B4.4 | Remark ⇒ CorH-U (RD) with 𝒦^♭_n := 𝒦^λ_n(s, A, 2M₀+1, (c_R/8)^{1/2}, C_OS, c) ((UP) by MIS(i) + Markov) and the events 𝒜_n of CorGb-plus's proof (P(𝒜_n) → 1); contraction sentence for a fixed design ⇒ CorH-plus (a′), (KL), with the premise δ_n → 0 in probability; uniform sentence ⇒ CorH-U (U-a), with its premise (UP); "fixed-design version of the theorem, uniform over the residual variance" ⇒ W3-MISR:MIS(i)@1.0.0 (BASE `STATEMENT.md:110-114`, constants free of v) | NEW (composition; the random-design part is `CorH-U` clause (G), STATEMENT §5) | the Hellinger rate M_n/√n and KL rate M_n/n are the sets H^a, K^a; the reference is centred (STATEMENT §1: μ(κ) = Cxβ) [R1] |
+ 
+ ### Honest limits
+@@ -560,6 +561,7 @@ conditions.
+   Example, the jointly Gaussian case with invertible $\Sigma_{\mathcal C\mathcal C}$ was already present, and the
+   pseudoinverse and linear-plus-noise cases are the new (STRONGER) scope.
+ - FRZ-RQ 2026-11-16: [REG-6cd6] MIS(i)/(i′)/(ii), Cor-G(b) @1.0.1 and MISR-R CorGb-plus/CorG-min/CorH-plus/CorH-U @1.0.1 with SOP:TH09/TH128 dropped; POST2 @1.0.5; `SOP:TH128@1.0.2` PROVED-CHECKED. Statuses only (EQUAL).
++- FRZ-B 2026-11-16: requote at main 2676e71f [REG-2676] (relabel D97): POST2 inputs @1.0.6 and `W3-POST:Thm-1` conditions dropped; EQUAL (statuses only).
+ <!-- ROW thm4 END -->
+ 
+ ---
+@@ -692,8 +694,8 @@ internal calibration; in particular $P(\text{output and }\hat S\neq S_0)\to0$. I
+ $$
+ P(\text{the run produces output})=1\ \ \text{for every admissible }n\ge3,\qquad P(\hat S=S_0)\to1 .
+ $$
+-The delivery statement idealises two fixed integer limits in the code (a base search cap of $10^6$, `v3_run.R:96`, and a 32-bit integer bound $2^{31}-1$ on the search cap, `cpp/v3_core.cpp:474`): the first can bind only when $n+p+1$ exceeds $2^{10^6}$, the second only when the starting model has more than about $2.1\times10^9$ variables, which needs $n\gtrsim4.3\times10^9$ since $|\tilde S_0|\le\lfloor n/2\rfloor$; without the idealisation, delivery holds on the bounded domain $\mathfrak D=\{\lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil\le10^6,\ \lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil+\lfloor n/2\rfloor\le2^{31}-1\}$, and with it (IDEAL-W⁺) for every $n$ [RM2R-5]. Neither limit can bind unless $n+p+1>2^{10^6}$ or $n\gtrsim4\times10^9$, that is, at no feasible problem size [RM2R-6].
+-The guarantees describe the run as if uninterrupted; a run stopped by its time guard reports status `resource_limit` and no output. (No output means no estimates, `NOTATION.md` §5; the best model found before the stop is returned marked incomplete, `v3_run.R:142-145`.) [GUARD-W]
++The delivery statement lifts two integer limits of the code (IDEAL-W⁺); in the default configuration neither can be reached on any input R can represent ($n, p_{\mathrm{raw}} \le 2^{31}-1$) [T14-REP], so this matters only for the $n\to\infty$ form. The two limits are a base search cap of $10^6$ (`v3_run.R:96`) and a 32-bit integer bound $2^{31}-1$ on the search cap (`cpp/v3_core.cpp:474`). R stores matrix dimensions as 32-bit integers, so in the default configuration the base cap is $\lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil\le32$ and the search cap is at most $32+\lfloor n/2\rfloor\le2^{30}+31$, and neither limit can fire [T14-REP]. Every such input lies in the bounded domain $\mathfrak D=\{\lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil\le10^6,\ \lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil+\lfloor n/2\rfloor\le2^{31}-1\}$, on which delivery holds under the remaining conventions (S4), without IDEAL-W⁺ [RM2R-5]; IDEAL-W⁺ is used only by the asymptotic form. Representable inputs still carry the other obligations of IDEAL-W (for example `2*p-1` in `int` for $p\ge2^{30}$); the statement is for the default configuration (`v3.ls0_ell` unset).
++The guarantees describe the run as if uninterrupted; a run stopped by its time guard reports status `resource_limit` and returns no estimates; anything else it returns is flagged incomplete and is not covered (`v3_fit.R:84`; `v3_run.R:110-113, 142-146`) [B2]. [GUARD-W]
+ 
+ *Remarks.* (o) [RM2R-3] Under (S4), for every seed and calibration outcome,
+ $P(\hat S\neq S_0)\le P(S_0\text{ is not the unique maximiser of the score})+P(\text{the local search from the start mode
+@@ -721,13 +723,12 @@ one-factor blocks [R2-O6].
+   other way, no-addition fails w.p. $\to1$). Not known to be necessary for the conclusion.
+ 
+ ### Master theorems
+-0. [RM2R-2] `W3-RM2-R:RM2-R-plus@1.0.0`, `Theory_work/Wave3/W3-RM2-R/STATEMENT.md:177-182` (same hypotheses as RM2-R; conclusion
+-   adds [MODE] and, under (D), delivery and $P(\hat S=S_0)\to1$ with the error split), status verbatim **"PROVED-CHECKED, conditional on C-DLV:L2-S3, C-DLV:P1-Inventory; council R3, MANIFEST 5d6d3c90… (= R3 b06a8588 re-frozen as R3r), sol=9.5 PASS, opus=9.4 PASS"** (main 5d3a8a70, task V) [REG-5d3a]; the two conditions are code-reading audits of the delivery path (`C-DLV:L2-S3`, `C-DLV:P1-Inventory`, each "AUDITED (code reading)"), which DLV-0 takes as hypotheses [RM2R-7].
+-   With `W3-RM2-R:RM0-plus@1.0.0` (`STATEMENT.md:118-143`, mode form of the core) and `W3-RM2-R:DLV-0@1.0.0` (`STATEMENT.md:144-163`,
++0. [RM2R-2] `W3-RM2-R:RM2-R-plus@1.0.1`, `Theory_work/Wave3/W3-RM2-R/STATEMENT.md:177-182` (same hypotheses as RM2-R; conclusion
++   adds [MODE] and, under (D), delivery and $P(\hat S=S_0)\to1$ with the error split), status verbatim **"PROVED-CHECKED; council R3, MANIFEST 5d6d3c90… (= R3 b06a8588 re-frozen as R3r), sol=9.5 PASS, opus=9.4 PASS"** (main fe05ccec, D95) [REG-fe05]; DLV-0 takes the two C-DLV code-reading audits as hypotheses [RM2R-7]; `C-DLV:L2-S3@1.0.1` and `C-DLV:P1-Inventory@1.1.1` are now each **"CODE-CHECKED (second seat, code reading; holds at pin 4676af6 after amendments A-1–A-7); council R2, MANIFEST 12802ac7…, sol=9.3 PASS, opus=9.4 PASS"**.
++   With `W3-RM2-R:RM0-plus@1.0.1` (`STATEMENT.md:118-143`, mode form of the core) and `W3-RM2-R:DLV-0@1.0.1` (`STATEMENT.md:144-163`,
+    deterministic delivery at the pinned code), each with the same status verbatim. RM2-R-plus implies RM2-R
+-   (`W3-RM2-R:Cont-plus@1.0.0`, same status); the supersession is not applied (deferred post-freeze), so `W3-RM2:RM2-R` stays ACTIVE.
+-   **Conditions of the row (current master) [RM2R-7]:** two code-reading audits of the delivery path (the posterior input
+-   `W2-APP:POST@1.0.7` is "PROVED-CHECKED" since main 6cd699dd [REG-6cd6]): the audits (`C-DLV:L2-S3`, `C-DLV:P1-Inventory`); the recording shows
++   (`W3-RM2-R:Cont-plus@1.0.1`, same status); the supersession is not applied (deferred post-freeze), so `W3-RM2:RM2-R` stays ACTIVE.
++   **Conditions of the row (current master) [RM2R-7]:** none open: the posterior input `W2-APP:POST@1.0.7` is "PROVED-CHECKED" (main 6cd699dd [REG-6cd6]) and the two code-reading audits of the delivery path (`C-DLV:L2-S3`, `C-DLV:P1-Inventory`) were discharged at main fe05ccec (D95); before D95 the recording showed
+    `W3-RM2-R:RM0-plus`, `RM2-R-plus` and `Cont-plus` with the latter two conditions.
+ 1. `W3-RM2:RM2-R@1.0.3` (ACTIVE; supersession by RM2-R-plus deferred post-freeze), `Theory_work/Wave3/W3-RM2/STATEMENT.md:216-218`
+    (assumptions :172-202), status verbatim
+@@ -790,7 +791,7 @@ regressions are local. HQ choices: keep them as stated (faithful), or state Theo
+ - v0.4 2026-11-16: [S2-F1] (S4) carries MACH, CONFIG, TDP-IMPL and the amended allocation by exact source reference.
+   Tag (S3): **WEAKER** for the "always produces output" clause — restores the master's own premises
+   (`C-DLV/STATEMENT.md:28-46`, `FINAL/sections/s6_delivery.tex:29-35`); common-data-event clause EQUAL.
+-- v0.5 2026-11-16: [REG-f526] RM2-R's input `W2-APP:POST@1.0.6` status and the RM-R special-case status quoted (EQUAL).
++- v0.5 2026-11-16: [REG-f526] RM2-R's input `W2-APP:POST@1.0.7` status and the RM-R special-case status quoted (EQUAL).
+ - v0.6 2026-11-16: [REG-33e1] SL0 cleared: row 3.1 conditional on T03♯ only; RM2-R/POST-R @1.0.2, RM-R @1.1.2 (EQUAL).
+ - v0.7 2026-11-16: [FUNI-N] delivery clause narrowed with F-UNI 2.1.0: bounded domain $\mathfrak D$ under (S4)(i)–(iv), every $n$
+   under IDEAL-W⁺ ((S4)(v)); F-UNI narrowing to 2.1.0 noted; sentence [RM2R-5] added after the display. Tag: **WEAKER** for the delivery clause (follows the
+@@ -802,9 +803,12 @@ regressions are local. HQ choices: keep them as stated (faithful), or state Theo
+   the implication edge to `C-DLV:Prop-F` is withdrawn. Assumptions (A1)–(A6) EQUAL.
+   Supersedes the [FUNI-N] delivery wording of v0.7: delivery now rests on DLV-0 (method drift [D74]); (S4)(v) folded into (S4)(i) as IDEAL-W⁺, and $\mathfrak D$ is stated in the [RM2R-5] sentence.
+ - FRZ-RQ 2026-11-16: [REG-6cd6] RM2-R @1.0.3 (ACTIVE, supersession deferred), POST-R/D-to-W @1.0.3, `W2-APP:POST@1.0.7` "PROVED-CHECKED", F-UNI @2.1.0 (history), RM-R @1.2.0 SUPERSEDED-VALID; row conditions now only the two delivery-path audits. Statuses only (EQUAL).
+-- v0.9 2026-11-16: [GUARD-W] (HQ YES 11-16; W3-AUDIT track A T1 GUARD-W, theory/W3-AUDIT 58e24245, `track_A/T1_GW/`) sentence added after the delivery display, with a pointer to the meaning of "output" (code: `v3_fit.R:84`, `v3_run.R:142-145`): "The guarantees describe the run as if uninterrupted; a run stopped by its time guard reports status `resource_limit` and no output." Presentation (EQUAL).
++- v0.9 2026-11-16: [GUARD-W] (HQ YES 11-16; W3-AUDIT track A T1 GUARD-W, theory/W3-AUDIT 58e24245, `track_A/T1_GW/`) sentence added after the delivery display, with a pointer to the meaning of "output" (code: `v3_fit.R:84`, `v3_run.R:142-145`): "The guarantees describe the run as if uninterrupted; a run stopped by its time guard reports status `resource_limit` and returns no estimates; anything else it returns is flagged incomplete and is not covered (`v3_fit.R:84`; `v3_run.R:110-113, 142-146`) [B2]." Presentation (EQUAL).
+ - R1 2026-11-16: [R1-F6] delivery-route sentence corrected (frozen F-UNI@2.1.0 states the shipped cap; only C-DLV Prop-F used $\ell_n$); [R1-F2] B6.6 / R3 marked historical; [R1-E7] $\mathcal G_n$ choice in remark (i) (EQUAL; corrections of descriptions).
+ - R2-ED 2026-11-16: [R2-O6] remark (iii) example status verbatim (EQUAL).
++- FRZ-B 2026-11-16: [B2] GUARD-W wording "returns no estimates; anything else … flagged incomplete and is not covered" with code lines (EQUAL).
++- FRZ-B 2026-11-16: [T14-REP] (H5 card 16, AGREED; `W3-AUDIT-AX:REP@1.0.0`; W3-AUDIT d727e7a3 `track_A_C/H5_T14_CARD.md` "Consultant edits") integer-limit passage: one sentence, then the caps, $\mathfrak D$, code lines with $p_{\mathrm{raw}}$; in the default configuration neither limit can be reached on any input R can represent; the other IDEAL-W obligations remain — **STRONGER** (informal remark [RM2R-6] → proved code fact; no premise added or dropped).
++- FRZ-B 2026-11-16: requote at main fe05ccec [REG-fe05] (D95): masters RM2-R-plus/RM0-plus/DLV-0/Cont-plus @1.0.1 plain "PROVED-CHECKED; council R3, …"; the two C-DLV audits "CODE-CHECKED"; row 3.1 carries no open registry condition; B1 moot (EQUAL, statuses only).
+ <!-- ROW thm6 END -->
+ 
+ ---
+@@ -842,8 +846,8 @@ If moreover the delivery conventions (S4) hold [S1-F2, RM2R-1],
+ $$
+ P(\text{the run produces output})=1\ \ \text{for every admissible }n\ge3,\qquad P(\hat S=S_0)\to1 .
+ $$
+-The delivery statement idealises two fixed integer limits in the code (a base search cap of $10^6$, `v3_run.R:96`, and a 32-bit integer bound $2^{31}-1$ on the search cap, `cpp/v3_core.cpp:474`): the first can bind only when $n+p+1$ exceeds $2^{10^6}$, the second only when the starting model has more than about $2.1\times10^9$ variables, which needs $n\gtrsim4.3\times10^9$ since $|\tilde S_0|\le\lfloor n/2\rfloor$; without the idealisation, delivery holds on the bounded domain $\mathfrak D=\{\lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil\le10^6,\ \lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil+\lfloor n/2\rfloor\le2^{31}-1\}$, and with it (IDEAL-W⁺) for every $n$ [RM2R-5]. Neither limit can bind unless $n+p+1>2^{10^6}$ or $n\gtrsim4\times10^9$, that is, at no feasible problem size [RM2R-6].
+-The guarantees describe the run as if uninterrupted; a run stopped by its time guard reports status `resource_limit` and no output. (No output means no estimates, as in Theorem 6.) [GUARD-W]
++The delivery statement lifts two integer limits of the code (IDEAL-W⁺); in the default configuration neither can be reached on any input R can represent ($n, p_{\mathrm{raw}} \le 2^{31}-1$) [T14-REP], so this matters only for the $n\to\infty$ form. The two limits are a base search cap of $10^6$ (`v3_run.R:96`) and a 32-bit integer bound $2^{31}-1$ on the search cap (`cpp/v3_core.cpp:474`). R stores matrix dimensions as 32-bit integers, so in the default configuration the base cap is $\lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil\le32$ and the search cap is at most $32+\lfloor n/2\rfloor\le2^{30}+31$, and neither limit can fire [T14-REP]. Every such input lies in the bounded domain $\mathfrak D=\{\lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil\le10^6,\ \lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil+\lfloor n/2\rfloor\le2^{31}-1\}$, on which delivery holds under the remaining conventions (S4), without IDEAL-W⁺ [RM2R-5]; IDEAL-W⁺ is used only by the asymptotic form. Representable inputs still carry the other obligations of IDEAL-W (for example `2*p-1` in `int` for $p\ge2^{30}$); the statement is for the default configuration (`v3.ls0_ell` unset).
++The guarantees describe the run as if uninterrupted; a run stopped by its time guard reports status `resource_limit` and returns no estimates; anything else it returns is flagged incomplete and is not covered (`v3_fit.R:84`; `v3_run.R:110-113, 142-146`) [B2]. [GUARD-W]
+ 
+ *Remarks* [RM2R-4]. (a) *Constants.* With $C_R:=3(M+\sigma_*^2)$ ($\|X\theta^*\|^2\le nM$): (A3) holds with any
+ $M_V>(\sigma_*\sqrt{2A}+\sqrt{(2A+1)C_R})^2$; (A5)(b)'s signal clause may be replaced by the master's (BM-Q♭) [R1-E2]:
+@@ -867,9 +871,8 @@ reach }S_0)$. *(Interpretation, not part of the theorem [D71]: posterior-mode er
+ - *Floors (A2).* Regressions on blocks and on $Q\cup\{l\}$ are well posed.
+ 
+ ### Master theorem
+-[RM2R-2] `W3-RM2-R:RM2-F-plus@1.0.0`, `Theory_work/Wave3/W3-RM2-R/STATEMENT.md:166-176` (hypotheses §2 :95-112 and PARENT's;
+-conclusion with [MODE] and, under (D), delivery and the error split; conditions of the row: two
+-code-reading audits of the delivery path (T03♯ discharged, main 6cd699dd), `C-DLV:L2-S3` and `C-DLV:P1-Inventory` [RM2R-7]), status verbatim **"PROVED-CHECKED, conditional on C-DLV:L2-S3, C-DLV:P1-Inventory; council R3, MANIFEST 5d6d3c90… (= R3 b06a8588 re-frozen as R3r), sol=9.5 PASS, opus=9.4 PASS"** (main 5d3a8a70, task V) [REG-5d3a]; the two conditions are code-reading audits of the delivery path (`C-DLV:L2-S3`, `C-DLV:P1-Inventory`, each "AUDITED (code reading)"), which DLV-0 takes as hypotheses [RM2R-7]; with `W3-RM2-R:RM0-plus`
++[RM2R-2] `W3-RM2-R:RM2-F-plus@1.0.1`, `Theory_work/Wave3/W3-RM2-R/STATEMENT.md:166-176` (hypotheses §2 :95-112 and PARENT's;
++conclusion with [MODE] and, under (D), delivery and the error split; conditions of the row: none open (T03♯ discharged, main 6cd699dd; the two C-DLV code-reading audits discharged, main fe05ccec) [RM2R-7]), status verbatim **"PROVED-CHECKED; council R3, MANIFEST 5d6d3c90… (= R3 b06a8588 re-frozen as R3r), sol=9.5 PASS, opus=9.4 PASS"** (main fe05ccec, D95) [REG-fe05]; DLV-0 takes the two C-DLV code-reading audits as hypotheses [RM2R-7]; `C-DLV:L2-S3@1.0.1` and `C-DLV:P1-Inventory@1.1.1` are now each **"CODE-CHECKED (second seat, code reading; holds at pin 4676af6 after amendments A-1–A-7); council R2, MANIFEST 12802ac7…, sol=9.3 PASS, opus=9.4 PASS"**; with `W3-RM2-R:RM0-plus`
+ and `W3-RM2-R:DLV-0` as in §6. It implies the previous master (`W3-RM2-R:Cont-plus`), kept below for the record (supersession deferred post-freeze; `W3-RM2:RM2-F` stays ACTIVE).
+ Delivery route: as §6 [HQ D74, R1-F6].
+ Previous master: `W3-RM2:RM2-F@1.0.3` (ACTIVE), `Theory_work/Wave3/W3-RM2/STATEMENT.md:206-214` (assumptions :126-170), status verbatim
+@@ -920,6 +923,9 @@ any $b\ge\tfrac12$. Recommendation: present (A5)(a) in the main text (fully expl
+ - FRZ-RQ 2026-11-16: [REG-6cd6] previous master RM2-F @1.0.3 "PROVED-CHECKED; …" (ACTIVE), W-suff @1.0.3, F-UNI @2.1.0 (history); T03♯ discharged. Statuses only (EQUAL).
+ - R1 2026-11-16: [R1-S6] honest limits (ii): Theorem 6 gives the same conclusion under population analogues (WEAKER); [R1-E8] example statuses verbatim; [R1-E2] Remark (a) reworded as the master's (BM-Q♭) replacement; [R1-F6] delivery-route label (EQUAL).
+ - R2-ED 2026-11-16: [GUARD-W] (manager 11-16: Theorem 7's guarantee concerns a run's output) time-guard sentence after the delivery display, as in Theorem 6 (EQUAL). [R2-O4] (A5)(b) $C_Q$ threshold example; [R2-E1] B7.2/B7.3 historical commentary labelled (EQUAL).
++- FRZ-B 2026-11-16: [B2] as Theorem 6 (EQUAL).
++- FRZ-B 2026-11-16: [T14-REP] as Theorem 6 — **STRONGER** (same delivery sentence).
++- FRZ-B 2026-11-16: requote at main fe05ccec [REG-fe05] as Theorem 6: RM2-F-plus @1.0.1 (EQUAL, statuses only).
+ <!-- ROW thm7 END -->
+ 
+ ---
+@@ -1190,8 +1196,8 @@ Page and equation numbers are those of the published paper (J. R. Statist. Soc.
+   $\varepsilon_n=O\{n^{-(1-\alpha)/2}\log^{k/2}n\}$. In display (i) the radius constant does not depend on $s$, and the
+   smallest level $M_0$ grows at most linearly in $s$ (in the general form of the theorem, where the in-sample signal
+   energy and coefficient cost are bounded by fixed constants; under (A5) those bounds themselves grow with $s$).
+-  (3) Theorem 9B gives the parametric rate $M_n/\sqrt n$ and Corollary 9C covers the sampler's output; their results
+-  concern the exact posterior only and give no parametric rate. (4) No lower bound on the growth of $p$ is needed; they
++  (3) Theorem 9B gives the parametric rate $M_n/\sqrt n$ and Corollary 9C covers the sampler's output at the coded budget;
++  their posterior results give no parametric rate, and their statements on the sampler's output are limits in the number of iterations at fixed data, for every data set (supplement pp. 12–13, 16–17); ours hold at the coded budget under design conditions; neither implies the other [AUD-S4]. (4) No lower bound on the growth of $p$ is needed; they
+   assume $P_n\succ n^\theta$ (p. 950).
+ - **Weaker.** (1) $p_{\mathrm{raw}}\le n^A$; their Corollary 1 allows $P_n<\exp(Cn^\alpha)$. (2) Exact sparsity; their
+   Theorem 1 covers approximate sparsity (their (3): $\lim_n\sum_j|\beta^*_j|<\infty$, with predictors bounded by 1), under
+@@ -1228,13 +1234,13 @@ Page and equation numbers are those of the published paper (J. R. Statist. Soc.
+ W3-DIST reader versions (`Theory_work/Wave3/W3-DIST/STATEMENT.md` v1.4.10, §1R :126-269); H5 card 13 AGREED; recorded on
+ main cb642afd (rule e7a7216c). Statuses verbatim from `Theory_work/INFRA/registry/claims.tsv` at cb642afd [REG-cb64]:
+ - Theorem 9 (display (i), level-M form, (ii), (iii)) = `W3-DIST:Thm-A` (:185-207; = DIST-1 (1.1) + bridges B0, B1, B2; the
+-  sentence without (A4) = DIST-2 (1.2) + B0, B1): `W3-DIST:Thm-A@1.0.0` **"PROVED-CHECKED; council R2, MANIFEST 9719c817… (= R2 c5cd9cdd re-frozen CITATION-ONLY as R2r), astra=9.3 PASS, opus=9.2 PASS"**; masters
+-  `W3-DIST:DIST-1@1.0.0`, `W3-DIST:DIST-2@1.0.0` the same.
+-- Theorem 9B = `W3-DIST:Thm-B@1.0.0` (:209-215): **"PROVED-CHECKED, conditional on W3-POST:Thm-1; council R2, MANIFEST 9719c817… (= R2 c5cd9cdd re-frozen CITATION-ONLY as R2r), astra=9.3 PASS, opus=9.2 PASS"**; bridge
+-  `W3-DIST:B3@1.0.0` **"PROVED-CHECKED, conditional on W3-POST:Thm-1 (for its last sentence); …"**.
+-- Corollary 9C = `W3-DIST:Cor-C@1.0.0` (:217-238): **"PROVED-CHECKED, conditional on EX-A (exact arithmetic); council R2, MANIFEST 9719c817… (= R2 c5cd9cdd re-frozen CITATION-ONLY as R2r), astra=9.3 PASS, opus=9.2 PASS"**.
+-  DIST-C's delivery statements (not used by 9C): `W3-DIST:DIST-C@1.0.0` **"PROVED-CHECKED, conditional on W3-SAMP:D,
+-  W3-SAMP:PC, W3-SAMP:LT#, W3-SAMP:C, W3-SAMP:TR, EX-A (exact arithmetic); council R2, MANIFEST 9719c817… (= R2 c5cd9cdd re-frozen CITATION-ONLY as R2r), astra=9.3 PASS, opus=9.2 PASS"**.
++  sentence without (A4) = DIST-2 (1.2) + B0, B1): `W3-DIST:Thm-A@1.0.1` **"PROVED-CHECKED; council R2, MANIFEST 9719c817… (= R2 c5cd9cdd re-frozen CITATION-ONLY as R2r), astra=9.3 PASS, opus=9.2 PASS"**; masters
++  `W3-DIST:DIST-1@1.0.1`, `W3-DIST:DIST-2@1.0.1` the same.
++- Theorem 9B = `W3-DIST:Thm-B@1.0.1` (:209-215): **"PROVED-CHECKED; council R2, MANIFEST 9719c817… (= R2 c5cd9cdd re-frozen CITATION-ONLY as R2r), astra=9.3 PASS, opus=9.2 PASS"**; bridge
++  `W3-DIST:B3@1.0.1` **"PROVED-CHECKED, conditional on W3-POST:Thm-1 (for its last sentence); …"**.
++- Corollary 9C = `W3-DIST:Cor-C@1.0.1` (:217-238): **"PROVED-CHECKED, conditional on W1-N1:B, W1-N1:F, EX-A (exact arithmetic); council R2, MANIFEST 9719c817… (= R2 c5cd9cdd re-frozen CITATION-ONLY as R2r), astra=9.3 PASS, opus=9.2 PASS"**.
++  DIST-C's delivery statements (not used by 9C): `W3-DIST:DIST-C@1.0.1` **"PROVED-CHECKED, conditional on W1-N1:B, W1-N1:F,
++  EX-A (exact arithmetic); council R2, MANIFEST 9719c817… (= R2 c5cd9cdd re-frozen CITATION-ONLY as R2r), astra=9.3 PASS, opus=9.2 PASS"**.
+ 
+ ### Bridges
+ | # | bridge | mark | detail |
+@@ -1268,6 +1274,8 @@ enumeration branch are not covered. Status: the masters' statuses above, with th
+   the theorems; presentation and comparison only).
+ - v0.4 applied 2026-11-16 [HQ card 13; recorder task W, main cb642afd]: variant A; statuses requoted verbatim from
+   `claims.tsv` at cb642afd; "Conditions, in words" paragraph added (STRONGER: placeholder → theorem).

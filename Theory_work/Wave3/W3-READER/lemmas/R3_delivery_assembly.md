@@ -3,7 +3,7 @@
 **Scope [R1-F2].** This lemma concerns the former reader hypotheses of Theorems 6–7, i.e. the hypotheses of `W3-RM2:RM2-R`
 (resp. `W3-RM2:RM2-F`, including BM-∞, diverging visibility and (BM-W)). It is **not** a bridge for the current Theorems
 6–7, whose constant-level assumptions do not imply those hypotheses; the current statements use the identities B6.6′ and
-B7.5 ((S4) ⇔ the delivery premises (D) of `W3-RM2-R:DLV-0`, with the two code-reading audits carried).
+B7.5 ((S4) ⇔ the delivery premises (D) of `W3-RM2-R:DLV-0`, with the two C-DLV code-reading audits, discharged at main fe05ccec).
 
 Status: **PROVED (by this seat, unchecked)**. S1 checked the (V)/(S)/(P) part ("B6.6/B7.4 pass only for (V)/(S)/(P)")
 and required the operational premises to be carried, with a premise-by-premise table (F2). This file is that table.
