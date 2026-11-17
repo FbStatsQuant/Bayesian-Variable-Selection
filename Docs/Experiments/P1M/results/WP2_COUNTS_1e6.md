@@ -35,4 +35,21 @@ IND 200 histogram {'13': 2030, '14': 69543, '8': 1} wall=871.20 cpu=297% maxrss_
 IND 400 histogram {'13': 3177, '14': 68478, '7': 1} wall=1759.02 cpu=296% maxrss_kb=4725344
 ```
 
-Pending: BLK n=1000. Updated 2026-11-16T19:48.
+
+## D-31 (PR #50): the same runs with cond_cum on demand and the corrected accounting (ESTIMATE; GB)
+
+Recomputed from the records above with `v4_setup_bench acct` (the D-31 accounting, validated equal to a direct count run at p = 10^5). "cond" = cond_ptr + cond_cum -> cond0.
+The table stage never held the conditional rows and becomes the limiting stage, so the overall setup peak falls by less than the retained size: unchanged at n <= 400, -2.9 to -3.0 GB at n = 1,000.
+
+| design | n | cond rows: old -> cond0 (GB) | setup.bin est: old -> new (GB) | setup peak est: old -> new (GB), limiting stage | setup peak bound: old -> new (GB) | start_law stage est: old -> new (GB) |
+|---|---|---|---|---|---|---|
+| AR | 200 | 0.87 -> 0.06 | 11.1 -> 10.3 | 14.1 -> 14.1 (tables -> tables) | 20.3 -> 20.3 | 12.8 -> 12.0 |
+| AR | 400 | 1.80 -> 0.12 | 11.5 -> 9.9 | 15.1 -> 15.1 (tables -> tables) | 21.7 -> 21.3 | 14.8 -> 13.1 |
+| AR | 1000 | 4.58 -> 0.31 | 13.6 -> 9.4 | 22.1 -> 19.1 (start_mode -> tables) | 28.4 -> 25.2 | 21.7 -> 17.4 |
+| IND | 200 | 0.86 -> 0.06 | 13.4 -> 12.5 | 16.4 -> 16.4 (tables -> tables) | 23.3 -> 22.5 | 15.0 -> 14.2 |
+| IND | 400 | 1.78 -> 0.12 | 14.3 -> 12.6 | 17.9 -> 17.9 (tables -> tables) | 25.8 -> 24.2 | 17.5 -> 15.9 |
+| IND | 1000 | 4.52 -> 0.29 | 17.1 -> 12.9 | 25.6 -> 22.7 (start_mode -> tables) | 33.7 -> 29.5 | 25.2 -> 21.0 |
+| BLK | 200 | 0.92 -> 0.08 | 7.4 -> 6.6 | 10.4 -> 10.4 (tables -> tables) | 16.5 -> 16.5 | 9.1 -> 8.3 |
+| BLK | 400 | 1.87 -> 0.16 | 8.4 -> 6.7 | 11.9 -> 11.9 (tables -> tables) | 18.1 -> 18.1 | 11.7 -> 9.9 |
+
+Pending: BLK n=1000. Updated 2026-11-16T20:54.
