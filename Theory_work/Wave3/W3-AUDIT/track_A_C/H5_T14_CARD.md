@@ -50,3 +50,17 @@ REP (REP-a), (REP-b); code pin 4676af6 (`v3_run.R:95-97`, `cpp/v3_core.cpp:92, 4
 "A:IDEAL-W⁺ costs nothing on any input the software can receive (n, p ≤ 2³¹ − 1): there the two predicates it lifts
 are false in the shipped default configuration (T14 REP); the narrowing matters only for the asymptotic form beyond R's
 limits."
+
+## Consultant edits (H5 card 16, AGREE, binding; HQ 2026-11-16). They supersede Edit 1 and Edit 2 above where they differ.
+1. **No overclaim.** Representable inputs still carry IDEAL-W obligations (e.g. `2*p − 1` in `int` for p ≥ 2³⁰). On 𝔇,
+   delivery holds "under the remaining conventions (S4), without IDEAL-W⁺". Never imply that representable inputs need no
+   idealisation at all.
+2. **p_raw, not p:** write "n, p_raw ≤ 2³¹ − 1" (𝔇 is written in p_raw).
+3. **Row 3.1, one sentence (replaces Edit 1's "After"):**
+   > The delivery statement lifts two integer limits of the code (IDEAL-W⁺); in the default configuration neither can be
+   > reached on any input R can represent ($n, p_{\mathrm{raw}} \le 2^{31}-1$) [T14-REP], so this matters only for the
+   > $n\to\infty$ form.
+   The caps (base cap ≤ 32, search cap ≤ 2³⁰ + 31), 𝔇, the code line references (`v3_run.R:96`, `cpp/v3_core.cpp:474`)
+   and "on 𝔇 delivery holds under the remaining conventions (S4), without IDEAL-W⁺" move to the reader note on 3.1
+   (Edit 2), with p_raw throughout.
+Applied by W3-READER in its editorial round (B3), after T14 is recorded. Tag stays STRONGER.
