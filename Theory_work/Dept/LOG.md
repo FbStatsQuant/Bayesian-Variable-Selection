@@ -436,3 +436,4 @@
 - 2026-11-17 12:57 CST Slot freed (track A lead done) → #3 lead launched (Opus, worktree /home/fb31/BVS-wt/W3-D3 @ 029bb748; PLAN stage first, stop if the W3-DIST bridge reuse fails; kill 3 d). Leads: W3-D2, W3-D5P, W3-D3, recorder = 4; audit Fable idle.
 - 2026-11-17 12:58 CST D111 relayed to the recorder.
 - 2026-11-17 12:59 CST D112: #3 required (lead told); generic-position lemma queued for the next free slot.
+- 2026-11-17 13:04 CST W3-D3 plan v0.2 (810fab69): bridge reuse OK at every step; GO (o1/o2 off). Class-1 anchoring (NH14 isotropic ↔ SL Cond 1) → HQ judgement call.
