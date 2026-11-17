@@ -733,3 +733,9 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - Timeline approved: campaign freeze 11-18/19; 10⁴ overlap 11-19..22; precision + 10⁴ science to 11-26; 10⁵ 11-27..30; **1M replicates from ≈ 12-01**.
   - **The owner's 20-replicate option at 1M is approved within the 28.3k envelope** (≈ 24.6k without D / 26.5k with; ≈ 1.8k margin). It starts after the overlap and 10⁵ gates pass, 2 fits at a time.
   - The pilot counts as replicate 1, subject to the freeze reproduction check.
+- 2026-11-17. **OWNER GREENLIGHT: the theory push started** on CP (continuous; CP → reset → CT).
+  - Started: W1-N1:B/F line checks; track D #2; A1/A2 NARROW; precedent notes; editorial and tools; an audit-Fable feasibility note on "the SMC does work".
+  - Consultant session part 1 (bounded "money on the table").
+  - Held for the owner's decision: track D #3, #5′, and any new SMC-works ticket.
+  - Proof hardening for the Lean targets (paper blueprints + hostile formalizer review) follows the method sign-off.
+  - Engineering moved to Claude Work, ≤ 3 agents.
