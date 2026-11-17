@@ -1261,8 +1261,11 @@ TEST(cost_record_per_step) {
       for (int i = 0; okr && i <= s; ++i) okr = std::memcmp(&r2.cost[i], &r1.cost[i], sizeof(StepCost)) == 0;   // every raw field
       CHECKF(okr, "resume at %d (variant %d): rows %zu", s, variant, r2.cost.size());
       cost_sums_match(r2, "resumed");
-      CHECK(r2.ks.particle_rounds == r.ks.particle_rounds && r2.ks.particle_sweeps == r.ks.particle_sweeps &&
-            r2.ks.support_label_pairs == r.ks.support_label_pairs && r2.ks.flip_evals == r.ks.flip_evals);
+      CHECKF(r2.ks.particle_rounds == r.ks.particle_rounds && r2.ks.particle_sweeps == r.ks.particle_sweeps &&
+             r2.ks.support_label_pairs == r.ks.support_label_pairs, "resume %d: rounds %llu/%llu sweeps %llu/%llu pairs %llu/%llu flips %llu/%llu", s,
+             (unsigned long long)r2.ks.particle_rounds, (unsigned long long)r.ks.particle_rounds, (unsigned long long)r2.ks.particle_sweeps,
+             (unsigned long long)r.ks.particle_sweeps, (unsigned long long)r2.ks.support_label_pairs, (unsigned long long)r.ks.support_label_pairs,
+             (unsigned long long)r2.ks.flip_evals, (unsigned long long)r.ks.flip_evals);
       sidecar_equals(a.cost_path, r2, m, "resumed");
     }
     wp3_rm(a.ckpt_path); wp3_rm(a.cost_path);

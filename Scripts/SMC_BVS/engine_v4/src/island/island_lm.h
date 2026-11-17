@@ -87,8 +87,7 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
     if (fail_fatal()) return;
     // active columns: members of fast supports that can add
     gb.act.clear();
-    for (int s = 0; s < nsup; ++s) { auto& c = gb.sup[s]; if (c.fast && c.add_ok) gb.act.insert(gb.act.end(), c.S.begin(), c.S.end()); else if (!c.fast) KS.slow_supports++;
-                                     if (c.add_ok) KS.flip_evals += (uint64_t)(p - c.k); }   // D-30 counter (WP7 O2)
+    for (int s = 0; s < nsup; ++s) { auto& c = gb.sup[s]; if (c.fast && c.add_ok) gb.act.insert(gb.act.end(), c.S.begin(), c.S.end()); else if (!c.fast) KS.slow_supports++; }
     std::sort(gb.act.begin(), gb.act.end()); gb.act.erase(std::unique(gb.act.begin(), gb.act.end()), gb.act.end());
     const int nA = (int)gb.act.size();
     KS.act_cols += (uint64_t)nA;   // D-30 counter (WP7 O2)

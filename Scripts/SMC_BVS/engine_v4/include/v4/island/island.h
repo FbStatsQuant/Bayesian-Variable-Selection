@@ -121,8 +121,6 @@ struct KernelStats {   // execution statistics (not part of the law, not hashed)
   double t_init = 0, t_orders = 0, t_build = 0, t_phaseA = 0, t_walk = 0, t_phaseB = 0, t_apply = 0, t_barrier = 0,
          t_pm = 0, t_ckpt = 0, t_total = 0;
   uint64_t act_cols = 0;     // label-major: sum over passes of the active columns (distinct members of fast supports that can add)
-  uint64_t flip_evals = 0;   // label-major: addition flips evaluated (non-member labels of supports that can add); bounded scoring
-                             // (builder 6, K1) counts only the flips it scores
   double t_check = 0;      // wall seconds in the I1 store checks (O1; included in t_ckpt when the check precedes a checkpoint)
   uint64_t store_checks = 0;   // I1 checks run (top store; leader stores counted with it)
 };
@@ -151,7 +149,8 @@ struct StepCost {
   double t_check = 0, t_ckpt = 0;            // I1 checks (O1) / checkpoint writes in the interval (t_ckpt includes its check)
   double mean_S = 0;                         // population mean |S| at the close
   double store_mean_k = 0;                   // mean |S| of the stored models at the close
-  uint64_t particle_rounds = 0, sweeps = 0, passes = 0, supports = 0, pairs = 0, flips = 0, act_cols = 0, slow_supports = 0;
+  uint64_t particle_rounds = 0, sweeps = 0, passes = 0, supports = 0, pairs = 0, act_cols = 0, slow_supports = 0;
+  uint64_t flips = 0;                        // KernelStats::flip_evals (K1): addition flips evaluated on fast supports
   uint64_t offers = 0, dup_dropped = 0, merges = 0, store_size = 0;   // top store: offers buffered / dropped by the snapshot filter
   uint64_t rss_kb = 0, hwm_kb = 0;           // VmRSS at the close / VmHWM (process peak so far)
 };
