@@ -416,3 +416,4 @@
 - 2026-11-17 11:35 CST HEARTBEAT (freeze): CI green (HQ commit 'Owner Lean gate: no Lean code until HQ+VP+owner agree theory is final'; the Mon kick-off reads HQ's latest). No Theory agents running; idle.
 - 2026-11-17 12:23 CST D104 dispatched (4 leads + Fable).
 - 2026-11-17 12:24 CST D105: Fable queued for the #5′ spec after its FEAS note; #5′ and #3 leads into the next free slots.
+- 2026-11-17 12:28 CST D106 noted; carried into every new brief (#5′, #3, READER batch).
