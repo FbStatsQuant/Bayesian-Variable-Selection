@@ -476,3 +476,4 @@
 - 2026-11-17 14:18 CST XR2r: re-dry byte-identical; extra delta = HQ's POLICIES.md (b40abc79, Sol model rule) → manager OK (no registry/theory file). A1/A2 corrigendum: Opus re-check FAIL on 2 overclaims (DLV-0, not C1, imports A4; C1 table lists A1/A2 relying on the inventory, covered by A4) → recorder fixing and re-checking.
 - 2026-11-17 14:23 CST auditV2 CLEAN 16/16 (V:SCOPE incl.); cite in the V carrier; Writing VISIBILITY_SCOPE v2 marked FINAL.
 - 2026-11-17 14:27 CST D123: SOL62_QUALITY.md created; leads told.
+- 2026-11-17 14:28 CST Track V R4 manifest fails verify on EXT TRACK_B.md (my B8 D18 update, W3-AUDIT 6e89f081); recorder to do a CITATION-ONLY R4 → R4r in the V recording. Lesson: check a file's manifest membership before post-freeze edits (as RIDER_RULES already says for ticket files).
