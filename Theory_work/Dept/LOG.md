@@ -457,3 +457,4 @@
 - 2026-11-17 13:42 CST Slot freed (W3-D5P at CP3). READER editorial batch HELD to bundle with the joint H5 card swap (D115: no reader/card change before AGREE), to avoid two rounds. Track A ER/XR1 editorial waits for the next track A manifest. Leads now: W3-D3, track V, recorder = 3.
 - 2026-11-17 13:42 CST D117 recorded.
 - 2026-11-17 13:45 CST Recorder Q3 dry run clean; decided: XR2r first (D110), Q3a yes (R2r→R2r2), Q3b skip (bundle with the H5 swap), Q3c none (pending W3-READER:R3 status), manifest.py v2 after review. Full recorder order sent.
+- 2026-11-17 13:48 CST auditD5P1 CLEAN 18/18 ($1.46); cite in the carrier; W3-D5P real recording waits on IMPL-LIST (Engineering's method commit; the lead discharges it against the commit first).
