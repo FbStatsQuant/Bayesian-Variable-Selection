@@ -84,8 +84,16 @@ struct Data {                                                 // read-only after
   as `core/cpp/v3_start.h:38`. Plus the duplicate components and the cut-group record (CSR each).
 - **Tables** (WP2): `struct Tables { std::vector<int64_t> code_ptr; std::vector<double> logr; ... }` — block b's
   `logr` for codes `0..2^{m_b}−1` at `logr[code_ptr[b] + code]`, NaN where |U| > K; code bit i ↔ i-th member
-  (`core/cpp/v3_start.h:76-98`). `logprof`, `logF` ((J+1)×(K+1) row-major), `size_logmass`, `size_cum`, `cond_cum`:
-  flat arrays + offsets, same values as `core/cpp/v3_start.h:101-157`. **`codes_by_size` and `sub_cum` are not stored
+  (`core/cpp/v3_start.h:76-98`). `logprof` (with `logprof_ptr`), `logF` ((J+1)×(K+1) row-major), `size_logmass` and
+  `size_cum` retain the core values and bits (`core/cpp/v3_start.h:101-157`). **`cond_ptr` and `cond_cum` are not stored
+  (D-31)**: `cond0` is f64 J×(K+1), b-major, with `cond0[b*(K+1)+r]` equal bit-for-bit to entry 0 of core's conditional
+  cumulative row (b, r) (`core/cpp/v3_start.h:140-150`); on reachable rows this is P(k_b=0 | remaining r).
+  `cond_row(T,b,r,out)` reconstructs the whole row from `logprof` and `logF`, with exactly the core operation order and
+  bits; its length is min(top_b,r)+1, where top_b = logprof_ptr[b+1] − logprof_ptr[b] − 1; all-minus-infinity rows contain
+  zeros and are never reached by a valid draw. For 0≤b<J, 0≤r≤K and 0≤u<1, `pi0_block_size(T,b,r,u)` returns 0 iff
+  u < cond0[b*(K+1)+r], otherwise the `upper_bound` index on that row. The caller-scratch forms (`CondScratch`,
+  `DrawScratch`; `Start::draw_pi0(…, DrawScratch&)`) perform no heap allocation. Gate: identical row bits, models and
+  uniform consumption with and without stored rows, against core. **`codes_by_size` and `sub_cum` are not stored
   (D-18)**: they are recomputed on demand for each block a π₀ draw selects, with the same values and bits —
   `codes_by_size[b][j]` = the codes of popcount j in increasing order, `sub_cum[b][j]` = `cumulative_from_logs` of
   their `logr` (`core/cpp/v3_start.h:101-116`). Gate: draws identical with and without the stored sections.
@@ -351,7 +359,7 @@ Sections (names fixed; WPs may add sections, never rename):
 - `data.bin` (prep): `Xs_cm`, `ys`, `z`, `diagG`, `col_max`, `col_mean`, `col_sd`, `kept` i32 (1-based), `dropped`
   i32, `meta` {n, p_raw, p, K, yty, logCn, logm0, logWK, y_max, y_mean, y_sd_scaled, prep_class: "B"|"A"}, `logw`, `logprior`.
 - `setup.bin` (WP2): `nb_ptr` i64, `nb_idx` i32, `dup_ptr/dup_idx`, `cut_ptr/cut_idx`, `blk_ptr/blk_members`, `blk`,
-  `pos`, `code_ptr`, `logr`, `logprof_ptr/logprof`, `logF`, `size_logmass`, `size_cum`, `cond_ptr/cond_cum`,
+  `pos`, `code_ptr`, `logr`, `logprof_ptr/logprof`, `logF`, `size_logmass`, `size_cum`, **`cond0`** (f64 J×(K+1), b-major; D-31),
   `mode_S`, table top stores `tstore_{top,lead0,lead1}_{v,off,len,hash,pool}`, `meta`.
 - `calib.bin` (WP4):
   - always: `grids_all_ptr/grids_all`, the stage records (when any island ran) and `meta`;
@@ -626,3 +634,8 @@ point, so all WPs link from day one: `setup::run`, `island::run`, `calib::run`, 
   floor bit-equal to calib.bin's `tau_cal_hex`, NaN / +∞ refused, calibration islands guarded on the island side.
   §4.1 hashes: the named readers check them; `load_fit` relies on fit.bin's content hash. (O2's `meta.cost` line is
   v0.1.16.)
+- v0.1.20 (2026-11-17, WP2 for WP1; D-31; PR #50 re-check F1) — §2 / §5.1: `setup.bin` no longer stores `cond_ptr` /
+  `cond_cum`; it stores `cond0` (f64 J×(K+1), b-major, entry 0 of each conditional row = P(k_b=0 | r)). `cond_row(T,b,r,out)`
+  recomputes a row with the core's bits; `pi0_block_size(T,b,r,u)` = 0 iff u < cond0, else `upper_bound` on the row; draws
+  are allocation-free with caller scratch. A setup.bin without `cond0` is refused by the reader. Numbering: v0.1.15 (PR #45),
+  v0.1.16 (O2), v0.1.17 (O6), v0.1.18 (O5), v0.1.19 (WP4's reader line) precede it; the header line moves with those PRs (WP1).
