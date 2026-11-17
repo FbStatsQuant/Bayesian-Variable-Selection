@@ -380,3 +380,4 @@
 - 2026-11-16 20:21 CST D94 relayed to the recorder (order: rule (c) → carriers → relabel dry → GO → relabel real → track A real → payoff chain).
 - 2026-11-16 20:22 CST C1: Sol LOCK + VERIFIED-WITH-AMENDMENTS; A-7 complete; DLV-0 E2 excludes B1′. Consumers: only HQ_AUDIT-W1C:A1/A2 affected in text (A4 covers, not registered). Recommended CORRECTION to HQ. Council C-R1 (221ca4e1) GO.
 - 2026-11-16 20:23 CST D95 relayed to the recorder (A1/A2 SUSPECT; P1-Inventory CORRECTION after C-R1).
+- 2026-11-16 20:34 CST Must-do item 3 DONE: C1 bound (Sol 9.3 C-R1 221ca4e1; Opus 9.4 C-R2 c27fb00e; 803dc983). P1-Inventory/L2-S3 hold with A-1..A-7. Pointers to the recorder; HQ told. Track A lead now idle → slot free for READER after the recorder's current step (pacing 2).
