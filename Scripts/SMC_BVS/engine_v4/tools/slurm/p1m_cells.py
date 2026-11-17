@@ -248,6 +248,7 @@ def plans(rows, outdir, only=None):
             chunk = rs[b:b + cap]
             name = "%s_p%d_n%d_%s_N%d_R%d_b%d" % (block.replace(" ", "").replace("⁴", "4").replace("⁵", "5").replace("⁶", "6"), p, n, mode, N, Rp, b // cap + 1)
             plan = {"batch": name[:64], "mode": mode, "code_commit": "UNSET-fill-at-freeze", "max_task_hours": 2.0,
+                    **({"island_isa": "sapphirerapids"} if mode == "V" else {}),   # D-32: V plans need an FMA island ISA
                     "kind": "gated (needs HQ go)", "fits": []}
             for r in chunk:
                 f = {"run_id": r["run_id"], "design": "NULL" if r["signal"] == "null" else r["design"], "p": r["p"], "n": r["n"],

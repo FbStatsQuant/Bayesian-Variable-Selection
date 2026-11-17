@@ -19,9 +19,13 @@ namespace v4::wp4io {
 // A store as <prefix>_v f64, _off u64, _len u16, _hash u64, _pool i32 (INTERFACES §4.1 flat layout; entries sorted).
 // The store must be compacted and stay alive until Writer::write returns. Its cap and order go to meta["stores"].
 void add_store(fmt::Writer& W, Json& meta, const std::string& prefix, const Store& s);
+void add_store_sections(fmt::Writer& W, const std::string& prefix, const Store& s);   // the five sections only (setup.bin: no meta.stores)
 // Rebuilds a Store from the sections (offer + compact; checks I1). Throws Error(invalid_input) on a malformed store.
 void read_store(const fmt::Reader& R, const Json& meta, const std::string& prefix, Store& s, int32_t p, int32_t K,
                 const Zobrist* zob = nullptr /* hashes checked against the models when given */);
+// The same with the store's cap and order given (setup.bin: from INTERFACES §4.1, no meta.stores).
+void read_store_sections(const fmt::Reader& R, const std::string& prefix, uint64_t cap, Order order, Store& s, int32_t p, int32_t K,
+                         const Zobrist* zob = nullptr);
 // Content checks (review PR20 M-2): a model is strictly increasing, in [0, p), of size <= K; else Error(invalid_input).
 void check_model(ModelView S, int32_t p, int32_t K, const std::string& what);
 // A list of models as <prefix>_ptr i64 (n + 1) and <prefix>_idx i32 (copied).
@@ -40,7 +44,7 @@ struct CalibWrite {
   std::vector<merge::InheritedModel> inherited;     // models of the three calibration stores with F, lg0, logm (or:)
   const calib::InheritedFlat* inherited_flat = nullptr;   // the same, flat (calibrate_with's export; preferred; has d)
   const calib::Settings* settings = nullptr;        // rule parameters recorded in meta (I_max, refine_m, ell, sum mode)
-  double k_store = 0;                               // calibration's mean stored |S| (INTERFACES v0.1.12 §7)
+  double k_store = 0;                               // calibration's mean stored |S| (INTERFACES v0.1.13 §5.1 meta.k_store; §7)
   int32_t N = 0, L = 0, Hm = 4;                     // final-run settings frozen with the grid
   Json inputs = Json::object();                     // {data.bin: hash, setup.bin: hash}
   std::vector<calib::StageRecord> stages;           // pilot and diagnostic islands' stage tables (calib.bin `stage_*`)
@@ -54,11 +58,18 @@ struct CalibIn {
   bool has_hpm = false; Model hpm; EventCtx hpm_ev;
   std::vector<merge::InheritedModel> inherited;
   std::string rule; int32_t I_used = 0, I_max = -1, ell = -1; double k_store = 0;
+  double tau_cal = -__builtin_huge_val();            // D-29: meta.tau_cal_hex (V mode; -inf when absent), checked against inh_F
 };
 // Every model, value, grid and meta range checked. V mode: the bounded rule, tier 0, N = 2,500 (D-1, D-26) and
 // I_used <= I_max <= ell. A completed calibration must carry k_store (finite, > 0). When data_hash / setup_hash are
 // given, calib.bin's meta.inputs must name them (review PR37 m-3). A non-ok calib.bin exposes no inherited models.
 CalibIn read_calib(const std::string& path, int32_t p, int32_t K, const std::string& data_hash = "", const std::string& setup_hash = "");
+// D-29 (review PR54 MAJOR-1/2): tau_cal's semantic check, light (mapped arrays, no model copies): distinct inherited
+// models, tau_cal = the c-th best F (c = 40p + 1) bit for bit. read_calib and `smcbvs4 island` both call it.
+// The most inherited models an UNORDERED (non-canonical) list may have before the distinctness proof (an index sort, 4 B per
+// model) is refused: 2^24. The exporter's flat list is canonical and has no limit. A mutable default so a test can lower it.
+inline size_t& calib_unordered_limit() { static size_t n = (size_t)1 << 24; return n; }
+double check_calib_tau_cal(const fmt::Reader& R, const Json& meta, uint32_t mode, int32_t p, int32_t K, const std::string& path);
 
 // ---- island_r.bin (INTERFACES v0.1.8 §5.1 = WP3's include/v4/island/island_file.h) ---------------------------------
 // meta {schema, kind, mode, r, N, T, L, Hm, p, status, reason, inputs, binary, timings, logZ_hex, init_hash};
@@ -104,8 +115,11 @@ class FileIslandSource : public merge::IslandSource {
   merge::IslandHead head(int r) override { return heads_[(size_t)r - 1]; }
   merge::IslandIn load(int r) override;
   const std::vector<merge::IslandHead>& heads() const { return heads_; }
+  // D-29 (v0.1.15 §7): marks every island whose offer floor fails merge::offer_floor_refusal as floor_refused
+  void check_offer_floors(bool v_mode, const std::string& calib_hash, double tau_cal, double pre_cutoff);
+  void check_calib_isa(const Json& calib_block);   // D-32: an island of another FMA family than calib.bin -> binary_mismatch
  private:
-  std::vector<std::string> paths_; std::vector<merge::IslandHead> heads_; Expect ex_; int Rp_, p_;
+  std::vector<std::string> paths_; std::vector<merge::IslandHead> heads_; std::vector<Json> blocks_; Expect ex_; int Rp_, p_;
 };
 
 // ---- setup view (until WP2's reader lands): the sections the merge needs --------------------------------------------
@@ -114,6 +128,7 @@ struct SetupView {
   std::vector<int32_t> blk, pos; std::vector<int64_t> code_ptr; std::vector<double> logr;
   std::vector<int64_t> blk_ptr; std::vector<int32_t> blk_members;
   Model mode_S;
+  std::vector<double> size_logmass;                 // log P_pi0(|S| = k), k = 0..K (INTERFACES §5; empty if the file has none)
   Store ttop, tlead0, tlead1;                       // table top stores
   // core/cpp/v3_start.h:54-66 (copied): ordered block sum of log r_b(S n C_b).
   double comp(const Model& S, std::vector<std::pair<int32_t, int32_t>>& scratch) const;
@@ -121,6 +136,15 @@ struct SetupView {
   EventCtx table_event_of(const Model& S) const;    // block b + 1, code of S in that block
 };
 SetupView read_setup(const std::string& path, int32_t p, int32_t K, const Zobrist* zob = nullptr);   // shapes, ranges and finite values checked
+// The pi_0 size law of setup.bin (K + 1 log probabilities summing to 1); Error(invalid_input) otherwise. read_setup runs it;
+// calibrate runs it on the dimensions reader's copy before it plans.
+void check_size_logmass(const std::vector<double>& v, int32_t K, const std::string& what);
+// ---- bounded plan reader (review PR46 MAJOR-2; INTERFACES §7: admission refuses "before any allocation") -------------
+// data.bin: the header, the section table and `meta` (against its SHA-256 in the header-authenticated table); no column
+// is read. Allocation is O(sections + meta). setup.bin's dimensions come from WP3's island::read_setup_dims (setup_load.h).
+// The full readers run only after admission.
+struct DataPlanHead { std::string content_hash; int64_t n = 0, p = 0; int32_t K = 0; uint64_t file_bytes = 0; };
+DataPlanHead read_data_plan(const std::string& path);            // data.bin meta: n, p, K
 std::string write_setup_min(const std::string& path, const SetupView& s, const Json& inputs);   // tests / harness
 // Table step of the merge ledger: the table top stores offered (top -> HPM + top, lead0, lead1) with their table event
 // keys, plus the logical TABLE count. Equal to ingesting every table code (core/cpp/v3_core.cpp:372-387) for the

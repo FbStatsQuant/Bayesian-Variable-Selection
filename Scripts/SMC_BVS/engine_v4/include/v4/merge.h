@@ -22,6 +22,7 @@
 #include <vector>
 #include <algorithm>
 #include <chrono>
+#include <cstring>
 #include <limits>
 #include "v4/calib_rules.h"
 #include "v4/ledger.h"
@@ -46,13 +47,30 @@ struct IslandIn {
   std::vector<Model> terminal;           // optional
 };
 // How an island file was found by the loader (WP1 format reader / manifest / binary check).
-enum class Load : uint8_t { ok = 0, missing, corrupt, hash_mismatch, binary_mismatch };
+enum class Load : uint8_t { ok = 0, missing, corrupt, hash_mismatch, binary_mismatch, floor_refused };
 // Pass-1 view of an island: what GUARD-W needs, read from headers and meta only (no store is loaded).
 struct IslandHead {
   Load load = Load::missing; Status status = Status::completed; int32_t r = 0, N = 0, p = 0, T = 0, L = 0, Hm = 0; double logZ = 0;
   std::string detail, content_hash;            // content hash actually read (recorded in fit.bin meta.inputs)
   uint64_t store_entries = 0, store_pool = 0;  // section lengths of the island store (memory plan: mean model size)
+  double floor = -__builtin_huge_val(); std::string floor_calib;   // D-29 offer floor (meta.offer_floor_hex; absent = -inf)
 };
+// D-29 merge check (INTERFACES v0.1.15 §7; v0.1.17 = review PR45 MINOR-2/3), after the tables and the inherited models
+// are in the pre-island ledger and before any island is merged. An island's floor must be -inf, or: the merge is V
+// mode, the floor names this calib.bin, its bits equal calib.bin's tau_cal, and floor <= the pre-island cut-off (<=:
+// offers equal to the floor are kept). Then every offer the island dropped (v < floor) is below the merged store's
+// cut-off, and the merged store equals the unfloored merge. Returns "" or why the island is refused (invalid_input).
+inline std::string offer_floor_refusal(const IslandHead& h, bool v_mode, const std::string& calib_hash, double tau_cal, double pre_cutoff) {
+  const double ninf = -__builtin_huge_val();
+  if (std::isnan(h.floor) || h.floor == -ninf) return "offer floor NaN or +inf";
+  if (!(h.floor > ninf)) return "";
+  if (!v_mode) return "offer floor outside V mode (compat / law islands run without one)";
+  if (h.floor_calib != calib_hash) return "offer floor from another calib.bin";
+  uint64_t a, b; std::memcpy(&a, &h.floor, 8); std::memcpy(&b, &tau_cal, 8);
+  if (a != b) return "offer floor differs from calib.bin's tau_cal";
+  if (!(h.floor <= pre_cutoff)) return "offer floor above the pre-island cut-off (tables + inherited)";
+  return "";
+}
 // Where the streaming merge reads islands from: files (slice 2), memory (tests, golden harness).
 struct IslandSource {
   virtual ~IslandSource() = default;
@@ -94,11 +112,12 @@ struct MergeSettings {
   // INTERFACES v0.1.7: final-run leader stores are not outputs in any mode; final-run ledgers use leaders = false
 };
 
-// Memory model of the streaming merge (ESTIMATE; bytes). A store entry costs 26 + 4 k bytes (v, off, hash, len, pool);
-// a store peaks at 2.5 cap entries (kept + staging + new kept run, INTERFACES §4.1).
+// Memory model of the streaming merge (ESTIMATE; bytes). A store entry costs 30 + 4 k bytes kept (v, off, hash, len,
+// pool: 26 + 4 k; the one-entry-per-model index: 4); a store peaks at 2.5 cap entries (kept + staging + new kept run,
+// INTERFACES §4.1), plus about 9 B per entry transient inside compact() (covered by the 2.5 factor's slack).
 struct MemEstimate { uint64_t merged = 0, one_island = 0, small = 0, tail = 0, extra = 0, total = 0; };
 inline MemEstimate estimate_merge_memory(const MergeSettings& ms) {
-  const double entry = 26.0 + 4.0 * ms.kbar, c = 40.0 * ms.p + 1, lead = 0.0;   // no final-run leaders (v0.1.7)
+  const double entry = 30.0 + 4.0 * ms.kbar, c = 40.0 * ms.p + 1, lead = 0.0;   // no final-run leaders (v0.1.7)
   MemEstimate m;
   m.merged = (uint64_t)(2.5 * (c + lead) * entry);
   m.one_island = (uint64_t)(2.5 * c * entry);                                        // one island store while loaded
@@ -123,6 +142,7 @@ struct OccRow {   // log Z^_occ for one M (D-13)
 struct FitOut {
   // status (INTERFACES §7) + why; fit_state = "completed" | "incomplete" (merge refused) | "not_admitted" | "failed"
   Status status = Status::completed; std::string fit_state = "completed", reason;
+  double t_islands = 0, t_local = 0, t_ls0 = 0;   // wall seconds: island stream + merge, final local search, LS0 (WP7 O5, T5)
   std::vector<Status> island_status; std::vector<int> missing, invalid;
   bool estimates_available = false;
   MemEstimate mem;
@@ -192,7 +212,7 @@ inline Status load_status(Load l) {
   switch (l) {
     case Load::ok: return Status::completed;
     case Load::missing: return Status::io_error;
-    default: return Status::invalid_input;   // corrupt, hash_mismatch, binary_mismatch
+    default: return Status::invalid_input;   // corrupt, hash_mismatch, binary_mismatch, floor_refused
   }
 }
 }  // namespace detail
@@ -244,6 +264,7 @@ FitOut merge_stream(IslandSource& src, Ledger&& pre, const Model& mode_S, Factor
     return out;
   }
   const int R = ms.Rp, p = ms.p;
+  const auto t_isl0 = std::chrono::steady_clock::now();
   // 3. pass 2: stream the islands into the one merged ledger (order-free), keep the small fields
   Ledger led = std::move(pre);
   std::vector<double> ess_all;
@@ -282,12 +303,14 @@ FitOut merge_stream(IslandSource& src, Ledger&& pre, const Model& mode_S, Factor
     terminal[(size_t)r - 1] = std::move(I.terminal);
   }   // each IslandIn (its ledger and stores) is freed at the end of its iteration
   led.compact();
+  const double t_islands_s = std::chrono::duration<double>(std::chrono::steady_clock::now() - t_isl0).count();
   // 4. tail
   TailSettings ts; ts.threads = ms.threads; ts.chunk = ms.chunk; ts.K = ms.K; ts.p = p; ts.tier = ms.tier; ts.zob = ms.zob;
   out.hpm_before_local = led.hpmS; out.hpm_before_local_F = led.hpmF;
   try {
     auto t0 = std::chrono::steady_clock::now();
     out.local = local_search(led.hpmS, ms.ell, false, PH_LOCAL, led, fac, ts); out.has_local = true;
+    out.t_local = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
     if (guard && guard(std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count(), "local_search")) {
       out.status = Status::resource_limit; out.fit_state = "failed"; out.reason = "runtime guard after the final local search";
     }
@@ -300,6 +323,7 @@ FitOut merge_stream(IslandSource& src, Ledger&& pre, const Model& mode_S, Factor
       out.ls0_cap = (int)cap;
       auto t1 = std::chrono::steady_clock::now();
       out.ls0 = local_search(mode_S, out.ls0_cap, true, PH_LS0, led, fac, ts); out.has_ls0 = true;
+      out.t_ls0 = std::chrono::duration<double>(std::chrono::steady_clock::now() - t1).count();
       if (guard && guard(std::chrono::duration<double>(std::chrono::steady_clock::now() - t1).count(), "ls0")) {
         out.status = Status::resource_limit; out.fit_state = "failed"; out.reason = "runtime guard after LS0";
       }
@@ -310,6 +334,7 @@ FitOut merge_stream(IslandSource& src, Ledger&& pre, const Model& mode_S, Factor
     out.status = e.st; out.fit_state = "failed"; out.reason = e.what();
   }
   led.compact();
+  out.t_islands = t_islands_s;
   out.has_hpm = led.has_hpm; out.hpm = led.hpmS; out.hpm_F = led.hpmF; out.hpm_logm = led.hpm_logm; out.hpm_ev = led.hpm_ev;
   if (out.status != Status::completed) {   // GUARD-W: no estimate field
     out.hpm_incomplete = true; out.logZ_r.clear(); out.pip_r.clear(); out.led = std::move(led); return out;

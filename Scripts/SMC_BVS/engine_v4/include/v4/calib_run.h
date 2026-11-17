@@ -6,6 +6,8 @@
 // The command (`smcbvs4 calibrate`, src/calib/calib_run.cpp) wires data.bin / setup.bin / calib.bin around it; the
 // island runner comes from WP3 (calibration roles) and is the only part not yet available.
 #pragma once
+#include <algorithm>
+#include <cmath>
 #include <vector>
 #include "v4/calib.h"
 #include "v4/calib_backend.h"
@@ -61,48 +63,67 @@ struct CalibOutcome {
   CalibOut co;
   Ledger led;                                   // the calibration ledger at the end (stores, HPM + provenance, counters)
   std::vector<StageRecord> stages;
-  InheritedFlat inherited;                      // models of top u lead0 u lead1 (lexicographic), scored (F, lg0, log m, d)
-  double k_store = 0;                           // mean |S| of the calibration top store (INTERFACES v0.1.12 §7 admission)
+  InheritedFlat inherited;                      // models of top u lead0 u lead1 (lexicographic), scored (F, lg0, log m, d); ok only
+  double k_store = 0;                           // mean |S| of the calibration top store (INTERFACES v0.1.13 §5.1 meta.k_store; §7 admission)
 };
 
-// Memory plan of the calibration process (review PR37 M-5; ESTIMATE, bytes): the calibration ledger's three stores at
-// their staging peak (2.5 x entries), one island ledger in flight (returned compacted, then merged: 2.5 x), the flat V /
-// export (pool + offsets + 4 values + a view each), the setup inputs and data (mapped). kbar = mean model size.
+// Memory plan of the calibration process (review PR37 M-5, N-1, N-2; ESTIMATE, bytes), on IslandSpec's rule:
+//   resident      = the calibration ledger's three stores at their staging peak (2.5 x entries) + the flat V / export
+//                   (pool + offsets + 4 values + a view each). Passed to every island as resident_bytes.
+//   island_ledger = one island's own ledger (the same caps, 2.5 x): the least any island plan holds.
+//   inputs        = data.bin + setup.bin bytes (mapped): counted once, here and in the island's plan, never in resident.
+//   total         = resident + inputs + island_ledger: the smallest whole-task footprint with one island running. The
+//                   command refuses (resource_limit) before building anything when total > --mem-budget.
+// kbar = the plan's mean model size (calib_k_plan).
 struct CalibMemPlan { uint64_t ledger = 0, island_ledger = 0, export_ = 0, inputs = 0, resident = 0, total = 0; };
 inline CalibMemPlan calib_memory_plan(int64_t p, double kbar, uint64_t inputs_bytes) {
-  const double entries = 40.0 * p + 1 + 2 * 20.0 * p, entry = 26.0 + 4.0 * kbar;
+  const double entries = 40.0 * p + 1 + 2 * 20.0 * p, entry = 30.0 + 4.0 * kbar;   // v4::Store: 26 + 4k data + 4 index
   CalibMemPlan m;
   m.ledger = (uint64_t)(2.5 * entries * entry);
   m.island_ledger = (uint64_t)(2.5 * entries * entry);
   m.export_ = (uint64_t)(entries * (4.0 * kbar + 8 + 4 * 8 + 16));
   m.inputs = inputs_bytes;
-  m.resident = m.ledger + m.export_ + m.inputs;   // held while an island runs (the export only at the end; counted conservatively)
-  m.total = m.resident + m.island_ledger;
+  m.resident = m.ledger + m.export_;   // held while an island runs (the export only at the end; counted conservatively)
+  m.total = m.resident + m.inputs + m.island_ledger;
   return m;
+}
+// The plan's k (INTERFACES §7; review PR37 N-2): max(8, q90(pi_0 size) + 1) from setup.bin's size_logmass -- the same
+// arithmetic as WP3's plan_island (src/island/island_impl.h:1020-1024; calibration runs before any k_store exists).
+// q90 = the smallest k with P(|S| <= k) >= 0.90 (0 if rounding never reaches 0.90, as WP3).
+inline double calib_k_plan(const std::vector<double>& size_logmass) {
+  double k_pi0 = 0, acc = 0;
+  for (size_t k = 0; k < size_logmass.size(); ++k) { acc += std::exp(size_logmass[k]); if (acc >= 0.90) { k_pi0 = (double)k; break; } }
+  return std::max(8.0, k_pi0 + 1.0);
 }
 
 // led: the calibration ledger with the tables already offered (leaders on, cfg.islands = 4). The evaluator factory
-// scores V, the local searches and the inherited export. resident / budget: passed to every island (INTERFACES §7).
+// scores V, the local searches and the inherited export. resident_bytes / mem_budget: passed unchanged to every island
+// (IslandSpec's rule: mem_budget is the whole task's budget, resident_bytes = CalibMemPlan::resident).
 template <class Factory>
 CalibOutcome calibrate_with(IslandRunner& runner, Ledger&& led, Factory& fac, const Settings& s, const merge::TailSettings& ts,
-                            uint64_t resident_bytes = 0, uint64_t island_budget = 0, bool test_force_local_limit_pilot = false) {
+                            uint64_t resident_bytes = 0, uint64_t mem_budget = 0, bool test_force_local_limit_pilot = false) {
   CalibOutcome out;
   out.led = std::move(led);
   LedgerBackend<Factory> be(runner, out.led, fac, ts, s.threads);
-  be.resident_bytes = resident_bytes; be.mem_budget = island_budget; be.test_force_local_limit_pilot = test_force_local_limit_pilot;
+  be.resident_bytes = resident_bytes; be.mem_budget = mem_budget; be.test_force_local_limit_pilot = test_force_local_limit_pilot;
   Driver drv(be, s);
   out.co = drv.run();
   out.stages = be.stages();
   out.led.compact();
-  // inherited export (core/cpp/v3_core.cpp:728-736): every model of the three stores, lexicographic, scored
-  std::vector<ModelView> U = sorted_unique_models({&out.led.top, &out.led.lead0, &out.led.lead1}, false);
-  InheritedFlat& f = out.inherited;
-  for (auto& v : U) { f.idx.insert(f.idx.end(), v.begin(), v.end()); f.ptr.push_back((int64_t)f.idx.size()); }
-  f.F.assign(U.size(), 0); f.lg0.assign(U.size(), 0); f.logm.assign(U.size(), 0); f.d.assign(U.size(), 0);
-  for_chunks(U.size(), 256, s.threads, [&](size_t, size_t b, size_t e) {
-    auto ev = fac.make(); Model S;
-    for (size_t i = b; i < e; ++i) { ModelView v = f.model(i); S.assign(v.begin(), v.end()); ev(S, f.logm[i], f.lg0[i], f.d[i], f.F[i]); }
-  });
+  // inherited export (core/cpp/v3_core.cpp:728-736): every model of the three stores, lexicographic, scored -- only for
+  // a completed calibration: a non-ok calib.bin carries no inherited models (wp4_io.h), and scoring them after a stop
+  // could replace the stop's status with a scorer failure (review PR37 N-3: a data-level numerical failure stops the
+  // pilot while the stores hold table models that the scorer would now fail on). Core's export only lists the models.
+  if (out.co.status == CalStatus::ok) {
+    std::vector<ModelView> U = sorted_unique_models({&out.led.top, &out.led.lead0, &out.led.lead1}, false);
+    InheritedFlat& f = out.inherited;
+    for (auto& v : U) { f.idx.insert(f.idx.end(), v.begin(), v.end()); f.ptr.push_back((int64_t)f.idx.size()); }
+    f.F.assign(U.size(), 0); f.lg0.assign(U.size(), 0); f.logm.assign(U.size(), 0); f.d.assign(U.size(), 0);
+    for_chunks(U.size(), 256, s.threads, [&](size_t, size_t b, size_t e) {
+      auto ev = fac.make(); Model S;
+      for (size_t i = b; i < e; ++i) { ModelView v = f.model(i); S.assign(v.begin(), v.end()); ev(S, f.logm[i], f.lg0[i], f.d[i], f.F[i]); }
+    });
+  }
   const Store& t = out.led.top;
   out.k_store = t.size() ? (double)t.pool.size() / (double)t.size() : 0.0;
   return out;

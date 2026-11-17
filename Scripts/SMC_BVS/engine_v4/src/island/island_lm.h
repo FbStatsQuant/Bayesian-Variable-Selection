@@ -42,7 +42,7 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
   gb.inv.resize((size_t)gN * m);
   const bool ipre = !csrc;   // K2: I proposals ahead (compat keeps core's serial stream order)
   // Everything the order phase's parallel region touches is sized here, serially (review PR53: no allocation inside the
-  // region): the nongibbs-label lists, the proposal models, the per-thread order / model / block-list scratch, and the
+  // region): the nongibbs-label lists, the proposal models, the per-thread order / model scratch, and the
   // scorers' Cholesky buffers (up to the plan's support size kq; a larger draw grows them, under the oom_guard)
   const int kmod = D.K + 1, kq = std::max(1, std::min<int>(D.K, (int)std::ceil(3.0 * std::max(1.0, k_est))));
   gb.ng.resize(gN); for (auto& v : gb.ng) { v.clear(); v.reserve((size_t)(m - p)); }
@@ -51,7 +51,7 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
   for (int t = 0; t < NT; ++t) {
     LmScratch& z = gb.scr[t];
     if ((int)z.ord.size() < m) z.ord.resize(m);
-    z.imodel.reserve((size_t)kmod); z.nz.reserve((size_t)kmod);
+    z.imodel.reserve((size_t)kmod);   // (the block list of the draw is StartView's per-thread scratch, prepared in the constructor)
     scorers[t]->reserve(kq);
   }
   if (cfg.test_order_phase) cfg.test_order_phase->store(true);   // tests only (operator-new counting)
@@ -113,6 +113,7 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
     for (int s = 0; s < nsup; ++s) { auto& c = gb.sup[s]; if (c.fast && c.add_ok) gb.act.insert(gb.act.end(), c.S.begin(), c.S.end()); else if (!c.fast) KS.slow_supports++; }
     std::sort(gb.act.begin(), gb.act.end()); gb.act.erase(std::unique(gb.act.begin(), gb.act.end()), gb.act.end());
     const int nA = (int)gb.act.size();
+    KS.act_cols += (uint64_t)nA;   // D-30 counter (WP7 O2)
     for (int s = 0; s < nsup; ++s) {
       auto& c = gb.sup[s]; c.arow.assign(c.k, 0);
       if (c.fast && c.add_ok) for (int a = 0; a < c.k; ++a) c.arow[a] = (int)(std::lower_bound(gb.act.begin(), gb.act.end(), c.S[a]) - gb.act.begin());

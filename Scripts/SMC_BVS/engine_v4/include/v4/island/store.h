@@ -125,7 +125,7 @@ inline uint64_t pow2_ceil(uint64_t x) { uint64_t n = 16; while (n < x) n <<= 1; 
 struct StoreBuffer {
   std::vector<double> v; std::vector<uint64_t> h, off; std::vector<uint16_t> len; std::vector<int32_t> pool;
   std::shared_ptr<const Kept> snap; uint64_t snap_gen = ~0ull;   // the worker's snapshot of the kept run
-  uint64_t n_dup_dropped = 0;
+  uint64_t n_dup_dropped = 0, n_floor_dropped = 0;
   size_t size() const { return v.size(); }
   void clear() { v.clear(); h.clear(); off.clear(); len.clear(); pool.clear(); }
   void push(double val, const int32_t* S, uint32_t k, uint64_t hash) {
@@ -180,8 +180,14 @@ class TopStore {
   // hot path, any thread, its own buffer
   std::atomic<bool> nan_offered{false};   // INTERFACES v0.1.3: a NaN value is refused (internal_error, raised by the owner
                                           // outside any parallel region: check_nan())
+  // D-29 offer floor (INTERFACES v0.1.15 §4.1, v0.1.17): a constant of the island's TOP store, set before the run;
+  // -inf = none. An offer with v < floor is dropped (ties kept). The effective reject threshold is max(cutoff, floor):
+  // cutoff() / tau are unchanged (still -inf below cap entries), and compact / restore / the duplicate filter never
+  // look at the floor. The store is then the top c of the offers v >= floor (may hold fewer than c), I1 unchanged.
+  double floor = NEG_INF;
   inline void offer(StoreBuffer& b, double val, const int32_t* S, uint32_t kk, uint64_t hsh) {
     if (std::isnan(val)) { nan_offered.store(true, std::memory_order_relaxed); return; }
+    if (val < floor) { ++b.n_floor_dropped; return; }
     if (cap == 0 || val < tau.load(std::memory_order_relaxed)) return;
     if (dup_filter) {
       refresh(b);

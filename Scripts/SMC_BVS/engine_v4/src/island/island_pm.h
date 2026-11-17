@@ -22,8 +22,7 @@ void IslandEngine<A>::draw_indep(int i, uint32_t pos, const RoundCtx& rc, BitSco
     const Address a0 = addr(rc.xph, rc.ustage, i1, pos, 0);
     const v4::Ctr4 ctr = v4::address_ctr(a0); const v4::Key2 kk = v4::address_key(a0);
     auto nu8 = [&](const uint32_t* sl, double* o8) { philox8_word(ctr.data(), kk.data(), 0, sl, o8); };
-    if (Z) draw_pi0_fast(st, [&](uint32_t slot) { return U(slot); }, nu8, T, Z->nz);
-    else draw_pi0_fast(st, [&](uint32_t slot) { return U(slot); }, nu8, T);
+    draw_pi0_fast(st, [&](uint32_t slot) { return U(slot); }, nu8, T);   // StartView: per-thread scratch, prepared before the regions
   }
   if (cfg.test_fail_indep == i && rc.xph == X_BRIDGE && rc.ustage == (uint32_t)cfg.test_fail_indep_stage)   // test hook
     throw v4::NumericalFailure("score failed (test hook: I proposal)");

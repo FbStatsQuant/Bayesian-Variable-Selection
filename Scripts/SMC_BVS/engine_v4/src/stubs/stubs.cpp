@@ -4,7 +4,6 @@
 
 namespace v4 {
 #define V4_STUB(ns, wp) namespace ns { Json run(const Json&) { throw Error(Status::internal_error, #ns ": not implemented (" wp ")"); } }
-V4_STUB(setup, "WP2")
-V4_STUB(island, "WP3")
+// (no stubs remain: setup is WP2 src/setup, island is WP3 src/island/island_cmd.cpp)
 #undef V4_STUB
 }  // namespace v4

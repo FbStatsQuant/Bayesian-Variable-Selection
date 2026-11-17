@@ -54,13 +54,20 @@ void Store::compact() {
   std::vector<char> drop(m, 0);
   // 1. one entry per model (INTERFACES §4.1, class-A values are path-dependent maxima): staged entries grouped by
   //    (hash, model), best first; then matched against the kept run through its (hash, model) index (linear walk).
+  //    The key sort runs on contiguous (hash, index) pairs, so most comparisons never touch hash[] or the pool.
   std::vector<uint32_t> sh(ns);
-  std::iota(sh.begin(), sh.end(), (uint32_t)nkept_);
-  std::sort(sh.begin(), sh.end(), [&](uint32_t a, uint32_t b) {
-    if (key_less(a, b)) return true;
-    if (key_less(b, a)) return false;
-    return better(v[a], model(a), v[b], model(b));
-  });
+  {
+    std::vector<std::pair<uint64_t, uint32_t>> kp(ns);
+    for (size_t t = 0; t < ns; ++t) kp[t] = {hash[nkept_ + t], (uint32_t)(nkept_ + t)};
+    std::sort(kp.begin(), kp.end(), [&](const std::pair<uint64_t, uint32_t>& x, const std::pair<uint64_t, uint32_t>& y) {
+      if (x.first != y.first) return x.first < y.first;
+      const uint32_t a = x.second, b = y.second;
+      if (lex_less(model(a), model(b))) return true;
+      if (lex_less(model(b), model(a))) return false;
+      return better(v[a], model(a), v[b], model(b));
+    });
+    for (size_t t = 0; t < ns; ++t) sh[t] = kp[t].second;
+  }
   {
     size_t k = 0;
     for (size_t t = 0; t < ns; ++t) {
@@ -130,12 +137,61 @@ void Store::merge(const Store& o) {
 bool Store::check_invariants() const {
   if (staging() != 0 || v.size() > cap) return false;
   for (size_t i = 1; i < v.size(); ++i)
-    if (!better(v[i - 1], model(i - 1), v[i], model(i))) return false;   // strict => sorted and no duplicates
+    if (!better(v[i - 1], model(i - 1), v[i], model(i))) return false;   // strictly sorted (not enough for one per model)
   if (cap > 0 && v.size() == cap && cutoff() != v.back()) return false;
-  // one entry per model (class-A values are path-dependent maxima): the (hash, model) index has no equal neighbours
+  // one entry per model, independent of the index: a fresh (hash, model) sort has no equal neighbours
+  {
+    std::vector<std::pair<uint64_t, uint32_t>> kp(v.size());
+    for (size_t i = 0; i < v.size(); ++i) kp[i] = {hash[i], (uint32_t)i};
+    std::sort(kp.begin(), kp.end(), [&](const std::pair<uint64_t, uint32_t>& x, const std::pair<uint64_t, uint32_t>& y) {
+      if (x.first != y.first) return x.first < y.first;
+      return lex_less(model(x.second), model(y.second));
+    });
+    for (size_t t = 1; t < kp.size(); ++t)
+      if (kp[t].first == kp[t - 1].first && same_model(model(kp[t].second), model(kp[t - 1].second))) return false;
+  }
+  // the index: same size, every entry in range (checked before any key_less read), strictly increasing keys
+  // (size + range + strict order => a permutation of the kept run in key order)
   if (hidx_.size() != v.size()) return false;
+  for (uint32_t x : hidx_) if (x >= v.size()) return false;
   for (size_t t = 1; t < hidx_.size(); ++t) if (!key_less(hidx_[t - 1], hidx_[t])) return false;
   return true;
+}
+
+void Store::load_unique_sorted(size_t n, const double* vv, const uint64_t* hh, const uint64_t* oo, const uint16_t* ll,
+                               const int32_t* pp, size_t pool_n) {
+  if (!v.empty()) throw Error(Status::internal_error, "load_unique_sorted: the store is not empty");
+  if (n > cap) throw Error(Status::invalid_input, "store load: " + std::to_string(n) + " entries > cap " + std::to_string(cap));
+  uint64_t pool_need = 0;
+  for (size_t i = 0; i < n; ++i) {
+    if (ll[i] > pool_n || oo[i] > pool_n - ll[i]) throw Error(Status::invalid_input, "store load: pool range out of bounds");
+    if (vv[i] != vv[i]) throw Error(Status::invalid_input, "store load: NaN value");
+    ModelView S(pp + oo[i], ll[i]);
+    if (!is_sorted_unique(S)) throw Error(Status::invalid_input, "store load: a model is not sorted / has repeats");
+    if (i > 0 && !better(vv[i - 1], ModelView(pp + oo[i - 1], ll[i - 1]), vv[i], S))
+      throw Error(Status::invalid_input, "store load: entries not strictly sorted under the store order");
+    pool_need += ll[i];
+  }
+  v.assign(vv, vv + n); hash.assign(hh, hh + n); len.assign(ll, ll + n);
+  off.resize(n); pool.clear(); pool.reserve(pool_need);
+  for (size_t i = 0; i < n; ++i) { off[i] = pool.size(); pool.insert(pool.end(), pp + oo[i], pp + oo[i] + ll[i]); }
+  // the model index by one pair sort; equal neighbours = the same model twice = not a valid store
+  std::vector<std::pair<uint64_t, uint32_t>> kp(n);
+  for (size_t i = 0; i < n; ++i) kp[i] = {hash[i], (uint32_t)i};
+  std::sort(kp.begin(), kp.end(), [&](const std::pair<uint64_t, uint32_t>& x, const std::pair<uint64_t, uint32_t>& y) {
+    if (x.first != y.first) return x.first < y.first;
+    return lex_less(model(x.second), model(y.second));
+  });
+  hidx_.resize(n);
+  for (size_t t = 0; t < n; ++t) {
+    if (t > 0 && kp[t].first == kp[t - 1].first && same_model(model(kp[t].second), model(kp[t - 1].second))) {
+      init(cap, ord);
+      throw Error(Status::invalid_input, "store load: the same model appears twice (I1)");
+    }
+    hidx_[t] = kp[t].second;
+  }
+  nkept_ = n;
+  if (n == cap && cap > 0 && v[n - 1] > cutoff()) cut_.store(v[n - 1], std::memory_order_relaxed);
 }
 
 uint64_t Store::content_hash() const {
