@@ -34,6 +34,14 @@ std::string write_island_file(const std::string& path, const IslandRun& r, Arith
   if (done) { m["logZ"] = r.logZ; m["logZ_hex"] = hex64(lz); }
   Json t = Json::object(); t["total"] = r.ks.t_total; t["init"] = r.ks.t_init; m["timings"] = t;
   { OfferFloor of; of.f = r.offer_floor; of.calib = r.offer_floor_calib; offer_floor_to_meta(m, of); }   // D-29 (v0.1.15 §5.1)
+  if (!r.cost.empty()) {   // D-30 per-step cost record (WP7 O2; INTERFACES §5.1): the header plus one column per field
+    Json c = r.cost_header.type() == Json::OBJ ? r.cost_header : Json::object();
+    const int mm = c.contains("m") ? (int)c.at("m").i64() : 0;
+    Json cols = Json::object();
+    for (const StepCost& row : r.cost) { const Json j = cost_row_json(row, mm); for (auto& kv : j.items()) cols[kv.first].push(kv.second); }   // j outlives the loop
+    c["rows"] = (int64_t)r.cost.size(); c["columns"] = cols;
+    m["cost"] = c;
+  }
   w.add_json("meta", m);
   // stage table and terminal rounds (no estimate content; written in every status)
   const size_t T = r.stages.size();
