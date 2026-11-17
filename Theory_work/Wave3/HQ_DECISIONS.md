@@ -715,3 +715,9 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - **This week:** the Theory Dept is paced: must-do only, ≤ 2 concurrent agents, Sonnet/Haiku routine, the audit Fable idle, no new tickets.
   - **Next week:** SMC uses **1 Claude Ultra account + 1 reset** for track D's last strike + 2–3 Lean proofs; **BNP Lean gets the other Ultra**. The owner names the exact account at the start of the week; HQ re-points the SMC threads then.
   - Engineering continues its steady medium share (unchanged).
+- 2026-11-17/18. This week's must-do recordings landed:
+  - track A 63144bc1;
+  - rule (c) 9441be8d;
+  - relabel 2676e71f (only ST → KER; R4/SAMP:C/DIST-C/OVL conditional on W1-N1:B/F, to be line-checked post-freeze);
+  - D95 fe05ccec: **rows 3.1/3.2 fully discharged**; P1-Inventory CORRECTION A-7; L2-S3 code-checked; A1/A2 note only.
+  - The last item before the freeze is the READER editorial round (card 16 etc.).
