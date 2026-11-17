@@ -461,3 +461,4 @@
 - 2026-11-17 13:54 CST Track V BOUND (d2b82652): W3-AUDIT-V:VIS, R3 Opus 9.6 (Sol V-R1 9.5); scope sentence + API card → HQ; recording queued. Track A lead free.
 - 2026-11-17 13:55 CST D118: VISIBILITY_SCOPE note placed in from_theory/ (+ README).
 - 2026-11-17 13:55 CST W3-D3 CP3 (057e7b05): Thm2SG/B3w/ExSG council R2 Opus 9.3 (R1 both ACCEPT claims, gates FAIL on prose S1, fixed), bound R2f c52866ef; all inputs PROVED-CHECKED (clean). Joint H5 card drafted: Theory_work/Dept/H5_CARD_PUSH_2026-11-17.md.
+- 2026-11-17 13:56 CST D119 relayed to the recorder. All push tickets at CP3; leads now: track V done, D2/D3/D5P done → only the recorder runs (+ W3-D5P waiting on Engineering).
