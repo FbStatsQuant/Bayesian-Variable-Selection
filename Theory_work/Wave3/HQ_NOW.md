@@ -45,6 +45,11 @@
 - **Mon 11-23, first item: an HQ + consultant ("VP") strategy session** on whether to do more about the algorithm theorem's novel assumptions (visibility, leakage set) beyond #5′. Options to weigh: weaker or primitive sufficient conditions, a design-family corollary, a different route for strong-factor data. Bring a recommendation to the owner.
 - **Queued for next week: a "precedent" note per non-Song–Liang assumption** (where the same type of condition appears in the literature). Theory verifies each citation against the paper (Sonnet/Haiku fetch + Opus check); Writing inserts it in the manuscript §5.
 
+## OWNER 11-17 (AGREED): PRE-LEAN CODEX PASS, after this week's recordings and the SOL62 A/B; size per the owner's Codex surplus or a reset he may cash in
+- **Sol 6.2 final-text confirmation pass (≈ 6–8 calls):** every result whose last round was Opus-only (C1 code audit; READER card R4/R5; W3-D2; W3-D3; track V R4; #5′ / Cor 6L). Findings only, important points only.
+- **Astra adversarial "try to break it" read (≈ 3–4 calls):** Thm 9; the presented Thm 2 (Thm2SG); Thm 6 + Cor 6L; optionally the Thm 3 lower bound.
+- Drop Astra first if Codex is tight. Accept only important findings.
+
 ## OWNER 11-17: OPTIONAL CODEX REVIEW OF KEY THEOREMS (only on the owner's order; depends on his Codex situation)
 - Later, **after the owner's explicit order:** Sol and/or Astra review the key theorems, especially those whose final diff rounds were Opus-only (D91/D99 carriers: C1, READER R4/R5, track D #2).
 - **Only important suggestions are accepted; no nitpicking.** Not before his word.
