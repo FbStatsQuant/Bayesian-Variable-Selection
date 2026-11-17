@@ -16,6 +16,9 @@ Writes, for one batch, everything the manager deploys to NOTS `~/SMC_Engineering
                           calibration pilot island alone (v4_pilot_island; H-11's 10^6 calibration pilot), cost record
                           in <run>/cost_pilot/
   submit_pilot.sh         (plan key "pilot" only) submits setup -> pilot and nothing else; its own worst case
+  stage_isa_check.sbatch  (plan key "isa_check" only; D-32) one task per fit, afterok on its island array: island r re-run
+                          with the PORTABLE build (bin/smcbvs4_portable) and compared with the island_isa run
+                          (p1m_stage_cost.py isa: meta.output_hash + every non-meta section hash); fails if they differ
   ledger_row.md           the LEDGER.md row (worst case = sum of allocated CPUs x time limit, billed core-h)
   SHA256SUMS              hashes of every generated file (submit.sh verifies them first)
   plan.resolved.json      the plan with every default filled in
@@ -117,6 +120,12 @@ def resolve(plan):
         if h > QOS_WALL_H or h > P["max_task_hours"] + 1e-9:
             raise PlanError("pilot: %s exceeds max_task_hours = %.2f" % (pl["time"], P["max_task_hours"]))
         pl.setdefault("with_ledger", 1)
+    if P.get("isa_check") is not None:              # D-32: T2 across island ISAs (one island re-run, portable build)
+        if not P["island_isa"]:
+            raise PlanError("isa_check needs island_isa (the portable build is the other side)")
+        r = P["isa_check"].get("island")
+        if not isinstance(r, int) or r < 1:
+            raise PlanError("isa_check: island must be an integer >= 1")
     if not P.get("fits"):
         raise PlanError("plan has no fits")
     seen = set()
@@ -156,7 +165,13 @@ def resolve(plan):
                 raise PlanError("fit %s stage %s: mem like 32G" % (f["run_id"], st))
         f["resources"] = res
     F = len(P["fits"])
+    if P.get("isa_check") is not None:
+        for f in P["fits"]:
+            if P["isa_check"]["island"] > f["Rp"]:
+                raise PlanError("isa_check: island %d > Rp of fit %s" % (P["isa_check"]["island"], f["run_id"]))
     tasks = sum(3 + f["Rp"] for f in P["fits"]) + F    # setup + calibrate + Rp islands + merge + eval
+    if P.get("isa_check") is not None:
+        tasks += F                                       # + one portable island re-run per fit (D-32)
     P["n_tasks"] = tasks
     if tasks > TASK_CAP:
         raise PlanError("batch has %d tasks > the 150-task cap: split it into waves (fewer fits per batch)" % tasks)
@@ -166,6 +181,8 @@ def resolve(plan):
             r = f["resources"][st]
             n = f["Rp"] if st == "islands" else 1
             wc += n * int(r["cpus"]) * hours(r["time"])
+        if P.get("isa_check") is not None:   # the portable island re-run: one island task
+            wc += int(f["resources"]["islands"]["cpus"]) * hours(f["resources"]["islands"]["time"])
     P["worst_case_core_h"] = round(wc, 1)
     if P.get("pilot") is not None:                  # submit_pilot.sh: setup + pilot per fit
         P["worst_case_pilot_core_h"] = round(sum(int(f["resources"]["setup"]["cpus"]) * hours(f["resources"]["setup"]["time"])
@@ -232,7 +249,7 @@ nice -n 19 make -C "$B" -j3 smcbvs4{pilot_target}
 cp "$B/smcbvs4" "$SCR/bin/smcbvs4"
 "$SCR/bin/smcbvs4" version
 sha256sum "$SCR/bin/smcbvs4" | tee "$SCR/bin/smcbvs4.sha256"
-{pilot_copy}"""
+{pilot_copy}{portable}"""
 
 FIT_TABLE = """# fit table: index (1-based) -> run_id
 RUNS=({runs})
@@ -347,6 +364,25 @@ def generate(P, out, dept):
         txt += 'printf \'{"stage":"pilot","run_id":"%%s","job":"%%s","task":"%%s","end":"%%s"}\\n\' "$RUN_ID" "${SLURM_JOB_ID}" "${SLURM_ARRAY_TASK_ID:-}" "$(date -u +%%FT%%TZ)" >> "$DEPT/scratch/runs/%s/ends.jsonl"\n' % batch
         write(os.path.join(out, "stage_pilot.sbatch"), txt, 0o755)
         files.append("stage_pilot.sbatch")
+    if P.get("isa_check") is not None:   # D-32: island r again with the portable build; same science or the task fails
+        r0 = P["fits"][0]["resources"]["islands"]
+        wc = sum(int(f["resources"]["islands"]["cpus"]) * hours(f["resources"]["islands"]["time"]) for f in P["fits"])
+        txt = HEADER.format(name="stage_isa_check.sbatch", batch=batch, stage="isa_check", wc=wc, cpus=r0["cpus"], mem=r0["mem"],
+                            time=r0["time"], dept=dept, binary=P["binary"])
+        txt += FIT_TABLE.format(runs=runs)
+        txt += fit_selector(False).replace("{batch}", batch)
+        txt += SKIP_IF_OUTCOME.format(stage="isa_check", batch=batch)
+        R = P["isa_check"]["island"]
+        txt += ('R=%d\n' % R
+                + 'python3 "$SCR/p1m_manifest.py" fill --template "$MAN/island.json" --out "$RUN/manifests/island_${R}_portable.json" '
+                  '--bin "$SCR/bin/smcbvs4_portable" --set params.id=$R\n'
+                + '"$SCR/bin/smcbvs4_portable" island --manifest "$RUN/manifests/island_${R}_portable.json" --threads "$OMP_NUM_THREADS" '
+                  '--mem-budget "$MEMB" --out "$RUN/island_${R}_portable.bin" > "$RUN/log/island_${R}_portable.log" 2>&1\n'
+                + 'python3 "$SCR/p1m_stage_cost.py" isa "$RUN/island_${R}.bin" "$RUN/island_${R}_portable.bin" --bin "$BIN" '
+                  '--json "$RUN/isa_check.json"\n')
+        txt += 'printf \'{"stage":"isa_check","run_id":"%%s","job":"%%s","task":"%%s","end":"%%s"}\\n\' "$RUN_ID" "${SLURM_JOB_ID}" "${SLURM_ARRAY_TASK_ID:-}" "$(date -u +%%FT%%TZ)" >> "$DEPT/scratch/runs/%s/ends.jsonl"\n' % batch
+        write(os.path.join(out, "stage_isa_check.sbatch"), txt, 0o755)
+        files.append("stage_isa_check.sbatch")
     write(os.path.join(out, "env.sh"), ENV_SH.format(batch=batch))
     files.append("env.sh")
     has_pilot = P.get("pilot") is not None
@@ -355,7 +391,14 @@ def generate(P, out, dept):
         isa=(" -DV4_ISLAND_ISA=" + P["island_isa"]) if P["island_isa"] else "",
         pilot_target=" v4_pilot_island" if has_pilot else "",
         pilot_copy=('cp "$B/v4_pilot_island" "$SCR/bin/v4_pilot_island"\nsha256sum "$SCR/bin/v4_pilot_island" | tee "$SCR/bin/v4_pilot_island.sha256"\n'
-                    if has_pilot else "")), 0o755)
+                    if has_pilot else ""),
+        portable=('# D-32: the portable island build (no -DV4_ISLAND_ISA) for the cross-ISA island check (stage_isa_check)\n'
+                  'BP=$SCR/build_portable; mkdir -p "$BP"\n'
+                  'nice -n 19 cmake -S "$SCR/code/Scripts/SMC_BVS/engine_v4" -B "$BP" -DCMAKE_BUILD_TYPE=Release -DV4_TESTS=OFF > "$BP/cmake.log"\n'
+                  'nice -n 19 make -C "$BP" -j3 smcbvs4\n'
+                  'cp "$BP/smcbvs4" "$SCR/bin/smcbvs4_portable"\n'
+                  'sha256sum "$SCR/bin/smcbvs4_portable" | tee "$SCR/bin/smcbvs4_portable.sha256"\n'
+                  if P.get("isa_check") is not None else "")), 0o755)
     files.append("build.sh")
     # manifests (templates + one run manifest per run)
     for f in P["fits"]:
@@ -426,7 +469,7 @@ SCR=$DEPT/scripts/{batch}
 cd "$SCR"
 sha256sum --quiet -c SHA256SUMS || {{ echo "FATAL: scripts differ from SHA256SUMS" >&2; exit 66; }}
 [[ -x $SCR/{binary} ]] || {{ echo "FATAL: binary $SCR/{binary} missing" >&2; exit 66; }}
-[[ -d $DEPT/scratch/slurm_out && -d $DEPT/scratch/tmp ]] || {{ echo "FATAL: scratch/slurm_out or scratch/tmp missing" >&2; exit 66; }}
+{portable_check}[[ -d $DEPT/scratch/slurm_out && -d $DEPT/scratch/tmp ]] || {{ echo "FATAL: scratch/slurm_out or scratch/tmp missing" >&2; exit 66; }}
 mkdir -p "$DEPT/scratch/runs/{batch}"
 LOG=$DEPT/scratch/runs/{batch}/submissions.jsonl
 log() {{ printf '{{"stage":"%s","fit":"%s","job":"%s","submitted_utc":"%s"}}\\n' "$1" "$2" "$3" "$(date -u +%FT%TZ)" | tee -a "$LOG"; }}
@@ -436,12 +479,16 @@ jc=$("$SB" --parsable --array=1-{F} --dependency=aftercorr:$js stage_calibrate.s
 for i in $(seq 1 {F}); do
   rp=$(sed -n "${{i}}p" fit_rp.txt)
   ji=$("$SB" --parsable --array=1-$rp{thr} --dependency=afterok:${{jc}}_$i stage_islands.sbatch $i); log islands "${{RUNS[$((i-1))]}}" "$ji"
-  jm=$("$SB" --parsable --dependency=afterok:$ji stage_merge.sbatch $i); log merge "${{RUNS[$((i-1))]}}" "$jm"
+{isa_line}  jm=$("$SB" --parsable --dependency=afterok:$ji stage_merge.sbatch $i); log merge "${{RUNS[$((i-1))]}}" "$jm"
   je=$("$SB" --parsable --dependency=afterok:$jm stage_eval.sbatch $i); log eval "${{RUNS[$((i-1))]}}" "$je"
 done
 echo "submitted; ledger row: see ledger_row.md (fill job ids from $LOG)"
 """.format(batch=batch, F=F, ntask=P["n_tasks"], wc=P["worst_case_core_h"], ncalls=2 + 3 * F, dept=dept,
-           binary=P["binary"], runs=runs, thr=thr)
+           binary=P["binary"], runs=runs, thr=thr,
+           portable_check=('[[ -x $SCR/bin/smcbvs4_portable ]] || { echo "FATAL: binary $SCR/bin/smcbvs4_portable missing (build.sh, D-32)" >&2; exit 66; }\n'
+                           if P.get("isa_check") is not None else ""),
+           isa_line=('  jx=$("$SB" --parsable --dependency=afterok:$ji stage_isa_check.sbatch $i); log isa_check "${RUNS[$((i-1))]}" "$jx"\n'
+                     if P.get("isa_check") is not None else ""))
     write(os.path.join(out, "submit.sh"), sub, 0o755)
     files.append("submit.sh")
     if P.get("pilot") is not None:   # setup -> pilot only (the fit itself waits for HQ's GO; its setup.bin is reused)
@@ -464,6 +511,9 @@ echo "submitted; ledger row: see ledger_row.md (fill job ids from $LOG)"
     with open(os.path.join(here, "p1m_manifest.py")) as fh:
         write(os.path.join(out, "p1m_manifest.py"), fh.read(), 0o755)
     files.append("p1m_manifest.py")
+    with open(os.path.join(here, "p1m_stage_cost.py")) as fh:   # T5 report and the D-32 isa check (WP7 O5)
+        write(os.path.join(out, "p1m_stage_cost.py"), fh.read(), 0o755)
+    files.append("p1m_stage_cost.py")
     # ledger row
     now = P["created_utc"]
     row = ("| %s | %s (%d fits, %d tasks; dry run %s) | %s | (from submissions.jsonl) | %.1f | — | generated |\n"

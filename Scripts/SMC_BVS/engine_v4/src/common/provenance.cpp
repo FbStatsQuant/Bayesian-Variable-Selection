@@ -8,6 +8,10 @@
 
 #include "v4_git.h"   // generated at build time: V4_GIT_COMMIT = git rev-parse HEAD + "-dirty" if tracked files changed
 
+#ifndef V4_ISLAND_ISA_STR
+#define V4_ISLAND_ISA_STR ""
+#endif
+
 namespace v4 {
 
 static Json make_block(bool with_self_test) {
@@ -17,6 +21,8 @@ static Json make_block(bool with_self_test) {
     j["git_commit"] = V4_GIT_COMMIT;
     j["compiler"] = std::string("g++ ") + __VERSION__;
     j["flags"] = V4_BIT_FLAGS_STR;
+    // D-32 (WP7 O5): the -march of the island sources (cmake -DV4_ISLAND_ISA; set on this file by island.cmake)
+    j["island_isa"] = std::string(V4_ISLAND_ISA_STR).empty() ? std::string("portable") : std::string(V4_ISLAND_ISA_STR);
     auto li = pm::libm_info();
     Json l = Json::object();
     l["path"] = li.path; l["sha256"] = li.sha256; l["glibc"] = li.gnu_libc_version; l["fma_variant"] = li.fma_variant;

@@ -14,6 +14,8 @@ target_link_libraries(v4_bit PUBLIC v4_a)
 # calib::run (WP4's calibrate command, which runs the calibration islands) and WP4's island-file test included
 set(V4_ISLAND_SOURCES ${V4_ISLAND_DIR}/island_bit.cpp ${V4_ISLAND_DIR}/island_a.cpp ${V4_ISLAND_DIR}/island_file.cpp tests/test_island.cpp tests/test_island_golden.cpp tools/bench_island.cpp tools/pilot_island.cpp
     src/calib/calib_run.cpp tests/test_wp4_io.cpp)   # test_wp4_io writes island files (until m9 moves the API types out of the ISA namespace)
+# D-32 (WP7 O5): the binary block records the island ISA (provenance.cpp: "island_isa"; "portable" without the option)
+set_property(SOURCE src/common/provenance.cpp APPEND PROPERTY COMPILE_DEFINITIONS V4_ISLAND_ISA_STR="${V4_ISLAND_ISA}")
 # -Wno-psabi: the 64-byte vector types are passed between inline functions only (no ABI boundary)
 if(V4_ISLAND_ISA)
   set_source_files_properties(${V4_ISLAND_SOURCES} PROPERTIES COMPILE_OPTIONS "-march=${V4_ISLAND_ISA};-Wno-psabi")
