@@ -14,6 +14,7 @@ OK            [STATEMENT.md] cpp/v3_start.h:272-272 sha=7a6fb31f17 | if (tie_dp 
 OK            [STATEMENT.md] cpp/v3_core.cpp:18-18 sha=cb5fa3fa29 | stop("object has no C++ pointer (ptr)");
 OK            [STATEMENT.md] cpp/v3_core.cpp:480-480 sha=3fe6e0943e | if (E.guard && E.guard->check(sec_ls0, "ls0", local_event(o.tier, -1, PH_LS0))) status = "resource_limit";
 OK            [STATEMENT.md] v3_calib.R:170-170 sha=0afbed03df | if (status == "ok" && is.null(last$grid)) status <- if (e == 1) "schedule_limit" else "grid_failure_no_escalat
+OK            [STATEMENT.md] Theory_work/Wave1C/FINAL/sections/s6_delivery.tex:37-44 sha=955eed009e | \texttt{allocation\$mem\_gb} $\ge\mathrm{mem}_n/2^{30}$, \texttt{allocation\$hours} $\ge\mathrm{time}_n/3600$,
 OK            [STATEMENT.md] cpp/v3_core.cpp:480-480 sha=3fe6e0943e | if (E.guard && E.guard->check(sec_ls0, "ls0", local_event(o.tier, -1, PH_LS0))) status = "resource_limit";
 OK            [STATEMENT.md] Theory_work/Wave1C/C-DLV/INVENTORY.md:80-81 sha=fe5fed41fa | Under (d)-premises EX-A, IDEAL-W, MACH and valid declared inputs, and after additionally excluding the shipped
 OK            [STATEMENT.md] v3_calib.R:122-125 sha=4501bbf810 | if (isTRUE(grid_fallback) && trig$grid_failure && tier == 1) {   # tier 0 failures escalate as in v3
@@ -21,10 +22,12 @@ OK            [STATEMENT.md] v3_calib.R:163-170 sha=af82929290 | if (status == "
 OK            [STATEMENT.md] Theory_work/State_of_Project/sections/02_method.tex:189-192 sha=2db75e8430 | \item \textbf{Cut:} top-down from the root; any node with more than $B$ members is split into its two children
 OK            [STATEMENT.md] v3_preprocess.R:99-107 sha=39b58e4bbe | if (!is.matrix(X) || !is.numeric(X) || !typeof(X) %in% c("integer", "double"))
 OK            [STATEMENT.md] v3_fit.R:114-117 sha=a671f24bad | ls0_wc <- isTRUE(ls0) && !identical(getOption("v3.ls0_cap", "ell_n_plus_mode"), "ell_n")
-OK            [STATEMENT.md] v3_fit.R:144-148 sha=a013da5a09 | pf_fun <- function(e) {
-OK            [STATEMENT.md] v3_calib.R:157-157 sha=382f59a78e | if (!is.null(preflight) && isTRUE(preflight(1))) { status <- "resource_limit"; blocked <- "resource_limit"; br
 OK            [STATEMENT.md] v3_fit.R:43-47 sha=5a8a22a0fa | if (isTRUE(ls0_worst_case)) {
 OK            [STATEMENT.md] v3_fit.R:61-66 sha=6987ee1faa | if (branch != "exact" && isTRUE(ls0_worst_case)) {
+OK            [STATEMENT.md] v3_fit.R:117-117 sha=9b407003b8 | if (pf$exceeds) { fit$status <- "resource_limit"; return(finish(fit)) }
+OK            [STATEMENT.md] v3_fit.R:144-148 sha=a013da5a09 | pf_fun <- function(e) {
+OK            [STATEMENT.md] v3_calib.R:157-157 sha=382f59a78e | if (!is.null(preflight) && isTRUE(preflight(1))) { status <- "resource_limit"; blocked <- "resource_limit"; br
+OK            [STATEMENT.md] Theory_work/Wave1C/FINAL/sections/s6_delivery.tex:37-44 sha=955eed009e | \texttt{allocation\$mem\_gb} $\ge\mathrm{mem}_n/2^{30}$, \texttt{allocation\$hours} $\ge\mathrm{time}_n/3600$,
 OK            [STATEMENT.md] cpp/v3_core.cpp:209-209 sha=51932e648e | try { check_blocks(st.blocks); } catch (...) { delete g; throw; }
 OK            [PROOF.md] v3_fit.R:76-78 sha=41fa37dc9c | fit <- list(seed = seed, allocation = allocation, local_certified = FALSE, global_certified = FALSE,
 OK            [PROOF.md] v3_fit.R:129-129 sha=3977b0a4d4 | fit$estimates_available <- TRUE
@@ -37,7 +40,7 @@ OK            [PROOF.md] v3_run.R:110-114 sha=576f726c9c | v3_unavailable_estima
 OK            [PROOF.md] v3_fit.R:89-89 sha=7fba198a38 | if (!isTRUE(valid_seed)) { fit$status <- "invalid_input"; fit$message <- valid_seed; return(finish(fit)) }
 OK            [PROOF.md] v3_fit.R:88-88 sha=f2c1ed5150 | valid_seed <- tryCatch({ if (length(seed) != 1) stop("seed must be a single integer"); v3_check_seed(seed); TR
 OK            [PROOF.md] v3_fit.R:99-103 sha=017e556e30 | if (pre$status != "ok") {
-OK            [PROOF.md] v3_preprocess.R:98-107 sha=6805499040 | bad <- function(reason) list(status = "invalid_input", reason = reason)
+OK            [PROOF.md] v3_preprocess.R:99-107 sha=39b58e4bbe | if (!is.matrix(X) || !is.numeric(X) || !typeof(X) %in% c("integer", "double"))
 OK            [PROOF.md(cont)] v3_preprocess.R:114-114 sha=9450fa0e89 | if (!length(kept)) return(c(list(status = "no_predictors", hpm = integer(0)), base))
 OK            [PROOF.md(cont)] v3_preprocess.R:115-115 sha=13b4b3fc77 | if (all(y == y[1])) return(c(list(status = "y_constant", hpm = integer(0)), base))
 OK            [PROOF.md] v3_fit.R:117-117 sha=9b407003b8 | if (pf$exceeds) { fit$status <- "resource_limit"; return(finish(fit)) }
@@ -222,7 +225,8 @@ OK            [PROOF.md] cpp/v3_core.cpp:469-469 sha=35f7274942 | ModeResult m =
 OK            [PROOF.md(cont)] cpp/v3_core.cpp:272-272 sha=805c1dad38 | List cpp_setup(SEXP ctx, int B) {
 OK            [PROOF.md(cont)] cpp/v3_core.cpp:261-261 sha=051a40e1a1 | _["log_gamma0"] = D.logprior[s.size()] + c, _["log_pi0"] = D.logprior[s.size()] + c - h->st->logZbar0);
 OK            [PROOF.md] cpp/v3_core.cpp:92-92 sha=e7fbc12288 | int n = X.nrow(), p = X.ncol();
+OK            [PROOF.md] Theory_work/Wave1C/FINAL/sections/s6_delivery.tex:37-44 sha=955eed009e | \texttt{allocation\$mem\_gb} $\ge\mathrm{mem}_n/2^{30}$, \texttt{allocation\$hours} $\ge\mathrm{time}_n/3600$,
 OK            [PROOF.md] Theory_work/Wave1C/C-DLV/STATEMENT.md:54-56 sha=da460f059c | **(P2) Lemma R** (L1; uses TDP-IMPL): for valid inputs (n ≥ 3, raw dimension p_raw), every seed and uniform re
 
-225 citations: 225 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+229 citations: 229 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
 Not machine-checked: unbackticked references and the semantic match of each excerpt.

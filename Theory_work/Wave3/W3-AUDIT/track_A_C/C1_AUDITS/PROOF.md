@@ -1,4 +1,4 @@
-# C1 · Check of C-DLV:P1-Inventory and C-DLV:L2-S3 — PROOF v2.1 (code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
+# C1 · Check of C-DLV:P1-Inventory and C-DLV:L2-S3 — PROOF v2.2 (code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
 
 Reuse. T10 (`Theory_work/Wave3/W3-AUDIT/track_A/T10_P1S3/`, STATEMENT v2.2 / PROOF v2.1, council-bound R2:
 `Theory_work/Wave3/W3-AUDIT/track_A/reviews/MANIFEST_R2.txt`) re-audited P1/S.3 at this pin as a new claim (P1′, S.3′).
@@ -15,11 +15,11 @@ return FALSE otherwise). `finish` (`v3_fit.R:79-87`) never sets it TRUE (`v3_fit
 | return | status source | row |
 |---|---|---|
 | `v3_fit.R:89` | seed check `v3_fit.R:88` (its `stop` is caught by `tryCatch`) | A1 |
-| `v3_fit.R:99-103` | `v3_preprocess` (`v3_preprocess.R:98-107`, `:114`, `:115`) | A3, A4, A5 |
-| `v3_fit.R:117` | preflight `v3_fit.R:114-117`: bytes > mem (both branches); exact-branch seconds; SMC-branch LS0 worst-case seconds and `ls0_archive` bytes (`v3_fit.R:43-47, 61-66`, default configuration) | B1, B2; **B1′ (A-7)** |
+| `v3_fit.R:99-103` | `v3_preprocess` (`v3_preprocess.R:99-107`, `:114`, `:115`) | A3, A4, A5 |
+| `v3_fit.R:117` | preflight `v3_fit.R:114-117`: bytes > mem (both branches); exact-branch seconds; SMC-branch LS0 worst-case seconds and `ls0_archive` bytes (`v3_fit.R:43-47, 61-66`, default configuration) | B1, B2; **B1′ (A-7)**, the tier-0 site |
 | `v3_fit.R:131` with `e$status != "exact"` | `cpp/v3_core.cpp:536, 556` (only "exact" or "numerical_failure") | C1 |
 | `v3_fit.R:134-138` | `cpp_setup` failure (`cpp/v3_core.cpp:284-297`; `v3_setup.R:71-72`) | C2 |
-| `v3_fit.R:154-159` | `v3_calibrate`: `resource_limit` (`v3_calib.R:81, 113`; escalation re-preflight `v3_calib.R:157` via `pf_fun`, `v3_fit.R:144-148`, which includes the LS0 terms), `numerical_failure` (C3 sites), `schedule_limit` / `grid_failure_no_escalation` (`v3_calib.R:163-170`) | E3, B3 (with A-7), C3, D1, D2 |
+| `v3_fit.R:154-159` | `v3_calibrate`: `resource_limit` (`v3_calib.R:81, 113`; escalation re-preflight `v3_calib.R:157` via `pf_fun`, `v3_fit.R:144-148`, which includes the LS0 terms), `numerical_failure` (C3 sites), `schedule_limit` / `grid_failure_no_escalation` (`v3_calib.R:163-170`) | E3, B3 (its unspecified tier-1 memory estimate includes `ls0_archive`), C3, D1, D2 |
 | `v3_fit.R:173` via `v3_run.R:143-148` | final run status ≠ "completed": `numerical_failure` (`cpp/v3_core.cpp:483-484`) or `resource_limit` (guard: `cpp/v3_engine.h:335-338`, `cpp/v3_core.cpp:451, 459`; LS0 guard `cpp/v3_core.cpp:480`) | C4, E1, E2, E5 |
 The pilot/diagnostic guard stops (`cpp/v3_core.cpp:637, 645, 673-680, 692`) reach `v3_fit` through the calibration
 status (`v3_calib.R:57, 100`), rows E1, E2 (T10 §1). The sticky guard rule is E4 (`cpp/v3_runtime.h:21-27`).
@@ -29,7 +29,7 @@ components and, if the bytes fit, times a size-K score and sets `exceeds` also w
 `hours`·3600 (`v3_fit.R:43-47, 61-66`). INVENTORY's B1 trigger is memory-only with a byte formula without this term
 (`Theory_work/Wave1C/C-DLV/INVENTORY.md:29`), and B2 is the exact branch (`Theory_work/Wave1C/C-DLV/INVENTORY.md:30`):
 no row states this trigger. The exit (status `resource_limit` at `v3_fit.R:117`, or at `v3_calib.R:157` on escalation)
-is the same site as B1/B3, but its trigger is new (commit ef33f91c, after INVENTORY v2). It is reachable on valid inputs
+is the same site as B1 (tier 0, row B1′) or B3 (escalation), but its tier-0 trigger is new (commit ef33f91c, after INVENTORY v2). It is reachable on valid inputs
 with an allocation too small for the estimate. On escalation the time term cannot newly fire (ŝ_K is cached in
 `time_fun`, `v3_fit.R:107-112`, and the seconds do not depend on the tier), but the byte term can, as for B3.
 
@@ -81,7 +81,8 @@ Each of S.3's steps (`Theory_work/Wave1C/C-DLV/lemmas/L2_degenerate.md:38-66`) a
 **New X2-class sites at the pin (amendment A-2), each unreachable:** `get_holder` (`cpp/v3_core.cpp:18`; every fit-path
 call passes `ctx` or `setup$ptr`; T10 §2); the `start_mode` exceptions (`cpp/v3_start.h:261, 272`, via
 `cpp/v3_core.cpp:469`): `:272` needs cap < 2 and the only call passes 10⁶; `:261` needs k̂ < 0 or a failed root
-feasibility check, excluded by T9 (TDP-e) under T4 (ENC) (T10 §2, X9); the implicit-error class X2-imp (T10 §2).
+feasibility check, excluded by T9 (TDP-e) under T4 (ENC), T9's (H4) being discharged by IDEAL-W, MACH and T2's |C_b| ≤ 16 (T10 §2,
+X9); the implicit-error class X2-imp (T10 §2).
 **Erratum sites (viii)–(ix)** (= X7, X8): stops no invariant excludes; excluded by A:IDEAL-W⁺ or 𝔇 as recorded, and
 false for every input R can represent, in the default configuration (`v3.ls0_ell`, `v3.ls0_cap` unset): n, p ≤ 2³¹ − 1 (`cpp/v3_core.cpp:92`), so `le` ≤ 32 < 10⁶ and `cap_ll` ≤
 32 + 2³⁰ − 1 < 2³¹ − 1 (T10 §2; `Theory_work/Wave3/W3-AUDIT/track_A_X/T14_REP/PROOF.md`). ∎(C1-b)
@@ -90,9 +91,10 @@ false for every input R can represent, in the default configuration (`v3.ls0_ell
 §1 gives the coverage; §2 gives D2 and the X2 class unreachable. Of the remaining rows, A1, A2 are excluded by the
 declared inputs, A3–A5 by DLV-0's non-degeneracy (or by S.1 a.s. on the classes), C1–C5 by EX-A (S.2, whose (vi) caller
 list holds at the pin, §2), A7 and X1, X3–X6 by IDEAL-W and MACH, X7–X8 by A:IDEAL-W⁺ or 𝔇 (or R representability),
-and B1–B3 (with A-7), D1, E1–E5 are the resource and schedule rows that DLV-0 handles by its own walk (outside this
+and B1, B1′, B2, B3, D1, E1–E5 are the resource and schedule rows that DLV-0 handles by its own walk (outside this
 item). In particular the A-7 trigger is named in DLV-0's (E2) ("on the SMC branch with the C-GROW cap also the LS0
-archive and LS0 time") and excluded there by 𝒜_n's FIN A4 term P̄_LS0 (W3-RM2-R `lemmas/Q5_dlv0.md` lines 59-64 at
-e78a1055); DLV-0 does not take it from the inventory. `C-DLV:L1-R` alone would not cover it (it bounds exact-branch
+archive and LS0 time") and excluded there by FIN A4's two terms: the LS0 seconds by time_n ≥ P̄_LS0 and the
+`ls0_archive` bytes by mem_n ≥ P_e + A, e = 0, 1 (`Theory_work/Wave1C/FINAL/sections/s6_delivery.tex:37-44`; W3-RM2-R
+`lemmas/Q5_dlv0.md` lines 59-65 at e78a1055: "the LS0 preflight time 2(ℓ_n + K + 1)q(p)ŝ_K ≤ P̄_LS0 and memory P_e + A"); DLV-0 does not take it from the inventory. `C-DLV:L1-R` alone would not cover it (it bounds exact-branch
 preflight seconds only, `Theory_work/Wave1C/C-DLV/STATEMENT.md:54-56`). D1 is unreachable on the shipped path under EX-A (T10 §3, amendment A-4). So the audits
 supply DLV-0's premise at the pin. ∎
