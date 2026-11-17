@@ -745,3 +745,7 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - **GO #3** (sub-Gaussian Thm 2) if it reuses W3-DIST's floor bridge (kill at 3 d; a coexisting claim).
   - **"The SMC does work": DEFERRED** to the follow-up paper, unless the feasibility note finds a route through existing lemmas.
   - Factor-adjusted start law: follow-up paper. Evidence spread: dropped.
+- 2026-11-17. **OWNER endorses HQ's "money on the table" verdict:** nothing important is left beyond #5′ (+ the printed list-PIP field) and optionally #3.
+  - **New, owner-approved: re-run a representative subset of the 2,400-fit study on the FROZEN method** (v3 with LS0 + the new field). Engineering plans it within H-12 if possible.
+  - Real-data example: Engineering reports the plan or a proposal.
+  - Afterwards: the method sign-off → proof hardening → Lean.
