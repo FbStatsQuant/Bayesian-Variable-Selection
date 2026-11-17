@@ -42,6 +42,9 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 - X2, X4: relabelling (recorder, post-freeze). P6 method version: Engineering reconciliation pending. RERUN_SPEC: open (HQ).
 
 ## Post-freeze riders (queued)
+- (HQ 11-16, card 15 B) READER editorial batch: (1) rows 3.1/3.2: say which clause C-DLV:L2-S3 / P1-Inventory attach to; if only delivery, the abstract's output-conditional clause must not read as conditional; (2) GUARD-W wording: 'returns no estimates; anything else it returns is flagged incomplete and is not covered' (partial_results / hpm_incomplete / estimates_available = FALSE in v3_fit.R/v3_run.R); (3) after T14 is recorded: compress row 3.1's integer-limit passage to one sentence; plus Opus R3's 2 items and [AUD-S4] (v1.4 wording).
+- (HQ 11-16, card 15 C) **Right after the recording batch:** Tier B Sol check of the two code-reading audits C-DLV:L2-S3 and C-DLV:P1-Inventory (the last unchecked input on row 3.1).
+- (HQ 11-16, card 15 D) Row 3.6 stays core for now; after #5′ is proved, HQ will likely demote it to a remark (Writing note ROW36_NOTE).
 - (11-16) READER post-freeze editorial: Opus R3's 2 wording items; [AUD-S4] SL sampler-output sentence in card row 3.1 / Cor 9C, using the **v1.4** wording (WRITING_DELTA_v1.4: 'limits in the number of iterations at fixed data, for every data set; ours hold at the coded budget under design conditions; neither implies the other'), not v1.3's.
 - (11-16) Recorder: W2 Lemma 1a′ registry label 'unchecked' is stale (check history R01, R02, C1, C3; X3 re-check). Editorial ER-11 (T1/T5 CAL/clock phrasing).
 - (11-16) Recorder (track A CP2): stale line numbers INVENTORY/S.3/TDP_E; W1-GEN:L5 note 'LS0 not in production'; X7/X8 erratum sentence; A_inventory drift D1–D7; X2/X4 relabelling. Representability lemma (D88): post-freeze, outside the track D cap, kill 1 d, one Sol line check; if it holds → STRONGER H5 card for row 3.1.
