@@ -11,6 +11,11 @@
 - When: BNP sends a "quiet window" (expected 11-16 early afternoon CST). HQ pauses SMC departments' leads, restarts, verifies, then messages BNP back. BNP launches nothing until confirmed.
 - BNP already moved its temp to /home/fb31/bnp_tmp and removed 73 stale sandboxes (11-15).
 
+## OWNER 11-17, after reading the unified manuscript
+- **Owner's top priority: the posterior theorems** (true model, rows 1.1/1.2; true distribution, row 2.1).
+- **Mon 11-23, first item: an HQ + consultant ("VP") strategy session** on whether to do more about the algorithm theorem's novel assumptions (visibility, leakage set) beyond #5′. Options to weigh: weaker or primitive sufficient conditions, a design-family corollary, a different route for strong-factor data. Bring a recommendation to the owner.
+- **Queued for next week: a "precedent" note per non-Song–Liang assumption** (where the same type of condition appears in the literature). Theory verifies each citation against the paper (Sonnet/Haiku fetch + Opus check); Writing inserts it in the manuscript §5.
+
 ## POST-FREEZE QUEUE (HQ, collected)
 - Engineering doc batch: the preflight README/v3_fit comment fix; the v3_core.cpp:144 comment (says B ≤ 20, while 16 is enforced); the item1_um_checks.py Windows path.
 - Theory: the registry blocks-assumption source line (C-GROW 61 → 65–67); the 6 RM2 supersessions; the suspect-dependents NARROW batch; track D #2 → #3 → #5′ from Sat 11-21.
