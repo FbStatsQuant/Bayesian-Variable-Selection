@@ -20,7 +20,7 @@ find_package(OpenMP REQUIRED COMPONENTS CXX)
 set(V4_COMMON_SRC
   src/common/sha256.cpp src/common/format.cpp src/common/json.cpp src/common/data.cpp src/common/store.cpp
   src/common/ledger.cpp src/common/status.cpp src/common/score.cpp src/common/provenance.cpp src/common/gen.cpp src/common/prep.cpp src/common/pmath_info.cpp)
-set(V4_WP4_SRC src/merge/wp4_io.cpp src/calib/calib_run.cpp)   # WP4: calib/island/fit files, merge command
+set(V4_WP4_SRC src/merge/wp4_io.cpp)   # WP4: calib/island/fit files, merge command (calibrate: v4_cmd, island.cmake)
 set(V4_STUB_SRC src/stubs/stubs.cpp)
 # WP5: evaluator and post (bit flags: they call BitScorer and must reproduce the stored F)
 set(V4_WP5_SRC src/eval/posterior.cpp src/eval/model.cpp src/eval/dist.cpp src/eval/metrics.cpp src/eval/io.cpp
@@ -41,7 +41,7 @@ target_link_libraries(v4_a PUBLIC v4_bit)
 
 add_executable(smcbvs4 src/cli/main.cpp)
 target_compile_options(smcbvs4 PRIVATE ${V4_BIT_FLAGS} ${V4_WARN})
-target_link_libraries(smcbvs4 PRIVATE v4_a v4_bit)
+target_link_libraries(smcbvs4 PRIVATE v4_cmd v4_a v4_bit)
 
 option(V4_TESTS "build the test executables" ON)
 if(V4_TESTS)
@@ -56,7 +56,7 @@ if(V4_TESTS)
     V4_FIXTURE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures" V4_SMCBVS4="$<TARGET_FILE:smcbvs4>")
   add_dependencies(v4_tests smcbvs4)
   target_compile_options(v4_tests PRIVATE ${V4_BIT_FLAGS})
-  target_link_libraries(v4_tests PRIVATE v4_a v4_bit quadmath)
+  target_link_libraries(v4_tests PRIVATE v4_cmd v4_a v4_bit quadmath)
   add_executable(v4_pmath_check tools/pmath_check.cpp)
   target_compile_options(v4_pmath_check PRIVATE ${V4_BIT_FLAGS})
   target_link_libraries(v4_pmath_check PRIVATE v4_bit quadmath)

@@ -34,6 +34,9 @@ enum class KernelKind : int { LabelMajor = 0, ParticleMajor = 1 };
 // L + h (core/cpp/v3_engine.h:269-372 phase_override); leaders on; the ledger so far is returned on a stop.
 enum class IslandRole : int { Final = 0, Pilot = 1, Diag = 2 };
 
+// the identity string the CLI binds into the checkpoint (IslandConfig::input_id): the three content hashes
+inline std::string input_identity(const std::string& data, const std::string& setup, const std::string& calib) { return data + "|" + setup + "|" + calib; }
+
 struct IslandConfig {
   uint32_t seed = 1; uint32_t island = 1;  // final island r = 1..R'; calibration: pilot 0, diagnostic 1..4
   IslandRole role = IslandRole::Final;
@@ -54,6 +57,10 @@ struct IslandConfig {
   int test_corrupt_store_step = -1;         // tests only: break I1 of the top store's kept run after this step (O1 wiring test)
   uint64_t mem_budget = 0;                  // bytes; 0 = no admission check (--mem-budget; manager Q3/Q4)
   uint64_t store_cap = 0;                   // 0: 40 p + 1 (OD-13)
+  std::string input_id;                     // identity of the inputs the caller verified (the data / setup / calib content
+                                            // hashes, as the CLI joins them): part of the checkpoint fingerprint, so a restart on
+                                            // other inputs is refused (invalid_input) before any state is loaded (INTERFACES §5.1:
+                                            // restart identifies its files by content_sha256; review PR52 MAJOR-1). Empty: tests
   std::string ckpt_path;                    // empty: no checkpoints; else <path>.a / <path>.b
   double ckpt_every_s = 600;                // spec §6: at most every 10 min
   int stop_after_step = -1;                 // testing (T6): write a checkpoint after step s and return `interrupted`
@@ -236,6 +243,24 @@ v4::IslandResult to_record(const IslandRun& r);
 // The --mem-budget admission plan of an island (manager Q3/Q4, review PR24 P2): the group size it would use (largest
 // G <= 256 that fits mem_budget when cfg.G == 0), the plan's k, the sizes. Used by run_island and by the bench.
 MemPlan plan_island(const Data& D, const Start& st, const IslandConfig& cfg, MemSizes* z = nullptr, double* k = nullptr, int* G = nullptr);
+
+// The same plan from sizes alone (no data, no Start: `--plan-only` before the files exist; k is then the caller's):
+// plan_sizes() fills MemSizes exactly as plan_island does, plan_with_budget() applies its G rule (cfg.G = 0 and a
+// budget: the largest G <= 256 that fits). Test `plan_from_sizes_equals_plan_island` pins the two paths equal.
+inline MemSizes plan_sizes(int n, int p, int K, const IslandConfig& cfg) {
+  const bool lm = cfg.kernel == KernelKind::LabelMajor;
+  MemSizes z; z.n = n; z.p = p; z.K = K; z.N = cfg.N; z.B = cfg.B; z.Hm = cfg.Hm; z.threads = cfg.threads;
+  z.tile = std::max(64, (cfg.tile + 63) / 64 * 64); z.cap = cfg.store_cap ? cfg.store_cap : 40ULL * (uint64_t)p + 1; z.label_major = lm;
+  z.deferred = cfg.store_parallel_compact && cfg.threads > 1 && lm; z.leaders = cfg.leaders || cfg.role != IslandRole::Final;
+  z.compat = cfg.compat; z.inputs_bytes = cfg.inputs_bytes; z.calib = cfg.role != IslandRole::Final;
+  return z;
+}
+inline MemPlan plan_with_budget(MemSizes& z, double k, const IslandConfig& cfg) {
+  int G = cfg.G ? cfg.G : 256;
+  z.G = G; z.gram_slots = gram_slots_of(cfg, G, z.p); MemPlan mp = island_memory(z, k);
+  if (cfg.mem_budget && cfg.G == 0) while (G > 1 && mp.total > cfg.mem_budget) { --G; z.G = G; z.gram_slots = gram_slots_of(cfg, G, z.p); mp = island_memory(z, k); }
+  return mp;
+}
 
 template <Arith A>
 IslandRun run_island(const Data& D, const Start& st, const Neighbours& nb, const IslandConfig& cfg);
