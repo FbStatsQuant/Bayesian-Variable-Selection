@@ -1,4 +1,4 @@
-# X1 · Lemma FR — PROOF v1 (re-check of T12 PROOF_v6 §§1–3, 5 and of W1-N1:B at the pin)
+# X1 · Lemma FR — PROOF v1.1 (re-check of T12 PROOF_v6 §§1–3, 5 and of W1-N1:B at the pin)
 
 T12 = `Docs/Theory/proofs/T12_T8_frozen_run_identities/`; code paths relative to `Scripts/SMC_BVS/core/` (pin 4676af6).
 Notation as in T12 STATEMENT §§0–2: γ_φ = γ₀e^{φd}, Z̄_φ = Σ_Ω γ_φ, q_φ = γ_φ/Z̄_φ, Z_t = m(∅)Z̄_{φ_t}, G_t = e^{Δ_t d},
@@ -6,7 +6,7 @@ J_j = {S ∈ Ω : j ∈ S}.
 
 ## Part 1 — (FR-a): the coded island is I(c) with (R1)–(R3)
 `W1-N1:B` proves (B-a) structure and (B-b) randomness for the v2.2.1 core
-(`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:33-43`, proof `Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:45-110`), status
+(`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:33-43`, proof `Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:45-125`), status
 "PROVED under the named premises … council-passed". `W3-SAMP:CC` ("CODE-CHECKED") records that at the pin
 `run_island_s` differs from v2.2.1 only by the removed write-only plain-PIP lines, and that the elementary steps, the
 round, resampling and `draw_start` are byte-identical up to line shifts
@@ -19,7 +19,7 @@ round, resampling and `draw_start` are byte-identical up to line shifts
   (`cpp/v3_engine.h:322`); ancestors `resample(lw)` and copy (`cpp/v3_engine.h:324-327`); one `population_round` at φ_t
   (`cpp/v3_engine.h:331`). No round before the first reweighting (flag unset).
 - After the loop: L rounds at φ = 1 (`cpp/v3_engine.h:343-347`), then Hm = 4 measured rounds at φ = 1
-  (`cpp/v3_engine.h:351-360`; `measured_rounds = 4L`, `v3_run.R:90`); no resampling after stage T. So L′ = L, M = 4.
+  (`cpp/v3_engine.h:351-360`; Hm = `o.Hm` = `measured_rounds` = 4, `cpp/v3_core.cpp:396`, `v3_run.R:90`); no resampling after stage T. So L′ = L, M = 4.
 - d and γ_φ are T12's: `eval` sets `lg0` = log ϖ(|S|) + Σ_b log r_b and `d` = (log m − log m(∅)) − Σ_b log r_b
   (`cpp/v3_engine.h:95-97`), `lgphi(φ) = lg0 + φ·d` (`cpp/v3_engine.h:14`).
 - (B-0) the statistical record is a function of (c, u): scores through `eval` are exact whatever the cache history (T7
@@ -40,14 +40,14 @@ Hence (FR-a).
 ## Part 2 — (FR-b), (FR-c): line check of T12 PROOF_v6
 Each lemma is re-derived; agreement with PROOF_v6 is noted.
 
-*Bridge identity* (PROOF_v6 Lemma 1.1, `Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex:42-54`). γ_φ > 0 on
+*Bridge identity* (PROOF_v6 Lemma 1.1, `Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex:42-52`). γ_φ > 0 on
 the finite Ω, so Z̄_φ ∈ (0, ∞). q_{t−1}(x)G_t(x) = γ₀(x)e^{φ_{t−1}d(x)}e^{Δ_t d(x)}/Z̄_{φ_{t−1}} = γ_{φ_t}(x)/Z̄_{φ_{t−1}}, so
 Z_{t−1}q_{t−1}(G_t h) = m(∅)Σ_x γ_{φ_t}(x)h(x) = Z_t q_t(h). γ₀e^{d} = ϖ·m/m(∅), so m(∅)Z̄₁ = Σ_Ω ϖm = Z. Agrees.
 
-*Invariance* (Lemma 1.2, `Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex:56-77`): each elementary kernel is
+*Invariance* (Lemma 1.2, `Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex:54-72`): each elementary kernel is
 q_φ-reversible — this is T7 (KER-b), re-derived independently there; PROOF_v6's four computations agree with T7's.
 
-*Prefixes* (Lemma 1.3, `Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex:79-87`): P_κ := (1/m!)Σ_σ
+*Prefixes* (Lemma 1.3, `Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex:74-81`): P_κ := (1/m!)Σ_σ
 K_{σ(1)}⋯K_{σ(κ(σ))} is an average of products of q_φ-invariant kernels, hence q_φP_κ = q_φ. The Gibbs-j step ends in
 J_j exactly when it moves to S⁺, with probability o_j(S, φ) (0 when |S⁺| > K), so K_{g_j}1_{J_j} = o_j(·, φ) and
 q_φ(o_j) = (q_φK_{g_j})(1_{J_j}) = q_φ(J_j). Agrees.
@@ -68,7 +68,7 @@ stage-t round with prefix κ, Ẑ_t is 𝓗-measurable and the round mean gives 
 part (a) with h = P_κ f and prefix invariance give Z_t q_t(P_κ f) = Z_t q_t(f) (part (c)); κ ≡ m gives (b). With t = T,
 h ≡ 1: E Ẑ = Z_T = Z. Agrees.
 
-*Post-terminal* (`Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex:130`): induction over the L + 4 rounds at
+*Post-terminal* (`Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex:131`): induction over the L + 4 rounds at
 φ = 1, each step the round mean plus prefix invariance at φ = 1 (q₁ = π), starting from C_T(b) with q_T = π. (The code has
 no unit-weight resamplings, a case T12 also covers.) Agrees. This is (FR-b).
 
@@ -80,6 +80,8 @@ E[Ẑ (1/N)Σ_i o_j(Y^i_{u,j}, 1)] = Z π(o_j(·, 1)) = Z π(J_j) = Z·PIP_j. Av
 (`res.pip[j] = rb_acc[j]/(N·Hm)`, `cpp/v3_engine.h:364`) gives (FR-c). Agrees. ∎
 
 ## Re-check verdict on T12 (i.a)–(i.c), (ii)
-No error found in PROOF_v6 §§1–3, 5. The only change at the pin is the removal of the plain-PIP accumulator, which T12
+No error found in PROOF_v6 §§1–3, 5. The only change on the island's code path at the pin is the removal of the plain-PIP accumulator (the other
+changes `W3-SAMP:CC` lists — the `local_search` phase argument, the ledger's `PH_LS0`, the start-mode DP after
+`draw_pi0`, four lines of `v3_runtime.h` — are off that path), which T12
 never used (its (ii) is the Rao–Blackwell record). With this check the T12 inputs of rows 3.5 and 3.6 rest on a
 re-check under PROTOCOL_v4 rather than on the PROVED-LOCKED label alone (the label change is the recorder's).

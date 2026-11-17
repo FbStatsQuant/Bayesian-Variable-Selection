@@ -8,6 +8,7 @@ OK            [PROOF.md] Theory_work/Wave1/W1-N1/STATEMENT.md:94-96 sha=252a819b
 OK            [PROOF.md] Scripts/SMC_BVS/core/v3_run.R:91-91 sha=a2ae3dd4fd | islands = 4L, tier = as.integer(tier), ell = as.integer(b$ell),
 OK            [PROOF.md] Scripts/SMC_BVS/core/v3_run.R:150-154 sha=ac2f10f772 | logZr <- vapply(isl, function(r) r$log_Z, 0)
 OK            [PROOF.md] Theory_work/Wave3/W3-SAMP/STATEMENT.md:35-36 sha=fe4d5f6e6d | E[min(1, ρ)]. No claim is conditional on 𝒜 or on completion, and P(𝒜) → 1 is neither assumed nor claimed. Unde
+OK            [PROOF.md] Theory_work/Wave1/W1-N1/STATEMENT.md:83-85 sha=11e757380c | - **MEAS** the realisation map (c, u) ↦ Φ(c, u) from (calibration value, stream) to the island record (includi
 
-10 citations: 10 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+11 citations: 11 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
 Not machine-checked: unbackticked references and the semantic match of each excerpt.

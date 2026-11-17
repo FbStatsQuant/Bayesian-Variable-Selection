@@ -1,4 +1,4 @@
-# X3 · Re-check of `W3-POST:Lemma-1a'` — PROOF v1 (line check)
+# X3 · Re-check of `W3-POST:Lemma-1a'` — PROOF v1.1 (line check)
 
 L1a′ = `Theory_work/Wave3/W3-POST/lemmas/L1a_size_tail.md`; [P1] = `Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex`;
 [T03R] = `Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/W1-T03R/PROOF.md`. Notation of L1a′ and [P1] §1:
@@ -31,8 +31,11 @@ Checked.
   ϖ(S)m^c_{b₊}(S) and contains the term of T. Checked.
 - v_m := ϖ(E_m) with E_m = {|S| > m}: ϖ(E_m) = Σ_{k>m} q_k/W_K and ϖ(T) = w(t)/W_K, q_k = C(p, k)w(k)
   (`Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex:128`), so v_m = R^T_mϖ(T) with
-  R^T_m = Σ_{k=max(m+1,0)}^K q_k/w(t), as defined in L1a′ and in [T03R] for S₀
+  R^T_m = Σ_{k=max(m+1,0)}^K q_k/w(t) (q_k := 0 outside [0, K]), as defined in L1a′ (W3-POST's corrected form [C2A-F4],
+  `Theory_work/Wave3/W3-POST/STATEMENT.md:36`); for m ≥ −1 this is [T03R]'s R_m with S₀ → T
   (`Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/W1-T03R/PROOF.md:16-17`). Checked.
+- Case R^T_m = 0: then {|S| > m} ∩ Ω = ∅, π(E_m) = 0 and Θ^T_{n,m} := 0, so the bound is trivial ([T03R] splits this off,
+  `Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/W1-T03R/PROOF.md:93`). Below, R^T_m > 0, so v_m > 0.
 - N_m := I_{b₋}(E_m)/f₀(y_c); `lem:num` with the data-free rate b₋ gives E N_m = v_m
   (`Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex:317-323`); Θ^{(1)}_{n,m} := N_m/v_m ≥ 0, E Θ^{(1)} = 1. Checked.
 - On 𝓑_n: π(E_m) ≤ κ²v_mΘ^{(1)}/(ϖ(T)m^c_{b₊}(T)/f₀) ≤ κ²R^T_mΘ^{(1)}(n + 1)^{t/2}√n e^{Λ′_n}/(c_IGσ*²)
