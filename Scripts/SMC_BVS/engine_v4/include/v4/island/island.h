@@ -80,6 +80,9 @@ struct IslandConfig {
                                             // phase B. Execution parameter: outputs unchanged (false = the dense reference)
   bool test_nan_rows = false;               // tests only: poison the label-major score rows before every pass; any read of a
                                             // value not computed in the pass is an internal_error (review §2.1 NaN-row test)
+  bool rolling_admission = true;            // label-major (K5, WP3_ARCH_REVIEW §2 lever 5): a slot whose particle finished its
+                                            // round takes the next particle, so the passes stay full (false = groups of G one
+                                            // after the other). Execution parameter: outputs unchanged
   int gram_slots = -1;                      // label-major with bounded scoring (K3, WP3_ARCH_REVIEW §2.2): Gram rows X^T x_a of
                                             // active columns kept across passes, one slot of p doubles each. -1 = auto
                                             // (gram_slots_of: 5 G / 2, 640 at G = 256); 0 = off. Execution parameter (same
