@@ -15,7 +15,7 @@ Values are random: the probe measures memory and I/O time, not statistics (its l
 
 ## Findings
 1. **The process itself did not need 75 GiB.** Peak VmHWM, before any change: **36.8 KB per column** (p = 2·10⁴: 746 MB; 10⁵:
-   3,682 MB; linear), i.e. **≈ 34 GiB at 10⁶**. The plan (43.7 GiB) bounded it. The rest of sacct's 75.1 GiB is **page cache**:
+   3,682 MB; linear), i.e. **≈ 34 GiB at 10⁶** (probe-layout extrapolation: the probe's setup.bin is ≈ 12.3 KB per column against the pilot's 10.1 KB, so this is not comparable with the 26.2 GiB plan computed at the pilot's real sizes). The plan (43.7 GiB) bounded it. The rest of sacct's 75.1 GiB is **page cache**:
    the merge reads ≈ 59 GB of files (setup 10.1 + calib ≈ 9.8 + 16 islands ≈ 37 + data 1.6) and sacct's MaxRSS counts file pages
    until the cgroup reclaims them; a job at its limit reads ≈ 94% of the request (75.1 of 80 GiB) without needing it. Evidence on
    NOTS already in the record: P7's setup task, process peak 13.5 GB, sacct MaxRSS 23.7 GB, the difference 10.2 GB = setup.bin
@@ -29,7 +29,7 @@ Values are random: the probe measures memory and I/O time, not statistics (its l
    - streaming: merged store 2.5 c entries (capacity kept) + one island (file mapped + loaded copy) ≈ 11 GB at 10⁶: not the peak.
 3. **Fixes (no output bit changes; quick golden 540,419 checks, 0 failures; T9 merge comparisons included):** the inherited models are
    validated in place and offered from the mapped calib.bin (same offers, same order); the table stores are released after
-   `offer_tables`. Peak at p = 10⁵: **3,682 → 2,578 MB (−30%)**, 25.8 KB per column, **≈ 24 GiB at 10⁶** (the setup-read phase).
+   `offer_tables`. Peak at p = 10⁵: **3,682 → 2,578 MB (−30%)**, 25.8 KB per column, **≈ 24 GiB at 10⁶** (the setup-read phase; probe-layout extrapolation, as above).
 4. **Plan.** `estimate_merge_memory` is now a plan by phase (resident = anonymous + mapped file pages; 1.15 × the largest phase
    + 80 MiB). It bounds the measured VmHWM by **×1.22 (p = 10⁵), ×1.25 (5·10⁴), ×1.83 (4,000, the 80 MiB floor)**; the default
    suite test fails below ×1.1. The load phases are admitted from the files' sizes before `read_setup` / `read_calib` allocate.
@@ -48,7 +48,8 @@ ratio), islands ≈ 2.3 GB each, c = 4·10⁷ + 1, k = 7.3, R′ = 16, 32 thread
 
 **Request for a 10⁶ merge: 48G** (process 26.2 GiB + ≈ 22 GiB headroom so the page cache is reclaimed lazily); **32G** is the
 functional minimum (the 90% `--mem-budget` = 28.8 GiB ≥ the 26.2 GiB plan). sacct's MaxRSS will keep reading ≈ the request
-because of the cache; use `peak_rss_kb` in the merge record (VmHWM) for the process.
+because of the cache; use `peak_rss_kb` in the merge record (`getrusage` ru_maxrss) for the process.
+**Status of this request (review PR65 m-5, manager):** plausible, not yet measured (the inputs calib.bin ≈ 9.8 GB, setup layout and 32 threads are projected). The driver keeps **128G** for the 1M campaign until a real 10⁶ `peak_rss_kb` is read from `timings.phases`; then 48G (fallback 80G on an OOM). Before the next merge: `ls -l` of the pilot's calib.bin and island files on NOTS and re-evaluate the plan at those sizes.
 
 ## The "20-minute tail" (report only)
 `merge_tail_seconds` (1,215 s) is **the whole command up to the write** (data load, `read_setup`, `read_calib`, pass 1 over the 16
@@ -64,3 +65,9 @@ Cheap cuts (not done): (1) verify each island once (pass 2 `Reader(path, verify 
 header hash is unchanged): −2.5 min; (2) hash sections in parallel (`Reader::verify_all` over 32 idle threads, ≥ 4× on the
 island files): −5 min; (3) SHA-NI on the Sapphire Rapids nodes. A mapped (not copied) `SetupView::logr` would remove
 the 7 GB copy and the 2× peak of the load phase (peak ≈ 14 GB): a refactor of `SetupView`, not cheap.
+
+## Review fixes (PR #65, Opus review 2026-11-17)
+The full plan is now admitted right after the island heads are read, before the table and inherited offers (a refusal record carries
+the phases reached, ending with `refused`); the early bound on the setup copy is 1.05 × setup.bin (measured 1.026); the second mapping
+of calib.bin is bounds-checked again; `peak_rss_kb` is `getrusage` ru_maxrss and the phase samples come from `smaps_rollup` when it
+exists (Linux only); the tests check the variable part of the plan and ten corrupt-calib mutations on both read paths.
