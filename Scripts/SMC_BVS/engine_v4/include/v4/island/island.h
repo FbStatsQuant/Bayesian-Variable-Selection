@@ -122,6 +122,8 @@ struct IslandConfig {
                                             // makes the K5 consumer tie observable
   bool test_consumers_by_slot = false;      // tests only: a deliberate bug -- the consumers of a support in slot order, not
                                             // particle order (the negative control of test_consumer_digest)
+  bool test_no_stop_admitting = false;      // tests only: rolling admission keeps admitting after a numerical failure (the
+                                            // pre-K6 behaviour; the baseline of test rolling_stops_admitting_after_failure)
   int test_bound_shrink = 0;                // tests only: bounded scoring skips the last s positions below the running first
                                             // change (a deliberate bug: the negative control of test_nan_rows)
   int products_block = 0;                   // tile products: 4 = 4 active columns x 32 labels per sweep, 1 = the original loop

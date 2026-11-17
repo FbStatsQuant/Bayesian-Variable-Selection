@@ -431,23 +431,47 @@ static void rolling_consumer_digest(const char* tag) {
   int caught = 0;
   for (int G : {5, 7, 16}) for (int th : {1, 3}) {
     const auto g = run(false, G, th, false), r = run(true, G, th, false), bug = run(true, G, th, true);
-    CHECKF(std::get<0>(r) == std::get<0>(g) && std::get<1>(r) == std::get<1>(g) && std::get<2>(r) == std::get<2>(g),
-           "[%s] G %d threads %d: consumer log rolling %016llx (%zu models) vs groups %016llx (%zu)", tag, G, th, (unsigned long long)std::get<0>(r),
+    const bool same = std::get<0>(r) == std::get<0>(g) && std::get<1>(r) == std::get<1>(g) && std::get<2>(r) == std::get<2>(g);
+    CHECKF(same, "[%s] G %d threads %d: consumer log rolling %016llx (%zu models) vs groups %016llx (%zu)", tag, G, th, (unsigned long long)std::get<0>(r),
            std::get<2>(r), (unsigned long long)std::get<0>(g), std::get<2>(g));
     CHECKF(std::get<1>(bug) == std::get<1>(g), "[%s] G %d: the slot-order bug changed the output hash (it should only change the log)", tag, G);
     if (std::get<0>(bug) != std::get<0>(g)) ++caught;
-    std::printf("  [%s] G %2d threads %d: %zu (round, model) entries, log %016llx rolling = groups; consumers-by-slot bug: %016llx%s\n", tag, G, th,
-                std::get<2>(g), (unsigned long long)std::get<0>(r), (unsigned long long)std::get<0>(bug), std::get<0>(bug) != std::get<0>(g) ? " (differs)" : " (same)");
+    std::printf("  [%s] G %2d threads %d: %zu (round, model) entries, log %016llx rolling %s groups; consumers-by-slot bug: %016llx%s\n", tag, G, th,
+                std::get<2>(g), (unsigned long long)std::get<0>(r), same ? "=" : "!=", (unsigned long long)std::get<0>(bug), std::get<0>(bug) != std::get<0>(g) ? " (differs)" : " (same)");
   }
-  CHECKF(caught >= 2, "[%s] the slot-order bug was caught in only %d of 6 legs", tag, caught);
+  CHECKF(caught == 6, "[%s] the slot-order bug was caught in only %d of 6 legs", tag, caught);
 }
 TEST(rolling_consumer_order_observable_bit) { rolling_consumer_digest<Arith::Bit>("bit"); }
 TEST(rolling_consumer_order_observable_classA) { rolling_consumer_digest<Arith::ClassA>("A"); }
 
-// review PR61 MINOR B-2: after a numerical failure rolling admission admits no more particles (the groups kernel stops
-// after the failing group): the same status and reason, and no more particle-rounds than the first window
+// review PR61 MINOR B-2, PR66 MINOR 1 / 2: after a numerical failure rolling admission admits no more particles (the groups
+// kernel stops after the failing group). A failed island reports the same status, reason and law outputs as groups (hash() with
+// the default keep_terminal: the in-memory partial population is cleared on failure); the work counters (particle-rounds) are
+// execution diagnostics and differ, in either direction, from groups. What holds in general: rolling with the stop admits a
+// prefix of what rolling without it admits (test_no_stop_admitting), so it never runs more; and in the first window (the failing
+// particle is index 0) it runs at most G.
 TEST(rolling_stops_admitting_after_failure) {
   Fixture F(100, 300, 32);
+  auto compare = [&](const char* tag, const v4::Data& D, const Start& st, IslandConfig c, int victim, bool first_window) {
+    c.kernel = KernelKind::LabelMajor;
+    const int G = c.G, th = c.threads;
+    c.rolling_admission = false; IslandRun g = run_island<Arith::ClassA>(D, st, F.nb, c);
+    c.rolling_admission = true; c.test_no_stop_admitting = true; IslandRun r0 = run_island<Arith::ClassA>(D, st, F.nb, c);
+    c.test_no_stop_admitting = false; IslandRun r = run_island<Arith::ClassA>(D, st, F.nb, c);
+    CHECKF(g.status == 2 && r.status == 2 && r0.status == 2 && r.reason == g.reason && r0.reason == g.reason,
+           "[%s] victim %d G %d threads %d: status %d / %d / %d, rolling '%s' vs groups '%s'", tag, victim, G, th, r.status, r0.status, g.status, r.reason.c_str(), g.reason.c_str());
+    CHECKF(r.hash() == g.hash() && r0.hash() == g.hash() && r.terminal.empty(), "[%s] victim %d G %d threads %d: failed-run hash %016llx (no stop %016llx) vs groups %016llx",
+           tag, victim, G, th, (unsigned long long)r.hash(), (unsigned long long)r0.hash(), (unsigned long long)g.hash());
+    CHECKF(r.ks.particle_rounds <= r0.ks.particle_rounds, "[%s] victim %d G %d threads %d: %llu particle-rounds with the stop vs %llu without it", tag, victim, G, th,
+           (unsigned long long)r.ks.particle_rounds, (unsigned long long)r0.ks.particle_rounds);
+    if (first_window) CHECKF(r.ks.particle_rounds <= (uint64_t)G, "[%s] G %d threads %d: rolling ran %llu particle-rounds after a failure in its first window", tag, G, th,
+                             (unsigned long long)r.ks.particle_rounds);
+    else if (victim + 2 * G < c.N) CHECKF(r.ks.particle_rounds < r0.ks.particle_rounds, "[%s] victim %d G %d threads %d: the stop saved nothing (%llu = %llu)", tag, victim, G, th,
+                                          (unsigned long long)r.ks.particle_rounds, (unsigned long long)r0.ks.particle_rounds);
+    std::printf("  [%s] victim %2d G %2d threads %d: particle-rounds rolling %llu (no stop %llu), groups %llu; same status, reason, hash\n", tag, victim, G, th,
+                (unsigned long long)r.ks.particle_rounds, (unsigned long long)r0.ks.particle_rounds, (unsigned long long)g.ks.particle_rounds);
+  };
+  // (1) poisoned labels: the failing particle is index 0, in the first window
   const std::vector<int> bad = {37, 151, 222};
   auto own = std::make_shared<v4::DataOwned>();
   own->X.assign(F.D.Xs, F.D.Xs + (size_t)F.D.n * F.D.p); own->y.assign(F.D.ys, F.D.ys + F.D.n);
@@ -457,14 +481,14 @@ TEST(rolling_stops_admitting_after_failure) {
   for (int j : bad) { int b = st2.blk[j]; for (size_t code = 0; code < st2.logr[b].size(); ++code) if (code & (1u << st2.pos[j])) st2.logr[b][code] = NEG_INF; }
   build_sampler(st2, F.D);
   for (int G : {5, 16}) for (int th : {1, 3}) {
-    IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = th; c.G = G;
-    c.rolling_admission = false; IslandRun g = run_island<Arith::ClassA>(D2, st2, F.nb, c);
-    c.rolling_admission = true; IslandRun r = run_island<Arith::ClassA>(D2, st2, F.nb, c);
-    CHECKF(g.status == 2 && r.status == 2 && r.reason == g.reason, "G %d threads %d: rolling '%s' vs groups '%s'", G, th, r.reason.c_str(), g.reason.c_str());
-    CHECKF(r.ks.particle_rounds <= (uint64_t)G, "G %d threads %d: rolling ran %llu particle-rounds after the failure (window %d, groups %llu)", G, th,
-           (unsigned long long)r.ks.particle_rounds, G, (unsigned long long)g.ks.particle_rounds);
-    std::printf("  G %2d threads %d: particle-rounds rolling %llu, groups %llu; same reason\n", G, th, (unsigned long long)r.ks.particle_rounds,
-                (unsigned long long)g.ks.particle_rounds);
+    IslandConfig c = small_cfg(); c.threads = th; c.G = G;
+    compare("poisoned", D2, st2, c, 0, true);
+  }
+  // (2) a late victim (the I proposal of particle `victim` fails in bridge stage s): the failure is recorded after later
+  // particles were admitted, some of the particles already running finish, and the work counters differ from groups
+  for (int stage : {1, 2}) for (int victim : {5, 20, 37}) for (int G : {5, 16}) for (int th : {1, 3}) {
+    IslandConfig c = small_cfg(); c.threads = th; c.G = G; c.test_fail_indep = victim; c.test_fail_indep_stage = stage;
+    compare(stage == 1 ? "late s1" : "late s2", F.D, F.st, c, victim, false);
   }
 }
 
@@ -525,6 +549,12 @@ static void order_phase_no_alloc(const char* tag) {
   { int* q = new int[100]; asm volatile("" : : "r"(q) : "memory"); delete[] q; }
   g_order_phase = false;
   CHECKF(g_order_allocs.load() >= 3, "[%s] control: the counting hook did not see %ld in-region allocations", tag, g_order_allocs.load());
+  // the same at one thread (omp_in_parallel() is false inside a num_threads(1) team: the hook uses omp_get_level())
+  g_order_allocs = 0; g_order_phase = true;
+  #pragma omp parallel num_threads(1)
+  { int* q = new int[100]; asm volatile("" : : "r"(q) : "memory"); delete[] q; }
+  g_order_phase = false;
+  CHECKF(g_order_allocs.load() >= 1, "[%s] control: the counting hook did not see the allocation of a 1-thread region (%ld)", tag, g_order_allocs.load());
   for (int th : {1, 3}) for (int G : {16, 48}) {
     IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = th; c.G = G; c.test_order_phase = &g_order_phase;
     g_order_allocs = 0;

@@ -72,9 +72,10 @@ void IslandEngine<A>::lm_group(int first, int count, int gN, const RoundCtx& rc)
     // admission: the free slots take the next particles; their orders (inverse only, K2) and I proposals are drawn here
     { int na = 0;
       // K5: once a numerical failure is recorded no particle is admitted any more: later admissions have larger particle
-      // indices than every admitted one, the smallest failing particle wins, and the round's work is discarded anyway
-      // (the groups kernel stops after the failing group). Particles already running finish: one of them may fail lower.
-      const bool failed = fail_any();
+      // indices than every admitted one and the smallest failing particle wins; a failed island exports no store, and its
+      // in-memory population and work counters are execution-dependent (the groups kernel stops after the failing group).
+      // Particles already running finish: one of them may fail lower.
+      const bool failed = !cfg.test_no_stop_admitting && fail_any();
       for (int gi : admit) if (next < end && !failed) { pid[gi] = next++; admit[na++] = gi; }
       admit.resize(na);
       for (int gi : admit) { gb.q[gi] = 0; gb.e[gi] = 0; gb.done[gi] = 0; gb.etype[gi] = 0; gb.elab[gi] = -1; gb.ierr[gi] = nullptr; gb.ng[gi].clear(); }

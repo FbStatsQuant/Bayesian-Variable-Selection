@@ -872,7 +872,9 @@ class IslandEngine {
       res.top_v = std::move(K.v); res.top_hash = std::move(K.hash); res.top_off = std::move(K.off); res.top_len = std::move(K.len); res.top_pool = std::move(K.pool);
     }
     res.ks.kept_live_max = kept_live_max().load();
-    if (cfg.keep_terminal) for (auto& x : P) res.terminal.push_back(x.S);
+    // only a completed (or test-interrupted) island reports its population: after a failure P holds the particles that happened to
+    // finish their round before it, which depends on the admission pattern (review PR66 MINOR 1); it never reaches a file
+    if (cfg.keep_terminal && (res.status == 0 || res.status == 1)) for (auto& x : P) res.terminal.push_back(x.S);
     if (csrc) { res.compat = true; res.stream_count = csrc->g.count; }
     res.role = cfg.role; res.tier = cfg.tier; res.iter = cfg.iter;
     if (cfg.leaders) {
