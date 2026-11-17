@@ -432,3 +432,4 @@
 - 2026-11-17 12:53 CST W3-D5P CP1 (10d77515): LIST-K/LIST-CODE/LIST-R locked (Sol L-W-C, 3 applied); closes W3-DIST:297-303; row 3.1 STRONGER; IMPL-LIST premise pending Engineering's commit; GO proofs → council → CP3 (~10 h).
 - 2026-11-17 12:55 CST A1/A2 NARROW dry-run findings → HQ: V1 (true NARROW; A5 fails for 6 rows until Sol rule-(b) verdicts; XR2r needed) vs V2 (dated corrigendum; no cascade); recommended V2 + Opus re-check + XR2r first. Recorder → tool items meanwhile.
 - 2026-11-17 12:55 CST D110 relayed to the recorder.
+- 2026-11-17 12:57 CST Track A_W DONE (a32f90e5): ISL/FRZ bound (Sol 9.4 W-R1, Opus 9.3 R2 d4f64540); discharge package → recorder (after XR2r); HQ: edge retarget + (𝒜°, 𝓒°) erratum calls; API card ready. Track A lead free.
