@@ -7,7 +7,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 - W3-D5P recording WAITS on Engineering's list-PIP method commit (IMPL-LIST discharge by the W3-D5P lead first; then also check that log_Z_list comes from the exact branch's store, to decide the NA qualifier).
 - ONE H5 card (D115) for Thm2X + Thm 2SG (row 1.2, coexist) + Cor 6L (row 3.1, STRONGER) once all three reach CP3 → consultant, with Writing's restructure. No reader/card swap before AGREE. Freeze tag theory-v2026-11-freeze → d40c9780 stands for recorded statements.
 - Running (4 leads + Fable): track A lead (W1-N1:B/F line checks), W3-D2 lead (check X), recorder (A1/A2 NARROW → tools → registry editorial), precedent notes (Sonnet); audit Fable (FEAS_SMC_WORKS).
-- Running since 11-17: W3-D5P (#5′) and W3-D3 (#3, plan stage). Running: generic-position lemma (track A lead, track_V/; D112). READER editorial batch bundled with the joint H5 card swap (after AGREE; D115).
+- Running since 11-17: W3-D5P (#5′) and W3-D3 (#3, plan stage). Running: generic-position lemma (track A lead, track_V/; D112). READER editorial batch bundled with the joint H5 card swap (after AGREE; D115): H5 card 17 text, R5 items, R4 pointer, and the stale card narrative bullets ('What blocks…', 'Status refresh') now superseded by the recordings.
 - DROPPED for this paper (owner D107): 'SMC does work' incl. the weak-leak corollary (FEAS_SMC_WORKS.md = follow-up material). Evidence spread dropped. **List CLOSED** (D107). After the owner's method sign-off: proof hardening for Lean (3 blueprints + hostile review).
 
 ## Running
