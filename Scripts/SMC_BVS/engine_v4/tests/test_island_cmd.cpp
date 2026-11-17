@@ -178,21 +178,31 @@ TEST(island_command_driver_manifest) {
   Dir dir("drv"); Fx f; make_fx(f, dir);
   const std::string bin = V4_SMCBVS4, tools = std::string(V4_FIXTURE_DIR) + "/../../tools/slurm";
   if (sh("command -v python3") != 0) { std::printf("    python3 not found: NOT RUN\n"); return; }
-  const std::string cal = dir("calib.bin");
-  CHECK_EQ(sh(bin + " calibrate --data " + q(f.dpath) + " --setup " + q(f.spath) + " --mode V --seed 1 --threads 3 --out " + q(cal)), 0);
   // the driver's dry run of the example plan (mode V, R' 16, seed 1 for its first fit)
   const std::string drv = dir("drv"), dept = dir("dept");
   CHECK_EQ(sh("python3 " + q(tools + "/p1m_driver.py") + " --plan " + q(tools + "/examples/plan_A2_pilot_1e4.json") + " --out " + q(drv) +
               " --dept " + q(dept) + " --now 2026-11-16T00:00:00Z"), 0);
-  const std::string tmpl = drv + "/manifests/A2_ARs_n200_r1/island.json";
-  Json T = v4::read_json_file(tmpl);
+  const std::string mdir = drv + "/manifests/A2_ARs_n200_r1";
+  Json T = v4::read_json_file(mdir + "/island.json");
   CHECK(T.at("command").str() == "island" && T.at("mode").str() == "V" && T.at("inputs").size() == 3 && (int)T.at("params").at("seed").num() == 1);
   std::string rundir;
   for (auto& [k, v] : T.at("inputs").items()) {
     const std::string b = k.substr(k.find_last_of('/') + 1); rundir = k.substr(0, k.find_last_of('/'));
-    const std::string src = b == "data.bin" ? f.dpath : b == "setup.bin" ? f.spath : cal;
+    if (b == "calib.bin") continue;   // produced below by the calibrate stage
+    const std::string src = b == "data.bin" ? f.dpath : f.spath;
     sh("mkdir -p " + q(rundir) + " && cp " + q(src) + " " + q(k) + " && cp " + q(src + ".json") + " " + q(k + ".json"));
   }
+  // the driver's calibrate stage: fill, then `calibrate --manifest ... --threads --mem-budget --out` (inputs from the manifest)
+  const std::string cman = dir("calibrate.json"), cal = rundir + "/calib.bin";
+  CHECK_EQ(sh("BIN=" + q(bin) + " python3 " + q(tools + "/p1m_manifest.py") + " fill --template " + q(mdir + "/calibrate.json") + " --out " + q(cman) + " --bin " + q(bin)), 0);
+  CHECK_EQ(sh(bin + " calibrate --manifest " + q(cman) + " --threads 3 --mem-budget " + std::to_string(8ull << 30) + " --out " + q(cal), dir("drv_cal.log")), 0);
+  CHECK(rec_of(cal + ".json").at("status").str() == "completed");
+  CHECK_EQ(sh(bin + " calibrate --manifest " + q(cman) + " --data " + q(f.spath) + " --out " + q(dir("c_a.bin"))), 13);   // disagreeing input
+  CHECK_EQ(sh(bin + " calibrate --manifest " + q(cman) + " --mode law --out " + q(dir("c_b.bin"))), 13);                 // disagreeing mode
+  { const std::string cal2 = dir("calib_explicit.bin");   // = the explicit form
+    CHECK_EQ(sh(bin + " calibrate --data " + q(f.dpath) + " --setup " + q(f.spath) + " --mode V --seed 1 --threads 3 --out " + q(cal2)), 0);
+    CHECK(body_hash(cal2) == body_hash(cal)); }
+  const std::string tmpl = mdir + "/island.json";
   // the driver's islands stage: fill with params.id = R, then the command line of stage_body("islands")
   const std::string man = dir("island_3.json"), out = rundir + "/island_3.bin";
   CHECK_EQ(sh("BIN=" + q(bin) + " python3 " + q(tools + "/p1m_manifest.py") + " fill --template " + q(tmpl) + " --out " + q(man) + " --bin " + q(bin) +

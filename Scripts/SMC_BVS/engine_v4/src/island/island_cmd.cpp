@@ -26,6 +26,7 @@
 #include <chrono>
 #include <cmath>
 #include <cstdio>
+#include "v4/cmd_args.h"
 #include "v4/island/island.h"
 #include "v4/island/island_file.h"
 #include "v4/island/setup_load.h"
@@ -39,7 +40,6 @@ namespace v4::island {
 
 namespace {
 const char* W = "island: ";
-std::string base_name(const std::string& p) { size_t k = p.find_last_of('/'); return k == std::string::npos ? p : p.substr(k + 1); }
 std::string hex64(uint64_t x) { char b[19]; std::snprintf(b, sizeof b, "0x%016llx", (unsigned long long)x); return b; }
 Json u64j(uint64_t x) { return Json((double)x); }   // byte counts < 2^53
 
@@ -79,33 +79,11 @@ struct Inputs {
 // Resolves the inputs: the manifest (authority) and the explicit arguments; a disagreement is refused (as WP4's merge).
 Inputs parse_inputs(const Json& args, bool plan_only) {
   Inputs in;
-  if (args.contains("manifest")) {
-    const Json& m = args.at("manifest");
-    in.manifest = m.type() == Json::STR ? read_json_file(m.str()) : m;
-    if (in.manifest.type() != Json::OBJ) throw Error(Status::invalid_input, std::string(W) + "--manifest is not a JSON object");
-    if (in.manifest.contains("command") && (in.manifest.at("command").type() != Json::STR || in.manifest.at("command").str() != "island"))
-      throw Error(Status::invalid_input, std::string(W) + "the manifest is not an island manifest (command)");
-  }
-  const bool has_man = in.manifest.size() > 0;
-  const Json minp = in.manifest.contains("inputs") ? in.manifest.at("inputs") : Json::object();
+  in.manifest = cmd::manifest_of(args, "island");
   const Json mpar = in.manifest.contains("params") ? in.manifest.at("params") : Json::object();
-  auto from_inputs = [&](const std::string& name) {
-    std::string found;
-    for (auto& [k, v] : minp.items()) if (base_name(k) == name) {
-      if (!found.empty()) throw Error(Status::invalid_input, std::string(W) + "the manifest's inputs name " + name + " twice");
-      found = k;
-    }
-    return found;
-  };
-  auto path_arg = [&](const char* key, const std::string& name, bool required) {
-    const std::string f = from_inputs(name), a = str_arg(args, key);
-    if (!a.empty() && !f.empty() && a != f) throw Error(Status::invalid_input, std::string(W) + "--" + key + " differs from the manifest's " + name);
-    if (required && a.empty() && f.empty()) throw Error(Status::invalid_input, std::string(W) + "no " + name + " (give --" + key + " or a manifest input)");
-    return a.empty() ? f : a;
-  };
-  in.data = path_arg("data", "data.bin", !plan_only);
-  in.setup = path_arg("setup", "setup.bin", !plan_only);
-  in.calib = path_arg("calib", "calib.bin", !plan_only);
+  in.data = cmd::input_path(args, in.manifest, "data", "data.bin", "island", !plan_only);
+  in.setup = cmd::input_path(args, in.manifest, "setup", "setup.bin", "island", !plan_only);
+  in.calib = cmd::input_path(args, in.manifest, "calib", "calib.bin", "island", !plan_only);
   in.out = str_arg(args, "out");
   // mode: the manifest's, else --mode
   std::string mm;
@@ -141,7 +119,6 @@ Inputs parse_inputs(const Json& args, bool plan_only) {
     if (args.at("role").type() != Json::STR || args.at("role").str() != "final")
       throw Error(Status::invalid_input, std::string(W) + "--role must be final (pilot and diagnostic islands run inside calibrate)");
   }
-  (void)has_man;
   return in;
 }
 

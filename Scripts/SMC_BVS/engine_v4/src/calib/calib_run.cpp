@@ -10,6 +10,7 @@
 #include <chrono>
 #include <cmath>
 #include "v4/calib_run.h"
+#include "v4/cmd_args.h"
 #include "v4/island/calib_runner.h"
 #include "v4/island/setup_load.h"
 #include "v4/format.h"
@@ -90,10 +91,15 @@ Json island_plan_json(const island::MemPlan& mp, uint64_t floor, uint64_t budget
 
 Json run(const Json& args) {
   // mode: compat | law | V only (review PR37 m-4)
+  // the driver's manifest is the authority (cmd_args.h; as merge and island): inputs by base name, its mode; a
+  // disagreeing explicit argument is refused. Before, calibrate read --data / --setup only, so the driver's stage
+  // (`calibrate --manifest m.json --out ...`) failed with "--data is required".
+  const Json man = cmd::manifest_of(args, "calibrate");
   std::string mode_s = str_arg(args, "mode");
-  if (mode_s.empty() && args.contains("manifest") && args.at("manifest").type() == Json::OBJ && args.at("manifest").contains("mode")) {
-    const Json& mm = args.at("manifest").at("mode");
+  if (man.contains("mode")) {
+    const Json& mm = man.at("mode");
     if (mm.type() != Json::STR) throw Error(Status::invalid_input, "calibrate: the manifest's mode must be a string");
+    if (!mode_s.empty() && mode_s != mm.str()) throw Error(Status::invalid_input, "calibrate: --mode differs from the manifest's mode");
     mode_s = mm.str();
   }
   if (mode_s != "compat" && mode_s != "law" && mode_s != "V") throw Error(Status::invalid_input, "calibrate: --mode must be compat, law or V");
@@ -105,7 +111,8 @@ Json run(const Json& args) {
   const uint64_t budget = (uint64_t)whole_arg(args, "mem_budget", 0, 0, (int64_t)1 << 50);   // bytes, 0 = off (INTERFACES §7)
   const bool plan_only = whole_arg(args, "plan_only", 0, 0, 1) == 1;
   // n, p: data.bin, or --n / --p for a plan
-  const std::string dpath = str_arg(args, "data"), spath = str_arg(args, "setup"), out = str_arg(args, "out");
+  const std::string dpath = cmd::input_path(args, man, "data", "data.bin", "calibrate", false),
+                    spath = cmd::input_path(args, man, "setup", "setup.bin", "calibrate", false), out = str_arg(args, "out");
   Data D; std::string dhash; int64_t n = 0, p = 0;
   if (!dpath.empty()) { D = prep::load_data(dpath, &dhash); n = D.n; p = D.p; }
   else if (plan_only) { n = whole_arg(args, "n", 0, 3, (int64_t)1 << 31); p = whole_arg(args, "p", 0, 1, (int64_t)1 << 31); }
