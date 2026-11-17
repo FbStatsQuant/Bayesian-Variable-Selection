@@ -28,12 +28,34 @@ inline double f64_of_hex(const std::string& h, const std::string& what) {
   const uint64_t b = std::strtoull(h.c_str() + 2, nullptr, 16); double x; std::memcpy(&x, &b, 8); return x;
 }
 
-// tau_cal over the inherited models' F (one value per distinct model): the c-th largest, or -inf if fewer than c
-inline double tau_cal_of(std::vector<double> F, uint64_t c) {
-  if (c == 0 || F.size() < c) return -__builtin_huge_val();
-  std::nth_element(F.begin(), F.begin() + (c - 1), F.end(), [](double a, double b) { return a > b; });
-  return F[c - 1];
+// The c-th largest of n finite doubles by a four-pass radix select on the order-preserving 64-bit key (16 bits per pass,
+// 65,536 counters): exact, deterministic, O(1) memory and no copy of the values (review PR54 re-check: the nth_element
+// copy was ~0.64 GB at 10^6, 8e7 inherited models, before the island's admission). Ties are value-exact: the answer is the
+// bits of one of the values (-0.0 orders below +0.0). 1 <= c <= n; callers have checked finiteness.
+inline double kth_largest_f64(const double* F, size_t n, uint64_t c) {
+  auto key = [](double x) { uint64_t u; std::memcpy(&u, &x, 8); return (u >> 63) ? ~u : (u | 0x8000000000000000ull); };
+  std::vector<uint64_t> cnt(65536);
+  uint64_t prefix = 0, rem = c;   // prefix: the chosen high bits so far; rem: the rank still to find among the keys with that prefix
+  for (int shift = 48; shift >= 0; shift -= 16) {
+    std::fill(cnt.begin(), cnt.end(), 0);
+    const int hi = shift + 16;   // keys whose bits above `shift + 16` equal prefix
+    for (size_t i = 0; i < n; ++i) {
+      const uint64_t k = key(F[i]);
+      if (hi == 64 || (k >> hi) == prefix) ++cnt[(k >> shift) & 0xFFFF];
+    }
+    int b = 65535; uint64_t acc = 0;
+    for (; b > 0; --b) { if (acc + cnt[b] >= rem) break; acc += cnt[b]; }
+    rem -= acc; prefix = (prefix << 16) | (uint64_t)b;
+  }
+  const uint64_t k = prefix; const uint64_t u = (k >> 63) ? (k & 0x7FFFFFFFFFFFFFFFull) : ~k;
+  double r; std::memcpy(&r, &u, 8); return r;
 }
+// tau_cal over the inherited models' F (one value per distinct model): the c-th largest, or -inf if fewer than c
+inline double tau_cal_of(const double* F, size_t n, uint64_t c) {
+  if (c == 0 || n < c) return -__builtin_huge_val();
+  return kth_largest_f64(F, n, c);
+}
+inline double tau_cal_of(const std::vector<double>& F, uint64_t c) { return tau_cal_of(F.data(), F.size(), c); }
 inline void tau_cal_to_meta(Json& meta, double tau) { meta["tau_cal_hex"] = f64_hex(tau); meta["tau_cal"] = tau; }
 // calib.bin -> tau_cal (-inf when the key is absent: older files, theory modes, a failed calibration)
 inline double tau_cal_of_meta(const Json& meta) {

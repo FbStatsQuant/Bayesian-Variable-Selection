@@ -155,6 +155,25 @@ TEST(offer_floor_merge_rule) {
   CHECK(!v4::merge::offer_floor_refusal(h, true, "c", std::nextafter(-5.0, 0.0), 0.0).empty());   // not tau_cal's bits
   h.floor = std::nan(""); CHECK(!v4::merge::offer_floor_refusal(h, true, "c", -5.0, 0.0).empty());
   h.floor = __builtin_huge_val(); CHECK(!v4::merge::offer_floor_refusal(h, true, "c", -5.0, 1e300).empty());
+  // the radix select equals the sorted c-th largest on random values with many ties, both signs, subnormals and +-0
+  {
+    std::mt19937_64 g(9); std::vector<double> vals;
+    for (int rep = 0; rep < 60; ++rep) {
+      const size_t n = 1 + (size_t)(g() % 700);
+      std::vector<double> v(n);
+      for (auto& x : v) { switch (g() % 6) { case 0: x = -(double)(g() % 20); break; case 1: x = (double)(g() % 20) * 0.25; break;
+                                               case 2: x = std::ldexp((double)(g() % 1000) - 500.0, (int)(g() % 40) - 1060); break;   // subnormals too
+                                               case 3: x = (g() & 1) ? 0.0 : -0.0; break; case 4: x = -1e300 * (double)(g() % 5); break;
+                                               default: x = ((double)g() / 1.8e19 - 0.5) * 1e3; } }
+      std::vector<double> sorted = v; std::sort(sorted.begin(), sorted.end(), [](double a, double b) { return a > b; });
+      for (uint64_t c : {(uint64_t)1, (uint64_t)n, (uint64_t)(1 + g() % n), (uint64_t)(1 + g() % n)}) {
+        const double r = v4::tau_cal_of(v, c), w = sorted[c - 1];
+        const bool zero = r == 0.0 && w == 0.0;   // +0 and -0 compare equal: the sort may pick either; the select is by key (-0 < +0)
+        CHECKF(zero || v4::f64_hex(r) == v4::f64_hex(w), "n %zu c %llu: select %.17g vs sorted %.17g", n, (unsigned long long)c, r, w);
+      }
+      CHECK(std::isinf(v4::tau_cal_of(v, n + 1)) && v4::tau_cal_of(v, n + 1) < 0);
+    }
+  }
   // tau_cal: the c-th largest, -inf below c values
   CHECK(v4::tau_cal_of({3, 1, 2, 5, 4}, 2) == 4.0 && v4::tau_cal_of({3, 1, 2}, 3) == 1.0 && std::isinf(v4::tau_cal_of({3, 1}, 3)));
   v4::Json m = v4::Json::object(); v4::tau_cal_to_meta(m, -1.25);

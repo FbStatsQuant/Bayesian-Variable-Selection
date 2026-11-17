@@ -278,12 +278,14 @@ double check_calib_tau_cal(const fmt::Reader& R, const Json& meta, uint32_t mode
   bool strict = true;
   for (uint64_t i = 1; i < n && strict; ++i) strict = lex_less(M(i - 1), M(i));
   if (!strict) {   // not the canonical order: distinctness by sorting the indices (small files / legacy lists only)
+    // bounded: the exporter's flat list is canonical (the scan above); an unordered list is a legacy / hand-made file, and
+    // its index sort must not become a large allocation before the island's admission (4 B per model)
+    if (n > (1ull << 24)) throw Error(Status::invalid_input, path + ": more than 2^24 inherited models and not in canonical (lexicographic) order");
     std::vector<uint32_t> ord(n); for (uint64_t i = 0; i < n; ++i) ord[i] = (uint32_t)i;
-    if (n > 0xFFFFFFFFull) throw Error(Status::invalid_input, path + ": too many inherited models for an unordered list");
     std::sort(ord.begin(), ord.end(), [&](uint32_t a, uint32_t b) { return lex_less(M(a), M(b)); });
     for (uint64_t i = 1; i < n; ++i) if (!lex_less(M(ord[i - 1]), M(ord[i]))) throw Error(Status::invalid_input, path + ": inherited models are not distinct (D-29: tau_cal is over distinct models)");
   }
-  const double t = tau_cal_of(std::vector<double>(F, F + n), 40ull * (uint64_t)p + 1);
+  const double t = tau_cal_of(F, n, 40ull * (uint64_t)p + 1);   // radix select over the mapped values: no copy
   if (f64_hex(t) != f64_hex(tau)) throw Error(Status::invalid_input, path + ": tau_cal is not the c-th best F of the distinct inherited models (D-29)");
   return tau;
 }
