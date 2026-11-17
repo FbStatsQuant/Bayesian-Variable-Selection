@@ -95,8 +95,35 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
       auto& c = gb.sup[s]; c.arow.assign(c.k, 0);
       if (c.fast && c.add_ok) for (int a = 0; a < c.k; ++a) c.arow[a] = (int)(std::lower_bound(gb.act.begin(), gb.act.end(), c.S[a]) - gb.act.begin());
     }
-    gb.XA.resize((size_t)nA * D.n);
-    for (int a = 0; a < nA; ++a) std::memcpy(&gb.XA[(size_t)a * D.n], D.col(gb.act[a]), sizeof(double) * D.n);
+    // Gram rows (K3): which active columns have a row from an earlier pass, which get a slot now, which go without
+    gb.act_gr.assign(nA, nullptr); gb.act_local.assign(nA, -1); gb.act_newslot.assign(nA, -1); gb.loc.clear();
+    const int nslots = gram_slots_of(cfg, cfg.G, p);   // 0 unless label-major with bounded scoring
+    if (nslots > 0) {
+      if (gb.gr_slots != nslots) {   // once per island (G is fixed by the admission)
+        // uninitialised (no serial zero-fill of slots x p doubles: 5 GB at 10^6): a row is written by the tile sweep of the
+        // pass that gives its column the slot, before any read, and the pages are first touched there, in parallel
+        gb.GR.reset(); gb.GR.reset(new double[(size_t)nslots * p]); gb.slot_col.assign(nslots, -1); gb.gr_slots = nslots;
+      }
+      for (int r = 0; r < nslots; ++r) if (gb.slot_col[r] >= 0) {   // keep the slots of columns still active, free the others
+        auto it = std::lower_bound(gb.act.begin(), gb.act.end(), gb.slot_col[r]);
+        if (it != gb.act.end() && *it == gb.slot_col[r]) gb.act_gr[it - gb.act.begin()] = &gb.GR[(size_t)r * p]; else gb.slot_col[r] = -1;
+      }
+      int fr = 0; std::vector<int> noslot;
+      for (int a = 0; a < nA; ++a) if (!gb.act_gr[a]) {
+        while (fr < nslots && gb.slot_col[fr] >= 0) ++fr;
+        if (fr < nslots) { gb.slot_col[fr] = gb.act[a]; gb.act_newslot[a] = fr; gb.loc.push_back(a); KS.gram_rows_new++; }
+        else { noslot.push_back(a); KS.gram_rows_noslot++; }
+      }
+      const int nnew = (int)gb.loc.size();
+      gb.loc.insert(gb.loc.end(), noslot.begin(), noslot.end());
+      KS.gram_rows_reused += (uint64_t)(nA - nnew - (int)noslot.size());
+    } else {
+      for (int a = 0; a < nA; ++a) gb.loc.push_back(a);
+    }
+    const int nLoc = (int)gb.loc.size();
+    for (int t = 0; t < nLoc; ++t) gb.act_local[gb.loc[t]] = t;
+    gb.XA.resize((size_t)nLoc * D.n);
+    for (int t = 0; t < nLoc; ++t) std::memcpy(&gb.XA[(size_t)t * D.n], D.col(gb.act[gb.loc[t]]), sizeof(double) * D.n);
     if (gb.lbuf.size() < (size_t)nsup * p) {   // sized once to G p (review P2 / L5: growing re-zero-fills and reallocates)
       const size_t full = (size_t)std::max(nsup, std::min(cfg.G, cfg.N)) * p;
       gb.lbuf.clear(); gb.lbuf.shrink_to_fit(); gb.obuf.clear(); gb.obuf.shrink_to_fit();
@@ -150,7 +177,7 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
         }
         if ((int)z.ub.size() < kmax) z.ub.resize(kmax);
         avec<double>& Pp = scratch_P[t];
-        if (Pp.size() < (size_t)std::max(1, nA) * Bk + 8) Pp.resize((size_t)std::max(1, nA) * Bk + 8);
+        if (Pp.size() < (size_t)std::max(1, nLoc) * Bk + 8) Pp.resize((size_t)std::max(1, nLoc) * Bk + 8);   // computed columns only (K3)
       }
     }
     lap(KS.t_build);
@@ -171,7 +198,11 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
         const double* Xtile = &Xt[(size_t)ti * Bk * D.n];
         // products P[a][jj] = sum_i x_{i,a} x_{i,j}, sequential in i (bits of the Gram entry)
         const double tp0 = omp_get_wtime();
-        tile_products(gb.XA.data(), nA, D.n, Xtile, Bk, Pp.data(), products_block_of(cfg));
+        if (nLoc > 0) tile_products(gb.XA.data(), nLoc, D.n, Xtile, Bk, Pp.data(), products_block_of(cfg));
+        for (int t = 0; t < nLoc; ++t) {   // K3: new columns store this tile's part of their Gram rows (new columns come first)
+          const int sl = gb.act_newslot[gb.loc[t]]; if (sl < 0) break;
+          std::memcpy(&gb.GR[(size_t)sl * p + j0], &Pp[(size_t)t * Bk], sizeof(double) * nbv);
+        }
         tprod += omp_get_wtime() - tp0;
         for (int s = 0; s < nsup; ++s) {
           const SupportCache& c = gb.sup[s];
@@ -204,8 +235,9 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
               const int nl = std::min(8, cnt - c0); const unsigned valid = (1u << nl) - 1u;
               int32_t j8[8], jj8[8];
               for (int l = 0; l < 8; ++l) { jj8[l] = nlist[c0 + std::min(l, nl - 1)]; j8[l] = j0 + jj8[l]; }   // idle lanes repeat the last label
-              for (int a = 0; a < c.k; ++a) {
-                const double* row = &Pp[(size_t)c.arow[a] * Bk];
+              for (int a = 0; a < c.k; ++a) {   // the Gram row of member a: cached (K3) or this pass's product row
+                const int ai = c.arow[a];
+                const double* row = gb.act_gr[ai] ? gb.act_gr[ai] + j0 : &Pp[(size_t)gb.act_local[ai] * Bk];
                 v8d g; for (int l = 0; l < 8; ++l) g[l] = row[jj8[l]];
                 u[a] = g;
               }
@@ -232,7 +264,7 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
               for (int l = 0; l < 8; ++l) { int j = j0 + v + l; if (v + l < nbv && !inm[v + l]) valid |= 1u << l; j8[l] = std::min(j, p - 1); }
               if (!valid) continue;
               nflip += (uint64_t)__builtin_popcount(valid);
-              for (int a = 0; a < c.k; ++a) u[a] = load8(&Pp[(size_t)c.arow[a] * Bk + v]);
+              for (int a = 0; a < c.k; ++a) u[a] = load8(&Pp[(size_t)gb.act_local[c.arow[a]] * Bk + v]);   // dense path: no Gram rows (all local)
               double lm8[8], o8[8];
               if constexpr (A == Arith::ClassA) {
                 eval8_add<A>(D, st, sc, c, 0, u, j8, valid, lm8, o8);
@@ -303,7 +335,10 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
       KS.flip_evals += nflip;
     }
     lap(KS.t_phaseA);
-    if (fail_fatal()) return;
+    if (fail_fatal()) {   // a tile may not have run: the rows of this pass's new slots can be incomplete, so free them
+      for (int a = 0; a < nA; ++a) if (gb.act_newslot[a] >= 0) gb.slot_col[gb.act_newslot[a]] = -1;
+      return;
+    }
 
     // ---- walk: U/N/I labels in position order up to the first Gibbs change --------------------------------
     #pragma omp parallel for schedule(dynamic, 1) num_threads(NT)

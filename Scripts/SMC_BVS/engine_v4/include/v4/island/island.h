@@ -82,6 +82,10 @@ struct IslandConfig {
                                             // phase B. Execution parameter: outputs unchanged (false = the dense reference)
   bool test_nan_rows = false;               // tests only: poison the label-major score rows before every pass; any read of a
                                             // value not computed in the pass is an internal_error (review §2.1 NaN-row test)
+  int gram_slots = -1;                      // label-major with bounded scoring (K3, WP3_ARCH_REVIEW §2.2): Gram rows X^T x_a of
+                                            // active columns kept across passes, one slot of p doubles each. -1 = auto
+                                            // (gram_slots_of: 5 G / 2, 640 at G = 256); 0 = off. Execution parameter (same
+                                            // bits); counted in the memory plan (gram_rows)
   int test_bound_shrink = 0;                // tests only: bounded scoring skips the last s positions below the running first
                                             // change (a deliberate bug: the negative control of test_nan_rows)
   int products_block = 0;                   // tile products: 4 = 4 active columns x 32 labels per sweep, 1 = the original loop
@@ -99,6 +103,15 @@ struct IslandConfig {
   bool adaptive = false; double adaptive_H = 0; int adaptive_Te = 30;
 };
 
+// Gram-row slots of a label-major island with G particles per group (K3): -1 = auto, 5 G / 2 (640 at G = 256; the
+// measured late 10^6 rounds use ~151 active columns per pass at G = 256, production supports have E|S| ~ 3.6-3.9),
+// at least 16; never more than p. Columns without a slot fall back to per-pass products (same bits).
+inline int gram_slots_of(const IslandConfig& c, int G, int p) {
+  if (c.kernel != KernelKind::LabelMajor || !c.bounded_scoring || c.gram_slots == 0) return 0;
+  const int g = std::max(1, std::min(G, c.N));
+  return std::min(p, c.gram_slots > 0 ? c.gram_slots : std::max(16, (5 * g + 1) / 2));
+}
+
 // the products block a configuration uses (0 = auto by the island ISA; review PR26 B2)
 inline int products_block_of(const IslandConfig& c) {
   if (c.products_block > 0) return c.products_block;
@@ -113,6 +126,8 @@ using v4::StageRow;
 
 struct KernelStats {   // execution statistics (not part of the law, not hashed)
   uint64_t particle_rounds = 0, particle_sweeps = 0, passes = 0, support_label_pairs = 0, supports = 0;
+  uint64_t gram_rows_new = 0, gram_rows_reused = 0, gram_rows_noslot = 0;   // K3: active columns per pass whose Gram row is
+                                                                             // computed into a slot / read from a slot / without a slot
   uint64_t flip_evals = 0;   // label-major: addition flips evaluated on fast supports (bounded scoring: the needed ones only)
   uint64_t slow_supports = 0, store_merges = 0, store_buffered = 0, store_dup_dropped = 0, store_serial_merges = 0;
   double t_store_compact = 0, t_compact_pass = 0;   // wall seconds compacting (all paths) / at pass boundaries
