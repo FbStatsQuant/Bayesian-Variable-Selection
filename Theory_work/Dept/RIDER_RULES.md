@@ -102,3 +102,6 @@ the new text, and the bridges it needs. The manager passes it to HQ for W3-READE
   with every recording and void the council. Cite the registry rows (id + status, verbatim) in the brief instead. Applies
   to every new freeze and re-freeze. Post-freeze tool item: manifest.py warns when an EXT input is a registry file.
 - **HQ 11-17 (12:55): extended.** The same applies to INFRA/DECISIONS.md and any other live log (files appended by lifecycle tools): no council manifest freezes them as EXT inputs. The manifest.py warning covers live logs too.
+
+- **HQ 11-17 (14:11, owner; POLICIES §5, main b40abc79): Sol model.** All future Sol reviews use **gpt-6.2-sol** (provider codex,
+  reasoningEffort high), not gpt-6.1-sol. Reviews already in flight finish as started. Record the model id in each review's header.
