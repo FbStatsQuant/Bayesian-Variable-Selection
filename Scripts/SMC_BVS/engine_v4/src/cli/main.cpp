@@ -23,7 +23,9 @@ static void usage() {
     "  gen   --design AR|IND|BLK|ADJ-OPP --n N --p P --seed S [--rho R --b B --a A --s0 K --sigma s] --out raw.bin [--truth truth.json]\n"
     "  gen-test  (same spec) --ntest M --cols 1,5,9 --out test.bin\n"
     "  prep  --in raw.bin --out data.bin    |   prep --from-r <dir> --out data.bin\n"
-    "  info  --in file.bin                  (header, sections, verified hashes)\n"
+    "  info  file.bin | --in file.bin       (header, sections, verified hashes: every section)\n"
+    "  info  file.bin --meta 1              (header + table + the meta section only, the meta printed; no full-file read:\n"
+    "                                        seconds on a multi-GB island file; --verify 1 adds every section hash)\n"
     "  common: --threads k  --record out.json\n");
 }
 
@@ -45,7 +47,10 @@ int main(int argc, char** argv) {
   // the record path first, so that a failure while reading the other arguments (e.g. a refused manifest) is recorded
   for (int i = 2; i + 1 < argc; ++i) if (std::string(argv[i]) == "--record") record_path = argv[i + 1];
   try {
-    for (int i = 2; i < argc; ++i) {
+    int first = 2;
+    // `info FILE ...`: the file as the first argument (WP7: `smcbvs4 info island_1.bin --meta 1` used to be "bad argument")
+    if (cmd == "info" && argc >= 3 && std::string(argv[2]).rfind("--", 0) != 0) { args["in"] = Json(std::string(argv[2])); first = 3; }
+    for (int i = first; i < argc; ++i) {
       std::string k = argv[i];
       if (k.rfind("--", 0) != 0 || i + 1 >= argc) throw Error(Status::invalid_input, "bad argument " + k);
       std::string key = k.substr(2), val = argv[++i];
@@ -84,7 +89,14 @@ int main(int argc, char** argv) {
     } else if (cmd == "prep") {
       rec = prep::run(args);
     } else if (cmd == "info") {
-      fmt::Reader rd(args.at("in").str());
+      if (!args.contains("in")) throw Error(Status::invalid_input, "info: the file is required (info FILE, or --in FILE)");
+      // --meta 1 alone reads the header, the section table and the meta section only (their hashes are checked: the table's
+      // and the meta section's): no pass over the other sections, which are GBs in an island file at 10^6. --verify 1|0
+      // overrides (default: verify every section unless --meta is given).
+      const bool meta_req = args.contains("meta") && args.at("meta").type() == Json::NUM && args.at("meta").num() != 0;
+      const bool full = args.contains("verify") && args.at("verify").type() == Json::NUM ? args.at("verify").num() != 0 : !meta_req;
+      fmt::Reader rd(args.at("in").str(), full);
+      if (!full && rd.has("meta")) rd.verify_section("meta");
       rec["kind"] = fmt::kind_name(rd.kind()); rec["mode"] = fmt::mode_name(rd.mode()); rec["content_sha256"] = rd.content_hash();
       Json secs = Json::array();
       for (auto& e : rd.sections()) {
@@ -92,8 +104,10 @@ int main(int argc, char** argv) {
         s["dims"] = Json::array(); s["dims"].push(e.dims[0]); if (e.ndim == 2) s["dims"].push(e.dims[1]);
         s["sha256"] = hex(e.sha256, 32); secs.push(s);
       }
-      rec["sections"] = secs; rec["verified"] = true;
-      if (args.contains("meta") && rd.has("meta")) rec["meta"] = rd.json("meta");   // --meta 1: the meta section (T5: island meta.cost; WP7 O5)
+      rec["sections"] = secs;
+      if (full) rec["verified"] = true;
+      else { rec["verified"] = "header+table+meta"; rec["verified_sections"] = "meta"; }   // section hashes listed are the table's, not recomputed
+      if (meta_req && rd.has("meta")) rec["meta"] = rd.json("meta");   // --meta 1: the meta section (T5: island meta.cost; WP7 O5)
     } else if (cmd == "setup") rec = setup::run(args);
     else if (cmd == "calibrate") rec = calib::run(args);
     else if (cmd == "island") rec = island::run(args);

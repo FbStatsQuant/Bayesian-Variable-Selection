@@ -143,6 +143,11 @@ void Reader::verify_all() const {
       throw Error(Status::invalid_input, std::string("section hash mismatch: ") + e.name + " in " + path_);
   }
 }
+void Reader::verify_section(const std::string& name) const {
+  const SectionEntry& e = entry(name);
+  auto h = sha256(base_ + e.offset, e.length);
+  if (std::memcmp(h.data(), e.sha256, 32) != 0) throw Error(Status::invalid_input, "section hash mismatch: " + name + " in " + path_);
+}
 bool Reader::has(const std::string& name) const {
   for (auto& e : table_) if (name == e.name) return true;
   return false;

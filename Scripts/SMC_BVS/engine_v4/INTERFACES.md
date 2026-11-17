@@ -697,3 +697,8 @@ point, so all WPs link from day one: `setup::run`, `island::run`, `calib::run`, 
   "interrupted_resumable", no island file); the checkpoint written at the stop is the ordinary `island_r.ckpt.{a,b}`
   (v0.1.22 checksum). Driver: plan keys `restart` (the islands' resubmission chain) and `t6` / `t6_only` (T6 by real kills,
   `tools/slurm/p1m_t6.py`).
+- v0.1.24 (2026-11-18, WP7 for WP1; the 1M pilot fit's T5 report) — §1 `info`: `smcbvs4 info FILE` (the file may be the first
+  argument as well as `--in FILE`); `--meta 1` reads the header, the section table and the meta section only (the table's and
+  the meta section's hashes are checked; the other sections are not read) and prints the meta; the record then has
+  `verified` = "header+table+meta". Without `--meta` (or with `--verify 1`) every section hash is recomputed as before
+  (`verified` = true). MEASURED on a real 10⁶ island file (2.1 GB): 0.04 s with `--meta 1`, 11–19 s full.
