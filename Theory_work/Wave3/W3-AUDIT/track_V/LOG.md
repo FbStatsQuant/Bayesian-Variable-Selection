@@ -15,3 +15,4 @@ Times from `date` (CST). Write scope: `Theory_work/Wave3/W3-AUDIT/track_V/` (out
 - 2026-11-17 13:37 Council V-R1 frozen: MANIFEST c271cfac… (reviews/MANIFEST_VR1.txt, INPUTS_VR1.txt); briefs BRIEF_VR1_{sol,opus}.md; seats launched (Sol on codex, Opus on claudeAgent_personal).
 - 2026-11-17 13:40 V-R1 Sol seat: 9.5 PASS, V1 ACCEPT. Opus seat running.
 - 2026-11-17 13:44 V-R1 Opus seat: 8.4 FAIL (F-1: remark mislabels track C spread placements as (VIS-a); E-1–E-5). All accepted (VR1_disposition.md) → STATEMENT v1.3 / PROOF v1.3 (no clause changed); scope sentence corrected likewise. Diff round V-R2 frozen: MANIFEST 0bc1e0b4… (DIFF_VR1_to_VR2.patch); Opus diff seat only (D91).
+- 2026-11-17 13:50 V-R2 Opus diff seat 9.4 PASS → bound R2 (0bc1e0b4). E items N-1–N-4 (N-1: (VIS-b) per-n bound needs n ≥ n₀) applied in v1.4 (VR2_disposition.md); short diff round V-R3 frozen: MANIFEST aee57913… (Opus only).

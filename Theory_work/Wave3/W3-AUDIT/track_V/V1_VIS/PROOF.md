@@ -1,4 +1,4 @@
-# V1 · Lemma VIS — PROOF v1.3
+# V1 · Lemma VIS — PROOF v1.4
 
 Fix n; Σ = Σ_n is a p × p correlation matrix with c₁₆ > 0 (positive definite in (VIS-a)), W ~ N_p(0, Σ). For U ⊆ [p]
 write U^c := [p] ∖ U. F1 is applied to positive definite matrices only: to Σ in (VIS-a), and to Σ_V with |V| ≤ 16
@@ -41,7 +41,7 @@ a sign σd_j times a sum of nonnegative terms, one of which (k = j) is |θ*_j| �
 ## (VIS-b)
 *B is closed.* 𝒩 is a closed subset of the unit sphere, hence compact. Let θ_m ∈ B, θ_m → θ; choose ν_m ∈ 𝒩 with
 ⟨ν_m, θ_m⟩ = 0; a subsequence ν_m → ν ∈ 𝒩, and ⟨ν, θ⟩ = lim ⟨ν_m, θ_m⟩ = 0, so θ ∈ B.
-*Bound.* Fix n, j, U and let γ := γ(U, j). By (VIS-0) γ ≠ 0; ν := γ/|γ| ∈ 𝒩_n ⊆ 𝒩, so ν^⊥ ⊆ B and
+*Bound.* Fix n ≥ n₀, j, U and let γ := γ(U, j). By (VIS-0) γ ≠ 0; ν := γ/|γ| ∈ 𝒩_n ⊆ 𝒩, so ν^⊥ ⊆ B and
 |⟨ν, ϑ⟩| = dist(ϑ, ν^⊥) ≥ dist(ϑ, B). Hence |Cov(W_j, Wᵀθ* | W_U)| = |γ|·|⟨ν, ϑ⟩| ≥ |γ_{i(j)}|·dist(ϑ, B) ≥ c₁₆·dist(ϑ, B).
 *Minimum attained.* ν ↦ |⟨ν, ϑ⟩| is continuous on the compact 𝒩, and dist(ϑ, B) = inf_{ν∈𝒩} dist(ϑ, ν^⊥) =
 inf_{ν∈𝒩} |⟨ν, ϑ⟩| (B = ∪_{ν∈𝒩} ν^⊥), so the infimum is a minimum; as B is closed, dist(ϑ, B) > 0 iff ϑ ∉ B.
@@ -95,11 +95,14 @@ alignment of (VIS-a) is required only within a block. ∎
   so δ = 0. (VIS-a) gives the explicit constant θ_lo c₁₆ directly.
 - Track C's designs (`Theory_work/Wave3/W3-AUDIT/track_C/RESULTS.md:28-50`; spread placement signs + − + −, clustered
   placement four adjacent aligned truths). *(VIS-a) instances:* IND in both placements (components are singletons, so
-  alignment is vacuous); the clustered (aligned) placement of AR(ρ), ρ > 0, of the block compound-symmetry designs and of
-  the one-factor designs (D10, D12, D14). Block designs with the spread placement are (VIS-a) instances only if the
-  truths lie in different blocks (alignment is required within a block); otherwise they are (VIS-b) cases. *(VIS-b)
-  cases:* AR(ρ) with the spread placement (not aligned; there the (VIS-a) inequality itself can fail), Toeplitz, the
-  three-factor designs D11, D13, D15 (not covered by (VIS-e), which treats one factor), S5's spread placement. B8's s5
+  alignment is vacuous); the clustered (aligned) placement of AR(ρ), ρ > 0, of the block compound-symmetry designs, of
+  the one-factor designs (D10, D12, D14) and of S5 (D16; s5-type M-matrix form, B8); the block compound-symmetry designs
+  with the spread placement too, since track C's spread truths lie in different blocks (alignment is required only
+  within a block). *(VIS-b) cases:* AR(ρ) with the spread placement (not aligned; there the (VIS-a) inequality itself can
+  fail), Toeplitz in both placements (its precision matrix may well be a Stieltjes matrix, which would put the clustered
+  placement under (VIS-a), but this is not proved here), the one-factor designs with the spread (mixed-sign) placement
+  (D10, D12; D14's spread truths lie on B), the three-factor designs D11, D13, D15 (not covered by (VIS-e), which treats
+  one factor), S5's spread placement, and the FRED-QD-like tiles (D19). B8's s5
   and fac2 (aligned truths) are shown inside by B8's own computations — s5 by the M-matrix form of Σ⁻¹, i.e. a (VIS-a)
   instance; fac2 by an explicit formula for the conditional covariances (`Theory_work/Wave3/W3-AUDIT/TRACK_B.md:222-228`).
 - Illustration of B (AR(ρ), two truths at distance g, U = ∅, j = k₁): γ = (1, ρ^g), so B ⊇ {θ₁ + ρ^gθ₂ = 0} for each gap g

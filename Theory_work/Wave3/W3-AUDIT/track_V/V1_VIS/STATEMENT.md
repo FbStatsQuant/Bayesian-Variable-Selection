@@ -1,4 +1,4 @@
-# V1 · Lemma VIS (visibility with a margin uniform in n: a sign route and a generic-position route) — STATEMENT v1.3 (draft; Sol LOCK WITH CHANGES on v1.1, changes applied)
+# V1 · Lemma VIS (visibility with a margin uniform in n: a sign route and a generic-position route) — STATEMENT v1.4 (draft; Sol LOCK WITH CHANGES on v1.1, changes applied)
 
 Track V item V1 (manager 11-17, D112; owner + consultant requirement: a margin **uniform in n**, not "nonzero for almost
 every β"). Tier B (new lemma; pure linear algebra and topology, no code). **Lean target: yes** (finite-dimensional:
@@ -33,7 +33,7 @@ conditions with an explicit uniform constant.
   such that DΣ⁻¹D has nonpositive off-diagonal entries, and the truths are **aligned**: d_k·sgn(θ*_k) = d_j·sgn(θ*_j) for
   every j, k ∈ S₀ in the same connected component of the graph of Σ⁻¹ (the graph with an edge {l, l′} iff (Σ⁻¹)_{ll′} ≠ 0).
   Then for every j ∈ S₀ and U ∌ j: |Cov(W_j, Wᵀθ* | W_U)| ≥ |θ*_j|·Var(W_j | W_U), and this is ≥ θ_lo·c₁₆ when |U| ≤ 15.
-- **(VIS-b) Generic-position route (explicit constant).** For every j ∈ S₀ and U ∌ j with |U| ≤ 15,
+- **(VIS-b) Generic-position route (explicit constant).** For every n ≥ n₀, every j ∈ S₀ and U ∌ j with |U| ≤ 15,
   |Cov(W_j, Wᵀθ* | W_U)| ≥ c₁₆ · dist(ϑ, B). B is closed, so for a fixed ϑ, ϑ ∉ B ⇔ dist(ϑ, B) > 0, and
   dist(ϑ, B) = min_{ν∈𝒩} |⟨ν, ϑ⟩| (attained: 𝒩 is compact). Hence for a design sequence with
   **c̲ := inf_{n≥n₀} c₁₆(Σ_n) > 0** and **δ := inf_{n≥n₀} dist(ϑ_n, B) > 0** (for instance ϑ_n in a fixed compact
@@ -45,7 +45,7 @@ conditions with an explicit uniform constant.
   matrices with c_m := inf_{n≥n₀} min_{|V|≤15+s₀} λ_min(Σ_{n,V}) > 0; 𝒩 formed over n ≥ n₀):
   (i) *finitely many local patterns*: the labelled matrices Σ_{n,V}, V = U ∪ S₀ (labels: which indices are U, which is
   j, and the rank of each truth), take finitely many values over all n, j, U — e.g. block-diagonal Σ_n with blocks from
-  a fixed finite list of correlation matrices; block designs with equicorrelated blocks of a fixed ρ_b and any sizes
+  a fixed finite list of correlation matrices; block designs with equicorrelated blocks of a fixed ρ_b ∈ [0, 1) and any sizes
   (also growing), the entries depending only on block sharing; equicorrelation with a fixed ρ (ρ ∈ [0, 1) when p → ∞, for
   positive definiteness); factor models Σ_n = Ψ + ΛΛᵀ (unit
   diagonal) whose rows (λ_l, ψ_l) take finitely many values;
@@ -53,7 +53,7 @@ conditions with an explicit uniform constant.
   |ρ| < 1, fixed; banded/MA(q)); also block-diagonal designs whose blocks are of this form, with finitely many r's.
 - **(VIS-e) Instances of the sign route** (each with D and the floor): independent columns (D = I; c₁₆ = 1); AR(ρ), |ρ| < 1
   (d_l = s^l with s := sgn ρ, s := +1 if ρ = 0; alignment: s^k·sgn(θ*_k) is the same for every k ∈ S₀ — for ρ > 0 equal
-  signs, for ρ < 0 signs alternating with the column index; c₁₆ ≥ (1 − |ρ|)/(1 + |ρ|)); equicorrelation ρ ∈ [0, 1) (D = I; c₁₆ ≥ 1 − ρ); one-factor
+  signs, for ρ < 0 sgn(θ*_k) = σ·(−1)^k for a common σ, i.e. the sign is fixed by the parity of k; c₁₆ ≥ (1 − |ρ|)/(1 + |ρ|)); equicorrelation ρ ∈ [0, 1) (D = I; c₁₆ ≥ 1 − ρ); one-factor
   Σ = Ψ + λλᵀ with Ψ diagonal positive (d_l = sgn(λ_l), sgn 0 := +1; c₁₆ ≥ min_l ψ_l); block-diagonal combinations of
   these (D blockwise; alignment is required only within a block).
 
@@ -81,3 +81,4 @@ n ≥ n₀.
 | v1.1 | target quote (Σ_n PD only in Thm 6; theorem ↔ lines); (VIS-a) PD premise, |U| ≤ 15 for the c₁₆ bound; (VIS-b) ϑ ∉ B ⇔ δ > 0, min attained, n ≥ n₀; reading for Thm 5/6/10 floors; ρ = 0, equicorrelation ρ ≥ 0; "a.e." bullet | WEAKER (premises stated) / EQUAL | VLC1 #1–#7, #10 | `reviews/VLC1_disposition.md` | Sol read |
 | v1.2 | — (proof only: the false remark "(VIS-a) is a case of (VIS-b)" replaced by the two-route remark with Sol's example; (VIS-0) locality parenthetical) | EQUAL (no clause changed) | VSL1 Sol #1 (C, remark), #2 (E) | `reviews/VSL1_reply_sol.md` | council |
 | v1.3 | — (proof remark on track C reworded: spread placements are (VIS-b) cases, clustered (VIS-a), three-factor not (VIS-e)); target: n ≥ n₀; B over n ≥ n₀; AR alignment written out; growing equicorrelated blocks in (VIS-d)(i) | EQUAL (no clause changed) / STRONGER ((VIS-d)(i) example) | V-R1 Opus F-1, E-1–E-5 | `reviews/VR1_council_opus.md` | diff round V-R2 (Opus) |
+| v1.4 | (VIS-b) per-n bound for n ≥ n₀ (𝒩 is formed over n ≥ n₀); ρ_b ∈ [0, 1); AR ρ < 0 parity wording; track C remark completed | WEAKER ((VIS-b) for n ≥ n₀ only, as used) / EQUAL | V-R2 Opus N-1–N-4 | `reviews/VR2_council_opus.md` | diff round V-R3 (Opus) |
