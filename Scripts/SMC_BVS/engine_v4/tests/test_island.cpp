@@ -1337,7 +1337,8 @@ static bool cost_sums_match(const IslandRun& r, const char* what) {
     offers += q.offers; merges += q.merges; dup += q.dup_dropped; wall += q.wall; comp += q.t_compact; chk += q.t_check; ck += q.t_ckpt;
   }
   const KernelStats& k = r.ks;
-  const bool ok = rounds == k.particle_rounds && sweeps == k.particle_sweeps && pairs == k.support_label_pairs && passes == k.passes &&
+  double leadc = 0; for (const StepCost& q : r.cost) leadc += q.t_compact_lead;
+  const bool ok = std::abs(leadc - k.t_store_compact_lead) <= 1e-9 && rounds == k.particle_rounds && sweeps == k.particle_sweeps && pairs == k.support_label_pairs && passes == k.passes &&
                   flips == k.flip_evals && act == k.act_cols && offers == k.store_buffered && merges == k.store_merges && dup == k.store_dup_dropped &&
                   std::abs(wall - k.t_total) <= 1e-9 * std::max(1.0, k.t_total) && std::abs(comp - k.t_store_compact) <= 1e-9 &&
                   std::abs(chk - k.t_check) <= 1e-9 && std::abs(ck - k.t_ckpt) <= 1e-9 && !r.cost.empty() && r.cost.back().kind == 4;
@@ -1692,4 +1693,28 @@ TEST(time_stop_chain_equals_uninterrupted) {
   try { IslandConfig b = c; b.stop_after_s = 1.0; run_island<Arith::ClassA>(F.D, F.st, F.nb, b); } catch (const v4::Error& e) { r1 = e.st == v4::Status::invalid_input; }   // no checkpoint path
   try { IslandConfig b = a; b.stop_after_s = -1.0; run_island<Arith::ClassA>(F.D, F.st, F.nb, b); } catch (const v4::Error& e) { r2 = e.st == v4::Status::invalid_input; }
   CHECK(r1 && r2);
+}
+
+// WP7 O3 (WP3_ARCH_REVIEW R2): the leader stores are compacted by the same deferred parallel merge as the top store (waves
+// bounded by the smallest store; compaction between waves and at pass boundaries; parallel at step boundaries). Their
+// content is a function of their offers only: every thread count / group size / tile, the serial option and the
+// particle-major reference give the same island hash and the same two leader stores, in both arithmetic forms.
+TEST(leader_stores_deferred_compaction_same_bits) {
+  Fixture F(100, 300, 64);
+  for (int arith = 0; arith < 2; ++arith) {
+    auto run = [&](IslandConfig c) { return arith ? run_island<Arith::ClassA>(F.D, F.st, F.nb, c) : run_island<Arith::Bit>(F.D, F.st, F.nb, c); };
+    IslandConfig c = small_cfg(); c.leaders = true; c.N = 96; c.kernel = KernelKind::ParticleMajor; c.threads = 1;
+    const IslandRun ref = run(c);
+    CHECK(ref.leaders && !ref.lead0_v.empty() && ref.ks.t_store_compact_lead > 0);
+    struct Cf { int th, G, tile; bool par; };
+    for (Cf cf : {Cf{2, 16, 128, true}, Cf{3, 7, 64, true}, Cf{3, 96, 128, true}, Cf{3, 16, 128, false}, Cf{1, 16, 128, true}}) {
+      IslandConfig d = c; d.kernel = KernelKind::LabelMajor; d.threads = cf.th; d.G = cf.G; d.tile = cf.tile; d.store_parallel_compact = cf.par;
+      IslandRun r = run(d);
+      bool ok = r.hash() == ref.hash() && r.lead0_pool == ref.lead0_pool && r.lead1_pool == ref.lead1_pool && r.lead0_v.size() == ref.lead0_v.size() && r.lead1_v.size() == ref.lead1_v.size();
+      for (size_t i = 0; ok && i < ref.lead0_v.size(); ++i) ok = same_bits(r.lead0_v[i], ref.lead0_v[i]);
+      for (size_t i = 0; ok && i < ref.lead1_v.size(); ++i) ok = same_bits(r.lead1_v[i], ref.lead1_v[i]);
+      CHECKF(ok, "arith %d threads %d G %d tile %d parallel %d: leaders / hash differ from the particle-major reference", arith, cf.th, cf.G, cf.tile, (int)cf.par);
+      if (cf.par && cf.th > 1) CHECK(r.ks.t_store_compact_lead > 0);
+    }
+  }
 }

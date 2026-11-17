@@ -219,11 +219,13 @@ class IslandEngine {
     if (cfg.leaders) {   // calibration islands / golden tests only (INTERFACES v0.1.7: no final-run leader stores)
       lead0.init(20ULL * (uint64_t)p, Order::LEX); lead1.init(20ULL * (uint64_t)p, Order::LEX);   // core/cpp/v3_ledger.h:78
       for (auto& t : tl) { t->lead0 = &lead0; t->lead1 = &lead1; }
+      // WP7 O3 (WP3_ARCH_REVIEW R2): the leader stores take the same deferred parallel compaction as the top store (below)
     }
     top.dup_filter = cfg.store_dup_filter;
     top.floor = cfg.offer_floor;   // D-29: the top store only (run_island validated it); leader stores never have a floor
     top.test_oom_merge = cfg.test_oom_merge;
     top.defer = cfg.store_parallel_compact && NT > 1 && cfg.kernel == KernelKind::LabelMajor;   // PM has no boundaries (review m3)   // compaction at pass/step boundaries, all threads
+    if (cfg.leaders) lead0.defer = lead1.defer = top.defer && cfg.leaders_deferred;   // O3: same class, same proof (content = a function of the offers only)
     scratch_P.resize(NT);
     Bk = std::max(64, (cfg.tile + 63) / 64 * 64);
     st.prepare(NT);   // StartView: the pi_0 draws' per-thread scratch, built before any parallel region (no heap in a draw)
@@ -331,8 +333,8 @@ class IslandEngine {
   void sync_ledgers() {
     for (auto& t : tl) { top.flush(t->buf); if (cfg.leaders) { lead0.flush(t->buf0); lead1.flush(t->buf1); } master.merge_from(*t); t->reset_counters(); }
     if (cfg.leaders) {
-      lead0.compact(); lead1.compact();
-      for (auto& t : tl) { t->buf0.snap.reset(); t->buf0.snap_gen = ~0ull; t->buf1.snap.reset(); t->buf1.snap_gen = ~0ull; }
+      release_leader_snapshots();
+      for (TopStore* L : {&lead0, &lead1}) { if (L->defer) L->compact_parallel(NT); else L->compact(); }   // O3: parallel at step boundaries
       if (lead0.nan_offered.load() || lead1.nan_offered.load()) throw v4::Error(v4::Status::internal_error, "leader store: a NaN value was offered");
     }
     release_snapshots();
@@ -341,6 +343,15 @@ class IslandEngine {
   }
   // workers drop their kept-run snapshots before a boundary compaction: at most two kept runs are ever alive
   void release_snapshots() { for (auto& t : tl) { t->buf.snap.reset(); t->buf.snap_gen = ~0ull; } }
+  void release_leader_snapshots() { for (auto& t : tl) { t->buf0.snap.reset(); t->buf0.snap_gen = ~0ull; t->buf1.snap.reset(); t->buf1.snap_gen = ~0ull; } }
+  // Deferred compaction of the top store and, on calibration islands, the two leader stores (WP7 O3): called between waves
+  // (`mid`: staged >= (stage_limit + stage_hard) / 2) and at a pass boundary (staged >= stage_limit), all threads free.
+  // Each store is compacted by its own parallel merge; the content of every store is a function of its offers only.
+  void compact_if_due(bool mid) {
+    auto due = [&](TopStore& s) { return s.defer && s.staged() >= (mid ? (s.stage_limit + s.stage_hard) / 2 : s.stage_limit); };
+    if (due(top)) { release_snapshots(); top.compact_parallel(NT); }
+    if (cfg.leaders) for (TopStore* L : {&lead0, &lead1}) if (due(*L)) { release_leader_snapshots(); L->compact_parallel(NT); }
+  }
   // --mem-budget at a step boundary (deterministic: the kept run's content is a function of the offers)
   bool over_budget(int step) {
     if (!cfg.mem_budget) return false;
@@ -386,7 +397,7 @@ class IslandEngine {
   // the previous close into a FINAL row; the checkpoint written after it carries the row and the lifetime totals at that
   // close (cost_now), so a resume continues both exactly. The exit row (kind 4) closes the last interval.
   struct CostMark {   // lifetime execution totals at one instant
-    KernelStats ks; double t_compact = 0; uint64_t merges = 0, buffered = 0, dup = 0, serial = 0; double elapsed = 0;
+    KernelStats ks; double t_compact = 0, t_lead = 0; uint64_t merges = 0, buffered = 0, dup = 0, serial = 0; double elapsed = 0;
   };
   std::chrono::steady_clock::time_point t_start;   // start of run() in this process
   double elapsed_base = 0;                          // lifetime seconds before this process (checkpoint)
@@ -395,7 +406,7 @@ class IslandEngine {
   int64_t cost_segment = 0;
   uint64_t dup_dropped_now() const { uint64_t d = dup_base; for (auto& t : tl) d += t->buf.n_dup_dropped; return d; }
   CostMark cost_now(std::chrono::steady_clock::time_point now) const {
-    CostMark c; c.ks = res.ks; c.t_compact = top.t_compact; c.merges = top.n_merges; c.buffered = top.n_buffered; c.dup = dup_dropped_now();
+    CostMark c; c.ks = res.ks; c.t_compact = top.t_compact; c.t_lead = lead0.t_compact + lead1.t_compact; c.merges = top.n_merges; c.buffered = top.n_buffered; c.dup = dup_dropped_now();
     c.serial = top.n_serial_merges; c.elapsed = elapsed_base + std::chrono::duration<double>(now - t_start).count();
     return c;
   }
@@ -412,7 +423,7 @@ class IslandEngine {
     c.wall = cur.elapsed - cmark.elapsed;
     c.t_orders = k.t_orders - o.t_orders; c.t_build = k.t_build - o.t_build; c.t_phaseA = k.t_phaseA - o.t_phaseA; c.t_products = k.t_products - o.t_products;
     c.t_walk = k.t_walk - o.t_walk; c.t_phaseB = k.t_phaseB - o.t_phaseB; c.t_apply = k.t_apply - o.t_apply; c.t_barrier = k.t_barrier - o.t_barrier; c.t_pm = k.t_pm - o.t_pm;
-    c.t_compact = cur.t_compact - cmark.t_compact; c.t_compact_pass = k.t_compact_pass - o.t_compact_pass;
+    c.t_compact = cur.t_compact - cmark.t_compact; c.t_compact_lead = cur.t_lead - cmark.t_lead; c.t_compact_pass = k.t_compact_pass - o.t_compact_pass;
     c.t_check = k.t_check - o.t_check; c.t_ckpt = k.t_ckpt - o.t_ckpt;
     double sS = 0; for (auto& x : P) sS += (double)x.S.size();
     c.mean_S = P.empty() ? 0.0 : sS / (double)P.size();
@@ -432,13 +443,13 @@ class IslandEngine {
     for (uint64_t* x : {&k.particle_rounds, &k.particle_sweeps, &k.passes, &k.support_label_pairs, &k.supports, &k.slow_supports, &k.act_cols,
                         &k.flip_evals, &k.store_checks, &c.merges, &c.buffered, &c.dup, &c.serial}) io1(w, *x);
     for (double* x : {&k.t_compact_pass, &k.t_products, &k.t_init, &k.t_orders, &k.t_build, &k.t_phaseA, &k.t_walk, &k.t_phaseB, &k.t_apply,
-                      &k.t_barrier, &k.t_pm, &k.t_ckpt, &k.t_check, &c.t_compact, &c.elapsed}) io1(w, *x);
+                      &k.t_barrier, &k.t_pm, &k.t_ckpt, &k.t_check, &c.t_compact, &c.t_lead, &c.elapsed}) io1(w, *x);
   }
   template <class W, class T> static void io1(W& w, T& x) {   // CkptOut::put / CkptIn::get (complete-class context)
     if constexpr (std::is_same_v<W, CkptOut>) w.put(x); else w.get(x);
   }
   void cost_restore(const CostMark& c) {   // after load_ckpt: continue the lifetime totals
-    res.ks = c.ks; top.t_compact = c.t_compact; top.n_merges = c.merges; top.n_buffered = c.buffered; top.n_serial_merges = c.serial;
+    res.ks = c.ks; top.t_compact = c.t_compact; lead0.t_compact = c.t_lead; lead1.t_compact = 0; top.n_merges = c.merges; top.n_buffered = c.buffered; top.n_serial_merges = c.serial;
     dup_base = c.dup; elapsed_base = c.elapsed;
     cmark = cost_now(t_start);   // = c (elapsed: elapsed_base + 0)
     cost_segment = res.cost.empty() ? 1 : res.cost.back().segment + 1;
@@ -877,7 +888,7 @@ class IslandEngine {
       res.lead1_v = std::move(lead1.k->v); res.lead1_hash = std::move(lead1.k->hash); res.lead1_off = std::move(lead1.k->off); res.lead1_len = std::move(lead1.k->len); res.lead1_pool = std::move(lead1.k->pool);
     }
     res.ks.store_merges = cmark.merges; res.ks.store_buffered = cmark.buffered;
-    res.ks.store_serial_merges = cmark.serial; res.ks.t_store_compact = cmark.t_compact;
+    res.ks.store_serial_merges = cmark.serial; res.ks.t_store_compact = cmark.t_compact; res.ks.t_store_compact_lead = cmark.t_lead;
     res.ks.store_dup_dropped = cmark.dup;
     for (auto& t : tl) res.ks.store_floor_dropped += t->buf.n_floor_dropped;   // D-29: this process's floor drops
     res.offer_floor = cfg.offer_floor; res.offer_floor_calib = cfg.offer_floor > NEG_INF ? cfg.offer_floor_calib : std::string();

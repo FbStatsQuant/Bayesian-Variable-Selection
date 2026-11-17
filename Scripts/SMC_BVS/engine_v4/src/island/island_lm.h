@@ -365,7 +365,7 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
       if (gb.etype[gi] == 3) gb.e[gi] = gb.q[gi];   // a failed particle consumes nothing more (the round's events are discarded)
     }
     lap(KS.t_walk);
-    if (top.defer && top.staged() >= (top.stage_limit + top.stage_hard) / 2) { release_snapshots(); top.compact_parallel(NT); }   // walk offers
+    compact_if_due(true);   // walk offers (top and, on calibration islands, the leader stores: O3)
 
     // ---- phase B: consumption of the Gibbs labels at positions (q, e] -------------------------------------
     // In waves of tiles; between waves (all threads free) the staging area is compacted in parallel once it passes
@@ -374,7 +374,9 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
     // wave keeps the staging area below 0.375 c + 0.1 c < c/2 = stage_hard: the in-pass serial compaction (stale
     // snapshots, pool over-reservation) is unreachable in label-major
     const uint64_t per_tile = (uint64_t)std::max(1, nsup) * (uint64_t)Bk;
-    const int wave = top.defer ? (int)std::max<uint64_t>(1, std::min<uint64_t>((uint64_t)std::max(64, 16 * NT), (top.cap / 10) / per_tile)) : ntile;
+    // the smallest store bounds the wave (the leader stores have half the top store's capacity: O3)
+    const uint64_t wave_cap = cfg.leaders ? std::min(top.cap, std::min(lead0.cap, lead1.cap)) : top.cap;
+    const int wave = top.defer ? (int)std::max<uint64_t>(1, std::min<uint64_t>((uint64_t)std::max(64, 16 * NT), (wave_cap / 10) / per_tile)) : ntile;
     for (int w0 = 0; w0 < ntile; w0 += wave) {
     const int w1 = std::min(ntile, w0 + wave);
     #pragma omp parallel num_threads(NT)
@@ -445,14 +447,11 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
         }
       });
     }
-    if (top.defer && w1 < ntile && top.staged() >= (top.stage_limit + top.stage_hard) / 2) { release_snapshots(); top.compact_parallel(NT); }
+    if (w1 < ntile) compact_if_due(true);
     }   // waves
     lap(KS.t_phaseB);
     if (fail_fatal()) return;
-    if (top.defer && top.staged() >= top.stage_limit) {   // pass boundary: all threads free
-      release_snapshots();
-      top.compact_parallel(NT);
-    }
+    compact_if_due(false);   // pass boundary: all threads free
     lap(KS.t_compact_pass);
 
     // ---- apply the state changes ---------------------------------------------------------------------------

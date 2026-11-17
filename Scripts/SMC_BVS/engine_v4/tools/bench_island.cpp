@@ -132,6 +132,8 @@ static int bench_island(int p, int N, const std::vector<int>& thr, KernelKind kk
   IslandConfig c; c.store_dup_filter = std::getenv("V4_NO_DUP_FILTER") == nullptr; c.verbose = std::getenv("V4_VERBOSE") != nullptr;
   if (const char* e = std::getenv("V4_PRODUCTS_BLOCK")) c.products_block = std::atoi(e);
   c.store_parallel_compact = std::getenv("V4_SERIAL_COMPACT") == nullptr; c.allow_test_kernels = true;
+  c.leaders_deferred = std::getenv("V4_LEADERS_SERIAL") == nullptr;   // before/after: the pre-O3 serial leader compaction
+  c.leaders = std::getenv("V4_LEADERS") != nullptr;   // a calibration-shaped island: the two leader stores (WP7 O3; golden / bench only)
   c.check_store_each_step = std::getenv("V4_CHECK_EACH_STEP") != nullptr;   // the pre-O1 behaviour (before/after comparisons)
   if (const char* e = std::getenv("V4_COST_PATH")) c.cost_path = e;   // D-30 per-step cost record (JSON lines; O2)
   c.seed = 2026; c.island = 1; c.N = N; c.L = L; c.Hm = Hm; c.B = 14; c.kernel = kk; c.G = G; c.tile = Bk; c.store_cap = cap;
@@ -189,6 +191,7 @@ static int bench_island(int p, int N, const std::vector<int>& thr, KernelKind kk
     std::printf("  memory plan (admission, ESTIMATE): %s | G used %d\n", r.mem_plan.c_str(), r.G_used);
     std::printf("  store compaction: %.2f s wall in total (%llu compactions, %llu serial in-pass fallbacks; %s)\n", k.t_store_compact,
                 (unsigned long long)k.store_merges, (unsigned long long)k.store_serial_merges, c.store_parallel_compact ? "parallel at pass/step boundaries" : "serial under the mutex");
+    if (c.leaders) std::printf("  leader stores (V4_LEADERS): compaction %.2f s wall of %.2f s (top store %.2f s)\n", k.t_store_compact_lead, wall, k.t_store_compact);
     std::printf("  store check (I1, parallel; O1): %llu checks, %.2f s wall (%s)\n", (unsigned long long)k.store_checks, k.t_check,
                 c.check_store_each_step ? "after every step: V4_CHECK_EACH_STEP" : "before checkpoints and the final write");
     std::printf("  wall s: init %.2f orders %.2f build %.2f phaseA %.2f walk %.2f phaseB %.2f apply %.2f barrier %.2f pm %.2f\n",
