@@ -36,7 +36,7 @@ TC = `track_C/RESULTS.md` (Owls part). "pending" = the proof exists but its chec
 | 2.1 Cor 9C | **the returned list carries posterior mass ≥ n^{−cM/2}** | **ATTENTION** | a property of the run, neither proved nor a data condition; #5′ (in progress) would supply it on designs inside Thm 6 |
 | 2.1 Cor 9C | inputs `W1-N1:B`, `W1-N1:F` | 2a, **pending** | "PROVED under the named premises … council-passed" (old label); line check running |
 | 3.1 Thm 6 | Gaussian rows, fixed signals, floor on O(log n) columns | 1 | as row 1.2 |
-| 3.1 Thm 6 | **visibility given ≤ 15 columns** | **ATTENTION** | not class 1: SL Condition 5 (p. 958) is only its case with no conditioning and no margin. Not 2b by our own evidence: TC finds it failing at the population level on the riboflavin-like design and unclear on the FRED-QD-like one; TB B8 |
+| 3.1 Thm 6 | **visibility given ≤ 15 columns** | **ATTENTION** | not class 1: SL Condition 5 (p. 958) is only its case with no conditioning and no margin. Not 2b by our own evidence: TC finds it failing at the population level on the riboflavin-like design's clustered placement (on/next to B); Lemma VIS (W3-AUDIT-V:VIS) now proves it with a uniform-in-n margin on the sign-route and generic-position designs, incl. D18's spread placement (≥ 0.1, p ≥ 16352) and D19; TB B8 |
 | 3.1 Thm 6 | **leakage set \|Q\| ≤ n^b with locality; local regressions in Q** | **ATTENTION** | not class 1: SL remark (a), p. 958, is not a hypothesis. Not 2b in general: TC finds the leak set covering the whole design for factors, S5 and the riboflavin-like design; inside for independent, block, AR ≤ 0.8 |
 | 3.1 Thm 6 | floor on Q ∪ {l} | 2b | follows from a spectral floor; TC row P3: rising with n in all 19 designs |
 | 3.1 Thm 6 | the code does what the proof says (guard, blocks ≤ 16, start table, LS0, tie rule) | 2a | `W3-AUDIT-A:GW`, `BLK`, `ENC`, `OPC`, `TDP`: "PROVED-CHECKED; council R2, …"; `W3-RM:E4` "PROVED-CHECKED" |
@@ -60,7 +60,7 @@ scope; (iv) demote to the supplement.
 1. **Visibility (rows 3.1, 3.2, 3.3, 3.6; #5′).** (i) None found: Song–Liang's Condition 5 is the marginal case only.
    (ii) Possible and cheap in part: a lemma that, for a fixed correlation structure, visibility fails only on a
    measure-zero set of coefficient vectors, plus the proved cases (one truth per correlated group, Markov, aligned
-   signs). It will not cover the riboflavin-like design. (iii) State the theorem "for designs in which no true
+   signs). **Done (D112/track V):** Lemma VIS, uniform-in-n margin; it covers D18's spread placement (certified ≥ 0.1) but not its clustered placement. (iii) State the theorem "for designs in which no true
    predictor is masked by 15 others", with the examples and the two failures named. **Recommendation: (iii) now, (ii) as
    a Tier B lemma (1–2 lead-days).** The honest sentence for the paper: this is a condition of the method's first
    stage, as Condition 5 is of Song–Liang's.
