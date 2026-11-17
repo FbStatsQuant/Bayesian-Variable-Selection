@@ -11,6 +11,12 @@
 - When: BNP sends a "quiet window" (expected 11-16 early afternoon CST). HQ pauses SMC departments' leads, restarts, verifies, then messages BNP back. BNP launches nothing until confirmed.
 - BNP already moved its temp to /home/fb31/bnp_tmp and removed 73 stale sandboxes (11-15).
 
+## OWNER 11-17: THEORY BUDGET POLICY
+- Theory is **no longer the main activity or the largest token consumer**.
+- A genuine model or method improvement is welcome **only if** its theory impact is localized and its cost is modest (not hundreds of millions of tokens).
+- Every theory item needs a cost estimate and a kill budget up front.
+- Monday's consultant session ("the SMC does work" theorem; dropping or keeping the sub-Gaussian ticket) is decided under this policy.
+
 ## OWNER 11-17, after reading the unified manuscript
 - **Owner's top priority: the posterior theorems** (true model, rows 1.1/1.2; true distribution, row 2.1).
 - **Mon 11-23, first item: an HQ + consultant ("VP") strategy session** on whether to do more about the algorithm theorem's novel assumptions (visibility, leakage set) beyond #5′. Options to weigh: weaker or primitive sufficient conditions, a design-family corollary, a different route for strong-factor data. Bring a recommendation to the owner.
