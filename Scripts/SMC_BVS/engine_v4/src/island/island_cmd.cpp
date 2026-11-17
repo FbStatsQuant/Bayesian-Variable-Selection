@@ -230,7 +230,10 @@ Json run(const Json& args) {
   c.seed = (uint32_t)std::max<int64_t>(1, in.seed); c.island = (uint32_t)in.r; c.role = IslandRole::Final; c.iter = 0; c.tier = (uint32_t)C.tier;
   c.N = C.N; c.grid = C.grid; c.L = C.L; c.Hm = C.Hm; c.B = bud.B;
   c.kernel = kernel_of(mode); c.threads = threads; c.G = G; c.tile = tile; c.compat = compat;
-  c.k_store = C.k_store; c.inputs_bytes = start_bytes_model(sd);   // the setup inputs: the same number before the load and in the run (StartView: the mapped lengths)
+  // the setup inputs, the same number before the load and in the run: the mapped section bytes of the flat start law
+  // (StartView) + its per-thread draw scratch + the neighbour lists (WP2's setup.bin); the expanded-Start model for a
+  // minimal file the island must rebuild
+  c.k_store = C.k_store; c.inputs_bytes = start_inputs_bytes(sd, threads);
   c.mem_budget = budget; c.leaders = false; c.keep_terminal = true;
   // the checkpoint's identity includes the three verified input hashes (review PR52 MAJOR-1): a restart on other inputs is refused
   c.input_id = input_identity(dhash, sd.content_hash, C.hash);
@@ -252,7 +255,8 @@ Json run(const Json& args) {
   const double kplan = plan_k(sd.size_logmass, C.k_store);
   const MemPlan mp = plan_with_budget(z, kplan, c);
   const bool admitted = budget == 0 || mp.total <= budget;
-  rec["mem_plan"] = plan_json(mp, budget, c.inputs_bytes, "ESTIMATE (final island peak-live plan, memory.h; k = max(8, q90(pi_0) + 1, k_store); setup inputs = start_bytes_model from the section sizes)");
+  rec["mem_plan"] = plan_json(mp, budget, c.inputs_bytes, sd.mappable ? "ESTIMATE (final island peak-live plan, memory.h; k = max(8, q90(pi_0) + 1, k_store); setup inputs = the mapped setup.bin sections + draw scratch + neighbours)"
+                                             : "ESTIMATE (final island peak-live plan, memory.h; k = max(8, q90(pi_0) + 1, k_store); setup inputs = model of the rebuilt Start: the file lacks WP2's sections)");
   const std::string refusal = "mem_budget: predicted peak " + std::to_string(mp.total >> 20) + " MiB > budget " + std::to_string(budget >> 20) + " MiB [" + mem_plan_text(mp) + "]";
   if (plan_only) {
     rec["plan_only"] = true; rec["status"] = admitted ? "completed" : "resource_limit";
@@ -271,7 +275,8 @@ Json run(const Json& args) {
   // ---- read the arrays (the files are verified in full here), then run ------------------------------------------------
   Data D = prep::load_data(in.data, nullptr);
   if (D.n != n || D.p != p || D.K != K) throw Error(Status::invalid_input, std::string(W) + "data.bin changed between the metadata and the load");
-  const Start st = load_start(in.setup, D);
+  const StartView st = load_start_view(in.setup, D, sd.mappable);   // mapped: nothing of the start law is expanded
+  if (sd.mappable && st.bytes() != sd.view_bytes) throw Error(Status::internal_error, std::string(W) + "the mapped start law differs from the planned sections");
   const Neighbours nb = load_neighbours(in.setup, D.p);
   const double t_load = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
   const IslandRun r = mode == fmt::M_V ? run_island<Arith::ClassA>(D, st, nb, c) : run_island<Arith::Bit>(D, st, nb, c);
@@ -284,7 +289,7 @@ Json run(const Json& args) {
   rec["island_bin"] = fhash; rec["output_hash"] = hex64(r.hash()); rec["init_hash"] = hex64(r.init_hash);
   if (s == Status::completed) rec["logZ"] = r.logZ;
   rec["G_used"] = r.G_used; rec["resumed_from_step"] = r.resumed_from_step;
-  rec["start_bytes_measured"] = start_bytes(st, nb);   // after the fact: the model above must bound it
+  rec["start_source"] = st.source; rec["start_view_bytes"] = (double)st.bytes();
   Json t = Json::object(); t["load"] = t_load; t["island"] = r.ks.t_total; t["ckpt"] = r.ks.t_ckpt; t["store_check"] = r.ks.t_check;
   t["total"] = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
   rec["seconds"] = t;

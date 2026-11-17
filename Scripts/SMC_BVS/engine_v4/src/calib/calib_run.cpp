@@ -87,7 +87,7 @@ IslandPlans calib_island_plans(const Settings& s, Rule rule, uint32_t mode, int 
   for (int e = 0; e < (rule == Rule::coded ? 2 : 1); ++e) { ic.N = std::max(ic.N, s.tiers[e].H); ic.Hm = std::max(ic.Hm, s.tiers[e].Hm); }
   ic.compat = mode == fmt::M_COMPAT; ic.threads = ic.compat ? 1 : s.threads;
   ic.kernel = mode == fmt::M_V ? island::KernelKind::LabelMajor : island::KernelKind::ParticleMajor;
-  IslandPlans r; r.setup_in = sd ? island::start_bytes_model(*sd) : 0.0;
+  IslandPlans r; r.setup_in = sd ? island::start_inputs_bytes(*sd, ic.threads) : 0.0;   // mapped sections (StartView) or the rebuild model
   ic.inputs_bytes = r.setup_in + (double)resident_own;
   const double k = sd ? island::plan_k(sd->size_logmass, 0.0) : kbar;
   island::IslandConfig ic1 = ic; ic1.G = 1; ic1.mem_budget = 0;
@@ -194,7 +194,7 @@ Json run(const Json& args) {
   // the island runner: WP3's island with calibration roles (PILOT / DIAG; WP3_DESIGN §1.11). Theory modes (compat, law)
   // run the bit form particle-major (D-21; compat: 1 thread, v3 streams 0-9 owned by the runner); V runs class A
   // label-major with every thread.
-  const island::Start st = island::load_start(spath, D);
+  const island::StartView st = island::load_start_view(spath, D, sdims.mappable);   // mapped: the start law is not expanded
   const island::Neighbours nb = island::load_neighbours(spath, D.p);
   island::CalibRunnerConfig rc; rc.seed = (uint32_t)seed; rc.B = b.B; rc.threads = s.threads;
   rc.inputs_bytes = ipl.setup_in;   // the island's own setup inputs: the Start model of the plan above (StartView: the mapped lengths)
