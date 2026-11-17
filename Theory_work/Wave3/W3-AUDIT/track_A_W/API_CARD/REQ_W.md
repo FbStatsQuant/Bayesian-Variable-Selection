@@ -1,11 +1,11 @@
 # AUDITW — W1 (island control flow, MEAS) and W2 (freezing at general c), code of record 4676af6
 
-Material for a blind review. Every excerpt is verbatim with its file and line numbers (the code at commit 4676af6, the texts at commit e8d30aa0). Status labels have been replaced by [status omitted].
+Material for a blind review. Every excerpt is verbatim with its file and line numbers (the code at commit 4676af6, the texts at commit 5daf97a8). Status labels have been replaced by [status omitted].
 
 ## 1. W1 statement
-`Theory_work/Wave3/W3-AUDIT/track_A_W/W1_ISL/STATEMENT.md` @ e8d30aa0, lines 1–67:
+`Theory_work/Wave3/W3-AUDIT/track_A_W/W1_ISL/STATEMENT.md` @ 5daf97a8, lines 1–76:
 ```
-    1| # W1 · Lemma ISL (island control flow, stopping times, MEAS at the pin) — STATEMENT v1.1 (draft, not [status omitted])
+    1| # W1 · Lemma ISL (island control flow, stopping times, MEAS at the pin) — STATEMENT v1.2 (draft; [status omitted] [status omitted] on v1.1)
     2| 
     3| Track A_W item W1 (manager 11-17; D97 edge verdicts, recorder package §2 edges 2 and 3). Tier B (line check of the cited
     4| steps of `W1-N1:B` at the code of record). **Lean target: yes** for (ISL-st) in abstract form ("a program that reads an
@@ -18,12 +18,12 @@ Material for a blind review. Every excerpt is verbatim with its file and line nu
    11|   core, as used by
    12|   - **`W3-SAMP:D`** (D-i, "used only through the control-flow clause of W1-N1 Lemma B (B-b)"; its freezing step uses
    13|     (B-0), (B-d)): `Theory_work/Wave3/W3-SAMP/lemmas/D_theorem.md:6-31`;
-   14|   - **`W3-SAMP:MR`** Step 2 (measurability of the augmented record, (B-d)): `Theory_work/Wave3/W3-SAMP/lemmas/MR_identities.md:57-65`.
+   14|   - **`W3-SAMP:MR`** Step 2 (measurability of the augmented record, (B-d)): `Theory_work/Wave3/W3-SAMP/lemmas/MR_identities.md:51-58`.
    15|   (B-a), (B-b)'s law statements (R1)–(R3) at the pin are `W3-AUDIT-AX:FR` (FR-a) (`Theory_work/Wave3/W3-AUDIT/track_A_X/X1_T12/STATEMENT.md:27-42`)
    16|   and are not re-[status omitted] here.
-   17| - The three steps: **(B-0)** the record is a function of (c, u) (`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:65-78`);
-   18|   the **control-flow clause of (B-b)** — stopping times, bounded reads, fresh uniforms (`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:78-86`);
-   19|   **(B-d)** MEAS (`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:115-122`).
+   17| - The three steps: **(B-0)** the record is a function of (c, u) (`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:62-75`);
+   18|   the **control-flow clause of (B-b)** — stopping times, bounded reads, fresh uniforms (`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:77-86`);
+   19|   **(B-d)** MEAS (`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:119-125`).
    20| 
    21| ## Code of record
    22| `Scripts/SMC_BVS/core/` at pin 4676af6 (= HEAD for the core); paths relative to it. Final island r:
@@ -34,50 +34,59 @@ Material for a blind review. Every excerpt is verbatim with its file and line nu
    27| Fixed valid data on the SMC branch, `setup` built (T2 BLK, T4 ENC). A calibration value c in the success set A_s: grid
    28| 0 = φ₀ < … < φ_T = 1 (T ≥ 1), the tier, Hm = 4; N_e(c), L(c) denote the values **actually executed**,
    29| `b$tiers$N[tier(c) + 1]` and `b$L` (`v3_run.R:90`; W3-SAMP's convention, `Theory_work/Wave3/W3-SAMP/STATEMENT.md:47-50`),
-   30| integers N_e ≥ 1, L ≥ 0 (the final-run settings are functions of c and (n, p): T5 CAL-c). A_s ∈ 𝓔: it is the preimage
-   31| under c ↦ (T, grid, tier) of a Borel set. u = (u₁, u₂, …) ∈ Υ := [0, 1)^ℕ the island's stream; 𝓕_k := σ(u₁, …, u_k). The **potential run**
-   32| (T1: every guard Boolean FALSE). EX-A. The **statistical record** Φ(c, u) is `W1-N1:B`'s (`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:14-21`):
-   33| log Ẑ_r, the population after the initial draws, after each stage-t resampling and each stage-t round, after each of the
-   34| L + 4 rounds at φ = 1, and for each particle and round its order and within-round path; the **augmented record** Φ̃(c, u)
-   35| adds every π₀ draw in execution order (initial draws and independence proposals, accepted or not; `W3-SAMP:D`'s
-   36| augmentation). Off A_s, Φ := Φ̃ := a fixed dummy record o†.
-   37| 
-   38| ## Lemma ISL
-   39| For every c ∈ A_s, on the potential run of final island r:
-   40| - **(ISL-0) Function of (c, u).** Every value that feeds a state transition, an accept decision, a weight, a resampling
-   41|   or log Ẑ is a function of c, the fixed data and uniforms read from u; no other source (clock, guard, cache history,
-   42|   ledger, other islands' streams, persistent engine members) influences Φ̃(c, u). Uniforms are read only through the
-   43|   island's `vs->u(·)`, sequentially.
-   44| - **(ISL-st) Stopping times and fresh uniforms.** The island's operations — each initial draw, each resampling, each
-   45|   particle-round, each elementary step, and each `draw_pi0` call — run in an order and read a number of uniforms that
-   46|   are decided by c, the data and the uniforms already read. Hence the index τ at which an operation starts is an
-   47|   (𝓕_k)-stopping time, bounded by a constant κ(c) (below); (u_{τ+1}, u_{τ+2}, …) is i.i.d. U[0, 1) and independent of
-   48|   𝓕_τ (under H-U); and every record variable produced before the operation is 𝓕_τ-measurable. Bounds: `draw_pi0`
-   49|   ≤ 1 + 2J uniforms; a resampling N_e; a particle-round ≤ κ_max := (m − 1) + p + 3 + 3B + (2 + 2J), m = p + B + 2; so
-   50|   κ(c) := N_e(1 + 2J) + T·N_e + (T + L + 4)·N_e·κ_max. The number of π₀ draws is D_r(c) = N_e(1 + T + L + 4).
-   51| - **(ISL-d) MEAS.** (c, u) ↦ Φ̃(c, u) (hence Φ) is 𝓔 ⊗ 𝓤-measurable, where 𝓔 is any σ-field on the calibration space
-   52|   for which c ↦ (T, grid, N_e, L, tier) is measurable and A_s ∈ 𝓔, and 𝓤 is the Borel σ-field of Υ; its values lie in a
-   53|   Polish space (a countable disjoint union of Euclidean spaces times finite sets). Every coordinate used by
-   54|   `W3-SAMP:MR` Step 2 (stage-t populations, post-terminal populations, Y^i_{q,ℓ} = particle i's state before its ℓ-step
-   55|   in measured round q, the partial evidence Ẑ_t and W_r = Ẑ_r/Z) and by `W3-SAMP:D` (the D_r(c) draws) is a measurable
-   56|   function of (c, Φ̃): Ẑ_t = Z₀∏_{s≤t}(1/N_e)Σ_i e^{Δ_s d(S_i^{(s−1)})} is a function of grid(c) and the populations
-   57|   after the stage-(s − 1) rounds, which are coordinates of Φ.
-   58| 
-   59| ## Use
-   60| (ISL-0) + (ISL-st) are the "control-flow clause of (B-b)" and (B-0) as `W3-SAMP:D` (D-i) uses them; (ISL-d) is (B-d) as
-   61| `W3-SAMP:D`'s freezing step and `W3-SAMP:MR` Step 2 use it — all at the pin, for the record conventions those proofs use.
-   62| 
-   63| ## Not claimed
-   64| - The laws (R1)–(R3) and the identification with T12's I(c) (that is FR-a).
-   65| - Binary64 / the 2⁻⁵³ grid (EX-A, H-U); interrupted runs (T1 GW).
-   66| - Calibration-time islands (pilot, diagnostics), which run on streams 0–9 (T5 CAL-a).
-   67| 
+   30| integers N_e ≥ 1, L ≥ 0 (the final-run settings are functions of c and (n, p): T5 CAL-c); tier ∈ {0, 1}. The calibration
+   31| space E contains every value of the record, ⊥ and non-"ok" records included; (T, grid, tier) are defined on all of E
+   32| (a dummy value where a record has none) and 𝓔-measurable, and A_s ∈ 𝓔: it is the preimage under c ↦ (T, grid, tier) of a
+   33| Borel set. Executions: no C++ integer operation overflows and every allocation succeeds (IDEAL-W, MACH; as in T2 BLK-d,
+   34| T4 ENC). u = (u₁, u₂, …) ∈ Υ := [0, 1)^ℕ the island's stream; 𝓕_k := σ(u₁, …, u_k). The **potential run**
+   35| (T1: every guard Boolean FALSE). EX-A. The **statistical record** Φ(c, u) is `W1-N1:B`'s (`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:14-21`):
+   36| log Ẑ_r, the population after the initial draws, after each stage-t resampling and each stage-t round, after each of the
+   37| L + 4 rounds at φ = 1, and for each particle and round its order and within-round path; the **augmented record** Φ̃(c, u)
+   38| adds every π₀ draw in execution order (initial draws and independence proposals, accepted or not; `W3-SAMP:D`'s
+   39| augmentation). Off A_s, Φ := Φ̃ := a fixed dummy record o†.
+   40| 
+   41| ## Lemma ISL
+   42| For every c ∈ A_s, on the potential run of final island r:
+   43| - **(ISL-0) Function of (c, u).** Every value that feeds a state transition, an accept decision, a weight, a resampling
+   44|   or log Ẑ is a function of c, the fixed data and uniforms read from u; no other source (clock, guard, cache history,
+   45|   ledger, other islands' streams, persistent engine members) influences Φ̃(c, u). Uniforms are read only through the
+   46|   island's `vs->u(·)`, sequentially. The island program ends normally (no error or exception) for every u ∈ Υ.
+   47| - **(ISL-st) Stopping times and fresh uniforms.** The island's operations — each initial draw, each resampling, each
+   48|   particle-round, each elementary step, and each `draw_pi0` call — run in an order and read a number of uniforms that
+   49|   are decided by c, the data and the uniforms already read. Hence the index τ at which an operation starts is an
+   50|   (𝓕_k)-stopping time, bounded by a constant κ(c) (below); (u_{τ+1}, u_{τ+2}, …) is i.i.d. U[0, 1) and independent of
+   51|   𝓕_τ (under H-U); and every record variable produced before the operation is 𝓕_τ-measurable. Bounds: `draw_pi0`
+   52|   ≤ 1 + 2J uniforms; a resampling N_e; a particle-round ≤ κ_max := (m − 1) + p + 3 + 3B + (2 + 2J), m = p + B + 2; so
+   53|   κ(c) := N_e(1 + 2J) + T·N_e + (T + L + 4)·N_e·κ_max. The number of π₀ draws is D_r(c) = N_e(1 + T + L + 4).
+   54| - **(ISL-d) MEAS.** (c, u) ↦ Φ̃(c, u) (hence Φ) is 𝓔 ⊗ 𝓤-measurable, where 𝓔 is any σ-field on the calibration space
+   55|   for which c ↦ (T, grid, N_e, L, tier) is measurable and A_s ∈ 𝓔, and 𝓤 is the Borel σ-field of Υ; its values lie in a
+   56|   Polish space (a countable disjoint union of Euclidean spaces times finite sets). Every coordinate used by
+   57|   `W3-SAMP:MR` Step 2 (stage-t populations, post-terminal populations, Y^i_{q,ℓ} = particle i's state before its ℓ-step
+   58|   in measured round q, the partial evidence Ẑ_t and W_r = Ẑ_r/Z) and by `W3-SAMP:D` (the D_r(c) draws) is a measurable
+   59|   function of (c, Φ̃): Ẑ_t = Z₀∏_{s≤t}(1/N_e)Σ_i e^{Δ_s d(S_i^{(s−1)})} is a function of grid(c) and the populations
+   60|   after the stage-(s − 1) rounds, which are coordinates of Φ.
+   61| 
+   62| ## Use
+   63| (ISL-0) + (ISL-st) are the "control-flow clause of (B-b)" and (B-0) as `W3-SAMP:D` (D-i) uses them; (ISL-d) is (B-d) as
+   64| `W3-SAMP:D`'s freezing step and `W3-SAMP:MR` Step 2 use it — all at the pin, for the record conventions those proofs use.
+   65| 
+   66| ## Not claimed
+   67| - The laws (R1)–(R3) and the identification with T12's I(c) (that is FR-a).
+   68| - Binary64 / the 2⁻⁵³ grid (EX-A, H-U); interrupted runs (T1 GW).
+   69| - Calibration-time islands (pilot, diagnostics), which run on streams 0–9 (T5 CAL-a).
+   70| 
+   71| ## Inputs reused (status as recorded)
+   72| - T1 GW, T2 BLK, T4 ENC, T5 CAL-C, T6 START-X, T7 KER: registry `W3-AUDIT-A:{GW,BLK,ENC,CAL-C,START-X,KER}` "[status omitted]-[status omitted];
+   73|   [status omitted] R2" (main 029bb748). FR: `W3-AUDIT-AX:FR` "[status omitted]-[status omitted]; [status omitted] R2" (main 029bb748).
+   74| - The steps re-[status omitted]: `W1-N1:B` "[status omitted] under the named premises of STATEMENT §2 — cross-family [status omitted] … [status omitted]-passed"
+   75|   (registry, main 029bb748).
+   76| 
 ```
 
 ## 2. W1 proof
-`Theory_work/Wave3/W3-AUDIT/track_A_W/W1_ISL/PROOF.md` @ e8d30aa0, lines 1–83:
+`Theory_work/Wave3/W3-AUDIT/track_A_W/W1_ISL/PROOF.md` @ 5daf97a8, lines 1–93:
 ```
-    1| # W1 · Lemma ISL — PROOF v1.1 (line check of `W1-N1:B` (B-0), (B-b) control flow, (B-d) at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
+    1| # W1 · Lemma ISL — PROOF v1.2 (line check of `W1-N1:B` (B-0), (B-b) control flow, (B-d) at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
     2| 
     3| Reuse: T1 GW (`Theory_work/Wave3/W3-AUDIT/track_A/T1_GW/STATEMENT.md`: guard bodies draw no uniform, the potential run's
     4| Booleans are FALSE), T5 CAL-C (`Theory_work/Wave3/W3-AUDIT/track_A/T5_CAL/STATEMENT.md`: final-run settings are functions
@@ -104,68 +113,78 @@ Material for a blind review. Every excerpt is verbatim with its file and line nu
    25| The uniform-reading sites of the island are exactly: `draw_pi0` (`cpp/v3_start.h:160, 164, 170`), `step_gibbs`
    26| (`cpp/v3_engine.h:129`), `step_uswap` (`cpp/v3_engine.h:150, 151, 156`), `step_nswap` (`cpp/v3_engine.h:167, 171, 177`),
    27| `step_indep` (its `draw_start`, `cpp/v3_engine.h:184`, and `cpp/v3_engine.h:189`), `draw_order` (`cpp/v3_engine.h:199`) and `resample`
-   28| (`cpp/v3_engine.h:250`); `eval`, `held`, the ledger and the cache read none (`cpp/v3_engine.h:89-105`), and the guard
-   29| bodies draw no uniform (T1 GW-i). Each transition, accept decision and weight is computed from the current state, c (φ,
-   30| N_e) and the data through `eval` (log m, lg0, d: `cpp/v3_engine.h:89-99`), whose score is exact whatever the cache history:
-   31| `ScoreCache::find` hits only when the hash and the full model agree (`cpp/v3_score.h:271-281`), `insert` stores the
-   32| scorer's value (`cpp/v3_score.h:282-293`), a capacity clear (`cpp/v3_score.h:284`) only causes later misses, and the scorer
-   33| is a deterministic function of S under EX-A; the neighbour lists, B and `st` are fixed before the islands (T7
-   34| KER-d). The clock reads (`cpp/v3_engine.h:284, 298, 304, 335, 336, 341, 348, 361`) set only `seconds_*` and the guard
-   35| argument. Engine
-   36| members shared across steps and islands (one `Engine`, `cpp/v3_core.cpp:410`) carry no information into a transition:
-   37| `tmpQ` is written before it is read in each step (`step_gibbs` reads it only when `include != in`, which needs the branch
-   38| `in || add_ok` that wrote it, `cpp/v3_engine.h:118-131`; the swaps and `step_indep` write it first, `cpp/v3_engine.h:152, 172, 185`);
-   39| `rb_acc` is written only and reset before the measured rounds; `ms`, `ev` are bookkeeping; `scratch` is workspace of
-   40| `st.comp`. The `resample` guard u = 0 ↦ the smallest positive double (`cpp/v3_engine.h:251`) changes the map only on
-   41| {u_i = 0}, a null set under H-U. Hence Φ̃(c, u) is a function of (c, u) (data fixed). This is `W1-N1:B` (B-0)
-   42| (`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:65-78`) at the pin; FR Part 1 lists the same facts.
-   43| 
-   44| ## Step 3 — (ISL-st)
-   45| *Order and counts decided by the past.* By Step 1 the program is a fixed nesting of loops whose bounds are c's integers
-   46| (N_e, T, L, Hm = 4, m = p + B + 2) and whose bodies read uniforms only through `vs->u`. Inside an operation, the number
-   47| of uniforms read is decided by values already read: `draw_pi0` reads 1 (size) + one per iteration of the remaining-size
-   48| loop (stops when r = 0 or after J blocks) + one per positive-size block, ≤ 1 + 2J, a function of the draw (T6 (S));
-   49| `step_gibbs` exactly 1; `step_uswap` 0 (self-loop at |S| ∈ {0, p}, `cpp/v3_engine.h:148`) or 3; `step_nswap` 0 (|S| = 0),
-   50| 1 (empty candidate set, `cpp/v3_engine.h:170`) or 3; `step_indep` (≤ 1 + 2J) + 1; `draw_order` m − 1; `resample` N_e.
-   51| The branch conditions (|S|, candidate set, the drawn values) are functions of the state, hence of (c, data, uniforms
-   52| already read) by Step 2. So for each operation O, {τ_O = k} is determined by (u₁, …, u_k): τ_O is an (𝓕_k)-stopping time.
-   53| *Bounds.* A particle-round reads ≤ (m − 1) + p·1 + 3 + B·3 + (1 + 2J + 1) = κ_max; summing over the program,
-   54| τ_O ≤ κ(c) = N_e(1 + 2J) + T·N_e + (T + L + 4)·N_e·κ_max < ∞.
-   55| *Fresh uniforms.* Under H-U, u is i.i.d. U[0, 1); for a bounded stopping time τ, (u_{τ+1}, u_{τ+2}, …) is i.i.d.
-   56| U[0, 1) and independent of 𝓕_τ (strong Markov property of an i.i.d. sequence: for each k, on {τ = k} the shifted
-   57| sequence is (u_{k+1}, …), independent of 𝓕_k; sum over the finitely many k). Every record variable produced before O is a
-   58| function of (c, u₁, …, u_τ) (Step 2), hence 𝓕_τ-measurable.
-   59| *Draw count.* Each round has exactly one `I` label (`cpp/v3_engine.h:211`), so the π₀ draws are the N_e initial draws and
-   60| one per particle per round over T + L + 4 rounds: D_r(c) = N_e(1 + T + L + 4) (as `W3-SAMP:CC` CC1).
-   61| This is the control-flow clause of `W1-N1:B` (B-b) (`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:78-86`) at the pin, with
-   62| the same κ_max. ∎(ISL-st)
-   63| 
-   64| ## Step 4 — (ISL-d)
-   65| Fix a cell 𝒞 = {c ∈ A_s : T(c) = T, N_e(c) = N, L(c) = L, tier(c) = e} (countably many; A_s ∖ ∪𝒞 = ∅). On 𝒞, by Steps 2–3,
-   66| Φ̃(c, u) is computed by a finite program that reads at most κ := κ(c) (constant on 𝒞) uniforms and whose branches are
-   67| comparisons of finitely many Borel functions of (grid values, data constants, u₁, …, u_κ): `floor`, products,
-   68| `cat_draw_gt` thresholds, `u < o_j`, `u < α` with α = min(1, exp(·)), the resampling comparisons W_k < u, and the
-   69| grid-dependent weights Δ_t d(S). Under EX-A these are exact real functions, so Φ̃ on 𝒞 × Υ is a Borel function of
-   70| (grid, u₁, …, u_κ), and (c, u) ↦ (grid(c), u₁, …, u_κ) is 𝓔 ⊗ 𝓤-measurable. With Φ̃ ≡ o† off A_s, Φ̃ is
-   71| 𝓔 ⊗ 𝓤-measurable on the countable measurable partition {𝒞} ∪ {A_s^c}. Its values (finitely many reals, finite
-   72| sequences of subsets of [p] and permutations of [m]) lie in a countable disjoint union of Euclidean spaces times finite
-   73| sets, a Polish space. The coordinates `W3-SAMP:MR` Step 2 uses are coordinates of Φ (stage-t populations, post-terminal
-   74| populations) or a finite case split over the order (Y^i_{q,ℓ} = path of particle i in post-terminal round L + q, the
-   75| (T + L + q)-th `population_round` of the island, at position σ_i⁻¹(ℓ) − 1); the D_r(c) draws are coordinates of Φ̃; the
-   76| partial evidence Ẑ_t = Z₀∏_{s≤t}(1/N_e)Σ_i e^{Δ_s d(S_i^{(s−1)})} (`cpp/v3_engine.h:299, 316-322`) is a Borel function of
-   77| grid(c) and the populations after the stage-(s − 1) rounds (coordinates of Φ), and W_r = Ẑ_r/Z with Z a data constant. This is `W1-N1:B` (B-d)
-   78| (`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:115-122`) at the pin. ∎
-   79| 
-   80| ## Line-check verdict on the `W1-N1:B` steps
-   81| (B-0), the control-flow clause of (B-b) and (B-d) hold at the pin with the line numbers above; the v2.2.1 → pin changes on
-   82| the island path (the removed write-only plain-PIP lines; `resample` is unchanged, its u = 0 guard was already in v2.2.1)
-   83| do not affect them.
+   28| (`cpp/v3_engine.h:250`); `eval`, `held`, the ledger and the cache read none (`cpp/v3_engine.h:89-105`; the ledger's
+   29| `event` takes its inputs by value or const reference and writes only counters and stores, `cpp/v3_ledger.h:104-113`), and the guard
+   30| bodies draw no uniform (T1 GW-i). Each transition, accept decision and weight is computed from the current state, c (φ,
+   31| N_e) and the data through `eval` (log m, lg0, d: `cpp/v3_engine.h:89-99`), whose score is exact whatever the cache history:
+   32| `ScoreCache::find` hits only when the hash and the full model agree (`cpp/v3_score.h:271-281`), `insert` stores the
+   33| scorer's value (`cpp/v3_score.h:282-293`), a capacity clear (`cpp/v3_score.h:284`) only causes later misses, and the scorer
+   34| is a deterministic function of S under EX-A; the neighbour lists, B and `st` are fixed before the islands (T7
+   35| KER-d). The clock reads (`cpp/v3_engine.h:284, 298, 304, 335, 336, 341, 348, 361`) set only `seconds_*` and the guard
+   36| argument. Engine
+   37| members shared across steps and islands (one `Engine`, `cpp/v3_core.cpp:410`) carry no information into a transition:
+   38| `tmpQ` is written before it is read in each step (`step_gibbs` reads it only when `include != in`, which needs the branch
+   39| `in || add_ok` that wrote it, `cpp/v3_engine.h:118-131`; the swaps and `step_indep` write it first, `cpp/v3_engine.h:152, 172, 185`);
+   40| `rb_acc` is written only and reset before the measured rounds; `ms`, `ev` are bookkeeping; `scratch` is workspace of
+   41| `st.comp`. The `resample` guard u = 0 ↦ the smallest positive double (`cpp/v3_engine.h:251`) changes the map only on
+   42| {u_i = 0}, a null set under H-U.
+   43| *Normal termination.* The island program raises no error for any u ∈ Υ: under EX-A the scorer returns the exact, finite
+   44| log m (valid input: m > 0), so its `NumericalFailure` throw (`cpp/v3_score.h:237`) is not reached; its |S| > K throw
+   45| (`cpp/v3_score.h:230`) is not reached because every scored model lies in Ω (Gibbs adds only when |S| < K,
+   46| `cpp/v3_engine.h:115-116`; the swaps preserve |S|; π₀ draws have |S| ≤ K, T6 (S)); `nth_nonmember` receives
+   47| ⌊u(p − k)⌋ ≤ p − k − 1 < the number of non-members (`cpp/v3_engine.h:151`), so its throw (`cpp/v3_engine.h:143`) is not
+   48| reached; the categorical draws of `draw_pi0` return for every u ∈ [0, 1) (cumulative tables ending at 1 under EX-A, T6);
+   49| allocations and integer ranges are the execution premise (IDEAL-W, MACH). These are the X2 sites of `C-DLV:L2-S3` as
+   50| [status omitted] at the pin (`Theory_work/Wave3/W3-AUDIT/track_A_C/C1_AUDITS/STATEMENT.md`, (C1-b)) and S.2's EX-A argument.
+   51| Hence Φ̃(c, u) is a function of (c, u) (data fixed). This is `W1-N1:B` (B-0) (`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:62-75`) at the pin; FR Part 1 lists
+   52| the same facts.
+   53| 
+   54| ## Step 3 — (ISL-st)
+   55| *Order and counts decided by the past.* By Step 1 the program is a fixed nesting of loops whose bounds are c's integers
+   56| (N_e, T, L, Hm = 4, m = p + B + 2) and whose bodies read uniforms only through `vs->u`. Inside an operation, the number
+   57| of uniforms read is decided by values already read: `draw_pi0` reads 1 (size) + one per iteration of the remaining-size
+   58| loop (stops when r = 0 or after J blocks) + one per positive-size block, ≤ 1 + 2J, a function of the draw (T6 (S));
+   59| `step_gibbs` exactly 1; `step_uswap` 0 (self-loop at |S| ∈ {0, p}, `cpp/v3_engine.h:148`) or 3; `step_nswap` 0 (|S| = 0),
+   60| 1 (empty candidate set, `cpp/v3_engine.h:170`) or 3; `step_indep` (≤ 1 + 2J) + 1; `draw_order` m − 1; `resample` N_e.
+   61| The branch conditions (|S|, candidate set, the drawn values) are functions of the state, hence of (c, data, uniforms
+   62| already read) by Step 2. So for each operation O, {τ_O = k} is determined by (u₁, …, u_k): τ_O is an (𝓕_k)-stopping time.
+   63| *Bounds.* A particle-round reads ≤ (m − 1) + p·1 + 3 + B·3 + (1 + 2J + 1) = κ_max; summing over the program,
+   64| τ_O ≤ κ(c) = N_e(1 + 2J) + T·N_e + (T + L + 4)·N_e·κ_max < ∞.
+   65| *Fresh uniforms.* Under H-U, u is i.i.d. U[0, 1); for a bounded stopping time τ, (u_{τ+1}, u_{τ+2}, …) is i.i.d.
+   66| U[0, 1) and independent of 𝓕_τ (strong Markov property of an i.i.d. sequence: for each k, on {τ = k} the shifted
+   67| sequence is (u_{k+1}, …), independent of 𝓕_k; sum over the finitely many k). Every record variable produced before O is a
+   68| function of (c, u₁, …, u_τ) (Step 2), hence 𝓕_τ-measurable.
+   69| *Draw count.* Each round has exactly one `I` label (`cpp/v3_engine.h:211`), so the π₀ draws are the N_e initial draws and
+   70| one per particle per round over T + L + 4 rounds: D_r(c) = N_e(1 + T + L + 4) (as `W3-SAMP:CC` CC1).
+   71| This is the control-flow clause of `W1-N1:B` (B-b) (`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:77-86`) at the pin, with
+   72| the same κ_max. ∎(ISL-st)
+   73| 
+   74| ## Step 4 — (ISL-d)
+   75| Fix a cell 𝒞 = {c ∈ A_s : T(c) = T, N_e(c) = N, L(c) = L, tier(c) = e} (countably many; A_s ∖ ∪𝒞 = ∅). On 𝒞, by Steps 2–3,
+   76| Φ̃(c, u) is computed by a finite program that reads at most κ := κ(c) (constant on 𝒞) uniforms and whose branches are
+   77| comparisons of finitely many Borel functions of (grid values, data constants, u₁, …, u_κ): `floor`, products,
+   78| `cat_draw_gt` thresholds, `u < o_j`, `u < α` with α = min(1, exp(·)), the resampling comparisons W_k < u, and the
+   79| grid-dependent weights Δ_t d(S). Under EX-A these are exact real functions, so Φ̃ on 𝒞 × Υ is a Borel function of
+   80| (grid, u₁, …, u_κ), and (c, u) ↦ (grid(c), u₁, …, u_κ) is 𝓔 ⊗ 𝓤-measurable. With Φ̃ ≡ o† off A_s, Φ̃ is
+   81| 𝓔 ⊗ 𝓤-measurable on the countable measurable partition {𝒞} ∪ {A_s^c}. Its values (finitely many reals, finite
+   82| sequences of subsets of [p] and permutations of [m]) lie in a countable disjoint union of Euclidean spaces times finite
+   83| sets, a Polish space. The coordinates `W3-SAMP:MR` Step 2 uses are coordinates of Φ (stage-t populations, post-terminal
+   84| populations) or a finite case split over the order (Y^i_{q,ℓ} = path of particle i in post-terminal round L + q, the
+   85| (T + L + q)-th `population_round` of the island, at position σ_i⁻¹(ℓ) − 1); the D_r(c) draws are coordinates of Φ̃; the
+   86| partial evidence Ẑ_t = Z₀∏_{s≤t}(1/N_e)Σ_i e^{Δ_s d(S_i^{(s−1)})} (`cpp/v3_engine.h:299, 316-322`) is a Borel function of
+   87| grid(c) and the populations after the stage-(s − 1) rounds (coordinates of Φ), and W_r = Ẑ_r/Z with Z a data constant. This is `W1-N1:B` (B-d)
+   88| (`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:119-125`) at the pin. ∎
+   89| 
+   90| ## Line-check verdict on the `W1-N1:B` steps
+   91| (B-0), the control-flow clause of (B-b) and (B-d) hold at the pin with the line numbers above; the v2.2.1 → pin changes on
+   92| the island path (the removed write-only plain-PIP lines; `resample` is unchanged, its u = 0 guard was already in v2.2.1)
+   93| do not affect them.
 ```
 
 ## 3. W2 statement
-`Theory_work/Wave3/W3-AUDIT/track_A_W/W2_FRZ/STATEMENT.md` @ e8d30aa0, lines 1–51:
+`Theory_work/Wave3/W3-AUDIT/track_A_W/W2_FRZ/STATEMENT.md` @ 5daf97a8, lines 1–64:
 ```
-    1| # W2 · Lemma FRZ (freezing on the calibration value, at general c, at the pin) — STATEMENT v1.1 (draft, not [status omitted])
+    1| # W2 · Lemma FRZ (freezing on the calibration value, at general c, at the pin) — STATEMENT v1.2 (draft; [status omitted] [status omitted] on v1.1)
     2| 
     3| Track A_W item W2 (manager 11-17; D97 edge verdicts, recorder package §2 edge 4). Tier B (line check of `W1-N1:F`'s
     4| freezing step and of its use by `W3-SAMP:MR` at the code of record). **Lean target: yes** for (FRZ-a) (the freezing
@@ -173,10 +192,10 @@ Material for a blind review. Every excerpt is verbatim with its file and line nu
     6| for (FRZ-d) (a finite product bound); no for (FRZ-b), (FRZ-c) (code facts).
     7| 
     8| ## Steps under check (the conditions to discharge)
-    9| - `W1-N1:F` (registry: `Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md:21-23`; proof `:25-46`), written for the v2.2.1
+    9| - `W1-N1:F` (registry: `Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md:21-23`; proof `:25-39`), written for the v2.2.1
    10|   core: conditioning island-r identities on the calibration record 𝓒 (localisation E₀, set A₀, evidence bound, T12
    11|   freezing lemma `Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex:157-162`).
-   12| - Its extension in **`W3-SAMP:MR`** (Steps 2–4, `Theory_work/Wave3/W3-SAMP/lemmas/MR_identities.md:57-79`) from
+   12| - Its extension in **`W3-SAMP:MR`** (Steps 2–4, `Theory_work/Wave3/W3-SAMP/lemmas/MR_identities.md:51-67`) from
    13|   terminal endpoints to stage-t populations, post-terminal populations and pre-step states, with the stage evidence ratio
    14|   bound. FR (`W3-AUDIT-AX:FR`) gives the identities at **fixed** c only and excludes T12 (iii) (D97 edge 4).
    15| 
@@ -187,41 +206,54 @@ Material for a blind review. Every excerpt is verbatim with its file and line nu
    20| Fixed valid data on the SMC branch. Streams U^{(k)} as in T5 (`Theory_work/Wave3/W3-AUDIT/track_A/T5_CAL/STATEMENT.md`);
    21| H-U: the streams are independent i.i.d. U[0, 1) sequences. 𝓒° (calibration record of the potential fit P°) and
    22| 𝒜° ∈ σ(𝓒°) as in T5 (CAL-b), a random element of a measurable space (E, 𝓔) on which c ↦ (T, grid, tier) is
-   23| measurable, so that A_s ∈ 𝓔 (W1 setting); N_e(c), L(c) are the executed values of W1 (ISL). For r ∈ {1, …, 4}: U_r := U^{(9+r)} ∈ (Υ, 𝓤) = ([0, 1)^ℕ, Borel); Φ the island record map and A_s the
-   24| success set of W1 (ISL). R′ = 4 (`v3_run.R:90-91`), so E₀ := 𝒜° ∩ {r ≤ R′} = 𝒜°. EX-A. Potential run (T1).
-   25| 
-   26| ## Lemma FRZ
-   27| - **(FRZ-a) Freezing lemma.** If 𝓒 is a random element of (E, 𝓔), U of (Υ, 𝓤), 𝓒 ⊥ U, and g : E × Υ → ℝ is bounded
-   28|   and 𝓔 ⊗ 𝓤-measurable, then ḡ(c) := E[g(c, U)] is 𝓔-measurable and E[g(𝓒, U) | 𝓒] = ḡ(𝓒) a.s.
-   29|   (T12 `Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex:157-162`, line-[status omitted].)
-   30| - **(FRZ-b) The code meets its hypotheses at the pin.** (i) U_r ⊥ 𝓒° (SI): 𝓒° is a measurable function of the fixed
-   31|   data and U^{(0)}, …, U^{(9)} (T5 CAL-a, CAL-b) and U^{(9+r)} is independent of these streams (H-U). (ii) There is
-   32|   A₀ ∈ 𝓔 with A₀ ⊆ A_s and E₀ = {𝓒° ∈ A₀}. (iii) On E₀, the potential record of final island r is O_r = Φ(𝓒°, U_r) (and its augmented record is Φ̃(𝓒°, U_r)):
-   33|   the final run's settings are functions of 𝓒° and (n, p) (T5 CAL-c), stream 9 + r is seeded inside `cpp_final_run`
-   34|   for island r alone and read by nothing else, and the frozen grid lies in A_s.
-   35| - **(FRZ-c) Conditioning at general c.** For every 𝓔 ⊗ 𝓤-measurable g with |g| ≤ B < ∞ and g(c, ·) = 0 for c ∉ A₀:
-   36|   E[1_{E₀} Y | 𝓒°] = 1_{E₀} ḡ(𝓒°) a.s. for every Y with 1_{E₀} Y = g(𝓒°, U_r) (localised form, `W1-N1:F`'s
-   37|   convention). In particular `W1-N1:F`'s statement (terminal endpoints, h jointly measurable with a deterministic
-   38|   bound), `W3-SAMP:MR` (MR-a)–(MR-c) and the freezing step of `W3-SAMP:D` (D-i) (g = 1{no draw of Φ̃ equals S₀}) given 𝓒
-   39|   hold at the pin with (𝒜°, 𝓒°). The fixed-c values ḡ(c) are FR (FR-b), (FR-c) for F and MR, and for D the value
-   40|   (1 − π₀(S₀))^{D_r(c)} of `Theory_work/Wave3/W3-SAMP/lemmas/D_theorem.md:8-20` (from (ISL-st) and T6 (S), (S′)).
-   41|   The identities hold for (𝒜°, 𝓒°); for the actual pair (𝒜, 𝓒) only T5's transfer rules apply
-   42|   (`Theory_work/Wave3/W3-AUDIT/track_A/T5_CAL/STATEMENT.md:45-54`).
-   43| - **(FRZ-d) Evidence bounds.** For c ∈ A_s, t ≤ T, u ∈ Υ, with d_min := min_Ω d, d_max := max_Ω d (finite, Ω finite,
-   44|   EX-A): Ẑ_t(c, Φ(c, u)) (a function of (c, Φ), W1 ISL-d) ∈ [Z₀e^{φ_t d_min}, Z₀e^{φ_t d_max}] and Z_t(c) ∈ the same interval, Z₀ = m(∅)Z̄₀; hence
-   45|   0 < Ẑ_t/Z_t ≤ C_d := e^{d_max − d_min}, and Ẑ = Ẑ_T ≤ Z₀e^{d_max}, uniformly in (c, u). So the integrands of
-   46|   `W1-N1:F` and `W3-SAMP:MR` (with |h| ≤ B_h) are bounded by B_h·Z₀e^{d_max} and B_h·C_d.
-   47| 
-   48| ## Not claimed
-   49| - The fixed-c identities themselves (FR); measurability of Φ (W1 ISL-d, used); IND-T / independence between islands.
-   50| - Binary64; interrupted runs (T1 GW).
-   51| 
+   23| measurable on all of E (⊥ and non-"ok" records included; W1 setting), so that A_s ∈ 𝓔; N_e(c), L(c) are the executed values
+   24| of W1 (ISL). Valid input (W1's setting, incl. a valid declared seed); default configuration (`v3.ls0_ell` unset); W1's
+   25| execution premise (IDEAL-W, MACH). For r ∈ {1, …, 4}: U_r := U^{(9+r)} ∈ (Υ, 𝓤) = ([0, 1)^ℕ, Borel); Φ the island record map and A_s the
+   26| success set of W1 (ISL). R′ = 4 (`v3_run.R:90-91`), so E₀ := 𝒜° ∩ {r ≤ R′} = 𝒜°. EX-A. Potential run (T1).
+   27| 
+   28| ## Lemma FRZ
+   29| - **(FRZ-a) Freezing lemma.** If 𝓒 is a random element of (E, 𝓔), U of (Υ, 𝓤), 𝓒 ⊥ U, and g : E × Υ → ℝ is bounded
+   30|   and 𝓔 ⊗ 𝓤-measurable, then ḡ(c) := E[g(c, U)] is 𝓔-measurable and E[g(𝓒, U) | 𝓒] = ḡ(𝓒) a.s.
+   31|   (T12 `Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex:157-162`, line-[status omitted].)
+   32| - **(FRZ-b) The code meets its hypotheses at the pin.** (i) U_r ⊥ 𝓒° (SI): 𝓒° is a measurable function of the fixed
+   33|   data and U^{(0)}, …, U^{(9)} (T5 CAL-a, CAL-b) and U^{(9+r)} is independent of these streams (H-U). (ii) There is
+   34|   A₀ ∈ 𝓔 with A₀ ⊆ A_s and E₀ = {𝓒° ∈ A₀}. (iii) On E₀, the potential record of final island r is O_r = Φ(𝓒°, U_r) (and its augmented record is Φ̃(𝓒°, U_r)):
+   35|   the final run's settings are functions of 𝓒° and (n, p) (T5 CAL-c), stream 9 + r is seeded inside `cpp_final_run`
+   36|   for island r alone and read by nothing else, and the frozen grid lies in A_s.
+   37| - **(FRZ-c) Conditioning at general c.** For every 𝓔 ⊗ 𝓤-measurable g with |g| ≤ B < ∞ and g(c, ·) = 0 for c ∉ A₀:
+   38|   E[1_{E₀} Y | 𝓒°] = 1_{E₀} ḡ(𝓒°) a.s. for every Y with 1_{E₀} Y = g(𝓒°, U_r) (localised form, `W1-N1:F`'s
+   39|   convention). In particular `W1-N1:F`'s statement (terminal endpoints, h jointly measurable with a deterministic
+   40|   bound), `W3-SAMP:MR` (MR-a)–(MR-c) and the freezing step of `W3-SAMP:D` (D-i) (g = 1{no draw of Φ̃ equals S₀}) given 𝓒
+   41|   hold at the pin with (𝒜°, 𝓒°). The fixed-c values ḡ(c) are FR (FR-b), (FR-c) for F and MR, and for D the value
+   42|   (1 − π₀(S₀))^{D_r(c)} of `Theory_work/Wave3/W3-SAMP/lemmas/D_theorem.md:8-20` (from (ISL-st) and T6 (S), (S′)).
+   43|   The identities hold for (𝒜°, 𝓒°); for the actual pair (𝒜, 𝓒) only T5's transfer rules apply
+   44|   (`Theory_work/Wave3/W3-AUDIT/track_A/T5_CAL/STATEMENT.md:45-54`).
+   45| - **(FRZ-d) Evidence bounds.** For c ∈ A_s, t ≤ T, u ∈ Υ, with d_min := min_Ω d, d_max := max_Ω d (finite, Ω finite,
+   46|   EX-A): Ẑ_t(c, Φ(c, u)) (a function of (c, Φ), W1 ISL-d) ∈ [Z₀e^{φ_t d_min}, Z₀e^{φ_t d_max}] and Z_t(c) ∈ the same interval, Z₀ = m(∅)Z̄₀; hence
+   47|   0 < Ẑ_t/Z_t ≤ C_d := e^{d_max − d_min}, and Ẑ = Ẑ_T ≤ Z₀e^{d_max}, uniformly in (c, u). So the integrands of
+   48|   `W1-N1:F` and `W3-SAMP:MR` (with |h| ≤ B_h) are bounded by B_h·Z₀e^{d_max} and B_h·C_d.
+   49| 
+   50| ## Not claimed
+   51| - The fixed-c identities themselves (FR); measurability of Φ (W1 ISL-d, used); IND-T / independence between islands.
+   52| - Integration over the data: FRZ is at fixed data. `W3-SAMP:D` (D-iii) integrates the conditional bound over 𝓒 and the data
+   53|   under the joint law (`Theory_work/Wave3/W3-SAMP/lemmas/D_theorem.md:46-51`), which needs a version jointly measurable in the
+   54|   data (freezing with (data, 𝓒°) as the conditioning element; streams 10–13 independent of the data,
+   55|   `Theory_work/Wave3/W3-SAMP/STATEMENT.md:35-36`); not claimed here.
+   56| 
+   57| ## Inputs reused (status as recorded)
+   58| - T1 GW, T4 ENC, T5 CAL-C, T6 START-X: `W3-AUDIT-A:{GW,ENC,CAL-C,START-X}` "[status omitted]-[status omitted]; [status omitted] R2"; FR:
+   59|   `W3-AUDIT-AX:FR` "[status omitted]-[status omitted]; [status omitted] R2"; T14 REP: `W3-AUDIT-AX:REP` "[status omitted]-[status omitted]; [status omitted] R2" (registry, main 029bb748).
+   60| - C1 (`C-DLV:L2-S3`, `:P1-Inventory` [status omitted] at the pin): track_A_C, [status omitted] bound R2 (MANIFEST c27fb00e…); not registered.
+   61| - `W1-N1:F` "[status omitted] under the named premises of STATEMENT §2 — cross-family [status omitted] … [status omitted]-passed"; T12's freezing lemma
+   62|   through `SOP:TH110` "[status omitted]-[status omitted] (all parts (i)-(iv), wave 1); not adopted" (registry, main 029bb748).
+   63| - Binary64; interrupted runs (T1 GW).
+   64| 
 ```
 
 ## 4. W2 proof
-`Theory_work/Wave3/W3-AUDIT/track_A_W/W2_FRZ/PROOF.md` @ e8d30aa0, lines 1–74:
+`Theory_work/Wave3/W3-AUDIT/track_A_W/W2_FRZ/PROOF.md` @ 5daf97a8, lines 1–83:
 ```
-    1| # W2 · Lemma FRZ — PROOF v1.1 (line check of `W1-N1:F` and of `W3-SAMP:MR` Steps 2–4 at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
+    1| # W2 · Lemma FRZ — PROOF v1.2 (line check of `W1-N1:F` and of `W3-SAMP:MR` Steps 2–4 at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
     2| 
     3| Reuse: T5 CAL-C (`Theory_work/Wave3/W3-AUDIT/track_A/T5_CAL/STATEMENT.md`, (CAL-a)–(CAL-d)), T1 GW (potential run), W1
     4| ISL (`Theory_work/Wave3/W3-AUDIT/track_A_W/W1_ISL/STATEMENT.md`: (ISL-0), (ISL-d)), FR (`Theory_work/Wave3/W3-AUDIT/track_A_X/X1_T12/STATEMENT.md`:
@@ -249,8 +281,8 @@ Material for a blind review. Every excerpt is verbatim with its file and line nu
    26| `v3_final_run` (`v3_fit.R:154-162`), which checks the frozen grid (`v3_run.R:225`, `v3_check_grid`, `v3_run.R:77-82`:
    27| finite, length ≥ 2, starts at exactly 0, ends at exactly 1, strictly increasing); this check is an X2 site, unreachable on
    28| 𝒜°: the frozen object is built by `v3_frozen` (`v3_calib.R:185-186`), which runs the same `v3_check_grid` (`v3_run.R:70`)
-   29| on a successful construction or on a fallback that passed it (`v3_calib.R:164`; C1 (C1-b) (vii),
-   30| `Theory_work/Wave3/W3-AUDIT/track_A_C/C1_AUDITS/PROOF.md`). The executed N_e = `b$tiers$N[tier + 1]` ≥ N₀ ≥ 2500 and
+   29| on a successful construction or on a fallback that passed it (`v3_calib.R:164`): if it failed there, `v3_calibrate` would
+   30| stop with an error and not return "ok", so on 𝒜° the grid passed. The executed N_e = `b$tiers$N[tier + 1]` ≥ N₀ ≥ 2500 and
    31| L = `b$L` ≥ 4 are integers (`v3_run.R:89-90`; `v3_preprocess.R:24-25, 30`). So 𝓒° ∈ A_s on 𝒜°, and A₀ := A_𝒜 ∩ A_s ∈ 𝓔
    32| gives E₀ = 𝒜° = {𝓒° ∈ A₀} (R′ = `islands` = 4, `v3_run.R:91`, so {r ≤ R′} is the whole space for r ≤ 4).
    33| (iii) *O_r = Φ(𝓒°, U_r) on E₀.* `cpp_final_run` receives `frozen[["grid"]]` and `ro` (N_e, L, Hm = 4, tier, islands)
@@ -259,46 +291,55 @@ Material for a blind review. Every excerpt is verbatim with its file and line nu
    36| inherited models with the scorer only (`cpp/v3_core.cpp:407-439`): no uniform. The islands run serially; island r creates
    37| its `RngSource` seeded on stream 9 + r and runs `E.run_island(r, o.N, g, o.L, o.Hm, o.tier, nullptr)`
    38| (`cpp/v3_core.cpp:443-446`); no other code reads that source, and island r's record does not depend on islands < r (W1
-   39| ISL-0: the shared cache and ledger do not feed transitions). In P° the guard Booleans are FALSE (T1), so island r's
-   40| potential record is the W1 program run with c = 𝓒° on u = U_r: O_r = Φ(𝓒°, U_r), and likewise for Φ̃. ∎(FRZ-b)
-   41| 
-   42| ## (FRZ-c) Conditioning at general c
-   43| Let g be as stated. By W1 (ISL-d), compositions of g-type functions with Φ, Φ̃ are 𝓔 ⊗ 𝓤-measurable; g is bounded. By
-   44| (FRZ-b)(i) and (FRZ-a), E[g(𝓒°, U_r) | 𝓒°] = ḡ(𝓒°) a.s.; since g(c, ·) = 0 off A₀, ḡ = 1_{A₀}ḡ, so
-   45| E[1_{E₀}Y | 𝓒°] = E[g(𝓒°, U_r) | 𝓒°] = 1_{E₀}ḡ(𝓒°).
-   46| *`W1-N1:F`.* Its g (`Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md:29-31`) is g(c, u) = Ẑ(Φ(c, u))·η_q(Φ(c, u))(h(·; c))
-   47| on A₀, 0 off it: measurable (ISL-d; h jointly measurable; N_e(c) a measurable integer coordinate, the sum measurable cell
-   48| by cell) and bounded by B_h Z₀e^{d_max} (FRZ-d). By (FRZ-b)(iii), g(𝓒°, U_r) = 1_{E₀}Ẑ_r η_{rq}(h(·; 𝓒°)). The fixed-c
-   49| value ḡ(c) = ψ_q(c) is FR (FR-b) at c. This is L3's proof (`Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md:25-39`) with its
-   50| three inputs re-established at the pin. Agrees.
-   51| *`W3-SAMP:MR`.* Its Step 2 g's (`Theory_work/Wave3/W3-SAMP/lemmas/MR_identities.md:57-65`) are of the stated form: they
-   52| vanish off A₀ (and off the index range {T(c) ≥ t}, {s ≤ L(c) + 4}, measurable), are measurable by ISL-d (the stage-t
-   53| population, the post-terminal populations and Y^i_{q,ℓ} are coordinates of Φ or a finite case split over the order), and
-   54| are bounded by B_h C_d (FRZ-d; its Step 3). Their fixed-c values are FR (FR-b) (stage, post-terminal, prefix) and (FR-c)
-   55| (the RB clause). So MR's Step 4 holds at the pin. Agrees.
-   56| *`W3-SAMP:D` (D-i) freezing step* (`Theory_work/Wave3/W3-SAMP/lemmas/D_theorem.md:26-31`): g = 1{no draw of Φ̃(c, u)
-   57| equals S₀} on A₀, 0 off it — an indicator of a measurable set (ISL-d). Its fixed-c value ḡ(c) = (1 − π₀(S₀))^{D_r(c)} is
-   58| D's own computation (`Theory_work/Wave3/W3-SAMP/lemmas/D_theorem.md:8-20`: W1 (ISL-st) and T6 (S), (S′)), not FR. Agrees.
-   59| *Actual pair.* The identities are for (𝒜°, 𝓒°). By T5 (CAL-d), 𝒜 = 𝒜° ∩ G ⊆ 𝒜° and on 𝒜 the actual calibration fields
-   60| equal 𝓒°, but 𝒜 depends on the clock through G; for the actual pair only T5's transfer rules apply
-   61| (`Theory_work/Wave3/W3-AUDIT/track_A/T5_CAL/STATEMENT.md:45-54`). ∎(FRZ-c)
-   62| 
-   63| ## (FRZ-d) Evidence bounds
-   64| For c ∈ A_s the island's log Ẑ starts at log Z₀ (`cpp/v3_engine.h:299`; T6 (Z)) and adds, at stage t,
-   65| inc_t = LSE(Δ_t d(S_i)) − log N_e (`cpp/v3_engine.h:316-322`), i.e. Ẑ_t = Z₀∏_{s≤t} (1/N_e)Σ_i e^{Δ_s d(S_i^{(s−1)})}
-   66| under EX-A (FR Part 1). Each factor lies in [e^{Δ_s d_min}, e^{Δ_s d_max}] (Δ_s > 0), and Σ_{s≤t} Δ_s = φ_t, so
-   67| Ẑ_t ∈ [Z₀e^{φ_t d_min}, Z₀e^{φ_t d_max}]. Z_t = m(∅)Σ_Ω γ₀e^{φ_t d} with m(∅)Σ_Ω γ₀ = Z₀ lies in the same interval. Hence
-   68| Ẑ_t/Z_t ≤ e^{φ_t(d_max − d_min)} ≤ C_d (φ_t ≤ 1), and Ẑ ≤ Z₀e^{d_max}. d is finite on the finite Ω under EX-A (log m
-   69| finite, T4 ENC's finite tables). This is L3's bound (`Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md:34-36`) and MR's Step 3
-   70| (`Theory_work/Wave3/W3-SAMP/lemmas/MR_identities.md:67-70`). Agrees. ∎
-   71| 
-   72| ## Line-check verdict
-   73| `W1-N1:F`'s freezing step and `W3-SAMP:MR`'s extension (Steps 2–4) hold at the pin, at general c ∈ A₀, with the
-   74| potential pair (𝒜°, 𝓒°) (T5's reading); the fixed-c inputs are FR, the measurability W1 (ISL-d).
+   39| ISL-0: the shared cache and ledger do not feed transitions).
+   40| *No error exit before or during island r on E₀.* `v3_final_run`'s prelude: `v3_check_seed` passes for the valid declared
+   41| seed (`v3_run.R:225`); `v3_run_settings`' LS0 base-cap validator (`v3_run.R:95-97`) passes in the default configuration
+   42| for every input R can represent (T14 REP (REP-a): `le` ≤ 32), and its other fields are fixed-type assignments. Inside
+   43| `cpp_final_run` before the islands: the `setup required`, model-validation and provenance sites, and the inherited-model
+   44| size `stop` (`cpp/v3_core.cpp:425`), are X2-class sites unreachable on valid internal state (C1 (C1-b),
+   45| `Theory_work/Wave3/W3-AUDIT/track_A_C/C1_AUDITS/STATEMENT.md`; inherited models are calibration models in Ω); the scorer
+   46| call (`cpp/v3_core.cpp:426`) returns the exact finite log m under EX-A. Islands 1, …, r − 1 and island r end normally (W1
+   47| ISL-0, normal termination), and no guard stops them in P° (T1). So on E₀ island r runs to completion. In P° the guard Booleans are FALSE (T1), so island r's
+   48| potential record is the W1 program run with c = 𝓒° on u = U_r: O_r = Φ(𝓒°, U_r), and likewise for Φ̃. ∎(FRZ-b)
+   49| 
+   50| ## (FRZ-c) Conditioning at general c
+   51| Let g be as stated. By W1 (ISL-d), compositions of g-type functions with Φ, Φ̃ are 𝓔 ⊗ 𝓤-measurable; g is bounded. By
+   52| (FRZ-b)(i) and (FRZ-a), E[g(𝓒°, U_r) | 𝓒°] = ḡ(𝓒°) a.s.; since g(c, ·) = 0 off A₀, ḡ = 1_{A₀}ḡ, so
+   53| E[1_{E₀}Y | 𝓒°] = E[g(𝓒°, U_r) | 𝓒°] = 1_{E₀}ḡ(𝓒°).
+   54| *`W1-N1:F`.* Its g (`Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md:29-31`) is g(c, u) = Ẑ(Φ(c, u))·η_q(Φ(c, u))(h(·; c))
+   55| on A₀, 0 off it: measurable (ISL-d; h jointly measurable; N_e(c) a measurable integer coordinate, the sum measurable cell
+   56| by cell) and bounded by B_h Z₀e^{d_max} (FRZ-d). By (FRZ-b)(iii), g(𝓒°, U_r) = 1_{E₀}Ẑ_r η_{rq}(h(·; 𝓒°)). The fixed-c
+   57| value ḡ(c) = ψ_q(c) is FR (FR-b) at c. This is L3's proof (`Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md:25-39`) with its
+   58| three inputs re-established at the pin. Agrees.
+   59| *`W3-SAMP:MR`.* Its Step 2 g's (`Theory_work/Wave3/W3-SAMP/lemmas/MR_identities.md:51-58`) are of the stated form: they
+   60| vanish off A₀ (and off the index range {T(c) ≥ t}, {s ≤ L(c) + 4}, measurable), are measurable by ISL-d (the stage-t
+   61| population, the post-terminal populations and Y^i_{q,ℓ} are coordinates of Φ or a finite case split over the order), and
+   62| are bounded by B_h C_d (FRZ-d; its Step 3). Their fixed-c values are FR (FR-b) (stage, post-terminal, prefix) and (FR-c)
+   63| (the RB clause). So MR's Step 4 holds at the pin. Agrees.
+   64| *`W3-SAMP:D` (D-i) freezing step* (`Theory_work/Wave3/W3-SAMP/lemmas/D_theorem.md:26-31`): g = 1{no draw of Φ̃(c, u)
+   65| equals S₀} on A₀, 0 off it — an indicator of a measurable set (ISL-d). Its fixed-c value ḡ(c) = (1 − π₀(S₀))^{D_r(c)} is
+   66| D's own computation (`Theory_work/Wave3/W3-SAMP/lemmas/D_theorem.md:8-20`: W1 (ISL-st) and T6 (S), (S′)), not FR. Agrees.
+   67| *Actual pair.* The identities are for (𝒜°, 𝓒°). By T5 (CAL-d), 𝒜 = 𝒜° ∩ G ⊆ 𝒜° and on 𝒜 the actual calibration fields
+   68| equal 𝓒°, but 𝒜 depends on the clock through G; for the actual pair only T5's transfer rules apply
+   69| (`Theory_work/Wave3/W3-AUDIT/track_A/T5_CAL/STATEMENT.md:45-54`). ∎(FRZ-c)
+   70| 
+   71| ## (FRZ-d) Evidence bounds
+   72| For c ∈ A_s the island's log Ẑ starts at log Z₀ (`cpp/v3_engine.h:299`; T6 (Z)) and adds, at stage t,
+   73| inc_t = LSE(Δ_t d(S_i)) − log N_e (`cpp/v3_engine.h:316-322`), i.e. Ẑ_t = Z₀∏_{s≤t} (1/N_e)Σ_i e^{Δ_s d(S_i^{(s−1)})}
+   74| under EX-A (FR Part 1). Each factor lies in [e^{Δ_s d_min}, e^{Δ_s d_max}] (Δ_s > 0), and Σ_{s≤t} Δ_s = φ_t, so
+   75| Ẑ_t ∈ [Z₀e^{φ_t d_min}, Z₀e^{φ_t d_max}]. Z_t = m(∅)Σ_Ω γ₀e^{φ_t d} with m(∅)Σ_Ω γ₀ = Z₀ lies in the same interval. Hence
+   76| Ẑ_t/Z_t ≤ e^{φ_t(d_max − d_min)} ≤ C_d (φ_t ≤ 1), and Ẑ ≤ Z₀e^{d_max}. d is finite on the finite Ω under EX-A (log m
+   77| finite for a valid input — n ≥ 3, a retained column, non-constant y, so m > 0, as in FR's hypothesis — and T4 ENC's finite
+   78| tables). This is L3's bound (`Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md:34-36`) and MR's Step 3
+   79| (`Theory_work/Wave3/W3-SAMP/lemmas/MR_identities.md:60-62`). Agrees. ∎
+   80| 
+   81| ## Line-check verdict
+   82| `W1-N1:F`'s freezing step and `W3-SAMP:MR`'s extension (Steps 2–4) hold at the pin, at general c ∈ A₀, with the
+   83| potential pair (𝒜°, 𝓒°) (T5's reading); the fixed-c inputs are FR, the measurability W1 (ISL-d).
 ```
 
 ## 5. Lemma B (older core; the steps under test)
-`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md` @ e8d30aa0, lines 4–142:
+`Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md` @ 5daf97a8, lines 4–142:
 ```
     4| Notation: STATEMENT.md v2 ([status omitted]). CODE = `Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/`;
     5| T12 = `Docs/Theory/proofs/T12_T8_frozen_run_identities/` (STATEMENT.md, PROOF_v6.tex; status [status omitted]-[status omitted] on card TH01);
@@ -442,7 +483,7 @@ Material for a blind review. Every excerpt is verbatim with its file and line nu
 ```
 
 ## 6. Lemma F (older core; the step under test)
-`Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md` @ e8d30aa0, lines 4–48:
+`Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md` @ 5daf97a8, lines 4–48:
 ```
     4| `Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex:157-162`).
     5| 
@@ -492,7 +533,7 @@ Material for a blind review. Every excerpt is verbatim with its file and line nu
 ```
 
 ## 7. Premises of the older ticket
-`Theory_work/Wave1/W1-N1/STATEMENT.md` @ e8d30aa0, lines 64–95:
+`Theory_work/Wave1/W1-N1/STATEMENT.md` @ 5daf97a8, lines 64–95:
 ```
    64| is fixed before stream 10 (no dependence on any final stream). Calibration information used to choose h must be part of 𝓒
    65| (measurability in streams 0–9 alone is not enough, `METHOD_v3.1_FINAL.md:159`). The card's class (h ∈ 𝓗, 0 ≤ h ≤ 1,
@@ -529,7 +570,7 @@ Material for a blind review. Every excerpt is verbatim with its file and line nu
 ```
 
 ## 8. T12 freezing lemma
-`Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex` @ e8d30aa0, lines 155–166:
+`Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex` @ 5daf97a8, lines 155–166:
 ```
   155| \section{Embedding in the method: conditioning on $\cC$}
   156| 
@@ -546,7 +587,7 @@ Material for a blind review. Every excerpt is verbatim with its file and line nu
 ```
 
 ## 9. Consumer: Theorem D, section 1
-`Theory_work/Wave3/W3-SAMP/lemmas/D_theorem.md` @ e8d30aa0, lines 6–31:
+`Theory_work/Wave3/W3-SAMP/lemmas/D_theorem.md` @ 5daf97a8, lines 6–31:
 ```
     6| ## §1 The draws are iid π₀ given 𝓒 (D-i)
     7| 
@@ -577,7 +618,7 @@ Material for a blind review. Every excerpt is verbatim with its file and line nu
 ```
 
 ## 10. Consumer: Lemma MR
-`Theory_work/Wave3/W3-SAMP/lemmas/MR_identities.md` @ e8d30aa0, lines 25–79:
+`Theory_work/Wave3/W3-SAMP/lemmas/MR_identities.md` @ 5daf97a8, lines 25–79:
 ```
    25| h : Ω × E → ℝ jointly measurable, sup_{S,c}|h(S; c)| ≤ B_h < ∞ deterministic, evaluated at c = 𝓒. E₀ := 𝒜 ∩ {r ≤ R′}.
    26| Almost surely:

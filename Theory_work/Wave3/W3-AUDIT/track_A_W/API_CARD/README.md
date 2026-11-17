@@ -30,5 +30,5 @@ python Theory_work/Wave3/API_AUDIT/audit_batch.py wait   Theory_work/Wave3/W3-AU
 `wait` keeps only lines starting `AUDIT ` in `VERDICTS.tsv`; the `AUDITW …` lines are in `results/*.md` (grep `^AUDITW `).
 
 ## Cost (estimate)
-≈ 27.4k input tokens per request (chars / 3.5); 2 requests ≈ $0.22 input; output ≈ 20k tokens/request ≈ $0.80;
+≈ 28.8k input tokens per request (chars / 3.5); 2 requests ≈ $0.23 input; output ≈ 20k tokens/request ≈ $0.80;
 worst case at max_tokens 128000 ≈ $5.12 output. **≈ $1 expected, ≤ $5.4 worst case.**
