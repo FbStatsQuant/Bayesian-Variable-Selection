@@ -338,16 +338,22 @@ Sections (names fixed; WPs may add sections, never rename):
     (before that step's checkpoint, whose seconds go to the next row) and is final then; the exit row (kind 4) covers
     the last checkpoint, a failed or interrupted partial step, the I1 check on exit and the result assembly. The
     checkpoint carries the rows and the lifetime totals at the last close, so after a resume (segment = resumes before
-    the row) the rows sum exactly to the island's totals (counts) and to `t_total` (seconds). Values: counts are JSON
+    the row) the rows sum exactly to the island's totals (counts) and to `t_total` (seconds). After a resume these are
+    the totals of the work the result continues from: the dead job's work after its last row close (its last
+    checkpoint write, exit check and assembly, and any partial step) is in neither, so `t_total` is not the sum of the
+    job segments' wall times (use the scheduler's accounting for that; review PR49 re-check NIT-1). Values: counts are JSON
     numbers (a bounded-count exception to the hex rule of this section: per-row counts are exact below 2^53, and the
     writer refuses more); a field the row's kernel does not measure is `"NaN"` (the particle-major kernel measures
-    particle_rounds, t_pm, the store, check, checkpoint and memory fields; the label-major kernel all but t_pm).
+    particle_rounds, t_pm, the store, check, checkpoint and memory fields; the label-major kernel all but t_pm). The
+    exit row's `phi` is `"NaN"` too, as are the fields its kernel does not measure (NIT-2).
     Execution statistics only: not in `IslandRun::hash` / `meta.output_hash` nor in any non-meta section hash (T2, the
     merge never reads it); like all of `meta` it is in the container's content hash.
   - The sidecar `IslandConfig::cost_path` is a **non-authoritative progress log** of the same rows (a header line, one
-    JSON line per row, one `write()` each). At the start of every job segment it is rebuilt from the rows the run
-    continues from; a write failure cuts it back to whole lines and disables it without failing the island. Calibration
-    islands get it from `calibrate --cost-dir` (WP7 O5); until then only `IslandConfig::cost_path` sets it.
+    JSON line per row, one `write()` each). At the first row close of every process (job segment) it is rebuilt from
+    the rows the run continues from (a segment killed before its first close leaves the old file until the next
+    process rebuilds it; NIT-3); a write failure cuts it back to whole lines and disables it without failing the island. Calibration
+    islands get it from `calibrate --cost-dir` (WP7 O5), one file per calibration island
+    (`cost_<pilot|diag>_t<tier>_k<iter>_r<island>.jsonl`).
 - `fit.bin` + `fit.json` (WP4): merged `top_*`, `hpm_*` + provenance, `hpm_before_local_*`, local-search archive,
   `mode_S`, LS0, near ties, `logZ_r`, `pip_eq`, `pip_Z`, `pip_T`, `rb_*`, flags; `fit.json` scalars and hashes only.
   No leader stores in `island_r.bin` or `fit.bin`, in any mode (§4.1; on the compat exclusion list).
