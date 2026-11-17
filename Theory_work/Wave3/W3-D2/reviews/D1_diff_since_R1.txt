@@ -18,6 +18,15 @@ index 91c14c47..c5cc7d73 100644
 +P:P3	PROOF.md:60-83	S:Cor2X,P:P2	b2487f8789e613f9	b2487f8789e613f9	reviews/D1_council_opus.md (diff round D1, in scope)	OK
 +P:P5	PROOF.md:84-97		8d16597bb9a8717d	8d16597bb9a8717d	reviews/D1_council_opus.md (diff round D1, in scope)	OK
 +R:registry	REPORT.md:61-81	S:Thm2X,S:Cor2X	b2140e8277de6a99	b2140e8277de6a99	reviews/D1_council_opus.md (diff round D1, in scope)	OK
+diff --git a/Theory_work/Wave3/W3-D2/ERRATA.md b/Theory_work/Wave3/W3-D2/ERRATA.md
+new file mode 100644
+index 00000000..8209ef0f
+--- /dev/null
++++ b/Theory_work/Wave3/W3-D2/ERRATA.md
+@@ -0,0 +1,3 @@
++# W3-D2 — ERRATA (E findings; PROTOCOL_v4 §5.3)
++All E findings to date were applied before the diff round (dispositions: `reviews/L1_disposition.md`, `K1_disposition.md`,
++`K2_disposition.md`, `K3_disposition.md`, `R1_disposition.md`). Open: none.
 diff --git a/Theory_work/Wave3/W3-D2/PROOF.md b/Theory_work/Wave3/W3-D2/PROOF.md
 index 35e2dce5..6c2bd86f 100644
 --- a/Theory_work/Wave3/W3-D2/PROOF.md
