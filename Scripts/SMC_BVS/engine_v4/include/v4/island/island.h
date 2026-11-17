@@ -32,6 +32,9 @@ enum class KernelKind : int { LabelMajor = 0, ParticleMajor = 1 };
 // L + h (core/cpp/v3_engine.h:269-372 phase_override); leaders on; the ledger so far is returned on a stop.
 enum class IslandRole : int { Final = 0, Pilot = 1, Diag = 2 };
 
+// the identity string the CLI binds into the checkpoint (IslandConfig::input_id): the three content hashes
+inline std::string input_identity(const std::string& data, const std::string& setup, const std::string& calib) { return data + "|" + setup + "|" + calib; }
+
 struct IslandConfig {
   uint32_t seed = 1; uint32_t island = 1;  // final island r = 1..R'; calibration: pilot 0, diagnostic 1..4
   IslandRole role = IslandRole::Final;
@@ -52,6 +55,10 @@ struct IslandConfig {
   int test_corrupt_store_step = -1;         // tests only: break I1 of the top store's kept run after this step (O1 wiring test)
   uint64_t mem_budget = 0;                  // bytes; 0 = no admission check (--mem-budget; manager Q3/Q4)
   uint64_t store_cap = 0;                   // 0: 40 p + 1 (OD-13)
+  std::string input_id;                     // identity of the inputs the caller verified (the data / setup / calib content
+                                            // hashes, as the CLI joins them): part of the checkpoint fingerprint, so a restart on
+                                            // other inputs is refused (invalid_input) before any state is loaded (INTERFACES §5.1:
+                                            // restart identifies its files by content_sha256; review PR52 MAJOR-1). Empty: tests
   std::string ckpt_path;                    // empty: no checkpoints; else <path>.a / <path>.b
   double ckpt_every_s = 600;                // spec §6: at most every 10 min
   int stop_after_step = -1;                 // testing (T6): write a checkpoint after step s and return `interrupted`
@@ -180,8 +187,8 @@ inline MemSizes plan_sizes(int n, int p, int K, const IslandConfig& cfg) {
 }
 inline MemPlan plan_with_budget(MemSizes& z, double k, const IslandConfig& cfg) {
   int G = cfg.G ? cfg.G : 256;
-  z.G = G; MemPlan mp = island_memory(z, k);
-  if (cfg.mem_budget && cfg.G == 0) while (G > 1 && mp.total > cfg.mem_budget) { --G; z.G = G; mp = island_memory(z, k); }
+  z.G = G; z.gram_slots = gram_slots_of(cfg, G, z.p); MemPlan mp = island_memory(z, k);
+  if (cfg.mem_budget && cfg.G == 0) while (G > 1 && mp.total > cfg.mem_budget) { --G; z.G = G; z.gram_slots = gram_slots_of(cfg, G, z.p); mp = island_memory(z, k); }
   return mp;
 }
 

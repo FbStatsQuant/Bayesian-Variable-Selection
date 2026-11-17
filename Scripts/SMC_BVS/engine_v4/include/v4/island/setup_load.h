@@ -6,6 +6,8 @@
 // size_cum, it must equal the rebuild bit for bit (else invalid_input): one law, two writers.
 // Neighbours: nb_ptr (i64, p + 1) / nb_idx (i32), N(j) = idx[ptr[j] .. ptr[j+1]).
 #pragma once
+#include <sys/stat.h>
+#include <cmath>
 #include <string>
 #include "v4/format.h"
 #include "v4/island/dep.h"
@@ -66,11 +68,97 @@ inline double start_bytes(const Start& st, const Neighbours& nb) {
   return b;
 }
 
+// ---------------------------------------------------------------------------------------------------------------
+// The setup's dimensions WITHOUT expanding it (review PR52 MAJOR-2; INTERFACES §7: admission before any allocation that
+// grows with the setup). The file is mapped (every section hash verified, no heap copy of a section); what is read into
+// memory is the block-size histogram (blk_ptr, J + 1 entries) and size_logmass (K + 1 entries). From them:
+//  * k of the admission plan: q90 of the pi_0 size distribution (the rule of plan_island, from the persisted size_logmass)
+//  * start_bytes_model(): the memory of the expanded dep::Start and neighbour lists, from the section sizes alone.
+// StartView (WP3_DESIGN §1.12) replaces the model by the mapped section lengths. The reader split is shared with
+// `calibrate`'s up-front admission (WP4, PR46 MAJOR-2): the dimensions are cheap, the arrays are read after admission.
+struct SetupDims {
+  std::string content_hash, data_hash; uint64_t file_bytes = 0;   // data_hash: setup.bin's meta.inputs["data.bin"] ("" if absent)
+  int J = 0; int64_t p = 0; int K = 0;
+  uint64_t nb_ptr_len = 0, nb_idx_len = 0;
+  std::vector<uint64_t> m_hist = std::vector<uint64_t>(21, 0);   // number of blocks of m members, m = 1..20
+  std::vector<double> size_logmass;                              // K + 1 entries
+};
+
+// verify = false: header and section-table hashes only (the admission needs the sizes; the sections are verified in full
+// when load_start opens the file after admission)
+inline SetupDims read_setup_dims(const std::string& path, int64_t p, int K, bool verify = true) {
+  fmt::Reader R(path, verify);
+  if (R.kind() != fmt::K_SETUP) throw Error(Status::invalid_input, path + ": not a setup file");
+  const std::string w = path + ": ";
+  SetupDims d; d.content_hash = R.content_hash(); d.p = p; d.K = K;
+  { struct stat sb{}; d.file_bytes = ::stat(path.c_str(), &sb) == 0 ? (uint64_t)sb.st_size : 0; }
+  { const Json m = R.json("meta");
+    if (m.contains("inputs") && m.at("inputs").type() == Json::OBJ && m.at("inputs").contains("data.bin") && m.at("inputs").at("data.bin").type() == Json::STR)
+      d.data_hash = m.at("inputs").at("data.bin").str(); }
+  for (const char* nm : {"blk_ptr", "nb_ptr", "nb_idx", "logr", "size_logmass"})
+    if (!R.has(nm)) throw Error(Status::invalid_input, w + "no section " + nm + " (the admission plan needs it; INTERFACES §5.1)");
+  const auto blk_ptr = R.vec<int64_t>("blk_ptr");
+  if (blk_ptr.size() < 2 || blk_ptr[0] != 0 || blk_ptr.back() != p) throw Error(Status::invalid_input, w + "partition shape");
+  d.J = (int)(blk_ptr.size() - 1);
+  for (size_t b = 0; b + 1 < blk_ptr.size(); ++b) {
+    const int64_t m = blk_ptr[b + 1] - blk_ptr[b];
+    if (m < 1 || m > 20) throw Error(Status::invalid_input, w + "block size outside 1..20");
+    ++d.m_hist[(size_t)m];
+  }
+  uint64_t c = 0; R.get<int64_t>("nb_ptr", &c); d.nb_ptr_len = c; R.get<int32_t>("nb_idx", &c); d.nb_idx_len = c;
+  if (d.nb_ptr_len != (uint64_t)p + 1) throw Error(Status::invalid_input, w + "nb_ptr has " + std::to_string(d.nb_ptr_len) + " entries, expected p + 1 = " + std::to_string(p + 1));
+  d.size_logmass = R.vec<double>("size_logmass");
+  if (d.size_logmass.size() != (size_t)K + 1) throw Error(Status::invalid_input, w + "size_logmass has " + std::to_string(d.size_logmass.size()) + " entries, expected K + 1 = " + std::to_string(K + 1));
+  return d;
+}
+
+// q90 of the pi_0 size distribution + 1, with the floor 8 and the calibration's measured k_store: the plan's k
+// (INTERFACES §7; the same rule as plan_island, which computes it from the rebuilt Start's size_logmass)
+inline double pi0_size_q90(const std::vector<double>& size_logmass) {
+  double k_pi0 = 0, acc = 0;
+  for (size_t k = 0; k < size_logmass.size(); ++k) { acc += std::exp(size_logmass[k]); if (acc >= 0.90) { k_pi0 = (double)k; break; } }
+  return k_pi0;
+}
+inline double plan_k(const std::vector<double>& size_logmass, double k_store) { return std::max({8.0, pi0_size_q90(size_logmass) + 1.0, k_store}); }
+
+// An UPPER-BOUND model of the expanded dep::Start + neighbour lists (what start_bytes() measures after the fact, plus the
+// per-row vector headers it leaves out): payloads, 24 B per std::vector, 16 B malloc header per allocation, x 2 for
+// vectors grown by push_back / insert. It is the plan's caller-supplied term both before the load (admission) and in the
+// run, so the pre-load refusal and the island's own admission are one number. Test `start_bytes_model_bounds_start_bytes`
+// pins start_bytes() <= model <= 3 start_bytes() on the fixtures.
+inline double start_bytes_model(const SetupDims& d) {
+  const double K = d.K, J = d.J, p = (double)d.p, hdr = 40.0;
+  double b = 0, flat = 0;
+  for (int m = 1; m <= 20; ++m) {
+    const double cnt = (double)d.m_hist[(size_t)m]; if (!cnt) continue;
+    const int top = std::min(m, d.K);
+    double nle = 0, c = 1;   // codes with popcount <= top: sum_j C(m, j)
+    for (int j = 0; j <= top; ++j) { nle += c; c = c * (m - j) / (j + 1); }
+    double cond = 0; for (int r = 0; r <= d.K; ++r) cond += std::min(top, r) + 1;
+    const double ncode = std::ldexp(1.0, m);
+    b += cnt * (hdr + m * 4.0 * 2                                   // blocks[b]
+                + hdr + ncode * 8                                   // logr[b]
+                + hdr + (top + 1) * 8.0                             // logprof[b]
+                + hdr + (top + 1) * hdr + nle * 4.0 * 2             // codes_by_size[b]
+                + hdr + (top + 1) * hdr + nle * 8.0                 // sub_cum[b]
+                + hdr + (K + 1) * hdr + cond * 8.0);                // cond_cum[b]
+    flat += cnt * ncode * 8.0;
+  }
+  b += hdr + flat * 2;                                              // logr_flat
+  b += 6 * J * 24.0;                                                // the outer vectors (one row per block)
+  b += 2 * (hdr + p * 4.0) + 2 * (hdr + (K + 1) * 8.0);             // blk, pos; size_logmass, size_cum
+  b += hdr + (J + 1) * 8.0;                                         // code_ptr
+  b += hdr + (J + 1) * ((K + 1) * 8.0 + hdr);                       // logF rows
+  b += hdr + (K + 1) * J * 8.0;                                     // c0r
+  b += 2 * hdr + (double)d.nb_ptr_len * 8.0 + (double)d.nb_idx_len * 4.0;   // neighbour lists
+  return b;
+}
+
 inline Neighbours load_neighbours(const std::string& path, int p) {
   fmt::Reader R(path);
   if (!R.has("nb_ptr") || !R.has("nb_idx")) throw Error(Status::invalid_input, path + ": no neighbour lists (nb_ptr / nb_idx)");
   Neighbours nb; nb.ptr = R.vec<int64_t>("nb_ptr"); nb.idx = R.vec<int32_t>("nb_idx");
-  if (nb.ptr.size() != (size_t)p + 1 || nb.ptr[0] != 0 || nb.ptr[(size_t)p] != (int64_t)nb.idx.size()) throw Error(Status::invalid_input, path + ": nb_ptr shape");
+  if (nb.ptr.size() != (size_t)p + 1 || nb.ptr[0] != 0 || nb.ptr[(size_t)p] != (int64_t)nb.idx.size()) throw Error(Status::invalid_input, path + ": nb_ptr shape (" + std::to_string(nb.ptr.size()) + " entries for p = " + std::to_string(p) + ", ptr[0] = " + std::to_string(nb.ptr.empty() ? -1 : nb.ptr[0]) + ", ptr[p] = " + std::to_string(nb.ptr.size() > (size_t)p ? nb.ptr[(size_t)p] : -1) + ", |idx| = " + std::to_string(nb.idx.size()) + ")");
   for (int j = 0; j < p; ++j) {
     if (nb.ptr[j + 1] < nb.ptr[j]) throw Error(Status::invalid_input, path + ": nb_ptr not increasing");
     for (int64_t e = nb.ptr[j]; e < nb.ptr[j + 1]; ++e) if (nb.idx[e] < 0 || nb.idx[e] >= p || nb.idx[e] == j) throw Error(Status::invalid_input, path + ": nb_idx out of range");

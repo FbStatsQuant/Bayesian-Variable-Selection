@@ -26,6 +26,7 @@
 #include <chrono>
 #include <cmath>
 #include <cstdio>
+#include "v4/calib_run.h"
 #include "v4/cmd_args.h"
 #include "v4/island/island.h"
 #include "v4/island/island_file.h"
@@ -80,7 +81,7 @@ struct Inputs {
 Inputs parse_inputs(const Json& args, bool plan_only) {
   Inputs in;
   in.manifest = cmd::manifest_of(args, "island");
-  const Json mpar = in.manifest.contains("params") ? in.manifest.at("params") : Json::object();
+  const Json mpar = cmd::manifest_params(in.manifest);
   in.data = cmd::input_path(args, in.manifest, "data", "data.bin", "island", !plan_only);
   in.setup = cmd::input_path(args, in.manifest, "setup", "setup.bin", "island", !plan_only);
   in.calib = cmd::input_path(args, in.manifest, "calib", "calib.bin", "island", !plan_only);
@@ -95,13 +96,15 @@ Inputs parse_inputs(const Json& args, bool plan_only) {
   if (!mm.empty() && !ma.empty() && mm != ma) throw Error(Status::invalid_input, std::string(W) + "--mode differs from the manifest's mode");
   in.mode = mm.empty() ? ma : mm;
   if (in.mode != "compat" && in.mode != "law" && in.mode != "V") throw Error(Status::invalid_input, std::string(W) + "--mode must be compat, law or V");
-  // a whole-number parameter: the manifest's params (authority) or the argument; any disagreement is refused.
-  // `args` holds the manifest's params too (main copies them), so an argument is compared with the manifest itself.
+  // a whole-number parameter: the manifest's params (authority) or the explicit argument; any disagreement is refused, in
+  // either argument order (review PR52 MAJOR-4). `args` holds the manifest's params too (main copies them over an earlier
+  // explicit value), so the explicit values are cmd::explicit_args(), not `args`.
+  const Json& ex = cmd::explicit_args(args);
   auto param = [&](std::initializer_list<const char*> keys, int64_t lo, int64_t hi) -> int64_t {
     int64_t v = -1; std::string src;
     for (const char* k : keys) {
       for (int pass = 0; pass < 2; ++pass) {
-        const Json& o = pass == 0 ? mpar : args;
+        const Json& o = pass == 0 ? mpar : ex;
         if (!o.contains(k)) continue;
         const std::string nm = (pass == 0 ? "manifest params." : "--") + std::string(k);
         const int64_t x = whole(o.at(k), nm, lo, hi);
@@ -180,8 +183,11 @@ Json run(const Json& args) {
     const int64_t n = whole_arg(args, "n", 0, 3, (int64_t)1 << 31), p = whole_arg(args, "p", 0, 1, (int64_t)1 << 31);
     if (n < 3 || p < 1) throw Error(Status::invalid_input, std::string(W) + "--plan-only needs --data/--setup/--calib, or --n and --p");
     const double k = (double)whole_arg(args, "k", 8, 1, 1 << 16);
-    const int K = (int)std::min<int64_t>(p, n / 2);   // the model cap K of data.bin (src/common/data.cpp)
-    MemSizes z = plan_sizes((int)n, (int)p, K, c);
+    const calib::Budgets bud = calib::budgets(n, p);   // K = min(p, n / 2) and B = min(isqrt n, isqrt p, 16): the engine's budgets
+    if (args.contains("B") && whole(args.at("B"), "--B", 1, 1 << 16) != bud.B)
+      throw Error(Status::invalid_input, std::string(W) + "--B differs from the engine's N-swap budget B = " + std::to_string(bud.B));
+    c.B = bud.B;
+    MemSizes z = plan_sizes((int)n, (int)p, bud.K, c);
     MemPlan mp = plan_with_budget(z, k, c);
     rec["n"] = (double)n; rec["p"] = (double)p; rec["N"] = c.N;
     rec["mem_plan"] = plan_json(mp, budget, c.inputs_bytes, "ESTIMATE (final island plan from sizes: k given, setup inputs = --inputs-bytes)");
@@ -191,7 +197,8 @@ Json run(const Json& args) {
     return rec;
   }
 
-  // ---- inputs ----------------------------------------------------------------------------------------------------
+  // ---- inputs: the small things first (calib.bin's settings, the data and setup dimensions): nothing that grows with the
+  //      setup is allocated before the admission below (review PR52 MAJOR-2) ----------------------------------------------
   if (in.r < 1) throw Error(Status::invalid_input, std::string(W) + "the island index is required (--island r, or manifest params.id / params.island)");
   if (!plan_only && in.out.empty()) throw Error(Status::invalid_input, std::string(W) + "--out is required");
   if (!plan_only && in.seed < 1) throw Error(Status::invalid_input, std::string(W) + "--seed is required (a whole number in [1, 2^31 - 1])");
@@ -202,51 +209,74 @@ Json run(const Json& args) {
     throw Error(Status::invalid_input, std::string(W) + "--seed " + std::to_string(in.seed) + " differs from the calibration's seed " + std::to_string(C.seed));
   if (args.contains("N") && whole(args.at("N"), "N", 1, 1 << 24) != C.N)
     throw Error(Status::invalid_input, std::string(W) + "N differs from calib.bin's frozen N = " + std::to_string(C.N));
-  std::string dhash, shash;
-  Data D = prep::load_data(in.data, &dhash);
-  { fmt::Reader R(in.setup);
-    if (R.kind() != fmt::K_SETUP) throw Error(Status::invalid_input, in.setup + ": not a setup file");
-    shash = R.content_hash();
-    const Json m = R.json("meta");
-    if (m.contains("inputs") && m.at("inputs").contains("data.bin") && m.at("inputs").at("data.bin").str() != dhash)
-      throw Error(Status::invalid_input, std::string(W) + "setup.bin was built from another data.bin"); }
-  if ((!C.data_hash.empty() && C.data_hash != dhash) || (!C.setup_hash.empty() && C.setup_hash != shash))
+  // data.bin: n, p, K from the metadata (mapped; the arrays are read after admission, where the file is verified in full)
+  std::string dhash; int64_t n = 0, p = 0, K = 0;
+  { fmt::Reader R(in.data, false);
+    if (R.kind() != fmt::K_DATA) throw Error(Status::invalid_input, in.data + " is not a data file");
+    dhash = R.content_hash(); const Json m = R.json("meta");
+    n = whole(m.at("n"), "data.bin n", 3, (int64_t)1 << 31); p = whole(m.at("p"), "data.bin p", 1, (int64_t)1 << 31); K = whole(m.at("K"), "data.bin K", 0, (int64_t)1 << 31); }
+  const calib::Budgets bud = calib::budgets(n, p);   // B, K: the budgets the calibration ran with (calibrate uses the same helper)
+  if (bud.K != K) throw Error(Status::invalid_input, std::string(W) + "data.bin K = " + std::to_string(K) + " differs from min(p, n / 2) = " + std::to_string(bud.K));
+  // B is part of the law (the N-swap labels per round: shuffled order, addresses, compat stream use). The calibration used
+  // budgets(n, p).B, so the final islands must; a conflicting --B is refused (review PR52 MAJOR-3)
+  if (args.contains("B") && whole(args.at("B"), "--B", 1, 1 << 16) != bud.B)
+    throw Error(Status::invalid_input, std::string(W) + "--B differs from the engine's N-swap budget B = min(isqrt n, isqrt p, 16) = " + std::to_string(bud.B) + " (n = " + std::to_string(n) + ", p = " + std::to_string(p) + ")");
+  const SetupDims sd = read_setup_dims(in.setup, p, (int)K, false);
+  if (!sd.data_hash.empty() && sd.data_hash != dhash) throw Error(Status::invalid_input, std::string(W) + "setup.bin was built from another data.bin");
+  if ((!C.data_hash.empty() && C.data_hash != dhash) || (!C.setup_hash.empty() && C.setup_hash != sd.content_hash))
     throw Error(Status::invalid_input, std::string(W) + "calib.bin's meta.inputs differ from the data.bin / setup.bin in use");
-  const Start st = load_start(in.setup, D);
-  const Neighbours nb = load_neighbours(in.setup, D.p);
-  const double t_load = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
 
   IslandConfig c;
   c.seed = (uint32_t)std::max<int64_t>(1, in.seed); c.island = (uint32_t)in.r; c.role = IslandRole::Final; c.iter = 0; c.tier = (uint32_t)C.tier;
-  c.N = C.N; c.grid = C.grid; c.L = C.L; c.Hm = C.Hm; c.B = (int)whole_arg(args, "B", 14, 1, 1 << 16);
+  c.N = C.N; c.grid = C.grid; c.L = C.L; c.Hm = C.Hm; c.B = bud.B;
   c.kernel = kernel_of(mode); c.threads = threads; c.G = G; c.tile = tile; c.compat = compat;
-  c.k_store = C.k_store; c.inputs_bytes = start_bytes(st, nb);   // the setup inputs (dep::Start until StartView)
+  c.k_store = C.k_store; c.inputs_bytes = start_bytes_model(sd);   // the setup inputs: the same number before the load and in the run (StartView: the mapped lengths)
   c.mem_budget = budget; c.leaders = false; c.keep_terminal = true;
+  // the checkpoint's identity includes the three verified input hashes (review PR52 MAJOR-1): a restart on other inputs is refused
+  c.input_id = input_identity(dhash, sd.content_hash, C.hash);
   const bool ckpt = whole_arg(args, "ckpt", 1, 0, 1) == 1;
   if (ckpt && !plan_only) {
     std::string b = in.out; if (b.size() > 4 && b.substr(b.size() - 4) == ".bin") b.resize(b.size() - 4);
     c.ckpt_path = b + ".ckpt";
     c.ckpt_every_s = (double)whole_arg(args, "ckpt_every_s", 600, 1, 1 << 30);
   }
-  rec["r"] = (double)in.r; rec["N"] = C.N; rec["T"] = (double)C.grid.size() - 1; rec["L"] = C.L; rec["Hm"] = C.Hm; rec["tier"] = C.tier;
-  rec["n"] = D.n; rec["p"] = D.p; rec["seed"] = (double)c.seed;
-  Json inputs = Json::object(); inputs["data.bin"] = dhash; inputs["setup.bin"] = shash; inputs["calib.bin"] = C.hash;
+  rec["r"] = (double)in.r; rec["N"] = C.N; rec["T"] = (double)C.grid.size() - 1; rec["L"] = C.L; rec["Hm"] = C.Hm; rec["tier"] = C.tier; rec["B"] = bud.B;
+  rec["n"] = (double)n; rec["p"] = (double)p; rec["seed"] = (double)c.seed;
+  Json inputs = Json::object(); inputs["data.bin"] = dhash; inputs["setup.bin"] = sd.content_hash; inputs["calib.bin"] = C.hash;
   rec["inputs"] = inputs;
-  // admission plan (the same plan_island run_island admits with)
-  { MemSizes z; double k = 0; int Gp = 0;
-    const MemPlan mp = plan_island(D, st, c, &z, &k, &Gp);
-    rec["mem_plan"] = plan_json(mp, budget, c.inputs_bytes, "ESTIMATE (final island peak-live plan, memory.h; k = max(8, q90(pi_0) + 1, k_store))");
-    if (plan_only) {
-      rec["plan_only"] = true;
-      rec["status"] = budget && mp.total > budget ? "resource_limit" : "completed";
-      if (budget && mp.total > budget) rec["reason"] = "island not admitted: plan " + std::to_string(mp.total) + " B > --mem-budget";
-      return rec;
-    } }
 
-  // ---- run ------------------------------------------------------------------------------------------------------
+  // ---- admission (INTERFACES §7): the plan from the dimensions, before the data, the Start or the neighbour lists are
+  //      read into memory. Same rule as plan_island (k = max(8, q90(pi_0 size) + 1, k_store)); the run's own admission
+  //      sees the same numbers (test island_command_refusals_and_budget) ---------------------------------------------------
+  MemSizes z = plan_sizes((int)n, (int)p, (int)K, c);
+  const double kplan = plan_k(sd.size_logmass, C.k_store);
+  const MemPlan mp = plan_with_budget(z, kplan, c);
+  const bool admitted = budget == 0 || mp.total <= budget;
+  rec["mem_plan"] = plan_json(mp, budget, c.inputs_bytes, "ESTIMATE (final island peak-live plan, memory.h; k = max(8, q90(pi_0) + 1, k_store); setup inputs = start_bytes_model from the section sizes)");
+  const std::string refusal = "mem_budget: predicted peak " + std::to_string(mp.total >> 20) + " MiB > budget " + std::to_string(budget >> 20) + " MiB [" + mem_plan_text(mp) + "]";
+  if (plan_only) {
+    rec["plan_only"] = true; rec["status"] = admitted ? "completed" : "resource_limit";
+    if (!admitted) rec["reason"] = "island not admitted: " + refusal;
+    return rec;
+  }
+  const Arith arith = mode == fmt::M_V ? Arith::ClassA : Arith::Bit;
+  if (!admitted) {   // refuse before any allocation: the file carries the request's identity (mode, schedule) and no estimates (GUARD-W)
+    IslandRun r; r.status = 3; r.reason = refusal; r.r = (int)in.r; r.N = C.N; r.p = (int)p; r.L = C.L; r.Hm = C.Hm; r.G_used = mp.G; r.mem_plan = mem_plan_text(mp);
+    r.role = IslandRole::Final; r.tier = (uint32_t)C.tier; r.compat = compat; r.grid = C.grid; r.T = (int)C.grid.size() - 1;
+    rec["island_bin"] = write_island_file(in.out, r, arith, inputs);
+    rec["status"] = "resource_limit"; rec["reason"] = refusal; rec["G_used"] = mp.G;
+    return rec;
+  }
+
+  // ---- read the arrays (the files are verified in full here), then run ------------------------------------------------
+  Data D = prep::load_data(in.data, nullptr);
+  if (D.n != n || D.p != p || D.K != K) throw Error(Status::invalid_input, std::string(W) + "data.bin changed between the metadata and the load");
+  const Start st = load_start(in.setup, D);
+  const Neighbours nb = load_neighbours(in.setup, D.p);
+  const double t_load = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
   const IslandRun r = mode == fmt::M_V ? run_island<Arith::ClassA>(D, st, nb, c) : run_island<Arith::Bit>(D, st, nb, c);
   if (r.status == 1) throw Error(Status::internal_error, std::string(W) + "island interrupted without a stop request");
-  const std::string fhash = write_island_file(in.out, r, mode == fmt::M_V ? Arith::ClassA : Arith::Bit, inputs);
+  const std::string fhash = write_island_file(in.out, r, arith, inputs);
   const Status s = r.status == 0 ? Status::completed : r.status == 2 ? Status::numerical_failure : Status::resource_limit;
   if (s == Status::completed && !c.ckpt_path.empty()) { std::remove((c.ckpt_path + ".a").c_str()); std::remove((c.ckpt_path + ".b").c_str()); }
   rec["status"] = status_name(s);
@@ -254,6 +284,7 @@ Json run(const Json& args) {
   rec["island_bin"] = fhash; rec["output_hash"] = hex64(r.hash()); rec["init_hash"] = hex64(r.init_hash);
   if (s == Status::completed) rec["logZ"] = r.logZ;
   rec["G_used"] = r.G_used; rec["resumed_from_step"] = r.resumed_from_step;
+  rec["start_bytes_measured"] = start_bytes(st, nb);   // after the fact: the model above must bound it
   Json t = Json::object(); t["load"] = t_load; t["island"] = r.ks.t_total; t["ckpt"] = r.ks.t_ckpt; t["store_check"] = r.ks.t_check;
   t["total"] = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
   rec["seconds"] = t;

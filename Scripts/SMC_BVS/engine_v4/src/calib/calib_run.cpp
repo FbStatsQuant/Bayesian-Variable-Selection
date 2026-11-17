@@ -74,6 +74,28 @@ Json plan_json(const CalibMemPlan& m, uint64_t budget, double kbar) {
 // CalibIslandRunner admits it under WP4's N-1 rule: the caller-supplied term = the setup inputs (start_bytes) + the
 // calibration's resident state without the inputs (ledger + export); admitted iff that plan <= --mem-budget. With
 // setup.bin it is plan_island on the real Start; without it, sizes only (k = kbar, setup inputs 0: an ESTIMATE floor).
+// The calibration island's plans (largest island of the calibration: max H and Hm over the tiers the rule can use, leaders,
+// round-start snapshot), planned as CalibIslandRunner admits it under the N-1 rule: the caller-supplied term = setup inputs +
+// the calibration's resident state without them. `ip` at the G the budget allows, `ip1` at G = 1 (the admission floor).
+// With the setup's dimensions (read_setup_dims: nothing expanded) k = q90 rule and the inputs = the Start model; without
+// them, sizes only (k = kbar, setup inputs 0). The same numbers drive --plan-only and the run's up-front refusal (PR52 MAJOR-2).
+struct IslandPlans { island::MemPlan ip, ip1; double setup_in = 0; };
+IslandPlans calib_island_plans(const Settings& s, Rule rule, uint32_t mode, int B, int K, int64_t n, int64_t p, uint64_t budget,
+                               uint64_t resident_own, const island::SetupDims* sd, double kbar) {
+  island::IslandConfig ic; ic.role = island::IslandRole::Pilot; ic.island = 0; ic.leaders = true; ic.B = B; ic.G = 0; ic.mem_budget = budget;
+  ic.N = 1; ic.Hm = 1;
+  for (int e = 0; e < (rule == Rule::coded ? 2 : 1); ++e) { ic.N = std::max(ic.N, s.tiers[e].H); ic.Hm = std::max(ic.Hm, s.tiers[e].Hm); }
+  ic.compat = mode == fmt::M_COMPAT; ic.threads = ic.compat ? 1 : s.threads;
+  ic.kernel = mode == fmt::M_V ? island::KernelKind::LabelMajor : island::KernelKind::ParticleMajor;
+  IslandPlans r; r.setup_in = sd ? island::start_bytes_model(*sd) : 0.0;
+  ic.inputs_bytes = r.setup_in + (double)resident_own;
+  const double k = sd ? island::plan_k(sd->size_logmass, 0.0) : kbar;
+  island::IslandConfig ic1 = ic; ic1.G = 1; ic1.mem_budget = 0;
+  island::MemSizes z = island::plan_sizes((int)n, (int)p, K, ic), z1 = island::plan_sizes((int)n, (int)p, K, ic1);
+  r.ip = island::plan_with_budget(z, k, ic); r.ip1 = island::plan_with_budget(z1, k, ic1);
+  return r;
+}
+
 Json island_plan_json(const island::MemPlan& mp, uint64_t floor, uint64_t budget, double setup_inputs, uint64_t resident_own, bool from_files) {
   Json j = Json::object();
   auto u = [](uint64_t x) { return Json((double)x); };
@@ -95,6 +117,9 @@ Json run(const Json& args) {
   // disagreeing explicit argument is refused. Before, calibrate read --data / --setup only, so the driver's stage
   // (`calibrate --manifest m.json --out ...`) failed with "--data is required".
   const Json man = cmd::manifest_of(args, "calibrate");
+  // the manifest freezes the scientific parameters: an explicit different seed / I_max / refine_m is refused, whichever side
+  // of --manifest it is given (review PR52 MAJOR-4)
+  cmd::refuse_manifest_conflicts(args, man, "calibrate", {"seed", "I_max", "refine_m"});
   std::string mode_s = str_arg(args, "mode");
   if (man.contains("mode")) {
     const Json& mm = man.at("mode");
@@ -136,35 +161,31 @@ Json run(const Json& args) {
   Json rec = Json::object();
   rec["settings"] = settings_json(s, b, rule); rec["mem_plan"] = plan_json(plan, budget, kbar); rec["n"] = (double)n; rec["p"] = (double)p;
   rec["mode"] = mode_s;
-  if (budget && plan.resident >= budget) {   // the calibration's own state does not fit: refuse before any allocation
+  const uint64_t resident_own = plan.ledger + plan.export_;
+  const bool files = !dpath.empty() && !spath.empty();
+  // the island plan from the dimensions (nothing of the setup expanded): printed on every plan-only outcome, admitted or not
+  // (review PR52 m5), and the run's up-front refusal below
+  island::SetupDims sdims; if (files) sdims = island::read_setup_dims(spath, p, D.K, false);
+  const IslandPlans ipl = calib_island_plans(s, rule, mode, b.B, b.K, n, p, budget, resident_own, files ? &sdims : nullptr, kbar);
+  const bool resident_ok = !(budget && plan.resident >= budget), island_ok = !(budget && ipl.ip.total > budget);
+  if (plan_only) {
+    rec["island_plan"] = island_plan_json(ipl.ip, ipl.ip1.total, budget, ipl.setup_in, resident_own, files);
+    rec["plan_only"] = true;
+    if (!resident_ok) { rec["status"] = "resource_limit"; rec["reason"] = "calibrate not admitted: calibration state " + std::to_string(plan.resident) + " B >= --mem-budget"; }
+    else if (!island_ok) {
+      rec["status"] = "resource_limit";
+      rec["reason"] = "calibration island not admitted (N-1): resident + island plan " + std::to_string(ipl.ip.total) + " B > --mem-budget";
+    } else rec["status"] = "completed";
+    return rec;
+  }
+  if (!resident_ok) {   // the calibration's own state does not fit: refuse before any allocation
     rec["status"] = "resource_limit"; rec["reason"] = "calibrate not admitted: calibration state " + std::to_string(plan.resident) + " B >= --mem-budget";
     return rec;
   }
-  if (plan_only) {
-    island::IslandConfig ic; ic.role = island::IslandRole::Pilot; ic.island = 0; ic.leaders = true; ic.B = b.B; ic.G = 0; ic.mem_budget = budget;
-    ic.N = 1; ic.Hm = 1;
-    for (int e = 0; e < (rule == Rule::coded ? 2 : 1); ++e) { ic.N = std::max(ic.N, s.tiers[e].H); ic.Hm = std::max(ic.Hm, s.tiers[e].Hm); }
-    ic.compat = mode == fmt::M_COMPAT; ic.threads = ic.compat ? 1 : s.threads;
-    ic.kernel = mode == fmt::M_V ? island::KernelKind::LabelMajor : island::KernelKind::ParticleMajor;
-    const uint64_t resident_own = plan.ledger + plan.export_;
-    island::MemPlan ip, ip1; double setup_in = 0; const bool files = !dpath.empty() && !spath.empty();
-    island::IslandConfig ic1 = ic; ic1.G = 1; ic1.mem_budget = 0;
-    if (files) {
-      const island::Start st = island::load_start(spath, D);
-      const island::Neighbours nb = island::load_neighbours(spath, D.p);
-      setup_in = island::start_bytes(st, nb); ic.inputs_bytes = ic1.inputs_bytes = setup_in + (double)resident_own;
-      ip = island::plan_island(D, st, ic); ip1 = island::plan_island(D, st, ic1);
-    } else {
-      ic.inputs_bytes = ic1.inputs_bytes = (double)resident_own;
-      island::MemSizes z = island::plan_sizes((int)n, (int)p, (int)std::min<int64_t>(p, n / 2), ic), z1 = z;
-      ip = island::plan_with_budget(z, kbar, ic); ip1 = island::plan_with_budget(z1, kbar, ic1);
-    }
-    rec["island_plan"] = island_plan_json(ip, ip1.total, budget, setup_in, resident_own, files);
-    rec["plan_only"] = true;
-    if (budget && ip.total > budget) {
-      rec["status"] = "resource_limit";
-      rec["reason"] = "calibration island not admitted (N-1): resident + island plan " + std::to_string(ip.total) + " B > --mem-budget";
-    } else rec["status"] = "completed";
+  if (!island_ok) {     // N-1: no calibration island can run beside the resident state: refuse BEFORE the Start is expanded
+    rec["island_plan"] = island_plan_json(ipl.ip, ipl.ip1.total, budget, ipl.setup_in, resident_own, files);
+    rec["status"] = "resource_limit";
+    rec["reason"] = "calibration island not admitted (N-1): resident + island plan " + std::to_string(ipl.ip.total) + " B > --mem-budget";
     return rec;
   }
   if (out.empty()) throw Error(Status::invalid_input, "calibrate: --out is required");
@@ -176,7 +197,7 @@ Json run(const Json& args) {
   const island::Start st = island::load_start(spath, D);
   const island::Neighbours nb = island::load_neighbours(spath, D.p);
   island::CalibRunnerConfig rc; rc.seed = (uint32_t)seed; rc.B = b.B; rc.threads = s.threads;
-  rc.inputs_bytes = island::start_bytes(st, nb);   // the island's own setup inputs (dep::Start; the flat view will shrink it)
+  rc.inputs_bytes = ipl.setup_in;   // the island's own setup inputs: the Start model of the plan above (StartView: the mapped lengths)
   if (mode == fmt::M_COMPAT) { rc.compat = true; rc.kernel = island::KernelKind::ParticleMajor; rc.threads = 1; }
   else if (mode == fmt::M_LAW) rc.kernel = island::KernelKind::ParticleMajor;
   else rc.kernel = island::KernelKind::LabelMajor;
@@ -187,7 +208,7 @@ Json run(const Json& args) {
   CalibFactory fac{&D, &S};
   // INTERFACES §7 (whole task), WP4's N-1 rule: every island gets the task budget unchanged and the calibration's own
   // state without the inputs (calibration ledger + export); the island's plan counts X, z, diag(G) and the setup inputs
-  const uint64_t resident_own = plan.ledger + plan.export_, island_budget = budget;
+  const uint64_t island_budget = budget;
   auto t0 = std::chrono::steady_clock::now();
   CalibOutcome oc;
   if (mode == fmt::M_V) { island::CalibIslandRunner<island::Arith::ClassA> run(D, st, nb, rc); oc = calibrate_with(run, std::move(led), fac, s, ts, resident_own, island_budget); }

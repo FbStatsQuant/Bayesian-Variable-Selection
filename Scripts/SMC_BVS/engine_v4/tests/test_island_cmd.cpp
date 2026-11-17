@@ -18,10 +18,13 @@
 #include <sys/wait.h>
 #include <cstdio>
 #include <filesystem>
+#include <functional>
 #include <random>
+#include <set>
 #include "tk.h"
 #include "tutil.h"
 #include "tutil_island.h"
+#include "v4/calib_run.h"
 #include "v4/island/island.h"
 #include "v4/island/island_file.h"
 #include "v4/island/setup_load.h"
@@ -63,7 +66,33 @@ Json rec_of(const std::string& p) { return v4::read_json_file(p); }
 // data.bin (prep of an AR(0.6) design, n 60, p 30) and setup.bin (blocks of 3, the island's own tables, table stores over
 // every table model, neighbour lists, size_cum): the fixture of calibrate_command_end_to_end
 struct Fx { v4::Data D; std::string dpath, spath, dhash, shash; };
-void make_fx(Fx& f, const Dir& dir) {
+// copies every section of R into W except `skip` (json sections as json; the rest as raw bytes of their dtype)
+void copy_sections(const v4::fmt::Reader& R, v4::fmt::Writer& W, const std::set<std::string>& skip = {}) {
+  for (const auto& e : R.sections()) {
+    const std::string nm(e.name);
+    if (skip.count(nm)) continue;
+    if (e.dtype == v4::fmt::D_JSON) { W.add_json(nm, R.json(nm)); continue; }
+    const void* qq = e.dtype == v4::fmt::D_F64 ? (const void*)R.get<double>(nm) : e.dtype == v4::fmt::D_I32 ? (const void*)R.get<int32_t>(nm)
+                   : e.dtype == v4::fmt::D_U32 ? (const void*)R.get<uint32_t>(nm) : e.dtype == v4::fmt::D_I64 ? (const void*)R.get<int64_t>(nm)
+                   : e.dtype == v4::fmt::D_U64 ? (const void*)R.get<uint64_t>(nm) : e.dtype == v4::fmt::D_U16 ? (const void*)R.get<uint16_t>(nm)
+                   : (const void*)R.get<uint8_t>(nm);
+    W.add_copy(nm, e.dtype, qq, e.length, e.dims[0], e.dims[1]);
+  }
+}
+// a setup.bin like `src` with other sections (the replaced names are dropped from the copy); returns the new content hash
+std::string rewrite_setup(const std::string& src, const std::string& dst, const std::set<std::string>& drop, const std::function<void(v4::fmt::Writer&)>& add) {
+  v4::fmt::Reader R(src); v4::fmt::Writer W(v4::fmt::K_SETUP, R.mode());
+  copy_sections(R, W, drop); add(W);
+  return W.write(dst);
+}
+// a calib.bin like `src` whose meta.inputs["setup.bin"] names `shash` (every normal input check of the island passes)
+std::string rewrite_calib_inputs(const std::string& src, const std::string& dst, const std::string& shash) {
+  v4::fmt::Reader R(src); v4::fmt::Writer W(R.kind(), R.mode());
+  Json m = R.json("meta"); m["inputs"]["setup.bin"] = shash;
+  W.add_json("meta", m); copy_sections(R, W, {"meta"});
+  return W.write(dst);
+}
+void make_fx(Fx& f, const Dir& dir, int bsz = 3) {
   const int n = 60, p_raw = 30;
   std::vector<double> X((size_t)n * p_raw), y(n);
   { std::mt19937_64 g(41); std::normal_distribution<double> nd;
@@ -74,7 +103,7 @@ void make_fx(Fx& f, const Dir& dir) {
   const v4::Data& D = f.D; const int p = D.p;
   f.dpath = dir("data.bin"); f.spath = dir("setup.bin");
   f.dhash = v4::prep::write_data(f.dpath, D, pr, "B", Json::object());
-  Start st; build_start(st, D, contiguous_blocks(p, 3));
+  Start st; build_start(st, D, contiguous_blocks(p, bsz));
   Neighbours nb = window_neighbours(D, 6, 4);
   v4::wp4io::SetupView S; S.blk = st.blk; S.pos = st.pos; S.blk_ptr.push_back(0);
   S.ttop.init(40ull * p + 1, v4::Order::HPM); S.tlead0.init(20ull * p, v4::Order::LEX); S.tlead1.init(20ull * p, v4::Order::LEX);
@@ -96,15 +125,7 @@ void make_fx(Fx& f, const Dir& dir) {
   const std::string s0 = dir("setup0.bin");
   v4::wp4io::write_setup_min(s0, S, sin);
   { v4::fmt::Reader R(s0); v4::fmt::Writer W(v4::fmt::K_SETUP, v4::fmt::M_COMPAT);   // + the neighbour lists (WP2's sections)
-    for (const auto& e : R.sections()) {
-      const std::string nm(e.name);
-      if (e.dtype == v4::fmt::D_JSON) { W.add_json(nm, R.json(nm)); continue; }
-      const void* qq = e.dtype == v4::fmt::D_F64 ? (const void*)R.get<double>(nm) : e.dtype == v4::fmt::D_I32 ? (const void*)R.get<int32_t>(nm)
-                     : e.dtype == v4::fmt::D_U32 ? (const void*)R.get<uint32_t>(nm) : e.dtype == v4::fmt::D_I64 ? (const void*)R.get<int64_t>(nm)
-                     : e.dtype == v4::fmt::D_U64 ? (const void*)R.get<uint64_t>(nm) : e.dtype == v4::fmt::D_U16 ? (const void*)R.get<uint16_t>(nm)
-                     : (const void*)R.get<uint8_t>(nm);
-      W.add_copy(nm, e.dtype, qq, e.length, e.dims[0], e.dims[1]);
-    }
+    copy_sections(R, W);
     // + size_logmass (WP4 #46: calibrate's plan k = max(8, q90(pi_0 size) + 1) from setup.bin requires it)
     W.add("nb_ptr", nb.ptr); W.add("nb_idx", nb.idx); W.add("size_cum", st.size_cum); W.add("size_logmass", st.size_logmass); f.shash = W.write(f.spath); }
   std::remove(s0.c_str());
@@ -145,9 +166,19 @@ TEST(island_command_end_to_end) {
       Start st = load_start(f.spath, f.D); Neighbours nb = load_neighbours(f.spath, f.D.p);
       IslandConfig c; c.seed = 77; c.island = (uint32_t)r; c.tier = (uint32_t)ci.tier; c.N = ci.N; c.grid = ci.grid; c.L = ci.L; c.Hm = ci.Hm;
       c.compat = mode == "compat"; c.threads = th; c.kernel = mode == "V" ? KernelKind::LabelMajor : KernelKind::ParticleMajor;
+      // B is part of the law: min(isqrt n, isqrt p, 16) = min(7, 5, 16) = 5 for this n = 60, p = 30 fixture (review PR52 MAJOR-3);
+      // the reference sets it by value, not from the CLI default (14, which is right only for n = 200)
+      CHECK(f.D.n == 60 && f.D.p == 30 && v4::calib::budgets(f.D.n, f.D.p).B == 5);
+      c.B = 5;
       const IslandRun ref = mode == "V" ? run_island<Arith::ClassA>(f.D, st, nb, c) : run_island<Arith::Bit>(f.D, st, nb, c);
       char hx[19]; std::snprintf(hx, sizeof hx, "0x%016llx", (unsigned long long)ref.hash());
-      CHECKF(rec.at("output_hash").str() == hx, "%s island %d: CLI output hash %s, run_island %s", mode.c_str(), r, rec.at("output_hash").str().c_str(), hx);
+      CHECKF(rec.at("output_hash").str() == hx, "%s island %d: CLI output hash %s, run_island (B 5) %s", mode.c_str(), r, rec.at("output_hash").str().c_str(), hx);
+      CHECK((int)rec.at("B").num() == 5);
+      if (mode == "V" && r == 1) {   // the wrong B gives other output: the test above would fail on a hard-coded 14
+        IslandConfig c14 = c; c14.B = 14;
+        const IslandRun w = run_island<Arith::ClassA>(f.D, st, nb, c14);
+        CHECK(w.hash() != ref.hash());
+      }
       std::printf("  %-6s island %d: %.2f s, T = %zu, N = %d, logZ = %.6f, G %d\n", mode.c_str(), r, omp_get_wtime() - t0, ci.grid.size() - 1, ci.N,
                   rec.at("logZ").num(), (int)rec.at("G_used").num());
       if (mode == "V" && r == 2) {   // T3 through the CLI: 1 thread, G 7, tile 64 -> the same sections
@@ -156,6 +187,17 @@ TEST(island_command_end_to_end) {
         CHECK(body_hash(o1) == body_hash(out));
       }
     }
+    // a refused island carries the request's identity (review PR52 m6): mode, schedule, no estimates; and --B is checked
+    { const std::string ro = dir("island_" + mode + "_refused.bin");
+      CHECK_EQ(sh(bin + " island --data " + q(f.dpath) + " --setup " + q(f.spath) + " --calib " + q(cal) + " --mode " + mode + " --seed 77 --island 1 --threads " +
+                  std::to_string(th) + " --mem-budget 1 --out " + q(ro)), 11);
+      v4::fmt::Reader R(ro); const Json m = R.json("meta");
+      CHECKF(m.at("status").str() == "resource_limit" && m.at("mode").str() == mode && R.mode() == v4::fmt::mode_from_name(mode) &&
+             R.vec<double>("grid") == ci.grid && (size_t)m.at("T").num() + 1 == ci.grid.size() && !R.has("logZ") && !R.has("pip_r") && !R.has("terminal_S"),
+             "%s refusal file: status %s mode %s header mode %s", mode.c_str(), m.at("status").str().c_str(), m.at("mode").str().c_str(), v4::fmt::mode_name(R.mode()).c_str());
+      const std::string base = bin + " island --data " + q(f.dpath) + " --setup " + q(f.spath) + " --calib " + q(cal) + " --mode " + mode + " --seed 77 --island 1 --plan-only 1";
+      CHECK_EQ(sh(base + " --B 14"), 13);   // conflicts with min(isqrt n, isqrt p, 16) = 5
+      CHECK_EQ(sh(base + " --B 5"), 0); }
     // WP4's merge takes the islands
     const std::string fit = dir("fit_" + mode + ".bin");
     const int rcm = sh(bin + " merge --data " + q(f.dpath) + " --setup " + q(f.spath) + " --calib " + q(cal) + " --islands " + q(isl) + " --Rp " +
@@ -224,6 +266,17 @@ TEST(island_command_driver_manifest) {
   CHECK_EQ(sh(bin + " island --manifest " + q(man) + " --seed 2 --out " + q(dir("m_d.bin"))), 13);
   CHECK_EQ(sh(bin + " island --manifest " + q(man) + " --data " + q(f.dpath) + " --out " + q(dir("m_e.bin"))), 13);
   CHECK_EQ(sh(bin + " island --manifest " + q(man) + " --id 3 --threads 2 --out " + q(dir("m_f.bin"))), 0);
+  // the same keys BEFORE --manifest (review PR52 MAJOR-4: main copies the manifest's params over an earlier explicit value):
+  // the manifest has id 3, seed 1, Rp 16
+  for (const char* conflict : {"--seed 2", "--id 4", "--Rp 8", "--island 4"})
+    CHECK_MSG(sh(bin + " island " + conflict + " --manifest " + q(man) + " --plan-only 1") == 13, std::string("before the manifest: ") + conflict);
+  for (const char* conflict : {"--seed 2", "--id 4", "--Rp 8", "--island 4"})
+    CHECK_MSG(sh(bin + " island --manifest " + q(man) + " " + conflict + " --plan-only 1") == 13, std::string("after the manifest: ") + conflict);
+  CHECK_EQ(sh(bin + " island --id 3 --seed 1 --manifest " + q(man) + " --plan-only 1"), 0);   // agreeing values, before the manifest
+  // calibrate: the manifest freezes the seed (and I_max / refine_m); a conflicting explicit seed is refused on either side
+  CHECK_EQ(sh(bin + " calibrate --seed 2 --manifest " + q(cman) + " --plan-only 1"), 13);
+  CHECK_EQ(sh(bin + " calibrate --manifest " + q(cman) + " --seed 2 --plan-only 1"), 13);
+  CHECK_EQ(sh(bin + " calibrate --seed 1 --manifest " + q(cman) + " --plan-only 1"), 0);
   // a manifest of another command is refused
   { Json M = v4::read_json_file(man); M["command"] = "merge"; v4::write_json_file(dir("m_merge.json"), M); }
   CHECK_EQ(sh(bin + " island --manifest " + q(dir("m_merge.json")) + " --out " + q(dir("m_g.bin"))), 13);
@@ -273,10 +326,34 @@ TEST(island_command_refusals_and_budget) {
   { const std::string pr2 = dir("plan2.json");
     CHECK_EQ(sh(ok + " --plan-only 1 --mem-budget " + std::to_string(plan) + " --record " + q(pr2)), 0);
     CHECK(rec_of(pr2).at("mem_plan").at("G").num() >= 16 && rec_of(pr2).at("mem_plan").at("total").num() <= (double)plan); }
+  // the pre-load plan IS the plan run_island admits with (the Start is rebuilt from the same setup): same total, same G
+  { const v4::wp4io::CalibIn ci = v4::wp4io::read_calib(cal, f.D.p, f.D.K, f.dhash, f.shash);
+    Start st = load_start(f.spath, f.D); Neighbours nb = load_neighbours(f.spath, f.D.p);
+    const SetupDims sd = read_setup_dims(f.spath, f.D.p, f.D.K);
+    IslandConfig c; c.seed = 77; c.island = 1; c.N = ci.N; c.grid = ci.grid; c.L = ci.L; c.Hm = ci.Hm; c.B = 5; c.kernel = KernelKind::LabelMajor; c.threads = 2; c.G = 16;
+    c.k_store = ci.k_store; c.inputs_bytes = start_bytes_model(sd);
+    CHECK(plan_island(f.D, st, c).total == plan);
+    c.G = 0; c.mem_budget = plan;   // G chosen by the budget: the same G as the plan-only record
+    CHECK(plan_island(f.D, st, c).G == (int)rec_of(dir("plan2.json")).at("mem_plan").at("G").num());
+    (void)nb; }
+  // admission comes BEFORE the arrays are read (review PR52 MAJOR-2): a setup whose arrays load_start rejects (blk_members
+  // not a partition; header, hashes and dimensions intact, calib.bin's inputs updated) is refused by the budget (11) without
+  // ever being expanded, rejected by the load (13) when admitted, and planned (0) without any load
+  { std::vector<int32_t> bm; { v4::fmt::Reader R(f.spath); bm = R.vec<int32_t>("blk_members"); }
+    bm[0] = bm[1];
+    const std::string bad = dir("setup_bad.bin"), calb = dir("calib_bad.bin");
+    const std::string bh = rewrite_setup(f.spath, bad, {"blk_members"}, [&](v4::fmt::Writer& W) { W.add("blk_members", bm); });
+    rewrite_calib_inputs(cal, calb, bh);
+    const std::string b2 = bin + " island --data " + q(f.dpath) + " --setup " + q(bad) + " --calib " + q(calb) + " --mode V --seed 77 --island 1 --threads 2 --G 16";
+    CHECK_EQ(sh(b2 + " --mem-budget 1" + o("bad_refused.bin")), 11);
+    CHECK_EQ(sh(b2 + o("bad_loaded.bin")), 13);
+    CHECK_EQ(sh(b2 + " --plan-only 1"), 0);
+    CHECK_EQ(sh(b2 + " --plan-only 1 --mem-budget 1"), 11); }
   // --plan-only from sizes (10^6, V, 96 threads, G 64, k 7): the plan of memory.h
   { const std::string pr3 = dir("plan3.json");
     CHECK_EQ(sh(bin + " island --plan-only 1 --mode V --n 200 --p 1000000 --threads 96 --G 64 --k 7 --record " + q(pr3)), 0);
-    MemSizes big; big.n = 200; big.p = 1000000; big.K = 100; big.N = 2500; big.B = 14; big.threads = 96; big.G = 64; big.cap = 40000001ULL; big.deferred = true;
+    MemSizes big; big.n = 200; big.p = 1000000; big.K = 100; big.N = 2500; big.B = v4::calib::budgets(200, 1000000).B; big.threads = 96; big.G = 64; big.cap = 40000001ULL; big.deferred = true;
+    { IslandConfig gc; gc.kernel = KernelKind::LabelMajor; big.gram_slots = gram_slots_of(gc, 64, 1000000); }   // K3's Gram-row slots (default config: bounded scoring)
     const double t = rec_of(pr3).at("mem_plan").at("total").num();
     CHECKF(t == (double)island_memory(big, 7).total, "sizes plan %.0f vs memory.h %.0f", t, (double)island_memory(big, 7).total);
     std::printf("  1M final island plan (sizes, G 64, 96 threads, k 7): %.2f GiB\n", t / 1073741824.0);
@@ -292,6 +369,11 @@ TEST(island_command_refusals_and_budget) {
     CHECK(res == (uint64_t)(C.at("mem_plan").at("ledger").num() + C.at("mem_plan").at("export").num()));
     CHECK_EQ(sh(bin + " calibrate --plan-only 1 --data " + q(f.dpath) + " --setup " + q(f.spath) + " --mode V --threads 3 --mem-budget " + std::to_string(ip)), 0);
     CHECK_EQ(sh(bin + " calibrate --plan-only 1 --data " + q(f.dpath) + " --setup " + q(f.spath) + " --mode V --threads 3 --mem-budget " + std::to_string(ip - 1)), 11);
+    // a refused plan-only still prints the plan and its floor (review PR52 m5): that is when the requester resizes
+    { const std::string cp2 = dir("cal_plan_refused.json");
+      CHECK_EQ(sh(bin + " calibrate --plan-only 1 --mode V --n 200 --p 1000000 --threads 3 --mem-budget 1000 --record " + q(cp2)), 11);
+      const Json R2 = rec_of(cp2);
+      CHECK(R2.contains("plan_only") && R2.contains("island_plan") && R2.at("island_plan").at("floor").num() > 1e10 && R2.at("island_plan").at("admitted").boolean() == false); }
     // the run with the budget one byte below the island plan: the pilot is refused at admission (exit 11, no calib.bin)
     const std::string c2 = dir("calib_lim.bin");
     CHECK_EQ(sh(bin + " calibrate --data " + q(f.dpath) + " --setup " + q(f.spath) + " --mode V --seed 77 --threads 3 --mem-budget " + std::to_string(ip - 1) + " --out " + q(c2)), 11);
@@ -310,24 +392,61 @@ TEST(island_command_resume) {
   { Json a = Json::object(); a["data"] = f.dpath; a["setup"] = f.spath; a["out"] = cal; a["mode"] = "V"; a["seed"] = 77.0; a["threads"] = 3.0;
     CHECK(v4::calib::run(a).at("status").str() == "completed"); }
   const v4::wp4io::CalibIn ci = v4::wp4io::read_calib(cal, f.D.p, f.D.K);
-  auto args = [&](const std::string& out) {
-    Json a = Json::object(); a["data"] = f.dpath; a["setup"] = f.spath; a["calib"] = cal; a["mode"] = "V"; a["seed"] = 77.0; a["island"] = 2.0;
+  auto args = [&](const std::string& out, const std::string& setup, const std::string& calibf) {
+    Json a = Json::object(); a["data"] = f.dpath; a["setup"] = setup; a["calib"] = calibf; a["mode"] = "V"; a["seed"] = 77.0; a["island"] = 2.0;
     a["threads"] = 3.0; a["out"] = out; return a;
   };
-  const Json full = v4::island::run(args(dir("full.bin")));
+  const Json full = v4::island::run(args(dir("full.bin"), f.spath, cal));
   CHECK(full.at("status").str() == "completed" && (int)full.at("resumed_from_step").num() == -1);
-  // an island of the same configuration interrupted after step 2 leaves <out>.ckpt.{a,b}; the command resumes from it
+  // an island of the same configuration interrupted after step 2 leaves <out>.ckpt.{a,b}; the command resumes from it.
+  // Same configuration = the CLI's: B = 5 for n = 60, p = 30, and the identity of the three verified inputs
   const std::string out = dir("island_2.bin"), ck = dir("island_2.ckpt");
-  { Start st = load_start(f.spath, f.D); Neighbours nb = load_neighbours(f.spath, f.D.p);
-    IslandConfig c; c.seed = 77; c.island = 2; c.tier = (uint32_t)ci.tier; c.N = ci.N; c.grid = ci.grid; c.L = ci.L; c.Hm = ci.Hm; c.threads = 3;
-    c.kernel = KernelKind::LabelMajor; c.ckpt_path = ck; c.ckpt_every_s = 1e9; c.stop_after_step = 2;
-    CHECK(run_island<Arith::ClassA>(f.D, st, nb, c).status == 1); }
+  CHECK(v4::calib::budgets(f.D.n, f.D.p).B == 5);
+  auto interrupted = [&](const std::string& ckbase, const std::string& setup_hash, const std::string& calib_hash, const std::string& setup_path) {
+    Start st = load_start(setup_path, f.D); Neighbours nb = load_neighbours(setup_path, f.D.p);
+    IslandConfig c; c.seed = 77; c.island = 2; c.tier = (uint32_t)ci.tier; c.N = ci.N; c.grid = ci.grid; c.L = ci.L; c.Hm = ci.Hm; c.B = 5; c.threads = 3;
+    c.kernel = KernelKind::LabelMajor; c.ckpt_path = ckbase; c.ckpt_every_s = 1e9; c.stop_after_step = 2;
+    c.input_id = input_identity(f.dhash, setup_hash, calib_hash);
+    return run_island<Arith::ClassA>(f.D, st, nb, c).status;
+  };
+  CHECK(interrupted(ck, f.shash, ci.content_hash, f.spath) == 1);
   struct stat sb{}; CHECK(::stat((ck + ".a").c_str(), &sb) == 0 || ::stat((ck + ".b").c_str(), &sb) == 0);
-  const Json res = v4::island::run(args(out));
+  // other inputs, every normal check passing (review PR52 MAJOR-1): setup' = the same setup with another (valid, empty)
+  // neighbour graph; calib' = calib.bin with meta.inputs updated to setup'. The frozen grid, N, L, Hm are the same, so only
+  // the checkpoint's input identity tells the two apart. The checkpoint of the original inputs must be refused (13), and
+  // stay on disk; the changed inputs themselves run fine from scratch
+  const std::string setup_b = dir("setup_b.bin"), calib_b = dir("calib_b.bin");
+  const std::vector<int64_t> empty_ptr((size_t)f.D.p + 1, 0); const std::vector<int32_t> empty_idx;   // Writer::add keeps a reference until write()
+  const std::string shash_b = rewrite_setup(f.spath, setup_b, {"nb_ptr", "nb_idx"}, [&](v4::fmt::Writer& W) {
+    W.add("nb_ptr", empty_ptr); W.add("nb_idx", empty_idx); });
+  const std::string chash_b = rewrite_calib_inputs(cal, calib_b, shash_b);
+  CHECK(shash_b != f.shash && chash_b != ci.content_hash);
+  { bool refused = false;
+    try { v4::island::run(args(out, setup_b, calib_b)); } catch (const v4::Error& e) { refused = e.st == v4::Status::invalid_input; }
+    CHECK_MSG(refused, "a checkpoint of other inputs must be refused (invalid_input)");
+    CHECK(::stat((ck + ".a").c_str(), &sb) == 0 || ::stat((ck + ".b").c_str(), &sb) == 0);   // not deleted
+    CHECK(::stat(out.c_str(), &sb) != 0);                                                     // no island file
+    const Json fresh = v4::island::run(args(dir("island_2_b.bin"), setup_b, calib_b));          // the changed inputs are themselves valid
+    CHECK(fresh.at("status").str() == "completed" && (int)fresh.at("resumed_from_step").num() == -1);
+    CHECK(fresh.at("output_hash").str() != full.at("output_hash").str()); }
+  const Json res = v4::island::run(args(out, f.spath, cal));
   CHECKF(res.at("status").str() == "completed" && (int)res.at("resumed_from_step").num() == 2, "resume: status %s from step %d",
          res.at("status").str().c_str(), (int)res.at("resumed_from_step").num());
   CHECK(res.at("output_hash").str() == full.at("output_hash").str() && body_hash(out) == body_hash(dir("full.bin")));
   CHECK(::stat((ck + ".a").c_str(), &sb) != 0 && ::stat((ck + ".b").c_str(), &sb) != 0);   // removed after the completed write
+}
+
+// the Start model that admission uses before anything is expanded bounds what dep::Start + neighbours really take
+// (start_bytes measures the expanded structures after the fact), without being far above it
+TEST(start_bytes_model_bounds_start_bytes) {
+  for (int bsz : {3, 5, 8}) {
+    Dir dir("sbm" + std::to_string(bsz)); Fx f; make_fx(f, dir, bsz);
+    const SetupDims sd = read_setup_dims(f.spath, f.D.p, f.D.K);
+    const Start st = load_start(f.spath, f.D); const Neighbours nb = load_neighbours(f.spath, f.D.p);
+    const double meas = start_bytes(st, nb), model = start_bytes_model(sd);
+    CHECKF(sd.J == st.J && model >= meas && model <= 3.0 * meas, "blocks of %d: model %.0f B vs measured %.0f B (J %d)", bsz, model, meas, sd.J);
+    std::printf("  blocks of %d: J = %d, Start + neighbours %.0f B measured, model %.0f B (x %.2f)\n", bsz, sd.J, meas, model, model / meas);
+  }
 }
 
 TEST(plan_from_sizes_equals_plan_island) {

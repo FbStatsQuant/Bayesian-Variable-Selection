@@ -3,7 +3,11 @@
 // parsed manifest under args["manifest"]. An input is found by base name among the manifest's `inputs` (their keys are
 // paths); with a manifest, the manifest is the authority: an explicit argument that names another path is refused
 // (invalid_input), in either argument order. Used by `calibrate` and `island` (v4_cmd).
+// That copy overwrites an explicit value given BEFORE --manifest; main therefore also records the explicit values separately (args["cli_explicit"]), and the scientific parameters are
+// compared through explicit_args() (review PR52 MAJOR-4). Callers that build their arguments in process have no
+// cli_explicit: their arguments are the explicit values.
 #pragma once
+#include <initializer_list>
 #include <string>
 #include "v4/json.h"
 #include "v4/status.h"
@@ -21,6 +25,24 @@ inline Json manifest_of(const Json& args, const std::string& cmd) {
   if (M.contains("command") && (M.at("command").type() != Json::STR || M.at("command").str() != cmd))
     throw Error(Status::invalid_input, cmd + ": the manifest is not a " + cmd + " manifest (command)");
   return M;
+}
+
+// the explicit (command-line) values: cli_explicit when the CLI recorded them, else the arguments themselves
+inline const Json& explicit_args(const Json& args) { return args.contains("cli_explicit") ? args.at("cli_explicit") : args; }
+
+// manifest params (an object; empty when none)
+inline Json manifest_params(const Json& manifest) {
+  return manifest.contains("params") && manifest.at("params").type() == Json::OBJ ? manifest.at("params") : Json::object();
+}
+
+// An explicit value of a scientific parameter that differs from the manifest's is refused, in either argument order
+// (the manifest is the authority). Compared as written (number or string).
+inline void refuse_manifest_conflicts(const Json& args, const Json& manifest, const std::string& cmd, std::initializer_list<const char*> keys) {
+  const Json mp = manifest_params(manifest);
+  const Json& ex = explicit_args(args);
+  for (const char* k : keys)
+    if (mp.contains(k) && ex.contains(k) && ex.at(k).dump() != mp.at(k).dump())
+      throw Error(Status::invalid_input, cmd + ": --" + k + " " + ex.at(k).dump() + " differs from the manifest's params." + k + " " + mp.at(k).dump());
 }
 
 // the path of input `name` (e.g. "data.bin"): --key, or the manifest input with that base name; "" if neither and not
