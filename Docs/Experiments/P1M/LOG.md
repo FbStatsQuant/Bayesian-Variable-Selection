@@ -293,3 +293,4 @@
 - 2026-11-17 06:53 CST — **P7 SUBMITTED**: jobs 2761787 (setup) → 2761788 (pilot island). Monitor scheduled.
 - 2026-11-17 07:31 CST — **P7 COMPLETED** (30.17 core-h: setup 15.2 [correlation 789 s, setup.bin 10.1 GB, RSS 13.5–23.7 GB] + pilot 15.0 [island 315 s, 48.7 GB]). Late M 4.4–4.6, bridge offers/step 0.046, late ≈ 220 ns·CPU/pair at N = 512. P9 re-size ESTIMATE ≈ 390–440 core-h per 1M fit (high ≈ 660; f 0.33–0.56) → campaign ≈ 18–21k (< 28.3k). results/P7_PILOT_1e6.md. HQ: P9 GO requested.
 - 2026-11-17 07:33 CST — **1M PILOT FIT SUBMITTED** (HQ P9 GO): jobs 2761931 setup, 2761932 calibrate, 2761933 islands ×16, 2761934 merge, 2761935 eval; expected ≈ 450 core-h, stop ≈ 675, worst 1,816. Monitor scheduled.
+- 2026-11-17 08:20 CST — 1M fit monitor: setup COMPLETED (19:04, 15.3 core-h); calibrate RUNNING 21 min (bb5u22c1); islands/merge/eval pending on dependency; billed so far 49.6 core-h (within the 675 stop rule). Next check +30 min.
