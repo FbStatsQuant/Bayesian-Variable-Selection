@@ -456,3 +456,4 @@
 - 2026-11-17 13:41 CST W3-D5P CP3 (21f0111f): R3 Opus 9.4 PASS, bound; LIST-K/CODE/R ACCEPT (LIST-R | IMPL-LIST); record fix patch (correction-only); API card D5P1 → HQ; recording dry run queued with the recorder.
 - 2026-11-17 13:42 CST Slot freed (W3-D5P at CP3). READER editorial batch HELD to bundle with the joint H5 card swap (D115: no reader/card change before AGREE), to avoid two rounds. Track A ER/XR1 editorial waits for the next track A manifest. Leads now: W3-D3, track V, recorder = 3.
 - 2026-11-17 13:42 CST D117 recorded.
+- 2026-11-17 13:45 CST Recorder Q3 dry run clean; decided: XR2r first (D110), Q3a yes (R2r→R2r2), Q3b skip (bundle with the H5 swap), Q3c none (pending W3-READER:R3 status), manifest.py v2 after review. Full recorder order sent.

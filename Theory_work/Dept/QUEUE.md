@@ -48,6 +48,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 - X2, X4: relabelling (recorder, post-freeze). P6 method version: Engineering reconciliation pending. RERUN_SPEC: open (HQ).
 
 ## Post-freeze riders (queued)
+- (11-17) RM2-R supersessions RM2-F-plus→RM2-F, RM2-R-plus→RM2-R: free but wait for W3-READER:R3's historical status (re-pointing it would be wrong; leaving it is A0). R4 premise pointer: with the next READER manifest (joint H5 swap).
 - (11-17) W3-READER:R4 premise pointer (:28-32) stale after the v1.13 re-anchor (R4 kept @1.0.1); next editorial batch.
 - (11-17) W3-READER R5's 3 minor editorial items (reviews/R5_council_opus.md), next READER manifest.
 - (D100, low priority) Tool: propagate.py `suspect --no-cascade` with per-dependent acks (flag a defect that consumers don't use, without a false cascade).
