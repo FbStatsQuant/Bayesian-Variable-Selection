@@ -2,6 +2,8 @@
 #include "v4/wp4_io.h"
 
 #include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include <map>
 #include <algorithm>
 #include <chrono>
@@ -10,6 +12,7 @@
 #include "v4/pmath.h"
 #include "v4/prep.h"
 #include "v4/provenance.h"
+#include "v4/sha256.h"
 #include "v4/stubs.h"
 #include "v4/wp4_terminal.h"
 #include <cstring>
@@ -511,12 +514,81 @@ EventCtx SetupView::table_event_of(const Model& S) const {
   for (int32_t j : S) { if (blk[(size_t)j] != b) throw Error(Status::invalid_input, "table store model spans blocks"); code |= 1u << pos[(size_t)j]; }
   return merge::table_event(b, code);
 }
+namespace {
+std::string setup_data_hash(const Json& meta) {
+  if (meta.contains("inputs") && meta.at("inputs").contains("data.bin") && meta.at("inputs").at("data.bin").type() == Json::STR) return meta.at("inputs").at("data.bin").str();
+  return "";
+}
+// the pi_0 size law (calibrate's memory plan, INTERFACES §7): K + 1 log masses summing to 1
+std::vector<double> checked_size_logmass(const double* q, uint64_t c, int32_t K, const std::string& w) {
+  if (c != (uint64_t)K + 1) throw Error(Status::invalid_input, w + "size_logmass length != K + 1");
+  std::vector<double> v(q, q + c);
+  long double tot = 0;
+  for (double x : v) {
+    if (std::isnan(x) || x == std::numeric_limits<double>::infinity() || x > 1e-9) throw Error(Status::invalid_input, w + "size_logmass not a log probability");
+    tot += std::exp((long double)x);
+  }
+  if (std::fabs((double)tot - 1.0) > 1e-6) throw Error(Status::invalid_input, w + "size_logmass does not sum to 1");
+  return v;
+}
+// One small section, checked against its table hash (the Reader was opened without verify_all). Refuses a section
+// longer than `max_bytes`, so a plan read stays bounded whatever the file claims.
+void check_small_section(const fmt::Reader& R, const std::string& name, const void* q, uint64_t max_bytes, const std::string& w) {
+  const fmt::SectionEntry& e = R.entry(name);
+  if (e.length > max_bytes) throw Error(Status::invalid_input, w + "section " + name + " too long for a plan read");
+  auto h = sha256(q, (size_t)e.length);
+  if (std::memcmp(h.data(), e.sha256, 32) != 0) throw Error(Status::invalid_input, w + "section " + name + " hash mismatch");
+}
+// a JSON section read with pread (Reader::json has no raw view), checked against its hash, then parsed
+Json small_json(const fmt::Reader& R, const std::string& path, const std::string& name, const std::string& w) {
+  const fmt::SectionEntry& e = R.entry(name);
+  if (e.dtype != fmt::D_JSON) throw Error(Status::invalid_input, w + "section " + name + " is not json");
+  constexpr uint64_t MAXJ = 16ull << 20;
+  if (e.length > MAXJ) throw Error(Status::invalid_input, w + "section " + name + " too long for a plan read");
+  std::string txt((size_t)e.length, '\0');
+  int fd = ::open(path.c_str(), O_RDONLY);
+  if (fd < 0) throw Error(Status::invalid_input, "cannot open " + path);
+  ssize_t got = ::pread(fd, txt.data(), (size_t)e.length, (off_t)e.offset);
+  ::close(fd);
+  if (got != (ssize_t)e.length) throw Error(Status::io_error, w + "short read of section " + name);
+  check_small_section(R, name, txt.data(), MAXJ, w);
+  return Json::parse(txt);
+}
+uint64_t stat_bytes(const std::string& p) { struct stat st{}; return ::stat(p.c_str(), &st) == 0 ? (uint64_t)st.st_size : 0; }
+}  // namespace
+
+DataPlanHead read_data_plan(const std::string& path) {
+  fmt::Reader R(path, /*verify=*/false);   // header + table (hash-checked), no section read
+  const std::string w = path + ": ";
+  if (R.kind() != fmt::K_DATA) throw Error(Status::invalid_input, path + " is not a data file");
+  Json m = small_json(R, path, "meta", w);
+  DataPlanHead h; h.content_hash = R.content_hash(); h.file_bytes = stat_bytes(path);
+  if (!m.contains("n") || !m.contains("p") || !m.contains("K")) throw Error(Status::invalid_input, w + "meta has no n / p / K");
+  h.n = m.at("n").i64(); h.p = m.at("p").i64(); const int64_t K = m.at("K").i64();
+  if (h.n < 3 || h.p < 1 || h.p > ((int64_t)1 << 31) - 1 || K < 0 || K > h.p) throw Error(Status::invalid_input, w + "bad n / p / K");
+  h.K = (int32_t)K;
+  return h;
+}
+SetupPlanHead read_setup_plan(const std::string& path, int32_t K) {
+  fmt::Reader R(path, /*verify=*/false);
+  const std::string w = path + ": ";
+  if (R.kind() != fmt::K_SETUP) throw Error(Status::invalid_input, path + ": not a setup file");
+  SetupPlanHead h; h.content_hash = R.content_hash(); h.file_bytes = stat_bytes(path);
+  h.data_hash = setup_data_hash(small_json(R, path, "meta", w));
+  if (R.has("size_logmass")) {
+    uint64_t c = 0; const double* q = R.get<double>("size_logmass", &c);
+    check_small_section(R, "size_logmass", q, 8ull * ((uint64_t)K + 1), w);   // a length != K + 1 is refused here, unread
+    h.size_logmass = checked_size_logmass(q, c, K, w);
+  }
+  return h;
+}
+
 SetupView read_setup(const std::string& path, int32_t p, int32_t K, const Zobrist* zob) {
   fmt::Reader R(path);
   if (R.kind() != fmt::K_SETUP) throw Error(Status::invalid_input, path + ": not a setup file");
   SetupView s; s.content_hash = R.content_hash();
   Json meta = R.json("meta");
-  if (meta.contains("inputs") && meta.at("inputs").contains("data.bin") && meta.at("inputs").at("data.bin").type() == Json::STR) s.data_hash = meta.at("inputs").at("data.bin").str();
+  s.data_hash = setup_data_hash(meta);
   s.blk = R.vec<int32_t>("blk"); s.pos = R.vec<int32_t>("pos"); s.code_ptr = R.vec<int64_t>("code_ptr"); s.logr = R.vec<double>("logr");
   s.blk_ptr = R.vec<int64_t>("blk_ptr"); s.blk_members = R.vec<int32_t>("blk_members"); s.mode_S = R.vec<int32_t>("mode_S");
   // shapes (review PR20 M-2): blk / pos / members over p columns; blocks of 1..20 members (B <= 16, table codes < 2^20);
@@ -539,16 +611,7 @@ SetupView read_setup(const std::string& path, int32_t p, int32_t K, const Zobris
     if (s.blk_members[(size_t)(s.blk_ptr[(size_t)b] + q)] != j) throw Error(Status::invalid_input, w + "blk / pos / blk_members inconsistent");
   }
   check_model(s.mode_S, p, K, w + "mode_S");
-  if (R.has("size_logmass")) {   // the pi_0 size law (calibrate's memory plan, INTERFACES §7): K + 1 log masses summing to 1
-    s.size_logmass = R.vec<double>("size_logmass");
-    if (s.size_logmass.size() != (size_t)K + 1) throw Error(Status::invalid_input, w + "size_logmass length != K + 1");
-    long double tot = 0;
-    for (double x : s.size_logmass) {
-      if (std::isnan(x) || x == std::numeric_limits<double>::infinity() || x > 1e-9) throw Error(Status::invalid_input, w + "size_logmass not a log probability");
-      tot += std::exp((long double)x);
-    }
-    if (std::fabs((double)tot - 1.0) > 1e-6) throw Error(Status::invalid_input, w + "size_logmass does not sum to 1");
-  }
+  if (R.has("size_logmass")) { uint64_t c = 0; const double* q = R.get<double>("size_logmass", &c); s.size_logmass = checked_size_logmass(q, c, K, w); }
   read_store(R, meta, "tstore_top", s.ttop, p, K, zob);
   if (R.has("tstore_lead0_v")) read_store(R, meta, "tstore_lead0", s.tlead0, p, K, zob);
   if (R.has("tstore_lead1_v")) read_store(R, meta, "tstore_lead1", s.tlead1, p, K, zob);

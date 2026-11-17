@@ -77,7 +77,7 @@ struct CalibOutcome {
 // kbar = the plan's mean model size (calib_k_plan).
 struct CalibMemPlan { uint64_t ledger = 0, island_ledger = 0, export_ = 0, inputs = 0, resident = 0, total = 0; };
 inline CalibMemPlan calib_memory_plan(int64_t p, double kbar, uint64_t inputs_bytes) {
-  const double entries = 40.0 * p + 1 + 2 * 20.0 * p, entry = 26.0 + 4.0 * kbar;
+  const double entries = 40.0 * p + 1 + 2 * 20.0 * p, entry = 30.0 + 4.0 * kbar;   // v4::Store: 26 + 4k data + 4 index
   CalibMemPlan m;
   m.ledger = (uint64_t)(2.5 * entries * entry);
   m.island_ledger = (uint64_t)(2.5 * entries * entry);

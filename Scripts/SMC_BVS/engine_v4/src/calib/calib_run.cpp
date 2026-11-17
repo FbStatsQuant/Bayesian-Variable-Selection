@@ -89,10 +89,12 @@ Json run(const Json& args) {
   const int threads = (int)whole_arg(args, "threads", 1, 1, 4096);
   const uint64_t budget = (uint64_t)whole_arg(args, "mem_budget", 0, 0, (int64_t)1 << 50);   // bytes, 0 = off (INTERFACES §7)
   const bool plan_only = whole_arg(args, "plan_only", 0, 0, 1) == 1;
-  // n, p: data.bin, or --n / --p for a plan
+  // Admission first (review PR46 MAJOR-2; INTERFACES §7 "before any allocation"): n, p, K from data.bin's meta and the
+  // pi_0 size law from setup.bin, through the bounded plan readers (header, section table, hash-checked small
+  // sections); data.bin and setup.bin are loaded in full only after the plan is admitted.
   const std::string dpath = str_arg(args, "data"), spath = str_arg(args, "setup"), out = str_arg(args, "out");
-  Data D; std::string dhash; int64_t n = 0, p = 0;
-  if (!dpath.empty()) { D = prep::load_data(dpath, &dhash); n = D.n; p = D.p; }
+  wp4io::DataPlanHead dh; int64_t n = 0, p = 0;
+  if (!dpath.empty()) { dh = wp4io::read_data_plan(dpath); n = dh.n; p = dh.p; }
   else if (plan_only) { n = whole_arg(args, "n", 0, 3, (int64_t)1 << 31); p = whole_arg(args, "p", 0, 1, (int64_t)1 << 31); }
   if (n < 3 || p < 1) throw Error(Status::invalid_input, "calibrate: --data is required (or --n and --p with --plan-only)");
   const Budgets b = budgets(n, p);
@@ -104,19 +106,19 @@ Json run(const Json& args) {
   Driver::validate(s);   // e.g. I_max > ell -> invalid_input, before anything runs (review PR37 m-4)
   // memory plan (review PR37 M-5, N-2): k = max(8, q90(pi_0 size) + 1) from setup.bin (INTERFACES §7, as WP3's plan);
   // a plan from --n / --p alone has no setup and uses the floor 8 (labelled)
-  wp4io::SetupView S; double kbar = 8; std::string k_src = "floor 8 (no setup.bin)";
+  wp4io::SetupPlanHead sh; double kbar = 8; std::string k_src = "floor 8 (no setup.bin)";
   if (!plan_only || (!spath.empty() && !dpath.empty())) {
     if (spath.empty()) throw Error(Status::invalid_input, "calibrate: --setup is required");
-    S = wp4io::read_setup(spath, D.p, D.K, &D.zob);
-    if (!S.data_hash.empty() && S.data_hash != dhash) throw Error(Status::invalid_input, "calibrate: setup.bin was built from another data.bin");
-    if (S.size_logmass.empty()) throw Error(Status::invalid_input, "calibrate: setup.bin has no size_logmass (INTERFACES §5; the memory plan's k)");
-    kbar = calib_k_plan(S.size_logmass); k_src = "max(8, q90(pi_0 size) + 1) from setup.bin";
+    sh = wp4io::read_setup_plan(spath, dh.K);
+    if (!sh.data_hash.empty() && sh.data_hash != dh.content_hash) throw Error(Status::invalid_input, "calibrate: setup.bin was built from another data.bin");
+    if (sh.size_logmass.empty()) throw Error(Status::invalid_input, "calibrate: setup.bin has no size_logmass (INTERFACES §5; the memory plan's k)");
+    kbar = calib_k_plan(sh.size_logmass); k_src = "max(8, q90(pi_0 size) + 1) from setup.bin";
   }
   const CalibMemPlan plan = calib_memory_plan(p, kbar, file_bytes(dpath) + file_bytes(spath));
   Json rec = Json::object();
   rec["settings"] = settings_json(s, b, rule); rec["mem_plan"] = plan_json(plan, budget, kbar, k_src); rec["n"] = (double)n; rec["p"] = (double)p;
   rec["mode"] = mode_s;
-  if (budget && plan.total > budget) {   // no island can run beside the calibration state: refuse before any allocation (N-2)
+  if (budget && plan.total > budget) {   // no island can run beside the calibration state: refuse before any large allocation (N-2)
     rec["status"] = "resource_limit";
     rec["reason"] = "calibrate not admitted: calibration state + inputs + one island ledger = " + std::to_string(plan.total) + " B > --mem-budget " + std::to_string(budget) + " B";
     return rec;
@@ -125,6 +127,12 @@ Json run(const Json& args) {
   if (out.empty()) throw Error(Status::invalid_input, "calibrate: --out is required");
   const int64_t seed = whole_arg(args, "seed", -1, 1, 2147483647);
   if (seed < 1) throw Error(Status::invalid_input, "calibrate: --seed is required (a whole number in [1, 2^31 - 1])");
+  // admitted: the full loads (every section verified); the files must be the ones the plan read
+  std::string dhash;
+  const Data D = prep::load_data(dpath, &dhash);
+  if (dhash != dh.content_hash) throw Error(Status::invalid_input, "calibrate: data.bin changed between the plan and the load");
+  const wp4io::SetupView S = wp4io::read_setup(spath, D.p, D.K, &D.zob);
+  if (S.content_hash != sh.content_hash) throw Error(Status::invalid_input, "calibrate: setup.bin changed between the plan and the load");
   // the island runner: WP3's island with calibration roles (PILOT / DIAG; WP3_DESIGN §1.11). Theory modes (compat, law)
   // run the bit form particle-major (D-21; compat: 1 thread, v3 streams 0-9 owned by the runner); V runs class A
   // label-major with every thread.

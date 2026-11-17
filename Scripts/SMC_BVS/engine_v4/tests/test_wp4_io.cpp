@@ -395,6 +395,41 @@ TEST(wp4_io_calib_refusals) {
 // review PR37 N-1 / N-2: the calibration plan's k comes from setup.bin's pi_0 size law (q90 + 1, floor 8, as WP3's
 // plan_island); resident excludes the inputs; the command refuses up front iff resident + inputs + one island ledger >
 // --mem-budget. setup.bin's size_logmass is validated.
+// Review PR46 MAJOR-2: the bounded plan readers return what the full readers return, and they check the sections they
+// read against the table's hashes (the Reader is opened without verify_all): a swapped size law or an altered meta byte
+// is refused by the plan read itself.
+TEST(wp4_io_plan_readers) {
+  TmpGuard tmp_guard("prd"); Fx f = make_fx("prd", 1, fmt::M_V);
+  const wp4io::DataPlanHead dh = wp4io::read_data_plan(f.dpath);
+  CHECK(dh.n == f.D.n && dh.p == f.D.p && dh.K == f.D.K && dh.content_hash == f.dhash && dh.file_bytes > 0);
+  const wp4io::SetupPlanHead sh = wp4io::read_setup_plan(f.spath, f.D.K);
+  const wp4io::SetupView S = wp4io::read_setup(f.spath, f.D.p, f.D.K, &f.D.zob);
+  CHECK(sh.content_hash == S.content_hash && sh.data_hash == S.data_hash && sh.data_hash == f.dhash && sh.size_logmass == S.size_logmass);
+  auto slurp = [](const std::string& path) { std::ifstream in(path, std::ios::binary); return std::string(std::istreambuf_iterator<char>(in), {}); };
+  auto spit = [](const std::string& path, const std::string& b) { std::ofstream o(path, std::ios::binary); o.write(b.data(), (std::streamsize)b.size()); };
+  auto refused = [](auto fn, const char* what) {
+    try { fn(); } catch (const Error& e) { const bool ok = e.st == Status::invalid_input && std::string(e.what()).find("hash mismatch") != std::string::npos;
+                                          if (!ok) std::printf("    %s: %s\n", what, e.what());
+                                          CHECK(ok); return; }
+    std::printf("    %s: not refused\n", what); CHECK(false);
+  };
+  {  // size law: P(0) and P(1) swapped (still a law summing to 1; only the section hash catches it)
+    std::string b = slurp(f.spath); fmt::Reader R(f.spath); const fmt::SectionEntry& e = R.entry("size_logmass");
+    std::string t = b.substr(e.offset, 8); b.replace(e.offset, 8, b.substr(e.offset + 8, 8)); b.replace(e.offset + 8, 8, t);
+    const std::string bad = tmp_path("prd_swap.bin"); spit(bad, b);
+    refused([&] { wp4io::read_setup_plan(bad, f.D.K); }, "setup size_logmass swapped");
+  }
+  {  // meta: one byte altered (the hash is checked before the JSON is parsed)
+    for (const std::string& path : {f.spath, f.dpath}) {
+      std::string b = slurp(path); fmt::Reader R(path); const fmt::SectionEntry& e = R.entry("meta");
+      b[e.offset + e.length / 2] ^= 0x01;
+      const std::string bad = tmp_path("prd_meta.bin"); spit(bad, b);
+      if (path == f.spath) refused([&] { wp4io::read_setup_plan(bad, f.D.K); }, "setup meta altered");
+      else refused([&] { wp4io::read_data_plan(bad); }, "data meta altered");
+    }
+  }
+}
+
 TEST(wp4_io_calib_plan_from_setup) {
   TmpGuard tmp_guard("cplan");
   Fx f = make_fx("cplan", 1, fmt::M_V);
