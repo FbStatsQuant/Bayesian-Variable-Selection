@@ -382,3 +382,4 @@
 - 2026-11-16 20:23 CST D95 relayed to the recorder (A1/A2 SUSPECT; P1-Inventory CORRECTION after C-R1).
 - 2026-11-16 20:34 CST Must-do item 3 DONE: C1 bound (Sol 9.3 C-R1 221ca4e1; Opus 9.4 C-R2 c27fb00e; 803dc983). P1-Inventory/L2-S3 hold with A-1..A-7. Pointers to the recorder; HQ told. Track A lead now idle → slot free for READER after the recorder's current step (pacing 2).
 - 2026-11-16 20:35 CST HQ: recorder sequence approved; the P1-Inventory/L2-S3 dry run must show the discharge of rows 3.1/3.2's two code-audit conditions (RM2-R ×5). Then item 5 READER (one diff round incl. card 16's 3 edits).
+- 2026-11-16 20:35 CST HEARTBEAT: CI green (main d5e9eee7); recorder running (Sonnet; rule (c)/carriers/relabel); track A lead idle; READER held until the relabel + T14 recording land (or Fri noon). Heartbeat prompt updated (items 3/4 done; READER GO condition). Nothing to report.
