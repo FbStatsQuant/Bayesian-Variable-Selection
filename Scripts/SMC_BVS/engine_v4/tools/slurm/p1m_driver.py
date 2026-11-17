@@ -52,6 +52,7 @@ import sys
 DEPT_DEFAULT = "/home/fb31/SMC_Engineering_Department"
 QOS_WALL_H = 24.0
 TASK_CAP = 150
+INT31 = 2 ** 31 - 1          # seeds, p, n
 CPU_CAP = 1536
 STAGES = ["setup", "calibrate", "islands", "merge", "eval"]
 
@@ -106,13 +107,44 @@ def hours(t):
 
 
 def safe_id(s, what):
-    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,63}", s):
+    if not isinstance(s, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,63}", s):
         raise PlanError("%s %r: use letters, digits, _ . - (max 64)" % (what, s))
     return s
 
 
+# Plan value checks (WP7 freeze item): every numeric key is refused with one line naming the key, the value and the
+# allowed range (exit 65); a bool is never a number here (JSON true is not 1).
+def plan_int(v, what, lo, hi):
+    if isinstance(v, bool) or not isinstance(v, int) or not (lo <= v <= hi):
+        raise PlanError("%s must be an integer in [%d, %d], got %r" % (what, lo, hi, v))
+    return v
+
+
+def plan_pos(v, what):
+    if isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) or not v > 0:
+        raise PlanError("%s must be a number > 0, got %r" % (what, v))
+    return v
+
+
+def plan_mem(v, what):
+    if not isinstance(v, str) or not re.fullmatch(r"\d+[MG]", v) or int(v[:-1]) < 1:
+        raise PlanError("%s must be a positive size like 512M or 32G, got %r" % (what, v))
+    return v
+
+
+def plan_time(v, what):
+    if not isinstance(v, str) or not re.fullmatch(r"(?:\d+-)?\d+:\d\d:\d\d", v):
+        raise PlanError("%s must be a time limit [D-]HH:MM:SS, got %r" % (what, v))
+    h = hours(v)
+    if h <= 0:
+        raise PlanError("%s must be a time limit > 0, got %r" % (what, v))
+    return h
+
+
 def resolve(plan):
     """Fill defaults and validate. Returns the resolved plan (a new dict)."""
+    if not isinstance(plan, dict):
+        raise PlanError("the plan must be a JSON object, got %s" % type(plan).__name__)
     P = copy.deepcopy(plan)
     safe_id(P.get("batch", ""), "batch")
     P.setdefault("mode", "V")
@@ -124,6 +156,20 @@ def resolve(plan):
     P.setdefault("eval", {"threads": None, "post": True, "n_draws": 10000, "n_x": 4000, "n_test": 10000})
     P.setdefault("island_throttle", None)           # optional %k on each island array
     P.setdefault("island_isa", "")                  # WP7 O5: -DV4_ISLAND_ISA for build.sh ("" = the portable default)
+    plan_pos(P["max_task_hours"], "max_task_hours")
+    if P.get("core_h_cap") is not None:
+        plan_pos(P["core_h_cap"], "core_h_cap")
+    if P["island_throttle"] is not None:
+        plan_int(P["island_throttle"], "island_throttle", 1, TASK_CAP)
+    if not isinstance(P["eval"], dict):
+        raise PlanError("eval must be a JSON object, got %r" % (P["eval"],))
+    for k in ("n_draws", "n_x", "n_test"):
+        if k in P["eval"]:
+            plan_int(P["eval"][k], "eval.%s" % k, 1, INT31)
+    if P["eval"].get("threads") is not None:
+        plan_int(P["eval"]["threads"], "eval.threads", 1, 192)
+    if not isinstance(P["island_isa"], str):
+        raise PlanError("island_isa must be a -march name such as sapphirerapids, got %r" % (P["island_isa"],))
     if P["island_isa"] and not re.fullmatch(r"[A-Za-z0-9_.-]+", P["island_isa"]):
         raise PlanError("island_isa must be a -march name such as sapphirerapids")
     # D-32 (1): class-A values (V mode) use a true FMA in every FMA build and a*b + c without one (amath.h fma8), so a
@@ -134,10 +180,12 @@ def resolve(plan):
     # WP7 O4: the islands' resubmission chain (restart from island_r.ckpt.{a,b}); default: one attempt, no soft stop
     rs = P.get("restart")
     if rs is not None:
-        if not isinstance(rs.get("attempts"), int) or not (1 <= rs["attempts"] <= 6):
-            raise PlanError("restart.attempts must be an integer in 1..6")
-        if "margin_s" in rs and not (isinstance(rs["margin_s"], (int, float)) and rs["margin_s"] >= 0):
-            raise PlanError("restart.margin_s must be a number >= 0")
+        if not isinstance(rs, dict):
+            raise PlanError("restart must be a JSON object, got %r" % (rs,))
+        plan_int(rs.get("attempts"), "restart.attempts", 1, 6)
+        if "margin_s" in rs and (isinstance(rs["margin_s"], bool) or not isinstance(rs["margin_s"], (int, float))
+                                 or not math.isfinite(rs["margin_s"]) or rs["margin_s"] < 0):
+            raise PlanError("restart.margin_s must be a number >= 0, got %r" % (rs["margin_s"],))
         if P.get("pilot_only"):
             raise PlanError("restart does not apply to a pilot_only batch")
     # WP7 O4: T6 by real kills (a t6_only batch: the island of a finished fit's inputs, nothing else)
@@ -147,18 +195,21 @@ def resolve(plan):
     if t6 is not None and not P.get("t6_only"):
         raise PlanError("a t6 section needs t6_only: true (a T6 batch is generated alone: its worst case and submit script are the T6's)")
     if t6 is not None:
+        if not isinstance(t6, dict):
+            raise PlanError("t6 must be a JSON object, got %r" % (t6,))
         for k in ("source_batch", "cpus", "mem", "time"):
             if k not in t6:
                 raise PlanError("t6: missing %r" % k)
         safe_id(t6["source_batch"], "t6.source_batch")
-        if not (1 <= int(t6["cpus"]) <= 192) or not re.fullmatch(r"\d+[MG]", t6["mem"]):
-            raise PlanError("t6: cpus in 1..192 and mem like 32G")
-        h = hours(t6["time"])
+        plan_int(t6["cpus"], "t6.cpus", 1, 192)
+        plan_mem(t6["mem"], "t6.mem")
+        h = plan_time(t6["time"], "t6.time")
         if h > QOS_WALL_H or h > P["max_task_hours"] + 1e-9:
             raise PlanError("t6: %s exceeds max_task_hours = %.2f" % (t6["time"], P["max_task_hours"]))
         t6.setdefault("island", 1); t6.setdefault("kills", 2); t6.setdefault("ckpt_every_s", 20)
-        if not (isinstance(t6["kills"], int) and 1 <= t6["kills"] <= 4) or not (isinstance(t6["island"], int) and t6["island"] >= 1):
-            raise PlanError("t6: kills in 1..4 and island >= 1")
+        plan_int(t6["kills"], "t6.kills", 1, 4)
+        plan_int(t6["island"], "t6.island", 1, 2 ** 20 - 1)
+        plan_pos(t6["ckpt_every_s"], "t6.ckpt_every_s")
         if P.get("pilot") is not None or P.get("pilot_only") or P.get("isa_check") is not None or rs is not None:
             raise PlanError("a t6 batch has no pilot, isa_check or restart section")
     # review PR55 MAJOR: a pilot-only batch (P7) generates setup + pilot and nothing that could launch the fit; its
@@ -170,6 +221,8 @@ def resolve(plan):
         raise PlanError("pilot_only batches have no islands: remove isa_check")
     if P.get("pilot") is not None:                  # WP7 O5: {"cpus", "mem", "time", "with_ledger"} of the pilot task
         pl = P["pilot"]
+        if not isinstance(pl, dict):
+            raise PlanError("pilot must be a JSON object, got %r" % (pl,))
         # memory (WP3 11-17): the calibration island plans 54.5 GiB at G 256 at 10^6 before Gram rows (+4.9) and the setup
         # inputs (4-14 GB), so 64G is too small: default 128G (one 257 GB SPR node holds two such tasks), or sized from a
         # `smcbvs4 calibrate --plan-only 1` record: island_plan.total (+ setup_inputs_gb when the record was made from
@@ -195,18 +248,18 @@ def resolve(plan):
         for k in ("cpus", "mem", "time"):
             if k not in pl:
                 raise PlanError("pilot: missing %r" % k)
-        if not (1 <= int(pl["cpus"]) <= 192) or not re.fullmatch(r"\d+[MG]", pl["mem"]):
-            raise PlanError("pilot: cpus in 1..192 and mem like 64G")
-        h = hours(pl["time"])
+        plan_int(pl["cpus"], "pilot.cpus", 1, 192)
+        plan_mem(pl["mem"], "pilot.mem")
+        h = plan_time(pl["time"], "pilot.time")
         if h > QOS_WALL_H or h > P["max_task_hours"] + 1e-9:
             raise PlanError("pilot: %s exceeds max_task_hours = %.2f" % (pl["time"], P["max_task_hours"]))
         pl.setdefault("with_ledger", 1)
     if P.get("isa_check") is not None:              # D-32: T2 across island ISAs (one island re-run with a comparison build)
         if not P["island_isa"]:
             raise PlanError("isa_check needs island_isa (the comparison build is the other side)")
-        r = P["isa_check"].get("island")
-        if not isinstance(r, int) or r < 1:
-            raise PlanError("isa_check: island must be an integer >= 1")
+        if not isinstance(P["isa_check"], dict):
+            raise PlanError("isa_check must be a JSON object, got %r" % (P["isa_check"],))
+        plan_int(P["isa_check"].get("island"), "isa_check.island", 1, 2 ** 20 - 1)
         # the comparison build's island ISA: class A uses a true FMA when the build has one (amath.h fma8), so its bits
         # are those of every FMA build (x86-64-v3 = AVX2 + FMA matched AVX-512 on Owls) and differ from a build without
         # FMA ("portable" = x86-64-v2) by design; the bit form (theory/compat) is ISA-free
@@ -217,13 +270,17 @@ def resolve(plan):
             raise PlanError("isa_check.against equals island_isa: the class-A comparison would compare a build with itself")
         # its own time limit (review PR55 m5): one island re-run, two `info --meta` reads, three bit-form islands
         P["isa_check"].setdefault("time", "00:40:00")
-        h = hours(P["isa_check"]["time"])
+        h = plan_time(P["isa_check"]["time"], "isa_check.time")
         if h > QOS_WALL_H or h > P["max_task_hours"] + 1e-9:
             raise PlanError("isa_check.time %s exceeds max_task_hours = %.2f" % (P["isa_check"]["time"], P["max_task_hours"]))
     if not P.get("fits"):
         raise PlanError("plan has no fits")
+    if not isinstance(P["fits"], list):
+        raise PlanError("fits must be a list of fit objects, got %s" % type(P["fits"]).__name__)
     seen = set()
     for i, f in enumerate(P["fits"]):
+        if not isinstance(f, dict):
+            raise PlanError("fit %d must be a JSON object, got %r" % (i, f))
         for k in ("run_id", "design", "p", "n", "signal", "data_seed", "seed"):
             if k not in f:
                 raise PlanError("fit %d: missing %r" % (i, k))
@@ -234,29 +291,34 @@ def resolve(plan):
         if f["design"] not in ("IND", "AR", "BLK", "ADJ-OPP", "NULL"):
             raise PlanError("fit %s: design %s is not generated by WP1 gen (IND, AR, BLK, ADJ-OPP, NULL)" % (f["run_id"], f["design"]))
         for k in ("seed", "data_seed"):
-            if not (isinstance(f[k], int) and 1 <= f[k] <= 2 ** 31 - 1):
-                raise PlanError("fit %s: %s must be an integer in [1, 2^31-1]" % (f["run_id"], k))
+            plan_int(f[k], "fit %s: %s" % (f["run_id"], k), 1, INT31)
+        plan_int(f["p"], "fit %s: p" % f["run_id"], 1, INT31)
+        plan_int(f["n"], "fit %s: n" % f["run_id"], 3, INT31)     # gen needs n >= 3
         f.setdefault("Rp", 16)
         f.setdefault("N", 2500)
+        plan_int(f["Rp"], "fit %s: Rp" % f["run_id"], 1, 2 ** 20 - 1)   # island r < 2^20 (INTERFACES §3)
+        plan_int(f["N"], "fit %s: N" % f["run_id"], 1, 2 ** 24)
         f.setdefault("mode", P["mode"])
         res = copy.deepcopy(DEFAULT_RES[rung(f["p"])])
-        for st, over in (P.get("resources") or {}).items():
-            if st not in res:
-                raise PlanError("unknown stage %r in resources" % st)
-            res[st].update(over)
-        for st, over in (f.get("resources") or {}).items():
-            res[st].update(over)
+        for where, given in (("resources", P.get("resources")), ("fit %s resources" % f["run_id"], f.get("resources"))):
+            if given is not None and not isinstance(given, dict):
+                raise PlanError("%s must be a JSON object, got %r" % (where, given))
+            for st, over in (given or {}).items():
+                if st not in res:
+                    raise PlanError("unknown stage %r in %s" % (st, where))
+                if not isinstance(over, dict):
+                    raise PlanError("%s.%s must be a JSON object, got %r" % (where, st, over))
+                res[st].update(over)
         for st, r in res.items():
-            h = hours(r["time"])
+            what = "fit %s stage %s" % (f["run_id"], st)
+            plan_int(r["cpus"], what + ": cpus", 1, 192)
+            plan_mem(r["mem"], what + ": mem")
+            h = plan_time(r["time"], what + ": time")
             if h > QOS_WALL_H:
                 raise PlanError("fit %s stage %s: %s exceeds the QOS wall of 24 h" % (f["run_id"], st, r["time"]))
             if h > P["max_task_hours"] + 1e-9:
                 raise PlanError("fit %s stage %s: %s exceeds max_task_hours = %.2f (§0-v2.5: no job longer than 2 h)"
                                 % (f["run_id"], st, r["time"], P["max_task_hours"]))
-            if not (1 <= int(r["cpus"]) <= 192):
-                raise PlanError("fit %s stage %s: cpus must be in 1..192 (one SPR node)" % (f["run_id"], st))
-            if not re.fullmatch(r"\d+[MG]", r["mem"]):
-                raise PlanError("fit %s stage %s: mem like 32G" % (f["run_id"], st))
         f["resources"] = res
     F = len(P["fits"])
     if rs is not None:   # the soft-stop margin: the step in flight and its checkpoint must fit before the limit
@@ -753,8 +815,12 @@ def main(argv=None):
         if not path_allowed(path):
             print("refusing: %s %s is outside the department folder (POLICIES §12)" % (what, path), file=sys.stderr)
             return 64
-    with open(a.plan) as fh:
-        plan = json.load(fh)
+    try:
+        with open(a.plan) as fh:
+            plan = json.load(fh)
+    except (OSError, ValueError) as e:   # missing, unreadable, not UTF-8 or not JSON: one clean line, exit 65
+        print("plan error: cannot read the plan %s: %s" % (a.plan, str(e).replace("\n", " ")), file=sys.stderr)
+        return 65
     try:
         P = resolve(plan)
         P["created_utc"] = a.now or datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")

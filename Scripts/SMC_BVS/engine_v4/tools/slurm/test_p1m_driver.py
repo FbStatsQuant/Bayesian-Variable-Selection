@@ -82,6 +82,122 @@ class TestResolve(Base):
         with self.assertRaises(p1m_driver.PlanError):
             p1m_driver.resolve(pl)
 
+    # ---- plan value validation (WP7 freeze item): each rule refuses with exit 65 and ONE line naming the key, the value and
+    # the allowed range; a valid plan resolves exactly as before (the example plans regenerate byte-identically)
+    def refused(self, mutate, *needles):
+        pl = load_example(); mutate(pl)
+        with self.assertRaises(p1m_driver.PlanError) as cm:
+            p1m_driver.resolve(pl)
+        msg = str(cm.exception)
+        self.assertNotIn("\n", msg)
+        for n in needles:
+            self.assertIn(n, msg)
+        rc, _ = self.gen(pl)
+        self.assertEqual(rc, 65)
+
+    def test_value_rules_fit_keys(self):
+        for key, bad, lo in (("Rp", 0, "1"), ("Rp", -3, "1"), ("N", 0, "1"), ("p", 0, "1"), ("p", -5, "1"), ("n", 0, "3"), ("n", 2, "3")):
+            self.refused(lambda pl, k=key, b=bad: pl["fits"][0].__setitem__(k, b), "fit A2_ARs_n200_r1: %s must be an integer in [%s," % (key, lo), "got %d" % bad)
+        for key in ("Rp", "N", "p", "n"):   # not integers: float, string, bool, null
+            for bad in (16.5, "16", True, None):
+                self.refused(lambda pl, k=key, b=bad: pl["fits"][0].__setitem__(k, b), "%s must be an integer" % key, "got %r" % (bad,))
+        self.refused(lambda pl: pl["fits"][0].__setitem__("Rp", 2 ** 20), "Rp must be an integer in [1, 1048575]")
+        self.refused(lambda pl: pl["fits"][0].__setitem__("N", 2 ** 24 + 1), "N must be an integer in [1, 16777216]")
+
+    def test_value_rules_seeds(self):
+        for key in ("seed", "data_seed"):
+            for bad in (0, -1, 2 ** 31, 1.5, "7", True):
+                self.refused(lambda pl, k=key, b=bad: pl["fits"][0].__setitem__(k, b), "%s must be an integer in [1, 2147483647]" % key, "got %r" % (bad,))
+
+    def test_value_rules_top_level(self):
+        for bad in (0, -1, 0.0, "2", True, None, float("inf")):
+            if bad is None:
+                continue   # null max_task_hours is not a number either, covered below
+            self.refused(lambda pl, b=bad: pl.__setitem__("max_task_hours", b), "max_task_hours must be a number > 0", "got %r" % (bad,))
+        self.refused(lambda pl: pl.__setitem__("max_task_hours", None), "max_task_hours must be a number > 0", "got None")
+        for bad in (0, -5, "10", True):
+            self.refused(lambda pl, b=bad: pl.__setitem__("core_h_cap", b), "core_h_cap must be a number > 0", "got %r" % (bad,))
+        pl = load_example(); pl["core_h_cap"] = None   # null = no cap, as before
+        p1m_driver.resolve(pl)
+        for bad in (0, -1, 151, 2.5, True):
+            self.refused(lambda pl, b=bad: pl.__setitem__("island_throttle", b), "island_throttle must be an integer in [1, 150]")
+        for k in ("n_draws", "n_x", "n_test"):
+            self.refused(lambda pl, k=k: pl["eval"].__setitem__(k, 0), "eval.%s must be an integer in [1, 2147483647]" % k, "got 0")
+        self.refused(lambda pl: pl["eval"].__setitem__("threads", 0), "eval.threads must be an integer in [1, 192]", "got 0")
+
+    def test_value_rules_resources(self):
+        for bad in (0, -4, 193, 2.5, "16", True):
+            self.refused(lambda pl, b=bad: pl.__setitem__("resources", {"islands": {"cpus": b}}),
+                         "fit A2_ARs_n200_r1 stage islands: cpus must be an integer in [1, 192]", "got %r" % (bad,))
+            self.refused(lambda pl, b=bad: pl["fits"][0].__setitem__("resources", {"merge": {"cpus": b}}),
+                         "stage merge: cpus must be an integer in [1, 192]")
+        for bad in ("0G", "G", "32", "-1G", 32):
+            self.refused(lambda pl, b=bad: pl.__setitem__("resources", {"setup": {"mem": b}}), "stage setup: mem must be a positive size", "got %r" % (bad,))
+        for bad in ("00:00:00", "0:0", 3600):
+            self.refused(lambda pl, b=bad: pl.__setitem__("resources", {"eval": {"time": b}}), "stage eval: time")
+        self.refused(lambda pl: pl["fits"][0].__setitem__("resources", {"nonsense": {"cpus": 1}}), "unknown stage 'nonsense'")
+        self.refused(lambda pl: pl.__setitem__("resources", {"islands": 16}), "must be a JSON object")
+
+    def test_value_rules_sections(self):
+        def pilot(pl):
+            pl["pilot"] = {"cpus": 0, "mem": "64G", "time": "01:00:00"}
+        self.refused(pilot, "pilot.cpus must be an integer in [1, 192]", "got 0")
+        self.refused(lambda pl: pl.__setitem__("pilot", {"cpus": 8, "mem": "0G", "time": "01:00:00"}), "pilot.mem must be a positive size")
+        self.refused(lambda pl: pl.__setitem__("pilot", {"cpus": 8, "mem": "8G", "time": "00:00:00"}), "pilot.time must be a time limit > 0")
+        for bad in (0, 7, True, 2.5):
+            self.refused(lambda pl, b=bad: pl.__setitem__("restart", {"attempts": b}), "restart.attempts must be an integer in [1, 6]", "got %r" % (bad,))
+        for bad in (-1, True, "600"):
+            self.refused(lambda pl, b=bad: pl.__setitem__("restart", {"attempts": 2, "margin_s": b}), "restart.margin_s must be a number >= 0", "got %r" % (bad,))
+        self.refused(lambda pl: pl.__setitem__("isa_check", {"island": 0}), "isa_check.island must be an integer in [1, 1048575]", "got 0")
+        t6 = {"source_batch": "T5_1e5", "cpus": 48, "mem": "24G", "time": "00:50:00"}
+        for k, bad, needle in (("cpus", 0, "t6.cpus must be an integer in [1, 192]"), ("mem", "0G", "t6.mem must be a positive size"),
+                               ("kills", 0, "t6.kills must be an integer in [1, 4]"), ("island", 0, "t6.island must be an integer in [1, 1048575]"),
+                               ("ckpt_every_s", 0, "t6.ckpt_every_s must be a number > 0"), ("time", "00:00:00", "t6.time must be a time limit > 0")):
+            self.refused(lambda pl, k=k, b=bad: pl.update({"t6_only": True, "t6": dict(t6, **{k: b})}), needle)
+
+    def test_value_rules_shapes(self):
+        # structure errors are plan errors too, never a traceback
+        pl = load_example()
+        for bad in ([], "plan", 7, None):
+            with self.assertRaisesRegex(p1m_driver.PlanError, "the plan must be a JSON object"):
+                p1m_driver.resolve(bad)
+        self.refused(lambda pl: pl.__setitem__("batch", 5), "batch 5")
+        self.refused(lambda pl: pl.__setitem__("fits", "x"), "fits must be a list")
+        self.refused(lambda pl: pl.__setitem__("fits", [5]), "fit 0 must be a JSON object")
+        self.refused(lambda pl: pl.__setitem__("eval", 3), "eval must be a JSON object")
+
+    def test_unreadable_plan_is_exit_65_without_traceback(self):
+        import io, contextlib
+        def run(path):
+            err = io.StringIO()
+            with contextlib.redirect_stderr(err):
+                rc = p1m_driver.main(["--plan", path, "--out", os.path.join(self.tmp, "o"), "--now", "2026-11-15T23:00:00Z"])
+            return rc, err.getvalue()
+        missing = os.path.join(self.tmp, "nonexistent.json")
+        rc, msg = run(missing)
+        self.assertEqual(rc, 65); self.assertTrue(msg.startswith("plan error: cannot read the plan " + missing)); self.assertEqual(msg.count("\n"), 1)
+        self.assertNotIn("Traceback", msg)
+        rc, msg = run(self.tmp)   # a directory
+        self.assertEqual(rc, 65); self.assertIn("cannot read the plan", msg); self.assertNotIn("Traceback", msg)
+        bad = os.path.join(self.tmp, "bad.json")
+        with open(bad, "w") as fh:
+            fh.write("{not json")
+        rc, msg = run(bad)
+        self.assertEqual(rc, 65); self.assertIn("cannot read the plan", msg); self.assertEqual(msg.count("\n"), 1)
+        with open(bad, "wb") as fh:
+            fh.write(b"\xff\xfe\x00")
+        rc, msg = run(bad)
+        self.assertEqual(rc, 65); self.assertNotIn("Traceback", msg)
+        with open(bad, "w") as fh:
+            fh.write("[1, 2]")   # valid JSON, not an object
+        rc, msg = run(bad)
+        self.assertEqual(rc, 65); self.assertIn("the plan must be a JSON object", msg)
+
+    def test_example_plans_still_resolve(self):   # the rules refuse nothing the real plans use
+        for name in sorted(os.listdir(os.path.join(HERE, "examples"))):
+            with open(os.path.join(HERE, "examples", name)) as fh:
+                p1m_driver.resolve(json.load(fh))
+
     def test_mixed_rungs_rejected_at_generation(self):
         pl = load_example(); pl["fits"][1]["p"] = 100000
         rc, _ = self.gen(pl)
