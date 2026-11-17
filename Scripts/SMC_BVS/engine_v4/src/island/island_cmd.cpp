@@ -17,7 +17,8 @@
 // owns their streams and ledgers (WP3_DESIGN §1.11).
 // Kernels (D-21): compat = bit form, particle-major, 1 thread, v3 stream 9 + r; law = bit form, particle-major; V = class A,
 // label-major. Memory (INTERFACES §7): --mem-budget is the whole task's memory; the island plan counts X, z, diag(G),
-// the stores, ... and, as its caller-supplied term, the setup inputs (today's dep::Start + neighbour lists: start_bytes).
+// the stores, ... and, as its caller-supplied term, the setup inputs: the mapped setup.bin sections the flat start law
+// reads (StartView, WP3_DESIGN §1.12) + its draw scratch + the neighbour lists.
 // k = max(8, q90(pi_0 size) + 1, calib.bin k_store). Over budget: resource_limit before the run, island_r.bin written
 // with that status (no estimate section, GUARD-W), exit 11.
 // Checkpoints: <out without .bin>.ckpt.{a,b} (INTERFACES §5.1), every --ckpt-every-s seconds (default 600); a restart of

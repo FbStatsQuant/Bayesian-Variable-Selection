@@ -168,6 +168,22 @@ inline double start_bytes_model(const SetupDims& d) {
   return b;
 }
 
+// The dimensions of a WP2 setup.bin from its sizes alone (WP2's --count-only accounting: the block histogram, K and the
+// neighbour list length), without the file: what read_setup_dims reports for the mapped sections (test
+// start_view_mapped_wp2_setup pins the two equal). Used to print the real-table 10^6 plans before a 10^6 setup.bin exists.
+inline SetupDims dims_from_sizes(int64_t p, int K, const std::vector<uint64_t>& m_hist, uint64_t nb_idx_len) {
+  SetupDims d; d.p = p; d.K = K; d.mappable = true; d.nb_ptr_len = (uint64_t)p + 1; d.nb_idx_len = nb_idx_len;
+  uint64_t J = 0, C = 0, lp = 0;
+  for (int m = 1; m <= 20 && (size_t)m < m_hist.size(); ++m) {
+    d.m_hist[(size_t)m] = m_hist[(size_t)m]; J += m_hist[(size_t)m]; C += m_hist[(size_t)m] << m; lp += m_hist[(size_t)m] * (uint64_t)(std::min(m, K) + 1);
+    if (m_hist[(size_t)m]) d.max_m = m;
+  }
+  d.J = (int)J;
+  const uint64_t K1 = (uint64_t)K + 1;
+  d.view_bytes = 12 * (uint64_t)p + 3 * 8 * (J + 1) + 8 * C + 8 * lp + 8 * (J + 1) * K1 + 16 * K1 + 8 * J * K1;
+  return d;
+}
+
 // ---------------------------------------------------------------------------------------------------------------
 // The flat start law over WP2's setup.bin sections, mapped (nothing expanded; StartView, WP3_DESIGN §1.12). Shapes and
 // the partition are checked in O(p + J) without allocation (every j: members[blk_ptr[blk[j]] + pos[j]] = j, a bijection);

@@ -166,6 +166,10 @@ TEST(start_view_mapped_wp2_setup) {
     { const auto* R = static_cast<const v4::fmt::Reader*>(v.keep.get());
       CHECK(v.source == "mapped" && R != nullptr && v.bytes() == sd.view_bytes); }
     std::printf("  %s n %d p %d: J = %d, largest block %d, K = %d, mapped start law %.1f KiB (sections)\n", design.c_str(), D.n, D.p, v.J, v.max_m, v.K, v.bytes() / 1024.0);
+    // the sizes-only formula (WP2's count-only accounting -> the 10^6 plans) = the file's own section lengths
+    { const SetupDims fd = dims_from_sizes(D.p, D.K, sd.m_hist, sd.nb_idx_len);
+      CHECKF(fd.view_bytes == sd.view_bytes && fd.J == sd.J && fd.max_m == sd.max_m, "dims_from_sizes %llu B vs the file's %llu B",
+             (unsigned long long)fd.view_bytes, (unsigned long long)sd.view_bytes); }
     char tag[48]; std::snprintf(tag, sizeof tag, "mapped WP2 %s", design.c_str());
     compare_tables(v, st, tag);      // = WP2's sections equal the island's rebuild bit for bit (and the on-demand rows)
     compare_draws(v, st, 3000, tag);
