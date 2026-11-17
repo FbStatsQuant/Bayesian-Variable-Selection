@@ -110,9 +110,11 @@ settings_for <- function(setup, rule = "coded", I_max = 3L, refine_m = 1L, sum_m
 #  * the bounded rule (D-26) against core: V's variant rule has no core reference; instead the ledger backend equals the
 #    core backend on it (extra_coded_paths, Blocked and Serial sums, same seed).
 stream_id <- function(tier, island) (if (tier == 0) 0L else 5L) + as.integer(island)
-ledger_calib <- function(r, setup, seed, tag, st = settings_for(setup), th = 1L, guard_hours = -1) {
-  st$threads <- as.integer(th)
+ledger_calib <- function(r, setup, seed, tag, st = settings_for(setup), th = 1L, guard_hours = -1, runner = "core") {
+  st$threads <- as.integer(th); st$runner <- runner
+  if (runner != "core") tag <- paste0(tag, " [", runner, " islands]")
   cp <- file.path(work, paste0("calib_", gsub("[^A-Za-z0-9]", "_", tag), ".bin"))
+  c0 <- n_checks; f0 <- length(failures)
   m <- .v3cpp$wp4_calibrate_ledger(setup$ptr, seed, st, cp, guard_hours)
   compare_calib(r, m, paste(tag, "[v4 backend]"))
   tg <- paste(tag, "[v4 backend]")
@@ -160,6 +162,7 @@ ledger_calib <- function(r, setup, seed, tag, st = settings_for(setup), th = 1L,
     same(as.integer(cb$n_stage_islands), as.integer(nt), paste(tg, "stage records: one per calibration island"))
     unlink(cp)
   }
+  if (runner != "core") cat(sprintf("   %s: calibration == v3_calibrate, %d checks, %d failures\n", tag, n_checks - c0, length(failures) - f0))
   invisible(m)
 }
 
@@ -283,7 +286,8 @@ coded_path <- function(setup, seed, tag, opts = list(), expect_status = NULL) {
 extra_coded_paths <- function(setup, seed, id, r0) {
   coded_path(setup, seed, paste(id, "P2 tier-1 start"), list(tier0 = 1L))
   { r2 <- v3_calibrate(setup, seed, tier = 1, grid_fallback = TRUE); st2 <- settings_for(setup); st2$tier0 <- 1L
-    ledger_calib(r2, setup, seed, paste(id, "P2 tier-1 start"), st2) }
+    ledger_calib(r2, setup, seed, paste(id, "P2 tier-1 start"), st2)
+    ledger_calib(r2, setup, seed, paste(id, "P2 tier-1 start"), st2, runner = "wp3") }
   for (el in c(1L, 0L)) { sb <- setup; sb$budgets$ell <- el
     ledger_calib(v3_calibrate(sb, seed, tier = 0, grid_fallback = TRUE), sb, seed, paste0(id, " P", 5L - el, " ell=", el)) }
   sb <- setup; sb$budgets$ell <- 1L; coded_path(sb, seed, paste(id, "P4 ell=1"))
@@ -392,6 +396,8 @@ for (cs in cases) {
   t0 <- proc.time()[["elapsed"]]; r <- v3_calibrate(setup, seed, tier = 0, preflight = NULL, runtime = NULL, grid_fallback = TRUE)
   t_ref <- proc.time()[["elapsed"]] - t0
   for (th in unique(c(1L, threads))) ledger_calib(r, setup, seed, sprintf("%s calib[th=%d]", cs$id, th), th = th)
+  # WP3's production islands (compat, calibration roles) in place of core's: the whole calibration == v3_calibrate
+  ledger_calib(r, setup, seed, sprintf("%s calib[th=%d]", cs$id, threads), th = threads, runner = "wp3")
   for (th in unique(c(1L, threads))) {
     m <- .v3cpp$wp4_calibrate(setup$ptr, seed, settings_for(setup, th = th))
     compare_calib(r, m, sprintf("%s calib[th=%d]", cs$id, th))

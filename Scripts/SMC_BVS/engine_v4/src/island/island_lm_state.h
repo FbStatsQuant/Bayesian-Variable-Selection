@@ -1,0 +1,33 @@
+// island_lm_state.h -- the label-major group state (owned with island_lm.h; WP3_ARCH_REVIEW §4). A namespace-scope type
+// so that the engine (island_run.h) can hold it as a member while the label-major code lives in island_lm.h.
+#pragma once
+#include <atomic>
+#include "v4/island/island.h"
+
+namespace v4::island {
+
+// Per-thread label-major scratch (review PR48 finding 1): sized serially before the parallel regions, so no allocation
+// happens inside an OpenMP region outside the oom_guard (an escaping std::bad_alloc would std::terminate). Grows only.
+struct LmScratch {
+  std::vector<uint8_t> inm;                    // Bk: member flags of a tile
+  std::vector<uint64_t> needw, consw;          // Bk / 64: needed (phase A) / consumed (phase B) label bits of a tile
+  std::vector<int> nlist, first;               // Bk + 1: listed bits; Bk: first consuming particle per label
+  std::vector<uint32_t> ncons, fpos;           // Bk: consumption counts and positions per label
+  std::vector<v8d> ub;                         // max k: one 8-lane Gram vector per member
+};
+
+// --- label-major round for the particles [g0, g0 + gN) ------------------------------------------------------
+struct LmGroupBuf {
+  std::vector<uint32_t> ord, inv;             // gN x m
+  std::vector<std::vector<std::pair<uint32_t, int>>> ng;   // per particle: (position, label) of U/N/I labels, sorted
+  std::vector<uint32_t> q, e; std::vector<uint8_t> done, etype; std::vector<Particle> pending;
+  std::vector<std::atomic<uint32_t>> fmin;
+  std::vector<SupportCache> sup; std::vector<int> sup_of;
+  std::vector<std::vector<int>> sup_parts;     // particles (group-local, ascending) per support
+  std::vector<int> act;                        // active columns
+  avec<double> XA;                             // |act| x n
+  std::vector<double> lbuf, obuf;              // nsup x p
+  std::vector<LmScratch> scr;                  // one per thread
+};
+
+}  // namespace v4::island

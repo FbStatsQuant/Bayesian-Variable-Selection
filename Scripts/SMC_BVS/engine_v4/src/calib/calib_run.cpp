@@ -1,14 +1,17 @@
 // calib_run.cpp -- `smcbvs4 calibrate` (WP4; spec §1 row 3). Reads data.bin and setup.bin, builds the calibration
 // ledger (tables from setup.bin's table top stores), runs calib::calibrate_with over the island runner, writes calib.bin.
-// The island runner is WP3's island with calibration roles (WP3_DESIGN §1.11); until it is merged this command validates
-// every input and setting, plans its memory, and then refuses with internal_error naming what is missing.
+// The island runner is WP3's island with calibration roles (WP3_DESIGN §1.11; island::CalibIslandRunner); the start law
+// and the neighbour lists come from setup.bin (island/setup_load.h).
 //
 //   smcbvs4 calibrate --data D --setup S --seed s --mode compat|law|V --out calib.bin [--threads k] [--mem-budget BYTES]
 //                     [--I_max i --refine_m m (V only)]
 //   smcbvs4 calibrate --plan-only 1 --mode M (--data D | --n n --p p) [--mem-budget BYTES]   settings + memory plan, no run
 #include <sys/stat.h>
+#include <chrono>
 #include <cmath>
 #include "v4/calib_run.h"
+#include "v4/island/calib_runner.h"
+#include "v4/island/setup_load.h"
 #include "v4/format.h"
 #include "v4/prep.h"
 #include "v4/stubs.h"
@@ -17,6 +20,18 @@
 namespace v4::calib {
 
 namespace {
+// per-chunk evaluator for V, the local searches and the inherited export: bit scorer + comp(S) of the setup tables
+// (core/cpp/v3_engine.h:84-90; the same as the merge command's)
+struct CalibEval {
+  const Data* D; const wp4io::SetupView* S; BitScorer sc; std::vector<std::pair<int32_t, int32_t>> scratch;
+  CalibEval(const Data* d, const wp4io::SetupView* s) : D(d), S(s), sc(d) {}
+  void operator()(const Model& M, double& lm, double& lg0, double& dd, double& F) {
+    lm = sc.score(M).logm;
+    double c = S->comp(M, scratch); size_t k = M.size();
+    lg0 = D->logprior[k] + c; dd = (lm - D->logm0) - c; F = D->logprior[k] + lm;
+  }
+};
+struct CalibFactory { const Data* D; const wp4io::SetupView* S; CalibEval make() const { return CalibEval(D, S); } };
 std::string str_arg(const Json& a, const char* k, const std::string& d = "") {
   if (!a.contains(k)) return d;
   if (a.at(k).type() != Json::STR) throw Error(Status::invalid_input, std::string("calibrate: --") + k + " must be a string");
@@ -110,11 +125,40 @@ Json run(const Json& args) {
   if (out.empty()) throw Error(Status::invalid_input, "calibrate: --out is required");
   const int64_t seed = whole_arg(args, "seed", -1, 1, 2147483647);
   if (seed < 1) throw Error(Status::invalid_input, "calibrate: --seed is required (a whole number in [1, 2^31 - 1])");
-  // the island runner: WP3's island with calibration roles (PILOT / DIAG; WP3_DESIGN §1.11) -- not merged yet. When it
-  // is: calibrate_with(runner, ledger, fac, s, ts, plan.resident, budget) (N-1: the whole budget, resident without inputs)
-  throw Error(Status::internal_error, "calibrate: the island runner (WP3 calibration roles) is not available yet; inputs and settings validated: data " +
-              dhash + ", setup " + S.content_hash + ", n = " + std::to_string(n) + ", p = " + std::to_string(p) + ", " +
-              settings_json(s, b, rule).dump());
+  // the island runner: WP3's island with calibration roles (PILOT / DIAG; WP3_DESIGN §1.11). Theory modes (compat, law)
+  // run the bit form particle-major (D-21; compat: 1 thread, v3 streams 0-9 owned by the runner); V runs class A
+  // label-major with every thread.
+  const island::Start st = island::load_start(spath, D);
+  const island::Neighbours nb = island::load_neighbours(spath, D.p);
+  island::CalibRunnerConfig rc; rc.seed = (uint32_t)seed; rc.B = b.B; rc.threads = s.threads;
+  rc.inputs_bytes = island::start_bytes(st, nb);   // the island's own setup inputs (dep::Start; the flat view will shrink it)
+  if (mode == fmt::M_COMPAT) { rc.compat = true; rc.kernel = island::KernelKind::ParticleMajor; rc.threads = 1; }
+  else if (mode == fmt::M_LAW) rc.kernel = island::KernelKind::ParticleMajor;
+  else rc.kernel = island::KernelKind::LabelMajor;
+  LedgerConfig lc; lc.p = D.p; lc.islands = 4; lc.leaders = true; lc.fresh_counters = false;
+  Ledger led(lc);
+  wp4io::offer_tables(led, S, D.K, D.zob);   // the calibration ledger starts with the tables (core v3_core.cpp:613)
+  merge::TailSettings ts; ts.threads = s.threads; ts.chunk = 64; ts.K = D.K; ts.p = D.p; ts.zob = &D.zob;
+  CalibFactory fac{&D, &S};
+  // INTERFACES §7 (whole task), WP4's N-1 rule: every island gets the task budget unchanged and the calibration's own
+  // state without the inputs (calibration ledger + export); the island's plan counts X, z, diag(G) and the setup inputs
+  const uint64_t resident_own = plan.ledger + plan.export_, island_budget = budget;
+  auto t0 = std::chrono::steady_clock::now();
+  CalibOutcome oc;
+  if (mode == fmt::M_V) { island::CalibIslandRunner<island::Arith::ClassA> run(D, st, nb, rc); oc = calibrate_with(run, std::move(led), fac, s, ts, resident_own, island_budget); }
+  else { island::CalibIslandRunner<island::Arith::Bit> run(D, st, nb, rc); oc = calibrate_with(run, std::move(led), fac, s, ts, resident_own, island_budget); }
+  const CalibOut& co = oc.co;
+  rec["status"] = cal_status_name(co.status); rec["tier_final"] = co.tier_final;
+  rec["seconds"] = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
+  if (co.status == CalStatus::ok) {
+    wp4io::CalibWrite cw; cw.mode = mode; cw.co = &co; cw.led = &oc.led; cw.inherited_flat = &oc.inherited;
+    cw.settings = &s; cw.k_store = oc.k_store;
+    cw.N = frozen_N(b, rule, co.tier_final); cw.L = s.tiers[co.tier_final].L; cw.Hm = s.tiers[co.tier_final].Hm; cw.stages = oc.stages;
+    cw.inputs["data.bin"] = dhash; cw.inputs["setup.bin"] = S.content_hash;
+    cw.extra["seed"] = (double)seed; cw.extra["threads"] = s.threads;
+    rec["calib_bin"] = wp4io::write_calib(out, cw);
+  } else rec["exit_status"] = status_name(task_status(co.status));
+  return rec;
 }
 
 }  // namespace v4::calib
