@@ -498,3 +498,4 @@
 - 2026-11-17 16:48 CST CorGb-plus refresh LANDED 5912ce6e (CI 44190247392). W3-D2 re-dry clean (Thm2X/Cor2X conditional on W2-APP:POST, C-MIS:GDb, C-MIS:Prop-P; R2f2 bbe1e125 incl. caveat (a) requote, Opus PURE) → HQ final GO requested.
 - 2026-11-17 16:49 CST D127 relayed to the recorder.
 - 2026-11-17 17:16 CST HQ notice: 11-18 10:05–10:30 CT freeze on Owls Claude settings files (~/.claude*, settings.json; no /config or model-setting changes). No dept action planned in that window.
+- 2026-11-17 17:26 CST W3-D2 LANDED 2e0decc8 (CI 44196881467). W3-D3 dry run clean (Thm2SG/B3w/ExSG clean; R2g2 PURE pin requote) → HQ GO requested. Recorder: manifest.py v2 (already GO'd) + V dry run.
