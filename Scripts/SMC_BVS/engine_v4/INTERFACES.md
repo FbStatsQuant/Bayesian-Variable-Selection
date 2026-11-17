@@ -328,6 +328,17 @@ Sections (names fixed; WPs may add sections, never rename):
     f64 [p], `rb_round` f64 [**Hm** × p].
   - Terminal supports, also completed only: `terminal_S_ptr` i64 [N + 1] and `terminal_S` i32, the N supports after the
     last measured round, in particle order (WP4: occupancy, Ẑ_occ).
+  - `meta.cost` (D-30; WP7 O2; any status, when the island ran at least its initial draws): the per-step execution
+    record, schema `smcbvs4.cost/1`. Header fields r, role, tier, iter, N, p, m (= p + B + 2 elementary steps per
+    particle-round), threads, G, tile, kernel, arith, segment; `rows` = 1 + T + L + Hm; `columns` = one array per field
+    with one entry per step (step 0 = the initial draws, then bridge stages, burn-in and measured rounds), as
+    `IslandRun::cost` (`include/v4/island/island.h` `StepCost`): step, kind (0 init, 1 bridge, 2 burn-in, 3 measured),
+    segment (resumes before the step), phi, wall and phase seconds (orders, build, phaseA, products [thread-s], walk,
+    phaseB, apply, barrier, pm, compact, compact_pass, check, ckpt), mean_S (population), store_mean_k, counts
+    (particle_rounds, sweeps, passes, supports, pairs, flips, act_cols, slow_supports, offers, dup_dropped, merges,
+    store_size), rss_kb, hwm_kb, and the ratios M, flips_per_step, act_cols_per_pass. Execution statistics only: not
+    part of the law, not hashed, never read by the merge; readers must not depend on its presence. The same rows go,
+    one JSON line per step, to an optional sidecar (`IslandConfig::cost_path`), which calibration islands use.
 - `fit.bin` + `fit.json` (WP4): merged `top_*`, `hpm_*` + provenance, `hpm_before_local_*`, local-search archive,
   `mode_S`, LS0, near ties, `logZ_r`, `pip_eq`, `pip_Z`, `pip_T`, `rb_*`, flags; `fit.json` scalars and hashes only.
   No leader stores in `island_r.bin` or `fit.bin`, in any mode (§4.1; on the compat exclusion list).
@@ -499,3 +510,6 @@ point, so all WPs link from day one: `setup::run`, `island::run`, `calib::run`, 
 - v0.1.13 (2026-11-16, WP1; WP4 PR #37, WP3_ARCH_REVIEW R7) — §5.1: `calib.bin` `meta.k_store` (calibration top store
   mean |S|), cross-referenced from §7 admission. §4.1: class-A values are path-dependent maxima; every store keeps one
   entry per model with its best value (the reference `Store` now de-duplicates by model; deterministic, T3-invariant).
+- v0.1.16 (2026-11-17, WP7 O2 for WP1; D-30) — §5.1: `island_r.bin` `meta.cost`, the per-step cost record (schema
+  `smcbvs4.cost/1`; execution statistics, not hashed, not read by the merge) and its JSON-lines sidecar. Numbering:
+  if WP1's v0.1.14–v0.1.15 (PR #45) merge first, this line keeps v0.1.16 and D-29's O6 line follows as v0.1.17.
