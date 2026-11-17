@@ -11,3 +11,4 @@ Times from `date` (CST). Write scope: `Theory_work/Wave3/W3-AUDIT/track_A_C/` (o
 - 2026-11-16 20:04 C1_AUDITS STATEMENT/PROOF v1; citecheck 0 bad (194). Blind line check CLC1 (Opus, fresh) next.
 - 2026-11-16 20:06 CLC1 (Opus, fresh, delegate) launched. Task 2 done meanwhile: `H5_T14_CARD.md` (before/after vs card v1.12 at 128e6a9a, row 3.1 integer-limit passage + reader note; STRONGER).
 - 2026-11-16 20:06 Manager: Codex pacing LEVEL 1 (POLICIES §14). C1 is key-path: keeps its one Sol read (lock + line check) and the council's OpenAI seat; any repair re-check or diff-only re-check after that goes to Opus, not Sol. H5 card: no Codex.
+- 2026-11-16 20:07 Manager: council diff round = diff-only re-check → Opus; Codex = one Sol read + first council OpenAI seat only; exception: a C from Sol's first council seat keeps a Sol seat for its re-check. H5 card first priority for HQ (delivered ab1887be).
