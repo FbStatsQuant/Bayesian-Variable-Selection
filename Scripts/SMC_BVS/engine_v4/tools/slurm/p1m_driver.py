@@ -17,7 +17,7 @@ Writes, for one batch, everything the manager deploys to NOTS `~/SMC_Engineering
                           in <run>/cost_pilot/
   submit_pilot.sh         (plan key "pilot" only) submits setup -> pilot and nothing else; its own worst case
   stage_isa_check.sbatch  (plan key "isa_check" only; D-32) one task per fit, afterok on its island array: island r re-run
-                          with the PORTABLE build (bin/smcbvs4_portable) and compared with the island_isa run
+                          with the PORTABLE build (bin/smcbvs4_isa_check) and compared with the island_isa run
                           (p1m_stage_cost.py isa: meta.output_hash + every non-meta section hash); fails if they differ
   ledger_row.md           the LEDGER.md row (worst case = sum of allocated CPUs x time limit, billed core-h)
   SHA256SUMS              hashes of every generated file (submit.sh verifies them first)
@@ -120,12 +120,18 @@ def resolve(plan):
         if h > QOS_WALL_H or h > P["max_task_hours"] + 1e-9:
             raise PlanError("pilot: %s exceeds max_task_hours = %.2f" % (pl["time"], P["max_task_hours"]))
         pl.setdefault("with_ledger", 1)
-    if P.get("isa_check") is not None:              # D-32: T2 across island ISAs (one island re-run, portable build)
+    if P.get("isa_check") is not None:              # D-32: T2 across island ISAs (one island re-run with a comparison build)
         if not P["island_isa"]:
-            raise PlanError("isa_check needs island_isa (the portable build is the other side)")
+            raise PlanError("isa_check needs island_isa (the comparison build is the other side)")
         r = P["isa_check"].get("island")
         if not isinstance(r, int) or r < 1:
             raise PlanError("isa_check: island must be an integer >= 1")
+        # the comparison build's island ISA: class A uses a true FMA when the build has one (amath.h fma8), so its bits
+        # are those of every FMA build (x86-64-v3 = AVX2 + FMA matched AVX-512 on Owls) and differ from a build without
+        # FMA ("portable" = x86-64-v2) by design; the bit form (theory/compat) is ISA-free
+        P["isa_check"].setdefault("against", "x86-64-v3")
+        if not re.fullmatch(r"portable|[A-Za-z0-9_.-]+", P["isa_check"]["against"]):
+            raise PlanError("isa_check.against must be 'portable' or a -march name")
     if not P.get("fits"):
         raise PlanError("plan has no fits")
     seen = set()
@@ -171,7 +177,7 @@ def resolve(plan):
                 raise PlanError("isa_check: island %d > Rp of fit %s" % (P["isa_check"]["island"], f["run_id"]))
     tasks = sum(3 + f["Rp"] for f in P["fits"]) + F    # setup + calibrate + Rp islands + merge + eval
     if P.get("isa_check") is not None:
-        tasks += F                                       # + one portable island re-run per fit (D-32)
+        tasks += F                                       # + one island re-run per fit with the comparison build (D-32)
     P["n_tasks"] = tasks
     if tasks > TASK_CAP:
         raise PlanError("batch has %d tasks > the 150-task cap: split it into waves (fewer fits per batch)" % tasks)
@@ -181,7 +187,7 @@ def resolve(plan):
             r = f["resources"][st]
             n = f["Rp"] if st == "islands" else 1
             wc += n * int(r["cpus"]) * hours(r["time"])
-        if P.get("isa_check") is not None:   # the portable island re-run: one island task
+        if P.get("isa_check") is not None:   # the comparison-build island re-run: one island task
             wc += int(f["resources"]["islands"]["cpus"]) * hours(f["resources"]["islands"]["time"])
     P["worst_case_core_h"] = round(wc, 1)
     if P.get("pilot") is not None:                  # submit_pilot.sh: setup + pilot per fit
@@ -364,7 +370,7 @@ def generate(P, out, dept):
         txt += 'printf \'{"stage":"pilot","run_id":"%%s","job":"%%s","task":"%%s","end":"%%s"}\\n\' "$RUN_ID" "${SLURM_JOB_ID}" "${SLURM_ARRAY_TASK_ID:-}" "$(date -u +%%FT%%TZ)" >> "$DEPT/scratch/runs/%s/ends.jsonl"\n' % batch
         write(os.path.join(out, "stage_pilot.sbatch"), txt, 0o755)
         files.append("stage_pilot.sbatch")
-    if P.get("isa_check") is not None:   # D-32: island r again with the portable build; same science or the task fails
+    if P.get("isa_check") is not None:   # D-32: island r again with the comparison build; same science or the task fails
         r0 = P["fits"][0]["resources"]["islands"]
         wc = sum(int(f["resources"]["islands"]["cpus"]) * hours(f["resources"]["islands"]["time"]) for f in P["fits"])
         txt = HEADER.format(name="stage_isa_check.sbatch", batch=batch, stage="isa_check", wc=wc, cpus=r0["cpus"], mem=r0["mem"],
@@ -374,11 +380,11 @@ def generate(P, out, dept):
         txt += SKIP_IF_OUTCOME.format(stage="isa_check", batch=batch)
         R = P["isa_check"]["island"]
         txt += ('R=%d\n' % R
-                + 'python3 "$SCR/p1m_manifest.py" fill --template "$MAN/island.json" --out "$RUN/manifests/island_${R}_portable.json" '
-                  '--bin "$SCR/bin/smcbvs4_portable" --set params.id=$R\n'
-                + '"$SCR/bin/smcbvs4_portable" island --manifest "$RUN/manifests/island_${R}_portable.json" --threads "$OMP_NUM_THREADS" '
-                  '--mem-budget "$MEMB" --out "$RUN/island_${R}_portable.bin" > "$RUN/log/island_${R}_portable.log" 2>&1\n'
-                + 'python3 "$SCR/p1m_stage_cost.py" isa "$RUN/island_${R}.bin" "$RUN/island_${R}_portable.bin" --bin "$BIN" '
+                + 'python3 "$SCR/p1m_manifest.py" fill --template "$MAN/island.json" --out "$RUN/manifests/island_${R}_isa_check.json" '
+                  '--bin "$SCR/bin/smcbvs4_isa_check" --set params.id=$R\n'
+                + '"$SCR/bin/smcbvs4_isa_check" island --manifest "$RUN/manifests/island_${R}_isa_check.json" --threads "$OMP_NUM_THREADS" '
+                  '--mem-budget "$MEMB" --out "$RUN/island_${R}_isa_check.bin" > "$RUN/log/island_${R}_isa_check.log" 2>&1\n'
+                + 'python3 "$SCR/p1m_stage_cost.py" isa "$RUN/island_${R}.bin" "$RUN/island_${R}_isa_check.bin" --bin "$BIN" '
                   '--json "$RUN/isa_check.json"\n')
         txt += 'printf \'{"stage":"isa_check","run_id":"%%s","job":"%%s","task":"%%s","end":"%%s"}\\n\' "$RUN_ID" "${SLURM_JOB_ID}" "${SLURM_ARRAY_TASK_ID:-}" "$(date -u +%%FT%%TZ)" >> "$DEPT/scratch/runs/%s/ends.jsonl"\n' % batch
         write(os.path.join(out, "stage_isa_check.sbatch"), txt, 0o755)
@@ -392,12 +398,13 @@ def generate(P, out, dept):
         pilot_target=" v4_pilot_island" if has_pilot else "",
         pilot_copy=('cp "$B/v4_pilot_island" "$SCR/bin/v4_pilot_island"\nsha256sum "$SCR/bin/v4_pilot_island" | tee "$SCR/bin/v4_pilot_island.sha256"\n'
                     if has_pilot else ""),
-        portable=('# D-32: the portable island build (no -DV4_ISLAND_ISA) for the cross-ISA island check (stage_isa_check)\n'
-                  'BP=$SCR/build_portable; mkdir -p "$BP"\n'
-                  'nice -n 19 cmake -S "$SCR/code/Scripts/SMC_BVS/engine_v4" -B "$BP" -DCMAKE_BUILD_TYPE=Release -DV4_TESTS=OFF > "$BP/cmake.log"\n'
-                  'nice -n 19 make -C "$BP" -j3 smcbvs4\n'
-                  'cp "$BP/smcbvs4" "$SCR/bin/smcbvs4_portable"\n'
-                  'sha256sum "$SCR/bin/smcbvs4_portable" | tee "$SCR/bin/smcbvs4_portable.sha256"\n'
+        portable=(('# D-32: the comparison island build (isa_check.against = %s) for the cross-ISA island check (stage_isa_check)\n'
+                   'BP=$SCR/build_isa_check; mkdir -p "$BP"\n'
+                   'nice -n 19 cmake -S "$SCR/code/Scripts/SMC_BVS/engine_v4" -B "$BP" -DCMAKE_BUILD_TYPE=Release -DV4_TESTS=OFF%s > "$BP/cmake.log"\n'
+                   'nice -n 19 make -C "$BP" -j3 smcbvs4\n'
+                   'cp "$BP/smcbvs4" "$SCR/bin/smcbvs4_isa_check"\n'
+                   'sha256sum "$SCR/bin/smcbvs4_isa_check" | tee "$SCR/bin/smcbvs4_isa_check.sha256"\n')
+                  % (P["isa_check"]["against"], "" if P["isa_check"]["against"] == "portable" else " -DV4_ISLAND_ISA=" + P["isa_check"]["against"])
                   if P.get("isa_check") is not None else "")), 0o755)
     files.append("build.sh")
     # manifests (templates + one run manifest per run)
@@ -485,7 +492,7 @@ done
 echo "submitted; ledger row: see ledger_row.md (fill job ids from $LOG)"
 """.format(batch=batch, F=F, ntask=P["n_tasks"], wc=P["worst_case_core_h"], ncalls=2 + 3 * F, dept=dept,
            binary=P["binary"], runs=runs, thr=thr,
-           portable_check=('[[ -x $SCR/bin/smcbvs4_portable ]] || { echo "FATAL: binary $SCR/bin/smcbvs4_portable missing (build.sh, D-32)" >&2; exit 66; }\n'
+           portable_check=('[[ -x $SCR/bin/smcbvs4_isa_check ]] || { echo "FATAL: binary $SCR/bin/smcbvs4_isa_check missing (build.sh, D-32 isa_check)" >&2; exit 66; }\n'
                            if P.get("isa_check") is not None else ""),
            isa_line=('  jx=$("$SB" --parsable --dependency=afterok:$ji stage_isa_check.sbatch $i); log isa_check "${RUNS[$((i-1))]}" "$jx"\n'
                      if P.get("isa_check") is not None else ""))

@@ -339,13 +339,13 @@ class TestPilotBatch(Base):
     def test_example_plans_resolve(self):
         t5 = p1m_driver.resolve(json.load(open(os.path.join(HERE, "examples", "plan_T5_1e5.json"))))
         self.assertLessEqual(t5["worst_case_core_h"], t5["core_h_cap"])
-        self.assertEqual(t5["isa_check"], {"island": 1})
+        self.assertEqual(t5["isa_check"], {"island": 1, "against": "x86-64-v3"})
         self.assertEqual(t5["island_isa"], "sapphirerapids")
         pp = p1m_driver.resolve(json.load(open(os.path.join(HERE, "examples", "plan_P7_pilot_1e6.json"))))
         self.assertEqual(pp["fits"][0]["run_id"], "6-AR-n200-r01-V-s1")
         self.assertLessEqual(pp["worst_case_pilot_core_h"], 150)
 
-    def test_isa_check(self):   # D-32: SPR constraint everywhere, portable build, island re-run after the island array, compare
+    def test_isa_check(self):   # D-32: SPR constraint everywhere, comparison build, island re-run after the island array, compare
         pl = self.plan(); pl["isa_check"] = {"island": 1}
         P = p1m_driver.resolve(pl)
         base = p1m_driver.resolve(self.plan())
@@ -360,14 +360,17 @@ class TestPilotBatch(Base):
                 self.assertIn("#SBATCH --constraint=sapphirerapids", open(os.path.join(out, fn)).read(), fn)
         build = open(os.path.join(out, "build.sh")).read()
         self.assertIn("-DV4_ISLAND_ISA=sapphirerapids", build)
-        self.assertIn('cp "$BP/smcbvs4" "$SCR/bin/smcbvs4_portable"', build)
-        self.assertNotIn("V4_ISLAND_ISA", build.split("BP=$SCR/build_portable")[1])   # the portable side has no ISA option
+        self.assertIn('cp "$BP/smcbvs4" "$SCR/bin/smcbvs4_isa_check"', build)
+        self.assertIn("-DV4_ISLAND_ISA=x86-64-v3", build.split("BP=$SCR/build_isa_check")[1])   # default comparison: an FMA build
+        q = self.plan(); q["isa_check"] = {"island": 1, "against": "portable"}
+        rc2, out2 = self.gen(q, name="out_portable")
+        self.assertNotIn("V4_ISLAND_ISA", open(os.path.join(out2, "build.sh")).read().split("BP=$SCR/build_isa_check")[1])
         isa = open(os.path.join(out, "stage_isa_check.sbatch")).read()
-        self.assertIn('"$SCR/bin/smcbvs4_portable" island', isa); self.assertIn("p1m_stage_cost.py\" isa", isa)
+        self.assertIn('"$SCR/bin/smcbvs4_isa_check" island', isa); self.assertIn("p1m_stage_cost.py\" isa", isa)
         self.assertTrue(os.path.exists(os.path.join(out, "p1m_stage_cost.py")))
         scr = os.path.join(fake_dept, "scripts", "A2_pilot")
         shutil.copytree(out, scr); os.makedirs(os.path.join(scr, "bin"))
-        for b in ("smcbvs4", "smcbvs4_portable"):
+        for b in ("smcbvs4", "smcbvs4_isa_check"):
             with open(os.path.join(scr, "bin", b), "w") as fh:
                 fh.write("#!/bin/sh\nexit 0\n")
             os.chmod(os.path.join(scr, "bin", b), 0o755)
@@ -387,7 +390,7 @@ class TestPilotBatch(Base):
                               "stage_merge.sbatch", "stage_eval.sbatch"])
         self.assertIn("--dependency=afterok:3002", lines[3])   # after the island array
         self.assertIn("--dependency=afterok:3002", lines[4])   # merge does not wait for the check
-        os.remove(os.path.join(scr, "bin", "smcbvs4_portable"))
+        os.remove(os.path.join(scr, "bin", "smcbvs4_isa_check"))
         self.assertEqual(subprocess.call(["bash", os.path.join(scr, "submit.sh")], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL), 66)
         with self.assertRaises(p1m_driver.PlanError):   # isa_check without island_isa
             q = self.plan(); q["island_isa"] = ""; q["isa_check"] = {"island": 1}; p1m_driver.resolve(q)

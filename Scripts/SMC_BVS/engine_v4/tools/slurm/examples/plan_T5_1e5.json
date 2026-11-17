@@ -54,6 +54,7 @@
     }
   ],
   "isa_check": {
-    "island": 1
+    "island": 1,
+    "against": "x86-64-v3"
   }
 }

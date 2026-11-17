@@ -1319,7 +1319,7 @@ TEST(pilot_only_equals_calibrate_pilot) {
     v4::Json pr = run_pilot_only(pa, rc);
     CHECKF(rc == 0 && pr.at("status").str() == "completed", "pilot-only threads %d: rc %d %s", th, rc, pr.dump().c_str());
     auto pil = rows_of(pr.at("cost_record").str());
-    bool same = !cal.empty() && cal.size() == pil.size() && (int64_t)pil.size() == pr.at("T").i64() + 1 + pr.at("settings").at("L").i64() + pr.at("settings").at("Hm").i64();
+    bool same = !cal.empty() && cal.size() == pil.size() && (int64_t)pil.size() == pr.at("T").i64() + 2 + pr.at("settings").at("L").i64() + pr.at("settings").at("Hm").i64();   // + the exit row
     for (size_t i = 0; same && i < cal.size(); ++i) for (const char* k : keys) if (cal[i].at(k).dump() != pil[i].at(k).dump()) { same = false; std::printf("  step %zu key %s: %s vs %s\n", i, k, cal[i].at(k).dump().c_str(), pil[i].at(k).dump().c_str()); }
     CHECKF(same, "threads %d: calibrate pilot %zu rows, pilot-only %zu rows", th, cal.size(), pil.size());
     if (ref.empty()) ref = pil;
