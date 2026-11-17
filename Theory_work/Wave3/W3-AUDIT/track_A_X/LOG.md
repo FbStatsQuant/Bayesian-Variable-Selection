@@ -14,3 +14,4 @@
 - 2026-11-16 18:39 Sol X-read: X1 LOCK/VERIFIED; X3 LOCK/VWA; X5 LOCK WITH CHANGES/VWA; LC2 repairs all RESOLVED; no C. Applied (X3 v1.2, X5 v1.2); reviews/LC3_*. X5_POOLZ/SOURCE_PoolZ.md (verbatim claim copy). Council XR1 (X1, X3, X5, T14) manifest frozen: MANIFEST 0ebcb2dafa56732bb7b70f920ba3234a7ed62c6a514428162f8e4d973f907d3c; briefs reviews/BRIEF_XR1_{sol,opus}.md.
 - 2026-11-16 18:43 XR1 Sol seat: 9.4 PASS. Opus seat still running.
 - 2026-11-16 18:48 XR1 Opus seat: 8.5 FAIL (T14 F1: proof used T9 under EX-A/H2-FP, unstated); X1/X3/X5 ACCEPT; bind XR1 refused. T14 v1 structural repair (premise-free); XR2 manifest 5db04d3a…64d6; diff patch; briefs BRIEF_XR2_{sol,opus}. Opus diff seat launched; Sol diff seat awaits the manager (Codex budget).
+- 2026-11-16 18:49 XR2 Opus diff seat: 9.5 PASS (F1 resolved; all four ACCEPT). Sol diff seat pending the manager's Codex decision; bind not attempted.

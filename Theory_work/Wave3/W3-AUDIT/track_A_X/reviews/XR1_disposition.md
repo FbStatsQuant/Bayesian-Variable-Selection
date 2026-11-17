@@ -17,3 +17,9 @@ Sol E2 / Opus E3 (X3 summary: "any p ≥ 2"), Opus E1 (X1: ledger attribution), 
 E4 (X5: SOURCE_PoolZ copy cut mid-sentence in Remark (iii) — copy lines 12–38), E5 (X5 vs T5 CAL-d wording: "CAL, in
 the sense of T5 CAL-b (a function of data and streams 0–9 for every input), fails for the actual record off G"), E6
 (X5: MEAS-J argued by analogy; "only under" phrasing).
+
+## XR2 (diff round), Opus seat
+`XR2_diff_opus.md`: 9.5, gates PASS; F1 RESOLVED; X1, X3, X5, T14 ACCEPT. Editorial additions for the batch: E8 partly
+(T14 STATEMENT's "(19 claims)" cites `DECISIONS.md:95`, which carries no count — cite the CASCADE note or drop the count);
+E9 (T14 Step 3(3): cite the injectivity of the column → (block, position) map, `cpp/v3_start.h:79-80`).
+Sol diff seat: not run — awaiting the manager's Codex decision; XR2 cannot bind without it.
