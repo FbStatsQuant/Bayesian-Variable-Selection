@@ -12,3 +12,4 @@
 - 2026-11-17 12:29 CST — STATEMENT v1.0 (Thm2X, Cor2X), PROOF v1.0, PLAN, TARGET, READER_DELTA draft written.
   Route check: no hypothesis of CorGb-plus is missing (kill point not reached).
 - 2026-11-17 12:29 CST — Agent started: Sol (codex, gpt-6.1-sol, reasoningEffort high), fresh, blind — role: L1 statement lock; brief reviews/L1_brief.md (saved before launch); reply → reviews/L1_statement_lock_sol.md. Codex jobs running: 1.
+- 2026-11-17 12:32 CST — L1 reply received (Sol): LOCK-WITH-AMENDMENTS, F1 E1; all accepted (reviews/L1_disposition.md); STATEMENT v1.1 locked; TARGET row updated. Sol reviewer finished. HOLDS.md (origin/main) re-read: 0 HOLD lines. CHECKPOINT_1.md written; run 1 ends (awaiting manager's CP1 answer).

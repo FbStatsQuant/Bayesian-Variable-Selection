@@ -17,7 +17,7 @@
 | P(HPM/MPM ≠ S₀) = O(r_n) | matches | beats (exact selection with a rate) | beats (row 1.2: → 0, no rate) |
 | floor size | matches | short in kind: they need no sparse floor of this form but assume Condition 1 (stronger moment form) — as row 1.2 | beats: 3(A+1)(s₀+1) log n vs 5(A+1)(s₀+1) log n |
 | scope (Σ, β, σ² vary with n) | matches | beats (theirs fixed-order) | beats (row 1.2 fixes σ², bounded β) |
-| vanishing floor allowed | — | — | **short**: W2-APP:POST allows ψ_n → 0 on the large sets; Theorem 2X needs fixed c (reason: CorGb-plus's transfer uses one fixed floor; keep the old master as coexisting) |
+| vanishing floor allowed | — | — | **incomparable** [L1-2]: W2-APP:POST keeps a fixed floor on \|S\| ≤ min(p, s₀ + j₀) and allows ψ_n → 0 (ψ_n√n/(log n)^{3/2} → ∞) on \|S\| ≤ k̄_n; Theorem 2X needs a fixed c on \|T\| ≤ k_n (CorGb-plus's transfer uses one fixed floor); keep the old master as coexisting |
 | status | — | — | **short**: conditional (CorGb-plus's conditions; W3-POST2:C ← W3-POST:Prop-LB unchecked) vs "clean" |
 
 ## Boundary numerics

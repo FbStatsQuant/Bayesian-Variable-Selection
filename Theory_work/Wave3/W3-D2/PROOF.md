@@ -1,7 +1,7 @@
 # W3-D2 — PROOF of Theorem 2X and Corollary 2X (v1.0, 2026-11-17)
 
 Status: **PROVED (by this seat, unchecked)**, conditional as carried from `W3-MISR-R:CorGb-plus@1.0.1` (STATEMENT §5).
-Statement: `STATEMENT.md` v1.0 §§0–3. Aliases as there. Every step is either a citation (file:line, id@version) or
+Statement: `STATEMENT.md` v1.1 (locked) §§0–3; clause (E) is the explicit form of §1. Aliases as there. Every step is either a citation (file:line, id@version) or
 elementary; no new estimate.
 
 ## P0. Deterministic facts (STATEMENT §3)
