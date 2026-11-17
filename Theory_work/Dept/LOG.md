@@ -431,3 +431,4 @@
 - 2026-11-17 12:53 CST ASSUMPTION_COMPLIANCE (Fable 582af8a3) → HQ: cores 1/2/5 pass (except Cor 9C premise); ATTENTION: visibility, leakage set, A5 (row 3.6), Cor 9C list mass, row 1.4 Gaussianity; recs: narrow core 3 scope + Tier B generic-position lemma, demote 3.6, 9C remark; ~1 lead-day of pending proofs.
 - 2026-11-17 12:53 CST W3-D5P CP1 (10d77515): LIST-K/LIST-CODE/LIST-R locked (Sol L-W-C, 3 applied); closes W3-DIST:297-303; row 3.1 STRONGER; IMPL-LIST premise pending Engineering's commit; GO proofs → council → CP3 (~10 h).
 - 2026-11-17 12:55 CST A1/A2 NARROW dry-run findings → HQ: V1 (true NARROW; A5 fails for 6 rows until Sol rule-(b) verdicts; XR2r needed) vs V2 (dated corrigendum; no cascade); recommended V2 + Opus re-check + XR2r first. Recorder → tool items meanwhile.
+- 2026-11-17 12:55 CST D110 relayed to the recorder.

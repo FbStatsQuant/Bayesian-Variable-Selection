@@ -101,3 +101,4 @@ the new text, and the bridges it needs. The manager passes it to HQ for W3-READE
   (`Theory_work/INFRA/registry/claims.tsv`, `assumptions.tsv`, or any other registry table) as EXT inputs: they change
   with every recording and void the council. Cite the registry rows (id + status, verbatim) in the brief instead. Applies
   to every new freeze and re-freeze. Post-freeze tool item: manifest.py warns when an EXT input is a registry file.
+- **HQ 11-17 (12:55): extended.** The same applies to INFRA/DECISIONS.md and any other live log (files appended by lifecycle tools): no council manifest freezes them as EXT inputs. The manifest.py warning covers live logs too.
