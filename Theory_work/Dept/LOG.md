@@ -428,3 +428,4 @@
 - 2026-11-17 12:39 CST HQ: X2 stays off the closed list (confirmed). W3-D2 proceeds: line check → council → CP3.
 - 2026-11-17 12:40 CST Precedent notes FINAL: Opus re-check of comparison sentences (3 OK, 5 fixed as proposed), applied; Writing copy + README updated.
 - 2026-11-17 12:49 CST D109 → audit Fable.
+- 2026-11-17 12:53 CST ASSUMPTION_COMPLIANCE (Fable 582af8a3) → HQ: cores 1/2/5 pass (except Cor 9C premise); ATTENTION: visibility, leakage set, A5 (row 3.6), Cor 9C list mass, row 1.4 Gaussianity; recs: narrow core 3 scope + Tier B generic-position lemma, demote 3.6, 9C remark; ~1 lead-day of pending proofs.
