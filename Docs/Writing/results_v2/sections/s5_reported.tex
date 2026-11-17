@@ -72,23 +72,24 @@ outcome of its internal calibration. In particular,
 \begin{equation}\label{eq:reported}
   \P(\text{the run produces output and }\Shat\neq\Sz)\to0 .
 \end{equation}
-If moreover Convention~\as{C2} holds, then the run produces output with probability one for every admissible $n\ge3$
-with $(n,\praw)\in\Dom$ (Appendix~\ref{app:conventions}). Under Convention~\as{C2p} instead,
+If moreover Convention~\as{C2p} holds, then
 \begin{equation}\label{eq:delivery}
   \P(\text{the run produces output})=1\ \ \text{for every admissible }n\ge3,\qquad \P(\Shat=\Sz)\to1 .
 \end{equation}
 \end{theorem}
 
+Convention~\as{C2p} lifts two integer limits of the code; in the default configuration neither can be reached on any input
+R can represent ($n,\praw\le2^{31}-1$), so this matters only for the form as $n\to\infty$ (Appendix~\ref{app:conventions}).
+
 \asmlist{(1)~\as{GR} Gaussian rows; (2)~\as{DIM} [\SA{3.1}]; (3)~\as{FSt} fixed signals [\SA{3.2}]; (4)~\as{V}
 visibility [\SA{3.3}]; (5)~\as{EFS} population floor [\SA{3.2}]; (6)~Assumption~\ref{asm:reported}(a) polynomial
-leakage set, and (b)--(c) floor and local regressions in it [\SA{3.3}]; (7)~Conventions \as{C1}, and \as{C2} or \as{C2p}
-for delivery (Appendix~\ref{app:conventions}).}
+leakage set, and (b)--(c) floor and local regressions in it [\SA{3.3}]; (7)~Conventions \as{C1}, and \as{C2p} for delivery
+(Appendix~\ref{app:conventions}).}
 
-\status{\textbf{Proved and checked}; its one condition (the transfer from population to sample conditions) is itself
-proved and independently checked. Delivery clauses: \textbf{proved and independently checked}. \bridgepending{} A
-revision of this statement, from a strengthening that has passed its review, is pending. The two integer limits that
-\as{C2p} lifts are never reached on an input the software accepts ($n,p\le2^{31}-1$): proved and checked, to be recorded
-and stated in the next revision. Registry: Appendix~\ref{app:status}, row 3.1.}
+\status{\textbf{Proved and independently checked}, with no open condition: the recorded master is a strengthening of
+this statement, and the two code-reading audits that its delivery route takes as hypotheses are independently checked.
+The statement that the integer limits of \as{C2p} cannot be reached on any representable input: \textbf{proved and
+independently checked}. Registry: Appendix~\ref{app:status}, row 3.1.}
 
 \begin{remark}[On the assumptions]\label{rem:reported}
 (i) \emph{Why $b<\tfrac12$.} At model size about $\sqrt n$ the prior-plus-Occam penalty of one more predictor

@@ -12,7 +12,8 @@ the result says in words, why it matters, the statement, and its assumptions wit
 \centering\footnotesize
 \setlength{\tabcolsep}{3.5pt}
 \renewcommand{\arraystretch}{1.12}
-\caption{The five results. Statuses are those of the project's registry; every check is independent of the author.}\label{tab:results}
+\caption{The five results. Statuses are those of the project's registry as frozen at \texttt{theory-v2026-11-freeze};
+every check is independent of the author.}\label{tab:results}
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.17\linewidth}>{\raggedright\arraybackslash}p{0.3\linewidth}>{\raggedright\arraybackslash}p{0.26\linewidth}>{\raggedright\arraybackslash}p{0.2\linewidth}@{}}
 \toprule
 Result & In words & Key assumptions & Status \\
@@ -22,8 +23,7 @@ The posterior mass outside the true model is of order $\rn$; the highest posteri
 the true model with probability tending to one. &
 Gaussian linear model; $p\le n^A$; a fixed number of fixed nonzero coefficients (for a fixed design, a beta-min
 condition instead); an eigenvalue floor on sets of $O(\log n)$ predictors. &
-In probability: proved and independently verified (two passes); random-design transfer: proved and checked;
-fixed-design expectation bound: rests on two supporting results not yet checked.$^{a}$ \\
+Proved and checked; the fixed-design expectation bound rests on one supporting result not yet checked. \\
 2.~It finds the true distribution (Thm~\ref{thm:dist}) &
 The posterior contracts around the true conditional law of the response, at radius of order $\rn$ in the Hellinger distance. &
 i.i.d.\ observations; sparse Gaussian linear model; light-tailed predictors; no near-exact collinearity; no predictor with an unbounded
@@ -33,25 +33,24 @@ Proved and checked. \\
 With probability tending to one, every run that produces output reports exactly the true model, whatever its seed. &
 Gaussian rows; fixed signals; every true predictor visible (its signal does not cancel against any $15$ others); the predictors that can imitate the signal are few,
 and local. &
-Proved and checked; a revision of the statement is pending.$^{a}$ \\
+Proved and checked; no open condition. \\
 4.~The run's estimates (Prop.~\ref{prop:unbiased}, Thm~\ref{thm:outputs}) &
 The evidence estimate is unbiased on every design. On designs without leakage the errors of the printed inclusion
 probabilities, median model and evidence estimate (relative and log error), multiplied by the indicator that the sampler
 is used and its calibration succeeds, tend to zero; no claim is made about how likely that event is. &
 Unbiasedness: none on the design. Consistency: Gaussian rows, fixed signals, visibility, and no null predictor
 correlated with a true one beyond order $n^{-1/2}$, even given $15$ others. &
-Per island, proved and checked; the pooled form is not yet checked. Consistency: proved and checked.$^{a}$ \\
+Unbiasedness: proved and checked. Consistency: proved and checked, conditional on two results on the coded sampler that
+are themselves proved and checked. \\
 5.~The rate cannot be improved (Rem.~\ref{rem:sharp}) &
 For true models of at most $\min(K-1,p/2)$ predictors no design gives a rate faster than $n^{-1/2}$; on two
 families of designs the expected posterior miss is at least of order $\rn$, and on orthogonal designs of exactly that
 order. &
 None for the first part; orthogonal or Gaussian null predictors for the second. &
 Proved and checked; the exact order on orthogonal designs uses the fixed-design expectation bound and has its
-status.$^{a}$ \\
+status. \\
 \bottomrule
 \end{tabular}
-\par\smallskip\raggedright\footnotesize
-$^{a}$ The short bridging argument that puts the statement in the form given here awaits its final independent check.
 \end{table}
 
 \paragraph{What ``asymptotic'' means.} The results are statements as $n\to\infty$, with $p$ allowed to grow polynomially

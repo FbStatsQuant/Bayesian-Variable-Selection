@@ -32,8 +32,8 @@ established for the method as coded, calibration included: the calibration is fr
 random numbers. By linearity the equal-weight pooled estimate is then unbiased too: on $\Acal$,
 $\E[\Zhat\mid\text{calibration}]=Z$.
 
-\status{Pooled form: \textbf{proved (a two-line argument), not yet independently checked}. Registry:
-Appendix~\ref{app:status}, row 3.5.}
+\status{Pooled form: \textbf{proved and independently checked}; the frozen-run identities behind both forms are
+proved and independently checked at the code of record. Registry: Appendix~\ref{app:status}, row 3.5.}
 
 \subsection{Consistent estimates, on designs without leakage}\label{sec:outputs}
 
@@ -72,7 +72,7 @@ and~\eqref{eq:outputs-rate} also holds for the printed values multiplied by the 
 \asmlist{(1)~\as{GR}, \as{FSt}, \as{EFS}, \as{V} as in Result~3; (2)~\as{DIM} [\SA{3.1}]; (3)~\as{NL} no leakage
 [\SA{3.4}]; (4)~Conventions \as{C1}, \as{C3} (Appendix~\ref{app:conventions}).}
 
-\status{\textbf{Proved and independently checked}. \bridgepending{} Registry: Appendix~\ref{app:status}, row 3.6.}
+\status{\textbf{Proved and checked, conditional on} \samplerconds. Registry: Appendix~\ref{app:status}, row 3.6.}
 
 \begin{remark}[What is not claimed]\label{rem:outputs}
 (i) No lower bound on $\P(\Acal)$ is asserted: the statements are about intersections with $\Acal$ or with completion, not
@@ -80,5 +80,6 @@ conditional on them.
 (ii) The rate $\rho_n$ is the start law's rate; it is slower than the posterior rate $\rn$, by the factor
 $e^{C_\rho\sqrt{\log n}}/\sqrt{\log n}$.
 (iii) Pooling cannot make things worse: the pooled inclusion probabilities are never farther from the exact ones, in the
-largest coordinate, than those of the worst island (proved and independently checked; registry row 4.1).
+largest coordinate, than those of the worst island (proved and checked, conditional on the same two sampler results as
+Theorem~\ref{thm:outputs}; registry row 4.1).
 \end{remark}

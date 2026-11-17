@@ -36,9 +36,9 @@ the conclusions~\eqref{eq:post-op}--\eqref{eq:post-exp} of Theorem~\ref{thm:post
 constants depending only on $(\sz,A,\sigs^2,\bar\theta,\varphi_0,g_0,c_{\mathrm{id}})$.
 \end{theorem}
 
-\status{\textbf{Proved and checked, conditional on the same two supporting results} (the lower-bound proposition and the
-size-tail lemma, not yet independently checked) as the expectation bound of Theorem~\ref{thm:post-fixed}.
-\bridgepending{} Registry: Appendix~\ref{app:status}, row 1.1.}
+\status{The in-probability conclusions: \textbf{proved and independently checked}. The expectation bound:
+\textbf{proved and checked, conditional on the same supporting result} (the lower-bound proposition, not yet independently
+checked) as the expectation bound of Theorem~\ref{thm:post-fixed}. Registry: Appendix~\ref{app:status}, row 1.1.}
 
 Under \as{EF} and \as{BM}(a), Assumption~\ref{asm:margin} holds with $c_{\mathrm{id}}=C_\beta^2\varphi_0^2(1-1/n)$. So
 Theorem~\ref{thm:post-margin} contains Theorem~\ref{thm:post-fixed} when $C_\beta^2\varphi_0^2>c_1$; when
@@ -74,9 +74,9 @@ condition is placed on how $m_{\mathcal C}$, $\Sigma$, $\beta^{\mathcal C}$ or $
 \]
 \end{theorem}
 
-\status{\textbf{Proved and checked, conditional on} the expectation bound of Theorem~\ref{thm:post-fixed} (hence on its two
-supporting results) and on two lemmas on Gaussian designs that are verified and passed a council review. \bridgepending{}
-Registry: Appendix~\ref{app:status}, row 1.4.}
+\status{\textbf{Proved and checked, conditional on} the expectation bound of Theorem~\ref{thm:post-fixed} (hence on the
+lower-bound proposition, not yet independently checked) and on two lemmas on Gaussian designs that are independently
+verified. Registry: Appendix~\ref{app:status}, row 1.4.}
 
 For example, if candidates and omitted predictors are jointly Gaussian, $\beta^{\mathcal C}=\beta^*_{\mathcal C}+
 \Sigma_{\mathcal C\mathcal C}^{-1}\Sigma_{\mathcal C\mathcal M}\beta^*_{\mathcal M}$: each candidate absorbs the part of the
@@ -114,8 +114,7 @@ $\min\{\abs{\beta^*_j}\sd(x_j)/\sigs:\beta^*_j\neq0\}\ge b_n$, where $b_n>0$ and
 $\Pi(d_H(f,f^*)>M_n/\sqrt n\mid\Dn)\to0$ in $\P^*$-probability, for every sequence $M_n\to\infty$.
 \end{theorem}
 
-\status{\textbf{Proved and checked, conditional on} Theorem~\ref{thm:post-fixed} (in-probability form), which is proved
-and independently verified. Registry: Appendix~\ref{app:status}, row 2.1.}
+\status{\textbf{Proved and independently checked}. Registry: Appendix~\ref{app:status}, row 2.1.}
 
 \why{The distribution guarantee carries over to the list of models that a completed run returns, whenever that list
 holds a non-negligible share of the posterior.}
@@ -133,8 +132,8 @@ completed run scored $\Sz$ and $\pi(\Sz\mid\Dn)>\tfrac12$, then the list contain
 T\mid\Dn)>\tfrac12$.
 \end{corollary}
 
-\status{\textbf{Proved and checked, under exact arithmetic}; the description of the output was checked against the code.
-Registry: Appendix~\ref{app:status}, row 2.1.}
+\status{\textbf{Proved and checked, conditional on} exact arithmetic and on \samplerconds; the description of the
+output was checked against the code. Registry: Appendix~\ref{app:status}, row 2.1.}
 
 Whether the list carries enough posterior probability is a property of the run; the corollary does not assert it.
 
@@ -191,8 +190,8 @@ admissible run that produces output reports $\Shat=\Sz$, for every seed and cali
 clauses hold under \as{C2} on $\Dom$ and under \as{C2p} for every admissible $n\ge3$.
 \end{theorem}
 
-\status{\textbf{Proved and independently checked}. \bridgepending{} A revision of this statement, from a strengthening
-that has passed its review, is pending. Registry: Appendix~\ref{app:status}, row 3.2.}
+\status{\textbf{Proved and independently checked}, with no open condition: the recorded master is a strengthening of
+this statement. Registry: Appendix~\ref{app:status}, row 3.2.}
 
 \why{A certified small model rarely misses a true predictor, under much weaker conditions than Result~3; it is the
 guarantee about the coded method that remains on pervasive-factor designs, which Result~3 excludes.}
@@ -227,7 +226,8 @@ inclusion probabilities and the median and highest posterior models under a glob
 the proof).
 \end{remark}
 
-\status{\textbf{Proved and independently checked}; its premise is open. Registry: Appendix~\ref{app:status}, row 3.6.}
+\status{\textbf{Proved and independently checked}; its global-overlap premise is a named open premise. Registry:
+Appendix~\ref{app:status}, row 3.6.}
 
 \subsection{Open questions}\label{sec:open}
 

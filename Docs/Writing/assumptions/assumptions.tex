@@ -26,7 +26,7 @@
 \begin{document}
 \begin{center}
 {\Large\bfseries Are the assumptions reasonable?}\par\smallskip
-{\small SMC-BVS project. Draft, \today}
+{\small SMC-BVS project. Draft v2.1, statuses as frozen at \texttt{theory-v2026-11-freeze}, \today}
 \end{center}
 
 % =====================================================================================================
@@ -42,7 +42,7 @@ For the method as coded, the assumptions of the theorem that the run reports the
 independent and locally correlated designs, and fail on pervasive common factors when $p$ is much larger than $\sqrt n$.
 The theorem that the printed estimates are consistent needs one more condition, \emph{no leakage} (null predictors
 nearly uncorrelated with true ones), which only our independent designs satisfy. Separately, given the calibration, the
-evidence estimate is unbiased on every design (Proposition~6.1 and Section~6.1; two inputs await their check, Section~\ref{sec:a-math}).
+evidence estimate is unbiased on every design (Proposition~6.1 and Section~6.1; proved and independently checked, Section~\ref{sec:a-math}).
 Conclusions are compared with Song and Liang theorem by theorem (Section~\ref{sec:a-setting}), not as a whole;
 Table~\ref{tab:a-summary} compares the assumptions one by one.
 
@@ -286,16 +286,15 @@ primary design of the $10^6$ plan.}
 \begin{itemize}[leftmargin=1.5em,itemsep=2pt]
   \item \emph{Posterior theorems.} The prior facts, the posterior-summary lemma (Lemma~2.1) and the Hellinger facts
     are proved and independently checked, and the output description used by Corollary~A.8 is checked against the code.
-    Two lemmas behind the expectation bound of Theorem~3.2 await their independent check, and one reference in the
-    record of Corollary~A.8 is to be corrected.
+    One proposition behind the expectation bound of Theorem~3.2 (a lower bound on the posterior miss) awaits its
+    independent check.
   \item \emph{Theorems on the coded method.} The probabilistic events of the reported-model proof are proved and
-    independently checked. Thirteen premises are stated and await their checks. Ten are code readings or short mathematical checks,
-    for example that the run guard stops runs without changing them, that the start sampler is exact, and that the coded
-    moves are the stated kernels. Of the other three, one is used only by Remark~A.13 and needs a new key lemma; two
-    are used only by an older proof that the core theorems no longer use. The unbiasedness
-    of the evidence estimate also rests on two inputs not yet checked under the current protocol: the identities of the
-    final run once its calibration is fixed, and the two-line argument for the pooled form.
-  \item \emph{Idealisations, stated as conventions:} exact arithmetic and ideal random numbers.
+    independently checked, and so are the ten code-level premises the audit named (one of them conditional on a checked
+    result on the coded sampler). One further premise, used only by Remark~A.13, stays open; two more serve only an older
+    proof. Unbiasedness rests on the frozen-run identities and the pooled form, both checked. Theorem~6.2 is conditional
+    on two results on the coded sampler, themselves proved under named premises and independently checked.
+  \item \emph{Idealisations, stated as conventions:} exact arithmetic and ideal random numbers; the integer limits that
+    the delivery convention lifts cannot be reached on any input R can represent (checked).
 \end{itemize}
 
 \renewcommand{\bibsection}{\par\medskip\noindent\textbf{Reference}\par}

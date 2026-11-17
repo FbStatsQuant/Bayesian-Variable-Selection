@@ -64,7 +64,8 @@ The proof is two lines: every model that misses a true predictor, or contains a 
 A \emph{run} is one call of the software on a data set, with a seed and a computing allocation; a data set is
 \emph{valid} when $n\ge3$, at least one predictor is given and every entry is finite. When $\Om$ is small enough the
 method enumerates it; otherwise it runs the sampler. A run either \emph{produces output}, with status ``exact''
-(enumeration) or ``completed'' (sampler; a \emph{completed run}), or stops without estimates. Four objects of a run appear
+(enumeration) or ``completed'' (sampler; a \emph{completed run}), or stops without estimates. A run stopped by its time guard reports status \texttt{resource\_limit} and returns no
+estimates; anything else it returns is flagged incomplete and is not covered by the results. Four objects of a run appear
 in the results.
 \begin{itemize}[leftmargin=1.5em,itemsep=1pt]
   \item \emph{The start law.} The method partitions the predictors into blocks of at most $16$, by clustering on sample
