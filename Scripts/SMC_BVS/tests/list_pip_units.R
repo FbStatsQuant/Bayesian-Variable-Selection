@@ -37,7 +37,11 @@ r <- LF(list(2L, c(1L, 3L)), c(0, -800), 3); chk(near(unname(r$pip_list), c(0, 1
 r <- LF(list(1L, 2L), c(-Inf, -3), 3); chk(identical(unname(r$pip_list), c(0, 1, 0)) && r$log_Z_list == -3, "-Inf entry has weight 0")
 r <- LF(list(1L, 2L), c(NaN, 1), 3); chk(identical(r$pip_list_flag, "nonfinite_score") && all(is.na(r$pip_list)) && is.na(r$log_Z_list) && is.na(r$mpm_list), "NaN score")
 r <- LF(list(1L, 2L), c(Inf, 1), 3); chk(identical(r$pip_list_flag, "nonfinite_score"), "+Inf score")
-r <- LF(list(1L, 2L), c(-Inf, -Inf), 3); chk(identical(r$pip_list_flag, "nonfinite_score"), "all -Inf")
+# Theory-confirmed via HQ 11-17: -Inf has weight 0; ALL scores -Inf (normaliser 0) -> every field NA and flag "nonfinite_score"
+r <- LF(list(1L, 2L), c(-Inf, -Inf), 3)
+chk(identical(r$pip_list_flag, "nonfinite_score") && length(r$pip_list) == 3 && all(is.na(r$pip_list)) && identical(names(r$pip_list), as.character(1:3)) &&
+    is.na(r$mpm_list) && is.na(r$log_Z_list) && r$list_size == 2L, "all -Inf: fields NA, flag nonfinite_score")
+r <- LF(list(integer(0)), -Inf, 2); chk(identical(r$pip_list_flag, "nonfinite_score") && all(is.na(r$pip_list)), "a single -Inf entry (0/0)")
 r <- LF(list(), numeric(0), 3); chk(identical(r$pip_list_flag, "empty_list") && all(is.na(r$pip_list)) && r$list_size == 0L, "empty list is flagged")
 chk(inherits(try(LF(list(1L, 2L, 1L), c(0, -1, -2), 3), silent = TRUE), "try-error"), "duplicate model stops")
 r <- LF(list(integer(0)), -7, 2); chk(identical(unname(r$pip_list), c(0, 0)) && identical(r$mpm_list, integer(0)) && r$log_Z_list == -7, "the empty model alone")
@@ -84,6 +88,19 @@ for (id in 1:6) {
     } else chk(lf$log_Z_list <= fit$log_Z + 1e-12, paste("truncated store: log_Z_list <= log Z, fixture", id))
   }
 }
+# Theory-confirmed via HQ 11-17 (exact branch, status "exact"): pip_list = pip_primary, mpm_list = mpm, log_Z_list from fit$exact$top,
+# list_size / list_full describe THAT store (not models_scored), pip_list_source = "exact" -- pinned on every exact fixture, also with a truncated store
+n_trunc <- 0L
+for (id in 1:6) {
+  fit <- fit_ok(id)
+  if (!identical(fit$status, "exact")) next
+  top <- fit$exact$top
+  chk(identical(fit$pip_list, fit$pip_primary) && identical(fit$mpm_list, fit$mpm) && identical(fit$pip_list_source, "exact"), paste("pinned exact reading: fields, fixture", id))
+  chk(identical(fit$list_size, length(top$models)) && identical(fit$list_full, isTRUE(top$full)), paste("pinned exact reading: list_size = length(fit$exact$top$models), fixture", id))
+  chk(identical(fit$log_Z_list, v3_list_fields(top, as.integer(names(fit$pip_primary)), names(fit$pip_primary))$log_Z_list), paste("pinned exact reading: log_Z_list from the store, fixture", id))
+  if (isTRUE(top$full)) { n_trunc <- n_trunc + 1L; chk(fit$list_size == top$capacity && fit$list_size < fit$exact$models_scored, paste("truncated store: list_size is the store's, fixture", id)) }
+}
+chk(n_trunc >= 1L, "a truncated exact store is among the pinned fixtures")
 chk(n_exact >= 1L && n_all >= 1L, "at least one exact-branch fixture whose store holds every model")
 cat("exact-branch fixtures:", n_exact, "of 6; store holds every model in", n_all, "\n")
 # an SMC fit (p = 40 with two exact copies) and A3: same seed twice, the new fields identical

@@ -71,7 +71,11 @@ TEST(listpip_cases_of_section_4) {
   { Raw w({{0}, {1}}, {NaN, 1.0}, 3); ListPip r = compute_list_pip(w.src(), 3, 41);
     CHECK(r.flag == "nonfinite_score" && std::isnan(r.log_Z_list) && r.mpm_list.empty() && r.pip_list.size() == 3 && std::isnan(r.pip_list[0])); }
   { Raw w({{0}, {1}}, {Inf, 1.0}, 3); CHECK(compute_list_pip(w.src(), 3, 41).flag == "nonfinite_score"); }
-  { Raw w({{0}, {1}}, {-Inf, -Inf}, 3); CHECK(compute_list_pip(w.src(), 3, 41).flag == "nonfinite_score"); }
+  { // Theory-confirmed via HQ 11-17: -Inf has weight 0; ALL scores -Inf (normaliser 0) -> fields NA, flag "nonfinite_score"
+    Raw w({{0}, {1}}, {-Inf, -Inf}, 3); ListPip r = compute_list_pip(w.src(), 3, 41);
+    bool allnan = r.pip_list.size() == 3; for (double x : r.pip_list) allnan = allnan && std::isnan(x);
+    CHECK(r.flag == "nonfinite_score" && allnan && std::isnan(r.log_Z_list) && r.mpm_list.empty() && r.list_size == 2); }
+  { Raw w({{}}, {-Inf}, 2); CHECK(compute_list_pip(w.src(), 2, 41).flag == "nonfinite_score"); }   // a single -Inf entry (0/0)
   { Raw w({}, {}, 3); ListPip r = compute_list_pip(w.src(), 3, 41); CHECK(r.flag == "empty_list" && r.list_size == 0 && std::isnan(r.log_Z_list) && r.pip_list.size() == 3); }
   { Raw w({{0}, {1}, {0}}, {0.0, -1.0, -2.0}, 3); CHECK_THROWS(compute_list_pip(w.src(), 3, 41)); }   // a duplicate model: an error, never merged
   { Raw w({{0}, {5}}, {0.0, -1.0}, 3); CHECK_THROWS(compute_list_pip(w.src(), 3, 41)); }              // a column outside [0, p)
