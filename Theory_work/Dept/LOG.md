@@ -481,3 +481,4 @@
 - 2026-11-17 14:41 CST XR2r confirmed landed (d8a1334d, CI 44169043637 success). A1/A2 corrected clause Opus re-check PASS (V3); the V2 dry run is running. W discharge details re-sent to the recorder in full.
 - 2026-11-17 14:50 CST A1/A2 V2 corrigendum dry run clean (2 files appended, no registry write; Opus V3 PASS) → HQ GO requested. Recorder → W discharge dry run.
 - 2026-11-17 14:51 CST HQ GO A1/A2 corrigendum real (relayed).
+- 2026-11-17 15:01 CST D124: SOL62 A/B prep (Sonnet) launched; the manager runs the 6.2 calls after the recordings.
