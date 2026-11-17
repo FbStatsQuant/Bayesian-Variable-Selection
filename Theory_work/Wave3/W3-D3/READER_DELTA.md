@@ -29,10 +29,12 @@ probability tending to one; the posterior argument uses the observed design only
 **Bridges.** B2.2′ := `W3-D3:B3w` (replaces `W2-APP:POST` (a) for this statement; built on `W3-DIST:B1`, `B2core`, `B2`
 (a), `W3-READER:R1`); B2.3 unchanged (`W3-POST:Thm-1` item 6, via `W3-D3:Thm2SG`). The old B2.1–B2.3 stay for row 1.2.
 
-**Assumption class (HQ ruling 2026-11-17: class 1, stated precisely, with a 2b backup).** Class 1: "Sub-Gaussian rows on
-sparse directions with arbitrary correlation. This contains Narisetty & He's (2014, Lemma 6.1) isotropic sub-Gaussian
-rows as the special case Σ = I [for centred rows, with L a fixed multiple of their sub-Gaussian constant], and implies
-Song & Liang's Condition 1 [for the centred predictors z = x − m_n]." [R1-sol-S1] (NH14 cited from arXiv v1 pp. 16–17, journal version not checked; Song & Liang p. 953.)
+**Assumption class (HQ ruling 2026-11-17: class 1, stated precisely, with a 2b backup; anchor Narisetty–He only, H5 card
+17).** Class 1: "Sub-Gaussian rows on sparse directions with arbitrary correlation. This contains Narisetty & He's (2014,
+Lemma 6.1) isotropic sub-Gaussian rows as the special case Σ = I [for centred rows, with L a fixed multiple of their
+sub-Gaussian constant]." (NH14 cited from arXiv v1 pp. 16–17, journal version not checked.) Separate factual remark, not
+an anchor: it also implies Song & Liang's Condition 1 (p. 953) for centred rows [the centred predictors z = x − m_n]
+[R1-sol-S1].
 2b backup: "Light-tailed, correlated features are the ordinary situation: Gaussian predictors qualify, and so do
 correlated mixtures x = m + Bξ of independent features each confined to an interval of K standard deviations on either
 side of its mean (for instance Rademacher features, K = 1; uniform features, K = √3)." (HQ's first wording "any bounded … predictors

@@ -32,7 +32,8 @@ grid; small exact-posterior run with Rademacher/uniform correlated rows), `READE
 ≈ 1.5 days with checks (Sol lock; blind Opus line check; council Sol + Opus; Opus diff rounds; CP3 + API blind-audit card).
 
 **D109 classes of the hypotheses.** (SG) with constant K: **class 1**, same assumption and class as Thm 9 (A3)
-(`ASSUMPTION_COMPLIANCE.md:31`). **Class-1 anchors (BVS for linear regression), cited by (SG):**
+(`ASSUMPTION_COMPLIANCE.md:31`). **Class-1 anchors (BVS for linear regression), cited by (SG):** [superseded by H5 card 17: the anchor is NH14 only; the Song–Liang
+implication is a factual remark, not an anchor — STATEMENT §5]
 - **Primary: NH14 Lemma 6.1** (Narisetty & He 2014, Ann. Statist. 42, arXiv 1405.6545v1 pp. 16–17): "Suppose that the rows
   of X_{n×p_n} are independent isotropic sub-Gaussian random vectors in R^{p_n}. Then there exists a ν > 0 such that, with
   probability greater than 1 − exp(−w′n), inf_{|k|≤m_n(ν)} φ_min(X_k′X_k/n) > 0", introduced as "this requirement is

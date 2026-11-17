@@ -69,3 +69,4 @@
 - 13:54 — F1 reply (Opus): FORM-ONLY. Carrier reviews/R2f_record_opus.md → bind OK on MANIFEST_R2f (c52866ef…); verify OK;
   citecheck 70/0; staged ingest 0 problems, acceptance PASS; HOLDS 0 (origin/main 9f939e8a); inputs unchanged since 029bb748.
   API request rebuilt under unshare -rn (reviews/API_CARD_README.md). CHECKPOINT_3.md written (recording package). Run ends.
+- 13:59 — Manager: H5 card 17 (binding): Thm2SG to become the presented Theorem 2 once recorded and API-clean; class-1 anchor NH14 only, Song–Liang kept as a separate factual remark. Edited STATEMENT §5 (v1.4; outside claim spans), REPORT §2/§3, READER_DELTA, TARGET, PLAN; DEPS S:class re-hashed (pre-marked for F2). citecheck 70/0; staged ingest 0 problems, PASS. Re-froze FORM-ONLY MANIFEST_R2g = c41a5b3485d712770989cc3c82a621fe8f5690f976bb8bb0378a188efa40665f. Agent started: Opus 5.5 high (claudeAgent_personal), new — F2 form check; brief reviews/F2_brief.md.

@@ -1,4 +1,4 @@
-# W3-D3 — STATEMENT v1.3 (2026-11-17; lead: Claude Opus 5.5, high; track D ticket #3, sub-Gaussian rows for Theorem 2)
+# W3-D3 — STATEMENT v1.4 (2026-11-17; lead: Claude Opus 5.5, high; track D ticket #3, sub-Gaussian rows for Theorem 2)
 
 Ticket W3-D3: Theorem 2 (claims card row 1.2, posterior concentration on a random design) with Gaussian rows replaced by
 rows that are sub-Gaussian along sparse directions, as a **coexisting** claim. The proof reuses W3-DIST's
@@ -6,7 +6,7 @@ population-to-sample bridge (owner condition D105/D112). Source: W3-AUDIT `TRACK
 theory/W3-AUDIT). Tier B (no new key lemma). Delta statement (RIDER_RULES §1) over the recorded reader Theorem 2
 ([RV] row thm2) and its master [W3P] Theorem 1 item 6. This file **asserts no proof status**: proofs in `lemmas/`,
 statuses in the checkpoints. Asymptotic (n → ∞) unless marked *deterministic*. No method change.
-v1.3 = v1.2 with the council R1 dispositions (`reviews/R1_disposition.md`). v1.2 = v1.1 with the line-check amendments [K1-1]…[K1-12] (`reviews/K1_linecheck_opus.md`;
+v1.4 = v1.3 with H5 card 17 (class-1 anchor Narisetty–He only; §5, outside the claim spans). v1.3 = v1.2 with the council R1 dispositions (`reviews/R1_disposition.md`). v1.2 = v1.1 with the line-check amendments [K1-1]…[K1-12] (`reviews/K1_linecheck_opus.md`;
 `reviews/K1_disposition.md`). v1.1 = v1.0 with the statement-lock amendments [L1-1]…[L1-6] (`reviews/L1_statement_lock_sol.md`, LOCK-WITH-AMENDMENTS;
 `reviews/L1_disposition.md`) and the HQ anchoring wording with the lead's queued edits Q1, Q2
 (`reviews/PENDING_LEAD_EDITS.md`).
@@ -110,20 +110,21 @@ normalisation of a design with arbitrary positive variances, it replaces β* by 
 (f) *Measurability of 𝒜_n [K1-11].* 𝒜_n itself need not be (X, θ̃*)-measurable (𝓔₁ involves the sample scales of null
 columns, which standardisation discards); it is used only for its probability, through 𝒜′_n ⊇ 𝒜_n.
 
-## 5. Class of the new hypothesis (owner rule D109; HQ ruling of 2026-11-17: class 1, stated precisely, with a 2b backup)
+## 5. Class of the new hypothesis (owner rule D109; HQ ruling of 2026-11-17: class 1, stated precisely, with a 2b backup; anchor Narisetty–He only, H5 card 17)
 
 (A4) is the only new hypothesis (L the only new constant); (A1)–(A3) are row 1.2's, verbatim (including the parenthetical example of (A3), restored in v1.2 [K1-10]).
-**Class 1 (HQ wording, with the lead's precision in brackets [Q1]).** "Sub-Gaussian rows on sparse directions with
-arbitrary correlation. This contains Narisetty & He's (2014, Lemma 6.1) isotropic sub-Gaussian rows as the special case
-Σ = I [for centred rows, with L a fixed multiple of their sub-Gaussian constant], and implies Song & Liang's Condition 1
-[for z = x − m_n, unit marginal variances here — L1-5]."
+**Class 1 (HQ wording, with the lead's precision in brackets [Q1]; the anchor is Narisetty–He only [H5-17]).**
+"Sub-Gaussian rows on sparse directions with arbitrary correlation. This contains Narisetty & He's (2014, Lemma 6.1)
+isotropic sub-Gaussian rows as the special case Σ = I [for centred rows, with L a fixed multiple of their sub-Gaussian
+constant]." Separate factual remark, not an anchor: it also implies Song–Liang's Condition 1 for centred rows
+[z = x − m_n, unit marginal variances here — L1-5].
 - **Narisetty & He (2014), Lemma 6.1** (Ann. Statist. 42(2) 789–817; cited from arXiv 1405.6545v1, pp. 16–17; journal
   version not checked), verbatim: "Lemma 6.1 (MNEV for sub-Gaussian random matrices). Suppose that the rows of X_{n×p_n}
   are independent isotropic sub-Gaussian random vectors in R^{p_n}. Then there exists a ν > 0 such that, with
   probability greater than 1 − exp(−w′n), inf_{|k|≤m_n(ν)} φ_min(X_k′X_k/n) > 0." Introduced (p. 16): "We now show that this
   requirement is satisfied with high probability if the design matrix consists of independent sub-Gaussian rows."
   Same role as (A4): sub-Gaussian rows ⇒ a floor on the sample Gram matrix of small sets.
-- **Song & Liang (2015), Condition 1** (J. R. Statist. Soc. B 77, p. 953), verbatim: "Condition 1. There are some
+- **Song & Liang (2015), Condition 1** (factual comparison, not a class-1 anchor [H5-17]; J. R. Statist. Soc. B 77, p. 953), verbatim: "Condition 1. There are some
   constants M > 0 and δ > 0 such that for any subvector of x, (x_{j1}, …, x_{jr})ᵀ with 1 ≤ j1 < … < jr ≤ P_n, r ≤ r̄_n,
   and |a_i| ≤ δ for i = 1, …, r, we have E exp{(Σ_{i=1}^r a_i x_{ji}/r)²} ≤ exp(M), where the expectation is taken with
   respect to the distribution of the random variables x_{ji}." (Assumed in their Theorem 2, p. 953; verified there for a
@@ -196,3 +197,4 @@ HQ's decision). Status: every input is PROVED-CHECKED (§6).
 | 1.3 | §3 ExSG (b): "every ξ_k … with the same K > 0 for all k" | EQUAL (the reading (a) needs; a common constant was implicit) | [R1-opus-E4] | council R1 | diff round R2 |
 | 1.3 | §2 (c): "for n < n₁ put 𝒜′_n := ∅" | EQUAL (completes a definition; item 6 needs only P(𝒜′_n) → 1) | [R1-opus-E5] | council R1 | diff round R2 |
 | 1.3 | §9 check cell of the ExSG (b) row | EQUAL (bookkeeping) | [R1-opus-E1] | council R1 | — |
+| 1.4 | §5 class-1 wording: anchor Narisetty–He only; the Song–Liang implication kept as a separate factual remark (for centred rows); Song–Liang bullet labelled "not a class-1 anchor" | EQUAL (outside the claim spans; no mathematical relation changed) | H5 card 17 (consultant AGREE, binding) | manager | form check F2 |

@@ -6,7 +6,7 @@
 
 | hypothesis | row 1.2 (recorded) | Theorem 2SG | used where | class (D109) |
 |---|---|---|---|---|
-| row law | i.i.d. N_p(m_n, Σ_n), Σ_n a correlation matrix | i.i.d., mean m_n, covariance Σ_n a correlation matrix, and (A4) | B3w: sample SDs ([EB]`B1.md`), sparse sample Gram floors ([EB]`B2core.md`, `B2.md` (a)) | 1 (HQ ruling D114; STATEMENT §5: between NH14 Lemma 6.1 and SL Condition 1) [R1-opus-E2] |
+| row law | i.i.d. N_p(m_n, Σ_n), Σ_n a correlation matrix | i.i.d., mean m_n, covariance Σ_n a correlation matrix, and (A4) | B3w: sample SDs ([EB]`B1.md`), sparse sample Gram floors ([EB]`B2core.md`, `B2.md` (a)) | 1 (HQ ruling D114; anchor NH14 Lemma 6.1 only, H5 card 17; STATEMENT §5) [R1-opus-E2] |
 | (A4) constant L | — (L = 1) | fixed L | B1, B2core exponents c₁n/L⁴, c₂n/L⁴; threshold n₁(s₀, A, L) | as above |
 | (A1)–(A3) | as recorded | verbatim | as in row 1.2 | as recorded (ASSUMPTION_COMPLIANCE.md lines 27–29, branch theory/W3-AUDIT) |
 
