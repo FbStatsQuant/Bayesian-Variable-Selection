@@ -419,3 +419,4 @@
 - 2026-11-17 12:28 CST D106 noted; carried into every new brief (#5′, #3, READER batch).
 - 2026-11-17 12:28 CST FEAS_SMC_WORKS (Fable 1118f165): no route via existing lemmas; full target NO-GO (8–10 d, Tier A); 2-d G1/G2 gate available; cheap weak-leak corollary (Tier B, 1–2 d). Sent to HQ; recommended no ticket (D106). Fable → SPEC_LIST_PIP next.
 - 2026-11-17 12:30 CST D107 recorded; list closed.
+- 2026-11-17 12:31 CST SPEC_LIST_PIP (Fable 523dda23) sent to HQ for Engineering; log_Z_list kept as recommended (HQ to confirm). #5′ lead launches at the next free slot.
