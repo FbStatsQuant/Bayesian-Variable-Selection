@@ -722,4 +722,4 @@ point, so all WPs link from day one: `setup::run`, `island::run`, `calib::run`, 
   / `fit.json`: `meta.timings.phases` (phase seconds and RSS), `peak_rss_kb`, `write_fit_seconds`, and `meta.mem_estimate`
   by phase with `sacct_upper`. §7: the merge's memory plan is by phase (resident = anonymous + mapped file pages), the
   load phases are admitted before anything is read, and the merge streams the inherited models from calib.bin and releases
-  the table stores (no output bit changes). Numbers: ./results of the PR.
+  the table stores (no output bit changes). Numbers: results/MERGE_MEM.md (probe at p = 2e4 .. 1e5, projection to 10⁶).
