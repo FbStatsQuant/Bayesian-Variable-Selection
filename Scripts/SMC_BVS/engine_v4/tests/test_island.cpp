@@ -1375,7 +1375,7 @@ TEST(store_check_on_failure_exits) {
 
 // WP7 O5: the pilot-only path (include/v4/island/pilot_only.h, tool v4_pilot_island) runs the same island as the first
 // island of `calibrate --mode V`: with the same seed, the per-step cost records of the two pilots agree step by step in
-// every law-determined count (phi, rounds, sweeps, pairs, flips, offers, store size, mean |S|), at 1 and 3 threads.
+// every law-determined field (phi, rounds, sweeps, pairs, passes, active columns, store size, mean |S|), at 1 and 3 threads.
 // Also: calibrate --cost-dir writes one record per calibration island (pilot + diagnostic islands).
 TEST(pilot_only_equals_calibrate_pilot) {
   TmpGuard tg;
@@ -1383,7 +1383,8 @@ TEST(pilot_only_equals_calibrate_pilot) {
   auto rows_of = [](const std::string& path) {
     std::vector<v4::Json> r; for (auto& j : read_jsonl(path)) if (!j.contains("cost_header")) r.push_back(j); return r;
   };
-  const char* keys[] = {"step", "kind", "phi", "particle_rounds", "sweeps", "pairs", "flips", "offers", "store_size", "mean_S", "act_cols", "passes"};
+  // law-determined fields only: flips (K1's bounded count) and offers (the snapshot duplicate filter) depend on the schedule
+  const char* keys[] = {"step", "kind", "phi", "particle_rounds", "sweeps", "pairs", "store_size", "mean_S", "act_cols", "passes"};
   std::vector<v4::Json> ref;
   for (int th : {1, 3}) {
     const std::string cdir = tg.add(wp3_tmp("pil_cal_cost" + std::to_string(th)));
@@ -1408,7 +1409,7 @@ TEST(pilot_only_equals_calibrate_pilot) {
     if (ref.empty()) ref = pil;
     else {   // and the same island at 1 and 3 threads (T3 through the record)
       bool t3 = ref.size() == pil.size();
-      for (size_t i = 0; t3 && i < ref.size(); ++i) for (const char* k : {"phi", "sweeps", "offers", "store_size", "mean_S"}) t3 = t3 && ref[i].at(k).dump() == pil[i].at(k).dump();
+      for (size_t i = 0; t3 && i < ref.size(); ++i) for (const char* k : {"phi", "sweeps", "store_size", "mean_S"}) t3 = t3 && ref[i].at(k).dump() == pil[i].at(k).dump();
       CHECK(t3);
     }
     std::printf("  threads %d: pilot T = %lld (%lld forced), %zu rows, %.2f s; calibrate wrote %d cost records (%d diagnostic)\n", th,
