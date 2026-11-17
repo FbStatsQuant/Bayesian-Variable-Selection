@@ -393,3 +393,4 @@
 - 2026-11-16 22:38 CST Relabel package to HQ: rule (c) 4 Opus rounds (last fix not re-reviewed → recommended a short confirmation); D97 edges: ST SAME, D/MR×2 NOT-COVERED → R4 'conditional on W1-N1:B, W1-N1:F'; dry run clean. Post-freeze Tier B for W1-N1:B/F queued.
 - 2026-11-16 22:39 CST D98 relayed to the recorder.
 - 2026-11-16 23:00 CST Must-do item 1 DONE: rule (c) 9441be8d (CI 44018824956) + relabel 2676e71f (CI 44020444027); verified. R4/SAMP:C/DIST-C/OVL conditional on W1-N1:B/F. Next: D95 dry run; Sol-carrier form question sent to HQ (recommend yes). Must-do left: D95 (+A1/A2), READER round (item 5).
+- 2026-11-16 23:01 CST READER GO step 1 (prepare the editorial patch on its branch: card 16 edits, B2, AUD-S4 v1.4, Opus R3 items, requote); B1 + council seat wait for D95 (step 2; deadline Fri 12:00 CT). Agents: recorder + READER = 2.
