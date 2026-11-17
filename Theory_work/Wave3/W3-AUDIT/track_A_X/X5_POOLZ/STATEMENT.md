@@ -1,4 +1,4 @@
-# X5 · Re-check of `W3-READER:PoolZ` (pooled evidence unbiased) — STATEMENT v1.1 (draft, not locked)
+# X5 · Re-check of `W3-READER:PoolZ` (pooled evidence unbiased) — STATEMENT v1.2 (draft, not locked)
 
 Track A item X5 (`AUDIT.md` §6 "Further open inputs", X5; TRACK_D §3: "lemma (Tier B) — two-line proof; line check and
 registry row"). Tier B (second-seat line check; no new claim). **Lean target: yes** (linearity of conditional
@@ -18,8 +18,11 @@ surely on 𝒜, E[Ẑ | 𝓒] = Z; hence E[1_𝒜Ẑ] = E[1_𝒜Z] under the joi
 - T1 (GW-iv) and T5 (CAL-b, CAL-d) of this track (the success event; see the precision below).
 
 ## Re-check result
-- **(X5-a) VERIFIED.** The proof is correct: N1's identity for r = 1, …, 4 on 𝒜 (R′ = 4 there) and linearity of
-  conditional expectation give E[Ẑ/Z | 𝓒] = 1 a.s. on 𝒜, with Z a constant for fixed data. The joint-law form
+- **(X5-a) VERIFIED WITH AMENDMENTS.** What is verified is PoolZ for the uninterrupted pair: the identities hold for
+  (𝒜°, 𝓒°, Ẑ°), with MEAS-J and the joint independence below for the joint-law form; equality for the actual 𝒜 holds
+  only under the additional clock-independence premise of (X5-b). The original PoolZ wording is not verified without
+  these qualifications. The argument: N1's identity for r = 1, …, 4 on 𝒜° (R′ = 4 there) and linearity of
+  conditional expectation give E[Ẑ°/Z | 𝓒°] = 1 a.s. on 𝒜°, with Z a constant for fixed data. The joint-law form
   E[1_𝒜Ẑ] = E[1_𝒜Z] (an equality in [0, ∞]; both sides nonnegative, no integrability needed) additionally uses
   **MEAS-J** — the island record is jointly measurable in (data, c, u), not only in (c, u) for fixed data as W1-N1's
   MEAS gives — and that the final streams are independent of (data, streams 0–9) **jointly**; PoolZ's proof uses both
@@ -46,3 +49,4 @@ surely on 𝒜, E[Ẑ | 𝓒] = Z; hence E[1_𝒜Ẑ] = E[1_𝒜Z] under the joi
 |---|---|---|---|---|---|
 | v1 | all | NEW-CLAIM (second-seat line check of an existing proof) | track A X5 | `AUDIT.md` §6 X5; manager GO 11-16 | `CHECK.md` |
 | v1.1 | joint-law form: MEAS-J and joint independence named; (X5-b): failing premise is CAL; clock condition stated jointly | STRONGER as to stated premises / EQUAL in conclusion | LC2 X5 #1, #3, #4 | `reviews/LC2_reply_opus.md` | — |
+| v1.2 | verification label: VERIFIED WITH AMENDMENTS, scope (𝒜°, 𝓒°, Ẑ°) stated in (X5-a) | WEAKER (label made exact; no new argument) | Sol X-read #1 | `reviews/LC3_reply_sol.md` | — |

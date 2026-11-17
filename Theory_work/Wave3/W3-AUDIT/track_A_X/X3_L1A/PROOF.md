@@ -1,4 +1,4 @@
-# X3 · Re-check of `W3-POST:Lemma-1a'` — PROOF v1.1 (line check)
+# X3 · Re-check of `W3-POST:Lemma-1a'` — PROOF v1.2 (line check)
 
 L1a′ = `Theory_work/Wave3/W3-POST/lemmas/L1a_size_tail.md`; [P1] = `Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex`;
 [T03R] = `Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/W1-T03R/PROOF.md`. Notation of L1a′ and [P1] §1:
@@ -6,7 +6,7 @@ U is the n × (n − 1) contrast basis (UᵀU = I, UUᵀ = C = I − 11ᵀ/n), y
 
 ## Step 1 — the changed step (bound on Q^c_T), `Theory_work/Wave3/W3-POST/lemmas/L1a_size_tail.md:27-32`
 - [P1] `lem:slab` with A = X_{c,T}, Y = y_c gives Q^c_T = min_ϑ {‖y_c − X_{c,T}ϑ‖² + ϑᵀ(G_T + I)ϑ/n}, G_T = X_{c,T}ᵀX_{c,T}
-  (`Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex:68-72`). Checked.
+  (`Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex:68-81`). Checked.
 - G_T = X_TᵀUUᵀX_T = X_TᵀCX_T = X_TᵀX_T since the standardised columns are centred. Checked.
 - y_c = Uᵀ(α1 + X^rβ + ε) = UᵀX^rβ + ε_c (Uᵀ1 = 0) = UᵀCX^rβ + ε_c (UᵀC = Uᵀ) = Uᵀμ + ε_c with μ = CX^rβ. And
   X_{c,T}θ = UᵀX_Tθ = Uᵀμ. So ϑ = θ gives ‖y_c − X_{c,T}θ‖² = ‖ε_c‖² and θᵀ(G_T + I)θ/n = (‖X_Tθ‖² + ‖θ‖²)/n =

@@ -1,0 +1,17 @@
+# External inputs of council round XR1 (X1, X3, X5, T14): the pinned code and the sources the files cite.
+# Registry tables are not listed (PROTOCOL_v4 §4.1); the PoolZ claim is copied verbatim in X5_POOLZ/SOURCE_PoolZ.md.
+Scripts/SMC_BVS/core
+Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex
+Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex
+Docs/Theory/proofs/T12_T8_frozen_run_identities/STATEMENT.md
+Docs/Theory/proofs/T12_T8_frozen_run_identities/STATUS.md
+Theory_work/INFRA/DECISIONS.md
+Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/W1-T03R/PROOF.md
+Theory_work/Wave1/W1-N1/STATEMENT.md
+Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md
+Theory_work/Wave1C/C-DLV/INVENTORY.md
+Theory_work/Wave1C/C-DLV/STATEMENT.md
+Theory_work/Wave3/W3-POST/STATEMENT.md
+Theory_work/Wave3/W3-POST/lemmas/L1a_size_tail.md
+Theory_work/Wave3/W3-SAMP/STATEMENT.md
+Theory_work/Wave3/W3-SAMP/lemmas/CC_code_check.md

@@ -1,9 +1,10 @@
-# X3 · Re-check of `W3-POST:Lemma-1a'` (design-free size tail) — STATEMENT v1.1 (draft, not locked)
+# X3 · Re-check of `W3-POST:Lemma-1a'` (design-free size tail) — STATEMENT v1.2 (draft, not locked)
 
 Track A item X3 (`AUDIT.md` §6 "Further open inputs", X3; TRACK_D §3: "lemma (Tier B) — one line check"). Tier B (a
 further line check under PROTOCOL_v4 of an existing proof; no new claim). The registry status reads "PROVED (by this
 seat, unchecked)", but the lemma file records a check history (R01 VERIFIED-WITH-AMENDMENTS, R02 VERIFIED, council C1
-seats re-derived it, council C3 correct:PASS; `Theory_work/Wave3/W3-POST/lemmas/L1a_size_tail.md:3-5`); the status label
+seats re-derived it: `Theory_work/Wave3/W3-POST/lemmas/L1a_size_tail.md:3-5`; council C3 correct:PASS: the registry row,
+`Theory_work/INFRA/registry/claims.tsv:343`); the status label
 has not been updated to it (recorder note). **Lean target: no** (analytic: Gaussian slab
 integral, inverse-gamma bound, Markov; feasible in principle but not small). Blocks row 1.1, expectation display
 (`W3-POST2:C` is "conditional on W3-POST:Prop-LB, [L1a′], …").
@@ -36,3 +37,4 @@ correction is needed to the statement; two precisions are recorded (PROOF, end).
 |---|---|---|---|---|---|
 | v1 | all | NEW-CLAIM (second-seat line check of an existing proof) | track A X3 | `AUDIT.md` §6 X3; manager GO 11-16 | `CHECK.md` |
 | v1.1 | record of prior checks; summary completed (G, n ≥ 3, second conclusion); citations | EQUAL (description) | LC2 X3 #1, #4, #5 | `reviews/LC2_reply_opus.md` | — |
+| v1.2 | citations: C3 attributed to the registry row; [P1] lem:slab range | EQUAL | Sol X-read #2, #3 | `reviews/LC3_reply_sol.md` | — |

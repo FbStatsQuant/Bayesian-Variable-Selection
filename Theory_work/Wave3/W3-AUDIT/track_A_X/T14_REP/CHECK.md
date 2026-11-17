@@ -8,3 +8,4 @@ Citation check: 0 MISS (`CITECHECK.txt`). Kill budget: not touched (one attempt,
 Sol's scope remark (finding 4): the conclusion holds in the shipped default configuration; non-default options
 (`v3.ls0_ell` > 10⁶) are excluded and the qualification must be kept when quoted.
 Lean target: no.
+Council: combined with X1, X3, X5 in round XR1 (manager 11-16); outcome in `../reviews/` and `../LOG.md`.
