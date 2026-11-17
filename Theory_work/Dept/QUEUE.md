@@ -42,6 +42,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 - X2, X4: relabelling (recorder, post-freeze). P6 method version: Engineering reconciliation pending. RERUN_SPEC: open (HQ).
 
 ## Post-freeze riders (queued)
+- (11-16) READER post-freeze editorial: Opus R3's 2 wording items; [AUD-S4] SL sampler-output sentence in card row 3.1 / Cor 9C, using the **v1.4** wording (WRITING_DELTA_v1.4: 'limits in the number of iterations at fixed data, for every data set; ours hold at the coded budget under design conditions; neither implies the other'), not v1.3's.
 - (11-16) Recorder: W2 Lemma 1a′ registry label 'unchecked' is stale (check history R01, R02, C1, C3; X3 re-check). Editorial ER-11 (T1/T5 CAL/clock phrasing).
 - (11-16) Recorder (track A CP2): stale line numbers INVENTORY/S.3/TDP_E; W1-GEN:L5 note 'LS0 not in production'; X7/X8 erratum sentence; A_inventory drift D1–D7; X2/X4 relabelling. Representability lemma (D88): post-freeze, outside the track D cap, kill 1 d, one Sol line check; if it holds → STRONGER H5 card for row 3.1.
 - (11-16) W3-RM2-R READER_DELTA: the F-UNI cap sentence carries the error W3-READER corrected as R1-F6 (editorial).
