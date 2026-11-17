@@ -224,7 +224,11 @@ diagnostic), whose ledgers define τ_cal.
   never apply the floor. Leader stores never have one.
 - A final island gets f from its calib.bin: f = `meta.tau_cal_hex` when the mode is V, else −∞; a calib.bin without
   `tau_cal` (fewer than c inherited models, older files) gives −∞ (`include/v4/offer_floor.h` `offer_floor_from_calib`).
-  The `island` command passes it as `IslandConfig::offer_floor` with `offer_floor_calib` = that calib.bin's content hash.
+  The `island` command passes it as `IslandConfig::offer_floor` with `offer_floor_calib` = that calib.bin's content hash,
+  **after the same semantic check `read_calib` makes** (`wp4io::check_calib_tau_cal`, light: mapped arrays): the
+  inherited models are **distinct** (strictly increasing in the exporter's lexicographic order, else proved by a sort;
+  duplicates → `invalid_input`) and `tau_cal_hex` is bit-equal to the c-th best F over those distinct models (c = 40p + 1;
+  −∞ below c). A tampered finite tau_cal is refused by the command before any island work (review PR54 MAJOR-1/2).
 - The island side enforces the roles: `run_island` refuses (`invalid_input`) a floor > −∞ unless the island is class A
   (V), not compat, without leader stores and in the final role; it refuses a NaN or +∞ floor and a floor without its
   calib hash. Calibration islands never write an `island_r.bin`, so this, not the merge, is their guard. The floor is
@@ -526,7 +530,8 @@ Status fit_status(span<Status>);   // first that applies: invalid_input, interna
   the pre-island ledger, and before any island is merged, every island must have:
   - floor = −∞ unless `meta.mode` = "V" (compat and law islands with a floor are refused; calibration islands are
     refused on the island side, §4.1, since they write no `island_r.bin`; v0.1.17, MINOR-2);
-  - a floor is −∞ or finite (NaN, +∞ → `invalid_input`; v0.1.17, MINOR-3);
+  - a floor is −∞ or finite (NaN, +∞ → `invalid_input`; v0.1.17, MINOR-3); an island's `meta.mode` must equal its
+    container header's mode, and a finite floor needs `meta.mode` = "V" (`head_island`; review PR54 MINOR);
   - floor > −∞ only with `offer_floor_calib` = the island's `meta.inputs` calib content hash, **and `offer_floor_hex`
     bit-equal to that calib.bin's `tau_cal_hex`** (v0.1.17, MINOR-3; `read_calib` also checks that `tau_cal` is the
     c-th best F of the inherited models it reads);

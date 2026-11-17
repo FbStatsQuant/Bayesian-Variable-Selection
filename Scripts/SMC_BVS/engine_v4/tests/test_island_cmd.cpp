@@ -266,6 +266,53 @@ TEST(island_command_offer_floor_on_off) {
   std::printf("  tau_cal %.6f: islands floored through the CLI; fit.bin identical with and without the floor\n", ci.tau_cal);
 }
 
+// D-29 (review PR54 MAJOR-1/2): the island command validates tau_cal itself, before any island work, with the check
+// read_calib uses: a tampered finite tau_cal (next ulp, or far above every value) and inherited models that are not
+// distinct (one model repeated; two models alternating) are refused (13, no island file); the valid calib.bin runs.
+TEST(island_command_refuses_tampered_tau_cal) {
+  Dir dir("tau"); Fx f; make_fx(f, dir);
+  const std::string bin = V4_SMCBVS4, cal = dir("calib.bin");
+  CHECK_EQ(sh(bin + " calibrate --data " + q(f.dpath) + " --setup " + q(f.spath) + " --mode V --seed 77 --threads 3 --out " + q(cal)), 0);
+  const v4::wp4io::CalibIn ci = v4::wp4io::read_calib(cal, f.D.p, f.D.K, f.dhash, f.shash);
+  CHECK(std::isfinite(ci.tau_cal) && ci.inherited.size() > (size_t)(40 * f.D.p + 1));
+  auto island = [&](const std::string& calf, const std::string& out) {
+    return sh(bin + " island --data " + q(f.dpath) + " --setup " + q(f.spath) + " --calib " + q(calf) + " --mode V --seed 77 --island 1 --threads 3 --out " + q(out));
+  };
+  struct stat sb{};
+  { const std::string out = dir("ok.bin"); CHECK_EQ(island(cal, out), 0); }   // the control: the valid calib.bin runs
+  auto with_tau = [&](const std::string& dst, double tau) {   // the same calib.bin with another finite tau_cal
+    v4::fmt::Reader R(cal); v4::fmt::Writer W(R.kind(), R.mode());
+    Json m = R.json("meta"); v4::tau_cal_to_meta(m, tau); W.add_json("meta", m); copy_sections(R, W, {"meta"}); W.write(dst);
+  };
+  const std::string t1 = dir("calib_ulp.bin"), t2 = dir("calib_big.bin");
+  with_tau(t1, std::nextafter(ci.tau_cal, 0.0)); with_tau(t2, 1e6);
+  for (const std::string& c : {t1, t2}) {
+    const std::string out = dir("bad_" + c.substr(c.rfind('/') + 1));
+    CHECK_EQ(island(c, out), 13); CHECK(::stat(out.c_str(), &sb) != 0);
+  }
+  // inherited models that are not distinct, with matching repeated values and the tau_cal the row count would give
+  auto with_models = [&](const std::string& dst, const std::vector<size_t>& pick) {
+    std::vector<int64_t> ptr{0}; std::vector<int32_t> idx; std::vector<double> F, lg0, logm, d;
+    for (size_t i : pick) { const auto& m = ci.inherited[i]; idx.insert(idx.end(), m.S.begin(), m.S.end()); ptr.push_back((int64_t)idx.size());
+      F.push_back(m.F); lg0.push_back(m.lg0); logm.push_back(m.logm); d.push_back(0.0); }
+    v4::fmt::Reader R(cal); v4::fmt::Writer W(R.kind(), R.mode());
+    Json m = R.json("meta"); v4::tau_cal_to_meta(m, v4::tau_cal_of(F, 40ull * (uint64_t)f.D.p + 1)); W.add_json("meta", m);
+    copy_sections(R, W, {"meta", "inh_ptr", "inh_idx", "inh_F", "inh_lg0", "inh_logm", "inh_d"});
+    W.add("inh_ptr", ptr); W.add("inh_idx", idx); W.add("inh_F", F); W.add("inh_lg0", lg0); W.add("inh_logm", logm); if (R.has("inh_d")) W.add("inh_d", d);
+    W.write(dst);
+  };
+  const size_t n = ci.inherited.size();
+  std::vector<size_t> one(n, 0), alt; for (size_t i = 0; i < n; ++i) alt.push_back(i % 2);
+  const std::string d1 = dir("calib_one.bin"), d2 = dir("calib_alt.bin");
+  with_models(d1, one); with_models(d2, alt);
+  for (const std::string& c : {d1, d2}) {
+    const std::string out = dir("bad_" + c.substr(c.rfind('/') + 1));
+    CHECK_EQ(island(c, out), 13); CHECK(::stat(out.c_str(), &sb) != 0);
+    bool refused = false; try { v4::wp4io::read_calib(c, f.D.p, f.D.K); } catch (const v4::Error& e) { refused = e.st == v4::Status::invalid_input; }
+    CHECK(refused);   // read_calib and the command agree
+  }
+}
+
 // D-32 (review PR55 m3): a V island refuses a calib.bin written by a binary of the other class-A FMA family
 TEST(island_command_refuses_other_fma_family_calib) {
   Dir dir("isa"); Fx f; make_fx(f, dir);

@@ -38,6 +38,7 @@
 #include "v4/provenance.h"
 #include "v4/stubs.h"
 #include "v4/threads.h"
+#include "v4/wp4_io.h"
 
 namespace v4::island {
 
@@ -226,6 +227,12 @@ Json run(const Json& args) {
     dhash = R.content_hash(); const Json m = R.json("meta");
     n = whole(m.at("n"), "data.bin n", 3, (int64_t)1 << 31); p = whole(m.at("p"), "data.bin p", 1, (int64_t)1 << 31); K = whole(m.at("K"), "data.bin K", 0, (int64_t)1 << 31); }
   const calib::Budgets bud = calib::budgets(n, p);   // B, K: the budgets the calibration ran with (calibrate uses the same helper)
+  // D-29 (review PR54 MAJOR-1/2): tau_cal is checked HERE, before any island work, by the check read_calib uses: distinct
+  // inherited models and tau_cal = the c-th best F, bit for bit. The mapped file was verified by read_calib_head already.
+  if (mode == fmt::M_V) {
+    fmt::Reader RC(in.calib, false); const Json cm = RC.json("meta");
+    wp4io::check_calib_tau_cal(RC, cm, C.mode, (int32_t)p, (int32_t)K, in.calib);
+  }
   if (bud.K != K) throw Error(Status::invalid_input, std::string(W) + "data.bin K = " + std::to_string(K) + " differs from min(p, n / 2) = " + std::to_string(bud.K));
   // B is part of the law (the N-swap labels per round: shuffled order, addresses, compat stream use). The calibration used
   // budgets(n, p).B, so the final islands must; a conflicting --B is refused (review PR52 MAJOR-3)
