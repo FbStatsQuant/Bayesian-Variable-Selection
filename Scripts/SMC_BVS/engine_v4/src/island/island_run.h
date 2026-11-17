@@ -19,6 +19,7 @@
 #include "v4/island/island.h"
 #include "v4/provenance.h"
 #include "island_lm_state.h"
+#include "v4/island/ckpt_sum.h"
 
 namespace v4::island {
 
@@ -126,7 +127,10 @@ v4::IslandResult to_record(const IslandRun& r) {
 // Checkpoint container (provisional: magic, generation, length, FNV-1a checksum, streamed payload; WP1's kind-8 file
 // with SHA-256 sections may replace it). Streaming I/O: IslandEngine::save_ckpt / load_ckpt.
 // ---------------------------------------------------------------------------------------------------------------
-static const char kCkptMagic[8] = {'S', 'M', 'C', 'V', '4', 'C', 'K', 'P'};
+// v2 (WP7 O4): the checksum is the parallel, thread-count-independent block checksum of ckpt_sum.h (v1: a serial FNV-1a
+// byte loop, magic ...CKP). A v1 file is refused with a clear error, never read as "no checkpoint".
+static const char kCkptMagic[8] = {'S', 'M', 'C', 'V', '4', 'C', 'K', '2'};
+static const char kCkptMagicV1[8] = {'S', 'M', 'C', 'V', '4', 'C', 'K', 'P'};
 
 // ---------------------------------------------------------------------------------------------------------------
 template <Arith A>
@@ -496,8 +500,9 @@ class IslandEngine {
   }
   // Streamed checkpoint I/O (manager Q6): no byte image of the store; the checksum is computed while streaming.
   struct CkptOut {
-    FILE* f = nullptr; Fnv ck; uint64_t len = 0; bool bad = false;
-    void raw(const void* q, size_t n) { if (n && std::fwrite(q, 1, n, f) != n) bad = true; ck.bytes(q, n); len += n; }
+    FILE* f = nullptr; BlockSum ck; uint64_t len = 0; bool bad = false;
+    explicit CkptOut(int threads = 1) : ck(threads) {}
+    void raw(const void* q, size_t n) { if (n && std::fwrite(q, 1, n, f) != n) bad = true; ck.add(q, n); len += n; }
     template <class T> void put(const T& x) { raw(&x, sizeof(T)); }
     template <class T> void putv(const std::vector<T>& v) { uint64_t n = v.size(); put(n); raw(v.data(), n * sizeof(T)); }
   };
@@ -541,11 +546,12 @@ class IslandEngine {
     std::setvbuf(f, nullptr, _IOFBF, 1 << 20);
     uint64_t zero[3] = {0, 0, 0};
     bool ok = std::fwrite(kCkptMagic, 1, 8, f) == 8 && std::fwrite(zero, 8, 3, f) == 3;
-    CkptOut w; w.f = f;
+    CkptOut w(NT); w.f = f;
     ckpt_payload(w, step);
+    const uint64_t cks = w.ck.finish();
     uint64_t gen = (uint64_t)(step + 1) * 1024 + (uint64_t)(ckpt_writes & 1023);
     ok = ok && !w.bad && std::fseek(f, 8, SEEK_SET) == 0 && std::fwrite(&gen, 8, 1, f) == 1 && std::fwrite(&w.len, 8, 1, f) == 1 &&
-         std::fwrite(&w.ck.h, 8, 1, f) == 1 && std::fflush(f) == 0 && ::fsync(fileno(f)) == 0;
+         std::fwrite(&cks, 8, 1, f) == 1 && std::fflush(f) == 0 && ::fsync(fileno(f)) == 0;
     ok = (std::fclose(f) == 0) && ok;
     if (!ok || std::rename(tmp.c_str(), path.c_str()) != 0) { std::remove(tmp.c_str()); throw v4::Error(v4::Status::io_error, "checkpoint write failed: " + path); }
     {   // the rename is durable only once the directory entry is (review m4a; INTERFACES §5.1)
@@ -575,19 +581,24 @@ class IslandEngine {
       std::string path = cfg.ckpt_path + sfx;
       FILE* f = std::fopen(path.c_str(), "rb"); if (!f) continue;
       char mg[8]; uint64_t gen = 0, len = 0, ck = 0;
+      if (std::fread(mg, 1, 8, f) == 8 && std::memcmp(mg, kCkptMagicV1, 8) == 0) {
+        std::fclose(f);
+        throw v4::Error(v4::Status::invalid_input, "checkpoint " + path + " is of the older format (serial checksum, before WP7 O4): remove it or finish the run with the binary that wrote it");
+      }
+      std::rewind(f);
       bool ok = std::fread(mg, 1, 8, f) == 8 && std::memcmp(mg, kCkptMagic, 8) == 0 && std::fread(&gen, 8, 1, f) == 1 &&
                 std::fread(&len, 8, 1, f) == 1 && std::fread(&ck, 8, 1, f) == 1;
       if (ok) { std::fseek(f, 0, SEEK_END); ok = (uint64_t)std::ftell(f) == 32 + len && len >= 12; std::fseek(f, 32, SEEK_SET); }
       uint64_t fp = 0; int s = -1;
-      if (ok) {   // pass 1: checksum by streaming
-        Fnv c; std::vector<unsigned char> buf(1 << 20); uint64_t left = len, pos = 0;
+      if (ok) {   // pass 1: the block checksum by streaming 64 MiB reads, hashed in parallel (ckpt_sum.h)
+        BlockSum c(NT); std::vector<unsigned char> buf((size_t)64 << 20); uint64_t left = len, pos = 0;
         while (left && ok) {
           size_t n = (size_t)std::min<uint64_t>(left, buf.size());
           if (std::fread(buf.data(), 1, n, f) != n) { ok = false; break; }
           if (pos == 0 && n >= 12) { std::memcpy(&fp, buf.data(), 8); std::memcpy(&s, buf.data() + 8, 4); }
-          c.bytes(buf.data(), n); left -= n; pos += n;
+          c.add(buf.data(), n); left -= n; pos += n;
         }
-        ok = ok && c.h == ck;
+        ok = ok && c.finish() == ck;
       }
       std::fclose(f);
       if (!ok) continue;

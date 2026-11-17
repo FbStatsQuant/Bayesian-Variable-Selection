@@ -14,6 +14,7 @@
 #include "tutil.h"
 #include "tutil_island.h"
 #include "v4/island/island.h"
+#include "v4/island/ckpt_sum.h"
 #include "v4/island/island_file.h"
 #include "v4/format.h"
 
@@ -1602,4 +1603,61 @@ TEST(merge_refuses_mixed_fma_families) {
   v4::Json w = a; w["island_isa"] = "portable"; w["island_fma"] = true;
   CHECK(!v4::binary_compatible(w, with(b, "portable"), v4::BinaryUse::MergeV).ok);
   CHECK(v4::binary_compatible(w, with(b, "x86-64-v3"), v4::BinaryUse::MergeV).ok);
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// WP7 O4: the checkpoint checksum (ckpt_sum.h) is a function of the byte stream alone: any chunking of the writer's
+// calls, any number of threads and the whole-region form give the same value; a changed byte (at block boundaries too),
+// a changed length and the empty stream differ. A checkpoint of the older (serial checksum) format is refused, not ignored.
+TEST(checkpoint_checksum_is_chunking_and_thread_independent) {
+  std::mt19937_64 g(33);
+  const size_t B = BlockSum::B;
+  for (size_t n : {(size_t)0, (size_t)1, (size_t)8, B - 1, B, B + 1, 2 * B, 3 * B + 17, 5 * B + B / 3}) {
+    std::vector<unsigned char> d(n); for (auto& x : d) x = (unsigned char)g();
+    const uint64_t ref = BlockSum::of_region(d.data(), n, 1);
+    bool ok = true;
+    for (int th : {1, 2, 3, 5}) {
+      ok = ok && BlockSum::of_region(d.data(), n, th) == ref;
+      for (int rep = 0; rep < 3; ++rep) {   // random chunkings, including empty adds and chunks that straddle blocks
+        BlockSum s(th); size_t pos = 0;
+        while (pos < n) {
+          size_t take = rep == 0 ? 1 + (size_t)(g() % 97) : (rep == 1 ? 1 + (size_t)(g() % (3 * B)) : n);
+          take = std::min(take, n - pos);
+          s.add(d.data() + pos, take); pos += take; if (g() % 5 == 0) s.add(d.data() + pos, 0);
+        }
+        ok = ok && s.finish() == ref && s.length() == n;
+      }
+    }
+    CHECKF(ok, "n %zu: the checksum depends on the chunking or the thread count", n);
+    if (n == 0) continue;
+    // one changed byte anywhere (first, block edges, last) changes it
+    for (size_t at : {(size_t)0, n / 2, n - 1, std::min(n - 1, B - 1), std::min(n - 1, B)}) {
+      d[at] ^= 0x40; const uint64_t h2 = BlockSum::of_region(d.data(), n, 3); d[at] ^= 0x40;
+      CHECKF(h2 != ref, "n %zu: a changed byte at %zu is not detected", n, at);
+    }
+    // the length is part of the value: the stream with one more zero byte differs
+    std::vector<unsigned char> e = d; e.push_back(0);
+    CHECK(BlockSum::of_region(e.data(), e.size(), 2) != ref);
+  }
+  CHECK(BlockSum::of_region(nullptr, 0, 1) == BlockSum(1).finish());
+}
+
+TEST(checkpoint_of_the_older_format_is_refused) {
+  TmpGuard tg;
+  Fixture F(100, 300, 61);
+  IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = 3; c.G = 16;
+  IslandConfig a = c; a.ckpt_path = tg.add(wp3_tmp("o4_oldfmt")); a.ckpt_every_s = 1e9; a.stop_after_step = 2; wp3_rm(a.ckpt_path);
+  CHECK(run_island<Arith::ClassA>(F.D, F.st, F.nb, a).status == 1);
+  // a checkpoint of the new format written with 3 threads resumes with 1 (the checksum does not depend on threads)
+  { IslandConfig b = a; b.stop_after_step = -1; b.threads = 1; b.G = 7;
+    IslandRun r = run_island<Arith::ClassA>(F.D, F.st, F.nb, b);
+    CHECK(r.status == 0 && r.resumed_from_step == 2 && r.hash() == run_island<Arith::ClassA>(F.D, F.st, F.nb, c).hash()); }
+  for (const char* sfx : {".a", ".b"}) {   // the files stay after run_island (the command removes them); make them the old magic ...CKP
+    FILE* f = std::fopen((a.ckpt_path + sfx).c_str(), "r+b"); if (!f) continue;
+    std::fseek(f, 7, SEEK_SET); std::fputc('P', f); std::fclose(f);
+  }
+  bool refused = false; std::string msg;
+  try { IslandConfig b = a; b.stop_after_step = -1; run_island<Arith::ClassA>(F.D, F.st, F.nb, b); }
+  catch (const v4::Error& e) { refused = e.st == v4::Status::invalid_input; msg = e.what(); }
+  CHECKF(refused && msg.find("older format") != std::string::npos, "old-format refusal: %s", msg.c_str());
 }

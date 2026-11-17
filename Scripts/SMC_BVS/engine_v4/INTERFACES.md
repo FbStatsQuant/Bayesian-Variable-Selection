@@ -681,3 +681,8 @@ point, so all WPs link from day one: `setup::run`, `island::run`, `calib::run`, 
   for a ±0 tie). The writer refuses a non-finite inherited F (`internal_error`). The distinctness proof of the inherited
   models is a linear scan for the exporter's canonical (strictly lexicographic) list, which has no size limit; any other
   order needs an index sort and is refused above 2^24 inherited models (`invalid_input`).
+- v0.1.22 (2026-11-18, WP7 O4 for WP1; WP3_ARCH_REVIEW R5) — §5.1 `island_r.ckpt.{a,b}`: the checkpoint checksum is the
+  parallel block checksum of `include/v4/island/ckpt_sum.h` (1 MiB blocks by stream position, FNV-1a 64 per block, FNV-1a 64
+  over the length and the block hashes in order): a function of the bytes alone, independent of thread count and of the
+  write / read chunking, so a checkpoint written with k threads resumes with any other. Magic `SMCV4CK2`; a file with the
+  earlier magic (`SMCV4CKP`, serial FNV-1a) is refused with `invalid_input`, never treated as "no checkpoint".
