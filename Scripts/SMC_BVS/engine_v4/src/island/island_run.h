@@ -189,6 +189,7 @@ class IslandEngine {
   template <class Fn> void oom_guard(Fn&& f) {
     try { f(); } catch (const std::bad_alloc&) { fail.record(UINT32_MAX, "out of memory inside a parallel region", FK_RESOURCE); }
   }
+  bool fail_any() { std::lock_guard<std::mutex> lk(fail.mu); return fail.has; }
   bool fail_fatal() { std::lock_guard<std::mutex> lk(fail.mu); return fail.has && fail.kind != FK_NUMERICAL; }
   static const char* xph_name(uint8_t x) { return x == X_INIT ? "init" : x == X_BRIDGE ? "bridge stage" : x == X_BURN ? "burn-in round" : x == X_MEASURED ? "measured round" : "?"; }
   std::string fail_msg(const RoundCtx& rc, uint32_t i1, uint32_t pos, const std::string& what) const {
@@ -890,7 +891,9 @@ class IslandEngine {
       res.top_v = std::move(K.v); res.top_hash = std::move(K.hash); res.top_off = std::move(K.off); res.top_len = std::move(K.len); res.top_pool = std::move(K.pool);
     }
     res.ks.kept_live_max = kept_live_max().load();
-    if (cfg.keep_terminal) for (auto& x : P) res.terminal.push_back(x.S);
+    // only a completed (or test-interrupted) island reports its population: after a failure P holds the particles that happened to
+    // finish their round before it, which depends on the admission pattern (review PR66 MINOR 1); it never reaches a file
+    if (cfg.keep_terminal && (res.status == 0 || res.status == 1)) for (auto& x : P) res.terminal.push_back(x.S);
     if (csrc) { res.compat = true; res.stream_count = csrc->g.count; }
     res.role = cfg.role; res.tier = cfg.tier; res.iter = cfg.iter;
     if (cfg.leaders) {
