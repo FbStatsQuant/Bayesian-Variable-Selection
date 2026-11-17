@@ -13,8 +13,9 @@ i.e. only under the C-GROW cap ℓ_n + |S̃₀|. C-DLV's own method has LS0 cap 
 | W3-RM2-R:RM2-R-plus, RM2-F-plus, RM0-plus, Cont-plus (P1, status only) | No own use: the condition is inherited through DLV-0 (same answer as DLV-0). |
 | C-ENG:Impl-DLV-A2 (L1-R) | No: TDP-IMPL operation/storage bounds; no preflight exit involved. |
 | HQ_AUDIT-W1C:A2 (L1-R) | **Yes, in its registered span**: Step 2 extends Delivery to the C-GROW cap via Thm D's walk and Cor R with W_G, M_G, without the LS0 time term (`Theory_work/Wave1C/HQ_AUDIT/A2_propF_GROW.md:51-53`); the term is covered by the later HQ audit A4 (`Theory_work/Wave1C/HQ_AUDIT/A4_postcouncil_check.md:5-19`, not a registry claim). Status "EXTENDS". |
-| second-hand (via Cor-R / Thm-D): C-DLV:Prop-F, Cor-Dp, C1-CondDelivery, O; HQ_AUDIT-W1C:A1 | No (cap ℓ_n configuration); A1 as its method (A2 cites A1's premises; verify if HQ needs A1 itself). |
+| second-hand (via Cor-R / Thm-D): C-DLV:Prop-F, Cor-Dp, C1-CondDelivery, O | No (cap ℓ_n configuration). |
+| second-hand (via Thm-D): HQ_AUDIT-W1C:A1 | **Yes, as A2**: Prop F with the C-GROW cap and preflight bounds P_0, P_1, P̄_t only (`Theory_work/Wave1C/HQ_AUDIT/A1_propF_redteam.md:62-75`); the LS0 preflight term came later (ef33f91c) and is covered by HQ audit A4 (`Theory_work/Wave1C/HQ_AUDIT/A4_postcouncil_check.md:5-19`, `:33`: "checked separately in HQ audit A4"). |
 | second-hand: W2-FAC-A:Prop-F-FAC | No: its allocation is "A1+A4", i.e. includes the LS0 preflight term. |
 
 Reading: every consumer that uses the shipped C-GROW cap either names B1′ itself (DLV-0, Prop-F-FAC) or is covered by HQ
-audit A4 (A2); the cap-ℓ_n consumers never meet B1′. Lead's view: CORRECTION (amendment), pending CSL1 (ii).
+audit A4 (A1, A2); the cap-ℓ_n consumers never meet B1′. Lead's view: CORRECTION (amendment), pending CSL1 (ii).
