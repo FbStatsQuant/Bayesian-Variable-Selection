@@ -287,10 +287,15 @@ set +u; source "$SCR/env.sh"; set -u          # NOTS modules (GCC 14.3.0 runtime
 
 # NOTS module environment (manager's lesson, 11-15: CMake 3.27.6 sits under GCCcore 13.2 and fails; use these)
 ENV_SH = """# env.sh -- NOTS module environment for batch {batch} (GENERATED). Sourced by every stage and by build.sh.
-source /etc/profile.d/modules.sh
+# The Lmod init and `module` return non-zero internally, so under the callers' `set -euo pipefail` sourcing them exits the
+# script silently (T5 build, 11-17). Run them with errexit/nounset/pipefail off, restore the caller's options, then check.
+__p1m_flags=$-; __p1m_pf=$(shopt -po pipefail); set +e +u +o pipefail   # $- (not $(set +o): a subshell drops errexit)
+type module >/dev/null 2>&1 || source /etc/profile.d/modules.sh
 module use /opt/apps/modules/Core
 module purge
 module load GCC/14.3.0 CMake/3.31.8
+[[ $__p1m_flags == *e* ]] && set -e; [[ $__p1m_flags == *u* ]] && set -u; eval "$__p1m_pf"; unset __p1m_flags __p1m_pf
+command -v g++ >/dev/null && [[ $(g++ -dumpfullversion) == 14.3.0 ]] || {{ echo "FATAL: env.sh: GCC 14.3.0 not loaded" >&2; exit 66; }}
 """
 
 BUILD_SH = """#!/usr/bin/env bash
