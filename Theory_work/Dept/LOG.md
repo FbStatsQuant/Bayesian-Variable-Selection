@@ -404,3 +404,4 @@
 - 2026-11-17 01:05 CST HEARTBEAT: CI green (HQ 8bec550d on fe05ccec). READER step 2: R4 Opus seat 7.9 FAIL (FAITHFUL; one status quote LT# + 6 wording items), fixes applied 7405a463, not bound → authorised one Opus read of the fix diff (R5), bind on PASS; fallback R3r3.
 - 2026-11-17 02:35 CST Item 5: READER R5 PASS (Opus 9.6 FAITHFUL) bound MANIFEST_R5 9f110474 (6709d619); card v1.13. Recorder: dry run of the READER editorial recording onto main → HQ GO. 3 R5 editorial items → post-freeze.
 - 2026-11-17 02:36 CST D102 relayed to the recorder (card v1.13 conditional real run → freeze tag + entries).
+- 2026-11-17 02:53 CST Card v1.13 dry run clean (8bec550d) but beyond the advance-GO scope: R5→R5r re-freeze, Sol carrier (D99-style wording), R1 1.0.2 re-anchor (R4 stale pointer kept). Sent to HQ for yes (recommended).
