@@ -31,7 +31,10 @@ static std::atomic<uint64_t> g_new_calls{0}, g_new_bytes{0}, g_new_max{0};
 // every operator new on any thread increments g_allocs. Off for every other test.
 std::atomic<bool> g_count_allocs{false};
 std::atomic<uint64_t> g_allocs{0};
+static std::atomic<bool> g_order_phase{false};      // set by the island around the label-major order phase's parallel region
+static std::atomic<long> g_order_allocs{0};         // operator-new calls inside that region
 void* operator new(std::size_t n) {
+  if (g_order_phase.load(std::memory_order_relaxed) && omp_in_parallel()) g_order_allocs.fetch_add(1, std::memory_order_relaxed);
   if (g_new_track.load(std::memory_order_relaxed)) {
     g_new_calls.fetch_add(1); g_new_bytes.fetch_add(n);
     uint64_t m = g_new_max.load(); while (n > m && !g_new_max.compare_exchange_weak(m, n)) {}
@@ -96,6 +99,11 @@ TEST(philox_known_answers) {
     v4::Ctr4 c = v4::address_ctr(b); v4::Key2 kk = v4::address_key(b); double u8[8];
     philox8_positions(c.data(), kk.data(), pos, u8);
     for (int l = 0; l < 8; ++l) { Address e = b; e.position = pos[l]; ok = ok && same_bits(u8[l], uniform_at(e)); }
+    // K2: the slot word (philox8_word word 0), with extreme 32-bit lane values included
+    uint32_t sl[8]; for (int l = 0; l < 8; ++l) sl[l] = l < 2 ? (l ? 0xFFFFFFFFu : 0u) : (uint32_t)g();
+    b.position = (uint32_t)g(); c = v4::address_ctr(b); kk = v4::address_key(b);
+    philox8_word(c.data(), kk.data(), 0, sl, u8);
+    for (int l = 0; l < 8; ++l) { Address e = b; e.slot = sl[l]; ok = ok && same_bits(u8[l], uniform_at(e)); }
   }
   CHECK(ok);
 }
@@ -400,6 +408,49 @@ TEST(lm_alloc_failure_in_parallel_is_resource_limit) {
   CHECKF(hit >= 10, "only %d of %d runs reached the injected allocation", hit, runs);
   std::printf("  %d runs, %d with an injected in-region allocation failure: all resource_limit\n", runs, hit);
 }
+
+// K2: label-major draws and scores the I proposal in the order phase; a failed score must surface where core's serial
+// round fails (the walk reaching the I position), with the same reason as particle-major, any threads / G
+TEST(indep_proposal_failure_deferred_to_its_position) {
+  Fixture F(100, 300, 44);
+  for (int arith = 0; arith < 2; ++arith) for (int victim : {0, 5, 37}) {
+    std::string reason0;
+    struct Conf { KernelKind k; int threads, G; };
+    for (const Conf& cf : std::vector<Conf>{{KernelKind::ParticleMajor, 1, 1}, {KernelKind::LabelMajor, 1, 48}, {KernelKind::LabelMajor, 3, 16},
+                                            {KernelKind::LabelMajor, 3, 7}}) {
+      IslandConfig c = small_cfg(); c.kernel = cf.k; c.threads = cf.threads; c.G = cf.G; c.test_fail_indep = victim; c.test_fail_indep_stage = 2;
+      IslandRun r = arith ? run_island<Arith::ClassA>(F.D, F.st, F.nb, c) : run_island<Arith::Bit>(F.D, F.st, F.nb, c);
+      if (reason0.empty()) { reason0 = r.reason; std::printf("  [%s] victim %d: %s\n", arith ? "A" : "bit", victim, r.reason.c_str()); }
+      CHECKF(r.status == 2 && r.reason.find("test hook: I proposal") != std::string::npos && r.reason == reason0,
+             "arith %d victim %d kernel %d threads %d G %d: status %d '%s' vs '%s'", arith, victim, (int)cf.k, cf.threads, cf.G, r.status,
+             r.reason.c_str(), reason0.c_str());
+    }
+  }
+}
+
+// review PR53 MAJOR: the label-major order phase (inverse orders, nongibbs lists, the I proposals' pi_0 draws and scores)
+// allocates nothing inside its parallel region: everything is sized serially before it, cold and warm, both forms,
+// threads 1 / 3, G < N. Counted by the replaced operator new while the island's test flag is set.
+template <Arith A>
+static void order_phase_no_alloc(const char* tag) {
+  Fixture F(100, 300, 46);
+  // control: the counter sees an allocation made in a region while the flag is set (and not otherwise)
+  g_order_allocs = 0; g_order_phase = true;
+  #pragma omp parallel num_threads(3)
+  { int* q = new int[100]; asm volatile("" : : "r"(q) : "memory"); delete[] q; }
+  g_order_phase = false;
+  CHECKF(g_order_allocs.load() >= 3, "[%s] control: the counting hook did not see %ld in-region allocations", tag, g_order_allocs.load());
+  for (int th : {1, 3}) for (int G : {16, 48}) {
+    IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = th; c.G = G; c.test_order_phase = &g_order_phase;
+    g_order_allocs = 0;
+    IslandRun r = run_island<A>(F.D, F.st, F.nb, c);
+    const long n = g_order_allocs.exchange(0);
+    CHECKF(r.status == 0 && n == 0, "[%s] threads %d G %d: %ld allocations inside the order phase's parallel region (status %d)", tag, th, G, n, r.status);
+    std::printf("  [%s] threads %d G %2d: %llu particle-rounds, %ld allocations in the order phase's region\n", tag, th, G, (unsigned long long)r.ks.particle_rounds, n);
+  }
+}
+TEST(order_phase_allocates_nothing_in_parallel_bit) { order_phase_no_alloc<Arith::Bit>("bit"); }
+TEST(order_phase_allocates_nothing_in_parallel_classA) { order_phase_no_alloc<Arith::ClassA>("A"); }
 
 // negative control of the NaN-row test: bounded scoring that skips the position just below the running first change
 // (test_bound_shrink = 1) consumes unscored values; the test must catch it as an internal_error

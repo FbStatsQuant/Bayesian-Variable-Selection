@@ -32,6 +32,9 @@ template <> class Scorer<Arith::Bit> {
   explicit Scorer(const Data* d) : D(d) {}
   // log m(S) for a sorted feasible S; throws NumericalFailure after the last fallback; |S| > K -> Error(internal_error).
   ScoreOut score(ModelView S);
+  // Capacity only (no value changes): the Cholesky-route buffers for supports up to kmax, so that scoring such a support
+  // inside a parallel region does not allocate (WP6 K2). The QR fallback (rare) still grows its buffers on demand.
+  void reserve(int kmax);
   // Entry t = score(S (+) labels[t]) (symmetric difference). Infeasible (|S u j| > K): logm NaN, route -1.
   // Reference implementation: one full score per label (bits equal by construction). WP3 adds prefix reuse.
   void flip_scores(ModelView S, const int32_t* labels, size_t nl, double* logm_out, int8_t* route_out);

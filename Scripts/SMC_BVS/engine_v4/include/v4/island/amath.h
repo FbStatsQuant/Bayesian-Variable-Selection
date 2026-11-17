@@ -86,7 +86,14 @@ inline void philox8_word(const uint32_t ctr[4], const uint32_t key[2], int word,
   uint32_t k0 = key[0], k1 = key[1];
   for (int r = 0; r < 10; ++r) {
     if (r) { k0 += 0x9E3779B9u; k1 += 0xBB67AE85u; }
+#if defined(__AVX512F__)
+    // K2 (WP3_ARCH_REVIEW §2 lever 4): the lanes hold 32-bit values, so the 32 x 32 -> 64 unsigned multiply of the low
+    // halves (vpmuludq: 1 uop, latency 5) gives the products of the 64-bit lane multiply the generic expression compiles
+    // to with AVX-512DQ (vpmullq: 3 uops, latency 15). Same bits (philox_known_answers / uniform_at lane tests).
+    v8u p0 = (v8u)_mm512_mul_epu32((__m512i)c0, _mm512_set1_epi64(0xD2511F53ll)), p1 = (v8u)_mm512_mul_epu32((__m512i)c2, _mm512_set1_epi64(0xCD9E8D57ll));
+#else
     v8u p0 = c0 * 0xD2511F53ull, p1 = c2 * 0xCD9E8D57ull;     // 32 x 32 -> 64 (lanes hold 32-bit values)
+#endif
     v8u n0 = (p1 >> 32) ^ c1 ^ (uint64_t)k0, n2 = (p0 >> 32) ^ c3 ^ (uint64_t)k1;
     c1 = p1 & M; c3 = p0 & M; c0 = n0; c2 = n2;
   }

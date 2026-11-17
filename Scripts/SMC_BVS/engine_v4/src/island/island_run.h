@@ -262,7 +262,9 @@ class IslandEngine {
 
   // --- U, N_b, I steps at round position `pos` (core/cpp/v3_engine.h:146-192). Returns true if the state changed;
   //     the new state is written to `out`. ----------------------------------------------------------------------
-  bool step_nongibbs(int lab, const Particle& Pc, int i, uint32_t pos, const RoundCtx& rc, ThreadLedger& L, BitScorer& sc, Particle& out);   // island_pm.h
+  bool step_nongibbs(int lab, const Particle& Pc, int i, uint32_t pos, const RoundCtx& rc, ThreadLedger& L, BitScorer& sc, Particle& out,
+                     const Particle* pre = nullptr);   // island_pm.h (pre: the I step's proposal, drawn and scored ahead, K2)
+  void draw_indep(int i, uint32_t pos, const RoundCtx& rc, BitScorer& sc, Particle& out, LmScratch* Z = nullptr);   // island_pm.h
 
   // Round order (core/cpp/v3_engine.h:195-200): Fisher-Yates, uniform of step i at slot m-1-i.
   void draw_order(const RoundCtx& rc, int i, uint32_t* ord);   // island_pm.h
