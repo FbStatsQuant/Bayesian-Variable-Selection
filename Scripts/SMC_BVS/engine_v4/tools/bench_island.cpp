@@ -133,6 +133,7 @@ static int bench_island(int p, int N, const std::vector<int>& thr, KernelKind kk
   if (const char* e = std::getenv("V4_PRODUCTS_BLOCK")) c.products_block = std::atoi(e);
   c.store_parallel_compact = std::getenv("V4_SERIAL_COMPACT") == nullptr; c.allow_test_kernels = true;
   c.check_store_each_step = std::getenv("V4_CHECK_EACH_STEP") != nullptr;   // the pre-O1 behaviour (before/after comparisons)
+  if (const char* e = std::getenv("V4_COST_PATH")) c.cost_path = e;   // D-30 per-step cost record (JSON lines; O2)
   c.seed = 2026; c.island = 1; c.N = N; c.L = L; c.Hm = Hm; c.B = 14; c.kernel = kk; c.G = G; c.tile = Bk; c.store_cap = cap;
   // environment overrides AFTER the defaults (the island id was reset to 1 before: manager 11-16 note 1)
   if (const char* e = std::getenv("V4_ISLAND_ID")) c.island = (uint32_t)std::atoi(e);

@@ -17,6 +17,9 @@ const Json& binary_block_no_self_test();   // the same with self_test = "not run
 enum class BinaryUse { MergeV, MergeTheory, Restart };
 struct BinaryCheck { bool ok; std::string reason; };
 BinaryCheck binary_compatible(const Json& a, const Json& b, BinaryUse use);
+// D-32: the class-A FMA family of two binary blocks (island_fma, else known island_isa names); refuses only two known,
+// different families. MergeV uses it; the merge also checks every island against calib.bin's block.
+BinaryCheck isa_family_compatible(const Json& a, const Json& b);
 void require_binary_compatible(const Json& a, const Json& b, BinaryUse use);   // throws Error(invalid_input)
 // INTERFACES §6 (v0.1.3): throws Error(invalid_input) unless pm::self_test() passes, i.e. log / exp / lgamma return the
 // measured reference bits (Owls = NOTS). Keys on function results, not on the libm file hash. Called by every command

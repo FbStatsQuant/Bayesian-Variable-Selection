@@ -1,3 +1,4 @@
+#include <cmath>
 #include <random>
 #include "tk.h"
 #include "v4/ledger.h"
@@ -93,5 +94,39 @@ TEST(thread_ledgers_equal_serial_ledger) {
       CHECK(isl.top.check_invariants() && isl.lead0.check_invariants() && isl.lead1.check_invariants());
       if (small_caps && nth == 3 && buf == 1) { std::printf("    small caps: %llu offers dropped by the cut-off\n", (unsigned long long)dropped); CHECK(dropped > 0); }
     }
+  }
+}
+
+// PR40 review #2 (WP4 shape): two island ledgers share a model at F and nextafter(F) (class A); Ledger::merge keeps it
+// once with the larger value, the HPM provenance is the smallest key among the events with that larger value, and a
+// store-sum quantity (log Z_T = LSE of the top values) counts the model once.
+TEST(merge_two_islands_same_model_two_values) {
+  const int p = 20; Zobrist z; z.init(p);
+  LedgerConfig cfg; cfg.p = p; cfg.islands = 2; cfg.leaders = false; cfg.fresh_counters = false;
+  const double F = -10.25, Fup = std::nextafter(F, 0.0);
+  Model S = {2, 7}, A = {1}, B = {3, 4};
+  auto ctx = [](uint32_t island, uint32_t particle) {
+    EventCtx c; c.phase = PH_MEASURED; c.mech = ME_GIBBS_FLIP; c.key.seg = SG_FINAL; c.key.unit = island; c.key.xph = 4; c.key.particle = particle; return c; };
+  Ledger i1(cfg), i2(cfg);
+  i1.event(S, z.hash(S), F, 0, F, ctx(1, 5), true);       // island 1: S at F
+  i1.event(A, z.hash(A), -12.0, 0, -12.0, ctx(1, 6), true);
+  i2.event(B, z.hash(B), -13.0, 0, -13.0, ctx(2, 1), true);
+  i2.event(S, z.hash(S), Fup, 0, Fup, ctx(2, 9), true);    // island 2: S at the larger value, later key ...
+  i2.event(S, z.hash(S), Fup, 0, Fup, ctx(2, 3), true);    // ... and an earlier key with the same larger value
+  i1.compact(); i2.compact();
+  for (int order = 0; order < 2; ++order) {
+    Ledger m(cfg);
+    if (order == 0) { m.merge(i1); m.merge(i2); } else { m.merge(i2); m.merge(i1); }
+    m.compact();
+    CHECK(m.top.check_invariants());
+    int copies = 0; double val = 0;
+    for (size_t t = 0; t < m.top.size(); ++t) if (same_model(m.top.model(t), S)) { ++copies; val = m.top.v[t]; }
+    CHECK(copies == 1 && same_bits(val, Fup));
+    CHECK(m.hpmS == S && same_bits(m.hpmF, Fup));
+    CHECK(m.hpm_ev.key.unit == 2 && m.hpm_ev.key.particle == 3);   // smallest key among the events with value Fup
+    // log Z_T over the top store: S once
+    double mx = m.top.v[0], acc = 0; for (double v : m.top.v) acc += std::exp(v - mx);
+    double want = Fup + std::log(1 + std::exp(-12.0 - Fup) + std::exp(-13.0 - Fup));
+    CHECK(m.top.size() == 3 && std::fabs((mx + std::log(acc)) - want) < 1e-12);
   }
 }

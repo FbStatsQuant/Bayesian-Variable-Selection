@@ -4,6 +4,7 @@
   "mode": "V",
   "code_commit": "UNSET-fill-at-freeze",
   "binary": "bin/smcbvs4",
+  "island_isa": "sapphirerapids",
   "core_h_cap": 200,
   "max_task_hours": 2.0,
   "island_throttle": 16,

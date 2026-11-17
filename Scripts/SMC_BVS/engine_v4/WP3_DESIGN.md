@@ -331,7 +331,7 @@ This is the API that WP4's `calib::IslandRunner` calls. It is built after the PR
       VmHWM of one label-major row varied from 220 to 237 MiB against a 243 MiB plan.
   - The plan-bound test requires plan ≥ 1.10 × measured in every row: label-major G 64 / 256 with leaders off / on,
     particle-major on 3 threads, and a calibration island.
-  - The calibrate command passes the expanded `dep::Start` bytes as the inputs term (`island::start_bytes`) until the
+  - The calibrate command passes the Start model (`island::start_bytes_model`, §1.13) as the inputs term until the
     island reads WP2's flat arrays as a view.
 - **Tests.** MEASURED, Owls, 3 threads, `nice -n 19`.
   - `golden_calibration_islands_compat_vs_core`: 10 islands (pilot e = 0; 2 rebuilds × 4 diagnostic islands; pilot
@@ -345,24 +345,154 @@ This is the API that WP4's `calib::IslandRunner` calls. It is built after the PR
   - WP4's R golden with `runner = "wp3"`: the whole calibration through WP3's islands equals `v3_calibrate`, the
     calib.bin round trip included.
 
-### 1.12 Planned (manager-approved 11-16): StartView over WP2's flat setup arrays
-- **What changes.**
-  - The island reads WP2's `setup.h` arrays as a view over the mapped setup.bin instead of expanding them into
-    `dep::Start`.
-  - Arrays read: the partition, `code_ptr` / `logr`, `size_logmass` / `size_cum`, `cond_ptr` / `cond_cum`, `logZbar0`.
-  - `codes_by_size` and `sub_cum` are rebuilt per draw, only for the blocks the draw selects (D-18).
-  - `c0r` is dropped. The 8-lane size-0 test gathers `cond_cum[cond_ptr[b*(K+1) + r]]`: the same comparison, the same
-    bits.
-  - One view type serves both owned storage (tests, bench) and mapped storage.
-  - The memory plan's inputs term becomes the mapped section lengths.
-- **WP2's layout answers (11-16).**
-  - The row index is b·(K+1) + r, b-major. Row (b, r) holds min(m_b, r) + 1 cumulative masses, equal to core's bits,
-    and ends at 1.0.
-  - An all-−∞ row has the same length and holds zeros, so the gather of entry 0 is always in bounds. A valid draw never
-    reaches such a row; debug builds assert this.
-  - Pending HQ: WP2 may move `cond_cum` on demand (`cond_row(b, r)`, same bits). The gather then calls it.
-- **Why.** WP2's ESTIMATE of the sections an island reads at 10⁶ is 4.4–14.1 GB, against 13–38 GB for `dep::Start`.
-- **When.** After WP2's PR #13 merges, built on its `setup.h` types.
+### 1.12 v0.8 (gate P5; plan approved 11-16): StartView, the start law as flat mapped arrays (`include/v4/island/start_view.h`)
+- **What the engine reads.** `StartView`: spans over WP2's setup.bin sections (INTERFACES v0.1.20 §5.1): `blk`, `pos`,
+  `blk_members`, `blk_ptr`, `code_ptr` (J + 1), `logr`, `logprof_ptr` / `logprof`, `logF` ((J+1) × (K+1)), `size_logmass`,
+  `size_cum`, `cond0` (J × (K+1), D-31) and `scalars_f64[0]` = log Z̄₀. The file stays mapped (the view keeps the
+  `fmt::Reader`); nothing of the start law is expanded or copied. The neighbour lists stay an owned CSR copy (≈ 120 MB at 10⁶).
+- **Per draw** (`draw_pi0`, `draw_pi0_fast` overloads; same uniforms, same order, same result as dep's):
+  - block sizes: j = 0 iff u < cond0[b (K+1) + r] (the scan); otherwise the row (b, r) is rebuilt from logprof and logF
+    (D-31 `cond_row`, core/cpp/v3_start.h:140-150) and j = upper_bound. The fast path gathers the 8 scan entries with
+    stride K + 1 (dep's r-major `c0r` is gone);
+  - submodels: the codes of popcount j in increasing order (WP2's static `codes_of_size` for m ≤ 16; enumerated for larger
+    stand-in blocks) and their within-size law from logr (D-18), i = upper_bound;
+  - the arithmetic is dep.h's `cumulative_from_logs` (same loop, long double accumulation) in caller storage.
+- **Scratch.** `StartView::prepare(threads)` sizes one scratch per worker (and warms WP2's code tables); the engine calls it
+  in its constructor, before any parallel region, so a draw allocates nothing. One engine at a time per view.
+- **Two sources, one type.** `map_start_view(setup.bin)` (production: WP2's file) and `StartView::from(dep::Start)` (an owned
+  flat copy: tests, the core goldens, the synthetic benchmarks; `run_island` / `plan_island` / `CalibIslandRunner` keep
+  `dep::Start` overloads that flatten). A setup.bin without WP2's sections (minimal test fixtures) is rebuilt by
+  `load_start` and flattened (`load_start_view(..., mappable = false)`; record `start_source`).
+- **Checks (O(p + J), no allocation).** Section shapes; every block 1..20 members with 2^m codes and min(m, K) + 1 profile rows;
+  `members[blk_ptr[blk[j]] + pos[j]] = j` for every j (one partition); n, p, K equal the data's.
+- **Memory.** The plan's caller-supplied term is the mapped section bytes + the draw scratch + the neighbour lists + a fixed
+  1 MiB (WP2's static code tables and the allocator's overhead; `start_inputs_bytes`), from `read_setup_dims` before the load
+  and equal to `StartView::bytes()` after it (checked: internal_error otherwise). An admitted island no longer holds the expanded
+  Start (closes PR52 MAJOR-2's remaining part). Verifying the file's sections pages the WHOLE setup.bin through the mapping
+  (RssFile ≈ the file, 10.4 GiB at AR 10⁶, not the 6.7 GiB of view sections the plan counts); these are clean, reclaimable file
+  pages, not anonymous memory, and the plan labels say so.
+- **`calibrate` also holds WP4's `SetupView`** (review PR57 MAJOR-1): `wp4io::read_setup` copies logr and the partition arrays
+  (and the three table stores) into owned vectors, and `CalibEval` reads them for the whole calibration. The plan counts them
+  (`setup_view_bytes`: 12 p + 16 (J+1) + 8 C + 8 (K+1) + 4 K + headers; MEASURED 687.3 MB counted vs 687 MB live at p = 10⁵),
+  and `calibrate` / the pilot release the three table stores (`release_table_stores`) once `offer_tables` has copied them into
+  the ledger. One function (`calib_plan.h` `calib_island_plans`) gives the plan to `calibrate`, `v4_pilot_island` and
+  `v4_plan_tables`. The cleaner fix, a SetupView that borrows the mapping, would remove the copy; it is WP4's type.
+- **Loader values** (review PR57 MAJOR-2). `map_start_view` checks what the hashes cannot: the size law is a non-decreasing
+  cumulative in [0, 1] ending at exactly 1 and equal, bit for bit, to the rebuild from logF and the prior; every cond0 entry is
+  in [0, 1] and equals row (b, r)'s first cumulative rebuilt from logprof and logF (D-31); logF, logprof, size_logmass have no
+  NaN or +inf. Cost 0.63 s (1 thread) / 0.23 s (3 threads) at p = 10⁵, about 10× at 10⁶. The draws also clamp (k ≤ K, j ≤ the
+  row, i ≤ the code count), which never acts on a valid file and bounds a malformed one.
+- **Identity** (review PR57 MINOR-3). `map_start_view` and `load_neighbours` take the content hash the plan read; the second
+  open must be that file. The mapping is `MAP_PRIVATE`, read-only. Engine files are written by rename, never in place; an
+  in-place rewrite of an input during a run is outside the contract (a truncation would raise SIGBUS).
+- **Bits.** Unchanged: T3 hashes bit `44a15bfc6fb8d233`, A `d2df149413596a19` (owned path), every core golden, WP4's R
+  golden. On WP2's own setup.bin (`smcbvs4 setup`, AR and BLK): WP2's logprof, logF, size law, log Z̄₀ and cond0 equal the
+  island's rebuild from logr bit for bit, every conditional and within-size row equals dep's, 3,000 draws per path equal
+  (result and uniform order), and V / law / compat islands give the same hash mapped and rebuilt (`tests/test_start_view.cpp`).
+- **Plans with real tables.** `v4_plan_tables` (tools/plan_tables.cpp) prints the final-island, calibration-island,
+  calibrate-task and merge-task plans from a setup.bin or from WP2's `--count-only` accounting (`dims_from_sizes`: the same
+  section formula, pinned equal to a real file's in the test).
+
+### 1.13 v0.7 (manager 11-16, 1M fast-track P4): the `island` command (`src/island/island_cmd.cpp`)
+- **What it runs.** One **final** island r of a fit. Pilot and diagnostic islands run inside `calibrate`, which owns
+  their streams and ledgers (§1.11); `--role` other than `final` is `invalid_input`.
+- **Argument forms** (the same rules as WP4's `merge`, INTERFACES §1; proposed for WP1 to copy into §1):
+  - **Driver form:** `island --manifest island_r.json --out island_r.bin [--threads k] [--mem-budget BYTES]`.
+    - The manifest is authoritative. Inputs are found by base name (`data.bin`, `setup.bin`, `calib.bin`) among its
+      `inputs`, and the mode is its `mode`.
+    - r = `params.id` (the driver's `--set params.id=$R`) or `params.island` (INTERFACES §5.3); seed = `params.seed`;
+      R′ = `params.Rp` (r ≤ R′ is checked).
+    - An explicit `--data/--setup/--calib/--mode/--seed/--island/--id/--Rp` that disagrees is refused (exit 13), in
+      either argument order; agreeing ones are accepted. A manifest whose `command` is not `island` is refused.
+  - **Explicit form:** `island --data D --setup S --calib C --island r --seed s --mode compat|law|V --out island_r.bin
+    [--Rp R] [--threads k] [--mem-budget BYTES | --mem-budget-gb G] [--G g] [--tile t] [--ckpt 0|1] [--ckpt-every-s s]`.
+  - **Plan only:** either form with `--plan-only 1` (no `--out`), which prints the admission plan and does not run.
+    Without files, `--plan-only 1 --mode M --n n --p p [--N --threads --G --k --inputs-bytes]` gives the same plan
+    from sizes (ESTIMATE).
+- **Settings come from calib.bin and the data, never from the arguments:** grid, N, L, Hm, tier, k_store from calib.bin;
+  **B = min(isqrt n, isqrt p, 16) from `calib::budgets(n, p)`**, the budget the calibration ran with (review PR52 MAJOR-3).
+  B is part of the law (the N-swap labels per round: shuffled order, addresses, compat stream use), and a hard-coded 14 is
+  right only for n ≥ 196, p ≥ 196. A conflicting `--B` is `invalid_input`. Plans use the same B.
+  - The calibration's status must be `ok`; its mode must equal the command's mode.
+  - A given N or seed that differs from calib.bin's is refused.
+  - **The manifest freezes the scientific parameters** (seed, id / island, Rp; for `calibrate` also seed, I_max,
+    refine_m). An explicit different value is refused **on either side of `--manifest`** (review PR52 MAJOR-4): `main`
+    copies a manifest's `params` over an earlier explicit value, so it also records the explicit values separately
+    (`args["cli_explicit"]`), and the commands compare those (`include/v4/cmd_args.h`). `merge` (WP4) has the same
+    copy-over hazard for `--Rp` / `--mode`; it can use `cmd::explicit_args()`.
+  - calib.bin's `meta.inputs` must equal the data.bin and setup.bin in use, and setup.bin's must equal data.bin.
+  - Only calib.bin's `meta` and `grid` are read; its stores (GBs at 10⁶) are not loaded. Every section hash is
+    still verified on open.
+- **Kernels (D-21).**
+  - compat: bit form, particle-major, 1 thread (forced), v3 stream 9 + r.
+  - law: bit form, particle-major.
+  - V: class A, label-major.
+- **Memory (INTERFACES §7).** `--mem-budget` is the whole task's memory.
+  - **Admission comes before anything that grows with the setup is allocated** (review PR52 MAJOR-2). The command reads
+    calib.bin's settings, data.bin's n / p / K from its mapped metadata and `read_setup_dims` (setup.bin mapped: the
+    block-size histogram, the section lengths and size_logmass; nothing expanded), plans, and refuses or admits. Only
+    then are the arrays read: `load_data` (X), `load_start`, `load_neighbours`, with every file verified in full.
+  - The plan is `plan_island`'s own rule, from `plan_sizes` + `plan_with_budget` (island.h; `plan_island` calls them,
+    so there is one implementation). Its caller-supplied term is `start_bytes_model(dims)`: an upper-bound model of the
+    expanded `dep::Start` + neighbour lists from the section sizes (payloads, vector headers, ×2 for push_back growth). The
+    same number is used before the load and in the run, so the pre-load refusal and the island's own admission are one
+    decision. Test `start_bytes_model_bounds_start_bytes` pins `start_bytes ≤ model ≤ 3 × start_bytes` (measured 1.05–1.17).
+    StartView (§1.12) replaces the model by the mapped section lengths.
+  - k = max(8, q90(π₀ size) + 1, k_store), with q90 from setup.bin's persisted `size_logmass` (required).
+  - With `--G 0` (the default) and a budget, the island takes the largest G ≤ 256 that fits. It is then admitted iff
+    the G = 1 plan fits.
+  - Over budget, the result is `resource_limit` before the run. island_r.bin is still written with that status, the
+    request's mode and schedule (header mode, `meta.mode`, `grid`, T; review PR52 m6) and no estimate section (GUARD-W);
+    the exit code is 11. `--plan-only` makes the same decision from the same numbers and loads nothing.
+  - **StartView (§1.12) closes the rest:** the admitted island maps the start law (the plan counts the mapped sections);
+    nothing of it is expanded. What remains is WP4's: `calibrate` reads data.bin and `read_setup` (copies of logr, the table
+    stores, ...) before its own plan (PR46 MAJOR-2's reader split; `read_setup_dims` is the cheap half).
+- **Output.**
+  - island_r.bin (island_file.h) with `meta.inputs` = the three content hashes, which is what the merge checks.
+  - island_r.bin is written in every status except `interrupted`.
+  - The record holds status, reason, r, N, T, L, Hm, tier, `mem_plan`, `G_used`, `output_hash` (FNV over the law
+    outputs, = `IslandRun::hash()`), `init_hash`, `logZ` (completed only), `resumed_from_step`, and the seconds
+    (load / island / ckpt / store check / total).
+- **Checkpoints.**
+  - Written to `<out without .bin>.ckpt.{a,b}` (INTERFACES §5.1), every `--ckpt-every-s` seconds (default 600).
+  - **Identity (review PR52 MAJOR-1).** The checkpoint fingerprint includes the data / setup / calib **content hashes**
+    (`IslandConfig::input_id`, `input_identity()`), checked before any state is read: a restart on other inputs is
+    `invalid_input` (exit 13), the checkpoint stays on disk, no island file is written. Test `island_command_resume` changes only
+    the neighbour graph (valid, normal checks all pass; calib.bin's inputs updated), so only the identity tells the runs apart.
+  - **Container (review PR52 m7).** The files are not kind-8 containers: they are a streamed payload (magic `SMCV4CKP`,
+    two generations, FNV checksum, atomic rename) because the store held by an island at 10⁶ is GBs and `fmt::Writer`
+    would hold a second copy of it (its `add_copy` owns its bytes). `smcbvs4 info` therefore cannot read them. A contract
+    amendment to INTERFACES §5.1 (kind 8 = this streamed layout, or a Writer that streams) is requested from WP1 through the
+    manager; no behaviour changes meanwhile.
+  - A rerun of the same command resumes from the newest valid generation. The fingerprint includes the binary, so a
+    resume needs the same executable.
+  - Both generations are removed once island_r.bin is written as completed. They are kept on any other status.
+- **`calibrate --plan-only` (review PR39 MAJOR-2).**
+  - It adds `island_plan`: the largest calibration island (max H and Hm over the tiers the rule can use, leaders, the
+    round-start snapshot), planned as `CalibIslandRunner` admits it under WP4's N-1 rule.
+  - The caller-supplied term is `start_bytes_model` (from `read_setup_dims`: nothing is expanded, also in the run, where
+    the island's admission precedes `load_start`) + the calibration's resident state without the inputs (ledger + export).
+  - `total` is the plan at the G the budget allows; `floor` is the G = 1 plan. The calibration is admitted iff
+    `floor ≤ --mem-budget`, and the driver sizes from it. Over budget, the result is `resource_limit` (exit 11), and the
+    plan is printed all the same (review PR52 m5), so the requester sees the minimum budget when resizing.
+  - Without setup.bin it plans from sizes (k = kbar, setup inputs **not** counted).
+  - `mem_plan.island_budget` (budget − resident with inputs; obsolete since N-1) is removed (review PR39 m6).
+- **Fixed on the way.** `calibrate`'s record held `status: "ok"`, which `main` cannot map: a successful
+  `smcbvs4 calibrate` exited 13 with its record overwritten, and the driver's fill would have refused calib.bin.
+  `status` is now the task status; `cal_status` is the v3 name (ok, schedule_limit, …).
+- **Link graph (review PR39 m4).** `calibrate` and `island` (both forms of the island) live in `v4_cmd`, which links
+  `v4_a` and `v4_bit`. There is no v4_bit ↔ v4_a cycle. WP4's R golden still links `libv4_bit.a` alone.
+- **Tests** (`tests/test_island_cmd.cpp`):
+  - `island_command_end_to_end`: calibrate → island → merge through the binary, per mode. The file equals
+    `run_island` (output hash). In V, 1 thread / G 7 / tile 64 gives the same sections as 3 threads. Theory-mode
+    merges need a clean commit (MergeTheory) and are expected refused on `-dirty` builds.
+  - `island_command_driver_manifest`: driver dry run → `p1m_manifest.py fill --set params.id=3` → the driver's
+    command line. Equal to the explicit form; manifest authority.
+  - `island_command_refusals_and_budget`: the invalid_input cases, admission to the byte, and plans (files, sizes,
+    calibrate N-1 floor).
+  - `island_command_resume`: resume from a checkpoint left by an interrupted island, with the same output; the
+    checkpoints are removed after completion.
+  - `plan_from_sizes_equals_plan_island`.
 
 ---
 

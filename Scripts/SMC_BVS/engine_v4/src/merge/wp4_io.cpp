@@ -1,14 +1,19 @@
 // wp4_io.cpp -- WP4 file I/O and the merge command (see include/v4/wp4_io.h).
 #include "v4/wp4_io.h"
+#include "v4/offer_floor.h"
 
 #include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include <map>
 #include <algorithm>
 #include <chrono>
 #include <cmath>
+#include <limits>
 #include "v4/pmath.h"
 #include "v4/prep.h"
 #include "v4/provenance.h"
+#include "v4/sha256.h"
 #include "v4/stubs.h"
 #include "v4/wp4_terminal.h"
 #include <cstring>
@@ -61,16 +66,22 @@ std::vector<Model> models_checked(const int64_t* ptr, uint64_t np, const int32_t
 }  // namespace
 
 // ---------------------------------------------------------------------------------------------------- generic sections
-void add_store(fmt::Writer& W, Json& meta, const std::string& prefix, const Store& s) {
+void add_store_sections(fmt::Writer& W, const std::string& prefix, const Store& s) {
   if (s.staging() != 0) throw Error(Status::internal_error, "add_store: store " + prefix + " is not compacted");
   W.add(prefix + "_v", s.v); W.add(prefix + "_off", s.off); W.add(prefix + "_len", s.len);
   W.add(prefix + "_hash", s.hash); W.add(prefix + "_pool", s.pool);
+}
+void add_store(fmt::Writer& W, Json& meta, const std::string& prefix, const Store& s) {
+  add_store_sections(W, prefix, s);
   Json d = Json::object(); d["cap"] = u64_json(s.cap); d["order"] = s.ord == Order::HPM ? "HPM" : "LEX"; d["size"] = u64_json(s.size());
   meta["stores"][prefix] = d;
 }
 void read_store(const fmt::Reader& R, const Json& meta, const std::string& prefix, Store& s, int32_t p, int32_t K, const Zobrist* zob) {
   const Json& d = meta.at("stores").at(prefix);
-  s.init(u64_of(d.at("cap")), d.at("order").str() == "HPM" ? Order::HPM : Order::LEX);
+  read_store_sections(R, prefix, u64_of(d.at("cap")), d.at("order").str() == "HPM" ? Order::HPM : Order::LEX, s, p, K, zob);
+}
+void read_store_sections(const fmt::Reader& R, const std::string& prefix, uint64_t cap, Order order, Store& s, int32_t p, int32_t K, const Zobrist* zob) {
+  s.init(cap, order);
   uint64_t n = 0, no = 0, nl = 0, nh = 0, np = 0;
   const double* v = R.get<double>(prefix + "_v", &n);
   const uint64_t* off = R.get<uint64_t>(prefix + "_off", &no);
@@ -84,9 +95,8 @@ void read_store(const fmt::Reader& R, const Json& meta, const std::string& prefi
     check_model(ModelView(pool + off[i], len[i]), p, K, "store " + prefix);
     if (zob && h[i] != zob->hash(ModelView(pool + off[i], len[i]))) throw Error(Status::invalid_input, "store " + prefix + ": hash differs from the model's");
   }
-  for (uint64_t i = 0; i < n; ++i) s.offer(v[i], ModelView(pool + off[i], len[i]), h[i]);
-  s.compact();
-  if (s.size() != n || !s.check_invariants()) throw Error(Status::invalid_input, "store " + prefix + ": not a valid sorted store (I1)");
+  s.load_unique_sorted(n, v, h, off, len, pool, np);   // verifies strict order and one entry per model (I1)
+  if (s.size() != n) throw Error(Status::invalid_input, "store " + prefix + ": not a valid sorted store (I1)");
 }
 void add_models(fmt::Writer& W, const std::string& prefix, const std::vector<Model>& ms) {
   std::vector<int64_t> ptr{0}; std::vector<int32_t> idx;
@@ -198,6 +208,17 @@ std::string write_calib(const std::string& path, const CalibWrite& c) {
     meta["has_hpm"] = false;
     if (c.led->has_hpm) { meta["hpm_incomplete"] = true; meta["hpm_so_far_F"] = c.led->hpmF; meta["hpm_so_far_ev"] = event_json(c.led->hpm_ev); }
   } else meta["has_hpm"] = false;
+  if (ok && c.mode == fmt::M_V) {   // D-29 (v0.1.15 §5.1): tau_cal = the c-th best F over the exported distinct inherited models
+    // the flat export (calibrate's) is selected in place: no copy of the F values (review PR59 MAJOR); only the legacy
+    // vector-of-models path (tests, hand-made calibrations) builds a small array. Non-finite values are refused as
+    // the reader does (invalid_input there, internal_error here: a writer must not produce them)
+    std::vector<double> legacy;
+    const double* Fp; size_t nF;
+    if (c.inherited_flat) { Fp = c.inherited_flat->F.data(); nF = c.inherited_flat->F.size(); }
+    else { for (auto& m : c.inherited) legacy.push_back(m.F); Fp = legacy.data(); nF = legacy.size(); }
+    for (size_t i = 0; i < nF; ++i) if (!std::isfinite(Fp[i])) throw Error(Status::internal_error, "write_calib: a non-finite inherited F");
+    tau_cal_to_meta(meta, tau_cal_of(Fp, nF, c.led ? c.led->top.cap : 0));   // c = the top-store capacity 40p + 1
+  }
   if (ok && c.inherited_flat) {
     const calib::InheritedFlat& f = *c.inherited_flat;
     add_vec_copy(W, "inh_ptr", f.ptr); add_vec_copy(W, "inh_idx", f.idx);
@@ -235,6 +256,45 @@ std::string write_calib(const std::string& path, const CalibWrite& c) {
   W.add_json("meta", meta);
   return W.write(path);
 }
+// D-29 (review PR54 MAJOR-1/2): the semantic check of calib.bin's tau_cal, shared by read_calib and the island command.
+// Reads the inherited arrays through the mapped file (no per-model allocation: at 10^6 there are ~8e7 models):
+//   * ptr / idx / F lengths agree, offsets cover the pool, every model is valid (labels in [0, p), sorted, |S| <= K);
+//   * the inherited models are DISTINCT: strictly increasing in lexicographic order (the exporter's canonical order,
+//     a linear scan), else (a hand-ordered legacy list) a sort of the model indices proves it or refuses duplicates;
+//   * tau_cal is bit-equal to the c-th best F (c = 40p + 1) over those distinct models, -inf below c.
+// Returns tau_cal; throws invalid_input otherwise. A file without tau_cal_hex (older, theory mode) gives -inf; a V-mode
+// file with one is checked; any other mode must not carry a finite one.
+double check_calib_tau_cal(const fmt::Reader& R, const Json& meta, uint32_t mode, int32_t p, int32_t K, const std::string& path) {
+  const double tau = tau_cal_of_meta(meta);
+  if (!meta.contains("tau_cal_hex")) return tau;
+  if (mode != fmt::M_V) { if (tau > -__builtin_huge_val()) throw Error(Status::invalid_input, path + ": tau_cal outside V mode (D-29)"); return tau; }
+  uint64_t np = 0, ni = 0, nF = 0;
+  const int64_t* ptr = R.get<int64_t>("inh_ptr", &np);
+  const int32_t* idx = R.get<int32_t>("inh_idx", &ni);
+  const double* F = R.get<double>("inh_F", &nF);
+  const uint64_t n = np ? np - 1 : 0;
+  if (nF != n) throw Error(Status::invalid_input, path + ": calib: inherited arrays differ in length");
+  if (np && (ptr[0] != 0 || (uint64_t)ptr[np - 1] != ni)) throw Error(Status::invalid_input, path + ": inh: offsets do not cover the pool");
+  for (uint64_t i = 0; i < n; ++i) {
+    if (ptr[i + 1] < ptr[i] || (uint64_t)ptr[i + 1] > ni) throw Error(Status::invalid_input, path + ": inh: offsets not monotone or past the pool");
+    check_model(ModelView(idx + ptr[i], (uint32_t)(ptr[i + 1] - ptr[i])), p, K, "inh");
+    need_finite(F[i], path + ": inh_F");
+  }
+  auto M = [&](uint64_t i) { return ModelView(idx + ptr[i], (uint32_t)(ptr[i + 1] - ptr[i])); };
+  bool strict = true;
+  for (uint64_t i = 1; i < n && strict; ++i) strict = lex_less(M(i - 1), M(i));
+  if (!strict) {   // not the canonical order: distinctness by sorting the indices (small files / legacy lists only)
+    // bounded: the exporter's flat list is canonical (the scan above); an unordered list is a legacy / hand-made file, and
+    // its index sort must not become a large allocation before the island's admission (4 B per model)
+    if (n > calib_unordered_limit()) throw Error(Status::invalid_input, path + ": more than " + std::to_string(calib_unordered_limit()) + " inherited models and not in canonical (lexicographic) order");
+    std::vector<uint32_t> ord(n); for (uint64_t i = 0; i < n; ++i) ord[i] = (uint32_t)i;
+    std::sort(ord.begin(), ord.end(), [&](uint32_t a, uint32_t b) { return lex_less(M(a), M(b)); });
+    for (uint64_t i = 1; i < n; ++i) if (!lex_less(M(ord[i - 1]), M(ord[i]))) throw Error(Status::invalid_input, path + ": inherited models are not distinct (D-29: tau_cal is over distinct models)");
+  }
+  const double t = tau_cal_of(F, n, 40ull * (uint64_t)p + 1);   // radix select over the mapped values: no copy
+  if (f64_hex(t) != f64_hex(tau)) throw Error(Status::invalid_input, path + ": tau_cal is not the c-th best F of the distinct inherited models (D-29)");
+  return tau;
+}
 CalibIn read_calib(const std::string& path, int32_t p, int32_t K, const std::string& data_hash, const std::string& setup_hash) {
   fmt::Reader R(path);
   if (R.kind() != fmt::K_CALIB) throw Error(Status::invalid_input, path + ": not a calib file");
@@ -259,7 +319,8 @@ CalibIn read_calib(const std::string& path, int32_t p, int32_t K, const std::str
       throw Error(Status::invalid_input, path + ": meta.inputs differ from the data / setup in use");
   }
   if (c.status == "ok") {
-    if (!c.meta.contains("k_store") || !std::isfinite(c.meta.at("k_store").num()) || !(c.meta.at("k_store").num() > 0))
+    if (!c.meta.contains("k_store") || c.meta.at("k_store").type() != Json::NUM ||   // a NaN is written as the string "NaN"
+        !std::isfinite(c.meta.at("k_store").num()) || !(c.meta.at("k_store").num() > 0))
       throw Error(Status::invalid_input, path + ": k_store (calibration mean stored |S|) missing or not finite and > 0");
     c.k_store = c.meta.at("k_store").num();
   } else return c;   // a non-ok calib.bin exposes no inherited models
@@ -275,6 +336,7 @@ CalibIn read_calib(const std::string& path, int32_t p, int32_t K, const std::str
     need_finite(iF[i], path + ": inh_F"); need_finite(ilg0[i], path + ": inh_lg0"); need_finite(ilogm[i], path + ": inh_logm");
     c.inherited.push_back({im[i], iF[i], ilg0[i], ilogm[i]});
   }
+  c.tau_cal = check_calib_tau_cal(R, c.meta, c.mode, p, K, path);   // D-29: over the DISTINCT inherited models (review PR54 MAJOR-1/2)
   return c;
 }
 
@@ -347,6 +409,11 @@ merge::IslandHead head_island(const std::string& path, int r, const Expect& ex, 
     h.logZ = h.status == Status::completed ? R.vec<double>("logZ").at(0) : 0.0;
     h.content_hash = R.content_hash();
     { uint64_t ne = 0, npool = 0; R.get<uint16_t>("top_len", &ne); R.get<int32_t>("top_pool", &npool); h.store_entries = ne; h.store_pool = npool; }
+    { const OfferFloor of = offer_floor_of_meta(meta, path); h.floor = of.f; h.floor_calib = of.calib;   // D-29 (malformed -> corrupt)
+      // review PR54 MINOR: meta.mode must agree with the container header, and a finite floor needs meta.mode = V (INTERFACES v0.1.17 §7)
+      const std::string mm = meta.contains("mode") && meta.at("mode").type() == Json::STR ? meta.at("mode").str() : "";
+      if (!mm.empty() && mm != fmt::mode_name(R.mode())) throw Error(Status::invalid_input, path + ": meta.mode '" + mm + "' differs from the container header's mode");
+      if (of.f > -__builtin_huge_val() && mm != "V") throw Error(Status::invalid_input, path + ": an offer floor needs meta.mode = V (D-29)"); }
     if (binary_out) *binary_out = meta.at("binary");
     h.load = merge::Load::ok;
   } catch (const std::exception& e) {
@@ -387,9 +454,10 @@ merge::IslandIn load_island_full(const std::string& path, int Rp, int p, const E
       // review PR20 re-check n-1: a wrong hash would let duplicates of one model into the merged store
       if (ex.zob && hh[i] != ex.zob->hash(ModelView(pool + off[i], len[i]))) throw Error(Status::invalid_input, "top store: hash differs from the model's");
     }
-    for (uint64_t i = 0; i < n; ++i) I.led.top.offer(v[i], ModelView(pool + off[i], len[i]), hh[i]);
-    I.led.top.compact();
-    if (I.led.top.size() != n || !I.led.top.check_invariants()) throw Error(Status::invalid_input, "top store not sorted / unique (I1)");
+    // bulk load (PR40 review follow-up): an island file's store is already sorted and unique; load_unique_sorted verifies
+    // that (strict order, one entry per model) and throws invalid_input otherwise, with no compactions
+    I.led.top.load_unique_sorted(n, v, hh, off, len, pool, np);
+    if (I.led.top.size() != n) throw Error(Status::invalid_input, "top store not sorted / unique (I1)");
   }
   { std::vector<int32_t> hs = R.vec<int32_t>("hpm_S"); std::vector<double> hv = R.vec<double>("hpm_val"); std::vector<int64_t> ev = R.vec<int64_t>("hpm_ev");
     if (hv.size() != 2 || ev.size() != 12) throw Error(Status::invalid_input, "hpm_val / hpm_ev size");
@@ -471,10 +539,24 @@ void check_binaries(std::vector<merge::IslandSlot>& slots, const std::vector<Jso
   check_binaries(h, blocks, mode);
   for (size_t i = 0; i < slots.size(); ++i) if (h[i].load == merge::Load::binary_mismatch) { slots[i].load = h[i].load; slots[i].detail = h[i].detail; }
 }
+void FileIslandSource::check_offer_floors(bool v_mode, const std::string& calib_hash, double tau_cal, double pre_cutoff) {
+  for (size_t i = 0; i < heads_.size(); ++i) {
+    if (heads_[i].load != merge::Load::ok) continue;
+    const std::string why = merge::offer_floor_refusal(heads_[i], v_mode, calib_hash, tau_cal, pre_cutoff);
+    if (!why.empty()) { heads_[i].load = merge::Load::floor_refused; heads_[i].detail = "island " + std::to_string(i + 1) + ": " + why + " (D-29)"; }
+  }
+}
 FileIslandSource::FileIslandSource(std::vector<std::string> paths, const Expect& ex, int Rp, int p) : paths_(std::move(paths)), ex_(ex), Rp_(Rp), p_(p) {
-  std::vector<Json> blocks(paths_.size());
-  for (size_t r = 1; r <= paths_.size(); ++r) heads_.push_back(head_island(paths_[r - 1], (int)r, ex, &blocks[r - 1]));
-  check_binaries(heads_, blocks, ex.mode);
+  blocks_.assign(paths_.size(), Json());
+  for (size_t r = 1; r <= paths_.size(); ++r) heads_.push_back(head_island(paths_[r - 1], (int)r, ex, &blocks_[r - 1]));
+  check_binaries(heads_, blocks_, ex.mode);
+}
+void FileIslandSource::check_calib_isa(const Json& calib_block) {   // D-32 (review PR55 m3): calib.bin and the islands, one FMA family
+  for (size_t i = 0; i < heads_.size(); ++i) {
+    if (heads_[i].load != merge::Load::ok) continue;
+    const BinaryCheck bc = isa_family_compatible(calib_block, blocks_[i]);
+    if (!bc.ok) { heads_[i].load = merge::Load::binary_mismatch; heads_[i].detail = "island " + std::to_string(i + 1) + " vs calib.bin: " + bc.reason; }
+  }
 }
 merge::IslandIn FileIslandSource::load(int r) {
   try { return load_island_full(paths_[(size_t)r - 1], Rp_, p_, ex_); }
@@ -509,25 +591,90 @@ EventCtx SetupView::table_event_of(const Model& S) const {
   for (int32_t j : S) { if (blk[(size_t)j] != b) throw Error(Status::invalid_input, "table store model spans blocks"); code |= 1u << pos[(size_t)j]; }
   return merge::table_event(b, code);
 }
+namespace {
+std::string setup_data_hash(const Json& meta) {
+  if (meta.contains("inputs") && meta.at("inputs").contains("data.bin") && meta.at("inputs").at("data.bin").type() == Json::STR) return meta.at("inputs").at("data.bin").str();
+  return "";
+}
+// the pi_0 size law (calibrate's memory plan, INTERFACES §7): K + 1 log masses summing to 1
+std::vector<double> checked_size_logmass(const double* q, uint64_t c, int32_t K, const std::string& w) {
+  std::vector<double> v(q, q + c);
+  check_size_logmass(v, K, w);
+  return v;
+}
+}  // namespace
+void check_size_logmass(const std::vector<double>& v, int32_t K, const std::string& w) {
+  if (v.size() != (size_t)K + 1) throw Error(Status::invalid_input, w + "size_logmass length != K + 1");
+  long double tot = 0;
+  for (double x : v) {
+    if (std::isnan(x) || x == std::numeric_limits<double>::infinity() || x > 1e-9) throw Error(Status::invalid_input, w + "size_logmass not a log probability");
+    tot += std::exp((long double)x);
+  }
+  if (std::fabs((double)tot - 1.0) > 1e-6) throw Error(Status::invalid_input, w + "size_logmass does not sum to 1");
+}
+namespace {
+// One small section, checked against its table hash (the Reader was opened without verify_all). Refuses a section
+// longer than `max_bytes`, so a plan read stays bounded whatever the file claims.
+void check_small_section(const fmt::Reader& R, const std::string& name, const void* q, uint64_t max_bytes, const std::string& w) {
+  const fmt::SectionEntry& e = R.entry(name);
+  if (e.length > max_bytes) throw Error(Status::invalid_input, w + "section " + name + " too long for a plan read");
+  auto h = sha256(q, (size_t)e.length);
+  if (std::memcmp(h.data(), e.sha256, 32) != 0) throw Error(Status::invalid_input, w + "section " + name + " hash mismatch");
+}
+// a JSON section read with pread (Reader::json has no raw view), checked against its hash, then parsed
+Json small_json(const fmt::Reader& R, const std::string& path, const std::string& name, const std::string& w) {
+  const fmt::SectionEntry& e = R.entry(name);
+  if (e.dtype != fmt::D_JSON) throw Error(Status::invalid_input, w + "section " + name + " is not json");
+  constexpr uint64_t MAXJ = 16ull << 20;
+  if (e.length > MAXJ) throw Error(Status::invalid_input, w + "section " + name + " too long for a plan read");
+  std::string txt((size_t)e.length, '\0');
+  int fd = ::open(path.c_str(), O_RDONLY);
+  if (fd < 0) throw Error(Status::invalid_input, "cannot open " + path);
+  ssize_t got = ::pread(fd, txt.data(), (size_t)e.length, (off_t)e.offset);
+  ::close(fd);
+  if (got != (ssize_t)e.length) throw Error(Status::io_error, w + "short read of section " + name);
+  check_small_section(R, name, txt.data(), MAXJ, w);
+  return Json::parse(txt);
+}
+uint64_t stat_bytes(const std::string& p) { struct stat st{}; return ::stat(p.c_str(), &st) == 0 ? (uint64_t)st.st_size : 0; }
+}  // namespace
+
+DataPlanHead read_data_plan(const std::string& path) {
+  fmt::Reader R(path, /*verify=*/false);   // header + table (hash-checked), no section read
+  const std::string w = path + ": ";
+  if (R.kind() != fmt::K_DATA) throw Error(Status::invalid_input, path + " is not a data file");
+  Json m = small_json(R, path, "meta", w);
+  DataPlanHead h; h.content_hash = R.content_hash(); h.file_bytes = stat_bytes(path);
+  if (!m.contains("n") || !m.contains("p") || !m.contains("K")) throw Error(Status::invalid_input, w + "meta has no n / p / K");
+  h.n = m.at("n").i64(); h.p = m.at("p").i64(); const int64_t K = m.at("K").i64();
+  if (h.n < 3 || h.p < 1 || h.p > ((int64_t)1 << 31) - 1 || K < 0 || K > h.p) throw Error(Status::invalid_input, w + "bad n / p / K");
+  h.K = (int32_t)K;
+  return h;
+}
 SetupView read_setup(const std::string& path, int32_t p, int32_t K, const Zobrist* zob) {
   fmt::Reader R(path);
   if (R.kind() != fmt::K_SETUP) throw Error(Status::invalid_input, path + ": not a setup file");
   SetupView s; s.content_hash = R.content_hash();
   Json meta = R.json("meta");
-  if (meta.contains("inputs") && meta.at("inputs").contains("data.bin") && meta.at("inputs").at("data.bin").type() == Json::STR) s.data_hash = meta.at("inputs").at("data.bin").str();
+  s.data_hash = setup_data_hash(meta);
   s.blk = R.vec<int32_t>("blk"); s.pos = R.vec<int32_t>("pos"); s.code_ptr = R.vec<int64_t>("code_ptr"); s.logr = R.vec<double>("logr");
   s.blk_ptr = R.vec<int64_t>("blk_ptr"); s.blk_members = R.vec<int32_t>("blk_members"); s.mode_S = R.vec<int32_t>("mode_S");
   // shapes (review PR20 M-2): blk / pos / members over p columns; blocks of 1..20 members (B <= 16, table codes < 2^20);
   // members[blk_ptr[b] + pos[j]] = j; each block's table fits in logr; logr finite for every code with |U| <= K
   const std::string w = path + ": ";
   if (s.blk.size() != (size_t)p || s.pos.size() != (size_t)p || s.blk_members.size() != (size_t)p) throw Error(Status::invalid_input, w + "blk / pos / blk_members length != p");
-  const size_t J = s.code_ptr.size();
-  if (s.blk_ptr.size() != J + 1 || s.blk_ptr[0] != 0 || s.blk_ptr[J] != p) throw Error(Status::invalid_input, w + "blk_ptr shape");
+  // INTERFACES v0.1.19 §2/§5: J blocks; blk_ptr and code_ptr both have J + 1 entries (CSR); code_ptr[0] = 0, block b's
+  // table is logr[code_ptr[b] .. code_ptr[b + 1]) = 2^m codes, code_ptr[J] = |logr|
+  if (s.blk_ptr.empty() || s.code_ptr.size() != s.blk_ptr.size()) throw Error(Status::invalid_input, w + "code_ptr must have J + 1 entries like blk_ptr");
+  const size_t J = s.blk_ptr.size() - 1;
+  if (J == 0 || s.blk_ptr[0] != 0 || s.blk_ptr[J] != p) throw Error(Status::invalid_input, w + "blk_ptr shape");
+  if (s.code_ptr[0] != 0 || s.code_ptr[J] != (int64_t)s.logr.size()) throw Error(Status::invalid_input, w + "code_ptr[0] != 0 or code_ptr[J] != |logr|");
   for (size_t b = 0; b < J; ++b) {
     const int64_t m = s.blk_ptr[b + 1] - s.blk_ptr[b];
     if (m < 1 || m > 20) throw Error(Status::invalid_input, w + "block size outside 1..20");
     const int64_t c0 = s.code_ptr[b];
     if (c0 < 0 || (uint64_t)c0 > s.logr.size() || (uint64_t)(1ull << m) > s.logr.size() - (uint64_t)c0) throw Error(Status::invalid_input, w + "code_ptr / logr out of range");
+    if (s.code_ptr[b + 1] - c0 != (int64_t)(1ull << m)) throw Error(Status::invalid_input, w + "code_ptr: block table length != 2^m");
     for (uint32_t c = 0; c < (1u << m); ++c) if (__builtin_popcount(c) <= K && !std::isfinite(s.logr[(size_t)c0 + c])) throw Error(Status::invalid_input, w + "logr not finite for a code with |U| <= K");
   }
   for (int32_t j = 0; j < p; ++j) {
@@ -537,21 +684,27 @@ SetupView read_setup(const std::string& path, int32_t p, int32_t K, const Zobris
     if (s.blk_members[(size_t)(s.blk_ptr[(size_t)b] + q)] != j) throw Error(Status::invalid_input, w + "blk / pos / blk_members inconsistent");
   }
   check_model(s.mode_S, p, K, w + "mode_S");
-  read_store(R, meta, "tstore_top", s.ttop, p, K, zob);
-  if (R.has("tstore_lead0_v")) read_store(R, meta, "tstore_lead0", s.tlead0, p, K, zob);
-  if (R.has("tstore_lead1_v")) read_store(R, meta, "tstore_lead1", s.tlead1, p, K, zob);
+  if (R.has("size_logmass")) { uint64_t c = 0; const double* q = R.get<double>("size_logmass", &c); s.size_logmass = checked_size_logmass(q, c, K, w); }
+  // table stores: caps and orders from INTERFACES §4.1 (top 40p + 1 HPM, lead0 / lead1 20p LEX); setup.bin carries no
+  // meta.stores (v0.1.19), the tstore_* sections are all there is. A stray meta.stores is ignored.
+  read_store_sections(R, "tstore_top", 40ull * (uint64_t)p + 1, Order::HPM, s.ttop, p, K, zob);
+  if (R.has("tstore_lead0_v")) read_store_sections(R, "tstore_lead0", 20ull * (uint64_t)p, Order::LEX, s.tlead0, p, K, zob);
+  if (R.has("tstore_lead1_v")) read_store_sections(R, "tstore_lead1", 20ull * (uint64_t)p, Order::LEX, s.tlead1, p, K, zob);
   for (const Store* st : {&s.ttop, &s.tlead0, &s.tlead1})   // table models lie within one block
     for (size_t i = 0; i < st->size(); ++i) { ModelView v = st->model(i); s.table_event_of(Model(v.begin(), v.end())); }
   return s;
 }
 std::string write_setup_min(const std::string& path, const SetupView& s, const Json& inputs) {
+  if (s.code_ptr.empty() || s.code_ptr.size() != s.blk_ptr.size() || s.code_ptr.back() != (int64_t)s.logr.size())
+    throw Error(Status::internal_error, "write_setup_min: code_ptr must have J + 1 entries with code_ptr[J] = |logr| (INTERFACES v0.1.19)");
   fmt::Writer W(fmt::K_SETUP, fmt::M_COMPAT);
   Json meta = Json::object();
   W.add("blk", s.blk); W.add("pos", s.pos); W.add("code_ptr", s.code_ptr); W.add("logr", s.logr);
   W.add("blk_ptr", s.blk_ptr); W.add("blk_members", s.blk_members); W.add("mode_S", s.mode_S);
-  add_store(W, meta, "tstore_top", s.ttop);
-  if (s.tlead0.cap) add_store(W, meta, "tstore_lead0", s.tlead0);
-  if (s.tlead1.cap) add_store(W, meta, "tstore_lead1", s.tlead1);
+  if (!s.size_logmass.empty()) W.add("size_logmass", s.size_logmass);
+  add_store_sections(W, "tstore_top", s.ttop);   // no meta.stores in setup.bin (INTERFACES v0.1.19)
+  if (s.tlead0.cap) add_store_sections(W, "tstore_lead0", s.tlead0);
+  if (s.tlead1.cap) add_store_sections(W, "tstore_lead1", s.tlead1);
   meta["inputs"] = inputs; meta["binary"] = binary_block(); meta["writer"] = "wp4 write_setup_min (test/harness; WP2 owns setup.bin)";
   W.add_json("meta", meta);
   return W.write(path);
@@ -671,6 +824,8 @@ std::string write_fit(const std::string& path, const FitWrite& f, Json* record) 
     Json& rec = *record;
     rec["status"] = status_name(fo.status); rec["fit_state"] = fo.fit_state; rec["reason"] = fo.reason;
     rec["estimates_available"] = fo.estimates_available; rec["fit_bin"] = h; rec["inputs"] = f.inputs;
+    rec["timings"] = f.timings;   // seconds (T5: merge, tail local search, LS0; WP7 O5)
+    rec["island_isa"] = binary_block().contains("island_isa") ? binary_block().at("island_isa") : Json("unknown");   // D-32 (4)
     if (fo.has_hpm) rec["hpm_F"] = fo.hpm_F;
     if (fo.estimates_available) { rec["logZ"] = fo.log_Z; rec["logZ_T"] = fo.log_Z_T; rec["R_eff"] = fo.R_eff; }
   }
@@ -832,11 +987,13 @@ Json run(const Json& args) {
   ex.grid = C.grid; ex.L = C.L; ex.Hm = C.Hm; ex.K = D.K; ex.tier = C.tier; ex.zob = &D.zob;
   for (int r = 0; r < R; ++r) ex.island_hash.push_back(want(in.islands[(size_t)r]));
   wp4io::FileIslandSource src(in.islands, ex, R, D.p);   // pass 1: heads + binary check
+  if (mode == fmt::M_V && C.meta.contains("binary")) src.check_calib_isa(C.meta.at("binary"));   // D-32: the islands' family = calib.bin's
   LedgerConfig cfg; cfg.p = D.p; cfg.islands = R; cfg.leaders = false; cfg.fresh_counters = false;   // v0.1.7: no final-run leaders
   Ledger pre(cfg);
   wp4io::offer_tables(pre, S, D.K, D.zob);
   offer_inherited(pre, C.inherited, C.has_hpm, C.hpm, C.hpm_ev, D.zob);
   pre.compact();
+  src.check_offer_floors(mode == fmt::M_V, C.content_hash, C.tau_cal, pre.top.cutoff());   // D-29: refused islands -> GUARD-W
   MergeSettings ms;
   ms.Rp = R; ms.N = C.N; ms.p = D.p; ms.K = D.K; ms.tier = C.tier;
   ms.ell = (int)nget(args, "ell", ceil_log2((double)D.n + D.p + 1));
@@ -873,6 +1030,8 @@ Json run(const Json& args) {
   // review PR20 m-1: the content hash actually read ("" only for a file that could not be read)
   for (int r = 0; r < R; ++r) fw.inputs["island_" + std::to_string(r + 1) + ".bin"] = src.heads()[(size_t)r].content_hash;
   fw.timings["merge_tail_seconds"] = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
+  // T5 (WP7 O5): the parts -- island stream + merge, final local search (tail), LS0
+  fw.timings["merge_islands_seconds"] = fo.t_islands; fw.timings["tail_local_seconds"] = fo.t_local; fw.timings["ls0_seconds"] = fo.t_ls0;
   Json rec = Json::object();
   wp4io::write_fit(in.out, fw, &rec);
   rec["command"] = "merge"; rec["Rp"] = R;
