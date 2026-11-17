@@ -178,22 +178,22 @@ the shape of the posterior or of the output is proved here; the theorem describe
 (hypotheses :63-75; conclusions 1–3 at :80-85).
 Registry status of `W3-POST:Thm-1@1.0.1`, verbatim: **"PROVED-CHECKED; council C3, MANIFEST 420c1cb0…, astra=8.8 PASS, opus=8.7 PASS"**.
 Registry status of `SOP:TH09@1.0.2` (main 6cd699dd, W3-T03ACC accepted) [REG-6cd6], verbatim: **"PROVED-CHECKED (T03♯ only: the conjunction of W3-T03ACC:T03S.1–T03S.4, clause map CHECKPOINT_4.md §2; council R1, MANIFEST 9714aea4…, astra=9.5 PASS, opus=9.4 PASS; LC-A, LC-B, LC-C VERIFIED). Not upgraded (their statuses stay as at theory_main.tsv:68): T02(i♯) and T02(ii♯) PROVED, SF/XF VERIFIED; T01–T03 PROVED-LOCKED (wave 3; external review queued), SAME-FAMILY-ONLY"** [S1-F9]. Theorem 1 (T03♯) is therefore PROVED-CHECKED through `SOP:TH09`; the `W3-POST:Thm-1` row keeps its
-older label (recorder item, card "What blocks" (1)).
+Thm-1 therefore carries the label above and no open condition.
 **Re-base [H5-1].** Expectation display: `W3-POST2:C@1.0.6`, `Theory_work/Wave3/W3-POST2/STATEMENT.md:83-94`, case (i)
 (hypotheses = Theorem 1's: R1 size conditions, G, (E), (F₀), (F_λ), (F_w), BM($c$), $c>c_0$, all "at that $n$"; HPM/MPM
 bounds $P(\cdot\neq S_0)\le2E\delta_n$ at :91). Theorem 1′: `W3-POST2:E@1.0.6` (:126-133) with `W3-POST2:C` case (iii),
 and `W3-POST2:A0@1.0.6` (`lemmas/A_occam.md:14-15`) for (F_w) ⇒ (OS). Remark (o): `W3-POST2:A1@1.0.6` (:54-56).
-Registry statuses (main 6cd699dd, TH09/TH128 conditions discharged), verbatim [REG-6cd6]: `W3-POST2:C@1.0.6` **"PROVED-CHECKED, conditional on W3-POST:Prop-LB, W2-APP:POST"**; `W3-POST2:E@1.0.6` **"PROVED-CHECKED, conditional on
-W2-APP:POST, W3-POST:Thm-1"**; `W3-POST2:A1@1.0.6` **"PROVED-CHECKED, conditional on W2-APP:POST"**;
+Registry statuses (main 2676e71f: relabel, Thm-1 conditions discharged), verbatim [REG-2676]: `W3-POST2:C@1.0.6` **"PROVED-CHECKED, conditional on W3-POST:Prop-LB, W2-APP:POST"**; `W3-POST2:E@1.0.6` **"PROVED-CHECKED, conditional on
+W2-APP:POST"**; `W3-POST2:A1@1.0.6` **"PROVED-CHECKED, conditional on W2-APP:POST"**;
 `W3-POST2:A0@1.0.6` **"PROVED-CHECKED"**; `W2-APP:POST@1.0.7` **"PROVED-CHECKED"**. W3-T03ACC passed: **Form A applies**
-(below). The expectation route still lists `W3-POST:Prop-LB` and `[L1a′]` ("PROVED (by this seat, unchecked)").
+(below). The expectation route (`W3-POST2:C`) still lists `W3-POST:Prop-LB` ("PROVED (by this seat, unchecked)"); `[L1a′]` is no longer a listed condition.
 
 ### Abstract forms of row 1.1 (HQ order 2026-11-16; outcome: **Form A**, W3-T03ACC accepted, main 6cd699dd) [REG-f526, REG-6cd6]
 - **Form A — W3-T03ACC passes (T03♯ PROVED-CHECKED).** The abstract states Theorem 1 in its $O_P$ form (rate,
   HPM = MPM = $S_0$, PIPs), whose master then carries no open condition. The design-uniform expectation display and
   Theorem 1′ are stated in the body with their own conditions until those are cleared: the expectation route
-  (`W3-POST2:C`) also lists `W3-POST:Prop-LB` (author-only; implied by the checked `W3-PSHARP:B` — recorder item),
-  `[L1a′]` (unchecked) and `W2-APP:POST` (now "PROVED-CHECKED"; `SOP:TH128` discharged, main 6cd699dd).
+  (`W3-POST2:C`) also lists `W3-POST:Prop-LB` (author-only; implied by the checked `W3-PSHARP:B` — recorder item)
+  and `W2-APP:POST` (now "PROVED-CHECKED"; `SOP:TH128` discharged, main 6cd699dd; `[L1a′]` no longer listed, main 2676e71f).
 - **Form B — not used (W3-T03ACC passed; kept for the record).** Two variants:
   - **B1 (abstract, condition stated verbatim in reader words):** *"Conditional on the posterior concentration theorem
     for the coded prior — verified independently by reviewers of the same and of a different model family, but without
@@ -250,6 +250,7 @@ as a post-freeze rider — it would make "no eigenvalue condition off $S_0$" lit
 - FRZ-RQ 2026-11-16: [REG-6cd6] freeze requote (main 14892123): `SOP:TH09@1.0.2` PROVED-CHECKED (W3-T03ACC accepted, 6cd699dd); POST2 C/E/A1/A0 @1.0.5 with TH09/TH128 dropped; Form A applies. Statuses only (EQUAL).
 - R1 2026-11-16: council R1 fixes — [R1-S3] lower-bound remark (vi) and (A2) line restricted to $s_0\le\min(K-1,p/2)$ (WEAKER: restores the master's domain); [R1-F3] remark (vii) relabelled an Engineering observation, mechanism sentence removed (WEAKER); [R1-E5] status base line (EQUAL).
 - R2-ED 2026-11-16: [R2-O2] remark (vi) domain pointer: $s_0\le K-1$ via Corollary B or Prop. LB (EQUAL).
+- FRZ-B 2026-11-16: requote at main 2676e71f [REG-2676] (relabel D97): `W3-POST:Thm-1@1.0.1` "PROVED-CHECKED; council C3, …"; POST2 C/E/A0/A1 @1.0.6 with the Thm-1 and [L1a′] conditions dropped; EQUAL (statuses only).
 <!-- ROW thm1 END -->
 
 ---
@@ -316,6 +317,7 @@ row 1.1 applies here too.
 - v0.4 2026-11-16: [REG-33e1] SL0 cleared: `W2-APP:POST@1.0.7` conditional on SOP:TH09 only (EQUAL).
 - FRZ-RQ 2026-11-16: [REG-6cd6] `W2-APP:POST@1.0.7` "PROVED-CHECKED"; T03♯ discharged; Form A. Statuses only (EQUAL).
 - R1 2026-11-16: [R1-E6] B2.1 constant harmonised with R1 (EQUAL).
+- FRZ-B 2026-11-16: requote at main 2676e71f [REG-2676] (relabel D97): `W3-POST:Thm-1@1.0.1`; EQUAL (statuses only).
 <!-- ROW thm2 END -->
 
 ---
@@ -535,7 +537,7 @@ Fixed-design form: `W3-MISR:MIS(i)@1.0.1` (:110-123), **"PROVED-CHECKED, conditi
 | B4.0 | (A0) ⇒ CorGb-plus setting | NEW (one line) | take no explicit omitted columns, ε := y^r − α′1 − X_𝒞β^𝒞: given X_𝒞 it is N_n(0, σ²_𝒞I), hence independent of X_𝒞 ((N) with q = 0; (OV) with γ = 0, τ² = 0). The Example is `CorG-min` (E1) (and (E2) for the linear-plus-noise sentence) |
 | B4.1 | (A2) size 3(A+1)(s+1)log n ⇒ CorGb-plus's \|T\| ≤ s + max(j₀, m♯_n), for all large n | NEW arithmetic (as current B4.1) | unchanged arithmetic; the floor is now on R; sufficient for the O(·) conclusions |
 | B4.2 | (A3) = CorGb-plus's signal conditions (→ ∞ branch of its liminf condition) | identity | `STATEMENT.md` §3 |
-| B4.3 | POST2 C, E, A1, A0 (and D for the remark) | EXISTS-CHECKED, conditional (A0 unconditional) | recorded at main f526e45b; `SOP:TH09`/`TH128` discharged (main 6cd699dd); C still conditional on `W3-POST:Prop-LB`, [L1a′] (§1) [REG-f526, REG-6cd6] |
+| B4.3 | POST2 C, E, A1, A0 (and D for the remark) | EXISTS-CHECKED, conditional (A0 unconditional) | recorded at main f526e45b; `SOP:TH09`/`TH128` discharged (main 6cd699dd); C still conditional on `W3-POST:Prop-LB` (§1; [L1a′] no longer listed, main 2676e71f) [REG-f526, REG-6cd6] |
 | B4.4 | Remark ⇒ CorH-U (RD) with 𝒦^♭_n := 𝒦^λ_n(s, A, 2M₀+1, (c_R/8)^{1/2}, C_OS, c) ((UP) by MIS(i) + Markov) and the events 𝒜_n of CorGb-plus's proof (P(𝒜_n) → 1); contraction sentence for a fixed design ⇒ CorH-plus (a′), (KL), with the premise δ_n → 0 in probability; uniform sentence ⇒ CorH-U (U-a), with its premise (UP); "fixed-design version of the theorem, uniform over the residual variance" ⇒ W3-MISR:MIS(i)@1.0.0 (BASE `STATEMENT.md:110-114`, constants free of v) | NEW (composition; the random-design part is `CorH-U` clause (G), STATEMENT §5) | the Hellinger rate M_n/√n and KL rate M_n/n are the sets H^a, K^a; the reference is centred (STATEMENT §1: μ(κ) = Cxβ) [R1] |
 
 ### Honest limits
@@ -559,6 +561,7 @@ conditions.
   Example, the jointly Gaussian case with invertible $\Sigma_{\mathcal C\mathcal C}$ was already present, and the
   pseudoinverse and linear-plus-noise cases are the new (STRONGER) scope.
 - FRZ-RQ 2026-11-16: [REG-6cd6] MIS(i)/(i′)/(ii), Cor-G(b) @1.0.1 and MISR-R CorGb-plus/CorG-min/CorH-plus/CorH-U @1.0.1 with SOP:TH09/TH128 dropped; POST2 @1.0.5; `SOP:TH128@1.0.2` PROVED-CHECKED. Statuses only (EQUAL).
+- FRZ-B 2026-11-16: requote at main 2676e71f [REG-2676] (relabel D97): POST2 inputs @1.0.6 and `W3-POST:Thm-1` conditions dropped; EQUAL (statuses only).
 <!-- ROW thm4 END -->
 
 ---
@@ -1272,6 +1275,7 @@ enumeration branch are not covered. Status: the masters' statuses above, with th
 - v0.4 applied 2026-11-16 [HQ card 13; recorder task W, main cb642afd]: variant A; statuses requoted verbatim from
   `claims.tsv` at cb642afd; "Conditions, in words" paragraph added (STRONGER: placeholder → theorem).
 - FRZ-B 2026-11-16: [AUD-S4] Song–Liang comparison (3): their sampler-output statements are iteration limits at fixed data; ours at the coded budget; neither implies the other (W3-AUDIT TRACK_B v1.4.1) (EQUAL).
+- FRZ-B 2026-11-16: requote at main 2676e71f [REG-2676] (relabel D97): W3-DIST @1.0.1 statuses (Thm-B unconditional; Cor-C, DIST-C conditional on W1-N1:B, W1-N1:F, EX-A); EQUAL (statuses only).
 <!-- ROW thm9 END -->
 
 ---
@@ -1329,13 +1333,13 @@ per-island identity of the unbiasedness theorem by linearity). The guarantees de
 - (S5) idealises the random numbers and the coded kernels; they are not statistical assumptions.
 
 ### Master theorem
-`W3-SAMP:C@1.1.4`, `Theory_work/Wave3/W3-SAMP/STATEMENT.md:149-163`, clause (C-v) at :158-162, status **"PROVED-CHECKED"**
-(main 6cd699dd) [REG-6cd6];
+`W3-SAMP:C@1.1.5`, `Theory_work/Wave3/W3-SAMP/STATEMENT.md:149-163`, clause (C-v) at :158-162, status **"PROVED-CHECKED, conditional on W1-N1:B, W1-N1:F; council R1, MANIFEST 68480a72…, astra=9.1 PASS, opus=8.8 PASS"**
+(main 2676e71f) [REG-2676]; `W1-N1:B`, `W1-N1:F` (the conditions) each **"PROVED under the named premises of STATEMENT §2 — cross-family checked (Codex gpt-6.1-sol: LC1, MP1 CONTINUE, SW1, council C1 9.3) and council-passed (Claude Opus 5.5: C1 8.9), round 1, 2026-11-08."**;
 start input `W3-START2-R:IF-START@1.0.0` (IF-START⁺⁺, `W3-START2-R/STATEMENT.md:241-246`, under (T3⁺⁺)(b) at :226-240 with (L-R⁺⁺) at
 :70-81), **"PROVED-CHECKED; council R2, MANIFEST 12bb52cd… (= R2 90886d06 re-frozen CITATION-ONLY as R2r), sol=9.0 PASS, opus=9.3 PASS"** (main b48fd0a1; supersedes `W3-START2:IF-START`, free, SUPERSEDED-VALID) [REPIN]; posterior input Theorem 2
 (`W3-POST:Thm-1@1.0.1` item 6 with `W2-APP:POST@1.0.7`, "PROVED-CHECKED"). Alternative
-route (remark): `W3-SAMP:TR@2.1.4`, "PROVED-CHECKED" [REG-6cd6]. Row 3.5: `W1-N1:Thm-N1@1.0.0`,
-"PROVED-CHECKED", and `W3-READER:PoolZ@1.0.1` ("PROVED (by this seat, unchecked)").
+route (remark): `W3-SAMP:TR@2.1.5`, "PROVED-CHECKED; council R1, MANIFEST 68480a72…, astra=9.1 PASS, opus=8.8 PASS" [REG-2676]. Row 3.5: `W1-N1:Thm-N1@1.0.0`,
+"PROVED-CHECKED", and `W3-READER:PoolZ@1.0.1` "PROVED-CHECKED; council R3, MANIFEST 7aebdf2e…, sol=9.5 PASS, opus=9.4 PASS".
 
 ### Bridges
 | # | Bridge | Mark | Detail |
@@ -1351,8 +1355,8 @@ that $P(\mathcal A)\to1$ is not claimed here (under (S4), whose item (i) now inc
 admissible $n$, and without the two limits lifted on $\mathfrak D$; that link is not used here) [S4-S1, RM2R-1]. The theorem covers only designs with no leakage outside the true model (A5), such as independent predictors; AR and
 block designs are outside it (row 3.5 applies there, and row 3.1 for particular AR or block designs that satisfy Theorem 6's
 conditions) [AUD-B11, R2-L1]. The rate $\rho_n$ is the start law's rate;
-its ratio to the posterior rate $\sqrt{\log n/n}$ is $e^{C\sqrt{\log n}}/\sqrt{\log n}$ [R2-E2]. No open registry condition: `W3-SAMP:C` and `W2-APP:POST`
-are "PROVED-CHECKED" since T03♯ was discharged (main 6cd699dd) [REG-6cd6]; the assembly R4 and PoolZ are unchecked.
+its ratio to the posterior rate $\sqrt{\log n/n}$ is $e^{C\sqrt{\log n}}/\sqrt{\log n}$ [R2-E2]. Registry conditions [REG-2676]: `W3-SAMP:C` and `W3-READER:R4@1.0.1` are "PROVED-CHECKED, conditional on W1-N1:B, W1-N1:F" (the two
+N1 premises "PROVED under the named premises", cross-family checked and council-passed); `W2-APP:POST` is "PROVED-CHECKED".
 
 #### Update log (thm10)
 - v0.3 2026-11-16: first version (manager's CP1 decision 4; bridge leg).
@@ -1381,6 +1385,7 @@ are "PROVED-CHECKED" since T03♯ was discharged (main 6cd699dd) [REG-6cd6]; the
 - R1 2026-11-16: [R1-F3] moderate-$n$ parenthesis relabelled an observation (WEAKER).
 - R2-ED 2026-11-16: post-council editorial items [R2-E2] exact rate ratio, [R2-L1] AR/block pointer as in card row 3.6 (EQUAL).
 - FRZ-B 2026-11-16: [B2] GUARD-W wording (Theorem 10 and row 3.5 remark); [R3-O1] comma splice fixed (EQUAL).
+- FRZ-B 2026-11-16: requote at main 2676e71f [REG-2676] (relabel D97): `W3-SAMP:C@1.1.5` and `W3-READER:R4@1.0.1` conditional on W1-N1:B, W1-N1:F (these are now registry conditions of row 3.6; the earlier "no open registry condition" is superseded); `TR@2.1.5`, PoolZ@1.0.1; EQUAL (statuses only).
 <!-- ROW thm10 END -->
 
 ---
@@ -1390,7 +1395,7 @@ are "PROVED-CHECKED" since T03♯ was discharged (main 6cd699dd) [REG-6cd6]; the
 | Bridge | Theorem | Mark | Where proved | Importance |
 |---|---|---|---|---|
 | B2.2 `W2-APP:POST@1.0.7` | 2, 6, 10 | EXISTS-CHECKED | accepted at W2-APP CP3; SL0 cleared (main 33e1f0f5); SOP:TH09 discharged (main 6cd699dd) | none |
-| B4.3 / B1.7 POST2 C/E/A1/A0 | 1 (re-base), 1′, 4 | EXISTS-CHECKED, conditional (A0 unconditional; §1) | recorded at main f526e45b; @1.0.5 after main 6cd699dd | conditions quoted in §1 (C: W3-POST:Prop-LB, [L1a′], W2-APP:POST, W3-POST:Thm-1; E: W2-APP:POST, W3-POST:Thm-1; A1: W3-POST:Thm-1, W2-APP:POST) [S4-F1, REG-6cd6] |
+| B4.3 / B1.7 POST2 C/E/A1/A0 | 1 (re-base), 1′, 4 | EXISTS-CHECKED, conditional (A0 unconditional; §1) | recorded at main f526e45b; @1.0.6 after main 2676e71f | conditions quoted in §1 (C: W3-POST:Prop-LB, W2-APP:POST; E, A1: W2-APP:POST) [S4-F1, REG-6cd6] |
 | B6.6′ / B7.5 (S4) ⇔ delivery premises (D) of `W3-RM2-R:DLV-0` | 6, 7 | identity | `W3-RM2-R/STATEMENT.md:71-93` | low |
 | B6.6 / B7.4 RM2 ⇒ delivery assembly; (S4) premise table — **historical** (former hypotheses; not used by current 6, 7) [R1-F2] | — | NEW | `lemmas/R3_delivery_assembly.md` | — |
 | B6.3 local regressions ⇒ variance clause | 6 (7: B7.3) | NEW | `lemmas/R2_local_regression.md` | medium |

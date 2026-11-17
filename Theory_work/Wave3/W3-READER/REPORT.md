@@ -43,12 +43,11 @@ claim: W3-READER:R4 | kind: lemma | statement: lemmas/R4_printed_outputs.md:1-51
 name: Lemma R4 (printed PIPs, MPM, HPM and evidence estimate are consistent: assembly)
 status: PROVED (by this seat, unchecked) | status_source: lemmas/R4_printed_outputs.md:3
 conclusion: rate: 1_A max(o0, o1) = O_P(n^{-1/2} exp(C_R sqrt(log n))); hence Zhat/Z - 1, log Zhat - log Z, ||pip_primary - 1_S0||_inf = O_P(that) on A; P(A and MPM != S0) -> 0; P(completed and Shat != S0) -> 0 | scope: Gaussian rows, standardised-signal convention, Q = S0 (no leakage outside the true model, e.g. independent predictors; AR and block designs not covered)
-depends_on: W3-SAMP:C@1.1.4 ; W3-START2-R:IF-START@1.0.0 ; W3-START2-R:START-R@1.0.0 ; W3-POST:Thm-1@1.0.0 ; W2-APP:POST@1.0.7
+depends_on: W3-SAMP:C@1.1.5 ; W3-START2-R:IF-START@1.0.0 ; W3-START2-R:START-R@1.0.0 ; W3-POST:Thm-1@1.0.0 ; W2-APP:POST@1.0.7
 gates: correct:PENDING(bridge-leg Sol line check)
 ```
 
-Notes for the ingest (HQ / recorder): R4's inputs carry no open registry condition (`W3-SAMP:C@1.1.4`, `W2-APP:POST@1.0.7`
-"PROVED-CHECKED", main 6cd699dd; `W3-POST:Thm-1` label as recorded). R3 carries F-UNI's qualifications ([OP] author-only; e4/N3 OPEN; P1/S.3 code-reading audit).
+Notes for the ingest (HQ / recorder): R4 inherits `W3-SAMP:C@1.1.5`'s conditions (W1-N1:B, W1-N1:F; main 2676e71f) [REG-2676]; `W2-APP:POST@1.0.7` is "PROVED-CHECKED"; `W3-POST:Thm-1@1.0.1` "PROVED-CHECKED; council C3, …". R3 carries F-UNI's qualifications ([OP] author-only; e4/N3 OPEN; P1/S.3 code-reading audit).
 The reader-version corollaries (Theorems 1–8, 10 of `READER_VERSIONS.md`) are not proposed as separate rows here;
 HQ decides whether each reader version gets a row (PROGRAM "Readability": "The reader version is a corollary with its
 bridges checked").
