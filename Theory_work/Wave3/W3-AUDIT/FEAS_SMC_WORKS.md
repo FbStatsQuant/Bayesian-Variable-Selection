@@ -1,6 +1,7 @@
 # Feasibility note — "the SMC does work": Result 4 under bounded leakage (audit Fable, 2026-11-17; for HQ and the consultant)
 
-Half-day note, no proving. Every argument below is a sketch [unchecked]; recorded results are cited with their status.
+**Status (2026-11-17): the owner has deferred "the SMC does work" to the follow-up paper; this note is kept for HQ as
+the record of what a route through existing lemmas would need.** Half-day note, no proving. Every argument below is a sketch [unchecked]; recorded results are cited with their status.
 "Result 4" = core theorem 4: the printed PIPs, MPM and Ẑ are consistent (row 3.6), today proved only without leakage.
 
 ## 1. Answer to the question as asked
