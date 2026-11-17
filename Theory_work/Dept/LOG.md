@@ -375,3 +375,4 @@
 - 2026-11-16 20:07 CST D93 relayed to the recorder (after the task 2 dry run).
 - 2026-11-16 20:08 CST Must-do item 4 DONE: T14 H5 card (STRONGER) ab1887be → HQ for the consultant. C1 blind Opus line check running; recorder on the task 2 dry run, then rule (c) + carriers.
 - 2026-11-16 20:09 CST H5 card 16 (T14 → row 3.1) AGREED with 3 binding edits (no overclaim / p_raw / one-sentence row; details to the reader note). Appended to the card (W3-AUDIT d727e7a3); queued for READER B3 (after T14 is recorded).
+- 2026-11-16 20:15 CST C1 blind Opus check (e1837fa0): real gap in C-DLV:P1-Inventory (SMC preflight LS0-time/archive trigger, ef33f91c, not in the inventory) → amendment A-7 (B1′); row 3.1 holds (DLV-0 E2 + P̄_LS0). GO Sol read on C1 v2 + consumer table for P1-Inventory/L1-R. HQ told: CORRECTION vs SUSPECT decision pending the table.
