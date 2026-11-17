@@ -88,6 +88,7 @@ struct IslandConfig {
                                             // Value: calib.bin meta.tau_cal_hex (offer_floor_for(), island/offer_floor.h)
   std::string offer_floor_calib;            // the content hash of the calib.bin the floor came from (required when floor > -inf)
   bool store_parallel_compact = true;       // compaction at pass/step boundaries with all threads (content unchanged)
+  bool leaders_deferred = true;             // the leader stores follow store_parallel_compact (WP7 O3); false = the serial pre-O3 compaction (bench / tests)
   bool check_store = true;                  // I1 on the top store (and the leader stores), in parallel over index ranges,
                                             // before every checkpoint and on every exit of the run, whatever its status
                                             // (before any island file can be written; review PR47 finding 1),
@@ -107,6 +108,12 @@ struct IslandConfig {
                                             // active columns kept across passes, one slot of p doubles each. -1 = auto
                                             // (gram_slots_of: 5 G / 2, 640 at G = 256); 0 = off. Execution parameter (same
                                             // bits); counted in the memory plan (gram_rows)
+  int test_lead_buf_limit = 0;              // tests only: the leader stores' worker-buffer flush size (default 65,536). At small p the staging hard
+                                            // limit (8192) is below one worker buffer, so every flush compacts serially and the deferred triggers
+                                            // never fire; a small buffer lets a small-p fixture reach them (same code path, same bits)
+  bool test_drop_leader_stage = false;      // tests only: the leader stores discard their staged offers at the deferred triggers instead of
+                                            // compacting (a deliberate bug: the negative control of leader_stores_deferred_compaction_same_bits)
+
   std::atomic<bool>* test_order_phase = nullptr;   // tests only: set true around the label-major order phase's parallel region
                                             // (an operator-new counting test asserts that the region does not allocate)
   int test_fail_indep = -1, test_fail_indep_stage = 1;   // tests only: the I proposal of particle i (0-based) in bridge stage
@@ -157,6 +164,9 @@ struct KernelStats {   // execution statistics (not part of the law, not hashed)
   uint64_t slow_supports = 0, store_merges = 0, store_buffered = 0, store_dup_dropped = 0, store_serial_merges = 0;
   uint64_t store_floor_dropped = 0;   // offers dropped by the D-29 offer floor (v < floor)
   double t_store_compact = 0, t_compact_pass = 0;   // wall seconds compacting (all paths) / at pass boundaries
+  double t_store_compact_lead = 0;                  // WP7 O3: wall seconds compacting the two leader stores (calibration islands)
+  uint64_t lead_compact_mid = 0, lead_compact_pass = 0, lead_serial_merges = 0;   // WP7 O3 (review PR64): leader compactions started between
+                                                    // waves / at a pass boundary (deferred), and the serial in-pass fallbacks inside flush() (both stores)
   int kept_live_max = 0;   // most kept runs alive at once in this process (M2 bound; process-wide counter)
   double t_products = 0;   // thread-seconds inside phase A spent on the tile products
   double t_init = 0, t_orders = 0, t_build = 0, t_phaseA = 0, t_walk = 0, t_phaseB = 0, t_apply = 0, t_barrier = 0,
@@ -186,7 +196,9 @@ struct StepCost {
   double wall = 0;                           // the row's interval (lifetime wall clock)
   double t_orders = 0, t_build = 0, t_phaseA = 0, t_products = 0 /* thread-seconds */, t_walk = 0, t_phaseB = 0, t_apply = 0,
          t_barrier = 0, t_pm = 0;
-  double t_compact = 0, t_compact_pass = 0;  // store compaction, all paths / of which at pass boundaries
+  double t_compact = 0, t_compact_pass = 0;  // top store compaction, all paths / of which at pass boundaries (the top store only)
+  double t_compact_lead = 0;                 // the two leader stores' compaction, all paths (WP7 O3; 0 without leader stores), wall seconds;
+                                             // its in-wave and pass-boundary seconds fall inside t_phaseB (not in t_compact_pass)
   double t_check = 0, t_ckpt = 0;            // I1 checks (O1) / checkpoint writes in the interval (t_ckpt includes its check)
   double mean_S = 0;                         // population mean |S| at the close
   double store_mean_k = 0;                   // mean |S| of the stored models at the close
@@ -195,7 +207,7 @@ struct StepCost {
   uint64_t offers = 0, dup_dropped = 0, merges = 0, store_size = 0;   // top store: offers buffered / dropped by the snapshot filter
   uint64_t rss_kb = 0, hwm_kb = 0;           // VmRSS at the close / VmHWM (process peak so far)
 };
-static_assert(sizeof(StepCost) == 8 * 35, "StepCost: 8-byte fields only (raw checkpoint rows, no padding)");
+static_assert(sizeof(StepCost) == 8 * 36, "StepCost: 8-byte fields only (raw checkpoint rows, no padding)");
 
 // one row as a JSON object: the raw fields plus three ratios (M = sweeps / particle-rounds, flips per elementary step =
 // flips / (particle-rounds x m), active columns per pass; m = p + B + 2). Counts are JSON numbers (bounded counts,
@@ -210,7 +222,7 @@ inline v4::Json cost_row_json(const StepCost& c, int m) {
   j["t_orders"] = L(c.t_orders); j["t_build"] = L(c.t_build); j["t_phaseA"] = L(c.t_phaseA); j["t_products"] = L(c.t_products);
   j["t_walk"] = L(c.t_walk); j["t_phaseB"] = L(c.t_phaseB); j["t_apply"] = L(c.t_apply); j["t_barrier"] = c.t_barrier;
   j["t_pm"] = lm ? v4::Json(nan) : v4::Json(c.t_pm);
-  j["t_compact"] = c.t_compact; j["t_compact_pass"] = L(c.t_compact_pass); j["t_check"] = c.t_check; j["t_ckpt"] = c.t_ckpt;
+  j["t_compact"] = c.t_compact; j["t_compact_lead"] = c.t_compact_lead; j["t_compact_pass"] = L(c.t_compact_pass); j["t_check"] = c.t_check; j["t_ckpt"] = c.t_ckpt;
   j["mean_S"] = c.mean_S; j["store_mean_k"] = c.store_mean_k;
   j["particle_rounds"] = c.particle_rounds;
   j["sweeps"] = L((double)c.sweeps); j["passes"] = L((double)c.passes); j["supports"] = L((double)c.supports); j["pairs"] = L((double)c.pairs);
@@ -277,6 +289,7 @@ inline MemSizes plan_sizes(int n, int p, int K, const IslandConfig& cfg) {
   MemSizes z; z.n = n; z.p = p; z.K = K; z.N = cfg.N; z.B = cfg.B; z.Hm = cfg.Hm; z.threads = cfg.threads;
   z.tile = std::max(64, (cfg.tile + 63) / 64 * 64); z.cap = cfg.store_cap ? cfg.store_cap : 40ULL * (uint64_t)p + 1; z.label_major = lm;
   z.deferred = cfg.store_parallel_compact && cfg.threads > 1 && lm; z.leaders = cfg.leaders || cfg.role != IslandRole::Final;
+  z.leaders_serial = !cfg.leaders_deferred;
   z.compat = cfg.compat; z.inputs_bytes = cfg.inputs_bytes; z.calib = cfg.role != IslandRole::Final;
   return z;
 }

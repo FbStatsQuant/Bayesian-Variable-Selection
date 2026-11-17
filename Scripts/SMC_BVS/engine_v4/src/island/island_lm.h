@@ -412,16 +412,20 @@ void IslandEngine<A>::lm_group(int first, int count, int gN, const RoundCtx& rc)
       if (gb.etype[gi] == 3) gb.e[gi] = gb.q[gi];   // a failed particle consumes nothing more (the round's events are discarded)
     }
     lap(KS.t_walk);
-    if (top.defer && top.staged() >= (top.stage_limit + top.stage_hard) / 2) { release_snapshots(); top.compact_parallel(NT); }   // walk offers
+    compact_if_due(true);   // walk offers (top and, on calibration islands, the leader stores: O3)
 
     // ---- phase B: consumption of the Gibbs labels at positions (q, e] -------------------------------------
     // In waves of tiles; between waves (all threads free) the staging area is compacted in parallel once it passes
     // the trigger, so in-pass serial compactions are rare (content: a function of the offers only).
     // wave size bounded by offer volume (review P2): a wave offers at most nsup * tile entries per tile, so <= 0.1 c per
-    // wave keeps the staging area below 0.375 c + 0.1 c < c/2 = stage_hard: the in-pass serial compaction (stale
-    // snapshots, pool over-reservation) is unreachable in label-major
+    // wave keeps the offers of one wave below 0.1 c, the staging area below 0.375 c + 0.1 c < c/2 = stage_hard: the in-pass
+    // serial compaction (stale snapshots, pool over-reservation) is RARE in label-major, not impossible: up to T x buf_limit
+    // entries can still sit unflushed in the worker buffers from earlier waves and flush into the staging area (review PR64
+    // MINOR-3). It is counted: KernelStats::store_serial_merges (top) / lead_serial_merges (leaders). Content is unaffected.
     const uint64_t per_tile = (uint64_t)std::max(1, nsup) * (uint64_t)Bk;
-    const int wave = top.defer ? (int)std::max<uint64_t>(1, std::min<uint64_t>((uint64_t)std::max(64, 16 * NT), (top.cap / 10) / per_tile)) : ntile;
+    // the smallest store bounds the wave (the leader stores have half the top store's capacity: O3)
+    const uint64_t wave_cap = cfg.leaders ? std::min(top.cap, std::min(lead0.cap, lead1.cap)) : top.cap;
+    const int wave = top.defer ? (int)std::max<uint64_t>(1, std::min<uint64_t>((uint64_t)std::max(64, 16 * NT), (wave_cap / 10) / per_tile)) : ntile;
     for (int w0 = 0; w0 < ntile; w0 += wave) {
     const int w1 = std::min(ntile, w0 + wave);
     #pragma omp parallel num_threads(NT)
@@ -492,15 +496,14 @@ void IslandEngine<A>::lm_group(int first, int count, int gN, const RoundCtx& rc)
         }
       });
     }
-    if (top.defer && w1 < ntile && top.staged() >= (top.stage_limit + top.stage_hard) / 2) { release_snapshots(); top.compact_parallel(NT); }
+    if (w1 < ntile) compact_if_due(true);
     }   // waves
     lap(KS.t_phaseB);
     if (fail_fatal()) return;
-    if (top.defer && top.staged() >= top.stage_limit) {   // pass boundary: all threads free
-      release_snapshots();
-      top.compact_parallel(NT);
-    }
-    lap(KS.t_compact_pass);
+    compact_top_if_due(false);   // pass boundary: all threads free
+    lap(KS.t_compact_pass);      // the top store only (t_compact_pass is "of which" t_compact)
+    compact_leaders_if_due(false);
+    lap(KS.t_phaseB);            // the leader stores' pass-boundary compaction counts with phase B, like their in-wave compactions
 
     // ---- apply the state changes ---------------------------------------------------------------------------
     // particles are independent: in parallel (L5; class A pays one canonical Bit score per accepted Gibbs change)

@@ -11,7 +11,8 @@
 //                sort refs + the sort scratch of psort_noalloc (c/2) 64, flags, alive list 5 c, two indexes 2 * 4 pow2(2c + 2);
 //                serial (particle-major): staging c/4, refs 32, pool over-reservation (c/4) 4k, + one stale generation
 //   k            the plan's mean stored |S|: max(8, q90(pi_0 size) + 1, k_store) -- round 1 stores pi_0-sized models
-//   leaders      (calibration islands, option `leaders`) two stores of cap 20p, serial compaction at cap/4, same terms
+//   leaders      (calibration islands, option `leaders`) two stores of cap 20p, the same terms as the top store (deferred:
+//                parallel compaction at pass boundaries, WP7 O3; serial for particle-major and with leaders_deferred = false)
 //   worker_bufs  T offer buffers per store, capacity pow2(65,536) x 1.5          T * 98,304 * e * (1 or 3)
 //   rb           u128 accumulators 32 p (+ particle-major 16 p T) (+ compat 8 p) + rb_round Hm p 8 + rb_acc, pip 16 p
 //   orders       label-major group: inverse orders + one order per thread (K2) + U/N/I lists   G m 4 + T m 4 + G (B + 2) 8
@@ -44,6 +45,7 @@ struct MemPlan { std::vector<MemItem> items; uint64_t total = 0; int G = 0; doub
 struct MemSizes {
   int n = 0, p = 0, K = 0, N = 0, B = 0, Hm = 4, threads = 1, G = 1, tile = 128;
   uint64_t cap = 0; bool label_major = true, deferred = true, leaders = false, compat = false;
+  bool leaders_serial = false;   // the leader stores compact serially although the island is deferred (IslandConfig::leaders_deferred = false: bench / tests)
   int gram_slots = 0;        // K3: Gram-row slots (gram_slots_of)
   double inputs_bytes = 0;   // setup / calib sections mapped by the caller (tables, neighbours)
   bool calib = false;        // calibration island: the round-start snapshot (one kept run per store + the particles)
@@ -76,7 +78,7 @@ inline MemPlan island_memory(const MemSizes& z, double k) {
   add("inputs", n * p * 8 + 16 * p + z.inputs_bytes);
   if (z.label_major) add("x_tiles", (double)ntile * z.tile * n * 8);
   add("store", store_peak_bytes(c, z.deferred, k));
-  if (z.leaders) { const uint64_t cl = 20ULL * (uint64_t)z.p; add("leaders", 2.0 * store_peak_bytes(cl, false, k)); }
+  if (z.leaders) { const uint64_t cl = 20ULL * (uint64_t)z.p; add("leaders", 2.0 * store_peak_bytes(cl, z.deferred && !z.leaders_serial, k)); }   // WP7 O3: deferred parallel compaction like the top store, unless leaders_deferred = false
   add("worker_bufs", T * 1.5 * (double)pow2_at_least(65536) * e * (z.leaders ? 3 : 1));
   add("rb", 32 * p + (z.label_major ? 0.0 : 16 * p * T) + (z.compat ? 8 * p : 0.0) + (double)z.Hm * p * 8 + 16 * p);
   if (z.label_major) {
