@@ -739,3 +739,9 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - Held for the owner's decision: track D #3, #5′, and any new SMC-works ticket.
   - Proof hardening for the Lean targets (paper blueprints + hostile formalizer review) follows the method sign-off.
   - Engineering moved to Claude Work, ≤ 3 agents.
+- 2026-11-17. **OWNER DECISION (theory push):**
+  - **GO #5′** (store-restricted output consistency on every Thm 6 design; kill at 3 d), with the method-level companion: **print the list-renormalised PIPs + their median model as a second output field** (core v3 + engine v4; existing fields bit-identical; Theory spec first).
+  - **Equal-weight island-mean PIP stays primary**; this closes the scaling-design equal-vs-evidence-weighted question.
+  - **GO #3** (sub-Gaussian Thm 2) if it reuses W3-DIST's floor bridge (kill at 3 d; a coexisting claim).
+  - **"The SMC does work": DEFERRED** to the follow-up paper, unless the feasibility note finds a route through existing lemmas.
+  - Factor-adjusted start law: follow-up paper. Evidence spread: dropped.
