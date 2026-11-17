@@ -443,3 +443,4 @@
 - 2026-11-17 13:08 CST W3-D2: numerics rerun matches Sol's value (grid max 0.3928); REPORT §3a sentence labelled OPEN; waiting on the Opus seat. Account: W3-D2's K1–K3 checks and R1 Opus seat ran on Claude Third (logged by the lead); W3-D5P LC1 likewise; both leads now set claudeAgent_personal explicitly.
 - 2026-11-17 13:16 CST W3-D3: HQ's 2b sentence false for (A4) (bounded binary with P→0); replacement options A (ExSG(b) via Hoeffding) / B (Gaussian + K=1 only) → HQ (recommended A). Sol lock on v1.0 running; numerics clean.
 - 2026-11-17 13:16 CST D114 relayed to the W3-D3 lead.
+- 2026-11-17 13:20 CST W3-D3 CP1 (36f28f4e): Thm 2SG locked (Sol L-W-A, 6 applied; L/K_cap; B3w completed pair); STRONGER vs Thm 2 (coexists); GO → line check → council → CP3 (~5–6 h).
