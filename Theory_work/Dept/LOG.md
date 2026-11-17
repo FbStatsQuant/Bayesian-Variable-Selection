@@ -367,3 +367,4 @@
 - 2026-11-16 19:32 CST CP3 dry run (recorder, feb19aad): stopped on R4 (A3/A5: W3-POST:Thm-1 old-format status; W3-SAMP:C pre-v4 cell) and MANIFEST_R3 freezing EXT claims.tsv (A4). Option C clean (R4 conditional on Thm-1, SAMP:C; R3→R3r de0552c9 CITATION-ONLY; 4/4 PASS). Sent to HQ with recommendation (GO C + form choices a/b; no abstract line; post-freeze relabel of Thm-1 / SAMP:C to discharge).
 - 2026-11-16 19:33 CST HQ GO CP3 real run (option C); recorder told; D89.
 - 2026-11-16 19:43 CST W3-READER CP3 RECORDED: main 128e6a9a (CI 43996890993 success, verified; registry rows checked). Freeze content complete; freeze Fri 11-20. HQ told.
+- 2026-11-16 19:59 CST D90 dispatched: recorder (1)+(2); track A lead (3)+(4); READER (5); audit Fable: Lean shortlist; kick-off schedule re-pointed to Mon 11-23 08:00 (track D). Leads: recorder, track A lead, READER = 3; Fable outside the cap.
