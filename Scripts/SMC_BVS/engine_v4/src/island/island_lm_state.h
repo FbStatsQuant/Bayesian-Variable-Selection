@@ -22,6 +22,7 @@ struct LmScratch {
 
 // --- label-major round for the particles [g0, g0 + gN) ------------------------------------------------------
 struct LmGroupBuf {
+  std::vector<int> pid;                        // particle of each slot (K5: slots are reused within a round)
   std::vector<uint32_t> inv;                  // gN x m: 1-based position of each label (K2: the order itself is not kept)
   std::vector<std::vector<std::pair<uint32_t, int>>> ng;   // per particle: (position, label) of U/N/I labels, sorted
   std::vector<uint32_t> q, e; std::vector<uint8_t> done, etype; std::vector<Particle> pending;

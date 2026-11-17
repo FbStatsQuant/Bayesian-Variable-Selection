@@ -34,11 +34,20 @@ static inline uint64_t lm_pack(uint32_t pos, uint32_t lab) { return ((uint64_t)p
 static constexpr uint64_t LM_POISON_BITS = 0x7FFBADC0FFEE0BADull;
 static inline bool lm_poisoned(double x) { uint64_t b; std::memcpy(&b, &x, 8); return b == LM_POISON_BITS; }
 
+// The particles [first, first + count) of a round, in a window of gN slots (gN <= count). Without rolling admission
+// (gN = count) this is one group. With rolling admission (K5, WP3_ARCH_REVIEW §2 lever 5) a slot whose particle has
+// finished its round takes the next particle at the following pass, so every pass stays full until the round's tail.
+// Particles of a round are independent (their own state and addresses; offers order-free; failures ranked by particle),
+// so the outputs do not depend on which particles share a pass (T3).
 template <Arith A>
-void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
+void IslandEngine<A>::lm_group(int first, int count, int gN, const RoundCtx& rc) {
   auto& KS = res.ks;
   auto t0 = std::chrono::steady_clock::now();
   auto lap = [&](double& acc) { auto t1 = std::chrono::steady_clock::now(); acc += std::chrono::duration<double>(t1 - t0).count(); t0 = t1; };
+  gN = std::max(1, std::min(gN, count));
+  std::vector<int>& pid = gb.pid; pid.assign(gN, -1);   // particle of each slot
+  int next = first;                                     // the next particle to admit
+  const int end = first + count;
   gb.inv.resize((size_t)gN * m);
   const bool ipre = !csrc;   // K2: I proposals ahead (compat keeps core's serial stream order)
   // Everything the order phase's parallel region touches is sized here, serially (review PR53: no allocation inside the
@@ -54,57 +63,68 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
     z.imodel.reserve((size_t)kmod);   // (the block list of the draw is StartView's per-thread scratch, prepared in the constructor)
     scorers[t]->reserve(kq);
   }
-  if (cfg.test_order_phase) cfg.test_order_phase->store(true);   // tests only (operator-new counting)
-  #pragma omp parallel for schedule(dynamic, 1) num_threads(NT)
-  for (int gi = 0; gi < gN; ++gi) oom_guard([&] {
-    uint32_t* ord = gb.scr[omp_get_thread_num()].ord.data(); uint32_t* inv = &gb.inv[(size_t)gi * m];
-    draw_order(rc, g0 + gi, ord);
-    for (int t = 0; t < m; ++t) { if (t + 16 < m) __builtin_prefetch(&inv[ord[t + 16]], 1); inv[ord[t]] = (uint32_t)t + 1; }   // 1-based positions
-    for (int lab = p; lab < m; ++lab) gb.ng[gi].push_back({inv[lab], lab});   // reserved above
-    std::sort(gb.ng[gi].begin(), gb.ng[gi].end());
-    if (ipre) {   // the I step's proposal: its addresses do not depend on the state (K2)
-      try { draw_indep(g0 + gi, inv[m - 1], rc, *scorers[omp_get_thread_num()], gb.iprop[gi], &gb.scr[omp_get_thread_num()]); }
-      catch (const v4::NumericalFailure&) { gb.ierr[gi] = std::current_exception(); }
-    }
-  });
-  if (cfg.test_order_phase) cfg.test_order_phase->store(false);
-  if (fail_fatal()) return;
-  gb.q.assign(gN, 0); gb.e.assign(gN, 0); gb.done.assign(gN, 0); gb.etype.assign(gN, 0); gb.pending.assign(gN, Particle());
+  gb.q.assign(gN, 0); gb.e.assign(gN, 0); gb.done.assign(gN, 1); gb.etype.assign(gN, 0); gb.pending.assign(gN, Particle());
   gb.elab.assign(gN, -1);
-  std::vector<std::atomic<uint64_t>> fm(gN); gb.fmin.swap(fm);
-  KS.particle_rounds += gN;
-  lap(KS.t_orders);
+  if ((int)gb.fmin.size() != gN) { std::vector<std::atomic<uint64_t>> fm(gN); gb.fmin.swap(fm); }
+  std::vector<int> admit; for (int gi = 0; gi < gN; ++gi) admit.push_back(gi);
   std::vector<int> active;
   while (true) {
+    // admission: the free slots take the next particles; their orders (inverse only, K2) and I proposals are drawn here
+    { int na = 0;
+      for (int gi : admit) if (next < end) { pid[gi] = next++; admit[na++] = gi; }
+      admit.resize(na);
+      for (int gi : admit) { gb.q[gi] = 0; gb.e[gi] = 0; gb.done[gi] = 0; gb.etype[gi] = 0; gb.elab[gi] = -1; gb.ierr[gi] = nullptr; gb.ng[gi].clear(); }
+      if (na > 0) {
+        if (cfg.test_order_phase) cfg.test_order_phase->store(true);   // tests only (operator-new counting)
+        #pragma omp parallel for schedule(dynamic, 1) num_threads(NT)
+        for (int t = 0; t < na; ++t) oom_guard([&] {
+          const int gi = admit[t];
+          uint32_t* ord = gb.scr[omp_get_thread_num()].ord.data(); uint32_t* inv = &gb.inv[(size_t)gi * m];
+          draw_order(rc, pid[gi], ord);
+          for (int u = 0; u < m; ++u) { if (u + 16 < m) __builtin_prefetch(&inv[ord[u + 16]], 1); inv[ord[u]] = (uint32_t)u + 1; }   // 1-based positions
+          for (int lab = p; lab < m; ++lab) gb.ng[gi].push_back({inv[lab], lab});
+          std::sort(gb.ng[gi].begin(), gb.ng[gi].end());
+          if (ipre) {   // the I step's proposal: its addresses do not depend on the state (K2)
+            try { draw_indep(pid[gi], inv[m - 1], rc, *scorers[omp_get_thread_num()], gb.iprop[gi], &gb.scr[omp_get_thread_num()]); }
+            catch (const v4::NumericalFailure&) { gb.ierr[gi] = std::current_exception(); }
+          }
+        });
+        if (cfg.test_order_phase) cfg.test_order_phase->store(false);
+        if (fail_fatal()) return;
+        KS.particle_rounds += na;
+      }
+      admit.clear();
+      lap(KS.t_orders);
+    }
     active.clear(); for (int gi = 0; gi < gN; ++gi) if (!gb.done[gi]) active.push_back(gi);
     if (active.empty()) break;
     KS.passes++; KS.particle_sweeps += active.size();
     // distinct supports: (hash, log m bits, S)  [class A: one model can carry different path values]
     std::vector<int> idx = active;
-    auto lmbits = [&](int gi) { uint64_t b; std::memcpy(&b, &P[g0 + gi].logm, 8); return b; };
+    auto lmbits = [&](int gi) { uint64_t b; std::memcpy(&b, &P[pid[gi]].logm, 8); return b; };
     std::sort(idx.begin(), idx.end(), [&](int a, int b) {
-      const Particle &x = P[g0 + a], &y = P[g0 + b];
+      const Particle &x = P[pid[a]], &y = P[pid[b]];
       if (x.h != y.h) return x.h < y.h;
       if (lmbits(a) != lmbits(b)) return lmbits(a) < lmbits(b);
       if (x.S != y.S) return lex_less(x.S, y.S);
-      return a < b;
+      return pid[a] < pid[b];
     });
     gb.sup_of.assign(gN, -1); gb.sup_parts.clear();
     std::vector<int> rep;
     for (size_t t = 0; t < idx.size(); ++t) {
       int gi = idx[t];
-      if (t == 0 || P[g0 + gi].h != P[g0 + idx[t - 1]].h || lmbits(gi) != lmbits(idx[t - 1]) || P[g0 + gi].S != P[g0 + idx[t - 1]].S) {
+      if (t == 0 || P[pid[gi]].h != P[pid[idx[t - 1]]].h || lmbits(gi) != lmbits(idx[t - 1]) || P[pid[gi]].S != P[pid[idx[t - 1]]].S) {
         rep.push_back(gi); gb.sup_parts.push_back({});
       }
       gb.sup_of[gi] = (int)rep.size() - 1; gb.sup_parts.back().push_back(gi);
     }
-    for (auto& v : gb.sup_parts) std::sort(v.begin(), v.end());
+    for (auto& v : gb.sup_parts) std::sort(v.begin(), v.end(), [&](int a, int b) { return pid[a] < pid[b]; });   // by particle (event keys)
     const int nsup = (int)rep.size();
     KS.supports += nsup; KS.support_label_pairs += (uint64_t)nsup * p;
     if ((int)gb.sup.size() < nsup) gb.sup.resize(nsup);
     #pragma omp parallel for schedule(dynamic, 1) num_threads(NT)
     for (int s = 0; s < nsup; ++s) oom_guard([&] {
-      const Particle& x = P[g0 + rep[s]];
+      const Particle& x = P[pid[rep[s]]];
       build_support(D, st, *scorers[omp_get_thread_num()], gb.sup[s], x.S, x.h, x.logm, x.lg0, x.d, rc.phi);
     });
     if (fail_fatal()) return;
@@ -175,7 +195,7 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
       for (int gi : active) {
         const SupportCache& c = gb.sup[gb.sup_of[gi]];
         const uint32_t* inv = &gb.inv[(size_t)gi * m]; const uint32_t qi = gb.q[gi]; uint32_t best = UINT32_MAX; uint64_t bestv = UINT64_MAX;
-        const uint32_t i1 = (uint32_t)(g0 + gi) + 1;
+        const uint32_t i1 = (uint32_t)pid[gi] + 1;
         for (int a = 0; a < c.k; ++a) {
           const uint32_t pos = inv[c.S[a]];
           if (pos <= qi || pos >= best) continue;
@@ -309,7 +329,7 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
           for (int gi : gb.sup_parts[s]) {
             const uint32_t* inv = &gb.inv[(size_t)gi * m];
             const uint32_t qi = gb.q[gi]; uint64_t bestv = gb.fmin[gi].load(std::memory_order_relaxed); uint32_t best = (uint32_t)(bestv >> 32);
-            const uint32_t i1 = (uint32_t)(g0 + gi) + 1;
+            const uint32_t i1 = (uint32_t)pid[gi] + 1;
             Address a0 = addr(rc.xph, rc.ustage, i1, 0, SLOT_ACCEPT);   // lanes set the position
             v4::Ctr4 ctr = v4::address_ctr(a0); v4::Key2 key = v4::address_key(a0);
             if (bounded && c.fast && c.add_ok) {
@@ -370,7 +390,7 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
       const uint64_t fv = gb.fmin[gi].load(std::memory_order_relaxed); const uint32_t f = (uint32_t)(fv >> 32);
       gb.etype[gi] = 0; gb.e[gi] = (uint32_t)m;
       if (f != UINT32_MAX) { gb.etype[gi] = 1; gb.e[gi] = f; }
-      const uint32_t i1 = (uint32_t)(g0 + gi) + 1; uint32_t pos_cur = 0;
+      const uint32_t i1 = (uint32_t)pid[gi] + 1; uint32_t pos_cur = 0;
       try {
         for (auto& pl : gb.ng[gi]) {
           if (pl.first <= gb.q[gi]) continue;
@@ -378,7 +398,7 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
           pos_cur = pl.first;
           const bool istep = ipre && pl.second == m - 1;
           if (istep && gb.ierr[gi]) std::rethrow_exception(gb.ierr[gi]);   // the I proposal's score failed: core fails here
-          if (step_nongibbs(pl.second, P[g0 + gi], g0 + gi, pl.first, rc, L, sc, gb.pending[gi], istep ? &gb.iprop[gi] : nullptr)) {
+          if (step_nongibbs(pl.second, P[pid[gi]], pid[gi], pl.first, rc, L, sc, gb.pending[gi], istep ? &gb.iprop[gi] : nullptr)) {
             gb.etype[gi] = 2; gb.e[gi] = pl.first; break;
           }
         }
@@ -426,7 +446,7 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
           // one consumed label: ncons particles of this support consumed it; `first` = the smallest of them, at fpos
           auto consume = [&](const int jj, const uint32_t ncons, const int first, const uint32_t fpos) {
             const int j = j0 + jj;
-            if (poison && unscored(s, j, lb, ob, (uint32_t)(g0 + first) + 1, fpos)) return;
+            if (poison && unscored(s, j, lb, ob, (uint32_t)pid[first] + 1, fpos)) return;
             const uint64_t fx = rc.measured ? fix63(ob[j]) : 0;
             if (rc.measured) rb_cur[j] += (u128)fx * ncons;
             L.logical[rc.phase][ME_GIBBS_HELD] += ncons; L.ms.gibbs += ncons;
@@ -440,7 +460,7 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
             const bool lead_pass = cfg.leaders && (lg0 >= lead0.tau.load(std::memory_order_relaxed) || F >= lead1.tau.load(std::memory_order_relaxed));
             if (lead_pass || F >= top.tau.load(std::memory_order_relaxed) || F > L.island_best || F >= L.hpm.F) {
               T = c.S; if (in) sorted_erase(T, j); else sorted_insert(T, j);
-              L.scored(T.data(), (uint32_t)T.size(), c.h ^ D.zob.key[j], F, lm, rc.phase, ME_GIBBS_FLIP, key(rc, (uint32_t)(g0 + first) + 1, fpos, 1),
+              L.scored(T.data(), (uint32_t)T.size(), c.h ^ D.zob.key[j], F, lm, rc.phase, ME_GIBBS_FLIP, key(rc, (uint32_t)pid[first] + 1, fpos, 1),
                        cfg.leaders ? lg0 : std::numeric_limits<double>::quiet_NaN());
             } else {
               L.logical[rc.phase][ME_GIBBS_FLIP] += 1;
@@ -487,15 +507,15 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
     #pragma omp parallel for schedule(dynamic, 1) num_threads(NT)
     for (size_t t = 0; t < active.size(); ++t) oom_guard([&] {
       const int gi = active[t]; const int th = omp_get_thread_num();
-      Particle& x = P[g0 + gi];
+      Particle& x = P[pid[gi]];
       if (gb.etype[gi] == 1) {
         const int j = gb.elab[gi];
         const SupportCache& c = gb.sup[gb.sup_of[gi]];
-        if (poison && unscored(gb.sup_of[gi], j, &gb.lbuf[(size_t)gb.sup_of[gi] * p], &gb.obuf[(size_t)gb.sup_of[gi] * p], (uint32_t)(g0 + gi) + 1, gb.e[gi])) return;
+        if (poison && unscored(gb.sup_of[gi], j, &gb.lbuf[(size_t)gb.sup_of[gi] * p], &gb.obuf[(size_t)gb.sup_of[gi] * p], (uint32_t)pid[gi] + 1, gb.e[gi])) return;
         double lm = gb.lbuf[(size_t)gb.sup_of[gi] * p + j];
         Model T = c.S; if (std::binary_search(T.begin(), T.end(), j)) sorted_erase(T, j); else sorted_insert(T, j);
         try { fill(x, T, canonical(*scorers[th], T, lm)); tl[th]->ms.gibbs_change++; }
-        catch (const v4::NumericalFailure& e) { fail.record((uint32_t)(g0 + gi), fail_msg(rc, (uint32_t)(g0 + gi) + 1, gb.e[gi], e.what())); gb.etype[gi] = 3; }
+        catch (const v4::NumericalFailure& e) { fail.record((uint32_t)pid[gi], fail_msg(rc, (uint32_t)pid[gi] + 1, gb.e[gi], e.what())); gb.etype[gi] = 3; }
       } else if (gb.etype[gi] == 2) {
         x = gb.pending[gi];
       }
@@ -503,6 +523,7 @@ void IslandEngine<A>::lm_group(int g0, int gN, const RoundCtx& rc) {
       if (gb.e[gi] == (uint32_t)m || gb.etype[gi] == 3) gb.done[gi] = 1;
     });
     if (fail_fatal()) return;
+    for (int gi : active) if (gb.done[gi]) admit.push_back(gi);   // K5: free slots for the next particles (if any are left)
     lap(KS.t_apply);
   }
 }

@@ -428,6 +428,32 @@ TEST(indep_proposal_failure_deferred_to_its_position) {
   }
 }
 
+// K5 (WP3_ARCH_REVIEW §2 lever 5): rolling admission (a finished particle's slot takes the next particle) gives the
+// output bits of groups run one after the other, both forms, threads 1 / 3, G < N, dense and bounded, with fewer passes
+template <Arith A>
+static void rolling_same_bits(const char* tag) {
+  Fixture F(100, 300, 45);
+  IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = 3; c.G = 16; c.rolling_admission = false;
+  IslandRun g = run_island<A>(F.D, F.st, F.nb, c);
+  CHECK(g.status == 0);
+  struct Conf { int threads, G; bool bounded; };
+  for (const Conf& cf : std::vector<Conf>{{3, 16, true}, {1, 7, true}, {3, 5, false}, {2, 48, true}, {3, 1, true}}) {
+    IslandConfig d = c; d.rolling_admission = true; d.threads = cf.threads; d.G = cf.G; d.bounded_scoring = cf.bounded; d.test_nan_rows = true;
+    IslandRun r = run_island<A>(F.D, F.st, F.nb, d);
+    d.rolling_admission = false; d.test_nan_rows = false; IslandRun r0 = run_island<A>(F.D, F.st, F.nb, d);
+    CHECKF(r.status == 0 && r.hash() == g.hash(), "[%s] threads %d G %d bounded %d: hash %016llx vs groups %016llx", tag, cf.threads, cf.G, (int)cf.bounded,
+           (unsigned long long)r.hash(), (unsigned long long)g.hash());
+    CHECKF(r.ks.particle_rounds == r0.ks.particle_rounds && r.ks.particle_sweeps == r0.ks.particle_sweeps, "[%s] G %d: rounds / sweeps differ", tag, cf.G);
+    if (cf.G < c.N && cf.G > 1) CHECKF(r.ks.passes < r0.ks.passes, "[%s] G %d: passes %llu (rolling) vs %llu (groups)", tag, cf.G,
+                                       (unsigned long long)r.ks.passes, (unsigned long long)r0.ks.passes);
+    std::printf("  [%s] threads %d G %2d bounded %d: hash %016llx = groups; passes %llu (groups %llu), supports per pass %.1f (groups %.1f)\n", tag,
+                cf.threads, cf.G, (int)cf.bounded, (unsigned long long)r.hash(), (unsigned long long)r.ks.passes, (unsigned long long)r0.ks.passes,
+                (double)r.ks.supports / std::max<uint64_t>(1, r.ks.passes), (double)r0.ks.supports / std::max<uint64_t>(1, r0.ks.passes));
+  }
+}
+TEST(rolling_admission_same_bits_bit) { rolling_same_bits<Arith::Bit>("bit"); }
+TEST(rolling_admission_same_bits_classA) { rolling_same_bits<Arith::ClassA>("A"); }
+
 // review PR53 MAJOR: the label-major order phase (inverse orders, nongibbs lists, the I proposals' pi_0 draws and scores)
 // allocates nothing inside its parallel region: everything is sized serially before it, cold and warm, both forms,
 // threads 1 / 3, G < N. Counted by the replaced operator new while the island's test flag is set.

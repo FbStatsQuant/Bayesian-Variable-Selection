@@ -276,14 +276,15 @@ class IslandEngine {
   using GroupBuf = LmGroupBuf;
   GroupBuf gb;
 
-  void lm_group(int g0, int gN, const RoundCtx& rc);   // island_lm.h
+  void lm_group(int first, int count, int gN, const RoundCtx& rc);   // island_lm.h (count particles in gN slots)
 
   void round(const RoundCtx& rc) {
     if (calib) { snap.valid = true; snap.init = false; snap.rc = rc; snap.P = P; snap.top = top.k; snap.lead0 = lead0.k; snap.lead1 = lead1.k; }
     if (rc.measured) std::fill(rb_cur.begin(), rb_cur.end(), (u128)0);
     if (cfg.kernel == KernelKind::LabelMajor) {
       int G = std::max(1, cfg.G);
-      for (int g0 = 0; g0 < cfg.N; g0 += G) { lm_group(g0, std::min(G, cfg.N - g0), rc); throw_if_failed(); }
+      if (cfg.rolling_admission) { lm_group(0, cfg.N, G, rc); throw_if_failed(); }   // K5: one window of G slots for the round
+      else for (int g0 = 0; g0 < cfg.N; g0 += G) { const int gN = std::min(G, cfg.N - g0); lm_group(g0, gN, gN, rc); throw_if_failed(); }
     } else {
       auto t0 = std::chrono::steady_clock::now();
       if (rc.measured) for (auto& v : rb_thread) std::fill(v.begin(), v.end(), (u128)0);
