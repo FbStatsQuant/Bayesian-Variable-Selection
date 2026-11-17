@@ -434,3 +434,11 @@ Each finding was read against the supplement (pp. 13–16 as page images; p. 6 a
 | U8 | S.CONC (1/2): "ours implies (24)" compares two posteriors | **ACCEPT** | (24) is about their posterior (7) under prior (6) (p. 951; supp p. 13); ours about the coded posterior | §S conclusion row; AUDIT row |
 | U9 | B4.PROOFS (1/2): "needs β*_t bounded away from zero" | **ACCEPT** | the printed bound is on supp p. 6 and needs only a rate; likewise supp p. 15 | B4 rewritten; §T2 |
 | U10 | B4.STATED (unclear): may their β* vary with n? | **ACCEPT as open** | the texts read as one fixed sequence (p. 950) but do not say so | B4 states both readings; the "1/n" example is dropped |
+
+## C-NOTS. Track C cross-check with the NOTS cells (track C lead, 2026-11-16; for the audit Fable to fold in; details `track_C/RESULTS.md`, final)
+- B5: confirms "all inside": sample floors (sets of 16 and the m♯ cutoff) rise with n at p = 10n and at p = 2·10⁴ in all 19 designs.
+- B6: confirms "all inside": Occam term bounded and decreasing at p = 10n in every design.
+- B8: confirms inside (IND, AR, blocks, S6, aligned factors) and outside (mixed-sign strong factor D14/D15, riboflavin-like); refines the two "unclear": S5-type (4 mixed-sign truths) has a small positive population margin (0.06) and rising sample visibility; FRED-like is inside when tiled (population 0.08–0.30, sample rising).
+- B9: confirms every listed in/out; **corrects the Track-C sentence on AR(0.95)**: at p = 10n its leak set grows ≈ n^0.1 (466 → 585), not n^0.4–0.5 (that was capped by p = n = 200); Toeplitz α = 1 (n^0.4) and growing blocks (n^0.5) stand.
+- B10: confirms inside for IND, AR(0.5), blocks, S6; AR(0.8) spread unclear and improving.
+- B11: confirms; **corrects "leak set = S₀ for IND only"**: also for weak factors (common correlation 0.5 p^{-1/2}) once below √(log n/n); no study/P6/1M design is of that kind, so no design verdict changes.
