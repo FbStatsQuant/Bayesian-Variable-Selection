@@ -691,3 +691,16 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - Track C: visibility fails at the population level for pervasive factors with mixed-sign truths and for riboflavin-like designs (FRED-QD-like unclear). A typical real-data user may be outside core 3 while inside cores 1 and 2.
   - HQ: an API blind second opinion on TRACK_B (≈ $30; Theory prepares the card).
   - Writing's advisor-report section waits for the owner's release.
+- 2026-11-16 evening. W3-AUDIT closed:
+  - track C: 46.86 core-h, no verdict contradicted; (AG) belongs to the fixed-design branch only;
+  - track A: T1–T10 and X1/X3/X5/T14 council-passed; T14 makes IDEAL-W⁺ vacuous on representable inputs. Its STRONGER card for row 3.1 comes post-freeze.
+  - API AUDIT1/2 spent $10.66 in total. TRACK_B v1.4 uses regime-conditional SL comparisons.
+- W3-READER CP3 (R3 Sol 9.5 / Opus 9.4, MANIFEST_R3 7aebdf2e, card v1.12). **H5 card 15: the consultant AGREES that it can freeze.**
+  - Blocking before recording: verify that row 3.6's "R4 assembly (unchecked)" was covered by the council, or label it honestly.
+  - Post-freeze:
+    - code-audit conditions attached to the delivery clause only;
+    - GUARD-W wording ("no estimates; partial results flagged");
+    - compress the integer-limit passage after T14;
+    - check C-DLV L2-S3 / P1-Inventory.
+  - Row 3.6 is to be demoted to a remark once #5′ is proved (HQ, likely).
+- Engineering: T5/P7 worst cases accepted (≤ 400 / ≤ 144 core-h); P1 done.
