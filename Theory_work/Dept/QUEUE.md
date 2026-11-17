@@ -108,6 +108,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 | NOTS move | theory_w2/w3, /scratch theory_w2|3, P6 outputs → /home/fb31/SMC_Theory_Department on NOTS (+ scratch link, INDEX.md); one calm session; copies only, no deletion before Owls copy verified | D32/D33 (HQ approved) |
 
 ## Named open items (no tickets; for the chapter's open-problems section)
+- (11-17, D121) READER B6.7, raw-scale search bridge: needed for the probability form of 'Cor 6L supplies Cor 9C's list-mass premise'. Follow-up paper / open item; not a ticket.
 RM2-R aggregated leak (D) · START MIS with a general μ (D) · Ex-Equi b < 3/8 if not done in W3-RM2-R (O4′) · START2-O1 count (17 − s₀).
 
 ## Not ours
