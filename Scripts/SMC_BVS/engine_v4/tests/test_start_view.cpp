@@ -105,38 +105,6 @@ bool wp2_files(const Dir& dir, const std::string& design, int n, int p, int seed
          sh(bin + " prep --in " + q(raw) + " --out " + q(dpath)) == 0 &&
          sh(bin + " setup --data " + q(dpath) + " --threads 3 --out " + q(spath)) == 0;
 }
-void copy_all(const v4::fmt::Reader& R, v4::fmt::Writer& W, const std::string& skip1, const std::string& skip2) {
-  for (const auto& e : R.sections()) {
-    const std::string nm(e.name);
-    if (nm == skip1 || nm == skip2) continue;
-    if (e.dtype == v4::fmt::D_JSON) { W.add_json(nm, R.json(nm)); continue; }
-    const void* qq = e.dtype == v4::fmt::D_F64 ? (const void*)R.get<double>(nm) : e.dtype == v4::fmt::D_I32 ? (const void*)R.get<int32_t>(nm)
-                   : e.dtype == v4::fmt::D_U32 ? (const void*)R.get<uint32_t>(nm) : e.dtype == v4::fmt::D_I64 ? (const void*)R.get<int64_t>(nm)
-                   : e.dtype == v4::fmt::D_U64 ? (const void*)R.get<uint64_t>(nm) : e.dtype == v4::fmt::D_U16 ? (const void*)R.get<uint16_t>(nm)
-                   : (const void*)R.get<uint8_t>(nm);
-    W.add_copy(nm, e.dtype, qq, e.length, e.dims[0], e.dims[1]);
-  }
-}
-// UNTIL WP4's #46 MERGES (its read_setup adapts to WP2's setup.bin: code_ptr with J + 1 entries, no meta.stores): a calib.bin
-// for WP2's setup.bin, made by `calibrate` on a WP4-readable copy of the same tables and then pointed at WP2's file
-// (meta.inputs). The island checks only calib.bin's inputs and settings, so this is the calib.bin the pipeline would make.
-std::string calib_for_wp2_setup(const Dir& dir, const std::string& dpath, const std::string& spath, int p, const std::string& extra) {
-  const std::string bin = V4_SMCBVS4, s4 = dir("setup_wp4.bin"), c4 = dir("calib_wp4.bin"), cal = dir("calib.bin");
-  std::string shash;
-  { v4::fmt::Reader R(spath); shash = R.content_hash();
-    v4::fmt::Writer W(R.kind(), R.mode());
-    Json m = R.json("meta"); Json st = Json::object();
-    auto store = [&](const char* nm, double cap, const char* ord) { Json d = Json::object(); d["cap"] = cap; d["order"] = ord; d["size"] = (double)R.entry(std::string(nm) + "_v").dims[0]; st[nm] = d; };
-    store("tstore_top", 40.0 * p + 1, "HPM"); store("tstore_lead0", 20.0 * p, "LEX"); store("tstore_lead1", 20.0 * p, "LEX");
-    m["stores"] = st; W.add_json("meta", m);
-    std::vector<int64_t> cp = R.vec<int64_t>("code_ptr"); cp.pop_back();
-    copy_all(R, W, "meta", "code_ptr"); W.add("code_ptr", cp); W.write(s4); }
-  if (sh(bin + " calibrate --data " + q(dpath) + " --setup " + q(s4) + " " + extra + " --out " + q(c4)) != 0) return "";
-  { v4::fmt::Reader R(c4); v4::fmt::Writer W(R.kind(), R.mode());
-    Json m = R.json("meta"); m["inputs"]["setup.bin"] = shash; W.add_json("meta", m);
-    copy_all(R, W, "meta", ""); W.write(cal); }
-  return cal;
-}
 }  // namespace
 
 TEST(start_view_owned_equals_dep) {
@@ -186,9 +154,8 @@ TEST(start_view_cli_mapped) {
   Dir dir("cli"); std::string dpath, spath;
   CHECK(wp2_files(dir, "AR", 100, 400, 7, dpath, spath));
   const std::string bin = V4_SMCBVS4, out = dir("island_1.bin");
-  const v4::Data D0 = v4::prep::load_data(dpath);
-  const std::string cal = calib_for_wp2_setup(dir, dpath, spath, D0.p, "--mode V --seed 5 --threads 3");
-  CHECK(!cal.empty());
+  const std::string cal = dir("calib.bin");   // WP4's calibrate reads WP2's setup.bin directly (#46)
+  CHECK_EQ(sh(bin + " calibrate --data " + q(dpath) + " --setup " + q(spath) + " --mode V --seed 5 --threads 3 --out " + q(cal)), 0);
   const std::string base = bin + " island --data " + q(dpath) + " --setup " + q(spath) + " --calib " + q(cal) + " --mode V --seed 5 --island 1 --threads 3";
   CHECK_EQ(sh(base + " --out " + q(out)), 0);
   const Json rec = v4::read_json_file(out + ".json");
