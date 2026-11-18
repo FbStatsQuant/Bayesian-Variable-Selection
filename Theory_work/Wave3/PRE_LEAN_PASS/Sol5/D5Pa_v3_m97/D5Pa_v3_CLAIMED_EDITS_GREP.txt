@@ -1,0 +1,10 @@
+# D5Pa v3 on main 97f9c8c3: T6-3 folded into D5Pa v2 (combined card :71 cell with a-2, a-3; RV:1435); claimed edits grepped in the REAL staged reader copies (HQ RIDER_RULES)
+OK   Sol5/D5Pa_v3_m97/staged_reader/READER_VERSIONS.md:1435  T6-3 RV:1435 new parenthesis
+OK   Sol5/D5Pa_v3_m97/staged_reader/READER_VERSIONS.md:0  T6-3 RV:1435 ABSENT old "met by the run"
+OK   Sol5/D5Pa_v3_m97/staged_reader/CLAIMS_CARD.md:71  T6-3 card :71 new "models, the best-scored among those offered to the run's final stage"
+OK   Sol5/D5Pa_v3_m97/staged_reader/CLAIMS_CARD.md:0  T6-3 card :71 ABSENT old "best-scored models" (returned list)
+OK   Sol5/D5Pa_v3_m97/staged_reader/CLAIMS_CARD.md:71  card :71 keeps a-3 (pathwise on the part of the stated event)
+OK   Sol5/D5Pa_v3_m97/staged_reader/READER_VERSIONS.md:1443  RV:1443 keeps a-3
+OK   Sol5/D5Pa_v3_m97/staged_reader/CLAIMS_CARD.md:71  card :71 keeps a-2 (p ≥ 2 on the rate)
+OK   Sol5/D5Pa_v3_m97/staged_reader/READER_VERSIONS.md:1441  RV:1441 keeps a-2
+FAILS 0
