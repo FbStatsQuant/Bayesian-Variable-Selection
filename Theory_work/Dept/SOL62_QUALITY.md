@@ -10,7 +10,11 @@ Leads append their own lines (manager checks); the daily report gives the runnin
 | 2026-11-17 | SOL62 A/B case1 (W3-MISR-R L1) | statement lock, replay vs 6.1 same inputs | BETTER | SAME | BETTER | WORSE | both caught KL + 3/3; 6.2 +1 verified +2 plausible, verdict = stored; 0 false each; ≈5 vs ≈2–3 min |
 | 2026-11-17 | SOL62 A/B case2 (W3-D2 R1) | council seat, replay vs 6.1 same inputs | SAME | WORSE | SAME | SAME | both caught lgamma F1 + "P=0" point; 6.2 false REJECT of Thm2X on a null-event caveat + 1 nit; 6.1 gave no decisions |
 | 2026-11-17 | SOL62 A/B case3 (W3-MISR-R K2) | clean-control re-check, replay vs 6.1 same inputs | SAME | SAME | SAME | SAME | both exact (2 RESOLVED, 0 new, 2 VERIFIED); ≈2 vs ≈3 min |
+| 2026-11-17 | W3-FAMC (R1) | line check (statement + assembly) | BETTER | BETTER | SAME | SAME | 11 points, all genuine (0 false, 0 nit); MAJOR §1R overclaim caught with a concrete case; S not timed |
+| 2026-11-17 | W3-FAMC (R2) | diff round | BETTER | SAME | SAME | SAME | 5 points, all genuine; caught a MAJOR introduced by the R1 fix (group signs, θ=(1,−2)) |
+| 2026-11-17 | W3-FAMC (R3) | council seat | BETTER | SAME | SAME | SAME | 4 F + 3 E, all genuine; per-claim REJECT on provenance/registry only (math PASS), warranted |
+| 2026-11-17 | W3-FAMC (R4) | council diff check | BETTER | SAME | BETTER | SAME | 1 F genuine: ran the ingest converter and caught the `|x|` registry-block parse defect the Opus seat missed |
 | 2026-11-17 | W3-FAMC (R5) | council confirmation | SAME | SAME | SAME | SAME | clean confirm, ran converter + verify, 0 findings (lead) |
 
 ## Running tally
-F: BETTER 1 / SAME 2 / WORSE 0 · N: 0/2/1 · B: 1/2/0 · S: 0/2/1 (3 reviews; A/B only). Alarm rule (two WORSE in a row on F or N): not triggered.
+F: BETTER 5 / SAME 3 / WORSE 0 · N: 1/6/1 · B: 2/6/0 · S: 0/7/1 (8 reviews: 3 A/B + 5 W3-FAMC; FAMC S not timed). Alarm rule (two WORSE in a row on F or N): not triggered.
