@@ -1,0 +1,28 @@
+# NA_DROP v1.3: Sol-5 (b) points b-1..b-4 applied; claimed edits grepped in the REAL staged files (HQ RIDER_RULES)
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:36  b-1 (0.5) lists the three stop() rows with reasons
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:41  b-1 (0.5) count mismatch reason (:251)
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:41  b-1 (0.5) duplicate row (:253)
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:42  b-1 (0.5) out-of-set column reason (:263)
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:37  b-1 (0.5) byte-identical at 61b0a582 and the tag
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:54  b-1 Step 0' row list
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:0  b-1 ABSENT: 'only through SPEC §4's duplicate-model row'
+OK   ticket/.../W3-D5P/CARD.md:10  b-2 CARD row 3.1L: p>=2 on the rate
+OK   ticket/.../W3-D5P/CARD.md:13  b-2 CARD Option B: p>=2 for the rate
+OK   ticket/.../W3-D5P/READER_DELTA.md:30  b-2 READER_DELTA: p>=2 on the rate
+OK   ticket/.../W3-D5P/CARD.md:10  b-3 CARD: IMPL-LIST discharged
+OK   ticket/.../W3-D5P/CARD.md:0  b-3 ABSENT (CARD): 'until Engineering's method commit is code-read'
+OK   ticket/.../W3-D5P/REPORT.md:19,64  b-3 REPORT status (LIST-R table row and REGISTRY status line)
+OK   ticket/.../W3-D5P/REPORT.md:0  b-3 ABSENT (REPORT): 'conditional on IMPL-LIST'
+OK   ticket/.../W3-D5P/REPORT.md:0  b-3 ABSENT (REPORT): 'method commit pending'
+OK   ticket/.../W3-D5P/REPORT.md:66  b-4 REPORT conclusion: (o) its own clause, finite log_Z_list
+OK   ticket/.../W3-D5P/REPORT.md:0  b-4 ABSENT: 'log_Z_list is never NA on an output run' inside the data-event sentence
+OK   ticket/.../W3-D5P/STATEMENT.md:168  changelog row v1.3 (outside every claim span)
+OK   ticket/.../W3-D5P/STATEMENT.md:1  header v1.3
+
+file sha256 (first 16) and line counts:
+STATEMENT.md: c968e0715f97303f lines=168
+lemmas/L3_listR.md: e81a564b5de1bcd9 lines=129
+REPORT.md: a649e9a2eda86981 lines=72
+CARD.md: 46be38145525e830 lines=23
+READER_DELTA.md: a3fd959d97c48c7f lines=45
+RESULT: ALL CLAIMED EDITS PRESENT

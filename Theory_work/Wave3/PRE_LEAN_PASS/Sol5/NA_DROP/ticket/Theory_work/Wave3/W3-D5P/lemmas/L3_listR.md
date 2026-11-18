@@ -33,9 +33,16 @@ last runtime-guard consultation (`v3_fit.R:121-122` on the exact branch, after `
 sampler branch), after which `finish` (`v3_fit.R:79-87`) does not branch on the clock, so DLV-0's guard and MACH
 accounting are unaffected [R2-E-2] — on every input and every
 realisation of the run's uniforms the post-commit fit and the pinned fit execute the same computation up to the new
-fields, and the new computation can end the fit with an error only through SPEC §4's duplicate-model row. That row
-cannot fire on an output run: the sampler store `top_store` and the exact store 𝒯^ex hold distinct models (L2 (iii),
-(iv)). Hence the post-commit fit returns if and only if the pinned fit returns, and 𝒪, `status`, `hpm`, `top_store`,
+fields, and the new computation can end the fit with an error only through the three `stop()` rows of `v3_list_fields`
+(`v3_run.R:251, 253, 263`; these three lines are byte-identical at the core tree 61b0a582 and at `method-v3.1.1-listpip`,
+7100bb3b), none of which can fire on an output run [NA-b1]: (i) *count mismatch* (`:251`, "top store has m models and
+… scores"): the store is serialised by `store_to_list` (`cpp/v3_core.cpp:358-362`, called at `:366` for the sampler store
+and at `:565` for the exact store), which fills the model list and the value vector in one pass over the same set, so
+length(F) = m by construction; (ii) *duplicate model* (`:253`): the sampler store `top_store` and the exact store 𝒯^ex
+hold distinct models (L2 (iii), (iv)); (iii) *column outside the retained set* (`:263`): every stored model is
+serialised by `to_orig` (`cpp/v3_core.cpp:38-42`) as the original indices `D.orig[S[i]]` of retained columns, and the
+`orig` passed to `v3_list_fields` is that same vector (`ctx$orig`, built from `pre$kept` at `v3_fit.R:118` and passed at
+`:176`; `v3_run.R:160, 220`), so `lut[orig] <- seq_len(p)` assigns a position in 1..p to every stored column. Hence the post-commit fit returns if and only if the pinned fit returns, and 𝒪, `status`, `hpm`, `top_store`,
 `fit$exact` (with its store) and every other existing field are those of core 4676af6. So L2, RM0-plus (b⁺) and DLV-0
 apply to the method with the list fields, and the new fields are SPEC's functions of the pinned outputs.
 The reader assumptions (A1)–(A6) of Theorem 6 imply these hypotheses through READER §6 bridges B6.1–B6.4 (this file
@@ -44,7 +51,7 @@ does not re-prove them; the corollary is stated with "the hypotheses of RM2-R-pl
 ## Step 0′ — (o): the list fields are never NA on an output run [NA-2, NA-C1]
 Fix any data set and an admissible run on it that returns output [NA-C2]. By (0.5)
 its existing fields are those of the pinned core. SPEC §4 makes a field NA (or absent) only in these rows: a status other
-than `completed` / `exact` (absent; not an output run); an empty list; a duplicate model (error; excluded by (0.5)); a
+than `completed` / `exact` (absent; not an output run); an empty list; a count mismatch, a duplicate model or a column outside the retained set (the three `stop()` rows, errors; excluded by (0.5) [NA-b1]); a
 NaN or +Inf score, or (HQ's confirmed reading) all scores −Inf; and, in the reading of STATEMENT §1 [NA-1], no exact-branch
 row any more (`log_Z_list` is computed from `fit$exact$top`). On the sampler branch the list 𝒯 is nonempty — it contains
 the hpm_better-maximum of the nonempty offered set 𝓜^run (L2 A4, (iii)) — and consists of distinct models with values

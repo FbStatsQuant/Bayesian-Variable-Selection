@@ -27,7 +27,7 @@ companion of D105 (the printed list fields of SPEC_LIST_PIP); until that commit 
 > 1-\varepsilon_n\le\hat Z^{\mathrm{list}}/Z\le1,
 > $$
 > so that $0\le\log Z-\log\hat Z^{\mathrm{list}}\le-\log(1-\varepsilon_n)$; and $\hat S^{\mathrm{list}}=\hat S=S_0$ when
-> $\varepsilon_n<\tfrac12$. Since $\varepsilon_n=O_P(\sqrt{\log n/n})$, the two PIP errors and the log-evidence error
+> $\varepsilon_n<\tfrac12$. When $p\ge2$ for all large $n$, $\varepsilon_n=O_P(\sqrt{\log n/n})$, so the two PIP errors and the log-evidence error
 > $|\log\hat Z^{\mathrm{list}}-\log Z|$ are $O_P(\sqrt{\log n/n})$ on output, and without "on output"
 > under the delivery conventions (S4).
 
