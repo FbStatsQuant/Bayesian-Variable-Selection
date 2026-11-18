@@ -35,3 +35,8 @@
   clean (0 PROBLEM). Opus E-9 applied. Re-freeze R5 (REPORT only) → both seats confirm.
 - 2026-11-17 Council R5 (MANIFEST 3305c329): sol 10.0 PASS, opus 9.5 PASS; bind OK. Staged ingest: 0 problems, acceptance
   PASS. CHECKPOINT_3 written → manager (recorder dry run; real run on HQ GO only).
+- 2026-11-17 HQ RM2 routing (manager): (1) `reviews/E2_COVERAGE.md`, the E2 seat's exact coverage, for the recorder's
+  RM2-side check-status update; (2) `reviews/RM2_wording.patch` (CORRECTION-ONLY; 3 wording notes; sha256s in
+  `reviews/RM2_wording.sha256`; applies cleanly to main a1d55cef; RM2 branch untouched) + Opus PURE check
+  (`reviews/RM2_wording_check_opus.md`); (3) HQ rule: ingest converter before any Sol council call (PLAN). SOL62 lines R1–R5:
+  `reviews/SOL62_LINES.md`.

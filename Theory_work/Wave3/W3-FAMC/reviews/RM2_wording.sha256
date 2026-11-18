@@ -1,0 +1,7 @@
+# W3-FAMC RM2_wording.patch — expected sha256 (CORRECTION-ONLY; base = origin/main a1d55cef, files identical on theory/W3-FAMC)
+patch  885ad8c48b4152115ea894e5afa4519c68f9a810d717654113fdd9aae366cd20  reviews/RM2_wording.patch
+pre    01a3880694e54586fab7f60eaba49af3b7246fed1efff61021126af1ad0690b4  Theory_work/Wave2/W2-LOC2/lemmas/L6_poly.md
+post   b898acf5683ce2e22a102850bc953f2a73e47e5b32fda2bf3de45dab44f1c635  Theory_work/Wave2/W2-LOC2/lemmas/L6_poly.md
+pre    84bb02399fbe6468c187c688661f0e9dfb994e6bdd16b593a9488dd4b6bcc92c  Theory_work/Wave3/W3-RM2/lemmas/L6_examples.md
+post   b9f47482659c8f69aef06a947864b57bfe7e291c1270313b5d90be0f8dc8e1df  Theory_work/Wave3/W3-RM2/lemmas/L6_examples.md
+# line counts unchanged (477, 573); UTF-8 BOM of L6_examples.md kept; registered statement spans untouched: W2-LOC2:Lemma-BC L6_poly.md:78-84, W2-LOC2:Lemma-IR L6_poly.md:118-129, W3-RM2:Ex-PolyR STATEMENT.md:259-275
