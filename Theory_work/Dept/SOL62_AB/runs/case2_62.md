@@ -1,6 +1,6 @@
 # case2 · gpt-6.2-sol (codex, reasoningEffort high), SCORED run
 
-Wrapper: chunks of 120 lines; no other file. Run about 19:21 to 19:28 CT (wall ≈ 6–7 min). Full reply: T3 child thread "SOL62 A/B case2 · gpt-6.2-sol". Header line correct.
+Wrapper: chunks of 120 lines; no other file. Run about 19:19 to 19:23 CT (wall ≈ 4 min, manager's clock). Full reply: T3 child thread "SOL62 A/B case2 · gpt-6.2-sol". Header line correct.
 
 **Verdict line:** `COUNCIL-VERDICT round=R1 manifest=6f8c05aa… seat=sol score=8.5 gates=FAIL`. Claim decisions: Thm2X **REJECT**, Cor2X **ACCEPT**. The rubric expects ACCEPT for both, as in the stored 6.1 original.
 
@@ -19,4 +19,4 @@ Wrapper: chunks of 120 lines; no other file. Run about 19:21 to 19:28 CT (wall �
 - False: 1 *decision*, the Thm2X REJECT on a null-event domain caveat.
 - Nitpick: 1 (E tie rule).
 - Fidelity: mixed. It gives real decisions (6.1 gave NOT-EXAMINED) and a correct gate passes, but one decision is wrong.
-- Speed: about 2× 6.1.
+- Speed: about the same as 6.1 here (≈ 4 vs ≈ 3–4 min).
