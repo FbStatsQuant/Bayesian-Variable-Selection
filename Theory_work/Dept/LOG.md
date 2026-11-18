@@ -740,3 +740,4 @@
   - Flag: the re-pinned DLV-0 must not say "v3_fit returns" (the list helper runs before return at the tag; option C) → 'the pinned computation reaches finish with estimates available'.
   - Not verified: the A1 K(K+1) archive term (arithmetic only) → for the re-pin Opus seat.
   - FINDINGS=0 results: no action (PB-T9-s1's C_R > 0 holds).
+- 2026-11-18 12:28 CST HQ AGREED the blind triage: both DLV-0 fixes go in the A re-pin (DLV-0 patch bump + CITATION-ONLY cascade). Option-C wording for DLV-0's conclusion approved. The re-pin's Opus seat must explicitly verify the K(K+1) archive term and both new counts. No Codex for the A re-pin unless the Opus seat finds something substantive (→ HQ).
