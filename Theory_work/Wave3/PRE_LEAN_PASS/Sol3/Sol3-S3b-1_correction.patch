@@ -1,0 +1,27 @@
+# Sol-3 S3b-1 (Sol-3 card, AGREE): W3-DIST:B3 is the proof template of B3w only (its last sentence, conditional on W3-POST:Thm-1, is not used). Reader paragraph READER_VERSIONS.md:295 and W3-D3/REPORT.md:42 (REPORT is in D3's manifest: CITATION-ONLY re-freeze when D3 is next opened). Reader/report prose only; no claim span. Line counts unchanged.
+diff --git a/Theory_work/Wave3/W3-D3/REPORT.md b/Theory_work/Wave3/W3-D3/REPORT.md
+index aef5edaf..6c41aeb0 100644
+--- a/Theory_work/Wave3/W3-D3/REPORT.md
++++ b/Theory_work/Wave3/W3-D3/REPORT.md
+@@ -39,7 +39,7 @@ Row 1.2 unchanged (statement, masters, "clean" mark). Added sentence under row 1
+ > centred rows $x-m_n$. [R1-sol-S1, R1-opus-S1, H5-17]
+ 
+ "Master" cell for the added sentence: `W3-D3:Thm2SG` (with `W3-D3:B3w`, `W3-D3:ExSG`), statuses as recorded at CP3; inputs
+-`W3-POST:Thm-1@1.0.1`, `W3-DIST:B0/B1/B2core/B2/B3@1.0.1`, `W3-READER:R1@1.0.2`, all PROVED-CHECKED. "Mark" cell: **clean**
++`W3-POST:Thm-1@1.0.1`, `W3-DIST:B0/B1/B2core/B2@1.0.1`, `W3-READER:R1@1.0.2`, all PROVED-CHECKED; `W3-DIST:B3` is the proof template of B3w only. "Mark" cell: **clean**
+ once the three claims are recorded PROVED-CHECKED.
+ 
+ ## 4. Chain record
+diff --git a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+index b8f3015d..1c91caf1 100644
+--- a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
++++ b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+@@ -292,7 +292,7 @@ $$
+ `W3-POST:Thm-1@1.0.1` item 6 (random-design interface), `Theory_work/Wave3/W3-POST/STATEMENT.md:95-100`, status as in §1;
+ with `W2-APP:POST@1.0.7`, `Theory_work/Wave2/W2-APP/lemmas/L1_POST.md:27-33`, status verbatim **"PROVED-CHECKED"**
+ (main 6cd699dd) [REG-6cd6] (`C-PACK:SL0@1.0.1`, the posterior-summary lemma, is now "PROVED-CHECKED"), and its restatement `W3-POST:Cor-1R@1.0.0`
+-(`W3-POST/STATEMENT.md:106-118`), status **"PROVED (by this seat, unchecked)"**. **Presented statement (sub-Gaussian rows; Gaussian = the case $L=1$):** `W3-D3:Thm2SG@1.0.0` (with `W3-D3:B3w@1.0.0`, `W3-D3:ExSG@1.0.0`), main 0eb1b6ef [REG-0eb1], status verbatim **"PROVED-CHECKED; council R2, MANIFEST 1c14a298…, sol=8.5 PASS, opus=9.3 PASS"** (each); inputs `W3-POST:Thm-1@1.0.1`, `W3-DIST:B0/B1/B2core/B2/B3@1.0.2`, `W3-READER:R1@1.0.4`. **Coexisting statement (Theorem 2X, §11):** `W3-D2:Thm2X@1.0.2` (with `W3-D2:Cor2X@1.0.0`), recorded at main 2e0decc8, status as at main 34c8fb4d [REG-2e0d], **"PROVED-CHECKED, conditional on W2-APP:POST, C-MIS:GDb, C-MIS:Prop-P; council R2, MANIFEST d408b7dc…, sol=9.2 PASS, opus=9.6 PASS"** (each).
++(`W3-POST/STATEMENT.md:106-118`), status **"PROVED (by this seat, unchecked)"**. **Presented statement (sub-Gaussian rows; Gaussian = the case $L=1$):** `W3-D3:Thm2SG@1.0.0` (with `W3-D3:B3w@1.0.0`, `W3-D3:ExSG@1.0.0`), main 0eb1b6ef [REG-0eb1], status verbatim **"PROVED-CHECKED; council R2, MANIFEST 1c14a298…, sol=8.5 PASS, opus=9.3 PASS"** (each); inputs `W3-POST:Thm-1@1.0.1`, `W3-DIST:B0/B1/B2core/B2@1.0.2` (and `W3-DIST:B3@1.0.2` as the proof template of B3w only; its last sentence, conditional on `W3-POST:Thm-1`, is not used), `W3-READER:R1@1.0.4`. **Coexisting statement (Theorem 2X, §11):** `W3-D2:Thm2X@1.0.2` (with `W3-D2:Cor2X@1.0.0`), recorded at main 2e0decc8, status as at main 34c8fb4d [REG-2e0d], **"PROVED-CHECKED, conditional on W2-APP:POST, C-MIS:GDb, C-MIS:Prop-P; council R2, MANIFEST d408b7dc…, sol=9.2 PASS, opus=9.6 PASS"** (each).
+ 
+ ### Bridges
+ | # | Bridge | Mark | Detail |

@@ -1,0 +1,14 @@
+# PENDING (statement-span edit: HQ + consultant). T5 R2 (T5 card, AGREE; found independently by Astra and blind Sol): W3-DIST/STATEMENT.md:78, DIST-1: 'Equivalently' -> 'In particular (dropping the size clause)'. Line count unchanged.
+diff --git a/Theory_work/Wave3/W3-DIST/STATEMENT.md b/Theory_work/Wave3/W3-DIST/STATEMENT.md
+index 46d67fce..19bd78b4 100644
+--- a/Theory_work/Wave3/W3-DIST/STATEMENT.md
++++ b/Theory_work/Wave3/W3-DIST/STATEMENT.md
+@@ -75,7 +75,7 @@ c_D; ℓ_n := log(p_raw ∨ n).
+ M₀, n₀ such that, in (RD), for every n ≥ n₀ and every real t with M₀ log n ≤ t ≤ n^{1−κ₀}:
+   P*[ Π( d_H(f, f*) > C√(t/n)  or  |S| > s₀ + C′t/log n | D_n ) > e^{−ct} ]
+      ≤ 3e^{−ct} + P*( 𝒟_nᶜ ∪ (E; M)ᶜ ∪ (C; M′)ᶜ ∪ (ND; c_D, m_n(t))ᶜ ).   (1.1)
+-Equivalently, for every sequence ε_n with C²M₀ log n/n ≤ ε_n² ≤ C²n^{−κ₀} and c₁ := c/C²:
++In particular (dropping the size clause), for every sequence ε_n with C²M₀ log n/n ≤ ε_n² ≤ C²n^{−κ₀} and c₁ := c/C²:
+   P*[ Π( d_H(f, f*) > ε_n | D_n ) > e^{−c₁nε_n²} ] ≤ 3e^{−c₁nε_n²} + P*(interfaces fail):
+ [SL] (15) with an explicit remainder. Consequences:
+ - (a) **[SL] (15)-form** whenever P*(interfaces fail) ≤ e^{−c₁nε_n²}. At the best rate the right side is n^{−cM₀}, a

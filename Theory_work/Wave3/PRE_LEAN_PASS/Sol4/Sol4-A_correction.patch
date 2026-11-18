@@ -1,0 +1,14 @@
+# Sol-4 replacement A (Sol-4 card, AGREE S4-1): W3-AUDIT/TRACK_B.md:216, B8 'Holds / fails'. Dossier wording only; Lemma VIS and Cor-FAMC unaffected. TRACK_B.md is an EXT input of MANIFEST_VR4r3 (track V: CORRECTION-ONLY re-freeze) and of W3-FAMC MANIFEST_R5r2 (CITATION-ONLY re-freeze); the recorder handles both. Line count unchanged. NOTE: W3-FAMC/STATEMENT.md:93 points at line 216; the cancellation example stays on line 216.
+diff --git a/Theory_work/Wave3/W3-AUDIT/TRACK_B.md b/Theory_work/Wave3/W3-AUDIT/TRACK_B.md
+index 7223dc44..8df6db8e 100644
+--- a/Theory_work/Wave3/W3-AUDIT/TRACK_B.md
++++ b/Theory_work/Wave3/W3-AUDIT/TRACK_B.md
+@@ -213,7 +213,7 @@ cheap first stage must see every true predictor.
+ **Evidence.** U = ∅ in (A3) gives |Cov(W_j, y)| ≥ a [one line]. SL need Condition 5 so that their iterative subset
+ screening "ensures that all true predictors that are contained in X_s will be selected" (p. 958). Ours conditions on up
+ to 15 other columns because the method's blocks have at most 16 columns.
+-**Holds / fails.** Holds when no truth is cancelled by ≤ 15 others: bounded blocks with one truth each, AR and banded with the truths spread apart (study gaps 31–37, ≈ p/5; adjacent mixed-sign AR truths can cancel: ρ = 0.5, θ = (1, −2) lies on B, Lemma VIS),
++**Holds / fails.** Holds with a margin uniform in n under the sufficient conditions of Lemma VIS: bounded blocks with one truth each; aligned signs (VIS-a); or coefficients a fixed distance from the closed bad set B (VIS-b; this covers banded designs in generic position). For AR(ρ) with mixed signs, spread alone is not enough: the proved condition is the separation bound (AR-sep) of Cor-FAMC, Σ_{k≠j}|θ*_k||ρ|^{|j−k|} ≤ ½|θ*_j|(1 − ρ²)/(1 + ρ²), which the study's AR(0.5) layouts satisfy (gaps 31–37, ≈ p/5; 0.5³¹ < 10⁻⁹). Mixed-sign AR truths that violate it can cancel: adjacent truths with ρ = 0.5, θ = (1, −2), and truths at gap 31 with ρ = 2^{−1/31}, θ = (1, −2), lie on B (Lemma VIS),
+ (W2-APP family map, "PTV automatic if ≤ 1 truth/block", `L4_families.md:165`). Fails for masked truths (zero marginal or
+ partial covariance with y); those designs are treated by a separate theorem (W1-PXN), not by Thm 6. Track C gives two
+ concrete failures at the population level: a pervasive factor with **mixed-sign** truths (its D14, D15: a set of ≤ 15

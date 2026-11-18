@@ -1,0 +1,14 @@
+# PENDING (HQ + consultant). Sol-2 S2-2 (Sol-2 card): CLAIMS_CARD.md:97 row 4.1 omits the calibration-success qualifier (PoolZ is 'almost surely on A'; row 3.5 has it). Line count unchanged.
+diff --git a/Theory_work/Wave3/W3-READER/CLAIMS_CARD.md b/Theory_work/Wave3/W3-READER/CLAIMS_CARD.md
+index 2d21cda7..ebe24061 100644
+--- a/Theory_work/Wave3/W3-READER/CLAIMS_CARD.md
++++ b/Theory_work/Wave3/W3-READER/CLAIMS_CARD.md
+@@ -94,7 +94,7 @@ marked · **long** = primitive but lengthy · **limit** = no primitive version;
+ 
+ | # | Item | Status | Reader version |
+ |---|---|---|---|
+-| 4.1 | **Pooling over the coded 4 islands.** The pooled PIP is the equal-weight island mean, so its sup-norm error is at most the worst island's (`W3-SAMP:LT#@2.0.6` (LT-d), "PROVED-CHECKED; council R1, …", main 20d01e52); the equal-weight mean $\hat Z=\frac14\sum_r\hat Z_r$ of the four potential uninterrupted island records has expectation $Z$ given the calibration and the data (equal to the printed evidence on completed runs; no unbiasedness conditional on completion) [R1-F1] (`W3-READER:PoolZ@1.0.2`, registered claim of this ticket, approved [H5-6c]; "PROVED-CHECKED; council R3, MANIFEST 7aebdf2e…, sol=9.5 PASS, opus=9.4 PASS"). | PROVED-CHECKED (LT-d; PoolZ PROVED-CHECKED) | `STATEMENT.md` (two-line proof) |
++| 4.1 | **Pooling over the coded 4 islands.** The pooled PIP is the equal-weight island mean, so its sup-norm error is at most the worst island's (`W3-SAMP:LT#@2.0.6` (LT-d), "PROVED-CHECKED; council R1, …", main 20d01e52); the equal-weight mean $\hat Z=\frac14\sum_r\hat Z_r$ of the four potential uninterrupted island records has, on calibration success, expectation $Z$ given the calibration and the data (equal to the printed evidence on completed runs; no unbiasedness conditional on completion) [R1-F1] (`W3-READER:PoolZ@1.0.2`, registered claim of this ticket, approved [H5-6c]; "PROVED-CHECKED; council R3, MANIFEST 7aebdf2e…, sol=9.5 PASS, opus=9.4 PASS"). | PROVED-CHECKED (LT-d; PoolZ PROVED-CHECKED) | `STATEMENT.md` (two-line proof) |
+ | 4.2 | **An output-identical parallel engine inherits every guarantee above.** Engineering fact: engine revision D is byte-identical to the serial engine on the tested set (24/24 production-hash cases, 10/10 supplementary; briefing 11-13). The inheritance statement is a note in progress (W3-SCALE). | **empirical + note in progress; no theorem, no registry row** | n/a until the note exists |
+ | 4.3 | **Many islands, island weighting, fixed $N$ per island at $p=10^6$.** Evidence census: island log-evidence spread grows with $p$ (0.09 at $p=2$k, 0.76–1.15 at 5k–20k; one island held 79% of the weight at 5k); PIPs agree across islands to $\le5\times10^{-4}$. Do not weight islands by $\hat Z$ at $p\ge5$k. | **OPEN** (no theorem; moved to the scaling paper) | n/a |
+ 

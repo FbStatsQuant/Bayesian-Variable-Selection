@@ -1,0 +1,16 @@
+# PENDING (statement-span edit: HQ + consultant). T5 R1 (T5 card, AGREE): W3-DIST/STATEMENT.md:96-97, DIST-2 commentary sentence (not display (1.2)): the best squared radius for fixed s0^r; the constant is at most of order (1+s0^r)^3 as proved. The reader already says cubic. Line count unchanged.
+diff --git a/Theory_work/Wave3/W3-DIST/STATEMENT.md b/Theory_work/Wave3/W3-DIST/STATEMENT.md
+index 46d67fce..8d8b714c 100644
+--- a/Theory_work/Wave3/W3-DIST/STATEMENT.md
++++ b/Theory_work/Wave3/W3-DIST/STATEMENT.md
+@@ -93,8 +93,8 @@ Equivalently, for every sequence ε_n with C²M₀ log n/n ≤ ε_n² ≤ C²n^{
+ **Theorem DIST-2 (no geometric condition on the design; one logarithm slower).** There are c, C, M₀, n₀ (depending on
+ (s₀^r, A, σ*², M, M′, κ₀)) such that for n ≥ n₀ and M₀ log n ≤ t ≤ n^{1−κ₀}:
+   P*[ Π( d_H(f, f*) > C√(tℓ_n/n) | D_n ) > e^{−ct} ] ≤ 3e^{−ct} + P*( 𝒟_nᶜ ∪ (E; M)ᶜ ∪ (C; M′)ᶜ ).   (1.2)
+-Interfaces: Gaussian noise independent of the design, (E), (C); nothing on the dependence among predictors. Best rate
+-ε_n² ≍ (1 + s₀^r) log n · ℓ_n/n: one logarithm slower than DIST-1 at polynomial p. In [SL]'s form the exponent is
++Interfaces: Gaussian noise independent of the design, (E), (C); nothing on the dependence among predictors. Best rate, for fixed s₀^r:
++ε_n² ≍ log n · ℓ_n/n, one logarithm slower than DIST-1 at polynomial p. As proved, its constant is at most of order (1 + s₀^r)³ for fixed (A, σ*², M, M′) (an upper bound, not known to be tight; `lemmas/X.md` §9, `lemmas/DIST12.md` D.6). In [SL]'s form the exponent is
+ c nε_n²/ℓ_n, not c nε_n² (comparison with [SL]: TARGET.md §2) [S1-04, S1-07].
+ 
+ **Theorem DIST-3 (oracle bound with an additive selection error; parametric rate) [S1-03, BT1, BT2].** Let
