@@ -1,4 +1,4 @@
-# W3-FAMC — STATEMENT v1.2 (2026-11-17; lead: Claude Opus 5.5, high; design-family corollary for core 3)
+# W3-FAMC — STATEMENT v1.3 (2026-11-17; lead: Claude Opus 5.5, high; design-family corollary for core 3)
 
 Ticket W3-FAMC (owner GO via HQ, 2026-11-17; brief `Theory_work/Dept/briefs/W3-FAMC_LEAD_BRIEF.md` on dept/theory).
 Core 3 = card row 3.1 = reader Theorem 6 ([RV] row thm6), used in Theorems 5 and 10. **Assembly only:** no theorem is
@@ -8,7 +8,8 @@ families. Not a Lean target. Asymptotic (n → ∞). This file **asserts no proo
 statuses go in the checkpoints. v1.1 = v1.0 with the manager's pre-review items: a reader version (§1R), remarks moved
 outside the corollary (§1b), citecheck-form pointers, and full verbatim statuses with D126 expansion (§4). HQ read v1.0
 (GO for Tier B, 11-17). v1.2 = v1.1 with the Sol R1 line-check dispositions [R1-S1]…[R1-S11]
-(`reviews/R1_disposition.md`) and the DP1 outcome (E2 check PASS, §4).
+(`reviews/R1_disposition.md`) and the DP1 outcome (E2 check PASS, §4). v1.3 = v1.2 with the Sol R2 diff-round dispositions [R2-N1]…[R2-N5]
+(`reviews/R2_disposition.md`).
 
 **Aliases.** [RV] = `Theory_work/Wave3/W3-READER/READER_VERSIONS.md` (row thm6, `:660-813`); [NOT] =
 `Theory_work/Wave3/W3-READER/NOTATION.md`; [VIS] = `Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md` v1.5;
@@ -35,11 +36,14 @@ conventions (S4) ([RV] `:32-50`) are used only for the delivery clause.
 **Corollary (block and AR designs).** In the setting of Theorem 6 (§0), let the predictors' correlation be either *block*
 (independent groups of bounded size, uniformly well conditioned) or *autoregressive* with a fixed ρ ∈ (−1, 1). Let the
 fixed number of true coefficients be bounded away from 0 and ∞, and let them be unable to cancel one another in one of
-the ways of §1: one true predictor per group; signs aligned with the correlation (AR: equal signs if ρ > 0, alternating
-with position if ρ < 0; a group: signs making all its sign-adjusted partial correlations ≥ 0); AR truths spread apart by
-§1's separation bound; or coefficients a fixed distance from the closed set B of cancelling directions defined in §1.
-Then, with probability → 1, every admissible run that returns a result reports exactly the true model; under Theorem 6's
-delivery conventions (S4), every run returns a result, so the true model is recovered with probability → 1 [R1-S1].
+the ways of §1: one true predictor per group; signs aligned with the correlation (AR: equal signs if ρ > 0, sign
+alternating with the parity of the column index if ρ < 0, no sign condition if ρ = 0; a group with several truths: one
+choice of column sign flips that makes all partial correlations of the flipped group ≥ 0 *and* gives all flipped true
+coefficients the same sign); AR truths spread apart by §1's separation bound; or coefficients a fixed distance from the
+closed set B of cancelling directions defined in §1. Then, with probability → 1, every admissible run that returns a
+result reports exactly the true model. Under Theorem 6's delivery conventions (S4), every admissible run returns a result
+for every n ≥ 3, so the true model is recovered with probability → 1, with Theorem 6's qualifications (lifted integer
+limits, bounded domain, time guard) [R1-S1, R2-N1, R2-N2].
 
 ## 1. Corollary FAMC (core 3 on block and AR designs)
 
@@ -100,8 +104,11 @@ slowly growing finite-n leak set at ρ = 0.95 ([TB] B9 `:256-257`). This is evid
 
 | condition | role in Theorem 6 | class (D109) | supplied by |
 |---|---|---|---|
-| Gaussian rows, fixed signals (A2), floor | (A1), (A2) | 1 (ASSUMPTION_COMPLIANCE.md, row 3.1 at line 38; branch theory/W3-AUDIT @0211dca4) | Theorem 6 itself |
-| (S1) model, (S2) p ≤ n^A | (A1) | 1 (same file, line 20) | Theorem 6 itself |
+| Gaussian rows, fixed signals (A2) | (A1), (A2) | 1 (ASSUMPTION_COMPLIANCE.md, row 3.1 at line 38; branch theory/W3-AUDIT @0211dca4) | Theorem 6 itself |
+| (S1) Gaussian linear model, independent Gaussian errors | (A1) | 1 (same file, line 18) | Theorem 6 itself [R2-N4] |
+| (S2) p ≤ n^A | (A1) | 1 (same file, line 20) | Theorem 6 itself [R2-N4] |
+| (A5) floor on sets of size O(log n) | (A5), (T1-R), (FL-R) | in Theorem 6: 1 (line 38); in FAMC: implied by the design, no separate assumption | (BLK): λ_min(Σ_n) ≥ c; (AR): [GROW5] (P1) [R2-N3] |
+| (A5) floor on Q ∪ {l} | (A5), (FL-R) | in Theorem 6: 2b (line 41); in FAMC: implied by the design, no separate assumption | as the row above [R2-N3] |
 | (S3) the code does what the proof says | (A1) | 2a (same file, line 42: W3-AUDIT-A GW, BLK, ENC, OPC, TDP; W3-RM:E4) | Theorem 6 itself |
 | (S4) delivery conventions (delivery clause only) | delivery | 2a for the no-output inventory and IDEAL-W⁺ (line 43: W3-AUDIT-A:P1S3, W3-AUDIT-AX:REP); 2b with a caveat for the time/memory allocation (line 44) | Theorem 6 itself [R1-S3] |
 | (BLK) group structure, g fixed, λ_min ≥ c | gives (A4), (A5), (A6) | 2b (grouped predictors; the standard block simulation design) | §3, item B (direct computation) |
@@ -176,7 +183,8 @@ input). The AR half rests on Ex-PolyR, BC and IR as quoted. **DP1 (HQ, 11-17): r
 (claude-opus-5-5, high; not an E2 author) checked every E2 item FAMC consumes, with Lemmas BC and IR at α = 3, and
 found no gap: `reviews/E2_check_opus_R1.md`, "OVERALL: PASS". It also closed the AR case independently of BC and IR from
 `C-GROW:C5a` (P1)–(P4) and an explicit two-neighbour Markov regression. Per HQ, the AR half is recorded
-**unconditionally**, with this check in the FAMC manifest. The registry statuses of Ex-PolyR, BC and IR above are
+**unconditionally**. The evidence is the checked-in report `reviews/E2_check_opus_R1.md`; it enters the FAMC manifest at
+the freeze (pending) [R2-N5]. The registry statuses of Ex-PolyR, BC and IR above are
 quoted unchanged; the result goes to W3-RM2 through the manager (no RM2 file is edited).
 
 ## 5. Not claimed
@@ -193,5 +201,6 @@ quoted unchanged; the result goes to W3-RM2 through the manager (no RM2 file is 
 | version | clause | tag | reason | trigger | check |
 |---|---|---|---|---|---|
 | v1.0 | all | NEW-CLAIM (corollary; additive) | W3-FAMC | owner GO via HQ, 11-17 (brief) | — (draft for HQ; no review yet) |
+| v1.3 | §1R group-sign and AR-sign wording, delivery scope; §2 (S1)/(S2) pointers, (A5) floor rows; §4 manifest wording | EQUAL (§1 unchanged; §1R now matches §1) | Sol R2 diff round N1–N5 (all ACCEPT) | `reviews/R2_diff_sol.md` | `reviews/R2_disposition.md`; council |
 | v1.2 | §0 X defined; §1R rewritten with all hypotheses and the (S4) split; B defined in §1 and nullity scoped; §1b(i), (ii); §2 inherited classes and (S4); §3 |·|, (P4) magnitude, B.0 citation; §4 DP1 resolved (E2 PASS); §5 scoped | EQUAL for §1's clauses except (BLK-g)/(AR-g) wording: B's definition written out (EQUAL), nullity claim narrowed (WEAKER remark); §1R corrected (it overclaimed) | Sol R1 line check S1–S11 (all ACCEPT) | `reviews/R1_linecheck_sol.md` | `reviews/R1_disposition.md`; diff round R2 |
 | v1.1 | §1R added; remarks → §1b; pointers; §4 full statuses + D126 expansion | EQUAL (no clause of §1 changed) | manager pre-review items; HQ DP2 (keep every fixed ρ) | manager 11-17 | citecheck |

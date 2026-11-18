@@ -23,3 +23,6 @@
   Markov regression. DP1 → AR half unconditional (HQ). Three wording notes for W3-RM2 → manager.
 - 2026-11-17 Sol R1 line check (gpt-6.2-sol, high): ACCEPT WITH CHANGES (1 MAJOR, 10 MINOR); triage 11/11 ACCEPT
   (`reviews/R1_disposition.md`). STATEMENT v1.2 and A_assembly v1.1; citecheck 93/0. Diff round R2 next.
+- 2026-11-17 Sol R2 diff round (gpt-6.2-sol, high): PASS WITH CHANGES; R1 9 RESOLVED / 2 PARTIAL; new N1 (MAJOR, §1R
+  group-sign wording) + N2–N5 (MINOR); triage 5/5 ACCEPT (`reviews/R2_disposition.md`). STATEMENT v1.3 (§1R, §2, §4
+  wording only; §1 and proof unchanged). Next: council (Sol + non-author Opus seat, same manifest) → freeze → CHECKPOINT.
