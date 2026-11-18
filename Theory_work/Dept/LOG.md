@@ -710,3 +710,4 @@
   - Residuals: (i) "recorded at main 2e0decc8" provenance phrasing (card :55, RV :295/:1417); (ii) stale pins of bumped ids in card/RV → post-freeze requote queue; (iii) START2-R:MIS status text cites old digest 12bb52cd → re-point carrier at the MEAS-D/NA_DROP landing.
   - Next: Recorder-2 retires; blind API rebuild from 97f9c8c3; the coordinator re-freezes its stages on 97f9c8c3.
 - 2026-11-18 12:00 CST Blind API batch rebuilt: theory/prelean-blind b6950652 (merged to 97f9c8c3). 12 requests, ~402k tokens, max_tokens 128000, effort high, no notes. No span changes. Blindness scan 0 hits. Head sent to HQ to submit.
+- 2026-11-18 12:03 CST HQ unreachable (DESKTOP-955G53S relay not answering). The blind-batch head report (b6950652) is NOT delivered. Retry at the next heartbeat or when the relay returns; the report is in the line above.
