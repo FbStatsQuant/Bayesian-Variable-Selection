@@ -754,6 +754,11 @@
 - 2026-11-18 14:39 CST **HQ: HOLD all Claude-seat Theory work until the Claude Personal reset (Mon 2026-11-23 15:00 CT). No Claude Third exception for Theory.** Sol-7 launched now on Codex (gpt-6.2-sol high; delta read of NA_DROP v1.5 bound to 9ddef7fd, R8; packet PRE_LEAN_PASS/Sol7/PACKET.md). Its verdict gets filed for the dry run.
   **RESUME ORDER after the reset:**
   1. item 7 Opus PURE (patch ab9719a6);
-  2. the MEAS-D/NA_DROP/T12 landing DRY run (landing set c854f912 + item 7 + Sol-7 verdict + W-1 citation fix) → table to HQ;
+  1b. NA_DROP v1.6: apply Sol-7 b‴-1/b‴-2 as written + Opus PURE (+ Sol confirm if HQ approves);
+  2. the MEAS-D/NA_DROP/T12 landing DRY run (landing set c854f912 + item 7 + NA_DROP v1.6 + W-1 citation fix) → table to HQ;
   3. the A re-pin (widened; D5Pa v4 rebased; DLV-0 blind-triage fixes; CLAIMS_CARD:2; MIS done in the landing; Opus seat verifies the K(K+1) term and both counts);
   4. the SUMMARY (counts + §3 declined, by the manager).
+- 2026-11-18 14:43 CST **Sol-7 (R8, 9ddef7fd): 8.8 gates=FAIL, 2 WORDING points, no genuine gap** (saved verbatim, PRE-LEAN 40926222). (C) is accepted: the withdrawal is consistent including the registry, Step 2 holds without (D), and (o) and the qualifier removals are justified.
+  - b‴-1: L3:35 "error only via the 3 stop() calls" contradicts the allocation exception at :42 → call them validation stops + the allocation exception.
+  - b‴-2: the IMPL-LIST premise (STATEMENT:60, REPORT:65) still says blanket "no other field changes" → apply L3:43's field scope.
+  - Resume plan: apply both as written (CORRECTION-ONLY) + Opus PURE after the reset → NA_DROP v1.6. A passing Sol seat on the final digest is still needed for A4; asked HQ for one tiny Sol confirm after the PURE.
