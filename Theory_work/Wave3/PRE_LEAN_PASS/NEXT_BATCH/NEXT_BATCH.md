@@ -15,7 +15,7 @@ Sources: manager messages 11-18; the T9 card v2 and addendum (`T9/FABLE_CARD.md`
 | NB-INT | `W3-READER/STATEMENT.md:32`, PoolZ proof, "(Both sides are finite. … ≤ κ_n.)" (the self-contained v1 (b) sentence; no citation of MEAS-D) | proof completion (Z ≤ κ_n); CORRECTION-ONLY, confirmed by the consultant | PoolZ span 12-39 (PoolZ rehash); the claim sentence is unchanged | none |
 | NB-T10-1 | `READER_VERSIONS.md:956`, `CLAIMS_CARD.md:78` ("of size at most q_n + s₀") | wording (overclaim edge case) | none | none |
 | NB-T10-2 | `READER_VERSIONS.md:950`, `CLAIMS_CARD.md:78` (bounds fixed, coefficients may vary within them) | wording (understatement) | none | NB-T10-1 |
-| NB-F3 | `CLAIMS_CARD.md:76, :97` ("exp of the printed field `log_Z`") | wording | none | `Sol2/Sol2-S2-2`, NB-T10-1, NB-T10-2. **Not in the manager's list; in the T9 card (row F3). Drop if not wanted.** |
+| NB-F3 | `CLAIMS_CARD.md:76, :97` ("exp of the printed field `log_Z`") | wording | none | `Sol2/Sol2-S2-2`, NB-T10-1, NB-T10-2. **Kept (manager 11-18): the `log_Z` wording was AGREED in the Fable's T9 prep note (F3); not droppable.** |
 
 **Landing rules (manager, 11-18; consultant riders on T9).**
 - No row cites MEAS-D before its seats (R3 + Sol-5) pass. NB-C1v2 and NB-C1r are stacked on the MEAS-D stage patch and land WITH or AFTER MEAS-D. No other patch here cites MEAS-D (NB-INT keeps the self-contained sentence).
