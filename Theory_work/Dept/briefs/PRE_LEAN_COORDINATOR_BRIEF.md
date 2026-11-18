@@ -30,3 +30,9 @@
 
 ## End
 `PRE_LEAN_PASS/SUMMARY.md`, one page: findings, what changed, what was declined, and the Lean-readiness notes the Lean Department will use as blueprint input. Draft it from the Fable cards; the manager finalizes it.
+
+## Consistency tier (owner 11-18: "especially crucial results like the consistency ones"; HQ brief main 668b413f)
+These targets get extra treatment: **T4** (Thm 1, 1′ and the presented Thm 2), **T5** (Thm 9), **T6** (Thm 6, Cor 6L, Cor-FAMC), **T8's Thm 7** and **T9's Thm 10**.
+- **Second adversarial read by Sol 6.2.** After each Astra call on these targets, run one blind adversarial read with `gpt-6.2-sol`, reasoningEffort high. Give it the same `PACKET.md` and the same "break it" wrapper, and **never show it Astra's reply.** Save the reply as `<target>/CODEX_gpt-6.2-sol_adv.md`. These are separate from the Sol final-text confirmations 1–5.
+- **Fable proof walk.** The Fable does a full proof walk on these targets, and the manager routes its cards to HQ and the consultant. Nothing more for you to do, except to note the card path in your report.
+- **Budget:** about 20 Codex calls in total (10 Astra, 5 Sol final-text, 5 Sol adversarial). Kill at about 4 days. Codex calls stay one at a time.
