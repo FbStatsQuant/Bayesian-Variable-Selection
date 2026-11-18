@@ -46,3 +46,4 @@ W3-AUDIT-AX	Wave3	Theory_work/Wave3/W3-AUDIT/track_A_X	PROVED-CHECKED (track A l
 W3-AUDIT-AW	Wave3	Theory_work/Wave3/W3-AUDIT/track_A_W	PROVED-CHECKED (track A_W lemmas; council W-R2)	Theory_work/Wave3/W3-AUDIT/track_A_W/CHECKPOINT_3.md			theory/W3-AUDIT		W3-AUDIT track A_W (W1 ISL, W2 FRZ: line checks of W1-N1:B / W1-N1:F at the pin); HQ recorder task W2
 W3-D2	Wave3						theory/W3-D2		added by ingest; fill folder/result
 W3-D3	Wave3						theory/W3-D3		added by ingest; fill folder/result
+W3-AUDIT-V	Wave3	Theory_work/Wave3/W3-AUDIT/track_V	PROVED-CHECKED (track V lemma VIS; council R4)	Theory_work/Wave3/W3-AUDIT/track_V/CHECKPOINT_3.md			theory/W3-AUDIT		W3-AUDIT track V (Lemma VIS, visibility with a margin uniform in n; D112); HQ recorder task V2

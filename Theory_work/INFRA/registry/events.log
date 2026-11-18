@@ -3067,3 +3067,5 @@ utc	actor	action	id	before	after	reason
 2026-11-17T23:27:58Z	HQ	accept	W3-D3:B3w		v1.0.0 fp2:407e395021e91756c000edc9	check.py --acceptance W3-D3:B3w W3-D3:ExSG W3-D3:Thm2SG: PASS (0 ERROR)
 2026-11-17T23:27:58Z	HQ	accept	W3-D3:ExSG		v1.0.0 fp2:89f8caf48ce376791f9702df	check.py --acceptance W3-D3:B3w W3-D3:ExSG W3-D3:Thm2SG: PASS (0 ERROR)
 2026-11-17T23:27:58Z	HQ	accept	W3-D3:Thm2SG		v1.0.0 fp2:0ba6c25d72a1db226c5c32e1	check.py --acceptance W3-D3:B3w W3-D3:ExSG W3-D3:Thm2SG: PASS (0 ERROR)
+2026-11-18T00:42:11Z	INFRA	ingest	W3-AUDIT-V:VIS		v1.0.0 PROVED-CHECKED; council R4, MANIFEST a125ce4da54949003a1c866	ingested from W3-AUDIT-V_CP2.jsonl
+2026-11-18T00:42:25Z	HQ	accept	W3-AUDIT-V:VIS		v1.0.0 fp2:42a1809623b21ee48a04d068	check.py --acceptance W3-AUDIT-V:VIS: PASS (0 ERROR)

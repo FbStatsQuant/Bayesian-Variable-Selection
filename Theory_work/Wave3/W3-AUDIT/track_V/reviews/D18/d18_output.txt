@@ -1,0 +1,10 @@
+p0, k: 4088 70  max|diag-1|: 4.773959005888173e-14  lam_min: 0.09999999999975362
+== clustered (fixed rows of copy 0; every p > 4088) truths [0, 214, 660, 295] theta [1.4, 1.0, 1.8, 1.2]
+  j=0: greedy min |cov|=6.615e-07 (delta2 7.872e-13) at |U|=10; exact: cov=6.615368e-07, var=0.555946, cov==0: False
+  j=214: greedy min |cov|=1.908e-07 (delta2 1.817e-13) at |U|=15; exact: cov=-1.908384e-07, var=0.200384, cov==0: False
+  j=660: greedy min |cov|=1.494e-01 (delta2 1.293e-01) at |U|=15; exact: cov=1.493685e-01, var=0.172590, cov==0: False
+  j=295: greedy min |cov|=7.566e-02 (delta2 2.356e-02) at |U|=15; exact: cov=7.565829e-02, var=0.242947, cov==0: False
+== spread, p = 16000 (truths 0 and 4000 share copy 0; theta 1.4, -1.0) truths [0, 4000] theta [1.4, -1.0]
+  j=0: greedy min |cov|=1.715e-01 (delta2 1.278e-01) at |U|=15; exact: cov=1.714866e-01, var=0.230181, cov==0: False
+  j=4000: greedy min |cov|=2.128e-02 (delta2 1.416e-03) at |U|=15; exact: cov=-2.127997e-02, var=0.319702, cov==0: False
+spread, p >= 16352: the four truths lie in four different copies => cov = theta_j Var(W_j|W_U) >= theta_lo * 0.1
