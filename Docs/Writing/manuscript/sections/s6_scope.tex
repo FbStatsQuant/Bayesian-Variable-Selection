@@ -3,13 +3,15 @@
 
 The results are asymptotic in $n$, with $p$ at most polynomial in $n$; one lower bound (Remark~\ref{rem:sharp}(a)) holds at
 every $n\ge3$. The explicit constants of the proofs are conservative. The results cover the posterior that the software targets
-and, for Results~3--5, the software itself in its default configuration, under Conventions \as{C1}, \as{C2p} and \as{C3}, which
-idealise the arithmetic, the random numbers and the allocation. A run that
+and, for Results~3--5, the software itself in its default configuration: Result~3 and Corollary~\ref{cor:list} under
+Convention~\as{C1} and, for delivery, \as{C2p}; Result~4 under \as{C1}; Result~5 under \as{C3}. The conventions idealise the
+arithmetic, the random numbers and the allocation. A run that
 stops early returns no estimates and is not covered. Which designs are inside each result is in
 Section~\ref{sec:who-outside}. The consistency of the reported inclusion probabilities, median model and evidence estimate,
-and the guarantee for the list a run returns, are remarks in the supplement. Statements about a run's estimates concern the event that the
-calibration succeeds, or that the run completes; no lower bound on the probability of that event is claimed. Apart from
-Result~5, which holds given each calibration outcome that freezes a grid, nothing is claimed conditionally on success or
-on completion. No theorem covers a parallel engine, runs with more than the four
+and the distribution guarantee for the list a run returns, are remarks in the supplement. Statements about a run's estimates concern the event that the
+calibration succeeds, or that the run completes; no lower bound on the probability of that event is claimed, except that
+under \as{C2p} every run produces output. Result~5 is a statement given the frozen calibration, on the event that it
+succeeds, about the estimate the islands would produce if the run did not stop; nothing is claimed conditionally on
+completion. No theorem covers a parallel engine, runs with more than the four
 islands, or the engineered variant used at $p=10^6$ (Section~\ref{sec:supp-1m}); results about those are empirical and
 reported elsewhere.

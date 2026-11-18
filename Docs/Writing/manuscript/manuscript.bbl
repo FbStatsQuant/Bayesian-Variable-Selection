@@ -15,7 +15,7 @@ M.~M. Barbieri and J.~O. Berger.
   Tsybakov]{BickelRitovTsybakov2009}
 P.~J. Bickel, Y.~Ritov, and A.~B. Tsybakov.
 \newblock Simultaneous analysis of {L}asso and {D}antzig selector, 2009.
-\newblock arXiv:0801.1095.
+\newblock arXiv:0801.1095v3.
 
 \bibitem[Castillo et~al.(2015)Castillo, Schmidt-Hieber, and van~der
   Vaart]{CastilloSchmidtHieberVanDerVaart2015}
@@ -23,7 +23,7 @@ I.~Castillo, J.~Schmidt-Hieber, and A.~van~der Vaart.
 \newblock Bayesian linear regression with sparse priors.
 \newblock \emph{The Annals of Statistics}, 43\penalty0 (5):\penalty0
   1986--2018, 2015.
-\newblock arXiv:1403.0735.
+\newblock arXiv:1403.0735v3; page numbers cited from this version.
 
 \bibitem[Del~Moral(2004)]{DelMoral2004}
 P.~Del~Moral.
@@ -36,6 +36,7 @@ N.~N. Narisetty and X.~He.
 \newblock {B}ayesian variable selection with shrinking and diffusing priors.
 \newblock \emph{The Annals of Statistics}, 42\penalty0 (2):\penalty0 789--817,
   2014.
+\newblock arXiv:1405.6545v1; page numbers cited from this version.
 
 \bibitem[Scott and Berger(2010)]{ScottBerger2010}
 J.~G. Scott and J.~O. Berger.
@@ -48,14 +49,14 @@ J.~G. Scott and J.~O. Berger.
 Z.~Shang and M.~K. Clayton.
 \newblock Consistency of {B}ayesian linear model selection with a growing
   number of parameters, 2012.
-\newblock arXiv:1102.0826.
+\newblock arXiv:1102.0826v2.
 
 \bibitem[Shin et~al.(2017)Shin, Bhattacharya, and
   Johnson]{ShinBhattacharyaJohnson2017}
 M.~Shin, A.~Bhattacharya, and V.~E. Johnson.
 \newblock Scalable {B}ayesian variable selection using nonlocal prior densities
   in ultrahigh-dimensional settings, 2017.
-\newblock arXiv:1507.07106.
+\newblock arXiv:1507.07106v4.
 
 \bibitem[Song and Liang(2015)]{SongLiang2015}
 Q.~Song and F.~Liang.
@@ -69,7 +70,7 @@ Q.~Song and F.~Liang.
 Y.~Yang, M.~J. Wainwright, and M.~I. Jordan.
 \newblock On the computational complexity of high-dimensional {B}ayesian
   variable selection, 2015.
-\newblock arXiv:1505.07925.
+\newblock arXiv:1505.07925v1.
 
 \bibitem[Zellner(1986)]{Zellner1986}
 A.~Zellner.
@@ -85,6 +86,6 @@ C.-H. Zhang and J.~Huang.
   linear regression.
 \newblock \emph{The Annals of Statistics}, 36\penalty0 (4):\penalty0
   1567--1594, 2008.
-\newblock arXiv:0808.0967.
+\newblock arXiv:0808.0967v1; page numbers cited from this version.
 
 \end{thebibliography}

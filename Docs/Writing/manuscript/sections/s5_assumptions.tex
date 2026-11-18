@@ -88,7 +88,8 @@ and signal size (\S\ref{sec:a-scr}). & \na & \na & \na \\
 \bottomrule
 \end{tabular}
 \par\smallskip\raggedright\footnotesize
-$^{b}$ Result~4 does not assume \lab{SP}; Result~2 allows $s=0$ and a noise level that varies with $n$;
+$^{b}$ Result~4 does not assume \lab{SP} and replaces \lab{DIM} by its budget inequality; Result~5 assumes nothing on the
+design or the data model; Result~2 allows $s=0$ and a noise level that varies with $n$;
 Result~6(a) assumes nothing. $^{a}$ Inside for every design of the strong-factor study (true effects of aligned signs); unclear for S5 and FAC.
 \end{table}
 
@@ -108,7 +109,8 @@ and~\ref{sec:a-post}; ``Our designs'' lines appear only in Sections~\ref{sec:a-r
 
 \subsubsection{Shared assumptions}\label{sec:a-all}
 
-These are assumed by most results, with three exceptions: Result~4 does not assume \lab{SP}; Result~2 allows $s=0$ and a
+These are assumed by most results, with four exceptions: Result~4 does not assume \lab{SP} and replaces \lab{DIM} by its
+budget inequality; Result~5 assumes nothing on the design or the data model; Result~2 allows $s=0$ and a
 noise level that varies with $n$; and Result~6(a) assumes nothing.
 
 \ahead{Gaussian linear model}{\lab{GL}}{The same as \SL{} in every regime (their model (1), p.~947, and density (2), p.~950).}
@@ -164,7 +166,7 @@ the other.}
 \ev{``No larger'' means $\abs t+\bar r_n\le2(A+1)\sz+2$ ($\abs t$ their true-model size) against Theorem~\ref{thm:post-fixed}, and $\bar r_n+1\le5(A+1)(\sz+1)\log n$
 against Theorem~\ref{thm:post-random}. Condition~3 asks a \emph{vanishing} level $\delta_n\succ\epsilon_n^2$ ($\epsilon_n$ their contraction rate) on $\bar r_n+1$ columns that contain a true
 predictor. We ask
-a \emph{fixed} level on sets of $(2A+2)\sz+2$ predictors (fixed design) or $O(\log n)$ predictors (Gaussian rows). In
+a \emph{fixed} level on sets of $(2A+2)\sz+2$ predictors (fixed design) or $O(\log n)$ predictors (random rows). In
 every regime both conditions follow from $\lmin(\Sig)\ge c$. No upper eigenvalue bound is used, so pervasive factors are allowed: the smallest eigenvalue of
 $\Sig$ is $1$ (S1, IND), $1/3$ (S2), $0.3$ (S3, S5), $0.15$ (S4), $0.1$ (S6), $1-\rho$ (one factor at $\rho$), $0.40$ (two
 factors), $0.25$ (AR), $0.5$ (BLK) and $0.7$ (FAC).}
@@ -205,15 +207,14 @@ checked). On raw predictors, Gaussian rows with mean $n$
 satisfy our row law and violate Condition~1, which is a raw exponential-moment bound. Our generators draw centred
 Gaussian rows with unit variances, which satisfy Condition~1 itself.}
 \ro{Heavy-tailed predictors, and bounded predictors whose sparse combinations are not sub-Gaussian at their own scale,
-such as rare binary features, for Results~1 and~2; non-Gaussian rows for Result~3 and Remark~\ref{thm:outputs}.}
+such as binary features whose success probability tends to zero, for Results~1 and~2; non-Gaussian rows for Result~3 and Remark~\ref{thm:outputs}.}
 \pr{\citet[Lemma~6.1, p.~16]{NarisettyHe2014}: rows that are independent isotropic sub-Gaussian vectors. For centred
-rows, \lab{SGR} contains theirs as the case $\Sig=I$, and asks sub-Gaussianity only along sparse directions. As a factual
-remark, for the centred predictors $x-m_n$ it implies Song and Liang's Condition~1, whose worked case is a zero-mean
-Gaussian process (p.~953). In ordinary data, \lab{SGR} holds for Gaussian rows ($L=1$) and for correlated mixtures of
+rows, \lab{SGR} contains theirs as the case $\Sig=I$, and asks sub-Gaussianity only along sparse directions. For the centred predictors $x-m_n$ it implies Song and Liang's Condition~1, whose worked case is a zero-mean
+Gaussian process (p.~953). Examples: Gaussian rows ($L=1$) and for correlated mixtures of
 independent features with a common sub-Gaussian constant, such as features each confined to $K$ standard deviations of its mean, with one common $K$ (Section~\ref{sec:model-result}).}
 \tu{Bounded data such as genotypes are outside Result~3 as stated (Gaussian rows); they meet \lab{SGR} when they are
 mixtures of independent features each confined to $K$ standard deviations of its mean, with one common $K$, but not
-when they include rare binary features; and they are
+when they include binary features whose success probability tends to zero; and they are
 covered by the fixed-design Theorem~\ref{thm:post-fixed} when the observed design meets its conditions.}
 
 \subsubsection{Further assumptions of Result 3}\label{sec:a-rm}
@@ -222,19 +223,33 @@ covered by the fixed-design Theorem~\ref{thm:post-fixed} when the observed desig
 predictor) in every regime: theirs is our condition with no conditioning and no margin.}
 \ev{The start law must see every true predictor, as their first stage must; it conditions on up to $15$ columns because it
 works on groups of at most $16$ predictors (\as{V}, Section~\ref{sec:reported}). For bounded blocks with one true predictor
-each, and for autoregressive designs, the covariance in \as{V} is $\theta^*_j\Var(W_j\mid W_U)$ plus geometrically small terms, at
+each, and for autoregressive designs with the true predictors spread apart (as in our designs), the covariance in \as{V} is $\theta^*_j\Var(W_j\mid W_U)$ plus geometrically small terms, at
 least $\abs{\theta^*_j}\lmin(\Sig)/2$. When the true effects have aligned signs and every conditional covariance
 between columns outside $U$ is nonnegative, as in each design of the strong-factor study, it is at least
 $\theta^*_j\lmin(\Sig)$.}
 \ro{Masking: a true predictor whose signal some $15$ other predictors cancel.}
 \pr{None found: \SL's Condition~5 is the marginal case of visibility only, and their remark (a) on the leakage set is
 not a hypothesis. Both conditions are argued here for block and moderate AR correlation.}
+\begin{remark}[When visibility holds]\label{rem:vis}
+Visibility holds with a margin that does not depend on $n$ (i) with \emph{aligned signs}: when the precision matrix,
+after flipping the signs of some columns, has nonpositive off-diagonal entries and, within each block, the true
+coefficients' signs agree with those flips (independent columns; autoregressive correlation (moderate or not) or one factor with aligned
+coefficients; blocks with the true predictors in different blocks); and (ii) in \emph{generic position}: for designs with
+countably many local correlation patterns (finitely many block, factor or tile types; stationary designs with decaying
+correlation, such as autoregressive, banded and Toeplitz), for every vector of true coefficients outside one fixed closed,
+Lebesgue-null set of hyperplanes, the same for every $n$. Not covered: strong-factor designs whose mixed-sign coefficients
+lie on that set. Whether riboflavin-like data are covered is being determined.
+\end{remark}
+
+\status{Lemma VIS: \textbf{proved, and passed its independent review; recording in the registry pending}. It gives
+sufficient conditions for \as{V}; it adds no assumption.}
 \ds{\textbf{Inside:} the independent and locally correlated designs, and every design of the strong-factor study.
 \textbf{Unclear:} S5 (mixed signs; a search found a near-cancellation) and FAC (its signs are mixed, so the aligned-sign
-bound does not apply; a search found a margin below it).}
+bound does not apply; a search found a margin below it). Generic position (Remark~\ref{rem:vis}) would cover them if
+their coefficient vectors lie off its fixed null set; that is not certified.}
 \tu{A numerical check of the conditions' population quantities, not yet complete, found visibility failing for a
-pervasive factor with effects of mixed signs and for a design modelled on the riboflavin gene-expression data (the latter
-under re-examination); such a user may be outside Result~3
+strong factor whose mixed-sign coefficients cancel; whether a design modelled on the riboflavin gene-expression data
+is covered is being determined; such a user may be outside Result~3
 and still inside Results~1 and~2.}
 
 \ahead{Polynomial leakage set,}{Assumption~\ref{asm:reported}(a)}{\SL{} have no hypothesis of this kind; the nearest text is their
@@ -284,5 +299,5 @@ Section~\ref{sec:a-rm}). What still holds outside
 Result~3: Results~1 and~2; Result~4, certified screening, which needs neither visibility nor a leakage set, when its own
 floor and signal bounds hold; and Result~5, the unbiasedness of the evidence estimate, on every design. The consistency of
 the reported inclusion probabilities, median model and evidence estimate (Remark~\ref{thm:outputs} in the supplement)
-needs a no-leakage condition (\as{NL}, Appendix~\ref{sec:a-pe}): no null predictor has a fixed-level covariance with a
-true one, given up to $15$ others; of our designs, only the independent ones satisfy it.
+needs a no-leakage condition (\as{NL}, Appendix~\ref{sec:a-pe}): no null predictor's covariance with a true one, given the local part of up
+to $15$ others, exceeds a fixed multiple of $n^{-1/2}$, with locality conditions; of our designs, only the independent ones satisfy it.

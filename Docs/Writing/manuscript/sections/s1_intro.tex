@@ -24,12 +24,12 @@ an evidence estimate (Section~\ref{sec:method}).
     with no lower bound on the coefficients (Result~2);
   \item for block and moderate AR correlation, with probability tending to one, every run that produces output reports
     exactly the true model, for every seed and calibration outcome, and the inclusion probabilities, median model and
-    evidence renormalised to its returned list are consistent. The conditions, that no true predictor is masked by $15$ or fewer others
-    (visibility) and that the predictors able to imitate the signal are few and local, the second fails for pervasive
-    common factors when $p\gg\sqrt n$, and visibility fails for strong factors whose mixed-sign coefficients lie on a fixed
-    null set of cancellations (Result~3);
-  \item for a fixed design with a floor on small sets and fixed signal bounds, but neither condition of Result~3, a run
-    rarely certifies a reported model within a size budget $k_n$ that misses a true predictor (Result~4);
+    evidence renormalised to its returned list are consistent. It needs two conditions: no true predictor is masked by
+    $15$ or fewer others (visibility), and the predictors able to imitate the signal are few and local. The second fails
+    for pervasive common factors when $p\gg\sqrt n$; visibility fails for strong factors whose mixed-sign coefficients lie
+    on a fixed null set of cancellations (Result~3);
+  \item for a fixed design with a floor on small sets and fixed signal bounds, whether or not the conditions of Result~3
+    hold, a run rarely certifies a reported model within a size budget $k_n$ that misses a true predictor (Result~4);
   \item the evidence estimate is unbiased on every design (Result~5);
   \item no design allows a posterior rate faster than $n^{-1/2}$, and on two families of designs the rate $\rn$ of
     Result~1 is attained (Result~6).

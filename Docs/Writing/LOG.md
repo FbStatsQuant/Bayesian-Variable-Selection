@@ -72,3 +72,5 @@
 - 2026-11-17 HQ: future Codex fidelity reads use gpt-6.2-sol (high). Recorded as WD9.
 - 2026-11-17 HQ: track gpt-6.2-sol vs 6.1 quality; created SOL62_QUALITY.md with a 6.1 baseline (7 reads, 38 findings, all confirmed). No 6.2 read yet.
 - 2026-11-17 HQ: Claude Work drying out. A5 finish at a light pace: manager + ≤1 helper; Fable advisor final read only; Codex one final fidelity read (gpt-6.2-sol). If Claude Work hits its limit, stop and tell HQ. HELPER: Fable advisor, final read of A5b → advisor/STYLE_A5_R2.md.
+- 2026-11-17 STYLE_A5_R2 (final advisor read) applied, except moving Remark Thm2X to the supplement (HQ: under Thm 2) and 'Cor 13 gives the 9C premise' (not claimed); VIS remark merged into §5.3.3 with the scope line; per-theorem assumption lists dropped. Main text ends p. 26. CODEX CALL #10, FINAL (gpt-6.2-sol, high), diff-scoped → reviews/A5final_codex_fidelity.md.
+- 2026-11-17 CODEX #10 (gpt-6.2-sol, final): 19 findings (2C 9S 6F 2E) in ~6 min; 18 fixed, 1 rejected (reviews/A5final_codex_disposition.md). C present → Opus diff re-check (.rc_tmp/a5f_fix_diff.patch).
