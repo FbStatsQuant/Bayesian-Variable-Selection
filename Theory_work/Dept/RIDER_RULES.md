@@ -105,3 +105,5 @@ the new text, and the bridges it needs. The manager passes it to HQ for W3-READE
 
 - **HQ 11-17 (14:11, owner; POLICIES §5, main b40abc79): Sol model.** All future Sol reviews use **gpt-6.2-sol** (provider codex,
   reasoningEffort high), not gpt-6.1-sol. Reviews already in flight finish as started. Record the model id in each review's header.
+
+- **Fuel (HQ 11-17, owner):** every agent and every review subagent explicitly on `claudeAgent_personal`; never Claude Third/Work. Codex only for the remaining key checks and the 3 SOL62 A/B calls.
