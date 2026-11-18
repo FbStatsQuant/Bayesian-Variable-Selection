@@ -22,5 +22,6 @@ Leads append their own lines (manager checks); the daily report gives the runnin
 | 2026-11-18 | pre-Lean T4 Sol adversarial | blind adversarial | SAME | WORSE | SAME | — | 3 Lean points; 1 (p = 1) already ruled at W3-T03ACC (Fable OBJECT) |
 | 2026-11-18 | pre-Lean T5 Sol adversarial | blind adversarial | SAME | SAME | SAME | — | corroborated Astra's 'equivalent' overclaim independently + 1 new Lean point |
 
+| 2026-11-18 | pre-Lean Sol-5 (D5P landed, NA_DROP v1.2, MEAS-D MEASD7) | final-text confirmation | BETTER | SAME | SAME | — | caught LIST-CODE (v) 'exact-branch run' vs status exact (resource_limit before enumeration), missed by earlier D5P rounds; independently re-found T6 F3 (b-1); MEAS-D PASS with 3 wording items; 0 false |
 ## Running tally
-F: BETTER 7 / SAME 7 / WORSE 0 · N: 1/11/2 · B: 2/12/0 · S: 0/7/1 (14 gpt-6.2-sol reviews: 3 A/B + 5 W3-FAMC + 6 pre-Lean; pre-Lean S not timed). The pre-Lean Astra (gpt-6.2-astra) lines are in PRE_LEAN_PASS/SOL62_LINES.md. Alarm rule (two WORSE in a row on F or N): not triggered.
+F: BETTER 8 / SAME 7 / WORSE 0 · N: 1/12/2 · B: 2/13/0 · S: 0/7/1 (15 gpt-6.2-sol reviews: 3 A/B + 5 W3-FAMC + 7 pre-Lean; pre-Lean S not timed). The pre-Lean Astra (gpt-6.2-astra) lines are in PRE_LEAN_PASS/SOL62_LINES.md. Alarm rule (two WORSE in a row on F or N): not triggered.
