@@ -1,0 +1,23 @@
+# MANIFEST_MEASD2 external inputs (repo-relative; pinned code and recorded readings the proof relies on). No registry files, no live logs.
+# recorded code readings (track A, W3-AUDIT-A:*): GW (potential fit P0), CAL-C (calibration record), OPC (LS0 / local search), TDP (start mode), BLK (block partition)
+Theory_work/Wave3/W3-AUDIT/track_A/T1_GW/STATEMENT.md
+Theory_work/Wave3/W3-AUDIT/track_A/T1_GW/PROOF.md
+Theory_work/Wave3/W3-AUDIT/track_A/T5_CAL/STATEMENT.md
+Theory_work/Wave3/W3-AUDIT/track_A/T5_CAL/PROOF.md
+Theory_work/Wave3/W3-AUDIT/track_A/T3_OPC/STATEMENT.md
+Theory_work/Wave3/W3-AUDIT/track_A/T3_OPC/PROOF.md
+Theory_work/Wave3/W3-AUDIT/track_A/T9_TDP/STATEMENT.md
+Theory_work/Wave3/W3-AUDIT/track_A/T9_TDP/PROOF.md
+Theory_work/Wave3/W3-AUDIT/track_A/T2_BLK/STATEMENT.md
+Theory_work/Wave3/W3-AUDIT/track_A/T2_BLK/PROOF.md
+# N1 Lemma B (code bridge) and the freezing lemma; W3-SAMP:CC
+Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md
+Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md
+Theory_work/Wave3/W3-SAMP/lemmas/CC_code_check.md
+# valid inputs (cited in Step 1)
+Theory_work/Wave3/W3-RM2-R/STATEMENT.md
+# pinned code (core = 4676af6, unchanged in cpp/): the four local_search call sites v3_core.cpp:456/:476/:642/:689 and the routine at v3_engine.h:379
+Scripts/SMC_BVS/core/cpp/v3_core.cpp
+Scripts/SMC_BVS/core/cpp/v3_engine.h
+# neighbour graph read by the islands (R1 F2), pinned at :149-173
+Scripts/SMC_BVS/core/cpp/v3_blocks.h
