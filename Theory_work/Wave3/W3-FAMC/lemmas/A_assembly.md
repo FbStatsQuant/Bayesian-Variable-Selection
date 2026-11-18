@@ -1,6 +1,6 @@
-# W3-FAMC — A. Assembly proof of Corollary FAMC (v1.0, 2026-11-17; lead Claude Opus 5.5, high)
+# W3-FAMC — A. Assembly proof of Corollary FAMC (v1.1, 2026-11-17; lead Claude Opus 5.5, high)
 
-This file proves `STATEMENT.md` §1 (v1.1). It introduces no new lemma: every step is either a citation (with path:line)
+This file proves `STATEMENT.md` §1 (v1.2). v1.1 = v1.0 with [R1-S5], [R1-S7]. It introduces no new lemma: every step is either a citation (with path:line)
 or a finite linear-algebra computation written out in full. Aliases are as in `STATEMENT.md` (header). In addition:
 [RM2] §3.2 = `Theory_work/Wave3/W3-RM2/STATEMENT.md:172-202`.
 
@@ -93,8 +93,9 @@ The remaining E2 inputs are §0 of the statement and (A2).
 **A.1 (T1-R), (FL-R), (L-size^b), (L-feas), (L-gain-R), (L-loc-R), (W-R).** These are exactly E2's verified list
 ([L6] `:211-248`), for every fixed b ∈ [1/(2α), ½) = [1/6, ½). Take b = ¼ and E2's ϱ = (½ − b)/30 = 1/120. E2 uses no
 truth-separation condition beyond PTV ([L6] `:174`).
-*Cross-check, AR-specific:* by [GROW5] (P4) (`:31-42`, after the sign reduction), 0 ≤ Cov(W_l, W_k | W_U) ≤ |ρ|^{|l−k|} for
-every U. So E2's (L-gain-R) and (L-loc-R) bounds hold in this case with K_15 replaced by 1. The PROVED-CHECKED C-GROW
+*Cross-check, AR-specific:* by [GROW5] (P4) (`:31-42`), |Cov(W_l, W_k | W_U)| ≤ |ρ|^{|l−k|} for every U and l ≠ k ∉ U.
+For ρ < 0, (P4) applies to DW (D = diag((−1)^i), [GROW5] `:18-20`), and W_U, (DW)_U generate the same σ-field, so the
+magnitudes agree; for ρ = 0 the covariances vanish [R1-S5]. So E2's (L-gain-R) and (L-loc-R) bounds hold in this case with K_15 replaced by 1. The PROVED-CHECKED C-GROW
 facts thus confirm the leakage half independently of Lemma BC.
 
 **A.2 (V-R) = PTV(a₀)** ([RM] `:135-136`).
@@ -119,5 +120,6 @@ RM2-R-plus. ∎ The status of this half is that of E2 together with its inputs (
 ## A.3 Reader hypotheses, for the record (not used by the proof)
 
 In both families: (A3) is A.2 / B.2, (A4) is B.3 / E2, (A5) is B.1 / E2, and (A6) is B.4 / E2's (0.1) with
-N_l = Q ∩ {v ≠ l : |v − l| ≤ ⌊√log n⌋} ([L6] `:97-103`). These are the reader's sufficient forms; the proof above goes
+N_l = Q ∩ {v ≠ l : |v − l| ≤ ⌊√log n⌋} (definition and error bound [L6] `:75-84`, rates [L6] `:97-100`, use in E2
+[L6] `:233-236`) [R1-S7]. These are the reader's sufficient forms; the proof above goes
 directly to the master and does not use the bridges B6.1–B6.5.

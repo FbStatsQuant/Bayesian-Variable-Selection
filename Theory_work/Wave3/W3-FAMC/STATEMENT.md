@@ -1,4 +1,4 @@
-# W3-FAMC — STATEMENT v1.1 (2026-11-17; lead: Claude Opus 5.5, high; design-family corollary for core 3)
+# W3-FAMC — STATEMENT v1.2 (2026-11-17; lead: Claude Opus 5.5, high; design-family corollary for core 3)
 
 Ticket W3-FAMC (owner GO via HQ, 2026-11-17; brief `Theory_work/Dept/briefs/W3-FAMC_LEAD_BRIEF.md` on dept/theory).
 Core 3 = card row 3.1 = reader Theorem 6 ([RV] row thm6), used in Theorems 5 and 10. **Assembly only:** no theorem is
@@ -7,7 +7,8 @@ visibility (A3), leakage (A4), floors (A5) and local-regression (A6) conditions 
 families. Not a Lean target. Asymptotic (n → ∞). This file **asserts no proof status**: proofs go in `lemmas/`, and
 statuses go in the checkpoints. v1.1 = v1.0 with the manager's pre-review items: a reader version (§1R), remarks moved
 outside the corollary (§1b), citecheck-form pointers, and full verbatim statuses with D126 expansion (§4). HQ read v1.0
-(GO for Tier B, 11-17).
+(GO for Tier B, 11-17). v1.2 = v1.1 with the Sol R1 line-check dispositions [R1-S1]…[R1-S11]
+(`reviews/R1_disposition.md`) and the DP1 outcome (E2 check PASS, §4).
 
 **Aliases.** [RV] = `Theory_work/Wave3/W3-READER/READER_VERSIONS.md` (row thm6, `:660-813`); [NOT] =
 `Theory_work/Wave3/W3-READER/NOTATION.md`; [VIS] = `Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md` v1.5;
@@ -23,20 +24,22 @@ and Theorem 6's locality exponent (called ρ in [RV]) is written **ϱ**.
 ## 0. Setting (Theorem 6's own, unchanged)
 
 The rows of X^r are i.i.d. N_p(m_n, Σ_n), with Σ_n a positive definite correlation matrix, and
-y^r = α1 + Xθ* + ε with deterministic θ*. Theorem 6 (A1): (S1) Gaussian noise, fixed σ*² > 0, independent of the design;
+y^r = α1 + Xθ* + ε with deterministic θ*, where X := CX^rD⁻¹ is the centred, column-standardised design ([NOT] `:31-35`),
+so θ* is on the standardised scale [R1-S1]. Theorem 6 (A1): (S1) Gaussian noise, fixed σ*² > 0, independent of the design;
 (S2) n → ∞, 2 ≤ p ≤ n^A for a fixed A ≥ 1 (p ≫ n allowed); (S3) the method as coded, under the standing conventions
 ([RV] `:28-31`). Theorem 6 (A2): s₀ ≥ 1 fixed, and θ_lo ≤ |θ*_j| ≤ θ_hi on S₀ for fixed 0 < θ_lo ≤ θ_hi. The delivery
 conventions (S4) ([RV] `:32-50`) are used only for the delivery clause.
 
 ## 1R. Reader version (for the H5 card and Writing; the technical version is §1)
 
-**Corollary (block and AR designs).** Suppose the predictors are Gaussian and their correlation is either *block*
-(independent groups of bounded size, each well conditioned) or *autoregressive* with any fixed correlation ρ, |ρ| < 1.
-Suppose the number of true predictors is fixed, their coefficients are bounded away from zero and infinity, and the
-true coefficients cannot cancel each other: one true predictor per group, or true predictors with
-aligned signs, or (for AR) true predictors spread apart, or more generally coefficients a fixed distance away from a
-closed null set of cancelling configurations. Then, with probability tending to one, every run of the method that
-returns a result reports exactly the true model (Theorem 6's conclusion, delivery clause included).
+**Corollary (block and AR designs).** In the setting of Theorem 6 (§0), let the predictors' correlation be either *block*
+(independent groups of bounded size, uniformly well conditioned) or *autoregressive* with a fixed ρ ∈ (−1, 1). Let the
+fixed number of true coefficients be bounded away from 0 and ∞, and let them be unable to cancel one another in one of
+the ways of §1: one true predictor per group; signs aligned with the correlation (AR: equal signs if ρ > 0, alternating
+with position if ρ < 0; a group: signs making all its sign-adjusted partial correlations ≥ 0); AR truths spread apart by
+§1's separation bound; or coefficients a fixed distance from the closed set B of cancelling directions defined in §1.
+Then, with probability → 1, every admissible run that returns a result reports exactly the true model; under Theorem 6's
+delivery conventions (S4), every run returns a result, so the true model is recovered with probability → 1 [R1-S1].
 
 ## 1. Corollary FAMC (core 3 on block and AR designs)
 
@@ -49,9 +52,12 @@ into groups G₁, …, G_m (any sizes ≤ g, in any column order), such that Σ_
 - **(BLK-s) aligned signs within groups:** for every group G with |G ∩ S₀| ≥ 2 there are signs d_l ∈ {−1, +1},
   l ∈ G, such that diag(d)(Σ_{n,GG})⁻¹diag(d) has nonpositive off-diagonal entries, and d_k·sgn θ*_k is the same for all
   k ∈ G ∩ S₀ (for example, equicorrelated groups with correlation in [0, 1) and equal signs inside each group);
-- **(BLK-g) generic position:** inf_{n≥n₀} dist(ϑ_n, B) > 0, where B is the bad set of Lemma VIS for this design
-  sequence ([VIS] `:27`): a closed union of hyperplanes through 0. When the group matrices take finitely many values
-  over n, B is a finite or countable union of hyperplanes, so it is Lebesgue-null and nowhere dense.
+- **(BLK-g) generic position:** inf_{n≥n₀} dist(ϑ_n, B) > 0, where B is the bad set of Lemma VIS ([VIS] `:22-27`) for
+  this design sequence: order the truths by index, and for j ∈ S₀ and U ∌ j with |U| ≤ 15 let γ(U, j) ∈ ℝ^{s₀} have
+  entries Cov(W_j, W_k | W_U) for truths k ∉ U and 0 for truths k ∈ U; let 𝒩 be the closure of the set of all
+  γ(U, j)/|γ(U, j)| over n ≥ n₀, j and U; then B := ∪_{ν∈𝒩} ν^⊥, a closed union of hyperplanes through 0. If the labelled
+  local matrices take finitely many values over n (e.g. group matrices from a fixed finite list), B is a countable union
+  of hyperplanes, so it is Lebesgue-null and nowhere dense ((VIS-c), (VIS-d)(i)); in general it may have interior [R1-S2].
 
 **(AR) Autoregressive correlation.** Σ_{n,lk} = ρ^{|l−k|} in the given column order, for a fixed ρ ∈ (−1, 1). This is
 "moderate" in the sense of correlation bounded away from ±1; no uniformity in ρ is claimed. The coefficients satisfy one
@@ -61,7 +67,7 @@ of:
 - **(AR-sep) truths spread apart:** ρ ≠ 0 and, for every j ∈ S₀,
   Σ_{k∈S₀∖{j}} |θ*_k| |ρ|^{|j−k|} ≤ ½ |θ*_j| (1 − ρ²)/(1 + ρ²);
 - **(AR-g) generic position:** inf_{n≥n₀} dist(ϑ_n, B) > 0, with B as in (BLK-g). For AR, B is a countable union of
-  hyperplanes, so it is null and nowhere dense ([VIS] (VIS-c), (VIS-d)(ii)).
+  hyperplanes, so it is null and nowhere dense ((VIS-c), (VIS-d)(ii)).
 
 **Then the conclusion of Theorem 6 holds.** Under the joint law of design and noise, there are data events 𝒢_n with
 P(𝒢_n) → 1 on which **every** admissible run that produces output reports Ŝ = S₀, whatever its seed and the outcome of
@@ -76,12 +82,14 @@ a = θ_lo·c under (BLK-1) and (BLK-s); a = c·δ under (BLK-g), where
 δ := inf dist(ϑ_n, B). For AR: a = θ_lo(1 − |ρ|)/(1 + |ρ|) under (AR-s); a = ½θ_lo(1 − ρ²)/(1 + ρ²) under (AR-sep);
 a = δ(1 − |ρ|)/(1 + |ρ|) under (AR-g).
 
-(i) **Excluded cases.** Coefficient vectors on B. The example is two adjacent AR truths with θ = (1, −2) at ρ = ½: the
+(i) **Cancellation.** The generic-position routes say nothing on or near B; the sign and separation routes do not refer
+to B and can cover vectors that lie on it [R1-S2]. A cancelling example, covered by no route, is two adjacent AR truths with θ = (1, −2) at ρ = ½: the
 first truth has Cov(W_j, Wᵀθ* | W_U) = 0 for U = ∅ and for every U to its left
 (`Theory_work/Dept/writing_answers/AR1_VIS_NOTE_2026-11-17.md` on dept/theory; [TB] B8 `:216`). The same cancellation can
 occur with two mixed-sign truths in one group.
-(ii) **Group sizes.** The group size g is any fixed number. It is not tied to the method's block cap of 16, which
-enters Theorem 6 only through |U| ≤ 15.
+(ii) **Group sizes.** The design groups G_i are distinct from the method's data-dependent blocks (at most 16 columns).
+The group size g is any fixed number. The method's cap fixes |U| ≤ 15 in visibility and the floor sets of size
+≤ 16 + s₀, and both are covered by λ_min(Σ_n) ≥ c [R1-S8].
 (iii) **The paper's designs.** (BLK-1) covers the block designs with one truth per block. (AR-sep) covers the study's
 AR(0.5) layouts, whose truths are spread apart ([CG] `:146-147`, C-GROW (C5)(c): "The generator's S2 layouts … satisfy
 separation for every signal scale c > 0").
@@ -92,16 +100,20 @@ slowly growing finite-n leak set at ρ = 0.95 ([TB] B9 `:256-257`). This is evid
 
 | condition | role in Theorem 6 | class (D109) | supplied by |
 |---|---|---|---|
-| Gaussian rows, (S1)–(S3), (A2) | (A1), (A2) | as recorded for row 3.1 (no change) | Theorem 6 itself |
+| Gaussian rows, fixed signals (A2), floor | (A1), (A2) | 1 (ASSUMPTION_COMPLIANCE.md, row 3.1 at line 38; branch theory/W3-AUDIT @0211dca4) | Theorem 6 itself |
+| (S1) model, (S2) p ≤ n^A | (A1) | 1 (same file, line 20) | Theorem 6 itself |
+| (S3) the code does what the proof says | (A1) | 2a (same file, line 42: W3-AUDIT-A GW, BLK, ENC, OPC, TDP; W3-RM:E4) | Theorem 6 itself |
+| (S4) delivery conventions (delivery clause only) | delivery | 2a for the no-output inventory and IDEAL-W⁺ (line 43: W3-AUDIT-A:P1S3, W3-AUDIT-AX:REP); 2b with a caveat for the time/memory allocation (line 44) | Theorem 6 itself [R1-S3] |
 | (BLK) group structure, g fixed, λ_min ≥ c | gives (A4), (A5), (A6) | 2b (grouped predictors; the standard block simulation design) | §3, item B (direct computation) |
 | (AR) ρ fixed, \|ρ\| < 1 | gives (A4), (A5), (A6) | 2b (ordered predictors: time, position; standard AR(1) simulation design) | §3, item A ([L6] E2) |
 | (BLK-1) | gives (A3) | 2b (one signal per correlated group) | §3, B.V1 |
 | (BLK-s), (AR-s) | gives (A3) | 2b (aligned effects) | [VIS] (VIS-a), (VIS-e): class 2a |
 | (AR-sep) | gives (A3) | 2b (signals spread apart along the order) | [GROW5] (G3b), C-GROW:C5a: class 2a |
-| (BLK-g), (AR-g) | gives (A3) | 2b (coefficients off a closed null set, by a fixed distance) | [VIS] (VIS-b), (VIS-c), (VIS-d): class 2a |
+| (BLK-g), (AR-g) | gives (A3) | 2b (coefficients a fixed distance off the closed set B) | [VIS] (VIS-b), (VIS-c), (VIS-d): class 2a |
 
 Class-1 candidates for the two families (block and AR designs as theorem conditions in a BVS paper) are not yet verified.
-They are listed as 2b until verified (PLAN item P5).
+They are listed as 2b until verified (PLAN item P5). In the same compliance file, Theorem 6's visibility and leakage
+rows (lines 39–40) are marked ATTENTION; on these two families, FAMC replaces them by the conditions above.
 
 ## 3. Proof map (assembly; every step is an existing result or an explicit computation)
 
@@ -112,8 +124,9 @@ bridges B6.1–B6.5. The reader's (A3)–(A6) are also shown, for readability.
 **B (block).** Q₀ := ∪{G : G ∩ S₀ ≠ ∅}, so |Q₀| ≤ g·s₀. Q := Q₀ if p ≥ 2|Q₀| + 32s₀ + 1, and Q := [p] otherwise (then p is
 bounded and K = p eventually). Fix b = ¼ and ϱ = 1/120.
 - **B.0 Cross-group zero.** If l and k lie in different groups and l, k ∉ U, then Cov(W_l, W_k | W_U) = 0 for every U
-  (Σ_{UU}⁻¹ is block-diagonal on the partition) [TB B9 computation].
-- **B.V1 (BLK-1) ⇒ (V-R).** By (VIS-0) and B.0, Cov(W_j, Wᵀθ* | W_U) = θ*_j·Var(W_j | W_U) ≥ θ_lo·c.
+  (Σ_{UU}⁻¹ is block-diagonal on the partition; proof in `lemmas/A_assembly.md`, B.0; route as in [TB] B9) [R1-S6].
+- **B.V1 (BLK-1) ⇒ (V-R).** By (VIS-0) and B.0, Cov(W_j, Wᵀθ* | W_U) = θ*_j·Var(W_j | W_U), so
+  |Cov(W_j, Wᵀθ* | W_U)| ≥ θ_lo·c [R1-S4].
   (BLK-s) ⇒ (V-R): by B.0 and block independence, Cov(W_j, Wᵀθ* | W_U) = Cov(W_j, Σ_{k∈G∩S₀} θ*_k W_k | W_{U∩G}) with
   G = G(j), a quantity of the single group W_G ~ N(0, Σ_{n,GG}); apply (VIS-a) to Σ_{n,GG} (positive definite, with
   floor ≥ c) and the signs of (BLK-s): margin ≥ θ_lo·c. (BLK-1) is the case |G ∩ S₀| = 1. (BLK-g) ⇒ (V-R) by (VIS-b),
@@ -130,8 +143,9 @@ bounded and K = p eventually). Fix b = ¼ and ϱ = 1/120.
 - |ρ|^d ≤ K_dec(1 + d)^{−α} with K_dec := sup_{d≥0} |ρ|^d(1 + d)^α < ∞.
 
 Take α = 3. [L6] E2 then verifies (T1-R), (FL-R), (L-size^b), (L-feas), (L-gain-R), (L-loc-R) and (W-R) through (D-loc^b),
-for any b ∈ [1/6, ½) (take b = ¼) and ϱ = (½ − b)/30. Leakage and locality are cross-checked by [GROW5] (P4),
-0 ≤ Cov(W_l, W_k | W_U) ≤ |ρ|^{|l−k|} for every U (after the sign flip D). E2 assumes PTV(a₀) = (V-R); it is supplied
+for any b ∈ [1/6, ½) (take b = ¼) and ϱ = (½ − b)/30. Leakage and locality are cross-checked by [GROW5] (P4):
+|Cov(W_l, W_k | W_U)| ≤ |ρ|^{|l−k|} for every U and l ≠ k (for ρ < 0 apply (P4) to DW, which generates the same
+σ-fields; for ρ = 0 the covariances vanish) [R1-S5]. E2 assumes PTV(a₀) = (V-R); it is supplied
 by (AR-s) via (VIS-e), (AR-sep) via [GROW5] (G3b), and (AR-g) via (VIS-b) with c₁₆ ≥ (1 − |ρ|)/(1 + |ρ|).
 
 **Conclusion.** RM2-R-plus gives [SAND(Q)], [TL(Q)], [NA(Q)], [POST] and [MODE], and hence the common data event and,
@@ -158,23 +172,26 @@ expand.
 | ↳ expansion: `W2-LOC2:Lemma-IR@1.0.0` | condition of Ex-PolyR | "PROVED (by this seat, unchecked)" |
 
 **Consequence.** The block half rests only on PROVED-CHECKED inputs (the POST-R condition expands to a PROVED-CHECKED
-input). The AR half rests on Ex-PolyR, BC and IR as quoted. **DP1 (HQ, 11-17):** HQ prefers an unconditional AR half.
-An independent Opus seat is checking E2 (with BC and IR as far as FAMC consumes them), and its report goes to
-`reviews/E2_check_opus_R1.md`. The result decides between an unconditional AR half, the block-only fallback (AR as track-C
-evidence), and, only if the check cannot finish within the kill budget, "AR conditional on E2". No RM2 file is edited.
+input). The AR half rests on Ex-PolyR, BC and IR as quoted. **DP1 (HQ, 11-17): resolved.** An independent Opus seat
+(claude-opus-5-5, high; not an E2 author) checked every E2 item FAMC consumes, with Lemmas BC and IR at α = 3, and
+found no gap: `reviews/E2_check_opus_R1.md`, "OVERALL: PASS". It also closed the AR case independently of BC and IR from
+`C-GROW:C5a` (P1)–(P4) and an explicit two-neighbour Markov regression. Per HQ, the AR half is recorded
+**unconditionally**, with this check in the FAMC manifest. The registry statuses of Ex-PolyR, BC and IR above are
+quoted unchanged; the result goes to W3-RM2 through the manager (no RM2 file is edited).
 
 ## 5. Not claimed
 
-- Anything for coefficient vectors on B, or approaching it (dist(ϑ_n, B) → 0).
-- Groups whose size grows with n; correlation tending to ±1; AR(q) or other Toeplitz designs. These are outside this
-  ticket; the second is covered for |Q| polynomial only through E2's class, which is not stated here.
-- Theorems 5 and 10 on these families: their (A5) no-leakage condition fails for AR and for block designs with a truth
-  that has correlated block-mates ([TB] B11). Only Theorem 6's conclusion is claimed. Its uses in Theorems 5 and 10 are
-  unchanged.
-- Finite-n statements, and any change to the method.
+- Under (BLK-g) and (AR-g): anything for coefficient vectors on B or approaching it (dist(ϑ_n, B) → 0) [R1-S2].
+- Groups whose size grows with n; correlation tending to ±1; AR(q) or other Toeplitz designs [R1-S9].
+- Theorems 5 and 10 on these families. Their (A5) no-leakage condition fails whenever a null column has covariance with a
+  truth bounded away from 0, already at U = ∅ ([TB] B11) — e.g. AR with ρ ≠ 0, or a group in which a truth has a null
+  block-mate correlated with it at a fixed level. This corollary draws no conclusion for Theorems 5 and 10 [R1-S10].
+- Finite-n statistical recovery guarantees (the delivery clause's every-n ≥ 3 statement is Theorem 6's own and is kept),
+  and any change to the method [R1-S11].
 
 ## Changelog
 | version | clause | tag | reason | trigger | check |
 |---|---|---|---|---|---|
 | v1.0 | all | NEW-CLAIM (corollary; additive) | W3-FAMC | owner GO via HQ, 11-17 (brief) | — (draft for HQ; no review yet) |
+| v1.2 | §0 X defined; §1R rewritten with all hypotheses and the (S4) split; B defined in §1 and nullity scoped; §1b(i), (ii); §2 inherited classes and (S4); §3 |·|, (P4) magnitude, B.0 citation; §4 DP1 resolved (E2 PASS); §5 scoped | EQUAL for §1's clauses except (BLK-g)/(AR-g) wording: B's definition written out (EQUAL), nullity claim narrowed (WEAKER remark); §1R corrected (it overclaimed) | Sol R1 line check S1–S11 (all ACCEPT) | `reviews/R1_linecheck_sol.md` | `reviews/R1_disposition.md`; diff round R2 |
 | v1.1 | §1R added; remarks → §1b; pointers; §4 full statuses + D126 expansion | EQUAL (no clause of §1 changed) | manager pre-review items; HQ DP2 (keep every fixed ρ) | manager 11-17 | citecheck |

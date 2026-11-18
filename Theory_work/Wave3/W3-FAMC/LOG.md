@@ -19,3 +19,7 @@
   the check cannot finish within the kill budget.
 - 2026-11-17 STATEMENT v1.1 (reader version §1R, remarks → §1b, pointers, full statuses + D126 expansion); proof file
   `lemmas/A_assembly.md` v1.0; TARGET.md; citecheck.py (from W3-D3): 89 checks, 0 failures (`reviews/CITECHECK.txt`).
+- 2026-11-17 E2 check (Opus seat, R1): **PASS**, no gap; AR also closed independently via C-GROW (P1)–(P4) and a
+  Markov regression. DP1 → AR half unconditional (HQ). Three wording notes for W3-RM2 → manager.
+- 2026-11-17 Sol R1 line check (gpt-6.2-sol, high): ACCEPT WITH CHANGES (1 MAJOR, 10 MINOR); triage 11/11 ACCEPT
+  (`reviews/R1_disposition.md`). STATEMENT v1.2 and A_assembly v1.1; citecheck 93/0. Diff round R2 next.
