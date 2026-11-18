@@ -155,7 +155,7 @@ constant]." Separate factual remark, not an anchor: it also implies Song–Liang
   W3-POST:Thm-1 (for its last sentence); council R2, MANIFEST
   9719c81705729389283bcc99a31cdef06afe84bafef076cbfbadead951b9ed1a (= R2 c5cd9cdd re-frozen CITATION-ONLY as R2r),
   astra=9.3 PASS, opus=9.2 PASS". (Its last sentence, δ_n → 0, is not used; W3-POST:Thm-1 is consumed directly above.)
-- `W3-READER:R1@1.0.3` ([R1] B1.2 `:15-17`, B1.3 `:19-31`) — "PROVED-CHECKED; council R3, MANIFEST
+- `W3-READER:R1@1.0.4` ([R1] B1.2 `:15-17`, B1.3 `:19-31`) — "PROVED-CHECKED; council R3, MANIFEST
   7aebdf2eb126058719114df656d0eaf416adb1ae3d21138cb11b51d7075d2263, sol=9.5 PASS, opus=9.4 PASS".
 - External, standard: Hoeffding's lemma (W. Hoeffding, J. Amer. Statist. Assoc. 58 (1963) 13–30, eq. (4.16)) for ExSG (b).
 - Definitions only: [W3P] §0 `:16-39`; [NOT] §1–§2; [RV] (S1), (S2) `:28-29`.
