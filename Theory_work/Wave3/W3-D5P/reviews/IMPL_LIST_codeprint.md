@@ -3,7 +3,7 @@
 **Scope.** The method commit that adds the list fields, read against SPEC §2, §3, §4, §5, §7 A.1–A.2 (pinned carrier
 `sources/SPEC_LIST_PIP_523dda23.md`, unchanged) and HQ's two confirmed SPEC §4 readings; plus a re-check of LIST-CODE's own
 code reading (core 4676af6) against the tagged code. Part 1: tag `method-v3.1-listpip` = commit **e9bac478**
-(`e9bac47861f1632a6615fecf5b107f6c396b7692`, merge of PR #69). Part 2 (guard hunk, `method-v3.1.1-listpip`): pending.
+(`e9bac47861f1632a6615fecf5b107f6c396b7692`, merge of PR #69). Part 2 (guard hunk): `method-v3.1.1-listpip` = 7100bb3b, §5.
 Scratch only under `.rc_tmp/`; evidence copied to `reviews/impl_list/`.
 
 **What changed in the core.** `git diff 4676af6 e9bac478 -- Scripts/SMC_BVS/core`: `README.md` (+8), `v3_fit.R` (+6/−3),
@@ -107,8 +107,36 @@ argument with LIST-CODE (iv). The incomplete-run deviation of §2 concerns non-o
 after the guard (part 2) those fields are absent there. This is the premise NA_DROP v1.2 needs; recording v1.2 (STRONGER)
 still needs seats on a new manifest (manager, 2026-11-18).
 
-## 5. Part 2 — the guard hunk (`git diff method-v3.1-listpip method-v3.1.1-listpip -- Scripts/SMC_BVS/core/`)
-Pending: the new commit.
+## 5. Part 2 — the guard hunk at `method-v3.1.1-listpip` = main **7100bb3b** (`7100bb3b5a341aed5cbcd3b03fa5851a6345f0dd`, PR #80)
+`git diff method-v3.1-listpip method-v3.1.1-listpip -- Scripts/SMC_BVS/core/`: **one file, one line** (`v3_fit.R`, 1+/1−):
+```
+-  v3_add_list_fields(fit, v3_list_fields(fit$top_store, ctx$orig, names(fit$pip_primary)))
++  if (identical(fit$status, "completed")) v3_add_list_fields(fit, v3_list_fields(fit$top_store, ctx$orig, names(fit$pip_primary))) else fit
+```
+(`v3_fit.R:176`; the other tag-diff files are outside the core: tests, `Lean/BRIEF.md`, Wave3 HQ notes.)
+- **Incomplete final run → fields absent (SPEC §4).** On a sampler fit whose final run did not complete, `fit$status` is not
+  "completed" (it is copied from the final run, `v3_fit.R:171`), so `:176` returns `fit` unchanged: no list field is added.
+  Executed: `reviews/impl_list/finalstop.R` on the tagged core → `reviews/impl_list/finalstop_out_v3.1.1.txt`: "status:
+  resource_limit … list fields present: (none)". The open item of §2 / §2b is **closed**.
+- **Completed branch untouched.** For `fit$status == "completed"` the line evaluates exactly the former call (same arguments,
+  same function); `finish()` and everything above `:176` are unchanged (one-line diff).
+- **Exact branch untouched.** It returns at `v3_fit.R:131` (`v3_exact_list_last(finish(fit), e, ctx)`) before `:176`; no line
+  of it changed.
+- **Nothing else changed** in `Scripts/SMC_BVS/core/` (diff stat: 1 file); `v3_run.R` and all of `cpp/` identical to
+  e9bac478, so §1–§4 (field lines, SPEC verdicts, LIST-CODE re-check, NA premise) carry over unchanged.
+- **Tests at the tag.** `tests/list_pip_units.R`: **all 155 checks passed** (`reviews/impl_list/list_pip_units_out_v3.1.1.txt`),
+  including the new final-run-stop and INV-SCORE-BITS checks.
+- **INV-SCORE-BITS (Engineering, cited).** `Docs/Experiments/P1M/results/listpip_ab/IMPL_LIST_CODE_READ.md` §"INV-SCORE-BITS"
+  (manager-verified 2026-11-18; trace `SCORE_PATH_TRACE.md`): every score offered to the top and leader stores for a model
+  S is the binary64 value `D.logprior[|S|] + Scorer::score(S).logm`, one deterministic function of the sorted S; hence a model
+  never reaches a store with two values, the store's (value, S) dedup is exact dedup by model, and the list-PIP duplicate
+  `stop()` (`v3_run.R:253`) is unreachable by construction, also in binary64. Test: the `identical()` recomputation in
+  `tests/list_pip_units.R` "INV-SCORE-BITS" (PR #80). This complements L2 D2 / L3 (0.5), which exclude duplicates under EX-A.
+- **For the recording.** With IMPL-LIST discharged, LIST-R carries no open premise ("conditional on IMPL-LIST" is dropped;
+  status plain PROVED-CHECKED), method pin `method-v3.1.1-listpip` (7100bb3b). The T6 F3 wording fix of L3 (0.5) — name all
+  three `stop()` rows of `v3_list_fields` (store/score length mismatch `v3_run.R:251`, duplicate model `:253`, column outside
+  the retained set `:263`), each unreachable on an output run — belongs to the later NA_DROP round, not v1.1 (manager,
+  2026-11-18).
 
 ## 6. SUPERSEDED (route b′ not taken) — SPEC §4 amended to match the tagged code
 *Record only.* HQ's latest decision is route (a) (manager, 2026-11-18): Engineering adds the guard, HQ tags
@@ -168,4 +196,4 @@ F(S) (Lemma S.2, LIST-CODE A5), so in particular not all are −Inf; and the exa
 `fit$exact$top` (reading (1)). Hence non-NA on every output run, in particular on Theorem 6's data event and on the delivery
 event. NA_DROP's (o) is unchanged in substance; only Step 0′'s description of the other-status row changes (above).
 
-IMPL-LIST: NOT DISCHARGED (only the SPEC §4 incomplete-final-run row; route (a): guard + new tag method-v3.1.1-listpip — part 2 pending)
+IMPL-LIST: DISCHARGED at method-v3.1.1-listpip (7100bb3b)
