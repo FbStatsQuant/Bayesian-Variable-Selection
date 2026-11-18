@@ -48,7 +48,7 @@
 ## OWNER 11-17 (AGREED): PRE-LEAN CODEX PASS, after this week's recordings and the SOL62 A/B; size per the owner's Codex surplus or a reset he may cash in
 - **Sol final-text confirmation pass (model = gpt-6.2-sol, owner GO 11-17 night) (≈ 6–8 calls):** every result whose last round was Opus-only (C1 code audit; READER card R4/R5; W3-D2; W3-D3; track V R4; #5′ / Cor 6L). Findings only, important points only.
 - **Astra adversarial "try to break it" read (≈ 3–4 calls):** Thm 9; the presented Thm 2 (Thm2SG); Thm 6 + Cor 6L; optionally the Thm 3 lower bound.
-- Drop Astra first if Codex is tight.
+- **OWNER 11-17 night: Codex is fine (resets available, for the pre-Lean check only). Split ≈ half Astra `gpt-6.2-astra` / half Sol `gpt-6.2-sol`, both high, ≈ 5 + 5 calls.** Astra = adversarial "try to break it" on the Lean-bound theorems (Thm 3(a) lower bound, the Hellinger reduction / Thm 9, Thm 1, Thm2SG, Thm 6 + Cor 6L). Sol = final-text confirmation of the Opus-only-final results, consolidated to ≈ 5 calls (C1, READER R4/R5, W3-D2+D3, V R4, D5P/FAMC). The first Astra 6.2 call doubles as calibration (log in SOL62_QUALITY.md). Was: drop Astra first if Codex is tight.
 - **Fable triage (owner, 11-17):** 1–2 Fables (the consultant + the audit Fable) judge each Sol/Astra point against the acceptance filter before any change is made.
 - **Trigger:** HQ tells the owner when the theory recordings are done. The owner then sets the Codex depth (budget or reset).
 - **Acceptance filter (owner, binding):** accept only (a) genuine flaws we missed, or (b) changes needed for the proof to compile in Lean. **No complexity growth; don't change what works; no nitpicks.** Everything else is logged and declined.
