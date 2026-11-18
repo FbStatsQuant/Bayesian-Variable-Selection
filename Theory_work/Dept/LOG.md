@@ -724,3 +724,9 @@
   - b″-2 (guard decisions can differ across executions from clock variance), b″-3 (exact-branch finish() samples peak_memory_kb/timings after the helper) and b″-4 (status quotes) are wording.
   - The Opus seat (R4 8.7 PASS) missed b″-1.
   - Escalated to HQ: (A) the CP Fable bounds paste/as.character/interning ops and the cache words, including a table resize, citing R source at the pinned R version, with the session baseline in β₀ (recommended); or (C) fallback: keep 'on output' on the list-field delivery conclusion and record T6-1 as not claimed. The code is frozen, so Sol's 'integer duplicate check' alternative is out.
+- 2026-11-18 12:15 CST **HQ ruling on NA_DROP b″-1: option (C), now.**
+  - Keep "on output" on the list fields' delivery conclusion. T6-1 is recorded as "allocation/delivery of the list fields is not claimed for the tagged method beyond output runs". No new premise; Cor 6L's other conclusions and the NA_DROP strengthening on output runs stand.
+  - Withdraw the allocation card's claim on the paste/interning cost (its anyDuplicated part may stay as a note). Apply b″-2/3/4.
+  - Checks: one Opus PURE/diff on the (C) texts; NO further Codex call.
+  - Fill the DIST-2 1.4.11 cell (Sol R2 9.6 PASS).
+  - Then a MEAS-D + NA_DROP + T12 landing DRY run to HQ.
