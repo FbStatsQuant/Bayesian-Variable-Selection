@@ -1,0 +1,30 @@
+# D5P (a) stage external inputs (repo-relative): as MANIFEST_R3r2's #EXTRA (option B: core README.md, v3_fit.R, v3_run.R dropped; code readings AT 4676af6), with the two READER files replaced by their STAGED copies (a-2, a-3). No registry files, no live logs.
+Theory_work/Wave3/W3-RM2-R/STATEMENT.md
+Theory_work/Wave3/W3-RM/STATEMENT.md
+Theory_work/Wave3/W3-RM2/STATEMENT.md
+Theory_work/Wave1C/C-DLV/lemmas/L4_delivery.md
+Theory_work/Wave1C/C-DLV/lemmas/L2_degenerate.md
+Theory_work/Wave3/W3-SAMP/STATEMENT.md
+Theory_work/Wave3/W3-SAMP/lemmas/CC_code_check.md
+Theory_work/Wave2/W2-APP/lemmas/L1_POST.md
+Theory_work/Wave3/W3-DIST/STATEMENT.md
+Scripts/SMC_BVS/core/cpp/Makevars.v3
+Scripts/SMC_BVS/core/cpp/v3_blocks.h
+Scripts/SMC_BVS/core/cpp/v3_calib.h
+Scripts/SMC_BVS/core/cpp/v3_core.cpp
+Scripts/SMC_BVS/core/cpp/v3_engine.h
+Scripts/SMC_BVS/core/cpp/v3_holder.h
+Scripts/SMC_BVS/core/cpp/v3_ledger.h
+Scripts/SMC_BVS/core/cpp/v3_runtime.h
+Scripts/SMC_BVS/core/cpp/v3_score.h
+Scripts/SMC_BVS/core/cpp/v3_start.h
+Scripts/SMC_BVS/core/cpp/v3_util.h
+Scripts/SMC_BVS/core/source_manifest.json
+Scripts/SMC_BVS/core/v3.R
+Scripts/SMC_BVS/core/v3_calib.R
+Scripts/SMC_BVS/core/v3_exact.R
+Scripts/SMC_BVS/core/v3_preprocess.R
+Scripts/SMC_BVS/core/v3_setup.R
+# staged READER copies (a-2: p >= 2 at CLAIMS_CARD:71 and READER_VERSIONS:1441; a-3: the list-mass premise on {pi(S0|y) >= n^(-cM/2)} at :71 and :1443)
+Theory_work/Wave3/PRE_LEAN_PASS/Sol5/D5Pa/staged_reader/CLAIMS_CARD.md
+Theory_work/Wave3/PRE_LEAN_PASS/Sol5/D5Pa/staged_reader/READER_VERSIONS.md

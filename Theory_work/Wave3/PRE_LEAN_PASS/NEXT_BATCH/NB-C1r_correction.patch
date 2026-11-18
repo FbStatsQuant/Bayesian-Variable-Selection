@@ -1,6 +1,6 @@
 # NB-C1r (T9 addendum, rider 4, remark): Theory_work/Wave3/W3-SAMP/STATEMENT.md, a new final paragraph after line 192 (outside MEAS-D's claim span 190-192; shifts no earlier line; adds 2 lines: a blank line and the paragraph). FOLDED INTO MEASD5 (do NOT apply with MEAS-D_stage.patch); kept for the PURE audit; stacked on MEAS-D/MEAS-D_stage_wo_NB-C1.patch and NB-C1v2. The clock/outer-probability clause is a remark, not part of any claim.
 diff --git a/Theory_work/Wave3/W3-SAMP/STATEMENT.md b/Theory_work/Wave3/W3-SAMP/STATEMENT.md
-index 990d62d9..9fd2f782 100644
+index 990d62d9..061a43cc 100644
 --- a/Theory_work/Wave3/W3-SAMP/STATEMENT.md
 +++ b/Theory_work/Wave3/W3-SAMP/STATEMENT.md
 @@ -190,3 +190,5 @@ island by island conditionally on that island's own history up to the end of its
@@ -8,4 +8,4 @@ index 990d62d9..9fd2f782 100644
  
  Conventions: off 𝒜° the final-run objects are set to a fixed symbol ⊥ (as 𝓒° := ⊥ when the calibration is not called). "Borel" is with respect to the product σ-field on the streams; each object depends on finitely many of their coordinates.
 +
-+*Remark (actual runs; not part of any claim).* The guard's clock is not modelled (`W3-AUDIT-A:GW`, "Not claimed"). A probability of an actual-run event, that is, an event of the statistical state intersected with {completed}, or a potential or calibration-time event intersected with the actual 𝒜 (§0, :33-34), is therefore read as an outer probability unless the clock is taken jointly measurable with the streams; in either reading it is bounded by the probability of the corresponding potential event.
++*Remark (actual runs; not part of any claim).* The guard's clock is not modelled (`W3-AUDIT-A:GW`, "Not claimed"). A probability of an actual-run event, that is, an event of the statistical state intersected with {completed}, or a potential or calibration-time event intersected with the actual 𝒜 (§0, :33-34), is therefore read as an outer probability unless the operational inputs of the guard (the clock readings) are taken jointly measurable with the data and the streams (measurability in the streams for each fixed data set is not enough); in either reading it is bounded by the probability of the corresponding potential event.

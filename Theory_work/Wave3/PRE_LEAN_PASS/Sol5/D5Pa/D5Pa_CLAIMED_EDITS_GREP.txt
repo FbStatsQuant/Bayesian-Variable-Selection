@@ -1,0 +1,17 @@
+# D5P (a) stage: Sol-5 (a) points a-1, a-2, a-3 applied; claimed edits grepped in the REAL staged files (HQ RIDER_RULES)
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/D5Pa/ticket/STATEMENT.md:95  a-1 LIST-CODE (v): 'a run with status `exact`'
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/D5Pa/ticket/STATEMENT.md:0  a-1 ABSENT: 'on an exact-branch run'
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/D5Pa/ticket/lemmas/L2_listCODE.md:148  a-1 L2 Step F proof restricted to status exact
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/D5Pa/staged_reader/CLAIMS_CARD.md:71  a-2 card :71 p>=2 qualifier on the rate
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/D5Pa/staged_reader/READER_VERSIONS.md:1441  a-2 RV §11.2 p>=2 qualifier on the rate
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/D5Pa/staged_reader/CLAIMS_CARD.md:71  a-3 card :71 list-mass premise with pi(S0|y) >= n^(-cM/2)
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/D5Pa/staged_reader/READER_VERSIONS.md:1443  a-3 RV §11.2 (:1443) same sentence
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/D5Pa/staged_reader/CLAIMS_CARD.md:0  a-3 ABSENT (card): old sentence
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/D5Pa/staged_reader/READER_VERSIONS.md:0  a-3 ABSENT (RV): old sentence
+
+file sha256 (first 16) and line counts:
+ticket/STATEMENT.md: e3196041b792111d lines=163
+ticket/lemmas/L2_listCODE.md: 60b391fd56c197f4 lines=154
+staged_reader/CLAIMS_CARD.md: 53b8ed75b823c005 lines=181
+staged_reader/READER_VERSIONS.md: 658c77eb1178f507 lines=1458
+RESULT: ALL CLAIMED EDITS PRESENT

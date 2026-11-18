@@ -1,0 +1,13 @@
+# MEASD8 (CITATION-ONLY): Sol-5 (c) points c-1, c-2, c-3 applied; claimed edits grepped in the REAL files (HQ RIDER_RULES)
+OK   ticket/.../W3-SAMP/lemmas/MEAS_D.md:3  c-2 header names MEASD7 (Sol's wording)
+OK   ticket/.../W3-SAMP/lemmas/MEAS_D.md:50  c-3 W1-N1 pin for the h class (Sol: §1 lines 62-66)
+OK   ticket/.../W3-SAMP/STATEMENT.md:194  c-1 remark: exception needs joint measurability with the data and the streams (wording mine; Sol gave none)
+OK   ticket/.../W3-SAMP/lemmas/MEAS_D.md:0  ABSENT: bound to the MEASD6 digest
+OK   ticket/.../W3-SAMP/lemmas/MEAS_D.md:0  ABSENT: (`STATEMENT.md:107-108`)
+OK   ticket/.../W3-SAMP/STATEMENT.md:0  ABSENT: unless the clock is taken jointly measurable with the streams
+
+file sha256 (first 16) and line counts:
+STATEMENT.md: a38fe14700a4eeb6 lines=194
+REPORT.md: d0e9f04e07beac80 lines=206
+lemmas/MEAS_D.md: 146c2e411924da40 lines=96
+RESULT: ALL CLAIMED EDITS PRESENT
