@@ -682,3 +682,8 @@
   - STOP: the T12 relabel is refused by check.py --acceptance (A1/A4: no council record; the version bump leaves LEGACY_ACCEPTED; MR/ST/TR then fail A5). The dry run omits T12.
   - Side items: (i) the staged MEAS-D manifest fails verify after the batch (T8-1 EXT); (ii) the DIST-2 1.4.11 WEAKER row needs its OpenAI statement-change check named; (iii) START2-R :189 bare range now false OUT-OF-RANGE (not gated); (iv) second Sol seats are labelled sol62 (bind refuses two 'sol').
   - Manager: ask HQ for GO on the batch without T12, and for the T12 route.
+- 2026-11-18 11:08 CST Coordinator results:
+  - Frozen: MEASD8 8a9c5aca (PURE); D5Pa 9a70be48 (PURE; a-1 confirmed at v3_fit.R:117 resource_limit and numerical_failure); NA_DROP v1.3 91805b68 (Opus diff seat R2 gates PASS 8.8, wording applied; PURE).
+  - Sol-5b ran before my T12 hold arrived: (a′) D5Pa 9.0 FAIL, 2 wording points (REPORT:53 status=="exact"; p≥2 in CARD:10 / READER_DELTA:29). (b′) NA_DROP v1.3 8.7 FAIL. b′-1 is a GENUINE gap: L3 (0.5)/C-1 say the guard and MACH accounting are "unaffected", but the list helper's tail adds O(|𝒯|K) ops and O(|𝒯|+p) words after the last guard. No proof yet that this fits the (D) allocation (RM2-R STATEMENT:76-77 → DLV L1_resources:129-143). Same as T6-1. D5P ERRATA E1 text was never applied.
+  - Escalated to HQ: option 1 (existing CP Fable writes the allocation argument + Opus check + NA_DROP re-freeze + Sol delta read) vs option 2 (an HQ ruling as a stated premise).
+  - D5Pa v2 wording approved.
