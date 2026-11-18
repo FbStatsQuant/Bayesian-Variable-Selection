@@ -1,0 +1,10 @@
+ERRATUM (no statement change intended; IDEAL-W⁺ batch, HQ D78, 2026-11-16) — Theory_work/Wave1C/C-DLV/STATEMENT.md
+diff --git a/Theory_work/Wave1C/C-DLV/STATEMENT.md b/Theory_work/Wave1C/C-DLV/STATEMENT.md
+--- a/Theory_work/Wave1C/C-DLV/STATEMENT.md
++++ b/Theory_work/Wave1C/C-DLV/STATEMENT.md
+@@ -82,3 +82,5 @@
+ (α)–(γ) for the realised tier-1 candidate sets and pilot schedule — to be proved jointly with (or conditionally on) the
+ triggering event, not for an unconditioned tier-1 run (E_n includes forced pilot steps, and fully forced pilots attain
+ k = T_e exactly, N2b). The pilot stage count is the CJ06 / Conjecture P question.
++
++**IDEAL-W amendment note (ERRATUM, 2026-11-16; HQ D78).** IDEAL-W never covered the application-level rejection predicates; IDEAL-W⁺ is the explicit form. IDEAL-W (`:24-25`) is unchanged: it removes overflow and `unsupported_size`, not the shipped LS0 cap validators `le > 1e6` (`Scripts/SMC_BVS/core/v3_run.R:96`) and `cap_ll > INT_MAX` (`Scripts/SMC_BVS/core/cpp/v3_core.cpp:474`) (INVENTORY.md X7–X8; `lemmas/L2_degenerate.md`, erratum at the end). Claims that need those predicates removed assume the registered A:IDEAL-W⁺ explicitly (verbatim definition in INVENTORY.md section X′). The method of this ticket (§0: v3.1 + LS0 as specified, LS0 cap ℓ_n) does not contain these validators, so this ticket's claims are unchanged.
