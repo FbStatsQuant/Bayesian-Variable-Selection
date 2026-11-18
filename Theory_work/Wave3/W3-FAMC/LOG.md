@@ -33,3 +33,5 @@
 - 2026-11-17 Council R4 (MANIFEST 7fab398c): opus 9.5 gates PASS (ACCEPT; 15/15 R3 findings resolved); sol 9.0 gates FAIL
   on F-R4-1 (REPORT registry block: `|x|` read as field delimiters by ingest.py convert; reproduced). Fix: abs(x); converter
   clean (0 PROBLEM). Opus E-9 applied. Re-freeze R5 (REPORT only) → both seats confirm.
+- 2026-11-17 Council R5 (MANIFEST 3305c329): sol 10.0 PASS, opus 9.5 PASS; bind OK. Staged ingest: 0 problems, acceptance
+  PASS. CHECKPOINT_3 written → manager (recorder dry run; real run on HQ GO only).
