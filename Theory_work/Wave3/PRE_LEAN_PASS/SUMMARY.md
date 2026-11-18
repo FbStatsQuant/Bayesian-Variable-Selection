@@ -4,6 +4,7 @@ Method frozen for this pass: `method-v3.1.1-listpip` = 7100bb3b (guard merged); 
 
 ## 1. Findings (one line per target: Astra / blind Sol / Fable ruling)
 _to fill: T1 ... T10, Sol1 ... Sol5, MEAS-D; counts of FLAW / UNSTATED-HYPOTHESIS / LEAN-COMPILE as ruled._
+- **T9 (rows 3.5, 3.6, 4.1): record the verdict as "GAPS CLOSED (filter (a))", not "no flaw"** (consultant AGREE on T9, with riders). The joint-law clauses of rows 3.5, 3.6 and 4.1 were incomplete until measurability and integrability were supplied (MEAS-D; the Z ≤ κ_n bound) and are complete only once MEAS-D is recorded. No row cites MEAS-D before its seats (R3 + Sol-5) pass.
 
 ## 2. Changes staged (see `CORRECTIONS.md`, `BATCH_READY_v2.md`)
 _to fill: corrections landed by the recorder; recorder-only items; deferred (T4-R4)._

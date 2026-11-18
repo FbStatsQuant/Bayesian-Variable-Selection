@@ -13,6 +13,11 @@ Source: manager message 11-18 and the T9 and T10 Fable cards (`T9/FABLE_CARD.md`
 | NB-T10-2 | `READER_VERSIONS.md:950-951`, `CLAIMS_CARD.md:78` (bounds fixed in n, coefficients may vary within them) | wording (understatement) | no | NB-T10-1 (same card line) |
 | NB-F3 | `CLAIMS_CARD.md:76`, `:97` ("exp of the printed field `log_Z`") | wording | no | `Sol2/Sol2-S2-2_correction.patch` (same line :97). **Not in the manager's list; in the T9 card, row F3. Drop if not wanted.** |
 
+**Landing rules (manager, 11-18; consultant riders on T9):**
+- **No row cites MEAS-D before its seats (R3 + Sol-5) pass.** Items that mention or depend on MEAS-D land WITH or AFTER MEAS-D, never before: **NB-C1** (appended to MEAS-D's pointer sentence; stacked on `MEAS-D/MEAS-D_stage.patch`). NB-INT deliberately cites nothing: PoolZ keeps the self-contained Z-bound sentence (T9 card v1 (b)); the Z bound is confirmed, CORRECTION-ONLY.
+- **HELD for the Fable's addendum:** NB-C1 to NB-C4 (the 𝒜 texts). The addendum splits text C into a theorem sentence plus a remark (outer probabilities if the clock is not modelled) with an erratum-E1 changelog line, and adds row 3.5's h-identity integrability sentence; both are staged when the manager passes them on, and NB-C1..C4 are rebuilt from it.
+- NB-T10-1, NB-T10-2 (T10 card column (c)), NB-INT and NB-F3 do not mention MEAS-D.
+
 Notes for the recorder / the Fable:
 - NB-INT uses c_n, ν, b₀, which are not defined in the PoolZ span (they are in `W3-T03ACC/STATEMENT.md:30-31`); the sentence is the card's text, verbatim.
 - NB-C1 and NB-C2 are the only two that change a hashed span; both are wording-only (E1 already records the reading).
