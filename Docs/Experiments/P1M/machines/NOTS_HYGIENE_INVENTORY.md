@@ -22,6 +22,17 @@ File: `Docs/Experiments/P1M/machines/NOTS_HYGIENE_INVENTORY.md`. Companions: `IN
 - **D9, likely benign:** gen writes the binary block into data.bin's `meta` (gen.cpp:173, 186), so file hashes differ between builds. Data identity is the `X_sha256`/`y_sha256` pair (gen.cpp:188-193), which the transfer step compares for P7 vs F1M.
 - **D10:** the rerun plan reruns v2.2.1 from the repo tree on NOTS. Leave `projects/BVS` (141 MB) untouched until the rerun verdict.
 
+## D5: Theory sign-off (Theory Dept manager, 2026-11-18, owner order via HQ)
+| rows | decision | condition |
+|---|---|---|
+| S34+S35 `/scratch/fb31/theory_w2/` | DELETE | after re-running `sha256sum -c` on the Owls copy (`/home/fb31/SMC_Theory_Department/records/theory_w2`); no desktop copy needed |
+| S30 `w3scale/out/` | DELETE | after the verified Owls copy (records/W3-SCALE). P1M check (Engineering, 11-18): R5/R6 were one-time read-only queries answered 11-15 (REQUESTS.md R6, LOG 11-15 19:30/19:43); no P1M job or engine code reads `census_p*.rds` in place → OK |
+| S31 `w3scale/code/v32dev_6866f57` | KEEP | until HQ confirms G0 closed; then delete after verified copy |
+| S32+S33 `w3scale/code/{v31…, v32dev_bbdfea0, v32dev_e5afee7}`, `{runs,stage,nots,tasks,submissions.jsonl}` | DELETE | after the verified Owls copy |
+| S36 `/scratch/fb31/theory_w3/` + H14 `projects/BVS/theory_w3` | DELETE (HQ update via Theory, 11-18) | after a fresh copy to Owls `SMC_Theory_Department/records/theory_w3` + checksum verify (the scratch copy is newer than the 11-14 Owls copy); a future W3-P6 resume restores from Owls. `projects/BVS/theory_w3` still waits for the rerun-verdict hold |
+| H14 `projects/BVS/theory_w2` | DELETE | after download to Owls + verify (falls under the projects/BVS hold until the rerun verdict) |
+| S37 scratch `SMC_Theory_Department/W3-AUDIT-C` + H17 `~/SMC_Theory_Department/W3-AUDIT-C/pkg` | DOWNLOAD then DELETE | no copy anywhere: copy to Owls `/home/fb31/SMC_Theory_Department/records/w3_audit_c/`, SHA256SUMS, verify, then delete both |
+
 ## 1. Headline numbers
 
 | Item | 11-15 | now (11-17 ~21:00 CT) | Command |
@@ -265,3 +276,14 @@ ls <F1M run dir>/{log,manifests,cost} | head / wc -l
 ```
 
 Not run (odd-looking or not needed): `du -sh /scratch/fb31` over the whole tree; any `find` on `/projects`, `$WORK`, `/home/fb31/.vscode-server`, `.codex` etc.; any checksum of NOTS files (to be done in the transfer step, ideally as one low-priority job); `sbatch`/`srun`; any write. The home-dir `du` calls on `.vscode-server` (many files) and `.t3` ran once each, sequentially.
+
+## Group 1 done (Sonnet operator, 2026-11-18 06:10-06:20 UTC; HQ GO)
+- **Scope:** 144 files, **12,037,953,990 B**: F1M run dir (72: `calib.bin` 8.08 GB, `data.bin` 1.64, `raw.bin` 1.60, `law.bin` 0.34 + small files), T5 run dir (69: `law.bin` 0.37 GB + small files), T5 batch ledgers (3). Not touched: all `island_*.bin`, `setup.bin`, `fit.bin` and the `*.bin.json` of those kept bins (T5 `raw/data/calib.bin` + json also stay, DG).
+- **Manifest on NOTS** (one file at a time, `nice -n 19`): `~/SMC_Engineering_Department/records/hygiene_1117/group1_manifest_nots.tsv` (bytes, mtime, sha256, path); `group1_files.txt` is the explicit list.
+- **Copy:** one `rsync -a --partial --bwlimit=60000` (nice both ends, one multiplexed ssh) into `records/hygiene_1117/group1/runs/...`.
+- **Verify on Owls:** `sha256sum -c` 144/144 OK, 0 size mismatches. Row sizes of S02, S04, S05, S12 match the inventory.
+- **D9 (data identity):** F1M vs P7 `X_sha256` and `y_sha256` IDENTICAL; file-level hashes (raw, data.bin) differ only by the meta block. Benign. Record: `group1_D9_data_identity.txt`.
+- **NOTS delete:** one ssh call, literal paths, `squeue`=0 guard and size+mtime re-check per file; 144 deleted, 0 skipped. Log: `records/hygiene_1117/DELETES.tsv`. Tombstones `OFFLOADED_group1.txt` in 9 dirs (each run dir + its cost/, log/, manifests/; T5_1e5 batch dir).
+- **Dept scratch:** 79,151,970,815 B / 967 files -> **67,114,033,797 B / 832 files** (freed 12,037,937,018 B net of 9 tombstones). Home untouched.
+- **Ledger:** `crews/offload/ledger.tsv` created, 144 rows, `desktop_verified` empty (15.7 GB records group goes to the desktop when its VPN is back; Owls copy is currently the only copy).
+- Status of S02, S04, S05, S12 and the F1M/T5 small files: **done (Owls only)**. Next: Group 2 = rest of DD (below the line in the operator report).
