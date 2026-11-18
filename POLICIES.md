@@ -42,6 +42,13 @@ citation check → council (two seats; only C/S/F block; diff round) → **CP3**
 Engineering and compute tickets follow their own DESIGN.md plus the output-preservation contract. Writing follows
 PROGRAM Readability, with a fidelity check of every number.
 
+## 3b. Standing model roles (owner, 2026-11-18: "the best I've found and we will stick to it")
+- **Opus:** the driver. HQ, department managers, decisions, integration and final reviews.
+- **Fable 5.2:** the VP. HQ's consultant and second signature; hard mathematics and rulings as a precision tool.
+- **Astra 6.2:** the external adviser. HQ-only, independent opinions; also adversarial "break it" reads.
+- **Sol 6.2:** the reviewer. Council seats and final-text checks; its verdicts are input, triaged against the acceptance filter.
+- **Sonnet and Haiku:** unlimited workers, in parallel wherever the work splits. Sonnet builds, analyses and writes; Haiku does chores.
+
 ## 4. Access and autonomy
 - **Repo:** github.com/FbStatsQuant/Bayesian-Variable-Selection (public for now; the owner will make it private).
   Clones:
