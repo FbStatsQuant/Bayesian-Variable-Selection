@@ -44,6 +44,40 @@ passes `list_fields = FALSE` (`v3_fit.R:162`).
 `log_Z_list` NA and the flag while `pip_list`/`mpm_list` stay the exact PIPs/MPM (`v3_run.R:277-278`). Under EX-A every
 store value is a finite F(S) (Lemma S.2), so this row never fires on an output run.
 
+## 2b. The single open SPEC item and its effect
+**Item.** SPEC §4 row "any other status → the fields are absent (NULL), also when partial results are returned": on a
+sampler-branch fit whose **final run did not complete** (`raw$status != "completed"`, `v3_run.R:143`: a runtime-guard stop
+or a numerical failure inside the final run), `v3_assemble_final` returns early without `top_store` (`:143-149`), and
+`v3_fit.R:176` still calls `v3_list_fields(NULL, …)`: m = 0, so the seven fields are set to NA with
+`pip_list_flag = "empty_list"` (`v3_run.R:249`) instead of being absent. Verified independently (code path above;
+executable emulation `reviews/impl_list/finalstop.R` → `finalstop_out.txt`).
+**Does it break IMPL-LIST as worded?** Yes, for that row only. IMPL-LIST (`STATEMENT.md:59-63`) requires the commit to
+compute the fields "as SPEC §2 and §4 prescribe"; on incomplete-final-run fits the §4 row is not followed. The second half,
+"changes no other field and no other state", **holds**: the deviation adds new fields only; no legacy field changes
+(A/B identity below) and no error or state change occurs (`v3_list_fields(NULL, …)` returns before any computation).
+**Is any LIST-R or LIST-CODE clause affected?** No.
+- LIST-CODE (i)–(v) read the pinned core's existing fields (C++ unchanged; R lines moved only, §3); the extra fields touch
+  neither `status`, `estimates_available`, `hpm`, `top_store` nor `fit$exact`.
+- LIST-R (C3)(i)–(iii) are about runs that return output (𝒪 = `estimates_available` TRUE); an incomplete-final-run fit has
+  `estimates_available = FALSE` (`v3_run.R:144`), so it is outside every clause. L3 (0.5) uses IMPL-LIST for two facts —
+  the post-commit fit returns iff the pinned fit returns, and its existing fields are the pinned ones — both still true on
+  those fits (no error is raised; nothing existing changes). L3 Step 1's identification of the printed fields uses SPEC §2
+  and the `completed` / `exact` rows of §4 only, which MATCH.
+- The NA_DROP premise (§4 below) is about output runs and is unaffected.
+**Remedies (HQ's choice).** (a) the guard `if (identical(fit$status, "completed"))` at `v3_fit.R:176` (Engineering's
+proposal), new tag `method-v3.1.1-listpip` — then IMPL-LIST as worded is met (part 2 checks the hunk); or (b) narrow the
+premise to output runs ("on every run that returns output, computes them as SPEC §2 and §4 prescribe …"), a statement
+change needing its own check. HQ chose (a) (manager, 2026-11-18).
+
+## 2c. Inputs consulted (not part of this independent read)
+- Engineering's code read `Docs/Experiments/P1M/results/listpip_ab/IMPL_LIST_CODE_READ.md` (main checkout, 2026-11-18):
+  same single deviation (its §4 row "DEVIATION (minor)", same cause, same one-line guard); every other row OK — concordant
+  with §2 here.
+- Legacy-field bit-identity (SPEC §7 A.1–A.2): Engineering's A/B, PR #69 comment
+  https://github.com/FbStatsQuant/Bayesian-Variable-Selection/pull/69#issuecomment-6977156343 (39/39 units identical on tree
+  991787ef — 34 PROD-H production + 5 status paths — and 15/15 fast units on the final tree 8ff2d876, same C++ key). Cited,
+  not redone; my 10-unit subset (§2, last row) is an independent spot check.
+
 ## 3. LIST-CODE re-check against the tagged code (what it reads, moved or changed)
 - **C++** (`cpp/*.h`, `cpp/v3_core.cpp`): unchanged; every C++ citation of L2 (A1–A5, B2–B4, C, D1–D3, E) stands.
 - **R, changed or moved lines cited in L2 / L3** (content still supports the step unless stated):
@@ -76,4 +110,4 @@ still needs seats on a new manifest (manager, 2026-11-18).
 ## 5. Part 2 — the guard hunk (`git diff method-v3.1-listpip method-v3.1.1-listpip -- Scripts/SMC_BVS/core/`)
 Pending: the new commit.
 
-IMPL-LIST: NOT DISCHARGED (one open SPEC §4 item: on fits whose final run did not complete the list fields are present — NA, flag "empty_list" — instead of absent; HQ decision (a): guard, new tag method-v3.1.1-listpip)
+IMPL-LIST: NOT DISCHARGED (only the SPEC §4 row "other statuses → fields absent" on fits whose final run did not complete: the seven fields are present, NA with flag "empty_list"; no LIST-R or LIST-CODE clause affected; HQ decision (a): guard + new tag method-v3.1.1-listpip, part 2 pending)
