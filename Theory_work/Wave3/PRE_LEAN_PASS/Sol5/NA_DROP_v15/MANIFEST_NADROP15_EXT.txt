@@ -1,0 +1,41 @@
+# NA_DROP v1.3 stage external inputs (repo-relative): the unchanged D5P files, the recorded inputs and the code of record the NA_DROP argument reads (method-v3.1.1-listpip). No registry files, no live logs.
+# unchanged D5P files (v1.1 as landed, df1f5872)
+Theory_work/Wave3/W3-D5P/lemmas/L1_listK.md
+Theory_work/Wave3/W3-D5P/lemmas/L2_listCODE.md
+# recorded inputs and code of the R4 manifest (MANIFEST_R3r2), plus the core files the NA argument cites
+Theory_work/Wave3/W3-RM2-R/STATEMENT.md
+Theory_work/Wave3/W3-RM/STATEMENT.md
+Theory_work/Wave3/W3-RM2/STATEMENT.md
+Theory_work/Wave1C/C-DLV/lemmas/L4_delivery.md
+Theory_work/Wave1C/C-DLV/lemmas/L2_degenerate.md
+Theory_work/Wave3/W3-SAMP/STATEMENT.md
+Theory_work/Wave3/W3-SAMP/lemmas/CC_code_check.md
+Theory_work/Wave2/W2-APP/lemmas/L1_POST.md
+Theory_work/Wave3/W3-DIST/STATEMENT.md
+Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+Theory_work/Wave3/W3-READER/CLAIMS_CARD.md
+Scripts/SMC_BVS/core/cpp/Makevars.v3
+Scripts/SMC_BVS/core/cpp/v3_blocks.h
+Scripts/SMC_BVS/core/cpp/v3_calib.h
+Scripts/SMC_BVS/core/cpp/v3_core.cpp
+Scripts/SMC_BVS/core/cpp/v3_engine.h
+Scripts/SMC_BVS/core/cpp/v3_holder.h
+Scripts/SMC_BVS/core/cpp/v3_ledger.h
+Scripts/SMC_BVS/core/cpp/v3_runtime.h
+Scripts/SMC_BVS/core/cpp/v3_score.h
+Scripts/SMC_BVS/core/cpp/v3_start.h
+Scripts/SMC_BVS/core/cpp/v3_util.h
+Scripts/SMC_BVS/core/source_manifest.json
+Scripts/SMC_BVS/core/v3.R
+Scripts/SMC_BVS/core/v3_calib.R
+Scripts/SMC_BVS/core/v3_exact.R
+Scripts/SMC_BVS/core/v3_preprocess.R
+Scripts/SMC_BVS/core/v3_setup.R
+Scripts/SMC_BVS/core/v3_fit.R
+Scripts/SMC_BVS/core/v3_run.R
+# IMPL-LIST discharge reading (R2 G4-1): the new status text of REPORT and CARD rests on it (manifest.py skips reviews/ in ticket dirs, so it is pinned as an external input)
+Theory_work/Wave3/W3-D5P/reviews/IMPL_LIST_codeprint.md
+# v1.4 additions: the allocation argument's inputs (C-DLV Lemma R / Corollary R, the (D) definition, RM2-R Q5)
+Theory_work/Wave1C/C-DLV/lemmas/L1_resources.md
+Theory_work/Wave1C/C-DLV/STATEMENT.md
+Theory_work/Wave3/W3-RM2-R/lemmas/Q5_dlv0.md

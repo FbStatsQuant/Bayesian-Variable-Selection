@@ -1,0 +1,48 @@
+# NA_DROP v1.5 (HQ ruling (C) on Sol-6 b″-1; b″-2, b″-3, b″-4): claimed edits grepped in the REAL staged files (HQ RIDER_RULES)
+OK   ticket/.../W3-D5P/STATEMENT.md:1  header v1.5
+OK   ticket/.../W3-D5P/STATEMENT.md:0  ABSENT: "under the delivery premises, unconditionally"
+OK   ticket/.../W3-D5P/STATEMENT.md:24  table row :24 on output runs (T6-1)
+OK   ticket/.../W3-D5P/STATEMENT.md:125  (iii) pinned core returns output (DLV-0); tagged: output runs only
+OK   ticket/.../W3-D5P/STATEMENT.md:126  (iii) P(𝒪 ∩ B₄) → 0
+OK   ticket/.../W3-D5P/STATEMENT.md:127  (iii) O_P(r_n) on output
+OK   ticket/.../W3-D5P/STATEMENT.md:128  (iii) not claimed beyond output runs
+OK   ticket/.../W3-D5P/STATEMENT.md:0  (iii) ABSENT: old "so for every seed, N_e, R′ and calibration outcome, without"
+OK   ticket/.../W3-D5P/STATEMENT.md:169  changelog v1.4 row marked withdrawn
+OK   ticket/.../W3-D5P/STATEMENT.md:170  changelog row v1.5 WEAKER
+OK   ticket/.../W3-D5P/STATEMENT.md:170  v1.5 row tag WEAKER
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:27  (0.4) DLV-0 for the pinned core; not transferred
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:33  (0.5) b″-2: new computation cannot affect any guard decision; no decision-by-decision comparison
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:33  (0.5) b″-2: times not fixed
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:0  (0.5) ABSENT: old "bounded in (0.6) —"
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:42  (0.5) C-1 replacement: failed allocation not excluded (T6-1)
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:43  (0.5) b″-3: peak_memory_kb and timings after the helper; proof does not use them
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:43  (0.5) L2/RM0-plus on output runs; DLV-0 not transferred
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:0  (0.5) ABSENT: "returns whenever the pinned fit returns"
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:0  (0.5) ABSENT: old "DLV-0 apply to the method with the list fields"
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:44  (0.6) heading: not claimed beyond output runs
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:44  (0.6) note, not a claim
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:44  (0.6) paste/interning not bounded (withdrawal)
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:44  (0.6) allocation card claim withdrawn
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:0  (0.6) ABSENT: "T_M := T_B/8"
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:0  (0.6) ABSENT: "Lemma R holds for it with the same brackets"
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:113  Step 3: no P(O^c)=0 for the tagged method; (iii) is Step 2 on output
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:0  Step 3 ABSENT: "P(𝒪ᶜ) = 0 for every admissible run of the method with the list fields"
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:116  Step 3 O_P argument on output (X_n ⊆ 𝒪 ∩ …)
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:123  remarks: IMPL-LIST carries L2 and RM0-plus on output runs; DLV-0 not transferred
+OK   ticket/.../W3-D5P/ERRATA.md:5  E1 cell: not claimed beyond output runs [T6-1; HQ ruling]
+OK   ticket/.../W3-D5P/ERRATA.md:5  E1 cell: earlier wordings withdrawn (allocation card bound, Lemma R/Corollary R)
+OK   ticket/.../W3-D5P/ERRATA.md:5  E1 cell: inventory a note, "not a claim"
+OK   ticket/.../W3-D5P/ERRATA.md:0  E1 ABSENT: "absorbed by the polynomial envelopes of (D)" and "T_W ≤ 3mK(D+1)"
+OK   ticket/.../W3-D5P/REPORT.md:66  conclusion: under (D), on output runs only (T6-1)
+OK   ticket/.../W3-D5P/REPORT.md:0  conclusion ABSENT: under (D) without "on output"
+OK   ticket/.../W3-D5P/REPORT.md:19,64  status (LIST-R row :19 and registry :64): Sol-5b R3 8.7 FAIL recorded separately
+OK   ticket/.../W3-D5P/REPORT.md:0  status ABSENT: "review of v1.3 pending"
+OK   ticket/.../W3-D5P/REPORT.md:0  depends_on ABSENT: C-DLV:L1-R / C-DLV:Cor-R
+OK   ticket/.../W3-D5P/REPORT.md:4  header changelog v1.1–v1.5
+OK   ticket/.../W3-D5P/CARD.md:10  CARD :10 delivery sentence: not claimed beyond output runs [T6-1]
+OK   ticket/.../W3-D5P/CARD.md:0  CARD ABSENT: "without \"on output\" under the delivery conventions"
+OK   ticket/.../W3-D5P/CARD.md:10  CARD :10 status quote b″-4: Sol-5b R3 8.7 FAIL, v1.4 Sol-6 8.4 FAIL, separate from IMPL-LIST
+OK   ticket/.../W3-D5P/CARD.md:0  CARD ABSENT: "review of v1.3 pending"
+OK   ticket/.../W3-D5P/READER_DELTA.md:30  READER_DELTA :30 not claimed beyond output runs
+OK   ticket/.../W3-D5P/READER_DELTA.md:0  READER_DELTA ABSENT: "without \"on output\""
+FAILS 0
