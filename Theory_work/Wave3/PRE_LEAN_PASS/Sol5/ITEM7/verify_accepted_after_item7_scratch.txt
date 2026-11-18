@@ -1,0 +1,21 @@
+verify_accepted: 27 accepted manifest digest(s) from 177 accepted row(s); 22 verify, 5 FAIL
+FAIL Theory_work/Wave3/W3-D2/reviews/MANIFEST_R2f7.txt (MANIFEST 77a82cb8ed70..., cited by 2 accepted row(s): W3-D2:Thm2X, W3-D2:Cor2X):
+    CHANGED EXT:Theory_work/Wave3/W3-READER/CLAIMS_CARD.md
+    CHANGED EXT:Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+    reproduce: python Theory_work/Wave3/tools/manifest.py verify Theory_work/Wave3/W3-D2 Theory_work/Wave3/W3-D2/reviews/MANIFEST_R2f7.txt
+FAIL Theory_work/Wave3/W3-D3/reviews/MANIFEST_R2g6.txt (MANIFEST 5a7e5d08ad78..., cited by 3 accepted row(s): W3-D3:B3w, W3-D3:ExSG, W3-D3:Thm2SG):
+    CHANGED EXT:Theory_work/Wave3/W3-READER/CLAIMS_CARD.md
+    CHANGED EXT:Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+    reproduce: python Theory_work/Wave3/tools/manifest.py verify Theory_work/Wave3/W3-D3 Theory_work/Wave3/W3-D3/reviews/MANIFEST_R2g6.txt
+FAIL Theory_work/Wave3/W3-D5P/reviews/MANIFEST_R3r3.txt (MANIFEST 75e4386f5500..., cited by 3 accepted row(s): W3-D5P:LIST-K, W3-D5P:LIST-CODE, W3-D5P:LIST-R):
+    CHANGED EXT:Theory_work/Wave3/W3-READER/CLAIMS_CARD.md
+    CHANGED EXT:Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+    CHANGED TARGET.md
+    reproduce: python Theory_work/Wave3/tools/manifest.py verify Theory_work/Wave3/W3-D5P Theory_work/Wave3/W3-D5P/reviews/MANIFEST_R3r3.txt
+FAIL Theory_work/Wave3/W3-FAMC/reviews/MANIFEST_R5r4.txt (MANIFEST e5cb4cceda5e..., cited by 1 accepted row(s): W3-FAMC:Cor-FAMC):
+    CHANGED EXT:Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+    reproduce: python Theory_work/Wave3/tools/manifest.py verify Theory_work/Wave3/W3-FAMC Theory_work/Wave3/W3-FAMC/reviews/MANIFEST_R5r4.txt
+FAIL Theory_work/Wave3/W3-READER/reviews/MANIFEST_R5r9.txt (MANIFEST 8ac6b6618d56..., cited by 5 accepted row(s): W3-READER:PoolZ, W3-READER:R1, W3-READER:R2, W3-READER:R3 ...):
+    CHANGED CLAIMS_CARD.md
+    CHANGED READER_VERSIONS.md
+    reproduce: python Theory_work/Wave3/tools/manifest.py verify Theory_work/Wave3/W3-READER Theory_work/Wave3/W3-READER/reviews/MANIFEST_R5r9.txt
