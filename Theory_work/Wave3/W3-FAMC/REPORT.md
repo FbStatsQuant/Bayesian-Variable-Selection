@@ -6,13 +6,15 @@ report; claims.tsv governs.
 
 ## 1. What was done
 - Step 0: not recorded as a corollary (`PLAN.md` table: W2-APP Family-map, RM2 L6 E1/E2, C-GROW C5a/C5c, TRACK_B B8–B10).
-- `STATEMENT.md` v1.3: Corollary FAMC (§1), reader version (§1R), remarks outside the claim (§1b), D109 classes (§2),
+- `STATEMENT.md` v1.4: Corollary FAMC (§1), reader version (§1R), remarks outside the claim (§1b), D109 classes (§2),
   proof map (§3), inputs with verbatim statuses and D126 expansion (§4), not claimed (§5).
-- `lemmas/A_assembly.md` v1.1: the block half is proved by explicit linear algebra (B.0–B.4: cross-group partial
+- `lemmas/A_assembly.md` v1.2: the block half is proved by explicit linear algebra (B.0–B.4: cross-group partial
   covariances vanish; ϖ_n = r_n = L_n = η_n = 0). The AR half is an instantiation of RM2 Example E2 (α = 3, b = ¼,
   ϱ = 1/120). Visibility comes from Lemma VIS (VIS-0/a/b/e) and C-GROW (G3b).
 - Reviews: Sol R1 line check (11 findings, 11 accepted), Sol R2 diff round (5 findings, 5 accepted), and an independent Opus
-  check of E2 with BC and IR (PASS; `reviews/E2_check_opus_R1.md`). Citecheck: 0 failures.
+  check of E2 with BC and IR (PASS; `reviews/E2_check_opus_R1.md`). Council R3 (both seats: no C/S; F-level
+  provenance/registry repairs, `reviews/R3_disposition.md`), council R4 (diff check; converter repair
+  `reviews/R4_disposition.md`). Citecheck: 0 failures.
 
 ## 2. Caveats (plainly)
 - The AR half rests on `W3-RM2:Ex-PolyR`, `W2-LOC2:Lemma-BC` and `W2-LOC2:Lemma-IR`, whose registry statuses are not
@@ -42,8 +44,8 @@ Corollary FAMC ⇐ `W3-RM2-R:RM2-R-plus@1.0.1` (master of Theorem 6) with hypoth
 REGISTRY
 claim: W3-FAMC:Cor-FAMC | kind: corollary | statement: STATEMENT.md:49-81 | premises: STATEMENT.md:25-32
 status: PROVED (by this seat, unchecked) | status_source: lemmas/A_assembly.md:3
-assumptions: A:IID-GAUSS-ROWS ; A:GAUSS-NOISE ; A:P-POLY ; A:FIXED-S0 ; A:COEF-BOUNDED ; A:OP ; A:BLOCK-LE-16 ; A:DELIV-D (delivery clause only) ; A:FAMC-DESIGN (new | design family: block or AR | Sigma_n block-diagonal on a deterministic partition into groups of size <= g fixed with lambda_min(Sigma_n) >= c fixed, or Sigma_n,lk = rho^|l-k| with rho in (-1,1) fixed | STATEMENT.md:53-76 | shared no | bridge W3-FAMC:Cor-FAMC) ; A:FAMC-COEF (new | no cancellation among the true coefficients | (BLK-1) at most one truth per group; (BLK-s) in each group G with >= 2 truths, one sign vector d on G with diag(d)(Sigma_GG)^-1 diag(d) having nonpositive off-diagonal entries and d_k sgn(theta_k) constant on the truths of G; (BLK-g) inf_n dist(theta_S0, B) > 0 with B the bad set of Lemma VIS for the sequence; (AR-s) rho > 0: equal signs, rho < 0: sgn(theta_k) = sigma (-1)^k for a common sigma, rho = 0: no condition; (AR-sep) rho != 0 and sum_{k!=j}|theta_k||rho|^|j-k| <= (1/2)|theta_j|(1-rho^2)/(1+rho^2) for every j in S0; (AR-g) inf_n dist(theta_S0, B) > 0; all for n >= n0 | STATEMENT.md:53-76 | shared no | bridge W3-FAMC:Cor-FAMC)
-conclusion: reported-model: conclusion of reader Theorem 6 (row 3.1): data events G_n with P(G_n) -> 1 on which every admissible output run reports S-hat = S0; P(output and S-hat != S0) -> 0; under (S4) (delivery clause only): with probability one, output for every admissible run at every n >= 3, and P(S-hat = S0) -> 1, with Theorem 6's qualifications (IDEAL-W-plus lifted integer limits, bounded domain D, time guard) | rate: n/a | scope: Gaussian rows; (BLK) or (AR) design with a coefficient condition; 2 <= p <= n^A; s0 fixed; theta_lo <= |theta_j| <= theta_hi
+assumptions: A:IID-GAUSS-ROWS ; A:GAUSS-NOISE ; A:P-POLY ; A:FIXED-S0 ; A:COEF-BOUNDED ; A:OP ; A:BLOCK-LE-16 ; A:DELIV-D (delivery clause only) ; A:FAMC-DESIGN (new | design family: block or AR | Sigma_n block-diagonal on a deterministic partition into groups of size <= g fixed with lambda_min(Sigma_n) >= c fixed, or Sigma_n,lk = rho^abs(l-k) with rho in (-1,1) fixed | STATEMENT.md:53-76 | shared no | bridge W3-FAMC:Cor-FAMC) ; A:FAMC-COEF (new | no cancellation among the true coefficients | (BLK-1) at most one truth per group; (BLK-s) in each group G with >= 2 truths, one sign vector d on G with diag(d)(Sigma_GG)^-1 diag(d) having nonpositive off-diagonal entries and d_k sgn(theta_k) constant on the truths of G; (BLK-g) inf_n dist(theta_S0, B) > 0 with B the bad set of Lemma VIS for the sequence; (AR-s) rho > 0: equal signs, rho < 0: sgn(theta_k) = sigma (-1)^k for a common sigma, rho = 0: no condition; (AR-sep) rho != 0 and sum_{k!=j} abs(theta_k) abs(rho)^abs(j-k) <= (1/2) abs(theta_j) (1-rho^2)/(1+rho^2) for every j in S0; (AR-g) inf_n dist(theta_S0, B) > 0; all for n >= n0 | STATEMENT.md:53-76 | shared no | bridge W3-FAMC:Cor-FAMC)
+conclusion: reported-model: conclusion of reader Theorem 6 (row 3.1): data events G_n with P(G_n) -> 1 on which every admissible output run reports S-hat = S0; P(output and S-hat != S0) -> 0; under (S4) (delivery clause only): with probability one, output for every admissible run at every n >= 3, and P(S-hat = S0) -> 1, with Theorem 6's qualifications (IDEAL-W-plus lifted integer limits, bounded domain D, time guard) | rate: n/a | scope: Gaussian rows; (BLK) or (AR) design with a coefficient condition; 2 <= p <= n^A; s0 fixed; theta_lo <= abs(theta_j) <= theta_hi
 depends_on: W3-RM2-R:RM2-R-plus@stmt ; W3-RM2-R:RM0-plus@stmt ; W3-RM2-R:DLV-0@stmt ; W3-AUDIT-V:VIS@proof:VIS-0,VIS-a,VIS-b,VIS-c,VIS-d,VIS-e ; C-GROW:C5a@proof:P1-P4,G3b ; W3-RM2:Ex-PolyR@proof:E2-verification ; W3-RM2:D-to-W@stmt ; W3-RM2:POST-R@stmt
 implies:
 notes: Additive special case of row 3.1 (reader Theorem 6) on two design families; replaces (A3)-(A6) by primitive conditions. AR half recorded unconditionally per HQ DP1 on the strength of reviews/E2_check_opus_R1.md (PASS). Ex-PolyR, Lemma-BC, Lemma-IR statuses quoted unchanged in STATEMENT §4.

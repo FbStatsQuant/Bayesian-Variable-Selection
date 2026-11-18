@@ -8,4 +8,4 @@ S:inputs	STATEMENT.md:162-190		5f2a670c43f243cb			UNCHECKED
 P:target	lemmas/A_assembly.md:10-20	S:map	d9e37263af18f2f8			UNCHECKED
 P:BLK	lemmas/A_assembly.md:22-82	S:Cor-FAMC,S:inputs,P:target	fb3a62fc22add836			UNCHECKED
 P:AR	lemmas/A_assembly.md:84-123	S:Cor-FAMC,S:inputs,P:target	8adf8851f77bfb09			UNCHECKED
-R:registry	REPORT.md:39-50	S:Cor-FAMC	db2773ce34889e6e			UNCHECKED
+R:registry	REPORT.md:41-52	S:Cor-FAMC	40fa55b60e5b7b1a			UNCHECKED

@@ -30,3 +30,6 @@
   (ACCEPT; F-1 only); both PASS correct/strength, no C or S. Repairs (`reviews/R3_disposition.md`): E2 report bound as
   #EXTRA, registry block made exact, editorial items. STATEMENT v1.4 (§1 byte-identical), A_assembly v1.2. Next: R4 freeze
   + both seats' diff check.
+- 2026-11-17 Council R4 (MANIFEST 7fab398c): opus 9.5 gates PASS (ACCEPT; 15/15 R3 findings resolved); sol 9.0 gates FAIL
+  on F-R4-1 (REPORT registry block: `|x|` read as field delimiters by ingest.py convert; reproduced). Fix: abs(x); converter
+  clean (0 PROBLEM). Opus E-9 applied. Re-freeze R5 (REPORT only) → both seats confirm.
