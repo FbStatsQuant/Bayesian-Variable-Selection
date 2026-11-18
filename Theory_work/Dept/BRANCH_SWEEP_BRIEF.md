@@ -23,8 +23,10 @@ Plus one snapshot PR of `Theory_work/Dept/` (QUEUE, DECISIONS, LOG, RIDER_RULES,
 Include only finished, non-sensitive files. **Exclude:** `.rc_tmp/`, scratch/tmp folders, anything gitignored (`git check-ignore`), PDFs of papers
 (the refs stay out of git), credentials/tokens, `Theory_work/INFRA/registry/*` (the registry changes only through the recorder), and any file whose
 main version is newer. Never overwrite a file that exists on main with an older branch version.
-Before opening: `BVS_NUMERICS_PY=python3 python3 Theory_work/INFRA/run_ci.py` steps check, paper, falsify, cite must PASS on the PR tree (use the
-Py3.13 env for cite as the HQ rule says). Fix pointer/citation breaks only by excluding the offending file and listing it as LIVE/needs-recording.
+Before opening: `Theory_work/INFRA/ci/run_ci.py --steps check,paper,falsify,cite` must PASS on the committed PR tree, in CI's environment: a Python 3.13
+venv (uv) with `Theory_work/INFRA/ci/requirements-ci.txt`, `BVS_NUMERICS_PY=<that python>`, `PYTHONUTF8=1`,
+`PYTHONPATH=<repo>/Theory_work/Wave1/W1-N3/numerics` (local python3 is 3.9 without mpmath; falsify fails spuriously there). Don't commit regenerated
+CITECHECK.txt files of unrelated tickets. Fix pointer/citation breaks only by excluding the offending file and listing it as LIVE/needs-recording.
 PR body: the sweep table, exclusions, and CI result; end with the Claude Code attribution line.
 
 ## Step 3 — PR #1 (theory/E-SPINE, 11-02, "replace 'tempering is needed' …")
