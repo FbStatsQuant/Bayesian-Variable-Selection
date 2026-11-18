@@ -260,7 +260,7 @@ as a post-freeze rider — it would make "no eigenvalue condition off $S_0$" lit
 
 
 ### Reader statement
-**Theorem 2.** Let the rows of $X^{\mathrm r}$ be i.i.d. with mean $m_n$ and a correlation matrix $\Sigma_n$, sub-Gaussian along sparse directions: for a fixed $L$, $E\exp\{\lambda u^\top(x-m_n)\}\le\exp\{L^2\lambda^2u^\top\Sigma_nu/2\}$ for every $\lambda\in\mathbb R$ and every $u$ with at most $5(A+1)(s_0+1)\log n$ nonzero entries (Gaussian rows $N_p(m_n,\Sigma_n)$: $L=1$), and
+**Theorem 2.** Let the rows of $X^{\mathrm r}$ be i.i.d. with mean $m_n$ and covariance matrix $\Sigma_n$, a correlation matrix, sub-Gaussian along sparse directions: for a fixed $L$, $E\exp\{\lambda u^\top(x-m_n)\}\le\exp\{L^2\lambda^2u^\top\Sigma_nu/2\}$ for every $\lambda\in\mathbb R$ and every $u$ with at most $5(A+1)(s_0+1)\log n$ nonzero entries (Gaussian rows $N_p(m_n,\Sigma_n)$: $L=1$), and
 assume
 - **(A1) Model.** (S1) and (S2).
 - **(A2) Sparsity and fixed signals.** $s_0\ge1$ is fixed and $b_{\mathrm{lo}}\le|\beta^*_j|\le b_{\mathrm{hi}}$ for
@@ -292,7 +292,7 @@ $$
 `W3-POST:Thm-1@1.0.1` item 6 (random-design interface), `Theory_work/Wave3/W3-POST/STATEMENT.md:95-100`, status as in §1;
 with `W2-APP:POST@1.0.7`, `Theory_work/Wave2/W2-APP/lemmas/L1_POST.md:27-33`, status verbatim **"PROVED-CHECKED"**
 (main 6cd699dd) [REG-6cd6] (`C-PACK:SL0@1.0.1`, the posterior-summary lemma, is now "PROVED-CHECKED"), and its restatement `W3-POST:Cor-1R@1.0.0`
-(`W3-POST/STATEMENT.md:106-118`), status **"PROVED (by this seat, unchecked)"**. **Presented statement (sub-Gaussian rows; Gaussian = the case $L=1$):** `W3-D3:Thm2SG@1.0.0` (with `W3-D3:B3w@1.0.0`, `W3-D3:ExSG@1.0.0`), main 0eb1b6ef [REG-0eb1], status verbatim **"PROVED-CHECKED; council R2, MANIFEST 1c14a298…, sol=8.5 PASS, opus=9.3 PASS"** (each); inputs `W3-POST:Thm-1@1.0.1`, `W3-DIST:B0/B1/B2core/B2/B3@1.0.2`, `W3-READER:R1@1.0.3`. **Coexisting statement (Theorem 2X, §11):** `W3-D2:Thm2X@1.0.1` (with `W3-D2:Cor2X@1.0.0`), main 2e0decc8 [REG-2e0d], **"PROVED-CHECKED, conditional on W2-APP:POST, C-MIS:GDb, C-MIS:Prop-P; council R2, MANIFEST d408b7dc…, sol=9.2 PASS, opus=9.6 PASS"** (each).
+(`W3-POST/STATEMENT.md:106-118`), status **"PROVED (by this seat, unchecked)"**. **Presented statement (sub-Gaussian rows; Gaussian = the case $L=1$):** `W3-D3:Thm2SG@1.0.0` (with `W3-D3:B3w@1.0.0`, `W3-D3:ExSG@1.0.0`), main 0eb1b6ef [REG-0eb1], status verbatim **"PROVED-CHECKED; council R2, MANIFEST 1c14a298…, sol=8.5 PASS, opus=9.3 PASS"** (each); inputs `W3-POST:Thm-1@1.0.1`, `W3-DIST:B0/B1/B2core/B2/B3@1.0.2`, `W3-READER:R1@1.0.3`. **Coexisting statement (Theorem 2X, §11):** `W3-D2:Thm2X@1.0.1` (with `W3-D2:Cor2X@1.0.0`), recorded at main 2e0decc8, @1.0.1 as at main 34c8fb4d [REG-2e0d], **"PROVED-CHECKED, conditional on W2-APP:POST, C-MIS:GDb, C-MIS:Prop-P; council R2, MANIFEST d408b7dc…, sol=9.2 PASS, opus=9.6 PASS"** (each).
 
 ### Bridges
 | # | Bridge | Mark | Detail |
@@ -502,18 +502,18 @@ two rows rest on different masters with their own conditions.
   (a liminf condition at a fixed constant suffices; remark).
 
 ### Master theorem
-**Headline masters [H5-3]:** the fixed-design theorems `W3-MISR:MIS(i)@1.0.1` (:110-123; uniform over the residual
-variance), `W3-MISR:MIS(i')@1.0.1` (:127-140) and `W3-MISR:MIS(ii)@1.0.1` (:144-160; random candidate designs,
-conditional form) carry the headline flag; statuses verbatim: MIS(i) **"PROVED-CHECKED, conditional on W3-POST2:C; …"**;
-MIS(i′) and MIS(ii) **"PROVED-CHECKED, conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1; council R2, MANIFEST 217d6708…,
-sol=9.2 PASS, opus=8.9 PASS; …"** (main 6cd699dd) [REG-6cd6]. The reader statement above is their **Gaussian-row reader version**: `W3-MISR-R:CorGb-plus` (with `W3-MISR-R:CorG-min`
+**Headline masters [H5-3]:** the fixed-design theorems `W3-MISR:MIS(i)@1.0.2` (:110-123; uniform over the residual
+variance), `W3-MISR:MIS(i')@1.0.2` (:127-140) and `W3-MISR:MIS(ii)@1.0.2` (:144-160; random candidate designs,
+conditional form) carry the headline flag; statuses verbatim (versions and statuses as at main 34c8fb4d): MIS(i), MIS(i′) and MIS(ii)
+**"PROVED-CHECKED, conditional on W2-APP:POST; council R2, MANIFEST 217d6708…,
+sol=9.2 PASS, opus=8.9 PASS; …"** (each) [REG-34c8]. The reader statement above is their **Gaussian-row reader version**: `W3-MISR-R:CorGb-plus` (with `W3-MISR-R:CorG-min`
 (E1), (E2) for the Example) and, for the remark, `W3-MISR-R:CorH-plus`, `W3-MISR-R:CorH-U` — statuses verbatim from the
-registry (main 2b54cb3c, then 6cd699dd) [REG-2b54, REG-6cd6]: `W3-MISR-R:CorGb-plus@1.0.3` **"PROVED-CHECKED, conditional on W3-POST2:C,
-W3-POST2:E, W3-POST2:A1, W3-POST2:A0, C-MIS:GDb, C-MIS:Prop-P; council R3, MANIFEST 052ea6dffa0495584b051435b1e82d6b7c598d965e3b13ddc067545728728069, sol=10.0 PASS, opus=9.6 PASS"**;
+registry (versions and statuses as at main 34c8fb4d) [REG-34c8]: `W3-MISR-R:CorGb-plus@1.0.3` **"PROVED-CHECKED, conditional on W2-APP:POST,
+C-MIS:GDb, C-MIS:Prop-P; council R3, MANIFEST 052ea6dffa0495584b051435b1e82d6b7c598d965e3b13ddc067545728728069, sol=10.0 PASS, opus=9.6 PASS"**;
 `W3-MISR-R:CorG-min@1.0.3` **"PROVED-CHECKED; council R3, MANIFEST 052ea6dffa0495584b051435b1e82d6b7c598d965e3b13ddc067545728728069, sol=10.0 PASS, opus=9.6 PASS"**;
-`W3-MISR-R:CorH-plus@1.0.3` **"PROVED-CHECKED, conditional on W3-POST2:D; council R3, MANIFEST 052ea6dffa0495584b051435b1e82d6b7c598d965e3b13ddc067545728728069, sol=10.0 PASS, opus=9.6 PASS"**;
-`W3-MISR-R:CorH-U@1.0.3` **"PROVED-CHECKED, conditional on W3-POST2:D, W3-POST2:C, W3-POST2:A0,
-C-MIS:Prop-P; clause (G) also conditional on W3-POST2:E, W3-POST2:A1, C-MIS:GDb; council R3, MANIFEST 052ea6dffa0495584b051435b1e82d6b7c598d965e3b13ddc067545728728069, sol=10.0 PASS, opus=9.6 PASS"**.
+`W3-MISR-R:CorH-plus@1.0.3` **"PROVED-CHECKED, conditional on W2-APP:POST; council R3, MANIFEST 052ea6dffa0495584b051435b1e82d6b7c598d965e3b13ddc067545728728069, sol=10.0 PASS, opus=9.6 PASS"**;
+`W3-MISR-R:CorH-U@1.0.3` **"PROVED-CHECKED, conditional on W2-APP:POST,
+C-MIS:Prop-P; clause (G) also conditional on C-MIS:GDb; council R3, MANIFEST 052ea6dffa0495584b051435b1e82d6b7c598d965e3b13ddc067545728728069, sol=10.0 PASS, opus=9.6 PASS"**.
 These replace `W3-MISR:Cor-G(b)` below as the row's reader-version master. `W3-MISR:Cor-G(b)` stays ACTIVE and coexists
 with CorGb-plus (CorGb-plus implies it and reuses its proof steps); `W3-MISR:Cor-G(a)` is SUPERSEDED-VALID by CorG-min.
 The remark's Kullback–Leibler sentence rests on CorH-plus (centred reference), not on `W3-MISR:Cor-H` (whose KL reading
@@ -528,7 +528,7 @@ VERIFIED; R04 wording fixes checked in R05; council PASS"**; `C-MIS:GD(b)@1.0.0`
 (applied); council PASS"**; `SOP:TH09` as in §1; `SOP:TH128@1.0.2`: **"PROVED-CHECKED (the conjunction of W3-T03ACC:T03S.1–T03S.5 = record clauses
 1–5, clause map CHECKPOINT_4.md §2; council R1, MANIFEST 9714aea4…, astra=9.5 PASS, opus=9.4 PASS; LC-A, LC-B, LC-C
 VERIFIED)"** [S1-F9, REG-6cd6]; neither is a condition of the masters any more (discharged, main 6cd699dd).
-Fixed-design form: `W3-MISR:MIS(i)@1.0.1` (:110-123), **"PROVED-CHECKED, conditional on W3-POST2:C; …"**.
+Fixed-design form: `W3-MISR:MIS(i)@1.0.2` (:110-123), **"PROVED-CHECKED, conditional on W2-APP:POST; …"** (main 34c8fb4d).
 
 ### Bridges
 | # | bridge | mark | detail |
@@ -703,7 +703,7 @@ search error.)* (i) $\mathcal G_n$ can be chosen ($\mathcal M_n\cap\mathrm{Sand}
 mode, one per move, at most $n^b$ moves, and certifies $S_0$; its move cap never binds. (ii) The polylogarithmic case
 $|Q|\le(\log n)^{\kappa}$ is a special case (the earlier version of the theorem). (iii) Examples (never hypotheses):
 metric-local correlation, polynomial correlation decay of exponent $\alpha>2$ (`W3-RM2:Ex-PolyR@1.0.5` "PROVED-CHECKED; council R1, MANIFEST c8596ad0…, astra=9.5 PASS, opus=9.5 PASS"
-(main 8b4d3101),
+(main 8b4d3101)),
 one-factor blocks [R2-O6].
 ### Why each assumption
 - (A2) Fixed signals give the posterior input (Theorem 2) and the truth-removal margin.
@@ -1414,7 +1414,7 @@ statements (HQ-confirmed; no separate review).
 These blocks are appended here so that the line numbers of §§1–10 stay unchanged. They belong to the reader versions of Theorem 2 (§2), Theorem 6 (§6) and card rows 1.2, 3.1L and 3.1F. Update-log entries are in §2 (v0.5) and §6 (v1.0).
 
 ### 11.1 Theorem 2X (coexisting statement under Theorem 2; tag MIXED / incomparable; conditional)
-**Source:** W3-D2 READER_DELTA (text) and `W3-D2/REPORT.md` §3 (card text). Statuses verbatim (main 2e0decc8) [REG-2e0d]: `W3-D2:Thm2X@1.0.1`, `W3-D2:Cor2X@1.0.0`: **"PROVED-CHECKED, conditional on W2-APP:POST, C-MIS:GDb, C-MIS:Prop-P; council R2, MANIFEST d408b7dc…, sol=9.2 PASS, opus=9.6 PASS"** (each).
+**Source:** W3-D2 READER_DELTA (text) and `W3-D2/REPORT.md` §3 (card text). Statuses verbatim (recorded at main 2e0decc8; `Thm2X@1.0.1` as at main 34c8fb4d) [REG-2e0d]: `W3-D2:Thm2X@1.0.1`, `W3-D2:Cor2X@1.0.0`: **"PROVED-CHECKED, conditional on W2-APP:POST, C-MIS:GDb, C-MIS:Prop-P; council R2, MANIFEST d408b7dc…, sol=9.2 PASS, opus=9.6 PASS"** (each).
 
 **Theorem 2X (smaller-set, expectation form).** Let the rows of $X^{\mathrm r}$ be i.i.d. $N_p(m,\Sigma)$ with $\Sigma_{jj}>0$, and let $R$ be the correlation matrix of a row. Assume (S1) with $\sigma^2>0$ allowed to depend on $n$ and
 - **(A1) Dimension and sparsity.** $2\le p\le n^A$; $s_0\ge1$ fixed.
