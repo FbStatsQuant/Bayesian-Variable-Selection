@@ -1,0 +1,41 @@
+# T10 Fable card: Thm 8, certified screening (row 3.7; `W3-SCR:A1`, with `SCR-A`, `A-inf`, `SCR-M`, `CC`)
+
+Inputs: packet; Astra (FLAWS-FOUND, 2 local points, both in reader and card text, with evidence trail); walk `walks/T10.md` on walkC (WALK COMPLETE: 0 MINOR, 2 Lean NOTEs). Snapshot: `origin/theory/PRE-LEAN` a8f70d2b.
+
+**Verdict:** no flaw in the formal theorem or its proof chain; Astra and the walk both confirm SCR-A → (A∞) → A1 with the explicit constant. No recorded statement is affected. Two sentences of reader and card text are inaccurate: one overstates (T10-1), one understates (T10-2).
+
+## 1. Rulings
+
+| Point | Ruling | (a) Kind | (b) Recorded STATEMENT affected? | (c) Exact fix |
+|---|---|---|---|---|
+| **T10-1** abstract placement and card say the floor holds "on models of size q_n + s₀" | AGREE | Wording overclaim in an edge case: when q_n + s₀ > p there are no sets of that exact size, so the condition is vacuous and the conclusion can fail | **No.** The formal (A1) (`READER_VERSIONS.md:938-939`) and the master `W3-SCR:A1` say "\|S\| ≤ q_n + s₀" | `READER_VERSIONS.md:956`: "on models of size $q_n+s_0$" → "on models of size at most $q_n+s_0$". `CLAIMS_CARD.md:78`: "on $(q_n+s_0)$-sets" → "on sets of size at most $q_n+s_0$". |
+| **T10-2** scope sentence says signals that vary with n are not covered | AGREE | Wording, an **understatement**: the theorem fixes the bounds κ, b₀, M and σ_*², not the coefficients; a coefficient alternating between 1 and 2 is covered | No | `READER_VERSIONS.md:950`: "Signal sizes or floors that vary with $n$ are **not** covered by this theorem" → "The bounds $\kappa$, $b_0$, $M$ and $\sigma_*^2$ must not depend on $n$; the coefficients themselves may vary within them. A signal minimum or a floor tending to zero is **not** covered by this theorem". `CLAIMS_CARD.md:78`: "Signals varying with $n$ are not covered (open item SCR-R1)." → "The bounds must be fixed in $n$ (the coefficients may vary within them); a signal minimum or floor tending to zero is not covered (open item SCR-R1)." |
+
+Notes:
+- **T10-1.** Astra's example is correct: p = 2, q_n = 1, two identical columns, θ* = (1, −1), so s₀ = 2 and q_n + s₀ = 3 > p. The formal (A1) fails there (the pair has smallest eigenvalue 0), as it should; only the abbreviated wording lets it through. Whenever q_n + s₀ ≤ p the two wordings agree, because a floor on a set passes to its subsets.
+- **T10-2.** The rest of each sentence (the pointer to open item SCR-R1) stays. Theorem 8′ already covers signals whose size varies with n.
+
+## 2. Rulings on the walk rows
+
+| Row | Ruling | (a) Kind | (b) Recorded STATEMENT? | (c) Fix |
+|---|---|---|---|---|
+| **NOTE:** "certified implies locally optimal" is a code reading (`W3-SCR:CC`, CC2–CC4), not a lemma | AGREE | Lean note | No | None. In Lean the certificate is a hypothesis, and the theorem is stated for any random model Ŝ: P(Ŝ locally optimal, \|Ŝ\| ≤ q_n, S₀ ⊄ Ŝ) → 0. The proof is an inclusion in the complement of one data event, so nothing about the run's randomness is needed. |
+| **NOTE:** the event 𝓔_A does not include {τ̂ > 0}, where the score is defined | AGREE | Lean note | No | None in the paper: τ̂ > 0 almost surely, and the output event already requires a non-constant response. In Lean, intersect 𝓔_A with {τ̂ > 0}; the bound 3e^{−x} is unchanged. |
+
+**Left uncovered by the walk:** nothing in the chain it lists (L1, L2, SCR-A, (A∞), the bridges, A1). It did not walk SCR-M (`lemmas/L7_master.md`), which Theorem 8 does not use; Astra's trail covers SCR-M.
+
+## 3. Correctness (beyond Astra and the walk)
+
+Nothing further. The conclusion is an intersection probability, as stated; no claim is made that a run certifies with high probability, and the reader says so.
+
+## 4. Lean readiness (ranked; no item changes a statement)
+
+This is the most Lean-friendly of the probabilistic rows: finite-sample, with an explicit constant c₁ and an explicit failure bound.
+
+1. **Deterministic core first (Level 1).** On 𝓔_A, every locally optimal model of size ≤ q contains S₀ (Theorem SCR-A), from the score algebra of L1. The one-step Schur update is the same machinery as T1 and FLOOR.
+   - Named axioms: none.
+2. **Probability of 𝓔_A as two named tail bounds.** A Gaussian tail with a union over the N_q models (the witness index is deterministic), and Laurent–Massart for the response scale. Total failure ≤ 3e^{−x}.
+   - Level-2 named axioms: the Gaussian tail and Laurent–Massart χ² tails, both shared with T4.
+3. **Bridges B2, B2d, B3 (Level 1).** Floors give the directional floor and the visibility quantity Γ_n by minimising a quadratic form over the S-coordinates; this route needs no interlacing theorem.
+4. **Corollary A1's constant as arithmetic (Level 1):** the squared ratio is at least 200/64 > 1 under (A3).
+5. **Conventions:** the certificate as a hypothesis; 𝓔_A intersected with {τ̂ > 0}; (A1) with "at most" (T10-1).
