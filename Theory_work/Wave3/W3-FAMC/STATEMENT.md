@@ -1,4 +1,4 @@
-# W3-FAMC — STATEMENT v1.3 (2026-11-17; lead: Claude Opus 5.5, high; design-family corollary for core 3)
+# W3-FAMC — STATEMENT v1.4 (2026-11-17; lead: Claude Opus 5.5, high; design-family corollary for core 3)
 
 Ticket W3-FAMC (owner GO via HQ, 2026-11-17; brief `Theory_work/Dept/briefs/W3-FAMC_LEAD_BRIEF.md` on dept/theory).
 Core 3 = card row 3.1 = reader Theorem 6 ([RV] row thm6), used in Theorems 5 and 10. **Assembly only:** no theorem is
@@ -9,7 +9,7 @@ statuses go in the checkpoints. v1.1 = v1.0 with the manager's pre-review items:
 outside the corollary (§1b), citecheck-form pointers, and full verbatim statuses with D126 expansion (§4). HQ read v1.0
 (GO for Tier B, 11-17). v1.2 = v1.1 with the Sol R1 line-check dispositions [R1-S1]…[R1-S11]
 (`reviews/R1_disposition.md`) and the DP1 outcome (E2 check PASS, §4). v1.3 = v1.2 with the Sol R2 diff-round dispositions [R2-N1]…[R2-N5]
-(`reviews/R2_disposition.md`).
+(`reviews/R2_disposition.md`). v1.4 = v1.3 with the council R3 repairs [R3-…] (`reviews/R3_disposition.md`).
 
 **Aliases.** [RV] = `Theory_work/Wave3/W3-READER/READER_VERSIONS.md` (row thm6, `:660-813`); [NOT] =
 `Theory_work/Wave3/W3-READER/NOTATION.md`; [VIS] = `Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md` v1.5;
@@ -40,10 +40,11 @@ the ways of §1: one true predictor per group; signs aligned with the correlatio
 alternating with the parity of the column index if ρ < 0, no sign condition if ρ = 0; a group with several truths: one
 choice of column sign flips that makes all partial correlations of the flipped group ≥ 0 *and* gives all flipped true
 coefficients the same sign); AR truths spread apart by §1's separation bound; or coefficients a fixed distance from the
-closed set B of cancelling directions defined in §1. Then, with probability → 1, every admissible run that returns a
-result reports exactly the true model. Under Theorem 6's delivery conventions (S4), every admissible run returns a result
-for every n ≥ 3, so the true model is recovered with probability → 1, with Theorem 6's qualifications (lifted integer
-limits, bounded domain, time guard) [R1-S1, R2-N1, R2-N2].
+closed set B of cancelling directions defined in §1 (all conditions for every large n). Then there are data events of
+probability → 1 on which every admissible run that returns a result reports exactly the true model. Under Theorem 6's
+delivery conventions (S4), with probability one every admissible run returns a result, for every n ≥ 3, so the true model
+is recovered with probability → 1, with Theorem 6's qualifications (lifted integer limits, bounded domain, time guard)
+[R1-S1, R2-N1, R2-N2, R3-sol-E3].
 
 ## 1. Corollary FAMC (core 3 on block and AR designs)
 
@@ -169,11 +170,11 @@ expand.
 | `W3-RM2-R:RM2-R-plus@1.0.1` | master of Theorem 6 | "PROVED-CHECKED; council R3, MANIFEST 5d6d3c905e7dbfe5b637150bbd4cb3fb099596b46f72ddd62357d843056e649f (= R3 b06a8588 re-frozen as R3r), sol=9.5 PASS, opus=9.4 PASS" |
 | `W3-RM2-R:RM0-plus@1.0.1` | core (b⁺), (c⁺) | "PROVED-CHECKED; council R3, MANIFEST 5d6d3c905e7dbfe5b637150bbd4cb3fb099596b46f72ddd62357d843056e649f (= R3 b06a8588 re-frozen as R3r), sol=9.5 PASS, opus=9.4 PASS" |
 | `W3-RM2-R:DLV-0@1.0.1` | delivery under (S4) | "PROVED-CHECKED; council R3, MANIFEST 5d6d3c905e7dbfe5b637150bbd4cb3fb099596b46f72ddd62357d843056e649f (= R3 b06a8588 re-frozen as R3r), sol=9.5 PASS, opus=9.4 PASS" |
-| `W3-AUDIT-V:VIS@1.0.0` | (V-R) for (BLK-s), (BLK-g), (AR-s), (AR-g); (VIS-0) for (BLK-1) | "PROVED-CHECKED; council R4, MANIFEST a125ce4da54949003a1c866ad116ab518cdcc4343e11fb87ff4d2fc762339248, sol=9.5 PASS, opus=9.5 PASS" |
+| `W3-AUDIT-V:VIS@1.0.0` | (V-R) for (BLK-s), (BLK-g), (AR-s), (AR-g); (VIS-0) for (BLK-1); (VIS-c), (VIS-d)(i), (ii) for the nullity sentences of §1 [R3-sol-F4] | "PROVED-CHECKED; council R4, MANIFEST a125ce4da54949003a1c866ad116ab518cdcc4343e11fb87ff4d2fc762339248, sol=9.5 PASS, opus=9.5 PASS" |
 | `C-GROW:C5a@1.0.0` ([GROW5] (P1)–(P4), (G3b)) | AR spectrum; (V-R) for (AR-sep); leakage cross-check | "PROVED-CHECKED" |
 | `W3-RM2:D-to-W@1.0.3` | (D-loc^b) ⇒ (W-R), block side | "PROVED-CHECKED; council R1, MANIFEST 00bbeab89433b2f65dbfb8eefddf5e1a88dcc5460cabe79cd7adc3c8d6515d4a, astra=9.5 PASS, opus=8.8 PASS; correct:PASS(reviews/C_R1_council_astra.md, reviews/C_R1_council_opus.md, per-claim addenda)" |
 | `W3-RM2:POST-R@1.0.3` | (T1-R) ⇒ [POST] | "PROVED-CHECKED, conditional on W2-APP:POST; input versions W2-APP:POST@1.0.1; council R1, MANIFEST 00bbeab89433b2f65dbfb8eefddf5e1a88dcc5460cabe79cd7adc3c8d6515d4a, astra=9.5 PASS, opus=8.8 PASS; correct:PASS(reviews/C_R1_council_astra.md, reviews/C_R1_council_opus.md, per-claim addenda)" |
-| ↳ expansion: `W2-APP:POST@1.0.7` | condition of POST-R and of Ex-PolyR | "PROVED-CHECKED" |
+| ↳ expansion: `W2-APP:POST@1.0.7` (current version; the quotes above name the input version used at their recording) | condition of POST-R and of Ex-PolyR | "PROVED-CHECKED" |
 | `W3-RM2:Ex-PolyR@1.0.3` ([L6] E2) | AR: (T1-R), (FL-R), (L-R^b), (W-R) | "PROVED; line-checked LC2-C; Astra seat ACCEPT; not examined by the Opus seat — next council round; conditional on W2-APP:POST, W2-LOC2:Lemma-BC, W2-LOC2:Lemma-IR; input versions W2-APP:POST@1.0.1, W2-LOC2:Lemma-BC@1.0.0, W2-LOC2:Lemma-IR@1.0.0" |
 | ↳ expansion: `W2-LOC2:Lemma-BC@1.0.0` | condition of Ex-PolyR | "PROVED (by this seat, unchecked)" |
 | ↳ expansion: `W2-LOC2:Lemma-IR@1.0.0` | condition of Ex-PolyR | "PROVED (by this seat, unchecked)" |
@@ -183,8 +184,9 @@ input). The AR half rests on Ex-PolyR, BC and IR as quoted. **DP1 (HQ, 11-17): r
 (claude-opus-5-5, high; not an E2 author) checked every E2 item FAMC consumes, with Lemmas BC and IR at α = 3, and
 found no gap: `reviews/E2_check_opus_R1.md`, "OVERALL: PASS". It also closed the AR case independently of BC and IR from
 `C-GROW:C5a` (P1)–(P4) and an explicit two-neighbour Markov regression. Per HQ, the AR half is recorded
-**unconditionally**. The evidence is the checked-in report `reviews/E2_check_opus_R1.md`; it enters the FAMC manifest at
-the freeze (pending) [R2-N5]. The registry statuses of Ex-PolyR, BC and IR above are
+**unconditionally**. The evidence is the checked-in report `reviews/E2_check_opus_R1.md` (commit 2ba7730a; sha256
+6c65796c31897a3a03881946cf19b907690e91d388de236c1d56d3726f85679d), bound in the council manifest as an `#EXTRA` input from round R4
+on (`reviews/INPUTS_R4.txt`) [R3-F1]. The registry statuses of Ex-PolyR, BC and IR above are
 quoted unchanged; the result goes to W3-RM2 through the manager (no RM2 file is edited).
 
 ## 5. Not claimed
@@ -201,6 +203,7 @@ quoted unchanged; the result goes to W3-RM2 through the manager (no RM2 file is 
 | version | clause | tag | reason | trigger | check |
 |---|---|---|---|---|---|
 | v1.0 | all | NEW-CLAIM (corollary; additive) | W3-FAMC | owner GO via HQ, 11-17 (brief) | — (draft for HQ; no review yet) |
-| v1.3 | §1R group-sign and AR-sign wording, delivery scope; §2 (S1)/(S2) pointers, (A5) floor rows; §4 manifest wording | EQUAL (§1 unchanged; §1R now matches §1) | Sol R2 diff round N1–N5 (all ACCEPT) | `reviews/R2_diff_sol.md` | `reviews/R2_disposition.md`; council |
-| v1.2 | §0 X defined; §1R rewritten with all hypotheses and the (S4) split; B defined in §1 and nullity scoped; §1b(i), (ii); §2 inherited classes and (S4); §3 |·|, (P4) magnitude, B.0 citation; §4 DP1 resolved (E2 PASS); §5 scoped | EQUAL for §1's clauses except (BLK-g)/(AR-g) wording: B's definition written out (EQUAL), nullity claim narrowed (WEAKER remark); §1R corrected (it overclaimed) | Sol R1 line check S1–S11 (all ACCEPT) | `reviews/R1_linecheck_sol.md` | `reviews/R1_disposition.md`; diff round R2 |
 | v1.1 | §1R added; remarks → §1b; pointers; §4 full statuses + D126 expansion | EQUAL (no clause of §1 changed) | manager pre-review items; HQ DP2 (keep every fixed ρ) | manager 11-17 | citecheck |
+| v1.2 | §0 X defined; §1R rewritten with all hypotheses and the (S4) split; B defined in §1 and nullity scoped; §1b(i), (ii); §2 inherited classes and (S4); §3 \|·\|, (P4) magnitude, B.0 citation; §4 DP1 resolved (E2 PASS); §5 scoped | §1: EQUAL (B's definition written out) and WEAKER (nullity claim narrowed); §1R: WEAKER (it overclaimed) | Sol R1 line check S1–S11 (all ACCEPT) | `reviews/R1_linecheck_sol.md` | `reviews/R1_disposition.md`; diff round R2 |
+| v1.3 | §1R group-sign and AR-sign wording, delivery scope; §2 (S1)/(S2) pointers, (A5) floor rows; §4 manifest wording | §1 EQUAL (unchanged); §1R WEAKER (now matches §1) | Sol R2 diff round N1–N5 (all ACCEPT) | `reviews/R2_diff_sol.md` | `reviews/R2_disposition.md`; council |
+| v1.4 | §1R explicit data events, eventual scope, probability-one delivery; §4 E2 evidence bound (R4 #EXTRA), VIS sub-clauses, POST version note; changelog order | §1 EQUAL (unchanged); §1R EQUAL (explicit) | council R3 (sol F1–F4, E1–E3; opus F-1, E-1–E-8) | `reviews/R3_council_sol.md`, `reviews/R3_council_opus.md` | `reviews/R3_disposition.md`; council R4 |

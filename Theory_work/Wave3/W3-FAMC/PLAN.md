@@ -36,15 +36,16 @@ Budget: 1–2 lead-days, KILL at 3. Folder template: W3-D3. Branch: `theory/W3-F
 | P8 | manifest.py v2 freeze (no registry files, no live logs); citecheck; CHECKPOINT; recorder dry run | lead / recorder | real run on HQ GO only |
 
 ## Decision points for the manager
-- **DP1 (AR status).** The AR half has no new lemma; it is an E2 instantiation. E2 (`W3-RM2:Ex-PolyR`) is not fully
+- **DP1 (AR status) — RESOLVED (HQ, 11-17): AR half unconditional, on an independent Opus E2 check (PASS,
+  `reviews/E2_check_opus_R1.md`).** Original options, kept for the record: The AR half has no new lemma; it is an E2 instantiation. E2 (`W3-RM2:Ex-PolyR`) is not fully
   checked (Opus seat not examined), and its inputs BC and IR are "PROVED (by this seat, unchecked)". Options:
   (a) record the AR half with the inherited conditional status (D126 expansion);
   (b) ask W3-RM2's owner for the pending Opus-seat examination of E2 (+ BC, IR) — not this ticket's files;
   (c) present AR as track-C evidence only (the brief's kill fallback).
   Recommendation: (a), with (b) requested in parallel. Option (c) would discard a proof that needs no new lemma.
-- **DP2 (scope of "moderate").** v1.0 states every fixed ρ ∈ (−1, 1), with no uniformity in ρ. This is stronger than
+- **DP2 — RESOLVED (HQ): keep every fixed ρ ∈ (−1, 1) and remark (iv).** Original text: v1.0 states every fixed ρ ∈ (−1, 1), with no uniformity in ρ. This is stronger than
   "moderate" and is what the masters give. Alternative: restrict to |ρ| ≤ ρ̄ < 1 for presentation only.
-- **DP3 (D126 expansion rule).** The rule text is not in the repo ("recorded in the notes"). v1.0 reads it as: quote every
+- **DP3 — RESOLVED (manager): reading confirmed.** Original text: The rule text is not in the repo ("recorded in the notes"). v1.0 reads it as: quote every
   input status verbatim and expand each "conditional on X" to X's current status. Please confirm.
 
 ## Risks

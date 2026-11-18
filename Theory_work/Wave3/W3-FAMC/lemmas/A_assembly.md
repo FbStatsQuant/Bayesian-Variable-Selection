@@ -1,6 +1,9 @@
-# W3-FAMC — A. Assembly proof of Corollary FAMC (v1.1, 2026-11-17; lead Claude Opus 5.5, high)
+# W3-FAMC — A. Assembly proof of Corollary FAMC (v1.2, 2026-11-17; lead Claude Opus 5.5, high)
 
-This file proves `STATEMENT.md` §1 (v1.2). v1.1 = v1.0 with [R1-S5], [R1-S7]. It introduces no new lemma: every step is either a citation (with path:line)
+Status: PROVED (by this seat, unchecked).
+
+This file proves `STATEMENT.md` §1 (v1.4; §1 is unchanged since v1.2). v1.1 = v1.0 with [R1-S5], [R1-S7]; v1.2 = v1.1 with
+the council R3 editorial items (`reviews/R3_disposition.md`). It introduces no new lemma: every step is either a citation (with path:line)
 or a finite linear-algebra computation written out in full. Aliases are as in `STATEMENT.md` (header). In addition:
 [RM2] §3.2 = `Theory_work/Wave3/W3-RM2/STATEMENT.md:172-202`.
 
@@ -29,8 +32,8 @@ Var(W_l | W_U) = Var(W_l | W_{U∩G(l)}).
 definite (λ_min(Σ_n) ≥ c > 0). Hence Σ_{UU}⁻¹ is block-diagonal with blocks Σ_{U_iU_i}⁻¹. The row Σ_{lU} vanishes outside
 U ∩ G(l), and the column Σ_{Uk} vanishes outside U ∩ G(k). Therefore
 Σ_{lU}Σ_{UU}⁻¹Σ_{Uk} = Σ_{l,U_{G(l)}} Σ⁻¹_{U_{G(l)}U_{G(l)}} Σ_{U_{G(l)},k}.
-In (a), the last factor is 0 because U_{G(l)} ⊆ G(l) ≠ G(k); also Σ_{lk} = 0, so Γ^U_{lk} = 0. In (b), the right side is
-Σ_{lk} − Σ_{l,U∩G}Σ⁻¹_{U∩G,U∩G}Σ_{U∩G,k} = Γ^{U∩G}_{lk}. (For U ∩ G = ∅, read Γ^∅_{lk} = Σ_{lk}.) ∎
+In (a), the last factor is 0 because U_{G(l)} ⊆ G(l) ≠ G(k); also Σ_{lk} = 0, so Γ^U_{lk} = 0. In (b),
+Γ^U_{lk} = Σ_{lk} minus that product = Σ_{lk} − Σ_{l,U∩G}Σ⁻¹_{U∩G,U∩G}Σ_{U∩G,k} = Γ^{U∩G}_{lk}. (For U ∩ G = ∅, read Γ^∅_{lk} = Σ_{lk}.) ∎
 
 **B.1 (T1-R), (FL-R) [reader (A5)].** By Cauchy interlacing, λ_min(Σ_{n,S}) ≥ λ_min(Σ_n) ≥ c for every S ⊆ [p]. This
 gives (FL-R) (sets of size ≤ 16 + s₀ and Q ∪ {l}). It also gives (T1-R) through its stated sufficient form
@@ -95,7 +98,8 @@ The remaining E2 inputs are §0 of the statement and (A2).
 truth-separation condition beyond PTV ([L6] `:174`).
 *Cross-check, AR-specific:* by [GROW5] (P4) (`:31-42`), |Cov(W_l, W_k | W_U)| ≤ |ρ|^{|l−k|} for every U and l ≠ k ∉ U.
 For ρ < 0, (P4) applies to DW (D = diag((−1)^i), [GROW5] `:18-20`), and W_U, (DW)_U generate the same σ-field, so the
-magnitudes agree; for ρ = 0 the covariances vanish [R1-S5]. So E2's (L-gain-R) and (L-loc-R) bounds hold in this case with K_15 replaced by 1. The PROVED-CHECKED C-GROW
+magnitudes agree; for ρ = 0 the covariances vanish [R1-S5]. So E2's (L-gain-R) and (L-loc-R) bounds hold in this case with K_dec in place of K_15 (and with constant 1 for
+n ≥ n₀, since R_Q, r₀ → ∞). The PROVED-CHECKED C-GROW
 facts thus confirm the leakage half independently of Lemma BC.
 
 **A.2 (V-R) = PTV(a₀)** ([RM] `:135-136`).
@@ -113,11 +117,12 @@ facts thus confirm the leakage half independently of Lemma BC.
   hyperplanes by (VIS-d)(ii) ([VIS] `:52-53`); this is explanatory only.
 
 **A.3 Conclusion (AR).** E2 verifies the remaining hypotheses of RM2-R given PTV(a₀), which A.2 supplies. Apply
-RM2-R-plus. ∎ The status of this half is that of E2 together with its inputs (`STATEMENT.md` §4); see DP1.
+RM2-R-plus. ∎ E2's consumed items were checked independently (`reviews/E2_check_opus_R1.md`, PASS); per HQ DP1 the AR
+half is recorded unconditionally (`STATEMENT.md` §4) [R3-F1].
 
 ---
 
-## A.3 Reader hypotheses, for the record (not used by the proof)
+## A.4 Reader hypotheses, for the record (not used by the proof)
 
 In both families: (A3) is A.2 / B.2, (A4) is B.3 / E2, (A5) is B.1 / E2, and (A6) is B.4 / E2's (0.1) with
 N_l = Q ∩ {v ≠ l : |v − l| ≤ ⌊√log n⌋} (definition and error bound [L6] `:75-84`, rates [L6] `:97-100`, use in E2

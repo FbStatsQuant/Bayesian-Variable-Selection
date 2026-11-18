@@ -11,8 +11,9 @@ ROWS = [  # id, file, start header prefix, end header prefix (exclusive; None = 
     ("S:class", "STATEMENT.md", "## 2.", "## 3.", "S:Cor-FAMC"),
     ("S:map", "STATEMENT.md", "## 3.", "## 4.", "S:Cor-FAMC"),
     ("S:inputs", "STATEMENT.md", "## 4.", "## 5.", ""),
-    ("P:BLK", "lemmas/A_assembly.md", "## A.1", "## A.2", "S:Cor-FAMC,S:inputs"),
-    ("P:AR", "lemmas/A_assembly.md", "## A.2", "## A.3", "S:Cor-FAMC,S:inputs"),
+    ("P:target", "lemmas/A_assembly.md", "**Target.**", "## A.1", "S:map"),
+    ("P:BLK", "lemmas/A_assembly.md", "## A.1", "## A.2", "S:Cor-FAMC,S:inputs,P:target"),
+    ("P:AR", "lemmas/A_assembly.md", "## A.2", "## A.4", "S:Cor-FAMC,S:inputs,P:target"),
     ("R:registry", "REPORT.md", "## 6. Registry blocks", None, "S:Cor-FAMC"),
 ]
 def span(f, h0, h1):

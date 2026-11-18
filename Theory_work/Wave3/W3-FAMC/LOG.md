@@ -26,3 +26,7 @@
 - 2026-11-17 Sol R2 diff round (gpt-6.2-sol, high): PASS WITH CHANGES; R1 9 RESOLVED / 2 PARTIAL; new N1 (MAJOR, §1R
   group-sign wording) + N2–N5 (MINOR); triage 5/5 ACCEPT (`reviews/R2_disposition.md`). STATEMENT v1.3 (§1R, §2, §4
   wording only; §1 and proof unchanged). Next: council (Sol + non-author Opus seat, same manifest) → freeze → CHECKPOINT.
+- 2026-11-17 Council R3 (MANIFEST 68cb6944): sol 8.8 gates FAIL (REJECT on provenance/registry: F1–F4), opus 9.0 gates FAIL
+  (ACCEPT; F-1 only); both PASS correct/strength, no C or S. Repairs (`reviews/R3_disposition.md`): E2 report bound as
+  #EXTRA, registry block made exact, editorial items. STATEMENT v1.4 (§1 byte-identical), A_assembly v1.2. Next: R4 freeze
+  + both seats' diff check.
