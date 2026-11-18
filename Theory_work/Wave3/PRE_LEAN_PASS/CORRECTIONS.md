@@ -1,0 +1,5 @@
+# PRE-LEAN PASS: staged corrections (land at block boundaries, after T5 and after T10, through the recorder, each with its own PURE check)
+
+| id | files | kind | PURE verdict | status |
+|---|---|---|---|---|
+| T1-1 | `Theory_work/Wave3/W3-PSHARP/STATEMENT.md:100` (line count 156, unchanged); `Theory_work/Wave3/W3-PSHARP/lemmas/B_sparsity.md:33` (line count 59, unchanged; the manager's note said :32, the clause is on :33). Patch: `T1/T1-1_correction.patch`. Reader text (READER_VERSIONS thm3 Theorem 3(a), CLAIMS_CARD row 1.3) states no "s₀ ≥ λ√n" implication and carries no λ in 3(a), so no reader edit. `W3-PSHARP/REPORT.md:42` ("at s₀ ~ λ√n with s₀/p → 0") is a scale statement, not the implication: untouched. `API_AUDIT/audit1/REQ_core1.md` is a frozen request log: untouched | CORRECTION-ONLY (HQ ruling: a tacit hypothesis λ ≥ 0 made explicit; no consultant card) | PURE (Opus, `T1/T1-1_PURE_check_opus.md`) | staged |
