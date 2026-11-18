@@ -1,0 +1,28 @@
+# R6 claimed edits, grepped in the REAL ticket files at freeze time (HQ RIDER_RULES)
+OK   ticket/.../W3-SAMP/STATEMENT.md:190  F7 phrase, statement (claim span 190-192)
+OK   ticket/.../W3-SAMP/lemmas/MEAS_D.md:24  F7 phrase, MEAS_D §1 copy of the statement
+OK   ticket/.../W3-SAMP/lemmas/MEAS_D.md:50  F7 phrase, Step 6 first sentence
+OK   ticket/.../W3-SAMP/REPORT.md:203  F7 phrase, REGISTRY conclusion (E26: 'section 2')
+OK   ticket/.../W3-SAMP/lemmas/MEAS_D.md:50  F7 Step 6 sentence 'H_r(h) and pi(h) are Borel'
+OK   ticket/.../W3-SAMP/lemmas/MEAS_D.md:42  F7 Step 5 phrase
+OK   ticket/.../W3-SAMP/lemmas/MEAS_D.md:50  E25 MR weights
+OK   ticket/.../W3-SAMP/STATEMENT.md:194  E27 remark wording
+OK   ticket/.../W3-SAMP/REPORT.md:204  E28 depends_on
+OK   ticket/.../W3-SAMP/lemmas/MEAS_D.md:3  E29 status line (R1 to R6, MEASD6)
+OK   ticket/.../W3-SAMP/lemmas/MEAS_D.md:3  E29 status line: Sol bound to MEASD6
+OK   ticket/.../W3-SAMP/REPORT.md:205  E29 gates pointer R6
+OK   ticket/.../W3-SAMP/STATEMENT.md:36  kept from MEASD5: E1 sentence (NB-C1v2)
+OK   ticket/.../W3-SAMP/STATEMENT.md:194  kept from MEASD5: remark paragraph (NB-C1r)
+OK   ticket/.../W3-SAMP/lemmas/MEAS_D.md:37  kept from MEASD5: E23 bound
+OK   ticket/.../W3-SAMP/STATEMENT.md:0  ABSENT: whose bound B_h does not depend
+OK   ticket/.../W3-SAMP/lemmas/MEAS_D.md:0  ABSENT: whose bound B_h does not depend
+OK   ticket/.../W3-SAMP/REPORT.md:0  ABSENT: whose bound B_h does not depend
+OK   ticket/.../W3-SAMP/lemmas/MEAS_D.md:0  ABSENT: expectation P(𝒜°) ≤ 1 by
+OK   ticket/.../W3-SAMP/STATEMENT.md:0  ABSENT: that is, one intersected with
+OK   ticket/.../W3-SAMP/lemmas/MEAS_D.md:0  ABSENT: MEASD4 digest
+
+file sha256 (first 16) and line counts:
+STATEMENT.md: 08c1ed7fab7b8733 lines=194
+REPORT.md: a17058dfcc61e510 lines=206
+lemmas/MEAS_D.md: 8f0a2164f7337671 lines=96
+RESULT: ALL CLAIMED EDITS PRESENT

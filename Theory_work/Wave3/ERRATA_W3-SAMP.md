@@ -1,6 +1,6 @@
 # W3-SAMP — errata (HQ, outside every council manifest; no hashed file is edited)
 
-## E1 (reading erratum; HQ D111; recorded by the HQ recorder, HQ GO real run (task W2, W1-N1:B/F discharge, track A_W, 2026-11-23))
+## E1 (reading erratum; HQ D111; recorded by the HQ recorder, HQ GO real run (task W2, W1-N1:B/F discharge, track A_W, 2026-11-17))
 
 **W3-SAMP's conditional identities (D, MR) are read with 𝒜, 𝓒 the potential pair (𝒜°, 𝓒°) of the uninterrupted run (as in GUARD-W's 'as if uninterrupted'); the actual pair gets only T5's transfer rules (W3-AUDIT-A:CAL-C).**
 

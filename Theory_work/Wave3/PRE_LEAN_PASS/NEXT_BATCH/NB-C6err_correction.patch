@@ -1,6 +1,6 @@
-# NB-C6err (T9 addendum, rider 4, changelog under E1): Theory_work/Wave3/ERRATA_W3-SAMP.md, a paragraph appended at the end (under E1, the file's only section; the errata file is outside every council manifest). Describes NB-C1v2, NB-C1r, NB-C2, NB-C3, NB-C4, NB-C4r: lands with or after them (NB-C1v2 and NB-C1r are held for MEAS-D).
+# NB-C6err (T9 addendum, rider 4, changelog under E1): Theory_work/Wave3/ERRATA_W3-SAMP.md, a paragraph appended at the end (under E1, the file's only section; the errata file is outside every council manifest). Describes NB-C1v2, NB-C1r, NB-C2, NB-C3, NB-C4, NB-C4r.
 diff --git a/Theory_work/Wave3/ERRATA_W3-SAMP.md b/Theory_work/Wave3/ERRATA_W3-SAMP.md
-index e17a5895..b6786664 100644
+index 80e002b0..220d0d16 100644
 --- a/Theory_work/Wave3/ERRATA_W3-SAMP.md
 +++ b/Theory_work/Wave3/ERRATA_W3-SAMP.md
 @@ -7,3 +7,5 @@
