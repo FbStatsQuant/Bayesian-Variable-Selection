@@ -16,3 +16,4 @@
 - `ANSWERS_2026-11-16.md`: the four open items (C*, 32s₀, Remark 3.7, noiseless gain). Current.
 - AR1_VIS_NOTE_2026-11-17.md — AR(1) visibility counterexample: consistent with Lemma VIS (ϑ on B); 3 wording fixes for §5.3.3/Remark vis/Remark 11(ii); riboflavin 'being determined' is settled by VISIBILITY_SCOPE v2.
 - FAMC_NOTE_2026-11-17.md — Corollary FAMC recorded (core 3 on block and any fixed AR correlation); 4-line reader version (faithfulness-checked); wording 'any fixed AR correlation'.
+- PRELEAN_WORDING_NOTE_2026-11-18.md — pre-Lean wording fixes for the draft (sec3_selection.tex:432-433 'no condition on how Σ, β, σ² vary'; the sharpened Cor 6L↔9C sentence).
