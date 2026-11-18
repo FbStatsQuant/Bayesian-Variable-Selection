@@ -138,3 +138,4 @@ Consistency results first (owner, 11-15 evening) + Lean readiness of their deter
     - T9/T10 cards.
     - SUMMARY.
 
+- (11-18, HQ a810898a, consultant; post-freeze editorial, Sonnet) **Precedent quantifier notes:** for each non-Song–Liang assumption (PRECEDENTS_2026-11-17.md and the assumption-class tables), record in one line whether the cited precedent supplies the **decisive quantifier**, not just the same type of condition. Example: Cor-FAMC (BLK-g)/(AR-g) need the uniform margin inf_n dist(ϑ_n, B) > 0 for all large n. If no precedent gives it, say so, and point to the explicit sufficient cases (BLK-1/BLK-s/AR-s/AR-sep) or a typical-data argument.
