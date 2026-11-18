@@ -1,0 +1,12 @@
+diff --git a/Theory_work/Wave2/W2-FAC-B/lemmas/L5_assembly.md b/Theory_work/Wave2/W2-FAC-B/lemmas/L5_assembly.md
+--- a/Theory_work/Wave2/W2-FAC-B/lemmas/L5_assembly.md
++++ b/Theory_work/Wave2/W2-FAC-B/lemmas/L5_assembly.md
+@@ -58,7 +58,7 @@
+ column is dropped and p_raw = p; the centred response is nonconstant with probability one (ε Gaussian); Q_S ≥ yᵀy/(n + 1)
+ > 0 for every S, so the scorer never fails (A2 step 1, `A2_propF_GROW.md:37-47`, applies verbatim: it uses no
+ relevance-set property). (2) **No output has probability 0.** Proposition F's conclusion "for every admissible n ≥ 3,
+-P(no output) = 0" uses only the method/allocation/premises and Lemma S inputs, not the statistical class (A2 step 2).
++P(no output) = 0" uses only the method/allocation/premises and Lemma S inputs, not the statistical class (A2 step 2). [2026-11-16, HQ D78] It is read as in STATEMENT (C4): for (n, p_raw) ∈ 𝔇 under IDEAL-W, and for every admissible n ≥ 3 under A:IDEAL-W⁺ in place of IDEAL-W (definitions in the note at the end of `STATEMENT.md`); the consistency step (3) uses P(𝒪) = 1, hence clause (b).
+ (3) **Consistency.** With 𝒦_n as in L5.2, D′'s pathwise inclusion (FINAL s6, Corollary D′; reused with cap a_n in A2
+ step 3) gives 𝒪 ∩ {Ŝ⁺ ≠ S₀} ⊆ {π(S₀ | y) ≤ ½} ∪ 𝒦_nᶜ; with P(𝒪) = 1, Markov and L5.1–L5.2:
+ P(Ŝ⁺ ≠ S₀) ≤ 2E₀[1 − π(S₀)] + P(𝒦_nᶜ) → 0. CAL, restricted-ESS success and any bound on the fallback probability are not
