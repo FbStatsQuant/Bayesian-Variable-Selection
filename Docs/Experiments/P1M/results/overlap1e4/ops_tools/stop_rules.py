@@ -5,7 +5,7 @@ Thresholds (OVERLAP_1e4_SUBMISSION_PLAN §4, H-18): T fit > 172 core-h; V fit > 
 wave actual > 2 x quote (W0 quote = 100 expected -> 200); any failed / TIMEOUT / OOM / CANCELLED stage that is not an infrastructure
 fault (NODE_FAIL, BOOT_FAIL; SIGKILL by Slurm shows as NODE_FAIL / FAILED with a scheduler reason, judged by the manager);
 > 2 failed fits in a wave; any QOS / MaxSubmit / Assoc pending reason; any engine resource_limit / admission / OUTCOME record;
-X/y (data.bin.json content_sha256) must be equal across the fits of a dataset (design + rep; T and V and both seeds share it).
+X/y (truth.json X_sha256 + y_sha256: the DATA identity; data.bin content_sha256 also hashes the writing binary's meta block, so it differs between the T and V builds) must be equal across the fits of a dataset (design + rep; T and V and both seeds share it).
 """
 import argparse, json, os, re, sys
 from collections import defaultdict
@@ -108,7 +108,7 @@ def main():
         b, r, h = l.split("|"); hashes[re.sub(r"-(T|V)-s\d$", "", r)].add(h)
     for ds, hs in hashes.items():
         if len(hs) > 1:
-            flags.append("STOP X/y MISMATCH dataset %s: %d distinct content_sha256" % (ds, len(hs)))
+            flags.append("STOP X/y MISMATCH dataset %s: %d distinct X_sha256+y_sha256" % (ds, len(hs)))
     meta = next((k for k in S if k.startswith("META")), next((k for k in S.keys()), "") )
     meta = meta if meta.startswith("META") else "(no META line)"
     print("probe", meta, "| wave", a.wave)

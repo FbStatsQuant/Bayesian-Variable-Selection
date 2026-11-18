@@ -14,6 +14,7 @@ if [[ $MODE == submit ]]; then
   [[ ${GO:-} == yes ]] || { echo "refusing: GO=yes not set" >&2; exit 64; }
   ssh $NOTS "cd $FC && sbatch --parsable freeze_check_1e5.sh run"; exit 0
 fi
+home_guard || exit 3      # refuses above 7,500 MB of NOTS home (code trees: see below)
 [[ -f $SCRIPT ]] || { echo "no $SCRIPT: the freeze branch does not carry freeze_check_1e5.sh yet" >&2; exit 2; }
 [[ $(git -C "$WT" rev-parse HEAD) == "$F" ]] || echo "WARNING: worktree HEAD is not F" >&2
 # 1. the T5 inputs (sizes: data 164 MB, setup 1.0 GB, calib 784 MB, island_1 221 MB = 2.2 GB, one stream, nice)
@@ -32,4 +33,9 @@ for f in manifests/$R/island.json p1m_manifest.py p1m_stage_cost.py; do rs $H/gr
 rs "$SCRIPT" $NOTS:$FC/freeze_check_1e5.sh
 rs "$STG/clone_${F:0:8}"/ $NOTS:$CN/
 ssh $NOTS "cd $FC && CLONE=$CN nice -n 19 bash freeze_check_1e5.sh build $F 2>&1 | tail -n 12"
+# freeze_check_1e5.sh (the builder's script) unpacks the code tree into $FC/code_freeze (home, ~360 MB; it does rm -rf + mkdir, so a symlink
+# cannot be pre-placed). Move it to scratch code_ws/ right after the build and leave a symlink, as deploy_wave.sh does for the waves.
+ssh $NOTS "set -e; CW=\$(readlink -f $D/scratch)/$CODE_WS_REL; mkdir -p \$CW; cd $FC
+  for c in code_freeze code_pilot; do [[ -d \$c && ! -L \$c ]] && { rm -rf \$CW/FREEZE_CHECK_1e5_\$c; mv \$c \$CW/FREEZE_CHECK_1e5_\$c && ln -s \$CW/FREEZE_CHECK_1e5_\$c \$c && echo \"\$c -> scratch\"; }; done; true"
+home_guard
 echo "staged. Submit (manager, GO=yes):  GO=yes $0 $F $WT submit   -> read $D/scratch/runs/FREEZE_CHECK_1e5/freeze_check.json (verdict PASS|FAIL)"

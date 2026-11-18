@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # monitor_probe.sh <WAVE> -- ONE ssh call to NOTS = ONE squeue + ONE sacct (POLICIES §12: <= 1 per 5 min; normally every 20-30 min).
 # Writes the raw probe to $STG/monitor/<WAVE>/probe_<UTC>.txt (Owls) and prints the stop-rule verdict (stop_rules.py). Read-only.
-# Everything else in the call is plain file reads on 2 run dirs (submissions.jsonl, data.bin.json hashes, OUTCOME / resource_limit hits).
+# Everything else in the call is plain file reads on 2 run dirs (submissions.jsonl, truth.json X/y hashes, OUTCOME / resource_limit hits).
 set -euo pipefail; . "$(dirname "$0")/common.sh"
 WAVE=${1:?WAVE}; OUT=$STG/monitor/$WAVE; mkdir -p "$OUT"; P=$OUT/probe_$(date -u +%Y%m%dT%H%M%SZ).txt
 ssh $NOTS "set -u; D=$D
@@ -15,7 +15,7 @@ ids=\$(echo \"\$ids\" | sed 's/^,*//; s/,,*/,/g; s/,*\$//')
 echo '### SQUEUE'; squeue -u fb31 -h -o '%i|%j|%T|%r|%M|%C'
 echo '### SACCT'; [[ -n \$ids ]] && sacct -X -P -n -j \"\$ids\" --format=JobID,JobName,State,ElapsedRaw,AllocCPUS,CPUTimeRAW,Timelimit || true
 echo '### DATA_HASH'
-for b in OV_${WAVE}_T OV_${WAVE}_V; do for f in \$D/scratch/runs/\$b/*/data.bin.json; do [[ -f \$f ]] && printf '%s|%s|%s\n' \$b \$(basename \$(dirname \$f)) \$(grep -o '\"content_sha256\": *\"[0-9a-f]*\"' \$f | grep -o '[0-9a-f]\{64\}'); done; done
+for b in OV_${WAVE}_T OV_${WAVE}_V; do for f in \$D/scratch/runs/\$b/*/truth.json; do [[ -f \$f ]] && printf '%s|%s|%s\n' \$b \$(basename \$(dirname \$f)) \$(grep -o '\"[Xy]_sha256\": *\"[0-9a-f]*\"' \$f | grep -o '[0-9a-f]\{64\}' | tr -d '\n'); done; done
 echo '### ENGINE_FLAGS'
 for b in OV_${WAVE}_T OV_${WAVE}_V; do ls \$D/scratch/runs/\$b/*/OUTCOME 2>/dev/null; grep -l -s -i 'resource_limit\|admission' \$D/scratch/runs/\$b/*/log/*.log 2>/dev/null; done; true" > "$P"
-python3 "$(dirname "$0")/stop_rules.py" "$P" --wave "$WAVE" --plans "$STG/current/scripts"
+python3 "$(dirname "$0")/stop_rules.py" "$P" --wave "$WAVE" --plans "$STG/current/scripts" ${QUOTE:+--quote $QUOTE}   # QUOTE=<expected core-h of the wave> for W1+ (W0 default 100)
