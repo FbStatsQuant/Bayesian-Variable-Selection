@@ -68,8 +68,8 @@ exact-enumeration branch (`v3_fit.R:120-132`) is excluded. So is every run whose
 
 **Positivity.** On {completed}, π(S) > 0 for every S ∈ Ω. Proof: completion requires preprocessing status "ok"
 (`v3_fit.R:99-103`), which excludes a constant response (`v3_preprocess.R:115`). So s_y² > 0, the IG(0.01, 0.01 s_y²)
-prior is proper, the slab N(0, nv(G_S + I)⁻¹) is proper, and m(S) is the integral of a strictly positive likelihood
-against a proper prior: m(S) ∈ (0, ∞). Also w(k) > 0. Hence e^{F(S)} ∈ (0, ∞) and π(S) > 0. ∎
+prior is proper, the slab N(0, nv(G_S + I)⁻¹) is proper, and m(S) > 0, as the integral of a strictly positive likelihood
+against a proper prior. Also m(S) < ∞, by the closed form m(S) ∝ D_S^{−1/2}(2b₀ + Q_S)^{−ν} ([P1] `prop:closed`), since D_S ∈ (0, ∞), Q_S ≥ 0 and b₀ > 0. Also w(k) > 0. Hence e^{F(S)} ∈ (0, ∞) and π(S) > 0. ∎
 
 ## 1. Objects
 

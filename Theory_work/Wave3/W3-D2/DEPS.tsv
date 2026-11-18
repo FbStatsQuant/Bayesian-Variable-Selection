@@ -3,7 +3,7 @@ S:setting	STATEMENT.md:14-27		4e4a43ab4a85892a	4e4a43ab4a85892a	reviews/K3_reche
 S:Thm2X	STATEMENT.md:29-48	S:setting,S:det	c84965edd299de7e	c84965edd299de7e	reviews/K1_linecheck_opus.md	OK
 S:Cor2X	STATEMENT.md:50-58	S:Thm2X	211f1c45aec1e94d	211f1c45aec1e94d	reviews/F1_formcheck_opus.md (form check, in scope)	OK
 S:det	STATEMENT.md:60-64	S:setting	2d04f4d7340d147c	2d04f4d7340d147c	reviews/D1_council_opus.md (diff round D1, in scope)	OK
-S:inputs	STATEMENT.md:81-86		0b261bd594f05927	0b261bd594f05927	reviews/RED_requote_check_opus.md (CITATION-ONLY pin requote check, Opus one-shot)	OK
+S:inputs	STATEMENT.md:81-86		07893573cd7dc315	0b261bd594f05927	reviews/RED_requote_check_opus.md (CITATION-ONLY pin requote check, Opus one-shot)	STALE
 P:P0	PROOF.md:7-17	S:det	1211dc4d154080dc	1211dc4d154080dc	reviews/K1_linecheck_opus.md	OK
 P:P1	PROOF.md:18-53	S:setting,S:Thm2X,S:inputs	6e0d31edcc304018	6e0d31edcc304018	reviews/K3_recheck_opus.md	OK
 P:P2	PROOF.md:54-59	P:P0,P:P1	8a89d37202db7624	8a89d37202db7624	reviews/K1_linecheck_opus.md	OK

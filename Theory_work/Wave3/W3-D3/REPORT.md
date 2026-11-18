@@ -39,7 +39,7 @@ Row 1.2 unchanged (statement, masters, "clean" mark). Added sentence under row 1
 > centred rows $x-m_n$. [R1-sol-S1, R1-opus-S1, H5-17]
 
 "Master" cell for the added sentence: `W3-D3:Thm2SG` (with `W3-D3:B3w`, `W3-D3:ExSG`), statuses as recorded at CP3; inputs
-`W3-POST:Thm-1@1.0.1`, `W3-DIST:B0/B1/B2core/B2/B3@1.0.1`, `W3-READER:R1@1.0.2`, all PROVED-CHECKED. "Mark" cell: **clean**
+`W3-POST:Thm-1@1.0.1`, `W3-DIST:B0/B1/B2core/B2@1.0.1`, `W3-READER:R1@1.0.2`, all PROVED-CHECKED; `W3-DIST:B3` is the proof template of B3w only. "Mark" cell: **clean**
 once the three claims are recorded PROVED-CHECKED.
 
 ## 4. Chain record

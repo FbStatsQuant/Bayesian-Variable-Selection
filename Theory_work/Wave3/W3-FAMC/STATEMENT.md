@@ -125,7 +125,7 @@ rows (lines 39–40) are marked ATTENTION; on these two families, FAMC replaces 
 
 ## 3. Proof map (assembly; every step is an existing result or an explicit computation)
 
-The proof verifies the hypotheses of the **master** of Theorem 6, `W3-RM2-R:RM2-R-plus@1.0.1` ([RM2R] `:177-182`; the
+The proof verifies the hypotheses of the **master** of Theorem 6, `W3-RM2-R:RM2-R-plus@1.0.2` ([RM2R] `:177-182`; the
 hypotheses of RM2-R: (T1-R), (FL-R), (V-R), (L-R^b) with 15ϱ + b < ½, and (W-R)). It does not go through the reader
 bridges B6.1–B6.5. The reader's (A3)–(A6) are also shown, for readability.
 
@@ -167,10 +167,10 @@ expand.
 
 | input | used for | status (verbatim, claims.tsv) |
 |---|---|---|
-| `W3-RM2-R:RM2-R-plus@1.0.1` | master of Theorem 6 | "PROVED-CHECKED; council R3, MANIFEST 5d6d3c905e7dbfe5b637150bbd4cb3fb099596b46f72ddd62357d843056e649f (= R3 b06a8588 re-frozen as R3r), sol=9.5 PASS, opus=9.4 PASS" |
-| `W3-RM2-R:RM0-plus@1.0.1` | core (b⁺), (c⁺) | "PROVED-CHECKED; council R3, MANIFEST 5d6d3c905e7dbfe5b637150bbd4cb3fb099596b46f72ddd62357d843056e649f (= R3 b06a8588 re-frozen as R3r), sol=9.5 PASS, opus=9.4 PASS" |
-| `W3-RM2-R:DLV-0@1.0.1` | delivery under (S4) | "PROVED-CHECKED; council R3, MANIFEST 5d6d3c905e7dbfe5b637150bbd4cb3fb099596b46f72ddd62357d843056e649f (= R3 b06a8588 re-frozen as R3r), sol=9.5 PASS, opus=9.4 PASS" |
-| `W3-AUDIT-V:VIS@1.0.0` | (V-R) for (BLK-s), (BLK-g), (AR-s), (AR-g); (VIS-0) for (BLK-1); (VIS-c), (VIS-d)(i), (ii) for the nullity sentences of §1 [R3-sol-F4] | "PROVED-CHECKED; council R4, MANIFEST a125ce4da54949003a1c866ad116ab518cdcc4343e11fb87ff4d2fc762339248, sol=9.5 PASS, opus=9.5 PASS" |
+| `W3-RM2-R:RM2-R-plus@1.0.2` | master of Theorem 6 | "PROVED-CHECKED; council R3, MANIFEST 5d6d3c905e7dbfe5b637150bbd4cb3fb099596b46f72ddd62357d843056e649f (= R3 b06a8588 re-frozen as R3r), sol=9.5 PASS, opus=9.4 PASS" |
+| `W3-RM2-R:RM0-plus@1.0.2` | core (b⁺), (c⁺) | "PROVED-CHECKED; council R3, MANIFEST 5d6d3c905e7dbfe5b637150bbd4cb3fb099596b46f72ddd62357d843056e649f (= R3 b06a8588 re-frozen as R3r), sol=9.5 PASS, opus=9.4 PASS" |
+| `W3-RM2-R:DLV-0@1.0.2` | delivery under (S4) | "PROVED-CHECKED; council R3, MANIFEST 5d6d3c905e7dbfe5b637150bbd4cb3fb099596b46f72ddd62357d843056e649f (= R3 b06a8588 re-frozen as R3r), sol=9.5 PASS, opus=9.4 PASS" |
+| `W3-AUDIT-V:VIS@1.0.1` | (V-R) for (BLK-s), (BLK-g), (AR-s), (AR-g); (VIS-0) for (BLK-1); (VIS-c), (VIS-d)(i), (ii) for the nullity sentences of §1 [R3-sol-F4] | "PROVED-CHECKED; council R4, MANIFEST 3326543dc8feed288bfe997ad5349548ae619acb53b8c72eb1589b8809ceada4, sol=9.5 PASS, opus=9.5 PASS (= R4 a125ce4d re-frozen CORRECTION-ONLY as VR4r3 1e298254 and as VR4r4 3326543d)" |
 | `C-GROW:C5a@1.0.0` ([GROW5] (P1)–(P4), (G3b)) | AR spectrum; (V-R) for (AR-sep); leakage cross-check | "PROVED-CHECKED" |
 | `W3-RM2:D-to-W@1.0.3` | (D-loc^b) ⇒ (W-R), block side | "PROVED-CHECKED; council R1, MANIFEST 00bbeab89433b2f65dbfb8eefddf5e1a88dcc5460cabe79cd7adc3c8d6515d4a, astra=9.5 PASS, opus=8.8 PASS; correct:PASS(reviews/C_R1_council_astra.md, reviews/C_R1_council_opus.md, per-claim addenda)" |
 | `W3-RM2:POST-R@1.0.3` | (T1-R) ⇒ [POST] | "PROVED-CHECKED, conditional on W2-APP:POST; input versions W2-APP:POST@1.0.1; council R1, MANIFEST 00bbeab89433b2f65dbfb8eefddf5e1a88dcc5460cabe79cd7adc3c8d6515d4a, astra=9.5 PASS, opus=8.8 PASS; correct:PASS(reviews/C_R1_council_astra.md, reviews/C_R1_council_opus.md, per-claim addenda)" |

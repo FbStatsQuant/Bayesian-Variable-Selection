@@ -1,0 +1,14 @@
+# T7-1 (T7 card, AGREE; HQ: reader stale-wording class, CORRECTION-ONLY): READER_VERSIONS.md:470 (thm4 Example). '(A0) holds' needs sigma^2_C > 0; the master CorG-min allows sigma^2 >= 0 and requires sigma^2 + tau^2 > 0 (W3-MISR-R/STATEMENT.md:57-60). Reader prose only. Line count unchanged. Inside the W3-READER:R1 premises span 444-564: recorder's hash/cascade.
+diff --git a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+index b8f3015d..bab15bef 100644
+--- a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
++++ b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+@@ -467,7 +467,7 @@ $$
+ *Example (omitted predictors: the full model is misspecified for the candidate-only fit) [P4].* If the rows $(x_{\mathcal C,i},x_{\mathcal M,i})$ are i.i.d. Gaussian with
+ $\Sigma_{\mathcal C\mathcal C}$ invertible and
+ $y^{\mathrm r}_i=\alpha+x_{\mathcal C,i}^\top\beta_{\mathcal C}+x_{\mathcal M,i}^\top\beta_{\mathcal M}+\varepsilon_i$ with
+-$\varepsilon\sim N_n(0,\sigma^2I)$ independent of the rows, then (A0) holds with
++$\varepsilon\sim N_n(0,\sigma^2I)$ independent of the rows, then (A0) holds, provided the $\sigma^2_{\mathcal C}$ below is positive (for instance $\sigma^2>0$), with
+ $\beta^{\mathcal C}=\beta_{\mathcal C}+\Sigma_{\mathcal C\mathcal C}^{-1}\Sigma_{\mathcal C\mathcal M}\beta_{\mathcal M}$ and
+ $\sigma^2_{\mathcal C}=\sigma^2+\beta_{\mathcal M}^\top(\Sigma_{\mathcal M\mathcal M}-\Sigma_{\mathcal M\mathcal C}\Sigma_{\mathcal C\mathcal C}^{-1}\Sigma_{\mathcal C\mathcal M})\beta_{\mathcal M}$.
+ (If $\Sigma_{\mathcal C\mathcal C}$ is singular, the same holds with its Moore–Penrose inverse in place of the inverse.)

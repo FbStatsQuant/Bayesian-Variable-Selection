@@ -1,0 +1,16 @@
+# T5 R3 (T5 card, ruling AGREE): proof-file amendment A-2 of W3-DIST/work/E_bridges/B3.md:98-103: the item-6 event is redefined on the completed pair (measurable), as in W3-D3/lemmas/B3w.md (c). Recorded B3 span STATEMENT.md:409-414 untouched. File in MANIFEST_R2r: re-freeze needed (CORRECTION-ONLY). Line count unchanged.
+diff --git a/Theory_work/Wave3/W3-DIST/work/E_bridges/B3.md b/Theory_work/Wave3/W3-DIST/work/E_bridges/B3.md
+index 64357f1f..663f5130 100644
+--- a/Theory_work/Wave3/W3-DIST/work/E_bridges/B3.md
++++ b/Theory_work/Wave3/W3-DIST/work/E_bridges/B3.md
+@@ -95,8 +95,8 @@ P(𝒜_nᶜ) ≤ 4pe^{−c₁n/K⁴} + e^{−c₂n/K⁴} ≤ 5n^Ae^{−c₂n/K
+ ## Amendments (lead, 2026-11-15, after the cross-family line check; part of this file)
+ A-1 (Step 4, the chain "|S₀ ∪ J| ≤ s + m♯_n ≤ q_n"). Replace by |S₀ ∪ J| ≤ min{p, s + m♯_n} ≤ q_n (Step 0): the numerical
+ inequality s + m♯_n ≤ q_n is false when q_n = p (p = 2, s = 1, n = 100: m♯_n = 2, q_n = 2). (F_w) follows as before.
+-A-2 (Step 6, "R1 holds by (A2)"). (A2) gives p ≥ 2 for the raw dimension, not p_ret ≥ 2 on every outcome. The event 𝒜′_n is
+-intersected with {p_ret = p} (which holds on the event of B1). To apply the consumed theorem in fixed dimension p, outside
++A-2 (Step 6, "R1 holds by (A2)"). (A2) gives p ≥ 2 for the raw dimension, not p_ret ≥ 2 on every outcome. 𝒜′_n is redefined as the set of outcomes on which the completed pair below satisfies the conditions of Step 6, with m♯_n computed from (n, p, s) and a replacement truth with exactly s nonzero coordinates;
++it is measurable in the completed pair and contains 𝒜_n (as in `W3-D3/lemmas/B3w.md` (c)). To apply the consumed theorem in fixed dimension p, outside
+ {p_ret = p} the retained standardised design and truth are replaced by any deterministic admissible n × p design and
+ truth satisfying the dimensional conditions of R1 (a function of the raw design only, hence still independent of the
+ noise; the interface conditions may fail there). The replacement agrees with the actual objects on the event of B1, so

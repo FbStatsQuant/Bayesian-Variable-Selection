@@ -106,7 +106,7 @@ Numbering of the headline theorems (proposal; see `CLAIMS_CARD.md`):
 - **(A5) No near-collinearity among $O(\log n)$ columns.** $\lambda_{\min}(X_S^\top X_S)\ge g_0$ for every $S$ with
   $|S|\le 3(A+1)(s_0+1)\log n$, for a fixed $g_0>0$.
 - **(A6) Beta-min.** $\theta^*_{\min}\ge C_\beta\,\sigma_*\sqrt{\log n/n}$ with a fixed $C_\beta>0$ such that
-  $C_\beta^2\varphi_0^2>c_0(s_0,A)$ [S1-F1]; or $\theta^*_{\min}\sqrt{n/\log n}\to\infty$.
+  $C_\beta^2\varphi_0^2>c_0(s_0,A)$ [S1-F1]; or $\theta^*_{\min}\ge\sigma_*\sqrt{M_n\log n/n}/\varphi_0$ for a fixed sequence $M_n\to\infty$.
 
 Then there are $n_0$ and $C$, depending only on $(s_0,A,\sigma_*^2,\bar\theta,\varphi_0,g_0,C_\beta)$, such that for every
 $n\ge n_0$ and every design and $\theta^*$ satisfying (A1)–(A6) at that $n$ [H5-1]
@@ -118,8 +118,8 @@ $$
 P\big(\mathrm{HPM}=\mathrm{MPM}=S_0\big)\ \ge\ 1-4C\sqrt{\tfrac{\log n}{n}}\ \to1,\qquad
 \max_{j\le p}\big|\mathrm{PIP}_j-\mathbf 1\{j\in S_0\}\big|\le 1-\pi(S_0\mid y)=O_P\Big(\sqrt{\tfrac{\log n}{n}}\Big).
 $$
-(Expectation over the noise, design fixed. With the second form of (A6), $n_0$ depends also on the divergence of
-$\theta^*_{\min}\sqrt{n/\log n}$.)
+(Expectation over the noise, design fixed. With the second form of (A6), $n_0$ depends also on the sequence
+$(M_n)$.)
 
 **Theorem 1′ (no eigenvalue condition off $S_0$ beyond the vanishing floor (A5)).** Replace (A4) by
 - **(A4′) Floor on the truth and an identifiability margin.** $\lambda_{\min}(\hat R_{S_0})\ge\varphi_0^2$, and every model
@@ -292,13 +292,13 @@ $$
 `W3-POST:Thm-1@1.0.1` item 6 (random-design interface), `Theory_work/Wave3/W3-POST/STATEMENT.md:95-100`, status as in §1;
 with `W2-APP:POST@1.0.7`, `Theory_work/Wave2/W2-APP/lemmas/L1_POST.md:27-33`, status verbatim **"PROVED-CHECKED"**
 (main 6cd699dd) [REG-6cd6] (`C-PACK:SL0@1.0.1`, the posterior-summary lemma, is now "PROVED-CHECKED"), and its restatement `W3-POST:Cor-1R@1.0.0`
-(`W3-POST/STATEMENT.md:106-118`), status **"PROVED (by this seat, unchecked)"**. **Presented statement (sub-Gaussian rows; Gaussian = the case $L=1$):** `W3-D3:Thm2SG@1.0.0` (with `W3-D3:B3w@1.0.0`, `W3-D3:ExSG@1.0.0`), main 0eb1b6ef [REG-0eb1], status verbatim **"PROVED-CHECKED; council R2, MANIFEST 1c14a298…, sol=8.5 PASS, opus=9.3 PASS"** (each); inputs `W3-POST:Thm-1@1.0.1`, `W3-DIST:B0/B1/B2core/B2/B3@1.0.2`, `W3-READER:R1@1.0.4`. **Coexisting statement (Theorem 2X, §11):** `W3-D2:Thm2X@1.0.2` (with `W3-D2:Cor2X@1.0.0`), recorded at main 2e0decc8, status as at main 34c8fb4d [REG-2e0d], **"PROVED-CHECKED, conditional on W2-APP:POST, C-MIS:GDb, C-MIS:Prop-P; council R2, MANIFEST d408b7dc…, sol=9.2 PASS, opus=9.6 PASS"** (each).
+(`W3-POST/STATEMENT.md:106-118`), status **"PROVED (by this seat, unchecked)"**. **Presented statement (sub-Gaussian rows; Gaussian = the case $L=1$):** `W3-D3:Thm2SG@1.0.0` (with `W3-D3:B3w@1.0.0`, `W3-D3:ExSG@1.0.0`), main 0eb1b6ef [REG-0eb1], status verbatim **"PROVED-CHECKED; council R2, MANIFEST 1c14a298…, sol=8.5 PASS, opus=9.3 PASS"** (each); inputs `W3-POST:Thm-1@1.0.1`, `W3-DIST:B0/B1/B2core/B2@1.0.2` (and `W3-DIST:B3@1.0.2` as the proof template of B3w only; its last sentence, conditional on `W3-POST:Thm-1`, is not used), `W3-READER:R1@1.0.5`. **Coexisting statement (Theorem 2X, §11):** `W3-D2:Thm2X@1.0.3` (with `W3-D2:Cor2X@1.0.0`), recorded at main 2e0decc8, status as at main 34c8fb4d [REG-2e0d], **"PROVED-CHECKED, conditional on W2-APP:POST, C-MIS:GDb, C-MIS:Prop-P; council R2, MANIFEST d408b7dc…, sol=9.2 PASS, opus=9.6 PASS"** (each).
 
 ### Bridges
 | # | Bridge | Mark | Detail |
 |---|---|---|---|
 | B2.1 | (A3) ⇒ LSF (i) and (ii) with $\psi_n=\varphi^2$ | NEW arithmetic | LSF asks the floor on $|S|\le\min(p,s_0+j_0)$ and on $|S|\le\bar k_n=\min\{p,s_0+\max(j_0,\bar m_n)\}$, $\bar m_n=\lceil[s_0(A\log n+\log2)+\log2+\tfrac{s_0+2}2\log n]/\log\tfrac32\rceil$ (L1_POST.md:20-25). For $n\ge3$: $\bar k_n<(2.4664As_0+3.6996s_0+4.9327)\log n\le5(A+1)(s_0+1)\log n$ (R1) [R1-E6], and $s_0+j_0\le(2A+2)s_0+2$ is smaller. Checked numerically (LOG). |
-| B2.2 | LSF + Gaussian rows + fixed coefficients ⇒ events $\mathcal A_n$, $P(\mathcal A_n)\to1$, carrying (E), (F_λ), (F_w), BM-∞ with common constants | EXISTS-CHECKED | `W2-APP:POST@1.0.7` part (a), "PROVED-CHECKED" (accepted at W2-APP's CP3, main f526e45b; SOP:TH09 discharged, main 6cd699dd) [REG-f526, REG-6cd6]. Raw-scale coefficients are covered (L1_POST.md:12-15, event $\mathcal H_n$). Theorems 2, 6 and 10 depend on it; Theorem 4 does not (its master uses its own Gaussian-design transfer [S1-F12]). |
+| B2.2 | LSF + Gaussian rows + fixed coefficients ⇒ events $\mathcal A_n$, $P(\mathcal A_n)\to1$, carrying (E), (F_λ), (F_w), BM-∞ with common constants | EXISTS-CHECKED | `W2-APP:POST@1.0.7` part (a), "PROVED-CHECKED" (accepted at W2-APP's CP3, main f526e45b; SOP:TH09 discharged, main 6cd699dd) [REG-f526, REG-6cd6]. Raw-scale coefficients are covered (L1_POST.md:12-15, event $\mathcal H_n$). Theorems 6 and 10 depend on it, as did the previous Gaussian proof of Theorem 2 (the presented Theorem 2 uses B2.2′ instead); Theorem 4 does not (its master uses its own Gaussian-design transfer [S1-F12]). |
 | B2.3 | events ⇒ conclusions under the joint law | inside the master | Theorem 1 item 6 (diagonal transfer), via `W3-D3:Thm2SG`. **B2.2′** (sub-Gaussian rows: (A3) and the sub-Gaussian condition ⇒ the events $\mathcal A_n$ of B2.2; replaces B2.2 for the presented statement; EXISTS-CHECKED): `W3-D3:B3w@1.0.0` (built on `W3-DIST:B1`, `B2core`, `B2` part (a), `W3-READER:R1`), main 0eb1b6ef [REG-0eb1]; B2.2 stays for the Gaussian case. Bridges B2.1′, B2.1″ of Theorem 2X: §11. |
 
 **Effort:** B2.1 half a page.
@@ -446,7 +446,7 @@ display is attained is not proved. Status: the expectation display and remarks (
 
 
 ### Reader statement
-**Theorem 4** (candidate-only fitting with omitted Gaussian predictors; no condition on how $\Sigma$, $\beta$, $\sigma^2$ vary with $n$) [P4]. The method is run on the candidate predictors
+**Theorem 4** (candidate-only fitting with omitted Gaussian predictors; $\Sigma$, $\beta$, $\sigma^2$ may vary with $n$, subject only to (A1)–(A3)) [P4]. The method is run on the candidate predictors
 $x_{\mathcal C}$ and the response $y^{\mathrm r}$ only ($p$ = number of candidates). Assume:
 - **(A0) Model.** The candidate rows $x_{\mathcal C,1},\dots,x_{\mathcal C,n}$ are i.i.d. $N_p(m,\Sigma)$, and, given the
   candidate design, the responses are independent with
@@ -459,7 +459,7 @@ $x_{\mathcal C}$ and the response $y^{\mathrm r}$ only ($p$ = number of candidat
   $\beta^{\mathcal C\top}\Sigma\beta^{\mathcal C}\le M_0\,\sigma^2_{\mathcal C}$ and
   $n\min_{j\in S_0^{\mathcal C}}\Sigma_{jj}(\beta^{\mathcal C}_j)^2/(\sigma^2_{\mathcal C}\log n)\to\infty$.
 
-No condition is placed on how $m$, $\Sigma$, $\beta^{\mathcal C}$ or $\sigma^2_{\mathcal C}$ vary with $n$. Then
+$m$, $\Sigma$, $\beta^{\mathcal C}$ and $\sigma^2_{\mathcal C}$ may depend on $n$; no condition beyond (A1)–(A3) is placed on how they vary. Then
 $$
 E\big[1-\pi(S_0^{\mathcal C}\mid y)\big]=O\Big(\sqrt{\tfrac{\log n}{n}}\Big),\qquad
 P\big(\mathrm{HPM}\neq S_0^{\mathcal C}\big)=O\Big(\sqrt{\tfrac{\log n}{n}}\Big).
@@ -467,7 +467,7 @@ $$
 *Example (omitted predictors: the full model is misspecified for the candidate-only fit) [P4].* If the rows $(x_{\mathcal C,i},x_{\mathcal M,i})$ are i.i.d. Gaussian with
 $\Sigma_{\mathcal C\mathcal C}$ invertible and
 $y^{\mathrm r}_i=\alpha+x_{\mathcal C,i}^\top\beta_{\mathcal C}+x_{\mathcal M,i}^\top\beta_{\mathcal M}+\varepsilon_i$ with
-$\varepsilon\sim N_n(0,\sigma^2I)$ independent of the rows, then (A0) holds with
+$\varepsilon\sim N_n(0,\sigma^2I)$ independent of the rows, then (A0) holds, provided the $\sigma^2_{\mathcal C}$ below is positive (for instance $\sigma^2>0$), with
 $\beta^{\mathcal C}=\beta_{\mathcal C}+\Sigma_{\mathcal C\mathcal C}^{-1}\Sigma_{\mathcal C\mathcal M}\beta_{\mathcal M}$ and
 $\sigma^2_{\mathcal C}=\sigma^2+\beta_{\mathcal M}^\top(\Sigma_{\mathcal M\mathcal M}-\Sigma_{\mathcal M\mathcal C}\Sigma_{\mathcal C\mathcal C}^{-1}\Sigma_{\mathcal C\mathcal M})\beta_{\mathcal M}$.
 (If $\Sigma_{\mathcal C\mathcal C}$ is singular, the same holds with its Moore–Penrose inverse in place of the inverse.)
@@ -478,7 +478,7 @@ the truth onto the candidate linear models: the posterior concentrates on the su
 predictor. Under the same assumptions the posterior's fitted mean and variance also contract around this law, with its
 mean centred over the sample (the fitted mean carries no intercept), in the in-sample average Hellinger and
 Kullback–Leibler distances, at rate $M_n/\sqrt n$ in Hellinger and $M_n/n$ in Kullback–Leibler (any $M_n\to\infty$).
-For a fixed design the contraction needs only that the posterior mass of $S_0^{\mathcal C}$ tends to one in probability
+For a fixed design, under the same Gaussian model for the responses and (A1), the contraction needs only that the posterior mass of $S_0^{\mathcal C}$ tends to one in probability
 (with the energy bound and a floor on $S_0^{\mathcal C}$); it holds uniformly over any class of fixed-design configurations with
 common constants and bounded support size on which this convergence is uniform. A fixed-design version of the theorem, uniform
 over the residual variance, also holds (remarks in the paper; same status).
@@ -821,7 +821,7 @@ regressions are local. HQ choices: keep them as stated (faithful), or state Theo
 **Theorem 7.** Let the design be fixed, with non-constant raw columns [R3]. Assume
 - **(A1) Model and posterior conditions.** (S1), (S2), (S3); (A2)–(A5) of Theorem 1; and the beta-min
   $\theta^*_{\min}\ge C_\beta\,\sigma_*\sqrt{\log n/n}$ with a fixed $C_\beta$ above an explicit constant depending on
-  $(s_0,A,M,\sigma_*^2,\varphi_0)$ (Remark (a)), or $\theta^*_{\min}\sqrt{n/\log n}\to\infty$ [RM2R-4].
+  $(s_0,A,M,\sigma_*^2,\varphi_0)$ (Remark (a)), or $\theta^*_{\min}\ge\sigma_*\sqrt{M_n\log n/n}/\varphi_0$ for a fixed sequence $M_n\to\infty$ [RM2R-4].
 - **(A2) Floors.** $\lambda_{\min}(\hat R_T)\ge\varphi_0^2$ for every $T$ with $|T|\le16$ and for every
   $T=Q\cup\{l\}$, $l\in[p]$ ($Q$ as in (A4)).
 - **(A3) Visibility.** There is a fixed $M_V$, larger than an explicit constant depending on $(A,M,\sigma_*^2)$
@@ -882,7 +882,7 @@ nonconstant raw columns").
 | # | Bridge | Mark | Detail |
 |---|---|---|---|
 | B7.1′ | (A1) ⇒ (T1-F♭) | identity + B1.1–B1.4 [RM2R-4] | (T1-F♭) = Theorem 1's (H0) with BM-∞ or BM(c), c > c₀ (`W3-RM2-R/STATEMENT.md:95-99`); (A1)'s constant exceeds c₀. Replaces B7.1. |
-| B7.2′ | (A5)(a) + (A1) ⇒ (BM-W⁺) | NEW (two lines; council-checked as READER_DELTA R7.2 of W3-RM2-R) | fixed $D>2+4A$, $d_n^2\le D\log n$ for large $n$; the strict constant of Remark (a); `W3-RM2-R/STATEMENT.md:107-112` (last sentence of (BM-W⁺)). Under $\theta^*_{\min}\sqrt{n/\log n}\to\infty$: (BM-W) ⇒ (BM-W⁺). |
+| B7.2′ | (A5)(a) + (A1) ⇒ (BM-W⁺) | NEW (two lines; council-checked as READER_DELTA R7.2 of W3-RM2-R) | fixed $D>2+4A$, $d_n^2\le D\log n$ for large $n$; the strict constant of Remark (a); `W3-RM2-R/STATEMENT.md:107-112` (last sentence of (BM-W⁺)). Under $\theta^*_{\min}\ge\sigma_*\sqrt{M_n\log n/n}/\varphi_0$ for a fixed sequence $M_n\to\infty$: (BM-W) ⇒ (BM-W⁺). |
 | B7.3′ | (A5)(b) signal clause (Remark (a) form) ⇒ (BM-Q♭) ⇒ (BM-W⁺) | identity | `W3-RM2-R/STATEMENT.md:107-112`; checked as R7.3 of W3-RM2-R. |
 | B7.4′ | (A3) = (V♭) | identity | `W3-RM2-R/STATEMENT.md:101-105`. |
 | B7.1 | (A1) ⇒ (T1-F) | as B1.1–B1.4 (with BM-∞) | (T1-F) uses BM-∞ (RM STATEMENT.md:91-92). Superseded by B7.1′ for the current master. |
@@ -1063,8 +1063,8 @@ and inverse-gamma prior §3; no tuning). $\Pi(\cdot\mid D_n)$ is the resulting e
 back to the original units: $S$ is the set of included predictors, $\beta\in\mathbb R^{p_{\mathrm{raw}}}$ the coefficient vector
 (zero outside $S$ and on removed predictors), $\sigma^2$ the noise variance. If fewer than two predictors remain, or the
 response is constant in the sample, the posterior is not defined; under the assumptions below such data sets have
-probability smaller than the exceptional probabilities in the theorems and are counted in them (and $p=p_{\mathrm{raw}}$
-outside them).
+probability smaller than the exceptional probabilities in the theorems and are counted in them: there the posterior probabilities in the displays are read as 1.
+The common exceptional set of the proofs also contains every data set with $p<p_{\mathrm{raw}}$.
 
 *What is estimated.* A draw $(S,\beta,\sigma^2)$ defines a conditional law of $y$ given $x$,
 $N\big(\bar y+(x-\bar x)^\top\beta,\ \sigma^2\big)$, with the sample-mean intercept ($\bar y$, $\bar x$ are the sample means). The
@@ -1414,14 +1414,14 @@ statements (HQ-confirmed; no separate review).
 These blocks are appended here so that the line numbers of §§1–10 stay unchanged. They belong to the reader versions of Theorem 2 (§2), Theorem 6 (§6) and card rows 1.2, 3.1L and 3.1F. Update-log entries are in §2 (v0.5) and §6 (v1.0).
 
 ### 11.1 Theorem 2X (coexisting statement under Theorem 2; tag MIXED / incomparable; conditional)
-**Source:** W3-D2 READER_DELTA (text) and `W3-D2/REPORT.md` §3 (card text). Statuses verbatim (recorded at main 2e0decc8; `Thm2X@1.0.2`, status as at main 34c8fb4d) [REG-2e0d]: `W3-D2:Thm2X@1.0.2`, `W3-D2:Cor2X@1.0.0`: **"PROVED-CHECKED, conditional on W2-APP:POST, C-MIS:GDb, C-MIS:Prop-P; council R2, MANIFEST d408b7dc…, sol=9.2 PASS, opus=9.6 PASS"** (each).
+**Source:** W3-D2 READER_DELTA (text) and `W3-D2/REPORT.md` §3 (card text). Statuses verbatim (recorded at main 2e0decc8; `Thm2X@1.0.3`, status as at main 34c8fb4d) [REG-2e0d]: `W3-D2:Thm2X@1.0.3`, `W3-D2:Cor2X@1.0.0`: **"PROVED-CHECKED, conditional on W2-APP:POST, C-MIS:GDb, C-MIS:Prop-P; council R2, MANIFEST d408b7dc…, sol=9.2 PASS, opus=9.6 PASS"** (each).
 
 **Theorem 2X (smaller-set, expectation form).** Let the rows of $X^{\mathrm r}$ be i.i.d. $N_p(m,\Sigma)$ with $\Sigma_{jj}>0$, and let $R$ be the correlation matrix of a row. Assume (S1) with $\sigma^2>0$ allowed to depend on $n$ and
 - **(A1) Dimension and sparsity.** $2\le p\le n^A$; $s_0\ge1$ fixed.
 - **(A2) Sparse eigenvalue floor.** $\lambda_{\min}(R_{TT})\ge c$ for every $T$ with $1\le|T|\le3(A+1)(s_0+1)\log n$, for a fixed $c>0$.
 - **(A3) Signal relative to the noise.** $\beta^\top\Sigma\beta\le M_0\sigma^2$ and $n\min_{j\in S_0}\Sigma_{jj}\beta_j^2/(\sigma^2\log n)\to\infty$.
 
-No condition is placed on how $m$, $\Sigma$, $\beta$ or $\sigma^2$ vary with $n$. Then
+$m$, $\Sigma$, $\beta$ and $\sigma^2$ may depend on $n$; no condition beyond (A1)–(A3) is placed on how they vary. Then
 $$E\big[1-\pi(S_0\mid y)\big]=O\Big(\sqrt{\tfrac{\log n}{n}}\Big),\quad P(\mathrm{HPM}\neq S_0)+P(\mathrm{MPM}\neq S_0)=O\Big(\sqrt{\tfrac{\log n}{n}}\Big),\quad E\max_j|\mathrm{PIP}_j-\mathbf 1\{j\in S_0\}|=O\Big(\sqrt{\tfrac{\log n}{n}}\Big).$$
 It is conditional on `W2-APP:POST`, `C-MIS:GDb` and `C-MIS:Prop-P` (the inputs of Theorem 4's master), as recorded.
 
@@ -1440,7 +1440,7 @@ $$
 $$
 so that $0\le\log Z-\log\hat Z^{\mathrm{list}}\le-\log(1-\varepsilon_n)$; and $\hat S^{\mathrm{list}}=\hat S=S_0$ when $\varepsilon_n<\tfrac12$. Since $\varepsilon_n=O_P(\sqrt{\log n/n})$, the two PIP errors and the log-evidence error $|\log\hat Z^{\mathrm{list}}-\log Z|$ (where printed) are $O_P(\sqrt{\log n/n})$ on output, and without "on output" under the delivery conventions (S4).
 
-*Remark.* This covers every design inside Theorem 6, including AR and block designs that satisfy Theorem 6's conditions, on which the sampler's averaged PIPs, median model and evidence are not covered (Theorem 10 needs no leakage outside the true model). The list quantities are deterministic functions of the run's output; they speak about the posterior restricted to the list, which on Theorem 6's data event holds at least the mass of $S_0$. *Relation to Corollary 9C (D121):* 6L supplies Cor 9C's list-mass premise pathwise (on the stated event); the probability form under Cor 9C's law needs the raw-scale bridge (open). Tag vs Theorem 6: **STRONGER** (added conclusions, same hypotheses and event). Cor 9C's status is unchanged.
+*Remark.* This covers every design inside Theorem 6, including AR and block designs that satisfy Theorem 6's conditions, on which the sampler's averaged PIPs, median model and evidence are not covered (Theorem 10 needs no leakage outside the true model). The list quantities are deterministic functions of the run's output; they speak about the posterior restricted to the list, which on Theorem 6's data event holds at least the mass of $S_0$. *Relation to Corollary 9C (D121):* 6L supplies Cor 9C's list-mass premise pathwise on the part of the stated event where $\pi(S_0\mid y)\ge n^{-cM/2}$ (there the list holds at least that mass); the probability form under Cor 9C's law needs the raw-scale bridge (open). Tag vs Theorem 6: **STRONGER** (added conclusions, same hypotheses and event). Cor 9C's status is unchanged.
 
 ### 11.3 Corollary FAMC (block and AR designs whose true coefficients do not cancel)
 `W3-FAMC:Cor-FAMC@1.0.0`, main 8b4d3101 [REG-8b4d], status verbatim **"PROVED-CHECKED; council R5, MANIFEST b32ee9df…, sol=10.0 PASS, opus=9.5 PASS"**. Reader text (verbatim, `Theory_work/Dept/writing_answers/FAMC_NOTE_2026-11-17.md` on dept/theory; checked for faithfulness against `Theory_work/Wave3/W3-FAMC/STATEMENT.md` §1):

@@ -1,0 +1,16 @@
+# T3-1 (T3 card, ruling AGREE): proof-file Positivity paragraph, W3-DIST/work/D_output/P6_DISTC.md:70-72. m(S)<inf via the closed form. No recorded claim span touched (registry spans STATEMENT.md:381-382, 289-318, 217-238, 322-326 do not contain it). File is in MANIFEST_R2r: needs a re-freeze (CORRECTION-ONLY). Line count unchanged.
+diff --git a/Theory_work/Wave3/W3-DIST/work/D_output/P6_DISTC.md b/Theory_work/Wave3/W3-DIST/work/D_output/P6_DISTC.md
+index 08bc1f8c..d8dd3635 100644
+--- a/Theory_work/Wave3/W3-DIST/work/D_output/P6_DISTC.md
++++ b/Theory_work/Wave3/W3-DIST/work/D_output/P6_DISTC.md
+@@ -68,8 +68,8 @@ exact-enumeration branch (`v3_fit.R:120-132`) is excluded. So is every run whose
+ 
+ **Positivity.** On {completed}, π(S) > 0 for every S ∈ Ω. Proof: completion requires preprocessing status "ok"
+ (`v3_fit.R:99-103`), which excludes a constant response (`v3_preprocess.R:115`). So s_y² > 0, the IG(0.01, 0.01 s_y²)
+-prior is proper, the slab N(0, nv(G_S + I)⁻¹) is proper, and m(S) is the integral of a strictly positive likelihood
+-against a proper prior: m(S) ∈ (0, ∞). Also w(k) > 0. Hence e^{F(S)} ∈ (0, ∞) and π(S) > 0. ∎
++prior is proper, the slab N(0, nv(G_S + I)⁻¹) is proper, and m(S) > 0, as the integral of a strictly positive likelihood
++against a proper prior. Also m(S) < ∞, by the closed form m(S) ∝ D_S^{−1/2}(2b₀ + Q_S)^{−ν} ([P1] `prop:closed`), since D_S ∈ (0, ∞), Q_S ≥ 0 and b₀ > 0. Also w(k) > 0. Hence e^{F(S)} ∈ (0, ∞) and π(S) > 0. ∎
+ 
+ ## 1. Objects
+ 

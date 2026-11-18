@@ -1,0 +1,11 @@
+PURE check of `T7/T7-2_correction.patch` (fresh Opus subagent, claudeAgent_personal, high; scratch in `.rc_tmp/t72/`, removed). Verbatim report (harness indent removed):
+
+PURE-VERDICT: PURE
+1. `git apply --check` passes. I applied the patch to a scratch copy only. The file stays at 1458 lines and only line 481 changes. At character level the only change is the insertion of `, under the same Gaussian model for the responses and (A1),` after "For a fixed design".
+2. The new text matches the card's T7-2 column (c) exactly. In the original, "For a fixed design the contraction needs only" occurs exactly once; replacing it with the card's text gives the patched file byte for byte.
+3. The master supports the new sentence. CorH-plus (W3-MISR-R/STATEMENT.md:111-116, clause (a′)) assumes κ_n in 𝒦^F_n = {s(κ)=s, (SZ), (E^σ; M), (F₀; φ₀)} (:43). The law P_κ must satisfy GR^c at κ, which is the Gaussian contrast law at v (W3-MISR/STATEMENT.md:65). It also assumes δ_n → 0 in probability. The added clause covers the Gaussian law, and (A1) covers (SZ).
+4. (A1) is the right size condition. The reader's (A1) (:455) says "2 ≤ p ≤ n^A; s ≥ 1 fixed". (SZ) (W3-MISR/STATEMENT.md:46) says "2 ≤ p ≤ n^A, 1 ≤ s ≤ K". With s fixed, (A1) is (SZ).
+5. The rest of the remark fits the new opening clause. "Energy bound and a floor on S_0^C" is (E^σ) and (F₀). The uniform clause ("common constants and bounded support size") is the ≤s̄ union classes. This does not conflict with "s fixed" in (A1), because (SZ) only needs s ≤ K.
+6. The card's point about Astra's counterexample holds. Actual noise variance 2 against reference variance 1 means the law is not GR^c at the stated v. So the example shows a premise the old sentence left unstated, not a wrong result.
+7. Nothing else is touched. Lines 478-480 and 482-484 are unchanged, as are all of Theorem 4 (A0)-(A3), the display, the Example and the "Relation to Theorem 2" paragraph. The diff has a single hunk.
+8. Registry span (reported, not edited): line 481 falls inside the premises span `READER_VERSIONS.md:444-564` of **W3-READER:R1** (ACTIVE, v1.0.4, Theory_work/INFRA/registry/claims.tsv:527). No other W3-READER claim's premises span covers it. This matches the patch header's note that the recorder needs to update R1's hash and cascade.

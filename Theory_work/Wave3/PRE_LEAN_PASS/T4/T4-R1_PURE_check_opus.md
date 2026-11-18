@@ -1,0 +1,15 @@
+PURE check of `T4/T4-R1_correction.patch` (fresh Opus subagent, claudeAgent_personal, high; scratch in `.rc_tmp/t4r1_pure_*`). Verbatim report (harness indent removed):
+
+PURE-VERDICT: PURE
+
+1. **Patch mechanics.** `git apply --check` passes from the repo root. I applied the patch with `patch -p1` to a scratch copy in `.rc_tmp/t4r1_pure_2606774/`. The diff touches only line 86, and both copies have 127 lines. At the character level the only changes are `Ω`→`2^{[p]}` in the sup's domain, `π(h)`→`Σ_{S∈Ω}π(S)h(S)`, and the inserted `δ_n for every data set, hence `. The `π(|S| = s₀)` clause is unchanged.
+2. **Card text.** The new text matches card row R1, column (c), character for character (`FABLE_CARD.md:11`, with `\|` unescaped). Replacing the old card string by the new one in the original line reproduces the patched line exactly.
+3. **(a) S₀ ∈ Ω.** The quantity is Σ_{S≠S₀}π(S)(h(S)−h(S₀)), and |h(S)−h(S₀)| ≤ 1, so the sup is at most δ_n. h = 1{S≠S₀} gives δ_n − 0, so the sup is δ_n. Values of h outside Ω do not enter, because h(S₀) is evaluated in Ω. This matches SL0(ii) (`I4_SL_corollaries.md:22-23` and proof `:30-33`).
+4. **(b) S₀ ∉ Ω (s₀ > K).** Both terms lie in [0,1], so the sup is at most 1. h = 1_{S₀} gives |0 − 1| = 1. δ_n = 1 − π(S₀) = 1 by the convention π(S₀) := 0, which C-PACK records as "If s₀ > K then δ = 1" (`I4_SL_corollaries.md:30`). So "= δ_n for every data set" holds.
+5. **(c)** O_P(r_n) then follows from item 1, δ_n = O_P(r_n) under (BM).
+6. **Wherever the old form was defined** (S₀ ∈ Ω, h on Ω), the new form has the same value. Extending h to 2^{[p]} changes nothing there. This is the C-PACK R34 #3 convention (`I4_SL_corollaries.md:16-17`), stated in its definedness-safe form.
+7. **Neighbouring items stay consistent.** Item 3 (max_j |PIP_j − 1{j∈S₀}| ≤ δ_n) and items 1-2 are untouched and agree with the new deterministic "= δ_n" form. Item 6 (random design, `STATEMENT.md:94-100`) transfers 1-4. The identity is deterministic, so it carries over to the joint law.
+8. **W3-POST2.** The cited lines 126-133 hold Claim E, not a "Theorem 1′ item 6". Claim E cites "[W3P] Theorem 1 conclusions 1–4 … size and functionals" and item 6 only by reference ("Item 6 (random design) as in [W3P]"). It does not restate the sup display, so it stays consistent.
+9. **Reader (report only).** `W3-READER/READER_VERSIONS.md`, ROW thm1 (lines 95-253), has no `sup_{h`, "functional" or `h(S₀)` display. `CLAIMS_CARD.md` rows 1.1 and 1.2 (lines 54-55) have no "bounded functional" or sup-over-h text. The reader does not restate item 4 in the old form.
+10. **Registered span.** The edited line lies inside the span of `W3-POST:Thm-1`, `Theory_work/Wave3/W3-POST/STATEMENT.md:61-100` (`INFRA/registry/claims.tsv:344`). The registered hash is c88f9ddc…, so a rehash is required. `aliases.tsv:89` maps [W3P] Theorem 1 to this claim, which is how W3-POST2 inherits it.
+11. **Housekeeping.** No tracked file was modified. The scratch copies are left in `.rc_tmp/t4r1_pure_2606774/`.

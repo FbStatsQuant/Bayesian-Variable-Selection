@@ -184,7 +184,7 @@ indexed by every l ∉ S₀, as these functionals require); both are random vari
   o₀ = O_P(r̄_n) + o_P(n^{−κ}). In particular (T3⁺)(a) of PARENT `:120-133` holds with (D3) in place of the visibility
   condition and |S₀| ≤ s̄ in place of |S₀| = s₀.
 Supports, coefficients, sets Q or level vectors selected using the response are not covered. *Convention off the
-admissible designs:* as BASE `:301-305` (also in (b)).
+admissible designs:* as BASE `:301-305` (also in (b)); in addition ϱ_n, R^♯_n and b_n(h) are set to 0 on realisations where their defining expressions are not available (no retained column, or h not a level vector for Q). With this they are measurable functions of X^r on the whole design space (`lemmas/R4_TRANSFER_COR.md`, Measurability), and no clause changes on admissible designs.
 
 **[MIS] (T6⁺⁺) Corollary MIS.** BASE (T6) (`:346-357`) with the claims of version 1.5 in place of those of version
 1.3.4: under (GR), each claim of version 1.5 holds for the start π₀^𝒞 of the method re-run on the candidate data
@@ -234,7 +234,7 @@ p = s₀). Assume (FL-R16), (V-R) and (L-R⁺⁺). Then:
 * (iii) **No leakage, uncorrelated nulls.** If Q = S₀ and (L-gain-0) holds (for instance C_L = 0 in (L-R⁺⁺) with
   Q = S₀): **o₀ = O_P(√(log n/n))**, hence 1 − π₀(S₀) = O_P(√(log n/n)).
 (At each n where the right side of (i) is ≥ 1 its event is sure; the O_P statements need no rate tending to zero — as
-PARENT `:140-144`. By (T0), o₀ ≥ ½(n + 1)^{−1/2} on every data set, so (iii) is optimal up to the factor √log n.)
+PARENT `:140-144`. By (T0), o₀ ≥ ½(n + 1)^{−1/2} on every data set with s₀ < K and n ≥ 4, so (iii) is optimal up to the factor √log n.)
 Proof structure: (B-R⁺⁺), then (T1⁺⁺)(d) conditionally on the design, as in (a); for (iii) the second display of
 (T1⁺⁺)(d) with (B-R⁺⁺)(iii) for the leading term and (B-R⁺⁺)(i) for 𝔏_n(S₀).
 

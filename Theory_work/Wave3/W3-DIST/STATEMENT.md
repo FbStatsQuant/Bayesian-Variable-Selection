@@ -75,7 +75,7 @@ c_D; ℓ_n := log(p_raw ∨ n).
 M₀, n₀ such that, in (RD), for every n ≥ n₀ and every real t with M₀ log n ≤ t ≤ n^{1−κ₀}:
   P*[ Π( d_H(f, f*) > C√(t/n)  or  |S| > s₀ + C′t/log n | D_n ) > e^{−ct} ]
      ≤ 3e^{−ct} + P*( 𝒟_nᶜ ∪ (E; M)ᶜ ∪ (C; M′)ᶜ ∪ (ND; c_D, m_n(t))ᶜ ).   (1.1)
-Equivalently, for every sequence ε_n with C²M₀ log n/n ≤ ε_n² ≤ C²n^{−κ₀} and c₁ := c/C²:
+In particular (dropping the size clause), for every sequence ε_n with C²M₀ log n/n ≤ ε_n² ≤ C²n^{−κ₀} and c₁ := c/C²:
   P*[ Π( d_H(f, f*) > ε_n | D_n ) > e^{−c₁nε_n²} ] ≤ 3e^{−c₁nε_n²} + P*(interfaces fail):
 [SL] (15) with an explicit remainder. Consequences:
 - (a) **[SL] (15)-form** whenever P*(interfaces fail) ≤ e^{−c₁nε_n²}. At the best rate the right side is n^{−cM₀}, a
@@ -93,8 +93,8 @@ Equivalently, for every sequence ε_n with C²M₀ log n/n ≤ ε_n² ≤ C²n^{
 **Theorem DIST-2 (no geometric condition on the design; one logarithm slower).** There are c, C, M₀, n₀ (depending on
 (s₀^r, A, σ*², M, M′, κ₀)) such that for n ≥ n₀ and M₀ log n ≤ t ≤ n^{1−κ₀}:
   P*[ Π( d_H(f, f*) > C√(tℓ_n/n) | D_n ) > e^{−ct} ] ≤ 3e^{−ct} + P*( 𝒟_nᶜ ∪ (E; M)ᶜ ∪ (C; M′)ᶜ ).   (1.2)
-Interfaces: Gaussian noise independent of the design, (E), (C); nothing on the dependence among predictors. Best rate
-ε_n² ≍ (1 + s₀^r) log n · ℓ_n/n: one logarithm slower than DIST-1 at polynomial p. In [SL]'s form the exponent is
+Interfaces: Gaussian noise independent of the design, (E), (C); nothing on the dependence among predictors. Best rate, for fixed s₀^r:
+ε_n² ≍ log n · ℓ_n/n, one logarithm slower than DIST-1 at polynomial p. As proved, its constant is at most of order (1 + s₀^r)³ for fixed (A, σ*², M, M′) (an upper bound, not known to be tight; `lemmas/X.md` §9, `lemmas/DIST12.md` D.6). In [SL]'s form the exponent is
 c nε_n²/ℓ_n, not c nε_n² (comparison with [SL]: TARGET.md §2) [S1-04, S1-07].
 
 **Theorem DIST-3 (oracle bound with an additive selection error; parametric rate) [S1-03, BT1, BT2].** Let
@@ -149,7 +149,7 @@ inverse-gamma prior with shape 0.01 and rate 0.01. (3) The posterior is mapped b
 coefficient vector in the original units (zero outside S and for removed predictors), and σ² the noise variance in the
 original units. If fewer than two predictors remain, or the response is constant in the sample, the posterior is not
 defined here; under the assumptions below such data sets have probability smaller than the exceptional probabilities
-in the theorems and are counted in them (in particular r = p outside them).
+in the theorems and are counted in them: there the posterior probabilities in the displays are read as 1. The common exceptional set of the proofs also contains every data set with r < p.
 
 *The distribution attached to a posterior draw.* A draw (S, β, σ²) defines a joint density f for a new pair (x, y): x
 has its true distribution and, given x, y is normal with mean ȳ + (x − x̄)ᵀβ and variance σ², where ȳ and x̄ are the
@@ -494,6 +494,7 @@ posterior with the contrast model (locked T01, [P1] `thm:T01i`, `lem:spec`, `lem
 | 1.4.9 | DIST-C (C-i): the predictive display written for both readings (ε_n² = C²t/n for (1.1), C²tℓ_n/n for (1.2)) | EQUAL on TC8 (the sentence introducing DIST-C already said "(or (1.2), with its rate)"; the display now carries the substitution, as the proof does in `work/D_output/P6_DISTC.md` Remark 6.6; read literally for (1.2), the old display omitted ℓ_n) | the display left the substitution implicit | `reviews/SW1_sweep_astra.md` SW1-03 | `reviews/D4_sol_diff.md`: RESOLVED; **CONFIRMED (EQUAL on TC8)** |
 | 1.4.9 | §3 Lemma X: the paragraph describing the structure of the proof, and the consumes row for W3-POST2:A0, A1 | EQUAL (descriptions of the proof route and of what is consumed; the statement of Lemma X is unchanged). They described an earlier route (truncated moments, Lemmas S and V as inputs); the adopted proof is the fractional-moment route of `lemmas/X.md` and is self-contained | description did not match the adopted proof | `reviews/SW1_sweep_astra.md` SW1-01 | `reviews/D4_sol_diff.md`: RESOLVED; CONFIRMED (EQUAL) |
 | 1.4.10 | DIST-1 (c), the sentence after the bound on M₀ (a gloss on the rate): "for fixed (σ*², M, M′) … ε_n² is of order (1 + s₀^r) log p_raw/n when p_raw = n^A" replaced by "for fixed (A, σ*², M, M′), ε_n² is of order (1 + s₀^r) log n/n", with the remark that C depends on A | **EQUAL on TC3** (the text of TC3, "Best radius ε_n² = C²M₀ log n/n with M₀ = O((1 + s₀^r)(A + 1))", is not edited and is proved as written); **WEAKER on this descriptive sentence of consequence (c), which is not a target clause**: A is now held fixed, and the gloss changes log p_raw to log n (the same order for fixed A). The old sentence let A vary, which reads as a rate linear in A; the radius constant C grows with A (through C_X and C_T), so that reading was not proved | the gloss claimed more than is proved | `reviews/R1_council_opus.md` R1-opus-01 (S) | `reviews/D5_sol_diff.md`: RESOLVED; TC3 unchanged and proved as written; tag **CONFIRMED** (EQUAL on TC3; WEAKER on the descriptive sentence only). Both seats of the diff round are asked to confirm the same by name |
+| 1.4.11 | DIST-2 commentary sentence (`STATEMENT.md:96-97`) and the matching cell of `TARGET.md:30` (P3 rate row): the best squared radius is stated for fixed s₀^r, with the constant "at most of order (1 + s₀^r)³ as proved (an upper bound, not known to be tight)"; displays (1.1), (1.2) unchanged | **WEAKER** (commentary only: the sentence now claims less; the displays and every target clause TC1–TC9 are unchanged; DIST-1's own linear claim (c) is unaffected because C_X does not depend on s) | the sentence claimed a squared radius linear in (1 + s₀^r) for DIST-2, but the proof constants (`lemmas/X.md` §9, `lemmas/DIST12.md` D.6) give (1 + s₀^r)³ | pre-Lean pass T5 Astra T5-1 (`Theory_work/Wave3/PRE_LEAN_PASS/T5/CODEX_gpt-6.2-astra.md`); the Song–Liang scan of the PURE check found `TARGET.md:30` as the only other DIST-2-linear sentence | `Theory_work/Wave3/PRE_LEAN_PASS/T5/FABLE_CARD.md` R1; CORRECTION-ONLY, consultant AGREE |
 Target clauses TC1–TC9 were fixed by HQ at CP1 (2026-11-15) in their v1.3 form; TC10 = companion results. **Relative to that
 baseline, no row of v1.4 weakens the mathematics of a target clause** (per S2: this sentence is about the CP1 baseline, not
 about the history before it — the pre-CP1 rows 1.0.1, 1.1 and 1.3 marked WEAKER did narrow ranges or add remainder events).
