@@ -741,3 +741,7 @@
   - Not verified: the A1 K(K+1) archive term (arithmetic only) → for the re-pin Opus seat.
   - FINDINGS=0 results: no action (PB-T9-s1's C_R > 0 holds).
 - 2026-11-18 12:28 CST HQ AGREED the blind triage: both DLV-0 fixes go in the A re-pin (DLV-0 patch bump + CITATION-ONLY cascade). Option-C wording for DLV-0's conclusion approved. The re-pin's Opus seat must explicitly verify the K(K+1) archive term and both new counts. No Codex for the A re-pin unless the Opus seat finds something substantive (→ HQ).
+- 2026-11-18 12:33 CST NA_DROP v1.5 (option C) frozen 9ddef7fd on 97f9c8c3; Opus PURE 9.5 PASS; WEAKER (LIST-R hash changes). No Sol PASS on the final text: Sol R3/R5 FAIL stay on record, superseded by HQ's (C). Landing set (c854f912): MEASD8, NB-C6err, NA_DROP v1.5, the T12 scoped carrier (XR2r3 39b07968), the MIS re-point, the DIST-2 cell fill. Manager adds:
+  - item 7, the (C)-scoping of the live "without 'on output'" clause at card :71 / RV :1441 (+ grep), with Opus PURE. Main must not contradict NA_DROP v1.5 after this landing.
+  - W-1 citation fix at the real run (CITATION-ONLY, recorder PURE).
+  - D5Pa → v4 rebased after this landing, for the A re-pin.
