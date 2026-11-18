@@ -112,3 +112,4 @@ the new text, and the bridges it needs. The manager passes it to HQ for W3-READE
 - **D80 scope (HQ 11-17):** if main moved only through live logs (HQ_DECISIONS.md, HQ_NOW.md, never manifest-frozen), that is not a stop. Any manifest, registry or theory-file drift is a hard stop.
 - **Sol model (owner 11-17 night; POLICIES §5 00d90758; supersedes D122):** default `gpt-6.1-sol` (codex, high) for all Sol reviews; `gpt-6.2-sol` only in the SOL62 A/B. The model id goes in each review header.
 - **No attested verdicts (HQ 11-17):** never write a carrier or verdict that contradicts the seat's own file. If a second seat is missing, run a real continuation seat (HQ GO).
+- **Round labels:** council round labels must be `R<digits>` (manifest.py VERDICT grammar). Never use suffixes such as R3S.
