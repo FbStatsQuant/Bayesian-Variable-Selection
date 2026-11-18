@@ -24,5 +24,6 @@ Leads append their own lines (manager checks); the daily report gives the runnin
 
 | 2026-11-18 | pre-Lean Sol-5 (D5P landed, NA_DROP v1.2, MEAS-D MEASD7) | final-text confirmation | BETTER | SAME | SAME | — | caught LIST-CODE (v) 'exact-branch run' vs status exact (resource_limit before enumeration), missed by earlier D5P rounds; independently re-found T6 F3 (b-1); MEAS-D PASS with 3 wording items; 0 false |
 | 2026-11-18 | pre-Lean Sol-5b (D5Pa + NA_DROP v1.3 deltas) | delta read | BETTER | SAME | SAME | — | all 7 Sol-5 fixes verified; caught b′-1, an overreach the Opus R2 seat's C-1 sentence had introduced (tail allocation vs (D)), = T6-1; 2 wording points, 0 false |
+| 2026-11-18 | pre-Lean Sol-6 (NA_DROP v1.4 + DIST-2 delta) | delta read | BETTER | SAME | SAME | — | caught b″-1 (R string creation/interning and global-cache words not bounded in the allocation proof), which the Opus R4 seat passed; DIST-2 clean PASS with 4 checks; 3 genuine wording points, 0 false |
 ## Running tally
-F: BETTER 9 / SAME 7 / WORSE 0 · N: 1/13/2 · B: 2/14/0 · S: 0/7/1 (16 gpt-6.2-sol reviews: 3 A/B + 5 W3-FAMC + 8 pre-Lean; pre-Lean S not timed). The pre-Lean Astra (gpt-6.2-astra) lines are in PRE_LEAN_PASS/SOL62_LINES.md. Alarm rule (two WORSE in a row on F or N): not triggered.
+F: BETTER 10 / SAME 7 / WORSE 0 · N: 1/14/2 · B: 2/15/0 · S: 0/7/1 (17 gpt-6.2-sol reviews: 3 A/B + 5 W3-FAMC + 9 pre-Lean; pre-Lean S not timed). The pre-Lean Astra (gpt-6.2-astra) lines are in PRE_LEAN_PASS/SOL62_LINES.md. Alarm rule (two WORSE in a row on F or N): not triggered.
