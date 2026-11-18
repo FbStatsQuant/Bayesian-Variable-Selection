@@ -29,6 +29,8 @@ Writes, for one batch, everything the manager deploys to NOTS `~/SMC_Engineering
   ledger_row.md           the LEDGER.md row (worst case = sum of allocated CPUs x time limit, billed core-h)
   SHA256SUMS              hashes of every generated file (submit.sh verifies them first)
   plan.resolved.json      the plan with every default filled in
+(Campaign freeze: the optional plan keys method_tag and core_tree, written by p1m_cells.py, are validated and copied into
+every run manifest next to code_commit.)
 
 Usage:  p1m_driver.py --plan plan.json --out <dir> [--dept /home/fb31/SMC_Engineering_Department]
 There is no submit mode. The driver never calls sbatch, squeue, sacct or ssh.
@@ -66,7 +68,7 @@ REQUIRED_KEYS = ("core_h_cap", "max_task_hours", "mode", "code_commit", "binary"
 # Keys the driver reads, plus the ones it writes into plan.resolved.json (so that a resolved plan can be fed back in).
 # Anything else is reported as a WARNING (other tools may add keys), or refused under --strict.
 KNOWN_KEYS = {"batch", "kind", "island_isa", "eval", "island_throttle", "restart", "t6", "t6_only", "pilot", "pilot_only",
-              "isa_check", "resources", "created_utc", "n_tasks", "worst_case_core_h", "worst_case_pilot_core_h", "warnings"} | set(REQUIRED_KEYS)
+              "isa_check", "resources", "created_utc", "method_tag", "core_tree", "n_tasks", "worst_case_core_h", "worst_case_pilot_core_h", "warnings"} | set(REQUIRED_KEYS)
 KNOWN_FIT_KEYS = {"run_id", "design", "p", "n", "signal", "data_seed", "seed", "Rp", "N", "mode", "resources", "params"}
 
 
@@ -202,6 +204,12 @@ def resolve(plan):
     for k in ("binary", "code_commit"):
         if not isinstance(P[k], str) or not P[k]:
             raise PlanError("%s must be a non-empty string, got %r" % (k, P[k]))
+    # campaign freeze (p1m_cells.py FREEZE): optional, recorded in every run manifest; core_tree is a git tree hash
+    for k in ("method_tag", "core_tree"):
+        if k in P and (not isinstance(P[k], str) or not P[k]):
+            raise PlanError("%s must be a non-empty string, got %r" % (k, P[k]))
+    if "core_tree" in P and not re.fullmatch(r"[0-9a-f]{40}", P["core_tree"]):
+        raise PlanError("core_tree must be a 40-hex git tree hash, got %r" % (P["core_tree"],))
     P.setdefault("eval", {"threads": None, "post": True, "n_draws": 10000, "n_x": 4000, "n_test": 10000})
     P.setdefault("island_throttle", None)           # optional %k on each island array
     P.setdefault("island_isa", "")                  # WP7 O5: -DV4_ISLAND_ISA for build.sh ("" = the portable default)
@@ -750,6 +758,7 @@ def generate(P, out, dept):
               "pipeline": ["setup(gen,prep,setup)", "calibrate", "islands[1..%d]" % f["Rp"], "merge", "eval(+post)"],
               "paths": {"run_dir": "%s/scratch/runs/%s/%s" % (dept, batch, f["run_id"]), "scripts": "%s/scripts/%s" % (dept, batch)},
               "created_utc": P["created_utc"]}
+        rm.update({k: P[k] for k in ("method_tag", "core_tree") if k in P})   # the freeze pin, when the plan has one
         write(os.path.join(out, "run_manifests", f["run_id"] + ".json"), json.dumps(rm, indent=1) + "\n")
         files.append(os.path.join("run_manifests", f["run_id"] + ".json"))
     # submit.sh (the manager's)

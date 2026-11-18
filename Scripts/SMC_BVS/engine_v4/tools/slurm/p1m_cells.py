@@ -5,9 +5,19 @@ One table of CELLS (below) is the single source. This tool expands it into one r
 islands, planning cost) and into Slurm-driver plans (p1m_driver.py) grouped into batches of <= 150 tasks with one
 resource shape each. Docs/Experiments/P1M/MANIFEST_CELLS.md documents the same table and the totals this tool prints.
 
-  p1m_cells.py --tsv fits.tsv [--plans DIR] [--only RUNG]     (writes files; never submits; RUNG = 4|5|6 = log10 p,
+  p1m_cells.py --tsv fits.tsv [--plans DIR] [--only RUNG] [--code-commit REV]
+                                                               (writes files; never submits; RUNG = 4|5|6 = log10 p,
                                                                or 1e4|1e5|1e6, or p itself)
   p1m_cells.py --summary                                       (cost per rung / block, PLANNING VALUES)
+
+Campaign freeze (CAMPAIGN_FREEZE.md): every plan written by --plans carries
+  code_commit  the engine commit the binary is built from (--code-commit REV, default HEAD; `git archive` of it is what
+               is deployed), resolved to 40 hex;
+  method_tag   the frozen METHOD tag, and core_tree the git tree hash of the method's source (Scripts/SMC_BVS/core).
+--plans first verifies the pin (verify_freeze): the tag resolves to the pinned method commit, and the code commit's core
+tree AND the tag's core tree equal the pinned core_tree, so a change to the method after the freeze refuses to generate.
+(Ancestry of the tag is not required: the engine branch carries the same core tree, not the same commit.)
+--no-freeze-check writes the old placeholder code_commit "UNSET-fill-at-freeze" (development and tests only).
 
 Seed rule (deterministic, all < 2^31 - 1; collision-free because every field has its own decimal digits):
   data_seed = R * 10^8 + D * 10^6 + (n / 100) * 10^4 + rep        R = log10 p (1 = the p <= 25 exact block T8)
@@ -24,22 +34,105 @@ Costs are PLANNING VALUES (ENGINEERING_SPEC §0-v2.5 and the owner sheet; n-scal
 c_s = 30 + 60 n/200 ns), replaced after the SPR sweep and gate T5 by measured core-h per fit.
 """
 import argparse
+import hashlib
 import json
 import math
 import os
+import re
+import subprocess
 import sys
 from collections import OrderedDict
+
+# The campaign freeze pin (HQ order 11-18; H-14). The METHOD is the tag below; the engine commit is a plan input (code_commit).
+FREEZE = OrderedDict([
+    ("method_tag", "method-v3.1.1-listpip"),
+    ("method_commit", "7100bb3b5a341aed5cbcd3b03fa5851a6345f0dd"),   # main 7100bb3b; the tag is annotated (tag object 15a6d841)
+    ("core_path", "Scripts/SMC_BVS/core"),
+    ("core_tree", "61b0a5822019b2737fe415ff15625e410f3227b2"),       # same tree on main, the tag and exp/P1M-engine
+])
+UNSET_COMMIT = "UNSET-fill-at-freeze"
+HEX40 = re.compile(r"^[0-9a-f]{40}$")
+HERE = os.path.dirname(os.path.abspath(__file__))
 
 DESIGN_CODE = {"IND": 1, "AR": 2, "AR-weak": 3, "BLK": 4, "ADJ-OPP": 5, "NULL": 6}
 # planning core-h per fit at n = 200 (V = V-1M class A, precise; T = theory mode in the new engine, law mode, bit form)
 # 10⁶: H-9 (HQ 11-16) re-size from job 2748756, G = 256 socket-local: 1.44 × the 963 plan (≈ 288 ns·CPU per pair)
 RESIZE_6 = 1.234   # H-10 (11-16): MEASURED after L5, job 2749328 (≈ 247 ns·CPU per pair); H-9 used 1.44 (job 2748756)
 COST_V = {4: 10.0, 5: 96.0, 6: 963.0 * RESIZE_6}
-COST_T = {4: 115.0, 5: 6100.0}          # 10⁴: upper end of 52–115 (escalating coded calibration)
+COST_T = {4: 115.0, 5: 6100.0}          # 10⁴: upper end of 52–115 (escalating coded calibration), the WHOLE fit (N0, R' = 4)
 COST_V_N5000 = {6: 1800.0 * RESIZE_6}     # the 1M self-check, reduced to N = 5,000 (H-9; was N = 10⁴ at 3,600)
 COST_6_BY_N = {k: v * RESIZE_6 for k, v in {200: 963.0, 500: 1800.0, 1000: 3300.0}.items()}   # owner sheet option D, H-9 re-size
+# Per (block, mode) resource shapes and the task-hour limit, from OVERLAP_1e4_SUBMISSION_PLAN §2 (PLANNING VALUES, re-sized after the
+# pilot wave W0 is read back). Only the 10⁴ overlap rung has them; every other block keeps the driver's defaults. The T calibrate
+# limit of 3:00 exceeds the driver's 2-h task rule (§0-v2.5), so the T overlap plans set max_task_hours = 3.0: a one-off exception
+# that needs HQ's acceptance before submission.
+PLAN_RESOURCES = {
+    ("overlap 1e4", "V"): {"max_task_hours": 2.0, "resources": {
+        "setup": {"cpus": 8, "mem": "8G", "time": "00:15:00"}, "calibrate": {"cpus": 16, "mem": "8G", "time": "00:30:00"},
+        "islands": {"cpus": 4, "mem": "4G", "time": "00:30:00"}, "merge": {"cpus": 8, "mem": "4G", "time": "00:15:00"},
+        "eval": {"cpus": 8, "mem": "8G", "time": "00:20:00"}}},
+    ("overlap 1e4", "law"): {"max_task_hours": 3.0, "resources": {
+        "setup": {"cpus": 8, "mem": "8G", "time": "00:15:00"}, "calibrate": {"cpus": 48, "mem": "16G", "time": "03:00:00"},
+        "islands": {"cpus": 24, "mem": "16G", "time": "00:45:00"}, "merge": {"cpus": 8, "mem": "8G", "time": "00:20:00"},
+        "eval": {"cpus": 8, "mem": "8G", "time": "00:30:00"}}},
+}
 MAX_REP = 99            # seed-rule field widths (see the module docstring)
 K_SEED2, K_PREC_FINAL, K_PREC_CALIB = 1, 10, 20
+
+
+def _git(repo, *args):
+    r = subprocess.run(["git", "-C", repo] + list(args), capture_output=True, text=True)
+    if r.returncode != 0:
+        raise ValueError("git %s failed: %s" % (" ".join(args), (r.stderr or r.stdout).strip()))
+    return r.stdout.strip()
+
+
+def verify_freeze(code_commit="HEAD", repo=HERE, freeze=FREEZE):
+    """Check the freeze pin and return the 40-hex engine commit. Raises ValueError (one line) if
+      - the method tag is missing or does not resolve to the pinned method commit (a moved tag), or
+      - the core tree of the tag's commit, or of the code commit, differs from the pinned core_tree
+        (the method changed after the freeze), or the pin itself is not 40 hex."""
+    for k in ("method_commit", "core_tree"):
+        if not HEX40.match(freeze[k]):
+            raise ValueError("freeze pin %s is not 40 hex: %r" % (k, freeze[k]))
+    tag = freeze["method_tag"]
+    try:
+        tagged = _git(repo, "rev-parse", "--verify", "refs/tags/%s^{commit}" % tag)
+    except ValueError:
+        raise ValueError("method tag %s not found here (git fetch --tags)" % tag)
+    if tagged != freeze["method_commit"]:
+        raise ValueError("method tag %s resolves to %s, the pin says %s (tag moved)" % (tag, tagged, freeze["method_commit"]))
+    commit = _git(repo, "rev-parse", "--verify", "%s^{commit}" % code_commit)
+    for what, rev in (("method tag", tagged), ("code commit", commit)):
+        tree = _git(repo, "rev-parse", "--verify", "%s:%s" % (rev, freeze["core_path"]))
+        if tree != freeze["core_tree"]:
+            raise ValueError("%s %s: %s tree is %s, the freeze pins %s (the method changed)" % (what, rev[:8], freeze["core_path"], tree[:12], freeze["core_tree"][:12]))
+    return commit
+
+
+def plan_set_digest(paths, mask_commit=False):
+    """sha256 over the sorted (file name, bytes) of the plan files. mask_commit blanks code_commit first, so the digest of
+    the plan set is comparable before the engine freeze commit exists (everything else in a plan is commit-independent)."""
+    h = hashlib.sha256()
+    for p in sorted(paths, key=os.path.basename):
+        b = open(p, "rb").read()
+        if mask_commit:
+            q = json.loads(b); q["code_commit"] = "MASKED"; b = (json.dumps(q, indent=1)).encode()
+        h.update(os.path.basename(p).encode() + b"\0" + b + b"\0")
+    return h.hexdigest()
+
+
+def n0(n, p):
+    """The engine's tier-0 particle count in theory mode (calib_run.h budgets()): N0 = max(2500, n, p)."""
+    return max(2500, n, p)
+
+
+def check_theory_arms(rows):
+    """Overlap defect (OVERLAP_1e4_SUBMISSION_PLAN §1): every theory-mode (law) fit is N = N0 = max(2500, n, p) with R' = 4
+    (EXPERIMENT_PLAN A1); a law fit with V's N = 2,500 / R' = 16 would be sized and timed as the wrong method."""
+    bad = [r["run_id"] for r in rows if r["mode"] == "law" and (r["N"] != n0(r["n"], r["p"]) or r["Rp"] != 4)]
+    assert not bad, "law-mode fits must have N = max(2500, n, p) and R' = 4: %s" % bad[:5]
+    return True
 
 
 def n_factor(n):
@@ -52,7 +145,9 @@ def fit_cost(rung, n, mode, N=2500, islands=16):
         return COST_V_N5000[6]
     if rung == 6:
         return COST_6_BY_N.get(n, COST_V[6] * n_factor(n))
-    base = (COST_T if mode == "law" else COST_V)[rung] * n_factor(n)
+    if mode == "law":   # T: COST_T is the whole fit (coded calibration + R' = 4 islands at N0); N and R' do not rescale it
+        return COST_T[rung] * n_factor(n)
+    base = COST_V[rung] * n_factor(n)
     # a fit = R′ islands + ≈ 3 island-equivalents of bounded calibration (19 for R′ = 16; OD-2); both scale with N
     return base * (N / 2500.0) * ((islands + 3) / 19.0)
 
@@ -60,7 +155,11 @@ def fit_cost(rung, n, mode, N=2500, islands=16):
 # CELLS: (block, rung, design, n, reps, arms, note). arms: list of dicts {mode, seeds, N, islands, params, tag}.
 V1 = [{"mode": "V", "seeds": 1, "tag": "V"}]
 V2 = [{"mode": "V", "seeds": 2, "tag": "V"}]                        # seed 1 + seed 2 on the same data
-TV2 = [{"mode": "law", "seeds": 2, "tag": "T"}, {"mode": "V", "seeds": 2, "tag": "V"}]
+# The T arm (theory mode, law, bit form; EXPERIMENT_PLAN A1, D-26): N0 = max(2500, n, p) and R' = 4 islands, coded calibration.
+# The ENGINE sets N itself (calibrate: Budgets::N0, tier 1 = 4 N0 on escalation; island and merge read N from calib.bin; an explicit
+# different --N is refused), so the plan's N is the tier-0 record and expand() asserts it equals N0. "N": "N0" resolves to it.
+T_ARM = {"mode": "law", "seeds": 2, "tag": "T", "N": "N0", "islands": 4}
+TV2 = [T_ARM, {"mode": "V", "seeds": 2, "tag": "V"}]
 # Precision study (Sol F6): 8 arms, each with its OWN final seed (k = 10 + a) and calibration seed (k = 20 + a), so no
 # two fits share a Philox key and none shares one with the overlap T / V or A3 fits of the same dataset. c = replicate.
 # Open (WP4 open item 1, MANIFEST_CELLS §6): I_max in {0, 3} and systematic resampling (D-2, D-14) have NO arms here and
@@ -133,6 +232,8 @@ def expand():
                 assert arm.get("seeds", 1) <= 2
                 for s in range(1, arm.get("seeds", 1) + 1):
                     N = arm.get("N", 2500); isl = arm.get("islands", 16)
+                    if N == "N0":
+                        N = n0(n, 25 if rung == 1 else 10**rung)
                     cost = arm["fixed_cost"] if "fixed_cost" in arm else fit_cost(rung, n, arm["mode"], N, isl)
                     params = dict(arm.get("params") or {})
                     if "prec_arm" in arm:
@@ -160,6 +261,7 @@ def expand():
         assert 1 <= r["seed"] <= 2**31 - 1 and 1 <= r["data_seed"] <= 2**31 - 1
     check_seeds(rows)
     check_a3_pairing(rows)
+    check_theory_arms(rows)
     return rows
 
 
@@ -231,8 +333,11 @@ def rung_to_p(only):
     raise ValueError("--only: expected a rung 4|5|6, 1e4|1e5|1e6 or p, got %r" % only)
 
 
-def plans(rows, outdir, only=None):
-    """Driver plans: one per (block, p, n, mode, N, Rp) group, split so that each batch has <= 150 tasks."""
+def plans(rows, outdir, only=None, code_commit=None):
+    """Driver plans: one per (block, p, n, mode, N, Rp) group, split so that each batch has <= 150 tasks. code_commit is
+    the engine commit (40 hex, see verify_freeze); None writes the placeholder UNSET-fill-at-freeze (development, tests).
+    Every plan also carries method_tag and core_tree (FREEZE)."""
+    assert code_commit is None or HEX40.match(code_commit), "code_commit must be 40 hex, got %r" % (code_commit,)
     os.makedirs(outdir, exist_ok=True)
     groups = OrderedDict()
     only_p = rung_to_p(only) if only else None
@@ -248,9 +353,12 @@ def plans(rows, outdir, only=None):
         for b in range(0, len(rs), cap):
             chunk = rs[b:b + cap]
             name = "%s_p%d_n%d_%s_N%d_R%d_b%d" % (block.replace(" ", "").replace("⁴", "4").replace("⁵", "5").replace("⁶", "6"), p, n, mode, N, Rp, b // cap + 1)
-            plan = {"batch": name[:64], "mode": mode, "code_commit": "UNSET-fill-at-freeze", "binary": "bin/smcbvs4", "max_task_hours": 2.0,
+            shape = PLAN_RESOURCES.get((block, mode), {})
+            plan = {"batch": name[:64], "mode": mode, "code_commit": code_commit or UNSET_COMMIT,
+                    "method_tag": FREEZE["method_tag"], "core_tree": FREEZE["core_tree"], "binary": "bin/smcbvs4",
+                    "max_task_hours": shape.get("max_task_hours", 2.0),
                     **({"island_isa": "sapphirerapids"} if mode == "V" else {}),   # D-32: V plans need an FMA island ISA
-                    "kind": "gated (needs HQ go)", "fits": []}
+                    "kind": "gated (needs HQ go)", **({"resources": shape["resources"]} if shape else {}), "fits": []}
             for r in chunk:
                 f = {"run_id": r["run_id"], "design": "NULL" if r["signal"] == "null" else r["design"], "p": r["p"], "n": r["n"],
                      "signal": r["signal"], "data_seed": r["data_seed"], "seed": r["seed"], "Rp": r["Rp"], "N": r["N"]}
@@ -273,6 +381,8 @@ def plans(rows, outdir, only=None):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--tsv"); ap.add_argument("--plans"); ap.add_argument("--only", metavar="RUNG", help="4|5|6 (log10 p), 1e4|1e5|1e6, or p"); ap.add_argument("--summary", action="store_true")
+    ap.add_argument("--code-commit", default="HEAD", metavar="REV", help="engine commit the plans pin (default HEAD); verified against the freeze")
+    ap.add_argument("--no-freeze-check", action="store_true", help="development/tests: skip the freeze check, write code_commit %s" % UNSET_COMMIT)
     a = ap.parse_args(argv)
     rows = expand()
     if a.tsv:
@@ -281,8 +391,17 @@ def main(argv=None):
             for r in rows:
                 fh.write("\t".join(str(v) for v in r.values()) + "\n")
     if a.plans:
-        w = plans(rows, a.plans, a.only)
-        print("wrote %d driver plans to %s" % (len(w), a.plans))
+        commit = None
+        if not a.no_freeze_check:
+            try:
+                commit = verify_freeze(a.code_commit)
+            except ValueError as e:
+                print("freeze check failed: %s" % e, file=sys.stderr)
+                return 65
+        w = plans(rows, a.plans, a.only, commit)
+        print("wrote %d driver plans to %s; code_commit %s, method_tag %s, core_tree %s"
+              % (len(w), a.plans, commit or UNSET_COMMIT, FREEZE["method_tag"], FREEZE["core_tree"][:12]))
+        print("plan set sha256 %s (code_commit masked: %s)" % (plan_set_digest(w), plan_set_digest(w, True)))
     if a.summary or not (a.tsv or a.plans):
         blocks, fixed, planned, d = summary(rows)
         print("%-14s %6s %10s" % ("block", "fits", "core-h"))
