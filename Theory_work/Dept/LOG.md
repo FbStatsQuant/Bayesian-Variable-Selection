@@ -746,3 +746,8 @@
   - W-1 citation fix at the real run (CITATION-ONLY, recorder PURE).
   - D5Pa → v4 rebased after this landing, for the A re-pin.
 - 2026-11-18 12:33 CST HQ: item 7 approved. Pre-ruling for the dry run: if check.py's A4 (two distinct seats) blocks NA_DROP v1.5 because only Opus passes, do NOT attest Sol. ONE short Sol delta read bound to 9ddef7fd, scoped to the (C) changes (does (C) resolve b″-1; anything else wrong in the diff), is approved as the single exception. If the tool accepts v1.5 on the existing seats, no call. Table to HQ either way.
+- 2026-11-18 14:38 CST **BLOCKED: Claude Personal weekly limit reached (resets 2026-11-23 15:00 CT).** The coordinator's run failed mid-turn. Its work is safe on origin/theory/PRE-LEAN:
+  - ab9719a6: item 7 patch (card :71, RV :1441, D5P TARGET :7) + scratch verify_accepted + the Opus PURE brief; the PURE was NOT run.
+  - 0365810f: A4 pre-check = BLOCKS NA_DROP v1.5 (one passing seat); Sol-7 packet ready (short delta read bound to 9ddef7fd), not launched.
+
+  Main is green at 0dfd4b38. Every Claude agent (coordinator, recorder, CP Fable, Opus seats) is on claudeAgent_personal, so nothing Claude-side can run. Sol-7 (Codex) could run now. Asked HQ: wait for the reset, or an owner exception (Claude Third) for the remaining seats.
