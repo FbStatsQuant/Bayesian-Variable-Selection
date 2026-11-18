@@ -24,3 +24,12 @@ Statement, printed p. 16, Section 6 ("Discussion of the conditions"), verbatim (
 - Lemma number and statement match the claim (arXiv v1): "isotropic sub-Gaussian rows", so "the case Σ_n = I" is right for centred rows (see the Opus check below).
 - Pages: statement on arXiv v1 p. 16 (discussion continues p. 17), proof p. 28. Journal pages not known.
 - Card wording: "(2014, Lemma 6.1; verified against arXiv v1 pp. 16–17; journal version not accessed)".
+
+## Opus check (fresh, claudeAgent_personal, claude-opus-5-5, effort high; 2026-11-17): CONFIRMED-WITH-CORRECTIONS
+Independent read of the arXiv PDF (30 pages, AoS layout, printed pp. 1–30):
+- Lemma 6.1 ("MNEV for sub-Gaussian random matrices") is stated on p. 16 in §6; the proof is on p. 28 in §11 (it proves Lemmas 4.1 and 6.1, citing Vershynin 2012, Thm 5.39). The transcription above matches word for word. Page 17 only continues the discussion, so "statement p. 16" is exact.
+- "Isotropic" is not defined in the paper; it is used as in Vershynin (second-moment matrix = I, no mean-zero requirement). So "for centred rows" is needed and correct; centred isotropic rows have Σ = I. The card's condition (sub-Gaussian along sparse directions, fixed L) is weaker than the paper's all-direction condition, so the containment holds, with L of the order of the sub-Gaussian norm bound.
+- Correction 1 (applied): the paper's rows are independent, not identically distributed, while the card's class is i.i.d. The card now says "contains the i.i.d. case of the isotropic sub-Gaussian rows of Narisetty and He (2014, Lemma 6.1), the case Σ_n = I".
+- Correction 2 (applied): a fixed L needs a sub-Gaussian bound uniform in n; the card adds "(with a uniform sub-Gaussian bound)".
+- The lemma's conclusion is a design-regularity fact (inf over |k| ≤ m_n(ν) of φ_min(X_k'X_k/n) > 0 with probability > 1 − exp(−w'n), used for their Condition 4.5), not a posterior result; the card claims only containment of the class of rows.
+- Journal version: two attempts, no text (Project Euclid `.full` returned empty content; the DOI link redirects to that URL). The journal lemma number and pages remain unverified, as the card says.
