@@ -1,0 +1,118 @@
+# T5 at 10⁵ and the 10⁶ calibration pilot: commands and cost quotes (WP7 O5)
+
+Both runs go through the WP5 driver (dry run on Owls, submission on NOTS by the manager). Builder 7 never submits.
+Every core-h figure below is an ESTIMATE unless it says MEASURED.
+
+## Preconditions
+| run | needs merged into `exp/P1M-engine` (then frozen as `code_commit`) |
+|---|---|
+| T5 at 10⁵ (gate P4) | `setup` (WP2 #13), the `island` command (WP3), O1 (#47), O2 (#49), O5 (this), K1 (#48) |
+| 10⁶ pilot (gate P7, H-11 (2)) | the T5 list + K3 (Gram rows) + WP3's StartView and island CLI (`calibrate --plan-only` with the island plan); pilot memory 128G or `mem_from_plan` |
+
+The `island` command (WP3) should:
+- checkpoint to `island_<r>.ckpt.{a,b}` (INTERFACES §5.1; WP3's CLI derives it from `--out`: `<out without .bin>.ckpt`, every 600 s), resume on a rerun and remove the generations when the island completes. The D-32 rerun writes `island_<r>_isa_check.bin`, so its checkpoints (`island_<r>_isa_check.ckpt.{a,b}`) never meet the production island's;
+- write `island_r.bin` through `write_island_file`, which carries `meta.cost` (O2) automatically.
+
+T5 checks both.
+
+## ISA (D-32, revised 11-17)
+- **FMA rule:** class A (V mode) uses a true FMA in every build that has one and `a*b + c` without (`amath.h` `fma8`). So its bits are those of the FMA family (x86-64-v3 = x86-64-v4 = sapphirerapids, MEASURED on Owls) and differ by design from a portable x86-64-v2 build. The bit form (theory, compat) is the same in every build.
+- **Rule (1):** a V-mode plan must set `island_isa` to an FMA ISA (at least x86-64-v3); the driver refuses it otherwise. Production uses `sapphirerapids` with `--constraint=sapphirerapids` on every task.
+- **Rule (2), one fit = one FMA family:** one `smcbvs4` runs every stage.
+  - calibrate's class-A islands (`calib_run.cpp`) are compiled with the island ISA, and the ISA inline namespace makes a mismatch fail to link;
+  - merge, tail and LS0 score with the bit form;
+  - the V merge refuses islands of two FMA families (`binary_compatible`).
+- **Rule (3), T5's `stage_isa_check`:**
+  - island 1 is re-run by an x86-64-v3 build, and its `meta.output_hash` and every non-meta section hash must equal the sapphirerapids run's (`isa_check.json`);
+  - one bit-form particle-major island (`v4_bench_island island 20000 64 <threads> bit pm 1 128 geo:4 1 1`) must give one output hash in the sapphirerapids, x86-64-v3 and portable builds (`isa_check_bitform.json`).
+
+  Either mismatch fails the task.
+- **Rule (4):** `island_isa` is in the binary block, so it appears in every record and every file's meta, `island_r.bin` included. `fit.json` also has it as a top-level field.
+
+## 1. T5 at 10⁵: the whole fit `5-AR-n200-r01-V-s1` (AR strong, n = 200, p = 10⁵, V, N = 2,500, R′ = 16)
+On Owls (dry run):
+```
+cd Scripts/SMC_BVS/engine_v4/tools/slurm
+# set code_commit in examples/plan_T5_1e5.json to the frozen commit first
+python3 p1m_driver.py --plan examples/plan_T5_1e5.json --out /home/fb31/SMC_Engineering_Department/scripts/T5_1e5
+```
+On NOTS (manager):
+```
+cd ~/SMC_Engineering_Department/scripts/T5_1e5
+mkdir -p code && git -C <clone> archive <code_commit> | tar -x -C code
+bash build.sh                                   # -DV4_ISLAND_ISA=sapphirerapids (plan key island_isa)
+CONFIRM=yes bash submit.sh                      # setup -> calibrate -> 16 islands -> merge -> eval (+post)
+```
+After it ends (Owls or NOTS):
+```
+python3 p1m_stage_cost.py t5 ~/SMC_Engineering_Department/scratch/runs/T5_1e5/5-AR-n200-r01-V-s1 \
+        --bin ~/SMC_Engineering_Department/scripts/T5_1e5/bin/smcbvs4 --json t5_report.json
+python3 p1m_cost.py --sacct <sacct dump> --submissions .../T5_1e5/submissions.jsonl --out-dir <dir>   # billed core-h
+```
+The report gives:
+- per calibration island: the per-stage table (`$RUN/cost/*.jsonl`);
+- per final island: `meta.cost` through `smcbvs4 info --meta 1`;
+- the merge's `merge_islands_seconds`, `tail_local_seconds` and `ls0_seconds` (`fit.bin.json` `timings`);
+- calibrate's `seconds`.
+
+| stage | request | limit | worst case | expected (ESTIMATE) |
+|---|---|---|---|---|
+| setup | 32 CPUs, 16G | 0:30 | 16 | ≈ 1 |
+| calibrate | 64 CPUs, 24G | 1:00 | 64 | ≈ 10–25 (pilot + 8 diagnostic islands of H, leader stores serial: R2) |
+| islands | 16 × 48 CPUs, 16G | 0:20 | 256 | ≈ 35–120 (≈ 1.8·10¹⁰ steps per island × 500–1,100 ns·CPU; 4–14 min each) |
+| merge (tail + LS0) | 16 CPUs, 16G | 0:30 | 8 | ≈ 1–4 (LS0 at 10⁵ is unmeasured: T5 measures it) |
+| eval + post | 8 CPUs, 16G | 0:45 | 6 | ≈ 1–3 |
+| isa check (D-32) | 48 CPUs, 16G | 0:40 (own limit, `isa_check.time`) | 32 | ≈ 3–8 (one island, x86-64-v3, + three bit-form islands at p = 2·10⁴, ≈ 1 min) |
+| **total** | 21 tasks | | **382** (driver, from the limits; cap 400) | **≈ 55–160, central ≈ 90** (manifest T5 row: 200) |
+
+Basis:
+- **Per-step cost:** ≈ 1,056 ns·CPU per step in late 10⁵ rounds on SPR today (MEASURED, job 2748104). O1 and K1 lower it (ESTIMATE −25 to −45%).
+- **Steps per island:** T + 12 rounds at a T of 40–120 (G0 had 28–36 at 5k–10k).
+
+## 2. The 10⁶ calibration pilot (H-11 gate (2)): `6-AR-n200-r01-V-s1`, setup → pilot island only
+On Owls (dry run):
+```
+python3 p1m_driver.py --plan examples/plan_P7_pilot_1e6.json --out /home/fb31/SMC_Engineering_Department/scripts/P7_pilot_1e6
+```
+On NOTS (manager):
+```
+cd ~/SMC_Engineering_Department/scripts/P7_pilot_1e6
+mkdir -p code && git -C <clone> archive <code_commit> | tar -x -C code
+bash build.sh                                   # builds smcbvs4 and v4_pilot_island
+CONFIRM=yes bash submit_pilot.sh                # setup[1] -> pilot[1] (aftercorr); the batch is pilot_only: there is no submit.sh
+```
+After it ends:
+```
+python3 p1m_stage_cost.py table ~/SMC_Engineering_Department/scratch/runs/P7_pilot_1e6/6-AR-n200-r01-V-s1/cost_pilot/cost_pilot_t0_k0_r0.jsonl
+cat .../6-AR-n200-r01-V-s1/pilot.json           # T, forced steps, seconds, peak RSS, settings
+```
+The plan has `"pilot_only": true` (review PR55 MAJOR): the driver generates setup + pilot and `submit_pilot.sh` only (no
+full-fit `submit.sh`, calibrate, island, merge or eval scripts), and the printed worst case, `core_h_cap` (144, equal to
+the worst case: changing the setup or pilot limit needs a new cap) and `ledger_row.md` are the pilot's. The fit itself
+gets its own plan after HQ's GO; it reuses this run directory's setup.bin.
+
+What it runs:
+- `v4_pilot_island` (`include/v4/island/pilot_only.h`) is the first island of `calibrate --mode V`: the same settings, runner, IslandSpec and seed. The test `pilot_only_equals_calibrate_pilot` checks it step by step against calibrate's own pilot record.
+- With `--with-ledger 1` it also holds the calibration ledger with the table stores, so the task's memory is the calibration task's.
+- The setup.bin stays in the run directory for the fit.
+
+| stage | request | limit | worst case | expected (ESTIMATE) |
+|---|---|---|---|---|
+| setup (10⁶) | 48 CPUs, 48G | 1:00 | 48 | ≈ 5–15 |
+| pilot island | 96 CPUs (one socket), **128G** | 1:00 | 96 | ≈ 20–35 (WP3_ARCH_REVIEW §8.4: ≈ 27 with levers 1–3 at E₀ = 10; production E₀ = 3.6) |
+| **total** | 2 tasks | | **144** (driver: printed, `core_h_cap` 144, ledger row) | **≈ 25–50** (H-11: 27–50 for the island; ceiling ≈ 100) |
+
+Memory (WP3, 11-17):
+- **Plan:** WP3 plans the calibration island at 54.5 GiB at 10⁶ and G 256 (calibration state included). Gram rows add 4.9 and the setup inputs 4–14 GB, so 64G was too small; the default is now **128G**, which fits on a 257 GB SPR node.
+- **Sizing from a record:** with `"mem_from_plan": {"record": <calibrate --plan-only 1 record>, "setup_inputs_gb": 14}` the driver sizes the request as (island_plan.total + setup inputs if the record has none) × 1.15 / 0.9 and refuses above 240G.
+- **In the job:** the pilot stage first writes `pilot_plan.json` (`calibrate --plan-only 1` on the real data and setup), and the island's own admission refuses before any allocation if the plan exceeds `--mem-budget`.
+- **Cost:** NOTS bills CPUs, so the worst case stays 144 core-h.
+
+This run measures, at the target size with the real start law:
+- M(φ) and |S|(φ);
+- offers per stage at production N;
+- the compactions and their seconds;
+- the I1 check seconds (O1's SPR saving, against job 2749328's ≈ 5.7 s per step);
+- the peak RSS.
+
+Re-size per stage from it (R1, WP3_ARCH_REVIEW §8.2). If `pilot.json` shows resource_limit, re-set `pilot.mem` from the printed plan (calibrate `--plan-only`, P5) and resubmit `submit_pilot.sh` only.

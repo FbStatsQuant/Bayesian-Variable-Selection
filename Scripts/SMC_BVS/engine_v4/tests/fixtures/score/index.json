@@ -1,0 +1,33 @@
+{
+  "cases": [
+    {
+      "name": "ar2k",
+      "n": 200,
+      "p": 2000,
+      "K": 100,
+      "models": 402
+    },
+    {
+      "name": "ind300",
+      "n": 100,
+      "p": 300,
+      "K": 50,
+      "models": 402
+    },
+    {
+      "name": "adj500",
+      "n": 200,
+      "p": 500,
+      "K": 100,
+      "models": 402
+    },
+    {
+      "name": "scaled",
+      "n": 50,
+      "p": 39,
+      "K": 25,
+      "models": 402
+    }
+  ],
+  "source": "core cpp_score via v3_score (revision D)"
+}
