@@ -45,6 +45,16 @@ add_executable(smcbvs4 src/cli/main.cpp)
 target_compile_options(smcbvs4 PRIVATE ${V4_BIT_FLAGS} ${V4_WARN})
 target_link_libraries(smcbvs4 PRIVATE v4_cmd v4_a v4_bit)
 
+# xeval: EVAL-ONLY cross predictive Hellinger (overlap1e4 criterion H). A separate library and executable; smcbvs4 and every
+# fit-side source are untouched (src/xeval/xeval.h).
+add_library(v4_xeval STATIC src/xeval/xeval.cpp)
+target_include_directories(v4_xeval PUBLIC src)
+target_compile_options(v4_xeval PRIVATE ${V4_BIT_FLAGS} ${V4_WARN})
+target_link_libraries(v4_xeval PUBLIC v4_bit)
+add_executable(smcbvs4_xeval src/xeval/main.cpp)
+target_compile_options(smcbvs4_xeval PRIVATE ${V4_BIT_FLAGS} ${V4_WARN})
+target_link_libraries(smcbvs4_xeval PRIVATE v4_xeval v4_bit)
+
 option(V4_TESTS "build the test executables" ON)
 if(V4_TESTS)
   # v3ref: core/ headers compiled unchanged with the v3 flags (golden comparisons). core/ is never edited.
@@ -77,6 +87,10 @@ if(V4_TESTS)
   add_executable(v4_bench_score tools/bench_score.cpp)
   target_compile_options(v4_bench_score PRIVATE ${V4_BIT_FLAGS})
   target_link_libraries(v4_bench_score PRIVATE v4_bit)
+endif()
+if(V4_TESTS)   # xeval tests join v4_tests (quick suite); additive: no existing target line changes
+  target_sources(v4_tests PRIVATE tests/xeval/test_xeval.cpp)
+  target_link_libraries(v4_tests PRIVATE v4_xeval)
 endif()
 
 include(src/island/island.cmake)   # WP3 island kernel (sources, tests, bench)
