@@ -1,0 +1,20 @@
+# Sol-5 claimed edits, grepped in the REAL files at freeze time (HQ RIDER_RULES). Section (c) MEAS-D: see MEAS-D/MEASD7_CLAIMED_EDITS_GREP.txt (all present).
+OK   Theory_work/Wave3/W3-READER/CLAIMS_CARD.md:71  (a) card row 3.1L: HQ's sentence ("presented as a statement about the frozen software once the code re-pin to that tag is recorded.")
+OK   Theory_work/Wave3/W3-READER/CLAIMS_CARD.md:71  (a) card row 3.1L: LIST-R unconditional, IMPL-LIST discharged at the tag
+OK   Theory_work/Wave3/W3-READER/READER_VERSIONS.md:1433  (a) RV §11.2 sentence (:1433)
+OK   Theory_work/Wave3/W3-READER/READER_VERSIONS.md:1432  (a) RV §11.2 header says recorded (W3-D5P)
+OK   Theory_work/**/reviews/*_record_*.md (16 files)  (a) option-B carrier sentence; HQ: 16 carriers
+OK   Theory_work/Wave3/W3-D5P/reviews/R4r2_record_opus.md:3  (a) option-B carrier of W3-D5P
+OK   Theory_work/Wave3/W3-D5P/reviews/R4r2_record_sol.md:3  (a) option-B carrier of W3-D5P
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/NA_DROP/ticket/Theory_work/Wave3/W3-D5P/STATEMENT.md:57  (b) NA-1 exact-branch row from fit$exact$top
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/NA_DROP/ticket/Theory_work/Wave3/W3-D5P/STATEMENT.md:62  (b) IMPL-LIST edit [NA-1]
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/NA_DROP/ticket/Theory_work/Wave3/W3-D5P/STATEMENT.md:104  (b) clause (o) [NA-2, NA-C1]
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/NA_DROP/ticket/Theory_work/Wave3/W3-D5P/STATEMENT.md:167  (b) changelog row v1.2
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/NA_DROP/ticket/Theory_work/Wave3/W3-D5P/lemmas/L3_listR.md:44  (b) L3 Step 0' heading
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/NA_DROP/ticket/Theory_work/Wave3/W3-D5P/lemmas/L3_listR.md:45  (b) L3 NA-C2 (no non-degeneracy claim)
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/NA_DROP/ticket/Theory_work/Wave3/W3-D5P/lemmas/L3_listR.md:53  (b) L3 NA-C5
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/NA_DROP/ticket/Theory_work/Wave3/W3-D5P/lemmas/L3_listR.md:57  (b) L3 NA-C6
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/NA_DROP/ticket/Theory_work/Wave3/W3-D5P/lemmas/L3_listR.md:74,80  (b) L3 NA-C7 sampler branch
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/NA_DROP/ticket/Theory_work/Wave3/W3-D5P/READER_DELTA.md:20  (b) READER_DELTA NA-C9
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/NA_DROP/ticket/Theory_work/Wave3/W3-D5P/STATEMENT.md:0  (b) ABSENT: qualifier 'when returned' in the statement text of (C3)
+RESULT: ALL CLAIMED EDITS PRESENT
