@@ -1,0 +1,20 @@
+# External inputs the memo relies on (review B1). Repo-relative paths.
+Theory_work/Wave3/PROGRAM.md
+Theory_work/Wave3/W3-SCR/STATEMENT.md
+Theory_work/Wave3/W3-SCR/REPORT.md
+Theory_work/Wave3/W3-SCR/CODE_CHECK.md
+Theory_work/Wave3/W3-SCR/ASSUMPTION_MAP.md
+Theory_work/Wave3/W3-SCR/lemmas/L5_exact.md
+Theory_work/Wave3/W3-SCR/lemmas/L7_master.md
+Theory_work/Wave3/W3-RM/STATEMENT.md
+Theory_work/Wave3/W3-RM/REPORT.md
+Theory_work/Wave3/W3-RM/ASSUMPTION_MAP.md
+Theory_work/Wave3/W3-RM/SHARPNESS.md
+Theory_work/Wave3/W3-RM/lemmas/L0_core.md
+Theory_work/Wave3/W3-RM/reviews/R02_better_theorem_astra.md   # source of follow-ups P5/P6 (a review of W3-RM, not of this memo)
+Theory_work/Wave2/W2-FAC-PK/STATEMENT.md
+Theory_work/Wave2/W2-FAC-PK/REPORT.md
+Theory_work/Wave2/W2-APP/lemmas/L5_VN.md
+Theory_work/Wave1C/C-GROW/STATEMENT.md
+Scripts/SMC_BVS/core/v3_run.R
+Theory_work/INFRA/registry/claims.tsv

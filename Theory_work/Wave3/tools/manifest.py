@@ -30,6 +30,20 @@ verdict line for OUT's digest, with gates=PASS and 8.0 <= score <= 10; no other 
 another digest or round in the same file is a contradiction; a malformed one is an error); across the reviews one
 round and distinct seats. It prints the council cell those verdicts make (paste it into the registry `council`
 field); with --council it also requires that cell to match them (round, digest, and per seat: score, PASS, file).
+
+Git-ignored files (HQ 2026-11). `freeze` does not hash a file that the .gitignore files of the work tree ignore and git does not
+track (e.g. generated numerics under an ignored folder): such a file is absent from a CI checkout, so a manifest that hashed it could
+never verify there. Only the per-directory .gitignore files count (not the user's global excludes or .git/info/exclude), so the
+result does not depend on the machine. A tracked file stays covered whatever the patterns say. `freeze` prints how many files it
+left out, and REFUSES when the filter leaves a ticket folder or a listed external directory with no file at all (an empty
+manifest would verify OK for any content). `verify` keeps verifying a file the manifest lists, ignored or not (older manifests),
+and does not count an unlisted ignored file as ADDED. Without git (or outside a work tree) nothing is excluded, as before.
+
+Live logs (HQ 2026-11). `freeze` and `verify` print one WARNING (stderr; the exit code is unchanged) per listed external input
+that is, or contains, a registry file (Theory_work/INFRA/registry/*: claims.tsv, assumptions.tsv, events.log, ...) or the decision
+log Theory_work/INFRA/DECISIONS.md, however the path is spelled: they change with every registry write / lifecycle operation, so a
+council manifest that freezes one stops verifying after the recording it is meant to support. Freeze the council's content
+without them (cite the registry status in the review instead) or re-freeze CITATION-ONLY.
 """
 import hashlib, os, re, subprocess, sys
 sys.dont_write_bytecode = True
@@ -81,8 +95,57 @@ def accepted_hashes(p):
     return {_h(data), _h(lf), _h(lf.replace(b"\n", b"\r\n"))}
 
 
-def ticket_files(root):
-    """[(path, manifest name)] of the covered files of the ticket folder."""
+def ignored_paths(base, pathspecs=None):
+    """Paths (relative to `base`, '/'-separated) of untracked files that the work tree's per-directory .gitignore files ignore
+    (under `pathspecs` if given); empty if `base` is not in a git work tree or git is unavailable (nothing is then excluded).
+    Only .gitignore counts: a tracked file is never listed, and global / info/exclude patterns are not read."""
+    cmd = ["git", "-C", base, "ls-files", "--others", "--ignored", "--exclude-per-directory=.gitignore", "-z"]
+    if pathspecs:
+        cmd += ["--"] + list(pathspecs)
+    try:
+        p = subprocess.run(cmd, capture_output=True)
+    except OSError:
+        return set()
+    if p.returncode:
+        return set()
+    return {os.fsdecode(x).replace("\\", "/") for x in p.stdout.split(b"\0") if x}
+
+
+LIVE_LOG = "Theory_work/INFRA/DECISIONS.md"
+LIVE_DIR = "Theory_work/INFRA/registry/"
+
+
+def _real_rel(repo, rel):
+    """`rel` (any spelling: ./, //, .., absolute, case on a case-insensitive file system, symlinks) as a normalised
+    repo-relative path."""
+    r = os.path.relpath(os.path.realpath(os.path.join(repo, rel)), os.path.realpath(repo))
+    return r.replace(os.sep, "/").lower()
+
+
+def _is_live(norm):
+    return norm.startswith(LIVE_DIR.lower()) or norm == LIVE_LOG.lower()
+
+
+def warn_live_logs(repo, listed, names):
+    """One WARNING per listed external input that is or contains a registry file / the decision log. `listed`: the inputs as
+    spelled (file or directory); `names`: the per-file `EXT:<path>` names (or paths) of everything they cover."""
+    files = [_real_rel(repo, n[len("EXT:"):] if n.startswith("EXT:") else n) for n in names]
+    for L in listed:
+        base = _real_rel(repo, L)
+        hit = [f for f in files if base == "." or f == base or f.startswith(base.rstrip("/") + "/")]
+        live = sorted({f for f in hit if _is_live(f)} | ({base} if _is_live(base) else set()))
+        if live:
+            print(f"manifest: WARNING: external input {L} is or contains {len(live)} registry / decision-log file(s) (e.g. {live[0]}); they change "
+                  "with every registry write or lifecycle operation, so a council manifest must not freeze them (it stops verifying after the recording)",
+                  file=sys.stderr)
+
+
+def ticket_files(root, honour_ignore=True, ign=None):
+    """[(path, manifest name)] of the covered files of the ticket folder (files ignored by .gitignore and untracked are
+    excluded unless honour_ignore is False; `ign` = a precomputed ignored_paths(root))."""
+    if honour_ignore and ign is None:
+        ign = ignored_paths(root)
+    ign = ign if honour_ignore else set()
     out = []
     for d, dirs, files in os.walk(root):
         rel_d = os.path.relpath(d, root)
@@ -93,12 +156,20 @@ def ticket_files(root):
             if f == "LOG.md" or (f.startswith("CHECKPOINT_") and f.endswith(".md")):
                 continue
             p = os.path.join(d, f)
-            out.append((p, os.path.relpath(p, root).replace(os.sep, "/")))
+            name = os.path.relpath(p, root).replace(os.sep, "/")
+            if name in ign:
+                continue
+            out.append((p, name))
     return out
 
 
 def ticket_entries(root):
-    return [f"{sha(p)}  {name}" for p, name in ticket_files(root)]
+    kept, every = ticket_files(root), ticket_files(root, False)
+    if len(every) > len(kept):
+        print(f"manifest: NOTE: {len(every) - len(kept)} git-ignored untracked file(s) of {root} are not covered", file=sys.stderr)
+        if not kept:
+            raise ManifestError(f"manifest: every file of {root} is git-ignored: refusing to freeze an empty manifest")
+    return [f"{sha(p)}  {name}" for p, name in kept]
 
 
 def extra_paths(listfile):
@@ -110,17 +181,34 @@ def extra_paths(listfile):
     return paths
 
 
-def extra_files(repo, paths):
-    """[(path, manifest name `EXT:<repo path>`)] of the listed external inputs (a directory: every file under it)."""
+def extra_files(repo, paths, honour_ignore=True, ign=None, strict=False):
+    """[(path, manifest name `EXT:<repo path>`)] of the listed external inputs (a directory: every file under it, except files
+    ignored by .gitignore and untracked; an explicitly listed file is always included). `strict` (freeze): a listed directory
+    whose files are all excluded is an error, and one NOTE says how many files of a listed directory were left out.
+    `ign` = a precomputed ignored_paths(repo, <listed directories>)."""
+    dirs_ = [rel for rel in paths if os.path.isdir(os.path.join(repo, rel))]
+    if honour_ignore and dirs_ and ign is None:
+        ign = ignored_paths(repo, dirs_)
+    ign = ign if honour_ignore else set()
     out = []
     for rel in paths:
         p = os.path.join(repo, rel)
         if os.path.isdir(p):
+            n_all = n_kept = 0
             for d, dirs, files in os.walk(p):
                 dirs[:] = sorted(x for x in dirs if x not in {"__pycache__", ".git"})
                 for f in sorted(files):
                     q = os.path.join(d, f)
-                    out.append((q, f"EXT:{os.path.relpath(q, repo).replace(os.sep, '/')}"))
+                    relq = os.path.relpath(q, repo).replace(os.sep, "/")
+                    n_all += 1
+                    if relq in ign:
+                        continue
+                    n_kept += 1
+                    out.append((q, f"EXT:{relq}"))
+            if strict and n_all > n_kept:
+                print(f"manifest: NOTE: {n_all - n_kept} git-ignored untracked file(s) of the listed directory {rel} are not covered", file=sys.stderr)
+            if strict and n_all and not n_kept:
+                raise ManifestError(f"manifest: every file of the listed directory {rel} is git-ignored: refusing to freeze it as an empty input")
         elif os.path.isfile(p):
             out.append((p, f"EXT:{rel}"))
         else:
@@ -155,11 +243,16 @@ def verify_problems(root, out, repo=None):
     if digest(rows) != dg:
         return dg, ["header digest does not match the stored rows (corrupted or hand-edited manifest)"]
     try:
-        cur = ticket_files(root) + extra_files(repo or repo_root(root), extras)
+        rp = repo or repo_root(root)
+        cur = ticket_files(root) + extra_files(rp, extras)
+        cur_all = ticket_files(root, False) + extra_files(rp, extras, False)
     except ManifestError as e:
         return dg, [str(e)]
     old_files = {l[66:]: l[:64] for l in rows}
     new_files = {name: p for p, name in cur}
+    for p, name in cur_all:   # a git-ignored file the manifest lists is still verified (older manifests); an unlisted one is not ADDED
+        if name in old_files and name not in new_files:
+            new_files[name] = p
     # INFRA R06: a recorded hash matches if it is the raw, LF-normalised or CRLF-ised hash of the current file
     return dg, sorted([f"CHANGED {k}" for k in old_files if k in new_files
                        and old_files[k] not in accepted_hashes(new_files[k])]
@@ -346,11 +439,15 @@ def main():
         repo = repo_root(root)
         if cmd == "freeze":
             paths = extra_paths(a[4]) if len(a) == 5 else []
-            cur = ticket_entries(root) + extra_entries(repo, paths)
+            xf = extra_files(repo, paths, strict=True)
+            warn_live_logs(repo, paths, [n for _, n in extra_files(repo, paths, False)])
+            cur = ticket_entries(root) + [f"{sha(p)}  {name}" for p, name in xf]
             with open(out, "w", encoding="utf-8", newline="\n") as fh:
                 fh.write(f"MANIFEST {digest(cur)}\n" + "".join(f"#EXTRA {p}\n" for p in paths) + "\n".join(cur) + "\n")
             print(f"MANIFEST {digest(cur)} ({len(cur)} files, {len(paths)} extra input(s))"); return
         dg, diffs = verify_problems(root, out, repo)
+        _dg, _extras, _rows = read_manifest(out)
+        warn_live_logs(repo, _extras, [r[66:] for r in _rows if r[66:].startswith("EXT:")] + _extras)
         if diffs:
             print("\n".join(diffs)); print(f"verify: {len(diffs)} difference(s) vs MANIFEST {dg}"); sys.exit(1)
         print(f"verify: OK MANIFEST {dg}")

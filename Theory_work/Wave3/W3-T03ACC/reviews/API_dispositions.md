@@ -1,0 +1,16 @@
+# W3-T03ACC — dispositions of HQ's blind API Fable audit (v4 H3: proof material, not a review layer)
+
+Inputs: `reviews/api/t03acc-1.md`, `reviews/api/t03acc-2.md`, `reviews/api/VERDICTS.tsv` (moved from `api/` on the manager's CP1 answer) (also on main: `Theory_work/Wave3/API_AUDIT/t03acc/`).
+Both samples: `AUDIT SOP:TH09 VERDICT=MINOR FINDINGS=0`, no GAP or ERROR ("the theorem is proved as stated"). Line numbers
+in the audits match `sources/W1-T03R/PROOF.md` (checked: :79 = T02(i♯), :168 = conclusions, :172 = (C1)).
+Never given to the blind council seats. Each slip goes to a Sol line-check batch as a **named point to check**; final
+disposition after that batch.
+
+| # | sample(s) | location | slip (summary) | lead's reading | goes to | disposition |
+|---|---|---|---|---|---|---|
+| A1 | 1, 2 | `PROOF.md:9` | "for p = 1 every statement below is trivial or void" is inaccurate for T03♯ (p = 1, s₀ = 1 is a real case); E1(b)/E2 divide by p − 1 | same point as STATEMENT §4 item 4 (raised before the audit arrived). Proposed repair (both samples): for p = 1, K = 1 and m♯_n ≤ K = 1 ≤ C_m log n directly; nothing else needs p ≥ 2 | LC-A (E1, E2(i)) and LC-B ((C1)) | **CONFIRMED (E-level, no hypothesis)**: LC-A N1 (`reviews/LC_A_line_check_sol.md`): p = 1 forces s₀ = K = m♯_n = 1 ≤ m_n(½ log n); E1(b),(d)/E2(i) stay on their p ≥ 2 domain; nothing else in §2 or [P1] needs p ≥ 2. LC-C N7 confirms the p = 1 specialization of (C6)–(C10); LC-B N1 confirms §4 and (C1)–(C5) need no p ≥ 2. → ERRATA E2 |
+| A2 | 1 | `PROOF.md:172` with `:50`, `:59` | (C1) cites E2(i) without its side condition n ≥ 5 when s₀ = 0 | moot for the statement (s₀ ≥ 1, STATEMENT §4 item 1); otherwise absorbed in n ≥ n₀ | LC-B ((C1)) | **MOOT under the locked s₀ ≥ 1** (LC-B N2, `reviews/LC_B_line_check_sol.md`; also LC-A N3); for a hypothetical s₀ = 0 extension, n₀ ≥ 5 suffices. No action |
+| A3 | 2 | `PROOF.md:79-80` with `:16` | R_m written as Σ_{k=m+1}^K q_k/w(s₀) "for every integer m", but q_k is defined only for k ≥ 0; for m < 0 read as ϖ(Ω)/ϖ(S₀) | the record's definition uses max(m+1, 0) (STATEMENT §2), which is that reading; sup over m unaffected | LC-A (T02(i♯)) | **CONFIRMED (E-level)**: LC-A N2: under STATEMENT's max(m+1,0) reading, every line of T02(i♯) holds for all m; sup_m unaffected. → ERRATA E3 |
+| A4 | 2 | `PROOF.md:168` | J_n^∞ written without "j ∈ S₀" | harmless: θ*_j = 0 off S₀ and the threshold is positive. STATEMENT §3 clause 4 copies the record verbatim (also without "j ∈ S₀"); candidate E-level wording fix for ERRATA | LC-C ((C10), Assembly (iv)) | **CONFIRMED harmless** (LC-C N1, `reviews/LC_C_line_check_sol.md`): eventually J_n^∞ ⊆ S₀ and ⊆ J_n(c₀+1); E-level wording only → ERRATA |
+
+Use in CHECKPOINT_3: supporting evidence only.

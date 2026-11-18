@@ -1,0 +1,10 @@
+# R2 seat record — sol (HQ carrier; PROTOCOL_v4 §7; CITATION-ONLY; NOT a new review)
+
+Seat record: `reviews/R2f4_record_sol.md` (council round R2, score 9.2, all gates PASS), bound to `MANIFEST_R2f4.txt` (MANIFEST f816ce301e59ad44b704091844960e690555069de63ca616beffa5aafc012960). CITATION-ONLY re-freeze: after the round, only DEPS.tsv, EXT:Theory_work/Wave3/W3-READER/CLAIMS_CARD.md, EXT:Theory_work/Wave3/W3-READER/READER_VERSIONS.md, EXT:Theory_work/Wave3/W3-READER/lemmas/R1_set_sizes.md, STATEMENT.md changed. CITATION-ONLY: the external input(s) .tsv, EMENT.md, Theory_work/Wave3/W3-READER/CLAIMS_CARD.md, Theory_work/Wave3/W3-READER/READER_VERSIONS.md, Theory_work/Wave3/W3-READER/lemmas/R1_set_sizes.md (READER files) changed by the READER editorial round (theory/W3-READER-ED 84ce4f08: requotes of registry statuses and pins, the H5 card 17 swap, update-log lines; MANIFEST_ED3 f6dcb3f4; hand-off `READER_ED_RECORDER_ITEMS.md`); recorder's Opus PURE check `Theory_work/Wave3/W3-READER/reviews/RED_requote_check_opus.md`; also requoted, CITATION-ONLY (same line count, no mathematics): the `W3-READER:R1@1.0.3` pin in STATEMENT.md (§5/§6 inputs) -> `@1.0.4` after the READER row R1 got the registry's patch bump, and DEPS.tsv (the S:inputs row re-hashed; Opus check `reviews/RED_requote_check_opus.md`); the ticket row W3-D2:Thm2X took the registry's patch bump 1.0.1 -> 1.0.2 because the pin lies in its hashed premise span (S:inputs); no statement, proof, bridge or conclusion of this ticket changes; every other entry is byte-identical. This carrier binds the seat's outcome to `reviews/MANIFEST_R2f5.txt` (MANIFEST f76e9decfe21a0f3a402ec61d01f663f97877fb4325777f5ad1a9f6798308522), which differs from the round's manifest only as stated. The per-claim table below is the seat's own table, copied verbatim (the decision column; any note column is quoted below the table).
+
+| id | decision |
+|---|---|
+| W3-D2:Thm2X | ACCEPT |
+| W3-D2:Cor2X | ACCEPT |
+
+COUNCIL-VERDICT round=R2 manifest=f76e9decfe21a0f3a402ec61d01f663f97877fb4325777f5ad1a9f6798308522 seat=sol score=9.2 gates=PASS

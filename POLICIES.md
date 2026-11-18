@@ -58,12 +58,17 @@ PROGRAM Readability, with a fidelity check of every number.
   - open PRs to `main`;
   - start reviewers and helpers within their brief's allowance.
 - **Models and escalation (owner, 2026-11-15, final).**
-  - Departments are independent in using **Opus 5.5, Sonnet 5.5 and Haiku 5.5** (Claude Third unless their charter
+  - Departments are independent in using **Opus 5.5, Sonnet 5.5 and Haiku 5.5** (Claude Personal unless their charter
     says otherwise; effort high max).
-  - **A new Fable 5.2 needs the owner's green light.** If a problem is big enough to need it, the manager reports to HQ:
-    the problem, why Opus is not enough, **how many Fables**, the expected size or duration, and the account. HQ passes
-    it to the owner, and the owner gives the green light. Fables already approved continue (the W3-DIST lead;
-    Engineering's feasibility expert).
+  - **A new Fable 5.2 needs HQ's approval** (owner delegated Fable allocation to HQ, 2026-11-16: "be efficient, we
+    need to save tokens for future tasks"). If a problem is big enough to need it, the manager reports to HQ: the
+    problem, why Opus is not enough, how many Fables, the expected size or duration, and the account. HQ decides,
+    with the consultant when it is significant.
+    - Fables are **precision tools, not volume tools** (owner, 11-16). They go only to hard key proofs, finding
+      improvement opportunities in core results, creative or architect reviews, writing advice, and headline cards. They are
+      scoped with a kill budget and reused (the same thread across rounds) rather than re-spawned.
+    - Opus is the default everywhere else.
+    - HQ reports Fable use to the owner in the daily brief.
   - Big problems are reported to HQ at once.
   - Otherwise every department works on its own: the same repo, the same information, clear goals and resources (charters
     in §8). Technical decisions are the department's, confirmed by HQ.
@@ -87,10 +92,11 @@ PROGRAM Readability, with a fidelity check of every number.
 which account (Claude Third, Claude Personal, Claude Work) or which proportions to use for new agents, and HQ relays it
 to every manager. Managers apply the current allocation, recorded in `HQ_NOW.md` "ACCOUNT ALLOCATION", to every new
 agent they start.
-- **Claude Third:** ample; the default for Owls departments; Opus default, Fable for hard proofs or creative reviews.
-- **Claude Personal:** HQ and the Writing Department; budget resets Monday 16:00 CT.
-- **Claude Work:** as HQ says.
-- **Codex** (Sol `gpt-6.1-sol`, Astra `gpt-6-astra`, high): one shared Codex Pro account, also used by the owner's BNP
+- **Claude Personal:** the **SMC default account since 11-16 16:00 CT** (owner): HQ, Theory, Engineering and every
+  new SMC agent. Its budget resets Monday 16:00 CT.
+- **Claude Third:** **retired for SMC** (owner, 11-16). No SMC agent starts or resumes on it.
+- **Claude Work:** the Writing Department and its Fable writing advisor (owner, 11-16); otherwise as HQ says.
+- **Codex** (Sol `gpt-6.2-sol` (owner GO 11-17 night after the SOL62 A/B; was 6.1. 6.2 verdicts are input, not decisions: every point is triaged against the acceptance filter), Astra `gpt-6-astra`, high): one shared Codex Pro account, also used by the owner's BNP
   Lean project. NORMAL mode until HQ switches it.
 - **NOTS:** Owls now has its own login (`ssh nots`, dedicated key `~/.ssh/id_ed25519_nots`, comment "owls-bvs-departments";
   revocable by deleting that line from NOTS `~/.ssh/authorized_keys`). Departments run read-only queries
@@ -110,7 +116,7 @@ a hold on a consumed claim, a budget overrun, or anything touching a headline cl
 
 | who | decides |
 |---|---|
-| Owner (Felipe) | direction, budget tiers, account and budget for every Fable, paper claims, framing and competitors, org changes |
+| Owner (Felipe) | direction, budget tiers, account allocation (Fable allocation delegated to HQ 11-16), paper claims, framing and competitors, org changes |
 | CEO (HQ) | priorities across departments, resource allocation inside the owner's budget, gates (CP3 acceptance, headline cards with the consultant), merges to main, API submission, launching and closing departments and tickets |
 | Department manager | technical decisions (HQ confirms), staffing with Opus/Sonnet inside the allowance, ticket planning and schedule, reviews per PROTOCOL_v4 |
 
@@ -118,8 +124,8 @@ Escalation ladder: manager → HQ (CEO) → HQ's Fable consultant for important 
 the overall direction of the paper and for extra resources.
 
 **Budget envelopes** (set by HQ inside the owner's budget, reviewed weekly):
-- Claude Third: Theory and Engineering departments, at most 5 + 3 concurrent leads (Theory 5 until Wed 18:00, then 3).
-- Claude Personal: HQ and Writing.
+- Claude Personal (since 11-16): HQ, Theory (≤ 3 leads + the audit Fable) and Engineering (≤ 4 concurrent agents).
+- Claude Work: Writing.
 - Codex reviews: priority order W3-DIST > riders > the rest.
 - NOTS core-hours: per approved batch.
 - API credits: HQ only.
@@ -144,9 +150,9 @@ A department that expects to exceed its envelope asks HQ first.
 
 | department | goal | resources | gates with HQ |
 |---|---|---|---|
-| SMC - Theory | all theory tickets: W3-DIST (top priority: distribution consistency), W3-READER, riders, premise tickets (T-N, T-PART, T-STREAM, T-CAL, T-MERGE), parallel-SMC campaign, strength gates for headline candidates | Claude Third (Opus/Sonnet/Haiku); up to 5 concurrent leads until Wed 11-18 18:00, then 3; Codex reviews (priority W3-DIST); NOTS read access | CP3 acceptance, headline cards (H5), merges, API submission, new Fables |
-| SMC - Engineering | **build the machinery that runs the method at p = 10⁶ on NOTS** (spec, build, ladder 10⁴ → 10⁵ → 10⁶). If that is impossible, **prove it** to HQ, which must approve the proof, with the consultant as needed. Then find the **closest variant of the current strategy that does reach 10⁶**, and if none exists, prove that too (see the mandate below the table) | Claude Third (Opus/Sonnet/Haiku); Owls local runs; NOTS read access; NOTS core-hours per approved batch | job batches, budget tier (owner), paper claim for the parallel method (owner), new Fables, merges |
-| SMC - Writing | chapter v2.0, advisor report (~Dec 4–6), later the paper; readable to peers | Claude Personal (Opus/Sonnet/Haiku); LaTeX on Owls | delivery dates, a fidelity check per document, merges |
+| SMC - Theory | all theory tickets: W3-DIST (top priority: distribution consistency), W3-READER, riders, premise tickets (T-N, T-PART, T-STREAM, T-CAL, T-MERGE), parallel-SMC campaign, strength gates for headline candidates | Claude Personal (Opus/Sonnet/Haiku); up to 3 concurrent leads + the audit Fable; Codex reviews (priority W3-DIST); NOTS read access | CP3 acceptance, headline cards (H5), merges, API submission, new Fables |
+| SMC - Engineering | **build the machinery that runs the method at p = 10⁶ on NOTS** (spec, build, ladder 10⁴ → 10⁵ → 10⁶). If that is impossible, **prove it** to HQ, which must approve the proof, with the consultant as needed. Then find the **closest variant of the current strategy that does reach 10⁶**, and if none exists, prove that too (see the mandate below the table) | Claude Personal (Opus/Sonnet/Haiku), ≤ 4 concurrent agents; Owls local runs; NOTS read access; NOTS core-hours per approved batch | job batches, budget tier (owner), paper claim for the parallel method (owner), new Fables, merges |
+| SMC - Writing | chapter v2.0, advisor report (~Dec 4–6), later the paper; readable to peers | Claude Work (Opus/Sonnet/Haiku + one Fable writing advisor); LaTeX on Owls | delivery dates, a fidelity check per document, merges |
 | SMC - Lean | Lean certificates of headline theorems (launched when material is ready) | to be set at launch | launch, merges |
 
 **Engineering mandate (owner, 2026-11-15, final).** Deliver exactly one of:
@@ -194,6 +200,10 @@ HQ adds its recommendation and forwards it to the owner the same day. Nothing ex
   **non-department thread** (ticket lead, helper, reviewer, recorder task, expert) has **finished**, its manager
   **settles** it (`t3_thread_organize` action `settle`), so the sidebar shows only HQ, the departments and work in
   progress. Department threads and HQ are never settled. Nothing is archived or deleted unless the owner asks.
+
+- **Where threads and agents run (owner, 2026-11-15):** only on **Owls** or the **desktop (DESKTOP-955G53S)**, which are
+  always on, so work continues 24/7. Never on the laptop (Felipe_Bedoya): it goes on and off. The laptop is only a data
+  mirror, reached by its own scheduled pull or by a short, explicitly approved one-off.
 
 ## 11. Overnight mode (owner, 2026-11-15; times in US Central)
 When the owner says he is going to bed or leaving HQ working overnight, **HQ is in charge of all decisions** until he
@@ -284,7 +294,7 @@ Each department may tailor the review, process and rollback protocols to its nee
   in `HQ_DECISIONS.md`. Until a variant is approved, the baseline applies.
 
 ## 14. Codex pacing levels (owner, 2026-11-15)
-The owner says "pace to level N"; HQ relays it to every manager the same day. Reviews already in flight finish as
+The owner says "pace to level N"; HQ relays it to every manager the same day. **A pacing level is not a reasoning effort:** Codex reviewers always run at effort high, at every level. Reviews already in flight finish as
 started.
 
 | level | Codex (Sol / Astra) used for | moves to Claude (Opus / Fable) |
@@ -295,3 +305,12 @@ started.
 
 **No level drops a Codex check on what we call checked:** statement locks, key lemmas and the council OpenAI seat. The current
 level is recorded in `HQ_NOW.md`.
+
+**Unattended agents never wait on approvals (HQ, 2026-11-16; from Theory D62):**
+- A Codex or other unattended reviewer that triggers a sandbox approval request stalls forever, because no tool can answer it.
+- Briefs therefore never set TMPDIR or write outside the agent's own worktree or folder. Scratch goes in `<worktree>/.rc_tmp/` at the worktree root (git-ignored via the shared .git/info/exclude), never inside a ticket folder, because manifest.py walks ticket folders and stray files break freeze and bind. Never add a .gitignore inside a frozen folder.
+- **Codex agents never delete anything**, not even their own `.rc_tmp/`, since deletions trigger approval prompts.
+  They never write outside their worktree, either: reviews go to `.rc_tmp/`, and the manager copies them and cleans up
+  (Engineering, PR #47 incident, 11-16).
+- Managers check pending requests when a review runs over 2 h.
+- **No shell redirects or heredoc outputs outside the worktree** (e.g. `> /tmp/.../scratchpad/x`): the harness prompts on them even in full-access (Theory READER seat, 11-18). **A seat stuck on an approval prompt is cancelled and relaunched by its parent** (`task_cancel` on the parent's own delegate task), not left waiting for the owner.

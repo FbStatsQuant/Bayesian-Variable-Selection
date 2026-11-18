@@ -1,0 +1,2 @@
+bind: OK, 2 review(s) give a PASS verdict (>= 8.0) on MANIFEST 322e8c121e76a3d19d31b4870b39da8e09baa18d6c92f330d8f74ee293eaadd6
+council cell: R1; MANIFEST 322e8c121e76a3d19d31b4870b39da8e09baa18d6c92f330d8f74ee293eaadd6; astra=9.5 PASS(reviews/R1r_record_astra.md); opus=9.5 PASS(Theory_work/Wave3/W3-FAMC/reviews/RM2_ExPolyR_seat_opus.md)

@@ -1,0 +1,33 @@
+OK            [STATEMENT.md] Theory_work/Wave3/W3-POST/lemmas/L1a_size_tail.md:3-5 sha=2f80cd4992 | Status: **PROVED (by this seat, unchecked)**. Check record [C1B-N4]: R01 (gpt-6-astra high,
+OK            [STATEMENT.md] Theory_work/INFRA/registry/claims.tsv:343-343 sha=474a5d529e | W3-POST:Lemma-1a'	W3-POST	Lemma-1a'	lemma	Lemma 1a′ (design-free form of the size tail)	Size tail with no eige
+OK            [STATEMENT.md] Theory_work/Wave3/W3-POST/lemmas/L1a_size_tail.md:9-19 sha=43cf222652 | ## Statement
+OK            [STATEMENT.md] Theory_work/Wave3/W3-POST/lemmas/L1a_size_tail.md:21-42 sha=17363eef49 | ## Proof
+OK            [STATEMENT.md] Theory_work/Wave3/W3-POST/STATEMENT.md:52-58 sha=362b35e0f2 | **Lemma 1a′ (design-free form; NEW in this ticket — `lemmas/L1a_size_tail.md`, status there).** Replace the ei
+OK            [STATEMENT.md] Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex:68-81 sha=b5abda4ea0 | \begin{lemma}[Gaussian slab integral]\label{lem:slab}
+OK            [STATEMENT.md] Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex:90-111 sha=0d308ae972 | \begin{lemma}[smoother and determinant]\label{lem:spec}
+OK            [STATEMENT.md] Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex:139-150 sha=70bd7815bb | \begin{lemma}[chi-square facts]\label{lem:chi}
+OK            [STATEMENT.md] Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex:234-240 sha=d18ce8fc97 | \begin{theorem}[T01(iii)]\label{thm:T01iii}
+OK            [STATEMENT.md] Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex:255-264 sha=9e4673039f | \begin{theorem}[T01 (T)(a): mixed-endpoint transfer]\label{thm:Ta}
+OK            [STATEMENT.md] Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex:317-323 sha=749ef3d0dc | \begin{lemma}[numerator]\label{lem:num}
+OK            [STATEMENT.md] Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex:324-360 sha=974cd8b8d6 | \begin{lemma}[denominator]\label{lem:den}
+OK            [STATEMENT.md] Theory_work/Wave3/W3-POST/STATEMENT.md:43-43 sha=2f38badb68 | **Lemma 1a (= T02(i♯), [T03R] lines 79-85; status "T02(i♯), T02(ii♯): PROVED; SF/XF VERIFIED",
+OK            [STATEMENT.md] Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/W1-T03R/PROOF.md:16-17 sha=2fd9948513 | $$R_m:=\frac{\varpi(\{S\in\Omega:|S|>m\})}{\varpi(S_0)}=\sum_{k=m+1}^{K}\frac{q_k}{w(s_0)}\qquad(\text{empty s
+OK            [STATEMENT.md] Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/W1-T03R/PROOF.md:74-97 sha=61430df7dd | ## 2. Theorem T02(i♯): sharpened size tail with explicit constants (PROVED; candidate)
+OK            [PROOF.md] Theory_work/Wave3/W3-POST/lemmas/L1a_size_tail.md:27-32 sha=a0d42428cb | *Changed step (bound on Q^c_T).* By [P1] `lem:slab`, Q^c_T = min_ϑ {‖y_c − X_{c,T}ϑ‖² + ϑᵀ(G_T + I)ϑ/n}, where
+OK            [PROOF.md] Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex:68-81 sha=b5abda4ea0 | \begin{lemma}[Gaussian slab integral]\label{lem:slab}
+OK            [PROOF.md] Theory_work/Wave3/W3-POST/lemmas/L1a_size_tail.md:34-37 sha=54c46e3578 | *Rest of den′, verbatim with R_n → ρ.* The integral representation and the exponent bound of [P1] `lem:den`
+OK            [PROOF.md] Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex:340-353 sha=a8b3ea494c | \emph{Integral representation.} By Lemma~\ref{lem:slab} and Tonelli,
+OK            [PROOF.md] Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex:97-97 sha=a4261fad96 | \item[(e)] $D=\prod_{i=1}^kf(\lambda_i(G))$; in particular $1\le D\le(n+1)^k$. If $\mathsf{A}'$ is $\mathsf{A}
+OK            [PROOF.md] Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex:344-345 sha=70907e2027 | Since $f_0(\yc)=(2\pi\sigma_*^2)^{-(n-1)/2}e^{-E'/2}$,
+OK            [PROOF.md] Theory_work/Wave3/W3-POST/lemmas/L1a_size_tail.md:39-42 sha=f57e466703 | *Assembly.* As in [T03R] lines 93-97 with S₀ → T: on 𝓑_n, [P1] `thm:Ta` (its last inequality needs only T ∈ Ω,
+OK            [PROOF.md] Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex:255-264 sha=9e4673039f | \begin{theorem}[T01 (T)(a): mixed-endpoint transfer]\label{thm:Ta}
+OK            [PROOF.md] Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex:128-128 sha=5d6ff0a9d8 | (c) Put $q_k=\binom pkw(k)$. By (b), $q_{k+1}/q_k=\frac{p-k}{k+1}\cdot\frac{k+1}{2p-k-1}=\frac{p-k}{2p-k-1}$, 
+OK            [PROOF.md] Theory_work/Wave3/W3-POST/STATEMENT.md:36-36 sha=7449ca24bd | Size cutoff (data-free — a fixed function of (n, p, s₀), not computable from data since s₀ is unknown [R02-F6]
+OK            [PROOF.md] Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/W1-T03R/PROOF.md:16-17 sha=2fd9948513 | $$R_m:=\frac{\varpi(\{S\in\Omega:|S|>m\})}{\varpi(S_0)}=\sum_{k=m+1}^{K}\frac{q_k}{w(s_0)}\qquad(\text{empty s
+OK            [PROOF.md] Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/W1-T03R/PROOF.md:93-93 sha=cea9b2f27e | *Proof of T02(i♯).* Fix $n$ with $s_0\le K$ and an integer $m$ with $R_m>0$ (otherwise there is nothing to pro
+OK            [PROOF.md] Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex:317-323 sha=749ef3d0dc | \begin{lemma}[numerator]\label{lem:num}
+OK            [PROOF.md] Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex:234-240 sha=d18ce8fc97 | \begin{theorem}[T01(iii)]\label{thm:T01iii}
+OK            [PROOF.md] Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/W1-T03R/PROOF.md:76-76 sha=1fbc6996cd | Constants (as in [P1] §1 and `lem:den`): $b_-=b_0\sigma_*^2/2$, $b_+=b_0(2(\sigma_*^2+M)+1)$, $\kappa=(b_+/b_-
+
+30 citations: 30 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+Not machine-checked: unbackticked references and the semantic match of each excerpt.

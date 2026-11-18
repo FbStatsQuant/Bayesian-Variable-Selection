@@ -1,0 +1,186 @@
+OK            [STATEMENT.md] Theory_work/Wave2/W2-UNI/lemmas/L5_delivery.md:12-13 sha=a39967fd69 | preflight bounds, LS0 score count ≤ 1 + (ℓ_n + K + 1)q(p), evaluated at (n, p_raw). CAL not assumed. P1/S.3 ke
+OK            [STATEMENT.md] Theory_work/Wave1C/C-DLV/STATEMENT.md:52-53 sha=51070a6287 | **(P1) Inventory** (INVENTORY.md v2) — AUDITED (code reading; R01, R02, R05, R06, council): every exit of `v3_
+OK            [STATEMENT.md] Theory_work/Wave1C/C-DLV/INVENTORY.md:15-93 sha=23e778fc4d | ## A. Entry, input and preprocessing
+OK            [STATEMENT.md] Theory_work/Wave1C/C-DLV/lemmas/L2_degenerate.md:37-72 sha=73e60d96ea | ## S.3 Unreachable paths (D2, X2)
+OK            [STATEMENT.md] Theory_work/Wave1C/C-DLV/INVENTORY.md:71-77 sha=b1618f85e4 | ## G. Spec-only components (v3.1 + LS0)
+OK            [STATEMENT.md] cpp/v3_start.h:261-261 sha=9334c5c245 | if (dp.kbest < 0 || !feasible()) throw std::runtime_error("start_mode tie DP: no tight path from (J, kbest) (i
+OK            [STATEMENT.md] cpp/v3_start.h:272-272 sha=7a6fb31f17 | if (tie_dp && cap < 2) throw std::invalid_argument("start_mode: the e4 tie-aware fallback requires cap >= 2 (C
+OK            [STATEMENT.md] cpp/v3_core.cpp:469-469 sha=35f7274942 | ModeResult m = start_mode(st, 1000000, o.ls0_tie_dp);
+OK            [STATEMENT.md] cpp/v3_core.cpp:480-480 sha=3fe6e0943e | if (E.guard && E.guard->check(sec_ls0, "ls0", local_event(o.tier, -1, PH_LS0))) status = "resource_limit";
+OK            [STATEMENT.md] v3_calib.R:163-170 sha=af82929290 | if (status == "ok" && is.null(last$grid) && e == 1 && isTRUE(grid_fallback) && !is.null(last$fallback_grid) &&
+OK            [STATEMENT.md] v3_calib.R:122-125 sha=4501bbf810 | if (isTRUE(grid_fallback) && trig$grid_failure && tier == 1) {   # tier 0 failures escalate as in v3
+OK            [STATEMENT.md] Theory_work/Wave1C/C-DLV/REPORT.md:70-70 sha=a669eb03e0 | | F1 Proposition F | PROVED-CHECKED for the patched calibration law (R04; council round 2) | lemmas/L4_deliver
+OK            [STATEMENT.md] Theory_work/Wave1C/C-DLV/lemmas/L4_delivery.md:79-93 sha=da0fc3c201 | ## Proposition F (finding: a one-line fallback removes the last path; a change to a SHIPPED component).
+OK            [PROOF.md] v3_fit.R:88-89 sha=16c3c3e721 | valid_seed <- tryCatch({ if (length(seed) != 1) stop("seed must be a single integer"); v3_check_seed(seed); TR
+OK            [PROOF.md] v3_preprocess.R:7-11 sha=2ce30a54cc | v3_check_seed <- function(seed, what = "seed") {
+OK            [PROOF.md] v3_fit.R:91-94 sha=0607c49393 | if (!is.list(allocation)) stop("allocation must be a list containing mem_gb and hours")
+OK            [PROOF.md] v3_preprocess.R:99-107 sha=39b58e4bbe | if (!is.matrix(X) || !is.numeric(X) || !typeof(X) %in% c("integer", "double"))
+OK            [PROOF.md] v3_fit.R:99-103 sha=017e556e30 | if (pre$status != "ok") {
+OK            [PROOF.md] v3_preprocess.R:111-114 sha=5e0aec4c96 | constant <- apply(X, 2, function(x) all(x == x[1]))   # dropped only if all entries are exactly equal
+OK            [PROOF.md] v3_fit.R:99-103 sha=017e556e30 | if (pre$status != "ok") {
+OK            [PROOF.md] v3_preprocess.R:115-115 sha=13b4b3fc77 | if (all(y == y[1])) return(c(list(status = "y_constant", hpm = integer(0)), base))
+OK            [PROOF.md] v3_fit.R:99-103 sha=017e556e30 | if (pre$status != "ok") {
+OK            [PROOF.md] v3_fit.R:26-68 sha=ab1e38a333 | v3_preflight <- function(n, p, b, branch, allocation, tier = 0, time_fun = NULL, ls0_worst_case = FALSE) {
+OK            [PROOF.md] v3_fit.R:115-117 sha=4af22f5aff | pf <- v3_preflight(n, p, b, fit$branch_run, allocation, time_fun = time_fun, ls0_worst_case = ls0_wc)
+OK            [PROOF.md] v3_fit.R:114-114 sha=4b920258df | ls0_wc <- isTRUE(ls0) && !identical(getOption("v3.ls0_cap", "ell_n_plus_mode"), "ell_n")
+OK            [PROOF.md] v3_calib.R:157-157 sha=382f59a78e | if (!is.null(preflight) && isTRUE(preflight(1))) { status <- "resource_limit"; blocked <- "resource_limit"; br
+OK            [PROOF.md] v3_fit.R:144-148 sha=a013da5a09 | pf_fun <- function(e) {
+OK            [PROOF.md] v3_fit.R:154-159 sha=d0373db6f5 | if (cal$status != "ok") {
+OK            [PROOF.md] cpp/v3_core.cpp:556-556 sha=6c6ab1f9cc | try { rec(0); } catch (NumericalFailure& e) { status = "numerical_failure"; message = e.what(); }
+OK            [PROOF.md] v3_fit.R:122-130 sha=4d2b81373d | fit$timings$exact <- proc.time()[["elapsed"]] - t0; fit$exact <- e; fit$status <- e$status
+OK            [PROOF.md] cpp/v3_core.cpp:284-297 sha=155b75c30f | } catch (NumericalFailure& e) {
+OK            [PROOF.md] v3_setup.R:71-72 sha=1299b9c440 | if (r$status != "ok")   # numerical_failure while scoring the tables (M §2): best table model so far, incomple
+OK            [PROOF.md] v3_fit.R:134-138 sha=de9c6b0689 | if (inherits(setup, "v3_setup_failed")) {
+OK            [PROOF.md] cpp/v3_core.cpp:649-650 sha=6d42ba050e | } catch (NumericalFailure& e) {
+OK            [PROOF.md] cpp/v3_core.cpp:695-696 sha=6d42ba050e | } catch (NumericalFailure& e) {
+OK            [PROOF.md] cpp/v3_core.cpp:717-721 sha=b590cfb6af | } catch (NumericalFailure& e) {
+OK            [PROOF.md] v3_calib.R:57-57 sha=6a0929ea60 | if (pil$status != "ok") return(fail(pil))
+OK            [PROOF.md] v3_calib.R:67-67 sha=5ad3493bc4 | if (identical(V$status, "numerical_failure")) return(V)
+OK            [PROOF.md] v3_calib.R:80-80 sha=0ad4e361b2 | if (identical(g$status, "numerical_failure")) return(fail(g))
+OK            [PROOF.md] v3_calib.R:100-100 sha=3e92c6862d | if (dg$status != "ok") return(fail(dg))
+OK            [PROOF.md] v3_calib.R:112-112 sha=77c51fbe13 | if (identical(gn$status, "numerical_failure")) return(fail(gn))
+OK            [PROOF.md] cpp/v3_core.cpp:483-484 sha=e54dc24930 | } catch (NumericalFailure& e) {
+OK            [PROOF.md] v3_run.R:143-148 sha=d2ba04a85f | if (raw$status != "completed") {   # numerical_failure: best scored model so far, labelled incomplete (M §2)
+OK            [PROOF.md] cpp/v3_core.cpp:417-482 sha=aeac9c3cd6 | try {
+OK            [PROOF.md] cpp/v3_score.h:226-238 sha=55267ad5d5 | // log m(S) for a sorted feasible model S (internal indices). Throws NumericalFailure after the last fallback.
+OK            [PROOF.md] v3_calib.R:163-170 sha=af82929290 | if (status == "ok" && is.null(last$grid) && e == 1 && isTRUE(grid_fallback) && !is.null(last$fallback_grid) &&
+OK            [PROOF.md] v3_fit.R:154-159 sha=d0373db6f5 | if (cal$status != "ok") {
+OK            [PROOF.md] v3_calib.R:170-170 sha=0afbed03df | if (status == "ok" && is.null(last$grid)) status <- if (e == 1) "schedule_limit" else "grid_failure_no_escalat
+OK            [PROOF.md] cpp/v3_engine.h:335-338 sha=c51b07a332 | if (guard && guard->check(secs_since(stage_start), "bridge_stage", ev)) {
+OK            [PROOF.md] cpp/v3_core.cpp:637-637 sha=9903a3efad | if (res.partial) return List::create(_["status"] = "resource_limit", _["island"] = island_to_list(res, D),
+OK            [PROOF.md] cpp/v3_core.cpp:673-680 sha=6df3fab0cf | if (res.partial) {
+OK            [PROOF.md] cpp/v3_core.cpp:451-451 sha=4c35f3f254 | if (res.back().partial) { status = "resource_limit"; break; }
+OK            [PROOF.md] cpp/v3_core.cpp:645-645 sha=eb9964bbc3 | return List::create(_["status"] = (c->guard && c->guard->check(sec_ls, "local_search", local_event(tier, 0))) 
+OK            [PROOF.md] cpp/v3_core.cpp:692-692 sha=eb9fd733f9 | return List::create(_["status"] = (c->guard && c->guard->check(sec_ls, "local_search", local_event(tier, iter)
+OK            [PROOF.md] cpp/v3_core.cpp:459-459 sha=53e30259eb | if (E.guard && E.guard->check(sec_local, "local_search", local_event(o.tier, -1))) status = "resource_limit";
+OK            [PROOF.md] v3_calib.R:75-81 sha=b154ecf1d3 | g$resource_limit <- !is.null(runtime) && .v3cpp$cpp_runtime_check(runtime,
+OK            [PROOF.md] v3_calib.R:113-113 sha=d77118b918 | if (isTRUE(gn$resource_limit)) return(fail(c(gn, list(status = "resource_limit"))))
+OK            [PROOF.md] cpp/v3_runtime.h:21-27 sha=09d02f54d3 | bool check(double operation, const std::string& checkpoint, const EventCtx& event) {
+OK            [PROOF.md] cpp/v3_core.cpp:480-480 sha=3fe6e0943e | if (E.guard && E.guard->check(sec_ls0, "ls0", local_event(o.tier, -1, PH_LS0))) status = "resource_limit";
+OK            [PROOF.md] cpp/v3_core.cpp:465-465 sha=1ff0884dfd | if (o.ls0 && status == "completed") {
+OK            [PROOF.md] v3_run.R:143-148 sha=d2ba04a85f | if (raw$status != "completed") {   # numerical_failure: best scored model so far, labelled incomplete (M §2)
+OK            [PROOF.md] cpp/v3_core.cpp:552-552 sha=3075e9ba23 | if (((long)count & 65535) == 0) Rcpp::checkUserInterrupt();
+OK            [PROOF.md] v3.R:55-55 sha=bcea9f8215 | if (difftime(Sys.time(), t0, units = "secs") > wait_seconds) stop("v3_compile: timed out waiting for the build
+OK            [PROOF.md] v3.R:64-64 sha=b8315fef8f | if (!all(ok)) stop("v3_compile: could not copy the compiled cache to ", priv)
+OK            [PROOF.md] v3_run.R:73-73 sha=b2a19ef63b | fr$sha256 <- digest::digest(fr[c("grid", "tier", "N", "L", "inherited")], algo = "sha256")
+OK            [PROOF.md] v3_run.R:95-97 sha=75c7ca43aa | le <- getOption("v3.ls0_ell", b$ell)   # testing override of the LS0 base cap (R05 #2: validated)
+OK            [PROOF.md] cpp/v3_core.cpp:473-474 sha=16c5ae9e75 | long long cap_ll = (long long)o.ls0_ell + (o.ls0_cap_plus_mode ? (long long)m.S.size() : 0LL);  // checked (R0
+OK            [PROOF.md] cpp/v3_start.h:261-261 sha=9334c5c245 | if (dp.kbest < 0 || !feasible()) throw std::runtime_error("start_mode tie DP: no tight path from (J, kbest) (i
+OK            [PROOF.md] cpp/v3_start.h:272-272 sha=7a6fb31f17 | if (tie_dp && cap < 2) throw std::invalid_argument("start_mode: the e4 tie-aware fallback requires cap >= 2 (C
+OK            [PROOF.md] cpp/v3_core.cpp:469-469 sha=35f7274942 | ModeResult m = start_mode(st, 1000000, o.ls0_tie_dp);
+OK            [PROOF.md] cpp/v3_core.cpp:18-18 sha=cb5fa3fa29 | stop("object has no C++ pointer (ptr)");
+OK            [PROOF.md] cpp/v3_core.cpp:112-112 sha=1c5ef09274 | if ((int)s.size() > D.K) stop("v3_score: |S| = %d > K = %d (infeasible model; callers never pass these, R1)", 
+OK            [PROOF.md] cpp/v3_core.cpp:148-148 sha=7eb6a08f70 | for (auto& b : bl) if (b.empty() || (int)b.size() > B_MAX) stop("a block has %d members (supported 1..%d)", (i
+OK            [PROOF.md] cpp/v3_core.cpp:179-179 sha=3601ac5ed7 | check_blocks(st.blocks);
+OK            [PROOF.md] cpp/v3_core.cpp:209-209 sha=51932e648e | try { check_blocks(st.blocks); } catch (...) { delete g; throw; }
+OK            [PROOF.md] cpp/v3_core.cpp:209-209 sha=51932e648e | try { check_blocks(st.blocks); } catch (...) { delete g; throw; }
+OK            [PROOF.md] cpp/v3_core.cpp:212-219 sha=f3e5247962 | for (int j = 0; j < g->D->p; ++j) if (st.blk[j] < 0) stop("blocks do not cover every column");
+OK            [PROOF.md] cpp/v3_core.cpp:233-257 sha=b1786117e7 | HPtr h = get_holder(start); if (!h->has_start) stop("object has no start");
+OK            [PROOF.md] v3_setup.R:18-18 sha=98641f37f1 | if (!is.null(r$status)) stop(r$message)
+OK            [PROOF.md] v3_setup.R:49-49 sha=6f013621d5 | if (!is.numeric(stream) || stream != round(stream) || stream < 0 || stream > 2^31 - 1) stop("stream must be an
+OK            [PROOF.md] v3_setup.R:81-81 sha=5cfa39f44e | v3_gram <- function(ctx) { if (!is.null(ctx$G)) return(ctx$G); stop("ctx built without return_gram = TRUE; reb
+OK            [PROOF.md] v3_fit.R:89-89 sha=7fba198a38 | if (!isTRUE(valid_seed)) { fit$status <- "invalid_input"; fit$message <- valid_seed; return(finish(fit)) }
+OK            [PROOF.md] v3_fit.R:100-100 sha=fc1ea139b5 | fit$status <- pre$status
+OK            [PROOF.md] v3_fit.R:117-117 sha=9b407003b8 | if (pf$exceeds) { fit$status <- "resource_limit"; return(finish(fit)) }
+OK            [PROOF.md] v3_fit.R:122-122 sha=08e88a0237 | fit$timings$exact <- proc.time()[["elapsed"]] - t0; fit$exact <- e; fit$status <- e$status
+OK            [PROOF.md] v3_fit.R:135-135 sha=65718b6b7d | fit$status <- "numerical_failure"; fit$message <- setup$message
+OK            [PROOF.md] v3_fit.R:155-155 sha=df1f127fe1 | fit$status <- cal$status; fit$flags <- cal$flags
+OK            [PROOF.md] v3_fit.R:171-171 sha=800c2b2b84 | for (nm in names(fr)) fit[[nm]] <- fr[[nm]]
+OK            [PROOF.md] v3_calib.R:170-170 sha=0afbed03df | if (status == "ok" && is.null(last$grid)) status <- if (e == 1) "schedule_limit" else "grid_failure_no_escalat
+OK            [PROOF.md] v3_calib.R:126-126 sha=dd74f8dbae | out$grid <- if (trig$grid_failure) NULL else g$grid
+OK            [PROOF.md] v3_calib.R:82-82 sha=fe93d0451f | if (!g$ok) trig$grid_failure <- TRUE
+OK            [PROOF.md] v3_calib.R:114-114 sha=d7aa7dc176 | if (!gn$ok) { trig$grid_failure <- TRUE; break }
+OK            [PROOF.md] v3_calib.R:154-154 sha=275a76a0f9 | fired <- any(unlist(a$triggers))
+OK            [PROOF.md] v3_calib.R:158-158 sha=7b4e44232e | e <- 1                                                              # one escalation at most
+OK            [PROOF.md] v3_calib.R:157-157 sha=382f59a78e | if (!is.null(preflight) && isTRUE(preflight(1))) { status <- "resource_limit"; blocked <- "resource_limit"; br
+OK            [PROOF.md] cpp/v3_core.cpp:146-146 sha=886abac455 | static void check_B(int B) { if (B < 1 || B > B_MAX) stop("block size B = %d outside the supported range 1..%d
+OK            [PROOF.md] cpp/v3_core.cpp:274-274 sha=afc0773c66 | check_B(B);
+OK            [PROOF.md] cpp/v3_core.cpp:393-393 sha=6ef3048b35 | if (!h->has_graph) stop("setup required");
+OK            [PROOF.md] cpp/v3_core.cpp:304-304 sha=7b7f8c923e | g->has_start = true; g->has_graph = true;
+OK            [PROOF.md] v3_fit.R:133-138 sha=824aecaade | t0 <- proc.time()[["elapsed"]]; setup <- v3_setup(ctx)
+OK            [PROOF.md] v3_fit.R:162-162 sha=ebeb469ff9 | t0 <- proc.time()[["elapsed"]]; fr <- v3_final_run(setup, frozen, seed, runtime, ls0 = ls0)
+OK            [PROOF.md] cpp/v3_core.cpp:24-36 sha=a1a47a6fce | static std::vector<int> to_internal(const Data& D, SEXP Sx) {
+OK            [PROOF.md] cpp/v3_core.cpp:422-422 sha=fd8ee86ac8 | auto Ms = models_from_R(D, inh["models"]);
+OK            [PROOF.md] cpp/v3_core.cpp:434-434 sha=73c1b97e19 | to_internal(D, hp["model"]) == led.hpmS) {
+OK            [PROOF.md] cpp/v3_core.cpp:493-493 sha=40137c9d52 | std::vector<int> S = to_internal(D, hp["model"]);
+OK            [PROOF.md] cpp/v3_core.cpp:735-735 sha=b41810a28e | return List::create(_["inherited"] = List::create(_["models"] = models_to_list(D, Ms), _["hpm"] = hpm_now(*c))
+OK            [PROOF.md] cpp/v3_core.cpp:616-619 sha=9fb130ee8e | static List hpm_now(const CalState& c) {
+OK            [PROOF.md] cpp/v3_core.cpp:425-425 sha=c62f00f2df | if ((int)S.size() > D.K) stop("inherited model larger than K");
+OK            [PROOF.md] cpp/v3_core.cpp:54-55 sha=4590433ca8 | static int phase_index(const std::string& s) { for (int a = 0; a < N_PHASE; ++a) if (s == phase_name(a)) retur
+OK            [PROOF.md] cpp/v3_core.cpp:436-436 sha=521413a7d4 | EventCtx e; e.phase = phase_index(as<std::string>(pv["phase"])); e.tier = as<int>(pv["tier"]); e.island = as<i
+OK            [PROOF.md] cpp/v3_core.cpp:439-439 sha=b6bf2325a2 | led.hpm_ev = e; led.hpm_mech = mech_index(as<std::string>(pv["mechanism"]));
+OK            [PROOF.md] cpp/v3_core.cpp:499-499 sha=9593291176 | EventCtx ev; ev.phase = phase_index(as<std::string>(pv["phase"])); ev.tier = as<int>(pv["tier"]); ev.island = 
+OK            [PROOF.md] cpp/v3_core.cpp:502-502 sha=ff24c91aae | if (better) led.offer_hpm(S, F, F - D.logprior[S.size()], ev, mech_index(as<std::string>(pv["mechanism"])));
+OK            [PROOF.md] cpp/v3_core.cpp:503-503 sha=02fdf31588 | else { led.hpm_ev = ev; led.hpm_mech = mech_index(as<std::string>(pv["mechanism"])); }
+OK            [PROOF.md] cpp/v3_engine.h:143-143 sha=b3ae01cfde | throw std::runtime_error("nth_nonmember out of range");
+OK            [PROOF.md] cpp/v3_engine.h:151-151 sha=ce616bc9be | int l = nth_nonmember(P.bits, (int)std::floor(vs->u("uswap_l") * (p - k)));
+OK            [PROOF.md] cpp/v3_engine.h:80-85 sha=cea24221c8 | void set_model(Particle& q, const std::vector<int>& S) {
+OK            [PROOF.md] cpp/v3_score.h:230-230 sha=afffb5333d | if (k > D->K) throw std::runtime_error("v3_score: |S| > K (infeasible model; callers never pass these, R1)");
+OK            [PROOF.md] cpp/v3_engine.h:397-397 sha=095273a325 | else { if ((int)C.S.size() >= K) continue; add_var(Q, j); }
+OK            [PROOF.md] cpp/v3_core.cpp:714-714 sha=f07e235867 | double lm = sc.score(S).logm, cmp = st.comp(S);
+OK            [PROOF.md] cpp/v3_core.cpp:538-538 sha=ab81eb89a0 | ScoreOut o = sc.score(S);
+OK            [PROOF.md] cpp/v3_core.cpp:553-553 sha=1e23fdd0d2 | if ((int)S.size() >= K) return;
+OK            [PROOF.md] cpp/v3_core.cpp:126-126 sha=e04376f7eb | k = std::max(0, std::min(k, D.K));
+OK            [PROOF.md] cpp/v3_core.cpp:578-578 sha=055bb3ff03 | if (a.size() != b.size()) stop("logg0_V and d_V must have equal length");
+OK            [PROOF.md] cpp/v3_core.cpp:711-716 sha=bfe5a4ab30 | List M(n); NumericVector lg0(n), d(n), F(n); int i = 0;
+OK            [PROOF.md] v3_calib.R:67-67 sha=5ad3493bc4 | if (identical(V$status, "numerical_failure")) return(V)
+OK            [PROOF.md] v3_calib.R:80-80 sha=0ad4e361b2 | if (identical(g$status, "numerical_failure")) return(fail(g))
+OK            [PROOF.md] v3_calib.R:112-112 sha=77c51fbe13 | if (identical(gn$status, "numerical_failure")) return(fail(gn))
+OK            [PROOF.md] v3_calib.R:146-146 sha=67b6284fe1 | cseed <- seed; v3_check_seed(seed)
+OK            [PROOF.md] v3_run.R:225-225 sha=df235c8d7a | v3_check_grid(frozen[["grid"]]); v3_check_seed(seed)
+OK            [PROOF.md] v3_setup.R:8-8 sha=2c30d2a127 | stopifnot(is.matrix(Xs), length(ys) == nrow(Xs), length(orig) == ncol(Xs), !is.unsorted(orig, strictly = TRUE)
+OK            [PROOF.md] v3_fit.R:118-118 sha=18d46aead9 | ctx <- v3_context(pre$X, pre$y, orig = pre$kept, return_gram = FALSE)
+OK            [PROOF.md] v3_fit.R:12-12 sha=ec19ed3070 | tctx <- v3_context(Xs[, seq_len(m), drop = FALSE], ys, return_gram = FALSE)
+OK            [PROOF.md] v3_preprocess.R:112-112 sha=af890f13ec | kept <- which(!constant); dropped <- which(constant)
+OK            [PROOF.md] v3_run.R:78-80 sha=7a58b9e116 | if (!is.numeric(grid) || length(grid) < 2 || any(!is.finite(grid))) stop("grid must be a finite numeric vector
+OK            [PROOF.md] v3_calib.R:186-186 sha=c077797a2f | out$frozen <- v3_frozen(last$grid, tier = e, N = N, L = last$settings$L, inherited = ex$inherited, budgets = s
+OK            [PROOF.md] v3_run.R:225-225 sha=df235c8d7a | v3_check_grid(frozen[["grid"]]); v3_check_seed(seed)
+OK            [PROOF.md] v3_calib.R:164-164 sha=27a2a1425a | isTRUE(tryCatch(v3_check_grid(last$fallback_grid$grid), error = function(err) FALSE))) {
+OK            [PROOF.md] v3_run.R:224-224 sha=ee64b727c4 | stopifnot(inherits(setup, "v3_setup"), inherits(frozen, "v3_frozen"))
+OK            [PROOF.md] cpp/v3_core.cpp:18-18 sha=cb5fa3fa29 | stop("object has no C++ pointer (ptr)");
+OK            [PROOF.md] cpp/v3_core.cpp:102-102 sha=98f64b3a8a | return List::create(_["ptr"] = ptr, _["G"] = G, _["z"] = NumericVector(D.z.begin(), D.z.end()), _["yty"] = D.y
+OK            [PROOF.md] cpp/v3_core.cpp:396-404 sha=5a3ceee21f | o.N = as<int>(ro["N"]); o.L = as<int>(ro["L"]); o.Hm = as<int>(ro["measured_rounds"]); o.islands = as<int>(ro[
+OK            [PROOF.md] cpp/v3_core.cpp:436-439 sha=6e0d5cfdf9 | EventCtx e; e.phase = phase_index(as<std::string>(pv["phase"])); e.tier = as<int>(pv["tier"]); e.island = as<i
+OK            [PROOF.md] cpp/v3_core.cpp:494-494 sha=9550ffb02b | double F = as<double>(hp["F"]);
+OK            [PROOF.md] cpp/v3_core.cpp:499-503 sha=fb4b037a3b | EventCtx ev; ev.phase = phase_index(as<std::string>(pv["phase"])); ev.tier = as<int>(pv["tier"]); ev.island = 
+OK            [PROOF.md] v3_run.R:90-102 sha=084810f924 | ro <- list(N = as.integer(b$tiers$N[tier + 1]), L = as.integer(b$L), measured_rounds = 4L,
+OK            [PROOF.md] cpp/v3_core.cpp:624-624 sha=44c5eb3d90 | CPtr c(state); const Data& D = *c->h->D;
+OK            [PROOF.md] cpp/v3_core.cpp:658-658 sha=44c5eb3d90 | CPtr c(state); const Data& D = *c->h->D;
+OK            [PROOF.md] cpp/v3_core.cpp:704-704 sha=b366767719 | CPtr c(state); const Data& D = *c->h->D; const Start& st = *c->h->st;
+OK            [PROOF.md] cpp/v3_core.cpp:729-729 sha=44c5eb3d90 | CPtr c(state); const Data& D = *c->h->D;
+OK            [PROOF.md] v3_run.R:50-64 sha=1e6908175a | v3_stage_table <- function(islands, rho = NULL, grid_label = NA_character_) {
+OK            [PROOF.md] v3_fit.R:163-163 sha=3ad4a29dbc | fr$stage_table <- v3_bind_records(list(cal$stage_table, fr$stage_table))
+OK            [PROOF.md] cpp/v3_runtime.h:29-31 sha=4a19f20906 | inline RuntimeGuard* runtime_ptr(SEXP x) {
+OK            [PROOF.md] cpp/v3_core.cpp:411-411 sha=91e5ffe715 | E.cache = &cache; E.led = &led; E.guard = runtime_ptr(runtime);
+OK            [PROOF.md] cpp/v3_core.cpp:609-609 sha=bf5696a12c | c->guard = runtime_ptr(runtime); c->runtime_keep = runtime;
+OK            [PROOF.md] cpp/v3_core.cpp:771-771 sha=4ccafb04f1 | RuntimeGuard* g = runtime_ptr(runtime);
+OK            [PROOF.md] cpp/v3_core.cpp:778-778 sha=4ccafb04f1 | RuntimeGuard* g = runtime_ptr(runtime);
+OK            [PROOF.md] cpp/v3_core.cpp:610-610 sha=0d70e658ec | c->cache.init(D.W, (size_t)as<double>(ro["cache_capacity"]));
+OK            [PROOF.md] v3_calib.R:147-147 sha=10233b0ddf | ro <- list(cache_capacity = as.numeric(500 * setup$ctx$p))
+OK            [PROOF.md] v3_calib.R:6-6 sha=ede1a63d9f | .v3cpp$cpp_build_grid(as.numeric(logg0_V), as.numeric(d_V), as.numeric(pilot_temps), as.integer(T_e))
+OK            [PROOF.md] v3_calib.R:44-44 sha=68180ef120 | pil <- .v3cpp$cpp_cal_pilot(state, tier, cs$H, cs$T_e, cs$L, cs$Hm, cs$ell)
+OK            [PROOF.md] v3_calib.R:86-86 sha=37949abc08 | dg <- .v3cpp$cpp_cal_diag(state, tier, g$grid, cs$H, cs$L, cs$Hm, cs$ell, it)
+OK            [PROOF.md] v3_run.R:159-159 sha=28b2f84ebc | P <- do.call(cbind, lapply(isl, function(r) r$pip))
+OK            [PROOF.md] v3_run.R:164-168 sha=d87633a7a0 | out$terminal_table <- do.call(rbind, lapply(seq_len(R), function(r) {
+OK            [PROOF.md] cpp/v3_start.h:272-272 sha=7a6fb31f17 | if (tie_dp && cap < 2) throw std::invalid_argument("start_mode: the e4 tie-aware fallback requires cap >= 2 (C
+OK            [PROOF.md] cpp/v3_core.cpp:469-469 sha=35f7274942 | ModeResult m = start_mode(st, 1000000, o.ls0_tie_dp);
+OK            [PROOF.md] cpp/v3_start.h:261-261 sha=9334c5c245 | if (dp.kbest < 0 || !feasible()) throw std::runtime_error("start_mode tie DP: no tight path from (J, kbest) (i
+OK            [PROOF.md] Theory_work/Wave1C/C-DLV/INVENTORY.md:83-93 sha=21f8c0bbef | ## X′. ERRATUM (2026-11-16; HQ D78; precedent R02 #5 `nth_nonmember`, added to L2 S.3's X2 list after R02)
+OK            [PROOF.md] cpp/v3_core.cpp:92-92 sha=e7fbc12288 | int n = X.nrow(), p = X.ncol();
+OK            [PROOF.md] v3_run.R:95-97 sha=75c7ca43aa | le <- getOption("v3.ls0_ell", b$ell)   # testing override of the LS0 base cap (R05 #2: validated)
+OK            [PROOF.md] v3_preprocess.R:15-15 sha=e2818be336 | v3_ceil_log2 <- function(x) { c <- 0; while (2^c < x) c <- c + 1; c }   # smallest c with 2^c >= x
+OK            [PROOF.md] v3_preprocess.R:23-23 sha=88bf884342 | ell <- v3_ceil_log2(n + p + 1)
+OK            [PROOF.md] v3_preprocess.R:20-20 sha=07654cb9af | n <- as.numeric(n); p <- as.numeric(p)
+OK            [PROOF.md] cpp/v3_core.cpp:473-474 sha=16c5ae9e75 | long long cap_ll = (long long)o.ls0_ell + (o.ls0_cap_plus_mode ? (long long)m.S.size() : 0LL);  // checked (R0
+OK            [PROOF.md] cpp/v3_core.cpp:402-402 sha=6520e449d4 | o.ls0_ell = ro.containsElementNamed("ls0_ell") ? as<int>(ro["ls0_ell"]) : o.ell;
+OK            [PROOF.md] cpp/v3_score.h:40-40 sha=3b222c88d0 | D.n = n; D.p = p; D.K = std::min(p, n / 2); D.W = nwords(p);
+OK            [PROOF.md] cpp/v3_blocks.h:49-49 sha=1e31b90f7b | T.left.assign(2 * p - 1, -1); T.right.assign(2 * p - 1, -1); T.size.assign(2 * p - 1, 1); T.minidx.assign(2 * 
+OK            [PROOF.md] v3_calib.R:122-125 sha=4501bbf810 | if (isTRUE(grid_fallback) && trig$grid_failure && tier == 1) {   # tier 0 failures escalate as in v3
+OK            [PROOF.md] v3_calib.R:163-169 sha=c7cee29631 | if (status == "ok" && is.null(last$grid) && e == 1 && isTRUE(grid_fallback) && !is.null(last$fallback_grid) &&
+OK            [PROOF.md] v3_calib.R:170-170 sha=0afbed03df | if (status == "ok" && is.null(last$grid)) status <- if (e == 1) "schedule_limit" else "grid_failure_no_escalat
+OK            [PROOF.md] cpp/v3_core.cpp:636-636 sha=6516277c83 | std::vector<double> sched{0.0}; sched.insert(sched.end(), res.phi.begin(), res.phi.end());
+OK            [PROOF.md] cpp/v3_calib.h:30-46 sha=1101193d76 | inline NextPhi pilot_next_phi(const std::vector<double>& d, double phi, double H, int Te) {
+OK            [PROOF.md] cpp/v3_engine.h:310-310 sha=93ce25565d | if (phi_prev == 1.0) break;
+
+183 citations: 183 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+Not machine-checked: unbackticked references and the semantic match of each excerpt.

@@ -1,0 +1,52 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{natbib}
+\usepackage{float}
+\usepackage{amssymb}
+\usepackage{../shared/smcbvs}
+\bibliographystyle{abbrvnat}
+\setcitestyle{authoryear,round}
+\linespread{1.06}
+\setlength{\emergencystretch}{2em}
+\newcommand{\samplerconds}{two results on the coded sampler (each island realises the frozen run of the theory, and conditioning on the frozen
+calibration preserves its identities), themselves proved under their named premises and independently checked}
+% "Why it matters" line, and the list of assumptions with the place where each is judged.
+\newcommand{\why}[1]{\par\noindent\textit{Why it matters.} #1\par\smallskip}
+\newcommand{\asmlist}[1]{\par\smallskip\noindent{\small\textit{Assumptions, and where they are judged.} #1}\par\smallskip}
+\newcommand{\SA}[1]{Assumptions~\S#1}
+
+\title{What we prove: consistency of the SMC-BVS method}
+\author{SMC-BVS project}
+\date{Draft v2.1 (statuses as frozen at \texttt{theory-v2026-11-freeze}), \today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+We prove five things about the SMC-BVS method, a sequential Monte Carlo method for Bayesian variable selection in the
+linear model, with the prior exactly as the software sets it. The posterior finds the true model, and it finds the true
+distribution of the response. The software, as coded, reports the true model. Its evidence estimate is unbiased on every
+design, and, on designs without leakage and on the event that its calibration succeeds, its printed estimates are
+consistent (no claim is made about how likely that event is). The rate of the first result cannot be
+improved. The results are asymptotic in the sample size $n$ and allow many more predictors than observations.
+The section ``Are the assumptions reasonable?'' (cited below as ``Assumptions~\S\,$x$'') judges every assumption used here.
+\end{abstract}
+
+\input{sections/s1_results}
+\input{sections/s2_setting}
+\input{sections/s3_model}
+\input{sections/s4_distribution}
+\input{sections/s5_reported}
+\input{sections/s6_estimates}
+
+\bibliography{../shared/refs}
+
+\appendix
+\input{sections/supplement}
+\input{sections/appendices}
+
+\end{document}

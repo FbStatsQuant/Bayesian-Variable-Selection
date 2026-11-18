@@ -1,0 +1,11 @@
+# External inputs of W3-D2 (premise sources and inherited proof files cited by STATEMENT and PROOF); no registry files
+Theory_work/Wave3/W3-MISR-R/STATEMENT.md
+Theory_work/Wave3/W3-MISR-R/lemmas/G2_corr.md
+Theory_work/Wave3/W3-MISR-R/lemmas/G1_min.md
+Theory_work/Wave3/W3-MISR/STATEMENT.md
+Theory_work/Wave3/W3-POST/STATEMENT.md
+Theory_work/Wave3/W3-READER/lemmas/R1_set_sizes.md
+Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+Theory_work/Wave3/W3-READER/NOTATION.md
+Theory_work/Wave3/W3-READER/CLAIMS_CARD.md
+Theory_work/Wave2/W2-APP/lemmas/L1_POST.md

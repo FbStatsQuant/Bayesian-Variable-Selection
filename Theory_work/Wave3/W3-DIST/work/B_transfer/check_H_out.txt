@@ -1,0 +1,5 @@
+[1] max |closed-form affinity - quadrature| over 200 cases: 2.63e-12
+[2] max (H^2 - bound) on grid (r in [e^-6,e^6], Delta in [0,e^4], w in {0.1,1,7}): 0.000e+00  (must be <= 0)
+[3] dropped true column present: True; n^-1 sum Delta_i^2 = 5.649634079575; eps_bar^2 + |muhat-mu|^2/n = 5.649634079575; diff 1.8e-15
+    max |Delta - (eps_bar 1 + muhat - mu)| = 3.6e-15
+    coefficient of x_2 in Delta(x): b_2 - beta_2 = 2.000 (nonzero: the dropped column matters out of sample)

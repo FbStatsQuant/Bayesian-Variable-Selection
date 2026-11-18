@@ -1,0 +1,23 @@
+ERRATUM (no statement change intended; IDEAL-W⁺ batch, HQ D78, 2026-11-16) — Theory_work/Wave1C/C-DLV/INVENTORY.md
+diff --git a/Theory_work/Wave1C/C-DLV/INVENTORY.md b/Theory_work/Wave1C/C-DLV/INVENTORY.md
+--- a/Theory_work/Wave1C/C-DLV/INVENTORY.md
++++ b/Theory_work/Wave1C/C-DLV/INVENTORY.md
+@@ -77,5 +77,17 @@
+ | G4 | stacking R′ = 4k, extra c₄ search, workers/merge | SoP/02_method.tex:365-385, :392-401 | (a) per R′ declared |
+ 
+ ## Summary
+-Under (d)-premises EX-A, IDEAL-W, MACH and valid declared inputs, every path except D1 is either impossible
++Under (d)-premises EX-A, IDEAL-W, MACH and valid declared inputs, and after additionally excluding the shipped LS0 cap validators X7–X8 by A:IDEAL-W⁺ or on 𝔇 (ERRATUM 2026-11-16, section X′ below), every path except D1 is either impossible
+ (P = 0 or unreachable) or deterministic resource use; D1 (`schedule_limit`) is the only random no-output path.
++
++## X′. ERRATUM (2026-11-16; HQ D78; precedent R02 #5 `nth_nonmember`, added to L2 S.3's X2 list after R02)
++Two stops on the current `v3_fit` call graph (main 4676af6; when this inventory was written LS0 was spec-only, section G) end the fit without a fit object and are excluded neither by IDEAL-W (an overflow premise, `STATEMENT.md:24-25`) nor by an internal invariant (Sol review TR1, `Theory_work/Dept/research/FUNI_transfer/TR1_sol.md` §1). They are not in the method of this ticket (`STATEMENT.md` §0: v3.1 + LS0 as specified, LS0 cap ℓ_n), so its claims are unchanged; claims about the shipped LS0 must exclude them.
++
++| # | path | trigger | code | class |
++|---|---|---|---|---|
++| X7 | R error `option v3.ls0_ell must be a whole number in [0, 1e6]` (LS0 base-cap validator in the final-run settings, before `cpp_final_run`) | le > 10⁶, where le = ℓ_n = ⌈log₂(n + p + 1)⌉ by default: n + p ≥ 2^(10⁶) on the SMC branch with LS0 on | core/v3_run.R:95-97 | (d) **A:IDEAL-W⁺** (this predicate is false), or the bounded domain 𝔇 (ℓ_raw ≤ 10⁶); deterministic in (n, p) |
++| X8 | C++ `stop("LS0 move cap out of range")` (LS0 cap-range guard) | cap_ll = ls0_ell + \|S̃₀\| > numeric_limits<int>::max() = 2³¹ − 1 under the merged cap `ell_n_plus_mode` (under the legacy cap `ell_n`, cap_ll = ℓ_n ≤ 10⁶ once X7 passes) | core/cpp/v3_core.cpp:473-474 | (d) **A:IDEAL-W⁺** (this disjunct is false), or 𝔇 (ℓ_raw + ⌊n/2⌋ ≤ 2³¹ − 1, since \|S̃₀\| ≤ K ≤ ⌊n/2⌋); data-dependent through \|S̃₀\| |
++
++Neither is reached on the exact-enumeration branch. G3's 10⁶-maximiser enumeration cap is a different, non-stopping cap. 𝔇 := {(n, p_raw): ℓ_raw ≤ 10⁶ and ℓ_raw + ⌊n/2⌋ ≤ 2³¹ − 1}, ℓ_raw := ⌈log₂(n + p_raw + 1)⌉ (sufficient, not necessary). Definition (verbatim; registered assumption A:IDEAL-W⁺):
++
++**A:IDEAL-W⁺ (IDEAL-W with the two LS0 cap ceilings lifted).** IDEAL-W, exactly as defined in C-DLV `STATEMENT.md:24-25`, and the two shipped rejection predicates `le > 10⁶` (`Scripts/SMC_BVS/core/v3_run.R:96`, the LS0 base-cap validator; le = ℓ_n = ⌈log₂(n + p + 1)⌉ in the shipped configuration) and `ℓ + |S̃₀| > INT_MAX` (`Scripts/SMC_BVS/core/cpp/v3_core.cpp:474`, the disjunct `cap_ll > numeric_limits<int>::max()` of the LS0 cap-range guard, `int` read as unbounded) are false. Nothing else is lifted: the other conditions of those two validators (numeric type, length, finiteness, integrality, `le < 0`, `o.ls0_ell < 0`), every other validator, the 10⁶-maximiser start-mode enumeration cap with its tie-aware DP fallback, and every fallback and method cap are kept as coded. Like IDEAL-W and EX-A, A:IDEAL-W⁺ is an idealisation of the machine and code; a larger allocation does not imply it.

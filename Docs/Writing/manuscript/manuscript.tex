@@ -1,0 +1,84 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{natbib}
+\usepackage{float}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit}
+\usepackage{../shared/smcbvs}
+\bibliographystyle{abbrvnat}
+\setcitestyle{authoryear,round}
+\linespread{1.06}
+\renewcommand{\topfraction}{0.95}\renewcommand{\textfraction}{0.05}\renewcommand{\floatpagefraction}{0.75}
+\setlength{\emergencystretch}{3em}
+\usepackage{url}
+\makeatletter\g@addto@macro\UrlBreaks{\do\_\do\-\do\:}\makeatother
+\urlstyle{tt}
+\DeclareUrlCommand\code{}
+\newcommand{\Nc}{N^{\mathrm c}}          % calibration particles
+\newcommand{\grid}[1]{\xi_{[#1]}}        % temperatures of the grid
+\newcommand{\Lbi}{L_{\mathrm{bi}}}       % burn-in rounds
+\newcommand{\Ts}{T_{\mathrm s}}          % number of steps
+\newcommand{\Tmax}{T^{\max}}             % step ceiling
+\newcommand{\grouprow}[1]{\midrule\multicolumn{6}{@{}l}{\textbf{#1}}\\}
+\newcommand{\why}[1]{\par\noindent\textit{Why it matters.} #1\par\smallskip}
+\newcommand{\scope}[1]{\par\noindent{\small\textit{Scope.} #1}\par\smallskip}
+\newcommand{\asmlist}[1]{\par\smallskip\noindent{\small\textit{Assumptions.} #1}\par\smallskip}
+\newcommand{\samplerconds}{two results on the coded sampler (each island realises the frozen run of the theory, and
+conditioning on the frozen calibration preserves its identities), themselves proved under their named premises and
+independently checked}
+% assumptions-section paragraph heads
+\newcommand{\SA}[1]{\S\ref{sec:a-#1}}
+\makeatletter\defasm{SGR}{SG}\makeatother
+\newcommand{\lab}[1]{\textup{(\asmdisp{#1})}}
+\newcommand{\SL}{Song and Liang}
+\newcommand{\ahead}[3]{\par\smallskip\noindent\textbf{#1} #2. #3\par}
+\newcommand{\ev}[1]{\noindent\emph{Evidence.} #1\par}
+\newcommand{\ro}[1]{\noindent\emph{Rules out.} #1\par}
+\newcommand{\pr}[1]{\noindent\emph{Precedents.} #1\par}
+\newcommand{\ds}[1]{\noindent\emph{Our designs.} #1\par}
+\newcommand{\tu}[1]{\noindent\emph{A typical user.} #1\par}
+\newcommand{\yes}{$\bullet$}\newcommand{\no}{$\circ$}\newcommand{\unc}{?}\newcommand{\na}{--}
+
+\title{Consistency of a sequential Monte Carlo method for Bayesian variable selection, as implemented}
+\author{SMC-BVS project}
+\date{Draft, \today}
+
+\makeatletter\@removefromreset{theorem}{section}\makeatother
+\renewcommand{\thetheorem}{\arabic{theorem}}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+Theory for Bayesian variable selection usually concerns an exact posterior under tuned priors, while users run
+software with fixed defaults and read the output. We study SMC-BVS, a sequential Monte Carlo method for
+variable selection in the Gaussian linear model with more predictors than observations, exactly as its software
+implements it: a fixed beta-binomial and $g$-prior with no tuning, a start law from exactly scored blocks of
+predictors, a tempered sampler on four islands, and two local searches. We prove that the posterior concentrates on the
+true model at the rate $\sqrt{\log n/n}$, a rate attained on two families of designs, and recovers the true conditional distribution of
+the response; that, for block and AR designs whose true coefficients do not cancel (any fixed AR correlation), every run that produces output reports exactly the true model with
+probability tending to one, for every seed; that, without those conditions, a run rarely certifies a small reported model that
+misses a true predictor; and that the evidence estimate is unbiased on every design. We compare every assumption with those of Song and
+Liang (2015) and check it against the designs of our simulation studies: the posterior results cover all,
+strong common factors included.
+\end{abstract}
+
+\input{sections/s1_intro}
+\input{sections/s2_setup}
+\input{sections/s3_method}
+\input{sections/s4_results}
+\input{sections/s5_assumptions}
+\input{sections/s6_scope}
+
+\bibliography{../shared/refs}
+
+\appendix
+\setcounter{theorem}{0}\counterwithin{theorem}{section}
+\input{sections/supplement}
+\input{sections/appendices}
+
+\end{document}

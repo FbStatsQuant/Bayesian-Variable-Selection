@@ -1,0 +1,10 @@
+ERRATUM (no statement change intended; IDEAL-W⁺ batch, HQ D78, 2026-11-16) — Theory_work/Wave1C/C-DLV/lemmas/L2_degenerate.md
+diff --git a/Theory_work/Wave1C/C-DLV/lemmas/L2_degenerate.md b/Theory_work/Wave1C/C-DLV/lemmas/L2_degenerate.md
+--- a/Theory_work/Wave1C/C-DLV/lemmas/L2_degenerate.md
++++ b/Theory_work/Wave1C/C-DLV/lemmas/L2_degenerate.md
+@@ -68,3 +68,5 @@
+ 
+ ## S.4 Consequence
+ On the classes, with n ≥ 3 and under EX-A and IDEAL-W: P(A1 ∪ … ∪ A7 ∪ C1 ∪ … ∪ C5 ∪ D2 ∪ X2) = 0.
++
++**ERRATUM (2026-11-16; HQ D78; precedent R02 #5 `nth_nonmember`).** Addition to S.3's X2 list, kept here so that the registered span `:37-67` is unchanged: (viii) the LS0 base-cap validator `le > 1e6` (`v3_run.R:96-97`, le = ℓ_n) and (ix) the LS0 cap-range guard `cap_ll > numeric_limits<int>::max()` (`cpp/v3_core.cpp:474`, cap_ll = ℓ_n + |S̃₀| under the merged cap) are reachable stop sites on the current call graph (main 4676af6) that no internal invariant excludes: they fire on valid inputs of sufficiently large dimension (Sol review TR1, `Theory_work/Dept/research/FUNI_transfer/TR1_sol.md` §1; INVENTORY.md X7–X8). They are excluded by A:IDEAL-W⁺, not by IDEAL-W, or by restricting to 𝔇 := {(n, p_raw): ℓ_raw ≤ 10⁶ and ℓ_raw + ⌊n/2⌋ ≤ 2³¹ − 1}, ℓ_raw := ⌈log₂(n + p_raw + 1)⌉. When S.3 was written LS0 was specified, not shipped, so these sites were not on the audited call graph. S.4's union does not contain them and is unchanged; a delivery argument about the shipped LS0 that walks every exit must exclude them separately (A:IDEAL-W⁺ is defined verbatim in INVENTORY.md section X′).

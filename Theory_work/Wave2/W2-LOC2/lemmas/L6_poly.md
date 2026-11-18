@@ -104,7 +104,7 @@ of the corresponding principal 2 by 2 submatrix H of B^-1. The eigenvalues
 of H are in [1/C,1/c], hence det H>=1/C^2 and
 |S_jk|=|H_jk|/det H<=C^2 |H_jk|. Equation (P1) proves BC.
 For general U, the Schur complement is the inverse of a principal submatrix
-of Sigma^-1, so its spectrum lies in [c,C]; conditional variance is at most
+of (Sigma_{U union V})^-1 (the V-block, V the unconditioned variables; a submatrix of Sigma^-1 only if U union V=[p]), so its spectrum lies in [c,C]; conditional variance is at most
 the marginal variance 1. This is the same block-inverse/Rayleigh argument
 as `APP/lemmas/L2_CT.md:55`, independent of the decay assumption. QED.
 

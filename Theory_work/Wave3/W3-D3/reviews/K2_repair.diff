@@ -1,0 +1,90 @@
+diff --git a/Theory_work/Wave3/W3-D3/REPORT.md b/Theory_work/Wave3/W3-D3/REPORT.md
+index 0bed775d..9392cf65 100644
+--- a/Theory_work/Wave3/W3-D3/REPORT.md
++++ b/Theory_work/Wave3/W3-D3/REPORT.md
+@@ -43,7 +43,8 @@ once the three claims are recorded PROVED-CHECKED.
+ Statement lock L1 (Sol, NORMAL): `reviews/L1_statement_lock_sol.md`, disposition `reviews/L1_disposition.md`.
+ Line check K1 (Opus 5.5 high, blind, claudeAgent_personal; with the statement-change check v1.0 → v1.1):
+ `reviews/K1_linecheck_opus.md` (VERIFIED-WITH-AMENDMENTS; 1 C minor, 2 S, 1 F, 8 E), disposition `reviews/K1_disposition.md`.
+-Re-check K2 (Opus, new agent): `reviews/K2_recheck_opus.md`.
++Re-check K2 (Opus, new agent): `reviews/K2_recheck_opus.md` (RESOLVED-WITH-AMENDMENTS; 2 S, 4 E), disposition
++`reviews/K2_disposition.md`.
+ Changelog: `STATEMENT.md` §9. DEPS: `DEPS.tsv` (`deps_hand.py`). Citation check: `citecheck.py` → `reviews/CITECHECK.txt`.
+ Numerics: `numerics/N1_window.py` → `numerics/N1_out.txt` (size arithmetic, 1966 cases, 0 violations);
+ `numerics/N2_subgauss_rows.py` → `numerics/N2_out.txt` (exact posteriors, non-Gaussian rows; sanity only).
+@@ -62,8 +63,8 @@ API blind-audit card: `API_CARD.md` (`api_request_build.py`). Council: (filled a
+ REGISTRY
+ claim: W3-D3:B3w | kind: lemma | statement: STATEMENT.md:59-79 | premises: STATEMENT.md:23-39 ; STATEMENT.md:41-57
+ status: PROVED (by this seat, unchecked) | status_source: lemmas/B3w.md:3
+-assumptions: A:GAUSS-NOISE ; A:P-POLY ; A:FIXED-S0 ; A:COEF-BOUNDED ; A:POP-FLOOR-5LOG (new | fixed population sparse eigenvalue floor on logarithmic sets | lambda_min(Sigma_n,S) >= phi^2 for every S of size at most 5(A+1)(s0+1) log n, fixed phi in (0,1], Sigma_n a correlation matrix | STATEMENT.md:41-57 | shared no | bridge W3-D3:B3w) ; A:SUBG-SPARSE-ROWS (new | sub-Gaussian predictors on sparse directions | E exp(lambda u'(x - m_n)) <= exp(L^2 lambda^2 u' Sigma_n u / 2) for every u with at most 5(A+1)(s0+1) log n nonzero entries, fixed L | STATEMENT.md:41-57 | shared no | bridge W3-D3:B3w)
+-conclusion: posterior: random-design interface events of W3-POST Theorem 1 item 6; on E1 and E2(q_n) (probability >= 1 - 4p e^{-c1 n/L^4} - e^{-c2 n/L^4}) no column is constant and (E; M_E), (F_lambda; phi^2/4), (F_w; phi^2/8), BM-inf with envelope b_lo^2 n phi^2/(8 sigma^2 log n) hold; completed-pair (X, theta)-measurable events | rate: n/a | scope: iid rows with correlation-matrix covariance, (A1)-(A4), n >= n1(s0, A, L)
++assumptions: A:GAUSS-NOISE ; A:P-POLY ; A:FIXED-S0 ; A:COEF-BOUNDED ; A:POP-FLOOR-5LOG (new | fixed population sparse eigenvalue floor on logarithmic sets | lambda_min(Sigma_n,S) >= phi^2 for every S of size at most 5(A+1)(s0+1) log n, fixed phi in (0,1], Sigma_n a correlation matrix | STATEMENT.md:41-57 | shared no | bridge W3-D3:B3w) ; A:SUBG-SPARSE-ROWS (new | sub-Gaussian predictors on sparse directions | E exp(lambda u'(x - m_n)) <= exp(L^2 lambda^2 u' Sigma_n u / 2) for every u with at most 5(A+1)(s0+1) log n nonzero entries, fixed L; variant of A:DIST-A3 on the window 5(A+1)(s0+1) log n | STATEMENT.md:41-57 | shared no | bridge W3-D3:B3w)
++conclusion: posterior: random-design interface events of W3-POST Theorem 1 item 6; on E1 and E2(q_n) (probability >= 1 - 4p e^{-c1 n/L^4} - e^{-c2 n/L^4}) no column is constant and (E; M_E), (F_lambda; phi0^2 = phi^2/4), (F_w; g0 = phi^2/8), BM-inf with envelope b_lo^2 n phi^2/(8 sigma^2 log n) hold; (X°, θ°)-measurable events A'_n ⊇ A_n of the completed pair on which the hypotheses of W3-POST Theorem 1 item 6 hold (regime R1) | rate: n/a | scope: iid rows with correlation-matrix covariance, (A1)-(A4), n >= n1(s0, A, L)
+ depends_on: W3-DIST:B0@stmt ; W3-DIST:B1@stmt ; W3-DIST:B2core@stmt ; W3-DIST:B2@proof:part-(a) ; W3-DIST:B3@proof:template-Steps-1-6-and-A-2 ; W3-READER:R1@proof:B1.2-B1.3
+ implies:
+ 
+diff --git a/Theory_work/Wave3/W3-D3/STATEMENT.md b/Theory_work/Wave3/W3-D3/STATEMENT.md
+index ea29285d..f1f15fa9 100644
+--- a/Theory_work/Wave3/W3-D3/STATEMENT.md
++++ b/Theory_work/Wave3/W3-D3/STATEMENT.md
+@@ -188,6 +188,6 @@ HQ's decision). Status: every input is PROVED-CHECKED (§6).
+ | 1.1 | §3 ExSG: B for the mixing matrix; **part (b) bounded features, L = K (Hoeffding)** | **STRONGER** on the companion claim ExSG (an added conclusion; Theorem 2SG unchanged) | support for HQ's 2b sentence [Q2] | HQ ruling via manager | statement-change check (pending; Opus diff round) |
+ | 1.1 | §5 HQ class-1 and 2b wording; NH14 "journal version not checked" | EQUAL (outside spans) | HQ ruling [Q1], [Q2] | HQ ruling | — |
+ | 1.1 | §2 bookkeeping (n₁ ≥ max(3, 2s₀), 𝓔₂(q_n) for 𝓔₂(w_n), p_ret in m♯_n, θ̃*); §4 (a), (b), (d); §6; §7; §8 [K1-7] | EQUAL (equal events and objects on 𝒜_n / outside spans; consumed scope narrowed to items 1–3) | L1, Q2 | K1-7 | `reviews/K1_linecheck_opus.md` |
+-| 1.2 | §2 (c): θ⁰ with supp θ⁰ = S₀ (supp θ° = S₀ on every outcome); "and so" replaced by the explicit appeal to (b) and R1; the measurability remark moved to §4 (f) | EQUAL (the v1.1 conclusion with an arbitrary θ⁰ was stated for supp θ°; the proof's intended object is S₀, and the two agree on {p_ret = p}) | [K1-1], [K1-3], [K1-11] | K1 | diff round (pending) |
+-| 1.2 | §1 (A3): the recorded parenthetical "(for instance, λ_min(Σ_n) ≥ φ²)" restored | EQUAL (an example, not a condition) | [K1-10] | K1 | diff round (pending) |
++| 1.2 | §2 (c): θ⁰ with supp θ⁰ = S₀ (supp θ° = S₀ on every outcome); "and so" replaced by the explicit appeal to (b) and R1; the measurability remark moved to §4 (f) | EQUAL for Theorem 2SG (the v1.1 conclusion with an arbitrary θ⁰ was stated for supp θ°; the proof's intended object is S₀, and the two agree on {p_ret = p}); on the companion claim B3w (c) the completion is specialised (supp θ⁰ = S₀ instead of any support of size s₀): **WEAKER in form, EQUAL in use** (ASSEMBLY needs one completion; the broader v1.1 completion is no longer claimed); 𝒜′_n drops '|supp θ°| = s₀', now automatic [K2-4] | [K1-1], [K1-3], [K1-11] | K1, K2 | `reviews/K2_recheck_opus.md` (tag per K2-4) |
++| 1.2 | §1 (A3): the recorded parenthetical "(for instance, λ_min(Σ_n) ≥ φ²)" restored | EQUAL (an example, not a condition) | [K1-10] | K1 | `reviews/K2_recheck_opus.md`: CONFIRMED |
+ | 1.2 | §5, §6 (outside spans): off-main paths written as plain text; B3 status quoted in full; Condition-1 example note; "qualify" glossed | EQUAL (outside spans) | [K1-9], [K1-12], citecheck | K1, lead | — |
+diff --git a/Theory_work/Wave3/W3-D3/lemmas/ASSEMBLY.md b/Theory_work/Wave3/W3-D3/lemmas/ASSEMBLY.md
+index d5822d7e..8dcb8652 100644
+--- a/Theory_work/Wave3/W3-D3/lemmas/ASSEMBLY.md
++++ b/Theory_work/Wave3/W3-D3/lemmas/ASSEMBLY.md
+@@ -1,7 +1,7 @@
+ # ASSEMBLY — Theorem 2SG from Lemma B3w and W3-POST Theorem 1 item 6; Proposition ExSG
+ 
+ **Status: PROVED (by this seat, unchecked).** Ticket W3-D3 (Tier B). Targets: `STATEMENT.md` §1 (Theorem 2SG) and §3
+-(Proposition ExSG), v1.1 (symbols per [L1-1]: L = sub-Gaussian constant, K_cap = min(p_ret, ⌊n/2⌋)).
++(Proposition ExSG), v1.2 [K2-2] (symbols per [L1-1]: L = sub-Gaussian constant, K_cap = min(p_ret, ⌊n/2⌋)).
+ 
+ Aliases: [EB] = `Theory_work/Wave3/W3-DIST/work/E_bridges/`; [W3P] = `Theory_work/Wave3/W3-POST/STATEMENT.md`.
+ 
+diff --git a/Theory_work/Wave3/W3-D3/lemmas/B3w.md b/Theory_work/Wave3/W3-D3/lemmas/B3w.md
+index 38ec9ca1..e4d33b96 100644
+--- a/Theory_work/Wave3/W3-D3/lemmas/B3w.md
++++ b/Theory_work/Wave3/W3-D3/lemmas/B3w.md
+@@ -31,10 +31,10 @@ is O((log n)²)). For n ≥ n₁:
+     (iv) (F_w; g₀) of [W3P] `:71-73`: λ_min(X_{S₀∪J}ᵀX_{S₀∪J}) ≥ g₀ for every J ⊆ [p]∖S₀ with |J| ≤ m♯_n;
+     (v) BM-∞ with a common deterministic envelope: θ̃*²_min nφ₀²/log n ≥ M_n, and M_n → ∞.
+ (b) P(𝒜_nᶜ) ≤ 4p·e^{−c₁n/L⁴} + e^{−c₂n/L⁴} ≤ 5n^A e^{−c₂n/L⁴} → 0 (c₁ = 1/576).
+-(c) [L1-2] (Interface.) Let (X°, θ°) be the completed pair of Step 6 ((X, θ̃*) on {p_ret = p}; a fixed deterministic
+-    centred standardised n × p matrix with a fixed truth of support size s₀ otherwise), and 𝒜′_n the set of outcomes on which
+-    (X°, θ°) satisfies |supp θ°| = s₀, ‖X°θ°‖² ≤ nM_E, (F_λ; φ₀), (F_w; g₀) (m♯_n computed from (n, p, s₀)) and
+-    θ°²_min nφ₀²/log n ≥ M_n. Then 𝒜′_n is (X°, θ°)-measurable, 𝒜_n ⊆ 𝒜′_n ∩ {p_ret = p}, ε is independent of (X°, θ°), and
++(c) [L1-2] (Interface.) Let (X°, θ°) be the completed pair of Step 6 ((X, θ̃*) on {p_ret = p}; outside it a fixed
++    deterministic centred standardised n × p matrix with a fixed truth θ⁰ with supp θ⁰ = S₀ [K1-1], [K2-1]). Then
++    supp θ° = S₀ on every outcome. Let 𝒜′_n be the set of outcomes on which (X°, θ°) satisfies ‖X°θ°‖² ≤ nM_E, (F_λ; φ₀),
++    (F_w; g₀) (m♯_n computed from (n, p, s₀)) and θ°²_min nφ₀²/log n ≥ M_n. Then 𝒜′_n is (X°, θ°)-measurable, 𝒜_n ⊆ 𝒜′_n ∩ {p_ret = p}, ε is independent of (X°, θ°), and
+     the hypotheses of [W3P] Theorem 1 item 6 (`:95-100`) hold for (X°, θ°, ε/σ*) in regime R1 with the events 𝒜′_n, the
+     common constants (M_E, φ₀, g₀) and the common envelope M_n. (𝒜_n need not be (X, θ̃*)-measurable; it is used only
+     for its probability, P(𝒜′_nᶜ) ≤ P(𝒜_nᶜ).)
+@@ -71,7 +71,7 @@ Also W̄_n ≥ 1, so (A4) contains every u = e_j, and W̄_n ≥ |S₀| = s₀.
+ 
+ **Step 1 [R-6] (the hypotheses of B1 and B2-core).** Put z := x − m_n, z_i := x_i − m_n. Then E z = 0, Var(z_j) = Σ_{n,jj} = 1,
+ Γ := E zzᵀ = Σ_n, Var(uᵀz) = uᵀΣ_nu, and z_j = (x_j − E x_j)/sd(x_j). (A4) with u = e_j (one nonzero entry ≤ W̄_n) is (SG₁) of
+-B1 with the same K. (A4) restricted to u with at most q_n ≤ W̄_n nonzero entries is (SG_{q_n}) of B2-core with K := L. For n ≥ n₁:
++B1 with K := L [K2-3]. (A4) restricted to u with at most q_n ≤ W̄_n nonzero entries is (SG_{q_n}) of B2-core with K := L. For n ≥ n₁:
+ q′ := min(q_n, p) = w_n ≥ 1, and log(ep/w_n) ≤ 1 + log p ≤ 1 + A log n (w_n ≥ 1, p ≤ n^A), so
+ w_n log(ep/w_n) ≤ W̄_n(1 + A log n) ≤ c₂n/L⁴, which is B2-core's size condition. ∎
+ 
+@@ -103,8 +103,8 @@ fixed, G) with ε independent of (X, θ*), the design being n × p with p fixed
+ (B3 amendment A-2): off {p_ret = p} the standardised design X has p_ret ≠ p columns (p_ret may be 0 or 1 for discrete rows),
+ and 𝓔₁ (scale ratios of null columns) is not determined by (X, θ̃*) since standardisation discards the sample scales.
+ *Completion.* Fix, for each n, a deterministic n × p matrix X⁰ with centred columns of squared norm n − 1 and a deterministic
+-θ⁰ ∈ ℝ^p with supp θ⁰ = S₀ (possible: β* is deterministic and |S₀| = s₀ ≤ p; otherwise any choice — the interface
+-conditions need not hold for it) [K1-1]. Put (X°, θ°) := (X, θ̃*) on
++θ⁰ ∈ ℝ^p with supp θ⁰ = S₀ (possible since β* is deterministic and S₀ ⊆ [p]; X⁰ and the nonzero values of θ⁰ are
++otherwise arbitrary, and the interface conditions need not hold for (X⁰, θ⁰)) [K1-1], [K2-6]. Put (X°, θ°) := (X, θ̃*) on
+ {p_ret = p} and (X°, θ°) := (X⁰, θ⁰) on {p_ret ≠ p}. The event {p_ret = p} = ∩_j {column j is not constant} and, on it,
+ (X, θ̃*) are Borel functions of the raw design (centring, division by sample standard deviations, multiplication of β̃*
+ by them); so (X°, θ°) is a Borel function of the raw design, and ε (independent of X^r by (S1)) is independent of it.

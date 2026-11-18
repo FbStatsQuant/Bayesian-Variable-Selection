@@ -1,0 +1,53 @@
+diff --git a/Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/PROOF.md b/Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/PROOF.md
+index 372af5fc..dfe09f1f 100644
+--- a/Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/PROOF.md
++++ b/Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/PROOF.md
+@@ -1,4 +1,4 @@
+-# V1 · Lemma VIS — PROOF v1.4
++# V1 · Lemma VIS — PROOF v1.5
+ 
+ Fix n; Σ = Σ_n is a p × p correlation matrix with c₁₆ > 0 (positive definite in (VIS-a)), W ~ N_p(0, Σ). For U ⊆ [p]
+ write U^c := [p] ∖ U. F1 is applied to positive definite matrices only: to Σ in (VIS-a), and to Σ_V with |V| ≤ 16
+@@ -102,7 +102,12 @@ alignment of (VIS-a) is required only within a block. ∎
+   fail), Toeplitz in both placements (its precision matrix may well be a Stieltjes matrix, which would put the clustered
+   placement under (VIS-a), but this is not proved here), the one-factor designs with the spread (mixed-sign) placement
+   (D10, D12; D14's spread truths lie on B), the three-factor designs D11, D13, D15 (not covered by (VIS-e), which treats
+-  one factor), S5's spread placement, and the FRED-QD-like tiles (D19). B8's s5
++  one factor), S5's spread placement, and the real-data-like designs D18 (riboflavin) and D19 (FRED-QD), both built from
++  one fixed matrix (sub-panels, then block tilings) and so with finitely many local patterns ((VIS-d)(i)). For D18 the
++  finite computation (`Theory_work/Wave3/W3-AUDIT/track_V/reviews/D18/D18_VERDICT.md`): the spread placement has its four
++  truths in four different tiles for p ≥ 16352, so every visibility direction is a coordinate vector and a ≥ 0.1·min_k|θ_k|
++  (up to 5 × 10⁻¹⁴); the clustered placement is effectively on B (a 15-column U gives |Cov| ≤ 6.9 × 10⁻⁹, exact
++  recomputation), like D14, D15. B8's s5
+   and fac2 (aligned truths) are shown inside by B8's own computations — s5 by the M-matrix form of Σ⁻¹, i.e. a (VIS-a)
+   instance; fac2 by an explicit formula for the conditional covariances (`Theory_work/Wave3/W3-AUDIT/TRACK_B.md:222-228`).
+ - Illustration of B (AR(ρ), two truths at distance g, U = ∅, j = k₁): γ = (1, ρ^g), so B ⊇ {θ₁ + ρ^gθ₂ = 0} for each gap g
+diff --git a/Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md b/Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md
+index a09d1174..aaae92fb 100644
+--- a/Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md
++++ b/Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md
+@@ -1,4 +1,4 @@
+-# V1 · Lemma VIS (visibility with a margin uniform in n: a sign route and a generic-position route) — STATEMENT v1.4 (draft; Sol LOCK WITH CHANGES on v1.1, changes applied)
++# V1 · Lemma VIS (visibility with a margin uniform in n: a sign route and a generic-position route) — STATEMENT v1.5 (draft; Sol LOCK WITH CHANGES on v1.1, changes applied)
+ 
+ Track V item V1 (manager 11-17, D112; owner + consultant requirement: a margin **uniform in n**, not "nonzero for almost
+ every β"). Tier B (new lemma; pure linear algebra and topology, no code). **Lean target: yes** (finite-dimensional:
+@@ -67,8 +67,11 @@ n ≥ n₀.
+ ## Not claimed
+ - Anything when ϑ_n approaches B (dist(ϑ_n, B) → 0) or lies on it: there visibility may fail with no margin; this is the
+   case of track C's strong factor with mixed-sign truths (D14, D15: population value 0).
+-- Designs whose local patterns are uncountable without a countable closure of 𝒩 (e.g. irregular or estimated
+-  correlation matrices such as track C's riboflavin-like D18): B may then have interior; no claim.
++- (VIS-c)'s smallness of B when the closure 𝒩 is uncountable. Every design sequence has countably many local patterns
++  (finitely many at each n); only their closure can be uncountable (e.g. local matrices whose entries are dense in an
++  interval), and then B may have interior. (VIS-b) still applies whenever δ > 0. Designs built from one fixed matrix —
++  track C's real-data-like D18 (riboflavin) and D19 (FRED-QD), sub-panels and block tilings of a fixed matrix — have
++  finitely many local patterns and fall under (VIS-d)(i).
+ - Sample-level visibility (Theorem 7 (A3); W3-START2-R (D3); W3-RM2-R (V♭)) and the other hypotheses of Theorems 5, 6, 10.
+ - Avoiding, for each n separately, only that n's hyperplanes (ϑ_n ∉ ∪_{ν∈𝒩_n} ν^⊥, "nonzero for almost every β" at each n)
+   is not enough and is not used: ϑ may then lie on a limit hyperplane ν^⊥, ν ∈ 𝒩 ∖ ∪_n 𝒩_n, where the margin tends to 0.
+@@ -82,3 +85,4 @@ n ≥ n₀.
+ | v1.2 | — (proof only: the false remark "(VIS-a) is a case of (VIS-b)" replaced by the two-route remark with Sol's example; (VIS-0) locality parenthetical) | EQUAL (no clause changed) | VSL1 Sol #1 (C, remark), #2 (E) | `reviews/VSL1_reply_sol.md` | council |
+ | v1.3 | — (proof remark on track C reworded: spread placements are (VIS-b) cases, clustered (VIS-a), three-factor not (VIS-e)); target: n ≥ n₀; B over n ≥ n₀; AR alignment written out; growing equicorrelated blocks in (VIS-d)(i) | EQUAL (no clause changed) / STRONGER ((VIS-d)(i) example) | V-R1 Opus F-1, E-1–E-5 | `reviews/VR1_council_opus.md` | diff round V-R2 (Opus) |
+ | v1.4 | (VIS-b) per-n bound for n ≥ n₀ (𝒩 is formed over n ≥ n₀); ρ_b ∈ [0, 1); AR ρ < 0 parity wording; track C remark completed | WEAKER ((VIS-b) for n ≥ n₀ only, as used) / EQUAL | V-R2 Opus N-1–N-4 | `reviews/VR2_council_opus.md` | diff round V-R3 (Opus) |
++| v1.5 | "Not claimed": the false exclusion of D18 ("uncountable local patterns") replaced — every sequence has countably many patterns; only an uncountable closure 𝒩 escapes (VIS-c); D18, D19 fall under (VIS-d)(i) | STRONGER (scope: D18 covered by (VIS-d)(i)) / correctness of the scope text | HQ API audit V (V:SCOPE REFUTED, 2/2) | `reviews/D18/D18_VERDICT.md` | diff check V-R4 (Opus) |

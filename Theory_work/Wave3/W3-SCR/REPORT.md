@@ -10,48 +10,48 @@ edits, v3.4, not re-scored). The card's theorem is proved (Corollary A1) and str
 
 ## 2. The statement as proved (`STATEMENT.md`, v3.4) and changes vs the card
 
-**Code check first (`CODE_CHECK.md`, CC1-CC6).** `fit$local_certified = TRUE` means: the fit completed (so 𝒪 holds)
-and the **reported HPM Ŝ itself** is a scanned endpoint of the final local search or of LS0 (or, on the enumeration
-branch, the enumerated maximiser) with **no strictly better model among all single deletions, all single additions
-(only when |Ŝ| < K) and all swaps**. `local_certified_by` says which search; `local_limit` (a move cap was hit in
-either search) is *not* its negation. Each search archive also prints its scanned centres with scores, and every
-scanned neighbour reaches the ledger, so F(Ŝ) ≥ F(N) for every neighbour N of every scanned centre (CC6).
+**Pointers only** (PROTOCOL_v4: REPORT restates nothing). Each claim's hypotheses and conclusion are the text at the
+lines cited below (`STATEMENT.md` v3.4 unless another file is named); this section paraphrases none of them.
+Edit of 2026-11-16 (W3-SCR-R2 leg 2, council R2 findings F1-F4): the earlier §2 summaries, which dropped stated
+hypotheses, were replaced by these pointers. Only §2 changed; every line of §3 keeps its text and line number.
 
-**Results** (fixed standardised design, Gaussian errors, exact arithmetic EX-A; no premise on the start mode, leakage,
-blocks, uniforms or calibration; every seed):
-- **SCR-A (screening, non-asymptotic).** If the sparse visibility Γ_n(q) — the noiseless one-step gain of the best
-  missing truth, minimised over all models of size ≤ q missing a truth — satisfies the explicit margin MC(q, x), then
-  with probability ≥ 1 − 3e^{-x} **every** locally optimal model of size ≤ q ≤ K−1 contains S₀. Hence
-  P(𝒪 ∩ {certified} ∩ {|Ŝ| ≤ q} ∩ {S₀ ⊄ Ŝ}) ≤ 3e^{-x}, and the same for every certified search endpoint.
-  Asymptotic form (A∞): it suffices that √Γ_n(q_n) ≥ (1+δ)[τ_n√(2 log p + log n) + σ√(2 q_n log p)].
-- **Corollary A1 = the card.** Sparse eigenvalue floor κ on sets of size q_n + s₀ (or only the weaker directional
-  floor), fixed coefficients (θ_min ≥ b, ‖θ*‖₁ ≤ M), (q_n + 1) log p + log n ≤ c₁n with c₁ = κ²b²/(200(M² + σ²)):
-  the probability → 0. Covers p ≤ n^A with any q_n = o(n/log n), and q_n up to order n/log(p ∨ n).
-- **SCR-A° / A1° (self-normalised).** Each missing truth competes against the residual scale of the model at hand,
-  not the total signal: beta-min θ_min ≥ 16σκ^{-1}√(((q_n+1) log p + log n)/n) suffices (no fixed coefficients).
-- **SCR-M (master gap theorem) and SCR-G (uncertified runs).** On one event of probability ≥ 1 − 4e^{-x}, every model
-  S of a deterministic family that misses a truth has a truth-addition improving F by at least an explicit
-  deterministic gap δ_S; under A1's hypotheses δ_S > c₂n, c₂ = κ²b²/(104(M² + σ²)). Consequences, with probability → 1:
-  (i) every **scanned centre** of size ≤ q_n whose score is within c₂n of the reported score contains S₀ — no
-  certificate needed; (ii) if a search **stops on its move cap**, its returned model contains S₀ whenever its last
-  scanned centre is within c₂n of the best score (so an uncertified reported model can still be covered);
-  (iii) the coded search never drops a truth while sizes stay ≤ q_n. The model-count entropy is replaced by a
-  geometric complexity (Gaussian width of the witness directions).
-- **Excess set and exact recovery.** Lemma L5.1: every locally optimal strict superset of S₀ satisfies an explicit
-  inequality (EC′) in the conditional lengths α(S) and the dual-direction factor ω(S) of its excess columns.
-  **SCR-C:** with s₀ bounded and a floor φ ≥ 2 log p/(2 log p + log n) + ε on supersets of S₀ of size ≤ q_n (for
-  p ≤ n^A: φ ≥ 2A/(2A+1) + ε), a sparse certified model **equals** S₀ with probability → 1.
-- **SCR-R** (least-squares refit on a certified model: prediction error ≤ σ²(√k + √(2k log(ep/k) + 4 log n))², no
-  floor needed) and **SCR-N** (sharpness: just below the threshold τ_n√(2 log p + log n), the empty model is locally
-  optimal with probability → 1 — the constant 1 of (A∞) cannot be lowered at q = 0).
+**Setting and code check.**
+- Model G, score, neighbourhood, certificate, set 𝒞, scanned centres, premise EX-A: STATEMENT.md:12-47.
+- Quantities Γ_n, Ψ_n, T_n, r_n, ϑ°_n, margins MC / MC°, floors φ^a, φ^d, φ: STATEMENT.md:49-75.
+- CC (CC1-CC6, meaning of `local_certified`, `local_certified_by`, `local_limit`, CC6 ledger): CODE_CHECK.md:20-72.
 
-**Changes vs the card** (all strengthenings; the card is Corollary A1): floor on all (q_n+s₀)-sets → visibility /
-directional floor (non-true columns may be arbitrarily collinear); q_n = o(n/log n) → c₁n/log(p ∨ n); fixed
-coefficients → beta-min at rate σ√(𝐋_n/n); reported model only → every certified endpoint **and uncertified runs**;
-"contains S₀" → "= S₀" under a near-orthogonality floor, plus an explicit inequality on the excess set in general.
-**Answers to the brief's questions:** "= S₀ up to a controlled set" — yes in the form (EC′) and SCR-C; no general bound
-on |Ŝ∖S₀| is possible from the certificate alone (reviewers' constructions of locally optimal strict supersets);
-q_n enlarged — yes; floor weakened — yes.
+**Lemmas.**
+- L1 (score algebra): lemmas/L1_score.md:7-82.
+- L2 (probabilistic events): lemmas/L2_noise.md:11-57.
+
+**Results.**
+- SCR-A: STATEMENT.md:79-85.
+- (A∞) (A-inf): STATEMENT.md:87-90.
+- SCR-A° (SCR-Ao): STATEMENT.md:92-95.
+- (A°∞) (Ao-inf): STATEMENT.md:96-101.
+- SCR-M (M1-M6): STATEMENT.md:103-130.
+- SCR-G: STATEMENT.md:132-145.
+- Lemma B (c_θ defined at STATEMENT.md:147-148):
+  - B1: STATEMENT.md:149.
+  - B2: STATEMENT.md:150-151.
+  - B2° (B2o): STATEMENT.md:152-153.
+  - B2d: STATEMENT.md:154.
+  - B3: STATEMENT.md:155.
+- A1 (the card): STATEMENT.md:158-163.
+- A1° (A1o): STATEMENT.md:165-169.
+- SCR-C: STATEMENT.md:171-176.
+- L5.1 (EC′): STATEMENT.md:177-192.
+- L5.2: lemmas/L5_exact.md:71-75.
+- SCR-R: STATEMENT.md:194-199.
+- SCR-N and its two consequences: STATEMENT.md:201-212.
+- What is and is not claimed: STATEMENT.md:214-227. Interface (assumption ids): STATEMENT.md:238-246.
+
+**Changes vs the card:** STATEMENT.md:228-236 (the card's statement is Corollary A1, STATEMENT.md:158-163).
+
+**Answers to the brief's questions** (pointers only):
+- "= S₀ up to a controlled set": L5.1 (EC′), STATEMENT.md:177-192, and SCR-C, STATEMENT.md:171-176; no bound on
+  |Ŝ∖S₀| is claimed (STATEMENT.md:190, 220-221).
+- q_n enlarged: A1, STATEMENT.md:161-163. Floor weakened: Lemma B, STATEMENT.md:147-156, and A1, STATEMENT.md:158.
 
 ## 3. Status per clause
 | Clause | Status | Evidence |

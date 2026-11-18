@@ -1,0 +1,6 @@
+request	claim	line
+audit1-core1-s1	-	STOP=max_tokens
+audit1-core1-s2	-	STOP=max_tokens
+audit1-core2-s2	-	STOP=max_tokens
+audit1-core3-s1	-	STOP=max_tokens
+audit1-core3-s2	-	STOP=max_tokens

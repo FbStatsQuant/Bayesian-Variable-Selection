@@ -1,0 +1,16 @@
+AUDIT1 token and cost estimate (OFFLINE ESTIMATE: tokens ≈ characters / 3.5; not a count).
+Exact input counts: `python Theory_work/Wave3/API_AUDIT/audit_batch.py count Theory_work/Wave3/API_AUDIT/audit1`.
+Model claude-fable-5-2, effort high, max_tokens 32000, 2 samples per core, 6 requests.
+Batch rates for Claude Fable 5.2: input $4.00 / MTok, output $20.00 / MTok (half of $8 / $40).
+
+core	chars/request	est. input tokens/request	verdicts
+core1	93556	26730	20
+core2	81434	23267	18
+core3	69887	19968	17
+
+total est. input tokens (all 6 requests, no cache credit): 139930  -> $0.56
+output, expected (≈16k tokens per request incl. thinking): 96000 -> $1.92
+output, worst case (every request hits max_tokens 32000): 192000 -> $3.84
+TOTAL: expected ≈ $2.48; worst case ≤ $4.40 (budget $30: 2 samples per core fit).
+Cache reads of the shared context (sample 2 of each core) are billed lower; not credited above.
+Note: `audit_batch.py wait` overwrites this file with the billed usage after the run; the estimate is repeated in README.md.

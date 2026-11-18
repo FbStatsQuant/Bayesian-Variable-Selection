@@ -173,5 +173,5 @@ v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24), ls0 = 
   fit <- finish(fit)
   # list-renormalised PIP fields (SPEC_LIST_PIP.md): strictly LAST, after finish() has sampled peak_memory_kb, the clock and the runtime
   # guard, so the new allocation cannot leak into a legacy field (review PR68 MAJOR-2)
-  v3_add_list_fields(fit, v3_list_fields(fit$top_store, ctx$orig, names(fit$pip_primary)))
+  if (identical(fit$status, "completed")) v3_add_list_fields(fit, v3_list_fields(fit$top_store, ctx$orig, names(fit$pip_primary))) else fit
 }

@@ -1,0 +1,36 @@
+diff --git a/Theory_work/Wave3/W3-PSHARP-R/reviews/post_cp3/BRIDGE_orth_thm1.md b/Theory_work/Wave3/W3-PSHARP-R/reviews/post_cp3/BRIDGE_orth_thm1.md
+index 7fb0d907..b47c0faa 100644
+--- a/Theory_work/Wave3/W3-PSHARP-R/reviews/post_cp3/BRIDGE_orth_thm1.md
++++ b/Theory_work/Wave3/W3-PSHARP-R/reviews/post_cp3/BRIDGE_orth_thm1.md
+@@ -1,6 +1,7 @@
+-# BRIDGE B3.8 — the fully orthogonal witness satisfies Theorem 1 and Theorem 3(b) (W3-PSHARP-R, post-CP3, for READER_DELTA v0.4)
++# BRIDGE B3.8 — the fully orthogonal witness satisfies Theorem 1, and Theorem 3(b) when p_n → ∞ [L06-S] (W3-PSHARP-R, post-CP3, for READER_DELTA v0.4)
+ 
+-Status: **PROVED (by this seat, unchecked)**. Repairs [L05-S], [L05-C], [L05-F] after line check L05 (`L05_bridge_sol.md`). Purpose: name the cases in which the reader's Theorem 3 may say "the rate
++Status: **PROVED (by this seat, unchecked)**. Repairs [L05-S], [L05-C], [L05-F] after the informal read L05 (`L05_bridge_sol.md`); [L06-S] after line check L06
++(`L06_bridge_sol.md`, CORRECT-WITH-FIXES; the reviewer's exact text applied). Purpose: name the cases in which the reader's Theorem 3 may say "the rate
+ of Theorem 1 is exact in expectation". Reader texts (extracted read-only copies in `sources/`, sha256 below): W3-READER `READER_VERSIONS.md` @e20d287f
+ (`sources/READER_VERSIONS_e20d287f.md`, sha256 3353d8e1…ff62b0), Theorem 1 (row 1.1,
+ §1, lines 89-112: assumptions (A1)–(A6), expectation display) and Theorem 3 (row 1.3, §3); notation
+@@ -18,8 +19,10 @@ vectors of 1^⊥, of dimension n − 1, scaled by √(n − 1).)
+ 
+ **Claim.** For n ≥ 2s₀ + 2:
+ 1. Theorem 1's assumptions (A1)–(A6) hold with A := 1, θ̄ := max_{j∈S₀}|θ*_j|, φ₀ := 1, g₀ := 1, and (A6) in its second form.
+-2. Theorem 3(b)'s assumptions hold: s₀ fixed, (N-orth), ‖Xθ*‖² ≤ nM and ‖θ*‖² ≤ nM′ with M := M′ := ‖θ*‖², and
+-   s₀ + 1 ≤ K := min(p, ⌊n/2⌋).
++2. For every admissible p, (N-orth), the energy and coefficient bounds hold with M = M′ = ‖θ*‖², and
++   s₀ + 1 ≤ K := min(p, ⌊n/2⌋). If additionally p_n → ∞, the pinned reader's Theorem 3(b)'s assumptions hold [L06-S].
++   (The expectation display proposed in READER_DELTA v0.4 drops p → ∞; it rests on Corollary A1-E, whose hypotheses are
++   those just listed.)
+ 3. Consequently there are constants 0 < c ≤ C < ∞ (depending only on s₀, θ* and σ*² [L05-S]) and n₀ with
+    c(s₀ + 1)√(log n/n) ≤ E[1 − π(S₀ | y)] ≤ C√(log n/n) for n ≥ n₀, for every such sequence p_n,
+    the upper bound being Theorem 1's expectation display (with its master's status) and the lower bound Corollary A1-E.
+@@ -32,7 +35,7 @@ vectors of 1^⊥, of dimension n − 1, scaled by √(n − 1).)
+    θ*_min := min_{j∈S₀}|θ*_j| > 0 is fixed, so θ*_min√(n/log n) → ∞.
+ 2. (N-orth): all columns are mutually orthogonal, so the columns outside S₀ are mutually orthogonal and orthogonal to
+    those in S₀. ‖Xθ*‖² = θ*ᵀXᵀXθ* = (n − 1)‖θ*‖² ≤ n‖θ*‖². ‖θ*‖² ≤ n‖θ*‖² (n ≥ 1). K ≥ s₀ + 1: p ≥ s₀ + 1, and
+-   ⌊n/2⌋ ≥ s₀ + 1 for n ≥ 2s₀ + 2.
++   ⌊n/2⌋ ≥ s₀ + 1 for n ≥ 2s₀ + 2. When p_n → ∞ this also verifies the remaining hypothesis of Theorem 3(b) [L06-S].
+ 3. Upper bound: by 1, Theorem 1 applies at every n ≥ its n₀ (its constants depend only on (s₀, A, σ*², θ̄, φ₀, g₀) and,
+    for the second form of (A6), on the divergence of θ*_min√(n/log n), here fixed by θ*). Lower bound: by 2 and bridge
+    B3.3 ((N-orth) with all nulls gives the orthogonal witness hypothesis with (log p)² = o(n), since p ≤ n), Corollary

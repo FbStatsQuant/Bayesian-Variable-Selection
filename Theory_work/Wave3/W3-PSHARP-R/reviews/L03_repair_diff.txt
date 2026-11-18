@@ -1,0 +1,52 @@
+diff --git a/Theory_work/Wave3/W3-PSHARP-R/lemmas/AE_expectation.md b/Theory_work/Wave3/W3-PSHARP-R/lemmas/AE_expectation.md
+index 5f19679..3da9b2e 100644
+--- a/Theory_work/Wave3/W3-PSHARP-R/lemmas/AE_expectation.md
++++ b/Theory_work/Wave3/W3-PSHARP-R/lemmas/AE_expectation.md
+@@ -1,6 +1,7 @@
+ # AE — Proposition A-E and Corollaries A1-E, A2-E (W3-PSHARP-R, claim `W3-PSHARP-R:AE`)
+ 
+-Status: **PROVED (by this seat, unchecked)**. Statement: `../STATEMENT.md` v1.1 §2 (notation, Setting-E, (W-orth-E),
++Status: **PROVED (by this seat, unchecked)**. Repair [L02-S1] (Lemma F starting index; §4, §5 indices) after line check
++L02 (`../reviews/L02_line_check_sol.md`, `../reviews/L02_disposition.md`). Statement: `../STATEMENT.md` v1.1 §2 (notation, Setting-E, (W-orth-E),
+ (W-sph-E)), §3.1–§3.3. PARENT := `Theory_work/Wave3/W3-PSHARP/`; "P-A :a-b" := PARENT `lemmas/A_log_factor.md` lines
+ a-b; "P-S" := PARENT `lemmas/S_one_step.md`; "P-ST :a" := PARENT `STATEMENT.md` line a.
+ Consumed, unchanged: Lemma S(4) and Lemma V (`W3-PSHARP:S`@1.0.0, P-ST :32-44; P-S); from the proof of
+@@ -42,14 +43,15 @@ Also ℓ_n ≥ ½ log n (s₀ + 1 ≤ p), and ℓ_n ≤ log p + ½ log n. Hence
+   a_n := √(1 − 2 log(4/ϵ)/log n) ≤ √(log T/ℓ_n) ≤ 1   (n > (4/ϵ)²).                                               (3.2)
+ Since 2c_nN√(ℓ_n/π) = Λ^E_n: **2c_nN√(log T/π) = Λ^E_n·√(log T/ℓ_n) ∈ [a_nΛ^E_n, Λ^E_n]**, and c_nT = α.
+ 
+-**Lemma F (assembly).** Suppose that for n ≥ n₁
++**Lemma F (assembly).** Suppose that for n ≥ n₁, where n₁ depends only on (ϵ, 𝔭) [L02-S1],
+   E δ_n ≥ L_n(b_n − α − L_n),  L_n = θ_nΛ^E_n,  θ_n ∈ [θ⁻_n, θ⁺_n] ⊆ (0, 2],  b_n ≤ 1,
+ where θ^±_n → 1 and b_n → 1 at rates that depend only on (n, ϵ) and a set of parameters 𝔭. Then there is n₀ depending
+ only on (ϵ, 𝔭) with E δ_n ≥ (1 − ϵ − Λ^E_n)Λ^E_n for n ≥ n₀.
+ *Proof.* Write Λ := Λ^E_n. If Λ ≥ 1 − ϵ the right side is ≤ 0 ≤ E δ_n. Otherwise Λ < 1 and
+ L(b − α − L) − Λ(1 − ϵ − Λ) = Λ[(θb − 1) + (ϵ − θα) + Λ(1 − θ²)] ≥ Λ[ϵ/2 − |θb − 1| − |1 − θ²|], using θ ≤ 2,
+ α = ϵ/4. As |θb − 1| ≤ |θ − 1| + 2|1 − b| and |1 − θ²| ≤ 3|1 − θ|, the bracket is ≥ 0 once
+-max(|θ⁻_n − 1|, |θ⁺_n − 1|) ≤ ϵ/16 and 1 − b_n ≤ ϵ/16, which holds for n ≥ n₀(ϵ, 𝔭). ∎
++max(|θ⁻_n − 1|, |θ⁺_n − 1|) ≤ ϵ/16 and 1 − b_n ≤ ϵ/16, which holds for n ≥ n_rates(ϵ, 𝔭). Take
++n₀ := max(n₁, n_rates) [L02-S1]. ∎
+ 
+ ## 4. Proof under (W-orth-E)
+ **Setup (P-A :53-63, unchanged; these lines use (G), (E), (C), (W-orth) and n ≥ 3 only, not N → ∞).** u_j :=
+@@ -74,7 +76,8 @@ log T/√n ≤ ψ_n := √ω_n + log n/(2√n) → 0. Take x = x_n := ψ_n^{−1
+ e_n log T ≤ 1.02(√2·x_n log T/√(n − 1) + 2(log T)²/(n − 1)) + (0.04 + (1.06M + M′)/σ*²) log T/(n − 1)
+ ≤ C(ψ_n^{1/2} + ψ_n² + (1 + (M + M′)/σ*²)ψ_n/√n) with an absolute C (n ≥ 3, n/(n − 1) ≤ 3/2). So
+ b_n := e^{−e_n log T}(1 − ψ_n) → 1 and θ⁻_n = a_n → 1 at rates depending only on (n, ϵ, ω_n, (M + M′)/σ*²). Lemma F
+-gives n₀ = n₀(ϵ, (M + M′)/σ*², (ω_n)) with E δ_n ≥ (1 − ϵ − Λ^E_n)Λ^E_n for n ≥ n₀. ∎
++gives n₀ = n₀(ϵ, (M + M′)/σ*², (ω_n)) with E δ_n ≥ (1 − ϵ − Λ^E_n)Λ^E_n for n ≥ n₀; here the starting index of the
++displayed inequality is n₁ := the least n with n ≥ 3, n > (4/ϵ)² and ψ_n ≤ 1, a function of (ϵ, (ω_n)) only [L02-S1]. ∎
+ 
+ ## 5. Proof under (W-sph-E)
+ **Setup (P-A :75-99, unchanged).** X_{S₀}, θ* deterministic; ρ̃ := ρ̃_{S₀} ≠ 0 is a function of ε; for j ∈ 𝒩_n,
+@@ -96,7 +99,9 @@ log T/√n ≤ ψ_n → 0, so 2 log T ≤ (n − 1)/2 eventually and θ^±_n →
+ log T ≤ log p + ½ log n ≤ log(pn): e′_n log T ≤ C₀ψ_n/√n + 2x ω′_n. Take x = x_n := (ω′_n)^{−1/2} (ω′_n ≥ log(pn)/n > 0; x_n ≥ 1
+ once ω′_n ≤ 1): e′_n log T ≤ C₀ψ_n/√n + 2(ω′_n)^{1/2} → 0, and
+ b_n := e^{−e′_n log T}(1 − 2/(n − 1) − 16/n − (ω′_n)^{1/2}) → 1 at rates depending on (n, C₀, ω_n, ω′_n), and b_n ≤ 1.
+-Lemma F gives n₀ = n₀(ϵ, C₀, (ω_n), (ω′_n)) — C₀ is a function of (σ*², M, M′) — with E δ_n ≥ (1 − ϵ − Λ^E_n)Λ^E_n for
++Lemma F — with n₁ := the least n with n ≥ 4 (so d = n − 1 ≥ 3), n > (4/ϵ)², ψ_n ≤ ¼ (so 2 log T ≤ √n/2 ≤ (n − 1)/2)
++and ω′_n ≤ 1, a function of (ϵ, (ω_n), (ω′_n)) only [L02-S1] — gives n₀ = n₀(ϵ, C₀, (ω_n), (ω′_n)) — C₀ is a function of
++(σ*², M, M′) — with E δ_n ≥ (1 − ϵ − Λ^E_n)Λ^E_n for
+ n ≥ n₀. ∎
+ 
+ ## 6. Uniformity, random (X_{S₀}, θ*), and the limit form

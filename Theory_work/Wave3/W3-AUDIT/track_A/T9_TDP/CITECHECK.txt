@@ -1,0 +1,40 @@
+OK            [STATEMENT.md] Theory_work/Wave1C/C-DLV/STATEMENT.md:38-42 sha=62820bb34d | - **TDP-IMPL** (method requirement for a not-yet-shipped component; METHOD_REQUIREMENTS A.2): the e4 tie-aware
+OK            [STATEMENT.md] Theory_work/Wave1C/C-ENG/lemmas/TDP_E.md:38-40 sha=020410b7c0 | ## Claim
+OK            [STATEMENT.md] Theory_work/Wave1C/C-ENG/lemmas/TDP_E.md:42-60 sha=0dafb46312 | ## Proof
+OK            [STATEMENT.md] Theory_work/Wave1C/C-ENG/lemmas/TDP_E.md:62-64 sha=f84fb2d5a0 | ## Cost
+OK            [STATEMENT.md] Theory_work/Wave1/W1-N3/STATEMENT.md:78-82 sha=d9a713ba62 | 
+OK            [STATEMENT.md] Scripts/SMC_BVS/core/cpp/v3_start.h:178-305 sha=ff0b2a0d2a | // Start mode S~_0 = argmax pi_0 (M §6.3; CORE_SPEC §3): max-plus convolution of per-block per-size maxima, su
+OK            [STATEMENT.md] Theory_work/Wave1C/C-ENG/lemmas/TDP_E.md:15-20 sha=04938a21af | ## The enumeration's visited set
+OK            [STATEMENT.md] Theory_work/Wave1C/C-ENG/lemmas/TDP_E.md:33-34 sha=e290f27efc | (Makevars.v3: `-ffp-contract=off`), every intermediate sum of `mode_dp` finite. (H4) integer counters fit, all
+OK            [STATEMENT.md] Theory_work/Wave1/W1-N3/STATEMENT.md:106-109 sha=ee5e8c4f15 | * (H4) **Execution** (for the claims about the frozen C++ only): cap is representable as a positive `long`; K 
+OK            [STATEMENT.md] cpp/v3_start.h:261-261 sha=9334c5c245 | if (dp.kbest < 0 || !feasible()) throw std::runtime_error("start_mode tie DP: no tight path from (J, kbest) (i
+OK            [STATEMENT.md] Theory_work/Wave1C/C-ENG/lemmas/TDP_E.md:34-36 sha=4e5c657fd8 | succeed. The claim is about the doubles the code computes; it makes **no** claim of lexicographic optimality o
+OK            [PROOF.md] cpp/v3_start.h:195-226 sha=753db63fe1 | inline ModeDP mode_dp(const Start& st) {
+OK            [PROOF.md] cpp/v3_start.h:201-209 sha=769e681a34 | for (int b = 0; b < J; ++b) {
+OK            [PROOF.md] cpp/v3_start.h:211-219 sha=c516771280 | M.assign(J + 1, std::vector<double>(K + 1, NEG_INF));
+OK            [PROOF.md] cpp/v3_start.h:220-224 sha=fc383d4a28 | for (int k = 0; k <= K; ++k) {
+OK            [PROOF.md] cpp/v3_start.h:229-233 sha=427071e498 | inline bool mode_tight(const ModeDP& dp, int b, int r, int j) {
+OK            [PROOF.md] cpp/v3_start.h:294-296 sha=0b63e952e1 | if (M[b - 1][r - j] == NEG_INF) continue;
+OK            [PROOF.md] cpp/v3_start.h:281-300 sha=ad083eb7e8 | std::function<void(int, int)> rec = [&](int b, int r) {
+OK            [PROOF.md] cpp/v3_start.h:290-290 sha=13a875712f | if (count >= cap) trunc = true;
+OK            [PROOF.md] cpp/v3_start.h:282-282 sha=6a25028246 | if (trunc) return;
+OK            [PROOF.md] cpp/v3_start.h:297-297 sha=522005730b | for (uint32_t c : arg[b - 1][j]) { choice[b - 1] = c; rec(b - 1, r - j); if (trunc) return; }
+OK            [PROOF.md] cpp/v3_start.h:289-289 sha=7e2d7e263e | if (!have || lex_less(S, bestS)) { bestS = S; have = true; }
+OK            [PROOF.md] cpp/v3_start.h:218-218 sha=c79882b65d | if (v > M[b][k]) M[b][k] = v;
+OK            [PROOF.md] cpp/v3_start.h:261-261 sha=9334c5c245 | if (dp.kbest < 0 || !feasible()) throw std::runtime_error("start_mode tie DP: no tight path from (J, kbest) (i
+OK            [PROOF.md] cpp/v3_start.h:240-246 sha=c65743dc98 | std::vector<uint32_t> inm(J, 0), outm(J, 0);                  // IN / OUT as per-block position masks
+OK            [PROOF.md] cpp/v3_start.h:249-257 sha=14f367f76d | auto feasible = [&]() {
+OK            [PROOF.md] cpp/v3_start.h:263-268 sha=ae0fe18066 | for (int i = 0; i < p; ++i) {
+OK            [PROOF.md] v3_setup.R:8-8 sha=2c30d2a127 | stopifnot(is.matrix(Xs), length(ys) == nrow(Xs), length(orig) == ncol(Xs), !is.unsorted(orig, strictly = TRUE)
+OK            [PROOF.md] cpp/v3_start.h:261-261 sha=9334c5c245 | if (dp.kbest < 0 || !feasible()) throw std::runtime_error("start_mode tie DP: no tight path from (J, kbest) (i
+OK            [PROOF.md] cpp/v3_start.h:303-303 sha=b16cda8f69 | if (trunc && tie_dp) { res.S = mode_tie_dp(st, dp); res.tie_dp_used = true; }
+OK            [PROOF.md] cpp/v3_start.h:211-219 sha=c516771280 | M.assign(J + 1, std::vector<double>(K + 1, NEG_INF));
+OK            [PROOF.md] cpp/v3_start.h:220-224 sha=fc383d4a28 | for (int k = 0; k <= K; ++k) {
+OK            [PROOF.md] Theory_work/Wave1C/C-ENG/lemmas/TDP_E.md:62-64 sha=f84fb2d5a0 | ## Cost
+OK            [PROOF.md] cpp/v3_start.h:285-289 sha=9d66d899ec | std::vector<int> S;
+OK            [PROOF.md] cpp/v3_start.h:272-272 sha=7a6fb31f17 | if (tie_dp && cap < 2) throw std::invalid_argument("start_mode: the e4 tie-aware fallback requires cap >= 2 (C
+OK            [PROOF.md] cpp/v3_start.h:185-186 sha=6ee5b8dd0e | // C-PACK MR2: `truncated` is also set at count == cap (at cap = 1 even when the maximiser is unique), so the 
+OK            [PROOF.md] cpp/v3_start.h:281-300 sha=ad083eb7e8 | std::function<void(int, int)> rec = [&](int b, int r) {
+
+37 citations: 37 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+Not machine-checked: unbackticked references and the semantic match of each excerpt.

@@ -1,4 +1,4 @@
-# Lean department — brief (HQ, 2026-11-15). STATUS: READY, NOT STARTED. Wait for HQ's "GO" message.
+# SMC - Lean Department — brief (HQ, 2026-11-15; updated 2026-11-17). **GATED (owner, 11-17):** no Lean code until HQ, the consultant and the owner agree the theory is final; Lean done = final. Wait for HQ's "GO" message.
 
 You are the **Lean department** of the SMC-BVS project. You report to Theory HQ (the CEO thread on the owner's desktop).
 The owner is Felipe. The department exists to give **machine-checked certificates** for the most important theorems,
@@ -34,8 +34,16 @@ owner's Large-Prior repo on Owls, `/home/fb31/Large-Prior-Official-Repo/lean`) i
 - Old sorry-free snapshot, same toolchain and Mathlib rev: `Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/L-LEAN/`
   (STATUS.md:3-11, REPORT.md). It contains `hpm_eq_truth`, `markov_half`, `t21_C1` and `T37Lattice` for RM-0, plus the T12Core
   step algebra. Reuse them.
-- Launch: Thu 11-19. First jobs: the inventory, then Level 1 (SL0, the LT♯ sup-norm core, T01 prior counting, DIST Lemma H).
-  Level 2 from Mon 11-23, in the order DIST-1, W3-POST:Thm-1, RM2-F.
+- **Launch: Mon 11-23 (owner, 11-16): "Lean of the 2 or 3 most important theorems next week; the rest in December".**
+- **Shortlist** (Theory, `Theory_work/Wave3/W3-AUDIT/LEAN_SHORTLIST.md` on theory/W3-AUDIT 148d9ee1; all deterministic and
+  already paper-checked). **This week's targets, in order:**
+  1. Thm 3(a), the rate lower bound on every design (W3-PSHARP:B), on a shared score base;
+  2. the deterministic posterior summaries (C-PACK:SL0 with the pooling bound LT-d);
+  3. the distribution layer's deterministic core: domination transfer (the whole proof of Cor 9C and of track D #5′) +
+     the Hellinger reduction (W3-DIST:H).
+  - **Warm-ups** (only if they help the three targets): the track A Lean-tagged items (T8, T2 BLK-b, T6, T9).
+  - **December, not now:** 4. the coded posterior's closed form; 5. row 3.5's unbiasedness.
+  - **Out of scope:** the probabilistic key lemmas of Thms 1 and 9.
 - Folders: `/home/fb31/SMC_Lean_Department/` on Owls (and NOTS if needed), created at launch; work only there plus the
   Lean worktree.
 
@@ -63,7 +71,9 @@ WEAKER / STRONGER / DIFFERENT with reasons. Record it in `Lean/FIDELITY.md`. A c
 or with a WEAKER that HQ accepts as stated.
 
 ## Phases after GO
-0. **Inventory** (≈ 2 h): `Lean/TARGETS.md`. For each candidate: the paper statement verbatim with file:line, its
+0. **Scoping first** (≈ 2 h): verify the shortlist's Mathlib-availability notes (they come from LEAN_READINESS.md and
+   the Fable's knowledge, and are unverified) and whether the old L-LEAN snapshot is reusable. Use the shared Mathlib
+   cache (`lake exe cache get`); never build Mathlib from source on Owls. Then the **inventory**, `Lean/TARGETS.md`. For each candidate: the paper statement verbatim with file:line, its
    registry id and status, the Mathlib coverage (what exists, what is missing), an effort estimate, and the level.
    Then end your run for HQ's selection.
 1. **Level 1 certificates**, in HQ's order. Each: the Lean file, `lake build` clean, `#print axioms`, the fidelity
@@ -72,7 +82,22 @@ or with a WEAKER that HQ accepts as stated.
 
 ## Rules
 - Lead: Claude Opus 5.5, effort high (Fable 5.2 for a hard formalization step, with HQ's OK).
-- Helpers: on Claude Third, at most 3 at a time, Opus or Sonnet, effort high max.
-- Reviewers: codex for the fidelity checks only.
+- **Account: Claude Personal** (owner, 11-16; Claude Third is retired for SMC). Token discipline (owner): **Sonnet by
+  default** for mechanical Lean (porting, tactic search, lemma plumbing); Opus for hard formalization steps; Haiku for
+  builds, logs and status. At most **2 helpers** at a time. Fable only with HQ's OK.
+- Reviewers: codex (Sol) for the fidelity checks only. That is the key check, so it stays on Codex under pacing level 1.
 - `Lean/LOG.md` heartbeat with real local time. Read `Theory_work/Wave3/HOLDS.md` at each phase start.
 - Protocol: `Theory_work/Wave3/PROTOCOL_v4.md`, where it applies (DEPS-style trace in CERTIFICATES.md; restore points).
+
+## December plan: Level 2 for Thm 1 (true model) and Thm 9 (distribution) (owner, 11-17)
+- **Level 2**, with two safeguards:
+  1. an **axiom audit**: each named axiom is stated exactly with its source (paper/theorem/equation), and Codex checks that our Lean axiom says the same thing as the published result;
+  2. **discharge cheap axioms**: when one is short to prove in Lean, prove it instead of assuming it.
+- Level 3 is out of scope.
+- **Staffing (owner: tokens are the constraint, not time). One theorem at a time, serial.**
+  - **Opus lead, in bursts only:** the formal statement, the blueprint (lemma decomposition with exact Lean signatures), the axiom list; and escalations when Sonnet fails twice on a step.
+  - **Sonnet worker, one at a time:** fills in lemma proofs against the blueprint, tactic search, compile-error fixing. This is the bulk of the work (≈ 70–80% of tokens).
+  - **Haiku:** lake builds, `#print axioms`, CERTIFICATES/LOG updates, mechanical renames.
+  - **Codex (Sol), gates only:** the statement-fidelity check and the axiom audit (≈ 2–4 calls per theorem).
+  - **Fable:** none, unless a step is genuinely stuck and HQ OKs it.
+- Reuse first: next week's deterministic pieces and one shared axiom file (Gaussian/χ² facts) serve both theorems. Keep compiler output to errors only; use the shared Mathlib cache.
