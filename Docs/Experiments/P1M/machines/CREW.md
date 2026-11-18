@@ -176,3 +176,12 @@ Machines (daily check <date> <time>):
 - **Fixed by HQ (11-16):** PROTECTED_CMD now also covers `.config/bnp-eng`, `Bayesian-Nonparametric-Lean-Library`,
   `bnp_backups`, `bnp_tmp` and `bnp_worktrees`; the owls-guard service was restarted and is active. **owls_guard is
   SMC-compute-only from now on**: it never acts on BNP's processes or guard, nor on VS Code.
+
+## Standing NOTS home hygiene job (HQ 2026-11-18; supersedes the scope rule above for these two items only)
+The owner lets HQ manage NOTS. HQ ordered a standing job in the daily crew: `~/SMC_Engineering_Department/crews/home_hygiene/nots_home_prune.sh --apply` on Owls (one ssh call; dry run without `--apply`).
+- **`~/.t3/runtime/versions/<v>`:** keep only the newest (version sort and mtime must agree, otherwise nothing is deleted) plus empty `.staging-*` dirs (a non-empty one is reported).
+- **`~/.vscode-server/cli/servers/<name>`:** keep only the first entry of `lru.json` plus any server a live fb31 process uses.
+- **Live processes:** a version or server in use is skipped (pgrep sees only the login node the call lands on).
+- **Logging:** every removal goes to `crews/home_hygiene/removals.tsv`; full output in `runs.log`.
+- **Never:** anything else in `.vscode-server` (extensions/, data/) without asking HQ, anything else in home, anything outside fb31's own data.
+- **First run** (dry run 2026-11-18 ~07:00 CT, loginx2): quota 6,947 MB; one T3 version, three empty .staging dirs, one VS Code server (the lru first): nothing to remove (HQ had cleaned up).
