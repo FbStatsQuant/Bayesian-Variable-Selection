@@ -78,7 +78,7 @@ bound ([R1] B4.1), with room (numerics N1 (i): k_n is at most 0.40 of it on the 
 
 ## 5. Inputs (registry id @ version, ACTIVE on main 4d65550a; statuses verbatim; the four that changed since are requoted at the recording, task D2; caveat (a) follows them)
 
-- `W3-MISR-R:CorGb-plus@1.0.2` ([MISR-R] `:94-108`) — "PROVED-CHECKED, conditional on W2-APP:POST,
+- `W3-MISR-R:CorGb-plus@1.0.3` ([MISR-R] `:94-108`) — "PROVED-CHECKED, conditional on W2-APP:POST,
   C-MIS:GDb, C-MIS:Prop-P; council R3, MANIFEST 052ea6dffa0495584b051435b1e82d6b7c598d965e3b13ddc067545728728069, sol=10.0 PASS, opus=9.6 PASS".
 - `W3-READER:R1@1.0.3` ([R1] `:43-46`, B4.1; uses B1.3 `:19-31`) — "PROVED-CHECKED; council R3, MANIFEST 7aebdf2eb126058719114df656d0eaf416adb1ae3d21138cb11b51d7075d2263, sol=9.5 PASS, opus=9.4 PASS".
 - Definitions only: [W3P] §0 `:16-39` (target, outputs, m♯_n); [MISR-R] §2 `:48-70` ((N), (OV), N_k(m, 0) := δ_m at `:31`).
@@ -102,7 +102,7 @@ model takes Σ_n a correlation matrix without loss of generality, `NOTATION.md:2
 the relative conditions (A3) (energy and beta-min measured against σ², which may vary with n) [L1-2]; and the conclusions
 are in expectation (rate for E δ_n, the PIP error and the HPM/MPM error probabilities) instead of O_P / w.p. → 1.
 Two things are not stronger and must travel with the tag [L1-2, CP1]:
-- **Caveat (a) — status.** Theorem 2X and Corollary 2X rest on `W3-MISR-R:CorGb-plus@1.0.2`, whose status is conditional
+- **Caveat (a) — status.** Theorem 2X and Corollary 2X rest on `W3-MISR-R:CorGb-plus@1.0.3`, whose status is conditional
   on W2-APP:POST, C-MIS:GDb and C-MIS:Prop-P (§5; @1.0.1 listed W3-POST2:C, :E, :A1, :A0 and, through W3-POST2:C, the
   then-unchecked `W3-POST:Prop-LB`). Row 1.2 as recorded is "clean"; the new form is not.
 - **Caveat (b) — floor on the large sets [K2-F2].** Against the old **master** (W2-APP:POST with LSF), which allows the
