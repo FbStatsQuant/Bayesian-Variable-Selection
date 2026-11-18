@@ -51,8 +51,8 @@ jobs:
         working-directory: Theory_work/Wave1/W1-N3/numerics
         run: sh build.sh
 
-      - name: Theory CI (check, paper, falsify, cite)
-        run: python Theory_work/INFRA/ci/run_ci.py --steps check,paper,falsify,cite --out ci_out
+      - name: Theory CI (manifests, check, paper, falsify, cite)
+        run: python Theory_work/INFRA/ci/run_ci.py --steps manifests,check,paper,falsify,cite --out ci_out
 
       - name: Upload CI output
         if: always()
