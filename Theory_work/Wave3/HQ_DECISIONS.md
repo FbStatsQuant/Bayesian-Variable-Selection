@@ -789,3 +789,4 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   3. Lean naming: only MATCH counts as a certificate of the paper theorem; WEAKER gets its own label; the Level-2 headlines name their first paper-only dependency and axioms (Lean/BRIEF.md).
   4. Precedent notes record whether a cited precedent supplies the decisive quantifier, e.g. FAMC's uniform margin dist(theta_n, B) >= delta for all large n. Otherwise use the explicit sufficient cases or a typical-data argument. To Theory.
   5. Blind spot: there was no rule for a counterexample found during formalization; added to Lean/BRIEF.md (SUSPECT, escalate, stop that target).
+- 2026-11-18. **#84 MERGED (a658dd67): the 1M campaign engine freeze is on main.** Campaign pinned to code_commit eefcbc4a + method-v3.1.1-listpip + core tree 61b0a582; 47 plans; run plan 24.1k core-h with contingency (stress 26.4k) < 28.3k. Next: NOTS freeze check (about 2 core-h), then W0 of the 10^4 overlap.
