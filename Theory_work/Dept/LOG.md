@@ -711,3 +711,8 @@
   - Next: Recorder-2 retires; blind API rebuild from 97f9c8c3; the coordinator re-freezes its stages on 97f9c8c3.
 - 2026-11-18 12:00 CST Blind API batch rebuilt: theory/prelean-blind b6950652 (merged to 97f9c8c3). 12 requests, ~402k tokens, max_tokens 128000, effort high, no notes. No span changes. Blindness scan 0 hits. Head sent to HQ to submit.
 - 2026-11-18 12:03 CST HQ unreachable (DESKTOP-955G53S relay not answering). The blind-batch head report (b6950652) is NOT delivered. Retry at the next heartbeat or when the relay returns; the report is in the line above.
+- 2026-11-18 12:08 CST Coordinator:
+  - Re-frozen on 97f9c8c3: MEASD8 bdf9e70d, D5Pa v2 0c84bf9f, NA_DROP v1.4 f398a048, DIST-2 985b75cf (rebuilt with the landed 1.4.11 trailer). MIS re-point carrier staged (NEXT_BATCH, 030f0875).
+  - Allocation-proof Opus seat: R4 8.7 PASS, PURE 9.3.
+  - The Sol call (b″ + DIST-2) was already running on the batch-tree digests 906961f6/578913a6 and was not cancelled (§10). Manager: no second Sol call; bind to the batch-tree digests and carry them to the 97f9c8c3 digests as CITATION-ONLY re-freezes; one Opus PURE on the DIST-2 rebase.
+  - T6 card sent to the CP Fable.
