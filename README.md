@@ -17,6 +17,7 @@ Local-to-global Bayesian variable selection: a sequential Monte Carlo sampler ov
 | every theorem and its status | [`Docs/THEORY.md`](Docs/THEORY.md), one-pagers in `Docs/Theory/one_pagers/` |
 | how the HQ agent runs this project | [`Docs/HQ/BOOTSTRAP.md`](Docs/HQ/BOOTSTRAP.md), [`Docs/HQ/RULES.md`](Docs/HQ/RULES.md) |
 | what must be refreshed after the experiments | [`Docs/SYNC_LATER.md`](Docs/SYNC_LATER.md) |
+| to build and run the large-p engine `smcbvs4` (p up to 10⁶), and what its results guarantee | [`Scripts/SMC_BVS/engine_v4/README.md`](Scripts/SMC_BVS/engine_v4/README.md), [`REPRODUCIBILITY.md`](Scripts/SMC_BVS/engine_v4/REPRODUCIBILITY.md) |
 
 Data and per-seed outputs are **not** in Git. The New Campaign's bulk data currently lives in the data mirror on Felipe's PC, and earlier archives are off-repo too; see `Docs/Records/DATA_INDEX.md`. The git-ignored `_data/` on Owls is the intended always-on store, but it is empty: moving data there is Felipe's decision. Heavy compute runs on the NOTS cluster from the bundles in `Scripts/`.
 

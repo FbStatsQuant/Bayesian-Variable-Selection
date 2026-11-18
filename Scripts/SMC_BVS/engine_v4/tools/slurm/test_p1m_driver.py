@@ -82,6 +82,247 @@ class TestResolve(Base):
         with self.assertRaises(p1m_driver.PlanError):
             p1m_driver.resolve(pl)
 
+    # ---- plan value validation (WP7 freeze item): each rule refuses with exit 65 and ONE line naming the key, the value and
+    # the allowed range; a valid plan resolves exactly as before (the example plans regenerate byte-identically)
+    def refused(self, mutate, *needles):
+        pl = load_example(); mutate(pl)
+        with self.assertRaises(p1m_driver.PlanError) as cm:
+            p1m_driver.resolve(pl)
+        msg = str(cm.exception)
+        self.assertNotIn("\n", msg)
+        for n in needles:
+            self.assertIn(n, msg)
+        rc, _ = self.gen(pl)
+        self.assertEqual(rc, 65)
+
+    def test_value_rules_fit_keys(self):
+        for key, bad, lo in (("Rp", 0, "1"), ("Rp", -3, "1"), ("N", 0, "1"), ("p", 0, "1"), ("p", -5, "1"), ("n", 0, "3"), ("n", 2, "3")):
+            self.refused(lambda pl, k=key, b=bad: pl["fits"][0].__setitem__(k, b), "fit A2_ARs_n200_r1: %s must be an integer in [%s," % (key, lo), "got %d" % bad)
+        for key in ("Rp", "N", "p", "n"):   # not integers: float, string, bool, null
+            for bad in (16.5, "16", True, None):
+                self.refused(lambda pl, k=key, b=bad: pl["fits"][0].__setitem__(k, b), "%s must be an integer" % key, "got %r" % (bad,))
+        self.refused(lambda pl: pl["fits"][0].__setitem__("Rp", 2 ** 20), "Rp must be an integer in [1, 1048575]")
+        self.refused(lambda pl: pl["fits"][0].__setitem__("N", 2 ** 24 + 1), "N must be an integer in [1, 16777216]")
+
+    def test_value_rules_seeds(self):
+        for key in ("seed", "data_seed"):
+            for bad in (0, -1, 2 ** 31, 1.5, "7", True):
+                self.refused(lambda pl, k=key, b=bad: pl["fits"][0].__setitem__(k, b), "%s must be an integer in [1, 2147483647]" % key, "got %r" % (bad,))
+
+    def test_value_rules_top_level(self):
+        for bad in (0, -1, 0.0, "2", True, None, float("inf")):
+            if bad is None:
+                continue   # null max_task_hours is not a number either, covered below
+            self.refused(lambda pl, b=bad: pl.__setitem__("max_task_hours", b), "max_task_hours must be a number > 0", "got %r" % (bad,))
+        self.refused(lambda pl: pl.__setitem__("max_task_hours", None), "max_task_hours must be a number > 0", "got None")
+        for bad in (0, -5, "10", True):
+            self.refused(lambda pl, b=bad: pl.__setitem__("core_h_cap", b), "core_h_cap must be a number > 0", "got %r" % (bad,))
+        self.refused(lambda pl: pl.__setitem__("core_h_cap", None), "core_h_cap must be a number > 0, got None")   # null is not "no cap"
+        for bad in (0, -1, 151, 2.5, True):
+            self.refused(lambda pl, b=bad: pl.__setitem__("island_throttle", b), "island_throttle must be an integer in [1, 150]")
+        for k in ("n_draws", "n_x", "n_test"):
+            self.refused(lambda pl, k=k: pl["eval"].__setitem__(k, 0), "eval.%s must be an integer in [1, 2147483647]" % k, "got 0")
+        self.refused(lambda pl: pl["eval"].__setitem__("threads", 0), "eval.threads must be an integer in [1, 192]", "got 0")
+
+    def test_value_rules_resources(self):
+        for bad in (0, -4, 193, 2.5, "16", True):
+            self.refused(lambda pl, b=bad: pl.__setitem__("resources", {"islands": {"cpus": b}}),
+                         "fit A2_ARs_n200_r1 stage islands: cpus must be an integer in [1, 192]", "got %r" % (bad,))
+            self.refused(lambda pl, b=bad: pl["fits"][0].__setitem__("resources", {"merge": {"cpus": b}}),
+                         "stage merge: cpus must be an integer in [1, 192]")
+        for bad in ("0G", "G", "32", "-1G", 32):
+            self.refused(lambda pl, b=bad: pl.__setitem__("resources", {"setup": {"mem": b}}), "stage setup: mem must be a positive size", "got %r" % (bad,))
+        for bad in ("00:00:00", "0:0", 3600):
+            self.refused(lambda pl, b=bad: pl.__setitem__("resources", {"eval": {"time": b}}), "stage eval: time")
+        self.refused(lambda pl: pl["fits"][0].__setitem__("resources", {"nonsense": {"cpus": 1}}), "unknown stage 'nonsense'")
+        self.refused(lambda pl: pl.__setitem__("resources", {"islands": 16}), "must be a JSON object")
+
+    def test_value_rules_sections(self):
+        def pilot(pl):
+            pl["pilot"] = {"cpus": 0, "mem": "64G", "time": "01:00:00"}
+        self.refused(pilot, "pilot.cpus must be an integer in [1, 192]", "got 0")
+        self.refused(lambda pl: pl.__setitem__("pilot", {"cpus": 8, "mem": "0G", "time": "01:00:00"}), "pilot.mem must be a positive size")
+        self.refused(lambda pl: pl.__setitem__("pilot", {"cpus": 8, "mem": "8G", "time": "00:00:00"}), "pilot.time must be a time limit > 0")
+        for bad in (0, 7, True, 2.5):
+            self.refused(lambda pl, b=bad: pl.__setitem__("restart", {"attempts": b}), "restart.attempts must be an integer in [1, 6]", "got %r" % (bad,))
+        for bad in (-1, True, "600"):
+            self.refused(lambda pl, b=bad: pl.__setitem__("restart", {"attempts": 2, "margin_s": b}), "restart.margin_s must be a number >= 0", "got %r" % (bad,))
+        self.refused(lambda pl: pl.__setitem__("isa_check", {"island": 0}), "isa_check.island must be an integer in [1, 1048575]", "got 0")
+        t6 = {"source_batch": "T5_1e5", "cpus": 48, "mem": "24G", "time": "00:50:00"}
+        for k, bad, needle in (("cpus", 0, "t6.cpus must be an integer in [1, 192]"), ("mem", "0G", "t6.mem must be a positive size"),
+                               ("kills", 0, "t6.kills must be an integer in [1, 4]"), ("island", 0, "t6.island must be an integer in [1, 1048575]"),
+                               ("ckpt_every_s", 0, "t6.ckpt_every_s must be a number > 0"), ("time", "00:00:00", "t6.time must be a time limit > 0")):
+            self.refused(lambda pl, k=k, b=bad: pl.update({"t6_only": True, "t6": dict(t6, **{k: b})}), needle)
+
+    # ---- enumerated values: an unknown one is refused (exit 65), never defaulted: a typo such as "Weak" used to run AR-strong
+    def test_enum_signal(self):
+        for bad in ("Weak", "STRONG", "medium", "", " weak", 0.6, None, True):
+            self.refused(lambda pl, b=bad: pl["fits"][0].__setitem__("signal", b),
+                         "fit A2_ARs_n200_r1: signal must be one of strong, weak, null, got %r" % (bad,))
+        for ok in ("strong", "weak", "null"):
+            pl = load_example(); pl["fits"][0]["signal"] = ok
+            p1m_driver.resolve(pl)
+
+    def test_enum_design(self):
+        for bad in ("ar", "Ar", "AR ", "ADJ_OPP", "BLOCK", "", 1):
+            self.refused(lambda pl, b=bad: pl["fits"][0].__setitem__("design", b),
+                         "fit A2_ARs_n200_r1: design must be one of IND, AR, BLK, ADJ-OPP, NULL, got %r" % (bad,))
+        for ok in ("IND", "AR", "BLK", "ADJ-OPP", "NULL"):
+            pl = load_example(); pl["fits"][0]["design"] = ok
+            p1m_driver.resolve(pl)
+
+    def test_enum_mode(self):
+        for bad in ("v", "fast", "Law", "", 3, None):
+            self.refused(lambda pl, b=bad: pl.__setitem__("mode", b), "mode must be one of compat, law, V, got %r" % (bad,))
+            self.refused(lambda pl, b=bad: pl["fits"][1].__setitem__("mode", b), "fits[1].mode must be one of compat, law, V, got %r" % (bad,))
+        # a per-fit mode that is valid but differs from the plan's: fine (a law fit in a V plan keeps its own mode)
+        pl = load_example(); pl["fits"][1]["mode"] = "law"
+        self.assertEqual(p1m_driver.resolve(pl)["fits"][1]["mode"], "law")
+
+    def test_enum_isa(self):
+        # island_isa of a V plan, and the isa_check comparison build: the FMA family only, value and set named
+        for bad in ("portable", "x86-64-v2", "SapphireRapids", "", 3):
+            self.refused(lambda pl, b=bad: pl.__setitem__("island_isa", b), "got %r" % (bad,))
+        self.refused(lambda pl: pl.__setitem__("island_isa", "portable"), "x86-64-v3", "sapphirerapids")
+        for bad in ("portable", "x86-64-v2", "haswell", 5):
+            self.refused(lambda pl, b=bad: pl.update({"island_isa": "sapphirerapids", "isa_check": {"island": 1, "against": b}}),
+                         "isa_check.against (an FMA ISA) must be one of", "x86-64-v3", "got %r" % (bad,))
+
+    def test_enum_flags_and_stage_names(self):
+        for bad in ("false", "true", 0, 1, None):   # a string used to be truthy: "false" meant post = on
+            self.refused(lambda pl, b=bad: pl["eval"].__setitem__("post", b), "eval.post must be true or false, got %r" % (bad,))
+            self.refused(lambda pl, b=bad: pl.__setitem__("pilot_only", b), "pilot_only must be true or false, got %r" % (bad,))
+            self.refused(lambda pl, b=bad: pl.update({"t6_only": b}), "t6_only must be true or false, got %r" % (bad,))
+        for bad in (2, -1, "1", True):
+            self.refused(lambda pl, b=bad: pl.update({"pilot": {"cpus": 8, "mem": "8G", "time": "01:00:00", "with_ledger": b}}),
+                         "pilot.with_ledger must be one of 0, 1, got %r" % (bad,))
+        # resource stage names and their keys: a typo is refused, not ignored
+        self.refused(lambda pl: pl.__setitem__("resources", {"Islands": {"cpus": 8}}), "unknown stage 'Islands'", "allowed setup, calibrate, islands, merge, eval")
+        self.refused(lambda pl: pl["fits"][0].__setitem__("resources", {"island": {"cpus": 8}}), "unknown stage 'island'")
+        self.refused(lambda pl: pl.__setitem__("resources", {"islands": {"cpu": 8}}), "unknown key 'cpu'", "allowed cpus, mem, time")
+        self.refused(lambda pl: pl["fits"][0].__setitem__("resources", {"merge": {"memory": "8G"}}), "unknown key 'memory'")
+
+    # ---- required keys and unknown-key warnings (freeze item): a misspelt core_h_cap must not mean "no cap"
+    def test_required_keys(self):
+        for key in p1m_driver.REQUIRED_KEYS:
+            pl = load_example(); del pl[key]
+            with self.assertRaises(p1m_driver.PlanError) as cm:
+                p1m_driver.resolve(pl)
+            self.assertEqual(str(cm.exception), "required plan key missing: %s" % key)
+            rc, _ = self.gen(pl)
+            self.assertEqual(rc, 65)
+        pl = load_example(); del pl["core_h_cap"]; del pl["binary"]
+        with self.assertRaisesRegex(p1m_driver.PlanError, "required plan keys missing: core_h_cap, binary"):
+            p1m_driver.resolve(pl)
+        for key in ("binary", "code_commit"):
+            for bad in ("", 5, None):
+                self.refused(lambda pl, k=key, b=bad: pl.__setitem__(k, b), "%s must be a non-empty string" % key, "got %r" % (bad,))
+        # island_isa is required for a V plan (named), optional otherwise
+        pl = load_example(); del pl["island_isa"]
+        with self.assertRaisesRegex(p1m_driver.PlanError, "required plan key missing: island_isa"):
+            p1m_driver.resolve(pl)
+        pl = load_example(); del pl["island_isa"]; pl["mode"] = "law"
+        self.assertEqual(p1m_driver.resolve(pl)["mode"], "law")
+
+    def run_main(self, plan, *extra, name="w"):
+        import io, contextlib
+        pp = os.path.join(self.tmp, name + "_plan.json")
+        with open(pp, "w") as fh:
+            json.dump(plan, fh)
+        out = os.path.join(self.tmp, name)
+        o, e = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(o), contextlib.redirect_stderr(e):
+            rc = p1m_driver.main(["--plan", pp, "--out", out, "--now", "2026-11-15T23:00:00Z"] + list(extra))
+        return rc, o.getvalue(), e.getvalue(), out
+
+    def test_unknown_keys_warn(self):
+        # a typo next to the real key: the plan is valid, the typo is reported (did-you-mean), the cap still applies
+        pl = load_example(); pl["core_h_cp"] = 5; pl["fits"][0]["Rpp"] = 3; pl["note"] = "added by another tool"
+        P = p1m_driver.resolve(pl)
+        self.assertEqual(P["warnings"], ["unknown top-level key 'core_h_cp' (did you mean 'core_h_cap'?)",
+                                         "unknown top-level key 'note'",
+                                         "unknown key 'Rpp' in fit A2_ARs_n200_r1 (did you mean 'Rp'?)"])
+        rc, so, se, out = self.run_main(pl)
+        self.assertEqual(rc, 0)
+        self.assertEqual(se.count("plan warning: "), 3); self.assertIn("did you mean 'core_h_cap'?", se)
+        self.assertIn("WARNING: 3 unknown plan key(s), see PLAN_WARNINGS.txt.", so)
+        txt = open(os.path.join(out, "PLAN_WARNINGS.txt")).read()
+        self.assertIn("'core_h_cp'", txt); self.assertIn("'Rpp'", txt)
+        self.assertEqual(json.load(open(os.path.join(out, "plan.resolved.json")))["warnings"], P["warnings"])
+        self.assertIn("PLAN_WARNINGS.txt", open(os.path.join(out, "SHA256SUMS")).read())
+        # a typo INSTEAD of the real key is not a warning but a refusal: the cap is required
+        pl = load_example(); pl["core_h_cp"] = pl.pop("core_h_cap")
+        rc, so, se, out = self.run_main(pl, name="w2")
+        self.assertEqual(rc, 65); self.assertIn("required plan key missing: core_h_cap", se)
+
+    def test_strict_refuses_unknown_keys(self):
+        pl = load_example(); pl["core_h_cp"] = 5
+        rc, so, se, out = self.run_main(pl, "--strict")
+        self.assertEqual(rc, 65)
+        self.assertIn("plan warning: unknown top-level key 'core_h_cp'", se)
+        self.assertIn("plan error: --strict: 1 unknown plan key(s)", se)
+        self.assertFalse(os.path.exists(out))   # refused before anything is written
+        pl = load_example(); pl["fits"][1]["Rpp"] = 3
+        rc, _, se, _ = self.run_main(pl, "--strict", name="w3")
+        self.assertEqual(rc, 65); self.assertIn("unknown key 'Rpp' in fit A2_ARs_n200_r2", se)
+        rc, so, se, out = self.run_main(load_example(), "--strict", name="w4")   # a clean plan passes --strict
+        self.assertEqual(rc, 0); self.assertEqual(se, "")
+
+    def test_clean_plans_have_no_warnings(self):
+        for name in sorted(os.listdir(os.path.join(HERE, "examples"))):
+            with open(os.path.join(HERE, "examples", name)) as fh:
+                P = p1m_driver.resolve(json.load(fh))
+            self.assertNotIn("warnings", P, name)
+        rc, so, se, out = self.run_main(load_example())
+        self.assertEqual(rc, 0); self.assertEqual(se, ""); self.assertNotIn("WARNING", so)
+        self.assertFalse(os.path.exists(os.path.join(out, "PLAN_WARNINGS.txt")))
+        self.assertNotIn("warnings", json.load(open(os.path.join(out, "plan.resolved.json"))))
+        # a resolved plan fed back in is clean (the keys the driver writes are known)
+        self.assertNotIn("warnings", p1m_driver.resolve(json.load(open(os.path.join(out, "plan.resolved.json")))))
+
+    def test_value_rules_shapes(self):
+        # structure errors are plan errors too, never a traceback
+        pl = load_example()
+        for bad in ([], "plan", 7, None):
+            with self.assertRaisesRegex(p1m_driver.PlanError, "the plan must be a JSON object"):
+                p1m_driver.resolve(bad)
+        self.refused(lambda pl: pl.__setitem__("batch", 5), "batch 5")
+        self.refused(lambda pl: pl.__setitem__("fits", "x"), "fits must be a list")
+        self.refused(lambda pl: pl.__setitem__("fits", [5]), "fit 0 must be a JSON object")
+        self.refused(lambda pl: pl.__setitem__("eval", 3), "eval must be a JSON object")
+
+    def test_unreadable_plan_is_exit_65_without_traceback(self):
+        import io, contextlib
+        def run(path):
+            err = io.StringIO()
+            with contextlib.redirect_stderr(err):
+                rc = p1m_driver.main(["--plan", path, "--out", os.path.join(self.tmp, "o"), "--now", "2026-11-15T23:00:00Z"])
+            return rc, err.getvalue()
+        missing = os.path.join(self.tmp, "nonexistent.json")
+        rc, msg = run(missing)
+        self.assertEqual(rc, 65); self.assertTrue(msg.startswith("plan error: cannot read the plan " + missing)); self.assertEqual(msg.count("\n"), 1)
+        self.assertNotIn("Traceback", msg)
+        rc, msg = run(self.tmp)   # a directory
+        self.assertEqual(rc, 65); self.assertIn("cannot read the plan", msg); self.assertNotIn("Traceback", msg)
+        bad = os.path.join(self.tmp, "bad.json")
+        with open(bad, "w") as fh:
+            fh.write("{not json")
+        rc, msg = run(bad)
+        self.assertEqual(rc, 65); self.assertIn("cannot read the plan", msg); self.assertEqual(msg.count("\n"), 1)
+        with open(bad, "wb") as fh:
+            fh.write(b"\xff\xfe\x00")
+        rc, msg = run(bad)
+        self.assertEqual(rc, 65); self.assertNotIn("Traceback", msg)
+        with open(bad, "w") as fh:
+            fh.write("[1, 2]")   # valid JSON, not an object
+        rc, msg = run(bad)
+        self.assertEqual(rc, 65); self.assertIn("the plan must be a JSON object", msg)
+
+    def test_example_plans_still_resolve(self):   # the rules refuse nothing the real plans use
+        for name in sorted(os.listdir(os.path.join(HERE, "examples"))):
+            with open(os.path.join(HERE, "examples", name)) as fh:
+                p1m_driver.resolve(json.load(fh))
+
     def test_mixed_rungs_rejected_at_generation(self):
         pl = load_example(); pl["fits"][1]["p"] = 100000
         rc, _ = self.gen(pl)
@@ -344,6 +585,8 @@ class TestPilotBatch(Base):
         pp = p1m_driver.resolve(json.load(open(os.path.join(HERE, "examples", "plan_P7_pilot_1e6.json"))))
         self.assertEqual(pp["fits"][0]["run_id"], "6-AR-n200-r01-V-s1")
         self.assertLessEqual(pp["worst_case_pilot_core_h"], 150)
+        self.assertEqual(pp["fits"][0]["resources"]["merge"]["mem"], "128G")   # HQ H-14: the pilot fit's merge peaked at 75.1 GiB (sacct)
+        self.assertEqual(p1m_driver.DEFAULT_RES["1e6"]["merge"]["mem"], "128G")
 
     def test_isa_check(self):   # D-32: SPR constraint everywhere, comparison build, island re-run after the island array, compare
         pl = self.plan(); pl["isa_check"] = {"island": 1}
@@ -593,7 +836,7 @@ class TestRestartAndT6(Base):
     def plan(self, attempts=3):
         pl = load_example(); pl["fits"] = pl["fits"][:1]; pl["fits"][0]["Rp"] = 3
         pl["restart"] = {"attempts": attempts, "margin_s": 60}
-        pl.pop("core_h_cap", None)   # the retry arrays count at their limits: a cap set for one attempt would refuse the chain (by design)
+        pl["core_h_cap"] = 10 ** 6   # the retry arrays count at their limits: a cap set for one attempt would refuse the chain (by design); a chain plan carries a cap sized for the chain
         return pl
 
     def test_resolve_and_default(self):
@@ -603,13 +846,13 @@ class TestRestartAndT6(Base):
         self.assertEqual(P["n_tasks"], p1m_driver.resolve(dict(self.plan(1), restart=None))["n_tasks"] + 2 * 3)
         r = P["fits"][0]["resources"]["islands"]
         self.assertGreater(P["worst_case_core_h"], p1m_driver.resolve(dict(self.plan(1), restart=None))["worst_case_core_h"] + 1.9 * 3 * int(r["cpus"]) * p1m_driver.hours(r["time"]))
-        q = load_example(); q["restart"] = {"attempts": 2}; q.pop("core_h_cap", None)
+        q = load_example(); q["restart"] = {"attempts": 2}; q["core_h_cap"] = 10 ** 6
         self.assertEqual(p1m_driver.resolve(q)["restart"]["margin_s"], max(300, int(0.15 * p1m_driver.hours(p1m_driver.resolve(q)["fits"][0]["resources"]["islands"]["time"]) * 3600)))
         q = load_example(); q["restart"] = {"attempts": 2}   # with the example's cap 200: the chain's worst case is refused
         with self.assertRaises(p1m_driver.PlanError):
             p1m_driver.resolve(q)
         for bad in ({"attempts": 0}, {"attempts": 7}, {"attempts": 2, "margin_s": -1}, {"attempts": 2, "margin_s": 10 ** 6}):
-            q = load_example(); q["restart"] = bad; q.pop("core_h_cap", None)
+            q = load_example(); q["restart"] = bad; q["core_h_cap"] = 10 ** 6
             with self.assertRaises(p1m_driver.PlanError):
                 p1m_driver.resolve(q)
 
@@ -895,6 +1138,11 @@ class TestCells(Base):
         self.assertEqual(len(rows), 259)   # H-9 258 + the H-10 gated AR-weak 1M cell
         self.assertEqual(len(planned_ids), len(rows) - 20)
         self.assertEqual(len(written), 48)   # H-10: + the gated AR-weak 1M plan
+        for f in written:   # the campaign plans carry the required keys (a cap equal to the plan's own worst case) and no unknown keys
+            q = json.load(open(f)); P = p1m_driver.resolve(q)
+            self.assertNotIn("warnings", P, f)
+            self.assertEqual(q["binary"], "bin/smcbvs4"); self.assertGreaterEqual(q["core_h_cap"], P["worst_case_core_h"])
+            self.assertLess(q["core_h_cap"] - P["worst_case_core_h"], 1.1)
 
     def test_precision_seeds_independent(self):
         """PR #19 MAJOR-1 (Sol F6): every precision arm has its own final and calibration seed, shared with no other fit."""

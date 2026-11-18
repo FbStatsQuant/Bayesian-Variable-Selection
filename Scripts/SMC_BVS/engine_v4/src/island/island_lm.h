@@ -71,7 +71,12 @@ void IslandEngine<A>::lm_group(int first, int count, int gN, const RoundCtx& rc)
   while (true) {
     // admission: the free slots take the next particles; their orders (inverse only, K2) and I proposals are drawn here
     { int na = 0;
-      for (int gi : admit) if (next < end) { pid[gi] = next++; admit[na++] = gi; }
+      // K5: once a numerical failure is recorded no particle is admitted any more: later admissions have larger particle
+      // indices than every admitted one and the smallest failing particle wins; a failed island exports no store, and its
+      // in-memory population and work counters are execution-dependent (the groups kernel stops after the failing group).
+      // Particles already running finish: one of them may fail lower.
+      const bool failed = !cfg.test_no_stop_admitting && fail_any();
+      for (int gi : admit) if (next < end && !failed) { pid[gi] = next++; admit[na++] = gi; }
       admit.resize(na);
       for (int gi : admit) { gb.q[gi] = 0; gb.e[gi] = 0; gb.done[gi] = 0; gb.etype[gi] = 0; gb.elab[gi] = -1; gb.ierr[gi] = nullptr; gb.ng[gi].clear(); }
       if (na > 0) {
@@ -118,7 +123,10 @@ void IslandEngine<A>::lm_group(int first, int count, int gN, const RoundCtx& rc)
       }
       gb.sup_of[gi] = (int)rep.size() - 1; gb.sup_parts.back().push_back(gi);
     }
-    for (auto& v : gb.sup_parts) std::sort(v.begin(), v.end(), [&](int a, int b) { return pid[a] < pid[b]; });   // by particle (event keys)
+    for (auto& v : gb.sup_parts) {   // by particle (event keys); the test switch sorts by slot instead (a deliberate bug)
+      if (cfg.test_consumers_by_slot) std::sort(v.begin(), v.end());
+      else std::sort(v.begin(), v.end(), [&](int a, int b) { return pid[a] < pid[b]; });
+    }
     const int nsup = (int)rep.size();
     KS.supports += nsup; KS.support_label_pairs += (uint64_t)nsup * p;
     if ((int)gb.sup.size() < nsup) gb.sup.resize(nsup);
@@ -451,6 +459,12 @@ void IslandEngine<A>::lm_group(int first, int count, int gN, const RoundCtx& rc)
           auto consume = [&](const int jj, const uint32_t ncons, const int first, const uint32_t fpos) {
             const int j = j0 + jj;
             if (poison && unscored(s, j, lb, ob, (uint32_t)pid[first] + 1, fpos)) return;
+            if (cfg.test_consumers) {   // tests only: the smallest first consumer of each (round, flip model)
+              uint64_t tag = ((uint64_t)rc.xph << 40) ^ ((uint64_t)rc.ustage << 8) ^ (c.h ^ D.zob.key[j]) * 0x9E3779B97F4A7C15ull;
+              const uint64_t val = (uint64_t)(uint32_t)pid[first] << 32 | fpos;
+              std::lock_guard<std::mutex> lk(cfg.test_consumers->mu);
+              auto it = cfg.test_consumers->first.emplace(tag, val).first; if (val < it->second) it->second = val;
+            }
             const uint64_t fx = rc.measured ? fix63(ob[j]) : 0;
             if (rc.measured) rb_cur[j] += (u128)fx * ncons;
             L.logical[rc.phase][ME_GIBBS_HELD] += ncons; L.ms.gibbs += ncons;
