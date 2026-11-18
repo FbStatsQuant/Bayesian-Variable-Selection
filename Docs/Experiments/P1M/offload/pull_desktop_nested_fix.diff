@@ -1,0 +1,17 @@
+--- a/pull_desktop.ps1	2026-11-18 08:49:03.861944948 -0600
++++ b/pull_desktop.ps1	2026-11-18 08:49:03.900945367 -0600
+@@ -73,9 +73,13 @@
+   if ($LASTEXITCODE -ne 0) { Log "error: tar exit $LASTEXITCODE"; return 5 }
+ 
+   # 6. verify each unit (a folder holding SHA256SUMS), then move it into records\ and record it
+-  $units = @(Get-ChildItem $stage -Recurse -File -Filter 'SHA256SUMS' | ForEach-Object { $_.Directory.FullName })
++  # top-level units only: a SHA256SUMS nested inside another unit is that unit's DATA, not a unit (fix 2026-11-18)
++  $all = @(Get-ChildItem $stage -Recurse -File -Filter 'SHA256SUMS' | ForEach-Object { $_.Directory.FullName } | Sort-Object Length)
++  $units = @()
++  foreach ($c in $all) { if (-not ($units | Where-Object { $c.StartsWith($_ + '\') })) { $units += $c } }
+   if ($units.Count -eq 0) { Log 'nothing pending' }
+   foreach ($u in $units) {
++    if (-not (Test-Path -LiteralPath (Join-Path $u 'SHA256SUMS'))) { Log "skip: $u vanished"; continue }
+     $rel = $u.Substring($stage.Length + 1)
+     $ok = $true; $nfiles = 0; $bytes = 0
+     foreach ($line in Get-Content (Join-Path $u 'SHA256SUMS')) {
