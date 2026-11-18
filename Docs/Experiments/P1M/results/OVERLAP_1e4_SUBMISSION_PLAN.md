@@ -98,3 +98,6 @@ Outcomes: **clean** → precision study (64 islands) + 10⁴ science released. *
 5. **Queue / account:** commons is busy (≈ 900 pending, 11-15); wave starts may slip hours. Home 6.8 / 10 GB (guard 8.2): logs go to scratch only. The account was flagged once: calm submissions, one connection.
 6. **Freeze slip:** if F lands after Thu noon, W0 moves to Fri and the calendar loses the ½-day slack; W3 → Sat evening still fits, the verdict Sun.
 7. **Merge/eval memory** at 10⁴ is small (≤ 16 GB planned); an unexplained `resource_limit` stops the wave (§4). `eval` predictive objects (n_x 4,000, 64-node GH) are tested only at 10⁵ (T5): W0 is their first 10⁴ run.
+
+## 8. HQ approval (11-18, DECISIONS H-18)
+APPROVED with: W0 cap 543 core-h; **EXCEPTION (one-off) to the 2-h task rule: T calibrate limit 3 h**; log Z_T (deterministic lower bound) replaces log Ẑ_occ in the prereg. W0 only after the freeze PR merge, the NOTS freeze check and the committed prereg with its script sha. W1–W3 proceed without asking if W0 is clean and no stop rule fires.

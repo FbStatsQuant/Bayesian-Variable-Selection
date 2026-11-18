@@ -1,0 +1,66 @@
+# OPS log: 10⁴ overlap rung, wave W0 staging (Engineering ops, Sonnet; 2026-11-18)
+
+**State: STAGED on a PROVISIONAL base; NOTHING SUBMITTED, nothing deployed to NOTS** (HQ H-18: W0 only after (1) the freeze PR merge with the T-arm fix, (2) the NOTS freeze check passes, (3) the prereg is committed with its script sha). Two read-only `ssh nots` calls were made (14:42 and 14:44 UTC, below).
+All tools live in `/home/fb31/SMC_Engineering_Department/staging/overlap1e4/tools/` (snapshot copy: `results/overlap1e4/ops_tools/`). No commit on any engine branch.
+
+## 1. Gates and gaps (as of 14:50 UTC)
+| gate | state |
+|---|---|
+| freeze PR merged (T-arm fix) | **NOT YET.** `origin` has no `exp/P1M-freeze` (fetched 14:47). The builder's local branch `exp/P1M-freeze` (worktree t3-88018eff…) is at `21f6e2b5` = pin only (`p1m_cells.py` method/core pin + driver keys); **its generator still emits T = N 2,500, R′ 16** (printed by `make_waves.py`: "T-arm fix MISSING"). `CAMPAIGN_FREEZE.md` and `freeze_check_1e5.sh` are **untracked** in that worktree (not committed). |
+| NOTS freeze check | script exists (untracked, in the builder's worktree); staged by `freeze_check_stage.sh` once it is committed in F. **Gap found:** its inputs are gone from NOTS (see §3). |
+| prereg committed with script sha | not mine (Sonnet B). |
+
+`make_waves.py` forces the T arm itself (law mode, N = 10⁴, R′ = 4, plan §1) and the plan-§2 shapes, so the staged plans do not depend on the generator's T fix; it prints whether the generator already carries it. When F lands, only `stage_F.sh <F>` has to be re-run.
+
+## 2. Plans (PROVISIONAL: code_commit = 21f6e2b5…, regenerate at F)
+Worktree `staging/overlap1e4/wt_21f6e2b5` (detached, clean, read-only use). Generated with `p1m_cells.py --plans … --only 1e4 --code-commit 21f6e2b5` (pin verified: tag `method-v3.1.1-listpip` → 7100bb3b, core tree 61b0a582), then `make_waves.py` → `prov_21f6e2b5/{gen,plans,scripts}`; each resolved with `p1m_driver.py --strict` (no warnings).
+Plan sha256 (first 16): OV_W0_T `2f7d9028b17ef6a5`, OV_W0_V `736a576da781b1b3` (provisional; they change with F).
+| batch | fits | tasks | resolved worst case | `core_h_cap` | shapes (request / limit) |
+|---|---|---|---|---|---|
+| `OV_W0_T` (mode law, `max_task_hours` 3.0, N 10⁴, R′ 4) | 4-AR-n200-r01-T-s1 (seed 402020001), 4-ADJOPP-n200-r01-T-s1 (405020001) | 16 | **449.3** | 449.4 | setup 8 CPU 8G 0:15 · **calibrate 48 CPU 16G 3:00** · islands 4 × 24 CPU 16G 0:45 · merge 8 CPU 8G 0:20 · eval 8 CPU 8G 0:30 |
+| `OV_W0_V` (mode V, `island_isa` sapphirerapids, N 2,500, R′ 16) | 4-AR-n200-r01-V-s1, 4-ADJOPP-n200-r01-V-s1 | 40 | **93.3** | 93.4 | setup 8 CPU 8G 0:15 · calibrate 16 CPU 8G 0:30 · islands 16 × 4 CPU 4G 0:30 · merge 8 CPU 4G 0:15 · eval 8 CPU 8G 0:20 |
+| **W0** | 4 fits | 56 | **542.7 ≤ 543** (H-18 cap; caps sum 542.8) | | all `--constraint=sapphirerapids`, commons / nots_commons |
+Dry-run checks done: T `plan.resolved.json` = law, no `island_isa`, N 10000 / Rp 4 in every run and in `manifests/<run>/island.json`; `stage_calibrate.sbatch` = 48 CPUs / 16G / 03:00:00; V build.sh has `-DV4_ISLAND_ISA=sapphirerapids`, T build.sh has none (default); V sbatch files show the V shapes. Dry-run scripts: `prov_21f6e2b5/scripts/OV_W0_{T,V}/` (each with its SHA256SUMS). Expected cost ≈ 100 core-h (plan §3), quote for the monitor = 100, stop at wave > 200.
+**Layout deviation (needs HQ's eye, one line):** the requested `scripts/overlap1e4/<wave>/` and `scratch/runs/overlap1e4/<wave>/` cannot be produced by the driver: the batch id must match `[A-Za-z0-9][A-Za-z0-9_.-]{0,63}` (`safe_id`, no `/`), and the scripts and run paths are `$DEPT/scripts/<batch>` and `$DEPT/scratch/runs/<batch>`. So NOTS has the **flat** `scripts/OV_W0_T`, `scripts/OV_W0_V`, `scratch/runs/OV_W0_T`, `scratch/runs/OV_W0_V` (the plan's own names). Editing the generated scripts after the driver would break their SHA256SUMS and provenance, so I did not. Records on Owls keep the `overlap1e4/<wave>/` layout: `records/overlap1e4/W0/<run_id>/`.
+
+## 3. Read-only NOTS checks (2 of 2 used)
+- 14:42 UTC `loginx3`: home **6,946 MB** of 10,240 (guard 8,192: OK); my queue **0 jobs**; SPR CPUs A/I/O/T 9,334 / 3,798 / 308 / 13,440; SPR nodes (idle or mixed) with ≥ 24 CPUs and ≥ 16 GB free: **40**; with ≥ 64 CPUs + 32 GB: 21; with ≥ 96 + 32 GB: 6 (the task shapes ≤ 48 CPUs / 16 GB are not fragmentation-bound). `scratch` → `/scratch/fb31/SMC_Engineering_Department`; /scratch 87% (120 T free).
+- 14:44 UTC: `~/SMC_Engineering_Department/{crews,results,scratch,scripts,tmp}`, `git 2.43.0`, `python3 3.9.18`; **no git clone of the repo on NOTS**; **the T5 run inputs are gone**: `scratch/runs/T5_1e5/5-AR-n200-r01-V-s1/` holds only `cost log manifests OFFLOADED_group{1,2,3}.txt` and `scripts/T5_1e5/manifests` does not exist (hygiene offload, 11-18). `freeze_check_1e5.sh` needs `data.bin setup.bin calib.bin` (+ `island_1.bin` for the full compare) and the island manifest template.
+→ `freeze_check_stage.sh` **restores them from the verified Owls copies** (records/hygiene_1117/group3: data 164 MB, setup 1.0 GB, calib 784 MB, island_1 221 MB = **2.2 GB**, one nice'd rsync stream, then `sha256sum -c` ON NOTS against the NOTS-computed hashes of 11-18; scripts from group2/home) and ships a **150 MB shallow git clone** of F (Owls-built, `git fetch --depth 1 <F>`) to `scratch/overlap1e4/clone_<F8>`, because the script and the plan flow use `git archive`. Both go to /scratch, never home. The restored T5 inputs are freed again after the check (they live on Owls and the desktop).
+
+## 4. The command block (manager; all from Owls; `S=/home/fb31/SMC_Engineering_Department/staging/overlap1e4`)
+```bash
+# --- 0. when the freeze PR is merged: F = the merge commit on exp/P1M-engine (40 hex), after the T-arm fix
+F=<40-hex>; E=${F:0:8}; S=/home/fb31/SMC_Engineering_Department/staging/overlap1e4
+$S/tools/stage_F.sh $F            # git fetch, worktree wt_$E, shallow clone, plans (pin verified) + driver --strict dry runs -> $S/F_$E; current -> F_$E
+# read its output: GENERATOR T arm line, 'OV_W0_T … worst 449.3', 'OV_W0_V … worst 93.3', 'sum of worst cases 542.6'(= 542.7 unrounded) ≤ 543
+# --- 1. gate 2, the NOTS freeze check (≈ 2.1 core-h; limit 24)
+$S/tools/freeze_check_stage.sh $F $S/wt_$E                       # restore T5 inputs + verify, deploy script + clone, build on the login node (nice, -j3; no core-h)
+GO=yes $S/tools/freeze_check_stage.sh $F $S/wt_$E submit         # ONE job: sbatch freeze_check_1e5.sh run (48 CPU, 16G, 0:30, SPR)  <- the freeze-check submission
+ssh nots 'cat ~/SMC_Engineering_Department/scratch/runs/FREEZE_CHECK_1e5/freeze_check.json'   # verdict PASS | FAIL (one read after the job ended; ≈ 2-3 h wall? island 1:52-2:33 in T5; no polling)
+# --- 2. deploy + build W0 (after gates 1-3; no core-h; login node, nice -n 19, make -j3, V first, T second)
+$S/tools/deploy_wave.sh W0 $F $S/F_$E/scripts $S/clone_$E build  # local+NOTS SHA256SUMS, plan code_commit == F, rsync, git archive F -> code/, build.sh (V: -DV4_ISLAND_ISA=sapphirerapids; T: default), binary sha256
+$S/tools/presubmit_check.sh W0                                   # ONE ssh: SHA256SUMS, binaries + isa, run dirs empty, home MB, queue, free SPR nodes
+# --- 3. (pre-announce in REQUESTS.md + ledger rows, manager) then submit: T first, then V, the driver's submit.sh with CONFIRM=yes
+GO=yes $S/tools/submit_wave.sh W0                                # 2 x (2 arrays + 3 per fit) = 16 sbatch calls; ids in scratch/runs/OV_W0_{T,V}/submissions.jsonl
+# --- 4. monitor (Haiku, results/overlap1e4/MONITOR_W0_PROMPT.md): bash $S/tools/monitor_probe.sh W0   (≤ 1 per 5 min, normally 20-30 min)
+# --- 5. after the wave (manager's go): bash $S/tools/collect_wave.sh W0
+```
+Manual equivalent of step 2 for one batch (what `deploy_wave.sh` does): `rsync -a --checksum --exclude code --exclude bin --exclude build $S/F_$E/scripts/OV_W0_V/ nots:~/SMC_Engineering_Department/scripts/OV_W0_V/` → `ssh nots 'cd ~/SMC_Engineering_Department/scripts/OV_W0_V && sha256sum -c SHA256SUMS && mkdir code && git -C <clone> archive $F | tar -x -C code && nice -n 19 bash build.sh'` → `CONFIRM=yes bash submit.sh`.
+Pre-submit facts to log (ledger, manager): admission Σ actual + Σ worst of open batches + 542.7 ≤ envelope remaining (≈ 28k; the freeze check's 24 worst closes first); quote ≈ 100, W0 worst 542.7 accepted as a limit (H-18); one-off exception: T calibrate limit 3 h (`max_task_hours` 3.0 on `OV_W0_T` only).
+
+## 5. Monitoring
+`results/overlap1e4/MONITOR_W0_PROMPT.md` is the Haiku brief; `monitor_probe.sh` = one ssh = one `squeue` + one `sacct -X` (+ plain reads of the 2 run dirs: submissions, data.bin.json content hashes, OUTCOME / resource_limit hits) and `stop_rules.py` prints the verdict. Thresholds: T fit > 172, V fit > 15, cumulative > 1,600, projection > 2,500, wave > 2 × quote (W0: 200), any FAILED / TIMEOUT / OUT_OF_MEMORY / CANCELLED stage (NODE_FAIL / BOOT_FAIL = infrastructure INFO), > 2 failed fits, QOS / Assoc / MaxSubmit / Limit pending reasons, engine resource_limit / admission / OUTCOME records, X/y `content_sha256` mismatch inside a dataset. Tested on a synthetic probe (all rules fire as expected; the probe script's remote half tested against stub ssh / squeue / sacct).
+
+## 6. Collection (`collect_wave.sh W0`; tested end to end against a fake department tree)
+- One ssh runs `collect_nots.sh` on NOTS: per run dir `OFFLOAD_FILES.sha256` (sha256 of every file of record) and one `sacct -P -n -j <all ids>` dump of both batches (the p1m_cost.py format). Nothing is deleted on NOTS.
+- Owls then rsyncs (nice, one stream, `--files-from`) into **`records/overlap1e4/W0/<run_id>/`** (one unit per fit) and **`records/overlap1e4/W0/_batch_OV_W0_{T,V}/`** (driver scripts with `driver_sha256.txt` instead of its SHA256SUMS, `bin/smcbvs4.sha256`, `bin_version.json`, submissions / starts / ends jsonl, slurm_out logs, the sacct dump, `cost/` from `p1m_cost.py`). Depth 3 under `records/`, as `serve_pull.sh` expects.
+- **One `SHA256SUMS` at each unit root, none nested** (checked: `find <unit> -name 'SHA256SUMS*'` must be exactly 1); `sha256sum -c` passes on Owls against the sums computed on NOTS.
+- Kept per fit: everything except the rebuildable `raw.bin`, `setup.bin`, `calib.bin`, `island_*.bin` and checkpoints: `fit.bin`, `law.bin`, `eval.bin` + `.json`, `data.bin` (16 MB: the analysis needs X; **my addition to the plan's list, veto if unwanted**), `*.bin.json` sidecars (hashes, `content_sha256`), `cost/`, `manifests/`, `log/`, `run_manifest.json`, `truth.json`. A fit without `fit.bin` is still collected, with `INCOMPLETE.txt` (failures are stated, never dropped).
+- NOTS cleanup only after `crews/offload/desktop_verified.txt` lists the units (tombstone `OFFLOADED`; target ≤ 24 h, hard 7 days).
+
+## 7. Open items for the manager
+1. Freeze PR: the T-arm fix (`p1m_cells.py` T arm `N 10000, islands 4` + T limits) is **not** in the builder's committed head; my plans override it, but the freeze PR should carry it so the generator and the wave plans agree. `CAMPAIGN_FREEZE.md` and `freeze_check_1e5.sh` must be committed in F.
+2. Freeze check needs the 2.2 GB T5-input restore and the 150 MB clone (above): ≈ 5-10 min of one rsync stream. Optional: add the pilot-code build (`… build $F <2cfaa9e5d3ef72d1789c20bad442db3f02b68efc>`, + ≈ 2.1 core-h, needs that commit in the clone: `mk_clone.sh $F 2cfaa9e5…`); the default is the freeze binary only (≈ 2.1 core-h), as the plan says.
+3. Flat batch ids (§2 deviation); `p1m_cost.py` is not copied by the driver (collection runs it from the freeze worktree, `COST_PY`).
+4. Wave plans for W1-W3 are defined in `make_waves.py` (`--waves W1,W2,W3`, `--shapes <json>` for the post-W0 re-size); the cap of each comes from W0's measured worst (H-18).
