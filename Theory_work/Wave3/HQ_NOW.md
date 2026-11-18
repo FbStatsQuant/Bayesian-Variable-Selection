@@ -26,6 +26,11 @@
   7. the Lean gate sign-off → Lean on the Max reset next week.
 - Every item gets a cost estimate and a kill budget. When CP runs dry, nothing new starts until the reset.
 
+## OWNER 11-18 (late): PRIORITIES
+- Context: SMC-BVS is the **last chapter of the owner's PhD thesis** (defense next spring).
+- **Next immediate goal: the 1M engine/campaign** (H-12 timeline), run at a lower token cost than the theory: steady pace, lean staffing.
+- **Theory:** finish the in-flight landings and the SUMMARY, then idle. **Lean:** only when the owner brings it back to the table.
+
 ## OWNER 11-18: LEAN PAUSED (binding)
 - **The Lean conversion is paused.** The owner will read the whole set of theorems, give his take (changes are still possible), and then sign off, maybe next week. **Lean begins only after that sign-off.** He expects the conversion to take 1–2 days, so it isn't a schedule risk.
 - **Resources shift to BNP.** SMC runs in **finish-and-hold** mode: finish what is in flight, start no new tickets, keep staffing minimal.
