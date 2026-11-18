@@ -14,7 +14,7 @@ Notation as in `Theory_work/Wave1/W1-N3/STATEMENT.md` §1 and `lemmas/L7_tie_awa
 
 ## The enumeration's visited set
 A tight path is (j_0, …, j_{J−1}) with r_J := k̂, r_{b−1} := r_b − j_{b−1}, every (b, r_b, j_{b−1}) tight, r_0 = 0.
-E := {S : S ∩ C_b = U_b, code(U_b) ∈ arg[b][j_b], (j_b) a tight path}. By the code of `rec` (v3_start.h:217-237): it
+E := {S : S ∩ C_b = U_b, code(U_b) ∈ arg[b][j_b], (j_b) a tight path}. By the code of `rec` (v3_start.h:281-300): it
 visits exactly the elements of E (each once, since S determines (U_b) and hence (j_b)), and `res.S` = lex-min of the
 visited ones. So with no truncation `res.S` = lex_min E; the uncapped enumeration (cap = ∞) always returns lex_min E.
 All elements of E have size k̂ (Σ j_b = k̂).
