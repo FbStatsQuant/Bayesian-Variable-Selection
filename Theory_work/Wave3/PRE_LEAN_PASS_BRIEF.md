@@ -16,7 +16,13 @@ Owner: the Theory Department. It runs the pass serially, staffs it token-lean (P
 | T3 | Domination transfer (Cor 9C core) + Hellinger reduction (W3-DIST:H), Lemma D0 | yes | yes | shortlist 3 |
 | T4 | Thm 1 (true model, rows 1.1/1.2) + the presented Thm 2 (Thm2SG) | yes | yes | Dec (Level 2) |
 | T5 | Thm 9 (true distribution, row 2.1) | yes | yes | Dec (Level 2) |
-| T6 | Thm 6 + Cor 6L (+ Cor-FAMC as context) | yes, **after** Cor 6L is recorded | yes | later |
+| T6 | Thm 6 + Cor 6L + Cor-FAMC (rows 3.1, 3.1L, 3.1F) | yes, **after** Cor 6L is recorded | yes | later |
+| T7 | Thm 4, omitted variables (row 1.4) | yes | yes | later |
+| T8 | Thm 7, fixed-design reported model (row 3.2), + Thm 5, start law concentrates (row 3.3) | yes | yes | later |
+| T9 | Row 3.5 evidence unbiased + Thm 10 printed outputs (row 3.6) + pooling (row 4.1) | yes | yes | Dec (row 3.5) |
+| T10 | Thm 8, certified screening (row 3.7) | yes | yes | later |
+
+**Owner, 11-18 morning: "a whole pre-Lean check".** Every presented theorem and corollary in the card (rows 1.1–1.4, 2.1, 3.1–3.7, 4.1; T4 includes Thm 1′) is covered, not only the Lean-bound ones. The order is T1–T5 (Lean-bound first), then T7–T10, then T6 once Cor 6L is recorded. The empirical rows (4.2, 4.3, 5.x) and the body remark 2.2 are out of scope.
 
 **Sol 6.2 final-text confirmations** (results whose last round was Opus only), consolidated to about 5 calls:
 1. C1 code audit;
@@ -42,7 +48,7 @@ The consultant (HQ's Fable) is consulted only where the Fable OBJECTs to a rulin
 - **Proof simplifications** with the statement unchanged are adopted if localized and cheaper to formalize. They get an Opus diff check, plus Sol 6.2 if the change is substantive. Recorded as CORRECTION-ONLY or PATCH.
 - **Statement changes** (including those Lean needs) go through the normal route: seats, then H5 with the consultant, then HQ. They must not weaken any headline statement without HQ and owner sign-off.
 - Everything else is logged and declined. No complexity growth.
-- Kill budget: the whole pass ≈ 2–3 days. Codex ≈ 11 calls. Fable ≈ 6 short passes plus at most 2 consultant cards.
+- Kill budget: the whole pass ≈ 3–4 days. Codex ≈ 15 calls (10 Astra, 5 Sol). Fable ≈ 10 short passes plus at most 3 consultant cards.
 
 ## Output
 `Theory_work/Wave3/PRE_LEAN_PASS/` holds, per target, the Codex review, the Fable card, the rulings and the adopted changes. It also holds a one-page SUMMARY for the owner's theory sign-off: findings, what changed, what was declined, and the Lean-readiness notes the Lean Department will use as its blueprint input.
