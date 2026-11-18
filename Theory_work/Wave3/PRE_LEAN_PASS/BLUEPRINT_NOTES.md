@@ -79,3 +79,16 @@ Lean readiness (ranked; no item changes a statement):
    - Named axioms: the two conditional inputs C-MIS:GDb and C-MIS:Prop-P (they are the registry conditions), and Gaussian sample-variance concentration.
 4. **Example (E1) in two parts:** the Schur-complement algebra (Level 1), and "jointly Gaussian and uncorrelated implies independent" as a named axiom unless Mathlib has it (not checked). Carry σ² + τ² > 0 as a hypothesis (T7-1).
 5. **Cor H clauses:** the (KL) identity for two normals is deterministic (Level 1) and the Hellinger part reuses Lemma D0 from T3.
+
+## T8: Thm 7 and Thm 5 (card `T8/FABLE_CARD.md`; consistency tier for Thm 7)
+Lean readiness (ranked; no item changes a statement):
+
+1. **Theorem 7's core as finite-set mathematics over an explicit interface.** Hypotheses: scored models lie in Ω; on output, the search's scored sets are scored; the reported model maximises F over the scored set. Conclusion on 𝓜_n ∩ 𝒦_n: every output run reports S₀.
+   - Gain: Level 1, reusing the order lemma of T2 item 4. The "exactly |S̃₀ ∖ S₀| deletions" count is an induction on a down-closed family.
+2. **Probability layer as two bounds.** P(𝓜_nᶜ) ≤ 2·E[1 − π(S₀)] from the T4 headline; P(𝒦_nᶜ) from SAND-F-c, TL-F-c and NA-W.
+   - Named axioms: Gaussian tail with union bound; Gaussian concentration for the maximum; plus those of T4.
+3. **Delivery as hypotheses, not theorems.** State DLV-0 on the bounded domain 𝔇, or with the two predicates explicitly false (T8-1). The code-reading audits cannot be Lean theorems.
+4. **Constants:** define c₀ through C_* at `W3-T03ACC/STATEMENT.md:40` (G2); the BM-∞ branch needs none.
+5. **Theorem 5:** FLOOR is a Level-1 target of the same kind as T1 (one-step determinant ratio). In START-R the J-bounds (J0)–(J4) are Level-1 Gaussian integrals; state Step 1's representation with "≤" (T8-3).
+   - Named axioms: independence of the Gaussian regression innovation; covariance concentration for Gaussian rows.
+Note (walk G2, card): c₀(s₀, A)'s constant C_* is written explicitly in a recorded statement, `W3-T03ACC/STATEMENT.md:40`, C_* = 2s₀ + 3[A·j_* + s₀ + log(j_* + 1) + 1], j_* = ⌈(2A+1)s₀⌉ + 1: Lean defines it by that formula.
