@@ -1138,7 +1138,7 @@ class TestCells(Base):
         # PR #19 MINOR-6: the fit count (TSV data rows) and the planned count (all but the 20 block-costed T8 rows)
         self.assertEqual(len(rows), 259)   # H-9 258 + the H-10 gated AR-weak 1M cell
         self.assertEqual(len(planned_ids), len(rows) - 20)
-        self.assertEqual(len(written), 48)   # H-10: + the gated AR-weak 1M plan
+        self.assertEqual(len(written), 47)   # H-10 gated AR-weak 1M plan (48); the 20 T fits are R' = 4 (8 tasks each, 18 per batch): 2 T plans, not 3
         for f in written:   # the campaign plans carry the required keys (a cap equal to the plan's own worst case) and no unknown keys
             q = json.load(open(f)); P = p1m_driver.resolve(q)
             self.assertNotIn("warnings", P, f)
@@ -1204,7 +1204,7 @@ class TestCells(Base):
         d1, d2 = os.path.join(self.tmp, "f1"), os.path.join(self.tmp, "f2")
         w1 = p1m_cells.plans(rows, d1, code_commit=commit)
         w2 = p1m_cells.plans(p1m_cells.expand(), d2, code_commit=commit)
-        self.assertEqual(len(w1), 48)
+        self.assertEqual(len(w1), 47)
         self.assertEqual([open(a, "rb").read() for a in w1], [open(b, "rb").read() for b in w2])   # deterministic
         self.assertEqual(p1m_cells.plan_set_digest(w1), p1m_cells.plan_set_digest(w2))
         for f in w1:
@@ -1228,6 +1228,59 @@ class TestCells(Base):
         q = json.load(open(w1[0])); q["core_tree"] = "xyz"
         with self.assertRaises(p1m_driver.PlanError):
             p1m_driver.resolve(q)
+
+    def test_overlap_t_arm_and_shapes(self):
+        """OVERLAP_1e4_SUBMISSION_PLAN §1-2 (blocking fix): the T arm is law mode, N = N0 = max(2500, n, p) = 10^4, R' = 4, with the
+        T limits; the V arm keeps N = 2,500, R' = 16 with the planned V shapes; the planning cost of the rung is unchanged."""
+        rows = p1m_cells.expand()
+        ov = [r for r in rows if r["block"] == "overlap 1e4"]
+        T = [r for r in ov if r["mode"] == "law"]; V = [r for r in ov if r["mode"] == "V"]
+        self.assertEqual((len(T), len(V)), (20, 20))
+        self.assertTrue(all((r["N"], r["Rp"]) == (10000, 4) for r in T))
+        self.assertTrue(all((r["N"], r["Rp"]) == (2500, 16) for r in V))
+        self.assertEqual(round(sum(r["core_h_planning"] for r in ov)), 2500)            # MANIFEST_CELLS: 2,500 (T at 115 per fit)
+        self.assertTrue(all(r["core_h_planning"] == 115.0 for r in T))
+        # the guard: a law fit with V's N / R' (the old defect) is refused, and so is a wrong N0
+        bad = [dict(r) for r in rows]; t0 = next(r for r in bad if r["mode"] == "law"); t0["N"], t0["Rp"] = 2500, 16
+        with self.assertRaises(AssertionError):
+            p1m_cells.check_theory_arms(bad)
+        t0["N"], t0["Rp"] = 10000, 4; self.assertTrue(p1m_cells.check_theory_arms(bad))
+        t0["N"] = 40000
+        with self.assertRaises(AssertionError):
+            p1m_cells.check_theory_arms(bad)
+        self.assertEqual(p1m_cells.n0(200, 10 ** 4), 10 ** 4); self.assertEqual(p1m_cells.n0(200, 25), 2500); self.assertEqual(p1m_cells.n0(5000, 300), 5000)
+        w = p1m_cells.plans(rows, os.path.join(self.tmp, "ovp"), only="1e4", code_commit="ab" * 20)
+        tp = [f for f in w if "overlap1e4" in f and "_law_" in f]; vp = [f for f in w if "overlap1e4" in f and "_V_" in f]
+        self.assertEqual((len(tp), len(vp)), (2, 3))
+        for f in tp + vp:
+            q = json.load(open(f)); P = p1m_driver.resolve(q)
+            self.assertNotIn("warnings", P)
+            fit = P["fits"][0]; res = fit["resources"]
+            if q["mode"] == "law":
+                self.assertEqual((fit["N"], fit["Rp"], q["max_task_hours"]), (10000, 4, 3.0))
+                self.assertEqual(res["calibrate"], {"cpus": 48, "mem": "16G", "time": "03:00:00"})
+                self.assertEqual(res["islands"], {"cpus": 24, "mem": "16G", "time": "00:45:00"})
+                self.assertEqual(res["merge"], {"cpus": 8, "mem": "8G", "time": "00:20:00"}); self.assertEqual(res["eval"], {"cpus": 8, "mem": "8G", "time": "00:30:00"})
+                self.assertEqual(res["setup"], {"cpus": 8, "mem": "8G", "time": "00:15:00"})
+                self.assertEqual(P["n_tasks"], 8 * len(q["fits"])); self.assertEqual(P["island_isa"], "")
+                self.assertAlmostEqual(P["worst_case_core_h"] / len(q["fits"]), 224.7, delta=0.1)     # the planner's figure
+                for r in P["fits"][:1]:   # every island array is R' = 4 tasks (fit_rp.txt)
+                    self.assertEqual(r["Rp"], 4)
+            else:
+                self.assertEqual((fit["N"], fit["Rp"], q["max_task_hours"]), (2500, 16, 2.0))
+                self.assertEqual(res["setup"], {"cpus": 8, "mem": "8G", "time": "00:15:00"}); self.assertEqual(res["calibrate"], {"cpus": 16, "mem": "8G", "time": "00:30:00"})
+                self.assertEqual(res["islands"], {"cpus": 4, "mem": "4G", "time": "00:30:00"}); self.assertEqual(res["merge"], {"cpus": 8, "mem": "4G", "time": "00:15:00"})
+                self.assertEqual(res["eval"], {"cpus": 8, "mem": "8G", "time": "00:20:00"})
+                self.assertAlmostEqual(P["worst_case_core_h"] / len(q["fits"]), 46.7, delta=0.1)
+            self.assertGreaterEqual(q["core_h_cap"], P["worst_case_core_h"]); self.assertLess(q["core_h_cap"] - P["worst_case_core_h"], 1.1)
+        # the driver writes a law fit with R' = 4: the merge reads islands 1..4 and the islands array is 1-4
+        out = os.path.join(self.tmp, "ovt")
+        self.assertEqual(p1m_driver.main(["--plan", tp[0], "--out", out, "--strict", "--now", "2026-11-18T00:00:00Z"]), 0)
+        self.assertEqual(open(os.path.join(out, "fit_rp.txt")).read().split(), ["4"] * len(json.load(open(tp[0]))["fits"]))
+        mid = json.load(open(tp[0]))["fits"][0]["run_id"]
+        mm = json.load(open(os.path.join(out, "manifests", mid, "merge.json")))
+        self.assertEqual(sum(1 for k in mm["inputs"] if "island_" in k), 4)
+        self.assertEqual(json.load(open(os.path.join(out, "run_manifests", mid + ".json")))["params"]["N"], 10000)
 
     def _mini_repo(self, core_text="A"):
         """A throwaway git repo with a 'core' tree and a method tag; returns (repo, freeze dict for it)."""

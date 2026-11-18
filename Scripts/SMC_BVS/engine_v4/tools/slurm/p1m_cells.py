@@ -59,9 +59,23 @@ DESIGN_CODE = {"IND": 1, "AR": 2, "AR-weak": 3, "BLK": 4, "ADJ-OPP": 5, "NULL": 
 # 10⁶: H-9 (HQ 11-16) re-size from job 2748756, G = 256 socket-local: 1.44 × the 963 plan (≈ 288 ns·CPU per pair)
 RESIZE_6 = 1.234   # H-10 (11-16): MEASURED after L5, job 2749328 (≈ 247 ns·CPU per pair); H-9 used 1.44 (job 2748756)
 COST_V = {4: 10.0, 5: 96.0, 6: 963.0 * RESIZE_6}
-COST_T = {4: 115.0, 5: 6100.0}          # 10⁴: upper end of 52–115 (escalating coded calibration)
+COST_T = {4: 115.0, 5: 6100.0}          # 10⁴: upper end of 52–115 (escalating coded calibration), the WHOLE fit (N0, R' = 4)
 COST_V_N5000 = {6: 1800.0 * RESIZE_6}     # the 1M self-check, reduced to N = 5,000 (H-9; was N = 10⁴ at 3,600)
 COST_6_BY_N = {k: v * RESIZE_6 for k, v in {200: 963.0, 500: 1800.0, 1000: 3300.0}.items()}   # owner sheet option D, H-9 re-size
+# Per (block, mode) resource shapes and the task-hour limit, from OVERLAP_1e4_SUBMISSION_PLAN §2 (PLANNING VALUES, re-sized after the
+# pilot wave W0 is read back). Only the 10⁴ overlap rung has them; every other block keeps the driver's defaults. The T calibrate
+# limit of 3:00 exceeds the driver's 2-h task rule (§0-v2.5), so the T overlap plans set max_task_hours = 3.0: a one-off exception
+# that needs HQ's acceptance before submission.
+PLAN_RESOURCES = {
+    ("overlap 1e4", "V"): {"max_task_hours": 2.0, "resources": {
+        "setup": {"cpus": 8, "mem": "8G", "time": "00:15:00"}, "calibrate": {"cpus": 16, "mem": "8G", "time": "00:30:00"},
+        "islands": {"cpus": 4, "mem": "4G", "time": "00:30:00"}, "merge": {"cpus": 8, "mem": "4G", "time": "00:15:00"},
+        "eval": {"cpus": 8, "mem": "8G", "time": "00:20:00"}}},
+    ("overlap 1e4", "law"): {"max_task_hours": 3.0, "resources": {
+        "setup": {"cpus": 8, "mem": "8G", "time": "00:15:00"}, "calibrate": {"cpus": 48, "mem": "16G", "time": "03:00:00"},
+        "islands": {"cpus": 24, "mem": "16G", "time": "00:45:00"}, "merge": {"cpus": 8, "mem": "8G", "time": "00:20:00"},
+        "eval": {"cpus": 8, "mem": "8G", "time": "00:30:00"}}},
+}
 MAX_REP = 99            # seed-rule field widths (see the module docstring)
 K_SEED2, K_PREC_FINAL, K_PREC_CALIB = 1, 10, 20
 
@@ -108,6 +122,19 @@ def plan_set_digest(paths, mask_commit=False):
     return h.hexdigest()
 
 
+def n0(n, p):
+    """The engine's tier-0 particle count in theory mode (calib_run.h budgets()): N0 = max(2500, n, p)."""
+    return max(2500, n, p)
+
+
+def check_theory_arms(rows):
+    """Overlap defect (OVERLAP_1e4_SUBMISSION_PLAN §1): every theory-mode (law) fit is N = N0 = max(2500, n, p) with R' = 4
+    (EXPERIMENT_PLAN A1); a law fit with V's N = 2,500 / R' = 16 would be sized and timed as the wrong method."""
+    bad = [r["run_id"] for r in rows if r["mode"] == "law" and (r["N"] != n0(r["n"], r["p"]) or r["Rp"] != 4)]
+    assert not bad, "law-mode fits must have N = max(2500, n, p) and R' = 4: %s" % bad[:5]
+    return True
+
+
 def n_factor(n):
     c = lambda m: 3 * (30 + 60 * m / 200.0) + 30
     return c(n) / c(200)
@@ -118,7 +145,9 @@ def fit_cost(rung, n, mode, N=2500, islands=16):
         return COST_V_N5000[6]
     if rung == 6:
         return COST_6_BY_N.get(n, COST_V[6] * n_factor(n))
-    base = (COST_T if mode == "law" else COST_V)[rung] * n_factor(n)
+    if mode == "law":   # T: COST_T is the whole fit (coded calibration + R' = 4 islands at N0); N and R' do not rescale it
+        return COST_T[rung] * n_factor(n)
+    base = COST_V[rung] * n_factor(n)
     # a fit = R′ islands + ≈ 3 island-equivalents of bounded calibration (19 for R′ = 16; OD-2); both scale with N
     return base * (N / 2500.0) * ((islands + 3) / 19.0)
 
@@ -126,7 +155,11 @@ def fit_cost(rung, n, mode, N=2500, islands=16):
 # CELLS: (block, rung, design, n, reps, arms, note). arms: list of dicts {mode, seeds, N, islands, params, tag}.
 V1 = [{"mode": "V", "seeds": 1, "tag": "V"}]
 V2 = [{"mode": "V", "seeds": 2, "tag": "V"}]                        # seed 1 + seed 2 on the same data
-TV2 = [{"mode": "law", "seeds": 2, "tag": "T"}, {"mode": "V", "seeds": 2, "tag": "V"}]
+# The T arm (theory mode, law, bit form; EXPERIMENT_PLAN A1, D-26): N0 = max(2500, n, p) and R' = 4 islands, coded calibration.
+# The ENGINE sets N itself (calibrate: Budgets::N0, tier 1 = 4 N0 on escalation; island and merge read N from calib.bin; an explicit
+# different --N is refused), so the plan's N is the tier-0 record and expand() asserts it equals N0. "N": "N0" resolves to it.
+T_ARM = {"mode": "law", "seeds": 2, "tag": "T", "N": "N0", "islands": 4}
+TV2 = [T_ARM, {"mode": "V", "seeds": 2, "tag": "V"}]
 # Precision study (Sol F6): 8 arms, each with its OWN final seed (k = 10 + a) and calibration seed (k = 20 + a), so no
 # two fits share a Philox key and none shares one with the overlap T / V or A3 fits of the same dataset. c = replicate.
 # Open (WP4 open item 1, MANIFEST_CELLS §6): I_max in {0, 3} and systematic resampling (D-2, D-14) have NO arms here and
@@ -199,6 +232,8 @@ def expand():
                 assert arm.get("seeds", 1) <= 2
                 for s in range(1, arm.get("seeds", 1) + 1):
                     N = arm.get("N", 2500); isl = arm.get("islands", 16)
+                    if N == "N0":
+                        N = n0(n, 25 if rung == 1 else 10**rung)
                     cost = arm["fixed_cost"] if "fixed_cost" in arm else fit_cost(rung, n, arm["mode"], N, isl)
                     params = dict(arm.get("params") or {})
                     if "prec_arm" in arm:
@@ -226,6 +261,7 @@ def expand():
         assert 1 <= r["seed"] <= 2**31 - 1 and 1 <= r["data_seed"] <= 2**31 - 1
     check_seeds(rows)
     check_a3_pairing(rows)
+    check_theory_arms(rows)
     return rows
 
 
@@ -317,10 +353,12 @@ def plans(rows, outdir, only=None, code_commit=None):
         for b in range(0, len(rs), cap):
             chunk = rs[b:b + cap]
             name = "%s_p%d_n%d_%s_N%d_R%d_b%d" % (block.replace(" ", "").replace("⁴", "4").replace("⁵", "5").replace("⁶", "6"), p, n, mode, N, Rp, b // cap + 1)
+            shape = PLAN_RESOURCES.get((block, mode), {})
             plan = {"batch": name[:64], "mode": mode, "code_commit": code_commit or UNSET_COMMIT,
-                    "method_tag": FREEZE["method_tag"], "core_tree": FREEZE["core_tree"], "binary": "bin/smcbvs4", "max_task_hours": 2.0,
+                    "method_tag": FREEZE["method_tag"], "core_tree": FREEZE["core_tree"], "binary": "bin/smcbvs4",
+                    "max_task_hours": shape.get("max_task_hours", 2.0),
                     **({"island_isa": "sapphirerapids"} if mode == "V" else {}),   # D-32: V plans need an FMA island ISA
-                    "kind": "gated (needs HQ go)", "fits": []}
+                    "kind": "gated (needs HQ go)", **({"resources": shape["resources"]} if shape else {}), "fits": []}
             for r in chunk:
                 f = {"run_id": r["run_id"], "design": "NULL" if r["signal"] == "null" else r["design"], "p": r["p"], "n": r["n"],
                      "signal": r["signal"], "data_seed": r["data_seed"], "seed": r["seed"], "Rp": r["Rp"], "N": r["N"]}
