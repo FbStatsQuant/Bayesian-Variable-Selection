@@ -1,0 +1,27 @@
+# NA_DROP v1.4: Fable allocation card texts + manager items 2/3 applied; claimed edits grepped in the REAL staged files (HQ RIDER_RULES)
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:33  R-a new: "every guard decision of the tagged fit is that of the pinned fit [R2-E-2], while the work and storage of the new computation are bounded in (0.6)"
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:0  R-a old ABSENT: "DLV-0's guard and MACH"
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:42  R-b new: "raise no error other than a failed allocation, which (0.6) excludes under (D)"
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:42  R-b new: "post-commit fit returns whenever the pinned fit returns; without (D)"
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:0  R-b old ABSENT: "returns if and only if the pinned fit returns"
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:45  R-c (0.6) paragraph head
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:46  R-c T_B line
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:48  R-c T_W line
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:49  R-c words bound
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:49  R-c Lemma R citation
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:49  R-c constants C_W + 1, C_M + 8
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:49  R-c Corollary R citation
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:49  R-c (D) definition citations
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:49  R-c Q5 citation
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:49  R-c no-margin clause
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:49  R-c IDEAL-W+ clause
+OK   ticket/.../W3-D5P/ERRATA.md:5  E1 new: "[applied]; the added work and storage are bounded in L3 (0.6)"
+OK   ticket/.../W3-D5P/ERRATA.md:5  E1 new: withdrawal sentence
+OK   ticket/.../W3-D5P/ERRATA.md:5  E1 new: pointer to the card
+OK   ticket/.../W3-D5P/ERRATA.md:0  E1 old ABSENT: "absorbed by the polynomial envelopes of (D)"
+OK   ticket/.../W3-D5P/REPORT.md:69  depends_on LIST-R gains C-DLV:L1-R and C-DLV:Cor-R
+OK   ticket/.../W3-D5P/REPORT.md:4  REPORT header v1.1-v1.4
+OK   ticket/.../W3-D5P/STATEMENT.md:1  header v1.4
+OK   ticket/.../W3-D5P/STATEMENT.md:169  changelog row v1.4
+OK   ticket/.../W3-D5P/STATEMENT.md:169  manager item 2: constants
+OK   ticket/.../W3-D5P/STATEMENT.md:169  manager item 3: R internals
