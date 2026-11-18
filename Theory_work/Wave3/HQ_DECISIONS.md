@@ -759,3 +759,7 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - Gaussian rows and exact arithmetic/RNG are disclosed as SL-anchored conventions.
 - W1-N1:B/F line checks done (AW:ISL, AW:FRZ); retarget + W3-SAMP erratum (potential pair) approved; API blind audit submitted.
 - A1/A2: V2 corrigendum. #5′ statement locked (Corollary 6L).
+- 2026-11-17 evening. **OWNER account directive:** Claude Personal is the main fuel; Claude Work and Claude Third are drying out.
+  - The Engineering manager thread was switched to CP; all new SMC agents go on CP; no CT.
+  - Writing finishes Assignment 5 lightly on CW (≤ 1 helper; moves to CP if CW is limited).
+  - Codex sparingly.
