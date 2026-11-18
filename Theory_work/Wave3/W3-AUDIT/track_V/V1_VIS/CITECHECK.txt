@@ -1,4 +1,4 @@
-OK            [STATEMENT.md] Theory_work/Wave3/W3-AUDIT/TRACK_B.md:209-233 sha=ae91d20f90 | ## B8. Visibility (Thm 6 (A3); Thm 10 (A4)): |Cov(W_j, Wᵀθ* | W_U)| ≥ a for every true j and every |U| ≤ 15
+OK            [STATEMENT.md] Theory_work/Wave3/W3-AUDIT/TRACK_B.md:209-233 sha=2481bfbaad | ## B8. Visibility (Thm 6 (A3); Thm 10 (A4)): |Cov(W_j, Wᵀθ* | W_U)| ≥ a for every true j and every |U| ≤ 15
 OK            [STATEMENT.md] Theory_work/Wave3/W3-AUDIT/track_C/RESULTS.md:63-69 sha=04ce79c82b | - **Visibility, spread truth: yes by n = 800 in 15 designs** (v̂ ≥ 4.8 at n = 800 and 14–149 at n = 1600: IND,
 OK            [PROOF.md] Theory_work/Wave3/W3-AUDIT/track_C/RESULTS.md:28-50 sha=87a4f25c69 | ## Table: design × proxy × n trend (final)
 OK            [PROOF.md] Theory_work/Wave3/W3-AUDIT/TRACK_B.md:222-228 sha=d9e1d973b7 | covariance is θ_j Var(W_j | W_U) plus geometrically small terms, ≥ |θ_j| λ_min/2). cs(ρ) of P6: inside (aligne

@@ -213,7 +213,7 @@ cheap first stage must see every true predictor.
 **Evidence.** U = ∅ in (A3) gives |Cov(W_j, y)| ≥ a [one line]. SL need Condition 5 so that their iterative subset
 screening "ensures that all true predictors that are contained in X_s will be selected" (p. 958). Ours conditions on up
 to 15 other columns because the method's blocks have at most 16 columns.
-**Holds / fails.** Holds when no truth is cancelled by ≤ 15 others: bounded blocks with one truth each, AR, banded
+**Holds / fails.** Holds when no truth is cancelled by ≤ 15 others: bounded blocks with one truth each, AR and banded with the truths spread apart (study gaps 31–37, ≈ p/5; adjacent mixed-sign AR truths can cancel: ρ = 0.5, θ = (1, −2) lies on B, Lemma VIS),
 (W2-APP family map, "PTV automatic if ≤ 1 truth/block", `L4_families.md:165`). Fails for masked truths (zero marginal or
 partial covariance with y); those designs are treated by a separate theorem (W1-PXN), not by Thm 6. Track C gives two
 concrete failures at the population level: a pervasive factor with **mixed-sign** truths (its D14, D15: a set of ≤ 15
