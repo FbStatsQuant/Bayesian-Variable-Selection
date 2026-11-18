@@ -71,3 +71,4 @@
 - 2026-11-17 A5b Opus check: 13 issues, all fixed (reviews/A5b_disposition.md); one departs from HQ's wording (Cor 6L → Cor 9C premise: 'proposed, not yet claimed', per W3-D5P §5 rem. 3). DELIVERED manuscript/manuscript_A5b_2026-11-17.pdf: §1–6 end p. 26 with status boxes (see report for p. without).
 - 2026-11-17 HQ: future Codex fidelity reads use gpt-6.2-sol (high). Recorded as WD9.
 - 2026-11-17 HQ: track gpt-6.2-sol vs 6.1 quality; created SOL62_QUALITY.md with a 6.1 baseline (7 reads, 38 findings, all confirmed). No 6.2 read yet.
+- 2026-11-17 HQ: Claude Work drying out. A5 finish at a light pace: manager + ≤1 helper; Fable advisor final read only; Codex one final fidelity read (gpt-6.2-sol). If Claude Work hits its limit, stop and tell HQ. HELPER: Fable advisor, final read of A5b → advisor/STYLE_A5_R2.md.
