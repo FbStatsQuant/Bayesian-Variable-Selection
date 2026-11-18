@@ -52,6 +52,13 @@ PROGRAM Readability, with a fidelity check of every number.
 - **Sol 6.2:** the reviewer. Council seats and final-text checks; its verdicts are input, triaged against the acceptance filter.
 - **Sonnet and Haiku:** unlimited workers, in parallel wherever the work splits. Sonnet builds, analyses and writes; Haiku does chores.
 
+- **Right-model rule (owner, 11-18):** choose the model by what the task demands, not by default. Tokens aren't a problem in themselves.
+  - Fable when a task truly needs it (propose it; the owner is glad to sign it off).
+  - Opus for long agentic or difficult work.
+  - Sonnet for standard building, analysis and writing.
+  - Haiku for simple tasks.
+  - Opus is never the blanket option.
+
 ## 4. Access and autonomy
 - **Repo:** github.com/FbStatsQuant/Bayesian-Variable-Selection (public for now; the owner will make it private).
   Clones:
