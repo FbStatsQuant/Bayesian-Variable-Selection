@@ -1,0 +1,14 @@
+# NA_DROP v1.4 R4 corrections (Opus R4 F-1, C-1, S-1, S-2, C-2, S-3, C-4 applied as written; C-3, E-1, S-4 NOT applied): claimed edits grepped in the REAL staged files (HQ RIDER_RULES)
+OK   ticket/.../W3-D5P/ERRATA.md:5  F-1 E1 cell ends at the card pointer + closing quote then " |"
+OK   ticket/.../W3-D5P/ERRATA.md:0  F-1 ABSENT: "optionally"
+OK   ticket/.../W3-D5P/ERRATA.md:0  F-1 ABSENT: ":121-122"
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:49  C-1 lazy-promise qualifier
+OK   ticket/.../W3-D5P/STATEMENT.md:169  S-1 R-level objects / MACH peak bytes
+OK   ticket/.../W3-D5P/STATEMENT.md:0  S-1 ABSENT: "existing IDEAL-W⁺ premise"
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:49  S-2.1 M̄ = 2C_M·𝔅_M
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:49  S-2.2 sums of terms
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:49  C-2 shipped-code envelopes
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:118  S-3 P(O^c)=0 read for the method
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:45  C-4.1 which(!constant)
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:45  C-4.2 wrapper :274-279 inside 40000
+FAILS 0
