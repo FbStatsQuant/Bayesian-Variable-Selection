@@ -123,3 +123,5 @@ the new text, and the bridges it needs. The manager passes it to HQ for W3-READE
 - **API batch requests:** max_tokens 128000 (never 32k/64k) and effort high (never above). Re-run the blindness scan on every build.
 - **No /tmp (HQ 11-18, POLICIES §14):** worktrees live under /home/fb31/BVS-wt or the department folder on NFS; scratch goes in <worktree>/.rc_tmp. Nothing new in /tmp, including child scratchpads that hold clones or worktrees.
 - **SUMMARY template (HQ a810898a, Lean/BRIEF.md):** the pre-Lean SUMMARY carries a coverage statement. Only MATCH counts as a certificate of a paper theorem. Each Level-2 headline names its first paper-only dependency. A counterexample found during formalization means SUSPECT, escalate, and stop that target.
+
+- **Claimed-edit check before any seat freeze (HQ, 2026-11-18, after MEAS-D R4 F6).** Before freezing a manifest for a seat, the coordinator (or lead) greps the files being frozen for every edit its seat brief claims, and lists each one in the brief with file:line. If any claimed edit is missing, the freeze stops. Scratch copies (.rc_tmp) don't count; only the real ticket files do.
