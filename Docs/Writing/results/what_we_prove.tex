@@ -1,0 +1,44 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{natbib}
+\usepackage{float}
+\usepackage{../shared/smcbvs}
+\bibliographystyle{abbrvnat}
+\setcitestyle{authoryear,round}
+\linespread{1.08}
+\newcommand{\bridgepending}{The short bridging argument that puts the statement in this reader form (set-size
+arithmetic or assembly from the checked results) awaits its final independent check.}
+
+\title{What we prove: consistency of the SMC-BVS method}
+\author{SMC-BVS project}
+\date{Draft, \today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+This part of the paper collects every consistency result we have for the SMC-BVS method, a sequential Monte Carlo method for
+Bayesian variable selection in the linear model. The results answer four questions, in order. Does the posterior pick
+the right model? Is the posterior right about the distribution of the response? Does the method, as coded, deliver that
+posterior? And what carries over to the parallel version of the method? The results are asymptotic in the sample size
+$n$ (two lower bounds hold for every $n$), allow many more predictors than observations, and concern the prior exactly
+as the software sets it, with no tuning by the user.
+\end{abstract}
+
+\input{sections/sec1_overview}
+\input{sections/sec2_setting}
+\input{sections/sec3_selection}
+\input{sections/sec4_distribution}
+\input{sections/sec5_delivery}
+\input{sections/sec67_parallel_open}
+
+\bibliography{../shared/refs}
+
+\appendix
+\input{sections/appendices}
+
+\end{document}

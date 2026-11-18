@@ -1,0 +1,103 @@
+% =====================================================================================================
+\section{Result 3: the method, as coded, reports the true model}\label{sec:reported}
+
+\inwords{If every true predictor is visible to a block-by-block search, the predictors that can imitate the signal form a
+set $Q$ of at most $n^b$ predictors with $b<\tfrac12$, and regressions within $Q$ are local, then there is an event,
+determined by the data alone and of probability tending to one, on which every run that produces output reports exactly
+the true model, whatever its seed and the outcome of its calibration. The start mode contains every true predictor and
+possibly some members of $Q$; the local search from the start mode removes the spurious ones, one per move.}
+
+\why{It is a guarantee about what the software prints, at the effort its own calibration chooses and for every seed, not only
+about the posterior it targets.}
+
+\paragraph{How the signal looks to a block-by-block method.} The start law sees interactions within blocks of at most
+$16$ predictors only, so the conditions of this section are about partial covariances given at most $15$ other
+predictors. With $W\sim\Normal_p(0,\Sig)$, $\Cov(W_j,W_l\mid W_U)$ is the partial covariance given $(W_k)_{k\in U}$, and
+$\bar\beta_{U,l}:=\Sigma_{n,UU}^{-1}\Sigma_{n,Ul}$ is the population regression coefficient of $W_l$ on $W_U$, padded
+with zeros to a vector indexed by a larger set when needed. A
+\emph{leakage set} is a deterministic $Q$ with $\Sz\subseteq Q\subseteq\set{p}$ that contains every predictor able to
+imitate part of the signal; its \emph{lattice} $\Lat(Q):=\{T:\Sz\subseteq T\subseteq Q\}$ is the set of models between the
+true model and $Q$. The signal is fixed on the scale the method sees:
+
+\begin{assumption}{FSt}{Fixed signals, standardised scale}
+$\yr=\alpha\one+X\tstar+\varepsilon$ with $\varepsilon\sim\Normal_n(0,\sigs^2I_n)$, a fixed $\sigs^2>0$, noise independent
+of $\Xr$, a deterministic $\tstar$, $\sz\ge1$ fixed, and $\theta_{\mathrm{lo}}\le\abs{\theta^*_j}\le\theta_{\mathrm{hi}}$ for
+$j\in\Sz$, with fixed $0<\theta_{\mathrm{lo}}\le\theta_{\mathrm{hi}}$. \hfill [\SA{3.2}]
+\end{assumption}
+
+\begin{assumption}{V}{Visibility}
+For every $j\in\Sz$ and every $U\not\ni j$ with $\abs{U}\le15$, $\abs{\Cov(W_j,W^\top\tstar\mid W_U)}\ge a$, for a fixed
+$a>0$. \hfill [\SA{3.3}]
+\end{assumption}
+
+In \as{FSt} the raw coefficients $\bstar=D^{-1}\tstar$ depend on the design; \as{FSt} takes the place of \as{GL} and \as{SP}
+in Results~3 and~4.
+
+\begin{example}[Visibility and leakage with three predictors]\label{ex:visibility}
+Let $\Sz=\{1,2\}$ with $\tstar_{\Sz}=(1,-1)$, $\Corr(W_1,W_2)=\varrho$, and let $W_3$ be a null predictor. With $U=\emptyset$,
+$\Cov(W_1,W^\top\tstar)=1-\varrho$, so \as{V} requires $1-\varrho\ge a$: as $\varrho\to1$ the two true predictors cancel and
+each becomes invisible. If $\Corr(W_3,W_1)$ is fixed and nonzero, $W_3$ can imitate part of the signal of $W_1$, so it
+must belong to the leakage set $Q$.
+\end{example}
+
+Fix $b\in(0,\tfrac12)$ and $b_H>0$ with $15b_H+b<\tfrac12$.
+
+\begin{localassumption}[Polynomial leakage set with local regressions]\label{asm:reported}
+\begin{asmitems}
+  \item\label{asm:rr-leak} \emph{Leakage set.} There is a deterministic $Q\supseteq\Sz$ with $\abs{Q}\le n^b$ and, for
+    large $n$, $\abs{Q}\le K$ and ($Q=\set{p}$ or $K\ge2\abs{Q}+32\sz+1$), such that: (i) \emph{no leak outside $Q$:}
+    there is a deterministic $\varpi_n$ with $\varpi_n\sqrt{n/\log n}\to0$ such that
+    $\abs{\Cov(W_l,W_j\mid W_U)}\le\varpi_n$ for all $l\notin Q$, $j\in\Sz\setminus U$ and $\abs{U}\le15$; and (ii)
+    \emph{locality:} there is a deterministic $r_n\to0$, and every $l\notin Q$ has a deterministic
+    $\Hl_l\supseteq\{l\}\cup\Sz$ with $\abs{\Hl_l}\le n^{b_H}$, such that for all $l\notin Q$, all $U\not\ni l$ with
+    $\abs{U}\le15$ and $U_0:=U\cap\Hl_l$: $\abs{\Cov(W_l,W_v\mid W_{U_0})}\le r_n$ and
+    $\abs{\Cov(W_j,W_v\mid W_{U_0})}\le r_n$ for all $v\in U\setminus\Hl_l$ and $j\in\Sz\setminus U_0$.
+  \item\label{asm:rr-floor} \emph{Floor on the leakage set.} $\lmin(\Sigma_{n,Q\cup\{l\}})\ge\varphi^2$ for every
+    $l\in\set{p}$, with $\varphi$ as in \as{EFS}.
+  \item\label{asm:rr-local} \emph{Local regressions within the leakage set.} There are deterministic sequences
+    $d_n=o(\log n)$ and $L_n$, and for every $l\in\set{p}$ a deterministic $N_l\subseteq Q\setminus\{l\}$ with
+    $\abs{N_l}\le d_n$, such that $\norm{\bar\beta_{T,l}-\bar\beta_{T\cap N_l,l}}_1\le L_n$ for every $T\in\Lat(Q)$ with
+    $l\notin T$, where $L_n\to0$ and $L_n^2\log(\abs{Q}+1)=o(\log n)$.
+\end{asmitems}
+\end{localassumption}
+
+In~(a), $32\sz=2\cdot16\sz$, with $16$ the method's block-size cap: with probability tending to one the start mode has at
+most $2(\abs{Q}+16\sz)$ predictors, so this condition leaves room to add a missing true predictor to it.
+
+\begin{theorem}[The reported model equals the true model]\label{thm:reported}
+Let $\Sig$ be positive definite and assume \as{GR}, \as{DIM}, \as{FSt}, \as{V}, \as{EFS}, Assumption~\ref{asm:reported}
+and Convention~\as{C1}. Then, under the joint law of the design and the noise, there are data events $\mathcal G_n$ with
+$\P(\mathcal G_n)\to1$ on which \emph{every} admissible run that produces output reports $\Shat=\Sz$, whatever its seed and the
+outcome of its internal calibration. In particular,
+\begin{equation}\label{eq:reported}
+  \P(\text{the run produces output and }\Shat\neq\Sz)\to0 .
+\end{equation}
+If moreover Convention~\as{C2p} holds, then
+\begin{equation}\label{eq:delivery}
+  \P(\text{the run produces output})=1\ \ \text{for every admissible }n\ge3,\qquad \P(\Shat=\Sz)\to1 .
+\end{equation}
+\end{theorem}
+
+Convention~\as{C2p} lifts two integer limits of the code; in the default configuration neither can be reached on any input
+R can represent ($n,\praw\le2^{31}-1$), so this matters only for the form as $n\to\infty$ (Appendix~\ref{app:conventions}).
+
+\asmlist{(1)~\as{GR} Gaussian rows; (2)~\as{DIM} [\SA{3.1}]; (3)~\as{FSt} fixed signals [\SA{3.2}]; (4)~\as{V}
+visibility [\SA{3.3}]; (5)~\as{EFS} population floor [\SA{3.2}]; (6)~Assumption~\ref{asm:reported}(a) polynomial
+leakage set, and (b)--(c) floor and local regressions in it [\SA{3.3}]; (7)~Conventions \as{C1}, and \as{C2p} for delivery
+(Appendix~\ref{app:conventions}).}
+
+\status{\textbf{Proved and independently checked}, with no open condition: the recorded master is a strengthening of
+this statement, and the two code-reading audits that its delivery route takes as hypotheses are independently checked.
+The statement that the integer limits of \as{C2p} cannot be reached on any representable input: \textbf{proved and
+independently checked}. Registry: Appendix~\ref{app:status}, row 3.1.}
+
+\begin{remark}[On the assumptions]\label{rem:reported}
+(i) \emph{Why $b<\tfrac12$.} At model size about $\sqrt n$ the prior-plus-Occam penalty of one more predictor
+($\approx\log p+\tfrac12\log n$) stops dominating the best of $p$ noise gains ($\approx\log p$); for larger $b$ the key events of the argument are
+expected to fail (a heuristic; whether the conclusion fails is open).
+(ii) Designs that satisfy the assumptions include correlation that is local in a metric and bounded blocks; of our
+designs, the independent and locally correlated ones are inside (\SA{3.3}). The assumptions fail for pervasive common factors when
+$p\gg\sqrt n$, because every null predictor then imitates part of the signal. There Results~1 and~2 and the
+unbiasedness of Result~4 still hold, and certified screening (Theorem~\ref{thm:screen}), which has no leakage
+condition, covers these designs when its own conditions hold.
+\end{remark}
