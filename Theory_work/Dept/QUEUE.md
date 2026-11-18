@@ -141,3 +141,10 @@ Consistency results first (owner, 11-15 evening) + Lean readiness of their deter
 - (11-18, HQ a810898a, consultant; post-freeze editorial, Sonnet) **Precedent quantifier notes:** for each non-Song–Liang assumption (PRECEDENTS_2026-11-17.md and the assumption-class tables), record in one line whether the cited precedent supplies the **decisive quantifier**, not just the same type of condition. Example: Cor-FAMC (BLK-g)/(AR-g) need the uniform margin inf_n dist(ϑ_n, B) > 0 for all large n. If no precedent gives it, say so, and point to the explicit sufficient cases (BLK-1/BLK-s/AR-s/AR-sep) or a typical-data argument.
 - (11-18) **Next batch, with the re-pins:** T10-1 "of size at most q_n+s₀" (RV:956, CLAIMS_CARD:78); T10-2 uniform-bounds scope (RV:950, card row 3.7); T9 𝒜-identification wording in SAMP + R4 (MR erratum: the uninterrupted pair). All CORRECTION-ONLY + PURE.
 - (11-18) **Core drift vs frozen manifests:** method merges changed core files that are EXT inputs of 7 accepted manifests; CI does not run `manifest.py verify`, so this went unseen. Proposed: add a verify step to theory-ci (all accepted manifests) so drift is caught at merge time. Ask HQ/Engineering.
+- (11-18, HQ-approved, right AFTER the pre-Lean batch lands) **RE-PIN BATCH (option A):** re-read and re-freeze against core `method-v3.1.1-listpip` (tree 61b0a582):
+  - **Claims:** DLV-0, LIST-CODE, T14.
+  - **The 7 manifests that option B re-froze without core:** AUDIT track_A/A_X/A_W, RM2-R, MISR, DIST, READER.
+  - **Cite:** INV-SCORE-BITS; the 3 list-PIP stop() rows in the exit inventory, each with its unreachability reason; "list fields deterministic in the top store"; Sol-1's re-pin notes (S.3 unreachability, X5 byte envelope).
+  - **Also lands:** the NEXT_BATCH items that are not MEAS-D-dependent.
+- (11-18, HQ) **TOOLING (Sonnet, small):** add `manifest.py verify` over all accepted manifests as a theory-ci run_ci step and in the recorder's prepush. Land it with or right after the re-pin batch. Reason: 7 manifests failed verify while CI was green.
+
