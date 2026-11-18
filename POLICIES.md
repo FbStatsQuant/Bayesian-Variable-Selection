@@ -44,6 +44,7 @@ PROGRAM Readability, with a fidelity check of every number.
 
 ## 3b. Standing model roles (owner, 2026-11-18: "the best I've found and we will stick to it")
 - **Opus:** the driver. HQ, department managers, decisions, integration and final reviews.
+  - **Opus as agents** (owner, 11-18): also used as worker agents for large tasks that are still difficult, when we divide and conquer (parallel Opus children on hard sub-problems). Never for simple or mechanical work; that goes to Sonnet or Haiku.
 - **Fable 5.2:** the VP. HQ's consultant and second signature; hard mathematics and rulings as a precision tool.
 - **Astra 6.2:** the external adviser. HQ-only, independent opinions; also adversarial "break it" reads.
 - **Sol 6.2:** the reviewer. Council seats and final-text checks; its verdicts are input, triaged against the acceptance filter.
