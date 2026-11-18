@@ -55,15 +55,15 @@ independently checked}
 \begin{abstract}
 \noindent
 Theory for Bayesian variable selection usually concerns an exact posterior under tuned priors, while users run
-software with fixed defaults and read its output. We study SMC-BVS, a sequential Monte Carlo method for
-variable selection in the Gaussian linear model with many more predictors than observations, exactly as its software
-implements it: a fixed beta-binomial and $g$-prior with no tuning, a start law built from exactly scored blocks of
+software with fixed defaults and read the output. We study SMC-BVS, a sequential Monte Carlo method for
+variable selection in the Gaussian linear model with more predictors than observations, exactly as its software
+implements it: a fixed beta-binomial and $g$-prior with no tuning, a start law from exactly scored blocks of
 predictors, a tempered sampler on four islands, and two local searches. We prove that the posterior concentrates on the
 true model at the rate $\sqrt{\log n/n}$, a rate attained on two families of designs, and recovers the true conditional distribution of
-the response; that, for block correlation and any fixed AR correlation, every run that produces output reports exactly the true model with
+the response; that, for block and AR designs whose true coefficients do not cancel (any fixed AR correlation), every run that produces output reports exactly the true model with
 probability tending to one, for every seed; that, without those conditions, a run rarely certifies a small reported model that
 misses a true predictor; and that the evidence estimate is unbiased on every design. We compare every assumption with those of Song and
-Liang (2015) and check it against the designs of our simulation studies: the posterior results cover all of them,
+Liang (2015) and check it against the designs of our simulation studies: the posterior results cover all,
 strong common factors included.
 \end{abstract}
 
