@@ -313,3 +313,4 @@ level is recorded in `HQ_NOW.md`.
   They never write outside their worktree, either: reviews go to `.rc_tmp/`, and the manager copies them and cleans up
   (Engineering, PR #47 incident, 11-16).
 - Managers check pending requests when a review runs over 2 h.
+- **No shell redirects or heredoc outputs outside the worktree** (e.g. `> /tmp/.../scratchpad/x`): the harness prompts on them even in full-access (Theory READER seat, 11-18). **A seat stuck on an approval prompt is cancelled and relaunched by its parent** (`task_cancel` on the parent's own delegate task), not left waiting for the owner.
