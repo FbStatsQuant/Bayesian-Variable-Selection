@@ -42,3 +42,7 @@
   `reviews/SOL62_LINES.md`.
 - 2026-11-17 Standing rule (HQ): run `ingest.py convert REPORT.md` (0 PROBLEM lines) before any Sol council call. Kept here,
   not in PLAN.md, because PLAN.md is inside the frozen R5 manifest (an edit at 6e2200b7 was reverted for that reason).
+- 2026-11-17 RM2 route (b): fresh Opus seat (claudeAgent_personal, high) on RM2 MANIFEST_R1r (322e8c12): Ex-PolyR, Lemma-BC,
+  Lemma-IR each in full → ACCEPT ×3, 9.5, gates PASS (0 C/S/F, 4 E). `manifest.py bind` with Astra's R1r record: OK
+  (`reviews/RM2_ExPolyR_bind.txt`). E-note: BC/IR's file premises (L6_poly:33-41) say alpha > 17/2, but the proofs do not use
+  it (seat §1), so E2's (and FAMC's alpha = 3) use is sound. The wording patch stays unapplied until this seat is recorded.
