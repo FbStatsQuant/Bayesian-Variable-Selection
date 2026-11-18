@@ -1,4 +1,4 @@
-# NB-C4r (T9 addendum, rider 4, reader remark): READER_VERSIONS.md:1322 (row 3.5 remark, end of line; no line added; prose, no registry span). Remark on the time guard: outer probabilities, bounded by the uninterrupted-run event.
+# NB-C4r (T9 addendum, rider 4, reader remark): READER_VERSIONS.md:1322 (row 3.5 remark, end of line; no line added; inside `W3-READER:R1`'s premise span READER_VERSIONS.md:1283-1388: R1 rehash, same R1 bump as NB-C4, NB-C5log and BATCH_READY_v2). Remark on the time guard: outer probabilities, bounded by the uninterrupted-run event.
 diff --git a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
 index b8f3015d..5e7c4eb3 100644
 --- a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md

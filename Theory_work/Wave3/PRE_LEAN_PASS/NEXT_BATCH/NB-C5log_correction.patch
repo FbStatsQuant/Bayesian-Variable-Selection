@@ -1,4 +1,4 @@
-# NB-C5log (T9 addendum, rider 4, changelog): READER_VERSIONS.md, Theorem 10 update log (thm10): the entry is appended to the END of the last existing bullet (FRZ-B requote, line 1387) so that §11's line numbers stay fixed. Prose; no registry span. Depends on NB-C4 and NB-C4r being applied (it describes them); order-independent in lines.
+# NB-C5log (T9 addendum, rider 4, changelog): READER_VERSIONS.md, Theorem 10 update log (thm10): the entry is appended to the END of the last existing bullet (FRZ-B requote, line 1387) so that §11's line numbers stay fixed. Inside `W3-READER:R1`'s premise span READER_VERSIONS.md:1283-1388 (R1 rehash, same R1 bump). Depends on NB-C4 and NB-C4r being applied (it describes them); order-independent in lines.
 diff --git a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
 index b8f3015d..54ce6b5b 100644
 --- a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
