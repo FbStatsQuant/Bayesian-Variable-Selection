@@ -1,6 +1,6 @@
-# T9 F1 (T9 prep note, `Dept/pre_lean_cards/T9_prep.md`; HQ: CITATION-ONLY, approved): Theory_work/Wave3/W3-READER/STATEMENT.md, proof of Claim PoolZ (claim span :12-39; the sentence is on the line ending 'clause, :104).'). PoolZ's proof cites only W1-N1:Thm-N1, stated for the frozen v2.2.1 core; the inserted parenthetical cites, for the core of record, W3-SAMP:MR (MR-b, h = 1) and, for the code bridge, W3-SAMP:CC. EXACT text from the prep note. Recorder: add `W3-SAMP:MR@stmt:MR-b` and `W3-SAMP:CC` to PoolZ's depends_on, rehash PoolZ's span (STATEMENT.md:12-39), CITATION-ONLY cascade. Line count unchanged (inserted on the same line). F2 (measurability) is NOT here: it becomes the MEAS-D lemma in the T9 card. F3 (card wording for 'printed evidence') is not staged either: provisional until the T9 card.
+# T9 F1 (T9 prep note, `Dept/pre_lean_cards/T9_prep.md`; HQ: CITATION-ONLY, approved; manager ruling: the ALT pin): Theory_work/Wave3/W3-READER/STATEMENT.md, proof of Claim PoolZ (claim span :12-39). PoolZ's proof cites only W1-N1:Thm-N1 (frozen v2.2.1 core); the inserted parenthetical cites W3-SAMP:MR (MR-b, h = 1) for the core of record and W3-SAMP:CC for the code bridge. Text = the prep note with ONE change: the pin `W3-SAMP/STATEMENT.md:107-110` -> `:107-111` (MR-b is on line 111; the original pin was found NOT-PURE for exactly that). Recorder: add `W3-SAMP:MR@stmt:MR-b` and `W3-SAMP:CC` to PoolZ's depends_on, rehash PoolZ's span (STATEMENT.md:12-39), CITATION-ONLY cascade. Line count unchanged. F2 (MEAS-D) and F3 are not here.
 diff --git a/Theory_work/Wave3/W3-READER/STATEMENT.md b/Theory_work/Wave3/W3-READER/STATEMENT.md
-index 4081011c..a3813dac 100644
+index 4081011c..4fac2ce8 100644
 --- a/Theory_work/Wave3/W3-READER/STATEMENT.md
 +++ b/Theory_work/Wave3/W3-READER/STATEMENT.md
 @@ -23,7 +23,7 @@ $E[\hat Z/Z\mid\mathcal C]=1$ on $\mathcal A$. Consequently, under the joint law
@@ -8,7 +8,7 @@ index 4081011c..a3813dac 100644
  
  *Proof.* `W1-N1:Thm-N1@1.0.0` ("PROVED-CHECKED"; `W1-N1/STATEMENT.md:98-104`) gives, for each fixed $r\ge1$, almost surely
 -on $\mathcal A\cap\{r\le R'\}$, $E[W_r\mid\mathcal C]=1$ with $W_r:=\hat Z_r/Z$ (its "in particular" clause, :104). On
-+on $\mathcal A\cap\{r\le R'\}$, $E[W_r\mid\mathcal C]=1$ with $W_r:=\hat Z_r/Z$ (its "in particular" clause, :104). (N1 is stated for the frozen v2.2.1 core. For the core of record the same identity is `W3-SAMP:MR` (MR-b) with h ≡ 1, `W3-SAMP/STATEMENT.md:107-110`; N1's code bridge is carried to main's island by `W3-SAMP:CC`, `lemmas/CC_code_check.md:9-21`.) On
++on $\mathcal A\cap\{r\le R'\}$, $E[W_r\mid\mathcal C]=1$ with $W_r:=\hat Z_r/Z$ (its "in particular" clause, :104). (N1 is stated for the frozen v2.2.1 core. For the core of record the same identity is `W3-SAMP:MR` (MR-b) with h ≡ 1, `W3-SAMP/STATEMENT.md:107-111`; N1's code bridge is carried to main's island by `W3-SAMP:CC`, `lemmas/CC_code_check.md:9-21`.) On
  $\mathcal A$, $R'=4$, so this holds for $r=1,\dots,4$ simultaneously (four null sets). By linearity of conditional
  expectation, $E[\hat Z/Z\mid\mathcal C]=\tfrac14\sum_{r=1}^4E[W_r\mid\mathcal C]=1$ a.s. on $\mathcal A$. In W1-N1's
  conditional statement the data are fixed (probability over the final streams), so $Z>0$ is a constant and

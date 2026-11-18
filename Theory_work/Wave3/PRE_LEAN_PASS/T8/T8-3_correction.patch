@@ -1,6 +1,6 @@
-# T8-3 (T8 card, AGREE; HQ: CORRECTION-ONLY, rides on the START2-R re-freeze that T8-2 needs): Theory_work/Wave3/W3-START2-R/lemmas/R3_RATE.md:87. On the null event {(I-P_U)x_l = 0}, "the term is again sqrt(2/pi) z_n" is an equality that needs tau_U = sigma; only the upper bound is used. Replace "=" by "<=": the term is J_{z_n}(0, tau_U) <= sqrt(2/pi) z_n (since tau_U >= sigma), within the bound below. Proof file only; no registered claim span. Line count unchanged.
+# T8-3 (T8 card, AGREE; HQ: CORRECTION-ONLY, rides on the START2-R re-freeze that T8-2 needs): Theory_work/Wave3/W3-START2-R/lemmas/R3_RATE.md. (1) line 87: on the null event {(I-P_U)x_l = 0}, "the term is again sqrt(2/pi) z_n" is an equality that needs tau_U = sigma; replace by "J_{z_n}(0, tau_U) <= sqrt(2/pi) z_n (since tau_U >= sigma), within the bound below". (2) line 164 (manager ruling, after the T8-2 rider): the optimality remark in the lemma gets the same qualifier as T8-2 gave START-R (:237): "on every data set with s0 < K" -> "on every data set with s0 < K and n >= 4" (FLOOR (T0) is stated for valid data sets with n >= 4). Proof file; in no registry claim span. Line count unchanged.
 diff --git a/Theory_work/Wave3/W3-START2-R/lemmas/R3_RATE.md b/Theory_work/Wave3/W3-START2-R/lemmas/R3_RATE.md
-index 33e3cc6f..9192830e 100644
+index 33e3cc6f..62530d94 100644
 --- a/Theory_work/Wave3/W3-START2-R/lemmas/R3_RATE.md
 +++ b/Theory_work/Wave3/W3-START2-R/lemmas/R3_RATE.md
 @@ -84,7 +84,7 @@ algebra (they use no event): with Δ_U = ‖μ̃‖²/N, ρ̂_{U,l} := ⟨(I −
@@ -12,3 +12,12 @@ index 33e3cc6f..9192830e 100644
  
  **Step 2 (conditional law; BASE L9.5 with U₀ = U, D = S₀).** [R-7] In BASE `lemmas/L9_BR.md:94-123` take the reference
  pair (l, U₀) with U₀ := U ⊊ S₀; then D := U₀ ∪ S₀ = S₀, l ∉ D, |D ∪ {l}| = s₀ + 1 ≤ 16 + s₀. Every step of BASE `:96-123`
+@@ -161,7 +161,7 @@ Let C^♯ := C^♯(ε/8), c₀ := c₀(ε/8), n₀ := n₀(ε/8, 1) be the const
+ whose limsup is ≤ ε/4 < ε. Since C^♯r̄_n + n^{−1} ≤ T⁰_ε√(log n/n) with T⁰_ε := C^♯(D⁰_ε + 1) + 1, we get
+ limsup_n P(o₀ > T⁰_ε√(log n/n)) ≤ ε for every ε ∈ (0, 1):
+   **o₀ = O_P(√(log n/n)),   and 1 − π₀(S₀) = o₀/(1 + o₀) ≤ o₀ = O_P(√(log n/n)).** ∎
+-(Optimality up to √log n: o₀ ≥ ½(n + 1)^{−1/2} on every data set with s₀ < K, by (T0), BASE `STATEMENT.md:241-243`.)
++(Optimality up to √log n: o₀ ≥ ½(n + 1)^{−1/2} on every data set with s₀ < K and n ≥ 4, by (T0), BASE `STATEMENT.md:241-243`.)
+ *Where each hypothesis is used.* (L-gain-0): only (R3.4). (L-R⁺⁺) with Q = S₀ (any C_L): only 𝔏_n(S₀) ≤ e^{C_B√log n}, which
+ controls the second-order term n^{−1}𝔏_n(S₀)² and the smallness ϱ_n(S₀) ≤ c₀. (V-R): (V-c) on the design set. (FL-R16):
+ floors, τ_e², ‖γ²‖.

@@ -1,6 +1,6 @@
-# T7-MIN (title) READER_VERSIONS.md:449 (Theorem 4 title). T7 addendum (walk T7 MINOR; HQ-approved reader wording class, CORRECTION-ONLY; same reader touch as T7-1/T7-2): the sentence 'no condition on how Sigma, beta, sigma^2 vary with n' contradicts (A2)-(A3), which are conditions on the sequence; the masters say only 'may depend on n' (W3-MISR-R/STATEMENT.md:99). Reader prose only. Line count unchanged. Inside the W3-READER:R1 premises span 444-564: recorder's hash/cascade.
+# T7-MIN (title) READER_VERSIONS.md:449 (Theorem 4 title). HQ-approved reader wording class, CORRECTION-ONLY; same reader touch as T7-1/T7-2. Manager ruling: the ALT text. The addendum's own text ('subject only to (A2)-(A3)') was found NOT-PURE (it omits (A1): s fixed, p <= n^A); this patch says '(A1)-(A3)', consistent with the :462/:1424 wording. PURE: T7/T7-MIN-ALT_PURE_check_opus.md. Line count unchanged. Inside the W3-READER:R1 premises span 444-564: recorder's hash/cascade.
 diff --git a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
-index b8f3015d..a70c3029 100644
+index b8f3015d..893193d0 100644
 --- a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
 +++ b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
 @@ -446,7 +446,7 @@ display is attained is not proved. Status: the expectation display and remarks (
@@ -8,7 +8,7 @@ index b8f3015d..a70c3029 100644
  
  ### Reader statement
 -**Theorem 4** (candidate-only fitting with omitted Gaussian predictors; no condition on how $\Sigma$, $\beta$, $\sigma^2$ vary with $n$) [P4]. The method is run on the candidate predictors
-+**Theorem 4** (candidate-only fitting with omitted Gaussian predictors; $\Sigma$, $\beta$, $\sigma^2$ may vary with $n$, subject only to (A2)–(A3)) [P4]. The method is run on the candidate predictors
++**Theorem 4** (candidate-only fitting with omitted Gaussian predictors; $\Sigma$, $\beta$, $\sigma^2$ may vary with $n$, subject only to (A1)–(A3)) [P4]. The method is run on the candidate predictors
  $x_{\mathcal C}$ and the response $y^{\mathrm r}$ only ($p$ = number of candidates). Assume:
  - **(A0) Model.** The candidate rows $x_{\mathcal C,1},\dots,x_{\mathcal C,n}$ are i.i.d. $N_p(m,\Sigma)$, and, given the
    candidate design, the responses are independent with

@@ -1,12 +1,13 @@
-PURE check of `T8/T8-3_correction.patch` (fresh Opus subagent, claudeAgent_personal, high; scratch under `.rc_tmp/`, removed). Verbatim report (harness indent removed):
+PURE check (v2: two edits, line 87 and the manager-added "and n ≥ 4" at line 164) of `T8/T8-3_correction.patch` (fresh Opus subagent, claudeAgent_personal, high). Verbatim report (harness indent removed):
 
 PURE-VERDICT: PURE
-1. Patch applies: `git apply --check` passes from the repo root. I applied it with `patch` to a scratch copy, and only line 87 changes. The file stays at 183 lines. The character-level word-diff shows two edits. "again" becomes "J_{z_n}(0, τ_U) ≤". "≤ F-" becomes "(since τ_U ≥ σ), within the", which leaves "bound below.)". No other characters change.
-2. Card text matches: I pulled both strings out of the card's T8-3 row with a script. The old string occurs once in the original file and the new string once in the patched file. `orig.replace(old, new) == patched` is True.
-3a. The bound holds: BASE `W3-START/lemmas/L3_LEAK.md:8-9` defines J_h(d, t) := E[exp((d + σZ)²/(2t²))·1{|Z| ≤ h}] for t ≥ σ, with a := σ²/t² ∈ (0, 1]. So J_h(0, t) = E[e^{aZ²/2}·1{|Z| ≤ h}] ≤ E[e^{Z²/2}·1{|Z| ≤ h}] = √(2/π)h, which is (J3). Equality holds only when a = 1, that is t = σ, since h ≥ 1.
-3b. The old "=" was wrong: BASE `STATEMENT.md:77` defines τ²_U := σ² + Δ_U, where Δ_U = ‖μ̃‖²/N. The event (I − P_U)x_l = 0 does not force μ̃ = 0. When μ̃ ≠ 0 we get τ_U > σ and a_U < 1, so the inequality is strict. "is again √(2/π)z_n" therefore needs τ_U = σ, which only the μ̃ = 0 case at R3_RATE.md:80-81 gives. The new "≤", with the reason τ_U ≥ σ, is correct.
-3c. Only the upper bound is used: Step 2 (lines 102-103) bounds E[F·1{E_R}·1{CN}] ≤ Φ⁰_n, and √(2/π)z_n ≤ Φ⁰_n. Step 3 (lines 110-112) needs only 𝔏^♯_n ≤ Ψ⁰_n, a sum of nonnegative terms, then Markov. Both steps are one-sided. The event also has probability 0, so the value of the term on it cannot change an expectation or a probability bound. Nothing needs the old equality.
-4. No registry claim span covers this line: claims.tsv has no row mentioning R3_RATE.md. Its W3-START2-R rows cite STATEMENT.md:34-48, 34-69, 34-87, 51-69 and 70-87, plus CHECKPOINT_4.md and review files, never lemmas/R3_RATE.md:87.
-5. Manifest (report only): R3_RATE.md is in W3-START2-R `reviews/MANIFEST_R2r.txt` at line 20, under sha256 43dadcf5… for lemmas/R3_RATE.md. That hash will no longer match once the patch is applied. This fits the card's note that T8-3 rides on the START2-R re-freeze that T8-2 already needs.
 
-Housekeeping: I modified no tracked file, made no commit, and deleted my scratch directory under .rc_tmp afterwards. `git status` is the same as at the start.
+1. `git apply --check` passes from the repo root. On a scratch copy (`patch -p1`, removed afterwards) only lines 87 and 164 change, and the file stays at 183 lines. No tracked file was touched.
+2. Line 87, character by character: "again √(2/π)z_n ≤ F-bound below" becomes "J_{z_n}(0, τ_U) ≤ √(2/π)z_n (since τ_U ≥ σ), within the bound below". This matches the T8-3 replacement text in `FABLE_CARD.md:13` column (c) exactly.
+3. Line 164, character by character: the only change is " and n ≥ 4" inserted between "s₀ < K" and ", by (T0)". Nothing else moves.
+4. The edit is true. (T0) in W3-START `STATEMENT.md:241` reads "For every valid data set (n ≥ 4, EX-A)", and `L1_AGG_FLOOR.md` L1.0 (line 8) says "Valid inputs, n ≥ 4, EX-A".
+5. The second display does not use n ≥ 4 itself; it inherits it from the hypothesis. o₀ ≥ T₁ ≥ f_n(s₀) ≥ ½(n+1)^{−1/2} (L1 (iv)–(v)) needs only k < p. n ≥ 4 is used only in the ⅓ step of the first display (f ≤ ½·5^{−1/2}, line 133). Stating the qualifier is faithful either way.
+6. The optimality remark still holds asymptotically. With s₀ fixed and p > s₀, K = min(p, ⌊n/2⌋) > s₀ once n ≥ 2s₀ + 2, and n ≥ 4 holds for all large n. This matches (T0)'s own "true for all large n when p > s₀".
+7. The wording matches T8-2. Once T8-2 is applied, W3-START2-R `STATEMENT.md:237` reads "o₀ ≥ ½(n + 1)^{−1/2} on every data set with s₀ < K and n ≥ 4"; before it, the line reads "on every data set". The qualifier is word-for-word the same.
+8. Registry: `grep R3_RATE.md Theory_work/INFRA/registry/claims.tsv` returns 0 matches, so the file lies in no claim span.
+9. Manifest (report only): `R3_RATE.md` is an entry of `Theory_work/Wave3/W3-START2-R/reviews/MANIFEST_R2r.txt` line 20 (sha 43dadcf5…), so the START2-R re-freeze will need to update it.

@@ -1,17 +1,17 @@
-PURE check of `T9/T9-F1_correction.patch` (the exact text of the HQ-approved prep note `Dept/pre_lean_cards/T9_prep.md`, row F1; fresh Opus subagent, claudeAgent_personal, high; scratch in `.rc_tmp/t9f1_pure_*`). **Verdict NOT-PURE, and the only defect is the line pin `W3-SAMP/STATEMENT.md:107-110` (MR-b is on line 111).** The coordinator did NOT change the manager's text; an ALT with the pin `:107-111` is proposed (`T9/T9-F1_ALT_correction.patch`; the checker states that with that change and nothing else the patch is PURE). Verbatim report (harness indent removed):
+PURE check (v2, ALT pin `:107-111`, given its own run at the manager's request) of `T9/T9-F1_correction.patch` (fresh Opus subagent, claudeAgent_personal, high; scratch in `.rc_tmp/pure_f1_*`). The v1 check of the prep-note text (pin `:107-110`, NOT-PURE only for that pin) is kept as `T9-F1_PURE_check_opus_v1_pin107-110_NOT-PURE.md`. Verbatim report (harness indent removed):
 
-PURE-VERDICT: NOT-PURE (the line pin is the only defect)
+PURE-VERDICT: PURE
 
-1. Mechanics are clean. `git apply --check` passes from the repo root. Applying the patch with `patch -p1` to a scratch copy (`.rc_tmp/t9f1_pure_2798190/`) gives exactly one change: a single 245-character insertion on line 26, with no deletions. Both files have 46 lines.
-2. The inserted text, minus the trailing space before "On", matches the F1 row of the prep note (line 9 of `T9_prep.md`) character for character. It sits right after "…(its "in particular" clause, :104). " and right before "On $\mathcal A$, $R'=4$, so this holds…".
-3. (2a) is true. W1-N1/STATEMENT.md:15-16 sets CODE to the frozen v2.2.1 core. CC_code_check.md:9-10 says "W1-N1 used the frozen v2.2.1 core".
-4. (2b) is true. In MR-b (STATEMENT.md:111), h ≡ 1 is allowed: a constant is jointly measurable, has the fixed bound B_h = 1 and does not depend on the final streams. Then (1/N_e)Σ_i h = 1, so E[W_r | 𝓒] = π(1) = 1.
-5. W_r is the same quantity in both files: W3-SAMP/STATEMENT.md:52 defines W_r := Ẑ_r/Z with Ẑ_r = exp(log_Z_r[r]), which is PoolZ's W_r := Ẑ_r/Z.
-6. (2c) The pin is off by one. Line 107 holds the Lemma MR header with the start of the definition of h, lines 108-109 finish that definition, (MR-a) is on 110, (MR-b) on 111 and (MR-c) on 112. Your measurement is right, and the pin 107-110 does not cover MR-b.
-7. Corrected pin: `W3-SAMP/STATEMENT.md:107-111`. `:111` alone would also work, but that drops the definition of h.
-8. (2d) The pin is correct. Lines 9-21 are exactly the "Relation to the N1 code of record" paragraph (line 8 is blank and line 23 starts CC1). It ends with N1's code bridge (`L1_bridge.md`) applying "to main's island verbatim, **except** for its sentence identifying `pip_plain`".
-9. The inserted text leaves out that `pip_plain` exception. That does not matter here, because PoolZ is about Ẑ only (Remark ii).
-10. (3) The registry row in claims.tsv (line 526, W3-READER:PoolZ) gives the span as STATEMENT.md:12-39. Line 26 is inside it, so the recorder must rehash.
-11. The Setting and Claim (lines 14-24) are unchanged, as is the conclusion (∎ at line 33). The patch only adds citations (MR-b, CC) and introduces no new hypothesis. The added depends_on entries `W3-SAMP:MR@stmt:MR-b` and `W3-SAMP:CC` match it.
-12. (4) The rest of the proof still reads correctly: after the parenthetical, "On $\mathcal A$, $R'=4$, so this holds for r=1,…,4" still refers to the identity E[W_r|𝒞]=1.
-13. If the manager changes the patch and prep text to `:107-111`, with nothing else changed, the patch is PURE.
+1. Mechanics: `git apply --check` passes from the repo root. I applied the patch with `patch -p1` to a scratch copy in `.rc_tmp/pure_f1_2822796/`. Only physical line 26 changes, and the file is still 46 lines (`wc -l`).
+2. Character-level diff: there is exactly one opcode, an `insert` at column 116 of line 26. Nothing is deleted or replaced. The inserted text is the parenthetical plus one trailing space. It sits right after "(its "in particular" clause, :104)." and right before "On $\mathcal A$, $R'=4$".
+3. Text check: I extracted the F1 quote from `origin/dept/theory:…/T9_prep.md` (row 9) by script. The pin `:107-110` appears once there. After replacing it with `:107-111`, the result equals the inserted text exactly (`MATCH True`).
+4. W3-SAMP/STATEMENT.md line by line: 107 is the Lemma MR header and the start of h's definition; 108–109 finish h's definition (bound B_h, evaluated at c = 𝓒, W1-N1's class) and give "Under the N1 premises, given 𝓒 on 𝒜:"; 110 is (MR-a); 111 is (MR-b), all of it on that line; 112 is (MR-c). So `:107-111` covers h's definition and all of (MR-b), and stops before (MR-c).
+5. (MR-b) with h ≡ 1 is true. The constant 1 is measurable, bounded with B_h = 1, and does not depend on the final streams, so it is admissible. Then (1/N_e)Σ_i 1 = 1, which gives E[W_r | 𝓒] = π(1) = 1 on 𝒜. That is the same identity N1 gives, under the same N1 premises.
+6. N1 uses the frozen v2.2.1 core: `W1-N1/STATEMENT.md:15` sets CODE to `.../core/v2_2_1/core/`. `CC_code_check.md:9` says the same ("W1-N1 used the frozen v2.2.1 core").
+7. `CC_code_check.md:9-21` is exactly the "Relation to the N1 code of record" paragraph; line 22 is blank. It concludes at lines 19–20 that N1's code bridge "applies to main's island verbatim", except for the `pip_plain` sentence, which has nothing to do with Ẑ.
+8. Registry: `claims.tsv` line 526 is W3-READER:PoolZ, with span `STATEMENT.md` 12-39. Line 12 is the "## Claim PoolZ" heading and line 39 is blank, just before "## Bridge lemmas". Line 26 is inside the span.
+9. The Claim text (lines 20–23) does not change, and neither do its conclusion or the "No condition on the design or the data" sentence. The insertion only adds citations to existing results, so it introduces no new hypothesis.
+10. The rest of the proof still holds: the R′ = 4 step, linearity, Z > 0 fixed, H-U/SI and the Remarks all rely on the same per-r identity, which now has a second source. Nothing downstream refers to the inserted text.
+11. Note for the recorder: PoolZ's current `depends_on` field in `claims.tsv` is `W1-N1/STATEMENT.md:68-90`. Adding `W3-SAMP:MR@stmt:MR-b` and `W3-SAMP:CC` and rehashing the 12-39 span is still to be done, as the patch header says.
+
+No tracked files were modified. The scratch files are in `.rc_tmp/pure_f1_*`.
