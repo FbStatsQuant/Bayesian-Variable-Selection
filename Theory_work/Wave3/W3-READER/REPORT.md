@@ -47,7 +47,7 @@ depends_on: W3-SAMP:C@1.1.5 ; W3-START2-R:IF-START@1.0.0 ; W3-START2-R:START-R@1
 gates: correct:PENDING(bridge-leg Sol line check)
 ```
 
-Notes for the ingest (HQ / recorder): R4 inherits `W3-SAMP:C@1.1.5`'s conditions (W1-N1:B, W1-N1:F; main 2676e71f) [REG-2676]; `W2-APP:POST@1.0.7` is "PROVED-CHECKED"; `W3-POST:Thm-1@1.0.1` "PROVED-CHECKED; council C3, …". R3 carries F-UNI's qualifications ([OP] author-only; e4/N3 OPEN; P1/S.3 code-reading audit).
+Notes for the ingest (HQ / recorder): At main 2676e71f R4 inherited `W3-SAMP:C`'s conditions (W1-N1:B, W1-N1:F) [REG-2676]; since main 20d01e52 (HQ D111) `W3-SAMP:C@1.1.6` and `W3-READER:R4@1.0.2` carry none; `W2-APP:POST@1.0.7` is "PROVED-CHECKED"; `W3-POST:Thm-1@1.0.1` "PROVED-CHECKED; council C3, …". R3 carries F-UNI's qualifications ([OP] author-only; e4/N3 OPEN; P1/S.3 code-reading audit).
 The reader-version corollaries (Theorems 1–8, 10 of `READER_VERSIONS.md`) are not proposed as separate rows here;
 HQ decides whether each reader version gets a row (PROGRAM "Readability": "The reader version is a corollary with its
 bridges checked").
