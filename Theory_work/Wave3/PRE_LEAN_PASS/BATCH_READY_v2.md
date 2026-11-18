@@ -43,3 +43,8 @@ T9 F2 (MEAS-D, a new W3-SAMP lemma, in the T9 card), T9 F3 (card wording for "pr
 
 ## For the SUMMARY (owner)
 The owner signed the method as FINAL on 2026-11-18. The frozen method is `method-v3.1.1-listpip`, effective once Engineering's guard merges.
+
+## Notes added 2026-11-18 (after the Recorder-2 dry run 330b87b4)
+- `Sol2/Sol2-S2-1` is in this batch (the dry run applied it by phrase substitution on the card :71 / RV :1443 lines that D5P v1.1 moved). The D5P (a) stage therefore carries no a-3 edit (same sentence).
+- Landing order: this batch → NA_DROP and MEAS-D (CITATION-ONLY re-freezes on the post-batch tree; see `NEXT_BATCH/NEXT_BATCH.md`, last section) → the A re-pin batch with D5Pa rebased onto the post-NA_DROP main, keeping a-1.
+
