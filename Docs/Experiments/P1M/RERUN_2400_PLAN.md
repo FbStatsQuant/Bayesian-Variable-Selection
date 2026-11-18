@@ -134,3 +134,6 @@ Not compared: plain PIP (the v2.2 registry/plain-PIP fields are not in v3.1), `i
 6. **Ambiguity of "2,400":** Tier A/B is p ≫ n; the low-p study is only Tier C. If HQ meant low-p, swap the weights (low-p is ≈ 0.3 core-h for 120 fits, or ≈ 5 core-h for all 2,400, plus enumeration).
 7. **Timeline coupling:** the sign-off lands after the freeze unless the start is Wed evening. Home/scratch: outputs ≈ 0.2 GB; all on `/scratch`.
 8. **A/B state:** The Owls A/B (`ab_run`, 39 units, still running at my read; old core vs new core, both with LS0). It tests list-PIP additivity, not v3.1 vs v2.2.1, so it does not substitute for this rerun.
+
+## Result (2026-11-18)
+NO REGRESSION, accepted by HQ: see `results/RERUN_2400_VERDICT.md`.
