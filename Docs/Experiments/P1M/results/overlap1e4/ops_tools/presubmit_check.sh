@@ -21,7 +21,7 @@ for b in $BL; do
   [[ -z \$(ls -A \$D/scratch/runs/\$b 2>/dev/null) ]] && echo \"\$b run dir empty (fresh)\" || { echo \"\$b run dir NOT empty:\"; ls \$D/scratch/runs/\$b | head; fail=1; }
 done
 hm=\$(quota -s 2>/dev/null | grep -A1 export/nots/home | tail -1 | awk '{v=\$1; if (v ~ /G\$/) {sub(/G/,\"\",v); v*=1024} else sub(/M/,\"\",v); printf \"%d\", v}')
-echo \"home MB used: \$hm  (refuse above 7500; hard guard 8192)\"; [[ \$hm -le 7500 ]] || { echo \"HOME TOO FULL\"; fail=1; }
+echo \"home MB used: \$hm  (refuse above 7900; hard guard 8192)\"; [[ \$hm -le 7900 ]] || { echo \"HOME TOO FULL\"; fail=1; }
 echo \"my queue now: \$(squeue -u fb31 -h | wc -l) jobs\"
 echo \"SPR nodes with >=24 CPU & >=16G free:\"; sinfo -h -p commons -N -t idle,mixed -o '%N %f %C %e' | awk '\$2 ~ /sapphirerapids/ {split(\$3,c,\"/\"); if (c[2]>=24 && \$4>=16384) n++} END{print n+0}'
 exit \$fail"

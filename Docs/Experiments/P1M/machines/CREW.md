@@ -185,3 +185,7 @@ The owner lets HQ manage NOTS. HQ ordered a standing job in the daily crew: `~/S
 - **Logging:** every removal goes to `crews/home_hygiene/removals.tsv`; full output in `runs.log`.
 - **Never:** anything else in `.vscode-server` (extensions/, data/) without asking HQ, anything else in home, anything outside fb31's own data.
 - **First run** (dry run 2026-11-18 ~07:00 CT, loginx2): quota 6,947 MB; one T3 version, three empty .staging dirs, one VS Code server (the lru first): nothing to remove (HQ had cleaned up).
+- **Refinement (HQ 2026-11-18 afternoon):** keep the newest version + ANY version/server a live fb31 process uses on ANY login node; delete only versions with no live process and older than the newest.
+  - **Liveness:** one gentle, read-only, sequential direct login to each NOTS login node (the A records of nots.rice.edu: loginx1–3), reading /proc/<pid>/{exe,cwd,cmdline} of fb31 processes only. If any node is unreadable, nothing is deleted.
+  - **PROTECT.txt:** next to the script; HQ-protected names, always kept. It holds 0.1.11-nightly.20261117.4851 and 0.1.11-nightly.20261118.4877 per HQ "delete neither".
+  - **Dry run 11-18:** all 3 nodes read; both versions kept.

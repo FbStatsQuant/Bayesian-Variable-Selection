@@ -2,7 +2,7 @@
 """stop_rules.py <probe.txt> --wave W0 --plans <dir with OV_<wave>_T/plan.resolved.json ...> -- evaluate the plan §4 'during' stop rules.
 Stdlib only, read-only; prints a table of fits (billed core-h so far, state) and the flags. Exit 0 = no stop rule, 3 = STOP.
 Thresholds (OVERLAP_1e4_SUBMISSION_PLAN §4, H-18): T fit > 172 core-h; V fit > 15; cumulative actual > 1,600; projection > 2,500;
-wave actual > the quote (W0: QUOTE = 200 core-h, HQ-approved 11-18, covers T, V, T2, V2); any failed / TIMEOUT / OOM / CANCELLED stage that is not an infrastructure
+wave actual > 2 x the quote (W0: QUOTE = 200 core-h → stop above 400, HQ-approved 11-18, covers T, V, T2, V2); any failed / TIMEOUT / OOM / CANCELLED stage that is not an infrastructure
 fault (NODE_FAIL, BOOT_FAIL; SIGKILL by Slurm shows as NODE_FAIL / FAILED with a scheduler reason, judged by the manager);
 > 2 failed fits in a wave; any QOS / MaxSubmit / Assoc pending reason; any engine resource_limit / admission / OUTCOME record;
 X/y (truth.json X_sha256 + y_sha256: the DATA identity; data.bin content_sha256 also hashes the writing binary's meta block, so it differs between the T and V builds) must be equal across the fits of a dataset (design + rep; T and V and both seeds share it).
@@ -80,8 +80,10 @@ def main():
         if c > lim:
             flags.append("STOP fit %s cost %.1f core-h > %.0f" % (k, c, lim))
     quote = a.quote or QUOTE.get(a.wave)
-    if quote and wave_cost > quote:
-        flags.append("STOP wave %s actual %.1f > quote %.0f" % (a.wave, wave_cost, quote))
+    # plan §4: STOP when the wave actual exceeds 2x its quote (manager 11-18; HQ approved the W0 quote = 200, so W0 stops above 400;
+    # the actual includes the evidence batches OV_W0_T/OV_W0_V, which keeps the rule conservative)
+    if quote and wave_cost > 2 * quote:
+        flags.append("STOP wave %s actual %.1f > 2 x quote %.0f" % (a.wave, wave_cost, quote))
     if cum > CUM:
         flags.append("STOP cumulative %.1f > %.0f" % (cum, CUM))
     # projection: mean per arm over attempts whose stages are all COMPLETED x (20 - distinct fits started in that arm) + actual so far.

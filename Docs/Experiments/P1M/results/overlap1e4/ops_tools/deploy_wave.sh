@@ -49,7 +49,7 @@ if [[ $DO_BUILD == build ]]; then
   # the binary needs the batch's module environment (GCC 14.3.0, CXXABI_1.3.15): env.sh sourced in a subshell. git_commit must be F exactly.
   for arm in $ARMS; do
     B=OV_${WAVE}_$arm
-    ssh $NOTS "set -e; ( set +u; source $D/scripts/$B/env.sh; $D/scripts/$B/bin/smcbvs4 version 2>&1 ) > $D/scripts/$B/bin/version.json
+    ssh $NOTS "set -e; ( set +u; source $D/scripts/$B/env.sh; $D/scripts/$B/bin/smcbvs4 version 2>&1 ) > $D/scripts/$B/bin/version.json || true
       gc=\$(grep -o '\"git_commit\": *\"[^\"]*\"' $D/scripts/$B/bin/version.json | head -1); echo \"$B: version \$gc\"
       [[ \$gc == *'\"$F\"' ]] || { echo \"FATAL: $B git_commit is not $F\" >&2; exit 67; }
       [[ \$(git -C \$(readlink -f $D/scripts/$B/code) status --porcelain --untracked-files=no | wc -l) -eq 0 ]] || { echo 'FATAL: worktree dirty after build' >&2; exit 67; }"
