@@ -5,6 +5,7 @@ No real job is ever submitted: the submission test puts a FAKE `sbatch` (a shell
 arguments and prints an id) first on PATH, and the local chain test runs the stage scripts with a stub binary.
 """
 import copy
+import io
 import json
 import os
 import re
@@ -666,7 +667,7 @@ class TestPilotBatch(Base):
         with open(os.devnull, "w") as dn:
             old = sys.stdout; sys.stdout = dn
             try:
-                p1m_cells.main(["--tsv", os.path.join(d, "c.tsv"), "--plans", d])
+                p1m_cells.main(["--tsv", os.path.join(d, "c.tsv"), "--plans", d, "--no-freeze-check"])
             finally:
                 sys.stdout = old
         plans = [fn for fn in os.listdir(d) if fn.endswith(".json")]
@@ -1194,6 +1195,97 @@ class TestCells(Base):
         rows = p1m_cells.expand()
         w = p1m_cells.plans(rows, os.path.join(self.tmp, "p5"), only="5")
         self.assertTrue(w and all(f["p"] == 10 ** 5 for x in w for f in json.load(open(x))["fits"]))
+
+    def test_freeze_pin_plans(self):
+        """Campaign freeze: every plan names the engine commit, the method tag and the core tree; the pin is verified; the
+        48 plans regenerate byte for byte and pass the driver under --strict."""
+        commit = "ab" * 20
+        rows = p1m_cells.expand()
+        d1, d2 = os.path.join(self.tmp, "f1"), os.path.join(self.tmp, "f2")
+        w1 = p1m_cells.plans(rows, d1, code_commit=commit)
+        w2 = p1m_cells.plans(p1m_cells.expand(), d2, code_commit=commit)
+        self.assertEqual(len(w1), 48)
+        self.assertEqual([open(a, "rb").read() for a in w1], [open(b, "rb").read() for b in w2])   # deterministic
+        self.assertEqual(p1m_cells.plan_set_digest(w1), p1m_cells.plan_set_digest(w2))
+        for f in w1:
+            q = json.load(open(f))
+            self.assertEqual((q["code_commit"], q["method_tag"], q["core_tree"]), (commit, "method-v3.1.1-listpip", p1m_cells.FREEZE["core_tree"]))
+            P = p1m_driver.resolve(q)
+            self.assertNotIn("warnings", P, f)
+        # --strict through the driver CLI on one plan per mode, and the run manifests carry the pin
+        for f in (w1[0], [x for x in w1 if "_V_" in x][0]):
+            out = os.path.join(self.tmp, "strict_" + os.path.basename(f)[:-5])
+            rc = p1m_driver.main(["--plan", f, "--out", out, "--strict", "--now", "2026-11-18T00:00:00Z"])
+            self.assertEqual(rc, 0)
+            rm = json.load(open(os.path.join(out, "run_manifests", sorted(os.listdir(os.path.join(out, "run_manifests")))[0])))
+            self.assertEqual((rm["code_commit"], rm["method_tag"], rm["core_tree"]), (commit, "method-v3.1.1-listpip", p1m_cells.FREEZE["core_tree"]))
+        # the masked digest does not depend on the commit; the plain one does
+        w3 = p1m_cells.plans(rows, os.path.join(self.tmp, "f3"), code_commit="cd" * 20)
+        self.assertEqual(p1m_cells.plan_set_digest(w1, True), p1m_cells.plan_set_digest(w3, True))
+        self.assertNotEqual(p1m_cells.plan_set_digest(w1), p1m_cells.plan_set_digest(w3))
+        with self.assertRaises(AssertionError):
+            p1m_cells.plans(rows, os.path.join(self.tmp, "f4"), code_commit="main")      # not 40 hex
+        q = json.load(open(w1[0])); q["core_tree"] = "xyz"
+        with self.assertRaises(p1m_driver.PlanError):
+            p1m_driver.resolve(q)
+
+    def _mini_repo(self, core_text="A"):
+        """A throwaway git repo with a 'core' tree and a method tag; returns (repo, freeze dict for it)."""
+        import subprocess
+        r = os.path.join(self.tmp, "mini_%d" % len(os.listdir(self.tmp)))
+        os.makedirs(os.path.join(r, "core"))
+        g = lambda *a: subprocess.run(["git", "-C", r, "-c", "user.name=t", "-c", "user.email=t@t", *a], check=True, capture_output=True, text=True).stdout.strip()
+        subprocess.run(["git", "init", "-q", r], check=True)
+        open(os.path.join(r, "core", "m.R"), "w").write(core_text)
+        g("add", "."); g("commit", "-q", "-m", "method")
+        method = g("rev-parse", "HEAD")
+        g("tag", "-a", "mtag", "-m", "method tag")        # annotated, as method-v3.1.1-listpip is
+        open(os.path.join(r, "engine.txt"), "w").write("engine"); g("add", "."); g("commit", "-q", "-m", "engine")
+        fr = dict(method_tag="mtag", method_commit=method, core_path="core", core_tree=g("rev-parse", "HEAD:core"))
+        return r, fr, g
+
+    def test_verify_freeze(self):
+        """verify_freeze: accepts a commit with the pinned core tree (no ancestry needed); refuses a moved tag, a changed
+        method, a missing tag and a malformed pin."""
+        r, fr, g = self._mini_repo()
+        head = g("rev-parse", "HEAD")
+        self.assertEqual(p1m_cells.verify_freeze("HEAD", r, fr), head)
+        # a side branch off the root with the same core tree but unrelated history is fine (the engine branch is not a descendant)
+        g("checkout", "-q", "--orphan", "side"); g("add", "."); g("commit", "-q", "-m", "side")
+        self.assertEqual(p1m_cells.verify_freeze("side", r, fr), g("rev-parse", "side"))
+        g("checkout", "-q", "-f", head)
+        open(os.path.join(r, "core", "m.R"), "w").write("B"); g("add", "."); g("commit", "-q", "-m", "method changed")
+        with self.assertRaisesRegex(ValueError, "the method changed"):
+            p1m_cells.verify_freeze("HEAD", r, fr)
+        with self.assertRaisesRegex(ValueError, "not found"):
+            p1m_cells.verify_freeze("HEAD", r, dict(fr, method_tag="nope"))
+        g("tag", "-f", "-a", "mtag", "-m", "moved", "HEAD")
+        with self.assertRaisesRegex(ValueError, "tag moved"):
+            p1m_cells.verify_freeze(head, r, fr)
+        with self.assertRaisesRegex(ValueError, "not 40 hex"):
+            p1m_cells.verify_freeze(head, r, dict(fr, core_tree="61b0a582"))
+
+    def test_freeze_pin_constants(self):
+        """The pin is well formed, and the core tree of this checkout is the pinned one (skipped outside a git checkout)."""
+        import subprocess
+        for k in ("method_commit", "core_tree"):
+            self.assertRegex(p1m_cells.FREEZE[k], r"^[0-9a-f]{40}$")
+        self.assertEqual(p1m_cells.FREEZE["core_tree"][:8], "61b0a582")
+        r = subprocess.run(["git", "-C", p1m_cells.HERE, "rev-parse", "HEAD:" + p1m_cells.FREEZE["core_path"]], capture_output=True, text=True)
+        if r.returncode != 0:
+            self.skipTest("not a git checkout")
+        self.assertEqual(r.stdout.strip(), p1m_cells.FREEZE["core_tree"], "the method (core/) changed after the campaign freeze")
+
+    def test_cells_cli_freeze_refusal(self):
+        """--plans refuses (exit 65) a commit that fails the check, and writes nothing."""
+        d = os.path.join(self.tmp, "refuse")
+        err = io.StringIO()
+        old = sys.stderr; sys.stderr = err
+        try:
+            rc = p1m_cells.main(["--plans", d, "--code-commit", "no-such-rev-zzz"])
+        finally:
+            sys.stderr = old
+        self.assertEqual(rc, 65); self.assertIn("freeze check failed", err.getvalue()); self.assertFalse(os.path.exists(d))
 
 
 class TestCost(Base):
