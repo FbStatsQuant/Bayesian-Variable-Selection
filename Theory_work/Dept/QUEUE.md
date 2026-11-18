@@ -136,6 +136,7 @@ Consistency results first (owner, 11-15 evening) + Lean readiness of their deter
     - (MEAS-D/NA_DROP landing) T12 scoped relabel (HQ 11-18): PC for (i.a)-(i.c), (ii), (R3) via W3-AUDIT-AX:FR council + part→FR map; (iii)/(iv) keep wave-1 PROVED-LOCKED + "owner adopted 2026-11-18; not consumed by any presented result". Dry-run check.py --acceptance first.
     - (MEAS-D/NA_DROP landing) W3-START2-R:MIS status text re-point 12bb52cd → R2r2 (S4-3-style carrier).
     - D5P Sol-5 fixes (HQ 11-18): LIST-CODE (v) NARROW to status `exact` (carrier: NARROW, no consumer affected, LIST-R output runs only); p≥2 at card :71/RV :1441; π(S₀|y) ≥ n^{−cM/2} premise (ERRATA:7). Sol-5b-bound staged digest. 1-line consultant FYI with the A batch.
+    - D5Pa v3 a9353d82 (adds T6-3 at card :71 / RV :1435; Opus PURE 9.6). Landing record note N-1: ticket CARD.md:10 / READER_DELTA.md:14 keep the superseded "met by the run" wording (frozen copies).
     - T6 + Sol-5 (D5P final text; NA_DROP and MEAS-D Sol sections).
     - MEAS-D + NA_DROP landing.
     - Blind API batch rebuild (theory/prelean-blind) → HQ submits.

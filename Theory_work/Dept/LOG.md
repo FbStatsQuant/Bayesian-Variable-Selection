@@ -730,3 +730,4 @@
   - Checks: one Opus PURE/diff on the (C) texts; NO further Codex call.
   - Fill the DIST-2 1.4.11 cell (Sol R2 9.6 PASS).
   - Then a MEAS-D + NA_DROP + T12 landing DRY run to HQ.
+- 2026-11-18 12:15 CST D5Pa v3 (a-1..a-3 + T6-3) frozen a9353d82, Opus PURE 9.6 PASS, bound. It lands with the A re-pin. Note N-1 for that landing record: ticket CARD.md:10 / READER_DELTA.md:14 keep 'met by the run' (frozen proposal copies, superseded by card :71 / RV :1435). The coordinator's b″-1 question predates the option-C order (already steered).
