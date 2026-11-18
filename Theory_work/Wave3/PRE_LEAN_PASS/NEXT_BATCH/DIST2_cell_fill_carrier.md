@@ -1,0 +1,11 @@
+# Carrier: DIST-2 changelog row 1.4.11, "check" cell fill (recorder; lands with the MEAS-D / NA_DROP landing set)
+
+Main 97f9c8c3 carries, at the end of the last cell of `Theory_work/Wave3/W3-DIST/STATEMENT.md:497` (row 1.4.11, tagged WEAKER), the pending trailer:
+`; trigger and proposed wording: Astra T5-1 (T5/CODEX_gpt-6.2-astra.md); independent OpenAI check of the applied sentence: pending (section DIST-2 of the next Sol call)`
+
+**Replace that trailer (it is outside every hashed span; row 1.4.11 is the last row, after every registered span) by:**
+`; trigger and proposed fix: Astra T5-1 (Theory_work/Wave3/PRE_LEAN_PASS/T5/CODEX_gpt-6.2-astra.md); independent OpenAI check of the applied sentence: Sol 6.2 section (c) of Sol-6, round R2, 9.6 PASS (Theory_work/Wave3/PRE_LEAN_PASS/Sol5/DIST2/R2_council_sol.md; bound to MANIFEST 578913a683b89917ce47c838cca376e497699b5d5d5c4f665773bb96128f7962, carried to the re-freeze on 97f9c8c3, MANIFEST 985b75cfd1909a0a5580c27b4ff5d164c645183e8be1c12274cae6ab187e39f8, by the Opus PURE of the rebase, round R3, 9.5 PASS, Theory_work/Wave3/PRE_LEAN_PASS/Sol5/DIST2_m97/PURE_REBASE_check_opus.md)`
+
+Edits taken from the manager (11-18): "proposed fix" in place of "proposed wording" (Opus PURE E-1: Astra gave a direction, not literal wording) and the full path of the Astra file (Opus PURE E-2). Nothing else in the row changes.
+
+**Also in the landing set (staged edits, tag WEAKER, already in the frozen DIST-2 stage `Sol5/DIST2_m97/ticket`, MANIFEST 985b75cf):** `W3-DIST/STATEMENT.md:1` (header v1.4.10, 2026-11-16 -> v1.4.11, 2026-11-18), the row 1.4.11 cells 2-3 (F2/E2/E3 wording of Opus R1: the "As proved, its constant is at most of order (1 + s₀^r)³ for fixed (A, σ*², M, M′) (an upper bound, not known to be tight; …)" quote, DIST-1 (c)'s radius constant C = (C_X² + C_X/2 + 1 + C_T)^{1/2} and the proof places), and `W3-DIST/TARGET.md:30` (the DIST-2 cell, F1 qualifier). Source patch: `Sol5/DIST2/DIST2_R1_stage.patch` (applies to main by phrase; the stage ticket = main + these edits, checked by the Opus PURE of the rebase). Registry: DIST-2 council cell gets "R2; MANIFEST 578913a6…; sol=9.6 PASS(…/R2_council_sol.md)" (`manifest.py bind` output); the Opus R1 (9.3 PASS) is bound to the pre-R1 manifest a230f909 (`MANIFEST_DIST2_pre-R1.txt`).
