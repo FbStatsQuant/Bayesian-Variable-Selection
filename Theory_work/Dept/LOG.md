@@ -754,7 +754,7 @@
 - 2026-11-18 14:39 CST **HQ: HOLD all Claude-seat Theory work until the Claude Personal reset (Mon 2026-11-23 15:00 CT). No Claude Third exception for Theory.** Sol-7 launched now on Codex (gpt-6.2-sol high; delta read of NA_DROP v1.5 bound to 9ddef7fd, R8; packet PRE_LEAN_PASS/Sol7/PACKET.md). Its verdict gets filed for the dry run.
   **RESUME ORDER after the reset:**
   1. item 7 Opus PURE (patch ab9719a6);
-  1b. NA_DROP v1.6: apply Sol-7 b‴-1/b‴-2 as written + Opus PURE (+ Sol confirm if HQ approves);
+  1b. NA_DROP v1.6: apply Sol-7 b‴-1 as directed + b‴-2 (statistical outputs; name peak_memory_kb, timings, elapsed) → Opus PURE → ONE tiny wording-only Sol confirm bound to the v1.6 digest (HQ-approved, last Codex call for NA_DROP);
   2. the MEAS-D/NA_DROP/T12 landing DRY run (landing set c854f912 + item 7 + NA_DROP v1.6 + W-1 citation fix) → table to HQ;
   3. the A re-pin (widened; D5Pa v4 rebased; DLV-0 blind-triage fixes; CLAIMS_CARD:2; MIS done in the landing; Opus seat verifies the K(K+1) term and both counts);
   4. the SUMMARY (counts + §3 declined, by the manager).
@@ -762,3 +762,8 @@
   - b‴-1: L3:35 "error only via the 3 stop() calls" contradicts the allocation exception at :42 → call them validation stops + the allocation exception.
   - b‴-2: the IMPL-LIST premise (STATEMENT:60, REPORT:65) still says blanket "no other field changes" → apply L3:43's field scope.
   - Resume plan: apply both as written (CORRECTION-ONLY) + Opus PURE after the reset → NA_DROP v1.6. A passing Sol seat on the final digest is still needed for A4; asked HQ for one tiny Sol confirm after the PURE.
+- 2026-11-18 14:44 CST HQ approved the Sol-7 plan. After the reset:
+  - (1) b‴-1 as Sol directs.
+  - (2) Scope "no other field changes" to the statistical outputs, and name the runtime diagnostics (peak_memory_kb, timings, elapsed) that the exact branch's finish() samples after the helper.
+  - Then Opus PURE → NA_DROP v1.6 → ONE tiny Sol confirm on v1.6 (wording-only, bound to the final digest; A4's passing seat). That is the LAST Codex call for NA_DROP. Anything beyond these two points → HQ; no further rounds.
+  - Hold until Mon 2026-11-23 15:00 CT.
