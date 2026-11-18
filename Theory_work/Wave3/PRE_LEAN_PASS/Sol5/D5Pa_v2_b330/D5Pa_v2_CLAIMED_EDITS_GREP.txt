@@ -1,0 +1,22 @@
+# D5P (a) stage v2 on the batch tree 330b87b4: Sol-5 (a) a-1, a-2 (a-3 already in the batch) + Sol-5b (a') a'-1, a'-2; claimed edits grepped in the REAL staged files (HQ RIDER_RULES)
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/D5Pa_v2_b330/ticket/STATEMENT.md:95  a-1 LIST-CODE (v) status exact
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/D5Pa_v2_b330/ticket/lemmas/L2_listCODE.md:148  a-1 L2 Step F
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/D5Pa_v2_b330/staged_reader/CLAIMS_CARD.md:71  a-2 staged card :71 p>=2
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/D5Pa_v2_b330/staged_reader/READER_VERSIONS.md:1441  a-2 staged RV :1441 p>=2
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/D5Pa_v2_b330/staged_reader/CLAIMS_CARD.md:71  a-3 already in the batch (card :71)
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/D5Pa_v2_b330/staged_reader/READER_VERSIONS.md:1443  a-3 already in the batch (RV :1443)
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/D5Pa_v2_b330/ticket/REPORT.md:53  a'-1 REPORT LIST-CODE conclusion: on status exact
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/D5Pa_v2_b330/ticket/REPORT.md:0  a'-1 ABSENT: 'exact branch: the enumeration's store'
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/D5Pa_v2_b330/ticket/CARD.md:10  a'-2 CARD row 3.1L p>=2 (same words as NA_DROP v1.3)
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/D5Pa_v2_b330/ticket/CARD.md:13  a'-2 CARD Option B p>=2 (same words)
+OK   Theory_work/Wave3/PRE_LEAN_PASS/Sol5/D5Pa_v2_b330/ticket/READER_DELTA.md:29  a'-2 READER_DELTA p>=2 (same words)
+
+file sha256 (first 16) and line counts:
+ticket/STATEMENT.md: e3196041b792111d lines=163
+ticket/lemmas/L2_listCODE.md: 60b391fd56c197f4 lines=154
+ticket/REPORT.md: c9e26e35fa9a50f3 lines=72
+ticket/CARD.md: 29852a5eaf8be12f lines=23
+ticket/READER_DELTA.md: e6e594a80ee3230e lines=44
+staged_reader/CLAIMS_CARD.md: f1ec7956b1b8cbed lines=181
+staged_reader/READER_VERSIONS.md: 7fa96d799f4eef93 lines=1458
+RESULT: ALL CLAIMED EDITS PRESENT
