@@ -53,7 +53,3 @@ Budget: 1–2 lead-days, KILL at 3. Folder template: W3-D3. Branch: `theory/W3-F
   that would need a new verification, which is not done (no new lemma).
 - (BLK-g) and (AR-g) depend on B, which is defined over the whole design sequence; the statement quotes VIS's definition
   rather than restating it.
-
-## Standing rules added during the ticket
-- HQ (2026-11-17): run `ingest.py convert REPORT.md` (0 PROBLEM lines) locally before any Sol council call, so a format
-  failure never costs a Codex call. `manifest.py` skips `reviews/`, so a review file a status rests on must be an #EXTRA input.

@@ -40,3 +40,5 @@
   `reviews/RM2_wording.sha256`; applies cleanly to main a1d55cef; RM2 branch untouched) + Opus PURE check
   (`reviews/RM2_wording_check_opus.md`); (3) HQ rule: ingest converter before any Sol council call (PLAN). SOL62 lines R1–R5:
   `reviews/SOL62_LINES.md`.
+- 2026-11-17 Standing rule (HQ): run `ingest.py convert REPORT.md` (0 PROBLEM lines) before any Sol council call. Kept here,
+  not in PLAN.md, because PLAN.md is inside the frozen R5 manifest (an edit at 6e2200b7 was reverted for that reason).
