@@ -1,0 +1,3 @@
+hand cases ok: 37 checks
+exact-branch fixtures: 6 of 6; store holds every model in 4 
+list_pip_units: all 124 checks passed (core /home/fb31/BVS-wt/W3-D5P/.rc_tmp/implist/Scripts/SMC_BVS/core )
