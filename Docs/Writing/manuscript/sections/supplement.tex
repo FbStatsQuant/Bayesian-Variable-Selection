@@ -5,6 +5,74 @@ Each result below comes with one line on why it matters; the status notes give t
 
 \subsection{The posterior}\label{sec:supp-post}
 
+\subsubsection{Fixed design}\label{sec:supp-fixed}
+
+\why{The same conclusions hold for a deterministic design, under conditions on the observed sample that a user can
+check; it is the route for bounded data such as genotypes.}
+
+The theorem uses four assumptions beyond those of Theorem~\ref{thm:post-random}'s setting.
+
+\begin{assumption}{BC}{Bounded coefficients}
+$\max_{j}\abs{\theta^*_j}\le\bar\theta$ for a fixed $\bar\theta<\infty$. \hfill [\SA{post}]
+\end{assumption}
+
+\begin{assumption}{EF}{Eigenvalue floor on sets of bounded size}
+$\lmin(\Rhat_S)\ge\varphi_0^2$ for every model $S$ with $\abs{S}\le2(A+1)\sz+2$, for a fixed $\varphi_0\in(0,1]$. \hfill [\SA{post}]
+\end{assumption}
+
+\begin{assumption}{NC}{No near-exact collinearity among sets of logarithmic size}
+$\lmin(G_S)\ge g_0$ for every model $S$ with $\abs{S}\le3(A+1)(\sz+1)\log n$, for a fixed $g_0>0$; on the correlation
+scale, a floor $g_0/(n-1)$ that vanishes as $n$ grows. \hfill [\SA{post}]
+\end{assumption}
+
+\begin{assumption}{BM}{Beta-min}
+Either (a) $\tmin\ge C_\beta\,\sigs\rn$ with a fixed $C_\beta>0$ such that $C_\beta^2\varphi_0^2>c_0(\sz,A)$, an explicit
+constant (Appendix~\ref{app:constants}); or (b) $\tmin\sqrt{n/\log n}\to\infty$. \hfill [\SA{post}]
+\end{assumption}
+
+\begin{theorem}[Posterior concentration, fixed design]\label{thm:post-fixed}
+Let the design be fixed and assume \as{GL}, \as{DIM}, \as{SP}, \as{BC}, \as{EF}, \as{NC} and \as{BM}. Then, along every
+sequence that satisfies these assumptions,
+\begin{equation}\label{eq:post-op}
+  \max_{j\in\set{p}}\big|\PIP_j-\ind{j\in\Sz}\big|\ \le\ 1-\pis{\Sz}\ =\ \OP\Big(\sqrt{\frac{\log n}{n}}\Big),\qquad
+  \P\big(\HPM=\MPM=\Sz\big)\to1 .
+\end{equation}
+Moreover, there are $n_0$ and $C_{\mathrm E}$, depending only on $(\sz,A,\sigs^2,\bar\theta,\varphi_0,g_0,C_\beta)$, such that for
+every $n\ge n_0$ and every design and $\tstar$ that satisfy the assumptions at that $n$,
+\begin{equation}\label{eq:post-exp}
+  \E\big[1-\pis{\Sz}\big]\ \le\ C_{\mathrm E}\sqrt{\frac{\log n}{n}},\qquad \P\big(\HPM=\MPM=\Sz\big)\ \ge\ 1-4C_{\mathrm E}\sqrt{\frac{\log n}{n}} .
+\end{equation}
+The expectation is over the noise, with the design fixed. Under form (b) of \as{BM}, $n_0$ also depends on how fast
+$\tmin\sqrt{n/\log n}$ diverges.
+\end{theorem}
+
+
+\status{The in-probability conclusions~\eqref{eq:post-op}: \textbf{proved and independently checked}. The expectation
+bound~\eqref{eq:post-exp}: \textbf{proved and checked, conditional on one supporting result} (a proposition giving a lower
+bound on the posterior miss) \textbf{that is proved but not yet independently checked}; its other input, a lemma bounding
+the tail of the posterior model size, is now independently checked. Registry: Appendix~\ref{app:status}, row 1.1.}
+
+\paragraph{Is the beta-min reasonable?} The beta-min \lab{BM}, at the usual order $\sigs\rn$, has the same form as \SL's proof rates, with a fixed multiple of
+$\log n$ where theirs has a diverging multiple of $\bar r_n\log P_n$ (supp.\ p.~15). \SL's Theorem~1 bounds the
+coefficients above through (3) and (8) (pp.~950, 952). Without any lower bound, specificity can fail
+(Remark~\ref{rem:no-betamin}).
+\emph{Precedents:} \citet[Theorem~5 and Corollary~1, pp.~13--14]{CastilloSchmidtHieberVanDerVaart2015} and
+\citet[Theorem~1, display (8), p.~9]{YangWainwrightJordan2015} require the nonzero coefficients to exceed a multiple of
+$\sqrt{\log p/n}$ (in the first, with column norms of order $\sqrt n$, compatibility numbers bounded below and a bound on
+the true model size through the mutual coherence; in the second, for the coordinates it recovers); when $p\ge n^a$ for some fixed $a>0$ our order $\sigs\rn$ is the same, and when $\log p=o(\log n)$ ours is the larger requirement.
+
+\subsubsection{Further posterior results}
+
+\begin{remark}[The posterior miss at moderate $n$; a heuristic, not a theorem]\label{rem:moderate-n}
+The posterior miss is carried mainly by the models
+$\Sz\cup\{j\}$ that add one null predictor; each is light, but together, since the fit factor $e^{T_j^2/2}$ ($T_j^2$
+approximately $\chi^2_1$) has no finite mean, they carry about $(\sz+1)\sqrt{\log p/(\pi n)}$ times the weight of $\Sz$:
+the expression of Remark~\ref{rem:sharp}(b), here as a ratio to the weight of $\Sz$. With $\sz=5$, $n=200$ and $p=10^4$ this is about $0.7$. In single
+synthetic draws (AR(0.6), $\sz=5$) the measured total weight of these models, relative to that of $\Sz$, was $1.0$--$1.2$
+at $n=200$ and $p=10^4$--$10^6$, and $0.52$ at $n=400$, $p=10^4$. So at simulated sizes the posterior is spread over $\Sz$
+and many one-predictor extensions of it.
+\end{remark}
+
 \why{Without the beta-min condition, the posterior still rejects over-fitted models and still keeps every true predictor
 that is strong enough; specificity, however, can fail.}
 
@@ -198,6 +266,31 @@ clauses hold under \as{C2} on $\Dom$ and under \as{C2p} for every admissible $n\
 
 \status{\textbf{Proved and independently checked}, with no open condition: the version proved in the registry is a stronger form of
 this statement. Registry: Appendix~\ref{app:status}, row 3.2.}
+
+\why{It states in one place when Theorem~\ref{thm:reported} applies to block and autoregressive designs.}
+
+\begin{corollary}[Block and autoregressive designs]\label{cor:famc}
+In the setting of Theorem~\ref{thm:reported}, suppose that for all large $n$ the predictors are correlated either in
+independent blocks of bounded size (uniformly well conditioned) or autoregressively with a fixed $\rho\in(-1,1)$, and that
+a fixed number of true coefficients have absolute values bounded away from $0$ and $\infty$. Suppose also that the true
+predictors cannot cancel one another: (a) one true predictor per block; or (b) signs aligned with the correlation (for AR,
+equal signs if $\rho>0$ and signs alternating with the column index if $\rho<0$; for a block with several true predictors,
+after flipping some columns' signs all its partial correlations are nonnegative and the flipped true coefficients share
+one sign); or (c) for AR only, the true predictors are spread apart by an explicit separation bound; or (d) the coefficient
+vector stays a fixed distance from a closed set $B$ of cancelling directions ($B$ is null for AR designs, and possibly not
+null for general block designs). Then, on data events of probability tending to one, every admissible run that returns a
+result reports exactly the true model, whatever its seed. Under the delivery conventions of Theorem~\ref{thm:reported},
+every run returns a result with probability one, so the true model is recovered with probability tending to one, with
+that theorem's qualifications (lifted integer limits, bounded domain, time guard).
+\end{corollary}
+
+Not covered: coefficients that cancel, such as two adjacent autoregressive true predictors with coefficients $1$ and $-2$
+at correlation $0.5$. Our designs meet the conditions: block designs with one true predictor per block, and the AR($0.5$)
+and AR($0.6$) layouts, whose true predictors are spread apart. The constants degrade as $\abs\rho\to1$.
+
+\status{\textbf{Proved and independently checked} (recorded on main at 8b4d3101): an assembly of recorded results, with no
+new assumption. Registry: claim W3-FAMC:Cor-FAMC.}
+
 
 \subsection{The reported estimates are consistent, on designs without leakage}\label{sec:outputs}
 

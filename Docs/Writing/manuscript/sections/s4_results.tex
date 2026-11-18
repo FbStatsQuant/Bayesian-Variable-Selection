@@ -27,7 +27,7 @@ The posterior contracts around the true conditional law of the response, at radi
 i.i.d.\ observations; sparse Gaussian linear model; light-tailed predictors; no near-exact collinearity; no predictor with an unbounded
 signal; no lower bound on the coefficients. &
 Proved and checked. \\
-3.~The reported model is the true model, for block and moderate AR correlation (Thm~\ref{thm:reported}) &
+3.~The reported model is the true model, for block and any fixed AR correlation (Thm~\ref{thm:reported}) &
 With probability tending to one, every run that produces output reports exactly the true model, whatever its seed. &
 Gaussian rows; fixed signals; no true predictor masked by $15$ or fewer others; the predictors that can imitate the
 signal are few, and local. &
@@ -88,9 +88,9 @@ instance, $\lmin(\Sig)\ge\varphi^2$). \hfill [\SA{post}]
 \inwords{If the true model is small and its coefficients are fixed and nonzero, and no small group of predictors is
 collinear, then the posterior puts all but a fraction of order $\rn$ of its mass on the true model. The highest posterior
 model and the median probability model then equal the true model with probability tending to one, and every inclusion
-probability is within order $\rn$ of $1$ for a true predictor and of $0$ for a null one. We state this first for random
-rows that are sub-Gaussian along sparse directions (Gaussian rows, the case of our simulation designs, included), and
-then for a fixed design, with conditions on the sample.}
+probability is within order $\rn$ of $1$ for a true predictor and of $0$ for a null one. We state this for random
+rows that are sub-Gaussian along sparse directions (Gaussian rows, the case of our simulation designs, included); a
+fixed-design version is in the supplement.}
 
 \why{It is the basic guarantee of a Bayesian selection method, here for the prior exactly as the software sets it: with
 enough data the posterior points to the right predictors, and its inclusion probabilities can be read as near-certain
@@ -144,48 +144,9 @@ case of Theorem~\ref{thm:post-random} can let the floor on its larger sets vanis
 bound used in the expectation route) has not yet had an independent check, and two others are earlier-wave results;
 passed its independent review, not yet recorded in the registry.}
 
-\paragraph{Fixed design.} The same conclusions hold for a deterministic design under conditions on the sample. They
-use four more assumptions.
-
-\begin{assumption}{BC}{Bounded coefficients}
-$\max_{j}\abs{\theta^*_j}\le\bar\theta$ for a fixed $\bar\theta<\infty$. \hfill [\SA{post}]
-\end{assumption}
-
-\begin{assumption}{EF}{Eigenvalue floor on sets of bounded size}
-$\lmin(\Rhat_S)\ge\varphi_0^2$ for every model $S$ with $\abs{S}\le2(A+1)\sz+2$, for a fixed $\varphi_0\in(0,1]$. \hfill [\SA{post}]
-\end{assumption}
-
-\begin{assumption}{NC}{No near-exact collinearity among sets of logarithmic size}
-$\lmin(G_S)\ge g_0$ for every model $S$ with $\abs{S}\le3(A+1)(\sz+1)\log n$, for a fixed $g_0>0$; on the correlation
-scale, a floor $g_0/(n-1)$ that vanishes as $n$ grows. \hfill [\SA{post}]
-\end{assumption}
-
-\begin{assumption}{BM}{Beta-min}
-Either (a) $\tmin\ge C_\beta\,\sigs\rn$ with a fixed $C_\beta>0$ such that $C_\beta^2\varphi_0^2>c_0(\sz,A)$, an explicit
-constant (Appendix~\ref{app:constants}); or (b) $\tmin\sqrt{n/\log n}\to\infty$. \hfill [\SA{post}]
-\end{assumption}
-
-\begin{theorem}[Posterior concentration, fixed design]\label{thm:post-fixed}
-Let the design be fixed and assume \as{GL}, \as{DIM}, \as{SP}, \as{BC}, \as{EF}, \as{NC} and \as{BM}. Then, along every
-sequence that satisfies these assumptions,
-\begin{equation}\label{eq:post-op}
-  \max_{j\in\set{p}}\big|\PIP_j-\ind{j\in\Sz}\big|\ \le\ 1-\pis{\Sz}\ =\ \OP\Big(\sqrt{\frac{\log n}{n}}\Big),\qquad
-  \P\big(\HPM=\MPM=\Sz\big)\to1 .
-\end{equation}
-Moreover, there are $n_0$ and $C_{\mathrm E}$, depending only on $(\sz,A,\sigs^2,\bar\theta,\varphi_0,g_0,C_\beta)$, such that for
-every $n\ge n_0$ and every design and $\tstar$ that satisfy the assumptions at that $n$,
-\begin{equation}\label{eq:post-exp}
-  \E\big[1-\pis{\Sz}\big]\ \le\ C_{\mathrm E}\sqrt{\frac{\log n}{n}},\qquad \P\big(\HPM=\MPM=\Sz\big)\ \ge\ 1-4C_{\mathrm E}\sqrt{\frac{\log n}{n}} .
-\end{equation}
-The expectation is over the noise, with the design fixed. Under form (b) of \as{BM}, $n_0$ also depends on how fast
-$\tmin\sqrt{n/\log n}$ diverges.
-\end{theorem}
-
-
-\status{The in-probability conclusions~\eqref{eq:post-op}: \textbf{proved and independently checked}. The expectation
-bound~\eqref{eq:post-exp}: \textbf{proved and checked, conditional on one supporting result} (a proposition giving a lower
-bound on the posterior miss) \textbf{that is proved but not yet independently checked}; its other input, a lemma bounding
-the tail of the posterior model size, is now independently checked. Registry: Appendix~\ref{app:status}, row 1.1.}
+A fixed-design version, with conditions on the observed sample in place of \as{SGR} (bounded coefficients, an eigenvalue
+floor, no near-collinearity on sets of logarithmic size, and a beta-min condition), is Theorem~\ref{thm:post-fixed} in the
+supplement (Section~\ref{sec:supp-fixed}).
 
 \subsection{Result 2: the posterior finds the true distribution}\label{sec:distribution}
 
@@ -247,7 +208,7 @@ Theorem~1, p.~952; their Theorem~2 has the same form, p.~953), equals $n^{-cM}$;
 exponential form, for levels $M\le\sqrt n/\log n$.
 (ii) The rate $\rn$ of Result~1 concerns the posterior miss $1-\pis{\Sz}$, and under its assumptions it cannot be improved
 for this prior (Result~6). Song and Liang give no rate for selecting the whole model: their Theorem~3 (p.~956) controls
-sensitivity only, and their Theorem~S (supplement, p.~13, display (24)) states consistency of the posterior mode without
+sensitivity only, and their Theorem~S (supp.\ p.~13, display (24)) states consistency of the posterior mode without
 a rate.
 \end{remark}
 
@@ -261,14 +222,14 @@ posterior mass at least $n^{-c_{\mathrm H}M/2}$, a condition the run does not ch
 \end{remark}
 
 % =====================================================================================================
-\subsection{Result 3: the reported model is the true model, the theorem for block and moderate AR correlation}\label{sec:reported}
+\subsection{Result 3: the reported model is the true model, the theorem for block and any fixed AR correlation}\label{sec:reported}
 
 \inwords{If no true predictor is masked by $15$ or fewer others, the predictors that can imitate the signal form a
 set $Q$ of at most $n^b$ predictors with $b<\tfrac12$, and regressions within $Q$ are local, then there is an event,
 determined by the data alone and of probability tending to one, on which every run that produces output reports exactly
 the true model, whatever its seed and the outcome of its calibration. The mechanism is that of
 Example~\ref{ex:leak}: the start mode holds the true predictors and possibly some members of $Q$, and the local search
-from the start mode deletes the spurious ones.}
+from the start mode deletes them.}
 
 \why{It is a guarantee about what the software reports, at the effort its own calibration chooses and for every seed, not only
 about the posterior it targets.}
@@ -352,15 +313,16 @@ independently checked}. Registry: Appendix~\ref{app:status}, row 3.1.}
 \begin{remark}[On the assumptions]\label{rem:reported}
 (i) \emph{Why $b<\tfrac12$} (a heuristic): at model size about $\sqrt n$ the penalty of one more predictor stops dominating
 the best of $p$ noise gains; whether the conclusion fails for larger $b$ is open.
-(ii) \emph{Block and moderate AR correlation} means blocks of bounded size, or autoregressive correlation bounded away
-from one, as the AR(1) correlations $0.5$ and $0.6$ of our designs; visibility must still hold (one true predictor per
+(ii) \emph{Block and any fixed AR correlation} means blocks of bounded size, or autoregressive correlation with a fixed
+$\rho\in(-1,1)$, as the AR(1) correlations $0.5$ and $0.6$ of our designs; the constants degrade as $\abs\rho\to1$; visibility must still hold (one true predictor per
 block, or true predictors spread far enough apart, as in our designs, or by Remark~\ref{rem:vis}).
 \end{remark}
 
-\scope{Block and moderate AR correlation, and independent predictors: the designs S1--S4, S6, IND, AR ($0.6$) and BLK of
+\scope{Block correlation, any fixed AR correlation, and independent predictors: the designs S1--S4, S6, IND, AR ($0.6$) and BLK of
 our studies; not pervasive common factors with $p\gg\sqrt n$. Visibility holds with a margin that does not depend on $n$
 with aligned signs, and in generic position for designs with finitely many local correlation types (Section~\ref{sec:a-rm},
-Remark~\ref{rem:vis}; Section~\ref{sec:who-outside}).}
+Remark~\ref{rem:vis}; Section~\ref{sec:who-outside}). Corollary~\ref{cor:famc} (supplement) collects these sufficient
+conditions for block and autoregressive designs into one statement.}
 
 \paragraph{Estimates from the returned list.} For a nonempty set $\mathcal T\subseteq\Om$ of models, the \emph{list-renormalised}
 quantities are the posterior renormalised to $\mathcal T$ and its total weight:
@@ -429,7 +391,7 @@ $c_{\mathrm{SB}}:=\kappa^2\tlow^2/\{200(M_1^2+\sigs^2)\}$. Then
 
 \status{\textbf{Proved and independently checked}. Registry: Appendix~\ref{app:status}, row 3.7.}
 
-\scope{Every fixed design with the floor and the signal bounds; no visibility, leakage, start or block condition.}
+\scope{Fixed designs with the floor and signal bounds; no visibility, leakage, start or block condition.}
 
 \begin{remark}[What is not claimed, and how often runs certify]\label{rem:screen}
 (i) The bound is on an intersection: a run produces output, certifies a small model, \emph{and} that model misses a true
@@ -446,7 +408,7 @@ size budget of Theorem~\ref{thm:screen} requires $n\gtrsim1{,}450$.
 \subsection{Result 5: the evidence estimate is unbiased, on every design}\label{sec:estimates}\phantomsection\label{sec:unbiased}
 
 \inwords{The method reports an evidence estimate, the pooled average of its four islands' estimates. Given the
-calibration, it is unbiased for the evidence $Z$, on every design and every data set.}
+calibration, it is unbiased for the evidence $Z$, on every design and data set.}
 
 \why{It is the one reported estimate with a guarantee that needs no condition on the design: the run reports $\log\Zhat$,
 and, given the frozen calibration and on its success, the estimate of the uninterrupted run is unbiased for $Z$. It also underlies the reported lower bound $\log(0.05\,\Zhat)$ for $\log Z$
@@ -490,7 +452,7 @@ its one-predictor extensions.}
 such as $n=200$.}
 \scope{(a) Every design; (b) the witness designs only.}
 
-\begin{remark}[The rate cannot be improved, and what it means at moderate $n$]\label{rem:sharp}
+\begin{remark}[The rate cannot be improved]\label{rem:sharp}
 \textup{(a)} \emph{Every design.} For every $n\ge3$, every standardised design with $p\ge2$, every response and every
 model $S$ with $\abs{S}\le\min(K-1,p/2)$,
 \begin{equation}\label{eq:sharp-a}
@@ -514,13 +476,7 @@ and, if moreover $p\to\infty$, $1-\pis{\Sz}\ge(1-\oP(1))\,(\sz+1)\sqrt{\log p/(\
 orthogonal designs ($\sz<p\le n-1$) with fixed nonzero coefficients, the expectation bound~\eqref{eq:post-exp} applies
 too, so there $\E[1-\pis{\Sz}]$ is of exact order $\rn$.
 
-\textup{(c)} \emph{At moderate $n$} (a heuristic, not a theorem). The posterior miss is carried mainly by the models
-$\Sz\cup\{j\}$ that add one null predictor; each is light, but together, since the fit factor $e^{T_j^2/2}$ ($T_j^2$
-approximately $\chi^2_1$) has no finite mean, they carry about $(\sz+1)\sqrt{\log p/(\pi n)}$ times the weight of $\Sz$:
-the expression of~(b), here as a ratio to the weight of $\Sz$. With $\sz=5$, $n=200$ and $p=10^4$ this is about $0.7$. In single
-synthetic draws (AR(0.6), $\sz=5$) the measured total weight of these models, relative to that of $\Sz$, was $1.0$--$1.2$
-at $n=200$ and $p=10^4$--$10^6$, and $0.52$ at $n=400$, $p=10^4$. So at simulated sizes the posterior is spread over $\Sz$
-and many one-predictor extensions of it.
+\textup{(c)} A heuristic for simulated sizes is in the supplement (Remark~\ref{rem:moderate-n}).
 \end{remark}
 
 

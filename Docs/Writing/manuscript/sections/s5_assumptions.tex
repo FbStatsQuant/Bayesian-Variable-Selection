@@ -54,7 +54,7 @@ under design conditions; neither implies the other.
 \caption{The assumptions, \SL{} (2015), and our designs, by class: independent, locally correlated, pervasive factor.
 \yes{} inside, \no{} outside, \unc{} unclear, \na{} not applicable or not judged. A comparison in one word appears only where it holds
 in every regime of both papers; elsewhere the comparison depends on the regime and is given in Section~\ref{sec:a-each}.
-``No counterpart'': they assume nothing of the kind. }\label{tab:a-summary}
+``No counterpart'': none. }\label{tab:a-summary}
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.18\linewidth}>{\raggedright\arraybackslash}p{0.16\linewidth}>{\raggedright\arraybackslash}p{0.40\linewidth}ccc@{}}
 \toprule
 Assumption & In words & \SL: counterpart, and comparison by regime & Indep. & Local & Factor \\
@@ -103,7 +103,7 @@ opens with the comparison with \SL, gives the evidence, what the assumption excl
 appears in other Bayesian selection papers (with the Lasso literature where the condition originates). Every precedent was checked against the arXiv
 version listed in the references, and its page numbers refer to that version; page numbers for Song and Liang are journal
 pages. In general, two conditions of Result~3, visibility and the leakage set with its local regressions, meet none of
-these standards: they have no precedent. For block and moderate AR correlation they are argued to hold
+these standards: they have no precedent. For block correlation and any fixed AR correlation they are argued to hold
 (Section~\ref{sec:a-rm}), so there they meet (iii); this is why Result~3 is stated for those designs. Every design is inside each assumption of Sections~\ref{sec:a-all}
 and~\ref{sec:a-post}; ``Our designs'' lines appear only in Sections~\ref{sec:a-rm} and~\ref{sec:a-scr}.
 
@@ -114,7 +114,7 @@ budget inequality; Result~5 assumes nothing on the design or the data model; Res
 noise level that varies with $n$; and Result~6(a) assumes nothing.
 
 \ahead{Gaussian linear model}{\lab{GL}}{The same as \SL{} in every regime (their model (1), p.~947, and density (2), p.~950).}
-\ev{Their density is $f^*(y,x)=\phi(y;x^\top\bstar,\sigs)\,\nu_x(dx)$; ours is the same model with an intercept.}
+\ev{Their density is $f^*(y,x)=\phi(y;x^\top\bstar,\sigs)\,\nu_x(dx)$; ours adds an intercept.}
 \ro{Heavy-tailed or heteroscedastic errors; no theorem of ours or of theirs covers them.}
 
 \ahead{Dimension $p\le n^A$}{\lab{DIM}}{\emph{Upper range:} ours covers a smaller range of $p$ than \SL: far fewer than their Corollary~1
@@ -131,7 +131,7 @@ assume $p_n\log p_n=o(n)$. As $p\to\infty$, ours lies inside the first two range
 the last two, ours also admits bounded $p$.}
 
 \ahead{Fixed true model size}{\lab{SP}}{The same as \SL's strict sparsity (4), p.~950, used by their Theorems~2, 3 and~S;
-their Theorem~1 also allows growing supports under their (3), p.~950, which ours does not.}
+their Theorem~1 also allows growing supports, p.~950; ours does not.}
 \ev{Growth of $\sz$ is tightly limited: on every design with $\sz\le\min(K-1,p/2)$, $K$ the prior's cap on model
 size, $\pis{\Sz}\le\{1+(\sz+1)/(3\sqrt n)\}^{-1}$
 (Remark~\ref{rem:sharp}(a)), so a posterior miss of order $\rn$ is possible only if $\sz=O(\sqrt{\log n})$.}
@@ -145,17 +145,11 @@ the beta-min}{\SL{} state no lower bound in their theorems. \emph{If their $\bst
 reading of p.~950): Theorems~\ref{thm:post-random} and~\ref{thm:reported} and Remark~\ref{thm:outputs} ask the same; Theorems~\ref{thm:post-fixed} and~\ref{thm:dist}, whose
 coefficients may vary with $n$, admit more. \emph{If it may vary with $n$:} their proof steps need rates (supp.\
 pp.~6, 15), and our fixed signals ask more than those steps use.}
-\ev{Our explicit beta-min \lab{BM}, at the usual order $\sigs\rn$,
-appears only in the fixed-design Theorem~\ref{thm:post-fixed}; it has the same form as their proof rates, with a fixed multiple of
-$\log n$ where theirs has a diverging multiple of $\bar r_n\log P_n$ (supp.\ p.~15). Their Theorem~1 bounds the
-coefficients above through (3) and (8) (pp.~950, 952). Without any lower bound, specificity can fail
-(Remark~\ref{rem:no-betamin}).}
-\ro{True coefficients below a constant times $\rn$ (Theorem~\ref{thm:post-fixed} only), and signals that grow without bound.}
-\pr{Lower bound: \citet[Theorem~5 and Corollary~1, pp.~13--14]{CastilloSchmidtHieberVanDerVaart2015} and
-\citet[Theorem~1, display (8), p.~9]{YangWainwrightJordan2015} require the nonzero coefficients to exceed a multiple of
-$\sqrt{\log p/n}$ (in the first, with column norms of order $\sqrt n$, compatibility numbers bounded below and a bound on
-the true model size through the mutual coherence; in the second, for the coordinates it recovers); when $p\ge n^a$ for some fixed $a>0$ our order $\sigs\rn$ is the same, and when $\log p=o(\log n)$ ours is the larger requirement. Upper
-bound: \citet[Assumption~A, p.~7]{YangWainwrightJordan2015} and \citet[Assumption~2.7, p.~7]{ShangClayton2012} bound the
+\ev{The explicit beta-min \lab{BM}, at the usual order $\sigs\rn$, appears only in the fixed-design Theorem~\ref{thm:post-fixed}
+of the supplement, and is compared with \SL{} and with other Bayesian selection papers there (Section~\ref{sec:supp-fixed}).
+Without any lower bound, specificity can fail (Remark~\ref{rem:no-betamin}).}
+\ro{Signals that grow without bound (and, for Theorem~\ref{thm:post-fixed} only, true coefficients below a constant times $\rn$).}
+\pr{Upper bound: \citet[Assumption~A, p.~7]{YangWainwrightJordan2015} and \citet[Assumption~2.7, p.~7]{ShangClayton2012} bound the
 signal in terms of a prior hyperparameter; ours is a fixed constant in noise units, since the coded prior has no
 tuning.}
 
@@ -229,7 +223,7 @@ between columns outside $U$ is nonnegative, as in each design of the strong-fact
 $\theta^*_j\lmin(\Sig)$.}
 \ro{Masking: a true predictor whose signal some $15$ other predictors cancel.}
 \pr{None found: \SL's Condition~5 is the marginal case of visibility only, and their remark (a) on the leakage set is
-not a hypothesis. Both conditions are argued here for our block and moderate-AR designs (one true predictor per block; autoregressive
+not a hypothesis. Both conditions are argued here for our block and AR designs (one true predictor per block; autoregressive
 true predictors spread apart).}
 \begin{remark}[When visibility holds]\label{rem:vis}
 Visibility holds with a margin that does not depend on $n$ (i) with \emph{aligned signs}: when the precision matrix,
@@ -253,8 +247,7 @@ bound does not apply; a search found a margin below it). Generic position (Remar
 their coefficient vectors lie off its fixed null set; that is not certified.}
 \tu{A numerical check of the conditions' population quantities, not yet complete, found visibility failing for a
 strong factor whose mixed-sign coefficients cancel; a design modelled on the riboflavin gene-expression data
-is covered with its true predictors spread apart but not clustered in one tile (Remark~\ref{rem:vis}); such a user may be outside Result~3
-and still inside Results~1 and~2.}
+is covered with its true predictors spread apart but not clustered in one tile (Remark~\ref{rem:vis}); such a user may be outside Result~3 but inside Results~1--2.}
 
 \ahead{Polynomial leakage set,}{Assumption~\ref{asm:reported}(a)}{\SL{} have no hypothesis of this kind; the nearest text is their
 informal remark (a), p.~958, which is not a condition of any of their theorems. No ordering is claimed.}
@@ -272,17 +265,17 @@ for every predictor $l$:} of the kind of \SL's Condition~3
 (p.~955) and (22) (supp.\ p.~13), on other sets; it compares as the eigenvalue floor does. \emph{Local regressions:} no
 counterpart (they serve the method's local search, which \SL{} do not analyse).}
 \ev{Both follow from a floor on the whole matrix, $\lmin(\Sig)\ge\varphi^2$ (the sufficient form noted in \lab{EFS}), plus
-a locality property of $\Sig$: for block correlation and moderate AR correlation,
+a locality property of $\Sig$: for block correlation and any fixed AR correlation,
 take as local set the block-mates or the nearest leakage-set neighbours. A fixed-design version needs nothing of the kind
 when the leakage set has at most $(1-\delta)\log n$ extra predictors, for a fixed $\delta\in(0,1)$ (Theorem~\ref{thm:reported-fixed}, case
 (d1)).}
-\ro{Leakage sets collinear with another predictor, or inside which regressions depend on many members.}
+\ro{Leakage sets collinear with another predictor, or whose regressions use many members.}
 \ds{As for the polynomial leakage set; not applicable where that fails.}
 
 \subsubsection{Assumptions of Result 4 (certified screening)}\label{sec:a-scr}
 
 \ahead{Eigenvalue floor on small sets and fixed signal bounds}{(Theorem~\ref{thm:screen})}{Of the same kinds as the
-eigenvalue floor and the signal bounds of Section~\ref{sec:a-post}; neither visibility nor a leakage set is assumed.}
+eigenvalue floor and the signal bounds of Section~\ref{sec:a-post}; no visibility or leakage set is assumed.}
 \ev{The floor is asked on sets of $k_n+\sz$ predictors, with the budget $k_n$ chosen by the analyst; the signals are
 bounded below and above by fixed constants. The size budget is a sufficient condition for a union bound over models of
 that size; at the constants of the strong-factor designs it requires $n\gtrsim1{,}450$ (Remark~\ref{rem:screen}).}
@@ -295,11 +288,10 @@ $n\gtrsim1{,}450$.}
 \subsection{Who is outside Result 3, and what still holds}\label{sec:who-outside}
 
 The assumptions of Results~1 and~2 hold on every design of our studies, strong common factors included. Result~3 is the
-theorem for block and moderate AR correlation: its assumptions hold on our independent designs and on those with block or
-moderate AR correlation (S1--S4, S6, IND, AR at $0.6$, BLK), and not on the pervasive-factor designs (S5, the strong-factor
+theorem for block and any fixed AR correlation: its assumptions hold on our independent designs and on those with block or
+AR correlation (S1--S4, S6, IND, AR at $0.6$, BLK), and not on the pervasive-factor designs (S5, the strong-factor
 study, FAC), whose leakage set is all of $\set{p}$ when $p\gg\sqrt n$; visibility can also fail on its own, for strong
-factors whose mixed-sign coefficients lie on a fixed null set of cancellations (Remark~\ref{rem:vis},
-Section~\ref{sec:a-rm}). What still holds outside
+factors whose mixed-sign coefficients lie on a fixed null set of cancellations (Remark~\ref{rem:vis}). What still holds outside
 Result~3: Results~1 and~2; Result~4, certified screening, which needs neither visibility nor a leakage set, when its own
 floor and signal bounds hold; and Result~5, the unbiasedness of the evidence estimate, on every design. The consistency of
 the reported inclusion probabilities, median model and evidence estimate (Remark~\ref{thm:outputs} in the supplement)
