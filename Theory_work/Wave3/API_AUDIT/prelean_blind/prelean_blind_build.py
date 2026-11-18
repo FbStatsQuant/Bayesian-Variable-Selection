@@ -233,10 +233,7 @@ TARGETS["PB-T1"] = dict(
         F("W3-PSHARP/lemmas/S_one_step.md", hdr=True, label="PROOF FILE: Lemma S and Lemma V"),
         F("W3-PSHARP/lemmas/B_sparsity.md", hdr=True, label="PROOF FILE: Corollary B"),
     ],
-    pending=[
-        "W3-PSHARP/STATEMENT.md:100 (consequence (B1)): \"if s₀ ≥ λ√n then π(S₀) ≤ 1/(1 + λ/3)\" → \"if s₀ ≥ λ√n, λ ≥ 0, then π(S₀) ≤ 1/(1 + λ/3)\"",
-        "W3-PSHARP/lemmas/B_sparsity.md:33 (B1): \"If s₀ ≥ λ√n: a_n ≥ λ/3\" → \"If s₀ ≥ λ√n (λ ≥ 0): a_n ≥ λ/3\"",
-    ])
+    pending=[])
 
 TARGETS["PB-T3"] = dict(
     title="Hellinger reduction (W3-DIST:H), Lemma D0 (W3-POST2:D0), domination transfer and the output corollary (W3-DIST:P6, DIST-C deterministic clauses, Cor-C core)",
@@ -281,9 +278,7 @@ TARGETS["PB-T4"] = dict(
         F(RV, 257, 290, "PRESENTED STATEMENT: Theorem 2 (reader statement)"),
         F("W3-READER/NOTATION.md", 9, 40, "NOTATION sections 1-2"),
     ],
-    pending=[
-        "W3-D3/STATEMENT.md:61-62 (Lemma B3w) and W3-D3/lemmas/B3w.md:24: \"(computed with p_ret and s₀)\" → \"(computed with (n, p, s₀), as in (c); on 𝒜_n, p_ret = p)\"",
-    ])
+    pending=[])
 
 TARGETS["PB-T5"] = dict(
     title="Theorems 9, 9B and Corollary 9C (W3-DIST:Thm-A, Thm-B, Cor-C)",
@@ -333,9 +328,7 @@ TARGETS["PB-T8"] = dict(
         C("C-DLV:Prop-F"), C("C-DLV:P1-Inventory"), C("C-DLV:L2-S3"), C("W2-UNI:F-UNI"),
         C("C-GROW:L1.1"), C("C-GROW:L1.2"),
     ],
-    pending=[
-        "W3-RM2-R/STATEMENT.md:80-81 (IDEAL-W⁺): \", which are treated as true:\" → \"; the two bounds are treated as satisfied (the rejection predicates `le > 1e6`, `cap_ll > INT_MAX` never fire):\"",
-    ])
+    pending=[])
 
 TARGETS["PB-T9"] = dict(
     title="Theorem 10: the printed outputs are consistent (W3-READER:R4, from W3-SAMP:C and W3-START2-R:IF-START)",
@@ -355,11 +348,41 @@ TARGETS["PB-T9"] = dict(
         F("W3-READER/lemmas/R1_set_sizes.md", 6, None, "CONSUMED: set-size arithmetic R1 (B2.1, B6.1)"),
         F("W3-READER/NOTATION.md", 9, 60, "NOTATION"),
     ],
-    pending=[
-        "W3-START2-R/STATEMENT.md:237 (in the consumed span of START-R, remark after (iii)): \"o₀ ≥ ½(n + 1)^{−1/2} on every data set\" → \"o₀ ≥ ½(n + 1)^{−1/2} on every data set with s₀ < K\"",
-    ])
+    pending=[])
 # PB-T9 inputs of R4 (statement text of the inputs is taken from their own files above; the 'Inputs' section of
 # the R4 file is cut below because it quotes registry statuses)
+
+# "Known pending corrections (do not re-report)": the items of origin/theory/PRE-LEAN:Theory_work/Wave3/PRE_LEAN_PASS/CORRECTIONS.md
+# (cdb5f027) that touch the text of a packet, plus the deferred T4 R4; location, then old -> new. Lines are those of origin/main.
+T11 = ("W3-PSHARP/STATEMENT.md:100 (consequence (B1)) [T1-1]: \"if s₀ ≥ λ√n then π(S₀) ≤ 1/(1 + λ/3)\" → \"if s₀ ≥ λ√n, λ ≥ 0, then π(S₀) ≤ 1/(1 + λ/3)\"; "
+       "W3-PSHARP/lemmas/B_sparsity.md:33 (B1): \"If s₀ ≥ λ√n: a_n ≥ λ/3\" → \"If s₀ ≥ λ√n (λ ≥ 0): a_n ≥ λ/3\"")
+T31 = ("W3-DIST/work/D_output/P6_DISTC.md:70-72 (Positivity) [T3-1]: \"and m(S) is the integral of a strictly positive likelihood against a proper prior: m(S) ∈ (0, ∞).\" → "
+       "\"and m(S) > 0, as the integral of a strictly positive likelihood against a proper prior. Also m(S) < ∞, by the closed form m(S) ∝ D_S^{−1/2}(2b₀ + Q_S)^{−ν} ([P1] `prop:closed`), since D_S ∈ (0, ∞), Q_S ≥ 0 and b₀ > 0.\"")
+T4R1 = ("W3-POST/STATEMENT.md:86 (Theorem 1, item 4) [T4-R1]: \"sup_{h:Ω→[0,1]} |π(h) − h(S₀)| = O_P(r_n)\" → "
+        "\"sup_{h:2^{[p]}→[0,1]} |Σ_{S∈Ω}π(S)h(S) − h(S₀)| = δ_n for every data set, hence O_P(r_n)\"")
+T4R4 = ("W3-D3/STATEMENT.md:64-65 and W3-D3/lemmas/B3w.md:25 (Lemma B3w, m♯_n) [T4-R4, deferred]: \"(computed with p_ret and s₀)\" → "
+        "\"(computed with (n, p, s₀), as in (c); on 𝒜_n, p_ret = p)\"")
+T4N1 = ("W3-READER/READER_VERSIONS.md:109 and :121-122 (Theorem 1, (A6) second form) [T4-N1]: \"or θ*_min√(n/log n) → ∞\" → "
+        "\"or θ*_min ≥ σ_*√(M_n log n/n)/φ₀ for a fixed sequence M_n → ∞\"; \"n₀ depends also on the divergence of θ*_min√(n/log n)\" → \"n₀ depends also on the sequence (M_n)\"")
+T5R3 = ("W3-DIST/work/E_bridges/B3.md:98-99 (amendment A-2) [T5-R3]: \"The event 𝒜′_n is intersected with {p_ret = p} (which holds on the event of B1).\" → "
+        "\"𝒜′_n is redefined as the set of outcomes on which the completed pair below satisfies the conditions of Step 6, with m♯_n computed from (n, p, s) and a replacement truth with exactly s nonzero coordinates; it is measurable in the completed pair and contains 𝒜_n (as in W3-D3/lemmas/B3w.md (c)).\"")
+T5R1 = ("W3-DIST/STATEMENT.md:96-97 (DIST-2 commentary) [T5-R1]: \"Best rate ε_n² ≍ (1 + s₀^r) log n · ℓ_n/n: one logarithm slower than DIST-1 at polynomial p.\" → "
+        "\"Best rate, for fixed s₀^r: ε_n² ≍ log n · ℓ_n/n, one logarithm slower than DIST-1 at polynomial p. As proved, its constant is at most of order (1 + s₀^r)³ for fixed (A, σ*², M, M′) (an upper bound, not known to be tight).\"")
+T5R2 = ("W3-DIST/STATEMENT.md:78 (DIST-1) [T5-R2]: \"Equivalently, for every sequence ε_n\" → \"In particular (dropping the size clause), for every sequence ε_n\"")
+T5R4 = ("W3-DIST/STATEMENT.md:151-152 (Theorem A premises) [T5-R4]: \"and are counted in them (in particular r = p outside them).\" → "
+        "\"and are counted in them: there the posterior probabilities in the displays are read as 1. The common exceptional set of the proofs also contains every data set with r < p.\"")
+T5R4R = ("W3-READER/READER_VERSIONS.md:1065-1067 (Theorem 9 setting) [T5-R4-reader]: \"(and p = p_raw outside them)\" → "
+         "\"there the posterior probabilities in the displays are read as 1. The common exceptional set of the proofs also contains every data set with p < p_raw.\"")
+T81 = ("W3-RM2-R/STATEMENT.md:80-81 (IDEAL-W⁺) [T8-1]: \", which are treated as true:\" → \"; the two bounds are treated as satisfied (the rejection predicates `le > 1e6`, `cap_ll > INT_MAX` never fire):\"")
+T82 = ("W3-START2-R/STATEMENT.md:237 (START-R, remark after (iii); in the consumed span) [T8-2]: \"o₀ ≥ ½(n + 1)^{−1/2} on every data set\" → \"o₀ ≥ ½(n + 1)^{−1/2} on every data set with s₀ < K\"")
+TARGETS["PB-T1"]["pending"] = [x.strip() for x in T11.split("; W3-PSHARP/lemmas") ]
+TARGETS["PB-T1"]["pending"] = [TARGETS["PB-T1"]["pending"][0], "W3-PSHARP/lemmas" + TARGETS["PB-T1"]["pending"][1]]
+TARGETS["PB-T3"]["pending"] = [T31]
+TARGETS["PB-T4"]["pending"] = [T4R4, T4R1, T4N1, T5R3]
+TARGETS["PB-T5"]["pending"] = [T31, T5R3, T5R1, T5R2, T5R4, T5R4R, T4R1]
+TARGETS["PB-T8"]["pending"] = [T81]
+TARGETS["PB-T9"]["pending"] = [T82, T4R1]
+
 
 SYSTEM = """You are an independent referee. You receive the statement of one or more results from a research project on the asymptotic theory of a sequential Monte Carlo method for Bayesian variable selection (linear regression, p ≤ n^A, often p ≫ n), the full proof files, and the statements of the results they consume. Every result is asymptotic; finite-n behaviour is not a defect. Consumed results may be taken as true as stated; check that their stated hypotheses actually hold where they are used.
 
@@ -387,7 +410,7 @@ def build_target(tid, spec):
         man.append((rel, a2, b2, dropped))
         if dropped:
             drops.append((rel, dropped))
-    pend = spec["pending"]
+    pend = [re.sub(r" \[T\d-[A-Za-z0-9-]+(?:, deferred)?\]", "", x) for x in spec["pending"]]
     note = ("Known pending corrections (do not re-report):\n" + "\n".join(f"- {p}" for p in pend)) if pend else \
         "Known pending corrections (do not re-report): none for this target."
     claims = "\n".join(f"- {c}" for c in spec["claims"])
