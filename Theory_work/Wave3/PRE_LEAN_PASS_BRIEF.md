@@ -33,6 +33,14 @@ Owner: the Theory Department. It runs the pass serially, staffs it token-lean (P
 
 Order: T1–T5 and Sol 1–4 start now; T6 and Sol 5 follow the Cor 6L recording. Run the format converter locally before every Codex call. Work one Codex call at a time.
 
+## Consistency tier: deeper treatment (owner, 11-18: "especially crucial results like the consistency ones")
+The consistency results are T4 (Thm 1, 1′, presented Thm 2), T5 (Thm 9), T6 (Thm 6, Cor 6L, Cor-FAMC), T8's Thm 7 and T9's Thm 10. For each, three things are added to the standard treatment:
+1. **A second, independent adversarial read by Sol 6.2.** It is blind to Astra's review: same packet, same "try to break it" brief, so two model views reach the same proof separately.
+2. **A full proof walk by the Fable,** not only rulings on the Codex points. It follows the key-lemma chain step by step and checks that every assumption is actually used, every step is justified, every constant is tracked, and every probability event is the one the statement claims.
+3. **The consultant reads the Fable's card** on these targets and answers AGREE or OBJECT per item, in at most 3 lines.
+
+Added cost: about 5 more Codex calls and about 5 consultant cards.
+
 ## Fable role (one Fable 5.2, Claude Personal, effort high, a Theory child, sequential over T1–T6 in one context)
 For each target, after Codex has returned, it writes a card of at most 1 page:
 1. **Rulings:** each Codex point gets AGREE or OBJECT with the proposed ruling, in at most 3 lines.
@@ -48,7 +56,7 @@ The consultant (HQ's Fable) is consulted only where the Fable OBJECTs to a rulin
 - **Proof simplifications** with the statement unchanged are adopted if localized and cheaper to formalize. They get an Opus diff check, plus Sol 6.2 if the change is substantive. Recorded as CORRECTION-ONLY or PATCH.
 - **Statement changes** (including those Lean needs) go through the normal route: seats, then H5 with the consultant, then HQ. They must not weaken any headline statement without HQ and owner sign-off.
 - Everything else is logged and declined. No complexity growth.
-- Kill budget: the whole pass ≈ 3–4 days. Codex ≈ 15 calls (10 Astra, 5 Sol). Fable ≈ 10 short passes plus at most 3 consultant cards.
+- Kill budget: the whole pass ≈ 4 days. Codex ≈ 20 calls (10 Astra, 5 Sol final-text, 5 Sol adversarial on the consistency tier). Fable ≈ 10 passes (5 of them full proof walks), plus ≈ 5–8 consultant cards.
 
 ## Output
 `Theory_work/Wave3/PRE_LEAN_PASS/` holds, per target, the Codex review, the Fable card, the rulings and the adopted changes. It also holds a one-page SUMMARY for the owner's theory sign-off: findings, what changed, what was declined, and the Lean-readiness notes the Lean Department will use as its blueprint input.
