@@ -1,0 +1,14 @@
+# T7-MIN (sentence) READER_VERSIONS.md:462 (Theorem 4 statement). T7 addendum (walk T7 MINOR; HQ-approved reader wording class, CORRECTION-ONLY; same reader touch as T7-1/T7-2): the sentence 'no condition on how Sigma, beta, sigma^2 vary with n' contradicts (A2)-(A3), which are conditions on the sequence; the masters say only 'may depend on n' (W3-MISR-R/STATEMENT.md:99). Reader prose only. Line count unchanged. Inside the W3-READER:R1 premises span 444-564: recorder's hash/cascade.
+diff --git a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+index b8f3015d..246f15cd 100644
+--- a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
++++ b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+@@ -459,7 +459,7 @@ $x_{\mathcal C}$ and the response $y^{\mathrm r}$ only ($p$ = number of candidat
+   $\beta^{\mathcal C\top}\Sigma\beta^{\mathcal C}\le M_0\,\sigma^2_{\mathcal C}$ and
+   $n\min_{j\in S_0^{\mathcal C}}\Sigma_{jj}(\beta^{\mathcal C}_j)^2/(\sigma^2_{\mathcal C}\log n)\to\infty$.
+ 
+-No condition is placed on how $m$, $\Sigma$, $\beta^{\mathcal C}$ or $\sigma^2_{\mathcal C}$ vary with $n$. Then
++$m$, $\Sigma$, $\beta^{\mathcal C}$ and $\sigma^2_{\mathcal C}$ may depend on $n$; no condition beyond (A1)–(A3) is placed on how they vary. Then
+ $$
+ E\big[1-\pi(S_0^{\mathcal C}\mid y)\big]=O\Big(\sqrt{\tfrac{\log n}{n}}\Big),\qquad
+ P\big(\mathrm{HPM}\neq S_0^{\mathcal C}\big)=O\Big(\sqrt{\tfrac{\log n}{n}}\Big).

@@ -1,0 +1,25 @@
+# T4 walk N1 (T4 card, AGREE): reader Theorem 1, second form of (A6) and the closing parenthesis, READER_VERSIONS.md:109-110 and :121-122. The master W3-POST2:C is right; reader prose only. Line counts unchanged.
+diff --git a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+index b8f3015d..e4be5af4 100644
+--- a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
++++ b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+@@ -106,7 +106,7 @@ Numbering of the headline theorems (proposal; see `CLAIMS_CARD.md`):
+ - **(A5) No near-collinearity among $O(\log n)$ columns.** $\lambda_{\min}(X_S^\top X_S)\ge g_0$ for every $S$ with
+   $|S|\le 3(A+1)(s_0+1)\log n$, for a fixed $g_0>0$.
+ - **(A6) Beta-min.** $\theta^*_{\min}\ge C_\beta\,\sigma_*\sqrt{\log n/n}$ with a fixed $C_\beta>0$ such that
+-  $C_\beta^2\varphi_0^2>c_0(s_0,A)$ [S1-F1]; or $\theta^*_{\min}\sqrt{n/\log n}\to\infty$.
++  $C_\beta^2\varphi_0^2>c_0(s_0,A)$ [S1-F1]; or $\theta^*_{\min}\ge\sigma_*\sqrt{M_n\log n/n}/\varphi_0$ for a fixed sequence $M_n\to\infty$.
+ 
+ Then there are $n_0$ and $C$, depending only on $(s_0,A,\sigma_*^2,\bar\theta,\varphi_0,g_0,C_\beta)$, such that for every
+ $n\ge n_0$ and every design and $\theta^*$ satisfying (A1)–(A6) at that $n$ [H5-1]
+@@ -118,8 +118,8 @@ $$
+ P\big(\mathrm{HPM}=\mathrm{MPM}=S_0\big)\ \ge\ 1-4C\sqrt{\tfrac{\log n}{n}}\ \to1,\qquad
+ \max_{j\le p}\big|\mathrm{PIP}_j-\mathbf 1\{j\in S_0\}\big|\le 1-\pi(S_0\mid y)=O_P\Big(\sqrt{\tfrac{\log n}{n}}\Big).
+ $$
+-(Expectation over the noise, design fixed. With the second form of (A6), $n_0$ depends also on the divergence of
+-$\theta^*_{\min}\sqrt{n/\log n}$.)
++(Expectation over the noise, design fixed. With the second form of (A6), $n_0$ depends also on the sequence
++$(M_n)$.)
+ 
+ **Theorem 1′ (no eigenvalue condition off $S_0$ beyond the vanishing floor (A5)).** Replace (A4) by
+ - **(A4′) Floor on the truth and an identifiability margin.** $\lambda_{\min}(\hat R_{S_0})\ge\varphi_0^2$, and every model

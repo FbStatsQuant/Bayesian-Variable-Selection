@@ -1,0 +1,17 @@
+PURE check of the two ALTERNATIVE patches `T7/T7-MIN-449_ALT_correction.patch` and `T7/T7-MIN-CARD57_ALT_correction.patch` (proposed by the coordinator after the exact addendum texts for :449 and CLAIMS_CARD:57 were found NOT-PURE for omitting (A1) / the fixed support size s; one fresh Opus subagent run, separate verdict line per patch; claudeAgent_personal, high; scratch under `.rc_tmp/pure_alt_*`, removed). Verbatim report (harness indent removed):
+
+PURE-VERDICT-449ALT: PURE
+PURE-VERDICT-CARD57ALT: PURE
+- **(1) Mechanics, both patches:** `git apply --check` passes from the repo root. Applied with `patch -p1` to scratch copies, the line counts stay at 1458 (READER_VERSIONS.md) and 181 (CLAIMS_CARD.md). The diff stat is 1 line changed per file and no tracked file was modified. The scratch directory .rc_tmp/pure_alt_* is removed.
+- **A, character diff:** `[-no condition on how-] $\Sigma$, $\beta$, $\sigma^2$ {+may+} vary with [-$n$)-]{+$n$, subject only to (A1)–(A3))+}`. The title still parses as "(…; X may vary with n, subject only to (A1)–(A3)) [P4]", with balanced parentheses.
+- **B, character diff:** `[-no condition on how-]{+with+} … {+free to+} vary with [-$n$;-]{+$n$, with $s$ fixed and subject only to the theorem's floor and signal conditions;+}`. It still parses inside "…, with up to $n^A$ candidates and with …;". The doubled "with … with" is a style point only.
+- **(2) A is true and complete.** (A1) fixes s ≥ 1 and requires 2 ≤ p ≤ n^A, (A2) is the floor on sets of size ≤ 3(A+1)(s+1) log n, and (A3) is the energy and beta-min condition. Together these are exactly the n-dependent constraints in the master (STATEMENT.md:95-102). The master's liminf ρ^{BM} > threshold is weaker than the reader's ρ → ∞, so the reader's (A3) is not under-stated.
+  - **Admissibility, not variation:** (A0)'s σ²_𝒞 > 0 and the master's Σ_jj > 0 (STATEMENT.md:95) only make each n's model well-defined (they are needed to normalise R). They do not limit how the parameters vary with n. The constants A, c, M₀ being fixed belongs to the meaning of (A1)–(A3), so it adds no constraint.
+- **(2) B is true and complete.** Reading the whole row 1.4 comparator cell, the only constraints on variation are:
+  - the dimension bound ("up to $n^A$ candidates"), already in the same sentence;
+  - "s fixed", now stated;
+  - the floor (A2) and the signal conditions (A3), named as "the theorem's floor and signal conditions".
+  The rest of the cell describes the model (Gaussian response, mean linear in the candidates, constant variance), not variation. Not naming $m$ matches the old text and is harmless.
+  - **B misreading risk:** "with $s$ fixed and subject only to …" has a remote reading in which s is the subject of "subject only to". Even so, it never says the floor and signal conditions fix s; "s fixed" stands as its own coordinated clause. Not a defect.
+- **(3) Consistency with the staged edits:** T7-MIN-462 and T7-MIN-1424 say "may depend on $n$; no condition beyond (A1)–(A3) is placed on how they vary". A says the same thing in different words. B is the card's (A)-label-free paraphrase (n^A bound, s fixed, floor, signal), equal to (A1)–(A3). Both agree with the master's "may depend on n".
+- **(4) Registry spans:** READER_VERSIONS.md:449 lies inside W3-READER:R1's premises span 444-564 (claims.tsv:527 also lists 444-563 in a recorded change string). CLAIMS_CARD.md appears in no claims.tsv entry, so it is in no premises span.

@@ -80,7 +80,7 @@ bound ([R1] B4.1), with room (numerics N1 (i): k_n is at most 0.40 of it on the 
 
 - `W3-MISR-R:CorGb-plus@1.0.3` ([MISR-R] `:94-108`) — "PROVED-CHECKED, conditional on W2-APP:POST,
   C-MIS:GDb, C-MIS:Prop-P; council R3, MANIFEST 052ea6dffa0495584b051435b1e82d6b7c598d965e3b13ddc067545728728069, sol=10.0 PASS, opus=9.6 PASS".
-- `W3-READER:R1@1.0.4` ([R1] `:43-46`, B4.1; uses B1.3 `:19-31`) — "PROVED-CHECKED; council R3, MANIFEST 7aebdf2eb126058719114df656d0eaf416adb1ae3d21138cb11b51d7075d2263, sol=9.5 PASS, opus=9.4 PASS".
+- `W3-READER:R1@1.0.5` ([R1] `:43-46`, B4.1; uses B1.3 `:19-31`) — "PROVED-CHECKED; council R3, MANIFEST 7aebdf2eb126058719114df656d0eaf416adb1ae3d21138cb11b51d7075d2263, sol=9.5 PASS, opus=9.4 PASS".
 - Definitions only: [W3P] §0 `:16-39` (target, outputs, m♯_n); [MISR-R] §2 `:48-70` ((N), (OV), N_k(m, 0) := δ_m at `:31`).
 - Rows named in CorGb-plus's former condition list (for the recorder; statuses on main at the recording; its status above is the HQ 11-23 refresh): `W3-POST2:C@1.0.7` "PROVED-CHECKED, conditional on
   W2-APP:POST"; `W3-POST:Prop-LB@1.0.1` "PROVED-CHECKED; council C3, MANIFEST 420c1cb0b13771355c19f3412ac6d03fe325de3c62ab851b978c9d32c0d85d22, astra=8.8 PASS, opus=8.7 PASS".
