@@ -751,3 +751,9 @@
   - 0365810f: A4 pre-check = BLOCKS NA_DROP v1.5 (one passing seat); Sol-7 packet ready (short delta read bound to 9ddef7fd), not launched.
 
   Main is green at 0dfd4b38. Every Claude agent (coordinator, recorder, CP Fable, Opus seats) is on claudeAgent_personal, so nothing Claude-side can run. Sol-7 (Codex) could run now. Asked HQ: wait for the reset, or an owner exception (Claude Third) for the remaining seats.
+- 2026-11-18 14:39 CST **HQ: HOLD all Claude-seat Theory work until the Claude Personal reset (Mon 2026-11-23 15:00 CT). No Claude Third exception for Theory.** Sol-7 launched now on Codex (gpt-6.2-sol high; delta read of NA_DROP v1.5 bound to 9ddef7fd, R8; packet PRE_LEAN_PASS/Sol7/PACKET.md). Its verdict gets filed for the dry run.
+  **RESUME ORDER after the reset:**
+  1. item 7 Opus PURE (patch ab9719a6);
+  2. the MEAS-D/NA_DROP/T12 landing DRY run (landing set c854f912 + item 7 + Sol-7 verdict + W-1 citation fix) → table to HQ;
+  3. the A re-pin (widened; D5Pa v4 rebased; DLV-0 blind-triage fixes; CLAIMS_CARD:2; MIS done in the landing; Opus seat verifies the K(K+1) term and both counts);
+  4. the SUMMARY (counts + §3 declined, by the manager).
