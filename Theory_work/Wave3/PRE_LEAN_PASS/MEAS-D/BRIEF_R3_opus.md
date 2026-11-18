@@ -1,0 +1,27 @@
+# BRIEF R3: one fresh Opus seat (council round R3, diff round R2 -> R3) for the W3-SAMP lemma MEAS-D
+
+You are the single seat for round R3 (Claude Opus 5.5, effort high, claudeAgent_personal; fresh: you did not see rounds R1 or R2). Be skeptical. **Scratch only under `<worktree>/.rc_tmp/`; nothing in /tmp or /tmp/claude-*; no `git worktree add` there.** Write only your review as your final message (no files, change nothing, commit nothing, start no subagents).
+
+**Scope: the R2 -> R3 diff plus the new steps.** Read `Theory_work/Wave3/PRE_LEAN_PASS/MEAS-D/R2_council_opus.md` (the R2 review: score 8.7, gates FAIL on F4; E9-E12; verdicts (a) NOT AN ADDED PREMISE, (b) NOT COVERED by (C-iv)/(TR-c) alone) and `R2_to_R3.diff` (36 lines) in the same folder. The author's T9 card with the two new texts is `Theory_work/Wave3/PRE_LEAN_PASS/T9/FABLE_CARD.md` (section (a): "Text A", "Text B"; read only that section).
+
+## What is under review (frozen)
+`Theory_work/Wave3/PRE_LEAN_PASS/MEAS-D/MANIFEST_MEASD3.txt`, first line `MANIFEST 3a4093524024e11c072d8843a9c9007bc8955e1ed55008b6522bdab629d50360` (ticket dir `Theory_work/Wave3/PRE_LEAN_PASS/MEAS-D/ticket`, 3 files, plus 18 external inputs: those of R2 and `Scripts/SMC_BVS/core/cpp/v3_score.h`, newly pinned because Step 4 cites it at :175-183, :230, :237). First run `python3 Theory_work/Wave3/tools/manifest.py verify Theory_work/Wave3/PRE_LEAN_PASS/MEAS-D/ticket Theory_work/Wave3/PRE_LEAN_PASS/MEAS-D/MANIFEST_MEASD3.txt` and report its output (it must print `verify: OK MANIFEST 3a4093524024e11c072d8843a9c9007bc8955e1ed55008b6522bdab629d50360`).
+Files (under `.../ticket/Theory_work/Wave3/W3-SAMP/`): `lemmas/MEAS_D.md` (91 lines), `STATEMENT.md` (192; unchanged since R2), `REPORT.md` (REGISTRY lines 199-206). The recorded readings and pinned code are the same as in R1/R2 (see `BRIEF_R2_opus.md` for the list). Read `Theory_work/INFRA/registry/claims.tsv` read-only if needed.
+
+## What to check (every item gets a line)
+1. **F4 (mandatory).** The replacement at `MEAS_D.md:48` routes (C-v) through (C-iii) and (C-iv), and (TR-d) through (TR-b) (per-island bound g + e_L), plus (TR-c) for the one-island 𝓜_r bound, (LT-d) with Lemma PC and 𝒪 ⊆ 𝒪° (GW-iv). Confirm against `W3-SAMP/STATEMENT.md` (the statements of (C-iii), (C-iv), (C-v), (TR-b), (TR-c), (TR-d), (LT-d)) that every clause of (C-v) and (TR-d) is covered by the inputs now named, each used only at one fixed island (no independence across islands), and that nothing is cited that does not say what is claimed. Verdict lines: `(F4) (C-v): COVERED | NOT COVERED`, `(F4) (TR-d): COVERED | NOT COVERED`.
+2. **Text A (mandatory)** (Step 5, after "hence of (data, 𝓒°)."): is the independence of U^{(9+r)} from the PAIR (data, U^{(0:9)}) correctly derived from the two stated facts (SI given the data at `STATEMENT.md:29`; independence of the stream from the data at `:35-36`), and is the displayed identity P(U^{(9+r)} ∈ A, U^{(0:9)} ∈ B | data) = P(U^{(9+r)} ∈ A)·P(U^{(0:9)} ∈ B | data) what is needed for Lemma F's frozen slot (data, 𝓒°)? Does it add a premise? Verdict line: `(Text A): CORRECT, NO ADDED PREMISE | <problem and exact correction>`.
+3. **Text B (mandatory)** (Step 4, Ledger bullet): are the ledger's offers listed completely and correctly (islands' evaluations, block-table models as functions of the data, models inherited from calibration as coordinates of 𝓒°, the two searches' scans; `W3-SAMP:PC` (iii) at `STATEMENT.md:90-95` and `lemmas/PC_completed.md`; check in `cpp/v3_core.cpp` and the ledger code whether anything else is offered to the ledger, for example seed models or exact-branch models, and how each is Borel). Verdict line: `(Text B): COMPLETE AND CORRECT | <missing or wrong offer, with file:line>`.
+4. **R2 items:** E9 (pin `cpp/v3_core.cpp:474`; the `|S| > K` throw at `cpp/v3_score.h:230`, unreachable because additions are skipped at size K, `cpp/v3_engine.h:397`, and swaps keep the size: check this claim), E10 (the derived IND-T wording), E11 (REGISTRY wording), E12 (`gates:` now points at `reviews/R3_council_opus.md`, the final round's record). One line each: ACCEPT/REJECT.
+5. **Nothing else moved:** scope remains the potential objects only; the converter exits 0 on a scratch copy of the staged REPORT.md (run it under `.rc_tmp/`); no `|x|` bars in the block or the statement; claim span `STATEMENT.md:190-192`; `depends_on` items without spaces. Look for any new C/S/F introduced by the R3 edits.
+
+## Output (your final message; it will be saved as `PRE_LEAN_PASS/MEAS-D/R3_council_opus.md`)
+1. A per-item table `| # | ACCEPT/REJECT | note |` for items 1-5, with file:line.
+2. The four verdict lines of items 1-3 exactly as given.
+3. Findings tagged C / S / F / E, each with file:line and the exact correction.
+4. Gates, each PASS or FAIL: G1 correctness, G3 faithfulness and scope, G4 statuses and pins, G5 registration form. `gates=FAIL` if you hold any C, S or F.
+5. A score (0.0-10.0, one decimal) on C, S, F only.
+6. The claim table: `| id | decision |` then `| W3-SAMP:MEAS-D | ACCEPT |` or `REJECT` (REJECT if any C or S stands).
+7. The last line, alone and the only line containing the keyword:
+`COUNCIL-VERDICT round=R3 manifest=3a4093524024e11c072d8843a9c9007bc8955e1ed55008b6522bdab629d50360 seat=opus score=<x.y> gates=<PASS|FAIL>`
+(If the verify step does not print OK for exactly this digest, write gates=FAIL and say why.)
