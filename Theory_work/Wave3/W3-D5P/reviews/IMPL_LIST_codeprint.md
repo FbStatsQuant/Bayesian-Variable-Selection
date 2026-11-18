@@ -110,7 +110,11 @@ still needs seats on a new manifest (manager, 2026-11-18).
 ## 5. Part 2 — the guard hunk (`git diff method-v3.1-listpip method-v3.1.1-listpip -- Scripts/SMC_BVS/core/`)
 Pending: the new commit.
 
-## 6. Route (b′): SPEC §4 amended to match the tagged code (manager message received 2026-11-18, after §5)
+## 6. SUPERSEDED (route b′ not taken) — SPEC §4 amended to match the tagged code
+*Record only.* HQ's latest decision is route (a) (manager, 2026-11-18): Engineering adds the guard, HQ tags
+`method-v3.1.1-listpip`; no SPEC carrier change, no STATEMENT edit (`STATEMENT.md:11` and `:57` stay true once the guard makes
+the fields absent), no NA_DROP Step 0′ rewording. The text below is kept as the record of the route not taken.
+
 *Conflict to resolve first.* The manager's earlier message "HQ CHANGED COURSE … decision (a): guard + new tag
 `method-v3.1.1-listpip`; SPEC stays as is" states that it supersedes a crossed "SPEC §4 amended" message. The message asking
 for this section announces "SPEC §4 is amended … no code change, no re-tag". The two routes are exclusive; **which one
@@ -164,4 +168,4 @@ F(S) (Lemma S.2, LIST-CODE A5), so in particular not all are −Inf; and the exa
 `fit$exact$top` (reading (1)). Hence non-NA on every output run, in particular on Theorem 6's data event and on the delivery
 event. NA_DROP's (o) is unchanged in substance; only Step 0′'s description of the other-status row changes (above).
 
-IMPL-LIST: NOT DISCHARGED (only the SPEC §4 incomplete-final-run row; route pending HQ: (a) guard + new tag method-v3.1.1-listpip, or (b′) SPEC §4 amended — then a CORRECTION-ONLY carrier + two STATEMENT pointer/description edits (`STATEMENT.md:11`, `:57`) + re-freeze + Opus check, after which: DISCHARGED (against SPEC as amended <ref>))
+IMPL-LIST: NOT DISCHARGED (only the SPEC §4 incomplete-final-run row; route (a): guard + new tag method-v3.1.1-listpip — part 2 pending)
