@@ -1910,8 +1910,11 @@ TEST(leader_deferred_triggers_fire_and_keep_the_bits) {
       return ok;
     };
     struct Cf { int th, G, tile, buf; bool defer; };
+    // Buffer 1 in the G 96 leg: every offer flushes at once, so what is staged when a trigger is checked is the whole offer
+    // volume so far and no longer depends on the thread schedule (with 64-entry buffers the between-waves count was 2 in 30 of 30
+    // runs, but only because up to 3 x 63 unflushed entries stayed small against the thresholds: a margin, not a guarantee).
     uint64_t mid_sum = 0;
-    for (Cf cf : {Cf{3, 16, 128, 256, true}, Cf{2, 7, 64, 256, true}, Cf{3, 96, 128, 64, true}, Cf{3, 16, 128, 256, false}}) {
+    for (Cf cf : {Cf{3, 16, 128, 256, true}, Cf{2, 7, 64, 256, true}, Cf{3, 96, 128, 1, true}, Cf{3, 16, 128, 256, false}}) {
       IslandConfig d = c; d.kernel = KernelKind::LabelMajor; d.threads = cf.th; d.G = cf.G; d.tile = cf.tile; d.test_lead_buf_limit = cf.buf; d.leaders_deferred = cf.defer;
       const IslandRun r = run(d);
       std::printf("  arith %d threads %d G %d buf %d deferred %d: leader compactions mid %llu pass %llu, serial in-pass %llu\n", arith, cf.th, cf.G, cf.buf, (int)cf.defer,
@@ -1921,8 +1924,8 @@ TEST(leader_deferred_triggers_fire_and_keep_the_bits) {
       else CHECK(r.ks.lead_compact_mid == 0 && r.ks.lead_compact_pass == 0);
     }
     CHECKF(mid_sum > 0, "arith %d: no between-waves leader compaction ran in any deferred leg: the test no longer reaches that trigger", arith);
-    // the planted bug, both triggers live (G 96, 64-entry buffers: mid and pass fire)
-    IslandConfig d = c; d.kernel = KernelKind::LabelMajor; d.threads = 3; d.G = 96; d.tile = 128; d.test_lead_buf_limit = 64; d.test_drop_leader_stage = true;
+    // the planted bug, both triggers live (G 96, 1-entry buffers: mid and pass fire)
+    IslandConfig d = c; d.kernel = KernelKind::LabelMajor; d.threads = 3; d.G = 96; d.tile = 128; d.test_lead_buf_limit = 1; d.test_drop_leader_stage = true;
     CHECKF(!same(run(d)), "arith %d negative control: dropping the staged leader offers at the deferred triggers went unnoticed", arith);
   }
 }

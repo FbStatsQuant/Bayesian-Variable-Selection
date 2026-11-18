@@ -177,12 +177,14 @@ export TMPDIR=<a scratch directory>        # the runner refuses to start without
 Scripts/SMC_BVS/engine_v4/tests/run_tests.sh --quick --threads 3
 ```
 
-It builds, runs about 190 C++ test cases, the SLURM-driver tests and the golden tests, and exits 0 if everything that ran
-passed. **Without R it skips the golden tests and the competitor checks, prints `R not found: WP4 golden tests NOT RUN`
-and can still exit 0**; read the output. `--full` adds the long cases. MEASURED on Owls with 3 threads: about 25 minutes
-including the build; 192 C++ cases, 38 driver tests, 540,419 golden checks. The golden step builds in
-`$TMPDIR/wp4_golden`; a directory left there by another checkout makes CMake stop with `does not match the source`, so
-delete it or use a fresh `TMPDIR`.
+It builds, runs the C++ test cases, the SLURM-driver tests, the competitor-harness checks and the golden tests, and ends
+with one summary line that gives PASS, FAIL or SKIPPED and the time for each suite. It exits 0 only if every suite ran and
+passed. **Without R the golden and competitor suites are SKIPPED and the exit status is 3** (a failure is 1); pass
+`--allow-skip` to accept that on purpose. `--list` names the suites, `--only a,b` runs some of them, `--full` adds the long
+cases. MEASURED on Owls with 3 threads: about 25 minutes for `--quick` including the build (198 C++ cases, 55 driver tests,
+540,419 golden checks), about 2 hours for `--full`. A build or golden directory left in `TMPDIR` by another checkout is now
+reported as such (`was configured for another checkout`) instead of CMake's `does not match the source`. What each suite
+covers, the timings, what to do when a pinned reference moves and the other traps are in [TESTING.md](TESTING.md).
 
 ---
 
@@ -574,5 +576,6 @@ orphans every checkpoint of the old one; the SLURM driver is specific to Rice NO
 | [INTERFACES.md](INTERFACES.md) | the binding contract: file formats, record fields, statuses, the changelog |
 | [tools/slurm/T5_AND_PILOT.md](tools/slurm/T5_AND_PILOT.md) | the 10⁵ and 10⁶ commands, ISA rules, cost tables |
 | [tools/slurm/T6_AND_RESTART.md](tools/slurm/T6_AND_RESTART.md) | the restart chain and the kill-and-resume test |
+| [TESTING.md](TESTING.md) | the test suites: what each covers, how long it takes, what a pass means, updating pinned references, the traps |
 | [DEV_NOTES.md](DEV_NOTES.md) | the component table (WP1), fixtures, test inventory |
 | `src/eval/README_WP5.md` | everything `eval` and `post` compute |
