@@ -108,3 +108,4 @@ the new text, and the bridges it needs. The manager passes it to HQ for W3-READE
 
 - **Fuel (HQ 11-17, owner):** every agent and every review subagent explicitly on `claudeAgent_personal`; never Claude Third/Work. Codex only for the remaining key checks and the 3 SOL62 A/B calls.
 - **Finished folder to main at recording (HQ 11-17, owner):** each ticket's finished folder goes to main as part of its recording, not later. No long tail of branches/PRs.
+- **Card-requote re-freezes (HQ 11-17):** automatic in the recorder script; each stays CITATION-ONLY and is PURE-checked by Opus (stated in the carriers).
