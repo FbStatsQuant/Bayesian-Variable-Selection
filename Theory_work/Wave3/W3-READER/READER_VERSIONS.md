@@ -518,11 +518,11 @@ These replace `W3-MISR:Cor-G(b)` below as the row's reader-version master. `W3-M
 with CorGb-plus (CorGb-plus implies it and reuses its proof steps); `W3-MISR:Cor-G(a)` is SUPERSEDED-VALID by CorG-min.
 The remark's Kullback–Leibler sentence rests on CorH-plus (centred reference), not on `W3-MISR:Cor-H` (whose KL reading
 is restricted to a deterministic intercept at 2.1.0).
-Earlier reader-version master, kept for the record: `W3-MISR:Cor-G(b)@1.0.1`,
-`Theory_work/Wave3/W3-MISR/STATEMENT.md:171-174`, status verbatim:
-**"PROVED-CHECKED, conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1, W3-POST2:A0, C-MIS:Prop-P, C-MIS:GDb; input
+Earlier reader-version master, kept for the record: `W3-MISR:Cor-G(b)@1.0.2`,
+`Theory_work/Wave3/W3-MISR/STATEMENT.md:171-174`, status verbatim (main 34c8fb4d):
+**"PROVED-CHECKED, conditional on W2-APP:POST, C-MIS:Prop-P, C-MIS:GDb; input
 versions …; council R2, MANIFEST 217d6708…, sol=9.2 PASS, opus=8.9 PASS; …"**.
-Inputs, verbatim (main 6cd699dd) [REG-6cd6]: `W3-POST2:C/E/A1/A0@1.0.5` as quoted in §1 (C, E, A1 "PROVED-CHECKED,
+Inputs, verbatim (main 6cd699dd) [REG-6cd6]: `W3-POST2:C/E/A1/A0@1.0.7` as quoted in §1 (main 33bfcb9c) (C, E, A1 "PROVED-CHECKED,
 conditional on …"; A0 "PROVED-CHECKED"); `C-MIS:Prop-P@1.0.0`: **"R02
 VERIFIED; R04 wording fixes checked in R05; council PASS"**; `C-MIS:GD(b)@1.0.0`: **"R02 VERIFIED-WITH-AMENDMENTS
 (applied); council PASS"**; `SOP:TH09` as in §1; `SOP:TH128@1.0.2`: **"PROVED-CHECKED (the conjunction of W3-T03ACC:T03S.1–T03S.5 = record clauses
@@ -537,7 +537,7 @@ Fixed-design form: `W3-MISR:MIS(i)@1.0.2` (:110-123), **"PROVED-CHECKED, conditi
 | B4.1 | (A2) size 3(A+1)(s+1)log n ⇒ CorGb-plus's \|T\| ≤ s + max(j₀, m♯_n), for all large n | NEW arithmetic (as current B4.1) | unchanged arithmetic; the floor is now on R; sufficient for the O(·) conclusions |
 | B4.2 | (A3) = CorGb-plus's signal conditions (→ ∞ branch of its liminf condition) | identity | `STATEMENT.md` §3 |
 | B4.3 | POST2 C, E, A1, A0 (and D for the remark) | EXISTS-CHECKED, conditional (A0 unconditional) | recorded at main f526e45b; `SOP:TH09`/`TH128` discharged (main 6cd699dd); C no longer conditional on `W3-POST:Prop-LB` (PROVED-CHECKED, main 33bfcb9c; §1; [L1a′] no longer listed, main 2676e71f) [REG-f526, REG-6cd6, REG-33bf] |
-| B4.4 | Remark ⇒ CorH-U (RD) with 𝒦^♭_n := 𝒦^λ_n(s, A, 2M₀+1, (c_R/8)^{1/2}, C_OS, c) ((UP) by MIS(i) + Markov) and the events 𝒜_n of CorGb-plus's proof (P(𝒜_n) → 1); contraction sentence for a fixed design ⇒ CorH-plus (a′), (KL), with the premise δ_n → 0 in probability; uniform sentence ⇒ CorH-U (U-a), with its premise (UP); "fixed-design version of the theorem, uniform over the residual variance" ⇒ W3-MISR:MIS(i)@1.0.0 (BASE `STATEMENT.md:110-114`, constants free of v) | NEW (composition; the random-design part is `CorH-U` clause (G), STATEMENT §5) | the Hellinger rate M_n/√n and KL rate M_n/n are the sets H^a, K^a; the reference is centred (STATEMENT §1: μ(κ) = Cxβ) [R1] |
+| B4.4 | Remark ⇒ CorH-U (RD) with 𝒦^♭_n := 𝒦^λ_n(s, A, 2M₀+1, (c_R/8)^{1/2}, C_OS, c) ((UP) by MIS(i) + Markov) and the events 𝒜_n of CorGb-plus's proof (P(𝒜_n) → 1); contraction sentence for a fixed design ⇒ CorH-plus (a′), (KL), with the premise δ_n → 0 in probability; uniform sentence ⇒ CorH-U (U-a), with its premise (UP); "fixed-design version of the theorem, uniform over the residual variance" ⇒ W3-MISR:MIS(i)@1.0.2 (BASE `STATEMENT.md:110-114`, constants free of v) | NEW (composition; the random-design part is `CorH-U` clause (G), STATEMENT §5) | the Hellinger rate M_n/√n and KL rate M_n/n are the sets H^a, K^a; the reference is centred (STATEMENT §1: μ(κ) = Cxβ) [R1] |
 
 ### Honest limits
 Nothing is claimed when, given the candidates, $y$ is not Gaussian with a mean linear in the candidates and a constant
