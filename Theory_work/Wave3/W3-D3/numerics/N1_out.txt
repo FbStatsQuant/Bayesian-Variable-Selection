@@ -1,0 +1,10 @@
+N1 grid: 1966 cases, 0 violations; max (s0 + m#_n)/W = 0.226
+n1 (K=1): A=1, s0=1: about 8.940e+08
+n1 (K=1): A=1, s0=3: about 1.917e+09
+n1 (K=1): A=1, s0=8: about 4.674e+09
+n1 (K=1): A=2, s0=1: about 2.921e+09
+n1 (K=1): A=2, s0=3: about 6.264e+09
+n1 (K=1): A=2, s0=8: about 1.527e+10
+n1 (K=1): A=5, s0=1: about 1.683e+10
+n1 (K=1): A=5, s0=3: about 3.574e+10
+n1 (K=1): A=5, s0=8: about 8.713e+10

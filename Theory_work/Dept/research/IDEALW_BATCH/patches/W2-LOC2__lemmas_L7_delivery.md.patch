@@ -1,0 +1,20 @@
+diff --git a/Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md b/Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md
+--- a/Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md
++++ b/Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md
+@@ -14,7 +14,7 @@
+ **Classes.** Iid Gaussian rows satisfying Theorem LOC-d (L4 Part A), Theorem LOC-BF (L4 Part B), or the polynomial-decay
+ theorem of L6_poly (α > 17/2; added after its checks R06a/R06b).
+ 
+-**Proposition F-LOC2.** Under the method, premises and allocation above, for these classes: for every admissible n ≥ 3,
++**Proposition F-LOC2.** Under the method, premises and allocation above, for these classes: (a) for every admissible n ≥ 3 with (n, p_raw) ∈ 𝔇 := {ℓ_raw ≤ 10⁶ and ℓ_raw + ⌊n/2⌋ ≤ 2³¹ − 1}, ℓ_raw := ⌈log₂(n + p_raw + 1)⌉, P(no output) = 0; (b) under A:IDEAL-W⁺ in place of IDEAL-W (IDEAL-W, and the two shipped rejection predicates `le > 10⁶` (Scripts/SMC_BVS/core/v3_run.R:96) and `ℓ + |S̃₀| > INT_MAX` (Scripts/SMC_BVS/core/cpp/v3_core.cpp:474) are false; definition at the end of this file): for every admissible n ≥ 3,
+ P(no output) = 0; and along each sequence, P(Ŝ⁺ = S₀) → 1 under the joint design/noise law, together with the
+ algorithm's randomness.
+ 
+@@ -37,3 +37,7 @@
+ Qualifications inherited verbatim from FACA L7: [OP] "PROVED (by this seat, unchecked)"; e4 rests on N3, "OPEN" (only
+ "some maximiser" is used for consistency; delivery keeps e4 with TDP-IMPL as in Proposition F); S.3 is a code-reading
+ audit; the fallback is merged on main (4676af6).
++
++**IDEAL-W⁺ narrowing note (2026-11-16; HQ D78 correctness event; outside every registered statement span).** Proposition F-LOC2 (`:17-19`; registered at `STATEMENT.md:100-102`) now states delivery in two clauses, in the form of W2-UNI's Proposition F-UNI v2 (`Theory_work/Wave2/W2-UNI/lemmas/L5_delivery.md`): (a) under IDEAL-W, P(no output) = 0 only on the bounded domain 𝔇; (b) for every admissible n, and every asymptotic delivery conclusion, under A:IDEAL-W⁺. Reason (Sol review TR1, `Theory_work/Dept/research/FUNI_transfer/TR1_sol.md` §1–§2): two shipped LS0 cap validators lie outside Theorem D's exit walk and can end an SMC-branch fit without output, independently of resources: `le > 1e6` (`Scripts/SMC_BVS/core/v3_run.R:96-97`; le = ℓ_n in the stated configuration) and `cap_ll > numeric_limits<int>::max()` with cap_ll = ℓ_n + |S̃₀| (`Scripts/SMC_BVS/core/cpp/v3_core.cpp:474`). IDEAL-W (C-DLV `STATEMENT.md:24-25`, unchanged) excludes overflow, not these application-level rejection predicates. On 𝔇 neither predicate fires: ℓ_n ≤ ℓ_raw ≤ 10⁶ (p ≤ p_raw) and ℓ_n + |S̃₀| ≤ ℓ_raw + K_n ≤ ℓ_raw + ⌊n/2⌋ ≤ 2³¹ − 1; the exact-enumeration branch reaches neither check. 𝔇 is sufficient, not necessary, and bounded, so clause (a) carries no asymptotic conclusion. Under A:IDEAL-W⁺ both predicates are false. In both clauses the no-output step of the proof (Theorem D's exit walk with the total tier-1 fallback and the stated allocation, which already contains A4's LS0 preflight terms P_e + A and P̄_LS0 (FIN `s6_delivery.tex:37-44`)) is otherwise unchanged (TR1 §1 table). Definition (verbatim; registered assumption A:IDEAL-W⁺):
++
++**A:IDEAL-W⁺ (IDEAL-W with the two LS0 cap ceilings lifted).** IDEAL-W, exactly as defined in C-DLV `STATEMENT.md:24-25`, and the two shipped rejection predicates `le > 10⁶` (`Scripts/SMC_BVS/core/v3_run.R:96`, the LS0 base-cap validator; le = ℓ_n = ⌈log₂(n + p + 1)⌉ in the shipped configuration) and `ℓ + |S̃₀| > INT_MAX` (`Scripts/SMC_BVS/core/cpp/v3_core.cpp:474`, the disjunct `cap_ll > numeric_limits<int>::max()` of the LS0 cap-range guard, `int` read as unbounded) are false. Nothing else is lifted: the other conditions of those two validators (numeric type, length, finiteness, integrality, `le < 0`, `o.ls0_ell < 0`), every other validator, the 10⁶-maximiser start-mode enumeration cap with its tie-aware DP fallback, and every fallback and method cap are kept as coded. Like IDEAL-W and EX-A, A:IDEAL-W⁺ is an idealisation of the machine and code; a larger allocation does not imply it.

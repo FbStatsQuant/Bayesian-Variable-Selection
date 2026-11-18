@@ -1,0 +1,16 @@
+law         n     mean(delta*sqrt(n/log n))   freq(HPM=MPM=S0)
+gaussian      50       1.5513                  0.89
+gaussian     100       1.3978                  0.96
+gaussian     200       1.2831                  0.99
+gaussian     400       1.1840                  0.99
+gaussian     800       1.1991                  0.99
+rademacher    50       1.4541                  0.91
+rademacher   100       1.2127                  1.00
+rademacher   200       1.1448                  0.97
+rademacher   400       1.2297                  1.00
+rademacher   800       1.2663                  1.00
+uniform       50       1.3820                  0.91
+uniform      100       1.2903                  0.96
+uniform      200       1.2437                  0.97
+uniform      400       1.1302                  1.00
+uniform      800       1.3633                  0.99

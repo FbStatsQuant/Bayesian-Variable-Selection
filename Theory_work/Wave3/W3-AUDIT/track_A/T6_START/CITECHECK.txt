@@ -1,0 +1,48 @@
+OK            [STATEMENT.md] Theory_work/Wave1/W1-N1/STATEMENT.md:75-75 sha=570a091d6a | - **START** `draw_pi0` returns exact π₀ draws and the reported Z̄₀ = Σ_Ω γ₀ (N9 Claims S, Z; status PROVED (ca
+OK            [STATEMENT.md] Docs/Theory/proofs/T12_T8_frozen_run_identities/STATEMENT.md:48-48 sha=23f42c51bd | - **START** (imported dependency: T09(i) / project P1, not re-proved here): the start sampler returns exact ii
+OK            [STATEMENT.md] Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/N9-KERNEL/PROOF.md:247-292 sha=18e55fc164 | ## 3. The start sampler and Z̄₀
+OK            [STATEMENT.md] Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/N9-KERNEL/REPORT.md:23-24 sha=a846b49a62 | | 7 | `draw_pi0` draws exactly from π₀ = ϖ∏r_b/Z̄₀ on 𝒮_K: size from ϖ(k)F_J(k), block sizes backwards from e_
+OK            [STATEMENT.md] Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/N9-KERNEL/REPORT.md:65-66 sha=630eba83d5 | - An independent line-by-line review of PROOF.md §1–3 (all are candidates), especially the telescoping in Clai
+OK            [STATEMENT.md] cpp/v3_start.h:133-135 sha=33f246b500 | std::vector<double> lk(K + 1);
+OK            [STATEMENT.md] cpp/v3_engine.h:299-299 sha=0628731bc7 | double logZ = D.logm0 + st.logZbar0;
+OK            [STATEMENT.md] v3_fit.R:140-140 sha=8d3fa6e8db | fit$blocks <- setup$blocks; fit$neighbours <- setup$neighbours; fit$log_Zbar0 <- setup$start$log_Zbar0
+OK            [STATEMENT.md] v3_run.R:217-217 sha=663dc6bd84 | out$log_m0 <- raw$log_m0; out$log_Zbar0 <- raw$log_Zbar0
+OK            [STATEMENT.md] cpp/v3_engine.h:289-289 sha=86161cef55 | if (init_states) S = (*init_states)[i]; else draw_start(S);
+OK            [STATEMENT.md] cpp/v3_engine.h:184-184 sha=1c6aa57fa0 | std::vector<int> S; draw_start(S);
+OK            [STATEMENT.md] cpp/v3_engine.h:108-108 sha=2c87e7b937 | void draw_start(std::vector<int>& S) { draw_pi0(st, *vs, S); }
+OK            [STATEMENT.md] Theory_work/Wave1/W1-N1/STATEMENT.md:75-75 sha=570a091d6a | - **START** `draw_pi0` returns exact π₀ draws and the reported Z̄₀ = Σ_Ω γ₀ (N9 Claims S, Z; status PROVED (ca
+OK            [STATEMENT.md] Docs/Theory/proofs/T12_T8_frozen_run_identities/STATEMENT.md:48-48 sha=23f42c51bd | - **START** (imported dependency: T09(i) / project P1, not re-proved here): the start sampler returns exact ii
+OK            [PROOF.md] cpp/v3_start.h:139-139 sha=03b5f576be | // backward conditional of block b's size given the remaining total r: P(k_b = j | r) = e_b(j) F_{b-1}(r-j)/F_
+OK            [PROOF.md] cpp/v3_start.h:155-156 sha=248257ca8f | //   then for b = J..1 while the remaining size r > 0: 1 uniform for k_b (categorical over j = 0..min(|C_b|, r
+OK            [PROOF.md] cpp/v3_start.h:147-147 sha=12a2d38f81 | lj.push_back(st.logF[b][r - j] == NEG_INF ? NEG_INF : pr[j] + st.logF[b][r - j]);  // logF index b == block b-
+OK            [PROOF.md] cpp/v3_start.h:115-117 sha=950294588a | for (int j = 0; j <= top; ++j) {
+OK            [PROOF.md] cpp/v3_start.h:118-118 sha=f537b73f4c | st.sub_cum[b][j] = cumulative_from_logs(lv);  // within-size law r_b(U)/e_b(j), increasing code order
+OK            [PROOF.md] cpp/v3_start.h:21-32 sha=7ee66157bc | inline std::vector<double> cumulative_from_logs(const std::vector<double>& lp) {
+OK            [PROOF.md] cpp/v3_start.h:122-123 sha=e1ef58be83 | st.logF.assign(J + 1, std::vector<double>(K + 1, NEG_INF));
+OK            [PROOF.md] cpp/v3_start.h:124-131 sha=245ed50fe3 | for (int b = 1; b <= J; ++b) {
+OK            [PROOF.md] cpp/v3_start.h:133-135 sha=33f246b500 | std::vector<double> lk(K + 1);
+OK            [PROOF.md] cpp/v3_start.h:138-138 sha=9bfa4fa5f4 | st.size_cum = cumulative_from_logs(lk);
+OK            [PROOF.md] cpp/v3_start.h:140-149 sha=eddb0432ea | st.cond_cum.assign(J, {});
+OK            [PROOF.md] cpp/v3_engine.h:299-299 sha=0628731bc7 | double logZ = D.logm0 + st.logZbar0;
+OK            [PROOF.md] v3_fit.R:140-140 sha=8d3fa6e8db | fit$blocks <- setup$blocks; fit$neighbours <- setup$neighbours; fit$log_Zbar0 <- setup$start$log_Zbar0
+OK            [PROOF.md] v3_run.R:217-217 sha=663dc6bd84 | out$log_m0 <- raw$log_m0; out$log_Zbar0 <- raw$log_Zbar0
+OK            [PROOF.md] cpp/v3_core.cpp:515-515 sha=e289f9d3e7 | _["log_m0"] = D.logm0, _["log_Zbar0"] = st.logZbar0);
+OK            [PROOF.md] cpp/v3_core.cpp:198-198 sha=f908b4dd1c | return List::create(_["log_Zbar0"] = st.logZbar0, _["log_profiles"] = prof, _["log_F"] = logF,
+OK            [PROOF.md] v3_setup.R:73-73 sha=438592d090 | start <- r$start; start$ptr <- r$ptr; class(start) <- "v3_start"
+OK            [PROOF.md] cpp/v3_start.h:18-20 sha=bec38fa9f6 | inline int cat_draw_gt(const std::vector<double>& cum, double u) {
+OK            [PROOF.md] cpp/v3_start.h:158-176 sha=bed8f205d3 | inline void draw_pi0(const Start& st, VariateSource& vs, std::vector<int>& S, std::vector<int>* sizes_out = nu
+OK            [PROOF.md] cpp/v3_start.h:160-160 sha=1f4fb75052 | int k = cat_draw_gt(st.size_cum, vs.u("pi0_size"));
+OK            [PROOF.md] cpp/v3_start.h:163-166 sha=094c85e000 | for (int b = J - 1; b >= 0 && r > 0; --b) {
+OK            [PROOF.md] cpp/v3_start.h:169-172 sha=8bc4fee19d | if (kb[b] == 0) continue;
+OK            [PROOF.md] cpp/v3_start.h:174-174 sha=1528795223 | std::sort(S.begin(), S.end());
+OK            [PROOF.md] cpp/v3_engine.h:108-108 sha=2c87e7b937 | void draw_start(std::vector<int>& S) { draw_pi0(st, *vs, S); }
+OK            [PROOF.md] cpp/v3_engine.h:289-289 sha=86161cef55 | if (init_states) S = (*init_states)[i]; else draw_start(S);
+OK            [PROOF.md] cpp/v3_core.cpp:446-446 sha=4c5511024d | res.push_back(E.run_island(r, o.N, g, o.L, o.Hm, o.tier, nullptr));
+OK            [PROOF.md] cpp/v3_core.cpp:632-632 sha=4d40b33be4 | IslandResult res = E.run_island_s(0, H, sch, L, Hm, tier, nullptr, PH_PILOT, 0);
+OK            [PROOF.md] cpp/v3_core.cpp:670-670 sha=482ef8d7cb | IslandResult res = E.run_island_s(r, H, sch, L, Hm, tier, nullptr, PH_DIAG, iter);
+OK            [PROOF.md] cpp/v3_engine.h:184-184 sha=1c6aa57fa0 | std::vector<int> S; draw_start(S);
+OK            [PROOF.md] Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/N9-KERNEL/PROOF.md:266-286 sha=238dd06677 | **Claim Z.** F_J(k) = Σ_{S: |S| = k} ∏_b r_b(S∩C_b) for k ≤ K, and Z̄₀ = Σ_{k≤K} ϖ(k)F_J(k) = Σ_{S∈𝒮_K} γ₀(S).
+OK            [PROOF.md] Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/N9-KERNEL/PROOF.md:254-255 sha=e73839f880 | - `logF[b][k]` = log F_b(k), F_0 = 1{k=0}, F_b(k) = Σ_{j ≤ min(k, top_{b−1})} e_{b−1}(j) F_{b−1}(k−j), k = 0..
+
+45 citations: 45 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+Not machine-checked: unbackticked references and the semantic match of each excerpt.

@@ -742,6 +742,29 @@ def status_token(status: str) -> str:
     return m.group(0) if m else ""
 
 
+_CODE_CHECKED = re.compile(r"^CODE-CHECKED(?![\w-])")
+
+
+def carrier_checked(row: dict) -> bool:
+    """HQ 11-16 (task W): an IMPLEMENTATION row whose status is CODE-CHECKED counts as checked ONLY when it is accepted
+    through an HQ carrier: its status source is a CHECKPOINT_<k>.md and it has a council record. A4 then checks that
+    council on the row itself (manifest, seats, per-claim ACCEPT, checkpoint route), and A5 requires its accept record
+    from every consumer that uses it through a statement / proof edge. Used @hyp it stays a condition (weak_or_invalid
+    keeps status_strength). Nothing else about CODE-CHECKED changes (not checked in general)."""
+    if row.get("kind") != "implementation" or not _CODE_CHECKED.match(_norm_status(row.get("status", ""))):
+        return False
+    if not (row.get("council") or "").strip():
+        return False
+    # the status source must be the row's OWN ticket's CHECKPOINT_<k>.md (the carrier sits in the row's ticket)
+    return bool(own_checkpoint(row, ticket_folders().get(row.get("ticket", ""), "")))
+
+
+def row_strength(row: dict):
+    """status_strength of a row's status, plus the carrier rule for CODE-CHECKED implementation rows (carrier_checked)."""
+    s = status_strength(row.get("status", ""))
+    return 3 if s is None and carrier_checked(row) else s
+
+
 def status_strength(status: str):
     s = _norm_status(status)
     if not s:
@@ -1714,7 +1737,12 @@ def manifest_tool():
 
 def ticket_dir(row: dict, folder: str = "") -> str:
     """The ticket folder whose reviews/MANIFEST_*.txt holds a claim's council manifest: tickets.tsv `folder`, else the
-    folder of the claim's statement file."""
+    folder of the claim's statement file. An EXTERNAL row (no tickets.tsv folder) whose status is carried by a council
+    CHECKPOINT and which has a council record: the folder of that checkpoint (the HQ carrier's ticket; task T, 2026-11-16)."""
+    if not folder and row.get("kind") == "external" and (row.get("council") or "").strip():
+        raw = (row.get("status_source", "") or "").rpartition(":")[0]
+        if raw and _CKPT_NAME.match(os.path.basename(raw)):
+            return _pkey(os.path.dirname(raw))
     return _pkey(folder or os.path.dirname(row.get("file", "")) or "")
 
 
@@ -1893,7 +1921,15 @@ def _digest(lines) -> str:
     return hashlib.sha256("\n".join(lines).encode("utf-8", errors="replace")).hexdigest()
 
 
-def accept_artifacts(row: dict, folder: str = "") -> list[str]:
+def _akey(relpath: str, fold: bool = False) -> str:
+    """Path as written into the acceptance identity: case-preserving `_pkey` on every platform (INFRA J, 2026-11-15:
+    `_pcase` folded case on Windows only, so the same claim had two identities). `fold=True` reproduces the legacy
+    Windows identity, used only to MATCH records written before the fix (accept_stamp_matches), never to write one."""
+    k = _pkey(relpath)
+    return k.lower() if fold else k
+
+
+def accept_artifacts(row: dict, folder: str = "", fold: bool = False) -> list[str]:
     """The artifacts a claim's acceptance rests on, each as `<reference> -> <repo path>[@pin] <content digest>` (or
     `<reference> MISSING`): every gate evidence reference (whatever the result), every council seat's review file and
     each `<ticket>/reviews/MANIFEST_*.txt` whose header is the council digest."""
@@ -1915,7 +1951,7 @@ def accept_artifacts(row: dict, folder: str = "") -> list[str]:
                 out.add(f"{tok} MISSING")
                 continue
             lines = read_lines_at(path, pin) if pin else read_lines(path)
-            out.add(f"{tok} -> {_pcase(path)}{'@' + pin if pin else ''} "
+            out.add(f"{tok} -> {_akey(path, fold)}{'@' + pin if pin else ''} "
                     + (_digest(lines) if lines is not None else "UNREADABLE"))
     d = ticket_dir(row, folder)
     for dg in mans:
@@ -1925,14 +1961,14 @@ def accept_artifacts(row: dict, folder: str = "") -> list[str]:
                 rel = os.path.relpath(mp, ROOT).replace(os.sep, "/")
                 lines = read_lines(rel)
                 if lines and lines[0].strip() == f"MANIFEST {dg}":
-                    out.add(f"MANIFEST {dg} -> {_pcase(rel)} {_digest(lines)}")
+                    out.add(f"MANIFEST {dg} -> {_akey(rel, fold)} {_digest(lines)}")
                     hit = True
         if not hit:
             out.add(f"MANIFEST {dg} MISSING")
     return sorted(out)
 
 
-def accept_identity(cid: str, by: dict, g, aliases: dict, folders: dict | None = None) -> list[str]:
+def accept_identity(cid: str, by: dict, g, aliases: dict, folders: dict | None = None, fold: bool = False) -> list[str]:
     """The acceptance identity of a claim (see above) as a list of lines; accept_stamp fingerprints it."""
     row = by[cid]
     folders = ticket_folders() if folders is None else folders
@@ -1944,15 +1980,27 @@ def accept_identity(cid: str, by: dict, g, aliases: dict, folders: dict | None =
         tr = by.get(t, {})
         ident.append(f"input={t}@{','.join(sorted(g.uses[(cid, t)]))} v{tr.get('version', '')} "
                      f"{tr.get('sha256', '')} {tr.get('status', '')}")
-    ident += [f"artifact={a}" for a in accept_artifacts(row, folder)]
+    ident += [f"artifact={a}" for a in accept_artifacts(row, folder, fold)]
+    for t in sorted(g.deps.get(cid, [])):   # rule (c): LC-step evidence of the edge uses enters the identity (absent -> no line)
+        for u in sorted(g.uses[(cid, t)]):
+            if u.startswith("proof:") and (li := lc_step_identity(cid, t, u)):
+                ident.append(li)
     return ident
 
 
-def accept_stamp(cid: str, by: dict, g, aliases: dict, folders: dict | None = None) -> str:
+def accept_stamp(cid: str, by: dict, g, aliases: dict, folders: dict | None = None, fold: bool = False) -> str:
     """`v<version> fp2:<24 hex>`: what an accept event records. The fingerprint covers the whole acceptance identity
     (row fields, ticket folder, effective inputs, names, artifact contents), so ANY later change makes it stale."""
-    fp = hashlib.sha256("\x1f".join(accept_identity(cid, by, g, aliases, folders)).encode()).hexdigest()[:24]
+    fp = hashlib.sha256("\x1f".join(accept_identity(cid, by, g, aliases, folders, fold)).encode()).hexdigest()[:24]
     return f"v{by[cid].get('version', '')} {ACCEPT_FORMAT}:{fp}"
+
+
+def accept_stamp_matches(cid: str, by: dict, g, aliases: dict, have: set, folders: dict | None = None) -> bool:
+    """True if a recorded accept event matches the claim's CURRENT identity: the case-preserving stamp (every record
+    written from INFRA J on), or the legacy Windows-folded stamp of a record written on Windows before the fix."""
+    if accept_stamp(cid, by, g, aliases, folders) in have:
+        return True
+    return accept_stamp(cid, by, g, aliases, folders, fold=True) in have
 
 
 def accept_records() -> dict[str, set]:
@@ -2054,6 +2102,218 @@ def write_legacy_boundary() -> int:
     return 0
 
 
+# HQ 11-16 (task V, rule (b), fail-closed): a legacy-accepted row NARROWED by a recorded NARROW keeps its legacy
+# acceptance only if (1) a file in that NARROW's issue folder carries the Sol verdict line
+#   NARROW-CHAIN-VERIFIED: <claim id> sha256=<64-hex> chain=OWN
+# (the narrowed statement is proved by the row's own existing chain), (2) that sha256 equals the row's CURRENT statement
+# hash, and (3) the row's council cell is unchanged since the legacy tag. Any NARROW-CHAIN-NOT-VERIFIED line for the row,
+# any VERIFIED line with another hash, or anything missing -> not accepted.
+_NC_OK = re.compile(r"^NARROW-CHAIN-VERIFIED: (\S+) sha256=([0-9a-f]{64}) chain=OWN\s*$")
+_NC_NO = re.compile(r"^NARROW-CHAIN-NOT-VERIFIED: (\S+)(?:\s|$)")
+_NC_CACHE = None
+
+
+def _nc_index():
+    """-> (legacy rows at the tag {id: row}, ids with a recorded `narrow` event, {id: [(kind, sha|None, file)]}) for the
+    verdict lines found in files under an INFRA issue folder of a NARROW of that id (cached per process)."""
+    global _NC_CACHE
+    if _NC_CACHE is None:
+        import glob as _glob
+        tag, commit, rows, probs = load_legacy()
+        at_tag = {}
+        if rows and legacy_boundary()[0] and commit:
+            rc, txt = git("show", f"{commit}:Theory_work/INFRA/registry/claims.tsv")
+            if rc == 0:
+                ids = {r[0] for r in legacy_boundary()[0]}
+                at_tag = {r["id"]: r for r in read_tsv_text(txt) if r["id"] in ids}
+        narrowed = {e.get("id", "") for e in read_tsv(EVENTS)[1] if e.get("action") == "narrow"}
+        lines = defaultdict(list)
+        # the REPOSITORY's issues/ (a staged copy has none; review S1), as for LEGACY_FILE
+        idir_ = os.path.join(os.path.dirname(TOOLS), "issues")
+        for f in sorted(_glob.glob(os.path.join(idir_, "**", "*"), recursive=True)):
+            if not os.path.isfile(f):
+                continue
+            parts = os.path.relpath(f, idir_).replace(os.sep, "/").split("/")[:-1]
+            try:
+                text = open(f, encoding="utf-8", errors="replace").read().splitlines()   # review S3: never skip a file
+            except OSError:
+                continue
+            is_sol = os.path.basename(f).endswith("_sol.md")
+            for ln in text:
+                # review S2: a VERIFIED line counts only unindented and only in a Sol check file (*_sol.md); a
+                # NOT-VERIFIED line counts anywhere in the folder (fail closed)
+                m = _NC_OK.match(ln.rstrip()) if is_sol and not ln[:1].isspace() else None
+                n = _NC_NO.match(ln.strip())
+                cid_ = (m or n).group(1) if (m or n) else None
+                if not cid_:
+                    continue
+                # only an issue folder of a NARROW of THIS row: a folder named ..._narrow_<safe id> or a sub-folder
+                # <safe id> of a ..._narrow_... folder
+                sid = safe(cid_)
+                own = any(("_narrow_" in p_ and p_.endswith("_" + sid)) for p_ in parts) or (
+                    len(parts) >= 2 and "_narrow_" in parts[0] and sid in parts[1:])
+                if own:
+                    lines[cid_].append(("ok" if m else "no", m.group(2) if m else None,
+                                        os.path.relpath(f, os.path.dirname(os.path.dirname(os.path.dirname(TOOLS))))))
+        _NC_CACHE = (at_tag, narrowed, dict(lines))
+    return _NC_CACHE
+
+
+def narrow_kept_legacy(row: dict) -> str:
+    """'' or the repository path of the Sol verdict file that keeps this NARROWED legacy row's acceptance (rule (b))."""
+    at_tag, narrowed, lines = _nc_index()
+    cid = row.get("id", "")
+    old = at_tag.get(cid)
+    if old is None or cid not in narrowed:
+        return ""
+    if (row.get("council") or "").strip() != (old.get("council") or "").strip():
+        return ""
+    found = lines.get(cid, [])
+    if not found or any(k == "no" for k, _, _ in found) or any(h != row.get("sha256", "") for k, h, _ in found if k == "ok"):
+        return ""
+    return found[0][2]
+
+
+# ---------------------------------------------------------------- rule (c): an LC-verified @proof step (HQ 11-16, card 12 cond. 1)
+# A3 normally refuses a checked claim whose direct input is below that assurance. Card 12 (T03#) keeps rows such as T02(ii#)
+# un-upgraded but lets an edge into the VERIFIED STEP of such a row stand. An edge consumer -> input satisfies A3 only if EVERY
+# use of it is a named `proof:<step>` use AND each such use has exactly one row in registry/lc_steps.tsv
+# (consumer, input, use, file, lines, sha256, carrier) such that:
+#  * the cited file, the carrier and the review are regular repository files reached WITHOUT any symlink, `..`, absolute or
+#    scratch path component (realpath == the plain joined path); the carrier and the review are `*.md` under a `reviews/` folder;
+#  * `lines` is a valid range of the cited file and the file's content digest equals `sha256`;
+#  * the carrier is clean: every line that mentions LC-STEP in ANY spelling (NFKC, case-folded, any separator) is an exact
+#    `LC-STEP-VERIFIED: <consumer> | <input> | <use> | <file>:<a>-<b> | sha256=<64 hex> | review=<path> | verdict=<line>` line
+#    at column 0 (so a NOT-VERIFIED, indented, bulleted, re-spelled or malformed line anywhere refuses the whole carrier; a
+#    carrier may hold several edges' lines), and exactly ONE such line names this (consumer, input, use) - and it equals the
+#    tsv tuple (another range or hash for the same edge use refuses);
+#  * the review is a different file and contains a line EQUAL to the verdict (the verbatim review line; nothing stripped but
+#    surrounding whitespace), which holds the word VERIFIED and no negated / qualified form of it.
+# Anything else (no row, two rows, wrong or partial range, hash mismatch, missing or unclean carrier, review without the
+# verbatim verdict line, carrier = review) fails closed. The input row itself is NOT upgraded; check.py applies the rule only
+# to inputs that lc_input_eligible() admits (proved or unclassified-but-PROVED, never open / partial / negative).
+# Residual trust (as for the CC rule): the HQ recorder writes the tsv row and picks the review line; the tool binds them to
+# existing files, the cited hash and the exact line, it does not judge the mathematics. A later retraction written elsewhere
+# in the review is not seen (the review's digest is in the accept identity, so the record goes stale on any edit, and
+# re-acceptance is an HQ act). A carrier may hold no prose that mentions an LC step (fail closed).
+import unicodedata as _ud
+LC_STEPS = os.path.join(REG, "lc_steps.tsv")
+_LC_LINE = re.compile(r"^LC-STEP-VERIFIED: ([^|]+?) \| ([^|]+?) \| ([^|]+?) \| (\S+?):(\d+)-(\d+) \| sha256=([0-9a-f]{64}) \| "
+                      r"review=(\S+) \| verdict=(.+)$")
+_LC_LOOSE = re.compile(r"(?<![^\W_])lc[\W_]{0,6}step")
+_LC_NEG = re.compile(r"(?i)\b(?:not|un|non|partial\w*|yet|only|except)\b[\s-]*verified|\bun-?verified|verified\s*\?|"
+                     r"verified\s*\(\s*(?:false|wrong|gap)|verified\s+(?:with a gap|except|modulo|but)|"
+                     r"verified-with-(?!amendments\b)|verified\s+with\s+(?!amendments\b)|"
+                     r"\b(?:refut\w*|counterexample\w*|gaps?|fail\w*|false|wrong|incorrect|invalid|unsound|unchecked|pending)\b|"
+                     r"not\s+checked")
+# the verdict must BEGIN with VERIFIED (optionally -WITH-AMENDMENTS) or be a markdown table row with a cell equal to it
+_LC_ANCHOR = re.compile(r"VERIFIED(?:-WITH-AMENDMENTS)?(?:\s|$|[—–:-])|\|(?:[^|]*\|)*\s*VERIFIED(?:-WITH-AMENDMENTS)?\s*\|")
+_LC_BADINPUT = re.compile(r"(?i)\b(OPEN|GAP|REFUTED|STUCK|FALSE|SKETCH|PARTIAL|CONDITIONAL|SUSPECT|WRONG|COUNTEREXAMPLE|NOT)\b")
+
+
+def lc_input_eligible(dr: dict) -> bool:
+    """Rule (c) applies to an input that is proved but not checked (strength 2), or whose status is unclassified yet says
+    PROVED (a legacy label such as 'T02(i#), T02(ii#): PROVED; SF/XF VERIFIED'); never to open / partial / negative ones."""
+    st, s = dr.get("status", "") or "", row_strength(dr)
+    if s == 2:
+        return True
+    return s is None and bool(re.search(r"\bPROVED\b", st)) and not _LC_BADINPUT.search(st)
+
+
+def _repo_file(path: str, md_in_reviews: bool = False) -> bool:
+    """A repository-relative regular file path with NO symlink, `..`, absolute or scratch component (checked on the raw
+    path and on its resolution); `md_in_reviews`: also a `*.md` under a `reviews/` folder."""
+    if not path or os.path.isabs(path) or "\\" in path or ":" in path:
+        return False
+    parts = path.split("/")
+    if ".." in parts or "." in parts or "" in parts or any("scratch" in x.lower() for x in parts):
+        return False
+    if md_in_reviews and not (path.endswith(".md") and "reviews" in parts[:-1]):
+        return False
+    root_r = os.path.realpath(ROOT)
+    plain = os.path.normcase(os.path.normpath(os.path.join(root_r, *parts)))
+    return os.path.normcase(os.path.realpath(os.path.join(ROOT, *parts))) == plain and os.path.isfile(os.path.join(ROOT, *parts))
+
+
+def lc_steps_rows() -> list[dict]:
+    return read_tsv(LC_STEPS)[1] if os.path.isfile(LC_STEPS) else []
+
+
+def _lc_carrier(C, consumer, inp, use):
+    """-> (matches of THIS edge use in the carrier text C, unclean?): unclean = a line mentioning LC-STEP in any spelling
+    that is not an exact well-formed LC-STEP-VERIFIED line at column 0."""
+    mine, unclean = [], 0
+    for ln in C:
+        if not _LC_LOOSE.search(_ud.normalize("NFKC", ln).casefold()):
+            continue
+        m = _LC_LINE.match(ln.rstrip("\r\n")) if ln.startswith("LC-STEP-VERIFIED: ") else None
+        if not m:
+            unclean += 1
+        elif (m.group(1), m.group(2), m.group(3)) == (consumer, inp, use):
+            mine.append(m)
+    return mine, unclean
+
+
+def lc_step_check(consumer: str, inp: str, use: str) -> tuple[bool, str]:
+    """(ok, why): does the edge use `use` of consumer -> inp stand on a recorded, VERIFIED LC step (rule (c))?"""
+    if not use.startswith("proof:") or not use[len("proof:"):].strip() or "|" in consumer + inp + use:
+        return False, "not a named proof step"
+    hits = [r for r in lc_steps_rows() if (r.get("consumer"), r.get("input"), r.get("use")) == (consumer, inp, use)]
+    if len(hits) != 1:
+        return False, f"{len(hits)} lc_steps.tsv rows for this edge use (need exactly one)"
+    r = hits[0]
+    f, mr = r.get("file", ""), re.fullmatch(r"(\d+)-(\d+)", r.get("lines", "") or "")
+    if not mr or not _repo_file(f):
+        return False, "bad file (symlink / .. / scratch / missing) or line range in lc_steps.tsv"
+    a, b = int(mr.group(1)), int(mr.group(2))
+    L = read_lines(f)
+    if L is None or not 1 <= a <= b <= len(L):
+        return False, f"cited step {f}:{a}-{b} missing or out of range"
+    if _digest(L) != r.get("sha256", ""):
+        return False, f"source hash mismatch for {f} (changed since the step was line-checked)"
+    carrier = r.get("carrier", "")
+    if not _repo_file(carrier, True):
+        return False, "carrier is not a regular symlink-free *.md under a reviews/ folder"
+    C = read_lines(carrier)
+    if C is None:
+        return False, f"carrier {carrier} missing"
+    mine, unclean = _lc_carrier(C, consumer, inp, use)
+    if unclean:
+        return False, f"carrier {carrier}: {unclean} line(s) mention LC-STEP but are not exact LC-STEP-VERIFIED lines (any NOT-VERIFIED / malformed / indented line refuses the carrier)"
+    m = mine[0] if len(mine) == 1 else None
+    if m is None or (m.group(4), int(m.group(5)), int(m.group(6)), m.group(7)) != (f, a, b, r["sha256"]):
+        return False, (f"carrier {carrier}: {len(mine)} line(s) for this edge use, or one with another file / range / hash "
+                       "(wrong or partial range)")
+    review, verdict = m.group(8), m.group(9).strip()
+    if not _repo_file(review, True) or os.path.samefile(os.path.join(ROOT, review), os.path.join(ROOT, carrier)):
+        return False, "review must be a regular symlink-free *.md under a reviews/ folder, different from the carrier"
+    if len(verdict) < 24 or not _LC_ANCHOR.match(verdict) or _LC_NEG.search(verdict):
+        return False, "the recorded verdict is not a specific, unqualified VERIFIED line (must begin with VERIFIED or be a table row with a VERIFIED cell)"
+    RL = read_lines(review)
+    if RL is None or not any(x.strip() == verdict for x in RL):
+        return False, f"review {review} missing or has no line equal to the recorded verdict"
+    return True, f"{f}:{a}-{b} VERIFIED (carrier {carrier}; review {review})"
+
+
+def lc_step_identity(consumer: str, inp: str, use: str) -> str:
+    """Acceptance-identity line of an edge use with a recorded LC step ('' when there is none): the digests of the
+    cited file, the carrier and the review, so a later change to any of them makes the consumer's accept record stale."""
+    hits = [r for r in lc_steps_rows() if (r.get("consumer"), r.get("input"), r.get("use")) == (consumer, inp, use)]
+    if len(hits) != 1:
+        return ""
+    r = hits[0]
+    parts = [f"lcstep={consumer}|{inp}|{use}|{r.get('file', '')}:{r.get('lines', '')}|{r.get('sha256', '')}"]
+    C = read_lines(r.get("carrier", "")) if r.get("carrier") else None
+    review = ""
+    if C is not None:
+        mine, _ = _lc_carrier(C, consumer, inp, use)
+        review = mine[0].group(8) if len(mine) == 1 else ""
+    for path in (r.get("file", ""), r.get("carrier", ""), review):
+        L = read_lines(path) if path else None
+        parts.append(_digest(L) if L is not None else "UNREADABLE")
+    return " ".join(parts)
+
+
 def unaccepted_inputs(cid: str, by: dict, g, aliases: dict, now: set, records=None, legacy=None, revalidate=None,
                       folders=None):
     """R03-N1 / R04-N1: checked claims cid consumes (stmt / proof / bound-bridge edges, transitively; an @hyp edge too
@@ -2076,12 +2336,12 @@ def unaccepted_inputs(cid: str, by: dict, g, aliases: dict, now: set, records=No
             seen.add(d)
             q.append((d, path + [d]))
             dr = by[d]
-            if dr.get("state") not in VALID or status_strength(dr.get("status", "")) != 3 or d in now:
+            if dr.get("state") not in VALID or row_strength(dr) != 3 or d in now:
                 continue
-            if (d, dr.get("version", ""), dr.get("sha256", "")) in legacy:
+            if (d, dr.get("version", ""), dr.get("sha256", "")) in legacy or narrow_kept_legacy(dr):
                 continue
             have = records.get(d, set())
-            if accept_stamp(d, by, g, aliases, folders) in have:
+            if accept_stamp_matches(d, by, g, aliases, have, folders):
                 probs = revalidate(d) if revalidate else []
                 if probs:
                     out.append((d, path + [d], "its accept record matches, but it no longer passes acceptance on the "
@@ -2133,7 +2393,7 @@ def conditional_on(status: str, names) -> str | None:
 
 def weak_or_invalid(dr: dict) -> bool:
     """An @hyp input needs the conditional-result treatment if it is below checked assurance or not ACTIVE."""
-    s = status_strength(dr.get("status", ""))
+    s = status_strength(dr.get("status", ""))   # NOT row_strength: a declared @hyp condition stays a condition (fail-closed)
     return (s != 3 and s != "NEG") or dr.get("state") != "ACTIVE"
 
 

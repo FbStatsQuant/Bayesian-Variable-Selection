@@ -1,0 +1,94 @@
+OK   STATEMENT.md:14 -> Theory_work/Wave3/W3-READER/READER_VERSIONS.md:660-813 (lines 1458)
+OK   STATEMENT.md:21 -> Theory_work/Wave3/W3-READER/NOTATION.md:161-164 (lines 264)
+OK   STATEMENT.md:22 -> Theory_work/Wave3/W3-READER/NOTATION.md:60-60 (lines 264)
+OK   STATEMENT.md:28 -> Theory_work/Wave3/W3-READER/NOTATION.md:31-35 (lines 264)
+OK   STATEMENT.md:31 -> Theory_work/Wave3/W3-READER/READER_VERSIONS.md:28-31 (lines 1458)
+OK   STATEMENT.md:32 -> Theory_work/Wave3/W3-READER/READER_VERSIONS.md:32-50 (lines 1458)
+OK   STATEMENT.md:60 -> Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md:22-27 (lines 88)
+OK   STATEMENT.md:81 -> Theory_work/Wave3/W3-READER/READER_VERSIONS.md:696-697 (lines 1458)
+OK   STATEMENT.md:93 -> Theory_work/Wave3/W3-AUDIT/TRACK_B.md:216-216 (lines 444)
+OK   STATEMENT.md:99 -> Theory_work/Wave1C/C-GROW/STATEMENT.md:146-147 (lines 168)
+OK   STATEMENT.md:102 -> Theory_work/Wave3/W3-AUDIT/TRACK_B.md:256-257 (lines 444)
+OK   STATEMENT.md:128 -> Theory_work/Wave3/W3-RM2-R/STATEMENT.md:177-182 (lines 262)
+OK   STATEMENT.md:144 -> Theory_work/Wave3/W3-RM/STATEMENT.md:129-133 (lines 273)
+OK   lemmas/A_assembly.md:8 -> Theory_work/Wave3/W3-RM2/STATEMENT.md:172-202 (lines 337)
+OK   lemmas/A_assembly.md:10 -> Theory_work/Wave3/W3-RM2-R/STATEMENT.md:177-182 (lines 262)
+OK   lemmas/A_assembly.md:11 -> Theory_work/Wave3/W3-RM2/STATEMENT.md:172-202 (lines 337)
+OK   lemmas/A_assembly.md:12 -> Theory_work/Wave3/W3-RM2/STATEMENT.md:49-58 (lines 337)
+OK   lemmas/A_assembly.md:18 -> Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md:22-22 (lines 88)
+OK   lemmas/A_assembly.md:40 -> Theory_work/Wave3/W3-RM/STATEMENT.md:129-133 (lines 273)
+OK   lemmas/A_assembly.md:42 -> Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md:30-31 (lines 88)
+OK   lemmas/A_assembly.md:48 -> Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md:31-31 (lines 88)
+OK   lemmas/A_assembly.md:49 -> Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md:32-35 (lines 88)
+OK   lemmas/A_assembly.md:54 -> Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md:36-40 (lines 88)
+OK   lemmas/A_assembly.md:58 -> Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md:46-51 (lines 88)
+OK   lemmas/A_assembly.md:63 -> Theory_work/Wave3/W3-RM2/STATEMENT.md:134-134 (lines 337)
+OK   lemmas/A_assembly.md:76 -> Theory_work/Wave3/W3-RM/STATEMENT.md:154-156 (lines 273)
+OK   lemmas/A_assembly.md:77 -> Theory_work/Wave3/W3-RM2/STATEMENT.md:201-202 (lines 337)
+OK   lemmas/A_assembly.md:86 -> Theory_work/Wave3/W3-RM2/lemmas/L6_examples.md:164-263 (lines 573)
+OK   lemmas/A_assembly.md:87 -> Theory_work/Wave3/W3-RM2/lemmas/L6_examples.md:35-38 (lines 573)
+OK   lemmas/A_assembly.md:89 -> Theory_work/Wave3/W3-RM2/lemmas/L6_examples.md:170-174 (lines 573)
+OK   lemmas/A_assembly.md:91 -> Theory_work/Wave1C/C-GROW/lemmas/L5_instances.md:23-25 (lines 127)
+OK   lemmas/A_assembly.md:92 -> Theory_work/Wave1C/C-GROW/lemmas/L5_instances.md:18-20 (lines 127)
+OK   lemmas/A_assembly.md:97 -> Theory_work/Wave3/W3-RM2/lemmas/L6_examples.md:211-248 (lines 573)
+OK   lemmas/A_assembly.md:98 -> Theory_work/Wave3/W3-RM2/lemmas/L6_examples.md:174-174 (lines 573)
+OK   lemmas/A_assembly.md:99 -> Theory_work/Wave1C/C-GROW/lemmas/L5_instances.md:31-42 (lines 127)
+OK   lemmas/A_assembly.md:100 -> Theory_work/Wave1C/C-GROW/lemmas/L5_instances.md:18-20 (lines 127)
+OK   lemmas/A_assembly.md:105 -> Theory_work/Wave3/W3-RM/STATEMENT.md:135-136 (lines 273)
+OK   lemmas/A_assembly.md:106 -> Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md:54-58 (lines 88)
+OK   lemmas/A_assembly.md:111 -> Theory_work/Wave1C/C-GROW/lemmas/L5_instances.md:58-61 (lines 127)
+OK   lemmas/A_assembly.md:113 -> Theory_work/Wave1C/C-GROW/lemmas/L5_instances.md:43-46 (lines 127)
+OK   lemmas/A_assembly.md:117 -> Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md:52-53 (lines 88)
+OK   lemmas/A_assembly.md:128 -> Theory_work/Wave3/W3-RM2/lemmas/L6_examples.md:75-84 (lines 573)
+OK   lemmas/A_assembly.md:128 -> Theory_work/Wave3/W3-RM2/lemmas/L6_examples.md:97-100 (lines 573)
+OK   lemmas/A_assembly.md:129 -> Theory_work/Wave3/W3-RM2/lemmas/L6_examples.md:233-236 (lines 573)
+OK   TARGET.md:17 -> Theory_work/Wave3/W3-AUDIT/TRACK_B.md:256-257 (lines 444)
+OK   token '## 6. Theorem 6' in Theory_work/Wave3/W3-READER/READER_VERSIONS.md:660-660
+OK   token '(S3)' in Theory_work/Wave3/W3-READER/READER_VERSIONS.md:28-31
+OK   token '(S4)' in Theory_work/Wave3/W3-READER/READER_VERSIONS.md:32-32
+OK   token 'IDEAL-W⁺' in Theory_work/Wave3/W3-READER/READER_VERSIONS.md:696-697
+OK   token 'time guard' in Theory_work/Wave3/W3-READER/READER_VERSIONS.md:697-697
+OK   token 'K:=\\min(p,\\lfloor n/2\\rfloor)' in Theory_work/Wave3/W3-READER/NOTATION.md:60-60
+OK   token 'Cov' in Theory_work/Wave3/W3-READER/NOTATION.md:161-164
+OK   token '**bad set** B' in Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md:27-27
+OK   token '(VIS-0)' in Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md:30-31
+OK   token '≥ c₁₆' in Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md:31-31
+OK   token '(VIS-a)' in Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md:32-35
+OK   token '(VIS-b)' in Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md:36-40
+OK   token 'finitely many local patterns' in Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md:46-51
+OK   token 'stationary designs' in Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md:52-53
+OK   token '(VIS-e)' in Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md:54-58
+OK   token 'Γ^U_{jk}' in Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md:22-22
+OK   token 'Theorem RM2-R-plus' in Theory_work/Wave3/W3-RM2-R/STATEMENT.md:177-182
+OK   token '(L-feas)' in Theory_work/Wave3/W3-RM2/STATEMENT.md:134-134
+OK   token '### 3.2' in Theory_work/Wave3/W3-RM2/STATEMENT.md:172-172
+OK   token '(D-loc^b)' in Theory_work/Wave3/W3-RM2/STATEMENT.md:201-202
+OK   token 'Sufficient: λ_min(Σ_n) ≥ c.' in Theory_work/Wave3/W3-RM/STATEMENT.md:129-133
+OK   token 'PTV(a₀)' in Theory_work/Wave3/W3-RM/STATEMENT.md:135-136
+OK   token '(D-loc)' in Theory_work/Wave3/W3-RM/STATEMENT.md:154-156
+OK   token 'K_dec (1+d(j,k))^(-alpha)' in Theory_work/Wave3/W3-RM2/lemmas/L6_examples.md:35-38
+OK   token 'r=floor(sqrt(log n))' in Theory_work/Wave3/W3-RM2/lemmas/L6_examples.md:97-103
+OK   token '## E2.' in Theory_work/Wave3/W3-RM2/lemmas/L6_examples.md:164-164
+OK   token 'PTV(a0)' in Theory_work/Wave3/W3-RM2/lemmas/L6_examples.md:170-174
+OK   token 'No truth-separation' in Theory_work/Wave3/W3-RM2/lemmas/L6_examples.md:174-174
+OK   token 'Thus all hypotheses of RM2-R are verified' in Theory_work/Wave3/W3-RM2/lemmas/L6_examples.md:211-248
+OK   token 'Reduction to ρ > 0' in Theory_work/Wave1C/C-GROW/lemmas/L5_instances.md:18-20
+OK   token '(P1) Spectrum' in Theory_work/Wave1C/C-GROW/lemmas/L5_instances.md:23-25
+OK   token '(P4) Conditional covariance' in Theory_work/Wave1C/C-GROW/lemmas/L5_instances.md:31-42
+OK   token '(P5)' in Theory_work/Wave1C/C-GROW/lemmas/L5_instances.md:43-46
+OK   token '(G3b) TV' in Theory_work/Wave1C/C-GROW/lemmas/L5_instances.md:58-61
+OK   token 'θ = (1, −2)' in Theory_work/Wave3/W3-AUDIT/TRACK_B.md:216-216
+OK   token 'AR(0.95)' in Theory_work/Wave3/W3-AUDIT/TRACK_B.md:256-257
+OK   token 'S2 layouts' in Theory_work/Wave1C/C-GROW/STATEMENT.md:146-147
+OK   status W3-RM2-R:RM2-R-plus@1.0.1 quoted verbatim in STATEMENT §4
+OK   status W3-RM2-R:RM0-plus@1.0.1 quoted verbatim in STATEMENT §4
+OK   status W3-RM2-R:DLV-0@1.0.1 quoted verbatim in STATEMENT §4
+OK   status W3-AUDIT-V:VIS@1.0.0 quoted verbatim in STATEMENT §4
+OK   status C-GROW:C5a@1.0.0 quoted verbatim in STATEMENT §4
+OK   status W3-RM2:D-to-W@1.0.3 quoted verbatim in STATEMENT §4
+OK   status W3-RM2:POST-R@1.0.3 quoted verbatim in STATEMENT §4
+OK   status W2-APP:POST@1.0.7 quoted verbatim in STATEMENT §4
+OK   status W3-RM2:Ex-PolyR@1.0.5 quoted verbatim in STATEMENT §4
+OK   status W2-LOC2:Lemma-BC@1.0.1 quoted verbatim in STATEMENT §4
+OK   status W2-LOC2:Lemma-IR@1.0.1 quoted verbatim in STATEMENT §4
+W3-FAMC citecheck: 93 checks, 0 failures

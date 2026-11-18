@@ -158,4 +158,68 @@ chk(fg$status != "completed" && absent(fg) && isTRUE(fg$partial_results), paste(
 chk(absent(v3_fit(d$X, d$y, NA, allocation = alloc)), "invalid_input")
 chk(absent(v3_fit(matrix(1, 10, 3), rnorm(10), 1L, allocation = alloc)), "no_predictors")
 chk(absent(v3_fit(d$X[1:20, 1:8], rep(2, 20), 1L, allocation = alloc)), "y_constant")
+# ---- INV-SCORE-BITS (core v3.1): every score offered to a store for model S is the binary64 value D.logprior[|S|] + Scorer::score(S).logm of ONE
+# deterministic scorer on sorted S (tables v3_start.h:93, particles v3_engine.h:92-97, inherited v3_core.cpp:426-427 re-scored not copied, the final
+# local search and LS0; build with -ffp-contract=off), so a model never gets two values and the store's (value, S) dedup is exact. On the SMC fit `fa`
+# above (LS0 on, frozen calibration with inherited models) and on a second final run `fb` of the same frozen calibration WITHOUT the inherited models:
+# EVERY model of top_store and of both leader stores is re-scored through the public single-model path (v3_score -> cpp_score; v3_discrepancy for
+# log gamma_0) and compared with identical(); no model key repeats in a store (a model with two bit-values would sit twice in the (value, S) set);
+# fa and fb agree bit for bit on every model they share; every block-table entry has log_r = cpp_score(U)$log_m - log m0 with identical().
+pre <- v3_preprocess(d$X, d$y, dup_components = FALSE)
+ctx <- v3_context(pre$X, pre$y, orig = pre$kept, return_gram = FALSE)
+setup <- v3_setup(ctx)
+keyf <- function(M) vapply(M, function(S) paste(sort(S), collapse = ","), "")
+fz <- fa$frozen; fz$inherited <- NULL                                   # same frozen grid / N / L, no inherited store
+fb <- v3_final_run(setup, fz, 9104L, NULL, ls0 = TRUE, list_fields = FALSE)
+chk(identical(fb$status, "completed") && length(fa$frozen$inherited$models) > 0L && is.null(fz$inherited), "INV-SCORE-BITS: second final run without inherited models completed")
+n_ident <- 0L
+for (nm in c("fa", "fb")) for (sn in c("top_store", "leaders_gamma1", "leaders_gamma0")) {
+  st <- get(nm)[[sn]]; kk <- keyf(st$models)
+  chk(length(kk) > 0L && length(kk) == length(st$value) && !anyDuplicated(kk), paste("INV-SCORE-BITS:", nm, sn, "has", length(kk), "models, no duplicate key"))
+  rec <- if (sn == "leaders_gamma0") vapply(st$models, function(S) attr(v3_discrepancy(ctx, setup$start, S), "log_gamma0"), 0)   # log varpi + sum_b log r_b
+         else vapply(st$models, function(S) v3_score(ctx, S)$F, 0)                                                              # log varpi + log m
+  chk(identical(unname(rec), as.numeric(st$value)), paste("INV-SCORE-BITS:", nm, sn, "values identical() to the single-model scorer"))
+  n_ident <- n_ident + length(kk)
+}
+for (sn in c("top_store", "leaders_gamma1", "leaders_gamma0")) {
+  ka <- keyf(fa[[sn]]$models); kb <- keyf(fb[[sn]]$models); both <- intersect(ka, kb)
+  chk(length(both) > 0L && identical(fa[[sn]]$value[match(both, ka)], fb[[sn]]$value[match(both, kb)]), paste("INV-SCORE-BITS:", sn, "shared models:", length(both), "of", length(ka), "have identical values with and without inherited"))
+}
+n_tab <- 0L
+for (b in seq_along(setup$blocks)) {
+  mem <- setup$blocks[[b]]; tb <- setup$tables[[b]]; m <- length(mem); ok <- TRUE
+  for (code in seq_len(2^m) - 1) {
+    lr <- tb$log_r[code + 1]; if (is.na(lr)) next                       # |U| > K: not scored
+    U <- mem[bitwAnd(code, 2^(seq_len(m) - 1)) > 0]
+    if (code == 0) { ok <- ok && identical(lr, 0); next }
+    r <- v3_score(ctx, U)
+    ok <- ok && identical(lr, r$log_m - ctx$log_m0) && identical(lr, r$log_BF) && identical(tb$log_m[code + 1], r$log_m); n_tab <- n_tab + 1L
+  }
+  chk(ok, paste("INV-SCORE-BITS: table of block", b, "log_r = cpp_score(U)$log_m - log m0, identical()"))
+}
+# Provenance. The stores keep no origin, so it is inferred from the sets. fb (no inherited models) over the union of its three stores: table = S inside
+# one block (offered by the tables); local = not a table model and one add / drop / swap (|S symdiff centre| <= 2) away from a scanned centre of the
+# final local search or LS0; particle = neither (only the particle moves can have offered it). fa: inherited = key in frozen$inherited$models.
+blk_of <- integer(max(pre$kept)); for (b in seq_along(setup$blocks)) blk_of[setup$blocks[[b]]] <- b
+ub <- unique(unlist(lapply(c("top_store", "leaders_gamma1", "leaders_gamma0"), function(sn) fb[[sn]]$models), recursive = FALSE))
+cen <- c(fb$local_search$scanned_centres, fb$ls0$scanned_centres)
+is_tab <- vapply(ub, function(S) length(S) == 0L || length(unique(blk_of[S])) == 1L, NA)
+is_loc <- !is_tab & vapply(ub, function(S) any(vapply(cen, function(cc) length(setdiff(S, cc)) + length(setdiff(cc, S)) <= 2L, NA)), NA)
+n_inh <- sum(keyf(fa$top_store$models) %in% keyf(fa$frozen$inherited$models))
+cat("INV-SCORE-BITS provenance: fb (no inherited) ", length(ub), " distinct store models: table ", sum(is_tab), ", local-search reach ", sum(is_loc), ", particle only ", sum(!is_tab & !is_loc),
+    "; fa top store: ", n_inh, " of ", length(fa$top_store$models), " also in the inherited set (", length(fa$frozen$inherited$models), " inherited models)\n", sep = "")
+chk(sum(is_tab) >= 1L && sum(!is_tab & !is_loc) >= 1L && sum(is_loc) >= 1L && n_inh >= 1L, "INV-SCORE-BITS: table, particle, local and inherited models are all in the stores")
+cat("INV-SCORE-BITS test: ", n_ident, " store models (fit with inherited: top ", length(fa$top_store$models), ", leaders gamma1 ", length(fa$leaders_gamma1$models), ", gamma0 ", length(fa$leaders_gamma0$models),
+    "; final run without inherited: ", length(fb$top_store$models), ", ", length(fb$leaders_gamma1$models), ", ", length(fb$leaders_gamma0$models), ") + ", n_tab, " table entries identical across paths\n", sep = "")
+
+# v3.1.1 (SPEC_LIST_PIP §4): a FINAL run that did not complete (guard stop / numerical failure) carries NO list field. Forced deterministically:
+# calibration runs normally; v3_final_run is wrapped to receive an already-expired runtime guard, so only the final run stops.
+v3_final_run_orig <- v3_final_run
+v3_final_run <- function(setup, frozen, seed, runtime = NULL, ...) v3_final_run_orig(setup, frozen, seed, runtime = .v3cpp$cpp_runtime_new(1e-9, 0), ...)
+ff <- tryCatch(v3_fit(d$X, d$y, 9104L, allocation = alloc), finally = v3_final_run <- v3_final_run_orig)
+chk(!identical(ff$status, "completed") && !is.null(ff$partial_final) && isTRUE(ff$partial_results), paste("stopped final run: status", ff$status))
+chk(all(vapply(NEWF, function(nm) is.null(ff[[nm]]), NA)), "stopped final run: all 7 list fields are NULL (absent)")
+chk(identical(v3_final_run, v3_final_run_orig) && identical(fa$status, "completed") && all(NEWF[-7] %in% names(fa)), "completed run still carries the fields")
+fe <- v3_fit(d$X[, 1:10], d$y, 9101L, allocation = alloc)
+chk(identical(fe$status, "exact") && all(NEWF[-7] %in% names(fe)), "exact run still carries the fields")
 cat("list_pip_units: all", n_ok, "checks passed (core", V3_CORE_DIR, ")\n")

@@ -4,7 +4,7 @@
   "R": "R version 4.6.0 (2026-04-24)",
   "reference": {
     "name": "SMC-BVS v3.1 core (revision D + LS0 merge), Scripts/SMC_BVS/core",
-    "core_commit": "72785fe8f3e7983369a5beacb4a3042513641494",
+    "core_commit": "32c90ac163d22b8fb740ff2509f988ee8ff0e94d",
     "core_files_sha256": {
       "cpp/Makevars.v3": "61984bf960fd53481d14bb35182910eef72b54ab243759fcc84fe1f075c12894",
       "cpp/v3_blocks.h": "ca8aeb341b6031fe9f3e80f49697efb2d8a1a1ed79fdc6023c0bc5df1ed7abc0",
@@ -21,7 +21,7 @@
       "source_manifest.json": "addfae035781bbfbf503d1b2fbd8f4d9fc5d92795276a83f28777fdb51b7de2b",
       "v3_calib.R": "5c85c773b58f69b28eab04e7eb0a46560c59870695b03dc21a642bed7dda3ef3",
       "v3_exact.R": "18e29edea8d0df176a878d0f28a8662a50c80bfb4e567fb7a4bfde9648ff8ec8",
-      "v3_fit.R": "83c828a9bf5f92f292996432f91354bb3341112b7d9a80e33fc9ee9e14701271",
+      "v3_fit.R": "7068890ed9cf9ee6fae3e5488e52d7e48d0adbf4cd11add4ffb4b4410c3221f2",
       "v3_preprocess.R": "758d97e0f02c01e6b4f6ca824805ee1e9fda55a8214f668d8947b9e1a0e929be",
       "v3_run.R": "ac8b8b57089193dd31aa929c98ec8eb245d4045a959f152937f0eadbade6938b",
       "v3_setup.R": "1f8425e77f59c73eca9e67d6294ca3a0d52828d3f079420bf916eab55396215a",

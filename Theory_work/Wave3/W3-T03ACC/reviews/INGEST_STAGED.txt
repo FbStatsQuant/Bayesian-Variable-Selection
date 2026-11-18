@@ -1,0 +1,17 @@
+# staged ingest outputs (2026-11-16 04:26 CST)
+
+## 1. `ingest.py claims Theory_work/Wave3/W3-T03ACC/REPORT.md --staged` (exit 1)
+```
+5 claim(s) to add; 7 problem(s) — status_source not verbatim (×5), implies 'TH128' unresolved, kind 'remark' (T03S.5); refused: nothing written
+```
+
+## 2. `ingest.py claims Theory_work/Wave3/W3-T03ACC/reviews/REPORT_formfix.md --staged` (exit 0)
+```
+5 claim(s) to add; 0 problem(s); new tickets ['W3-T03ACC']; 0 new assumption(s); 0 sharpness row(s); 0 binding row(s); 0 claim(s) with bound bridges; 0 method pin(s)
+written
+
+STAGED check.py on the proposed registry (with --acceptance on the 5 ingested id(s)): 473 claims; 0 ERROR, 297 WARN, 164 INFO
+  ERROR introduced by this claims fragment: 0; ERROR already in the live registry: 0
+  acceptance (W3-T03ACC:T03S.1, W3-T03ACC:T03S.2, W3-T03ACC:T03S.3, W3-T03ACC:T03S.4, W3-T03ACC:T03S.5): PASS; 0 acceptance ERROR
+(staged copy discarded; the live registry was not touched. Apply with --apply only if this passed, then run check.py --acceptance <ids> --record.)
+```

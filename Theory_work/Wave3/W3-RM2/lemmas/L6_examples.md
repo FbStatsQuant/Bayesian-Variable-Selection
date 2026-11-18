@@ -74,7 +74,7 @@ from J, i.e. from Lemma IR [LC2C-5].)
 
 Every inverse principal matrix has induced column-sum norm at most J; every
 rectangular submatrix of B has induced column-sum norm at most D. For
-N_l={v in Q\{l}:d(l,v)<=r}, A=T intersect N_l and E=T\A, the normal equations give
+N_l={v in Q\{l}:d(l,v)<=r}, T in the lattice (so T subset Q, RM2 STATEMENT.md:70; hence d(l,v)>r for v in E), A=T intersect N_l and E=T\A, the normal equations give
 
     beta_A(l) = beta_T(l)_A + B_AA^(-1) B_AE beta_T(l)_E.
 
@@ -165,7 +165,7 @@ the examples. No polynomial extension of LOC-BF is inferred by containment.
 
 Status: PROVED (by this seat, unchecked), conditional on RM2-R as given and on
 W2-LOC2 Lemma BC (POLY:78) and Lemma IR (POLY:118), both "PROVED (by this seat,
-unchecked)" [LC2C-3].
+unchecked)" [LC2C-3]. (Check record: E2 was line-checked in LC2-C, file header :3-6; claims.tsv governs the status.)
 
 **Class.** Rows iid N(m_n,Sigma_n), independent of Gaussian response noise,
 Sigma as in §0; s0>=1 fixed, p<=n^A, A>=1 fixed, fixed standardized signals

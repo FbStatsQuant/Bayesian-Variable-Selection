@@ -1,0 +1,46 @@
+% ---------------------------------------------------------------- S-T
+\subsubsection{TH09 · S-T · Theorem 1, target consistency T03♯ (K93, K04)}\label{sec:th09}
+\begin{card}{TH09}{S-T · Theorem 1, target consistency T03♯ (K93, K04)}
+\approvedFB\quad Placement: supplement card, cited in the main text; registered with LP-FOUND, no HQ work (wave 1, cited) \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:32,438}.\par
+\textbf{Status (registry, verbatim):} \status{T03♯: PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2). T02(i♯), T02(ii♯): PROVED; SF/XF VERIFIED. T01–T03: PROVED-LOCKED (wave 3; external review queued), SAME-FAMILY-ONLY}\par
+\textbf{Statement source:} Seat C's full self-contained card C9 (R2\_C); Seats A, B, D file it as ``unchanged from R1'' with scope notes; ``Compatible; no choice needed'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:438}.\par
+\textbf{Kind:} the registry classifies TH09 as one of the supplement cards TH09–TH20 \src{NBH/ID_REGISTRY.md:4}. It is algorithm-free (a statement about the exact posterior π only).
+\end{card}
+
+\paragraph{TLF clerk text (verbatim).}
+\par\noindent \textbf{Decision note (MINUTES §2.2, \texttt{theory\_campaign/MEET-THM/MINUTES.md:60}):} content = Theorem 1, target consistency T03♯ (K93, K04). Notes and decisions = Unanimous since Round 2; cited in the main text
+\par\noindent Registered here as a cited supplement; no HQ work (registered with LP-FOUND). A, B and D file the statement as "unchanged from R1" with scope notes; C filed the full self-contained statement (C9 with its hypotheses table). Compatible; no choice needed.
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:448-451}
+\par\smallskip\noindent\textbf{R1, R.}\enspace Fixed-design triangular array, fixed \(s_0\ge1\), \(p\le n^A\) for fixed \(A\), \(s_0\le K\) eventually; G; \(\mu=X\theta^*\), \(\Vert\mu\Vert^2\le Mn\), and normalized truth Gram eigenvalue at least fixed \(\phi_0^2>0\).
+\par\smallskip\noindent\textbf{Tail cutoff.}\enspace With per-model prior weight \(w(k)\), \(R_m=\sum_{k=\max(m+1,0)}^K\binom pk w(k)/w(s_0)\), and \(m_n^\sharp=\min\{m\ge s_0:R_m\le n^{-(s_0+2)/2}\}\). It is deterministic and data-free.
+\par\smallskip\noindent\textbf{Anchored eigenvalues.}\enspace \(j_0=\lceil(2A+1)s_0\rceil+1\). SE\(_\lambda(j_0)\): every \(S_0\cup J\), \(\lvert J\rvert\le j_0\), has normalized minimum eigenvalue at least \(\phi_0^2\). SE\(_w(m_n^\sharp;g_0)\): every \(S_0\cup J\), \(\lvert J\rvert\le m_n^\sharp\), has unnormalized minimum eigenvalue at least fixed \(g_0>0\).
+\par\smallskip\noindent\textbf{Signal thresholds.}\enspace BM-∞: \(\theta_{\min}^{*2}n\phi_0^2/(\sigma^2\log n)\to\infty\). Alternatively BM\((c)\) uses a fixed \(c>c_0(s_0,A)\), with \(c_0=\max\{4C_*,32[s_0(A+1)+2]\}\), \(C_*\) the locked T03 proof constant, exactly as FIX §1.1.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:462}
+\par\smallskip\noindent\textbf{Final statement.}\enspace Under R1, G, R, SE\(_\lambda(j_0)\), SE\(_w(m_n^\sharp;g_0)\), and BM-∞ or BM\((c>c_0)\), \(1-\pi(S_0)=O_P(\sqrt{\log n/n})\); exact HPM and MPM are consistent. Without beta-min, for \(J_n(c)=\{j\in S_0:\theta_j^{*2}\ge c\sigma^2\log n/(n\phi_0^2)\}\), \(c>c_0\), \(\pi(S\not\supseteq J_n(c))=O_P(\sqrt{\log n/n})\), hence all corresponding exact PIPs converge to one. Empty \(J_n(c)\) gives a vacuous inclusion statement.
+\end{stmt}
+
+\paragraph{Remaining card fields (verbatim, TLF 463–469) and the seats' one-line filings (TLF 478, 489, 498).}
+{\small
+\par\smallskip\noindent\textbf{Repairs.}\enspace PC1/PC2 statistical clauses: no expectation rate inferred from \(O_P\), no universal onset \(n_0\), no random-design or growing-sparsity extension.
+\par\smallskip\noindent\textbf{Status.}\enspace T03♯: \textbf{PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2)}. T02(i♯), T02(ii♯): \textbf{PROVED; SF/XF VERIFIED}.
+\par\smallskip\noindent\textbf{Placement.}\enspace Supplement.
+\par\smallskip\noindent\textbf{Route / key lemma.}\enspace Cite FIX §1 and the filed exact-prior-tail/selection checks; no re-derivation.
+\par\smallskip\noindent\textbf{Lean core.}\enspace Finite prior-tail and posterior-to-decision inequalities; Gaussian asymptotics remain prose.
+\par\smallskip\noindent\textbf{Fallback / stop.}\enspace Fixed-\(p\), uniformly nonsingular correlated design; narrow scope if hypotheses cannot be matched.
+\par\smallskip\noindent\textbf{IC3.}\enspace LH satisfies fixed sparsity, bounded energy, positive full Gram eigenvalue and BM-∞. Otherwise unchanged from R1 §D D8.
+\par\noindent \textbf{S1 · Theorem T (K93; K61 remark).} Statement unchanged from R1 §D C15 with the scope sentence (p ≤ n$^{A}$ from prior and technique; e$^{Cn^{α}}$ OPEN) and onset n ≳ 2·10⁶. Status: T03♯: PROVED (SF: VERIFIED (W2-VT03R); XF: VERIFIED (A-REV2)); T01–T03: PROVED-LOCKED (wave 3; external review queued), SAME-FAMILY-ONLY. Supplement; cited in the main setup. Rest unchanged.
+\par\noindent Final statement unchanged from R1 §D D13 (R1 fixed s₀, p ≤ n$^{A}$; G, R, SE$_{λ}$, SE$_{w}$, BM-∞ or BM(c \textgreater{} c₀); 1 − π(S₀) = O$_{P}$(√(log n/n)); HPM/MPM consistent; large-signal inclusion without beta-min). Status: T03♯: PROVED (SF: VERIFIED (W2-VT03R); XF: VERIFIED (A-REV2)); T01–T03: PROVED-LOCKED (wave 3; external review queued) SAME-FAMILY-ONLY; onset n ≳ 2·10⁶ disclosed. Repairs: none needed (PC1 §12 TRUE). Rest unchanged.
+\par\smallskip\noindent\textbf{M12 Theorem 1 (T03♯) — K93, K04.}\enspace Unchanged from R1 §D M12; supplement, cited in main text. \textbar\ "PROVED (SF: VERIFIED (W2-VT03R); XF: VERIFIED (A-REV2))"; T01-T03 "PROVED-LOCKED (wave 3; external review queued)"
+}
+
+Seat A's R1 base statement, to which the ``scope sentence'' above refers (verbatim):
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/R1_A.md:417}
+\par\smallskip\noindent\textbf{Statement.}\enspace R1 hypotheses (s₀ fixed, p ≤ n$^{A}$, G, R, SE, BM-∞ or BM(c)), fixed design: 1 − π(S₀) = O$_{P}$(√(log n/n)); HPM, MPM of π equal S₀ w.p. → 1; P(S† ≠ S₀) ≤ 2E₀[1 − π(S₀)]; large signals get PIP → 1 without beta-min; exact BB(1,p) tail T02(i♯). Scope sentence: p ≤ n$^{A}$ comes from the prior and proof technique; e$^{Cn^{α}}$ OPEN.
+\end{stmt}
+
+\begin{plain}
+For a fixed design sequence with fixed sparsity $s_0$, $p\le n^A$, Gaussian noise, bounded signal energy, sparse-eigenvalue conditions anchored at $S_0$ and a beta-min condition, the exact posterior puts mass $1-O_P(\sqrt{\log n/n})$ on the true model, so the exact HPM and MPM are consistent; without beta-min, for a fixed $c>c_0$ every true coordinate with $\theta_j^{*2}\ge c\sigma^2\log n/(n\phi_0^2)$ (the set $J_n(c)$) has exact PIP → 1, and $\pi(S\not\supseteq J_n(c))=O_P(\sqrt{\log n/n})$; an empty $J_n(c)$ makes this vacuous. This is a statement about the target π, not about the sampler.
+\end{plain}

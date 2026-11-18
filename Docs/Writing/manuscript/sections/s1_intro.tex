@@ -1,0 +1,58 @@
+% =====================================================================================================
+\section{Introduction}\label{sec:intro}
+
+Bayesian variable selection in the linear model with many more predictors than observations has a large theory, but
+that theory is mostly about an exact posterior under a prior the analyst tunes. Users run software with fixed defaults,
+and read what it reports: inclusion probabilities, a median probability model, an evidence estimate, a best model. This
+paper proves consistency results for one method exactly as its software implements it.
+
+\paragraph{The method.} SMC-BVS puts a fixed prior on models and coefficients, a beta-binomial prior on the model size
+\citep{ScottBerger2010} and a $g$-prior with a unit ridge, so that the posterior over models is known in closed form up to
+its normalising constant, the evidence. Nothing is tuned by the user. The method partitions the predictors into small
+blocks of correlated predictors, scores every subset of every block exactly, and combines these block tables into a
+\emph{start law}, an approximation of the posterior that can be computed and sampled exactly. A sequential Monte Carlo
+sampler, run as four independent \emph{islands}, then moves from the start law to the posterior along a tempered path
+that an internal calibration fixes in advance. Two deterministic local searches, one of them from the mode of the start
+law, finish the run. The run reports its best model, pooled inclusion probabilities, their median probability model and
+an evidence estimate (Section~\ref{sec:method}).
+
+\paragraph{What we prove.} Under conditions stated in Section~\ref{sec:results}:
+\begin{enumerate}[leftmargin=1.6em,itemsep=1pt]
+  \item the posterior puts all but a fraction of order $\rn$ of its mass on the true model, and its highest posterior and
+    median probability models are the true model with probability tending to one (Result~1);
+  \item the posterior recovers the true conditional law of the response at radius of order $\rn$ in Hellinger distance,
+    with no lower bound on the coefficients (Result~2);
+  \item for block and AR designs whose true coefficients do not cancel (any fixed AR correlation), with probability tending to one, every run that produces output reports
+    exactly the true model, for every seed and calibration outcome, and the inclusion probabilities, median model and
+    evidence renormalised to its returned list, when the list is nonempty, are consistent. It needs two conditions: no true predictor is masked by
+    $15$ or fewer others (visibility), and the predictors able to imitate the signal are few and local. The second fails
+    for pervasive common factors when $p\gg\sqrt n$; visibility fails for strong factors whose mixed-sign coefficients lie
+    on a fixed null set of cancellations (Result~3);
+  \item for a fixed design with a floor on small sets and fixed signal bounds, whether or not the conditions of Result~3
+    hold, a run rarely certifies a reported model within a size budget $k_n$ that misses a true predictor (Result~4);
+  \item the evidence estimate is unbiased on every design (Result~5);
+  \item no design allows a posterior rate faster than $n^{-1/2}$, and on two families of designs the expected posterior
+    miss is at least of order $\rn$, the rate of Result~1 (Result~6).
+\end{enumerate}
+
+\paragraph{Earlier work.} The closest earlier analysis is that of \citet{SongLiang2015}, who prove selection and
+distribution consistency of a posterior with $p\gg n$ and run a sampler on it. Their statements about what their
+sampler reports are limits as the number of iterations grows, at fixed data and for every data set; ours hold at the
+budget the software actually uses, jointly with $n$, under conditions on the design. Neither kind of statement implies
+the other. Our results concern a different posterior (the prior as the software sets it), and Section~\ref{sec:SL-concl}
+compares the conclusions theorem by theorem. [A paragraph on the wider literature on selection consistency, on Markov
+chain Monte Carlo for variable selection and on sequential Monte Carlo over binary spaces awaits the owner's reference
+list.]
+
+\paragraph{Are the assumptions reasonable?} Our theorems use the same kinds of assumptions as \citet{SongLiang2015}; on
+the designs we study, the assumptions of the posterior theorems hold, and where the two papers differ the direction
+depends on the regime (Section~\ref{sec:assumptions}). The designs are those of our simulation studies, a study of
+$2{,}400$ fits and a study of strong common factors, which are reported separately, and planned runs with $p$ up to
+$10^6$; this paper contains no simulation study. The posterior results cover all these designs, strong common factors
+included.
+
+\paragraph{Organisation.} Section~\ref{sec:setup} sets up the data and the notation, and Section~\ref{sec:method}
+describes the method as coded. Section~\ref{sec:results} states the six results, Section~\ref{sec:assumptions} judges
+their assumptions, and Section~\ref{sec:scope} states what is not claimed. The supplement (Appendix~\ref{sec:supp})
+holds further results, and the appendices hold the notation, the full parameter table with its code locations, the
+explicit constants and the status of each result.

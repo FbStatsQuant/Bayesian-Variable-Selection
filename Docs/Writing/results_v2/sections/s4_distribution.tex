@@ -1,0 +1,66 @@
+% =====================================================================================================
+\section{Result 2: the posterior finds the true distribution}\label{sec:distribution}
+
+\inwords{Suppose the observations are i.i.d., the response follows a sparse Gaussian linear model, the predictors have light
+tails, no small group of predictors is almost exactly collinear, and no single predictor carries an unbounded signal.
+Then, for every large enough level $M$, with probability at least $1-n^{-c_{\mathrm H}M}$ the posterior puts mass at
+most $n^{-c_{\mathrm H}M}$ on conditional laws of the response farther than $\sqrt{M\log n/n}$ from the true one, in the
+Hellinger distance. No
+lower bound on the coefficients is needed.}
+
+\why{The posterior describes the response correctly even when some true predictors are too weak to be selected, so
+prediction does not depend on perfect selection.}
+
+\paragraph{Setting.} In this section only, the observations are $n$ i.i.d.\ copies $(x^{(i)},y^{(i)})$ of a pair $(x,y)$,
+with $x\in\R^{\praw}$ the vector of all observed predictors; $\Dn$ is the data set, $\P^*$ its law, and the method runs on
+the predictors that are not constant in the sample. The posterior is not defined if fewer than two predictors remain or
+the response is constant in the sample; such data sets are counted in the exceptional event of the theorem. A posterior draw $(S,\beta,\sigma^2)$, mapped back to the original
+units, defines the conditional law $\Normal(\bar y+(x-\bar x)^\top\beta,\sigma^2)$ of $y$ given $x$; the law of $x$ is not
+estimated. Let $f$ be the joint density of $(x,y)$ with $x$ from its true law and $y\mid x$ from this fitted law, and $f^*$
+the true joint density; then $d_H(f,f^*):=(1-\int\sqrt{ff^*})^{1/2}$ is the Hellinger distance between the fitted and the true conditional
+laws, averaged over a new $x$. $\Pi(\cdot\mid\Dn)$ is the posterior of $(S,\beta,\sigma^2)$, and
+$\zeta_j:=(x_j-\E x_j)/\sd(x_j)$. Fix a \emph{level} $M\ge1$; the \emph{window} $q_n:=\min\{\praw,\lceil C_qM\log
+n\rceil\}$, $C_q:=2(s(A+2)+4)/\log2$, is the largest number of predictors the conditions constrain jointly.
+
+\begin{localassumption}[Distribution-level setting]\label{asm:dist}
+The integer $s\ge0$ and the constants $A\ge1$, $L\ge1$, $c_\psi>0$ and $\bar b>0$ are fixed.
+\begin{asmitems}
+  \item\label{asm:dist-model} \emph{Gaussian linear model for i.i.d.\ pairs.} $y=\alpha^*+x^\top\bstar+\varepsilon$ with
+    $\varepsilon\sim\Normal(0,\sigs^2)$, $\sigs^2>0$, independent of $x$; $\alpha^*$, $\bstar$, $\sigs$ and the law of $x$ may
+    depend on $n$.
+  \item\label{asm:dist-sparse} \emph{Sparsity and dimension.} At most $s$ coordinates of $\bstar$ are nonzero, and
+    $2\le\praw\le n^A$.
+  \item\label{asm:dist-subg} \emph{Sub-Gaussian predictors on sparse directions.} Every predictor has positive variance,
+    and $\E\exp(\lambda u^\top\zeta)\le\exp\big(L^2\lambda^2\Var(u^\top\zeta)/2\big)$ for every $\lambda\in\R$ and every
+    $u\in\R^{\praw}$ with at most $q_n$ nonzero entries.
+  \item\label{asm:dist-nec} \emph{No near-exact collinearity.} $\lmin(\Corr(x_T))\ge c_\psi/n$ for every set $T$ of at
+    most $q_n$ predictors.
+  \item\label{asm:dist-bs} \emph{Bounded signal.} $\abs{\beta^*_j}\sd(x_j)\le\bar b\,\sigs$ for every $j$.
+\end{asmitems}
+\end{localassumption}
+
+\begin{theorem}[Distribution-level consistency]\label{thm:dist}
+There are constants $c_{\mathrm H}>0$, $M_0$ and $n_0$, depending only on $(s,A,L,c_\psi,\bar b)$, such that the following
+holds. Fix a level $M\ge M_0$ and assume Assumption~\ref{asm:dist}, with the window $q_n$ of this $M$. Then for every
+$n\ge n_0$ with $\sqrt n/\log n\ge M$,
+\begin{equation}\label{eq:dist-i}
+  \P^*\Big[\,\Pi\Big(d_H(f,f^*)>\sqrt{M\log n/n}\ \Big|\ \Dn\Big)>n^{-c_{\mathrm H} M}\Big]\ \le\ n^{-c_{\mathrm H} M}.
+\end{equation}
+\end{theorem}
+
+\asmlist{(1)~Assumption~\ref{asm:dist}\ref{asm:dist-model}: Gaussian linear model [\SA{3.1}]; (2)~\ref{asm:dist-sparse}:
+sparsity and $\praw\le n^A$ [\SA{3.1}]; (3)~\ref{asm:dist-subg}: light-tailed predictors [\SA{3.2}, law of the rows];
+(4)~\ref{asm:dist-nec}: no near-exact collinearity [\SA{3.2}]; (5)~\ref{asm:dist-bs}: bounded signal [\SA{3.2}, signal
+size].}
+
+\status{\textbf{Proved and independently checked}. Registry: Appendix~\ref{app:status}, row 2.1.}
+
+\begin{remark}[On the assumptions]\label{rem:dist-asm}
+No beta-min condition and no fixed lower bound on eigenvalues are assumed. Jointly Gaussian predictors satisfy Assumption~\ref{asm:dist}\ref{asm:dist-subg} with $L=1$, and every correlation matrix whose $q_n\times q_n$
+principal blocks have smallest eigenvalue at least a fixed $\psi>0$ satisfies Assumption~\ref{asm:dist}\ref{asm:dist-nec}
+for all large $n$. Condition~\ref{asm:dist-nec} keeps the Occam factor of each extra predictor in force; without it the
+radius grows by one factor $\sqrt{\log(\praw\vee n)}$ (Proposition~\ref{prop:dist}). The same statement holds for every
+level $M$ up to $\sqrt n/\log n$, with the same constants, It also carries over to the list of models that a completed run returns,
+when that list holds posterior mass at least $n^{-c_{\mathrm H}M/2}$, a condition the run does not check
+(Corollary~\ref{cor:dist-output}).
+\end{remark}

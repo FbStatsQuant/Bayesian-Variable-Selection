@@ -1,0 +1,25 @@
+--- READER_DELTA.md (MANIFEST_R2)	2026-11-16 03:18:28.018215980 -0600
++++ READER_DELTA.md	2026-11-16 03:18:28.062216452 -0600
+@@ -14,7 +14,7 @@
+ | (A2) floor | λ_min(Σ_TT) ≥ c and max_j Σ_jj ≤ C₀ | λ_min(R_TT) ≥ c for the **correlation** matrix R; no variance bound | `CorGb-plus` |
+ | (A3) beta-min | → ∞ | unchanged in the reader text (the liminf form goes to a remark) | `CorGb-plus` |
+ | conclusion | E[1 − π] = O(√(log n/n)), P(HPM ≠ S₀^𝒞) = O(√(log n/n)) | unchanged | — |
+-| remark | "a Hellinger version exists" | Hellinger and Kullback–Leibler in-sample versions whenever the posterior selects the support with probability → 1; uniform over configurations; random designs by conditioning | `CorH-plus`, `CorH-U` |
++| remark | "a Hellinger version exists" | Hellinger and Kullback–Leibler in-sample versions around the (A0) law with its mean centred over the sample; for a fixed design whenever the posterior mass of the support tends to one in probability, uniformly over any class on which this convergence is uniform; random designs by conditioning | `CorH-plus`, `CorH-U` |
+ 
+ Classification: STRONGER (weaker hypotheses, same conclusion). The headline masters MIS(i), (i′), (ii) are unchanged.
+ 
+@@ -60,9 +60,10 @@
+ ## 3. "Why each assumption" (replaces the row's list)
+ - (A0) is a convenient sufficient form. The proof uses only a weaker condition: given the candidates, the coordinates of
+   the residual vector $y^{\mathrm r}-\alpha'1-x_{\mathcal C}\beta^{\mathcal C}$ in an orthonormal basis of the vectors
+-  orthogonal to the constant vector are i.i.d. Gaussian with a common variance (nothing is required of the residual's
+-  sample mean). When the noise is Gaussian and independent of all predictors, this holds if and only if the omitted part
+-  has the same property given the candidates. (A0) covers omitted Gaussian predictors and omitted predictors that are
++  orthogonal to the constant vector are i.i.d. $N(0,\sigma^2_{\mathcal C})$ — centred, with the variance of (A0); nothing
++  is required of the residual's sample mean. When the noise is Gaussian with variance $\sigma^2$ and independent of all
++  predictors, this holds if and only if the omitted contribution, after subtracting its linear candidate component, has
++  (given the candidates) such coordinates i.i.d. $N(0,\sigma^2_{\mathcal C}-\sigma^2)$, the variance possibly zero. (A0) covers omitted Gaussian predictors and omitted predictors that are
+   linear in the candidates plus Gaussian noise. The Gaussian law of the candidate rows is an assumption on how the data
+   are generated (not a choice of design); it is used only to transfer the population floor (A2) and (A3) to the sample.
+ - (A1) as Theorem 1.

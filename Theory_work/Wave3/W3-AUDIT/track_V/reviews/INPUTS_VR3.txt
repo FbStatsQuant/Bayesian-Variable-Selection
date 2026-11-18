@@ -1,0 +1,3 @@
+# External inputs of council round V-R1 (item V1). The theorems' texts are read from origin/main with git show (brief).
+Theory_work/Wave3/W3-AUDIT/TRACK_B.md
+Theory_work/Wave3/W3-AUDIT/track_C/RESULTS.md

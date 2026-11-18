@@ -1,0 +1,57 @@
+OK            [STATEMENT.md] Docs/Theory/proofs/T12_T8_frozen_run_identities/STATEMENT.md:23-61 sha=6e906fe0b4 | ## 1. Elementary steps and rounds (method §6.5)
+OK            [STATEMENT.md] Docs/Theory/proofs/T12_T8_frozen_run_identities/STATEMENT.md:64-64 sha=8f3106a21b | **(ii) Recorded RB identity.** For every c and j ∈ [p]: E_c[Ẑ·PIP̂_j] = Z·PIP_j.
+OK            [STATEMENT.md] Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex:40-153 sha=76033e566e | \section{Deterministic facts}
+OK            [STATEMENT.md] Docs/Theory/proofs/T12_T8_frozen_run_identities/STATUS.md:19-20 sha=3df8cbd1ec | - Final reviewers Fable 5.1 (high) and Astra (xhigh) both hold the proof correct (source: COLLECTED/review/FAB
+OK            [STATEMENT.md] Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:33-43 sha=c5e38e8f3c | Under EX-A, START and KERNEL (STATEMENT §2):
+OK            [STATEMENT.md] Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:3-3 sha=9f4fcee898 | Status: PROVED under the named premises of STATEMENT §2 — cross-family checked (Codex gpt-6.1-sol: LC1, MP1 CO
+OK            [STATEMENT.md] Theory_work/Wave3/W3-SAMP/STATEMENT.md:107-116 sha=978b28d644 | **Lemma MR (measured identities; imported + short extension).** Let h : Ω × E_𝓒 → ℝ be jointly measurable with
+OK            [STATEMENT.md] cpp/v3_core.cpp:443-446 sha=855cede1e2 | for (int r = 1; r <= o.islands; ++r) {
+OK            [STATEMENT.md] cpp/v3_core.cpp:396-396 sha=d017c3b9c9 | o.N = as<int>(ro["N"]); o.L = as<int>(ro["L"]); o.Hm = as<int>(ro["measured_rounds"]); o.islands = as<int>(ro[
+OK            [STATEMENT.md] v3_run.R:90-90 sha=47ff3a71c8 | ro <- list(N = as.integer(b$tiers$N[tier + 1]), L = as.integer(b$L), measured_rounds = 4L,
+OK            [STATEMENT.md] v3_run.R:90-90 sha=47ff3a71c8 | ro <- list(N = as.integer(b$tiers$N[tier + 1]), L = as.integer(b$L), measured_rounds = 4L,
+OK            [STATEMENT.md] Theory_work/Wave3/W3-SAMP/STATEMENT.md:47-50 sha=352cc13dd5 | (`v3_frozen`, `v3_run.R:68-82`; `cpp/v3_core.cpp:446`), but N_e and L are always the production budgets
+OK            [STATEMENT.md] Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:14-21 sha=f7a91eeffa | **Record convention.** Φ(c, u) denotes the **statistical record** of this run: the evidence log Ẑ_r; the popul
+OK            [PROOF.md] Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:33-43 sha=c5e38e8f3c | Under EX-A, START and KERNEL (STATEMENT §2):
+OK            [PROOF.md] Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:45-125 sha=5648056cf9 | ## Proof
+OK            [PROOF.md] Theory_work/Wave3/W3-SAMP/lemmas/CC_code_check.md:9-21 sha=c7ed90f891 | **Relation to the N1 code of record.** W1-N1 used the frozen v2.2.1 core
+OK            [PROOF.md] cpp/v3_core.cpp:446-446 sha=4c5511024d | res.push_back(E.run_island(r, o.N, g, o.L, o.Hm, o.tier, nullptr));
+OK            [PROOF.md] cpp/v3_engine.h:286-292 sha=55cc6c519f | for (int i = 0; i < N; ++i) {
+OK            [PROOF.md] cpp/v3_engine.h:108-108 sha=2c87e7b937 | void draw_start(std::vector<int>& S) { draw_pi0(st, *vs, S); }
+OK            [PROOF.md] cpp/v3_engine.h:299-299 sha=0628731bc7 | double logZ = D.logm0 + st.logZbar0;
+OK            [PROOF.md] cpp/v3_engine.h:303-339 sha=93b6f064c9 | while (true) {
+OK            [PROOF.md] cpp/v3_engine.h:269-273 sha=667078990b | IslandResult run_island(int r, int N, const std::vector<double>& grid, int L, int Hm, int tier,
+OK            [PROOF.md] cpp/v3_engine.h:280-280 sha=3074954b85 | int T = sch.adaptive ? 0 : (int)sch.grid->size() - 1;
+OK            [PROOF.md] cpp/v3_engine.h:306-308 sha=9222f5173e | if (!sch.adaptive) {
+OK            [PROOF.md] cpp/v3_engine.h:317-317 sha=f48211d664 | for (int i = 0; i < N; ++i) lw[i] = dphi * P[i].d;
+OK            [PROOF.md] cpp/v3_engine.h:318-319 sha=5af14f4c8e | double lse = log_sum_exp(lw);
+OK            [PROOF.md] cpp/v3_engine.h:322-322 sha=a520171e23 | logZ += inc;
+OK            [PROOF.md] cpp/v3_engine.h:324-327 sha=81fcfbf9cd | std::vector<int> a = resample(lw);
+OK            [PROOF.md] cpp/v3_engine.h:331-331 sha=d8d9f7a944 | population_round(P, phi_new);
+OK            [PROOF.md] cpp/v3_engine.h:343-347 sha=3466b23787 | for (int l = 1; l <= L; ++l) {
+OK            [PROOF.md] cpp/v3_engine.h:351-360 sha=33e7ac271b | for (int h = 1; h <= Hm; ++h) {
+OK            [PROOF.md] cpp/v3_core.cpp:396-396 sha=d017c3b9c9 | o.N = as<int>(ro["N"]); o.L = as<int>(ro["L"]); o.Hm = as<int>(ro["measured_rounds"]); o.islands = as<int>(ro[
+OK            [PROOF.md] v3_run.R:90-90 sha=47ff3a71c8 | ro <- list(N = as.integer(b$tiers$N[tier + 1]), L = as.integer(b$L), measured_rounds = 4L,
+OK            [PROOF.md] cpp/v3_engine.h:95-97 sha=e914319592 | double c = st.comp(q.S, scratch);
+OK            [PROOF.md] cpp/v3_engine.h:14-14 sha=d1e7266055 | inline double lgphi(double phi) const { return lg0 + phi * d; }  // log gamma_phi(S) = log gamma_0(S) + phi d(
+OK            [PROOF.md] cpp/v3_score.h:274-282 sha=ae80db72f8 | bool find(const std::vector<int>& S, uint64_t h, double& lm) {
+OK            [PROOF.md] cpp/v3_engine.h:350-350 sha=51877f0d85 | rb_acc.assign(p, 0.0);
+OK            [PROOF.md] cpp/v3_engine.h:234-259 sha=bc50ae8261 | std::vector<int> resample(const std::vector<double>& lw) {
+OK            [PROOF.md] cpp/v3_engine.h:243-256 sha=6bc68ed8e5 | for (int b = 0; b < N; ++b) {
+OK            [PROOF.md] cpp/v3_engine.h:240-240 sha=e3d3e90cf3 | W[N - 1] = 1.0;
+OK            [PROOF.md] cpp/v3_engine.h:215-218 sha=1b3cd131e1 | void population_round(std::vector<Particle>& P, double phi) {
+OK            [PROOF.md] cpp/v3_engine.h:203-203 sha=f9c80551d1 | std::vector<int> ord; draw_order(ord);
+OK            [PROOF.md] Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:95-107 sha=ea0075c560 | - (R3) `population_round` (`:216-219`) runs `one_round` for particles i = 1, …, N_e in turn. The entering stat
+OK            [PROOF.md] Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex:42-52 sha=65c4e2a461 | \begin{lemma}[bridge identities]\label{lem:bridge}
+OK            [PROOF.md] Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex:54-72 sha=98fe9182b9 | \begin{lemma}[elementary steps are $q_\varphi$-reversible]\label{lem:rev}
+OK            [PROOF.md] Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex:74-81 sha=1b4b7efbed | \begin{lemma}[state-independent prefixes; recordings]\label{lem:prefix}
+OK            [PROOF.md] Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex:100-106 sha=17aa78dd38 | \begin{lemma}[resampling]\label{lem:res}
+OK            [PROOF.md] Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex:108-113 sha=2561a9fd69 | \begin{lemma}[one round, state-independent prefix]\label{lem:round}
+OK            [PROOF.md] Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex:115-128 sha=1fec705a93 | \section{Proof of (i.a)--(i.c)}
+OK            [PROOF.md] Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex:131-131 sha=d07853dc49 | \paragraph{Post-terminal operations: (i.b) and (i.c).} Let $\mathcal O_1,\dots,\mathcal O_k$ be the fixed sequ
+OK            [PROOF.md] Docs/Theory/proofs/T12_T8_frozen_run_identities/PROOF_v6.tex:145-153 sha=4a1e4a5841 | \section{Proof of (ii)}
+OK            [PROOF.md] cpp/v3_engine.h:128-128 sha=1ef40628e3 | if (rb_on) rb_acc[j] += oj;  // R8: recorded before the draw
+OK            [PROOF.md] cpp/v3_engine.h:354-356 sha=629cad65ef | rb_on = true;
+OK            [PROOF.md] cpp/v3_engine.h:364-364 sha=6b5b067ec9 | for (int j = 0; j < p; ++j) res.pip[j] = rb_acc[j] / ((double)N * Hm);  // PIP_rj = mean over particles and ro
+
+54 citations: 54 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+Not machine-checked: unbackticked references and the semantic match of each excerpt.

@@ -459,3 +459,316 @@ Changes:
 - **HQ: launch the SMC - Lean Department Thu 11-19** (inventory + Level-1 batch). Level 2 from Mon 11-23. Owner priority:
   "consistency results and even their lean parts".
 - Theory gets a temporary 6th lead slot for W3-MISR-R until PSMC-S0 closes.
+
+## 2026-11-15 ~21:45 CT — OVERNIGHT MODE ON (owner: "until tomorrow morning, you have full authority for any decision")
+HQ decides everything under POLICIES §11 limits: within existing envelopes and accounts; nothing irreversible or
+outward-facing; every decision tagged "(overnight)"; morning brief for the owner.
+- (overnight) ~22:00 CT, task J: approved a case-preserving accept-identity tool fix (bvsreg `_pkey`; Windows-recorded paths
+  read stale on Linux; 49 of 57 records match once fixed) with a regression test, an Opus review, and a Linux re-record
+  (PSHARP first). Manifest drift from the citefix merge (4 line-number re-points in C-MIS EXT inputs of START/MISR
+  manifests): Opus diff check + re-frozen manifests with HQ seat carriers now; tool change (EXT inputs verified at their
+  freeze commit) after Friday. Cont-F/R recorded as-is (implication lemmas consume RM-F/R by design). New Theory protocol
+  rule: a manifest-impact check before merging edits to files listed in accepted manifests.
+- (overnight) ~22:05 CT: W3-START2-R CP1 GO. Start-mass rate √(log n/n), optimal up to √log n; the visibility threshold exactly 1.
+  H5 card at CP3. Codex congested (BNP's review push): for the rest of the night, new **non-critical** reviews go to Opus.
+  This is a level-1 call for non-critical work only; DIST and rider CP3 paths stay on Codex.
+- (overnight) ~22:30 CT, Engineering:
+  - Sol EXP-CP1 review: GO-WITH-CHANGES, 2 CRITICAL / 8 MAJOR, no NOTS obstruction. All 11 adopted.
+  - ENGINEERING_SPEC v3 = EXP-CP1 v2 accepted. D-19 (block cap B_V = 14) and D-20 (pinned reference config) confirmed.
+  - Envelope +1–5%; memory per task up (island ~24–32 GB, calibration ~48–64 GB), within the cap.
+  - Schedule: 10⁴ pilot early Dec, 10⁵ mid-Dec, first 1M fit at risk for before the holidays. A recovery-options card is
+    requested for the owner's morning brief.
+- (overnight) ~23:15 CT: Claude Third hit its 5-hour session limit. All SMC agents on it failed: both department threads'
+  children, the leads, the recorder; the Engineering Department thread too. The window resets at 05:20 UTC. HQ
+  scheduled a one-off resume (05:24 UTC) telling both managers to resume with a paced ramp-up. Account allocation is
+  unchanged (the owner wants Claude Third used today and tomorrow). Lesson for the morning pacing plan: with ~5 builders
+  + ~6 leads + reviewers, Claude Third's 5-hour window runs out in about 4–5 h. Consider a concurrency cap or a split to
+  Claude Work.
+- (overnight) ~23:18 CT, account split: Engineering's WP2 and WP5 builders + their reviewers move to **Claude Work** (Opus,
+  high); the critical path (WP3/WP4) and the managers stay on Claude Third. Reason: Claude Third's 5-hour window binds at
+  the current concurrency, while Claude Work is ~82% of its week unused. For the owner's review in the morning pacing plan.
+- (overnight) ~23:40 CT, root finding (recorder H): SOP:TH09 (T03♯) has no council record and is the root of headline
+  rows 1.1/1.2/3.1. C-PACK:SL0 has 5 files changed since its C1 snapshot. TH05.0 is author-only. Decisions:
+  - new Tier B ticket **W3-T03ACC**: a council acceptance of T03♯ on its existing proof, target CP3 Thu 11-19;
+  - SL0 PC-style diff check before Friday;
+  - TH05.0 post-freeze unless it sits under an abstract row;
+  - a blind Fable API audit of T03♯ as an extra read;
+  - fallback: row 1.1 states its condition or moves to the body.
+
+  C (W2-APP) and the conditional re-status of 11 consumers approved.
+- (overnight) ~00:40 CT 11-16: the record damage from H's fallback (Cont-R status source moved off W3-RM2/CHECKPOINT_4
+  broke A4 for every CP4-sourced RM2 row; accept records of POST2:A1, RM2-R and POST-R stale). Repair GO:
+  CHECKPOINT_5 = a verbatim copy of CP4 with only Cont-R's extended status; re-point; re-record (dry run first; must show
+  A4 PASS, RM2-R re-validating, check 0 ERROR, suite pass, DIST still passing). Task L GO. Prop-LB re-point deferred to the
+  post-freeze POST2 checkpoint rewrite. Protocol lesson added to the Theory variant.
+- (overnight) ~01:00 CT 11-16, Engineering H-1 flag:
+  - at 10⁶ the late rounds cost ≈ 330 ns·CPU per pair (1.65× plan); 48 → 96 threads gives only 1.15×; memory/NUMA bound;
+    peak 31 GB per island;
+  - pro-rated, A + D with contingency becomes ≈ 33.7k (+37%), so no 10⁶ stage is released.
+  - Approved a ≤ 80 core-h exploratory batch to measure L1 (socket-local islands), L2 (G = 256) and L3 (parallel
+    compaction), then a firm re-size (quantity cut before precision).
+  - The sweep cost 77.4 core-h vs ≈ 40 announced (covered by the 200 standing authority; rule: pre-announce > 50%
+    overruns).
+- (overnight) ~01:30 CT 11-16, H5 card 7 (row 3.7, W3-SCR:A1): the post-council v3.4 edits narrowed A1 (κ, b, M, σ fixed
+  in n). The current proof is valid (Sol PC). The consultant AGREES that A1 stays in the abstract (reader text names κ, σ,
+  b, M fixed in n), and OBJECTS that a PC read is not enough. Adopted:
+  - a short SCR round: frozen current tree; Opus seat confirms the substantive hunks + per-claim table for all SCR rows;
+    Sol (or Astra) verdict on the same manifest;
+  - interim label on A1 and SCR-G: "council C1 on v3.3 text; post-C1 narrowing re-verified by Sol; second round pending";
+  - fallback: row 3.7 in the abstract with the label stated, or in the body.
+- (overnight) ~01:50 CT 11-16, p = 1M re-size (H-9):
+  - lever batch 2748756 (48.3 core-h): G-invariance PASS; best configuration G = 256 socket-local, ≈ 1.44× plan per pair;
+    products no longer the bottleneck; memory 40 GB per island task.
+  - **Approved: 1M config G = 256 socket-local; L4 alternative = keep a reduced 1M self-check (N = 5,000) + drop AR-weak at
+    1M; envelope re-sized to ≈ 28.3k core-h (+15.2%).** Rule: quantity before precision (the self-check is part of
+    "validated").
+  - L5 savings buy AR-weak back first. M risk (×1.2–1.35) priced after T5; above ≈ 30k comes back before any 10⁵ release.
+
+- 2026-11-16 (overnight) BNP Lean Engineering install slots AGREED. Both happen after their council accepts and on a day they confirm (≥2 h notice).
+  - Owls crontab + authorized_keys: 11:13 CT; SMC edit-freeze 11:05–11:30.
+  - Desktop ~/.ssh/config block + task re-point to 03:00: 11:40 CT; HQ freeze 11:35–12:00.
+  - Conditions: restricted forced-command key; existing lines byte-identical; diffs sent; ssh -G owls/nots identical, else roll back.
+  - HQ TODO on confirmation: tell Theory Dept + Engineering about the Owls cron freeze.
+- 2026-11-16 (overnight) W3-SCR-R2: both reviewers accept all 21 SCR claims, with no proof problem. A1 (row 3.7) is sound with κ, b, M, σ fixed in n. Both quality gates failed only on the summaries in REPORT §2 (F1–F4).
+  - GO: replace those summaries with pointers to the STATEMENT lines; status-source lines stay byte-identical.
+  - R2 counts as the round HQ ordered (card 7); this fix is its one diff round (v4 §5.5). If it fails, it comes back to HQ.
+  - Row 3.7 keeps the interim (b1) label until the diff round passes. Then W3-READER states "κ, b, M, σ fixed in n" in row 3.7's reader version, through an H5 card with the CP3 package.
+  - SCR-R1 queued post-freeze.
+- 2026-11-16 (overnight) ~03:30 CT. W3-PSHARP-R CP3 council passed: Sol 9.5, Opus 9.2, MANIFEST fdfd4562.
+  - H5 card 8 (row 1.3): the consultant AGREES.
+  - Acceptance GO for AE and A2C, once the recorder re-stages the ingest on current main cleanly.
+  - Reader text v0.4 before the thm3 swap:
+    - headline: "Thm 1 rate cannot be improved under its assumptions: orthogonal/Gaussian null columns, E[1−π] ≥ c(s₀+1)√(log n/n), every p"; never "every design" (POST2-R1 open);
+    - A2C moves to the body as a growing-s₀ remark;
+    - named cases, with a §5 bridge (Sol line check if it is new);
+    - numbered remarks;
+    - status lines updated;
+    - fidelity check on the "forces s₀ bounded" remark.
+  - HQ signs off v0.4 without a new card unless the headline sentence changes.
+- 2026-11-16 (overnight) Cont-F/R edge fix on main 435896a7. 83/83 accept records current. The TH05.0 leftover on Cont-R is deferred to post-freeze.
+- 2026-11-16 (overnight) W3-PSHARP-R:AE and :A2C are PROVED-CHECKED (main 5fff7740).
+  - Recorded with no implies edge; PSHARP:A stays ACTIVE as the in-probability record.
+  - The rider folder came onto main as a snapshot (POST2 precedent); the branch is kept as history.
+  - Accept records 86/86 current.
+  - Policy: §14 scratch rule refined (44238a06).
+- 2026-11-16 (overnight) W3-MISR-R CP3 council: both seats accept all 4 claims; the gates fail only on one reader sentence (the "why (A0)" sentence).
+  - GO for one HQ-ordered R3: diff only, fresh seats; it is the last round, and a failure comes back to HQ.
+  - Deciding outside bind is refused.
+  - The v1.1a WEAKER change (KL sentence) is flagged for H5 if any headline row or reader version quotes it.
+- 2026-11-16 ~04:00 CT, owner back. Decisions:
+  - (b) Fable 5.2 architect for WP3 APPROVED (CT, high, ~3 d).
+  - (a) 7 builders OK'd, phased by HQ: stay at 5 until the WP3 design lands, because the owner asked to pace down.
+  - Desktop offload destination D:\SMC_Engineering_Department\ (created); Task Scheduler hourly pulls OK, installed by HQ from Engineering's script.
+  - Codex level 0. Claude pacing down: no new tickets pre-freeze unless critical path, Sonnet/Haiku for routine helpers, no new Fables beyond (b).
+- 2026-11-16 ~03:55 CT Owls incident: load ~41k from a VS Code Remote extension host (fb31 pid 873283) spawning ~3,200 hung `rg --files` scans.
+  - HQ killed the extension host and the rg processes; the load is falling.
+  - Theory, Engineering and BNP HQ informed.
+- 2026-11-16 ~04:30 CT. W3-SCR-R2 R3 PASS (sol 10.0 / opus 9.4); merged to main 9364df88. PR #35 (offload docs) merged f6d07e10. Desktop offload installed: task "SMC Engineering offload pull", hourly :20, Interactive logon; ssh -G owls/nots identical.
+- H5 card 9 (row 3.7, closes card 7): the consultant AGREES to form (a), plain. Conditions:
+  - c₁ named in the abstract; the formula stays in the body;
+  - q_n ≤ K−1 stated, or a bridge for it;
+  - the honest-limit line is REQUIRED, with the intersection event made clear;
+  - certification frequency from numerics, especially on strong-factor designs; until it is reported, the row is not called the remedy for 3.1.
+  - One HQ GO covers label removal and the reader swap after the diff.
+- 2026-11-16 ~04:45 CT. W3-MISR-R CP3: R3 PASS (sol 10.0 / opus 9.6), acceptance staging GO.
+  - H5 card 10 (row 1.4): the consultant AGREES.
+  - Supersessions GO: Cor-G(a), Cor-G(b), and Cor-H (clauses (a),(b) only; tombstone notes the KL generic-intercept reading is not carried; erratum if the base was false).
+  - Reader thm4 v0.4: retitle to omitted Gaussian predictors; honest-limit line; relation of rows 1.2/1.4.
+  - Post-freeze: rider P1; check X (CorGb-plus as a row 1.2 master in place of W2-APP:POST?).
+- 2026-11-16 ~05:00 CT. Task Q (MISR-R): GO on the complete transitive conditions; Cor-G(a) supersede; Cor-G(b) coexist.
+  - Cor-H held: the consultant objects to a remark-only record. If the false KL sentence (W3-MISR STATEMENT:191-195) is inside Cor-H's registered span, record it as NARROW 1.0.0 → 1.1.0, with a Sol diff check, rollback history and the erratum. If not, the remark is enough.
+  - Read-only sweep for the generic-intercept KL/Hellinger reading: C-MIS:Cor-H, POST2:D, W3-READER, W3-DIST. The DIST lead gets the counterexample now, pre-freeze.
+  - New rule (HQ, from the consultant): interpretive sentences inside registered statement spans are moved out or checked as claims (RIDER_RULES now; sweep in the post-freeze format package).
+- 2026-11-16 ~05:10 CT. H5 card 11 (row 3.7 wording): the consultant AGREES.
+  - The card states assumptions, not behaviour: "needs no visibility, leakage, start or block condition…".
+  - No row-only "asymptotically".
+  - "Certified" is defined at first use.
+  - Numbers by n from existing data.
+- Cor-H: the false KL sentence is inside its span (W3-MISR STATEMENT:191-195 ⊂ :178-197), so NARROW 1.0.0 → 1.1.0.
+  - Order: a registry hold now → Sol diff check → apply before the DIST R1 freeze → re-freeze carriers (MISR-R R1–R3, W3-MISR R1/R2/R2r).
+  - DIST SW1 drift is logged as an EXT-input change, conditional on the DIST lead's answer.
+  - If Sol isn't back by 07:30, the freeze goes ahead on the current file and the correction lands after it.
+- 2026-11-16 ~05:30 CT. W3-T03ACC CP3 council R1 PASS (astra 9.5 / opus 9.4, MANIFEST 9714aea4); formfix ingest OK (v4 §7). Row 3.7 v4 signed off, with a conditional GO after task R is clean.
+- H5 card 12 (T03♯ root): the consultant AGREES. Conditions:
+  - discharge by edge type (@stmt yes; @proof or internal-step only if verified in LC-A/B/C);
+  - the carrier is scoped to T03♯ only (T01–T03 and T02(i♯)/(ii♯) are not upgraded; the Scope paragraph is kept);
+  - acceptance binds to 9714aea4 (E items wait or get a diff check);
+  - statuses are recomputed by the tool; other conditions stay.
+  - The real run waits for HQ's GO on the dry-run edge table.
+- 2026-11-16 05:17 CT. **W3-DIST council R2 PASSED** (astra 9.3 / opus 9.2, MANIFEST c5cd9cdd; all 20 claims ACCEPT; TC3 EQUAL confirmed by name). R1 (04:59) failed on status labels (TH09 @hyp) and the TC3 gloss only, with no C finding.
+  - Before recording: one Sol check of whether DIST-2's "best rate ≍ (1+s₀^r) log n·ℓ_n/n" sentence is in span and false (then a same-line-count correction, diff check and CORRECTION-ONLY carrier) or loose (then an erratum).
+  - Sharpness list: item 8 (log p form with an A-free constant) and item 9 (the true s₀-dependence).
+  - Recording waits for the Sol check, H5 card 13 (row 2.1) and the task T interplay.
+- Also on main: task R 8875eeba; row 3.7 interim-label removal d2b600ba; READER swaps thm3 f12828fd, thm4 45a18748, thm8 30991734. Cor-H correction 213e2115; MISR-R recorded 2b54cb3c.
+- 2026-11-16 ~05:40 CT. H-10 (1M): L5 measured, with bit identity PASS. Late rounds 1.44× → 1.23× of plan; re-size A+D+contingency ≈ 26.1k core-h.
+  - AR-weak at 1M bought back conditionally (≈ 27.6k against the 28.3k envelope). Those are the last-released cells, run only after T5 prices M and the total stays ≤ 28.3k; otherwise they drop automatically.
+  - The m3 fix (≈ 223 ns) gets a re-size when it lands.
+- DIST-2 rate sentence (RT1 Sol): LOOSE, in span. Erratum in the editorial batch, no correction. Item 9: proof gives ε_n² ≲ (1+s₀)³ log n·ℓ_n/n, against Song–Liang's linear s; for the sharpness review.
+- 2026-11-16 ~06:00 CT. START2-R and RM2-R CP3 accepted; all four riders through council.
+- H5 card 14: the consultant AGREES on both riders.
+  - **(A) START2-R, row 3.3, STRONGER.** Drop "equivalently"; merge the delta onto the current row, keeping the S1 floor restriction.
+  - **(B) RM2-R, rows 3.2 and 3.1, MIXED.**
+    - STRONGER: Thm 7 conditions; RM0-plus.
+    - WEAKER: IDEAL-W⁺; a narrower domain; the Prop-F implies edge withdrawn.
+    - Flag: Prop-F/F-UNI bridges used LS0 cap ℓ_n, not the shipped ℓ_n+|S̃₀|. The recorder lists consumers and re-points them to DLV-0; any headline row relying on them goes to HQ first.
+    - Row 3.1 (Thm 6) changes to RM2-R-plus, recorded as a row 3.1 change.
+  - Post-freeze: does IDEAL-W⁺ ever bind in existing runs?
+- 2026-11-16 ~06:10 CT. Correctness event: the card-14 method drift reaches row 3.1. W2-UNI:F-UNI@1.1.0 claims every-n delivery for the shipped LS0 cap ℓ_n+|S̃₀|, but its proof cites C-DLV:Prop-F (cap ℓ_n).
+  - F-UNI → SUSPECT now.
+  - One neutral Sol check: do Prop-F Steps 1-2 transfer to the shipped cap under IDEAL-W? YES → erratum + PATCH + clear. NO → NARROW to DLV-0 ((D), IDEAL-W⁺).
+  - Row 3.1's delivery is re-pointed to DLV-0 meanwhile. No recorded headline status asserted it (the gate was PENDING).
+- 2026-11-16 ~06:30 CT. **H5 card 13 (W3-DIST, row 2.1): the consultant AGREES**; row 2.1 becomes proved on recording.
+  - Reader edits:
+    - the Song–Liang analogue is display (i) only (cubic s₀/ℓ_n only in (iii));
+    - "s fixed" goes in the Weaker list;
+    - the SL sentences are verified against the published text;
+    - exact estimand wording (conditional law of y, Hellinger averaged over x; law of x not estimated);
+    - lead with the fixed-level display; only (i) in the abstract;
+    - 2.2 stays a body remark.
+  - Status: the TH09 (T01 part) discharge happens only if task T shows the cited T01 labels were LC-A verified; otherwise the row is recorded conditional.
+  - Sharpness top 3: item 1 ((A4)/(ND)), 8(a)+10, 9; 8(b) gets a kill budget.
+- Owls: BNP installs today, guard at 10:13 CT and backup cron at 11:13 CT; SMC crontab freezes 10:05–10:30 and 11:05–11:30. Baseline crontab (15 lines) saved by HQ. Correction to BNP: SMC does have owls_guard (a load watchdog).
+- 2026-11-16 ~07:00 CT. Task T (T03♯ root) dry run clean: TH09 4/4 and TH128 5/5 covered; 74 edges, 73 discharged and 1 kept; 39 status changes.
+  - Headline: 1.2 plain (W2-APP:POST); 3.2 plain (RM2-F); 3.6 plain (SAMP); 1.1 POST2 drops TH09 but keeps POST/Thm-1; 3.1 unchanged.
+  - GO:
+    - alias split (T01–T03 and T02 keep their own status), then a re-dry-run; the real run proceeds only if the headline deltas are identical;
+    - 7-line A4 tool fix (suite, test case, Opus review);
+    - HQ carriers;
+    - re-anchor to 9714aea4;
+    - Lemma-1a edge discharged (LC-A:47-48 verified).
+  - Follow-up T2: Sol line checks of [P1] lem:prior(e) (W3-DIST X/V, row 2.1) and T02(ii♯) 5(a) (Thm-1, row 1.1).
+- F-UNI: TR1 Sol says transfer NO; NARROW to (D) / IDEAL-W⁺. Ceilings: le ≤ 10⁶ (binds at n+p > 2^(10⁶)) and INT_MAX (binds once the start model has ≳ 2×10⁹ variables). The sweep covers all every-n delivery claims about shipped code. owls_guard now protects BNP paths (HQ edit 06:3x CT).
+- 2026-11-16 ~07:20 CT. Method-pin sweep: 17 more every-n shipped-code delivery claims are exposed (Wave 2 FAC/LOC2/UNI family + HQ_AUDIT-W1C A2/A3); card reach is rows 3.1/3.2 delivery only.
+  - Cause: validators `le ≤ 10⁶` (v3_run.R:96) and `ℓ+|S̃₀| ≤ INT_MAX` (v3_core.cpp:474) are not covered by IDEAL-W.
+  - GO: SUSPECT the 17 now (state only), as part of the F-UNI correctness event.
+  - Batch NARROW (A:IDEAL-W⁺ or (D)) this week, before the Fri freeze: one Opus prep + one Sol batch diff, major bumps, carriers.
+  - C-DLV errata (exit inventory + IDEAL-W amendment note) and the FINAL s7_impl:39 erratum.
+  - No silent widening of IDEAL-W.
+- owls_guard: further BNP paths protected (bnp_quality, phaseB_inbox, ~/lean, ~/.elan).
+- 2026-11-16 ~08:00 CT. Engineering, WP3 architect design (day 1): late rounds ≈ 0.6× plan with the same bits (Owls 10⁶ round −40%, hash identical).
+  - **Budget risk R1:** early/bridge stages carry π₀-sized supports. At 10⁶ they cost ≈ 45× plan now and ≈ 10× with the prototype; at 10⁵ the bridge averages 3× the late rounds. The 1M block could be several times H-10.
+    - Engineering re-sizes per stage after WP2 gives the production π₀ size; > 30k comes back with ranked cuts (H-9).
+  - Measurement job (≈ 96–160 core-h): no objection.
+  - Builders 6–7 start Tue 11-17 ~08:00 CT on CT (owner pacing today).
+  - Endorsed: no FMA in class A; offer floor in V mode pending contract checks.
+- Theory: T2(i) lem:prior(e) and T2(ii) T02(ii♯) 5(a) both VERIFIED (Sol); 0 of 74 edges kept after T2. F-UNI NARROW: Sol DIFF PASS, every n under A:IDEAL-W⁺; batch now 19 claims; F-UNI clears at S4. Task W choices: R2r re-freeze, form carrier, CC accepted by HQ carrier only with council evidence. SL PDF check: card rows 1.4 and 1.1 corrected; full-card SL sweep before the freeze.
+- 2026-11-16 ~09:00 CT. H-11 (1M): production π₀ at 10⁶ has E|S| ≈ 3.6–3.9 (q90 = 5), ≈ 15× below the bench stand-in.
+  - Per-fit estimates: today's code 1.9–2.3× H-10; levers 1–3 + m3 0.8–0.9×; plus the offer floor 0.6–0.7×.
+  - Totals ≈ 24.6–26.1k (levers + m3) and ≈ 22.3–23.4k (with the floor), both under 28.3k. High bracket: ≈ 37k without the floor, ≈ 27k with it.
+  - Gate: no 1M stage on today's code. Levers + m3 merged and measured in the SPR 10⁶ calibration pilot (≈ 27–50 core-h); the offer floor before the first 1M fit; re-size from measured numbers. AR-weak gate kept.
+- Theory: task T recorded (6cd699dd; TH09/TH128 PROVED-CHECKED, rows 1.2/3.2/3.6 plain); S3 88f36120 (17 SUSPECT + 15 cascade); T2 1574a127 (74/74 edges discharged); S2 4754e3e9 (F-UNI NARROWED 2.0.0; A:IDEAL-W⁺ registered).
+- 2026-11-16 ~09:30 CT. **W3-DIST RECORDED** (e7a7216c CC rule + tests; cb642afd record): all 20 claims PROVED-CHECKED, with no T01 caveat. Row 2.1 (distribution consistency, Song–Liang Thms 1–2 analogue, display (i)) moves from in progress to proved; thm9 + card swap variant A in progress.
+  - Remaining conditions: Thm-B/B3 on W3-POST:Thm-1; DIST-C on the SAMP delivery premises + EX-A; Cor C on EX-A.
+  - The owner's top-priority item is closed.
+- 2026-11-16 ~10:30 CT. Recorded on main: S4 b3153634 (IDEAL-W⁺ batch; D80 23/23 hashes; F-UNI ACTIVE 2.1.0), START2-R b48fd0a1 (row 3.3 masters STRONGER), S4b a8a135d6. D80 re-verification of today's recordings: no mismatch.
+- Task V (RM2-R) blocker. Rule (b) GO, fail-closed: a legacy-accepted row NARROWED by a recorded NARROW keeps legacy acceptance only if (1) its Sol DIFF verdict explicitly says the narrowed statement is proved by the row's own chain, (2) the DIFF post-patch sha equals the current hash, and (3) the council cell is unchanged.
+  - Tests + Opus review; fallback (a) per-row carriers; (c) refused.
+  - Rows 3.1/3.2 newly conditional on C-DLV:L2-S3 / P1-Inventory (code-reading audits), stated plainly.
+  - Post-freeze: check those audits for council evidence.
+- 2026-11-16 (owner, during the pause). The Writing Department started early on Claude Work (thread switched from CP), paced until 16:00 CT (≤ 1 helper).
+  - Codex/Astra allowed for review, efficiently: one end-of-draft read per document.
+  - **One Fable 5.2 writing advisor approved** (CW, high, a Writing child): style and clarity only, never math or statuses. If CW hits its 5-h limit: stop and wait, no account switching.
+  - 1M fast-track pilot (before Dec 4) approved, no delay to the main plan; queued for the resume.
+- 2026-11-16 ~17:00 CT. Resume executed (24 live SMC threads moved CT → CP; POLICIES: CP is the SMC default, CT retired for SMC). Engineering's 1M fast-track pilot plan APPROVED (submit 11-25/26, evaluated 12-1; P9 GO gate ≤ 1,188 core-h per fit and ≤ 28.3k campaign).
+- W3-AUDIT CHECKPOINT_1 (81291dd9):
+  - Posterior cores (rows 1.1, 1.2, 2.1): every design of ours is inside; the assumptions are the same as or comparable to Song–Liang's.
+  - Core 3 (row 3.1): strong factors are outside (visibility/leakage).
+  - **Row 3.6 needs A5 (no leakage): only IND/S1 inside; AR, the 1M primary, is outside.** HQ: no correctness event; the headline wording states the A5 scope plainly; the repair "leaks inside a method block are harmless" is track D candidate #1.
+  - P6 version conflict (Theory: v3.1 with LS0; Engineering: v2.2): Engineering to reconcile.
+  - RERUN_SPEC left open until Writing restructures.
+- 2026-11-16 ~17:45 CT. CI green (a14ce83b; issue #41 closed). Task V GO, with the 6 free supersessions as a small follow-up task. P6 confirmed v3.1 with LS0 (Engineering corrected); only the 2,400-fit study is v2.2.1.
+- W3-AUDIT CP2 (track D): candidate #1 (group-relative no-leakage) reaches S3/S4/S6 only, not AR or the 1M BLK. AR needs #5 (non-collapse; Fable feasibility note pending).
+  - HQ order, post-freeze (from Sat 11-21), after the Opus check of the audit-calc lines:
+    - #2 check X: 1 d, kill at 1.5 d;
+    - #3 sub-Gaussian Thm 2: 2 d, kill at 3 d;
+    - #1 group no-leakage: 3 d, kill at 4 d.
+  - #4 deferred; #5 decided on the note (may replace #1).
+- 2026-11-16 ~18:15 CT. Track D: #5′ (store-restricted printed-output clause on every Thm 6 design, AR and BLK included; Tier B, 1–2 d, kill at 3 d) REPLACES #1.
+  - Final order: #2 → #3 → #5′, post-freeze. No G1/G2 gate; printed fields on AR stay NO-GO.
+  - After #5′: Engineering reports the store-derived summaries in the overlap/1M analysis (post-processing only).
+- 2026-11-16 ~18:30 CT. W3-AUDIT v1.1 done on day 0 (56dafbdd).
+  - Cores 1 and 2 hold on all our designs under assumptions the same as or comparable to Song–Liang's.
+  - Track C: visibility fails at the population level for pervasive factors with mixed-sign truths and for riboflavin-like designs (FRED-QD-like unclear). A typical real-data user may be outside core 3 while inside cores 1 and 2.
+  - HQ: an API blind second opinion on TRACK_B (≈ $30; Theory prepares the card).
+  - Writing's advisor-report section waits for the owner's release.
+- 2026-11-16 evening. W3-AUDIT closed:
+  - track C: 46.86 core-h, no verdict contradicted; (AG) belongs to the fixed-design branch only;
+  - track A: T1–T10 and X1/X3/X5/T14 council-passed; T14 makes IDEAL-W⁺ vacuous on representable inputs. Its STRONGER card for row 3.1 comes post-freeze.
+  - API AUDIT1/2 spent $10.66 in total. TRACK_B v1.4 uses regime-conditional SL comparisons.
+- W3-READER CP3 (R3 Sol 9.5 / Opus 9.4, MANIFEST_R3 7aebdf2e, card v1.12). **H5 card 15: the consultant AGREES that it can freeze.**
+  - Blocking before recording: verify that row 3.6's "R4 assembly (unchecked)" was covered by the council, or label it honestly.
+  - Post-freeze:
+    - code-audit conditions attached to the delivery clause only;
+    - GUARD-W wording ("no estimates; partial results flagged");
+    - compress the integer-limit passage after T14;
+    - check C-DLV L2-S3 / P1-Inventory.
+  - Row 3.6 is to be demoted to a remark once #5′ is proved (HQ, likely).
+- Engineering: T5/P7 worst cases accepted (≤ 400 / ≤ 144 core-h); P1 done.
+- 2026-11-16 late. **W3-READER CP3 RECORDED (main 128e6a9a, CI green). The theory freeze content is complete.** The freeze is Fri 11-20.
+  - Post-freeze kick-off is Sat 08:00 CT: Thm-1/SAMP:C relabel → track A recording → L2-S3/P1-Inventory Sol check → T14 H5 card → track D #2 → READER editorial batch.
+- 2026-11-16 late. **OWNER token/schedule allocation (SMC vs BNP Lean):**
+  - **This week:** theory must-do (Thm-1/SAMP:C relabel, track A recording, L2-S3/P1-Inventory check, T14 card, READER editorial), all INTO the freeze; freeze target Fri 11-20 evening, slipping to Sat if needed.
+  - **Next week:** track D (#2 → #3 → #5′, kill budgets), plus the **Lean Department launch Mon 11-23 for the 2–3 most important theorems only** (scoping first; Theory sends a ranked shortlist by Fri). The rest of Lean in December.
+  - **Engineering:** continues, a steady medium share until Dec 1 (4-agent cap, fast-track pilot).
+  - Deferred: the niche-results narrowing; parallel-method theory (scaling paper).
+- 2026-11-17. **OWNER pacing and allocation:**
+  - **This week:** the Theory Dept is paced: must-do only, ≤ 2 concurrent agents, Sonnet/Haiku routine, the audit Fable idle, no new tickets.
+  - **Next week:** SMC uses **1 Claude Ultra account + 1 reset** for track D's last strike + 2–3 Lean proofs; **BNP Lean gets the other Ultra**. The owner names the exact account at the start of the week; HQ re-points the SMC threads then.
+  - Engineering continues its steady medium share (unchanged).
+- 2026-11-17/18. This week's must-do recordings landed:
+  - track A 63144bc1;
+  - rule (c) 9441be8d;
+  - relabel 2676e71f (only ST → KER; R4/SAMP:C/DIST-C/OVL conditional on W1-N1:B/F, to be line-checked post-freeze);
+  - D95 fe05ccec: **rows 3.1/3.2 fully discharged**; P1-Inventory CORRECTION A-7; L2-S3 code-checked; A1/A2 note only.
+  - The last item before the freeze is the READER editorial round (card 16 etc.).
+- 2026-11-17 THEORY FREEZE at d40c9780, tag theory-v2026-11-freeze (HQ); post-freeze queue from Mon 11-23 08:00 CT.
+- 2026-11-17/18. Engineering: T5 (10⁵) PASSED, 42.2 core-h (HPM = MPM = S₀; predictive h² = the oracle's; cross-ISA hashes equal). P7 (the 10⁶ calibration pilot) done, 30.2 core-h.
+  - **P9 re-size:** ≈ 390–440 core-h per 1M fit (high ≈ 660); campaign ≈ 18–21k.
+  - **HQ P9 GO for the 1M pilot fit 6-AR-n200-r01-V-s1:** ≈ 450 expected, stop at ≈ 675; Sol F7 pilot rule kept. About a week ahead of the fast-track plan.
+- THEORY FREEZE declared: tag theory-v2026-11-freeze → d40c9780 (card v1.13); entries 40e02ae7.
+- 2026-11-17 10:38 CT. **FIRST 1M FIT COMPLETED** (6-AR-n200-r01-V-s1, p = 10⁶, n = 200): HPM = MPM = S₀ exactly; predictive h² = the oracle's; 437.4 core-h (budget 1,188); wall 3 h 04 min; 20 tasks, no retries.
+  - Anomalies: merge peak 75.1 GiB against a 43.7 GiB plan (re-size before the campaign); calibration 85 vs 55 min.
+  - Engineering is asked for a revised timeline and the owner's 20-replicate option.
+- 2026-11-17. **H-12 (1M campaign):**
+  - Timeline approved: campaign freeze 11-18/19; 10⁴ overlap 11-19..22; precision + 10⁴ science to 11-26; 10⁵ 11-27..30; **1M replicates from ≈ 12-01**.
+  - **The owner's 20-replicate option at 1M is approved within the 28.3k envelope** (≈ 24.6k without D / 26.5k with; ≈ 1.8k margin). It starts after the overlap and 10⁵ gates pass, 2 fits at a time.
+  - The pilot counts as replicate 1, subject to the freeze reproduction check.
+- 2026-11-17. **OWNER GREENLIGHT: the theory push started** on CP (continuous; CP → reset → CT).
+  - Started: W1-N1:B/F line checks; track D #2; A1/A2 NARROW; precedent notes; editorial and tools; an audit-Fable feasibility note on "the SMC does work".
+  - Consultant session part 1 (bounded "money on the table").
+  - Held for the owner's decision: track D #3, #5′, and any new SMC-works ticket.
+  - Proof hardening for the Lean targets (paper blueprints + hostile formalizer review) follows the method sign-off.
+  - Engineering moved to Claude Work, ≤ 3 agents.
+- 2026-11-17. **OWNER DECISION (theory push):**
+  - **GO #5′** (store-restricted output consistency on every Thm 6 design; kill at 3 d), with the method-level companion: **print the list-renormalised PIPs + their median model as a second output field** (core v3 + engine v4; existing fields bit-identical; Theory spec first).
+  - **Equal-weight island-mean PIP stays primary**; this closes the scaling-design equal-vs-evidence-weighted question.
+  - **GO #3** (sub-Gaussian Thm 2) if it reuses W3-DIST's floor bridge (kill at 3 d; a coexisting claim).
+  - **"The SMC does work": DEFERRED** to the follow-up paper, unless the feasibility note finds a route through existing lemmas.
+  - Factor-adjusted start law: follow-up paper. Evidence spread: dropped.
+- 2026-11-17. **OWNER endorses HQ's "money on the table" verdict:** nothing important is left beyond #5′ (+ the printed list-PIP field) and optionally #3.
+  - **New, owner-approved: re-run a representative subset of the 2,400-fit study on the FROZEN method** (v3 with LS0 + the new field). Engineering plans it within H-12 if possible.
+  - Real-data example: Engineering reports the plan or a proposal.
+  - Afterwards: the method sign-off → proof hardening → Lean.
+- 2026-11-17. FEAS_SMC_WORKS (audit Fable): no route through existing lemmas. **OWNER: "SMC does work" DROPPED for this paper, including the weak-leak corollary** ("what we have is more than enough for a brand-new method"). Material kept for the follow-up paper. The theory push list is closed.
+- 2026-11-17. Owner: "SMC does work" may come back on the table **after the Lean proofs for the core theorems are done**; focus on the target now. #5′ spec forwarded to Engineering (3 fields incl. log_Z_list, kept by HQ).
+- 2026-11-17/18. **OWNER-approved ASSUMPTION COMPLIANCE decisions** (consultant AGREE with 4 tweaks).
+  - Core 3 is presented as the theorem for block and moderate AR correlation; visibility stated as "no true predictor masked by ≤ 15 others"; failures named.
+  - Certified screening (row 3.7) is promoted to the main text with the card-9/11 handling. Row 3.6 → supplement remark; row 3.5 stays main once the W1-N1 discharge is recorded.
+  - Cor 9C → a conditional remark until #5′. Row 1.4 stays in the supplement.
+  - Generic-position lemma required with a margin uniform in n. **#3 (sub-Gaussian Thm 2) is now required.**
+  - Gaussian rows and exact arithmetic/RNG are disclosed as SL-anchored conventions.
+- W1-N1:B/F line checks done (AW:ISL, AW:FRZ); retarget + W3-SAMP erratum (potential pair) approved; API blind audit submitted.
+- A1/A2: V2 corrigendum. #5′ statement locked (Corollary 6L).
+- 2026-11-17 evening. **OWNER account directive:** Claude Personal is the main fuel; Claude Work and Claude Third are drying out.
+  - The Engineering manager thread was switched to CP; all new SMC agents go on CP; no CT.
+  - Writing finishes Assignment 5 lightly on CW (≤ 1 helper; moves to CP if CW is limited).
+  - Codex sparingly.
+- 2026-11-17 night. **OWNER: keep Sol 6.1 (`gpt-6.1-sol`) as the review default for now** (reverts the 11-17 switch to 6.2). Early data (2 logged reviews: Eng #68, Writing A5 final) favour 6.2 on real findings, with 1 extra false positive, but the sample is too small. 6.2 is used only in the SOL62 A/B (Theory, 3 cases, both models on the same inputs) and in SOL62_QUALITY.md side-by-side logs where a manager already runs one. HQ reports back with more data and a recommendation (which model, and why).
+- 2026-11-17 night. **W3-D5P (#5' / Cor 6L), two-seat rule A4:** the only Sol record is R1 (7.5, FAIL, LIST-R REJECT on 3 F findings in derived texts, not the maths), and Opus R1+R3 count as one seat. HQ GO (a): one Sol continuation seat (gpt-6.1-sol, codex high, 1 call) on the R1->R3r diff, bound to the R3r manifest. (b) an HQ-attested carrier contradicting Sol's own file is REFUSED as a rule: never attest a verdict the seat's file contradicts. If Sol still rejects on substance, stop and escalate to HQ.
+- 2026-11-17 night. **OWNER GO: Sol default = `gpt-6.2-sol`** (codex, high) for all reviews, on HQ's recommendation after the SOL62 A/B (Theory SOL62_AB.md, 3 cases) + 2 logged reviews (Eng #68, Writing A5): 6.2 found more real issues (incl. 4 that 6.1 never reached); its false calls are confident (one false REJECT of Thm2X), so its verdicts are input, never decisions: Fable/HQ triage per the acceptance filter. Managers keep logging SOL62_QUALITY.md at real gates.
+- 2026-11-17 night. **Owner asked to pull the Mon 11-23 consultant session forward.** HQ sent the bounded consult: one pass + at most one revision round, narrow reading. Q1: anything more on Thm 6's novel assumptions (visibility, leakage) beyond Cor 6L, under the theory budget policy. Q2: method-final verdict (SIGN / SIGN-AFTER / HOLD), with the previously identified list only and SMC-does-work dropped. Then the HQ recommendation, then the owner, for the three-way sign-off.
+- 2026-11-17 night. **Consultant method-finality consult** (pulled forward): Q1 = scope as stated (i) + optional block/AR design-family corollary (iii; 1-2 d, kill 3 d; awaiting owner); Q2 = SIGN-AFTER (1) IMPL-LIST, (2) the subset re-run of the 2,400-fit study on the frozen method with no regression. **OWNER accepts (b)**: rerun kept simple (Sonnet/Haiku bulk, few Opus); plus **NOTS hygiene** (home maximally clean, relevant data downloaded locally and verified, no heavy data left on NOTS; inventory, then HQ GO, then verify-before-delete; exclusions per section 12). Sent to Engineering.
+- 2026-11-17 night. **OWNER GO: W3-FAMC**, the design-family corollary for core 3 (block + moderate AR, primitive assumptions). Assembly only; Opus lead on CP, Sonnet for the bulk, no Fable; Tier B (Sol 6.2 line check + 1 diff round); 1-2 lead-days, kill at 3 d (if AR needs a new lemma: block only, AR via track C). Additive, not a Lean target. Sent to Theory.
+- 2026-11-17 night. **OWNER: pre-Lean Codex pass split about half Astra `gpt-6.2-astra` and half Sol `gpt-6.2-sol`** (Codex budget OK; resets available, for this check only). HQ allocation: Astra (adversarial) on the Lean-bound theorems; Sol on the final-text confirmations of the Opus-only-final results; about 5 + 5 calls; Fable triage + acceptance filter unchanged. Starts after this week's recordings (Cor 6L, W3-FAMC).
+- 2026-11-17 night. **OWNER: in the pre-Lean phase a Fable validates the final ruling on every Codex point**; all Fables on CP; interventions short and precise (card per batch, AGREE/OBJECT + at most 3 lines).
+- 2026-11-18. **#69 MERGED (main e9bac478), tagged `method-v3.1-listpip`.** List-PIP fields (pip_list, mpm_list, log_Z_list) with the legacy fields bit-identical: A1/A2 39/39 on 991787ef + 15/15 fast units on the final core 8ff2d876; Sol 6.2 ACCEPT-WITH-FIXES, fixes done. Method sign-off condition 1 (IMPL-LIST) now waits only on Engineering's code-read note to Theory; condition 2 = the rr2400 subset rerun (verdict ~09:15 CT today).

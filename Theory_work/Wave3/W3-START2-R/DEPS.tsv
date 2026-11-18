@@ -1,0 +1,24 @@
+id	file:lines	uses	sha	checked_sha	checked_by	state
+S:D3	STATEMENT.md:51-69		8636b49f1ce83314	8636b49f1ce83314	reviews/SL1_statement_lock_sol.md;reviews/LC1_line_check_sol.md	OK
+S:D4	STATEMENT.md:70-81		8ce7ea6ffc2c2106	8ce7ea6ffc2c2106	reviews/SL1_statement_lock_sol.md	OK
+S:D5	STATEMENT.md:82-87		74eb8cff5864adf1	74eb8cff5864adf1	reviews/SL1_statement_lock_sol.md	OK
+S:VIS-c	STATEMENT.md:101-107	S:D3	63d650b0360baa1f	63d650b0360baa1f	reviews/SL1_statement_lock_sol.md;reviews/LC1_line_check_sol.md	OK
+S:VIS-m	STATEMENT.md:108-112	S:D3	7fd74df9db4b8046	7fd74df9db4b8046	reviews/SL1_statement_lock_sol.md;reviews/LC1_line_check_sol.md	OK
+S:START-F	STATEMENT.md:113-128	S:VIS-c;S:VIS-m	e9d24b894283f838	e9d24b894283f838	reviews/SL1_statement_lock_sol.md	OK
+S:F1-F3	STATEMENT.md:129-133	S:START-F	9b9da4aa1963ac5a	9b9da4aa1963ac5a	reviews/SL1_statement_lock_sol.md	OK
+S:F4	STATEMENT.md:134-144	S:START-F;S:NEC-b	55f759824768ad26	55f759824768ad26	reviews/SL1_statement_lock_sol.md	OK
+S:NEC-b	STATEMENT.md:145-153		a6d8f31c52bc8d7c	a6d8f31c52bc8d7c	reviews/SL1_statement_lock_sol.md;reviews/LC1_line_check_sol.md	OK
+S:NEC	STATEMENT.md:154-166	S:NEC-b	199f28662541bead	199f28662541bead	reviews/SL1_statement_lock_sol.md	OK
+S:TRANSFER	STATEMENT.md:167-188	S:START-F	401d4e0d3188fdcb	401d4e0d3188fdcb	reviews/SL1_statement_lock_sol.md;reviews/LC1_line_check_sol.md	OK
+S:MIS	STATEMENT.md:189-198	S:TRANSFER	bf7fb93e10009abb	bf7fb93e10009abb	reviews/SL1_statement_lock_sol.md	OK
+S:EX	STATEMENT.md:199-211	S:F4;S:START-F;S:START-R	911986d9575db4af	911986d9575db4af	reviews/SL1_statement_lock_sol.md	OK
+S:OVL	STATEMENT.md:212-214	S:START-F	1305eab9ad2bcf2f	1305eab9ad2bcf2f	reviews/SL1_statement_lock_sol.md	OK
+S:BR	STATEMENT.md:217-225	S:D4;S:D5	8efdf1d9b603ad50	8efdf1d9b603ad50	reviews/SL1_statement_lock_sol.md	OK
+S:START-R	STATEMENT.md:226-240	S:BR;S:START-F	196f08d0e5871ed8	196f08d0e5871ed8	reviews/SL1_statement_lock_sol.md	OK
+S:IF-START	STATEMENT.md:241-246	S:START-F;S:START-R	d48345d21e88961b	d48345d21e88961b	reviews/SL1_statement_lock_sol.md	OK
+L:R1_VIS	lemmas/R1_VIS.md	S:D3;S:VIS-c;S:VIS-m;S:START-F	38ba2e7353ba301d	38ba2e7353ba301d	reviews/LC1_line_check_sol.md	OK
+L:R2_NEC	lemmas/R2_NEC.md	S:NEC-b;S:NEC;S:F4	23a3aebba000c606	23a3aebba000c606	reviews/LC1_line_check_sol.md	OK
+L:R3_RATE	lemmas/R3_RATE.md	S:D4;S:D5;S:BR;S:START-R;S:IF-START;L:R1_VIS	43dadcf5eebb7109	43dadcf5eebb7109	reviews/LC2_line_check_sol.md;reviews/RC1_recheck_sol.md	OK
+L:R4_TRANSFER_COR	lemmas/R4_TRANSFER_COR.md	S:TRANSFER;S:F1-F3;S:OVL;S:MIS;L:R1_VIS	bf1e103c04c83c21	bf1e103c04c83c21	reviews/LC2_line_check_sol.md;reviews/RC1_recheck_sol.md	OK
+L:R5_EX	lemmas/R5_EX.md	S:EX;L:R1_VIS;L:R2_NEC;L:R3_RATE;L:R4_TRANSFER_COR	806cdf4e0a99d783	806cdf4e0a99d783	reviews/LC2_line_check_sol.md;reviews/RC1_recheck_sol.md;reviews/RC2_recheck_sol.md	OK
+R:REPORT	REPORT.md	all S:*	926d06aba1935197	-	(council)	UNCHECKED (council)

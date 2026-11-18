@@ -1,0 +1,5 @@
+# W3-T03ACC — external inputs for the council manifest (repo-relative). Everything else the proof uses is copied
+# under the ticket's sources/ (pins: sources/PINS.md). No wave document, registry table or review is listed.
+# the target as coded (gate G6: score, prior and standardisation), main @39db1381
+Scripts/SMC_BVS/core/cpp/v3_score.h
+Scripts/SMC_BVS/core/v3_preprocess.R

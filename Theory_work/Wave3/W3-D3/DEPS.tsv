@@ -1,0 +1,11 @@
+id	file[:lines]	uses	sha	checked_sha	checked_by	state
+S:setting	STATEMENT.md:23-39		9d4cd72f9d19ff89	9d4cd72f9d19ff89	reviews/K1_linecheck_opus.md	OK
+S:Thm2SG	STATEMENT.md:41-57	S:setting	243b77e0796f16e0	243b77e0796f16e0	reviews/K2_recheck_opus.md	OK
+S:B3w	STATEMENT.md:59-80	S:setting	2936d4aab6e60634	2936d4aab6e60634	reviews/R2_council_opus.md	OK
+S:ExSG	STATEMENT.md:82-90		a77b2844d9b4adda	a77b2844d9b4adda	reviews/R2_council_opus.md	OK
+S:class	STATEMENT.md:113-144	S:ExSG	0bb8d63a49c53d5a	0bb8d63a49c53d5a	reviews/F2_formcheck_opus.md	OK
+S:inputs	STATEMENT.md:146-161		fa3ea42bf3afff09	fa3ea42bf3afff09	reviews/RED_requote_check_opus.md (CITATION-ONLY pin requote check, Opus one-shot)	OK
+P:B3w	lemmas/B3w.md:12-134	S:B3w,S:inputs	0f1cd4bf262c570b	0f1cd4bf262c570b	reviews/R2_council_opus.md	OK
+P:Thm2SG	lemmas/ASSEMBLY.md:21-52	S:Thm2SG,P:B3w,S:inputs	5db2fe6b2eca4beb	5db2fe6b2eca4beb	reviews/K2_recheck_opus.md	OK
+P:ExSG	lemmas/ASSEMBLY.md:54-83	S:ExSG	7e4c9265f8760d8c	7e4c9265f8760d8c	reviews/R2_council_opus.md	OK
+R:registry	REPORT.md:65-92	S:Thm2SG,S:B3w,S:ExSG	e345cb9a2860d58a	e345cb9a2860d58a	reviews/R2_council_opus.md	OK

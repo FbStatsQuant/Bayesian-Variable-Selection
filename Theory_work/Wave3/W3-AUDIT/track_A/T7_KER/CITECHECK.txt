@@ -1,0 +1,54 @@
+OK            [STATEMENT.md] Theory_work/Wave1/W1-N1/STATEMENT.md:76-78 sha=358bd5901d | - **KERNEL** the four coded step functions and the order realise the T12 §1 kernels and a uniform state-indepe
+OK            [STATEMENT.md] Docs/Theory/proofs/T12_T8_frozen_run_identities/STATEMENT.md:23-31 sha=91287c9661 | ## 1. Elementary steps and rounds (method §6.5)
+OK            [STATEMENT.md] Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/N9-KERNEL/REPORT.md:17-21 sha=fbcc4dd533 | | 1 | Gibbs flip j: heat bath for γ_φ on 𝒮_K; addition at |S| = K is a self-loop. Reversible. | `v3_engine.h:1
+OK            [STATEMENT.md] Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/N9-KERNEL/PROOF.md:59-197 sha=5b1d61b196 | ## 1. The four elementary moves
+OK            [STATEMENT.md] Theory_work/Wave3/W3-SAMP/STATEMENT.md:118-124 sha=c292c69d72 | **Lemma ST (staying at S₀).** Under KERNEL, at φ = 1:
+OK            [STATEMENT.md] cpp/v3_core.cpp:302-302 sha=de3f578263 | g->Nb = neighbour_graph(D, B);
+OK            [PROOF.md] cpp/v3_engine.h:95-97 sha=e914319592 | double c = st.comp(q.S, scratch);
+OK            [PROOF.md] cpp/v3_engine.h:14-14 sha=d1e7266055 | inline double lgphi(double phi) const { return lg0 + phi * d; }  // log gamma_phi(S) = log gamma_0(S) + phi d(
+OK            [PROOF.md] cpp/v3_score.h:274-282 sha=ae80db72f8 | bool find(const std::vector<int>& S, uint64_t h, double& lm) {
+OK            [PROOF.md] cpp/v3_engine.h:91-94 sha=00f9095e12 | if (!(cache && cache->find(q.S, q.h, lm))) {
+OK            [PROOF.md] cpp/v3_engine.h:150-150 sha=d8e6bc538e | int j = P.S[(int)std::floor(vs->u("uswap_j") * k)];
+OK            [PROOF.md] cpp/v3_engine.h:167-167 sha=c691a76ab2 | int j = P.S[(int)std::floor(vs->u("nswap_j") * k)];
+OK            [PROOF.md] cpp/v3_engine.h:134-144 sha=bb9677e28a | int nth_nonmember(const std::vector<uint64_t>& bits, int m) const {
+OK            [PROOF.md] cpp/v3_engine.h:113-132 sha=8aba6e1d84 | void step_gibbs(Particle& P, int j, double phi) {
+OK            [PROOF.md] cpp/v3_engine.h:116-116 sha=c77759ceaa | bool add_ok = in || (int)P.S.size() < D.K;
+OK            [PROOF.md] cpp/v3_engine.h:120-122 sha=67bd34b576 | tmpQ = P;
+OK            [PROOF.md] cpp/v3_engine.h:124-126 sha=29c60afcc4 | double lw = in ? P.lgphi(phi) : tmpQ.lgphi(phi);
+OK            [PROOF.md] cpp/v3_util.h:89-93 sha=9820e44a33 | inline double plogis_log(double la) {
+OK            [PROOF.md] cpp/v3_engine.h:117-117 sha=2c3ee4978b | double oj = 0; bool has_other = false;
+OK            [PROOF.md] cpp/v3_engine.h:128-128 sha=1ef40628e3 | if (rb_on) rb_acc[j] += oj;  // R8: recorded before the draw
+OK            [PROOF.md] cpp/v3_engine.h:129-131 sha=a9f6a1cc7a | double u = vs->u("gibbs");
+OK            [PROOF.md] cpp/v3_engine.h:146-159 sha=3395512f77 | void step_uswap(Particle& P, double phi) {
+OK            [PROOF.md] cpp/v3_engine.h:148-148 sha=c69a83a9be | if (k == 0 || k == p) { ms.us_self++; return; }
+OK            [PROOF.md] cpp/v3_engine.h:150-152 sha=6da0f1ed73 | int j = P.S[(int)std::floor(vs->u("uswap_j") * k)];
+OK            [PROOF.md] cpp/v3_engine.h:154-157 sha=ec47f51c4c | double la = tmpQ.lgphi(phi) - P.lgphi(phi);
+OK            [PROOF.md] cpp/v3_engine.h:162-180 sha=64f1759a1a | void step_nswap(Particle& P, double phi, int b) {
+OK            [PROOF.md] cpp/v3_blocks.h:149-173 sha=14e1a50063 | inline std::vector<std::vector<int>> neighbour_graph(const Data& D, int B) {
+OK            [PROOF.md] cpp/v3_blocks.h:159-159 sha=f197d1281c | for (int l = 0; l < p; ++l) if (l != j) cand[c++] = l;
+OK            [PROOF.md] cpp/v3_blocks.h:170-171 sha=f8f830fb73 | for (int j = 0; j < p; ++j) for (int l : chosen[j]) { N[j].push_back(l); N[l].push_back(j); }
+OK            [PROOF.md] cpp/v3_blocks.h:171-171 sha=b4493b0848 | for (int j = 0; j < p; ++j) { std::sort(N[j].begin(), N[j].end()); N[j].erase(std::unique(N[j].begin(), N[j].e
+OK            [PROOF.md] cpp/v3_core.cpp:302-302 sha=de3f578263 | g->Nb = neighbour_graph(D, B);
+OK            [PROOF.md] cpp/v3_engine.h:165-165 sha=c4dcd757c2 | if (k == 0) { ms.ns_self++; return; }
+OK            [PROOF.md] cpp/v3_engine.h:167-167 sha=c691a76ab2 | int j = P.S[(int)std::floor(vs->u("nswap_j") * k)];
+OK            [PROOF.md] cpp/v3_engine.h:168-169 sha=e9203e8851 | std::vector<int> cand;
+OK            [PROOF.md] cpp/v3_engine.h:170-170 sha=553112adc1 | if (cand.empty()) { ms.ns_noscore++; return; }
+OK            [PROOF.md] cpp/v3_engine.h:171-171 sha=e141e4a784 | int l = cand[(int)std::floor(vs->u("nswap_l") * cand.size())];
+OK            [PROOF.md] cpp/v3_engine.h:172-173 sha=75c0b0573b | tmpQ = P; del_var(tmpQ, j); add_var(tmpQ, l);
+OK            [PROOF.md] cpp/v3_engine.h:175-178 sha=44d9736a0d | double la = tmpQ.lgphi(phi) - P.lgphi(phi) + std::log((double)cand.size()) - std::log((double)back);
+OK            [PROOF.md] cpp/v3_engine.h:182-192 sha=39665160e9 | void step_indep(Particle& P, double phi) {
+OK            [PROOF.md] cpp/v3_engine.h:184-184 sha=1c6aa57fa0 | std::vector<int> S; draw_start(S);
+OK            [PROOF.md] cpp/v3_engine.h:187-190 sha=6a7cc6a1cd | double la = phi * (tmpQ.d - P.d);
+OK            [PROOF.md] cpp/v3_engine.h:195-214 sha=6f2d6fe756 | void draw_order(std::vector<int>& ord) {
+OK            [PROOF.md] cpp/v3_engine.h:203-203 sha=f9c80551d1 | std::vector<int> ord; draw_order(ord);
+OK            [PROOF.md] cpp/v3_engine.h:72-72 sha=4bc9f21ea6 | int nlabels() const { return D.p + B + 2; }
+OK            [PROOF.md] cpp/v3_engine.h:196-198 sha=c9a554cc16 | int m = nlabels();
+OK            [PROOF.md] cpp/v3_engine.h:199-199 sha=5a00247bf2 | for (int i = m - 1; i >= 1; --i) { int jj = (int)std::floor(vs->u("order") * (i + 1)); std::swap(ord[i], ord[j
+OK            [PROOF.md] cpp/v3_engine.h:205-211 sha=37c3eebbe9 | for (size_t pos = 0; pos < ord.size(); ++pos) {
+OK            [PROOF.md] cpp/v3_core.cpp:302-302 sha=de3f578263 | g->Nb = neighbour_graph(D, B);
+OK            [PROOF.md] cpp/v3_engine.h:60-60 sha=457f71c54f | const Data& D; const Start& st; const std::vector<std::vector<int>>& Nb; int B;
+OK            [PROOF.md] Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/N9-KERNEL/PROOF.md:59-197 sha=5b1d61b196 | ## 1. The four elementary moves
+OK            [PROOF.md] cpp/v3_blocks.h:167-170 sha=bc5ee8f7bd | int keep = std::min(B, std::max(1, above));
+
+51 citations: 51 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+Not machine-checked: unbackticked references and the semantic match of each excerpt.

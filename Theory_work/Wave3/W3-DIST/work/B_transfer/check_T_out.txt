@@ -1,0 +1,26 @@
+[1] kappa(1/5) = 0.284024 = 48/169 = 0.284024 >= 1/4: True
+    lower bound for n*eta^2 in Lemma T: 4(1+4log(2e)+log4) = 36.636 (>= 25 needed)
+    ratio route, theta=1/7, prefactor 6: n theta^2 eta^2 >= 1.121 (>=1), (1-theta)^2*6/4 = 1.1020 (>=1)
+[2] min n*eta^2 over grid = 36.640 (>= 25 required)
+    Phi_k(m) <= (em/k)^k for 1<=k<=m<60: True
+[3] Monte Carlo of the multiplicative inequality (worst set over the class, exact):
+    Cauchy   n=  50 eta^2=0.0200 (n eta^2=  1.0): empirical P(fail) = 0.7900; Prop.R bound = 1
+    Pois0.7  n=  50 eta^2=0.0200 (n eta^2=  1.0): empirical P(fail) = 0.2067; Prop.R bound = 1
+    Cauchy   n=  50 eta^2=0.0600 (n eta^2=  3.0): empirical P(fail) = 0.2867; Prop.R bound = 1
+    Pois0.7  n=  50 eta^2=0.0600 (n eta^2=  3.0): empirical P(fail) = 0.0133; Prop.R bound = 1
+    Cauchy   n=  50 eta^2=0.1200 (n eta^2=  6.0): empirical P(fail) = 0.0167; Prop.R bound = 1
+    Pois0.7  n=  50 eta^2=0.1200 (n eta^2=  6.0): empirical P(fail) = 0.0000; Prop.R bound = 1
+    Cauchy   n=  50 eta^2=0.5000 (n eta^2= 25.0): empirical P(fail) = 0.0000; Prop.R bound = 1
+    Pois0.7  n=  50 eta^2=0.5000 (n eta^2= 25.0): empirical P(fail) = 0.0000; Prop.R bound = 1
+    Cauchy   n=  50 eta^2=1.2000 (n eta^2= 60.0): empirical P(fail) = 0.0000; Prop.R bound = 0.00612
+    Pois0.7  n=  50 eta^2=1.2000 (n eta^2= 60.0): empirical P(fail) = 0.0000; Prop.R bound = 0.00612
+    Cauchy   n= 200 eta^2=0.0050 (n eta^2=  1.0): empirical P(fail) = 0.8267; Prop.R bound = 1
+    Pois0.7  n= 200 eta^2=0.0050 (n eta^2=  1.0): empirical P(fail) = 0.3100; Prop.R bound = 1
+    Cauchy   n= 200 eta^2=0.0150 (n eta^2=  3.0): empirical P(fail) = 0.2967; Prop.R bound = 1
+    Pois0.7  n= 200 eta^2=0.0150 (n eta^2=  3.0): empirical P(fail) = 0.0133; Prop.R bound = 1
+    Cauchy   n= 200 eta^2=0.0300 (n eta^2=  6.0): empirical P(fail) = 0.0533; Prop.R bound = 1
+    Pois0.7  n= 200 eta^2=0.0300 (n eta^2=  6.0): empirical P(fail) = 0.0033; Prop.R bound = 1
+    Cauchy   n= 200 eta^2=0.1250 (n eta^2= 25.0): empirical P(fail) = 0.0000; Prop.R bound = 1
+    Pois0.7  n= 200 eta^2=0.1250 (n eta^2= 25.0): empirical P(fail) = 0.0000; Prop.R bound = 1
+    Cauchy   n= 200 eta^2=0.3000 (n eta^2= 60.0): empirical P(fail) = 0.0000; Prop.R bound = 0.0979
+    Pois0.7  n= 200 eta^2=0.3000 (n eta^2= 60.0): empirical P(fail) = 0.0000; Prop.R bound = 0.0979

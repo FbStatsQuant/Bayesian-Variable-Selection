@@ -1,0 +1,39 @@
+OK            [STATEMENT.md] Theory_work/Wave1C/C-DLV/INVENTORY.md:93-93 sha=b94dfb9bfe | **A:IDEAL-W⁺ (IDEAL-W with the two LS0 cap ceilings lifted).** IDEAL-W, exactly as defined in C-DLV `STATEMENT
+OK            [STATEMENT.md] Scripts/SMC_BVS/core/v3_run.R:96-96 sha=dadca0db55 | if (!is.numeric(le) || length(le) != 1 || !is.finite(le) || le < 0 || le != round(le) || le > 1e6)
+OK            [STATEMENT.md] Scripts/SMC_BVS/core/cpp/v3_core.cpp:474-474 sha=2efd1bb2f7 | if (o.ls0_ell < 0 || cap_ll > (long long)std::numeric_limits<int>::max()) stop("LS0 move cap out of range");
+OK            [STATEMENT.md] Theory_work/Wave1C/C-DLV/STATEMENT.md:24-25 sha=423b71db42 | - **IDEAL-W**: an abstract unbounded-word/address machine: integer, index, stream-id and allocation arithmetic
+OK            [STATEMENT.md] Theory_work/INFRA/DECISIONS.md:95-95 sha=830cc068cc | - 2026-11-16 correctness event (rollback history, HQ_AUDIT-W1C): HQ_AUDIT-W1C:A2, HQ_AUDIT-W1C:A3 ACTIVE -> SU
+OK            [STATEMENT.md] Scripts/SMC_BVS/core/cpp/v3_core.cpp:92-92 sha=e7fbc12288 | int n = X.nrow(), p = X.ncol();
+OK            [STATEMENT.md] Scripts/SMC_BVS/core/v3_run.R:95-97 sha=75c7ca43aa | le <- getOption("v3.ls0_ell", b$ell)   # testing override of the LS0 base cap (R05 #2: validated)
+OK            [STATEMENT.md] Scripts/SMC_BVS/core/cpp/v3_core.cpp:473-474 sha=16c5ae9e75 | long long cap_ll = (long long)o.ls0_ell + (o.ls0_cap_plus_mode ? (long long)m.S.size() : 0LL);  // checked (R0
+OK            [STATEMENT.md] cpp/v3_blocks.h:49-49 sha=1e31b90f7b | T.left.assign(2 * p - 1, -1); T.right.assign(2 * p - 1, -1); T.size.assign(2 * p - 1, 1); T.minidx.assign(2 * 
+OK            [PROOF.md] v3_preprocess.R:103-103 sha=e25d39086c | n <- nrow(X); p_raw <- ncol(X)
+OK            [PROOF.md] v3_preprocess.R:111-113 sha=43dfcf1070 | constant <- apply(X, 2, function(x) all(x == x[1]))   # dropped only if all entries are exactly equal
+OK            [PROOF.md] v3_preprocess.R:106-107 sha=5d459821d1 | if (n < 3) return(bad("n < 3"))
+OK            [PROOF.md] v3_preprocess.R:114-114 sha=9450fa0e89 | if (!length(kept)) return(c(list(status = "no_predictors", hpm = integer(0)), base))
+OK            [PROOF.md] v3_fit.R:118-118 sha=18d46aead9 | ctx <- v3_context(pre$X, pre$y, orig = pre$kept, return_gram = FALSE)
+OK            [PROOF.md] cpp/v3_core.cpp:92-92 sha=e7fbc12288 | int n = X.nrow(), p = X.ncol();
+OK            [PROOF.md] cpp/v3_core.cpp:103-103 sha=37ec1cbed4 | _["n"] = n, _["p"] = p, _["K"] = D.K, _["log_Cn"] = D.logCn, _["log_W_K"] = D.logWK,
+OK            [PROOF.md] v3_setup.R:68-68 sha=32c6bbd90f | b <- v3_budgets(ctx$n, ctx$p)
+OK            [PROOF.md] v3_preprocess.R:20-20 sha=07654cb9af | n <- as.numeric(n); p <- as.numeric(p)
+OK            [PROOF.md] v3_preprocess.R:23-23 sha=88bf884342 | ell <- v3_ceil_log2(n + p + 1)
+OK            [PROOF.md] v3_preprocess.R:15-15 sha=e2818be336 | v3_ceil_log2 <- function(x) { c <- 0; while (2^c < x) c <- c + 1; c }   # smallest c with 2^c >= x
+OK            [PROOF.md] v3_run.R:95-95 sha=dcc6ec81f7 | le <- getOption("v3.ls0_ell", b$ell)   # testing override of the LS0 base cap (R05 #2: validated)
+OK            [PROOF.md] v3_run.R:96-97 sha=3d2a5aa0a1 | if (!is.numeric(le) || length(le) != 1 || !is.finite(le) || le < 0 || le != round(le) || le > 1e6)
+OK            [PROOF.md] v3_run.R:98-98 sha=12804f79af | ro$ls0_ell <- as.integer(le)
+OK            [PROOF.md] cpp/v3_core.cpp:402-402 sha=6520e449d4 | o.ls0_ell = ro.containsElementNamed("ls0_ell") ? as<int>(ro["ls0_ell"]) : o.ell;
+OK            [PROOF.md] v3_run.R:101-101 sha=9dcf57e697 | ro$ls0_cap <- if (identical(getOption("v3.ls0_cap", "ell_n_plus_mode"), "ell_n")) "ell_n" else "ell_n_plus_mod
+OK            [PROOF.md] cpp/v3_core.cpp:404-404 sha=1c3e134aae | o.ls0_cap_plus_mode = !ro.containsElementNamed("ls0_cap") || as<std::string>(ro["ls0_cap"]) != "ell_n";
+OK            [PROOF.md] cpp/v3_core.cpp:469-469 sha=35f7274942 | ModeResult m = start_mode(st, 1000000, o.ls0_tie_dp);
+OK            [PROOF.md] cpp/v3_start.h:220-224 sha=fc383d4a28 | for (int k = 0; k <= K; ++k) {
+OK            [PROOF.md] cpp/v3_start.h:281-301 sha=09dd494518 | std::function<void(int, int)> rec = [&](int b, int r) {
+OK            [PROOF.md] cpp/v3_start.h:111-111 sha=9b957391c6 | if (j <= top) st.codes_by_size[b][j].push_back(code);
+OK            [PROOF.md] cpp/v3_start.h:201-209 sha=769e681a34 | for (int b = 0; b < J; ++b) {
+OK            [PROOF.md] cpp/v3_start.h:261-261 sha=9334c5c245 | if (dp.kbest < 0 || !feasible()) throw std::runtime_error("start_mode tie DP: no tight path from (J, kbest) (i
+OK            [PROOF.md] cpp/v3_start.h:263-268 sha=ae0fe18066 | for (int i = 0; i < p; ++i) {
+OK            [PROOF.md] cpp/v3_score.h:40-40 sha=3b222c88d0 | D.n = n; D.p = p; D.K = std::min(p, n / 2); D.W = nwords(p);
+OK            [PROOF.md] cpp/v3_core.cpp:473-473 sha=eb29fd99a2 | long long cap_ll = (long long)o.ls0_ell + (o.ls0_cap_plus_mode ? (long long)m.S.size() : 0LL);  // checked (R0
+OK            [PROOF.md] cpp/v3_core.cpp:474-474 sha=2efd1bb2f7 | if (o.ls0_ell < 0 || cap_ll > (long long)std::numeric_limits<int>::max()) stop("LS0 move cap out of range");
+
+36 citations: 36 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+Not machine-checked: unbackticked references and the semantic match of each excerpt.

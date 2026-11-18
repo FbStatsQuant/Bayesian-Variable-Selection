@@ -1,0 +1,338 @@
+##### STATEMENT.md : as frozen in MANIFEST_SW1 (de9ccec7…) -> current (sha 05d6a8bc6a6872ca)
+--- a/STATEMENT.md (frozen for the sweep)
++++ b/STATEMENT.md (current)
+@@ -1,4 +1,4 @@
+-# W3-DIST — STATEMENT (v1.4.8, 2026-11-16; lead: Claude Fable 5.2, Claude Third, high)
++# W3-DIST — STATEMENT (v1.4.9, 2026-11-16; lead: Claude Fable 5.2, Claude Third, high)
+ 
+ **Status: targets TC1–TC9 fixed by HQ at CP1; proofs are in `lemmas/` and `work/<stream>/`; the check state of every item is
+ in `DEPS.tsv` (a statement here is checked only if its row says OK).** v1.4 = v1.3.1 with the dispositions of the blind read S2
+@@ -292,7 +292,7 @@
+   every measurable B. Store BMA: L_n = 1/π(𝒯). A single model Ŝ: L_n = 1/π(Ŝ).
+ - (C-i) **Store BMA.** For every λ ∈ [0, c): P⊗( {completed} ∩ {π(𝒯) ≥ e^{−λt}} ∩ {Π̂^𝒯(B_n) > e^{−(c−λ)t}} ) ≤
+   3e^{−ct} + P*(interfaces fail); on {completed} ∩ {π(𝒯) ≥ e^{−λt}} ∩ {Π̂^𝒯(B_n) ≤ e^{−(c−λ)t}} the store-BMA predictive density satisfies
+-  d_H²(f̄^𝒯, f*) ≤ C²t/n + e^{−(c−λ)t}. Threshold form: for every a ∈ (0, 1], on the success event of DIST-1 every completed
++  d_H²(f̄^𝒯, f*) ≤ ε_n² + e^{−(c−λ)t}, where ε_n² = C²t/n for the bad set of (1.1) and ε_n² = C²tℓ_n/n for that of (1.2) [SW1-03]. Threshold form: for every a ∈ (0, 1], on the success event of DIST-1 every completed
+   run with π(𝒯) ≥ a has Π̂^𝒯(B_n) ≤ ϱ_n/a (pathwise; proved in `work/D_output/P6_DISTC.md` as (C-i°)) [stream D SCR-2].
+ - (C-ii) **When does the store hold enough mass?** (α) With selection: on {completed} ∩ {S₀ ∈ 𝓜} ∩ {δ_n < ½}, S₀ ∈ 𝒯
+   and π(𝒯) > ½ (S₀ is then the unique maximiser of F and the top store keeps the best-scored offered model:
+@@ -356,12 +356,14 @@
+ s₀ ∈ {0, …, s₀^r} with s₀ ≤ K, noise G, p ≤ n^A. Under (E; M), (C; M′), (ND; c_D, m_n(t)): there are c, C, C′, M₀ and **one
+ n₀ valid for every t in the range**, such that for n ≥ n₀ and M₀ log n ≤ t ≤ n^{1−κ₀}, with d_t := s₀ + ⌈C′t/log n⌉:
+   P_ε[ Π( ‖μ̂ − μ‖² > Cσ*²t  or  |v/σ*² − 1| > C√(t/n)  or  |S| > d_t | y ) > e^{−ct} ] ≤ 2e^{−ct}.
+-Structure: (X1) noise event; (X2) good models (|S| ≤ d_t, L_S ≤ C″σ*²t) have conditional mass ≤ e^{−ct} outside the
+-ball; (X3) small models with large ridge loss have total mass ≤ e^{−ct}π(S₀); (X4) models with |S| > d_t have total mass
+-≤ e^{−ct} with probability ≥ 1 − e^{−ct}: supersets by truncated Occam moments under (ND) with Lemma V — **paying the
+-factor exp(‖P_{S₀}e‖²/2σ*²) ≤ e^{C(t + s₀ log n)}, the union multiplicity 2^{s₀}(2p)^{s₀}(n+1)^{s₀/2} and the variance
+-surcharge ε_{n,t}(j log n + t), ε_{n,t} = O(√(t/n) + (m_n(t)+s₀) log n/n), before Markov** —; other large models through
+-their union with S₀; sizes above m_n(t) by Lemma S.
++Structure of the proof (`lemmas/X.md`, self-contained) [SW1-01]: (X1) a noise event; (X2) good models (|S| ≤ d_t, L_S ≤ C″σ*²t)
++have conditional mass ≤ e^{−ct} outside the ball, by the conditional Gaussian and inverse-gamma laws; (X3) small models
++with large ridge loss have total mass ≤ e^{−ct}π(S₀) (their score is suppressed); (X4) models with |S| > d_t have total
++mass ≤ e^{−ct} with probability ≥ 1 − e^{−ct}: for sizes in (d_t, m_n(t)], a moment of order λ = (4A+1)/(4A+2) of the Bayes
++factors of the supersets of S₀ under (ND), every other model of these sizes being compared with its union with S₀ (the
++multiplicity is paid by M₀ ≥ (A+1)s₀^r), then Markov's inequality; sizes above m_n(t) by a size tail that the proof file
++derives itself (numerator in expectation, denominator on the noise event). Lemmas S and V are companion results with
++their own proofs (`work/C_size/`); the proof of Lemma X re-derives the instances it needs and does not depend on them.
+ 
+ **Lemma X′ (the same without (ND)).** Under (E; M), (C; M′) only, with constants depending also on κ₀: the conclusion
+ of Lemma X holds with ‖μ̂ − μ‖² > Cσ*²tℓ_n and |S| > m_n(t) in place of ‖μ̂ − μ‖² > Cσ*²t and |S| > d_t (the variance
+@@ -418,7 +420,7 @@
+ | consumed | recorded status | used for | exact content used |
+ |---|---|---|---|
+ | W3-POST2:D (v1.1.0; D.D(a) 1.0.0, D.D(b) 1.2.0) | **HQ note 2026-11-15: "council-passed C1 (11-09); D(b) repaired after the council, single Sol check (PC2); diff round in progress"** (registry: "PROVED (by this seat, unchecked)") | Lemma H and X2 use only the computations D0, D1 (re-derived here); **D(a) is no longer consumed** (DIST-3 v1.1 is self-contained); **D(b) only in fallback F-b**, which is conditional on it (rule 11) | Lemma D0; D1(a)–(d); D(b) (fallback only) |
+-| W3-POST2:A0, A1 (1.0.0) | "PROVED (by this seat, unchecked)" | (ND) interface; X4 | (F_w) ⇒ (DG) ⇒ (ADG); truncated Occam weights a_J (re-derived with t-scaled truncation) |
++| W3-POST2:A0, A1 (1.0.0) | "PROVED (by this seat, unchecked)" | the form of the (ND) interface | A0: (F_w) ⇒ (DG) ⇒ (ADG), which motivates (ND) and is the model for bridge B2. **Not consumed as a premise**: the proof of Lemma X uses (ND) directly through a fractional moment and does not use A1's truncated Occam weights [SW1-01] |
+ | W3-POST2:B (1.0.0) | "PROVED (by this seat, unchecked)" | Lemma S (proof re-run with exponential tails) | Steps 1–4 of `B_tail_approx.md` |
+ | W3-POST2:E (1.0.0) | "PROVED (by this seat, unchecked)" | X3 (template) | Lemma E1(b) |
+ | W3-POST:Lemma-1a′ (1.0.0) | "PROVED (by this seat, unchecked)" | Lemma S (starting point) | design-free size tail |
+@@ -489,6 +491,8 @@
+ | 1.4.6 | DIST-C (C-ii)(γ) added; Corollary C's closing sentences: the condition concerns the total posterior probability of the list, and the posterior is in general a mixture over many models | EQUAL (descriptive sentences; no statement relied on a point-mass posterior — (C-ii)(α) and the retention sentence use π(S₀) > ½ only as a sufficient condition) | cross-department finding: at moderate n the store law is a mixture over S₀ and many one-extra-variable supersets | Engineering via HQ and the manager (`Docs/Experiments/P1M/DECISIONS.md` D-17) | `reviews/D1_sol_diff.md`: CONFIRMED |
+ | 1.4.7 | DIST-1 (c): the dependence of the rate constant on the sparsity is written out (C free of s₀^r; explicit bound on M₀; raw sparsity s₀^r in place of s₀) | EQUAL on TC3 ("M₀ = O((1 + s₀^r)(A + 1))" is now proved as written, for fixed (σ*², M, M′); v1.3's sentence was not established by the proof files: the constants of `lemmas/X.md` v0.3 gave M₀ ≳ s log s and C growing with s). Proof files: `lemmas/X.md` v0.4, `lemmas/DIST12.md` v0.2 (constants only) | a claimed constant dependence was not established | `reviews/L6_sol_DIST12.md` L6-01 (MAJOR) | `reviews/D1_sol_diff.md`: **CONFIRMED (EQUAL on TC3)**; the repair VERIFIED (Part A items 1–7) |
+ | 1.4.8 | DIST-C (C-i): "on the complementary success event" replaced by the explicit event {completed} ∩ {π(𝒯) ≥ e^{−λt}} ∩ {Π̂^𝒯(B_n) ≤ e^{−(c−λ)t}}; changelog tags of three v1.4 rows split | EQUAL on TC8 (TC8 fixes the delivery statements "jointly with {completed} and under its named premise", which is this event; the loose phrase, read literally, also covered stopped runs and lists of small posterior probability, where nothing was proved or intended; the probability display and (C-0) are unchanged) | the statement did not match the proved form (`work/D_output/P6_DISTC.md` SCR-4) | `reviews/D1_sol_diff.md` D1-02, D1-03, D1-04 | `reviews/D3_sol_diff.md`: **CONFIRMED (EQUAL on TC8)**; D1-01 … D1-04 RESOLVED; Corollary C's reported-model conclusion VERIFIED |
++| 1.4.9 | DIST-C (C-i): the predictive display written for both readings (ε_n² = C²t/n for (1.1), C²tℓ_n/n for (1.2)) | EQUAL on TC8 (the sentence introducing DIST-C already said "(or (1.2), with its rate)"; the display now carries the substitution, as the proof does in `work/D_output/P6_DISTC.md` Remark 6.6; read literally for (1.2), the old display omitted ℓ_n) | the display left the substitution implicit | `reviews/SW1_sweep_astra.md` SW1-03 | pending (`reviews/D4_sol_diff.md`) |
++| 1.4.9 | §3 Lemma X: the paragraph describing the structure of the proof, and the consumes row for W3-POST2:A0, A1 | EQUAL (descriptions of the proof route and of what is consumed; the statement of Lemma X is unchanged). They described an earlier route (truncated moments, Lemmas S and V as inputs); the adopted proof is the fractional-moment route of `lemmas/X.md` and is self-contained | description did not match the adopted proof | `reviews/SW1_sweep_astra.md` SW1-01 | pending (`reviews/D4_sol_diff.md`) |
+ Target clauses TC1–TC9 were fixed by HQ at CP1 (2026-11-15) in their v1.3 form; TC10 = companion results. **Relative to that
+ baseline, no row of v1.4 weakens the mathematics of a target clause** (per S2: this sentence is about the CP1 baseline, not
+ about the history before it — the pre-CP1 rows 1.0.1, 1.1 and 1.3 marked WEAKER did narrow ranges or add remainder events).
+
+##### work/E_bridges/B3.md : as frozen in MANIFEST_SW1 (de9ccec7…) -> current (sha 47ffb2b603de5cc0)
+--- a/work/E_bridges/B3.md (frozen for the sweep)
++++ b/work/E_bridges/B3.md (current)
+@@ -8,7 +8,7 @@
+ Assume the reader setting (`STATEMENT.md:128-169`) with (A1)–(A5) for the window of M = 1,
+   q_n := min{p, ⌈C_q log n⌉},  C_q = 2(s(A + 2) + 4)/log 2,
+ exactly s ≥ 1 nonzero coordinates of β*, and (A6) (`STATEMENT.md:196-197`):
+-(a) λ_min(Corr(x_T)) ≥ ψ > 0 for every T with |T| ≤ (2A + 3)s + 2; (b) min_{β*_j≠0}|β*_j|·sd(x_j)/σ* ≥ b_n, b_n²n/log n → ∞.
++(a) λ_min(Corr(x_T)) ≥ ψ > 0 for every T with |T| ≤ (2A + 3)s + 2; (b) min_{β*_j≠0}|β*_j|·sd(x_j)/σ* ≥ b_n with **b_n > 0** and b_n²n/log n → ∞ [SW1-04: positivity copied from the statement of (A6); Step 5 squares the bound].
+ By `B0.md` work in the unit-noise model (α* = 0, σ* = 1, coefficients β*/σ*; all interface constants in units of σ*²;
+ we keep the names β*, θ*, μ for the reduced objects). Let 𝒜_n := 𝓔₁ ∩ 𝓔₂(q_n) (`B1.md`, `B2core.md`). Put
+   M_E := 2s²b̄², M_C := 2sb̄², B := M_E + M_C, φ₀² := ψ/4, g₀ := c_ψ/8, M_n := b_n²nψ/(8 log n), j₀ := ⌈(2A + 1)s⌉ + 1,
+
+##### TARGET.md : as frozen in MANIFEST_SW1 (de9ccec7…) -> current (sha e53d74a2551d09f4)
+--- a/TARGET.md (frozen for the sweep)
++++ b/TARGET.md (current)
+@@ -13,8 +13,8 @@
+ | p_raw ≤ n^A | constants | proof device; S-EXP stretch |
+ | 𝒟_n = {p_ret ≥ 2} | remainder | proof device |
+ | (E; M) energy | s_y bracket, X3, S | some bound on signal energy is needed with the s_y-scaled prior |
+-| (C; M′) / (L₀; B) coefficient cost | X3, S through L_{S₀} | very weak; replaces the floor on S₀ |
+-| **(ND)** average determinant growth | X4 only | **not needed for consistency** (DIST-2); needed by this proof for the sharp rate and the full exponent; absent from [SL]; `improvable` (N4; S-FIT open) |
++| (C; M′) coefficient cost; (L₀; B) ridge loss of the true model | (E) and (C) together bound ρ′ = (‖μ‖² + ‖θ*‖²)/n ≤ M + M′, which Lemmas X, X′ use (small models with large ridge loss; the comparison of a model with its union with S₀). (L₀), which (E) and (C) imply, is enough for DIST-3 and for the size tail with reference (S₀, θ*); it is **not** shown to replace (C) in DIST-1 [SW1-02] | very weak; replaces the floor on S₀ |
++| **(ND)** average determinant growth | X4 only | **not needed for consistency** (DIST-2); needed by this proof for the sharp rate and the full exponent; absent from [SL]; `improvable` in one simulated family (N4; historical). Status after Proposition NEC: the fixed-design exponential form at the sharp radius is false without (ND); open: the in-probability form, and a random-design counterexample [SW1-05] |
+ | (TR₀) second moments on supp β* | DIST-3 only | needed by this route at scale 1/n |
+ | beta-min, identifiability ([SL] Condition 3) | **not assumed** | — |
+ 
+@@ -26,7 +26,7 @@
+ | **P1 metric** | Hellinger between joint (x, y) densities, x-marginal integrated (d² = 2d_H²) | the same distance, d_H (DIST-1/2/3); sample → population by Lemma H + Lemma T | **matches**; the transfer step needs no condition on the predictor law, where [SL] need bounded predictors or Condition 1/2 | design-agnostic ✓ | **beats** (out-of-sample, random design) |
+ | **P2 mode (15)** | P*[π(d > ε_n) > e^{−c₁nε_n²}] < e^{−c₁nε_n²} under Condition 1 | DIST-1 (1.1): the same display with remainder P*(interfaces fail); for all ε_n² ∈ [C²M₀ log n/n, C²n^{−κ₀}] | **matches in form**, under (ND). Tail condition: only the probability of (E), (C), (ND); in the reader form (§6), sub-Gaussian predictors and bounded signal (bridges B1, B2). **Short** in two respects: needs (ND), which [SL] do not; sequences with ε_n² > n^{−κ₀} get exponent c n^{1−κ₀} only | ✓ | **beats** (exponential vs in probability) |
+ | **P2 mode (16)** | lim P*[π(d > ε_n) > e^{−c₁nε_n²}] = 0 under second moments (Condition 2) | DIST-1(b) when P*(interfaces fail) → 0; (E), (C) need only second moments of the true signal coordinates | **matches** given (ND) w.p. → 1; **beats** on the moment condition for the transfer. No primitive second-moment condition for (ND) is claimed (an atom of mass 1 − 1/n makes two sample columns identical with probability ≈ e⁻¹: P1-02) | ✓ | **beats** |
+-| P2 without (ND) | — ([SL] need no design geometry) | DIST-2 (1.2): exponential form with exponent c nε_n²/ℓ_n | **short**: exponent reduced by ℓ_n. Reason: the coded size prior is ≈ geometric(½), [SL] hard-cap the size at r̄_n; closing it = stretch S-FIT (kill budget: 1 attempt + 1 break review) | ✓ no geometric condition | new |
++| P2 without (ND) | — ([SL] need no design geometry) | DIST-2 (1.2): exponential form with exponent c nε_n²/ℓ_n | **short**: exponent reduced by ℓ_n. Reason: the coded size prior is ≈ geometric(½), [SL] hard-cap the size at r̄_n; closing it = stretch S-FIT (kill budget: 1 attempt + 1 break review). Status: for the fixed-design in-sample core the answer is negative (Proposition NEC: the exponential form at the sharp radius fails without (ND)); for the random-design Hellinger statement and for the in-probability form the question remains open [SW1-05] | ✓ no geometric condition | new |
+ | **P3 rate** | Thm 2 at polynomial p: any ε_n with r_n → ∞, r̄_n ≥ r_n, r̄_n log n = o(nε_n²) — i.e. ε_n² = ω_n log n/n with ω_n → ∞ tied to the prior's cap; Cor 1 as printed (fixed α ∈ (0, 1)): ε_n² = n^{−(1−α)} log^k n | DIST-1: ε_n² of order (1 + s₀^r)(A + 1) log n/n, i.e. (1 + s₀^r) log p/n for p = n^A (for fixed σ*², M, M′), no diverging factor, no tuning; DIST-3: √(u/n) oracle/parametric given selection; DIST-2: (1 + s₀^r) log n·ℓ_n/n | DIST-1 **beats** both (constant × log n/n; and beats Cor 1's printed rate for every fixed α). DIST-3 **beats** (parametric; [SL] have none). DIST-2 **beats Cor 1 as printed** but is **short** of Thm 2's best (ω_n log n/n, any ω_n → ∞) by the factor log n/ω_n | p ≫ n ✓ | **beats** D(b) in generality ((OS) → (ND) is stronger, but no (F₀)); equal rate |
+ | **P4 sparsity** | Thm 2: strict (4). Thm 1: approximate (3) with bounded predictors | strict, s₀^r fixed | **matches** Thm 2; **short** of Thm 1 (approximate sparsity) → stretch S-APX (kill budget: 1 attempt after CP2) | ✓ | equal |
+ | **P5 prior** | a family of priors: Bernoulli(r_n/P_n) with r_n → ∞, hard cap r̄_n tied to ε_n, V_ξ with envelopes (9)–(14) | the prior **as coded**, no tuning: BB(1, p) capped at K = min(p, ⌊n/2⌋), data-dependent slab and IG rate | **matches the checklist** (coded prior, no tuning). [SL]'s own conditions (9), (10), (11) and "r_n ≻ 1" **fail** for it (cap ⌊n/2⌋; mean size O(1)); their sieve route is incompatible with a geometric size prior when log p → ∞ (H1 §2, unchecked; S1-04 agrees on (9)–(11)). Route that works: conditional on the design, closed-form marginal likelihoods, Occam factor | method as coded ✓ | equal |
+@@ -44,7 +44,7 @@
+ BT1 (drop (F₀) in DIST-3) — adopted. BT2 (oracle exponential bound with additive δ_n) — adopted. BT3
+ (reference-adaptive size lemma, no p ≤ n^A) — adopted. BT4 (domination transfer for any output law) — adopted.
+ Details and evidence: `reviews/S1_disposition.md`. S1 also attacked the comparison rows (S1-04); the table above is
+-the corrected one.
++the corrected one. The sweep SW1 listed seven further strengthenings that the proofs already give (weaker forms of (ND) in Lemma X; an outer bound δ/2 in Lemma T; a finite-n form of Lemma S; ranks in Lemma V; the constant c_ψ/4 in B2; DIST-3 without p ≤ n^A; pathwise thresholds in P6). Disposition: **named open items, not adopted in this leg** (the statements stay as fixed at CP1; adopting any of them is HQ's decision): `reviews/SW1_disposition.md`.
+ 
+ ## 5. Target clauses (proposed for HQ to fix at CP1; a WEAKER change to any of them is an early checkpoint)
+ - **TC1 (metric).** d_H between the joint (x, y) laws f_{S,θ,v} and f*, x-marginal ν_x integrated; rows i.i.d.; ν_x arbitrary.
+
+##### ASSUMPTION_MAP.md : as frozen in MANIFEST_SW1 (de9ccec7…) -> current (sha f7b05e3fc6872898)
+--- a/ASSUMPTION_MAP.md (frozen for the sweep)
++++ b/ASSUMPTION_MAP.md (current)
+@@ -12,8 +12,8 @@
+ | A-sp | strict sparsity, s₀ fixed | X3 (constant M₀ ∝ s₀(A+1)), Lemma S (cost (2p)^{s₀}n^{s₀/2}) | growing s₀ changes rates to s₀ log p/n at best; approximate sparsity is stretch S-APX | N5 |
+ | A-p | p ≤ n^A | constants in X1, X3; R1 | proof device for constants; S-EXP stretch | N7 (p ≫ n) |
+ | (E) | ‖μ‖² ≤ nM | X1(iv) (s_y), X3, Lemma S | some bound on signal energy is needed for the s_y-scaled prior; M enters constants only | — |
+-| (C) | ‖θ*‖² ≤ nM′ | Lemma S and X3 through L_{S₀} ≤ B_{S₀}(θ*) | very weak; replaces (F₀) (cf. [W3P] 1a′). Looks necessary only in this weak form | — |
+-| (ND) | average determinant growth on supersets up to size m_n(t) | X4(b),(c) only | **not necessary for consistency** (DIST-2 holds without it); needed by this proof for the sharp rate and the full exponent. Whether the sharp rate holds without it is S-FIT (open). Flag: `improvable` pending N4 | N4 (near-duplicate cluster, τ² ∈ {n⁻², n⁻¹, log n/n, 1}) |
++| (C) | ‖θ*‖² ≤ nM′ | Lemmas X, X′ through ρ′ = (‖μ‖² + ‖θ*‖²)/n ≤ M + M′ (with (E)): small models with large ridge loss, and the comparison of a model with its union with S₀ (which pays 3ρ′). Lemma S and DIST-3 need only the weaker L_{S₀} ≤ B; (L₀) is not shown to replace (C) in DIST-1 [SW1-02] | very weak; replaces (F₀) (cf. [W3P] 1a′). Looks necessary only in this weak form | — |
++| (ND) | average determinant growth on supersets up to size m_n(t) | X4(b),(c) only | **not necessary for consistency** (DIST-2 holds without it); needed by this proof for the sharp rate and the full exponent. Without it the exponential form at the sharp radius is false for the fixed-design core (Proposition NEC, `lemmas/NEC.md`); the in-probability form and a random-design counterexample are open (S-FIT). N4's `improvable` flag is historical evidence about one simulated family [SW1-05] | N4 (near-duplicate cluster, τ² ∈ {n⁻², n⁻¹, log n/n, 1}) |
+ | (L₀), δ_n, (TR₀) | DIST-3 only | oracle bound given S = S₀; transfer at the parametric scale | (F₀) of v1.0 was not needed (S1 better-theorem 1): dropped. (TR₀) (second moments on supp β*) is needed by this route at scale 1/n; δ_n enters additively | N1 vs N3 |
+ | 𝒟_n = {p_ret ≥ 2} | every theorem (remainder) | inherited lemmas need p ≥ 2 | proof device; p_ret ∈ {0, 1} are finite problems to be treated directly | N2c (dropped columns) |
+ | beta-min | **not assumed** in DIST-1/2 | — | — | N3 (weak signals) |
+@@ -43,7 +43,7 @@
+ | N6 | Lemma T | ρ = E_x[1 ∧ Δ²/4σ*²] / (2·in-sample truncated mean + log n/n), every posterior draw | max ρ over all draws and designs = 1.004 (t₂.₅, n = 50); pooled 0.999-quantile ≤ 0.9; decreasing in n; spikes 0.14–0.25. No violation of Lemma T's form (which allows ρ up to a constant ≈ d·(A + 2)·4) |
+ | N7 | A-p (p ≫ n), restricted family | p = 4n and p = min(n^{1.5}, 600), AR and t₂.₅ | n = 50 not yet in the asymptotic regime (n·d² median 4–5); at n = 200: median 0.9–1.5, q99 3.2–4.0, as at p = 12. Restricted family only |
+ Summary: nothing contradicts a candidate statement. (ND) looks weaker than needed in one simulated family (N4); it is
+-recorded as `improvable` with the stretch item S-FIT and is not dropped from the targets.
++recorded as `improvable` with the stretch item S-FIT and is not dropped from the targets. Current status [SW1-05]: Proposition NEC shows that the fixed-design exponential form fails without (ND); N4 remains a finite-sample observation about one family and does not reopen that question; the in-probability form and a random-design counterexample remain open.
+ **Limits of these numerics (S1-10).** (1) The tail slopes c_t are from posterior draws pooled over replications: an
+ *averaged* posterior tail, not the nested statement of DIST-1 (distribution over data sets of the conditional posterior
+ tail); per replication the resolution is 1/4000. They are finite-n diagnostics, not checks of (1.1). (2) N4 does not
+
+##### API_CARDS.md : as frozen in MANIFEST_SW1 (de9ccec7…) -> current (sha b13c4f3de011216e)
+--- a/API_CARDS.md (frozen for the sweep)
++++ b/API_CARDS.md (current)
+@@ -88,6 +88,7 @@
+ eigenvalue γ ≍ log n/n (near-copies with τ² ≍ log n/n²) on which Π(‖μ̂ − μ‖² > M log n | y) stays ≥ c^M with c close to 1,
+ or ≥ n^{−c} for large M. F-c: non-supersets — replace the comparison with S₀ (cost n^{(A+½)s₀}) by a comparison with
+ the best submodel T ⊆ S₀ and control ρ′_T.
++**Current status (2026-11-16) [SW1-05].** Route F-b succeeded for the fixed-design exponential form: Proposition NEC (`lemmas/NEC.md`) shows that the distance clause of Lemma X fails under (E), (C) alone. The in-probability form (route F-a) and a random-design counterexample remain open.
+ 
+ ## Card B — bridge B2-core (sparse lower bound for the sample covariance; critical path of the reader version)
+ **Statement.** z₁, …, z_n i.i.d. in ℝ^p with E z = 0, Var(z_j) = 1 for all j, and for every u with at most q nonzero
+
+##### REPORT_extra.md : as frozen in MANIFEST_SW1 (de9ccec7…) -> current (sha bb7d4a4f5e98205e)
+--- a/REPORT_extra.md (frozen for the sweep)
++++ b/REPORT_extra.md (current)
+@@ -16,6 +16,8 @@
+ | L6 line check | gpt-6.1-sol | `lemmas/DIST12.md` v0.1 (DIST-1, DIST-2) | displays (1.1), (1.2) and consequences (a), (b), (d), (e) VERIFIED; 1 MAJOR (L6-01: the dependence of the rate constant on the sparsity claimed in consequence (c) was not established) | `L6_disposition.md`: repaired by constants (`lemmas/X.md` v0.4, `lemmas/DIST12.md` v0.2); the target clause is kept |
+ | L7 line check | gpt-6.1-sol | `lemmas/NEC.md` v0.1 (Proposition NEC) | Proposition and Corollary VERIFIED; 2 MINOR, 1 NIT (presentation) | applied (v0.2) |
+ | D1 diff check (re-check of the L6-01 repair; post-check amendments; statement changes v1.3.1 → v1.4.7 with every changelog tag) and D2 (the three L7 amendments) | gpt-6.1-sol, new agents | `lemmas/X.md` v0.4, `lemmas/DIST12.md` v0.2, five amended proof files, `STATEMENT.md`; `lemmas/NEC.md` v0.2 | D1: VERIFIED-WITH-AMENDMENTS: the L6-01 repair VERIFIED, the tag "EQUAL on TC3" CONFIRMED, 15 changelog tags CONFIRMED, 3 corrected; 4 MINOR, 1 NIT. D2: VERIFIED-WITH-AMENDMENTS; 1 MINOR (a numerical remark) | `D1_D2_disposition.md` |
++| SW1 sweep (two passes: blind, then records) | gpt-6-astra, new agent | the whole package, frozen as MANIFEST de9ccec7… (`MANIFEST_SW1.txt`) | 0 CRITICAL, 0 MAJOR, 9 MINOR; every claim and TC1–TC9 "proved as stated" (DIST-C and B3 after local repairs); Corollary C's reported-model conclusion valid | `SW1_disposition.md`; repairs checked by D4 |
++| D4 diff check (the repairs made after the sweep) | gpt-6.1-sol, new agent | `STATEMENT.md` v1.4.9, `work/E_bridges/B3.md`, the maps, this report's registry blocks, `PINS.md` | @@D4@@ | — |
+ | D3 diff check (the amendments applied after D1 and D2; Corollary C's reported-model conclusion) | gpt-6.1-sol, new agent | `STATEMENT.md` v1.4.8 (DIST-C (C-i), changelog), `work/D_output/P6_DISTC.md` A-10, `lemmas/NEC.md` v0.3, `work/D_output/COR_C.md` C2 | VERIFIED, no findings: D1-01 … D1-04 and D2-01 RESOLVED; the tag "EQUAL on TC8" and the three split tags CONFIRMED; Corollary C's reported-model conclusion VERIFIED | — |
+ Proof material that is not a review: API proof attempts `work/api_attempts/dist1/`, `dist1b/` (PROTOCOL_v4 H3). Two were
+ adopted as proofs after the lead's check and then reviewed as above: Lemma X (attempt X-b-1) and Proposition NEC (F-b-r2).
+@@ -39,17 +41,24 @@
+   probability exceeds ½, the true model is the model the method reports as most probable. Companion result; HQ go of
+   2026-11-16 (PROTOCOL_v4 §4.2). The dependence of the rate constant on the sparsity (DIST-1 (c), target clause TC3) is
+   proved as fixed at CP1: tag EQUAL, confirmed by the reviewer of D1.
+-- **Implies / supersedes.** DIST-1 with DIST-3 gives, out of sample and for a random design, what W3-POST2:D gave in
+-  sample for a fixed design; DIST-3 does not use W3-POST2:D. Lemma S strengthens the tail of W3-POST:Lemma-1a' and of
+-  W3-POST2:B (same cutoff order, exponential failure probability). Bridge B2 needs a population sparse eigenvalue floor
+-  of order 1/n, where W3-POST:Cor-1R needs ψ_n√n/(log n)^{3/2} → ∞.
++- **Relations (comparisons, not registry implications) [SW1-08].** DIST-1 and DIST-3 are the out-of-sample, random-design
++  counterparts of what W3-POST2:D states in sample for a fixed design; they hold under their own interfaces and do not
++  imply that claim on its hypotheses. DIST-3 does not use W3-POST2:D. Lemma S strengthens the tail of W3-POST:Lemma-1a' and of
++  W3-POST2:B (same cutoff order, exponential failure probability). For the determinant-floor step only, bridge
++  B2 needs a population sparse eigenvalue floor of order 1/n, where W3-POST:Cor-1R needs ψ_n√n/(log n)^{3/2} → ∞; B2
++  says nothing about the selection conclusion of that corollary.
+ - **Sharpness.** The non-degeneracy interface cannot be dropped from Lemma X: Proposition NEC (fixed design, in sample).
+   NEC contradicts no target clause (its design violates the interface). Whether the in-probability form holds without
+-  the interface is open (stretch S-FIT). The coefficient-cost interface cannot be dropped either (explicit design in
+-  `work/api_attempts/dist1/X-d-1.md` §3(a); unchecked).
++  the interface is open (stretch S-FIT). The registry blocks record this only for the fixed-design core (Lemma X, DIST-1's route). For the
++  reader theorem, (A4) is a sufficient primitive bridge to the interface; its necessity is not established, and NEC
++  is not a random-design statement. (A3), (A5): candidate weakenings with numerical evidence only (`ASSUMPTION_MAP.md`
++  §3), no proved replacement. An API attempt reports a design against dropping the coefficient-cost interface
++  (`work/api_attempts/dist1/X-d-1.md` §3(a)); it is unchecked and is not used as evidence.
+ - **Description of the coded output.** The store law is in general a mixture over many models (the true model and many
+   one-extra-variable supersets; measured by the Engineering Department, `Docs/Experiments/P1M/DECISIONS.md` row D-17).
+-  DIST-C (C-0), (C-i) apply to it as it is; no statement of this ticket assumes a posterior close to a point mass.
++  DIST-C (C-0), (C-i) apply to it as it is: the store-BMA domination and contraction transfer does not require a posterior
++  close to a point mass; the selection-based alternatives (DIST-3's consequence, Theorem B, retention by discovery) keep
++  their named premises.
+ - **Constants.** Explicit constants, not optimised.
+ - **Stretch items not pursued in this leg:** S-APX (approximate sparsity), S-EXP (exponential p), S-FIT (in-probability
+   sharp rate without the interface).
+@@ -59,8 +68,9 @@
+ - **SOP:TH09@1.0.0** — its T01 part ("T01–T03: PROVED-LOCKED (wave 3; external review queued)"): the identification of the
+   coded posterior with the contrast-model posterior, and the locked lemmas of
+   `Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/main@c4ef0dc/Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex`
+-  (`lem:chi`, `lem:prior`, `lem:num`, `lem:spec`, `lem:slab`, `thm:Ta`, the proof of `lem:den`). **Not verified by a
+-  reviewer of this ticket**; every theorem about the coded posterior is "conditional on SOP:TH09 (T01)".
++  (`lem:chi`, `lem:prior`, `lem:num`, `lem:spec`, `lem:slab`, `thm:Ta`, the proof of `lem:den`). **Not audited as a whole by a
++  reviewer of this ticket** (the reviewers of D1, D3 and the sweep read the passages used); every theorem about the
++  coded posterior is "conditional on SOP:TH09 (T01)".
+ - **W3-POST:Thm-1@1.0.0** ("T03♯: PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2)") — premise of reader Theorem B and of
+   the last sentence of bridge B3 only: "conditional on W3-POST:Thm-1".
+ - **W3-MISR:R'@1.0.0** ("PROVED-CHECKED; council R2", accepted) — bridge B0.
+@@ -73,7 +83,8 @@
+   `work/D_output/pins_sha256.txt`). HOLDS.md was read before each step: empty throughout.
+ 
+ ## 6. Files
+-`STATEMENT.md` (@@VER@@), `TARGET.md`, `ROUTES.md`, `PLAN.md`, `ASSUMPTION_MAP.md`, `DEPS.tsv`, `DEPS.md`, `API_CARDS.md`, `REPORT.md`
++`STATEMENT.md` (@@VER@@), `TARGET.md`, `ROUTES.md`, `PLAN.md`, `ASSUMPTION_MAP.md`, `DEPS.tsv`, `DEPS.md`, `API_CARDS.md`, `PINS.md` (the line pins into STATEMENT inside the proof files are historical pins to
++v1.3.1; this record maps each to its object and to the current lines), `REPORT.md`
+ (generated by `mkreport.py` from `REPORT_extra.md`), `LOG.md`, `CHECKPOINT_1.md`, `CHECKPOINT_2.md`; proofs: `lemmas/X.md`,
+ `lemmas/DIST12.md`, `lemmas/NEC.md` (and `lemmas/X_route_a.md`, an independent second derivation of Lemma X, not on the
+ path), `work/B_transfer/`, `work/C_size/`, `work/D_output/`, `work/E_bridges/`; numerics: `work/numerics/`, `work/F_numerics/`;
+@@ -87,17 +98,16 @@
+ claim: W3-DIST:DIST-1 | kind: theorem | statement: STATEMENT.md:@@DIST-1@@ | premises: STATEMENT.md:@@setting@@
+ status: @@st:DIST-1@@ | status_source: REPORT.md:@@line:DIST-1@@
+ assumptions: A:DIST-RD (new | random design, Gaussian noise | rows iid from an arbitrary law on R^{p_raw}; noise N(0, sigma*^2) independent of the design, sigma*^2 fixed | STATEMENT.md:@@setting@@ | shared yes) ; A:DIST-SPARSE (new | strict sparsity, null truth allowed | the support of beta* has a fixed size s0^r >= 0 | STATEMENT.md:@@setting@@ | shared yes) ; A:P-POLY ; A:DIST-DOM (new | at least two retained columns | p_ret >= 2 | STATEMENT.md:@@setting@@ | shared yes | bridge W3-DIST:B1) ; A:ENERGY ; A:COEF-REP ; A:DIST-ND (new | no degeneracy on average | average determinant growth over supersets of S0 of each size up to m_n(t) | STATEMENT.md:@@setting@@ | shared no | bridge W3-DIST:B2)
+-conclusion: posterior: P*[Pi(d_H(f, f*) > C sqrt(t/n) or |S| > s0 + C' t/log n | D_n) > e^{-ct}] <= 3 e^{-ct} + P*(interfaces fail), for M0 log n <= t <= n^{1-kappa0}; d_H the Hellinger distance between joint (x, y) laws | rate: C sqrt(log n / n) at t = M0 log n | scope: exact coded posterior; random design; p_raw <= n^A, p >> n allowed; no beta-min; no condition on the predictor law beyond the interfaces
++conclusion: posterior: P*[Pi(d_H(f, f*) > C sqrt(t/n) or |S| > s0 + C' t/log n | D_n) > e^{-ct}] <= 3 e^{-ct} + P*(interfaces fail), for M0 log n <= t <= n^{1-kappa0}; d_H the Hellinger distance between joint (x, y) laws | rate: C sqrt(M0 log n / n) at t = M0 log n, with C free of the sparsity and M0 <= 16 + 4(1 + s0^r)(A + 1) + 3(M + M')/(2 sigma*^2) | scope: exact coded posterior; random design; p_raw <= n^A, p >> n allowed; no beta-min; no condition on the predictor law beyond the interfaces
+ depends_on: W3-DIST:H@stmt ; W3-DIST:T@stmt ; W3-DIST:X@stmt ; SOP:TH09@hyp
+-implies: W3-POST2:D (in-sample fixed-design Hellinger contraction at rate log n / n follows from Lemma X under its interfaces; the population statement is new)
+-sharpness: A:DIST-ND = NECESSARY-FOR-ROUTE (evidence: lemmas/NEC.md:8) ; A:COEF-REP = NECESSARY-FOR-ROUTE (evidence: work/api_attempts/dist1/X-d-1.md:42) ; A:P-POLY = ARTEFACT (evidence: ASSUMPTION_MAP.md:13)
++sharpness: A:DIST-ND = NECESSARY-FOR-ROUTE (evidence: lemmas/NEC.md:8) ; A:P-POLY = ARTEFACT (evidence: ASSUMPTION_MAP.md:13)
+ gates: lit:PARTIAL(TARGET.md) ; necessity:PARTIAL(ASSUMPTION_MAP.md) ; better-proposal:BT1-BT4(reviews/S1_astra.md) ; better-disposition:BT1-BT4=adopted(reviews/S1_disposition.md)
+ 
+ REGISTRY
+ claim: W3-DIST:DIST-2 | kind: theorem | statement: STATEMENT.md:@@DIST-2@@ | premises: STATEMENT.md:@@setting@@
+ status: @@st:DIST-2@@ | status_source: REPORT.md:@@line:DIST-2@@
+ assumptions: A:DIST-RD ; A:DIST-SPARSE ; A:P-POLY ; A:DIST-DOM ; A:ENERGY ; A:COEF-REP
+-conclusion: posterior: the display of W3-DIST:DIST-1 with radius C sqrt(t log(p_raw v n)/n) and no size clause, remainder without the non-degeneracy interface | rate: sqrt(log n log(p v n) / n) | scope: as W3-DIST:DIST-1, no condition on the dependence among predictors
++conclusion: posterior: the display of W3-DIST:DIST-1 with radius C sqrt(t log(p_raw v n)/n) and no size clause, remainder without the non-degeneracy interface | rate: sqrt(log n log(p_raw v n) / n) | scope: as W3-DIST:DIST-1, no condition on the dependence among predictors
+ depends_on: W3-DIST:H@stmt ; W3-DIST:T@stmt ; W3-DIST:X'@stmt ; SOP:TH09@hyp
+ gates: lit:PARTIAL(TARGET.md) ; necessity:PARTIAL(ASSUMPTION_MAP.md)
+ 
+@@ -105,7 +115,7 @@
+ claim: W3-DIST:DIST-3 | kind: theorem | statement: STATEMENT.md:@@DIST-3@@ | premises: STATEMENT.md:@@setting@@
+ status: @@st:DIST-3@@ | status_source: REPORT.md:@@line:DIST-3@@
+ assumptions: A:DIST-RD ; A:DIST-SPARSE ; A:DIST-DOM ; A:ENERGY ; A:DIST-L0 (new | bounded ridge loss of the true model | L_{S0} <= B | STATEMENT.md:@@setting@@ | shared no | bridge W3-DIST:B1) ; A:DIST-TR0 (new | second-moment comparison on the true support | E_x (a + w'x)^2 <= C_T times its sample mean for all a and all w supported on supp beta* | STATEMENT.md:@@DIST-3@@ | shared no | bridge W3-DIST:B3)
+-conclusion: posterior: Pi(d_H > C sqrt(u/n) | D_n) <= delta_n + C e^{-u} outside a noise event of probability C e^{-u}, 1 <= u <= n^{1-kappa0}; hence Pi(d_H > M_n/sqrt(n) | D_n) -> 0 in probability when delta_n -> 0 | rate: M_n / sqrt(n) | scope: exact coded posterior; random design; no eigenvalue floor; no polynomial bound on p
++conclusion: posterior: Pi(d_H > C sqrt(u/n) | D_n) <= delta_n + C e^{-u} outside a noise event of probability C e^{-u}, 1 <= u <= n^{1-kappa0}; hence Pi(d_H > M_n/sqrt(n) | D_n) -> 0 in probability when delta_n -> 0 and the four design events have probability tending to one | rate: M_n / sqrt(n) | scope: exact coded posterior; random design as in (RD), p_raw <= n^A; no eigenvalue floor
+ depends_on: W3-DIST:H@stmt ; SOP:TH09@hyp
+ gates: better-proposal:BT1-BT2(reviews/S1_astra.md) ; better-disposition:BT1-BT2=adopted(reviews/S1_disposition.md)
+ 
+@@ -113,17 +123,16 @@
+ claim: W3-DIST:DIST-C | kind: theorem | statement: STATEMENT.md:@@DIST-C@@ | premises: STATEMENT.md:@@code@@
+ status: @@st:DIST-C@@ | status_source: REPORT.md:@@line:DIST-C@@
+ assumptions: A:EX-A ; A:DIST-RD ; A:DIST-SPARSE ; A:P-POLY ; A:DIST-DOM ; A:ENERGY ; A:COEF-REP ; A:DIST-ND
+-conclusion: delivery: for any output-defined law Q on models with Q <= L pi, the reconstructed parameter law has QPi(B) <= L Pi(B | D_n); the store-restricted posterior and the HPM and MPM plug-ins inherit W3-DIST:DIST-1 or DIST-3 under named premises on the run (enough posterior mass in the returned store, or discovery of the true model); all statements jointly with a completed run | scope: output of the final SMC run (no particles, no parameter draws, no predictive are returned); exact-enumeration branch excluded
+-depends_on: W3-DIST:P6@stmt ; W3-DIST:DIST-1@stmt ; W3-DIST:DIST-3@stmt ; W3-SAMP:CC@stmt ; W3-SAMP:D@hyp ; W3-SAMP:PC@hyp ; W3-SAMP:LT#@hyp ; W3-SAMP:C@hyp ; W3-SAMP:TR@hyp ; SOP:TH09@hyp
++conclusion: delivery: for any output-defined law Q on models with Q <= L pi, the reconstructed parameter law has QPi(B) <= L Pi(B | D_n); this domination clause needs no contraction hypothesis; the store-restricted posterior then inherits W3-DIST:DIST-1 (under its interfaces, non-degeneracy included) or W3-DIST:DIST-2 (without non-degeneracy, at its rate) when the returned store has enough posterior mass; the HPM and MPM plug-ins inherit W3-DIST:DIST-3 under its own premises and the named premises on the run (discovery of the true model); all statements jointly with a completed run | scope: output of the final SMC run (no particles, no parameter draws, no predictive are returned); exact-enumeration branch excluded
++depends_on: W3-DIST:P6@stmt ; W3-DIST:DIST-1@stmt ; W3-DIST:DIST-2@stmt ; W3-DIST:DIST-3@stmt ; W3-SAMP:CC@stmt ; W3-SAMP:D@hyp ; W3-SAMP:PC@hyp ; W3-SAMP:LT#@hyp ; W3-SAMP:C@hyp ; W3-SAMP:TR@hyp ; SOP:TH09@hyp
+ gates: better-proposal:BT4(reviews/S1_astra.md) ; better-disposition:BT4=adopted(reviews/S1_disposition.md)
+ 
+ REGISTRY
+ claim: W3-DIST:Thm-A | kind: theorem | statement: STATEMENT.md:@@Thm-A@@ | premises: STATEMENT.md:@@setupR@@
+ status: @@st:Thm-A@@ | status_source: REPORT.md:@@line:Thm-A@@
+ assumptions: A:DIST-A1 (new | Gaussian linear model, any noise level | y = alpha* + x'beta* + eps, eps normal and independent of x, sigma* > 0 free | STATEMENT.md:@@setupR@@ | shared yes | bridge W3-DIST:B0) ; A:DIST-A2 (new | sparsity and dimension | at most s nonzero coefficients, 2 <= p <= n^A | STATEMENT.md:@@setupR@@ | shared yes) ; A:DIST-A3 (new | sub-Gaussian predictors on sparse directions | E exp(lambda u'z) <= exp(K^2 lambda^2 Var(u'z)/2) for u with at most q_n nonzero entries | STATEMENT.md:@@setupR@@ | shared yes | bridge W3-DIST:B2core) ; A:DIST-A4 (new | no near-exact collinearity | smallest eigenvalue of Corr(x_T) at least c_psi/n for sets T of at most q_n predictors | STATEMENT.md:@@setupR@@ | shared yes | bridge W3-DIST:B2) ; A:DIST-A5 (new | bounded signal | abs(beta*_j) sd(x_j) <= b sigma* for every j | STATEMENT.md:@@setupR@@ | shared yes | bridge W3-DIST:B1)
+-conclusion: posterior: P*[Pi(d_H(f, f*) > sqrt(M log n/n) | D_n) > n^{-cM}] <= n^{-cM} and P*[Pi(|S| > s + C1 M | D_n) > n^{-cM}] <= n^{-cM}, M0 <= M <= sqrt(n)/log n; without the collinearity assumption, radius sqrt(M log n log(p v n)/n) and size s + C1 M log n | rate: sqrt(log n / n) | scope: exact coded posterior, prior as coded, no tuning; p >> n allowed; no beta-min
++conclusion: posterior: P*[Pi(d_H(f, f*) > sqrt(M log n/n) | D_n) > n^{-cM}] <= n^{-cM} and P*[Pi(|S| > s + C1 M | D_n) > n^{-cM}] <= n^{-cM}, M0 <= M <= sqrt(n)/log n, both bounds holding on one data event of probability at least 1 - n^{-cM}; without the collinearity assumption (and with the sub-Gaussian assumption on single predictors only), the same with radius sqrt(M log n log(p v n)/n) and size s + C1 M log n, again on one event | rate: sqrt(log n / n) | scope: exact coded posterior, prior as coded, no tuning; p >> n allowed; no beta-min
+ depends_on: W3-DIST:DIST-1@stmt ; W3-DIST:DIST-2@stmt ; W3-DIST:B0@stmt ; W3-DIST:B1@stmt ; W3-DIST:B2@stmt ; SOP:TH09@hyp
+-sharpness: A:DIST-A3 = WEAKENABLE (evidence: ASSUMPTION_MAP.md:59) ; A:DIST-A4 = NECESSARY-FOR-ROUTE (evidence: lemmas/NEC.md:8) ; A:DIST-A5 = WEAKENABLE (evidence: ASSUMPTION_MAP.md:59)
+ gates: lit:PARTIAL(TARGET.md) ; necessity:PARTIAL(TARGET.md)
+ 
+ REGISTRY
+@@ -153,8 +162,8 @@
+ REGISTRY
+ claim: W3-DIST:S | kind: lemma | statement: STATEMENT.md:@@S@@ | premises: STATEMENT.md:@@setting@@
+ status: @@st:S@@ | status_source: REPORT.md:@@line:S@@
+-assumptions: A:GAUSS-NOISE ; A:ENERGY ; A:COEF-REP
+-conclusion: posterior: P[pi(|S| > m) > e^{-t}] <= C e^{-t} + C e^{-cn} for every m beyond an explicit cutoff built from the reference cost and the exact determinant | scope: fixed design; reference-adaptive; no polynomial bound on p
++assumptions: A:GAUSS-NOISE ; A:ENERGY ; A:DIST-REF (new | bounded reference cost | a design-measurable reference (T, vartheta) with T in Omega and cost B_T(vartheta) <= B; the true pair (S0, theta*) is one admissible reference when the coefficient cost is bounded | STATEMENT.md:@@S@@ | shared no)
++conclusion: posterior: P[pi(|S| > m) > e^{-t}] <= C e^{-t} + C e^{-cn} for every m beyond an explicit cutoff built from the reference cost and the exact determinant (cutoff and range of t: STATEMENT.md lines @@S@@) | scope: fixed design; reference-adaptive; no polynomial bound on p
+ depends_on: SOP:TH09@proof:P1-lem-num-thm-Ta-lem-den
+ implies: W3-POST:Lemma-1a' (same cutoff order, exponential failure probability) ; W3-POST2:B (the same with an approximate reference)
+ 
+@@ -188,7 +197,7 @@
+ REGISTRY
+ claim: W3-DIST:P6 | kind: lemma | statement: STATEMENT.md:@@P6@@ | premises: STATEMENT.md:@@P6@@
+ status: @@st:P6@@ | status_source: REPORT.md:@@line:P6@@
+-conclusion: identity: domination transfer Q <= L pi implies QPi(B) <= L Pi(B); Markov bound over models; convexity of the squared Hellinger distance for predictive mixtures | scope: deterministic
++conclusion: identity: domination transfer Q <= L pi implies QPi(B) <= L Pi(B); Markov bound over models | scope: deterministic
+ 
+ REGISTRY
+ claim: W3-DIST:B0 | kind: lemma | statement: STATEMENT.md:@@B0@@ | premises: STATEMENT.md:@@setupR@@
+@@ -214,7 +223,6 @@
+ assumptions: A:DIST-A3 ; A:DIST-A4
+ conclusion: identity: on the events of W3-DIST:B1 and W3-DIST:B2core the unnormalised Gram floor c_psi/8 holds on all sets of size at most q, hence determinant growth and the non-degeneracy interface with c_D = g0/(1 + g0) | scope: window q_n = min(p, ceil(C_q M log n))
+ depends_on: W3-DIST:B1@stmt ; W3-DIST:B2core@stmt
+-implies: W3-POST:Cor-1R (for sub-Gaussian rows, with a population floor of order 1/n in place of psi_n sqrt(n)/(log n)^{3/2} -> infinity; the floor conclusions only)
+ 
+ REGISTRY
+ claim: W3-DIST:B3 | kind: lemma | statement: STATEMENT.md:@@B3@@ | premises: STATEMENT.md:@@setupR@@
+
+##### DEPS.tsv : as frozen in MANIFEST_SW1 (de9ccec7…) -> current (sha 43eb0f99c2e3f625)
+--- a/DEPS.tsv (frozen for the sweep)
++++ b/DEPS.tsv (current)
+@@ -1,5 +1,5 @@
+ id	file[:lines]	uses	sha (sha256, first 16 hex)	checked_sha	checked_by	state
+-TC/DIST-1	proof lemmas/DIST12.md §D.0–D.5 (statement: STATEMENT.md §1 (1.1))	H, T, X	9b468ca7d9e4d185	9b468ca7d9e4d185	reviews/L6_sol_DIST12.md (Sol): display (1.1), consequences (a), (b), (d), (e) VERIFIED; consequence (c)'s constant dependence NOT VERIFIED (L6-01, MAJOR) at checked_sha; BR1: passage NOT BROKEN; re-checked after amendment: reviews/D1_sol_diff.md (Sol): DIST-1 VERIFIED at v0.2; consequence (c) and EQUAL on TC3 CONFIRMED (items 6, 7)	OK
++TC/DIST-1	proof lemmas/DIST12.md §D.0–D.5 (statement: STATEMENT.md §1 (1.1))	H, T, X	9b468ca7d9e4d185	9b468ca7d9e4d185	reviews/L6_sol_DIST12.md (Sol): display (1.1), consequences (a), (b), (d), (e) VERIFIED; consequence (c)'s constant dependence NOT VERIFIED (L6-01, MAJOR) at v0.1, sha c05fb3f082fcb938; BR1: passage NOT BROKEN; re-checked after amendment: reviews/D1_sol_diff.md (Sol): DIST-1 VERIFIED at v0.2; consequence (c) and EQUAL on TC3 CONFIRMED (items 6, 7)	OK
+ TC/DIST-2	proof lemmas/DIST12.md §D.6 (statement: STATEMENT.md §1 (1.2))	H, T, X'	9b468ca7d9e4d185	9b468ca7d9e4d185	reviews/L6_sol_DIST12.md (Sol): D.6 / (1.2) VERIFIED; re-checked after amendment: reviews/D1_sol_diff.md (Sol): DIST-2 VERIFIED	OK
+ TC/DIST-3	proof work/B_transfer/DIST3.md (statement: STATEMENT.md §1)	H; locked T01 (conditional posterior)	4240189593efcb4d	4240189593efcb4d	reviews/L3_sol_B.md (VERIFIED, no findings; c = 1); STATEMENT wording: reviews/D1_sol_diff.md (Sol) CONFIRMED (row 1.4 DIST-3)	OK
+ TC/DIST-C	proof work/D_output/P6_DISTC.md (statement: STATEMENT.md §2)	P6, DIST-1 (or DIST-2), DIST-3; W3-SAMP:CC@1.1.1; delivery premises W3-SAMP:D@2.1.1, LT#@2.0.1, C@1.1.1, TR@2.1.1, W3-RM2:RM2-F@1.0.0, RM2-R@1.0.0	0b0b1556cfba806b	0b0b1556cfba806b	reviews/L2_sol_D.md (gpt-6.1-sol, cross-family line check): (C-0), (C-iv) VERIFIED; (C-i), (C-ii), (C-iii) VERIFIED-WITH-AMENDMENTS (SCR-1, SCR-2, SCR-4, A-1, L2D-02); reviews/D1_sol_diff.md (Sol): VERIFIED-WITH-AMENDMENTS at 5e3f9116a9ce9d36 (D1-01 on amendment A-10; D1-02 on the wording of (C-i)); re-checked after amendment: reviews/D3_sol_diff.md (Sol): Theorem DIST-C VERIFIED; (C-i) wording RESOLVED, EQUAL on TC8 CONFIRMED	OK
+@@ -11,8 +11,8 @@
+ X'	lemmas/X.md §9 (statement: STATEMENT.md §3)	X (§2, §4–§7 of lemmas/X.md)	15d23ee7a05e96a1	15d23ee7a05e96a1	reviews/L1_astra_X.md (Astra): VERIFIED (v0.3); break review BR1: NOT BROKEN; re-checked after amendment: reviews/D1_sol_diff.md (Sol): Lemma X′ VERIFIED (§9 unaffected)	OK
+ P6	work/D_output/P6_DISTC.md (Lemma P6)	—	0b0b1556cfba806b	0b0b1556cfba806b	reviews/L2_sol_D.md (gpt-6.1-sol, cross-family line check): Lemma P6 (a), (b), (c) VERIFIED; reviews/D1_sol_diff.md (Sol): VERIFIED-WITH-AMENDMENTS at 5e3f9116a9ce9d36 (D1-01 on amendment A-10; D1-02 on the wording of (C-i)); re-checked after amendment: reviews/D3_sol_diff.md (Sol): Lemma P6 VERIFIED (D1-01 RESOLVED)	OK
+ F-b (fallback)	ROUTES.md §6 item 3	H, T; W3-POST2:D.D(b)@1.2.0 (conditional; HQ note 2026-11-15)				UNCHECKED — not under a claim (fallback route, not used)
+-S-APX	STATEMENT.md §1 stretch	X, S	1f977ab6e2b2e407			UNCHECKED — not under a claim (stretch candidate, labelled as such in STATEMENT §1)
+-S-EXP	STATEMENT.md §1 stretch	X, T	1f977ab6e2b2e407			UNCHECKED — not under a claim (stretch candidate, labelled as such in STATEMENT §1)
++S-APX	STATEMENT.md §1 stretch	X, S	05d6a8bc6a6872ca			UNCHECKED — not under a claim (stretch candidate, labelled as such in STATEMENT §1)
++S-EXP	STATEMENT.md §1 stretch	X, T	05d6a8bc6a6872ca			UNCHECKED — not under a claim (stretch candidate, labelled as such in STATEMENT §1)
+ NUM	work/numerics/RESULTS.md; ASSUMPTION_MAP.md §3	—	ef53be9c7a7a9fea / adc413eb7e3e2ca2			UNCHECKED — not under a claim (numerics are evidence only, never a proof step; scripts not audited)
+ R/Theorem-A	STATEMENT.md §1R; assembly work/E_bridges/ASSEMBLY.md	TC/DIST-1, TC/DIST-2, B0, B1, B2	e2bb6ed765be030f	e2bb6ed765be030f	reviews/L4_sol_E.md (gpt-6.1-sol, cross-family line check): ASSEMBLY/Theorem A VERIFIED-WITH-AMENDMENTS (E-03); re-checked after amendment: reviews/D1_sol_diff.md (Sol): ASSEMBLY.md VERIFIED (A-6..A-8); statement matches proof (Part C item 3)	OK
+ R/Theorem-B	STATEMENT.md §1R; assembly work/E_bridges/ASSEMBLY.md	TC/DIST-3, B0, B1, B2, B3; W3-POST:Thm-1@1.0.0 (premise)	e2bb6ed765be030f	e2bb6ed765be030f	reviews/L4_sol_E.md (gpt-6.1-sol, cross-family line check): ASSEMBLY/Theorem B VERIFIED-WITH-AMENDMENTS (E-02, E-04, E-05); re-checked after amendment: reviews/D1_sol_diff.md (Sol): ASSEMBLY.md VERIFIED (A-6..A-8); statement matches proof (Part C item 3)	OK
+@@ -21,7 +21,7 @@
+ B1	work/E_bridges/B1.md (statement: STATEMENT.md §3 Bridges)	—	9c06b7ffabb109ce	9c06b7ffabb109ce	reviews/L4_sol_E.md (gpt-6.1-sol, cross-family line check): VERIFIED	OK
+ B2-core	work/E_bridges/B2core.md (statement: STATEMENT.md §3 Bridges)	external: Bernstein + net (standard)	77eaa30c4d7ba5ef	77eaa30c4d7ba5ef	reviews/L4_sol_E.md (gpt-6.1-sol, cross-family line check): VERIFIED	OK
+ B2	work/E_bridges/B2.md (statement: STATEMENT.md §3 Bridges)	B1, B2-core; W3-POST2:A0@1.0.0 (re-derived)	5c1328b5bad99922	5c1328b5bad99922	reviews/L4_sol_E.md (gpt-6.1-sol, cross-family line check): VERIFIED-WITH-AMENDMENTS (STATEMENT wording, applied in v1.4)	OK
+-B3	work/E_bridges/B3.md (statement: STATEMENT.md §3 Bridges)	B1, B2-core; W3-POST:Thm-1@1.0.0 item 6	95ed27da8ba36fa1	95ed27da8ba36fa1	reviews/L4_sol_E.md (gpt-6.1-sol, cross-family line check): VERIFIED-WITH-AMENDMENTS (E-02, E-05); re-checked after amendment: reviews/D1_sol_diff.md (Sol): VERIFIED (A-1, A-2)	OK
++B3	work/E_bridges/B3.md (statement: STATEMENT.md §3 Bridges)	B1, B2-core; W3-POST:Thm-1@1.0.0 item 6	47ffb2b603de5cc0	95ed27da8ba36fa1	reviews/L4_sol_E.md (gpt-6.1-sol, cross-family line check): VERIFIED-WITH-AMENDMENTS (E-02, E-05); re-checked after amendment: reviews/D1_sol_diff.md (Sol): VERIFIED (A-1, A-2)	STALE (SW1-04: "b_n > 0" inserted in the copy of (A6)(b), line 11; re-check in D4)
+ X12 (independent version of X1–X2; not on the path)	work/C_size/X12.md	—	b835453142f7bbda			UNCHECKED — not under a claim (independent version of two steps; not consumed: lemmas/X.md is self-contained)
+-NEC	lemmas/NEC.md (statement: STATEMENT.md §3 Proposition NEC)	locked T01 ([P1] lem:spec, lem:slab)	48cb55be4d967f3e	48cb55be4d967f3e	reviews/L7_sol_NEC.md (Sol): Proposition NEC and Corollary NEC VERIFIED at checked_sha (v0.2), no outstanding finding; reviews/D2_sol_NEC_diff.md (Sol, second reading of v0.2): VERIFIED-WITH-AMENDMENTS, D2-01 MINOR on the numerical remark §8(d); v0.3 re-checked: reviews/D3_sol_diff.md (Sol): D2-01 RESOLVED, file VERIFIED	OK
+-S-FIT	STATEMENT.md §1 stretch	NEC (negative part)	1f977ab6e2b2e407			OPEN — not under a claim (stretch; exponential fixed-design form refuted by NEC; in-probability form open; not pursued)
++NEC	lemmas/NEC.md (statement: STATEMENT.md §3 Proposition NEC)	locked T01 ([P1] lem:spec, lem:slab)	48cb55be4d967f3e	48cb55be4d967f3e	reviews/L7_sol_NEC.md (Sol): Proposition NEC and Corollary NEC VERIFIED at v0.2, sha 54340e87b89336a1, no outstanding finding; reviews/D2_sol_NEC_diff.md (Sol, second reading of v0.2): VERIFIED-WITH-AMENDMENTS, D2-01 MINOR on the numerical remark §8(d); v0.3 re-checked: reviews/D3_sol_diff.md (Sol): D2-01 RESOLVED, file VERIFIED	OK
++S-FIT	STATEMENT.md §1 stretch	NEC (negative part)	05d6a8bc6a6872ca			OPEN — not under a claim (stretch; exponential fixed-design form refuted by NEC; in-probability form open; not pursued)
+
+##### mkreport.py : as frozen in MANIFEST_SW1 (de9ccec7…) -> current (sha 21adc99e0a4e3f4d)
+--- a/mkreport.py (frozen for the sweep)
++++ b/mkreport.py (current)
+@@ -69,12 +69,12 @@
+  ('X', 'in-sample exponential core (key lemma)', 'lemmas/X.md §0–§7', P, 'reviews/L1_astra_X.md: VERIFIED (v0.3); break review reviews/BR1_astra_break.md: NOT BROKEN; v0.4 (three constants changed after L6-01, no step of the argument): reviews/D1_sol_diff.md VERIFIED'),
+  ("X'", 'the same without the non-degeneracy interface', 'lemmas/X.md §9', P, 'reviews/L1_astra_X.md: VERIFIED; break review: NOT BROKEN; unaffected by v0.4 (reviews/D1_sol_diff.md)'),
+  ('NEC', 'sharpness: the non-degeneracy hypothesis cannot be dropped from Lemma X (fixed design)', 'lemmas/NEC.md', P, 'reviews/L7_sol_NEC.md: VERIFIED; presentation amendments re-checked: reviews/D2_sol_NEC_diff.md, reviews/D3_sol_diff.md'),
+- ('P6', 'domination transfer; Markov bound over models; convexity for predictive densities', 'work/D_output/P6_DISTC.md', P, 'reviews/L2_sol_D.md: VERIFIED; amendments to the file re-checked: reviews/D1_sol_diff.md, reviews/D3_sol_diff.md'),
++ ('P6', 'domination transfer; Markov bound over models (the convexity step for predictive densities is P6(c) of the proof file, §3, used in the proof of DIST-C)', 'work/D_output/P6_DISTC.md', P, 'reviews/L2_sol_D.md: VERIFIED; amendments to the file re-checked: reviews/D1_sol_diff.md, reviews/D3_sol_diff.md'),
+  ('B0', 'scale reduction, pathwise', 'work/E_bridges/B0.md', P, 'reviews/L4_sol_E.md: VERIFIED'),
+  ('B1', 'sample variances; energy and coefficient-cost events', 'work/E_bridges/B1.md', P, 'reviews/L4_sol_E.md: VERIFIED'),
+  ('B2core', 'sparse lower bound for sample second moments, with an intercept', 'work/E_bridges/B2core.md', P, 'reviews/L4_sol_E.md: VERIFIED'),
+  ('B2', 'non-degeneracy interface from the population assumptions', 'work/E_bridges/B2.md', P, 'reviews/L4_sol_E.md: VERIFIED-WITH-AMENDMENTS, statement wording applied'),
+- ('B3', 'the events needed by Theorem B', 'work/E_bridges/B3.md', P + ', conditional on W3-POST:Thm-1 for its last sentence', 'reviews/L4_sol_E.md: VERIFIED-WITH-AMENDMENTS, applied; amendments: reviews/D1_sol_diff.md VERIFIED'),
++ ('B3', 'the events needed by Theorem B', 'work/E_bridges/B3.md', P + ', conditional on W3-POST:Thm-1 for its last sentence', 'reviews/L4_sol_E.md: VERIFIED-WITH-AMENDMENTS, applied; amendments: reviews/D1_sol_diff.md VERIFIED; the copy of (A6)(b) completed after the sweep: reviews/D4_sol_diff.md'),
+ ]
+ EXTRA = open('REPORT_extra.md', encoding='utf-8').read()   # §2–§6 prose and the registry blocks, with @@key@@ fields
+ 
+

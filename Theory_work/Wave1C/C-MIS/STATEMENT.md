@@ -56,7 +56,7 @@ concentration π_𝒞(S₀^𝒞 | y) → 1 with rate O_P(√(log n/n)) for the s
 and ε ~ N_n(0, σ²I). The method's uniforms are independent of (X^r, ε, ξ).
 **Definitions.** β^𝒞 := β_𝒞 + γ; **S₀^𝒞 := supp β^𝒞**; s₀^𝒞 := |S₀^𝒞|; σ_𝒞² := σ² + τ²; θ^𝒞 := D_xβ^𝒞; μ^𝒞 := X_𝒞θ^𝒞.
 Then y^r = (α + a)1 + X^r_𝒞β^𝒞 + ε′, ε′ := ε + ξ, and ε′ | X^r_𝒞 ~ N_n(0, σ_𝒞²I) (so ε′ is independent of X^r_𝒞).
-**(H-MIS)** = the T03♯ hypotheses (SoP `04_theory.tex:774-782`) for the candidate problem, i.e. with
+**(H-MIS)** = the T03♯ hypotheses (SoP `04_theory.tex:780-788`) for the candidate problem, i.e. with
 (p, S₀, s₀, θ*, μ, σ*²) := (p_𝒞, S₀^𝒞, s₀^𝒞, θ^𝒞, μ^𝒞, σ_𝒞²), eigenvalue conditions on subsets of 𝒞, and in particular
 **s₀^𝒞 ≥ 1 fixed** (the empty-support case is excluded; not claimed), p_𝒞 ≤ n^A, ‖μ^𝒞‖² ≤ Mn, λ_min(R̂_{S₀^𝒞}) ≥ φ₀²,
 SE_λ(j₀), SE_w(m♯_n; g₀), and BM-∞ or BM(c > c₀) **with σ_𝒞²**.
@@ -171,4 +171,4 @@ Targets until checked. Cited inputs keep verbatim statuses: T03♯ "PROVED; SF V
 T01–T03 "PROVED-LOCKED (wave 3; external review queued), SAME-FAMILY-ONLY"; T38-(0) as above; Theorem GEN "PROVED-CHECKED"
 (Wave 1) with its premises (e4; N3 "OPEN" as a general invariant). All convergence claims are asymptotic, with thresholds
 depending on the stated constants and envelope/onset sequences. TH09's approximately two-million illustration
-(SoP `04_theory.tex:811`) is not a universal threshold and is not transferred to the new results.
+(SoP `04_theory.tex:817`) is not a universal threshold and is not transferred to the new results.

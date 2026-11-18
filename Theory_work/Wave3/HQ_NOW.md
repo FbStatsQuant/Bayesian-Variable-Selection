@@ -11,10 +11,126 @@
 - When: BNP sends a "quiet window" (expected 11-16 early afternoon CST). HQ pauses SMC departments' leads, restarts, verifies, then messages BNP back. BNP launches nothing until confirmed.
 - BNP already moved its temp to /home/fb31/bnp_tmp and removed 73 stale sandboxes (11-15).
 
-## CODEX PACING LEVEL (owner sets; POLICIES §14): **0 (normal)** since 2026-11-15
+## OWNER 11-17: THEORY PUSH PLAN (awaiting owner greenlight; deploy only on his word)
+- **Accounts:**
+  - push hard on **Claude Personal** (2–3 days), then the owner cashes in the CP reset (another 2–3 days), then the remainder on **Claude Third** (≈ 60% for 1–2 days);
+  - a Codex reset is available, but stay efficient (level 1; API credits for blind audits);
+  - Engineering stays at its pace (proposal: move it to CT after CT's weekly reset, to keep CP for theory).
+- **Order:**
+  1. the bounded "money on the table" session (HQ + consultant) on the known list;
+  2. HQ recommendation → owner decision;
+  3. the adopted items + track D survivors (#2, #5′; #3 possibly dropped);
+  4. the W1-N1:B/F line checks;
+  5. A1/A2 NARROW, precedent notes, editorial;
+  6. Writing updates the manuscript (CW);
+  7. the Lean gate sign-off → Lean on the Max reset next week.
+- Every item gets a cost estimate and a kill budget. When CP runs dry, nothing new starts until the reset.
+
+## OWNER 11-17: LEAN GATE (binding)
+- **No line of Lean code** until **HQ, the consultant (VP) and the owner all agree** that the theory as it stands is virtually as good as it gets given our choices.
+- **Lean done = final:** we will not come back to change formalized theorems. Before the gate, specific localized theorem changes are fine (cheap).
+- **Scope of the gate (owner, clarified):** starting Lean freezes **the METHOD itself**, not only the theorems: the algorithm, how things are estimated and reported, the BVS procedure. After that, only trivial details. So the three-way sign-off answers: **is the method (as pinned, code 4676af6 + its outputs) final, near as good as it gets given our choices?** The consultant's operational improvement ideas (an SMC-does-work route, a factor-adjusted start law, evidence variance, list-based outputs) are decided before Lean: adopt now (localized) or defer to the follow-up paper.
+- **Finality review is bounded (owner):** it must not become a token sink. **The presumption is that the method IS final.** We move only on genuine weak points already identified (the consultant's list: SMC-does-work, factor-adjusted start law, evidence variance, list-based outputs) that can be addressed without demolishing anything. **No new search campaigns** for weaknesses. Monday = one HQ + consultant session on that list → one recommendation → owner sign-off.
+- Engineering's same-bits speed-ups don't change the method. The 1M V-mode stays a declared variant, with the theory on the pinned method.
+- The auto-launch of the Lean Department for Mon 11-23 is **DISABLED**. The launch happens only after the three-way sign-off, which follows Monday's HQ + consultant session.
+
+## OWNER 11-17: THEORY BUDGET POLICY
+- Theory is **no longer the main activity or the largest token consumer**.
+- A genuine model or method improvement is welcome **only if** its theory impact is localized and its cost is modest (not hundreds of millions of tokens).
+- Every theory item needs a cost estimate and a kill budget up front.
+- Monday's consultant session ("the SMC does work" theorem; dropping or keeping the sub-Gaussian ticket) is decided under this policy.
+
+## OWNER 11-17, after reading the unified manuscript
+- **Owner's top priority: the posterior theorems** (true model, rows 1.1/1.2; true distribution, row 2.1).
+- **PULLED FORWARD to 11-17 night (owner): the consult was sent (Q1 the novel assumptions; Q2 method-final SIGN / SIGN-AFTER / HOLD); HQ then brings the recommendation and sign-off to the owner.** Was: Mon 11-23, first item: an HQ + consultant ("VP") strategy session** on whether to do more about the algorithm theorem's novel assumptions (visibility, leakage set) beyond #5′. Options to weigh: weaker or primitive sufficient conditions, a design-family corollary, a different route for strong-factor data. Bring a recommendation to the owner.
+- **Queued for next week: a "precedent" note per non-Song–Liang assumption** (where the same type of condition appears in the literature). Theory verifies each citation against the paper (Sonnet/Haiku fetch + Opus check); Writing inserts it in the manuscript §5.
+
+## OWNER 11-17 (AGREED): PRE-LEAN CODEX PASS, after this week's recordings and the SOL62 A/B; size per the owner's Codex surplus or a reset he may cash in
+- **Sol final-text confirmation pass (model = gpt-6.2-sol, owner GO 11-17 night) (≈ 6–8 calls):** every result whose last round was Opus-only (C1 code audit; READER card R4/R5; W3-D2; W3-D3; track V R4; #5′ / Cor 6L). Findings only, important points only.
+- **Astra adversarial "try to break it" read (≈ 3–4 calls):** Thm 9; the presented Thm 2 (Thm2SG); Thm 6 + Cor 6L; optionally the Thm 3 lower bound.
+- **OWNER 11-17 night: Codex is fine (resets available, for the pre-Lean check only). Split ≈ half Astra `gpt-6.2-astra` / half Sol `gpt-6.2-sol`, both high, ≈ 5 + 5 calls.** Astra = adversarial "try to break it" on the Lean-bound theorems (Thm 3(a) lower bound, the Hellinger reduction / Thm 9, Thm 1, Thm2SG, Thm 6 + Cor 6L). Sol = final-text confirmation of the Opus-only-final results, consolidated to ≈ 5 calls (C1, READER R4/R5, W3-D2+D3, V R4, D5P/FAMC). The first Astra 6.2 call doubles as calibration (log in SOL62_QUALITY.md). Was: drop Astra first if Codex is tight.
+- **OWNER 11-17 night: a Fable validates the FINAL ruling on every Codex (Astra/Sol 6.2) point before anything changes. All Fables on Claude Personal (claudeAgent_personal, high). Short, precise interventions: one card per point batch (point, Codex claim, proposed ruling), answer AGREE/OBJECT + ≤ 3 lines; no open-ended reading.**
+- **Fable triage (owner, 11-17):** 1–2 Fables (the consultant + the audit Fable) judge each Sol/Astra point against the acceptance filter before any change is made.
+- **Trigger:** HQ tells the owner when the theory recordings are done. The owner then sets the Codex depth (budget or reset).
+- **Acceptance filter (owner, binding):** accept only (a) genuine flaws we missed, or (b) changes needed for the proof to compile in Lean. **No complexity growth; don't change what works; no nitpicks.** Everything else is logged and declined.
+
+## OWNER 11-17: OPTIONAL CODEX REVIEW OF KEY THEOREMS (only on the owner's order; depends on his Codex situation)
+- Later, **after the owner's explicit order:** Sol and/or Astra review the key theorems, especially those whose final diff rounds were Opus-only (D91/D99 carriers: C1, READER R4/R5, track D #2).
+- **Only important suggestions are accepted; no nitpicking.** Not before his word.
+
+## POST-FREEZE QUEUE (HQ, collected)
+- Engineering doc batch: the preflight README/v3_fit comment fix; the v3_core.cpp:144 comment (says B ≤ 20, while 16 is enforced); the item1_um_checks.py Windows path.
+- Theory: the registry blocks-assumption source line (C-GROW 61 → 65–67); the 6 RM2 supersessions; the suspect-dependents NARROW batch; track D #2 → #3 → #5′ from Sat 11-21.
+- Tools: manifest.py honours .gitignore.
+
+## RESUMED 11-16 16:00 CT (owner order)
+- Theory and Engineering resumed on Claude Personal; Writing stays idle on Claude Work.
+- **24 live SMC threads were switched from Claude Third to Claude Personal.** The 84 settled, finished threads were left as they are; they will not run again.
+- POLICIES §5/§7/§8 updated: Claude Personal is the SMC default, and Claude Third is retired for SMC.
+
+## PAUSE (owner, 11-16 ~10:40 CT): resources low
+- Order: current agents finish their current task, then ALL operations cease. Resume on **Claude Personal after its weekly reset** (≈ 17:30 CT 11-16, per the owner's screenshot; Codex weekly reset ≈ 18:45 CT).
+- Sent: Theory Dept, Engineering Dept and the consultant. Departments write resume cards: Theory_work/Dept/RESUME_2026-11-16.md and Docs/Experiments/P1M/RESUME_2026-11-16.md.
+- Scheduled tasks disabled by HQ: Theory Dept heartbeat (45 min), Theory daily report, W3-READER S4 ping. Builders 6–7 start: disabled. Left running (no tokens): snapshot crons, desktop offload, NOTS jobs in flight. BNP's own tasks (guard 10:13 and backup 11:13 installs) are theirs; HQ only verifies the crontab diffs.
+- BNP cancelled today's Owls slots (guard 10:13, backup 11:13); the SMC freezes are lifted; the crontab is verified unchanged against HQ's baseline. Both departments are STOPPED (resume cards: dept/theory db6bd259; Engineering Docs/Experiments/P1M/RESUME_2026-11-16.md). BNP is also paused; its T3-restart window comes after both resume.
+- **OWNER 11-16 (during the pause): 1M fast-track APPROVED, "but I want no delays either".** First message to Engineering on resume:
+  - produce, within its first working day, a fast-track plan for a **1M pilot fit before the advisor report (target Dec 1–4)**: 10⁵ and 10⁶ run side by side, the 1M pilot launches right after a short 10⁵ smoke test, and all 7 builders run at full speed from the resume;
+  - the pilot is labelled "pilot", with overlap validation after;
+  - **hard constraint:** the fast-track must not delay the main ladder or the January campaign. It runs as a side track; if the pilot fails, the main plan continues unchanged.
+  - The plan states the Claude usage, the NOTS core-h per attempt (≈ 1k), and the gates.
+- **OWNER 11-16: the Writing Department STARTS at the resume.** Assignment: Docs/Writing/ASSIGNMENT_1.md.
+  - D2 (all consistency results in reader form, statuses verbatim): draft ≈ 6 h after the resume.
+  - D1 (methodology as coded: priors, distributions, every parameter fixed or f(n, p), with code file:line): ≈ 24 h.
+  - The Writing thread is already on Claude Personal. HQ orders one Sol read per document and shows the owner the PDFs.
+- **For Engineering on resume (Writing D1 finding, 11-16):** the default v3_fit preflight is NOT memory-only. With ls0 = TRUE and cap ℓ_n+|S̃₀|, ls0_wc = TRUE (v3_fit.R:114) charges the LS0 worst-case time 2·(ℓ_n+K+1)·(p+p²/4)·(measured s per size-K score) against the allocated hours (:43-47, :65, :144-148).
+  - At n = 200, p = 10⁴ that is ≈ 563 h on Owls, so a default fit returns resource_limit before setup. The README and the code comment (:25) say "memory-only".
+  - Engineering: check how the overlap rung (10⁴) and the 1M plan set hours/ls0_cap, and which setting the 2,400-fit study and P6 used. Report the doc fix.
+  - Theory is unaffected ((C2) assumes allocation ≥ the requirement formulas).
+- **OWNER 11-16, after reading D2 v1 (binding direction):**
+  - (1) A tight report and paper: the core theorems in the main text, the rest in a supplement with a one-line "why it matters", or cut. HQ's proposed core: rows 1.1/1.2, 2.1, 3.1, 3.6 (+ 3.5), and 1.3 as a remark. The owner's OK on the list is pending.
+  - (2) Niche results are motivated in one sentence or cut.
+  - (3) **Assumption audit.**
+    - Assumptions on abstract mathematical objects (distributions, divergences, prior or kernel properties) must be proved: small checked lemmas, and Lean targets.
+    - Design-matrix assumptions (and similar) get a **"why this is reasonable" dossier in the advisor report**: plain meaning, comparison with standard literature conditions, where they hold and fail, and whether our simulation designs and a typical user are plausibly inside. No empirical tracking.
+    - Theory leads it; Writing presents it. The consultant stress-tests the core list and the audit plan. HQ proposes moving the freeze to include the audit (owner's OK pending).
+- **HQ decision 11-16 (owner: "open for you to decide").**
+  - The core list is ADOPTED.
+  - The Fri 11-20 freeze STANDS for recorded statements. The audit (W3-AUDIT) is the next campaign, adding lemmas and corollaries after the freeze; a draft of its first version ≈ 3 working days after the resume, ahead of the advisor report.
+  - Brief: Theory_work/Wave3/W3-AUDIT/BRIEF.md: tracks A (proved), B (reasonableness dossier, with Song–Liang as the reference point, "blank check" if same or weaker) and C (internal empirical proxies, ≤ 150 core-h).
+- **OWNER 11-16: at the resume, ON THE OWNER'S ORDER (wait for his word),** the Fable consultant reviews the **sub-optimality policies** for improvements:
+  - the sharpness gate, the S findings and better-theorem notes, supersession/rollback to better theorems, the optimizer, and the new W3-AUDIT track D;
+  - sources: PROTOCOL_v4 (§ supersession, sharpness), memory optimality-risk-feedback, W3-AUDIT/BRIEF.md.
+- **OWNER 11-16 (scope):** the theory is nearly done; the core analysis rests on what we have.
+  - Improvement work covers only the core theorems and key components; track D is light, with ≤ 3 tickets and kill budgets, and no effort on niche results.
+  - The Fable policy review is aimed at **the company playbook for future papers** (the owner is on board with protocol optimisation); it does not reopen this paper's theory.
+- **On resume:** move the department threads to Claude Personal (t3_thread_configure), then send each manager "resume from RESUME card". Pending HQ items:
+  - V (RM2-R) real-run GO after rule (b) and the dry run;
+  - re-enable the 3 Theory scheduled tasks;
+  - the builders 6–7 start;
+  - re-plan the freeze date (was Fri 11-20).
+
+## MORNING BRIEF 11-16 (items for the owner)
+- p = 1M: re-sized (H-9, HQ overnight) to ≈ 28.3k core-h with G = 256 socket-local (≈ 1.44× plan per pair); AR-weak at 1M dropped (returns first if L5 saves); a reduced 1M self-check (N = 5,000) kept. M risk priced after T5. Schedule: with descope (c, approved) the first 1M fit is in the first week of January. Options for the owner:
+  - (b) Fable 5.2 architect for WP3, ≈ 3 days (HQ recommends yes);
+  - (a) 7 Opus builders, ≈ +40% Claude Third for ~3 wk (only with b, and only if the accounts allow);
+  - a+b+c → ≈ Dec 21–23, but no slack.
+
+  Card: Docs/Experiments/P1M/RECOVERY_OPTIONS.md.
+- The desktop storage path (D: has ~3 TB free) and the Task Scheduler OK for hourly pulls.
+- The Owls T3 restart in BNP's quiet window (early afternoon).
+- The pacing plan for the day (accounts, Codex level).
+
+## USAGE NOTE (owner, 11-15 ~21:30 CT; all times Central)
+- Tonight: keep the rhythm. Tomorrow (11-16) probably pace down a bit: Claude Third is burning about a week of Ultra in
+  about 2.5 days (new account, odd reset schedule). The two companies together used ~2B tokens in ~4 h; this pace is not
+  the norm.
+- HQ on 11-16 morning: check the account and Codex meters, then propose a pacing plan to the owner (concurrency per
+  department, account split, Codex level) before the departments ramp up.
+
+## CODEX PACING LEVEL (owner sets; POLICIES §14): **1 (light pacing)** since 2026-11-16 late (owner: "let's have a surplus to burn when we actually need it"; Codex at 95% with the weekly reset in 6d20h). Previously 0.
 
 ## ACCOUNT ALLOCATION (owner sets; HQ relays to all managers)
-- Current (2026-11-15): all new department agents on **Claude Third**; HQ and the Writing Department on Claude Personal.
+- Current (2026-11-15): department agents on **Claude Third**, except Engineering WP2 + WP5 builders/reviewers on **Claude Work** (HQ overnight 11-15 ~23:18, pending the owner's review); HQ and the Writing Department on Claude Personal.
 
 ## PRIORITY ORDER (owner 2026-11-15, evening)
 1. All consistency results (selection + distribution / W3-DIST) **and their Lean parts** come first.

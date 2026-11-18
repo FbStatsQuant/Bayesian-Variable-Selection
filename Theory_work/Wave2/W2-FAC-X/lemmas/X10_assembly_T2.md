@@ -18,5 +18,5 @@ event 𝒜_n of X8, common constants, every-sequence de-randomisation).
 on the raw design Z, integration). Hence D_n → 0, P(𝒪 ∩ {Ŝ⁺ ≠ S₀}) → 0, liminf P(𝒪 ∩ {Ŝ⁺ = S₀}) = 1 − limsup P(U_n).
 
 **(G4).** (G): FACB L5.4 verbatim (Lemma S inputs for a fixed design with nonconstant columns; P(no output) = 0;
-D′'s pathwise inclusion with 𝒦_n). (R): X6.4 verbatim. Hence P(no output) = 0 for every admissible n ≥ 3 and
+D′'s pathwise inclusion with 𝒦_n). (R): X6.4 verbatim. Hence, as narrowed in STATEMENT_T2 (G4) on 2026-11-16 (HQ D78; 𝔇 and A:IDEAL-W⁺ defined in the note at the end of `STATEMENT_T2.md`): (a) P(no output) = 0 for every admissible n ≥ 3 with (n, p_raw) ∈ 𝔇; (b) with A:IDEAL-W⁺ in place of IDEAL-W, P(no output) = 0 for every admissible n ≥ 3 and
 P(Ŝ⁺ = S₀) → 1, CAL-free, with all of Proposition F's premises, allocation and total tier-1 fallback. ∎

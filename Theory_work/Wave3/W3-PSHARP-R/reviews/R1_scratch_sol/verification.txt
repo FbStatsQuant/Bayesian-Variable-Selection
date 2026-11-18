@@ -1,0 +1,17 @@
+Manifest digest: fd8b32a5540e5afcfdb73b94048ba7a1324f30a89ade786508ea04e9295bfc30
+All 20 manifest entries match raw-byte SHA256.
+DEPS PARENT:S: 261a72f734612e2bb1e227ec82bf202249225c40db0ddfe72e7d51538e540dda matches sha and checked_sha
+DEPS PARENT:A-proof: 84ee2882ad7144c9e63d2a557bb29d758582982199ec0c6f9e6d9ec376e682e6 matches sha and checked_sha
+DEPS PARENT:STATEMENT: 89e6cb9e76c664cb5cc047cb6e82a290c71785ead8158a45fce844097dc87633 matches sha and checked_sha
+DEPS STMT: 6123714c578e33f73417ed61a0675731a03927e14385cc2ffb38a1fe3424aa18 matches sha and checked_sha
+DEPS AE: e407d9587679316b300bef44f94e5f0e206300aba6f2c07133a760046fed8ac1 matches sha and checked_sha
+DEPS A2C: c2cd0381e8826fd74d7c95e6bf49a5f6192ebc8b19c136c4e9f2f0d89ec84eb5 matches sha and checked_sha
+DEPS N1: cae1af2234d9425c6ea9cedf45bb0c28f05edc72382b19c4e21a0a7e42cd7b2e matches sha
+DEPS READER_DELTA: 97295f1ca302583795156a8349d753110afd954de85be7b1dab0128f475fda7a matches sha
+DEPS REPORT: 2005b84f9733a19421cf0def28654db6c9c5ce44c671e8f7169065f3072ae6c7 matches sha
+DEPS CITECHECK: 10a056c9f8cd6fdc0bbca3c2d1fffb9e9aeb13afd9a8354200cdd8ee49e14132 matches sha
+Lemma F endpoint checks: 222,444 nonnegative-slack cases.
+Sphere truncated means: all 18 quadrature cases inside stated bounds.
+Direct target: all 31 nonempty null-subsets satisfy determinant/fit identities and A2C lower bounds (rank-deficient truth).
+N1: all 20 rows reproduced byte-for-byte at M=400000, including reported MC standard errors.
+Maximum reported relative MC standard error: 0.00220351; TARGET line 36 says <=0.0005.

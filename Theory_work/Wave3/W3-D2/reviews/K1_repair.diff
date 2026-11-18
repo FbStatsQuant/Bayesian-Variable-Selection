@@ -1,0 +1,33 @@
+1c1
+< # W3-D2 — PROOF of Theorem 2X and Corollary 2X (v1.0, 2026-11-17)
+---
+> # W3-D2 — PROOF of Theorem 2X and Corollary 2X (v1.1, 2026-11-17; v1.1 = K1 amendments [K1-1]–[K1-4], `reviews/K1_disposition.md`)
+23c23,24
+< - **(N)** ([MISR-R] `:56`): ε ~ N_n(0, σ²I_n), σ² deterministic, independent of (X^r_𝒞, X^r_𝓜) = (X^r, empty) — this is §0.
+---
+> - **(N)** ([MISR-R] `:56`): ε ~ N_n(0, σ²I_n), σ² a deterministic (n-dependent) parameter (§0 `:19`, `:21`), independent of
+>   (X^r_𝒞, X^r_𝓜) = (X^r, empty) — this is §0 [K1-3].
+29c30
+<   ([MISR] §0 `:20-22`: "π_𝒞(· | x, y^r) is the coded target of [W3P] §0 (lines 16-29) computed from (x, y^r)").
+---
+>   ([MISR] §0 `:21-22`: "π_𝒞(· | x, y^r) is the coded target of [W3P] §0 (lines 16-29) computed from (x, y^r)").
+37c38
+<   s ≤ K, n ≥ 3, A ≥ 1, s ≥ 1, with p = |𝒞| = p) gives k_n ≤ 3(A + 1)(s₀ + 1) log n. Every non-empty T with |T| ≤ k_n is
+---
+>   s ≤ K, n ≥ 3, A ≥ 1, s ≥ 1 and p ≤ n^A ((A1); used in B1.3, [R1] `:25`), with p = |𝒞| [K1-2]) gives k_n ≤ 3(A + 1)(s₀ + 1) log n. Every non-empty T with |T| ≤ k_n is
+48c49,52
+< n* depends on the sequence. (Take n* ≥ max(3, 2s₀) as well, for the floor step above.)
+---
+> n* depends on the sequence. (Take n* ≥ max(3, 2s₀) as well, for the floor step above.) This is legitimate [K1-1]:
+> CorGb-plus's hypotheses, like its k_n, are required only for all large n (k_n is undefined for s > K), and its bounds at
+> n concern the n-th law only (its proof checks class membership n by n, `lemmas/G2_corr.md` steps 1–5); so they hold here
+> for every n ≥ max(n*_master, 3, 2s₀).
+59c63,64
+< σ² := σ*² > 0, α := α*, β := β* (deterministic: the model of `Theory_work/Wave3/W3-READER/NOTATION.md:15-20`).
+---
+> σ² := σ*² > 0, α := α*, β := β* (parameters of the model of `Theory_work/Wave3/W3-READER/NOTATION.md:15-20`, read as
+> non-random as in the recorded fixed-signal setting; α* may even be random, [MISR-R] `:52-53`) [K1-3].
+74c79
+< No upper eigenvalue bound on Σ; no condition on m or α; no fixed σ², Σ or β (only the fixed constants A, s₀, c, M₀ and
+---
+> No upper eigenvalue bound on Σ; no condition on m; α only deterministic (and even that is not used, [MISR-R] `:52-53`) [K1-3]; no fixed σ², Σ or β (only the fixed constants A, s₀, c, M₀ and

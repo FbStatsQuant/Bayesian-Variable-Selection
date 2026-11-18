@@ -1,0 +1,13 @@
+# External inputs of council round C-R1 (item C1): the pinned code, the registered audits under check, and the inputs C1 cites.
+# DLV-0 (W3-RM2-R, commit e78a1055) is not on this branch; the seats read it with git show (brief).
+Scripts/SMC_BVS/core
+Theory_work/Wave1C/C-DLV/STATEMENT.md
+Theory_work/Wave1C/C-DLV/INVENTORY.md
+Theory_work/Wave1C/C-DLV/lemmas/L2_degenerate.md
+Theory_work/Wave1C/FINAL/sections/s6_delivery.tex
+Theory_work/Wave3/W3-AUDIT/track_A/T10_P1S3/STATEMENT.md
+Theory_work/Wave3/W3-AUDIT/track_A/T10_P1S3/PROOF.md
+Theory_work/Wave3/W3-AUDIT/track_A/T2_BLK/STATEMENT.md
+Theory_work/Wave3/W3-AUDIT/track_A/T4_ENC/STATEMENT.md
+Theory_work/Wave3/W3-AUDIT/track_A/T9_TDP/STATEMENT.md
+Theory_work/Wave3/W3-AUDIT/track_A_X/T14_REP/STATEMENT.md

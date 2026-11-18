@@ -1,0 +1,31 @@
+--- a/Theory_work/Wave2/W2-LOC2/lemmas/L6_poly.md
++++ b/Theory_work/Wave2/W2-LOC2/lemmas/L6_poly.md
+@@ -104,7 +104,7 @@
+ of H are in [1/C,1/c], hence det H>=1/C^2 and
+ |S_jk|=|H_jk|/det H<=C^2 |H_jk|. Equation (P1) proves BC.
+ For general U, the Schur complement is the inverse of a principal submatrix
+-of Sigma^-1, so its spectrum lies in [c,C]; conditional variance is at most
++of (Sigma_{U union V})^-1 (the V-block, V the unconditioned variables; a submatrix of Sigma^-1 only if U union V=[p]), so its spectrum lies in [c,C]; conditional variance is at most
+ the marginal variance 1. This is the same block-inverse/Rayleigh argument
+ as `APP/lemmas/L2_CT.md:55`, independent of the decay assumption. QED.
+ 
+--- a/Theory_work/Wave3/W3-RM2/lemmas/L6_examples.md
++++ b/Theory_work/Wave3/W3-RM2/lemmas/L6_examples.md
+@@ -74,7 +74,7 @@
+ 
+ Every inverse principal matrix has induced column-sum norm at most J; every
+ rectangular submatrix of B has induced column-sum norm at most D. For
+-N_l={v in Q\{l}:d(l,v)<=r}, A=T intersect N_l and E=T\A, the normal equations give
++N_l={v in Q\{l}:d(l,v)<=r}, T in the lattice (so T subset Q, RM2 STATEMENT.md:70; hence d(l,v)>r for v in E), A=T intersect N_l and E=T\A, the normal equations give
+ 
+     beta_A(l) = beta_T(l)_A + B_AA^(-1) B_AE beta_T(l)_E.
+ 
+@@ -165,7 +165,7 @@
+ 
+ Status: PROVED (by this seat, unchecked), conditional on RM2-R as given and on
+ W2-LOC2 Lemma BC (POLY:78) and Lemma IR (POLY:118), both "PROVED (by this seat,
+-unchecked)" [LC2C-3].
++unchecked)" [LC2C-3]. (Check record: E2 was line-checked in LC2-C, file header :3-6; claims.tsv governs the status.)
+ 
+ **Class.** Rows iid N(m_n,Sigma_n), independent of Gaussian response noise,
+ Sigma as in §0; s0>=1 fixed, p<=n^A, A>=1 fixed, fixed standardized signals
