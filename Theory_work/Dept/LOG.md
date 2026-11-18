@@ -700,3 +700,4 @@
   - The freezing lemma is used through MR's own edge W3-AUDIT-AW:FRZ (council W-R2), not via SOP:TH110.
   - T12 (iii) and (iv) are not covered by FR and are unused.
   - So no T12 Sol section is needed. The relabel carrier must be scoped: PC for the parts FR covers (mapped part → FR clause); (iii)/(iv) keep their wave-1 PROVED-LOCKED record. The recorder dry-runs acceptance with FR's council record at the MEAS-D landing.
+- 2026-11-18 11:15 CST HQ: T12 scoped carrier ACCEPTED: PC for (i.a), (i.b), (i.c), (ii) and (R3) via FR's council, with the part → FR-clause map. (iii)/(iv) keep wave-1 PROVED-LOCKED + note 'owner adopted 2026-11-18; not consumed by any presented result'. Dry-run at the MEAS-D/NA_DROP landing. Sol call = 2 sections (b″ + DIST-2).
