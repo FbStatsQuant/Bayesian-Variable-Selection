@@ -687,3 +687,8 @@
   - Sol-5b ran before my T12 hold arrived: (a′) D5Pa 9.0 FAIL, 2 wording points (REPORT:53 status=="exact"; p≥2 in CARD:10 / READER_DELTA:29). (b′) NA_DROP v1.3 8.7 FAIL. b′-1 is a GENUINE gap: L3 (0.5)/C-1 say the guard and MACH accounting are "unaffected", but the list helper's tail adds O(|𝒯|K) ops and O(|𝒯|+p) words after the last guard. No proof yet that this fits the (D) allocation (RM2-R STATEMENT:76-77 → DLV L1_resources:129-143). Same as T6-1. D5P ERRATA E1 text was never applied.
   - Escalated to HQ: option 1 (existing CP Fable writes the allocation argument + Opus check + NA_DROP re-freeze + Sol delta read) vs option 2 (an HQ ruling as a stated premise).
   - D5Pa v2 wording approved.
+- 2026-11-18 11:09 CST **GO (HQ): land the pre-Lean correction batch WITHOUT the T12 relabel. LAND=yes for this landing only.**
+  - Basis: theory/PRE-LEAN 13d10a94, from Recorder-2's dry run 330b87b4 (+ table Dept/PLB_DRYRUN_TABLE_330b87b4.md), re-dried on current main (D80) through the manifests gate.
+  - Adds: (iii) a T12 notes-only line on SOP:TH110, "owner adopted 2026-11-18; PC relabel pending council evidence". No status change; if the notes edit would bump the version or hash, STOP.
+  - Side items: DIST-2 1.4.11 WEAKER row names its OpenAI statement-change check (STOP if none exists); START2-R STATEMENT:189 bare range qualified with its file (citation, PURE); MEAS-D staged manifest re-freezes after the land (not in this landing).
+  - Then: Recorder-2 retires; blind API rebuild from the new main.
