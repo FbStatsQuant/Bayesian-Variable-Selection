@@ -1,0 +1,5 @@
+# DIST-2 delta stage external inputs (batch tree 330b87b4): the proofs of the DIST-2 constants and the reader rows (statement fidelity only)
+Theory_work/Wave3/W3-DIST/lemmas/X.md
+Theory_work/Wave3/W3-DIST/lemmas/DIST12.md
+Theory_work/Wave3/W3-READER/CLAIMS_CARD.md
+Theory_work/Wave3/W3-READER/READER_VERSIONS.md

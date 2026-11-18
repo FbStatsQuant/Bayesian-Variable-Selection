@@ -1,0 +1,13 @@
+# DIST-2 delta (T5-R1, changelog 1.4.11 WEAKER) on the batch tree 330b87b4: claimed edits grepped in the REAL staged files (HQ RIDER_RULES)
+OK   ticket/.../W3-DIST/STATEMENT.md:96  DIST-2 commentary: best rate stated for fixed s0^r
+OK   ticket/.../W3-DIST/STATEMENT.md:97  DIST-2 commentary: proved constant at most (1+s0^r)^3, upper bound not known tight
+OK   ticket/.../W3-DIST/STATEMENT.md:97,497  DIST-2 commentary: proof pointers X.md §9, DIST12.md D.6 (present twice: the commentary :97 and the changelog row :497, as intended)
+OK   ticket/.../W3-DIST/STATEMENT.md:0  ABSENT: old sentence 'Best rate ε_n² ≍ (1 + s₀^r) log n · ℓ_n/n'
+OK   ticket/.../W3-DIST/STATEMENT.md:497  changelog row 1.4.11 tagged WEAKER
+OK   ticket/.../W3-DIST/STATEMENT.md:497  changelog row 1.4.11: WEAKER tag
+OK   ticket/.../W3-DIST/TARGET.md:30  TARGET.md:30 P3 rate row: DIST-2 for fixed s0^r
+
+file sha256 (first 16) and line counts:
+STATEMENT.md: a065bb0cfbae81d5 lines=500
+TARGET.md: 0bf6776581764b9a lines=214
+RESULT: ALL CLAIMED EDITS PRESENT
