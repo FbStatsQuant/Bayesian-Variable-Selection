@@ -716,3 +716,4 @@
   - Allocation-proof Opus seat: R4 8.7 PASS, PURE 9.3.
   - The Sol call (b″ + DIST-2) was already running on the batch-tree digests 906961f6/578913a6 and was not cancelled (§10). Manager: no second Sol call; bind to the batch-tree digests and carry them to the 97f9c8c3 digests as CITATION-ONLY re-freezes; one Opus PURE on the DIST-2 rebase.
   - T6 card sent to the CP Fable.
+- 2026-11-18 12:10 CST CP Fable T6 card: no mathematical flaw in Thm 6, Cor 6L or Cor-FAMC. One wording fix (Astra T6-3: 'models met by the run' → 'offered to the final-run ledger', at RV:1435 and card:71; same line in the Sol5 staged reader copies) → staged into the A re-pin set with D5Pa (card :71), with Opus PURE. T6-1 closed (NA_DROP v1.4 §0.6). T6-2 = T8-1, already on main. Walk F2 (rows 3.1/3.2 code pin) = the A re-pin, already ruled. Card in Dept/pre_lean_cards/T6.md.
