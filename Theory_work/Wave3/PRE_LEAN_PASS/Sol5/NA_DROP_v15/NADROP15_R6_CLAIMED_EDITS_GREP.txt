@@ -1,0 +1,15 @@
+# NA_DROP v1.5 R6 corrections (Opus R6: C-1, C-2, S-1, S-2, S-3, S-4 x2, E-1, E-2 applied as written; F not applied): claimed edits grepped in the REAL staged files (HQ RIDER_RULES)
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:34  C-1 matching guard inputs; measured times not claimed equal
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:0  C-1 ABSENT: "(not the same measured times)"
+OK   ticket/.../W3-D5P/ERRATA.md:5  C-2 E1: new computation cannot affect any guard decision; matching guard inputs
+OK   ticket/.../W3-D5P/REPORT.md:67  S-1 registry rate: on output runs (each error set to 0 off the output event)
+OK   ticket/.../W3-D5P/STATEMENT.md:127  S-2 (iii): each set to 0 off 𝒪, no statement conditional on 𝒪
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:43  S-3: runtime_guard$elapsed_seconds, textual vs evaluation order
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:43  S-3: IMPL_LIST_codeprint.md:42 read only for the fields and state the proof uses
+OK   ticket/.../W3-D5P/STATEMENT.md:24  S-4 row :24: gains nothing beyond output runs
+OK   ticket/.../W3-D5P/REPORT.md:66  S-4 REPORT:66 conclusion: as without it, on output runs only
+OK   ticket/.../W3-D5P/STATEMENT.md:170  E-1 v1.5 row: scoped to output runs (form without on output withdrawn)
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:44  E-2 (0.6): each of at most K original indices
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:0  E-2 ABSENT: old "(K original indices of at most D"
+OK   ticket/.../W3-D5P/STATEMENT.md:0  S-4 ABSENT: old "under the delivery premises, on output runs of the method"
+FAILS 0
