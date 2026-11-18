@@ -1,7 +1,20 @@
 # T8-1 (HQ ruling; consultant AGREE with riders). CORRECTION-ONLY wording; recorded as W3-RM2-R ERRATA E2 (`Theory_work/Wave3/W3-RM2-R/ERRATA.md:6`, R1 Opus E1).
 # E2 text: replace "two upper-bound predicates, which are treated as true" with "the two bounds are treated as satisfied (the rejection predicates `le > 1e6`, `cap_ll > INT_MAX` never fire)".
-# Grammar adaptation: E2 phrase is kept verbatim; "**exactly two upper-bound predicates**" stays and ", which are treated as true:" becomes "; <E2 phrase>:".
-# Files: W3-RM2-R/STATEMENT.md:81 and W3-READER/reviews/carriers/A_IDEALW_PLUS.md:25 (live copies). Registry row A:IDEAL-W+ (assumptions.tsv:116) is the recorder's: old->new text in CORRECTIONS.md. Line counts unchanged.
+# Grammar adaptation (accepted by the manager): the E2 phrase is kept verbatim; "**exactly two upper-bound predicates**" stays and ", which are treated as true:" becomes "; <E2 phrase>:".
+# Live copies patched (3 files; line counts unchanged: 262, 29, 49): W3-RM2-R/STATEMENT.md:81; W3-READER/reviews/carriers/A_IDEALW_PLUS.md:25; Theory_work/Wave2/W2-UNI/lemmas/L5_delivery.md:48 (added on the manager's instruction: its sentence now says the lifted predicates never fire, citing E2).
+# L5_delivery.md:48 is OUTSIDE every registered span of W2-UNI claims (claims.tsv: the only row naming the file is W2-UNI:F-UNI, statement span L5_delivery.md:15-21, premises :8-13) and W2-UNI has no council manifest file; the file's other lines are untouched.
+# Registry row A:IDEAL-W+ (assumptions.tsv:116) is the recorder's: old->new text in CORRECTIONS.md. Left alone (manager): research notes under Dept/research, history (ERRATA, reviews, R2_frozen_copies, S4_frozen).
+diff --git a/Theory_work/Wave2/W2-UNI/lemmas/L5_delivery.md b/Theory_work/Wave2/W2-UNI/lemmas/L5_delivery.md
+index 050366c0..e386d363 100644
+--- a/Theory_work/Wave2/W2-UNI/lemmas/L5_delivery.md
++++ b/Theory_work/Wave2/W2-UNI/lemmas/L5_delivery.md
+@@ -45,5 +45,5 @@ are otherwise unchanged (TR1 §1 table), and Step 2's "P(no output) = 0" is read
+ ℓ_n + |S̃₀| ≤ ℓ_raw + K_n ≤ ℓ_raw + ⌊n/2⌋ ≤ 2³¹ − 1 (the exact branch reaches neither check); under A:IDEAL-W⁺ both predicates are false. The allocation that
+ TR1 §2 requires for the shipped cap and preflight (W_G, M_G, P_e + A, P̄_LS0) is already the premise at :11-12. 𝔇 is sufficient, not necessary (TR1's larger
+ D_K uses min(p_raw, ⌊n/2⌋)), and it is bounded, so (a) carries no asymptotic conclusion. Wording aligned with W3-RM2-R Lemma DLV-0 (W3-RM2-R
+-STATEMENT.md lines 80–90 and 144–150; branch theory/W3-RM2-R e78a1055, on main with task V); its "treated as true" for the lifted predicates is read as "are false" (TR1 §2). A:IDEAL-W⁺ is a registered assumption;
++STATEMENT.md lines 80–90 and 144–150; branch theory/W3-RM2-R e78a1055, on main with task V); it states that the lifted predicates never fire (W3-RM2-R ERRATA E2: "the two bounds are treated as satisfied (the rejection predicates `le > 1e6`, `cap_ll > INT_MAX` never fire)"; TR1 §2). A:IDEAL-W⁺ is a registered assumption;
+ IDEAL-W itself (C-DLV `STATEMENT.md:24-25`) is unchanged.
 diff --git a/Theory_work/Wave3/W3-READER/reviews/carriers/A_IDEALW_PLUS.md b/Theory_work/Wave3/W3-READER/reviews/carriers/A_IDEALW_PLUS.md
 index da303a65..65462032 100644
 --- a/Theory_work/Wave3/W3-READER/reviews/carriers/A_IDEALW_PLUS.md
