@@ -1,0 +1,61 @@
+diff --git a/Theory_work/Wave3/W3-D5P/CARD.md b/Theory_work/Wave3/W3-D5P/CARD.md
+index 7e1e654e..3f8364fe 100644
+--- a/Theory_work/Wave3/W3-D5P/CARD.md
++++ b/Theory_work/Wave3/W3-D5P/CARD.md
+@@ -1,4 +1,4 @@
+-# W3-D5P — card text proposal for HQ (Corollary 6L; placement is HQ's) — v0.2 after council R1 [R1-sol-1..3, R1-opus-2, -3]
++# W3-D5P — card text proposal for HQ (Corollary 6L; placement is HQ's) — v0.3 after council R1 and diff round R2 [R1-sol-1..3, R1-opus-2, -3; R2-F-1, R2-E-1..5]
+ 
+ Per D109, the hypotheses are stated as "those of Theorem 6", with nothing added, so any change to row 3.1's presented scope
+ carries over automatically. Statuses are left as placeholders until CP3 (filled verbatim from the passing council).
+@@ -7,11 +7,11 @@ carries over automatically. Statuses are left as placeholders until CP3 (filled
+ 
+ | Row | Claim (plain words) | Master / status | Why it matters | Notes |
+ |---|---|---|---|---|
+-| 3.1L (Cor 6L) | **The list the method returns gives consistent PIPs, median model and evidence on every Theorem 6 design.** Under the hypotheses of Theorem 6: on the same data event, every run that produces output (any seed, any calibration outcome) reports the true model and holds it in its returned list of at most $40p+1$ best-scored models (on exact enumeration: in the enumeration's list, where returned). On the sampler, the printed `pip_list`, `mpm_list`, `log_Z_list` (method companion of D105) are the PIPs, median model and log evidence of the posterior renormalised to that list; on exact enumeration, `pip_list` and `mpm_list` are the exact PIPs and median model. Both PIP fields are within $\varepsilon_n:=1-\pi(S_0\mid y)$ of the truth and of the exact posterior PIPs; the list evidence satisfies $1-\varepsilon_n\le Z^{\mathrm{list}}/Z\le1$, i.e. $0\le\log Z-$`log_Z_list`$\le-\log(1-\varepsilon_n)$ (where `log_Z_list` is printed); `mpm_list` is $S_0$ when $\varepsilon_n<\tfrac12$. The PIP errors and the log-evidence error are $O_P(\sqrt{\log n/n})$ on output; without "on output" under the delivery conventions (S4). The sampler's averaged `pip_primary`, `mpm` and `log_Z` are not covered outside row 3.6's scope. | `W3-D5P:LIST-R` (+ `LIST-K`, `LIST-CODE`): [status at CP3]; conditional on IMPL-LIST until Engineering's method commit is code-read. Inputs: `W3-RM2-R:RM2-R-plus@1.0.1`, `RM0-plus@1.0.1`, `DLV-0@1.0.1` "PROVED-CHECKED; council R3, …"; `W2-APP:POST@1.0.7` "PROVED-CHECKED". | Consistency of printed estimates (PIPs, median model, evidence) on AR and block designs that satisfy Theorem 6's conditions, which row 3.6 does not reach; same hypotheses as the main theorem, parametric-up-to-log rate. Also closes the two links W3-DIST left unchecked (completed run = output; printed `hpm` = the reported model). | **short** corollary; READER: Corollary 6L under Theorem 6 (`READER_DELTA.md`) |
++| 3.1L (Cor 6L) | **The list the method returns gives consistent PIPs, median model and evidence on every Theorem 6 design.** Under the hypotheses of Theorem 6: on the same data event, every run that produces output (any seed, any calibration outcome) reports the true model and holds it in its returned list of at most $40p+1$ best-scored models (on exact enumeration: in the enumeration's list, where returned). On the sampler, the printed `pip_list`, `mpm_list`, `log_Z_list` (method companion of D105) are the PIPs and median model of the posterior renormalised to that list and the log of the list's total unnormalised weight (the list evidence) [R2-E-4]; on exact enumeration, `pip_list` and `mpm_list` are the exact PIPs and median model. On Theorem 6's data event [R2-F-1], `pip_list` (on either branch) [R2-E-3] is within $\varepsilon_n:=1-\pi(S_0\mid y)$ of the truth and of the exact posterior PIPs; the list evidence satisfies $1-\varepsilon_n\le Z^{\mathrm{list}}/Z\le1$, i.e. $0\le\log Z-$`log_Z_list`$\le-\log(1-\varepsilon_n)$ (where `log_Z_list` is printed); `mpm_list` is $S_0$ when $\varepsilon_n<\tfrac12$. The PIP errors and the log-evidence error (where printed) [R2-E-1] are $O_P(\sqrt{\log n/n})$ on output; without "on output" under the delivery conventions (S4). The sampler's averaged `pip_primary`, `mpm` and `log_Z` are not covered outside row 3.6's scope. | `W3-D5P:LIST-R` (+ `LIST-K`, `LIST-CODE`): [status at CP3]; conditional on IMPL-LIST until Engineering's method commit is code-read. Inputs: `W3-RM2-R:RM2-R-plus@1.0.1`, `RM0-plus@1.0.1`, `DLV-0@1.0.1` "PROVED-CHECKED; council R3, …"; `W2-APP:POST@1.0.7` "PROVED-CHECKED". | Consistency of printed estimates (PIPs, median model, evidence) on AR and block designs that satisfy Theorem 6's conditions, which row 3.6 does not reach; same hypotheses as the main theorem, parametric-up-to-log rate. Also closes the two links W3-DIST left unchecked (completed run = output; printed `hpm` = the reported model). | **short** corollary; READER: Corollary 6L under Theorem 6 (`READER_DELTA.md`) |
+ 
+ ## Option B: a sentence added to row 3.6 ("Outside (A5): …")
+-"… row 3.1 still gives the reported-model result; on those designs, under the hypotheses of Theorem 6, the PIPs
+-computed from the returned list (`pip_list`; exact PIPs on exact enumeration) are within $\varepsilon_n=1-\pi(S_0\mid y)
++"… row 3.1 still gives the reported-model result; on those designs, under the hypotheses of Theorem 6, on Theorem 6's data event (probability → 1) [R2-F-1],
++`pip_list` (the list-renormalised PIPs; the exact PIPs on exact enumeration) [R2-E-5] is within $\varepsilon_n=1-\pi(S_0\mid y)
+ =O_P(\sqrt{\log n/n})$ of the truth and of the exact posterior PIPs on output, their median model (`mpm_list`) is $S_0$
+ when $\varepsilon_n<\tfrac12$, and the list evidence (`log_Z_list`, where printed) satisfies
+ $0\le\log Z-$`log_Z_list`$\le-\log(1-\varepsilon_n)$ (Corollary 6L) [W3-D5P]; consistency of the sampler's averaged
+diff --git a/Theory_work/Wave3/W3-D5P/DEPS.tsv b/Theory_work/Wave3/W3-D5P/DEPS.tsv
+index d8c2835c..534dab63 100644
+--- a/Theory_work/Wave3/W3-D5P/DEPS.tsv
++++ b/Theory_work/Wave3/W3-D5P/DEPS.tsv
+@@ -1,7 +1,7 @@
+ id	file[:lines]	uses (ids)	sha	checked_sha	checked_by	state
+-STMT-C1	STATEMENT.md:§2	LIST-K	5dc11132cf4d599f	c594e61e72581ad7	LC1 (read a91eb7cb) + LC1R (read 113c351e; E-fixes applied verbatim) + council R1 (read MANIFEST 952d9840 = checked_sha) [R1-opus-10]	STALE (edited after council R1; diff round R2)
+-STMT-C2	STATEMENT.md:§3	LIST-CODE	5dc11132cf4d599f	c594e61e72581ad7	LC1 (read a91eb7cb) + LC1R (read 113c351e; E-fixes applied verbatim) + council R1 (read MANIFEST 952d9840 = checked_sha) [R1-opus-10]	STALE (edited after council R1; diff round R2)
+-STMT-C3	STATEMENT.md:§4	LIST-R	5dc11132cf4d599f	c594e61e72581ad7	LC1 (read a91eb7cb) + LC1R (read 113c351e; E-fixes applied verbatim) + council R1 (read MANIFEST 952d9840 = checked_sha) [R1-opus-10]	STALE (edited after council R1; diff round R2)
+-LIST-K	lemmas/L1_listK.md	-	5c4c081b6e318773	408e2e4e2c4fedb7	LC1 (read a91eb7cb) + LC1R (read 113c351e; E-fixes applied verbatim) + council R1 (read MANIFEST 952d9840 = checked_sha) [R1-opus-10]	STALE (edited after council R1; diff round R2)
+-LIST-CODE	lemmas/L2_listCODE.md	W3-SAMP:CC@1.1.2	b023cafbf726d379	1accddb36dd7004c	LC1 (read a91eb7cb) + LC1R (read 113c351e; E-fixes applied verbatim) + council R1 (read MANIFEST 952d9840 = checked_sha) [R1-opus-10]	STALE (edited after council R1; diff round R2)
+-LIST-R	lemmas/L3_listR.md	LIST-K;LIST-CODE;W3-RM2-R:RM2-R-plus@1.0.1;W3-RM2-R:RM0-plus@1.0.1;W3-RM2-R:DLV-0@1.0.1;W2-APP:POST@1.0.7	b1e91cd83f183c43	f014059f08d9f2f4	LC1 (read a91eb7cb) + LC1R (read 113c351e; E-fixes applied verbatim) + council R1 (read MANIFEST 952d9840 = checked_sha) [R1-opus-10]	STALE (edited after council R1; diff round R2)
++STMT-C1	STATEMENT.md:§2	LIST-K	5dc11132cf4d599f	5dc11132cf4d599f	LC1 (a91eb7cb) + LC1R (113c351e) + council R1 (952d9840) + diff round R2 (MANIFEST 7431d66d = checked_sha)	OK
++STMT-C2	STATEMENT.md:§3	LIST-CODE	5dc11132cf4d599f	5dc11132cf4d599f	LC1 (a91eb7cb) + LC1R (113c351e) + council R1 (952d9840) + diff round R2 (MANIFEST 7431d66d = checked_sha)	OK
++STMT-C3	STATEMENT.md:§4	LIST-R	5dc11132cf4d599f	5dc11132cf4d599f	LC1 (a91eb7cb) + LC1R (113c351e) + council R1 (952d9840) + diff round R2 (MANIFEST 7431d66d = checked_sha)	OK
++LIST-K	lemmas/L1_listK.md	-	5c4c081b6e318773	5c4c081b6e318773	LC1 (a91eb7cb) + LC1R (113c351e) + council R1 (952d9840) + diff round R2 (MANIFEST 7431d66d = checked_sha)	OK
++LIST-CODE	lemmas/L2_listCODE.md	W3-SAMP:CC@1.1.2	b023cafbf726d379	b023cafbf726d379	LC1 (a91eb7cb) + LC1R (113c351e) + council R1 (952d9840) + diff round R2 (MANIFEST 7431d66d = checked_sha)	OK
++LIST-R	lemmas/L3_listR.md	LIST-K;LIST-CODE;W3-RM2-R:RM2-R-plus@1.0.1;W3-RM2-R:RM0-plus@1.0.1;W3-RM2-R:DLV-0@1.0.1;W2-APP:POST@1.0.7	71642c061447ba57	b1e91cd83f183c43	LC1 (a91eb7cb) + LC1R (113c351e) + council R1 (952d9840) + diff round R2 (MANIFEST 7431d66d = checked_sha)	STALE (E-2 edit after R2; candidate R3)
+diff --git a/Theory_work/Wave3/W3-D5P/lemmas/L3_listR.md b/Theory_work/Wave3/W3-D5P/lemmas/L3_listR.md
+index 5825b923..6133bf51 100644
+--- a/Theory_work/Wave3/W3-D5P/lemmas/L3_listR.md
++++ b/Theory_work/Wave3/W3-D5P/lemmas/L3_listR.md
+@@ -27,8 +27,11 @@ the design's p, and POST, stated for the design's p, applies to ε_n.
+ RM2R `STATEMENT.md:138-143`, last sentence).
+ (0.5) *From the pinned core to the method with the list fields* [R1-opus-1]. L2, RM0-plus and DLV-0 are statements
+ about the core of record (4676af6); LIST-R is about the method after the pending commit that adds the fields. By
+-IMPL-LIST (the commit computes the fields as SPEC §2 and §4 prescribe, after everything else, from the returned list
+-and values of the same run, and changes no other field and no other state; SPEC §7 A.1–A.2), on every input and every
++IMPL-LIST (the commit computes the fields as SPEC §2 and §4 prescribe, from the returned list and values of the same
++run, and changes no other field and no other state; SPEC §7 A.1–A.2) — and the returned list exists only after the
++last runtime-guard consultation (`v3_fit.R:121-122` on the exact branch, after `v3_final_run` at `v3_fit.R:162` on the
++sampler branch), after which `finish` (`v3_fit.R:79-87`) does not branch on the clock, so DLV-0's guard and MACH
++accounting are unaffected [R2-E-2] — on every input and every
+ realisation of the run's uniforms the post-commit fit and the pinned fit execute the same computation up to the new
+ fields, and the new computation can end the fit with an error only through SPEC §4's duplicate-model row. That row
+ cannot fire on an output run: the sampler store `top_store` and the exact store 𝒯^ex hold distinct models (L2 (iii),

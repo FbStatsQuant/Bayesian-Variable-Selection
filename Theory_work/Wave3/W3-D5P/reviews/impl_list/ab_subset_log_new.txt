@@ -1,0 +1,10 @@
+[2026-11-18T11:30:12Z] exact_p10 new status=exact identical=TRUE fp_equal=TRUE names_order=TRUE attrs=TRUE elem_attrs=TRUE new_last=TRUE new_fields=pip_list,mpm_list,log_Z_list,list_size,list_full,pip_list_source wall=0.4s
+[2026-11-18T11:30:14Z] exact_p12_dup_const new status=exact identical=TRUE fp_equal=TRUE names_order=TRUE attrs=TRUE elem_attrs=TRUE new_last=TRUE new_fields=pip_list,mpm_list,log_Z_list,list_size,list_full,pip_list_source wall=0.4s
+[2026-11-18T11:30:36Z] smc_p40_dup new status=completed identical=TRUE fp_equal=TRUE names_order=TRUE attrs=TRUE elem_attrs=TRUE new_last=TRUE new_fields=pip_list,mpm_list,log_Z_list,list_size,list_full,pip_list_source wall=10.1s
+[2026-11-18T11:30:51Z] smc_p60_n30 new status=completed identical=TRUE fp_equal=TRUE names_order=TRUE attrs=TRUE elem_attrs=TRUE new_last=TRUE new_fields=pip_list,mpm_list,log_Z_list,list_size,list_full,pip_list_source wall=6.5s
+[2026-11-18T11:31:00Z] smc_p48_integer new status=completed identical=TRUE fp_equal=TRUE names_order=TRUE attrs=TRUE elem_attrs=TRUE new_last=TRUE new_fields=pip_list,mpm_list,log_Z_list,list_size,list_full,pip_list_source wall=3.3s
+[2026-11-18T11:31:15Z] smc_default new status=completed identical=TRUE fp_equal=TRUE names_order=TRUE attrs=TRUE elem_attrs=TRUE new_last=TRUE new_fields=pip_list,mpm_list,log_Z_list,list_size,list_full,pip_list_source wall=6.6s
+[2026-11-18T11:31:30Z] smc_ls0off new status=completed identical=TRUE fp_equal=TRUE names_order=TRUE attrs=TRUE elem_attrs=TRUE new_last=TRUE new_fields=pip_list,mpm_list,log_Z_list,list_size,list_full,pip_list_source wall=6.5s
+[2026-11-18T11:31:32Z] resource_limit new status=resource_limit identical=TRUE fp_equal=TRUE names_order=TRUE attrs=TRUE elem_attrs=TRUE new_last=TRUE new_fields= wall=0.3s
+[2026-11-18T11:31:33Z] guard_calib new status=resource_limit identical=TRUE fp_equal=TRUE names_order=TRUE attrs=TRUE elem_attrs=TRUE new_last=TRUE new_fields= wall=0.3s
+[2026-11-18T11:31:35Z] invalid_seed new status=invalid_input identical=TRUE fp_equal=TRUE names_order=TRUE attrs=TRUE elem_attrs=TRUE new_last=TRUE new_fields= wall=0.1s

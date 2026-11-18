@@ -273,3 +273,7 @@ output in reviews/); (3) P6 smoke still on NOTS — heartbeat re-wakes the P6 le
 - (decided by HQ + consultant 2026-11-12, see HQ_DECISIONS) track 3 leg A launched; SAMP D/TR approved; track 1 not ready.
 - For Felipe: API month spend ≈ $171 of the $195 limit — the 11-15 grant needs a higher limit to be usable before Dec 1.
 - For Felipe: p = 1M fixed-N islands; primary PIP switch; TR sharpness (coded target); track 1 may shrink to a gate-0 sample.
+
+## WRITING QUEUE (HQ, 11-18; send when Writing next runs)
+- The 1M pilot caption names the engine mode (V variant) and the output field; it is kept separate from the primary-PIP theorem sentence (external consultant point 1).
+- The simulation study is labelled v2.2.1. The frozen-method check is reported verbatim: a 121-setting paired subset, identical on all 120 completed pairs; do not write "carries over exactly" (point 2).

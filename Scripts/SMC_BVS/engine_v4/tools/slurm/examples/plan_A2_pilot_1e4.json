@@ -1,0 +1,16 @@
+{
+  "batch": "A2_pilot",
+  "kind": "gated (G-A pilot; needs HQ go)",
+  "mode": "V",
+  "code_commit": "UNSET-fill-at-freeze",
+  "binary": "bin/smcbvs4",
+  "island_isa": "sapphirerapids",
+  "core_h_cap": 200,
+  "max_task_hours": 2.0,
+  "island_throttle": 16,
+  "eval": {"post": true, "n_draws": 10000, "n_x": 4000, "n_test": 10000},
+  "fits": [
+    {"run_id": "A2_ARs_n200_r1", "design": "AR", "p": 10000, "n": 200, "signal": "strong", "data_seed": 20261201, "seed": 1, "Rp": 16, "N": 2500},
+    {"run_id": "A2_ARs_n200_r2", "design": "AR", "p": 10000, "n": 200, "signal": "strong", "data_seed": 20261202, "seed": 2, "Rp": 16, "N": 2500}
+  ]
+}

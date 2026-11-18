@@ -8,6 +8,11 @@ sure they hold").
 **Do nothing until HQ sends GO.** Felipe's other project (BNP Lean) currently runs full throttle on the same accounts
 and on Owls; HQ decides when you start.
 
+## Ownership (owner, 2026-11-18)
+The Lean work is done **in-house** by this department, not outsourced to the owner's BNP Lean project. BNP Lean HQ
+(peer thread mcp:0a4bc001-e5d5-40be-b36a-3d4f45984c49 on Owls) is consulted **only when needed**, through HQ: Lean or tooling
+questions, conventions, or reuse of general lemmas already in its library. Never burden its pipeline; never write to its repo.
+
 ## Organization (owner, 2026-11-15)
 **Read `POLICIES.md` (repo root) first: the company handbook (policies, pipeline, access and autonomy).**
 Felipe = owner. Theory HQ (thread 647bfd65-83bc-403a-b3b0-0a8352044e7f, environment 1fde6176-4453-43b0-82cc-70fda5110037) =
@@ -65,10 +70,21 @@ owner's Large-Prior repo on Owls, `/home/fb31/Large-Prior-Official-Repo/lean`) i
 - Level 3 (full probability formalization) is out of scope this semester.
 
 ## Fidelity (the main risk of any certificate is proving the wrong statement)
-Every formal statement gets a **fidelity check**. One independent reviewer (codex `gpt-6.1-sol`, high, blind) compares
+Every formal statement gets a **fidelity check**. One independent reviewer (codex `gpt-6.2-sol`, high, blind) compares
 the Lean statement with the paper statement, including quantifiers, hypotheses and constants, and answers MATCH /
 WEAKER / STRONGER / DIFFERENT with reasons. Record it in `Lean/FIDELITY.md`. A certificate counts only with a MATCH,
 or with a WEAKER that HQ accepts as stated.
+**Naming (HQ, 2026-11-18, external-consultant point):**
+- Only a MATCH may be called a certificate of the paper's theorem (by its number).
+- A WEAKER result gets its own lemma label and is never cited as the paper theorem.
+- For each Level-2 headline (Thm 1, Thm 9), FIDELITY.md names the first paper-only dependency and every named axiom Lean assumes. The paper states this coverage explicitly.
+
+**Counterexample during formalization (HQ, 2026-11-18):** if formalization uncovers a genuine mathematical counterexample or gap in a paper statement:
+1. Suspend that paper claim and its certificate at once (SUSPECT in the registry).
+2. Send the counterexample to HQ, which informs the owner.
+3. Stop work on that target until the HQ/owner ruling (fix through the normal route, NARROW, or drop).
+
+"Lean done = final" applies only to statements that survived formalization.
 
 ## Phases after GO
 0. **Scoping first** (≈ 2 h): verify the shortlist's Mathlib-availability notes (they come from LEAN_READINESS.md and

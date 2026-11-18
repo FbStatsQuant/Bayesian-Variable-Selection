@@ -1,0 +1,71 @@
+key	line	original (omitted)
+ST	4	corollary ticket, Theory Wave 3. Lead: Claude Opus 5.5 (effort high). Protocol: `Theory_work/Wave3/PROTOCOL_v4.md` with
+ST	6	(`reviews/SL1_statement_lock_sol.md`: LOCK WITH CHANGES; disposition `reviews/SL1_disposition.md`; markers). It asserts no proof status.
+ST	161	| v1.1 | (C1) hypothesis "F real-valued on Ω (0 < Z < ∞)"; §1 convention for S₀ ∉ Ω; (C3) preamble: the reader-form sentence moved out of the claim span to §5 remark 5; P(𝒢⁺_n) → 1 attributed to RM0-plus (b⁺); (C3)(ii) reason for "every right side tends to 0" completed | EQUAL (hypothesis made explicit as already defined in §1; a convention that makes small-n cases trivially true; an unproved interpretive sentence moved out of the span; citations) | , , , , | `reviews/LC1_line_check_opus.md` | council R1 |
+ST	162	| v1.1.1 | §1 convention sentence narrowed to statements involving S₀, 𝓜_n or 𝒦_n; §5 remark 5 (outside claims) | EQUAL (wording) | , | `reviews/LC1R_recheck_opus.md` | fixes applied verbatim from LC1R |
+ST	163	| v1.1.2 | (C2) configuration gloss: `ls0_ell` = ℓ_n added (it is part of the imported shipped configuration, RM `STATEMENT.md:59-67`) | EQUAL (explicit form of an imported premise) | R1-opus-5 | `reviews/R1_council_opus.md` | council diff round R2 |
+L1	3	Claim: STATEMENT.md (C1), §2. Proof by the lead; line-checked by LC1 and LC1R (see REPORT §2). Written for a Lean transcription:
+L2	3	Claim: STATEMENT.md (C2), §3. Code reading by the lead; line-checked by LC1 and LC1R (see REPORT §2).
+L3	3	Claim: STATEMENT.md (C3), §4. Proof by the lead; line-checked by LC1 and LC1R (see REPORT §2); (0.5) added after council R1.
+SPEC	1	<!-- Carrier copy (read-only) of Theory_work/Wave3/W3-AUDIT/SPEC_LIST_PIP.md at theory/W3-AUDIT commit 523dda23, byte-identical below this line; frozen so the council reads the field definitions LIST-R is stated against. -->
+RM2R	3	Ticket W3-RM2-R (Tier B rider), Theory Wave 3. Lead: Claude Opus 5.5 (Claude Third, effort high). Protocol:
+RM2R	5	check SC1 applied (`reviews/SC1_statement_change_sol.md`: ACCEPT WITH CHANGES; markers; `reviews/SC1_disposition.md`).
+RM2R	7	findings of statement-lock review SL1 applied (`reviews/SL1_statement_lock_sol.md`: DO NOT LOCK; disposition
+RM2R	8	`reviews/SL1_disposition.md`; markers); v0.1.1 = v0.1 with the C-DLV law-free inputs listed in (C-D) after R-AUD1. All results are asymptotic (n → ∞) unless marked *deterministic*.
+RM2R	232	C-DLV:L3-3.3@1.0.0, C-DLV:L3-3.4@1.0.0, W2-UNI:F-UNI@1.1.0 ([status omitted]). AUDITED (code reading) — C-DLV:P1-Inventory,
+RM2R	255	| v0.1.1 | (C-D), dependency row DLV-0 | EQUAL | consumed C-DLV steps listed; Prop F consistency sentence excluded (manager input, R-AUD1) | `Theory_work/Wave3/API_AUDIT/pass1/R-AUD1_sol.md` | SL1 disposition |
+RM	3	Ticket W3-RM, Theory Wave 3 (PROGRAM item 3). Lead: Claude Fable 5.2 (Claude Personal, effort high).
+RM	4	Status of this file: **v1.2.1** (2026-11-09; v1.2.1 = council round-1 wording/record fixes [C1-A#], [C1-B#], no hypothesis
+RM	6	"better theorem" review R02 (`reviews/R02_disposition.md`; markers [P1], [P2], [P3a]) and one corollary [P7]; every v1.1
+RM	8	LOCK-WITH-CHANGES; all five required changes and the four optional suggestions applied, `reviews/R01_disposition.md`;
+RM	196	| (B2) SAND-F | Setting F: ‖μ‖² ≤ Mn, p ≤ n^A, (G3a) (the within-block part of (FL_b)), (V_b), (L_b), (L-feas), log\|Q\| = o(log n) ⇒ [SAND(Q)] | GROW L3 (\|Q\| ≤ C log n, σ²-normalised leakage; R02 VERIFIED) | extension to log\|Q\| = o(log n); τ²_U-normalised leakage (Lemma B2τ, `lemmas/L1b_rss.md`) [P2] |
+RM	251	GROW [status omitted] (L0, L1 R03 VERIFIED; L2 R03 VERIFIED-WITH-AMENDMENTS; L3 R02 VERIFIED; L4 R04
+RM	252	VERIFIED-WITH-AMENDMENTS; L6 R07 VERIFIED / R06 VERIFIED-WITH-AMENDMENTS); W2-LOC2 [status omitted] (lemma statuses
+RM	253	[status omitted], checks R02/R03/R04 VERIFIED-WITH-AMENDMENTS); W2-UNI UNI-0 and R1–R5
+RM2	3	Ticket W3-RM2, Theory Wave 3 (follow-up of PROGRAM item 3; W3-RM REPORT §6 item 1). Lead: Claude Fable 5.2 (Claude
+RM2	10	implication v1.3 ⇒ v1.4 passes; four corrections, applied, markers [SC2-#]; `reviews/LC2_disposition.md`). Proof status of every
+RM2	14	`reviews/BT1_disposition.md`): **[CP1-P1]** the signal floor (BM-Q) is replaced by the weaker (BM-W); **[CP1-P2]** the
+RM2	18	both changes pass; four record corrections, applied, markers; `reviews/SC1_disposition.md`). v1.2 itself = v1.0 with
+RM2	20	(`reviews/SL1_statement_lock_sol.md`: LOCK WITH CHANGES; `reviews/SL1_disposition.md`; markers) and the two
+RM2	22	`reviews/RC1_disposition.md`; markers [RC1-#]: registry dependency edges and one stale exponent — no hypothesis,
+DLV4	3	Status: PROVED; R04 VERIFIED-WITH-AMENDMENTS — amendments applied (Corollary D′ pathwise proof,
+DLV2	3	Status: PROVED; R02: S.1, S.2 and D2 survive; S.3 list extended per R02 #5. Paths refer to INVENTORY.md; code = `Scripts/SMC_BVS/core/`.
+SAMP	3	**v2 → v3 (sharpness gate, `reviews/BT1_better_theorem_astra.md`, `reviews/BT1_disposition.md`; every change is a
+SAMP	10	(`reviews/SL1_statement_lock_sol.md`); all five required changes applied (`reviews/SL1_disposition.md`). v1 → v2:
+CC	3	Status: [status omitted] (lead; re-checked against the code by SL1, LC1, SW1 and both council seats; council C1 PASSED round 1). History: v2, 2026-11-09 (SL1 item 5).
+CC	7	2026-11-09 (checked by `reviews/CITECHECK.txt` before the council).
+POST	3	Status: **PROVED**. Check record: R02 (Codex gpt-6.1-sol high,
+POST	4	`reviews/R02_L1L2_check_sol.md`): VERIFIED-WITH-AMENDMENTS (1 MAJOR, 2 MINOR on remarks/raw-scale wording), all applied
+POST	43	(2) *Entrywise event.* GROW L6.2, first paragraph (status: PROVED; checks R07 VERIFIED, R06
+POST	44	VERIFIED-WITH-AMENDMENTS), proves for iid Gaussian rows with unit population variances — its argument uses only
+DIST	4	in `DEPS.tsv` (a statement here is checked only if its row says OK).** v1.4 = v1.3.1 with the dispositions of the blind read S2
+DIST	5	(`reviews/S2_sol.md`, `reviews/S2_disposition.md`) and the wording edits queued from the proof leg. v1.3 = v1.2 with the dispositions of the same-family pre-check P1 (`reviews/P1_opus_precheck.md`,
+DIST	6	`reviews/P1_disposition.md`) and the lead's final form of the reader versions. v1.2 = v1.1 + reader versions
+DIST	8	dispositions of the blind read S1 (`reviews/S1_astra.md`, `reviews/S1_disposition.md`). Changelog: table at the foot
+DIST	430	| C-PACK SL0/SL2 (`Wave1C/C-PACK/lemmas/I4_SL_corollaries.md`) | [status omitted], R34-checked; council C1 passed | DIST-C framing | SL0(iv) (δ < ½ ⇒ unique maximiser); SL2's store-restricted object |
+DIST	434	| SOP:TH09 (1.0.0), W2-APP:POST (1.0.1), W1-PXN (P) | [status omitted]; [status omitted]; "XF VERIFIED" | DIST-3 instances | δ_n = O_P(√(log n/n)) |
+DIST	490	| 1.4.5 | §3: Proposition NEC added (sharpness of Lemma X's hypothesis (ND); fixed design); stretch item S-FIT restated accordingly | NEW-CLAIM (non-target; touches no target clause: the design violates (ND)) | necessity gate for (ND) | API attempt F-b-r2; `reviews/P7_opus_precheck_NEC.md` | `reviews/D1_sol_diff.md`: CONFIRMED (classification); proof: `reviews/L7_sol_NEC.md` VERIFIED |
+DIST	492	| 1.4.7 | DIST-1 (c): the dependence of the rate constant on the sparsity is written out (C free of s₀^r; explicit bound on M₀; raw sparsity s₀^r in place of s₀) | EQUAL on TC3 ("M₀ = O((1 + s₀^r)(A + 1))" is now proved as written, for fixed (σ*², M, M′); v1.3's sentence was not established by the proof files: the constants of `lemmas/X.md` v0.3 gave M₀ ≳ s log s and C growing with s). Proof files: `lemmas/X.md` v0.4, `lemmas/DIST12.md` v0.2 (constants only) | a claimed constant dependence was not established | `reviews/L6_sol_DIST12.md` L6-01 (MAJOR) | `reviews/D1_sol_diff.md`: **CONFIRMED (EQUAL on TC3)**; the repair VERIFIED (Part A items 1–7) |
+DIST	493	| 1.4.8 | DIST-C (C-i): "on the complementary success event" replaced by the explicit event {completed} ∩ {π(𝒯) ≥ e^{−λt}} ∩ {Π̂^𝒯(B_n) ≤ e^{−(c−λ)t}}; changelog tags of three v1.4 rows split | EQUAL on TC8 (TC8 fixes the delivery statements "jointly with {completed} and under its named premise", which is this event; the loose phrase, read literally, also covered stopped runs and lists of small posterior probability, where nothing was proved or intended; the probability display and (C-0) are unchanged) | the statement did not match the proved form (`work/D_output/P6_DISTC.md` SCR-4) | `reviews/D1_sol_diff.md` D1-02, D1-03, D1-04 | `reviews/D3_sol_diff.md`: **CONFIRMED (EQUAL on TC8)**; D1-01 … D1-04 RESOLVED; Corollary C's reported-model conclusion VERIFIED |
+DIST	496	| 1.4.10 | DIST-1 (c), the sentence after the bound on M₀ (a gloss on the rate): "for fixed (σ*², M, M′) … ε_n² is of order (1 + s₀^r) log p_raw/n when p_raw = n^A" replaced by "for fixed (A, σ*², M, M′), ε_n² is of order (1 + s₀^r) log n/n", with the remark that C depends on A | **EQUAL on TC3** (the text of TC3, "Best radius ε_n² = C²M₀ log n/n with M₀ = O((1 + s₀^r)(A + 1))", is not edited and is proved as written); **WEAKER on this descriptive sentence of consequence (c), which is not a target clause**: A is now held fixed, and the gloss changes log p_raw to log n (the same order for fixed A). The old sentence let A vary, which reads as a rate linear in A; the radius constant C grows with A (through C_X and C_T), so that reading was not proved | the gloss claimed more than is proved | `reviews/R1_council_opus.md` R1-opus-01 (S) | `reviews/D5_sol_diff.md`: RESOLVED; TC3 unchanged and proved as written; tag **CONFIRMED** (EQUAL on TC3; WEAKER on the descriptive sentence only). Both seats of the diff round are asked to confirm the same by name |
+READER	12	printed outputs) and the pooled-evidence remark (row 3.5). v0.2 = v0.1 with all twelve findings of the Sol fidelity
+READER	13	read S1 applied (`reviews/S1_fidelity_sol.md`, `reviews/S1_disposition.md`); markers.
+READER	19	[status omitted]), **EXISTS-UNCHECKED** (exists, status below [status omitted], quoted) or **NEW** (stated precisely
+READER	24	main 14892123); long council suffixes are cut after the first clause and marked "…[status omitted]
+READER	212	| B1.3 | (A5) ⇒ (F_w) = SE_w(m♯_n; g₀) | EXISTS-UNCHECKED + NEW arithmetic | $m^\sharp_n\le s_0+\lceil(\log\binom{p}{s_0}+\tfrac{s_0+1}2\log n+\tfrac12\log n)/\log2\rceil$ ([T03R] E2(ii), stated at W3-POST STATEMENT.md:38-39; inside SOP:TH09, status above). With $\binom{p}{s_0}\le n^{As_0}$ and $n\ge3$: $s_0+m^\sharp_n\le(2s_0+1)\log n+1.45(As_0+\tfrac{s_0}2+1)\log n\le3(A+1)(s_0+1)\log n$. Checked numerically on $A\in[1,20]$, $s_0\le39$, $n\in[3,10^{15}]$ (LOG 2026-11-15). |
+READER	218	**Effort:** B1.1–B1.4 are a half page; one Sol line check.
+READER	251	[status omitted]; council C3, …"; POST2 C/E/A0/A1 @1.0.6 with the Thm-1 and [L1a′] conditions dropped; EQUAL (statuses only).
+READER	409	| B3.3 | (N-orth), $s_0$ fixed ⇒ (W-orth-E) with $\mathcal N=[p]\setminus S_0$ | NEW one line (council-checked inside W3-PSHARP-R R2 as READER_DELTA v0.3) | (N-orth) gives $N=p-s_0\le n-1-r_0$, so $p\le2n$ and $(\log p)^2=o(n)$ (W3-PSHARP-R `STATEMENT.md` §2). |
+READER	414	| B3.8 | fully orthogonal designs, fixed nonzero coefficients, $s_0<p\le n-1$ ⇒ Theorem 1 (A1)–(A6) and the hypotheses of the expectation display of (b); hence exact order $\sqrt{\log n/n}$ in expectation, every such $p$ | NEW, checked: `lemmas/B3_8_orth_witness.md` (verbatim copy of theory/W3-PSHARP-R @34d56f5b `reviews/post_cp3/BRIDGE_orth_thm1.md`) (sha256 d54a2a7a…); Sol line check L06 (CORRECT-WITH-FIXES, C 0, one S applied) and Sol confirm L07 (YES, 0 findings), theory/W3-PSHARP-R @ 8e22c756 | (A1)–(A6) with $A=1$, $\bar\theta=\max|\theta^*_j|$, $\varphi_0=1$, $g_0=1$, second form of (A6); the upper half carries Theorem 1's master status (row 1.1). |
+READER	634	| **B5.3** | **(A6) ⇒ (L-gain-0) with $C_0=0$** | **checked with the master (council R1/R2 of W3-START2-R)** | **for $U\subseteq S_0$: $\operatorname{Cov}(W_l,W_j\mid W_U)=\Sigma_{lj}-\Sigma_{lU}\Sigma_{UU}^{-1}\Sigma_{Uj}=0$ (`W3-START2-R/STATEMENT.md:82-87`).** |
+READER	738	   **[status omitted]** (registry; correctness gate PASS; narrowed, task S2/S4). Inherited qualifications, verbatim
+READER	756	[status omitted]; council R1, …[status omitted]
+READER	773	**Effort:** B6.1, B6.3 half a page; B6.6 one page with a premise-by-premise table; all three need one Sol line check.
+READER	897	[status omitted]; council R1, …"; one
+READER	978	*Reviewed together with Theorem 8 in the second SCR council round; A-inf ACCEPTed by both seats (stated plain).*
+READER	990	interim label removed; council cell R3, MANIFEST 19847f54…, sol=10.0 PASS, opus=9.4 PASS). Companion for
+READER	992	commit and council cell).
+READER	1248	| B9.3 | Theorem 9B, Corollary 9C = W3-DIST Theorem B, Corollary C | identity (text; the mixture sentence of C shortened, no content dropped from the claim) | STATEMENT :209-238; "code-checked by independent reviewers": the output description rests on the code facts of STATEMENT §2 :273-287 (scores: W3-SAMP CC2, [status omitted]), and Corollary C's reported-model conclusion was verified against the code by D3, the sweep and both council seats (CHECKPOINT_3 §4) |
+READER	1355	N1 premises [status omitted], cross-family checked and council-passed); `W2-APP:POST` is [status omitted].
+READER	1403	All NEW items are covered by the bridge leg's one Sol line check, together with the v0.1 → v0.3 diff of the reader
+READER	1404	statements. The CP3 council's Sol seat gives the fresh `FIDELITY: FAITHFUL | NOT-FAITHFUL` line on the final reader
