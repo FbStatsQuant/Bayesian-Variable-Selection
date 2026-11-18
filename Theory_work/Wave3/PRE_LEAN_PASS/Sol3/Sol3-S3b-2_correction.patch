@@ -1,0 +1,14 @@
+# Sol-3 S3b-2 (Sol-3 card, AGREE; reclassified FLAW -> stale dependency wording): reader bridge-table row B2.2, READER_VERSIONS.md:301. Reader prose only. Line count unchanged.
+diff --git a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+index b8f3015d..69c41e14 100644
+--- a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
++++ b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+@@ -298,7 +298,7 @@ with `W2-APP:POST@1.0.7`, `Theory_work/Wave2/W2-APP/lemmas/L1_POST.md:27-33`, st
+ | # | Bridge | Mark | Detail |
+ |---|---|---|---|
+ | B2.1 | (A3) ⇒ LSF (i) and (ii) with $\psi_n=\varphi^2$ | NEW arithmetic | LSF asks the floor on $|S|\le\min(p,s_0+j_0)$ and on $|S|\le\bar k_n=\min\{p,s_0+\max(j_0,\bar m_n)\}$, $\bar m_n=\lceil[s_0(A\log n+\log2)+\log2+\tfrac{s_0+2}2\log n]/\log\tfrac32\rceil$ (L1_POST.md:20-25). For $n\ge3$: $\bar k_n<(2.4664As_0+3.6996s_0+4.9327)\log n\le5(A+1)(s_0+1)\log n$ (R1) [R1-E6], and $s_0+j_0\le(2A+2)s_0+2$ is smaller. Checked numerically (LOG). |
+-| B2.2 | LSF + Gaussian rows + fixed coefficients ⇒ events $\mathcal A_n$, $P(\mathcal A_n)\to1$, carrying (E), (F_λ), (F_w), BM-∞ with common constants | EXISTS-CHECKED | `W2-APP:POST@1.0.7` part (a), "PROVED-CHECKED" (accepted at W2-APP's CP3, main f526e45b; SOP:TH09 discharged, main 6cd699dd) [REG-f526, REG-6cd6]. Raw-scale coefficients are covered (L1_POST.md:12-15, event $\mathcal H_n$). Theorems 2, 6 and 10 depend on it; Theorem 4 does not (its master uses its own Gaussian-design transfer [S1-F12]). |
++| B2.2 | LSF + Gaussian rows + fixed coefficients ⇒ events $\mathcal A_n$, $P(\mathcal A_n)\to1$, carrying (E), (F_λ), (F_w), BM-∞ with common constants | EXISTS-CHECKED | `W2-APP:POST@1.0.7` part (a), "PROVED-CHECKED" (accepted at W2-APP's CP3, main f526e45b; SOP:TH09 discharged, main 6cd699dd) [REG-f526, REG-6cd6]. Raw-scale coefficients are covered (L1_POST.md:12-15, event $\mathcal H_n$). Theorems 6 and 10 depend on it, as did the previous Gaussian proof of Theorem 2 (the presented Theorem 2 uses B2.2′ instead); Theorem 4 does not (its master uses its own Gaussian-design transfer [S1-F12]). |
+ | B2.3 | events ⇒ conclusions under the joint law | inside the master | Theorem 1 item 6 (diagonal transfer), via `W3-D3:Thm2SG`. **B2.2′** (sub-Gaussian rows: (A3) and the sub-Gaussian condition ⇒ the events $\mathcal A_n$ of B2.2; replaces B2.2 for the presented statement; EXISTS-CHECKED): `W3-D3:B3w@1.0.0` (built on `W3-DIST:B1`, `B2core`, `B2` part (a), `W3-READER:R1`), main 0eb1b6ef [REG-0eb1]; B2.2 stays for the Gaussian case. Bridges B2.1′, B2.1″ of Theorem 2X: §11. |
+ 
+ **Effort:** B2.1 half a page.

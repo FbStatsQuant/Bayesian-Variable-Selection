@@ -78,7 +78,7 @@ and `allocation$hours` at least the polynomial envelopes of DLV Corollary R (DLV
 re-derived for the shipped code — LS0 cap ℓ_n + |S̃₀| (at most ℓ_n + K + 1 scans of ≤ p + p²/4 score requests each) and
 the shipped preflight charge — evaluated at (n, p_raw). CAL is not assumed.
 **IDEAL-W⁺ [SL1-2, SC1-2].** DLV's IDEAL-W (DLV `STATEMENT.md:24`) plus the lift of **exactly two upper-bound
-predicates**, which are treated as true: (i) `le > 1e6` in the LS0 base-cap validator (`Scripts/SMC_BVS/core/v3_run.R:96`;
+predicates**; the two bounds are treated as satisfied (the rejection predicates `le > 1e6`, `cap_ll > INT_MAX` never fire): (i) `le > 1e6` in the LS0 base-cap validator (`Scripts/SMC_BVS/core/v3_run.R:96`;
 with le = ℓ_n = ⌈log₂(n + p + 1)⌉ in the configuration of §1, it would fire once n + p + 1 > 2^{10⁶}); (ii)
 `cap_ll > numeric_limits<int>::max()` in the LS0 cap-range guard (`cpp/v3_core.cpp:474`), with `int` read as unbounded.
 Every other part of those two validators (type, length, finiteness, integrality, lower bounds) and every other

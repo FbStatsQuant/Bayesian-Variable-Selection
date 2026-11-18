@@ -26,6 +26,13 @@
   7. the Lean gate sign-off → Lean on the Max reset next week.
 - Every item gets a cost estimate and a kill budget. When CP runs dry, nothing new starts until the reset.
 
+## OWNER 11-18: LEAN PAUSED (binding)
+- **The Lean conversion is paused.** The owner will read the whole set of theorems, give his take (changes are still possible), and then sign off, maybe next week. **Lean begins only after that sign-off.** He expects the conversion to take 1–2 days, so it isn't a schedule risk.
+- **Resources shift to BNP.** SMC runs in **finish-and-hold** mode: finish what is in flight, start no new tickets, keep staffing minimal.
+  - Theory: land the batch, T6 + Sol-5, MEAS-D/NA_DROP, the tooling ticket, then the A re-pin; the one-page SUMMARY; the blind API batch (API credits only).
+  - Engineering: the 10⁴ overlap (NOTS + Haiku monitor), riboflavin, plus the daily chores.
+- No Lean blueprints or Lean-readiness work beyond what the cards already contain.
+
 ## OWNER 11-17: LEAN GATE (binding)
 - **No line of Lean code** until **HQ, the consultant (VP) and the owner all agree** that the theory as it stands is virtually as good as it gets given our choices.
 - **Lean done = final:** we will not come back to change formalized theorems. Before the gate, specific localized theorem changes are fine (cheap).
@@ -273,3 +280,7 @@ output in reviews/); (3) P6 smoke still on NOTS — heartbeat re-wakes the P6 le
 - (decided by HQ + consultant 2026-11-12, see HQ_DECISIONS) track 3 leg A launched; SAMP D/TR approved; track 1 not ready.
 - For Felipe: API month spend ≈ $171 of the $195 limit — the 11-15 grant needs a higher limit to be usable before Dec 1.
 - For Felipe: p = 1M fixed-N islands; primary PIP switch; TR sharpness (coded target); track 1 may shrink to a gate-0 sample.
+
+## WRITING QUEUE (HQ, 11-18; send when Writing next runs)
+- The 1M pilot caption names the engine mode (V variant) and the output field; it is kept separate from the primary-PIP theorem sentence (external consultant point 1).
+- The simulation study is labelled v2.2.1. The frozen-method check is reported verbatim: a 121-setting paired subset, identical on all 120 completed pairs; do not write "carries over exactly" (point 2).

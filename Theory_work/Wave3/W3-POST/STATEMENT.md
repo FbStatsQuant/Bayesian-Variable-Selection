@@ -83,7 +83,7 @@ PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2)", `Theory_work/State_of_Pro
    P(MPM = S₀) → 1; P(ξ_{q_n} = S₀) → 1 for every deterministic q_n ∈ (0, 1) with r_n = o(min(q_n, 1 − q_n)).
 3. **(PIPs)** For every data set, max_j |PIP_j − 1{j ∈ S₀}| ≤ δ_n; under (BM) this is O_P(r_n) (sensitivity and
    specificity uniformly in j), and E max_j |PIP_j − 1{j ∈ S₀}| → 0 (no expectation rate claimed).
-4. **(Size, functionals)** Under (BM): π(|S| = s₀) = 1 − O_P(r_n); sup_{h:Ω→[0,1]} |π(h) − h(S₀)| = O_P(r_n).
+4. **(Size, functionals)** Under (BM): π(|S| = s₀) = 1 − O_P(r_n); sup_{h:2^{[p]}→[0,1]} |Σ_{S∈Ω}π(S)h(S) − h(S₀)| = δ_n for every data set, hence O_P(r_n).
 5. **(Without beta-min)** (a) *No strict-superset mass* [R02-F3]: π(S ⊋ S₀) = O_P(r_n) (needs only, in R1, G, (E),
    λ_min(R_{S₀}) ≥ φ₀², (F_w) [R02-F9]; swaps S₀∖{j} ∪ {k} are not controlled; = T02(ii♯), [T03R] line 149). (b) *Strong-signal recovery*: for fixed c > c₀ and
    J_n(c) := {j ∈ S₀ : θ*²_j ≥ cσ*² log n/(nφ₀²)}, π(S ⊉ J_n(c)) = O_P(r_n), hence max_{j∈J_n(c)}(1 − PIP_j) = O_P(r_n)

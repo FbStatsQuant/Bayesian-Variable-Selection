@@ -1,0 +1,7 @@
+# W3-D5P — ERRATA (E findings; never blocking; applied in one editorial batch later, PROTOCOL_v4 §5.3)
+
+| id | source | file | text | proposed fix |
+|---|---|---|---|---|
+| E1 | `reviews/R3_council_opus.md` E-a | lemmas/L3_listR.md (0.5) | "so DLV-0's guard and MACH accounting are unaffected" — guard decisions are unaffected; the MACH counts grow by O(\|𝒯\|K) operations and O(\|𝒯\| + p) words after the last guard | "so every guard decision is that of the pinned fit, and the added O(\|𝒯\|K) operations and O(\|𝒯\| + p) words, dominated by the store already held, are absorbed by the polynomial envelopes of (D)"; optionally: on the exact branch the last guard decision is the preflight (`v3_fit.R:115-117`) and `:121-122` creates the list |
+| E2 | `reviews/R3_council_opus.md` E-b | CARD.md Option B | "their median model (`mpm_list`)" lost its plural antecedent | "the list's median model (`mpm_list`; the exact MPM on exact enumeration)" |
+| E3 | `reviews/post_cp3/COR9C_check_opus.md` F8 (advisory) | STATEMENT.md §5 remark 3; TARGET.md §4 row "Corollary 9C's list premise" | "designs that satisfy both Theorem 9 and Theorem 6" is an empty class for s₀ ≥ 1 (Theorem A's i.i.d. raw-β* law and Setting R's deterministic standardised θ* are disjoint; `reviews/post_cp3/COR9C_NOTE.md` (N3)) | "LIST-CODE (i), (v) give the list premise of Corollary 9C pathwise on 𝓜_n ∩ 𝒦_n ∩ {π(S₀ \| y) ≥ n^{−cM/2}}; a probability-level form needs the raw-scale search bridge (READER B6.7)" |

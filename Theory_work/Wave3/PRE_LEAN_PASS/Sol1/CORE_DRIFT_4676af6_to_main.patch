@@ -1,0 +1,128 @@
+diff --git a/Scripts/SMC_BVS/core/README.md b/Scripts/SMC_BVS/core/README.md
+index 6a04497a..8ce280b5 100644
+--- a/Scripts/SMC_BVS/core/README.md
++++ b/Scripts/SMC_BVS/core/README.md
+@@ -58,3 +58,11 @@ Authority: `METHOD_v3.1_FINAL.md` rows #6, #8, #9, #10, #15, #26. Plan, reviews,
+ - C-PACK method requirements (`Theory_work/Wave1C/C-PACK/METHOD_REQUIREMENTS.md`): MR1 the LS0 centre is `start_mode(st, 1e6).S` on the run's own setup `Start`, emitted; MR2 the fallback (`tie_dp`) requires cap >= 2 (`start_mode` throws otherwise), so a unique maximiser is always returned by the enumeration path; MR3 the size-then-lex tie rule is kept for reproducibility only.
+ - `source_manifest.json` was NOT refreshed (its updater targets the deployment layout and LF checkouts); refresh it on a
+   LF checkout before any deployment.
++
++## List-renormalised PIP fields (additive output, HQ order 2026-11-17; spec `SPEC_LIST_PIP.md`)
++
++`v3_fit` additionally returns `pip_list` (named like `pip_primary`), `mpm_list`, `log_Z_list`, `list_size`, `list_full`, `pip_list_source` (`"store"` or `"exact"`) and `pip_list_flag` (absent when clean; `"empty_list"` or `"nonfinite_score"` with NA fields): the posterior renormalised to the returned top store `top_store` (the store's scores F(S), subtracted by their maximum before `exp`; both sums run from the last store entry to the first, in plain double). `pip_primary` and `mpm` stay the primary outputs; nothing else changes, no random number is read, and the fields are computed last (`v3_list_fields` in `v3_run.R`). Exact branch: `pip_list = pip_primary`, `mpm_list = mpm`, `log_Z_list` from the enumeration's returned store (`fit$exact$top`). Every other status (resource limit, invalid input, no predictors, constant response, numerical failure, calibration stop): the fields are absent. Tests: `../tests/list_pip_units.R`.
++
++Two readings of the spec are Theory-confirmed (via HQ 2026-11-17). (1) Exact branch (status `exact`): `pip_list = pip_primary` (the enumeration PIPs), `mpm_list = mpm`, `log_Z_list` from the store `fit$exact$top`, `list_size` / `list_full` describe that same store, `pip_list_source = "exact"`. (2) A score of −Inf gets weight 0; if ALL scores are −Inf (normaliser 0) the fields are NA and `pip_list_flag = "nonfinite_score"` (the NaN / +Inf rule extended to 0/0).
++
++Order of computation: `v3_fit` adds the list fields strictly LAST, after `finish()` has sampled `peak_memory_kb`, the clock and the runtime guard, so they cannot touch a legacy field; direct callers of `v3_final_run` get them by default (`list_fields = TRUE`; `v3_fit` passes FALSE and adds them itself). Error precedence: an empty list is flagged, then a duplicate model stops, then a non-finite score flags; a flagged result is all NA (`mpm_list = NA_integer_`).
+diff --git a/Scripts/SMC_BVS/core/v3_fit.R b/Scripts/SMC_BVS/core/v3_fit.R
+index bb131337..cf1a54ba 100644
+--- a/Scripts/SMC_BVS/core/v3_fit.R
++++ b/Scripts/SMC_BVS/core/v3_fit.R
+@@ -128,7 +128,7 @@ v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24), ls0 =
+       fit$global_certified <- e$global_certified; fit$local_certified <- e$local_certified
+       fit$estimates_available <- TRUE
+     } else { fit$message <- e$message; fit$hpm_incomplete <- TRUE }
+-    return(finish(fit))
++    return(v3_exact_list_last(finish(fit), e, ctx))   # + the list fields, strictly last (v3_run.R)
+   }
+   t0 <- proc.time()[["elapsed"]]; setup <- v3_setup(ctx)
+   if (inherits(setup, "v3_setup_failed")) {
+@@ -159,7 +159,7 @@ v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24), ls0 =
+     return(finish(fit))
+   }
+   frozen <- cal$frozen; fit$frozen <- frozen
+-  t0 <- proc.time()[["elapsed"]]; fr <- v3_final_run(setup, frozen, seed, runtime, ls0 = ls0)
++  t0 <- proc.time()[["elapsed"]]; fr <- v3_final_run(setup, frozen, seed, runtime, ls0 = ls0, list_fields = FALSE)   # list fields: added last, below
+   fr$stage_table <- v3_bind_records(list(cal$stage_table, fr$stage_table))
+   fit$timings$final <- proc.time()[["elapsed"]] - t0; fit$timings$final_detail <- fr$timings; fr$timings <- NULL
+   cf <- cal$flags
+@@ -170,5 +170,8 @@ v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24), ls0 =
+   if (!is.null(cf$grid_fallback)) fr$flags$grid_fallback <- cf$grid_fallback
+   for (nm in names(fr)) fit[[nm]] <- fr[[nm]]
+   fit$flags$cut_group <- fit$cut_group
+-  finish(fit)
++  fit <- finish(fit)
++  # list-renormalised PIP fields (SPEC_LIST_PIP.md): strictly LAST, after finish() has sampled peak_memory_kb, the clock and the runtime
++  # guard, so the new allocation cannot leak into a legacy field (review PR68 MAJOR-2)
++  v3_add_list_fields(fit, v3_list_fields(fit$top_store, ctx$orig, names(fit$pip_primary)))
+ }
+diff --git a/Scripts/SMC_BVS/core/v3_run.R b/Scripts/SMC_BVS/core/v3_run.R
+index 9046ab6b..0fbddbec 100644
+--- a/Scripts/SMC_BVS/core/v3_run.R
++++ b/Scripts/SMC_BVS/core/v3_run.R
+@@ -116,7 +116,7 @@ v3_unavailable_estimates <- function(fit) {
+ v3_model_key <- function(S) paste(S, collapse = ",")
+ 
+ # Assemble the reported outputs of a final run (CORE_SPEC §6, §7; M §§6.9-6.12).
+-v3_assemble_final <- function(raw, setup, frozen, ro, seed) {
++v3_assemble_final <- function(raw, setup, frozen, ro, seed, list_fields = TRUE) {   # list_fields = FALSE (v3_fit): the list fields are added by v3_fit strictly last, after finish() (review PR68 MAJOR-2); direct callers of v3_final_run keep them (TRUE)
+   isl <- raw$islands
+   out <- list(status = raw$status, message = raw$message, seed = seed, settings = ro,
+               frozen_sha256 = frozen[["sha256"]], grid = frozen[["grid"]], B = setup$B)
+@@ -216,14 +216,64 @@ v3_assemble_final <- function(raw, setup, frozen, ro, seed) {
+   if (v31) out$timings$ls0 <- raw$seconds_ls0
+   out$log_m0 <- raw$log_m0; out$log_Zbar0 <- raw$log_Zbar0
+   out$estimates_available <- TRUE
++  # list-renormalised PIP fields (SPEC_LIST_PIP.md; v3_list_fields at the end of this file): last, from the returned top store
++  if (isTRUE(list_fields)) out <- v3_add_list_fields(out, v3_list_fields(out$top_store, orig, names(out$pip_primary)))
+   out
+ }
+ 
+ # Fresh production final run. The runtime pointer shares the complete-fit clock with calibration.
+-v3_final_run <- function(setup, frozen, seed, runtime = NULL, ls0 = getOption("v3.ls0", TRUE)) {
++v3_final_run <- function(setup, frozen, seed, runtime = NULL, ls0 = getOption("v3.ls0", TRUE), list_fields = TRUE) {
+   stopifnot(inherits(setup, "v3_setup"), inherits(frozen, "v3_frozen"))
+   v3_check_grid(frozen[["grid"]]); v3_check_seed(seed)
+   ro <- v3_run_settings(setup, frozen, ls0)
+   raw <- .v3cpp$cpp_final_run(setup$ptr, frozen[["grid"]], ro, as.numeric(seed), frozen[["inherited"]], runtime)
+-  v3_assemble_final(raw, setup, frozen, ro, seed)
++  v3_assemble_final(raw, setup, frozen, ro, seed, list_fields = list_fields)
++}
++
++# List-renormalised PIP fields (SPEC_LIST_PIP.md, HQ order 2026-11-17; owner-approved, additive output only). The returned top
++# store T (models in ORIGINAL column indices, scores F(S) = log varpi(S) + log m(S)) read as a list: pip_list[j] =
++# sum_{S in T, j in S} u_S / sum_{S in T} u_S with u_S = exp(F(S) - max F); mpm_list = {j : pip_list[j] > 1/2} (strict);
++# log_Z_list = max F + log sum u_S. Computed LAST, no random numbers, no state change. Numerics (spec §3): subtract max F
++# before exp (F itself is never exponentiated); both sums run from the LAST store entry to the first in plain double
++# (explicit loop: R's sum() accumulates in long double); nothing is clamped (a column's numerator adds a subsequence of the
++# denominator's terms in the same order, so 0 <= pip_list <= 1 holds exactly in floating point).
++# `pip_names` = names(pip_primary) (the retained columns, same order); `orig` = their original indices. Returns a list with
++# pip_list, mpm_list, log_Z_list, list_size, list_full, pip_list_source = "store", pip_list_flag (NULL when clean).
++# Cases (§4), in this order of precedence: empty list -> NA and flag "empty_list" (must not occur); duplicate models -> stop (a store
++# is a set); NaN or +Inf score -> NA and "nonfinite_score" (so does a list whose scores are all -Inf: normaliser 0); -Inf scores get
++# weight 0. A flagged result is all NA (mpm_list = NA_integer_, never an empty vector, which is a valid empty MPM).
++v3_list_fields <- function(top, orig, pip_names = as.character(orig)) {
++  p <- length(orig); m <- length(top$models)
++  res <- function(flag) list(pip_list = setNames(rep(NA_real_, p), pip_names), mpm_list = NA_integer_, log_Z_list = NA_real_,
++                             list_size = m, list_full = isTRUE(top$full), pip_list_source = "store", pip_list_flag = flag)
++  if (m == 0L) return(res("empty_list"))
++  F <- as.numeric(top$value)
++  if (length(F) != m) stop("list PIP: top store has ", m, " models and ", length(F), " scores")
++  # error precedence: a duplicate model stops BEFORE any flag is set (a store is a set, whatever its scores are)
++  if (anyDuplicated(vapply(top$models, paste, "", collapse = ","))) stop("list PIP: the top store holds a duplicate model")
++  if (anyNA(F) || any(F == Inf)) return(res("nonfinite_score"))
++  Fmax <- max(F)
++  if (Fmax == -Inf) return(res("nonfinite_score"))   # all -Inf: normaliser 0 (Theory-confirmed via HQ 11-17)
++  lut <- integer(max(orig)); lut[orig] <- seq_len(p)
++  u <- exp(F - Fmax)
++  num <- numeric(p); den <- 0
++  for (i in m:1L) {
++    S <- top$models[[i]]; ui <- u[i]
++    den <- den + ui
++    if (length(S)) { j <- lut[S]; if (anyNA(j) || any(j == 0L)) stop("list PIP: a stored model has a column outside the retained set"); num[j] <- num[j] + ui }
++  }
++  pip <- num / den; names(pip) <- pip_names
++  list(pip_list = pip, mpm_list = as.integer(orig[pip > 0.5]), log_Z_list = Fmax + log(den), list_size = m,
++       list_full = isTRUE(top$full), pip_list_source = "store", pip_list_flag = NULL)
++}
++v3_add_list_fields <- function(fit, lf) { for (nm in names(lf)) if (!is.null(lf[[nm]])) fit[[nm]] <- lf[[nm]]; fit }
++
++# Exact branch (status "exact") of v3_fit: the list fields, strictly LAST (after finish()); one call in place of the former `return(finish(fit))`.
++# SPEC_LIST_PIP.md §4, Theory-confirmed via HQ 11-17: pip_list = pip_primary, mpm_list = mpm (both exact); log_Z_list from the enumeration's
++# returned store (e$top, not fit$top_store) by the same formula; list_size / list_full describe that store; every other status: unchanged.
++v3_exact_list_last <- function(fit, e, ctx) {
++  if (!identical(e$status, "exact")) return(fit)
++  lf <- v3_list_fields(e$top, ctx$orig, names(e$pip))
++  v3_add_list_fields(fit, c(list(pip_list = fit$pip_primary, mpm_list = fit$mpm), lf[c("log_Z_list", "list_size", "list_full")],
++                            list(pip_list_source = "exact", pip_list_flag = lf$pip_list_flag)))
+ }

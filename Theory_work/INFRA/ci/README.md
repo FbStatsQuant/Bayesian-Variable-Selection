@@ -18,6 +18,7 @@ itself: **HQ schedules it with T3 scheduled tasks**. Rules behind each step: `..
 
 | step | what | fails the run when | typical time |
 |---|---|---|---|
+| `manifests` | `tools/verify_accepted.py`: `manifest.py verify` over every accepted manifest (council digest of each ACTIVE claim with an accept record, the set `check.py` counts for acceptance); names each failing manifest and the file whose hash differs (CHANGED / REMOVED / ADDED). `check` alone does not run verify, so a changed EXT input of an accepted manifest was invisible to CI before | any accepted manifest no longer verifies (frozen inputs changed after the round) | seconds |
 | `check` | `tools/check.py`: statement hashes, use-level dependency lifecycle, dangling ids, cycles, statuses vs `State_of_Project/registry/theory_loop.tsv` and `Wave1C/FINAL/sections/*.tex`, method pins (M1), strength-layer consistency | any ERROR | seconds |
 | `paper` | `tools/assemble.py --check`: generated paper blocks match the registry | stale | seconds |
 | `falsify` | re-runs the **cheap** (< 120 s, calibrated) saved falsification scripts in `falsification.tsv`; compares regenerated output files with the committed ones; runs `kind=boundary` entries (just outside an assumption: a PASS is reported as an *improvable* SIGNAL) | a script fails / times out | minutes |
@@ -32,7 +33,7 @@ committed; HQ copies what it acts on into the relevant ticket or issue.
 
 1. **Daily audit** (cheap): schedule a task in the Theory HQ project, e.g. every day 06:00, prompt:
    > In C:\Users\felip\Bayesian-Variable-Selection on an up-to-date checkout of main, run
-   > `python Theory_work/INFRA/ci/run_ci.py --steps check,paper,falsify,cite`. Report the SUMMARY.md verdict per
+   > `python Theory_work/INFRA/ci/run_ci.py --steps manifests,check,paper,falsify,cite`. Report the SUMMARY.md verdict per
    > step to Theory HQ. If `check` has ERRORs or a falsification script fails, open one issue per finding with the
    > repo's issue templates (label `suspect` or `lemma-gap`) — do not change the registry yourself.
 2. **Weekly re-audit** (one strong review per week): e.g. Monday, prompt:

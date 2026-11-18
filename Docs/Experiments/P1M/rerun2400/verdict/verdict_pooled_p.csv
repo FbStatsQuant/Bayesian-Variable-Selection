@@ -1,0 +1,3 @@
+"p","c","n_pairs","rt_median_old_s","rt_median_new_s","rt_ratio_row","pooled_paired_median_ratio","pass"
+500,"all",61,585.918,549.398,0.937670459006209,0.975120588981975,TRUE
+1000,"all",60,1666.3425,1612.0775,0.967434666042545,0.978170000934615,TRUE

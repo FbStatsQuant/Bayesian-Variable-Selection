@@ -1,0 +1,33 @@
+core /home/fb31/SMC_Engineering_Department/tmp/20261117-listpip/abfinal/tree/Scripts/SMC_BVS/core key 9413042ffd4db2b7ef2aa41365bbb8b73ff97684b5251ba26d67753e538b9b5e 
+[2026-11-18T09:57:30Z] exact_p10 new status=exact identical=TRUE fp_equal=TRUE names_order=TRUE attrs=TRUE elem_attrs=TRUE new_last=TRUE new_fields=pip_list,mpm_list,log_Z_list,list_size,list_full,pip_list_source wall=0.4s
+core /home/fb31/SMC_Engineering_Department/tmp/20261117-listpip/abfinal/tree/Scripts/SMC_BVS/core key 9413042ffd4db2b7ef2aa41365bbb8b73ff97684b5251ba26d67753e538b9b5e 
+[2026-11-18T09:57:31Z] exact_p12_dup_const new status=exact identical=TRUE fp_equal=TRUE names_order=TRUE attrs=TRUE elem_attrs=TRUE new_last=TRUE new_fields=pip_list,mpm_list,log_Z_list,list_size,list_full,pip_list_source wall=0.4s
+core /home/fb31/SMC_Engineering_Department/tmp/20261117-listpip/abfinal/tree/Scripts/SMC_BVS/core key 9413042ffd4db2b7ef2aa41365bbb8b73ff97684b5251ba26d67753e538b9b5e 
+core /home/fb31/SMC_Engineering_Department/tmp/20261117-listpip/abfinal/tree/Scripts/SMC_BVS/core key 9413042ffd4db2b7ef2aa41365bbb8b73ff97684b5251ba26d67753e538b9b5e 
+[2026-11-18T09:57:32Z] exact_p14_integer new status=exact identical=TRUE fp_equal=TRUE names_order=TRUE attrs=TRUE elem_attrs=TRUE new_last=TRUE new_fields=pip_list,mpm_list,log_Z_list,list_size,list_full,pip_list_source wall=0.4s
+core /home/fb31/SMC_Engineering_Department/tmp/20261117-listpip/abfinal/tree/Scripts/SMC_BVS/core key 9413042ffd4db2b7ef2aa41365bbb8b73ff97684b5251ba26d67753e538b9b5e 
+[2026-11-18T09:57:33Z] no_predictors new status=no_predictors identical=TRUE fp_equal=TRUE names_order=TRUE attrs=TRUE elem_attrs=TRUE new_last=TRUE new_fields= wall=0.2s
+core /home/fb31/SMC_Engineering_Department/tmp/20261117-listpip/abfinal/tree/Scripts/SMC_BVS/core key 9413042ffd4db2b7ef2aa41365bbb8b73ff97684b5251ba26d67753e538b9b5e 
+core /home/fb31/SMC_Engineering_Department/tmp/20261117-listpip/abfinal/tree/Scripts/SMC_BVS/core key 9413042ffd4db2b7ef2aa41365bbb8b73ff97684b5251ba26d67753e538b9b5e 
+[2026-11-18T09:57:34Z] near_constant new status=completed identical=TRUE fp_equal=TRUE names_order=TRUE attrs=TRUE elem_attrs=TRUE new_last=TRUE new_fields=pip_list,mpm_list,log_Z_list,list_size,list_full,pip_list_source wall=1.9s
+core /home/fb31/SMC_Engineering_Department/tmp/20261117-listpip/abfinal/tree/Scripts/SMC_BVS/core key 9413042ffd4db2b7ef2aa41365bbb8b73ff97684b5251ba26d67753e538b9b5e 
+[2026-11-18T09:57:38Z] smc_p48_integer new status=completed identical=TRUE fp_equal=TRUE names_order=TRUE attrs=TRUE elem_attrs=TRUE new_last=TRUE new_fields=pip_list,mpm_list,log_Z_list,list_size,list_full,pip_list_source wall=3.3s
+core /home/fb31/SMC_Engineering_Department/tmp/20261117-listpip/abfinal/tree/Scripts/SMC_BVS/core key 9413042ffd4db2b7ef2aa41365bbb8b73ff97684b5251ba26d67753e538b9b5e 
+[2026-11-18T09:57:42Z] smc_p60_n30 new status=completed identical=TRUE fp_equal=TRUE names_order=TRUE attrs=TRUE elem_attrs=TRUE new_last=TRUE new_fields=pip_list,mpm_list,log_Z_list,list_size,list_full,pip_list_source wall=6.3s
+core /home/fb31/SMC_Engineering_Department/tmp/20261117-listpip/abfinal/tree/Scripts/SMC_BVS/core key 9413042ffd4db2b7ef2aa41365bbb8b73ff97684b5251ba26d67753e538b9b5e 
+[2026-11-18T09:57:43Z] resource_limit new status=resource_limit identical=TRUE fp_equal=TRUE names_order=TRUE attrs=TRUE elem_attrs=TRUE new_last=TRUE new_fields= wall=0.3s
+core /home/fb31/SMC_Engineering_Department/tmp/20261117-listpip/abfinal/tree/Scripts/SMC_BVS/core key 9413042ffd4db2b7ef2aa41365bbb8b73ff97684b5251ba26d67753e538b9b5e 
+[2026-11-18T09:57:44Z] guard_calib new status=resource_limit identical=TRUE fp_equal=TRUE names_order=TRUE attrs=TRUE elem_attrs=TRUE new_last=TRUE new_fields= wall=0.3s
+[2026-11-18T09:57:44Z] smc_p40_dup new status=completed identical=TRUE fp_equal=TRUE names_order=TRUE attrs=TRUE elem_attrs=TRUE new_last=TRUE new_fields=pip_list,mpm_list,log_Z_list,list_size,list_full,pip_list_source wall=10.0s
+core /home/fb31/SMC_Engineering_Department/tmp/20261117-listpip/abfinal/tree/Scripts/SMC_BVS/core key 9413042ffd4db2b7ef2aa41365bbb8b73ff97684b5251ba26d67753e538b9b5e 
+[2026-11-18T09:57:45Z] invalid_seed new status=invalid_input identical=TRUE fp_equal=TRUE names_order=TRUE attrs=TRUE elem_attrs=TRUE new_last=TRUE new_fields= wall=0.1s
+core /home/fb31/SMC_Engineering_Department/tmp/20261117-listpip/abfinal/tree/Scripts/SMC_BVS/core key 9413042ffd4db2b7ef2aa41365bbb8b73ff97684b5251ba26d67753e538b9b5e 
+core /home/fb31/SMC_Engineering_Department/tmp/20261117-listpip/abfinal/tree/Scripts/SMC_BVS/core key 9413042ffd4db2b7ef2aa41365bbb8b73ff97684b5251ba26d67753e538b9b5e 
+[2026-11-18T09:57:52Z] smc_ls0off new status=completed identical=TRUE fp_equal=TRUE names_order=TRUE attrs=TRUE elem_attrs=TRUE new_last=TRUE new_fields=pip_list,mpm_list,log_Z_list,list_size,list_full,pip_list_source wall=6.5s
+[2026-11-18T09:57:52Z] smc_default new status=completed identical=TRUE fp_equal=TRUE names_order=TRUE attrs=TRUE elem_attrs=TRUE new_last=TRUE new_fields=pip_list,mpm_list,log_Z_list,list_size,list_full,pip_list_source wall=6.7s
+core /home/fb31/SMC_Engineering_Department/tmp/20261117-listpip/abfinal/tree/Scripts/SMC_BVS/core key 9413042ffd4db2b7ef2aa41365bbb8b73ff97684b5251ba26d67753e538b9b5e 
+WORKER DONE
+[2026-11-18T09:57:53Z] y_constant new status=y_constant identical=TRUE fp_equal=TRUE names_order=TRUE attrs=TRUE elem_attrs=TRUE new_last=TRUE new_fields= wall=0.2s
+WORKER DONE
+[2026-11-18T11:23:23Z] tie_dp_p400 new status=completed identical=TRUE fp_equal=TRUE names_order=TRUE attrs=TRUE elem_attrs=TRUE new_last=TRUE new_fields=pip_list,mpm_list,log_Z_list,list_size,list_full,pip_list_source wall=5139.9s
+WORKER DONE

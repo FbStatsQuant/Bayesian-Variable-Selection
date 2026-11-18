@@ -1,0 +1,16 @@
+# T5 R4, reader copy (T5 card, AGREE): inadmissible-data sentence, READER_VERSIONS.md:1065-1067, with p < p_raw (the reader's p is the retained count). Reader prose only. The statement-span copy (W3-DIST/STATEMENT.md:150-152) is PENDING separately. Line count unchanged.
+diff --git a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+index b8f3015d..2e61b89e 100644
+--- a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
++++ b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+@@ -1063,8 +1063,8 @@ and inverse-gamma prior §3; no tuning). $\Pi(\cdot\mid D_n)$ is the resulting e
+ back to the original units: $S$ is the set of included predictors, $\beta\in\mathbb R^{p_{\mathrm{raw}}}$ the coefficient vector
+ (zero outside $S$ and on removed predictors), $\sigma^2$ the noise variance. If fewer than two predictors remain, or the
+ response is constant in the sample, the posterior is not defined; under the assumptions below such data sets have
+-probability smaller than the exceptional probabilities in the theorems and are counted in them (and $p=p_{\mathrm{raw}}$
+-outside them).
++probability smaller than the exceptional probabilities in the theorems and are counted in them: there the posterior probabilities in the displays are read as 1.
++The common exceptional set of the proofs also contains every data set with $p<p_{\mathrm{raw}}$.
+ 
+ *What is estimated.* A draw $(S,\beta,\sigma^2)$ defines a conditional law of $y$ given $x$,
+ $N\big(\bar y+(x-\bar x)^\top\beta,\ \sigma^2\big)$, with the sample-mean intercept ($\bar y$, $\bar x$ are the sample means). The

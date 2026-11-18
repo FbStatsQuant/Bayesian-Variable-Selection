@@ -80,10 +80,10 @@ OK   token '(G3b) TV' in Theory_work/Wave1C/C-GROW/lemmas/L5_instances.md:58-61
 OK   token 'θ = (1, −2)' in Theory_work/Wave3/W3-AUDIT/TRACK_B.md:216-216
 OK   token 'AR(0.95)' in Theory_work/Wave3/W3-AUDIT/TRACK_B.md:256-257
 OK   token 'S2 layouts' in Theory_work/Wave1C/C-GROW/STATEMENT.md:146-147
-OK   status W3-RM2-R:RM2-R-plus@1.0.1 quoted verbatim in STATEMENT §4
-OK   status W3-RM2-R:RM0-plus@1.0.1 quoted verbatim in STATEMENT §4
-OK   status W3-RM2-R:DLV-0@1.0.1 quoted verbatim in STATEMENT §4
-OK   status W3-AUDIT-V:VIS@1.0.0 quoted verbatim in STATEMENT §4
+OK   status W3-RM2-R:RM2-R-plus@1.0.2 quoted verbatim in STATEMENT §4
+OK   status W3-RM2-R:RM0-plus@1.0.2 quoted verbatim in STATEMENT §4
+OK   status W3-RM2-R:DLV-0@1.0.2 quoted verbatim in STATEMENT §4
+OK   status W3-AUDIT-V:VIS@1.0.1 quoted verbatim in STATEMENT §4
 OK   status C-GROW:C5a@1.0.0 quoted verbatim in STATEMENT §4
 OK   status W3-RM2:D-to-W@1.0.3 quoted verbatim in STATEMENT §4
 OK   status W3-RM2:POST-R@1.0.3 quoted verbatim in STATEMENT §4

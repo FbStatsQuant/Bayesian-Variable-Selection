@@ -84,7 +84,7 @@ algebra (they use no event): with Δ_U = ‖μ̃‖²/N, ρ̂_{U,l} := ⟨(I −
 a_U := σ²/τ²_U: δ_{U,l} = ‖μ̃‖ρ̂_{U,l} = √Δ_U·g_{U,l}, (δ_{U,l} + σZ)/τ_U = √(1 − a_U)g_{U,l} + √a_UZ, and
 **J_{z_n}(δ_{U,l}, τ_U) = F(g_{U,l}, a_U).** Always a_U ≥ a̲, since Δ_U ≤ ‖μ‖²/N ≤ Δ_hi (‖μ‖ ≤ Σ_{j∈S₀}|θ*_j|‖x_j‖ ≤ s₀θ_hi√N).
 (The event (I − P_U)x_l = 0 has probability 0: the rows of (CW_{U∪{l}}) span a space of dimension |U| + 1 ≤ 16 a.s. once
-N ≥ 16, by λ_min(Σ_{U∪{l}}) ≥ c_Σ > 0; on it δ_{U,l} := 0 and the term is again √(2/π)z_n ≤ F-bound below.)
+N ≥ 16, by λ_min(Σ_{U∪{l}}) ≥ c_Σ > 0; on it δ_{U,l} := 0 and the term is J_{z_n}(0, τ_U) ≤ √(2/π)z_n (since τ_U ≥ σ), within the bound below.)
 
 **Step 2 (conditional law; BASE L9.5 with U₀ = U, D = S₀).** [R-7] In BASE `lemmas/L9_BR.md:94-123` take the reference
 pair (l, U₀) with U₀ := U ⊊ S₀; then D := U₀ ∪ S₀ = S₀, l ∉ D, |D ∪ {l}| = s₀ + 1 ≤ 16 + s₀. Every step of BASE `:96-123`
@@ -161,7 +161,7 @@ Let C^♯ := C^♯(ε/8), c₀ := c₀(ε/8), n₀ := n₀(ε/8, 1) be the const
 whose limsup is ≤ ε/4 < ε. Since C^♯r̄_n + n^{−1} ≤ T⁰_ε√(log n/n) with T⁰_ε := C^♯(D⁰_ε + 1) + 1, we get
 limsup_n P(o₀ > T⁰_ε√(log n/n)) ≤ ε for every ε ∈ (0, 1):
   **o₀ = O_P(√(log n/n)),   and 1 − π₀(S₀) = o₀/(1 + o₀) ≤ o₀ = O_P(√(log n/n)).** ∎
-(Optimality up to √log n: o₀ ≥ ½(n + 1)^{−1/2} on every data set with s₀ < K, by (T0), BASE `STATEMENT.md:241-243`.)
+(Optimality up to √log n: o₀ ≥ ½(n + 1)^{−1/2} on every data set with s₀ < K and n ≥ 4, by (T0), BASE `STATEMENT.md:241-243`.)
 *Where each hypothesis is used.* (L-gain-0): only (R3.4). (L-R⁺⁺) with Q = S₀ (any C_L): only 𝔏_n(S₀) ≤ e^{C_B√log n}, which
 controls the second-order term n^{−1}𝔏_n(S₀)² and the smallness ϱ_n(S₀) ≤ c₀. (V-R): (V-c) on the design set. (FL-R16):
 floors, τ_e², ‖γ²‖.

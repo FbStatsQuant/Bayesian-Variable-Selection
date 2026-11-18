@@ -69,7 +69,7 @@ OK   token '| 1.2 (Thm 2) |' in Theory_work/Wave3/W3-READER/CLAIMS_CARD.md:55-55
 OK   token 'ψ_n' in Theory_work/Wave2/W2-APP/lemmas/L1_POST.md:20-25
 OK   token 'non-empty T' in Theory_work/Wave3/W3-MISR-R/lemmas/G2_corr.md:29-34
 OK   status W3-MISR-R:CorGb-plus@1.0.3 quoted verbatim in STATEMENT §5
-OK   status W3-READER:R1@1.0.4 quoted verbatim in STATEMENT §5
+OK   status W3-READER:R1@1.0.5 quoted verbatim in STATEMENT §5
 OK   status W3-POST2:C@1.0.7 quoted verbatim in STATEMENT §5
 OK   status W3-POST:Prop-LB@1.0.1 quoted verbatim in STATEMENT §5
 W3-D2 citecheck: 74 checks, 0 failures

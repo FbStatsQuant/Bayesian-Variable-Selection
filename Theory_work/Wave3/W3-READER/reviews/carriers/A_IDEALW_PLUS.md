@@ -22,7 +22,7 @@ Sources: HQ's definition; TR1 §2 (`Theory_work/Dept/research/FUNI_transfer/TR1_
 | implies | — (it contains IDEAL-W, which has no separate row; IDEAL-W sits inside A:DELIVERY-ALLOC) |
 | bridge | — |
 | version | 1.0.0 |
-| notes | Without it, statements that use it hold on the sufficient bounded domain 𝔇 := {(n, p_raw): ⌈log₂(n + p_raw + 1)⌉ ≤ 10⁶ and ⌈log₂(n + p_raw + 1)⌉ + ⌊n/2⌋ ≤ 2³¹ − 1}. Both predicates are false there, because p ≤ p_raw and \|S̃₀\| ≤ K ≤ ⌊n/2⌋, and the exact-enumeration branch reaches neither check (TR1 §2). 𝔇 is sufficient, not necessary. This is the same assumption as W3-RM2-R's IDEAL-W⁺ (`Theory_work/Wave3/W3-RM2-R/STATEMENT.md:80-85`); that file says the predicates are "treated as true", which TR1 §2 reads as "are false". First users: W2-UNI:F-UNI@2.0.0 clause (b), W3-RM2-R:DLV-0. |
+| notes | Without it, statements that use it hold on the sufficient bounded domain 𝔇 := {(n, p_raw): ⌈log₂(n + p_raw + 1)⌉ ≤ 10⁶ and ⌈log₂(n + p_raw + 1)⌉ + ⌊n/2⌋ ≤ 2³¹ − 1}. Both predicates are false there, because p ≤ p_raw and \|S̃₀\| ≤ K ≤ ⌊n/2⌋, and the exact-enumeration branch reaches neither check (TR1 §2). 𝔇 is sufficient, not necessary. This is the same assumption as W3-RM2-R's IDEAL-W⁺ (`Theory_work/Wave3/W3-RM2-R/STATEMENT.md:80-85`); that file says the two bounds are treated as satisfied (the rejection predicates `le > 1e6`, `cap_ll > INT_MAX` never fire), the reading of TR1 §2. First users: W2-UNI:F-UNI@2.0.0 clause (b), W3-RM2-R:DLV-0. |
 
 **Wording note for the batch:** the code ceiling is `numeric_limits<int>::max()` = 2³¹ − 1 on the shipped platform. "INT_MAX" in
 the paragraph means that value. The predicate fires on cap_ll = `ls0_ell` + |S̃₀|; under the shipped configuration (`ls0_cap`

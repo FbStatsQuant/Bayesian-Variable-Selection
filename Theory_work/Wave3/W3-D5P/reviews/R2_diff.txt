@@ -1,0 +1,279 @@
+diff --git a/Theory_work/Wave3/W3-D5P/CARD.md b/Theory_work/Wave3/W3-D5P/CARD.md
+index 3b7fec5b..7e1e654e 100644
+--- a/Theory_work/Wave3/W3-D5P/CARD.md
++++ b/Theory_work/Wave3/W3-D5P/CARD.md
+@@ -1,4 +1,4 @@
+-# W3-D5P — card text proposal for HQ (Corollary 6L; placement is HQ's)
++# W3-D5P — card text proposal for HQ (Corollary 6L; placement is HQ's) — v0.2 after council R1 [R1-sol-1..3, R1-opus-2, -3]
+ 
+ Per D109, the hypotheses are stated as "those of Theorem 6", with nothing added, so any change to row 3.1's presented scope
+ carries over automatically. Statuses are left as placeholders until CP3 (filled verbatim from the passing council).
+@@ -7,13 +7,15 @@ carries over automatically. Statuses are left as placeholders until CP3 (filled
+ 
+ | Row | Claim (plain words) | Master / status | Why it matters | Notes |
+ |---|---|---|---|---|
+-| 3.1L (Cor 6L) | **The list the method returns gives consistent PIPs, median model and evidence on every Theorem 6 design.** Under the hypotheses of Theorem 6: on the same data event, every run that produces output (any seed, any calibration outcome) has the true model in its returned list of at most $40p+1$ best-scored models and reports it; the inclusion probabilities obtained by renormalising the posterior to that list are within $1-\pi(S_0\mid y)$ of the truth and of the exact posterior PIPs, the list evidence lies in $[\pi(S_0\mid y)Z,\,Z]$, and the list's median model is $S_0$ when $\pi(S_0\mid y)>\tfrac12$. Errors $O_P(\sqrt{\log n/n})$ on output; without "on output" under the delivery conventions (S4). These are the printed fields `pip_list`, `mpm_list`, `log_Z_list` (method companion of D105). The sampler's averaged `pip_primary`, `mpm` and `log_Z` are not covered outside row 3.6's scope. | `W3-D5P:LIST-R` (+ `LIST-K`, `LIST-CODE`): [status at CP3]; conditional on IMPL-LIST until Engineering's method commit is code-read. Inputs: `W3-RM2-R:RM2-R-plus@1.0.1`, `RM0-plus@1.0.1`, `DLV-0@1.0.1` "PROVED-CHECKED; council R3, …"; `W2-APP:POST@1.0.7` "PROVED-CHECKED". | Consistency of printed estimates (PIPs, median model, evidence) on AR and block designs, which row 3.6 does not reach; same hypotheses as the main theorem, parametric-up-to-log rate. Also closes the two links W3-DIST left unchecked (completed run = output; printed `hpm` = the reported model). | **short** corollary; READER: Corollary 6L under Theorem 6 (`READER_DELTA.md`) |
++| 3.1L (Cor 6L) | **The list the method returns gives consistent PIPs, median model and evidence on every Theorem 6 design.** Under the hypotheses of Theorem 6: on the same data event, every run that produces output (any seed, any calibration outcome) reports the true model and holds it in its returned list of at most $40p+1$ best-scored models (on exact enumeration: in the enumeration's list, where returned). On the sampler, the printed `pip_list`, `mpm_list`, `log_Z_list` (method companion of D105) are the PIPs, median model and log evidence of the posterior renormalised to that list; on exact enumeration, `pip_list` and `mpm_list` are the exact PIPs and median model. Both PIP fields are within $\varepsilon_n:=1-\pi(S_0\mid y)$ of the truth and of the exact posterior PIPs; the list evidence satisfies $1-\varepsilon_n\le Z^{\mathrm{list}}/Z\le1$, i.e. $0\le\log Z-$`log_Z_list`$\le-\log(1-\varepsilon_n)$ (where `log_Z_list` is printed); `mpm_list` is $S_0$ when $\varepsilon_n<\tfrac12$. The PIP errors and the log-evidence error are $O_P(\sqrt{\log n/n})$ on output; without "on output" under the delivery conventions (S4). The sampler's averaged `pip_primary`, `mpm` and `log_Z` are not covered outside row 3.6's scope. | `W3-D5P:LIST-R` (+ `LIST-K`, `LIST-CODE`): [status at CP3]; conditional on IMPL-LIST until Engineering's method commit is code-read. Inputs: `W3-RM2-R:RM2-R-plus@1.0.1`, `RM0-plus@1.0.1`, `DLV-0@1.0.1` "PROVED-CHECKED; council R3, …"; `W2-APP:POST@1.0.7` "PROVED-CHECKED". | Consistency of printed estimates (PIPs, median model, evidence) on AR and block designs that satisfy Theorem 6's conditions, which row 3.6 does not reach; same hypotheses as the main theorem, parametric-up-to-log rate. Also closes the two links W3-DIST left unchecked (completed run = output; printed `hpm` = the reported model). | **short** corollary; READER: Corollary 6L under Theorem 6 (`READER_DELTA.md`) |
+ 
+ ## Option B: a sentence added to row 3.6 ("Outside (A5): …")
+-"… row 3.1 still gives the reported-model result; on those designs, under the hypotheses of Theorem 6, the PIPs, median
+-model and evidence computed from the returned list (`pip_list`, `mpm_list`, `log_Z_list`) are within
+-$1-\pi(S_0\mid y)=O_P(\sqrt{\log n/n})$ of the truth on output (Corollary 6L) [W3-D5P]; consistency of the sampler's
+-averaged PIPs, MPM and $\hat Z$ is not claimed there."
++"… row 3.1 still gives the reported-model result; on those designs, under the hypotheses of Theorem 6, the PIPs
++computed from the returned list (`pip_list`; exact PIPs on exact enumeration) are within $\varepsilon_n=1-\pi(S_0\mid y)
++=O_P(\sqrt{\log n/n})$ of the truth and of the exact posterior PIPs on output, their median model (`mpm_list`) is $S_0$
++when $\varepsilon_n<\tfrac12$, and the list evidence (`log_Z_list`, where printed) satisfies
++$0\le\log Z-$`log_Z_list`$\le-\log(1-\varepsilon_n)$ (Corollary 6L) [W3-D5P]; consistency of the sampler's averaged
++PIPs, MPM and $\hat Z$ is not claimed there."
+ 
+ ## Tags vs the current card
+ Row 3.1: STRONGER (added conclusions; hypotheses and data event unchanged). Row 3.6: unchanged (Option A) or NEW-CLAIM
+diff --git a/Theory_work/Wave3/W3-D5P/DEPS.tsv b/Theory_work/Wave3/W3-D5P/DEPS.tsv
+index 7a810f2c..d8c2835c 100644
+--- a/Theory_work/Wave3/W3-D5P/DEPS.tsv
++++ b/Theory_work/Wave3/W3-D5P/DEPS.tsv
+@@ -1,7 +1,7 @@
+ id	file[:lines]	uses (ids)	sha	checked_sha	checked_by	state
+-STMT-C1	STATEMENT.md:§2	LIST-K	c594e61e72581ad7	c594e61e72581ad7	reviews/LC1_line_check_opus.md (a91eb7cb) + reviews/LC1R_recheck_opus.md (113c351e; its E-fixes applied verbatim)	OK
+-STMT-C2	STATEMENT.md:§3	LIST-CODE	c594e61e72581ad7	c594e61e72581ad7	reviews/LC1_line_check_opus.md (a91eb7cb) + reviews/LC1R_recheck_opus.md (113c351e; its E-fixes applied verbatim)	OK
+-STMT-C3	STATEMENT.md:§4	LIST-R	c594e61e72581ad7	c594e61e72581ad7	reviews/LC1_line_check_opus.md (a91eb7cb) + reviews/LC1R_recheck_opus.md (113c351e; its E-fixes applied verbatim)	OK
+-LIST-K	lemmas/L1_listK.md	-	408e2e4e2c4fedb7	408e2e4e2c4fedb7	reviews/LC1_line_check_opus.md (a91eb7cb) + reviews/LC1R_recheck_opus.md (113c351e; its E-fixes applied verbatim)	OK
+-LIST-CODE	lemmas/L2_listCODE.md	W3-SAMP:CC@1.1.2	1accddb36dd7004c	1accddb36dd7004c	reviews/LC1_line_check_opus.md (a91eb7cb) + reviews/LC1R_recheck_opus.md (113c351e; its E-fixes applied verbatim)	OK
+-LIST-R	lemmas/L3_listR.md	LIST-K;LIST-CODE;W3-RM2-R:RM2-R-plus@1.0.1;W3-RM2-R:RM0-plus@1.0.1;W3-RM2-R:DLV-0@1.0.1;W2-APP:POST@1.0.7	f014059f08d9f2f4	f014059f08d9f2f4	reviews/LC1_line_check_opus.md (a91eb7cb) + reviews/LC1R_recheck_opus.md (113c351e; its E-fixes applied verbatim)	OK
++STMT-C1	STATEMENT.md:§2	LIST-K	5dc11132cf4d599f	c594e61e72581ad7	LC1 (read a91eb7cb) + LC1R (read 113c351e; E-fixes applied verbatim) + council R1 (read MANIFEST 952d9840 = checked_sha) [R1-opus-10]	STALE (edited after council R1; diff round R2)
++STMT-C2	STATEMENT.md:§3	LIST-CODE	5dc11132cf4d599f	c594e61e72581ad7	LC1 (read a91eb7cb) + LC1R (read 113c351e; E-fixes applied verbatim) + council R1 (read MANIFEST 952d9840 = checked_sha) [R1-opus-10]	STALE (edited after council R1; diff round R2)
++STMT-C3	STATEMENT.md:§4	LIST-R	5dc11132cf4d599f	c594e61e72581ad7	LC1 (read a91eb7cb) + LC1R (read 113c351e; E-fixes applied verbatim) + council R1 (read MANIFEST 952d9840 = checked_sha) [R1-opus-10]	STALE (edited after council R1; diff round R2)
++LIST-K	lemmas/L1_listK.md	-	5c4c081b6e318773	408e2e4e2c4fedb7	LC1 (read a91eb7cb) + LC1R (read 113c351e; E-fixes applied verbatim) + council R1 (read MANIFEST 952d9840 = checked_sha) [R1-opus-10]	STALE (edited after council R1; diff round R2)
++LIST-CODE	lemmas/L2_listCODE.md	W3-SAMP:CC@1.1.2	b023cafbf726d379	1accddb36dd7004c	LC1 (read a91eb7cb) + LC1R (read 113c351e; E-fixes applied verbatim) + council R1 (read MANIFEST 952d9840 = checked_sha) [R1-opus-10]	STALE (edited after council R1; diff round R2)
++LIST-R	lemmas/L3_listR.md	LIST-K;LIST-CODE;W3-RM2-R:RM2-R-plus@1.0.1;W3-RM2-R:RM0-plus@1.0.1;W3-RM2-R:DLV-0@1.0.1;W2-APP:POST@1.0.7	b1e91cd83f183c43	f014059f08d9f2f4	LC1 (read a91eb7cb) + LC1R (read 113c351e; E-fixes applied verbatim) + council R1 (read MANIFEST 952d9840 = checked_sha) [R1-opus-10]	STALE (edited after council R1; diff round R2)
+diff --git a/Theory_work/Wave3/W3-D5P/READER_DELTA.md b/Theory_work/Wave3/W3-D5P/READER_DELTA.md
+index 9ca58ac0..a4f5f2f5 100644
+--- a/Theory_work/Wave3/W3-D5P/READER_DELTA.md
++++ b/Theory_work/Wave3/W3-D5P/READER_DELTA.md
+@@ -1,4 +1,4 @@
+-# W3-D5P — READER_DELTA (draft v0.1, for CP1; HQ passes it to W3-READER; nothing written in W3-READER's folder)
++# W3-D5P — READER_DELTA (v0.2, after council R1 [R1-sol-1..3, R1-opus-2, -3, -8]; HQ passes it to W3-READER; nothing written in W3-READER's folder)
+ 
+ **Current reader version.** `Theory_work/Wave3/W3-READER/READER_VERSIONS.md` §6 (Theorem 6, card row 3.1, section
+ v0.9, lines 660-812). Unchanged by this ticket: assumptions (A1)–(A6), the displays, the remarks.
+@@ -10,29 +10,35 @@ companion of D105 (the printed list fields of SPEC_LIST_PIP); until that commit
+ 
+ **New text (reader form; no internal ids).**
+ 
+-> **Corollary 6L (what the returned list gives).** A completed run returns, besides the reported model, a list of at
+-> most $40p+1$ distinct models with their unnormalised log posterior weights (the best-scored models met by the run).
+-> Renormalising the posterior to this list gives inclusion probabilities $\hat p^{\,\mathrm{list}}_j$, their median model
++> **Corollary 6L (what the returned list gives).** A run that produces output returns, besides the reported model, a
++> list of at most $40p+1$ distinct models with their unnormalised log posterior weights (the best-scored models met by
++> the run). The method prints three further summaries. On a run that uses the sampler they are computed from this list:
++> the inclusion probabilities $\hat p^{\,\mathrm{list}}_j$ of the posterior renormalised to the list, their median model
+ > $\hat S^{\mathrm{list}}=\{j:\hat p^{\,\mathrm{list}}_j>\tfrac12\}$ and the list evidence $\hat Z^{\mathrm{list}}$ (the
+-> sum of the list's weights), which the method prints. Write $\varepsilon_n:=1-\pi(S_0\mid y)$. Under the assumptions of
+-> Theorem 6, on the same data events $\mathcal G_n$, every run that produces output, whatever its seed and calibration
+-> outcome, has $S_0$ in its list, reports $\hat S=S_0$, and
++> sum of the list's weights). On a small problem solved by exact enumeration they are the exact inclusion probabilities,
++> the exact median model and, where it is printed, the evidence of the enumeration's list. Write
++> $\varepsilon_n:=1-\pi(S_0\mid y)$. Under the assumptions of Theorem 6, on the same data events $\mathcal G_n$, every
++> run that produces output, whatever its seed and calibration outcome, reports $\hat S=S_0$ and has $S_0$ in its list
++> (on the sampler; on exact enumeration, in the enumeration's list where it is returned), and
+ > $$
+ > \max_j\big|\hat p^{\,\mathrm{list}}_j-\mathbf 1\{j\in S_0\}\big|\le\varepsilon_n,\qquad
+ > \max_j\big|\hat p^{\,\mathrm{list}}_j-\mathrm{PIP}_j\big|\le\varepsilon_n,\qquad
+-> \pi(S_0\mid y)\,Z\le\hat Z^{\mathrm{list}}\le Z ,
++> 1-\varepsilon_n\le\hat Z^{\mathrm{list}}/Z\le1\ \ \text{(where }\hat Z^{\mathrm{list}}\text{ is printed)},
+ > $$
+-> and $\hat S^{\mathrm{list}}=\hat S=S_0$ when $\varepsilon_n<\tfrac12$. Since $\varepsilon_n=O_P(\sqrt{\log n/n})$, these errors
+-> are $O_P(\sqrt{\log n/n})$ on output, and without "on output" under the delivery conventions (S4).
++> so that $0\le\log Z-\log\hat Z^{\mathrm{list}}\le-\log(1-\varepsilon_n)$; and $\hat S^{\mathrm{list}}=\hat S=S_0$ when
++> $\varepsilon_n<\tfrac12$. Since $\varepsilon_n=O_P(\sqrt{\log n/n})$, the two PIP errors and the log-evidence error
++> $|\log\hat Z^{\mathrm{list}}-\log Z|$ (where printed) are $O_P(\sqrt{\log n/n})$ on output, and without "on output"
++> under the delivery conventions (S4).
+ 
+-*Remark for the text.* This covers every design inside Theorem 6 — AR and block designs included — where the
+-sampler's averaged PIPs, median model and evidence are not covered (Theorem 10 needs no leakage outside the true model).
+-The list quantities are deterministic functions of the run's output; the price is that they speak about the posterior
+-restricted to the list, which on Theorem 6's data event holds at least the mass of $S_0$.
++*Remark for the text.* This covers every design inside Theorem 6 — including AR and block designs that satisfy
++Theorem 6's conditions — on which the sampler's averaged PIPs, median model and evidence are not covered (Theorem 10
++needs no leakage outside the true model). The list quantities are deterministic functions of the run's output; the price
++is that they speak about the posterior restricted to the list, which on Theorem 6's data event holds at least the mass of
++$S_0$.
+ 
+ **Bridges needed.** None beyond those of Theorem 6: (A5) gives (T1-R) = LSF (bridge B6.1), which is the input of the
+ rate; the corollary's master is `W3-D5P:LIST-R` with `LIST-K`, `LIST-CODE`.
+ 
+ **Tag vs the current reader version.** Theorem 6: STRONGER (added conclusions, same hypotheses, same event). Row 3.6:
+-NEW-CLAIM (different outputs; row 3.6 unchanged). Row 3.5: NEW-CLAIM (a deterministic sandwich for the list evidence;
++NEW-CLAIM (different outputs; row 3.6 unchanged). Row 3.5: NEW-CLAIM (a deterministic sandwich for the list evidence, relative error ≤ ε_n, log error ≤ −log(1 − ε_n);
+ row 3.5's unbiasedness unchanged).
+diff --git a/Theory_work/Wave3/W3-D5P/REPORT.md b/Theory_work/Wave3/W3-D5P/REPORT.md
+index a232f5b2..8a56e9e1 100644
+--- a/Theory_work/Wave3/W3-D5P/REPORT.md
++++ b/Theory_work/Wave3/W3-D5P/REPORT.md
+@@ -1,7 +1,7 @@
+ # W3-D5P — REPORT (track D ticket #5′: the list-restricted outputs on every Theorem 6 design)
+ 
+ Lead: Claude Opus 5.5 (effort high). Branch theory/W3-D5P (off main 029bb748). Protocol: PROTOCOL_v4 + RIDER_RULES
+-(dept/theory). **This file restates nothing**: statements are in `STATEMENT.md` (v1.0 LOCKED), proofs in `lemmas/`.
++(dept/theory). **This file restates nothing**: statements are in `STATEMENT.md` (v1.0 LOCKED, changelog v1.1–v1.1.2), proofs in `lemmas/`.
+ Statuses below are as of this draft; the council result goes in §4 and in the REGISTRY blocks.
+ 
+ ## 1. What the ticket delivers
+@@ -40,16 +40,16 @@ claim: W3-D5P:LIST-K | kind: lemma | statement: STATEMENT.md:67-75 | premises: S
+ status: PROVED (by this seat); LC1 VERIFIED-WITH-AMENDMENTS, applied; LC1R VERIFIED-WITH-AMENDMENTS (E only), applied | status_source: REPORT.md:17
+ conclusion: deterministic: for any list T of models containing S0, the list-renormalised PIPs are within 1 - pi(T) <= 1 - pi(S0|y) of the exact PIPs and within 1 - pi_T(S0) <= 1 - pi(S0|y) of the indicator of S0; the list median model is S0 when 1 - pi(S0|y) < 1/2; log Z_T = log Z + log pi(T)
+ rate: none (deterministic)
+-scope: any finite model space and any score
++scope: any finite set of models Omega and any real-valued F on Omega (as (C1)); applied with Omega = {|S| <= K} and the coded F [R1-opus-4]
+ depends_on: none
+ council: none yet
+ ```
+ 
+ ```
+ REGISTRY
+-claim: W3-D5P:LIST-CODE | kind: lemma | statement: STATEMENT.md:79-95 | premises: STATEMENT.md:29-38
++claim: W3-D5P:LIST-CODE | kind: lemma | statement: STATEMENT.md:79-95 | premises: STATEMENT.md:29-38 ; STATEMENT.md:49-57
+ status: CODE-READ (by this seat); LC1 VERIFIED-WITH-AMENDMENTS, applied; LC1R VERIFIED-WITH-AMENDMENTS (E only), applied | status_source: REPORT.md:18
+-assumptions: A:OP ; A:EX-A
++assumptions: A:OP (EX-A, EX-S, SR, GUARD-W, OP-LS0, at the shipped configuration) ; A:EX-A [R1-opus-7]
+ conclusion: code fact at core 4676af6: on the sampler branch status completed iff estimates available (the output event), and LS0 ran in the final run with the evaluation sequence of the search in K_n; printed hpm = the HPM-order maximum of the models offered to the final-run ledger (= the reported model of RM/RM2R); top_store holds distinct offered models with their exact scores and contains that maximum; exact branch: the enumeration's store contains the HPM-order maximum of Omega, pip_primary/mpm are exact
+ rate: none
+ scope: the method as coded (shipped configuration)
+@@ -63,8 +63,8 @@ REGISTRY
+ claim: W3-D5P:LIST-R | kind: corollary | statement: STATEMENT.md:99-125 | premises: STATEMENT.md:29-63
+ status: PROVED (by this seat); conditional on IMPL-LIST; LC1 VERIFIED-WITH-AMENDMENTS, applied; LC1R VERIFIED-WITH-AMENDMENTS (E only), applied | status_source: REPORT.md:19
+ assumptions: the hypotheses of W3-RM2-R:RM2-R-plus (= Theorem 6, card row 3.1), nothing added ; A:OP ; A:EX-A ; IMPL-LIST (new | the printed list fields are computed as SPEC_LIST_PIP §2, §4 prescribe | code fact of the pending method commit | STATEMENT.md:59-63 | shared no | discharge: code reading) ; A:DELIV-D (clause (iii) only)
+-conclusion: on Theorem 6's data event every admissible output run has S0 in its returned list, hpm = S0, list PIPs within 1 - pi(S0|y) of the truth and of the exact PIPs, log Z + log pi(S0|y) <= log_Z_list <= log Z, mpm_list = S0 when 1 - pi(S0|y) < 1/2; under (D) without "on output"
+-rate: O_P(sqrt(log n / n)) (p >= 2)
++conclusion: on Theorem 6's data event every admissible output run has S0 in its returned list (exact branch: in the enumeration's store, when returned), hpm = S0, pip_list within 1 - pi(S0|y) of the truth and of the exact PIPs (sampler: list-renormalised; exact branch: exact PIPs), log Z + log pi(S0|y) <= log_Z_list <= log Z when log_Z_list is not NA, mpm_list = S0 when 1 - pi(S0|y) < 1/2; under (D) without "on output" [R1-sol-1, R1-sol-3, R1-opus-2]
++rate: O_P(sqrt(log n / n)) for the two PIP errors and |log_Z_list - log Z| (when not NA) (p >= 2)
+ scope: Gaussian rows; every design inside Theorem 6 (AR and block designs included when they satisfy it); the list fields only (not the printed sampler averages)
+ depends_on: W3-D5P:LIST-K@stmt ; W3-D5P:LIST-CODE@stmt ; W3-RM2-R:RM2-R-plus@stmt ; W3-RM2-R:RM0-plus@stmt ; W3-RM2-R:DLV-0@stmt ; W2-APP:POST@stmt
+ method: SMC-BVS v3.1 core + list fields | method_commit: pending (Engineering; D105)
+diff --git a/Theory_work/Wave3/W3-D5P/STATEMENT.md b/Theory_work/Wave3/W3-D5P/STATEMENT.md
+index 9818969b..32e13478 100644
+--- a/Theory_work/Wave3/W3-D5P/STATEMENT.md
++++ b/Theory_work/Wave3/W3-D5P/STATEMENT.md
+@@ -1,4 +1,4 @@
+-# W3-D5P — STATEMENT v1.1.1 (locked v1.0 + changelog rows v1.1, v1.1.1): the list-restricted outputs on every Theorem 6 design
++# W3-D5P — STATEMENT v1.1.2 (locked v1.0 + changelog rows v1.1–v1.1.2): the list-restricted outputs on every Theorem 6 design
+ 
+ Ticket W3-D5P = track D ticket #5′ (owner GO, `Theory_work/Dept/DECISIONS.md` D105, dept/theory; standard D106), Tier B
+ corollary ticket, Theory Wave 3. Lead: Claude Opus 5.5 (effort high). Protocol: `Theory_work/Wave3/PROTOCOL_v4.md` with
+@@ -77,7 +77,7 @@ with S₀ ∈ 𝒯. Then:
+ ## 3. Lemma LIST-CODE (code reading at the pin)
+ 
+ **(C2) Lemma LIST-CODE.** Code of record as in the header; shipped configuration (`ls0 = TRUE`, cap
+-`"ell_n_plus_mode"`, `ls0_tie_dp = TRUE`); EX-A, EX-S, SR. Let 𝓜^run be the set of models offered to the final-run
++`"ell_n_plus_mode"`, `ls0_ell` = ℓ_n, `ls0_tie_dp = TRUE`) [R1-opus-5]; EX-A, EX-S, SR. Let 𝓜^run be the set of models offered to the final-run
+ ledger (`Ledger::offer_stores`, `cpp/v3_ledger.h:89-94`), as in SAMP `STATEMENT.md:59-60`.
+ (i) *[Link 1: completed = output on the sampler branch.]* On the sampler branch, `fit$status == "completed"` if and only
+     if `fit$estimates_available` is TRUE, i.e. if and only if the run is in 𝒪. On such a run the final run executed LS0
+@@ -160,3 +160,4 @@ No supersession. Card proposal (a new row next to 3.1, or an addition to 3.1/3.6
+ | v1.0 | (C3)(ii)–(iii): evidence error events qualified "when `log_Z_list` is not NA"; t, t_n ∈ (0, ½) (was (0, ½]); rate clause under "p ≥ 2 for all large n"; error events named B₁–B₄; (C3) preamble "implied by" the reader assumptions | EQUAL (corrections of the draft before the lock) | SL1-1, SL1-2, SL1-3, SL1 table row "C3 preamble" | `reviews/SL1_statement_lock_sol.md` | applied as the reviewer's fixes; LOCK |
+ | v1.1 | (C1) hypothesis "F real-valued on Ω (0 < Z < ∞)"; §1 convention for S₀ ∉ Ω; (C3) preamble: the reader-form sentence moved out of the claim span to §5 remark 5; P(𝒢⁺_n) → 1 attributed to RM0-plus (b⁺); (C3)(ii) reason for "every right side tends to 0" completed | EQUAL (hypothesis made explicit as already defined in §1; a convention that makes small-n cases trivially true; an unproved interpretive sentence moved out of the span; citations) | LC1-12, LC1-2, LC1-3, LC1-13, LC1-1 | `reviews/LC1_line_check_opus.md` | council R1 (tags to be confirmed by the seats) |
+ | v1.1.1 | §1 convention sentence narrowed to statements involving S₀, 𝓜_n or 𝒦_n; §5 remark 5 (outside claims) | EQUAL (wording) | LC1R-4, LC1R-3 | `reviews/LC1R_recheck_opus.md` | fixes applied verbatim from LC1R |
++| v1.1.2 | (C2) configuration gloss: `ls0_ell` = ℓ_n added (it is part of the imported shipped configuration, RM `STATEMENT.md:59-67`) | EQUAL (explicit form of an imported premise) | R1-opus-5 | `reviews/R1_council_opus.md` | council diff round R2 |
+diff --git a/Theory_work/Wave3/W3-D5P/TARGET.md b/Theory_work/Wave3/W3-D5P/TARGET.md
+index 84231491..a3e4f44e 100644
+--- a/Theory_work/Wave3/W3-D5P/TARGET.md
++++ b/Theory_work/Wave3/W3-D5P/TARGET.md
+@@ -1,4 +1,4 @@
+-# W3-D5P — TARGET (one page; v0.1 with STATEMENT v0.1)
++# W3-D5P — TARGET (one page; v0.2 with STATEMENT v1.1.2)
+ 
+ ## Target clauses (for CP1)
+ - **T1 (LIST-R (i)).** Theorem 6's data event 𝒢⁺_n carries, for every admissible output run, S₀ ∈ returned list,
+@@ -19,7 +19,7 @@
+ ## Parity table
+ | clause | (a) PROGRAM goals (design-agnostic within the theorem, p ≫ n, method as coded) | (b) closest published | (c) our best registered result | verdict |
+ |---|---|---|---|---|
+-| PIPs from the output on AR / block designs | method as coded, p ≫ n, at the coded budget: **matches** | Song–Liang (2015): sampler statements are limits in the iteration count at fixed data (supplement pp. 9–10, 12–13, 16–17), none at a coded budget | row 3.6: printed sampler PIPs, rate n^{−1/2}e^{C√log n}, **only without leakage (Thm 5's (A5)); AR/BLK not covered** | **beats** 3.6 in scope (AR/BLK) and rate, for a different (list-based) output |
++| PIPs from the output on AR / block designs | method as coded, p ≫ n, at the coded budget: **matches** | Song–Liang (2015): sampler statements are limits in the iteration count at fixed data (supplement pp. 9–10, 12–13, 16–17), none at a coded budget | row 3.6: printed sampler PIPs, rate n^{−1/2}e^{C√log n}, **only without leakage (Thm 5's (A5)); AR/BLK not covered** | **beats** 3.6 in scope (AR/BLK designs inside Theorem 6) and rate, for a different (list-based) output [R1-opus-9] |
+ | median model from the output | as above: **matches** | as above | row 3.6: P(MPM wrong ∩ calibration success) → 0, no-leak designs only | **beats** in scope |
+ | evidence from the output | as above | Del Moral unbiasedness (row 3.5) is not a consistency statement | row 3.5: E Ẑ = Z, any design (unbiased, no consistency); 3.6: |Ẑ/Z − 1| → 0 no-leak only | **new** (deterministic sandwich log Z + log π(S₀) ≤ log_Z_list ≤ log Z) |
+ | reported model | — | — | row 3.1 | **equal** (re-derived on the same event, jointly) |
+@@ -39,3 +39,4 @@ necessity): `numerics/listk_check_out.txt` (LIST-K, 20 000 random small Ω, 0 vi
+ | Corollary 9C's list premise discharged on designs inside both Theorem 9 and Theorem 6 | one-line consequence of LIST-R (i) (π(𝒯) ≥ π(S₀) > ½); proposed to HQ at CP3 (STATEMENT §5 remark 3), not claimed: needs a bridge between the two theorems' hypotheses (no new scope, D106) |
+ | The rate for p = 1 | omitted (POST covers p ≥ 2); the fixed-t clause holds for every p |
+ | A binary64 version | out of scope (EX-A, as every theorem of the programme); SPEC §7 acceptance tests cover the numerics |
++| Drop the qualifier "when `log_Z_list` is not NA" (council R1, Opus note: under IMPL-LIST the exact branch's store is always returned at the pin, `v3_fit.R:122`, `cpp/v3_core.cpp:565`, so `log_Z_list` is never NA on an output run) | STRONGER; not adopted in this round (a STRONGER statement change needs HQ's go, PROTOCOL_v4 §4.2); proposed to HQ at CP3 together with the IMPL-LIST discharge, where it is checked against the method commit |
+diff --git a/Theory_work/Wave3/W3-D5P/lemmas/L1_listK.md b/Theory_work/Wave3/W3-D5P/lemmas/L1_listK.md
+index 2274e14f..f60a127a 100644
+--- a/Theory_work/Wave3/W3-D5P/lemmas/L1_listK.md
++++ b/Theory_work/Wave3/W3-D5P/lemmas/L1_listK.md
+@@ -1,6 +1,6 @@
+ # L1 — Lemma LIST-K (deterministic list algebra) — proof
+ 
+-Claim: STATEMENT.md (C1), §2. Status: proof by the lead, not yet line-checked. Written for a Lean transcription:
++Claim: STATEMENT.md (C1), §2. Proof by the lead; line-checked by LC1 and LC1R (see REPORT §2). Written for a Lean transcription:
+ finite sums over a finite set, real arithmetic, one inequality for log; no measure theory.
+ 
+ ## Setting (all deterministic)
+diff --git a/Theory_work/Wave3/W3-D5P/lemmas/L2_listCODE.md b/Theory_work/Wave3/W3-D5P/lemmas/L2_listCODE.md
+index b273e04e..827d298f 100644
+--- a/Theory_work/Wave3/W3-D5P/lemmas/L2_listCODE.md
++++ b/Theory_work/Wave3/W3-D5P/lemmas/L2_listCODE.md
+@@ -1,6 +1,6 @@
+ # L2 — Lemma LIST-CODE (code reading at the pin) — proof
+ 
+-Claim: STATEMENT.md (C2), §3. Status: code reading by the lead, not yet line-checked.
++Claim: STATEMENT.md (C2), §3. Code reading by the lead; line-checked by LC1 and LC1R (see REPORT §2).
+ **Code of record:** `Scripts/SMC_BVS/core/` at 4676af6 = the core on main 029bb748 (`git diff 4676af6 029bb748 --
+ Scripts/SMC_BVS/core` is empty; last change 72785fe). Paths below are relative to `Scripts/SMC_BVS/core/`; line
+ numbers are those of this worktree (branch theory/W3-D5P). Premises: EX-A (every score is computed exactly), EX-S, SR,
+diff --git a/Theory_work/Wave3/W3-D5P/lemmas/L3_listR.md b/Theory_work/Wave3/W3-D5P/lemmas/L3_listR.md
+index 03d3b589..5825b923 100644
+--- a/Theory_work/Wave3/W3-D5P/lemmas/L3_listR.md
++++ b/Theory_work/Wave3/W3-D5P/lemmas/L3_listR.md
+@@ -1,6 +1,6 @@
+ # L3 — Corollary LIST-R (assembly) — proof
+ 
+-Claim: STATEMENT.md (C3), §4. Status: proof by the lead, not yet line-checked.
++Claim: STATEMENT.md (C3), §4. Proof by the lead; line-checked by LC1 and LC1R (see REPORT §2); (0.5) added after council R1.
+ Consumed, statuses verbatim (registry, main 029bb748): `W3-RM2-R:RM2-R-plus@1.0.1`, `W3-RM2-R:RM0-plus@1.0.1`,
+ `W3-RM2-R:DLV-0@1.0.1`: "PROVED-CHECKED; council R3, MANIFEST 5d6d3c90… (= R3 b06a8588 re-frozen as R3r), sol=9.5
+ PASS, opus=9.4 PASS" (each); `W2-APP:POST@1.0.7`: "PROVED-CHECKED". Internal: LIST-K (L1), LIST-CODE (L2); premise
+@@ -25,12 +25,22 @@ the design's p, and POST, stated for the design's p, applies to ε_n.
+ (0.4) (D) ⇒ every admissible run returns output for every valid non-degenerate input (DLV-0, RM2R
+ `STATEMENT.md:144-147`), and under Setting R the input is valid and non-degenerate with probability one (RM0-plus (c⁺),
+ RM2R `STATEMENT.md:138-143`, last sentence).
++(0.5) *From the pinned core to the method with the list fields* [R1-opus-1]. L2, RM0-plus and DLV-0 are statements
++about the core of record (4676af6); LIST-R is about the method after the pending commit that adds the fields. By
++IMPL-LIST (the commit computes the fields as SPEC §2 and §4 prescribe, after everything else, from the returned list
++and values of the same run, and changes no other field and no other state; SPEC §7 A.1–A.2), on every input and every
++realisation of the run's uniforms the post-commit fit and the pinned fit execute the same computation up to the new
++fields, and the new computation can end the fit with an error only through SPEC §4's duplicate-model row. That row
++cannot fire on an output run: the sampler store `top_store` and the exact store 𝒯^ex hold distinct models (L2 (iii),
++(iv)). Hence the post-commit fit returns if and only if the pinned fit returns, and 𝒪, `status`, `hpm`, `top_store`,
++`fit$exact` (with its store) and every other existing field are those of core 4676af6. So L2, RM0-plus (b⁺) and DLV-0
++apply to the method with the list fields, and the new fields are SPEC's functions of the pinned outputs.
+ The reader assumptions (A1)–(A6) of Theorem 6 imply these hypotheses through READER §6 bridges B6.1–B6.4 (this file
+ does not re-prove them; the corollary is stated with "the hypotheses of RM2-R-plus").
+ 
+ ## Step 1 — (i): the pathwise statement on 𝒢⁺_n
+ Fix n with s₀ ≤ K, a data set in 𝒢⁺_n, and an admissible run (any seed, N_e, R′, calibration outcome) that returns
+-output (event 𝒪). Output occurs only on the two branches [LC1-6]: `estimates_available` becomes TRUE only at
++output (event 𝒪); by (0.5) its existing fields are those of the pinned core, so L2 applies. Output occurs only on the two branches [LC1-6]: `estimates_available` becomes TRUE only at
+ `v3_fit.R:129` (exact branch) or through `v3_fit.R:171` from `v3_run.R:218` (sampler branch), both after `branch_run` is set
+ (`v3_fit.R:106`); the earlier returns (`v3_fit.R:89`, `:102`) keep the initial FALSE (`v3_fit.R:78`). By L2 (i), on the sampler branch 𝒪 = {status "completed"}; on the exact branch 𝒪 = {status "exact"}
+ (`v3_fit.R:125-129`: `estimates_available` TRUE iff `e$status == "exact"`; otherwise `:130-131` returns with it FALSE).
+@@ -77,7 +87,7 @@ argument above with t = t_n: max_j |pip_list[j] − 1{j ∈ S₀}| ≤ t_n, max_
+ ≤ 2t_n when `log_Z_list` is not NA, and (ε_n ≤ t_n < ½) `mpm_list` = `hpm` = S₀. ∎(ii)
+ 
+ ## Step 3 — (iii): with delivery
+-Under (D), by (0.4), P(𝒪ᶜ) = 0 for every admissible run. Hence for any event B of the run, P(B) ≤ P(𝒪 ∩ B) + P(𝒪ᶜ) =
++Under (D), by (0.4) and (0.5), P(𝒪ᶜ) = 0 for every admissible run of the method with the list fields. Hence for any event B of the run, P(B) ≤ P(𝒪 ∩ B) + P(𝒪ᶜ) =
+ P(𝒪 ∩ B), and Step 2 gives P(B₄) → 0 and P(B₁(t) ∪ B₂(t) ∪ B₃(t)) → 0 for every t ∈ (0, ½), and, when p ≥ 2 for all
+ large n, P(B₁(t_n) ∪ B₂(t_n) ∪ B₃(t_n)) ≤ P(𝓜_nᶜ) + P(𝒦_nᶜ) + P(ε_n > t_n) → 0 for every deterministic t_n ∈ (0, ½) with
+ t_n/r_n → ∞.
+@@ -89,5 +99,6 @@ t_n/r_n → ∞.
+   ran in this run"; L2 (ii)–(iii) turn RM's Ŝ⁺ into the printed `hpm` and put S₀ into `top_store`.
+ - The only data-level inputs are (0.1)–(0.3) and POST (b); no sampler law (no W1-N1 premise) is used: the claim is
+   pathwise in the run.
+-- IMPL-LIST is used only to identify the printed fields with pip_𝒯, mpm_𝒯, logZ_𝒯 (sampler branch) and with PIP, MPM,
+-  logZ_{𝒯^ex} (exact branch).
++- IMPL-LIST is used twice [R1-opus-1]: in (0.5), to carry L2, RM0-plus and DLV-0 from the pinned core to the method with
++  the list fields ("changes no other field and no other state"); and in Step 1, to identify the printed fields with
++  pip_𝒯, mpm_𝒯, logZ_𝒯 (sampler branch) and with PIP, MPM, logZ_{𝒯^ex} (exact branch).

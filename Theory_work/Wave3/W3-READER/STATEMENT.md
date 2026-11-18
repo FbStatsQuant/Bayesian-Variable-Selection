@@ -23,7 +23,7 @@ $E[\hat Z/Z\mid\mathcal C]=1$ on $\mathcal A$. Consequently, under the joint law
 $E[\mathbf 1_{\mathcal A}\hat Z]=E[\mathbf 1_{\mathcal A}Z]$ [R1-E9]. No condition on the design or the data.
 
 *Proof.* `W1-N1:Thm-N1@1.0.0` ("PROVED-CHECKED"; `W1-N1/STATEMENT.md:98-104`) gives, for each fixed $r\ge1$, almost surely
-on $\mathcal A\cap\{r\le R'\}$, $E[W_r\mid\mathcal C]=1$ with $W_r:=\hat Z_r/Z$ (its "in particular" clause, :104). On
+on $\mathcal A\cap\{r\le R'\}$, $E[W_r\mid\mathcal C]=1$ with $W_r:=\hat Z_r/Z$ (its "in particular" clause, :104). (N1 is stated for the frozen v2.2.1 core. For the core of record the same identity is `W3-SAMP:MR` (MR-b) with h ≡ 1, `W3-SAMP/STATEMENT.md:107-111`; N1's code bridge is carried to main's island by `W3-SAMP:CC`, `lemmas/CC_code_check.md:9-21`.) On
 $\mathcal A$, $R'=4$, so this holds for $r=1,\dots,4$ simultaneously (four null sets). By linearity of conditional
 expectation, $E[\hat Z/Z\mid\mathcal C]=\tfrac14\sum_{r=1}^4E[W_r\mid\mathcal C]=1$ a.s. on $\mathcal A$. In W1-N1's
 conditional statement the data are fixed (probability over the final streams), so $Z>0$ is a constant and
