@@ -1,0 +1,14 @@
+# DIST-2 delta after Opus R1 (9.3 PASS on a230f909): F1, E1, E2, E3 applied as written; grepped in the REAL staged files (HQ RIDER_RULES)
+OK   ticket/.../W3-DIST/TARGET.md:30  F1 TARGET.md:30 qualifier (fixed (A, σ*², M, M′), not known to be tight)
+OK   ticket/.../W3-DIST/STATEMENT.md:1  E1 STATEMENT.md:1 header v1.4.11, 2026-11-18
+OK   ticket/.../W3-DIST/STATEMENT.md:497  E2 row 1.4.11 verbatim quote of :97
+OK   ticket/.../W3-DIST/STATEMENT.md:497  E3a row 1.4.11: DIST-1 (c) reason with C = (C_X² + C_X/2 + 1 + C_T)^{1/2}
+OK   ticket/.../W3-DIST/STATEMENT.md:497  E3b row 1.4.11: constants from X.md §0 (C_m) and §9, DIST12.md D.1 (C_T′) and D.6
+OK   ticket/.../W3-DIST/STATEMENT.md:0  ABSENT: old header v1.4.10
+OK   ticket/.../W3-DIST/STATEMENT.md:0  ABSENT: 'because C_X does not depend on s' (old)
+OK   ticket/.../W3-DIST/TARGET.md:0  ABSENT: old TARGET cell wording
+
+file sha256 (first 16) and line counts:
+STATEMENT.md: 7686ba50fd877f2d lines=500
+TARGET.md: 6120f6c52fa80424 lines=214
+RESULT: ALL CLAIMED EDITS PRESENT
