@@ -13,7 +13,7 @@ Writes, next to this script:
 Blind: every request is self-contained (statement, full proof files, consumed statements). No review, council file,
 disposition, CHECKPOINT, LOG, CODEX_*, FABLE_CARD, PRE_LEAN_PASS file, earlier audit result or ERRATA file is read by
 this script. Status/review words are redacted inside lines; a line that still carries one is dropped (numbers listed in
-BUILD_MANIFEST.txt). The model is claude-fable-5-2, effort high, as audit_batch.py (HQ to confirm).
+BUILD_MANIFEST.txt). The model is claude-fable-5-2, effort high (never above), max_tokens 128000 (HQ decision).
 """
 import csv
 import hashlib
@@ -27,9 +27,9 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[3]
 T = "Theory_work/Wave3/"
 MODEL = "claude-fable-5-2"
-MAX_TOKENS = 64000
+MAX_TOKENS = 128000  # HQ: every card since AUDIT1 (lost requests at the 32k cap) uses 128k
 N_SAMPLES = 2
-NO_NOTES = "--no-notes" in sys.argv  # rebuild from a main that already holds the corrections: no pending-corrections note
+NO_NOTES = "--notes" not in sys.argv  # default: no pending-corrections note (build from a main that holds the corrections); --notes adds them
 
 # ---------------------------------------------------------------- redaction
 HARD = ["PROVED", "VERIFIED", "CHECKED", "council", "Council", "MANIFEST", "sol=", "opus=", "astra=", "Status", "STATUS",
