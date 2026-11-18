@@ -66,3 +66,16 @@ Lean readiness (ranked; no item changes a presented statement):
 
 ## Sol-2, Sol-3, Sol-4 cards
 No Lean items (final-text confirmations of reader text, D2/D3 and the track V dossier).
+
+## T7: Thm 4, omitted variables (card `T7/FABLE_CARD.md`)
+Lean readiness (ranked; no item changes a statement):
+
+1. **Theorem 4 as a corollary of the T4 Lean headline at unit noise.** MIS(i) is `W3-POST2:C` applied to (x, β/√v, σ*² = 1) after two deterministic reductions: posterior invariance under y ↦ a·1 + c·y (Lemma R′), and the rescaling of the class conditions by v.
+   - Gain: no new probabilistic work; uniformity in v is free. Cost: R′ is Level-1 algebra on the closed-form score.
+   - Named axioms: only those of T4.
+2. **Make the fixed-design MIS(i) the Lean statement; derive the reader theorem** through bridges B4.0–B4.2, importing B4.1 from `W3-READER:R1` (explicit for n ≥ 3).
+   - Gain: one event layer instead of two.
+3. **Random-design layer (CorGb-plus) as "bound on a design event, plus its complement".** E δ_n ≤ C·r_n + P(𝒜_nᶜ).
+   - Named axioms: the two conditional inputs C-MIS:GDb and C-MIS:Prop-P (they are the registry conditions), and Gaussian sample-variance concentration.
+4. **Example (E1) in two parts:** the Schur-complement algebra (Level 1), and "jointly Gaussian and uncorrelated implies independent" as a named axiom unless Mathlib has it (not checked). Carry σ² + τ² > 0 as a hypothesis (T7-1).
+5. **Cor H clauses:** the (KL) identity for two normals is deterministic (Level 1) and the Hellinger part reuses Lemma D0 from T3.
