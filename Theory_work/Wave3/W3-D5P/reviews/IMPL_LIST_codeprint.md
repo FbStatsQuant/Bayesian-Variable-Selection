@@ -110,4 +110,58 @@ still needs seats on a new manifest (manager, 2026-11-18).
 ## 5. Part 2 — the guard hunk (`git diff method-v3.1-listpip method-v3.1.1-listpip -- Scripts/SMC_BVS/core/`)
 Pending: the new commit.
 
-IMPL-LIST: NOT DISCHARGED (only the SPEC §4 row "other statuses → fields absent" on fits whose final run did not complete: the seven fields are present, NA with flag "empty_list"; no LIST-R or LIST-CODE clause affected; HQ decision (a): guard + new tag method-v3.1.1-listpip, part 2 pending)
+## 6. Route (b′): SPEC §4 amended to match the tagged code (manager message received 2026-11-18, after §5)
+*Conflict to resolve first.* The manager's earlier message "HQ CHANGED COURSE … decision (a): guard + new tag
+`method-v3.1.1-listpip`; SPEC stays as is" states that it supersedes a crossed "SPEC §4 amended" message. The message asking
+for this section announces "SPEC §4 is amended … no code change, no re-tag". The two routes are exclusive; **which one
+stands is HQ's** — this section answers the (b′) questions so either can proceed.
+
+**(1) Every claim is about output runs only — where each clause restricts itself** (`STATEMENT.md`, v1.1.2 in MANIFEST_R3r):
+| clause | restriction | where |
+|---|---|---|
+| LIST-K (C1) (a)–(e) | deterministic; about a list 𝒯 ⊆ Ω containing S₀ — no run, no field | `STATEMENT.md:67-75` |
+| LIST-CODE (C2) (i) | "On the sampler branch, `fit$status == "completed"` iff … 𝒪. On such a run …" | `:82-86` |
+| LIST-CODE (C2) (ii), (iii) | "On a completed run" | `:87`, `:89` |
+| LIST-CODE (C2) (iv) | "On status `exact`" | `:91` |
+| LIST-CODE (C2) (v) | "on a completed run …; on an exact-branch run" | `:94-95` |
+| LIST-R (C3) (i) | "every admissible run that returns output" | `:103` |
+| LIST-R (C3) (ii) | the error events are "of an output run" and every bound is on 𝒪 ∩ B (`P(𝒪 ∩ …)`); the t_n display "every admissible run that returns output" | `:109`, `:113-114`, `:119` |
+| LIST-R (C3) (iii) | under (D) "every admissible run returns output (DLV-0)" | `:122` |
+| Corollary 6L (reader) | "A run that produces output returns …"; "every run that produces output" | `READER_DELTA.md:13`, `:21` |
+| Card row 3.1L | "every run that produces output" | `CARD.md:10` |
+An incomplete-final-run fit has `estimates_available = FALSE` (`v3_run.R:144` at the tag), i.e. lies in 𝒪ᶜ: **no clause
+uses SPEC §4's incomplete-run case**; LIST-CODE does not mention the list fields at all. Unaffected: LIST-K, LIST-CODE (i)–(v),
+LIST-R (i)–(iii), Corollary 6L. The proofs: L3 (0.5) uses only "the commit raises no error except the duplicate row" and
+"no existing field changes" — both true at the tag also on incomplete fits (§2b).
+
+**(2) What must change so that IMPL-LIST refers to the amended SPEC.**
+- **Carrier.** A CORRECTION-ONLY update of the pinned carrier: a new file `sources/SPEC_LIST_PIP_<amended commit>.md`
+  (byte-identical copy of the amended SPEC at its commit, with the same one-line carrier header), and the old carrier
+  `sources/SPEC_LIST_PIP_523dda23.md` kept or removed by HQ's choice (kept is safer for the record); `STATEMENT.md:11`
+  ("SPEC := … @ theory/W3-AUDIT 523dda23") must then name the amended commit — **a wording change in STATEMENT itself**
+  (a pointer; EQUAL if the amendment touches only the incomplete-run row).
+- **STATEMENT §1, `STATEMENT.md:57`** — "Other statuses: the fields are absent (SPEC §4); no claim." — becomes false under
+  the amended §4 for incomplete-final-run fits. **Wording change in STATEMENT itself, flagged:** e.g. "Other statuses: the
+  fields are absent, or — on a fit whose final run did not complete — present as NA with `pip_list_flag = "empty_list"`
+  (SPEC §4 as amended); no claim." Tag EQUAL (a description of the code's non-output behaviour, outside every claim span;
+  no clause uses it) — to be confirmed by the check.
+- **IMPL-LIST text (`STATEMENT.md:59-63`)** needs no change: "as SPEC §2 and §4 prescribe" then reads against the amended
+  SPEC through the SPEC pointer.
+- **Elsewhere:** the NA_DROP draft's L3 Step 0′ (not frozen) lists the §4 rows and says other statuses are "absent; not an
+  output run" (`reviews/post_cp3/NA_DROP/L3_listR_v1.2_draft.md:46-47`) — reword to "absent or NA-flagged; not an output
+  run". REPORT, CARD, READER_DELTA, L1–L3 as frozen do not mention the other-status row.
+- **Process.** The above as one CORRECTION-ONLY change (carrier + `STATEMENT.md:11`, `:57`), re-freeze (R3r → new manifest),
+  and one Opus check that (i) the carrier is byte-identical to the amended SPEC, (ii) the amendment touches only the
+  incomplete-run row (else every changed SPEC row must be re-read here), (iii) no clause or proof step uses that row, (iv)
+  the two STATEMENT edits are EQUAL. The council seats (Opus R4, Sol R3S) are on MANIFEST_R3r; the recorder carries them as
+  for R3r2.
+
+**(3) NA_DROP premise with the amendment folded in.** On every **output** run, `log_Z_list` is provably non-NA under EX-A
+against the tagged code: SPEC §4 (amended) sets the fields NA only on (α) incomplete-final-run fits — not output runs
+(`estimates_available = FALSE`); (β) an empty list — impossible on output runs (LIST-CODE (iii), (iv)); (γ) a NaN / +Inf
+score, or all scores −Inf (HQ reading (2), `v3_run.R:256`) — impossible on output runs: every store value is a finite
+F(S) (Lemma S.2, LIST-CODE A5), so in particular not all are −Inf; and the exact branch computes `log_Z_list` from
+`fit$exact$top` (reading (1)). Hence non-NA on every output run, in particular on Theorem 6's data event and on the delivery
+event. NA_DROP's (o) is unchanged in substance; only Step 0′'s description of the other-status row changes (above).
+
+IMPL-LIST: NOT DISCHARGED (only the SPEC §4 incomplete-final-run row; route pending HQ: (a) guard + new tag method-v3.1.1-listpip, or (b′) SPEC §4 amended — then a CORRECTION-ONLY carrier + two STATEMENT pointer/description edits (`STATEMENT.md:11`, `:57`) + re-freeze + Opus check, after which: DISCHARGED (against SPEC as amended <ref>))
