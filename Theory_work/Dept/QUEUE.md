@@ -123,3 +123,4 @@ Consistency results first (owner, 11-15 evening) + Lean readiness of their deter
 - (11-18, pre-Lean T2) W3-SAMP statement: stale sentence "Production core on main = 4676af6" (editorial; does not affect LT-d). Post-freeze, low priority.
 - (11-18, pre-Lean T6 F2/T8 G1) DLV-0 re-pin note: three post-pin `stop()` rows in v3_fit (list PIP) cannot fire on output runs; only argued in W3-D5P L3 (0.5). After D5P records, add a re-pin note/check for DLV-0 (with Sol-1 card re-pin notes: S.3 unreachability, X5 byte envelope).
 - (11-18, pre-Lean T6 F3) W3-D5P L3 (0.5): name all three stop rows, not only the duplicate-model one; fold into the NA_DROP round.
+- (11-18, HOLD for owner) T9 H1: SOP:TH110 (T12) adoption. Yes → v4 HQ carrier relabel to PC ("owner adoption 11-18 + carrier relabel, precedent Prop-LB", wave-1 record quoted verbatim). No → "conditional on SOP:TH110" on W3-SAMP:MR/ST/TR, cascading to row 3.6.
