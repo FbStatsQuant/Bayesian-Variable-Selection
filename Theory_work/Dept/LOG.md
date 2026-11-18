@@ -745,3 +745,4 @@
   - item 7, the (C)-scoping of the live "without 'on output'" clause at card :71 / RV :1441 (+ grep), with Opus PURE. Main must not contradict NA_DROP v1.5 after this landing.
   - W-1 citation fix at the real run (CITATION-ONLY, recorder PURE).
   - D5Pa → v4 rebased after this landing, for the A re-pin.
+- 2026-11-18 12:33 CST HQ: item 7 approved. Pre-ruling for the dry run: if check.py's A4 (two distinct seats) blocks NA_DROP v1.5 because only Opus passes, do NOT attest Sol. ONE short Sol delta read bound to 9ddef7fd, scoped to the (C) changes (does (C) resolve b″-1; anything else wrong in the diff), is approved as the single exception. If the tool accepts v1.5 on the existing seats, no call. Table to HQ either way.
