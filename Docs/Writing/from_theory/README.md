@@ -14,3 +14,4 @@
 - `AUDIT_NOTE_2026-11-16.md`: row 3.6 scope (item 1 still current); item 2 superseded.
 - Superseded: `AUDIT_NOTE_2_2026-11-16.md`, `TRACK_B_v1.2.md`, `TRACK_B_v1.3.md`, `WRITING_DELTA_v1.3.md`.
 - `ANSWERS_2026-11-16.md`: the four open items (C*, 32s₀, Remark 3.7, noiseless gain). Current.
+- AR1_VIS_NOTE_2026-11-17.md — AR(1) visibility counterexample: consistent with Lemma VIS (ϑ on B); 3 wording fixes for §5.3.3/Remark vis/Remark 11(ii); riboflavin 'being determined' is settled by VISIBILITY_SCOPE v2.

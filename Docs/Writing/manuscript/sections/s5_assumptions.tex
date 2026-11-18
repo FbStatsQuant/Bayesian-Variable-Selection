@@ -229,7 +229,8 @@ between columns outside $U$ is nonnegative, as in each design of the strong-fact
 $\theta^*_j\lmin(\Sig)$.}
 \ro{Masking: a true predictor whose signal some $15$ other predictors cancel.}
 \pr{None found: \SL's Condition~5 is the marginal case of visibility only, and their remark (a) on the leakage set is
-not a hypothesis. Both conditions are argued here for block and moderate AR correlation.}
+not a hypothesis. Both conditions are argued here for our block and moderate-AR designs (one true predictor per block; autoregressive
+true predictors spread apart).}
 \begin{remark}[When visibility holds]\label{rem:vis}
 Visibility holds with a margin that does not depend on $n$ (i) with \emph{aligned signs}: when the precision matrix,
 after flipping the signs of some columns, has nonpositive off-diagonal entries and, within each block, the true
@@ -237,8 +238,11 @@ coefficients' signs agree with those flips (independent columns; autoregressive 
 coefficients; blocks with the true predictors in different blocks); and (ii) in \emph{generic position}: for designs with
 countably many local correlation patterns (finitely many block, factor or tile types; stationary designs with decaying
 correlation, such as autoregressive, banded and Toeplitz), for every vector of true coefficients outside one fixed closed,
-Lebesgue-null set of hyperplanes, the same for every $n$. Not covered: strong-factor designs whose mixed-sign coefficients
-lie on that set. Whether riboflavin-like data are covered is being determined.
+Lebesgue-null set of hyperplanes, the same for every $n$. Not covered: coefficient vectors on that set, such as strong-factor designs with mixed-sign coefficients, or adjacent
+autoregressive true predictors with coefficients $1$ and $-2$ at correlation $0.5$. A design modelled on the riboflavin
+gene-expression data is covered when its four true predictors are spread apart: they then lie in four different tiles
+once $p\ge16{,}352$, with a margin of at least $0.1\min_k\abs{\theta^*_k}$. It is not covered when they are clustered
+in one tile, where no usable margin can be certified.
 \end{remark}
 
 \status{Lemma VIS: \textbf{proved, and passed its independent review; recording in the registry pending}. It gives
@@ -248,8 +252,8 @@ sufficient conditions for \as{V}; it adds no assumption.}
 bound does not apply; a search found a margin below it). Generic position (Remark~\ref{rem:vis}) would cover them if
 their coefficient vectors lie off its fixed null set; that is not certified.}
 \tu{A numerical check of the conditions' population quantities, not yet complete, found visibility failing for a
-strong factor whose mixed-sign coefficients cancel; whether a design modelled on the riboflavin gene-expression data
-is covered is being determined; such a user may be outside Result~3
+strong factor whose mixed-sign coefficients cancel; a design modelled on the riboflavin gene-expression data
+is covered with its true predictors spread apart but not clustered in one tile (Remark~\ref{rem:vis}); such a user may be outside Result~3
 and still inside Results~1 and~2.}
 
 \ahead{Polynomial leakage set,}{Assumption~\ref{asm:reported}(a)}{\SL{} have no hypothesis of this kind; the nearest text is their
