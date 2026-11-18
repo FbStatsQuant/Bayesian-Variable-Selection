@@ -158,4 +158,14 @@ chk(fg$status != "completed" && absent(fg) && isTRUE(fg$partial_results), paste(
 chk(absent(v3_fit(d$X, d$y, NA, allocation = alloc)), "invalid_input")
 chk(absent(v3_fit(matrix(1, 10, 3), rnorm(10), 1L, allocation = alloc)), "no_predictors")
 chk(absent(v3_fit(d$X[1:20, 1:8], rep(2, 20), 1L, allocation = alloc)), "y_constant")
+# v3.1.1 (SPEC_LIST_PIP §4): a FINAL run that did not complete (guard stop / numerical failure) carries NO list field. Forced deterministically:
+# calibration runs normally; v3_final_run is wrapped to receive an already-expired runtime guard, so only the final run stops.
+v3_final_run_orig <- v3_final_run
+v3_final_run <- function(setup, frozen, seed, runtime = NULL, ...) v3_final_run_orig(setup, frozen, seed, runtime = .v3cpp$cpp_runtime_new(1e-9, 0), ...)
+ff <- tryCatch(v3_fit(d$X, d$y, 9104L, allocation = alloc), finally = v3_final_run <- v3_final_run_orig)
+chk(!identical(ff$status, "completed") && !is.null(ff$partial_final) && isTRUE(ff$partial_results), paste("stopped final run: status", ff$status))
+chk(all(vapply(NEWF, function(nm) is.null(ff[[nm]]), NA)), "stopped final run: all 7 list fields are NULL (absent)")
+chk(identical(v3_final_run, v3_final_run_orig) && identical(fa$status, "completed") && all(NEWF[-7] %in% names(fa)), "completed run still carries the fields")
+fe <- v3_fit(d$X[, 1:10], d$y, 9101L, allocation = alloc)
+chk(identical(fe$status, "exact") && all(NEWF[-7] %in% names(fe)), "exact run still carries the fields")
 cat("list_pip_units: all", n_ok, "checks passed (core", V3_CORE_DIR, ")\n")

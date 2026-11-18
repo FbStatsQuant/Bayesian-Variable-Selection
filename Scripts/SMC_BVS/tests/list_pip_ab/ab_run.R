@@ -26,7 +26,6 @@ if (grepl("^prodh:", unit)) {
   d <- ws_prodh(as.integer(m[2]), as.integer(m[3]), as.integer(m[4]), m[5], GEN_DIR, NULL)
   d$seed <- d$method_seed
   d$allocation <- list(mem_gb = as.double(2), hours = as.double(if (as.integer(m[2]) == 500L) "1.75" else "6.666666667"))
-  if (unit %in% RERUN) d$allocation$hours <- 48
 } else if (grepl("^stat:", unit)) {
   RNGkind("Mersenne-Twister", "Inversion", "Rejection"); set.seed(104); n <- 60; p <- 40; G <- ceiling(p / 4); f <- matrix(rnorm(n * G), n)
   X <- sqrt(.6) * f[, rep(seq_len(G), each = 4)[seq_len(p)], drop = FALSE] + sqrt(.4) * matrix(rnorm(n * p), n)
@@ -39,6 +38,7 @@ if (grepl("^prodh:", unit)) {
   if (id == "smc_ls0off") d$ls0 <- FALSE
 } else d <- ws_supp(id)
 if (is.null(d$ls0)) d$ls0 <- TRUE
+if (unit %in% RERUN) d$allocation$hours <- 48   # any unit kind (v3.1.1: also supp:tie_dp_p400)
 t0 <- proc.time()[["elapsed"]]
 fit <- tryCatch(v3_fit(d$X, d$y, d$seed, allocation = d$allocation, ls0 = d$ls0), error = function(e) list(status = "R_error", message = conditionMessage(e)))
 wall <- proc.time()[["elapsed"]] - t0
