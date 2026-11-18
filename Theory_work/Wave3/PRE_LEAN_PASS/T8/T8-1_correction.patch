@@ -1,5 +1,22 @@
+# T8-1 (HQ ruling; consultant AGREE with riders). CORRECTION-ONLY wording; recorded as W3-RM2-R ERRATA E2 (`Theory_work/Wave3/W3-RM2-R/ERRATA.md:6`, R1 Opus E1).
+# E2 text: replace "two upper-bound predicates, which are treated as true" with "the two bounds are treated as satisfied (the rejection predicates `le > 1e6`, `cap_ll > INT_MAX` never fire)".
+# Grammar adaptation: E2 phrase is kept verbatim; "**exactly two upper-bound predicates**" stays and ", which are treated as true:" becomes "; <E2 phrase>:".
+# Files: W3-RM2-R/STATEMENT.md:81 and W3-READER/reviews/carriers/A_IDEALW_PLUS.md:25 (live copies). Registry row A:IDEAL-W+ (assumptions.tsv:116) is the recorder's: old->new text in CORRECTIONS.md. Line counts unchanged.
+diff --git a/Theory_work/Wave3/W3-READER/reviews/carriers/A_IDEALW_PLUS.md b/Theory_work/Wave3/W3-READER/reviews/carriers/A_IDEALW_PLUS.md
+index da303a65..65462032 100644
+--- a/Theory_work/Wave3/W3-READER/reviews/carriers/A_IDEALW_PLUS.md
++++ b/Theory_work/Wave3/W3-READER/reviews/carriers/A_IDEALW_PLUS.md
+@@ -22,7 +22,7 @@ Sources: HQ's definition; TR1 §2 (`Theory_work/Dept/research/FUNI_transfer/TR1_
+ | implies | — (it contains IDEAL-W, which has no separate row; IDEAL-W sits inside A:DELIVERY-ALLOC) |
+ | bridge | — |
+ | version | 1.0.0 |
+-| notes | Without it, statements that use it hold on the sufficient bounded domain 𝔇 := {(n, p_raw): ⌈log₂(n + p_raw + 1)⌉ ≤ 10⁶ and ⌈log₂(n + p_raw + 1)⌉ + ⌊n/2⌋ ≤ 2³¹ − 1}. Both predicates are false there, because p ≤ p_raw and \|S̃₀\| ≤ K ≤ ⌊n/2⌋, and the exact-enumeration branch reaches neither check (TR1 §2). 𝔇 is sufficient, not necessary. This is the same assumption as W3-RM2-R's IDEAL-W⁺ (`Theory_work/Wave3/W3-RM2-R/STATEMENT.md:80-85`); that file says the predicates are "treated as true", which TR1 §2 reads as "are false". First users: W2-UNI:F-UNI@2.0.0 clause (b), W3-RM2-R:DLV-0. |
++| notes | Without it, statements that use it hold on the sufficient bounded domain 𝔇 := {(n, p_raw): ⌈log₂(n + p_raw + 1)⌉ ≤ 10⁶ and ⌈log₂(n + p_raw + 1)⌉ + ⌊n/2⌋ ≤ 2³¹ − 1}. Both predicates are false there, because p ≤ p_raw and \|S̃₀\| ≤ K ≤ ⌊n/2⌋, and the exact-enumeration branch reaches neither check (TR1 §2). 𝔇 is sufficient, not necessary. This is the same assumption as W3-RM2-R's IDEAL-W⁺ (`Theory_work/Wave3/W3-RM2-R/STATEMENT.md:80-85`); that file says the two bounds are treated as satisfied (the rejection predicates `le > 1e6`, `cap_ll > INT_MAX` never fire), the reading of TR1 §2. First users: W2-UNI:F-UNI@2.0.0 clause (b), W3-RM2-R:DLV-0. |
+ 
+ **Wording note for the batch:** the code ceiling is `numeric_limits<int>::max()` = 2³¹ − 1 on the shipped platform. "INT_MAX" in
+ the paragraph means that value. The predicate fires on cap_ll = `ls0_ell` + |S̃₀|; under the shipped configuration (`ls0_cap`
 diff --git a/Theory_work/Wave3/W3-RM2-R/STATEMENT.md b/Theory_work/Wave3/W3-RM2-R/STATEMENT.md
-index 947ad41b..9c821da0 100644
+index 947ad41b..38fb1df6 100644
 --- a/Theory_work/Wave3/W3-RM2-R/STATEMENT.md
 +++ b/Theory_work/Wave3/W3-RM2-R/STATEMENT.md
 @@ -78,7 +78,7 @@ and `allocation$hours` at least the polynomial envelopes of DLV Corollary R (DLV
@@ -7,7 +24,7 @@ index 947ad41b..9c821da0 100644
  the shipped preflight charge — evaluated at (n, p_raw). CAL is not assumed.
  **IDEAL-W⁺ [SL1-2, SC1-2].** DLV's IDEAL-W (DLV `STATEMENT.md:24`) plus the lift of **exactly two upper-bound
 -predicates**, which are treated as true: (i) `le > 1e6` in the LS0 base-cap validator (`Scripts/SMC_BVS/core/v3_run.R:96`;
-+predicates**, which are treated as false (never fire): (i) `le > 1e6` in the LS0 base-cap validator (`Scripts/SMC_BVS/core/v3_run.R:96`;
++predicates**; the two bounds are treated as satisfied (the rejection predicates `le > 1e6`, `cap_ll > INT_MAX` never fire): (i) `le > 1e6` in the LS0 base-cap validator (`Scripts/SMC_BVS/core/v3_run.R:96`;
  with le = ℓ_n = ⌈log₂(n + p + 1)⌉ in the configuration of §1, it would fire once n + p + 1 > 2^{10⁶}); (ii)
  `cap_ll > numeric_limits<int>::max()` in the LS0 cap-range guard (`cpp/v3_core.cpp:474`), with `int` read as unbounded.
  Every other part of those two validators (type, length, finiteness, integrality, lower bounds) and every other
