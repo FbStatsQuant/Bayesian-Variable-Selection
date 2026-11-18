@@ -17,3 +17,4 @@ home_guard() {
 }
 # the code tree (git archive, ~360 MB) lives in SCRATCH; scripts/<batch>/code is a symlink to it (build.sh reads $SCR/code)
 CODE_WS_REL=code_ws
+ARMS=${ARMS:-T V}                          # batch arms of a wave: T V (original) or T2 V2 (rebuilds from the git clone of F); ARMS="T2 V2" deploy_wave.sh ...

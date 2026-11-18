@@ -38,6 +38,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--wt", required=True); ap.add_argument("--code-commit", required=True); ap.add_argument("--out", required=True)
     ap.add_argument("--waves", default="W0"); ap.add_argument("--dept", default=DEPT)
+    ap.add_argument("--arms", default="T,V", help="batch arms to write: T, V, or a rebuild T2 / V2 (= the T / V fits and shapes in a fresh batch "
+                    "OV_<wave>_T2 / _V2, built from the git clone of F; fresh run dirs). Default T,V.")
     ap.add_argument("--shapes", help="JSON file {T: {...}, V: {...}} replacing the plan-§2 shapes (post-W0 re-size)")
     a = ap.parse_args()
     slurm = os.path.join(a.wt, "Scripts/SMC_BVS/engine_v4/tools/slurm")
@@ -65,7 +67,8 @@ def main():
     os.makedirs(os.path.join(a.out, "plans"), exist_ok=True)
     rows = []
     for wave in a.waves.split(","):
-        for arm in ("T", "V"):
+        for barm in a.arms.split(","):
+            arm = barm[0]                       # T2 -> T, V2 -> V: same fits, same shapes, same caps
             sel = []
             for tag, rep, seeds in WAVES[wave]:
                 for s in seeds:
@@ -77,7 +80,7 @@ def main():
                         assert f["N"] == 2500 and f["Rp"] == 16, f
                     sel.append(f)
             plan = dict(head["law" if arm == "T" else "V"])
-            plan.update(batch="OV_%s_%s" % (wave, arm), kind="gated (HQ H-18, overlap 1e4 %s %s)" % (wave, arm),
+            plan.update(batch="OV_%s_%s" % (wave, barm), kind="gated (HQ H-18, overlap 1e4 %s %s)" % (wave, barm),
                         max_task_hours=MAX_TASK_H[arm], resources=shapes[arm], fits=sel)
             wc = p1m_driver.resolve(dict(plan, core_h_cap=1e12))["worst_case_core_h"]
             plan["core_h_cap"] = math.ceil((wc + 0.05) * 10 - 1e-9) / 10   # resolve() rounds wc to 0.1 (449.33 -> 449.3): +0.05 as p1m_cells does

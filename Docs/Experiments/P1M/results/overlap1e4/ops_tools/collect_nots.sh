@@ -5,14 +5,14 @@
 # Per batch: _batch_files.sha256 = driver files (no code/, build*/), bin/smcbvs4.sha256 + bin_version.json, submissions/starts/ends.jsonl,
 # slurm_out logs, and ONE sacct dump of both batches (the p1m_cost.py format, with the step rows for MaxRSS).
 set -euo pipefail
-WAVE=${1:?WAVE}; D=${P1M_OPS_D:-$HOME/SMC_Engineering_Department}; ids=''
-for b in OV_${WAVE}_T OV_${WAVE}_V; do
+WAVE=${1:?WAVE}; ARMS=${2:-T V}; BL=$(for a in $ARMS; do printf "OV_%s_%s " "$WAVE" "$a"; done); D=${P1M_OPS_D:-$HOME/SMC_Engineering_Department}; ids=''
+for b in $BL; do
   R=$D/scratch/runs/$b; S=$D/scripts/$b
   ids="$ids,$(grep -o '"job": *"[0-9]*"' "$R/submissions.jsonl" | grep -o '[0-9][0-9]*' | paste -sd,)"
 done
 ids=$(echo "$ids" | sed 's/^,*//; s/,,*/,/g; s/,*$//')
 sacct -P -n -j "$ids" --format=JobID,JobName,State,ElapsedRaw,AllocCPUS,CPUTimeRAW,MaxRSS,NodeList,Timelimit > "$D/scratch/runs/OV_${WAVE}_sacct.txt"   # the one sacct call
-for b in OV_${WAVE}_T OV_${WAVE}_V; do
+for b in $BL; do
   R=$D/scratch/runs/$b; S=$D/scripts/$b
   cp "$D/scratch/runs/OV_${WAVE}_sacct.txt" "$R/sacct_dump.txt"
   "$S/bin/smcbvs4" version > "$R/bin_version.json" 2>&1 || true
