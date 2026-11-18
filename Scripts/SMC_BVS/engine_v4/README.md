@@ -391,6 +391,7 @@ scalars and hashes only. The full content, including the PIP vectors, is in `fit
 | `pip_r` | R′ × p: each island's own vector (for spread checks) |
 | `hpm_S`, `mpm` | the HPM and the MPM (`pip_eq > 0.5`) |
 | `mode_S` | the start law's mode model (from `setup`) |
+| `pip_list`, `mpm_list`, `orig` | **list-renormalised PIPs** (HQ order 2026-11-17, spec SPEC_LIST_PIP; additive, `pip_eq` / `mpm` stay primary): the posterior renormalised to the merged `top` store, `pip_list[j] = Σ_{S ∋ j} u_S / Σ u_S` with `u_S = e^{F_S − max F}` (sums from the last store entry to the first, plain double); `pip_list` has length p (by position j), `mpm_list` = the columns with `pip_list > 0.5`, **as 1-based RAW column indices** (the one section that is not a 0-based position), `orig` = the position → raw column map (a copy of `kept`); `meta` has `log_Z_list`, `list_size`, `list_full`, `pip_list_source`. A fit.bin from before this change (the pilot's, T5's) gets the same fields from `smcbvs4 listpip FIT.bin --data data.bin` |
 
 **Which column is "column j".** Every index in `fit.bin`, `law.bin` and the islands is a position in `data.bin`, not a column
 of your `raw.bin`. `prep` removes constant columns and renumbers the rest, so after it a variable's position can be
@@ -477,6 +478,7 @@ their inputs and parameters from it, and an explicit flag that disagrees with th
 | `merge` | `--mode`, `--Rp R′`, `--data`, `--setup`, `--calib`, `--islands i1,…,iR′`, `--out fit.bin` | `--threads` (1), `--mem-budget` / `--mem-budget-gb`, `--chunk` (2048 items per parallel chunk) |
 | `eval` | `--fit fit.bin`, `--data`, `--truth truth.json`, `--out eval.bin` | `--threads` (1), `--n-draws` (10,000), `--n-x` (4,000), `--n-test` (10,000), `--n-gh` (64), `--rel-cut` (1e-12), `--top-k` (1,000), `--tail-r` (1,000), `--tail-groups` (8), `--block-rows` (500), `--law law.bin`, `--seed`; details in `src/eval/README_WP5.md` |
 | `post` | `--fit`, `--data`, `--out law.bin` | `--threads` (1), `--rel-cut` (1e-12), `--max-models` (1,000,000), `--draws`, `--seed` |
+| `listpip` | `FIT.bin` (or `--fit`) | `--data data.bin` (the raw-column map for a fit.bin without an `orig` section), `--full 1` (dense `pip_list` with `columns_orig`; default: the nonzero entries by raw and kept index); prints `pip_list`, `mpm_list` (raw columns), `log_Z_list`, `list_size`, `list_full`; the same function the merge calls |
 | `info` | `FILE` (or `--in FILE`) | `--meta 1` (header + section table + meta only), `--verify 0\|1` |
 | `version` | — | prints the binary block |
 

@@ -202,6 +202,40 @@ compare_calib <- function(r, m, tag) {
   same(r$ledger$island_best, m$ledger$island_best, paste(tag, "island_best"))
 }
 
+# ---- SPEC_LIST_PIP B12 (+ B10 invariants, absence of flags): core v3 against engine v4, fields of the list-renormalised PIPs ----
+# pip_list and log_Z_list within 1e-12, mpm_list identical unless some pip_list[j] is within 1e-9 of 0.5 (those cases are reported).
+list_pip_cases <- character()
+compare_list <- function(r, m, tag) {
+  nf <- c("pip_list", "mpm_list", "log_Z_list", "list_size", "list_full", "pip_list_flag")
+  expect(!is.null(r$pip_list) && !is.null(m$pip_list), paste(tag, "list fields present in v3 and v4", if (is.null(r$pip_list)) "(v3 missing)" else "", if (is.null(m$pip_list)) paste("(v4 missing; fields:", paste(names(m), collapse = ","), ")") else ""))
+  if (is.null(r$pip_list) || is.null(m$pip_list)) return(invisible())
+  expect(is.null(r$pip_list_flag) && is.null(m$pip_list_flag), paste(tag, "list: no flag (an empty or non-finite list must not occur)"))
+  expect(identical(names(r$pip_list), names(m$pip_list)) && identical(names(r$pip_list), names(r$pip_primary)), paste(tag, "list: names"))
+  expect(max(abs(unname(r$pip_list) - unname(m$pip_list))) <= 1e-12, paste(tag, "list: pip_list v3 vs v4 within 1e-12"))
+  expect(abs(r$log_Z_list - m$log_Z_list) <= 1e-12, paste(tag, "list: log_Z_list v3 vs v4 within 1e-12"))
+  expect(r$list_size == m$list_size && identical(r$list_full, m$list_full) && r$list_size == length(r$top_store$models), paste(tag, "list: size and full"))
+  close_half <- any(abs(r$pip_list - 0.5) <= 1e-9)
+  if (close_half) list_pip_cases <<- c(list_pip_cases, tag)
+  expect(close_half || identical(as.integer(r$mpm_list), as.integer(m$mpm_list)), paste(tag, "list: mpm_list identical"))
+  # B10 permutation, per golden: v3 on the store in a random order; v4 (harness) on it in reversed order (the in-process merge only)
+  if (!is.null(r$top_store$models)) {
+    set.seed(7); ord <- sample(length(r$top_store$models))
+    pv <- v3_list_fields(list(models = r$top_store$models[ord], value = r$top_store$value[ord], full = r$top_store$full), as.integer(names(r$pip_primary)), names(r$pip_primary))
+    expect(max(abs(unname(pv$pip_list) - unname(r$pip_list))) <= 1e-12 && abs(pv$log_Z_list - r$log_Z_list) <= 1e-12, paste(tag, "list: v3 permutation invariance"))
+  }
+  if (!is.null(m$pip_list_permuted))
+    expect(max(abs(unname(m$pip_list_permuted) - unname(m$pip_list))) <= 1e-12 && abs(m$log_Z_list_permuted - m$log_Z_list) <= 1e-12, paste(tag, "list: v4 permutation invariance"))
+  # the original-index contract (review PR68 MAJOR-1): mpm_list in ORIGINAL columns = v3's, and fit.bin's `orig` is the kept -> original map
+  if (!is.null(m$fit_orig)) expect(identical(as.integer(m$fit_orig), as.integer(names(m$pip_list))), paste(tag, "list: fit.bin orig = names of pip_list"))
+  # B10 on both
+  for (x in list(r, m)) {
+    expect(all(x$pip_list >= 0 & x$pip_list <= 1), paste(tag, "list: bounds"))
+    Fv <- r$top_store$value; w1 <- exp(Fv[1] - max(Fv)) / sum(exp(Fv - max(Fv)))
+    ind <- as.numeric(as.integer(names(x$pip_list)) %in% r$top_store$models[[1]])
+    expect(max(abs(x$pip_list - ind)) <= 1 - w1 + 1e-12, paste(tag, "list: support bound"))
+  }
+}
+
 # ---- 2. T9 merge vs v3_final_run -------------------------------------------------------------------------------------
 compare_final <- function(r, m, tag) {
   same(r$status, m$status, paste(tag, "status"))
@@ -220,6 +254,7 @@ compare_final <- function(r, m, tag) {
           "ls0_local_limit", "ls0_improved", "ls0_hpm_changed")
   same(r$flags[fl], m$flags[fl], paste(tag, "flags"))
   same(r$top_store, m$top_store, paste(tag, "top store"))
+  compare_list(r, m, tag)
   # v3's final-run leader stores (r$leaders_gamma0/1) are on the exclusion list: INTERFACES v0.1.7 -- final-run leaders
   # are not outputs in any mode (final ledgers use leaders = false). Calibration leaders are compared in compare_calib.
   n_checks <<- n_checks + 1L; if (m$leaders_gamma0$capacity != 0 || length(m$leaders_gamma0$models)) { failures <<- c(failures, paste(tag, "final leaders present")); cat("  FAIL:", tag, "final leaders present\n") }
@@ -381,7 +416,10 @@ cases <- list(
   list(id = "AR0.6_n100_p40",   n = 100, p = 40,   rho = 0.6, seed = 11, H = c(64, 128),  Te = c(60, 120),  N = c(150, 300), ell = NULL),
   list(id = "AR0.9_n120_p120",  n = 120, p = 120,  rho = 0.9, seed = 12, H = c(48, 96),   Te = c(40, 80),   N = c(120, 240), ell = 3),
   list(id = "IND_n80_p60_Te3",  n = 80,  p = 60,   rho = 0.0, seed = 13, H = c(32, 64),   Te = c(3, 4),     N = c(100, 200), ell = 2),
-  list(id = "AR0.5_n150_p300",  n = 150, p = 300,  rho = 0.5, seed = 14, H = c(64, 128),  Te = c(60, 120),  N = c(200, 400), ell = 4))
+  list(id = "AR0.5_n150_p300",  n = 150, p = 300,  rho = 0.5, seed = 14, H = c(64, 128),  Te = c(60, 120),  N = c(200, 400), ell = 4),
+  # dropped raw columns (constant): the kept -> original map is NOT the identity, so a list field in the wrong index space fails here
+  # (review PR68 MAJOR-1/5; SPEC_LIST_PIP B8)
+  list(id = "AR0.7_n90_p36_dropcols", n = 90, p = 36, rho = 0.7, seed = 17, H = c(48, 96), Te = c(40, 80), N = c(100, 200), ell = NULL, s0 = c(3, 7, 21), beta = c(1.5, -1.2), const = c(1, 6, 20)))
 if (level == "full") cases <- c(cases, list(
   list(id = "AR0.7_n200_p1000", n = 200, p = 1000, rho = 0.7, seed = 15, H = c(64, 128), Te = c(100, 200), N = c(150, 300), ell = NULL, heavy = TRUE),
   list(id = "AR0.8_n200_p2000", n = 200, p = 2000, rho = 0.8, seed = 16, H = c(48, 96), Te = c(80, 160), N = c(100, 200), ell = 6, heavy = TRUE)))
@@ -391,7 +429,9 @@ if (nzchar(only)) cases <- Filter(function(cs) cs$id == only, cases)
 for (cs in cases) {
   cat(sprintf("== case %s\n", cs$id))
   fx <- if (is.null(cs$s0)) fixture(cs$n, cs$p, cs$rho, cs$seed) else fixture(cs$n, cs$p, cs$rho, cs$seed, cs$s0, cs$beta)
+  if (!is.null(cs$const)) { for (j in cs$const) fx$X[, j] <- 7.25; cat(sprintf("   constant raw columns %s dropped by preprocessing\n", paste(cs$const, collapse = ","))) }
   setup <- make_setup(fx, cs$H, cs$Te, cs$N, cs$ell)
+  if (!is.null(cs$const)) expect(identical(as.integer(setup$ctx$orig), setdiff(seq_len(cs$p), cs$const)), paste(cs$id, "kept columns are the non-constant ones"))
   seed <- 1000L + cs$seed
   t0 <- proc.time()[["elapsed"]]; r <- v3_calibrate(setup, seed, tier = 0, preflight = NULL, runtime = NULL, grid_fallback = TRUE)
   t_ref <- proc.time()[["elapsed"]] - t0
@@ -434,6 +474,7 @@ for (cs in cases) {
                  "hpm_before_local", "top_store", "local_certified", "local_certified_by"))
       same(fr[[nm]], mf[[nm]], paste(tg, nm))
     same(unname(fr$pip_r), unname(mf$pip_r), paste(tg, "pip_r"))
+    compare_list(fr, mf, tg)
     same(fr$start_mode$model, mf$start_mode, paste(tg, "start_mode"))
     same(fr$local_search$scanned_centres, mf$ls_scanned, paste(tg, "local scanned")); same(fr$local_search$scanned_F, mf$ls_scanned_F, paste(tg, "local scanned F"))
     same(fr$local_search$path, mf$ls_path, paste(tg, "local path"))
@@ -449,7 +490,7 @@ for (cs in cases) {
     want <- switch(fault, missing = "io_error", corrupt = "invalid_input", hash_mismatch = "invalid_input",
                    island_numerical = "numerical_failure", tail_numerical = "numerical_failure")
     expect(identical(mm$status, want), sprintf("%s T10 %s status (%s)", cs$id, fault, mm$status))
-    expect(!isTRUE(mm$estimates_available) && is.null(mm$log_Z) && is.null(mm$pip_primary) && is.null(mm$mpm),
+    expect(!isTRUE(mm$estimates_available) && is.null(mm$log_Z) && is.null(mm$pip_primary) && is.null(mm$mpm) && is.null(mm$pip_list) && is.null(mm$log_Z_list),
            sprintf("%s T10 %s no estimate fields", cs$id, fault))
     if (fault == "tail_numerical") expect(isTRUE(mm$hpm_incomplete), sprintf("%s T10 tail HPM labelled incomplete", cs$id))
   }
@@ -476,6 +517,7 @@ for (cs in cases) {
 tim <- do.call(rbind, timing)
 print(tim, row.names = FALSE)
 write.table(tim, file.path(work, "wp4_golden_timing.tsv"), sep = "\t", quote = FALSE, row.names = FALSE)
+cat(sprintf("\nlist PIP (B12): %d comparison(s) with some pip_list within 1e-9 of 0.5%s\n", length(list_pip_cases), if (length(list_pip_cases)) paste0(": ", paste(unique(list_pip_cases), collapse = ", ")) else ""))
 cat(sprintf("\nWP4 golden: %d checks, %d failures\n", n_checks, length(failures)))
 if (!keep) clean_work()
 if (length(failures)) { cat(paste(" -", failures), sep = "\n"); quit(status = 1) }

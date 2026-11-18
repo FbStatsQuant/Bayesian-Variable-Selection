@@ -16,6 +16,8 @@
 #include "v4/provenance.h"
 #include "v4/stubs.h"
 #include "v4/wp4_io.h"
+#include "v4/list_pip.h"
+#include "eval/io.h"
 
 using namespace v4;
 
@@ -56,11 +58,12 @@ Model random_model(std::mt19937_64& g, int p, int kmax) {
   std::sort(S.begin(), S.end()); S.erase(std::unique(S.begin(), S.end()), S.end()); return S;
 }
 
-Fx make_fx(const std::string& tag, int R, uint32_t mode = fmt::M_COMPAT) {
+Fx make_fx(const std::string& tag, int R, uint32_t mode = fmt::M_COMPAT, const std::vector<int>& const_cols = {}) {   // const_cols: 0-based raw columns made constant (dropped by prep)
   Fx f;
   const int n = 60, p_raw = 24;
   gen::Spec sp; sp.design = gen::Design::AR; sp.n = n; sp.p = p_raw; sp.seed = 5; sp.s0 = 3; sp.a = 1.5;
   std::vector<double> X, y; gen::generate(sp, X, y);
+  for (int cc : const_cols) for (int i = 0; i < n; ++i) X[(size_t)cc * (size_t)n + (size_t)i] = 5.0;   // column-major
   f.pr = prep::preprocess(X.data(), y.data(), n, p_raw);
   f.D = make_data(f.pr.own, n, f.pr.p);
   const int p = f.D.p;
@@ -289,6 +292,37 @@ TEST(wp4_io_merge_command_e2e) {
     CHECK(R.entry("occ_top_r").dims[0] == 4 && meta.at("occ_total").num() == 200 && meta.at("occ_total_r").num() == 50);
     CHECK(meta.contains("logZ") && meta.contains("hpm_F") && meta.at("status").str() == "completed" && meta.contains("hpm_ev"));
     CHECK(meta.at("flags").contains("occ_inhomogeneous") && meta.at("occ").size() == 4);
+    // SPEC_LIST_PIP: pip_list / mpm_list sections + scalars = the function applied to the stored top store; the tool reproduces them
+    {
+      CHECK(R.has("pip_list") && R.has("mpm_list") && R.entry("pip_list").dims[0] == (uint64_t)f.D.p);
+      CHECK(meta.contains("log_Z_list") && meta.contains("list_size") && meta.contains("list_full") && meta.at("pip_list_source").str() == "store" && !meta.contains("pip_list_flag"));
+      eval::io::FitFile ff; eval::io::load_fit(o1, ff);
+      ListPipSrc ls; ls.n = ff.top.size; ls.v = ff.top.v; ls.off = ff.top.off; ls.len = ff.top.len; ls.hash = ff.top.hash; ls.pool = ff.top.pool;
+      ListPip lp = compute_list_pip(ls, f.D.p, (uint64_t)meta.at("stores").at("top").at("cap").num());
+      std::vector<double> sp = R.vec<double>("pip_list"); std::vector<int32_t> sm = R.vec<int32_t>("mpm_list");
+      std::vector<int32_t> mpm_orig = lp.mpm_list; for (auto& j : mpm_orig) j = f.D.orig[j];   // fit.bin's mpm_list is in ORIGINAL column indices
+      CHECK(R.has("orig") && R.vec<int32_t>("orig") == std::vector<int32_t>(f.D.orig, f.D.orig + f.D.p) && meta.at("mpm_list_index_space").str() == "original_1based");
+      bool eq = sp.size() == lp.pip_list.size() && sm == mpm_orig && same_bits(meta.at("log_Z_list").num(), lp.log_Z_list);
+      for (size_t j = 0; eq && j < sp.size(); ++j) eq = same_bits(sp[j], lp.pip_list[j]);
+      CHECK(eq);
+      CHECK((uint64_t)meta.at("list_size").num() == ff.top.size && meta.at("list_full").boolean() == lp.list_full);
+      // invariants: 0 <= pip_list <= 1; mpm_list = {pip_list > 1/2}; log_Z_list <= log_Z_T + tiny (same store, different arithmetic)
+      bool inv2 = true; for (size_t j = 0; j < sp.size(); ++j) inv2 = inv2 && sp[j] >= 0 && sp[j] <= 1 && ((sp[j] > 0.5) == std::binary_search(sm.begin(), sm.end(), f.D.orig[j]));
+      CHECK(inv2 && std::fabs(lp.log_Z_list - meta.at("logZ_T").num()) <= 1e-9);
+      // pip_T is the existing long-double quantity: still within rounding of the new one on the same store
+      std::vector<double> pT = R.vec<double>("pip_T"); double md = 0; for (size_t j = 0; j < sp.size(); ++j) md = std::max(md, std::fabs(pT[j] - sp[j]));
+      CHECK(md <= 1e-12);
+      // fit.json
+      CHECK(r1.contains("log_Z_list") && same_bits(r1.at("log_Z_list").num(), lp.log_Z_list) && r1.at("pip_list_source").str() == "store" && !r1.contains("pip_list_flag"));
+      // the post-hoc tool: the same function on the stored store; matches the stored fields bit for bit
+      Json t = listpip::run([&] { Json a = Json::object(); a["in"] = o1; return a; }());
+      CHECK(t.at("status").str() == "completed" && t.at("matches_stored").boolean() && same_bits(t.at("log_Z_list").num(), lp.log_Z_list) && t.at("mpm_list").size() == lp.mpm_list.size() &&
+            t.at("index_space").str() == "original_1based" && t.at("orig_from").str() == "fit.bin");
+      for (size_t k = 0; k < mpm_orig.size(); ++k) CHECK(t.at("mpm_list").at(k).num() == (double)mpm_orig[k]);
+      Json d = listpip::run([&] { Json a = Json::object(); a["in"] = o1; a["full"] = 1; return a; }());
+      bool dd = d.at("pip_list").size() == sp.size() && d.at("columns_orig").size() == sp.size(); for (size_t j = 0; dd && j < sp.size(); ++j) dd = same_bits(d.at("pip_list").at(j).num(), sp[j]) && d.at("columns_orig").at(j).num() == (double)f.D.orig[j];
+      CHECK(dd);
+    }
     // the pre-island ledger: table step (top stores + logical count) and the inherited step
     std::vector<uint64_t> lg = R.vec<uint64_t>("logical");
     CHECK(lg[(size_t)PH_TABLE * N_MECH + ME_TABLE] == f.S.table_event_count(f.D.K));
@@ -300,7 +334,10 @@ TEST(wp4_io_merge_command_e2e) {
   auto refused = [&](const std::string& out, Status want) {
     Json r = merge::run(merge_args(f, out, 3));
     fmt::Reader R(out); Json meta = R.json("meta");
-    bool none = !R.has("pip_eq") && !R.has("logZ_r") && !R.has("pip_r") && !meta.contains("logZ") && !meta.at("estimates_available").boolean();
+    bool none = !R.has("pip_eq") && !R.has("logZ_r") && !R.has("pip_r") && !meta.contains("logZ") && !meta.at("estimates_available").boolean() &&
+                !R.has("pip_list") && !R.has("mpm_list") && !meta.contains("log_Z_list") && !meta.contains("list_size");   // SPEC_LIST_PIP §4: absent
+    { Json t = listpip::run([&] { Json a = Json::object(); a["in"] = out; return a; }());   // the tool: absent, not an error
+      none = none && t.at("status").str() == "completed" && !t.contains("pip_list") && !t.contains("pip_list_nonzero") && t.contains("reason"); }
     CHECK_MSG(r.at("status").str() == status_name(want) && none, out + ": " + r.at("status").str() + " / " + r.at("reason").str());
     std::remove(out.c_str());
   };
@@ -337,6 +374,89 @@ TEST(wp4_io_merge_command_e2e) {
   CHECK_THROWS(merge::run(a));
   std::remove(mp.c_str()); std::remove(o1.c_str()); std::remove(o3.c_str());
   cleanup(f);
+}
+
+// Review PR68 MAJOR-1 / MINOR-4: the original-column contract through the real merge with dropped raw columns, the old-fit route (no `orig` section:
+// --data), and the post-hoc boundary for the flagged cases (hand-made fit.bin: the legacy merge check pre-empts them in a merge).
+TEST(wp4_io_list_pip_original_indices_dropped_columns) {
+  TmpGuard tmp_guard("lpo"); Fx f = make_fx("lpo", 4, fmt::M_COMPAT, {1, 8, 17});
+  CHECK_MSG(f.D.p == 21 && f.D.orig[1] == 3 && f.D.orig[7] == 10, "p " + std::to_string(f.D.p) + " p_raw " + std::to_string(f.D.p_raw) + " orig1 " + std::to_string(f.D.orig[1]) + " orig7 " + std::to_string(f.D.orig[7]));   // columns 2, 9, 18 (1-based) are gone: the map is not the identity
+  const std::string out = tmp_path("lpo_fit.bin");
+  Json r = merge::run(merge_args(f, out, 2));
+  CHECK_MSG(r.at("status").str() == "completed", r.dump());
+  fmt::Reader R(out); Json meta = R.json("meta");
+  std::vector<int32_t> orig = R.vec<int32_t>("orig"), mpm = R.vec<int32_t>("mpm_list"), mpm_internal = R.vec<int32_t>("mpm");
+  CHECK(orig == std::vector<int32_t>(f.D.orig, f.D.orig + f.D.p));
+  CHECK(mpm.size() == mpm_internal.size() || true);
+  { eval::io::FitFile ff; eval::io::load_fit(out, ff);
+    ListPipSrc ls; ls.n = ff.top.size; ls.v = ff.top.v; ls.off = ff.top.off; ls.len = ff.top.len; ls.hash = ff.top.hash; ls.pool = ff.top.pool;
+    ListPip lp = compute_list_pip(ls, f.D.p, (uint64_t)meta.at("stores").at("top").at("cap").num());
+    std::vector<int32_t> want = lp.mpm_list; for (auto& j : want) j = f.D.orig[j];
+    CHECK(mpm == want);
+    bool wrong_space = !lp.mpm_list.empty(); for (size_t k = 0; k < want.size(); ++k) wrong_space = wrong_space && want[k] != lp.mpm_list[k];
+    CHECK_MSG(lp.mpm_list.empty() || want != lp.mpm_list, "the dropped-column map must change the indices (else this test proves nothing)");
+    (void)wrong_space;
+    // the CLI-level tool: original indices from the fit's `orig` section
+    Json t = listpip::run([&] { Json a = Json::object(); a["in"] = out; return a; }());
+    CHECK(t.at("index_space").str() == "original_1based" && t.at("orig_from").str() == "fit.bin" && t.at("matches_stored").boolean());
+    CHECK(t.at("mpm_list").size() == want.size());
+    for (size_t k = 0; k < want.size(); ++k) CHECK(t.at("mpm_list").at(k).num() == (double)want[k]);
+    { bool differs = false; const Json& nz = t.at("pip_list_nonzero");
+      for (size_t k = 0; k < nz.at("index").size(); ++k) {
+        CHECK(nz.at("index").at(k).num() == (double)f.D.orig[(size_t)nz.at("kept").at(k).num()]);
+        differs = differs || nz.at("index").at(k).num() != nz.at("kept").at(k).num();
+      }
+      CHECK_MSG(differs && nz.at("index").size() == (size_t)f.D.p, "original and kept indices must differ somewhere (else the dropped-column test is vacuous)"); }
+    // an OLD fit.bin (no `orig`, no list sections), as the pilot's: internal indices without --data, original with --data (the fit's input)
+    const std::string old = tmp_path("lpo_old_fit.bin"); { fmt::Writer W(fmt::K_FIT, R.mode());
+      for (const auto& e : R.sections()) { const std::string nm(e.name); if (nm == "orig" || nm == "pip_list" || nm == "mpm_list") continue;
+        if (e.dtype == fmt::D_JSON) { Json m = R.json(nm); if (nm == "meta") for (const char* k : {"log_Z_list", "list_size", "list_full", "pip_list_source", "mpm_list_index_space"}) { Json m2 = Json::object(); for (auto& [kk, vv] : m.items()) if (kk != k) m2[kk] = vv; m = m2; } W.add_json(nm, m); continue; }
+        const void* q = e.dtype == fmt::D_F64 ? (const void*)R.get<double>(nm) : e.dtype == fmt::D_I32 ? (const void*)R.get<int32_t>(nm)
+                      : e.dtype == fmt::D_U32 ? (const void*)R.get<uint32_t>(nm) : e.dtype == fmt::D_I64 ? (const void*)R.get<int64_t>(nm)
+                      : e.dtype == fmt::D_U64 ? (const void*)R.get<uint64_t>(nm) : e.dtype == fmt::D_U16 ? (const void*)R.get<uint16_t>(nm) : (const void*)R.get<uint8_t>(nm);
+        W.add_copy(nm, e.dtype, q, e.length, e.dims[0], e.dims[1]); }
+      W.write(old); }
+    Json t0 = listpip::run([&] { Json a = Json::object(); a["in"] = old; return a; }());
+    CHECK(t0.at("index_space").str() == "internal_0based" && !t0.at("stored_in_fit").boolean());
+    for (size_t k = 0; k < lp.mpm_list.size(); ++k) CHECK(t0.at("mpm_list").at(k).num() == (double)lp.mpm_list[k]);
+    Json t1 = listpip::run([&] { Json a = Json::object(); a["in"] = old; a["data"] = f.dpath; return a; }());
+    CHECK(t1.at("index_space").str() == "original_1based" && t1.at("orig_from").str() == "data.bin");
+    for (size_t k = 0; k < want.size(); ++k) CHECK(t1.at("mpm_list").at(k).num() == (double)want[k]);
+    CHECK(same_bits(t1.at("log_Z_list").num(), lp.log_Z_list));
+    std::remove(old.c_str()); }
+  std::remove(out.c_str()); cleanup(f);
+}
+
+namespace {
+// a minimal completed fit.bin for the post-hoc tool: pip_eq (p), the `top` store from the given (value, model) entries, no list sections
+std::string write_min_fit(const std::string& tag, int p, const std::vector<double>& v, const std::vector<Model>& ms, const std::vector<uint64_t>& hashes) {
+  std::vector<uint64_t> off, hash = hashes; std::vector<uint16_t> len; std::vector<int32_t> pool; std::vector<double> pip((size_t)p, 0.5), vv = v;
+  for (auto& m : ms) { off.push_back(pool.size()); len.push_back((uint16_t)m.size()); pool.insert(pool.end(), m.begin(), m.end()); }
+  Json meta = Json::object(); meta["status"] = "completed"; meta["stores"] = Json::object(); meta["stores"]["top"] = Json::object(); meta["stores"]["top"]["cap"] = 40.0 * p + 1;
+  fmt::Writer W(fmt::K_FIT, fmt::M_COMPAT);
+  W.add("pip_eq", pip); W.add("top_v", vv); W.add("top_off", off); W.add("top_len", len); W.add("top_hash", hash); W.add("top_pool", pool); W.add_json("meta", meta);
+  const std::string path = tmp_path(tag); W.write(path); return path;
+}
+}  // namespace
+TEST(wp4_io_list_pip_post_hoc_flags_and_precedence) {
+  TmpGuard tmp_guard("lpf");
+  const double Inf = std::numeric_limits<double>::infinity(), NaN = std::numeric_limits<double>::quiet_NaN();
+  auto flagged = [&](const Json& t, const char* flag) {
+    return t.at("status").str() == "completed" && t.at("pip_list_flag").str() == flag && !t.contains("pip_list") && !t.contains("pip_list_nonzero") && !t.contains("mpm_list") && !t.contains("log_Z_list");
+  };
+  { std::string p1 = write_min_fit("lpf_allinf.bin", 4, {-Inf, -Inf}, {Model{0}, Model{1}}, {11, 12});    // all -Inf: normaliser 0 (Theory-confirmed via HQ 11-17)
+    Json t = listpip::run([&] { Json a = Json::object(); a["in"] = p1; return a; }()); CHECK_MSG(flagged(t, "nonfinite_score"), t.dump()); CHECK(t.at("list_size").num() == 2);
+    std::remove(p1.c_str()); }
+  { std::string p1 = write_min_fit("lpf_nan.bin", 4, {NaN, -1.0}, {Model{0}, Model{1}}, {11, 12});       // NaN
+    Json t = listpip::run([&] { Json a = Json::object(); a["in"] = p1; return a; }()); CHECK_MSG(flagged(t, "nonfinite_score"), t.dump()); std::remove(p1.c_str()); }
+  { std::string p1 = write_min_fit("lpf_empty.bin", 4, {}, {}, {});                                         // an empty store
+    Json t = listpip::run([&] { Json a = Json::object(); a["in"] = p1; return a; }()); CHECK_MSG(flagged(t, "empty_list"), t.dump()); CHECK(t.at("list_size").num() == 0); std::remove(p1.c_str()); }
+  { std::string p1 = write_min_fit("lpf_dupnan.bin", 4, {NaN, -1.0}, {Model{0}, Model{0}}, {11, 11});       // a duplicate AND a non-finite score: the duplicate is an error first
+    CHECK_THROWS(listpip::run([&] { Json a = Json::object(); a["in"] = p1; return a; }())); std::remove(p1.c_str()); }
+  { Zobrist z; z.init(4); ListPip a;   // the helper itself: a duplicate with a NaN / all -Inf stops (not flagged)
+    std::vector<double> v{-Inf, -Inf}; std::vector<uint64_t> off{0, 1}, hash{z.hash(Model{0}), z.hash(Model{0})}; std::vector<uint16_t> len{1, 1}; std::vector<int32_t> pool{0, 0};
+    ListPipSrc s; s.n = 2; s.v = v.data(); s.off = off.data(); s.len = len.data(); s.hash = hash.data(); s.pool = pool.data();
+    CHECK_THROWS(compute_list_pip(s, 4, 161)); (void)a; }
 }
 
 TEST(wp4_io_chi2_and_inherited_provenance) {

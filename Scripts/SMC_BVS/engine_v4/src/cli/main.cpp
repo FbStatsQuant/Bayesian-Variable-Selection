@@ -6,6 +6,7 @@
 #include "v4/format.h"
 #include "v4/gen.h"
 #include "v4/json.h"
+#include "v4/list_pip.h"
 #include "v4/pmath.h"
 #include "v4/prep.h"
 #include "v4/provenance.h"
@@ -19,13 +20,15 @@ using namespace v4;
 static void usage() {
   std::fprintf(stderr,
     "usage: smcbvs4 <command> [--key value ...]   or   smcbvs4 <command> --manifest m.json\n"
-    "commands: gen prep setup calibrate island merge eval post info version\n"
+    "commands: gen prep setup calibrate island merge eval post listpip info version\n"
     "  gen   --design AR|IND|BLK|ADJ-OPP --n N --p P --seed S [--rho R --b B --a A --s0 K --sigma s] --out raw.bin [--truth truth.json]\n"
     "  gen-test  (same spec) --ntest M --cols 1,5,9 --out test.bin\n"
     "  prep  --in raw.bin --out data.bin    |   prep --from-r <dir> --out data.bin\n"
     "  info  file.bin | --in file.bin       (header, sections, verified hashes: every section)\n"
     "  info  file.bin --meta 1              (header + table + the meta section only, the meta printed; no full-file read:\n"
     "                                        seconds on a multi-GB island file; --verify 1 adds every section hash)\n"
+    "  listpip FIT.bin [--data data.bin] [--full 1]   (list-renormalised PIP fields of an existing fit.bin: pip_list, mpm_list, log_Z_list, ...;\n"
+    "                                        mpm_list in ORIGINAL column indices: from the fit's `orig` section, else from --data)\n"
     "  common: --threads k  --record out.json\n");
 }
 
@@ -49,7 +52,7 @@ int main(int argc, char** argv) {
   try {
     int first = 2;
     // `info FILE ...`: the file as the first argument (WP7: `smcbvs4 info island_1.bin --meta 1` used to be "bad argument")
-    if (cmd == "info" && argc >= 3 && std::string(argv[2]).rfind("--", 0) != 0) { args["in"] = Json(std::string(argv[2])); first = 3; }
+    if ((cmd == "info" || cmd == "listpip") && argc >= 3 && std::string(argv[2]).rfind("--", 0) != 0) { args["in"] = Json(std::string(argv[2])); first = 3; }
     for (int i = first; i < argc; ++i) {
       std::string k = argv[i];
       if (k.rfind("--", 0) != 0 || i + 1 >= argc) throw Error(Status::invalid_input, "bad argument " + k);
@@ -114,6 +117,7 @@ int main(int argc, char** argv) {
     else if (cmd == "merge") rec = merge::run(args);
     else if (cmd == "eval") rec = eval::run(args);
     else if (cmd == "post") rec = post::run(args);
+    else if (cmd == "listpip") rec = listpip::run(args);
     else { usage(); throw Error(Status::invalid_input, "unknown command " + cmd); }
     if (rec.contains("status") && rec.at("status").type() == Json::STR) st = status_from_name(rec.at("status").str());
   } catch (const Error& e) {

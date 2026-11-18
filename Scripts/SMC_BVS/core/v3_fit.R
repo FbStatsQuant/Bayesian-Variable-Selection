@@ -128,7 +128,7 @@ v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24), ls0 = 
       fit$global_certified <- e$global_certified; fit$local_certified <- e$local_certified
       fit$estimates_available <- TRUE
     } else { fit$message <- e$message; fit$hpm_incomplete <- TRUE }
-    return(finish(fit))
+    return(v3_exact_list_last(finish(fit), e, ctx))   # + the list fields, strictly last (v3_run.R)
   }
   t0 <- proc.time()[["elapsed"]]; setup <- v3_setup(ctx)
   if (inherits(setup, "v3_setup_failed")) {
@@ -159,7 +159,7 @@ v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24), ls0 = 
     return(finish(fit))
   }
   frozen <- cal$frozen; fit$frozen <- frozen
-  t0 <- proc.time()[["elapsed"]]; fr <- v3_final_run(setup, frozen, seed, runtime, ls0 = ls0)
+  t0 <- proc.time()[["elapsed"]]; fr <- v3_final_run(setup, frozen, seed, runtime, ls0 = ls0, list_fields = FALSE)   # list fields: added last, below
   fr$stage_table <- v3_bind_records(list(cal$stage_table, fr$stage_table))
   fit$timings$final <- proc.time()[["elapsed"]] - t0; fit$timings$final_detail <- fr$timings; fr$timings <- NULL
   cf <- cal$flags
@@ -170,5 +170,8 @@ v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24), ls0 = 
   if (!is.null(cf$grid_fallback)) fr$flags$grid_fallback <- cf$grid_fallback
   for (nm in names(fr)) fit[[nm]] <- fr[[nm]]
   fit$flags$cut_group <- fit$cut_group
-  finish(fit)
+  fit <- finish(fit)
+  # list-renormalised PIP fields (SPEC_LIST_PIP.md): strictly LAST, after finish() has sampled peak_memory_kb, the clock and the runtime
+  # guard, so the new allocation cannot leak into a legacy field (review PR68 MAJOR-2)
+  v3_add_list_fields(fit, v3_list_fields(fit$top_store, ctx$orig, names(fit$pip_primary)))
 }

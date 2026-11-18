@@ -17,13 +17,13 @@
       "cpp/v3_score.h": "41173ac1460e180e7a30da98260e1e338efb4a685a5052a6cd815aa7cbe26df7",
       "cpp/v3_start.h": "e9b3817ea3160e789d11871d89a7e2eea989b0b8ff07c44cc3ee5b90c8dcfe2f",
       "cpp/v3_util.h": "1841122ef2ad6d963b1e0f1d622e1bc154f23fd9e5d347e2b7e02890334d2e15",
-      "README.md": "42f7d5af7406ec62ba9b575f71afc79e6cc72bef51a68c23490332c0554b6238",
+      "README.md": "40a0b191aeb6e3d7a8f300a774bf18872eded1d4369e8fdc9991956ac1299010",
       "source_manifest.json": "addfae035781bbfbf503d1b2fbd8f4d9fc5d92795276a83f28777fdb51b7de2b",
       "v3_calib.R": "5c85c773b58f69b28eab04e7eb0a46560c59870695b03dc21a642bed7dda3ef3",
       "v3_exact.R": "18e29edea8d0df176a878d0f28a8662a50c80bfb4e567fb7a4bfde9648ff8ec8",
-      "v3_fit.R": "c19c3a2fa8569b088c74d091ec97d140fa5da729388602f2c5c78308c5926852",
+      "v3_fit.R": "83c828a9bf5f92f292996432f91354bb3341112b7d9a80e33fc9ee9e14701271",
       "v3_preprocess.R": "758d97e0f02c01e6b4f6ca824805ee1e9fda55a8214f668d8947b9e1a0e929be",
-      "v3_run.R": "3d486abe5a10dd5a8e78b24bd4e4b8e290578379eadf19aa32727ccc6753b0e6",
+      "v3_run.R": "ac8b8b57089193dd31aa929c98ec8eb245d4045a959f152937f0eadbade6938b",
       "v3_setup.R": "1f8425e77f59c73eca9e67d6294ca3a0d52828d3f079420bf916eab55396215a",
       "v3.R": "951ffb3476c38e24de8b532827e83590a40d02fe0d0525beb1d025fb33b4eaed"
     },
@@ -36,7 +36,8 @@
       "sha256": "840be1bbf53e1697dbb0dd258594ca70870936a5c20e1fe8ed44b34b9bc83d7e",
       "glibc": "ldd (GNU libc) 2.34"
     },
-    "host": "owls.stat.rice.edu"
+    "host": "owls.stat.rice.edu",
+    "core_additive_changes": "2026-11-17 list-renormalised PIP fields (HQ order, SPEC_LIST_PIP): v3_run.R and v3_fit.R append pip_list, mpm_list, log_Z_list, list_size, list_full, pip_list_source, pip_list_flag; no existing output changes (tests/list_pip_units.R, old-vs-new identical() runs); the fixtures were not regenerated (none reads the new fields); core_commit above is the commit the fixtures were made from"
   },
   "core_cpp_key": "9413042ffd4db2b7ef2aa41365bbb8b73ff97684b5251ba26d67753e538b9b5e",
   "smcbvs4": "bb19011aa086498df927502a18d9d05a0897b2df44a3da6ea7a3efeb8193fcfe",
