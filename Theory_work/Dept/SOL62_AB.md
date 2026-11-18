@@ -1,15 +1,31 @@
-# SOL62_AB — gpt-6.2-sol vs gpt-6.1-sol, replay mini-experiment (D124) — PREPARED, NOT RUN
+# SOL62_AB — gpt-6.2-sol vs gpt-6.1-sol, replay mini-experiment (D124) — RUN 2026-11-17 (both arms, same inputs)
 
 Prepared by the Theory helper (Sonnet 5.5) 2026-11-17. **Evaluation only; no registry/record change; no Codex/API call made.** The manager runs the 6.2 calls (≤ 4; one at a time). Folder: `Theory_work/Dept/SOL62_AB/` (per case: BRIEF.md = original brief verbatim; INPUTS.md = excerpts with commit+path:lines+sha; KNOWN_ANSWER.md; STORED_61.md; RUN.md; PROMPT_6.2.txt = the exact text to send; `build_inputs.py` regenerates all from git).
 
 **Method.** Replay only 6.2 on the exact original 6.1 brief + the excerpted inputs the original saw (at that commit), same effort (high). Compare the 6.2 reply with the stored 6.1 reply and the known answer. A fixed REPLAY NOTICE (inputs are inline; no file writing) is the only text added to the brief; each RUN.md lists what was omitted for size.
 
-| case | known answer (evidence) | 6.1 verdict (stored) | 6.2 verdict | real findings caught Y/N | false / nitpick count | brief fidelity | tokens / time |
+## Results (run 2026-11-17, 19:03–19:26 CT; owner change: same inputs to 6.1 and 6.2)
+
+**Method as run.** Each case's PROMPT (`caseN/PROMPT_6.2.txt`, which is model-neutral despite the name) was copied byte-identical to `/home/fb31/SMC_Theory_Department/tmp/sol62ab/`. Both models got the same wrapper, which told them to read the file in chunks of 120 lines, read no other file, and leave the repo off-limits. Each run used codex at reasoningEffort high, as a fresh child thread, run one at a time. **7 Codex calls:** the first (case1 6.1) is VOID, because a single `cat` let the shell truncate its input (`runs/case1_61_PILOT_VOID.md`). After that the wrapper was fixed for every scored run in both arms. Per-run records are in `runs/`. Times are wall time on the manager's clock; token counts were not exposed by the harness.
+
+| case | known answer | 6.1 (same inputs) | 6.2 (same inputs) | real caught 6.1 / 6.2 | false · nitpick 6.1 / 6.2 | brief fidelity 6.1 / 6.2 | wall 6.1 / 6.2 |
 |---|---|---|---|---|---|---|---|
-| **1 · W3-MISR-R L1 statement lock** (rider STATEMENT v1.0 @ 01873c40) | KL(ii) row-wise reading FALSE for design-dependent α, true for deterministic α (counterexample α=(X)²_{2,1}); MAJOR L1-1 + MINOR L1-2/3/4. Evidence: K1-1 (second blind 6.1), BASE_KL_VERDICT.md, ERRATUM_W3-MISR_KL.md, R3 council 10.0/9.6 | LOCK-WITH-AMENDMENTS; L1-1 MAJOR (caught), L1-2, L1-3, L1-4 MINOR; 0 FATAL — `W3-MISR-R/reviews/L1_statement_lock_sol.md` | | | | brief verbatim; inputs: child BRIEF/STATEMENT/PLAN whole + parent excerpts; POST2/POST/TRIAGE/M_misr/R_reduction omitted | in ≈ 12.3k tok / |
-| **2 · W3-D2 council R1, sol seat** (package @ 934a2b43) | F1: numerics `lgamma` cancellation at p=10¹⁵ (log C(2p−1,1)=40.0 vs 35.2319; m♯=95 vs 76; grid max 0.3928 not 0.3942); analytic claims correct. Evidence: lead rerun (ba0f38f2), local lgamma check, Opus 9.6, auditD2 FINDINGS=0 | ACCEPT both; score 9.2, gates=FAIL on F1 (+E1 REPORT label, not catchable here) — `W3-D2/reviews/R1_council_sol.md` | | | | brief verbatim (incl. manifest verdict-line format); STATEMENT, PROOF, TARGET, numerics + two source excerpts; REPORT/DEPS/READER_DELTA/sources omitted | in ≈ 11.3k tok / |
-| **3 · W3-MISR-R K2 re-check (clean control)** (@ 4df0ea57) | Both repairs (n≥5→9; supp β=T stratification) correct; nothing else changed; no new finding. Evidence: log 9/9=0.2441<¼ (log 8/8>¼); lemma files on main byte-identical to checked ones; R3 council sol 10.0 / opus 9.6 | 2 RESOLVED; 0 new findings; both VERIFIED — `W3-MISR-R/reviews/K2_recheck_sol.md` | | | | brief verbatim; diff, K1-2/K1-3 text, both lemma files (pre and post), DEPS rows — complete | in ≈ 10.3k tok / |
-| 4 · D18-type scope item (optional) | **not built** | — | — | — | — | — | — |
+| **1 · L1 statement lock** | KL(ii) row-wise false for design-dependent α (MAJOR) + 3 secondaries | NO-LOCK; KL caught; 3/3 secondaries; +1 plausible (C̄_H vs C_H(s,A)) | LOCK-WITH-AMENDMENTS (= stored); KL caught; 3/3; +2 plausible (C̄_H, shared; singular s̃ support) +1 verified (D_hellinger owner mis-cited) | Y / Y (6.2 more new) | 0·0 / 0·0–1 | weaker (missing sources inflated to MAJOR → NO-LOCK) / good | ≈ 2–3 / ≈ 5 min |
+| **2 · W3-D2 R1 sol seat** | F1 lgamma cancellation (m♯ 95 vs 76; max 0.3942 vs 0.3928); both claims ACCEPT | 8.0 gates=FAIL; F1 caught (76 vs 95); +1 verified (TARGET "P=0" vs 0/300); decisions NOT-EXAMINED ×2 | 8.5 gates=FAIL; F1 caught (exact 0.392839); same "P=0" point with a proof; +1 plausible (parity table); **Thm2X REJECT** on a null-event domain caveat; Cor2X ACCEPT | Y / Y | 0·0 / **1 false decision**·1 | weaker (no decisions) / mixed (decisions, one wrong) | ≈ 3–4 / ≈ 4 min |
+| **3 · K2 re-check (clean control)** | 2 RESOLVED, 0 new, 2 VERIFIED | exact match | exact match | — / — | 0·0 / 0·0 | exact / exact | ≈ 3 / ≈ 2 min |
+
+**Reading (indicative only: n = 3, one sample each).**
+- **Real findings:** both models catch every known-true finding.
+- **Depth:** 6.2 goes deeper. It found 1 extra verified real finding, 2 extra plausible ones, and gave more rigorous arguments.
+- **False positives:** 6.2 made the only false call in the A/B, a REJECT on a probability-zero domain caveat that 6.1 noted as a caveat only.
+- **Fidelity:** 6.1 repeatedly turned "not supplied" inputs into verdict-level failures (NO-LOCK; NOT-EXAMINED); 6.2 handled them per item.
+- **Clean control:** both models were clean.
+- **Speed:** about the same, with 6.2 slower once.
+
+**Open adjudications (not needed for the comparison):**
+- C̄_H vs C_H(s,A) (both models);
+- singular s̃ support (6.2);
+- the parity table (6.2).
 
 **Total estimated input:** ≈ 33.9k tokens for 3 calls (12.3k + 11.3k + 10.3k; chars/3.5). Output not estimated.
 
