@@ -11,7 +11,13 @@ Input so far: walk `walks/T9_rest.md` on walkD b5a87cd2 (rows 3.5 and 4.1; 2 MIN
 | **F3 (NOTE):** "printed evidence" should name the field | AGREE | Card wording. `CLAIMS_CARD.md:76`: "equals the printed evidence" → "equals $\exp$ of the printed field `log_Z` (not `log_Z_list`, row 3.1L)". `:97`: "(equal to the printed evidence on completed runs" → "(equal to $\exp$(`log_Z`), the printed pooled evidence, on completed runs". |
 | **F4 (NOTE, Lean):** N1's premises are hypotheses in Lean | AGREE | None. |
 
-## F2: draft of the measurability lemma
+## F2: superseded by `MEAS-D_draft.md` (HQ approved MEAS-D as a new W3-SAMP lemma)
+
+The final statement, proof, Mathlib names and clause list are in `/home/fb31/BVS-wt/THEORY-DEPT/.rc_tmp/cards/MEAS-D_draft.md`. Both checks listed at the end of this note are closed there (§0). The earlier sketch below is kept only as history.
+
+**Line for the consultant, to put in the T9 card:** "MEAS-D (new W3-SAMP lemma, proved, no premise added): on valid inputs and under EX-A, the potential calibration record, the four potential island records, the final-run ledger and Z are Borel functions of (data, streams); so every joint-law clause of W3-SAMP, PoolZ's 'Consequently' clause and DIST-C's P⊗ clauses are well posed for the potential pair (𝒜°, 𝓒°). It claims nothing about the actual 𝒜, 𝒪 or the guard. AGREE or OBJECT?"
+
+## F2: earlier sketch of the measurability lemma (history)
 
 **Result of the feasibility check: the proof is short and standard.** It is an assembly of two recorded code-reading lemmas plus continuity of the closed-form scores. There is no supremum over an uncountable set and no non-Borel tie rule: every tie rule in the code is a fixed finite chain of comparisons (score, then size, then lexicographic order).
 
