@@ -128,16 +128,7 @@ v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24), ls0 = 
       fit$global_certified <- e$global_certified; fit$local_certified <- e$local_certified
       fit$estimates_available <- TRUE
     } else { fit$message <- e$message; fit$hpm_incomplete <- TRUE }
-    fit <- finish(fit)
-    if (identical(e$status, "exact")) {
-      # list-renormalised PIP fields (SPEC_LIST_PIP.md §4, exact branch; Theory-confirmed via HQ 11-17): strictly LAST, after finish()
-      # (peak RSS, clock, runtime guard) and every legacy field. pip_list = pip_primary, mpm_list = mpm (both exact); log_Z_list from the
-      # enumeration's returned store (e$top, here, not fit$top_store) by the same formula; list_size / list_full describe that store
-      lf <- v3_list_fields(e$top, ctx$orig, names(e$pip))
-      fit <- v3_add_list_fields(fit, c(list(pip_list = fit$pip_primary, mpm_list = fit$mpm), lf[c("log_Z_list", "list_size", "list_full")],
-                                       list(pip_list_source = "exact", pip_list_flag = lf$pip_list_flag)))
-    }
-    return(fit)
+    return(v3_exact_list_last(finish(fit), e, ctx))   # + the list fields, strictly last (v3_run.R)
   }
   t0 <- proc.time()[["elapsed"]]; setup <- v3_setup(ctx)
   if (inherits(setup, "v3_setup_failed")) {
@@ -180,7 +171,7 @@ v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24), ls0 = 
   for (nm in names(fr)) fit[[nm]] <- fr[[nm]]
   fit$flags$cut_group <- fit$cut_group
   fit <- finish(fit)
-  # list-renormalised PIP fields (SPEC_LIST_PIP.md): strictly LAST, after finish() has sampled peak_memory_kb, the clock and the
-  # runtime guard, so the new allocation cannot leak into a legacy field (review PR68 MAJOR-2)
+  # list-renormalised PIP fields (SPEC_LIST_PIP.md): strictly LAST, after finish() has sampled peak_memory_kb, the clock and the runtime
+  # guard, so the new allocation cannot leak into a legacy field (review PR68 MAJOR-2)
   v3_add_list_fields(fit, v3_list_fields(fit$top_store, ctx$orig, names(fit$pip_primary)))
 }
