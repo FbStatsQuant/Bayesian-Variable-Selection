@@ -113,3 +113,4 @@ the new text, and the bridges it needs. The manager passes it to HQ for W3-READE
 - **Sol model (owner 11-17 night; POLICIES §5 00d90758; supersedes D122):** default `gpt-6.1-sol` (codex, high) for all Sol reviews; `gpt-6.2-sol` only in the SOL62 A/B. The model id goes in each review header.
 - **No attested verdicts (HQ 11-17):** never write a carrier or verdict that contradicts the seat's own file. If a second seat is missing, run a real continuation seat (HQ GO).
 - **Round labels:** council round labels must be `R<digits>` (manifest.py VERDICT grammar). Never use suffixes such as R3S.
+- **Recorder pushes (HQ 11-17):** prepush.sh in every recorder clone requires LAND=yes, set only on an explicit GO. Commits use the repo's normal author identity. An accidental land is fixed forward (note + CITATION-ONLY if needed), never by force-push.
