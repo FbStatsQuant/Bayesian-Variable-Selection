@@ -1,0 +1,2 @@
+bind: OK, 1 review(s) give a PASS verdict (>= 8.0) on MANIFEST 64a3ec05e9dbb4e0ed609f5d15d6e14198c42a14ef3a553a36c03756ed6c1890
+council cell: R4; MANIFEST 64a3ec05e9dbb4e0ed609f5d15d6e14198c42a14ef3a553a36c03756ed6c1890; opus=9.6 PASS(reviews/R4_council_opus.md)

@@ -1,0 +1,7 @@
+id	file[:lines]	uses (ids)	sha	checked_sha	checked_by	state
+STMT-C1	STATEMENT.md:§2	LIST-K	5dc11132cf4d599f	5dc11132cf4d599f	LC1 (a91eb7cb) + LC1R (113c351e) + council R1 (952d9840) + diff round R2 (MANIFEST 7431d66d = checked_sha)	OK
+STMT-C2	STATEMENT.md:§3	LIST-CODE	5dc11132cf4d599f	5dc11132cf4d599f	LC1 (a91eb7cb) + LC1R (113c351e) + council R1 (952d9840) + diff round R2 (MANIFEST 7431d66d = checked_sha)	OK
+STMT-C3	STATEMENT.md:§4	LIST-R	5dc11132cf4d599f	5dc11132cf4d599f	LC1 (a91eb7cb) + LC1R (113c351e) + council R1 (952d9840) + diff round R2 (MANIFEST 7431d66d = checked_sha)	OK
+LIST-K	lemmas/L1_listK.md	-	5c4c081b6e318773	5c4c081b6e318773	LC1 (a91eb7cb) + LC1R (113c351e) + council R1 (952d9840) + diff round R2 (MANIFEST 7431d66d = checked_sha)	OK
+LIST-CODE	lemmas/L2_listCODE.md	W3-SAMP:CC@1.1.2	b023cafbf726d379	b023cafbf726d379	LC1 (a91eb7cb) + LC1R (113c351e) + council R1 (952d9840) + diff round R2 (MANIFEST 7431d66d = checked_sha)	OK
+LIST-R	lemmas/L3_listR.md	LIST-K;LIST-CODE;W3-RM2-R:RM2-R-plus@1.0.1;W3-RM2-R:RM0-plus@1.0.1;W3-RM2-R:DLV-0@1.0.1;W2-APP:POST@1.0.7	71642c061447ba57	71642c061447ba57	LC1 (a91eb7cb) + LC1R (113c351e) + council R1 (952d9840) + R2 (7431d66d) + targeted re-check R3 (MANIFEST 35a027be = checked_sha; opus 9.4 PASS)	OK
