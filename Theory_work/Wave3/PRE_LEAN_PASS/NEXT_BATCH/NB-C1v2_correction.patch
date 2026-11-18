@@ -1,0 +1,14 @@
+# NB-C1v2 (T9 addendum, rider 4, theorem-side sentence; supersedes NB-C1: no clock clause): Theory_work/Wave3/W3-SAMP/STATEMENT.md:36, appended after MEAS-D's pointer sentence (premises span of the W3-SAMP claims; wording). STACKED on MEAS-D/MEAS-D_stage.patch; lands WITH or AFTER MEAS-D (no row cites MEAS-D before its seats pass). Line count unchanged.
+diff --git a/Theory_work/Wave3/W3-SAMP/STATEMENT.md b/Theory_work/Wave3/W3-SAMP/STATEMENT.md
+index 95351f2b..19dfad9b 100644
+--- a/Theory_work/Wave3/W3-SAMP/STATEMENT.md
++++ b/Theory_work/Wave3/W3-SAMP/STATEMENT.md
+@@ -33,7 +33,7 @@ R′ = 4), and "given 𝓒 on 𝒜" means E[1_𝒜 Y | 𝓒] = 1_𝒜·(right si
+ **joint data/algorithm law** along n → ∞ and are always intersected with 𝒜 (potential quantities) or with
+ {completed} ⊆ 𝒜 (reported outputs); a conditional finite-sample bound with a random right side ρ is integrated as
+ E[min(1, ρ)]. No claim is conditional on 𝒜 or on completion, and P(𝒜) → 1 is neither assumed nor claimed. Under the joint law the
+-final streams 10–13 are idealised as independent of the data as well as of streams 0–9 (H-U/SI; C1 Opus #7). Joint measurability of the potential records in the data, which this paragraph uses: Lemma MEAS-D (§4, `lemmas/MEAS_D.md`).
++final streams 10–13 are idealised as independent of the data as well as of streams 0–9 (H-U/SI; C1 Opus #7). Joint measurability of the potential records in the data, which this paragraph uses: Lemma MEAS-D (§4, `lemmas/MEAS_D.md`). By erratum E1 (`Theory_work/Wave3/ERRATA_W3-SAMP.md`), 𝒜 and 𝓒 are read throughout as the potential pair (𝒜°, 𝓒°) of `W3-AUDIT-A:GW`; on completed runs the actual calibration record equals 𝓒° (GW-iii), and statements about actual runs are obtained through 𝒪 ∩ A ⊆ 𝒪° ∩ A° (GW-iv, `W3-AUDIT-A:CAL-C`).
+ 
+ **The method as coded.** Production core on main = 4676af6, `Scripts/SMC_BVS/core/`; code facts in
+ `lemmas/CC_code_check.md` (CC1–CC7). Calibration record 𝓒, success event 𝒜 ∈ σ(𝓒) — in code terms 𝒜 = {SMC branch and `v3_calibrate` returns status

@@ -1,0 +1,11 @@
+# NB-C6err (T9 addendum, rider 4, changelog under E1): Theory_work/Wave3/ERRATA_W3-SAMP.md, a paragraph appended at the end (under E1, the file's only section; the errata file is outside every council manifest). Describes NB-C1v2, NB-C1r, NB-C2, NB-C3, NB-C4, NB-C4r.
+diff --git a/Theory_work/Wave3/ERRATA_W3-SAMP.md b/Theory_work/Wave3/ERRATA_W3-SAMP.md
+index e17a5895..b6786664 100644
+--- a/Theory_work/Wave3/ERRATA_W3-SAMP.md
++++ b/Theory_work/Wave3/ERRATA_W3-SAMP.md
+@@ -7,3 +7,5 @@
+ Why: the proofs of `W3-SAMP:D` and `:MR` (and so LT#, C, W3-READER:R4, W3-DIST DIST-C/Cor-C) hold at the pin for the potential pair (𝒜°, 𝓒°) of `W3-AUDIT-A:GW` / `:CAL-C` (`W3-AUDIT-AW:FRZ` (FRZ-c): the identities hold for (𝒜°, 𝓒°); for the actual pair (𝒜, 𝓒) only T5's transfer rules apply, `Theory_work/Wave3/W3-AUDIT/track_A/T5_CAL/STATEMENT.md:45-54`: upper bounds of the forms P(𝒪 ∩ A) ≤ P(𝒪° ∩ A°) and P(𝒜 ∩ A°) ≤ P(𝒜° ∩ A°) transfer; conditional identities given the actual 𝓒 do not). `W3-SAMP/STATEMENT.md` §0 already states the claims 'for the potential run'; this erratum fixes the reading the proofs use. EQUAL in substance. First flagged 11-16 (T1 CHECK, 'F flag for HQ'; recording package §4 of track A_W).
+ 
+ Evidence: `Theory_work/Wave3/W3-AUDIT/track_A_W/CHECKPOINT_2_RECORDING_PACKAGE.md` §4 (Sol WSL1 finding C, consumer scope); HQ API blind audit auditW (Fable 5.2, two samples): 18/18 NO-FINDING, main commit 47639f0e, Theory_work/Wave3/API_AUDIT/auditW_results/ (README.md, auditW-s1.md, auditW-s2.md). Registry notes on `W3-SAMP:D`, `W3-SAMP:MR`.
++
++Applied to text 2026-11-18 (pre-Lean pass T9, CORRECTION-ONLY): `W3-SAMP/STATEMENT.md:36` now states the potential-pair reading, with a remark on actual runs after §4; `W3-READER/lemmas/R4_printed_outputs.md:17-18`, `W3-READER/STATEMENT.md:15-16` and `READER_VERSIONS.md:1301-1302, 1322` aligned. E1's substance is unchanged.

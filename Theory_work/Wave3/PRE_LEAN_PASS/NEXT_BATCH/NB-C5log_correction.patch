@@ -1,0 +1,14 @@
+# NB-C5log (T9 addendum, rider 4, changelog): READER_VERSIONS.md, Theorem 10 update log (thm10): the entry is appended to the END of the last existing bullet (FRZ-B requote, line 1387) so that §11's line numbers stay fixed. Prose; no registry span. Depends on NB-C4 and NB-C4r being applied (it describes them); order-independent in lines.
+diff --git a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+index b8f3015d..54ce6b5b 100644
+--- a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
++++ b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+@@ -1384,7 +1384,7 @@ N1 premises remain "PROVED under the named premises", cross-family checked and c
+ - R1 2026-11-16: [R1-F3] moderate-$n$ parenthesis relabelled an observation (WEAKER).
+ - R2-ED 2026-11-16: post-council editorial items [R2-E2] exact rate ratio, [R2-L1] AR/block pointer as in card row 3.6 (EQUAL).
+ - FRZ-B 2026-11-16: [B2] GUARD-W wording (Theorem 10 and row 3.5 remark); [R3-O1] comma splice fixed (EQUAL).
+-- FRZ-B 2026-11-16: requote at main 2676e71f [REG-2676] (relabel D97): `W3-SAMP:C@1.1.5` and `W3-READER:R4@1.0.1` conditional on W1-N1:B, W1-N1:F (these are now registry conditions of row 3.6; the earlier "no open registry condition" is superseded); `TR@2.1.5`, PoolZ@1.0.1; EQUAL (statuses only).
++- FRZ-B 2026-11-16: requote at main 2676e71f [REG-2676] (relabel D97): `W3-SAMP:C@1.1.5` and `W3-READER:R4@1.0.1` conditional on W1-N1:B, W1-N1:F (these are now registry conditions of row 3.6; the earlier "no open registry condition" is superseded); `TR@2.1.5`, PoolZ@1.0.1; EQUAL (statuses only). PL-T9 2026-11-18: [E1-TEXT] 𝒜 stated "in the run taken as if uninterrupted" in Theorem 10's preamble; remark on the time guard added to the row 3.5 remark. Aligns the text with `W3-SAMP` erratum E1 (HQ D111; `Theory_work/Wave3/ERRATA_W3-SAMP.md`) and `W3-AUDIT-A:GW`, `:CAL-C`. Source: pre-Lean pass T9 (Astra T9-2, Sol T9-1, walk H2). CORRECTION-ONLY (EQUAL).
+ <!-- ROW thm10 END -->
+ 
+ ---

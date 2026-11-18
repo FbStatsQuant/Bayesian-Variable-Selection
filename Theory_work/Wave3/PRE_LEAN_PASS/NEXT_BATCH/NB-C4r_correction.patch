@@ -1,0 +1,14 @@
+# NB-C4r (T9 addendum, rider 4, reader remark): READER_VERSIONS.md:1322 (row 3.5 remark, end of line; no line added; prose, no registry span). Remark on the time guard: outer probabilities, bounded by the uninterrupted-run event.
+diff --git a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+index b8f3015d..5e7c4eb3 100644
+--- a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
++++ b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+@@ -1319,7 +1319,7 @@ $\mathcal A$ or with completion, not conditional on them. The guarantees describ
+ 
+ *Remark (row 3.5: the pooled evidence is unbiased).* Given the calibration, on $\mathcal A$, $E[\hat Z\mid\text{calibration}]=Z$
+ for every design and data set; no statistical condition is needed (claim `W3-READER:PoolZ@1.0.2`, `STATEMENT.md`, from the
+-per-island identity of the unbiasedness theorem by linearity). The guarantees describe the run as if uninterrupted; a run stopped by its time guard reports status `resource_limit` and returns no estimates; anything else it returns is flagged incomplete and is not covered (`v3_fit.R:84-85`; `v3_run.R:110-113, 142-147`) [B2]. [GUARD-W]
++per-island identity of the unbiasedness theorem by linearity). The guarantees describe the run as if uninterrupted; a run stopped by its time guard reports status `resource_limit` and returns no estimates; anything else it returns is flagged incomplete and is not covered (`v3_fit.R:84-85`; `v3_run.R:110-113, 142-147`) [B2]. [GUARD-W] *Remark (the time guard).* The guard's clock is not part of the probability model. A completed run coincides with the uninterrupted one, so each probability above that concerns the actual run is read as an outer probability and is bounded by the probability of the same event for the uninterrupted run.
+ 
+ ### Why each assumption
+ - (A2)–(A3) give posterior concentration (Theorem 2) and the start's small-set floor.
