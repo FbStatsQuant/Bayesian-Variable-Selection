@@ -5,8 +5,7 @@ v0.9, lines 660-812). Unchanged by this ticket: assumptions (A1)–(A6), the dis
 
 **What changes.** One corollary is added under Theorem 6 (proposal; HQ decides placement: under Theorem 6, as a new
 card row next to 3.1, or as a sentence of row 3.6 "Outside (A5) …"). No hypothesis is added. It needs the method
-companion of D105 (the printed list fields of SPEC_LIST_PIP); until that commit exists the text below speaks of
-"quantities computed from the returned list".
+companion of D105 (the printed list fields of SPEC_LIST_PIP); the method companion exists at `method-v3.1.1-listpip` (7100bb3b).
 
 **New text (reader form; no internal ids).**
 

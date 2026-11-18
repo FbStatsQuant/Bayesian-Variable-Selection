@@ -33,3 +33,5 @@ Scripts/SMC_BVS/core/v3_preprocess.R
 Scripts/SMC_BVS/core/v3_setup.R
 Scripts/SMC_BVS/core/v3_fit.R
 Scripts/SMC_BVS/core/v3_run.R
+# IMPL-LIST discharge reading (R2 G4-1): the new status text of REPORT and CARD rests on it (manifest.py skips reviews/ in ticket dirs, so it is pinned as an external input)
+Theory_work/Wave3/W3-D5P/reviews/IMPL_LIST_codeprint.md

@@ -26,7 +26,7 @@ the design's p, and POST, stated for the design's p, applies to ε_n.
 `STATEMENT.md:144-147`), and under Setting R the input is valid and non-degenerate with probability one (RM0-plus (c⁺),
 RM2R `STATEMENT.md:138-143`, last sentence).
 (0.5) *From the pinned core to the method with the list fields* [R1-opus-1]. L2, RM0-plus and DLV-0 are statements
-about the core of record (4676af6); LIST-R is about the method after the pending commit that adds the fields. By
+about the core of record (4676af6); LIST-R is about the method with the fields, `method-v3.1.1-listpip` (7100bb3b; IMPL-LIST discharged there, `reviews/IMPL_LIST_codeprint.md` §5). By
 IMPL-LIST (the commit computes the fields as SPEC §2 and §4 prescribe, from the returned list and values of the same
 run, and changes no other field and no other state; SPEC §7 A.1–A.2) — and the returned list exists only after the
 last runtime-guard consultation (`v3_fit.R:121-122` on the exact branch, after `v3_final_run` at `v3_fit.R:162` on the
@@ -34,15 +34,13 @@ sampler branch), after which `finish` (`v3_fit.R:79-87`) does not branch on the 
 accounting are unaffected [R2-E-2] — on every input and every
 realisation of the run's uniforms the post-commit fit and the pinned fit execute the same computation up to the new
 fields, and the new computation can end the fit with an error only through the three `stop()` rows of `v3_list_fields`
-(`v3_run.R:251, 253, 263`; these three lines are byte-identical at the core tree 61b0a582 and at `method-v3.1.1-listpip`,
-7100bb3b), none of which can fire on an output run [NA-b1]: (i) *count mismatch* (`:251`, "top store has m models and
+(`v3_run.R:251, 253, 263`; at `method-v3.1.1-listpip`, 7100bb3b, whose core tree is 61b0a582; `v3_run.R` is unchanged from e9bac478), none of which can fire on an output run [NA-b1]: (i) *count mismatch* (`:251`, "top store has m models and
 … scores"): the store is serialised by `store_to_list` (`cpp/v3_core.cpp:358-362`, called at `:366` for the sampler store
 and at `:565` for the exact store), which fills the model list and the value vector in one pass over the same set, so
 length(F) = m by construction; (ii) *duplicate model* (`:253`): the sampler store `top_store` and the exact store 𝒯^ex
-hold distinct models (L2 (iii), (iv)); (iii) *column outside the retained set* (`:263`): every stored model is
+hold distinct models (L2 (iii), (iv)), and `to_orig` is injective (`D.orig` strictly increasing, `v3_setup.R:8`), so their comma-joined keys are distinct; (iii) *column outside the retained set* (`:263`): every stored model is
 serialised by `to_orig` (`cpp/v3_core.cpp:38-42`) as the original indices `D.orig[S[i]]` of retained columns, and the
-`orig` passed to `v3_list_fields` is that same vector (`ctx$orig`, built from `pre$kept` at `v3_fit.R:118` and passed at
-`:176`; `v3_run.R:160, 220`), so `lut[orig] <- seq_len(p)` assigns a position in 1..p to every stored column. Hence the post-commit fit returns if and only if the pinned fit returns, and 𝒪, `status`, `hpm`, `top_store`,
+`orig` passed to `v3_list_fields` is that same vector (`ctx$orig`, built from `pre$kept` at `v3_fit.R:118`; passed at `:176` on the sampler branch and, on the exact branch, at `v3_run.R:276` through `v3_exact_list_last` (`v3_fit.R:131`); `v3_run.R:160, 220` is the same vector in a standalone `v3_final_run`, which `v3_fit` calls with `list_fields = FALSE`, `v3_fit.R:162`), so `lut[orig] <- seq_len(p)` assigns a position in 1..p to every stored column. No other line of `v3_list_fields`, `v3_add_list_fields` or `v3_exact_list_last` (`v3_run.R:245-279`) can raise an error on an output run: `integer(max(orig))` needs p ≥ 1, which holds since p = 0 returns `no_predictors` before branching (`v3_preprocess.R:114`, `v3_fit.R:99-102`); `names(pip) <- pip_names` (and `setNames` in `res`) needs length(`pip_names`) = p, which holds since `pip_names` is `names(fit$pip_primary)`, of length p by `v3_run.R:161-162` (sampler), or `names(e$pip)`, of length p by `cpp/v3_core.cpp:558` and `v3_exact.R:9` (exact); the remaining operations (`vapply` of `paste`, `exp`, `log`, indexing within 1..m) raise no error. Hence the post-commit fit returns if and only if the pinned fit returns, and 𝒪, `status`, `hpm`, `top_store`,
 `fit$exact` (with its store) and every other existing field are those of core 4676af6. So L2, RM0-plus (b⁺) and DLV-0
 apply to the method with the list fields, and the new fields are SPEC's functions of the pinned outputs.
 The reader assumptions (A1)–(A6) of Theorem 6 imply these hypotheses through READER §6 bridges B6.1–B6.4 (this file
@@ -50,8 +48,8 @@ does not re-prove them; the corollary is stated with "the hypotheses of RM2-R-pl
 
 ## Step 0′ — (o): the list fields are never NA on an output run [NA-2, NA-C1]
 Fix any data set and an admissible run on it that returns output [NA-C2]. By (0.5)
-its existing fields are those of the pinned core. SPEC §4 makes a field NA (or absent) only in these rows: a status other
-than `completed` / `exact` (absent; not an output run); an empty list; a count mismatch, a duplicate model or a column outside the retained set (the three `stop()` rows, errors; excluded by (0.5) [NA-b1]); a
+its existing fields are those of the pinned core. SPEC §4, as implemented by `v3_list_fields` and `v3_exact_list_last` (`v3_run.R:245-279`), makes a field NA (or absent) or stops only in these rows: a status other
+than `completed` / `exact` (absent; not an output run); an empty list; a duplicate model (SPEC §4) and the implementation's two guards, a count mismatch and a column outside the retained set (the three `stop()` rows, errors; excluded by (0.5) [NA-b1]); a
 NaN or +Inf score, or (HQ's confirmed reading) all scores −Inf; and, in the reading of STATEMENT §1 [NA-1], no exact-branch
 row any more (`log_Z_list` is computed from `fit$exact$top`). On the sampler branch the list 𝒯 is nonempty — it contains
 the hpm_better-maximum of the nonempty offered set 𝓜^run (L2 A4, (iii)) — and consists of distinct models with values

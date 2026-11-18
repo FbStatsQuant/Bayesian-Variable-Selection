@@ -1,0 +1,39 @@
+# NA_DROP v1.3 after Opus R2 (8.8 PASS on 8fb12543): its WORDING findings F-1, C-1, C-2, S-1, S-2, E-1, E-2, E-3 and the pin G4-1 applied as written; grepped in the REAL staged files (HQ RIDER_RULES)
+OK   ticket/.../W3-D5P/REPORT.md:66  F-1 REPORT conclusion level first
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:41  C-1a to_orig injective
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:43  C-1b no other error line
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:43  C-2 call-site pointers
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:51  S-1a SPEC §4 as implemented
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:52  S-1b duplicate (SPEC §4) and two guards
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:29  S-2 method with the fields at the tag
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:37  E-1 core tree is 61b0a582
+OK   ticket/.../W3-D5P/READER_DELTA.md:8  E-2 READER_DELTA companion exists
+OK   ticket/.../W3-D5P/CARD.md:10  E-3 CARD under separate review
+OK   lemmas/L3_listR.md:0  ABSENT S-2: 'after the pending commit'
+OK   lemmas/L3_listR.md:0  ABSENT E-1: 'byte-identical at the core tree'
+OK   CARD.md:0  ABSENT E-3: 'is reviewed separately'
+OK   REPORT.md:0  ABSENT F-1: old order
+OK   MANIFEST_NADROP13_EXT.txt:37  G4-1 IMPL_LIST_codeprint.md pinned
+OK   MANIFEST_NADROP13.txt  G4-1 sha256 72a2d781… as the seat gave
+
+file sha256 (first 16) and line counts:
+STATEMENT.md: c968e0715f97303f lines=168
+lemmas/L3_listR.md: aeead9cb186a5ed3 lines=127
+REPORT.md: 7fc48c12f3d3625b lines=72
+CARD.md: 73beff4559e74d86 lines=23
+READER_DELTA.md: 88e3103705dc018d lines=44
+RESULT: ALL CLAIMED EDITS PRESENT
+
+Re-check of the Sol-5 (b) edits b-1..b-4 in the final v1.3 files (line numbers as of MANIFEST_NADROP13 = 91805b68):
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:36  b-1 (0.5) lists the three stop() rows
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:40  b-1 count mismatch reason
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:40  b-1 duplicate row (:253)
+OK   ticket/.../W3-D5P/lemmas/L3_listR.md:41  b-1 out-of-set column (:263)
+OK   ticket/.../W3-D5P/CARD.md:10  b-2 CARD row 3.1L p>=2
+OK   ticket/.../W3-D5P/CARD.md:13  b-2 CARD Option B p>=2
+OK   ticket/.../W3-D5P/READER_DELTA.md:29  b-2 READER_DELTA p>=2
+OK   ticket/.../W3-D5P/CARD.md:10  b-3 CARD IMPL-LIST discharged
+OK   ticket/.../W3-D5P/REPORT.md:19,64,70  b-3 REPORT status (table row + REGISTRY)
+OK   ticket/.../W3-D5P/REPORT.md:66  b-4 REPORT conclusion (o) own clause
+OK   ticket/.../W3-D5P/STATEMENT.md:168  changelog v1.3
+RESULT (b-1..b-4 re-check): ALL PRESENT
