@@ -1,0 +1,21 @@
+# MEASD7: R6's findings applied as written (F8, C1, E30, E31, E32); claimed edits grepped in the REAL files (HQ RIDER_RULES)
+OK   ticket/.../W3-SAMP/STATEMENT.md:190  F8 qualifier, statement (claim span 190-192)
+OK   ticket/.../W3-SAMP/lemmas/MEAS_D.md:24  F8 qualifier, MEAS_D §1 copy
+OK   ticket/.../W3-SAMP/REPORT.md:203  F8 qualifier, REGISTRY conclusion
+OK   ticket/.../W3-SAMP/lemmas/MEAS_D.md:32  C1 Step 2 'continuous' qualifier
+OK   ticket/.../W3-SAMP/lemmas/MEAS_D.md:50  E30 exact weight expectations
+OK   ticket/.../W3-SAMP/lemmas/MEAS_D.md:50  E31 pi Borel by Step 2
+OK   H_CLAUSE_INVENTORY.md:21  E32 o_j row in the inventory
+OK   H_CLAUSE_INVENTORY.md:27  E32 Result: o_j by MEAS-D Step 2
+OK   H_CLAUSE_INVENTORY.md:27  E32 list complete with the o_j row
+OK   STATEMENT.md:0  ABSENT: stated "given 𝓒 on 𝒜" holds
+OK   lemmas/MEAS_D.md:0  ABSENT: stated "given 𝓒 on 𝒜" holds
+OK   REPORT.md:0  ABSENT: about island r holds conditionally
+OK   lemmas/MEAS_D.md:0  ABSENT: 𝓒° is Borel by Step 3, and the S_{rqi}
+OK   lemmas/MEAS_D.md:0  ABSENT: in its localised form, `MR_identities.md:27`
+
+file sha256 (first 16) and line counts:
+STATEMENT.md: 3530caf75a777ce9 lines=194
+REPORT.md: d0e9f04e07beac80 lines=206
+lemmas/MEAS_D.md: ecd3bce9cd542af3 lines=96
+RESULT: ALL CLAIMED EDITS PRESENT

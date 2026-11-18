@@ -1,6 +1,6 @@
 # NB-C1v2 (T9 addendum, rider 4, theorem-side sentence; supersedes NB-C1: no clock clause): Theory_work/Wave3/W3-SAMP/STATEMENT.md:36, appended after MEAS-D's pointer sentence (premises span of the W3-SAMP claims; wording). FOLDED INTO MEASD5: the text is already in MEAS-D/MEAS-D_stage.patch (do NOT apply both). Kept for the PURE audit; stacked on MEAS-D/MEAS-D_stage_wo_NB-C1.patch (MEASD5 without the NB-C1 texts). Line count unchanged.
 diff --git a/Theory_work/Wave3/W3-SAMP/STATEMENT.md b/Theory_work/Wave3/W3-SAMP/STATEMENT.md
-index 4013a2a9..1b179c86 100644
+index dc1116bb..990d62d9 100644
 --- a/Theory_work/Wave3/W3-SAMP/STATEMENT.md
 +++ b/Theory_work/Wave3/W3-SAMP/STATEMENT.md
 @@ -33,7 +33,7 @@ R′ = 4), and "given 𝓒 on 𝒜" means E[1_𝒜 Y | 𝓒] = 1_𝒜·(right si
