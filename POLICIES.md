@@ -96,7 +96,7 @@ agent they start.
   new SMC agent. Its budget resets Monday 16:00 CT.
 - **Claude Third:** **retired for SMC** (owner, 11-16). No SMC agent starts or resumes on it.
 - **Claude Work:** the Writing Department and its Fable writing advisor (owner, 11-16); otherwise as HQ says.
-- **Codex** (Sol `gpt-6.2-sol` (since 11-17, owner; was gpt-6.1-sol), Astra `gpt-6-astra`, high): one shared Codex Pro account, also used by the owner's BNP
+- **Codex** (Sol `gpt-6.1-sol` (owner 11-17 evening: keep 6.1 as default until HQ's 6.1-vs-6.2 recommendation; 6.2 only in the SOL62 A/B), Astra `gpt-6-astra`, high): one shared Codex Pro account, also used by the owner's BNP
   Lean project. NORMAL mode until HQ switches it.
 - **NOTS:** Owls now has its own login (`ssh nots`, dedicated key `~/.ssh/id_ed25519_nots`, comment "owls-bvs-departments";
   revocable by deleting that line from NOTS `~/.ssh/authorized_keys`). Departments run read-only queries

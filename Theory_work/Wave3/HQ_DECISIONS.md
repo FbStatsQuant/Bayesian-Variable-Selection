@@ -763,3 +763,4 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - The Engineering manager thread was switched to CP; all new SMC agents go on CP; no CT.
   - Writing finishes Assignment 5 lightly on CW (≤ 1 helper; moves to CP if CW is limited).
   - Codex sparingly.
+- 2026-11-17 night. **OWNER: keep Sol 6.1 (`gpt-6.1-sol`) as the review default for now** (reverts the 11-17 switch to 6.2). Early data (2 logged reviews: Eng #68, Writing A5 final) favour 6.2 on real findings, with 1 extra false positive, but the sample is too small. 6.2 is used only in the SOL62 A/B (Theory, 3 cases, both models on the same inputs) and in SOL62_QUALITY.md side-by-side logs where a manager already runs one. HQ reports back with more data and a recommendation (which model, and why).
