@@ -29,6 +29,8 @@
 ## OWNER 11-18 (late): PRIORITIES
 - Context: SMC-BVS is the **last chapter of the owner's PhD thesis** (defense next spring).
 - **Next immediate goal: the 1M engine/campaign** (H-12 timeline), run at a lower token cost than the theory: steady pace, lean staffing.
+- **Later (owner idea, 11-18):** large-scale real-data applications of the 1M engine. Not scheduled; it comes up again after the campaign.
+- **Codex: the 6.2 family stays the standard** (owner 11-18: "very smart reviewers, we will def stick to 6.2").
 - **Theory:** finish the in-flight landings and the SUMMARY, then idle. **Lean:** only when the owner brings it back to the table.
 
 ## OWNER 11-18: LEAN PAUSED (binding)
