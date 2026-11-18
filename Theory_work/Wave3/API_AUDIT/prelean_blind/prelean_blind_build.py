@@ -29,6 +29,7 @@ T = "Theory_work/Wave3/"
 MODEL = "claude-fable-5-2"
 MAX_TOKENS = 64000
 N_SAMPLES = 2
+NO_NOTES = "--no-notes" in sys.argv  # rebuild from a main that already holds the corrections: no pending-corrections note
 
 # ---------------------------------------------------------------- redaction
 HARD = ["PROVED", "VERIFIED", "CHECKED", "council", "Council", "MANIFEST", "sol=", "opus=", "astra=", "Status", "STATUS",
@@ -380,7 +381,8 @@ TARGETS["PB-T1"]["pending"] = [TARGETS["PB-T1"]["pending"][0], "W3-PSHARP/lemmas
 TARGETS["PB-T3"]["pending"] = [T31]
 TARGETS["PB-T4"]["pending"] = [T4R4, T4R1, T4N1, T5R3]
 TARGETS["PB-T5"]["pending"] = [T31, T5R3, T5R1, T5R2, T5R4, T5R4R, T4R1]
-TARGETS["PB-T8"]["pending"] = [T81]
+T4N1B = ("W3-READER/READER_VERSIONS.md:824 (Theorem 7, (A1)) [T4-N1]: \"or θ*_min√(n/log n) → ∞\" → \"or θ*_min ≥ σ_*√(M_n log n/n)/φ₀ for a fixed sequence M_n → ∞\"")
+TARGETS["PB-T8"]["pending"] = [T81, T4N1B]
 TARGETS["PB-T9"]["pending"] = [T82, T4R1]
 
 
@@ -411,7 +413,9 @@ def build_target(tid, spec):
         if dropped:
             drops.append((rel, dropped))
     pend = [re.sub(r" \[T\d-[A-Za-z0-9-]+(?:, deferred)?\]", "", x) for x in spec["pending"]]
-    note = ("Known pending corrections (do not re-report):\n" + "\n".join(f"- {p}" for p in pend)) if pend else \
+    if NO_NOTES:
+        pend = []
+    note = "" if NO_NOTES else ("Known pending corrections (do not re-report):\n" + "\n".join(f"- {p}" for p in pend)) if pend else \
         "Known pending corrections (do not re-report): none for this target."
     claims = "\n".join(f"- {c}" for c in spec["claims"])
     user = (f"Target: {spec['title']}.\n\nClaims to audit (the closing lines of your reply must name exactly these ids):\n{claims}\n\n"
