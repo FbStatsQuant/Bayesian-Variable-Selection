@@ -674,3 +674,4 @@
   - b-1 (two more stop rows, v3_run.R:251/:263, in Step (0.5)) = T6 F3, now due. b-2..b-4 are wording. NA_DROP v1.3 + Opus diff seat.
   - c-1..c-3 are CITATION-ONLY outside the claim span: apply, re-freeze as MEASD8 with Opus PURE, carry R6 + R7.
   - Asked HQ: one Sol-5b delta read on the (a)/(b) fixes. SOL62 row logged (F BETTER).
+- 2026-11-18 10:43 CST HQ Sol-5 rulings: (1) the D5P fixes (LIST-CODE (v) NARROW to status exact; p≥2; π(S₀|y) premise) fold into the A re-pin batch. Carrier: NARROW of LIST-CODE (v), no consumer affected (LIST-R uses output runs only). Consultant gets a 1-line FYI with the A batch. (2) Sol-5b YES: one Codex call on the (a) D5P fixes + (b) NA_DROP v1.3 deltas, each bound to its frozen digest; freeze both first. NA_DROP v1.3 Opus diff seat as planned. MEASD8 CITATION-ONLY + PURE OK.

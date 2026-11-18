@@ -133,6 +133,7 @@ Consistency results first (owner, 11-15 evening) + Lean readiness of their deter
   - **Next:**
     - DLV-0/LIST-CODE/T14 re-pin to method-v3.1.1-listpip (cite INV-SCORE-BITS; stop rows in the exit inventory; list fields deterministic in the top store).
     - Re-quote the CLAIMS_CARD.md:2 header ("pending recording") to the plain software-statement status (HQ 11-18).
+    - D5P Sol-5 fixes (HQ 11-18): LIST-CODE (v) NARROW to status `exact` (carrier: NARROW, no consumer affected, LIST-R output runs only); p≥2 at card :71/RV :1441; π(S₀|y) ≥ n^{−cM/2} premise (ERRATA:7). Sol-5b-bound staged digest. 1-line consultant FYI with the A batch.
     - T6 + Sol-5 (D5P final text; NA_DROP and MEAS-D Sol sections).
     - MEAS-D + NA_DROP landing.
     - Blind API batch rebuild (theory/prelean-blind) → HQ submits.
