@@ -1,69 +1,79 @@
 # T9 Fable card (consistency tier): Thm 10 (row 3.6), evidence unbiased (row 3.5), pooling (row 4.1)
 
+Version 2, after HQ's rulings on version 1 (measurability is MEAS-D's job; the 𝒜 identification is CORRECTION-ONLY; integrability is proved, not assumed).
+
 Inputs: Astra (4 points) and blind Sol (3 points), found independently; walks `walks/T9_Thm10.md` (walkB: 1 MINOR, 2 NOTE) and `walks/T9_rest.md` (walkD: 2 MINOR, 2 NOTE), both complete to recorded inputs; MEAS-D as fixed after R1, with Opus R2 (8.7, gates FAIL on F4 and E9–E12). Snapshot: `origin/theory/PRE-LEAN` a8f70d2b, main ad29c22e. **For the consultant: answer AGREE or OBJECT per row.**
 
-**Verdict:** no flaw in the mathematics of any of the three rows; both reviewers' CHECKED lists and both walks confirm every identity, constant and event at fixed data. All seven Codex points concern the passage from fixed data to the joint law, and they reduce to three things, each closed without adding a premise:
-1. joint measurability in the data: **MEAS-D** (proved);
-2. which calibration event 𝒜 is: already recorded as erratum E1; three texts need aligning;
-3. integrability of Z under the joint law: a one-line deterministic bound.
+**Verdict:** no flaw in the mathematics of any of the three rows; both reviewers' CHECKED lists and both walks confirm every identity, constant and event at fixed data. All seven Codex points concern the passage from fixed data to the joint law. They reduce to three things, each closed with no premise added:
+1. joint measurability in the data: **MEAS-D**, with a small widening of its statement (§A);
+2. which calibration event 𝒜 is: already recorded as erratum E1; texts aligned, CORRECTION-ONLY (§B);
+3. integrability of Z under the joint law: a short standard proof, written as Step 6 of MEAS-D (§A).
 
-**Line for the consultant on MEAS-D.** New W3-SAMP lemma, proved, no premise added: under exact arithmetic, on valid inputs, the potential calibration record, the four potential island records, the final-run ledger and Z are Borel functions of (data, streams). So every joint-law clause of W3-SAMP, PoolZ's "Consequently" clause and DIST-C's P⊗ clauses are well posed for the potential pair (𝒜°, 𝓒°). It claims nothing about the actual 𝒜, 𝒪 or the guard. AGREE or OBJECT?
+**Line for the consultant on MEAS-D.** New W3-SAMP lemma, proved, no premise added: under exact arithmetic, on valid inputs, the potential calibration record, the four potential island records, the final-run ledger and Z are Borel functions of (data, streams), and Z is bounded by a constant depending on n only. So every joint-law clause of W3-SAMP, PoolZ's "Consequently" clause and DIST-C's P⊗ clauses are well posed, with finite expectations, for the potential pair (𝒜°, 𝓒°). It claims nothing about the actual 𝒜, 𝒪 or the guard. AGREE or OBJECT?
 
-## (a) Coverage by MEAS-D
+## A. MEAS-D: coverage, and the exact widening
 
-| Reviewer point | Covered by MEAS-D? | What remains |
+| Reviewer point | Covered after R1? | What is added |
 |---|---|---|
-| Astra T9-1, Sol T9-2 (first half): measurability, as the data vary, of the potential calibration record and its success flag, the island records and the evaluated-model sets | **Yes** (Steps 1–4) | Nothing |
-| Same points: each final stream must be independent of the **pair** (data, streams 0–9); two marginal independences would not do | **Not yet written** | One sentence in Step 5 (text A below). It is derived, not assumed. |
-| Astra T9-3, Sol T9-2 (second half): measurable completion flag and reported model; ledger offers from outside the islands; the clock | **Yes for the potential run** (𝒪°, the ledger, Ŝ of P°) | Name the ledger's offers in Step 4 (text B). State once that probabilities of actual-run events are bounded through 𝒪 ∩ A ⊆ 𝒪° ∩ A° (text C). |
-| Astra T9-2, Sol T9-1: 𝒜 identified with the coded calibration returning "ok" | Not a MEAS-D matter | See (c) |
-| Astra T9-4, Sol T9-3: joint integrability of Z | Not a MEAS-D matter | See (b) |
+| Astra T9-1, Sol T9-2 (first half): measurability, as the data vary, of the potential calibration record, its success flag, the island records and the evaluated-model sets | Yes (Steps 1–4). The statement did not name the evaluated-model sets. | Statement: name them (W1). |
+| Same points: each final stream must be independent of the **pair** (data, streams 0–9) | Used in Step 5 but not derived | Statement: say it (W2). Proof: derive it (P1). |
+| Astra T9-3, Sol T9-2 (second half): measurable completion flag and reported model; ledger offers from outside the islands; the clock | Yes for the potential run (𝒪°, ledger, Ŝ of P°) | Proof: name the ledger's offers (P2). Actual runs: the sentence in §B.1. |
+| Astra T9-4, Sol T9-3: joint integrability of 1_{𝒜°}Z | **No** | Statement: W3. Proof: new Step 6 (P3). |
 
-So nothing substantive remains beyond MEAS-D: texts A, B and C are three sentences. For Opus R2, as author I accept F4 and E9–E12 as written by the seat (route list for (C-v) and (TR-d); the `:474` pin; the derived IND-T wording; two registry wordings). A, B and R2's fixes go into one R3 round.
+**Exact replacements, keyed to MEASD2 and MEASD3:** `/home/fb31/BVS-wt/THEORY-DEPT/.rc_tmp/cards/MEAS-D_R3_texts.md`. They are consistent with Opus R2's F4 and E9–E12: no new text names a route for (C-v) or (TR-d), and none cites `v3_core.cpp:475`. In MEASD3 (43e1b07f) the coordinator has already applied F4, E9–E12 and P1, P2 below; **W1, W2, W3 and P3 are still to apply.**
 
-**Text A** (`lemmas/MEAS_D.md`, Step 5, after its first sentence): "Independence from the pair follows from two stated facts: SI holds for each fixed data set, that is, given the data U^{(9+r)} is independent of U^{(0:9)} (`STATEMENT.md:29`); and U^{(9+r)} is independent of the data (`:35-36`). Hence P(U^{(9+r)} ∈ A, U^{(0:9)} ∈ B | data) = P(U^{(9+r)} ∈ A)·P(U^{(0:9)} ∈ B | data)."
+**Widened statement** (`W3-SAMP/STATEMENT.md:190`; replaces the R1-fixed sentence; the three additions are W1, W2, W3):
 
-**Text B** (Step 4, Ledger bullet, append): "Its offers are the islands' evaluations, the block-table models (functions of the data, Step 2), the models inherited from calibration (coordinates of 𝓒°) and the two searches' scans (`W3-SAMP:PC` (iii))."
+> **(MEAS-D) Joint measurability of the potential records.** Fix n, p_raw and the options, and assume EX-A. On the Borel set of valid inputs, the following objects of the potential fit P° (`W3-AUDIT-A:GW`) are Borel functions of (X^r, y^r, U^{(0)}, …, U^{(13)}), the seed entering only as a label: the calibration record 𝓒° and the event 𝒜°; the records of the four final islands, **with the sets 𝓜_r of models they evaluate** [W1]; the final local-search and LS0 archives and the final-run ledger, hence 𝓜, 𝒯, Ŝ and every statistical field of P°'s output; the output event 𝒪°; and Z, π, π₀. **Moreover 0 < Z ≤ κ_n for every valid data set, with κ_n depending on n only, so 1_{𝒜°}Z and 1_{𝒜°}Ẑ are integrable under every law of the data** [W3]. Consequently, under the joint law of §0 (H-U/SI, **:29 and** :35-36, **which together make each final stream independent of the pair (data, streams 0–9)** [W2]), for each island r every identity or bound of §2 about island r stated "given 𝓒 on 𝒜" holds, for the potential pair (𝒜°, 𝓒°), conditionally on (data, 𝓒°); so do the statements obtained from these by finite sums, monotone comparison and union bounds over r, which is all that the joint-law clauses of §2 use; and where a clause assumes IND-T, the same holds for functions of the four final streams jointly. Nothing is claimed about the actual 𝒜, 𝒪 or the guard, which enter only through the pathwise inclusions of `W3-AUDIT-A:GW` (GW-iii), (GW-iv). (Proof: `lemmas/MEAS_D.md`.)
 
-**Text C**: the sentence in (c)1 below.
+**Proof additions** (`lemmas/MEAS_D.md`):
 
-## (b) Integrability (Astra T9-4, Sol T9-3)
+- **P1** (Step 5, after its first sentence): "Independence from the pair follows from two stated facts: SI holds for each fixed data set, that is, given the data U^{(9+r)} is independent of U^{(0:9)} (`STATEMENT.md:29`); and U^{(9+r)} is independent of the data (`:35-36`). Hence P(U^{(9+r)} ∈ A, U^{(0:9)} ∈ B | data) = P(U^{(9+r)} ∈ A)·P(U^{(0:9)} ∈ B | data)."
+- **P2** (Step 4, Ledger bullet, append; already in MEASD3 without the parenthesis "(the sets 𝓜_r)", which W1 adds): "Its offers are the islands' evaluations (the sets 𝓜_r), the block-table models (functions of the data, Step 2), the models inherited from calibration (coordinates of 𝓒°) and the two searches' scans (`W3-SAMP:PC` (iii))."
+- **P3** (new step, before "What the proof does not use"; the ∎ moves here):
 
-**Genuine, and closed by a short standard proof; it does not need HQ.** The reviewers are right that Lemma F's bound is data-dependent. But Z itself is bounded by a constant depending on n only:
-- the coded marginal likelihood is m(S) = c_n·D_S^{−1/2}(2b₀ + Q_S)^{−ν} (`W3-T03ACC/STATEMENT.md:30-31`);
-- D_S = Π_i((n+1)λ_i + 1)/(λ_i + 1) ≥ 1 and Q_S ≥ 0, so m(S) ≤ κ_n := c_n·(2b₀)^{−ν};
-- the prior weights sum to 1, so Z = Σ_Ω ϖ(S)m(S) ≤ κ_n for every data set.
+> **Step 6 (Z is bounded; integrability).** The coded marginal likelihood is m(S) = C_n·D_S^{−1/2}(2b₀ + Q_S)^{−ν}, with C_n = (2b₀)^{a₀}Γ(ν)/(π^{n/2}Γ(a₀)) depending on n only (`cpp/v3_score.h:59, 223`; `W3-T03ACC/STATEMENT.md:29-30`). Here D_S = det((n+1)G_S + I)/det(G_S + I) = Π_i((n+1)λ_i + 1)/(λ_i + 1) ≥ 1, the λ_i ≥ 0 being the eigenvalues of G_S; and Q_S ≥ 0, because Q_S is the minimum of a sum of two nonnegative quadratic forms (Lemma V, `W3-PSHARP/lemmas/S_one_step.md:7-15`). Hence m(S) ≤ κ_n := C_n(2b₀)^{−ν} for every S and every valid data set. The prior weights sum to 1 over Ω, so 0 < Z ≤ κ_n. Thus 1_{𝒜°}Z is bounded, hence integrable under every law of the data. For the estimates: Ẑ_r ≥ 0 is Borel (Step 4), and Step 5 in its [0, ∞] form with (MR-b) at h ≡ 1 gives E[1_{𝒜°}Ẑ_r | data, 𝓒°] = 1_{𝒜°}Z; so E[1_{𝒜°}Ẑ_r] = E[1_{𝒜°}Z] ≤ κ_n. Each 1_{𝒜°}Ẑ_r, and their mean 1_{𝒜°}Ẑ, is therefore integrable, and the real-valued conditional expectations of §2 and of PoolZ are defined. ∎
 
-Kind: proof completion. Span: PoolZ's proof lies inside its registry span (`W3-READER/STATEMENT.md:12-39`); the claim sentence does not change. **Exact fix**, inserted in the proof before "taking expectations": "(Both sides are finite. For every data set m(S) ≤ κ_n := c_n(2b₀)^{−ν}, because D_S ≥ 1 and Q_S ≥ 0, so Z ≤ κ_n, a constant depending on n only. Since Ẑ ≥ 0, E[1_𝒜 Ẑ] is obtained by monotone convergence and equals E[1_𝒜 Z] ≤ κ_n.)"
+Standard facts for Step 6 (Mathlib names verified in the pinned checkout): a bounded measurable function is integrable on a probability space (`Integrable.of_bound`); monotonicity and monotone convergence of the lower integral (`lintegral_mono`, `lintegral_iSup`).
 
-## (c) The 𝒜 identification (Astra T9-2, Sol T9-1, walk H2)
+**Registry block:** append to the conclusion "; 0 < Z <= kappa_n with kappa_n depending on n only, so 1_A0 Z and 1_A0 Zhat are integrable under every law of the data"; add to depends_on `W3-SAMP:MR@stmt:MR-b ; W3-PSHARP:S@proof:Lemma-V`.
 
-**A wording fix, not more.** The reading is already recorded: erratum E1 (`Theory_work/Wave3/ERRATA_W3-SAMP.md`, HQ D111) says W3-SAMP's conditional identities are read with the potential pair (𝒜°, 𝓒°); `W3-AUDIT-A:GW` (GW-iii) proves that on completed runs the actual calibration record equals the potential one, which is exactly the pathwise implication Astra asks to import; `W3-AUDIT-A:CAL-C` gives the transfer rules. E1 edited no hashed file, so three texts still say only "calibration returns ok". Theorem 10's conclusions are intersections and indicator-multiplied bounds, so they pass to the actual 𝒜 ⊆ 𝒜°; row 3.5's conditional identity is true only in the potential reading. Exact fixes:
+**PoolZ then needs only a citation** (`W3-READER/STATEMENT.md`, proof, before "taking expectations of"; inside its span, CITATION-ONLY): "(the records are jointly measurable and both sides are finite: `W3-SAMP:MEAS-D`, `W3-SAMP/STATEMENT.md` §4);". Recorder: add `W3-SAMP:MEAS-D` to PoolZ's depends_on.
 
-1. `W3-SAMP/STATEMENT.md:36` (premises span of the W3-SAMP claims; wording). Append after MEAS-D's pointer sentence: "By erratum E1 (`Theory_work/Wave3/ERRATA_W3-SAMP.md`), 𝒜 and 𝓒 are read throughout as the potential pair (𝒜°, 𝓒°) of `W3-AUDIT-A:GW`; on completed runs the actual calibration record equals 𝓒° (GW-iii), and probabilities of actual-run events (those intersected with {completed} or with the actual 𝒜) are bounded through 𝒪 ∩ A ⊆ 𝒪° ∩ A° (GW-iv, `W3-AUDIT-A:CAL-C`), as outer probabilities if the clock is not modelled."
-2. `W3-READER/STATEMENT.md:15-16` (PoolZ Setting; inside its span, wording). After "success event $\mathcal A\in\sigma(\mathcal C)$" insert "(the potential pair of the uninterrupted run, `W3-SAMP` erratum E1)".
-3. `W3-READER/lemmas/R4_printed_outputs.md:17-18` (Inputs paragraph, not the claim). After "$\{\text{completed}\}\subseteq\mathcal A$ (:38-41)" add "; read as the potential pair by erratum E1 (`W3-AUDIT-A:GW`, `:CAL-C`)".
-4. `READER_VERSIONS.md:1301-1302` (reader prose). "its calibration succeeds (fallback ladder included)" → "its calibration succeeds (fallback ladder included), in the run taken as if uninterrupted".
+**Is the integrability proof short and standard? Yes.** It is a data-uniform bound: three inequalities and one application of monotone convergence. Nothing goes to HQ.
 
-## Rulings on the walk rows
+**Opus R2 (8.7, gates FAIL; claim ACCEPT):** as author I accept F4 and E9–E12 as the seat wrote them. In particular the routes for (C-v) and (TR-d) are those of F4: (C-iii)'s per-island bound for the Ẑ, log Ẑ and NC_r clauses, (C-iv)'s and (TR-b)'s per-island bounds for the PIP and MPM clauses, with no independence across islands; and the LS0 `stop` is at `v3_core.cpp:474`, with the scorer's size throw at `v3_score.h:230` added to the exit list. R2 also confirms that IND-T "with the data adjoined" is derived, not added. One R3 round takes W1–W3 and P3 on top of what MEASD3 already holds.
+
+## B. The 𝒜 identification (Astra T9-2, Sol T9-1, walk H2): CORRECTION-ONLY wording
+
+The reading is already recorded: erratum E1 (`Theory_work/Wave3/ERRATA_W3-SAMP.md`, HQ D111) says W3-SAMP's conditional identities are read with the uninterrupted pair (𝒜°, 𝓒°). `W3-AUDIT-A:GW` (GW-iii) proves that on completed runs the actual calibration record equals the potential one, which is the pathwise implication Astra asks to import; `W3-AUDIT-A:CAL-C` gives the transfer rules. E1 edited no hashed file, so the texts still say only "calibration returns ok". Theorem 10's conclusions are intersections and indicator-multiplied bounds, so they pass to the actual 𝒜 ⊆ 𝒜°; row 3.5's conditional identity is true only in the potential reading.
+
+1. **SAMP** (`W3-SAMP/STATEMENT.md:36`, premises span of the W3-SAMP claims). Append after MEAS-D's pointer sentence: "By erratum E1 (`Theory_work/Wave3/ERRATA_W3-SAMP.md`), 𝒜 and 𝓒 are read throughout as the potential pair (𝒜°, 𝓒°) of `W3-AUDIT-A:GW`; on completed runs the actual calibration record equals 𝓒° (GW-iii), and probabilities of actual-run events (those intersected with {completed} or with the actual 𝒜) are bounded through 𝒪 ∩ A ⊆ 𝒪° ∩ A° (GW-iv, `W3-AUDIT-A:CAL-C`), as outer probabilities if the clock is not modelled."
+2. **R4** (`W3-READER/lemmas/R4_printed_outputs.md:17-18`, Inputs paragraph; the claim paragraph is untouched). After "$\{\text{completed}\}\subseteq\mathcal A$ (:38-41)" add: "; read as the potential pair by erratum E1 (`W3-AUDIT-A:GW`, `:CAL-C`)".
+3. **PoolZ** (`W3-READER/STATEMENT.md:15-16`, Setting; inside its span). After "success event $\mathcal A\in\sigma(\mathcal C)$" insert: "(the potential pair of the uninterrupted run, `W3-SAMP` erratum E1)".
+4. **Reader** (`READER_VERSIONS.md:1301-1302`, prose). "its calibration succeeds (fallback ladder included)" → "its calibration succeeds (fallback ladder included), in the run taken as if uninterrupted".
+
+Items 1 and 2 are the ones HQ ruled on; 3 and 4 are the same alignment in the two other places that state 𝒜.
+
+## C. Rulings on the walk rows
 
 | Row | Ruling | Kind | Recorded STATEMENT? | Fix |
 |---|---|---|---|---|
 | Thm10 **H1** (MINOR): row 3.6 rests on T12, whose registry status reads "PROVED-LOCKED … not adopted" | AGREE | Status record, not mathematics | No | Recorder: the T12 relabel carrier (owner adopted T12 on 2026-11-18; draft in `T9/T12_relabel_carrier_draft.md`). `W3-AUDIT-AX:FR` (PROVED-CHECKED) also re-checks the T12 identities at the code of record. |
-| Thm10 **H2** (NOTE): 𝒜 must be read as 𝒜° | AGREE | Wording | Yes, wording | (c) above |
+| Thm10 **H2** (NOTE): 𝒜 must be read as 𝒜° | AGREE | Wording | Yes, wording | §B |
 | Thm10 **H3** (NOTE, Lean): the N1 premises define the abstract algorithm | AGREE | Lean note | No | None |
 | rest **F1** (MINOR): PoolZ cites only N1 (v2.2.1 core) | AGREE | Citation and registry edge | Proof text inside PoolZ's span | Applied as CITATION-ONLY (`T9/T9-F1_correction.patch`, PURE). The pin in my prep note was one line short; the coordinator corrected it to `:107-111`. |
-| rest **F2** (MINOR): joint-law clause needs measurability in the data | AGREE | Proved by MEAS-D | No premise added | (a) above |
+| rest **F2** (MINOR): joint-law clause needs measurability in the data | AGREE | Proved by MEAS-D | No premise added | §A |
 | rest **F3** (NOTE): "printed evidence" should name `log_Z` | AGREE | Card wording | No | `CLAIMS_CARD.md:76`: "equals the printed evidence" → "equals $\exp$ of the printed field `log_Z` (not `log_Z_list`, row 3.1L)". `:97`: "(equal to the printed evidence on completed runs" → "(equal to $\exp$(`log_Z`), the printed pooled evidence, on completed runs". |
 | rest **F4** (NOTE, Lean) | AGREE | Lean note | No | None |
 
 **Left uncovered by the walks:** both stop at recorded inputs. Not opened: T12's own proof text, the START and KERNEL code bridges (N9), and for Theorem 10 the posterior and start inputs (`W2-APP:POST`, `W3-START2-R:IF-START`), which T4 and the T8 addendum cover.
 
-## Lean readiness (ranked; no item changes a statement)
+## D. Lean readiness (ranked; no item changes a statement)
 
-1. **Row 3.5 at fixed calibration value first.** E[Ẑ_r] = Z for the abstract frozen island on a finite state space (the unbiasedness induction of Lemma P / MR-b), then linearity over four islands.
+1. **Row 3.5 at a fixed calibration value first.** E[Ẑ_r] = Z for the abstract frozen island on a finite state space (the unbiasedness induction of Lemma P / MR-b), then linearity over four islands.
    - Gain: the December target is certified with finite sums only; no freezing, no measurability. Named axioms: none; the N1 premises are the definition of the abstract algorithm.
-2. **Then the freezing step as a separate lemma** (`condExp_indep_eq`), and the joint-law form last, with MEAS-D's code readings as hypotheses and Z ≤ κ_n as a proved bound.
+2. **Then the freezing step as a separate lemma** (`condExp_indep_eq`), and the joint-law form last, with MEAS-D's code readings as hypotheses and Z ≤ κ_n as a proved bound (Step 6 is Level 1).
 3. **Theorem C above MR is finite Markov-chain algebra plus Markov's inequality** ((C-i) deterministic; (C-iii), (C-iv), ST, LT). Level 1 given the MR identities.
 4. **Define 𝒜 as 𝒜° in Lean**; actual runs enter through the two inclusion hypotheses of GW (iii), (iv).
 5. **Theorem 10's assembly (R4)** is three O_P bounds added. Its two imported theorems are the posterior rate (T4 headline) and the start rate (T8 addendum), which bring their own named axioms.
