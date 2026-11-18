@@ -132,6 +132,17 @@ still needs seats on a new manifest (manager, 2026-11-18).
   never reaches a store with two values, the store's (value, S) dedup is exact dedup by model, and the list-PIP duplicate
   `stop()` (`v3_run.R:253`) is unreachable by construction, also in binary64. Test: the `identical()` recomputation in
   `tests/list_pip_units.R` "INV-SCORE-BITS" (PR #80). This complements L2 D2 / L3 (0.5), which exclude duplicates under EX-A.
+- **Engineering's confirmation (input only; the discharge is this read).** Tag `method-v3.1.1-listpip` = 7100bb3b
+  (annotated); core tree **61b0a582**, identical on the tag and on main (checked here: `git rev-parse <ref>:Scripts/SMC_BVS/core`
+  = 61b0a582 for both; Engineering adds exp/P1M-engine); core diff from e9bac478 = the one hunk at `v3_fit.R:176`, zero line
+  shift. Exact branch unchanged (`v3_fit.R:131` → `v3_exact_list_last`, `v3_run.R:274`, gated on `e$status == "exact"`,
+  `:275`). Engineering's bit check: completed and exact fits identical in all fields on 15 units; a forced-stop unit keeps its
+  legacy fields identical with the list fields absent; `list_pip_units.R` 155/155 (PR #80) — concordant with the runs above.
+  INV-SCORE-BITS anchors (checked at the tag): block tables scored by the same scorer, `cpp/v3_start.h:93` (blocks sorted,
+  `:37`); evaluation path `cpp/v3_engine.h:89-101`; inherited models `cpp/v3_core.cpp:426-427`; build flag
+  `-ffp-contract=off` (`cpp/Makevars.v3:3, :6`) so each score is rounded exactly as written; hence the duplicate `stop()`
+  `v3_run.R:253` is unreachable. Sources: `Docs/Experiments/P1M/results/listpip_ab/IMPL_LIST_CODE_READ.md`,
+  `SCORE_PATH_TRACE.md` (main checkout).
 - **For the recording.** With IMPL-LIST discharged, LIST-R carries no open premise ("conditional on IMPL-LIST" is dropped;
   status plain PROVED-CHECKED), method pin `method-v3.1.1-listpip` (7100bb3b). The T6 F3 wording fix of L3 (0.5) — name all
   three `stop()` rows of `v3_list_fields` (store/score length mismatch `v3_run.R:251`, duplicate model `:253`, column outside
