@@ -97,3 +97,5 @@ line-sha tables, `bind_R3.out`, `linesha.sh`); delete after the manager reads th
 `verify: OK MANIFEST 19847f54f60d58a7d7f8214004b09a41242492c1c7237dc60de42f2a6fbce5dc` (04:04 CST)
 
 Note (04:04): the temp folder `tmp/20261116-W3-SCR-R2-leg2/` listed under Housekeeping was already gone when I wrote this addendum (removed by someone else, possibly the load-spike cleanup). Nothing of record is lost: the bind output is verbatim above, and the before/after status-line check can be re-run from git (`e18e479e~1` vs `e18e479e`, REPORT.md:59–65).
+
+Manager note (2026-11-16 04:05 CST): the temp folders were not lost. The manager copied all four (R2 bind/opus/sol seat scratch, incl. `a1o_counter.*` and `check_review.*`, and leg-2 `before.tsv`/`after.tsv`/`bind_R3.out`/`linesha.sh`) verbatim (diff -r clean) to `reviews/evidence_tmp/` at ~04:05, then removed them from the department tmp folder (POLICIES §12). The R2 evidence for F2/F4 is therefore preserved.
