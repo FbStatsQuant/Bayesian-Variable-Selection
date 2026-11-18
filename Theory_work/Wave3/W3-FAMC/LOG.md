@@ -12,3 +12,10 @@
   DP1 (PLAN).
 - 2026-11-17 STATEMENT v1.0 + PLAN v0.1 written; sent to the manager before any review round (HQ to see the draft).
   No Sol round started.
+- 2026-11-17 manager: DP3 confirmed (D126 = replace each input by its current conditions, verbatim statuses, never drop a
+  used condition). HQ read v1.0: **GO for Tier B**. DP2: keep every fixed ρ ∈ (−1, 1) and remark (iv). DP1: HQ prefers an
+  unconditional AR half → independent Opus E2 check (claudeAgent_personal, claude-opus-5-5, high; delegated, async;
+  report `reviews/E2_check_opus_R1.md`). Fallback: block-only with AR as track-C evidence. "AR conditional on E2" only if
+  the check cannot finish within the kill budget.
+- 2026-11-17 STATEMENT v1.1 (reader version §1R, remarks → §1b, pointers, full statuses + D126 expansion); proof file
+  `lemmas/A_assembly.md` v1.0; TARGET.md; citecheck.py (from W3-D3): 89 checks, 0 failures (`reviews/CITECHECK.txt`).
