@@ -5,7 +5,7 @@
 **Your role.** You are the Sonnet coordinator, explicitly on claudeAgent_personal. You prepare the packets, run the Codex calls one at a time, collect the outputs and apply the adopted changes. **You do not rule on findings.** The manager's Fable child writes the ruling card for every target. Work on branch `theory/PRE-LEAN` from origin/main, in folder `Theory_work/Wave3/PRE_LEAN_PASS/<target>/`. Never push to main, and never edit registry files.
 
 ## Order (now)
-T1 Astra → Sol-1 → T2 Astra → Sol-2 → T3 Astra → Sol-3 → T4 Astra → Sol-4 → T5 Astra. T6 Astra and Sol-5 wait until Cor 6L is recorded; the manager will tell you.
+**Widened by the owner on 11-18 (HQ brief, main f60744a4): "a whole pre-Lean check", covering every presented theorem and corollary on the card.** The order is T1 Astra → Sol-1 → T2 → Sol-2 → T3 → Sol-3 → T4 (now including Thm 1′) → Sol-4 → T5 → T7 (Thm 4, row 1.4) → T8 (Thm 7, row 3.2 + Thm 5, row 3.3) → T9 (row 3.5 + Thm 10, row 3.6 + pooling, row 4.1) → T10 (Thm 8, row 3.7). T6 (rows 3.1 + 3.1L + 3.1F) and Sol-5 come only after Cor 6L is recorded; the manager will tell you when. Empirical rows and remark 2.2 are out of scope.
 
 ## Per call
 1. **Packet:** `<target>/PACKET.md`. It contains the exact claim ids, each with its verbatim main registry status and version; STATEMENT and PROOF spans as file:line on main; dependencies; and the single question to answer.
@@ -26,7 +26,7 @@ T1 Astra → Sol-1 → T2 Astra → Sol-2 → T3 Astra → Sol-3 → T4 Astra �
 ## Hygiene
 - Scratch goes only under `<worktree>/.rc_tmp/`, with no redirects outside the worktree and no deletes.
 - Every subagent is explicitly on claudeAgent_personal; the only exceptions are the Codex calls.
-- Kill budget for the whole pass: about 2–3 days. Codex calls: about 11 in total.
+- Kill budget for the whole pass: about 3–4 days. Codex calls: about 15 in total (10 Astra, 5 Sol). Fable: about 10 passes.
 
 ## End
 `PRE_LEAN_PASS/SUMMARY.md`, one page: findings, what changed, what was declined, and the Lean-readiness notes the Lean Department will use as blueprint input. Draft it from the Fable cards; the manager finalizes it.
