@@ -1,4 +1,4 @@
-# NB-C4 (T9 card (c)4): W3-READER/READER_VERSIONS.md:1301-1302, reader prose (Theorem 10). Not a registry span.
+# NB-C4 (T9 card (c)4): W3-READER/READER_VERSIONS.md:1301-1302, reader prose (Theorem 10). Inside `W3-READER:R1`'s premise span READER_VERSIONS.md:1283-1388: R1 rehash/bump (join the BATCH_READY_v2 R1 bump if landed together).
 diff --git a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
 index b8f3015d..b2419343 100644
 --- a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md

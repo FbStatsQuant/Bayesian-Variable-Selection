@@ -1,4 +1,4 @@
-# NB-C3 (T9 card (c)3; manager: matching R4 wording aligned to the MR erratum's uninterrupted pair): W3-READER/lemmas/R4_printed_outputs.md:17-18, Inputs paragraph (not the claim).
+# NB-C3 (T9 card (c)3; manager: matching R4 wording aligned to the MR erratum's uninterrupted pair): W3-READER/lemmas/R4_printed_outputs.md:17-18, Inputs paragraph (inside `W3-READER:R4`'s registered span 1-48; premises :25-29 untouched; wording, the recorder rehashes R4).
 diff --git a/Theory_work/Wave3/W3-READER/lemmas/R4_printed_outputs.md b/Theory_work/Wave3/W3-READER/lemmas/R4_printed_outputs.md
 index 9d7b03b0..28653e4c 100644
 --- a/Theory_work/Wave3/W3-READER/lemmas/R4_printed_outputs.md
