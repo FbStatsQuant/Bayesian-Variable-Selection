@@ -1,4 +1,4 @@
-# PENDING (HQ + consultant). Sol-2 S2-1 (Sol-2 card): the Cor 6L -> Cor 9C sentence overclaims; restore the condition pi(S0|y) >= n^{-cM/2} on the stated event. Two of four places: CLAIMS_CARD.md:71 and READER_VERSIONS.md:1443. NOT included (manager handles them): Docs/Writing/from_theory/COR6L_9C_NOTE_2026-11-17.md:3 and Theory_work/Dept/writing_answers/COR6L_9C_NOTE_2026-11-17.md:3. Line counts unchanged.
+# CORRECTION-ONLY, STAGED (HQ ruling; consultant AGREE). Sol-2 S2-1 (Sol-2 card): the Cor 6L -> Cor 9C sentence overclaims; restore the condition pi(S0|y) >= n^{-cM/2} on the stated event. Two of four places: CLAIMS_CARD.md:71 and READER_VERSIONS.md:1443. NOT included (manager handles them): Docs/Writing/from_theory/COR6L_9C_NOTE_2026-11-17.md:3 and Theory_work/Dept/writing_answers/COR6L_9C_NOTE_2026-11-17.md:3. Line counts unchanged.
 diff --git a/Theory_work/Wave3/W3-READER/CLAIMS_CARD.md b/Theory_work/Wave3/W3-READER/CLAIMS_CARD.md
 index 2d21cda7..241e2644 100644
 --- a/Theory_work/Wave3/W3-READER/CLAIMS_CARD.md

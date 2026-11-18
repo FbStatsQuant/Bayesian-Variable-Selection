@@ -1,4 +1,4 @@
-# PENDING (HQ + consultant). Sol-2 S2-2 (Sol-2 card): CLAIMS_CARD.md:97 row 4.1 omits the calibration-success qualifier (PoolZ is 'almost surely on A'; row 3.5 has it). Line count unchanged.
+# CORRECTION-ONLY, STAGED (HQ ruling; consultant AGREE). Sol-2 S2-2 (Sol-2 card): CLAIMS_CARD.md:97 row 4.1 omits the calibration-success qualifier (PoolZ is 'almost surely on A'; row 3.5 has it). Line count unchanged.
 diff --git a/Theory_work/Wave3/W3-READER/CLAIMS_CARD.md b/Theory_work/Wave3/W3-READER/CLAIMS_CARD.md
 index 2d21cda7..ebe24061 100644
 --- a/Theory_work/Wave3/W3-READER/CLAIMS_CARD.md

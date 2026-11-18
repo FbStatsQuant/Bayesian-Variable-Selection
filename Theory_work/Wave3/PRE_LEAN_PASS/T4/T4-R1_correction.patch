@@ -1,4 +1,4 @@
-# PENDING (statement-span edit: HQ + consultant). T4 R1 (T4 card, AGREE): W3-POST/STATEMENT.md:86, Theorem 1 item 4: h on 2^{[p]} so the functional is defined when S0 is not in Omega (equals 1 - pi(S0) = delta_n on every outcome). Recorded claim W3-POST:Thm-1 (span :61-100) affected; inherited by Thm 1' item 6. Line count unchanged.
+# CORRECTION-ONLY, STAGED (HQ ruling; consultant AGREE). STATEMENT-SPAN edit: the recorder rehashes and cascades. T4 R1 (T4 card, AGREE): W3-POST/STATEMENT.md:86, Theorem 1 item 4: h on 2^{[p]} so the functional is defined when S0 is not in Omega (equals 1 - pi(S0) = delta_n on every outcome). Recorded claim W3-POST:Thm-1 (span :61-100) affected; inherited by Thm 1' item 6. Line count unchanged.
 diff --git a/Theory_work/Wave3/W3-POST/STATEMENT.md b/Theory_work/Wave3/W3-POST/STATEMENT.md
 index a57e8461..c45b003a 100644
 --- a/Theory_work/Wave3/W3-POST/STATEMENT.md
