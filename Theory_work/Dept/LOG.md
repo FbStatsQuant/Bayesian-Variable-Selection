@@ -519,3 +519,4 @@
 - 2026-11-17 20:07 CST Main fix pushed 4979abcf (W3-MISR-R §7 requote, Opus PURE; CITATION-ONLY R3r3, D2 R2f4, READER R5r6; CI 44220856308 running). The recorder admitted the Q3a push went out despite a local cite FAIL; its prepush.sh guard now points origin/main at HEAD and blocks the push unless check/paper/cite PASS.
 - 2026-11-17 20:13 CST MAIN GREEN again: 4979abcf (CI 44220856308 success). VR4r carrier correction landed as dce5914d (CORRECTION-ONLY; CI 44221110000 running). The TRACK_B:216 AR qualifier (VR4r→VR4r2) had not reached the recorder; re-sent, dry run comes to me. PR #78/#79 updated from main; watching checks.
 - 2026-11-17 20:22 CST PRs #78 (e58d34e) and #79 (fe01fd7) theory-ci green and MERGEABLE; HQ pinged to merge. Main green at dce5914d.
+- 2026-11-17 20:24 CST HQ merged #78 (9978706a) and #79 (a71f6907); unwatched. HQ: proceed with VR4r3; recorder steered for the dry run. D5P A4 decision (a/b/c) is with HQ.
