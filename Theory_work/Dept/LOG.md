@@ -732,3 +732,11 @@
   - Then a MEAS-D + NA_DROP + T12 landing DRY run to HQ.
 - 2026-11-18 12:15 CST D5Pa v3 (a-1..a-3 + T6-3) frozen a9353d82, Opus PURE 9.6 PASS, bound. It lands with the A re-pin. Note N-1 for that landing record: ticket CARD.md:10 / READER_DELTA.md:14 keep 'met by the run' (frozen proposal copies, superseded by card :71 / RV :1435). The coordinator's b″-1 question predates the option-C order (already steered).
 - 2026-11-18 12:22 CST Blind API batch results on main (e5f8d140; $13.64; 12/12 end_turn): FINDINGS=0 on every claim in both samples, except PB-T8-s1 on W3-RM2-R:DLV-0 = 2 (s2 = 0): (1) resource-exit exclusion not covered by Lemma R / Cor R (Q5_dlv0:59-67); (2) E4 used outside DLV-0's hypotheses (Q5_dlv0:100-103). Sent to the CP Fable for a triage card (genuine?; overlap with T6-1/(C); (2) proved for the production call or already carried by RM0-plus, no new assumption; minimal fix, ideally in the A re-pin).
+- 2026-11-18 12:28 CST CP Fable BLIND_TRIAGE card (Dept/pre_lean_cards/BLIND_TRIAGE.md):
+  - Both DLV-0 findings are genuine as proof/citation gaps, not in the mathematics. No new assumption, no NARROW.
+  - (1) E2 cites Lemma R / Cor R at cap ℓ, but the code runs LS0 at ℓ_n+|S̃₀|. Fix: a 3-line amended count + one inputs clause. No overlap with T6-1 (pre-guard core).
+  - (2) E4's hypotheses are PROVED for the production call (H1 via W3-AUDIT-A:ENC; H2 = EX-A; H4 from DLV-0's premises; the throw excluded by TDP-e). Fix: the (E6) sentence + one inputs clause; erratum E4 marked "discharged, not added as a premise".
+  - Both go in the A re-pin: DLV-0 patch bump, CITATION-ONLY cascade (RM0-plus (c⁺), rows 3.1/3.2/3.1L).
+  - Flag: the re-pinned DLV-0 must not say "v3_fit returns" (the list helper runs before return at the tag; option C) → 'the pinned computation reaches finish with estimates available'.
+  - Not verified: the A1 K(K+1) archive term (arithmetic only) → for the re-pin Opus seat.
+  - FINDINGS=0 results: no action (PB-T9-s1's C_R > 0 holds).
