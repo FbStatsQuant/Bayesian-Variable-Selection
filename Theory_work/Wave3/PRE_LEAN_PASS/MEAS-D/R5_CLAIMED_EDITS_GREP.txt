@@ -1,0 +1,25 @@
+# R5 claimed edits, grepped in the REAL ticket files at freeze time (HQ RIDER_RULES: any missing edit stops the freeze)
+OK   ticket/.../W3-SAMP/lemmas/MEAS_D.md:50  F6(a) bounded-h paragraph (R4 F6(a), R4_council_opus.md:58), Step 6
+OK   ticket/.../W3-SAMP/lemmas/MEAS_D.md:50  F6(a) H_r(h) is Borel
+OK   ticket/.../W3-SAMP/lemmas/MEAS_D.md:50  F6(a) MR weights expectation P(𝒜°) ≤ 1
+OK   ticket/.../W3-SAMP/STATEMENT.md:190  F6(b) qualifier, statement (claim span 190-192)
+OK   ticket/.../W3-SAMP/lemmas/MEAS_D.md:24  F6(b) qualifier, MEAS_D §1 copy of the statement
+OK   ticket/.../W3-SAMP/lemmas/MEAS_D.md:50  F6(b) qualifier, Step 6 first sentence
+OK   ticket/.../W3-SAMP/REPORT.md:203  F6(b) qualifier, REGISTRY conclusion
+OK   ticket/.../W3-SAMP/lemmas/MEAS_D.md:38  E21 exit-list sentence
+OK   ticket/.../W3-SAMP/lemmas/MEAS_D.md:37  E22 notation
+OK   ticket/.../W3-SAMP/lemmas/MEAS_D.md:37  E23 evaluation bound
+OK   ticket/.../W3-SAMP/STATEMENT.md:36  NB-C1v2 E1 theorem-side sentence (line 36)
+OK   ticket/.../W3-SAMP/STATEMENT.md:194  NB-C1r remark (new final paragraph)
+OK   MEASD5_EXT.txt:30  E24 W1-N1/STATEMENT.md pinned (EXT file)
+OK   MANIFEST_MEASD5.txt:46  E24 W1-N1/STATEMENT.md in the manifest
+OK   lemmas/MEAS_D.md:0  ABSENT: for every bounded h of §2
+OK   STATEMENT.md:0  ABSENT: for every bounded h of §2
+OK   REPORT.md:0  ABSENT: for every bounded h of section 2
+OK   lemmas/MEAS_D.md:0  ABSENT: u_κ
+
+file sha256 (first 16) and line counts:
+STATEMENT.md: 9f2119a092efb8c9 lines=194
+REPORT.md: 7ef54ea28fa2c4bf lines=206
+lemmas/MEAS_D.md: c26d3c9c1d344450 lines=96
+RESULT: ALL CLAIMED EDITS PRESENT
