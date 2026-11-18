@@ -2,6 +2,19 @@
 
 Sonnet research helper for Engineering, 2026-11-17. Planning only: nothing submitted, no NOTS connection, no git change.
 
+## Manager decision (proposal to HQ; supersedes the helper's routes where they differ)
+- **Simplify: run BOTH cores on the same NOTS SPR nodes, Tier A + the one p500 stop.**
+  - The old per-seed v2.2.1 outputs are on the desktop only, and the desktop has no VPN now. So rerun v2.2.1 (its hash-checked tree in the repo) side by side. 11-02 showed v2.2.1 reproduces its stored records exactly (2,400/2,400), so the rerun IS the v2.2.1 reference, on the same machine, toolchain and day: no cross-machine libm doubt, no pull, paired timings.
+  - Optional later cross-check: compare against the 126 stored records once the desktop pull resumes.
+- **Fits:** 2 × 121 = 242 (Tier A 120 + `p0500_S5_r088_c100`, each on v2.2.1 and on v3.1). Drop the five p1000 24,000 s stops: they cost 33 core-h each side and make the wall 8 h. Tier C (low-p) is out ("keep it simple"; no exact-reference add-on).
+- **Core-h:** 2 × (45.3 + 1.75) ≈ 94 elapsed (188 billed). Cap 120 elapsed.
+- **Arrays:** v2.2.1 and v3.1 each as p1000 30 tasks + p500 31 tasks = 4 arrays, 122 tasks, %20 each, 80 billed CPUs at most.
+- **Wall:** ≈ 4–5 h (a p1000 task = c100 + c050 ≈ 3,200 s median, up to ≈ 8,000 s for S4/S5; 30 tasks at %20 run in 2 waves).
+- **Harness:** v2.2.1 = its original study layer unchanged; v3.1 = the `list_pip_ab/ab_run.R` route (generate_prod_dataset → v3_fit; already used on these PROD-H cases), with no patched adapter. Data X/y sha256 are compared across the two sides per fit.
+- **Rule** as in §6 minus the low-p row: legacy fields identical on completed fits (any `ls0_improved` HPM gain is disclosed, not failed), 0 completed→stopped, runtime and RSS ratios within the bands.
+- **Earliest finish without slipping H-14:** #69 merged and tagged Wed 11-18 → bundle + 2-fit smoke on Owls Wed → submit Thu 11-19 AM after HQ GO → results Thu PM → **verdict Fri 11-20 AM**. It runs in the 10⁴-overlap window on ≤ 80 billed CPUs (1 CPU, 2G tasks), with no overlap on island nodes.
+- Staffing: Sonnet (bundle, comparator, smoke), Haiku (submit/poll/collect), manager look, and one Sonnet re-check.
+
 ## Summary (10 lines)
 1. **Subset (Tier A):** the PROD-H p ≫ n study (n = 200, p ∈ {500, 1000}, S1–S6, c ∈ {1, 0.5}) at the SAME fixed grid as the 2026-11-02 reproduction spot-check: r ∈ {1, 25, 50, 75, 100} → **120 fits (5.0%)**. Tier B adds the **6 known `resource_limit` fits**. Tier C (optional) is a 120-fit low-p arm.
 2. **Fit count:** 126 on NOTS (Tier A + B; 66 tasks). Tier C adds 120 fits (0.25 core-h).
