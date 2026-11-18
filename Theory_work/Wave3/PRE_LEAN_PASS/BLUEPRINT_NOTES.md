@@ -1,5 +1,7 @@
 # PRE-LEAN PASS: Lean-readiness notes (copied from the Fable cards; input to the Lean Department's blueprint)
 
+**First paper-only dependency (manager, 11-18; Lean/BRIEF.md, HQ a810898a).** For each Level-2 target below, a line "First paper-only dependency" names the dependency that the card lists first among the named axioms or hypotheses Lean would assume (not proved in Lean). It is copied from the card text; where a card names none, the line says so. The Lean department confirms the order in `FIDELITY.md`. Level-1 targets (T1, T2, T3) have none.
+
 ## T1: Thm 3(a), `W3-PSHARP:B` (card `T1/FABLE_CARD.md`)
 Level-2 named axioms: none (Level 1). B2, B3 and the "in probability" clause of B1 stay out of Lean scope. No item changes the statement.
 1. **Three-layer split with an abstract core.** (L1) Finite Ω, scores σ > 0, distinct S_J ≠ S₀ with σ(S_J)/σ(S₀) ≥ ρ_J imply odds ≥ Σρ_J. (L2) Combinatorics. (L3) Linear algebra, entering L1 as the two hypotheses D_{S∪{j}} ≤ n·D_S and 0 ≤ Q_{S∪{j}} ≤ Q_S. Thm 3(a) then compiles before any matrix work; L1 is the shared score base for T2.
@@ -34,6 +36,8 @@ Level-2 named axioms: none for items 1–4 (Level 1). No item changes a paper st
 5. **Define d_H² once.** Mathlib has no Hellinger distance (I searched the pinned checkout). Put d_H²(f, g) := 1 − ∫√(fg) for densities in a shared file; T3 and T5 both use it.
 
 ## T4: Thm 1, Thm 1′, presented Thm 2 (card `T4/FABLE_CARD.md`; consistency tier)
+
+**First paper-only dependency (Level 2):** B1, variance concentration for sub-Gaussian coordinates (card item 1; then B2-core, the sparse quadratic-form lower bound), unless proved. The chain's own list (item 4) starts with the Laurent–Massart χ² tails.
 Lean readiness (ranked; no item changes a presented statement):
 
 1. **Thm 2 from the presented Thm 1, not from item 6.** Thm2SG ⇐ B3w + `W3-POST2:C` case (i): expectation bound on 𝒜′_n, Markov, add P(𝒜′_nᶜ).
@@ -53,6 +57,8 @@ Lean readiness (ranked; no item changes a presented statement):
 5. **Conventions fixed once:** 2 ≤ p (raw count), S₀ on retained columns, m♯ as a function of (n, p, s₀), h on 2^{[p]} (R1, R4, R5, N4, N5).
 
 ## T5: Thm 9 (Thm A/B, Cor 9C chain) (card `T5/FABLE_CARD.md`; consistency tier)
+
+**First paper-only dependency (Level 2):** the Lemma T transfer inequality, a growth-function (VC-type) bound (card item 2, first in its list; then Laurent–Massart χ² tails, Gamma tails, sub-Gaussian concentration for B1 and the net bound for B2-core, the marginal-likelihood identity of `lem:num`).
 Lean readiness (ranked; no item changes a presented statement):
 
 1. **State Theorem 9 with an explicit success event.** There is a measurable set G_n of data sets with P*(G_n) ≥ 1 − n^{−cM} such that on G_n the data are admissible, r = p, Π(d_H > √(M log n/n)) ≤ n^{−cM} and Π(|S| > s + C₁M) ≤ n^{−cM}.
@@ -68,6 +74,8 @@ Lean readiness (ranked; no item changes a presented statement):
 No Lean items (final-text confirmations of reader text, D2/D3 and the track V dossier).
 
 ## T7: Thm 4, omitted variables (card `T7/FABLE_CARD.md`)
+
+**First paper-only dependency (Level 2):** none beyond those of T4 (item 1: "only those of T4"), i.e. B1. The random-design layer adds C-MIS:GDb and C-MIS:Prop-P (item 3) and Gaussian sample-variance concentration.
 Lean readiness (ranked; no item changes a statement):
 
 1. **Theorem 4 as a corollary of the T4 Lean headline at unit noise.** MIS(i) is `W3-POST2:C` applied to (x, β/√v, σ*² = 1) after two deterministic reductions: posterior invariance under y ↦ a·1 + c·y (Lemma R′), and the rescaling of the class conditions by v.
@@ -81,6 +89,8 @@ Lean readiness (ranked; no item changes a statement):
 5. **Cor H clauses:** the (KL) identity for two normals is deterministic (Level 1) and the Hellinger part reuses Lemma D0 from T3.
 
 ## T8: Thm 7 and Thm 5 (card `T8/FABLE_CARD.md`; consistency tier for Thm 7)
+
+**First paper-only dependency (Level 2):** Gaussian tail with a union bound (card item 2, first in its list; then Gaussian concentration for the maximum, plus those of T4). For Theorem 5 (item 5): independence of the Gaussian regression innovation, then covariance concentration for Gaussian rows.
 Lean readiness (ranked; no item changes a statement):
 
 1. **Theorem 7's core as finite-set mathematics over an explicit interface.** Hypotheses: scored models lie in Ω; on output, the search's scored sets are scored; the reported model maximises F over the scored set. Conclusion on 𝓜_n ∩ 𝒦_n: every output run reports S₀.
@@ -92,3 +102,9 @@ Lean readiness (ranked; no item changes a statement):
 5. **Theorem 5:** FLOOR is a Level-1 target of the same kind as T1 (one-step determinant ratio). In START-R the J-bounds (J0)–(J4) are Level-1 Gaussian integrals; state Step 1's representation with "≤" (T8-3).
    - Named axioms: independence of the Gaussian regression innovation; covariance concentration for Gaussian rows.
 Note (walk G2, card): c₀(s₀, A)'s constant C_* is written explicitly in a recorded statement, `W3-T03ACC/STATEMENT.md:40`, C_* = 2s₀ + 3[A·j_* + s₀ + log(j_* + 1) + 1], j_* = ⌈(2A+1)s₀⌉ + 1: Lean defines it by that formula.
+
+## T9: row 3.5, Thm 10, row 4.1 (Fable card pending)
+**First paper-only dependency (Level 2):** not yet given: the Fable card for T9 has not arrived. Both Codex reads (Astra; blind Sol, `T9/CODEX_gpt-6.2-sol_adv.md`, T9-1 to T9-3) are saved. Joint measurability of the potential records is now MEAS-D (staged, R2 done; records with D5P).
+
+## T10: Thm 8, row 3.7 (Fable card pending)
+**First paper-only dependency (Level 2):** not yet given (no card). Astra (`T10/CODEX_gpt-6.2-astra.md`) found no flaw in the formal chain; the Gaussian tail and χ² (Laurent–Massart) events of `W3-SCR/lemmas/L2_noise.md` are the probabilistic inputs it names.
