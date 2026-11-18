@@ -1,0 +1,1 @@
+{"case_id":"p0500_S1_r001_c100","side":"new","order":2,"task":1,"array_job":"","job":"smoke1","host":"owls","started_utc":"2026-11-18T06:26:01Z","finished_utc":"2026-11-18T06:35:47Z","wall_s":586,"exit":0,"timed_out":false,"v3_status":"completed","unit_limit_s":6300,"hours":"1.75"}

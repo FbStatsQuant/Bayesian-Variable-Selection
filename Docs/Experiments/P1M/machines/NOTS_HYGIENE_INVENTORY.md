@@ -287,3 +287,12 @@ Not run (odd-looking or not needed): `du -sh /scratch/fb31` over the whole tree;
 - **Dept scratch:** 79,151,970,815 B / 967 files -> **67,114,033,797 B / 832 files** (freed 12,037,937,018 B net of 9 tombstones). Home untouched.
 - **Ledger:** `crews/offload/ledger.tsv` created, 144 rows, `desktop_verified` empty (15.7 GB records group goes to the desktop when its VPN is back; Owls copy is currently the only copy).
 - Status of S02, S04, S05, S12 and the F1M/T5 small files: **done (Owls only)**. Next: Group 2 = rest of DD (below the line in the operator report).
+
+## Group 2 done (Sonnet operator, 2026-11-18 06:18-06:25 UTC; manager GO)
+- **Scope:** 487 files (scratch 368 + home 119), 2,730,436,690 B hashed; 139,623,506 B copied. Scratch: `runs/{g0,pmath,wp3_bench}`, `wp6_k3/run_2756524`, P7 and T6 small files + ledgers, F1M ledgers, `slurm_out/` (120, all older than 11-18 00:00), 2 codex backup tgz, F1M/T5 `fit.bin` (+ `.bin.json`). Home `scripts/`: `bin/`, `manifests/`, `run_manifests/` and top-level files of P7/T5/T6; all of g0, pmath, wp3_arch, wp3_bench (not `engine_v4_cd1a7e02.tgz`), wp3_l5, wp3_levers, wp6_k3.
+- **Not touched:** `rerun2400` (did not exist in either tree at 06:21), `INDEX.md`, `crews/`, F1M_pilot scripts (K), ccd-cli (D6), the build/code trees, islands, setup/raw/data/calib `.bin` and their sidecars, Theory trees, `projects/BVS`.
+- **fit.bin (F1M, T5):** not re-copied. NOTS re-hash == `fitbin_1117/nots_sums.txt` == fresh `sha256sum` of the Owls copies (58e9e816..., 16a67d14...); sizes match; deleted. G0 stage files also compared with the existing `records/G0` copies: identical.
+- **Verify:** `sha256sum -c` 485/485 OK (the 2 fit.bin are hash-only), 0 size mismatches. Manifest `group2_manifest_nots.tsv`; copies in `records/hygiene_1117/group2/{scratch,home}/`.
+- **Delete:** one ssh call, `squeue`=0 guard, per-file size+mtime re-check; 487 deleted, 0 skipped; tombstones `OFFLOADED_group2.txt` in 24 dirs; DELETES.tsv +487, ledger.tsv +487 (now 631 rows). Empty subdirs (e.g. old build trees) were left (no `rmdir` authorized).
+- **After:** dept scratch 67,114,033,797 B / 832 files -> **64,397,161,861 B / 478 files** (freed 2,716,871,936 B); home `scripts/` 175.7 -> 162.2 MB; home quota 8,088 -> 8,075 MB.
+- **Left on scratch (Group 3 candidates):** 64.40 GB = islands/setup/P7/T5/T6/wp6 build + ccd-cli; list `group3_proposed_files.tsv` (453 files, 64,055,186,051 B, ccd-cli excluded).
