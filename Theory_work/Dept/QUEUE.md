@@ -128,3 +128,13 @@ Consistency results first (owner, 11-15 evening) + Lean readiness of their deter
 - (11-18) **After the pre-Lean correction batch lands:** signal the blind-batch builder to rebuild theory/prelean-blind from main (no notes, max_tokens 128000), then send HQ the head commit to submit.
 - (11-18, HQ-approved) **MEAS-D** (a new W3-SAMP lemma: calibration record, island records and Z measurable in (data, seeds); proved, not assumed). The Fable closes 2 checks (potential vs completed vs W3-AUDIT-A:GW; final local search coverage), then drafts. Seats: a fresh Opus seat on its manifest + a Sol 6.2 seat as a separate section of the Sol-5 (D5P) call. Records WITH D5P (same landing as Sol-5). Serves PoolZ, W3-SAMP D/LT/C/TR, Thm 10, DIST-C.
 - (11-18) Re-pin to method-v3.1.1-listpip also adds: "the list fields are deterministic functions of the top store" (for MEAS-D); the seats re-check cpp/v3_core.cpp:456/:476 vs :642/:689 (same local_search routine).
+- (11-18 08:30) **Current state:**
+  - **Recorder:** dry runs of (a) the D5P v1.1 recording and (b) the pre-Lean batch (theory/PRE-LEAN f787a2c2).
+  - **Next:**
+    - DLV-0/LIST-CODE/T14 re-pin to method-v3.1.1-listpip (cite INV-SCORE-BITS; stop rows in the exit inventory; list fields deterministic in the top store).
+    - T6 + Sol-5 (D5P final text; NA_DROP and MEAS-D Sol sections).
+    - MEAS-D + NA_DROP landing.
+    - Blind API batch rebuild (theory/prelean-blind) → HQ submits.
+    - T9/T10 cards.
+    - SUMMARY.
+

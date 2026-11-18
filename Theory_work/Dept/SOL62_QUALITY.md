@@ -15,6 +15,12 @@ Leads append their own lines (manager checks); the daily report gives the runnin
 | 2026-11-17 | W3-FAMC (R3) | council seat | BETTER | SAME | SAME | SAME | 4 F + 3 E, all genuine; per-claim REJECT on provenance/registry only (math PASS), warranted |
 | 2026-11-17 | W3-FAMC (R4) | council diff check | BETTER | SAME | BETTER | SAME | 1 F genuine: ran the ingest converter and caught the `|x|` registry-block parse defect the Opus seat missed |
 | 2026-11-17 | W3-FAMC (R5) | council confirmation | SAME | SAME | SAME | SAME | clean confirm, ran converter + verify, 0 findings (lead) |
+| 2026-11-18 | pre-Lean Sol-1 (C1 audits) | final-text confirmation | SAME | SAME | SAME | — | ACCEPT ×2; 1 observation, agreed by the Fable |
+| 2026-11-18 | pre-Lean Sol-2 (READER R4/R5) | final-text confirmation | BETTER | SAME | SAME | — | caught a real card overclaim (6L↔9C, S2-1; consultant AGREE) + 2 status quotes |
+| 2026-11-18 | pre-Lean Sol-3 (W3-D2 + D3) | final-text confirmation | SAME | SAME | SAME | — | ACCEPT ×5; 3 local stale-wording points |
+| 2026-11-18 | pre-Lean Sol-4 (track V R4) | final-text confirmation | BETTER | SAME | SAME | — | 2 real dossier overreaches in the unreviewed B8 edit |
+| 2026-11-18 | pre-Lean T4 Sol adversarial | blind adversarial | SAME | WORSE | SAME | — | 3 Lean points; 1 (p = 1) already ruled at W3-T03ACC (Fable OBJECT) |
+| 2026-11-18 | pre-Lean T5 Sol adversarial | blind adversarial | SAME | SAME | SAME | — | corroborated Astra's 'equivalent' overclaim independently + 1 new Lean point |
 
 ## Running tally
-F: BETTER 5 / SAME 3 / WORSE 0 · N: 1/6/1 · B: 2/6/0 · S: 0/7/1 (8 reviews: 3 A/B + 5 W3-FAMC; FAMC S not timed). Alarm rule (two WORSE in a row on F or N): not triggered.
+F: BETTER 7 / SAME 7 / WORSE 0 · N: 1/11/2 · B: 2/12/0 · S: 0/7/1 (14 gpt-6.2-sol reviews: 3 A/B + 5 W3-FAMC + 6 pre-Lean; pre-Lean S not timed). The pre-Lean Astra (gpt-6.2-astra) lines are in PRE_LEAN_PASS/SOL62_LINES.md. Alarm rule (two WORSE in a row on F or N): not triggered.
