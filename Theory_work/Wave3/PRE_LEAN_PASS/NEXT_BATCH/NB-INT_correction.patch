@@ -1,0 +1,14 @@
+# NB-INT (T9 card (b); Astra T9-4, Sol T9-3): W3-READER/STATEMENT.md, proof of Claim PoolZ (span 12-39), before 'taking expectations'. Joint-law integrability: Z <= kappa_n. CITATION-ONLY within the span; the claim sentence does not change; the recorder rehashes. NOTE for the Fable: c_n, nu, b_0 are not defined in the PoolZ span (they are in W3-T03ACC/STATEMENT.md:30-31); the text is the card's, verbatim.
+diff --git a/Theory_work/Wave3/W3-READER/STATEMENT.md b/Theory_work/Wave3/W3-READER/STATEMENT.md
+index 4081011c..82913744 100644
+--- a/Theory_work/Wave3/W3-READER/STATEMENT.md
++++ b/Theory_work/Wave3/W3-READER/STATEMENT.md
+@@ -29,7 +29,7 @@ expectation, $E[\hat Z/Z\mid\mathcal C]=\tfrac14\sum_{r=1}^4E[W_r\mid\mathcal C]
+ conditional statement the data are fixed (probability over the final streams), so $Z>0$ is a constant and
+ $E[\hat Z\mid\mathcal C]=Z$ on $\mathcal A$. Under the joint data/algorithm law, with the final streams idealised as independent of the
+ data and of streams 0–9 (H-U/SI, as in `W3-SAMP/STATEMENT.md:35-36`), the same identity holds conditionally on
+-(data, $\mathcal C$); taking expectations of $\mathbf 1_{\mathcal A}E[\hat Z\mid\text{data},\mathcal C]=\mathbf 1_{\mathcal A}Z$
++(data, $\mathcal C$). (Both sides are finite. For every data set $m(S)\le\kappa_n:=c_n(2b_0)^{-\nu}$, because $D_S\ge1$ and $Q_S\ge0$, so $Z\le\kappa_n$, a constant depending on $n$ only. Since $\hat Z\ge0$, $E[\mathbf 1_{\mathcal A}\hat Z]$ is obtained by monotone convergence and equals $E[\mathbf 1_{\mathcal A}Z]\le\kappa_n$.) Taking expectations of $\mathbf 1_{\mathcal A}E[\hat Z\mid\text{data},\mathcal C]=\mathbf 1_{\mathcal A}Z$
+ gives the last form. ∎
+ 
+ *Remarks.* (i) No independence between islands is used (N1 uses none; SI is per island). (ii) This concerns $\hat Z$

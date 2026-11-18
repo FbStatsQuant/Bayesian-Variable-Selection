@@ -1,0 +1,14 @@
+# NB-C4 (T9 card (c)4): W3-READER/READER_VERSIONS.md:1301-1302, reader prose (Theorem 10). Not a registry span.
+diff --git a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+index b8f3015d..b2419343 100644
+--- a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
++++ b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+@@ -1299,7 +1299,7 @@ there [AUD-B11].
+ 
+ This theorem concerns the sampler branch of the method (the model space is too large to enumerate; the exact branch is
+ the scope note below) [S2-F3]. Let $\mathcal A$ be the event that the method takes the sampler branch and its calibration
+-succeeds (fallback ladder included); every completed sampler run lies in $\mathcal A$. On $\mathcal A$ let $\hat Z$,
++succeeds (fallback ladder included), in the run taken as if uninterrupted; every completed sampler run lies in $\mathcal A$. On $\mathcal A$ let $\hat Z$,
+ $\widehat{\mathrm{PIP}}$, $\widehat{\mathrm{MPM}}$ denote the evidence estimate, pooled PIPs and their MPM computed from the
+ four islands' uninterrupted records (equal-weight pooling, `NOTATION.md` §5); on completed runs they are exactly the
+ printed fields, and $\hat S$ is the reported model. Let $\rho_n:=n^{-1/2}e^{C\sqrt{\log n}}$ for a suitable constant $C$

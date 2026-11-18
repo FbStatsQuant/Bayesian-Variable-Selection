@@ -1,0 +1,14 @@
+# NB-C3 (T9 card (c)3; manager: matching R4 wording aligned to the MR erratum's uninterrupted pair): W3-READER/lemmas/R4_printed_outputs.md:17-18, Inputs paragraph (not the claim).
+diff --git a/Theory_work/Wave3/W3-READER/lemmas/R4_printed_outputs.md b/Theory_work/Wave3/W3-READER/lemmas/R4_printed_outputs.md
+index 9d7b03b0..28653e4c 100644
+--- a/Theory_work/Wave3/W3-READER/lemmas/R4_printed_outputs.md
++++ b/Theory_work/Wave3/W3-READER/lemmas/R4_printed_outputs.md
+@@ -15,7 +15,7 @@ concern the potential records on $\mathcal A$ and equal the printed fields on co
+   then, localised to $\mathcal A$, $\hat Z/Z-1$, $\log\hat Z-\log Z$ and $\|\mathrm{pip\_primary}-\mathbf 1_{S_0}\|_\infty$ are
+   $O_P(r_n)$ (:158-162). Here $\bar\delta:=\max(o_0,o_1)$, $o_1=\delta/(1-\delta)$, $o_0=\delta_0/(1-\delta_0)$,
+   $\delta=1-\pi(S_0)$, $\delta_0=1-\pi_0(S_0)$ (:26-27); $\mathcal A$ = calibration returns "ok" (fallback grid included),
+-  $\{\text{completed}\}\subseteq\mathcal A$ (:38-41).
++  $\{\text{completed}\}\subseteq\mathcal A$ (:38-41); read as the potential pair by erratum E1 (`W3-AUDIT-A:GW`, `:CAL-C`).
+ - `W3-START2-R:IF-START@1.0.0` (IF-START⁺⁺, `W3-START2-R/STATEMENT.md:241-246`), "PROVED-CHECKED; council R2, MANIFEST 12bb52cd… (= R2 90886d06 re-frozen CITATION-ONLY as R2r), sol=9.0 PASS, opus=9.3 PASS" [REPIN]: under (T3⁺⁺)(b)
+   (:226-240) with $Q=S_0$,
+   $1_{\mathcal A}o_0=O_P(\rho_n)$ with $\rho_n:=n^{-1/2}\exp(C_R\sqrt{\log n})$ for every event $\mathcal A$.

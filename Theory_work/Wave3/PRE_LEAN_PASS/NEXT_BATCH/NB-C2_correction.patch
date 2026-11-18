@@ -1,0 +1,14 @@
+# NB-C2 (T9 card (c)2; erratum E1): W3-READER/STATEMENT.md:16, PoolZ Setting, inside the claim span 12-39 (wording; CITATION-ONLY, the recorder rehashes). The calibration pair of PoolZ is the potential pair of the uninterrupted run.
+diff --git a/Theory_work/Wave3/W3-READER/STATEMENT.md b/Theory_work/Wave3/W3-READER/STATEMENT.md
+index 4081011c..cd2e6734 100644
+--- a/Theory_work/Wave3/W3-READER/STATEMENT.md
++++ b/Theory_work/Wave3/W3-READER/STATEMENT.md
+@@ -13,7 +13,7 @@ the lemmas below. Statuses are those of the proof files until a check record say
+ Status: **PROVED (by this seat, unchecked)** (line check: bridge-leg Sol review).
+ **Setting.** The method as coded on the SMC branch, under the N1 premises (`Theory_work/Wave1/W1-N1/STATEMENT.md` §2:
+ EX-A, EX-S/H-U, START, KERNEL, CAL, SI, MEAS, potential run); calibration record $\mathcal C$, success event
+-$\mathcal A\in\sigma(\mathcal C)$; on $\mathcal A$ the final run has $R'=4$ islands with evidence estimates
++$\mathcal A\in\sigma(\mathcal C)$ (the potential pair of the uninterrupted run, `W3-SAMP` erratum E1); on $\mathcal A$ the final run has $R'=4$ islands with evidence estimates
+ $\hat Z_1,\dots,\hat Z_4$, and the reported evidence is the equal-weight mean $\hat Z:=\tfrac14\sum_{r=1}^4\hat Z_r$
+ (code: `Scripts/SMC_BVS/core/v3_run.R:154`, `log_Z = log_sum_exp(logZr) - log(R)`, with `islands = 4L` at `:91`;
+ as recorded at `Theory_work/Wave3/W3-SAMP/STATEMENT.md:52-53`, with $R'=4$ at :42). $Z=\sum_{S\in\Omega}\varpi(S)m(S)$.

@@ -103,8 +103,22 @@ Lean readiness (ranked; no item changes a statement):
    - Named axioms: independence of the Gaussian regression innovation; covariance concentration for Gaussian rows.
 Note (walk G2, card): c₀(s₀, A)'s constant C_* is written explicitly in a recorded statement, `W3-T03ACC/STATEMENT.md:40`, C_* = 2s₀ + 3[A·j_* + s₀ + log(j_* + 1) + 1], j_* = ⌈(2A+1)s₀⌉ + 1: Lean defines it by that formula.
 
-## T9: row 3.5, Thm 10, row 4.1 (Fable card pending)
-**First paper-only dependency (Level 2):** not yet given: the Fable card for T9 has not arrived. Both Codex reads (Astra; blind Sol, `T9/CODEX_gpt-6.2-sol_adv.md`, T9-1 to T9-3) are saved. Joint measurability of the potential records is now MEAS-D (staged, R2 done; records with D5P).
+## T9: row 3.5, Thm 10, row 4.1 (card `T9/FABLE_CARD.md`; consistency tier for Thm 10)
+**First paper-only dependency (Level 2, Thm 10):** the posterior rate, the T4 headline (card item 5: R4's first imported theorem; the second is the start rate of the T8 addendum). Both bring their own named axioms (see T4, T8). Row 3.5 at fixed calibration value (item 1) has none.
+Lean readiness (ranked; no item changes a statement):
 
-## T10: Thm 8, row 3.7 (Fable card pending)
-**First paper-only dependency (Level 2):** not yet given (no card). Astra (`T10/CODEX_gpt-6.2-astra.md`) found no flaw in the formal chain; the Gaussian tail and χ² (Laurent–Massart) events of `W3-SCR/lemmas/L2_noise.md` are the probabilistic inputs it names.
+1. **Row 3.5 at fixed calibration value first.** E[Ẑ_r] = Z for the abstract frozen island on a finite state space (the unbiasedness induction of Lemma P / MR-b), then linearity over four islands. Gain: certified with finite sums only; no freezing, no measurability. Named axioms: none; the N1 premises are the definition of the abstract algorithm.
+2. **Then the freezing step as a separate lemma** (`condExp_indep_eq`), and the joint-law form last, with MEAS-D's code readings as hypotheses and Z ≤ κ_n (the PoolZ integrability sentence) as a proved bound.
+3. **Theorem C above MR is finite Markov-chain algebra plus Markov's inequality** ((C-i) deterministic; (C-iii), (C-iv), ST, LT). Level 1 given the MR identities.
+4. **Define 𝒜 as 𝒜° in Lean;** actual runs enter through the two inclusion hypotheses of GW (iii), (iv).
+5. **Theorem 10's assembly (R4)** is three O_P bounds added; its two imported theorems are the posterior rate (T4 headline) and the start rate (T8 addendum).
+
+## T10: Thm 8, row 3.7 (card `T10/FABLE_CARD.md`)
+**First paper-only dependency (Level 2):** the Gaussian tail with a union over the N_q models (card item 2, first in its list; then Laurent–Massart χ² tails, both shared with T4). Items 1, 3, 4 are Level 1.
+Lean readiness (ranked; no item changes a statement). The most Lean-friendly probabilistic row: finite-sample, explicit constant c₁ and explicit failure bound.
+
+1. **Deterministic core first (Level 1).** On 𝓔_A, every locally optimal model of size ≤ q contains S₀ (SCR-A), from the score algebra of L1 (one-step Schur update, the same machinery as T1 and FLOOR). Named axioms: none.
+2. **Probability of 𝓔_A as two named tail bounds:** a Gaussian tail with a union over the N_q models (the witness index is deterministic), and Laurent–Massart for the response scale. Total failure ≤ 3e^{−x}.
+3. **Bridges B2, B2d, B3 (Level 1):** floors give the directional floor and the visibility Γ_n by minimising a quadratic form over the S-coordinates; no interlacing theorem.
+4. **Corollary A1's constant as arithmetic (Level 1):** the squared ratio is at least 200/64 > 1 under (A3).
+5. **Conventions:** the certificate as a hypothesis (the theorem for any random model Ŝ: P(Ŝ locally optimal, |Ŝ| ≤ q_n, S₀ ⊄ Ŝ) → 0); 𝓔_A intersected with {τ̂ > 0}; (A1) with "at most" (T10-1).
