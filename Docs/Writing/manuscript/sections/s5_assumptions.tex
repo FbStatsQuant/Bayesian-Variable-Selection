@@ -210,10 +210,10 @@ Gaussian rows with unit variances, which satisfy Condition~1 itself.}
 such as binary features whose success probability tends to zero, for Results~1 and~2; non-Gaussian rows for Result~3 and Remark~\ref{thm:outputs}.}
 \pr{\citet[Lemma~6.1, p.~16]{NarisettyHe2014}: rows that are independent isotropic sub-Gaussian vectors. For centred
 rows, \lab{SGR} contains theirs as the case $\Sig=I$, and asks sub-Gaussianity only along sparse directions. For the centred predictors $x-m_n$ it implies Song and Liang's Condition~1, whose worked case is a zero-mean
-Gaussian process (p.~953). Examples: Gaussian rows ($L=1$) and for correlated mixtures of
-independent features with a common sub-Gaussian constant, such as features each confined to $K$ standard deviations of its mean, with one common $K$ (Section~\ref{sec:model-result}).}
+Gaussian process (p.~953). Examples: Gaussian rows ($L=1$) and correlated mixtures $BW$ of
+independent features $W$, with $BB^\top$ a correlation matrix and a common sub-Gaussian constant, such as features each confined to $K$ standard deviations of its mean, with one common $K$ (Section~\ref{sec:model-result}).}
 \tu{Bounded data such as genotypes are outside Result~3 as stated (Gaussian rows); they meet \lab{SGR} when they are
-mixtures of independent features each confined to $K$ standard deviations of its mean, with one common $K$, but not
+mixtures (with $BB^\top$ a correlation matrix) of independent features each confined to $K$ standard deviations of its mean, with one common $K$, but not
 when they include binary features whose success probability tends to zero; and they are
 covered by the fixed-design Theorem~\ref{thm:post-fixed} when the observed design meets its conditions.}
 
@@ -223,7 +223,7 @@ covered by the fixed-design Theorem~\ref{thm:post-fixed} when the observed desig
 predictor) in every regime: theirs is our condition with no conditioning and no margin.}
 \ev{The start law must see every true predictor, as their first stage must; it conditions on up to $15$ columns because it
 works on groups of at most $16$ predictors (\as{V}, Section~\ref{sec:reported}). For bounded blocks with one true predictor
-each, and for autoregressive designs with the true predictors spread apart (as in our designs), the covariance in \as{V} is $\theta^*_j\Var(W_j\mid W_U)$ plus geometrically small terms, at
+each, and for our autoregressive designs (AR(1) correlation $0.5$ and $0.6$, true predictors spread apart), the covariance in \as{V} is $\theta^*_j\Var(W_j\mid W_U)$ plus geometrically small terms, at
 least $\abs{\theta^*_j}\lmin(\Sig)/2$. When the true effects have aligned signs and every conditional covariance
 between columns outside $U$ is nonnegative, as in each design of the strong-factor study, it is at least
 $\theta^*_j\lmin(\Sig)$.}

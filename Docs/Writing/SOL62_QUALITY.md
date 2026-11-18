@@ -24,5 +24,6 @@ Wall-clock time was not logged per read, so speed is judged against the typical 
 ## gpt-6.2-sol reads
 | Date | Read | Findings (C/S/F/E) | Real findings | False positives | Brief fidelity | Speed | Reason |
 |---|---|---|---|---|---|---|---|
+| 2026-11-17 | A5 final (manuscript, diff vs A5b) | 2/9/6/2 = 19 | BETTER: 18 confirmed, including two C catches 6.1 never reached (Thm 2's raw-label conventions; an AR(1) visibility counterexample) | WORSE: 1 rejected (#01 flags the display label (SG) against the brief's key name; not a defect), vs 0 in 6.1's 38 | SAME: stayed in the diff scope, used the brief's format and paths | BETTER: ~6 min for a whole-manuscript diff | depth up, precision slightly down; 6 of the 18 fixes needed a second pass, because the findings cited several locations each |
 
-Tally (BETTER / SAME / WORSE, per axis): none yet.
+Tally after 1 read (BETTER / SAME / WORSE): real findings 1/0/0; false positives 0/0/1; brief fidelity 0/1/0; speed 1/0/0.

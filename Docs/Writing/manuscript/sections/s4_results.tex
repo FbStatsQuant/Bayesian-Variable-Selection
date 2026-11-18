@@ -110,12 +110,12 @@ $L=1$.
 
 \begin{theorem}[Posterior concentration, random sub-Gaussian design]\label{thm:post-random}
 Assume \as{GL}, \as{DIM} with $p=\praw$ (the bound on the number of raw predictors), \as{SP}, \as{SGR}, \as{FSb} and
-\as{EFS}. Columns keep their raw labels; on the event that the method removes a column, set $\PIP_j:=0$ for a removed
+\as{EFS}. Columns keep their raw labels, and $\Sz:=\{j\in\set{\praw}:\beta^*_j\neq0\}$ with $\bstar$ the coefficients of the raw design; on the event that the method removes a column, set $\PIP_j:=0$ for a removed
 column $j$ and $\pis{\Sz}:=0$ if $\Sz\notin\Om$, and, if no column is retained, take the posterior to be a point mass at
 $\emptyset$. Then, under the joint law of the design and the noise,
 \begin{gather}
   1-\pis{\Sz}=\OP\Big(\sqrt{\frac{\log n}{n}}\Big),\qquad \P\big(\HPM=\MPM=\Sz\big)\to1,\label{eq:post-random}\\
-  \max_{j\in\set{p}}\big|\PIP_j-\ind{j\in\Sz}\big|=\OP\Big(\sqrt{\frac{\log n}{n}}\Big).\nonumber
+  \max_{j\in\set{\praw}}\big|\PIP_j-\ind{j\in\Sz}\big|=\OP\Big(\sqrt{\frac{\log n}{n}}\Big).\nonumber
 \end{gather}
 \end{theorem}
 
@@ -353,7 +353,7 @@ independently checked}. Registry: Appendix~\ref{app:status}, row 3.1.}
 (i) \emph{Why $b<\tfrac12$} (a heuristic): at model size about $\sqrt n$ the penalty of one more predictor stops dominating
 the best of $p$ noise gains; whether the conclusion fails for larger $b$ is open.
 (ii) \emph{Moderate AR correlation} means autoregressive correlation bounded away from one, as the AR(1) correlations
-$0.5$ and $0.6$ of our designs; visibility must still hold (with the true predictors spread apart, as in our designs,
+$0.5$ and $0.6$ of our designs; visibility must still hold (with the true predictors spread far enough apart, as in our designs,
 or by Remark~\ref{rem:vis}).
 \end{remark}
 
@@ -449,7 +449,7 @@ size budget of Theorem~\ref{thm:screen} requires $n\gtrsim1{,}450$.
 calibration, it is unbiased for the evidence $Z$, on every design and every data set.}
 
 \why{It is the one reported estimate with a guarantee that needs no condition on the design: the run reports $\log\Zhat$,
-and $\Zhat$ is unbiased for $Z$. It also underlies the reported lower bound $\log(0.05\,\Zhat)$ for $\log Z$
+and, given the frozen calibration and on its success, the estimate of the uninterrupted run is unbiased for $Z$. It also underlies the reported lower bound $\log(0.05\,\Zhat)$ for $\log Z$
 (Appendix~\ref{app:params}).}
 
 \begin{proposition}[Each island's evidence estimate is unbiased]\label{prop:unbiased}

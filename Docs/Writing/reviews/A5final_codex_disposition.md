@@ -20,3 +20,13 @@
 - 18 (S) The NL gloss gives the n^{-1/2} rate, the local conditioning and the locality conditions.
 - 19 (S) §6 assigns conventions per result, and notes that under (C2⁺) every run produces output.
 C findings 04 and 08 → diff-only Opus re-check (WD8).
+
+## After the Opus re-check (reviews/A5final_recheck_opus.md: OPEN 04, 08, 05, 09, 12, 13)
+Each repair below is the one the re-check suggested, applied as written:
+- 04: the maximum runs over [p_raw]; S₀ := {j ∈ [p_raw]: β*_j ≠ 0}, with β* the raw design's coefficients.
+- 08: the bound |θ_j| λ_min/2 is attached to *our* AR designs (AR(1) 0.5 and 0.6, true predictors spread apart); Remark 11(ii) says "spread far enough apart".
+- 05: both §5 mixture sentences carry "BBᵀ a correlation matrix".
+- 09: intro item 3 adds "when the list is nonempty".
+- 12: the Result 5 why-line says "given the frozen calibration and on its success, the estimate of the uninterrupted run is unbiased".
+- 13: intro item 6 says "the expected posterior miss is at least of order r_n".
+Compiled with rc=0 and 0 overfull boxes; §6 ends on p.26. A second re-check was not run (light-pace directive): the repairs are verbatim from the re-check.

@@ -24,15 +24,15 @@ an evidence estimate (Section~\ref{sec:method}).
     with no lower bound on the coefficients (Result~2);
   \item for block and moderate AR correlation, with probability tending to one, every run that produces output reports
     exactly the true model, for every seed and calibration outcome, and the inclusion probabilities, median model and
-    evidence renormalised to its returned list are consistent. It needs two conditions: no true predictor is masked by
+    evidence renormalised to its returned list, when the list is nonempty, are consistent. It needs two conditions: no true predictor is masked by
     $15$ or fewer others (visibility), and the predictors able to imitate the signal are few and local. The second fails
     for pervasive common factors when $p\gg\sqrt n$; visibility fails for strong factors whose mixed-sign coefficients lie
     on a fixed null set of cancellations (Result~3);
   \item for a fixed design with a floor on small sets and fixed signal bounds, whether or not the conditions of Result~3
     hold, a run rarely certifies a reported model within a size budget $k_n$ that misses a true predictor (Result~4);
   \item the evidence estimate is unbiased on every design (Result~5);
-  \item no design allows a posterior rate faster than $n^{-1/2}$, and on two families of designs the rate $\rn$ of
-    Result~1 is attained (Result~6).
+  \item no design allows a posterior rate faster than $n^{-1/2}$, and on two families of designs the expected posterior
+    miss is at least of order $\rn$, the rate of Result~1 (Result~6).
 \end{enumerate}
 
 \paragraph{Earlier work.} The closest earlier analysis is that of \citet{SongLiang2015}, who prove selection and
