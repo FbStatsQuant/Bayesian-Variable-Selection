@@ -1,4 +1,4 @@
-# W3-FAMC — PLAN (v0.1, 2026-11-17; lead Claude Opus 5.5 high, claudeAgent_personal)
+# W3-FAMC — PLAN (v0.2; v0.2 = DP1–DP3 resolved, P7 staffing; 2026-11-17; lead Claude Opus 5.5 high, claudeAgent_personal)
 
 Brief: `Theory_work/Dept/briefs/W3-FAMC_LEAD_BRIEF.md` (dept/theory). This is a Tier B assembly with no new lemma.
 Budget: 1–2 lead-days, KILL at 3. Folder template: W3-D3. Branch: `theory/W3-FAMC` from origin/main f0b8246c.
@@ -32,7 +32,7 @@ Budget: 1–2 lead-days, KILL at 3. Folder template: W3-D3. Branch: `theory/W3-F
 | P4 | Sol line check R1 (gpt-6.2-sol, codex, reasoningEffort high; model-id header); triage against the acceptance filter; 1 line in `Dept/SOL62_QUALITY.md` (sent to the manager) | Sol | after release |
 | P5 | class-1 search for (BLK)/(AR) as theorem conditions in BVS papers already in the record (TRACK_B citations only; no new reading list) | Sonnet subagent | optional; 2b stands otherwise |
 | P6 | fixes, then diff round R2 | lead + Sol | — |
-| P7 | council: Sol + an Opus seat that did not author the text, same manifest | manager staffs | 2 distinct seats |
+| P7 | council R3: Sol (gpt-6.2-sol, high) + a fresh Opus seat (claudeAgent_personal, high) that did not author the text, bound to one manifest (`reviews/MANIFEST_R3.txt`) | lead launches (brief step 4) | 2 distinct seats, bind |
 | P8 | manifest.py v2 freeze (no registry files, no live logs); citecheck; CHECKPOINT; recorder dry run | lead / recorder | real run on HQ GO only |
 
 ## Decision points for the manager

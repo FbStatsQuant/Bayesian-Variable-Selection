@@ -1,0 +1,10 @@
+id	file[:lines]	uses	sha	checked_sha	checked_by	state
+S:setting	STATEMENT.md:25-32		efc9c972b88ecf7c			UNCHECKED
+S:reader	STATEMENT.md:34-46	S:Cor-FAMC	8196cf7d4dbc1d75			UNCHECKED
+S:Cor-FAMC	STATEMENT.md:48-80	S:setting	32e68d4c2c8126a7			UNCHECKED
+S:class	STATEMENT.md:103-123	S:Cor-FAMC	c07458ea3dd92578			UNCHECKED
+S:map	STATEMENT.md:125-159	S:Cor-FAMC	b466ba2760dc2c53			UNCHECKED
+S:inputs	STATEMENT.md:161-188		1b687880f5332a60			UNCHECKED
+P:BLK	lemmas/A_assembly.md:19-79	S:Cor-FAMC,S:inputs	6e8e862cd6297047			UNCHECKED
+P:AR	lemmas/A_assembly.md:81-118	S:Cor-FAMC,S:inputs	74b7db6ce7cdaaf4			UNCHECKED
+R:registry	REPORT.md:39-50	S:Cor-FAMC	9994d1fb2c61e84b			UNCHECKED

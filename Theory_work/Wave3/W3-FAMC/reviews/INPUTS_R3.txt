@@ -1,0 +1,13 @@
+# W3-FAMC council R3: external inputs (no registry files, no live logs)
+Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+Theory_work/Wave3/W3-READER/NOTATION.md
+Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md
+Theory_work/Wave3/W3-RM2-R/STATEMENT.md
+Theory_work/Wave3/W3-RM2/STATEMENT.md
+Theory_work/Wave3/W3-RM2/lemmas/L6_examples.md
+Theory_work/Wave3/W3-RM2/lemmas/L5_formR.md
+Theory_work/Wave2/W2-LOC2/lemmas/L6_poly.md
+Theory_work/Wave1C/C-GROW/lemmas/L5_instances.md
+Theory_work/Wave1C/C-GROW/STATEMENT.md
+Theory_work/Wave3/W3-RM/STATEMENT.md
+Theory_work/Wave3/W3-AUDIT/TRACK_B.md
