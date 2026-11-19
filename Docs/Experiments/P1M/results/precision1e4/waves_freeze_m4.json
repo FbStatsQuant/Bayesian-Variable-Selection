@@ -1,0 +1,3258 @@
+{
+ "A0": {
+  "batches": [
+   {
+    "batch": "PL_A0_1",
+    "plan_sha256": "369197e9de087974406f416e316794cd2eb303b0e37b4a974088dc928758268d",
+    "fits": [
+     {
+      "run_id": "4-AR-n200-r01-P-N2500-m4-c1-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 64,
+      "N": 2500,
+      "seed": 402021201,
+      "data_seed": 402020001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "prec"
+     },
+     {
+      "run_id": "4-AR-n200-r01-P-N2500-m1-I0-c1-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 64,
+      "N": 2500,
+      "seed": 402021801,
+      "data_seed": 402020001,
+      "params": {
+       "refine_m": 1,
+       "I_max": 0
+      },
+      "klass": "prec"
+     }
+    ],
+    "tasks": 136,
+    "worst_case_core_h": 278.7,
+    "core_h_cap": 278.8
+   },
+   {
+    "batch": "PL_A0_2",
+    "plan_sha256": "27fff2dbf80afef567f31d61384401b4dfa60c431515719de5b36f6d8f40f0e1",
+    "fits": [
+     {
+      "run_id": "4-AR-n200-r01-A3-exactlink-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020001,
+      "data_seed": 402020001,
+      "params": {
+       "partition": "exact",
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "a3"
+     }
+    ],
+    "tasks": 20,
+    "worst_case_core_h": 48.7,
+    "core_h_cap": 48.8
+   }
+  ]
+ },
+ "P1": {
+  "batches": [
+   {
+    "batch": "PL_P1_1",
+    "plan_sha256": "c373a9622ecdad7e07603c271d588f26536c0fee524b7c9c18144a1dcd86f819",
+    "fits": [
+     {
+      "run_id": "4-AR-n200-r01-P-N2500-m1-c1-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 64,
+      "N": 2500,
+      "seed": 402021001,
+      "data_seed": 402020001,
+      "params": {
+       "refine_m": 1,
+       "I_max": 3
+      },
+      "klass": "prec"
+     },
+     {
+      "run_id": "4-AR-n200-r01-P-N2500-m1-c2-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 64,
+      "N": 2500,
+      "seed": 402021101,
+      "data_seed": 402020001,
+      "params": {
+       "refine_m": 1,
+       "I_max": 3
+      },
+      "klass": "prec"
+     }
+    ],
+    "tasks": 136,
+    "worst_case_core_h": 278.7,
+    "core_h_cap": 278.8
+   },
+   {
+    "batch": "PL_P1_2",
+    "plan_sha256": "eb0a944fc7830e2e23bf05635baab24c0f6b5bc213a8ead73cf0682bef2ff817",
+    "fits": [
+     {
+      "run_id": "4-AR-n200-r01-P-N2500-m4-c2-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 64,
+      "N": 2500,
+      "seed": 402021301,
+      "data_seed": 402020001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "prec"
+     },
+     {
+      "run_id": "4-AR-n200-r01-P-N2500-m1-I0-c2-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 64,
+      "N": 2500,
+      "seed": 402021901,
+      "data_seed": 402020001,
+      "params": {
+       "refine_m": 1,
+       "I_max": 0
+      },
+      "klass": "prec"
+     }
+    ],
+    "tasks": 136,
+    "worst_case_core_h": 278.7,
+    "core_h_cap": 278.8
+   }
+  ]
+ },
+ "P2": {
+  "batches": [
+   {
+    "batch": "PL_P2_1",
+    "plan_sha256": "e2cdd308ae7667bcebee3b39c24046c9453a0cd5e710615e2ad23841f70c988b",
+    "fits": [
+     {
+      "run_id": "4-ARweak-n200-r01-P-N2500-m1-c1-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 64,
+      "N": 2500,
+      "seed": 403021001,
+      "data_seed": 403020001,
+      "params": {
+       "refine_m": 1,
+       "I_max": 3
+      },
+      "klass": "prec"
+     },
+     {
+      "run_id": "4-ARweak-n200-r01-P-N2500-m1-c2-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 64,
+      "N": 2500,
+      "seed": 403021101,
+      "data_seed": 403020001,
+      "params": {
+       "refine_m": 1,
+       "I_max": 3
+      },
+      "klass": "prec"
+     }
+    ],
+    "tasks": 136,
+    "worst_case_core_h": 278.7,
+    "core_h_cap": 278.8
+   },
+   {
+    "batch": "PL_P2_2",
+    "plan_sha256": "0552030e219b5d7b4835aca46cf47558a17170f5df6dfcfccadbbca2b02796ff",
+    "fits": [
+     {
+      "run_id": "4-ARweak-n200-r01-P-N2500-m4-c1-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 64,
+      "N": 2500,
+      "seed": 403021201,
+      "data_seed": 403020001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "prec"
+     },
+     {
+      "run_id": "4-ARweak-n200-r01-P-N2500-m4-c2-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 64,
+      "N": 2500,
+      "seed": 403021301,
+      "data_seed": 403020001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "prec"
+     }
+    ],
+    "tasks": 136,
+    "worst_case_core_h": 278.7,
+    "core_h_cap": 278.8
+   }
+  ]
+ },
+ "P3": {
+  "batches": [
+   {
+    "batch": "PL_P3_1",
+    "plan_sha256": "e2ee9d5d6a3e659c661f40267c5028629828b9e8edd4401f2381dfddbc205961",
+    "fits": [
+     {
+      "run_id": "4-ARweak-n200-r01-P-N2500-m1-I0-c1-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 64,
+      "N": 2500,
+      "seed": 403021801,
+      "data_seed": 403020001,
+      "params": {
+       "refine_m": 1,
+       "I_max": 0
+      },
+      "klass": "prec"
+     },
+     {
+      "run_id": "4-ARweak-n200-r01-P-N2500-m1-I0-c2-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 64,
+      "N": 2500,
+      "seed": 403021901,
+      "data_seed": 403020001,
+      "params": {
+       "refine_m": 1,
+       "I_max": 0
+      },
+      "klass": "prec"
+     }
+    ],
+    "tasks": 136,
+    "worst_case_core_h": 278.7,
+    "core_h_cap": 278.8
+   },
+   {
+    "batch": "PL_P3_2",
+    "plan_sha256": "746d804e8b162e6e16c8110853ecb5655bc5158b4ecb23006a41f5df9df443ad",
+    "fits": [
+     {
+      "run_id": "4-ADJOPP-n200-r01-P-N2500-m1-c1-s1",
+      "design": "ADJ-OPP",
+      "n": 200,
+      "Rp": 64,
+      "N": 2500,
+      "seed": 405021001,
+      "data_seed": 405020001,
+      "params": {
+       "refine_m": 1,
+       "I_max": 3
+      },
+      "klass": "prec"
+     },
+     {
+      "run_id": "4-ADJOPP-n200-r01-P-N2500-m1-c2-s1",
+      "design": "ADJ-OPP",
+      "n": 200,
+      "Rp": 64,
+      "N": 2500,
+      "seed": 405021101,
+      "data_seed": 405020001,
+      "params": {
+       "refine_m": 1,
+       "I_max": 3
+      },
+      "klass": "prec"
+     }
+    ],
+    "tasks": 136,
+    "worst_case_core_h": 278.7,
+    "core_h_cap": 278.8
+   }
+  ]
+ },
+ "P4": {
+  "batches": [
+   {
+    "batch": "PL_P4_1",
+    "plan_sha256": "e6a56439a9b6a7e7dd00d1f9d6424beb503618db0dc8522010f9a5922aa05f0e",
+    "fits": [
+     {
+      "run_id": "4-ADJOPP-n200-r01-P-N2500-m4-c1-s1",
+      "design": "ADJ-OPP",
+      "n": 200,
+      "Rp": 64,
+      "N": 2500,
+      "seed": 405021201,
+      "data_seed": 405020001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "prec"
+     },
+     {
+      "run_id": "4-ADJOPP-n200-r01-P-N2500-m4-c2-s1",
+      "design": "ADJ-OPP",
+      "n": 200,
+      "Rp": 64,
+      "N": 2500,
+      "seed": 405021301,
+      "data_seed": 405020001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "prec"
+     }
+    ],
+    "tasks": 136,
+    "worst_case_core_h": 278.7,
+    "core_h_cap": 278.8
+   },
+   {
+    "batch": "PL_P4_2",
+    "plan_sha256": "1bf980d6338fc98060bbc022c44317b575be7724ed052bd76b180f412e4261b5",
+    "fits": [
+     {
+      "run_id": "4-ADJOPP-n200-r01-P-N2500-m1-I0-c1-s1",
+      "design": "ADJ-OPP",
+      "n": 200,
+      "Rp": 64,
+      "N": 2500,
+      "seed": 405021801,
+      "data_seed": 405020001,
+      "params": {
+       "refine_m": 1,
+       "I_max": 0
+      },
+      "klass": "prec"
+     },
+     {
+      "run_id": "4-ADJOPP-n200-r01-P-N2500-m1-I0-c2-s1",
+      "design": "ADJ-OPP",
+      "n": 200,
+      "Rp": 64,
+      "N": 2500,
+      "seed": 405021901,
+      "data_seed": 405020001,
+      "params": {
+       "refine_m": 1,
+       "I_max": 0
+      },
+      "klass": "prec"
+     }
+    ],
+    "tasks": 136,
+    "worst_case_core_h": 278.7,
+    "core_h_cap": 278.8
+   }
+  ]
+ },
+ "H1": {
+  "batches": [
+   {
+    "batch": "PL_H1_1",
+    "plan_sha256": "096cbe56b1f286c9496f6afd28474a17cf5eb6a02e4d8207109ae1ba0de9a089",
+    "fits": [
+     {
+      "run_id": "4-AR-n200-r01-P-N10000-m1-c1-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 64,
+      "N": 10000,
+      "seed": 402021401,
+      "data_seed": 402020001,
+      "params": {
+       "refine_m": 1,
+       "I_max": 3
+      },
+      "klass": "prec"
+     },
+     {
+      "run_id": "4-AR-n200-r01-P-N10000-m1-c2-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 64,
+      "N": 10000,
+      "seed": 402021501,
+      "data_seed": 402020001,
+      "params": {
+       "refine_m": 1,
+       "I_max": 3
+      },
+      "klass": "prec"
+     }
+    ],
+    "tasks": 136,
+    "worst_case_core_h": 278.7,
+    "core_h_cap": 278.8
+   },
+   {
+    "batch": "PL_H1_2",
+    "plan_sha256": "821dc5de7a252676ff8c045dc62adcb771ecda624c04e5ae0aac6ff92e05327e",
+    "fits": [
+     {
+      "run_id": "4-AR-n200-r01-P-N10000-m4-c1-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 64,
+      "N": 10000,
+      "seed": 402021601,
+      "data_seed": 402020001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "prec"
+     },
+     {
+      "run_id": "4-AR-n200-r01-P-N10000-m4-c2-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 64,
+      "N": 10000,
+      "seed": 402021701,
+      "data_seed": 402020001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "prec"
+     }
+    ],
+    "tasks": 136,
+    "worst_case_core_h": 278.7,
+    "core_h_cap": 278.8
+   }
+  ]
+ },
+ "H2": {
+  "batches": [
+   {
+    "batch": "PL_H2_1",
+    "plan_sha256": "c554d5d3942175599a14d75e108dc802018dbe213fa156c4a0818ebc5bea5ecb",
+    "fits": [
+     {
+      "run_id": "4-ARweak-n200-r01-P-N10000-m1-c1-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 64,
+      "N": 10000,
+      "seed": 403021401,
+      "data_seed": 403020001,
+      "params": {
+       "refine_m": 1,
+       "I_max": 3
+      },
+      "klass": "prec"
+     },
+     {
+      "run_id": "4-ARweak-n200-r01-P-N10000-m1-c2-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 64,
+      "N": 10000,
+      "seed": 403021501,
+      "data_seed": 403020001,
+      "params": {
+       "refine_m": 1,
+       "I_max": 3
+      },
+      "klass": "prec"
+     }
+    ],
+    "tasks": 136,
+    "worst_case_core_h": 278.7,
+    "core_h_cap": 278.8
+   },
+   {
+    "batch": "PL_H2_2",
+    "plan_sha256": "b69c802debcdd16d9b6905737a3ee789ba136a83c3736f0744d2e3949133dcc6",
+    "fits": [
+     {
+      "run_id": "4-ARweak-n200-r01-P-N10000-m4-c1-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 64,
+      "N": 10000,
+      "seed": 403021601,
+      "data_seed": 403020001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "prec"
+     },
+     {
+      "run_id": "4-ARweak-n200-r01-P-N10000-m4-c2-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 64,
+      "N": 10000,
+      "seed": 403021701,
+      "data_seed": 403020001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "prec"
+     }
+    ],
+    "tasks": 136,
+    "worst_case_core_h": 278.7,
+    "core_h_cap": 278.8
+   }
+  ]
+ },
+ "H3": {
+  "batches": [
+   {
+    "batch": "PL_H3_1",
+    "plan_sha256": "214c8d47fef19055e2f1a0bf4072e9e288b25aec150e3b822334b8992398dc5e",
+    "fits": [
+     {
+      "run_id": "4-ADJOPP-n200-r01-P-N10000-m1-c1-s1",
+      "design": "ADJ-OPP",
+      "n": 200,
+      "Rp": 64,
+      "N": 10000,
+      "seed": 405021401,
+      "data_seed": 405020001,
+      "params": {
+       "refine_m": 1,
+       "I_max": 3
+      },
+      "klass": "prec"
+     },
+     {
+      "run_id": "4-ADJOPP-n200-r01-P-N10000-m1-c2-s1",
+      "design": "ADJ-OPP",
+      "n": 200,
+      "Rp": 64,
+      "N": 10000,
+      "seed": 405021501,
+      "data_seed": 405020001,
+      "params": {
+       "refine_m": 1,
+       "I_max": 3
+      },
+      "klass": "prec"
+     }
+    ],
+    "tasks": 136,
+    "worst_case_core_h": 278.7,
+    "core_h_cap": 278.8
+   },
+   {
+    "batch": "PL_H3_2",
+    "plan_sha256": "6866dd8843ec5d4514eab761b73603992514166618162942cd14f7614405e05d",
+    "fits": [
+     {
+      "run_id": "4-ADJOPP-n200-r01-P-N10000-m4-c1-s1",
+      "design": "ADJ-OPP",
+      "n": 200,
+      "Rp": 64,
+      "N": 10000,
+      "seed": 405021601,
+      "data_seed": 405020001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "prec"
+     },
+     {
+      "run_id": "4-ADJOPP-n200-r01-P-N10000-m4-c2-s1",
+      "design": "ADJ-OPP",
+      "n": 200,
+      "Rp": 64,
+      "N": 10000,
+      "seed": 405021701,
+      "data_seed": 405020001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "prec"
+     }
+    ],
+    "tasks": 136,
+    "worst_case_core_h": 278.7,
+    "core_h_cap": 278.8
+   }
+  ]
+ },
+ "S1": {
+  "batches": [
+   {
+    "batch": "PL_S1_1",
+    "plan_sha256": "6cd55a94307ef86241a0c3c277a7ec3a665f0a7aacc21b5234645339e13cb675",
+    "fits": [
+     {
+      "run_id": "4-ADJOPP-n200-r01-VF-s1",
+      "design": "ADJ-OPP",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 405020001,
+      "data_seed": 405020001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-ADJOPP-n200-r02-VF-s1",
+      "design": "ADJ-OPP",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 405020002,
+      "data_seed": 405020002,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-ADJOPP-n200-r03-V-s1",
+      "design": "ADJ-OPP",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 405020003,
+      "data_seed": 405020003,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-ADJOPP-n200-r04-V-s1",
+      "design": "ADJ-OPP",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 405020004,
+      "data_seed": 405020004,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-ADJOPP-n200-r05-V-s1",
+      "design": "ADJ-OPP",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 405020005,
+      "data_seed": 405020005,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-AR-n200-r01-VF-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020001,
+      "data_seed": 402020001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-AR-n200-r01-VF-s2",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020101,
+      "data_seed": 402020001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     }
+    ],
+    "tasks": 140,
+    "worst_case_core_h": 326.7,
+    "core_h_cap": 326.8
+   },
+   {
+    "batch": "PL_S1_2",
+    "plan_sha256": "8a0868aa006e57cd1ba44a418a16fc5c374adb4d4a200cb66e122a7d477d989d",
+    "fits": [
+     {
+      "run_id": "4-AR-n200-r02-VF-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020002,
+      "data_seed": 402020002,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-AR-n200-r02-VF-s2",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020102,
+      "data_seed": 402020002,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-AR-n200-r03-VF-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020003,
+      "data_seed": 402020003,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-AR-n200-r03-VF-s2",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020103,
+      "data_seed": 402020003,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-AR-n200-r04-VF-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020004,
+      "data_seed": 402020004,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-AR-n200-r04-VF-s2",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020104,
+      "data_seed": 402020004,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-AR-n200-r05-V-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020005,
+      "data_seed": 402020005,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     }
+    ],
+    "tasks": 140,
+    "worst_case_core_h": 326.7,
+    "core_h_cap": 326.8
+   },
+   {
+    "batch": "PL_S1_3",
+    "plan_sha256": "590014f712346eae12cd765e02b06ebac792dc259234511d2f3b640c7afc7b43",
+    "fits": [
+     {
+      "run_id": "4-AR-n200-r05-V-s2",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020105,
+      "data_seed": 402020005,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-AR-n200-r06-V-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020006,
+      "data_seed": 402020006,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-AR-n200-r06-V-s2",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020106,
+      "data_seed": 402020006,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-AR-n200-r07-V-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020007,
+      "data_seed": 402020007,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-AR-n200-r07-V-s2",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020107,
+      "data_seed": 402020007,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-AR-n200-r08-V-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020008,
+      "data_seed": 402020008,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-AR-n200-r08-V-s2",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020108,
+      "data_seed": 402020008,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     }
+    ],
+    "tasks": 140,
+    "worst_case_core_h": 326.7,
+    "core_h_cap": 326.8
+   },
+   {
+    "batch": "PL_S1_4",
+    "plan_sha256": "a93bfa5332c6c4ea436e9dce5343a4bc0fa7f6a239316ecfad120f8720a26ed1",
+    "fits": [
+     {
+      "run_id": "4-AR-n200-r09-V-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020009,
+      "data_seed": 402020009,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-AR-n200-r09-V-s2",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020109,
+      "data_seed": 402020009,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-AR-n200-r10-V-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020010,
+      "data_seed": 402020010,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-AR-n200-r10-V-s2",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020110,
+      "data_seed": 402020010,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-ARweak-n200-r01-VF-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403020001,
+      "data_seed": 403020001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-ARweak-n200-r02-VF-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403020002,
+      "data_seed": 403020002,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-ARweak-n200-r03-V-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403020003,
+      "data_seed": 403020003,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     }
+    ],
+    "tasks": 140,
+    "worst_case_core_h": 326.7,
+    "core_h_cap": 326.8
+   }
+  ]
+ },
+ "S2": {
+  "batches": [
+   {
+    "batch": "PL_S2_1",
+    "plan_sha256": "e729a13f2725e12ef7d080b214ba85f3082e081d2e5bee48329b282110104720",
+    "fits": [
+     {
+      "run_id": "4-ARweak-n200-r04-V-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403020004,
+      "data_seed": 403020004,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-ARweak-n200-r05-V-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403020005,
+      "data_seed": 403020005,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-ARweak-n200-r06-V-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403020006,
+      "data_seed": 403020006,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-ARweak-n200-r07-V-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403020007,
+      "data_seed": 403020007,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-ARweak-n200-r08-V-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403020008,
+      "data_seed": 403020008,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-ARweak-n200-r09-V-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403020009,
+      "data_seed": 403020009,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-ARweak-n200-r10-V-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403020010,
+      "data_seed": 403020010,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     }
+    ],
+    "tasks": 140,
+    "worst_case_core_h": 326.7,
+    "core_h_cap": 326.8
+   },
+   {
+    "batch": "PL_S2_2",
+    "plan_sha256": "b55ebcae68f1dfb3ebb94b695705f5f74a95680a526ce110a546871b887f4463",
+    "fits": [
+     {
+      "run_id": "4-ARweak-n200-r11-V-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403020011,
+      "data_seed": 403020011,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-ARweak-n200-r12-V-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403020012,
+      "data_seed": 403020012,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-ARweak-n200-r13-V-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403020013,
+      "data_seed": 403020013,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-ARweak-n200-r14-V-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403020014,
+      "data_seed": 403020014,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-ARweak-n200-r15-V-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403020015,
+      "data_seed": 403020015,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-ARweak-n200-r16-V-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403020016,
+      "data_seed": 403020016,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-ARweak-n200-r17-V-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403020017,
+      "data_seed": 403020017,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     }
+    ],
+    "tasks": 140,
+    "worst_case_core_h": 326.7,
+    "core_h_cap": 326.8
+   },
+   {
+    "batch": "PL_S2_3",
+    "plan_sha256": "f3b274a7eb6f4dc306d493e037fb1a94f8f12687f5c5a35eebcedffe6f1bcbc8",
+    "fits": [
+     {
+      "run_id": "4-ARweak-n200-r18-V-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403020018,
+      "data_seed": 403020018,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-ARweak-n200-r19-V-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403020019,
+      "data_seed": 403020019,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-ARweak-n200-r20-V-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403020020,
+      "data_seed": 403020020,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-BLK-n200-r01-V-s1",
+      "design": "BLK",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 404020001,
+      "data_seed": 404020001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-BLK-n200-r02-V-s1",
+      "design": "BLK",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 404020002,
+      "data_seed": 404020002,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-BLK-n200-r03-V-s1",
+      "design": "BLK",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 404020003,
+      "data_seed": 404020003,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-BLK-n200-r04-V-s1",
+      "design": "BLK",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 404020004,
+      "data_seed": 404020004,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     }
+    ],
+    "tasks": 140,
+    "worst_case_core_h": 326.7,
+    "core_h_cap": 326.8
+   },
+   {
+    "batch": "PL_S2_4",
+    "plan_sha256": "83d6d33a04e6c75eec9a3b680c0934be612a590e35ec06ba7278369045f0a581",
+    "fits": [
+     {
+      "run_id": "4-BLK-n200-r05-V-s1",
+      "design": "BLK",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 404020005,
+      "data_seed": 404020005,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-IND-n200-r01-VF-s1",
+      "design": "IND",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 401020001,
+      "data_seed": 401020001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-IND-n200-r02-V-s1",
+      "design": "IND",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 401020002,
+      "data_seed": 401020002,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-IND-n200-r03-V-s1",
+      "design": "IND",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 401020003,
+      "data_seed": 401020003,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-IND-n200-r04-V-s1",
+      "design": "IND",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 401020004,
+      "data_seed": 401020004,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-IND-n200-r05-V-s1",
+      "design": "IND",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 401020005,
+      "data_seed": 401020005,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-NULL-n200-r01-VF-s1",
+      "design": "NULL",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 406020001,
+      "data_seed": 406020001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     }
+    ],
+    "tasks": 140,
+    "worst_case_core_h": 326.7,
+    "core_h_cap": 326.8
+   }
+  ]
+ },
+ "S3": {
+  "batches": [
+   {
+    "batch": "PL_S3_1",
+    "plan_sha256": "99ec1b424c18a95187aed0368ba1b7a1cd339c3cb16ca53e5f3fef58518d1419",
+    "fits": [
+     {
+      "run_id": "4-NULL-n200-r02-V-s1",
+      "design": "NULL",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 406020002,
+      "data_seed": 406020002,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-NULL-n200-r03-V-s1",
+      "design": "NULL",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 406020003,
+      "data_seed": 406020003,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-NULL-n200-r04-V-s1",
+      "design": "NULL",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 406020004,
+      "data_seed": 406020004,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     },
+     {
+      "run_id": "4-NULL-n200-r05-V-s1",
+      "design": "NULL",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 406020005,
+      "data_seed": 406020005,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s200"
+     }
+    ],
+    "tasks": 80,
+    "worst_case_core_h": 186.7,
+    "core_h_cap": 186.8
+   }
+  ]
+ },
+ "S4": {
+  "batches": [
+   {
+    "batch": "PL_S4_1",
+    "plan_sha256": "dd39894872a8273267a23036a01e2689f777c52412b0eda7b7547704d6f90014",
+    "fits": [
+     {
+      "run_id": "4-AR-n200-r02-A3-exactlink-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020002,
+      "data_seed": 402020002,
+      "params": {
+       "partition": "exact",
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "a3"
+     },
+     {
+      "run_id": "4-AR-n200-r03-A3-exactlink-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020003,
+      "data_seed": 402020003,
+      "params": {
+       "partition": "exact",
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "a3"
+     },
+     {
+      "run_id": "4-AR-n200-r04-A3-exactlink-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020004,
+      "data_seed": 402020004,
+      "params": {
+       "partition": "exact",
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "a3"
+     },
+     {
+      "run_id": "4-AR-n200-r05-A3-exactlink-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020005,
+      "data_seed": 402020005,
+      "params": {
+       "partition": "exact",
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "a3"
+     },
+     {
+      "run_id": "4-AR-n200-r06-A3-exactlink-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020006,
+      "data_seed": 402020006,
+      "params": {
+       "partition": "exact",
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "a3"
+     },
+     {
+      "run_id": "4-AR-n200-r07-A3-exactlink-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020007,
+      "data_seed": 402020007,
+      "params": {
+       "partition": "exact",
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "a3"
+     },
+     {
+      "run_id": "4-AR-n200-r08-A3-exactlink-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020008,
+      "data_seed": 402020008,
+      "params": {
+       "partition": "exact",
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "a3"
+     }
+    ],
+    "tasks": 140,
+    "worst_case_core_h": 340.7,
+    "core_h_cap": 340.8
+   },
+   {
+    "batch": "PL_S4_2",
+    "plan_sha256": "4a70c3b5f1170e5ed58b2f8b428e77523d831126a1316b22c324783a4b700aef",
+    "fits": [
+     {
+      "run_id": "4-AR-n200-r09-A3-exactlink-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020009,
+      "data_seed": 402020009,
+      "params": {
+       "partition": "exact",
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "a3"
+     },
+     {
+      "run_id": "4-AR-n200-r10-A3-exactlink-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020010,
+      "data_seed": 402020010,
+      "params": {
+       "partition": "exact",
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "a3"
+     },
+     {
+      "run_id": "4-BLK-n200-r01-A3-exactlink-s1",
+      "design": "BLK",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 404020001,
+      "data_seed": 404020001,
+      "params": {
+       "partition": "exact",
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "a3"
+     },
+     {
+      "run_id": "4-BLK-n200-r02-A3-exactlink-s1",
+      "design": "BLK",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 404020002,
+      "data_seed": 404020002,
+      "params": {
+       "partition": "exact",
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "a3"
+     },
+     {
+      "run_id": "4-BLK-n200-r03-A3-exactlink-s1",
+      "design": "BLK",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 404020003,
+      "data_seed": 404020003,
+      "params": {
+       "partition": "exact",
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "a3"
+     },
+     {
+      "run_id": "4-BLK-n200-r04-A3-exactlink-s1",
+      "design": "BLK",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 404020004,
+      "data_seed": 404020004,
+      "params": {
+       "partition": "exact",
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "a3"
+     },
+     {
+      "run_id": "4-BLK-n200-r05-A3-exactlink-s1",
+      "design": "BLK",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 404020005,
+      "data_seed": 404020005,
+      "params": {
+       "partition": "exact",
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "a3"
+     }
+    ],
+    "tasks": 140,
+    "worst_case_core_h": 340.7,
+    "core_h_cap": 340.8
+   }
+  ]
+ },
+ "S5": {
+  "batches": [
+   {
+    "batch": "PL_S5_1",
+    "plan_sha256": "b0c2111875806efc67acd0bdacbab460822f08795f1959e57b7f4319a36bed5d",
+    "fits": [
+     {
+      "run_id": "4-AR-n100-r01-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402010001,
+      "data_seed": 402010001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-AR-n100-r02-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402010002,
+      "data_seed": 402010002,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-AR-n100-r03-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402010003,
+      "data_seed": 402010003,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-AR-n100-r04-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402010004,
+      "data_seed": 402010004,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-AR-n100-r05-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402010005,
+      "data_seed": 402010005,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-AR-n100-r06-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402010006,
+      "data_seed": 402010006,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-AR-n100-r07-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402010007,
+      "data_seed": 402010007,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     }
+    ],
+    "tasks": 140,
+    "worst_case_core_h": 326.7,
+    "core_h_cap": 326.8
+   },
+   {
+    "batch": "PL_S5_2",
+    "plan_sha256": "3473d31121891817310bac218ac7e97644584648b5ff46797c10cd704fabf31f",
+    "fits": [
+     {
+      "run_id": "4-AR-n100-r08-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402010008,
+      "data_seed": 402010008,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-AR-n100-r09-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402010009,
+      "data_seed": 402010009,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-AR-n100-r10-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402010010,
+      "data_seed": 402010010,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-ARweak-n100-r01-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403010001,
+      "data_seed": 403010001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-ARweak-n100-r02-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403010002,
+      "data_seed": 403010002,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-ARweak-n100-r03-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403010003,
+      "data_seed": 403010003,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-ARweak-n100-r04-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403010004,
+      "data_seed": 403010004,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     }
+    ],
+    "tasks": 140,
+    "worst_case_core_h": 326.7,
+    "core_h_cap": 326.8
+   },
+   {
+    "batch": "PL_S5_3",
+    "plan_sha256": "532f7dfd647de27d7790f62dec3c55c7175e5e8d841e5ea45c2ef156d2d1365e",
+    "fits": [
+     {
+      "run_id": "4-ARweak-n100-r05-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403010005,
+      "data_seed": 403010005,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-ARweak-n100-r06-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403010006,
+      "data_seed": 403010006,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-ARweak-n100-r07-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403010007,
+      "data_seed": 403010007,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-ARweak-n100-r08-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403010008,
+      "data_seed": 403010008,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-ARweak-n100-r09-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403010009,
+      "data_seed": 403010009,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-ARweak-n100-r10-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403010010,
+      "data_seed": 403010010,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-ARweak-n100-r11-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403010011,
+      "data_seed": 403010011,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     }
+    ],
+    "tasks": 140,
+    "worst_case_core_h": 326.7,
+    "core_h_cap": 326.8
+   },
+   {
+    "batch": "PL_S5_4",
+    "plan_sha256": "39a662d083e7434abc5cdceab811255a62e8dbecf796ee56e17cdba9be50891f",
+    "fits": [
+     {
+      "run_id": "4-ARweak-n100-r12-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403010012,
+      "data_seed": 403010012,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-ARweak-n100-r13-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403010013,
+      "data_seed": 403010013,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-ARweak-n100-r14-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403010014,
+      "data_seed": 403010014,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-ARweak-n100-r15-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403010015,
+      "data_seed": 403010015,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-ARweak-n100-r16-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403010016,
+      "data_seed": 403010016,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-ARweak-n100-r17-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403010017,
+      "data_seed": 403010017,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-ARweak-n100-r18-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403010018,
+      "data_seed": 403010018,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     }
+    ],
+    "tasks": 140,
+    "worst_case_core_h": 326.7,
+    "core_h_cap": 326.8
+   }
+  ]
+ },
+ "S6": {
+  "batches": [
+   {
+    "batch": "PL_S6_1",
+    "plan_sha256": "7973ae870b92c829e33451ee13e1b7d3ac2cafa3b5faeef686053f47c4d0f2f5",
+    "fits": [
+     {
+      "run_id": "4-ARweak-n100-r19-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403010019,
+      "data_seed": 403010019,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-ARweak-n100-r20-V-s1",
+      "design": "AR",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403010020,
+      "data_seed": 403010020,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-BLK-n100-r01-V-s1",
+      "design": "BLK",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 404010001,
+      "data_seed": 404010001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-BLK-n100-r02-V-s1",
+      "design": "BLK",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 404010002,
+      "data_seed": 404010002,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-BLK-n100-r03-V-s1",
+      "design": "BLK",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 404010003,
+      "data_seed": 404010003,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-BLK-n100-r04-V-s1",
+      "design": "BLK",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 404010004,
+      "data_seed": 404010004,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-BLK-n100-r05-V-s1",
+      "design": "BLK",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 404010005,
+      "data_seed": 404010005,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     }
+    ],
+    "tasks": 140,
+    "worst_case_core_h": 326.7,
+    "core_h_cap": 326.8
+   },
+   {
+    "batch": "PL_S6_2",
+    "plan_sha256": "be9ff727729e5938bfcec43c2b02c07272bb57ce2b32da4705c8fd39fc8f0b19",
+    "fits": [
+     {
+      "run_id": "4-IND-n100-r01-V-s1",
+      "design": "IND",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 401010001,
+      "data_seed": 401010001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-IND-n100-r02-V-s1",
+      "design": "IND",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 401010002,
+      "data_seed": 401010002,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-IND-n100-r03-V-s1",
+      "design": "IND",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 401010003,
+      "data_seed": 401010003,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-IND-n100-r04-V-s1",
+      "design": "IND",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 401010004,
+      "data_seed": 401010004,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     },
+     {
+      "run_id": "4-IND-n100-r05-V-s1",
+      "design": "IND",
+      "n": 100,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 401010005,
+      "data_seed": 401010005,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s100"
+     }
+    ],
+    "tasks": 100,
+    "worst_case_core_h": 233.3,
+    "core_h_cap": 233.4
+   }
+  ]
+ },
+ "S7": {
+  "batches": [
+   {
+    "batch": "PL_S7_1",
+    "plan_sha256": "a1d57651de6bbbbf759a4ed1cadfb0a4debd5183f575483068cdc716714600f1",
+    "fits": [
+     {
+      "run_id": "4-ADJOPP-n400-r01-V-s1",
+      "design": "ADJ-OPP",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 405040001,
+      "data_seed": 405040001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-ADJOPP-n400-r02-V-s1",
+      "design": "ADJ-OPP",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 405040002,
+      "data_seed": 405040002,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-ADJOPP-n400-r03-V-s1",
+      "design": "ADJ-OPP",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 405040003,
+      "data_seed": 405040003,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-ADJOPP-n400-r04-V-s1",
+      "design": "ADJ-OPP",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 405040004,
+      "data_seed": 405040004,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-ADJOPP-n400-r05-V-s1",
+      "design": "ADJ-OPP",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 405040005,
+      "data_seed": 405040005,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-AR-n400-r01-V-s1",
+      "design": "AR",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402040001,
+      "data_seed": 402040001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-AR-n400-r02-V-s1",
+      "design": "AR",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402040002,
+      "data_seed": 402040002,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     }
+    ],
+    "tasks": 140,
+    "worst_case_core_h": 466.7,
+    "core_h_cap": 466.8
+   }
+  ]
+ },
+ "S8": {
+  "batches": [
+   {
+    "batch": "PL_S8_1",
+    "plan_sha256": "59abdda73c662f67167976de40c9c82c08d5dac389eb2d4eb396adbde7cd1f80",
+    "fits": [
+     {
+      "run_id": "4-AR-n400-r03-V-s1",
+      "design": "AR",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402040003,
+      "data_seed": 402040003,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-AR-n400-r04-V-s1",
+      "design": "AR",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402040004,
+      "data_seed": 402040004,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-AR-n400-r05-V-s1",
+      "design": "AR",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402040005,
+      "data_seed": 402040005,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-AR-n400-r06-V-s1",
+      "design": "AR",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402040006,
+      "data_seed": 402040006,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-AR-n400-r07-V-s1",
+      "design": "AR",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402040007,
+      "data_seed": 402040007,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-AR-n400-r08-V-s1",
+      "design": "AR",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402040008,
+      "data_seed": 402040008,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-AR-n400-r09-V-s1",
+      "design": "AR",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402040009,
+      "data_seed": 402040009,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     }
+    ],
+    "tasks": 140,
+    "worst_case_core_h": 466.7,
+    "core_h_cap": 466.8
+   },
+   {
+    "batch": "PL_S8_2",
+    "plan_sha256": "3c5801be67f71b59d36dc34a41a4ca9af3e537113250ec211ad5bd10e4effdc0",
+    "fits": [
+     {
+      "run_id": "4-AR-n400-r10-V-s1",
+      "design": "AR",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402040010,
+      "data_seed": 402040010,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-ARweak-n400-r01-V-s1",
+      "design": "AR",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403040001,
+      "data_seed": 403040001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-ARweak-n400-r02-V-s1",
+      "design": "AR",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403040002,
+      "data_seed": 403040002,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-ARweak-n400-r03-V-s1",
+      "design": "AR",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403040003,
+      "data_seed": 403040003,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-ARweak-n400-r04-V-s1",
+      "design": "AR",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403040004,
+      "data_seed": 403040004,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-ARweak-n400-r05-V-s1",
+      "design": "AR",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403040005,
+      "data_seed": 403040005,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-ARweak-n400-r06-V-s1",
+      "design": "AR",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403040006,
+      "data_seed": 403040006,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     }
+    ],
+    "tasks": 140,
+    "worst_case_core_h": 466.7,
+    "core_h_cap": 466.8
+   },
+   {
+    "batch": "PL_S8_3",
+    "plan_sha256": "c3e095a0c32b1fd33d119d6ec0bad617aa6a23dacbd3ae8a24b5964a2df0f118",
+    "fits": [
+     {
+      "run_id": "4-ARweak-n400-r07-V-s1",
+      "design": "AR",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403040007,
+      "data_seed": 403040007,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-ARweak-n400-r08-V-s1",
+      "design": "AR",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403040008,
+      "data_seed": 403040008,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-ARweak-n400-r09-V-s1",
+      "design": "AR",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403040009,
+      "data_seed": 403040009,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-ARweak-n400-r10-V-s1",
+      "design": "AR",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403040010,
+      "data_seed": 403040010,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-BLK-n400-r01-V-s1",
+      "design": "BLK",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 404040001,
+      "data_seed": 404040001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-BLK-n400-r02-V-s1",
+      "design": "BLK",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 404040002,
+      "data_seed": 404040002,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-BLK-n400-r03-V-s1",
+      "design": "BLK",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 404040003,
+      "data_seed": 404040003,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     }
+    ],
+    "tasks": 140,
+    "worst_case_core_h": 466.7,
+    "core_h_cap": 466.8
+   },
+   {
+    "batch": "PL_S8_4",
+    "plan_sha256": "8fca07807056862a55faf4e9a2fd49996121a9c547b71b01340897e210a2f178",
+    "fits": [
+     {
+      "run_id": "4-BLK-n400-r04-V-s1",
+      "design": "BLK",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 404040004,
+      "data_seed": 404040004,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-BLK-n400-r05-V-s1",
+      "design": "BLK",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 404040005,
+      "data_seed": 404040005,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-IND-n400-r01-V-s1",
+      "design": "IND",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 401040001,
+      "data_seed": 401040001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-IND-n400-r02-V-s1",
+      "design": "IND",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 401040002,
+      "data_seed": 401040002,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-IND-n400-r03-V-s1",
+      "design": "IND",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 401040003,
+      "data_seed": 401040003,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-IND-n400-r04-V-s1",
+      "design": "IND",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 401040004,
+      "data_seed": 401040004,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     },
+     {
+      "run_id": "4-IND-n400-r05-V-s1",
+      "design": "IND",
+      "n": 400,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 401040005,
+      "data_seed": 401040005,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s400"
+     }
+    ],
+    "tasks": 140,
+    "worst_case_core_h": 466.7,
+    "core_h_cap": 466.8
+   }
+  ]
+ },
+ "S9": {
+  "batches": [
+   {
+    "batch": "PL_S9_1",
+    "plan_sha256": "10fed251981bf516136a23acb10b861c63b67d527fa99648d1c76954e64b24bb",
+    "fits": [
+     {
+      "run_id": "4-AR-n800-r01-V-s1",
+      "design": "AR",
+      "n": 800,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402080001,
+      "data_seed": 402080001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s800"
+     },
+     {
+      "run_id": "4-AR-n800-r02-V-s1",
+      "design": "AR",
+      "n": 800,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402080002,
+      "data_seed": 402080002,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s800"
+     },
+     {
+      "run_id": "4-AR-n800-r03-V-s1",
+      "design": "AR",
+      "n": 800,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402080003,
+      "data_seed": 402080003,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s800"
+     },
+     {
+      "run_id": "4-AR-n800-r04-V-s1",
+      "design": "AR",
+      "n": 800,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402080004,
+      "data_seed": 402080004,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s800"
+     },
+     {
+      "run_id": "4-AR-n800-r05-V-s1",
+      "design": "AR",
+      "n": 800,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402080005,
+      "data_seed": 402080005,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s800"
+     },
+     {
+      "run_id": "4-AR-n800-r06-V-s1",
+      "design": "AR",
+      "n": 800,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402080006,
+      "data_seed": 402080006,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s800"
+     },
+     {
+      "run_id": "4-AR-n800-r07-V-s1",
+      "design": "AR",
+      "n": 800,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402080007,
+      "data_seed": 402080007,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s800"
+     }
+    ],
+    "tasks": 140,
+    "worst_case_core_h": 611.3,
+    "core_h_cap": 611.4
+   }
+  ]
+ },
+ "S10": {
+  "batches": [
+   {
+    "batch": "PL_S10_1",
+    "plan_sha256": "a51d409a89eac43584b4aaf699415069448aa4089a90b3f2ac58e8c2b38d581b",
+    "fits": [
+     {
+      "run_id": "4-AR-n800-r08-V-s1",
+      "design": "AR",
+      "n": 800,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402080008,
+      "data_seed": 402080008,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s800"
+     },
+     {
+      "run_id": "4-AR-n800-r09-V-s1",
+      "design": "AR",
+      "n": 800,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402080009,
+      "data_seed": 402080009,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s800"
+     },
+     {
+      "run_id": "4-AR-n800-r10-V-s1",
+      "design": "AR",
+      "n": 800,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402080010,
+      "data_seed": 402080010,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s800"
+     },
+     {
+      "run_id": "4-ARweak-n800-r01-V-s1",
+      "design": "AR",
+      "n": 800,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403080001,
+      "data_seed": 403080001,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s800"
+     },
+     {
+      "run_id": "4-ARweak-n800-r02-V-s1",
+      "design": "AR",
+      "n": 800,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403080002,
+      "data_seed": 403080002,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s800"
+     },
+     {
+      "run_id": "4-ARweak-n800-r03-V-s1",
+      "design": "AR",
+      "n": 800,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403080003,
+      "data_seed": 403080003,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s800"
+     },
+     {
+      "run_id": "4-ARweak-n800-r04-V-s1",
+      "design": "AR",
+      "n": 800,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403080004,
+      "data_seed": 403080004,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s800"
+     }
+    ],
+    "tasks": 140,
+    "worst_case_core_h": 611.3,
+    "core_h_cap": 611.4
+   },
+   {
+    "batch": "PL_S10_2",
+    "plan_sha256": "5ad04e0989b68c96171240a611de6d64a148309b8d0a8b329eaddb215f838ce0",
+    "fits": [
+     {
+      "run_id": "4-ARweak-n800-r05-V-s1",
+      "design": "AR",
+      "n": 800,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403080005,
+      "data_seed": 403080005,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s800"
+     },
+     {
+      "run_id": "4-ARweak-n800-r06-V-s1",
+      "design": "AR",
+      "n": 800,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403080006,
+      "data_seed": 403080006,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s800"
+     },
+     {
+      "run_id": "4-ARweak-n800-r07-V-s1",
+      "design": "AR",
+      "n": 800,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403080007,
+      "data_seed": 403080007,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s800"
+     },
+     {
+      "run_id": "4-ARweak-n800-r08-V-s1",
+      "design": "AR",
+      "n": 800,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403080008,
+      "data_seed": 403080008,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s800"
+     },
+     {
+      "run_id": "4-ARweak-n800-r09-V-s1",
+      "design": "AR",
+      "n": 800,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403080009,
+      "data_seed": 403080009,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s800"
+     },
+     {
+      "run_id": "4-ARweak-n800-r10-V-s1",
+      "design": "AR",
+      "n": 800,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 403080010,
+      "data_seed": 403080010,
+      "params": {
+       "refine_m": 4,
+       "I_max": 3
+      },
+      "klass": "s800"
+     }
+    ],
+    "tasks": 120,
+    "worst_case_core_h": 524.0,
+    "core_h_cap": 524.1
+   }
+  ]
+ }
+}

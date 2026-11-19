@@ -1,0 +1,59 @@
+quote_model.py: 20000 replicates, 200 fits in 18 waves; measured pool: {'ADJOPP': 4, 'AR': 8, 'ARweak': 4, 'IND': 2, 'NULL': 2}
+
+== PER WAVE (billed core-h; stop > 2 x the quote; quote = E rounded to 5)
+A0     3 fits                        E     22.2   P10     18.3  P50     21.7  P90     26.1  P99     36.0   QUOTE   20  WAVE STOP >   40   worst-case   327.4
+P1     4 fits                        E     30.2   P10     25.7  P50     29.7  P90     35.1  P99     44.8   QUOTE   30  WAVE STOP >   60   worst-case   557.4
+P2     4 fits                        E     28.0   P10     24.3  P50     27.5  P90     32.4  P99     39.7   QUOTE   30  WAVE STOP >   60   worst-case   557.4
+P3     4 fits                        E     24.5   P10     21.4  P50     24.1  P90     28.2  P99     34.4   QUOTE   25  WAVE STOP >   50   worst-case   557.4
+P4     4 fits                        E     45.7   P10     38.3  P50     44.8  P90     53.8  P99     68.1   QUOTE   45  WAVE STOP >   90   worst-case   557.4
+H1     4 fits                        E    114.8   P10     94.2  P50    112.8  P90    136.6  P99    173.2   QUOTE  115  WAVE STOP >  230   worst-case   557.4
+H2     4 fits                        E     81.4   P10     68.2  P50     79.8  P90     95.7  P99    121.3   QUOTE   80  WAVE STOP >  160   worst-case   557.4
+H3     4 fits                        E    153.1   P10    125.3  P50    150.3  P90    183.2  P99    231.7   QUOTE  155  WAVE STOP >  310   worst-case   557.4
+S1    28 fits                        E    106.3   P10     93.7  P50    105.6  P90    119.7  P99    133.0   QUOTE  105  WAVE STOP >  210   worst-case  1306.8
+S2    28 fits                        E     87.3   P10     77.3  P50     86.8  P90     98.1  P99    108.5   QUOTE   85  WAVE STOP >  170   worst-case  1306.8
+S3     4 fits                        E      1.9   P10      1.9  P50      1.9  P90      2.3  P99      2.4   QUOTE    0  WAVE STOP >    0   worst-case   186.7
+S4    14 fits                        E     60.1   P10     52.7  P50     59.6  P90     68.0  P99     76.1   QUOTE   60  WAVE STOP >  120   worst-case   681.4
+S5    28 fits                        E     59.1   P10     46.1  P50     57.7  P90     73.7  P99     91.2   QUOTE   60  WAVE STOP >  120   worst-case  1306.8
+S6    12 fits                        E     30.2   P10     22.9  P50     29.4  P90     38.3  P99     48.2   QUOTE   30  WAVE STOP >   60   worst-case   560.0
+S7     7 fits                        E     57.1   P10     41.0  P50     55.4  P90     75.7  P99     97.4   QUOTE   55  WAVE STOP >  110   worst-case   466.7
+S8    28 fits                        E    172.9   P10    126.9  P50    168.3  P90    224.1  P99    286.1   QUOTE  175  WAVE STOP >  350   worst-case  1866.8
+S9     7 fits                        E     92.1   P10     60.9  P50     87.8  P90    128.7  P99    170.4   QUOTE   90  WAVE STOP >  180   worst-case   611.3
+S10   13 fits                        E    133.4   P10     90.4  P50    128.0  P90    183.4  P99    239.8   QUOTE  135  WAVE STOP >  270   worst-case  1135.3
+
+== LEG TOTALS
+released (A0,P1-P4,S1-S9) E    950.9   P10    814.1  P50    942.2  P90   1098.9  P99   1252.3
+  precision part P1-P4+A0 E    150.7   P10    133.6  P50    149.5  P90    169.4  P99    188.9
+  science part S1-S9   E    800.3   P10    673.4  P50    791.7  P90    937.4  P99   1082.6
+held N=10^4 (H1-H3)    E    349.2   P10    298.7  P50    346.0  P90    404.3  P99    462.5
+released + held        E   1300.2   P10   1128.4  P50   1291.6  P90   1483.1  P99   1672.2
+
+plan figure (MANIFEST_CELLS v0.4, precision 2,117 + science 2,010): 4,127.   released scope E = 951 (23.0% of 4,127), P90 = 1099, P99 = 1252; with the held arms E = 1300, P90 = 1483, P99 = 1672
+P(released total > 4,127) = 0.0000;  P(with held > 4,127) = 0.0000
+cumulative stop (1.6 x E of the scope in release): released 951 -> 1600 ; with held 1300 -> 2100 ; projection ceiling = the plan figure 4,127
+
+== PER-FIT MODEL BY CLASS (E over the fits of the class, first 4,000 replicates) -> per-fit stop = max(3.0, 1.5 x E)
+class                          fits    E/fit  P90/fit  P99/fit  STOP/fit P(>STOP|no rerun) P(>2.5xE|no rr)
+A3 n200                          15     4.28     5.38     8.97       6.4         0.0138       0.0000
+prec N10000 m1 I3                 6    16.96    23.52    35.21      25.4         0.0312       0.0000
+prec N10000 m4 I3                 6    41.29    62.27    90.53      61.9         0.0860       0.0000
+prec N2500 m1 I0                  6     5.76     7.44    11.81       8.6         0.0043       0.0000
+prec N2500 m1 I3                  6     6.30     8.15    13.11       9.4         0.0046       0.0000
+prec N2500 m4 I3                  6    12.36    17.80    26.69      18.5         0.0531       0.0000
+sci ADJOPP n200                   5     4.81     5.86    10.09       7.2         0.0003       0.0000
+sci ADJOPP n400                   5     8.75    12.17    18.26      13.1         0.0429       0.0003
+sci AR n100                      10     2.48     3.31     5.26       3.7         0.0275       0.0000
+sci AR n200                      20     3.70     4.55     7.87       5.5         0.0007       0.0000
+sci AR n400                      10     6.65     9.32    14.34      10.0         0.0444       0.0001
+sci AR n800                      10    13.13    19.29    30.23      19.7         0.0705       0.0006
+sci ARweak n100                  20     1.92     2.46     3.98       3.0         0.0091       0.0000
+sci ARweak n200                  20     2.77     3.25     5.67       4.2         0.0000       0.0000
+sci ARweak n400                  10     4.83     6.49    10.35       7.3         0.0281       0.0000
+sci ARweak n800                  10     9.37    13.24    20.31      14.1         0.0500       0.0004
+sci BLK n100                      5     2.52     3.63     5.75       3.8         0.0616       0.0006
+sci BLK n200                      5     3.78     5.21     8.30       5.7         0.0401       0.0001
+sci BLK n400                      5     6.77    10.11    16.03      10.2         0.0786       0.0019
+sci IND n100                      5     2.76     3.57     5.72       4.1         0.0163       0.0000
+sci IND n200                      5     4.16     4.77     8.61       6.2         0.0000       0.0000
+sci IND n400                      5     7.55    10.07    16.24      11.3         0.0234       0.0000
+sci NULL n200                     5     0.49     0.48     0.95       3.0         0.0000       0.0000
+expected number of per-fit trips over the leg (186 fits, reruns excluded): 5.0 at 1.5 x E; 0.03 at 2.5 x E

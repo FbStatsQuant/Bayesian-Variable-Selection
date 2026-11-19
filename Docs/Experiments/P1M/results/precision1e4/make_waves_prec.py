@@ -14,6 +14,9 @@ Corrections applied to the generator's fits (LEG_PLAN section 2; each one verifi
   C2  new arms I_max = 0 (the OPEN item of MANIFEST_CELLS section 2): N = 2,500, m = 1, 2 replicates, arms a = 8, 9 (final seeds k = 18, 19).
   C3  A3 fits: partition "exact_linkage" -> "exact" (the engine accepts truncated | exact; "exact_linkage" is refused, setup_run.cpp:214-217).
   C4  explicit resource shapes (the generator's defaults are the 1e4 DEFAULT_RES: islands 16 CPUs x 15 min, 4x over-sized), island_throttle.
+FREEZE DEPENDENCY (LEG_PLAN section 3): the science waves run AFTER the precision freeze (G-A). --frozen-m / --frozen-I (default 1 / 3 = the spec defaults) set the
+configuration of the science fits; if it differs from (m 1, I_max 3) the 14 overlap V fits that the manifest shares with the science block are NOT reusable and are
+added as new fits (run-id tag VF, same data and seed), so the science block is 156 + 14 fits. The precision and canary waves are unaffected.
 N = 10^4 arms (12 fits) are HELD (B2: V's N is the constant calib::V_N = 2500); they are written as waves H1-H3 and never submitted
 without HQ's ruling on B2.
 """
@@ -60,14 +63,18 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--wt", required=True); ap.add_argument("--code-commit", required=True); ap.add_argument("--out", required=True)
     ap.add_argument("--dept", default=DEPT)
+    ap.add_argument("--frozen-m", type=int, default=1, help="refine_m of the science fits (the precision freeze's m)")
+    ap.add_argument("--frozen-I", type=int, default=3, help="I_max of the science fits (the precision freeze's I_max)")
     a = ap.parse_args()
     gen = os.path.join(a.out, "gen")
     slurm = run_gen(a.wt, a.code_commit, gen)
     sys.path.insert(0, slurm); sys.dont_write_bytecode = True
     import p1m_driver
-    fits, head = {}, None
+    fits, head, shared = {}, None, {}
     for fn in sorted(os.listdir(gen)):
         p = json.load(open(os.path.join(gen, fn)))
+        if fn.startswith("overlap1e4") and p["mode"] == "V":
+            shared.update({f["run_id"]: f for f in p["fits"]})
         if fn.startswith(("precision", "science1e4")):
             head = head or {k: v for k, v in p.items() if k not in ("fits", "batch", "core_h_cap", "kind", "resources", "max_task_hours")}
             for f in p["fits"]:
@@ -91,6 +98,18 @@ def main():
             assert src["run_id"] not in fits and src["seed"] not in {g["seed"] for g in fits.values()}
             fits[src["run_id"]] = src
     assert len(fits) == 24 + 156 + 6, len(fits)
+    frozen = (a.frozen_m, a.frozen_I)
+    if frozen != (1, 3):
+        # the science fits run in the frozen configuration; the 14 shared overlap fits (m 1, I_max 3) are re-run under the tag VF
+        for rid in ("4-AR-n200-r01-V-s1", "4-AR-n200-r01-V-s2", "4-AR-n200-r02-V-s1", "4-AR-n200-r02-V-s2", "4-AR-n200-r03-V-s1", "4-AR-n200-r03-V-s2",
+                    "4-AR-n200-r04-V-s1", "4-AR-n200-r04-V-s2", "4-ARweak-n200-r01-V-s1", "4-ARweak-n200-r02-V-s1", "4-ADJOPP-n200-r01-V-s1", "4-ADJOPP-n200-r02-V-s1",
+                    "4-IND-n200-r01-V-s1", "4-NULL-n200-r01-V-s1"):
+            f = dict(shared[rid]); f["run_id"] = rid.replace("-V-s", "-VF-s"); f["params"] = {}
+            fits[f["run_id"]] = f
+        for rid, f in fits.items():
+            if "-P-N" not in rid:
+                f["params"] = dict(f.get("params") or {}, refine_m=frozen[0], I_max=frozen[1])
+    expect = 24 + 156 + 6 + (14 if frozen != (1, 3) else 0)
     sel = lambda pred: [fits[r] for r in sorted(fits) if pred(r)]
     P = lambda ds, tag: "4-%s-n200-r01-P-%s-s1" % (ds, tag)
     waves = {   # wave id -> list of batches, each a list of run ids
@@ -130,7 +149,7 @@ def main():
             if len(cur) == MAX_WAVE_BATCHES:
                 flush()
         flush()
-    assert sorted(r for w in waves.values() for b in w for r in b) == sorted(fits), "every fit is in exactly one wave"
+    assert sorted(r for w in waves.values() for b in w for r in b) == sorted(fits) and len(fits) == expect, "every fit is in exactly one wave"
     os.makedirs(os.path.join(a.out, "plans"), exist_ok=True)
     table, wavejson = [], {}
     for w, bs in waves.items():

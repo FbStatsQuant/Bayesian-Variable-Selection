@@ -1,0 +1,7 @@
+# precision_offset report (script sha256 df221026011d0b6b538c65b3dbe5328e9350077e1d417becedacfcb65073c10d, --only-full)
+fits found 40, V fits used 20 (datasets with a T reference: 10), dropped 0, duplicates resolved 2; s_T (seed-to-seed, pooled) = 0.00324; s_rep(k=64) = n/a over 0 dataset-cells
+
+## offset delta(N, m, I_max, k) = mean over datasets of [V block-mean log Z-hat - T reference]   (no pass/fail)
+| src | N | m | I_max | k | datasets | fits | delta | se (clustered) | 95% t-CI | neg | delta / s_T | delta (T tier-0 ref only; datasets) | Jensen mean | occ offset |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| ovl | 2500 | 1 | 3 | 16 | 10 | 20 | -0.00394 | 0.00141 | -0.00712 .. -0.00076 | 7/10 | -1.21 | -0.00431 (10) | -1.5e-05 | +0.00029 |
