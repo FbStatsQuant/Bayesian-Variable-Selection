@@ -19,7 +19,7 @@ for b in ("PL_B1_1", "PL_B1_2"):
     p = json.load(open("%s/current/scripts/%s/plan.resolved.json" % (STG, b))); planned["B1"] += [(f["run_id"], f["Rp"], b) for f in p["fits"]]
 def sha_ok(u):
     r = subprocess.run(["sha256sum", "--quiet", "-c", "SHA256SUMS"], cwd=u, capture_output=True)
-    n = sum(1 for _, _, fs in os.walk(u) for f in fs if f.startswith("SHA256SUMS"))
+    n = sum(1 for _, _, fs in os.walk(u) for f in fs if f == "SHA256SUMS")   # exactly one file named SHA256SUMS (a SHA256SUMS.prev from a re-sum is allowed)
     return r.returncode == 0 and n == 1
 print("%-4s %7s %9s %-9s  %s" % ("wave", "planned", "delivered", "build ok", "not delivered / issues"))
 tot_p = tot_d = sci_p = sci_d = vf_p = vf_d = 0; allbad = []

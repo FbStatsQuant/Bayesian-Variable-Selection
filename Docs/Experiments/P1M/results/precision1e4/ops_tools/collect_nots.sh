@@ -26,8 +26,8 @@ for b in $BL; do
       ( set +u; source "$S/env.sh" >/dev/null 2>&1; nice -n 19 "$S/bin/smcbvs4" info "$run/calib.bin" --meta 1 --record "$run/calib_meta.json" >/dev/null 2>&1 ) \
         || echo "WARNING: $rid: calib_meta.json could not be made" >&2
     fi
-    keep_law=0; [[ $rid == *-P-* || $rid == *-A3-* || $rid == *-A3F-* || $rid == *-r91-* ]] && keep_law=1   # r91 = the boundary dataset B1 (V and T): law.bin and data.bin kept as in the overlap layout
-    keep_data=0; [[ $rid == *-r91-* ]] && keep_data=1
+    keep_law=0; [[ $rid == *-P-* || $rid == *-A3-* || $rid == *-A3F-* || $rid == *-r91-* || $rid == *-VF-* ]] && keep_law=1   # VF = the I0 re-runs of the overlap V fits: law.bin + data.bin kept (criterion H, cross-Hellinger vs the overlap T fits)   # r91 = the boundary dataset B1 (V and T): law.bin and data.bin kept as in the overlap layout
+    keep_data=0; [[ $rid == *-r91-* || $rid == *-VF-* ]] && keep_data=1
     keep_setup=0; [[ ,$KEEP, == *,$rid,* ]] && keep_setup=1
     ( cd "$run"; rm -f OFFLOAD_FILES.sha256
       find . -type f ! -name 'SHA256SUMS*' ! -name 'OFFLOAD*' ! -name '*.ckpt*' \
