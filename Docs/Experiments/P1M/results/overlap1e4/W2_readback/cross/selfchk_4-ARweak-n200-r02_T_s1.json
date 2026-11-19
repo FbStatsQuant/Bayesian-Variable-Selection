@@ -1,0 +1,67 @@
+{
+  "binary": {
+    "compiler": "g++ 11.5.0 20240719 (Red Hat 11.5.0-17)",
+    "flags": "-O2 -fno-math-errno -ffp-contract=off -march=x86-64-v2",
+    "git_commit": "unknown",
+    "island_isa": "portable",
+    "libm": {
+      "binding": "glibc-libm",
+      "fma_variant": true,
+      "glibc": "2.34",
+      "path": "/lib64/libm.so.6",
+      "self_test": {
+        "exp": true,
+        "exp_pos": true,
+        "expl": true,
+        "lgamma": true,
+        "lgamma_int": true,
+        "log": true,
+        "log_near1": true,
+        "logl": true,
+        "pass": true
+      },
+      "sha256": "c8933ed54328b293c8b005fe44161d1c73c09f96abc6d781a6c31230368d1120"
+    },
+    "sha256": "afef0e463216edca9f7d877fb688ad57f7a13fcdcb2c1ebae7d4f51f1c92e59d"
+  },
+  "command": "xeval",
+  "inputs": {
+    "law_a.bin": "8208199d65499cf543b43f3639bc33516ff46ca33275a987cb99889117d30961",
+    "truth.json": "b145c1a1e15a225d7480991d32a23dd8427135fb4a3f664cf9fb710a6d3c1f0f"
+  },
+  "pairs": {},
+  "schema": "overlap1e4.cross_vt/1",
+  "status": "completed",
+  "xeval": {
+    "block_rows": 500,
+    "dH": 0.18804021286593442,
+    "dH_bound_truncation": 0,
+    "definition": "h2 = 1 - mean_x int sqrt(fbar_A fbar_B) dy, same x rows / 64-node Gauss-Hermite / top-K + stratified tail as the engine eval predictive",
+    "dropped_mass_a": 0,
+    "dropped_mass_b": 0,
+    "exact_a": false,
+    "exact_b": true,
+    "h2": 0.035359121654665926,
+    "h2_topK": 0.035671297462073426,
+    "n_gh": 64,
+    "n_x": 4000,
+    "oid_a": 2,
+    "oid_b": 6,
+    "rows": "gen_test",
+    "se": 0.00071317182396755236,
+    "se_tail": 1.2798068191480357e-05,
+    "se_x": 0.00071305698226142606,
+    "seed": 403020002,
+    "tail_components_a": 399001,
+    "tail_components_b": 0,
+    "tail_groups": 8,
+    "tail_mass_a": 0.19981987818237487,
+    "tail_mass_b": 0,
+    "tail_r": 1000,
+    "threads": 3,
+    "top_a": 1000,
+    "top_b": 1,
+    "top_k": 1000,
+    "wall_s": 4.8339668680000001
+  }
+}

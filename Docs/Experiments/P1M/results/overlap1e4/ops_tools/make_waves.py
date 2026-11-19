@@ -41,6 +41,7 @@ def main():
     ap.add_argument("--arms", default="T,V", help="batch arms to write: T, V, or a rebuild T2 / V2 (= the T / V fits and shapes in a fresh batch "
                     "OV_<wave>_T2 / _V2, built from the git clone of F; fresh run dirs). Default T,V.")
     ap.add_argument("--caps", default="", help="explicit core_h_cap per arm letter, e.g. T=2068,V=280 (must be >= the resolved worst case; default: worst rounded up)")
+    ap.add_argument("--max-task-hours", default="", help="override per arm letter, e.g. T=5.0 (W3: the T calibrate limit 5:00, HQ H-23); default T=3.0, V=2.0")
     ap.add_argument("--shapes", help="JSON file {T: {...}, V: {...}} replacing the plan-§2 shapes (post-W0 re-size)")
     a = ap.parse_args()
     slurm = os.path.join(a.wt, "Scripts/SMC_BVS/engine_v4/tools/slurm")
@@ -82,7 +83,7 @@ def main():
                     sel.append(f)
             plan = dict(head["law" if arm == "T" else "V"])
             plan.update(batch="OV_%s_%s" % (wave, barm), kind="gated (HQ H-18, overlap 1e4 %s %s)" % (wave, barm),
-                        max_task_hours=MAX_TASK_H[arm], resources=shapes[arm], fits=sel)
+                        max_task_hours=float(dict(x.split("=") for x in a.max_task_hours.split(",") if x).get(arm, MAX_TASK_H[arm])), resources=shapes[arm], fits=sel)
             wc = p1m_driver.resolve(dict(plan, core_h_cap=1e12))["worst_case_core_h"]
             caps = dict(x.split("=") for x in a.caps.split(",") if x)
             plan["core_h_cap"] = float(caps[arm]) if arm in caps else math.ceil((wc + 0.05) * 10 - 1e-9) / 10   # resolve() rounds wc to 0.1 (449.33 -> 449.3): +0.05 as p1m_cells does

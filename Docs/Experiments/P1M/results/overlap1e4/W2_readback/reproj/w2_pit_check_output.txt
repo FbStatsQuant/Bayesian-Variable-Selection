@@ -1,0 +1,10 @@
+W1-model W2: E 400 P10/50/90 [250, 383, 557]; ESS 29099
+P(W2 <= 221.15) = 0.054; P(T cost <= 207.09) = 0.053
+E #esc in 6 = 2.81; P(0 of 6) = 0.044; P(<=1) = 0.190
+  ARweak r02 s1  P(esc) 0.44  E cost 40.5
+  ARweak r02 s2  P(esc) 0.44  E cost 40.7
+  ADJ r01 s2     P(esc) 0.41  E cost 69.2
+  ADJ r02 s1     P(esc) 0.41  E cost 69.3
+  ADJ r02 s2     P(esc) 0.41  E cost 69.5
+  AR r01 s2      P(esc) 0.67  E cost 97.6
+actual T costs: 23.16 7.66 36.73 47.41 43.13 49.01

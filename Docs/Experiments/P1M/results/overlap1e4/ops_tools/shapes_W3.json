@@ -1,0 +1,56 @@
+{
+ "V": {
+  "setup": {
+   "cpus": 8,
+   "mem": "8G",
+   "time": "00:15:00"
+  },
+  "calibrate": {
+   "cpus": 16,
+   "mem": "8G",
+   "time": "00:30:00"
+  },
+  "islands": {
+   "cpus": 4,
+   "mem": "4G",
+   "time": "00:30:00"
+  },
+  "merge": {
+   "cpus": 8,
+   "mem": "4G",
+   "time": "00:15:00"
+  },
+  "eval": {
+   "cpus": 8,
+   "mem": "8G",
+   "time": "00:20:00"
+  }
+ },
+ "T": {
+  "setup": {
+   "cpus": 8,
+   "mem": "8G",
+   "time": "00:15:00"
+  },
+  "calibrate": {
+   "cpus": 48,
+   "mem": "16G",
+   "time": "05:00:00"
+  },
+  "islands": {
+   "cpus": 24,
+   "mem": "16G",
+   "time": "00:45:00"
+  },
+  "merge": {
+   "cpus": 8,
+   "mem": "8G",
+   "time": "00:20:00"
+  },
+  "eval": {
+   "cpus": 8,
+   "mem": "8G",
+   "time": "00:30:00"
+  }
+ }
+}
