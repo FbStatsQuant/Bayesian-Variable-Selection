@@ -22,7 +22,12 @@ tools/xeval/merge_cross.py cross_all.json cross_*_s1.json cross_*_s2.json       
 * The GH importance Gaussian is the moment-matched product of the two predictive densities (the eval uses f̄ and f*): symmetric in A, B.
 * Two store laws get tail-sample streams 2 and 6 (the engine's T object is 2) assigned by law content hash, so the
   result does not depend on which file is `--a`.
-* Guards: the two laws' recorded `inputs.data.bin` hashes must be equal (and equal to `--data`'s), n and p equal.
+* Guards: n and p equal; **data identity** = the X and y section hashes (`Xs_cm`, `ys`) of the two laws' `data.bin` (+ n, p, p_raw),
+  not the whole-file hash (it covers the meta block, which embeds the writing binary's provenance, so the T and V builds of
+  the same X/y hash differently). Pass `--data` (law A's data.bin) and, when it is a different file, `--data-b` (law B's);
+  each file's whole-file hash must equal the `inputs.data.bin` its law recorded (provenance) and the two identities must
+  be equal; a real X / y / n / p mismatch is refused. Without `--data` the recorded whole-file hashes must be equal (a law
+  does not record the X / y section hashes). The `inputs` block of the output records `data_identity`.
 * Output: `pairs[dataset][seed_id] = {h2, se, se_x, se_tail}` (exactly what `compare_overlap.py` `load_cross` reads; metric
   unchanged) and an `xeval` block (tail masses, dropped masses, `dH_bound_truncation` = √δ_A + √δ_B for the law truncation
   at rel_cut, parameters, wall time), `inputs` hashes and the `binary` block.

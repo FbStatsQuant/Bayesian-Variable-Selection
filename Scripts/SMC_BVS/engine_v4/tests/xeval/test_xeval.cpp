@@ -12,6 +12,7 @@
 
 #include "eval/io.h"
 #include "v4/eval.h"
+#include "v4/format.h"
 #include "v4/gen.h"
 #include "v4/post.h"
 #include "v4/sha256.h"
@@ -233,7 +234,52 @@ Json xargs(const std::string& a, const std::string& b, const Prep& P, const std:
   j["dataset"] = "4-AR-n200-r01"; j["seed_id"] = 1; j["n_x"] = 200; j["block_rows"] = 100; j["top_k"] = 20; j["tail_r"] = 30;
   return j;
 }
+// the same X / y written with another meta block (what another binary's provenance block does to a data.bin): identical sections,
+// different whole-file hash
+Prep meta_variant(const Prep& P, const std::string& tag) {
+  Prep r = P; r.dir = tdir() + "/" + tag; std::filesystem::create_directories(r.dir);
+  prep::Result res; res.n = P.D.n; res.p = P.D.p; res.p_raw = P.D.p_raw;
+  { fmt::Reader rd(P.data); res.dropped = rd.vec<int32_t>("dropped"); }
+  Json inputs = Json::object(); inputs["raw.bin"] = "another build";
+  r.data = r.dir + "/data.bin";
+  r.dhash = prep::write_data(r.data, P.D, res, "meta_variant", inputs);
+  std::string chk; r.D = prep::load_data(r.data, &chk);
+  return r;
+}
+std::string section_sha(const std::string& path, const char* sec) { fmt::Reader rd(path); return hex(rd.entry(sec).sha256, 32); }
 }  // namespace
+
+// data identity guard: two data.bin with identical X / y but different meta (e.g. the T and V builds) are ACCEPTED; a different X
+// (or y) is refused; so is a file that is not the data.bin its law recorded, and unverifiable recorded-hash differences
+TEST(xeval_data_identity_guard_xy_sections) {
+  const Prep P = make_prep(4242, "id_p"), Q = make_prep(777, "id_q"), R = meta_variant(P, "id_r");
+  CHECK(R.dhash != P.dhash);                                             // whole-file hashes differ (meta block) ...
+  CHECK(section_sha(R.data, "Xs_cm") == section_sha(P.data, "Xs_cm"));   // ... the X and y sections are bit-identical
+  CHECK(section_sha(R.data, "ys") == section_sha(P.data, "ys"));
+  CHECK(section_sha(Q.data, "Xs_cm") != section_sha(P.data, "Xs_cm"));
+  write_store_law(P, 150, P.dir + "/law_V.bin"); write_store_law(R, 60, R.dir + "/law_T.bin"); write_store_law(Q, 60, Q.dir + "/law_T.bin");
+  // accepted: identical X/y, different meta (both orders)
+  Json ok = xargs(P.dir + "/law_V.bin", R.dir + "/law_T.bin", P, P.dir + "/g1.json"); ok["data_b"] = R.data;
+  const Json r1 = xeval::run(ok);
+  CHECK(r1.at("status").str() == "completed");
+  CHECK(r1.at("inputs").at("data_identity").at("X_section_sha256").str() == section_sha(P.data, "Xs_cm"));
+  CHECK(r1.at("inputs").at("data_identity").at("y_section_sha256").str() == section_sha(P.data, "ys"));
+  CHECK(r1.at("inputs").at("data.bin").str() == P.dhash && r1.at("inputs").at("data_b.bin").str() == R.dhash);
+  Json ok2 = xargs(R.dir + "/law_T.bin", P.dir + "/law_V.bin", R, P.dir + "/g2.json"); ok2["data_b"] = P.data;
+  const Json r2 = xeval::run(ok2);
+  CHECK(same_bits(r1.at("pairs").at("4-AR-n200-r01").at("1").at("h2").num(), r2.at("pairs").at("4-AR-n200-r01").at("1").at("h2").num()));
+  // refused: a different X (law B and its data.bin from another dataset, same n and p)
+  Json bad = xargs(P.dir + "/law_V.bin", Q.dir + "/law_T.bin", P, P.dir + "/g3.json"); bad["data_b"] = Q.data;
+  CHECK_THROWS(xeval::run(bad));
+  // refused: --data-b is not the data.bin law B recorded
+  Json wrong = xargs(P.dir + "/law_V.bin", R.dir + "/law_T.bin", P, P.dir + "/g4.json"); wrong["data_b"] = P.data;
+  CHECK_THROWS(xeval::run(wrong));
+  // refused: the recorded whole-file hashes differ and no data files are given (identity cannot be shown)
+  CHECK_THROWS(xeval::run(xargs(P.dir + "/law_V.bin", R.dir + "/law_T.bin", P, P.dir + "/g5.json", false)));
+  // --data-b without --data / with --b-truth is an argument error
+  Json nb = xargs(P.dir + "/law_V.bin", "", P, P.dir + "/g6.json"); nb["data_b"] = R.data;
+  CHECK_THROWS(xeval::run(nb));
+}
 
 TEST(xeval_command_record_layout_and_pairing) {
   const Prep P = make_prep(4242, "d1"), Q = make_prep(777, "d2");

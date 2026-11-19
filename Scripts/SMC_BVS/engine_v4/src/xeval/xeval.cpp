@@ -233,6 +233,19 @@ LawIn load_law_in(const std::string& path) {
   if (const Json* inp = jfind(meta, "inputs")) L.data_hash = jstr_or(*inp, "data.bin", "");
   return L;
 }
+
+// The DATA identity of a data.bin: the section hashes of the standardised X (Xs_cm) and y (ys) plus n, p, p_raw. The whole-file
+// content hash is NOT an identity of the data: it covers the meta block, which embeds the writing binary's provenance, so the
+// same X/y written by two binaries (the T and V builds of the 10^4 overlap) hash differently. `whole` is kept for provenance only
+// (a law's recorded inputs.data.bin is the whole-file hash).
+struct DataId { std::string whole, X, y; int32_t n = 0, p = 0, p_raw = 0; };
+DataId data_identity(const std::string& path) {
+  DataId d; const Data D = prep::load_data(path, &d.whole);   // validates the file (section hashes, stored constants)
+  fmt::Reader R(path);
+  d.X = hex(R.entry("Xs_cm").sha256, 32); d.y = hex(R.entry("ys").sha256, 32);
+  d.n = D.n; d.p = D.p; d.p_raw = D.p_raw;
+  return d;
+}
 }  // namespace
 
 Json run(const Json& a) {
@@ -240,10 +253,12 @@ Json run(const Json& a) {
   Json rec = Json::object();
   rec["schema"] = "overlap1e4.cross_vt/1";
   const std::string pa = io::arg_str(a, "a", ""), pb = io::arg_str(a, "b", ""), truthp = io::arg_str(a, "truth", ""), datap = io::arg_str(a, "data", "");
+  const std::string datapb = io::arg_str(a, "data_b", "");   // law B's own data.bin (when it differs from --data in meta only)
   const std::string dataset = io::arg_str(a, "dataset", ""), seed_id = io::arg_str(a, "seed_id", "");
   const bool b_truth = io::arg_num(a, "b_truth", 0) != 0;
   if (pa.empty() || truthp.empty() || (pb.empty() && !b_truth) || (!pb.empty() && b_truth))
     throw Error(Status::invalid_input, "xeval: --a law.bin, --truth truth.json and exactly one of --b law.bin / --b_truth 1 are required");
+  if (!datapb.empty() && (datap.empty() || b_truth)) throw Error(Status::invalid_input, "xeval: --data-b needs --data and a --b law.bin");
   if (dataset.empty() != seed_id.empty()) throw Error(Status::invalid_input, "xeval: --dataset and --seed_id go together");
   if (!seed_id.empty() && seed_id != "1" && seed_id != "2") throw Error(Status::invalid_input, "xeval: --seed_id must be 1 or 2");
   const std::string truth_hash = sha256_file(truthp);
@@ -267,17 +282,30 @@ Json run(const Json& a) {
     LB = load_law_in(pb);
     inp["law_b.bin"] = LB.hash; x["b"] = pb;
     lb = post::to_eval_law(LB.F, "B");
-    // the two laws must come from the SAME dataset (pairing check)
+    // the two laws must come from the SAME dataset (pairing check): n, p here; the data identity (X / y section hashes) below
     if (LA.F.n != LB.F.n || LA.F.p != LB.F.p) throw Error(Status::invalid_input, "xeval: the two laws have different n or p");
-    if (!LA.data_hash.empty() && !LB.data_hash.empty() && LA.data_hash != LB.data_hash)
-      throw Error(Status::invalid_input, "xeval: the two laws were built on different data.bin (recorded hashes differ)");
+    // equal recorded whole-file hashes = the same data.bin. Different ones may be a meta-only difference (the binary block of
+    // two builds), which cannot be told from a data difference by the hashes alone: then both data.bin files are required.
+    if (datap.empty() && !LA.data_hash.empty() && !LB.data_hash.empty() && LA.data_hash != LB.data_hash)
+      throw Error(Status::invalid_input, "xeval: the two laws recorded different data.bin whole-file hashes; pass --data (law A's data.bin) and "
+                                         "--data-b (law B's) so that the data identity (X / y section hashes) can be compared");
   }
   if (!datap.empty()) {
-    std::string dh; const Data D = prep::load_data(datap, &dh);
-    inp["data.bin"] = dh;
-    if (D.n != LA.F.n) throw Error(Status::invalid_input, "xeval: data.bin n differs from the law's n");
-    for (const LawIn* L : {&LA, &LB}) if (!L->data_hash.empty() && L->data_hash != dh)
-      throw Error(Status::invalid_input, "xeval: --data hash differs from the law's recorded data.bin hash");
+    const DataId dA = data_identity(datap);
+    const DataId dB = datapb.empty() ? dA : data_identity(datapb);
+    inp["data.bin"] = dA.whole;
+    if (!datapb.empty()) inp["data_b.bin"] = dB.whole;
+    if (dA.n != LA.F.n) throw Error(Status::invalid_input, "xeval: data.bin n differs from the law's n");
+    // provenance: each file must be the data.bin its law recorded (whole-file hash)
+    if (!LA.data_hash.empty() && LA.data_hash != dA.whole)
+      throw Error(Status::invalid_input, "xeval: --data hash differs from law A's recorded data.bin hash");
+    if (!b_truth && !LB.data_hash.empty() && LB.data_hash != dB.whole)
+      throw Error(Status::invalid_input, std::string("xeval: ") + (datapb.empty() ? "--data" : "--data-b") + " hash differs from law B's recorded data.bin hash");
+    // identity: the same X and y (section hashes), n, p, p_raw; a real data mismatch is refused
+    if (dA.X != dB.X || dA.y != dB.y || dA.n != dB.n || dA.p != dB.p || dA.p_raw != dB.p_raw)
+      throw Error(Status::invalid_input, "xeval: the two laws were built on different data (X / y section hashes of data.bin differ)");
+    Json id = Json::object(); id["X_section_sha256"] = dA.X; id["y_section_sha256"] = dA.y; id["n"] = dA.n; id["p"] = dA.p; id["p_raw"] = dA.p_raw;
+    inp["data_identity"] = id;
   }
   // symmetric tail-stream rule for two store laws: the law with the smaller content hash gets stream 2 (the engine's T id)
   uint32_t oa = 2, ob = 6;
