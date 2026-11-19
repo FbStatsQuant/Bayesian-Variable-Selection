@@ -18,7 +18,7 @@ Rules:
   build identity every batch's bin/smcbvs4 sha256 and every new fit's recorded binary.sha256 == the leg's single build (first BUILD line of deploy_leg.log)  -> STOP
                 (the 14 reused overlap V fits are exempt by their listed shas; they are not run in this leg's batches)
 """
-import argparse, hashlib, json, os, re, sys
+import argparse, hashlib, json, math, os, re, sys
 from collections import defaultdict
 
 # ---- the COMMITTED class table (LEG_PLAN §5.3; E per fit from quote_output.txt): class -> (E, soft, hard) ------------------------------------------------
@@ -34,9 +34,17 @@ TABLE = {
     "NULL n200": (0.51, 3.0, 3.0),
 }
 TABLE_SHA256 = "c0fcd139db0a02d18c169eed1e9c46effdd6f5407a7d413ac97bb8046d9994b3"
-QUOTE = {"A0": 25, "P1": 30, "P2": 30, "P3": 25, "P4": 45, "S1": 60, "S2": 30, "S3": 40, "S4": 40, "S5": 20, "S6": 30, "S7": 100, "S8": 50, "S9": 75, "B1": 115,
-         "H1": 115, "H2": 80, "H3": 155}                       # LEG_PLAN §4: the wave stop is 2 x
-CUM_STOP, PROJ_STOP = 1000.0, 4127.0
+# Wave quotes (the wave stop is 2 x the quote). A0, P1-P4, B1, H1-H3: LEG_PLAN §4 / ADDENDUM_1. The science waves S1-S10 are the I0-FROZEN scenario (FZ: m = 1, I_max = 0
+# frozen, manager 11-19; quote_output_freeze_i0.txt): E per wave, quote = max(5, 5 x round(E / 5)) (a quote FLOOR of 5 core-h, so no wave has quote 0 and S3's stop is > 10).
+# The baseline S1-S9 labels are gone (S3 = 4 NULL fits, S4 = A3, S7 / S9 = the n = 400 / 800 pilots, S10 = the n = 800 rest).
+QUOTE_FLOOR = 5.0
+E_I0 = {"S1": 48.0, "S2": 42.1, "S3": 1.8, "S4": 33.8, "S5": 32.2, "S6": 15.1, "S7": 22.1, "S8": 71.3, "S9": 34.1, "S10": 53.3}
+def quote_from_E(e):
+    return max(QUOTE_FLOOR, 5.0 * math.floor(e / 5.0 + 0.5))
+QUOTE = {"A0": 25, "P1": 30, "P2": 30, "P3": 25, "P4": 45, "B1": 115, "H1": 115, "H2": 80, "H3": 155}
+QUOTE.update({w: quote_from_E(e) for w, e in E_I0.items()})
+PILOT_RE_QUOTES = {"S7": "S8", "S9": "S10"}        # pilot gates (relabelled for the I0 map): S7 (n = 400 pilot) re-quotes S8, S9 (n = 800 pilot) re-quotes S10
+CUM_STOP, CUM_STOP_SCIENCE, PROJ_STOP = 1000.0, 900.0, 4127.0   # cumulative: 900 for the science waves (I0-frozen: 1.6 x E 505 rounded up to 100), 1,000 before
 T_REPORT, T_MEAN, T_NS = 172.5, 44.0, {10000 * 4 ** k for k in range(4)}   # boundary wave B1 (ADDENDUM_1): T fits report above 172.5, no class row; T tiers N = 10^4 * 4^k
 EXEMPT_RUNS = {"4-AR-n200-r0%d-V-s%d" % (r, s) for r in (1, 2, 3, 4) for s in (1, 2)} | {"4-ARweak-n200-r01-V-s1", "4-ARweak-n200-r02-V-s1", "4-ADJOPP-n200-r01-V-s1",
                "4-ADJOPP-n200-r02-V-s1", "4-IND-n200-r01-V-s1", "4-NULL-n200-r01-V-s1"}   # reused overlap fits: exempt by their listed shas (never run here)
@@ -88,7 +96,7 @@ def sections(path):
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("probe"); ap.add_argument("--wave", required=True); ap.add_argument("--plans", required=True)
-    ap.add_argument("--leg-log"); ap.add_argument("--quote", type=float); ap.add_argument("--prior"); ap.add_argument("--cum-stop", type=float, default=CUM_STOP)
+    ap.add_argument("--leg-log"); ap.add_argument("--quote", type=float); ap.add_argument("--prior"); ap.add_argument("--cum-stop", type=float, default=None, help="default: 900 for the science waves S*, 1,000 otherwise")
     ap.add_argument("--waves-json", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "waves.json"))
     ap.add_argument("--with-held", action="store_true"); ap.add_argument("--ref-hashes", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "overlap_refs.json"))
     ap.add_argument("--soft", action="append", default=[], metavar="CLASS=VALUE", help="override the SOFT column of a class (after a pilot re-fit, approved by the manager); TABLE and the HARD column stay pinned; also env SOFT_OVERRIDES='CLASS=V;CLASS=V'; every override is printed in the verdict")
@@ -180,11 +188,16 @@ def main():
             flags.append("SOFT TRIP fit %s [%s] cost %.2f > soft %.1f (1.5 x model): report and continue (≤ 3 lines to the manager)" % (k, kl, c, soft))
     if len(soft_trips) >= 3:
         flags.append("STOP 3 soft trips in wave %s: %s" % (a.wave, ", ".join(t[0] for t in soft_trips)))
-    quote = a.quote or QUOTE.get(a.wave)
-    if quote and wave_cost > 2 * quote:
-        flags.append("STOP wave %s actual %.1f > 2 x quote %.0f" % (a.wave, wave_cost, quote))
-    if spent > a.cum_stop:
-        flags.append("STOP cumulative %.1f > %.0f" % (spent, a.cum_stop))
+    if a.quote is not None and a.quote <= 0:
+        print("bad --quote %s: a wave quote must be > 0 (a zero quote would switch the wave stop off)" % a.quote, file=sys.stderr); sys.exit(64)
+    quote = a.quote if a.quote is not None else QUOTE.get(a.wave)
+    if quote is None:
+        flags.append("STOP no quote for wave %s (a wave without a quote has no wave stop): pass --quote or add it to the committed map" % a.wave)
+    cum_stop = a.cum_stop if a.cum_stop is not None else (CUM_STOP_SCIENCE if a.wave.startswith("S") else CUM_STOP)
+    if quote is not None and wave_cost > 2 * quote:
+        flags.append("STOP wave %s actual %.1f > 2 x quote %g" % (a.wave, wave_cost, quote))
+    if spent > cum_stop:
+        flags.append("STOP cumulative %.1f > %.0f" % (spent, cum_stop))
     # ---- projection: spent + class means x fits left (released scope of waves.json) ---------------------------------------------------------------------
     proj, pnote = spent, ""
     try:
@@ -295,7 +308,7 @@ def main():
             k = b + "/" + r; kl = klass(r); t = TABLE.get(kl)
             print("%-50s %-18s %8.2f %6s %6s  %s" % (k, kl, cost.get(k, 0.0), "%.1f" % t[1] if t else "-", "%.1f" % t[2] if t else "(rpt>%.1f)" % T_REPORT, ",".join(sorted(state.get(k, [])))))
     print("wave actual %.1f core-h (quote %s -> stop > %s) | leg spent %.1f (cum stop %.0f) | projection %.0f (stop > %.0f; %s)" % (
-        wave_cost, quote, "%.0f" % (2 * quote) if quote else "n/a", spent, a.cum_stop, proj, PROJ_STOP, pnote))
+        wave_cost, "%g" % quote if quote is not None else "none", "%g" % (2 * quote) if quote is not None else "n/a", spent, cum_stop, proj, PROJ_STOP, pnote))
     print("arm identity checked on %d fits; datasets with hashes: %d; leg build sha256 V %s T %s" % (n_arm, len(hs), (leg or "-")[:16], (leg_t or "-")[:16]))
     print("SOFT OVERRIDES (soft column only; TABLE and the hard column pinned, sha256 %s): %s" % (table_sha()[:12], "; ".join("%s: committed soft %.1f -> %.1f" % (k, TABLE[k][1], v) for k, v in sorted(soft_ov.items())) or "none"))
     if n_foreign:
@@ -312,6 +325,8 @@ def main():
         if missing: why.append("%d submitted job id(s) not in sacct yet" % len(missing))
         if sacct_rows == 0: why.append("no sacct row yet")
         print("WAVE STATE: RUNNING  (%s)" % "; ".join(why))
+    if a.wave in PILOT_RE_QUOTES:
+        infos.append("pilot gate: after %s ends the manager re-fits the classes of this pilot and re-quotes %s" % (a.wave, PILOT_RE_QUOTES[a.wave]))
     for x in infos:
         print("INFO", x[5:] if x.startswith("INFO ") else x)
     for f in flags:

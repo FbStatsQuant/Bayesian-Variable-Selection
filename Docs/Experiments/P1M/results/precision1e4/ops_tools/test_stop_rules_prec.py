@@ -174,6 +174,53 @@ rc2 = subprocess.run([sys.executable, os.path.join(HERE, "stop_rules_prec.py"), 
 check("B1 T batches but no BUILD_T line in the deploy log -> STOP", rc2.returncode == 3 and "no BUILD_T line" in rc2.stdout, rc2.stdout)
 rc, o = runb(probe_b1(bb)); check("B1 projection counts the wave's own fits (not in waves.json): printed with fits left", "fits left" in o, o)
 rc, o = runb(probe_b1(bb)); check("B1 WAVE STATE ENDED when everything is terminal", "WAVE STATE: ENDED" in o, o)
+
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+# FZ (m = 1, I_max = 0 frozen): the S1-S10 quote map of the I0-frozen scenario, the quote floor 5, cum-stop 900 for the science waves, pilot labels
+import re as _re
+def probe_wave(wave, per_fit=0.2, drop_first=False):
+    bs = sorted(d for d in os.listdir(PLANS) if _re.fullmatch(r"PL_%s_\d+" % wave, d)); L = ["### META utc=2026-11-23T11:00:00Z"]; off = 300
+    pf = {}
+    for b in bs:
+        pf[b] = [f["run_id"] for f in json.load(open(os.path.join(PLANS, b, "plan.resolved.json")))["fits"]]
+        L += ["### SUBMISSIONS " + b, json.dumps({"stage": "setup", "fit": "all", "job": str(off), "submitted_utc": "x"})]; off += 10
+    L += ["### SQUEUE", "### SACCT"]; off = 300
+    for b in bs:
+        for i, r in enumerate(pf[b], 1):
+            L.append("%d_%d|p1m_%s_setup|COMPLETED|60|8|%d|01:00:00" % (off, i, b, int((per_fit(r) if callable(per_fit) else per_fit) * 3600)))
+        off += 10
+    L += ["### DATA_HASH", "### CALIB", "### ISLAND_T", "### DIAG", "### BINSHA", "### ENGINE_FLAGS"]
+    pth = os.path.join(TMP, "probe_wave.txt"); open(pth, "w").write("\n".join(L) + "\n"); return pth
+def runw(wave, pth, *extra):
+    r = subprocess.run([sys.executable, os.path.join(HERE, "stop_rules_prec.py"), pth, "--wave", wave, "--plans", PLANS, "--leg-log", LOG,
+                        "--waves-json", os.path.join(STG, "waves.json"), "--ref-hashes", os.path.join(TMP, "refs.json")] + list(extra), capture_output=True, text=True)
+    return r.returncode, r.stdout + r.stderr
+I0MAP = {"S1": 50, "S2": 40, "S3": 5, "S4": 35, "S5": 30, "S6": 15, "S7": 20, "S8": 70, "S9": 35, "S10": 55}
+bad = []
+for w, q in I0MAP.items():
+    rc, o = runw(w, probe_wave(w, 0.01))
+    if "quote %d -> stop > %d" % (q, 2 * q) not in o: bad.append((w, q, [l for l in o.split("\n") if l.startswith("wave actual")]))
+check("S1-S10 map of the I0-frozen scenario: quote / stop 50/100, 40/80, 5/10, 35/70, 30/60, 15/30, 20/40, 70/140, 35/70, 55/110", not bad, str(bad))
+rc, o = runw("S3", probe_wave("S3", 2.9)); check("quote floor: S3 (4 NULL fits at 2.9 = 11.6 > 10) -> STOP on the wave rule although every fit is under its 3.0 line", rc == 3 and "2 x quote 5" in o and "HARD" not in o and "SOFT TRIP" not in o, o)
+rc, o = runw("S3", probe_wave("S3", 2.4)); check("quote floor: S3 at 9.6 (< 10): no stop (the stop is not off, and not 0)", rc == 0 and "stop > 10" in o, o)
+rc, o = runw("S3", probe_wave("S3", 0.45)); check("S3 at the model (0.45 per fit): no stop", rc == 0, o)
+rc, o = runw("S3", probe_wave("S3", 0.1), "--quote", "0"); check("--quote 0 is refused (rc 64): a zero quote must not switch the wave stop off", rc == 64, o)
+rc, o = runw("S3", probe_wave("S3", 0.1), "--quote", "-3"); check("--quote -3 is refused (rc 64)", rc == 64, o)
+rc, o = runw("S8", probe_wave("S8", 0.01), "--quote", "30"); check("--quote re-quote accepted (S8 30 -> stop > 60)", rc == 0 and "quote 30 -> stop > 60" in o, o)
+os.makedirs(os.path.join(TMP, "plans11"), exist_ok=True); lk = os.path.join(TMP, "plans11", "PL_S11_1")
+if os.path.lexists(lk): os.remove(lk)
+os.symlink(os.path.join(PLANS, "PL_S3_1"), lk)
+pw = probe_wave("S3", 0.1); txt = open(pw).read().replace("PL_S3_1", "PL_S11_1"); open(pw, "w").write(txt)
+r = subprocess.run([sys.executable, os.path.join(HERE, "stop_rules_prec.py"), pw, "--wave", "S11", "--plans", os.path.join(TMP, "plans11"), "--leg-log", LOG, "--waves-json", os.path.join(STG, "waves.json"), "--ref-hashes", os.path.join(TMP, "refs.json")], capture_output=True, text=True)
+check("a wave without a quote is a STOP (no silent 'no wave stop')", r.returncode == 3 and "no quote for wave S11" in r.stdout, r.stdout)
+json.dump({"x": 890.0}, open(os.path.join(TMP, "prior890.json"), "w"))
+rc, o = runw("S1", probe_wave("S1", 0.5), "--prior", os.path.join(TMP, "prior890.json")); check("cum-stop default 900 for a science wave: 890 + 14 = 904 -> STOP, line shows cum stop 900", rc == 3 and "cumulative 904" in o and "(cum stop 900)" in o, o)
+rc, o = runw("S1", probe_wave("S1", 0.2), "--prior", os.path.join(TMP, "prior890.json")); check("science wave: 890 + 5.6 = 895.6 (< 900) -> no cumulative stop", "STOP cumulative" not in o and "(cum stop 900)" in o, o)
+rc, o = runw("S1", probe_wave("S1", 0.5), "--prior", os.path.join(TMP, "prior890.json"), "--cum-stop", "1000"); check("--cum-stop 1000 overrides the science default", "STOP cumulative" not in o and "(cum stop 1000)" in o, o)
+rc, o = run(probe(base), "--prior", os.path.join(TMP, "prior890.json")); check("a precision wave keeps the 1,000 default (A0 21.5 + 890 = 911.5: no cumulative stop)", "STOP cumulative" not in o and "(cum stop 1000)" in o, o)
+rc, o = runw("S7", probe_wave("S7", 0.01)); check("pilot gate S7: prints 'S7 ... re-quotes S8'", "after S7 ends" in o and "re-quotes S8" in o, o)
+rc, o = runw("S9", probe_wave("S9", 0.01)); check("pilot gate S9: re-quotes S10", "re-quotes S10" in o, o)
+rc, o = runw("S6", probe_wave("S6", 0.01)); check("S6 is no pilot gate any more (no pilot line)", "pilot gate" not in o, o)
 # the committed table is pinned: altering it is a STOP
 src = open(os.path.join(HERE, "stop_rules_prec.py")).read().replace('"A3 n200": (2.76, 4.1, 6.9)', '"A3 n200": (2.76, 40.1, 60.9)')
 alt = os.path.join(TMP, "stop_rules_prec_altered.py"); open(alt, "w").write(src)

@@ -15,6 +15,7 @@ keep = set()
 for r in ids:
     if "-A3-exactlink-" in r or "-A3F-exactlink-" in r:
         keep.add(r); keep.add(r.replace("-A3-exactlink-", "-V-").replace("-A3F-exactlink-", "-VF-"))
+        keep.add(r.replace("-A3-exactlink-", "-VF-").replace("-A3F-exactlink-", "-V-"))   # I0-frozen plan: the pair of an overlap-dataset A3 fit is the re-run VF fit (both spellings; only existing run dirs matter)
 print(",".join(sorted(keep)))
 PY
 )

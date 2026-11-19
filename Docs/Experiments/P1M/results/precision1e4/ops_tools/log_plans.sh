@@ -16,8 +16,12 @@ python3 - "$STG/current/plans" "$W" <<'PY' | while IFS=$'\t' read -r b sha cc; d
 import hashlib, json, os, sys
 plans, w = sys.argv[1], json.load(open(sys.argv[2]))
 n = bad = 0
+import re
+only = re.compile(os.environ.get("ONLY", "."))     # ONLY='^PL_S' logs just the science plans (e.g. after the I0 regeneration)
 for wv, x in w.items():
     for b in x["batches"]:
+        if not only.search(b["batch"]):
+            continue
         raw = open(os.path.join(plans, b["batch"] + ".json"), "rb").read(); sha = hashlib.sha256(raw).hexdigest(); n += 1
         if sha != b["plan_sha256"]:
             bad += 1; print("PLAN SHA DIFFERS from the committed waves.json: " + b["batch"], file=sys.stderr)

@@ -1,0 +1,65 @@
+wave batch      fits  tasks     worst       cap  peakCPU  warnings
+A0   PL_A0_1       2    136     278.7     278.8      256  None
+A0   PL_A0_2       1     20      48.7      48.8       32  None
+A0   PL_A0_3       1     20      46.7      46.8       32  None
+P1   PL_P1_1       2    136     278.7     278.8      256  None
+P1   PL_P1_2       2    136     278.7     278.8      256  None
+P2   PL_P2_1       2    136     278.7     278.8      256  None
+P2   PL_P2_2       2    136     278.7     278.8      256  None
+P3   PL_P3_1       2    136     278.7     278.8      256  None
+P3   PL_P3_2       2    136     278.7     278.8      256  None
+P4   PL_P4_1       2    136     278.7     278.8      256  None
+P4   PL_P4_2       2    136     278.7     278.8      256  None
+H1   PL_H1_1       2    136     278.7     278.8      256  None
+H1   PL_H1_2       2    136     278.7     278.8      256  None
+H2   PL_H2_1       2    136     278.7     278.8      256  None
+H2   PL_H2_2       2    136     278.7     278.8      256  None
+H3   PL_H3_1       2    136     278.7     278.8      256  None
+H3   PL_H3_2       2    136     278.7     278.8      256  None
+S1   PL_S1_1       7    140     326.7     326.8      224  None
+S1   PL_S1_2       7    140     326.7     326.8      224  None
+S1   PL_S1_3       7    140     326.7     326.8      224  None
+S1   PL_S1_4       7    140     326.7     326.8      224  None
+S2   PL_S2_1       7    140     326.7     326.8      224  None
+S2   PL_S2_2       7    140     326.7     326.8      224  None
+S2   PL_S2_3       7    140     326.7     326.8      224  None
+S2   PL_S2_4       7    140     326.7     326.8      224  None
+S3   PL_S3_1       4     80     186.7     186.8      128  None
+S4   PL_S4_1       5    100     243.3     243.4      160  None
+S4   PL_S4_2       5    100     243.3     243.4      160  None
+S4   PL_S4_3       5    100     243.3     243.4      160  None
+S5   PL_S5_1       7    140     326.7     326.8      224  None
+S5   PL_S5_2       7    140     326.7     326.8      224  None
+S5   PL_S5_3       7    140     326.7     326.8      224  None
+S5   PL_S5_4       7    140     326.7     326.8      224  None
+S6   PL_S6_1       7    140     326.7     326.8      224  None
+S6   PL_S6_2       5    100     233.3     233.4      160  None
+S7   PL_S7_1       7    140     466.7     466.8      224  None
+S8   PL_S8_1       7    140     466.7     466.8      224  None
+S8   PL_S8_2       7    140     466.7     466.8      224  None
+S8   PL_S8_3       7    140     466.7     466.8      224  None
+S8   PL_S8_4       7    140     466.7     466.8      224  None
+S9   PL_S9_1       7    140     611.3     611.4      224  None
+S10  PL_S10_1      7    140     611.3     611.4      224  None
+S10  PL_S10_2      6    120     524.0     524.1      192  None
+
+per wave: batches, fits, tasks, worst-case core-h (limit sum), peak CPUs (sum over the wave's batches of the larger phase)
+A0    3 batches   4 fits  176 tasks worst    374.1  peak<=320
+P1    2 batches   4 fits  272 tasks worst    557.4  peak<=512
+P2    2 batches   4 fits  272 tasks worst    557.4  peak<=512
+P3    2 batches   4 fits  272 tasks worst    557.4  peak<=512
+P4    2 batches   4 fits  272 tasks worst    557.4  peak<=512
+H1    2 batches   4 fits  272 tasks worst    557.4  peak<=512
+H2    2 batches   4 fits  272 tasks worst    557.4  peak<=512
+H3    2 batches   4 fits  272 tasks worst    557.4  peak<=512
+S1    4 batches  28 fits  560 tasks worst   1306.8  peak<=896
+S2    4 batches  28 fits  560 tasks worst   1306.8  peak<=896
+S3    1 batches   4 fits   80 tasks worst    186.7  peak<=128
+S4    3 batches  15 fits  300 tasks worst    729.9  peak<=480
+S5    4 batches  28 fits  560 tasks worst   1306.8  peak<=896
+S6    2 batches  12 fits  240 tasks worst    560.0  peak<=384
+S7    1 batches   7 fits  140 tasks worst    466.7  peak<=224
+S8    4 batches  28 fits  560 tasks worst   1866.8  peak<=896
+S9    1 batches   7 fits  140 tasks worst    611.3  peak<=224
+S10   2 batches  13 fits  260 tasks worst   1135.3  peak<=416
+total fits 202; waves 18
