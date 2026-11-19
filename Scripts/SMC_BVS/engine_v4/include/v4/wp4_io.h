@@ -61,7 +61,7 @@ struct CalibIn {
   std::string rule; int32_t I_used = 0, I_max = -1, ell = -1; double k_store = 0;
   double tau_cal = -__builtin_huge_val();            // D-29: meta.tau_cal_hex (V mode; -inf when absent), checked against inh_F
 };
-// Every model, value, grid and meta range checked. V mode: the bounded rule, tier 0, N = 2,500 (D-1, D-26) and
+// Every model, value, grid and meta range checked. V mode: the bounded rule, tier 0, N in [1, 2^24] (default 2,500; D-1, D-26) and
 // I_used <= I_max <= ell. A completed calibration must carry k_store (finite, > 0). When data_hash / setup_hash are
 // given, calib.bin's meta.inputs must name them (review PR37 m-3). A non-ok calib.bin exposes no inherited models.
 // keep_inherited = false: the inherited models are validated in place (no per-model allocation) and NOT materialised

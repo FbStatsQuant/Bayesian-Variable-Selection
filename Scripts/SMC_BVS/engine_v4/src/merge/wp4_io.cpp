@@ -332,8 +332,8 @@ CalibIn read_calib(const std::string& path, int32_t p, int32_t K, const std::str
   c.I_used = c.meta.contains("I_used") ? (int32_t)c.meta.at("I_used").num() : 0;
   c.I_max = c.meta.contains("I_max") ? (int32_t)c.meta.at("I_max").num() : -1;
   c.ell = c.meta.contains("ell") ? (int32_t)c.meta.at("ell").num() : -1;
-  if (c.mode == fmt::M_V) {   // V-1M (D-1, D-26): bounded rule, tier 0, N = 2,500, I_used <= I_max <= ell
-    if (c.rule != "bounded" || c.tier != 0 || c.N != calib::V_N) throw Error(Status::invalid_input, path + ": a V calib.bin must have the bounded rule, tier 0 and N = 2500 (D-1, D-26)");
+  if (c.mode == fmt::M_V) {   // V-1M (D-1, D-26): bounded rule, tier 0, N = the calibration's V parameter (default 2,500), I_used <= I_max <= ell
+    if (c.rule != "bounded" || c.tier != 0 || c.N < calib::V_N_MIN || c.N > calib::V_N_MAX) throw Error(Status::invalid_input, path + ": a V calib.bin must have the bounded rule, tier 0 and N a whole number in [1, 2^24] (default 2500; D-1, D-26)");
     if (c.I_max < 0 || c.ell < 0 || c.I_used > c.I_max || c.I_max > c.ell) throw Error(Status::invalid_input, path + ": I_used <= I_max <= ell violated");
   } else if (c.rule != "coded") throw Error(Status::invalid_input, path + ": a theory-mode calib.bin must have the coded rule");
   if (!data_hash.empty() || !setup_hash.empty()) {

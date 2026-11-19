@@ -52,14 +52,14 @@ int64_t whole_arg(const Json& a, const char* k, int64_t dflt, int64_t lo, int64_
   return (int64_t)x;
 }
 uint64_t file_bytes(const std::string& p) { struct stat st{}; return ::stat(p.c_str(), &st) == 0 ? (uint64_t)st.st_size : 0; }
-Json settings_json(const Settings& s, const Budgets& b, Rule rule) {
+Json settings_json(const Settings& s, const Budgets& b, Rule rule, int v_N) {
   Json j = Json::object();
   j["rule"] = rule == Rule::coded ? "coded" : "bounded"; j["I_max"] = s.I_max; j["refine_m"] = s.refine_m;
   j["sum_mode"] = s.sum_mode == SumMode::Serial ? "serial" : "blocked";
   Json t = Json::array();
   for (int e = 0; e < (rule == Rule::coded ? 2 : 1); ++e) {
     Json x = Json::object(); x["tier"] = e; x["H"] = s.tiers[e].H; x["T_e"] = s.tiers[e].Te; x["L"] = s.tiers[e].L; x["Hm"] = s.tiers[e].Hm;
-    x["ell"] = s.tiers[e].ell; x["N_final"] = frozen_N(b, rule, e); t.push(x);
+    x["ell"] = s.tiers[e].ell; x["N_final"] = frozen_N(b, rule, e, v_N); t.push(x);
   }
   j["tiers"] = t; j["K"] = b.K; j["B"] = b.B;
   return j;
@@ -114,6 +114,14 @@ Json run(const Json& args) {
   const Rule rule = mode == fmt::M_V ? Rule::bounded : Rule::coded;   // theory mode (compat, law): coded; V: bounded (D-2, D-26)
   if (rule == Rule::coded && (args.contains("I_max") || args.contains("refine_m")))
     throw Error(Status::invalid_input, "calibrate: --I_max / --refine_m apply to the bounded rule (mode V) only");
+  // V mode: the final islands' N is a parameter (default V_N = 2,500; manifest params.N or --N), refused when invalid exactly as the
+  // island refuses T's N (a whole number in [1, 2^24]); a conflicting explicit --N is refused as for the other scientific
+  // parameters. Theory mode ignores N here as before (the coded rule's N is v3's N_e).
+  int v_N = V_N;
+  if (rule == Rule::bounded) {
+    cmd::refuse_manifest_conflicts(args, man, "calibrate", {"N"});
+    v_N = (int)whole_arg(args, "N", V_N, V_N_MIN, V_N_MAX);
+  }
   const int threads = (int)whole_arg(args, "threads", 1, 1, 4096);
   const uint64_t budget = (uint64_t)whole_arg(args, "mem_budget", 0, 0, (int64_t)1 << 50);   // bytes, 0 = off (INTERFACES §7)
   const bool plan_only = whole_arg(args, "plan_only", 0, 0, 1) == 1;
@@ -146,7 +154,7 @@ Json run(const Json& args) {
   }
   const CalibMemPlan plan = calib_memory_plan(p, kbar, file_bytes(dpath) + file_bytes(spath));
   Json rec = Json::object();
-  rec["settings"] = settings_json(s, b, rule); rec["mem_plan"] = plan_json(plan, budget, kbar, k_src); rec["n"] = (double)n; rec["p"] = (double)p;
+  rec["settings"] = settings_json(s, b, rule, v_N); rec["mem_plan"] = plan_json(plan, budget, kbar, k_src); rec["n"] = (double)n; rec["p"] = (double)p;
   rec["mode"] = mode_s;
   const uint64_t resident_own = plan.ledger + plan.export_;
   const bool files = !dpath.empty() && !spath.empty();
@@ -219,7 +227,7 @@ Json run(const Json& args) {
   if (co.status == CalStatus::ok) {
     wp4io::CalibWrite cw; cw.mode = mode; cw.co = &co; cw.led = &oc.led; cw.inherited_flat = &oc.inherited;
     cw.settings = &s; cw.k_store = oc.k_store;
-    cw.N = frozen_N(b, rule, co.tier_final); cw.L = s.tiers[co.tier_final].L; cw.Hm = s.tiers[co.tier_final].Hm; cw.stages = oc.stages;
+    cw.N = frozen_N(b, rule, co.tier_final, v_N); cw.L = s.tiers[co.tier_final].L; cw.Hm = s.tiers[co.tier_final].Hm; cw.stages = oc.stages;
     cw.inputs["data.bin"] = dhash; cw.inputs["setup.bin"] = S.content_hash;
     cw.extra["seed"] = (double)seed; cw.extra["threads"] = s.threads;
     rec["calib_bin"] = wp4io::write_calib(out, cw);
