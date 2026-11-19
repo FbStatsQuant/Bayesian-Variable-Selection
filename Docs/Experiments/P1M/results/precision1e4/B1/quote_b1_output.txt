@@ -1,0 +1,7 @@
+n=100 AR-weak, 2 T + 2 V fits (20,000 reps, seed 20261119)
+T (2 fits)  E 110.7  P50 92.5  P90 201.3  P99 346.9
+V (2 fits)  E 3.8  P50 3.7  P90 4.6  P99 5.5
+TOTAL       E 114.5  P50 96.2  P90 205.3  P99 350.7
+single T fit: P(> 172.5) = 0.0533 ; max-T-fit P90 141
+P(total > 120) = 0.361 ; P(total > 2 x E) = 0.069
+sensitivity: the overlap's flat mean of all 20 T fits (incl. NULL) = 44.0; 2 T + 2 V at that mean + V 2.5 = 92.9
