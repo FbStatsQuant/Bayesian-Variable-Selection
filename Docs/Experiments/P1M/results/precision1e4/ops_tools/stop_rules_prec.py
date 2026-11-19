@@ -34,12 +34,14 @@ TABLE = {
     "NULL n200": (0.51, 3.0, 3.0),
 }
 TABLE_SHA256 = "c0fcd139db0a02d18c169eed1e9c46effdd6f5407a7d413ac97bb8046d9994b3"
-QUOTE = {"A0": 25, "P1": 30, "P2": 30, "P3": 25, "P4": 45, "S1": 60, "S2": 30, "S3": 40, "S4": 40, "S5": 20, "S6": 30, "S7": 100, "S8": 50, "S9": 75,
+QUOTE = {"A0": 25, "P1": 30, "P2": 30, "P3": 25, "P4": 45, "S1": 60, "S2": 30, "S3": 40, "S4": 40, "S5": 20, "S6": 30, "S7": 100, "S8": 50, "S9": 75, "B1": 115,
          "H1": 115, "H2": 80, "H3": 155}                       # LEG_PLAN §4: the wave stop is 2 x
 CUM_STOP, PROJ_STOP = 1000.0, 4127.0
+T_REPORT, T_MEAN, T_NS = 172.5, 44.0, {10000 * 4 ** k for k in range(4)}   # boundary wave B1 (ADDENDUM_1): T fits report above 172.5, no class row; T tiers N = 10^4 * 4^k
 EXEMPT_RUNS = {"4-AR-n200-r0%d-V-s%d" % (r, s) for r in (1, 2, 3, 4) for s in (1, 2)} | {"4-ARweak-n200-r01-V-s1", "4-ARweak-n200-r02-V-s1", "4-ADJOPP-n200-r01-V-s1",
                "4-ADJOPP-n200-r02-V-s1", "4-IND-n200-r01-V-s1", "4-NULL-n200-r01-V-s1"}   # reused overlap fits: exempt by their listed shas (never run here)
 INFRA, PEND_BAD = {"NODE_FAIL", "BOOT_FAIL"}, re.compile(r"QOS|Assoc|MaxSubmit|Invalid|Limit", re.I)
+TERMINAL = {"COMPLETED", "FAILED", "TIMEOUT", "OUT_OF_MEMORY", "CANCELLED", "NODE_FAIL", "BOOT_FAIL", "DEADLINE", "PREEMPTED", "REVOKED"}
 BAD = {"FAILED", "TIMEOUT", "OUT_OF_MEMORY", "CANCELLED", "DEADLINE", "PREEMPTED", "REVOKED", "SUSPENDED"}
 RID = re.compile(r"^4-(AR|ARweak|ADJOPP|IND|BLK|NULL)-n(\d+)-r(\d+)-(.*)-s(\d+)$")
 
@@ -61,6 +63,8 @@ def klass(rid):
         return "prec N2500 m%s I%s" % (mval, "0" if i0 else "3") if N == "2500" else "prec N10000 m%s" % mval
     if mid in ("A3-exactlink", "A3F-exactlink"):
         return "A3 n200"
+    if mid == "T":
+        return "T law"            # the T arm of the boundary wave B1: no class in the committed table (report-only rule below)
     if mid in ("V", "VF", "V-XB"):
         return "%s n%s" % (ds, n)
     return None
@@ -105,10 +109,10 @@ def main():
         soft_ov[k] = v
     ign_jobs = {x for x in a.ignore_jobs.split(",") if x}; ign_b = {x for x in a.ignore_batches.split(",") if x}
     S = sections(a.probe)
-    runs, planfit, arm_of = {}, {}, {}
+    runs, planfit, arm_of, bmode = {}, {}, {}, {}
     for b in sorted(d for d in os.listdir(a.plans) if re.fullmatch(r"PL_%s_\d+" % a.wave, d)):
         pr = json.load(open(os.path.join(a.plans, b, "plan.resolved.json")))
-        runs[b] = [f["run_id"] for f in pr["fits"]]
+        runs[b] = [f["run_id"] for f in pr["fits"]]; bmode[b] = pr["mode"]
         for f in pr["fits"]:
             planfit[b + "/" + f["run_id"]] = f
     jobmap = {}
@@ -118,11 +122,15 @@ def main():
             for l in lines:
                 j = json.loads(l); jobmap[j["job"]] = (b, None if j["fit"] == "all" else j["fit"])
     cost, state, bad_stage, pend = defaultdict(float), defaultdict(set), [], []
+    sacct_rows, sacct_nonterm, sacct_jobs = 0, [], set()
     for l in S.get("SACCT", []):
         jid, name, st, el, cpus, cpuraw, lim = l.split("|")[:7]
         base, _, task = jid.partition("_")
         if base not in jobmap:
             continue
+        sacct_rows += 1; sacct_jobs.add(base)
+        if st.split()[0] not in TERMINAL:
+            sacct_nonterm.append("%s %s" % (jid, st.split()[0]))
         b, fit = jobmap[base]
         if fit is None:
             if not task.isdigit():
@@ -138,11 +146,12 @@ def main():
             (infos if known else bad_stage).append(("known-failed: " if known else "") + "%s %s %s" % (jid, name, st))
         if s0 in INFRA:
             infos.append("infrastructure fault (not a stop rule; one rerun per fit, manager): %s %s %s" % (jid, name, st))
-    n_foreign = 0
+    n_foreign = 0; own_squeue = 0
     for l in S.get("SQUEUE", []):
         i, n, st, rs = l.split("|")[:4]
         if i.split("_")[0] not in jobmap:   # F6: only this wave's own jobs (a foreign job of the account must not give a false STOP)
             n_foreign += 1; continue
+        own_squeue += 1
         if st == "PENDING" and PEND_BAD.search(rs):
             # JobArrayTaskLimit with the array's own %k throttle in its id ([a-b%k]) = our own submit throttle, not a cluster limit
             # (A0 false alarm 11-19, 2791240_[9-16%8]; HQ: exclude it). Without a %k in the id it still STOPs.
@@ -156,6 +165,10 @@ def main():
     soft_trips = []
     for k, c in sorted(cost.items()):
         rid = k.split("/")[1]; kl = klass(rid)
+        if kl == "T law" and bmode.get(k.split("/")[0]) == "law":
+            if c > T_REPORT:
+                flags.append("REPORT T fit %s cost %.1f core-h > %.1f (report-and-continue; recorded as the cost-criterion FAIL of this fit; the fit is not cancelled, no stop)" % (k, c, T_REPORT))
+            continue
         if kl not in TABLE:
             flags.append("STOP fit %s: no class in the committed table (class %r)" % (k, kl)); continue
         E, soft, hard = TABLE[kl]
@@ -177,6 +190,7 @@ def main():
     try:
         wj = json.load(open(a.waves_json))
         scope = [f["run_id"] for w, x in wj.items() if a.with_held or not w.startswith("H") for b in x["batches"] for f in b["fits"]]
+        scope += [r for b in runs for r in runs[b] if r not in scope]      # the monitored wave's own fits (e.g. B1, which is not in waves.json)
         started = {k.split("/")[1] for k in cost} | set(prior)
         done = defaultdict(list)
         for k, s in state.items():
@@ -187,7 +201,7 @@ def main():
         left = [r for r in scope if r not in started]
         for r in left:
             kl = klass(r); xs = done.get(kl) or []
-            proj += (sum(xs) / len(xs)) if len(xs) >= 3 else TABLE.get(kl, (3.0,))[0]
+            proj += (sum(xs) / len(xs)) if len(xs) >= 3 else (T_MEAN if kl == "T law" else TABLE.get(kl, (3.0,))[0])
         pnote = "%d fits left" % len(left)
     except OSError as e:
         pnote = "waves.json unreadable (%s): projection = spent" % e
@@ -213,6 +227,11 @@ def main():
         f = planfit.get(k)
         if not f:
             continue
+        if bmode.get(k.split("/")[0]) == "law":   # T arm (B1): coded calibration with escalation, N = 10^4 * 4^k; refine_m / I_max are not an arm knob here
+            n_arm += 1
+            if rec.get("rule") != "coded" or rec.get("N") not in T_NS:
+                flags.append("STOP T ARM IDENTITY %s: recorded rule %r, N %r (%s) != plan: rule 'coded', N in %s" % (k, rec.get("rule"), rec.get("N"), rec.get("source"), sorted(T_NS)))
+            continue
         pm = f.get("params") or {}
         exp = {"N": f["N"], "refine_m": pm.get("refine_m", 1), "I_max": pm.get("I_max", 3), "rule": "bounded"}
         got = {x: rec.get(x) for x in exp}
@@ -236,17 +255,20 @@ def main():
                 flags.append("FLAG behaviour %s: I_used = %s but the largest diagnostic index in cost/ is %d" % (k, rec["I_used"], kmax))
     # ---- data identity ----------------------------------------------------------------------------------------------------------------------------------------
     hs, bsha = defaultdict(set), []
-    leg = None
+    leg, leg_t = None, None
     if a.leg_log and os.path.exists(a.leg_log):
         for l in open(a.leg_log):
             f = l.rstrip("\n").split("\t")
-            if len(f) > 3 and f[2] == "BUILD":
-                leg = f[3]; break
+            if len(f) > 3 and f[2] == "BUILD" and leg is None:
+                leg = f[3]
+            if len(f) > 3 and f[2] == "BUILD_T" and leg_t is None:
+                leg_t = f[3]
+    want = lambda b: leg_t if bmode.get(b) == "law" else leg      # the expected build of a batch: V -> BUILD, T (law mode, wave B1) -> BUILD_T
     for l in S.get("DATA_HASH", []):
         b, r, cs, xs, ys, bs = l.split("|")
         hs[dataset(r)].add((xs, ys))   # X / y from truth.json only: data.bin.json content_sha256 embeds the binary block and differs per build (checked on the 40 overlap records)
-        if leg and r not in EXEMPT_RUNS and bs != "-" and bs != leg:
-            bsha.append("%s/%s recorded binary.sha256 %s.. != the leg build" % (b, r, bs[:12]))
+        if want(b) and r not in EXEMPT_RUNS and bs != "-" and bs != want(b):
+            bsha.append("%s/%s recorded binary.sha256 %s.. != the leg's %s build" % (b, r, bs[:12], "T" if bmode.get(b) == "law" else "V"))
     ref = json.load(open(a.ref_hashes)) if os.path.exists(a.ref_hashes) else {}
     for ds, v in hs.items():
         if len(v) > 1:
@@ -257,10 +279,12 @@ def main():
                 flags.append("STOP DATA IDENTITY dataset %s: X/y sha256 differ from the overlap record" % ds)
     if leg is None:
         flags.append("STOP build identity: no BUILD line in the deploy log (cannot compare)")
+    if leg_t is None and any(m == "law" for m in bmode.values()):
+        flags.append("STOP build identity: T batches but no BUILD_T line in the deploy log (cannot compare)")
     for l in S.get("BINSHA", []):
         b, sh = l.split("|")
-        if leg and sh != leg:
-            flags.append("STOP BUILD IDENTITY batch %s bin/smcbvs4 sha256 %s.. != the leg build %s.." % (b, sh[:12], leg[:12]))
+        if want(b) and sh != want(b):
+            flags.append("STOP BUILD IDENTITY batch %s bin/smcbvs4 sha256 %s.. != the leg's %s build %s.." % (b, sh[:12], "T" if bmode.get(b) == "law" else "V", want(b)[:12]))
     for x in bsha:
         flags.append("STOP BUILD IDENTITY " + x)
     meta = next((k for k in S if k.startswith("META")), "(no META line)")
@@ -268,14 +292,26 @@ def main():
     print("%-50s %-18s %8s %6s %6s  %s" % ("batch/fit", "class", "core-h", "soft", "hard", "stage states"))
     for b in sorted(runs):
         for r in runs[b]:
-            k = b + "/" + r; kl = klass(r); t = TABLE.get(kl, (0, 0, 0))
-            print("%-50s %-18s %8.2f %6.1f %6.1f  %s" % (k, kl, cost.get(k, 0.0), t[1], t[2], ",".join(sorted(state.get(k, [])))))
+            k = b + "/" + r; kl = klass(r); t = TABLE.get(kl)
+            print("%-50s %-18s %8.2f %6s %6s  %s" % (k, kl, cost.get(k, 0.0), "%.1f" % t[1] if t else "-", "%.1f" % t[2] if t else "(rpt>%.1f)" % T_REPORT, ",".join(sorted(state.get(k, [])))))
     print("wave actual %.1f core-h (quote %s -> stop > %s) | leg spent %.1f (cum stop %.0f) | projection %.0f (stop > %.0f; %s)" % (
         wave_cost, quote, "%.0f" % (2 * quote) if quote else "n/a", spent, a.cum_stop, proj, PROJ_STOP, pnote))
-    print("arm identity checked on %d fits; datasets with hashes: %d; leg build sha256 %s" % (n_arm, len(hs), (leg or "-")[:16]))
+    print("arm identity checked on %d fits; datasets with hashes: %d; leg build sha256 V %s T %s" % (n_arm, len(hs), (leg or "-")[:16], (leg_t or "-")[:16]))
     print("SOFT OVERRIDES (soft column only; TABLE and the hard column pinned, sha256 %s): %s" % (table_sha()[:12], "; ".join("%s: committed soft %.1f -> %.1f" % (k, TABLE[k][1], v) for k, v in sorted(soft_ov.items())) or "none"))
     if n_foreign:
         print("squeue rows of other jobs of the account ignored: %d" % n_foreign)
+    # WAVE STATE (every probe, one explicit line): ENDED = no squeue row of the wave's batches AND every sacct row of the wave terminal (and every submitted job id seen in sacct)
+    missing = sorted(set(jobmap) - sacct_jobs)
+    ended = own_squeue == 0 and sacct_rows > 0 and not sacct_nonterm and not missing
+    if ended:
+        print("WAVE STATE: ENDED  (no squeue row of the wave's batches; %d sacct rows, all terminal; %d job ids seen) -> stop probing, report, collect (read-back)" % (sacct_rows, len(sacct_jobs)))
+    else:
+        why = []
+        if own_squeue: why.append("%d squeue row(s) of the wave" % own_squeue)
+        if sacct_nonterm: why.append("%d non-terminal sacct row(s), e.g. %s" % (len(sacct_nonterm), sacct_nonterm[0]))
+        if missing: why.append("%d submitted job id(s) not in sacct yet" % len(missing))
+        if sacct_rows == 0: why.append("no sacct row yet")
+        print("WAVE STATE: RUNNING  (%s)" % "; ".join(why))
     for x in infos:
         print("INFO", x[5:] if x.startswith("INFO ") else x)
     for f in flags:

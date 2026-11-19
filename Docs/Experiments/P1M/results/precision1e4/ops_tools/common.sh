@@ -24,3 +24,7 @@ home_guard() {
   [[ $mb -le $HOME_LIMIT_MB ]] || { echo "REFUSING: NOTS home $mb MB > $HOME_LIMIT_MB MB. Free home first (code trees belong in scratch code_ws/)." >&2; return 1; }
 }
 log_leg() { printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "$(date -u +%FT%TZ)" "$1" "$2" "$3" "$4" "$5" "$6" "$7" "${WHO:-ops-sonnet}" >> "$LEG_LOG"; }
+# ---- the T arm (boundary wave B1, ADDENDUM_1_BOUNDARY): ONE T build for the leg, logged as a BUILD_T line (law mode, default ISA = portable); T batches = plan mode law ----
+batch_mode() { python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['mode'])" "$1/$2/plan.resolved.json"; }   # batch_mode <scripts dir> <batch> -> V | law
+leg_sha_T() { [[ -f $LEG_LOG ]] && awk -F'\t' '$3=="BUILD_T"{print $4; exit}' "$LEG_LOG" || true; }
+t_master()  { [[ -f $LEG_LOG ]] && awk -F'\t' '$3=="BUILD_T"{print $2; exit}' "$LEG_LOG" || true; }
