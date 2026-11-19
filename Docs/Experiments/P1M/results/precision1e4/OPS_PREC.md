@@ -143,3 +143,29 @@ Totals: 170 science fits (156 new + 14 `VF`), science E 353.7 (committed model; 
 
 ## S10 (the LAST science wave) submitted; S9 collected (2026-11-19)
 **S10** (AR 3 + ARweak 10 at n = 800; 13 fits, 260 tasks, 2 batches): `PL_S10_1`, `PL_S10_2` COPYBIN from `PL_A0_1`, sha256 `d0c30b65103e308e…`; presubmit rc 0; home 6,700 MB. Submitted 21:53:59 and 21:59:01 UTC (setup / calibrate 2801728 / 2801729 and 2801898 / 2801899). Re-quoted quote 25, stop > 50, cumulative 900. Monitor-start line sent after the last batch: `START S10: PRIOR=prior_after_S9.json, QUOTE=25 (re-quoted from the S9 pilot), stop > 50`. **S9 collected:** 8 units (7 fits + `_batch_PL_S9_1`), `sha256sum -c` OK, one `SHA256SUMS` each; `write_prior.py S9` = the manager's `prior_after_S9.json` (181 fits, 445.36); per-fit class costs in `S9_class_costs.txt`. When S10 ends: collect at once and tell the manager (the leg read-back follows).
+
+
+## S10 collected; LEG COMPLETE: ledger, completeness table, one-build check (2026-11-19, after S10 ended clean at 22:19Z)
+**S10** (13 fits, 2 batches, submitted 21:53:59 / 21:59:01 UTC; quote 25 re-quoted): collected, 15 units (13 fits + 2 batch units), `sha256sum -c` OK, one `SHA256SUMS` each. **Full leg ledger `prior_after_S10.json` (`write_prior.py S10`, copy in `results/precision1e4/`): 194 fits, 462.48 core-h** = A0 24.83 + P1–P4 + B1 82.34 + S1–S10 (the S9 ledger values are unchanged; S10 added 13 fits, 17.12 core-h). **It includes B1 (4 fits, 82.34) and NOT the V-N mini-leg's `VN_ID_1` (the F2 default-N identity check, 1.99 core-h: a separate batch and ledger under `records/vn_minileg/`, outside `records/precision1e4`); so the precision + 10⁴-science leg ledger is 462.48 core-h (= the manager's ≈ 462.5), and leg + VN_ID_1 = 464.47.**
+**Completeness (`tools/leg_completeness.py`, output `LEG_COMPLETENESS_output.txt`; delivered = unit present, exactly one `SHA256SUMS` and `sha256sum -c` OK, `fit.bin` present, `eval.bin.json` status and fit_status completed, every stage COMPLETED in the batch cost record, `evidence.logZ_r` of length R′ and finite):**
+| wave | planned | delivered | build ok |
+|---|---|---|---|
+| A0 | 4 | 4 | 4/4 |
+| P1 | 4 | 4 | 4/4 |
+| P2 | 4 | 4 | 4/4 |
+| P3 | 4 | 4 | 4/4 |
+| P4 | 4 | 4 | 4/4 |
+| B1 | 4 | 4 | 4/4 |
+| S1 | 28 | 28 | 28/28 |
+| S2 | 28 | 28 | 28/28 |
+| S3 | 4 | 4 | 4/4 |
+| S4 | 15 | 15 | 15/15 |
+| S5 | 28 | 28 | 28/28 |
+| S6 | 12 | 12 | 12/12 |
+| S7 | 7 | 7 | 7/7 |
+| S8 | 28 | 28 | 28/28 |
+| S9 | 7 | 7 | 7/7 |
+| S10 | 13 | 13 | 13/13 |
+**Total 194 planned, 194 delivered (100 %).** **Science S1–S10: 170 / 170 delivered = 100 % (≥ 95 % needed, PREREG §2): the 156 new fits 156 / 156 (≥ 149 needed by the §2 wording) and the 14 `VF` re-runs 14 / 14. No fit was dropped, no failure to list.**
+**The ONE leg build:** every `binary.sha256` found in every json record of all 194 fit units (sidecars, `eval.bin.json fit.meta.binary`, `calib_meta.json`, islands; `log/`, `cost/`, `manifests/` excluded) equals the leg's V BUILD `d0c30b65103e308eb12c0665727c248f9ef0d9afe28f115dc9da6614a981b378` for the 192 V fits (A0 4, P1–P4 16, B1 V 2, S1–S10 170), and **the 2 B1 T fits equal BUILD_T `09249230f052860fbf04960e5a224cd6e4987b461de91eafa28cf97ec12cbc21`**: 194 / 194 units with exactly one sha256, 0 deviations (the check also covers the 14 `VF` fits, so the build-identity exemption for reused overlap fits is not used). The 2 B1 V fits are V-build fits (copied from `PL_A0_1`).
+No NOTS jobs were run for this step.

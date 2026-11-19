@@ -1,0 +1,22 @@
+wave planned delivered build ok   not delivered / issues
+A0         4         4 4/4        -
+P1         4         4 4/4        -
+P2         4         4 4/4        -
+P3         4         4 4/4        -
+P4         4         4 4/4        -
+B1         4         4 4/4        -
+S1        28        28 28/28      -
+S2        28        28 28/28      -
+S3         4         4 4/4        -
+S4        15        15 15/15      -
+S5        28        28 28/28      -
+S6        12        12 12/12      -
+S7         7         7 7/7        -
+S8        28        28 28/28      -
+S9         7         7 7/7        -
+S10       13        13 13/13      -
+
+TOTAL planned 194, delivered 194 (A0 + P1-P4 + B1 + S1-S10)
+SCIENCE (S1-S10): delivered 170 / planned 170 (the plan's 170 = 156 new + 14 VF) = 100.0 % (PREREG §2: >= 95 % = >= 162 of 170 needed)
+   of which new fits 156 / 156 (PREREG §2 wording: >= 95 % of the 156 new fits = >= 149) and the VF re-runs 14 / 14
+BUILD: V BUILD d0c30b65103e308e.. (every non-T fit), BUILD_T 09249230f052860f.. (B1 T fits); units whose binary.sha256 set differs: 0
