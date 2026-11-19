@@ -1,0 +1,91 @@
+leg build sha256 (deploy_leg.log BUILD): d0c30b65103e308eb12c0665727c248f9ef0d9afe28f115dc9da6614a981b378
+
+=== 4-AR-n200-r01-P-N2500-m4-c1-s1  [PL_A0_1, prec N2500 m4 I3, plan: refine_m 4, I_max 3, R' 64]
+calib_meta.json: N 2500 refine_m 4 I_max 3 I_used 3 rule bounded grid_unconverged True escalated False tier 0 cal_status ok tau_cal -194.44434017341132
+   triggers_fired ['grid_unconverged']; calib.bin.json settings I_max 3 refine_m 4 N_final 2500
+   ARM IDENTITY vs plan: MATCH
+islands: 64 (plan R' 64), island T values [84], N [2500], status ['completed']; T % 4 == 0: True; T >= 36: True
+cost/: 13 files; cost_diag files 12, diagnostic rebuild indices k [1, 2, 3]; pilot files 1
+setup.bin.json partition: 'truncated'
+truth.json X_sha256 e67d705163fc.. y_sha256 577c5682dbd7..; == overlap rep-1 record: True
+binary.sha256 in the unit's sidecar json records: ['d0c30b65103e308e'] -> EQUAL to the leg build
+eval.bin.json: status completed fit_status completed; evidence.logZ_r length 64 (all finite: True); fit.meta.occ present: True; selection.hpm [1000, 3000, 5000, 7000, 9000]
+fit.bin readable via info: verified header+table+meta, verified_sections meta, 45 sections
+COST: fit total 14.01 core-h; class model E 12.36, soft 18.5, hard 30.9 -> within soft (1.13 x E)
+   setup     tasks  1  wall_max   16 s  billed  0.0356 core-h  maxRSS   306.6 MB  states ['COMPLETED']
+   calibrate tasks  1  wall_max  217 s  billed  0.9644 core-h  maxRSS   759.5 MB  states ['COMPLETED']
+   islands   tasks 64  wall_max  239 s  billed 12.8378 core-h  maxRSS   373.6 MB  states ['COMPLETED']
+   merge     tasks  1  wall_max   62 s  billed  0.1378 core-h  maxRSS  1717.9 MB  states ['COMPLETED']
+   eval      tasks  1  wall_max   16 s  billed  0.0356 core-h  maxRSS   669.3 MB  states ['COMPLETED']
+
+=== 4-AR-n200-r01-P-N2500-m1-I0-c1-s1  [PL_A0_1, prec N2500 m1 I0, plan: refine_m 1, I_max 0, R' 64]
+calib_meta.json: N 2500 refine_m 1 I_max 0 I_used 0 rule bounded grid_unconverged True escalated False tier 0 cal_status ok tau_cal -194.49574159696212
+   triggers_fired ['grid_unconverged']; calib.bin.json settings I_max 0 refine_m 1 N_final 2500
+   ARM IDENTITY vs plan: MATCH
+islands: 64 (plan R' 64), island T values [23], N [2500], status ['completed']; T % 4 == 0: False; T >= 36: False
+cost/: 1 files; cost_diag files 0, diagnostic rebuild indices k []; pilot files 1
+setup.bin.json partition: 'truncated'
+truth.json X_sha256 e67d705163fc.. y_sha256 577c5682dbd7..; == overlap rep-1 record: True
+binary.sha256 in the unit's sidecar json records: ['d0c30b65103e308e'] -> EQUAL to the leg build
+eval.bin.json: status completed fit_status completed; evidence.logZ_r length 64 (all finite: True); fit.meta.occ present: True; selection.hpm [1000, 3000, 5000, 7000, 9000]
+fit.bin readable via info: verified header+table+meta, verified_sections meta, 45 sections
+COST: fit total 5.55 core-h; class model E 5.76, soft 8.6, hard 14.4 -> within soft (0.96 x E)
+   setup     tasks  1  wall_max   15 s  billed  0.0333 core-h  maxRSS   311.4 MB  states ['COMPLETED']
+   calibrate tasks  1  wall_max   24 s  billed  0.1067 core-h  maxRSS   639.4 MB  states ['COMPLETED']
+   islands   tasks 64  wall_max   94 s  billed  5.1878 core-h  maxRSS   379.5 MB  states ['COMPLETED']
+   merge     tasks  1  wall_max   83 s  billed  0.1844 core-h  maxRSS  1700.4 MB  states ['COMPLETED']
+   eval      tasks  1  wall_max   15 s  billed  0.0333 core-h  maxRSS   661.6 MB  states ['COMPLETED']
+
+=== 4-AR-n200-r01-A3-exactlink-s1  [PL_A0_2, A3 n200, plan: refine_m 1, I_max 3, R' 16]
+calib_meta.json: N 2500 refine_m 1 I_max 3 I_used 3 rule bounded grid_unconverged True escalated False tier 0 cal_status ok tau_cal -194.4446048007297
+   triggers_fired ['grid_unconverged']; calib.bin.json settings I_max 3 refine_m 1 N_final 2500
+   ARM IDENTITY vs plan: MATCH
+islands: 16 (plan R' 16), island T values [21], N [2500], status ['completed']; T % 4 == 0: False; T >= 36: False
+cost/: 13 files; cost_diag files 12, diagnostic rebuild indices k [1, 2, 3]; pilot files 1
+setup.bin.json partition: 'exact'
+truth.json X_sha256 e67d705163fc.. y_sha256 577c5682dbd7..; == overlap rep-1 record: True
+binary.sha256 in the unit's sidecar json records: ['d0c30b65103e308e'] -> EQUAL to the leg build
+eval.bin.json: status completed fit_status completed; evidence.logZ_r length 16 (all finite: True); fit.meta.occ present: True; selection.hpm [1000, 3000, 5000, 7000, 9000]
+fit.bin readable via info: verified header+table+meta, verified_sections meta, 45 sections
+COST: fit total 2.63 core-h; class model E 2.76, soft 4.1, hard 6.9 -> within soft (0.95 x E)
+   setup     tasks  1  wall_max   14 s  billed  0.0311 core-h  maxRSS   864.3 MB  states ['COMPLETED']
+   calibrate tasks  1  wall_max  282 s  billed  1.2533 core-h  maxRSS  1002.0 MB  states ['COMPLETED']
+   islands   tasks 16  wall_max   93 s  billed  1.2767 core-h  maxRSS   332.5 MB  states ['COMPLETED']
+   merge     tasks  1  wall_max   15 s  billed  0.0333 core-h  maxRSS   561.7 MB  states ['COMPLETED']
+   eval      tasks  1  wall_max   18 s  billed  0.0400 core-h  maxRSS   668.3 MB  states ['COMPLETED']
+
+=== 4-AR-n200-r01-V-XB-s1  [PL_A0_3, AR n200, plan: refine_m 1, I_max 3, R' 16]
+calib_meta.json: N 2500 refine_m 1 I_max 3 I_used 3 rule bounded grid_unconverged True escalated False tier 0 cal_status ok tau_cal -194.44463375982562
+   triggers_fired ['grid_unconverged']; calib.bin.json settings I_max 3 refine_m 1 N_final 2500
+   ARM IDENTITY vs plan: MATCH
+islands: 16 (plan R' 16), island T values [20], N [2500], status ['completed']; T % 4 == 0: True; T >= 36: False
+cost/: 13 files; cost_diag files 12, diagnostic rebuild indices k [1, 2, 3]; pilot files 1
+setup.bin.json partition: 'truncated'
+truth.json X_sha256 e67d705163fc.. y_sha256 577c5682dbd7..; == overlap rep-1 record: True
+binary.sha256 in the unit's sidecar json records: ['d0c30b65103e308e'] -> EQUAL to the leg build
+eval.bin.json: status completed fit_status completed; evidence.logZ_r length 16 (all finite: True); fit.meta.occ present: True; selection.hpm [1000, 3000, 5000, 7000, 9000]
+fit.bin readable via info: verified header+table+meta, verified_sections meta, 45 sections
+COST: fit total 2.64 core-h; class model E 2.18, soft 3.3, hard 5.5 -> within soft (1.21 x E)
+   setup     tasks  1  wall_max   12 s  billed  0.0267 core-h  maxRSS   297.4 MB  states ['COMPLETED']
+   calibrate tasks  1  wall_max  242 s  billed  1.0756 core-h  maxRSS   821.7 MB  states ['COMPLETED']
+   islands   tasks 16  wall_max   99 s  billed  1.4289 core-h  maxRSS   302.7 MB  states ['COMPLETED']
+   merge     tasks  1  wall_max   30 s  billed  0.0667 core-h  maxRSS   607.1 MB  states ['COMPLETED']
+   eval      tasks  1  wall_max   19 s  billed  0.0422 core-h  maxRSS   658.8 MB  states ['COMPLETED']
+
+WAVE actual (sum of the 4 fits, p1m_cost.py from the sacct dump): 24.83 core-h; quote 25, stop 50; batch files: PL_A0_1 19.56, PL_A0_2 2.63, PL_A0_3 2.64
+
+calibrate array task -> fit (from starts.jsonl, task numbers as logged by the stage scripts):
+   PL_A0_1 starts.jsonl: 110 records, 1 line(s) with two glued records, 2 unparseable fragment(s) (concurrent appends of simultaneously started island tasks; sacct is authoritative)
+   PL_A0_1 setup job 2791121 task 2 -> 4-AR-n200-r01-P-N2500-m1-I0-c1-s1 on bb2u15c1
+   PL_A0_1 setup job 2791130 task 1 -> 4-AR-n200-r01-P-N2500-m4-c1-s1 on bb2u15c1
+   PL_A0_1 calibrate job 2791127 task 1 -> 4-AR-n200-r01-P-N2500-m4-c1-s1 on bb2u15c1
+   PL_A0_1 calibrate job 2791122 task 2 -> 4-AR-n200-r01-P-N2500-m1-I0-c1-s1 on bb2u15c1
+   PL_A0_1 submitted: setup array 2791121, calibrate array 2791122
+   PL_A0_2 starts.jsonl: 20 records, 0 line(s) with two glued records, 0 unparseable fragment(s) (concurrent appends of simultaneously started island tasks; sacct is authoritative)
+   PL_A0_2 setup job 2791238 task 1 -> 4-AR-n200-r01-A3-exactlink-s1 on bb2u24c1
+   PL_A0_2 calibrate job 2791239 task 1 -> 4-AR-n200-r01-A3-exactlink-s1 on bb2u12c1
+   PL_A0_2 submitted: setup array 2791238, calibrate array 2791239
+   PL_A0_3 starts.jsonl: 20 records, 0 line(s) with two glued records, 0 unparseable fragment(s) (concurrent appends of simultaneously started island tasks; sacct is authoritative)
+   PL_A0_3 setup job 2791382 task 1 -> 4-AR-n200-r01-V-XB-s1 on bb2u13c1
+   PL_A0_3 calibrate job 2791383 task 1 -> 4-AR-n200-r01-V-XB-s1 on bb2u12c1
+   PL_A0_3 submitted: setup array 2791382, calibrate array 2791383

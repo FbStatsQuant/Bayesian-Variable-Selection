@@ -1,0 +1,7 @@
+sha256sum -c OK: 4-AR-n200-r01-A3-exactlink-s1/ (89 files; 1 SHA256SUMS)
+sha256sum -c OK: 4-AR-n200-r01-P-N2500-m1-I0-c1-s1/ (220 files; 1 SHA256SUMS)
+sha256sum -c OK: 4-AR-n200-r01-P-N2500-m4-c1-s1/ (232 files; 1 SHA256SUMS)
+sha256sum -c OK: 4-AR-n200-r01-V-XB-s1/ (87 files; 1 SHA256SUMS)
+sha256sum -c OK: _batch_PL_A0_1/ (313 files; 1 SHA256SUMS)
+sha256sum -c OK: _batch_PL_A0_2/ (71 files; 1 SHA256SUMS)
+sha256sum -c OK: _batch_PL_A0_3/ (71 files; 1 SHA256SUMS)
