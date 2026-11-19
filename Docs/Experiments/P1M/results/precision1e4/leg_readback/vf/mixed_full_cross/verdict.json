@@ -1,0 +1,517 @@
+{
+ "schema": "overlap1e4.verdict/1",
+ "script_sha256": "4f402e5127efd4754cf25e4ade6ad799f697ebc28e1c657ff49f93fd2905b5c6",
+ "prereg": {
+  "schema": "overlap1e4.prereg/1",
+  "grid": [
+   [
+    "AR",
+    4
+   ],
+   [
+    "ARweak",
+    2
+   ],
+   [
+    "ADJOPP",
+    2
+   ],
+   [
+    "IND",
+    1
+   ],
+   [
+    "NULL",
+    1
+   ]
+  ],
+  "seeds": [
+   1,
+   2
+  ],
+  "run_id_prefix": "4",
+  "n_fits": 40,
+  "arms": {
+   "V": {
+    "N": 2500,
+    "Rp": 16,
+    "mode": [
+     "V"
+    ],
+    "island_isa": "sapphirerapids",
+    "cost_model_core_h": 10.0
+   },
+   "T": {
+    "N": 10000,
+    "Rp": 4,
+    "mode": [
+     "law",
+     "T",
+     "theory"
+    ],
+    "cost_model_core_h": 115.0
+   }
+  },
+  "cost_factor": 1.5,
+  "hpm_datasets_min": 9,
+  "F_tol": 1e-06,
+  "pip_floor": 0.01,
+  "z_mult": 3.0,
+  "hell_frac": 0.1,
+  "notclean_hpm_misses": 2,
+  "notclean_pred_misses": 2,
+  "pooled_seed_sd": true
+ },
+ "records": [
+  "vf_in/mixed40"
+ ],
+ "outcome": "CLEAN",
+ "reasons": [
+  "all pre-registered criteria PASS (release still needs the independent review ACCEPT)"
+ ],
+ "incomplete": false,
+ "criteria": [
+  {
+   "id": "D",
+   "name": "delivered 40/40 (complete, valid arm settings, fit.bin readable)",
+   "status": "PASS",
+   "detail": "40/40 delivered; missing 0; failed/invalid 0; unexpected 0",
+   "missing": [],
+   "failed": [],
+   "unexpected": []
+  },
+  {
+   "id": "PAIR",
+   "name": "X/y sha256 equal across the 4 fits of each dataset",
+   "status": "PASS",
+   "detail": "0 problems",
+   "problems": []
+  },
+  {
+   "id": "S1",
+   "name": "HPM(V) = HPM(T) as sets, both engine-seed pairs, in >= 9 of 10 datasets",
+   "status": "PASS",
+   "detail": "10/10 datasets equal (10 evaluable, 0 real mismatching datasets)",
+   "n_ok": 10,
+   "n_real_miss": 0
+  },
+  {
+   "id": "S2",
+   "name": "T never reports a higher-F HPM than V (per seed pair)",
+   "status": "PASS",
+   "detail": "0 pairs with F_T > F_V + 1e-06",
+   "pairs": []
+  },
+  {
+   "id": "S3",
+   "name": "MPM(V) = MPM(T) in every evaluable dataset-seed pair",
+   "status": "PASS",
+   "detail": "0 mismatching pairs of 20 evaluable",
+   "pairs": []
+  },
+  {
+   "id": "S4",
+   "name": "NULL dataset: no column with PIP > 0.5 (either arm, either seed)",
+   "status": "PASS",
+   "detail": "4 fits checked, 0 violations",
+   "violations": []
+  },
+  {
+   "id": "P",
+   "name": "max_j |PIP_V - PIP_T| <= max(0.01, 3 combined s.e.) for pip_primary (= pip_eq), every dataset",
+   "status": "PASS",
+   "detail": "10/10 datasets evaluated, 0 fail",
+   "datasets": []
+  },
+  {
+   "id": "E1",
+   "name": "|log Zhat_V - log Zhat_T| <= 3 combined s.e. (seed-pooled / island, per dataset)",
+   "status": "PASS",
+   "detail": "10/10 datasets evaluated, 0 fail; pooled seed-to-seed sd (df V 10, T 10): s_V = 0.006071, s_T = 0.003244",
+   "datasets": []
+  },
+  {
+   "id": "E2",
+   "name": "log Z_T deterministic lower bound: consistent with the other arm's log Zhat (3 combined s.e.) and its own",
+   "status": "PASS",
+   "detail": "0 datasets inconsistent (log Z_T reported per arm in per_dataset.csv; log Zhat_occ deferred, D-21 / H-18)",
+   "datasets": []
+  },
+  {
+   "id": "H",
+   "name": "Hellinger d_H(V,T) between the store-BMA predictives <= 10% of d_H(T,f*), every dataset",
+   "status": "PASS",
+   "detail": "10 datasets evaluated (10 with a V-vs-T cross value), 0 fail, 0 pending",
+   "datasets": [],
+   "pending": []
+  },
+  {
+   "id": "C",
+   "name": "cost <= 1.5 x model per fit (V 15.0, T 172.5 core-h, sacct billed)",
+   "status": "PASS",
+   "detail": "0 fits over limit, 0 without a cost record",
+   "over": [],
+   "no_cost": []
+  }
+ ],
+ "summary": {
+  "n_fits_expected": 40,
+  "n_delivered": 40,
+  "pooled_seed_sd": {
+   "V": 0.006071100563545629,
+   "T": 0.0032441837139936974,
+   "df_V": 10,
+   "df_T": 10
+  },
+  "info": {
+   "binary_sha_by_arm": {
+    "V": [
+     [
+      "1e375b74f52514444a49687f6198235371b59cf5875d054b16d4df29d6742be2",
+      "1e375b74f52514444a49687f6198235371b59cf5875d054b16d4df29d6742be2"
+     ],
+     [
+      "72c9109d8e35002467f0e6476368033dba8f52e9e53f85e7d626b5e8a2d56896",
+      "72c9109d8e35002467f0e6476368033dba8f52e9e53f85e7d626b5e8a2d56896"
+     ],
+     [
+      "d0c30b65103e308eb12c0665727c248f9ef0d9afe28f115dc9da6614a981b378",
+      "d0c30b65103e308eb12c0665727c248f9ef0d9afe28f115dc9da6614a981b378"
+     ]
+    ],
+    "T": [
+     [
+      "182c3b6206ec9960eef3e3fc27c90b84706926b0362f530c8c80c06bdb5109e0",
+      "182c3b6206ec9960eef3e3fc27c90b84706926b0362f530c8c80c06bdb5109e0"
+     ],
+     [
+      "5fc6bbb32a517310f0859e2f99505b9afecb4f0e09db624de40aa4887d73219a",
+      "5fc6bbb32a517310f0859e2f99505b9afecb4f0e09db624de40aa4887d73219a"
+     ],
+     [
+      "b6641febb2f8991f6e3f5e2398966827949cf30406faea864d16be114e284a3d",
+      "b6641febb2f8991f6e3f5e2398966827949cf30406faea864d16be114e284a3d"
+     ],
+     [
+      "f90aa3f68608efb1e0317bfb121051b731411b39abd4931ec9b65da2dfc5cca2",
+      "f90aa3f68608efb1e0317bfb121051b731411b39abd4931ec9b65da2dfc5cca2"
+     ]
+    ]
+   },
+   "code_commits": [
+    "eefcbc4a2ab42fdf52ec1e5d318a956bdd07f463"
+   ]
+  },
+  "warnings": [
+   "arm V: 3 different binary sha256 pairs (plan 2: one build per arm)",
+   "arm T: 4 different binary sha256 pairs (plan 2: one build per arm)"
+  ],
+  "duplicates_resolved": [
+   {
+    "run_id": "4-ADJOPP-n200-r01-T-s1",
+    "kept": "vf_in/mixed40/W0__4-ADJOPP-n200-r01-T-s1.T2",
+    "other": "vf_in/mixed40/W0__4-ADJOPP-n200-r01-T-s1"
+   },
+   {
+    "run_id": "4-AR-n200-r01-T-s1",
+    "kept": "vf_in/mixed40/W0__4-AR-n200-r01-T-s1.T2",
+    "other": "vf_in/mixed40/W0__4-AR-n200-r01-T-s1"
+   }
+  ],
+  "cost_core_h": {
+   "V": {
+    "n": 20,
+    "sum": 30.1186,
+    "max": 2.9056
+   },
+   "T": {
+    "n": 20,
+    "sum": 807.7131,
+    "max": 143.9578
+   },
+   "total": 837.8317000000001
+  }
+ },
+ "fits_tier_N": {
+  "4-ADJOPP-n200-r01-T-s1": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-ADJOPP-n200-r01-T-s2": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-ADJOPP-n200-r01-V-s1": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-ADJOPP-n200-r01-V-s2": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-ADJOPP-n200-r02-T-s1": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-ADJOPP-n200-r02-T-s2": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-ADJOPP-n200-r02-V-s1": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-ADJOPP-n200-r02-V-s2": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-AR-n200-r01-T-s1": {
+   "arm": "T",
+   "tier_final": 1,
+   "N_final": 40000,
+   "N_expected_at_tier": 40000,
+   "delivered": true
+  },
+  "4-AR-n200-r01-T-s2": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-AR-n200-r01-V-s1": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-AR-n200-r01-V-s2": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-AR-n200-r02-T-s1": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-AR-n200-r02-T-s2": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-AR-n200-r02-V-s1": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-AR-n200-r02-V-s2": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-AR-n200-r03-T-s1": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-AR-n200-r03-T-s2": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-AR-n200-r03-V-s1": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-AR-n200-r03-V-s2": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-AR-n200-r04-T-s1": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-AR-n200-r04-T-s2": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-AR-n200-r04-V-s1": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-AR-n200-r04-V-s2": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-ARweak-n200-r01-T-s1": {
+   "arm": "T",
+   "tier_final": 1,
+   "N_final": 40000,
+   "N_expected_at_tier": 40000,
+   "delivered": true
+  },
+  "4-ARweak-n200-r01-T-s2": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-ARweak-n200-r01-V-s1": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-ARweak-n200-r01-V-s2": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-ARweak-n200-r02-T-s1": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-ARweak-n200-r02-T-s2": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-ARweak-n200-r02-V-s1": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-ARweak-n200-r02-V-s2": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-IND-n200-r01-T-s1": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-IND-n200-r01-T-s2": {
+   "arm": "T",
+   "tier_final": 1,
+   "N_final": 40000,
+   "N_expected_at_tier": 40000,
+   "delivered": true
+  },
+  "4-IND-n200-r01-V-s1": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-IND-n200-r01-V-s2": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-NULL-n200-r01-T-s1": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-NULL-n200-r01-T-s2": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-NULL-n200-r01-V-s1": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-NULL-n200-r01-V-s2": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  }
+ }
+}

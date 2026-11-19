@@ -13,3 +13,5 @@ science.py v3 (format-string fix; crash before any output was written; nothing r
 science_extras.py written and run AFTER the first read of science.py output (post-read addition, logged)
 570aa66535249011874dd1bacdd750c933102e423664110736288c43145fe01f  science_extras2.py
 science_extras2.py post-read addition (posterior d_H quantiles)
+eb01236de2049ea0b8dd2c5eb8acddb4520206b14a60a2345c3a36e188f61180  science_extras3.py
+science_extras3.py post-review addition (min logZ-logZ_T, r04 detail, A3 pair d_H)

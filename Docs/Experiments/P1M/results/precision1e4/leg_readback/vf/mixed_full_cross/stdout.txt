@@ -1,0 +1,12 @@
+outcome: CLEAN  (all pre-registered criteria PASS (release still needs the independent review ACCEPT))
+  D     PASS           40/40 delivered; missing 0; failed/invalid 0; unexpected 0
+  PAIR  PASS           0 problems
+  S1    PASS           10/10 datasets equal (10 evaluable, 0 real mismatching datasets)
+  S2    PASS           0 pairs with F_T > F_V + 1e-06
+  S3    PASS           0 mismatching pairs of 20 evaluable
+  S4    PASS           4 fits checked, 0 violations
+  P     PASS           10/10 datasets evaluated, 0 fail
+  E1    PASS           10/10 datasets evaluated, 0 fail; pooled seed-to-seed sd (df V 10, T 10): s_V = 0.006071, s_T = 0.003244
+  E2    PASS           0 datasets inconsistent (log Z_T reported per arm in per_dataset.csv; log Zhat_occ deferred, D-21 / H-18)
+  H     PASS           10 datasets evaluated (10 with a V-vs-T cross value), 0 fail, 0 pending
+  C     PASS           0 fits over limit, 0 without a cost record
