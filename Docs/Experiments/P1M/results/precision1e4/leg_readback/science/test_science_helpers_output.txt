@@ -1,0 +1,17 @@
+PASS tci mean/sd
+PASS tci half-width
+PASS tci n=1 has no interval
+PASS tci drops None / nan
+PASS wilson 0.5/10
+PASS wilson 10/10 upper = 1 (float tol), lower in (0.65, 0.75)
+PASS wilson 0/20 lower = 0
+PASS ols slope exact
+PASS boot slope degenerate
+PASS boot slope covers -1, non-degenerate
+PASS boot slope refuses a zero cell
+PASS cluster ratio degenerate
+PASS cluster ratio point and interval
+PASS cluster ratio, empty bin -> None
+PASS prop dataset-level
+PASS by_dataset averages seeds
+ALL 16 PASS

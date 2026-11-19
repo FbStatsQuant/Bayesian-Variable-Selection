@@ -1,0 +1,15 @@
+9a2cc1cb772a11653d88472c072b7d2a559cd64aa7e126dad289f5875db37478  science.py
+0c4fe18a8320d594c8265d2912446c27b3758e4670fbc256a96b18630b77e402  test_science_helpers.py
+cf179b90566adef56fa3ce97f1f2b7a992759b88a420b8f5183c6d04b2e8c7ec  costs.py
+6ac532b7ff847c191c00bca87d22894347665f0a9a5ac71bbef5f55e310372d5  vf_offset.py
+d72e5a597b61783ec110471e9ad2f01273e473fb19c161f3a8603e91e6e331bc  vf_tables.py
+2026-11-19T22:37:07Z
+recorded BEFORE science.py was run on the records (no science value had been read in this task, apart from the structure of one VF eval record)
+3b3b1254c67f41dbb7b0480f7d7885ddd95f55c219ca72f5e3c40a34552196a4  science.py
+science.py v2 (mean_pip 'NaN' string guard; crash before any output; nothing read)
+7c5c7feeee09733ea4e88fc134b55ae680c581aa6b23609718182d411e3acf78  science.py
+science.py v3 (format-string fix; crash before any output was written; nothing read)
+390383e4467fc21a4c1bf12b4b5f33df59c3274cb083946d58300609c0de8277  science_extras.py
+science_extras.py written and run AFTER the first read of science.py output (post-read addition, logged)
+570aa66535249011874dd1bacdd750c933102e423664110736288c43145fe01f  science_extras2.py
+science_extras2.py post-read addition (posterior d_H quantiles)
