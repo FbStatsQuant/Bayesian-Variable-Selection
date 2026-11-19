@@ -66,6 +66,8 @@ COST_6_BY_N = {k: v * RESIZE_6 for k, v in {200: 963.0, 500: 1800.0, 1000: 3300.
 # pilot wave W0 is read back). Only the 10⁴ overlap rung has them; every other block keeps the driver's defaults. The T calibrate
 # limit of 3:00 exceeds the driver's 2-h task rule (§0-v2.5), so the T overlap plans set max_task_hours = 3.0: a one-off exception
 # that needs HQ's acceptance before submission.
+# The driver requests the T islands' limit for the escalated N (tier 1 = 4 x N0): 0:45 x 4 = 3:00, capped at 2:00 (islands never exceed 2 h), so
+# the planned worst case of a T fit is 224.7 + 120 = 344.7 core-h (an island that finishes early is billed what it used); see p1m_driver.law_islands_time.
 PLAN_RESOURCES = {
     ("overlap 1e4", "V"): {"max_task_hours": 2.0, "resources": {
         "setup": {"cpus": 8, "mem": "8G", "time": "00:15:00"}, "calibrate": {"cpus": 16, "mem": "8G", "time": "00:30:00"},
