@@ -55,7 +55,7 @@ def check(name, cond, out=""):
     if cond: ok += 1; print("PASS", name)
     else: fail += 1; print("FAIL", name); print(out)
 base = {M4: 12.0, I0: 5.0, A3: 2.5, XB: 2.0}
-rc, o = run(probe(base)); check("healthy A0: no stop", rc == 0 and "no stop rule fired" in o and "SOFT" not in o, o)
+rc, o = run(probe(base)); check("healthy A0: no stop", rc == 0 and "no stop rule fired" in o and "SOFT TRIP" not in o, o)
 rc, o = run(probe(dict(base, **{M4: 20.0}))); check("one soft trip (m4 20 > 18.5, <= hard 30.9): reported, continues", rc == 0 and "SOFT TRIP" in o and "1 soft trip" in o, o)
 rc, o = run(probe(dict(base, **{M4: 20.0, I0: 9.0, A3: 4.5}))); check("3 soft trips -> STOP", rc == 3 and "3 soft trips" in o, o)
 rc, o = run(probe(dict(base, **{M4: 31.0}))); check("hard trip (m4 31 > 30.9) -> STOP", rc == 3 and "HARD" in o, o)
@@ -69,8 +69,14 @@ rc, o = run(probe(base), "--cum-stop", "1600"); check("--cum-stop 1600 accepted"
 rc, o = run(probe(base, calib={M4: {"refine_m": 1}})); check("ARM IDENTITY: m4 planned, record says refine_m 1 -> STOP", rc == 3 and "ARM IDENTITY" in o, o)
 rc, o = run(probe(base, calib={I0: {"I_max": 3}})); check("ARM IDENTITY: I_max 0 planned, record says 3 -> STOP", rc == 3 and "ARM IDENTITY" in o, o)
 rc, o = run(probe(base, calib={XB: {"N": 10000}})); check("ARM IDENTITY: N 10000 recorded -> STOP", rc == 3 and "ARM IDENTITY" in o, o)
-rc, o = run(probe(base, islT={M4: 24})); check("behaviour: m4 with island T 24 -> FLAG, not STOP", rc == 0 and "FLAG behaviour" in o and "T = 24" in o, o)
-rc, o = run(probe(base, islT={M4: 30})); check("behaviour: m4 with T 30 (not % 4, < 36) -> FLAG", rc == 0 and "FLAG behaviour" in o, o)
+rc, o = run(probe(base, islT={M4: 24})); check("behaviour hint (no grid dims yet): m4 with island T 24 -> HINT only, no FLAG, no STOP", rc == 0 and "HINT behaviour" in o and "FLAG behaviour" not in o, o)
+rc, o = run(probe(base, islT={M4: 30})); check("behaviour hint: m4 with T 30 -> HINT only", rc == 0 and "HINT behaviour" in o and "FLAG" not in o, o)
+# F1: the exact grid identity T = dims(grid) - 1 = refine_m x (dims(grid_unrefined) - 1) from calib_meta.json
+rc, o = run(probe(base, islT={M4: 84}, calib={M4: {"grid_n": 85, "grid_unrefined_n": 22}})); check("F1 exact identity holds (84 = 4 x 21): no flag, no hint", rc == 0 and "behaviour" not in o, o)
+rc, o = run(probe(base, islT={M4: 32}, calib={M4: {"grid_n": 33, "grid_unrefined_n": 9}})); check("F1 an ARweak-like m4 grid T = 32 (< 36) is fine by the identity: no flag", rc == 0 and "behaviour" not in o, o)
+rc, o = run(probe(base, islT={M4: 80}, calib={M4: {"grid_n": 85, "grid_unrefined_n": 22}})); check("F1 identity fails (T 80 != 84) -> FLAG, not STOP", rc == 0 and "FLAG behaviour" in o and "identity" in o, o)
+rc, o = run(probe(base, islT={M4: 84}, calib={M4: {"grid_n": 85, "grid_unrefined_n": 23}})); check("F1 identity fails (unrefined dims 23 -> 4 x 22 = 88) -> FLAG", rc == 0 and "FLAG behaviour" in o, o)
+rc, o = run(probe(base, islT={I0: 23}, calib={I0: {"grid_n": 24, "grid_unrefined_n": 24}})); check("F1 identity also checked for m = 1 (T 23 = 1 x 23): no flag", rc == 0 and "behaviour" not in o, o)
 rc, o = run(probe(base, diag={I0: (1, 3)})); check("behaviour: I_max 0 but cost_diag files -> FLAG, not STOP", rc == 0 and "I_max = 0 but 3 cost_diag" in o, o)
 rc, o = run(probe(base, diag={XB: (3, 12)})); check("behaviour: I_max 3, I_used 2, diag k max 3 -> FLAG", rc == 0 and "I_used = 2" in o, o)
 rc, o = run(probe(base, xy={A3: ("1" * 64, XY[1])})); check("DATA IDENTITY: dataset X differs across fits -> STOP", rc == 3 and "DATA IDENTITY" in o, o)
@@ -80,10 +86,23 @@ rc, o = run(probe(base, binsha={"PL_A0_2": "a" * 64})); check("BUILD IDENTITY: b
 rc, o = run(probe(base, dbin={XB: "b" * 64})); check("BUILD IDENTITY: fit record binary.sha256 != leg -> STOP", rc == 3 and "BUILD IDENTITY" in o, o)
 rc, o = run(probe(base, states={A3: "FAILED"})); check("FAILED stage -> STOP", rc == 3 and "non-infrastructure" in o, o)
 rc, o = run(probe(base, states={A3: "NODE_FAIL"})); check("NODE_FAIL = INFO only", rc == 0 and "infrastructure fault" in o, o)
-rc, o = run(probe(base, squeue=["9|p1m_PL_A0_1_setup|PENDING|QOSMaxCpuPerUserLimit|0:00|8"])); check("QOS pending reason -> STOP", rc == 3 and "admission" in o, o)
+rc, o = run(probe(base, squeue=["100_3|p1m_PL_A0_1_setup|PENDING|QOSMaxCpuPerUserLimit|0:00|8"])); check("QOS pending reason -> STOP", rc == 3 and "admission" in o, o)
 rc, o = run(probe(base, engine=["/x/scratch/runs/PL_A0_1/f/log/island_1.log"])); check("engine resource_limit record -> STOP", rc == 3 and "engine record" in o, o)
 os.environ["IGNORE_JOBS"] = "100"; rc, o = run(probe(base, states={M4: "FAILED"})); del os.environ["IGNORE_JOBS"]
 check("known-failed job (IGNORE_JOBS) = INFO", rc == 0 and "known-failed" in o, o)
+# F2: --soft overrides (soft column only); TABLE and hard column pinned; printed in every verdict
+rc, o = run(probe(dict(base, **{M4: 20.0})), "--soft", "prec N2500 m4 I3=21.0"); check("F2 soft override 21.0: m4 20.0 is no soft trip; override printed", rc == 0 and "SOFT TRIP" not in o and "committed soft 18.5 -> 21.0" in o, o)
+rc, o = run(probe(base)); check("F2 no override: verdict says 'SOFT OVERRIDES ...: none'", rc == 0 and "SOFT OVERRIDES" in o and "none" in o, o)
+rc, o = run(probe(dict(base, **{M4: 31.0})), "--soft", "prec N2500 m4 I3=21.0"); check("F2 the hard line never moves: m4 31 > 30.9 still STOP with an override", rc == 3 and "HARD 30.9" in o, o)
+rc, o = run(probe(base), "--soft", "prec N2500 m4 I3=40.0"); check("F2 a soft line above the hard line is refused (rc 64)", rc == 64, o)
+rc, o = run(probe(base), "--soft", "no such class=3.0"); check("F2 an unknown class is refused (rc 64)", rc == 64, o)
+os.environ["SOFT_OVERRIDES"] = "prec N2500 m4 I3=21.0;A3 n200=5.0"; rc, o = run(probe(dict(base, **{M4: 20.0, A3: 4.5}))); del os.environ["SOFT_OVERRIDES"]
+check("F2 env SOFT_OVERRIDES (two classes) works", rc == 0 and "SOFT TRIP" not in o and "A3 n200: committed soft 4.1 -> 5.0" in o, o)
+rc, o = run(probe(dict(base, **{M4: 20.0, I0: 9.0, A3: 4.5})), "--soft", "prec N2500 m4 I3=21.0"); check("F2 3 soft trips counted against the overridden lines (m4 no longer trips: 2 trips -> no STOP)", rc == 0 and o.count("SOFT TRIP") == 2, o)
+# F6: only this wave's own jobs in squeue
+rc, o = run(probe(base, squeue=["999|foreign_job|PENDING|QOSMaxCpuPerUserLimit|0:00|8"])); check("F6 a foreign pending job with a QOS reason is ignored (no false STOP)", rc == 0 and "other jobs of the account ignored: 1" in o, o)
+rc, o = run(probe(base, squeue=["100_5|p1m_PL_A0_1_setup|PENDING|QOSMaxCpuPerUserLimit|0:00|8"])); check("F6 own job (base id 100) pending on QOS -> STOP", rc == 3 and "admission" in o, o)
+rc, o = run(probe(base, squeue=["100_[9-16%8]|p1m_PL_A0_1_islands|PENDING|JobArrayTaskLimit|0:00|4"])); check("own %k array throttle = INFO, printed once as 'INFO ...' (no 'INFO INFO')", rc == 0 and "INFO own array throttle" in o and "INFO INFO" not in o, o)
 # the committed table is pinned: altering it is a STOP
 src = open(os.path.join(HERE, "stop_rules_prec.py")).read().replace('"A3 n200": (2.76, 4.1, 6.9)', '"A3 n200": (2.76, 40.1, 60.9)')
 alt = os.path.join(TMP, "stop_rules_prec_altered.py"); open(alt, "w").write(src)

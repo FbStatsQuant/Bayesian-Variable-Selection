@@ -50,6 +50,8 @@ for b in batches:
             m = (cm or {}).get("meta") or {}
             rec = {"N": m.get("N", nfin), "refine_m": m.get("refine_m", st.get("refine_m")), "I_max": m.get("I_max", st.get("I_max")), "I_used": m.get("I_used"),
                    "rule": m.get("rule", st.get("rule")), "grid_unconverged": (m.get("flags") or {}).get("grid_unconverged"),
+                   "grid_n": next((x.get("dims", [None])[0] for x in (cm or {}).get("sections", []) if x.get("name") == "grid"), None),
+                   "grid_unrefined_n": next((x.get("dims", [None])[0] for x in (cm or {}).get("sections", []) if x.get("name") == "grid_unrefined"), None),
                    "status": (cj or {}).get("status"), "cal_status": (cj or {}).get("cal_status"), "source": "calib_meta.json" if cm else "calib.bin.json settings"}
             out["CALIB"].append("%s|%s|%s" % (b, rid, json.dumps(rec, sort_keys=True)))
         i1 = J(r + "island_1.bin.json")

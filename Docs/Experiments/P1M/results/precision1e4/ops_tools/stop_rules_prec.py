@@ -11,7 +11,8 @@ Rules:
   failures      FAILED / TIMEOUT / OUT_OF_MEMORY / CANCELLED stage (NODE_FAIL, BOOT_FAIL = INFO); > 2 failed fits in the wave  -> STOP
   admission     engine resource_limit / admission / OUTCOME record, pending reason QOS / Assoc / MaxSubmit / Invalid / Limit  -> STOP
   arm identity  the fit's recorded arm (calib_meta.json when present, else calib.bin.json settings): N, refine_m, I_max, rule != the plan's  -> STOP.
-                BEHAVIOUR checks (R5) are FLAGS, not stops (the record is authoritative): m = 4: island T % 4 == 0 and T >= 36; I_max = 0: no cost_diag files;
+                BEHAVIOUR checks (R5) are FLAGS, not stops (the record is authoritative): the grid identity (F1) island T = refine_m x (dims(grid_unrefined) - 1) = dims(grid) - 1
+                from calib_meta.json (T >= 36 for m = 4 is only a HINT, when calib_meta.json is not there yet); I_max = 0: no cost_diag files;
                 I_max = 3: the largest diagnostic rebuild index k in cost/ == I_used (needs calib_meta.json)
   data identity truth.json X / y sha256 equal across all fits of a dataset (NOT data.bin.json content_sha256: it embeds the binary block), and equal to the overlap records (--ref-hashes)  -> STOP
   build identity every batch's bin/smcbvs4 sha256 and every new fit's recorded binary.sha256 == the leg's single build (first BUILD line of deploy_leg.log)  -> STOP
@@ -86,11 +87,22 @@ def main():
     ap.add_argument("--leg-log"); ap.add_argument("--quote", type=float); ap.add_argument("--prior"); ap.add_argument("--cum-stop", type=float, default=CUM_STOP)
     ap.add_argument("--waves-json", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "waves.json"))
     ap.add_argument("--with-held", action="store_true"); ap.add_argument("--ref-hashes", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "overlap_refs.json"))
+    ap.add_argument("--soft", action="append", default=[], metavar="CLASS=VALUE", help="override the SOFT column of a class (after a pilot re-fit, approved by the manager); TABLE and the HARD column stay pinned; also env SOFT_OVERRIDES='CLASS=V;CLASS=V'; every override is printed in the verdict")
     ap.add_argument("--ignore-jobs", default=os.environ.get("IGNORE_JOBS", "")); ap.add_argument("--ignore-batches", default=os.environ.get("IGNORE_FAILED", ""))
     a = ap.parse_args()
     flags, infos = [], []
     if table_sha() != TABLE_SHA256:
         flags.append("STOP the committed class table in this script was altered (sha256 %s != pinned %s)" % (table_sha()[:12], TABLE_SHA256[:12]))
+    soft_ov = {}
+    for item in list(a.soft) + [x for x in os.environ.get("SOFT_OVERRIDES", "").split(";") if x.strip()]:
+        k, _, v = item.rpartition("=")
+        k = k.strip()
+        if k not in TABLE or not v.strip():
+            print("bad --soft %r: class must be one of the committed table's and the value a number" % item, file=sys.stderr); sys.exit(64)
+        v = float(v)
+        if not (0 < v <= TABLE[k][2]):
+            print("bad --soft %r: the soft line must be in (0, hard = %.1f]; the hard column never moves" % (item, TABLE[k][2]), file=sys.stderr); sys.exit(64)
+        soft_ov[k] = v
     ign_jobs = {x for x in a.ignore_jobs.split(",") if x}; ign_b = {x for x in a.ignore_batches.split(",") if x}
     S = sections(a.probe)
     runs, planfit, arm_of = {}, {}, {}
@@ -126,13 +138,16 @@ def main():
             (infos if known else bad_stage).append(("known-failed: " if known else "") + "%s %s %s" % (jid, name, st))
         if s0 in INFRA:
             infos.append("infrastructure fault (not a stop rule; one rerun per fit, manager): %s %s %s" % (jid, name, st))
+    n_foreign = 0
     for l in S.get("SQUEUE", []):
         i, n, st, rs = l.split("|")[:4]
+        if i.split("_")[0] not in jobmap:   # F6: only this wave's own jobs (a foreign job of the account must not give a false STOP)
+            n_foreign += 1; continue
         if st == "PENDING" and PEND_BAD.search(rs):
             # JobArrayTaskLimit with the array's own %k throttle in its id ([a-b%k]) = our own submit throttle, not a cluster limit
             # (A0 false alarm 11-19, 2791240_[9-16%8]; HQ: exclude it). Without a %k in the id it still STOPs.
             if rs == "JobArrayTaskLimit" and re.search(r"%\d+\]$", i):
-                infos.append("INFO own array throttle (not a stop): %s %s reason=%s" % (i, n, rs))
+                infos.append("own array throttle (not a stop): %s %s reason=%s" % (i, n, rs))
             else:
                 pend.append("%s %s reason=%s" % (i, n, rs))
     prior = json.load(open(a.prior)) if a.prior else {}
@@ -144,6 +159,7 @@ def main():
         if kl not in TABLE:
             flags.append("STOP fit %s: no class in the committed table (class %r)" % (k, kl)); continue
         E, soft, hard = TABLE[kl]
+        soft = soft_ov.get(kl, soft)
         if c > hard:
             flags.append("STOP fit %s [%s] cost %.2f core-h > HARD %.1f (2.5 x model, committed table)" % (k, kl, c, hard))
         elif c > soft:
@@ -204,8 +220,14 @@ def main():
         if got != exp:
             flags.append("STOP ARM IDENTITY %s: recorded %s (%s) != plan %s" % (k, got, rec.get("source"), exp))
             continue
-        if exp["refine_m"] == 4 and k in islT and not (islT[k] % 4 == 0 and islT[k] >= 36):
-            flags.append("FLAG behaviour %s: m = 4 but island T = %d (needs T %% 4 == 0 and T >= 36); the record is authoritative, tell the manager" % (k, islT[k]))
+        gn, un = rec.get("grid_n"), rec.get("grid_unrefined_n")
+        if k in islT and gn and un:   # F1: the exact identity T = dims(grid) - 1 = refine_m x (dims(grid_unrefined) - 1), from calib_meta.json (all arms)
+            mm = exp["refine_m"]
+            if not (islT[k] == gn - 1 == mm * (un - 1)):
+                flags.append("FLAG behaviour %s: island T = %d, dims(grid) - 1 = %d, refine_m x (dims(grid_unrefined) - 1) = %d x %d = %d: the identity T = refine_m x (n_unrefined - 1) fails; "
+                             "the record is authoritative, tell the manager" % (k, islT[k], gn - 1, mm, un - 1, mm * (un - 1)))
+        elif exp["refine_m"] == 4 and k in islT and not (islT[k] % 4 == 0 and islT[k] >= 36):
+            infos.append("HINT behaviour %s: m = 4, island T = %d (hint: T %% 4 == 0 and T >= 36); the exact identity needs calib_meta.json (grid dims): re-check at the read-back" % (k, islT[k]))
         if k in diag:
             kmax, cnt = diag[k]
             if exp["I_max"] == 0 and cnt != 0:
@@ -251,8 +273,11 @@ def main():
     print("wave actual %.1f core-h (quote %s -> stop > %s) | leg spent %.1f (cum stop %.0f) | projection %.0f (stop > %.0f; %s)" % (
         wave_cost, quote, "%.0f" % (2 * quote) if quote else "n/a", spent, a.cum_stop, proj, PROJ_STOP, pnote))
     print("arm identity checked on %d fits; datasets with hashes: %d; leg build sha256 %s" % (n_arm, len(hs), (leg or "-")[:16]))
+    print("SOFT OVERRIDES (soft column only; TABLE and the hard column pinned, sha256 %s): %s" % (table_sha()[:12], "; ".join("%s: committed soft %.1f -> %.1f" % (k, TABLE[k][1], v) for k, v in sorted(soft_ov.items())) or "none"))
+    if n_foreign:
+        print("squeue rows of other jobs of the account ignored: %d" % n_foreign)
     for x in infos:
-        print("INFO", x)
+        print("INFO", x[5:] if x.startswith("INFO ") else x)
     for f in flags:
         print(f)
     stop = any(f.startswith("STOP") for f in flags)
