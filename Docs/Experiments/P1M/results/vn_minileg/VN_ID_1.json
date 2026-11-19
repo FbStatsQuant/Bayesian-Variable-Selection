@@ -1,0 +1,52 @@
+{
+ "batch": "VN_ID_1",
+ "mode": "V",
+ "code_commit": "e993ece226b355058e26400f05f9faad6daf16ca",
+ "method_tag": "method-v3.1.1-listpip",
+ "core_tree": "61b0a5822019b2737fe415ff15625e410f3227b2",
+ "binary": "bin/smcbvs4",
+ "max_task_hours": 2.0,
+ "island_isa": "sapphirerapids",
+ "kind": "gated (HQ 4a47e8a4: F2 default-N identity check, one V fit = the overlap W0 V2 configuration)",
+ "core_h_cap": 46.8,
+ "resources": {
+  "setup": {
+   "cpus": 8,
+   "mem": "8G",
+   "time": "00:15:00"
+  },
+  "calibrate": {
+   "cpus": 16,
+   "mem": "8G",
+   "time": "00:30:00"
+  },
+  "islands": {
+   "cpus": 4,
+   "mem": "4G",
+   "time": "00:30:00"
+  },
+  "merge": {
+   "cpus": 8,
+   "mem": "4G",
+   "time": "00:15:00"
+  },
+  "eval": {
+   "cpus": 8,
+   "mem": "8G",
+   "time": "00:20:00"
+  }
+ },
+ "fits": [
+  {
+   "run_id": "4-AR-n200-r01-V-s1",
+   "design": "AR",
+   "p": 10000,
+   "n": 200,
+   "signal": "strong",
+   "data_seed": 402020001,
+   "seed": 402020001,
+   "Rp": 16,
+   "N": 2500
+  }
+ ]
+}
