@@ -1,0 +1,73 @@
+=== BASE (full) ===
+BASE                                                       ESS    29099 | W2   400 [ 250, 557] W3   602 [ 381, 835] | rung  1534 P10/50/90 1231/1508/1853 | P>1.6k 0.34 P>2.1k 0.037 P>2.5k 0.0077 | P(any>172) 0.222 P(TO) 0.173 | P(esc) AR/ADJ/ARw 0.67/0.41/0.44 | E#>172 0.32
+  posterior means: mu0 2.666, tau 0.169, sig 0.342, eps 0.083, phi 0.032, p 0.572, mu_AR 2.872, mu_ARweak 2.744, mu_ADJ 2.613, mu_IND 2.652, pi_AR 0.100, pi_ARweak 0.334, pi_ADJ 0.199, pi_IND 0.168
+  P(esc) AR: mean 0.674  P10-P90 0.41-0.91
+  P(esc) ARweak: mean 0.444  P10-P90 0.20-0.70
+  P(esc) ADJ: mean 0.414  P10-P90 0.15-0.68
+  per fit: name, P(esc), E cost, P90 cost, P(>172 completed), P(TIMEOUT), E k1|esc
+   ARweak r02 s1  0.444    40.5    73.0 0.0000 0.0005 2.32
+   ARweak r02 s2  0.445    40.7    73.0 0.0000 0.0006 2.34
+   ADJ r01 s2     0.413    69.2   116.3 0.0050 0.0134 2.32
+   ADJ r02 s1     0.413    69.3   119.7 0.0057 0.0128 2.31
+   ADJ r02 s2     0.415    69.5   119.7 0.0056 0.0132 2.31
+   AR r01 s2      0.675    97.6   133.0 0.0079 0.0283 2.33
+   AR r02 s1      0.672    97.9   136.4 0.0092 0.0292 2.35
+   AR r02 s2      0.672    97.8   136.4 0.0095 0.0287 2.34
+   AR r03 s1      0.673    98.0   136.4 0.0093 0.0291 2.34
+   AR r03 s2      0.674    98.1   136.6 0.0097 0.0288 2.34
+   AR r04 s1      0.673    97.9   136.4 0.0094 0.0290 2.35
+   AR r04 s2      0.673    97.9   136.4 0.0095 0.0287 2.34
+  escalations in 12 remaining T: E 6.84 P10-P90 [4.0, 10.0]
+  cum after W2: E 932 P90 1090; P(W2>960) 0.0048; P(W2>480) 0.218
+  W2 P(any>172 or TO) 0.083 (TO 0.062); W3 0.176 (TO 0.136)
+  P(>2.1k & TO) 0.0365  P(>2.1k & no TO) 0.0001; P(>1.6k & no TO) 0.184; E rung | no TO 1455, | TO 1915
+  max single-fit cost P99.9 449; full (no-TO) fit cost max over draws 350
+  P(any ADJ fit >172 or TO) 0.051
+  P(any AR fit >172 or TO) 0.195
+  W3 quote 600: P(W3 > quote) 0.464  P(W3 > 2x) 0.0159
+  W3 quote 650: P(W3 > quote) 0.335  P(W3 > 2x) 0.0085
+  W3 quote 700: P(W3 > quote) 0.222  P(W3 > 2x) 0.0055
+  W3 quote 720: P(W3 > quote) 0.188  P(W3 > 2x) 0.0046
+  W3 quote 750: P(W3 > quote) 0.152  P(W3 > 2x) 0.0033
+  P(cum after W2 > 1.6k) 0.0021;  P(total > 2.0k) 0.054
+  rung if TIMEOUT fits were NOT re-run: E 1478 P90 1716
+
+=== SENSITIVITY ===
+tier-1 tail: phi = 0 (pure geometric, p~Beta(1,1))         ESS    29720 | W2   384 [ 250, 521] W3   571 [ 378, 731] | rung  1487 P10/50/90 1224/1485/1729 | P>1.6k 0.27 P>2.1k 0.012 P>2.5k 0.0023 | P(any>172) 0.105 P(TO) 0.053 | P(esc) AR/ADJ/ARw 0.68/0.42/0.44 | E#>172 0.15
+tier-1 tail: phi ~ Beta(0.5,3.5) prior (post. mean .07)    ESS    27104 | W2   420 [ 251, 626] W3   644 [ 385, 955] | rung  1597 P10/50/90 1242/1546/2013 | P>1.6k 0.42 P>2.1k 0.075 P>2.5k 0.0196 | P(any>172) 0.343 P(TO) 0.297 | P(esc) AR/ADJ/ARw 0.67/0.42/0.44 | E#>172 0.55
+tier-1 tail: phi ~ Beta(1,3) prior (post. mean .14)        ESS    22182 | W2   457 [ 254, 729] W3   720 [ 395,1143] | rung  1709 P10/50/90 1265/1632/2256 | P>1.6k 0.54 P>2.1k 0.155 P>2.5k 0.0488 | P(any>172) 0.524 P(TO) 0.484 | P(esc) AR/ADJ/ARw 0.68/0.42/0.44 | E#>172 0.96
+tier-1 geometric optimistic p~Beta(3,1) prior              ESS    30489 | W2   388 [ 247, 532] W3   579 [ 375, 763] | rung  1500 P10/50/90 1220/1482/1777 | P>1.6k 0.28 P>2.1k 0.023 P>2.5k 0.0044 | P(any>172) 0.161 P(TO) 0.136 | P(esc) AR/ADJ/ARw 0.67/0.41/0.44 | E#>172 0.22
+AR esc low: no AR shift, pi_AR~Beta(1,3)                   ESS    24756 | W2   388 [ 237, 548] W3   511 [ 287, 736] | rung  1432 P10/50/90 1126/1407/1750 | P>1.6k 0.22 P>2.1k 0.021 P>2.5k 0.0040 | P(any>172) 0.189 P(TO) 0.144 | P(esc) AR/ADJ/ARw 0.53/0.43/0.46 | E#>172 0.26
+AR esc high: shift +0.35, pi_AR~Beta(0.2,4)                ESS    32364 | W2   410 [ 265, 566] W3   687 [ 490, 938] | rung  1630 P10/50/90 1352/1593/1945 | P>1.6k 0.48 P>2.1k 0.055 P>2.5k 0.0123 | P(any>172) 0.252 P(TO) 0.198 | P(esc) AR/ADJ/ARw 0.82/0.40/0.43 | E#>172 0.38
+slow-K centre prior 7 (easier)                             ESS    14622 | W2   387 [ 241, 544] W3   587 [ 365, 812] | rung  1507 P10/50/90 1204/1482/1821 | P>1.6k 0.30 P>2.1k 0.030 P>2.5k 0.0062 | P(any>172) 0.210 P(TO) 0.163 | P(esc) AR/ADJ/ARw 0.65/0.38/0.42 | E#>172 0.30
+slow-K centre prior 14 (harder)                            ESS    37482 | W2   411 [ 259, 571] W3   615 [ 394, 849] | rung  1559 P10/50/90 1257/1532/1878 | P>1.6k 0.38 P>2.1k 0.041 P>2.5k 0.0085 | P(any>172) 0.228 P(TO) 0.177 | P(esc) AR/ADJ/ARw 0.70/0.44/0.47 | E#>172 0.33
+eps ~ 0 (only the cap escalates)                           ESS    83986 | W2   383 [ 237, 542] W3   590 [ 364, 819] | rung  1506 P10/50/90 1200/1482/1823 | P>1.6k 0.30 P>2.1k 0.031 P>2.5k 0.0064 | P(any>172) 0.214 P(TO) 0.166 | P(esc) AR/ADJ/ARw 0.65/0.36/0.39 | E#>172 0.31
+dataset latent eta sd 0.15 (seeds of a dataset correlated) ESS    28325 | W2   398 [ 247, 556] W3   594 [ 375, 821] | rung  1524 P10/50/90 1226/1498/1837 | P>1.6k 0.32 P>2.1k 0.034 P>2.5k 0.0068 | P(any>172) 0.216 P(TO) 0.167 | P(esc) AR/ADJ/ARw 0.67/0.41/0.44 | E#>172 0.31
+calibrate limit raised to 4:00 now (14,400 s)              ESS    28159 | W2   394 [ 250, 542] W3   592 [ 380, 781] | rung  1518 P10/50/90 1231/1504/1801 | P>1.6k 0.32 P>2.1k 0.024 P>2.5k 0.0042 | P(any>172) 0.222 P(TO) 0.074 | P(esc) AR/ADJ/ARw 0.68/0.42/0.44 | E#>172 0.32
+dataset cost factor sd 0.15                                ESS    28590 | W2   401 [ 250, 564] W3   607 [ 379, 848] | rung  1541 P10/50/90 1231/1513/1869 | P>1.6k 0.35 P>2.1k 0.039 P>2.5k 0.0081 | P(any>172) 0.248 P(TO) 0.174 | P(esc) AR/ADJ/ARw 0.68/0.41/0.44 | E#>172 0.36
+AR esc ~0.9 (F16 'certain'): shift +0.6, pi_AR~Beta(0.1,5) ESS    35161 | W2   414 [ 273, 568] W3   736 [ 575, 978] | rung  1682 P10/50/90 1438/1632/1993 | P>1.6k 0.58 P>2.1k 0.067 P>2.5k 0.0157 | P(any>172) 0.268 P(TO) 0.212 | P(esc) AR/ADJ/ARw 0.92/0.39/0.42 | E#>172 0.42
+calibrate limit 5:00 (18,000 s): no TIMEOUT possible       ESS    28074 | W2   389 [ 250, 537] W3   578 [ 379, 757] | rung  1500 P10/50/90 1228/1499/1762 | P>1.6k 0.31 P>2.1k 0.008 P>2.5k 0.0004 | P(any>172) 0.221 P(TO) 0.002 | P(esc) AR/ADJ/ARw 0.67/0.41/0.44 | E#>172 0.32
+5:00 limit + phi ~ Beta(1,3) prior                         ESS    23879 | W2   421 [ 254, 609] W3   637 [ 394, 893] | rung  1591 P10/50/90 1256/1572/1947 | P>1.6k 0.46 P>2.1k 0.045 P>2.5k 0.0039 | P(any>172) 0.527 P(TO) 0.009 | P(esc) AR/ADJ/ARw 0.68/0.41/0.44 | E#>172 0.96
+
+=== W2 READ-BACK SCENARIOS (BASE; W2 outcome added as observations, W3 re-projected) ===
+S1 benign: AR esc k1=1; ADJ 1/3 esc k1=1 (others K0 12,13); ARweak 1 fast,1 esc k1=1
+   ESS 4962; W3 E 608 P10/50/90 [431, 606, 754]; P(any W3 AR fit >172 or TO) 0.104; P(TO) 0.089; E esc AR 0.08(pi)
+   W2 actual (mean speeds) 387; rung at W2 read-back E 1528 P10/50/90 [1351, 1526, 1674]; P>1.6k 0.24 P>2.1k 0.009 P>2.5k 0.0006
+S2 typical-bad: AR esc k1=3; ADJ 2/3 esc k1=1,2; ARweak 2/2 esc k1=1
+   ESS 9019; W3 E 630 P10/50/90 [455, 628, 780]; P(any W3 AR fit >172 or TO) 0.120; P(TO) 0.091; E esc AR 0.08(pi)
+   W2 actual (mean speeds) 525; rung at W2 read-back E 1687 P10/50/90 [1512, 1686, 1838]; P>1.6k 0.75 P>2.1k 0.016 P>2.5k 0.0015
+S3 AR per-fit stop: AR esc k1=7 (>172); ADJ 1/3 esc k1=1
+   ESS 4293; W3 E 666 P10/50/90 [451, 651, 911]; P(any W3 AR fit >172 or TO) 0.243; P(TO) 0.162; E esc AR 0.08(pi)
+   W2 actual (mean speeds) 451; rung at W2 read-back E 1650 P10/50/90 [1435, 1635, 1894]; P>1.6k 0.60 P>2.1k 0.027 P>2.5k 0.0026
+S4 tier-1 slow: AR esc k1=14 (TIMEOUT); ADJ 2/3 esc k1=1,4
+   ESS 4153; W3 E 742 P10/50/90 [483, 684, 1065]; P(any W3 AR fit >172 or TO) 0.385; P(TO) 0.354; E esc AR 0.08(pi)
+   W2 actual (mean speeds) 805; rung at W2 read-back E 2080 P10/50/90 [1821, 2022, 2402]; P>1.6k 0.99 P>2.1k 0.356 P>2.5k 0.0730
+S3b AR k1=9 (completes ~192 at mean speed); ADJ 1/3 esc k1=1
+   ESS 4683; W3 E 682 P10/50/90 [440, 660, 962]; P(any W3 AR fit >172 or TO) 0.306; P(TO) 0.216; E esc AR 0.08(pi)
+   W2 actual (mean speeds) 472; rung at W2 read-back E 1687 P10/50/90 [1445, 1665, 1967]; P>1.6k 0.65 P>2.1k 0.045 P>2.5k 0.0050
+S4b ADJ TIMEOUT: ADJ esc k1=14; AR esc k1=1; ARweak 1/2 esc
+   ESS 2793; W3 E 731 P10/50/90 [454, 666, 1104]; P(any W3 AR fit >172 or TO) 0.395; P(TO) 0.377; E esc AR 0.08(pi)
+   W2 actual (mean speeds) 655; rung at W2 read-back E 1919 P10/50/90 [1641, 1854, 2292]; P>1.6k 0.94 P>2.1k 0.219 P>2.5k 0.0335
+S5 good: AR fast (no esc); ADJ 0/3 esc; ARweak 1 fast
+   ESS 1980; W3 E 524 P10/50/90 [300, 514, 730]; P(any W3 AR fit >172 or TO) 0.117; P(TO) 0.092; E esc AR 0.24(pi)
+   W2 actual (mean speeds) 206; rung at W2 read-back E 1263 P10/50/90 [1038, 1252, 1469]; P>1.6k 0.05 P>2.1k 0.003 P>2.5k 0.0003
