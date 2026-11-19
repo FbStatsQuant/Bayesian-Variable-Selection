@@ -29,6 +29,12 @@ Writes, for one batch, everything the manager deploys to NOTS `~/SMC_Engineering
   ledger_row.md           the LEDGER.md row (worst case = sum of allocated CPUs x time limit, billed core-h)
   SHA256SUMS              hashes of every generated file (submit.sh verifies them first)
   plan.resolved.json      the plan with every default filled in
+  (theory mode: a fit whose mode is law or compat -- the coded calibration, which can escalate tier 0 -> 1 (N x 4, D-26))
+                          the island and merge stages take N from calib.bin.json (tiers[tier_final].N_final) at STAGE time
+                          (p1m_calib_n.py set-n after the fill; the plan's N stays in the manifests as the pre-calibration record;
+                          the calibrate stage records both in the run manifest, key calib_N); the islands' time limit is requested
+                          for the escalated N up front: base x ceil(4 N0 / N_plan), capped by max_task_hours (see law_islands_time).
+                          V mode is byte-identical to before.
 (Campaign freeze: the optional plan keys method_tag and core_tree, written by p1m_cells.py, are validated and copied into
 every run manifest next to code_commit.)
 
@@ -69,7 +75,8 @@ REQUIRED_KEYS = ("core_h_cap", "max_task_hours", "mode", "code_commit", "binary"
 # Anything else is reported as a WARNING (other tools may add keys), or refused under --strict.
 KNOWN_KEYS = {"batch", "kind", "island_isa", "eval", "island_throttle", "restart", "t6", "t6_only", "pilot", "pilot_only",
               "isa_check", "resources", "created_utc", "method_tag", "core_tree", "n_tasks", "worst_case_core_h", "worst_case_pilot_core_h", "warnings"} | set(REQUIRED_KEYS)
-KNOWN_FIT_KEYS = {"run_id", "design", "p", "n", "signal", "data_seed", "seed", "Rp", "N", "mode", "resources", "params"}
+KNOWN_FIT_KEYS = {"run_id", "design", "p", "n", "signal", "data_seed", "seed", "Rp", "N", "mode", "resources", "params",
+                  "islands_time_base"}   # islands_time_base: written by resolve() for a theory-mode fit whose island limit was scaled
 
 
 def unknown_keys(plan):
@@ -115,6 +122,30 @@ DEFAULT_RES = {
             "merge": {"cpus": 32, "mem": "128G", "time": "01:00:00"},
             "eval": {"cpus": 8, "mem": "16G", "time": "01:00:00"}},
 }
+
+
+# Theory mode (law, compat): the coded calibration (v3's tiers, calib_run.h budgets()) may freeze tier 1, N = 4 x N0 with
+# N0 = max(2500, n, p); V mode never escalates (frozen N = 2,500).
+THEORY_TIER_MULT = 4
+
+
+def theory_n_max(f):
+    return THEORY_TIER_MULT * max(2500, f["n"], f["p"])
+
+
+def hhmmss(h):
+    s = int(round(h * 3600))
+    return "%02d:%02d:%02d" % (s // 3600, s // 60 % 60, s % 60)
+
+
+def law_islands_time(P, f, base):
+    """The final islands' time limit of a theory-mode fit. The islands' N is calib.bin's frozen N, known only after the calibration,
+    but sbatch needs the limit at SUBMIT time, and Slurm lets an ordinary user only LOWER a limit afterwards (`scontrol update
+    TimeLimit` cannot raise it), so the limit is requested for the largest possible N up front:
+        limit = base x ceil(N_tier1 / N_plan),  N_tier1 = 4 max(2500, n, p),  capped by max_task_hours (and the QOS wall).
+    It is the cost-linear-in-N bound; an island that finishes early is billed what it used. Returns (limit string, factor)."""
+    factor = max(1, -(-theory_n_max(f) // f["N"]))
+    return hhmmss(min(hours(base) * factor, P["max_task_hours"], QOS_WALL_H)), factor
 
 
 # D-32: island ISAs with FMA (class A has the same bits in all of them: x86-64-v3 = x86-64-v4, MEASURED on Owls)
@@ -390,6 +421,11 @@ def resolve(plan):
             if h > P["max_task_hours"] + 1e-9:
                 raise PlanError("fit %s stage %s: %s exceeds max_task_hours = %.2f (§0-v2.5: no job longer than 2 h)"
                                 % (f["run_id"], st, r["time"], P["max_task_hours"]))
+        if f["mode"] != "V" and "islands_time_base" not in f:   # theory mode: islands sized for the escalated N (a fed-back resolved plan is not scaled twice)
+            lim, factor = law_islands_time(P, f, res["islands"]["time"])
+            if factor > 1:
+                f["islands_time_base"] = res["islands"]["time"]
+                res["islands"]["time"] = lim
         f["resources"] = res
     F = len(P["fits"])
     if rs is not None:   # the soft-stop margin: the step in flight and its checkpoint must fit before the limit
@@ -436,7 +472,8 @@ def resolve(plan):
     P["worst_case_core_h"] = round(wc, 1)
     cap = P.get("core_h_cap")
     if cap is not None and wc > cap + 1e-9:
-        raise PlanError("worst case %.1f billed core-h exceeds the plan's core_h_cap %.1f" % (wc, cap))
+        raise PlanError("worst case %.1f billed core-h exceeds the plan's core_h_cap %.1f%s" % (wc, cap,
+                        " (theory-mode island limits are scaled for the tier-1 N, see law_islands_time)" if any("islands_time_base" in f for f in P["fits"]) else ""))
     peak = max(f["Rp"] * int(f["resources"]["islands"]["cpus"]) for f in P["fits"])
     if peak > CPU_CAP:
         raise PlanError("one fit's island array needs %d CPUs > the 1,536-CPU user cap" % peak)
@@ -523,10 +560,16 @@ SKIP_IF_OUTCOME = ('if [[ -e $RUN/OUTCOME ]]; then echo "prep outcome $(cat "$RU
                    'printf \'{{"stage":"%s","run_id":"%s","skipped":"prep_outcome"}}\\n\' "{stage}" "$RUN_ID" >> "$DEPT/scratch/runs/{batch}/ends.jsonl"; exit 0; fi\n')
 
 
-def stage_body(stage, restart=None, limit_s=0):
+# theory mode: after the fill, the island / merge manifest's N is set to calib.bin's frozen N, read at stage time (p1m_calib_n.py)
+def set_n(manifest):
+    return 'python3 "$SCR/p1m_calib_n.py" set-n --manifest %s --calib "$RUN/calib.bin.json"\n' % manifest
+
+
+def stage_body(stage, restart=None, limit_s=0, theory=False):
     """Command lines of WP1's CLI (src/cli/main.cpp): --out names the .bin, the record is <out>.json; --manifest merges
     `params` into the arguments and refuses to start when an `inputs` path has a different content hash."""
     fill = 'python3 "$SCR/p1m_manifest.py" fill --template "$MAN/{cmd}.json" --out "$RUN/manifests/{cmd}{suffix}.json"'
+    sn = (lambda m: set_n(m)) if theory else (lambda m: "")
     run = '"$BIN" {cmd} --manifest "$RUN/manifests/{cmd}{suffix}.json"{extra} --out "$RUN/{out}" > "$RUN/log/{cmd}{suffix}.log" 2>&1\n'
     if stage == "setup":
         return ("mkdir -p \"$RUN/manifests\" \"$RUN/log\"\n"
@@ -543,7 +586,10 @@ def stage_body(stage, restart=None, limit_s=0):
     if stage == "calibrate":
         return (fill.format(cmd="calibrate", suffix="") + "\n"
                 # D-30 / WP7 O5: one per-step cost record per calibration island in $RUN/cost/
-                + run.format(cmd="calibrate", suffix="", extra=' --threads "$OMP_NUM_THREADS" --mem-budget "$MEMB" --cost-dir "$RUN/cost"', out="calib.bin"))
+                + run.format(cmd="calibrate", suffix="", extra=' --threads "$OMP_NUM_THREADS" --mem-budget "$MEMB" --cost-dir "$RUN/cost"', out="calib.bin")
+                # theory mode: record the plan's N and calib.bin's frozen N in the run manifest (not fatal: the islands re-read calib.bin.json)
+                + ('python3 "$SCR/p1m_calib_n.py" record-n --manifest "$MAN/calibrate.json" --calib "$RUN/calib.bin.json" '
+                   '--run-manifest "$RUN/run_manifest.json" || echo "WARNING: could not record calib N_final in the run manifest" >&2\n' if theory else ""))
     if stage == "islands" and restart is not None and restart["attempts"] > 1:
         # WP7 O4: attempt ATT of A. A finished island exits at once; a failed one repeats its code; a soft stop (exit 22: the
         # island checkpointed at the first step boundary after limit - margin seconds) ends this attempt cleanly and the next
@@ -553,7 +599,7 @@ def stage_body(stage, restart=None, limit_s=0):
                 'DONE="$RUN/island_$R.done"; FAILED="$RUN/island_$R.failed"\n'
                 'if [[ -e $DONE ]]; then echo "island $R: already finished"; exit 0; fi\n'
                 'if [[ -e $FAILED ]]; then rc=$(cat "$FAILED"); echo "island $R: failed in an earlier attempt (exit $rc)"; exit "$rc"; fi\n'
-                + fill.format(cmd="island", suffix="_$R") + " --set params.id=$R\n"
+                + fill.format(cmd="island", suffix="_$R") + " --set params.id=$R\n" + sn('"$RUN/manifests/island_$R.json"')
                 + "LIMIT_S=%d; MARGIN_S=%d\n" % (limit_s, margin)
                 + 'STOP_S=$(( LIMIT_S - MARGIN_S - SECONDS )); [[ $STOP_S -ge 1 ]] || STOP_S=1   # SECONDS: since this script started\n'
                 + 'mkdir -p "$RUN/log"; rc=0\n'
@@ -564,10 +610,10 @@ def stage_body(stage, restart=None, limit_s=0):
                 + 'echo "$rc" > "$FAILED"; exit "$rc"\n')
     if stage == "islands":
         return ("R=${SLURM_ARRAY_TASK_ID}\n"
-                + fill.format(cmd="island", suffix="_$R") + " --set params.id=$R\n"
+                + fill.format(cmd="island", suffix="_$R") + " --set params.id=$R\n" + sn('"$RUN/manifests/island_$R.json"')
                 + run.format(cmd="island", suffix="_$R", extra=' --threads "$OMP_NUM_THREADS" --mem-budget "$MEMB"', out="island_$R.bin"))
     if stage == "merge":
-        return (fill.format(cmd="merge", suffix="") + "\n"
+        return (fill.format(cmd="merge", suffix="") + "\n" + sn('"$RUN/manifests/merge.json"')
                 + run.format(cmd="merge", suffix="", extra=' --threads "$OMP_NUM_THREADS" --mem-budget "$MEMB"', out="fit.bin"))
     if stage == "eval":
         return ('if [[ -e $RUN/OUTCOME ]]; then printf \'{"status":"completed","command":"eval","fit_status":"prep_%s","prep_status":"%s","hpm":[]}\\n\' '
@@ -618,7 +664,14 @@ def generate(P, out, dept):
         txt += 'printf \'{"stage":"%s","run_id":"%%s","job":"%%s","task":"%%s","host":"%%s","start":"%%s"}\\n\' "$RUN_ID" "${SLURM_JOB_ID}" "${SLURM_ARRAY_TASK_ID:-}" "$(hostname -s)" "$(date -u +%%FT%%TZ)" >> "$DEPT/scratch/runs/%s/starts.jsonl"\n' % (st, batch)
         if st in ("calibrate", "islands", "merge"):
             txt += SKIP_IF_OUTCOME.format(stage=st, batch=batch)
-        txt += stage_body(st, P.get("restart") if st == "islands" else None, int(hours(r["time"]) * 3600))
+        theory = any(f["mode"] != "V" for f in P["fits"]) and not P["pilot_only"]   # a pure V batch generates exactly what it always did
+        if theory and st == "islands":
+            f0 = P["fits"][0]
+            if "islands_time_base" in f0:
+                txt += ("# theory mode: time limit %s = base %s x ceil(4 max(2500, n, p) / N_plan), capped by max_task_hours %g (tier-1 N, requested up front:\n"
+                        "# Slurm lets a user only lower a limit later). The islands' N is calib.bin.json's frozen N_final, read at stage time.\n"
+                        % (r["time"], f0["islands_time_base"], P["max_task_hours"]))
+        txt += stage_body(st, P.get("restart") if st == "islands" else None, int(hours(r["time"]) * 3600), theory)
         txt += 'printf \'{"stage":"%s","run_id":"%%s","job":"%%s","task":"%%s","end":"%%s"}\\n\' "$RUN_ID" "${SLURM_JOB_ID}" "${SLURM_ARRAY_TASK_ID:-}" "$(date -u +%%FT%%TZ)" >> "$DEPT/scratch/runs/%s/ends.jsonl"\n' % (st, batch)
         write(os.path.join(out, name), txt, 0o755)
         files.append(name)
@@ -840,6 +893,10 @@ echo "submitted; ledger row: see ledger_row.md (fill job ids from $LOG)"
     with open(os.path.join(here, "p1m_manifest.py")) as fh:
         write(os.path.join(out, "p1m_manifest.py"), fh.read(), 0o755)
     files.append("p1m_manifest.py")
+    if any(f["mode"] != "V" for f in P["fits"]) and not (P["pilot_only"] or P.get("t6_only")):   # theory mode: N from calib.bin at stage time (a pure V batch is byte-identical to before)
+        with open(os.path.join(here, "p1m_calib_n.py")) as fh:
+            write(os.path.join(out, "p1m_calib_n.py"), fh.read(), 0o755)
+        files.append("p1m_calib_n.py")
     if P.get("t6") is not None:   # T6 by real kills (WP7 O4): shipped only with a T6 batch (other batches are byte-identical to before)
         with open(os.path.join(here, "p1m_t6.py")) as fh:
             write(os.path.join(out, "p1m_t6.py"), fh.read(), 0o755)

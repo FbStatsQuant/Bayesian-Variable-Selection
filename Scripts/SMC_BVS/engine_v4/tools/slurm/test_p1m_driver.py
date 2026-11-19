@@ -177,7 +177,7 @@ class TestResolve(Base):
             self.refused(lambda pl, b=bad: pl.__setitem__("mode", b), "mode must be one of compat, law, V, got %r" % (bad,))
             self.refused(lambda pl, b=bad: pl["fits"][1].__setitem__("mode", b), "fits[1].mode must be one of compat, law, V, got %r" % (bad,))
         # a per-fit mode that is valid but differs from the plan's: fine (a law fit in a V plan keeps its own mode)
-        pl = load_example(); pl["fits"][1]["mode"] = "law"
+        pl = load_example(); pl["fits"][1]["mode"] = "law"; pl["core_h_cap"] = 1e4   # (a law fit's island limit is scaled: a larger worst case)
         self.assertEqual(p1m_driver.resolve(pl)["fits"][1]["mode"], "law")
 
     def test_enum_isa(self):
@@ -222,7 +222,7 @@ class TestResolve(Base):
         pl = load_example(); del pl["island_isa"]
         with self.assertRaisesRegex(p1m_driver.PlanError, "required plan key missing: island_isa"):
             p1m_driver.resolve(pl)
-        pl = load_example(); del pl["island_isa"]; pl["mode"] = "law"
+        pl = load_example(); del pl["island_isa"]; pl["mode"] = "law"; pl["core_h_cap"] = 1e4
         self.assertEqual(p1m_driver.resolve(pl)["mode"], "law")
 
     def run_main(self, plan, *extra, name="w"):
@@ -655,7 +655,7 @@ class TestPilotBatch(Base):
         for ok in ("x86-64-v3", "x86-64-v4", "sapphirerapids"):
             q = self.plan(); q["island_isa"] = ok
             self.assertEqual(p1m_driver.resolve(q)["island_isa"], ok)
-        q = self.plan(); q["mode"] = "law"; q["island_isa"] = ""   # theory (bit form) plans are ISA-free
+        q = self.plan(); q["mode"] = "law"; q["island_isa"] = ""; q["core_h_cap"] = 1e4   # theory (bit form) plans are ISA-free
         for f in q["fits"]:
             f["mode"] = "law"
         self.assertEqual(p1m_driver.resolve(q)["island_isa"], "")
@@ -1075,6 +1075,216 @@ class TestPrepOutcome(TestLocalChain):
             os.environ.pop("STUB_PREP_RC")
 
 
+# Law-mode N (HQ_DECISIONS e8aab325): the stub calibrate writes the engine's real sidecar shape (tier_final, settings.tiers[e].N_final);
+# the stub island / merge refuse, as the engine does, a manifest whose params.N is not the frozen N
+LAW_STUB = r"""#!/bin/bash
+cmd=$1; man=""; out=""; args=("$@")
+for ((i=0;i<${#args[@]};i++)); do case ${args[$i]} in --manifest) man=${args[$((i+1))]};; --out) out=${args[$((i+1))]};; esac; done
+if [[ $cmd == island || $cmd == merge ]]; then
+  python3 - "$man" "$cmd" <<'PY' || exit 12
+import json, os, sys
+m = json.load(open(sys.argv[1]))
+want = int(os.environ["STUB_FROZEN_N"])
+if m["params"]["N"] != want:
+    sys.stderr.write("%s: N differs from calib.bin's frozen N = %d (manifest %r)\n" % (sys.argv[2], want, m["params"]["N"])); sys.exit(1)
+PY
+fi
+"$(dirname "$0")/stub_base" "$@" || exit $?
+if [[ $cmd == calibrate ]]; then
+  python3 - "$out" <<'PY'
+import json, os, sys
+out, n0, tier = sys.argv[1], int(os.environ["STUB_N0"]), int(os.environ.get("STUB_TIER", "0"))
+kind = os.environ.get("STUB_CALIB_JSON", "ok")
+if kind == "ok":
+    rec = {"status": "completed", "command": "calibrate", "tier_final": tier, "settings": {"rule": "coded", "tiers": [{"tier": 0, "N_final": n0}, {"tier": 1, "N_final": 4 * n0}]}}
+elif kind == "noN":
+    rec = {"status": "completed", "command": "calibrate", "tier_final": tier, "settings": {"tiers": [{"tier": 0}, {"tier": 1}]}}
+elif kind == "corrupt":
+    open(out + ".json", "w").write('{"status": "compl'); sys.exit(0)
+if kind == "missing":
+    os.remove(out + ".json"); sys.exit(0)
+json.dump(rec, open(out + ".json", "w"))
+PY
+fi
+exit 0
+"""
+
+
+class TestLawN(Base):
+    N = 10000
+
+    def law_plan(self, mode="law", **kw):
+        pl = load_example(); pl["batch"] = "LAWN"; pl["mode"] = mode; pl["core_h_cap"] = 1e5; pl["max_task_hours"] = 3.0
+        pl["resources"] = {"islands": {"time": "00:45:00"}}
+        pl["island_isa"] = "sapphirerapids" if mode == "V" else ""
+        pl["fits"] = [dict(pl["fits"][0], run_id="LAWN_r1", N=(2500 if mode == "V" else self.N), Rp=2, **kw)]
+        return pl
+
+    def deploy(self, pl):
+        dept = os.path.join(self.tmp, "SMC_Engineering_Department")
+        rc, out = self.gen(pl, dept=dept)
+        self.assertEqual(rc, 0)
+        scr = os.path.join(dept, "scripts", "LAWN")
+        shutil.copytree(out, scr); os.makedirs(os.path.join(scr, "bin"))
+        for nm, txt in (("stub_base", STUB), ("smcbvs4", LAW_STUB), ("../env.sh", "true\n")):
+            with open(os.path.join(scr, "bin", nm), "w") as fh:
+                fh.write(txt)
+            os.chmod(os.path.join(scr, "bin", nm), 0o755)
+        for d in ("scratch/slurm_out", "scratch/tmp", "scratch/runs/LAWN"):
+            os.makedirs(os.path.join(dept, d))
+        return scr, os.path.join(dept, "scratch", "runs", "LAWN", "LAWN_r1")
+
+    def stage(self, scr, st, task=None, arg=None, **env):
+        e = dict(os.environ, SLURM_JOB_ID="91", SLURM_CPUS_PER_TASK="2", **env)
+        if task is not None:
+            e["SLURM_ARRAY_TASK_ID"] = str(task)
+        return subprocess.run(["bash", os.path.join(scr, "stage_%s.sbatch" % st)] + ([str(arg)] if arg else []), env=e,
+                              stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+
+    def chain(self, pl, frozen, **env):
+        scr, rd = self.deploy(pl)
+        env = dict(env, STUB_FROZEN_N=str(frozen), STUB_N0=str(self.N))
+        for st, task, arg in (("setup", 1, None), ("calibrate", 1, None)):
+            r = self.stage(scr, st, task, arg, **env); self.assertEqual(r.returncode, 0, "%s: %s" % (st, r.stderr))
+        out = []
+        for st, task, arg in (("islands", 1, 1), ("islands", 2, 1), ("merge", None, 1)):
+            r = self.stage(scr, st, task, arg, **env); self.assertEqual(r.returncode, 0, "%s: %s" % (st, r.stderr)); out.append(r)
+        return scr, rd, out
+
+    def test_escalated_law_fit(self):   # calib froze tier 1: N_final = 4 x plan N = 40,000
+        scr, rd, out = self.chain(self.law_plan(), 4 * self.N, STUB_TIER="1")
+        for f in ("manifests/island_1.json", "manifests/island_2.json", "manifests/merge.json"):
+            self.assertEqual(json.load(open(os.path.join(rd, f)))["params"]["N"], 40000, f)
+        self.assertIn("plan 10000, calib.bin frozen N_final 40000 (tier 1): using calib's", out[0].stderr)   # both logged
+        self.assertIn("plan 10000, calib.bin frozen N_final 40000", out[2].stderr)
+        rm = json.load(open(os.path.join(rd, "run_manifest.json")))   # recorded; the plan's N stays as the pre-calibration record
+        self.assertEqual(rm["params"]["N"], 10000)
+        self.assertEqual(rm["calib_N"], {"N_plan": 10000, "N_final": 40000, "tier_final": 1, "differs": True, "source": "calib.bin.json"})
+        # the template keeps the plan's N; the time limit scales: 0:45 x ceil(4 x 10^4 / 10^4) = 3:00 (= max_task_hours)
+        self.assertEqual(json.load(open(os.path.join(scr, "manifests", "LAWN_r1", "island.json")))["params"]["N"], 10000)
+        isl = open(os.path.join(scr, "stage_islands.sbatch")).read()
+        self.assertIn("#SBATCH --time=03:00:00", isl); self.assertIn("base 00:45:00", isl)
+        self.assertEqual(json.load(open(os.path.join(scr, "manifests", "LAWN_r1", "island.json")))["budget"]["task_seconds"], 3 * 3600)
+        P = json.load(open(os.path.join(scr, "plan.resolved.json")))
+        self.assertEqual(P["fits"][0]["islands_time_base"], "00:45:00"); self.assertEqual(P["fits"][0]["resources"]["islands"]["time"], "03:00:00")
+
+    def test_non_escalated_law_fit(self):   # calib stayed at tier 0: N_final = plan N, nothing differs, nothing is logged
+        scr, rd, out = self.chain(self.law_plan(), self.N, STUB_TIER="0")
+        for f in ("manifests/island_1.json", "manifests/merge.json"):
+            self.assertEqual(json.load(open(os.path.join(rd, f)))["params"]["N"], 10000, f)
+        self.assertTrue(all("using calib's" not in r.stderr for r in out))
+        rm = json.load(open(os.path.join(rd, "run_manifest.json")))
+        self.assertEqual(rm["calib_N"], {"N_plan": 10000, "N_final": 10000, "tier_final": 0, "differs": False, "source": "calib.bin.json"})
+        # the limit was requested for the worst case up front (the tier is not known at submit time)
+        self.assertIn("#SBATCH --time=03:00:00", open(os.path.join(scr, "stage_islands.sbatch")).read())
+
+    def test_stale_plan_n_is_replaced(self):   # a plan whose N was never N0 (e.g. the default 2,500 at p = 10^4): calib's N wins at tier 0 too
+        pl = self.law_plan(); pl["fits"][0]["N"] = 2500
+        scr, rd, out = self.chain(pl, self.N, STUB_TIER="0")
+        self.assertEqual(json.load(open(os.path.join(rd, "manifests", "island_1.json")))["params"]["N"], 10000)
+        self.assertIn("plan 2500, calib.bin frozen N_final 10000", out[0].stderr)
+
+    def test_v_mode_is_unchanged(self):   # V: no helper, no new line in any script, the manifest keeps the plan's N whatever calib.bin.json says
+        pl = self.law_plan("V")
+        scr, rd = self.deploy(pl)
+        self.assertFalse(os.path.exists(os.path.join(scr, "p1m_calib_n.py")))
+        for st in p1m_driver.STAGES:
+            self.assertNotIn("p1m_calib_n", open(os.path.join(scr, "stage_%s.sbatch" % st)).read())
+        self.assertNotIn("p1m_calib_n.py", open(os.path.join(scr, "SHA256SUMS")).read())
+        isl = open(os.path.join(scr, "stage_islands.sbatch")).read()
+        self.assertIn("#SBATCH --time=00:45:00", isl); self.assertNotIn("theory mode", isl)
+        P = json.load(open(os.path.join(scr, "plan.resolved.json")))
+        self.assertNotIn("islands_time_base", P["fits"][0]); self.assertEqual(P["fits"][0]["resources"]["islands"]["time"], "00:45:00")
+        self.assertNotIn("calib_N", json.load(open(os.path.join(scr, "run_manifests", "LAWN_r1.json"))))
+        env = dict(STUB_FROZEN_N="2500", STUB_N0="40000")   # a calib.bin.json with other Ns is not read in V mode
+        for st, task, arg in (("setup", 1, None), ("calibrate", 1, None), ("islands", 1, 1), ("islands", 2, 1), ("merge", None, 1)):
+            r = self.stage(scr, st, task, arg, **env); self.assertEqual(r.returncode, 0, "%s: %s" % (st, r.stderr))
+        self.assertEqual(json.load(open(os.path.join(rd, "manifests", "island_1.json")))["params"]["N"], 2500)
+        self.assertEqual(json.load(open(os.path.join(rd, "manifests", "merge.json")))["params"]["N"], 2500)
+        self.assertNotIn("calib_N", json.load(open(os.path.join(rd, "run_manifest.json"))))
+
+    def test_missing_or_corrupt_calib_json_refused(self):
+        for kind, what in (("missing", "cannot read"), ("corrupt", "cannot read"), ("noN", "no settings.tiers[1].N_final")):
+            with self.subTest(kind=kind):
+                self.tearDown(); self.setUp()
+                scr, rd = self.deploy(self.law_plan())
+                env = dict(STUB_FROZEN_N="40000", STUB_N0=str(self.N), STUB_TIER="1", STUB_CALIB_JSON=kind)
+                for st, task, arg in (("setup", 1, None), ("calibrate", 1, None)):
+                    r = self.stage(scr, st, task, arg, **env)
+                    if st == "setup":
+                        self.assertEqual(r.returncode, 0, r.stderr)
+                for st, task, arg in (("islands", 1, 1), ("merge", None, 1)):
+                    r = self.stage(scr, st, task, arg, **env)
+                    self.assertNotEqual(r.returncode, 0, st)
+                    self.assertTrue("refusing to start" in r.stderr, "%s %s: %s" % (kind, st, r.stderr))   # a clear error, no traceback
+                    self.assertNotIn("Traceback", r.stderr)
+                    if kind == "noN" and st == "islands":   # (the merge stops earlier still: no island outputs to hash)
+                        self.assertIn(what, r.stderr)
+                self.assertFalse(os.path.exists(os.path.join(rd, "island_1.bin"))); self.assertFalse(os.path.exists(os.path.join(rd, "fit.bin")))
+
+    def test_merge_refuses_without_n(self):   # the merge's own read: calib.bin.json loses its N_final after the islands ran
+        scr, rd = self.deploy(self.law_plan())
+        env = dict(STUB_FROZEN_N="40000", STUB_N0=str(self.N), STUB_TIER="1")
+        for st, task, arg in (("setup", 1, None), ("calibrate", 1, None), ("islands", 1, 1), ("islands", 2, 1)):
+            r = self.stage(scr, st, task, arg, **env); self.assertEqual(r.returncode, 0, "%s: %s" % (st, r.stderr))
+        with open(os.path.join(rd, "calib.bin.json"), "w") as fh:
+            json.dump({"status": "completed", "tier_final": 1}, fh)
+        r = self.stage(scr, "merge", None, 1, **env)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("no settings.tiers[1].N_final", r.stderr); self.assertIn("refusing to start", r.stderr)
+        self.assertFalse(os.path.exists(os.path.join(rd, "fit.bin")))
+
+    def test_calib_n_validation(self):
+        import p1m_calib_n
+        def rec(**over):
+            r = {"status": "completed", "tier_final": 1, "settings": {"tiers": [{"N_final": 10000}, {"N_final": 40000}]}}
+            r.update(over); p = os.path.join(self.tmp, "c.json"); json.dump(r, open(p, "w")); return p
+        self.assertEqual(p1m_calib_n.calib_n(rec()), (40000, 1))
+        self.assertEqual(p1m_calib_n.calib_n(rec(tier_final=0)), (10000, 0))
+        self.assertEqual(p1m_calib_n.calib_n(rec(tier_final=1.0)), (40000, 1))
+        for bad in (dict(status="resource_limit"), dict(tier_final=2), dict(tier_final=True), dict(tier_final=None),
+                    dict(settings={"tiers": [{"N_final": 10000}, {"N_final": 0}]}), dict(settings={"tiers": [{"N_final": 10000}, {"N_final": 1.5}]}),
+                    dict(settings={"tiers": [{"N_final": 10000}, {"N_final": True}]}), dict(settings={"tiers": [{"N_final": 10000}, {"N_final": 1 << 25}]}),
+                    dict(settings={"tiers": [{"N_final": 10000}]}), dict(settings=None)):
+            with self.assertRaises(SystemExit, msg=repr(bad)) as cm:
+                p1m_calib_n.calib_n(rec(**bad))
+            self.assertIn("refusing to start", str(cm.exception))
+        with self.assertRaises(SystemExit):
+            p1m_calib_n.calib_n(os.path.join(self.tmp, "nonexistent.json"))
+
+    def test_time_scale_rules(self):
+        base = self.law_plan()
+        P = p1m_driver.resolve(base)
+        self.assertEqual(P["fits"][0]["resources"]["islands"]["time"], "03:00:00")
+        pl = copy.deepcopy(base); pl["max_task_hours"] = 2.0      # capped by max_task_hours
+        self.assertEqual(p1m_driver.resolve(pl)["fits"][0]["resources"]["islands"]["time"], "02:00:00")
+        pl = copy.deepcopy(base); pl["fits"][0]["N"] = 20000; pl["resources"] = {"islands": {"time": "00:20:00"}}   # ceil(40000 / 20000) = 2
+        self.assertEqual(p1m_driver.resolve(pl)["fits"][0]["resources"]["islands"]["time"], "00:40:00")
+        pl = copy.deepcopy(base); pl["fits"][0]["N"] = 80000      # N_plan above the tier-1 N: factor 1, untouched
+        R = p1m_driver.resolve(pl)
+        self.assertEqual(R["fits"][0]["resources"]["islands"]["time"], "00:45:00"); self.assertNotIn("islands_time_base", R["fits"][0])
+        R = p1m_driver.resolve(base)                              # a resolved plan fed back in is not scaled twice
+        self.assertEqual(p1m_driver.resolve(R)["fits"][0]["resources"]["islands"]["time"], "03:00:00")
+        pl = copy.deepcopy(base); pl["mode"] = "compat"           # compat is theory mode too (coded calibration)
+        self.assertEqual(p1m_driver.resolve(pl)["fits"][0]["resources"]["islands"]["time"], "03:00:00")
+        pl = self.law_plan("V")                                   # V: never scaled
+        self.assertEqual(p1m_driver.resolve(pl)["fits"][0]["resources"]["islands"]["time"], "00:45:00")
+        # the worst case is that of the scaled limit; a cap set from the unscaled plan is refused with the reason named
+        wc = P["worst_case_core_h"]
+        pl = copy.deepcopy(base); pl["core_h_cap"] = wc - 1
+        with self.assertRaisesRegex(p1m_driver.PlanError, "core_h_cap.*scaled for the tier-1 N"):
+            p1m_driver.resolve(pl)
+        pl = copy.deepcopy(base); pl["core_h_cap"] = wc
+        self.assertEqual(p1m_driver.resolve(pl)["worst_case_core_h"], wc)
+
+    def test_restart_uses_the_scaled_limit(self):
+        pl = self.law_plan(); pl["restart"] = {"attempts": 2}
+        scr, rd = self.deploy(pl)
+        isl = open(os.path.join(scr, "stage_islands.sbatch")).read()
+        self.assertIn("LIMIT_S=10800;", isl)
+        self.assertIn('p1m_calib_n.py" set-n --manifest "$RUN/manifests/island_$R.json"', isl)
+
+
 class TestManifest(Base):
     def test_refuses_incomplete_or_bad_input(self):
         import hashlib, struct
@@ -1259,11 +1469,12 @@ class TestCells(Base):
             if q["mode"] == "law":
                 self.assertEqual((fit["N"], fit["Rp"], q["max_task_hours"]), (10000, 4, 3.0))
                 self.assertEqual(res["calibrate"], {"cpus": 48, "mem": "16G", "time": "03:00:00"})
-                self.assertEqual(res["islands"], {"cpus": 24, "mem": "16G", "time": "00:45:00"})
+                # the islands' N is calib.bin's frozen N (tier 1 = 4 N0 = 40,000): the limit is requested for it, 0:45 x 4 = 3:00 (= max_task_hours)
+                self.assertEqual(res["islands"], {"cpus": 24, "mem": "16G", "time": "03:00:00"}); self.assertEqual(fit["islands_time_base"], "00:45:00")
                 self.assertEqual(res["merge"], {"cpus": 8, "mem": "8G", "time": "00:20:00"}); self.assertEqual(res["eval"], {"cpus": 8, "mem": "8G", "time": "00:30:00"})
                 self.assertEqual(res["setup"], {"cpus": 8, "mem": "8G", "time": "00:15:00"})
                 self.assertEqual(P["n_tasks"], 8 * len(q["fits"])); self.assertEqual(P["island_isa"], "")
-                self.assertAlmostEqual(P["worst_case_core_h"] / len(q["fits"]), 224.7, delta=0.1)     # the planner's figure
+                self.assertAlmostEqual(P["worst_case_core_h"] / len(q["fits"]), 224.7 + 4 * 24 * 2.25, delta=0.1)   # the planner's figure + the scaled island limit
                 for r in P["fits"][:1]:   # every island array is R' = 4 tasks (fit_rp.txt)
                     self.assertEqual(r["Rp"], 4)
             else:
