@@ -1,0 +1,48 @@
+n pairs 20 escalated 3
+ESCALATED:
+  4-AR-n200-r01-T-s1       gap -0.01521 (-2.41 isl se)  K0 14 core-h 110.1
+  4-ARweak-n200-r01-T-s1   gap -0.00792 (-1.31 isl se)  K0 14 core-h 60.7
+  4-IND-n200-r01-T-s2      gap -0.01138 (-1.61 isl se)  K0 14 core-h 144.0
+NOT ESCALATED:
+  4-ADJOPP-n200-r01-T-s1   gap -0.00070 (-0.06 isl se)  K0 12 core-h 48.3
+  4-ADJOPP-n200-r01-T-s2   gap -0.00074 (-0.07 isl se)  K0 9 core-h 36.7
+  4-ADJOPP-n200-r02-T-s1   gap -0.00895 (-0.58 isl se)  K0 12 core-h 47.4
+  4-ADJOPP-n200-r02-T-s2   gap +0.00243 (0.16 isl se)  K0 10 core-h 43.1
+  4-AR-n200-r01-T-s2       gap -0.00406 (-0.41 isl se)  K0 12 core-h 49.0
+  4-AR-n200-r02-T-s1       gap -0.00174 (-0.25 isl se)  K0 8 core-h 39.3
+  4-AR-n200-r02-T-s2       gap +0.00187 (0.21 isl se)  K0 12 core-h 41.9
+  4-AR-n200-r03-T-s1       gap +0.00231 (0.48 isl se)  K0 11 core-h 35.8
+  4-AR-n200-r03-T-s2       gap -0.00430 (-1.11 isl se)  K0 12 core-h 39.4
+  4-AR-n200-r04-T-s1       gap -0.00662 (-0.93 isl se)  K0 11 core-h 51.5
+  4-AR-n200-r04-T-s2       gap -0.01710 (-1.58 isl se)  K0 7 core-h 36.6
+  4-ARweak-n200-r01-T-s2   gap -0.00575 (-0.72 isl se)  K0 1 core-h 9.3
+  4-ARweak-n200-r02-T-s1   gap +0.00175 (0.33 isl se)  K0 10 core-h 23.2
+  4-ARweak-n200-r02-T-s2   gap -0.00165 (-0.22 isl se)  K0 1 core-h 7.7
+  4-IND-n200-r01-T-s1      gap -0.00137 (-0.21 isl se)  K0 11 core-h 50.5
+  4-NULL-n200-r01-T-s1     gap +0.00040 (1.10 isl se)  K0 1 core-h 2.3
+  4-NULL-n200-r01-T-s2     gap -0.00003 (-0.10 isl se)  K0 1 core-h 2.3
+
+means: escalated -0.01150 (sd 0.00365, n 3); not escalated -0.00260 (sd 0.00497, n 17); all -0.00394; difference (esc - non) -0.00890
+negative gaps: escalated 3/3, not escalated 12/17
+Welch t = -3.67, df ~ 3.5, p = 0.027
+Welch 95% CI of difference: [-0.01606, -0.00175]
+pooled t = -2.93 (df 18), p = 0.009, 95% CI [-0.01527, -0.00253]
+exact permutation (1140 labelings): two-sided p = 0.0105, one-sided (esc more negative) p = 0.0105
+Mann-Whitney U = 4.0, exact two-sided p = 0.0193
+gap in island-se units: mean esc -1.78, non -0.23, Welch p = 0.024
+non-escalated alone: mean -0.00260, sd 0.00497, one-sample t = -2.16 (df 16), p = 0.046, 95% CI [-0.00516, -0.00005]
+all 20: mean -0.00394, t = -3.07 (df 19), p = 0.006 (pairs are not independent: 2 seeds per dataset)
+
+within-dataset contrast (datasets with one escalated seed):
+  4-AR-n200-r01        escalated s1 gap -0.01521, other seed gap -0.00406, contrast -0.01116
+  4-ARweak-n200-r01    escalated s1 gap -0.00792, other seed gap -0.00575, contrast -0.00217
+  4-IND-n200-r01       escalated s2 gap -0.01138, other seed gap -0.00137, contrast -0.01001
+  mean contrast -0.00778 (sd 0.00489), paired t = -2.75 (df 2), p = 0.110, 95% CI [-0.01993, 0.00437]; all 3 negative: True
+  (the non-escalated seeds of AR r01, ARweak r01, IND r01 have mean gap -0.00373)
+
+AR-strong T tier-0 fits (7): mean gap -0.00424; AR r04 s1/s2 (both tier 0): -0.00662 / -0.01710
+exploratory Spearman: gap vs K0 (tier-0 rebuilds) rho = -0.34 (p = 0.148); gap vs T core-h rho = -0.47 (p = 0.036)
+   OLS gap ~ K0: slope -0.00031 per rebuild (p = 0.287)
+   slow-regime tier-0 non-escalated fits (K0 >= 7): n 13, mean gap -0.00286 ; fast-regime (K0 < 7): n 4, mean gap -0.00176
+
+Seed-pooled gap by dataset vs registered E1 ratio is in per_dataset.csv.

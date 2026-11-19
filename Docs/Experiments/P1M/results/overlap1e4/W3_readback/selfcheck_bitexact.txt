@@ -1,0 +1,13 @@
+4-AR-n200-r02-T-s1           status completed xeval 0.004016572263088269 engine 0.004016572263088269 BIT-EQUAL
+4-AR-n200-r02-T-s2           status completed xeval 0.004003073269747803 engine 0.004003073269747803 BIT-EQUAL
+4-AR-n200-r02-V-s1           status completed xeval 0.004017156201878369 engine 0.004017156201878369 BIT-EQUAL
+4-AR-n200-r02-V-s2           status completed xeval 0.004000018567328234 engine 0.004000018567328234 BIT-EQUAL
+4-AR-n200-r03-T-s1           status completed xeval 0.003702563657549063 engine 0.003702563657549063 BIT-EQUAL
+4-AR-n200-r03-T-s2           status completed xeval 0.003702563657549063 engine 0.003702563657549063 BIT-EQUAL
+4-AR-n200-r03-V-s1           status completed xeval 0.0037091975855085835 engine 0.0037091975855085835 BIT-EQUAL
+4-AR-n200-r03-V-s2           status completed xeval 0.003708889530742332 engine 0.003708889530742332 BIT-EQUAL
+4-AR-n200-r04-T-s1           status completed xeval 0.0017948118971916616 engine 0.0017948118971916616 BIT-EQUAL
+4-AR-n200-r04-T-s2           status completed xeval 0.0018081679682667717 engine 0.0018081679682667717 BIT-EQUAL
+4-AR-n200-r04-V-s1           status completed xeval 0.0017946394841911184 engine 0.0017946394841911184 BIT-EQUAL
+4-AR-n200-r04-V-s2           status completed xeval 0.0017948899357899117 engine 0.0017948899357899117 BIT-EQUAL
+12 of 12 bit-equal

@@ -1,0 +1,6 @@
+4-AR-n200-r02 s1  V:True T:True  hpm_eq=True T_higher_F=False dlogZ=-0.001741 (0.2511 se) pip_worst_ratio=0.01513 dH_T=0.06338 screen>10%=False
+4-AR-n200-r02 s2  V:True T:True  hpm_eq=True T_higher_F=False dlogZ=0.001865 (0.2133 se) pip_worst_ratio=0.01439 dH_T=0.06327 screen>10%=False
+4-AR-n200-r03 s1  V:True T:True  hpm_eq=True T_higher_F=False dlogZ=0.002309 (0.4837 se) pip_worst_ratio=0.0152 dH_T=0.06085 screen>10%=False
+4-AR-n200-r03 s2  V:True T:True  hpm_eq=True T_higher_F=False dlogZ=-0.004301 (1.106 se) pip_worst_ratio=0.01055 dH_T=0.06085 screen>10%=False
+4-AR-n200-r04 s1  V:True T:True  hpm_eq=True T_higher_F=False dlogZ=-0.006621 (0.9289 se) pip_worst_ratio=0.006186 dH_T=0.04237 screen>10%=False
+4-AR-n200-r04 s2  V:True T:True  hpm_eq=True T_higher_F=False dlogZ=-0.0171 (1.583 se) pip_worst_ratio=0.005465 dH_T=0.04252 screen>10%=False
