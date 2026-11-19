@@ -129,7 +129,12 @@ def main():
     for l in S.get("SQUEUE", []):
         i, n, st, rs = l.split("|")[:4]
         if st == "PENDING" and PEND_BAD.search(rs):
-            pend.append("%s %s reason=%s" % (i, n, rs))
+            # JobArrayTaskLimit with the array's own %k throttle in its id ([a-b%k]) = our own submit throttle, not a cluster limit
+            # (A0 false alarm 11-19, 2791240_[9-16%8]; HQ: exclude it). Without a %k in the id it still STOPs.
+            if rs == "JobArrayTaskLimit" and re.search(r"%\d+\]$", i):
+                infos.append("INFO own array throttle (not a stop): %s %s reason=%s" % (i, n, rs))
+            else:
+                pend.append("%s %s reason=%s" % (i, n, rs))
     prior = json.load(open(a.prior)) if a.prior else {}
     wave_cost = sum(cost.values()); spent = wave_cost + sum(prior.values())
     # ---- per fit: committed class table ------------------------------------------------------------------------------------------------------------------
