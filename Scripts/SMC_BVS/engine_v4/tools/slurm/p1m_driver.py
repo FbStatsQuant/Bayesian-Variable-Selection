@@ -31,9 +31,11 @@ Writes, for one batch, everything the manager deploys to NOTS `~/SMC_Engineering
   plan.resolved.json      the plan with every default filled in
   (theory mode: a fit whose mode is law or compat -- the coded calibration, which can escalate tier 0 -> 1 (N x 4, D-26))
                           the island and merge stages take N from calib.bin.json (tiers[tier_final].N_final) at STAGE time
-                          (p1m_calib_n.py set-n after the fill; the plan's N stays in the manifests as the pre-calibration record;
+                          (p1m_calib_n.py set-n after the fill; the engine refuses an island whose N differs from calib's and checks the islands' N
+                          against calib's at the merge, whose manifest N is only a record; the plan's N stays as the pre-calibration record;
                           the calibrate stage records both in the run manifest, key calib_N); the islands' time limit is requested
-                          for the escalated N up front: base x ceil(4 N0 / N_plan), capped by max_task_hours (see law_islands_time).
+                          for the escalated N up front: base x ceil(4 N0 / N_plan), capped at 2 h (THEORY_ISLANDS_MAX_H) and max_task_hours
+                          (see law_islands_time). isa_check is refused in a theory-mode plan (V's class-A check).
                           V mode is byte-identical to before.
 (Campaign freeze: the optional plan keys method_tag and core_tree, written by p1m_cells.py, are validated and copied into
 every run manifest next to code_commit.)
@@ -127,6 +129,7 @@ DEFAULT_RES = {
 # Theory mode (law, compat): the coded calibration (v3's tiers, calib_run.h budgets()) may freeze tier 1, N = 4 x N0 with
 # N0 = max(2500, n, p); V mode never escalates (frozen N = 2,500).
 THEORY_TIER_MULT = 4
+THEORY_ISLANDS_MAX_H = 2.0   # §0-v2.5 / H-18: islands stay <= 2 h; the only > 2 h exception is the T calibrate (HQ), not a plan-wide max_task_hours
 
 
 def theory_n_max(f):
@@ -142,10 +145,12 @@ def law_islands_time(P, f, base):
     """The final islands' time limit of a theory-mode fit. The islands' N is calib.bin's frozen N, known only after the calibration,
     but sbatch needs the limit at SUBMIT time, and Slurm lets an ordinary user only LOWER a limit afterwards (`scontrol update
     TimeLimit` cannot raise it), so the limit is requested for the largest possible N up front:
-        limit = base x ceil(N_tier1 / N_plan),  N_tier1 = 4 max(2500, n, p),  capped by max_task_hours (and the QOS wall).
-    It is the cost-linear-in-N bound; an island that finishes early is billed what it used. Returns (limit string, factor)."""
+        limit = base x ceil(N_tier1 / N_plan),  N_tier1 = 4 max(2500, n, p),  capped at THEORY_ISLANDS_MAX_H = 2 h (and
+    max_task_hours, and the QOS wall), but never below the base itself. It is the cost-linear-in-N bound; an island that finishes
+    early is billed what it used. Returns (limit string, factor)."""
     factor = max(1, -(-theory_n_max(f) // f["N"]))
-    return hhmmss(min(hours(base) * factor, P["max_task_hours"], QOS_WALL_H)), factor
+    h = max(hours(base), min(hours(base) * factor, THEORY_ISLANDS_MAX_H, P["max_task_hours"], QOS_WALL_H))
+    return hhmmss(h), factor
 
 
 # D-32: island ISAs with FMA (class A has the same bits in all of them: x86-64-v3 = x86-64-v4, MEASURED on Owls)
@@ -421,10 +426,17 @@ def resolve(plan):
             if h > P["max_task_hours"] + 1e-9:
                 raise PlanError("fit %s stage %s: %s exceeds max_task_hours = %.2f (§0-v2.5: no job longer than 2 h)"
                                 % (f["run_id"], st, r["time"], P["max_task_hours"]))
-        if f["mode"] != "V" and "islands_time_base" not in f:   # theory mode: islands sized for the escalated N (a fed-back resolved plan is not scaled twice)
-            lim, factor = law_islands_time(P, f, res["islands"]["time"])
-            if factor > 1:
-                f["islands_time_base"] = res["islands"]["time"]
+        if f["mode"] != "V":   # theory mode: islands sized for the escalated N, always recomputed from the base (resolve is idempotent)
+            has_base = "islands_time_base" in f
+            base = f["islands_time_base"] if has_base else res["islands"]["time"]
+            if has_base:
+                plan_time(base, "fit %s: islands_time_base" % f["run_id"])
+            lim, factor = law_islands_time(P, f, base)
+            if has_base and abs(hours(res["islands"]["time"]) - hours(lim)) > 1e-9:
+                raise PlanError("fit %s: islands time %s is not the scaled limit %s of islands_time_base %s (remove islands_time_base to rescale)"
+                                % (f["run_id"], res["islands"]["time"], lim, base))
+            if factor > 1 or has_base:
+                f["islands_time_base"] = base
                 res["islands"]["time"] = lim
         f["resources"] = res
     F = len(P["fits"])
@@ -433,6 +445,9 @@ def resolve(plan):
         rs.setdefault("margin_s", max(300, int(0.15 * lim)))
         if rs["margin_s"] >= lim:
             raise PlanError("restart.margin_s %s must be below the islands' time limit (%d s)" % (rs["margin_s"], lim))
+    if P.get("isa_check") is not None and any(f["mode"] != "V" for f in P["fits"]):
+        # the stage fills the island template with the plan's N, without set-n, and its time is not scaled: a theory-mode fit that escalates would be refused
+        raise PlanError("isa_check is a V (class-A) check; theory-mode plans are ISA-free (law / compat fits in the plan: remove isa_check)")
     if P.get("isa_check") is not None:
         for f in P["fits"]:
             if P["isa_check"]["island"] > f["Rp"]:
@@ -668,9 +683,9 @@ def generate(P, out, dept):
         if theory and st == "islands":
             f0 = P["fits"][0]
             if "islands_time_base" in f0:
-                txt += ("# theory mode: time limit %s = base %s x ceil(4 max(2500, n, p) / N_plan), capped by max_task_hours %g (tier-1 N, requested up front:\n"
+                txt += ("# theory mode: time limit %s = base %s x ceil(4 max(2500, n, p) / N_plan), capped at 2 h (tier-1 N, requested up front:\n"
                         "# Slurm lets a user only lower a limit later). The islands' N is calib.bin.json's frozen N_final, read at stage time.\n"
-                        % (r["time"], f0["islands_time_base"], P["max_task_hours"]))
+                        % (r["time"], f0["islands_time_base"]))
         txt += stage_body(st, P.get("restart") if st == "islands" else None, int(hours(r["time"]) * 3600), theory)
         txt += 'printf \'{"stage":"%s","run_id":"%%s","job":"%%s","task":"%%s","end":"%%s"}\\n\' "$RUN_ID" "${SLURM_JOB_ID}" "${SLURM_ARRAY_TASK_ID:-}" "$(date -u +%%FT%%TZ)" >> "$DEPT/scratch/runs/%s/ends.jsonl"\n' % (st, batch)
         write(os.path.join(out, name), txt, 0o755)

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""p1m_calib_n.py -- the final islands' and the merge's N in theory mode (law / compat): calib.bin's frozen N, at STAGE time.
+"""p1m_calib_n.py -- the final islands' N (and the merge manifest's N record) in theory mode (law / compat): calib.bin's frozen N, at STAGE time.
 
 The coded calibration (D-26; v3's tiers) may escalate tier 0 -> 1, which freezes N = 4 x N0 (N0 = max(2500, n, p)), so the N
 the engine demands of an island (`island: N differs from calib.bin's frozen N`) is not always the plan's N. The driver's manifest

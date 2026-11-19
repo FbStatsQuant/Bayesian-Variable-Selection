@@ -1076,7 +1076,8 @@ class TestPrepOutcome(TestLocalChain):
 
 
 # Law-mode N (HQ_DECISIONS e8aab325): the stub calibrate writes the engine's real sidecar shape (tier_final, settings.tiers[e].N_final);
-# the stub island / merge refuse, as the engine does, a manifest whose params.N is not the frozen N
+# the stub island refuses, as the engine does, a manifest whose params.N is not the frozen N (the real merge ignores params.N and checks
+# the islands' N against calib's; the stub merge is stricter, to test that merge.json is honest)
 LAW_STUB = r"""#!/bin/bash
 cmd=$1; man=""; out=""; args=("$@")
 for ((i=0;i<${#args[@]};i++)); do case ${args[$i]} in --manifest) man=${args[$((i+1))]};; --out) out=${args[$((i+1))]};; esac; done
@@ -1160,13 +1161,13 @@ class TestLawN(Base):
         rm = json.load(open(os.path.join(rd, "run_manifest.json")))   # recorded; the plan's N stays as the pre-calibration record
         self.assertEqual(rm["params"]["N"], 10000)
         self.assertEqual(rm["calib_N"], {"N_plan": 10000, "N_final": 40000, "tier_final": 1, "differs": True, "source": "calib.bin.json"})
-        # the template keeps the plan's N; the time limit scales: 0:45 x ceil(4 x 10^4 / 10^4) = 3:00 (= max_task_hours)
+        # the template keeps the plan's N; the time limit scales: 0:45 x ceil(4 x 10^4 / 10^4) = 3:00, capped at 2:00
         self.assertEqual(json.load(open(os.path.join(scr, "manifests", "LAWN_r1", "island.json")))["params"]["N"], 10000)
         isl = open(os.path.join(scr, "stage_islands.sbatch")).read()
-        self.assertIn("#SBATCH --time=03:00:00", isl); self.assertIn("base 00:45:00", isl)
-        self.assertEqual(json.load(open(os.path.join(scr, "manifests", "LAWN_r1", "island.json")))["budget"]["task_seconds"], 3 * 3600)
+        self.assertIn("#SBATCH --time=02:00:00", isl); self.assertIn("base 00:45:00", isl)
+        self.assertEqual(json.load(open(os.path.join(scr, "manifests", "LAWN_r1", "island.json")))["budget"]["task_seconds"], 2 * 3600)
         P = json.load(open(os.path.join(scr, "plan.resolved.json")))
-        self.assertEqual(P["fits"][0]["islands_time_base"], "00:45:00"); self.assertEqual(P["fits"][0]["resources"]["islands"]["time"], "03:00:00")
+        self.assertEqual(P["fits"][0]["islands_time_base"], "00:45:00"); self.assertEqual(P["fits"][0]["resources"]["islands"]["time"], "02:00:00")
 
     def test_non_escalated_law_fit(self):   # calib stayed at tier 0: N_final = plan N, nothing differs, nothing is logged
         scr, rd, out = self.chain(self.law_plan(), self.N, STUB_TIER="0")
@@ -1176,7 +1177,7 @@ class TestLawN(Base):
         rm = json.load(open(os.path.join(rd, "run_manifest.json")))
         self.assertEqual(rm["calib_N"], {"N_plan": 10000, "N_final": 10000, "tier_final": 0, "differs": False, "source": "calib.bin.json"})
         # the limit was requested for the worst case up front (the tier is not known at submit time)
-        self.assertIn("#SBATCH --time=03:00:00", open(os.path.join(scr, "stage_islands.sbatch")).read())
+        self.assertIn("#SBATCH --time=02:00:00", open(os.path.join(scr, "stage_islands.sbatch")).read())
 
     def test_stale_plan_n_is_replaced(self):   # a plan whose N was never N0 (e.g. the default 2,500 at p = 10^4): calib's N wins at tier 0 too
         pl = self.law_plan(); pl["fits"][0]["N"] = 2500
@@ -1254,19 +1255,24 @@ class TestLawN(Base):
 
     def test_time_scale_rules(self):
         base = self.law_plan()
-        P = p1m_driver.resolve(base)
-        self.assertEqual(P["fits"][0]["resources"]["islands"]["time"], "03:00:00")
-        pl = copy.deepcopy(base); pl["max_task_hours"] = 2.0      # capped by max_task_hours
-        self.assertEqual(p1m_driver.resolve(pl)["fits"][0]["resources"]["islands"]["time"], "02:00:00")
+        P = p1m_driver.resolve(base)                              # 0:45 x 4 = 3:00, capped at 2:00 although max_task_hours is 3.0 (F1)
+        self.assertEqual(P["fits"][0]["resources"]["islands"]["time"], "02:00:00")
+        for mth in (2.0, 3.0, 6.0):                               # the cap is THEORY_ISLANDS_MAX_H, whatever the plan-wide max_task_hours
+            pl = copy.deepcopy(base); pl["max_task_hours"] = mth
+            self.assertEqual(p1m_driver.resolve(pl)["fits"][0]["resources"]["islands"]["time"], "02:00:00", mth)
+        pl = copy.deepcopy(base); pl["resources"] = {"islands": {"time": "02:30:00"}}   # a base above the cap is never lowered
+        self.assertEqual(p1m_driver.resolve(pl)["fits"][0]["resources"]["islands"]["time"], "02:30:00")
+        # worst case: setup 8 x 20 min + calibrate 16 x 45 min + 2 islands x 16 CPUs x 2:00 (the capped limit) + merge 8 x 15 min + eval 4 x 20 min
+        self.assertAlmostEqual(P["worst_case_core_h"], 82.0, places=6)
         pl = copy.deepcopy(base); pl["fits"][0]["N"] = 20000; pl["resources"] = {"islands": {"time": "00:20:00"}}   # ceil(40000 / 20000) = 2
         self.assertEqual(p1m_driver.resolve(pl)["fits"][0]["resources"]["islands"]["time"], "00:40:00")
         pl = copy.deepcopy(base); pl["fits"][0]["N"] = 80000      # N_plan above the tier-1 N: factor 1, untouched
         R = p1m_driver.resolve(pl)
         self.assertEqual(R["fits"][0]["resources"]["islands"]["time"], "00:45:00"); self.assertNotIn("islands_time_base", R["fits"][0])
         R = p1m_driver.resolve(base)                              # a resolved plan fed back in is not scaled twice
-        self.assertEqual(p1m_driver.resolve(R)["fits"][0]["resources"]["islands"]["time"], "03:00:00")
+        self.assertEqual(p1m_driver.resolve(R)["fits"][0]["resources"]["islands"]["time"], "02:00:00")
         pl = copy.deepcopy(base); pl["mode"] = "compat"           # compat is theory mode too (coded calibration)
-        self.assertEqual(p1m_driver.resolve(pl)["fits"][0]["resources"]["islands"]["time"], "03:00:00")
+        self.assertEqual(p1m_driver.resolve(pl)["fits"][0]["resources"]["islands"]["time"], "02:00:00")
         pl = self.law_plan("V")                                   # V: never scaled
         self.assertEqual(p1m_driver.resolve(pl)["fits"][0]["resources"]["islands"]["time"], "00:45:00")
         # the worst case is that of the scaled limit; a cap set from the unscaled plan is refused with the reason named
@@ -1277,11 +1283,45 @@ class TestLawN(Base):
         pl = copy.deepcopy(base); pl["core_h_cap"] = wc
         self.assertEqual(p1m_driver.resolve(pl)["worst_case_core_h"], wc)
 
+    def test_islands_time_base_is_recomputed(self):   # F3: a plan that carries islands_time_base is rescaled from it; a disagreeing limit is refused
+        base = self.law_plan()
+        R = p1m_driver.resolve(base)
+        self.assertEqual(R["fits"][0]["islands_time_base"], "00:45:00")
+        ok = copy.deepcopy(R); ok["fits"][0]["resources"]["islands"]["time"] = "02:00:00"
+        self.assertEqual(p1m_driver.resolve(ok)["fits"][0]["resources"]["islands"]["time"], "02:00:00")
+        for bad in ("00:45:00", "01:00:00", "03:00:00"):          # unscaled, hand-edited, above the cap
+            q = copy.deepcopy(R); q["fits"][0]["resources"]["islands"]["time"] = bad
+            with self.assertRaisesRegex(p1m_driver.PlanError, "is not the scaled limit 02:00:00 of islands_time_base 00:45:00"):
+                p1m_driver.resolve(q)
+        q = copy.deepcopy(base); q["fits"][0]["islands_time_base"] = "00:45:00"     # hand-written marker with an unscaled plan limit: refused, not silently unscaled
+        with self.assertRaisesRegex(p1m_driver.PlanError, "islands_time_base"):
+            p1m_driver.resolve(q)
+        q = copy.deepcopy(base); q["fits"][0]["islands_time_base"] = "00:45:00"; q["resources"] = {"islands": {"time": "02:00:00"}}   # consistent: accepted
+        self.assertEqual(p1m_driver.resolve(q)["fits"][0]["resources"]["islands"]["time"], "02:00:00")
+        q = copy.deepcopy(base); q["fits"][0]["islands_time_base"] = "soon"
+        with self.assertRaisesRegex(p1m_driver.PlanError, "islands_time_base"):
+            p1m_driver.resolve(q)
+        v = self.law_plan("V"); v["fits"][0]["islands_time_base"] = "00:10:00"       # V ignores it (never scaled)
+        self.assertEqual(p1m_driver.resolve(v)["fits"][0]["resources"]["islands"]["time"], "00:45:00")
+
+    def test_isa_check_refused_in_theory_plans(self):   # F2
+        for mode in ("law", "compat"):
+            q = self.law_plan(mode); q["island_isa"] = "sapphirerapids"; q["isa_check"] = {"island": 1}
+            with self.assertRaisesRegex(p1m_driver.PlanError, "isa_check is a V .class-A. check; theory-mode plans are ISA-free"):
+                p1m_driver.resolve(q)
+        q = self.law_plan("V"); q["isa_check"] = {"island": 1}                        # V plans keep it
+        self.assertEqual(p1m_driver.resolve(q)["isa_check"]["island"], 1)
+        q = self.law_plan("V"); q["fits"].append(dict(q["fits"][0], run_id="LAWN_r2", mode="law", N=10000)); q["isa_check"] = {"island": 1}
+        with self.assertRaisesRegex(p1m_driver.PlanError, "isa_check is a V"):       # one theory fit is enough
+            p1m_driver.resolve(q)
+        rc, _ = self.gen(dict(self.law_plan(), island_isa="sapphirerapids", isa_check={"island": 1}), name="isa")
+        self.assertEqual(rc, 65)
+
     def test_restart_uses_the_scaled_limit(self):
         pl = self.law_plan(); pl["restart"] = {"attempts": 2}
         scr, rd = self.deploy(pl)
         isl = open(os.path.join(scr, "stage_islands.sbatch")).read()
-        self.assertIn("LIMIT_S=10800;", isl)
+        self.assertIn("LIMIT_S=7200;", isl)
         self.assertIn('p1m_calib_n.py" set-n --manifest "$RUN/manifests/island_$R.json"', isl)
 
 
@@ -1470,11 +1510,11 @@ class TestCells(Base):
                 self.assertEqual((fit["N"], fit["Rp"], q["max_task_hours"]), (10000, 4, 3.0))
                 self.assertEqual(res["calibrate"], {"cpus": 48, "mem": "16G", "time": "03:00:00"})
                 # the islands' N is calib.bin's frozen N (tier 1 = 4 N0 = 40,000): the limit is requested for it, 0:45 x 4 = 3:00 (= max_task_hours)
-                self.assertEqual(res["islands"], {"cpus": 24, "mem": "16G", "time": "03:00:00"}); self.assertEqual(fit["islands_time_base"], "00:45:00")
+                self.assertEqual(res["islands"], {"cpus": 24, "mem": "16G", "time": "02:00:00"}); self.assertEqual(fit["islands_time_base"], "00:45:00")
                 self.assertEqual(res["merge"], {"cpus": 8, "mem": "8G", "time": "00:20:00"}); self.assertEqual(res["eval"], {"cpus": 8, "mem": "8G", "time": "00:30:00"})
                 self.assertEqual(res["setup"], {"cpus": 8, "mem": "8G", "time": "00:15:00"})
                 self.assertEqual(P["n_tasks"], 8 * len(q["fits"])); self.assertEqual(P["island_isa"], "")
-                self.assertAlmostEqual(P["worst_case_core_h"] / len(q["fits"]), 224.7 + 4 * 24 * 2.25, delta=0.1)   # the planner's figure + the scaled island limit
+                self.assertAlmostEqual(P["worst_case_core_h"] / len(q["fits"]), 224.7 + 4 * 24 * 1.25, delta=0.1)   # the planner's figure + the scaled island limit
                 for r in P["fits"][:1]:   # every island array is R' = 4 tasks (fit_rp.txt)
                     self.assertEqual(r["Rp"], 4)
             else:
