@@ -401,6 +401,10 @@ def resolve(plan):
         f.setdefault("N", 2500)
         plan_int(f["Rp"], "fit %s: Rp" % f["run_id"], 1, 2 ** 20 - 1)   # island r < 2^20 (INTERFACES §3)
         plan_int(f["N"], "fit %s: N" % f["run_id"], 1, 2 ** 24)
+        pr = f.get("params")
+        if isinstance(pr, dict) and "N" in pr and pr["N"] != f["N"]:   # V-N Sol M2: the manifests take params.N, the sizing / cost model the top-level N
+            raise PlanError("fit %s: top-level N = %r disagrees with params.N = %r (the manifests would carry params.N, the cost and time model the top-level N): give N once, as the top-level N"
+                            % (f["run_id"], f["N"], pr["N"]))
         f.setdefault("mode", P["mode"])
         plan_choice(f["mode"], "fit %s: mode" % f["run_id"], MODES)
         res = copy.deepcopy(DEFAULT_RES[rung(f["p"])])

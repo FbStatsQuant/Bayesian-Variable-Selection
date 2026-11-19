@@ -2,7 +2,7 @@
 // The setup's dimensions come from a WP2 setup.bin (read_setup_dims: its mapped sections) or, before a 10^6 file exists,
 // from WP2's --count-only accounting JSON (dims_from_sizes: the same formula; test start_view_mapped_wp2_setup pins it).
 // Every number is the plan the code admits with (ESTIMATE, bytes):
-//   final island        plan_sizes + island_memory, V (class A, label-major), N = V_N, Hm, B = budgets(n, p).B, k = max(8,
+//   final island        plan_sizes + island_memory, V (class A, label-major), N = V_N (--N), Hm, B = budgets(n, p).B, k = max(8,
 //                       q90(pi_0 size) + 1, k_store), setup inputs = mapped sections + draw scratch + neighbours (StartView)
 //   calibration island  the same for the largest calibration island (pilot: leaders, round-start snapshot, N = V_H), under
 //                       WP4's N-1 rule: + the calibration's resident state (ledger + export, calib_memory_plan)
@@ -11,13 +11,16 @@
 //   merge task          estimate_merge_memory (WP4): R' islands' stores streamed, N terminal supports, + data.bin + 2.5 x setup.bin
 //
 //   v4_plan_tables --counts AR_n200.json [--q90 5] [--setup-bin-bytes B] [--island-threads 96] [--calib-threads 96]
-//                  [--merge-threads 32] [--Rp 16] [--k-store k]
+//                  [--merge-threads 32] [--Rp 16] [--k-store k] [--N 2500]
 //   v4_plan_tables --setup setup.bin --n n --p p [same options]
 //   v4_plan_tables --setup setup.bin --data data.bin --load 1 [--island-threads T]   MEASURED: map the start law as an
 //                  admitted island does (data, StartView, neighbours, draw scratch for T threads) and print /proc/self/status
 //                  RSS split into anonymous (heap: what the island owns) and file-backed (mapped setup.bin / data.bin pages)
 // Output: one JSON object per G (64, 256) on stdout, then a Markdown table.
+#include <cerrno>
+#include <cmath>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <string>
 #include "v4/calib_plan.h"
@@ -45,15 +48,26 @@ static Json proc_status() {   // VmRSS, VmHWM, RssAnon, RssFile (kB -> bytes)
   return j;
 }
 
+// --N: the engine's rule (calib_run.cpp whole_arg): a whole number in [V_N_MIN, V_N_MAX]; "2.5", "1e4"-style fractions, "abc", "" and a trailing junk are refused
+static bool whole_n(const std::string& s, int& out) {
+  if (s.empty()) return false;
+  char* end = nullptr; errno = 0;
+  const double x = std::strtod(s.c_str(), &end);
+  if (errno || end != s.c_str() + s.size() || !std::isfinite(x) || x != std::floor(x) || x < (double)calib::V_N_MIN || x > (double)calib::V_N_MAX) return false;
+  out = (int)x; return true;
+}
+
 int main(int argc, char** argv) {
   std::string counts, setup, data; int64_t n = 0, p = 0; double q90 = -1, setup_bin = -1, k_store = 0; int load = 0;
-  int ti = 96, tc = 96, tm = 32, Rp = 16;
-  for (int i = 1; i + 1 < argc; i += 2) {
-    const std::string k = argv[i], v = argv[i + 1];
+  int ti = 96, tc = 96, tm = 32, Rp = 16, vN = calib::V_N;   // vN: the V final islands' N (--N; default V_N = 2,500)
+  for (int i = 1; i < argc; i += 2) {
+    const std::string k = argv[i];
+    if (i + 1 >= argc) { std::fprintf(stderr, "option %s needs a value\n", k.c_str()); return 2; }   // V-N Sol m4: a bare trailing option is an error, not skipped
+    const std::string v = argv[i + 1];
     if (k == "--counts") counts = v; else if (k == "--setup") setup = v; else if (k == "--n") n = std::stoll(v); else if (k == "--p") p = std::stoll(v);
     else if (k == "--q90") q90 = std::stod(v); else if (k == "--setup-bin-bytes") setup_bin = std::stod(v); else if (k == "--k-store") k_store = std::stod(v);
     else if (k == "--island-threads") ti = std::stoi(v); else if (k == "--calib-threads") tc = std::stoi(v); else if (k == "--merge-threads") tm = std::stoi(v);
-    else if (k == "--Rp") Rp = std::stoi(v); else if (k == "--data") data = v; else if (k == "--load") load = std::stoi(v);
+    else if (k == "--Rp") Rp = std::stoi(v); else if (k == "--N") { if (!whole_n(v, vN)) { std::fprintf(stderr, "--N must be a whole number in [%d, %d] (as the engine's calibrate / island N)\n", calib::V_N_MIN, calib::V_N_MAX); return 2; } } else if (k == "--data") data = v; else if (k == "--load") load = std::stoi(v);
     else { std::fprintf(stderr, "unknown option %s\n", k.c_str()); return 2; }
   }
   if (load) {   // MEASURED load of the start law as an admitted island holds it
@@ -131,7 +145,7 @@ int main(int argc, char** argv) {
                    " thr) | calibration island, N-1 | calibrate task (anonymous = N-1) | + reclaimable file pages | merge task (" + std::to_string(tm) +
                    " thr) | setup inputs (mapped + scratch + nb) | WP4 setup copy |\n|---|---|---|---|---|---|---|---|---|---|---|\n";
   for (int G : {1, 64, 256}) {   // G = 1: the admission floor (with a budget the island takes the largest G that fits)
-    IslandConfig f; f.role = IslandRole::Final; f.N = calib::V_N; f.Hm = s.tiers[0].Hm; f.B = b.B; f.kernel = KernelKind::LabelMajor; f.threads = ti; f.G = G;
+    IslandConfig f; f.role = IslandRole::Final; f.N = vN; f.Hm = s.tiers[0].Hm; f.B = b.B; f.kernel = KernelKind::LabelMajor; f.threads = ti; f.G = G;
     f.inputs_bytes = start_inputs_bytes(d, ti); f.k_store = k_store;
     MemSizes zf = plan_sizes((int)n, (int)p, b.K, f); const MemPlan pf = plan_with_budget(zf, k, f);
     // the calibration island under N-1: calibrate's own plan function (calib_plan.h), so the numbers are what its admission uses
@@ -143,7 +157,7 @@ int main(int argc, char** argv) {
     MemSizes za = plan_sizes((int)n, (int)p, b.K, ca); const MemPlan pa = plan_with_budget(za, k, ca);
     const double calib_task = (double)pc.total;                                          // anonymous memory the task must hold
     const double file_pages = std::max(0.0, setup_bin - (double)d.view_bytes);            // the rest of setup.bin, paged in once by the hash check
-    merge::MergeSettings ms; ms.Rp = Rp; ms.p = (int)p; ms.N = calib::V_N; ms.K = b.K; ms.threads = tm; ms.kbar = k;
+    merge::MergeSettings ms; ms.Rp = Rp; ms.p = (int)p; ms.N = vN; ms.K = b.K; ms.threads = tm; ms.kbar = k;
     ms.extra_bytes = (uint64_t)(data_bytes + 2.5 * setup_bin);
     const merge::MemEstimate me = merge::estimate_merge_memory(ms);
     Json o = Json::object();

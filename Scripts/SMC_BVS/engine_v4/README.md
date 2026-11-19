@@ -30,7 +30,7 @@ Contents: 1 Requirements and build · 2 How a fit is organised · 3 Check the in
 
 | term | meaning |
 |---|---|
-| particle, island | a particle is one candidate model with a weight (N = 2,500 per island). An **island** is one independent SMC run; a fit merges R′ of them |
+| particle, island | a particle is one candidate model with a weight (N = 2,500 per island; in V mode N is the `calibrate` parameter `N`, default 2,500). An **island** is one independent SMC run; a fit merges R′ of them |
 | φ-grid, offer floor | the tempering ladder the sampler climbs, and the score below which candidate models are not stored; both are chosen once by `calibrate` |
 | HPM, MPM, PIP | highest-posterior model; median-probability model (variables with PIP > 0.5); posterior inclusion probability of one variable |
 | bit form, class A | the two arithmetics. The **bit form** reproduces the R reference implementation (`Scripts/SMC_BVS/core/`, "revision D") bit for bit. **Class A** is the vectorised, fused-multiply-add arithmetic of the large-p sampler (mode V); its bits depend on the build (§1.2) |
@@ -120,7 +120,7 @@ raw.bin  data.bin  setup.bin   calib.bin     island_r.bin      fit.bin    eval.b
 | `prep` | standardises the columns and drops constant ones | `data.bin` | a few s |
 | `setup` | correlation graph, blocks, the table of models around every variable, the start law; finds exactly duplicated columns and treats them as one group | `setup.bin` (97 MB) | 17 s |
 | `calibrate` | chooses the φ-grid and the offer floor; runs a pilot island | `calib.bin` | 12 min |
-| `island` | one independent SMC run (N = 2,500 particles); you run R′ of them | `island_<r>.bin` | 4 min each |
+| `island` | one independent SMC run (N = 2,500 particles by default; V mode: `calibrate --N`); you run R′ of them | `island_<r>.bin` | 4 min each |
 | `merge` | combines the R′ islands: stores, PIPs, evidence, final local search | `fit.bin` | 6 s |
 | `eval` | scores the fit against the truth (simulations) | `eval.bin` | 14 s |
 | `post` | builds the posterior law from the merged store | `law.bin` | 6 s |
@@ -473,7 +473,7 @@ their inputs and parameters from it, and an explicit flag that disagrees with th
 | `gen-test` | the `gen` spec, `--ntest M`, `--cols 1,5,9`, `--out test.bin` | test rows for the given columns (used by `eval`) |
 | `prep` | `--in raw.bin --out data.bin` (or `--from-r DIR`) | exits 20 (no usable predictors) or 21 (constant response) without writing `data.bin` |
 | `setup` | `--data data.bin`, `--out setup.bin` | `--threads`, `--mem-budget` (GB), `--count-only 1` (report the accounting without building tables), `--file-mode compat\|law\|V` (law), `--partition truncated\|exact` (truncated), `--tau`, `--B` (advanced: leave the defaults) |
-| `calibrate` | `--mode compat\|law\|V`, `--data`, `--setup`, `--seed` (1…2³¹−1), `--out calib.bin` | `--threads` (1), `--mem-budget` (bytes), `--cost-dir DIR` (per-island cost logs), `--plan-only 1` (with `--n --p`: print the memory plan, run nothing), `--I_max` (3) and `--refine_m` (1), both V mode only |
+| `calibrate` | `--mode compat\|law\|V`, `--data`, `--setup`, `--seed` (1…2³¹−1), `--out calib.bin` | `--threads` (1), `--mem-budget` (bytes), `--cost-dir DIR` (per-island cost logs), `--plan-only 1` (with `--n --p`: print the memory plan, run nothing), `--I_max` (3) and `--refine_m` (1), both V mode only, `--N` (2500; V mode only: the final islands' N, a whole number in [1, 2²⁴], frozen in `calib.bin`) |
 | `island` | `--mode`, `--island r`, `--seed`, `--data`, `--setup`, `--calib`, `--out island_r.bin`; `--Rp R′` (optional: checks that r ≤ R′) | `--threads`, `--mem-budget` (bytes) or `--mem-budget-gb`, `--G` particles per group (0 = the largest ≤ 256 that fits), `--tile` (128, 64…4096), `--ckpt 0\|1` (1), `--ckpt-every-s` (600), `--stop-after-s` (soft stop, exit 22), `--offer-floor 1\|0` (1; 0 = no floor, same merged science), `--plan-only 1` |
 | `merge` | `--mode`, `--Rp R′`, `--data`, `--setup`, `--calib`, `--islands i1,…,iR′`, `--out fit.bin` | `--threads` (1), `--mem-budget` / `--mem-budget-gb`, `--chunk` (2048 items per parallel chunk) |
 | `eval` | `--fit fit.bin`, `--data`, `--truth truth.json`, `--out eval.bin` | `--threads` (1), `--n-draws` (10,000), `--n-x` (4,000), `--n-test` (10,000), `--n-gh` (64), `--rel-cut` (1e-12), `--top-k` (1,000), `--tail-r` (1,000), `--tail-groups` (8), `--block-rows` (500), `--law law.bin`, `--seed`; details in `src/eval/README_WP5.md` |

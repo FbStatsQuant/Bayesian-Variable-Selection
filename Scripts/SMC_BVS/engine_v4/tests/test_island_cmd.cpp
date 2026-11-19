@@ -13,12 +13,23 @@
 //   * island_command_resume: a checkpoint written by an interrupted island is resumed by the command (same output hash),
 //     and the checkpoint files are removed after the completed write.
 //   * plan_from_sizes_equals_plan_island: plan_sizes + plan_with_budget = plan_island.
+//   * v_mode_N_parameter (V-N mini-leg, exp/P1M-VN): V's final-island N is a calibrate parameter (manifest params.N / --N, default
+//     2,500): plumbing (calib.bin, record, island, merge), default = 2,500 bit-identical, N = 10^4 accepted and run end to end,
+//     invalid N refused as T's island N is, T mode untouched, the memory plans scale with N; v4_plan_tables --N (strict, a bare
+//     trailing option is an error).
+//   * v_mode_default_N_identity_vs_F (tag "identity": `v4_tests --identity`, needs V4_F_SMCBVS4 = the frozen F binary and
+//     V4_F_SMCBVS4_SHA256 = its recorded build sha256; FAILS, never skips, when they are unset or wrong): default-N calibrate,
+//     islands and merge of the fixture are identical to F's, section by section.
 #include <omp.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <cstdio>
+#include <cctype>
 #include <filesystem>
+#include <fstream>
 #include <functional>
+#include <map>
+#include <vector>
 #include <random>
 #include <set>
 #include "tk.h"
@@ -28,6 +39,7 @@
 #include "v4/island/island.h"
 #include "v4/island/island_file.h"
 #include "v4/island/setup_load.h"
+#include "v4/merge.h"
 #include "v4/offer_floor.h"
 #include "v4/format.h"
 #include "v4/prep.h"
@@ -612,4 +624,179 @@ TEST(plan_from_sizes_equals_plan_island) {
       ++checked;
     }
   std::printf("  %d configurations: plan from sizes = plan_island\n", checked);
+}
+
+// ---- V-N mini-leg (exp/P1M-VN): V's final-island N is a parameter of `calibrate` (default V_N = 2,500) ------------------------
+TEST(v_mode_N_parameter) {
+  Dir dir("vn"); Fx f; make_fx(f, dir);
+  const std::string bin = V4_SMCBVS4;
+  const std::string common = " --data " + q(f.dpath) + " --setup " + q(f.spath) + " --mode V --seed 77 --threads 3";
+  auto calibrate = [&](const std::string& exe, const std::string& tag, const std::string& extra) {
+    const std::string out = dir("calib_" + tag + ".bin");
+    const int rc = sh(exe + " calibrate" + common + extra + " --out " + q(out), dir("calib_" + tag + ".log"));
+    return std::make_pair(rc, out);
+  };
+  // the frozen constants (calib_run.h): the default and the range of the V parameter
+  CHECK(v4::calib::V_N == 2500 && v4::calib::V_N_MIN == 1 && v4::calib::V_N_MAX == (1 << 24));
+  { const v4::calib::Budgets b = v4::calib::budgets(f.D.n, f.D.p);   // plumbing: frozen_N reads the parameter in V, never in T
+    CHECK(v4::calib::frozen_N(b, v4::calib::Rule::bounded, 0) == 2500 && v4::calib::frozen_N(b, v4::calib::Rule::bounded, 0, 10000) == 10000);
+    CHECK(v4::calib::frozen_N(b, v4::calib::Rule::coded, 0, 10000) == b.N[0] && v4::calib::frozen_N(b, v4::calib::Rule::coded, 1, 10000) == b.N[1]); }
+  // default (no N), explicit N = 2500 and N = 10000
+  const auto cd = calibrate(bin, "default", ""), c25 = calibrate(bin, "n2500", " --N 2500"), c1e4 = calibrate(bin, "n10000", " --N 10000");
+  CHECK_EQ(cd.first, 0); CHECK_EQ(c25.first, 0); CHECK_EQ(c1e4.first, 0);
+  if (cd.first || c25.first || c1e4.first) return;
+  const v4::wp4io::CalibIn Id = v4::wp4io::read_calib(cd.second, f.D.p, f.D.K, f.dhash, f.shash), I25 = v4::wp4io::read_calib(c25.second, f.D.p, f.D.K, f.dhash, f.shash),
+                           I4 = v4::wp4io::read_calib(c1e4.second, f.D.p, f.D.K, f.dhash, f.shash);
+  CHECK(Id.N == 2500 && I25.N == 2500 && I4.N == 10000 && I4.tier == 0 && I4.rule == "bounded");
+  CHECK(rec_of(cd.second + ".json").at("settings").at("tiers").at(0).at("N_final").num() == 2500 &&
+        rec_of(c1e4.second + ".json").at("settings").at("tiers").at(0).at("N_final").num() == 10000);
+  // default N = 2,500 is bit-identical: an omitted N, an explicit 2500 and the pre-change binary (F) give the same sections, meta included but for the timings
+  CHECK(body_hash(cd.second) == body_hash(c25.second) && Id.grid == I25.grid && Id.hpm == I25.hpm);
+  { const Json a = v4::fmt::Reader(cd.second).json("meta"), b = v4::fmt::Reader(c25.second).json("meta");
+    for (const char* k : {"N", "L", "Hm", "tier", "I_used", "I_max", "k_store", "rule", "tau_cal_hex", "seed"}) CHECKF(a.dump().size() && (a.contains(k) == b.contains(k)) && (!a.contains(k) || a.at(k).dump() == b.at(k).dump()), "meta.%s", k); }
+  // the calibration itself does not depend on N (its islands have H = 512): only meta.N and the records differ
+  CHECK(body_hash(cd.second) == body_hash(c1e4.second) && Id.grid == I4.grid && Id.inherited.size() == I4.inherited.size());
+  // invalid N is refused exactly as the island refuses T's N (a whole number in [1, 2^24]): exit 13, no calib.bin
+  for (const char* bad : {"0", "-5", "2.5", "16777217", "abc"}) {
+    const auto r = calibrate(bin, std::string("bad") + bad, std::string(" --N ") + bad);
+    struct stat sb{};
+    CHECKF(r.first == 13 && ::stat(r.second.c_str(), &sb) != 0, "calibrate --N %s: exit %d (expected 13, no calib.bin)", bad, r.first);
+    CHECK_EQ(sh(bin + " island --data " + q(f.dpath) + " --setup " + q(f.spath) + " --calib " + q(cd.second) + " --mode V --seed 77 --island 1 --plan-only 1 --N " + bad), 13);   // T's check
+  }
+  { const auto r = calibrate(bin, "edgeN1", " --N 1"); CHECK_EQ(r.first, 0);   // the bounds themselves are accepted, as the island accepts them
+    if (r.first == 0) CHECK(v4::wp4io::read_calib(r.second, f.D.p, f.D.K).N == 1); }
+  // manifest path (the driver's): params.N is the authority; a different explicit --N is refused; an invalid manifest N is refused
+  { const std::string rec = dir("plan.json");
+    auto man = [&](const std::string& nm, const std::string& n) { const std::string m = dir(nm);
+      std::ofstream(m) << "{\"schema\":\"smcbvs4.manifest/1\",\"command\":\"calibrate\",\"mode\":\"V\",\"params\":{\"N\":" + n + "}}\n"; return m; };
+    const std::string plan = bin + " calibrate --plan-only 1 --n 200 --p 1000 --record " + q(rec);
+    CHECK_EQ(sh(plan + " --manifest " + q(man("m1e4.json", "10000"))), 0);
+    CHECK(rec_of(rec).at("settings").at("tiers").at(0).at("N_final").num() == 10000);
+    CHECK_EQ(sh(plan + " --manifest " + q(man("m1e4b.json", "10000")) + " --N 2500"), 13);   // conflicting explicit N
+    CHECK_EQ(sh(plan + " --N 2500 --manifest " + q(man("m1e4c.json", "10000"))), 13);        // either argument order
+    CHECK_EQ(sh(plan + " --manifest " + q(man("m1e4d.json", "10000")) + " --N 10000"), 0);
+    CHECK_EQ(sh(plan + " --manifest " + q(man("mbad.json", "0"))), 13);
+    CHECK_EQ(sh(plan + " --manifest " + q(man("mbad2.json", "10000.5"))), 13); }
+  // T mode is unchanged: calibrate (law, compat) takes no V parameter, its N is v3's N_e; --N is ignored as before
+  for (const char* mode : {"law", "compat"}) {
+    const std::string rec = dir(std::string("plan_") + mode + ".json");
+    CHECK_EQ(sh(bin + " calibrate --plan-only 1 --mode " + mode + " --n 200 --p 1000 --record " + q(rec)), 0);
+    const double n0 = rec_of(rec).at("settings").at("tiers").at(0).at("N_final").num();
+    CHECK_EQ(sh(bin + " calibrate --plan-only 1 --mode " + mode + " --n 200 --p 1000 --N 10000 --record " + q(rec)), 0);
+    CHECK(n0 == 2500 && rec_of(rec).at("settings").at("tiers").at(0).at("N_final").num() == n0 && rec_of(rec).at("settings").at("tiers").size() == 2); }
+  // end to end at N = 10^4 on the fixture: islands take calib.bin's N, a conflicting --N is refused, the merge takes them; the reference run_island agrees
+  { const std::string cal = c1e4.second; std::string isl; const int Rp = 2;
+    Start st = load_start(f.spath, f.D); Neighbours nb = load_neighbours(f.spath, f.D.p);
+    for (int r = 1; r <= Rp; ++r) {
+      const std::string out = dir("island_n1e4_" + std::to_string(r) + ".bin");
+      const double t0 = omp_get_wtime();
+      CHECK_EQ(sh(bin + " island --data " + q(f.dpath) + " --setup " + q(f.spath) + " --calib " + q(cal) + " --mode V --seed 77 --island " + std::to_string(r) + " --Rp " + std::to_string(Rp) +
+                  " --threads 3 --out " + q(out)), 0);
+      const Json rec = rec_of(out + ".json");
+      CHECKF(rec.at("status").str() == "completed" && (int)rec.at("N").num() == 10000, "island %d: %s", r, rec.at("status").str().c_str());
+      const IslandFile F = read_island_file(out);
+      CHECK(F.rec.N == 10000 && (int)F.terminal.size() == 10000 && F.grid == I4.grid);
+      IslandConfig c; c.seed = 77; c.island = (uint32_t)r; c.tier = 0; c.N = I4.N; c.grid = I4.grid; c.L = I4.L; c.Hm = I4.Hm; c.B = 5; c.threads = 3; c.kernel = KernelKind::LabelMajor;
+      { const v4::OfferFloor of = v4::offer_floor_from_calib(I4.meta, true, I4.content_hash); c.offer_floor = of.f; c.offer_floor_calib = of.calib; }
+      const IslandRun ref = run_island<Arith::ClassA>(f.D, st, nb, c);
+      char hx[19]; std::snprintf(hx, sizeof hx, "0x%016llx", (unsigned long long)ref.hash());
+      CHECKF(rec.at("output_hash").str() == hx, "N = 10^4 island %d: CLI output hash %s, run_island %s", r, rec.at("output_hash").str().c_str(), hx);
+      std::printf("  N = 10^4 smoke, island %d: %.2f s, T = %zu, logZ = %.6f\n", r, omp_get_wtime() - t0, I4.grid.size() - 1, rec.at("logZ").num());
+      isl += (r > 1 ? "," : "") + out;
+    }
+    CHECK_EQ(sh(bin + " island --data " + q(f.dpath) + " --setup " + q(f.spath) + " --calib " + q(cal) + " --mode V --seed 77 --island 1 --threads 3 --N 2500 --out " + q(dir("island_conflict.bin"))), 13);
+    const std::string fit = dir("fit_n1e4.bin");
+    CHECK_EQ(sh(bin + " merge --data " + q(f.dpath) + " --setup " + q(f.spath) + " --calib " + q(cal) + " --islands " + q(isl) + " --Rp " + std::to_string(Rp) + " --mode V --threads 2 --out " + q(fit)), 0);
+    { v4::fmt::Reader R(fit); const Json m = R.json("meta");
+      CHECK(m.at("status").str() == "completed" && (int)m.at("Rp").num() == Rp && (int)m.at("N").num() == 10000 && std::isfinite(m.at("logZ").num()));
+      std::printf("  N = 10^4 smoke, merge: logZ = %.6f, N = %d\n", m.at("logZ").num(), (int)m.at("N").num()); }
+    // an island file of N = 2,500 cannot be merged under an N = 10^4 calib.bin (and vice versa): the merge checks N against calib.bin's
+    const std::string i25 = dir("island_n2500_1.bin");
+    CHECK_EQ(sh(bin + " island --data " + q(f.dpath) + " --setup " + q(f.spath) + " --calib " + q(cd.second) + " --mode V --seed 77 --island 1 --Rp 2 --threads 3 --out " + q(i25)), 0);
+    { // the merge refuses mixed N, both ways (exit 13: the island's meta.inputs name the other calib.bin; N itself is also checked at merge.h:274,323)
+      const std::string i1e4 = dir("island_n1e4_1.bin"), i1e4b = dir("island_n1e4_2.bin");
+      auto merge = [&](const std::string& calf, const std::string& islands, const std::string& out) {
+        return sh(bin + " merge --data " + q(f.dpath) + " --setup " + q(f.spath) + " --calib " + q(calf) + " --islands " + q(islands) + " --Rp 2 --mode V --threads 2 --out " + q(out)); };
+      // island 2 at N = 2,500 (calib `cd`), island 1 at N = 10^4 (calib `cal`)
+      const std::string i25b = dir("island_n2500_2.bin");
+      CHECK_EQ(sh(bin + " island --data " + q(f.dpath) + " --setup " + q(f.spath) + " --calib " + q(cd.second) + " --mode V --seed 77 --island 2 --Rp 2 --threads 3 --out " + q(i25b)), 0);
+      CHECK_EQ(merge(cal, i1e4 + "," + i25b, dir("fit_mix_a.bin")), 13);     // N = 10^4 calib.bin, one N = 2,500 island
+      CHECK_EQ(merge(cd.second, i25 + "," + i1e4b, dir("fit_mix_b.bin")), 13); // N = 2,500 calib.bin, one N = 10^4 island
+      CHECK_EQ(merge(cd.second, i25 + "," + i25b, dir("fit_n2500.bin")), 0);   // the matching N = 2,500 pair merges
+    }
+  }
+  // the memory plans scale with N: island --plan-only (sizes) and the merge estimate; the admission edge sits between the two plans
+  { const std::string r1 = dir("ip_2500.json"), r2 = dir("ip_10000.json");
+    const std::string ip = bin + " island --plan-only 1 --mode V --n 200 --p 10000 --threads 4 --k 8 --G 1 --record ";   // G = 1: the plan is the admission floor
+    CHECK_EQ(sh(ip + q(r1) + " --N 2500"), 0); CHECK_EQ(sh(ip + q(r2) + " --N 10000"), 0);
+    const double t1 = rec_of(r1).at("mem_plan").at("total").num(), t2 = rec_of(r2).at("mem_plan").at("total").num();
+    CHECKF(t2 > t1 && (int)rec_of(r2).at("N").num() == 10000, "island plan: N 2500 %.0f B, N 10^4 %.0f B", t1, t2);
+    const uint64_t mid = (uint64_t)((t1 + t2) / 2);
+    CHECK_EQ(sh(ip + q(r1) + " --N 2500 --mem-budget " + std::to_string(mid)), 0);
+    CHECK_EQ(sh(ip + q(r2) + " --N 10000 --mem-budget " + std::to_string(mid)), 11);
+    v4::merge::MergeSettings a, b; a.Rp = b.Rp = 16; a.p = b.p = 10000; a.kbar = b.kbar = 8; a.N = 2500; b.N = 10000;
+    const v4::merge::MemEstimate ea = v4::merge::estimate_merge_memory(a), eb = v4::merge::estimate_merge_memory(b);
+    CHECK(eb.small > ea.small && eb.total >= ea.total && eb.small - ea.small == (uint64_t)(16.0 * 7500 * (24 + 4 * 8.0)));
+    std::printf("  memory plans, p = 10^4, 4 threads: final island %.2f -> %.2f GiB (N 2500 -> 10^4), merge terminal supports %.1f -> %.1f MiB\n",
+                t1 / 1073741824.0, t2 / 1073741824.0, ea.small / 1048576.0, eb.small / 1048576.0); }
+}
+
+// ---- V-N Sol m4: v4_plan_tables --N is strict, and a bare trailing option is an error (it was silently skipped) -------------------
+TEST(plan_tables_N_option_strict) {
+  Dir dir("ptN"); Fx f; make_fx(f, dir);
+  const std::string pt = V4_PLAN_TABLES;
+  const std::string base = q(pt) + " --setup " + q(f.spath) + " --n " + std::to_string(f.D.n) + " --p " + std::to_string(f.D.p) + " --island-threads 4 --calib-threads 4 --merge-threads 2 --Rp 4";
+  CHECK_EQ(sh(base + " --N 2500", dir("pt_ok.out")), 0);
+  CHECK_EQ(sh(base + " --N 10000", dir("pt_1e4.out")), 0);
+  CHECK_EQ(sh(base + " --N", dir("pt_bare.out")), 2);                 // a bare trailing --N: an error, not skipped
+  CHECK_EQ(sh(q(pt) + " --setup " + q(f.spath) + " --N", dir("pt_bare2.out")), 2);
+  CHECK_EQ(sh(base + " --Rp", dir("pt_bare3.out")), 2);               // any bare trailing option
+  CHECK_EQ(sh(q(pt) + " --N", dir("pt_bare4.out")), 2);
+  for (const char* bad : {"2.5", "abc", "", "10000x", "0", "-5", "16777217"}) CHECKF(sh(base + " --N " + q(bad), dir("pt_bad.out")) == 2, "--N '%s' must exit 2", bad);
+  // the table moves with N (the final island and merge terms): N = 10^4 is larger than N = 2,500 in the JSON line
+  auto final_island = [&](const std::string& out) { std::ifstream in(out); std::string line; std::getline(in, line); return Json::parse(line).at("final_island").num(); };
+  const double a = final_island(dir("pt_ok.out")), b = final_island(dir("pt_1e4.out"));
+  CHECKF(b > a, "final island plan at N = 10^4 (%.0f) must exceed N = 2,500 (%.0f)", b, a);
+}
+
+// ---- V-N Sol m5: the default-N identity gate against the FROZEN binary F. Tag "identity": run as `v4_tests --identity`, with
+//      V4_F_SMCBVS4 = the F smcbvs4 (built with the SAME flags / island ISA as the head binary) and V4_F_SMCBVS4_SHA256 = the recorded
+//      sha256 of that F build. Unset or wrong -> FAIL (never a skip): the head can't be compared with itself. -------------------------
+TEST_TAGGED(v_mode_default_N_identity_vs_F, "identity") {
+  const char* fenv = std::getenv("V4_F_SMCBVS4"); const char* senv = std::getenv("V4_F_SMCBVS4_SHA256");
+  CHECK_MSG(fenv && *fenv, "V4_F_SMCBVS4 is not set: the identity gate needs the frozen F binary (method-v3.1.1-listpip, eefcbc4a); it never skips");
+  CHECK_MSG(senv && *senv, "V4_F_SMCBVS4_SHA256 is not set: the identity gate needs the recorded sha256 of the F build");
+  if (!fenv || !*fenv || !senv || !*senv) return;
+  const std::string fbin = fenv, head = V4_SMCBVS4;
+  std::string want = senv; for (auto& ch : want) ch = (char)std::tolower((unsigned char)ch);
+  const std::string have = v4::sha256_file(fbin);
+  CHECKF(have == want, "the F binary %s has sha256 %s, not the recorded %s", fbin.c_str(), have.c_str(), want.c_str());
+  CHECKF(have != v4::sha256_file(head), "V4_F_SMCBVS4 is the head binary itself (%s): the head would be compared with itself", head.c_str());
+  if (have != want || have == v4::sha256_file(head)) return;
+  Dir dir("vnid"); Fx f; make_fx(f, dir);
+  // F's V calibrate IGNORES N (B2); the head honours it: proof that the named binary is the pre-change one
+  { const std::string rf = dir("plan_F.json"), rh = dir("plan_head.json");
+    CHECK_EQ(sh(q(fbin) + " calibrate --plan-only 1 --mode V --n 200 --p 1000 --N 10000 --record " + q(rf)), 0);
+    CHECK_EQ(sh(q(head) + " calibrate --plan-only 1 --mode V --n 200 --p 1000 --N 10000 --record " + q(rh)), 0);
+    CHECK(rec_of(rf).at("settings").at("tiers").at(0).at("N_final").num() == 2500 && rec_of(rh).at("settings").at("tiers").at(0).at("N_final").num() == 10000); }
+  const std::string common = " --data " + q(f.dpath) + " --setup " + q(f.spath) + " --mode V --seed 77 --threads 3";
+  std::map<std::string, std::string> calib, fit; std::map<std::string, std::vector<std::string>> isl;
+  for (const std::string who : {"head", "F"}) {
+    const std::string exe = who == "head" ? head : fbin;
+    calib[who] = dir("calib_" + who + ".bin");
+    CHECK_EQ(sh(q(exe) + " calibrate" + common + " --out " + q(calib[who])), 0);   // default N: no --N
+    std::string list;
+    for (int r = 1; r <= 2; ++r) {
+      const std::string o = dir("island_" + who + "_" + std::to_string(r) + ".bin"); isl[who].push_back(o); list += (r > 1 ? "," : "") + o;
+      CHECK_EQ(sh(q(exe) + " island --data " + q(f.dpath) + " --setup " + q(f.spath) + " --calib " + q(calib[who]) + " --mode V --seed 77 --island " + std::to_string(r) + " --Rp 2 --threads 3 --out " + q(o)), 0);
+    }
+    fit[who] = dir("fit_" + who + ".bin");
+    CHECK_EQ(sh(q(exe) + " merge --data " + q(f.dpath) + " --setup " + q(f.spath) + " --calib " + q(calib[who]) + " --islands " + q(list) + " --Rp 2 --mode V --threads 2 --out " + q(fit[who])), 0);
+  }
+  CHECKF(body_hash(calib["head"]) == body_hash(calib["F"]), "default-N calib.bin sections differ from F's");
+  { const Json a = v4::fmt::Reader(calib["head"]).json("meta"), b = v4::fmt::Reader(calib["F"]).json("meta");
+    for (const char* k : {"N", "L", "Hm", "tier", "I_used", "I_max", "k_store", "rule", "tau_cal_hex", "seed", "status"}) CHECKF(a.contains(k) == b.contains(k) && (!a.contains(k) || a.at(k).dump() == b.at(k).dump()), "calib meta.%s differs from F's", k); }
+  for (int r = 0; r < 2; ++r) CHECKF(body_hash(isl["head"][(size_t)r]) == body_hash(isl["F"][(size_t)r]), "default-N island %d sections differ from F's", r + 1);
+  CHECKF(body_hash(fit["head"]) == body_hash(fit["F"]), "default-N fit.bin sections differ from F's");
+  std::printf("  default-N identity vs F (sha256 %s): calib.bin, 2 islands, fit.bin sections identical\n", have.substr(0, 12).c_str());
 }

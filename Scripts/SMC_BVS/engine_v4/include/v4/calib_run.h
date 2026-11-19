@@ -34,9 +34,10 @@ inline Budgets budgets(int64_t n, int64_t p) {
   for (int e = 0; e < 2; ++e) { const int m = e ? 4 : 1; b.N[e] = m * b.N0; b.H[e] = m * b.H0; b.T[e] = m * b.T0; }
   return b;
 }
-// V-1M (D-1, D-26): no tier escalation; the calibration islands have H = 512 particles and the final islands N = 2,500,
-// whatever p. Theory mode (coded rule) keeps v3's budgets (tiers e = 0, 1).
-constexpr int V_H = 512, V_N = 2500;
+// V-1M (D-1, D-26): no tier escalation; the calibration islands have H = 512 particles and the final islands N = 2,500 (V_N,
+// the DEFAULT), whatever p. Theory mode (coded rule) keeps v3's budgets (tiers e = 0, 1).
+// V's final-island N is a parameter of `calibrate` (manifest params.N / --N; default V_N); same range as T's island N check.
+constexpr int V_H = 512, V_N = 2500, V_N_MIN = 1, V_N_MAX = 1 << 24;
 inline Settings settings_from(const Budgets& b, Rule rule) {
   Settings s; s.rule = rule;
   for (int e = 0; e < 2; ++e) { s.tiers[e].tier = e; s.tiers[e].H = b.H[e]; s.tiers[e].Te = b.T[e]; s.tiers[e].L = b.L; s.tiers[e].Hm = 4; s.tiers[e].ell = b.ell; }
@@ -49,8 +50,8 @@ inline Settings settings_from(const Budgets& b, Rule rule) {
   }
   return s;
 }
-// The final islands' N frozen with the grid: v3's N_e of the frozen tier (coded), or V_N (bounded).
-inline int frozen_N(const Budgets& b, Rule rule, int tier) { return rule == Rule::bounded ? V_N : b.N[tier]; }
+// The final islands' N frozen with the grid: v3's N_e of the frozen tier (coded), or the V-mode parameter v_N (bounded; default V_N).
+inline int frozen_N(const Budgets& b, Rule rule, int tier, int v_N = V_N) { return rule == Rule::bounded ? v_N : b.N[tier]; }
 
 // Inherited models as flat arrays (review PR37 m-6): no per-model heap allocation at 8.10^7 models.
 struct InheritedFlat {
