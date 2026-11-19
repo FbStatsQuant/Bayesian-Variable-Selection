@@ -1,0 +1,14 @@
+xeval self-check (B = truth) vs engine dist.T.predictive.h2, W1, smcbvs4_xeval from b89cba4d
+4-ARweak-n200-r01-T-s1       status completed xeval 0.018401804765596053 engine 0.018401804765596053 BIT-EQUAL
+4-ARweak-n200-r01-T-s2       status completed xeval 0.01844839499723039 engine 0.01844839499723039 BIT-EQUAL
+4-ARweak-n200-r01-V-s1       status completed xeval 0.018434289526838232 engine 0.018434289526838232 BIT-EQUAL
+4-ARweak-n200-r01-V-s2       status completed xeval 0.01844107284260288 engine 0.01844107284260288 BIT-EQUAL
+4-IND-n200-r01-T-s1          status completed xeval 0.004567963196211555 engine 0.004567963196211555 BIT-EQUAL
+4-IND-n200-r01-T-s2          status completed xeval 0.004568799021437697 engine 0.004568799021437697 BIT-EQUAL
+4-IND-n200-r01-V-s1          status completed xeval 0.004565870546333062 engine 0.004565870546333062 BIT-EQUAL
+4-IND-n200-r01-V-s2          status completed xeval 0.004569216699492729 engine 0.004569216699492729 BIT-EQUAL
+4-NULL-n200-r01-T-s1         status completed xeval 0.0006650880128974412 engine 0.0006650880128974412 BIT-EQUAL
+4-NULL-n200-r01-T-s2         status completed xeval 0.000665067032027733 engine 0.000665067032027733 BIT-EQUAL
+4-NULL-n200-r01-V-s1         status completed xeval 0.0006650962257054305 engine 0.0006650962257054305 BIT-EQUAL
+4-NULL-n200-r01-V-s2         status completed xeval 0.0006650856391637872 engine 0.0006650856391637872 BIT-EQUAL
+12 of 12 bit-equal

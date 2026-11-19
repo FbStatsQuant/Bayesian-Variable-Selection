@@ -1,0 +1,35 @@
+=== BASE
+  W2 expected 400  P10/50/90 [309, 394, 502]
+  W3 expected 681  P10/50/90 [563, 692, 774]
+  rung total (W0+evidence 254.74 + W1 277.90 = 532.64 spent): E 1614  P10/50/90 [1460, 1614, 1763] ; P>1.6k 0.56  P>2.0k 0.005  P>2.1k 0.002  P>2.5k 0.0000
+  counted only (W0 163.24): E 1522  P10/50/90 [1369, 1523, 1671] ; P>1.6k 0.24
+  after W2 (cum): E 933 P90 1034 ; P(any fit > 172) 0.094 ; P(any calibrate TIMEOUT) 0.0375 ; escalations in the remaining 12 T fits: E 7.9 P10-P90 [6.0, 10.0]
+  wave stop (2 x quote; W2 quote 480 -> 960, W3 640 -> 1280): P(W2>960) 0.0000, P(W3>1280) 0.0001; W3 > 733 (W0 P90) 0.23
+=== all P(esc) x0.7
+  W2 expected 363  P10/50/90 [278, 356, 459]
+  W3 expected 596  P10/50/90 [437, 607, 730]
+  rung total (W0+evidence 254.74 + W1 277.90 = 532.64 spent): E 1491  P10/50/90 [1297, 1498, 1669] ; P>1.6k 0.22  P>2.0k 0.001  P>2.1k 0.001  P>2.5k 0.0000
+  counted only (W0 163.24): E 1400  P10/50/90 [1206, 1406, 1578] ; P>1.6k 0.08
+  after W2 (cum): E 896 P90 992 ; P(any fit > 172) 0.075 ; P(any calibrate TIMEOUT) 0.0300 ; escalations in the remaining 12 T fits: E 6.0 P10-P90 [3.0, 9.0]
+  wave stop (2 x quote; W2 quote 480 -> 960, W3 640 -> 1280): P(W2>960) 0.0000, P(W3>1280) 0.0000; W3 > 733 (W0 P90) 0.10
+=== all P(esc) x1.15
+  W2 expected 419  P10/50/90 [331, 409, 521]
+  W3 expected 723  P10/50/90 [674, 713, 793]
+  rung total (W0+evidence 254.74 + W1 277.90 = 532.64 spent): E 1675  P10/50/90 [1560, 1663, 1804] ; P>1.6k 0.78  P>2.0k 0.009  P>2.1k 0.003  P>2.5k 0.0000
+  counted only (W0 163.24): E 1583  P10/50/90 [1469, 1572, 1713] ; P>1.6k 0.39
+  after W2 (cum): E 952 P90 1054 ; P(any fit > 172) 0.101 ; P(any calibrate TIMEOUT) 0.0415 ; escalations in the remaining 12 T fits: E 8.8 P10-P90 [7.0, 10.0]
+  wave stop (2 x quote; W2 quote 480 -> 960, W3 640 -> 1280): P(W2>960) 0.0000, P(W3>1280) 0.0000; W3 > 733 (W0 P90) 0.33
+=== tier-1 convergence worse: r~Beta(3,4)
+  W2 expected 425  P10/50/90 [315, 410, 551]
+  W3 expected 744  P10/50/90 [586, 728, 914]
+  rung total (W0+evidence 254.74 + W1 277.90 = 532.64 spent): E 1701  P10/50/90 [1495, 1675, 1940] ; P>1.6k 0.71  P>2.0k 0.070  P>2.1k 0.040  P>2.5k 0.0039
+  counted only (W0 163.24): E 1610  P10/50/90 [1403, 1584, 1848] ; P>1.6k 0.46
+  after W2 (cum): E 958 P90 1084 ; P(any fit > 172) 0.339 ; P(any calibrate TIMEOUT) 0.2145 ; escalations in the remaining 12 T fits: E 7.9 P10-P90 [6.0, 10.0]
+  wave stop (2 x quote; W2 quote 480 -> 960, W3 640 -> 1280): P(W2>960) 0.0007, P(W3>1280) 0.0056; W3 > 733 (W0 P90) 0.48
+=== tier-1 convergence r~Beta(2,5) (mean 0.29)
+  W2 expected 465  P10/50/90 [325, 441, 637]
+  W3 expected 842  P10/50/90 [625, 800, 1132]
+  rung total (W0+evidence 254.74 + W1 277.90 = 532.64 spent): E 1839  P10/50/90 [1544, 1783, 2231] ; P>1.6k 0.83  P>2.0k 0.235  P>2.1k 0.164  P>2.5k 0.0303
+  counted only (W0 163.24): E 1748  P10/50/90 [1452, 1691, 2139] ; P>1.6k 0.67
+  after W2 (cum): E 998 P90 1169 ; P(any fit > 172) 0.611 ; P(any calibrate TIMEOUT) 0.4761 ; escalations in the remaining 12 T fits: E 7.9 P10-P90 [6.0, 10.0]
+  wave stop (2 x quote; W2 quote 480 -> 960, W3 640 -> 1280): P(W2>960) 0.0046, P(W3>1280) 0.0421; W3 > 733 (W0 P90) 0.68

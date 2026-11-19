@@ -1,0 +1,86 @@
+{
+  "binary": {
+    "compiler": "g++ 11.5.0 20240719 (Red Hat 11.5.0-17)",
+    "flags": "-O2 -fno-math-errno -ffp-contract=off -march=x86-64-v2",
+    "git_commit": "unknown",
+    "island_isa": "portable",
+    "libm": {
+      "binding": "glibc-libm",
+      "fma_variant": true,
+      "glibc": "2.34",
+      "path": "/lib64/libm.so.6",
+      "self_test": {
+        "exp": true,
+        "exp_pos": true,
+        "expl": true,
+        "lgamma": true,
+        "lgamma_int": true,
+        "log": true,
+        "log_near1": true,
+        "logl": true,
+        "pass": true
+      },
+      "sha256": "c8933ed54328b293c8b005fe44161d1c73c09f96abc6d781a6c31230368d1120"
+    },
+    "sha256": "afef0e463216edca9f7d877fb688ad57f7a13fcdcb2c1ebae7d4f51f1c92e59d"
+  },
+  "command": "xeval",
+  "inputs": {
+    "data.bin": "6b173486253447a83f8b3b785a8b3b679f768bc3ed513d61a2999f8cebea14ef",
+    "data_b.bin": "60988d60316cf68061018cf1d78ab058b46043e67afcf41c07d307ebfbec5608",
+    "data_identity": {
+      "X_section_sha256": "ba8850407bef43ccdaa9a816819c6b877daaa1bb0bb826a18e5abb0456cd1f3a",
+      "n": 200,
+      "p": 10000,
+      "p_raw": 10000,
+      "y_section_sha256": "a11963c394ee439b498b9e8d29ac028ff7c633ec20ee8cc9e4bac97accacb294"
+    },
+    "law_a.bin": "598faf563ce539c664cbb76be8067ac3d72f9834aec000f9978e0781a9192652",
+    "law_b.bin": "42ff5e7ade15a9a6fa361283f7ddf8c260d8b1ddd972bbc07e64ffcf52982cfd",
+    "truth.json": "5e13e251be13fa79cb72488211e6d1f0da32acf997596f206be4f2d01f52d33e"
+  },
+  "pairs": {
+    "4-NULL-n200-r01": {
+      "2": {
+        "h2": 7.7126581787823056e-09,
+        "se": 1.6948027296871923e-09,
+        "se_tail": 1.6866443837693574e-09,
+        "se_x": 1.6609339316915345e-10
+      }
+    }
+  },
+  "schema": "overlap1e4.cross_vt/1",
+  "status": "completed",
+  "xeval": {
+    "block_rows": 500,
+    "dH": 8.7821740923203662e-05,
+    "dH_bound_truncation": 0,
+    "definition": "h2 = 1 - mean_x int sqrt(fbar_A fbar_B) dy, same x rows / 64-node Gauss-Hermite / top-K + stratified tail as the engine eval predictive",
+    "dropped_mass_a": 0,
+    "dropped_mass_b": 0,
+    "exact_a": false,
+    "exact_b": false,
+    "h2": 7.7126581787823056e-09,
+    "h2_topK": 1.7763568394002505e-15,
+    "n_gh": 64,
+    "n_x": 4000,
+    "oid_a": 6,
+    "oid_b": 2,
+    "rows": "gen_test",
+    "se": 1.6948027296871923e-09,
+    "se_tail": 1.6866443837693574e-09,
+    "se_x": 1.6609339316915345e-10,
+    "seed": 406020001,
+    "tail_components_a": 399001,
+    "tail_components_b": 399001,
+    "tail_groups": 8,
+    "tail_mass_a": 0.04835628363929001,
+    "tail_mass_b": 0.048356375349951609,
+    "tail_r": 1000,
+    "threads": 3,
+    "top_a": 1000,
+    "top_b": 1000,
+    "top_k": 1000,
+    "wall_s": 8.5002003520000002
+  }
+}

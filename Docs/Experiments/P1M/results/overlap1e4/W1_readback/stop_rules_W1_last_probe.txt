@@ -1,0 +1,17 @@
+probe META utc=2026-11-19T04:51:09Z | wave W1 | batches OV_W1_T,OV_W1_V | ignored-as-known-failed: -
+batch/fit                                   core-h  stage states (sacct -X)
+OV_W1_T/4-IND-n200-r01-T-s1                  50.53  COMPLETED
+OV_W1_T/4-IND-n200-r01-T-s2                 143.96  COMPLETED
+OV_W1_T/4-NULL-n200-r01-T-s1                  2.30  COMPLETED
+OV_W1_T/4-NULL-n200-r01-T-s2                  2.29  COMPLETED
+OV_W1_T/4-ARweak-n200-r01-T-s1               60.72  COMPLETED
+OV_W1_T/4-ARweak-n200-r01-T-s2                9.28  COMPLETED
+OV_W1_V/4-IND-n200-r01-V-s1                   2.40  COMPLETED
+OV_W1_V/4-IND-n200-r01-V-s2                   2.04  COMPLETED
+OV_W1_V/4-NULL-n200-r01-V-s1                  0.50  COMPLETED
+OV_W1_V/4-NULL-n200-r01-V-s2                  0.49  COMPLETED
+OV_W1_V/4-ARweak-n200-r01-V-s1                1.62  COMPLETED
+OV_W1_V/4-ARweak-n200-r01-V-s2                1.76  COMPLETED
+wave actual 277.9 core-h (quote 450.0) | cumulative overlap 532.6 | projection 1194 [T mean 53.4 (8 completed attempts); V mean 1.7 (8 completed attempts)]
+datasets with X/y hash seen: 3 (all paired: True)
+VERDICT: no stop rule fired
