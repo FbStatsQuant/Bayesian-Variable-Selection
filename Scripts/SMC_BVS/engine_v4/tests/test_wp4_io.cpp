@@ -509,8 +509,12 @@ TEST(wp4_io_calib_refusals) {
   EXPECT_STR(outcome(fv, [](CW&, CO&, CS&) {}), "ok");
   EXPECT_STR(outcome(fv, [](CW&, CO&, CS&) {}, fv.dhash, fv.shash), "ok");
   EXPECT_STR(outcome(ft, [](CW&, CO&, CS&) {}, ft.dhash, ft.shash), "ok");
-  // V: N = 2,500, tier 0 and the bounded rule only (D-1, D-26)
-  EXPECT_STR(outcome(fv, [](CW& w, CO&, CS&) { w.N = 50; }), bad);
+  // V: tier 0 and the bounded rule only (D-1, D-26); N is the V parameter (default 2,500, V-N mini-leg): any whole N in [1, 2^24]
+  EXPECT_STR(outcome(fv, [](CW& w, CO&, CS&) { w.N = 50; }), "ok");
+  EXPECT_STR(outcome(fv, [](CW& w, CO&, CS&) { w.N = 10000; }), "ok");
+  EXPECT_STR(outcome(fv, [](CW& w, CO&, CS&) { w.N = 1 << 24; }), "ok");
+  EXPECT_STR(outcome(fv, [](CW& w, CO&, CS&) { w.N = 0; }), bad);
+  EXPECT_STR(outcome(fv, [](CW& w, CO&, CS&) { w.N = (1 << 24) + 1; }), bad);
   EXPECT_STR(outcome(fv, [](CW&, CO& c, CS& s) { c.tier_final = 1; s.tiers[1].ell = 3; }), bad);
   EXPECT_STR(outcome(fv, [](CW&, CO& c, CS& s) { c.rule = calib::Rule::coded; s.rule = calib::Rule::coded; }), bad);
   // theory mode: the coded rule only
