@@ -3,7 +3,7 @@
 #   ARMS="T2 V2" (env) selects the batches OV_<WAVE>_<arm>; default "T V".  Batch ids are flat (driver safe_id refuses '/').
 # Steps (each fails loudly): local SHA256SUMS ok and plan.code_commit == F -> home guard (<= 7,500 MB) -> refuse an already submitted batch
 # -> mkdir on NOTS -> shallow clone of F to NOTS scratch (once) -> rsync the driver files -> `sha256sum -c` ON NOTS
-# -> per-batch git WORKTREE of the clone at F: <scratch>/code_ws/<batch>_code (detached, HEAD == F, clean), scripts/<batch>/code -> it
+# -> one git WORKTREE of the clone at F per wave: <scratch>/code_ws/<WAVE>_F<F8>_code (detached, HEAD == F, clean), scripts/<batch>/code -> it
 # -> [build] login node, nice -n 19, make -j3 (generated build.sh); the CMake build dir is $SCR/build in home scripts/<batch>/, OUTSIDE the tree,
 #    so the tree stays clean; V: -DV4_ISLAND_ISA=sapphirerapids, T: default -> `version` (env.sh sourced) must show git_commit == F exactly.
 # Why a worktree and not `git archive`: v4_git.h embeds `git rev-parse HEAD` (+ -dirty); an archive has no .git -> 'unknown', and theory-mode
@@ -30,14 +30,16 @@ for arm in $ARMS; do
 done
 ssh $NOTS "git -C $CN cat-file -e $F^{commit} 2>/dev/null" && echo "clone on NOTS already holds F" || rs "$CLONE"/ $NOTS:$CN/
 ssh $NOTS "set -e; [[ \$(git -C $CN rev-parse $F:$CORE_PATH) == $CORE_TREE ]] && echo 'clone ok: core tree = pin'"
+# ONE worktree of the clone at F shared by the wave's batches (a checkout on /scratch takes ~20 min; the tree is only read, builds go to
+# scripts/<batch>/build outside it): <scratch>/code_ws/<WAVE>_F<F8>_code, detached, HEAD == F, clean. Reused if it already is.
+CW=$(ssh $NOTS "readlink -f $D/scratch")/$CODE_WS_REL/${WAVE}_F${F:0:8}_code
+ssh $NOTS "set -e; if [[ -d $CW && \$(git -C $CW rev-parse HEAD 2>/dev/null) == $F && -z \$(git -C $CW status --porcelain --untracked-files=no) ]]; then echo 'shared worktree exists, clean at F'; \
+  else mkdir -p \$(dirname $CW); git -C $CN worktree remove --force $CW 2>/dev/null || true; rm -rf $CW; git -C $CN worktree prune; git -C $CN worktree add -q --detach $CW $F; fi
+  [[ \$(git -C $CW rev-parse HEAD) == $F ]] && [[ -z \$(git -C $CW status --porcelain --untracked-files=no) ]] && echo \"worktree $CW at $F (clean)\""
 for arm in $ARMS; do
   B=OV_${WAVE}_$arm
   rs --exclude code --exclude bin --exclude build "$SRC/$B"/ $NOTS:$D/scripts/$B/
-  ssh $NOTS "set -e; cd $D/scripts/$B && sha256sum --quiet -c SHA256SUMS && echo '$B: SHA256SUMS verified on NOTS'
-    CW=\$(readlink -f $D/scratch)/$CODE_WS_REL/${B}_code; mkdir -p \$(dirname \$CW)
-    git -C $CN worktree remove --force \$CW 2>/dev/null || true; rm -rf \$CW code; git -C $CN worktree prune
-    git -C $CN worktree add -q --detach \$CW $F; ln -s \$CW code
-    [[ \$(git -C \$CW rev-parse HEAD) == $F ]] && [[ -z \$(git -C \$CW status --porcelain --untracked-files=no) ]] && echo \"$B: code = worktree of the clone at $F (clean) in \$CW; code -> it\""
+  ssh $NOTS "set -e; cd $D/scripts/$B && sha256sum --quiet -c SHA256SUMS && echo '$B: SHA256SUMS verified on NOTS'; rm -rf code; ln -s $CW code && echo \"$B: code -> $CW\""
 done
 if [[ $DO_BUILD == build ]]; then
   home_guard

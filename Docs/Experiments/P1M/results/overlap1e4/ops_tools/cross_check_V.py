@@ -15,8 +15,9 @@ Exit 0 = identical outside provenance; 1 = at least one DIFF (printed); 2 = the 
 import argparse, hashlib, json, os, re, subprocess, sys, tempfile
 
 DROP = re.compile(r"(^|\.)(binary|git_commit|inputs|data|outputs|paths|batch|created_utc|created|start|end|host|node|threads|mem_plan|"
-                  r"start_bytes_measured|seconds|[a-z_]*seconds|wall[a-z_]*|elapsed[a-z_]*|timings?|cost|island_bin|run_manifest|resumed_from_step)(\.|$|\[)")
-CONTAINERS = ("fit.bin", "law.bin", "eval.bin")
+                  r"start_bytes_measured|seconds|[a-z_]*seconds|wall[a-z_]*|elapsed[a-z_]*|timings?|cost|island_bin|run_manifest|resumed_from_step|"
+                  r"mem_estimate|[a-z_]*rss[a-z_]*|end_file_kb|fit_bin|calib_bin|[a-z_]*content_sha256)(\.|$|\[)")   # W0 read-back 11-18: whole-file hashes (they embed the binary block) and measured memory
+CONTAINERS = ("fit.bin", "law.bin", "eval.bin", "data.bin")   # data.bin added 11-18: its header/meta hash embeds the binary block; X/y sections compared
 
 
 def sha(p):
@@ -52,7 +53,7 @@ def sections(binf, path, tmp):
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("wave_dir"); ap.add_argument("--info-bin"); ap.add_argument("--show-dropped", action="store_true")
     a = ap.parse_args()
-    pairs = sorted((d[:-3], d, d[:-3] + ".V2") for d in os.listdir(a.wave_dir) if re.search(r"-V-s\d$", d))
+    pairs = sorted((d, d, d + ".V2") for d in os.listdir(a.wave_dir) if re.search(r"-V-s\d$", d))
     if not pairs:
         sys.exit("no V units in %s" % a.wave_dir)
     bad, miss, tmp = 0, 0, tempfile.mkdtemp(dir=os.path.dirname(os.path.abspath(a.wave_dir)))

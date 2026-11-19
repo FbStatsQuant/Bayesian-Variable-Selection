@@ -40,6 +40,7 @@ def main():
     ap.add_argument("--waves", default="W0"); ap.add_argument("--dept", default=DEPT)
     ap.add_argument("--arms", default="T,V", help="batch arms to write: T, V, or a rebuild T2 / V2 (= the T / V fits and shapes in a fresh batch "
                     "OV_<wave>_T2 / _V2, built from the git clone of F; fresh run dirs). Default T,V.")
+    ap.add_argument("--caps", default="", help="explicit core_h_cap per arm letter, e.g. T=2068,V=280 (must be >= the resolved worst case; default: worst rounded up)")
     ap.add_argument("--shapes", help="JSON file {T: {...}, V: {...}} replacing the plan-§2 shapes (post-W0 re-size)")
     a = ap.parse_args()
     slurm = os.path.join(a.wt, "Scripts/SMC_BVS/engine_v4/tools/slurm")
@@ -83,7 +84,8 @@ def main():
             plan.update(batch="OV_%s_%s" % (wave, barm), kind="gated (HQ H-18, overlap 1e4 %s %s)" % (wave, barm),
                         max_task_hours=MAX_TASK_H[arm], resources=shapes[arm], fits=sel)
             wc = p1m_driver.resolve(dict(plan, core_h_cap=1e12))["worst_case_core_h"]
-            plan["core_h_cap"] = math.ceil((wc + 0.05) * 10 - 1e-9) / 10   # resolve() rounds wc to 0.1 (449.33 -> 449.3): +0.05 as p1m_cells does
+            caps = dict(x.split("=") for x in a.caps.split(",") if x)
+            plan["core_h_cap"] = float(caps[arm]) if arm in caps else math.ceil((wc + 0.05) * 10 - 1e-9) / 10   # resolve() rounds wc to 0.1 (449.33 -> 449.3): +0.05 as p1m_cells does
             plan = {k: plan[k] for k in ("batch", "mode", "code_commit", "method_tag", "core_tree", "binary", "max_task_hours",
                                          "island_isa", "kind", "core_h_cap", "resources", "fits") if k in plan}
             pf = os.path.join(a.out, "plans", plan["batch"] + ".json")

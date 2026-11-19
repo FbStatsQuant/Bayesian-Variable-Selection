@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # presubmit_check.sh <WAVE> <F40> -- ONE read-only ssh call to NOTS: what must be true right before submit_wave.sh (plan §4 'before').
 # ARMS="T2 V2" (env) selects the batches. REFUSES (exit 1) unless every binary's `version` (env.sh sourced) shows git_commit == F EXACTLY
-# (not 'unknown', not -dirty), the libm self-test passed, SHA256SUMS ok, code is a symlink into scratch, run dir fresh, home <= 7,500 MB.
+# (not 'unknown', not -dirty), the libm self-test passed, SHA256SUMS ok, code is a symlink into scratch, run dir fresh, home <= 7,900 MB.
 set -euo pipefail; . "$(dirname "$0")/common.sh"
 WAVE=${1:?WAVE}; F=${2:?F}; need_full_sha "$F"; BL=$(for a in $ARMS; do printf 'OV_%s_%s ' "$WAVE" "$a"; done)
 ssh $NOTS "set -u; D=$D; F=$F; fail=0
