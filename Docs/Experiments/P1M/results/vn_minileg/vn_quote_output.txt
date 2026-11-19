@@ -1,0 +1,18 @@
+vn_quote_model.py: 20000 replicates, 15 fits in 3 waves; island factor f median 3.85 (sigma 0.09)
+
+== PER WAVE (billed core-h; wave stop > 2 x quote; quote = E rounded to 5)
+V0   5 fits  E    51.0  P10    45.2  P50    49.8  P90    56.8  P99    75.8   QUOTE   50  WAVE STOP >  100
+V1   4 fits  E    73.3  P10    63.6  P50    72.0  P90    84.6  P99   101.4   QUOTE   75  WAVE STOP >  150
+V2   6 fits  E   124.0  P10   108.2  P50   122.2  P90   142.2  P99   164.6   QUOTE  125  WAVE STOP >  250
+
+== MINI-LEG TOTAL   E 248.3  P10 219.3  P50 246.6  P90 279.7  P99 312.2   (approved H-28: ~440, P90 ~510, cap 600; r04 ~4)
+P(total > 444) = 0.0000 ; P(total > 600) = 0.0000
+cumulative stop (1.6 x E, rounded up to 50): 400 ; projection ceiling = the approved cap 600
+
+== PER-FIT CLASS MODEL (committed): soft = max(3.0, 1.5 E), hard = max(3.0, 2.5 E)
+class                          fits    E/fit  P90/fit     soft     hard min..max E P(>soft|no rerun)
+XB2 (N2500 R'64 I0, F2 vs F)      1     5.71     5.87      8.6     14.3      5.7..5.7          0.0000
+r04 pair (R'16)                   2     1.99     2.56      3.0      5.0      1.6..2.4          0.0026
+vn N10000 m1 I0                   6    19.06    22.67     28.6     47.6     15.4..21.0         0.0000
+vn N10000 m1 I3                   6    20.68    24.79     31.0     51.7     16.8..24.8         0.0005
+expected soft trips (reruns excluded) 0.01 ; hard trips 0.000

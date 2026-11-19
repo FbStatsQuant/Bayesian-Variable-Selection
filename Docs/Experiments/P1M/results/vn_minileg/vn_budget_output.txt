@@ -1,0 +1,35 @@
+INPUTS
+  spent     975.50  closed to 11-18 10:05 (gates, T5, P7, F1M pilot 437.44, T6, rr2400 172.6, freeze check; LEDGER)
+  spent    1010.43  10^4 overlap W0-W3 (LEDGER)
+  spent     462.48  precision + 10^4 science leg, 194 fits incl. B1 (LEG_READBACK 6; ledger prior_after_S10)
+  spent       1.99  VN_ID_1 F2 identity check (F2_IDENTITY_CHECK)
+  spent    2450.40  TOTAL (NOTE: the LEDGER line '~2,041' already contains A0 + P1 = 55.09 of the 462.48; '2,041 + 462 + 1.99' would count them twice)
+  envelope 28300 ; remaining before the mini-leg 25850
+  1M fit (MEASURED 437.44 at N 2,500, I_max 3): frozen I_max 0, N 2,500 = 315.4 ; N 10^4 = 1082.7 (f 3.85; range 961.6 at f 3.4 .. 1284.7 at f 4.6) ; N 5,000 (f 1.925) = 564.4 ; R'=4 at N 10^4 (equal island cost) ~ 305.3
+  10^5 fit: T5 42.18 (I_max 3, N 2,500, incl. isa_check 2.21); frozen N 2,500 = 30.4 ; N 10^4 = 110.5 ; I_max-3 fallback N 2,500 = 39.9, N 10^4 = 120.0
+  mini-leg E 248.3 (vn_quote_output) ; G-B I_max-3 twin 42.2 ; ablations + competitors (plan values, unspent) 1052 ; option D = 3.43 x a fit ; 1M fits = 22 (20 AR-strong + ADJ-OPP + AR-weak)
+
+PROJECTION TABLE (core-h). total = spent 2450 + unspent; 'cont' = spent + 1.25 x unspent
+scenario                                                                                               unspent   no cont +25% cont  vs 28,300
+S0  KEEP N 2,500 everywhere (self-check N 5,000 + option D)                                              10291     12742     15315       FITS
+S1  ADOPT, everything at N 10^4 (22 fits, option D)                                                      30280     32730     40300 DOES NOT FIT
+S1b ADOPT, everything at N 10^4, option D dropped                                                        26566     29016     35658 DOES NOT FIT
+S2  ADOPT: 10^5 rung at N 10^4; 1M at N 2,500 + ONE N 10^4 self-check (rep-1 data); option D at N 2,500     11848     14299     17261       FITS
+S3  ADOPT: 10^5 at N 10^4 only; 1M at N 2,500 (no 1M N 10^4 fit); N 5,000 self-check                     11330     13781     16613       FITS
+S4  ADOPT, 1M at N 10^4 for as many fits as fit, no option D, no N 5,000 self-check [f 3.85]: room for the 1M block 17934 -> 16 fits at 1083 each (14 AR-strong + ADJ-OPP + AR-weak gated), cost 17324, total with cont 27537
+S4  ADOPT, 1M at N 10^4 for as many fits as fit, no option D, no N 5,000 self-check [f 4.6 (P90)]: room for the 1M block 17660 -> 13 fits at 1285 each (11 AR-strong + ADJ-OPP + AR-weak gated), cost 16701, total with cont 27101
+S5  ADOPT, COST-NEUTRAL: N 10^4 with R' = 4 (4 islands; equal island cost to N 2,500, R' 16; T's own R' is 4): 22 fits x 305.3 = 6716 ; total with cont 14278 ; NEEDS an HQ ruling on D-6 (R' = 16 at every rung) and the 1M memory plan at N 10^4
+
+TIME (gate-paced; 1M island wall at N 2,500: 526-792 s on 96 CPUs, F1M_PILOT_FIT): N 10^4 island wall ~ 34-51 min (linear in N), limit 2 h: fits; 1M island memory at N 10^4 NOT measured (plan-only memory check required).
+
+OPERATING CHARACTERISTICS of the N rule (registered rule, N = 10^4 vs 2,500; 3 datasets x 2 replicates; metrics independent (conservative); c_X = 3.85 x lognormal(0, 0.09))
+  sd(log ratio) per dataset: 0.15 / 0.10 (the PREREG R3 range for independent seeds) / 0.05 (paired seeds share the grid: an ASSUMPTION, measured at the verdict)
+true r     (1/sqrt N-scaling=0.5)     sd .15     sd .10     sd .05
+0.35                                   1.000      1.000      1.000
+0.40                                   0.981      0.999      1.000
+0.45                                   0.746      0.883      0.976
+0.50       <- bar ~ 0.51               0.249      0.317      0.455
+0.55                                   0.024      0.020      0.023
+0.60                                   0.001      0.000      0.000
+0.70                                   0.000      0.000      0.000
+0.85                                   0.000      0.000      0.000
