@@ -830,3 +830,4 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   (1) The NOTS default-N identity check on the F2 binary must pass before ANY F2 run.
   (2) **The current precision + 10^4 science leg finishes on its one leg build (d0c30b65, F); no mid-leg switch (H-25).**
   (3) F2 is the campaign engine from the G-B pilot on (10^5, 1M) and for the V-N mini-leg; at default N it is scientifically identical to F.
+- 2026-11-19. **F2 FROZEN:** tag `p1m-freeze-F2` = e993ece2; binary sha256 da0cf85b (built once on NOTS); NOTS default-N identity PASS vs overlap W0 V2 (0 scientific differences; results/vn_minileg/F2_IDENTITY_CHECK.md). F2 is the campaign engine from the V-N mini-leg / G-B on.
