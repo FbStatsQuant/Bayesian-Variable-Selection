@@ -1,0 +1,614 @@
+{
+ "schema": "overlap1e4.verdict/1",
+ "script_sha256": "4f402e5127efd4754cf25e4ade6ad799f697ebc28e1c657ff49f93fd2905b5c6",
+ "prereg": {
+  "schema": "overlap1e4.prereg/1",
+  "grid": [
+   [
+    "AR",
+    4
+   ],
+   [
+    "ARweak",
+    2
+   ],
+   [
+    "ADJOPP",
+    2
+   ],
+   [
+    "IND",
+    1
+   ],
+   [
+    "NULL",
+    1
+   ]
+  ],
+  "seeds": [
+   1,
+   2
+  ],
+  "run_id_prefix": "4",
+  "n_fits": 40,
+  "arms": {
+   "V": {
+    "N": 2500,
+    "Rp": 16,
+    "mode": [
+     "V"
+    ],
+    "island_isa": "sapphirerapids",
+    "cost_model_core_h": 10.0
+   },
+   "T": {
+    "N": 10000,
+    "Rp": 4,
+    "mode": [
+     "law",
+     "T",
+     "theory"
+    ],
+    "cost_model_core_h": 115.0
+   }
+  },
+  "cost_factor": 1.5,
+  "hpm_datasets_min": 9,
+  "F_tol": 1e-06,
+  "pip_floor": 0.01,
+  "z_mult": 3.0,
+  "hell_frac": 0.1,
+  "notclean_hpm_misses": 2,
+  "notclean_pred_misses": 2,
+  "pooled_seed_sd": true
+ },
+ "records": [
+  "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W0",
+  "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W1",
+  "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W2"
+ ],
+ "outcome": "MARGINAL",
+ "reasons": [
+  "criteria failed: S1 (not in the not-clean list)"
+ ],
+ "incomplete": true,
+ "criteria": [
+  {
+   "id": "D",
+   "name": "delivered 40/40 (complete, valid arm settings, fit.bin readable)",
+   "status": "FAIL",
+   "detail": "28/40 delivered; missing 12; failed/invalid 0; unexpected 0",
+   "missing": [
+    "4-AR-n200-r02-V-s1",
+    "4-AR-n200-r02-V-s2",
+    "4-AR-n200-r02-T-s1",
+    "4-AR-n200-r02-T-s2",
+    "4-AR-n200-r03-V-s1",
+    "4-AR-n200-r03-V-s2",
+    "4-AR-n200-r03-T-s1",
+    "4-AR-n200-r03-T-s2",
+    "4-AR-n200-r04-V-s1",
+    "4-AR-n200-r04-V-s2",
+    "4-AR-n200-r04-T-s1",
+    "4-AR-n200-r04-T-s2"
+   ],
+   "failed": [],
+   "unexpected": []
+  },
+  {
+   "id": "PAIR",
+   "name": "X/y sha256 equal across the 4 fits of each dataset",
+   "status": "PASS",
+   "detail": "0 problems",
+   "problems": []
+  },
+  {
+   "id": "S1",
+   "name": "HPM(V) = HPM(T) as sets, both engine-seed pairs, in >= 9 of 10 datasets",
+   "status": "FAIL",
+   "detail": "7/10 datasets equal (7 evaluable, 0 real mismatching datasets)",
+   "n_ok": 7,
+   "n_real_miss": 0
+  },
+  {
+   "id": "S2",
+   "name": "T never reports a higher-F HPM than V (per seed pair)",
+   "status": "PASS",
+   "detail": "0 pairs with F_T > F_V + 1e-06",
+   "pairs": []
+  },
+  {
+   "id": "S3",
+   "name": "MPM(V) = MPM(T) in every evaluable dataset-seed pair",
+   "status": "NOT_EVALUATED",
+   "detail": "0 mismatching pairs of 14 evaluable",
+   "pairs": []
+  },
+  {
+   "id": "S4",
+   "name": "NULL dataset: no column with PIP > 0.5 (either arm, either seed)",
+   "status": "PASS",
+   "detail": "4 fits checked, 0 violations",
+   "violations": []
+  },
+  {
+   "id": "P",
+   "name": "max_j |PIP_V - PIP_T| <= max(0.01, 3 combined s.e.) for pip_primary (= pip_eq), every dataset",
+   "status": "NOT_EVALUATED",
+   "detail": "7/10 datasets evaluated, 0 fail",
+   "datasets": []
+  },
+  {
+   "id": "E1",
+   "name": "|log Zhat_V - log Zhat_T| <= 3 combined s.e. (seed-pooled / island, per dataset)",
+   "status": "NOT_EVALUATED",
+   "detail": "7/10 datasets evaluated, 0 fail; pooled seed-to-seed sd (df V 7, T 7): s_V = 0.00612, s_T = 0.002943",
+   "datasets": []
+  },
+  {
+   "id": "E2",
+   "name": "log Z_T deterministic lower bound: consistent with the other arm's log Zhat (3 combined s.e.) and its own",
+   "status": "NOT_EVALUATED",
+   "detail": "0 datasets inconsistent (log Z_T reported per arm in per_dataset.csv; log Zhat_occ deferred, D-21 / H-18)",
+   "datasets": []
+  },
+  {
+   "id": "H",
+   "name": "Hellinger d_H(V,T) between the store-BMA predictives <= 10% of d_H(T,f*), every dataset",
+   "status": "NOT_EVALUATED",
+   "detail": "7 datasets evaluated (7 with a V-vs-T cross value), 0 fail, 0 pending",
+   "datasets": [],
+   "pending": []
+  },
+  {
+   "id": "C",
+   "name": "cost <= 1.5 x model per fit (V 15.0, T 172.5 core-h, sacct billed)",
+   "status": "PASS",
+   "detail": "0 fits over limit, 0 without a cost record",
+   "over": [],
+   "no_cost": []
+  }
+ ],
+ "summary": {
+  "n_fits_expected": 40,
+  "n_delivered": 28,
+  "pooled_seed_sd": {
+   "V": 0.006119544000787145,
+   "T": 0.002943488877709256,
+   "df_V": 7,
+   "df_T": 7
+  },
+  "info": {
+   "binary_sha_by_arm": {
+    "V": [
+     [
+      "1e375b74f52514444a49687f6198235371b59cf5875d054b16d4df29d6742be2",
+      "1e375b74f52514444a49687f6198235371b59cf5875d054b16d4df29d6742be2"
+     ],
+     [
+      "72c9109d8e35002467f0e6476368033dba8f52e9e53f85e7d626b5e8a2d56896",
+      "72c9109d8e35002467f0e6476368033dba8f52e9e53f85e7d626b5e8a2d56896"
+     ],
+     [
+      "ba569a33d2e58234be5308c9b06f14dffd49ce777ceb6c27ba6dfedae790c427",
+      "ba569a33d2e58234be5308c9b06f14dffd49ce777ceb6c27ba6dfedae790c427"
+     ]
+    ],
+    "T": [
+     [
+      "5fc6bbb32a517310f0859e2f99505b9afecb4f0e09db624de40aa4887d73219a",
+      "5fc6bbb32a517310f0859e2f99505b9afecb4f0e09db624de40aa4887d73219a"
+     ],
+     [
+      "b6641febb2f8991f6e3f5e2398966827949cf30406faea864d16be114e284a3d",
+      "b6641febb2f8991f6e3f5e2398966827949cf30406faea864d16be114e284a3d"
+     ],
+     [
+      "f90aa3f68608efb1e0317bfb121051b731411b39abd4931ec9b65da2dfc5cca2",
+      "f90aa3f68608efb1e0317bfb121051b731411b39abd4931ec9b65da2dfc5cca2"
+     ]
+    ]
+   },
+   "code_commits": [
+    "eefcbc4a2ab42fdf52ec1e5d318a956bdd07f463"
+   ]
+  },
+  "warnings": [
+   "arm V: 3 different binary sha256 pairs (plan 2: one build per arm)",
+   "arm T: 3 different binary sha256 pairs (plan 2: one build per arm)"
+  ],
+  "duplicates_resolved": [
+   {
+    "run_id": "4-ADJOPP-n200-r01-T-s1",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W0/4-ADJOPP-n200-r01-T-s1.T2",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W0/4-ADJOPP-n200-r01-T-s1"
+   },
+   {
+    "run_id": "4-AR-n200-r01-T-s1",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W0/4-AR-n200-r01-T-s1.T2",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W0/4-AR-n200-r01-T-s1"
+   },
+   {
+    "run_id": "4-ADJOPP-n200-r01-V-s1",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W0/4-ADJOPP-n200-r01-V-s1.V2",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W0/4-ADJOPP-n200-r01-V-s1"
+   },
+   {
+    "run_id": "4-AR-n200-r01-V-s1",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W0/4-AR-n200-r01-V-s1.V2",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W0/4-AR-n200-r01-V-s1"
+   },
+   {
+    "run_id": "4-ADJOPP-n200-r01-T-s1",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W0/4-ADJOPP-n200-r01-T-s1.T2",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W0/_batch_OV_W0_T/scripts/manifests/4-ADJOPP-n200-r01-T-s1"
+   },
+   {
+    "run_id": "4-AR-n200-r01-T-s1",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W0/4-AR-n200-r01-T-s1.T2",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W0/_batch_OV_W0_T/scripts/manifests/4-AR-n200-r01-T-s1"
+   },
+   {
+    "run_id": "4-ADJOPP-n200-r01-V-s1",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W0/4-ADJOPP-n200-r01-V-s1.V2",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W0/_batch_OV_W0_V/scripts/manifests/4-ADJOPP-n200-r01-V-s1"
+   },
+   {
+    "run_id": "4-AR-n200-r01-V-s1",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W0/4-AR-n200-r01-V-s1.V2",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W0/_batch_OV_W0_V/scripts/manifests/4-AR-n200-r01-V-s1"
+   },
+   {
+    "run_id": "4-ADJOPP-n200-r01-T-s1",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W0/4-ADJOPP-n200-r01-T-s1.T2",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W0/_batch_OV_W0_T2/scripts/manifests/4-ADJOPP-n200-r01-T-s1"
+   },
+   {
+    "run_id": "4-AR-n200-r01-T-s1",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W0/4-AR-n200-r01-T-s1.T2",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W0/_batch_OV_W0_T2/scripts/manifests/4-AR-n200-r01-T-s1"
+   },
+   {
+    "run_id": "4-ADJOPP-n200-r01-V-s1",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W0/4-ADJOPP-n200-r01-V-s1.V2",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W0/_batch_OV_W0_V2/scripts/manifests/4-ADJOPP-n200-r01-V-s1"
+   },
+   {
+    "run_id": "4-AR-n200-r01-V-s1",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W0/4-AR-n200-r01-V-s1.V2",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W0/_batch_OV_W0_V2/scripts/manifests/4-AR-n200-r01-V-s1"
+   },
+   {
+    "run_id": "4-ARweak-n200-r01-T-s1",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W1/4-ARweak-n200-r01-T-s1",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W1/_batch_OV_W1_T/scripts/manifests/4-ARweak-n200-r01-T-s1"
+   },
+   {
+    "run_id": "4-ARweak-n200-r01-T-s2",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W1/4-ARweak-n200-r01-T-s2",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W1/_batch_OV_W1_T/scripts/manifests/4-ARweak-n200-r01-T-s2"
+   },
+   {
+    "run_id": "4-IND-n200-r01-T-s1",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W1/4-IND-n200-r01-T-s1",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W1/_batch_OV_W1_T/scripts/manifests/4-IND-n200-r01-T-s1"
+   },
+   {
+    "run_id": "4-IND-n200-r01-T-s2",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W1/4-IND-n200-r01-T-s2",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W1/_batch_OV_W1_T/scripts/manifests/4-IND-n200-r01-T-s2"
+   },
+   {
+    "run_id": "4-NULL-n200-r01-T-s1",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W1/4-NULL-n200-r01-T-s1",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W1/_batch_OV_W1_T/scripts/manifests/4-NULL-n200-r01-T-s1"
+   },
+   {
+    "run_id": "4-NULL-n200-r01-T-s2",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W1/4-NULL-n200-r01-T-s2",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W1/_batch_OV_W1_T/scripts/manifests/4-NULL-n200-r01-T-s2"
+   },
+   {
+    "run_id": "4-ARweak-n200-r01-V-s1",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W1/4-ARweak-n200-r01-V-s1",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W1/_batch_OV_W1_V/scripts/manifests/4-ARweak-n200-r01-V-s1"
+   },
+   {
+    "run_id": "4-ARweak-n200-r01-V-s2",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W1/4-ARweak-n200-r01-V-s2",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W1/_batch_OV_W1_V/scripts/manifests/4-ARweak-n200-r01-V-s2"
+   },
+   {
+    "run_id": "4-IND-n200-r01-V-s1",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W1/4-IND-n200-r01-V-s1",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W1/_batch_OV_W1_V/scripts/manifests/4-IND-n200-r01-V-s1"
+   },
+   {
+    "run_id": "4-IND-n200-r01-V-s2",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W1/4-IND-n200-r01-V-s2",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W1/_batch_OV_W1_V/scripts/manifests/4-IND-n200-r01-V-s2"
+   },
+   {
+    "run_id": "4-NULL-n200-r01-V-s1",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W1/4-NULL-n200-r01-V-s1",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W1/_batch_OV_W1_V/scripts/manifests/4-NULL-n200-r01-V-s1"
+   },
+   {
+    "run_id": "4-NULL-n200-r01-V-s2",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W1/4-NULL-n200-r01-V-s2",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W1/_batch_OV_W1_V/scripts/manifests/4-NULL-n200-r01-V-s2"
+   },
+   {
+    "run_id": "4-ADJOPP-n200-r01-T-s2",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W2/4-ADJOPP-n200-r01-T-s2",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W2/_batch_OV_W2_T/scripts/manifests/4-ADJOPP-n200-r01-T-s2"
+   },
+   {
+    "run_id": "4-ADJOPP-n200-r02-T-s1",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W2/4-ADJOPP-n200-r02-T-s1",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W2/_batch_OV_W2_T/scripts/manifests/4-ADJOPP-n200-r02-T-s1"
+   },
+   {
+    "run_id": "4-ADJOPP-n200-r02-T-s2",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W2/4-ADJOPP-n200-r02-T-s2",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W2/_batch_OV_W2_T/scripts/manifests/4-ADJOPP-n200-r02-T-s2"
+   },
+   {
+    "run_id": "4-AR-n200-r01-T-s2",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W2/4-AR-n200-r01-T-s2",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W2/_batch_OV_W2_T/scripts/manifests/4-AR-n200-r01-T-s2"
+   },
+   {
+    "run_id": "4-ARweak-n200-r02-T-s1",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W2/4-ARweak-n200-r02-T-s1",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W2/_batch_OV_W2_T/scripts/manifests/4-ARweak-n200-r02-T-s1"
+   },
+   {
+    "run_id": "4-ARweak-n200-r02-T-s2",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W2/4-ARweak-n200-r02-T-s2",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W2/_batch_OV_W2_T/scripts/manifests/4-ARweak-n200-r02-T-s2"
+   },
+   {
+    "run_id": "4-ADJOPP-n200-r01-V-s2",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W2/4-ADJOPP-n200-r01-V-s2",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W2/_batch_OV_W2_V/scripts/manifests/4-ADJOPP-n200-r01-V-s2"
+   },
+   {
+    "run_id": "4-ADJOPP-n200-r02-V-s1",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W2/4-ADJOPP-n200-r02-V-s1",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W2/_batch_OV_W2_V/scripts/manifests/4-ADJOPP-n200-r02-V-s1"
+   },
+   {
+    "run_id": "4-ADJOPP-n200-r02-V-s2",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W2/4-ADJOPP-n200-r02-V-s2",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W2/_batch_OV_W2_V/scripts/manifests/4-ADJOPP-n200-r02-V-s2"
+   },
+   {
+    "run_id": "4-AR-n200-r01-V-s2",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W2/4-AR-n200-r01-V-s2",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W2/_batch_OV_W2_V/scripts/manifests/4-AR-n200-r01-V-s2"
+   },
+   {
+    "run_id": "4-ARweak-n200-r02-V-s1",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W2/4-ARweak-n200-r02-V-s1",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W2/_batch_OV_W2_V/scripts/manifests/4-ARweak-n200-r02-V-s1"
+   },
+   {
+    "run_id": "4-ARweak-n200-r02-V-s2",
+    "kept": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W2/4-ARweak-n200-r02-V-s2",
+    "other": "/home/fb31/SMC_Engineering_Department/records/overlap1e4/W2/_batch_OV_W2_V/scripts/manifests/4-ARweak-n200-r02-V-s2"
+   }
+  ],
+  "cost_core_h": {
+   "V": {
+    "n": 14,
+    "sum": 27.706999999999997,
+    "max": 2.9056
+   },
+   "T": {
+    "n": 14,
+    "sum": 634.582,
+    "max": 143.9578
+   },
+   "total": 662.289
+  }
+ },
+ "fits_tier_N": {
+  "4-ADJOPP-n200-r01-T-s1": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-ADJOPP-n200-r01-T-s2": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-ADJOPP-n200-r01-V-s1": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-ADJOPP-n200-r01-V-s2": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-ADJOPP-n200-r02-T-s1": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-ADJOPP-n200-r02-T-s2": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-ADJOPP-n200-r02-V-s1": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-ADJOPP-n200-r02-V-s2": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-AR-n200-r01-T-s1": {
+   "arm": "T",
+   "tier_final": 1,
+   "N_final": 40000,
+   "N_expected_at_tier": 40000,
+   "delivered": true
+  },
+  "4-AR-n200-r01-T-s2": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-AR-n200-r01-V-s1": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-AR-n200-r01-V-s2": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-ARweak-n200-r01-T-s1": {
+   "arm": "T",
+   "tier_final": 1,
+   "N_final": 40000,
+   "N_expected_at_tier": 40000,
+   "delivered": true
+  },
+  "4-ARweak-n200-r01-T-s2": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-ARweak-n200-r01-V-s1": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-ARweak-n200-r01-V-s2": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-ARweak-n200-r02-T-s1": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-ARweak-n200-r02-T-s2": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-ARweak-n200-r02-V-s1": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-ARweak-n200-r02-V-s2": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-IND-n200-r01-T-s1": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-IND-n200-r01-T-s2": {
+   "arm": "T",
+   "tier_final": 1,
+   "N_final": 40000,
+   "N_expected_at_tier": 40000,
+   "delivered": true
+  },
+  "4-IND-n200-r01-V-s1": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-IND-n200-r01-V-s2": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-NULL-n200-r01-T-s1": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-NULL-n200-r01-T-s2": {
+   "arm": "T",
+   "tier_final": 0,
+   "N_final": 10000,
+   "N_expected_at_tier": 10000,
+   "delivered": true
+  },
+  "4-NULL-n200-r01-V-s1": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  },
+  "4-NULL-n200-r01-V-s2": {
+   "arm": "V",
+   "tier_final": 0,
+   "N_final": 2500,
+   "N_expected_at_tier": 2500,
+   "delivered": true
+  }
+ }
+}
