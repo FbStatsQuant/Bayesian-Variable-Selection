@@ -41,7 +41,9 @@ eval::Law truth_law(const eval::Truth& T);
 CrossResult cross_h2(const eval::Law& A, const eval::Law& B, const eval::Truth& T, const CrossOpts& o, uint32_t oid_a = 2, uint32_t oid_b = 6);
 
 // The command (JSON args): --a law.bin --b law.bin | --b_truth 1, --truth truth.json, --out cross.json, optional --data data.bin
-// (its hash must equal the laws' recorded data.bin hash), --dataset ID --seed_id 1|2 (then `pairs` is filled),
+// (+ --data-b law B's own data.bin): each file's whole-file hash must equal its law's recorded inputs.data.bin hash and the two
+// files must have the same DATA identity (section hashes of Xs_cm and ys, n, p, p_raw; not the whole-file hash, which embeds the
+// writing binary's meta block). Without --data the two recorded hashes must be equal. --dataset ID --seed_id 1|2 (then `pairs` is filled),
 // --seed, --threads, --n_x, --n_gh, --top_k, --tail_r, --tail_groups, --block_rows. Returns the record (schema
 // overlap1e4.cross_vt/1 + an `xeval` block).
 Json run(const Json& args);

@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
   if (argc < 2 || std::string(argv[1]) != "cross") {
     std::fprintf(stderr,
       "usage: smcbvs4_xeval cross --a law_V.bin (--b law_T.bin | --b-truth 1) --truth truth.json --out cross.json\n"
-      "         [--data data.bin] [--dataset ID --seed-id 1|2] [--seed s] [--threads k] [--n-x 4000] [--n-gh 64]\n"
+      "         [--data data.bin [--data-b data_B.bin]] [--dataset ID --seed-id 1|2] [--seed s] [--threads k] [--n-x 4000] [--n-gh 64]\n"
       "         [--top-k 1000 --tail-r 1000 --tail-groups 8 --block-rows 500]\n"
       "       smcbvs4_xeval version\n");
     return argc >= 2 && std::string(argv[1]) == "version" ? 0 : exit_code(Status::invalid_input);
