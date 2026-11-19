@@ -1,0 +1,2 @@
+4-ADJOPP-n200-r01 s1  V:True T:True  hpm_eq=True T_higher_F=False dlogZ=-0.0007049 (0.05612 se) pip_worst_ratio=0.01475 dH_T=0.05799 screen>10%=False
+4-AR-n200-r01 s1  V:True T:True  hpm_eq=True T_higher_F=False dlogZ=-0.01521 (2.412 se) pip_worst_ratio=0.008853 dH_T=0.08584 screen>10%=False

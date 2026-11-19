@@ -1,0 +1,78 @@
+{
+  "binary": {
+    "compiler": "g++ 11.5.0 20240719 (Red Hat 11.5.0-17)",
+    "flags": "-O2 -fno-math-errno -ffp-contract=off -march=x86-64-v2",
+    "git_commit": "unknown",
+    "island_isa": "portable",
+    "libm": {
+      "binding": "glibc-libm",
+      "fma_variant": true,
+      "glibc": "2.34",
+      "path": "/lib64/libm.so.6",
+      "self_test": {
+        "exp": true,
+        "exp_pos": true,
+        "expl": true,
+        "lgamma": true,
+        "lgamma_int": true,
+        "log": true,
+        "log_near1": true,
+        "logl": true,
+        "pass": true
+      },
+      "sha256": "c8933ed54328b293c8b005fe44161d1c73c09f96abc6d781a6c31230368d1120"
+    },
+    "sha256": "066b70f81562d1a871115075a2181bcd1cb7e88633f9a8a77dcb8e618d51f4a3"
+  },
+  "command": "xeval",
+  "inputs": {
+    "data.bin": "59a809b14d2b6c08a63e458d024a17484f5cf8884ccc12c2e95b4a6aafdd1281",
+    "law_a.bin": "38547faad55ff82a1912785041c5d8468b6e4515206bd924bfe1e0d08a78e1ff",
+    "law_b.bin": "bfb987985dd88d871e4f41c9c7ff64ba5b8feca2396026eccd736568bd24ac3a",
+    "truth.json": "87f7cdcc1ced5cea61289e6774dbafa657e7e268ab20f7d27f8a131ba58e3448"
+  },
+  "pairs": {
+    "4-AR-n200-r01": {
+      "1": {
+        "h2": 3.7673942798743809e-07,
+        "se": 9.8994413744490247e-08,
+        "se_tail": 9.8687344693867823e-08,
+        "se_x": 7.7911456082554414e-09
+      }
+    }
+  },
+  "schema": "overlap1e4.cross_vt/1",
+  "status": "completed",
+  "xeval": {
+    "block_rows": 500,
+    "dH": 0.00061379102957556989,
+    "dH_bound_truncation": 0,
+    "definition": "h2 = 1 - mean_x int sqrt(fbar_A fbar_B) dy, same x rows / 64-node Gauss-Hermite / top-K + stratified tail as the engine eval predictive",
+    "dropped_mass_a": 0,
+    "dropped_mass_b": 0,
+    "exact_a": false,
+    "exact_b": false,
+    "h2": 3.7673942798743809e-07,
+    "h2_topK": 1.7763568394002505e-15,
+    "n_gh": 64,
+    "n_x": 4000,
+    "oid_a": 2,
+    "oid_b": 6,
+    "rows": "gen_test",
+    "se": 9.8994413744490247e-08,
+    "se_tail": 9.8687344693867823e-08,
+    "se_x": 7.7911456082554414e-09,
+    "seed": 402020001,
+    "tail_components_a": 399001,
+    "tail_components_b": 399001,
+    "tail_groups": 8,
+    "tail_mass_a": 0.22787616981361022,
+    "tail_mass_b": 0.22787658949992226,
+    "tail_r": 1000,
+    "threads": 3,
+    "top_a": 1000,
+    "top_b": 1000,
+    "top_k": 1000,
+    "wall_s": 10.205547291
+  }
+}

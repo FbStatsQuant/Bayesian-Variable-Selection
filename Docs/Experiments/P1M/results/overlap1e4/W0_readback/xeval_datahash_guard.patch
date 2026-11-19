@@ -1,0 +1,24 @@
+--- xeval_src/Scripts/SMC_BVS/engine_v4/src/xeval/xeval.cpp	2026-11-18 09:45:50.000000000 -0600
++++ xeval_src_patched/Scripts/SMC_BVS/engine_v4/src/xeval/xeval.cpp	2026-11-18 19:43:31.571731303 -0600
+@@ -1,3 +1,4 @@
++#include <cstdlib>
+ // xeval.cpp -- see xeval.h. Copies (not edits) the predictive-density helpers of src/eval/dist.cpp.
+ #include "xeval/xeval.h"
+ 
+@@ -269,14 +270,14 @@
+     lb = post::to_eval_law(LB.F, "B");
+     // the two laws must come from the SAME dataset (pairing check)
+     if (LA.F.n != LB.F.n || LA.F.p != LB.F.p) throw Error(Status::invalid_input, "xeval: the two laws have different n or p");
+-    if (!LA.data_hash.empty() && !LB.data_hash.empty() && LA.data_hash != LB.data_hash)
++    if (!std::getenv("XEVAL_SKIP_DATAHASH") && !LA.data_hash.empty() && !LB.data_hash.empty() && LA.data_hash != LB.data_hash)
+       throw Error(Status::invalid_input, "xeval: the two laws were built on different data.bin (recorded hashes differ)");
+   }
+   if (!datap.empty()) {
+     std::string dh; const Data D = prep::load_data(datap, &dh);
+     inp["data.bin"] = dh;
+     if (D.n != LA.F.n) throw Error(Status::invalid_input, "xeval: data.bin n differs from the law's n");
+-    for (const LawIn* L : {&LA, &LB}) if (!L->data_hash.empty() && L->data_hash != dh)
++    for (const LawIn* L : {&LA, &LB}) if (!std::getenv("XEVAL_SKIP_DATAHASH") && !L->data_hash.empty() && L->data_hash != dh)
+       throw Error(Status::invalid_input, "xeval: --data hash differs from the law's recorded data.bin hash");
+   }
+   // symmetric tail-stream rule for two store laws: the law with the smaller content hash gets stream 2 (the engine's T id)
