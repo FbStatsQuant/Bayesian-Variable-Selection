@@ -74,7 +74,7 @@ ENGINEERING_SPEC §0-v2.6 G-A: "the precision study freezes (N, m, resampling, I
 | (2,500, m 1, I_max 3) (baseline kept) | as quoted | yes | 442 | **591 (1,000)** |
 | m = 4 adopted | `refine_m 4` on all science fits, +14 re-runs (tag `VF`) | no | 800 | 951 (1,600) |
 | I_max = 0 adopted | `I_max 0`, +14 re-runs | no | 351 | 500 (800) |
-(`make_waves_prec.py --frozen-m / --frozen-I`; `quote_output_freeze_m4.txt`, `quote_output_freeze_i0.txt`.) All three are far inside the plan figure.
+(`make_waves_prec.py --frozen-m / --frozen-I`; `quote_output_freeze_m4.txt`, `quote_output_freeze_i0.txt`.) All three are far inside the plan figure. **If both m = 4 and I_max = 0 are adopted** the combination was not run in the study (PREREG §3.2): S1 is then released as a one-batch pilot (7 fits) and re-quoted before the rest.
 
 ## 4. Waves (≤ 150 array tasks per batch; ≤ 4 batches per wave; every task ≤ 2 h)
 Plans: `make_waves_prec.py` (output `make_waves_prec_output.txt`, `waves.json`): driver `--strict` clean, no warnings, 186 fits in 17 waves. Quote per wave from `quote_model.py` (`quote_output.txt`). "Worst" = limit sum (the ledger/admission figure, not a cost estimate). Island arrays are throttled (`%32` precision, `%8` science) so a wave's peak stays < 1,000 CPUs (QOS cap 1,536).
@@ -185,7 +185,7 @@ H-14 had the leg in 11-22..26: this plan finishes it by 11-24 because the overla
 1. B1: is "one seed per arm" acceptable against Sol F6's "independent calibration and final seeds"? (My argument: Philox domains differ, arms and replicates have distinct seeds.)
 2. B2: (a) hold vs (b) engine change. My recommendation: (a) now; the doubling question is needed for the 1M self-check, so **decide (b) before the 1M leg**, not for this leg.
 3. The per-fit stop as report-and-continue (§5.3) is a departure from the literal "1.5× = stop"; confirm or revert.
-4. The freeze rule (PREREG §3) uses "gain must beat spending the same extra cost on islands" and treats the §0-v2.3 targets as reported; check the thresholds (0.7 / 0.5 limits follow from the measured cost ratios, 1.15 / 1.30 for I_max).
+4. The freeze rule (PREREG §3) uses "gain must beat spending the same extra cost on islands" and treats the §0-v2.3 targets as reported; check the thresholds (the limit 1/√c_X is ≈ 0.66 for m = 4 and 0.5 for N = 10⁴ from the cost ratios, measured at FZ; 1.15 / 1.30 for I_max).
 5. In the one overlap V fit I inspected (AR r01) the engine already meets the §0-v2.3 evidence and PIP targets (σ̂ 0.025, island PIP max sd 0.0005, log Ẑ_occ sd 0.02; the read-back must confirm it for all fits): the precision study can only freeze on *relative* precision per core-h, not on target misses. Say so in the report.
 6. Power of the offset measurement (PREREG §4.5): 3 datasets cannot resolve −0.004 (t(2) half-width ≈ 0.008); the R′ slope on the 10 overlap datasets can. A third replicate of T is not in this leg.
 7. A3 canary and exact-linkage setup limit (0:30) are guesses until A0.
