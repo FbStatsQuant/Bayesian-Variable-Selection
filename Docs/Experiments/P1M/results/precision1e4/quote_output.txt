@@ -1,58 +1,58 @@
-quote_model.py: 20000 replicates, 186 fits in 17 waves; measured pool: {'ADJOPP': 4, 'AR': 8, 'ARweak': 4, 'IND': 2, 'NULL': 2}
+quote_model.py: 20000 replicates, 187 fits in 17 waves; measured pool: {'ADJOPP': 4, 'AR': 8, 'ARweak': 4, 'IND': 2, 'NULL': 2}
 
 == PER WAVE (billed core-h; stop > 2 x the quote; quote = E rounded to 5)
-A0     3 fits                        E     20.6   P10     16.9  P50     20.3  P90     24.2  P99     34.5   QUOTE   20  WAVE STOP >   40   worst-case   327.4
-P1     4 fits                        E     30.2   P10     25.7  P50     29.6  P90     35.1  P99     44.5   QUOTE   30  WAVE STOP >   60   worst-case   557.4
-P2     4 fits                        E     28.1   P10     24.3  P50     27.5  P90     32.3  P99     40.0   QUOTE   30  WAVE STOP >   60   worst-case   557.4
-P3     4 fits                        E     24.5   P10     21.4  P50     24.1  P90     28.2  P99     34.6   QUOTE   25  WAVE STOP >   50   worst-case   557.4
-P4     4 fits                        E     45.8   P10     38.3  P50     44.9  P90     54.0  P99     68.9   QUOTE   45  WAVE STOP >   90   worst-case   557.4
-H1     4 fits                        E    115.0   P10     94.3  P50    112.9  P90    137.3  P99    175.1   QUOTE  115  WAVE STOP >  230   worst-case   557.4
-H2     4 fits                        E     81.4   P10     68.1  P50     80.0  P90     95.9  P99    119.9   QUOTE   80  WAVE STOP >  160   worst-case   557.4
-H3     4 fits                        E    153.2   P10    124.8  P50    150.2  P90    184.1  P99    233.2   QUOTE  155  WAVE STOP >  310   worst-case   557.4
-S1    28 fits                        E     58.4   P10     52.4  P50     58.2  P90     64.9  P99     71.1   QUOTE   60  WAVE STOP >  120   worst-case  1306.8
-S2    18 fits                        E     31.6   P10     28.1  P50     31.4  P90     35.5  P99     39.4   QUOTE   30  WAVE STOP >   60   worst-case   840.1
-S3    14 fits                        E     38.6   P10     34.4  P50     38.4  P90     43.2  P99     48.0   QUOTE   40  WAVE STOP >   80   worst-case   681.4
-S4    28 fits                        E     39.9   P10     32.5  P50     39.2  P90     48.2  P99     57.4   QUOTE   40  WAVE STOP >   80   worst-case  1306.8
-S5    12 fits                        E     18.7   P10     14.9  P50     18.3  P90     23.0  P99     28.0   QUOTE   20  WAVE STOP >   40   worst-case   560.0
-S6     7 fits                        E     30.4   P10     22.5  P50     29.6  P90     39.2  P99     50.2   QUOTE   30  WAVE STOP >   60   worst-case   466.7
-S7    28 fits                        E     97.7   P10     73.9  P50     95.4  P90    124.1  P99    155.3   QUOTE  100  WAVE STOP >  200   worst-case  1866.8
-S8     7 fits                        E     48.6   P10     33.3  P50     46.7  P90     66.3  P99     88.3   QUOTE   50  WAVE STOP >  100   worst-case   611.3
-S9    13 fits                        E     77.6   P10     54.2  P50     74.8  P90    104.5  P99    136.1   QUOTE   80  WAVE STOP >  160   worst-case  1135.3
+A0     4 fits                        E     22.8   P10     19.0  P50     22.4  P90     26.6  P99     36.6   QUOTE   25  WAVE STOP >   50   worst-case   374.1
+P1     4 fits                        E     30.2   P10     25.7  P50     29.6  P90     35.0  P99     44.2   QUOTE   30  WAVE STOP >   60   worst-case   557.4
+P2     4 fits                        E     28.1   P10     24.3  P50     27.5  P90     32.3  P99     39.5   QUOTE   30  WAVE STOP >   60   worst-case   557.4
+P3     4 fits                        E     24.5   P10     21.4  P50     24.0  P90     28.2  P99     34.7   QUOTE   25  WAVE STOP >   50   worst-case   557.4
+P4     4 fits                        E     45.7   P10     38.3  P50     44.8  P90     53.9  P99     68.4   QUOTE   45  WAVE STOP >   90   worst-case   557.4
+H1     4 fits                        E    115.0   P10     94.3  P50    112.7  P90    137.6  P99    174.3   QUOTE  115  WAVE STOP >  230   worst-case   557.4
+H2     4 fits                        E     81.3   P10     68.2  P50     79.9  P90     95.6  P99    120.3   QUOTE   80  WAVE STOP >  160   worst-case   557.4
+H3     4 fits                        E    152.9   P10    125.2  P50    150.1  P90    182.7  P99    230.8   QUOTE  155  WAVE STOP >  310   worst-case   557.4
+S1    28 fits                        E     58.4   P10     52.3  P50     58.1  P90     64.8  P99     71.0   QUOTE   60  WAVE STOP >  120   worst-case  1306.8
+S2    18 fits                        E     31.7   P10     28.2  P50     31.4  P90     35.4  P99     39.3   QUOTE   30  WAVE STOP >   60   worst-case   840.1
+S3    14 fits                        E     38.7   P10     34.4  P50     38.4  P90     43.2  P99     47.8   QUOTE   40  WAVE STOP >   80   worst-case   681.4
+S4    28 fits                        E     39.9   P10     32.6  P50     39.2  P90     48.2  P99     57.6   QUOTE   40  WAVE STOP >   80   worst-case  1306.8
+S5    12 fits                        E     18.7   P10     14.9  P50     18.3  P90     22.9  P99     28.0   QUOTE   20  WAVE STOP >   40   worst-case   560.0
+S6     7 fits                        E     30.3   P10     22.3  P50     29.4  P90     39.5  P99     50.7   QUOTE   30  WAVE STOP >   60   worst-case   466.7
+S7    28 fits                        E     97.6   P10     73.8  P50     95.2  P90    124.6  P99    155.6   QUOTE  100  WAVE STOP >  200   worst-case  1866.8
+S8     7 fits                        E     48.5   P10     33.2  P50     46.6  P90     66.2  P99     87.5   QUOTE   50  WAVE STOP >  100   worst-case   611.3
+S9    13 fits                        E     77.4   P10     54.3  P50     74.7  P90    104.0  P99    135.3   QUOTE   75  WAVE STOP >  150   worst-case  1135.3
 
 == LEG TOTALS
-released (A0,P1-P4,S1-S9) E    590.8   P10    514.9  P50    586.0  P90    673.0  P99    753.3
-  precision part P1-P4+A0 E    149.2   P10    132.2  P50    148.2  P90    167.7  P99    188.1
-  science part S1-S9   E    441.6   P10    376.6  P50    437.2  P90    512.1  P99    584.5
-held N=10^4 (H1-H3)    E    349.6   P10    298.0  P50    346.2  P90    405.0  P99    467.0
-released + held        E    940.5   P10    825.0  P50    934.9  P90   1064.1  P99   1183.8
+released (A0,P1-P4,S1-S9) E    592.5   P10    516.7  P50    587.7  P90    672.9  P99    757.8
+  precision part P1-P4+A0 E    151.3   P10    134.1  P50    150.4  P90    169.7  P99    189.5
+  science part S1-S9   E    441.2   P10    376.7  P50    436.8  P90    510.4  P99    584.1
+held N=10^4 (H1-H3)    E    349.2   P10    298.8  P50    345.8  P90    403.4  P99    464.1
+released + held        E    941.6   P10    826.8  P50    935.5  P90   1062.8  P99   1186.9
 
-plan figure (MANIFEST_CELLS v0.4, precision 2,117 + science 2,010): 4,127.   released scope E = 591 (14.3% of 4,127), P90 = 673, P99 = 753; with the held arms E = 940, P90 = 1064, P99 = 1184
+plan figure (MANIFEST_CELLS v0.4, precision 2,117 + science 2,010): 4,127.   released scope E = 592 (14.4% of 4,127), P90 = 673, P99 = 758; with the held arms E = 942, P90 = 1063, P99 = 1187
 P(released total > 4,127) = 0.0000;  P(with held > 4,127) = 0.0000
-cumulative stop (1.6 x E of the scope in release): released 591 -> 1000 ; with held 940 -> 1600 ; projection ceiling = the plan figure 4,127
+cumulative stop (1.6 x E of the scope in release): released 592 -> 1000 ; with held 942 -> 1600 ; projection ceiling = the plan figure 4,127
 
 == PER-FIT MODEL BY CLASS (E over the fits of the class, first 4,000 replicates) -> per-fit stop = max(3.0, 1.5 x E)
 class                          fits    E/fit  P90/fit  P99/fit  STOP/fit P(>STOP|no rerun) P(>2.5xE|no rr)
-A3 n200                          15     2.76     3.41     5.74       4.1         0.0114       0.0000
-prec N10000 m1 I3                 6    17.02    23.62    36.15      25.5         0.0342       0.0000
-prec N10000 m4 I3                 6    41.33    62.24    88.83      62.0         0.0849       0.0000
-prec N2500 m1 I0                  6     5.77     7.43    11.87       8.6         0.0048       0.0000
-prec N2500 m1 I3                  6     6.28     8.13    12.72       9.4         0.0056       0.0000
-prec N2500 m4 I3                  6    12.39    17.97    26.92      18.6         0.0567       0.0000
-sci ADJOPP n200                   3     2.68     3.14     5.42       4.0         0.0000       0.0000
-sci ADJOPP n400                   5     4.61     6.20     9.55       6.9         0.0289       0.0002
-sci AR n100                      10     1.54     1.96     3.21       3.0         0.0003       0.0000
-sci AR n200                      12     2.18     2.59     4.54       3.3         0.0001       0.0000
-sci AR n400                      10     3.63     4.93     7.79       5.4         0.0335       0.0001
-sci AR n800                      10     6.96    10.04    15.49      10.4         0.0628       0.0005
-sci ARweak n100                  20     1.36     1.67     2.75       3.0         0.0000       0.0000
-sci ARweak n200                  18     1.87     2.18     3.76       3.0         0.0000       0.0000
-sci ARweak n400                  10     3.05     4.03     6.38       4.6         0.0253       0.0003
-sci ARweak n800                  10     5.71     7.92    12.33       8.6         0.0438       0.0003
-sci BLK n100                      5     1.58     2.19     3.47       3.0         0.0062       0.0004
-sci BLK n200                      5     2.21     2.97     4.67       3.3         0.0299       0.0000
-sci BLK n400                      5     3.71     5.40     8.51       5.6         0.0655       0.0013
-sci IND n100                      5     1.61     2.01     3.26       3.0         0.0003       0.0000
-sci IND n200                      4     2.29     2.61     4.60       3.4         0.0000       0.0000
-sci IND n400                      5     3.88     5.13     8.18       5.8         0.0256       0.0000
+A3 n200                          15     2.76     3.41     5.74       4.1         0.0122       0.0000
+prec N10000 m1 I3                 6    17.00    23.50    36.14      25.5         0.0316       0.0000
+prec N10000 m4 I3                 6    41.29    62.35    90.37      61.9         0.0876       0.0000
+prec N2500 m1 I0                  6     5.76     7.43    11.89       8.6         0.0053       0.0000
+prec N2500 m1 I3                  6     6.28     8.12    12.89       9.4         0.0048       0.0000
+prec N2500 m4 I3                  6    12.36    17.81    26.30      18.5         0.0543       0.0000
+sci ADJOPP n200                   3     2.69     3.14     5.56       4.0         0.0000       0.0000
+sci ADJOPP n400                   5     4.62     6.23     9.89       6.9         0.0314       0.0001
+sci AR n100                      10     1.55     1.97     3.19       3.0         0.0001       0.0000
+sci AR n200                      13     2.18     2.57     4.51       3.3         0.0001       0.0000
+sci AR n400                      10     3.64     4.96     7.73       5.5         0.0363       0.0003
+sci AR n800                      10     6.94    10.03    15.26      10.4         0.0607       0.0002
+sci ARweak n100                  20     1.36     1.68     2.77       3.0         0.0000       0.0000
+sci ARweak n200                  18     1.87     2.17     3.75       3.0         0.0000       0.0000
+sci ARweak n400                  10     3.05     4.04     6.37       4.6         0.0257       0.0002
+sci ARweak n800                  10     5.67     7.88    12.14       8.5         0.0453       0.0001
+sci BLK n100                      5     1.58     2.19     3.45       3.0         0.0060       0.0005
+sci BLK n200                      5     2.22     2.99     4.76       3.3         0.0296       0.0000
+sci BLK n400                      5     3.72     5.44     8.54       5.6         0.0676       0.0011
+sci IND n100                      5     1.62     2.01     3.26       3.0         0.0000       0.0000
+sci IND n200                      4     2.30     2.61     4.68       3.5         0.0000       0.0000
+sci IND n400                      5     3.89     5.15     8.43       5.8         0.0259       0.0000
 sci NULL n200                     4     0.51     0.50     1.00       3.0         0.0000       0.0000
-expected number of per-fit trips over the leg (186 fits, reruns excluded): 3.7 at 1.5 x E; 0.02 at 2.5 x E
+expected number of per-fit trips over the leg (186 fits, reruns excluded): 3.8 at 1.5 x E; 0.02 at 2.5 x E

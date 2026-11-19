@@ -37,7 +37,7 @@ def design(run_id):
 class Fit:
     def __init__(s, f, wave):
         s.rid, s.wave, s.n, s.Rp, s.N = f["run_id"], wave, f["n"], f["Rp"], f["N"]
-        s.d = design(s.rid); s.m = f["params"].get("refine_m", 1); s.I = f["params"].get("I_max", 3); s.a3 = "-A3-" in s.rid
+        s.d = design(s.rid); s.m = f["params"].get("refine_m", 1); s.I = f["params"].get("I_max", 3); s.a3 = "-A3-" in s.rid or "-A3F-" in s.rid
         s.proxy = s.d == "BLK"; s.cls = ("prec N%d m%d I%d" % (s.N, s.m, s.I)) if s.Rp == 64 else ("A3 n%d" % s.n if s.a3 else "sci %s n%d" % (s.d, s.n))
 
 

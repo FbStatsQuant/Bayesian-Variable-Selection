@@ -198,19 +198,27 @@ def main(argv=None):
                       "per_dataset": {d: round(v, 6) for d, v in sorted(Dds.items())}})
     # contrasts (T cancels), paired by dataset
     contrasts = []
-    def contrast(name, A, B):
+    Jd = {key: {d: mean([x["jensen"] for x in rs]) for d, rs in byds.items()} for key, byds in cells.items()}     # per (cell, k, dataset) Jensen term
+    def contrast(name, A, B, kind="knob"):
         if A in Dd and B in Dd:
             ds = sorted(set(Dd[A]) & set(Dd[B]))
             if ds:
                 vals = [Dd[A][d] - Dd[B][d] for d in ds]
                 s = summ(vals)
-                contrasts.append({"contrast": name, "datasets": len(ds), "mean": s["mean"], "sd_ds": s["sd"], "se": s["se"], "lo95": s["lo"], "hi95": s["hi"], "n_negative": s["neg"],
-                                  "per_dataset": {d: round(v, 6) for d, v in zip(ds, vals)}})
+                rec = {"contrast": name, "kind": kind, "datasets": len(ds), "mean": s["mean"], "sd_ds": s["sd"], "se": s["se"], "lo95": s["lo"], "hi95": s["hi"], "n_negative": s["neg"],
+                       "per_dataset": {d: round(v, 6) for d, v in zip(ds, vals)}}
+                if kind != "knob":      # R' contrasts: the first-order (Jensen) prediction beside the slope, and the slope minus it (interval over datasets)
+                    jd = [Jd[A][d] - Jd[B][d] for d in ds]
+                    sj = summ([v - j for v, j in zip(vals, jd)])
+                    rec.update({"jensen_pred": mean(jd), "minus_jensen_mean": sj["mean"], "minus_jensen_lo95": sj["lo"], "minus_jensen_hi95": sj["hi"]})
+                contrasts.append(rec)
     if not a.only_full:
         for cell in sorted({c for c, _ in Dd}):
             ks = sorted(k for c, k in Dd if c == cell)
-            for k1, k2 in zip(ks, ks[1:]):
-                contrast("R' slope %s k %d -> %d" % (cell, k1, k2), (cell, k2), (cell, k1))
+            if len(ks) > 1:     # P2 headline: the full span k_min -> k_max (4 -> 16 on the overlap cell, 4 -> 64 on the leg's cells)
+                contrast("R' SPAN %s k %d -> %d" % (cell, ks[0], ks[-1]), (cell, ks[-1]), (cell, ks[0]), "P2_span")
+            for k1, k2 in zip(ks, ks[1:]):       # consecutive steps: descriptive only
+                contrast("R' step %s k %d -> %d" % (cell, k1, k2), (cell, k2), (cell, k1), "R_step")
         kmax = 64
         P = lambda N, m, I: ((N, m, I, "prec"), kmax)
         contrast("m: (2500,4,3) - (2500,1,3) at k=64", P(2500, 4, 3), P(2500, 1, 3))
@@ -244,9 +252,15 @@ def main(argv=None):
         L.append("| %s | %d | %d | %d | %d | %d | %d | %+.5f | %.5f | %+.5f .. %+.5f | %d/%d | %s | %s | %+.1e | %s |" % (t["src"], t["N"], t["m"], t["I_max"], t["k"], t["datasets"], t["fits"], t["delta"], t["se"], t["lo95"], t["hi95"],
                  t["n_negative"], t["datasets"], "%+.2f" % t["delta_over_sT"] if t["delta_over_sT"] is not None else "n/a", ("%+.5f (%d)" % (t["delta_tier0ref"], t["datasets_tier0ref"])) if t["delta_tier0ref"] is not None else "-", t["jensen_mean"], "%+.5f" % t["occ_offset_mean"] if t["occ_offset_mean"] is not None else "-"))
     if contrasts:
-        L += ["", "## contrasts (the T reference cancels; paired by dataset)", "| contrast | datasets | mean | se (clustered) | 95% t-CI | neg |", "|---|---|---|---|---|---|"]
+        L += ["", "## contrasts (the T reference cancels; paired by dataset)", "| contrast | kind | datasets | mean | se (clustered) | 95% t-CI | neg | Jensen pred. | slope - Jensen (95% CI) |", "|---|---|---|---|---|---|---|---|---|"]
         for c in contrasts:
-            L.append("| %s | %d | %+.5f | %.5f | %+.5f .. %+.5f | %d/%d |" % (c["contrast"], c["datasets"], c["mean"], c["se"], c["lo95"], c["hi95"], c["n_negative"], c["datasets"]))
+            L.append("| %s | %s | %d | %+.5f | %.5f | %+.5f .. %+.5f | %d/%d | %s | %s |" % (c["contrast"], c["kind"], c["datasets"], c["mean"], c["se"], c["lo95"], c["hi95"], c["n_negative"], c["datasets"],
+                     "%+.1e" % c["jensen_pred"] if "jensen_pred" in c else "-",
+                     "%+.5f (%+.5f .. %+.5f)" % (c["minus_jensen_mean"], c["minus_jensen_lo95"], c["minus_jensen_hi95"]) if "jensen_pred" in c else "-"))
+        kinds = {}
+        for c in contrasts:
+            kinds[c["kind"]] = kinds.get(c["kind"], 0) + 1
+        L.append("\nMultiplicity: %s contrasts (P2_span = headline, R_step = descriptive, knob = FINDING family). At 5%% each family expects 0.05 x its count false flags; only P2_span and knob contrasts are read (PREREG 4.4)." % kinds)
     if bad:
         L += ["", "## dropped fits"] + ["- %s: %s" % (r["run_id"], "; ".join(r["problems"])) for r in bad]
     open(os.path.join(a.out, "offset_report.md"), "w").write("\n".join(L) + "\n")

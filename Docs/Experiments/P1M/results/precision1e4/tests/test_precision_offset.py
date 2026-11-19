@@ -76,6 +76,19 @@ class T(unittest.TestCase):
         self.assertAlmostEqual(tab[16]["delta"], tab[4]["delta"], places=9)           # alternating pattern: every even-sized block has the same mean
         self.assertLess(tab[16]["jensen_mean"], 0)
 
+    def test_P2_span_contrast_with_jensen_prediction(self):
+        # plan review R11: the headline R' contrast is the SPAN k_min -> k_max, with the Jensen prediction beside it and the slope minus it
+        for des, rep in (("AR", "01"), ("ARweak", "01"), ("ADJOPP", "01")):
+            for sd in (1, 2):
+                mk(self.root, "4-%s-n200-r%s-T-s%d" % (des, rep, sd), 4, [-100.0] * 4, arm="T")
+                mk(self.root, "4-%s-n200-r%s-V-s%d" % (des, rep, sd), 16, [-100.0 + (0.4 if i % 4 == 0 else -0.1) for i in range(16)], cell=(2500, 1, 3))
+        o = run(self.root, os.path.join(self.t, "o")); cm = {c["contrast"]: c for c in o["contrasts"]}
+        span = [c for c in o["contrasts"] if c["kind"] == "P2_span"]
+        self.assertEqual(len(span), 1); self.assertIn("k 4 -> 16", span[0]["contrast"])
+        steps = [c for c in o["contrasts"] if c["kind"] == "R_step"]; self.assertEqual(len(steps), 2)          # 4 -> 8, 8 -> 16
+        self.assertGreater(span[0]["jensen_pred"], 0)                                                         # Jensen bias shrinks with k: log-mean rises
+        self.assertAlmostEqual(span[0]["mean"], span[0]["minus_jensen_mean"] + span[0]["jensen_pred"], places=12)
+
     def test_arm_mismatch_and_manifest_eval_skipped(self):
         self.build()
         mk(self.root, "4-AR-n200-r01-P-N10000-m1-c1-s1", 64, [-177.0] * 64, cell=(10000, 1, 3), settings_override={"refine_m": 4})     # run id says m1, settings say m4

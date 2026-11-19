@@ -1,6 +1,7 @@
 wave batch      fits  tasks     worst       cap  peakCPU  warnings
 A0   PL_A0_1       2    136     278.7     278.8      256  None
 A0   PL_A0_2       1     20      48.7      48.8       32  None
+A0   PL_A0_3       1     20      46.7      46.8       32  None
 P1   PL_P1_1       2    136     278.7     278.8      256  None
 P1   PL_P1_2       2    136     278.7     278.8      256  None
 P2   PL_P2_1       2    136     278.7     278.8      256  None
@@ -40,7 +41,7 @@ S9   PL_S9_1       7    140     611.3     611.4      224  None
 S9   PL_S9_2       6    120     524.0     524.1      192  None
 
 per wave: batches, fits, tasks, worst-case core-h (limit sum), peak CPUs (sum over the wave's batches of the larger phase)
-A0    2 batches   3 fits  156 tasks worst    327.4  peak<=288
+A0    3 batches   4 fits  176 tasks worst    374.1  peak<=320
 P1    2 batches   4 fits  272 tasks worst    557.4  peak<=512
 P2    2 batches   4 fits  272 tasks worst    557.4  peak<=512
 P3    2 batches   4 fits  272 tasks worst    557.4  peak<=512
@@ -57,4 +58,4 @@ S6    1 batches   7 fits  140 tasks worst    466.7  peak<=224
 S7    4 batches  28 fits  560 tasks worst   1866.8  peak<=896
 S8    1 batches   7 fits  140 tasks worst    611.3  peak<=224
 S9    2 batches  13 fits  260 tasks worst   1135.3  peak<=416
-total fits 186; waves 17
+total fits 187; waves 17

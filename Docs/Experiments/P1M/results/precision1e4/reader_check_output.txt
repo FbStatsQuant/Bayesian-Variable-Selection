@@ -1,4 +1,4 @@
-# precision_offset report (script sha256 df221026011d0b6b538c65b3dbe5328e9350077e1d417becedacfcb65073c10d, --only-full)
+# precision_offset report (script sha256 cbbc23012e6900ff7798267cc7325816ad0b8312ec6e26fd09972adc9780d300, --only-full)
 fits found 40, V fits used 20 (datasets with a T reference: 10), dropped 0, duplicates resolved 2; s_T (seed-to-seed, pooled) = 0.00324; s_rep(k=64) = n/a over 0 dataset-cells
 
 ## offset delta(N, m, I_max, k) = mean over datasets of [V block-mean log Z-hat - T reference]   (no pass/fail)

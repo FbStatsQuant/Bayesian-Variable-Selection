@@ -17,6 +17,8 @@ Corrections applied to the generator's fits (LEG_PLAN section 2; each one verifi
 FREEZE DEPENDENCY (LEG_PLAN section 3): the science waves run AFTER the precision freeze (G-A). --frozen-m / --frozen-I (default 1 / 3 = the spec defaults) set the
 configuration of the science fits; if it differs from (m 1, I_max 3) the 14 overlap V fits that the manifest shares with the science block are NOT reusable and are
 added as new fits (run-id tag VF, same data and seed), so the science block is 156 + 14 fits. The precision and canary waves are unaffected.
+A0 also carries the cross-build bit check (tag XB: the overlap fit 4-AR-n200-r01-V-s1 re-run with the leg build; plan review R7). A0's A3 canary and XB stay in the
+baseline configuration whatever the freeze; a changed freeze adds the A3F pair (R6) to the science waves.
 N = 10^4 arms (12 fits) are HELD (B2: V's N is the constant calib::V_N = 2500); they are written as waves H1-H3 and never submitted
 without HQ's ruling on B2.
 """
@@ -54,7 +56,7 @@ def run_gen(wt, commit, gen):
 def klass(f):
     if f["Rp"] == 64:
         return "prec"
-    if "-A3-" in f["run_id"]:
+    if "-A3-" in f["run_id"] or "-A3F-" in f["run_id"]:
         return "a3"
     return {100: "s100", 200: "s200", 400: "s400", 800: "s800"}[f["n"]]
 
@@ -98,6 +100,10 @@ def main():
             assert src["run_id"] not in fits and src["seed"] not in {g["seed"] for g in fits.values()}
             fits[src["run_id"]] = src
     assert len(fits) == 24 + 156 + 6, len(fits)
+    # R7 (plan review): cross-build bit check = the overlap fit 4-AR-n200-r01-V-s1 re-run with the leg's build (same data, seed, config); compared bitwise with the overlap record
+    xb = dict(shared["4-AR-n200-r01-V-s1"]); xb["run_id"] = "4-AR-n200-r01-V-XB-s1"; xb["params"] = {}
+    fits[xb["run_id"]] = xb
+    CANARY = {xb["run_id"], "4-AR-n200-r01-A3-exactlink-s1"}      # A0 canaries always run in the baseline configuration
     frozen = (a.frozen_m, a.frozen_I)
     if frozen != (1, 3):
         # the science fits run in the frozen configuration; the 14 shared overlap fits (m 1, I_max 3) are re-run under the tag VF
@@ -106,14 +112,17 @@ def main():
                     "4-IND-n200-r01-V-s1", "4-NULL-n200-r01-V-s1"):
             f = dict(shared[rid]); f["run_id"] = rid.replace("-V-s", "-VF-s"); f["params"] = {}
             fits[f["run_id"]] = f
+        # R6: the A3 canary stays baseline in A0; a frozen-configuration A3 pair (tag A3F) is added for the AR r01 pair with the VF default fit
+        a3f = dict(fits["4-AR-n200-r01-A3-exactlink-s1"]); a3f["run_id"] = "4-AR-n200-r01-A3F-exactlink-s1"
+        fits[a3f["run_id"]] = a3f
         for rid, f in fits.items():
-            if "-P-N" not in rid:
+            if "-P-N" not in rid and rid not in CANARY:
                 f["params"] = dict(f.get("params") or {}, refine_m=frozen[0], I_max=frozen[1])
-    expect = 24 + 156 + 6 + (14 if frozen != (1, 3) else 0)
+    expect = 24 + 156 + 6 + 1 + (15 if frozen != (1, 3) else 0)
     sel = lambda pred: [fits[r] for r in sorted(fits) if pred(r)]
     P = lambda ds, tag: "4-%s-n200-r01-P-%s-s1" % (ds, tag)
     waves = {   # wave id -> list of batches, each a list of run ids
-        "A0": [[P("AR", "N2500-m4-c1"), P("AR", "N2500-m1-I0-c1")], ["4-AR-n200-r01-A3-exactlink-s1"]],
+        "A0": [[P("AR", "N2500-m4-c1"), P("AR", "N2500-m1-I0-c1")], ["4-AR-n200-r01-A3-exactlink-s1"], ["4-AR-n200-r01-V-XB-s1"]],
         "P1": [[P("AR", "N2500-m1-c1"), P("AR", "N2500-m1-c2")], [P("AR", "N2500-m4-c2"), P("AR", "N2500-m1-I0-c2")]],
         "P2": [[P("ARweak", t) for t in ("N2500-m1-c1", "N2500-m1-c2")], [P("ARweak", t) for t in ("N2500-m4-c1", "N2500-m4-c2")]],
         "P3": [[P("ARweak", t) for t in ("N2500-m1-I0-c1", "N2500-m1-I0-c2")], [P("ADJOPP", t) for t in ("N2500-m1-c1", "N2500-m1-c2")]],

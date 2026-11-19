@@ -59,6 +59,26 @@
     "tasks": 20,
     "worst_case_core_h": 48.7,
     "core_h_cap": 48.8
+   },
+   {
+    "batch": "PL_A0_3",
+    "plan_sha256": "45fbf2f22b657c50379fcfad50d9eeb97a28b179a6169ff8daa110a6c313ff73",
+    "fits": [
+     {
+      "run_id": "4-AR-n200-r01-V-XB-s1",
+      "design": "AR",
+      "n": 200,
+      "Rp": 16,
+      "N": 2500,
+      "seed": 402020001,
+      "data_seed": 402020001,
+      "params": {},
+      "klass": "s200"
+     }
+    ],
+    "tasks": 20,
+    "worst_case_core_h": 46.7,
+    "core_h_cap": 46.8
    }
   ]
  },
