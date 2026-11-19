@@ -17,7 +17,10 @@
 //                  admitted island does (data, StartView, neighbours, draw scratch for T threads) and print /proc/self/status
 //                  RSS split into anonymous (heap: what the island owns) and file-backed (mapped setup.bin / data.bin pages)
 // Output: one JSON object per G (64, 256) on stdout, then a Markdown table.
+#include <cerrno>
+#include <cmath>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <string>
 #include "v4/calib_plan.h"
@@ -45,6 +48,15 @@ static Json proc_status() {   // VmRSS, VmHWM, RssAnon, RssFile (kB -> bytes)
   return j;
 }
 
+// --N: the engine's rule (calib_run.cpp whole_arg): a whole number in [V_N_MIN, V_N_MAX]; "2.5", "1e4"-style fractions, "abc", "" and a trailing junk are refused
+static bool whole_n(const std::string& s, int& out) {
+  if (s.empty()) return false;
+  char* end = nullptr; errno = 0;
+  const double x = std::strtod(s.c_str(), &end);
+  if (errno || end != s.c_str() + s.size() || !std::isfinite(x) || x != std::floor(x) || x < (double)calib::V_N_MIN || x > (double)calib::V_N_MAX) return false;
+  out = (int)x; return true;
+}
+
 int main(int argc, char** argv) {
   std::string counts, setup, data; int64_t n = 0, p = 0; double q90 = -1, setup_bin = -1, k_store = 0; int load = 0;
   int ti = 96, tc = 96, tm = 32, Rp = 16, vN = calib::V_N;   // vN: the V final islands' N (--N; default V_N = 2,500)
@@ -53,10 +65,9 @@ int main(int argc, char** argv) {
     if (k == "--counts") counts = v; else if (k == "--setup") setup = v; else if (k == "--n") n = std::stoll(v); else if (k == "--p") p = std::stoll(v);
     else if (k == "--q90") q90 = std::stod(v); else if (k == "--setup-bin-bytes") setup_bin = std::stod(v); else if (k == "--k-store") k_store = std::stod(v);
     else if (k == "--island-threads") ti = std::stoi(v); else if (k == "--calib-threads") tc = std::stoi(v); else if (k == "--merge-threads") tm = std::stoi(v);
-    else if (k == "--Rp") Rp = std::stoi(v); else if (k == "--N") vN = std::stoi(v); else if (k == "--data") data = v; else if (k == "--load") load = std::stoi(v);
+    else if (k == "--Rp") Rp = std::stoi(v); else if (k == "--N") { if (!whole_n(v, vN)) { std::fprintf(stderr, "--N must be a whole number in [%d, %d] (as the engine's calibrate / island N)\n", calib::V_N_MIN, calib::V_N_MAX); return 2; } } else if (k == "--data") data = v; else if (k == "--load") load = std::stoi(v);
     else { std::fprintf(stderr, "unknown option %s\n", k.c_str()); return 2; }
   }
-  if (vN < calib::V_N_MIN || vN > calib::V_N_MAX) { std::fprintf(stderr, "--N must be a whole number in [1, 2^24]\n"); return 2; }
   if (load) {   // MEASURED load of the start law as an admitted island holds it
     if (setup.empty() || data.empty()) { std::fprintf(stderr, "--load needs --setup and --data\n"); return 2; }
     if (load == 3) {   // MEASURED: WP4's SetupView (read_setup) held beside the island, before and after the table stores are released

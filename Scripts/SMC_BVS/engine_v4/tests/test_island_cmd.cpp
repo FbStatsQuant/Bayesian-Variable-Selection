@@ -716,6 +716,17 @@ TEST(v_mode_N_parameter) {
     // an island file of N = 2,500 cannot be merged under an N = 10^4 calib.bin (and vice versa): the merge checks N against calib.bin's
     const std::string i25 = dir("island_n2500_1.bin");
     CHECK_EQ(sh(bin + " island --data " + q(f.dpath) + " --setup " + q(f.spath) + " --calib " + q(cd.second) + " --mode V --seed 77 --island 1 --Rp 2 --threads 3 --out " + q(i25)), 0);
+    { // the merge refuses mixed N, both ways (exit 13: the island's meta.inputs name the other calib.bin; N itself is also checked at merge.h:274,323)
+      const std::string i1e4 = dir("island_n1e4_1.bin"), i1e4b = dir("island_n1e4_2.bin");
+      auto merge = [&](const std::string& calf, const std::string& islands, const std::string& out) {
+        return sh(bin + " merge --data " + q(f.dpath) + " --setup " + q(f.spath) + " --calib " + q(calf) + " --islands " + q(islands) + " --Rp 2 --mode V --threads 2 --out " + q(out)); };
+      // island 2 at N = 2,500 (calib `cd`), island 1 at N = 10^4 (calib `cal`)
+      const std::string i25b = dir("island_n2500_2.bin");
+      CHECK_EQ(sh(bin + " island --data " + q(f.dpath) + " --setup " + q(f.spath) + " --calib " + q(cd.second) + " --mode V --seed 77 --island 2 --Rp 2 --threads 3 --out " + q(i25b)), 0);
+      CHECK_EQ(merge(cal, i1e4 + "," + i25b, dir("fit_mix_a.bin")), 13);     // N = 10^4 calib.bin, one N = 2,500 island
+      CHECK_EQ(merge(cd.second, i25 + "," + i1e4b, dir("fit_mix_b.bin")), 13); // N = 2,500 calib.bin, one N = 10^4 island
+      CHECK_EQ(merge(cd.second, i25 + "," + i25b, dir("fit_n2500.bin")), 0);   // the matching N = 2,500 pair merges
+    }
     if (!fbin.empty()) {   // default N: the island of the branch and of F: identical sections
       const std::string iF = dir("island_F_1.bin"), cF = dir("calib_F.bin");
       CHECK_EQ(sh(fbin + " island --data " + q(f.dpath) + " --setup " + q(f.spath) + " --calib " + q(cF) + " --mode V --seed 77 --island 1 --Rp 2 --threads 3 --out " + q(iF)), 0);

@@ -5,7 +5,7 @@
 //    grid, up to ell rebuilds with bitwise grid convergence, the seven triggers (E1, E2, E3, forced_pilot_steps,
 //    grid_failure, grid_unconverged, local_limit), at most one escalation (preflight before it), the C-DLV fallback.
 //  * Rule::bounded (V-1M; D-2, D-26) = pilot + preliminary grid + at most I_max rebuilds (default 3, I_max <= ell
-//    required); NO tier escalation (N = 2,500, H = 512 always: tier 0 only); a construction failure installs the last
+//    required); NO tier escalation (H = 512 always, N = the calibrate parameter, default 2,500: tier 0 only); a construction failure installs the last
 //    successfully constructed grid, else the pilot schedule (the coded fallback path, core/v3_calib.R:122-124), flag
 //    grid_fallback -- never "no output"; otherwise the last grid is frozen, flag grid_unconverged if not converged;
 //    every trigger is still recorded. Grid refinement x m (default 1) is applied to the frozen grid.
