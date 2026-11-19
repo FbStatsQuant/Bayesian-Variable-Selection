@@ -1,0 +1,14 @@
+run_id                             class            core-h     x E |   setup   calib islands  merge   eval | wall max s (cal/isl/merge); maxRSS MB
+4-ADJOPP-n400-r01-V-s1             ADJOPP n400        1.23    0.27 |   0.042   0.102   0.992  0.060  0.031 | 23/70/27; 804 
+4-ADJOPP-n400-r02-V-s1             ADJOPP n400        0.96    0.21 |   0.029   0.053   0.788  0.060  0.027 | 12/55/27; 790 
+4-ADJOPP-n400-r03-V-s1             ADJOPP n400        0.88    0.19 |   0.033   0.053   0.694  0.067  0.033 | 12/45/30; 779 
+4-ADJOPP-n400-r04-V-s1             ADJOPP n400        1.42    0.31 |   0.040   0.107   1.172  0.064  0.040 | 24/83/29; 799 
+4-ADJOPP-n400-r05-V-s1             ADJOPP n400        1.16    0.25 |   0.031   0.084   0.959  0.049  0.038 | 19/61/22; 806 
+4-AR-n400-r01-V-s1                 AR n400            0.84    0.23 |   0.036   0.049   0.667  0.042  0.042 | 11/45/19; 790 
+4-AR-n400-r02-V-s1                 AR n400            0.93    0.26 |   0.031   0.071   0.751  0.049  0.031 | 16/53/22; 803 
+
+class            n     mean      min      max |      E   soft   hard  mean/E | mean split (setup/calib/islands/merge/eval)
+ADJOPP n400      5     1.13     0.88     1.42 |   4.62    6.9   11.6    0.24 | 0.04/0.08/0.92/0.06/0.03
+AR n400          2     0.88     0.84     0.93 |   3.64    5.5    9.1    0.24 | 0.03/0.06/0.71/0.05/0.04
+
+wave(s) S7: 7 fits, 7.42 core-h billed
