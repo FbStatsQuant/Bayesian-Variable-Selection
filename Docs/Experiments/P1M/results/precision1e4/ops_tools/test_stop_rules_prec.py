@@ -221,6 +221,11 @@ rc, o = run(probe(base), "--prior", os.path.join(TMP, "prior890.json")); check("
 rc, o = runw("S7", probe_wave("S7", 0.01)); check("pilot gate S7: prints 'S7 ... re-quotes S8'", "after S7 ends" in o and "re-quotes S8" in o, o)
 rc, o = runw("S9", probe_wave("S9", 0.01)); check("pilot gate S9: re-quotes S10", "re-quotes S10" in o, o)
 rc, o = runw("S6", probe_wave("S6", 0.01)); check("S6 is no pilot gate any more (no pilot line)", "pilot gate" not in o, o)
+# class mapping pinned (BLK n200 V fit -> "BLK n200", soft 3.3 / hard 5.6; BLK A3 fit -> "A3 n200")
+import importlib.util as _ilu
+_sp = _ilu.spec_from_file_location("srp", os.path.join(HERE, "stop_rules_prec.py")); _m = _ilu.module_from_spec(_sp); _sp.loader.exec_module(_m)
+check("class map: 4-BLK-n200-r01-V-s1 -> 'BLK n200' (soft 3.3 / hard 5.6 in the committed table)", _m.klass("4-BLK-n200-r01-V-s1") == "BLK n200" and _m.TABLE["BLK n200"][1:] == (3.3, 5.6), "%r %r" % (_m.klass("4-BLK-n200-r01-V-s1"), _m.TABLE.get("BLK n200")))
+check("class map: 4-BLK-n200-r01-A3-exactlink-s1 -> 'A3 n200' (not the BLK class)", _m.klass("4-BLK-n200-r01-A3-exactlink-s1") == "A3 n200", repr(_m.klass("4-BLK-n200-r01-A3-exactlink-s1")))
 # the committed table is pinned: altering it is a STOP
 src = open(os.path.join(HERE, "stop_rules_prec.py")).read().replace('"A3 n200": (2.76, 4.1, 6.9)', '"A3 n200": (2.76, 40.1, 60.9)')
 alt = os.path.join(TMP, "stop_rules_prec_altered.py"); open(alt, "w").write(src)
