@@ -575,7 +575,7 @@ Companion of [ERRORS.md](ERRORS.md). Generated from the source at commit `c8a30d
 | 323 | invalid_input | : not a calib file |
 | 328 | invalid_input | : calib meta N / L / Hm / tier out of range |
 | 330 | invalid_input | : frozen grid is not a valid grid |
-| 336 | invalid_input | : a V calib.bin must have the bounded rule, tier 0 and N = 2500 (D-1, D-26) |
+| 336 | invalid_input | : a V calib.bin must have the bounded rule, tier 0 and N a whole number in [1, 2^24] (default 2500; D-1, D-26) |
 | 337 | invalid_input | : I_used <= I_max <= ell violated |
 | 338 | invalid_input | : a theory-mode calib.bin must have the coded rule |
 | 342 | invalid_input | : meta.inputs differ from the data / setup in use |
