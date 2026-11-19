@@ -83,6 +83,25 @@ class TestResolve(Base):
         with self.assertRaises(p1m_driver.PlanError):
             p1m_driver.resolve(pl)
 
+    def test_top_level_N_must_agree_with_params_N(self):
+        # V-N Sol M2: top-level N = 2500 with params.N = 10000 used to resolve to 2,500 (sizing, cost) while the manifests carried 10,000
+        pl = load_example(); pl["fits"][0]["N"] = 2500; pl["fits"][0]["params"] = {"N": 10000}
+        with self.assertRaisesRegex(p1m_driver.PlanError, r"top-level N = 2500 disagrees with params\.N = 10000"):
+            p1m_driver.resolve(pl)
+        pl = load_example(); pl["fits"][0].pop("N", None); pl["fits"][0]["params"] = {"N": 10000}   # no top-level N: the default 2,500 would win silently
+        with self.assertRaisesRegex(p1m_driver.PlanError, "disagrees"):
+            p1m_driver.resolve(pl)
+        pl = load_example(); pl["fits"][0]["N"] = 10000; pl["fits"][0]["params"] = {"N": 2500}
+        with self.assertRaisesRegex(p1m_driver.PlanError, "disagrees"):
+            p1m_driver.resolve(pl)
+        # agreeing values (and no params.N) resolve, and the manifests carry that N
+        pl = load_example(); pl["fits"][0]["N"] = 10000; pl["fits"][0]["params"] = {"N": 10000}
+        P = p1m_driver.resolve(pl); self.assertEqual(P["fits"][0]["N"], 10000)
+        pl = load_example(); pl["fits"][0]["N"] = 10000
+        self.assertEqual(p1m_driver.resolve(pl)["fits"][0]["N"], 10000)
+        pl = load_example(); pl["fits"][0]["params"] = {"s0": 5}   # other params untouched
+        p1m_driver.resolve(pl)
+
     # ---- plan value validation (WP7 freeze item): each rule refuses with exit 65 and ONE line naming the key, the value and
     # the allowed range; a valid plan resolves exactly as before (the example plans regenerate byte-identically)
     def refused(self, mutate, *needles):

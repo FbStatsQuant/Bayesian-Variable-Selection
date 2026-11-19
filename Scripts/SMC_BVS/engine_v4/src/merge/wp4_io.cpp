@@ -323,6 +323,10 @@ CalibIn read_calib(const std::string& path, int32_t p, int32_t K, const std::str
   if (R.kind() != fmt::K_CALIB) throw Error(Status::invalid_input, path + ": not a calib file");
   CalibIn c; c.content_hash = R.content_hash(); c.mode = R.mode(); c.meta = R.json("meta");
   c.status = c.meta.at("status").str();
+  { // V-N Sol m3: meta.N is a whole number in [1, 2^24] BEFORE the int32 cast, as the island reader's whole() (16777216.5 is refused, not truncated)
+    const Json& mN = c.meta.at("N");
+    if (mN.type() != Json::NUM || !std::isfinite(mN.num()) || mN.num() != std::floor(mN.num()) || mN.num() < 1.0 || mN.num() > (double)calib::V_N_MAX)
+      throw Error(Status::invalid_input, path + ": calib meta N must be a whole number in [1, 2^24]"); }
   c.tier = (int32_t)c.meta.at("tier").num(); c.N = (int32_t)c.meta.at("N").num(); c.L = (int32_t)c.meta.at("L").num();
   c.Hm = (int32_t)c.meta.at("Hm").num();
   if (c.N < 1 || c.L < 0 || c.Hm < 1 || c.tier < 0 || c.tier > 1) throw Error(Status::invalid_input, path + ": calib meta N / L / Hm / tier out of range");
@@ -488,7 +492,9 @@ merge::IslandIn load_island_full(const std::string& path, int Rp, int p, const E
   std::vector<double> grid = R.vec<double>("grid");
   I.ess = R.vec<double>("st_ess");
   if (grid.size() != (size_t)I.T + 1 || I.ess.size() != (size_t)I.T) throw Error(Status::invalid_input, "grid / st_ess length differs from T");
-  for (double e : I.ess) if (!(e >= 0.0 && e <= (double)I.N)) throw Error(Status::invalid_input, "st_ess: not in [0, N]");   // re-check n-2
+  // re-check n-2. ESS = (sum w)^2 / sum w^2 can round a hair above N for equal weights (N = 3: 3.0000000000000004), so the bound has a relative
+  // tolerance (V-N Sol M1); a value that is not finite or negative or clearly above N is still refused. Validation only: nothing is changed.
+  for (double e : I.ess) if (!(e >= 0.0 && e <= (double)I.N * (1.0 + 1e-12))) throw Error(Status::invalid_input, "st_ess: not in [0, N]");
   for (double x : grid) need_finite(x, "grid");
   if (!ex.grid.empty() && grid != ex.grid) throw Error(Status::invalid_input, "grid differs from calib.bin's frozen grid");
   if ((ex.L >= 0 && I.L != ex.L) || (ex.Hm >= 1 && I.Hm != ex.Hm)) throw Error(Status::invalid_input, "L / Hm differ from calib.bin");

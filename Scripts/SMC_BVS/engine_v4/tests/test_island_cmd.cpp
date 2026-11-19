@@ -15,15 +15,21 @@
 //   * plan_from_sizes_equals_plan_island: plan_sizes + plan_with_budget = plan_island.
 //   * v_mode_N_parameter (V-N mini-leg, exp/P1M-VN): V's final-island N is a calibrate parameter (manifest params.N / --N, default
 //     2,500): plumbing (calib.bin, record, island, merge), default = 2,500 bit-identical, N = 10^4 accepted and run end to end,
-//     invalid N refused as T's island N is, T mode untouched, the memory plans scale with N. With V4_F_SMCBVS4 = the frozen F
-//     binary, the default-N calib.bin and island files of the fixture are also compared section by section with F's.
+//     invalid N refused as T's island N is, T mode untouched, the memory plans scale with N; v4_plan_tables --N (strict, a bare
+//     trailing option is an error).
+//   * v_mode_default_N_identity_vs_F (tag "identity": `v4_tests --identity`, needs V4_F_SMCBVS4 = the frozen F binary and
+//     V4_F_SMCBVS4_SHA256 = its recorded build sha256; FAILS, never skips, when they are unset or wrong): default-N calibrate,
+//     islands and merge of the fixture are identical to F's, section by section.
 #include <omp.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <cstdio>
+#include <cctype>
 #include <filesystem>
 #include <fstream>
 #include <functional>
+#include <map>
+#include <vector>
 #include <random>
 #include <set>
 #include "tk.h"
@@ -624,8 +630,6 @@ TEST(plan_from_sizes_equals_plan_island) {
 TEST(v_mode_N_parameter) {
   Dir dir("vn"); Fx f; make_fx(f, dir);
   const std::string bin = V4_SMCBVS4;
-  const char* fenv = std::getenv("V4_F_SMCBVS4");   // optional: the frozen F binary (method-v3.1.1-listpip); then default-N outputs are compared with F's
-  const std::string fbin = fenv ? fenv : "";
   const std::string common = " --data " + q(f.dpath) + " --setup " + q(f.spath) + " --mode V --seed 77 --threads 3";
   auto calibrate = [&](const std::string& exe, const std::string& tag, const std::string& extra) {
     const std::string out = dir("calib_" + tag + ".bin");
@@ -652,13 +656,6 @@ TEST(v_mode_N_parameter) {
     for (const char* k : {"N", "L", "Hm", "tier", "I_used", "I_max", "k_store", "rule", "tau_cal_hex", "seed"}) CHECKF(a.dump().size() && (a.contains(k) == b.contains(k)) && (!a.contains(k) || a.at(k).dump() == b.at(k).dump()), "meta.%s", k); }
   // the calibration itself does not depend on N (its islands have H = 512): only meta.N and the records differ
   CHECK(body_hash(cd.second) == body_hash(c1e4.second) && Id.grid == I4.grid && Id.inherited.size() == I4.inherited.size());
-  if (!fbin.empty()) {
-    const auto cf = calibrate(fbin, "F", "");
-    CHECK_EQ(cf.first, 0);
-    if (cf.first == 0) { CHECKF(body_hash(cf.second) == body_hash(cd.second), "default-N calib.bin sections differ from F's"); const Json a = v4::fmt::Reader(cf.second).json("meta"), b = v4::fmt::Reader(cd.second).json("meta");
-      CHECK(a.at("N").dump() == b.at("N").dump() && a.at("L").dump() == b.at("L").dump() && a.at("I_used").dump() == b.at("I_used").dump() && a.at("k_store").dump() == b.at("k_store").dump()); }
-    std::printf("  default-N calib.bin vs F (%s): sections %s\n", fbin.c_str(), cf.first == 0 && body_hash(cf.second) == body_hash(cd.second) ? "identical" : "DIFFER");
-  } else std::printf("  (V4_F_SMCBVS4 unset: no comparison with the F binary)\n");
   // invalid N is refused exactly as the island refuses T's N (a whole number in [1, 2^24]): exit 13, no calib.bin
   for (const char* bad : {"0", "-5", "2.5", "16777217", "abc"}) {
     const auto r = calibrate(bin, std::string("bad") + bad, std::string(" --N ") + bad);
@@ -727,12 +724,6 @@ TEST(v_mode_N_parameter) {
       CHECK_EQ(merge(cd.second, i25 + "," + i1e4b, dir("fit_mix_b.bin")), 13); // N = 2,500 calib.bin, one N = 10^4 island
       CHECK_EQ(merge(cd.second, i25 + "," + i25b, dir("fit_n2500.bin")), 0);   // the matching N = 2,500 pair merges
     }
-    if (!fbin.empty()) {   // default N: the island of the branch and of F: identical sections
-      const std::string iF = dir("island_F_1.bin"), cF = dir("calib_F.bin");
-      CHECK_EQ(sh(fbin + " island --data " + q(f.dpath) + " --setup " + q(f.spath) + " --calib " + q(cF) + " --mode V --seed 77 --island 1 --Rp 2 --threads 3 --out " + q(iF)), 0);
-      CHECKF(body_hash(iF) == body_hash(i25), "default-N island file sections differ from F's");
-      std::printf("  default-N island vs F: sections %s\n", body_hash(iF) == body_hash(i25) ? "identical" : "DIFFER");
-    }
   }
   // the memory plans scale with N: island --plan-only (sizes) and the merge estimate; the admission edge sits between the two plans
   { const std::string r1 = dir("ip_2500.json"), r2 = dir("ip_10000.json");
@@ -748,4 +739,64 @@ TEST(v_mode_N_parameter) {
     CHECK(eb.small > ea.small && eb.total >= ea.total && eb.small - ea.small == (uint64_t)(16.0 * 7500 * (24 + 4 * 8.0)));
     std::printf("  memory plans, p = 10^4, 4 threads: final island %.2f -> %.2f GiB (N 2500 -> 10^4), merge terminal supports %.1f -> %.1f MiB\n",
                 t1 / 1073741824.0, t2 / 1073741824.0, ea.small / 1048576.0, eb.small / 1048576.0); }
+}
+
+// ---- V-N Sol m4: v4_plan_tables --N is strict, and a bare trailing option is an error (it was silently skipped) -------------------
+TEST(plan_tables_N_option_strict) {
+  Dir dir("ptN"); Fx f; make_fx(f, dir);
+  const std::string pt = V4_PLAN_TABLES;
+  const std::string base = q(pt) + " --setup " + q(f.spath) + " --n " + std::to_string(f.D.n) + " --p " + std::to_string(f.D.p) + " --island-threads 4 --calib-threads 4 --merge-threads 2 --Rp 4";
+  CHECK_EQ(sh(base + " --N 2500", dir("pt_ok.out")), 0);
+  CHECK_EQ(sh(base + " --N 10000", dir("pt_1e4.out")), 0);
+  CHECK_EQ(sh(base + " --N", dir("pt_bare.out")), 2);                 // a bare trailing --N: an error, not skipped
+  CHECK_EQ(sh(q(pt) + " --setup " + q(f.spath) + " --N", dir("pt_bare2.out")), 2);
+  CHECK_EQ(sh(base + " --Rp", dir("pt_bare3.out")), 2);               // any bare trailing option
+  CHECK_EQ(sh(q(pt) + " --N", dir("pt_bare4.out")), 2);
+  for (const char* bad : {"2.5", "abc", "", "10000x", "0", "-5", "16777217"}) CHECKF(sh(base + " --N " + q(bad), dir("pt_bad.out")) == 2, "--N '%s' must exit 2", bad);
+  // the table moves with N (the final island and merge terms): N = 10^4 is larger than N = 2,500 in the JSON line
+  auto final_island = [&](const std::string& out) { std::ifstream in(out); std::string line; std::getline(in, line); return Json::parse(line).at("final_island").num(); };
+  const double a = final_island(dir("pt_ok.out")), b = final_island(dir("pt_1e4.out"));
+  CHECKF(b > a, "final island plan at N = 10^4 (%.0f) must exceed N = 2,500 (%.0f)", b, a);
+}
+
+// ---- V-N Sol m5: the default-N identity gate against the FROZEN binary F. Tag "identity": run as `v4_tests --identity`, with
+//      V4_F_SMCBVS4 = the F smcbvs4 (built with the SAME flags / island ISA as the head binary) and V4_F_SMCBVS4_SHA256 = the recorded
+//      sha256 of that F build. Unset or wrong -> FAIL (never a skip): the head can't be compared with itself. -------------------------
+TEST_TAGGED(v_mode_default_N_identity_vs_F, "identity") {
+  const char* fenv = std::getenv("V4_F_SMCBVS4"); const char* senv = std::getenv("V4_F_SMCBVS4_SHA256");
+  CHECK_MSG(fenv && *fenv, "V4_F_SMCBVS4 is not set: the identity gate needs the frozen F binary (method-v3.1.1-listpip, eefcbc4a); it never skips");
+  CHECK_MSG(senv && *senv, "V4_F_SMCBVS4_SHA256 is not set: the identity gate needs the recorded sha256 of the F build");
+  if (!fenv || !*fenv || !senv || !*senv) return;
+  const std::string fbin = fenv, head = V4_SMCBVS4;
+  std::string want = senv; for (auto& ch : want) ch = (char)std::tolower((unsigned char)ch);
+  const std::string have = v4::sha256_file(fbin);
+  CHECKF(have == want, "the F binary %s has sha256 %s, not the recorded %s", fbin.c_str(), have.c_str(), want.c_str());
+  CHECKF(have != v4::sha256_file(head), "V4_F_SMCBVS4 is the head binary itself (%s): the head would be compared with itself", head.c_str());
+  if (have != want || have == v4::sha256_file(head)) return;
+  Dir dir("vnid"); Fx f; make_fx(f, dir);
+  // F's V calibrate IGNORES N (B2); the head honours it: proof that the named binary is the pre-change one
+  { const std::string rf = dir("plan_F.json"), rh = dir("plan_head.json");
+    CHECK_EQ(sh(q(fbin) + " calibrate --plan-only 1 --mode V --n 200 --p 1000 --N 10000 --record " + q(rf)), 0);
+    CHECK_EQ(sh(q(head) + " calibrate --plan-only 1 --mode V --n 200 --p 1000 --N 10000 --record " + q(rh)), 0);
+    CHECK(rec_of(rf).at("settings").at("tiers").at(0).at("N_final").num() == 2500 && rec_of(rh).at("settings").at("tiers").at(0).at("N_final").num() == 10000); }
+  const std::string common = " --data " + q(f.dpath) + " --setup " + q(f.spath) + " --mode V --seed 77 --threads 3";
+  std::map<std::string, std::string> calib, fit; std::map<std::string, std::vector<std::string>> isl;
+  for (const std::string who : {"head", "F"}) {
+    const std::string exe = who == "head" ? head : fbin;
+    calib[who] = dir("calib_" + who + ".bin");
+    CHECK_EQ(sh(q(exe) + " calibrate" + common + " --out " + q(calib[who])), 0);   // default N: no --N
+    std::string list;
+    for (int r = 1; r <= 2; ++r) {
+      const std::string o = dir("island_" + who + "_" + std::to_string(r) + ".bin"); isl[who].push_back(o); list += (r > 1 ? "," : "") + o;
+      CHECK_EQ(sh(q(exe) + " island --data " + q(f.dpath) + " --setup " + q(f.spath) + " --calib " + q(calib[who]) + " --mode V --seed 77 --island " + std::to_string(r) + " --Rp 2 --threads 3 --out " + q(o)), 0);
+    }
+    fit[who] = dir("fit_" + who + ".bin");
+    CHECK_EQ(sh(q(exe) + " merge --data " + q(f.dpath) + " --setup " + q(f.spath) + " --calib " + q(calib[who]) + " --islands " + q(list) + " --Rp 2 --mode V --threads 2 --out " + q(fit[who])), 0);
+  }
+  CHECKF(body_hash(calib["head"]) == body_hash(calib["F"]), "default-N calib.bin sections differ from F's");
+  { const Json a = v4::fmt::Reader(calib["head"]).json("meta"), b = v4::fmt::Reader(calib["F"]).json("meta");
+    for (const char* k : {"N", "L", "Hm", "tier", "I_used", "I_max", "k_store", "rule", "tau_cal_hex", "seed", "status"}) CHECKF(a.contains(k) == b.contains(k) && (!a.contains(k) || a.at(k).dump() == b.at(k).dump()), "calib meta.%s differs from F's", k); }
+  for (int r = 0; r < 2; ++r) CHECKF(body_hash(isl["head"][(size_t)r]) == body_hash(isl["F"][(size_t)r]), "default-N island %d sections differ from F's", r + 1);
+  CHECKF(body_hash(fit["head"]) == body_hash(fit["F"]), "default-N fit.bin sections differ from F's");
+  std::printf("  default-N identity vs F (sha256 %s): calib.bin, 2 islands, fit.bin sections identical\n", have.substr(0, 12).c_str());
 }

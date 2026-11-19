@@ -39,6 +39,10 @@ target_compile_definitions(v4_bench_island PRIVATE V4_ISLAND_ISA_STR="${V4_ISLAN
 add_executable(v4_plan_tables tools/plan_tables.cpp)
 target_compile_options(v4_plan_tables PRIVATE ${V4_BIT_FLAGS})
 target_link_libraries(v4_plan_tables PRIVATE v4_a v4_bit)
+if(V4_TESTS)   # plan_tables_N_option_strict runs the tool
+  target_compile_definitions(v4_tests PRIVATE V4_PLAN_TABLES="$<TARGET_FILE:v4_plan_tables>")
+  add_dependencies(v4_tests v4_plan_tables)
+endif()
 # the calibration pilot island alone on production inputs (WP7 O5; the H-11 10^6 pilot measurement)
 add_executable(v4_pilot_island tools/pilot_island.cpp)
 target_compile_options(v4_pilot_island PRIVATE ${V4_BIT_FLAGS})

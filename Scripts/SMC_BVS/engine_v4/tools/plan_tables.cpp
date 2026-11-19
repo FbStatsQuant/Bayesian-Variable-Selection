@@ -60,8 +60,10 @@ static bool whole_n(const std::string& s, int& out) {
 int main(int argc, char** argv) {
   std::string counts, setup, data; int64_t n = 0, p = 0; double q90 = -1, setup_bin = -1, k_store = 0; int load = 0;
   int ti = 96, tc = 96, tm = 32, Rp = 16, vN = calib::V_N;   // vN: the V final islands' N (--N; default V_N = 2,500)
-  for (int i = 1; i + 1 < argc; i += 2) {
-    const std::string k = argv[i], v = argv[i + 1];
+  for (int i = 1; i < argc; i += 2) {
+    const std::string k = argv[i];
+    if (i + 1 >= argc) { std::fprintf(stderr, "option %s needs a value\n", k.c_str()); return 2; }   // V-N Sol m4: a bare trailing option is an error, not skipped
+    const std::string v = argv[i + 1];
     if (k == "--counts") counts = v; else if (k == "--setup") setup = v; else if (k == "--n") n = std::stoll(v); else if (k == "--p") p = std::stoll(v);
     else if (k == "--q90") q90 = std::stod(v); else if (k == "--setup-bin-bytes") setup_bin = std::stod(v); else if (k == "--k-store") k_store = std::stod(v);
     else if (k == "--island-threads") ti = std::stoi(v); else if (k == "--calib-threads") tc = std::stoi(v); else if (k == "--merge-threads") tm = std::stoi(v);

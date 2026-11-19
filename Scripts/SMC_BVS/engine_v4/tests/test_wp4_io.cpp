@@ -941,7 +941,8 @@ TEST(wp4_io_merge_cli_and_driver_manifest) {
 namespace {
 // Rewrites one section of an engine file hash-consistently (the WP1 Writer recomputes every hash): the review PR20 probe.
 using Bytes = std::vector<uint8_t>;
-void rewrite(const std::string& src, const std::string& dst, const std::string& name, const std::function<void(Bytes&, uint64_t&, uint64_t&)>& mut) {
+void rewrite(const std::string& src, const std::string& dst, const std::string& name, const std::function<void(Bytes&, uint64_t&, uint64_t&)>& mut,
+             const std::function<void(Json&)>& mut_meta = nullptr) {
   std::vector<std::pair<std::string, Bytes>> secs; std::vector<std::array<uint64_t, 3>> meta_d; std::vector<uint32_t> dt; Json meta;
   uint32_t kind, mode;
   { fmt::Reader R(src); kind = R.kind(); mode = R.mode();
@@ -958,6 +959,7 @@ void rewrite(const std::string& src, const std::string& dst, const std::string& 
       secs.push_back({n, Bytes(p, p + e.length)}); meta_d.push_back({e.dims[0], e.dims[1], 0}); dt.push_back(e.dtype);
     } }
   fmt::Writer W(kind, mode);
+  if (mut_meta) mut_meta(meta);
   W.add_json("meta", meta);
   for (size_t i = 0; i < secs.size(); ++i) {
     uint64_t d0 = meta_d[i][0], d1 = meta_d[i][1];
@@ -1065,5 +1067,49 @@ TEST(wp4_io_hostile_files_refused) {
     std::vector<double> ib = R.vec<double>("island_best");
     CHECK(r.at("status").str() == "completed" && ib.size() == 5 && ib[1] == f.isl[0].led.island_best[1] && ib[1] < 1e300);
     run_cmd("mv " + q(keep) + " " + q(src)); }
+  cleanup(f);
+}
+
+// V-N Sol M1: the merge's st_ess <= N check has a relative tolerance: ESS = (sum w)^2 / sum w^2 for EQUAL weights rounds a hair
+// above N (N = 3: 3.0000000000000004), and such a valid island must load; a clearly larger ESS is still refused.
+TEST(wp4_io_island_ess_equal_weights_tolerance) {
+  TmpGuard tmp_guard("ess"); Fx f = make_fx("ess", 2);
+  const int p = f.D.p;
+  wp4io::Expect ex; ex.mode = fmt::M_COMPAT; ex.data_hash = f.dhash; ex.setup_hash = f.shash; ex.calib_hash = f.chash; ex.grid = f.grid; ex.L = 4; ex.Hm = 4; ex.K = f.D.K; ex.tier = 0;
+  Json in = Json::object(); in["data.bin"] = f.dhash; in["setup.bin"] = f.shash; in["calib.bin"] = f.chash;
+  // the island's own formula (island_run.h:779) at equal weights: ess = exp(2 lse(lw) - lse(2 lw)) with lw = 0, lse(0 x N) = log N, lse(0) = log N
+  auto equal_weight_ess = [](int N) { const double L = std::log((double)N); return std::exp(2 * L - L); };
+  auto loads = [&](int N, double e) {   // an island of N particles whose three stages all report ESS e
+    merge::IslandIn I = f.isl[0]; I.N = N; I.terminal.clear(); I.ess = {e, e, e};
+    const std::string path = tmp_path("ess_island.bin");
+    wp4io::write_island(path, fmt::M_COMPAT, I, in, &clean_block(), &f.grid);
+    try { wp4io::load_island_full(path, 2, p, ex); return true; } catch (const Error& er) { CHECK(er.st == Status::invalid_input); return false; }
+  };
+  const double e3 = equal_weight_ess(3);
+  CHECK_MSG(e3 > 3.0, "the N = 3 equal-weights ESS is " + std::to_string(e3) + ": the case must exceed N for the test to bite");
+  CHECK(loads(3, e3));                                           // the reviewer's case
+  CHECK(loads(3, 3.0) && loads(3, std::nextafter(3.0, 1e300)));  // N, and N + 1 ulp
+  CHECK(loads(10000, equal_weight_ess(10000)));
+  CHECK(loads(10000, std::nextafter(10000.0, 1e300)) && loads(10000, 10000.0 * (1.0 + 1e-13)));
+  CHECK(!loads(3, 3.0 * (1.0 + 1e-9)) && !loads(10000, 10000.0 * (1.0 + 1e-9)) && !loads(10000, 10001.0));   // clearly above N: refused
+  CHECK(!loads(3, -1.0) && !loads(3, std::nan("")));
+  cleanup(f);
+}
+
+// V-N Sol m3: calib meta.N must be a whole number in [1, 2^24] BEFORE the int32 cast (as the island reader's whole()): 16777216.5
+// (truncated to 2^24 by the cast) and 2.5 are refused, not accepted as 16777216 / 2.
+TEST(wp4_io_calib_meta_N_integer_check) {
+  TmpGuard tmp_guard("mN"); Fx f = make_fx("mN", 2, fmt::M_V);
+  auto outcome = [&](const Json& n) {
+    const std::string dst = tmp_path("mN_variant.bin");
+    rewrite(f.cpath, dst, "grid", [](Bytes&, uint64_t&, uint64_t&) {}, [&](Json& m) { m["N"] = n; });
+    try { wp4io::read_calib(dst, f.D.p, f.D.K); } catch (const Error& e) { return e.st == Status::invalid_input ? std::string("refused") : std::string("other"); }
+    return std::string("ok");
+  };
+  CHECK(outcome(Json(2500.0)) == "ok" && outcome(Json(10000.0)) == "ok" && outcome(Json(1.0)) == "ok" && outcome(Json(16777216.0)) == "ok");
+  CHECK(outcome(Json(16777216.5)) == "refused");   // the reviewer's case: (int32)16777216.5 = 16777216 would have passed the old range check
+  CHECK(outcome(Json(2.5)) == "refused" && outcome(Json(10000.25)) == "refused");
+  CHECK(outcome(Json(0.5)) == "refused" && outcome(Json(0.0)) == "refused" && outcome(Json(-1.0)) == "refused" && outcome(Json(16777217.0)) == "refused");
+  CHECK(outcome(Json(std::nan(""))) == "refused" && outcome(Json("2500")) == "refused");   // not a finite number
   cleanup(f);
 }
