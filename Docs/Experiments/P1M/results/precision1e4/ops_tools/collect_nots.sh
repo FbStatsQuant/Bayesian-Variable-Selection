@@ -4,7 +4,7 @@
 #   calib_meta.json = `smcbvs4 info calib.bin --meta 1 --record` run with the BATCH's env.sh sourced (O-4, R8; written only when absent: the A0 monitor may have made it);
 #   OFFLOAD_FILES.sha256 = sha256 of every file of record (relative paths). Kept = everything EXCEPT rebuildable *.bin (raw, data, calib, island_*, checkpoints) and
 #   SHA256SUMS* / OFFLOAD*; KEPT *.bin: fit.bin, eval.bin; law.bin only for the precision fits (-P-) and the A3 fits; setup.bin only for the run ids in SETUP_KEEP_CSV
-#   (the A3 fits and their default pairs, R15). data.bin is NOT collected (rebuildable from its seed; a change from the overlap).
+#   (the A3 fits and their default pairs, R15). data.bin is NOT collected (except the boundary dataset r91 of B1) (rebuildable from its seed; a change from the overlap).
 # Per batch: bin_version.json = `version` with the batch env.sh SOURCED (the overlap's version file was written without env.sh and held the false
 #   'CXXABI_1.3.15 not found' text: that flaw is fixed; a non-JSON result is stored as bin_version.ERROR.txt and reported), submissions / starts / ends jsonl,
 #   the one sacct dump (p1m_cost.py format, with step rows), _batch_files.sha256, _batch_extra.list (driver scripts, bin/smcbvs4.sha256, COPIED_FROM, slurm_out logs).
@@ -26,13 +26,14 @@ for b in $BL; do
       ( set +u; source "$S/env.sh" >/dev/null 2>&1; nice -n 19 "$S/bin/smcbvs4" info "$run/calib.bin" --meta 1 --record "$run/calib_meta.json" >/dev/null 2>&1 ) \
         || echo "WARNING: $rid: calib_meta.json could not be made" >&2
     fi
-    keep_law=0; [[ $rid == *-P-* || $rid == *-A3-* || $rid == *-A3F-* ]] && keep_law=1
+    keep_law=0; [[ $rid == *-P-* || $rid == *-A3-* || $rid == *-A3F-* || $rid == *-r91-* ]] && keep_law=1   # r91 = the boundary dataset B1 (V and T): law.bin and data.bin kept as in the overlap layout
+    keep_data=0; [[ $rid == *-r91-* ]] && keep_data=1
     keep_setup=0; [[ ,$KEEP, == *,$rid,* ]] && keep_setup=1
     ( cd "$run"; rm -f OFFLOAD_FILES.sha256
       find . -type f ! -name 'SHA256SUMS*' ! -name 'OFFLOAD*' ! -name '*.ckpt*' \
-        ! \( -name '*.bin' ! -name fit.bin ! -name eval.bin ! -name law.bin ! -name setup.bin \) | sed 's#^\./##' | sort \
+        ! \( -name '*.bin' ! -name fit.bin ! -name eval.bin ! -name law.bin ! -name setup.bin ! -name data.bin \) | sed 's#^\./##' | sort \
         | while read -r f; do
-            case $f in law.bin) [[ $keep_law -eq 1 ]] || continue;; setup.bin) [[ $keep_setup -eq 1 ]] || continue;; esac
+            case $f in law.bin) [[ $keep_law -eq 1 ]] || continue;; setup.bin) [[ $keep_setup -eq 1 ]] || continue;; data.bin) [[ $keep_data -eq 1 ]] || continue;; esac
             echo "$f"
           done | nice -n 19 xargs -r sha256sum > OFFLOAD_FILES.sha256 )
   done

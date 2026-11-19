@@ -1,0 +1,2 @@
+4-ARweak-n200-r91 s1  V:True T:False  hpm_eq=NA T_higher_F=NA dlogZ=NA (NA se) pip_worst_ratio=NA dH_T=NA screen>10%=NA
+4-ARweak-n200-r91 s2  V:True T:False  hpm_eq=NA T_higher_F=NA dlogZ=NA (NA se) pip_worst_ratio=NA dH_T=NA screen>10%=NA

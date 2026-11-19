@@ -5,7 +5,7 @@ records/precision1e4/<wave>/_batch_PL_<wave>_<i>/cost/cost_<run_id>.json (p1m_co
 PRIOR=<this file>, so its cumulative and projection rules count earlier waves (and must NOT include the monitored wave's own run ids). A run id collected twice (a rerun) is
 summed (it is spent core-h). Values rounded to 2 decimals. A sidecar <file>.sources lists the cost files used. Stdlib only. Read-only on the records."""
 import argparse, glob, json, os, sys
-ORDER = ["A0", "P1", "P2", "P3", "P4", "FZ", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "S10", "H1", "H2", "H3"]
+ORDER = ["A0", "P1", "P2", "P3", "P4", "B1", "FZ", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "S10", "H1", "H2", "H3"]
 ap = argparse.ArgumentParser(); ap.add_argument("wave"); ap.add_argument("--records", default="/home/fb31/SMC_Engineering_Department/records/precision1e4")
 ap.add_argument("--out"); a = ap.parse_args()
 if a.wave not in ORDER:

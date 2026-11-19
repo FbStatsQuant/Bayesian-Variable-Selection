@@ -1,0 +1,21 @@
+selfcheck V s1 xeval 0.11223378503865644 engine 0.11223378503865655 DIFFERENT -1.110e-16
+selfcheck V s2 xeval 0.11210893685846035 engine 0.11210893685846035 BIT-EQUAL
+selfcheck T s1 xeval 0.11240452408198465 engine 0.11240452408198476 DIFFERENT -1.110e-16
+selfcheck T s2 xeval 0.11259813319790979 engine 0.11259813319790979 BIT-EQUAL
+2 of 4 self-checks bit-equal
+
+fit | HPM (size) | HPM = S0 | F_hpm | F_S0 | F_hpm-F_S0 | HPM mass exp(F_hpm-logZ) | occ M=1 | sup_null PIP | min_true PIP | island PIP max sd | logZ | store models | core-h | tier / N_final
+V s1 | [] (0) | False | -147.775522 | -172.6293 | +24.854 | 0.7437 | 0.7455 | 0.01048 | 1.82e-05 | 0.00269 | -147.4793 | 400001 | 0.80 | 0 / 2500
+V s2 | [] (0) | False | -147.775522 | -172.6293 | +24.854 | 0.7459 | 0.7451 | 0.01048 | 1.81e-05 | 0.00293 | -147.4824 | 400001 | 0.70 | 0 / 2500
+T s1 | [] (0) | False | -147.775522 | -172.6293 | +24.854 | 0.7451 | 0.7449 | 0.01048 | 1.82e-05 | 0.00093 | -147.4813 | 400001 | 36.63 | 1 / 40000
+T s2 | [] (0) | False | -147.775522 | -172.6293 | +24.854 | 0.7438 | 0.7441 | 0.01048 | 1.82e-05 | 0.00091 | -147.4795 | 400001 | 44.21 | 1 / 40000
+
+OFFSET CELL bnd (N 2,500, m 1, I_max 3, k = 16; ONE dataset, a point, not tested; no offset-vs-p):
+  per seed pair V - T: s1 +0.00197 (+0.61 s_T), s2 -0.00282 (-0.87 s_T)
+  delta_B1 = mean over the 2 seeds = -0.00042 = -0.13 s_T (s_T = 0.00324); seed spread (sd of the 2 pair differences) 0.00339 = 1.05 s_T
+  island se of logZ V s1: 0.00254 (sigma_hat 0.0101)
+  island se of logZ V s2: 0.00273 (sigma_hat 0.0109)
+  island se of logZ T s1: 0.00206 (sigma_hat 0.0041)
+  island se of logZ T s2: 0.00142 (sigma_hat 0.0028)
+
+core-h: V 0.8044 / 0.7022, T 36.6311 / 44.2089; B1 total 82.35 (quote 115, wave stop 230, T report line 172.5)

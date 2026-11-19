@@ -1,0 +1,2 @@
+4-ARweak-n200-r91 s1  V:True T:True  hpm_eq=True T_higher_F=False dlogZ=0.001975 (0.6018 se) pip_worst_ratio=0.05083 dH_T=0.3353 screen>10%=False
+4-ARweak-n200-r91 s2  V:True T:True  hpm_eq=True T_higher_F=False dlogZ=-0.002823 (0.9142 se) pip_worst_ratio=0.1176 dH_T=0.3356 screen>10%=False
