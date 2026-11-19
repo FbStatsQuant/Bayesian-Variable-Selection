@@ -7,7 +7,9 @@ WAVE=${1:?WAVE}
 # batches of the wave: W0 = the original T, V (evidence: T had its merge refused, GUARD-W) + the rebuilds T2, V2; other waves T, V. ARMS= overrides.
 if [[ -z ${ARMS_SET:-} && $WAVE == W0 && $ARMS == "T V" ]]; then ARMS="T V T2 V2"; fi
 BL=$(for a in $ARMS; do printf "OV_%s_%s " "$WAVE" "$a"; done)
-[[ $WAVE == W0 ]] && export IGNORE_FAILED=${IGNORE_FAILED-OV_W0_T}   # known-failed evidence batch: INFO, not STOP
+if [[ $WAVE == W0 ]]; then   # known failures (INFO, not STOP): the evidence batch OV_W0_T; the AR-T2 islands refused on N (2777597) and the cancelled merge / eval (2777598/99), rescued by 2783938-40
+  export IGNORE_FAILED=${IGNORE_FAILED-OV_W0_T} IGNORE_JOBS=${IGNORE_JOBS-2777597,2777598,2777599} IGNORE_ENGINE=${IGNORE_ENGINE-OV_W0_T2/4-AR-n200-r01-T-s1/log/island_}
+fi
 OUT=$STG/monitor/$WAVE; mkdir -p "$OUT"; P=$OUT/probe_$(date -u +%Y%m%dT%H%M%SZ).txt
 ssh $NOTS "set -u; D=$D
 echo \"### META utc=\$(date -u +%FT%TZ)\"

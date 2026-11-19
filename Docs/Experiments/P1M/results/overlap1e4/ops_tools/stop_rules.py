@@ -36,8 +36,13 @@ def main():
     ap.add_argument("--ignore", default=os.environ.get("IGNORE_FAILED", ""), help="comma list of batches whose failures are KNOWN evidence "
                     "(W0: OV_W0_T = the T batch whose merge was refused by GUARD-W): their failed stages / engine records are INFO, not STOP; "
                     "their cost still counts")
+    ap.add_argument("--ignore-jobs", default=os.environ.get("IGNORE_JOBS", ""), help="comma list of Slurm job ids (array base ids) whose failed / cancelled "
+                    "state is KNOWN and handled (W0: 2777597 AR-T2 islands refused on N, 2777598 / 2777599 merge / eval cancelled; rescue 2783938-40): "
+                    "INFO, cost still counts, not part of the fit's state")
+    ap.add_argument("--ignore-engine", default=os.environ.get("IGNORE_ENGINE", ""), help="comma list of substrings of ENGINE_FLAGS lines to ignore (known)")
     a = ap.parse_args()
     ignore = set(x for x in a.ignore.split(",") if x)
+    ign_jobs = set(x for x in a.ignore_jobs.split(",") if x); ign_eng = [x for x in a.ignore_engine.split(",") if x]
     S = sections(a.probe); flags = []
     runs, arm = {}, {}                                  # batch -> ordered run ids (plan order = array task order); key "batch/run" -> arm letter
     for b in sorted(d for d in os.listdir(a.plans) if re.fullmatch(r"OV_%s_(T|V)2?" % a.wave, d)):
@@ -64,9 +69,11 @@ def main():
             fit = runs[b][int(task) - 1]
         k = b + "/" + fit
         cost[k] += int(cpuraw or 0) / 3600.0
-        state[k].add(st.split()[0])
+        if base not in ign_jobs:
+            state[k].add(st.split()[0])
         if st.split()[0] in BAD:
-            (flags if b in ignore else bad_stage).append(("INFO known-failed batch %s: " % b if b in ignore else "") + "%s %s %s" % (jid, name, st))
+            known = b in ignore or base in ign_jobs
+            (flags if known else bad_stage).append(("INFO known-failed %s: " % (b if b in ignore else "job " + base) if known else "") + "%s %s %s" % (jid, name, st))
         if st.split()[0] in INFRA:
             flags.append("INFO infrastructure fault (not a stop rule; one rerun allowed, manager): %s %s %s" % (jid, name, st))
     for l in S.get("SQUEUE", []):
@@ -106,7 +113,7 @@ def main():
         flags.append("STOP > 2 failed fits in the wave: %s" % sorted(failed_fits))
     if pend:
         flags.append("STOP admission / QOS pending reason: " + "; ".join(pend))
-    eng = [l for l in S.get("ENGINE_FLAGS", []) if not any("/%s/" % b in l for b in ignore)]
+    eng = [l for l in S.get("ENGINE_FLAGS", []) if not any("/%s/" % b in l for b in ignore) and not any(x in l for x in ign_eng)]
     eng_known = [l for l in S.get("ENGINE_FLAGS", []) if l not in eng]
     if eng:
         flags.append("STOP engine record (OUTCOME / resource_limit / admission): " + "; ".join(eng))
