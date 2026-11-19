@@ -1,0 +1,177 @@
+# FZ_READBACK: freeze checkpoint of the precision study (Sol F6) + 10⁴ science: registered scripts run on the 18 precision fits (Sonnet worker; Thu 2026-11-19; plan a6037ab0; for the Opus check, then HQ)
+
+**Status: DRAFT for the one Opus check (PREREG §3.3 / §6). Nothing submitted, nothing committed, no registered file touched. Scripts run unchanged; outputs saved unedited in `fz/`.**
+
+## Summary (≤ 12 lines)
+1. **FREEZE PROPOSAL (the rule decides): N = 2,500 (PROVISIONAL, default D-1; the 12 N = 10⁴ fits are held for the V-N mini-leg), m = 1 (m = 4 KEEP), I_max = 0 (ADOPT), resampling OFF ("not tested").** Records: 18/18 precision fits delivered, 0 identity failures, one build `d0c30b65…`, one data identity per dataset; scripts shas verified (freeze `7cdd69a1…`, offset `cbbc2301…`), self-tests 8/8 + 5/5 pass (`fz/freeze_stdout.txt`, `fz/freeze.json`).
+2. **m = 4 → KEEP m = 1.** Cost ratio c_X = 2.326, so the bar is r ≤ 1/√c_X = 0.656 on all of M1, M2, M3 and r < 1 in every dataset. M3 (σ̂ of Ẑ_r) passes, **0.540**; M1 (occupancy-evidence sd) **1.007** and M2 (island PIP sd) **1.037** do not (per-dataset 0.94–1.13 and 0.98–1.07). m = 4 halves σ̂ but not the PIP or occupancy spread, at 2.3× the island cost. HPM identical in every fit.
+3. **I_max = 0 → ADOPT.** Non-inferiority: M1 0.971, M2 0.932, M3 **1.130** (bar 1.15; per-dataset M3 1.106 / 1.131 / 1.155 against 1.30), HPM identical. **The M3 margin is thin** (see Opus point 2). Measured saving: calibration 0.100 × of I_max = 3; fit −17 % at R′ = 64 (5.00 vs 6.02 core-h), **≈ −39 % at the production R′ = 16** (1.38 vs 2.25, estimated from the R′ = 64 stage costs).
+4. **Offset (no pass/fail):** δ(ovl, k = 16) = **−0.00394** reproduced (CI −0.00712…−0.00076, 7/10 negative). Leg cells at k = 64 (3 datasets, all negative): m1·I3 **−0.00601**, m4·I3 **−0.00591**, m1·I0 **−0.00690**; 95 % half-widths 0.0074 / 0.0060 / 0.0051. R′ span k = 4 → 64 equals the Jensen term (|slope − Jensen| ≤ 1 × 10⁻⁵, all four P2 intervals contain 0); knob contrasts m +0.00010 [−0.0018, +0.0020], I_max −0.00089 [−0.0040, +0.0022]; **no FINDING**; **N contrast not computable (no N = 10⁴ V fits)**. §2.
+5. **grid_unconverged:** V **18/20** fits (all 18 non-NULL; NULL converge at rebuild 1), T 0/20 final (3/20 at tier 0: all three escalations were this trigger alone after 14 rebuilds = the ℓ cap); source: one read-only ssh to NOTS. "Converged" = bitwise-equal temperature grid on a rebuild; **no I_max of this study clears it** (I_max = 0 cannot, I_max = 3 never did on a non-NULL fit; T needed 7–12 rebuilds). Recommend: **document as "bounded-stop"; do not use it for the I_max choice.** §3.
+6. **Cost:** 18 precision fits 140.41 core-h (all 20 units incl. A3 + XB: 145.68); class means m1·I3 6.02 (E 6.28, 0.96×), m1·I0 5.00 (5.76, 0.87×), m4·I3 12.37 (12.36, 1.00×); no soft or hard trip; G-B criterion PASS in all three classes. §4.
+7. **Science re-quote at (N 2,500, m 1, I_max 0):** committed model E **354** (science, S1–S10 = 170 fits: 156 new + 14 `VF` re-runs, A3 pair `A3F`); with the measured I_max = 0 calibration fraction 0.10 (model: U(0.2, 0.5)) **E 310**. Cumulative stop 900 stays (LEG_PLAN §3; measured basis would give 800). Spent 145.68 + science ≈ 310–354 (+ B1 ≈ 115) ≈ 570–615 ≪ 900. §6.
+8. **For the manager (PREREG §3.3, add nothing yet):** HQ approved one sentence (H-28): "calibration islands stay at H = 512 regardless of N (the N = 10⁴ arm tests island N)".
+9. **B1 (boundary add-on) is pending:** §7 is a placeholder. Both cheap items for the checker: §8.
+
+## 0. Preflight (all passed)
+- **P4 collected:** `records/precision1e4/P4/` = 4 fit units + `_batch_PL_P4_1`, `_batch_PL_P4_2` = 6 units, `sha256sum -c` OK in all (0 non-OK lines). I also ran `sha256sum -c` in all 18 fit units and `smcbvs4 info fit.bin --meta 1` (Owls build `b9dc443e…`, F + xeval, read-only): every fit `completed`, `verified header+table+meta`, 45 sections (`fz/fz_dchecks_output.txt`).
+- **Scripts:** `sha256sum precision_freeze.py` = `7cdd69a11f3aaffa7a6615df639aefbe101042e9d37a8d520999ccbdc6279605`; `precision_offset.py` = `cbbc23012e6900ff7798267cc7325816ad0b8312ec6e26fd09972adc9780d300`; tests `3ef4b5b6…` / `0a9e39be…`. Self-tests (`python3 -I tests/test_precision_freeze.py`, `…_offset.py`, scratch under `~/SMC_Engineering_Department/tmp/20261119-fz/selftest`): **8/8 OK, 5/5 OK**. `quote_model.py` sha `6cd8a978…`.
+- **D (delivered, PREREG §2):** 18/18: `status`/`fit_status` completed, `evidence.logZ_r` length 64 all finite, `fit.bin` readable, one `binary.sha256` = `d0c30b65103e308e…` (the leg build) in every `*.bin.json` of the 18 fits; **data identity:** one (X, y) sha256 pair per dataset (AR `e67d7051…/577c5682…`, ARweak `a9cee1b2…/407e59c3…`, ADJ-OPP `424a5536…/311b2835…`) equal to `staging/precision1e4/overlap_refs.json`; arm identity: 0 failures (`fz/freeze.json` `identity`: recorded N, m, I_max from `calib_meta.json` = plan arm, rule `bounded`, I_used ≤ I_max, in all 18).
+- **The 18 fits** = the two A0 canaries that carry a precision run id (AR m4 c1, AR I0 c1) + P1 4 + P2 4 + P3 4 + P4 4; the A3 canary and XB (A0) do not match the freeze script's run-id pattern and are not scored. Datasets AR, ARweak, ADJ-OPP × cells (m1·I3 base, m4·I3, m1·I0) × 2 replicates.
+- **Usage note (not a change to the registered script):** `precision_freeze.py --cost-dir DIR` globs `cost_*.json`, which also matches the batch totals `cost_batch.json` (no `stages`) → `KeyError: 'stages'`. The command that produced `fz/`: `--cost-dir` = a scratch dir of 20 symlinks to the per-run `cost_4-*.json` files only (`~/SMC_Engineering_Department/tmp/20261119-fz/cost`; every per-run file of the leg, incl. A3 and XB, which the script ignores). Command: `python3 -I precision_freeze.py --records $R/A0 $R/P1 $R/P2 $R/P3 $R/P4 --cost-dir ~/SMC_Engineering_Department/tmp/20261119-fz/cost --out fz` with `R=~/SMC_Engineering_Department/records/precision1e4`. The manager should record this command beside the freeze (and pass a clean cost dir if the checker re-runs it).
+
+## 1. The freeze rule (task 1; `fz/freeze.json`, `fz/freeze_stdout.txt`)
+Script output, unedited: `m=4` **KEEP**; `N=10000 (m=1)` **NOT_RUN**; `N=10000 (m=4)` **NOT_RUN**; `I_max=0` **ADOPT**; resampling "OFF, not tested (systematic not available in the frozen binary; D-14 default; HQ Q5)"; identity_failures `{}`.
+
+### 1.1 Per-knob comparison (metrics = per (dataset, cell) mean of the 2 replicates; r = geometric mean over the 3 datasets of value(X)/value(B); B = N 2,500, m 1, I_max 3)
+| knob | metric | ADJ-OPP | AR | ARweak | r (geo) | bar | per-dataset condition | pass |
+|---|---|---|---|---|---|---|---|---|
+| **m = 4** (c_X = **2.326**; bar 1/√c_X = **0.6557**) | M1 | 0.939 | 1.132 | 0.960 | **1.0067** | ≤ 0.656 | each < 1: no (AR 1.132) | **FAIL** |
+| | M2 | 0.979 | 1.073 | 1.061 | **1.0371** | ≤ 0.656 | each < 1: no | **FAIL** |
+| | M3 | 0.490 | 0.579 | 0.554 | **0.5396** | ≤ 0.656 | each < 1: yes | pass |
+| | HPM same in X ∪ B | – | – | – | True | – | – | pass |
+| **I_max = 0** | M1 | 1.005 | 1.006 | 0.907 | **0.9715** | ≤ 1.15 | each ≤ 1.30: yes | pass |
+| | M2 | 0.945 | 0.908 | 0.943 | **0.9317** | ≤ 1.15 | yes | pass |
+| | M3 | 1.106 | 1.131 | 1.155 | **1.1303** | ≤ 1.15 | yes (max 1.155) | pass |
+| | HPM same in arm ∪ B | – | – | – | True | – | – | pass |
+- **Cost ratio c_X (m = 4, islands only, calibration excluded, R16):** mean billed `islands` core-h m4 / m1·I3 = 11.395 / 4.899 = 2.326 (per dataset AR 2.48, ARweak 2.24, ADJ-OPP 2.26; the committed model 2.2–2.3).
+- **Outcome by the rule:** m = 4 fails the bar on two of the three metrics (and the per-dataset condition), so KEEP m = 1. I_max = 0 meets every condition, so ADOPT I_max = 0. N = 10⁴ is NOT_RUN (held, HQ Q1). Resampling is not testable (B3).
+- **Interaction:** only I_max = 0 is adopted, with m = 1; that cell (m1·I0) is exactly the 6 fits run, so the "7-fit pilot of an untested combination" rule (PREREG §3.2) does not trigger.
+
+### 1.2 Per-fit quantities (R′ = 64; `fz/fz_tables_output.md`, `fz/fz_tables.py`; targets §0-v2.3: M1 ≤ 0.05, M2 ≤ 0.005, M3 ≤ 0.5)
+| fit | wave | M1 | M2 | M3 (robust) | HPM = S₀ | occ_inhom | log Ẑ − log Ẑ_occ (3 s.e. bound) | island T | I_used | grid_unconv |
+|---|---|---|---|---|---|---|---|---|---|---|
+| ADJOPP m1 I0 c1 | P4 | 0.0155 | 0.00036 | 0.0217 (0.0190) | True | False | +0.0021 (0.0100) ok | 19 | 0 | True |
+| ADJOPP m1 I0 c2 | P4 | 0.0154 | 0.00039 | 0.0252 (0.0252) | True | False | −0.0090 (0.0111) ok | 17 | 0 | True |
+| AR m1 I0 c1 | A0 | 0.0129 | 0.00044 | 0.0242 (0.0230) | True | False | −0.0019 (0.0103) ok | 23 | 0 | True |
+| AR m1 I0 c2 | P1 | 0.0138 | 0.00043 | 0.0235 (0.0241) | True | False | −0.0004 (0.0102) ok | 23 | 0 | True |
+| ARweak m1 I0 c1 | P3 | 0.0118 | 0.00044 | 0.0180 (0.0154) | False | False | +0.0011 (0.0081) ok | 9 | 0 | True |
+| ARweak m1 I0 c2 | P3 | 0.0115 | 0.00052 | 0.0211 (0.0230) | False | False | −0.0038 (0.0090) ok | 10 | 0 | True |
+| ADJOPP m1 c1 | P3 | 0.0165 | 0.00036 | 0.0209 (0.0221) | True | False | −0.0010 (0.0100) ok | 21 | 3 | True |
+| ADJOPP m1 c2 | P3 | 0.0142 | 0.00043 | 0.0215 (0.0203) | True | False | +0.0011 (0.0097) ok | 17 | 3 | True |
+| AR m1 c1 | P1 | 0.0128 | 0.00052 | 0.0207 (0.0230) | True | False | −0.0011 (0.0091) ok | 20 | 3 | True |
+| AR m1 c2 | P1 | 0.0138 | 0.00044 | 0.0215 (0.0205) | True | False | −0.0040 (0.0096) ok | 21 | 3 | True |
+| ARweak m1 c1 | P2 | 0.0131 | 0.00046 | 0.0176 (0.0180) | False | False | −0.0001 (0.0082) ok | 9 | 3 | True |
+| ARweak m1 c2 | P2 | 0.0127 | 0.00055 | 0.0162 (0.0144) | False | False | +0.0037 (0.0077) ok | 12 | 3 | True |
+| ADJOPP m4 c1 | P4 | 0.0145 | 0.00039 | 0.0100 (0.0100) | True | False | +0.0043 (0.0066) ok | 64 | 3 | True |
+| ADJOPP m4 c2 | P4 | 0.0144 | 0.00039 | 0.0108 (0.0113) | True | False | +0.0018 (0.0068) ok | 68 | 3 | True |
+| AR m4 c1 | A0 | 0.0162 | 0.00054 | 0.0122 (0.0121) | True | False | −0.0012 (0.0076) ok | 84 | 3 | True |
+| AR m4 c2 | P1 | 0.0138 | 0.00049 | 0.0122 (0.0121) | True | False | +0.0008 (0.0069) ok | 80 | 3 | True |
+| ARweak m4 c1 | P2 | 0.0123 | 0.00052 | 0.0095 (0.0076) | False | False | −0.0014 (0.0058) ok | 44 | 3 | True |
+| ARweak m4 c2 | P2 | 0.0124 | 0.00056 | 0.0093 (0.0090) | False | False | −0.0034 (0.0058) ok | 48 | 3 | True |
+- **§0-v2.3 targets: all 18 fits meet M1, M2 (`target_met` True) and M3** with large margins (M1 ≤ 0.0165 vs 0.05; M2 ≤ 0.00056 vs 0.005; M3 ≤ 0.0252 vs 0.5); `occ_inhomogeneous` False in 18/18; log Ẑ vs log Ẑ_occ inside 3 s.e. in 18/18 (my operationalisation of PREREG §3.1: se = (sd over the 64 islands of log Ẑ_r, respectively `sd_log_Z_occ_r`)/√64; computed in `fz_tables.py`, not by a registered script). The freeze is therefore efficiency-based, as LEG_PLAN §8 expected.
+- **HPM = S₀ (reported, not a criterion):** True in all AR and ADJ-OPP fits; **False in all 8 ARweak fits** (HPM {1000, 3000, 5000, 7000}, missing 9000; F_hpm − F_S0 = +5.49 nats; same in the overlap's V and T fits of this dataset). The HPM set is identical across all arms within each dataset, so the rule's HPM check passes.
+- "Not computable at F: HPM in 16 of 16 islands" (PREREG §3.1): unchanged.
+
+## 2. The offset measurement (task 2; `fz/offset_report.md`, `fz/offset.json`, `fz/offset_per_fit.csv`, `fz/offset_stdout.txt`)
+`precision_offset.py --records overlap1e4 precision1e4 --out fz`: 58 eval records found (40 overlap + 18 precision), **V fits used 38** (20 overlap + 18 leg), 0 dropped, **2 duplicates resolved** (W0 AR r01 and ADJ-OPP r01 V-s1 vs their `.V2` rebuilds; the newest eval record wins; bit-identical by the A0 XB check, so no effect). s_T (seed-to-seed, 10 df) = **0.00324**; s_rep (k = 64, 9 dataset-cells) = **0.00247**. T tiers: AR r01 s1, ARweak r01 s1, IND r01 s2 are tier 1 (N = 4 × 10⁴); the other 17 T fits tier 0.
+
+### 2.1 The three registered headlines
+**P1 (continuity):** δ(ovl, 2,500, 1, 3, k = 16) = **−0.00394** (se 0.00141, CI −0.00712…−0.00076, 7/10 negative, −1.21 s_T; tier-0-reference sensitivity −0.00431), equal to the published value. log Ẑ_occ offset +0.00029.
+
+**P2 (R′ span, with the Jensen prediction beside it):**
+| cell | datasets | k span | span of δ | Jensen prediction | slope − Jensen (95 % CI) | reading (§4.4) |
+|---|---|---|---|---|---|---|
+| ovl (2,500, 1, 3) | 10 | 4 → 16 | +3.48e-5 | +4.42e-5 | −9.5e-6 (−2.2e-5 … +3.1e-6) | interval contains 0 |
+| prec (2,500, 1, 3) | 3 | 4 → 64 | +4.29e-5 | +4.62e-5 | −3.2e-6 (−3.0e-5 … +2.3e-5) | contains 0 |
+| prec (2,500, 4, 3) | 3 | 4 → 64 | +1.28e-5 | +1.34e-5 | −6.7e-7 (−1.2e-5 … +1.0e-5) | contains 0 |
+| prec (2,500, 1, 0) | 3 | 4 → 64 | +6.03e-5 | +5.87e-5 | +1.6e-6 (−1.4e-5 … +1.7e-5) | contains 0 |
+The R′ dependence of δ is the log-of-mean (Jensen) term and nothing beyond it, and it is 10⁻⁵ against an offset of 4–7 × 10⁻³.
+
+**P3 (knob contrasts at k = 64, paired by dataset):** m: (2,500, 4, 3) − (2,500, 1, 3) = **+0.00010** (se 0.00045; 95 % CI −0.00183 … +0.00204; 1/3 negative; per dataset ADJ-OPP +0.00041, AR +0.00068, ARweak −0.00078). I_max: (2,500, 1, 0) − (2,500, 1, 3) = **−0.00089** (se 0.00072; CI −0.00398 … +0.00220; 2/3 negative; ADJ-OPP −0.00205, AR +0.00042, ARweak −0.00104). **N: not computable** (the N = 10⁴ V fits are held, HQ Q1); the P3 headline is therefore 2 of 3.
+
+### 2.2 The δ table (mean over datasets of [V block-mean log Ẑ − T reference]; no pass/fail)
+| src | N | m | I_max | k | datasets | fits | δ | se | 95 % t-CI | neg | δ / s_T | δ (T tier-0 ref) | Jensen | occ offset |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| ovl | 2,500 | 1 | 3 | 4 / 8 / 16 | 10 | 20 | −0.00397 / −0.00395 / **−0.00394** | 0.00141 | −0.00712 … −0.00076 (k = 16) | 7/10 | −1.21 | −0.00431 | −5.9e-5 … −1.5e-5 | +0.00029 |
+| prec | 2,500 | 1 | 3 | 4 / 16 / 64 | 3 | 6 | −0.00605 / −0.00602 / **−0.00601** | 0.00171 | **−0.01338 … +0.00136** (k = 64) | 3/3 | −1.85 | −0.00706 | −4.9e-5 … −3.1e-6 | −0.00029 |
+| prec | 2,500 | 4 | 3 | 4 / 16 / 64 | 3 | 6 | −0.00592 / −0.00591 / **−0.00591** | 0.00140 | **−0.01194 … +0.00013** (k = 64) | 3/3 | −1.82 | −0.00696 | −1.4e-5 … −8.9e-7 | −0.00059 |
+| prec | 2,500 | 1 | 0 | 4 / 16 / 64 | 3 | 6 | −0.00696 / −0.00691 / **−0.00690** | 0.00118 | **−0.01198 … −0.00182** (k = 64) | 3/3 | −2.13 | −0.00795 | −6.3e-5 … −3.9e-6 | +0.00058 |
+Per-dataset δ at k = 64 (ADJ-OPP r01 / AR r01 / ARweak r01): m1·I3 −0.00480 / −0.00939 / −0.00384; m4·I3 −0.00439 / −0.00871 / −0.00463; m1·I0 −0.00685 / −0.00897 / −0.00488. Every k (4, 8, 16, 32, 64) is in `fz/offset_report.md`.
+
+### 2.3 Resolution (PREREG §4.5) and what it shows and does not (§4.4's declared reading; no pass/fail)
+- **Resolution:** a 3-dataset cell has a 95 % half-width of 0.0051–0.0074 (realised: m1·I3 0.0074, m4·I3 0.0060, m1·I0 0.0051; t(2) = 4.30), i.e. the registered ±0.008 caveat: these cells can resolve an offset about twice the overlap's −0.0039, not −0.0039 itself. The contrasts do not carry the T noise (it cancels); their half-widths are 0.0019 (m) and 0.0031 (I_max).
+- **Shows (§4.4 bullet 1, both conditions hold):** δ is the same at k = 4 and k = 64 within the Jensen term, and the m and I_max contrasts contain 0. So the offset is **not (detectably) a finite-R′ effect, and m = 4 or I_max = 0 do not move it by more than about ± 0.002 and ± 0.003 respectively** (the contrast half-widths). It is either noise or a difference between the V and T arms that none of the studied knobs changes (kernel arithmetic, calibration rule, N, R′, escalation).
+- **Consistent with, but not a replication of, the overlap value:** all 9 leg dataset-offsets are negative (−0.0038 to −0.0094) and the leg's −0.0060 / −0.0059 differs from the overlap's −0.0039 by ≈ 0.002 (0.6 s_T) and the overlap value lies inside each leg interval; no leg interval separates −0.0039 from −0.006 or from 0 (the m1·I3 and m4·I3 intervals contain 0).
+- **Does not show:** (i) nothing about N: the N contrast is missing, so "finite-N" is untested here (only T's own N tiers, confounded); (ii) no statement "V is biased low" (§4.4 last bullet; no truth for log Z; T carries noise and a tier mix on two of the three leg datasets); (iii) no cause between "noise" and "a V-versus-T difference" is assigned; (iv) the m1·I0 level interval (−0.0120 … −0.0018) excludes 0, but that is a LEVEL, not a registered contrast, and 3 datasets: **no FINDING** (FINDING = a contrast interval excluding 0: none of the 2 knob and 4 P2_span contrasts does). The companion log Ẑ_occ offsets are +0.00029, −0.00029, −0.00059, +0.00058 (varying sign, ≤ 6 × 10⁻⁴; reported, no inference).
+- **Multiplicity (§4.4):** P2_span 4, R_step 14, knob 2. One R_step contrast (ovl, k 4 → 8, slope − Jensen −8.3e-6, CI −1.55e-5 … −1.0e-6) has an interval just excluding 0: R_step contrasts are descriptive only and not read (0.05 × 14 = 0.7 false flags expected); size ≈ 10⁻⁵.
+
+## 3. HQ item `grid_unconverged` (task 3; nothing pre-registered changes)
+**(a) Rate in the 40 overlap fits** (20 V + 20 T, 10 datasets × 2 seeds). `calib.bin.json` carries no `flags`/`trigger` (keys: `settings`, `tier_final`, `cal_status`, seconds…; grep over all 43 run dirs: 0 hits). So ONE read-only ssh to NOTS (`ssh nots 'bash -s' < fz/grid_unconverged_remote_info.sh`, one connection, `nice -n 19`, only `scratch/runs/OV_W[0-3]_[TV]*/*/calib.bin`, each batch's own `env.sh` and `bin/smcbvs4`, `info <calib.bin> --meta 1` to stdout, nothing written on NOTS, no scan; rc 0, 43 calib.bin = 40 fits + 3 rebuild duplicates W0 V2 ×2, T2 ×1, which agree with their originals). Parsed by `fz/grid_unconverged_parse.py` → `fz/grid_unconverged_overlap.csv` (raw dump 676 KB: `~/SMC_Engineering_Department/tmp/20261119-fz/nots_info_raw.txt`).
+| arm | fits | final-tier flag `grid_unconverged` | detail |
+|---|---|---|---|
+| **V** (bounded, I_max 3) | 20 | **True in 18 (90 %)** | all 18 non-NULL fits: I_used = 3 = I_max (cap reached, no bitwise equality); the 2 NULL fits (s1, s2): False, converged at rebuild 1 (I_used 1) |
+| **T** (coded, ℓ = 14) | 20 | **True in 0**; trigger fired at tier 0 in **3/20 (15 %)** | AR r01 s1, ARweak r01 s1, IND r01 s2: tier 0 ran **14 rebuilds (= ℓ), not converged, `grid_unconverged` the ONLY trigger**; they escalated to tier 1 (N = 4 × 10⁴), where the grid converged in 1, 1, 3 rebuilds (final flag False). The other 17 converged at tier 0: I_used 1 (4 fits: NULL ×2, ARweak ×2) or 7–12 (13 fits; median 11) |
+(The "I_max 3" in T's `meta` is the unused default; the coded rule's cap is ℓ.) So the inference "escalated T fits hit the ℓ = 14 cap" is **confirmed by the record**, and in all three cases it was the only trigger.
+For the 18 precision fits (`calib_meta.json`): `grid_unconverged` **True in 18/18** (I_used = I_max: 12 fits at 3, 6 at 0), `checks_passed_calibration` False in 18/18, the trigger list is `['grid_unconverged']` alone; A0's XB and A3 (the overlap configuration) likewise True.
+**(b) What "converged" means at F, and whether any I_max here clears it.** Engine source `Scripts/SMC_BVS/engine_v4/include/v4/calib.h` at origin/exp/P1M-engine b89cba4d: after each of at most `cap` rebuilds (`:221`, cap = ℓ for coded, I_max for bounded) the new temperature grid is compared with the previous one and **converged = bitwise-identical grids** (`gn.g.grid == g.g.grid`, `:243`); if the cap is reached without it, and the construction did not fail, `grid_unconverged` = True (`:246`); the final flag is read from the selected tier (`:289`); only the coded rule escalates on it (`:270`, "D-26: the bounded rule never escalates"). **I_max = 0: the loop body never runs, so the flag is True by construction (the test is not performed, it did not fail). I_max = 3: never cleared on a non-NULL fit (0/18 overlap V, 0/12 precision I_max = 3 fits)**; T needed 7–12 rebuilds on 13 of 17 tier-0 fits and more than 14 on 3. A bitwise fixed point would need I_max ≈ 12–14, outside the study's {0, 3}.
+**(c) Recommendation: document it as "bounded-stop" (calibration stopped at the I_max cap without bitwise grid equality); do not rename the engine field and do not let it inform the I_max choice.** Reasons: in V it is inert (never escalates, changes no output) and uninformative (True in 18/18 precision fits, 18/18 non-NULL overlap V fits, and True by construction at I_max = 0), so it cannot separate arms; the I_max decision rests on the outcome metrics and the offset contrast (§1, §2), which are what tell whether the unconverged grid matters (it does not detectably). One practical consequence for the science analysis (C7): any aggregate built on `checks_passed_calibration` or on RULINGS_LEAD's `diag_flag` (which lists `grid_unconverged` as a quality flag) would be ≈ 100 % TRUE for V by design: report `grid_unconverged` / I_used as the "bounded-stop frequency" (expected ≈ 100 % at I_max = 0) and do not read it as a quality failure. The informative frequencies for V remain E1–E3, `low_empirical_ESS`, `occ_inhomogeneous`.
+
+## 4. Cost table (task 4; `fz/fz_tables_output.md`; billed core-h from `_batch_*/cost/cost_<run_id>.json`)
+| fit | total | × model E | calib | islands (64) | merge | soft / hard | verdict |
+|---|---|---|---|---|---|---|---|
+| ADJOPP m1 I0 c1 / c2 | 5.510 / 5.417 | 0.96 / 0.94 | 0.120 / 0.076 | 5.186 / 5.161 | 0.147 / 0.113 | 8.6 / 14.4 | ok |
+| AR m1 I0 c1 / c2 | 5.545 / 5.337 | 0.96 / 0.93 | 0.107 / 0.080 | 5.188 / 5.041 | 0.184 / 0.144 | 8.6 / 14.4 | ok |
+| ARweak m1 I0 c1 / c2 | 4.087 / 4.131 | 0.71 / 0.72 | 0.098 / 0.071 | 3.807 / 3.880 | 0.122 / 0.127 | 8.6 / 14.4 | ok |
+| ADJOPP m1 I3 c1 / c2 | 7.237 / 6.141 | 1.15 / 0.98 | 1.182 / 0.782 | 5.874 / 5.172 | 0.122 / 0.129 | 9.4 / 15.7 | ok |
+| AR m1 I3 c1 / c2 | 5.716 / 6.137 | 0.91 / 0.98 | 0.636 / 0.622 | 4.840 / 5.217 | 0.171 / 0.233 | 9.4 / 15.7 | ok |
+| ARweak m1 I3 c1 / c2 | 5.008 / 5.904 | 0.80 / 0.94 | 0.889 / 1.378 | 3.928 / 4.364 | 0.138 / 0.104 | 9.4 / 15.7 | ok |
+| ADJOPP m4 I3 c1 / c2 | 13.327 / 13.783 | 1.08 / 1.12 | 1.067 / 0.751 | 12.071 / 12.852 | 0.129 / 0.124 | 18.5 / 30.9 | ok |
+| AR m4 I3 c1 / c2 | 14.011 / 13.058 | 1.13 / 1.06 | 0.964 / 0.604 | 12.838 / 12.062 | 0.138 / 0.329 | 18.5 / 30.9 | ok |
+| ARweak m4 I3 c1 / c2 | 9.801 / 10.259 | 0.79 / 0.83 | 0.671 / 0.480 | 8.950 / 9.599 | 0.122 / 0.120 | 18.5 / 30.9 | ok |
+(setup 0.027–0.036 and eval 0.027–0.042 per fit, `fz/fz_tables_output.md`. The monitor's manager-approved F2 override moved only the soft line of the m4 class to 21.0; the committed table is shown here.)
+| class (committed LEG_PLAN §5.3) | fits | mean | E | mean / E | max fit (/ E) | G-B (mean ≤ 1.5 E, none > 2.5 E) |
+|---|---|---|---|---|---|---|
+| prec N2500 m1 I3 | 6 | 6.02 | 6.28 | **0.96** | 7.24 (1.15) | PASS |
+| prec N2500 m1 I0 | 6 | 5.00 | 5.76 | **0.87** | 5.55 (0.96) | PASS |
+| prec N2500 m4 I3 | 6 | 12.37 | 12.36 | **1.00** | 14.01 (1.13) | PASS |
+Totals: 18 precision fits 140.41; A3 canary 2.63 (E 2.76) and XB 2.64 (E 2.18 as class "AR n200", 1.21×, soft 3.3) are in A0; **all 20 units 145.68** (sum of the 11 `cost_batch.json`; the manager's prior file says 145.70: rounding). Waves: A0 24.83 (quote 25), P1 30.25 (30), P2 30.97 (30), P3 21.60 (25), P4 38.04 (45); every wave ≤ its stop (2 × quote).
+**Measured inputs for the science re-quote:** (i) **I_max = 0 calibration = 0.100 × the I_max = 3 calibration** (0.092 vs 0.915 core-h mean; per fit 0.06–0.17 of the dataset's I_max = 3 mean); the quote model assumed U(0.2, 0.5). (ii) I_max = 0 islands = 0.96 × I_max = 3 (AR 1.02, ARweak 0.93, ADJ-OPP 0.94), the model assumed 1.0; the I_max = 0 island T (19, 17, 23, 23, 9, 10) is of the same size as at I_max = 3 (21, 17, 20, 21, 9, 12). (iii) m = 4 islands ×2.33 (not adopted). (iv) **R′ = 16 estimate of the I_max saving** (R′ = 64 stage costs: islands/4, merge/3.1 as `quote_model.py` scales): I_max = 3 **2.25**, I_max = 0 **1.38 core-h per fit (−39 %)**; m = 4 3.72 (×1.65). Cross-check: the overlap's 16 measured V fits on these three designs average 2.15 (`measured_V_costs.csv`). The calibration share of a fit: 15.2 % at I_max = 3, 1.8 % at I_max = 0 (R′ = 64). **PREREG §3.2 asks the leg report to state this saving beside the decision: −39 % per fit at R′ = 16 (−17 % at R′ = 64).**
+
+## 5. DRAFT `CAMPAIGN_FREEZE` addendum (LEG_PLAN §7; a draft for the manager, not committed; hash line to be filled at commit)
+> **CAMPAIGN_FREEZE addendum: precision study outcome (G-A "the precision study freezes (N, m, resampling, I_max)")**
+> Date / commit: `<date>` / `<commit>`; addendum sha256 `<to fill>`. Plan: PREREG + LEG_PLAN at a6037ab0. Records: `records/precision1e4/{A0,P1,P2,P3,P4}`, 18 precision fits (R′ = 64) delivered, 0 identity failures; build `d0c30b65103e308eb12c0665727c248f9ef0d9afe28f115dc9da6614a981b378` (F = eefcbc4a2ab42fdf52ec1e5d318a956bdd07f463, sapphirerapids). Scripts: `precision_freeze.py` sha256 7cdd69a1…, `precision_offset.py` cbbc2301… (run unchanged; outputs `fz/freeze.json`, `fz/offset.json`, `fz/offset_report.md`). Review: `<Opus check file, verdict>`.
+> **Frozen configuration for the 10⁴ science and G-B:**
+> | knob | value | status | basis |
+> |---|---|---|---|
+> | N | **2,500** | **PROVISIONAL** (default D-1; **not evidence**) | the 12 N = 10⁴ fits are held (HQ Q1, B2); the V-N mini-leg (H-28) re-runs the same rule with its measured c_X. Calibration islands stay at H = 512 regardless of N; the N = 10⁴ arm tests island N |
+> | m (grid refinement) | **1** | KEEP by rule | m = 4: c_X 2.326, bar 0.656; M1 r 1.007, M2 1.037 (fail), M3 0.540 (pass); not worth 2.3× the island cost |
+> | I_max | **0** | ADOPT by rule (non-inferiority, not a cost rule) | M1 0.971, M2 0.932, M3 1.130 vs 1.15 (per dataset ≤ 1.155 vs 1.30), HPM identical; calibration 0.10 ×, fit −17 % (R′ 64) / ≈ −39 % (R′ 16) |
+> | resampling | **OFF, "not tested"** | default (D-14) | systematic resampling is not available in the frozen binary (B3, HQ Q5) |
+> **Not tested / limits:** m × I_max interaction (only I_max = 0 adopted, with m = 1: the run cell); N; resampling; π₀(S₀) (HQ Q6). **`grid_unconverged`** is True by construction at I_max = 0 and in V generally ("bounded-stop", FZ_READBACK §3); it is not a quality flag in V. **Offset (measurement, no verdict):** δ(ovl, k = 16) −0.00394; leg cells −0.0060 (m1 I3), −0.0059 (m4 I3), −0.0069 (I0) at k = 64 on 3 datasets (half-width ≈ 0.005–0.007); no R′, m or I_max effect detected beyond ± 0.002–0.003; N untested; no FINDING. B1 (boundary add-on) reported separately. The science runs in this configuration (`I_max 0`, 14 overlap V fits re-run as `VF`, AR r01 A3 pair re-run as `A3F`).
+
+## 6. What the science waves run with, and the re-quote (task 4; `fz/quote_rerun_freeze_i0.txt`, `fz/quote_freeze_i0_measured_calib.txt`)
+- **Configuration:** every science fit `params {refine_m 1, I_max 0}`, N 2,500, R′ = 16, resampling off, the leg build `d0c30b65…` (COPYBIN). The overlap's V fits are **not** reused (I_max 3 ≠ frozen): the 14 are re-run as tag `VF` (same data and seeds, new configuration) and the AR r01 A3 pair as `A3F` paired with `4-AR-n200-r01-VF-s1`; the A0 A3 canary and XB stay baseline-configuration canaries. The plan for this scenario is the committed `waves_freeze_i0.json` (sha `2837a507…`, from `make_waves_prec.py --frozen-I`; **170 science fits = 156 new + 14 VF**, 15 A3 incl. A3F; the plans for deploy come from O-1 as before). No combination pilot is needed (m stays 1).
+- **Wave relabel (important for the monitor tables):** in this scenario the generator numbers the waves **S1 … S10** (the VF re-runs join S1/S2, S3 is the 4 NULL fits, A3 is S4, n = 800 is S9 pilot + S10), not LEG_PLAN §4's S1–S9. The re-quote with the **committed quote_model.py** (re-run unchanged; output **identical** to `quote_output_freeze_i0.txt`), and with one scratch change (the I_max = 0 calibration factor U(0.2, 0.5) → U(0.06, 0.17), the measured range; `tmp/20261119-fz/quote_model_measuredcal.py`, a copy; nothing else changed, same seed):
+| wave | content (fits) | E committed model → QUOTE / wave stop | E measured calibration → QUOTE / stop |
+|---|---|---|---|
+| S1 | n = 200: AR 12 + 8 VF, AR-weak 1 + 2 VF, ADJ-OPP 3 + 2 VF (28) | 48.0 → 50 / 100 | 42.7 → 45 / 90 |
+| S2 | n = 200: AR-weak 17, BLK 5, IND 4 + 1 VF, NULL 1 VF (28) | 42.1 → 40 / 80 | 37.5 → 40 / 80 |
+| S3 | NULL n = 200 ×4 | 1.8 → **0 / 0** | 1.7 → **0 / 0** |
+| S4 | A3: AR 9 + A3F 1, BLK 5 (15) | 33.8 → 35 / 70 | 31.1 → 30 / 60 |
+| S5 | n = 100: AR 10, AR-weak 18 (28) | 32.2 → 30 / 60 | 29.4 → 30 / 60 |
+| S6 | n = 100: AR-weak 2, BLK 5, IND 5 (12) | 15.1 → 15 / 30 | 13.8 → 15 / 30 |
+| **S7** | **n = 400 pilot** (ADJ-OPP 5, AR 2; 7) | 22.1 → 20 / 40 | 19.1 → 20 / 40 |
+| S8 | n = 400 rest (28) | 71.3 → 70 / 140 | 61.8 → 60 / 120 |
+| **S9** | **n = 800 pilot** (AR 7) | 34.1 → 35 / 70 | 28.9 → 30 / 60 |
+| S10 | n = 800 rest (AR 3, AR-weak 10; 13) | 53.3 → 55 / 110 | 44.4 → 45 / 90 |
+| **science S1–S10** | 170 | **E 353.7** (P90 402.1, P99 450.6) | **E 310.3** (P90 349.6, P99 389.0) |
+- **Scope:** released scope (A0, P1–P4, S1–S10) model E **505** (P90 565) / measured-calibration basis **460** (P90 512), against the plan figure 4,127 (12 % / 11 %): self-release holds; P(total > 4,127) = 0.0000 either way. **The cumulative stop is 900** in the committed scenario (LEG_PLAN §3 row 3); the measured basis would round to 800 (1.6 × 460, up to 100). Proposal: **keep 900** (the committed value; the pinned hard line is never moved, HQ Q3) and move only the wave quotes if the manager wants the measured column. Spent so far 145.68 (A0 + P1–P4 incl. A3 + XB) + B1 quote ≈ 115 (pending) + science 310–354 = **≈ 570–615 ≪ 900**; projection ceiling 4,127 far away.
+- **Per-fit lines for the science classes stay the committed (baseline-configuration) table** `stop_rules_prec.py` TABLE sha `c0fcd139…` (HQ Q3): at I_max = 0 science costs are lower, so the soft/hard lines are looser than the new class models (e.g. A3 n200 model 2.28 / 2.11 vs committed E 2.76); no change proposed. The measured V R′ = 16 class on the baseline arm is 1.21 × its model (XB 2.64 vs 2.18), and the precision I_max = 3 classes ran at 0.96 ×: the n = 400 / 800 pilots (S7, S9) re-set the quotes, as before.
+- **Issues for the manager:** (1) **S3 (4 NULL fits) rounds to QUOTE 0 → wave stop 0** in the committed freeze output (`quote_output_freeze_i0.txt`): a floor (e.g. 5) or merging NULL into S2 is needed before the monitor uses it. (2) The monitor's `QUOTE`/wave tables, `stop_rules_prec.py` wave names and the `waves*.json` for this scenario must use the S1–S10 labels above.
+
+## 7. B1 (pending)
+*Placeholder: the B1 boundary add-on result (ADDENDUM_1_BOUNDARY; AR-weak n = 100, V + T × 2 seeds; one more offset cell `bnd`) will be appended here by a later worker. Not run when this file was written (B1 jobs submitted 11-19 16:03Z; not collected).*
+
+## 8. Points for the Opus checker
+1. **Re-derive the rule from the raw records**, not from `freeze.json`: M1 = `fit.meta.occ[M = 1000].sd_log_Z_occ_r`, M2 = `pip.island_spread.max_sd`, M3 = `evidence.sigma_hat`; per (dataset, cell) mean of 2; geometric mean of ratios; c_X from `cost_<run_id>.json` stage `islands` (`billed_core_h`, calibration excluded). `fz/fz_tables.json` holds my per-fit numbers (they match the script's).
+2. **I_max = 0 passes by a thin margin on M3** (geo 1.1303 against 1.15; the per-dataset M3 are all > 1: 1.106 / 1.131 / 1.155) while M1 and M2 are ≤ 1 on 5 of 6 dataset-ratios: the preliminary grid costs about 13 % in σ̂ of Ẑ_r and nothing in PIP spread. PREREG §3.2 says an identical arm is ADOPTed with probability ≈ 0.8 and the geometric-mean noise is ≈ 0.06–0.09 (log), so the ADOPT is within the rule's own resolution; **I applied the rule and did not reinterpret it.** For HQ's information (my arithmetic, not part of the rule): a 13 % σ̂ loss is a (1.13)² ≈ 1.28× islands-equivalent for the evidence; at R′ = 16 that costs ≈ 0.3 core-h/fit (islands 1.18 × 0.28), still below the 0.87 saving (2.25 → 1.38), so I_max = 0 is cheaper even on that reading. Check the arithmetic.
+3. **The registered script's `--cost-dir` glob picks up `cost_batch.json`** (§0): confirm the clean-cost-dir command reproduces `freeze.json`, and that the script's cost inputs (islands only) match the per-run cost files (c_X 2.326).
+4. **Offset:** reproduce P1 −0.00394, and the P2/P3 numbers in §2 from `offset.json`; check that the §4.4 reading is applied as declared (both conditions of bullet 1 hold; no FINDING; N contrast absent: say so in the leg report). Check my statement that the m1·I0 LEVEL interval excluding 0 is not a FINDING class. The T-tier mix (tier-1 reference on AR r01 and ARweak r01) is in the sensitivity column (−0.00706 / −0.00696 / −0.00795).
+5. **grid_unconverged:** re-read `calib.h:221, 243, 246, 270, 289` (b89cba4d) against my reading; the NOTS dump parse is `fz/grid_unconverged_overlap.csv` (V 18/20, T 0/20 final, 3/20 tier-0 trigger). The one ssh was read-only (`info`, stdout).
+6. **Re-quote:** the committed model is re-run unchanged and reproduces the committed output; the second column changes only the I_max = 0 calibration factor (measured 0.10, range 0.06–0.17); the quote/stop pairs are in `fz/quote_*`. S3 rounds to quote 0 (§6).
+7. **Observations outside the rule (flag, no action by me):** (a) **ARweak HPM ≠ S₀ in all 8 precision fits** and in all 8 overlap fits of the two AR-weak datasets (r01: HPM misses 9000, r02 misses 7000 and 9000; `selection.hpm_eq_S0` False, F_hpm − F_S0 = +5.49 / +5.84 nats): ADDENDUM_1_BOUNDARY's premise sentence "every AR-weak fit recovered S₀" should be read against that (it may mean PIP recovery or an outcome class; I did not investigate). (b) F7 correction line for the leg report (OPS_PREC): the reused W0 units are the V units built by `dd5af0cd`, not `ba569a33` as LEG_PLAN §5.3 lists; the XB check covers both W0 builds. (c) At 10⁴ the engine meets the §0-v2.3 evidence and PIP targets in all 18 fits (margins 3–54×: M1 3–4×, M2 9–14×, M3 20–54×), so the freeze is efficiency-based. (d) Notes carried for the leg report (LEG_PLAN §8): the overlap's 40 T setups used the truncated partition; the 1M budget note ("precise" ≈ m = 4, §0-v2.5) is not supported by the study, since m = 1 is frozen.
+8. **PREREG §3.3:** not edited. The manager adds the H-28 sentence "calibration islands stay at H = 512 regardless of N (the N = 10⁴ arm tests island N)".
+
+## Files (all under `results/precision1e4/`; not committed)
+`fz/freeze.json`, `fz/freeze_stdout.txt` (script output, unedited); `fz/offset.json`, `fz/offset_report.md`, `fz/offset_per_fit.csv`, `fz/offset_stdout.txt`; `fz/fz_tables.py` + `fz/fz_tables_output.md` + `fz/fz_tables.json` (per-fit quantities, cost, R′ = 16 estimate); `fz/fz_dchecks_output.txt`; `fz/grid_unconverged_remote_info.sh`, `fz/grid_unconverged_parse.py`, `fz/grid_unconverged_overlap.csv`; `fz/quote_rerun_freeze_i0.txt` (committed model re-run, identical to `quote_output_freeze_i0.txt`), `fz/quote_freeze_i0_measured_calib.txt`. Scratch: `~/SMC_Engineering_Department/tmp/20261119-fz/` (clean cost dir of symlinks, NOTS raw dump, `quote_model_measuredcal.py`, selftest). Registered scripts untouched (shas verified above).

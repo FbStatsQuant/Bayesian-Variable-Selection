@@ -1,0 +1,11 @@
+{
+ "decisions": {
+  "m=4": "KEEP",
+  "N=10000 (m=1)": "NOT_RUN",
+  "N=10000 (m=4)": "NOT_RUN",
+  "I_max=0": "ADOPT",
+  "resampling": "OFF, not tested (systematic not available in the frozen binary; D-14 default; HQ Q5)"
+ },
+ "identity_failures": {},
+ "script_sha256": "7cdd69a11f3aaffa7a6615df639aefbe101042e9d37a8d520999ccbdc6279605"
+}

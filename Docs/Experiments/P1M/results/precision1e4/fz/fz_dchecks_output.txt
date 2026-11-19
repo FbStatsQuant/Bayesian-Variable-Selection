@@ -1,0 +1,24 @@
+AR-n200-r01-P-N2500-m1-I0-c1-s1 delivered True logZ_r64 64 fit.bin completed header+table+meta 45 binary_sha ['d0c30b65'] sha256sum_c_nonOK 0
+AR-n200-r01-P-N2500-m4-c1-s1 delivered True logZ_r64 64 fit.bin completed header+table+meta 45 binary_sha ['d0c30b65'] sha256sum_c_nonOK 0
+AR-n200-r01-P-N2500-m1-I0-c2-s1 delivered True logZ_r64 64 fit.bin completed header+table+meta 45 binary_sha ['d0c30b65'] sha256sum_c_nonOK 0
+AR-n200-r01-P-N2500-m1-c1-s1 delivered True logZ_r64 64 fit.bin completed header+table+meta 45 binary_sha ['d0c30b65'] sha256sum_c_nonOK 0
+AR-n200-r01-P-N2500-m1-c2-s1 delivered True logZ_r64 64 fit.bin completed header+table+meta 45 binary_sha ['d0c30b65'] sha256sum_c_nonOK 0
+AR-n200-r01-P-N2500-m4-c2-s1 delivered True logZ_r64 64 fit.bin completed header+table+meta 45 binary_sha ['d0c30b65'] sha256sum_c_nonOK 0
+ARweak-n200-r01-P-N2500-m1-c1-s1 delivered True logZ_r64 64 fit.bin completed header+table+meta 45 binary_sha ['d0c30b65'] sha256sum_c_nonOK 0
+ARweak-n200-r01-P-N2500-m1-c2-s1 delivered True logZ_r64 64 fit.bin completed header+table+meta 45 binary_sha ['d0c30b65'] sha256sum_c_nonOK 0
+ARweak-n200-r01-P-N2500-m4-c1-s1 delivered True logZ_r64 64 fit.bin completed header+table+meta 45 binary_sha ['d0c30b65'] sha256sum_c_nonOK 0
+ARweak-n200-r01-P-N2500-m4-c2-s1 delivered True logZ_r64 64 fit.bin completed header+table+meta 45 binary_sha ['d0c30b65'] sha256sum_c_nonOK 0
+ADJOPP-n200-r01-P-N2500-m1-c1-s1 delivered True logZ_r64 64 fit.bin completed header+table+meta 45 binary_sha ['d0c30b65'] sha256sum_c_nonOK 0
+ADJOPP-n200-r01-P-N2500-m1-c2-s1 delivered True logZ_r64 64 fit.bin completed header+table+meta 45 binary_sha ['d0c30b65'] sha256sum_c_nonOK 0
+ARweak-n200-r01-P-N2500-m1-I0-c1-s1 delivered True logZ_r64 64 fit.bin completed header+table+meta 45 binary_sha ['d0c30b65'] sha256sum_c_nonOK 0
+ARweak-n200-r01-P-N2500-m1-I0-c2-s1 delivered True logZ_r64 64 fit.bin completed header+table+meta 45 binary_sha ['d0c30b65'] sha256sum_c_nonOK 0
+ADJOPP-n200-r01-P-N2500-m1-I0-c1-s1 delivered True logZ_r64 64 fit.bin completed header+table+meta 45 binary_sha ['d0c30b65'] sha256sum_c_nonOK 0
+ADJOPP-n200-r01-P-N2500-m1-I0-c2-s1 delivered True logZ_r64 64 fit.bin completed header+table+meta 45 binary_sha ['d0c30b65'] sha256sum_c_nonOK 0
+ADJOPP-n200-r01-P-N2500-m4-c1-s1 delivered True logZ_r64 64 fit.bin completed header+table+meta 45 binary_sha ['d0c30b65'] sha256sum_c_nonOK 0
+ADJOPP-n200-r01-P-N2500-m4-c2-s1 delivered True logZ_r64 64 fit.bin completed header+table+meta 45 binary_sha ['d0c30b65'] sha256sum_c_nonOK 0
+data identity within dataset (distinct (X,y) pairs): {'AR': 1, 'ARweak': 1, 'ADJOPP': 1}
+overlap refs keys ['4-ADJOPP-n200-r01', '4-ADJOPP-n200-r02', '4-AR-n200-r01', '4-AR-n200-r02', '4-AR-n200-r03']
+AR e67d705163fc 577c5682dbd7 ref {"X_sha256": "e67d705163fc3cde07a50d1ecf4a44b0f3fda321956498c3f3ad56504ba085b5", "y_sha256": "577c5682dbd796ed9a7865f01b1ea07ac37e83eb40c6a6
+ARweak a9cee1b2c4b1 407e59c30cfe ref {"X_sha256": "a9cee1b2c4b14989c2c7ed027219192d694ed32b9c0f27c311a5a0fcb64ce12f", "y_sha256": "407e59c30cfefb4491f32e79a3738b72d2f034da1ad023
+ADJOPP 424a5536f102 311b28355641 ref {"X_sha256": "424a5536f102805afd729a8d41f86529abf3b65f00632d148a1fe4cab3b0c0ff", "y_sha256": "311b283556414db7124d556f0d61f6a2b08bcd14eb623e
+binary shas seen: ['d0c30b65103e308e'] leg build ok: True
