@@ -13,7 +13,7 @@
 | builder at `5d87ca53` vs head | `git diff 5d87ca53 c682dfc7` = docs + `test_wp4_io.cpp` only, so the builder's binaries are the PR's engine |
 | builder's `F_src` | `diff -r` against `git archive eefcbc4a` (engine_v4): identical |
 | object identity | **My own** build of `git archive c682dfc7` (same flags: Release, x86-64-v4, g++ 11.5.0) against the builder's F build: **35 of 37 objects byte-identical**. Only `calib_run.cpp.o` and `wp4_io.cpp.o` differ. The builder's 34/37 included `provenance.o`, which differs only because its branch build had a git commit while mine, from an archive, says "unknown". `island_*.o`, `island_cmd.o`, eval, post, setup and `main.o` are identical |
-| default-N bit identity, end to end | See §2: (a) an independent no-drop-list re-compare of both builder fits; (b) **a fresh re-run of AR r01 s1** with my build of the head; (c) the T mode (law) check (calibrate + 4 islands) |
+| default-N bit identity, end to end | **Re-verified** (§2):<br>(a) an independent no-drop-list re-compare of both builder fits;<br>(b) **a fresh re-run of AR r01 s1** with my build of the head: 567/567 sections identical to F, and 75/75 identical to the NOTS record;<br>(c) the T mode (law) check (calibrate + 4 islands) |
 | unit tests (my build) | `v_mode_N_parameter` PASS (93.8 s) **with `V4_F_SMCBVS4` = the F build**: "default-N calib.bin vs F: sections identical", "default-N island vs F: sections identical". `wp4_io_calib_refusals` PASS. `calibrate_command_end_to_end` PASS. I did not re-run the full quick suite (the builder's log: cpp 208/0, driver 60, golden 568,269/0) |
 | N-independence of calibration | p = 300 V fixture, seed 9: `calibrate --N 2500` vs `--N 10000` give **40/40 sections identical**, and meta differs **only in `N`** |
 | mixed-N merge | N = 10⁴ calib + an N = 2,500 island, and the reverse: both **refused with exit 13**. A clean N = 10⁴ merge completes |
@@ -27,7 +27,7 @@ Severity: **M** = changes a number HQ will act on, or an operational risk; **L**
 | F2 | L | `tests/test_island_cmd.cpp:716-717` | **The comment promises a check the test never makes.** It says "an island file of N = 2,500 cannot be merged under an N = 10⁴ calib.bin (and vice versa)", but `i25` is built and never merged under `cal`. I ran both directions: exit 13, refused by the `meta.inputs` (calib hash) guard before the N guard (`merge.h:274,323`) | Add the two `CHECK_EQ(sh(merge … --calib cal --islands <N10⁴ island>,i25 …), 13)` calls (and the reverse), or reword the comment | no |
 | F3 | L | `include/v4/calib.h:8` | Stale comment: "NO tier escalation (N = 2,500, H = 512 always …)" | "N = the calibrate parameter (default 2,500), H = 512 always" | no |
 | F4 | L | `tools/plan_tables.cpp:56` | `--N` is parsed with `std::stoi`:<br>• `2.5` → 2 and `1e4` → 1, silently;<br>• `abc` → an uncaught `std::invalid_argument` (abort).<br>This is not "refused as T's N". It is a planning tool, not in `smcbvs4`, and `--Rp`/`--q90` share the pattern | Parse with `stod`, require a whole number in [1, 2²⁴], else exit 2 | no |
-| F5 | L | builder's `tools/vn_check.py` / `cross_check_V_copy.py:17` | The "identical() outside provenance" tool drops keys **by name anywhere in the tree** (`data`, `start`, `end`, `cost`, `inputs`, `mem_estimate`, …), so a scientific key with one of those names would be skipped. My no-drop re-compare (§2) shows nothing scientific is hidden in these 2 fits. **The only non-obvious non-provenance difference** is `fit.meta.mem_estimate.*` (±64 B; `sacct_upper` +320/+458 B). It comes from calib.bin's file size, which grows 64 B with the binary block's git-commit string, so it is provenance-derived | For the NOTS / freeze identity record, use a no-drop compare (or list the drops) and name `mem_estimate` as provenance-derived | no |
+| F5 | L | builder's `tools/vn_check.py` / `cross_check_V_copy.py:17` | The "identical() outside provenance" tool drops keys **by name anywhere in the tree** (`data`, `start`, `end`, `cost`, `inputs`, `mem_estimate`, …), so a scientific key with one of those names would be skipped. My no-drop re-compare (§2) shows nothing scientific is hidden in these 2 fits. **The only non-obvious non-provenance difference** is `fit.meta.mem_estimate.*` (±64 B; `sacct_upper` +320/+458 B). It comes from calib.bin's file size, which grows 64 B with the binary block's git-commit string, so it is provenance-derived. The `cost.columns` store counters (`flips`, `offers`, `dup_dropped`) also differ, but they do so between two F runs as well (§2) | For the NOTS / freeze identity record, use a no-drop compare (or list the drops), and name `mem_estimate` (provenance-derived) and `cost.columns.*` (run-to-run instrumentation) explicitly | no |
 | F6 | L | `PREREG.md` §3.3 / §4 (N contrast), the mini-leg note | H = 512 does not depend on N (see §4). It is correct per D-26, but it is not stated where the N = 10⁴ result will be read | One sentence (see §4) | no |
 | F7 | L | `tools/slurm/p1m_driver.py:95-120` (`DEFAULT_RES`) | Resources are set per rung and do not scale with N. Island time is ≈ linear in N, so the 10⁴ default (islands 0:15) is too short for N = 10⁴ (LEG_PLAN already overrides with 0:30 / 1:00). The 1M N = 5,000 self-check has the 2:00 default against ≈ 2× the N = 2,500 island time. Not silent: soft stop (exit 22), checkpoint resume, admission refusal (exit 11) | Size the 1M N = 5,000 plan's island time from 2× the measured 1M island (plan-level override) | no |
 | F8 | I | `ERRORS_ALL_SITES.md` | `calib_run.cpp` line references are now 8 lines stale. The file says it is generated at `c8a30d…`, and the generic `whole_arg` refusal (line 198 of the doc) already covers `--N` | Regenerate at the freeze tag (optional) | no |
@@ -51,8 +51,8 @@ One weakness: the F comparison runs only when `V4_F_SMCBVS4` is set (it is unset
    - the binary block or git commit;
    - `content_sha256`, and input hashes of files that embed the binary block;
    - timings, RSS or wall times;
-   - `mem_estimate` (F5).
-   - **Island files have no differing keys at all.**
+   - `mem_estimate` (F5);
+   - the island store-work counters `meta.cost.columns.{flips, flips_per_step}`, plus `offers` and `dup_dropped` in ADJ-OPP. **These vary run to run within F itself.** I re-ran island 1 of AR r01 s1 twice with the F binary (same inputs, 4 threads): 0 section differences, and only `flips` / `flips_per_step` differ, at every step. They are thread-scheduling instrumentation, not science. The builder's tool drops them under `cost` (F5).
 
    Branch vs the **NOTS overlap record** of AR r01 s1:
    - 28 common files, 75 sections, 0 differences;
@@ -70,7 +70,10 @@ One weakness: the F comparison runs only when `V4_F_SMCBVS4` is set (it is unset
 No further fixture or unit-level identity test is needed. Keep the NOTS XB re-run (sapphirerapids / GCC 14.3 side) as planned.
 
 ### 2a. Fresh re-run result
-(filled below on completion)
+Setup → calibrate → 16 islands → merge → eval → post. Owls, nice 19, 4 threads, 08:03–08:31. Run dir `~/SMC_Engineering_Department/tmp/20261119-pr88review/runs/rv/4-AR-n200-r01-V-s1`.
+- **vs the builder's F run:** 46 files, **567/567 sections identical**, 28,318 keys. Every differing key is provenance, timing or RSS, `mem_estimate`, `offer_floor_calib` (the hash of the unit's own calib.bin, which embeds the binary block), or the F-nondeterministic `flips` counters.
+- **vs the NOTS overlap record** (`records/overlap1e4/W0/4-AR-n200-r01-V-s1`, sapphirerapids): 28 common files (fit, eval, law, data and all sidecars), **75/75 sections identical**. The other diffs are `island_isa` and setup `accounted_peak_bytes` / `peak_rss_mb`.
+- **Conclusion: re-verified.** At default N the PR head gives F's bits, on Owls and against the NOTS record.
 
 ## 3. Remaining N = 2,500 assumptions (task 2) and the range check (task 3)
 **Engine.** `git grep` for `V_N`, `2500`, `2,500`, `"N"` and `.N` at the head finds:
