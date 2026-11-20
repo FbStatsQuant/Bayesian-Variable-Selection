@@ -768,3 +768,4 @@
   - Then Opus PURE → NA_DROP v1.6 → ONE tiny Sol confirm on v1.6 (wording-only, bound to the final digest; A4's passing seat). That is the LAST Codex call for NA_DROP. Anything beyond these two points → HQ; no further rounds.
   - Hold until Mon 2026-11-23 15:00 CT.
 - 2026-11-19 08:30 CST Daily report sent to HQ (§7). Done: D5P v1.1, tooling and the pre-Lean batch landed; MEAS-D at MEASD8; T6 card; blind batch triaged; DIST-2 checked; NA_DROP scoped (C). Status: HOLD until the CP reset Mon 11-23 15:00 CT. Codex 6 since last report; API $13.64. SOL62: 18 reviews, F 11/7/0, no alarm.
+- 2026-11-20 08:30 CST Daily report sent to HQ (§7): no change; HOLD until the CP reset Mon 11-23 15:00 CT; Codex 0, API $0 since the last report; SOL62 18 reviews, no alarm.
