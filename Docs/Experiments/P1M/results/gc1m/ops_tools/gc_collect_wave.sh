@@ -8,7 +8,7 @@ set -euo pipefail; . "$(dirname "$0")/common.sh"
 WAVE=${1:?WAVE P}
 BL=${BATCHES:-$(batches_of "$SCRIPTS" "$WAVE")}; [[ -n $BL ]] || { echo "no batches" >&2; exit 64; }
 KEEP=""    # no setup.bin kept; law.bin AND data.bin kept for every fit (L-12; gc_collect_nots.sh)
-ssh $NOTS "bash -s -- $D $WAVE '$KEEP' $BL" < "$(dirname "$0")/gc_collect_nots.sh"
+[[ -n ${SKIP_NOTS:-} ]] || ssh $NOTS "bash -s -- $D $WAVE '$KEEP' $BL" < "$(dirname "$0")/gc_collect_nots.sh"   # SKIP_NOTS=1: the NOTS-side step was run detached by hand (60 GB of sha256 over one ssh died silently)
 nbad=0; nunit=0
 for b in $BL; do
   R=$D/scratch/runs/$b; DEST=$OWLS_REC/$b; mkdir -p "$DEST"
