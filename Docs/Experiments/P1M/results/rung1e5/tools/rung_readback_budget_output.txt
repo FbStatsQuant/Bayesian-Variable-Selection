@@ -1,0 +1,9 @@
+measured 10^5 class costs, N 10^4, I_max 0: AR n200 66.18 (n=5, 50.2-76.4) | AR n400 43.08 (n=3) | IND n200 57.03 (n=2) | ADJ-OPP n200 67.81 (n=2) ; twins N 2,500: AR 29.57 ADJ-OPP 26.07
+rho = AR n400 mean / AR n200 mean = 0.6509 ; g = log2 rho = -0.619 ; n 1,000 = 5 x n 200 -> D = 317 x 5^g = 116.9 -> floored at 317: 316.8 ; plan value 1,087
+measured 10^5 island factor N 10^4 / N 2,500 (billed islands, same data, seed, grid): AR 2.747 (T 30), ADJ-OPP 2.649 (T 20), mean 2.698 ; whole-fit ratio AR 2.58 ADJ-OPP 2.52
+1M ONE N 10^4 fit (I_max 0): measured f 2.70 -> 774
+1M ONE N 10^4 fit (I_max 0): pre-declared f 3.77 -> 1062
+closed spend after the rung: 3618.13 (LEDGER ~ 3,618)
+D re-sized (floor)   S2 with rep 1 = (a): 22 x 317 = 6970 + N10^4 fit 774 + D 317 + comp 1052 = 9112 -> position 12730 (45.0%) ; +25% on unspent 15008 (53.0%) ; + H-34 (19 more seeds, seed 1 = the re-run) 18750 / 22532 (66.3% / 79.6%)
+D plan value 1,087   S2 with rep 1 = (a): 22 x 317 = 6970 + N10^4 fit 774 + D 1087 + comp 1052 = 9882 -> position 13501 (47.7%) ; +25% on unspent 15971 (56.4%) ; + H-34 (19 more seeds, seed 1 = the re-run) 19520 / 23495 (69.0% / 83.0%)
+worst case (pre-declared f 3.77, D 1,087, H-34 seeds, 25% reserve): 23855 (84.3%) <= 28,300: True

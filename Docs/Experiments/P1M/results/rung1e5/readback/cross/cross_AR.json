@@ -1,0 +1,86 @@
+{
+  "binary": {
+    "compiler": "g++ 11.5.0 20240719 (Red Hat 11.5.0-17)",
+    "flags": "-O2 -fno-math-errno -ffp-contract=off -march=x86-64-v2",
+    "git_commit": "unknown",
+    "island_isa": "portable",
+    "libm": {
+      "binding": "glibc-libm",
+      "fma_variant": true,
+      "glibc": "2.34",
+      "path": "/lib64/libm.so.6",
+      "self_test": {
+        "exp": true,
+        "exp_pos": true,
+        "expl": true,
+        "lgamma": true,
+        "lgamma_int": true,
+        "log": true,
+        "log_near1": true,
+        "logl": true,
+        "pass": true
+      },
+      "sha256": "c8933ed54328b293c8b005fe44161d1c73c09f96abc6d781a6c31230368d1120"
+    },
+    "sha256": "afef0e463216edca9f7d877fb688ad57f7a13fcdcb2c1ebae7d4f51f1c92e59d"
+  },
+  "command": "xeval",
+  "inputs": {
+    "data.bin": "87521d77df593872635c6981979bdb7e60ea323fc4acfb40f510e3795f7134af",
+    "data_b.bin": "87521d77df593872635c6981979bdb7e60ea323fc4acfb40f510e3795f7134af",
+    "data_identity": {
+      "X_section_sha256": "f774b039301c3d86e2ed517d0bec2b539ed10bfd750f0fb1a6f2b2ec449876b8",
+      "n": 200,
+      "p": 100000,
+      "p_raw": 100000,
+      "y_section_sha256": "331fef9b012d9d73721d529308a0c01f58ceb3c30f82c984b41f540b8ec7b273"
+    },
+    "law_a.bin": "ed60047e08da613bcc93cff551a94afd97cc81ae02f34662d419d51a0ad61fdc",
+    "law_b.bin": "34ce5776bcc044bf8e3746962d7977267c82478df1ac26eca54e83e210c5fe39",
+    "truth.json": "f352b90eefd426c035e8fc87ed364937dbe7cabed325d26824b4b29a2a0f707b"
+  },
+  "pairs": {
+    "5-AR-n200-r01": {
+      "1": {
+        "h2": 9.9369521278092066e-07,
+        "se": 1.0824780765067122e-07,
+        "se_tail": 1.0633826867181127e-07,
+        "se_x": 2.0242541269771359e-08
+      }
+    }
+  },
+  "schema": "overlap1e4.cross_vt/1",
+  "status": "completed",
+  "xeval": {
+    "block_rows": 500,
+    "dH": 0.00099684262187213924,
+    "dH_bound_truncation": 0.35053109633961549,
+    "definition": "h2 = 1 - mean_x int sqrt(fbar_A fbar_B) dy, same x rows / 64-node Gauss-Hermite / top-K + stratified tail as the engine eval predictive",
+    "dropped_mass_a": 0.030731431146826232,
+    "dropped_mass_b": 0.030704596533969699,
+    "exact_a": false,
+    "exact_b": false,
+    "h2": 9.9369521278092066e-07,
+    "h2_topK": 1.7763568394002505e-15,
+    "n_gh": 64,
+    "n_x": 4000,
+    "oid_a": 6,
+    "oid_b": 2,
+    "rows": "gen_test",
+    "se": 1.0824780765067122e-07,
+    "se_tail": 1.0633826867181127e-07,
+    "se_x": 2.0242541269771359e-08,
+    "seed": 502020001,
+    "tail_components_a": 999000,
+    "tail_components_b": 999000,
+    "tail_groups": 8,
+    "tail_mass_a": 0.30264449677541544,
+    "tail_mass_b": 0.3026357322543875,
+    "tail_r": 1000,
+    "threads": 3,
+    "top_a": 1000,
+    "top_b": 1000,
+    "top_k": 1000,
+    "wall_s": 20.364431450000001
+  }
+}

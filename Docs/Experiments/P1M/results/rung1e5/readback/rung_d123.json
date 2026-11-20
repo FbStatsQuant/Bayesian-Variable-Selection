@@ -1,0 +1,105 @@
+{
+ "script": "rung_d123.py",
+ "fits": {
+  "200": {
+   "5-AR-n200-r01-V-s1": {
+    "hpm_eq_S0": true,
+    "pi_hat_S0": 0.3865364023425814,
+    "occ_top1": 0.38615625,
+    "ok": true
+   },
+   "5-AR-n200-r02-V-s1": {
+    "hpm_eq_S0": true,
+    "pi_hat_S0": 0.28651535689406704,
+    "occ_top1": 0.286625,
+    "ok": true
+   },
+   "5-AR-n200-r03-V-s1": {
+    "hpm_eq_S0": true,
+    "pi_hat_S0": 0.27442989123968714,
+    "occ_top1": 0.27465,
+    "ok": true
+   },
+   "5-AR-n200-r04-V-s1": {
+    "hpm_eq_S0": true,
+    "pi_hat_S0": 0.4178950261236169,
+    "occ_top1": 0.421625,
+    "ok": true
+   },
+   "5-AR-n200-r05-V-s1": {
+    "hpm_eq_S0": true,
+    "pi_hat_S0": 0.37738982937305143,
+    "occ_top1": 0.37690625,
+    "ok": true
+   }
+  },
+  "400": {
+   "5-AR-n400-r01-V-s1": {
+    "hpm_eq_S0": true,
+    "pi_hat_S0": 0.5511145014954218,
+    "occ_top1": 0.5505,
+    "ok": true
+   },
+   "5-AR-n400-r02-V-s1": {
+    "hpm_eq_S0": true,
+    "pi_hat_S0": 0.5877392141701276,
+    "occ_top1": 0.5860875,
+    "ok": true
+   },
+   "5-AR-n400-r03-V-s1": {
+    "hpm_eq_S0": true,
+    "pi_hat_S0": 0.49806005180118,
+    "occ_top1": 0.49749375,
+    "ok": true
+   }
+  }
+ },
+ "excluded": {},
+ "D1": {
+  "n200_hpm_eq_S0": "5/5",
+  "n400_hpm_eq_S0": "3/3",
+  "rule": ">= 4/5 at n 200 and 3/3 at n 400",
+  "PASS": true
+ },
+ "D2": {
+  "mean_pi_hat_n200": 0.3485533011946008,
+  "mean_pi_hat_n400": 0.5456379224889099,
+  "difference_n400_minus_n200": 0.19708462129430904,
+  "rule": "difference >= 0 (a comparison of means, NO tolerance; reported interval does not gate)",
+  "PASS": true,
+  "welch_df": 5.6418455507080045,
+  "welch_95_ci": [
+   0.1008715767863123,
+   0.29329766580230576
+  ],
+  "cluster_bootstrap_95_ci": [
+   0.13281459397530337,
+   0.2616072151961057
+  ],
+  "bootstrap_draws": 10000,
+  "bootstrap_seed": 20261120,
+  "occupancy_beside": {
+   "mean_n200": 0.34919249999999996,
+   "mean_n400": 0.5446937500000001
+  },
+  "expert_band_note": "OWNER_SHEET 0.3-0.45 at n 200 is a p = 10^6 draw, not a 10^5 band"
+ },
+ "D3": "NOT computed here: position + D <= 28.3k at the re-sized unit cost, from the read-back's budget script",
+ "verdict": "D1 PASS, D2 PASS (D3 pending the budget script)",
+ "continuity_pi_hat_S0": [
+  {
+   "twin": "5-ADJOPP-n200-r01-VN25-s1",
+   "pi_hat_S0_N2500": 0.327382450397525,
+   "pi_hat_S0_N10000": 0.33968624081065985,
+   "difference_N10000_minus_N2500": 0.01230379041313484,
+   "note": "no threshold; a flag to HQ if the N effect looks large (D runs at N 2,500, the trend is measured at N 10^4)"
+  },
+  {
+   "twin": "5-AR-n200-r01-VN25-s1",
+   "pi_hat_S0_N2500": 0.38515061177506593,
+   "pi_hat_S0_N10000": 0.3865364023425814,
+   "difference_N10000_minus_N2500": 0.001385790567515477,
+   "note": "no threshold; a flag to HQ if the N effect looks large (D runs at N 2,500, the trend is measured at N 10^4)"
+  }
+ ]
+}
