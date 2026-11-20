@@ -1,0 +1,22 @@
+spent 2686.91 (closed); remaining 25613
+
+== pre-declared f 3.85: 1M fit N 2,500 = 315.4 ; N 10^4 = 1082.7 ; N 5,000 = 564.4 ; 10^5 fit N 2,500 = 30.4, N 10^4 = 110.5 (I_max-3 twin at N 10^4 120.0)
+  S0 KEEP everywhere                                                          unspent   10043  no reserve   12730  +25%   15241  fits
+  S1b all N 10^4, no D                                                        unspent   26318  no reserve   29005  +25%   35584  DOES NOT FIT
+  S2 ADOPT default (10^5 at N 10^4; 1M N 2,500 + ONE N 10^4 + D at 2,500)     unspent   11600  no reserve   14287  +25%   17187  fits
+  S5 ADOPT cost-neutral (R' 4 at N 10^4)                                      unspent    9214  no reserve   11900  +25%   14204  fits
+  S4 ADOPT, 1M at N 10^4 for as many fits as fit (no D, no self-check): room 17993 -> 16 fits at 1083 each; total with reserve 27463
+
+== MEASURED mean billed f 3.768: 1M fit N 2,500 = 315.4 ; N 10^4 = 1060.7 ; N 5,000 = 553.4 ; 10^5 fit N 2,500 = 30.4, N 10^4 = 108.2 (I_max-3 twin at N 10^4 117.7)
+  S0 KEEP everywhere                                                          unspent   10032  no reserve   12719  +25%   15227  fits
+  S1b all N 10^4, no D                                                        unspent   25802  no reserve   28489  +25%   34939  DOES NOT FIT
+  S2 ADOPT default (10^5 at N 10^4; 1M N 2,500 + ONE N 10^4 + D at 2,500)     unspent   11548  no reserve   14235  +25%   17122  fits
+  S5 ADOPT cost-neutral (R' 4 at N 10^4)                                      unspent    9062  no reserve   11749  +25%   14015  fits
+  S4 ADOPT, 1M at N 10^4 for as many fits as fit (no D, no self-check): room 18023 -> 16 fits at 1061 each; total with reserve 26984
+
+== measured max f 4.15: 1M fit N 2,500 = 315.4 ; N 10^4 = 1163.5 ; N 5,000 = 604.8 ; 10^5 fit N 2,500 = 30.4, N 10^4 = 118.9 (I_max-3 twin at N 10^4 128.4)
+  S0 KEEP everywhere                                                          unspent   10083  no reserve   12770  +25%   15291  fits
+  S1b all N 10^4, no D                                                        unspent   28204  no reserve   30891  +25%   37942  DOES NOT FIT
+  S2 ADOPT default (10^5 at N 10^4; 1M N 2,500 + ONE N 10^4 + D at 2,500)     unspent   11791  no reserve   14477  +25%   17425  fits
+  S5 ADOPT cost-neutral (R' 4 at N 10^4)                                      unspent    9767  no reserve   12454  +25%   14896  fits
+  S4 ADOPT, 1M at N 10^4 for as many fits as fit (no D, no self-check): room 17883 -> 15 fits at 1164 each; total with reserve 27762

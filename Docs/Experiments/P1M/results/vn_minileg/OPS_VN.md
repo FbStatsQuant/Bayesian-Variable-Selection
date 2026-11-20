@@ -55,3 +55,32 @@ Plan: `MINILEG_PLAN.md` + `MINILEG_PREREG.md` (exp/P1M 5d8c77e8). The precision 
 - Monitor end report V1 (00:48:16Z): 4/4 COMPLETED, wave 67.7 core-h (quote 75, stop 150), no stop rule, arm 4/4, pairing 4/4. Collected `vn_collect_wave.sh V1` → `records/vn_minileg/V1/` (6 units verified, 0 problems; 38.58 + 29.12 = 67.70 core-h from the cost records); quick read-back `readback_V1.json` (arm/build/data OK, pairing 0 differing sections on 4/4, f billed 3.5–3.85, I_max 3 diag max k = 3); `prior_after_V1.json` (9 fits, 119.77 core-h, V0+V1).
 - V2 released: COPYBIN (VN_V2_1/2/3 sha == BUILD_F2), presubmit rc 0, home 6,718 MB. Submitted 01:02:57Z (VN_V2_1: setup 2804180, calibrate 2804181; ARweak c1 2804182/83/84, c2 2804185/86/87), 01:08:00Z (VN_V2_2: 2804442/2804443; I0 c1 2804444/45/46, c2 2804447/48/49), 01:13:00Z (VN_V2_3: 2804601/2804602; c1 2804603/04/06, c2 2804607/08/09).
 - START V2 sent to the monitor (quote 125, stop > 250, PRIOR prior_after_V1.json).
+
+## Mini-leg complete: collection, ledger, completeness, offload, 2026-11-20 (Manager request after V2 ENDED CLEAN 01:34Z)
+- `vn_collect_wave.sh V1` (00:5xZ) and `V2` (01:3xZ) → `records/vn_minileg/V1|V2/` (V1 6 units, V2 9 units, 0 problems; one SHA256SUMS per unit); `calib_meta.json` for every fit. V2 cost records 32.67 + 39.51 + 44.57 = 116.75 core-h; V1 67.70; V0 52.07.
+- **law.bin + data.bin for every fit:** the main units already hold law.bin for the 13 `-P-` fits; to leave the already-offloaded V0 units untouched, **15 sibling units `<run>.lawdata`** (data.bin 16.4 MB + law.bin, hard links to the main unit's law.bin where it exists; law.bin of the 2 r04 fits fetched from NOTS) were made by `fetch_lawdata.sh` (sha256 verified against NOTS per file), each with `FOR_UNIT.txt` and its own SHA256SUMS. 
+- `prior_after_V2.json` = full mini-leg ledger: 15 fits, **236.51 core-h** (V0 52.07 + V1 67.70 + V2 116.75; the leg's 462.48 is not in it).
+- Verification: 40 units under `records/vn_minileg` (V0 13, V1 10, V2 15, F2_ID 2), `sha256sum -c` all OK, 0 nested SHA256SUMS.
+- **Desktop offload:** computed from `desktop_verified.txt` (mirror of the 19:20 pull) the same way `serve_pull.sh` does, without touching it: **30 units pending** (V0 5 `.lawdata`; V1 10: 6 units + 4 `.lawdata`; V2 15: 9 units + 6 `.lawdata`), 4.09 GB (du of the 30 units, hard links counted per unit); the V0 8 units + F2_ID 2 are already verified on the desktop. They follow the normal hourly pull (next ≈ 20:20 CST).
+- Note: one scratch file in `/tmp` (a find list, removed at once) slipped into the pending computation: POLICIES §14, no residue.
+
+### Completeness table (15/15)
+| # | wave | fit (run_id) | class | billed core-h | stages | arm | build | data | pairing (0 differing sections) | fit/eval/calib_meta | law.bin | data.bin | unit SHA OK |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | V0 | 4-AR-n200-r01-P-N10000-m1-I0-c1-s1 | vn N10000 m1 I0 | 20.58 | COMPLETED | ok | ok | ok | 40/40 sections equal, grid equal | yes | yes | yes | yes |
+| 2 | V0 | 4-AR-n200-r01-P-N10000-m1-c1-s1 | vn N10000 m1 I3 | 20.75 | COMPLETED | ok | ok | ok | 40/40 sections equal, grid equal | yes | yes | yes | yes |
+| 3 | V0 | 4-AR-n200-r01-P-N2500-m1-I0-XB2-s1 | XB2 | 6.29 | COMPLETED | ok | ok | ok | n/a (N 2,500 arm) | yes | yes | yes | yes |
+| 4 | V0 | 4-ADJOPP-n200-r04-VI3-s1 | r04 pair | 2.69 | COMPLETED | ok | ok | ok | n/a (N 2,500 arm) | yes | yes | yes | yes |
+| 5 | V0 | 4-ADJOPP-n200-r04-V-s2 | r04 pair | 1.76 | COMPLETED | ok | ok | ok | n/a (N 2,500 arm) | yes | yes | yes | yes |
+| 6 | V1 | 4-AR-n200-r01-P-N10000-m1-I0-c2-s1 | vn N10000 m1 I0 | 19.23 | COMPLETED | ok | ok | ok | 40/40 sections equal, grid equal | yes | yes | yes | yes |
+| 7 | V1 | 4-AR-n200-r01-P-N10000-m1-c2-s1 | vn N10000 m1 I3 | 19.35 | COMPLETED | ok | ok | ok | 40/40 sections equal, grid equal | yes | yes | yes | yes |
+| 8 | V1 | 4-ARweak-n200-r01-P-N10000-m1-I0-c1-s1 | vn N10000 m1 I0 | 13.79 | COMPLETED | ok | ok | ok | 40/40 sections equal, grid equal | yes | yes | yes | yes |
+| 9 | V1 | 4-ARweak-n200-r01-P-N10000-m1-I0-c2-s1 | vn N10000 m1 I0 | 15.33 | COMPLETED | ok | ok | ok | 40/40 sections equal, grid equal | yes | yes | yes | yes |
+| 10 | V2 | 4-ARweak-n200-r01-P-N10000-m1-c1-s1 | vn N10000 m1 I3 | 15.06 | COMPLETED | ok | ok | ok | 40/40 sections equal, grid equal | yes | yes | yes | yes |
+| 11 | V2 | 4-ARweak-n200-r01-P-N10000-m1-c2-s1 | vn N10000 m1 I3 | 17.61 | COMPLETED | ok | ok | ok | 40/40 sections equal, grid equal | yes | yes | yes | yes |
+| 12 | V2 | 4-ADJOPP-n200-r01-P-N10000-m1-I0-c1-s1 | vn N10000 m1 I0 | 20.65 | COMPLETED | ok | ok | ok | 40/40 sections equal, grid equal | yes | yes | yes | yes |
+| 13 | V2 | 4-ADJOPP-n200-r01-P-N10000-m1-I0-c2-s1 | vn N10000 m1 I0 | 18.85 | COMPLETED | ok | ok | ok | 40/40 sections equal, grid equal | yes | yes | yes | yes |
+| 14 | V2 | 4-ADJOPP-n200-r01-P-N10000-m1-c1-s1 | vn N10000 m1 I3 | 22.04 | COMPLETED | ok | ok | ok | 40/40 sections equal, grid equal | yes | yes | yes | yes |
+| 15 | V2 | 4-ADJOPP-n200-r01-P-N10000-m1-c2-s1 | vn N10000 m1 I3 | 22.53 | COMPLETED | ok | ok | ok | 40/40 sections equal, grid equal | yes | yes | yes | yes |
+
+**15 / 15 fits; total 236.50 billed core-h.**

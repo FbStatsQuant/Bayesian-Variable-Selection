@@ -1,0 +1,1144 @@
+{
+ "script_sha256": "7cdd69a11f3aaffa7a6615df639aefbe101042e9d37a8d520999ccbdc6279605",
+ "datasets": [
+  "ADJOPP",
+  "AR",
+  "ARweak"
+ ],
+ "cells": [
+  [
+   2500,
+   1,
+   0
+  ],
+  [
+   2500,
+   1,
+   3
+  ],
+  [
+   2500,
+   4,
+   3
+  ],
+  [
+   10000,
+   1,
+   0
+  ],
+  [
+   10000,
+   1,
+   3
+  ]
+ ],
+ "identity": {
+  "4-ADJOPP-n200-r01-P-N10000-m1-I0-c1-s1": {
+   "plan_arm": [
+    10000,
+    1,
+    0
+   ],
+   "recorded": {
+    "N": 10000,
+    "m": 1,
+    "I": 0,
+    "I_used": 0,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 19,
+    "diag_k_max": 0,
+    "m4_T_ok": false
+   }
+  },
+  "4-ADJOPP-n200-r01-P-N10000-m1-I0-c2-s1": {
+   "plan_arm": [
+    10000,
+    1,
+    0
+   ],
+   "recorded": {
+    "N": 10000,
+    "m": 1,
+    "I": 0,
+    "I_used": 0,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 17,
+    "diag_k_max": 0,
+    "m4_T_ok": false
+   }
+  },
+  "4-ADJOPP-n200-r01-P-N10000-m1-c1-s1": {
+   "plan_arm": [
+    10000,
+    1,
+    3
+   ],
+   "recorded": {
+    "N": 10000,
+    "m": 1,
+    "I": 3,
+    "I_used": 3,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 21,
+    "diag_k_max": 3,
+    "m4_T_ok": false
+   }
+  },
+  "4-ADJOPP-n200-r01-P-N10000-m1-c2-s1": {
+   "plan_arm": [
+    10000,
+    1,
+    3
+   ],
+   "recorded": {
+    "N": 10000,
+    "m": 1,
+    "I": 3,
+    "I_used": 3,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 17,
+    "diag_k_max": 3,
+    "m4_T_ok": false
+   }
+  },
+  "4-ADJOPP-n200-r01-P-N2500-m1-I0-c1-s1": {
+   "plan_arm": [
+    2500,
+    1,
+    0
+   ],
+   "recorded": {
+    "N": 2500,
+    "m": 1,
+    "I": 0,
+    "I_used": 0,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 19,
+    "diag_k_max": 0,
+    "m4_T_ok": false
+   }
+  },
+  "4-ADJOPP-n200-r01-P-N2500-m1-I0-c2-s1": {
+   "plan_arm": [
+    2500,
+    1,
+    0
+   ],
+   "recorded": {
+    "N": 2500,
+    "m": 1,
+    "I": 0,
+    "I_used": 0,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 17,
+    "diag_k_max": 0,
+    "m4_T_ok": false
+   }
+  },
+  "4-ADJOPP-n200-r01-P-N2500-m1-c1-s1": {
+   "plan_arm": [
+    2500,
+    1,
+    3
+   ],
+   "recorded": {
+    "N": 2500,
+    "m": 1,
+    "I": 3,
+    "I_used": 3,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 21,
+    "diag_k_max": 3,
+    "m4_T_ok": false
+   }
+  },
+  "4-ADJOPP-n200-r01-P-N2500-m1-c2-s1": {
+   "plan_arm": [
+    2500,
+    1,
+    3
+   ],
+   "recorded": {
+    "N": 2500,
+    "m": 1,
+    "I": 3,
+    "I_used": 3,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 17,
+    "diag_k_max": 3,
+    "m4_T_ok": false
+   }
+  },
+  "4-ADJOPP-n200-r01-P-N2500-m4-c1-s1": {
+   "plan_arm": [
+    2500,
+    4,
+    3
+   ],
+   "recorded": {
+    "N": 2500,
+    "m": 4,
+    "I": 3,
+    "I_used": 3,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 64,
+    "diag_k_max": 3,
+    "m4_T_ok": true
+   }
+  },
+  "4-ADJOPP-n200-r01-P-N2500-m4-c2-s1": {
+   "plan_arm": [
+    2500,
+    4,
+    3
+   ],
+   "recorded": {
+    "N": 2500,
+    "m": 4,
+    "I": 3,
+    "I_used": 3,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 68,
+    "diag_k_max": 3,
+    "m4_T_ok": true
+   }
+  },
+  "4-AR-n200-r01-P-N10000-m1-I0-c1-s1": {
+   "plan_arm": [
+    10000,
+    1,
+    0
+   ],
+   "recorded": {
+    "N": 10000,
+    "m": 1,
+    "I": 0,
+    "I_used": 0,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 23,
+    "diag_k_max": 0,
+    "m4_T_ok": false
+   }
+  },
+  "4-AR-n200-r01-P-N10000-m1-I0-c2-s1": {
+   "plan_arm": [
+    10000,
+    1,
+    0
+   ],
+   "recorded": {
+    "N": 10000,
+    "m": 1,
+    "I": 0,
+    "I_used": 0,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 23,
+    "diag_k_max": 0,
+    "m4_T_ok": false
+   }
+  },
+  "4-AR-n200-r01-P-N10000-m1-c1-s1": {
+   "plan_arm": [
+    10000,
+    1,
+    3
+   ],
+   "recorded": {
+    "N": 10000,
+    "m": 1,
+    "I": 3,
+    "I_used": 3,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 20,
+    "diag_k_max": 3,
+    "m4_T_ok": false
+   }
+  },
+  "4-AR-n200-r01-P-N10000-m1-c2-s1": {
+   "plan_arm": [
+    10000,
+    1,
+    3
+   ],
+   "recorded": {
+    "N": 10000,
+    "m": 1,
+    "I": 3,
+    "I_used": 3,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 21,
+    "diag_k_max": 3,
+    "m4_T_ok": false
+   }
+  },
+  "4-AR-n200-r01-P-N2500-m1-I0-c1-s1": {
+   "plan_arm": [
+    2500,
+    1,
+    0
+   ],
+   "recorded": {
+    "N": 2500,
+    "m": 1,
+    "I": 0,
+    "I_used": 0,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 23,
+    "diag_k_max": 0,
+    "m4_T_ok": false
+   }
+  },
+  "4-AR-n200-r01-P-N2500-m1-I0-c2-s1": {
+   "plan_arm": [
+    2500,
+    1,
+    0
+   ],
+   "recorded": {
+    "N": 2500,
+    "m": 1,
+    "I": 0,
+    "I_used": 0,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 23,
+    "diag_k_max": 0,
+    "m4_T_ok": false
+   }
+  },
+  "4-AR-n200-r01-P-N2500-m1-c1-s1": {
+   "plan_arm": [
+    2500,
+    1,
+    3
+   ],
+   "recorded": {
+    "N": 2500,
+    "m": 1,
+    "I": 3,
+    "I_used": 3,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 20,
+    "diag_k_max": 3,
+    "m4_T_ok": false
+   }
+  },
+  "4-AR-n200-r01-P-N2500-m1-c2-s1": {
+   "plan_arm": [
+    2500,
+    1,
+    3
+   ],
+   "recorded": {
+    "N": 2500,
+    "m": 1,
+    "I": 3,
+    "I_used": 3,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 21,
+    "diag_k_max": 3,
+    "m4_T_ok": false
+   }
+  },
+  "4-AR-n200-r01-P-N2500-m4-c1-s1": {
+   "plan_arm": [
+    2500,
+    4,
+    3
+   ],
+   "recorded": {
+    "N": 2500,
+    "m": 4,
+    "I": 3,
+    "I_used": 3,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 84,
+    "diag_k_max": 3,
+    "m4_T_ok": true
+   }
+  },
+  "4-AR-n200-r01-P-N2500-m4-c2-s1": {
+   "plan_arm": [
+    2500,
+    4,
+    3
+   ],
+   "recorded": {
+    "N": 2500,
+    "m": 4,
+    "I": 3,
+    "I_used": 3,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 80,
+    "diag_k_max": 3,
+    "m4_T_ok": true
+   }
+  },
+  "4-ARweak-n200-r01-P-N10000-m1-I0-c1-s1": {
+   "plan_arm": [
+    10000,
+    1,
+    0
+   ],
+   "recorded": {
+    "N": 10000,
+    "m": 1,
+    "I": 0,
+    "I_used": 0,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 9,
+    "diag_k_max": 0,
+    "m4_T_ok": false
+   }
+  },
+  "4-ARweak-n200-r01-P-N10000-m1-I0-c2-s1": {
+   "plan_arm": [
+    10000,
+    1,
+    0
+   ],
+   "recorded": {
+    "N": 10000,
+    "m": 1,
+    "I": 0,
+    "I_used": 0,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 10,
+    "diag_k_max": 0,
+    "m4_T_ok": false
+   }
+  },
+  "4-ARweak-n200-r01-P-N10000-m1-c1-s1": {
+   "plan_arm": [
+    10000,
+    1,
+    3
+   ],
+   "recorded": {
+    "N": 10000,
+    "m": 1,
+    "I": 3,
+    "I_used": 3,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 9,
+    "diag_k_max": 3,
+    "m4_T_ok": false
+   }
+  },
+  "4-ARweak-n200-r01-P-N10000-m1-c2-s1": {
+   "plan_arm": [
+    10000,
+    1,
+    3
+   ],
+   "recorded": {
+    "N": 10000,
+    "m": 1,
+    "I": 3,
+    "I_used": 3,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 12,
+    "diag_k_max": 3,
+    "m4_T_ok": false
+   }
+  },
+  "4-ARweak-n200-r01-P-N2500-m1-I0-c1-s1": {
+   "plan_arm": [
+    2500,
+    1,
+    0
+   ],
+   "recorded": {
+    "N": 2500,
+    "m": 1,
+    "I": 0,
+    "I_used": 0,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 9,
+    "diag_k_max": 0,
+    "m4_T_ok": false
+   }
+  },
+  "4-ARweak-n200-r01-P-N2500-m1-I0-c2-s1": {
+   "plan_arm": [
+    2500,
+    1,
+    0
+   ],
+   "recorded": {
+    "N": 2500,
+    "m": 1,
+    "I": 0,
+    "I_used": 0,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 10,
+    "diag_k_max": 0,
+    "m4_T_ok": false
+   }
+  },
+  "4-ARweak-n200-r01-P-N2500-m1-c1-s1": {
+   "plan_arm": [
+    2500,
+    1,
+    3
+   ],
+   "recorded": {
+    "N": 2500,
+    "m": 1,
+    "I": 3,
+    "I_used": 3,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 9,
+    "diag_k_max": 3,
+    "m4_T_ok": false
+   }
+  },
+  "4-ARweak-n200-r01-P-N2500-m1-c2-s1": {
+   "plan_arm": [
+    2500,
+    1,
+    3
+   ],
+   "recorded": {
+    "N": 2500,
+    "m": 1,
+    "I": 3,
+    "I_used": 3,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 12,
+    "diag_k_max": 3,
+    "m4_T_ok": false
+   }
+  },
+  "4-ARweak-n200-r01-P-N2500-m4-c1-s1": {
+   "plan_arm": [
+    2500,
+    4,
+    3
+   ],
+   "recorded": {
+    "N": 2500,
+    "m": 4,
+    "I": 3,
+    "I_used": 3,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 44,
+    "diag_k_max": 3,
+    "m4_T_ok": true
+   }
+  },
+  "4-ARweak-n200-r01-P-N2500-m4-c2-s1": {
+   "plan_arm": [
+    2500,
+    4,
+    3
+   ],
+   "recorded": {
+    "N": 2500,
+    "m": 4,
+    "I": 3,
+    "I_used": 3,
+    "grid_unconverged": true,
+    "rule": "bounded",
+    "src": "calib_meta.json"
+   },
+   "reasons": [],
+   "behaviour": {
+    "T": 48,
+    "diag_k_max": 3,
+    "m4_T_ok": true
+   }
+  }
+ },
+ "decisions": {
+  "m=4": "KEEP",
+  "N=10000 (m=1)": "KEEP",
+  "N=10000 (m=4)": "NOT_RUN",
+  "I_max=0": "ADOPT",
+  "resampling": "OFF, not tested (systematic not available in the frozen binary; D-14 default; HQ Q5)"
+ },
+ "detail": {
+  "m=4": {
+   "hpm_identical_X_and_B": true,
+   "ratios": {
+    "M1": {
+     "per_dataset": {
+      "ADJOPP": 0.9394403524005726,
+      "AR": 1.1317939575754679,
+      "ARweak": 0.9596497040094052
+     },
+     "geo_mean": 1.0067379462932313
+    },
+    "M2": {
+     "per_dataset": {
+      "ADJOPP": 0.9792397680958235,
+      "AR": 1.0732075633863636,
+      "ARweak": 1.061297135806222
+     },
+     "geo_mean": 1.0370584943700816
+    },
+    "M3": {
+     "per_dataset": {
+      "ADJOPP": 0.490016321743599,
+      "AR": 0.578933310258766,
+      "ARweak": 0.553719652353132
+     },
+     "geo_mean": 0.53956405183129
+    }
+   },
+   "cost_ratio": 2.325941045398105,
+   "limit_geo": 0.6556931530741984
+  },
+  "N=10000 (m=1)": {
+   "hpm_identical_X_and_B": true,
+   "ratios": {
+    "M1": {
+     "per_dataset": {
+      "ADJOPP": 0.46374399581105175,
+      "AR": 0.4932584068189531,
+      "ARweak": 0.4550385909434395
+     },
+     "geo_mean": 0.47039967011593115
+    },
+    "M2": {
+     "per_dataset": {
+      "ADJOPP": 0.4923607478267804,
+      "AR": 0.4458298896396719,
+      "ARweak": 0.4627890746422458
+     },
+     "geo_mean": 0.4666005366212086
+    },
+    "M3": {
+     "per_dataset": {
+      "ADJOPP": 0.5532643284493348,
+      "AR": 0.6296289266073588,
+      "ARweak": 0.5369146989823766
+     },
+     "geo_mean": 0.5718834722425895
+    }
+   },
+   "cost_ratio": 3.789620860335766,
+   "limit_geo": 0.5136911916046594
+  },
+  "N=10000 (m=4)": {
+   "reason": "arm or baseline fits missing"
+  },
+  "I_max=0": {
+   "hpm_identical_X_and_B": true,
+   "ratios": {
+    "M1": {
+     "per_dataset": {
+      "ADJOPP": 1.0053345635049984,
+      "AR": 1.0055007930113171,
+      "ARweak": 0.9070505521010268
+     },
+     "geo_mean": 0.9714970983290481
+    },
+    "M2": {
+     "per_dataset": {
+      "ADJOPP": 0.9453492927034479,
+      "AR": 0.9075041659176363,
+      "ARweak": 0.9427095117751618
+     },
+     "geo_mean": 0.9316932305067538
+    },
+    "M3": {
+     "per_dataset": {
+      "ADJOPP": 1.105820951805781,
+      "AR": 1.1305105880971464,
+      "ARweak": 1.1551361411403602
+     },
+     "geo_mean": 1.1303099225634625
+    }
+   },
+   "cost_ratio": null,
+   "limit_geo": 1.15
+  }
+ },
+ "targets_per_fit": {
+  "(2500, 1, 0)": [
+   {
+    "dataset": "ADJOPP",
+    "run_id": "4-ADJOPP-n200-r01-P-N2500-m1-I0-c1-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.01900538171595364,
+    "occ_inhomogeneous": false,
+    "I_used": 0,
+    "grid_unconverged": true
+   },
+   {
+    "dataset": "ADJOPP",
+    "run_id": "4-ADJOPP-n200-r01-P-N2500-m1-I0-c2-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.025231543725395312,
+    "occ_inhomogeneous": false,
+    "I_used": 0,
+    "grid_unconverged": true
+   },
+   {
+    "dataset": "AR",
+    "run_id": "4-AR-n200-r01-P-N2500-m1-I0-c1-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.022981202008261984,
+    "occ_inhomogeneous": false,
+    "I_used": 0,
+    "grid_unconverged": true
+   },
+   {
+    "dataset": "AR",
+    "run_id": "4-AR-n200-r01-P-N2500-m1-I0-c2-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.024053448955564088,
+    "occ_inhomogeneous": false,
+    "I_used": 0,
+    "grid_unconverged": true
+   },
+   {
+    "dataset": "ARweak",
+    "run_id": "4-ARweak-n200-r01-P-N2500-m1-I0-c1-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.015438761828267313,
+    "occ_inhomogeneous": false,
+    "I_used": 0,
+    "grid_unconverged": true
+   },
+   {
+    "dataset": "ARweak",
+    "run_id": "4-ARweak-n200-r01-P-N2500-m1-I0-c2-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.022973571145898427,
+    "occ_inhomogeneous": false,
+    "I_used": 0,
+    "grid_unconverged": true
+   }
+  ],
+  "(2500, 1, 3)": [
+   {
+    "dataset": "ADJOPP",
+    "run_id": "4-ADJOPP-n200-r01-P-N2500-m1-c1-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.022129704288978272,
+    "occ_inhomogeneous": false,
+    "I_used": 3,
+    "grid_unconverged": true
+   },
+   {
+    "dataset": "ADJOPP",
+    "run_id": "4-ADJOPP-n200-r01-P-N2500-m1-c2-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.020315822353548823,
+    "occ_inhomogeneous": false,
+    "I_used": 3,
+    "grid_unconverged": true
+   },
+   {
+    "dataset": "AR",
+    "run_id": "4-AR-n200-r01-P-N2500-m1-c1-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.023042331861542985,
+    "occ_inhomogeneous": false,
+    "I_used": 3,
+    "grid_unconverged": true
+   },
+   {
+    "dataset": "AR",
+    "run_id": "4-AR-n200-r01-P-N2500-m1-c2-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.020507639467537638,
+    "occ_inhomogeneous": false,
+    "I_used": 3,
+    "grid_unconverged": true
+   },
+   {
+    "dataset": "ARweak",
+    "run_id": "4-ARweak-n200-r01-P-N2500-m1-c1-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.018040038174888653,
+    "occ_inhomogeneous": false,
+    "I_used": 3,
+    "grid_unconverged": true
+   },
+   {
+    "dataset": "ARweak",
+    "run_id": "4-ARweak-n200-r01-P-N2500-m1-c2-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.014352921409657658,
+    "occ_inhomogeneous": false,
+    "I_used": 3,
+    "grid_unconverged": true
+   }
+  ],
+  "(2500, 4, 3)": [
+   {
+    "dataset": "ADJOPP",
+    "run_id": "4-ADJOPP-n200-r01-P-N2500-m4-c1-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.010027081622767267,
+    "occ_inhomogeneous": false,
+    "I_used": 3,
+    "grid_unconverged": true
+   },
+   {
+    "dataset": "ADJOPP",
+    "run_id": "4-ADJOPP-n200-r01-P-N2500-m4-c2-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.011271938869262968,
+    "occ_inhomogeneous": false,
+    "I_used": 3,
+    "grid_unconverged": true
+   },
+   {
+    "dataset": "AR",
+    "run_id": "4-AR-n200-r01-P-N2500-m4-c1-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.012132994247626597,
+    "occ_inhomogeneous": false,
+    "I_used": 3,
+    "grid_unconverged": true
+   },
+   {
+    "dataset": "AR",
+    "run_id": "4-AR-n200-r01-P-N2500-m4-c2-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.012077598202191694,
+    "occ_inhomogeneous": false,
+    "I_used": 3,
+    "grid_unconverged": true
+   },
+   {
+    "dataset": "ARweak",
+    "run_id": "4-ARweak-n200-r01-P-N2500-m4-c1-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.007555252318409213,
+    "occ_inhomogeneous": false,
+    "I_used": 3,
+    "grid_unconverged": true
+   },
+   {
+    "dataset": "ARweak",
+    "run_id": "4-ARweak-n200-r01-P-N2500-m4-c2-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.009038610296771684,
+    "occ_inhomogeneous": false,
+    "I_used": 3,
+    "grid_unconverged": true
+   }
+  ],
+  "(10000, 1, 0)": [
+   {
+    "dataset": "ADJOPP",
+    "run_id": "4-ADJOPP-n200-r01-P-N10000-m1-I0-c1-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.012076526605443725,
+    "occ_inhomogeneous": false,
+    "I_used": 0,
+    "grid_unconverged": true
+   },
+   {
+    "dataset": "ADJOPP",
+    "run_id": "4-ADJOPP-n200-r01-P-N10000-m1-I0-c2-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.011136246772932594,
+    "occ_inhomogeneous": false,
+    "I_used": 0,
+    "grid_unconverged": true
+   },
+   {
+    "dataset": "AR",
+    "run_id": "4-AR-n200-r01-P-N10000-m1-I0-c1-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.012397909965874442,
+    "occ_inhomogeneous": false,
+    "I_used": 0,
+    "grid_unconverged": true
+   },
+   {
+    "dataset": "AR",
+    "run_id": "4-AR-n200-r01-P-N10000-m1-I0-c2-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.011156348342050586,
+    "occ_inhomogeneous": false,
+    "I_used": 0,
+    "grid_unconverged": true
+   },
+   {
+    "dataset": "ARweak",
+    "run_id": "4-ARweak-n200-r01-P-N10000-m1-I0-c1-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.008574977461799346,
+    "occ_inhomogeneous": false,
+    "I_used": 0,
+    "grid_unconverged": true
+   },
+   {
+    "dataset": "ARweak",
+    "run_id": "4-ARweak-n200-r01-P-N10000-m1-I0-c2-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.008666422310056635,
+    "occ_inhomogeneous": false,
+    "I_used": 0,
+    "grid_unconverged": true
+   }
+  ],
+  "(10000, 1, 3)": [
+   {
+    "dataset": "ADJOPP",
+    "run_id": "4-ADJOPP-n200-r01-P-N10000-m1-c1-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.011829751303895727,
+    "occ_inhomogeneous": false,
+    "I_used": 3,
+    "grid_unconverged": true
+   },
+   {
+    "dataset": "ADJOPP",
+    "run_id": "4-ADJOPP-n200-r01-P-N10000-m1-c2-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.012127831416822462,
+    "occ_inhomogeneous": false,
+    "I_used": 3,
+    "grid_unconverged": true
+   },
+   {
+    "dataset": "AR",
+    "run_id": "4-AR-n200-r01-P-N10000-m1-c1-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.012886142725156062,
+    "occ_inhomogeneous": false,
+    "I_used": 3,
+    "grid_unconverged": true
+   },
+   {
+    "dataset": "AR",
+    "run_id": "4-AR-n200-r01-P-N10000-m1-c2-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.011495078459883035,
+    "occ_inhomogeneous": false,
+    "I_used": 3,
+    "grid_unconverged": true
+   },
+   {
+    "dataset": "ARweak",
+    "run_id": "4-ARweak-n200-r01-P-N10000-m1-c1-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.008188903795673247,
+    "occ_inhomogeneous": false,
+    "I_used": 3,
+    "grid_unconverged": true
+   },
+   {
+    "dataset": "ARweak",
+    "run_id": "4-ARweak-n200-r01-P-N10000-m1-c2-s1",
+    "M1<=0.05": true,
+    "M2<=0.005": true,
+    "M3<=0.5": true,
+    "M3_robust": 0.008398294144565568,
+    "occ_inhomogeneous": false,
+    "I_used": 3,
+    "grid_unconverged": true
+   }
+  ]
+ }
+}

@@ -1,0 +1,8 @@
+{
+ "decisions": {
+  "N=10000 (m=1,I0)": "ADOPT",
+  "resampling": "OFF, not tested (systematic not available in the frozen binary; D-14 default; HQ Q5)"
+ },
+ "identity_failures": {},
+ "script_sha256": "114f7e7847dc9efef111c6888feb2f6616edd24ba18244062332cfba84e4cf73"
+}
