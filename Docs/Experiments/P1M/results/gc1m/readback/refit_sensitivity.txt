@@ -1,0 +1,6 @@
+pilot / model = 1.0602 ; islands 302.93 vs 269.25 (x1.125) ; per island 18.93 core-h vs 16.8 (x1.127)
+re-fit unit 345.6 ; ADJ-OPP 359 ; N10^4 fit 860 (islands 302.93 x 2.698 + 42.7) ; soft line 1.5 x unit = 518 (hard stays 815)
+next-wave quotes: pair 2 x unit = 691 -> stop 1380 (committed 650 -> 1,300) ; W1 = 705 (committed 665 -> 1,330)
+S2 block 10617 (committed 10,107) -> position 14235 (50.3%) ; +25% on unspent 16889 (59.7%)
++ seeds 6567 -> 20802 (73.5%) ; +25% on all unspent 25098 (88.7%)
+(the pilot itself is already spent: closed after the pilot = 3963.77)
