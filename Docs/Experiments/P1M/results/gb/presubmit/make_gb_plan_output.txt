@@ -1,0 +1,6 @@
+wv  batch    run_id                     tasks     worst       cap  peakCPU stage manifests with explicit arm
+G1  GB_G1a   5-AR-n200-r01-V-s1            20     638.0     638.1      384 4
+G1  GB_G1b   5-AR-n200-r01-VI3-s1          20     670.0     670.1      384 4
+G2  GB_G2a   5-ADJOPP-n200-r01-V-s1        20     830.0     830.1      384 4
+G2  GB_G2b   5-ADJOPP-n200-r01-VI3-s1      20     862.0     862.1      384 4
+sets: 4 fits, 4 batches, 80 tasks, worst (limit sum) 3000.0 core-h

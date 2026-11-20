@@ -1,0 +1,142 @@
+{
+ "GB_G1a": {
+  "wave": "G1",
+  "plan_sha256": "51af3e68f7051f09f96ecc796288f46ded8482baa2d44a81b858dac4792a1b48",
+  "tasks": 20,
+  "worst_case_core_h": 638.0,
+  "core_h_cap": 638.1,
+  "fit": {
+   "run_id": "5-AR-n200-r01-V-s1",
+   "design": "AR",
+   "p": 100000,
+   "n": 200,
+   "Rp": 16,
+   "N": 10000,
+   "seed": 502020001,
+   "data_seed": 502020001,
+   "params": {
+    "refine_m": 1,
+    "I_max": 0
+   }
+  },
+  "explicit_arm_checked": {
+   "want": {
+    "N": 10000,
+    "refine_m": 1,
+    "I_max": 0
+   },
+   "run_manifest_and_stage_manifests": [
+    "run_manifest",
+    "setup",
+    "calibrate",
+    "island",
+    "merge"
+   ]
+  }
+ },
+ "GB_G1b": {
+  "wave": "G1",
+  "plan_sha256": "b5d8438b984f057b442ee2075b41add57f23324277c6b1ab299915ef35ff564a",
+  "tasks": 20,
+  "worst_case_core_h": 670.0,
+  "core_h_cap": 670.1,
+  "fit": {
+   "run_id": "5-AR-n200-r01-VI3-s1",
+   "design": "AR",
+   "p": 100000,
+   "n": 200,
+   "Rp": 16,
+   "N": 10000,
+   "seed": 502020001,
+   "data_seed": 502020001,
+   "params": {
+    "refine_m": 1,
+    "I_max": 3
+   }
+  },
+  "explicit_arm_checked": {
+   "want": {
+    "N": 10000,
+    "refine_m": 1,
+    "I_max": 3
+   },
+   "run_manifest_and_stage_manifests": [
+    "run_manifest",
+    "setup",
+    "calibrate",
+    "island",
+    "merge"
+   ]
+  }
+ },
+ "GB_G2a": {
+  "wave": "G2",
+  "plan_sha256": "98c7d2e81c65a6a95ce2c51922fbc19b548f1700d535bc32ddfcfbd452915704",
+  "tasks": 20,
+  "worst_case_core_h": 830.0,
+  "core_h_cap": 830.1,
+  "fit": {
+   "run_id": "5-ADJOPP-n200-r01-V-s1",
+   "design": "ADJ-OPP",
+   "p": 100000,
+   "n": 200,
+   "Rp": 16,
+   "N": 10000,
+   "seed": 505020001,
+   "data_seed": 505020001,
+   "params": {
+    "refine_m": 1,
+    "I_max": 0
+   }
+  },
+  "explicit_arm_checked": {
+   "want": {
+    "N": 10000,
+    "refine_m": 1,
+    "I_max": 0
+   },
+   "run_manifest_and_stage_manifests": [
+    "run_manifest",
+    "setup",
+    "calibrate",
+    "island",
+    "merge"
+   ]
+  }
+ },
+ "GB_G2b": {
+  "wave": "G2",
+  "plan_sha256": "5d4b9e30cc39eb76e7260d764456c79d4d99402250995a31a014084c97900648",
+  "tasks": 20,
+  "worst_case_core_h": 862.0,
+  "core_h_cap": 862.1,
+  "fit": {
+   "run_id": "5-ADJOPP-n200-r01-VI3-s1",
+   "design": "ADJ-OPP",
+   "p": 100000,
+   "n": 200,
+   "Rp": 16,
+   "N": 10000,
+   "seed": 505020001,
+   "data_seed": 505020001,
+   "params": {
+    "refine_m": 1,
+    "I_max": 3
+   }
+  },
+  "explicit_arm_checked": {
+   "want": {
+    "N": 10000,
+    "refine_m": 1,
+    "I_max": 3
+   },
+   "run_manifest_and_stage_manifests": [
+    "run_manifest",
+    "setup",
+    "calibrate",
+    "island",
+    "merge"
+   ]
+  }
+ }
+}
