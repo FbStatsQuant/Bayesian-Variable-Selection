@@ -1,0 +1,145 @@
+{
+ "old": "/home/fb31/SMC_Engineering_Department/records/F1M_pilot",
+ "new": "/home/fb31/SMC_Engineering_Department/records/F1M_pilot",
+ "checks": {
+  "I1_data": true,
+  "I2_setup": true,
+  "I3_pilot_counters": true
+ },
+ "detail": {
+  "I1": {
+   "X_sha256": [
+    "5174f8b3b56ff0de567bf3248151dc8e6c99e668cdf0c971474e6d74f446cb50",
+    "5174f8b3b56ff0de567bf3248151dc8e6c99e668cdf0c971474e6d74f446cb50"
+   ],
+   "y_sha256": [
+    "9b0c866ceb06c4b8dd5085cbf5dd9950a0d5f3598edf6650bad30414ecd71993",
+    "9b0c866ceb06c4b8dd5085cbf5dd9950a0d5f3598edf6650bad30414ecd71993"
+   ],
+   "raw_content_sha256": [
+    "2e8550beeddf93e9d8b0bba6a0ce3f70035092290fc434cce479da1bcdb86944",
+    "2e8550beeddf93e9d8b0bba6a0ce3f70035092290fc434cce479da1bcdb86944"
+   ],
+   "params.design": [
+    "AR",
+    "AR"
+   ],
+   "params.signal": [
+    "strong",
+    "strong"
+   ],
+   "params.p": [
+    1000000,
+    1000000
+   ],
+   "params.n": [
+    200,
+    200
+   ],
+   "params.data_seed": [
+    602020001,
+    602020001
+   ],
+   "params.seed": [
+    602020001,
+    602020001
+   ],
+   "params.Rp": [
+    16,
+    16
+   ]
+  },
+  "I2": {
+   "B": [
+    14,
+    14
+   ],
+   "B_blocks": [
+    14,
+    14
+   ],
+   "C": [
+    874393600,
+    874393600
+   ],
+   "J": [
+    74734,
+    74734
+   ],
+   "mode_size": [
+    2,
+    2
+   ],
+   "n": [
+    200,
+    200
+   ],
+   "p": [
+    1000000,
+    1000000
+   ],
+   "partition": [
+    "truncated",
+    "truncated"
+   ],
+   "file_mode": [
+    "V",
+    "V"
+   ]
+  },
+  "I3": {
+   "header_equal": true,
+   "rows": [
+    34,
+    34
+   ],
+   "differences": [],
+   "n_differences": 0,
+   "accounting_counters_reported_not_gating": {
+    "flips": {
+     "rows_differing": 0,
+     "max_rel_diff": 0.0
+    },
+    "flips_per_step": {
+     "rows_differing": 0,
+     "max_rel_diff": 0.0
+    },
+    "offers": {
+     "rows_differing": 0,
+     "max_rel_diff": 0.0
+    },
+    "dup_dropped": {
+     "rows_differing": 0,
+     "max_rel_diff": 0.0
+    },
+    "merges": {
+     "rows_differing": 0,
+     "max_rel_diff": 0.0
+    }
+   },
+   "sums_old": {
+    "flips": 13863586893,
+    "offers": 484415802,
+    "pairs": 47374000000
+   },
+   "sums_new": {
+    "flips": 13863586893,
+    "offers": 484415802,
+    "pairs": 47374000000
+   }
+  },
+  "I4_reported_not_gating": {
+   "island_1_T_new": "error: [Errno 2] No such file or directory: '/home/fb31/SMC_Engineering_Department/records/F1M_pilot/island_1.bin.json'",
+   "I_max_old_new": [
+    3,
+    3
+   ],
+   "binary_sha256_old_new": [
+    "2197fd5b2b5ca888f7230cafb04d382e94e9c9564dd1c71d7ad06f258a4fada9",
+    "2197fd5b2b5ca888f7230cafb04d382e94e9c9564dd1c71d7ad06f258a4fada9"
+   ],
+   "new_calib_meta": "error: [Errno 2] No such file or directory: '/home/fb31/SMC_Engineering_Department/records/F1M_pilot/calib_meta.json'"
+  }
+ },
+ "IDENTITY": "PASS"
+}

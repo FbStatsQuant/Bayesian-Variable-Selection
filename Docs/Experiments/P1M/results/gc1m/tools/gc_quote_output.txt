@@ -1,0 +1,23 @@
+1M fit: I_max 3 (11-17, measured) 437.44 ; I_max 0 (frozen) E 317.8 (calibration 16.0 instead of 135.6: saving 119.7) ; plan unit 317
+N 10^4 fit: E 775 (f 2.70) ; P90 1063 (f 3.77) ; N 5,000 option: E 470 (f 1.57; plan 586)
+  pilot (frozen rep-1 re-run)                  317
+  AR replicates 2-20                          6023
+  ADJ-OPP r01                                  330
+  AR-weak r01 (gated)                          317
+  ONE N 10^4 fit on the rep-1 data             775
+  option D (n 1,000)                          1087
+  ablations + competitors (plan values)       1052
+S2 block 9901 -> position 13519 (47.8%) ; +25% on unspent 15994 (56.5%)
+H-34 seeds (19, seed 1 = the pilot): 6023 -> position 19542 (69.1%) ; with 25% on everything unspent 23523 (83.1%)
+optional N 5,000 self-check: +470 (plan 586)
+P90 of the S2 block (assumption: pilot 360, replicates x1.12, ADJ-OPP 400, AR-weak 360, N10^4 1,062, D 1,630): 11610 -> position 15228 (53.8%)
+worst stack (P90 S2 + seeds x1.12 + N5 option, 25% reserve on all): 27150 (95.9%)
+calibration sensitivity (Opus F4: the I_max 0 calibration share 14-21 % of I_max 3): 19-29 per fit vs 15: +4..+14 per fit x 22 = 88..308
+wave pilot                    E 317 quote 315 stop 630
+wave W1 (AR + ADJ-OPP)        E 647 quote 645 stop 1290
+wave W2..W10 (AR pair)        E 634 quote 635 stop 1270
+wave X1 (AR-weak + N10^4)     E 1092 quote 1090 stop 2180
+wave D                        E 1087 quote 1085 stop 2170
+wave seed wave (pair)         E 634 quote 635 stop 1270
+cumulative stop S2 fits: 1.6 x 8849 = 14158 ; seeds 1.6 x 6023 = 9637
+per fit 1M sizes (11-17): islands 34.2, setup 10.1, calib 8.1, fit 2.4, data+raw 3.2, law 0.34 = 58.3 GB ; A-class (fit 2.4 + law 0.34 + sidecars ~0.05) ~ 2.8 GB x 43 fits = 120 GB

@@ -1,0 +1,127 @@
+{
+ "old": "/home/fb31/SMC_Engineering_Department/records/gb/GB_G1a/5-AR-n200-r01-V-s1",
+ "new": "/home/fb31/SMC_Engineering_Department/records/gb/GB_G2a/5-ADJOPP-n200-r01-V-s1",
+ "checks": {
+  "I1_data": false,
+  "I2_setup": false,
+  "I3_pilot_counters": false
+ },
+ "detail": {
+  "I1": {
+   "X_sha256": [
+    "2cdfff22a00436e3195612e8a954d3ed22875b2ba7c748617f1cb06585c29463",
+    "231001e2887ab097f63314e556e9d8891eb17bce2984b22e90d1a66bfdce32a3"
+   ],
+   "y_sha256": [
+    "b3b10e5d7aa7c24c59e6ac89578388917db19c48c5dfa81c884c44e991faf6b3",
+    "3af103cbfbd2635ab727839e1d23150f82af1a4bedf7554df769d23c26c50e74"
+   ],
+   "raw_content_sha256": [
+    "7152ee1cdafb91acddcb279d51e35d0613cc81bcaaf85dcbb12be0176e5d1df2",
+    "3493de24a6ffe85f694af4a7c4a06662cdab23efc3cd263742473a977d3d901f"
+   ],
+   "params.design": [
+    "AR",
+    "ADJ-OPP"
+   ],
+   "params.signal": [
+    "strong",
+    "strong"
+   ],
+   "params.p": [
+    100000,
+    100000
+   ],
+   "params.n": [
+    200,
+    200
+   ],
+   "params.data_seed": [
+    502020001,
+    505020001
+   ],
+   "params.seed": [
+    502020001,
+    505020001
+   ],
+   "params.Rp": [
+    16,
+    16
+   ]
+  },
+  "I2": {
+   "B": [
+    14,
+    14
+   ],
+   "B_blocks": [
+    14,
+    14
+   ],
+   "C": [
+    85741824,
+    85217284
+   ],
+   "J": [
+    7503,
+    7510
+   ],
+   "mode_size": [
+    1,
+    2
+   ],
+   "n": [
+    200,
+    200
+   ],
+   "p": [
+    100000,
+    100000
+   ],
+   "partition": [
+    "truncated",
+    "truncated"
+   ],
+   "file_mode": [
+    "V",
+    "V"
+   ]
+  },
+  "I3": {
+   "header_equal": true,
+   "rows": [
+    34,
+    29
+   ],
+   "differences": [],
+   "n_differences": 0,
+   "accounting_counters_reported_not_gating": null,
+   "sums_old": {
+    "flips": 1274590695,
+    "offers": 58485725,
+    "pairs": 4198500000
+   },
+   "sums_new": {
+    "flips": 1132400788,
+    "offers": 41759073,
+    "pairs": 3795000000
+   }
+  },
+  "I4_reported_not_gating": {
+   "island_1_T_new": 20,
+   "expected_T": 27,
+   "I_max_old_new": [
+    0,
+    0
+   ],
+   "binary_sha256_old_new": [
+    "da0cf85b5fe014973d15674f0da8e8c12dfdaf465a5e06aa0216b294601f231a",
+    "da0cf85b5fe014973d15674f0da8e8c12dfdaf465a5e06aa0216b294601f231a"
+   ],
+   "new_I_used": 0,
+   "new_I_max": 0,
+   "new_N": 10000
+  }
+ },
+ "IDENTITY": "FAIL"
+}

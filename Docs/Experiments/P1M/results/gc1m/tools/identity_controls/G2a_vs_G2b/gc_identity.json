@@ -1,0 +1,148 @@
+{
+ "old": "/home/fb31/SMC_Engineering_Department/records/gb/GB_G2a/5-ADJOPP-n200-r01-V-s1",
+ "new": "/home/fb31/SMC_Engineering_Department/records/gb/GB_G2b/5-ADJOPP-n200-r01-VI3-s1",
+ "checks": {
+  "I1_data": true,
+  "I2_setup": true,
+  "I3_pilot_counters": true
+ },
+ "detail": {
+  "I1": {
+   "X_sha256": [
+    "231001e2887ab097f63314e556e9d8891eb17bce2984b22e90d1a66bfdce32a3",
+    "231001e2887ab097f63314e556e9d8891eb17bce2984b22e90d1a66bfdce32a3"
+   ],
+   "y_sha256": [
+    "3af103cbfbd2635ab727839e1d23150f82af1a4bedf7554df769d23c26c50e74",
+    "3af103cbfbd2635ab727839e1d23150f82af1a4bedf7554df769d23c26c50e74"
+   ],
+   "raw_content_sha256": [
+    "3493de24a6ffe85f694af4a7c4a06662cdab23efc3cd263742473a977d3d901f",
+    "3493de24a6ffe85f694af4a7c4a06662cdab23efc3cd263742473a977d3d901f"
+   ],
+   "params.design": [
+    "ADJ-OPP",
+    "ADJ-OPP"
+   ],
+   "params.signal": [
+    "strong",
+    "strong"
+   ],
+   "params.p": [
+    100000,
+    100000
+   ],
+   "params.n": [
+    200,
+    200
+   ],
+   "params.data_seed": [
+    505020001,
+    505020001
+   ],
+   "params.seed": [
+    505020001,
+    505020001
+   ],
+   "params.Rp": [
+    16,
+    16
+   ]
+  },
+  "I2": {
+   "B": [
+    14,
+    14
+   ],
+   "B_blocks": [
+    14,
+    14
+   ],
+   "C": [
+    85217284,
+    85217284
+   ],
+   "J": [
+    7510,
+    7510
+   ],
+   "mode_size": [
+    2,
+    2
+   ],
+   "n": [
+    200,
+    200
+   ],
+   "p": [
+    100000,
+    100000
+   ],
+   "partition": [
+    "truncated",
+    "truncated"
+   ],
+   "file_mode": [
+    "V",
+    "V"
+   ]
+  },
+  "I3": {
+   "header_equal": true,
+   "rows": [
+    29,
+    29
+   ],
+   "differences": [],
+   "n_differences": 0,
+   "accounting_counters_reported_not_gating": {
+    "flips": {
+     "rows_differing": 27,
+     "max_rel_diff": 0.0012555565859618664
+    },
+    "flips_per_step": {
+     "rows_differing": 27,
+     "max_rel_diff": 0.0012555565859619108
+    },
+    "offers": {
+     "rows_differing": 5,
+     "max_rel_diff": 0.03825287438584563
+    },
+    "dup_dropped": {
+     "rows_differing": 5,
+     "max_rel_diff": 0.06426868714741231
+    },
+    "merges": {
+     "rows_differing": 2,
+     "max_rel_diff": 0.3333333333333333
+    }
+   },
+   "sums_old": {
+    "flips": 1132400788,
+    "offers": 41759073,
+    "pairs": 3795000000
+   },
+   "sums_new": {
+    "flips": 1132420419,
+    "offers": 41940706,
+    "pairs": 3795000000
+   }
+  },
+  "I4_reported_not_gating": {
+   "island_1_T_new": 20,
+   "expected_T": 27,
+   "I_max_old_new": [
+    0,
+    3
+   ],
+   "binary_sha256_old_new": [
+    "da0cf85b5fe014973d15674f0da8e8c12dfdaf465a5e06aa0216b294601f231a",
+    "da0cf85b5fe014973d15674f0da8e8c12dfdaf465a5e06aa0216b294601f231a"
+   ],
+   "new_I_used": 3,
+   "new_I_max": 3,
+   "new_N": 10000
+  }
+ },
+ "IDENTITY": "PASS"
+}
