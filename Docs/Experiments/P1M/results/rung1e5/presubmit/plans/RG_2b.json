@@ -1,0 +1,72 @@
+{
+ "batch": "RG_2b",
+ "mode": "V",
+ "code_commit": "e993ece226b355058e26400f05f9faad6daf16ca",
+ "method_tag": "method-v3.1.1-listpip",
+ "core_tree": "61b0a5822019b2737fe415ff15625e410f3227b2",
+ "binary": "bin/smcbvs4",
+ "max_task_hours": 2.0,
+ "island_isa": "sapphirerapids",
+ "kind": "gated (10^5 rung; self-release per HQ H-40)",
+ "island_throttle": 8,
+ "core_h_cap": 1660.1,
+ "resources": {
+  "setup": {
+   "cpus": 32,
+   "mem": "16G",
+   "time": "00:30:00"
+  },
+  "calibrate": {
+   "cpus": 64,
+   "mem": "16G",
+   "time": "00:30:00"
+  },
+  "islands": {
+   "cpus": 48,
+   "mem": "12G",
+   "time": "01:00:00"
+  },
+  "merge": {
+   "cpus": 16,
+   "mem": "24G",
+   "time": "00:30:00"
+  },
+  "eval": {
+   "cpus": 8,
+   "mem": "16G",
+   "time": "00:45:00"
+  }
+ },
+ "fits": [
+  {
+   "run_id": "5-AR-n400-r02-V-s1",
+   "design": "AR",
+   "p": 100000,
+   "n": 400,
+   "signal": "strong",
+   "data_seed": 502040002,
+   "seed": 502040002,
+   "Rp": 16,
+   "N": 10000,
+   "params": {
+    "refine_m": 1,
+    "I_max": 0
+   }
+  },
+  {
+   "run_id": "5-AR-n400-r03-V-s1",
+   "design": "AR",
+   "p": 100000,
+   "n": 400,
+   "signal": "strong",
+   "data_seed": 502040003,
+   "seed": 502040003,
+   "Rp": 16,
+   "N": 10000,
+   "params": {
+    "refine_m": 1,
+    "I_max": 0
+   }
+  }
+ ]
+}

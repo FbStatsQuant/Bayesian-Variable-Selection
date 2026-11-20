@@ -1,0 +1,46 @@
+{
+ "batch": "RG_T6b",
+ "mode": "V",
+ "code_commit": "e993ece226b355058e26400f05f9faad6daf16ca",
+ "method_tag": "method-v3.1.1-listpip",
+ "core_tree": "61b0a5822019b2737fe415ff15625e410f3227b2",
+ "binary": "bin/smcbvs4",
+ "max_task_hours": 2.0,
+ "island_isa": "sapphirerapids",
+ "kind": "gate T6 at 1e5 (G-C item): restart by REAL kills (WP7 O4); one island of RG_1a inputs; t6_only (HQ H-40)",
+ "core_h_cap": 72.1,
+ "t6_only": true,
+ "t6": {
+  "source_batch": "RG_1a",
+  "island": 1,
+  "kills": 2,
+  "ckpt_every_s": 60,
+  "cpus": 48,
+  "mem": "24G",
+  "time": "01:30:00"
+ },
+ "resources": {
+  "setup": {
+   "cpus": 32,
+   "mem": "16G",
+   "time": "00:30:00"
+  }
+ },
+ "fits": [
+  {
+   "run_id": "5-AR-n400-r01-V-s1",
+   "design": "AR",
+   "p": 100000,
+   "n": 400,
+   "signal": "strong",
+   "data_seed": 502040001,
+   "seed": 502040001,
+   "Rp": 16,
+   "N": 10000,
+   "params": {
+    "refine_m": 1,
+    "I_max": 0
+   }
+  }
+ ]
+}

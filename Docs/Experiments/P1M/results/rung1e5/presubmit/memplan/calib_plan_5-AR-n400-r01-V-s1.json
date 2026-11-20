@@ -1,0 +1,96 @@
+{
+  "binary": {
+    "compiler": "g++ 11.5.0 20240719 (Red Hat 11.5.0-17)",
+    "flags": "-O2 -fno-math-errno -ffp-contract=off -march=x86-64-v2",
+    "git_commit": "e993ece226b355058e26400f05f9faad6daf16ca",
+    "island_fma": true,
+    "island_isa": "x86-64-v4",
+    "libm": {
+      "binding": "glibc-libm",
+      "fma_variant": true,
+      "glibc": "2.34",
+      "path": "/lib64/libm.so.6",
+      "self_test": {
+        "exp": true,
+        "exp_pos": true,
+        "expl": true,
+        "lgamma": true,
+        "lgamma_int": true,
+        "log": true,
+        "log_near1": true,
+        "logl": true,
+        "pass": true
+      },
+      "sha256": "c8933ed54328b293c8b005fe44161d1c73c09f96abc6d781a6c31230368d1120"
+    },
+    "sha256": "4e33ec157a3b4f18405baa2f21b93c42daeb37e6a32347730588ec80e833bc72"
+  },
+  "command": "calibrate",
+  "island_plan": {
+    "G": 256,
+    "admitted": true,
+    "budget": 15461882265,
+    "floor": 7567881721,
+    "items": {
+      "calib_snapshot": 531158074,
+      "ckpt": 2097152,
+      "gram_rows": 512000000,
+      "headroom": 603521270,
+      "inputs": 3542047475,
+      "leaders": 797108864,
+      "lm_scratch": 2018560,
+      "orders": 128059904,
+      "particles": 139264,
+      "rb": 8000000,
+      "rows": 409600000,
+      "store": 797108985,
+      "supports": 427032576,
+      "worker_bufs": 1094713344,
+      "x_tiles": 320307200
+    },
+    "k": 8,
+    "label": "ESTIMATE (calibration island plan, memory.h, real setup; = the task's predicted peak under N-1: the island's own setup inputs (mapped sections + scratch + neighbours), WP4's live setup copy (logr + partition), the calibration's ledger + export; the file's other pages touched by the section hash check are reclaimable page cache, not counted)",
+    "resident": 1944000243,
+    "setup_copy": 619976904,
+    "setup_inputs": 656470328,
+    "text": "inputs=3377MiB x_tiles=305MiB store=760MiB leaders=760MiB worker_bufs=1044MiB rb=7MiB orders=122MiB rows=390MiB gram_rows=488MiB supports=407MiB lm_scratch=1MiB particles=0MiB calib_snapshot=506MiB ckpt=2MiB headroom=575MiB total=8749MiB (G=256, k=8.000000)",
+    "total": 9174912668
+  },
+  "mem_plan": {
+    "budget": 15461882265,
+    "export": 704000088,
+    "inputs": 1271627968,
+    "island_ledger": 1240000155,
+    "kbar": 8,
+    "kbar_source": "max(8, q90(pi_0 size) + 1) from setup.bin",
+    "label": "ESTIMATE (calibration memory plan: 3 calibration stores + flat V / export = resident; inputs; one island ledger)",
+    "ledger": 1240000155,
+    "resident": 1944000243,
+    "rule": "islands get mem_budget = the whole budget and resident_bytes = resident; an island is admitted iff resident + its plan (inputs included) <= mem_budget; refused up front iff resident >= budget or the island plan (island_plan) exceeds it; total = resident + inputs + one island ledger is the least any island needs (a lower bound)",
+    "total": 4455628366
+  },
+  "mode": "V",
+  "n": 400,
+  "p": 100000,
+  "plan_only": true,
+  "settings": {
+    "B": 16,
+    "I_max": 3,
+    "K": 200,
+    "refine_m": 1,
+    "rule": "bounded",
+    "sum_mode": "blocked",
+    "tiers": [
+      {
+        "H": 512,
+        "Hm": 4,
+        "L": 9,
+        "N_final": 2500,
+        "T_e": 1000,
+        "ell": 17,
+        "tier": 0
+      }
+    ]
+  },
+  "status": "completed"
+}

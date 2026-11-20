@@ -1,0 +1,302 @@
+{
+ "RG_1a": {
+  "wave": "R1",
+  "plan_sha256": "8afd032be857e4594b7f41e0373b4e6f8b47abd32bb58f0058215dc6a8fbc169",
+  "tasks": 20,
+  "worst_case_core_h": 830.0,
+  "core_h_cap": 830.1,
+  "island_throttle": 8,
+  "peak_island_cpus": 384,
+  "fits": [
+   {
+    "run_id": "5-AR-n400-r01-V-s1",
+    "design": "AR",
+    "p": 100000,
+    "n": 400,
+    "Rp": 16,
+    "N": 10000,
+    "seed": 502040001,
+    "data_seed": 502040001,
+    "params": {
+     "refine_m": 1,
+     "I_max": 0
+    }
+   }
+  ],
+  "explicit_arm_manifests_checked": 5
+ },
+ "RG_1b": {
+  "wave": "R1",
+  "plan_sha256": "fced26b338d20e627df33ac7abb2b377f8356ebf8c4ff0e321987db517674bf5",
+  "tasks": 40,
+  "worst_case_core_h": 636.0,
+  "core_h_cap": 636.1,
+  "island_throttle": 8,
+  "peak_island_cpus": 384,
+  "fits": [
+   {
+    "run_id": "5-AR-n200-r01-VN25-s1",
+    "design": "AR",
+    "p": 100000,
+    "n": 200,
+    "Rp": 16,
+    "N": 2500,
+    "seed": 502020001,
+    "data_seed": 502020001,
+    "params": {
+     "refine_m": 1,
+     "I_max": 0
+    }
+   },
+   {
+    "run_id": "5-ADJOPP-n200-r01-VN25-s1",
+    "design": "ADJ-OPP",
+    "p": 100000,
+    "n": 200,
+    "Rp": 16,
+    "N": 2500,
+    "seed": 505020001,
+    "data_seed": 505020001,
+    "params": {
+     "refine_m": 1,
+     "I_max": 0
+    }
+   }
+  ],
+  "explicit_arm_manifests_checked": 10
+ },
+ "RG_2a": {
+  "wave": "R2",
+  "plan_sha256": "5b02cead1e29dbfb2225cda7680b49c1622cccf84dd9efa1525b96be3be98572",
+  "tasks": 80,
+  "worst_case_core_h": 2552.0,
+  "core_h_cap": 2552.1,
+  "island_throttle": 12,
+  "peak_island_cpus": 576,
+  "fits": [
+   {
+    "run_id": "5-AR-n200-r02-V-s1",
+    "design": "AR",
+    "p": 100000,
+    "n": 200,
+    "Rp": 16,
+    "N": 10000,
+    "seed": 502020002,
+    "data_seed": 502020002,
+    "params": {
+     "refine_m": 1,
+     "I_max": 0
+    }
+   },
+   {
+    "run_id": "5-AR-n200-r03-V-s1",
+    "design": "AR",
+    "p": 100000,
+    "n": 200,
+    "Rp": 16,
+    "N": 10000,
+    "seed": 502020003,
+    "data_seed": 502020003,
+    "params": {
+     "refine_m": 1,
+     "I_max": 0
+    }
+   },
+   {
+    "run_id": "5-AR-n200-r04-V-s1",
+    "design": "AR",
+    "p": 100000,
+    "n": 200,
+    "Rp": 16,
+    "N": 10000,
+    "seed": 502020004,
+    "data_seed": 502020004,
+    "params": {
+     "refine_m": 1,
+     "I_max": 0
+    }
+   },
+   {
+    "run_id": "5-AR-n200-r05-V-s1",
+    "design": "AR",
+    "p": 100000,
+    "n": 200,
+    "Rp": 16,
+    "N": 10000,
+    "seed": 502020005,
+    "data_seed": 502020005,
+    "params": {
+     "refine_m": 1,
+     "I_max": 0
+    }
+   }
+  ],
+  "explicit_arm_manifests_checked": 20
+ },
+ "RG_2b": {
+  "wave": "R2",
+  "plan_sha256": "475e81a94ad7f9c55821ce56c9f0fc4e152ae43fc3b0381e1f0b4c8a9ca1c3ad",
+  "tasks": 40,
+  "worst_case_core_h": 1660.0,
+  "core_h_cap": 1660.1,
+  "island_throttle": 8,
+  "peak_island_cpus": 384,
+  "fits": [
+   {
+    "run_id": "5-AR-n400-r02-V-s1",
+    "design": "AR",
+    "p": 100000,
+    "n": 400,
+    "Rp": 16,
+    "N": 10000,
+    "seed": 502040002,
+    "data_seed": 502040002,
+    "params": {
+     "refine_m": 1,
+     "I_max": 0
+    }
+   },
+   {
+    "run_id": "5-AR-n400-r03-V-s1",
+    "design": "AR",
+    "p": 100000,
+    "n": 400,
+    "Rp": 16,
+    "N": 10000,
+    "seed": 502040003,
+    "data_seed": 502040003,
+    "params": {
+     "refine_m": 1,
+     "I_max": 0
+    }
+   }
+  ],
+  "explicit_arm_manifests_checked": 10
+ },
+ "RG_3a": {
+  "wave": "R3",
+  "plan_sha256": "dd2a8da0da3e6978eb5774c56cdb1f8522d09fea085dfa86816f29915a3a050d",
+  "tasks": 40,
+  "worst_case_core_h": 1660.0,
+  "core_h_cap": 1660.1,
+  "island_throttle": 8,
+  "peak_island_cpus": 384,
+  "fits": [
+   {
+    "run_id": "5-IND-n200-r01-V-s1",
+    "design": "IND",
+    "p": 100000,
+    "n": 200,
+    "Rp": 16,
+    "N": 10000,
+    "seed": 501020001,
+    "data_seed": 501020001,
+    "params": {
+     "refine_m": 1,
+     "I_max": 0
+    }
+   },
+   {
+    "run_id": "5-IND-n200-r02-V-s1",
+    "design": "IND",
+    "p": 100000,
+    "n": 200,
+    "Rp": 16,
+    "N": 10000,
+    "seed": 501020002,
+    "data_seed": 501020002,
+    "params": {
+     "refine_m": 1,
+     "I_max": 0
+    }
+   }
+  ],
+  "explicit_arm_manifests_checked": 10
+ },
+ "RG_3b": {
+  "wave": "R3",
+  "plan_sha256": "2387b19c2935328198edb24ac7edcd27fac5963675b09e47ca0fe11b51d6a719",
+  "tasks": 20,
+  "worst_case_core_h": 830.0,
+  "core_h_cap": 830.1,
+  "island_throttle": 8,
+  "peak_island_cpus": 384,
+  "fits": [
+   {
+    "run_id": "5-ADJOPP-n200-r02-V-s1",
+    "design": "ADJ-OPP",
+    "p": 100000,
+    "n": 200,
+    "Rp": 16,
+    "N": 10000,
+    "seed": 505020002,
+    "data_seed": 505020002,
+    "params": {
+     "refine_m": 1,
+     "I_max": 0
+    }
+   }
+  ],
+  "explicit_arm_manifests_checked": 5
+ },
+ "RG_T6": {
+  "wave": "R1",
+  "plan_sha256": "91e53f900d8ffe7a798a1025bbb652941b20cb73309c72fcd0aa6d2ade86b527",
+  "tasks": 1,
+  "worst_case_core_h": 72.0,
+  "core_h_cap": 72.1,
+  "t6": {
+   "source_batch": "GB_G1a",
+   "island": 1,
+   "kills": 2,
+   "ckpt_every_s": 60,
+   "cpus": 48,
+   "mem": "24G",
+   "time": "01:30:00"
+  },
+  "fit": {
+   "run_id": "5-AR-n200-r01-V-s1",
+   "N": 10000,
+   "seed": 502020001,
+   "data_seed": 502020001,
+   "params": {
+    "refine_m": 1,
+    "I_max": 0
+   }
+  },
+  "explicit_arm_checked": [
+   "run_manifest"
+  ],
+  "submitted": "ONE of RG_T6 / RG_T6b (RG_T6 unless the G-B pilot's inputs are gone from NOTS scratch)"
+ },
+ "RG_T6b": {
+  "wave": "R1",
+  "plan_sha256": "536a1e698b82866823eb9eb68b9f4ad8ade0f20bce791c6dd7821c1675f789ff",
+  "tasks": 1,
+  "worst_case_core_h": 72.0,
+  "core_h_cap": 72.1,
+  "t6": {
+   "source_batch": "RG_1a",
+   "island": 1,
+   "kills": 2,
+   "ckpt_every_s": 60,
+   "cpus": 48,
+   "mem": "24G",
+   "time": "01:30:00"
+  },
+  "fit": {
+   "run_id": "5-AR-n400-r01-V-s1",
+   "N": 10000,
+   "seed": 502040001,
+   "data_seed": 502040001,
+   "params": {
+    "refine_m": 1,
+    "I_max": 0
+   }
+  },
+  "explicit_arm_checked": [
+   "run_manifest"
+  ],
+  "submitted": "ONE of RG_T6 / RG_T6b (RG_T6 unless the G-B pilot's inputs are gone from NOTS scratch)"
+ }
+}

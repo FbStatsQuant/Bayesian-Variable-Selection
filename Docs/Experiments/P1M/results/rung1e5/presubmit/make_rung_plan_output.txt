@@ -1,0 +1,10 @@
+wv  batch    fits  tasks     worst       cap  peakCPU
+R1  RG_1a       1     20     830.0     830.1      384
+R1  RG_1b       2     40     636.0     636.1      384
+R2  RG_2a       4     80    2552.0    2552.1      576
+R2  RG_2b       2     40    1660.0    1660.1      384
+R3  RG_3a       2     40    1660.0    1660.1      384
+R3  RG_3b       1     20     830.0     830.1      384
+R1  RG_T6       1      1      72.0      72.1       48
+R1  RG_T6b      1      1      72.0      72.1       48
+rung plans (RG_T6 chosen): 12 fits + 1 T6 task, 241 tasks, worst (limit sum) 8240.0 core-h

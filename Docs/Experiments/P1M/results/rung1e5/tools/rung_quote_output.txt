@@ -1,0 +1,12 @@
+T6 estimate: wall 14.3 min -> 11.4 core-h (worst 72 = 48 x 1.5 h)
+R1: RG_1a AR n400 r01 76.4 + RG_1b twins 59.8 (AR 31.9 + ADJ-OPP 27.9) + T6 11.4 = 147.7
+R2: RG_2a AR n200 r02-r05 305.6 + RG_2b AR n400 r02-r03 152.8 = 458.3
+R3: RG_3a IND x2 152.8 + RG_3b ADJ-OPP r02 65.7 = 218.4
+rung new fits (10) 753.2 ; + twins 59.8 = 813.0 (HQ 813) ; + T6 11.4 = TOTAL 824.4
+P90 (assumption: factors above, T6 20) 1103
+wave R1 quote 150 -> wave stop (2x) 300
+wave R2 quote 460 -> wave stop (2x) 920
+wave R3 quote 220 -> wave stop (2x) 440
+cumulative stop 1.6 x 824 = 1319 -> round up to 100: 1400 ; projection ceiling 1,326 (S2 rung figure) - G-B pilots 142.04 = 1184 of new spend
+closed 2984.56 + rung 824 = 3809
+(b) 21 frozen fits 1M items 9854 ; position 13663 (48.3%); +25% on unspent 1M items 16126 (57.0%); + H-34 seeds 19998 / 24045
