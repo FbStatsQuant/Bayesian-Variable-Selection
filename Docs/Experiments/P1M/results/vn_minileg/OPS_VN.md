@@ -39,3 +39,8 @@ Plan: `MINILEG_PLAN.md` + `MINILEG_PREREG.md` (exp/P1M 5d8c77e8). The precision 
 ## V0 read-back, 2026-11-20 (Manager request after V0 ENDED CLEAN 00:13Z)
 - Collected `vn_collect_wave.sh V0` → `records/vn_minileg/V0/` (8 units verified, 0 problems; one ssh stream, nice 19), log `staging/vn_minileg/collect_V0.log`.
 - `V0_READBACK.md` (line 1 CLEAN), `readback_V0.json`, `xb_check_XB2_output.txt` (6/6 PASS, BIT-IDENTICAL outside provenance), `prior_after_V0.json` (5 fits, 52.07 core-h). New tools (copied to ops_tools/): `vn_readback.py`, `xb_check_vn.py`.
+
+## V1 deployed and submitted, 2026-11-20 (Manager V1 GO after the clean V0 read-back)
+- COPYBIN V1 (no build): VN_V1_1/2 bin sha256 == BUILD_F2 `da0cf85b…`, git e993ece2; presubmit rc 0, home 6,707 MB (guard 7,900). Submit `GO=yes vn_submit_wave.sh V1`, 300 s apart: VN_V1_1 00:22:09Z, VN_V1_2 00:27:10Z.
+- Jobs: VN_V1_1 setup 2803460, calibrate 2803461; AR c2 I0 islands/merge/eval 2803462/2803463/2803464; AR c2 I3 2803465/2803466/2803467. VN_V1_2 setup 2803607, calibrate 2803608; ARweak c1 I0 2803609/2803610/2803611; ARweak c2 I0 2803612/2803613/2803615.
+- Monitor START V1 sent (quote 75, stop > 150, PRIOR prior_after_V0.json, MAKE_CALIB_META=1). Standing order: at V1 ENDED write prior_after_V1.json and, if clean, release V2 (quote 125, stop > 250, PRIOR prior_after_V1.json).
