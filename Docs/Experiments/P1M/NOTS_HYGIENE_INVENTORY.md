@@ -103,3 +103,14 @@ Moved-to-local-then-deleted: nothing needed a *new* transfer; the deletes relied
 5. **Hard fences in the script**: allow-list of roots (the two dept trees), refuse symlinks, refuse names matching PROTECT, F2 sha, `GB_*`, `RG_*` while a job of that batch is queued/running, and abort if any live script references the target.
 6. **Home**: the standing `nots_home_prune.sh --apply` daily at the machines check; the worker never hand-deletes in `.t3`/`.vscode-server`.
 7. **Purge alarm**: any file not on Owls with atime older than 7 days is listed daily (NOTS_FACTS rule); 12 days → escalate to HQ.
+
+### 6.1 Invocation (approved by HQ, H-41; script written 11-20)
+
+- Script: `~/SMC_Engineering_Department/crews/home_hygiene/nots_wave_hygiene_check.py` (runs on **Owls**; stdlib Python; 2 niced ssh calls, ≈ 1 min; never run two at once or alongside a transfer).
+  - **Report-only (default):** `python3 -I ~/SMC_Engineering_Department/crews/home_hygiene/nots_wave_hygiene_check.py` → stdout + `crews/home_hygiene/wave_check_<UTC>.md`.
+  - **Clear-trash delete:** add `--apply-trash`. It deletes only (T1) core dumps, (T2) duplicate home `build/` dirs (sha == `bin/`, not F2), (T3) non-island run-dir files whose NOTS re-hash equals a line of a desktop-verified Owls unit's SHA256SUMS, in an unprotected batch with no live job. Every deletion is appended to `nots_scratch_removals.tsv`.
+  - **Fences:** protected batches `^(GB_|RG_|T5_|F1M|FREEZE_CHECK)` + extra regexes in `NOTS_SCRATCH_PROTECT.txt` (HQ/ops add the next rung's batches there); batches named by any queued/running job; F2 sha `da0cf85b`; `code_ws/` and the clones are never deleted by the script; no symlinks; allow-listed roots only.
+  - **Never automated:** unique copies, islands/setup/calib/raw, `code_ws`, probes, home (the standing `nots_home_prune.sh --apply` does home, daily).
+- Report fields: home quota; live batches; scratch GB by family; files not in any desktop-verified unit by kind with days to the 14-day purge and U/R tag; core dumps; T3 candidate count (size-match upper bound); duplicate build dirs; `code_ws` trees and which script `code` symlinks point to them.
+- Wiring (HQ): daily machines check → report-only; each wave end after the read-back → report, then `--apply-trash` once the wave's units are in `desktop_verified.txt`.
+- First run 2026-11-20 14:11 UTC (report-only): 276.0 GB in `runs/` (RG 68.0 and growing), home 6,091 MB, 0 core dumps, 0 duplicate builds; the U list showed PL law.bin 18.9 GB + RG fit/law 5.5 GB still unique at that moment (RG fit/law are the rung's own, to be collected by its read-back).
