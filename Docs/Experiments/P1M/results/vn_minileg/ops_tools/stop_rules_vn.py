@@ -117,7 +117,14 @@ def main():
     rerr = " / ".join(x.strip() for x in S.get("REMOTE_STDERR", [])[:3])[:300]
     if rrc is not None and rrc.strip() != "0":
         (probe_err if miss else infos).append("%sremote ssh exit status %s; probe sections %s%s" % ("" if miss else "INFO ", rrc.strip(), "incomplete, missing " + ",".join(miss) if miss else "complete (nothing lost)", "; stderr: " + rerr if rerr else "; no stderr"))
-    elif miss:
+    for x in S.get("REMOTE_NOTE", []):
+        infos.append("INFO probe transport: " + x.strip())
+    src = (S.get("REMOTE_SCRIPT_RC") or [None])[0]
+    if src is not None and src.strip() not in ("0", ""):
+        probe_err.append("the remote probe script exited with status %s" % src.strip())
+    if "PYERR" in S:
+        probe_err.append("the remote python section failed: " + " ".join(S["PYERR"])[:200])
+    elif miss and not (rrc is not None and rrc.strip() != "0"):
         probe_err.append("probe sections missing: %s (remote exit status %s)%s" % (",".join(miss), rrc if rrc is not None else "not recorded", "; stderr: " + rerr if rerr else ""))
     runs, planfit = {}, {}
     for b in sorted(d for d in os.listdir(a.plans) if re.fullmatch(r"VN_%s_\d+" % a.wave, d)):

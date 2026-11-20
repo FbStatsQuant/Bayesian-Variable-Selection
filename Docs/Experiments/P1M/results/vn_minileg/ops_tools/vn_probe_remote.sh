@@ -2,7 +2,7 @@
 # vn_probe_remote.sh (V-N mini-leg; derived from the precision leg probe_remote.sh, + the calib.bin section hashes) -- runs ON NOTS (fed through ONE ssh by monitor_probe.sh): ONE squeue + ONE sacct -X, plus plain file reads of the wave's run dirs.
 # usage: bash -s -- <DEPT> <WAVE> <MAKE_CALIB_META 0|1> <batch>...   Read-only, except MAKE_CALIB_META=1: for a fit whose calib.bin exists and calib_meta.json does not,
 # one nice'd `smcbvs4 info calib.bin --meta 1 --record calib_meta.json` (the batch's binary, env.sh sourced) writes calib_meta.json into that run dir (O-4 / O-7 artifact).
-set -u
+set -u   # ssh-cut safe: the wrapper runs this detached (setsid nohup) from a file; every section header is always printed
 D=$1; WAVE=$2; MAKE=$3; shift 3; BL="$*"
 echo "### META utc=$(date -u +%FT%TZ)"
 ids=''
@@ -75,3 +75,5 @@ for k, v in out.items():
     for l in v:
         print(l)
 PY
+rcp=$?; [[ $rcp -eq 0 ]] || { for k in DATA_HASH CALIB ISLAND_T DIAG BINSHA ENGINE_FLAGS; do echo "### $k"; done; echo "### PYERR"; echo "python3 section exited $rcp (stderr in probe_out_<WAVE>.txt.err)"; }
+exit 0

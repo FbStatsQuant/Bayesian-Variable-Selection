@@ -6,7 +6,18 @@
 set -uo pipefail; . "$(dirname "$0")/common.sh"   # no -e: a remote/ssh failure must NOT abort before the verdict (it is recorded in the probe file and surfaced by stop_rules_vn.py)
 WAVE=${1:?WAVE}; OUT=$STG/monitor/$WAVE; mkdir -p "$OUT"; P=$OUT/probe_$(date -u +%Y%m%dT%H%M%SZ).txt
 BL=${BATCHES:-$(batches_of "$STG/current/scripts" "$WAVE")}; [[ -n $BL ]] || { echo "no VN_${WAVE}_* batches" >&2; exit 64; }
-rc=0; ssh $NOTS "bash -s -- $D $WAVE ${MAKE_CALIB_META:-0} $BL" < "$(dirname "$0")/vn_probe_remote.sh" > "$P" 2> "$P.err" || rc=$?
+# The V1 / V0 probe truncations (ssh rc 255, empty stderr, after the same step; the ssh ControlMaster was found re-created right after) showed that the ssh session itself can be cut while the remote work is
+# still running. So the probe script is shipped (stdin -> file, fully read first: nothing can eat it any more), run DETACHED from the connection (setsid nohup: survives a dropped session) into
+# $D/scratch/probe_out_<WAVE>.txt (one file per wave, overwritten), and `cat`ed in the same ssh. If that ssh returns non-zero or the output is incomplete, ONE cheap re-fetch (cat of the finished
+# file, no squeue/sacct/info re-run) is made after 15 s; both statuses are recorded in the probe file.
+OUTF="$D/scratch/probe_out_${WAVE}.txt"; MC=${MAKE_CALIB_META:-0}; NEED=ENGINE_FLAGS
+rc=0; ssh $NOTS "cat > $OUTF.sh && setsid nohup bash $OUTF.sh $D $WAVE $MC $BL > $OUTF 2> $OUTF.err < /dev/null; rcs=\$?; cat $OUTF; echo '### REMOTE_SCRIPT_RC'; echo \$rcs" < "$(dirname "$0")/vn_probe_remote.sh" > "$P" 2> "$P.err" || rc=$?
+note=""
+if [[ $rc -ne 0 ]] || ! grep -q "^### $NEED" "$P"; then
+  sleep 15; P2=$P.refetch; rc2=0; ssh $NOTS "cat $OUTF; echo '### REMOTE_SCRIPT_ERR'; head -c 2000 $OUTF.err" > "$P2" 2> "$P2.err" || rc2=$?
+  if [[ $rc2 -eq 0 ]] && grep -q "^### $NEED" "$P2"; then note="first ssh rc $rc (connection cut, partial output); the finished probe output was re-fetched from NOTS (ssh rc $rc2); no second probe run"; mv "$P2" "$P"; rc=0
+  else note="first ssh rc $rc; re-fetch rc $rc2 did not return a complete probe output"; fi
+fi
 # the ssh exit status and its stderr are part of the probe file (never silently ignored): stop_rules_vn.py reads REMOTE_RC / REMOTE_STDERR and the section list
-{ echo "### REMOTE_RC"; echo "$rc"; echo "### REMOTE_STDERR"; head -c 3000 "$P.err" | tail -n 20; } >> "$P"; [[ -s $P.err ]] && head -n 5 "$P.err" >&2
+{ echo "### REMOTE_RC"; echo "$rc"; echo "### REMOTE_NOTE"; echo "$note"; echo "### REMOTE_STDERR"; head -c 3000 "$P.err" | tail -n 20; } >> "$P"; [[ -s $P.err ]] && head -n 5 "$P.err" >&2
 exec python3 "$(dirname "$0")/stop_rules_vn.py" "$P" --wave "$WAVE" --plans "$STG/current/scripts" --deploy-log "$LOG" ${QUOTE:+--quote $QUOTE} ${PRIOR:+--prior $PRIOR}

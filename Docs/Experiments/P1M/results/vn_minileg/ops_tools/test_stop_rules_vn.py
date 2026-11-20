@@ -125,4 +125,8 @@ _p2 = os.path.join(TMP, "p_rc255_trunc.txt"); open(_p2, "w").write(_txt.split("#
 rc, out = run("V0", _p2); check("remote rc 255 + truncated probe -> FLAG PROBE ERROR, exit 4, stderr shown", rc == 4 and "FLAG PROBE ERROR" in out and "missing DATA_HASH" in out and "Connection closed" in out and "PROBE ERROR: stop rules not fully evaluated" in out, out)
 _p3 = os.path.join(TMP, "p_trunc_norc.txt"); open(_p3, "w").write(_txt.split("### ISLAND_T")[0])
 rc, out = run("V0", _p3); check("truncated probe without REMOTE_RC -> FLAG PROBE ERROR, exit 4", rc == 4 and "FLAG PROBE ERROR" in out, out)
+_p4 = os.path.join(TMP, "p_refetch.txt"); open(_p4, "w").write(_txt + "### REMOTE_RC\n0\n### REMOTE_NOTE\nfirst ssh rc 255 (connection cut); re-fetched\n### REMOTE_STDERR\n")
+rc, out = run("V0", _p4); check("a re-fetched complete probe -> INFO probe transport, exit 0", rc == 0 and "INFO probe transport: first ssh rc 255" in out, out)
+_p5 = os.path.join(TMP, "p_pyerr.txt"); open(_p5, "w").write(_txt.split("### DATA_HASH")[0] + "".join("### %s\n" % k for k in ("DATA_HASH", "CALIB", "ISLAND_T", "DIAG", "BINSHA", "ENGINE_FLAGS")) + "### PYERR\npython3 section exited 1\n### REMOTE_RC\n0\n")
+rc, out = run("V0", _p5); check("remote python failure (all headers present) -> FLAG PROBE ERROR, exit 4", rc == 4 and "remote python section failed" in out, out)
 print("\n%d passed, %d failed" % (ok, fail)); sys.exit(1 if fail else 0)
