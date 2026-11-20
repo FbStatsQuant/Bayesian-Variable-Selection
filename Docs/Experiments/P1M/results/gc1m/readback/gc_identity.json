@@ -1,0 +1,237 @@
+{
+ "old": "/home/fb31/SMC_Engineering_Department/records/F1M_pilot",
+ "new": "/home/fb31/SMC_Engineering_Department/records/gc1m/GC_P/6-AR-n200-r01-V-s1",
+ "checks": {
+  "I1_data": true,
+  "I2_setup": true,
+  "I3_pilot_counters": true
+ },
+ "detail": {
+  "I1_reported_not_gating": {
+   "raw_content_sha256": [
+    "2e8550beeddf93e9d8b0bba6a0ce3f70035092290fc434cce479da1bcdb86944",
+    "52c892676c42712530ce2e59b039cc9b9db48ec697f2d850f4d583ae987a14a0"
+   ],
+   "equal": false
+  },
+  "I1": {
+   "X_sha256": [
+    "5174f8b3b56ff0de567bf3248151dc8e6c99e668cdf0c971474e6d74f446cb50",
+    "5174f8b3b56ff0de567bf3248151dc8e6c99e668cdf0c971474e6d74f446cb50"
+   ],
+   "y_sha256": [
+    "9b0c866ceb06c4b8dd5085cbf5dd9950a0d5f3598edf6650bad30414ecd71993",
+    "9b0c866ceb06c4b8dd5085cbf5dd9950a0d5f3598edf6650bad30414ecd71993"
+   ],
+   "generator": [
+    "smcbvs4.gen/1",
+    "smcbvs4.gen/1"
+   ],
+   "spec": [
+    {
+     "a": 1,
+     "b": 20,
+     "design": "AR",
+     "n": 200,
+     "p": 1000000,
+     "rho": 0.6,
+     "s0": 5,
+     "seed": 602020001,
+     "sigma": 1
+    },
+    {
+     "a": 1,
+     "b": 20,
+     "design": "AR",
+     "n": 200,
+     "p": 1000000,
+     "rho": 0.6,
+     "s0": 5,
+     "seed": 602020001,
+     "sigma": 1
+    }
+   ],
+   "S0": [
+    [
+     100000,
+     300000,
+     500000,
+     700000,
+     900000
+    ],
+    [
+     100000,
+     300000,
+     500000,
+     700000,
+     900000
+    ]
+   ],
+   "beta": [
+    [
+     1,
+     -0.8,
+     0.9,
+     -0.7,
+     0.6
+    ],
+    [
+     1,
+     -0.8,
+     0.9,
+     -0.7,
+     0.6
+    ]
+   ],
+   "sigma": [
+    1,
+    1
+   ],
+   "params.design": [
+    "AR",
+    "AR"
+   ],
+   "params.signal": [
+    "strong",
+    "strong"
+   ],
+   "params.p": [
+    1000000,
+    1000000
+   ],
+   "params.n": [
+    200,
+    200
+   ],
+   "params.data_seed": [
+    602020001,
+    602020001
+   ],
+   "params.seed": [
+    602020001,
+    602020001
+   ],
+   "params.Rp": [
+    16,
+    16
+   ]
+  },
+  "I2": {
+   "B": [
+    14,
+    14
+   ],
+   "B_blocks": [
+    14,
+    14
+   ],
+   "C": [
+    874393600,
+    874393600
+   ],
+   "J": [
+    74734,
+    74734
+   ],
+   "mode_size": [
+    2,
+    2
+   ],
+   "n": [
+    200,
+    200
+   ],
+   "p": [
+    1000000,
+    1000000
+   ],
+   "partition": [
+    "truncated",
+    "truncated"
+   ],
+   "file_mode": [
+    "V",
+    "V"
+   ]
+  },
+  "I3": {
+   "header_equal": true,
+   "rows": [
+    34,
+    34
+   ],
+   "differences": [],
+   "n_differences": 0,
+   "kernel_structure_counters_reported_not_gating": {
+    "passes": {
+     "rows_differing": 32,
+     "max_rel_diff": 0.45454545454545453
+    },
+    "act_cols": {
+     "rows_differing": 32,
+     "max_rel_diff": 0.04926285508809781
+    },
+    "act_cols_per_pass": {
+     "rows_differing": 32,
+     "max_rel_diff": 0.7705546638130907
+    },
+    "pairs": {
+     "rows_differing": 32,
+     "max_rel_diff": 0.019254658385093167
+    },
+    "supports": {
+     "rows_differing": 32,
+     "max_rel_diff": 0.019254658385093167
+    }
+   },
+   "accounting_counters_reported_not_gating": {
+    "flips": {
+     "rows_differing": 32,
+     "max_rel_diff": 0.01253479068815439
+    },
+    "flips_per_step": {
+     "rows_differing": 32,
+     "max_rel_diff": 0.012534790688154353
+    },
+    "offers": {
+     "rows_differing": 32,
+     "max_rel_diff": 0.06562520027807983
+    },
+    "dup_dropped": {
+     "rows_differing": 32,
+     "max_rel_diff": 0.2771580936036476
+    },
+    "merges": {
+     "rows_differing": 0,
+     "max_rel_diff": 0.0
+    }
+   },
+   "sums_old": {
+    "flips": 13863586893,
+    "offers": 484415802,
+    "pairs": 47374000000
+   },
+   "sums_new": {
+    "flips": 13839124308,
+    "offers": 486575232,
+    "pairs": 47509000000
+   }
+  },
+  "I4_reported_not_gating": {
+   "island_1_T_new": 27,
+   "expected_T": 27,
+   "I_max_old_new": [
+    3,
+    0
+   ],
+   "binary_sha256_old_new": [
+    "2197fd5b2b5ca888f7230cafb04d382e94e9c9564dd1c71d7ad06f258a4fada9",
+    "da0cf85b5fe014973d15674f0da8e8c12dfdaf465a5e06aa0216b294601f231a"
+   ],
+   "new_I_used": 0,
+   "new_I_max": 0,
+   "new_N": 2500
+  }
+ },
+ "IDENTITY": "PASS"
+}

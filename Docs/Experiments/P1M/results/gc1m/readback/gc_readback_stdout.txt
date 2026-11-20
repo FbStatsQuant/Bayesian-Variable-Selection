@@ -1,0 +1,19 @@
+{
+ "pilot": {
+  "items": {
+   "C1": true,
+   "C2": true,
+   "C3": true,
+   "C4": true,
+   "identity": true,
+   "no_kill_trip": true
+  },
+  "HPM_eq_S0 (reported)": true,
+  "pi_hat_S0": 0.32027998942303376,
+  "billed": 345.6355,
+  "ratio": 1.0602315950920245,
+  "G-C2": "PASS"
+ },
+ "fits": 1,
+ "identity": "PASS"
+}

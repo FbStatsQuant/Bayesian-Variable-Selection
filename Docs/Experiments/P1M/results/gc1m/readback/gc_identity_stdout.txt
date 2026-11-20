@@ -1,0 +1,23 @@
+{
+ "IDENTITY": "PASS",
+ "checks": {
+  "I1_data": true,
+  "I2_setup": true,
+  "I3_pilot_counters": true
+ },
+ "I4": {
+  "island_1_T_new": 27,
+  "expected_T": 27,
+  "I_max_old_new": [
+   3,
+   0
+  ],
+  "binary_sha256_old_new": [
+   "2197fd5b2b5ca888f7230cafb04d382e94e9c9564dd1c71d7ad06f258a4fada9",
+   "da0cf85b5fe014973d15674f0da8e8c12dfdaf465a5e06aa0216b294601f231a"
+  ],
+  "new_I_used": 0,
+  "new_I_max": 0,
+  "new_N": 2500
+ }
+}
