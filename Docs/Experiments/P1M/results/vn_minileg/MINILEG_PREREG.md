@@ -106,3 +106,7 @@ Stops of MINILEG_PLAN §5.3 apply during the runs (a stop → stop submitting an
 
 ## 10. Deviation log
 None. A change to any threshold, rule, script, field choice or the §6 mapping after the shas above are committed is a logged deviation with the reason, the date and the new sha256.
+
+**Errata after the verdict (2026-11-20, Engineering manager; MINILEG_CHECK_OPUS fixes, documentation only, no outcome change):**
+- E1. §1 prints a 65-character string as the sha256 of `tests/test_vn_offset_contrast.py`, which is not a valid sha256. The correct sha256 is `9ef9b9e73e30f84b9def13e24a34dc690156389d1ed417b8a228a0f2ab9a1331`; the file is unchanged since commit 5d8c77e8 (git-verified by the Opus check). The §1 text is left as committed.
+- E2. The registered `precision_offset.py` leaves out the r04 seed-2 fit (`4-ADJOPP-n200-r04-V-s2`): its run id collides with the overlap V naming pattern and the script's own arm check excludes it. This is a naming collision caught by design, not a script defect, and has zero effect on any declared quantity (r04 is in no precision cell and has no overlap T reference; the r04 check is report-only, §7).

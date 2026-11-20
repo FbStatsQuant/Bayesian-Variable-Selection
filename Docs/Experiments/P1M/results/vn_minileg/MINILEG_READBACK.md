@@ -1,5 +1,7 @@
 N OUTCOME: **ADOPT N = 10⁴ at the FROZEN configuration (m 1, I_max 0)** by the pre-declared rule (`precision_freeze_vn.py`, 114f7e78…): r(M1, M2, M3) = 0.5048 / 0.5146 / 0.4794 against the bar 1/√c_X = 0.5164 (measured c_X = 3.7496), HPM identical, every dataset r < 1; **the margin on M2 is 0.0019**. The I_max-3 arm, scored by the registered `precision_freeze.py` verbatim, returns **KEEP** (M3 0.5719 > bar 0.5137). The two configurations disagree: reported as a FINDING (MINILEG_PREREG §3.3); nothing post hoc.
 
+**Checked:** one Opus check (`reviews/MINILEG_CHECK_OPUS.md`) = CONFIRMED-WITH-FIXES (both fixes documentation-only, applied as errata E1/E2 in MINILEG_PREREG.md); all numbers reproduced from the raw records; c_X unambiguous under the prereg wording (every allowed reading gives ADOPT; M2 needs c_X ≥ 3.777 to fail, a 0.7 % margin). Pending HQ acceptance of N* (H-33).
+
 # MINILEG_READBACK: V-N mini-leg verdict read-back (Engineering, Sonnet worker; Fri 2026-11-20)
 
 **Status: pending manager commit.** Exactly as MINILEG_PREREG (exp/P1M 5d8c77e8) declares. No NOTS access by this worker; scratch `~/SMC_Engineering_Department/tmp/20261120-vnverdict/`; outputs and the descriptive tables script are in `results/vn_minileg/readback/` (sha256 in §9). Records: `~/SMC_Engineering_Department/records/vn_minileg/{V0,V1,V2}`, leg baselines `records/precision1e4/{A0,P1,P2,P3,P4}`, T references `records/overlap1e4/W0…W3`. Ops files read: `V0_READBACK.md`, `OPS_VN.md`, `completeness_table.md`, `prior_after_V2.json`.
