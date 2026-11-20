@@ -114,3 +114,16 @@ Moved-to-local-then-deleted: nothing needed a *new* transfer; the deletes relied
 - Report fields: home quota; live batches; scratch GB by family; files not in any desktop-verified unit by kind with days to the 14-day purge and U/R tag; core dumps; T3 candidate count (size-match upper bound); duplicate build dirs; `code_ws` trees and which script `code` symlinks point to them.
 - Wiring (HQ): daily machines check → report-only; each wave end after the read-back → report, then `--apply-trash` once the wave's units are in `desktop_verified.txt`.
 - First run 2026-11-20 14:11 UTC (report-only): 276.0 GB in `runs/` (RG 68.0 and growing), home 6,091 MB, 0 core dumps, 0 duplicate builds; the U list showed PL law.bin 18.9 GB + RG fit/law 5.5 GB still unique at that moment (RG fit/law are the rung's own, to be collected by its read-back).
+
+## 7. Execution of HQ H-41 (2026-11-20, same day)
+
+| Item | Result |
+|---|---|
+| Unique `law.bin` (PL 142 + VN 3 = 145 files, 19.69 GB) | NOTS sha256 (computed on NOTS) = Owls sha (3 m 06 s `sha256sum -c`, 0 mismatch) → 26 units `records/hygiene_20261120_nots/law_<batch>/<run_id>/law.bin` (one SHA256SUMS per unit, none nested; one rsync, staging outside `records/` emptied) → all 26 desktop-verified at the 09:20 pull → NOTS re-hash = sha → 145 deleted |
+| `T5_1e5` (2.2 GB, 16 files) | unit `records/hygiene_20261120_nots/T5_1e5`, per-file sha equal on both sides, desktop-verified, run dir deleted (file count and every sha re-checked on NOTS first) |
+| 9 old `code_ws` trees (3.1 GB) + `overlap1e4/clone_eefcbc4a` (0.17 GB) | streamed from NOTS as 10 tarball units `records/hygiene_20261120_nots/code/<name>/<name>.tar.gz` (stream sha on NOTS = file sha on Owls; `gzip -t` OK; 12,761 entries in a sample listing), desktop-verified, deleted. Tarballs are ≈ 172 MB each (the repo snapshot, so a tree can be re-created by `tar -xzf`) |
+| **Kept, F2** | `code_ws/VN_e993ece2_code` and **`vn_minileg/clone_e993ece2`**: the second is the git clone that backs the live F2 worktree (`.git` pointer `…/vn_minileg/clone_e993ece2/.git/worktrees/VN_e993ece2_code`); deleting it would break F2. Both fb31-owned, created 11-19 11:46 (matches the VN leg log). Re-checked present after the deletes. |
+| `overlap1e4/` | fb31-owned, created 11-18 09:16 (matches the overlap freeze log); contained only the shallow git clone eefcbc4a that backed the 6 old worktrees → offloaded, deleted, empty dir removed |
+| Side effect | the home `scripts/{OV_W0_T,T2,V,V2,OV_W1..3_T/V,PL_A0_1,PL_B1_2}/code` symlinks now dangle (those batches are finished and collected; the tarballs restore them) |
+
+Totals this item: 156 deletions, 25.2 GB, home 6,091 MB unchanged (these were scratch). Log: `nots_scratch_removals.tsv`.

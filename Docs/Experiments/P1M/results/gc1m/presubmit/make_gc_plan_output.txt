@@ -12,7 +12,7 @@ W9   GC_W9       2     40    3544.0    3544.1
 W10  GC_W10      2     40    3544.0    3544.1
 X1   GC_X1a      1     20    1772.0    1772.1
 X1   GC_X1b      1     20    2540.0    2540.1
-D    GC_D        1     20    3464.0    3464.1
+D    GC_D        1     20    2636.0    2636.1
 S1   GC_S1       2     40    3544.0    3544.1
 S2   GC_S2       2     40    3544.0    3544.1
 S3   GC_S3       2     40    3544.0    3544.1
@@ -24,5 +24,5 @@ S8   GC_S8       2     40    3544.0    3544.1
 S9   GC_S9       2     40    3544.0    3544.1
 S10  GC_S10      1     20    1772.0    1772.1
 opt  GC_N5       1     20    1772.0    1772.1
-S2 (no seeds, no N5): 24 fits, 14 batches, 480 tasks, worst (limit sum) 44988.0
+S2 (no seeds, no N5): 24 fits, 14 batches, 480 tasks, worst (limit sum) 44160.0
 H-34 seed block: 19 fits, 10 batches, 380 tasks, worst 33668.0

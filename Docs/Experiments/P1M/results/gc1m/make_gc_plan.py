@@ -10,7 +10,7 @@ Batches (2 fits per batch = "2 fits at a time"; <= 150 tasks; every task <= 2 h)
   GC_P   the G-C2 pilot = the FROZEN rep-1 re-run `6-AR-n200-r01-V-s1` (data + engine seed 602020001; run ALONE first)
   GC_W1  AR r02 + ADJ-OPP r01 | GC_W2 .. GC_W10  AR r03..r20 in pairs   (S2: AR-strong replicates 2-20, ADJ-OPP x 1)
   GC_X1a AR-weak r01 (gated, H-10) | GC_X1b the ONE N 10^4 fit on the rep-1 data `6-AR-n200-r01-VN10K-s1` (pairs with the pilot; calibration identical by pairing)
-  GC_D   option D: AR-strong n = 1,000 `6-AR-n1000-r01-V-s1` (D1-D3 passed; HQ releases)
+  GC_D   option D: AR-strong n = 1,000 `6-AR-n1000-r01-V-s1` (D1-D3 passed; RELEASED by HQ H-44; runs ALONE after the pilot is clean and the n = 1,000 --plan-only gate)
   GC_S1 .. GC_S10   the conditional 20 SEEDS (H-34): seeds 2..20 on the rep-1 data, `6-AR-n200-r01-V-s<i>`, engine seed = data seed + 100 (i - 1); seed 1 = the pilot (no double cost)
   GC_N5  the N 5,000 self-check `6-AR-n200-r01-VN5K-s1` (NOT in S2: H-38 replaced it by the N 10^4 fit; generated as an option only)
 Shapes (GB_PLAN / RUNG_PLAN conventions, measured 11-17 at 10^6): setup 48 CPU 48 G; calibrate 96 CPU 128 G; islands 96 CPU 64 G; merge 32 CPU 128 G (until a 1M `peak_rss_kb` is read); eval 8 CPU 16 G.
@@ -27,7 +27,9 @@ def shape(setup=("48", "48G", "00:45:00"), cal=("96", "128G", "01:30:00"), isl=(
 
 STD = shape()
 N10K = shape(isl=("96", "64G", "01:30:00"))
-OPTD = shape(setup=("96", "64G", "01:30:00"), cal=("96", "128G", "02:00:00"), isl=("96", "64G", "02:00:00"))
+# option D (n = 1,000; HQ H-44 released): the correlation pass dominates setup and does not scale with threads (WP2 count-only at 10^6: 4,069 s at 3 threads for n = 1,000, 897 s for n = 200; the 11-17 setup at 48 threads took 780 s for
+# n = 200), so 48 CPUs for <= 1:45 (billed ~55 core-h, not 96 CPUs); islands at 2-3.4x the n = 200 wall (13 min) get 1:30; every task <= 2 h
+OPTD = shape(setup=("48", "64G", "01:45:00"), cal=("96", "128G", "02:00:00"), isl=("96", "64G", "01:30:00"))
 
 
 def main():

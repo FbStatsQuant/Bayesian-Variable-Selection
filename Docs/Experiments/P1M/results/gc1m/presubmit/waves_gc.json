@@ -479,12 +479,12 @@
  },
  "GC_D": {
   "wave": "D",
-  "plan_sha256": "d4e30ff719f5d640565486d62ce020573e8b0bdf94845dc06be3df41d7e95364",
+  "plan_sha256": "a049192b1493a30c86d4c1559fae62c9b34c395139fb9d6f3988cf3cb5a41d2e",
   "tasks": 20,
-  "worst_case_core_h": 3464.0,
-  "core_h_cap": 3464.1,
+  "worst_case_core_h": 2636.0,
+  "core_h_cap": 2636.1,
   "island_cpus": 96,
-  "island_limit": "02:00:00",
+  "island_limit": "01:30:00",
   "fits": [
    {
     "run_id": "6-AR-n1000-r01-V-s1",
