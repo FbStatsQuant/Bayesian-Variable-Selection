@@ -36,3 +36,30 @@
 - **Fix (rung, G-B and VN verdict scripts share the code):** SACCT rows are kept only if JobName starts with the wave's prefix (`p1m_RG_` / `p1m_GB_` / `p1m_VN_`) and User ∈ {fb31, empty (older probe files)}; foreign rows → ONE `INFO n foreign sacct row(s) … ignored` line; a malformed sacct row or an own-looking row with a task outside the plan → `FLAG PROBE ERROR` (exit 4, with the reason); any other exception in the verdict script → `WAVE STATE: UNKNOWN` + `FLAG PROBE ERROR: the verdict script crashed (…)` + exit 4 (never a bare traceback). The remote probe scripts now also request the `User` column (field 8; `rung_probe_remote.sh`, `gb_probe_remote.sh`, `vn_probe_remote.sh`). Tests: rung 58/58 (incl. the EXACT 14:20:35Z probe file, kept as `ops_tests/probe_R3_foreign_cg160_20261120T142035Z.txt`), G-B 46/46, VN 51/51.
 - **Re-evaluation of the 14:20:35Z probe with the fix:** no stop rule fired; 11 foreign rows reported as one INFO; all 74 `p1m_RG_*` rows COMPLETED (46) / RUNNING (20) / PENDING (8), none FAILED; IND r01 50.61 and r02 62.51 core-h (hard 190), ADJ-OPP r02 51.35 (hard 165) so far; wave 164.5 (quote 220, stop 440); rung spent 614.0. R3 collection is NOT held.
 - The monitor was told (queue): normal cadence, foreign INFO needs no report.
+
+## R3 ended CLEAN; the 10⁵ rung is COMPLETE; collection, ledger, completeness, hygiene check, 2026-11-20 (monitor end report 14:35:39Z)
+- Monitor end report R3: 3/3 COMPLETED, wave **184.0 core-h** (quote 220, stop 440), no stop rule, no FLAG; IND n200 r01 / r02 50.69 / 63.38 (below the assumed E 76; hard 190), ADJ-OPP n200 r02 69.97 (hard 165). Rung spent 633.6.
+- Collected `rung_collect_wave.sh R3` → `records/rung1e5/RG_3a|RG_3b/` (5 units verified, 0 problems; cost records 114.06 + 70.27 = 184.33 core-h, the monitor's 184.0 is the probe-time figure). All 20 units under `records/rung1e5` pass `sha256sum -c`, one SHA256SUMS each, none nested. law.bin + data.bin are kept for RG_1a (n400 pilot), RG_1b (twins) and, from G-B, for the two pilots (RUNG_PLAN §6); the 8 other rung fits keep fit.bin / eval.bin / sidecars only.
+- **`prior_after_R3.json`** = the full rung ledger: 13 items (10 rung fits + 2 twins + `T6:`…), **633.57 core-h** (RG_* batches; quote 824): R1 112.50 + R2 337.03 + R3 184.03 (this is 633.56 from the per-run cost files); with the two G-B pilots (142.04) the rung total is 775.60 (the manager's projection ceiling 1,326 / new spend 1,184 not approached).
+- **Standing hygiene check (report-only, `crews/home_hygiene/nots_wave_hygiene_check.py`, no `--apply-trash`) at 14:38Z: `crews/home_hygiene/wave_check_20261120T1438Z.md`.** Home 6,089 MB (guards 7,900 / 8,192); no live batch in squeue; scratch runs 285.6 GB (RG 77.6, PL 139.6, GB 25.2, VN 23.2, OV 17.6); core dumps 0; T3 candidates 173 files 6.6 GB (not applied); T2 0. **Rung items flagged "U (unique, collect it)": RG fit.bin 2.8 GB (collected on Owls, pending desktop verification) and RG law.bin 4.5 GB: the law.bin of the 8 rung fits that RUNG_PLAN §6 does not collect are the unique copies on NOTS scratch (purge in 13 d) if anyone wants them (the N contrast and any cross need law.bin + data.bin only for the pilots / twins, which are collected).** RG calib / setup / raw / data = regenerable (R). Nothing was deleted or moved; GB_* / RG_* dirs untouched.
+
+### Completeness table (12 rung fits incl. the 2 G-B pilots, 2 continuity twins, T6)
+| # | batch | run id | role | billed core-h | N | I_max (used) | build | logZ_r | fit | eval | law | data | unit SHA OK |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | GB_G1a | 5-AR-n200-r01-V-s1 | G-B pilot (rung fit 1) | 76.39 | 10000 | 0 (0) | ok | 16 | yes | yes | yes | yes | yes |
+| 2 | GB_G2a | 5-ADJOPP-n200-r01-V-s1 | G-B pilot (rung fit 2) | 65.65 | 10000 | 0 (0) | ok | 16 | yes | yes | yes | yes | yes |
+| 3 | RG_1a | 5-AR-n400-r01-V-s1 | rung fit | 46.74 | 10000 | 0 (0) | ok | 16 | yes | yes | yes | yes | yes |
+| 4 | RG_2a | 5-AR-n200-r02-V-s1 | rung fit | 69.00 | 10000 | 0 (0) | ok | 16 | yes | yes | no | no | yes |
+| 5 | RG_2a | 5-AR-n200-r03-V-s1 | rung fit | 74.53 | 10000 | 0 (0) | ok | 16 | yes | yes | no | no | yes |
+| 6 | RG_2a | 5-AR-n200-r04-V-s1 | rung fit | 60.77 | 10000 | 0 (0) | ok | 16 | yes | yes | no | no | yes |
+| 7 | RG_2a | 5-AR-n200-r05-V-s1 | rung fit | 50.23 | 10000 | 0 (0) | ok | 16 | yes | yes | no | no | yes |
+| 8 | RG_2b | 5-AR-n400-r02-V-s1 | rung fit | 38.26 | 10000 | 0 (0) | ok | 16 | yes | yes | no | no | yes |
+| 9 | RG_2b | 5-AR-n400-r03-V-s1 | rung fit | 44.24 | 10000 | 0 (0) | ok | 16 | yes | yes | no | no | yes |
+| 10 | RG_3a | 5-IND-n200-r01-V-s1 | rung fit | 50.69 | 10000 | 0 (0) | ok | 16 | yes | yes | no | no | yes |
+| 11 | RG_3a | 5-IND-n200-r02-V-s1 | rung fit | 63.38 | 10000 | 0 (0) | ok | 16 | yes | yes | no | no | yes |
+| 12 | RG_3b | 5-ADJOPP-n200-r02-V-s1 | rung fit | 69.97 | 10000 | 0 (0) | ok | 16 | yes | yes | no | no | yes |
+| 13 | RG_1b | 5-ADJOPP-n200-r01-VN25-s1 | continuity twin (N 2,500) | 26.07 | 2500 | 0 (0) | ok | 16 | yes | yes | yes | yes | yes |
+| 14 | RG_1b | 5-AR-n200-r01-VN25-s1 | continuity twin (N 2,500) | 29.57 | 2500 | 0 (0) | ok | 16 | yes | yes | yes | yes | yes |
+| T6 | RG_T6 | 5-AR-n200-r01-V-s1 (island 1 of the G-B pilot's inputs) | restart test | 10.12 | 10000 | 0 | ok | - | t6.json | - | - | - | yes |
+
+**12 of 12 rung fits delivered (the 2 G-B pilots count; all COMPLETED, one binary da0cf85b, N 10⁴, I_max 0, logZ_r 16), 2 of 2 continuity twins (N 2,500), T6 PASS (11/11 checks, resumed output_hash 0x4e4fd6a2e6135cfb = reference = the pilot's island 1). Rung spend 633.56 core-h billed (RG_* batches incl. T6; quote 824).** HPM: AR fits {10000, 30000, 50000, 70000, 90000} (all AR n200 / n400 / IND); ADJ-OPP fits {10000, 10001, 50000, 70000, 90000}. law / data "no" = by RUNG_PLAN §6 (not collected; see the hygiene note).
