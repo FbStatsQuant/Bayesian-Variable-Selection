@@ -16,7 +16,7 @@ echo '### SACCT'; [[ -n $ids ]] && sacct -X -P -n -j "$ids" --format=JobID,JobNa
 if [[ $MAKE == 1 ]]; then
   for b in $BL; do for r in $D/scratch/runs/$b/*/; do
     [[ -s $r/calib.bin && -f $r/calib.bin.json && ! -f $r/calib_meta.json ]] || continue
-    ( set +u; source $D/scripts/$b/env.sh >/dev/null 2>&1; nice -n 19 $D/scripts/$b/bin/smcbvs4 info $r/calib.bin --meta 1 --record $r/calib_meta.json >/dev/null 2>&1 ) || true
+    ( set +u; source $D/scripts/$b/env.sh >/dev/null 2>&1; nice -n 19 $D/scripts/$b/bin/smcbvs4 info $r/calib.bin --meta 1 --record $r/calib_meta.json >/dev/null 2>&1 ) </dev/null || true
   done; done
 fi
 python3 - "$D" $BL <<'PY'

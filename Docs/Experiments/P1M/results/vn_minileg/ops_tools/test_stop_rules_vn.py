@@ -117,4 +117,12 @@ rc, o = run("V0", probe("V0", states={XB2: "RUNNING"})); check("a RUNNING sacct 
 src = open(os.path.join(HERE, "stop_rules_vn.py")).read().replace('"XB2": (5.71, 8.6, 14.3)', '"XB2": (5.71, 80.6, 140.3)'); alt = os.path.join(TMP, "stop_rules_vn_altered.py"); open(alt, "w").write(src)
 r = subprocess.run([sys.executable, alt, probe("V0"), "--wave", "V0", "--plans", PLANS, "--deploy-log", LOG, "--ref-hashes", os.path.join(TMP, "refs.json"), "--leg-records", LEGREC], capture_output=True, text=True)
 check("an altered class table -> STOP (pinned sha256)", r.returncode == 3 and "class table in this script was altered" in r.stdout, r.stdout)
+# probe integrity (the 23:52 exit-255 case): the wrapper appends REMOTE_RC / REMOTE_STDERR
+_pf = probe("V0"); _txt = open(_pf).read()
+_p1 = os.path.join(TMP, "p_rc255_full.txt"); open(_p1, "w").write(_txt + "### REMOTE_RC\n255\n### REMOTE_STDERR\nboom\n")
+rc, out = run("V0", _p1); check("remote rc 255 but all sections present -> INFO only, exit 0", rc == 0 and "INFO remote ssh exit status 255" in out and "boom" in out, out)
+_p2 = os.path.join(TMP, "p_rc255_trunc.txt"); open(_p2, "w").write(_txt.split("### DATA_HASH")[0] + "### REMOTE_RC\n255\n### REMOTE_STDERR\nConnection closed\n")
+rc, out = run("V0", _p2); check("remote rc 255 + truncated probe -> FLAG PROBE ERROR, exit 4, stderr shown", rc == 4 and "FLAG PROBE ERROR" in out and "missing DATA_HASH" in out and "Connection closed" in out and "PROBE ERROR: stop rules not fully evaluated" in out, out)
+_p3 = os.path.join(TMP, "p_trunc_norc.txt"); open(_p3, "w").write(_txt.split("### ISLAND_T")[0])
+rc, out = run("V0", _p3); check("truncated probe without REMOTE_RC -> FLAG PROBE ERROR, exit 4", rc == 4 and "FLAG PROBE ERROR" in out, out)
 print("\n%d passed, %d failed" % (ok, fail)); sys.exit(1 if fail else 0)

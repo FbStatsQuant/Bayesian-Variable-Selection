@@ -30,3 +30,8 @@ Plan: `MINILEG_PLAN.md` + `MINILEG_PREREG.md` (exp/P1M 5d8c77e8). The precision 
   - VN_V0_2 (XB2, N2500 I0): 2803087 / 2803088; 2803089, 2803090, 2803091
   - VN_V0_3 (r04 pair, R′16): 2803232 / 2803233; VI3-s1 2803234, 2803235, 2803236; V-s2 2803237, 2803238, 2803239
 - Monitor: rulebook `MONITOR_VN_PROMPT.md`; START line sent to the monitor thread (queue): quote 50, stop > 100, no PRIOR, probe with MAKE_CALIB_META=1.
+
+## V0 monitor-probe fix, 2026-11-19 ~00:00Z (Manager: probe exited 255)
+- 23:52:05Z probe was NOT complete: the file ends inside `### SACCT` (no DATA_HASH/CALIB/…/ENGINE_FLAGS sections) = a dropped/failed ssh (255 = ssh-level status), and `set -e` in `vn_monitor_probe.sh` aborted before the verdict. Not reproduced at 23:58:17Z (rc 0, all sections): treated as a transient ssh/connection failure; root stderr was not captured then.
+- Fixes: wrapper without `set -e`, ssh stderr to `<probe>.err`, `### REMOTE_RC` / `### REMOTE_STDERR` appended to the probe file, always `exec` the verdict; `stop_rules_vn.py` checks the 9 expected sections + REMOTE_RC: rc≠0 with a complete probe = INFO, anything missing = `FLAG PROBE ERROR` + verdict `PROBE ERROR` + exit 4 (3 new tests, 47/47 pass); remote script: `</dev/null` for the calib_meta subshell (so `smcbvs4 info`/env.sh can never eat the piped script).
+- Test probe 23:58:17Z (one, ≥5 min after the monitor's 23:52:05Z): rc 0, 5/5 `calib_meta.json` made on NOTS by MAKE_CALIB_META (all calibrations finished by then), arm identity checked on 5 fits, pairing identity on 3; wave actual 51.2 core-h (quote 50, stop > 100), no stop rule fired. (+1 extra read-only `ls` over the same ssh master to count calib_meta.json.)
