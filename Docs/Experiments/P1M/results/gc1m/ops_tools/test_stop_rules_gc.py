@@ -136,4 +136,26 @@ rc, o = runD(probeD(islT=26)); check("D T != 27 -> INFO", rc == 0 and "INFO fina
 _td = open(probeD()).read(); _pd = os.path.join(TMP, "p_D_trunc.txt"); open(_pd, "w").write(_td.split("### DATA_HASH")[0] + "### REMOTE_RC\n255\n### REMOTE_STDERR\n")
 rc, o = runD(_pd); check("D truncated probe -> PROBE ERROR, exit 4", rc == 4 and "PROBE ERROR" in o, o)
 rc, o = run(probeD()); check("the pilot wave P does not read the D batch (no GC_P rows): no crash", rc in (0, 3, 4), o)
+
+# ===================== wave D2 = the resubmission of option D after the setup TIMEOUT (HQ d99c67b4): same fit and lines; the lost GC_D setup (--prior, same run id) counts in the fit total =====================
+def probeD2(**kw):
+    s = open(probeD(**kw)).read().replace("SUBMISSIONS GC_D", "SUBMISSIONS GC_D2").replace("GC_D|", "GC_D2|").replace("p1m_GC_D_", "p1m_GC_D2_")
+    p = os.path.join(TMP, "probe_GC_D2.txt"); open(p, "w").write(s); return p
+def runD2(pth, *extra):
+    r = subprocess.run([sys.executable, os.path.join(HERE, "stop_rules_gc.py"), pth, "--wave", "D2", "--plans", PLANS, "--deploy-log", LOG, "--ref-hashes", os.path.join(STG, "gc_refs.json")] + list(extra), capture_output=True, text=True)
+    return r.returncode, r.stdout + r.stderr
+PD = os.path.join(TMP, "prior_D.json"); json.dump({RIDD: 84.0}, open(PD, "w"))
+rc, o = runD2(probeD2(), "--prior", PD); check("D2 healthy: 758 + the lost setup 84 = 842 in the fit total, no stop, quote 1,087 -> wave line 2,174, ENDED", rc == 0 and "no stop rule fired" in o and "842.00" in o and "quote 1087 -> wave line 2174" in o and "WAVE STATE: ENDED" in o, o)
+rc, o = runD2(probeD2(cost=dict(islands=95.0)), "--prior", PD); check("D2: islands 95 x 16 = 1,520 + 118 + 84 = 1,722 > soft 1,631 -> SOFT TRIP (the prior is in the total; without it 1,638 would also trip, so use hard below)", rc == 0 and "SOFT TRIP" in o, o)
+rc, o = runD2(probeD2(cost=dict(islands=150.0)), "--prior", PD); check("D2 hard: 150 x 16 = 2,400 + 118 + 84 = 2,602 <= 2,718 soft trip only; the prior alone decides: 2,640+... see next", rc == 0 and "SOFT TRIP" in o and "STOP" not in o.replace("STOP SUBMITTING", ""), o)
+rc, o = runD2(probeD2(cost=dict(islands=155.0)), "--prior", PD); check("D2 hard: 155 x 16 + 118 + 84 = 2,682 <= 2,718: still no stop", rc == 0 and "HARD" not in o, o)
+rc, o = runD2(probeD2(cost=dict(islands=158.0)), "--prior", PD); check("D2 hard: 158 x 16 + 118 + 84 = 2,730 > 2,718 -> STOP (the lost setup counts)", rc == 3 and "HARD 2718" in o, o)
+rc, o = runD2(probeD2(cost=dict(islands=158.0))); check("D2 without the prior the same probe (2,646) is NOT a hard trip (proves the prior is what pushes it over)", rc == 0 and "HARD" not in o, o)
+rc, o = runD2(probeD2(cost=dict(calibrate=70.5)), "--prior", PD); check("D2 K1 billed > 70 -> STOP", rc == 3 and "STOP K1" in o, o)
+rc, o = runD2(probeD2(cal_el=2701), "--prior", PD); check("D2 K1 elapsed > 45 min -> STOP", rc == 3 and "STOP K1" in o, o)
+rc, o = runD2(probeD2(isl_el={3: 3601}), "--prior", PD); check("D2 K2 island > 60 min while the others finished -> STOP", rc == 3 and "STOP K2" in o, o)
+rc, o = runD2(probeD2(states=dict(calibrate="OUT_OF_MEMORY")), "--prior", PD); check("D2 OOM state -> STOP", rc == 3, o)
+rc, o = runD2(probeD2(), "--prior", PD); check("D2 job names p1m_GC_D2_* are accepted (not foreign)", "foreign" not in o, o)
+_s = open(probeD2()).read().replace("### SQUEUE", "### SSTAT\n2817052_1.batch|23606760K|2-22:25:13\n### SQUEUE"); _ps = os.path.join(TMP, "p_sstat.txt"); open(_ps, "w").write(_s)
+rc, o = runD2(_ps, "--prior", PD); check("an SSTAT section is printed as an INFO progress line", rc == 0 and "INFO progress (sstat) 2817052_1.batch: MaxRSS 23606760K, AveCPU 2-22:25:13" in o, o)
 print("\n%d passed, %d failed" % (ok, fail)); sys.exit(1 if fail else 0)

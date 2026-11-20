@@ -11,8 +11,10 @@ for b in $BL; do
   ids="$ids,$(grep -o '"job": *"[0-9]*"' $D/scratch/runs/$b/submissions.jsonl 2>/dev/null | grep -o '[0-9][0-9]*' | paste -sd, || true)"
 done
 ids=$(echo "$ids" | sed 's/^,*//; s/,,*/,/g; s/,*$//')
-echo '### SQUEUE'; squeue -u fb31 -h -o '%i|%j|%T|%r|%M|%C'
+SQ=$(squeue -u fb31 -h -o '%i|%j|%T|%r|%M|%C'); echo '### SQUEUE'; echo "$SQ"
 echo '### SACCT'; [[ -n $ids ]] && sacct -X -P -n -j "$ids" --format=JobID,JobName,State,ElapsedRaw,AllocCPUS,CPUTimeRAW,Timelimit,User || true
+# progress visibility (HQ d99c67b4, ops-side only): sstat of the RUNNING batch steps of the wave (one extra Slurm query; MaxRSS + AveCPU of the .batch step)
+echo '### SSTAT'; for jid in $(echo "$SQ" | awk -F'|' '$2 ~ /^p1m_GC_/ && $3 == "RUNNING" {print $1}'); do sstat -n -P -j "${jid}.batch" --format=JobID,MaxRSS,AveCPU 2>/dev/null || true; done
 if [[ $MAKE == 1 ]]; then
   for b in $BL; do for r in $D/scratch/runs/$b/*/; do
     [[ -s $r/calib.bin && -f $r/calib.bin.json && ! -f $r/calib_meta.json ]] || continue

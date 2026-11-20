@@ -30,13 +30,13 @@ TABLE = {
     "gc1m AR n1000 N2500 I0 (option D)": (1087.0, 1631.0, 2718.0),
 }
 TABLE_SHA256 = "e03175982c557efe6128a0d77f41c33f24831789d7cbac6ac75e7483a3ec0474"
-WAVES = {"P": ["GC_P"], "D": ["GC_D"]}
-QUOTE = {"P": 325.0, "D": 1087.0}
-WAVE_LINE = {"P": 650.0, "D": 2174.0}                       # 2 x quote: halts submission only (a one-fit wave)
+WAVES = {"P": ["GC_P"], "D": ["GC_D"], "D2": ["GC_D2"]}   # D2 = the resubmission of option D (HQ d99c67b4): same fit, same lines; the lost GC_D setup is the --prior
+QUOTE = {"P": 325.0, "D": 1087.0, "D2": 1087.0}
+WAVE_LINE = {"P": 650.0, "D": 2174.0, "D2": 2174.0}                       # 2 x quote: halts submission only (a one-fit wave)
 CUM_STOP = 14500.0
 # kill rules per wave (GC_PREREG §4 pilot; §5.1 option D): K1 = calibrate billed core-h and (D) elapsed seconds; K2 = island elapsed seconds while the others have finished, and (pilot) billed core-h
-K1 = {"P": (48.0, None), "D": (70.0, 2700.0)}               # pilot: 2 x 24 core-h; D: > 70 core-h OR > 45 min
-K2 = {"P": (1584.0, 33.6), "D": (3600.0, None)}             # pilot: 2 x 792 s, 2 x 16.8 core-h; D: > 60 min
+K1 = {"P": (48.0, None), "D": (70.0, 2700.0), "D2": (70.0, 2700.0)}               # pilot: 2 x 24 core-h; D: > 70 core-h OR > 45 min
+K2 = {"P": (1584.0, 33.6), "D": (3600.0, None), "D2": (3600.0, None)}             # pilot: 2 x 792 s, 2 x 16.8 core-h; D: > 60 min
 INFRA, PEND_BAD = {"NODE_FAIL", "BOOT_FAIL"}, re.compile(r"QOS|Assoc|MaxSubmit|Invalid|Limit", re.I)
 TERMINAL = {"COMPLETED", "FAILED", "TIMEOUT", "OUT_OF_MEMORY", "CANCELLED", "NODE_FAIL", "BOOT_FAIL", "DEADLINE", "PREEMPTED", "REVOKED"}
 BAD = {"FAILED", "TIMEOUT", "OUT_OF_MEMORY", "CANCELLED", "DEADLINE", "PREEMPTED", "REVOKED", "SUSPENDED"}
@@ -182,9 +182,12 @@ def main():
                 pend.append("%s %s reason=%s" % (i, n, rs))
     prior = json.load(open(a.prior)) if a.prior else {}
     wave_cost = sum(cost.values()); spent = wave_cost + sum(prior.values())
+    # a RESUBMISSION of the same fit (option D after the setup TIMEOUT of GC_D, HQ d99c67b4): the earlier batch's billed core-h of the SAME run id (--prior) count in the fit's total and in the wave actual
+    own_prior = {k.split("/")[1]: prior.get(k.split("/")[1], 0.0) for k in cost}
+    wave_cost_incl = wave_cost + sum(own_prior.values())
     soft_trips = []
     for k, c in sorted(cost.items()):
-        b0, rid = k.split("/"); kl = klass(b0, rid)
+        b0, rid = k.split("/"); kl = klass(b0, rid); c = c + own_prior.get(rid, 0.0)
         if kl not in TABLE:
             flags.append("STOP fit %s: no class in the committed table (class %r)" % (k, kl)); continue
         E, soft, hard = TABLE[kl]; soft = soft_ov.get(kl, soft)
@@ -201,8 +204,8 @@ def main():
     wstop = 2 * a.quote if a.quote is not None else WAVE_LINE.get(a.wave)
     if quote is None or wstop is None:
         flags.append("STOP no quote for wave %s" % a.wave)
-    elif wave_cost > wstop:
-        flags.append("FLAG WAVE LINE: wave %s actual %.1f > 2 x the quote = %g: this halts submission only (the pilot is one fit, nothing more to submit); the per-fit lines (soft 489, hard 815) and K1-K3 govern" % (a.wave, wave_cost, wstop))
+    elif wave_cost_incl > wstop:
+        flags.append("FLAG WAVE LINE: wave %s actual %.1f > 2 x the quote = %g: this halts submission only (the pilot is one fit, nothing more to submit); the per-fit lines (soft 489, hard 815) and K1-K3 govern" % (a.wave, wave_cost_incl, wstop))
     if spent > a.cum_stop:
         flags.append("STOP cumulative %.1f > %.0f" % (spent, a.cum_stop))
     proj = spent; pnote = "projection ceiling 28,300 not evaluated for the pilot alone"
@@ -290,15 +293,19 @@ def main():
     for k, t in sorted(islT.items()):
         if t != 27:
             infos.append("INFO final-island stage count T of %s = %d (expected 27: the 11-17 final and diagnostic islands had 27 bridge stages)" % (k, t))
+    for l in S.get("SSTAT", []):
+        f_ = l.split("|")
+        if len(f_) >= 3:
+            infos.append("INFO progress (sstat) %s: MaxRSS %s, AveCPU %s (CPU-time summed over the job's cores; divide by elapsed x cores for utilisation)" % (f_[0], f_[1] or "-", f_[2] or "-"))
     meta = next((k for k in S if k.startswith("META")), "(no META line)")
     print("probe", meta, "| wave", a.wave, "| batches", ",".join(sorted(runs)), "| class table sha256", table_sha()[:12], "(pinned)" if table_sha() == TABLE_SHA256 else "(ALTERED)")
     print("%-52s %-18s %8s %6s %6s  %s" % ("batch/fit", "class", "core-h", "soft", "hard", "stage states"))
     for b in sorted(runs):
         for r in runs[b]:
             k = b + "/" + r; kl = klass(b, r); t = TABLE.get(kl)
-            print("%-52s %-18s %8.2f %6s %6s  %s" % (k, kl, cost.get(k, 0.0), "%.1f" % soft_ov.get(kl, t[1]) if t else "-", "%.1f" % t[2] if t else "-", ",".join(sorted(state.get(k, [])))))
+            print("%-52s %-18s %8.2f %6s %6s  %s" % (k, kl, cost.get(k, 0.0) + own_prior.get(r, 0.0), "%.1f" % soft_ov.get(kl, t[1]) if t else "-", "%.1f" % t[2] if t else "-", ",".join(sorted(state.get(k, [])))))
     print("wave actual %.1f core-h (quote %s -> wave line %s: halts submission only) | GC spent %.1f (cum stop %.0f) | %s" % (
-        wave_cost, "%g" % quote if quote is not None else "none", "%g" % wstop if wstop is not None else "n/a", spent, a.cum_stop, pnote))
+        wave_cost_incl, "%g" % quote if quote is not None else "none", "%g" % wstop if wstop is not None else "n/a", spent, a.cum_stop, pnote))
     print("arm identity checked on %d fits; datasets with hashes: %d; BUILD_F2 sha256 %s" % (n_arm, len(hs), (f2 or "-")[:16]))
     print("SOFT OVERRIDES (soft column only; TABLE and the hard column pinned, sha256 %s): %s" % (table_sha()[:12], "; ".join("%s: committed soft %.1f -> %.1f" % (k, TABLE[k][1], v) for k, v in sorted(soft_ov.items())) or "none"))
     if n_foreign:

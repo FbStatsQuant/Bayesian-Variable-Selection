@@ -1,0 +1,57 @@
+{
+ "batch": "GC_D2",
+ "mode": "V",
+ "code_commit": "e993ece226b355058e26400f05f9faad6daf16ca",
+ "method_tag": "method-v3.1.1-listpip",
+ "core_tree": "61b0a5822019b2737fe415ff15625e410f3227b2",
+ "binary": "bin/smcbvs4",
+ "max_task_hours": 4.0,
+ "island_isa": "sapphirerapids",
+ "kind": "gated (G-C / 1M; option D RESUBMISSION after the setup TIMEOUT of GC_D, HQ ruling d99c67b4: setup 4:00 [one-off exception to the 2-h norm], calibrate 2:00, islands 2:30 / 80G, merge 3:00, eval 1:00; fit, seed, arm and code unchanged)",
+ "island_throttle": 16,
+ "core_h_cap": 4328.1,
+ "resources": {
+  "setup": {
+   "cpus": 48,
+   "mem": "64G",
+   "time": "04:00:00"
+  },
+  "calibrate": {
+   "cpus": 96,
+   "mem": "128G",
+   "time": "02:00:00"
+  },
+  "islands": {
+   "cpus": 96,
+   "mem": "80G",
+   "time": "02:30:00"
+  },
+  "merge": {
+   "cpus": 32,
+   "mem": "128G",
+   "time": "03:00:00"
+  },
+  "eval": {
+   "cpus": 8,
+   "mem": "32G",
+   "time": "01:00:00"
+  }
+ },
+ "fits": [
+  {
+   "run_id": "6-AR-n1000-r01-V-s1",
+   "design": "AR",
+   "p": 1000000,
+   "n": 1000,
+   "signal": "strong",
+   "data_seed": 602100001,
+   "seed": 602100001,
+   "Rp": 16,
+   "N": 2500,
+   "params": {
+    "refine_m": 1,
+    "I_max": 0
+   }
+  }
+ ]
+}
