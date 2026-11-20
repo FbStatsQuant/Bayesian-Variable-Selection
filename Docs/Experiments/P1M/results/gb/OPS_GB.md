@@ -13,3 +13,9 @@
 - Pilot gate (GB_PLAN §2.2) at 02:24:2xZ: **GATE OK**, setup 0.53 ≤ 0.82, calibrate 1.51 ≤ 2.20 core-h, both COMPLETED (E 0.41 / 1.1).
 - **GB_G1b 02:24:29Z** (the I_max 3 twin): setup 2805961, calibrate 2805962, islands 2805963, merge 2805964, eval 2805965.
 - Monitor START G1 sent (queue) after batch a: quote 226, stop > 450, no PRIOR, MAKE_CALIB_META=1; the probe reports "batch not submitted yet" (WAVE STATE RUNNING) until b is out. Standing order: at G1 ENDED (clean) → collect G1, `gb_write_prior.py G1`, release G2 (quote 275, stop > 550, PRIOR prior_after_G1.json), one line to the manager.
+
+## G1 ended CLEAN and G2 released, 2026-11-20 (standing order)
+- Monitor end report G1 (03:06:09Z): both fits COMPLETED, GB_G1a 76.39 and GB_G1b 83.11 core-h (hard 270 / 295), wave 159.5 (quote 226, stop 450), no soft trip, no FLAG; pilot vs twin calib sections 1 of 40 equal (INFO; the I_max 3 calibration refines the grid); islands walls 255–447 s (below the 288 s INFO band on both fits).
+- Collected `gb_collect_wave.sh G1` → `records/gb/GB_G1a|GB_G1b/<run_id>/` + `_batch_<batch>/` (4 units verified, 0 problems, one SHA256SUMS each); law.bin + data.bin + fit.bin + eval.bin + calib_meta.json for both fits. Identity quick check: N 10000, refine_m 1, I_max 0 / 3 (I_used 0 / 3), rule bounded, build da0cf85b, logZ_r length 16, HPM {10000, 30000, 50000, 70000, 90000} in both fits, one (X, y) pair in the pair, diag files 0 / 12. `prior_after_G1.json` = 2 fits, 159.50 core-h.
+- G2: COPYBIN (GB_G2a/b sha == BUILD_F2), presubmit rc 0, home 7,213 MB (the 500 MB jump after G1 seen before; guard 7,900 unchanged). **GB_G2a 03:26:25Z**: setup 2809159, calibrate 2809160, islands/merge/eval 2809161/62/63. Gate OK (setup 0.51 ≤ 0.82, calibrate 1.81 ≤ 2.20). **GB_G2b 03:31:26Z**: setup 2809266, calibrate 2809267, islands/merge/eval 2809268/69/70.
+- START G2 sent to the monitor (quote 275, stop > 550, PRIOR prior_after_G1.json).
