@@ -12,7 +12,7 @@ for b in $BL; do
 done
 ids=$(echo "$ids" | sed 's/^,*//; s/,,*/,/g; s/,*$//')
 echo '### SQUEUE'; squeue -u fb31 -h -o '%i|%j|%T|%r|%M|%C'
-echo '### SACCT'; [[ -n $ids ]] && sacct -X -P -n -j "$ids" --format=JobID,JobName,State,ElapsedRaw,AllocCPUS,CPUTimeRAW,Timelimit || true
+echo '### SACCT'; [[ -n $ids ]] && sacct -X -P -n -j "$ids" --format=JobID,JobName,State,ElapsedRaw,AllocCPUS,CPUTimeRAW,Timelimit,User || true
 if [[ $MAKE == 1 ]]; then
   for b in $BL; do for r in $D/scratch/runs/$b/*/; do
     [[ -s $r/calib.bin && -f $r/calib.bin.json && ! -f $r/calib_meta.json ]] || continue

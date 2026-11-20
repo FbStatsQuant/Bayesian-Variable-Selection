@@ -140,11 +140,17 @@ def main():
                 j = json.loads(l); jobmap[j["job"]] = (b, None if j["fit"] == "all" else j["fit"])
     cost, state, bad_stage, pend = defaultdict(float), defaultdict(set), [], []
     sacct_rows, sacct_nonterm, sacct_jobs = 0, [], set()
+    foreign = []   # sacct rows on one of our job ids that are not ours (the Slurm accounting DB reuses old job ids: R3 probe 14:20Z, job 2814240 also listed 17 array tasks of another user's cmds_rmsd.list.sh from 2025-10-23)
     for l in S.get("SACCT", []):
-        jid, name, st, el, cpus, cpuraw, lim = l.split("|")[:7]
+        f_ = l.split("|")
+        if len(f_) < 7:
+            probe_err.append("malformed sacct row (%d fields, 7 needed): %r" % (len(f_), l[:80])); continue
+        jid, name, st, el, cpus, cpuraw, lim = f_[:7]; user = f_[7].strip() if len(f_) > 7 else ""
         base, _, task = jid.partition("_")
         if base not in jobmap:
             continue
+        if not name.startswith("p1m_VN_") or (user and user != "fb31"):
+            foreign.append((jid, name, user)); continue
         sacct_rows += 1; sacct_jobs.add(base); s0 = st.split()[0]
         if s0 not in TERMINAL:
             sacct_nonterm.append("%s %s" % (jid, s0))
@@ -152,6 +158,8 @@ def main():
         if fit is None:
             if not task.isdigit():
                 continue
+            if not 1 <= int(task) <= len(runs[b]):
+                probe_err.append("own-looking sacct row %s %s: task %s is outside the plan's %d task(s) of %s (not evaluated)" % (jid, name, task, len(runs[b]), b)); continue
             fit = runs[b][int(task) - 1]
         k = b + "/" + fit
         cost[k] += int(cpuraw or 0) / 3600.0
@@ -317,6 +325,9 @@ def main():
         if missing: why.append("%d submitted job id(s) not in sacct yet" % len(missing))
         if sacct_rows == 0: why.append("no sacct row yet")
         print("WAVE STATE: RUNNING  (%s)" % "; ".join(why))
+    if foreign:
+        fj = sorted({j.partition("_")[0] for j, _, _ in foreign}); fn = sorted({n for _, n, _ in foreign}); fu = sorted({u or "?" for _, _, u in foreign})
+        infos.append("INFO %d foreign sacct row(s) on our job id(s) %s ignored (not user fb31 / not p1m_VN_*): names %s, user(s) %s, e.g. %s (Slurm accounting job-id reuse; not ours, not touched)" % (len(foreign), ",".join(fj), ",".join(fn)[:80], ",".join(fu), foreign[0][0]))
     for x in pair_note + infos:
         print("INFO", x[5:] if x.startswith("INFO ") else x)
     for e in probe_err:
@@ -329,4 +340,13 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except SystemExit:
+        raise
+    except Exception as e:   # never crash silently: the stop rules were not evaluated
+        import traceback
+        print("WAVE STATE: UNKNOWN (the verdict script crashed)")
+        print("FLAG PROBE ERROR: the verdict script crashed (%s: %s) -> the stop rules were NOT evaluated on this probe: tell the manager now; do not retry within 5 min" % (type(e).__name__, e))
+        print("   at: " + traceback.format_exc().strip().splitlines()[-2].strip()[:160])
+        print("VERDICT: PROBE ERROR: stop rules not fully evaluated, tell the manager"); sys.exit(4)

@@ -129,4 +129,7 @@ _p4 = os.path.join(TMP, "p_refetch.txt"); open(_p4, "w").write(_txt + "### REMOT
 rc, out = run("V0", _p4); check("a re-fetched complete probe -> INFO probe transport, exit 0", rc == 0 and "INFO probe transport: first ssh rc 255" in out, out)
 _p5 = os.path.join(TMP, "p_pyerr.txt"); open(_p5, "w").write(_txt.split("### DATA_HASH")[0] + "".join("### %s\n" % k for k in ("DATA_HASH", "CALIB", "ISLAND_T", "DIAG", "BINSHA", "ENGINE_FLAGS")) + "### PYERR\npython3 section exited 1\n### REMOTE_RC\n0\n")
 rc, out = run("V0", _p5); check("remote python failure (all headers present) -> FLAG PROBE ERROR, exit 4", rc == 4 and "remote python section failed" in out, out)
+rc, o = run("V0", probe("V0", extra_sacct=["300_4|cmds_rmsd.list.sh|FAILED|10|2|20|12:00:00", "300_5|cmds_rmsd.list.sh|FAILED|10|2|20|12:00:00"])); check("foreign FAILED rows on our job id ignored: ONE INFO line, no stop (job-id reuse)", rc == 0 and o.count("INFO 2 foreign sacct row(s)") == 1, o)
+_bad = open(probe("V0")).read().replace("### SQUEUE", "### SQUEUE\nnot|enough"); _pb = os.path.join(TMP, "p_crash.txt"); open(_pb, "w").write(_bad)
+rc, o = run("V0", _pb); check("unexpected parse crash -> FLAG PROBE ERROR, exit 4", rc == 4 and "FLAG PROBE ERROR: the verdict script crashed" in o, o)
 print("\n%d passed, %d failed" % (ok, fail)); sys.exit(1 if fail else 0)
