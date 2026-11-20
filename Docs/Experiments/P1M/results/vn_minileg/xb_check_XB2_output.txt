@@ -1,0 +1,7 @@
+PASS  1 evidence.logZ_r bit-equal  64 vs 64 values; equal 64/64; first -177.30936952432126 vs -177.30936952432126
+PASS  2 selection.hpm equal  [1000, 3000, 5000, 7000, 9000] vs [1000, 3000, 5000, 7000, 9000]
+PASS  3 island output_hash r = 1..R'  64 islands vs 64; equal 64; e.g. r1 0x4752eabcd30a6bec vs 0x4752eabcd30a6bec
+PASS  4 sidecars identical outside provenance  72 json files compared (fit, eval, calib, setup, data, truth, 16 islands); 6251 provenance keys dropped; 0 differing field(s)
+PASS  5 fit.bin sections (all but meta) equal via info  44 sections; output_hash None vs None; differing: none
+PASS  5 eval.bin sections (all but meta) equal via info  4 sections; output_hash None vs None; differing: none
+RESULT: BIT-IDENTICAL outside provenance

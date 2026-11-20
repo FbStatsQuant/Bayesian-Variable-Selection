@@ -1,0 +1,308 @@
+[
+ {
+  "rid": "4-AR-n200-r01-P-N10000-m1-I0-c1-s1",
+  "batch": "VN_V0_1",
+  "delivered": true,
+  "sha_ok": true,
+  "one_sums": true,
+  "states": [
+   "COMPLETED"
+  ],
+  "cost": 20.5811,
+  "islands": {
+   "tasks": 64,
+   "wall_s_max": 313,
+   "billed_core_h": 20.03,
+   "max_rss_bytes": 324956160,
+   "states": [
+    "COMPLETED"
+   ],
+   "nodes": [
+    "bb2u23c1",
+    "bb2u24c1",
+    "bb2u25c1",
+    "bb2u26c1",
+    "bb3u12c1",
+    "bb3u14c1"
+   ]
+  },
+  "klass": "vn N10000 m1 I0",
+  "soft": 28.6,
+  "hard": 47.6,
+  "arm": {
+   "N": 10000,
+   "refine_m": 1,
+   "I_max": 0,
+   "I_used": 0,
+   "rule": "bounded"
+  },
+  "arm_plan": {
+   "N": 10000,
+   "refine_m": 1,
+   "I_max": 0
+  },
+  "arm_ok": true,
+  "build_ok": true,
+  "data_ok": true,
+  "logZ_n": 64,
+  "R": 64,
+  "pair": {
+   "n_sections": 40,
+   "differing": [],
+   "grid_equal": true,
+   "twin_N": 2500,
+   "meta_diff": [
+    "N"
+   ]
+  },
+  "twin": "4-AR-n200-r01-P-N2500-m1-I0-c1-s1",
+  "twin_islands": {
+   "tasks": 64,
+   "wall_s_max": 94,
+   "billed_core_h": 5.1878,
+   "max_rss_bytes": 379531264,
+   "states": [
+    "COMPLETED"
+   ],
+   "nodes": [
+    "bb2u15c1",
+    "bb2u16c1",
+    "bb2u17c1",
+    "bb2u18c1",
+    "bb2u19c1",
+    "bb2u20c1",
+    "bb2u21c1",
+    "bb2u23c1",
+    "bb2u24c1",
+    "bb2u25c1"
+   ]
+  },
+  "twin_cost": 5.5455,
+  "twin_tasks_wall": 94
+ },
+ {
+  "rid": "4-AR-n200-r01-P-N10000-m1-c1-s1",
+  "batch": "VN_V0_1",
+  "delivered": true,
+  "sha_ok": true,
+  "one_sums": true,
+  "states": [
+   "COMPLETED"
+  ],
+  "cost": 20.7456,
+  "islands": {
+   "tasks": 64,
+   "wall_s_max": 325,
+   "billed_core_h": 19.4789,
+   "max_rss_bytes": 390275072,
+   "states": [
+    "COMPLETED"
+   ],
+   "nodes": [
+    "bb2u19c1",
+    "bb2u23c1",
+    "bb2u25c1",
+    "bb2u26c1",
+    "bb3u11c1"
+   ]
+  },
+  "klass": "vn N10000 m1 I3",
+  "soft": 31.0,
+  "hard": 51.7,
+  "arm": {
+   "N": 10000,
+   "refine_m": 1,
+   "I_max": 3,
+   "I_used": 3,
+   "rule": "bounded"
+  },
+  "arm_plan": {
+   "N": 10000,
+   "refine_m": 1,
+   "I_max": 3
+  },
+  "arm_ok": true,
+  "build_ok": true,
+  "data_ok": true,
+  "logZ_n": 64,
+  "R": 64,
+  "pair": {
+   "n_sections": 40,
+   "differing": [],
+   "grid_equal": true,
+   "twin_N": 2500,
+   "meta_diff": [
+    "N"
+   ]
+  },
+  "twin": "4-AR-n200-r01-P-N2500-m1-c1-s1",
+  "twin_islands": {
+   "tasks": 64,
+   "wall_s_max": 90,
+   "billed_core_h": 4.84,
+   "max_rss_bytes": 382078976,
+   "states": [
+    "COMPLETED"
+   ],
+   "nodes": [
+    "bb2u16c1",
+    "bb2u17c1",
+    "bb2u18c1",
+    "bb2u19c1",
+    "bb2u20c1",
+    "bb2u21c1",
+    "bb2u23c1",
+    "bb2u24c1",
+    "bb2u25c1",
+    "bb2u26c1"
+   ]
+  },
+  "twin_cost": 5.7156,
+  "twin_tasks_wall": 90
+ },
+ {
+  "rid": "4-AR-n200-r01-P-N2500-m1-I0-XB2-s1",
+  "batch": "VN_V0_2",
+  "delivered": true,
+  "sha_ok": true,
+  "one_sums": true,
+  "states": [
+   "COMPLETED"
+  ],
+  "cost": 6.2878,
+  "islands": {
+   "tasks": 64,
+   "wall_s_max": 97,
+   "billed_core_h": 5.7322,
+   "max_rss_bytes": 270438400,
+   "states": [
+    "COMPLETED"
+   ],
+   "nodes": [
+    "bb2u25c1",
+    "bb2u26c1",
+    "bb3u15c1",
+    "bb3u16c1",
+    "bb3u17c1"
+   ]
+  },
+  "klass": "XB2",
+  "soft": 8.6,
+  "hard": 14.3,
+  "arm": {
+   "N": 2500,
+   "refine_m": 1,
+   "I_max": 0,
+   "I_used": 0,
+   "rule": "bounded"
+  },
+  "arm_plan": {
+   "N": 2500,
+   "refine_m": 1,
+   "I_max": 0
+  },
+  "arm_ok": true,
+  "build_ok": true,
+  "data_ok": true,
+  "logZ_n": 64,
+  "R": 64,
+  "pair": null
+ },
+ {
+  "rid": "4-ADJOPP-n200-r04-VI3-s1",
+  "batch": "VN_V0_3",
+  "delivered": true,
+  "sha_ok": true,
+  "one_sums": true,
+  "states": [
+   "COMPLETED"
+  ],
+  "cost": 2.6856,
+  "islands": {
+   "tasks": 16,
+   "wall_s_max": 103,
+   "billed_core_h": 1.5456,
+   "max_rss_bytes": 386662400,
+   "states": [
+    "COMPLETED"
+   ],
+   "nodes": [
+    "bb2u19c1",
+    "bb2u22c1",
+    "bb2u23c1",
+    "bb2u24c1",
+    "bb2u26c1",
+    "bb3u11c1",
+    "bb3u20c1"
+   ]
+  },
+  "klass": "r04 pair",
+  "soft": 3.0,
+  "hard": 5.0,
+  "arm": {
+   "N": 2500,
+   "refine_m": 1,
+   "I_max": 3,
+   "I_used": 3,
+   "rule": "bounded"
+  },
+  "arm_plan": {
+   "N": 2500,
+   "refine_m": 1,
+   "I_max": 3
+  },
+  "arm_ok": true,
+  "build_ok": true,
+  "data_ok": true,
+  "logZ_n": 16,
+  "R": 16,
+  "pair": null
+ },
+ {
+  "rid": "4-ADJOPP-n200-r04-V-s2",
+  "batch": "VN_V0_3",
+  "delivered": true,
+  "sha_ok": true,
+  "one_sums": true,
+  "states": [
+   "COMPLETED"
+  ],
+  "cost": 1.7566,
+  "islands": {
+   "tasks": 16,
+   "wall_s_max": 96,
+   "billed_core_h": 1.4722,
+   "max_rss_bytes": 374321152,
+   "states": [
+    "COMPLETED"
+   ],
+   "nodes": [
+    "bb2u23c1",
+    "bb2u24c1",
+    "bb2u26c1",
+    "bb3u11c1"
+   ]
+  },
+  "klass": "r04 pair",
+  "soft": 3.0,
+  "hard": 5.0,
+  "arm": {
+   "N": 2500,
+   "refine_m": 1,
+   "I_max": 0,
+   "I_used": 0,
+   "rule": "bounded"
+  },
+  "arm_plan": {
+   "N": 2500,
+   "refine_m": 1,
+   "I_max": 0
+  },
+  "arm_ok": true,
+  "build_ok": true,
+  "data_ok": true,
+  "logZ_n": 16,
+  "R": 16,
+  "pair": null
+ }
+]
