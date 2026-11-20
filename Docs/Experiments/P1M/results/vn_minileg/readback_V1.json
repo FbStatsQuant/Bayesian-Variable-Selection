@@ -1,0 +1,340 @@
+[
+ {
+  "rid": "4-AR-n200-r01-P-N10000-m1-I0-c2-s1",
+  "batch": "VN_V1_1",
+  "delivered": true,
+  "sha_ok": true,
+  "one_sums": true,
+  "states": [
+   "COMPLETED"
+  ],
+  "cost": 19.2311,
+  "islands": {
+   "tasks": 64,
+   "wall_s_max": 294,
+   "billed_core_h": 18.7222,
+   "max_rss_bytes": 296415232,
+   "states": [
+    "COMPLETED"
+   ],
+   "nodes": [
+    "bb2u22c1",
+    "bb2u23c1",
+    "bb2u24c1",
+    "bb2u25c1",
+    "bb2u26c1",
+    "bb3u15c1",
+    "bb3u16c1"
+   ]
+  },
+  "klass": "vn N10000 m1 I0",
+  "soft": 28.6,
+  "hard": 47.6,
+  "arm": {
+   "N": 10000,
+   "refine_m": 1,
+   "I_max": 0,
+   "I_used": 0,
+   "rule": "bounded"
+  },
+  "arm_plan": {
+   "N": 10000,
+   "refine_m": 1,
+   "I_max": 0
+  },
+  "arm_ok": true,
+  "build_ok": true,
+  "data_ok": true,
+  "logZ_n": 64,
+  "R": 64,
+  "pair": {
+   "n_sections": 40,
+   "differing": [],
+   "grid_equal": true,
+   "twin_N": 2500,
+   "meta_diff": [
+    "N"
+   ]
+  },
+  "twin": "4-AR-n200-r01-P-N2500-m1-I0-c2-s1",
+  "twin_islands": {
+   "tasks": 64,
+   "wall_s_max": 91,
+   "billed_core_h": 5.0411,
+   "max_rss_bytes": 384856064,
+   "states": [
+    "COMPLETED"
+   ],
+   "nodes": [
+    "bb2u14c1",
+    "bb2u16c1",
+    "bb2u17c1",
+    "bb2u18c1",
+    "bb2u19c1",
+    "bb2u20c1",
+    "bb2u21c1",
+    "bb2u23c1",
+    "bb2u24c1",
+    "bb2u25c1",
+    "bb2u26c1",
+    "bb3u11c1",
+    "bb3u13c1",
+    "bb3u14c1",
+    "bb3u15c1",
+    "bb3u16c1",
+    "bb3u17c1"
+   ]
+  },
+  "twin_cost": 5.3366,
+  "twin_tasks_wall": 91
+ },
+ {
+  "rid": "4-AR-n200-r01-P-N10000-m1-c2-s1",
+  "batch": "VN_V1_1",
+  "delivered": true,
+  "sha_ok": true,
+  "one_sums": true,
+  "states": [
+   "COMPLETED"
+  ],
+  "cost": 19.3522,
+  "islands": {
+   "tasks": 64,
+   "wall_s_max": 339,
+   "billed_core_h": 18.2544,
+   "max_rss_bytes": 390819840,
+   "states": [
+    "COMPLETED"
+   ],
+   "nodes": [
+    "bb2u22c1",
+    "bb2u24c1",
+    "bb2u26c1",
+    "bb3u11c1",
+    "bb3u14c1",
+    "bb3u15c1",
+    "bb3u20c1",
+    "bb3u21c1",
+    "bb3u22c1",
+    "bb3u23c1"
+   ]
+  },
+  "klass": "vn N10000 m1 I3",
+  "soft": 31.0,
+  "hard": 51.7,
+  "arm": {
+   "N": 10000,
+   "refine_m": 1,
+   "I_max": 3,
+   "I_used": 3,
+   "rule": "bounded"
+  },
+  "arm_plan": {
+   "N": 10000,
+   "refine_m": 1,
+   "I_max": 3
+  },
+  "arm_ok": true,
+  "build_ok": true,
+  "data_ok": true,
+  "logZ_n": 64,
+  "R": 64,
+  "pair": {
+   "n_sections": 40,
+   "differing": [],
+   "grid_equal": true,
+   "twin_N": 2500,
+   "meta_diff": [
+    "N"
+   ]
+  },
+  "twin": "4-AR-n200-r01-P-N2500-m1-c2-s1",
+  "twin_islands": {
+   "tasks": 64,
+   "wall_s_max": 88,
+   "billed_core_h": 5.2167,
+   "max_rss_bytes": 291176448,
+   "states": [
+    "COMPLETED"
+   ],
+   "nodes": [
+    "bb2u25c1",
+    "bb2u26c1",
+    "bb3u11c1",
+    "bb3u12c1",
+    "bb3u13c1"
+   ]
+  },
+  "twin_cost": 6.1367,
+  "twin_tasks_wall": 88
+ },
+ {
+  "rid": "4-ARweak-n200-r01-P-N10000-m1-I0-c1-s1",
+  "batch": "VN_V1_2",
+  "delivered": true,
+  "sha_ok": true,
+  "one_sums": true,
+  "states": [
+   "COMPLETED"
+  ],
+  "cost": 13.7855,
+  "islands": {
+   "tasks": 64,
+   "wall_s_max": 235,
+   "billed_core_h": 13.3722,
+   "max_rss_bytes": 317898752,
+   "states": [
+    "COMPLETED"
+   ],
+   "nodes": [
+    "bb2u22c1",
+    "bb2u23c1",
+    "bb2u25c1",
+    "bb2u26c1",
+    "bb3u14c1",
+    "bb3u15c1",
+    "bb3u16c1",
+    "bb3u17c1"
+   ]
+  },
+  "klass": "vn N10000 m1 I0",
+  "soft": 28.6,
+  "hard": 47.6,
+  "arm": {
+   "N": 10000,
+   "refine_m": 1,
+   "I_max": 0,
+   "I_used": 0,
+   "rule": "bounded"
+  },
+  "arm_plan": {
+   "N": 10000,
+   "refine_m": 1,
+   "I_max": 0
+  },
+  "arm_ok": true,
+  "build_ok": true,
+  "data_ok": true,
+  "logZ_n": 64,
+  "R": 64,
+  "pair": {
+   "n_sections": 40,
+   "differing": [],
+   "grid_equal": true,
+   "twin_N": 2500,
+   "meta_diff": [
+    "N"
+   ]
+  },
+  "twin": "4-ARweak-n200-r01-P-N2500-m1-I0-c1-s1",
+  "twin_islands": {
+   "tasks": 64,
+   "wall_s_max": 68,
+   "billed_core_h": 3.8067,
+   "max_rss_bytes": 390889472,
+   "states": [
+    "COMPLETED"
+   ],
+   "nodes": [
+    "bb2u22c1",
+    "bb2u23c1",
+    "bb2u25c1",
+    "bb2u26c1",
+    "bb3u12c1",
+    "bb3u13c1",
+    "bb3u14c1",
+    "bb3u15c1",
+    "bb3u16c1",
+    "bb3u17c1",
+    "bb3u23c1"
+   ]
+  },
+  "twin_cost": 4.0867,
+  "twin_tasks_wall": 68
+ },
+ {
+  "rid": "4-ARweak-n200-r01-P-N10000-m1-I0-c2-s1",
+  "batch": "VN_V1_2",
+  "delivered": true,
+  "sha_ok": true,
+  "one_sums": true,
+  "states": [
+   "COMPLETED"
+  ],
+  "cost": 15.3312,
+  "islands": {
+   "tasks": 64,
+   "wall_s_max": 338,
+   "billed_core_h": 14.9556,
+   "max_rss_bytes": 392257536,
+   "states": [
+    "COMPLETED"
+   ],
+   "nodes": [
+    "bb2u13c1",
+    "bb2u24c1",
+    "bb2u25c1",
+    "bb2u26c1",
+    "bb3u15c1",
+    "bb3u16c1",
+    "bb3u17c1",
+    "bb3u19c1",
+    "bb3u20c1",
+    "bb3u21c1"
+   ]
+  },
+  "klass": "vn N10000 m1 I0",
+  "soft": 28.6,
+  "hard": 47.6,
+  "arm": {
+   "N": 10000,
+   "refine_m": 1,
+   "I_max": 0,
+   "I_used": 0,
+   "rule": "bounded"
+  },
+  "arm_plan": {
+   "N": 10000,
+   "refine_m": 1,
+   "I_max": 0
+  },
+  "arm_ok": true,
+  "build_ok": true,
+  "data_ok": true,
+  "logZ_n": 64,
+  "R": 64,
+  "pair": {
+   "n_sections": 40,
+   "differing": [],
+   "grid_equal": true,
+   "twin_N": 2500,
+   "meta_diff": [
+    "N"
+   ]
+  },
+  "twin": "4-ARweak-n200-r01-P-N2500-m1-I0-c2-s1",
+  "twin_islands": {
+   "tasks": 64,
+   "wall_s_max": 68,
+   "billed_core_h": 3.88,
+   "max_rss_bytes": 389763072,
+   "states": [
+    "COMPLETED"
+   ],
+   "nodes": [
+    "bb2u22c1",
+    "bb3u14c1",
+    "bb3u15c1",
+    "bb3u16c1",
+    "bb3u17c1",
+    "bb3u23c1",
+    "bb3u26c1",
+    "bb4u12c1",
+    "bb4u13c1",
+    "bb4u14c1"
+   ]
+  },
+  "twin_cost": 4.1312,
+  "twin_tasks_wall": 68
+ }
+]
