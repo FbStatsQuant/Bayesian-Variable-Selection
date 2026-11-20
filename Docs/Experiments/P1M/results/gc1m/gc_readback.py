@@ -4,13 +4,15 @@ gb_readback.py functions, imported UNEDITED from ../gb/), with the 1M class tabl
 
   python3 -I gc_readback.py --records ROOT [ROOT ...] --cost-dir DIR [DIR ...] --out OUTDIR [--identity gc_identity.json]
 
-1M CLASS TABLE (core-h per fit at N 2,500 unless stated; soft = max(3, 1.5E) report-and-continue, hard = max(3, 2.5E) STOP; the hard line is never re-fitted; basis: 11-17 fit 437.44 measured,
-I_max 0 saves its 135.63 calibration down to the P7 pilot island 14.96 -> 317; the rung / G-B measured the I_max 0 calibration at 2-3 % of a 10^5 fit):
-  AR-strong n200 (pilot, replicates, seeds) 317 -> 476 / 793 | ADJ-OPP n200 330 -> 495 / 825 | AR-weak n200 317 -> 476 / 793 | the N 10^4 fit (VN10K; E 775 at the 10^5 island factor 2.70) 775 -> 1,163 / 1,938 |
-  option D AR n1000 1,087 -> 1,631 / 2,718 | the N 5,000 option (VN5K) 470 -> 705 / 1,175.
-REQUESTS (GiB): setup 48, calibrate 128, islands 64, merge 128, eval 16 (option D: setup 64). KILL RULES (pilot; ENGINEERING_SPEC G-C): the calibration > 2 x its model (E 16 -> 32 core-h) or any island
- > 2 x its model (E 16.8 core-h; max task wall > 2 x 792 s) -> STOP. G-C2 PILOT PASS = C1 (<= 1.5 E = 476; the 2.5 E guard 793 is the STOP line) AND C2 (M1 <= 0.05, M2 <= 0.005, evidence within 3 s.e.,
- HPM certified, PIP agreement) AND C3 (peak RSS < request in every stage) AND C4 AND the identity gate (gc_identity.json: IDENTITY PASS) AND no kill-rule trip. HPM vs S0 (truth) is REPORTED beside it.
+1M CLASS TABLE (core-h per fit at N 2,500 unless stated; soft = max(3, 1.5E), hard = max(3, 2.5E); the hard line is never re-fitted; basis: the 11-17 fit 437.44 measured, I_max 0 replaces its 135.63
+calibration by 24 (the plan's 12-15 min at 96 CPUs; Opus G-C check) -> 15.25 + 24 + 269.25 + 16.91 + 0.4 = 326):
+  AR-strong n200 (pilot, replicates, seeds) 326 -> 489 / 815 | ADJ-OPP n200 339 -> 509 / 848 | AR-weak n200 326 -> 489 / 815 | the N 10^4 fit (VN10K; E 783 at the 10^5 island factor 2.70) 783 -> 1,175 / 1,958 |
+  option D AR n1000 1,087 -> 1,631 / 2,718 | the N 5,000 option (VN5K) 478 -> 717 / 1,195.
+REQUESTS (GiB): setup 48, calibrate 128, islands 64, merge 128, eval 16 (option D, n = 1,000: setup 64, eval 32: data.bin is 8 GB). KILL RULES (pilot; ENGINEERING_SPEC G-C): the calibration > 2 x its model (E 24 ->
+ 48 core-h, about 30 min) or any island > 2 x its model (E 16.8 core-h; max task wall > 2 x 792 s) -> STOP. G-C2 PILOT PASS = C1 (<= 1.5 E = 489; the 2.5 E guard 815 is the STOP line) AND C2 (M1 <= 0.05, M2 <= 0.005,
+ evidence within 3 s.e., HPM certified, PIP agreement) AND C3 AND C4 AND the identity gate (gc_identity.json: IDENTITY PASS) AND no kill-rule trip. HPM vs S0 (truth) is REPORTED beside it.
+C3 MEMORY (process basis; Opus G-C check): sacct MaxRSS counts page cache (the 11-17 merge read 75.1 of 80 GiB with a ~34 GiB process), so C3 FAILS only if a stage is not COMPLETED (an OUT_OF_MEMORY kill) or a
+ PROCESS peak (merge: fit.bin.json peak_rss_kb; setup: setup.bin.json peak_rss_mb) reaches its request; sacct values are reported beside it and flagged ADVISORY when >= 80 % of the request.
 """
 import argparse, glob, importlib.util, json, math, os, re, sys
 
@@ -20,9 +22,10 @@ gbr = importlib.util.module_from_spec(spec); spec.loader.exec_module(gbr)
 gbr.REQ_GIB.update({"setup": 48, "calibrate": 128, "islands": 64, "merge": 128, "eval": 16})
 
 RUN = re.compile(r"^6-(?P<d>AR|ADJOPP|ARweak)-n(?P<n>\d+)-r(?P<r>\d+)-(?P<arm>V|VN10K|VN5K)-s(?P<s>\d+)$")
-MODELS = {("AR", 200, 2500): 317, ("ADJOPP", 200, 2500): 330, ("ARweak", 200, 2500): 317, ("AR", 200, 10000): 775, ("AR", 1000, 2500): 1087, ("AR", 200, 5000): 470}
+MODELS = {("AR", 200, 2500): 326, ("ADJOPP", 200, 2500): 339, ("ARweak", 200, 2500): 326, ("AR", 200, 10000): 783, ("AR", 1000, 2500): 1087, ("AR", 200, 5000): 478}
 PILOT = "6-AR-n200-r01-V-s1"
-CAL_E, ISL_E, ISL_WALL = 16.0, 16.8, 792.0
+CAL_E, ISL_E, ISL_WALL = 24.0, 16.8, 792.0
+REQ_D = {"setup": 64, "eval": 32}          # option D (n = 1,000): setup 64 G, eval 32 G (data.bin 8 GB)
 GIB = 2 ** 30
 
 
@@ -48,12 +51,28 @@ def main(argv=None):
     for rid, (dp, ev) in sorted(runs.items()):
         r = gbr.fit_row(rid, dp, ev, costs)
         r["C1"] = c1(rid, r["recorded_arm"], r["C1"]["billed"])
-        try:
-            kb = json.load(open(os.path.join(dp, "fit.bin.json"))).get("peak_rss_kb")
-            r["C3"]["merge_process_peak_gib"] = (kb / 2 ** 20) if kb else None
-        except Exception:
-            r["C3"]["merge_process_peak_gib"] = None
         st = r["stages"]
+        g = RUN.match(rid); req = dict(gbr.REQ_GIB)
+        if g and int(g["n"]) == 1000:
+            req.update(REQ_D)
+        proc = {}
+        try:
+            proc["merge"] = json.load(open(os.path.join(dp, "fit.bin.json"))).get("peak_rss_kb", 0) / 2 ** 20 or None
+        except Exception:
+            proc["merge"] = None
+        try:
+            proc["setup"] = json.load(open(os.path.join(dp, "setup.bin.json"))).get("peak_rss_mb", 0) / 1024 or None
+        except Exception:
+            proc["setup"] = None
+        notdone = [s_ for s_, v in st.items() if v["states"] and any(x != "COMPLETED" for x in v["states"])]
+        over = [s_ for s_, v in proc.items() if v and v >= req[s_]]
+        adv = [s_ for s_, v in st.items() if v["max_rss_gib"] is not None and v["max_rss_gib"] >= 0.8 * req[s_]]
+        miss = [s_ for s_ in gbr.STAGES if s_ not in st]
+        r["C3"] = {"basis": "process peak where recorded (merge peak_rss_kb, setup peak_rss_mb), COMPLETED state elsewhere; sacct reported", "requests_gib": req, "process_peak_gib": proc, "not_completed": notdone, "process_over_request": over,
+                   "sacct_pct_of_request": {s_: (v["max_rss_gib"] / req[s_] * 100 if v["max_rss_gib"] is not None else None) for s_, v in st.items()}, "sacct_advisory": adv, "stages_missing": miss,
+                   "max_pct": max([v["max_rss_gib"] / req[s_] * 100 for s_, v in st.items() if v["max_rss_gib"] is not None] or [None]) if st else None,
+                   "merge_process_peak_gib": proc["merge"],
+                   "verdict": ("NOT_EVALUATED" if (not st or miss) else ("FAIL" if (notdone or over) else ("ADVISORY" if adv else "PASS")))}
         r["kill"] = {"calibrate_billed": (st.get("calibrate") or {}).get("billed"), "calibrate_limit_2xE": 2 * CAL_E, "max_island_wall_s": (st.get("islands") or {}).get("wall_s_max"), "island_wall_limit_2x": 2 * ISL_WALL}
         r["kill"]["trip"] = bool((r["kill"]["calibrate_billed"] or 0) > 2 * CAL_E or (r["kill"]["max_island_wall_s"] or 0) > 2 * ISL_WALL)
         rows[rid] = r

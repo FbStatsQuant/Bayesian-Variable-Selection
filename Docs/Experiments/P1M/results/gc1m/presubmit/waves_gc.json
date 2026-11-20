@@ -479,7 +479,7 @@
  },
  "GC_D": {
   "wave": "D",
-  "plan_sha256": "a049192b1493a30c86d4c1559fae62c9b34c395139fb9d6f3988cf3cb5a41d2e",
+  "plan_sha256": "b5fbb58ff9e875e39da4eb4af802f561e955901f517479f1b878937d8970aeab",
   "tasks": 20,
   "worst_case_core_h": 2636.0,
   "core_h_cap": 2636.1,

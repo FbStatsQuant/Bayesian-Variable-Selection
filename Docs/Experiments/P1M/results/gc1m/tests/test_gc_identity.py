@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
-"""Self-test of gc_identity.py on REAL records: positive control = the 11-17 1M record against itself, and the G-B 10^5 AR pair (I_max 0 fit vs its I_max 3 twin: same data, seed, setup and PILOT island,
-different grid: the same structure as the 1M pair) -> PASS; negative controls = AR r01 vs ADJ-OPP r01 (different data) -> FAIL; a mutation of a trajectory counter (pairs, mean_S), a header mismatch or a missing row -> FAIL; the accounting counters (flips, offers, ...) differ between the identical 10^5 runs and are NOT gated.
+"""Self-test of gc_identity.py on REAL records: positive controls = the 11-17 1M record against itself, the G-B 10^5 AR pair (I_max 0 fit vs its I_max 3 twin: same data, seed, setup and PILOT island,
+different grid: the same structure as the 1M pair), and the CROSS-BUILD control T5 (04d8d2b5, 11-17) vs G-B G1a (F2) at 10^5, same data and seed (PASS under the STATE-counter gate; the five
+kernel-structure counters differ, and so does the whole-file raw hash, both only reported) -> PASS; negative controls = AR r01 vs ADJ-OPP r01 (different data) -> FAIL; a mutation of a STATE counter (M, mean_S),
+a header mismatch or a missing row -> FAIL; the kernel-structure and accounting counters (pairs, flips, offers, ...) are NOT gated.
 python3 -I tests/test_gc_identity.py (scratch: PREC_TEST_TMP or here, never /tmp)"""
 import json, os, shutil, subprocess, sys, tempfile, unittest
 
@@ -40,13 +42,13 @@ class T(unittest.TestCase):
     def test_mutated_counter_and_header(self):
         if not os.path.isdir(G1A):
             self.skipTest("records not present"); return
-        for mut in ("counter", "state", "header", "rows"):
+        for mut in ("counter", "state", "header", "rows"):                      # "counter" = M, "state" = mean_S (both gated)
             d = os.path.join(self.t, "new_" + mut); os.makedirs(os.path.join(d, "cost"))
             for f in ("truth.json", "setup.bin.json", "run_manifest.json", "calib.bin.json"):
                 shutil.copy(os.path.join(G1B, f), d)
             L = open(os.path.join(G1B, "cost", "cost_pilot_t0_k0_r0.jsonl")).read().strip().split("\n")
             if mut == "counter":
-                r = json.loads(L[5]); r["pairs"] += 100000; L[5] = json.dumps(r)
+                r = json.loads(L[5]); r["M"] += 0.001; L[5] = json.dumps(r)
             elif mut == "state":
                 r = json.loads(L[7]); r["mean_S"] += 0.01; L[7] = json.dumps(r)
             elif mut == "header":
@@ -55,6 +57,34 @@ class T(unittest.TestCase):
                 L = L[:-1]
             open(os.path.join(d, "cost", "cost_pilot_t0_k0_r0.jsonl"), "w").write("\n".join(L) + "\n")
             rc, j = run(G1A, d, os.path.join(self.t, "o_" + mut)); self.assertEqual(rc, 1, mut); self.assertFalse(j["checks"]["I3_pilot_counters"], mut); self.assertTrue(j["checks"]["I1_data"] and j["checks"]["I2_setup"])
+
+    def test_kernel_and_accounting_counters_not_gated(self):
+        if not os.path.isdir(G1A):
+            self.skipTest("records not present"); return
+        d = os.path.join(self.t, "new_k"); os.makedirs(os.path.join(d, "cost"))
+        for f in ("truth.json", "setup.bin.json", "run_manifest.json"):
+            shutil.copy(os.path.join(G1B, f), d)
+        L = open(os.path.join(G1B, "cost", "cost_pilot_t0_k0_r0.jsonl")).read().strip().split("\n")
+        for i in range(1, len(L)):
+            r = json.loads(L[i]); r["pairs"] += 12345; r["passes"] += 1; r["supports"] += 1; r["flips"] += 7; L[i] = json.dumps(r)
+        open(os.path.join(d, "cost", "cost_pilot_t0_k0_r0.jsonl"), "w").write("\n".join(L) + "\n")
+        rc, j = run(G1A, d, os.path.join(self.t, "o")); self.assertEqual((rc, j["IDENTITY"]), (0, "PASS"))
+
+    def test_cross_build_t5_vs_gb(self):
+        T5G1 = os.path.join(R, "hygiene_1117/group1/runs/T5_1e5/5-AR-n200-r01-V-s1"); T5G3 = os.path.join(R, "hygiene_1117/group3/runs/T5_1e5/5-AR-n200-r01-V-s1")
+        if not (os.path.isdir(T5G1) and os.path.isdir(G1A) and os.path.isfile(os.path.join(T5G3, "setup.bin.json"))):
+            self.skipTest("records not present"); return
+        d = os.path.join(self.t, "t5"); os.makedirs(os.path.join(d, "cost"))
+        for f in ("truth.json", "run_manifest.json"):
+            shutil.copy(os.path.join(T5G1, f), d)
+        shutil.copy(os.path.join(T5G3, "setup.bin.json"), d); shutil.copy(os.path.join(T5G1, "cost", "cost_pilot_t0_k0_r0.jsonl"), os.path.join(d, "cost"))
+        rc, j = run(d, G1A, os.path.join(self.t, "o"))
+        self.assertEqual((rc, j["IDENTITY"]), (0, "PASS"), (j["checks"], j["detail"]["I3"]["differences"][:3]))
+        det = j["detail"]
+        self.assertFalse(det["I1_reported_not_gating"]["equal"])                                   # the whole-file raw hash differs across builds, and is only reported
+        kern = det["I3"]["kernel_structure_counters_reported_not_gating"]
+        self.assertTrue(all(kern[k]["rows_differing"] > 0 for k in ("passes", "pairs", "supports")))   # the rolling-admission kernel changes them: the old gate would have failed here
+        self.assertEqual(det["I3"]["n_differences"], 0)
 
     def test_accounting_counters_not_gated(self):
         if not os.path.isdir(G1A):

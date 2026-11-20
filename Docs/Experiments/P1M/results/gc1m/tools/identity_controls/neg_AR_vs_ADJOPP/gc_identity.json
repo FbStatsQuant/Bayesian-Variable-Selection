@@ -7,6 +7,13 @@
   "I3_pilot_counters": false
  },
  "detail": {
+  "I1_reported_not_gating": {
+   "raw_content_sha256": [
+    "7152ee1cdafb91acddcb279d51e35d0613cc81bcaaf85dcbb12be0176e5d1df2",
+    "3493de24a6ffe85f694af4a7c4a06662cdab23efc3cd263742473a977d3d901f"
+   ],
+   "equal": false
+  },
   "I1": {
    "X_sha256": [
     "2cdfff22a00436e3195612e8a954d3ed22875b2ba7c748617f1cb06585c29463",
@@ -16,9 +23,69 @@
     "b3b10e5d7aa7c24c59e6ac89578388917db19c48c5dfa81c884c44e991faf6b3",
     "3af103cbfbd2635ab727839e1d23150f82af1a4bedf7554df769d23c26c50e74"
    ],
-   "raw_content_sha256": [
-    "7152ee1cdafb91acddcb279d51e35d0613cc81bcaaf85dcbb12be0176e5d1df2",
-    "3493de24a6ffe85f694af4a7c4a06662cdab23efc3cd263742473a977d3d901f"
+   "generator": [
+    "smcbvs4.gen/1",
+    "smcbvs4.gen/1"
+   ],
+   "spec": [
+    {
+     "a": 1,
+     "b": 20,
+     "design": "AR",
+     "n": 200,
+     "p": 100000,
+     "rho": 0.6,
+     "s0": 5,
+     "seed": 502020001,
+     "sigma": 1
+    },
+    {
+     "a": 1,
+     "b": 20,
+     "design": "ADJ-OPP",
+     "n": 200,
+     "p": 100000,
+     "rho": 0.6,
+     "s0": 5,
+     "seed": 505020001,
+     "sigma": 1
+    }
+   ],
+   "S0": [
+    [
+     10000,
+     30000,
+     50000,
+     70000,
+     90000
+    ],
+    [
+     10000,
+     10001,
+     50000,
+     70000,
+     90000
+    ]
+   ],
+   "beta": [
+    [
+     1,
+     -0.8,
+     0.9,
+     -0.7,
+     0.6
+    ],
+    [
+     1,
+     -0.8,
+     0.9,
+     -0.7,
+     0.6
+    ]
+   ],
+   "sigma": [
+    1,
+    1
    ],
    "params.design": [
     "AR",
@@ -95,6 +162,7 @@
    ],
    "differences": [],
    "n_differences": 0,
+   "kernel_structure_counters_reported_not_gating": null,
    "accounting_counters_reported_not_gating": null,
    "sums_old": {
     "flips": 1274590695,

@@ -1,0 +1,8 @@
+# tools/competitors/ sha256 at main 43348a44 (last change 2b4d741e); recorded with the G-C plan commit, candidate freeze pending HQ (GC_PLAN §11 item 2)
+1b94f231400c8c88ffa57408a8ab406b41713e56351794292bbdd97345364709  Scripts/SMC_BVS/engine_v4/tools/competitors/ACCEPTANCE.md
+bca58343d6ad1db3082040e8d100cf151c5e76c839ebb2208b9501a32a17f096  Scripts/SMC_BVS/engine_v4/tools/competitors/competitor_packages.tsv
+1e302a51768ac0ceaf5ceaa2dfbedd88c43e5b5e3f9a55dd3ea6251452c0e040  Scripts/SMC_BVS/engine_v4/tools/competitors/install_competitor_packages.sh
+3dd3aeb7ce076c74d831176775002039bad14a00419cddac08b273ed27ad216a  Scripts/SMC_BVS/engine_v4/tools/competitors/mock_packages.R
+0efbb4d9051a35e32b186a0f63abe2ad31f09061fd3b09ca65532d5460b47096  Scripts/SMC_BVS/engine_v4/tools/competitors/p1m_competitors.R
+c1c5465d36f1ee3593d39e85b6d362502ae2f822b944037aadde06cd595e2ba0  Scripts/SMC_BVS/engine_v4/tools/competitors/test_competitors.sh
+ebc1d1b57a1db700829d651da4f2ade992187daf84cd31e962c92e8bb5082712  Scripts/SMC_BVS/engine_v4/tools/competitors/test_install_script.sh

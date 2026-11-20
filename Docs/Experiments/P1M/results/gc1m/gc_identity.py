@@ -5,25 +5,31 @@ RECORDS (the 11-17 setup / calib / island files are gone from NOTS scratch; its 
   python3 -I gc_identity.py --old ~/SMC_Engineering_Department/records/F1M_pilot --new <records/gc1m/GC_P/6-AR-n200-r01-V-s1> --out OUTDIR
 
 GATING checks (IDENTITY PASS iff all three hold; a failure = STOP, HQ + Theory: the pair would not be a pure grid contrast):
-  I1 data     truth.json X_sha256, y_sha256, raw_content_sha256 equal; run_manifest params design, signal, p, n, data_seed, seed, Rp equal.
+  I1 data     truth.json X_sha256, y_sha256 (the content hashes of X and y), generator, spec, S0, beta, sigma equal; run_manifest params design, signal, p, n, data_seed, seed, Rp equal.
+              REPORTED, NOT GATED: raw_content_sha256 = the hash of the whole raw.bin FILE, whose meta section embeds the binary's provenance (gen.cpp: "data identity (independent of the binary block in
+              meta): the section hashes of X_cm and y"): it differs between builds on identical data (P7 vs the 11-17 fit; T5 vs G-B) and would give a certain false FAIL.
   I2 setup    setup.bin.json B, B_blocks, C, J, mode_size, n, p, partition, file_mode equal (the file hash is NOT compared: it carries the binary's provenance).
   I3 pilot    cost/cost_pilot_t0_k0_r0.jsonl (the calibration PILOT island, role R_PILOT, N 512, G 256): header G, N, arith, iter, kernel, m, p, r, role, schema, segment, tier, tile equal, the same number
-              of rows, and EVERY row equal on the trajectory-determined counters DET: M, act_cols, act_cols_per_pass, kind, mean_S, particle_rounds, passes, pairs, phi, segment, slow_supports, step,
-              store_mean_k, store_size, supports, sweeps (pairs = (support, label) pairs scored, mean_S and store_mean_k are state statistics: the same values in all 34 rows = the same pilot trajectory).
-              NOT gated (reported with their row counts and max relative differences): the ACCOUNTING counters flips, flips_per_step, offers, dup_dropped, merges: control runs at 10^5 (the same pilot run in
-              two fits of the same seed and data, F2 both; `tools/identity_controls/`) differ in them (flips by <= 0.3 % per row, offers and dup_dropped by <= 7 %, merges by 1-2 events) although every DET counter is equal, so they depend on execution order; timing and memory keys (t_*, wall, hwm_kb, rss_kb) are ignored.
+              of rows, and EVERY row equal on the STATE counters GATE: M, mean_S, phi, sweeps, particle_rounds, store_size, store_mean_k, slow_supports, kind, step, segment (the sampler's state and
+              schedule after each stage: equal in 34 of 34 rows in every control, including the CROSS-BUILD control T5 (04d8d2b5) vs G-B (F2) at 10^5, same data and seed).
+              NOT gated (reported with row counts and max relative differences): (a) the KERNEL-STRUCTURE counters passes, act_cols, act_cols_per_pass, pairs, supports: the rolling-admission kernel
+              (WP6 K5, default on in F2, absent at 2cfaa9e5) changes the pass composition and the per-pass support dedup by design (T5 vs G-B: 160 differences, every one in these five); (b) the ACCOUNTING
+              counters flips, flips_per_step, offers, dup_dropped, merges, which vary between identical same-build runs (flips <= 0.3 % per row, offers and dup_dropped <= 7 %, merges by 1-2 events;
+              `tools/identity_controls/`); timing and memory keys (t_*, wall, hwm_kb, rss_kb) are ignored.
 REPORTED (not gating): I4 the new final-island stage count T (island_1.bin.json; expected 27 = the 11-17 final and diagnostic islands' bridge stages) and the arms (I_max 3 -> 0, I_used), binary shas.
 """
 import argparse, json, math, os, sys
 
 TIMING = ("wall", "hwm_kb", "rss_kb")
-# trajectory-determined counters (GATING): equal in EVERY control pair of the 10^5 records (same seed, data, setup; I_max 0 vs I_max 3 fits and the N 2,500 twin); the ACCOUNTING counters below vary between
-# repeated identical runs (execution-order dependent: flips, flips_per_step, offers, dup_dropped, merges) and are only REPORTED, never gated
-DET = ("M", "act_cols", "act_cols_per_pass", "kind", "mean_S", "particle_rounds", "passes", "pairs", "phi", "segment", "slow_supports", "step", "store_mean_k", "store_size", "supports", "sweeps")
-ACCOUNTING = ("flips", "flips_per_step", "offers", "dup_dropped", "merges")
+# STATE counters (GATING): equal in EVERY control pair of the 10^5 records, same-build (I_max 0 vs I_max 3 fits, the N 2,500 twin) and cross-build (T5 04d8d2b5 vs G-B F2). The KERNEL-structure and ACCOUNTING
+# counters below differ across builds / runs by design or by execution order and are only REPORTED, never gated
+DET = ("M", "kind", "mean_S", "particle_rounds", "phi", "segment", "slow_supports", "step", "store_mean_k", "store_size", "sweeps")                 # STATE counters: GATED
+KERNEL = ("passes", "act_cols", "act_cols_per_pass", "pairs", "supports")                                                                           # kernel structure (rolling admission): reported
+ACCOUNTING = ("flips", "flips_per_step", "offers", "dup_dropped", "merges")                                                                          # execution-order accounting: reported
 HDR = ("G", "N", "arith", "iter", "kernel", "m", "p", "r", "role", "schema", "segment", "tier", "tile")
 RUNP = ("design", "signal", "p", "n", "data_seed", "seed", "Rp")
 SETUP = ("B", "B_blocks", "C", "J", "mode_size", "n", "p", "partition", "file_mode")
+TRUTH = ("X_sha256", "y_sha256", "generator", "spec", "S0", "beta", "sigma")
 
 
 def jl(p):
@@ -46,7 +52,8 @@ def main(argv=None):
     rep = {"old": a.old, "new": a.new, "checks": {}, "detail": {}}
     try:
         to, tn = jl(os.path.join(a.old, "truth.json")), jl(os.path.join(a.new, "truth.json"))
-        d = {k: (to.get(k), tn.get(k)) for k in ("X_sha256", "y_sha256", "raw_content_sha256")}
+        d = {k: (to.get(k), tn.get(k)) for k in TRUTH}
+        rep["detail"]["I1_reported_not_gating"] = {"raw_content_sha256": (to.get("raw_content_sha256"), tn.get("raw_content_sha256")), "equal": to.get("raw_content_sha256") == tn.get("raw_content_sha256")}
         po, pn = jl(os.path.join(a.old, "run_manifest.json"))["params"], jl(os.path.join(a.new, "run_manifest.json"))["params"]
         d.update({"params." + k: (po.get(k), pn.get(k)) for k in RUNP})
         rep["detail"]["I1"] = d; rep["checks"]["I1_data"] = all(v[0] is not None and v[0] == v[1] for v in d.values())
@@ -72,8 +79,11 @@ def main(argv=None):
                     same = (vx == vy) or (isinstance(vx, float) and isinstance(vy, float) and math.isnan(vx) and math.isnan(vy)) or (vx == "NaN" and vy == "NaN")
                     if not same:
                         bad.append((i, k, vx, vy))
-        acc = {k: {"rows_differing": sum(1 for x, y in zip(ro, rn) if x.get(k) != y.get(k)), "max_rel_diff": max([abs(x[k] - y[k]) / max(abs(x[k]), 1e-300) for x, y in zip(ro, rn) if x.get(k) and isinstance(x.get(k), (int, float)) and isinstance(y.get(k), (int, float))] or [0.0])} for k in ACCOUNTING} if n_ok else None
-        rep["detail"]["I3"] = {"header_equal": hdr_ok, "rows": [len(ro), len(rn)], "differences": bad[:10], "n_differences": len(bad), "accounting_counters_reported_not_gating": acc,
+        def rel(keys):
+            return {k: {"rows_differing": sum(1 for x, y in zip(ro, rn) if x.get(k) != y.get(k)), "max_rel_diff": max([abs(x[k] - y[k]) / max(abs(x[k]), 1e-300) for x, y in zip(ro, rn) if x.get(k) and isinstance(x.get(k), (int, float)) and isinstance(y.get(k), (int, float))] or [0.0])} for k in keys} if n_ok else None
+        kern = rel(KERNEL)
+        acc = rel(ACCOUNTING)
+        rep["detail"]["I3"] = {"header_equal": hdr_ok, "rows": [len(ro), len(rn)], "differences": bad[:10], "n_differences": len(bad), "kernel_structure_counters_reported_not_gating": kern, "accounting_counters_reported_not_gating": acc,
                                "sums_old": {k: sum(r[k] for r in ro) for k in ("flips", "offers", "pairs")}, "sums_new": {k: sum(r[k] for r in rn) for k in ("flips", "offers", "pairs")}}
         rep["checks"]["I3_pilot_counters"] = bool(hdr_ok and n_ok and not bad)
     except Exception as e:

@@ -29,7 +29,8 @@ STD = shape()
 N10K = shape(isl=("96", "64G", "01:30:00"))
 # option D (n = 1,000; HQ H-44 released): the correlation pass dominates setup and does not scale with threads (WP2 count-only at 10^6: 4,069 s at 3 threads for n = 1,000, 897 s for n = 200; the 11-17 setup at 48 threads took 780 s for
 # n = 200), so 48 CPUs for <= 1:45 (billed ~55 core-h, not 96 CPUs); islands at 2-3.4x the n = 200 wall (13 min) get 1:30; every task <= 2 h
-OPTD = shape(setup=("48", "64G", "01:45:00"), cal=("96", "128G", "02:00:00"), isl=("96", "64G", "01:30:00"))
+# eval at n = 1,000 reads an 8 GB data.bin (1.6 GB at n = 200): 32 G (Opus G-C check; memory is not billed)
+OPTD = shape(setup=("48", "64G", "01:45:00"), cal=("96", "128G", "02:00:00"), isl=("96", "64G", "01:30:00"), ev=("8", "32G", "01:00:00"))
 
 
 def main():

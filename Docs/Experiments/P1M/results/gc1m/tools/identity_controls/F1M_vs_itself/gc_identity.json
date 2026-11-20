@@ -7,6 +7,13 @@
   "I3_pilot_counters": true
  },
  "detail": {
+  "I1_reported_not_gating": {
+   "raw_content_sha256": [
+    "2e8550beeddf93e9d8b0bba6a0ce3f70035092290fc434cce479da1bcdb86944",
+    "2e8550beeddf93e9d8b0bba6a0ce3f70035092290fc434cce479da1bcdb86944"
+   ],
+   "equal": true
+  },
   "I1": {
    "X_sha256": [
     "5174f8b3b56ff0de567bf3248151dc8e6c99e668cdf0c971474e6d74f446cb50",
@@ -16,9 +23,69 @@
     "9b0c866ceb06c4b8dd5085cbf5dd9950a0d5f3598edf6650bad30414ecd71993",
     "9b0c866ceb06c4b8dd5085cbf5dd9950a0d5f3598edf6650bad30414ecd71993"
    ],
-   "raw_content_sha256": [
-    "2e8550beeddf93e9d8b0bba6a0ce3f70035092290fc434cce479da1bcdb86944",
-    "2e8550beeddf93e9d8b0bba6a0ce3f70035092290fc434cce479da1bcdb86944"
+   "generator": [
+    "smcbvs4.gen/1",
+    "smcbvs4.gen/1"
+   ],
+   "spec": [
+    {
+     "a": 1,
+     "b": 20,
+     "design": "AR",
+     "n": 200,
+     "p": 1000000,
+     "rho": 0.6,
+     "s0": 5,
+     "seed": 602020001,
+     "sigma": 1
+    },
+    {
+     "a": 1,
+     "b": 20,
+     "design": "AR",
+     "n": 200,
+     "p": 1000000,
+     "rho": 0.6,
+     "s0": 5,
+     "seed": 602020001,
+     "sigma": 1
+    }
+   ],
+   "S0": [
+    [
+     100000,
+     300000,
+     500000,
+     700000,
+     900000
+    ],
+    [
+     100000,
+     300000,
+     500000,
+     700000,
+     900000
+    ]
+   ],
+   "beta": [
+    [
+     1,
+     -0.8,
+     0.9,
+     -0.7,
+     0.6
+    ],
+    [
+     1,
+     -0.8,
+     0.9,
+     -0.7,
+     0.6
+    ]
+   ],
+   "sigma": [
+    1,
+    1
    ],
    "params.design": [
     "AR",
@@ -95,6 +162,28 @@
    ],
    "differences": [],
    "n_differences": 0,
+   "kernel_structure_counters_reported_not_gating": {
+    "passes": {
+     "rows_differing": 0,
+     "max_rel_diff": 0.0
+    },
+    "act_cols": {
+     "rows_differing": 0,
+     "max_rel_diff": 0.0
+    },
+    "act_cols_per_pass": {
+     "rows_differing": 0,
+     "max_rel_diff": 0.0
+    },
+    "pairs": {
+     "rows_differing": 0,
+     "max_rel_diff": 0.0
+    },
+    "supports": {
+     "rows_differing": 0,
+     "max_rel_diff": 0.0
+    }
+   },
    "accounting_counters_reported_not_gating": {
     "flips": {
      "rows_differing": 0,
