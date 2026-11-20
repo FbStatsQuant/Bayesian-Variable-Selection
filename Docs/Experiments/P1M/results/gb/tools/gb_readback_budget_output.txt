@@ -1,0 +1,8 @@
+G-B set measured 297.65 (quote 501: 59%) ; closed after G-B 2984.56
+islands billed N 10^4: AR I0 73.51 / I3 71.12 ; T5 (N 2,500, I3, same data and seed, T 30) 28.10 -> implied f = 2.53 (I3 pair) ; quote used f 3.768 (islands 105.9)
+10^5 rung N 10^4 I_max 0, 12 fits at measured unit costs: 895 ; remaining 10 after the two pilots: 753 (P90 ~ 1130) [GB_PLAN quote: 1,360 / 1,119]
+continuity twins (N 2,500, I_max 0), ESTIMATE with the implied f 2.53: AR 31.9 + ADJ-OPP 27.9 = 60 (HQ ~60; GB_PLAN 67)
+position before 1M 3798
+(b) 21 frozen fits     1M items 9854 ; position 13651 (48.2%) ; +25% on the unspent 1M items 16115 (56.9%) ; + H-34 seeds 19986 / 24034 (70.6% / 84.9%)
+(a)/(c) 22 frozen fits 1M items 10171 ; position 13968 (49.4%) ; +25% on the unspent 1M items 16511 (58.3%) ; + H-34 seeds 19986 / 24034 (70.6% / 84.9%)
+if the 10^5 island factor (2.53) held at 1M: the ONE N 10^4 1M fit = 729 instead of 1062 (not measured at 1M; not used)

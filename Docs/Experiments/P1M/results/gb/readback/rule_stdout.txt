@@ -1,0 +1,31 @@
+{
+ "outcome": "PASS",
+ "N": 10000,
+ "datasets": [
+  "ADJOPP",
+  "AR"
+ ],
+ "ratios": {
+  "M1": 1.0065749778158206,
+  "M2": 0.9272132133692718,
+  "M3": 0.903816801923827
+ },
+ "per_dataset": {
+  "M1": {
+   "ADJOPP": 1.012032057915553,
+   "AR": 1.0011473233879153
+  },
+  "M2": {
+   "ADJOPP": 0.8933274171147948,
+   "AR": 0.9623843694658416
+  },
+  "M3": {
+   "ADJOPP": 0.8910041311357876,
+   "AR": 0.9168137193690771
+  }
+ },
+ "hpm_identical": true,
+ "form": "n=2 datasets x 1 replicate(s): registered two bars",
+ "reason": null,
+ "script_sha256": "76927ae2faadc095e9353050eae3ef626ad439d88b92a7bf7cb9f313dab91012"
+}
