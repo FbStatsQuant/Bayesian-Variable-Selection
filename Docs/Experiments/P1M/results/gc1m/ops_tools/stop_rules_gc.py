@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""stop_rules_gc.py <probe.txt> --wave P --plans <dir with GC_P/plan.resolved.json> --deploy-log deploy_gc.log [options]
-1M PILOT GC_P ALONE (GC_PLAN §2-§3, GC_PREREG §4-§5, HQ H-45; derived from the rung's stop_rules_rung.py, which is untouched). One probe of gc_monitor_probe.sh. Read-only. Stdlib only.
+"""stop_rules_gc.py <probe.txt> --wave P|D --plans <dir with GC_P/plan.resolved.json> --deploy-log deploy_gc.log [options]
+1M PILOT GC_P (wave P) and OPTION D GC_D (wave D, HQ H-46), each ALONE (GC_PLAN §2-§3, GC_PREREG §4-§5.1, HQ H-45 / H-46; derived from the rung's stop_rules_rung.py, which is untouched). One probe of gc_monitor_probe.sh. Read-only. Stdlib only.
 Exit 0 = no stop rule, 3 = STOP, 4 = PROBE ERROR (the rules were not fully evaluated). The pilot is `6-AR-n200-r01-V-s1` (1M, F2, N 2,500, m 1, I_max 0, R' 16), ONE batch, 20 tasks. Rules (every number committed):
   per fit soft  cost > 489 (1.5 x E 326, the C1 line)  -> REPORT-and-continue (3 soft trips would STOP; one fit cannot)
-  per fit hard  cost > 815 (2.5 x E; K3, pinned, never re-fitted) -> STOP
-  K1            the calibrate task billed > 48 core-h (2 x its model 24; ~30 min of elapsed time) -> STOP
-  K2            an island task whose elapsed time > 2 x 792 s = 1,584 s WHILE THE OTHER ISLANDS HAVE FINISHED (no other island row non-terminal), or whose billed time > 2 x 16.8 = 33.6 core-h -> STOP
+  per fit hard  cost > 815 (2.5 x E; K3, pinned, never re-fitted; option D 2,718, soft 1,631) -> STOP
+  K1            the calibrate task billed > 48 core-h (pilot: 2 x its model 24; ~30 min); option D: billed > 70 core-h OR elapsed > 45 min -> STOP
+  K2            an island task whose elapsed time > 1,584 s (pilot: 2 x 792 s; option D: > 3,600 s = 60 min) WHILE THE OTHER ISLANDS HAVE FINISHED (no other island row non-terminal); pilot only: billed > 33.6 core-h -> STOP
                 (an island running > 1,584 s while others still run is an INFO, not yet K2)
-  wave line     wave actual > 2 x the quote (325 -> 650): HALTS SUBMISSION ONLY (a one-fit wave: nothing more to submit; the per-fit lines govern): printed as `FLAG WAVE LINE`, no stop
+  wave line     wave actual > 2 x the quote (pilot 325 -> 650; option D 1,087 -> 2,174): HALTS SUBMISSION ONLY (a one-fit wave: nothing more to submit; the per-fit lines govern): printed as `FLAG WAVE LINE`, no stop
   cumulative    new spend of the S2 fits (this wave + --prior) > 14,500 -> STOP (the projection ceiling 28,300 is evaluated from the second wave on, not here)
-  failures      FAILED / TIMEOUT / OUT_OF_MEMORY / CANCELLED stage (NODE_FAIL, BOOT_FAIL = INFO) -> STOP
+  failures      FAILED / TIMEOUT / OUT_OF_MEMORY / CANCELLED stage (NODE_FAIL, BOOT_FAIL = INFO) -> STOP. Memory is judged on the job STATE only (OOM = OUT_OF_MEMORY); sacct MaxRSS near a request is page cache, not a stop (not even read here)
   admission     engine resource_limit / admission / OUTCOME record; pending reason QOS / Assoc / MaxSubmit / Invalid / Limit (own jobs only) -> STOP
   arm identity  the fit's recorded arm (calib_meta.json, else calib.bin.json settings): N 2,500, refine_m 1, I_max 0, rule bounded != the plan's -> STOP; FLAG: I_max 0 and cost_diag files exist
   data identity truth.json X / y sha256 == the 11-17 rep-1 record (F1M_pilot: X 5174f8b3..., y 9b0c866c..., gc_refs.json)                           -> STOP
@@ -30,12 +30,13 @@ TABLE = {
     "gc1m AR n1000 N2500 I0 (option D)": (1087.0, 1631.0, 2718.0),
 }
 TABLE_SHA256 = "e03175982c557efe6128a0d77f41c33f24831789d7cbac6ac75e7483a3ec0474"
-WAVES = {"P": ["GC_P"]}
-QUOTE = {"P": 325.0}
-WAVE_LINE = {"P": 650.0}                                   # 2 x quote: halts submission only
+WAVES = {"P": ["GC_P"], "D": ["GC_D"]}
+QUOTE = {"P": 325.0, "D": 1087.0}
+WAVE_LINE = {"P": 650.0, "D": 2174.0}                       # 2 x quote: halts submission only (a one-fit wave)
 CUM_STOP = 14500.0
-K1_CALIB_BILLED = 48.0                                      # 2 x 24
-K2_ISLAND_S, K2_ISLAND_BILLED = 1584.0, 33.6                # 2 x 792 s; 2 x 16.8 core-h
+# kill rules per wave (GC_PREREG §4 pilot; §5.1 option D): K1 = calibrate billed core-h and (D) elapsed seconds; K2 = island elapsed seconds while the others have finished, and (pilot) billed core-h
+K1 = {"P": (48.0, None), "D": (70.0, 2700.0)}               # pilot: 2 x 24 core-h; D: > 70 core-h OR > 45 min
+K2 = {"P": (1584.0, 33.6), "D": (3600.0, None)}             # pilot: 2 x 792 s, 2 x 16.8 core-h; D: > 60 min
 INFRA, PEND_BAD = {"NODE_FAIL", "BOOT_FAIL"}, re.compile(r"QOS|Assoc|MaxSubmit|Invalid|Limit", re.I)
 TERMINAL = {"COMPLETED", "FAILED", "TIMEOUT", "OUT_OF_MEMORY", "CANCELLED", "NODE_FAIL", "BOOT_FAIL", "DEADLINE", "PREEMPTED", "REVOKED"}
 BAD = {"FAILED", "TIMEOUT", "OUT_OF_MEMORY", "CANCELLED", "DEADLINE", "PREEMPTED", "REVOKED", "SUSPENDED"}
@@ -207,17 +208,20 @@ def main():
     proj = spent; pnote = "projection ceiling 28,300 not evaluated for the pilot alone"
     # K1 / K2 (GC_PREREG §4): the calibrate task and the island tasks, from the sacct rows of our own jobs
     isl_rows = [r for r in gc_rows if "islands" in r[1]]
+    k1b, k1s = K1.get(a.wave, (None, None)); k2s, k2b = K2.get(a.wave, (None, None))
     for jid, name, s0, el, billed in gc_rows:
-        if name.endswith("calibrate") and billed > K1_CALIB_BILLED:
-            flags.append("STOP K1: calibrate task %s billed %.1f core-h > %.0f (2 x its model 24; elapsed %d s, state %s)" % (jid, billed, K1_CALIB_BILLED, el, s0))
+        if name.endswith("calibrate") and k1b is not None and billed > k1b:
+            flags.append("STOP K1: calibrate task %s billed %.1f core-h > %.0f (elapsed %d s, state %s)" % (jid, billed, k1b, el, s0))
+        elif name.endswith("calibrate") and k1s is not None and el > k1s:
+            flags.append("STOP K1: calibrate task %s elapsed %d s > %d s = %d min (billed %.1f core-h, state %s)" % (jid, el, k1s, k1s // 60, billed, s0))
     for jid, name, s0, el, billed in isl_rows:
         others_done = all(r[2] in TERMINAL for r in isl_rows if r[0] != jid and "[" not in r[0])
-        if billed > K2_ISLAND_BILLED:
-            flags.append("STOP K2: island task %s billed %.1f core-h > %.1f (2 x 16.8; elapsed %d s, state %s)" % (jid, billed, K2_ISLAND_BILLED, el, s0))
-        elif el > K2_ISLAND_S and others_done and not any("[" in r[0] for r in isl_rows):
-            flags.append("STOP K2: island task %s elapsed %d s > %d s (2 x 792 s) while the other islands have finished (state %s)" % (jid, el, K2_ISLAND_S, s0))
-        elif el > K2_ISLAND_S:
-            infos.append("INFO island task %s elapsed %d s > %d s (2 x 792 s) while others still run: K2 fires only when the others have finished" % (jid, el, K2_ISLAND_S))
+        if k2b is not None and billed > k2b:
+            flags.append("STOP K2: island task %s billed %.1f core-h > %.1f (elapsed %d s, state %s)" % (jid, billed, k2b, el, s0))
+        elif k2s is not None and el > k2s and others_done and not any("[" in r[0] for r in isl_rows):
+            flags.append("STOP K2: island task %s elapsed %d s > %d s while the other islands have finished (state %s)" % (jid, el, k2s, s0))
+        elif k2s is not None and el > k2s:
+            infos.append("INFO island task %s elapsed %d s > %d s while others still run: K2 fires only when the others have finished" % (jid, el, k2s))
     if bad_stage:
         flags.append("STOP non-infrastructure failed stage(s): " + "; ".join(bad_stage))
     failed = {k for k, s in state.items() if s & BAD}

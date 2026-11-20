@@ -81,4 +81,59 @@ rc, o = run(p3); check("re-fetched probe -> INFO probe transport", rc == 0 and "
 src = open(os.path.join(HERE, "stop_rules_gc.py")).read().replace('"gc1m AR n200 N2500 I0": (326.0, 489.0, 815.0)', '"gc1m AR n200 N2500 I0": (326.0, 4890.0, 8150.0)'); alt = os.path.join(TMP, "stop_rules_gc_altered.py"); open(alt, "w").write(src)
 r = subprocess.run([sys.executable, alt, probe(), "--wave", "P", "--plans", PLANS, "--deploy-log", LOG, "--ref-hashes", os.path.join(STG, "gc_refs.json")], capture_output=True, text=True)
 check("an altered class table -> STOP (pinned sha256)", r.returncode == 3 and "class table in this script was altered" in r.stdout, r.stdout)
+
+# ===================== option D (wave D: GC_D = 6-AR-n1000-r01-V-s1, quote 1,087, soft 1,631, hard 2,718, wave line 2,174; K1 calibrate > 70 core-h OR > 45 min; K2 island > 60 min while the others have finished) =====================
+RIDD = "6-AR-n1000-r01-V-s1"
+def probeD(cost=None, states=None, calib=None, xy=("a" * 64, "b" * 64), binsha=F2SHA, dbin=F2SHA, squeue=(), engine=(), extra=(), diag=(0, 0), islT=27, isl_el=None, isl_state=None, cal_el=600):
+    c = dict(setup=55.0, calibrate=40.0, islands=40.0, merge=22.0, eval=1.0); c.update(cost or {}); st = dict(states or {})
+    L = ["### META utc=2026-11-23T11:00:00Z", "### SUBMISSIONS GC_D"]; jobs = dict(setup=400, calibrate=401, islands=402, merge=403, eval=404)
+    for stg, j in jobs.items(): L.append(json.dumps({"stage": stg, "fit": "all" if stg in ("setup", "calibrate") else RIDD, "job": str(j), "submitted_utc": "x"}))
+    L += ["### SQUEUE"] + list(squeue) + ["### SACCT"]
+    lim = dict(setup="01:45:00", calibrate="02:00:00", islands="01:30:00", merge="01:30:00", eval="01:00:00")
+    for stg in ("setup", "calibrate", "merge", "eval"):
+        L.append("%d_1|p1m_GC_D_%s|%s|%d|96|%d|%s|fb31" % (jobs[stg], stg, st.get(stg, "COMPLETED"), cal_el if stg == "calibrate" else 900, int(c[stg] * 3600), lim[stg]))
+    for i in range(1, 17):
+        L.append("%d_%d|p1m_GC_D_islands|%s|%d|96|%d|%s|fb31" % (jobs["islands"], i, (isl_state or {}).get(i, st.get("islands", "COMPLETED")), (isl_el or {}).get(i, 1500), int(c["islands"] * 3600), lim["islands"]))
+    L += list(extra)
+    L += ["### DATA_HASH", "GC_D|%s|c|%s|%s|%s" % (RIDD, xy[0], xy[1], dbin)]
+    rec = {"N": 2500, "refine_m": 1, "I_max": 0, "I_used": 0, "rule": "bounded", "source": "calib.bin.json settings", "status": "completed", "cal_status": "ok"}; rec.update(calib or {})
+    L += ["### CALIB", "GC_D|%s|%s" % (RIDD, json.dumps(rec)), "### ISLAND_T", "GC_D|%s|%d" % (RIDD, islT), "### DIAG", "GC_D|%s|%d|%d" % (RIDD, *diag), "### BINSHA", "GC_D|%s" % binsha, "### ENGINE_FLAGS"] + list(engine)
+    p = os.path.join(TMP, "probe_GC_D.txt"); open(p, "w").write("\n".join(L) + "\n"); return p
+def runD(pth, *extra):
+    r = subprocess.run([sys.executable, os.path.join(HERE, "stop_rules_gc.py"), pth, "--wave", "D", "--plans", PLANS, "--deploy-log", LOG, "--ref-hashes", os.path.join(STG, "gc_refs.json")] + list(extra), capture_output=True, text=True)
+    return r.returncode, r.stdout + r.stderr
+rc, o = runD(probeD()); check("D healthy (758): no stop, ENDED, class option D, quote 1,087 -> wave line 2,174, arm identity 1 fit", rc == 0 and "no stop rule fired" in o and "WAVE STATE: ENDED" in o and "option D" in o and "quote 1087 -> wave line 2174" in o and "arm identity checked on 1 fits" in o, o)
+rc, o = runD(probeD(cost=dict(islands=75.0))); check("D soft: total 1,278 < 1,631: no trip", rc == 0 and "SOFT TRIP" not in o, o)
+rc, o = runD(probeD(cost=dict(islands=106.0))); check("D soft trip: total 1,771? (55+40+16x106+22+1 = 1,814) > 1,631 -> SOFT TRIP, exit 0, below hard 2,718", rc == 0 and "SOFT TRIP" in o and "STOP" not in o.replace("STOP SUBMITTING", ""), o)
+rc, o = runD(probeD(cost=dict(islands=170.0))); check("D hard: total 2,838 > 2,718 -> STOP (K3)", rc == 3 and "HARD 2718" in o, o)
+rc, o = runD(probeD(cost=dict(islands=160.0))); check("D: 2,678 <= 2,718: soft trip and wave line, no stop", rc == 0 and "SOFT TRIP" in o and "FLAG WAVE LINE" in o, o)
+rc, o = runD(probeD(cost=dict(islands=130.0))); check("D wave line: 2,198 > 2,174 -> FLAG WAVE LINE (halts submission only), exit 0", rc == 0 and "FLAG WAVE LINE" in o and "STOP" not in o.replace("STOP SUBMITTING", ""), o)
+rc, o = runD(probeD(cost=dict(calibrate=70.0))); check("D K1: calibrate billed 70.0 (not > 70): no stop", rc == 0 and "K1" not in o, o)
+rc, o = runD(probeD(cost=dict(calibrate=70.5))); check("D K1: calibrate billed 70.5 > 70 -> STOP", rc == 3 and "STOP K1" in o, o)
+rc, o = runD(probeD(cal_el=2700)); check("D K1: calibrate elapsed 2,700 s = 45 min (not >): no stop", rc == 0 and "K1" not in o, o)
+rc, o = runD(probeD(cal_el=2701)); check("D K1: calibrate elapsed 2,701 s > 45 min -> STOP", rc == 3 and "STOP K1" in o and "45 min" in o, o)
+rc, o = runD(probeD(states=dict(calibrate="RUNNING"), cal_el=2800)); check("D K1: a RUNNING calibrate beyond 45 min -> STOP", rc == 3 and "STOP K1" in o, o)
+rc, o = runD(probeD(isl_el={4: 3600})); check("D K2: island at exactly 3,600 s: no stop", rc == 0 and "K2" not in o, o)
+rc, o = runD(probeD(isl_el={4: 3601})); check("D K2: island 3,601 s > 60 min while the others have finished -> STOP", rc == 3 and "STOP K2" in o, o)
+rc, o = runD(probeD(isl_el={4: 3700}, isl_state={5: "RUNNING"})); check("D: island > 60 min while another island still runs -> INFO only", rc == 0 and "INFO island task" in o and "STOP K2" not in o, o)
+rc, o = runD(probeD(isl_el={4: 1700})); check("D: island 1,700 s (> the pilot's 1,584 s but < 60 min): no K2 at D's own model", rc == 0 and "K2" not in o, o)
+rc, o = runD(probeD(cost=dict(islands=40.0), isl_el={4: 1700})); check("D: the pilot's billed K2 line (33.6) does NOT apply to D (island billed 40)", rc == 0, o)
+rc, o = runD(probeD(states=dict(merge="OUT_OF_MEMORY"))); check("D memory: state OUT_OF_MEMORY -> STOP", rc == 3 and "OUT_OF_MEMORY" in o, o)
+rc, o = runD(probeD(extra=["403_1|p1m_GC_D_merge|COMPLETED|900|32|115200|01:30:00|fb31"])); check("D: no OOM, sacct near the request is not read: no stop", rc == 0, o)
+rc, o = runD(probeD(states=dict(calibrate="FAILED"))); check("D FAILED stage -> STOP", rc == 3 and "failed stage" in o, o)
+rc, o = runD(probeD(states=dict(islands="TIMEOUT"))); check("D TIMEOUT -> STOP", rc == 3, o)
+rc, o = runD(probeD(calib={"N": 10000})); check("D arm: N 10,000 -> STOP", rc == 3 and "ARM IDENTITY" in o, o)
+rc, o = runD(probeD(calib={"I_max": 3})); check("D arm: I_max 3 -> STOP", rc == 3 and "ARM IDENTITY" in o, o)
+rc, o = runD(probeD(calib={"refine_m": 4})); check("D arm: refine_m 4 -> STOP", rc == 3, o)
+rc, o = runD(probeD(binsha=OTHER)); check("D build identity -> STOP", rc == 3 and "BUILD IDENTITY" in o, o)
+rc, o = runD(probeD(dbin=OTHER)); check("D recorded binary sha -> STOP", rc == 3 and "BUILD IDENTITY" in o, o)
+rc, o = runD(probeD(diag=(0, 2))); check("D I_max 0 with cost_diag files -> FLAG", rc == 0 and "FLAG behaviour" in o, o)
+rc, o = runD(probeD(engine=["/x/OUTCOME"])); check("D OUTCOME -> STOP", rc == 3, o)
+rc, o = runD(probeD(squeue=["400_1|p1m_GC_D_setup|PENDING|QOSMaxCpuPerUserLimit|0:00|48"])); check("D own job with a QOS reason -> STOP", rc == 3 and "QOS" in o, o)
+rc, o = runD(probeD(extra=["400_4|cmds_rmsd.list.sh|FAILED|10|2|20|12:00:00|cg160"])); check("D foreign rows: one INFO, no stop", rc == 0 and "INFO 1 foreign" in o, o)
+rc, o = runD(probeD(isl_state={7: "PENDING"})); check("D island PENDING -> WAVE STATE RUNNING", "WAVE STATE: RUNNING" in o, o)
+rc, o = runD(probeD(islT=26)); check("D T != 27 -> INFO", rc == 0 and "INFO final-island stage count" in o, o)
+_td = open(probeD()).read(); _pd = os.path.join(TMP, "p_D_trunc.txt"); open(_pd, "w").write(_td.split("### DATA_HASH")[0] + "### REMOTE_RC\n255\n### REMOTE_STDERR\n")
+rc, o = runD(_pd); check("D truncated probe -> PROBE ERROR, exit 4", rc == 4 and "PROBE ERROR" in o, o)
+rc, o = run(probeD()); check("the pilot wave P does not read the D batch (no GC_P rows): no crash", rc in (0, 3, 4), o)
 print("\n%d passed, %d failed" % (ok, fail)); sys.exit(1 if fail else 0)

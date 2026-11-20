@@ -41,3 +41,19 @@ Normal pending reasons (Dependency, Priority, Resources, None, BeginTime) are no
 - No second connection, no `scancel`, no `sbatch`, no `rm`, no `chmod`, no editing of any script on NOTS or Owls. Do not "fix" a failure; a TIMEOUT is a STOP (report, never resubmit bigger).
 - Do not read or print job output files in bulk; a log tail only on the manager's request (one `ssh nots 'tail -n 40 <file>'`).
 - No statistics (HPM, PIPs, M1–M3): out of scope.
+
+---
+
+# WAVE D: option D (HQ H-46) — the same rulebook, with these differences
+**Batch `GC_D`**: ONE fit **`6-AR-n1000-r01-V-s1`** (AR-strong, **n = 1,000**, p = 10⁶, data seed = engine seed 602100001, F2 `da0cf85b…`, N 2,500, `refine_m` 1, I_max 0, R′ 16), 20 tasks, run ALONE. Probe: `cd /home/fb31/SMC_Engineering_Department/staging/gc1m && bash tools/gc_monitor_probe.sh D` (no MAKE_CALIB_META). Expected wall **≈ 3 h** (queue excluded): setup ≈ 55–70 min at 48 CPUs (limit 1:45; the correlation pass does not scale with threads), calibrate ≈ 30–60 min (limit 2:00), 16 islands (96 CPUs each, 1,536 CPUs together) ≈ 25–60 min each (limit 1:30), merge ≈ 22–30 min, eval ≈ 1–5 min. **Probe every 15–20 min (at most one per 5 min); every 10 min during calibrate and islands.**
+| rule | wave D |
+|---|---|
+| model / quote | E 1,087 (plan value; bottom-up ≈ 490–1,060); quote **1,087** |
+| soft / hard (K3) | **1,631** (`SOFT TRIP`: report ≤ 3 lines, continue) / **2,718** (STOP) |
+| wave line | **2,174** (2 × the quote): `FLAG WAVE LINE`, halts submission only, report ≤ 3 lines, not a stop |
+| **K1** | the calibrate task billed **> 70 core-h OR elapsed > 45 min (2,700 s)** → STOP (a RUNNING calibrate counts) |
+| **K2** | an island task elapsed **> 60 min (3,600 s) while the other islands have finished** → STOP (while others still run: INFO only; the pilot's 1,584 s / 33.6 core-h lines do NOT apply to D) |
+| identity | recorded arm N 2,500, `refine_m` 1, I_max 0, rule bounded (`calib.bin.json`); build = BUILD_F2 `da0cf85b5fe01497…`; `truth.json` X / y are a NEW dataset (no reference hash: reported, not compared) |
+| memory | **judge OOM only on the job STATE `OUT_OF_MEMORY`** (STOP). sacct MaxRSS close to a request (merge 128 G, calibrate 128 G, islands 64 G) is page cache: INFO at most, never a stop; the probe does not even read it |
+| end report extras | the calibrate task's elapsed time and billed core-h; setup wall and billed core-h; island min / mean / max elapsed and billed; merge wall; eval wall; fit total vs 1,087 / 1,631 / 2,718 |
+The other lines (failures, admission, foreign sacct rows, PROBE ERROR exit 4, WAVE STATE) are as for the pilot above. The class table is pinned in the script by sha256 `e0317598…` (it already carries the option D line 1,087 / 1,631 / 2,718).

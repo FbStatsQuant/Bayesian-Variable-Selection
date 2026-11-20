@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# gc_deploy_wave.sh <WAVE P> <SCRIPTS_SRC> -- 1M pilot GC_P (GC_PLAN §2.1): COPYBIN ONLY of the ONE F2 binary (BUILD_F2 in deploy_gc.log); NO build, NEVER submits.
+# gc_deploy_wave.sh <WAVE P|D> <SCRIPTS_SRC> -- 1M pilot GC_P (GC_PLAN §2.1): COPYBIN ONLY of the ONE F2 binary (BUILD_F2 in deploy_gc.log); NO build, NEVER submits.
 # Steps: local SHA256SUMS ok and plan checks (code_commit == F2, island_isa sapphirerapids, the explicit N / refine_m 1 / I_max in every fit's params) -> home guard (<= 7,900)
 # -> refuse an already submitted batch (explicit EXISTS / FRESH) -> mkdir on NOTS -> rsync the driver files (no bin / code / build) -> sha256sum -c ON NOTS
 # -> master binary scripts/VN_ID_1/bin/smcbvs4 must equal the BUILD_F2 sha -> `cp -p` into every batch's bin/ -> sha256 recomputed == BUILD_F2 -> `version` (env.sh sourced)
 # git_commit == e993ece2.., sapphirerapids, libm pass -> one COPYBIN line per batch in deploy_gc.log (UTC, batch, COPYBIN, sha256, git, isa, libm, home MB, who).
 set -euo pipefail; . "$(dirname "$0")/common.sh"
-WAVE=${1:?WAVE}; SRC=${2:?SCRIPTS_SRC}; [[ $WAVE =~ ^P$ ]] || { echo "bad wave" >&2; exit 64; }
+WAVE=${1:?WAVE}; SRC=${2:?SCRIPTS_SRC}; [[ $WAVE =~ ^[PD]$ ]] || { echo "bad wave" >&2; exit 64; }
 BL=${BATCHES:-$(batches_of "$SRC" "$WAVE")}; [[ -n $BL ]] || { echo "no batches the batches of wave $WAVE in $SRC" >&2; exit 64; }
 SHA=$(f2_sha); [[ -n $SHA ]] || { echo "REFUSING: no BUILD_F2 line in $LOG" >&2; exit 65; }
 for B in $BL; do
@@ -17,7 +17,8 @@ p = json.load(open(d + "/plan.resolved.json"))
 assert p["code_commit"] == f2 and p["batch"] == b and p["island_isa"] == "sapphirerapids" and not p.get("warnings"), "plan header"
 for f in p["fits"]:
     pr = f.get("params") or {}
-    assert f["run_id"] == "6-AR-n200-r01-V-s1" and f["N"] == 2500 and pr.get("refine_m") == 1 and pr.get("I_max") == 0 and f["Rp"] == 16 and f.get("seed") == 602020001, "fit %s: N 2500 / refine_m 1 / I_max 0 / R' 16 / seed 602020001 not explicit in the plan" % f["run_id"]
+    want = {"GC_P": ("6-AR-n200-r01-V-s1", 200, 602020001), "GC_D": ("6-AR-n1000-r01-V-s1", 1000, 602100001)}[b]
+    assert f["run_id"] == want[0] and f["N"] == 2500 and pr.get("refine_m") == 1 and pr.get("I_max") == 0 and f["Rp"] == 16 and f.get("seed") == want[2] and f.get("data_seed") == want[2] and f.get("n") == want[1] and f.get("p") == 1000000 and f.get("design") == "AR" and f.get("mode") == "V", "fit %s: N 2500 / refine_m 1 / I_max 0 / R' 16 / seed / n / p / design not as the plan in the plan" % f["run_id"]
     for st in ("calibrate", "island", "merge"):
         m = json.load(open("%s/manifests/%s/%s.json" % (d, f["run_id"], st)))["params"]
         assert (m.get("N"), m.get("refine_m"), m.get("I_max")) == (f["N"], 1, pr["I_max"]), "fit %s %s manifest params %s" % (f["run_id"], st, m)
