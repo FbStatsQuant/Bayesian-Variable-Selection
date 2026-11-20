@@ -12,6 +12,10 @@ for w in order[:order.index(a.wave) + 1]:
     for b in WAVES[w]:
         for f in sorted(glob.glob(os.path.join(a.records, b, "_batch_%s" % b, "cost", "cost_5-*.json"))):
             j = json.load(open(f)); k = ("T6:" if b == "RG_T6" else "") + j["run_id"]; prior[k] = prior.get(k, 0.0) + j["billed_core_h"]; src.append(f)
+        if b == "RG_T6":   # p1m_cost.py maps no per-run record for the T6 job (its stage is not a fit stage): the whole batch is the T6 task, cost_batch.json billed
+            f = os.path.join(a.records, b, "_batch_%s" % b, "cost", "cost_batch.json")
+            if os.path.exists(f) and not any(k.startswith("T6:") for k in prior):
+                j = json.load(open(f)); prior["T6:5-AR-n200-r01-V-s1"] = float(j["billed_core_h"]); src.append(f)
 if not prior: sys.exit("no cost records under %s up to %s" % (a.records, a.wave))
 out = a.out or os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "prior_after_%s.json" % a.wave)
 json.dump({k: round(v, 2) for k, v in prior.items()}, open(out, "w"), indent=1); open(out, "a").write("\n"); open(out + ".sources", "w").write("\n".join(src) + "\n")

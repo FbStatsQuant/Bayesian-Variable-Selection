@@ -36,7 +36,8 @@ for b in $BL; do
             echo "$f"
           done | nice -n 19 xargs -r sha256sum > OFFLOAD_FILES.sha256 )
   done
-  ( cd "$R"; { ls -1 submissions.jsonl starts.jsonl ends.jsonl sacct_dump.txt bin_version.json 2>/dev/null; } | nice -n 19 xargs -r sha256sum > _batch_files.sha256 )
+  # (the T6 batch has no starts.jsonl: under pipefail the ls status killed the script, hence the || true)
+  ( cd "$R"; { ls -1 submissions.jsonl starts.jsonl ends.jsonl sacct_dump.txt bin_version.json 2>/dev/null || true; } | nice -n 19 xargs -r sha256sum > _batch_files.sha256 )
   { ( cd "$S"; find . -type f ! -path './code/*' ! -path './build*' ! -path './bin/*' ! -name 'SHA256SUMS' | sed 's#^\./#scripts/#' | sort ); echo "scripts/bin/smcbvs4.sha256"; [[ -f $S/bin/COPIED_FROM ]] && echo "scripts/bin/COPIED_FROM"; true; } > "$R/_batch_extra.list"
   ls "$D"/scratch/slurm_out/p1m_${b}_* 2>/dev/null | sed "s#^$D/scratch/#scratch/#" >> "$R/_batch_extra.list" || true
   echo "$b: $(ls -d "$R"/*/ | wc -l) run dirs listed; $(wc -l < "$R/_batch_extra.list") batch extras"
