@@ -10,3 +10,6 @@
 ## G1 (AR pair), 2026-11-20
 - Deploy (COPYBIN, no build): GB_G1a / GB_G1b `bin/smcbvs4` sha256 == BUILD_F2, git e993ece2, sapphirerapids, libm pass; presubmit rc 0, home 6,716 MB (guard 7,900), run dirs fresh, queue empty.
 - Submit `GO=yes gb_submit_wave.sh G1`: **GB_G1a 02:19:28Z**: setup 2805653, calibrate 2805654, islands 2805655, merge 2805656, eval 2805657.
+- Pilot gate (GB_PLAN §2.2) at 02:24:2xZ: **GATE OK**, setup 0.53 ≤ 0.82, calibrate 1.51 ≤ 2.20 core-h, both COMPLETED (E 0.41 / 1.1).
+- **GB_G1b 02:24:29Z** (the I_max 3 twin): setup 2805961, calibrate 2805962, islands 2805963, merge 2805964, eval 2805965.
+- Monitor START G1 sent (queue) after batch a: quote 226, stop > 450, no PRIOR, MAKE_CALIB_META=1; the probe reports "batch not submitted yet" (WAVE STATE RUNNING) until b is out. Standing order: at G1 ENDED (clean) → collect G1, `gb_write_prior.py G1`, release G2 (quote 275, stop > 550, PRIOR prior_after_G1.json), one line to the manager.
