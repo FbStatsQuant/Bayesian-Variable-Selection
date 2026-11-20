@@ -1,21 +1,28 @@
-P7 pilot island core-h 14.96
-10^5 AR n200 N2500: I3 39.9 (T5 incl isa_check 42.1)  I0 30.4  saving 9.5
-N=1e4 factor on 10^5 fit (I0) 3.64 -> I0 110.5 I3 120.0
-R'=64 extension per fit (N2500) +85.9; pair +171.7
-rung 12 fits I0 N2500: E 382  P90 568 ; remaining 11 (pilot is rung fit 1): E 352 ; at I3 +114
-rung N=1e4 I0: E 1389 P90 2065; remaining 11: 1279
-1M N2500: I3 437 (measured)  I0 317 (cal 15 instead of 136: saving 121)
-1M N1e4: I0 1084  I3 1205
-1M self-check N5000 I0 586
-option D (n=1000) I0 N2500: 1087
-(b) 19 reps frozen (reps 2-20)     N2500 I0: {'AR': 6019, 'ADJ': 317, 'weak': 317, 'self': 586, 'D': 1087, 'ca': 474}  total 8799 ; +25% cont. on everything 10999
-(a) re-run rep 1: 20 reps          N2500 I0: {'AR': 6335, 'ADJ': 317, 'weak': 317, 'self': 586, 'D': 1087, 'ca': 474}  total 9116 ; +25% cont. on everything 11395
-(c) (b)+21st rep: 20 reps          N2500 I0: {'AR': 6335, 'ADJ': 317, 'weak': 317, 'self': 586, 'D': 1087, 'ca': 474}  total 9116 ; +25% cont. on everything 11395
-closed 2450.4 (ledger 2,041 includes 55.09 of the 462.48 leg: no double count) 
-after mini-leg: 2894 (P90 2964, cap 3054)
-G-B pair E 70 -> 2965
-G-B pair + ADJ-OPP pair (I0 37 + I3 49) E 157
-after rung (E): 3316 ; P90-ish 3527
-(b): after 1M (base) 12116 ; with 25% cont. on the 1M block 14315 ; vs 28,300
-(a)/(c): after 1M (base) 12432 ; with 25% cont. on the 1M block 14711 ; vs 28,300
-N*=1e4: pair 230 ; rung rem 1279 ; position before 1M 4404 ; available 23896 ; fits at 1084 each: 22.0 (no reserve), 17.6 (25% reserve)
+== 10^5 fits (E): AR n200 | ADJ-OPP n200
+N  2500 I_max 0: AR 30.4  ADJ-OPP 36.9
+N  2500 I_max 3: AR 39.9  ADJ-OPP 46.5
+N 10000 I_max 0: AR 108.2  ADJ-OPP 133.0
+N 10000 I_max 3: AR 117.7  ADJ-OPP 142.5
+G-B set at N 10^4: AR pair 226 (108.2 + 117.7) ; ADJ-OPP pair 275 (133.0 + 142.5) ; set 501
+   the +49 approved at N 2,500 (ADJ-OPP I_max 3 twin) = 46.5 ; at N 10^4 it is 142.5
+   net of rung (the I_max 0 fits are rung fits): twins only 260
+rung 12 fits N10^4 I0: E 1360 (P90 ~1938); the 2 pilots are rung fits (AR r01, ADJ-OPP r01) -> remaining 10: 1119 (P90 ~1697)
+FAIL branch rung (N 2500, I3) 12 fits: 495 (all new; the N 10^4 fits are reported only)
+continuity twins (AR r01 + ADJ-OPP r01 at N 2,500): I_max 0 67 ; (I_max 3 would be 86, not used)
+1M per fit: N2500 I0 317 (I3 437 measured) ; N 10^4 I0 1062 ; N 5000 I0 586
+option D (n=1000, x3.43) I0 N2500 1087 ; ablations+competitors (plan values) 1052
+closed 2686.91, remaining 25613
+H-34 20 seeds on ONE 1M dataset (N 2500, I0): 6335 (HQ: ~6.4k)
+(b) rep 1 separate: 21 frozen fits (19 AR + ADJ + weak)    1M block 6652 ; + one N10^4 fit 1062 + D 1087 + comp 1052 = 9853
+(a)/(c) 22 frozen fits                                     1M block 6969 ; + one N10^4 fit 1062 + D 1087 + comp 1052 = 10170
+(b) seeds=False: position 14228 (50.3%) ; reserve 25% on the unspent 1M items: 16691 (59.0%)
+(b) seeds=True: position 20563 (72.7%) ; reserve 25% on the unspent 1M items: 24610 (87.0%)
+(a) seeds=False: position 14544 (51.4%) ; reserve 25% on the unspent 1M items: 17087 (60.4%)
+(a) seeds=True: position 20563 (72.7%) ; reserve 25% on the unspent 1M items: 24610 (87.0%)
+FAIL branch: G-B set 501 + rung 495 + 1M block 12455 (21 x 437 + self-check 707 + D 1510 + comp 1052) -> position 16138 (57.0%); +25% on unspent: 19501; + H-34 20 seeds at I3 8749 -> 30437
+class model AR pilot I0        E  108  soft 162.0  hard 270.0
+class model AR twin I3         E  118  soft 177.0  hard 295.0
+class model ADJ pilot I0       E  133  soft 199.5  hard 332.5
+class model ADJ twin I3        E  142  soft 213.0  hard 355.0
+class model cont AR I0 N2500   E   30  soft  45.0  hard  75.0
+class model cont ADJ I0 N2500  E   37  soft  55.5  hard  92.5

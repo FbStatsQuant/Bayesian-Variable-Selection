@@ -1,70 +1,80 @@
 #!/usr/bin/env python3
-"""GB_PLAN quote arithmetic (stdlib; all inputs are MEASURED figures quoted in the plan, estimates labelled). python3 -I gb_quote.py"""
-# --- measured bases
-T5 = dict(setup=0.41, cal=10.56, isl=28.10, isa=2.21, merge=0.74, ev=0.07)         # results/T5_1e5.md, N 2500, R' 16, I3
-M1 = dict(setup=15.25, cal=135.63, isl=269.25, merge=16.91, ev=0.40)                  # results/F1M_PILOT_FIT.md, I3
-P7_pilot_island = 96 * (9 * 60 + 21) / 3600.0                                        # P7: calibration pilot island, 96 CPU x 9:21
-cal_I0_10_5 = 0.10 * T5["cal"]                                                        # PREREG/FZ: I_max=0 calibration = 0.10 x I3 (measured at 10^4)
-NF = 3.85                                                                             # N 10^4 / N 2500 island ratio, Owls same-machine (VN_MINILEG_NOTE §1), ONE datum
-print("P7 pilot island core-h %.2f" % P7_pilot_island)
-# --- 10^5 fit, AR n200, N 2500
-I3_5 = T5["setup"] + T5["cal"] + T5["isl"] + T5["merge"] + T5["ev"]
-I0_5 = T5["setup"] + cal_I0_10_5 + T5["isl"] + T5["merge"] + T5["ev"]
-print("10^5 AR n200 N2500: I3 %.1f (T5 incl isa_check %.1f)  I0 %.1f  saving %.1f" % (I3_5, I3_5 + T5["isa"], I0_5, I3_5 - I0_5))
-isl_share = T5["isl"] / I0_5
-f_N = (1 - isl_share) + isl_share * NF
-print("N=1e4 factor on 10^5 fit (I0) %.2f -> I0 %.1f I3 %.1f" % (f_N, I0_5 * f_N, (I3_5 - I0_5) + I0_5 * f_N))
-# R'=64 extension of one fit: +48 islands (+ merge x3.1)
-ext = 48 * T5["isl"] / 16 + T5["merge"] * (0.3 + 0.7 * 4 - 1)
-print("R'=64 extension per fit (N2500) +%.1f; pair +%.1f" % (ext, 2 * ext))
-# ADJ-OPP, IND factors from the committed 10^4 class table (E n200: AR 2.18, ADJ 2.69, IND 2.30)
-fa, fi = 2.69 / 2.18, 2.30 / 2.18
-# 10^5 rung, 12 fits, N 2500, I0 (E): n400 factor 1.0 (10^4 measured 0.77x; plan model 1.6x for P90)
-rung_E = 5 * I0_5 + 3 * I0_5 * 1.0 + 2 * I0_5 * fi + 2 * I0_5 * fa
-rung_P90 = (5 * I0_5 + 3 * I0_5 * 1.6 + 2 * I0_5 * fi + 2 * I0_5 * fa) * 1.30
-rung_rem = rung_E - I0_5
-print("rung 12 fits I0 N2500: E %.0f  P90 %.0f ; remaining 11 (pilot is rung fit 1): E %.0f ; at I3 +%.0f" % (rung_E, rung_P90, rung_rem, 12 * (I3_5 - I0_5)))
-print("rung N=1e4 I0: E %.0f P90 %.0f; remaining 11: %.0f" % (rung_E * f_N, rung_P90 * f_N, rung_rem * f_N))
-# --- 1M per fit
-cal_I0_1m = P7_pilot_island  # grid built from the pilot island; ~ the pilot island itself (measured), + small
-others = M1["setup"] + M1["merge"] + M1["ev"]
-I3_1 = sum(M1.values())
-I0_1 = others + cal_I0_1m + M1["isl"]
-print("1M N2500: I3 %.0f (measured)  I0 %.0f (cal %.0f instead of %.0f: saving %.0f)" % (I3_1, I0_1, cal_I0_1m, M1["cal"], I3_1 - I0_1))
-I0_1N = others + cal_I0_1m + M1["isl"] * NF
-I3_1N = others + M1["cal"] + M1["isl"] * NF
-print("1M N1e4: I0 %.0f  I3 %.0f" % (I0_1N, I3_1N))
-sc_I0 = others + cal_I0_1m + 2 * M1["isl"]
-print("1M self-check N5000 I0 %.0f" % sc_I0)
-D_ratio = 1510 / 440.0
-print("option D (n=1000) I0 N2500: %.0f" % (I0_1 * D_ratio))
-# --- block totals (N2500, I0)
-def block(u, n_reps_run, extra_rep, selfcheck, D, ca):
-    fits = n_reps_run + extra_rep
-    return dict(AR=fits * u, ADJ=u, weak=u, self=selfcheck, D=D, ca=ca)
-ca_I0 = 450 * I0_1 / 440 + 150
-for name, reps in (("(b) 19 reps frozen (reps 2-20)", 19), ("(a) re-run rep 1: 20 reps", 20), ("(c) (b)+21st rep: 20 reps", 20)):
-    b = block(I0_1, reps, 0, sc_I0, I0_1 * D_ratio, ca_I0)
-    tot = sum(b.values())
-    print("%-34s N2500 I0: %s  total %.0f ; +25%% cont. on everything %.0f" % (name, {k: round(v) for k, v in b.items()}, tot, tot * 1.25))
-# --- envelope position
-closed_ledger_1119 = 2041.0; leg_in_ledger = 55.09; leg_total = 462.48; ident = 1.99
-closed = closed_ledger_1119 - leg_in_ledger + leg_total + ident
-print("closed %.1f (ledger 2,041 includes 55.09 of the 462.48 leg: no double count) " % closed)
-ml, ml90, ml_cap, adj_r04 = 440.0, 510.0, 600.0, 4.0
-pos_pre = closed + ml + adj_r04
-print("after mini-leg: %.0f (P90 %.0f, cap %.0f)" % (pos_pre, closed + ml90 + adj_r04, closed + ml_cap + adj_r04))
-pair = I0_5 + I3_5
-print("G-B pair E %.0f -> %.0f" % (pair, pos_pre + pair))
-print("G-B pair + ADJ-OPP pair (I0 %.0f + I3 %.0f) E %.0f" % (I0_5 * fa, I3_5 * fa, pair * (1 + fa)))
-pos_rung = pos_pre + pair + rung_rem
-print("after rung (E): %.0f ; P90-ish %.0f" % (pos_rung, pos_pre + pair * 1.35 + rung_P90 - I0_5))
-for name, reps in (("(b)", 19), ("(a)/(c)", 20)):
-    b = block(I0_1, reps, 0, sc_I0, I0_1 * D_ratio, ca_I0); t = sum(b.values())
-    print("%s: after 1M (base) %.0f ; with 25%% cont. on the 1M block %.0f ; vs 28,300" % (name, pos_rung + t, pos_rung + t * 1.25))
-# N* = 1e4 capacity
-pair_N = (I0_5 + I3_5 - I0_5 * 0 ) * 0 + (I0_5 * f_N + (I3_5 - I0_5) + I0_5 * f_N)
-rung_remN = rung_rem * f_N
-posN = pos_pre + pair_N + rung_remN
-avail = 28300 - posN
-print("N*=1e4: pair %.0f ; rung rem %.0f ; position before 1M %.0f ; available %.0f ; fits at %.0f each: %.1f (no reserve), %.1f (25%% reserve)" % (pair_N, rung_remN, posN, avail, I0_1N, avail / I0_1N, avail / 1.25 / I0_1N))
+"""GB_PLAN (final) quote arithmetic. stdlib; inputs are MEASURED figures quoted in the plan (estimates labelled). python3 -I gb_quote.py
+v2 (2026-11-20): N* = 10^4 with the MEASURED island factor f = 3.768 (mean billed, 12 mini-leg pairs, MINILEG_READBACK T4); closed 2,686.91 (MINILEG_READBACK section 5)."""
+T5 = dict(setup=0.41, cal=10.56, isl=28.10, isa=2.21, merge=0.74, ev=0.07)        # results/T5_1e5.md (N 2,500, R' 16, I_max 3)
+M1M = dict(setup=15.25, cal=135.63, isl=269.25, merge=16.91, ev=0.40)             # results/F1M_PILOT_FIT.md
+P7_PILOT_ISLAND = 96 * (9 * 60 + 21) / 3600.0                                      # 14.96
+F = 3.768
+CAL0 = 0.10 * T5["cal"]                                                            # I_max 0 calibration (10^4: x0.10)
+MERGE_N = 0.80                                                                     # merge slightly up with N (10^4: non-island residual 0.36 -> 0.55 at R' 64)
+ADJ = 2.69 / 2.18                                                                  # committed 10^4 class ratio ADJ-OPP / AR
+IND = 2.30 / 2.18
+
+
+def fit5(N, I, f=1.0):
+    isl = T5["isl"] * (F if N == 10000 else 1.0) * f
+    return T5["setup"] + (CAL0 if I == 0 else T5["cal"]) + isl + (MERGE_N if N == 10000 else T5["merge"]) + T5["ev"]
+
+
+def adj(N, I):      # ADJ-OPP: islands x ADJ, the rest as AR
+    return fit5(N, I) + T5["isl"] * (F if N == 10000 else 1.0) * (ADJ - 1)
+
+
+print("== 10^5 fits (E): AR n200 | ADJ-OPP n200")
+for N in (2500, 10000):
+    for I in (0, 3):
+        print("N %5d I_max %d: AR %.1f  ADJ-OPP %.1f" % (N, I, fit5(N, I), adj(N, I)))
+pilotA, twinA, pilotD, twinD = fit5(10000, 0), fit5(10000, 3), adj(10000, 0), adj(10000, 3)
+print("G-B set at N 10^4: AR pair %.0f (%.1f + %.1f) ; ADJ-OPP pair %.0f (%.1f + %.1f) ; set %.0f" % (pilotA + twinA, pilotA, twinA, pilotD + twinD, pilotD, twinD, pilotA + twinA + pilotD + twinD))
+print("   the +49 approved at N 2,500 (ADJ-OPP I_max 3 twin) = %.1f ; at N 10^4 it is %.1f" % (adj(2500, 3), twinD))
+print("   net of rung (the I_max 0 fits are rung fits): twins only %.0f" % (twinA + twinD))
+# rung at N 10^4, I_max 0 (E): AR n200 x5, AR n400 x3 (1.0x; P90 1.6x on islands), IND x2, ADJ-OPP x2
+isl = T5["isl"] * F
+rungE = 5 * fit5(10000, 0) + 3 * fit5(10000, 0) + 2 * (fit5(10000, 0) + isl * (IND - 1)) + 2 * adj(10000, 0)
+rungP = (5 * fit5(10000, 0) + 3 * (fit5(10000, 0) + 0.6 * isl) + 2 * (fit5(10000, 0) + isl * (IND - 1)) + 2 * adj(10000, 0)) * 1.25
+rem = rungE - pilotA - pilotD
+print("rung 12 fits N10^4 I0: E %.0f (P90 ~%.0f); the 2 pilots are rung fits (AR r01, ADJ-OPP r01) -> remaining 10: %.0f (P90 ~%.0f)" % (rungE, rungP, rem, rungP - pilotA - pilotD))
+# FAIL branch: config (N 2500, I_max 3) = the I_max-3 verdict KEEP: rung 12 fits at N 2,500 I3
+rungF = 5 * fit5(2500, 3) + 3 * fit5(2500, 3) + 2 * (fit5(2500, 3) + T5["isl"] * (IND - 1)) + 2 * adj(2500, 3)
+print("FAIL branch rung (N 2500, I3) 12 fits: %.0f (all new; the N 10^4 fits are reported only)" % rungF)
+# continuity twins: 2 fits at 10^5 N 2,500 on the same data + seeds as AR r01 and ADJ-OPP r01
+ct0, ct3 = fit5(2500, 0) + adj(2500, 0), fit5(2500, 3) + adj(2500, 3)
+print("continuity twins (AR r01 + ADJ-OPP r01 at N 2,500): I_max 0 %.0f ; (I_max 3 would be %.0f, not used)" % (ct0, ct3))
+# 1M per fit
+others = M1M["setup"] + M1M["merge"] + M1M["ev"]
+u0 = others + P7_PILOT_ISLAND + M1M["isl"]; u3 = sum(M1M.values()); u0N = others + P7_PILOT_ISLAND + M1M["isl"] * F
+print("1M per fit: N2500 I0 %.0f (I3 %.0f measured) ; N 10^4 I0 %.0f ; N 5000 I0 %.0f" % (u0, u3, u0N, others + P7_PILOT_ISLAND + M1M["isl"] * 2))
+Dr = 1510 / 440.0
+D0 = u0 * Dr
+ca = 482 + 400 + 170.0                                                            # ablations + competitors (all rungs) + 1M competitors: plan values, as MINILEG vn_budget (unchanged, not re-costed)
+print("option D (n=1000, x3.43) I0 N2500 %.0f ; ablations+competitors (plan values) %.0f" % (D0, ca))
+# envelope
+closed = 2686.91; ENV = 28300.0
+print("closed %.2f, remaining %.0f" % (closed, ENV - closed))
+seeds20 = 20 * u0
+print("H-34 20 seeds on ONE 1M dataset (N 2500, I0): %.0f (HQ: ~6.4k)" % seeds20)
+for lab, reps in (("(b) rep 1 separate: 21 frozen fits (19 AR + ADJ + weak)", 21), ("(a)/(c) 22 frozen fits", 22)):
+    blk = reps * u0
+    s2 = blk + u0N + D0 + ca
+    print("%-58s 1M block %.0f ; + one N10^4 fit %.0f + D %.0f + comp %.0f = %.0f" % (lab, blk, u0N, D0, ca, s2))
+def pos(reps, with_seeds, branch="PASS"):
+    gb = pilotA + twinA + pilotD + twinD
+    r = rem
+    cont = ct0
+    blk = reps * u0 + u0N + D0 + ca
+    seeds = seeds20 - (u0 if reps >= 22 else 0) if with_seeds else 0   # under (a) seed 1 of the block IS the rep-1 re-run
+    return closed + gb + r + cont + blk + seeds, closed + gb + r + cont + (blk + seeds) * 1.25 - 0
+for reps, lab in ((21, "(b)"), (22, "(a)")):
+    for ws in (False, True):
+        e, e25 = pos(reps, ws)
+        print("%s seeds=%s: position %.0f (%.1f%%) ; reserve 25%% on the unspent 1M items: %.0f (%.1f%%)" % (lab, ws, e, 100 * e / ENV, e25, 100 * e25 / ENV))
+# FAIL branch totals (I3 at N 2500; KEEP row; N 5000 self-check)
+u3b = u3; sc3 = others + M1M["cal"] + M1M["isl"] * 2; D3 = 1510.0; ca3 = ca
+gbF = pilotA + twinA + pilotD + twinD
+blkF = 21 * u3b + sc3 + D3 + ca3
+posF = closed + gbF + rungF + blkF
+print("FAIL branch: G-B set %.0f + rung %.0f + 1M block %.0f (21 x %.0f + self-check %.0f + D %.0f + comp %.0f) -> position %.0f (%.1f%%); +25%% on unspent: %.0f; + H-34 20 seeds at I3 %.0f -> %.0f" % (gbF, rungF, blkF, u3b, sc3, D3, ca3, posF, 100 * posF / ENV, closed + (gbF + rungF + blkF) * 1.25, 20 * u3b, closed + (gbF + rungF + blkF + 20 * u3b) * 1.25))
+# stops
+for nm, E in (("AR pilot I0", pilotA), ("AR twin I3", twinA), ("ADJ pilot I0", pilotD), ("ADJ twin I3", twinD), ("cont AR I0 N2500", fit5(2500, 0)), ("cont ADJ I0 N2500", adj(2500, 0))):
+    Ec = round(E)
+    print("class model %-18s E %4d  soft %5.1f  hard %5.1f" % (nm, Ec, 1.5 * Ec, 2.5 * Ec))

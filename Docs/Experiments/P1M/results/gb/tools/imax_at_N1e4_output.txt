@@ -1,0 +1,35 @@
+{
+ "outcome": "PASS",
+ "N": 10000,
+ "datasets": [
+  "ADJOPP",
+  "AR",
+  "ARweak"
+ ],
+ "ratios": {
+  "M1": 1.0425642475418035,
+  "M2": 1.0274486232878814,
+  "M3": 0.9475802012099921
+ },
+ "per_dataset": {
+  "M1": {
+   "ADJOPP": 1.0695889515931347,
+   "AR": 1.0126901904101153,
+   "ARweak": 1.0462006166493036
+  },
+  "M2": {
+   "ADJOPP": 0.8760014502189707,
+   "AR": 1.0379016258332148,
+   "ARweak": 1.192941992254908
+  },
+  "M3": {
+   "ADJOPP": 0.954932749974501,
+   "AR": 0.8615600039665048,
+   "ARweak": 1.034164478064844
+  }
+ },
+ "hpm_identical": true,
+ "form": "n=3 datasets x 2 replicate(s): registered two bars",
+ "reason": null,
+ "script_sha256": "76927ae2faadc095e9353050eae3ef626ad439d88b92a7bf7cb9f313dab91012"
+}
