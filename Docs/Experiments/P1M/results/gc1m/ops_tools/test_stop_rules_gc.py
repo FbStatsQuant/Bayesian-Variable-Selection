@@ -158,4 +158,19 @@ rc, o = runD2(probeD2(states=dict(calibrate="OUT_OF_MEMORY")), "--prior", PD); c
 rc, o = runD2(probeD2(), "--prior", PD); check("D2 job names p1m_GC_D2_* are accepted (not foreign)", "foreign" not in o, o)
 _s = open(probeD2()).read().replace("### SQUEUE", "### SSTAT\n2817052_1.batch|23606760K|2-22:25:13\n### SQUEUE"); _ps = os.path.join(TMP, "p_sstat.txt"); open(_ps, "w").write(_s)
 rc, o = runD2(_ps, "--prior", PD); check("an SSTAT section is printed as an INFO progress line", rc == 0 and "INFO progress (sstat) 2817052_1.batch: MaxRSS 23606760K, AveCPU 2-22:25:13" in o, o)
+
+# ===================== option B (resume from the finished setup on the SAME batch GC_D; the lost setup + its cancelled dependants are --ignore-jobs) =====================
+OLD = ["2817052", "2817053", "2817054", "2817055", "2817056"]
+_old_rows = ["2817052_1|p1m_GC_D_setup|TIMEOUT|6307|48|302736|01:45:00|fb31", "2817053_1|p1m_GC_D_calibrate|CANCELLED|0|0|0|02:00:00|fb31", "2817054_[1-16%16]|p1m_GC_D_islands|CANCELLED|0|0|0|01:30:00|fb31", "2817055|p1m_GC_D_merge|CANCELLED|0|0|0|01:30:00|fb31", "2817056|p1m_GC_D_eval|CANCELLED|0|0|0|01:00:00|fb31"]
+def probeB(**kw):
+    s = open(probeD(**kw)).read()
+    sub = "### SUBMISSIONS GC_D\n" + "\n".join(json.dumps({"stage": st, "fit": "all" if st in ("setup", "calibrate") else RIDD, "job": j, "submitted_utc": "x"}) for st, j in zip(("setup", "calibrate", "islands", "merge", "eval"), OLD)) + "\n"
+    s = s.replace("### SUBMISSIONS GC_D\n", sub, 1).replace("### SACCT\n", "### SACCT\n" + "\n".join(_old_rows) + "\n", 1)
+    p = os.path.join(TMP, "probe_GC_D_B.txt"); open(p, "w").write(s); return p
+rc, o = runD(probeB(), "--ignore-jobs", ",".join(OLD)); check("B: the lost setup (TIMEOUT, 84.09 core-h) is a known-failed INFO, not a STOP; its core-h count in the fit total (758 + 84.09 = 842.09)", rc == 0 and "known-failed" in o and "842.09" in o and "no stop rule fired" in o, o)
+rc, o = runD(probeB())  ; check("B without --ignore-jobs the old TIMEOUT is a STOP (the monitor MUST pass IGNORE_JOBS / --ignore-jobs)", rc == 3 and "TIMEOUT" in o, o)
+rc, o = runD(probeB(isl_el={4: 3601}), "--ignore-jobs", ",".join(OLD)); check("B: K2 still fires although the old CANCELLED islands array row (with a [ ] id) is in the probe", rc == 3 and "STOP K2" in o, o)
+rc, o = runD(probeB(cost=dict(calibrate=70.5)), "--ignore-jobs", ",".join(OLD)); check("B: K1 fires on the NEW calibrate only", rc == 3 and "STOP K1" in o, o)
+rc, o = runD(probeB(cost=dict(islands=158.0)), "--ignore-jobs", ",".join(OLD)); check("B: hard line counts the lost setup: 158 x 16 + 55 + 40 + 22 + 1 + 84.09 > 2,718 -> STOP", rc == 3 and "HARD 2718" in o, o)
+rc, o = runD(probeB(isl_state={7: "PENDING"}), "--ignore-jobs", ",".join(OLD)); check("B: WAVE STATE RUNNING while a new island is pending", "WAVE STATE: RUNNING" in o, o)
 print("\n%d passed, %d failed" % (ok, fail)); sys.exit(1 if fail else 0)

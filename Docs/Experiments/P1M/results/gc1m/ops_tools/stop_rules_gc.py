@@ -144,7 +144,8 @@ def main():
         if s0 not in TERMINAL:
             sacct_nonterm.append("%s %s" % (jid, s0))
         b, fit = jobmap[base]
-        gc_rows.append((jid, name, s0, int(el or 0), int(cpuraw or 0) / 3600.0))
+        if base not in ign_jobs:   # known-failed jobs (--ignore-jobs: the lost GC_D setup and its cancelled dependants) take no part in K1 / K2
+            gc_rows.append((jid, name, s0, int(el or 0), int(cpuraw or 0) / 3600.0))
         if fit is None:
             if not task.isdigit():
                 continue
