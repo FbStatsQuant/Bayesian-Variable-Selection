@@ -82,3 +82,20 @@ for t in range(4, 20):
     if e6[t] > max(oth15): print("  stage %d above the others' max" % (t + 1))
 print("  stages where island 6 is below the other 15's minimum:", below, "(of 16 stages 5-20)")
 print("  stage 4: all 16 islands in [%.1f, %.1f] (delta phi %.4f)" % (min(d[n]["st_ess"][3] for n in names), max(d[n]["st_ess"][3] for n in names), dphi(d)[3]))
+
+# ---- added for HQ H-49: every flagged fit at N 2,500 with the island-stage events and the phi step (dphi) at each dip ----
+print()
+print("flagged fits (N 2500): island-stage events (island stage: ESS, ESS/N, dphi, phi); older-build islands read from NOTS (ess_oldbuild.json)")
+def events(isl, N=2500):
+    out = []
+    for f, s in isl.items():
+        ph = s["st_phi"]
+        for t, x in enumerate(s["st_ess"]):
+            if x < 0.5 * N: out.append((f.replace(".bin", ""), t + 1, round(x), round(x / N, 3), round(ph[t] - (ph[t - 1] if t else 0), 4), round(ph[t], 3)))
+    return out
+rows2 = [("GC_D n1000 p1e6 (F2)", {os.path.basename(k): v for k, v in L("ess_D.json").items()})]
+rows2.append(("V0 ADJ-OPP r04 n200 p1e4 (F2)", oth["VN_V0_3/4-ADJOPP-n200-r04-V-s2"]))
+for k, v in L("ess_oldbuild.json").items():
+    rows2.append((k.split("/")[1] + (" n800 p1e4 (d0c30b65)" if "n800" in k else " n100 p1e4 (d0c30b65)"), v))
+for name, isl in rows2:
+    ev2 = events(isl); print("  %-44s %s" % (name, ev2))
