@@ -61,4 +61,19 @@ r = subprocess.run([sys.executable, os.path.join(HERE, "gc_wave_check.py"), "--w
 check("D data with a (patched) C2 FAIL: low_ESS + C2 failure -> 'FLAG: STOP', exit 2, md says so", r.returncode == 2 and "FLAG: STOP" in open(os.path.join(TMP, "wave_check_Dx.md")).read(), r.stdout + r.stderr)
 r = subprocess.run([sys.executable, os.path.join(HERE, "gc_wave_check.py"), "--wave", "Dy", "--records-dir", rec + "/GC_D", "--ess-json", pe, "--out-dir", TMP], capture_output=True, text=True)
 check("missing ESS data for a fit is an error, never a silent pass", r.returncode != 0 and "no ESS data" in (r.stdout + r.stderr), r.stdout + r.stderr)
+# ---- island timing (H-50 / H-51) ----
+rec = "/home/fb31/SMC_Engineering_Department/records/gc1m"
+tm, bt, sent = W.island_timing([rec + "/GC_D"]); x = tm["6-AR-n1000-r01-V-s1"]
+check("island timing GOLDEN on GC_D (real sacct dump + sidecars): 16 islands, elapsed max 738 s, engine totals present, pre-engine wait > 0, billed 259.8 core-h", x["n"] == 16 and x["elapsed"]["max"] == 738 and x["engine_total"] and x["pre_engine_wait"]["min"] > 0 and abs(x["billed_core_h"] - 259.81) < 0.05 and x["engine_core_h"] < x["billed_core_h"], str(x))
+check("island timing groups by node type from the sacct NodeList (c / g suffix) and gives the one-sentence proposal", set(bt) <= {"c", "g"} and len(bt) >= 1 and ("Proposal only" in sent or "no node-type contrast" in sent), str(bt) + sent)
+# synthetic batch: 4 islands, two types, known numbers
+sb = os.path.join(TMP, "GC_X"); os.makedirs(os.path.join(sb, "_batch_GC_X"), exist_ok=True); os.makedirs(os.path.join(sb, "6-X-n200-r01-V-s1"), exist_ok=True)
+open(os.path.join(sb, "_batch_GC_X", "submissions.jsonl"), "w").write(json.dumps({"stage": "islands", "fit": "6-X-n200-r01-V-s1", "job": "900", "submitted_utc": "x"}) + "\n")
+rows = ["900_1|p1m_GC_X_islands|COMPLETED|600|96|%d||bb2u10c1|01:00:00" % (600 * 96), "900_2|p1m_GC_X_islands|COMPLETED|700|96|%d||bb2u11c1|01:00:00" % (700 * 96), "900_3|p1m_GC_X_islands|COMPLETED|1000|96|%d||bb6u21g1|01:00:00" % (1000 * 96), "900_4|p1m_GC_X_islands|COMPLETED|1100|96|%d||bb6u22g1|01:00:00" % (1100 * 96), "900_4.batch|batch|COMPLETED|1100|96|1||bb6u22g1|", "901|p1m_GC_X_merge|COMPLETED|10|32|320||bb1u1c1|"]
+open(os.path.join(sb, "_batch_GC_X", "sacct_dump.txt"), "w").write("\n".join(rows) + "\n")
+for k, eng in ((1, 500.0), (2, 560.0), (3, 700.0), (4, 760.0)): json.dump({"seconds": {"total": eng}}, open(os.path.join(sb, "6-X-n200-r01-V-s1", "island_%d.bin.json" % k), "w"))
+tm, bt, sent = W.island_timing([sb]); x = tm["6-X-n200-r01-V-s1"]
+check("island timing synthetic: elapsed 600 / 850 / 1100, engine 500 / 630 / 760, pre-engine wait min 100 / max 340, billed 3,400 x 96 / 3600 = 90.67 core-h, engine core-h 2,520 x 96 / 3600 = 67.2, types c (2) and g (2), batch step rows and merge rows ignored",
+      x["n"] == 4 and x["elapsed"]["min"] == 600 and x["elapsed"]["max"] == 1100 and abs(x["elapsed"]["mean"] - 850) < 1e-9 and x["pre_engine_wait"]["min"] == 100 and x["pre_engine_wait"]["max"] == 340 and abs(x["billed_core_h"] - 90.6667) < 1e-3 and abs(x["engine_core_h"] - 67.2) < 1e-6 and bt["c"]["n"] == 2 and bt["g"]["n"] == 2, str(x))
+check("node-constraint sentence: type c is faster (mean 650 vs 1,050 s); the saving is (1000-650 + 1100-650) x 96 / 3600 = 21.3 core-h of 90.7 (23.5 %); 'Proposal only' and the unmeasured-queue caveat", "Proposal only" in sent and "type c" in sent and "21.3" in sent and "23.5" in sent and "queue wait" in sent, sent)
 print("\n%d passed, %d failed" % (ok, fail)); sys.exit(1 if fail else 0)

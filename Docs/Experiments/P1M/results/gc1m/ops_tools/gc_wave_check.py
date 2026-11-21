@@ -22,6 +22,45 @@ def ess_dips(isl, N):
     mn = min(recs, key=lambda r: r["ess"])
     return mn, [r for r in sorted(recs, key=lambda r: r["ess"]) if r["ess"] < LOW * N], len(recs)
 
+def island_timing(batch_dirs):
+    """H-50 / H-51 wave-line extra: per fit the island ELAPSED spread (sacct), the engine's own seconds.total (island_k.bin.json), the pre-engine wait (elapsed - engine total), the Slurm-billed island core-h against the
+    engine-time core-h (total x allocated CPUs / 3600), and the elapsed by NODE TYPE (the node-name suffix bb<N>u<M><c|g><K>: c1 vs g1) from the batch's sacct dump (NodeList). Returns (per-fit dict, node-type dict, sentence)."""
+    import re
+    fits, bytype = {}, {}
+    for d in batch_dirs:
+        bn = os.path.basename(d.rstrip("/")); bu = os.path.join(d, "_batch_" + bn)
+        if not os.path.exists(os.path.join(bu, "sacct_dump.txt")): continue
+        jobfit = {}
+        for l in open(os.path.join(bu, "submissions.jsonl")):
+            j = json.loads(l)
+            if j["stage"] == "islands": jobfit[j["job"]] = j["fit"]
+        for l in open(os.path.join(bu, "sacct_dump.txt")):
+            f = l.rstrip("\n").split("|")
+            if len(f) < 8 or not re.match(r"^\d+_\d+$", f[0]) or "islands" not in f[1] or f[2] != "COMPLETED": continue
+            base, k = f[0].split("_"); rid = jobfit.get(base)
+            if rid is None: continue
+            sc = os.path.join(d, rid, "island_%s.bin.json" % k); eng = json.load(open(sc))["seconds"]["total"] if os.path.exists(sc) else None
+            node = f[7]; m = re.match(r"^bb\d+u\d+([a-z])\d+$", node); typ = m.group(1) if m else "?"
+            rec = {"island": int(k), "elapsed": int(f[3]), "cpus": int(f[4]), "billed_core_h": int(f[5]) / 3600.0, "engine": eng, "node": node, "type": typ}
+            fits.setdefault(rid, []).append(rec); bytype.setdefault(typ, []).append(rec)
+    out = {}
+    stat = lambda v: {"min": min(v), "mean": sum(v) / len(v), "max": max(v)} if v else None
+    for rid, rs in fits.items():
+        eng = [r for r in rs if r["engine"] is not None]
+        out[rid] = {"n": len(rs), "elapsed": stat([r["elapsed"] for r in rs]), "engine_total": stat([r["engine"] for r in eng]), "pre_engine_wait": stat([r["elapsed"] - r["engine"] for r in eng]),
+                    "billed_core_h": sum(r["billed_core_h"] for r in rs), "engine_core_h": sum(r["engine"] * r["cpus"] / 3600.0 for r in eng) if eng else None,
+                    "max_engine_core_h": max((r["engine"] * r["cpus"] / 3600.0 for r in eng), default=None)}
+    nt = {t: {"n": len(rs), "elapsed": stat([r["elapsed"] for r in rs]), "engine_total": stat([r["engine"] for r in rs if r["engine"] is not None]),
+              "pre_engine_wait": stat([r["elapsed"] - r["engine"] for r in rs if r["engine"] is not None])} for t, rs in bytype.items()}
+    sent = "no node-type contrast in this wave (single node type observed: %s)" % ", ".join(sorted(bytype)) if len(bytype) < 2 else None
+    if sent is None:
+        allr = [r for rs in bytype.values() for r in rs]; mean_el = {t: nt[t]["elapsed"]["mean"] for t in nt}; fast = min(mean_el, key=mean_el.get)
+        save = sum(max(0.0, r["elapsed"] - mean_el[fast]) * r["cpus"] / 3600.0 for r in allr if r["type"] != fast); tot = sum(r["billed_core_h"] for r in allr)
+        sent = ("Proposal only (a node constraint to type %s): the %s-type islands average %s s elapsed against %.0f s on type %s; had every island run at the %s mean, the wave would have billed about %.1f core-h less of %.1f island core-h (%.1f %%), "
+                "before any extra queue wait that a constraint could add (not measured here), so it pays for itself only if the wait of the constrained type stays small."
+                % (fast, "/".join(sorted(t for t in mean_el if t != fast)), "/".join("%.0f" % mean_el[t] for t in sorted(mean_el) if t != fast), mean_el[fast], fast, fast, save, tot, 100.0 * save / tot if tot else 0.0))
+    return out, nt, sent
+
 def decide(fit):
     """the H-48 rule on one fit dict: returns (low_ESS: bool, reasons: list, flag_stop: bool)"""
     low = bool(fit["low_empirical_ESS"]) or bool(fit["ess_low_stages"])
@@ -57,8 +96,9 @@ def main():
                "sigma_hat": evd.get("sigma_hat"), "sd_logZ_r": sd, "C2_verdict": f["C2"]["verdict"], "C2": {k: f["C2"].get(k) for k in ("M1", "M2", "evidence_gap", "evidence_bound_3se", "local_certified", "max_abs_eq_minus_T", "eq_T_target")},
                "low_empirical_ESS": bool(f["C5"].get("low_empirical_ESS")), "min_ess": mn, "n_islands": len(ess_by_run[rid]), "n_island_stages": n_st, "ess_low_stages": lows}
         low, reasons, stop = decide(fit); fit.update(low_ESS=low, flag_reasons=reasons, flag_stop=stop, ess_flag_consistent=(bool(lows) == fit["low_empirical_ESS"])); fits.append(fit)
+    timing, bytype, tsent = island_timing(a.records_dir)
     any_stop = any(x["flag_stop"] for x in fits)
-    out = {"wave": a.wave, "rule": "H-48: low_empirical_ESS together with an E-flag, sigma-hat > 0.5, a C2 failure or HPM != S0 -> FLAG, STOP; low_ESS alone is reported (H-49: expected ~ 1 in 7 fits on the frozen arm)", "fits": fits, "flag_stop": any_stop}
+    out = {"wave": a.wave, "rule": "H-48: low_empirical_ESS together with an E-flag, sigma-hat > 0.5, a C2 failure or HPM != S0 -> FLAG, STOP; low_ESS alone is reported (H-49: expected ~ 1 in 7 fits on the frozen arm)", "fits": fits, "flag_stop": any_stop, "island_timing": {"per_fit": timing, "by_node_type": bytype, "node_constraint_sentence": tsent}}
     json.dump(out, open(os.path.join(a.out_dir, "wave_check_%s.json" % a.wave), "w"), indent=1); open(os.path.join(a.out_dir, "wave_check_%s.json" % a.wave), "a").write("\n")
     L = ["# wave check %s (HQ H-48 / H-49)" % a.wave, "", "**%s**" % ("FLAG: STOP, tell the manager, no next wave: " + "; ".join("%s (%s)" % (x["run_id"], ", ".join(x["flag_reasons"])) for x in fits if x["flag_stop"]) if any_stop else "no FLAG: no fit has low_empirical_ESS together with an E-flag, sigma-hat > 0.5, a C2 failure or HPM != S0"), ""]
     L += ["| fit | HPM = S0 | MPM = S0 | E1 / E2 / E3 | sigma-hat (sd log Z_r) | C2 | min ESS / N | island, stage | phi step (dphi) at the dip | low_empirical_ESS (engine / sections) | flag |", "|---|---|---|---|---|---|---|---|---|---|---|"]
@@ -72,6 +112,16 @@ def main():
     for x in lows:
         L.append("- **%s**: %d island-stage(s) of %d below 0.5 N = %d: %s; min ESS/N %.3f; %s" % (x["run_id"], len(x["ess_low_stages"]), x["n_island_stages"], x["N"] // 2, "; ".join("%s stage %d ESS %.1f (%.3f N), phi %.4f -> %.4f, dphi %.4f" % (r["island"], r["stage"], r["ess"], r["ess_over_N"], r["phi_from"], r["phi_to"], r["dphi"]) for r in x["ess_low_stages"]),
                  x["min_ess"]["ess_over_N"], "engine flag and sections AGREE" if x["ess_flag_consistent"] else "**engine flag and section ESS DISAGREE**"))
+    L += ["", "## Island timing (H-50 / H-51): elapsed vs engine time, pre-engine wait, billed vs engine-time cost, node types"]
+    for rid, t in timing.items():
+        e, g, w = t["elapsed"], t["engine_total"], t["pre_engine_wait"]
+        L.append("- **%s** (%d islands): Slurm elapsed min / mean / max **%d / %.0f / %d s**; engine `seconds.total` %s; **pre-engine wait (elapsed - engine) %s**; **Slurm-billed island cost %.1f core-h** beside the **engine-time cost %s** (max single island %s core-h; K2 compute line 33.6)." % (
+            rid, t["n"], e["min"], e["mean"], e["max"], ("%d / %.0f / %d s" % (g["min"], g["mean"], g["max"])) if g else "n/a (no sidecars)", ("%d / %.0f / %d s" % (w["min"], w["mean"], w["max"])) if w else "n/a", t["billed_core_h"],
+            ("%.1f core-h" % t["engine_core_h"]) if t["engine_core_h"] is not None else "n/a", ("%.1f" % t["max_engine_core_h"]) if t["max_engine_core_h"] is not None else "n/a"))
+    for typ, t in sorted(bytype.items()):
+        e, g, w = t["elapsed"], t["engine_total"], t["pre_engine_wait"]
+        L.append("- node type **%s**: %d islands, elapsed min / mean / max %d / %.0f / %d s; engine mean %s; pre-engine wait mean %s." % (typ, t["n"], e["min"], e["mean"], e["max"], ("%.0f s" % g["mean"]) if g else "n/a", ("%.0f s" % w["mean"]) if w else "n/a"))
+    L.append("- Node constraint, one sentence: " + tsent)
     L += ["", "H-48 rule: STOP only for low_ESS with an E-flag, sigma-hat > 0.5, a C2 failure or HPM != S0; low_ESS alone is reported (H-49: expected about 1 fit in 7). The ESS values are read from the island sections st_ess / st_phi (the engine's own per-stage ESS; Delta-phi = st_phi[t] - st_phi[t-1], the first stage from 0)."]
     open(os.path.join(a.out_dir, "wave_check_%s.md" % a.wave), "w").write("\n".join(L) + "\n")
     print("wave_check_%s: %d fits; %s; low_ESS fits: %s" % (a.wave, len(fits), "FLAG: STOP" if any_stop else "no FLAG", ", ".join(x["run_id"] for x in lows) or "none"))

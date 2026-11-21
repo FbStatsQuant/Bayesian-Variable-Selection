@@ -15,5 +15,5 @@ home_guard() { local mb; mb=$(home_mb); [[ $mb =~ ^[0-9]+$ ]] || { echo "REFUSIN
   echo "NOTS home: $mb MB (refuse above $HOME_LIMIT_MB)"; [[ $mb -le $HOME_LIMIT_MB ]] || { echo "REFUSING: home $mb > $HOME_LIMIT_MB" >&2; return 1; }; }
 f2_sha() { awk -F'\t' '$3=="BUILD_F2"{print $4; exit}' "$LOG" 2>/dev/null || true; }
 # GC waves (GC_PLAN §3): P = the G-C2 pilot GC_P alone (6-AR-n200-r01-V-s1, 1M, F2, N 2,500, I_max 0); later waves (W1..W10, X1, D, S1..S10) are added at their release
-batches_of() { case "$2" in P) echo "GC_P";; D) echo "GC_D";; D2) echo "GC_D2";; W1) echo "GC_W1";; *) return 1;; esac; }   # P = the pilot (done); D = option D (n = 1,000), alone
+batches_of() { case "$2" in P) echo "GC_P";; D) echo "GC_D";; D2) echo "GC_D2";; W1) echo "GC_W1";; W2) echo "GC_W2";; *) return 1;; esac; }   # P = the pilot (done); D = option D (n = 1,000), alone
 log_gc() { printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "$(date -u +%FT%TZ)" "$1" "$2" "$3" "$4" "$5" "$6" "$7" "${WHO:-ops-sonnet}" >> "$LOG"; }

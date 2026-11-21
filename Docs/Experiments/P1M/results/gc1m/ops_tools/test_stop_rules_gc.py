@@ -243,4 +243,20 @@ rc, o = runW1(probeW1(extra=["500_4|cmds_rmsd.list.sh|FAILED|10|2|20|12:00:00|cg
 rc, o = runW1(probeW1(), "--soft", "gc1m AR n200 N2500 I0=900"); check("--soft above the pinned hard line (815) is refused (exit 64)", rc == 64, o)
 _e = subprocess.run([sys.executable, os.path.join(HERE, "stop_rules_gc.py"), probeW1(), "--wave", "W1", "--plans", PLANS, "--deploy-log", LOG, "--ref-hashes", os.path.join(STG, "gc_refs.json")], capture_output=True, text=True, env=dict(os.environ, SOFT_OVERRIDES="gc1m AR n200 N2500 I0=518"))
 check("SOFT_OVERRIDES env works like --soft", _e.returncode == 0 and "518.0" in _e.stdout, _e.stdout)
+
+# ===================== wave W2 (GC_W2: AR r03 + AR r04, staggered island arrays; quote 650 default, re-fitted at the START via --quote; wave STOP = 2 x the quote) =====================
+RB, RC = "6-AR-n200-r03-V-s1", "6-AR-n200-r04-V-s1"
+def probeW2(**kw):
+    s = open(probeW1(**kw)).read().replace("GC_W1", "GC_W2").replace(RA, RB).replace(RJ, RC)
+    p = os.path.join(TMP, "probe_GC_W2.txt"); open(p, "w").write(s); return p
+def runW2(pth, *extra):
+    r = subprocess.run([sys.executable, os.path.join(HERE, "stop_rules_gc.py"), pth, "--wave", "W2", "--plans", PLANS, "--deploy-log", LOG, "--ref-hashes", os.path.join(STG, "gc_refs.json")] + list(extra), capture_output=True, text=True)
+    return r.returncode, r.stdout + r.stderr
+rc, o = runW2(probeW2(), *SOFT_AR); check("W2 healthy: two AR fits, no stop, quote 650 -> wave STOP 1300, ENDED, arm identity on 2 fits, AR soft 518", rc == 0 and "no stop rule fired" in o and "quote 650 -> wave STOP 1300" in o and "WAVE STATE: ENDED" in o and "arm identity checked on 2 fits" in o and "518.0" in o, o)
+rc, o = runW2(probeW2(), *SOFT_AR, "--quote", "700"); check("W2 re-quote 700 -> wave STOP 1,400", rc == 0 and "wave STOP 1400" in o, o)
+rc, o = runW2(probeW2(cost={(RA, "merge"): 380.0, (RJ, "merge"): 380.0}), *SOFT_AR, "--quote", "650"); check("W2 wave STOP: 2 x ~711 = 1,422 > 1,300 -> STOP", rc == 3 and "wave stop 1300" in o, o)
+rc, o = runW2(probeW2(cost={(RA, "calibrate"): 48.5}), *SOFT_AR); check("W2 K1 -> STOP", rc == 3 and "STOP K1" in o, o)
+rc, o = runW2(probeW2(extra=["### ISLAND_SEC", "GC_W2|%s|2|1300" % RC]), *SOFT_AR); check("W2 K2 compute clause (engine 1,300 s x 96 CPUs = 34.7 > 33.6) -> STOP", rc == 3 and "STOP K2" in o, o)
+rc, o = runW2(probeW2(squeue=["502_[1-16%16]|p1m_GC_W2_islands|PENDING|Dependency|0:00|96"]), *SOFT_AR); check("W2 the staggered second array pending on Dependency is normal (not a stop)", rc == 0, o)
+rc, o = runW2(probeW2(cost={(RA, "merge"): 500.0}), *SOFT_AR); check("W2 hard: AR fit > 815 -> STOP", rc == 3 and "HARD 815" in o, o)
 print("\n%d passed, %d failed" % (ok, fail)); sys.exit(1 if fail else 0)
