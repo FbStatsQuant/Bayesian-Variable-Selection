@@ -1,4 +1,4 @@
-## STATUS 2026-11-20 (daily report; unchanged since 11-19)
+## STATUS 2026-11-20 — OWNER BREAK: Theory on hold entirely (incl. the Monday plan) until the owner restarts it; schedules disabled by HQ
 - HOLD: all Claude-seat Theory work until the Claude Personal reset, Mon 2026-11-23 15:00 CT (HQ). No Claude Third exception.
 - Landed 11-18: D5P v1.1 df1f5872; manifest-verify tooling f6411c3e; pre-Lean correction batch 97f9c8c3. Main e849f63f; CI green.
 - RESUME ORDER: (1) item 7 Opus PURE (PRE-LEAN ab9719a6) → (1b) NA_DROP v1.6: Sol-7 b‴-1 + b‴-2 (statistical outputs; name peak_memory_kb, timings, elapsed) → Opus PURE → ONE tiny wording-only Sol confirm on the v1.6 digest (last Codex for NA_DROP) → (2) MEAS-D/NA_DROP/T12 landing DRY run (landing set c854f912 + item 7 + v1.6 + W-1 citation fix) → table to HQ → (3) A re-pin (widened: D5Pa v4, DLV-0 blind-triage fixes, T6-3, CLAIMS_CARD:2, INV-SCORE-BITS, stop() rows; Opus seat verifies the K(K+1) term and both counts; no Codex unless substantive) → (4) SUMMARY (manager: counts + §3 declined).
