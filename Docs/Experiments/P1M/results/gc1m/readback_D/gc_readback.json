@@ -1,0 +1,187 @@
+{
+ "script": "gc_readback.py",
+ "models": {
+  "AR n200 N2500": 326,
+  "ADJOPP n200 N2500": 339,
+  "ARweak n200 N2500": 326,
+  "AR n200 N10000": 783,
+  "AR n1000 N2500": 1087,
+  "AR n200 N5000": 478
+ },
+ "requests_gib": {
+  "setup": 48,
+  "calibrate": 128,
+  "islands": 64,
+  "merge": 128,
+  "eval": 16
+ },
+ "fits": {
+  "6-AR-n1000-r01-V-s1": {
+   "run_id": "6-AR-n1000-r01-V-s1",
+   "design": null,
+   "arm": null,
+   "R'": 16,
+   "recorded_arm": {
+    "N": 2500,
+    "m": 1,
+    "I": 0,
+    "I_used": 0,
+    "rule": "bounded",
+    "grid_unconverged": true,
+    "grid_fallback": ""
+   },
+   "binary_sha256": "da0cf85b5fe014973d15674f0da8e8c12dfdaf465a5e06aa0216b294601f231a",
+   "status_ok": true,
+   "logZ_r_finite": true,
+   "build_is_F2": true,
+   "C2": {
+    "M1": 0.011692109737117293,
+    "M1<=0.05": true,
+    "M2": 0.00011389844246993499,
+    "M2<=0.005(target_met)": true,
+    "M3": 0.031049019276401794,
+    "M3<=0.5(goal, not gating)": true,
+    "local_certified": true,
+    "pip_eq_T_target_met": true,
+    "max_abs_eq_minus_T": 0.0006234453517477076,
+    "eq_T_target": 0.060922789585514774,
+    "evidence_gap": 0.0025272920984207303,
+    "evidence_bound_3se": 0.024883130898738996,
+    "evidence_consistent": true,
+    "pip_agreement_checked": true,
+    "verdict": "PASS"
+   },
+   "C5": {
+    "E1": false,
+    "E2": false,
+    "E3": false,
+    "low_empirical_ESS": true,
+    "checks_passed_final": false,
+    "occ_inhomogeneous": false,
+    "sd_logZ_r_gt_1": false,
+    "calibration_E1_E2": "NOT EVALUATED at I_max 0"
+   },
+   "science": {
+    "hpm": [
+     100000,
+     300000,
+     500000,
+     700000,
+     900000
+    ],
+    "hpm_eq_S0": true,
+    "logZ": -767.4737120520318,
+    "logZ_minus_logZ_T": 0.052265123919369216,
+    "pi_hat_S0": 0.6630102488624815,
+    "occ_top1": 0.66345,
+    "sup_null_eq": 0.01647312980309403,
+    "min_true_eq": 1,
+    "T_island": null
+   },
+   "stages": {
+    "setup": {
+     "billed": 84.0933,
+     "wall_s_max": 6307,
+     "max_rss_gib": 33.07296371459961,
+     "request_gib": 48,
+     "rss_pct_of_request": 68.90200773874919,
+     "states": [
+      "TIMEOUT"
+     ]
+    },
+    "calibrate": {
+     "billed": 17.84,
+     "wall_s_max": 669,
+     "max_rss_gib": 58.94116973876953,
+     "request_gib": 128,
+     "rss_pct_of_request": 46.047788858413696,
+     "states": [
+      "COMPLETED"
+     ]
+    },
+    "islands": {
+     "billed": 259.8133,
+     "wall_s_max": 738,
+     "max_rss_gib": 44.97570037841797,
+     "request_gib": 64,
+     "rss_pct_of_request": 70.27453184127808,
+     "states": [
+      "COMPLETED"
+     ]
+    },
+    "merge": {
+     "billed": 26.9067,
+     "wall_s_max": 3027,
+     "max_rss_gib": 71.73108673095703,
+     "request_gib": 128,
+     "rss_pct_of_request": 56.03991150856018,
+     "states": [
+      "COMPLETED"
+     ]
+    },
+    "eval": {
+     "billed": 0.5956,
+     "wall_s_max": 268,
+     "max_rss_gib": 10.993335723876953,
+     "request_gib": 16,
+     "rss_pct_of_request": 68.70834827423096,
+     "states": [
+      "COMPLETED"
+     ]
+    }
+   },
+   "C1": {
+    "billed": 389.24890000000005,
+    "model_E": 1087,
+    "soft": 1630.5,
+    "hard": 2717.5,
+    "ratio": 0.3580946642134315,
+    "verdict": "OK"
+   },
+   "C3": {
+    "basis": "process peak where recorded (merge peak_rss_kb, setup peak_rss_mb), COMPLETED state elsewhere; sacct reported",
+    "requests_gib": {
+     "setup": 64,
+     "calibrate": 128,
+     "islands": 64,
+     "merge": 128,
+     "eval": 32
+    },
+    "process_peak_gib": {
+     "merge": 24.650859832763672,
+     "setup": 18.116138458251953
+    },
+    "not_completed": [
+     "setup"
+    ],
+    "process_over_request": [],
+    "sacct_pct_of_request": {
+     "setup": 51.67650580406189,
+     "calibrate": 46.047788858413696,
+     "islands": 70.27453184127808,
+     "merge": 56.03991150856018,
+     "eval": 34.35417413711548
+    },
+    "sacct_advisory": [],
+    "stages_missing": [],
+    "max_pct": 70.27453184127808,
+    "merge_process_peak_gib": 24.650859832763672,
+    "verdict": "FAIL"
+   },
+   "C4": {
+    "delivered": true,
+    "one_build_F2": true,
+    "arm_identity": true
+   },
+   "kill": {
+    "calibrate_billed": 17.84,
+    "calibrate_limit_2xE": 48.0,
+    "max_island_wall_s": 738,
+    "island_wall_limit_2x": 1584.0,
+    "trip": false
+   }
+  }
+ },
+ "pilot": null,
+ "identity": null
+}
