@@ -693,3 +693,4 @@
 - 2026-11-20 21:07 CST — HQ H-52 (f75988f7): %8 island throttle from W3 if W2 mean pre-engine wait > 300 s (pre-approved, ops-side); node-local staging only via test + ruling; g-node not adopted. Ops told.
 - 2026-11-20 21:16 CST — **OWNER/HQ H-53 (4c0db8f7): 1M block stops after W2.** GC_PREREG §10 early-stop entry written before any W3 data (W3 never submitted). Ops: W3 standing order CANCELLED; W2 finishes, collect + wave check, hygiene, nothing else. Plan worker: 1M block summary after W2.
 - 2026-11-20 21:28 CST — HQ H-54 (0a146138): SMC-BVS break; finish W2 + 1M summary + riboflavin, then idle; keep daily report + hygiene; wind down other schedules after W2/riboflavin.
+- 2026-11-20 21:40 CST — W2 check (direct): setups COMPLETED (17.7 / 20.5 min), r03 calibrate RUNNING, r04 pending; probe 03:36Z; verdict no stop rule. Mid check 04:40Z.
