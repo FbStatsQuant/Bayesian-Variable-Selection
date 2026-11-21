@@ -92,19 +92,18 @@ def main():
         f = rb["fits"][rid]; sel = ev["selection"]; evd = ev["evidence"]; lz = evd["logZ_r"]; mean = sum(lz) / len(lz); sd = math.sqrt(sum((x - mean) ** 2 for x in lz) / (len(lz) - 1))
         if rid not in ess_by_run: sys.exit("no ESS data for %s (--ess-json has %s)" % (rid, sorted(ess_by_run)))
         mn, lows, n_st = ess_dips(ess_by_run[rid], N)
-        fit = {"run_id": rid, "N": N, "hpm": sel["hpm"], "hpm_eq_S0": bool(sel["hpm_eq_S0"]), "mpm_eq_S0": bool(sel["mpm_eq_S0"]), "E": {k: bool(f["C5"].get(k)) for k in ("E1", "E2", "E3")},
+        fit = {"run_id": rid, "N": N, "pi_hat_S0": (f.get("science") or {}).get("pi_hat_S0"), "hpm": sel["hpm"], "hpm_eq_S0": bool(sel["hpm_eq_S0"]), "mpm_eq_S0": bool(sel["mpm_eq_S0"]), "E": {k: bool(f["C5"].get(k)) for k in ("E1", "E2", "E3")},
                "sigma_hat": evd.get("sigma_hat"), "sd_logZ_r": sd, "C2_verdict": f["C2"]["verdict"], "C2": {k: f["C2"].get(k) for k in ("M1", "M2", "evidence_gap", "evidence_bound_3se", "local_certified", "max_abs_eq_minus_T", "eq_T_target")},
                "low_empirical_ESS": bool(f["C5"].get("low_empirical_ESS")), "min_ess": mn, "n_islands": len(ess_by_run[rid]), "n_island_stages": n_st, "ess_low_stages": lows}
         low, reasons, stop = decide(fit); fit.update(low_ESS=low, flag_reasons=reasons, flag_stop=stop, ess_flag_consistent=(bool(lows) == fit["low_empirical_ESS"])); fits.append(fit)
     timing, bytype, tsent = island_timing(a.records_dir)
     any_stop = any(x["flag_stop"] for x in fits)
     out = {"wave": a.wave, "rule": "H-48: low_empirical_ESS together with an E-flag, sigma-hat > 0.5, a C2 failure or HPM != S0 -> FLAG, STOP; low_ESS alone is reported (H-49: expected ~ 1 in 7 fits on the frozen arm)", "fits": fits, "flag_stop": any_stop, "island_timing": {"per_fit": timing, "by_node_type": bytype, "node_constraint_sentence": tsent}}
-    json.dump(out, open(os.path.join(a.out_dir, "wave_check_%s.json" % a.wave), "w"), indent=1); open(os.path.join(a.out_dir, "wave_check_%s.json" % a.wave), "a").write("\n")
     L = ["# wave check %s (HQ H-48 / H-49)" % a.wave, "", "**%s**" % ("FLAG: STOP, tell the manager, no next wave: " + "; ".join("%s (%s)" % (x["run_id"], ", ".join(x["flag_reasons"])) for x in fits if x["flag_stop"]) if any_stop else "no FLAG: no fit has low_empirical_ESS together with an E-flag, sigma-hat > 0.5, a C2 failure or HPM != S0"), ""]
-    L += ["| fit | HPM = S0 | MPM = S0 | E1 / E2 / E3 | sigma-hat (sd log Z_r) | C2 | min ESS / N | island, stage | phi step (dphi) at the dip | low_empirical_ESS (engine / sections) | flag |", "|---|---|---|---|---|---|---|---|---|---|---|"]
+    L += ["| fit | HPM = S0 | MPM = S0 | pi-hat(S0) | E1 / E2 / E3 | sigma-hat (sd log Z_r) | C2 | min ESS / N | island, stage | phi step (dphi) at the dip | low_empirical_ESS (engine / sections) | flag |", "|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for x in fits:
-        m = x["min_ess"]; L.append("| %s | %s | %s | %s | %.4f (%.4f) | %s (M1 %.4f, M2 %.5f, evid gap %.4f <= %.4f) | **%.3f** (ESS %.1f of N %d) | %s, stage %d | %.4f -> %.4f, **dphi %.4f** | %s / %s | %s |" % (
-            x["run_id"], "yes" if x["hpm_eq_S0"] else "**NO**", "yes" if x["mpm_eq_S0"] else "**NO**", " / ".join("TRUE" if x["E"][k] else "False" for k in ("E1", "E2", "E3")), x["sigma_hat"], x["sd_logZ_r"], x["C2_verdict"], x["C2"]["M1"], x["C2"]["M2"], x["C2"]["evidence_gap"], x["C2"]["evidence_bound_3se"],
+        m = x["min_ess"]; L.append("| %s | %s | %s | %s | %s | %.4f (%.4f) | %s (M1 %.4f, M2 %.5f, evid gap %.4f <= %.4f) | **%.3f** (ESS %.1f of N %d) | %s, stage %d | %.4f -> %.4f, **dphi %.4f** | %s / %s | %s |" % (
+            x["run_id"], "yes" if x["hpm_eq_S0"] else "**NO**", "yes" if x["mpm_eq_S0"] else "**NO**", ("%.3f" % x["pi_hat_S0"]) if x.get("pi_hat_S0") is not None else "n/a", " / ".join("TRUE" if x["E"][k] else "False" for k in ("E1", "E2", "E3")), x["sigma_hat"], x["sd_logZ_r"], x["C2_verdict"], x["C2"]["M1"], x["C2"]["M2"], x["C2"]["evidence_gap"], x["C2"]["evidence_bound_3se"],
             m["ess_over_N"], m["ess"], x["N"], m["island"], m["stage"], m["phi_from"], m["phi_to"], m["dphi"], "TRUE" if x["low_empirical_ESS"] else "False", "TRUE" if x["ess_low_stages"] else "False", "**STOP: " + ", ".join(x["flag_reasons"]) + "**" if x["flag_stop"] else ("low_ESS alone: reported" if x["low_ESS"] else "-")))
     L += ["", "## Every low_ESS fit (island-stages with ESS < 0.5 N)"]
     lows = [x for x in fits if x["low_ESS"]]
@@ -121,9 +120,17 @@ def main():
     for typ, t in sorted(bytype.items()):
         e, g, w = t["elapsed"], t["engine_total"], t["pre_engine_wait"]
         L.append("- node type **%s**: %d islands, elapsed min / mean / max %d / %.0f / %d s; engine mean %s; pre-engine wait mean %s." % (typ, t["n"], e["min"], e["mean"], e["max"], ("%.0f s" % g["mean"]) if g else "n/a", ("%.0f s" % w["mean"]) if w else "n/a"))
+    allw = []; allb = 0.0; alle = 0.0
+    if timing:
+        n_all = sum(t["n"] for t in timing.values()); wsum = sum(t["pre_engine_wait"]["mean"] * t["n"] for t in timing.values() if t["pre_engine_wait"])
+        n_w = sum(t["n"] for t in timing.values() if t["pre_engine_wait"]); mean_wait = wsum / n_w if n_w else None
+        bill = sum(t["billed_core_h"] for t in timing.values()); eng = sum(t["engine_core_h"] or 0.0 for t in timing.values())
+        out["island_timing"]["wave"] = {"islands": n_all, "mean_pre_engine_wait_s": mean_wait, "slurm_billed_island_core_h": bill, "engine_island_core_h": eng, "H52_throttle_rule": (None if mean_wait is None else ("mean wait > 300 s: W3 onward %8 island-array throttle per fit, stagger kept" if mean_wait > 300 else "mean wait <= 300 s: stagger only"))}
+        L.append("- **Wave: mean pre-engine wait per island %s s over %d islands (W1: 526 / 373 s per fit; pilot 205 s); Slurm-billed island cost %.1f core-h vs engine-time %.1f core-h. HQ H-52 rule: %s.**" % ("%.0f" % mean_wait if mean_wait is not None else "n/a", n_w, bill, eng, out["island_timing"]["wave"]["H52_throttle_rule"]))
     L.append("- Node constraint, one sentence: " + tsent)
     L += ["", "H-48 rule: STOP only for low_ESS with an E-flag, sigma-hat > 0.5, a C2 failure or HPM != S0; low_ESS alone is reported (H-49: expected about 1 fit in 7). The ESS values are read from the island sections st_ess / st_phi (the engine's own per-stage ESS; Delta-phi = st_phi[t] - st_phi[t-1], the first stage from 0)."]
     open(os.path.join(a.out_dir, "wave_check_%s.md" % a.wave), "w").write("\n".join(L) + "\n")
+    json.dump(out, open(os.path.join(a.out_dir, "wave_check_%s.json" % a.wave), "w"), indent=1); open(os.path.join(a.out_dir, "wave_check_%s.json" % a.wave), "a").write("\n")
     print("wave_check_%s: %d fits; %s; low_ESS fits: %s" % (a.wave, len(fits), "FLAG: STOP" if any_stop else "no FLAG", ", ".join(x["run_id"] for x in lows) or "none"))
     sys.exit(2 if any_stop else 0)
 

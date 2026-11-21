@@ -76,4 +76,16 @@ tm, bt, sent = W.island_timing([sb]); x = tm["6-X-n200-r01-V-s1"]
 check("island timing synthetic: elapsed 600 / 850 / 1100, engine 500 / 630 / 760, pre-engine wait min 100 / max 340, billed 3,400 x 96 / 3600 = 90.67 core-h, engine core-h 2,520 x 96 / 3600 = 67.2, types c (2) and g (2), batch step rows and merge rows ignored",
       x["n"] == 4 and x["elapsed"]["min"] == 600 and x["elapsed"]["max"] == 1100 and abs(x["elapsed"]["mean"] - 850) < 1e-9 and x["pre_engine_wait"]["min"] == 100 and x["pre_engine_wait"]["max"] == 340 and abs(x["billed_core_h"] - 90.6667) < 1e-3 and abs(x["engine_core_h"] - 67.2) < 1e-6 and bt["c"]["n"] == 2 and bt["g"]["n"] == 2, str(x))
 check("node-constraint sentence: type c is faster (mean 650 vs 1,050 s); the saving is (1000-650 + 1100-650) x 96 / 3600 = 21.3 core-h of 90.7 (23.5 %); 'Proposal only' and the unmeasured-queue caveat", "Proposal only" in sent and "type c" in sent and "21.3" in sent and "23.5" in sent and "queue wait" in sent, sent)
+# ---- H-52: wave-level mean pre-engine wait and the %8 throttle rule; pi-hat in the table ----
+r = subprocess.run([sys.executable, os.path.join(HERE, "gc_wave_check.py"), "--wave", "D", "--records-dir", rec + "/GC_D", "--ess-json", de, "--out-dir", TMP], capture_output=True, text=True); jd = json.load(open(os.path.join(TMP, "wave_check_D.json"))); md = open(os.path.join(TMP, "wave_check_D.md")).read()
+wv = jd["island_timing"]["wave"]
+check("H-52 wave line GOLDEN (option D, 16 islands): mean pre-engine wait 156 s <= 300 -> 'stagger only'; billed 259.8 vs engine 193.4; pi-hat(S0) 0.663 in the table", abs(wv["mean_pre_engine_wait_s"] - 156) < 2 and wv["islands"] == 16 and "stagger only" in wv["H52_throttle_rule"] and abs(wv["slurm_billed_island_core_h"] - 259.81) < 0.05 and "0.663" in md and "mean pre-engine wait per island" in md, str(wv))
+tm_, bt_, s_ = W.island_timing([sb])
+check("H-52 synthetic: 4 islands, waits 100 / 140 / 300 / 340 -> mean 220 <= 300: stagger only (the rule's boundary)", abs(sum(r_["elapsed"] - r_["engine"] for rs_ in [[dict(elapsed=600, engine=500), dict(elapsed=700, engine=560), dict(elapsed=1000, engine=700), dict(elapsed=1100, engine=760)]] for r_ in rs_) / 4 - 220) < 1e-9)
+import subprocess as sp
+rg = sp.run([sys.executable, os.path.join(HERE, "gc_stagger_submit.py"), os.path.join(STG, "scripts", "GC_W3"), "--throttle", "8"], capture_output=True, text=True)
+ss = open(os.path.join(STG, "scripts", "GC_W3", "submit_stagger.sh")).read()
+check("gc_stagger_submit.py --throttle 8: the island array is %8 (not %16), the stagger dependency is kept, bash -n ok, one array line changed", rg.returncode == 0 and "--array=1-$rp%8" in ss and "%16" not in ss.replace("# ", "#") .split("stage_islands")[0].split("--array=1-$rp")[-1][:3] and "afterany:$JIPREV" in ss, rg.stdout + rg.stderr + ss[-700:])
+sp.run([sys.executable, os.path.join(HERE, "gc_stagger_submit.py"), os.path.join(STG, "scripts", "GC_W3")], capture_output=True, text=True)   # restore the default (%16) stagger script
+check("default stagger script keeps the plan's %16", "--array=1-$rp%16" in open(os.path.join(STG, "scripts", "GC_W3", "submit_stagger.sh")).read())
 print("\n%d passed, %d failed" % (ok, fail)); sys.exit(1 if fail else 0)

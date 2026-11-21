@@ -30,14 +30,14 @@ TABLE = {
     "gc1m AR n1000 N2500 I0 (option D)": (1087.0, 1631.0, 2718.0),
 }
 TABLE_SHA256 = "e03175982c557efe6128a0d77f41c33f24831789d7cbac6ac75e7483a3ec0474"
-WAVES = {"P": ["GC_P"], "D": ["GC_D"], "D2": ["GC_D2"], "W1": ["GC_W1"], "W2": ["GC_W2"]}   # D2 = the resubmission of option D (HQ d99c67b4): same fit, same lines; the lost GC_D setup is the --prior
-QUOTE = {"P": 325.0, "D": 1087.0, "D2": 1087.0, "W1": 705.0, "W2": 650.0}
-WAVE_LINE = {"P": 650.0, "D": 2174.0, "D2": 2174.0, "W1": 1410.0, "W2": 1300.0}                       # 2 x quote: halts submission only (a one-fit wave)
-WAVE_STOPS = {"W1", "W2"}                                         # multi-fit waves: 2 x the quote is a real STOP; the one-fit waves (P, D, D2) only halt submission (a FLAG)
+WAVES = {"P": ["GC_P"], "D": ["GC_D"], "D2": ["GC_D2"], "W1": ["GC_W1"], "W2": ["GC_W2"], "W3": ["GC_W3"]}   # D2 = the resubmission of option D (HQ d99c67b4): same fit, same lines; the lost GC_D setup is the --prior
+QUOTE = {"P": 325.0, "D": 1087.0, "D2": 1087.0, "W1": 705.0, "W2": 650.0, "W3": 650.0}
+WAVE_LINE = {"P": 650.0, "D": 2174.0, "D2": 2174.0, "W1": 1410.0, "W2": 1300.0, "W3": 1300.0}                       # 2 x quote: halts submission only (a one-fit wave)
+WAVE_STOPS = {"W1", "W2", "W3"}                                         # multi-fit waves: 2 x the quote is a real STOP; the one-fit waves (P, D, D2) only halt submission (a FLAG)
 CUM_STOP = 14500.0
 # kill rules per wave (GC_PREREG §4 pilot; §5.1 option D): K1 = calibrate billed core-h and (D) elapsed seconds; K2 = island elapsed seconds while the others have finished, and (pilot, W1) the ENGINE time (island sidecar seconds.total) x the task's allocated CPUs > 33.6 core-h (H-51; the Slurm-billed core-h include the pre-engine wait and are reported, not gated)
-K1 = {"P": (48.0, None), "D": (70.0, 2700.0), "D2": (70.0, 2700.0), "W1": (48.0, None), "W2": (48.0, None)}               # pilot: 2 x 24 core-h; D: > 70 core-h OR > 45 min
-K2 = {"P": (1584.0, 33.6), "D": (3600.0, None), "D2": (3600.0, None), "W1": (1584.0, 33.6), "W2": (1584.0, 33.6)}   # (elapsed line s, compute clause core-h: ENGINE seconds.total x allocated CPUs, H-51)             # pilot: 2 x 792 s, 2 x 16.8 core-h; D: > 60 min
+K1 = {"P": (48.0, None), "D": (70.0, 2700.0), "D2": (70.0, 2700.0), "W1": (48.0, None), "W2": (48.0, None), "W3": (48.0, None)}               # pilot: 2 x 24 core-h; D: > 70 core-h OR > 45 min
+K2 = {"P": (1584.0, 33.6), "D": (3600.0, None), "D2": (3600.0, None), "W1": (1584.0, 33.6), "W2": (1584.0, 33.6), "W3": (1584.0, 33.6)}   # (elapsed line s, compute clause core-h: ENGINE seconds.total x allocated CPUs, H-51)             # pilot: 2 x 792 s, 2 x 16.8 core-h; D: > 60 min
 INFRA, PEND_BAD = {"NODE_FAIL", "BOOT_FAIL"}, re.compile(r"QOS|Assoc|MaxSubmit|Invalid|Limit", re.I)
 TERMINAL = {"COMPLETED", "FAILED", "TIMEOUT", "OUT_OF_MEMORY", "CANCELLED", "NODE_FAIL", "BOOT_FAIL", "DEADLINE", "PREEMPTED", "REVOKED"}
 BAD = {"FAILED", "TIMEOUT", "OUT_OF_MEMORY", "CANCELLED", "DEADLINE", "PREEMPTED", "REVOKED", "SUSPENDED"}

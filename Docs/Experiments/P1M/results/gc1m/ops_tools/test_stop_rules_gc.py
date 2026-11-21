@@ -259,4 +259,7 @@ rc, o = runW2(probeW2(cost={(RA, "calibrate"): 48.5}), *SOFT_AR); check("W2 K1 -
 rc, o = runW2(probeW2(extra=["### ISLAND_SEC", "GC_W2|%s|2|1300" % RC]), *SOFT_AR); check("W2 K2 compute clause (engine 1,300 s x 96 CPUs = 34.7 > 33.6) -> STOP", rc == 3 and "STOP K2" in o, o)
 rc, o = runW2(probeW2(squeue=["502_[1-16%16]|p1m_GC_W2_islands|PENDING|Dependency|0:00|96"]), *SOFT_AR); check("W2 the staggered second array pending on Dependency is normal (not a stop)", rc == 0, o)
 rc, o = runW2(probeW2(cost={(RA, "merge"): 500.0}), *SOFT_AR); check("W2 hard: AR fit > 815 -> STOP", rc == 3 and "HARD 815" in o, o)
+
+rc, _ = subprocess.run([sys.executable, os.path.join(HERE, "stop_rules_gc.py"), probeW2(), "--wave", "W3", "--plans", PLANS, "--deploy-log", LOG, "--ref-hashes", os.path.join(STG, "gc_refs.json"), "--soft", "gc1m AR n200 N2500 I0=518"], capture_output=True, text=True), None
+check("W3 wave is known to the verdict script (GC_W3 batch absent in a W2 probe: the script must not crash)", rc.returncode in (0, 3, 4) and "Traceback" not in rc.stdout + rc.stderr, rc.stdout + rc.stderr)
 print("\n%d passed, %d failed" % (ok, fail)); sys.exit(1 if fail else 0)
