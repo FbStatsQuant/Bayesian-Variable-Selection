@@ -32,3 +32,53 @@ for r in ev:
     if r[4]: print("  ", r[0], "n", r[1], "p", r[2], "binary", r[6])
 f2 = [r for r in ev if r[6] == "da0cf85b"]
 print("F2 build (da0cf85b) only: %d fits, TRUE %d; n=200 F2: %d fits, TRUE %d" % (len(f2), sum(1 for r in f2 if r[4]), sum(1 for r in f2 if r[1] == 200), sum(1 for r in f2 if r[1] == 200 and r[4])))
+
+# ---- added after the Opus check (F2, F4, F5): census stratified by N; early tempering steps; island-6 recovery band ----
+print()
+print("census stratified by N (all builds, then F2 da0cf85b only); rows = (N, n): TRUE of fits")
+def strat(rows, title):
+    c = collections.Counter()
+    for r in rows: c[(r[3], r[1], bool(r[4]))] += 1
+    print(title)
+    keys = sorted({(k[0], k[1]) for k in c})
+    for (N, n) in keys:
+        t, f = c[(N, n, True)], c[(N, n, False)]
+        print("  N %6s n %5s : TRUE %d of %d" % (N, n, t, t + f))
+    byN = collections.Counter()
+    for r in rows: byN[(r[3], bool(r[4]))] += 1
+    for N in sorted({r[3] for r in rows}):
+        print("  N %6s all n : TRUE %d of %d" % (N, byN[(N, True)], byN[(N, True)] + byN[(N, False)]))
+strat(ev, "all builds, %d records" % len(ev))
+strat(f2, "F2 only, %d records" % len(f2))
+n200_hi = [r for r in ev if r[1] == 200 and r[2] >= 100000]
+print("n 200, p >= 1e5 (all builds): %d records; N 2500: %d (TRUE %d); N 10000: %d (TRUE %d); the N 2500 ones: %s" % (
+    len(n200_hi), sum(1 for r in n200_hi if r[3] == 2500), sum(1 for r in n200_hi if r[3] == 2500 and r[4]),
+    sum(1 for r in n200_hi if r[3] == 10000), sum(1 for r in n200_hi if r[3] == 10000 and r[4]), [r[0] for r in n200_hi if r[3] == 2500]))
+print()
+print("early bridge steps (delta phi of stages 1-5) and the flagged stage, from st_phi of island 1")
+def dphi(isl):
+    f = sorted(isl)[0] if False else list(isl)[0]; p = isl[f]["st_phi"]
+    return [round(p[i] - (p[i - 1] if i else 0), 4) for i in range(len(p))]
+d = {os.path.basename(k): v for k, v in L("ess_D.json").items()}
+print("  GC_D n 1000   :", dphi(d)[:5], "flagged stage 3 delta", dphi(d)[2])
+print("  GC_P n 200 1M :", dphi(loc["GC_P"])[:5])
+oth = L("ess_others.json")
+print("  V0 ADJ-OPP n200 p1e4 N2500 :", dphi(oth["VN_V0_3/4-ADJOPP-n200-r04-V-s2"])[:5], "flagged stage 3 delta", dphi(oth["VN_V0_3/4-ADJOPP-n200-r04-V-s2"])[2])
+for k in ("GB_G2a/5-ADJOPP-n200-r01-V-s1", "GB_G1a/5-AR-n200-r01-V-s1"):
+    print("  %s (N 10000):" % k, dphi(oth[k])[:5])
+import math
+w1, N = 167.47, 2500
+print("one-particle model, same ~54-unit outlier: dphi 0.095 -> w %.0f ESS/N %.3f ; dphi 0.041 -> w %.1f ESS/N %.3f" % (
+    math.exp(0.0949 * 54), ((N - 1 + math.exp(0.0949 * 54)) ** 2 / (N - 1 + math.exp(0.0949 * 54) ** 2)) / N,
+    math.exp(0.041 * 54), ((N - 1 + math.exp(0.041 * 54)) ** 2 / (N - 1 + math.exp(0.041 * 54) ** 2)) / N))
+print()
+print("island 6 (GC_D) stages 5-20 against the other 15 islands' range (min / max per stage)")
+names = sorted(d, key=lambda s: int(s.split("_")[1].split(".")[0]))
+e6 = d["island_6.bin"]["st_ess"]
+below = []
+for t in range(4, 20):
+    oth15 = [d[n]["st_ess"][t] for n in names if n != "island_6.bin"]
+    if e6[t] < min(oth15): below.append((t + 1, round(e6[t], 1), round(min(oth15), 1)))
+    if e6[t] > max(oth15): print("  stage %d above the others' max" % (t + 1))
+print("  stages where island 6 is below the other 15's minimum:", below, "(of 16 stages 5-20)")
+print("  stage 4: all 16 islands in [%.1f, %.1f] (delta phi %.4f)" % (min(d[n]["st_ess"][3] for n in names), max(d[n]["st_ess"][3] for n in names), dphi(d)[3]))

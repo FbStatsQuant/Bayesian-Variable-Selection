@@ -31,3 +31,39 @@ TRUE fits:
    precision1e4/S9/4-AR-n800-r02-V-s1 n 800 p 10000 binary d0c30b65
    gc1m/GC_D/6-AR-n1000-r01-V-s1 n 1000 p 1000000 binary da0cf85b
 F2 build (da0cf85b) only: 34 fits, TRUE 2; n=200 F2: 30 fits, TRUE 1
+
+census stratified by N (all builds, then F2 da0cf85b only); rows = (N, n): TRUE of fits
+all builds, 273 records
+  N   2500 n   100 : TRUE 5 of 42
+  N   2500 n   200 : TRUE 1 of 127
+  N   2500 n   400 : TRUE 0 of 35
+  N   2500 n   800 : TRUE 1 of 20
+  N   2500 n  1000 : TRUE 1 of 1
+  N  10000 n   200 : TRUE 0 of 40
+  N  10000 n   400 : TRUE 0 of 3
+  N  40000 n   100 : TRUE 0 of 2
+  N  40000 n   200 : TRUE 0 of 3
+  N   2500 all n : TRUE 8 of 225
+  N  10000 all n : TRUE 0 of 43
+  N  40000 all n : TRUE 0 of 5
+F2 only, 34 records
+  N   2500 n   200 : TRUE 1 of 7
+  N   2500 n  1000 : TRUE 1 of 1
+  N  10000 n   200 : TRUE 0 of 23
+  N  10000 n   400 : TRUE 0 of 3
+  N   2500 all n : TRUE 2 of 8
+  N  10000 all n : TRUE 0 of 26
+n 200, p >= 1e5 (all builds): 17 records; N 2500: 6 (TRUE 0); N 10000: 11 (TRUE 0); the N 2500 ones: ['hygiene_1117/group1/runs/T5_1e5/5-AR-n200-r01-V-s1', 'rung1e5/RG_1b/5-ADJOPP-n200-r01-VN25-s1', 'rung1e5/RG_1b/5-AR-n200-r01-VN25-s1', 'F1M_pilot', 'gc1m/GC_P/6-AR-n200-r01-V-s1', 'hygiene_1117/group1/runs/F1M_pilot/6-AR-n200-r01-V-s1']
+
+early bridge steps (delta phi of stages 1-5) and the flagged stage, from st_phi of island 1
+  GC_D n 1000   : [0.3007, 0.1858, 0.0949, 0.0066, 0.038] flagged stage 3 delta 0.0949
+  GC_P n 200 1M : [0.0409, 0.0422, 0.0002, 0.0459, 0.0018]
+  V0 ADJ-OPP n200 p1e4 N2500 : [0.174, 0.0234, 0.0958, 0.0367, 0.0401] flagged stage 3 delta 0.0958
+  GB_G2a/5-ADJOPP-n200-r01-V-s1 (N 10000): [0.1194, 0.1174, 0.0339, 0.0651, 0.0457]
+  GB_G1a/5-AR-n200-r01-V-s1 (N 10000): [0.0848, 0.0009, 0.067, 0.0542, 0.0451]
+one-particle model, same ~54-unit outlier: dphi 0.095 -> w 168 ESS/N 0.093 ; dphi 0.041 -> w 9.2 ESS/N 0.974
+
+island 6 (GC_D) stages 5-20 against the other 15 islands' range (min / max per stage)
+  stage 13 above the others' max
+  stages where island 6 is below the other 15's minimum: [(9, 2269.6, 2273.3), (12, 2500.0, 2500.0), (15, 2239.4, 2243.2)] (of 16 stages 5-20)
+  stage 4: all 16 islands in [2499.1, 2499.9] (delta phi 0.0066)
