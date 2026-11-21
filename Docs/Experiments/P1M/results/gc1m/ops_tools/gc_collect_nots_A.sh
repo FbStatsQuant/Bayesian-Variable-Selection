@@ -26,7 +26,7 @@ for b in $BL; do
       ( set +u; source "$S/env.sh" >/dev/null 2>&1; nice -n 19 "$S/bin/smcbvs4" info "$run/calib.bin" --meta 1 --record "$run/calib_meta.json" >/dev/null 2>&1 ) \
         || echo "WARNING: $rid: calib_meta.json could not be made" >&2
     fi
-    keep_law=1; keep_data=0; keep_setup=1   # GC_PLAN §5: A (fit, law, eval, sidecars) + A+ (setup.bin of option D); data / calib / islands are B / C
+    keep_law=1; keep_data=0; keep_setup=0; [[ ,$KEEP, == *,$rid,* ]] && keep_setup=1   # GC_PLAN §5: A (fit, law, eval, sidecars) + A+ (setup.bin ONLY for the run ids in the KEEP csv: option D, ADJ-OPP r01, AR-weak r01); data / calib / islands are B / C
     ( cd "$run"; rm -f OFFLOAD_FILES.sha256
       find . -type f ! -name 'SHA256SUMS*' ! -name 'OFFLOAD*' ! -name '*.ckpt*' \
         ! \( -name '*.bin' ! -name fit.bin ! -name eval.bin ! -name law.bin ! -name setup.bin ! -name data.bin \) | sed 's#^\./##' | sort \

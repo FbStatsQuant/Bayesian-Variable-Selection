@@ -1,0 +1,188 @@
+{
+ "wave": "W1",
+ "rule": "H-48: low_empirical_ESS together with an E-flag, sigma-hat > 0.5, a C2 failure or HPM != S0 -> FLAG, STOP; low_ESS alone is reported (H-49: expected ~ 1 in 7 fits on the frozen arm)",
+ "fits": [
+  {
+   "run_id": "6-ADJOPP-n200-r01-V-s1",
+   "N": 2500,
+   "hpm": [
+    100000,
+    100001,
+    500000,
+    700000,
+    900000
+   ],
+   "hpm_eq_S0": true,
+   "mpm_eq_S0": true,
+   "E": {
+    "E1": false,
+    "E2": false,
+    "E3": false
+   },
+   "sigma_hat": 0.8747121912014545,
+   "sd_logZ_r": 0.8747121912014545,
+   "C2_verdict": "PASS",
+   "C2": {
+    "M1": 0.020577085854548323,
+    "M2": 0.001035599593749165,
+    "evidence_gap": 0.06303868602137186,
+    "evidence_bound_3se": 0.6562156422000525,
+    "local_certified": true,
+    "max_abs_eq_minus_T": 0.0052886112358106405,
+    "eq_T_target": 0.28150724434600904
+   },
+   "low_empirical_ESS": false,
+   "min_ess": {
+    "ess": 1846.015229126273,
+    "ess_over_N": 0.7384060916505092,
+    "island": "island_3.bin",
+    "stage": 5,
+    "phi_from": 0.20103784174276554,
+    "phi_to": 0.2678498469802681,
+    "dphi": 0.06681200523750255
+   },
+   "n_islands": 16,
+   "n_island_stages": 400,
+   "ess_low_stages": [],
+   "low_ESS": false,
+   "flag_reasons": [
+    "sigma-hat 0.8747 > 0.5"
+   ],
+   "flag_stop": false,
+   "ess_flag_consistent": true
+  },
+  {
+   "run_id": "6-AR-n200-r02-V-s1",
+   "N": 2500,
+   "hpm": [
+    100000,
+    300000,
+    500000,
+    700000,
+    900000
+   ],
+   "hpm_eq_S0": true,
+   "mpm_eq_S0": true,
+   "E": {
+    "E1": false,
+    "E2": false,
+    "E3": false
+   },
+   "sigma_hat": 0.04491850648949294,
+   "sd_logZ_r": 0.04491850648949294,
+   "C2_verdict": "PASS",
+   "C2": {
+    "M1": 0.015376096431325922,
+    "M2": 0.0009203663626750178,
+    "evidence_gap": 0.004129122589347389,
+    "evidence_bound_3se": 0.03560799515243073,
+    "local_certified": true,
+    "max_abs_eq_minus_T": 0.007253887936239163,
+    "eq_T_target": 0.22338688133449247
+   },
+   "low_empirical_ESS": false,
+   "min_ess": {
+    "ess": 1897.3896068463441,
+    "ess_over_N": 0.7589558427385377,
+    "island": "island_11.bin",
+    "stage": 24,
+    "phi_from": 0.7117367041666296,
+    "phi_to": 0.8390484785570962,
+    "dphi": 0.1273117743904666
+   },
+   "n_islands": 16,
+   "n_island_stages": 448,
+   "ess_low_stages": [],
+   "low_ESS": false,
+   "flag_reasons": [],
+   "flag_stop": false,
+   "ess_flag_consistent": true
+  }
+ ],
+ "flag_stop": false,
+ "island_timing": {
+  "per_fit": {
+   "6-AR-n200-r02-V-s1": {
+    "n": 16,
+    "elapsed": {
+     "min": 462,
+     "mean": 989.6875,
+     "max": 1560
+    },
+    "engine_total": {
+     "min": 392.068789896,
+     "mean": 463.63924482868754,
+     "max": 625.309159549
+    },
+    "pre_engine_wait": {
+     "min": 69.53972787100003,
+     "mean": 526.0482551713125,
+     "max": 995.834068194
+    },
+    "billed_core_h": 422.2666666666667,
+    "engine_core_h": 197.8194111269067,
+    "max_engine_core_h": 16.674910921306665
+   },
+   "6-ADJOPP-n200-r01-V-s1": {
+    "n": 16,
+    "elapsed": {
+     "min": 440,
+     "mean": 821.125,
+     "max": 1441
+    },
+    "engine_total": {
+     "min": 370.68204027,
+     "mean": 447.6976712176875,
+     "max": 667.723280103
+    },
+    "pre_engine_wait": {
+     "min": 68.748963097,
+     "mean": 373.4273287823125,
+     "max": 899.335181615
+    },
+    "billed_core_h": 350.3466666666667,
+    "engine_core_h": 191.01767305288,
+    "max_engine_core_h": 17.80595413608
+   }
+  },
+  "by_node_type": {
+   "c": {
+    "n": 16,
+    "elapsed": {
+     "min": 462,
+     "mean": 949.3125,
+     "max": 1560
+    },
+    "engine_total": {
+     "min": 392.068789896,
+     "mean": 497.7515451855,
+     "max": 667.723280103
+    },
+    "pre_engine_wait": {
+     "min": 69.53972787100003,
+     "mean": 451.5609548145,
+     "max": 995.753176644
+    }
+   },
+   "g": {
+    "n": 16,
+    "elapsed": {
+     "min": 440,
+     "mean": 861.5,
+     "max": 1408
+    },
+    "engine_total": {
+     "min": 370.68204027,
+     "mean": 413.585370860875,
+     "max": 464.698322819
+    },
+    "pre_engine_wait": {
+     "min": 68.748963097,
+     "mean": 447.914629139125,
+     "max": 995.834068194
+    }
+   }
+  },
+  "node_constraint_sentence": "Proposal only (a node constraint to type g): the c-type islands average 949 s elapsed against 862 s on type g; had every island run at the g mean, the wave would have billed about 96.2 core-h less of 772.6 island core-h (12.5 %), before any extra queue wait that a constraint could add (not measured here), so it pays for itself only if the wait of the constrained type stays small."
+ }
+}
