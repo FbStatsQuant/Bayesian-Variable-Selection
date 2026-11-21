@@ -707,3 +707,4 @@
 - 2026-11-21 01:31 CST — HQ H-56 (97039581): 1M NOTS hygiene (a)–(c) APPROVED → ops.
 - 2026-11-21 02:20 CST — H-56 hygiene check (direct): no deletion lines yet (V4 running, ETA 08:25Z); GC_W2 not yet desktop-verified. Next check 09:05Z.
 - 2026-11-21 08:42 UTC riboflavin 3-h check (automated, read-only): no DONE_seed1-5, all 5 originals active (ribo-s1..5), all 5 duplicates active (ribo-dup-s1..5 since 2026-11-21 02:45 UTC). Elapsed per seed from ActiveEnterTimestamp / ps etime: 66.1 h (2-18:05). Last log line per seed: 'seed <s> start; R 4.6.0; mem_gb 8 hours 120' (no progress lines yet). Kill rule, resource_limit, collection: not triggered.
+- 2026-11-21 03:05 CST — H-56 check (direct): no deletion lines; ops' 02:27 CST self-prompt did not fire (last run 07:50Z); GC_W2 now desktop-verified (3 lines). Ops reminded once; next check 09:40Z (do it myself if still stuck).
