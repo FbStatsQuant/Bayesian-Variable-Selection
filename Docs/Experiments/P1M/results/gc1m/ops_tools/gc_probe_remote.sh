@@ -29,7 +29,7 @@ def J(p):
         return json.load(open(p))
     except Exception:
         return None
-out = {k: [] for k in ("DATA_HASH", "CALIB", "ISLAND_T", "DIAG", "BINSHA", "ENGINE_FLAGS")}
+out = {k: [] for k in ("DATA_HASH", "CALIB", "ISLAND_T", "DIAG", "BINSHA", "ISLAND_SEC", "ENGINE_FLAGS")}
 for b in batches:
     bp = os.path.join(D, "scripts", b, "bin", "smcbvs4")
     if os.path.exists(bp):
@@ -57,6 +57,10 @@ for b in batches:
                    "sections": {x.get("name"): x.get("sha256") for x in (cm or {}).get("sections", []) if x.get("name") != "meta"},   # pairing identity: every section of calib.bin except meta
                    "status": (cj or {}).get("status"), "cal_status": (cj or {}).get("cal_status"), "source": "calib_meta.json" if cm else "calib.bin.json settings"}
             out["CALIB"].append("%s|%s|%s" % (b, rid, json.dumps(rec, sort_keys=True)))
+        for sf in glob.glob(r + "island_*.bin.json"):   # H-51: the engine's own island time per island (seconds.total), the K2 compute clause
+            sj = J(sf); mk = re.match(r"island_(\d+)\.bin\.json$", os.path.basename(sf))
+            if sj and mk and isinstance(sj.get("seconds"), dict) and "total" in sj["seconds"]:
+                out["ISLAND_SEC"].append("%s|%s|%s|%s" % (b, rid, mk.group(1), sj["seconds"]["total"]))
         i1 = J(r + "island_1.bin.json")
         if i1 and "T" in i1:
             out["ISLAND_T"].append("%s|%s|%s" % (b, rid, i1["T"]))

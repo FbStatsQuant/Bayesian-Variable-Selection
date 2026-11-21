@@ -82,3 +82,11 @@ The finished setup of `GC_D` (2817052, TIMEOUT 1 s after it wrote a `completed` 
 | identity / failures / memory / admission | as the pilot (arm N 2,500, `refine_m` 1, I_max 0, bounded; BUILD_F2; OOM only on the state OUT_OF_MEMORY; foreign sacct rows = one INFO) |
 | end report extras | per fit: setup wall + core-h, calibrate elapsed + core-h, islands min / mean / max elapsed and billed, merge and eval walls, fit total vs soft / hard; the wave total vs 705 / 1,410 |
 Cadence: first probe ≈ 10 min after the START, then every 15 min (every 10 during calibrate and islands); at most one per 5 min.
+
+---
+
+# AMENDMENT H-50 / H-51 (2026-11-21; applies to waves P-like and W1 and every later pair wave): the K2 compute clause and the own-QOS pending
+- **K2 compute clause is re-based on ENGINE time:** an island trips K2 if its **engine `seconds.total` (the island's `island_k.bin.json`, printed by the probe as section ISLAND_SEC) × its allocated CPUs / 3600 > 33.6 core-h** (e.g. 1,260 s at 96 CPUs). It can only be evaluated once an island's sidecar exists; while the island runs, the **elapsed clause** (an island > 1,584 s while the other islands have finished) and the fit billed lines govern. **A Slurm-billed island cost above 33.6 core-h is NOT a K2 trip** (the billed cost includes the pre-engine wait). The old fixed "billed > 33.6" wording in the tables above is superseded.
+- **`QOSMaxCpuPerUserLimit` pending = INFO** (our own 1,536-CPU per-user cap: the second fit's islands queue behind the first's); any other QOS / Assoc / MaxSubmit / Invalid / Limit reason on our own jobs is still a STOP. K1, K3, soft / hard, wave stop, cumulative, identity: unchanged.
+- **Report in the hourly line and at the end:** the island elapsed min / mean / max AND the Slurm-billed island core-h; when ISLAND_SEC lines exist, the engine-time spread too.
+

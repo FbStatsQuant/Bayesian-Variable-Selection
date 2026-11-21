@@ -5,12 +5,12 @@ Exit 0 = no stop rule, 3 = STOP, 4 = PROBE ERROR (the rules were not fully evalu
   per fit soft  cost > 489 (1.5 x E 326, the C1 line)  -> REPORT-and-continue (3 soft trips would STOP; one fit cannot)
   per fit hard  cost > 815 (2.5 x E; K3, pinned, never re-fitted; option D 2,718, soft 1,631) -> STOP
   K1            the calibrate task billed > 48 core-h (pilot: 2 x its model 24; ~30 min); option D: billed > 70 core-h OR elapsed > 45 min -> STOP
-  K2            an island task whose elapsed time > 1,584 s (pilot: 2 x 792 s; option D: > 3,600 s = 60 min) WHILE THE OTHER ISLANDS HAVE FINISHED (no other island row non-terminal); pilot only: billed > 33.6 core-h -> STOP
+  K2            an island task whose elapsed time > 1,584 s (pilot / W1: 2 x 792 s; option D: > 3,600 s = 60 min) WHILE THE OTHER ISLANDS HAVE FINISHED (no other island row non-terminal); pilot / W1 also: ENGINE time (island_k.bin.json seconds.total) x allocated CPUs / 3600 > 33.6 core-h (H-51; evaluated once the island's sidecar exists; Slurm-billed core-h are reported, not gated) -> STOP
                 (an island running > 1,584 s while others still run is an INFO, not yet K2)
   wave line     wave actual > 2 x the quote (pilot 325 -> 650; option D 1,087 -> 2,174): HALTS SUBMISSION ONLY (a one-fit wave: nothing more to submit; the per-fit lines govern): printed as `FLAG WAVE LINE`, no stop
   cumulative    new spend of the S2 fits (this wave + --prior) > 14,500 -> STOP (the projection ceiling 28,300 is evaluated from the second wave on, not here)
   failures      FAILED / TIMEOUT / OUT_OF_MEMORY / CANCELLED stage (NODE_FAIL, BOOT_FAIL = INFO) -> STOP. Memory is judged on the job STATE only (OOM = OUT_OF_MEMORY); sacct MaxRSS near a request is page cache, not a stop (not even read here)
-  admission     engine resource_limit / admission / OUTCOME record; pending reason QOS / Assoc / MaxSubmit / Invalid / Limit (own jobs only) -> STOP
+  admission     engine resource_limit / admission / OUTCOME record; pending reason QOS / Assoc / MaxSubmit / Invalid / Limit (own jobs only) -> STOP, EXCEPT `QOSMaxCpuPerUserLimit` = our own per-user CPU cap: INFO (H-50 / H-51)
   arm identity  the fit's recorded arm (calib_meta.json, else calib.bin.json settings): N 2,500, refine_m 1, I_max 0, rule bounded != the plan's -> STOP; FLAG: I_max 0 and cost_diag files exist
   data identity truth.json X / y sha256 == the 11-17 rep-1 record (F1M_pilot: X 5174f8b3..., y 9b0c866c..., gc_refs.json)                           -> STOP
   build         every batch's bin/smcbvs4 sha256 and every fit's recorded binary.sha256 == the BUILD_F2 line of deploy_gc.log (da0cf85b...)           -> STOP
@@ -35,9 +35,9 @@ QUOTE = {"P": 325.0, "D": 1087.0, "D2": 1087.0, "W1": 705.0}
 WAVE_LINE = {"P": 650.0, "D": 2174.0, "D2": 2174.0, "W1": 1410.0}                       # 2 x quote: halts submission only (a one-fit wave)
 WAVE_STOPS = {"W1"}                                         # multi-fit waves: 2 x the quote is a real STOP; the one-fit waves (P, D, D2) only halt submission (a FLAG)
 CUM_STOP = 14500.0
-# kill rules per wave (GC_PREREG §4 pilot; §5.1 option D): K1 = calibrate billed core-h and (D) elapsed seconds; K2 = island elapsed seconds while the others have finished, and (pilot) billed core-h
+# kill rules per wave (GC_PREREG §4 pilot; §5.1 option D): K1 = calibrate billed core-h and (D) elapsed seconds; K2 = island elapsed seconds while the others have finished, and (pilot, W1) the ENGINE time (island sidecar seconds.total) x the task's allocated CPUs > 33.6 core-h (H-51; the Slurm-billed core-h include the pre-engine wait and are reported, not gated)
 K1 = {"P": (48.0, None), "D": (70.0, 2700.0), "D2": (70.0, 2700.0), "W1": (48.0, None)}               # pilot: 2 x 24 core-h; D: > 70 core-h OR > 45 min
-K2 = {"P": (1584.0, 33.6), "D": (3600.0, None), "D2": (3600.0, None), "W1": (1584.0, 33.6)}             # pilot: 2 x 792 s, 2 x 16.8 core-h; D: > 60 min
+K2 = {"P": (1584.0, 33.6), "D": (3600.0, None), "D2": (3600.0, None), "W1": (1584.0, 33.6)}   # (elapsed line s, compute clause core-h: ENGINE seconds.total x allocated CPUs, H-51)             # pilot: 2 x 792 s, 2 x 16.8 core-h; D: > 60 min
 INFRA, PEND_BAD = {"NODE_FAIL", "BOOT_FAIL"}, re.compile(r"QOS|Assoc|MaxSubmit|Invalid|Limit", re.I)
 TERMINAL = {"COMPLETED", "FAILED", "TIMEOUT", "OUT_OF_MEMORY", "CANCELLED", "NODE_FAIL", "BOOT_FAIL", "DEADLINE", "PREEMPTED", "REVOKED"}
 BAD = {"FAILED", "TIMEOUT", "OUT_OF_MEMORY", "CANCELLED", "DEADLINE", "PREEMPTED", "REVOKED", "SUSPENDED"}
@@ -129,6 +129,11 @@ def main():
                 j = json.loads(l); jobmap[j["job"]] = (b, None if j["fit"] == "all" else j["fit"])
     cost, state, bad_stage, pend = defaultdict(float), defaultdict(set), [], []
     isl = defaultdict(list); gc_rows = []
+    isl_sec = {}   # (batch, run id, island) -> engine seconds.total from island_k.bin.json (probe section ISLAND_SEC; absent in older probes)
+    for l_ in S.get("ISLAND_SEC", []):
+        f_ = l_.split("|")
+        if len(f_) >= 4 and f_[3].replace(".", "", 1).isdigit():
+            isl_sec[(f_[0], f_[1], int(f_[2]))] = float(f_[3])
     sacct_rows, sacct_nonterm, sacct_jobs = 0, [], set()
     foreign = []   # sacct rows on one of our job ids that are not ours (the Slurm accounting DB reuses old job ids: R3 probe 14:20Z, job 2814240 also listed 17 array tasks of another user's cmds_rmsd.list.sh from 2025-10-23)
     for l in S.get("SACCT", []):
@@ -146,7 +151,7 @@ def main():
             sacct_nonterm.append("%s %s" % (jid, s0))
         b, fit = jobmap[base]
         if base not in ign_jobs:   # known-failed jobs (--ignore-jobs: the lost GC_D setup and its cancelled dependants) take no part in K1 / K2
-            gc_rows.append((jid, name, s0, int(el or 0), int(cpuraw or 0) / 3600.0))
+            gc_rows.append((jid, name, s0, int(el or 0), int(cpuraw or 0) / 3600.0, int(cpus or 0), b, fit, task))
         if fit is None:
             if not task.isdigit():
                 continue
@@ -171,17 +176,21 @@ def main():
             (infos if base in ign_jobs else bad_stage).append(("known-failed: " if base in ign_jobs else "") + "%s %s %s" % (jid, name, st))
         if s0 in INFRA:
             infos.append("infrastructure fault (not a stop rule; one rerun per fit, manager): %s %s %s" % (jid, name, st))
-    n_foreign = own_squeue = 0
+    n_foreign = own_squeue = 0; qos_own = []
     for l in S.get("SQUEUE", []):
         i, n, st, rs = l.split("|")[:4]
         if i.split("_")[0] not in jobmap:
             n_foreign += 1; continue
         own_squeue += 1
         if st == "PENDING" and PEND_BAD.search(rs):
-            if rs == "JobArrayTaskLimit" and re.search(r"%\d+\]$", i):
+            if rs == "QOSMaxCpuPerUserLimit":   # H-50: our OWN 1,536-CPU per-user cap (2 x 16 islands at 96 CPUs): INFO, not a stop
+                qos_own.append("%s %s" % (i, n))
+            elif rs == "JobArrayTaskLimit" and re.search(r"%\d+\]$", i):
                 infos.append("own array throttle (not a stop): %s %s reason=%s" % (i, n, rs))
             else:
                 pend.append("%s %s reason=%s" % (i, n, rs))
+    if qos_own:
+        infos.append("INFO %d pending row(s) wait on QOSMaxCpuPerUserLimit = our own per-user CPU cap (1,536 CPUs): normal queueing of the second fit's islands, not a stop (H-50), e.g. %s" % (len(qos_own), qos_own[0]))
     prior = json.load(open(a.prior)) if a.prior else {}
     wave_cost = sum(cost.values()); spent = wave_cost + sum(prior.values())
     # a RESUBMISSION of the same fit (option D after the setup TIMEOUT of GC_D, HQ d99c67b4): the earlier batch's billed core-h of the SAME run id (--prior) count in the fit's total and in the wave actual
@@ -216,15 +225,18 @@ def main():
     # K1 / K2 (GC_PREREG §4): the calibrate task and the island tasks, from the sacct rows of our own jobs
     isl_rows = [r for r in gc_rows if "islands" in r[1]]
     k1b, k1s = K1.get(a.wave, (None, None)); k2s, k2b = K2.get(a.wave, (None, None))
-    for jid, name, s0, el, billed in gc_rows:
+    for jid, name, s0, el, billed, ncpu, gb, gfit, gtask in gc_rows:
         if name.endswith("calibrate") and k1b is not None and billed > k1b:
             flags.append("STOP K1: calibrate task %s billed %.1f core-h > %.0f (elapsed %d s, state %s)" % (jid, billed, k1b, el, s0))
         elif name.endswith("calibrate") and k1s is not None and el > k1s:
             flags.append("STOP K1: calibrate task %s elapsed %d s > %d s = %d min (billed %.1f core-h, state %s)" % (jid, el, k1s, k1s // 60, billed, s0))
-    for jid, name, s0, el, billed in isl_rows:
+    for jid, name, s0, el, billed, ncpu, gb, gfit, gtask in isl_rows:
         others_done = all(r[2] in TERMINAL for r in isl_rows if r[0] != jid and "[" not in r[0])
-        if k2b is not None and billed > k2b:
-            flags.append("STOP K2: island task %s billed %.1f core-h > %.1f (elapsed %d s, state %s)" % (jid, billed, k2b, el, s0))
+        # H-51 (supersedes H-50): the K2 compute clause = the engine's own island time (island_k.bin.json seconds.total) x the task's ALLOCATED CPUs / 3600 > 33.6 core-h. It can only be evaluated once the island's
+        # sidecar exists; while the island runs the elapsed clause and the fit billed lines govern. The Slurm-billed core-h include the pre-engine wait (the engine starts after its input load / node contention) and are reported, not gated.
+        esec = isl_sec.get((gb, gfit, int(gtask))) if (gtask.isdigit() and k2b) else None
+        if esec is not None and ncpu and esec * ncpu / 3600.0 > k2b:
+            flags.append("STOP K2: island task %s engine time %.0f s x %d allocated CPUs = %.1f core-h > %.1f (engine seconds.total from island_%s.bin.json; Slurm elapsed %d s, billed %.1f core-h, state %s)" % (jid, esec, ncpu, esec * ncpu / 3600.0, k2b, gtask, el, billed, s0))
         elif k2s is not None and el > k2s and others_done and not any("[" in r[0] for r in isl_rows):
             flags.append("STOP K2: island task %s elapsed %d s > %d s while the other islands have finished (state %s)" % (jid, el, k2s, s0))
         elif k2s is not None and el > k2s:

@@ -1,0 +1,90 @@
+### META utc=2026-11-21T01:17:22Z
+### SUBMISSIONS GC_W1
+{"stage":"setup","fit":"all","job":"2820586","submitted_utc":"2026-11-21T00:16:20Z"}
+{"stage":"calibrate","fit":"all","job":"2820587","submitted_utc":"2026-11-21T00:16:20Z"}
+{"stage":"islands","fit":"6-AR-n200-r02-V-s1","job":"2820588","submitted_utc":"2026-11-21T00:16:20Z"}
+{"stage":"merge","fit":"6-AR-n200-r02-V-s1","job":"2820589","submitted_utc":"2026-11-21T00:16:20Z"}
+{"stage":"eval","fit":"6-AR-n200-r02-V-s1","job":"2820590","submitted_utc":"2026-11-21T00:16:20Z"}
+{"stage":"islands","fit":"6-ADJOPP-n200-r01-V-s1","job":"2820591","submitted_utc":"2026-11-21T00:16:20Z"}
+{"stage":"merge","fit":"6-ADJOPP-n200-r01-V-s1","job":"2820592","submitted_utc":"2026-11-21T00:16:20Z"}
+{"stage":"eval","fit":"6-ADJOPP-n200-r01-V-s1","job":"2820593","submitted_utc":"2026-11-21T00:16:20Z"}
+### SQUEUE
+2820591_[11-16%16]|p1m_GC_W1_islands|PENDING|QOSMaxCpuPerUserLimit|0:00|96
+2820592|p1m_GC_W1_merge|PENDING|Dependency|0:00|32
+2820589|p1m_GC_W1_merge|PENDING|Dependency|0:00|32
+2820593|p1m_GC_W1_eval|PENDING|Dependency|0:00|8
+2820590|p1m_GC_W1_eval|PENDING|Dependency|0:00|8
+2820591_9|p1m_GC_W1_islands|RUNNING|None|3:28|96
+2820591_7|p1m_GC_W1_islands|RUNNING|None|4:49|96
+2820591_8|p1m_GC_W1_islands|RUNNING|None|4:49|96
+2820591_5|p1m_GC_W1_islands|RUNNING|None|5:30|96
+2820591_6|p1m_GC_W1_islands|RUNNING|None|5:30|96
+2820591_10|p1m_GC_W1_islands|RUNNING|None|0:06|96
+2820588_14|p1m_GC_W1_islands|RUNNING|None|11:37|96
+2820588_15|p1m_GC_W1_islands|RUNNING|None|11:37|96
+2820591_2|p1m_GC_W1_islands|RUNNING|None|6:53|96
+2820591_3|p1m_GC_W1_islands|RUNNING|None|6:53|96
+2820591_4|p1m_GC_W1_islands|RUNNING|None|6:53|96
+2820591_1|p1m_GC_W1_islands|RUNNING|None|7:34|96
+2820588_12|p1m_GC_W1_islands|RUNNING|None|12:18|96
+2820588_11|p1m_GC_W1_islands|RUNNING|None|12:59|96
+2820588_9|p1m_GC_W1_islands|RUNNING|None|15:41|96
+2820588_8|p1m_GC_W1_islands|RUNNING|None|17:02|96
+### SACCT
+2820589|p1m_GC_W1_merge|PENDING|0|0|0|01:30:00|fb31
+2820590|p1m_GC_W1_eval|PENDING|0|0|0|01:00:00|fb31
+2820592|p1m_GC_W1_merge|PENDING|0|0|0|01:30:00|fb31
+2820593|p1m_GC_W1_eval|PENDING|0|0|0|01:00:00|fb31
+2820586_1|p1m_GC_W1_setup|COMPLETED|1106|48|53088|00:45:00|fb31
+2820586_2|p1m_GC_W1_setup|COMPLETED|995|48|47760|00:45:00|fb31
+2820587_1|p1m_GC_W1_calibrate|COMPLETED|728|96|69888|01:30:00|fb31
+2820587_2|p1m_GC_W1_calibrate|COMPLETED|843|96|80928|01:30:00|fb31
+2820588_1|p1m_GC_W1_islands|COMPLETED|561|96|53856|01:00:00|fb31
+2820588_2|p1m_GC_W1_islands|COMPLETED|1429|96|137184|01:00:00|fb31
+2820588_3|p1m_GC_W1_islands|COMPLETED|1228|96|117888|01:00:00|fb31
+2820588_4|p1m_GC_W1_islands|COMPLETED|1321|96|126816|01:00:00|fb31
+2820588_5|p1m_GC_W1_islands|COMPLETED|676|96|64896|01:00:00|fb31
+2820588_6|p1m_GC_W1_islands|COMPLETED|462|96|44352|01:00:00|fb31
+2820588_7|p1m_GC_W1_islands|COMPLETED|633|96|60768|01:00:00|fb31
+2820588_8|p1m_GC_W1_islands|RUNNING|1022|96|98112|01:00:00|fb31
+2820588_9|p1m_GC_W1_islands|RUNNING|941|96|90336|01:00:00|fb31
+2820588_10|p1m_GC_W1_islands|COMPLETED|496|96|47616|01:00:00|fb31
+2820588_11|p1m_GC_W1_islands|RUNNING|779|96|74784|01:00:00|fb31
+2820588_12|p1m_GC_W1_islands|RUNNING|738|96|70848|01:00:00|fb31
+2820588_13|p1m_GC_W1_islands|COMPLETED|470|96|45120|01:00:00|fb31
+2820588_14|p1m_GC_W1_islands|RUNNING|697|96|66912|01:00:00|fb31
+2820588_15|p1m_GC_W1_islands|RUNNING|697|96|66912|01:00:00|fb31
+2820588_16|p1m_GC_W1_islands|COMPLETED|504|96|48384|01:00:00|fb31
+2820591_1|p1m_GC_W1_islands|RUNNING|454|96|43584|01:00:00|fb31
+2820591_2|p1m_GC_W1_islands|RUNNING|413|96|39648|01:00:00|fb31
+2820591_3|p1m_GC_W1_islands|RUNNING|413|96|39648|01:00:00|fb31
+2820591_4|p1m_GC_W1_islands|RUNNING|413|96|39648|01:00:00|fb31
+2820591_5|p1m_GC_W1_islands|RUNNING|330|96|31680|01:00:00|fb31
+2820591_6|p1m_GC_W1_islands|RUNNING|330|96|31680|01:00:00|fb31
+2820591_7|p1m_GC_W1_islands|RUNNING|289|96|27744|01:00:00|fb31
+2820591_8|p1m_GC_W1_islands|RUNNING|289|96|27744|01:00:00|fb31
+2820591_9|p1m_GC_W1_islands|RUNNING|208|96|19968|01:00:00|fb31
+2820591_10|p1m_GC_W1_islands|RUNNING|6|96|576|01:00:00|fb31
+2820591_[11-16%16]|p1m_GC_W1_islands|PENDING|0|0|0|01:00:00|fb31
+### SSTAT
+### DATA_HASH
+GC_W1|6-ADJOPP-n200-r01-V-s1|321c26ecc9f1dc52c5839e6cf6e7b8008e94b7c49e6b701a1569f1b7951b1e27|50a943829db1c2bfbbbf554ebb491c370c19f4c234183e9284dd954938aa97c2|b431995477015ad0116b68c5a7d42e926bd049bc5705359be519a971d10d89bf|da0cf85b5fe014973d15674f0da8e8c12dfdaf465a5e06aa0216b294601f231a
+GC_W1|6-AR-n200-r02-V-s1|3ee9ebed18febe60620c4b4b4ae22ab55f8d8d24f0efa20e67e9762cbe519545|2728099fec55b3b652515e525fd55276d02c7b5650e9c1ea9b38909cc04eb921|eca9f8f9ae4d22a7476e34727c6b1312db4b0eaed22517e40fe1f69115ac1e17|da0cf85b5fe014973d15674f0da8e8c12dfdaf465a5e06aa0216b294601f231a
+### CALIB
+GC_W1|6-ADJOPP-n200-r01-V-s1|{"I_max": 0, "I_used": null, "N": 2500, "cal_status": "ok", "grid_n": null, "grid_unconverged": null, "grid_unrefined_n": null, "refine_m": 1, "rule": "bounded", "sections": {}, "source": "calib.bin.json settings", "status": "completed"}
+GC_W1|6-AR-n200-r02-V-s1|{"I_max": 0, "I_used": null, "N": 2500, "cal_status": "ok", "grid_n": null, "grid_unconverged": null, "grid_unrefined_n": null, "refine_m": 1, "rule": "bounded", "sections": {}, "source": "calib.bin.json settings", "status": "completed"}
+### ISLAND_T
+GC_W1|6-AR-n200-r02-V-s1|28
+### DIAG
+GC_W1|6-ADJOPP-n200-r01-V-s1|-1|0
+GC_W1|6-AR-n200-r02-V-s1|-1|0
+### BINSHA
+GC_W1|da0cf85b5fe014973d15674f0da8e8c12dfdaf465a5e06aa0216b294601f231a
+### ENGINE_FLAGS
+### REMOTE_SCRIPT_RC
+0
+### REMOTE_RC
+0
+### REMOTE_NOTE
+
+### REMOTE_STDERR
