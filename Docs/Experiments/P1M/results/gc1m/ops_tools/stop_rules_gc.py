@@ -30,13 +30,14 @@ TABLE = {
     "gc1m AR n1000 N2500 I0 (option D)": (1087.0, 1631.0, 2718.0),
 }
 TABLE_SHA256 = "e03175982c557efe6128a0d77f41c33f24831789d7cbac6ac75e7483a3ec0474"
-WAVES = {"P": ["GC_P"], "D": ["GC_D"], "D2": ["GC_D2"]}   # D2 = the resubmission of option D (HQ d99c67b4): same fit, same lines; the lost GC_D setup is the --prior
-QUOTE = {"P": 325.0, "D": 1087.0, "D2": 1087.0}
-WAVE_LINE = {"P": 650.0, "D": 2174.0, "D2": 2174.0}                       # 2 x quote: halts submission only (a one-fit wave)
+WAVES = {"P": ["GC_P"], "D": ["GC_D"], "D2": ["GC_D2"], "W1": ["GC_W1"]}   # D2 = the resubmission of option D (HQ d99c67b4): same fit, same lines; the lost GC_D setup is the --prior
+QUOTE = {"P": 325.0, "D": 1087.0, "D2": 1087.0, "W1": 705.0}
+WAVE_LINE = {"P": 650.0, "D": 2174.0, "D2": 2174.0, "W1": 1410.0}                       # 2 x quote: halts submission only (a one-fit wave)
+WAVE_STOPS = {"W1"}                                         # multi-fit waves: 2 x the quote is a real STOP; the one-fit waves (P, D, D2) only halt submission (a FLAG)
 CUM_STOP = 14500.0
 # kill rules per wave (GC_PREREG §4 pilot; §5.1 option D): K1 = calibrate billed core-h and (D) elapsed seconds; K2 = island elapsed seconds while the others have finished, and (pilot) billed core-h
-K1 = {"P": (48.0, None), "D": (70.0, 2700.0), "D2": (70.0, 2700.0)}               # pilot: 2 x 24 core-h; D: > 70 core-h OR > 45 min
-K2 = {"P": (1584.0, 33.6), "D": (3600.0, None), "D2": (3600.0, None)}             # pilot: 2 x 792 s, 2 x 16.8 core-h; D: > 60 min
+K1 = {"P": (48.0, None), "D": (70.0, 2700.0), "D2": (70.0, 2700.0), "W1": (48.0, None)}               # pilot: 2 x 24 core-h; D: > 70 core-h OR > 45 min
+K2 = {"P": (1584.0, 33.6), "D": (3600.0, None), "D2": (3600.0, None), "W1": (1584.0, 33.6)}             # pilot: 2 x 792 s, 2 x 16.8 core-h; D: > 60 min
 INFRA, PEND_BAD = {"NODE_FAIL", "BOOT_FAIL"}, re.compile(r"QOS|Assoc|MaxSubmit|Invalid|Limit", re.I)
 TERMINAL = {"COMPLETED", "FAILED", "TIMEOUT", "OUT_OF_MEMORY", "CANCELLED", "NODE_FAIL", "BOOT_FAIL", "DEADLINE", "PREEMPTED", "REVOKED"}
 BAD = {"FAILED", "TIMEOUT", "OUT_OF_MEMORY", "CANCELLED", "DEADLINE", "PREEMPTED", "REVOKED", "SUSPENDED"}
@@ -205,6 +206,8 @@ def main():
     wstop = 2 * a.quote if a.quote is not None else WAVE_LINE.get(a.wave)
     if quote is None or wstop is None:
         flags.append("STOP no quote for wave %s" % a.wave)
+    elif wave_cost_incl > wstop and a.wave in WAVE_STOPS:
+        flags.append("STOP wave %s actual %.1f > the wave stop %g (2 x the quote %g): no further wave until the manager rules" % (a.wave, wave_cost_incl, wstop, quote))
     elif wave_cost_incl > wstop:
         flags.append("FLAG WAVE LINE: wave %s actual %.1f > 2 x the quote = %g: this halts submission only (the pilot is one fit, nothing more to submit); the per-fit lines (soft 489, hard 815) and K1-K3 govern" % (a.wave, wave_cost_incl, wstop))
     if spent > a.cum_stop:
@@ -305,8 +308,8 @@ def main():
         for r in runs[b]:
             k = b + "/" + r; kl = klass(b, r); t = TABLE.get(kl)
             print("%-52s %-18s %8.2f %6s %6s  %s" % (k, kl, cost.get(k, 0.0) + own_prior.get(r, 0.0), "%.1f" % soft_ov.get(kl, t[1]) if t else "-", "%.1f" % t[2] if t else "-", ",".join(sorted(state.get(k, [])))))
-    print("wave actual %.1f core-h (quote %s -> wave line %s: halts submission only) | GC spent %.1f (cum stop %.0f) | %s" % (
-        wave_cost_incl, "%g" % quote if quote is not None else "none", "%g" % wstop if wstop is not None else "n/a", spent, a.cum_stop, pnote))
+    print("wave actual %.1f core-h (quote %s -> %s %s) | GC spent %.1f (cum stop %.0f) | %s" % (
+        wave_cost_incl, "%g" % quote if quote is not None else "none", "wave STOP" if a.wave in WAVE_STOPS else "wave line", "%g" % wstop if wstop is not None else "n/a", spent, a.cum_stop, pnote))
     print("arm identity checked on %d fits; datasets with hashes: %d; BUILD_F2 sha256 %s" % (n_arm, len(hs), (f2 or "-")[:16]))
     print("SOFT OVERRIDES (soft column only; TABLE and the hard column pinned, sha256 %s): %s" % (table_sha()[:12], "; ".join("%s: committed soft %.1f -> %.1f" % (k, TABLE[k][1], v) for k, v in sorted(soft_ov.items())) or "none"))
     if n_foreign:

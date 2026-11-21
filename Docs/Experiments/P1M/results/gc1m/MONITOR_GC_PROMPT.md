@@ -68,3 +68,17 @@ The other lines (failures, admission, foreign sacct rows, PROBE ERROR exit 4, WA
 
 # WAVE D, option B (resume on the SAME batch GC_D after the setup TIMEOUT; used only if the manager rules B)
 The finished setup of `GC_D` (2817052, TIMEOUT 1 s after it wrote a `completed` `setup.bin`) is kept; ops submits calibrate → islands → merge → eval again on the same run dir (limits calibrate 2:00, **islands 2:30 / 80 G**, merge 3:00, eval 1:00). Probe: `cd /home/fb31/SMC_Engineering_Department/staging/gc1m && IGNORE_JOBS=2817052,2817053,2817054,2817055,2817056 MAKE_CALIB_META=0 bash tools/gc_monitor_probe.sh D`. **`IGNORE_JOBS` is mandatory**: without it the old setup TIMEOUT is read as a STOP. The old jobs are then an `INFO known-failed` line; their billed core-h (setup 84.09) stay in the fit total (soft 1,631 / hard 2,718, quote 1,087, wave line 2,174); K1 / K2 look at the NEW calibrate and island rows only. Everything else as WAVE D, incl. the `INFO progress (sstat)` line per RUNNING job (copy it into your hourly report).
+
+---
+
+# WAVE W1 (HQ H-48): two 1M fits at once — the pilot rulebook with these differences
+**Batch `GC_W1`**: TWO fits in one batch (setup and calibrate arrays of 2 tasks, 2 × 16 island tasks): **AR r02 `6-AR-n200-r02-V-s1`** (seed 602020002) and **ADJ-OPP r01 `6-ADJOPP-n200-r01-V-s1`** (seed 605020001), F2 `da0cf85b…`, N 2,500, `refine_m` 1, I_max 0, R′ 16, 40 tasks. Probe (NOTE the env var, mandatory — the manager-approved AR soft line 518): `cd /home/fb31/SMC_Engineering_Department/staging/gc1m && SOFT_OVERRIDES='gc1m AR n200 N2500 I0=518' bash tools/gc_monitor_probe.sh W1` (no MAKE_CALIB_META). The 2 × 16 islands share the 1,536-CPU QOS cap: the second fit's islands queue behind the first's inside the cap (longer wall, not a problem). Expected wall ≈ 1.5–2.5 h.
+| rule | wave W1 |
+|---|---|
+| quote | **705** (≈ 346 + 359); **wave STOP > 1,410** (2 × the quote): a real STOP for this 2-fit wave (tell the manager, no next wave) |
+| per fit soft / hard | **AR: soft 518** (re-fitted unit ≈ 346, HQ H-46; the override), **hard 815**; **ADJ-OPP: soft 509, hard 848** (STOP). A soft trip = report ≤ 3 lines and continue |
+| K1 | **each fit's calibrate task billed > 48 core-h** → STOP |
+| K2 | an island task (either fit) elapsed **> 1,584 s while the other islands (both fits) have finished**, or billed **> 33.6 core-h** → STOP (while others still run: INFO only; note the queue wait of the 2nd fit's islands is NOT elapsed time) |
+| identity / failures / memory / admission | as the pilot (arm N 2,500, `refine_m` 1, I_max 0, bounded; BUILD_F2; OOM only on the state OUT_OF_MEMORY; foreign sacct rows = one INFO) |
+| end report extras | per fit: setup wall + core-h, calibrate elapsed + core-h, islands min / mean / max elapsed and billed, merge and eval walls, fit total vs soft / hard; the wave total vs 705 / 1,410 |
+Cadence: first probe ≈ 10 min after the START, then every 15 min (every 10 during calibrate and islands); at most one per 5 min.

@@ -1,0 +1,33 @@
+fit                                                             isl     T stages    min ESS where        stage    min/N  island-stages < 0.5 N
+GC_D 6-AR-n1000-r01 (1M, N 2500, F2)                             16    20    320      232.8 island_6.bin 3        0.093  1 [(232.8, 'island_6.bin', 3)]
+GC_P 6-AR-n200-r01 (1M, N 2500, F2)                              16    27    432     1666.9 island_11.bin 22       0.667  0 
+11-17 6-AR-n200-r01 (1M, N 2500, I_max 3)                        16    27    432     1668.2 island_11.bin 22       0.667  0 
+VN_V0_3/4-ADJOPP-n200-r04-V-s2 (p 1e4, F2)                       16    23    368      859.1 island_11.bin 3        0.344  2 [(859.1, 'island_11.bin', 3), (1226.7, 'island_13.bin', 18)]
+GB_G1a/5-AR-n200-r01-V-s1 (p 1e5, F2, N 10000)                   16    30    480     8181.0 island_5.bin 29       0.818  0 
+GB_G2a/5-ADJOPP-n200-r01-V-s1 (p 1e5, F2, N 10000)               16    20    320     8504.3 island_8.bin 2        0.850  0 
+RG_2a/5-AR-n200-r02-V-s1 (p 1e5, F2, N 10000)                    16    21    336     8495.2 island_8.bin 16       0.850  0 
+RG_3a/5-IND-n200-r01-V-s1 (p 1e5, F2, N 10000)                   16    16    256     6018.4 island_6.bin 13       0.602  0 
+RG_3b/5-ADJOPP-n200-r02-V-s1 (p 1e5, F2, N 10000)                16    22    352     8377.8 island_4.bin 18       0.838  0 
+RG_1a/5-AR-n400-r01-V-s1 (p 1e5, F2, N 10000)                    16     7    112     8157.0 island_14.bin 3        0.816  0 
+RG_2b/5-AR-n400-r02-V-s1 (p 1e5, F2, N 10000)                    16     7    112     8442.4 island_2.bin 6        0.844  0 
+RG_2b/5-AR-n400-r03-V-s1 (p 1e5, F2, N 10000)                    16     8    128     7984.7 island_10.bin 6        0.798  0 
+
+low_empirical_ESS census over all 273 eval.bin.json under records/ (all builds):
+  n   100 p    10000 : TRUE 5 of 44
+  n   200 p    10000 : TRUE 1 of 153
+  n   200 p   100000 : TRUE 0 of 14
+  n   200 p  1000000 : TRUE 0 of 3
+  n   400 p    10000 : TRUE 0 of 35
+  n   400 p   100000 : TRUE 0 of 3
+  n   800 p    10000 : TRUE 1 of 20
+  n  1000 p  1000000 : TRUE 1 of 1
+TRUE fits:
+   precision1e4/S5/4-ARweak-n100-r05-V-s1 n 100 p 10000 binary d0c30b65
+   precision1e4/S5/4-ARweak-n100-r06-V-s1 n 100 p 10000 binary d0c30b65
+   precision1e4/S5/4-ARweak-n100-r11-V-s1 n 100 p 10000 binary d0c30b65
+   precision1e4/S6/4-IND-n100-r02-V-s1 n 100 p 10000 binary d0c30b65
+   precision1e4/S6/4-IND-n100-r04-V-s1 n 100 p 10000 binary d0c30b65
+   vn_minileg/V0/4-ADJOPP-n200-r04-V-s2 n 200 p 10000 binary da0cf85b
+   precision1e4/S9/4-AR-n800-r02-V-s1 n 800 p 10000 binary d0c30b65
+   gc1m/GC_D/6-AR-n1000-r01-V-s1 n 1000 p 1000000 binary da0cf85b
+F2 build (da0cf85b) only: 34 fits, TRUE 2; n=200 F2: 30 fits, TRUE 1

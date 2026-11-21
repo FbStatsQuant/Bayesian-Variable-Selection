@@ -1,0 +1,56 @@
+{
+ "tool": "gc_t2thr_compare.py",
+ "check": "two thread counts at 1M (GC_PLAN \u00a711 item 5; ENGINEERING_SPEC \u00a70-v2.6 pilot item)",
+ "island": 1,
+ "report_only": true,
+ "pilot": {
+  "threads": 96,
+  "output_hash": "0x30791c64bed80fc5",
+  "sidecar_output_hash": "0x30791c64bed80fc5",
+  "T": 27,
+  "slurm_job_id": "2815184",
+  "host": "bb3u15c1"
+ },
+ "rerun": {
+  "threads": 48,
+  "output_hash": "0x30791c64bed80fc5",
+  "sidecar_output_hash": "0x30791c64bed80fc5",
+  "T": 27,
+  "slurm_job_id": "2820415",
+  "host": "bb3u24c1"
+ },
+ "checks": {
+  "threads_pilot_96_rerun_48": true,
+  "same_manifest_params_except_threads": true,
+  "same_input_content_hashes": true,
+  "output_hash_equal": true,
+  "sections_equal": true,
+  "sidecars_equal_outside_provenance": true,
+  "both_completed": true
+ },
+ "sections": {
+  "n_pilot": 26,
+  "n_rerun": 26,
+  "differing_sections": [],
+  "n_equal": 26
+ },
+ "sidecar_differing_fields": [],
+ "input_content_hashes": {
+  "calib.bin": "8182c948899439765bae86e99cd31c0b450d6809dd634412de7c602887228b77",
+  "data.bin": "38885e03b3c6d5512d8849586ff10d16579ecc014f111f75bb2d978322a84be3",
+  "setup.bin": "b68a1275119effba3e1ffc87c8513d473afc4835f55ea6464f2d4baa18c8d6a3"
+ },
+ "ok": true,
+ "rerun_wall_s": 816.0,
+ "rerun_job": {
+  "slurm_job_id": "2820415",
+  "batch": "GC_T2THR",
+  "state": "COMPLETED",
+  "elapsed_s": 816,
+  "billed_core_h": 10.88,
+  "cpus": 48,
+  "submitted_utc": "2026-11-20T23:50:29Z",
+  "pilot_island_1_wall_note": "the pilot's island 1 ran at 96 threads (job 2815184)"
+ },
+ "verdict": "PASS: the island output of the 1M pilot island 1 is bit-identical at 48 and 96 threads (output_hash 0x30791c64bed80fc5; 26 non-meta sections equal; sidecars equal outside provenance; same input content hashes; same manifest params except threads)"
+}

@@ -173,4 +173,65 @@ rc, o = runD(probeB(isl_el={4: 3601}), "--ignore-jobs", ",".join(OLD)); check("B
 rc, o = runD(probeB(cost=dict(calibrate=70.5)), "--ignore-jobs", ",".join(OLD)); check("B: K1 fires on the NEW calibrate only", rc == 3 and "STOP K1" in o, o)
 rc, o = runD(probeB(cost=dict(islands=158.0)), "--ignore-jobs", ",".join(OLD)); check("B: hard line counts the lost setup: 158 x 16 + 55 + 40 + 22 + 1 + 84.09 > 2,718 -> STOP", rc == 3 and "HARD 2718" in o, o)
 rc, o = runD(probeB(isl_state={7: "PENDING"}), "--ignore-jobs", ",".join(OLD)); check("B: WAVE STATE RUNNING while a new island is pending", "WAVE STATE: RUNNING" in o, o)
+
+# ===================== wave W1 (GC_W1: AR r02 + ADJ-OPP r01, 2 fits, 1M): quote 705, wave STOP 1,410 (2 x), K1 / K2 as the pilot; AR soft 518 (H-46 re-fit, --soft override), ADJ-OPP soft 509, hard 815 / 848 =====================
+RA, RJ = "6-AR-n200-r02-V-s1", "6-ADJOPP-n200-r01-V-s1"
+def probeW1(cost=None, states=None, calib=None, xy=None, binsha=F2SHA, dbin=None, squeue=(), engine=(), extra=(), isl_el=None, isl_state=None, only_fit=None):
+    """cost: {(fit, stage): billed per task (islands: per task) } ; fit in (RA, RJ)"""
+    L = ["### META utc=2026-11-23T11:00:00Z", "### SUBMISSIONS GC_W1"]
+    jobs = {"setup": 500, "calibrate": 501}; fj = {RA: dict(islands=502, merge=503, eval=504), RJ: dict(islands=505, merge=506, eval=507)}
+    for stg, j in jobs.items(): L.append(json.dumps({"stage": stg, "fit": "all", "job": str(j), "submitted_utc": "x"}))
+    for rid in (RA, RJ):
+        for stg, j in fj[rid].items(): L.append(json.dumps({"stage": stg, "fit": rid, "job": str(j), "submitted_utc": "x"}))
+    L += ["### SQUEUE"] + list(squeue) + ["### SACCT"]
+    base = dict(setup=12.3, calibrate=16.2, islands=18.9, merge=14.0, eval=0.3); cc_ = lambda rid, stg: (cost or {}).get((rid, stg), base[stg])
+    st = lambda rid, stg: (states or {}).get((rid, stg), "COMPLETED")
+    for i, rid in enumerate((RA, RJ), 1):
+        L.append("500_%d|p1m_GC_W1_setup|%s|900|48|%d|00:45:00|fb31" % (i, st(rid, "setup"), int(cc_(rid, "setup") * 3600)))
+        L.append("501_%d|p1m_GC_W1_calibrate|%s|600|96|%d|01:30:00|fb31" % (i, st(rid, "calibrate"), int(cc_(rid, "calibrate") * 3600)))
+        for k in range(1, 17):
+            s = (isl_state or {}).get((rid, k), st(rid, "islands")); el = (isl_el or {}).get((rid, k), 700)
+            L.append("%d_%d|p1m_GC_W1_islands|%s|%d|96|%d|01:00:00|fb31" % (fj[rid]["islands"], k, s, el, int(cc_(rid, "islands") * 3600)))
+        L.append("%d|p1m_GC_W1_merge|%s|1500|32|%d|01:30:00|fb31" % (fj[rid]["merge"], st(rid, "merge"), int(cc_(rid, "merge") * 3600)))
+        L.append("%d|p1m_GC_W1_eval|%s|100|8|%d|01:00:00|fb31" % (fj[rid]["eval"], st(rid, "eval"), int(cc_(rid, "eval") * 3600)))
+    L += list(extra)
+    L.append("### DATA_HASH")
+    for rid in (RA, RJ):
+        x, y = (xy or {}).get(rid, ("a" * 64, "b" * 64) if rid == RA else ("c" * 64, "d" * 64)); L.append("GC_W1|%s|c|%s|%s|%s" % (rid, x, y, (dbin or {}).get(rid, F2SHA)))
+    L.append("### CALIB")
+    for rid in (RA, RJ):
+        rec = {"N": 2500, "refine_m": 1, "I_max": 0, "I_used": 0, "rule": "bounded", "source": "calib.bin.json settings", "status": "completed", "cal_status": "ok"}; rec.update((calib or {}).get(rid, {})); L.append("GC_W1|%s|%s" % (rid, json.dumps(rec)))
+    L += ["### ISLAND_T"] + ["GC_W1|%s|27" % r for r in (RA, RJ)] + ["### DIAG"] + ["GC_W1|%s|0|0" % r for r in (RA, RJ)] + ["### BINSHA", "GC_W1|%s" % binsha, "### ENGINE_FLAGS"] + list(engine)
+    p = os.path.join(TMP, "probe_GC_W1.txt"); open(p, "w").write("\n".join(L) + "\n"); return p
+def runW1(pth, *extra):
+    r = subprocess.run([sys.executable, os.path.join(HERE, "stop_rules_gc.py"), pth, "--wave", "W1", "--plans", PLANS, "--deploy-log", LOG, "--ref-hashes", os.path.join(STG, "gc_refs.json")] + list(extra), capture_output=True, text=True)
+    return r.returncode, r.stdout + r.stderr
+SOFT_AR = ["--soft", "gc1m AR n200 N2500 I0=518"]
+rc, o = runW1(probeW1(), *SOFT_AR); check("W1 healthy (2 x ~346): no stop, quote 705, wave stop 1,410, ENDED, arm identity on 2 fits, the AR soft 518 override printed", rc == 0 and "no stop rule fired" in o and "quote 705" in o and "WAVE STATE: ENDED" in o and "arm identity checked on 2 fits" in o and "518.0" in o, o)
+rc, o = runW1(probeW1(cost={(RA, "islands"): 29.0}), *SOFT_AR); check("W1: AR fit 12.3+16.2+16x29+14+0.3 = 506.8 <= 518: no soft trip with the override (it WOULD trip at the default 489)", rc == 0 and "SOFT TRIP" not in o, o)
+rc, o = runW1(probeW1(cost={(RA, "islands"): 29.0})); check("W1: the same fit trips the DEFAULT soft 489 (control: the override matters)", rc == 0 and "SOFT TRIP" in o, o)
+rc, o = runW1(probeW1(cost={(RA, "islands"): 31.5}), *SOFT_AR); check("W1: AR 12.3+16.2+504+14.3 = 546.8 > 518 -> SOFT TRIP (K2 billed 33.6 not reached), exit 0", rc == 0 and "SOFT TRIP" in o and RA in o, o)
+rc, o = runW1(probeW1(cost={(RJ, "islands"): 30.0}), *SOFT_AR); check("W1: ADJ-OPP 12.3+16.2+480+14.3 = 522.8 > soft 509 -> SOFT TRIP", rc == 0 and "SOFT TRIP" in o and RJ in o, o)
+rc, o = runW1(probeW1(cost={(RJ, "islands"): 29.0}), *SOFT_AR); check("W1: ADJ-OPP 490.8 < 509: no trip", rc == 0 and "SOFT TRIP" not in o, o)
+rc, o = runW1(probeW1(cost={(RA, "merge"): 500.0}), *SOFT_AR); check("W1 hard: AR fit > 815 -> STOP", rc == 3 and "HARD 815" in o, o)
+rc, o = runW1(probeW1(cost={(RJ, "merge"): 520.0}), *SOFT_AR); check("W1 hard: ADJ-OPP fit > 848 -> STOP", rc == 3 and "HARD 848" in o, o)
+rc, o = runW1(probeW1(cost={(RA, "merge"): 380.0, (RJ, "merge"): 380.0}), *SOFT_AR); check("W1 wave stop: 2 fits ~ 711 + 711 = 1,422 > 1,410 -> STOP wave (each fit under its hard line), no HARD", rc == 3 and "wave stop 1410" in o and "HARD" not in o, o)
+rc, o = runW1(probeW1(cost={(RA, "merge"): 370.0, (RJ, "merge"): 330.0}), *SOFT_AR); check("W1: 2 fits ~ 701 + 661 = 1,362 < 1,410: no wave stop (soft trips only)", rc == 0 and "wave stop" not in o, o)
+rc, o = runW1(probeW1(cost={(RA, "calibrate"): 48.5}), *SOFT_AR); check("W1 K1: AR calibrate billed 48.5 > 48 -> STOP", rc == 3 and "STOP K1" in o, o)
+rc, o = runW1(probeW1(cost={(RJ, "calibrate"): 49.0}), *SOFT_AR); check("W1 K1: ADJ-OPP calibrate 49 -> STOP", rc == 3 and "STOP K1" in o, o)
+rc, o = runW1(probeW1(isl_el={(RA, 3): 1600}), *SOFT_AR); check("W1 K2: an island 1,600 s while all other islands (both fits) have finished -> STOP", rc == 3 and "STOP K2" in o, o)
+rc, o = runW1(probeW1(isl_el={(RA, 3): 1600}, isl_state={(RJ, 5): "RUNNING"}), *SOFT_AR); check("W1: island 1,600 s while ANOTHER fit's island still runs -> INFO only", rc == 0 and "INFO island task" in o and "STOP K2" not in o, o)
+rc, o = runW1(probeW1(cost={(RJ, "islands"): 34.0}), *SOFT_AR); check("W1 K2 billed: an island > 33.6 core-h -> STOP", rc == 3 and "STOP K2" in o, o)
+rc, o = runW1(probeW1(states={(RJ, "merge"): "FAILED"}), *SOFT_AR); check("W1 FAILED merge -> STOP", rc == 3 and "failed stage" in o, o)
+rc, o = runW1(probeW1(states={(RA, "calibrate"): "OUT_OF_MEMORY"}), *SOFT_AR); check("W1 OOM -> STOP", rc == 3, o)
+rc, o = runW1(probeW1(calib={RJ: {"N": 10000}}), *SOFT_AR); check("W1 arm: ADJ-OPP recorded N 10,000 -> STOP", rc == 3 and "ARM IDENTITY" in o, o)
+rc, o = runW1(probeW1(calib={RA: {"I_max": 3}}), *SOFT_AR); check("W1 arm: AR I_max 3 -> STOP", rc == 3 and "ARM IDENTITY" in o, o)
+rc, o = runW1(probeW1(binsha=OTHER), *SOFT_AR); check("W1 build identity -> STOP", rc == 3 and "BUILD IDENTITY" in o, o)
+rc, o = runW1(probeW1(dbin={RJ: OTHER}), *SOFT_AR); check("W1 recorded binary sha -> STOP", rc == 3 and "BUILD IDENTITY" in o, o)
+rc, o = runW1(probeW1(engine=["/x/OUTCOME"]), *SOFT_AR); check("W1 OUTCOME -> STOP", rc == 3, o)
+rc, o = runW1(probeW1(isl_state={(RA, 7): "PENDING"}), *SOFT_AR); check("W1 an island PENDING -> RUNNING", "WAVE STATE: RUNNING" in o, o)
+rc, o = runW1(probeW1(extra=["500_4|cmds_rmsd.list.sh|FAILED|10|2|20|12:00:00|cg160"]), *SOFT_AR); check("W1 foreign sacct row: one INFO", rc == 0 and "INFO 1 foreign" in o, o)
+rc, o = runW1(probeW1(), "--soft", "gc1m AR n200 N2500 I0=900"); check("--soft above the pinned hard line (815) is refused (exit 64)", rc == 64, o)
+_e = subprocess.run([sys.executable, os.path.join(HERE, "stop_rules_gc.py"), probeW1(), "--wave", "W1", "--plans", PLANS, "--deploy-log", LOG, "--ref-hashes", os.path.join(STG, "gc_refs.json")], capture_output=True, text=True, env=dict(os.environ, SOFT_OVERRIDES="gc1m AR n200 N2500 I0=518"))
+check("SOFT_OVERRIDES env works like --soft", _e.returncode == 0 and "518.0" in _e.stdout, _e.stdout)
 print("\n%d passed, %d failed" % (ok, fail)); sys.exit(1 if fail else 0)
