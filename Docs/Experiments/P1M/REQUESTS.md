@@ -247,3 +247,6 @@ Fit 6-AR-n200-r01-V-s1, batch F1M_pilot, code exp/P1M-engine 2cfaa9e5, island IS
 
 ## 2026-11-17 10:53 CST — PRE-ANNOUNCE: T6 at 10⁵ (real-kill restart test, a campaign-freeze prerequisite in the approved timeline H-14)
 1 task, 48 CPUs, 24G, 50 min, SPR: worst 40 core-h, expected 5–16. Plan tools/slurm/examples/plan_T6_1e5.json; reuses T5's run dir. Exploratory standing authority (≤ 200).
+
+## 2026-11-21 08:5x CST — daily report to HQ UNDELIVERED (desktop relay did not answer; 2 tries)
+ENG daily 2026-11-21 (break, H-54): Done: G-C2 PASS; option D VALID; T2THR bit-identical; W1 + W2 clean; 1M block stopped after W2 (H-53), summary eff63b5f (7/7 HPM = S₀); H-56 hygiene 260.88 GB deleted. In progress: riboflavin (5 originals ≈ 69 h + duplicates since 02:45Z). Blocked: none. Needs: RG law.bin 3.4 GB (rung, uncollected, unique) → recommend letting the purge take it (≈ 11–13 d). Agents: Opus 1, Sonnet 2 idle, Haiku 1 + daily child, Codex 0. NOTS: 3,057 core-h since 11-20; closed ≈ 6,042 / 28.3k (21 %); nothing running. Machines: NOTS home 6,071 MB, no prune removals, scratch 374.7 GB; Owls 85 % (+1); offload 428 verified / pending 0; BNP watchdog not installed; strays to index (Owls envs/, Rlib/; NOTS probe_out_*, gcd_*, gct2_*, vn_minileg/). Gates: G-C, G-C2 passed; block closed; 10⁷ Phase 0 paused. Sol 6.2: 2 reviews, no WORSE.
