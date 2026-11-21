@@ -72,7 +72,7 @@ class T(unittest.TestCase):
     def test_real_11_17_record_parse(self):
         if not os.path.isdir(REAL):
             self.skipTest("records not present"); return
-        rc = subprocess.run([sys.executable, "-I", SCRIPT, "--records", os.path.dirname(REAL), "--out", os.path.join(self.t, "o")], capture_output=True, text=True); self.assertEqual(rc.returncode, 0, rc.stderr)
+        rc = subprocess.run([sys.executable, "-I", SCRIPT, "--records", REAL, "--out", os.path.join(self.t, "o")], capture_output=True, text=True); self.assertEqual(rc.returncode, 0, rc.stderr)
         f = json.load(open(os.path.join(self.t, "o", "gc_readback.json")))["fits"][PILOT]
         self.assertAlmostEqual(f["C2"]["M1"], 0.0171029525813884, places=12); self.assertAlmostEqual(f["C2"]["M2"], 0.0029046438757469755, places=12); self.assertTrue(f["science"]["hpm_eq_S0"])
         self.assertEqual((f["recorded_arm"]["N"], f["recorded_arm"]["I"]), (2500, 3)); self.assertTrue(f["C2"]["evidence_consistent"])
