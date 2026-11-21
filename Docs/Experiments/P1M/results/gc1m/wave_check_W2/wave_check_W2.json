@@ -1,0 +1,195 @@
+{
+ "wave": "W2",
+ "rule": "H-48: low_empirical_ESS together with an E-flag, sigma-hat > 0.5, a C2 failure or HPM != S0 -> FLAG, STOP; low_ESS alone is reported (H-49: expected ~ 1 in 7 fits on the frozen arm)",
+ "fits": [
+  {
+   "run_id": "6-AR-n200-r03-V-s1",
+   "N": 2500,
+   "pi_hat_S0": 0.3754493560433961,
+   "hpm": [
+    100000,
+    300000,
+    500000,
+    700000,
+    900000
+   ],
+   "hpm_eq_S0": true,
+   "mpm_eq_S0": true,
+   "E": {
+    "E1": false,
+    "E2": false,
+    "E3": false
+   },
+   "sigma_hat": 0.12217395376740724,
+   "sd_logZ_r": 0.12217395376740724,
+   "C2_verdict": "PASS",
+   "C2": {
+    "M1": 0.024370810585640806,
+    "M2": 0.0016745777885474637,
+    "evidence_gap": 0.00044557550671697754,
+    "evidence_bound_3se": 0.09343570733727005,
+    "local_certified": true,
+    "max_abs_eq_minus_T": 0.0054301770006292965,
+    "eq_T_target": 0.21879425004870523
+   },
+   "low_empirical_ESS": false,
+   "min_ess": {
+    "ess": 1731.150604292372,
+    "ess_over_N": 0.6924602417169488,
+    "island": "island_10.bin",
+    "stage": 23,
+    "phi_from": 0.6072708133905991,
+    "phi_to": 0.7737474744300584,
+    "dphi": 0.16647666103945935
+   },
+   "n_islands": 16,
+   "n_island_stages": 416,
+   "ess_low_stages": [],
+   "low_ESS": false,
+   "flag_reasons": [],
+   "flag_stop": false,
+   "ess_flag_consistent": true
+  },
+  {
+   "run_id": "6-AR-n200-r04-V-s1",
+   "N": 2500,
+   "pi_hat_S0": 0.4053334044617418,
+   "hpm": [
+    100000,
+    300000,
+    500000,
+    700000,
+    900000
+   ],
+   "hpm_eq_S0": true,
+   "mpm_eq_S0": true,
+   "E": {
+    "E1": false,
+    "E2": false,
+    "E3": false
+   },
+   "sigma_hat": 0.019381922418944837,
+   "sd_logZ_r": 0.019381922418944837,
+   "C2_verdict": "PASS",
+   "C2": {
+    "M1": 0.023553274193675533,
+    "M2": 0.0004913881065106701,
+    "evidence_gap": 0.022845241664327887,
+    "evidence_bound_3se": 0.022877036490042975,
+    "local_certified": true,
+    "max_abs_eq_minus_T": 0.002409099891144413,
+    "eq_T_target": 0.20142819823079017
+   },
+   "low_empirical_ESS": false,
+   "min_ess": {
+    "ess": 2037.6607966352128,
+    "ess_over_N": 0.8150643186540851,
+    "island": "island_9.bin",
+    "stage": 25,
+    "phi_from": 0.8834887244567512,
+    "phi_to": 0.9714129960017609,
+    "dphi": 0.0879242715450097
+   },
+   "n_islands": 16,
+   "n_island_stages": 416,
+   "ess_low_stages": [],
+   "low_ESS": false,
+   "flag_reasons": [],
+   "flag_stop": false,
+   "ess_flag_consistent": true
+  }
+ ],
+ "flag_stop": false,
+ "island_timing": {
+  "per_fit": {
+   "6-AR-n200-r03-V-s1": {
+    "n": 16,
+    "elapsed": {
+     "min": 442,
+     "mean": 702.5,
+     "max": 1729
+    },
+    "engine_total": {
+     "min": 370.638511937,
+     "mean": 416.4039021530625,
+     "max": 484.670006418
+    },
+    "pre_engine_wait": {
+     "min": 69.15753500400001,
+     "mean": 286.09609784693754,
+     "max": 1272.166211999
+    },
+    "billed_core_h": 299.7333333333333,
+    "engine_core_h": 177.66566491864,
+    "max_engine_core_h": 12.924533504480001
+   },
+   "6-AR-n200-r04-V-s1": {
+    "n": 16,
+    "elapsed": {
+     "min": 453,
+     "mean": 851.75,
+     "max": 1785
+    },
+    "engine_total": {
+     "min": 383.7312129,
+     "mean": 459.78345648787496,
+     "max": 599.286349124
+    },
+    "pre_engine_wait": {
+     "min": 69.2687871,
+     "mean": 391.96654351212493,
+     "max": 1229.734048196
+    },
+    "billed_core_h": 363.41333333333324,
+    "engine_core_h": 196.17427476816002,
+    "max_engine_core_h": 15.980969309973334
+   }
+  },
+  "by_node_type": {
+   "c": {
+    "n": 21,
+    "elapsed": {
+     "min": 442,
+     "mean": 805.5714285714286,
+     "max": 1785
+    },
+    "engine_total": {
+     "min": 370.638511937,
+     "mean": 448.7638537934762,
+     "max": 599.286349124
+    },
+    "pre_engine_wait": {
+     "min": 69.15753500400001,
+     "mean": 356.80757477795237,
+     "max": 1272.166211999
+    }
+   },
+   "g": {
+    "n": 11,
+    "elapsed": {
+     "min": 444,
+     "mean": 722.8181818181819,
+     "max": 1404
+    },
+    "engine_total": {
+     "min": 373.26373275,
+     "mean": 417.72334623563637,
+     "max": 452.341382443
+    },
+    "pre_engine_wait": {
+     "min": 70.23050795500001,
+     "mean": 305.09483558254544,
+     "max": 968.4670259239999
+    }
+   }
+  },
+  "node_constraint_sentence": "Proposal only (a node constraint to type g): the c-type islands average 806 s elapsed against 723 s on type g; had every island run at the g mean, the wave would have billed about 121.3 core-h less of 663.1 island core-h (18.3 %), before any extra queue wait that a constraint could add (not measured here), so it pays for itself only if the wait of the constrained type stays small.",
+  "wave": {
+   "islands": 32,
+   "mean_pre_engine_wait_s": 339.03132067953123,
+   "slurm_billed_island_core_h": 663.1466666666665,
+   "engine_island_core_h": 373.8399396868,
+   "H52_throttle_rule": "mean wait > 300 s: W3 onward %8 island-array throttle per fit, stagger kept"
+  }
+ }
+}
