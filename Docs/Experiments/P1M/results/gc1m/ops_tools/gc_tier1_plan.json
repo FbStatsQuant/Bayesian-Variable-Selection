@@ -1,0 +1,828 @@
+[
+ {
+  "rel": "GC_D/6-AR-n1000-r01-V-s1/island_1.bin",
+  "kind": "island",
+  "size": 2205797888,
+  "mtime_ns": 1795212167035216984,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_D/6-AR-n1000-r01-V-s1/island_10.bin",
+  "kind": "island",
+  "size": 2205777024,
+  "mtime_ns": 1795212790025038065,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_D/6-AR-n1000-r01-V-s1/island_11.bin",
+  "kind": "island",
+  "size": 2205775616,
+  "mtime_ns": 1795212882296092339,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_D/6-AR-n1000-r01-V-s1/island_12.bin",
+  "kind": "island",
+  "size": 2205757440,
+  "mtime_ns": 1795213184952149254,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_D/6-AR-n1000-r01-V-s1/island_13.bin",
+  "kind": "island",
+  "size": 2205816384,
+  "mtime_ns": 1795213165634934586,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_D/6-AR-n1000-r01-V-s1/island_14.bin",
+  "kind": "island",
+  "size": 2205743488,
+  "mtime_ns": 1795213422556140578,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_D/6-AR-n1000-r01-V-s1/island_15.bin",
+  "kind": "island",
+  "size": 2205825088,
+  "mtime_ns": 1795213214523285497,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_D/6-AR-n1000-r01-V-s1/island_16.bin",
+  "kind": "island",
+  "size": 2205796224,
+  "mtime_ns": 1795213252080356932,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_D/6-AR-n1000-r01-V-s1/island_2.bin",
+  "kind": "island",
+  "size": 2205767744,
+  "mtime_ns": 1795212143893687092,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_D/6-AR-n1000-r01-V-s1/island_3.bin",
+  "kind": "island",
+  "size": 2205814144,
+  "mtime_ns": 1795212127377017039,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_D/6-AR-n1000-r01-V-s1/island_4.bin",
+  "kind": "island",
+  "size": 2205760704,
+  "mtime_ns": 1795212112058027870,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_D/6-AR-n1000-r01-V-s1/island_5.bin",
+  "kind": "island",
+  "size": 2205835776,
+  "mtime_ns": 1795212350937081629,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_D/6-AR-n1000-r01-V-s1/island_6.bin",
+  "kind": "island",
+  "size": 2205841984,
+  "mtime_ns": 1795212647798427130,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_D/6-AR-n1000-r01-V-s1/island_7.bin",
+  "kind": "island",
+  "size": 2205937536,
+  "mtime_ns": 1795212710443387436,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_D/6-AR-n1000-r01-V-s1/island_8.bin",
+  "kind": "island",
+  "size": 2205760576,
+  "mtime_ns": 1795212841087298985,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_D/6-AR-n1000-r01-V-s1/island_9.bin",
+  "kind": "island",
+  "size": 2205939968,
+  "mtime_ns": 1795212712081953686,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_D/6-AR-n1000-r01-V-s1/fit.bin",
+  "kind": "A",
+  "size": 2323570496,
+  "sha256": "54b401dfc963237a4a38cbc17280ae3ff758079b529ea72495a2df2270e88f92",
+  "why": "A: NOTS copy of a file with a sha-verified desktop copy (unit SHA256SUMS)"
+ },
+ {
+  "rel": "GC_D/6-AR-n1000-r01-V-s1/law.bin",
+  "kind": "A",
+  "size": 329957824,
+  "sha256": "9e0f58621b415ce5a1f95ff413c26175921eda602298b94e5d74caf24789bf61",
+  "why": "A: NOTS copy of a file with a sha-verified desktop copy (unit SHA256SUMS)"
+ },
+ {
+  "rel": "GC_D/6-AR-n1000-r01-V-s1/eval.bin",
+  "kind": "A",
+  "size": 356160,
+  "sha256": "09608af528161b4f6f047beaac8f6c954d6e5a64cef6b68b00e1d78559db9016",
+  "why": "A: NOTS copy of a file with a sha-verified desktop copy (unit SHA256SUMS)"
+ },
+ {
+  "rel": "GC_D/6-AR-n1000-r01-V-s1/setup.bin",
+  "kind": "A+",
+  "size": 9217428672,
+  "sha256": "046e01378fd8cbae5a14df3db16f26486055f65c2fba53c05d146d615ccd9362",
+  "why": "A+: NOTS copy of a file with a sha-verified desktop copy (unit SHA256SUMS)"
+ },
+ {
+  "rel": "GC_P/6-AR-n200-r01-V-s1/island_1.bin",
+  "kind": "island",
+  "size": 2247787136,
+  "mtime_ns": 1795193128371799496,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_P/6-AR-n200-r01-V-s1/island_10.bin",
+  "kind": "island",
+  "size": 2247151936,
+  "mtime_ns": 1795192897786564878,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_P/6-AR-n200-r01-V-s1/island_11.bin",
+  "kind": "island",
+  "size": 2247577024,
+  "mtime_ns": 1795192914423838002,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_P/6-AR-n200-r01-V-s1/island_12.bin",
+  "kind": "island",
+  "size": 2247780480,
+  "mtime_ns": 1795192977610744023,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_P/6-AR-n200-r01-V-s1/island_13.bin",
+  "kind": "island",
+  "size": 2247102784,
+  "mtime_ns": 1795192972191080179,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_P/6-AR-n200-r01-V-s1/island_14.bin",
+  "kind": "island",
+  "size": 2248042112,
+  "mtime_ns": 1795193438921222687,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_P/6-AR-n200-r01-V-s1/island_15.bin",
+  "kind": "island",
+  "size": 2247515072,
+  "mtime_ns": 1795193705433433606,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_P/6-AR-n200-r01-V-s1/island_16.bin",
+  "kind": "island",
+  "size": 2247557696,
+  "mtime_ns": 1795193336152721181,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_P/6-AR-n200-r01-V-s1/island_2.bin",
+  "kind": "island",
+  "size": 2247728896,
+  "mtime_ns": 1795192886111251394,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_P/6-AR-n200-r01-V-s1/island_3.bin",
+  "kind": "island",
+  "size": 2247699264,
+  "mtime_ns": 1795192977370479595,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_P/6-AR-n200-r01-V-s1/island_4.bin",
+  "kind": "island",
+  "size": 2247620160,
+  "mtime_ns": 1795192993511357165,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_P/6-AR-n200-r01-V-s1/island_5.bin",
+  "kind": "island",
+  "size": 2247866880,
+  "mtime_ns": 1795192938749831727,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_P/6-AR-n200-r01-V-s1/island_6.bin",
+  "kind": "island",
+  "size": 2247487744,
+  "mtime_ns": 1795192900721172731,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_P/6-AR-n200-r01-V-s1/island_7.bin",
+  "kind": "island",
+  "size": 2247289792,
+  "mtime_ns": 1795192873330210508,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_P/6-AR-n200-r01-V-s1/island_8.bin",
+  "kind": "island",
+  "size": 2247754304,
+  "mtime_ns": 1795192895359428478,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_P/6-AR-n200-r01-V-s1/island_9.bin",
+  "kind": "island",
+  "size": 2247885760,
+  "mtime_ns": 1795192906028342409,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_P/6-AR-n200-r01-V-s1/fit.bin",
+  "kind": "A",
+  "size": 2370297600,
+  "sha256": "30edb1e86d25525153ed0549e303e62cb1a4836cdb1fe3bc18942c0a4fdf4653",
+  "why": "A: NOTS copy of a file with a sha-verified desktop copy (unit SHA256SUMS)"
+ },
+ {
+  "rel": "GC_P/6-AR-n200-r01-V-s1/law.bin",
+  "kind": "A",
+  "size": 336268992,
+  "sha256": "99d7cb465ba9e4600766d53466b8a15eeaf49ae557740b3736de160b88fce03c",
+  "why": "A: NOTS copy of a file with a sha-verified desktop copy (unit SHA256SUMS)"
+ },
+ {
+  "rel": "GC_P/6-AR-n200-r01-V-s1/eval.bin",
+  "kind": "A",
+  "size": 356416,
+  "sha256": "30484b7943aaa20e062ca6caa411ce9f9e43cf4a0ed5ec5f130ebd6260545aa2",
+  "why": "A: NOTS copy of a file with a sha-verified desktop copy (unit SHA256SUMS)"
+ },
+ {
+  "rel": "GC_P/6-AR-n200-r01-V-s1/setup.bin",
+  "kind": "A+",
+  "size": 10140055680,
+  "sha256": "3a6261fb26883bc5d676f6c46e81f621d090fd07c387bf2ffdaf837ea98c2b16",
+  "why": "A+: NOTS copy of a file with a sha-verified desktop copy (unit SHA256SUMS)"
+ },
+ {
+  "rel": "GC_W1/6-ADJOPP-n200-r01-V-s1/island_1.bin",
+  "kind": "island",
+  "size": 2213288384,
+  "mtime_ns": 1795224042734748393,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-ADJOPP-n200-r01-V-s1/island_10.bin",
+  "kind": "island",
+  "size": 2213390080,
+  "mtime_ns": 1795224486630208171,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-ADJOPP-n200-r01-V-s1/island_11.bin",
+  "kind": "island",
+  "size": 2213313344,
+  "mtime_ns": 1795224814946611752,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-ADJOPP-n200-r01-V-s1/island_12.bin",
+  "kind": "island",
+  "size": 2213642368,
+  "mtime_ns": 1795224519464568662,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-ADJOPP-n200-r01-V-s1/island_13.bin",
+  "kind": "island",
+  "size": 2213847232,
+  "mtime_ns": 1795224556342694597,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-ADJOPP-n200-r01-V-s1/island_14.bin",
+  "kind": "island",
+  "size": 2213586368,
+  "mtime_ns": 1795224976913019998,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-ADJOPP-n200-r01-V-s1/island_15.bin",
+  "kind": "island",
+  "size": 2213458240,
+  "mtime_ns": 1795225833005971744,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-ADJOPP-n200-r01-V-s1/island_16.bin",
+  "kind": "island",
+  "size": 2213440512,
+  "mtime_ns": 1795225054035442451,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-ADJOPP-n200-r01-V-s1/island_2.bin",
+  "kind": "island",
+  "size": 2212936448,
+  "mtime_ns": 1795224868830731210,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-ADJOPP-n200-r01-V-s1/island_3.bin",
+  "kind": "island",
+  "size": 2213190016,
+  "mtime_ns": 1795224067192019532,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-ADJOPP-n200-r01-V-s1/island_4.bin",
+  "kind": "island",
+  "size": 2213418112,
+  "mtime_ns": 1795224766323402774,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-ADJOPP-n200-r01-V-s1/island_5.bin",
+  "kind": "island",
+  "size": 2213475904,
+  "mtime_ns": 1795224606692208487,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-ADJOPP-n200-r01-V-s1/island_6.bin",
+  "kind": "island",
+  "size": 2213172672,
+  "mtime_ns": 1795224185313168777,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-ADJOPP-n200-r01-V-s1/island_7.bin",
+  "kind": "island",
+  "size": 2213443136,
+  "mtime_ns": 1795224410999474584,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-ADJOPP-n200-r01-V-s1/island_8.bin",
+  "kind": "island",
+  "size": 2213102400,
+  "mtime_ns": 1795224621513188140,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-ADJOPP-n200-r01-V-s1/island_9.bin",
+  "kind": "island",
+  "size": 2213261440,
+  "mtime_ns": 1795224333100100301,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-ADJOPP-n200-r01-V-s1/fit.bin",
+  "kind": "A",
+  "size": 2336018112,
+  "sha256": "d64dff18b0123b5c0d6994d1c008b7c4fcae22a2be10f364ff268a05c017a0d9",
+  "why": "A: NOTS copy of a file with a sha-verified desktop copy (unit SHA256SUMS)"
+ },
+ {
+  "rel": "GC_W1/6-ADJOPP-n200-r01-V-s1/law.bin",
+  "kind": "A",
+  "size": 332987904,
+  "sha256": "357fd07a35be082eddfdee691b9bfb1b8da633d5e04b1e3da051d276e97e6251",
+  "why": "A: NOTS copy of a file with a sha-verified desktop copy (unit SHA256SUMS)"
+ },
+ {
+  "rel": "GC_W1/6-ADJOPP-n200-r01-V-s1/eval.bin",
+  "kind": "A",
+  "size": 356352,
+  "sha256": "a8b6d346eb4e33cd2fd6d172a778b1a45d8028b71f855e779eeeef1f596369ec",
+  "why": "A: NOTS copy of a file with a sha-verified desktop copy (unit SHA256SUMS)"
+ },
+ {
+  "rel": "GC_W1/6-ADJOPP-n200-r01-V-s1/setup.bin",
+  "kind": "A+",
+  "size": 10164467200,
+  "sha256": "4b03201d8e119a9da73048144445c6fb35698b3ba2e9a585db5e7f7b88ac18f8",
+  "why": "A+: NOTS copy of a file with a sha-verified desktop copy (unit SHA256SUMS)"
+ },
+ {
+  "rel": "GC_W1/6-AR-n200-r02-V-s1/island_1.bin",
+  "kind": "island",
+  "size": 2222042368,
+  "mtime_ns": 1795222630307742666,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-AR-n200-r02-V-s1/island_10.bin",
+  "kind": "island",
+  "size": 2222108672,
+  "mtime_ns": 1795223516624843419,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-AR-n200-r02-V-s1/island_11.bin",
+  "kind": "island",
+  "size": 2221863424,
+  "mtime_ns": 1795224415383185933,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-AR-n200-r02-V-s1/island_12.bin",
+  "kind": "island",
+  "size": 2221767168,
+  "mtime_ns": 1795224662702248749,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-AR-n200-r02-V-s1/island_13.bin",
+  "kind": "island",
+  "size": 2222266752,
+  "mtime_ns": 1795223614288383967,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-AR-n200-r02-V-s1/island_14.bin",
+  "kind": "island",
+  "size": 2221935360,
+  "mtime_ns": 1795224597934080926,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-AR-n200-r02-V-s1/island_15.bin",
+  "kind": "island",
+  "size": 2221872704,
+  "mtime_ns": 1795224550853663099,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-AR-n200-r02-V-s1/island_16.bin",
+  "kind": "island",
+  "size": 2221858560,
+  "mtime_ns": 1795223809295517122,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-AR-n200-r02-V-s1/island_2.bin",
+  "kind": "island",
+  "size": 2222078336,
+  "mtime_ns": 1795223498149498110,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-AR-n200-r02-V-s1/island_3.bin",
+  "kind": "island",
+  "size": 2222224448,
+  "mtime_ns": 1795223296585698440,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-AR-n200-r02-V-s1/island_4.bin",
+  "kind": "island",
+  "size": 2222174848,
+  "mtime_ns": 1795223390202617562,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-AR-n200-r02-V-s1/island_5.bin",
+  "kind": "island",
+  "size": 2222174144,
+  "mtime_ns": 1795223006366192539,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-AR-n200-r02-V-s1/island_6.bin",
+  "kind": "island",
+  "size": 2222123072,
+  "mtime_ns": 1795223128770062477,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-AR-n200-r02-V-s1/island_7.bin",
+  "kind": "island",
+  "size": 2222178048,
+  "mtime_ns": 1795223411833199711,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-AR-n200-r02-V-s1/island_8.bin",
+  "kind": "island",
+  "size": 2222091584,
+  "mtime_ns": 1795224119210867071,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-AR-n200-r02-V-s1/island_9.bin",
+  "kind": "island",
+  "size": 2222274432,
+  "mtime_ns": 1795223874692642033,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W1/6-AR-n200-r02-V-s1/fit.bin",
+  "kind": "A",
+  "size": 2344366080,
+  "sha256": "6fccc7100cec00d2a45099a3925eb11e19bd21f7da4a7c6fe9005b55fd839c16",
+  "why": "A: NOTS copy of a file with a sha-verified desktop copy (unit SHA256SUMS)"
+ },
+ {
+  "rel": "GC_W1/6-AR-n200-r02-V-s1/law.bin",
+  "kind": "A",
+  "size": 333302592,
+  "sha256": "e28e2ece8d5afe878b59edab0ea36f09ee8c758b7f2bf23457dc94ba0d8efa5a",
+  "why": "A: NOTS copy of a file with a sha-verified desktop copy (unit SHA256SUMS)"
+ },
+ {
+  "rel": "GC_W1/6-AR-n200-r02-V-s1/eval.bin",
+  "kind": "A",
+  "size": 356352,
+  "sha256": "01f626c0eccf4433c573aeb7125612707f569a10b4200c625aafc04a12a6569c",
+  "why": "A: NOTS copy of a file with a sha-verified desktop copy (unit SHA256SUMS)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r03-V-s1/island_1.bin",
+  "kind": "island",
+  "size": 2219621056,
+  "mtime_ns": 1795234070650938907,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r03-V-s1/island_10.bin",
+  "kind": "island",
+  "size": 2220200320,
+  "mtime_ns": 1795234464789898692,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r03-V-s1/island_11.bin",
+  "kind": "island",
+  "size": 2219894592,
+  "mtime_ns": 1795234526263659174,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r03-V-s1/island_12.bin",
+  "kind": "island",
+  "size": 2219945088,
+  "mtime_ns": 1795234617644230404,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r03-V-s1/island_13.bin",
+  "kind": "island",
+  "size": 2219981312,
+  "mtime_ns": 1795234917846648344,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r03-V-s1/island_14.bin",
+  "kind": "island",
+  "size": 2220087040,
+  "mtime_ns": 1795234806479619451,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r03-V-s1/island_15.bin",
+  "kind": "island",
+  "size": 2219793600,
+  "mtime_ns": 1795234963746910539,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r03-V-s1/island_16.bin",
+  "kind": "island",
+  "size": 2219749248,
+  "mtime_ns": 1795235006937409351,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r03-V-s1/island_2.bin",
+  "kind": "island",
+  "size": 2219958272,
+  "mtime_ns": 1795233472171766779,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r03-V-s1/island_3.bin",
+  "kind": "island",
+  "size": 2219797120,
+  "mtime_ns": 1795233778492328852,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r03-V-s1/island_4.bin",
+  "kind": "island",
+  "size": 2219851904,
+  "mtime_ns": 1795234083558377400,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r03-V-s1/island_5.bin",
+  "kind": "island",
+  "size": 2219885824,
+  "mtime_ns": 1795233980209509078,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r03-V-s1/island_6.bin",
+  "kind": "island",
+  "size": 2219697792,
+  "mtime_ns": 1795234912123814173,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r03-V-s1/island_7.bin",
+  "kind": "island",
+  "size": 2219734656,
+  "mtime_ns": 1795234330734519511,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r03-V-s1/island_8.bin",
+  "kind": "island",
+  "size": 2219968832,
+  "mtime_ns": 1795234347022646558,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r03-V-s1/island_9.bin",
+  "kind": "island",
+  "size": 2219655680,
+  "mtime_ns": 1795235565634481643,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r03-V-s1/fit.bin",
+  "kind": "A",
+  "size": 2341353600,
+  "sha256": "1d34ca78fd9f989f0e85c0956bd64cf6d8bcdd593baaa287da1a9c3b4b616ba3",
+  "why": "A: NOTS copy of a file with a sha-verified desktop copy (unit SHA256SUMS)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r03-V-s1/law.bin",
+  "kind": "A",
+  "size": 332437632,
+  "sha256": "85c04ad5ae37092b03624079d150394b592f5c8c70a0326f3e68e2d79f2320a6",
+  "why": "A: NOTS copy of a file with a sha-verified desktop copy (unit SHA256SUMS)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r03-V-s1/eval.bin",
+  "kind": "A",
+  "size": 356288,
+  "sha256": "a1333f8148d433d28f99c570e04bb9d0e3f297c8faedcdee64926da28b04f68a",
+  "why": "A: NOTS copy of a file with a sha-verified desktop copy (unit SHA256SUMS)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r04-V-s1/island_1.bin",
+  "kind": "island",
+  "size": 2207901632,
+  "mtime_ns": 1795237307379110366,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r04-V-s1/island_10.bin",
+  "kind": "island",
+  "size": 2207887296,
+  "mtime_ns": 1795237630115474286,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r04-V-s1/island_11.bin",
+  "kind": "island",
+  "size": 2207900864,
+  "mtime_ns": 1795239067903952393,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r04-V-s1/island_12.bin",
+  "kind": "island",
+  "size": 2207940480,
+  "mtime_ns": 1795237861522603601,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r04-V-s1/island_13.bin",
+  "kind": "island",
+  "size": 2207989696,
+  "mtime_ns": 1795237992551459780,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r04-V-s1/island_14.bin",
+  "kind": "island",
+  "size": 2207952960,
+  "mtime_ns": 1795237775500948143,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r04-V-s1/island_15.bin",
+  "kind": "island",
+  "size": 2207928832,
+  "mtime_ns": 1795237859182010237,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r04-V-s1/island_16.bin",
+  "kind": "island",
+  "size": 2208007424,
+  "mtime_ns": 1795238309205554043,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r04-V-s1/island_2.bin",
+  "kind": "island",
+  "size": 2208080960,
+  "mtime_ns": 1795237242360928422,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r04-V-s1/island_3.bin",
+  "kind": "island",
+  "size": 2208051136,
+  "mtime_ns": 1795236244653278873,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r04-V-s1/island_4.bin",
+  "kind": "island",
+  "size": 2208001408,
+  "mtime_ns": 1795236574895451252,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r04-V-s1/island_5.bin",
+  "kind": "island",
+  "size": 2207978752,
+  "mtime_ns": 1795237327531523375,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r04-V-s1/island_6.bin",
+  "kind": "island",
+  "size": 2208105856,
+  "mtime_ns": 1795236731912294388,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r04-V-s1/island_7.bin",
+  "kind": "island",
+  "size": 2207958080,
+  "mtime_ns": 1795237125271667564,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r04-V-s1/island_8.bin",
+  "kind": "island",
+  "size": 2207880256,
+  "mtime_ns": 1795237276998557143,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r04-V-s1/island_9.bin",
+  "kind": "island",
+  "size": 2208001472,
+  "mtime_ns": 1795237529831098191,
+  "why": "class C: V1-V5 pass (V4 info --verify 1 on NOTS; unit + batch unit desktop-verified)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r04-V-s1/fit.bin",
+  "kind": "A",
+  "size": 2328097024,
+  "sha256": "54f73245925a80fffd05280024f99eee9acf5f09def9d60054e6177966515eb4",
+  "why": "A: NOTS copy of a file with a sha-verified desktop copy (unit SHA256SUMS)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r04-V-s1/law.bin",
+  "kind": "A",
+  "size": 331091392,
+  "sha256": "a412e48f7d87365c5efeaa3c7fbf6abfd546ad8b56efbfadf6d88482ae4952d5",
+  "why": "A: NOTS copy of a file with a sha-verified desktop copy (unit SHA256SUMS)"
+ },
+ {
+  "rel": "GC_W2/6-AR-n200-r04-V-s1/eval.bin",
+  "kind": "A",
+  "size": 356352,
+  "sha256": "0e52e7a034ac703f4e5579bf2758aefce789d51f1bd1b999669624ca8608b905",
+  "why": "A: NOTS copy of a file with a sha-verified desktop copy (unit SHA256SUMS)"
+ },
+ {
+  "rel": "GC_T2THR/6-AR-n200-r01-V-s1/island_1.bin",
+  "kind": "island",
+  "size": 2247787264,
+  "sha256": "5815a22ec80b4664e49a409df5b37e2a1d58f4a6baeb5e1fe0b58bbe386f6077",
+  "why": "class C: the T2THR re-run island (unit desktop-verified, t2thr.json ok, bit-identical to the pilot's island 1; Owls staging copy sha-equal)"
+ }
+]
