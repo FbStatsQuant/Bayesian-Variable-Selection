@@ -49,6 +49,10 @@ checked; their final line checks were recorded on 2026-11-17, after the freeze}
 \date{Draft for the owner's review, \today}
 
 \makeatletter\@removefromreset{theorem}{section}\makeatother
+% Results 1--6 are Theorems 1--6 (Result 5 is Proposition 5): their own counter.
+\theoremstyle{plain}
+\newtheorem{mainthm}{Theorem}
+\newtheorem{mainprop}[mainthm]{Proposition}
 \renewcommand{\thetheorem}{\arabic{theorem}}
 \begin{document}
 \maketitle

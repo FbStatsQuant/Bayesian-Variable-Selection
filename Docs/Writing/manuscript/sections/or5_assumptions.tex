@@ -2,13 +2,13 @@
 \section{The assumptions}\label{sec:assumptions}\label{sec:standing}
 
 This section states every assumption of the main theorems once, and judges it. Table~\ref{tab:a-summary} gives the
-verdicts at a glance. Then each assumption has one entry with five parts: \textbf{(a)} the statement; \textbf{(b)} what it
-means in plain words; \textbf{(c)} what it rules out; \textbf{(d)} whether it is reasonable, for real designs, with an
-example where one exists; and \textbf{(e)} how it compares with \citet{SongLiang2015}: the same, weaker (asks less),
-stronger (asks more), or without an analogue. Page numbers for \SL{} are journal pages; ``supp.\ p.'' is a page of their
+verdicts at a glance. Then each assumption has one entry with five parts: \textbf{Statement}; \textbf{In words}, what it
+means in plain words; \textbf{Rules out}; \textbf{Reasonable?}, whether it is reasonable for real designs, with an example
+where one exists; and \textbf{vs \SL}, how it compares with \citet{SongLiang2015}: the same, weaker (asks less), stronger
+(asks more), or without an analogue. Page numbers for \SL{} are journal pages; ``supp.\ p.'' is a page of their
 online supplement; $\bar r_n$ is their cap on model size.
 
-\paragraph{Our designs.} Part (d) refers to the designs of our simulation studies. All have i.i.d.\ Gaussian rows, noise
+\paragraph{Our designs.} The ``Reasonable?'' parts refer to the designs of our simulation studies. All have i.i.d.\ Gaussian rows, noise
 variance $1$ and fixed nonzero coefficients, in three classes: \emph{independent} (S1 of the 2,400-fit study; IND of the
 $10^6$ plan); \emph{locally correlated} (S2, AR(1) at $0.5$; S3 and S4, blocks of five at $0.7$ and $0.85$; S6, blocks of
 five at $0.4$--$0.9$; AR, AR(1) at $0.6$; BLK, blocks of $20$ at $0.5$); and \emph{pervasive factor} (S5, blocks of five
@@ -38,9 +38,9 @@ with \citet{SongLiang2015}: \emph{same}, \emph{weaker} (ours asks less), \emph{s
 Assumption & Used by & Reasonable? & vs \SL \\
 \midrule
 \multicolumn{4}{@{}l}{\textbf{The data model}} \\
-\lab{GL} Gaussian linear model & 1, 3, 4, 6 & the standard model; true by construction in our designs & same: (1), p.~947 \\
-\lab{DIM} $p\le n^A$ & 1--3 & any polynomial $p$; $p=10^6$ at $n=200$ is $A\approx2.6$ & mixed: narrower at the top, wider at the bottom \\
-\lab{SP} fixed true model size & 1, 3 & few strong effects; nearly necessary for the rate & same as (4), p.~950 \\
+\lab{GL} Gaussian linear model & 1, 4, 6(b) & the standard model; true by construction in our designs & same: (1), p.~947 \\
+\lab{DIM} $p\le n^A$ & 1--3, 6(b) & any polynomial $p$; $p=10^6$ at $n=200$ is $A\approx2.6$ & mixed: narrower at the top, wider at the bottom \\
+\lab{SP} fixed true model size & 1, 6(b) & few strong effects; nearly necessary for the rate & same as (4), p.~950 \\
 \midrule
 \multicolumn{4}{@{}l}{\textbf{The predictors and the signal}} \\
 \lab{SGR}, \lab{GR} law of the rows & 1--3 & Gaussian or sub-Gaussian; bounded features included, rare binary features not & stronger than Cond.~1, p.~953 (standardised predictors, their cap $\lesssim\log n$) \\
@@ -62,11 +62,11 @@ conventions \as{C1}, \as{C2p}, \as{C3} & 3--5 & idealise the computer & their sa
 \end{tabular}
 \end{table}
 
-\newcommand{\Astate}{\par\smallskip\noindent\textbf{(a) Statement.}\ }
-\newcommand{\Awords}[1]{\par\noindent\textbf{(b) In words.} #1}
-\newcommand{\Arules}[1]{\par\noindent\textbf{(c) Rules out.} #1}
-\newcommand{\Areas}[1]{\par\noindent\textbf{(d) Reasonable?} #1}
-\newcommand{\Asl}[1]{\par\noindent\textbf{(e) vs \SL.} #1\par\medskip}
+\newcommand{\Astate}{\par\smallskip\noindent\textbf{Statement.}\ }
+\newcommand{\Awords}[1]{\par\noindent\textbf{In words.} #1}
+\newcommand{\Arules}[1]{\par\noindent\textbf{Rules out.} #1}
+\newcommand{\Areas}[1]{\par\noindent\textbf{Reasonable?} #1}
+\newcommand{\Asl}[1]{\par\noindent\textbf{vs \SL.} #1\par\medskip}
 
 % ------------------------------------------------------------------------------------------------
 \subsection{The data model}\label{sec:a-all}
