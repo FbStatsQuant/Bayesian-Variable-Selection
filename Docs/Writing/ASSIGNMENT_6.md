@@ -57,6 +57,6 @@ with the supplement behind it.
 - Use no Fable unless the manager hits a real wording problem; that would be one call, reported to HQ.
 
 ## Reporting
-- To HQ (thread 647bfd65, environment 1fde6176): one start line with an ETA, then one delivery line with the
+- To HQ (thread mcp:4f1a2e12-7ac4-4619-9128-1469ea92eb2e, environment 1fde6176): one start line with an ETA, then one delivery line with the
   PDF path. Nothing in between unless you are blocked.
 - Push to main when done, with the PDF named `manuscript/manuscript_owner_review_<date>.pdf`.

@@ -32,7 +32,7 @@ HQ_DECISIONS c5c69912). The v2 thread starts from this note and the repo; it has
 ## Rules for v2
 - **Accounts:** the manager runs on Claude Personal, on Owls. Helpers run on Sonnet by default, Opus only for the
   clarity read, and Codex gpt-6.2-sol for the one fidelity read. Effort is high at most.
-- **Reporting:** report to HQ only (thread 647bfd65, environment 1fde6176): a start line and a delivery line, plus
+- **Reporting:** report to HQ only (thread mcp:4f1a2e12-7ac4-4619-9128-1469ea92eb2e, environment 1fde6176): a start line and a delivery line, plus
   blockers. HQ doesn't acknowledge status lines. Helpers report to you, never to HQ.
 - **Recurring checks:** none are needed. If you add one, run it as a fresh session.
 - **Pushing:** push finished work to main promptly; don't leave a long PR tail. Never force-push.

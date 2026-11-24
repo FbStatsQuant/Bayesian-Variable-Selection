@@ -68,5 +68,5 @@ operations. All results asymptotic; design-agnostic statements; about the method
 
 ## Reporting
 At every ticket checkpoint and once a day: a ≤ 10-line report to HQ (`t3_thread_send` to the Theory HQ thread
-647bfd65-83bc-403a-b3b0-0a8352044e7f, environmentId 1fde6176-4453-43b0-82cc-70fda5110037, mode queue). Include what moved, what is blocked,
+mcp:4f1a2e12-7ac4-4619-9128-1469ea92eb2e, environmentId 1fde6176-4453-43b0-82cc-70fda5110037, mode queue). Include what moved, what is blocked,
 and what you need from HQ or the owner. Log every decision in `DECISIONS.md`.

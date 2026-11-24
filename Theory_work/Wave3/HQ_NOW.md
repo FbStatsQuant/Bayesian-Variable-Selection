@@ -144,6 +144,7 @@
 ## CODEX PACING LEVEL (owner sets; POLICIES §14): **1 (light pacing)** since 2026-11-16 late (owner: "let's have a surplus to burn when we actually need it"; Codex at 95% with the weekly reset in 6d20h). Previously 0.
 
 ## ACCOUNT ALLOCATION (owner sets; HQ relays to all managers)
+- **2026-11-24 00:47 UTC (owner): the HQ thread moves to Claude Work** (`claudeAgent`, config `.claude-work`; memory synced from the Personal store). Departments unchanged (Writing v2 on Claude Personal, Owls).
 - Current (2026-11-15): department agents on **Claude Third**, except Engineering WP2 + WP5 builders/reviewers on **Claude Work** (HQ overnight 11-15 ~23:18, pending the owner's review); HQ and the Writing Department on Claude Personal.
 
 ## PRIORITY ORDER (owner 2026-11-15, evening)

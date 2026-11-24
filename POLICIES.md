@@ -5,7 +5,7 @@ the documents win.
 
 ## 1. Organization (owner, 2026-11-15)
 - **Owner: Felipe.** Sets goals, decides budget and big-picture questions; may talk to any department directly.
-- **CEO: Theory HQ.** Thread `647bfd65-83bc-403a-b3b0-0a8352044e7f`, environment `1fde6176-4453-43b0-82cc-70fda5110037`
+- **CEO: Theory HQ.** Thread `mcp:4f1a2e12-7ac4-4619-9128-1469ea92eb2e`, environment `1fde6176-4453-43b0-82cc-70fda5110037`
   (owner's desktop). HQ runs all departments and reports to the owner when he asks.
 - **Department managers** report to HQ. Current roster: `Theory_work/Wave3/HQ_NOW.md` "DEPARTMENTS / ACTIVE THREADS".
   - SMC - Theory Department: theory tickets.
