@@ -1,0 +1,538 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs,array}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\topfraction}{0.95}\renewcommand{\textfraction}{0.05}\renewcommand{\floatpagefraction}{0.8}
+
+% ---- notation
+\newcommand{\R}{\mathbb{R}}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\one}{\mathbf{1}}
+\newcommand{\N}{\mathrm{N}}
+\newcommand{\abs}[1]{\lvert #1\rvert}
+\newcommand{\norm}[1]{\lVert #1\rVert}
+\newcommand{\ind}[1]{\mathbf{1}\{#1\}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Corr}{\operatorname{Corr}}
+\newcommand{\sd}{\operatorname{sd}}
+\newcommand{\lmin}{\lambda_{\min}}
+\newcommand{\yr}{y^{\mathrm r}}
+\newcommand{\Xr}{X^{\mathrm r}}
+\newcommand{\bstar}{\beta^*}
+\newcommand{\tstar}{\theta^*}
+\newcommand{\sigs}{\sigma_*}
+\newcommand{\Sz}{S_0}
+\newcommand{\sz}{s_0}
+\newcommand{\Sig}{\Sigma_n}
+\newcommand{\Om}{\Omega}
+\newcommand{\pis}[1]{\pi(#1\mid y)}
+\newcommand{\PIP}{\mathrm{PIP}}
+\newcommand{\HPM}{\mathrm{HPM}}
+\newcommand{\MPM}{\mathrm{MPM}}
+\newcommand{\Shat}{\hat S}
+\newcommand{\Zhat}{\hat Z}
+\newcommand{\tSz}{\tilde S_0}
+\newcommand{\rn}{\sqrt{\log n/n}}
+\newcommand{\OP}{O_{\P}}
+\newcommand{\oP}{o_{\P}}
+\newcommand{\Dn}{\mathcal D_n}
+\newcommand{\Hl}{\mathcal H}
+
+% ---- statements
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}
+\newtheorem{prop}[thm]{Proposition}
+\theoremstyle{definition}
+\newtheorem{asm}{Assumption}
+\renewcommand{\theasm}{A\arabic{asm}}
+\newtheorem{planned}{Planned result}
+\renewcommand{\theplanned}{P\arabic{planned}}
+\newcommand{\means}{\par\smallskip\noindent\textit{What it means.}\ }
+\setlist[enumerate]{leftmargin=2em,itemsep=1pt,topsep=3pt}
+\setlist[itemize]{leftmargin=1.5em,itemsep=1pt,topsep=3pt}
+
+\begin{document}
+\begin{center}
+{\LARGE SMC-BVS: the model, the sampler,\\[3pt] the assumptions and the theorems}\\[8pt]
+{\large A short version \quad$\cdot$\quad 24 November 2026}
+\end{center}
+\medskip
+
+\noindent SMC-BVS is a method for Bayesian variable selection in the linear model when the number of predictors $p$ is
+much larger than the sample size $n$. The model and the priors are standard. What is new is the sampler, which is built to
+find the posterior mass when predictors are correlated, and a set of theorems about the posterior and about the model the
+software reports. This note states each of these once: the model, the sampler, the assumptions, six proved results and
+five planned ones. It contains no proofs.
+
+% =====================================================================================================
+\section{The model and the priors}
+
+\paragraph{Data.} We observe a response $\yr\in\R^n$ and an $n\times p$ matrix of predictors $\Xr$; the superscript
+means ``raw''. The method centres the response and every predictor and scales each to sample variance one. We write $y$
+and $X$ for the standardised versions, so every column $x_j$ of $X$ has mean zero and $\norm{x_j}^2=n-1$, and
+$y^\top y=n-1$.\footnote{A predictor that is constant in the sample is dropped first, and the prior then uses the number
+of predictors kept. In Theorem~\ref{thm:post} a dropped predictor has inclusion probability $0$ and a model outside the
+model space has posterior probability $0$, and $p$ in the assumptions counts all predictors.}
+
+\paragraph{Model.} A model is a set $S\subseteq\{1,\dots,p\}$ of predictors, and $X_S$ holds its columns. Given $S$,
+\[
+  y\mid S,\theta_S,\sigma^2\ \sim\ \N_n(X_S\theta_S,\ \sigma^2I_n).
+\]
+There is no intercept because the data are centred. The model space $\Om$ is the set of all models with at most
+$K=\min(p,\lfloor n/2\rfloor)$ predictors.
+
+\paragraph{Priors.}
+\[
+  \pi(S)\ \propto\ \binom{2p-1}{\abs{S}}^{-1}\ (S\in\Om),\qquad
+  \theta_S\mid S,\sigma^2\ \sim\ \N\big(0,\ n\sigma^2(X_S^\top X_S+I)^{-1}\big),\qquad
+  \sigma^2\ \sim\ \mathrm{IG}(0.01,\,0.01).
+\]
+The model prior is the beta-binomial prior: each predictor enters independently with probability $q$, and
+$q\sim\mathrm{Beta}(1,p)$; it is restricted to $\Om$. Going from $k$ to $k+1$ predictors costs a factor of about
+$(k+1)/(2p)$ in prior odds. The coefficient prior is Zellner's $g$-prior with $g=n$, with a unit ridge added so that it
+stays proper when columns are collinear. Nothing is left for the user to tune.
+
+\paragraph{Posterior.} The coefficients and the variance integrate out in closed form. With $G_S=X_S^\top X_S$,
+$z_S=X_S^\top y$ and $H_S=(n+1)G_S+I$, the marginal likelihood of $S$ is
+\[
+  m(S)\ \propto\ \Big(\frac{\det H_S}{\det(G_S+I)}\Big)^{-1/2}\big(0.02+y^\top y-n\,z_S^\top H_S^{-1}z_S\big)^{-(n/2+0.01)},
+\]
+and the posterior over models is
+\[
+  \pis{S}=\frac{\pi(S)\,m(S)}{Z},\qquad Z=\sum_{S\in\Om}\pi(S)\,m(S).
+\]
+We call $\pi(S)m(S)$ the \emph{score} of $S$ and $Z$ the \emph{evidence}. The usual summaries are the inclusion
+probabilities $\PIP_j=\sum_{S\ni j}\pis{S}$, the highest posterior model $\HPM=\arg\max_S\pis{S}$, and the median
+probability model $\MPM=\{j:\PIP_j>1/2\}$.
+
+\paragraph{Truth.} The theorems assume that the data come from a sparse Gaussian linear model,
+\begin{equation}\label{eq:model}
+  \yr=\alpha^*\one_n+\Xr\bstar+\varepsilon,\qquad \varepsilon\sim\N_n(0,\sigs^2I_n).
+\end{equation}
+The true model is $\Sz=\{j:\beta^*_j\neq0\}$, of size $\sz$. Its members are the true predictors; the others are null
+predictors. On the standardised scale the coefficients are $\theta^*_j=\beta^*_j\times(\text{sample s.d.\ of predictor }j)$.
+
+% =====================================================================================================
+\section{The sampler}
+
+\paragraph{The idea.} The posterior is known up to the constant $Z$. The difficulty is to find where its mass sits in an
+enormous model space. Correlated predictors make this hard in two ways. A true predictor and a close proxy give two
+models with nearly the same score. And a null predictor that is correlated with a true one looks useful on its own,
+because it carries part of the true predictor's signal; we say it \emph{leaks}.
+
+Sequential Monte Carlo starts many models (\emph{particles}) from an easy distribution close to the posterior and moves
+them to the posterior in small steps. Our easy distribution, the \emph{start law}, treats small blocks of correlated
+predictors exactly. That settles the choice between a true predictor and its proxies inside a block. What the start law
+cannot see is leakage between blocks. A greedy search, run at the end from the mode of the start law, removes leaked
+predictors one at a time. This search uses no random numbers.
+
+\paragraph{The steps.}
+\begin{enumerate}
+  \item \emph{Blocks.} Cluster the predictors by their sample correlations into blocks $C_1,\dots,C_J$ of at most
+    $B=\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)$ predictors. Inside each block, compute
+    $h_k(U)=m(U)/m(\emptyset)$ for every subset $U\subseteq C_k$ (at most $2^{16}$ subsets).
+  \item \emph{Start law.} Set $\pi_0(S)\propto\pi(S)\prod_{k}h_k(S\cap C_k)$. This is the posterior one would have if the
+    marginal likelihood factorised over blocks. A recursion over the blocks gives its normalising constant $\bar Z_0$,
+    exact draws from it, and its mode $\tSz$.
+  \item \emph{Path to the posterior.} Let $\Delta(S)=\log\{m(S)/m(\emptyset)\}-\sum_k\log h_k(S\cap C_k)$, the part of the
+    log marginal likelihood that comes from interactions between blocks. The path is
+    $\pi_\xi\propto\pi_0\,e^{\xi\Delta}$ for $0\le\xi\le1$, and $\pi_1$ is the posterior. A pilot run chooses a grid
+    $0=\xi_0<\xi_1<\dots<\xi_T=1$, aiming to keep $90\%$ effective sample size at each step. The grid is then frozen.
+  \item \emph{Particles.} Four independent \emph{islands} each draw $N=\max(2500,n,p)$ particles from $\pi_0$ (four times
+    as many if the pilot's diagnostics ask for it). At step $t$ an island reweights particle $S_v$ by
+    $\omega^{(t)}_v=\exp\{(\xi_t-\xi_{t-1})\Delta(S_v)\}$, resamples the particles in proportion to these weights, and
+    moves each particle by Markov moves that leave $\pi_{\xi_t}$ invariant: a Gibbs update of every predictor, a random
+    swap, swaps with correlated neighbours, and one proposal drawn afresh from $\pi_0$. At $\xi=1$ a few more rounds of
+    moves are run, and the last four are used for the estimates.
+  \item \emph{Greedy searches.} A search moves from the current model to its best neighbour (add one predictor, delete
+    one, or swap one) as long as the score strictly increases, up to a cap on the number of moves. Two searches are run:
+    one from the best model the particles found, with cap $\lceil\log_2(n+p+1)\rceil$, and one from the start mode $\tSz$,
+    with cap $\lceil\log_2(n+p+1)\rceil+\abs{\tSz}$.
+  \item \emph{Report.} The \emph{reported model} $\Shat$ is the model with the highest score among all models the run
+    scored. It is \emph{certified} if it is the end point of one of the two searches and no neighbour has a higher
+    score: a local optimum under additions, deletions and swaps. The run also reports inclusion probabilities (averaged
+    over particles and islands), the list of the $40p+1$ best models scored, and the evidence estimate
+    \begin{equation}\label{eq:zhat}
+      \Zhat=\frac14\sum_{r=1}^{4}\Zhat_r,\qquad
+      \Zhat_r=m(\emptyset)\,\bar Z_0\prod_{t=1}^{T}\Big\{\frac1N\sum_{v=1}^N\omega^{(t)}_v\Big\}\quad\text{for island }r.
+    \end{equation}
+\end{enumerate}
+When $\Om$ is small enough the method enumerates it instead, and everything it reports is exact (and $\Shat$ counts as
+certified). A run can also stop without output, for instance when it would exceed its time or memory allowance. We say
+that a run \emph{produces output} when it does not stop.
+
+\paragraph{Very large $p$.} For $p$ near $10^6$ a parallel version runs $16$ islands as separate processes that do not
+communicate, merges what they found at the end, and then runs the two greedy searches; it scores models with a faster
+batched routine and re-scores every accepted model exactly. The theorems below are stated for the standard version, not
+for this one.
+
+% =====================================================================================================
+\section{The assumptions}
+
+Table~\ref{tab:assumptions} lists the assumptions, the theorems that use them, whether they are reasonable, and how they
+compare with Song and Liang (2015). Each assumption is then stated once. Constants called \emph{fixed} do not depend
+on $n$; everything else ($p$, the design, the coefficients) may change with $n$.
+
+
+\begin{table}[!t]
+\centering\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\renewcommand{\arraystretch}{1.08}
+\caption{The assumptions at a glance. ``Used by'' gives theorem numbers. The last column compares with Song and Liang
+(2015): \emph{same}, \emph{weaker} (ours asks less), \emph{stronger} (ours asks more), \emph{mixed}, or \emph{none} (no
+analogue).}\label{tab:assumptions}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.215\linewidth}>{\raggedright\arraybackslash}p{0.075\linewidth}>{\raggedright\arraybackslash}p{0.375\linewidth}>{\raggedright\arraybackslash}p{0.275\linewidth}@{}}
+\toprule
+Assumption & Used by & Reasonable? & vs Song and Liang \\
+\midrule
+\multicolumn{4}{@{}l}{\textbf{The data model}} \\
+A1 Gaussian linear model & 1, 4, 6(b) & the standard model; true by construction in our simulations & same (their model (1)) \\
+A2 $p\le n^A$ & 1, 3, 6(b) & any polynomial $p$; $p=10^6$ at $n=200$ is $A\approx2.6$ & mixed: they allow $\log p$ up to a power of $n$; we allow bounded $p$ \\
+A3 fixed true model size & 1, 6(b) & few strong effects; nearly necessary for the rate (Theorem~\ref{thm:sharp}(a)) & same as their strict sparsity (4) \\
+\midrule
+\multicolumn{4}{@{}l}{\textbf{The predictors and the signal}} \\
+A4 law of the rows & 1, 3 & Gaussian or sub-Gaussian; bounded features are included, rare binary features are not & stronger than their Condition~1 \\
+A5 fixed signals & 1, 3 & effects that do not shrink with $n$; Theorem~\ref{thm:dist} needs none & same, if their $\bstar$ is fixed \\
+A6 eigenvalue floor & 1, 3 & holds in all our designs (floors $0.1$ to $1$); no upper bound, so common factors are allowed & mixed: stronger than their Condition~3 where the two can be compared \\
+A7 weaker setting of Theorem~\ref{thm:dist} & 2 & A1--A4 relaxed, no lower bound on the effects; only exact duplicates and exact linear dependences fail & stronger in one respect: their Theorems 1--2 have no collinearity condition \\
+\midrule
+\multicolumn{4}{@{}l}{\textbf{The reported model (Theorem~\ref{thm:reported} only)}} \\
+A8 visibility & 3 & holds with aligned signs or generic coefficients; can fail by cancellation & stronger than their Condition~5 (marginal, no margin) \\
+A9(a) small leakage set & 3 & holds for block and autoregressive designs; fails for pervasive factors & none \\
+A9(b),(c) floor and local regressions & 3 & follow from a floor on $\Sig$ and local correlation & floor as A6; locality none \\
+\midrule
+\multicolumn{4}{@{}l}{\textbf{Certified screening (Theorem~\ref{thm:screen} only)}} \\
+A10 floor on sets of size $k_n+\sz$, signal bounds & 4 & fixed design; common factors allowed; the sample-size condition is conservative & as A6 and A5, on other sets \\
+\midrule
+\multicolumn{4}{@{}l}{\textbf{Not statistical}} \\
+C1--C3 idealised computer & 3--5 & the usual idealisation in a theorem about an algorithm & their sampler statements are idealised limits too \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{The data model}
+
+\begin{asm}[Gaussian linear model]\label{a:gl}
+The data follow~\eqref{eq:model}, with a fixed noise variance $\sigs^2>0$ and noise independent of the predictors.
+\end{asm}
+
+\begin{asm}[Dimension]\label{a:dim}
+$2\le p\le n^A$ for a fixed $A\ge1$.
+\end{asm}
+
+\begin{asm}[Sparsity]\label{a:sp}
+The number of true predictors $\sz\ge1$ is fixed.
+\end{asm}
+
+\subsection*{The predictors and the signal}
+
+\begin{asm}[Law of the rows]\label{a:rows}
+The rows of $\Xr$ are independent and identically distributed, with mean $m_n$ and covariance matrix $\Sig$, which is a
+correlation matrix. In addition, one of:
+\begin{enumerate}[label=(\alph*)]
+  \item \emph{sub-Gaussian on sparse directions:} for a fixed $L>0$, a row $x$ satisfies
+    $\E\exp\{\lambda u^\top(x-m_n)\}\le\exp\{L^2\lambda^2u^\top\Sig u/2\}$ for every $\lambda\in\R$ and every $u\in\R^p$
+    with at most $5(A+1)(\sz+1)\log n$ nonzero entries;
+  \item \emph{Gaussian:} the rows are $\N_p(m_n,\Sig)$. This is case (a) with $L=1$.
+\end{enumerate}
+\end{asm}
+
+\begin{asm}[Fixed signals]\label{a:fs}
+One of:
+\begin{enumerate}[label=(\alph*)]
+  \item \emph{raw scale:} $\alpha^*$ and $\bstar$ are deterministic, and $b_{\mathrm{lo}}\le\abs{\beta^*_j}\le
+    b_{\mathrm{hi}}$ for every $j\in\Sz$, with fixed $0<b_{\mathrm{lo}}\le b_{\mathrm{hi}}<\infty$;
+  \item \emph{standardised scale:} $\yr=\alpha\one_n+X\tstar+\varepsilon$, where $X$ is the standardised design,
+    $\varepsilon\sim\N_n(0,\sigs^2I_n)$ is independent of $\Xr$, $\sigs^2>0$ is fixed, $\tstar$ is deterministic with a
+    fixed number $\sz\ge1$ of nonzero entries, and $\theta_{\mathrm{lo}}\le\abs{\theta^*_j}\le\theta_{\mathrm{hi}}$ for
+    every $j\in\Sz$, with fixed $0<\theta_{\mathrm{lo}}\le\theta_{\mathrm{hi}}<\infty$.
+\end{enumerate}
+\end{asm}
+\noindent Form (b) says that the true coefficients are fixed numbers on the scale the method works on. It contains the
+linear model and the sparsity assumption, so it takes the place of A1 and A3 in Theorem~\ref{thm:reported}. When the
+predictors have unit population variance the two scales differ only by sampling error.
+
+\begin{asm}[Eigenvalue floor]\label{a:efs}
+$\lmin(\Sigma_{n,S})\ge\varphi^2$ for every set $S$ of at most $5(A+1)(\sz+1)\log n$ predictors, for a fixed
+$\varphi\in(0,1]$. Here $\Sigma_{n,S}$ is the sub-matrix of $\Sig$ for the predictors in $S$.
+\end{asm}
+\noindent No small group of predictors is close to linearly dependent in the population. A floor on the whole matrix,
+$\lmin(\Sig)\ge\varphi^2$, is enough. There is no upper bound on the eigenvalues.
+
+\begin{asm}[The weaker setting of Theorem~\ref{thm:dist}]\label{a:dist}
+The observations are $n$ independent copies of a pair $(x,y)$ with $x\in\R^p$. Fix an integer $s\ge0$ and constants
+$A\ge1$, $L\ge1$, $c_\psi>0$, $\bar b>0$. For a level $M\ge1$, let $q_n=\min\{p,\lceil C_qM\log n\rceil\}$ with
+$C_q=2(s(A+2)+4)/\log2$.
+\begin{enumerate}[label=(\alph*)]
+  \item \emph{Model.} $y=\alpha^*+x^\top\bstar+\varepsilon$ with $\varepsilon\sim\N(0,\sigs^2)$ independent of $x$ and
+    $\sigs^2>0$. The quantities $\alpha^*$, $\bstar$, $\sigs$ and the law of $x$ may depend on $n$.
+  \item \emph{Sparsity and dimension.} At most $s$ entries of $\bstar$ are nonzero, and $2\le p\le n^A$.
+  \item \emph{Sub-Gaussian predictors.} Every predictor has positive variance. With
+    $\zeta_j=(x_j-\E x_j)/\sd(x_j)$, $\E\exp(\lambda u^\top\zeta)\le\exp\{L^2\lambda^2\Var(u^\top\zeta)/2\}$ for every
+    $\lambda\in\R$ and every $u$ with at most $q_n$ nonzero entries.
+  \item \emph{No near-exact collinearity.} $\lmin(\Corr(x_T))\ge c_\psi/n$ for every set $T$ of at most $q_n$ predictors.
+  \item \emph{Bounded signal.} $\abs{\beta^*_j}\,\sd(x_j)\le\bar b\,\sigs$ for every $j$.
+\end{enumerate}
+\end{asm}
+\noindent Items (a)--(c) are A1--A4 with less asked: the noise level and the coefficients may change with $n$, and no
+coefficient has to be large, or even nonzero. The floor in (d) tends to zero, so it excludes only predictors that are
+almost exactly collinear.
+
+\subsection*{The reported model}
+
+The start law sees interactions only inside blocks of at most $16$ predictors. The next two assumptions are therefore
+about how predictors relate once up to $15$ others are held fixed. Let $W\sim\N_p(0,\Sig)$ be a centred copy of one row
+of the design. For a set $U$, $\Cov(W_j,W_l\mid W_U)$ is the partial covariance given the predictors in $U$, and
+$\bar\beta_{U,l}=\Sigma_{n,UU}^{-1}\Sigma_{n,Ul}$ is the population regression coefficient of $W_l$ on $W_U$.
+
+\begin{asm}[Visibility]\label{a:vis}
+For every true predictor $j\in\Sz$ and every set $U\not\ni j$ of at most $15$ predictors,
+$\abs{\Cov(W_j,\,W^\top\tstar\mid W_U)}\ge a$, for a fixed $a>0$.
+\end{asm}
+\noindent Each true predictor stays related to the signal $W^\top\tstar$, by a fixed margin, whichever $15$ other
+predictors are held fixed. It fails when other predictors cancel a true predictor's signal: two true predictors with
+coefficients $1$ and $-1$ and correlation $\rho$ each have covariance $1-\rho$ with the signal, which vanishes as
+$\rho\to1$.
+
+\begin{asm}[Small leakage set]\label{a:leak}
+Fix $b\in(0,\tfrac12)$ and $b_H>0$ with $15b_H+b<\tfrac12$.
+\begin{enumerate}[label=(\alph*)]
+  \item \emph{Leakage set.} There is a deterministic set $Q\supseteq\Sz$ with $\abs{Q}\le n^b$ such that:
+    \begin{enumerate}[label=(\roman*),leftmargin=1.8em]
+      \item \emph{no leak outside $Q$:} $\abs{\Cov(W_l,W_j\mid W_U)}\le\varpi_n$ for every $l\notin Q$, every set $U$ of
+        at most $15$ predictors and every $j\in\Sz\setminus U$, where $\varpi_n\sqrt{n/\log n}\to0$;
+      \item \emph{locality:} every $l\notin Q$ has a deterministic neighbourhood $\Hl_l\supseteq\{l\}\cup\Sz$ with
+        $\abs{\Hl_l}\le n^{b_H}$ such that, for every $U\not\ni l$ with $\abs{U}\le15$ and $U_0=U\cap\Hl_l$,
+        $\abs{\Cov(W_l,W_v\mid W_{U_0})}\le\delta_n$ and $\abs{\Cov(W_j,W_v\mid W_{U_0})}\le\delta_n$ for every
+        $v\in U\setminus\Hl_l$ and $j\in\Sz\setminus U_0$, where $\delta_n\to0$;
+      \item \emph{room under the size cap:} for large $n$, $\abs{Q}\le K$, and either $Q$ is the set of all predictors or
+        $K\ge2\abs{Q}+32\sz+1$.
+    \end{enumerate}
+  \item \emph{Floor.} $\lmin(\Sigma_{n,Q\cup\{l\}})\ge\varphi^2$ for every predictor $l$, with $\varphi$ as in A6.
+  \item \emph{Local regressions.} There are sequences $d_n=o(\log n)$ and $L_n\to0$ with
+    $L_n^2\log(\abs{Q}+1)=o(\log n)$, and for every predictor $l$ a deterministic set $N_l\subseteq Q\setminus\{l\}$ of at
+    most $d_n$ predictors, such that $\norm{\bar\beta_{T,l}-\bar\beta_{T\cap N_l,l}}_1\le L_n$ for every $T$ with
+    $\Sz\subseteq T\subseteq Q$ and $l\notin T$. (The second coefficient vector is filled with zeros to the length of the
+    first.)
+\end{enumerate}
+\end{asm}
+\noindent In words: (a) only a small set $Q$ of predictors, fewer than $\sqrt n$, can imitate part of the signal; every
+predictor outside $Q$ is nearly uncorrelated with the true ones given any $15$ others, and conditioning on far-away
+predictors changes nothing that matters. (b) No predictor is close to a linear combination of the members of $Q$. (c)
+The regression of any predictor on a model between $\Sz$ and $Q$ is close to its regression on a few members of $Q$.
+For independent predictors $Q=\Sz$. For block designs $Q$ is the union of the blocks that contain true predictors, and
+for autoregressive designs it is a neighbourhood of size $C\log n$ around them. With a pervasive common factor every
+null predictor is correlated with every true one, so $Q$ would have to be everything, and A9 fails once $p$ is larger
+than $\sqrt n$.
+
+\subsection*{Certified screening}
+
+\begin{asm}[Conditions for certified screening]\label{a:scr}
+The design is fixed. Let $\hat R_S=X_S^\top X_S/(n-1)$ be the sample correlation matrix of the predictors in $S$. For a
+\emph{size budget} $k_n\in\{0,\dots,K-1\}$:
+\begin{enumerate}[label=(\alph*)]
+  \item $\lmin(\hat R_S)\ge\kappa$ for every $S$ with $\abs{S}\le k_n+\sz$;
+  \item $\min_{j\in\Sz}\abs{\theta^*_j}\ge\underline\theta>0$ and $\norm{\tstar}_1\le M_1$;
+  \item $(k_n+1)\log p+\log n\le c\,n$, with $c=\kappa^2\underline\theta^2/\{200(M_1^2+\sigs^2)\}$.
+\end{enumerate}
+The constants $\kappa>0$, $\underline\theta$, $M_1$ and $\sigs^2$ are fixed.
+\end{asm}
+\noindent These are an eigenvalue floor and signal bounds of the same kind as A6 and A5, now on the observed design and
+on sets of the budget size. Item (c) lets the budget be as large as a small multiple of $n/\log p$. The true model size
+$\sz$ need not be fixed.
+
+\subsection*{The idealised computer}
+
+Theorems~\ref{thm:reported}--\ref{prop:unbiased} are about runs of the software. They idealise the computer in three
+ways. These are not assumptions about the data.
+\begin{itemize}
+  \item[\textbf{C1}] \emph{The method.} Exact arithmetic, the default settings, and a valid input and seed.
+  \item[\textbf{C2}] \emph{The machine.} C1, and a machine that never overflows or fails, ideal random numbers, and at
+    least the memory and time that the method's own formulas ask for. (Two hard-coded integer limits on the search caps
+    are also ignored; no real input can reach them.)
+  \item[\textbf{C3}] \emph{The sampler.} Exact arithmetic; ideal random numbers that, in the final run, are independent
+    of the data and of the pilot; exact draws from the start law; and Markov moves that do what their definitions say.
+\end{itemize}
+
+% =====================================================================================================
+\section{The theorems}
+
+\subsection{Proved}
+
+Theorems~\ref{thm:post}, \ref{thm:dist} and~\ref{thm:sharp} are about the exact posterior.
+Theorems~\ref{thm:reported} and~\ref{thm:screen} and Proposition~\ref{prop:unbiased} are about what the software
+returns.
+
+\begin{thm}[Posterior concentration]\label{thm:post}
+Assume A1, A2, A3, A4(a), A5(a) and A6. Then, under the joint law of the design and the noise,
+\[
+  1-\pis{\Sz}=\OP\big(\rn\big),\qquad
+  \max_{1\le j\le p}\big|\PIP_j-\ind{j\in\Sz}\big|=\OP\big(\rn\big),
+\]
+and $\P(\HPM=\MPM=\Sz)\to1$.
+\end{thm}
+\means The posterior puts all but about $\rn$ of its mass on the true model, every inclusion probability is within that
+distance of $0$ or $1$, and both standard point estimates are the true model. This holds for sub-Gaussian designs with
+any correlation structure that has an eigenvalue floor, common factors included, and for any polynomial $p$.
+
+\begin{thm}[Consistency of the fitted distribution]\label{thm:dist}
+A posterior draw $(S,\beta,\sigma^2)$, in the original units, defines the conditional law
+$\N(\bar y+(x-\bar x)^\top\beta,\sigma^2)$ of $y$ given $x$, where $\bar x$ and $\bar y$ are the sample means. Let $f$
+be the joint density of $(x,y)$ when $x$ has its true law and $y$ given $x$ has this fitted law, let $f^*$ be the true
+joint density, and let $d_H(f,f^*)=(1-\int\!\sqrt{ff^*})^{1/2}$ be the Hellinger distance.
+
+There are constants $c_H>0$, $M_0$ and $n_0$, depending only on $(s,A,L,c_\psi,\bar b)$, such that the following holds.
+Fix $M\ge M_0$ and assume A7 with this $M$. Then for every $n\ge n_0$ with $\sqrt n/\log n\ge M$,
+\[
+  \P^*\Big[\ \Pi\Big(d_H(f,f^*)>\sqrt{M\log n/n}\ \Big|\ \Dn\Big)>n^{-c_HM}\ \Big]\ \le\ n^{-c_HM},
+\]
+where $\Dn$ is the data set, $\P^*$ its law and $\Pi(\cdot\mid\Dn)$ the posterior of $(S,\beta,\sigma^2)$. If the
+posterior is not defined, because fewer than two predictors are left or the response is constant in the sample, the
+inner probability is read as $1$.
+\end{thm}
+\means The distribution that the posterior fits to $y$ given $x$ is within $\sqrt{M\log n/n}$ of the truth, except on
+a set of posterior mass $n^{-c_HM}$ and a set of data sets of the same probability. The bound holds for each large $n$,
+not only in the limit. It needs no lower bound on the coefficients: effects too weak to be selected do no harm to the
+fitted distribution. Theorem~\ref{thm:post} is about selection; this one is about prediction.
+
+\begin{thm}[The reported model equals the true model; simplified, full version in spec.tex, Theorem~3]\label{thm:reported}
+Let $\Sig$ be positive definite and assume A2, A4(b), A5(b), A6, A8, A9 and C1. Then there are events $\mathcal G_n$,
+determined by the data alone, with $\P(\mathcal G_n)\to1$, on which every run that produces output reports
+$\Shat=\Sz$, whatever its seed and whatever its pilot chose. In particular
+\[
+  \P\big(\text{the run produces output and }\Shat\neq\Sz\big)\to0 .
+\]
+Under C2 every run produces output, for every $n\ge3$ that the method accepts, and so $\P(\Shat=\Sz)\to1$.
+\end{thm}
+\means Theorems~\ref{thm:post} and~\ref{thm:dist} describe a posterior that nobody can compute exactly at this size.
+Theorem~\ref{thm:reported} is about the model the software prints: for almost every data set it is exactly the true
+model, and this does not depend on the seed. The proof follows the design of the sampler. By visibility, the mode of
+the start law contains every true predictor. Anything else in it is a leaked predictor, and so belongs to $Q$. The
+greedy search from that mode deletes the leaked predictors one at a time and stops at $\Sz$, and no other model the run
+scores beats $\Sz$. The search is deterministic, which is why the seed does not matter. The result covers independent,
+block and autoregressive designs. It does not cover pervasive common factors, because A9 fails there.
+
+\begin{thm}[Certified screening]\label{thm:screen}
+Let the design be fixed and assume A1, A10 with size budget $k_n$, and C1. Then
+\[
+  \P\big(\text{the run produces output},\ \Shat\text{ is certified},\ \abs{\Shat}\le k_n,\ \text{and }\Sz\not\subseteq\Shat\big)\to0 .
+\]
+\end{thm}
+\means A certified model is a local optimum of the posterior: no addition, deletion or swap of one predictor improves
+it. The theorem says that a local optimum with at most $k_n$ predictors cannot miss a true predictor, except with
+vanishing probability. If it missed one, bringing that predictor in would raise the score by more than chance can
+explain. So a small certified model can be read as a screening set: it contains every true predictor. The theorem needs
+neither visibility nor a leakage set, so it covers designs with strong common factors, where Theorem~\ref{thm:reported}
+does not apply. It bounds the probability of one joint event. It does not say that a run will certify a small model, it
+is not a statement conditional on certification, and a certified model may contain null predictors.
+
+\begin{prop}[The evidence estimate is unbiased; simplified, full version in spec.tex, Proposition~5]\label{prop:unbiased}
+Assume C3, and fix any data set on which the method uses the sampler and the pilot succeeds. Let $\mathcal C$ be
+everything the pilot chose. Then the evidence estimate that each island would produce if run to the end satisfies
+\[
+  \E\big[\Zhat_r\mid\mathcal C\big]=Z\quad(r=1,\dots,4),\qquad\text{and hence}\qquad \E\big[\Zhat\mid\mathcal C\big]=Z ,
+\]
+where the expectation is over the random numbers of the final run. No condition on the design is needed.
+\end{prop}
+\means The grid and the number of particles are tuned on the data by the pilot. Because they are frozen before the
+final run draws a single random number, the classical unbiasedness of the sequential Monte Carlo estimate of a
+normalising constant survives the tuning. The statement is about $\Zhat$, not $\log\Zhat$, and it holds for every data
+set, with or without a true model.
+
+\begin{thm}[The rate cannot be improved; simplified, full version in spec.tex, Theorem~6]\label{thm:sharp}
+\textup{(a)} \emph{Every design.} For every $n\ge3$, every standardised design with $p\ge2$, every response $y$ and
+every model $S$ with $\abs{S}\le\min(K-1,p/2)$,
+\[
+  \pis{S}\ \le\ \Big(1+\frac{\abs{S}+1}{3\sqrt n}\Big)^{-1}.
+\]
+
+\textup{(b)} \emph{Designs that attain the rate.} Assume A1 and A3. Let the true columns of the design and $\tstar$ be
+deterministic, with $\norm{X\tstar}^2\le nM_\mu$ and $\norm{\tstar}^2\le nM_\theta$ for fixed $M_\mu$, $M_\theta$.
+Assume one of: \textup{(i)} the null columns of $X$ are orthogonal to each other and to the true columns; or
+\textup{(ii)} the raw null columns have independent $\N(0,1)$ entries, independent of the noise, and $p\le n^A$ for a
+fixed $A$. Then, for every $p>\sz$, bounded or growing,
+\[
+  \E\big[1-\pis{\Sz}\big]\ \ge\ (1-o(1))\,(\sz+1)\,\frac{2(p-\sz)}{2p-1-\sz}\,
+  \sqrt{\frac{\log\!\big(p\sqrt n/(\sz+1)\big)}{\pi n}}\qquad(\pi=3.14\ldots),
+\]
+and, if $p\to\infty$, $1-\pis{\Sz}\ge(1-\oP(1))\,(\sz+1)\sqrt{\log p/(\pi n)}$.
+\end{thm}
+\means Part (a) holds for every data set and has no assumption: under this prior no model, the true one included, can
+have posterior mass closer to one than about $(\abs{S}+1)/(3\sqrt n)$. So no design gives a rate faster than
+$n^{-1/2}$, and the rate $\rn$ of Theorem~\ref{thm:post} is possible only when $\sz=O(\sqrt{\log n})$; this is why A3
+is nearly necessary. Part (b) shows that in the most favourable designs, with orthogonal or independent null
+predictors, the posterior still misses the true model by a constant times $\sqrt{\log p/n}$. With $p=n^A$ this is the
+rate of Theorem~\ref{thm:post}, logarithm included.
+
+\subsection{Planned}
+
+None of the following is proved. Each is a target, and the choices still open are named.
+
+\begin{planned}[Standard samplers get trapped where ours does not]
+There is a family of designs whose posterior has several well-separated modes, on which (i) every Markov chain that
+adds or removes one predictor at a time, and the weighted tempered Gibbs sampler of Zanella and Roberts (2019), has a
+mixing time that grows quickly with the size of the problem, while (ii) one of Theorems~\ref{thm:post},
+\ref{thm:reported} or~\ref{thm:screen} holds on the same designs. Open: the family of designs, which of the three
+theorems, the exact class of chains, and the growth rate.
+\end{planned}
+
+\begin{planned}[The theory at $p=10^7$]
+Take the autoregressive design of the planned $p=10^7$ run at $n=200$, continued as a sequence with $p_n=\lceil
+n^{A}\rceil$ and $A=\log(10^7)/\log200\approx3.04$. Show that it satisfies the assumptions of our theorems with this
+$A$; for Theorem~\ref{thm:reported} this means exhibiting a leakage set $Q$ that satisfies A9. Open: which theorems
+are covered, the set $Q$, and how the sequence is continued. The run itself uses the parallel version of the sampler,
+which no theorem covers.
+\end{planned}
+
+\begin{planned}[Theorem~\ref{thm:reported} on the raw scale]
+Theorem~\ref{thm:reported} takes the coefficients fixed on the standardised scale, and Theorem~\ref{thm:dist} takes
+them fixed on the raw scale; with $\sz\ge1$ no design satisfies both. The target is to restate A5(b), A8 and A9 for
+fixed raw coefficients and to show, under A7 with $s\ge1$, that with probability tending to one every completed run
+returns a list of models $\mathcal T$ with posterior mass $\pi(\mathcal T\mid\Dn)\ge n^{-c_HM/2}$. The Hellinger bound
+of Theorem~\ref{thm:dist} would then hold for the posterior restricted to the list the software returns. Open: the
+raw-scale form of the assumptions, and whether to aim for the full conclusion $\Shat=\Sz$ on the raw scale.
+\end{planned}
+
+\begin{planned}[Theorem~\ref{thm:reported} under an aggregated leak]
+The conclusions of Theorem~\ref{thm:reported} hold when the bound A9(a)(i), which is on each predictor outside $Q$
+separately, is replaced by a bound on the leaks of all predictors outside $Q$ taken together. Open: the form of the
+aggregated condition.
+\end{planned}
+
+\begin{planned}[A wrong model, with $p$ fixed]
+Drop the linear model altogether. Let the rows $(x_i,y_i)$ be independent draws from any fixed law on
+$\R^p\times\R$ with $p$ fixed and $\Sigma=\Var(x)$ positive definite. Let $\beta^0=\Sigma^{-1}\Cov(x,y)$ and
+$\alpha^0=\E y-\E x^\top\beta^0$ be the best linear predictor, $r=y-\alpha^0-x^\top\beta^0$ its residual, $v=\E
+r^2>0$, and $S^0=\{j:\beta^0_j\neq0\}$. Let $f_0$ be the joint density with $x$ from its true law and $y\mid
+x\sim\N(\alpha^0+x^\top\beta^0,v)$. Assume $\E[\norm{x}^2r^2]<\infty$ and $\E r^4<\infty$. Target:
+\[
+  1-\pi(S^0\mid\Dn)=\OP(n^{-1/2}),\qquad \max_j\big|\PIP_j-\ind{j\in S^0}\big|=\OP(n^{-1/2}),
+\]
+$\P(\HPM=\MPM=S^0)\to1$, and, for every $M_n\to\infty$,
+\[
+  \Pi\Big(d_H(f,f_0)>\frac{M_n}{\sqrt n}\ \text{ or }\ \mathrm{KL}(f_0\,\|\,f)>\frac{M_n}{n}\ \Big|\ \Dn\Big)\to0\quad\text{in probability.}
+\]
+Here $f_0$ is the Kullback--Leibler projection of the true law onto the Gaussian linear family, whenever that
+divergence is finite for some member of the family. So without Gaussian errors, a linear conditional mean or constant
+error variance, the posterior would select the support of the best linear predictor and concentrate on the closest
+Gaussian linear model. The target is for fixed $p$ only.
+\end{planned}
+
+\subsection*{References}
+{\small
+\noindent Song, Q. and Liang, F. (2015). A split-and-merge Bayesian variable selection approach for ultrahigh
+dimensional regression. \emph{J. R. Stat. Soc. B} 77, 947--972.
+
+\smallskip
+\noindent Zanella, G. and Roberts, G. (2019). Scalable importance tempering and Bayesian variable selection.
+\emph{J. R. Stat. Soc. B} 81, 489--517.}
+
+\end{document}
