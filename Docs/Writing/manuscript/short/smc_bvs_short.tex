@@ -4,10 +4,11 @@
 \usepackage{lmodern}
 \usepackage{microtype}
 \usepackage{amsmath,amssymb,amsthm}
-\usepackage{booktabs,array}
+\usepackage{booktabs,array,longtable}
 \usepackage{enumitem}
 \usepackage[hidelinks]{hyperref}
 \setlength{\emergencystretch}{2em}
+\setlength{\LTcapwidth}{\linewidth}
 \renewcommand{\topfraction}{0.95}\renewcommand{\textfraction}{0.05}\renewcommand{\floatpagefraction}{0.8}
 
 % ---- notation
@@ -55,6 +56,7 @@
 \renewcommand{\theasm}{A\arabic{asm}}
 \newtheorem{planned}{Planned result}
 \renewcommand{\theplanned}{P\arabic{planned}}
+\newcommand{\words}{\par\smallskip\noindent\textit{In words.}\ }
 \newcommand{\means}{\par\smallskip\noindent\textit{What it means.}\ }
 \setlist[enumerate]{leftmargin=2em,itemsep=1pt,topsep=3pt}
 \setlist[itemize]{leftmargin=1.5em,itemsep=1pt,topsep=3pt}
@@ -78,9 +80,7 @@ five planned ones. It contains no proofs.
 \paragraph{Data.} We observe a response $\yr\in\R^n$ and an $n\times p$ matrix of predictors $\Xr$; the superscript
 means ``raw''. The method centres the response and every predictor and scales each to sample variance one. We write $y$
 and $X$ for the standardised versions, so every column $x_j$ of $X$ has mean zero and $\norm{x_j}^2=n-1$, and
-$y^\top y=n-1$.\footnote{A predictor that is constant in the sample is dropped first, and the prior then uses the number
-of predictors kept. In Theorem~\ref{thm:post} a dropped predictor has inclusion probability $0$ and a model outside the
-model space has posterior probability $0$, and $p$ in the assumptions counts all predictors.}
+$y^\top y=n-1$.\footnote{A predictor that is constant in the sample is dropped first, and the prior then uses the number of predictors kept.}
 
 \paragraph{Model.} A model is a set $S\subseteq\{1,\dots,p\}$ of predictors, and $X_S$ holds its columns. Given $S$,
 \[
@@ -177,60 +177,161 @@ for this one.
 % =====================================================================================================
 \section{The assumptions}
 
-Table~\ref{tab:assumptions} lists the assumptions, the theorems that use them, whether they are reasonable, and how they
-compare with Song and Liang (2015). Each assumption is then stated once. Constants called \emph{fixed} do not depend
-on $n$; everything else ($p$, the design, the coefficients) may change with $n$.
+This section first recalls the conditions of Song and Liang (2015), the paper closest to ours. Table~\ref{tab:assumptions}
+then lists our assumptions, the theorems that use them, whether they are reasonable for real data, and how they compare
+with theirs. Each assumption is then stated once, with an explanation in words. Constants called \emph{fixed} do not
+depend on $n$; everything else ($p$, the design, the coefficients) may change with $n$.
 
+\subsection*{Song and Liang's setting and conditions}
 
-\begin{table}[!t]
-\centering\footnotesize
-\setlength{\tabcolsep}{3.5pt}
-\renewcommand{\arraystretch}{1.08}
-\caption{The assumptions at a glance. ``Used by'' gives theorem numbers. The last column compares with Song and Liang
-(2015): \emph{same}, \emph{weaker} (ours asks less), \emph{stronger} (ours asks more), \emph{mixed}, or \emph{none} (no
-analogue).}\label{tab:assumptions}
-\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.215\linewidth}>{\raggedright\arraybackslash}p{0.075\linewidth}>{\raggedright\arraybackslash}p{0.375\linewidth}>{\raggedright\arraybackslash}p{0.275\linewidth}@{}}
+We write their conditions in our notation: $p$ for their number of predictors $P_n$, and $\Sz$ for their true model.
+Two of their quantities have no counterpart here: $\bar r_n$, a cap on model size that they fix in advance, and
+$\epsilon_n$, the rate at which their posterior concentrates. Page numbers are those of their paper.
+\begin{itemize}
+  \item \textbf{Their model} (p.~947). $y=X\bstar+\varepsilon$ with $\varepsilon\sim\N_n(0,\sigs^2I_n)$.\\
+    The same Gaussian linear model, without an intercept. The rows of $X$ are independent draws from one law, which is
+    otherwise free (p.~950).
+  \item \textbf{Their dimension} (pp.~950, 954). $p\succ n^\theta$ for some $\theta>0$; for their rate,
+    $p<\exp(Cn^\alpha)$ with $\alpha\in(0,1)$.\\
+    The number of predictors must grow faster than some power of $n$, and may grow almost exponentially.
+  \item \textbf{Their strict sparsity} (p.~950). $\lim_{n\to\infty}\sum_{j=1}^{p}\ind{\beta^*_j\neq0}<\infty$.\\
+    The number of true predictors stays bounded. They state no bound, above or below, on the nonzero coefficients.
+  \item \textbf{Their tail condition} (their Condition~1, p.~953). There are $M>0$ and $\delta>0$ such that
+    $\E\exp\big\{\big(\sum_{i=1}^{r}a_ix_{j_i}/r\big)^2\big\}\le e^{M}$ for any $r\le\bar r_n$ predictors
+    $x_{j_1},\dots,x_{j_r}$ and any $\abs{a_i}\le\delta$.\\
+    Averages of up to $\bar r_n$ predictors have Gaussian-like tails. It holds for bounded predictors and for Gaussian
+    predictors with mean zero and unit variance.
+  \item \textbf{Their identifiability condition} (their Condition~3, p.~955). A predictor $x_k$ is identifiable if
+    $\E\exp\big\{-\big(x_k+\sum_{i=1}^{\bar r_n}b_ix_{j_i}\big)^2\big\}\le1-\delta_n$ for any $\bar r_n$ other
+    predictors and any real $b_i$, where $\delta_n/\epsilon_n^2\to\infty$.\\
+    No linear combination of $\bar r_n$ other predictors can mimic $x_k$. The gap $\delta_n$ may tend to zero.
+  \item \textbf{Their marginal relevance condition} (their Condition~5, p.~958). $\abs{\Cov(x_t,y)}>0$ for every true
+    predictor $x_t$.\\
+    Every true predictor is correlated with the response on its own. No margin is asked. They use it to justify a
+    screening step, not as a hypothesis of a numbered theorem.
+\end{itemize}
+
+{\footnotesize\setlength{\tabcolsep}{3.5pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.125\linewidth}>{\raggedright\arraybackslash}p{0.06\linewidth}>{\raggedright\arraybackslash}p{0.385\linewidth}>{\raggedright\arraybackslash}p{0.375\linewidth}@{}}
+\caption{The assumptions at a glance. ``Used by'' gives theorem numbers. ``Reasonable?'' says for which data the
+assumption holds and where it fails. The last column says what Song and Liang (2015) assume in its place and how ours
+compares; the names in bold type are those of the list above.}\label{tab:assumptions}\\
 \toprule
-Assumption & Used by & Reasonable? & vs Song and Liang \\
+Assumption & Used by & Reasonable for real data? & vs Song and Liang \\
 \midrule
+\endfirsthead
+\toprule
+Assumption & Used by & Reasonable for real data? & vs Song and Liang \\
+\midrule
+\endhead
 \multicolumn{4}{@{}l}{\textbf{The data model}} \\
-A1 Gaussian linear model & 1, 4, 6(b) & the standard model; true by construction in our simulations & same (their model (1)) \\
-A2 $p\le n^A$ & 1, 3, 6(b) & any polynomial $p$; $p=10^6$ at $n=200$ is $A\approx2.6$ & mixed: they allow $\log p$ up to a power of $n$; we allow bounded $p$ \\
-A3 fixed true model size & 1, 6(b) & few strong effects; nearly necessary for the rate (Theorem~\ref{thm:sharp}(a)) & same as their strict sparsity (4) \\
+A1 Gaussian linear model & 1, 4, 6(b) &
+A modelling choice, as in any linear regression. Fine for a continuous response with roughly symmetric errors, such as
+log expression levels. Fails for heavy-tailed errors, an error variance that changes with the mean, counts, or a
+strongly nonlinear mean. &
+Same. \textbf{Their model} is the same linear model with independent Gaussian errors of constant variance; ours adds
+an intercept. \\
+A2 $p\le n^A$ & 1, 3, 6(b) &
+Yes for the data we target: $10^4$ to $10^6$ predictors with $n$ in the hundreds ($p=10^6$ at $n=200$ is
+$A\approx2.6$). It excludes only $p$ that grows faster than every power of $n$. &
+Mixed. \textbf{Their dimension} condition lets $p$ grow almost exponentially in $n$, which we do not allow. But it
+needs $p$ to grow faster than some power of $n$, and we also allow small $p$. \\
+A3 fixed true model size & 1, 6(b) &
+Yes when a handful of strong effects drive the response (a few genes, a few markers). Fails for traits with hundreds
+of small effects, where more predictors matter as $n$ grows. Nearly necessary for our rate (Theorem~\ref{thm:sharp}(a)). &
+Same. \textbf{Their strict sparsity} also says that the number of nonzero coefficients stays bounded as $n$ grows. \\
 \midrule
 \multicolumn{4}{@{}l}{\textbf{The predictors and the signal}} \\
-A4 law of the rows & 1, 3 & Gaussian or sub-Gaussian; bounded features are included, rare binary features are not & stronger than their Condition~1 \\
-A5 fixed signals & 1, 3 & effects that do not shrink with $n$; Theorem~\ref{thm:dist} needs none & same, if their $\bstar$ is fixed \\
-A6 eigenvalue floor & 1, 3 & holds in all our designs (floors $0.1$ to $1$); no upper bound, so common factors are allowed & mixed: stronger than their Condition~3 where the two can be compared \\
-A7 weaker setting of Theorem~\ref{thm:dist} & 2 & A1--A4 relaxed, no lower bound on the effects; only exact duplicates and exact linear dependences fail & stronger in one respect: their Theorems 1--2 have no collinearity condition \\
+A4 law of the rows & 1, 3 &
+Independent observations with light-tailed predictors: Gaussian measurements, bounded features, genotypes whose
+allele frequencies stay away from $0$. Fails for heavy-tailed predictors and for rare binary features.
+Theorem~\ref{thm:reported} needs exactly Gaussian rows, which is a real restriction: genotypes are outside it. &
+\textbf{Their tail condition} asks Gaussian-like tails for averages of up to $\bar r_n$ predictors. Ours asks them for
+every sparse combination, measured against its own variance. Ours is stronger when their size cap is no larger than
+our multiple of $\log n$; for larger caps neither implies the other. \\
+A5 fixed signals & 1, 3 &
+Yes for selection: an effect that shrinks to zero as $n$ grows cannot be selected reliably by any method. Fails
+when there are many weak effects; Theorem~\ref{thm:dist} then still applies, since it needs no lower bound. &
+They state no lower bound on the nonzero coefficients (\textbf{their strict sparsity}). If their coefficients do not
+change with $n$, the natural reading, this is the same as ours. \\
+A6 eigenvalue floor & 1, 3 &
+Holds when no small group of predictors is nearly collinear: independent, block, autoregressive and common-factor
+designs all have a floor ($0.1$ to $1$ in our simulations). Fails with duplicated predictors, or pairs whose
+correlation tends to one, such as two probes of the same gene. &
+\textbf{Their identifiability condition} says that no combination of $\bar r_n$ other predictors can mimic a given
+one, with a gap that may shrink to zero. Ours asks a fixed gap for every small set: stronger when our sets cover
+theirs, otherwise not comparable. \\
+A7 weaker setting of Theorem~\ref{thm:dist} & 2 &
+Yes, almost always. A user is inside after removing exact duplicates and exact linear dependences (for example
+dummy variables for every level of a factor). Weak effects are allowed. Fails only if one predictor's effect is
+unbounded compared with the noise. &
+Their matching results (consistency of the fitted density) assume \textbf{their model}, \textbf{their strict sparsity}
+and \textbf{their tail condition}, and nothing about collinearity. Ours adds a very weak condition: a floor of order
+$1/n$ on small sets. \\
 \midrule
 \multicolumn{4}{@{}l}{\textbf{The reported model (Theorem~\ref{thm:reported} only)}} \\
-A8 visibility & 3 & holds with aligned signs or generic coefficients; can fail by cancellation & stronger than their Condition~5 (marginal, no margin) \\
-A9(a) small leakage set & 3 & holds for block and autoregressive designs; fails for pervasive factors & none \\
-A9(b),(c) floor and local regressions & 3 & follow from a floor on $\Sig$ and local correlation & floor as A6; locality none \\
+A8 visibility & 3 &
+Holds when correlated true predictors have effects of the same sign, and for coefficients with no exact cancellation.
+Fails when other predictors cancel a true predictor's signal, as with two highly correlated true predictors with
+opposite effects. &
+\textbf{Their marginal relevance condition} assumes that every true predictor has nonzero covariance with $y$ on its
+own. We assume the covariance with the signal stays bounded away from zero even after conditioning on any $15$ other
+predictors. Ours is stronger. \\
+A9(a) small leakage set & 3 &
+Holds when correlation is local: genes in pathways, markers along a chromosome, measurements ordered in time (block
+and autoregressive designs). Fails when one common factor drives all predictors (batch effects, population
+structure, a market factor), because then every predictor imitates the signal a little. &
+No counterpart. They have no condition on how many null predictors are correlated with the true ones. \\
+A9(b),(c) floor and local regressions & 3 &
+They follow from an eigenvalue floor on $\Sig$ and local correlation, so they hold in the same block and
+autoregressive designs and exclude nothing more there. &
+The floor compares with \textbf{their identifiability condition} as A6 does. The local regressions have no
+counterpart: they serve our greedy search, and their method has none. \\
 \midrule
 \multicolumn{4}{@{}l}{\textbf{Certified screening (Theorem~\ref{thm:screen} only)}} \\
-A10 floor on sets of size $k_n+\sz$, signal bounds & 4 & fixed design; common factors allowed; the sample-size condition is conservative & as A6 and A5, on other sets \\
+A10 floor on sets of size $k_n+\sz$, signal bounds & 4 &
+These are conditions on the observed design, and common factors are allowed. Fails if some $k_n+\sz$ observed
+predictors are nearly collinear or if true effects are tiny. The sample-size condition is conservative: with the
+constants of our factor simulations it asks $n$ of about $1{,}450$, while screening already worked there at $n=100$. &
+Of the same kind as \textbf{their identifiability condition} (no near-collinearity in small sets), with a fixed gap,
+on the observed design and on larger sets; plus bounds on the true effects, which they do not state. \\
 \midrule
 \multicolumn{4}{@{}l}{\textbf{Not statistical}} \\
-C1--C3 idealised computer & 3--5 & the usual idealisation in a theorem about an algorithm & their sampler statements are idealised limits too \\
+C1--C3 idealised computer & 3--5 &
+Not about the data. Real arithmetic has rounding error and real machines have limits; the theorems ignore both, as
+theorems about algorithms usually do. &
+Their statements about their own sampler are idealised too: they describe what it returns as the number of
+iterations tends to infinity (their online supplement). \\
 \bottomrule
-\end{tabular}
-\end{table}
+\end{longtable}}
 
 \subsection*{The data model}
 
 \begin{asm}[Gaussian linear model]\label{a:gl}
 The data follow~\eqref{eq:model}, with a fixed noise variance $\sigs^2>0$ and noise independent of the predictors.
 \end{asm}
+\words The response is a linear function of a few predictors plus independent Gaussian noise of constant variance.
+The proofs need it because they compare models through sums of squares, whose chi-square laws are exact under Gaussian
+noise. It holds for a response such as a log expression level with roughly symmetric measurement error. It fails for a
+count, for a response with heavy-tailed errors, and when the error variance grows with the mean.
 
 \begin{asm}[Dimension]\label{a:dim}
 $2\le p\le n^A$ for a fixed $A\ge1$.
 \end{asm}
+\words There may be many more predictors than observations, but at most a fixed power of $n$. The proofs need it
+because the best of $p$ null predictors gains about $\log p$ in log-likelihood by chance, and the price the prior and
+the marginal likelihood put on one extra predictor, about $\log p+\tfrac12\log n$, must stay ahead of that gain. It holds
+for $p=10^6$ and $n=200$, with $A\approx2.6$. It fails when $\log p$ grows like a power of $n$, for example
+$p=e^{\sqrt n}$.
 
 \begin{asm}[Sparsity]\label{a:sp}
 The number of true predictors $\sz\ge1$ is fixed.
 \end{asm}
+\words A fixed, small number of predictors truly matter, however large $n$ and $p$ become. The rate needs it: by
+Theorem~\ref{thm:sharp}(a) the posterior always misses the true model by at least about $(\sz+1)/(3\sqrt n)$, so the
+rate $\rn$ is possible only if $\sz=O(\sqrt{\log n})$. It holds for a trait driven by a handful of genes. It fails for
+a trait with hundreds of small effects, more of which become detectable as $n$ grows. Theorem~\ref{thm:screen} does
+not use it.
 
 \subsection*{The predictors and the signal}
 
@@ -244,6 +345,13 @@ correlation matrix. In addition, one of:
   \item \emph{Gaussian:} the rows are $\N_p(m_n,\Sig)$. This is case (a) with $L=1$.
 \end{enumerate}
 \end{asm}
+\words The observations are independent, and every combination of a few predictors has tails no heavier than a
+Gaussian's. The proofs need it so that the sample correlations of every small group of predictors, out of a very large
+number of groups, are close to the population ones at the same time. Theorem~\ref{thm:reported} asks for exactly
+Gaussian rows, because A8 and A9 are written with conditional covariances, which describe conditional dependence fully
+only for Gaussian vectors. Case (a) holds for Gaussian rows, for bounded features, and for genotypes whose allele
+frequencies stay away from zero. It fails for heavy-tailed predictors and for a binary feature whose frequency tends to
+zero.
 
 \begin{asm}[Fixed signals]\label{a:fs}
 One of:
@@ -256,16 +364,24 @@ One of:
     every $j\in\Sz$, with fixed $0<\theta_{\mathrm{lo}}\le\theta_{\mathrm{hi}}<\infty$.
 \end{enumerate}
 \end{asm}
-\noindent Form (b) says that the true coefficients are fixed numbers on the scale the method works on. It contains the
-linear model and the sparsity assumption, so it takes the place of A1 and A3 in Theorem~\ref{thm:reported}. When the
+\words Each true effect is bounded away from zero and from infinity, by constants that do not change with $n$. The
+proofs need the lower bound because a true predictor is selected only if it improves the fit by more than the price of
+one extra predictor, which is of order $\log p$; a fixed effect improves it by an amount of order $n$. It holds when the
+effects are fixed numbers, as in our simulations. It fails for effects that shrink with $n$, for example of order $\rn$.
+Form (b) says that the true coefficients are fixed numbers on the scale the method works on. It contains the linear
+model and the sparsity assumption, so it takes the place of A1 and A3 in Theorem~\ref{thm:reported}. When the
 predictors have unit population variance the two scales differ only by sampling error.
 
 \begin{asm}[Eigenvalue floor]\label{a:efs}
 $\lmin(\Sigma_{n,S})\ge\varphi^2$ for every set $S$ of at most $5(A+1)(\sz+1)\log n$ predictors, for a fixed
 $\varphi\in(0,1]$. Here $\Sigma_{n,S}$ is the sub-matrix of $\Sig$ for the predictors in $S$.
 \end{asm}
-\noindent No small group of predictors is close to linearly dependent in the population. A floor on the whole matrix,
-$\lmin(\Sig)\ge\varphi^2$, is enough. There is no upper bound on the eigenvalues.
+\words No small group of predictors, of up to a multiple of $\log n$, is close to linearly dependent in the population.
+The proofs need it because a null predictor that could almost reproduce a true one would give a model with almost the
+same score, and the posterior could not separate the two. A floor on the whole matrix, $\lmin(\Sig)\ge\varphi^2$, is
+enough: the smallest eigenvalue is $1$ for independent predictors, $1/3$ for autoregressive correlation $0.5$, and
+$1-\rho$ when all pairs have correlation $\rho$. There is no upper bound on the eigenvalues, so a strong common factor
+is allowed. It fails when a predictor is duplicated, or when the correlation of some pair tends to one.
 
 \begin{asm}[The weaker setting of Theorem~\ref{thm:dist}]\label{a:dist}
 The observations are $n$ independent copies of a pair $(x,y)$ with $x\in\R^p$. Fix an integer $s\ge0$ and constants
@@ -282,9 +398,13 @@ $C_q=2(s(A+2)+4)/\log2$.
   \item \emph{Bounded signal.} $\abs{\beta^*_j}\,\sd(x_j)\le\bar b\,\sigs$ for every $j$.
 \end{enumerate}
 \end{asm}
-\noindent Items (a)--(c) are A1--A4 with less asked: the noise level and the coefficients may change with $n$, and no
-coefficient has to be large, or even nonzero. The floor in (d) tends to zero, so it excludes only predictors that are
-almost exactly collinear.
+\words Items (a)--(c) are A1--A4 with less asked: the noise level and the coefficients may change with $n$, and no
+coefficient has to be large, or even nonzero. Less is needed because Theorem~\ref{thm:dist} asks only that the fitted
+distribution be close to the truth, not that the right predictors be selected. The floor in (d) tends to zero, so it
+excludes only predictors that are almost exactly collinear; it is there for the sharp rate. Item (e) says that no
+single predictor carries an unbounded signal compared with the noise. Every design we simulate is inside, and so is a
+real data set once exact duplicates and exact linear dependences are removed. It fails for duplicated columns, and for
+dummy variables that cover every level of a factor.
 
 \subsection*{The reported model}
 
@@ -297,10 +417,14 @@ $\bar\beta_{U,l}=\Sigma_{n,UU}^{-1}\Sigma_{n,Ul}$ is the population regression c
 For every true predictor $j\in\Sz$ and every set $U\not\ni j$ of at most $15$ predictors,
 $\abs{\Cov(W_j,\,W^\top\tstar\mid W_U)}\ge a$, for a fixed $a>0$.
 \end{asm}
-\noindent Each true predictor stays related to the signal $W^\top\tstar$, by a fixed margin, whichever $15$ other
-predictors are held fixed. It fails when other predictors cancel a true predictor's signal: two true predictors with
-coefficients $1$ and $-1$ and correlation $\rho$ each have covariance $1-\rho$ with the signal, which vanishes as
-$\rho\to1$.
+\words Each true predictor stays related to the signal $W^\top\tstar$, by a fixed margin, whichever $15$ other
+predictors are held fixed. The proof needs it because the start law looks at one block at a time: it can pick up a true
+predictor only through what that predictor explains given the other members of its block, at most $15$ of them. It
+holds for independent predictors, for autoregressive correlation with true effects of one sign, and for block designs
+with the true predictors in different blocks. It fails when other predictors cancel a true predictor's signal: two
+true predictors with coefficients $1$ and $-1$ and correlation $\rho$ each have covariance $1-\rho$ with the signal,
+which vanishes as $\rho\to1$; and two neighbours in an autoregressive design with correlation $0.5$ and coefficients
+$1$ and $-2$ cancel exactly.
 
 \begin{asm}[Small leakage set]\label{a:leak}
 Fix $b\in(0,\tfrac12)$ and $b_H>0$ with $15b_H+b<\tfrac12$.
@@ -361,6 +485,10 @@ ways. These are not assumptions about the data.
   \item[\textbf{C3}] \emph{The sampler.} Exact arithmetic; ideal random numbers that, in the final run, are independent
     of the data and of the pilot; exact draws from the start law; and Markov moves that do what their definitions say.
 \end{itemize}
+\words The theorems describe the algorithm as designed, run on a perfect machine. C1 fixes what ``the method'' is. C2
+is needed only to say that every run finishes: a real run can be stopped by its time or memory limit. C3 is needed for
+Proposition~\ref{prop:unbiased}, which is an exact identity and so needs exact sampling. Rounding error and imperfect
+random number generators are outside the theorems.
 
 % =====================================================================================================
 \section{The theorems}
@@ -372,7 +500,11 @@ Theorems~\ref{thm:reported} and~\ref{thm:screen} and Proposition~\ref{prop:unbia
 returns.
 
 \begin{thm}[Posterior concentration]\label{thm:post}
-Assume A1, A2, A3, A4(a), A5(a) and A6. Then, under the joint law of the design and the noise,
+Assume A1, A2, A3, A4(a), A5(a) and A6, where $p$ in A2, A4(a) and A6 is the number of predictors in the data,
+before any column that is constant in the sample is dropped, and $\Sz$ is a set of these columns. The prior, the cap
+$K$ and the posterior use the columns that are kept. A dropped predictor is given $\PIP_j=0$; $\pis{\Sz}$ is taken to be
+$0$ if $\Sz$ is not in $\Om$; and if no column is kept, the posterior is a point mass at the empty model. Then, under
+the joint law of the design and the noise,
 \[
   1-\pis{\Sz}=\OP\big(\rn\big),\qquad
   \max_{1\le j\le p}\big|\PIP_j-\ind{j\in\Sz}\big|=\OP\big(\rn\big),
