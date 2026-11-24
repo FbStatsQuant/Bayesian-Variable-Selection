@@ -9,7 +9,7 @@ mathematical form, with a fixed order and numbering and nothing extra. It is the
 and every official statement is written down once.
 
 ## Base
-- Take the content from the A6 owner-review edition (main 248c452a, `manuscript/manuscript_owner_review_2026-11-23.tex`)
+- Take the content from the A6 owner-review edition (main 248c452a, `manuscript/owner_review.tex`)
   and from the registry on main.
 - Don't re-derive anything, and use the notation of A6.
 - Keep it as a separate document: `manuscript/spec/spec.tex`.
