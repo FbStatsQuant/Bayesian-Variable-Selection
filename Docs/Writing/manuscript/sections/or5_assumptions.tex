@@ -1,0 +1,326 @@
+% =====================================================================================================
+\section{The assumptions}\label{sec:assumptions}\label{sec:standing}
+
+This section states every assumption of the main theorems once, and judges it. Table~\ref{tab:a-summary} gives the
+verdicts at a glance. Then each assumption has one entry with five parts: \textbf{(a)} the statement; \textbf{(b)} what it
+means in plain words; \textbf{(c)} what it rules out; \textbf{(d)} whether it is reasonable, for real designs, with an
+example where one exists; and \textbf{(e)} how it compares with \citet{SongLiang2015}: the same, weaker (asks less),
+stronger (asks more), or without an analogue. Page numbers for \SL{} are journal pages; ``supp.\ p.'' is a page of their
+online supplement; $\bar r_n$ is their cap on model size.
+
+\paragraph{Our designs.} Part (d) refers to the designs of our simulation studies. All have i.i.d.\ Gaussian rows, noise
+variance $1$ and fixed nonzero coefficients, in three classes: \emph{independent} (S1 of the 2,400-fit study; IND of the
+$10^6$ plan); \emph{locally correlated} (S2, AR(1) at $0.5$; S3 and S4, blocks of five at $0.7$ and $0.85$; S6, blocks of
+five at $0.4$--$0.9$; AR, AR(1) at $0.6$; BLK, blocks of $20$ at $0.5$); and \emph{pervasive factor} (S5, blocks of five
+at $0.7$ plus a global factor at $0.3$; the strong-factor study, one factor at $0.3$, $0.5$ or $0.7$ or two factors, with
+all true effects of one sign, $n$ from $50$ to $150$ and $p$ up to $10n$; FAC, one factor at $0.3$). The 2,400-fit study has
+$n=200$, $p\in\{500,1000\}$ and $14$ true predictors, one in each group of five; the $10^6$ plan has $5$ true predictors.
+A design is \emph{inside} an assumption when the design, continued as a sequence in $n$ with its structure and the number
+of true predictors fixed, satisfies it; we judge the qualitative conditions, not the conservative constants of the proofs.
+
+\paragraph{The short answer.} The posterior theorems (Results 1 and 2) use the same kinds of assumptions as \SL{}, and
+they hold on all our designs, strong common factors included. The theorem about the reported model (Result 3) adds two
+conditions that \SL{} do not have, visibility and a small leakage set; they hold for block and autoregressive designs and
+fail for pervasive factors. That is why Result 3 is stated for block and AR designs, and why Result 4 exists: it needs
+neither condition.
+
+\begin{table}[!t]
+\centering\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.05}
+\caption{The assumptions at a glance. ``Used by'' names the results (Section~\ref{sec:proved}). The last column compares
+with \citet{SongLiang2015}: \emph{same}, \emph{weaker} (ours asks less), \emph{stronger} (ours asks more), \emph{mixed}
+(depends on the regime), or \emph{none} (no analogue).}\label{tab:a-summary}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.2\linewidth}>{\raggedright\arraybackslash}p{0.08\linewidth}>{\raggedright\arraybackslash}p{0.38\linewidth}>{\raggedright\arraybackslash}p{0.28\linewidth}@{}}
+\toprule
+Assumption & Used by & Reasonable? & vs \SL \\
+\midrule
+\multicolumn{4}{@{}l}{\textbf{The data model}} \\
+\lab{GL} Gaussian linear model & 1, 3, 4, 6 & the standard model; true by construction in our designs & same: (1), p.~947 \\
+\lab{DIM} $p\le n^A$ & 1--3 & any polynomial $p$; $p=10^6$ at $n=200$ is $A\approx2.6$ & mixed: narrower at the top, wider at the bottom \\
+\lab{SP} fixed true model size & 1, 3 & few strong effects; nearly necessary for the rate & same as (4), p.~950 \\
+\midrule
+\multicolumn{4}{@{}l}{\textbf{The predictors and the signal}} \\
+\lab{SGR}, \lab{GR} law of the rows & 1--3 & Gaussian or sub-Gaussian; bounded features included, rare binary features not & stronger than Cond.~1, p.~953 (standardised predictors) \\
+\lab{FSb}, \lab{FSt} fixed signals & 1, 3 & effects that do not shrink with $n$; Result 2 needs none & same, if their $\bstar$ is fixed \\
+\lab{EFS} eigenvalue floor & 1, 3 & holds in all our designs (floors $0.1$ to $1$); no upper bound, so factors allowed & mixed: stronger unless their $\bar r_n$ is large \\
+\ref{asm:dist}(d) no near-collinearity & 2 & only exact duplicates and exact dependences fail & mixed: none in their Thms 1--2 \\
+\midrule
+\multicolumn{4}{@{}l}{\textbf{The reported model (Result 3 only)}} \\
+\lab{V} visibility & 3 & holds with aligned signs or generic coefficients; can fail by cancellation & stronger than Cond.~5, p.~958 \\
+\ref{asm:reported}(a) small leakage set & 3 & holds for block and AR designs; fails for pervasive factors & none \\
+\ref{asm:reported}(b),(c) floor and local regressions & 3 & follow from a floor on $\Sig$ and local correlation & floor as \lab{EFS}; locality none \\
+\midrule
+\multicolumn{4}{@{}l}{\textbf{Certified screening (Result 4 only)}} \\
+floor on $k_n+\sz$ sets, signal bounds & 4 & fixed design; the sample-size budget is conservative & as \lab{EFS} and signals \\
+\midrule
+\multicolumn{4}{@{}l}{\textbf{Not statistical}} \\
+conventions \as{C1}, \as{C2p}, \as{C3} & 3--5 & idealise the computer & presupposed by \SL{} too \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newcommand{\Astate}{\par\smallskip\noindent\textbf{(a) Statement.}\ }
+\newcommand{\Awords}[1]{\par\noindent\textbf{(b) In words.} #1}
+\newcommand{\Arules}[1]{\par\noindent\textbf{(c) Rules out.} #1}
+\newcommand{\Areas}[1]{\par\noindent\textbf{(d) Reasonable?} #1}
+\newcommand{\Asl}[1]{\par\noindent\textbf{(e) vs \SL.} #1\par\medskip}
+
+% ------------------------------------------------------------------------------------------------
+\subsection{The data model}\label{sec:a-all}
+
+\ahead{Gaussian linear model}{\lab{GL}}{}
+\Astate
+\begin{assumption}{GL}{Gaussian linear model}
+The data follow~\eqref{eq:model}, with a fixed noise variance $\sigs^2>0$ and noise independent of the design.
+\end{assumption}
+\Awords{The response is a linear function of the predictors plus independent Gaussian noise of constant variance.}
+\Arules{Heavy-tailed or heteroscedastic errors, and a nonlinear mean.}
+\Areas{It is the working model of almost all theory for Bayesian variable selection, and it holds by construction in our
+simulation designs. For real data it is a modelling choice, as in any linear-model analysis; Result~2 lets the noise level
+vary with $n$.}
+\Asl{\emph{The same} (their model (1), p.~947, and density (2), p.~950); ours adds an intercept.}
+
+\ahead{Dimension}{\lab{DIM}}{}
+\Astate
+\begin{assumption}{DIM}{Dimension}
+$2\le p\le n^A$ for a fixed $A\ge1$.
+\end{assumption}
+\Awords{The number of predictors may be much larger than $n$, but at most a fixed power of it.}
+\Arules{Numbers of predictors that grow faster than every power of $n$, such as $\log p\asymp n^\alpha$.}
+\Areas{Yes for the problems we target: $p=10^4$ to $10^6$ with $n$ in the hundreds. The largest exponent in our designs is
+the $10^6$ plan at $n=200$, $A=\log10^6/\log200\approx2.6$; $p=10^7$ at $n=200$ would be $A\approx3.0$. Since $A$ may be
+any fixed number, the assumption only excludes super-polynomial growth.}
+\Asl{\emph{Mixed.} At the top ours is \emph{stronger}: their Corollary~1 allows $P_n<\exp(Cn^\alpha)$ (p.~954), and their
+Theorem~S allows slightly more than polynomial growth (Corollary~S$_1$, $P_n<n^{\kappa\log n}$, supp.\ p.~16). At the
+bottom ours is \emph{weaker}: it allows bounded $p$, while they need $P_n\succ n^\theta$ (p.~950).}
+
+\ahead{Fixed true model size}{\lab{SP}}{}
+\Astate
+\begin{assumption}{SP}{Sparsity}
+The true model size $\sz\ge1$ is fixed.
+\end{assumption}
+\Awords{A fixed, small number of predictors truly matter, however large $n$ and $p$ become.}
+\Arules{True models whose size grows with $n$.}
+\Areas{Yes when a few strong effects drive the response; it is the usual assumption for exact selection. It is also nearly
+necessary for the rate we prove: on every design, $\pis{\Sz}\le\{1+(\sz+1)/(3\sqrt n)\}^{-1}$ (Result~6(a)), so a posterior
+miss of order $\rn$ is possible only if $\sz=O(\sqrt{\log n})$. Result~4 does not assume it.}
+\Asl{\emph{The same} as their strict sparsity (4), p.~950, which their Theorems~2, 3 and~S use; their Theorem~1 also
+allows growing supports (p.~950), so against that theorem ours is \emph{stronger}.}
+
+% ------------------------------------------------------------------------------------------------
+\subsection{The predictors and the signal}\label{sec:a-post}
+
+\ahead{Law of the rows}{\lab{SGR}, \lab{GR}}{}
+\Astate
+\begin{assumption}{GR}{Gaussian rows}
+The rows of $\Xr$ are i.i.d.\ $\Normal_p(m_n,\Sig)$, where $\Sig$ is a correlation matrix.
+\end{assumption}
+\begin{assumption}{SGR}{Sub-Gaussian rows on sparse directions}
+The raw rows are i.i.d.\ copies of a random vector $x\in\R^{\praw}$ with mean $m_n$ and covariance matrix $\Sig$, a
+correlation matrix, and, for a fixed $L>0$, $\E\exp\{\lambda u^\top(x-m_n)\}\le\exp\{L^2\lambda^2u^\top\Sig u/2\}$ for every
+$\lambda\in\R$ and every $u\in\R^{\praw}$ with at most $5(A+1)(\sz+1)\log n$ nonzero entries. Gaussian rows \as{GR} are
+the case $L=1$.
+\end{assumption}
+\Awords{The observations are independent, and every sparse combination of predictors has Gaussian-like tails. Result~3
+asks the rows to be exactly Gaussian; Results~1 and~2 ask only light tails.}
+\Arules{Heavy-tailed predictors, and binary features whose success probability tends to zero (Results 1 and 2);
+non-Gaussian rows (Result 3).}
+\Areas{For Results~1 and~2, yes: \as{SGR} holds for Gaussian rows and for correlated mixtures $x=m_n+B\xi$ ($BB^\top$ a
+correlation matrix) of independent features confined to $K$ standard deviations of their mean, with one common $K$; so
+bounded data such as genotypes with allele frequencies bounded away from zero are inside. For Result~3 the Gaussian
+requirement is a real restriction: such genotype data are outside Result~3 as stated, though the fixed-design version
+(supplement, Theorem~\ref{thm:reported-fixed}) can cover an observed design that meets its conditions.}
+\Asl{\emph{Stronger} than their Condition~1 (p.~953) on centred, unit-variance predictors: ours implies theirs.
+Against their bounded predictors $\abs{x_i}\le1$ (Theorem~1, p.~952), neither implies the other.}
+
+\ahead{Fixed signals}{\lab{FSb}, \lab{FSt}}{}
+\Astate
+\begin{assumption}{FSb}{Fixed signals, raw scale}
+$b_{\mathrm{lo}}\le\abs{\beta^*_j}\le b_{\mathrm{hi}}$ for every $j\in\Sz$, with fixed $0<b_{\mathrm{lo}}\le b_{\mathrm{hi}}<\infty$.
+\end{assumption}
+\begin{assumption}{FSt}{Fixed signals, standardised scale}
+$\yr=\alpha\one+X\tstar+\varepsilon$ with $\varepsilon\sim\Normal_n(0,\sigs^2I_n)$, a fixed $\sigs^2>0$, noise independent
+of $\Xr$, a deterministic $\tstar$, $\sz\ge1$ fixed, and $\theta_{\mathrm{lo}}\le\abs{\theta^*_j}\le\theta_{\mathrm{hi}}$ for
+$j\in\Sz$, with fixed $0<\theta_{\mathrm{lo}}\le\theta_{\mathrm{hi}}$.
+\end{assumption}
+\Awords{Each true effect is bounded away from zero and from infinity, by constants that do not change with $n$. \as{FSt}
+fixes the effects on the standardised scale the method works on; it replaces \as{GL} and \as{SP} in Result~3.}
+\Arules{True effects that shrink with $n$ (for example of order $\rn$), and effects that grow without bound.}
+\Areas{Yes for selection: a predictor whose effect shrinks to zero cannot be selected reliably by any method. Result~2
+needs no lower bound at all, so prediction is protected when some effects are weak; the fixed-design version of Result~1
+(supplement, Theorem~\ref{thm:post-fixed}) lets the effects shrink down to the usual order $\sigs\rn$.}
+\Asl{\emph{The same} if their $\bstar$ does not change with $n$, the natural reading of p.~950: they state no lower bound,
+and fixed nonzero coefficients are what their theorems then ask. If their $\bstar$ may vary with $n$, their proofs need
+rates (supp.\ pp.~6, 15), and our fixed signals ask more than those steps use.}
+
+\ahead{Eigenvalue floor on small sets}{\lab{EFS}}{}
+\Astate
+\begin{assumption}{EFS}{Population eigenvalue floor}
+$\lmin(\Sigma_{n,S})\ge\varphi^2$ for every $S$ with $\abs{S}\le5(A+1)(\sz+1)\log n$, for a fixed $\varphi\in(0,1]$ (for
+instance, $\lmin(\Sig)\ge\varphi^2$).
+\end{assumption}
+\Awords{No small group of predictors, of up to logarithmic size, is close to linearly dependent in the population.}
+\Arules{Exact or asymptotic duplicates of a predictor, and correlations that tend to one.}
+\Areas{Yes, and it holds in every design we study. No upper bound on the eigenvalues is asked, so strong common factors
+are allowed. The smallest eigenvalue of $\Sig$ is $1$ (S1, IND), $1/3$ (S2), $0.3$ (S3, S5), $0.15$ (S4), $0.1$ (S6),
+$1-\rho$ (one factor at $\rho$), $0.40$ (two factors), $0.25$ (AR), $0.5$ (BLK) and $0.7$ (FAC). In real data with
+near-duplicate predictors (two genes correlated at $0.99$) the floor is small and the constants degrade, but the
+assumption still holds if the floor stays fixed.}
+\Asl{\emph{Mixed.} Where their sets are no larger than ours, our fixed floor implies their (22)--(23) (supp.\ p.~13) and their
+Condition~3 (p.~955), so ours is \emph{stronger}; their Condition~3 also asks only a vanishing level. Where their sets are
+larger ($\bar r_n\succ\log n$), the two constrain different sets and neither implies the other.}
+
+% ------------------------------------------------------------------------------------------------
+\subsection{The assumptions of the distribution result}\label{sec:a-dist}
+
+Result~2 has its own, weaker, setting. Its observations are $n$ i.i.d.\ copies $(x^{(i)},y^{(i)})$ of a pair $(x,y)$, with
+$x\in\R^{\praw}$ the vector of all observed predictors, and $\zeta_j:=(x_j-\E x_j)/\sd(x_j)$. Fix a \emph{level} $M\ge1$;
+the \emph{window} $q_n:=\min\{\praw,\lceil C_qM\log n\rceil\}$, $C_q:=2(s(A+2)+4)/\log2$, is the largest number of
+predictors the conditions constrain jointly.
+
+\Astate
+\begin{localassumption}[Distribution-level setting]\label{asm:dist}
+The integer $s\ge0$ and the constants $A\ge1$, $L\ge1$, $c_\psi>0$ and $\bar b>0$ are fixed.
+\begin{asmitems}
+  \item\label{asm:dist-model} \emph{Gaussian linear model for i.i.d.\ pairs.} $y=\alpha^*+x^\top\bstar+\varepsilon$ with
+    $\varepsilon\sim\Normal(0,\sigs^2)$, $\sigs^2>0$, independent of $x$; $\alpha^*$, $\bstar$, $\sigs$ and the law of $x$ may
+    depend on $n$.
+  \item\label{asm:dist-sparse} \emph{Sparsity and dimension.} At most $s$ coordinates of $\bstar$ are nonzero, and
+    $2\le\praw\le n^A$.
+  \item\label{asm:dist-subg} \emph{Sub-Gaussian predictors on sparse directions.} Every predictor has positive variance,
+    and $\E\exp(\lambda u^\top\zeta)\le\exp\big(L^2\lambda^2\Var(u^\top\zeta)/2\big)$ for every $\lambda\in\R$ and every
+    $u\in\R^{\praw}$ with at most $q_n$ nonzero entries.
+  \item\label{asm:dist-nec} \emph{No near-exact collinearity.} $\lmin(\Corr(x_T))\ge c_\psi/n$ for every set $T$ of at
+    most $q_n$ predictors.
+  \item\label{asm:dist-bs} \emph{Bounded signal.} $\abs{\beta^*_j}\sd(x_j)\le\bar b\,\sigs$ for every $j$.
+\end{asmitems}
+\end{localassumption}
+\Awords{Items (a)--(c) are \as{GL}, \as{DIM}, \as{SP} and \as{SGR}, relaxed: the noise level and the coefficients may vary
+with $n$, and no coefficient need be nonzero. Item (d) asks only that no small group of predictors be \emph{almost exactly}
+collinear: its floor, $c_\psi/n$, tends to zero. Item (e) asks that no single predictor carry an unbounded signal relative
+to the noise.}
+\Arules{Duplicated columns and exact linear dependences (as in one-hot or compositional coding), for (d); a predictor
+whose effect is unbounded in noise units, for (e).}
+\Areas{Yes: every design we study is inside, and (d) is very mild; a user is inside after removing exact duplicates and
+exact linear dependences. There is no lower bound on the coefficients, so weak effects are allowed. Without (d) the result
+still holds with one extra factor $\sqrt{\log(\praw\vee n)}$ in the radius (supplement, Proposition~\ref{prop:dist}).}
+\Asl{Items (a)--(c) and (e) compare as \as{GL}, \as{DIM}, \as{SP}, \as{SGR} and the signal bounds above. Item (d) is
+\emph{mixed}: their Theorems~1--2 have no such condition, so there ours is \emph{stronger}; against their Condition~3
+(p.~955) and (22) (supp.\ p.~13), if their sets are at least as large as ours, theirs implies ours, so ours is
+\emph{weaker}. Our floor, $c_\psi/n$ on the correlation scale, is of the same order as the ridge $c_n\propto1/n$ they use
+(p.~953).}
+
+% ------------------------------------------------------------------------------------------------
+\subsection{The assumptions of the reported-model result}\label{sec:a-rm}
+
+The start law sees interactions within blocks of at most $16$ predictors only, so these conditions are about how the
+signal looks given at most $15$ other predictors. With $W\sim\Normal_p(0,\Sig)$, $\Cov(W_j,W_l\mid W_U)$ is the partial
+covariance given $(W_k)_{k\in U}$, and $\bar\beta_{U,l}:=\Sigma_{n,UU}^{-1}\Sigma_{n,Ul}$ is the population regression
+coefficient of $W_l$ on $W_U$, padded with zeros to a vector indexed by a larger set when needed. A \emph{leakage set} is
+a deterministic $Q$ with $\Sz\subseteq Q\subseteq\set{p}$ that contains every predictor able to imitate part of the
+signal; its \emph{lattice} $\Lat(Q):=\{T:\Sz\subseteq T\subseteq Q\}$ is the set of models between the true model and $Q$.
+In Example~\ref{ex:leak}, predictor $5$ leaks: it imitates part of predictor $1$'s signal.
+
+\ahead{Visibility}{\lab{V}}{}
+\Astate
+\begin{assumption}{V}{Visibility: no true predictor masked by $\le15$ others}
+For every $j\in\Sz$ and every $U\not\ni j$ with $\abs{U}\le15$, $\abs{\Cov(W_j,W^\top\tstar\mid W_U)}\ge a$, for a fixed
+$a>0$.
+\end{assumption}
+\Awords{Each true predictor stays visibly related to the signal, by a fixed margin, whichever $15$ other predictors are
+held fixed. A method that looks at blocks of $16$ must see every true predictor inside some block.}
+\Arules{Masking: a true predictor whose signal some $15$ other predictors cancel. With two true predictors with
+coefficients $1$ and $-1$ and correlation $\rho$, the signal of each, given nothing, is $1-\rho$, which vanishes as $\rho\to1$.}
+\Areas{Yes in two broad cases (supplement, Remark~\ref{rem:vis}): (i) \emph{aligned signs}, for example independent
+columns, autoregressive correlation, one factor with coefficients of one sign, or blocks with the true predictors in
+different blocks; and (ii) \emph{generic coefficients}: for designs with finitely many local correlation patterns, every
+coefficient vector outside one fixed null set of hyperplanes. It fails exactly on cancellations, such as adjacent AR(1)
+true predictors at correlation $0.5$ with coefficients $1$ and $-2$. Inside: our independent and locally correlated
+designs and every design of the strong-factor study. Unclear: S5 and FAC (mixed signs; a search found a near-cancellation
+in S5). A design modelled on the riboflavin gene-expression data is inside when its four true predictors are spread apart
+and not when they are clustered.}
+\Asl{\emph{Stronger.} Ours implies their Condition~5 (p.~958: $\abs{\operatorname{cov}(x_t,y)}>0$ for every true
+predictor) in every regime; theirs is ours with no conditioning and no margin.}
+
+\ahead{Small leakage set with local regressions}{Assumption~\ref{asm:reported}}{}
+Fix $b\in(0,\tfrac12)$ and $b_H>0$ with $15b_H+b<\tfrac12$.
+\Astate
+\begin{localassumption}[Polynomial leakage set with local regressions]\label{asm:reported}
+\begin{asmitems}
+  \item\label{asm:rr-leak} \emph{Leakage set.} There is a deterministic $Q\supseteq\Sz$ with $\abs{Q}\le n^b$ and, for
+    large $n$, $\abs{Q}\le K$ and ($Q=\set{p}$ or $K\ge2\abs{Q}+32\sz+1$), such that: (i) \emph{no leak outside $Q$:}
+    there is a deterministic $\varpi_n$ with $\varpi_n\sqrt{n/\log n}\to0$ such that
+    $\abs{\Cov(W_l,W_j\mid W_U)}\le\varpi_n$ for all $l\notin Q$, $j\in\Sz\setminus U$ and $\abs{U}\le15$; and (ii)
+    \emph{locality:} there is a deterministic $r_n\to0$, and every $l\notin Q$ has a deterministic
+    $\Hl_l\supseteq\{l\}\cup\Sz$ with $\abs{\Hl_l}\le n^{b_H}$, such that for all $l\notin Q$, all $U\not\ni l$ with
+    $\abs{U}\le15$ and $U_0:=U\cap\Hl_l$: $\abs{\Cov(W_l,W_v\mid W_{U_0})}\le r_n$ and
+    $\abs{\Cov(W_j,W_v\mid W_{U_0})}\le r_n$ for all $v\in U\setminus\Hl_l$ and $j\in\Sz\setminus U_0$.
+  \item\label{asm:rr-floor} \emph{Floor on the leakage set.} $\lmin(\Sigma_{n,Q\cup\{l\}})\ge\varphi^2$ for every
+    $l\in\set{p}$, with $\varphi$ as in \as{EFS}.
+  \item\label{asm:rr-local} \emph{Local regressions within the leakage set.} There are deterministic sequences
+    $d_n=o(\log n)$ and $L_n$, and for every $l\in\set{p}$ a deterministic $N_l\subseteq Q\setminus\{l\}$ with
+    $\abs{N_l}\le d_n$, such that $\norm{\bar\beta_{T,l}-\bar\beta_{T\cap N_l,l}}_1\le L_n$ for every $T\in\Lat(Q)$ with
+    $l\notin T$, where $L_n\to0$ and $L_n^2\log(\abs{Q}+1)=o(\log n)$.
+\end{asmitems}
+\end{localassumption}
+\Awords{(a) Only a small set $Q$ of predictors, at most $n^b$ with $b<\tfrac12$, can imitate part of the signal; every
+predictor outside $Q$ is, given up to $15$ others, nearly uncorrelated with the true ones, and only its nearby predictors
+matter. (b) The leakage set is not collinear with any predictor. (c) Within $Q$, the regression of a predictor on the others
+uses only a few of them. In~(a), $32\sz=2\cdot16\sz$: with probability tending to one the start mode has at most
+$2(\abs{Q}+16\sz)$ predictors, so the size condition leaves room to add a missing true predictor to it.}
+\Arules{Pervasive factors with $p\gg\sqrt n$: with no conditioning every null predictor then has a fixed covariance with
+every true one, so the leakage set is all of $\set{p}$, and $\abs{Q}\le n^b$ would force $p\le n^b$. Also leakage sets
+collinear with another predictor, or whose regressions use many members.}
+\Areas{Yes for block and autoregressive correlation, the usual models of local dependence (genes in pathways, markers along
+a chromosome): $Q$ is the true predictors' blocks (S3, S4, S6, BLK), or a neighbourhood of size $C\log n$ around them (S2,
+AR); for independent predictors $Q=\Sz$ (S1, IND). Items (b) and (c) then follow from a floor $\lmin(\Sig)\ge\varphi^2$ and
+the locality of $\Sig$. No for pervasive factors (S5, the strong-factor study, FAC). The bound $b<\tfrac12$ comes from the
+proof: at model size about $\sqrt n$ the penalty of one more predictor stops dominating the best of $p$ noise gains; whether
+the result fails for larger $b$ is open.}
+\Asl{\emph{None.} \SL{} have no hypothesis of this kind. The nearest text is their informal remark~(a), p.~958 (``if there
+are $p_n$ predictors correlated with the true predictor $X_t$, $p_n\prec P_n$, then there are at most $cp_n$ predictors to
+be selected''), which is not a condition of any of their theorems; their results on their sampler's output carry no design
+condition of this kind (supp.\ pp.~9--10, 12--13, 16--17). The floor~(b) compares as \as{EFS}; the local regressions~(c)
+have no counterpart (they serve the method's local search, which \SL{} do not analyse).}
+
+% ------------------------------------------------------------------------------------------------
+\subsection{The assumptions of certified screening}\label{sec:a-scr}
+
+\ahead{Floor on sets of the budget size, and fixed signal bounds}{(Theorem~\ref{thm:screen})}{}
+\Astate The design is fixed; \as{GL} holds; for a model-size budget $k_n<K$ chosen by the analyst, $\lmin(\Rhat_S)\ge\kappa$
+for every $S$ with $\abs{S}\le k_n+\sz$; $\tmin\ge\tlow>0$ and $\norm{\tstar}_1\le M_1$; with $\kappa$, $\tlow$, $M_1$,
+$\sigs^2$ fixed; and $(k_n+1)\log p+\log n\le c_{\mathrm{SB}}\,n$ with $c_{\mathrm{SB}}:=\kappa^2\tlow^2/\{200(M_1^2+\sigs^2)\}$.
+\Awords{The observed predictors have an eigenvalue floor on sets of the budget size; the true effects are bounded below
+and their total size is bounded; and the sample is large compared with the budget times $\log p$.}
+\Arules{Collinearity within sets of $k_n+\sz$ predictors, signals that vary with $n$, and budgets too large for the
+sample.}
+\Areas{The floor and signal bounds are of the same kind as \as{EFS} and \as{FSt}, on sets of the budget size, which can be
+much larger than a multiple of the sparsity. The budget inequality is a sufficient condition for a union bound and is
+conservative: at the constants of the strong-factor designs it asks $n\gtrsim1{,}450$, while in those designs the certified
+model already contained every true predictor in all $30$ fits at $n=100$ (Remark~\ref{rem:screen}). No visibility or
+leakage condition is needed, so pervasive factors are allowed.}
+\Asl{\emph{As} the eigenvalue floor and the signal bounds above, on other sets. \SL's sure-screening Theorem~3 (p.~956) is
+the nearest conclusion; Section~\ref{sec:proved} compares the two.}
+
+% ------------------------------------------------------------------------------------------------
+\subsection{Conventions: what ``the method'' means}\label{sec:conventions}
+
+Results 3--5 are about runs of the software. They use three conventions, which fix what ``the method'' means and
+idealise the computer; they are not statistical assumptions (Appendix~\ref{app:conventions} gives them in full).
+\begin{itemize}[leftmargin=1.5em,itemsep=1pt]
+  \item \phantomsection\label{asm:C1}\emph{Convention \as{C1} (the method):} exact arithmetic, the default configuration,
+    valid inputs and seed. A run that meets it is \emph{admissible}; a sample size $n$ is admissible if some data set of
+    that size is valid. Statements hold for every valid seed and every outcome of the calibration.
+  \item \phantomsection\label{asm:C2p}\emph{Convention \as{C2p} (delivery):} an idealised
+    machine that never overflows or fails, ideal random numbers, an allocation of at least the memory and time that the
+    method's own polynomial requirement formulas require, and the code's two fixed integer limits on the move caps lifted
+    (neither can be reached on any input R can represent).
+  \item \phantomsection\label{asm:C3}\emph{Convention \as{C3} (sampler):} exact arithmetic, ideal random numbers
+    independent of the data and of the calibration, an exact start sampler, and Markov moves that do what their definitions
+    say.
+\end{itemize}
+The results also use the event $\Acal$ that the method uses the sampler and its calibration succeeds; every completed run
+lies in $\Acal$. \emph{Reasonable?} These are the usual idealisations of any theorem about an algorithm. \emph{vs \SL:}
+exact arithmetic and ideal random numbers are presupposed by their statements about their own sampler too (supp.,
+pp.~9--10, 12--13).

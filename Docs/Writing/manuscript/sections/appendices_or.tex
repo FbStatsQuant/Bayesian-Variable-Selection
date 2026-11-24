@@ -1,0 +1,284 @@
+% =====================================================================================================
+\section{Notation}\label{app:notation}
+
+{\small
+\begin{longtable}{@{}p{0.26\linewidth}p{0.5\linewidth}l@{}}
+\toprule
+Symbol & Meaning & Where \\ \midrule \endhead
+$n$; $p$; $\praw$ & sample size; retained (non-constant) predictors; raw predictors & \S\ref{sec:setup} \\
+$\alpha^*,\bstar,\sigs^2$; $\Sz$, $\sz$ & true intercept, coefficients, noise variance; true model and its size & \S\ref{sec:setup} \\
+$\Sig$, $W$ & population correlation matrix of a row; a centred population row & \S\ref{sec:setup} \\
+$X$, $y$, $\tstar$, $\mu$, $\tmin$ & standardised design and response; standardised coefficients; mean signal; smallest true $\abs{\theta^*_j}$ & \S\ref{sec:setup} \\
+$X_S$, $G_S$, $\Rhat_S$, $\hat r_{jl}$, $P_S$, $z_S$ & columns in $S$; Gram matrix; sample correlations; projection; $X_S^\top y$ & \S\ref{sec:setup} \\
+$\Om$, $K$, $w(k)$, $\bar w_K$ & model space; size cap; model-size weight; its normaliser & \S\ref{sec:prior} \\
+$m(S)$, $H_S$, $\SSq_S$, $F(S)$, $Z$ & marginal likelihood and its ingredients; log score; evidence & \S\ref{sec:posterior} \\
+$\pis{S}$, $\PIP_j$, $\HPM$, $\MPM$ & posterior; inclusion probability; highest posterior and median probability models & \S\ref{sec:posterior} \\
+$B$; $C_k$, $J$, $h_k(U)$ & block size cap; blocks; number of blocks; block table $m(U)/m(\emptyset)$ & \S\ref{sec:algorithm} \\
+$\gamma_0$, $\bar Z_0$, $\pi_0$, $\tSz$ & unnormalised start law; its normaliser; start law; start mode & \S\ref{sec:algorithm} \\
+$\Delta(S)$; $\xi$, $\pi_\xi$, $\grid t$, $\Ts$ & discrepancy; temperature; path; grid; number of steps & \S\ref{sec:algorithm} \\
+$N_0$, $N_i$, $\Nc_i$, $\Lbi$, $\Tmax_i$ & particle numbers; burn-in rounds; step ceiling & \S\ref{sec:algorithm}, App.~\ref{sec:supp-cal} \\
+$\ell_n$ & base move cap $\lceil\log_2(n+p+1)\rceil$ & \S\ref{sec:algorithm} \\
+$\Shat$; $\PIPhat_j$, $\Zhat$, $\MPMhat$; $\mathcal T$ & reported model; pooled estimates; returned list & \S\ref{sec:outputs-method} \\
+$\Acal$ & the method uses the sampler and its calibration succeeds & \S\ref{sec:conventions} \\
+$\varphi_0,g_0,\bar\theta,C_\beta$; $\varphi$; $b_{\mathrm{lo}},b_{\mathrm{hi}}$ & constants of the fixed-design assumptions; population floor; bounds on raw coefficients & \S\ref{sec:results} \\
+$c_0(\sz,A)$, $c_1(\sz,A)$, $C_{\mathrm E}$ & beta-min and margin constants; rate constant & App.~\ref{app:constants} \\
+$\Dn$, $\Pi(\cdot\mid\Dn)$, $\P^*$, $\zeta$, $d_H$, $M$, $q_n$ & data, posterior and law of Result~2; standardised predictors; Hellinger distance; level; window & \S\ref{sec:distribution} \\
+$\Cov(\cdot,\cdot\mid W_U)$, $\bar\beta_{U,l}$; $Q$, $\Lat(Q)$, $\Hl_l$ & partial covariance; population regression coefficient; leakage set; its lattice; locality sets & \S\ref{sec:reported} \\
+$\mathcal G_n$; $\rho_n$ & data event of Result~3; rate of Remark~\ref{thm:outputs} & \S\ref{sec:reported}, \S\ref{sec:outputs} \\
+\bottomrule
+\end{longtable}}
+
+\section{All constants, diagnostics, and the conventions in full}\label{app:params}
+
+The user sets only the seed and the allocation; the two switches marked ``on'' are the default configuration. The column
+``Theory'' names the results that use the constant; ``none'' means that no result depends on its value. Code locations are
+relative to \code{Scripts/SMC_BVS/core/}.
+
+{\footnotesize\setlength{\tabcolsep}{3.5pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.18\linewidth}>{\raggedright\arraybackslash}p{0.075\linewidth}>{\raggedright\arraybackslash}p{0.19\linewidth}>{\raggedright\arraybackslash}p{0.08\linewidth}>{\raggedright\arraybackslash}p{0.15\linewidth}>{\raggedright\arraybackslash}p{0.245\linewidth}@{}}
+\caption{All constants of the method, with their code locations.}\label{tab:params-full}\\
+\toprule
+Parameter & Symbol & Value & {\scriptsize $n{=}200$, $p{=}10^4$} & Theory & Code \\ \endfirsthead
+\toprule
+Parameter & Symbol & Value & {\scriptsize $n{=}200$, $p{=}10^4$} & Theory & Code \\ \endhead
+\grouprow{Prior}
+size cap & $K$ & $\min(p,\lfloor n/2\rfloor)$ & 100 & all results & \code{cpp/v3_score.h:40}; \code{v3_preprocess.R:21} (\code{K}) \\
+model prior $\BB(1,p)$ & $w(k)$, $\bar w_K$ & $\tfrac12/\binom{2p-1}{k}$, renormalised to $\Om$ & & all results & \code{cpp/v3_score.h:61-70} (\code{logw}, \code{logWK}) \\
+coefficient prior scale; ridge & $g$ & $g=n$; unit ridge $I$ & 200 & all results & \code{cpp/v3_score.h:175-183} \\
+inverse-gamma shape, scale & $a_0$, $b_0$ & $0.01$, $0.01$ & & all results & \code{cpp/v3_score.h:14} \\
+\grouprow{Data preparation and score}
+duplicate threshold & & $\abs{\hat r_{jl}}\ge1-10^{-10}$ (reported only) & & none & \code{cpp/v3_core.cpp:742-760} \\
+small-$\SSq_S$ recomputation & & $\SSq_S<10^{-8}\,y^\top y$ & & none & \code{cpp/v3_score.h:219} \\
+\grouprow{Blocks and start}
+block size cap & $B$ & $\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)$ & 14 & Thms \ref{thm:start}, \ref{thm:reported}, \ref{thm:reported-fixed}, \ref{thm:outputs} (the theorems use only $B\le16$: each predictor shares its block with at most 15 others) & \code{v3_preprocess.R:22}; cap 16 at \code{cpp/v3_core.cpp:145-146} (\code{B_MAX}) \\
+neighbour threshold & & $\abs{\hat r_{jl}}>\sqrt{2\log p/n}$; 1 to $B$ neighbours before symmetrisation & 0.30 & none & \code{cpp/v3_blocks.h:146-172} \\
+start-mode enumeration cap & & $10^6$, then tie-aware recursion & & (C2) & \code{cpp/v3_core.cpp:469}; \code{cpp/v3_start.h:271-305} \\
+\grouprow{Exact case}
+exact-case threshold & & enumerate if $\abs{\Om}\le(5\Nc_0+4N_0)p$ & $5.0\times10^8$ & scope of Rem.\ \ref{cor:dist-output}, Rem.\ \ref{thm:outputs} & \code{cpp/v3_core.cpp:71-85}; \code{v3_fit.R:105-106} \\
+global certificate margin & & heuristic rounding bound, $64$ machine epsilons times a factor depending on the conditioning of $H_S$ & & none & \code{cpp/v3_score.h:240-246}; \code{cpp/v3_core.cpp:560-567} \\
+\grouprow{Sampler}
+islands & & $4$ & 4 & Rem.\ \ref{thm:outputs}, Prop.\ \ref{prop:unbiased} & \code{v3_run.R:91} (\code{islands}) \\
+particles per island & $N_i$ & $4^i\max(2500,n,p)$ & 10,000 (tier 0), 40,000 (tier 1) & (C3) & \code{v3_preprocess.R:25,30} (\code{N0}) \\
+burn-in rounds at $\xi=1$ & $\Lbi$ & $\max(4,\lceil\log_2(n+1)\rceil)$ & 8 & (C3) & \code{v3_preprocess.R:24} \\
+measured rounds & & $4$ & 4 & (C3) & \code{v3_run.R:90}; \code{v3_calib.R:12} \\
+resampling & & multinomial, every step & & (C3) & \code{cpp/v3_engine.h:230-259} (resampler), \code{:316-327} (use) \\
+moves per round & & $p$ inclusion updates, 1 uniform swap, $B$ neighbour swaps, 1 independence move & 10,016 & (C3) & \code{cpp/v3_engine.h:111-214} \\
+\grouprow{Calibration}
+calibration particles & $\Nc_i$ & $4^i\lceil512N_0/2500\rceil$, $N_0:=\max(2500,n,p)$ & 2,048; 8,192 & none & \code{v3_preprocess.R:26,30} (\code{H0}) \\
+step ceiling & $\Tmax_i$ & $4^i\max(1000,\ell_n^2)$ & 1,000; 4,000 & none & \code{v3_preprocess.R:27,30} (\code{T0}) \\
+tiers & $i$ & $i\in\{0,1\}$, factor $4^i$, at most one move to tier 1 & & none & \code{v3_preprocess.R:30}; \code{v3_calib.R:150-159} \\
+pilot effective-sample-size target & & $0.90\,\Nc_i$ & 1,843.2 (tier 0) & none & \code{cpp/v3_calib.h:31} \\
+pilot step floor & & $1/\Tmax_i$ & 0.001 (tier 0) & none & \code{cpp/v3_calib.h:38-43} \\
+grid target & & $\rho\ge0.90$ & & none & \code{cpp/v3_calib.h:79,84,92} \\
+bisections & & 60 & & none & \code{cpp/v3_calib.h:34,82} \\
+candidate set & $\mathcal V$ & $\emptyset$, best $20p$ by $\gamma_0$, best $20p$ by $F$ & up to 400,001 & none & \code{cpp/v3_core.cpp:699-724}; \code{cpp/v3_ledger.h:78} \\
+rebuild iterations & & at most $\ell_n$ & 14 & none & \code{v3_calib.R:84-119} \\
+triggers E1, E2 & & gap $1$ in log score; s.d.\ $1$ of $\log\Zhat_r$ & & none & \code{v3_calib.R:101-102} \\
+diagnostic islands per rebuild & & $4$ & 4 & none & \code{cpp/v3_core.cpp:664} \\
+snap to $\xi=1$ & & within $10^{-12}$ & & none & \code{cpp/v3_calib.h:42,89} \\
+grid fallback & & on & & Thms \ref{thm:reported}, \ref{thm:reported-fixed} (delivery) & \code{v3_calib.R:120-125,163-169}; \code{v3_fit.R:151} \\
+\grouprow{Local searches}
+base move cap & $\ell_n$ & $\lceil\log_2(n+p+1)\rceil$ & 14 & Thms \ref{thm:reported}, \ref{thm:reported-fixed} & \code{v3_preprocess.R:23} (\code{ell}) \\
+move cap from the start mode & & $\ell_n+\abs{\tSz}$ & & Thms \ref{thm:reported}, \ref{thm:reported-fixed} & \code{cpp/v3_core.cpp:473}; \code{v3_run.R:100-101} (\code{ls0_cap}) \\
+search from the start mode & & on & & (C1); Thms \ref{thm:reported}, \ref{thm:reported-fixed} & \code{v3_fit.R:73} (\code{ls0 = TRUE}); \code{cpp/v3_core.cpp:460-481} \\
+\grouprow{Outputs}
+pooling of islands & & equal weights & & Rem.\ \ref{thm:outputs}, Prop.\ \ref{prop:unbiased} & \code{v3_run.R:154,162} \\
+estimated MPM threshold & & $\PIPhat_j>1/2$ & & Rem.\ \ref{thm:outputs} & \code{v3_run.R:163} \\
+stored models & & best $40p+1$ by $F$ & 400,001 & Rem.\ \ref{cor:dist-output} & \code{cpp/v3_ledger.h:78} \\
+evidence lower bound & & $0.05\,\Zhat$ & & none & \code{v3_run.R:155} \\
+low-effective-sample-size flag & & below $0.5N$ at some step & 5,000 (tier 0) & none & \code{v3_run.R:201} \\
+near-tie window & & $10^{-9}$ in log score & & none & \code{v3_run.R:171} \\
+\grouprow{Computing}
+allocation defaults & & 8\,GiB ($8\cdot2^{30}$ bytes), 24\,h & & (C2) & \code{v3_fit.R:28,47,60,73,92} \\
+score cache & & $500p$ models, cleared when full & $5\times10^6$ & none & \code{v3_run.R:92}; \code{v3_calib.R:147} \\
+check before the run & & memory; exact case: time of 200 timed scores $\times$ count; sampler: worst-case time $2(\ell_n+K+1)(p+p^2/4)\times$(time of a size-$K$ score) & $2.9\times10^9$ requests & (C2) & \code{v3_fit.R:10-14,26-68,114-117,144-148} \\
+random streams & & 0--4 (tier 0), 5--9 (tier 1), 10--13 (final islands) & & (C3) & \code{v3_run.R:8-11}; \code{cpp/v3_core.cpp:444,626,667} \\
+seed & & integer in $[1,2^{31}-1]$ & & (C1) & \code{v3_preprocess.R:7-11} \\
+\grouprow{Two fixed integer limits (facts of the code)}
+ceiling on the base move cap & & $\ell_n\le10^6$, else the run ends with an error & & delivery domain $\Dom$ & \code{v3_run.R:96} \\
+integer range of the move cap & & $\ell_n+\abs{\tSz}\le2^{31}-1$, else the run ends with an error & & delivery domain $\Dom$ & \code{cpp/v3_core.cpp:474} \\
+\bottomrule
+\end{longtable}}
+
+
+\paragraph{The evidence lower bound.} A completed run also reports $\log(0.05\,\Zhat)$ as a one-sided $95\%$ lower bound
+for $\log Z$. It rests on Markov's inequality, $\P(\Zhat>20Z)\le0.05$, which needs the unbiasedness of
+Proposition~\ref{prop:unbiased}; it gives $\P(\text{the run completes and }\Zhat>20Z)\le0.05$, not a coverage statement
+conditional on completion.
+
+\paragraph{Diagnostics.} The method reports, without changing any output: island disagreement (E1) and evidence spread
+(E2) as in the calibration, computed on the final islands; late improvement (E3), whether the local search from the best
+model strictly improved it (the search from the start mode is not counted); a low-effective-sample-size flag (some step
+below $0.5N$); the models within $10^{-9}$ of the best log score among the store of the $40p+1$ best (with a flag when the store is full
+and the list may be incomplete); whether either local search reached its move cap while
+still improving; whether the search from the start mode improved the best model, or changed it without improving it (through the tie
+rule); groups of correlated
+predictors that span several blocks (components of the uncapped graph with edges $\abs{\hat r_{jl}}\ge\sqrt{2\log p/n}$,
+not the neighbour graph); and the calibration's
+own flags (move to tier~1, forced steps, unconverged grid, fallback).
+
+\paragraph{Runs without estimates.} A run stops without estimates when its inputs are invalid; when no predictor or no
+response variation remains; when the check before the run (memory and time), or its repeat before tier $1$, fails; when
+the elapsed time plus the duration of the most recent operation would exceed the time allocation (checked after every
+step, grid construction and local search); when all three score computations fail; or when no grid can be built.
+Invalid inputs and a failed check before the run return no model; no retained predictor or a constant response returns
+the empty model; any later stop returns the best model scored so far, marked incomplete. Every estimate is then marked
+unavailable. Three cases end instead with an error and return nothing: an invalid allocation, and a violation of either
+fixed integer limit of Table~\ref{tab:params-full} (the first is detected after the calibration, the second during the final
+run).
+
+
+\subsection{Conventions in full}\label{app:conventions}
+
+The code has two fixed integer limits on the local-search move caps; \as{C2p} lifts them. They are not reached on the
+domain
+\[
+  \Dom:=\big\{(n,\praw):\lceil\log_2(n+\praw+1)\rceil\le10^6,\ \ \lceil\log_2(n+\praw+1)\rceil+\lfloor n/2\rfloor\le2^{31}-1\big\}.
+\]
+The limits are a ceiling of $10^6$ on the base move cap $\ell_n:=\lceil\log_2(n+p+1)\rceil$, and the 32-bit integer bound
+$2^{31}-1$ on the move cap $\ell_n+\abs{\tSz}$ of the search from the start mode. The first can bind only when $n+p+1$
+exceeds $2^{10^6}$; the second only when the start mode has more than about $2.1\times10^9$ predictors, which needs
+$n\gtrsim4.3\times10^9$, since $\abs{\tSz}\le\lfloor n/2\rfloor$. In the default configuration neither can be reached on
+any input R can represent ($n,\praw\le2^{31}-1$), so $\Dom$ contains every such input; under \as{C2} without the lift,
+the delivery clauses hold on $\Dom$ (Theorem~\ref{thm:reported-fixed} states this form).
+
+\paragraph{Convention \as{C2}: delivery.}\phantomsection\label{asm:C2} Used only by the clauses ``the run always produces output'' of
+Theorems~\ref{thm:reported} and~\ref{thm:reported-fixed}. They are operational assumptions, not consequences of any
+statistical condition.
+\begin{enumerate}[label=(\roman*),leftmargin=2em]
+  \item \emph{Idealised machine:} exact arithmetic at unit cost (including $\exp$ and $\log$); no integer, index,
+    random-stream identifier or allocation overflow; wall time at most $c_{\mathrm t}\cdot(\text{operation count})+c_{\mathrm t0}$ and peak memory at
+    most $c_{\mathrm m}\cdot(\text{words held})+c_{\mathrm m0}$ for fixed constants $(c_{\mathrm t},c_{\mathrm t0},c_{\mathrm m},c_{\mathrm m0})$; every allocation within
+    the declared memory succeeds; the build and its dependencies work; no external interruption or worker crash.
+  \item \emph{Covered configuration:} the default core of the software, with the local search from the start mode (cap
+    $\ell_n+\abs{\tSz}$) and the rule that resolves ties in the start mode, implemented with
+    $O\big(p\sum_k(2^{\abs{C_k}}+(K+1)^2)\big)$ operations and $O\big(\sum_k2^{\abs{C_k}}+J(K+1)\big)$ storage; the local
+    search from the start mode starting at the smallest, lexicographically first maximiser of the start law; the default
+    list of summaries only; certificate computations with declared polynomial operation and memory budgets, included in
+    the allocation; serial execution or a fixed number of concurrent workers (memory envelope multiplied by that number);
+    a fixed number of islands; the fallback temperature sequence switched on (the default).
+  \item \emph{Random numbers and stops:} ideal independent uniform random numbers; the method's stop-and-return rule and
+    stop-only resource guard as coded (a stopped run returns no estimates).
+  \item \emph{Inputs and allocation:} a valid seed (an integer in $[1,2^{31}-1]$) and a declared memory and time allocation
+    at least the method's explicit polynomial work and memory envelopes in $(n,\praw)$, including the memory checks made before the run and
+    the bounds on the records and time of the local searches.
+\end{enumerate}
+The code has two fixed integer limits: a run is rejected when the base cap $\ell_n$ exceeds a fixed ceiling, or when the
+move cap $\ell_n+\abs{\tSz}$ of the search from the start mode exceeds the integer range. Theorem~\ref{thm:reported-fixed} states its delivery clause under (i)--(iv) on the domain $\Dom$ where neither limit
+is reached; Theorem~\ref{thm:reported} states it under \as{C2p}. \emph{Convention \as{C2p}} is the idealised machine of (i)
+with these two limits lifted, everything else (other validators, the cap on the enumeration used to find the start mode, and its fallback, every
+method cap) kept as coded; under it the delivery clauses hold for every $n$. With the limits in place, (i)--(iv) give delivery only on $\Dom$, not for every
+$n$.
+
+\paragraph{Convention \as{C3}: sampler.} Used only by Remark~\ref{thm:outputs} and Proposition~\ref{prop:unbiased}.
+\begin{enumerate}[label=(\roman*),leftmargin=2em,itemsep=1pt]
+  \item The computer does exact arithmetic.
+  \item Within each random stream, the random numbers are fresh, independent, ideal uniforms; the final run's stream for
+    each island is independent of the data and of the calibration's streams.
+  \item The coded start sampler returns exact draws from $\pi_0$, and the reported start normaliser equals the exact
+    normalising constant of the unnormalised weights of $\pi_0$.
+  \item The coded Markov moves realise their stated kernels, applied in a uniformly random order that is independent of
+    the state.
+  \item The outcome of the calibration is a function of the data and of the calibration's random streams, and each island's
+    record is a measurable function of that outcome and of the island's stream.
+  \item Statements about estimates refer to the potential (uninterrupted) run, which is identified with the reported
+    values on completed runs.
+\end{enumerate}
+
+
+\section{Explicit constants}\label{app:constants}
+
+The constants are copied from the statements of the underlying results; none is optimised. With
+$j_0:=\lceil(2A+1)\sz\rceil+1$ and $C_x:=Aj_0+\sz+\log(j_0+1)+2$:
+\begin{itemize}[leftmargin=1.5em]
+  \item \emph{Beta-min constant:} $c_0(\sz,A)=\max\{4C_*,\,32[\sz(A+1)+2]\}$, where
+    $C_*:=2\sz+3[Aj_0+\sz+\log(j_0+1)+1]=3C_x+2\sz-3$ is the noise constant of the proof: with probability at least
+    $1-1/n$, every model that misses a true predictor and has at most $j_0$ extra predictors has noise term at most
+    $C_*\sigs^2\log n$.
+  \item \emph{Margin constant:} with $C_A:=8+3A$,
+    \[
+      c_1(\sz,A)=\Big(\sqrt{2C_x}+\sqrt{2C_x+C_Aj_0+(2/\log2)\{\sz(A+1)+2\}}\Big)^2 .
+    \]
+\end{itemize}
+
+
+\ifshowstatus
+\section{Status ledger (internal; removed for submission)}\label{app:status}
+
+Registry: \texttt{claims.tsv} at tag \texttt{theory-v2026-11-freeze} (d40c9780; claims card v1.13). Card rows use the
+reader numbering of the registry (Theorem~1 = Theorem~\ref{thm:post-fixed}, Theorem~2 = Theorem~\ref{thm:post-random},
+Theorem~3 = Remark~\ref{rem:sharp}, Theorem~9 = Theorem~\ref{thm:dist}, Theorem~6 = Theorem~\ref{thm:reported},
+Theorem~10 = Remark~\ref{thm:outputs}). Long registry strings are cut with an ellipsis.
+
+\IfFileExists{../results_v2/status_ledger_freeze.tex}{\input{../results_v2/status_ledger_freeze.tex}}{[Ledger table.]}
+
+\paragraph{What changed at the freeze.} Since the first draft of this version (statuses of main a7fc5093): the
+reader-form bridges are independently checked; the strengthened masters of Theorems~\ref{thm:reported}
+and~\ref{thm:reported-fixed} are recorded, and the code-reading audits behind the delivery route are checked, so neither
+theorem carries an open condition; the representability lemma is recorded, and the delivery clause of
+Theorem~\ref{thm:reported} takes its one-sentence form; the size-tail lemma, the frozen-run identities and the pooled
+evidence estimate are independently checked; Theorem~\ref{thm:dist-param} no longer carries a condition;
+Remark~\ref{thm:outputs}, Remark~\ref{cor:dist-output} and the worst-island bound now carry two explicit conditions,
+results on the coded sampler that are themselves proved under named premises and independently checked.
+
+\paragraph{What remained at the freeze, and what has happened since (registry on main, 2026-11-23).}
+The table above is the freeze state. Section~\ref{sec:status-diff} lists every change since; in short:
+\begin{enumerate}[leftmargin=1.5em,itemsep=1pt]
+  \item The lower-bound proposition behind~\eqref{eq:post-exp} awaited its independent check. \emph{Done:} recorded as
+    independently checked on 2026-11-17, so~\eqref{eq:post-exp} no longer carries that condition.
+  \item The two results on the coded sampler behind Result~5, Remark~\ref{cor:dist-output} and Remark~\ref{thm:outputs}
+    awaited their final line check. \emph{Done:} the line checks were recorded on 2026-11-17 and the conditions dropped
+    from every dependent row (Remark~\ref{cor:dist-output} keeps only exact arithmetic).
+  \item The superseded masters of Theorems~\ref{thm:reported} and~\ref{thm:reported-fixed} are retired in the registry
+    (deferred past the freeze; no effect on the statements). \emph{Still open} (housekeeping).
+  \item The global-overlap premise of Remark~\ref{rem:alt-route} stays a named open premise. \emph{Still open.}
+  \item \emph{Planned at the freeze:} the store-restricted result (Corollary~\ref{cor:list}). \emph{Done:} recorded on
+    2026-11-18 with no condition. It supplies the list-mass premise of Remark~\ref{cor:dist-output} only pathwise; the
+    probability form needs a raw-scale bridge that is open (Section~\ref{sec:planned}). Remark~\ref{thm:outputs} stays a
+    remark.
+\end{enumerate}
+
+\paragraph{Assumptions on mathematical objects.} Premises about the prior, distributions, distances, Markov kernels and
+the code must be proved, not argued. The prior facts, Lemma~\ref{lem:summaries} and the Hellinger facts are proved and
+independently checked, and the output description used by Remark~\ref{cor:dist-output} is checked against the code.
+The probabilistic events of the proof of Theorem~\ref{thm:reported} are proved and independently checked, and so are the
+ten code-level premises the audit named; one further premise, used only by Remark~\ref{rem:alt-route}, stays open.
+
+\section{Where the sources and the code disagree (internal; removed for submission)}\label{app:disagree}
+Checked against the code by an independent reader (2026-11-16). In each case this text follows the code.
+\begin{enumerate}[leftmargin=1.8em]
+  \item The earlier method chapter (\code{Theory_work/State_of_Project/sections/02_method.tex:440-451}) describes an
+    evidence-weighted pooled inclusion probability as primary, and \code{Docs/Methodology/METHODOLOGY_v3.md:272-274} as
+    secondary; the code pools the islands with equal weights and computes neither (\code{v3_run.R:154,162};
+    \code{README.md:16}). This text follows the code.
+  \item A code comment says the block size satisfies $1\le B\le20$ (\code{cpp/v3_core.cpp:144}); the constant is $16$
+    (\code{cpp/v3_core.cpp:145-146}). This text uses $16$.
+  \item The earlier method chapter (\code{Theory_work/State_of_Project/sections/02_method.tex:363-400}) describes an optional
+    number of final islands $R'=4k$, declared in advance, with an ``expanded'' and a ``baseline'' record, and a parallel
+    execution layer with process workers. The shipped serial code fixes the number of islands at four
+    (\code{v3_run.R:91}, \code{islands = 4L}) and has neither option. This text describes four islands; the parallel
+    engine is the subject of Appendix~\ref{sec:supp-1m} and of Section~\ref{sec:scope}.
+  \item \emph{The check before the run.} \code{README.md:19} and the code comment at \code{v3_fit.R:25} say the
+    sampler's check is memory-only; \code{METHODOLOGY_v3.md:321-324,403} describes a memory and time check for both
+    branches. In the default configuration the code checks memory and the worst-case time of the search from the start
+    mode (\code{v3_fit.R:114-117, 43-47}), before the run and before tier~1 (\code{:144-148}). \code{02_method.tex:507}
+    quotes an overhead of that search ``under 1\,s per fit''. This text follows the code (Section~\ref{sec:algorithm}).
+  \item The move cap of the search from the start mode is $\ell_n+\abs{\tSz}$ in the code (\code{cpp/v3_core.cpp:473-479};
+    \code{v3_run.R:100-101}); \code{02_method.tex:492} and \code{README.md:43} give $\ell_n$.
+  \item The fallback for a failed tier-1 grid is on by default (\code{v3_calib.R:120-125,163-170}; \code{v3_fit.R:151});
+    \code{METHODOLOGY_v3.md:226} and \code{02_method.tex:324-325} say such a run stops (\code{schedule_limit}).
+  \item \code{METHODOLOGY_v3.md:57,158} calls the exact case's global certificate validated; the code labels its bound
+    heuristic (\code{cpp/v3_score.h:240-246}).
+  \item Items of \code{02_method.tex} not in the code: a near-tie window $\max(10^{-9},2\eta)$ (\code{:485}; the code uses
+    $10^{-9}$, \code{v3_run.R:171-173}); plain inclusion probabilities (\code{:452-456}); the statuses
+    \code{degenerate_n} and \code{unsupported_size} and $n=2$ (\code{:59-62}; the code rejects $n<3$,
+    \code{v3_preprocess.R:106}); a certificate card and related bounds (\code{:427-431, 512-576}).
+  \item The line numbers cited in \code{02_method.tex} refer to a campaign copy of the code, not to
+    \code{Scripts/SMC_BVS/core/}, and do not transfer.
+  \item \code{METHODOLOGY_v3.md:38} gives the default memory allocation (8\,GiB, as in the code) but not the default time
+    allocation of 24 hours (\code{v3_fit.R:73,92}). \code{METHODOLOGY_v3.md} \S6.1 and \S6.10 do not describe the search from the start mode or
+    the tie-aware start-mode recursion, both on by default in the code.
+\end{enumerate}
+
+
+\fi
