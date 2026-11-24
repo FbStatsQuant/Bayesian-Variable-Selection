@@ -8,6 +8,7 @@ Personal store; read MEMORY.md, especially ceo-role, token-lean-staffing, depart
 v2-thread-handoff, thesis-context, model-roles, owner-works-every-day).
 
 ## Read first
+0. HQ v2 thread: mcp:4f1a2e12-7ac4-4619-9128-1469ea92eb2e (env 1fde6176-…). The old id 647bfd65 is retired.
 1. `POLICIES.md` (repo root): the company rules, roles, account and Codex pacing, reporting.
 2. `Theory_work/Wave3/HQ_DECISIONS.md` — the tail from 2026-11-17 on is the live state.
 3. `Theory_work/Wave3/HQ_NOW.md` — resume card (older sections are history; owner rulings marked binding still bind).
