@@ -4,7 +4,7 @@
 \begin{alertblock}{Setting (P)}
 Rows $(x_i,y_i)$ i.i.d.\ from a fixed law $P^*$ on $\mathbb R^p\times\mathbb R$, $\Sigma=\mathrm{Var}(x)\succ0$,
 $\beta^0=\Sigma^{-1}\mathrm{Cov}(x,y)$, $\alpha^0=Ey-Ex^\top\beta^0$, $r=y-\alpha^0-x^\top\beta^0$, $v=Er^2>0$,
-$S_0=\operatorname{supp}\beta^0$, $f_0=\nu_x(dx)\,\phi(y;\alpha^0+x^\top\beta^0,v)$.
+$S_0=\operatorname{supp}\beta^0$ (SL's $\tilde s$), $f_0=\nu_x(dx)\,\phi(y;\alpha^0+x^\top\beta^0,v)$.
 \end{alertblock}
 \end{frame}
 
@@ -30,12 +30,13 @@ No Gaussianity, no linear conditional mean, no homoscedasticity.
 \small
 \begin{block}{Open choice P5 (not decided)}
 \begin{itemize}
-  \item \textbf{Exact selection or consistency.} ``Exactness is plausible and worth targeting; inclusion plus Hellinger
-    consistency is a fallback'': $\Pi\{H(f,f_0)>\epsilon\mid D_n\}\to_{P_*}0$ $(\epsilon>0)$, $\pi(S_0\mid D_n)\to_{P_*}1$.
+  \item \textbf{Exact selection or consistency.} Target: $\Pi\{H(f,f_0)>\epsilon\mid D_n\}\to_{P_*}0$ $(\epsilon>0)$,
+    $\pi(S_0\mid D_n)\to_{P_*}1$. ``Exactness is plausible and worth targeting; inclusion plus Hellinger consistency is a
+    fallback.''
   \item \textbf{Literal KL.} ``Assume a unique projection, a positive-definite covariance of the retained predictors, finite
     joint fourth moments, and finite $\mathrm{KL}(P_*\Vert f_0)$ for the literal KL interpretation. Otherwise describe the
     target as the Gaussian expected-log-score projection.''
-  \item \textbf{Intercept.} ``With raw coefficients and the plug-in intercept of \texttt{W3-DIST/STATEMENT.md} \S0.''
+  \item \textbf{Intercept.} ``\dots{} with raw coefficients and the plug-in intercept of \texttt{W3-DIST/STATEMENT.md} \S0 \dots''
     ``A common random intercept cancels for model selection, but can destroy iid rows and a deterministic population
     density target; fix it initially.''
   \item \textbf{Example.} ``Require an example outside (OV$^{c}$), and an explicit audit of standardisation and the
@@ -51,8 +52,10 @@ Fixed design, $y^r=\alpha1+x\beta+\varepsilon$, $\varepsilon\sim N_n(0,\mathrm{d
 MIS-R (i) in force. For a null column put
 $\rho_j=\sum_i\tilde x_{ij}^2v_i\big/\big(\bar v\sum_i\tilde x_{ij}^2\big)$, with $\tilde x_j$ the part of $x_j$ orthogonal
 to $x_{S_0}$ and $\bar v$ the mean variance. If $p=n^{A'}$ and $p^{1-o(1)}$ mutually orthogonal null columns have
-$\rho_j\ge\rho>1+1/(2A')$, then $\pi(S_0\mid x,y^r)\to0$ in probability.
+$\rho_j\ge\rho>1+1/(2A')$, then $\pi(S_0\mid x,y^r)\to0$ in probability. So the scalar covariance in (GR$^{c}$) cannot
+be dropped at polynomial $p$.
 \end{alertblock}
+{\footnotesize Statement: \texttt{Theory\_work/Dept/assess/MIS\_KL/ASSESS\_fable.md} \S2.}\par
 \textbf{Status: PLANNED, conditional: kept only if a valid design exists.}
-\quad{\footnotesize Source: \texttt{ASSESS\_fable.md} \S2.}
+{\footnotesize (Status: \texttt{Docs/Writing/ASSIGNMENT\_8.md}.)}
 \end{frame}

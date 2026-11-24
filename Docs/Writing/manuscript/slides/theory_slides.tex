@@ -11,6 +11,7 @@
 \urlstyle{tt}
 \DeclareUrlCommand\code{}
 \setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{enumerate items}[default]
 \setbeamersize{text margin left=7mm,text margin right=7mm}
 \setlength{\emergencystretch}{3em}
 \renewcommand{\arraystretch}{1.0}
@@ -834,7 +835,7 @@ before Planned Theorem~P2.}
 
 \begin{frame}{Planned Theorem P1 --- open choice}
 \small
-\begin{block}{Open choice P1 (not decided)}
+\begin{block}{Open choice P1 (not decided; see Appendix B of the specification)}
 (1)~The design family $\mathfrak F$: no statement, draft or design family exists. (2)~Which result is
 ``our consistency on the same design'': Theorem~1, 3 or~4. If it is
 Theorem~3, a leakage set $Q$ satisfying Assumption~\as{reported} must be exhibited for $\mathfrak F$
@@ -865,7 +866,7 @@ Order: after Planned Theorem~P1.}
 
 \begin{frame}{Planned Theorem P2 --- open choice}
 \small
-\begin{block}{Open choice P2 (not decided)}
+\begin{block}{Open choice P2 (not decided; see Appendix B of the specification)}
 (1)~What ``coverage at $p=10^7$'' means: reading~(i), whether the hypotheses of the theorems can hold at
 $n=200$, $p=10^7$; or reading~(ii), which statements a single fit with one seed can support (reading~(ii) may not be a
 theorem). No project document defines ``coverage''. (2)~The showcase design: the owner fixed one simulated AR-strong data set with $n=200$, a known truth, one fit and one
@@ -892,7 +893,7 @@ no statement in any project file. Owner: Theory (on hold).}
 
 \begin{frame}{Planned Theorem P3 --- open choice}
 \small
-\begin{block}{Open choice P3 (not decided)}
+\begin{block}{Open choice P3 (not decided; see Appendix B of the specification)}
 (1)~The raw-scale hypotheses: Theorem~3 and its masters take $\tstar$ deterministic on the
 standardised scale, while Theorem~2 takes i.i.d.\ pairs with fixed raw $\bstar$; for $\sz\ge1$ no design
 satisfies both (erratum E3 of \code{W3-D5P}), so the population conditions (\as{FSt}, \as{V}, Assumption~\as{reported})
@@ -911,32 +912,13 @@ The conclusions of Theorem~3 hold when, in Assumption~\as{reported}, the per-pre
 \end{alertblock}
 \medskip\noindent\textbf{Status: PLANNED}\quad{\footnotesize Named open item (\code{QUEUE.md}, ``Named open items''; \code{W3-RM2-R/STATEMENT.md}, ``Not targeted''). No
 statement in any project file. Owner: Theory (on hold).}
-\begin{block}{Open choice P4 (not decided)}
+\begin{block}{Open choice P4 (not decided; see Appendix B of the specification)}
 (1)~The aggregated condition: no form is written in any project file (\code{W3-RM2-R/STATEMENT.md} and
 \code{PLAN.md} name ``the aggregated Form~R leak'' only). (2)~Whether it is stated for the random-design form
 (Theorem~3) only, or also for the fixed-design form (Theorem~S11).
 \end{block}
 \end{frame}
 
-\begin{frame}{Planned work with no new statement --- PLANNED}
-\small
-\begin{alertblock}{Planned work with no new statement (Section 6.3)}
-\begin{enumerate}
-  \item \emph{Lean certificates} (not started; only with the owner's approval): first Theorem~6(a),
-    Lemma~S1 with the worst-island bound (Proposition~S16), and the Hellinger
-    reduction behind Remark~S9; then Theorem~S2 and Theorem~2. A Lean
-    statement certifies a result only if it matches the statement given here.
-  \item \emph{Named open items below headline level} (\code{Theory_work/Dept/QUEUE.md}, ``Named open items''; no official
-    statement): \begin{enumerate}[(a)]
-      \item the start-law theorem (Theorem~S10) with a general mean signal $\mu$ in the misspecified case
-        (\code{W3-START2R-O1});
-      \item the equicorrelated example with threshold $b<3/8$, and its converse (\code{O4}$'$);
-      \item the count $17-\sz$ in the start-law analysis (\code{START2-O1}).
-    \end{enumerate}
-\end{enumerate}
-\end{alertblock}
-\textbf{Status: PLANNED}
-\end{frame}
 
 \input{p5_targetN}
 
@@ -1216,6 +1198,9 @@ without ``that produces output''.
 
 \begin{frame}{Supplementary: the reported estimates (S15)}
 \footnotesize
+In this subsection, on $\Acal$, $\Zhat$, $\PIPhat$ and $\MPMhat$ denote the pooled values the four islands would produce if
+the run did not stop; on completed runs they are the reported values. Enumeration is not covered.
+$\rho_n:=n^{-1/2}e^{C_\rho\sqrt{\log n}}$, with $C_\rho$ depending only on the fixed quantities of the assumptions.
 \begin{block}{Remark S15 (The reported estimates are consistent)}
 Assume \as{GR}, \as{DIM} with $p>\sz$, \as{FSt}, \as{EFS}, \as{V}, \as{NL}, and Conventions~\as{C1} and~\as{C3}. Then,
 under the joint law of the design, the noise and the method's random numbers,
