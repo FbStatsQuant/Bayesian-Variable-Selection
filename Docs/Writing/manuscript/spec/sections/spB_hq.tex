@@ -1,0 +1,87 @@
+% =====================================================================================================
+\section{Open questions for HQ}\label{app:hq}
+
+Nothing in this appendix changes a statement. It lists what this specification could not settle from the project files,
+and the choices it made.
+
+\subsection{Open choices in the planned theorems}
+
+\begin{enumerate}[label=\textbf{H\arabic*.},leftmargin=2.6em,itemsep=2pt]
+  \item \emph{Trap theorem} (Planned Theorem~\ref{thm:trap}, box P1): the design family; which of Theorems~1, 3, 4 is
+    ``our consistency on the same design'' (and, for Theorem~3, the leakage set $Q$); the class of chains; the rate
+    $\tau_n$. The only wording in the project is \code{Docs/Writing/ASSIGNMENT_6.md}: ``a mixing lower bound for
+    single-flip MCMC (and wTGS) on a multimodal design, plus our consistency on the same design''.
+  \item \emph{Coverage at $p=10^7$} (Planned Theorem~\ref{thm:cov7}, box P2): no project document defines ``coverage''.
+    Two readings are written out; the showcase design (autoregressive, $n=200$, one seed) is not fixed; the leakage set
+    $Q$ for it is not chosen.
+  \item \emph{Raw-scale bridge} (Planned Theorem~\ref{thm:bridge}, box P3): which raw-scale hypotheses replace \as{FSt},
+    \as{V} and Assumption~\as{reported}, and whether the target is the list-mass premise or all of Theorem~3. Erratum E3
+    of \code{W3-D5P} (\code{ERRATA.md}) records that, for $\sz\ge1$, no design satisfies both Theorem~2's law and
+    Theorem~3's setting, so the bridge cannot be the conjunction of the two.
+  \item \emph{Aggregated leak} (Planned Theorem~\ref{thm:agg-leak}, box P4): no form of the aggregated condition exists.
+  \item \emph{Headline level.} Of the five named open items in \code{Theory_work/Dept/QUEUE.md}, the raw-scale bridge and
+    the aggregated leak are treated as headline-level (they extend Theorems~2--3 and Theorem~3) and get candidate
+    statements; the other three (Section~\ref{sec:planned-other}) refine supplementary results and get none. Confirm.
+\end{enumerate}
+
+\subsection{Where this specification and the A6 wording differ}
+
+The statements follow the registry on main; where A6 differed, the change is listed.
+\begin{enumerate}[label=\textbf{D\arabic*.},leftmargin=2.6em,itemsep=2pt]
+  \item \emph{Assumption~\as{WIT}} follows the reader form (\code{W3-READER/READER_VERSIONS.md}, Theorem~6(b)): the
+    bound $p\le n^A$ belongs to the Gaussian null block only. A6 attached it to both cases. The masters
+    (\code{W3-PSHARP}, \code{W3-PSHARP-R}) also take $X_{\Sz}$ and $\tstar$ deterministic and ask
+    $(\log p)^2=o(n)$ and $(r_0+1)\log(pn)=o(n)$; these are not in the reader form or here. HQ: whether the official
+    statement should carry them.
+  \item \emph{Proposition~\ref{prop:worst-island}} is stated in the registry form (\code{W3-SAMP:LT\#}, clause LT-d): the
+    pooled estimate's distance to $\ind{j\in\Sz}$ is at most the worst island's.
+  \item \emph{Remark~\ref{rem:alt-route}} states the hypotheses of \code{W3-SAMP:TR} (clause TR-d, production form), which
+    A6 did not state; its global-overlap condition is an open premise.
+  \item \emph{Lemma~\ref{rem:vis}} states \code{W3-AUDIT-V:VIS} (\code{V1_VIS/STATEMENT.md}), items (VIS-a)--(VIS-d);
+    (VIS-c) and (VIS-d) are merged into item~(c); item (VIS-e), instances of the sign route, is not carried over.
+  \item \emph{Remark~\ref{cor:dist-output}} says that runs that enumerate $\Om$ are not covered; the registry row excludes
+    them, and A6 left it implicit.
+\end{enumerate}
+
+\subsection{Statements kept stronger than the registry master}
+
+\begin{enumerate}[label=\textbf{K\arabic*.},leftmargin=2.6em,itemsep=2pt]
+  \item \emph{Theorem~\ref{thm:reported-fixed}} keeps A6's hypotheses (visibility with $\omega_n\to\infty$, \as{BM}(b),
+    and the signal condition in~(d2)), which are stronger than the reader form of \code{W3-RM2-R:RM2-F-plus}. The
+    conclusion follows from the master; the statement is not the weakest proved one.
+  \item \emph{Theorem~\ref{thm:screen}} keeps A6's eigenvalue floor on sets of the budget size; the master
+    (\code{W3-SCR:A1}) uses a weaker directional floor.
+  \item \emph{Status strings.} Several tags quote ``conditional on W2-APP:POST'' (and on \code{C-MIS:GDb},
+    \code{C-MIS:Prop-P}) verbatim from the registry (Theorems~\ref{thm:post-fixed}, \ref{thm:post-margin},
+    \ref{thm:omitted}, Remark~\ref{rem:thm2x}). \code{W2-APP:POST} is itself \code{PROVED-CHECKED} on main; whether these
+    rows should be restated without the condition is a registry question for Theory (on hold).
+\end{enumerate}
+
+\subsection{Presentation choices}
+
+\begin{enumerate}[label=\textbf{C\arabic*.},leftmargin=2.6em,itemsep=2pt]
+  \item The order of Theorems~1--6 is A6's; it is taken as the order of importance. Confirm.
+  \item The screening and witness conditions, stated inside A6's text, are numbered here as Assumptions~\as{SCR} and
+    \as{WIT}. The A6 local assumptions keep their labels and get display keys (DIST, RM, MARG, OMIT, RMF).
+  \item Supplementary statements keep A6's type (lemma, theorem, remark), numbered S1, S2, \dots{} in one sequence.
+\end{enumerate}
+
+\subsection{The code against the A6 description of the sampler}
+
+Section~\ref{sec:sampler} follows the code at \code{method-v3.1.1-listpip}. A6's prose omits or simplifies these points;
+no formula or constant of A6 is contradicted.
+\begin{enumerate}[label=\textbf{S\arabic*.},leftmargin=2.6em,itemsep=1pt]
+  \item An exact run also returns the lower bound $\log(0.05\,Z)$ and a global-certificate flag.
+  \item The grid construction has a fourth failure: no pilot temperature above $u$.
+  \item The start mode $\tSz$ is computed after the islands, inside the final run (same value).
+  \item On an exact run the list fields are the exact PIPs and median model, with $Z_{\mathcal T}$ from the $40p+1$ best
+    models.
+  \item The resource guard runs after each bridge stage of an island, each grid construction and each local search, not
+    after burn-in or measured rounds.
+  \item Invalid inputs give status \code{invalid_input} (including $n<3$ and $\praw<1$); an invalid allocation raises an
+    error.
+  \item The coded statuses are eight, not three (Definition~\ref{def:outcomes}).
+  \item Moves that do nothing still draw some random numbers; this matters only for reproducing streams.
+\end{enumerate}
+Not transcribed: the seeding function of the random streams and the formula of the rounding margin of the exact-run
+certificate.

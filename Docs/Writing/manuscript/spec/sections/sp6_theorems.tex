@@ -19,7 +19,7 @@ Then, under the joint law of the design and the noise,
 \end{gather}
 \end{mainthm}
 
-\proved{\TAGone}
+\proved{\rid{W3-D3:Thm2SG}, \rid{W3-D3:B3w}, \rid{W3-D3:ExSG}: \rid{PROVED-CHECKED}. Gaussian rows ($L=1$): \rid{W3-POST:Thm-1}, \rid{W2-APP:POST}, \rid{W3-READER:R1}: \rid{PROVED-CHECKED}.}
 
 \begin{mainthm}[Distribution-level consistency]\label{thm:dist}
 There are constants $c_{\mathrm H}>0$, $M_0$ and $n_0$, depending only on $(s,A,L,c_\psi,\bar b)$, such that the following
@@ -30,7 +30,7 @@ $n\ge n_0$ with $\sqrt n/\log n\ge M$,
 \end{equation}
 \end{mainthm}
 
-\proved{\TAGtwo}
+\proved{\rid{W3-DIST:Thm-A}: \rid{PROVED-CHECKED}.}
 
 \begin{mainthm}[The reported model equals the true model]\label{thm:reported}
 Let $\Sig$ be positive definite and assume \as{GR}, \as{DIM}, \as{FSt}, \as{V}, \as{EFS}, Assumption~\as{reported}
@@ -46,7 +46,7 @@ If moreover Convention~\as{C2p} holds, then
 \end{equation}
 \end{mainthm}
 
-\proved{\TAGthree}
+\proved{\rid{W3-RM2-R:RM2-R-plus}, \rid{W3-RM2-R:RM0-plus}, \rid{W3-RM2-R:DLV-0}: \rid{PROVED-CHECKED}. Code conformance \rid{C-DLV:L2-S3}, \rid{C-DLV:P1-Inventory}: \rid{CODE-CHECKED (second seat, code reading; holds at pin 4676af6 after amendments A-1--A-7)}.}
 
 \begin{mainthm}[Certified screening]\label{thm:screen}
 Let the design be fixed and assume \as{GL}, Assumption~\as{SCR} with model-size budget $k_n$, and Convention~\as{C1};
@@ -56,7 +56,7 @@ Let the design be fixed and assume \as{GL}, Assumption~\as{SCR} with model-size 
 \]
 \end{mainthm}
 
-\proved{\TAGfour}
+\proved{\rid{W3-SCR:A1}, \rid{W3-SCR:A-inf}, \rid{W3-SCR:SCR-A}: \rid{PROVED-CHECKED}.}
 
 \begin{mainprop}[Each island's evidence estimate is unbiased]\label{prop:unbiased}
 Under Convention~\as{C3}, given the calibration, each island's evidence estimate $\Zhat_r$ is unbiased for $Z$, for every
@@ -64,7 +64,7 @@ design and data set. Consequently, on $\Acal$, the pooled estimate~\eqref{eq:poo
 $\E[\Zhat\mid\text{calibration}]=Z$.
 \end{mainprop}
 
-\proved{\TAGfive}
+\proved{\rid{W1-N1:Thm-N1}, \rid{W3-READER:PoolZ}, \rid{W3-AUDIT-AX:FR}: \rid{PROVED-CHECKED}; line checks \rid{W3-AUDIT-AW:ISL}, \rid{W3-AUDIT-AW:FRZ}.}
 
 \begin{mainthm}[The rate cannot be improved]\label{rem:sharp}
 \textup{(a)} \emph{Every design.} For every $n\ge3$, every standardised design with $p\ge2$, every response and every
@@ -85,7 +85,7 @@ $\pi=3.14\ldots$ in this display,
 and, if moreover $p\to\infty$, $1-\pis{\Sz}\ge(1-\oP(1))\,(\sz+1)\sqrt{\log p/(\pi n)}$.
 \end{mainthm}
 
-\proved{\TAGsix}
+\proved{\rid{W3-PSHARP:A}, \rid{W3-PSHARP:B}, \rid{W3-PSHARP-R:AE}, \rid{W3-PSHARP-R:A2C}: \rid{PROVED-CHECKED}.}
 
 \subsection{Planned}\label{sec:planned}
 
@@ -146,7 +146,38 @@ set $Q$ for $\mathfrak D_{\mathrm{AR}}$. Also open: the fit runs on an engine de
 \planned{The engine design is paused; the theory analysis is not started. Owner: Theory (analysis), Engineering (engine).
 Order: after Planned Theorem~\ref{thm:trap}.}
 
-\PLANNEDTHREEFOUR
+\begin{planthm}[The raw-scale search bridge; candidate]\label{thm:bridge}
+Assume Assumption~\as{dist} with $s\ge1$ and the window $q_n$ of a level $M\ge M_0$, and assume raw-scale counterparts of
+the hypotheses of Theorem~\ref{thm:reported} \textup{[open choice~1]}, so that the true coefficients $\bstar$ are fixed on
+the raw scale and the standardised coefficients $\tstar=D\bstar$ are random. Then there are data events of
+$\P^*$-probability tending to one on which every admissible completed run, whatever its seed and calibration outcome,
+returns a list $\mathcal T$ with $\pi(\mathcal T\mid\Dn)\ge n^{-c_{\mathrm H}M/2}$. Consequently the conclusion of
+Remark~\ref{cor:dist-output} holds for every such run on events of $\P^*$-probability tending to one
+\textup{[open choice~2]}.
+\end{planthm}
+
+\openchoice{P3}{(1)~The raw-scale hypotheses: Theorem~\ref{thm:reported} and its masters take $\tstar$ deterministic on the
+standardised scale, while Theorem~\ref{thm:dist} takes i.i.d.\ pairs with fixed raw $\bstar$; for $\sz\ge1$ no design
+satisfies both (erratum E3 of \code{W3-D5P}), so the population conditions (\as{FSt}, \as{V}, Assumption~\as{reported})
+must be restated for fixed $\bstar$. (2)~The target: the list-mass premise only (as stated), or the full conclusion of
+Theorem~\ref{thm:reported} on the raw scale. Today the premise is known only pathwise, on the part of the data event of
+Corollary~\ref{cor:list} where $\pi(\Sz\mid y)\ge n^{-c_{\mathrm H}M/2}$.}
+
+\planned{Named open item (\code{QUEUE.md}, ``Named open items'', D121; \code{READER_VERSIONS.md}, row B6.7). Not a ticket;
+no statement in any project file. Owner: Theory (on hold).}
+
+\begin{planthm}[The reported model under an aggregated leak; candidate]\label{thm:agg-leak}
+The conclusions of Theorem~\ref{thm:reported} hold when, in Assumption~\as{reported}, the per-predictor bound
+\ref{asm:rr-leak}(i) is replaced by a condition on the leaks aggregated over the predictors outside $Q$
+\textup{[open choice~1]}, the other hypotheses of Theorem~\ref{thm:reported} being kept.
+\end{planthm}
+
+\openchoice{P4}{(1)~The aggregated condition: no form is written in any project file (\code{W3-RM2-R/STATEMENT.md} and
+\code{PLAN.md} name ``the aggregated Form~R leak'' only). (2)~Whether it is stated for the random-design form
+(Theorem~\ref{thm:reported}) only, or also for the fixed-design form (Theorem~\ref{thm:reported-fixed}).}
+
+\planned{Named open item (\code{QUEUE.md}, ``Named open items''; \code{W3-RM2-R/STATEMENT.md}, ``Not targeted''). No
+statement in any project file. Owner: Theory (on hold).}
 
 \subsection{Planned work with no new statement}\label{sec:planned-other}
 
@@ -156,5 +187,10 @@ Order: after Planned Theorem~\ref{thm:trap}.}
     reduction behind Remark~\ref{cor:dist-output}; then Theorem~\ref{thm:post-fixed} and Theorem~\ref{thm:dist}. A Lean
     statement certifies a result only if it matches the statement given here.
   \item \emph{Named open items below headline level} (\code{Theory_work/Dept/QUEUE.md}, ``Named open items''; no official
-    statement): \NONHEADLINE
+    statement): \begin{enumerate}[label=(\alph*),leftmargin=1.6em,itemsep=0pt]
+      \item the start-law theorem (Theorem~\ref{thm:start}) with a general mean signal $\mu$ in the misspecified case
+        (\code{W3-START2R-O1});
+      \item the equicorrelated example with threshold $b<3/8$, and its converse (\code{O4}$'$);
+      \item the count $17-\sz$ in the start-law analysis (\code{START2-O1}).
+    \end{enumerate}
 \end{enumerate}

@@ -62,7 +62,10 @@ calibration.
 
 \begin{definition}[Run outcomes]\label{def:outcomes}
 A run ends \emph{exact} ($\Om$ was enumerated), \emph{completed} (the sampler ran to the end), or \emph{stopped}. An
-exact or completed run \emph{produces output}. A stopped run reports no estimates. A run is \emph{admissible} when it meets
+exact or completed run \emph{produces output}. A stopped run reports no estimates. The coded statuses are \code{exact},
+\code{completed}, and the stopped statuses \code{invalid_input}, \code{no_predictors}, \code{y_constant},
+\code{resource_limit}, \code{numerical_failure} and \code{schedule_limit} (Algorithm~\ref{alg:run}); an invalid
+allocation raises an error and returns nothing. A run is \emph{admissible} when it meets
 Convention~\as{C1}. $\Acal$ is the event that the method uses the sampler and its calibration succeeds; every completed
 run lies in $\Acal$.
 \end{definition}
@@ -92,7 +95,7 @@ with $S_v$ the particles before reweighting at step $t$. A completed run reports
 \begin{equation}\label{eq:pool}
   \Zhat:=\frac14\sum_{r=1}^4\Zhat_r,
 \end{equation}
-and the lower bound $\log(0.05\,\Zhat)$; an exact run reports $\log Z$. Islands are not weighted by their evidence
+and the lower bound $\log(0.05\,\Zhat)$; an exact run reports $\log Z$ and the lower bound $\log(0.05\,Z)$. Islands are not weighted by their evidence
 estimates.
 \end{definition}
 
@@ -104,7 +107,8 @@ nonempty $\mathcal T\subseteq\Om$,
   \mathrm{pip}_{\mathcal T}(j):=\frac{1}{Z_{\mathcal T}}\sum_{S\in\mathcal T,\,S\ni j}e^{F(S)},\qquad
   \mathrm{mpm}_{\mathcal T}:=\{j:\mathrm{pip}_{\mathcal T}(j)>\tfrac12\}.
 \]
-A completed run reports these as its list-renormalised inclusion probabilities, median model and evidence. $\hat\Pi$ is
+A completed run reports these as its list-renormalised inclusion probabilities, median model and evidence. An exact
+run reports the exact $\PIP_j$ and $\MPM$ in their place, and $Z_{\mathcal T}$ for the list of the $40p+1$ best models. $\hat\Pi$ is
 the posterior restricted to $\mathcal T$: the models of $\mathcal T$ weighted in proportion to $e^{F(S)}$, each with its
 exact conditional posterior of $(\beta,\sigma^2)$ ($\hat\Pi$ is not computed by the method).
 \end{definition}

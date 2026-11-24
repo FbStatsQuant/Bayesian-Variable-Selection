@@ -111,9 +111,13 @@ $c_{\mathrm{SB}}:=\kappa^2\tlow^2/\{200(M_1^2+\sigs^2)\}$.
 \subsection{The witness designs}\label{sec:a-wit}
 
 \begin{assumption}{WIT}{Witness designs; A6 Theorem~6(b)}
-$\sz$ is fixed; $\norm{\mu}^2\le nM_\mu$ and $\norm{\tstar}^2\le nM_\theta$ for fixed $M_\mu$, $M_\theta$; the null
-predictors are either orthogonal (to each other and to the true ones) or have i.i.d.\ $\Normal(0,1)$ raw entries
-independent of the true predictors and of the noise; and $p\le n^A$.
+$\sz$ is fixed; $\norm{\mu}^2\le nM_\mu$ and $\norm{\tstar}^2\le nM_\theta$ for fixed $M_\mu$, $M_\theta$; and one of:
+\begin{asmitems}
+  \item\label{asm:wit-orth} \emph{(N-orth)} the columns of $X$ outside $\Sz$ are mutually orthogonal and orthogonal to the
+    columns in $\Sz$; or
+  \item\label{asm:wit-gauss} \emph{(N-gauss)} the raw columns outside $\Sz$ have i.i.d.\ $\Normal(0,1)$ entries, independent
+    of the raw true columns $\Xr_{\Sz}$ and of the noise, and $p\le n^A$ for a fixed $A$.
+\end{asmitems}
 \end{assumption}
 
 \subsection{The assumptions of the supplementary results}\label{sec:a-supp}
@@ -257,7 +261,7 @@ the memory and time that the method's own polynomial requirement formulas requir
 
 \subsection{Which statements use which assumption}\label{sec:usage}
 
-\begin{table}[ht]
+\begin{table}[H]
 \centering\small
 \setlength{\tabcolsep}{4pt}
 \caption{Assumptions and conventions against the statements that use them, read from the hypotheses of each statement.
@@ -266,7 +270,32 @@ Theorems~1--6 are in Section~\ref{sec:proved}; S-numbers are in Section~\ref{sec
 \toprule
 Assumption & Used by \\
 \midrule
-\USAGEROWS
+Assumption~\as{GL} & Thm.~\ref{thm:post-random}, \ref{thm:screen}, \ref{rem:sharp}(b); \ref{thm:post-fixed}, \ref{rem:no-betamin}, \ref{thm:post-margin}, \ref{thm:reported-fixed} \\
+Assumption~\as{DIM} & Thm.~\ref{thm:post-random}, \ref{thm:reported}; \ref{thm:post-fixed}, \ref{rem:no-betamin}, \ref{thm:post-margin}, \ref{thm:omitted}, \ref{thm:start}, \ref{thm:reported-fixed}, \ref{cor:famc}, \ref{cor:list}, \ref{thm:outputs} \\
+Assumption~\as{SP} & Thm.~\ref{thm:post-random}; \ref{thm:post-fixed}, \ref{rem:no-betamin}, \ref{thm:post-margin}, \ref{thm:reported-fixed} \\
+Assumption~\as{GR} & Thm.~\ref{thm:reported}; \ref{thm:start}, \ref{cor:famc}, \ref{cor:list}, \ref{thm:outputs} \\
+Assumption~\as{SGR} & Thm.~\ref{thm:post-random} \\
+Assumption~\as{FSb} & Thm.~\ref{thm:post-random} \\
+Assumption~\as{FSt} & Thm.~\ref{thm:reported}; \ref{thm:start}, \ref{cor:famc}, \ref{cor:list}, \ref{thm:outputs} \\
+Assumption~\as{EFS} & Thm.~\ref{thm:post-random}, \ref{thm:reported}; \ref{cor:famc}, \ref{cor:list}, \ref{thm:outputs} \\
+Assumption~\as{dist} & Thm.~\ref{thm:dist}; \ref{prop:dist}, \ref{thm:dist-param}, \ref{cor:dist-output}; planned \ref{thm:bridge} \\
+Assumption~\as{V} & Thm.~\ref{thm:reported}; \ref{thm:start}, \ref{cor:famc}, \ref{cor:list}, \ref{thm:outputs} \\
+Assumption~\as{reported} & Thm.~\ref{thm:reported}; \ref{cor:famc}, \ref{cor:list}; planned \ref{thm:cov7}(i), \ref{thm:bridge}, \ref{thm:agg-leak} \\
+Assumption~\as{SCR} & Thm.~\ref{thm:screen} \\
+Assumption~\as{WIT} & Thm.~\ref{rem:sharp}(b) \\
+Assumption~\as{BC} & \ref{thm:post-fixed}, \ref{rem:no-betamin}, \ref{thm:post-margin}, \ref{thm:reported-fixed} \\
+Assumption~\as{EF} & \ref{thm:post-fixed}, \ref{rem:no-betamin}, \ref{thm:post-margin}, \ref{thm:reported-fixed} \\
+Assumption~\as{NC} & \ref{thm:post-fixed}, \ref{rem:no-betamin}, \ref{thm:post-margin}, \ref{thm:reported-fixed} \\
+Assumption~\as{BM} & \ref{thm:post-fixed}, \ref{thm:post-margin}, \ref{thm:reported-fixed} \\
+Assumption~\as{margin} & \ref{thm:post-margin} \\
+Assumption~\as{omitted} & \ref{thm:omitted} \\
+Assumption~\as{NL} & \ref{thm:start}, \ref{thm:outputs} \\
+Assumption~\as{reported-fixed} & \ref{thm:reported-fixed} \\
+Convention~\as{C1} & Thm.~\ref{thm:reported}, \ref{thm:screen}; \ref{thm:reported-fixed}, \ref{cor:famc}, \ref{cor:list}, \ref{thm:outputs} \\
+Convention~\as{C2} & \ref{thm:reported-fixed} \\
+Convention~\as{C2p} & Thm.~\ref{thm:reported}; \ref{thm:reported-fixed}, \ref{cor:famc}, \ref{cor:list} \\
+Convention~\as{C3} & Thm.~\ref{prop:unbiased}; \ref{thm:outputs}, \ref{prop:worst-island}, \ref{rem:alt-route} \\
+No assumption & Theorem~\ref{rem:sharp}(a); \ref{lem:summaries}; \ref{rem:vis} (gives \as{V}); \ref{rem:thm2x} (hypotheses stated in it) \\
 \bottomrule
 \end{tabular}
 \end{table}
