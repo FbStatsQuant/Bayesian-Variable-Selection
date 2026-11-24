@@ -21,7 +21,6 @@
 - Daily report to HQ by 09:00 CT (≤ 10 lines). The riboflavin delivery line is owed ≈ 11-27.
 - NOTS Tier 2 (≈ 111–167 GB of regenerable *.bin): HQ ruled "let the purge take them" (H-41 (4), H-56); the purge starts ≈ 12-05. Do nothing.
 - Kept strays, all indexed: NOTS `vn_minileg/clone_e993ece2` (until the VN leg closes), `gcd_*/gct2_*` sha files; Owls `envs/ci-py313`, `Rlib/` (owner unknown), `scripts/`.
-- Untracked `Docs/Experiments/data_apps/` (SHORTLIST.md) in the worktree is not mine; leave it.
 - Owls / is at 89 %; the growth is not SMC (BNP-Lean, lhv, e03 in fb31's /tmp). HQ told the owner; never touch them.
 
 ## 3. Paths
@@ -36,12 +35,10 @@
 
 ## 4. Live threads
 - Riboflavin agent (Sonnet, idle, waiting for DONE): `thread:delegated-task:command%3Amcp%3A3b799f3d-3ff0-40af-9f34-b6a918f97d53%3Adelegate-task%3Ae5106e3a-1ec0-4a7f-804b-b0a43cbb4bf5`.
-- HQ v2: `mcp:4f1a2e12-7ac4-4619-9128-1469ea92eb2e`, env `1fde6176-4453-43b0-82cc-70fda5110037` (t3_thread_send, mode queue). The old 647bfd65 thread is retired.
-- No other live children; the daily Haiku children are settled after each report.
+- HQ v2: `mcp:4f1a2e12-7ac4-4619-9128-1469ea92eb2e`, env `1fde6176-4453-43b0-82cc-70fda5110037` (t3_thread_send, mode queue). The old 647bfd65 thread is retired. No other live children (daily Haiku children are settled).
 
 ## 5. Scheduled tasks
-- `scheduled-task:f9847b84-cc7a-4469-8903-0911f683756b`: the daily report at 08:40 CT. Its prompt already has the H-58, v2-address and ±3 rules. It is to be re-bound to v2.
-- No other live task: everything else is disabled or a spent one-shot, and the 3-h riboflavin check is deleted.
+- `scheduled-task:f9847b84-cc7a-4469-8903-0911f683756b`: the daily report at 08:40 CT. Its prompt already has the H-58, v2-address and ±3 rules. It is to be re-bound to v2. No other live task (the rest are disabled or spent one-shots).
 
 ## 6. Daily rules
 - Check states directly. For any worker-dependent step, schedule your own check ≤ 30 min later; never end a turn waiting on a worker.
@@ -53,9 +50,7 @@
   Already-verified units are never re-sent, so new files need a new unit. Delete nothing without HQ.
 - Owls `/`: alert on a ±3-point change from the last value, or > 95 %. SMC files live on NFS home, not on `/`.
 - NOTS etiquette:
-  - one ssh call per check;
-  - a QOSMaxCpuPerUserLimit pending is INFO;
-  - scancel only by exact job id;
+  - one ssh call per check; a QOSMaxCpuPerUserLimit pending is INFO; scancel only by exact job id;
   - home < 7 GiB (the daily prune; home_guard acts above 8,192 MB by its own rules);
   - the scratch purge is 14 days.
 - Lean staffing (H-54, f2d52b22): Opus = manager only; Haiku for checks; Sonnet for real work. No Fable; no Codex without HQ. Reports ≤ 10 lines. Never touch BNP.
