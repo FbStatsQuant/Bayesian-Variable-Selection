@@ -49,8 +49,9 @@ $\tmin\sqrt{n/\log n}$ diverges.
 
 \status{The in-probability conclusions~\eqref{eq:post-op}: \textbf{proved and independently checked}. The expectation
 bound~\eqref{eq:post-exp}: \textbf{proved and independently checked}: its last unchecked input (a proposition giving a lower
-bound on the posterior miss) was recorded as independently checked on 2026-11-17, after the freeze; its other input, a
-lemma bounding the tail of the posterior model size, is independently checked. Registry: Appendix~\ref{app:status}, row
+bound on the posterior miss) was recorded as independently checked on 2026-11-17, after the freeze. The registry string
+still reads ``conditional on'' one input, a lemma on random Gaussian designs that is itself proved and independently
+checked (Appendix~\ref{app:status-open}, housekeeping). Registry: Appendix~\ref{app:status}, row
 1.1 (the ledger there shows the freeze state).}
 
 \paragraph{Is the beta-min reasonable?} The beta-min \lab{BM}, at the usual order $\sigs\rn$, has the same form as \SL's proof rates, with a fixed multiple of
@@ -107,7 +108,8 @@ constants depending only on $(\sz,A,\sigs^2,\bar\theta,\varphi_0,g_0,c_{\mathrm{
 
 \status{The in-probability conclusions: \textbf{proved and independently checked}. The expectation bound:
 \textbf{proved and independently checked}, as the expectation bound of Theorem~\ref{thm:post-fixed} (its
-lower-bound proposition checked on 2026-11-17). Registry: Appendix~\ref{app:status}, row 1.1.}
+lower-bound proposition checked on 2026-11-17). As there, the registry strings still read ``conditional on'' the same
+checked lemma on random Gaussian designs. Registry: Appendix~\ref{app:status}, row 1.1.}
 
 Under \as{EF} and \as{BM}(a), Assumption~\ref{asm:margin} holds with $c_{\mathrm{id}}=C_\beta^2\varphi_0^2(1-1/n)$. So
 Theorem~\ref{thm:post-margin} contains Theorem~\ref{thm:post-fixed} when $C_\beta^2\varphi_0^2>c_1$; when
@@ -146,7 +148,9 @@ Assumption~\ref{asm:omitted} is placed on how they vary. Then
 
 \status{\textbf{Proved and independently checked}, using the posterior concentration result and two lemmas on Gaussian
 designs that are independently verified; since 2026-11-17 the registry no longer lists the lower-bound proposition among
-its conditions (that proposition is now checked). Registry: Appendix~\ref{app:status}, row 1.4.}
+its conditions (that proposition is now checked). The registry strings still read ``conditional on'' inputs that are
+themselves proved and checked or verified: the lemma on random Gaussian designs and, for one form, the two Gaussian-design
+lemmas. Registry: Appendix~\ref{app:status}, row 1.4.}
 
 \begin{example}[Omitted Gaussian predictors]\label{ex:omitted}
 If candidates and omitted predictors are jointly Gaussian, the response given the candidates is Gaussian with a linear

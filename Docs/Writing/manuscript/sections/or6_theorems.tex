@@ -23,32 +23,36 @@ is independent of the author.}\label{tab:results}
 Result & In words & Assumptions & Status \\
 \midrule
 1.~The posterior finds the true model (Thm~\ref{thm:post-random}) &
-The posterior mass outside the true model is of order $\rn$; the highest posterior and median probability models equal
-the true model with probability tending to one. &
+The posterior mass outside the true model is at most of order $\rn$, and so is every inclusion probability's distance
+from $0$ or $1$; the highest posterior and median probability models equal the true model with probability tending to
+one. &
 \as{GL}, \as{DIM}, \as{SP}, \as{SGR}, \as{FSb}, \as{EFS} &
 Proved and checked (the sub-Gaussian form recorded 11-17). \\
 2.~It finds the true distribution (Thm~\ref{thm:dist}) &
-The posterior contracts around the true conditional law of the response, at radius of order $\rn$ in Hellinger
-distance; no lower bound on the coefficients. &
+At each large enough level $M$, with probability at least $1-n^{-c_{\mathrm H}M}$, the posterior puts mass at most
+$n^{-c_{\mathrm H}M}$ outside a Hellinger ball of radius $\sqrt{M\log n/n}$ around the true conditional law of the response;
+no lower bound on the coefficients. &
 Assumption~\ref{asm:dist} &
 Proved and checked. \\
 3.~The reported model is the true model (Thm~\ref{thm:reported}) &
-For block and AR designs whose true coefficients do not cancel, with probability tending to one every run that produces
-output reports exactly the true model, whatever its seed. &
+On every design meeting its hypotheses (for example block and AR designs whose true coefficients do not cancel), with
+probability tending to one every admissible run that produces output reports exactly the true model, whatever its seed; on
+an idealised computer every run produces output. &
 \as{GR}, \as{DIM}, \as{FSt}, \as{V}, \as{EFS}, Assumption~\ref{asm:reported} &
 Proved and checked; no open condition. \\
 4.~Certified screening (Thm~\ref{thm:screen}) &
 A run rarely certifies a reported model of at most $k_n$ predictors that misses a true predictor. &
-fixed design; floor and signal bounds &
+fixed design; \as{GL}; floor and signal bounds; budget inequality; \as{C1} &
 Proved and checked. \\
 5.~The evidence estimate is unbiased (Prop.~\ref{prop:unbiased}) &
-Given the calibration, the evidence estimate is unbiased, on every design. &
+Given the calibration, each island's evidence estimate is unbiased, on every design; so is their pooled average on a
+successful calibration (for the uninterrupted run; nothing is claimed given completion). &
 \as{C3} only &
 Proved and checked. \\
 6.~The rate cannot be improved (Thm~\ref{rem:sharp}) &
-No design gives a posterior rate faster than $n^{-1/2}$; on two families of designs the expected posterior miss is at
-least of order $\rn$. &
-none for (a) &
+(a) For true models of at most $\min(K-1,p/2)$ predictors, no design gives a rate faster than $n^{-1/2}$. (b) On two
+families of designs the posterior miss is at least of order $\rn$, in expectation (and in probability when $p\to\infty$). &
+(a) standardised design, $p\ge2$; (b) \as{GL}, fixed $\sz$, energy bounds, $p\le n^A$ &
 Proved and checked. \\
 \bottomrule
 \end{tabular}
@@ -57,8 +61,10 @@ Proved and checked. \\
 % =====================================================================================================
 \subsection{Result 1: the posterior finds the true model}\label{sec:model-result}
 
-\inwords{If the true model is small, its coefficients are fixed and nonzero, and no small group of predictors is
-collinear, then the posterior puts all but a fraction of order $\rn$ of its mass on the true model. The highest posterior
+\inwords{Suppose the rows are i.i.d.\ with sub-Gaussian tails on sparse directions, $p$ grows at most polynomially in
+$n$, the true model has a fixed size, each true coefficient is bounded away from zero and from infinity by fixed constants,
+and small groups of predictors have a fixed population eigenvalue floor. Then the posterior puts all but a fraction at most
+of order $\rn$ of its mass on the true model. The highest posterior
 model and the median probability model then equal the true model with probability tending to one, and every inclusion
 probability is within order $\rn$ of $1$ for a true predictor and of $0$ for a null one.}
 
@@ -87,8 +93,9 @@ $p$, and the total weight of these models is of order $\sqrt{\log p/n}$ (supplem
 theorem's rate $\rn$ covers this whenever $p$ grows at most polynomially in $n$, as \as{DIM} allows. (This is a
 heuristic; Result~6 makes it precise on two families of designs.) The last sentence of the theorem is Lemma~\ref{lem:summaries}.}
 
-\vssl{Their Theorem~3 (p.~956) gives sensitivity (every true predictor is selected) with an exponentially small error, and
-does not control specificity; ours gives exact selection, specificity included, at a polynomial rate; neither implies the
+\vssl{Their Theorem~3 (p.~956) bounds, for each identifiable true predictor, the posterior mass of the models that miss
+it, with an error exponential in $n\epsilon_n^2$; when every true predictor is identifiable, thresholding their posterior
+gives sensitivity (every true predictor selected). It does not control specificity; ours gives exact selection, specificity included, at a polynomial rate; neither implies the
 other. Their Theorem~S (supp.\ p.~13) states consistency of the posterior mode, for a different posterior, with no rate.}
 
 \scope{Every design of our simulation studies, strong common factors included. A fixed-design version, with conditions on
@@ -97,10 +104,12 @@ the observed sample and a beta-min condition (a lower bound on the nonzero coeff
 % =====================================================================================================
 \subsection{Result 2: the posterior finds the true distribution}\label{sec:distribution}
 
-\inwords{Suppose the observations are i.i.d., the response follows a sparse Gaussian linear model, the predictors have
-light tails, no small group of predictors is almost exactly collinear, and no single predictor carries an unbounded
-signal. Then, for every large enough level $M$ for which these conditions hold (the window of Assumption~\ref{asm:dist}
-widens with $M$, so a larger $M$ asks more of the design), with probability at least $1-n^{-c_{\mathrm H}M}$ the posterior puts
+\inwords{Suppose the observations are i.i.d., the response follows a sparse Gaussian linear model with $p$ at most
+polynomial in $n$, the standardised predictors are sub-Gaussian on sparse directions, no small group of predictors is
+almost exactly collinear, and no single predictor's effect, in units of its standard deviation, exceeds a fixed multiple of
+the noise standard deviation. Fix a large enough level $M$ for which these conditions hold (the window of
+Assumption~\ref{asm:dist} widens with $M$, so a larger $M$ asks more of the design). Then, for every large enough $n$ with
+$M\le\sqrt n/\log n$, with probability at least $1-n^{-c_{\mathrm H}M}$ the posterior puts
 mass at most $n^{-c_{\mathrm H}M}$ on conditional laws of the response farther than $\sqrt{M\log n/n}$ from the true
 one, in Hellinger distance. No lower bound on the coefficients is needed.}
 
@@ -133,17 +142,21 @@ selected.}
 their Theorem~2 has the same form, p.~953) equals $n^{-cM}$, so~\eqref{eq:dist-i} is of the same exponential form, for
 levels $M\le\sqrt n/\log n$. It uses the same distance (their supplement's convention;
 their main text's distance is larger by the factor $\sqrt2$); it reaches a radius of order $\rn$, which their conditions do not
-reach at polynomial $p$; larger radii and exponential $p$ are outside ours.}
+reach at polynomial $p$. At larger radii our bound still holds, by monotonicity, but its exponent stays at that of a
+level $M\le\sqrt n/\log n$, whereas theirs grows with the radius; exponential $p$ is outside ours.}
 
 \scope{Every design of our simulation studies.}
 
 % =====================================================================================================
 \subsection{Result 3: the reported model is the true model}\label{sec:reported}
 
-\inwords{If no true predictor is masked by $15$ or fewer others, the predictors that can imitate the signal form a set
-$Q$ of at most $n^b$ predictors with $b<\tfrac12$, and regressions within $Q$ are local, then there is an event,
-determined by the data alone and of probability tending to one, on which every run that produces output reports exactly
-the true model, whatever its seed and the outcome of its calibration.}
+\inwords{Suppose the rows are Gaussian, $p$ is at most polynomial in $n$, the true effects are fixed on the method's
+scale, small groups of predictors have a population eigenvalue floor, no true predictor is masked by $15$ or fewer others,
+and the predictors that can imitate the signal form a set $Q$ of at most $n^b$ predictors ($b<\tfrac12$) with the
+locality, floor and local-regression conditions of Assumption~\ref{asm:reported}. Then there is an event, determined by
+the data alone and of probability tending to one, on which every admissible run that produces output reports exactly the
+true model, whatever its seed and the outcome of its calibration. On an idealised computer (\as{C2p}) every run produces
+output, so the reported model equals the true model with probability tending to one.}
 
 \begin{mainthm}[The reported model equals the true model]\label{thm:reported}
 Let $\Sig$ be positive definite and assume \as{GR}, \as{DIM}, \as{FSt}, \as{V}, \as{EFS}, Assumption~\ref{asm:reported}
@@ -171,8 +184,8 @@ walks down to $\Sz$; on the same event no other model the run scores beats $\Sz$
 assumptions of this result, which differ from those of Result~1). This is what one would hope a well-designed
 search does; the theorem says when it provably does, at the effort the software actually spends and for every seed.}
 
-\vssl{Their statements about what their sampler reports are limits as the number of iterations grows, at fixed data and
-for every data set; ours holds at the budget the software uses, jointly with $n$, under design conditions. Neither implies
+\vssl{Their statements about what their sampler reports are limits as the number of iterations grows, at fixed data,
+under convergence conditions for their sampler that they cite rather than verify (supp.\ pp.~9--10, 12--13, 16--17); ours holds at the budget the software uses, jointly with $n$, under design conditions. Neither implies
 the other.}
 
 \scope{Block and AR designs whose true coefficients do not cancel (any fixed AR correlation; the constants degrade as
@@ -182,8 +195,10 @@ supplement's Corollary~\ref{cor:famc} collects sufficient conditions for block a
 % =====================================================================================================
 \subsection{Result 4: certified screening, with no visibility or leakage condition}\label{sec:screen}
 
-\inwords{If small sets of observed predictors have an eigenvalue floor, the true effects are bounded by fixed constants,
-and the size budget $k_n$ is small compared with $n/\log p$, then the probability that a run produces output, certifies a
+\inwords{Suppose the design is fixed, sets of up to $k_n+\sz$ observed predictors have an eigenvalue floor, every true
+effect is at least a fixed $\tlow>0$ and their total absolute size is at most a fixed $M_1$, and the size budget $k_n<K$
+satisfies $(k_n+1)\log p+\log n\le c_{\mathrm{SB}}\,n$ (so $k_n$ may be as large as a small multiple of $n/\log p$).
+Then the probability that a run produces output, certifies a
 reported model of at most $k_n$ predictors, \emph{and} that model misses a true predictor tends to zero. A certified model
 may contain null predictors, and nothing is claimed conditionally on certification. Neither visibility nor a leakage set is
 needed.}
@@ -207,8 +222,8 @@ true predictor, adding that predictor would bring a fit gain of order $n$, far a
 $\log p$; a small certified model therefore cannot miss one. It is a sure-screening property, the property a statistician
 asks of a first-stage selector.}
 
-\vssl{The nearest result is their sure-screening Theorem~3 (p.~956), for their posterior: every true predictor is
-included with probability tending to one. Ours is about the model the software certifies, at its own budget.}
+\vssl{The nearest result is their Theorem~3 (p.~956), for their posterior: when every true predictor is identifiable,
+the thresholded posterior includes every true predictor with probability tending to one. Ours is about the model the software certifies, at its own budget.}
 
 \begin{mainrem}[What is not claimed, and how often runs certify]\label{rem:screen}
 (i) The bound is on an intersection; it is not a guarantee conditional on certification, no run is claimed to certify a
@@ -226,7 +241,9 @@ size budget of Theorem~\ref{thm:screen} requires $n\gtrsim1{,}450$.
 \subsection{Result 5: the evidence estimate is unbiased, on every design}\label{sec:estimates}\phantomsection\label{sec:unbiased}
 
 \inwords{The method reports an evidence estimate, the pooled average of its four islands' estimates. Given the
-calibration, it is unbiased for the evidence $Z$, on every design and data set.}
+calibration, each island's estimate is unbiased for the evidence $Z$, on every design and data set; so the pooled
+estimate of the uninterrupted run is unbiased on a successful calibration. Nothing is claimed conditionally on the run
+completing.}
 
 \begin{mainprop}[Each island's evidence estimate is unbiased]\label{prop:unbiased}
 Under Convention~\as{C3}, given the calibration, each island's evidence estimate $\Zhat_r$ is unbiased for $Z$, for every
@@ -253,8 +270,9 @@ bound $\log(0.05\,\Zhat)$ for $\log Z$.}
 \subsection{Result 6: the rate cannot be improved}\label{sec:sharp}
 
 \inwords{(a) On every design, no model of at most $\min(K-1,p/2)$ predictors has posterior mass closer to one than about
-$(\abs{S}+1)/(3\sqrt n)$, so no design gives a rate faster than $n^{-1/2}$. (b) On two families of designs the expected
-posterior miss is at least of order $\rn$, the rate of Result~1.}
+$(\abs{S}+1)/(3\sqrt n)$, so for true models of that size no design gives a rate faster than $n^{-1/2}$. (b) On two
+families of designs, with a fixed true model size and bounded signal energy, the posterior miss is at least of order
+$\rn$, the rate of Result~1: in expectation, and in probability when $p\to\infty$.}
 
 \begin{mainthm}[The rate cannot be improved]\label{rem:sharp}
 \textup{(a)} \emph{Every design.} For every $n\ge3$, every standardised design with $p\ge2$, every response and every
@@ -262,6 +280,10 @@ model $S$ with $\abs{S}\le\min(K-1,p/2)$,
 \begin{equation}\label{eq:sharp-a}
   \pis{S}\ \le\ \Big(1+\frac{\abs{S}+1}{3\sqrt n}\Big)^{-1}.
 \end{equation}
+So no model of that size, the true one included, can carry posterior mass closer to one than about
+$(\abs{S}+1)/(3\sqrt n)$. For true models with $\sz\le\min(K-1,p/2)$, no design gives a rate faster than
+$n^{-1/2}$, and a posterior miss of order $\rn$ is possible only if $\sz=O(\sqrt{\log n})$.
+
 \textup{(b)} \emph{Witness designs.} Assume \as{GL}, that $\sz$ is fixed, the energy bounds $\norm{\mu}^2\le nM_\mu$ and
 $\norm{\tstar}^2\le nM_\theta$ for fixed $M_\mu$, $M_\theta$, and that the null predictors are either orthogonal (to each
 other and to the true ones) or have i.i.d.\ $\Normal(0,1)$ raw entries independent of the true predictors and of the
@@ -273,8 +295,8 @@ noise, with $p\le n^A$. Then, for every $p>\sz$, bounded or growing, with $\pi=3
 and, if moreover $p\to\infty$, $1-\pis{\Sz}\ge(1-\oP(1))\,(\sz+1)\sqrt{\log p/(\pi n)}$.
 \end{mainthm}
 
-\status{(a) and (b): \textbf{proved and independently checked}. Registry row 1.3. On fully orthogonal designs with fixed
-nonzero coefficients the supplement's expectation bound~\eqref{eq:post-exp} applies too, so there the expected miss is of
+\status{(a) and (b): \textbf{proved and independently checked}. Registry row 1.3. On fully orthogonal designs ($\sz<p\le n-1$, so at least one null
+predictor) with fixed nonzero coefficients the supplement's expectation bound~\eqref{eq:post-exp} applies too, so there the expected miss is of
 exact order $\rn$; that statement has the status of~\eqref{eq:post-exp}: proved and independently checked since 2026-11-17.}
 
 \whynat{This prior cannot put all its mass on one model faster than the Occam factor of one extra predictor,
