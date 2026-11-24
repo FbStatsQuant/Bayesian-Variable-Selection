@@ -92,7 +92,7 @@ The proof is two lines: every model that misses a true predictor, or contains a 
 theorem that makes the posterior miss small makes every summary right at once.
 
 \paragraph{Compared with \SL.} The two priors are close in kind. \emph{Model prior:} theirs lets each predictor enter
-independently with probability $\lambda_n=r_n/P_n$ and caps the model size at $\bar r_n$ (their (6), p.~951); both $r_n$
+independently with probability $\lambda_n=r_n/P_n$, where $P_n$ is their number of predictors (our $p$), and caps the model size at $\bar r_n$ (their (6), p.~951); both $r_n$
 and $\bar r_n$ are chosen by the user, and their theorems need $\lambda_n\to0$. Ours mixes over the inclusion probability
 (beta-binomial), which costs each predictor about $\log p$ in log prior odds, as theirs does for their usual choices of $r_n$, with nothing to choose, and fixes the cap at
 $\lfloor n/2\rfloor$. \emph{Coefficients:} theirs is $\Normal(0,\sigma^2V_\xi)$ with a user-chosen $V_\xi$ (p.~951); in

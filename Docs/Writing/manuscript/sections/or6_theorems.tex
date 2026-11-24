@@ -6,7 +6,7 @@ of the software reports; the last says that the rate of the first cannot be impr
 format: \emph{in words}; the formal statement, which cites the assumptions of Section~\ref{sec:assumptions} by name; a
 \emph{status} box, outside the statement, quoting the project's registry; one paragraph on \emph{why it is natural}; and
 a one-line \emph{scope} (which of our designs are inside). Table~\ref{tab:results} summarises them. Result~$k$ is
-Theorem~$k$ (Result~5 is Proposition~5); lemmas, examples, assumptions and remarks are numbered separately.
+Theorem~$k$ (Result~5 is Proposition~5); lemmas, examples and assumptions are numbered separately.
 Section~\ref{sec:planned} lists the results that are planned and not yet proved.
 
 \newcommand{\whynat}[1]{\par\noindent\textit{Why it is natural.} #1\par\smallskip}
@@ -92,7 +92,7 @@ does not control specificity; ours gives exact selection, specificity included, 
 other. Their Theorem~S (supp.\ p.~13) states consistency of the posterior mode, for a different posterior, with no rate.}
 
 \scope{Every design of our simulation studies, strong common factors included. A fixed-design version, with conditions on
-the observed sample and a beta-min condition, is Theorem~\ref{thm:post-fixed} in the supplement.}
+the observed sample and a beta-min condition (a lower bound on the nonzero coefficients), is Theorem~\ref{thm:post-fixed} in the supplement.}
 
 % =====================================================================================================
 \subsection{Result 2: the posterior finds the true distribution}\label{sec:distribution}
@@ -210,7 +210,7 @@ asks of a first-stage selector.}
 \vssl{The nearest result is their sure-screening Theorem~3 (p.~956), for their posterior: every true predictor is
 included with probability tending to one. Ours is about the model the software certifies, at its own budget.}
 
-\begin{remark}[What is not claimed, and how often runs certify]\label{rem:screen}
+\begin{mainrem}[What is not claimed, and how often runs certify]\label{rem:screen}
 (i) The bound is on an intersection; it is not a guarantee conditional on certification, no run is claimed to certify a
 small model, and the certified model is not claimed to equal the true model.
 (ii) \emph{In existing numerics (not a theorem),} every completed run certified its reported model: 2,394 of 2,394 in the
@@ -218,7 +218,7 @@ small model, and the certified model is not claimed to equal the true model.
 equicorrelation $\rho\in\{0.5,0.7\}$, $p\ge2.5n$ and $\sz\in\{4,8\}$, the certified model missed at least one true
 predictor in 61 of 122 fits at $n=50$, 2 of 20 at $n=75$ and none of 30 at $n=100$; at the constants of these designs the
 size budget of Theorem~\ref{thm:screen} requires $n\gtrsim1{,}450$.
-\end{remark}
+\end{mainrem}
 
 \scope{Fixed designs with the floor and signal bounds; no visibility, leakage, start or block condition.}
 

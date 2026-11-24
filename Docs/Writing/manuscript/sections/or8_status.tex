@@ -5,7 +5,7 @@
 
 The theorems were frozen on 2026-11-17 (registry tag \code{theory-v2026-11-freeze}, cut at 03:03 CT). The registry on
 main was compared with that tag on 2026-11-23. Fourteen landings changed it, all on 2026-11-17 and 2026-11-18; there has
-been no change since 2026-11-18, when the Theory Department went on hold. Twelve rows were added and none removed; 23
+been no change since 2026-11-18. Twelve rows were added and none removed; 23
 status strings changed. \emph{No result was retracted, narrowed or superseded.} Every change is an upgrade: a check
 recorded, or a condition dropped. Table~\ref{tab:status-diff} lists them; the verbatim registry strings are in
 Appendix~\ref{app:status-verbatim}. The status boxes of this document quote the registry on main; the ledger in
@@ -38,37 +38,22 @@ Corollary~\ref{cor:list} \\
 \end{table}
 
 \paragraph{What did not change.} Three qualifications stay true and stay in the text. (i) The results checked against the
-code (the delivery route of Result~3, the list result, the frozen-run identities) were read at an earlier core commit; the
+code (the link of Result~3 to the code, the list result, the identities of the frozen run) were read at an earlier core
+commit; the
 re-reading at the final method tag is a pending step. (ii) Corollary~\ref{cor:list} supplies the premise of Remark~\ref{cor:dist-output} only pathwise
 (Section~\ref{sec:plan-open}, item 1). (iii) Remark~\ref{rem:thm2x} stays conditional.
 
-\subsection{Open questions for HQ}\label{sec:open-hq}
+\subsection{Open questions for the project lead}\label{sec:open-hq}
 
-These are carried from earlier rounds or found in this one. None blocks a statement above; each is written so that the
-owner can see what is not settled.
+These are carried from earlier rounds or found in this one. None blocks a statement above. Appendix~\ref{app:status-open}
+lists four more, about the parallel engine's checks and registry housekeeping, which change no statement.
 \begin{enumerate}[leftmargin=1.6em,itemsep=1pt]
   \item \emph{Related work.} A paragraph on the wider literature (selection consistency, Markov chain Monte Carlo for
     variable selection, sequential Monte Carlo on binary spaces) awaits the owner's reference list.
   \item \emph{The leakage set of Example~\ref{ex:leak}.} The example calls predictor $5$ a leaked predictor; which set $Q$
-    satisfies Assumption~\ref{asm:reported} for that example is a question for the Theory Department.
-  \item \emph{The approximate-Gram condition} (Theory): it is a condition of the fixed-design branch of an earlier uniform
-    result, not met by random designs with $p$ growing fast; whether it must appear in a supplement statement whose checked
-    version does not carry it is open. It is not an assumption our designs must meet.
-  \item \emph{Song--Liang comparison notes} (Theory): small slips in the Theory Department's comparison note (a page number
-    and a quotation) were reported on 2026-11-16; this document cites the paper directly.
+    satisfies Assumption~\ref{asm:reported} for that example has not been worked out.
   \item \emph{The trap theorem} (Section~\ref{sec:plan-trap}): which design family, and which of our results is meant by
     ``our consistency on the same design''?
   \item \emph{``Coverage at $p=10^7$''} (Section~\ref{sec:plan-1e7}): the hypotheses of the theorems at $n=200$,
     $p=10^7$, or the claims a single fit can support?
-  \item \emph{Checks of the parallel engine} (Section~\ref{sec:supp-1m}): the engineering specification lists an exact
-    level ($p\le25$) and a $p=5{,}000$ anchor against the unmodified method, and offered a run of the method at $p=10^5$.
-    No read-back of any of the three was found. Unless Engineering confirms otherwise, this edition says that the engine was
-    checked against the method at $p=10^4$ only.
-  \item \emph{Wording of Table~\ref{tab:engine}}: please confirm that the evidence estimate from the top stored models
-    carries ``no theorem'', and that resampling is unchanged from the method.
-  \item \emph{Registry housekeeping} (no effect on any statement): about twenty rows still read ``conditional on'' a
-    posterior-concentration input that is itself plain proved and checked; the row of the frozen-run evidence result
-    (adopted by the owner on 2026-11-18) still reads ``not adopted''; the two sampler results whose line checks were
-    recorded keep their pre-check status strings; several notes carry a wrong date (2026-11-23 for 11-17), corrected so
-    far only for the visibility rows; the code-checked rows await their re-pin to the final method tag.
 \end{enumerate}

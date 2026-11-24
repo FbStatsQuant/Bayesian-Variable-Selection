@@ -23,7 +23,7 @@ $\Acal$ & the method uses the sampler and its calibration succeeds & \S\ref{sec:
 $\varphi_0,g_0,\bar\theta,C_\beta$; $\varphi$; $b_{\mathrm{lo}},b_{\mathrm{hi}}$ & constants of the fixed-design assumptions; population floor; bounds on raw coefficients & \S\ref{sec:results} \\
 $c_0(\sz,A)$, $c_1(\sz,A)$, $C_{\mathrm E}$ & beta-min and margin constants; rate constant & App.~\ref{app:constants} \\
 $\Dn$, $\Pi(\cdot\mid\Dn)$, $\P^*$, $\zeta$, $d_H$, $M$, $q_n$ & data, posterior and law of Result~2; standardised predictors; Hellinger distance; level; window & \S\ref{sec:distribution} \\
-$\Cov(\cdot,\cdot\mid W_U)$, $\bar\beta_{U,l}$; $Q$, $\Lat(Q)$, $\Hl_l$ & partial covariance; population regression coefficient; leakage set; its lattice; locality sets & \S\ref{sec:reported} \\
+$\Cov(\cdot,\cdot\mid W_U)$, $\bar\beta_{U,l}$; $Q$, $\Lat(Q)$, $\Hl_l$ & partial covariance; population regression coefficient; leakage set; its lattice; locality sets & \S\ref{sec:a-rm} \\
 $\mathcal G_n$; $\rho_n$ & data event of Result~3; rate of Remark~\ref{thm:outputs} & \S\ref{sec:reported}, \S\ref{sec:outputs} \\
 \bottomrule
 \end{longtable}}
@@ -127,6 +127,35 @@ unavailable. Three cases end instead with an error and return nothing: an invali
 fixed integer limit of Table~\ref{tab:params-full} (the first is detected after the calibration, the second during the final
 run).
 
+
+\subsection{The parallel engine, change by change}\label{app:engine}
+
+\begin{table}[ht]
+\centering\small
+\caption{The parallel engine of Section~\ref{sec:supp-1m} against the method of Section~\ref{sec:algorithm}. Every row is an engineering change; no
+theorem covers it.}\label{tab:engine}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.17\linewidth}>{\raggedright\arraybackslash}p{0.3\linewidth}>{\raggedright\arraybackslash}p{0.47\linewidth}@{}}
+\toprule
+ & Method (theorems) & Engine (frozen) \\
+\midrule
+islands & four, pooled with equal weights & sixteen separate processes, merged: union of stores, equal-weight inclusion
+probabilities, plain mean of $\Zhat_r$, final local search on the merged store \\
+particles per island & $4^i\max(2500,n,p)$, two tiers & fixed; $2{,}500$ (and $10^4$ at $p=10^5$) \\
+calibration & pilot, at most $\ell_n$ rebuilds, at most one move to tier~1 & pilot only ($I_{\max}=0$); no tier move; after
+a failed construction, the last grid or the pilot schedule \\
+grid & as calibrated & not refined ($m=1$) \\
+blocks & at most $B$ predictors & the same clustering, truncated at a correlation threshold; at most $\min(B,14)$ \\
+random numbers & fourteen seeded streams & addressed by position (counter-based): the result does not depend on the number
+of threads \\
+scoring & the coded scorer & a batched kernel with different floating-point arithmetic (about $10^{-9}$ relative), on a fixed
+instruction set; every accepted model is re-scored by the exact scorer; inclusion probabilities summed in exact fixed point \\
+stores & score cache; candidate stores of $20p$; list of $40p+1$ & no cache and no $20p$ stores; each island keeps its
+$40p+1$ best models, offered only above the calibration floor \\
+extra outputs & --- & a deterministic lower bound on $\log Z$ from the stored models; inclusion probabilities and a
+predictive law from the stored models; an evidence estimate from the top stored models (no theorem) \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Conventions in full}\label{app:conventions}
 
@@ -278,6 +307,33 @@ the code must be proved, not argued. The prior facts, Lemma~\ref{lem:summaries} 
 independently checked, and the output description used by Remark~\ref{cor:dist-output} is checked against the code.
 The probabilistic events of the proof of Theorem~\ref{thm:reported} are proved and independently checked, and so are the
 ten code-level premises the audit named; one further premise, used only by Remark~\ref{rem:alt-route}, stays open.
+
+\subsection*{Further open questions (no effect on any statement)}\label{app:status-open}\phantomsection
+\begin{enumerate}[leftmargin=1.6em,itemsep=1pt]
+  \item \emph{The approximate-Gram condition}: it is a condition of the fixed-design branch of an earlier uniform result,
+    not met by random designs with $p$ growing fast; whether it must appear in a supplement statement whose checked version
+    does not carry it is open. It is not an assumption our designs must meet.
+  \item \emph{Song--Liang comparison notes}: small slips in the theory side's comparison note (a page number and a
+    quotation) were reported on 2026-11-16; this document cites the paper directly.
+  \item \emph{Checks of the parallel engine} (Section~\ref{sec:supp-1m}): the engineering specification lists an exact
+    level ($p\le25$) and a $p=5{,}000$ anchor against the unmodified method, and offered a run of the method at $p=10^5$.
+    No read-back of any of the three was found. Unless Engineering confirms otherwise, this edition says that the engine was
+    checked against the method at $p=10^4$ only. Please also confirm the wording of Table~\ref{tab:engine}: that the
+    evidence estimate from the top stored models carries ``no theorem'', and that resampling is unchanged from the method.
+  \item \emph{Registry housekeeping}: about twenty rows still read ``conditional on'' a posterior-concentration input that
+    is itself plain proved and checked; the row of the frozen-run evidence result (adopted by the owner on 2026-11-18)
+    still reads ``not adopted''; the two sampler results whose line checks were recorded keep their pre-check status
+    strings; several notes carry a wrong date (2026-11-23 for 11-17), corrected so far only for the visibility rows; the
+    code-checked rows await their re-pin to the final method tag.
+\end{enumerate}
+
+\paragraph{Possible strengthenings} (listed after the freeze; none started): a matching lower bound for the expected
+posterior miss on every design with an eigenvalue floor (one step unverified); a design-free sufficient condition that
+would make ``no eigenvalue condition off the true model'' literally true; a bounded ridge cost in place of the floor on the
+true model; a lower constant in the posterior concentration result, which would let one missed-signal result cover another;
+a sharper distribution result (a $\log(p\vee n)$ rate with explicit constants, and linear dependence on $\sz$); sharper
+sampler results (a truth-free form, and rates under weaker overlap); and a screening corollary with an exponential rate and
+no fixed signals.
 
 \section{Where the sources and the code disagree (internal; removed for submission)}\label{app:disagree}
 Checked against the code by an independent reader (2026-11-16). In each case this text follows the code.

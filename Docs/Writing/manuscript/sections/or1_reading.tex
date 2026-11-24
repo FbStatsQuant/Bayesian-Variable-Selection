@@ -11,12 +11,12 @@ order.
     theorems cover (Table~\ref{tab:coverage}), and, separately, the parallel engine built for $p=10^6$, which no theorem
     covers.
   \item \emph{The assumptions} (Section~\ref{sec:assumptions}): one table of verdicts (Table~\ref{tab:a-summary}), then one
-    entry per assumption with five parts: (a) the statement, (b) its meaning in words, (c) what it rules out, (d) whether it
-    is reasonable for real designs, and (e) how it compares with the conditions of \citet{SongLiang2015}, the split-and-merge
-    paper.
+    entry per assumption with five parts: the statement, its meaning in words, what it rules out, whether it is reasonable
+    for real designs, and how it compares with the conditions of \citet{SongLiang2015}, the split-and-merge paper.
   \item \emph{The proved results} (Section~\ref{sec:proved}), the main ones first. Each comes in words, then as a formal
-    statement, then with a grey status box quoting the project's registry, a paragraph on why it is natural, and a
-    comparison with \citet{SongLiang2015}.
+    statement, then with a grey status box quoting the project's registry (its list of statements and their review
+    status), a paragraph on why it is natural, and a comparison with \citet{SongLiang2015}. Result~$k$ is Theorem~$k$
+    (Result~5 is Proposition~5).
   \item \emph{The planned results} (Section~\ref{sec:planned}), each marked \textsf{PLANNED}: nothing there is claimed.
   \item \emph{The statuses} (Section~\ref{sec:statuses}): what changed in the registry since the theory freeze of
     2026-11-17, and the open questions.
@@ -37,11 +37,17 @@ probability model and an evidence estimate.
 
 \paragraph{What is proved.} Table~\ref{tab:results} lists the six proved results in words. In short: the posterior
 concentrates on the true model and on the true law of the response at the rate $\rn$, which cannot be improved; for
-block and AR designs every run reports exactly the true model; a certified small model rarely misses a true predictor; and
+block and autoregressive (AR(1)) designs whose true coefficients do not cancel, with probability tending to one every run
+reports exactly the true model; a certified small model rarely misses a true predictor; and
 the evidence estimate is unbiased. All results are asymptotic in $n$, with $p$ at most polynomial in $n$.
 
 \paragraph{What is not claimed.} No theorem covers the parallel engine used at $p=10^6$, more than four islands, or a run
-that stops early. Statements about a run's estimates concern the event that its calibration succeeds, or that the run
-completes; no lower bound on the probability of that event is claimed, except that under Convention~\as{C2p} every run
-produces output. The consistency of the pooled inclusion probabilities and evidence estimate is proved only on designs
-without leakage (supplement, Remark~\ref{thm:outputs}).
+that stops early. Results about a run's estimates hold on the event that the run's calibration succeeds (or that the run
+completes). We do not bound the probability of that event. The one exception: on an idealised computer
+(Convention~\as{C2p}, Section~\ref{sec:conventions}) every run produces output.
+
+The consistency of the pooled inclusion probabilities, their median model and the evidence estimate is proved only on
+designs \emph{without leakage}, where no null predictor is correlated with a true one at a fixed level (supplement,
+Remark~\ref{thm:outputs}). Among our designs that means only the independent ones (S1 and IND): no correlated design,
+including the autoregressive design of the $p=10^6$ plan, has a consistency guarantee for these estimates. The reported
+model (Result~3) and the evidence's unbiasedness (Result~5) do not need this condition.

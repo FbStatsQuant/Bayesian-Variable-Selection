@@ -40,16 +40,17 @@ posterior $\pi(\cdot\mid y)$ & $0.042$ & $\mathbf{0.688}$ & $0.118$ & $0.051$ & 
 Within its own block, predictor $5$ explains much of $y$ because it carries part of predictor $1$'s signal, and the
 start law cannot see that predictor $1$, in another block, already explains it: predictor $5$ leaks, and the start mode is
 $\{1,3,5\}$. The proxy $2$, in predictor $1$'s own block, is handled correctly. The posterior puts $0.69$ on $\{1,3\}$, and
-the local search from the start mode makes one move, deleting $5$, and stops at $\{1,3\}$, which has no improving neighbour. Result~3 proves this picture
-in general: the start mode contains the true model and possibly some predictors that enter it wrongly (here
-predictor~$5$), all members of a small \emph{leakage set} (Section~\ref{sec:reported}), and the search deletes them. (Computed with an independent re-implementation of the coded score,
+the local search from the start mode makes one move, deleting $5$, and stops at $\{1,3\}$, which has no improving
+neighbour. The example only illustrates the mechanism. Result~3 shows that, asymptotically and under its assumptions, this
+is what happens in general: the start mode contains the true model and possibly some predictors that enter it wrongly
+(here predictor~$5$), all members of a small \emph{leakage set} (Section~\ref{sec:a-rm}), and the search deletes them. (Computed with an independent re-implementation of the coded score,
 start law and search on this data set; with six predictors the software itself would enumerate all $64$ models.)
 \end{example}
 
 \subsection{The algorithm, step by step}\label{sec:algorithm}
 
 A run has seven stages (Figure~\ref{fig:pipeline}). A \emph{step} is one move of the sampler from one temperature to the
-next.
+next (the temperatures $\xi$ are defined at stages 4 and 5; $\pi_1$ is the posterior).
 
 \begin{figure}[ht]
 \centering
@@ -76,8 +77,9 @@ second local search starts from the start mode and does not depend on the partic
 \end{figure}
 
 \paragraph{Stage 1: inputs, the exact case and the check before the run.} Invalid inputs stop the run with no model; a constant response, or no retained predictor, stops it with the empty
-model and no estimates. With $N_0:=\max(2500,n,p)$ and $\Nc_0:=\lceil512N_0/2500\rceil$, if $\abs{\Om}\le(5\Nc_0+4N_0)\,p$ the method scores every model
-and computes everything exactly. Otherwise it estimates the memory the run will need and the worst-case time of the local search from the start
+model and no estimates. If the model space is small, at most $(5\Nc_0+4N_0)\,p$ models with $N_0:=\max(2500,n,p)$ and
+$\Nc_0:=\lceil512N_0/2500\rceil$ (Appendix~\ref{app:params}), the method scores every model and computes everything
+exactly. Otherwise it estimates the memory the run will need and the worst-case time of the local search from the start
 mode, and stops with status \texttt{resource\_limit} if the
 estimate exceeds the allocation (8\,GiB and 24 hours by default).
 
@@ -97,7 +99,7 @@ at most $2^{16}$ subsets. It also builds a \emph{neighbour graph} of correlated 
 the posterior one would have if the marginal likelihood, relative to the empty model, split into independent block
 contributions. It sees every interaction within a block and none between blocks. A recursion over model sizes, combining
 the blocks one at a time, computes $\bar Z_0$ exactly and gives an exact sampler for $\pi_0$ (draw the total size, then
-the size of each block backwards, then a subset of each block). The \emph{start mode} $\tSz$ is a maximiser of $\pi_0$,
+the size of each block, from the last block to the first, then a subset of each block). The \emph{start mode} $\tSz$ is a maximiser of $\pi_0$,
 computed by the same recursion with maxima: the smallest size among the maximisers, then the lexicographically smallest
 set. The posterior and the start law differ by the \emph{discrepancy}
 $\Delta(S):=\log\{m(S)/m(\emptyset)\}-\sum_k\log h_k(S\cap C_k)$, the part of the log marginal likelihood that comes from
@@ -122,8 +124,8 @@ $\Zhat_r:=m(\emptyset)\,\bar Z_0\prod_{t=1}^{\Ts}\{N^{-1}\sum_v\omega^{(t)}_v\}$
 the product of the average reweighting factors.
 
 The \emph{calibration} (stage 4) chooses the grid and the effort before the final run, from one pilot island and a few
-rounds of four short diagnostic islands; the grid refines the pilot's temperatures so that each step keeps an
-effective-sample-size fraction, computed on a set of candidate models, of at least $0.90$. The calibration starts at
+rounds of four short diagnostic islands; the grid is chosen so that each step keeps at least $90\%$ effective sample
+size, computed on a set of candidate models. The calibration starts at
 tier $i=0$ and moves at most once to tier $i=1$, which multiplies all particle numbers by four, when one of its
 diagnostics fires (Appendix~\ref{sec:supp-cal} gives the full procedure). Three facts are all that the results use: the calibration's outcome is a function of the data and of its own
 random numbers; it is \emph{frozen} before the final run draws any random number; and it \emph{succeeds} when it freezes a
@@ -134,16 +136,17 @@ its own random stream.
 \paragraph{Stage 6: the local searches.} Two models are \emph{neighbours} if one comes from the other by deleting a
 predictor, adding one (while the size is below $K$), or swapping a member for a non-member. A local search scans every
 neighbour of the current model and moves to the best one (ties broken lexicographically) if its log score is strictly
-higher, for at most a capped number of moves. It stops at the first scan with no strict improvement and \emph{certifies}
-its end point; after its last allowed move it scans once more, and if a neighbour still improves it stops there,
-uncertified. Two searches run after the islands: from the best model found so far, with move cap
+higher, for at most a capped number of moves. If a scan finds no strictly better neighbour, the search stops and its end
+point is \emph{certified} (a local optimum). If it uses up its move cap first, it scans once more: the end point is
+certified if that scan finds no improvement, and uncertified otherwise. Two searches run after the islands: from the best model found so far, with move cap
 $\ell_n:=\lceil\log_2(n+p+1)\rceil$; and from the start mode $\tSz$, with move cap $\ell_n+\abs{\tSz}$.
 
 \subsection{What a run reports}\label{sec:outputs-method}
 
-A run either \emph{produces output}, with status ``exact'' (enumeration) or ``completed'' (sampler; a \emph{completed
-run}), or stops without estimates (a run stopped by its time guard is one; anything else it returns is flagged
-incomplete, and the results do not cover it). The method records every model
+A run ends in one of three ways: \emph{exact} ($\Om$ was enumerated), \emph{completed} (the sampler ran to the end; a
+\emph{completed run}), or \emph{stopped} (for example by the resource guard, which stops a run whose time or memory would
+exceed its allocation). The first two \emph{produce output}. A stopped run reports no estimates; any partial output is
+flagged incomplete, and no result covers it. The method records every model
 it scores; the \emph{reported model} $\Shat$ is the best of them by log score (exact ties to the smaller model, then
 lexicographically). It is \emph{certified} when the method enumerated $\Om$, or when $\Shat$ ends a local search whose last
 scan found no strict improvement. An exact run reports $\Shat$, every $\PIP_j$, the median probability model and $\log Z$.
@@ -171,7 +174,8 @@ Section~\ref{sec:posterior}, and the theorems of Section~\ref{sec:proved} say wh
     the model that is optimal for prediction under conditions of \citet{BarbieriBerger2004}.
   \item \emph{The evidence $\log\Zhat$} estimates $\log Z$, the marginal probability of the data under the whole prior;
     it is what one compares across priors or data sets. Given the calibration, $\Zhat$ is unbiased for $Z$
-    (Result~5), so by Markov's inequality $\log(0.05\,\Zhat)$ exceeds $\log Z$, jointly with completion, with probability at most $0.05$.
+    (Result~5), so, by Markov's inequality, the probability that the run completes and still reports a lower bound
+    $\log(0.05\,\Zhat)$ above $\log Z$ is at most $0.05$.
   \item \emph{The returned list $\mathcal T$} holds the best models scored, with their exact log scores; renormalising
     the posterior to it gives a second set of estimates (supplement, Corollary~\ref{cor:list}).
 \end{itemize}
@@ -194,15 +198,15 @@ robust, that no theorem depends on, and that could be changed without touching a
 Part & What the theorems use & Engineering only \\
 \midrule
 model, priors, posterior & everything: Results 1, 2 and 6 are about this posterior & --- \\
-stage 1 & the exact case (Results 3, 4 and Corollary~\ref{cor:list} include it) & the check before the run and the time
-guard (the theorems assume enough memory and time, Convention~\as{C2p}) \\
+stage 1 & the exact case (Results 3, 4 and Corollary~\ref{cor:list} include it) & the check before the run and the
+resource guard (the theorems assume enough memory and time, Convention~\as{C2p}) \\
 stage 2, blocks & blocks of at most $16$ predictors, a deterministic function of $X$ (Result~3) & the clustering rule;
 the neighbour graph \\
 stage 3, start law & the start law and its mode (Result~3) & --- \\
 stage 4, calibration & only that it is frozen before the final run and either succeeds or stops the run; Result~3 holds for
 every outcome & every rule inside it: the effective-sample-size target, tiers, triggers, rebuilds, fallback \\
-stage 5, islands & each island's evidence estimate (Result~5); inclusion probabilities only on designs without leakage
-(supplement, Remark~\ref{thm:outputs}) & particle numbers, burn-in, the mix of moves; Result~3 does not need the
+stage 5, islands & each island's evidence estimate (Result~5); inclusion probabilities only on designs without leakage,
+the independent ones (supplement, Remark~\ref{thm:outputs}) & particle numbers, burn-in, the mix of moves; Result~3 does not need the
 particles to mix \\
 stage 6, local searches & the search from the start mode (Result~3) and certification (Result~4), with their move caps & --- \\
 outputs & $\Shat$ (Results 3, 4), $\Zhat$ (Result 5), the list (Corollary~\ref{cor:list}) & the diagnostics; the
@@ -225,44 +229,19 @@ its configuration was frozen on 2026-11-19 (code tag \code{p1m-freeze-F2}, on to
 ways listed in Table~\ref{tab:engine}, and none of the theorems above has been proved for it. Its runs are reported
 elsewhere; this edition quotes no result from them.
 
-\paragraph{The frozen configuration.} $R'=16$ islands, separate processes that do not communicate, merged as the
-method pools its four; $N=2{,}500$ particles per island ($10^4$ for the runs at $p=10^5$; a planned $10^6$ fit with $N=10^4$
-was never run); calibration by the pilot only ($I_{\max}=0$, set in every run plan; the binary's default is $3$); no grid
-refinement ($m=1$); no move to the larger tier; the method's multinomial resampling kept. Table~\ref{tab:engine} lists
-every change.
-
-\begin{table}[ht]
-\centering\small
-\caption{The parallel engine against the method of Section~\ref{sec:algorithm}. Every row is an engineering change; no
-theorem covers it.}\label{tab:engine}
-\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.17\linewidth}>{\raggedright\arraybackslash}p{0.3\linewidth}>{\raggedright\arraybackslash}p{0.47\linewidth}@{}}
-\toprule
- & Method (theorems) & Engine (frozen) \\
-\midrule
-islands & four, pooled with equal weights & sixteen separate processes, merged: union of stores, equal-weight inclusion
-probabilities, plain mean of $\Zhat_r$, final local search on the merged store \\
-particles per island & $4^i\max(2500,n,p)$, two tiers & fixed; $2{,}500$ (and $10^4$ at $p=10^5$) \\
-calibration & pilot, at most $\ell_n$ rebuilds, at most one move to tier~1 & pilot only ($I_{\max}=0$); no tier move; after
-a failed construction, the last grid or the pilot schedule \\
-grid & as calibrated & not refined ($m=1$) \\
-blocks & at most $B$ predictors & the same clustering, truncated at a correlation threshold; at most $\min(B,14)$ \\
-random numbers & fourteen seeded streams & addressed by position (counter-based): the result does not depend on the number
-of threads \\
-scoring & the coded scorer & a batched kernel with different floating-point arithmetic (about $10^{-9}$ relative), on a fixed
-instruction set; every accepted model is re-scored by the exact scorer; inclusion probabilities summed in exact fixed point \\
-stores & score cache; candidate stores of $20p$; list of $40p+1$ & no cache and no $20p$ stores; each island keeps its
-$40p+1$ best models, offered only above the calibration floor \\
-extra outputs & --- & a deterministic lower bound on $\log Z$ from the stored models; inclusion probabilities and a
-predictive law from the stored models; an evidence estimate from the top stored models (no theorem) \\
-\bottomrule
-\end{tabular}
-\end{table}
+\paragraph{The frozen configuration.} It runs $R'=16$ islands as separate processes that do not communicate, merged as
+the method pools its four. Each island has a fixed $N=2{,}500$ particles ($10^4$ for the runs at $p=10^5$; a planned
+$10^6$ fit with $N=10^4$ was never run). The calibration is the pilot alone: no rebuilds ($I_{\max}=0$, the number of
+rebuild rounds, set in every run plan; the program's default is $3$), no refinement of the pilot's grid ($m=1$, the
+setting \code{refine_m}), and no move to the larger tier. The method's multinomial resampling is kept. Appendix
+Table~\ref{tab:engine} lists every change against the method.
 
 \paragraph{How it was checked against the method.} Only at $p=10^4$: ten simulated data sets, two seeds each, run with both
 the method and the engine (40 fits), scored against criteria declared before any fit (same best model, same median
 probability model, inclusion probabilities and evidence within their Monte Carlo error, predictive laws close, cost).
-The verdict was \emph{clean}, under the scoring script as amended before scoring (the registered script printed a weaker
-verdict because of a defect that an independent review identified); a re-score with $I_{\max}=0$ was also clean. There was
+The engine matched the method on all of them, under the scoring script as corrected before scoring (an independent
+review had found a defect in the registered script, which printed a weaker verdict); a re-score with $I_{\max}=0$ also
+matched. There was
 no run of the method at $p=10^5$ or $10^6$; there the engine was judged only by its own pre-declared precision, cost,
 memory and restart criteria. Whether a parallel engine that reproduces the method's output inherits its guarantees, and
 what more islands and a fixed particle number do to them, are open (Section~\ref{sec:planned}).

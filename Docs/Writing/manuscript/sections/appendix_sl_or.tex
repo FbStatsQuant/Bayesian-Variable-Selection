@@ -1,0 +1,39 @@
+\section{The comparison with Song and Liang in detail}\label{app:sl}
+
+Section~\ref{sec:assumptions} gives a one-line verdict for each assumption; this appendix gives the argument for the
+entries where it takes more than a line. Page numbers are those of \citet{SongLiang2015}; ``supp.\ p.'' is a page of their
+online supplement.
+
+\paragraph{\lab{DIM}.} \emph{Mixed.} At the top ours is \emph{stronger}: their Corollary~1 allows $P_n<\exp(Cn^\alpha)$ (p.~954), and their
+Theorem~S allows slightly more than polynomial growth (Corollary~S$_1$, $P_n<n^{\kappa\log n}$, supp.\ p.~16). At the
+bottom ours is \emph{weaker}: it allows bounded $p$, while they assume $P_n\succ n^\theta$ (p.~950) and their
+theorems force $P_n\to\infty$ (their (13), $r_n\prec P_n$ with $r_n\ge1$, p.~952).
+
+\paragraph{\lab{SGR}, \lab{GR}.} \emph{Stronger} than their Condition~1 (p.~953) on centred, unit-variance predictors, in the regime where their
+model-size cap $\bar r_n$ is within our window (of order $\log n$): ours then implies theirs. Their Condition~1 constrains
+combinations of up to $\bar r_n$ predictors, and their Corollary~1 allows $\bar r_n$ beyond any multiple of $\log n$
+(p.~954); there neither implies the other, except for Gaussian rows, which satisfy both. Against their bounded predictors
+$\abs{x_i}\le1$ (Theorem~1, p.~952), neither implies the other.
+
+\paragraph{\lab{EFS}.} \emph{Mixed}; it depends on the size of the sets each constrains. Their Condition~3 (p.~955, for Gaussian
+predictors) asks only a vanishing floor; their (22)--(23) (supp.\ p.~13) are floors on the realised design.
+\begin{itemize}[leftmargin=1.5em,itemsep=0pt,topsep=1pt]
+  \item \emph{Fixed design} (our sets have fixed size): ours is \emph{stronger} than the conditions of their Theorems~1
+    and~S; it is not comparable with those of their Theorems~2--3, which take $r_n\to\infty$ (p.~953).
+  \item \emph{Random rows} (our sets grow like $\log n$): ours is \emph{stronger} when $\bar r_n\lesssim\log n$, and not
+    comparable otherwise. Against (22)--(23) this needs the floor to carry over to the sample with the probability their
+    relaxed form (26) allows (supp.\ p.~15).
+\end{itemize}
+
+\paragraph{Assumption~\ref{asm:dist}.} Items (a)--(c) and (e) compare as \as{GL}, \as{DIM}, \as{SP}, \as{SGR} and the signal bounds above. Item (d) is
+\emph{stronger} than their Theorems~1--2, which have no such condition, and not comparable with their other conditions:
+their Condition~3 (p.~955) keeps one true predictor from being imitated by others and puts no floor on sets of null
+predictors (two duplicated null columns satisfy it and violate ours), and their (22) (supp.\ p.~13) is a floor, at a higher
+level, on the realised design rather than on the population correlation. Our floor, $c_\psi/n$ on the correlation scale, is of the same order as the ridge $c_n\propto1/n$ they use
+(p.~953).
+
+\paragraph{Assumption~\ref{asm:reported}.} \emph{None.} \SL{} have no hypothesis of this kind. The nearest text is their informal remark~(a), p.~958 (``if there
+are $p_n$ predictors correlated with the true predictor $X_t$, $p_n\prec P_n$, then there are at most $cp_n$ predictors to
+be selected''), which is not a condition of any of their theorems; their results on their sampler's output carry no design
+condition of this kind (supp.\ pp.~9--10, 12--13, 16--17). The floor~(b) compares as \as{EFS}; the local regressions~(c)
+have no counterpart (they serve the method's local search, which \SL{} do not analyse).

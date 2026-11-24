@@ -8,14 +8,17 @@ Paths are relative to `/home/fb31/BVS-wt/WRITING`. Scratch goes in `.rc_tmp/` on
 ## The document
 The owner-review edition is `Docs/Writing/manuscript/owner_review.tex`. Its sections are in `Docs/Writing/manuscript/sections/`:
 - `or1_reading`, `or3_model`, `or4_sampler`, `or5_assumptions`, `or6_theorems`, `or7_planned`, `or8_status`;
-- `supplement_or`, `supp_index`, `appendices_or`.
+- `supplement_or`, `supp_index`, `appendices_or`, `appendix_sl_or` (the long Song–Liang comparisons, moved out of §5).
 
 A frozen copy of the text you read is in `.rc_tmp/a6/sol_snapshot/`. The compiled PDF is
 `Docs/Writing/manuscript/owner_review.pdf`.
 
 It is an edition of the checked manuscript (`Docs/Writing/manuscript/sections/s3_method.tex`, `s4_results.tex`,
 `s5_assumptions.tex`, `supplement.tex`). Those files passed earlier fidelity reads (A5 final). This edition copies their
-statements and rewrites the prose around them.
+statements and rewrites the prose around them. Deliberate changes in this edition, not findings in themselves: Results 1–6
+use their own counter (`mainthm`/`mainprop`, so Result k is Theorem k); in Assumption 4(a)(ii) the checked text's `r_n`
+is renamed `\delta_n` (it clashed with Song–Liang's `r_n`); a few "In words" and "Why it is natural" paragraphs were
+rewritten for clarity (check that they still say no more than the statements).
 
 ## Scope (only these four things)
 - **A. Theorem statements.** Read every formal statement in `or6_theorems.tex`: Results 1–6, the environments `theorem`,
@@ -35,7 +38,7 @@ statements and rewrites the prose around them.
     a date or count that is wrong.
 - **C. Song & Liang sentences.** Check every sentence that cites \SL{} or `SongLiang2015`, in `or3_model.tex`
   (`Compared with \SL`), `or5_assumptions.tex` (all `\Asl{}` parts and Table `tab:a-summary`'s last column),
-  `or6_theorems.tex` (`\vssl{}`) and `supplement_or.tex`.
+  `or6_theorems.tex` (`\vssl{}`), `supplement_or.tex` and `appendix_sl_or.tex`.
   - Compare them with the PDFs: `.rc_tmp/a2_sources/Song_Liang_2015.pdf` (journal page = PDF page + 946) and
     `Song_Liang_2015_supplement.pdf`.
   - The helper catalogue `.rc_tmp/a6/sol_src/H3_songliang.md` lists their conditions with pages and flags (F1–F9). Its
@@ -43,7 +46,7 @@ statements and rewrites the prose around them.
 - **D. Parameters against the code.**
   - **Model and prior.** Check Table `tab:prior` (`or3_model.tex`) and the defaults in the text of `or3_model.tex` and
     `or4_sampler.tex` (the stage descriptions) against `Scripts/SMC_BVS/core/` in this worktree.
-  - **The 1M engine.** Check Table `tab:engine` and §"The parallel engine" in `or4_sampler.tex` against:
+  - **The 1M engine.** Check Table `tab:engine` (now in `appendices_or.tex`, §"The parallel engine, change by change") and §"The parallel engine" in `or4_sampler.tex` against:
     - the frozen engine files `.rc_tmp/a6/sol_src/f2/` (`CAMPAIGN_FREEZE.md`, `calib.h`, `setup.h`, from tag
       `p1m-freeze-F2`);
     - the P1M documents `.rc_tmp/a6/sol_src/p1m/` (`DECISIONS.md`, `ENGINEERING_SPEC.md`, `GC_PREREG.md`, the
