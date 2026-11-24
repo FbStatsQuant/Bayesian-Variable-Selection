@@ -238,6 +238,41 @@ The table above is the freeze state. Section~\ref{sec:status-diff} lists every c
     remark.
 \end{enumerate}
 
+\subsection*{Registry changes since the freeze, verbatim}\label{app:status-verbatim}\phantomsection
+Registry \texttt{claims.tsv}, tag \texttt{theory-v2026-11-freeze} (d40c9780) against main (0f362503, 2026-11-23). Status
+strings are quoted up to the council cell (the part after the first semicolon, giving the council round, manifest and
+scores, is omitted). Rows that changed only by a version bump, re-freeze or re-quote are not listed.
+
+\paragraph{Rows added (12).}
+{\footnotesize\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.1\linewidth}>{\raggedright\arraybackslash}p{0.35\linewidth}>{\raggedright\arraybackslash}p{0.22\linewidth}@{}}
+\toprule Row & Date & Status on main & Used by \\ \midrule
+\texttt{W3-AUDIT-AW:ISL, :FRZ} & 11-17 & \texttt{PROVED-CHECKED} & line checks of the two sampler results \\
+\texttt{W3-D2:Thm2X, :Cor2X} & 11-17 & \texttt{PROVED-CHECKED, conditional on W2-APP:POST, C-MIS:GDb, C-MIS:Prop-P} & Remark \ref{rem:thm2x} \\
+\texttt{W3-D3:Thm2SG, :B3w, :ExSG} & 11-17 & \texttt{PROVED-CHECKED} & Result 1, sub-Gaussian form \\
+\texttt{W3-AUDIT-V:VIS} & 11-17 (re-pointed 11-18) & \texttt{PROVED-CHECKED} & Remark \ref{rem:vis} \\
+\texttt{W3-FAMC:Cor-FAMC} & 11-17 & \texttt{PROVED-CHECKED} & Corollary \ref{cor:famc} \\
+\texttt{W3-D5P:LIST-K, :LIST-R} & 11-18 & \texttt{PROVED-CHECKED} & Corollary \ref{cor:list} \\
+\texttt{W3-D5P:LIST-CODE} & 11-18 & \texttt{CODE-CHECKED (code reading at core 4676af6)} & Corollary \ref{cor:list} \\
+\bottomrule\end{longtable}}
+
+\paragraph{Status strings changed (23 rows).}
+{\footnotesize\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.22\linewidth}>{\raggedright\arraybackslash}p{0.07\linewidth}>{\raggedright\arraybackslash}p{0.35\linewidth}>{\raggedright\arraybackslash}p{0.3\linewidth}@{}}
+\toprule Row(s) & Date & At the tag & On main \\ \midrule
+\texttt{W3-SAMP:MR, :LT\#, :C; W3-READER:R4} & 11-17 & \texttt{PROVED-CHECKED, conditional on W1-N1:B, W1-N1:F} & \texttt{PROVED-CHECKED} \\
+\texttt{W3-SAMP:D; W3-AUDIT-A:OVL} & 11-17 & \texttt{PROVED-CHECKED, conditional on W1-N1:B} & \texttt{PROVED-CHECKED} \\
+\texttt{W3-DIST:DIST-C, :Cor-C} & 11-17 & \texttt{PROVED-CHECKED, conditional on W1-N1:B, W1-N1:F, EX-A (exact arithmetic)} & \texttt{PROVED-CHECKED, conditional on EX-A (exact arithmetic)} \\
+\texttt{W3-POST:Prop-LB} & 11-17 & \texttt{PROVED (by this seat, unchecked)} & \texttt{PROVED-CHECKED} \\
+\texttt{W3-POST2:C} & 11-17 & \texttt{PROVED-CHECKED, conditional on W3-POST:Prop-LB, W2-APP:POST} & \texttt{PROVED-CHECKED, conditional on W2-APP:POST} \\
+\texttt{W3-MISR-R:CorGb-plus} & 11-17 & \texttt{PROVED-CHECKED, conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1, W3-POST2:A0, C-MIS:GDb, C-MIS:Prop-P} & \texttt{PROVED-CHECKED, conditional on W2-APP:POST, C-MIS:GDb, C-MIS:Prop-P} \\
+\texttt{W3-MISR-R:CorH-U} & 11-17 & \texttt{PROVED-CHECKED, conditional on W3-POST2:D, W3-POST2:C, W3-POST2:A0, C-MIS:Prop-P; clause (G) also conditional on W3-POST2:E, W3-POST2:A1, C-MIS:GDb} & \texttt{PROVED-CHECKED, conditional on W2-APP:POST, C-MIS:Prop-P; clause (G) also conditional on C-MIS:GDb} \\
+\texttt{W3-MISR:MIS(i), :MIS(i'), :MIS(ii), :Cor-H; W3-MISR-R:CorH-plus} & 11-17 & \texttt{PROVED-CHECKED, conditional on (subsets of) W3-POST2:C, :D, :E, :A1} & \texttt{PROVED-CHECKED, conditional on W2-APP:POST} \\
+\texttt{W3-MISR:Cor-G(b)} & 11-17 & \texttt{PROVED-CHECKED, conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1, W3-POST2:A0, C-MIS:Prop-P, C-MIS:GDb} & \texttt{PROVED-CHECKED, conditional on W2-APP:POST, C-MIS:Prop-P, C-MIS:GDb} \\
+\texttt{W2-LOC2:Lemma-BC, :Lemma-IR} & 11-17 & \texttt{PROVED (by this seat, unchecked)} & \texttt{PROVED-CHECKED} \\
+\texttt{W3-RM2:Ex-PolyR} & 11-17 & \texttt{PROVED; line-checked LC2-C; Astra seat ACCEPT; not examined by the Opus seat --- next council round; conditional on W2-APP:POST, W2-LOC2:Lemma-BC, W2-LOC2:Lemma-IR} & \texttt{PROVED-CHECKED} \\
+\texttt{W3-RM2:Ex-PolyF} & 11-17 & \texttt{PROVED; line-checked LC2-C; Astra seat ACCEPT; not examined by the Opus seat --- next council round; conditional on W2-LOC2:Lemma-BC, W2-LOC2:Lemma-IR} & \texttt{PROVED; line-checked LC2-C; Astra seat ACCEPT; not examined by the Opus seat --- next council round} \\
+\texttt{W3-AUDIT-V:VIS} & 11-18 & \texttt{manifest a125ce4d} & \texttt{manifest 3326543d (re-frozen, correction only)} \\
+\bottomrule\end{longtable}}
+
 \paragraph{Assumptions on mathematical objects.} Premises about the prior, distributions, distances, Markov kernels and
 the code must be proved, not argued. The prior facts, Lemma~\ref{lem:summaries} and the Hellinger facts are proved and
 independently checked, and the output description used by Remark~\ref{cor:dist-output} is checked against the code.

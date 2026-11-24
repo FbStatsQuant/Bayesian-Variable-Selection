@@ -18,8 +18,10 @@ $n=200$, $p\in\{500,1000\}$ and $14$ true predictors, one in each group of five;
 A design is \emph{inside} an assumption when the design, continued as a sequence in $n$ with its structure and the number
 of true predictors fixed, satisfies it; we judge the qualitative conditions, not the conservative constants of the proofs.
 
-\paragraph{The short answer.} The posterior theorems (Results 1 and 2) use the same kinds of assumptions as \SL{}, and
-they hold on all our designs, strong common factors included. The theorem about the reported model (Result 3) adds two
+\paragraph{The short answer.} The posterior theorems (Results 1 and 2) use assumptions of the same kinds as \SL{}
+(a Gaussian linear model, sparsity, a bound on the dimension, a law for the predictors, an eigenvalue floor), plus fixed
+signals for Result~1, which \SL{} leave implicit (their theorems state no lower bound on the coefficients; their proofs
+use one). These assumptions hold on all our designs, strong common factors included. The theorem about the reported model (Result 3) adds two
 conditions that \SL{} do not have, visibility and a small leakage set; they hold for block and autoregressive designs and
 fail for pervasive factors. That is why Result 3 is stated for block and AR designs, and why Result 4 exists: it needs
 neither condition.
@@ -41,10 +43,10 @@ Assumption & Used by & Reasonable? & vs \SL \\
 \lab{SP} fixed true model size & 1, 3 & few strong effects; nearly necessary for the rate & same as (4), p.~950 \\
 \midrule
 \multicolumn{4}{@{}l}{\textbf{The predictors and the signal}} \\
-\lab{SGR}, \lab{GR} law of the rows & 1--3 & Gaussian or sub-Gaussian; bounded features included, rare binary features not & stronger than Cond.~1, p.~953 (standardised predictors) \\
+\lab{SGR}, \lab{GR} law of the rows & 1--3 & Gaussian or sub-Gaussian; bounded features included, rare binary features not & stronger than Cond.~1, p.~953 (standardised predictors, their cap $\lesssim\log n$) \\
 \lab{FSb}, \lab{FSt} fixed signals & 1, 3 & effects that do not shrink with $n$; Result 2 needs none & same, if their $\bstar$ is fixed \\
 \lab{EFS} eigenvalue floor & 1, 3 & holds in all our designs (floors $0.1$ to $1$); no upper bound, so factors allowed & mixed: stronger unless their $\bar r_n$ is large \\
-\ref{asm:dist}(d) no near-collinearity & 2 & only exact duplicates and exact dependences fail & mixed: none in their Thms 1--2 \\
+\ref{asm:dist}(d) no near-collinearity & 2 & only exact duplicates and exact dependences fail & stronger: none in their Thms 1--2; not comparable with Cond.~3 \\
 \midrule
 \multicolumn{4}{@{}l}{\textbf{The reported model (Result 3 only)}} \\
 \lab{V} visibility & 3 & holds with aligned signs or generic coefficients; can fail by cancellation & stronger than Cond.~5, p.~958 \\
@@ -55,7 +57,7 @@ Assumption & Used by & Reasonable? & vs \SL \\
 floor on $k_n+\sz$ sets, signal bounds & 4 & fixed design; the sample-size budget is conservative & as \lab{EFS} and signals \\
 \midrule
 \multicolumn{4}{@{}l}{\textbf{Not statistical}} \\
-conventions \as{C1}, \as{C2p}, \as{C3} & 3--5 & idealise the computer & presupposed by \SL{} too \\
+conventions \as{C1}, \as{C2p}, \as{C3} & 3--5 & idealise the computer & their sampler statements are idealised limits too \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -93,7 +95,8 @@ the $10^6$ plan at $n=200$, $A=\log10^6/\log200\approx2.6$; $p=10^7$ at $n=200$ 
 any fixed number, the assumption only excludes super-polynomial growth.}
 \Asl{\emph{Mixed.} At the top ours is \emph{stronger}: their Corollary~1 allows $P_n<\exp(Cn^\alpha)$ (p.~954), and their
 Theorem~S allows slightly more than polynomial growth (Corollary~S$_1$, $P_n<n^{\kappa\log n}$, supp.\ p.~16). At the
-bottom ours is \emph{weaker}: it allows bounded $p$, while they need $P_n\succ n^\theta$ (p.~950).}
+bottom ours is \emph{weaker}: it allows bounded $p$, while they assume $P_n\succ n^\theta$ (p.~950) and their
+theorems force $P_n\to\infty$ (their (13), $r_n\prec P_n$ with $r_n\ge1$, p.~952).}
 
 \ahead{Fixed true model size}{\lab{SP}}{}
 \Astate
@@ -131,8 +134,11 @@ correlation matrix) of independent features confined to $K$ standard deviations 
 bounded data such as genotypes with allele frequencies bounded away from zero are inside. For Result~3 the Gaussian
 requirement is a real restriction: such genotype data are outside Result~3 as stated, though the fixed-design version
 (supplement, Theorem~\ref{thm:reported-fixed}) can cover an observed design that meets its conditions.}
-\Asl{\emph{Stronger} than their Condition~1 (p.~953) on centred, unit-variance predictors: ours implies theirs.
-Against their bounded predictors $\abs{x_i}\le1$ (Theorem~1, p.~952), neither implies the other.}
+\Asl{\emph{Stronger} than their Condition~1 (p.~953) on centred, unit-variance predictors, in the regime where their
+model-size cap $\bar r_n$ is within our window (of order $\log n$): ours then implies theirs. Their Condition~1 constrains
+combinations of up to $\bar r_n$ predictors, and their Corollary~1 allows $\bar r_n$ beyond any multiple of $\log n$
+(p.~954); there neither implies the other, except for Gaussian rows, which satisfy both. Against their bounded predictors
+$\abs{x_i}\le1$ (Theorem~1, p.~952), neither implies the other.}
 
 \ahead{Fixed signals}{\lab{FSb}, \lab{FSt}}{}
 \Astate
@@ -167,9 +173,14 @@ are allowed. The smallest eigenvalue of $\Sig$ is $1$ (S1, IND), $1/3$ (S2), $0.
 $1-\rho$ (one factor at $\rho$), $0.40$ (two factors), $0.25$ (AR), $0.5$ (BLK) and $0.7$ (FAC). In real data with
 near-duplicate predictors (two genes correlated at $0.99$) the floor is small and the constants degrade, but the
 assumption still holds if the floor stays fixed.}
-\Asl{\emph{Mixed.} Where their sets are no larger than ours, our fixed floor implies their (22)--(23) (supp.\ p.~13) and their
-Condition~3 (p.~955), so ours is \emph{stronger}; their Condition~3 also asks only a vanishing level. Where their sets are
-larger ($\bar r_n\succ\log n$), the two constrain different sets and neither implies the other.}
+\Asl{\emph{Mixed.} Where their sets are no larger than ours, our fixed floor implies their Condition~3 (p.~955, for
+Gaussian predictors), which asks only a vanishing level, so ours is \emph{stronger}. Their (22)--(23) (supp.\ p.~13) are
+conditions on the realised design: ours implies them directly for a fixed design, and for random rows only if the floor
+carries over to the sample with the probability they allow in their relaxed form (26) (supp.\ p.~15). For a fixed design,
+whose sets here have a fixed size, their sets are no larger only for their Theorem~1 and Theorem~S, since their Theorem~2,
+and so their Theorem~3, assume $r_n\to\infty$ (p.~953); for random rows our sets grow like $\log n$, so the comparison
+applies whenever $\bar r_n\lesssim\log n$. Where their sets are larger ($\bar r_n\succ\log n$), the two constrain different sets and neither
+implies the other.}
 
 % ------------------------------------------------------------------------------------------------
 \subsection{The assumptions of the distribution result}\label{sec:a-dist}
@@ -206,9 +217,10 @@ whose effect is unbounded in noise units, for (e).}
 exact linear dependences. There is no lower bound on the coefficients, so weak effects are allowed. Without (d) the result
 still holds with one extra factor $\sqrt{\log(\praw\vee n)}$ in the radius (supplement, Proposition~\ref{prop:dist}).}
 \Asl{Items (a)--(c) and (e) compare as \as{GL}, \as{DIM}, \as{SP}, \as{SGR} and the signal bounds above. Item (d) is
-\emph{mixed}: their Theorems~1--2 have no such condition, so there ours is \emph{stronger}; against their Condition~3
-(p.~955) and (22) (supp.\ p.~13), if their sets are at least as large as ours, theirs implies ours, so ours is
-\emph{weaker}. Our floor, $c_\psi/n$ on the correlation scale, is of the same order as the ridge $c_n\propto1/n$ they use
+\emph{stronger} than their Theorems~1--2, which have no such condition, and not comparable with their other conditions:
+their Condition~3 (p.~955) keeps one true predictor from being imitated by others and puts no floor on sets of null
+predictors (two duplicated null columns satisfy it and violate ours), and their (22) (supp.\ p.~13) is a floor, at a higher
+level, on the realised design rather than on the population correlation. Our floor, $c_\psi/n$ on the correlation scale, is of the same order as the ridge $c_n\propto1/n$ they use
 (p.~953).}
 
 % ------------------------------------------------------------------------------------------------
@@ -241,7 +253,8 @@ designs and every design of the strong-factor study. Unclear: S5 and FAC (mixed 
 in S5). A design modelled on the riboflavin gene-expression data is inside when its four true predictors are spread apart
 and not when they are clustered.}
 \Asl{\emph{Stronger.} Ours implies their Condition~5 (p.~958: $\abs{\operatorname{cov}(x_t,y)}>0$ for every true
-predictor) in every regime; theirs is ours with no conditioning and no margin.}
+predictor) in every regime; theirs is ours with no conditioning and no margin. Their Condition~5 justifies their
+iterative screening; it is not a hypothesis of a numbered theorem.}
 
 \ahead{Small leakage set with local regressions}{Assumption~\ref{asm:reported}}{}
 Fix $b\in(0,\tfrac12)$ and $b_H>0$ with $15b_H+b<\tfrac12$.
@@ -322,5 +335,5 @@ idealise the computer; they are not statistical assumptions (Appendix~\ref{app:c
 \end{itemize}
 The results also use the event $\Acal$ that the method uses the sampler and its calibration succeeds; every completed run
 lies in $\Acal$. \emph{Reasonable?} These are the usual idealisations of any theorem about an algorithm. \emph{vs \SL:}
-exact arithmetic and ideal random numbers are presupposed by their statements about their own sampler too (supp.,
-pp.~9--10, 12--13).
+their statements about their own sampler are idealised limits too, as the number of iterations
+grows, whose conditions are cited rather than verified (supp.\ pp.~9--10, 12--13, 16--17).

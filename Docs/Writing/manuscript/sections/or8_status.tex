@@ -3,7 +3,44 @@
 
 \subsection{What changed since the theory freeze}\label{sec:status-diff}
 
-STATUS-DIFF-PENDING
+The theorems were frozen on 2026-11-17 (registry tag \code{theory-v2026-11-freeze}, cut at 03:03 CT). The registry on
+main was compared with that tag on 2026-11-23. Fourteen landings changed it, all on 2026-11-17 and 2026-11-18; there has
+been no change since 2026-11-18, when the Theory Department went on hold. Twelve rows were added and none removed; 23
+status strings changed. \emph{No result was retracted, narrowed or superseded.} Every change is an upgrade: a check
+recorded, or a condition dropped. Table~\ref{tab:status-diff} lists them; the verbatim registry strings are in
+Appendix~\ref{app:status-verbatim}. The status boxes of this document quote the registry on main; the ledger in
+Appendix~\ref{app:status} shows the freeze state.
+
+\begin{table}[ht]
+\centering\small
+\caption{Changes to the registry since the freeze. All are upgrades.}\label{tab:status-diff}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.1\linewidth}>{\raggedright\arraybackslash}p{0.48\linewidth}>{\raggedright\arraybackslash}p{0.36\linewidth}@{}}
+\toprule
+Date & What changed & Where it shows here \\
+\midrule
+11-17 & The line checks of the two results on the coded sampler were recorded; their conditions were dropped from every
+dependent result. & Result~5; Remarks~\ref{cor:dist-output} (now conditional on exact arithmetic only) and
+\ref{thm:outputs}; the worst-island bound \\
+11-17 & The lower-bound proposition behind the expectation bound was recorded as independently checked. &
+the expectation bound of Theorem~\ref{thm:post-fixed} and Theorem~\ref{thm:post-margin}; the exact-order note of Result~6;
+Theorem~\ref{thm:omitted} \\
+11-17 & The sub-Gaussian form of Result~1 was recorded as proved and checked, with no inherited condition (an external
+blind audit found nothing). & Result~1 \\
+11-17 & The comparison form of the posterior concentration result was recorded; it stays conditional on three earlier
+inputs. & Remark~\ref{rem:thm2x} \\
+11-17 & The lemma giving sufficient conditions for visibility was recorded. & Remark~\ref{rem:vis} \\
+11-17 & The condition lists of the missed-signal family were rewritten to name current inputs only. &
+Theorem~\ref{thm:omitted} \\
+11-18 & The list result was recorded with no condition, the code reading it waited for being done. &
+Corollary~\ref{cor:list} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{What did not change.} Three qualifications stay true and stay in the text. (i) The results checked against the
+code (the delivery route of Result~3, the list result, the frozen-run identities) were read at an earlier core commit; the
+re-reading at the final method tag is a pending step. (ii) Corollary~\ref{cor:list} supplies the premise of Remark~\ref{cor:dist-output} only pathwise
+(Section~\ref{sec:plan-open}, item 1). (iii) Remark~\ref{rem:thm2x} stays conditional.
 
 \subsection{Open questions for HQ}\label{sec:open-hq}
 
@@ -19,5 +56,19 @@ owner can see what is not settled.
     version does not carry it is open. It is not an assumption our designs must meet.
   \item \emph{Song--Liang comparison notes} (Theory): small slips in the Theory Department's comparison note (a page number
     and a quotation) were reported on 2026-11-16; this document cites the paper directly.
-OPEN-PENDING
+  \item \emph{The trap theorem} (Section~\ref{sec:plan-trap}): which design family, and which of our results is meant by
+    ``our consistency on the same design''?
+  \item \emph{``Coverage at $p=10^7$''} (Section~\ref{sec:plan-1e7}): the hypotheses of the theorems at $n=200$,
+    $p=10^7$, or the claims a single fit can support?
+  \item \emph{Checks of the parallel engine} (Section~\ref{sec:supp-1m}): the engineering specification lists an exact
+    level ($p\le25$) and a $p=5{,}000$ anchor against the unmodified method, and offered a run of the method at $p=10^5$.
+    No read-back of any of the three was found. Unless Engineering confirms otherwise, this edition says that the engine was
+    checked against the method at $p=10^4$ only.
+  \item \emph{Wording of Table~\ref{tab:engine}}: please confirm that the evidence estimate from the top stored models
+    carries ``no theorem'', and that resampling is unchanged from the method.
+  \item \emph{Registry housekeeping} (no effect on any statement): about twenty rows still read ``conditional on'' a
+    posterior-concentration input that is itself plain proved and checked; the row of the frozen-run evidence result
+    (adopted by the owner on 2026-11-18) still reads ``not adopted''; the two sampler results whose line checks were
+    recorded keep their pre-check status strings; several notes carry a wrong date (2026-11-23 for 11-17), corrected so
+    far only for the visibility rows; the code-checked rows await their re-pin to the final method tag.
 \end{enumerate}

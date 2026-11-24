@@ -91,4 +91,11 @@ $\HPM=\MPM=\Sz$.
 The proof is two lines: every model that misses a true predictor, or contains a null one, differs from $\Sz$. So a
 theorem that makes the posterior miss small makes every summary right at once.
 
-\paragraph{Compared with \SL.} \SLPRIOR
+\paragraph{Compared with \SL.} The two priors are close in kind. \emph{Model prior:} theirs lets each predictor enter
+independently with probability $\lambda_n=r_n/P_n$ and caps the model size at $\bar r_n$ (their (6), p.~951); both $r_n$
+and $\bar r_n$ are chosen by the user, and their theorems need $\lambda_n\to0$. Ours mixes over the inclusion probability
+(beta-binomial), which costs each predictor about $\log p$ in log prior odds, as theirs does for their usual choices of $r_n$, with nothing to choose, and fixes the cap at
+$\lfloor n/2\rfloor$. \emph{Coefficients:} theirs is $\Normal(0,\sigma^2V_\xi)$ with a user-chosen $V_\xi$ (p.~951); in
+their numerical work $V_\xi^{-1}=(X_\xi^\top X_\xi+\tau I)/n$ with $\tau=0.01$ (p.~959). Ours is exactly this form with
+$\tau=1$. \emph{Noise:} both use an inverse-gamma prior; theirs takes $a_0=b_0=1$ in their numerical work (pp.~959--960), ours
+$0.01$.

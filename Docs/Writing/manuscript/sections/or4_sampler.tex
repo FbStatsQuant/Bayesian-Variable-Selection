@@ -3,7 +3,7 @@
 
 This section describes the algorithm as the software (an R package with a C++ core) implements it in its default
 configuration, and how to read what it reports. The user supplies the data, a random seed and a computing allocation;
-everything else is a numerical constant or a stated function of $(n,p)$ (Table~\ref{tab:params}). The last two
+everything else is a numerical constant or a stated function of $(n,p)$ (Appendix~\ref{app:params} lists every one, with its code location). The last two
 subsections say which parts the theorems cover, and describe separately the parallel engine built for $p=10^6$, which no
 theorem covers.
 
@@ -75,9 +75,8 @@ second local search starts from the start mode and does not depend on the partic
 \label{fig:pipeline}
 \end{figure}
 
-\paragraph{Stage 1: inputs, the exact case and the check before the run.} The inputs are \emph{valid} when $n\ge3$, at
-least one predictor is given and every entry is finite; the seed is an integer in $[1,2^{31}-1]$. Invalid inputs stop the
-run with no model; a constant response, or no retained predictor, stops it with the empty model and no estimates. With $N_0:=\max(2500,n,p)$ and $\Nc_0:=\lceil512N_0/2500\rceil$, if $\abs{\Om}\le(5\Nc_0+4N_0)\,p$ the method scores every model
+\paragraph{Stage 1: inputs, the exact case and the check before the run.} Invalid inputs stop the run with no model; a constant response, or no retained predictor, stops it with the empty
+model and no estimates. With $N_0:=\max(2500,n,p)$ and $\Nc_0:=\lceil512N_0/2500\rceil$, if $\abs{\Om}\le(5\Nc_0+4N_0)\,p$ the method scores every model
 and computes everything exactly. Otherwise it estimates the memory the run will need and the worst-case time of the local search from the start
 mode, and stops with status \texttt{resource\_limit} if the
 estimate exceeds the allocation (8\,GiB and 24 hours by default).
@@ -143,9 +142,8 @@ $\ell_n:=\lceil\log_2(n+p+1)\rceil$; and from the start mode $\tSz$, with move c
 \subsection{What a run reports}\label{sec:outputs-method}
 
 A run either \emph{produces output}, with status ``exact'' (enumeration) or ``completed'' (sampler; a \emph{completed
-run}), or stops without estimates. A run stopped by its time guard reports status \texttt{resource\_limit} and returns no
-estimates; anything else such a run returns is flagged incomplete, and the results do not cover it. (A constant
-response, or no retained predictor, stops the run with the empty model; invalid inputs stop it with no model.) The method records every model
+run}), or stops without estimates (a run stopped by its time guard is one; anything else it returns is flagged
+incomplete, and the results do not cover it). The method records every model
 it scores; the \emph{reported model} $\Shat$ is the best of them by log score (exact ties to the smaller model, then
 lexicographically). It is \emph{certified} when the method enumerated $\Om$, or when $\Shat$ ends a local search whose last
 scan found no strict improvement. An exact run reports $\Shat$, every $\PIP_j$, the median probability model and $\log Z$.
@@ -153,12 +151,10 @@ A completed run pools its islands with equal weights,
 \begin{equation}\label{eq:pool}
   \PIPhat_j:=\frac14\sum_{r=1}^4\PIPhat_{r,j},\qquad \Zhat:=\frac14\sum_{r=1}^4\Zhat_r,
 \end{equation}
-and reports $\Shat$, the $\PIPhat_j$, the estimated median probability model $\MPMhat:=\{j:\PIPhat_j>1/2\}$, $\log\Zhat$
-with the lower bound $\log(0.05\,\Zhat)$ for $\log Z$, which exceeds $\log Z$ jointly with completion with probability at
-most $0.05$ (Appendix~\ref{app:params}), a flag saying whether
-$\Shat$ is certified, and a list $\mathcal T$ of at most $40p+1$ models with their log scores, the best among those it scored. Islands are not
-weighted by their evidence estimates. Diagnostics, which never change an output, are listed in
-Appendix~\ref{app:params}.
+and reports $\Shat$, the $\PIPhat_j$, $\MPMhat:=\{j:\PIPhat_j>1/2\}$, $\log\Zhat$ with the lower bound
+$\log(0.05\,\Zhat)$, a flag saying whether $\Shat$ is certified, and the list $\mathcal T$ of the best (at most $40p+1$)
+models it scored, with their log scores. Islands are not weighted by their evidence estimates. Diagnostics never change an
+output (Appendix~\ref{app:params}).
 
 \paragraph{How to read the outputs.} Each output is an estimate of one posterior summary of
 Section~\ref{sec:posterior}, and the theorems of Section~\ref{sec:proved} say when it can be trusted.
@@ -175,42 +171,13 @@ Section~\ref{sec:posterior}, and the theorems of Section~\ref{sec:proved} say wh
     the model that is optimal for prediction under conditions of \citet{BarbieriBerger2004}.
   \item \emph{The evidence $\log\Zhat$} estimates $\log Z$, the marginal probability of the data under the whole prior;
     it is what one compares across priors or data sets. Given the calibration, $\Zhat$ is unbiased for $Z$
-    (Result~5), so $\log(0.05\,\Zhat)$ is a one-sided $95\%$ lower bound for $\log Z$.
+    (Result~5), so by Markov's inequality $\log(0.05\,\Zhat)$ exceeds $\log Z$, jointly with completion, with probability at most $0.05$.
   \item \emph{The returned list $\mathcal T$} holds the best models scored, with their exact log scores; renormalising
     the posterior to it gives a second set of estimates (supplement, Corollary~\ref{cor:list}).
 \end{itemize}
 At moderate $n$ these outputs describe a posterior spread over the true model and many one-predictor extensions of it,
 not a point mass: in single synthetic draws at $n=200$ the one-predictor extensions together weighed about as much as the
 true model itself (Remark~\ref{rem:moderate-n}; Result~6 explains why).
-
-\subsection{The constants}\label{sec:constants}
-
-Table~\ref{tab:params} lists the constants of the method that the results use or that a reader needs. Appendix~\ref{app:params}
-gives all of them, with their code locations.
-
-\begin{table}[ht]
-\centering\small
-\setlength{\tabcolsep}{4pt}
-\caption{The main constants of the method. Every one is a numerical constant or a function of $(n,p)$; the example
-column uses $n=200$, $p=10^4$.}\label{tab:params}
-\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.34\linewidth}l>{\raggedright\arraybackslash}p{0.3\linewidth}r@{}}
-\toprule
-Constant & Symbol & Value & Example \\
-\midrule
-size cap & $K$ & $\min(p,\lfloor n/2\rfloor)$ & 100 \\
-model prior & $w(k)$ & $\tfrac12/\binom{2p-1}{k}$, renormalised to $\Om$ & \\
-coefficient prior scale; ridge & $g$ & $n$; unit ridge & 200 \\
-inverse-gamma shape and scale & $a_0,b_0$ & $0.01$, $0.01$ & \\
-block size cap & $B$ & $\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)$ & 14 \\
-particles per island (tier $i$) & $N_i$ & $4^i\max(2500,n,p)$ & $10^4$; $4\cdot10^4$ \\
-burn-in rounds at $\xi=1$ & $\Lbi$ & $\max(4,\lceil\log_2(n+1)\rceil)$ & 8 \\
-exact-case threshold & & enumerate if $\abs{\Om}\le(5\Nc_0+4N_0)\,p$ & $5.0\times10^8$ \\
-base move cap & $\ell_n$ & $\lceil\log_2(n+p+1)\rceil$ & 14 \\
-move cap from the start mode & & $\ell_n+\abs{\tSz}$ & \\
-returned list & $\mathcal T$ & best $40p+1$ models by $F$ & 400,001 \\
-\bottomrule
-\end{tabular}
-\end{table}
 
 \subsection{What the theorems cover, and what is engineering}\label{sec:coverage}
 
@@ -258,15 +225,11 @@ its configuration was frozen on 2026-11-19 (code tag \code{p1m-freeze-F2}, on to
 ways listed in Table~\ref{tab:engine}, and none of the theorems above has been proved for it. Its runs are reported
 elsewhere; this edition quotes no result from them.
 
-\paragraph{The frozen configuration.} Each run uses $R'=16$ islands, each a separate process with no communication between
-islands, and $N=2{,}500$ particles per island (the binary's default). A pre-declared comparison adopted $N=10^4$ for the
-runs at $p=10^5$; a single planned fit at $p=10^6$ with $N=10^4$ was never run. Calibration builds the pilot schedule and
-then at most $I_{\max}$ rebuilds; the frozen value is $I_{\max}=0$ (pilot only), set explicitly in every run plan, since the
-binary's default is $3$. The grid is not refined ($m=1$, \code{refine_m}). There is no move to the larger tier: if a grid
-cannot be built, the engine installs the last grid it built, else the pilot schedule, and flags the run. Blocks have at most
-$\min(B,14)$ predictors. The method's multinomial resampling is kept. The sixteen islands are merged as the method pools its
-four: the stored models are united, the primary inclusion probabilities are the equal-weight mean over islands, the
-evidence estimate is the plain mean of the island estimates $\Zhat_r$, and a final local search runs on the merged store.
+\paragraph{The frozen configuration.} $R'=16$ islands, separate processes that do not communicate, merged as the
+method pools its four; $N=2{,}500$ particles per island ($10^4$ for the runs at $p=10^5$; a planned $10^6$ fit with $N=10^4$
+was never run); calibration by the pilot only ($I_{\max}=0$, set in every run plan; the binary's default is $3$); no grid
+refinement ($m=1$); no move to the larger tier; the method's multinomial resampling kept. Table~\ref{tab:engine} lists
+every change.
 
 \begin{table}[ht]
 \centering\small
