@@ -8,15 +8,15 @@ the data, a seed and a computing allocation; every other quantity is a constant 
 
 \begin{definition}[Particles, islands and rounds]\label{def:island}
 A \emph{particle} is a model $S\in\Om$. An \emph{island} is a population of particles evolved by
-Algorithm~\ref{alg:island} on a fixed grid with its own random stream. A \emph{round} applies the $p+B+2$ Markov moves of
+Algorithm~\ref{alg:island} with its own random stream, on the adaptive schedule (the pilot) or on a fixed grid (the diagnostic and final islands). A \emph{round} applies the $p+B+2$ Markov moves of
 Definition~\ref{def:moves} to every particle, in an order drawn uniformly at random afresh for each particle and each
 round. A \emph{step} moves an island from $\grid{t-1}$ to $\grid t$.
 \end{definition}
 
 \begin{definition}[Neighbour graph]\label{def:nbgraph}
 The \emph{neighbour graph} is the graph on $\set{p}$ constructed in Algorithm~\ref{alg:blocks} from the sample
-correlations, with threshold $\abs{\hat r_{jl}}>\sqrt{2\log p/n}$ and between $1$ and $B$ neighbours per predictor before
-symmetrisation; $\mathcal N(j)$ is the set of neighbours of $j$.
+correlations, with threshold $\abs{\hat r_{jl}}>\sqrt{2\log p/n}$ and, before symmetrisation, no neighbour if $p=1$, otherwise at least the
+neighbour of largest $\abs{\hat r_{jl}}$ (even below the threshold) and at most $B$ neighbours per predictor; $\mathcal N(j)$ is the set of neighbours of $j$.
 \end{definition}
 
 \begin{definition}[Markov moves]\label{def:moves}
@@ -47,8 +47,8 @@ score.
 \end{definition}
 
 \begin{definition}[Stores of scored models]\label{def:stores}
-Throughout a run the method keeps three stores of the models scored so far: the $40p+1$ best by $F$; the $20p$ best by
-$\gamma_0$; and the $20p$ best by $\gamma_1=e^{F}/m(\emptyset)$. \emph{The best model found so far} is the model with the
+In the calibration and the final sampler the method keeps three stores of the models scored so far: the $40p+1$ best by $F$;
+the $20p$ best by $\gamma_0$; and the $20p$ best by $\gamma_1=e^{F}/m(\emptyset)$. The enumeration of an exact run keeps only the $40p+1$ best by $F$. \emph{The best model found so far} is the model with the
 highest $F$ among the models recorded so far: during the calibration, the block-table models and those scored in the
 calibration; in the final run, the block-table models, those scored in the final run, and the models passed on by the
 calibration.
@@ -65,7 +65,7 @@ A run ends \emph{exact} ($\Om$ was enumerated), \emph{completed} (the sampler ra
 exact or completed run \emph{produces output}. A stopped run reports no estimates. The coded statuses are \code{exact},
 \code{completed}, and the stopped statuses \code{invalid_input}, \code{no_predictors}, \code{y_constant},
 \code{resource_limit}, \code{numerical_failure} and \code{schedule_limit} (Algorithm~\ref{alg:run}); an invalid
-allocation raises an error and returns nothing. A run is \emph{admissible} when it meets
+allocation, a base move cap above $10^6$, or a move cap $\ell_n+\abs{\tSz}$ above $2^{31}-1$ raises an R error and returns nothing. A run is \emph{admissible} when it meets
 Convention~\as{C1}. $\Acal$ is the event that the method uses the sampler and its calibration succeeds; every completed
 run lies in $\Acal$.
 \end{definition}
@@ -73,7 +73,8 @@ run lies in $\Acal$.
 \begin{definition}[Reported model and certification]\label{def:shat}
 The \emph{reported model} $\Shat$ is the best model by log score among all models the run scored, exact ties going to the
 smaller model, then to the lexicographically smaller one. $\Shat$ is \emph{certified} when the method enumerated $\Om$, or
-when $\Shat$ ends a local search whose last scan found no strict improvement.
+when, in a completed run, $\Shat$ is the model returned by $\mathrm{LS}_1$ or by $\mathrm{LS}_0$ (Algorithm~\ref{alg:ls}) and that search's last scan found no
+strict improvement; a stopped run is not certified.
 \end{definition}
 
 \begin{definition}[Inclusion-probability estimates and median model]\label{def:pipr}
@@ -107,8 +108,8 @@ nonempty $\mathcal T\subseteq\Om$,
   \mathrm{pip}_{\mathcal T}(j):=\frac{1}{Z_{\mathcal T}}\sum_{S\in\mathcal T,\,S\ni j}e^{F(S)},\qquad
   \mathrm{mpm}_{\mathcal T}:=\{j:\mathrm{pip}_{\mathcal T}(j)>\tfrac12\}.
 \]
-A completed run reports these as its list-renormalised inclusion probabilities, median model and evidence. An exact
-run reports the exact $\PIP_j$ and $\MPM$ in their place, and $Z_{\mathcal T}$ for the list of the $40p+1$ best models. $\hat\Pi$ is
+A completed run reports these as its list-renormalised inclusion probabilities, median model and log evidence $\log Z_{\mathcal T}$ (field \code{log_Z_list}).
+An exact run reports the exact $\PIP_j$ and $\MPM$ in their place, and $\log Z_{\mathcal T}$ for the store of its at most $40p+1$ best models. $\hat\Pi$ is
 the posterior restricted to $\mathcal T$: the models of $\mathcal T$ weighted in proportion to $e^{F(S)}$, each with its
 exact conditional posterior of $(\beta,\sigma^2)$ ($\hat\Pi$ is not computed by the method).
 \end{definition}
@@ -123,20 +124,31 @@ $\Dom:=\big\{(n,\praw):\lceil\log_2(n+\praw+1)\rceil\le10^6,\ \lceil\log_2(n+\pr
 (frozen 2026-11-19, on top of \code{method-v3.1.1-listpip}). It differs from Section~\ref{sec:algorithm} only as follows.
 \begin{enumerate}[leftmargin=2em,itemsep=1pt]
   \item \emph{Islands:} $R'=16$ islands run as separate processes that do not communicate; merged by the union of their
-    stores, equal-weight inclusion probabilities, the plain mean of the $\Zhat_r$, and a final local search on the merged
-    store.
-  \item \emph{Particles:} a fixed $N=2{,}500$ per island ($10^4$ for the rung and pilot runs at $p=10^5$); no tiers.
-  \item \emph{Calibration:} a candidate grid built from the pilot, used if its construction succeeds, otherwise the
-    pilot's schedule; no diagnostic rebuilds ($I_{\max}=0$); the selected grid is not refined ($m=1$); no move to tier~1.
-  \item \emph{Blocks:} the same complete-linkage clustering, truncated at a correlation threshold, packed next-fit by
-    smallest index; at most $\min(B,14)$ predictors per block.
+    stores with the table models and the inherited calibration models, under the capped $40p+1$ store rule;
+    equal-weight inclusion probabilities; the plain mean of the $\Zhat_r$; and both searches of Algorithm~\ref{alg:ls} on the
+    merged ledger ($\mathrm{LS}_1$ from the merged best model, $\mathrm{LS}_0$ from the start mode). An island's ledger starts empty.
+  \item \emph{Particles:} $N$ per island is a setting, $2{,}500$ by default; the $p=10^5$ main rung uses $N=10^4$ and its
+    continuity twins $N=2{,}500$; the $p=10^6$ runs use $N=2{,}500$, plus one planned same-data comparison fit at $N=10^4$; no tiers.
+  \item \emph{Calibration:} a pilot and a candidate grid as in Algorithm~\ref{alg:cal}, with $H=512$ calibration particles whatever
+    the final $N$; at most $I_{\max}$ diagnostic rebuilds (a setting with $I_{\max}\le\ell_n$, default $3$; the registered
+    campaign configuration sets $I_{\max}=0$); the frozen grid is refined by a factor $m$ (default, and campaign value, $1$); no
+    move to tier~1; if a construction fails, the last successfully built grid is used, and if none exists the pilot's schedule.
+  \item \emph{Blocks:} the same complete-linkage clustering restricted to merges at height $\mathrm{fl}(1-\abs{\hat r})\le\mathrm{fl}(1-\tau)$,
+    with $\tau=\sqrt{2\log p/n}$ by default; the retained forest is cut top-down as in Algorithm~\ref{alg:blocks} and the clusters are
+    packed next-fit by minimum index; at most $\min(B,14)$ predictors per block.
   \item \emph{Random numbers:} addressed by position (counter-based); the result does not depend on the number of threads.
   \item \emph{Scoring:} a batched kernel with different floating-point arithmetic (about $10^{-9}$ relative), on a fixed
     instruction set; kernel passes admitted on a rolling basis; every accepted model re-scored by the exact scorer;
-    inclusion probabilities summed in exact fixed point.
-  \item \emph{Stores:} no score cache and no $20p$ stores; each island keeps its $40p+1$ best models, offered only above the
-    calibration floor.
-  \item \emph{Extra outputs:} a deterministic lower bound on $\log Z$ (the log of the summed exact weights of the stored
-    models), a predictive law from the stored models, and an evidence estimate from the top stored models.
+    each Gibbs probability $o_j$ is truncated to the integer $\lfloor2^{63}o_j\rfloor$, the integers are summed exactly (128-bit), and the
+    sum is converted to a double, multiplied by $2^{-63}$ and divided by $4N$.
+  \item \emph{Stores:} no score cache; the calibration keeps both $20p$ stores, to construct $\mathcal V$ and the inherited models, while
+    the final islands and the merge ledger keep none; each island keeps its $40p+1$ best models, and an offer below the calibration
+    floor $\tau_{\mathrm{cal}}$ is dropped (an offer equal to it is kept), where $\tau_{\mathrm{cal}}$ is the $(40p+1)$-st largest $F$
+    among the distinct inherited models ($-\infty$ if there are fewer).
+  \item \emph{Extra outputs:} $\log Z_{\mathcal T}$, the log-sum-exp of the stored $F$ values of the merged top store (a stored $F$ offered by
+    the Gibbs scan is a batched-kernel score, which a later canonical re-score of the accepted state does not replace);
+    inclusion probabilities weighted by the island evidences, and store-renormalised ones, beside the equal-weight ones; an optional
+    predictive law from the stored models; and an occupancy-based evidence estimate only if every island supplies its terminal
+    supports (deferred, not a default output).
 \end{enumerate}
 Multinomial resampling is unchanged.

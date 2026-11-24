@@ -12,8 +12,8 @@ and the choices it made.
     $\tau_n$. The only wording in the project is \code{Docs/Writing/ASSIGNMENT_6.md}: ``a mixing lower bound for
     single-flip MCMC (and wTGS) on a multimodal design, plus our consistency on the same design''.
   \item \emph{Coverage at $p=10^7$} (Planned Theorem~\ref{thm:cov7}, box P2): no project document defines ``coverage''.
-    Two readings are written out; the showcase design (autoregressive, $n=200$, one seed) is not fixed; the leakage set
-    $Q$ for it is not chosen.
+    Two readings are written out. The owner fixed the showcase (one simulated AR-strong data set, $n=200$, known truth,
+    one fit, one seed); its continuation as a sequence in $n$ and the leakage set $Q$ for it are not chosen.
   \item \emph{Raw-scale bridge} (Planned Theorem~\ref{thm:bridge}, box P3): which raw-scale hypotheses replace \as{FSt},
     \as{V} and Assumption~\as{reported}, and whether the target is the list-mass premise or all of Theorem~3. Erratum E3
     of \code{W3-D5P} (\code{ERRATA.md}) records that, for $\sz\ge1$, no design satisfies both Theorem~2's law and
@@ -28,17 +28,17 @@ and the choices it made.
 
 The statements follow the registry on main; where A6 differed, the change is listed.
 \begin{enumerate}[label=\textbf{D\arabic*.},leftmargin=2.6em,itemsep=2pt]
-  \item \emph{Assumption~\as{WIT}} follows the reader form (\code{W3-READER/READER_VERSIONS.md}, Theorem~6(b)): the
-    bound $p\le n^A$ belongs to the Gaussian null block only. A6 attached it to both cases. The masters
-    (\code{W3-PSHARP}, \code{W3-PSHARP-R}) also take $X_{\Sz}$ and $\tstar$ deterministic and ask
-    $(\log p)^2=o(n)$ and $(r_0+1)\log(pn)=o(n)$; these are not in the reader form or here. HQ: whether the official
-    statement should carry them.
+  \item \emph{Assumption~\as{WIT}} follows the reader form (\code{W3-READER/READER_VERSIONS.md}, row \code{thm3},
+    Theorem~3(b), which is A6's Theorem~6(b)): the bound $p\le n^A$ belongs to the Gaussian null block only. A6 attached
+    it to both cases. The masters' growth conditions $(\log p)^2=o(n)$ and $(r_0+1)\log(pn)=o(n)$ (with $r_0\le\sz$) follow from $\sz$ fixed
+    and $p\le n^A$ in the Gaussian case, and from $p\le2n$ (implied by orthogonality) in the orthogonal case. The
+    masters' deterministic $\Xr_{\Sz}$, $\tstar$ and their random extension are now stated in \as{WIT}.
   \item \emph{Proposition~\ref{prop:worst-island}} is stated in the registry form (\code{W3-SAMP:LT\#}, clause LT-d): the
     pooled estimate's distance to $\ind{j\in\Sz}$ is at most the worst island's.
   \item \emph{Remark~\ref{rem:alt-route}} states the hypotheses of \code{W3-SAMP:TR} (clause TR-d, production form), which
     A6 did not state; its global-overlap condition is an open premise.
-  \item \emph{Lemma~\ref{rem:vis}} states \code{W3-AUDIT-V:VIS} (\code{V1_VIS/STATEMENT.md}), items (VIS-a)--(VIS-d);
-    (VIS-c) and (VIS-d) are merged into item~(c); item (VIS-e), instances of the sign route, is not carried over.
+  \item \emph{Lemma~\ref{rem:vis}} states \code{W3-AUDIT-V:VIS} (\code{V1_VIS/STATEMENT.md}), items (VIS-0)--(VIS-e), as
+    items (0)--(5).
   \item \emph{Remark~\ref{cor:dist-output}} says that runs that enumerate $\Om$ are not covered; the registry row excludes
     them, and A6 left it implicit.
 \end{enumerate}
@@ -47,7 +47,8 @@ The statements follow the registry on main; where A6 differed, the change is lis
 
 \begin{enumerate}[label=\textbf{K\arabic*.},leftmargin=2.6em,itemsep=2pt]
   \item \emph{Theorem~\ref{thm:reported-fixed}} keeps A6's hypotheses (visibility with $\omega_n\to\infty$, \as{BM}(b),
-    and the signal condition in~(d2)), which are stronger than the reader form of \code{W3-RM2-R:RM2-F-plus}. The
+    and a diverging signal ratio in~(d2)), which are stronger than the reader form of \code{W3-RM2-R:RM2-F-plus}: there a
+    fixed visibility multiplier, a constant-level beta-min and a fixed signal multiplier above explicit constants suffice. The
     conclusion follows from the master; the statement is not the weakest proved one.
   \item \emph{Theorem~\ref{thm:screen}} keeps A6's eigenvalue floor on sets of the budget size; the master
     (\code{W3-SCR:A1}) uses a weaker directional floor.
@@ -78,10 +79,10 @@ no formula or constant of A6 is contradicted.
     models.
   \item The resource guard runs after each bridge stage of an island, each grid construction and each local search, not
     after burn-in or measured rounds.
-  \item Invalid inputs give status \code{invalid_input} (including $n<3$ and $\praw<1$); an invalid allocation raises an
-    error.
+  \item Invalid inputs give status \code{invalid_input} (including $n<3$ and $\praw<1$); an invalid allocation, an invalid
+    base cap of the start-mode search and a cap outside the integer range raise errors.
   \item The coded statuses are eight, not three (Definition~\ref{def:outcomes}).
   \item Moves that do nothing still draw some random numbers; this matters only for reproducing streams.
 \end{enumerate}
-Not transcribed: the seeding function of the random streams and the formula of the rounding margin of the exact-run
-certificate.
+Not transcribed: the seeding function of the random streams. Original column labels are written $\mathrm{col}(j)$
+(Section~\ref{sec:setup}); outputs are reported in them.

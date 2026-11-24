@@ -95,7 +95,8 @@ The start law is
   \bar Z_0:=\sum_{S\in\Om}\gamma_0(S),\qquad S\in\Om .
 \end{equation}
 The \emph{start mode} $\tSz$ is the maximiser of $\pi_0$ of smallest size, and among those the lexicographically smallest
-set.
+set; in binary64 the tie set is restricted to the block choices that attain the computed optimum at every prefix
+(Algorithm~\ref{alg:start}, \textsc{StartMode}).
 \end{definition}
 
 \begin{definition}[Discrepancy]\label{def:discrepancy}
@@ -139,9 +140,9 @@ Given the pilot's temperatures $\mathcal P$ (sorted) and $\mathcal V$: start wit
 let $b$ be the smallest element of $\mathcal P$ above $u$; if $\rho(u,b)\ge0.90$, set $v=b$; otherwise $v=\mathrm{lo}$
 after $60$ bisection halvings on $(u,b]$ started at $(\mathrm{lo},\mathrm{hi})=(u,b)$, each setting
 $\mathrm{lo}\leftarrow\mathrm{mid}$ if $\rho(u,\mathrm{mid})\ge0.90$ and $\mathrm{hi}\leftarrow\mathrm{mid}$ otherwise.
-Set $v=1$ if $v\ge1-10^{-12}$; append $v$ and set $u=v$. The construction \emph{fails} if no element of $\mathcal P$ lies
-above $u$, if no bisection point passes, if $v\le u$, if $\rho(u,v)<0.90$ for the appended $v$, or if the grid has more
-than $\Tmax_i$ intervals.
+Set $v=1$ if $v\ge1-10^{-12}$. The construction \emph{fails} if no element of $\mathcal P$ lies
+above $u$, if no bisection point passes, if $v\le u$, or if $\rho(u,v)\ge0.90$ does not hold. Otherwise append $v$; the
+construction fails if the grid then has more than $\Tmax_i$ intervals, and otherwise $u:=v$.
 \end{definition}
 
 \subsection{Hyperparameters and constants}
@@ -166,11 +167,11 @@ duplicate threshold & & $\abs{\hat r_{jl}}\ge1-10^{-10}$ (reported only) & \code
 small-$\SSq_S$ recomputation & & $\SSq_S<10^{-8}\,y^\top y$ & \code{cpp/v3_score.h:219} \\
 \midrule\multicolumn{4}{@{}l}{\textbf{Blocks and start}}\\
 block size cap & $B$ & $\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)$ & \code{v3_preprocess.R:22}; \code{cpp/v3_core.cpp:145-146} \\
-neighbour threshold & & $\abs{\hat r_{jl}}>\sqrt{2\log p/n}$; 1 to $B$ neighbours before symmetrisation & \code{cpp/v3_blocks.h:146-172} \\
+neighbour threshold & & $\abs{\hat r_{jl}}>\sqrt{2\log p/n}$; none if $p=1$, else the neighbour of largest $\abs{\hat r_{jl}}$ (even below the threshold) and at most $B$ in all, before symmetrisation & \code{cpp/v3_blocks.h:146-172} \\
 start-mode enumeration cap & & $10^6$, then tie-aware recursion & \code{cpp/v3_core.cpp:469}; \code{cpp/v3_start.h:271-305} \\
 \midrule\multicolumn{4}{@{}l}{\textbf{Exact case}}\\
 exact-case threshold & & enumerate if $\abs{\Om}\le(5\Nc_0+4N_0)p$ & \code{cpp/v3_core.cpp:71-85}; \code{v3_fit.R:105-106} \\
-global certificate margin & & $64$ machine epsilons times a factor depending on the conditioning of $H_S$ & \code{cpp/v3_score.h:240-246}; \code{cpp/v3_core.cpp:560-567} \\
+global certificate margin & & heuristic rounding bound $\eta(S)$, $64$ machine epsilons times a factor (Algorithm~\ref{alg:outputs}, \textsc{ReportExact}) & \code{cpp/v3_score.h:240-246}; \code{cpp/v3_core.cpp:560-567} \\
 \midrule\multicolumn{4}{@{}l}{\textbf{Sampler}}\\
 islands & & $4$ & \code{v3_run.R:91} \\
 particles per island & $N_i$ & $4^iN_0$, $N_0:=\max(2500,n,p)$ & \code{v3_preprocess.R:25,30} \\
@@ -205,8 +206,8 @@ low-effective-sample-size flag & & below $0.5N$ at some step & \code{v3_run.R:20
 near-tie window & & $10^{-9}$ in log score & \code{v3_run.R:171} \\
 \midrule\multicolumn{4}{@{}l}{\textbf{Computing}}\\
 allocation defaults & & 8\,GiB ($8\cdot2^{30}$ bytes), 24\,h & \code{v3_fit.R:28,47,60,73,92} \\
-score cache & & $500p$ models, cleared when full & \code{v3_run.R:92}; \code{v3_calib.R:147} \\
-check before the run & & memory; exact case: time of 200 timed scores $\times$ count; sampler: worst-case time $2(\ell_n+K+1)(p+p^2/4)\times$(time of a size-$K$ score) & \code{v3_fit.R:10-14,26-68,114-117,144-148} \\
+score cache & & $500p$ models, emptied at the next insertion once full & \code{v3_run.R:92}; \code{v3_calib.R:147} \\
+check before the run & & memory; exact case: mean time of 200 timed scores $\times$ count; sampler: worst-case time $2(\ell_n+K+1)(p+p^2/4)\times$(time of a size-$K$ score) & \code{v3_fit.R:10-14,26-68,114-117,144-148} \\
 random streams & & 0--4 (tier 0), 5--9 (tier 1), 10--13 (final islands) & \code{v3_run.R:8-11}; \code{cpp/v3_core.cpp:444,626,667} \\
 seed & & integer in $[1,2^{31}-1]$ & \code{v3_preprocess.R:7-11} \\
 \midrule\multicolumn{4}{@{}l}{\textbf{Fixed integer limits}}\\

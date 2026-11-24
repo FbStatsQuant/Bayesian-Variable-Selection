@@ -6,7 +6,7 @@ Statements only. Each carries one status tag, as in Section~\ref{sec:theorems}.
 \subsection{The posterior}\label{sec:supp-post}
 
 \begin{supplem}[The posterior miss controls the summaries]\label{lem:summaries}
-For every data set, $\max_{j\in\set{p}}\abs{\PIP_j-\ind{j\in\Sz}}\le1-\pis{\Sz}$. If $\pis{\Sz}>1/2$, then
+Set $\pis{\Sz}:=0$ if $\Sz\notin\Om$. For every data set, $\max_{j\in\set{p}}\abs{\PIP_j-\ind{j\in\Sz}}\le1-\pis{\Sz}$. If $\pis{\Sz}>1/2$, then
 $\HPM=\MPM=\Sz$.
 \end{supplem}
 
@@ -28,7 +28,9 @@ The expectation is over the noise, with the design fixed. Under form (b) of \as{
 $\tmin\sqrt{n/\log n}$ diverges.
 \end{suppthm}
 
-\proved{In probability: \rid{W3-POST:Thm-1}: \rid{PROVED-CHECKED}; \rid{SOP:TH09}: \rid{PROVED-CHECKED (T03$\sharp$ only: the conjunction of W3-T03ACC:T03S.1--T03S.4)}. Expectation: \rid{W3-POST2:C}: \rid{PROVED-CHECKED, conditional on W2-APP:POST}; with \rid{W3-POST:Prop-LB}, \rid{W3-POST:Lemma-1a\textquotesingle}: \rid{PROVED-CHECKED}.}
+\proved{In probability: \rid{W3-POST:Thm-1}: \rid{PROVED-CHECKED}; \rid{SOP:TH09}: \rid{PROVED-CHECKED (T03$\sharp$ only: the conjunction of W3-T03ACC:T03S.1--T03S.4, clause map
+CHECKPOINT\_4.md \S2; \dots). Not upgraded (their statuses stay as at theory\_main.tsv:68): T02(i$\sharp$) and
+T02(ii$\sharp$) PROVED, SF/XF VERIFIED; T01--T03 PROVED-LOCKED (wave 3; external review queued), SAME-FAMILY-ONLY}. Expectation: \rid{W3-POST2:C}: \rid{PROVED-CHECKED, conditional on W2-APP:POST}; with \rid{W3-POST:Prop-LB}, \rid{W3-POST:Lemma-1a\textquotesingle}: \rid{PROVED-CHECKED}.}
 
 \begin{supprem}[Without beta-min]\label{rem:no-betamin}
 Under the other assumptions of Theorem~\ref{thm:post-fixed}, the posterior mass of models that strictly contain $\Sz$ is
@@ -41,8 +43,9 @@ $1-\PIP_j=\OP(\rn)$.
 \begin{suppthm}[Posterior concentration under an identifiability margin]\label{thm:post-margin}
 Let the design be fixed and assume \as{GL}, \as{DIM}, \as{SP}, \as{BC}, \as{NC} and Assumption~\as{margin}. Then the
 conclusions~\eqref{eq:post-op}--\eqref{eq:post-exp} of Theorem~\ref{thm:post-fixed} hold, the expectation bound with
-constants depending only on $(\sz,A,\sigs^2,\bar\theta,\varphi_0,g_0,c_{\mathrm{id}})$. Under \as{EF} and \as{BM}(a),
-Assumption~\as{margin} holds with $c_{\mathrm{id}}=C_\beta^2\varphi_0^2(1-1/n)$.
+constants depending only on $(\sz,A,\sigs^2,\bar\theta,\varphi_0,g_0,c_{\mathrm{id}})$. Under \as{EF} and \as{BM}(a), every model of Assumption~\as{margin}(b) leaves unexplained signal at least
+$C_\beta^2\varphi_0^2(1-1/n)\,\sigs^2\log n$; hence, if moreover $C_\beta^2\varphi_0^2>c_1(\sz,A)$, Assumption~\as{margin}
+holds for all large $n$ with any fixed $c_{\mathrm{id}}\in(c_1(\sz,A),C_\beta^2\varphi_0^2)$.
 \end{suppthm}
 
 \proved{\rid{W3-POST2:E}, \rid{W3-POST2:D}: \rid{PROVED-CHECKED, conditional on W2-APP:POST}.}
@@ -60,14 +63,17 @@ Assumption~\as{omitted} is placed on how they vary. Then
 \proved{\rid{W3-MISR-R:CorGb-plus}: \rid{PROVED-CHECKED, conditional on W2-APP:POST, C-MIS:GDb, C-MIS:Prop-P}; \rid{W3-MISR:MIS(i)}: \rid{PROVED-CHECKED, conditional on W2-APP:POST}.}
 
 \begin{supprem}[Smaller sets, in expectation]\label{rem:thm2x}
-Take i.i.d.\ Gaussian rows (with any positive variances), and ask the floor only on sets of at most
-$3(A+1)(\sz+1)\log n$ predictors, on the correlation matrix of a row. Let the noise variance $\sigma^2$ depend on $n$, ask
-the signal energy $\bstar{}^\top\Sig\bstar$ to be at most a fixed multiple of $\sigma^2$, and ask
-$n\min_{j\in\Sz}\Sigma_{n,jj}\beta^{*2}_j/(\sigma^2\log n)\to\infty$ ($\Sig$ and $\bstar$ may also vary with $n$). Then
-$\E[1-\pis{\Sz}]=O(\rn)$, and the HPM and MPM error probabilities and the expected maximal PIP error are $O(\rn)$.
+Let the raw rows be i.i.d.\ $\Normal_p(m,\Sigma)$ with $\Sigma_{jj}>0$ for every $j$, and let $R$ be the correlation
+matrix of a row. Let $\yr=\alpha\one+\Xr\bstar+\varepsilon$ with $\varepsilon\sim\Normal_n(0,\sigma^2I_n)$ independent of
+$\Xr$, $\sigma^2>0$, and $\alpha$, $\bstar$ deterministic; $m$, $\Sigma$, $\alpha$, $\bstar$, $\sigma^2$ and $p$ may depend on
+$n$. Assume \as{DIM} and \as{SP}; $\lmin(R_{TT})\ge c$ for a fixed $c>0$ and every $T\subseteq\set p$ with
+$1\le\abs{T}\le3(A+1)(\sz+1)\log n$; and $\bstar{}^\top\Sigma\bstar\le M_0\sigma^2$ for a fixed $M_0$, with
+$n\min_{j\in\Sz}\Sigma_{jj}\beta^{*2}_j/(\sigma^2\log n)\to\infty$. Set $\pis{\Sz}:=0$ if $\sz>K$. Then, under the joint law
+of the design and the noise, $\E[1-\pis{\Sz}]$, $\P(\HPM\neq\Sz)$, $\P(\MPM\neq\Sz)$ and
+$\E\max_{j\in\set p}\abs{\PIP_j-\ind{j\in\Sz}}$ are all $O(\rn)$.
 \end{supprem}
 
-\proved{\rid{W3-D2:Thm2X}, \rid{W3-D2:Cor2X}: \rid{PROVED-CHECKED, conditional on W2-APP:POST, C-MIS:GDb, C-MIS:Prop-P}.}
+\proved{\rid{W3-D2:Thm2X}: \rid{PROVED-CHECKED, conditional on W2-APP:POST, C-MIS:GDb, C-MIS:Prop-P}.}
 
 \subsection{The distribution}\label{sec:supp-dist}
 
@@ -78,7 +84,8 @@ whenever $n\ge n_0$ and Assumption~\as{dist} holds with the window $q_n$ of this
 \begin{equation}\label{eq:dist-ii}
   \P^*\Big[\,\Pi\big(\abs{S}>s+C_{\mathrm s}M\ \big|\ \Dn\big)>n^{-c_{\mathrm H} M}\Big]\ \le\ n^{-c_{\mathrm H} M}.
 \end{equation}
-The two exceptional sets can be taken to be the same, and the bounds are uniform over all laws of the data that satisfy
+The two exceptional sets can be taken to be the same set, which also contains every data set on which a predictor is
+removed; and the bounds are uniform over all laws of the data that satisfy
 Assumption~\as{dist} with the given constants.
 \textup{(ii)} If Assumption~\as{dist}\ref{asm:dist-nec} is dropped and Assumption~\as{dist}\ref{asm:dist-subg} is
 required only for single predictors, then~\eqref{eq:dist-i} holds with radius $\sqrt{M\log n\cdot\log(\praw\vee n)/n}$,
@@ -114,9 +121,10 @@ for every $S$ with $\abs{S}\le16+\sz$, for a fixed $\varphi_{\mathrm b}>0$. Then
 $c<\tfrac12$. If moreover $\Cov(W_l,W_j)=0$ for every null $l$ and true $j$, then $1-\pi_0(\Sz)=\OP(\rn)$. The exponent
 $\tfrac12$ cannot be improved: $1-\pi_0(\Sz)\ge\tfrac13(n+1)^{-1/2}$ for every valid data set with $n\ge4$ and $\sz<K$.
 
-\textup{(ii)} Keep the other assumptions of~(i), and let \as{NL} hold with $\Sz$ replaced by a deterministic $Q\supseteq\Sz$
-with $\abs{Q}\le K$, so that only predictors outside $Q$ are required not to leak. Then
-$\P\big(\pi_0(\Lat(Q))\ge1-(\abs{Q}+1)n^{-1/2}e^{C\sqrt{\log n}}\big)\to1$.
+\textup{(ii)} Keep the other assumptions of~(i), and let \as{NL} hold only for the null predictors $l\notin Q$, for a
+deterministic $Q\supseteq\Sz$ with $\abs{Q}\le K$ (the neighbourhoods $\Hl_l$ and the true predictors $j\in\Sz$ are
+unchanged). Then $\P\big(\pi_0(\Lat(Q))\ge1-(\abs{Q}+1)n^{-1/2}e^{C\sqrt{\log n}}\big)\to1$; if $\abs{Q}\le
+n^{1/2-\epsilon}$ for a fixed $\epsilon>0$, then $\P(\pi_0(\Lat(Q))\ge1-n^{-c})\to1$ for every $c<\epsilon$.
 \end{suppthm}
 
 \proved{\rid{W3-START2-R:START-R}, \rid{W3-START2-R:BR}, \rid{W3-START:FLOOR}: \rid{PROVED-CHECKED}.}
@@ -132,43 +140,64 @@ clauses hold under \as{C2} on $\Dom$ and under \as{C2p} for every admissible $n\
 \proved{\rid{W3-RM2-R:RM2-F-plus}, \rid{W3-RM2:RM2-F}: \rid{PROVED-CHECKED}.}
 
 \begin{suppcor}[Block and autoregressive designs]\label{cor:famc}
-In the setting of Theorem~\ref{thm:reported}, suppose that for all large $n$ the predictors are correlated either in
-independent blocks of bounded size (uniformly well conditioned) or autoregressively with a fixed $\rho\in(-1,1)$, and that
-a fixed number of true coefficients have absolute values bounded away from $0$ and $\infty$. Suppose also that the true
-predictors cannot cancel one another: (a) one true predictor per block; or (b) signs aligned with the correlation (for AR,
-equal signs if $\rho>0$ and signs alternating with the column index if $\rho<0$; for a block with several true predictors,
-after flipping some columns' signs all its partial correlations are nonnegative and the flipped true coefficients share
-one sign); or (c) for AR only, the true predictors are spread apart by an explicit separation bound; or (d) the coefficient
-vector stays a fixed distance from a closed set $B$ of cancelling directions ($B$ is null for AR designs, and possibly not
-null for general block designs). Then, on data events of probability tending to one, every admissible run that returns a
-result reports exactly the true model, whatever its seed. Under the delivery conventions of Theorem~\ref{thm:reported},
-every run returns a result with probability one, so the true model is recovered with probability tending to one, with
-that theorem's qualifications (lifted integer limits, bounded domain, time guard).
+Assume \as{GR} with $\Sig$ positive definite, \as{DIM}, \as{FSt} and Convention~\as{C1}; write
+$\vartheta:=(\theta^*_k)_{k\in\Sz}$ with $\Sz$ in increasing order, and let $B$ be the set of Lemma~\ref{rem:vis} for the
+design sequence. Assume that, for every $n\ge n_0$, $(\Sig,\tstar)$ belongs to one of the two families:
+\begin{enumerate}[label=(\Alph*),leftmargin=2em,itemsep=1pt]
+  \item \emph{Block.} For a fixed $g\ge1$ and a fixed $c>0$, and a deterministic partition of $\set p$ into groups of size at
+    most $g$, $\Sig$ is block-diagonal on the partition and $\lmin(\Sig)\ge c$; and one of: (B1) every group contains at
+    most one true predictor; (Bs) for every group $G$ with $\abs{G\cap\Sz}\ge2$ there are signs $d_l\in\{-1,+1\}$, $l\in G$,
+    such that $\mathrm{diag}(d)(\Sigma_{n,GG})^{-1}\mathrm{diag}(d)$ has nonpositive off-diagonal entries and
+    $d_k\,\mathrm{sgn}\,\theta^*_k$ is the same for all $k\in G\cap\Sz$; (Bg) $\inf_{n\ge n_0}\mathrm{dist}(\vartheta_n,B)>0$.
+  \item \emph{Autoregressive.} $\Sigma_{n,lk}=\rho^{\abs{l-k}}$ for a fixed $\rho\in(-1,1)$; and one of: (ARs)
+    $\mathrm{sgn}\,\theta^*_k$ is the same for all $k\in\Sz$ if $\rho>0$, $\mathrm{sgn}\,\theta^*_k=\varsigma(-1)^k$ for a
+    common $\varsigma$ if $\rho<0$, and no condition if $\rho=0$; (ARsep) $\rho\neq0$ and, for every $j\in\Sz$,
+    $\sum_{k\in\Sz\setminus\{j\}}\abs{\theta^*_k}\abs\rho^{\abs{j-k}}\le\tfrac12\abs{\theta^*_j}(1-\rho^2)/(1+\rho^2)$; (ARg)
+    $\inf_{n\ge n_0}\mathrm{dist}(\vartheta_n,B)>0$.
+\end{enumerate}
+Then the conclusions of Theorem~\ref{thm:reported} hold: there are data events $\mathcal G_n$ with $\P(\mathcal G_n)\to1$
+on which every admissible run that produces output reports $\Shat=\Sz$, whatever its seed and calibration outcome; and
+the delivery clauses of Theorem~\ref{thm:reported} hold under Conventions~\as{C2} and~\as{C2p}, as stated there.
 \end{suppcor}
+
 
 \proved{\rid{W3-FAMC:Cor-FAMC}: \rid{PROVED-CHECKED}.}
 
 \begin{supplem}[Sufficient conditions for visibility]\label{rem:vis}
 For one $n$, let $\Sig$ be a correlation matrix with $c_{16}:=\min_{\abs{V}\le16}\lmin(\Sigma_{n,V})>0$; write
-$\Sz=\{k_1<\dots<k_{\sz}\}$, $\vartheta:=(\theta^*_{k_1},\dots,\theta^*_{k_{\sz}})$, and, for $j\in\Sz$ and $U\not\ni j$
-with $\abs{U}\le15$, let $g(U,j)\in\R^{\sz}$ have entries $\Cov(W_j,W_{k_i}\mid W_U)$ for $k_i\notin U$ and $0$ for
-$k_i\in U$. Let $\mathcal N$ be the closure of $\bigcup_{n\ge n_0}\{g(U,j)/\norm{g(U,j)}\}$ and $B:=\bigcup_{\nu\in\mathcal
-N}\nu^\perp$.
-\begin{enumerate}[label=(\alph*),leftmargin=2em,itemsep=1pt]
+$\Sz=\{k_1<\dots<k_{\sz}\}$ and $\vartheta:=(\theta^*_{k_1},\dots,\theta^*_{k_{\sz}})$. For $U\subseteq\set p$ and $j,k\notin U$
+let $\Gamma^U_{jk}:=\Cov(W_j,W_k\mid W_U)$. For $j\in\Sz$ and $U\not\ni j$ with $\abs{U}\le15$, the \emph{visibility vector}
+$g(U,j)\in\R^{\sz}$ has entries $\Gamma^U_{jk_i}$ for $k_i\notin U$ and $0$ for $k_i\in U$. Let
+$\mathcal N_n:=\{g(U,j)/\norm{g(U,j)}\}$ over these $(U,j)$; for a design sequence, $\mathcal N$ is the closure of
+$\bigcup_{n\ge n_0}\mathcal N_n$ and $B:=\bigcup_{\nu\in\mathcal N}\nu^\perp$.
+\begin{enumerate}[label=(\arabic*),leftmargin=2em,itemsep=1pt]
+  \setcounter{enumi}{-1}
+  \item \emph{Reduction.} $\Cov(W_j,W^\top\tstar\mid W_U)=\langle g(U,j),\vartheta\rangle$, and the entry of $g(U,j)$ at $j$ is
+    $\Var(W_j\mid W_U)\ge\lmin(\Sigma_{n,U\cup\{j\}})\ge c_{16}$.
   \item \emph{Sign route.} If $\Sig$ is positive definite and there is $D=\mathrm{diag}(d_1,\dots,d_p)$, $d_l\in\{-1,+1\}$,
     such that $D\Sig^{-1}D$ has nonpositive off-diagonal entries and $d_k\,\mathrm{sgn}(\theta^*_k)=d_j\,\mathrm{sgn}(\theta^*_j)$
     for all $j,k\in\Sz$ in the same connected component of the graph of $\Sig^{-1}$, then
-    $\abs{\Cov(W_j,W^\top\tstar\mid W_U)}\ge\abs{\theta^*_j}\Var(W_j\mid W_U)\ge\theta_{\mathrm{lo}}c_{16}$ for every $j\in\Sz$
-    and $U\not\ni j$ with $\abs{U}\le15$.
+    $\abs{\Cov(W_j,W^\top\tstar\mid W_U)}\ge\abs{\theta^*_j}\Var(W_j\mid W_U)$ for every $j\in\Sz$ and every $U\not\ni j$, and
+    this is at least $\theta_{\mathrm{lo}}c_{16}$ when $\abs{U}\le15$.
   \item \emph{Generic-position route.} For every $n\ge n_0$, $j\in\Sz$ and $U\not\ni j$ with $\abs{U}\le15$,
-    $\abs{\Cov(W_j,W^\top\tstar\mid W_U)}\ge c_{16}\,\mathrm{dist}(\vartheta,B)$. Hence, if $\underline c:=\inf_{n\ge n_0}
-    c_{16}(\Sig)>0$ and $\delta:=\inf_{n\ge n_0}\mathrm{dist}(\vartheta_n,B)>0$, \as{V} holds for every $n\ge n_0$ with
-    $a=\underline c\,\delta$.
+    $\abs{\Cov(W_j,W^\top\tstar\mid W_U)}\ge c_{16}\,\mathrm{dist}(\vartheta,B)$. The set $B$ is closed, and
+    $\mathrm{dist}(\vartheta,B)=\min_{\nu\in\mathcal N}\abs{\langle\nu,\vartheta\rangle}$ (attained). Hence, if
+    $\underline c:=\inf_{n\ge n_0}c_{16}(\Sig)>0$ and $\delta:=\inf_{n\ge n_0}\mathrm{dist}(\vartheta_n,B)>0$, \as{V} holds for
+    every $n\ge n_0$ with $a=\underline c\,\delta$.
   \item If $\mathcal N$ is countable, $B$ is a countable union of hyperplanes through $0$: closed, Lebesgue-null and
-    nowhere dense. $\mathcal N$ is countable when the labelled matrices $\Sigma_{n,U\cup\Sz}$ take finitely many values over
-    all $n$, $j$, $U$ (for example block-diagonal designs with blocks from a fixed finite list), and for stationary designs
-    $\Sigma_{n,ll'}=r(\abs{l-l'})$ with $r(d)\to0$ (for example AR($\rho$) with a fixed $\abs\rho<1$), provided
-    $\inf_{n\ge n_0}\min_{\abs{V}\le15+\sz}\lmin(\Sigma_{n,V})>0$.
+    nowhere dense. If $\mathcal N$ is finite, the minimum in~(2) is over finitely many $\nu$.
+  \item $\mathcal N$ is countable in each of the following cases, provided $\inf_{n\ge n_0}\min_{\abs{V}\le15+\sz}\lmin(\Sigma_{n,V})>0$:
+    (i) the labelled matrices $\Sigma_{n,U\cup\Sz}$ take finitely many values over all $n$, $j$, $U$ (for example
+    block-diagonal designs with blocks from a fixed finite list; equicorrelated blocks with a fixed correlation in $[0,1)$
+    and any sizes; equicorrelation with a fixed correlation; factor models $\Sig=\Psi+\Lambda\Lambda^\top$ whose rows take
+    finitely many values); (ii) stationary designs $\Sigma_{n,ll'}=r(\abs{l-l'})$ for one fixed function $r$ with
+    $r(d)\to0$ as $d\to\infty$ (for example AR($\rho$) with a fixed $\abs\rho<1$, or banded designs), and block-diagonal
+    designs whose blocks are of this form with finitely many such functions.
+  \item \emph{Instances of the sign route}, each with its $D$ and floor: independent columns ($D=I$, $c_{16}=1$); AR($\rho$),
+    $\abs\rho<1$ ($d_l=\varsigma^l$, $\varsigma:=\mathrm{sgn}\,\rho$, $\varsigma:=1$ if $\rho=0$; $c_{16}\ge(1-\abs\rho)/(1+\abs\rho)$);
+    equicorrelation $\rho\in[0,1)$ ($D=I$, $c_{16}\ge1-\rho$); one factor $\Sig=\Psi+\lambda\lambda^\top$ with $\Psi$ diagonal
+    positive ($d_l=\mathrm{sgn}\,\lambda_l$, $\mathrm{sgn}\,0:=1$; $c_{16}\ge\min_l\psi_l$); and block-diagonal combinations of
+    these (alignment required only within a block).
 \end{enumerate}
 \end{supplem}
 
@@ -177,19 +206,22 @@ N}\nu^\perp$.
 \subsection{Estimates from the returned list}\label{sec:supp-list}
 
 \begin{suppcor}[List-renormalised estimates on the designs of Theorem~\ref{thm:reported}]\label{cor:list}
-Under the assumptions of Theorem~\ref{thm:reported}, there are data events of probability tending to one on which every
-admissible run that produces output, for every seed and calibration outcome, reports $\Shat=\Sz$ and has $\Sz$ in its
-returned list $\mathcal T$ (on exact enumeration, in the enumeration's list where it is returned); and then, with
-$\varepsilon_n:=1-\pis{\Sz}$,
+Under the assumptions of Theorem~\ref{thm:reported}, on its data events $\mathcal G_n$, every admissible run that produces
+output, for every seed and calibration outcome, reports $\Shat=\Sz$ and has $\Sz$ in its returned list $\mathcal T$ (on
+exact enumeration, in the enumeration's list where it is returned); and then, with $\varepsilon_n:=1-\pis{\Sz}$,
 \begin{gather}
   \max_j\big|\mathrm{pip}_{\mathcal T}(j)-\ind{j\in\Sz}\big|\le\varepsilon_n,\qquad
   \max_j\big|\mathrm{pip}_{\mathcal T}(j)-\PIP_j\big|\le\varepsilon_n,\label{eq:list-pip}\\
-  1-\varepsilon_n\ \le\ Z_{\mathcal T}/Z\ \le\ 1,\label{eq:list-z}\\
-  \mathrm{mpm}_{\mathcal T}=\Sz\quad\text{when }\varepsilon_n<\tfrac12 .\label{eq:list-mpm}
+  0\ \le\ \log Z-\log Z_{\mathcal T}\ \le\ -\log(1-\varepsilon_n)\quad\text{(where $\log Z_{\mathcal T}$ is reported)},\label{eq:list-z}\\
+  \mathrm{mpm}_{\mathcal T}=\Shat=\Sz\quad\text{when }\varepsilon_n<\tfrac12 .\label{eq:list-mpm}
 \end{gather}
-Since $\varepsilon_n=\OP(\rn)$, these errors are $\OP(\rn)$ for runs that produce output; under Convention~\as{C2p} every
-run does.
+If $p\ge2$ for all large $n$, then $\varepsilon_n=\OP(\rn)$, and for every deterministic $t_n\in(0,\tfrac12)$ with
+$t_n/\rn\to\infty$ there are data events of probability tending to one on which every admissible run that produces output
+has both errors in~\eqref{eq:list-pip} at most $t_n$, $\mathrm{mpm}_{\mathcal T}=\Shat=\Sz$, and, where $\log Z_{\mathcal T}$ is
+reported, $\abs{\log Z_{\mathcal T}-\log Z}\le2t_n$. Under Convention~\as{C2p} every run produces output, so these hold
+without ``that produces output''.
 \end{suppcor}
+
 
 \proved{\rid{W3-D5P:LIST-K}, \rid{W3-D5P:LIST-R}: \rid{PROVED-CHECKED}; code conformance \rid{W3-D5P:LIST-CODE}:
 \rid{CODE-CHECKED (code reading at core 4676af6)}.}
@@ -232,5 +264,6 @@ every $\epsilon>0$,
 \end{gather*}
 \end{supprem}
 
-\proved{\rid{W3-SAMP:TR} (clause TR-d, production form), \rid{W3-AUDIT-A:OVL}: \rid{PROVED-CHECKED}. The global-overlap
-condition is a named open premise (\rid{P-OVL}$\infty$); it is not derived from conditions on the design.}
+\proved{\rid{W3-SAMP:TR} (clause TR-d, production form): \rid{PROVED-CHECKED}. The global-overlap condition is a named
+open premise (\rid{P-OVL}$\infty$); it is not derived from conditions on the design (\rid{W3-AUDIT-A:OVL} discharges only
+the weaker premise \rid{P-OVL}).}

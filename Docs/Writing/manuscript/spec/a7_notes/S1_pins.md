@@ -11,8 +11,8 @@ Algorithm numbers are the order of appearance: 1 Run (with Check, Guard); 2 Bloc
 |---|---|---|
 | 1 | Run | v3_fit.R:71-176 (top-level function; order of stages 133-176) |
 | 2 | if s is not a single integer in [1,2^31-1] then return status texttti | v3_fit.R:88-89; v3_preprocess.R:7-11 |
-| 3 | if the allocation is not two positive finite numbers then raise an R | v3_fit.R:91-94 |
-| 4 | start the wall clock that every Guard call below reads | v3_fit.R:74,96; v3_runtime.h:13-20 |
+| 3 | if the allocation is not two positive finite numbers then raise an R | v3_fit.R:91-95 |
+| 4 | start the wall clock that every Guard call below reads | v3_fit.R:73-74,96; v3_runtime.h:14-24 |
 | 5 | if Xr is not a numeric matrix, yr not a numeric vector, absyrne n, an | v3_preprocess.R:99-107; v3_fit.R:99-103 |
 | 6 | drop every column whose entries are all exactly equal; kappa:= the re | v3_preprocess.R:111-112 |
 | 7 | if p=0 then return status textttno_predictors, Shat=emptyset, no esti | v3_preprocess.R:114; v3_fit.R:99-102 |
@@ -21,20 +21,20 @@ Algorithm numbers are the order of appearance: 1 Run (with Check, Guard); 2 Bloc
 | 10 | Kgetsmin(p,lfloor n/2rfloor); Bgetsmin(lfloorsqrt nrfloor,lfloorsqrt | v3_preprocess.R:19-33 (K 21, B 22, ell 23, L 24, N0 25, H0 26, T0 27, tiers 30) |
 | 11 | absOmgetssum_k=0^Kbinom pk (exact integers, stopped once above the th | v3_core.cpp:72-85; v3_preprocess.R:28; v3_fit.R:105-106 |
 | 12 | if Check(exact or sampler, tier~0) then return status textttresource_ | v3_fit.R:115-117 |
-| 13 | build the data context: G=X^top X, z=X^top y, y^top y, log m(emptyset | v3_fit.R:118; v3_score.h:39-72; v3_core.cpp:91-106 |
+| 13 | build the data context: G=X^top X, z=X^top y, y^top y, log m(emptyset | v3_fit.R:118-120; v3_score.h:39-72; v3_core.cpp:91-106,742-760 |
 | 14 | exact | v3_fit.R:120 (exact branch); v3_core.cpp:524-559 |
 | 15 | visit every SinOm in depth-first order (the empty model, then each mo | v3_core.cpp:524-559; v3_exact.R:6-19 |
 | 16 | if a scoring fails numerically (Cholesky, Cholesky from a recomputed | v3_core.cpp:556; v3_score.h:227-238; v3_fit.R:125-131 |
 | 17 | status gets textttexact; return ReportExact (Algorithm~refalg:outputs | v3_fit.R:120-131 |
-| 18 | (stages~2--3) Blocks, Tables, Neighbours (Algorithm~refalg:blocks); S | v3_fit.R:133-140; v3_core.cpp:272-318 |
+| 18 | (stages~2--3) Blocks, Tables, Neighbours (Algorithm~refalg:blocks); S | v3_fit.R:133-140; v3_core.cpp:278-303 |
 | 19 | (stage~4) (textstatus_c,textfrozen)gets Calibrate (Algorithm~refalg:c | v3_fit.R:149-160 |
-| 20 | frozen =(0=grid0<dots<gridTs=1, i, N_i, Lbi, textthe models of the th | v3_fit.R:161-162; v3_run.R:88-104,225-231; v3_core.cpp:407-442 |
+| 20 | frozen =(0=grid0<dots<gridTs=1, i, N_i, Lbi, textthe models of the th | v3_fit.R:161-162; v3_run.R:88-104,225-231; v3_core.cpp:407-442 (inherited rescoring 417-428) |
 | 21 | r=1,dots,4 | v3_core.cpp:443-451 (final islands, streams 10-13) |
 | 22 | (Zhat_r,PIPhat_r,cdot)gets Island(r,N_i,gridcdot,Lbi) on random strea | v3_core.cpp:443-446 |
 | 23 | if Guard fired inside the island then status gets textttresource_limi | v3_core.cpp:451; v3_engine.h:335-338 |
 | 24 | if status = completed then LS_1gets LocalSearch(the best model scored | v3_core.cpp:453-459 |
-| 25 | if status = completed then tSzgets StartMode; if ell_n+abstSz>2^31-1 | v3_core.cpp:465-481 |
-| 26 | if a scoring failed numerically in lines~refln:run-isl1--refln:run-ls | v3_core.cpp:483-484 |
+| 25 | if status = completed then tSzgets StartMode; if ell_n+abstSz>2^31-1 | v3_core.cpp:465-481 (guard duration from 468) |
+| 26 | if a scoring failed numerically in lines~refln:run-isl1--refln:run-ls | v3_core.cpp:417-428,483-505 |
 | 27 | if status ne completed then return status, Shat:= the best model scor | v3_run.R:143-148; v3_fit.R:84-85 |
 | 28 | status gets textttcompleted; return Report (Algorithm~refalg:outputs) | v3_run.R:150-221; v3_fit.R:171-176 |
 | 29 | Checkbranch, iCommenttrue iff the allocation is exceeded | v3_fit.R:10-68 (resource estimate) |
@@ -44,10 +44,10 @@ Algorithm numbers are the order of appearance: 1 Run (with Check, Guard); 2 Bloc
 | 33 |  | v3_fit.R:36-47 (sampler branch of the estimate) |
 | 34 | Ngets N_i, Wgetslceil p/64rceil, Cgets500p; bytes gets8(3np+3p^2)+16l | v3_fit.R:36-41 |
 | 35 | if the search from the start mode is on (default): sigmagetsell_n+K+1 | v3_fit.R:43-45,113-115 |
-| 36 | exceeded gets [bytes >g,2^30]; if bytes le g,2^30 then tau_Kgets mean | v3_fit.R:47,60,65 |
+| 36 | exceeded gets [bytes >g,2^30]; if bytes le g,2^30 then tau_Kgets mean | v3_fit.R:42-48,60-65,107-115,144-147 |
 | 37 | return exceeded | v3_fit.R:67 |
 | 38 | GuarddeltaCommentcalled after every bridge stage, grid construction an | v3_runtime.h:21-27 |
-| 39 | if (time elapsed since line~refln:run-clock of Run) + delta>3600h the | v3_runtime.h:21-27; call sites v3_engine.h:335, v3_core.cpp:459,480,645,692, v3_calib.R:354-355 |
+| 39 | if (time elapsed since line~refln:run-clock of Run) + delta>3600h the | v3_runtime.h:14-27; call sites v3_engine.h:335, v3_core.cpp:459,480,645,692, v3_calib.R:354-355 |
 
 ## Algorithm 2: Stage~2: blocks, block tables and the neighbour graph.
 
@@ -60,11 +60,11 @@ Algorithm numbers are the order of appearance: 1 Run (with Check, Guard); 2 Bloc
 | 5 | pack next-fit in emission order: curgetsemptyset; for each cluster c: | v3_blocks.h:134-141; v3_core.cpp:145-149 |
 | 6 | Tables | v3_core.cpp:282-298; v3_start.h:76-98 |
 | 7 | kinset J and every Usubseteq C_k with abs Ule K (coded by the bits of | v3_start.h:76-98; v3_core.cpp:282-298 |
-| 8 | log h_k(U)getslog m(U)-log m(emptyset), with h_k(emptyset)=1, log m(U | v3_start.h:76-98 (score 93, entry 95); v3_core.cpp:282-298 |
+| 8 | log h_k(U)getslog m(U)-log m(emptyset), with h_k(emptyset)=1, log m(U | v3_start.h:76-98 (score 93, entry 95); v3_engine.h:89-100; v3_core.cpp:282-298,372-385,603-614 |
 | 9 | Neighbours | v3_blocks.h:152-171 |
 | 10 | if p=1 then mathcal N(1)getsemptyset and stop; rho_ngetssqrt2log p/n | v3_blocks.h:152,154 |
 | 11 | jinset p | v3_blocks.h:157-168 |
-| 12 | order the lne j by abshat r_jl decreasing, ties by smaller l; a_jgets | v3_blocks.h:157-168 |
+| 12 | order the lne j by abshat r_jl decreasing, ties by smaller l; a_jgets | v3_blocks.h:146-168 |
 | 13 | mathcal N(j)getsl: linch_j textor jinch_l, increasing (a symmetric gr | v3_blocks.h:170-171 |
 
 ## Algorithm 3: Stage~3: model evaluation, the start law $\pi_0$ with its exact sampler, and the start mode $\tSz$.
@@ -72,7 +72,7 @@ Algorithm numbers are the order of appearance: 1 Run (with Check, Guard); 2 Bloc
 | line | text (start) | code pin |
 |---|---|---|
 | 1 | EvalSCommentthe score of a model abs Sle K; used by every algorithm | v3_engine.h:89-100; v3_start.h:54-69 |
-| 2 | log m(S)gets the cached value if present, else the scorer (Cholesky o | v3_engine.h:89-96; v3_score.h:176-187,227-238; v3_core.cpp:409 |
+| 2 | log m(S)gets the cached value if present, else the scorer (Cholesky o | v3_engine.h:89-96; v3_score.h:145-159,176-238,274-292; v3_core.cpp:409 |
 | 3 | cgetssum_klog h_k(Scap C_k) over the blocks that S meets | v3_start.h:54-66 |
 | 4 | loggamma_0(S)getslogvarpi(abs S)+c;  Delta(S)getslog m(S)-log m(empty | v3_engine.h:97; v3_start.h:69 |
 | 5 | Offer(S) (Algorithm~refalg:outputs) if the score was computed afresh | v3_engine.h:98-100; v3_ledger.h:104-113 |
@@ -80,7 +80,7 @@ Algorithm numbers are the order of appearance: 1 Run (with Check, Guard); 2 Bloc
 | 7 | e_k(a)getssum_Usubseteq C_k, abs U=ah_k(U) for kinset J, a=0,dots,min | v3_start.h:106-120 |
 | 8 | Phi_0(0)gets1, Phi_0(a)gets0 for a>0; for kinset J, a=0,dots,K: Phi_k | v3_start.h:121-131 |
 | 9 | bar Z_0getssum_a=0^Kvarpi(a),Phi_J(a);  q(a)getsvarpi(a)Phi_J(a)/bar | v3_start.h:132-138 |
-| 10 | for kinset J, r=0,dots,K, ulemin(absC_k,r): P_k(umid r)gets e_k(u),Ph | v3_start.h:139-150 |
+| 10 | for kinset J, r=0,dots,K, ulemin(absC_k,r): P_k(umid r)gets e_k(u),Ph | v3_start.h:15-31,115-118,132-175 |
 | 11 | DrawStartCommentone exact draw from pi_0; the uniforms are used in thi | v3_start.h:155-175 |
 | 12 | draw asim q (inverse CDF: the smallest index whose cumulative probabi | v3_start.h:160; v3_start.h:18-20 |
 | 13 | rgets a; for k=J,J-1,dots,1 while r>0 do draw a_ksim P_k(cdotmid r) a | v3_start.h:161-166 |
@@ -90,7 +90,7 @@ Algorithm numbers are the order of appearance: 1 Run (with Check, Guard); 2 Bloc
 | 17 | mu_k(a)getsmax_Usubseteq C_k,abs U=alog h_k(U);  A_k(a):= the set of | v3_start.h:201-210 |
 | 18 | M_0(0)gets0;  M_k(a)getsmax_ulemin(absC_k,a)M_k-1(a-u)+mu_k(u) (nothi | v3_start.h:211-219 |
 | 19 | a^*gets the smallest a attaining max_alogvarpi(a)+M_J(a) (a strict co | v3_start.h:220-224 |
-| 20 | mathcal Egets the sets of size a^* whose block choices (a_k,U_kin A_k | v3_start.h:271-305 (enumeration 281-301, tie DP 237-270, used 303) |
+| 20 | mathcal Egets the sets of size a^* whose block choices (a_k,U_kin A_k | v3_start.h:178-186,227-257,271-305 (enumeration 281-301, tie DP 237-270, used 303) |
 
 ## Algorithm 4: Stage~4: calibration (adaptive tempering): pilot, grid, rebuilds, tier rule, fallback, freeze.
 
@@ -107,17 +107,17 @@ Algorithm numbers are the order of appearance: 1 Run (with Check, Guard); 2 Bloc
 | 9 | if grid =emptyset and i=1 then grid gets fb (valid fallback) | v3_calib.R:163-169 |
 | 10 | if grid =emptyset then return textttschedule_limit (for i=0 the code | v3_calib.R:170 |
 | 11 | freeze: grid, tier i, N_i, Lbi, and the models of mathcal Tcupmathcal | v3_calib.R:160,184-190; v3_core.cpp:728-740 |
-| 12 | CalTieri | v3_calib.R:44-126 |
-| 13 | (Xi,textforced)gets Island(0,Nc_i,textadaptive,Lbi) on stream 0 if i= | v3_calib.R:44; v3_core.cpp:626-636 |
+| 12 | CalTieri | v3_calib.R:44-126 (tier exits 57,100,112-113; v3_core.cpp:632-650,670-696) |
+| 13 | (Xi,textforced)gets Island(0,Nc_i,textadaptive,Lbi) on stream 0 if i= | v3_calib.R:44,57; v3_core.cpp:626-650 |
 | 14 | LSgets LocalSearch(best scored model, ell_n); Guard; E_3gets[F(textbe | v3_core.cpp:640-648; v3_calib.R:25,59-60 |
 | 15 | trig getsE_1=textfalse,E_2=textfalse,E_3, textforced>0, textgridfail= | v3_calib.R:60-61 |
-| 16 | grid gets BuildGrid(Xi); Guard; if the construction failed then trig. | v3_calib.R:79-82,362 |
+| 16 | grid gets BuildGrid(Xi); Guard; if the construction failed then trig. | v3_calib.R:64-82; v3_core.cpp:699-724 |
 | 17 | the construction succeeded | v3_calib.R:79-82,84 |
 | 18 | iota=1,dots,ell_n | v3_calib.R:84-119; v3_core.cpp:657-692 |
-| 19 | for r=1,dots,4: (Zhat_r,cdot)gets Island(r,Nc_i,textgrid,Lbi) on stre | v3_core.cpp:657-686; v3_calib.R:86 |
+| 19 | for r=1,dots,4: (Zhat_r,cdot)gets Island(r,Nc_i,textgrid,Lbi) on stre | v3_core.cpp:657-686; v3_calib.R:86,100 |
 | 20 | LSgets LocalSearch(best scored model, ell_n); Guard; E_3,iotagets[F(t | v3_core.cpp:687-692; v3_calib.R:103 |
 | 21 | E_1gets[exists r: b_r<F(textbest)-1];  E_2gets[sd(logZhat_1,dots,logZ | v3_calib.R:101-102,109-110 |
-| 22 | grid'gets BuildGrid(Xi) (the sets mathcal L_0,mathcal L_1 have been u | v3_calib.R:111-114 |
+| 22 | grid'gets BuildGrid(Xi) (the sets mathcal L_0,mathcal L_1 have been u | v3_calib.R:111-114; v3_core.cpp:699-724 |
 | 23 | if grid' has exactly the same temperatures as grid then grid gets gri | v3_calib.R:115-116 |
 | 24 | if not trig.gridfail and not converged then trig.unconverged gets tru | v3_calib.R:118 |
 | 25 | if trig.gridfail and i=1 then fb gets the last grid built successfull | v3_calib.R:120-126 |
@@ -154,12 +154,12 @@ Algorithm numbers are the order of appearance: 1 Run (with Check, Guard); 2 Bloc
 | 1 | RoundS,xi | v3_engine.h:195-214 |
 | 2 | draw a uniformly random order of the m labels G_1,dots,G_p,U,N_1,dots | v3_engine.h:195-214 |
 | 3 | GibbsS,j,xiCommentinclusion update of predictor j | v3_engine.h:111-131 |
-| 4 | if jin S then S^+gets S, S^-gets Ssetminusj; else if abs S<K then S^+ | v3_engine.h:115-127 |
-| 5 | agetsgamma_xi(S^+)/gamma_xi(S^-) and o_jgets a/(1+a) (evaluated as a | v3_engine.h:122-128; v3_util.h:30-34 |
+| 4 | if jin S then S^+gets S, S^-gets Ssetminusj; else if abs S<K then S^+ | v3_engine.h:113-127 |
+| 5 | agetsgamma_xi(S^+)/gamma_xi(S^-) and o_jgets a/(1+a) (evaluated as a | v3_engine.h:119-128; v3_util.h:30-34 |
 | 6 | draw u (one uniform, also when o_jin0,1); include j iff u<o_j; Sgets | v3_engine.h:129-131 |
 | 7 | UniformSwapS,xi | v3_engine.h:148-158 |
 | 8 | if abs Sin0,p then do nothing (no uniform used) | v3_engine.h:148 |
-| 9 | jgets a member of S, lgets a non-member, each uniform (lfloor ukrfloo | v3_engine.h:150-158 |
+| 9 | jgets a member of S, lgets a non-member, each uniform (lfloor ukrfloo | v3_engine.h:14,150-158 |
 | 10 | NeighbourSwapS,xi | v3_engine.h:164-179 |
 | 11 | if S=emptyset then do nothing; jgets a uniform member of S; mathcal C | v3_engine.h:164-170 |
 | 12 | lgets uniform in mathcal C (increasing list); S'gets(Ssetminusj)cupl; | v3_engine.h:171-179 |
@@ -171,7 +171,7 @@ Algorithm numbers are the order of appearance: 1 Run (with Check, Guard); 2 Bloc
 | line | text (start) | code pin |
 |---|---|---|
 | 1 | LocalSearchC_0,cap | v3_engine.h:380-415 |
-| 2 | Cgets C_0; Eval(C); mvgets0 | v3_engine.h:382-383 |
+| 2 | Cgets C_0; Eval(C); mvgets0 | v3_engine.h:377-383; v3_core.cpp:456,476,642,689 |
 | 3 | true | v3_engine.h:386-415 |
 | 4 | bestgets none; for every Q below, Eval(Q) and: if best is none or F(Q | v3_engine.h:387-393 |
 | 5 | for j=1,dots,p in order: Qgets Csetminusj if jin C; Qgets Ccupj if jn | v3_engine.h:394-399 |
@@ -200,12 +200,12 @@ Algorithm numbers are the order of appearance: 1 Run (with Check, Guard); 2 Bloc
 | 9 | PIPhat_jgetsfrac14sum_r=1^4PIPhat_r,j (equal weights);  MPMhatgetsj:P | v3_run.R:159-163 |
 | 10 | cert_1gets[LS_1 certified wedge Shat= its returned model];  cert_0get | v3_run.R:178-179,185-197 |
 | 11 | mathcal Tgets the store mathcal T with its log scores F (absmathcal T | v3_run.R:210; v3_ledger.h:72,78 |
-| 12 | list-renormalised fields: F_maxgetsmax_Sinmathcal TF(S); u_SgetsexpF( | v3_run.R:176,245-268 |
-| 13 | diagnostics, reported only (never change an output): E_1,E_2,E_3 on t | v3_run.R:169-209 |
+| 12 | list-renormalised fields: F_maxgetsmax_Sinmathcal TF(S); u_SgetsexpF( | v3_run.R:176,240-278 |
+| 13 | diagnostics, reported only (never change an output): E_1,E_2,E_3 on t | v3_run.R:169-209 (E1-E3 181-191) |
 | 14 | return Shat,PIPhat,MPMhat,logZhat,log(0.05Zhat), certified, mathcal T | v3_run.R:119-222; v3_fit.R:176 |
 | 15 | ReportExactCommentstatus exact (every SinOm was scored) | v3_fit.R:120-131; v3_core.cpp:524-567 |
 | 16 | Shatgets the best model under Better (the highest posterior model); l | v3_core.cpp:557-559; v3_exact.R:13-15; v3_fit.R:125-127 |
-| 17 | certified gets true; the global-certificate flag gets[F(Shat)-eta(Sha | v3_fit.R:128-129,131; v3_run.R:271-279; v3_core.cpp:560-567; v3_score.h:241-243 |
+| 17 | certified gets true; the global-certificate flag gets[F(Shat)-eta(Sha | v3_fit.R:128-129,131; v3_run.R:271-279; v3_core.cpp:538-551,560-567; v3_score.h:204-224,240-246 |
 
 ## A6 prose vs code differences
 
@@ -223,7 +223,11 @@ Both sides are pinned; the sampler follows the code. Most are omissions in the A
 ## Could not determine
 
 * **Exact stream seeding.** Algorithm 4 line 2 says stream $j$ is seeded by $(s,j)$. I read the stream numbers (`v3_run.R:8-11`; `cpp/v3_core.cpp:444,626,667`) but did not trace the seeding function itself, so the way $s$ and $j$ combine is not transcribed.
-* **The rounding margin $\eta$.** Algorithm 8, `ReportExact`, says "heuristic rounding bound" without its formula: `cpp/v3_score.h:241-243` was read only in part (A6: 64 machine epsilons times a conditioning factor).
+* **The rounding margin $\eta$.** Resolved after the Sol fidelity review (A05): Algorithm 8, `ReportExact`, now states the formula, `cpp/v3_score.h:204-224,240-246`, used at `cpp/v3_core.cpp:538-551,560-567`.
 * **Parts of files read only partly:** `cpp/v3_score.h`, `cpp/v3_util.h` and `cpp/v3_core.cpp` lines 330-399; pins into them rest on the parts read. I did not check that the statement in Algorithm 4 (`Calibrate`, the `schedule_limit` line) that the no-grid case at $i=0$ (`grid_failure_no_escalation`) is unreachable; this is argued from the trigger list (a failed grid is a trigger at tier 0).
-* **The anchored standardisation** (Algorithm 1 line 9, `v3_preprocess.R:37-68`) is summarised in words; its exact formula was not transcribed.
+* **The anchored standardisation** (Algorithm 1 line 9, `v3_preprocess.R:37-68`): resolved after the Sol fidelity review (A09); the anchored route is now described step by step (subtract the first raw entry, divide by the largest absolute difference, centre twice), with the test on the largest absolute centred scaled entry.
 * **Cache clearing and memory-estimate constants** (Algorithm 1, `Check`: the factors $29$, $80p+1$, $4096$, etc.) are copied from `v3_fit.R:36-47`; I did not test them numerically.
+
+## Changes after the Sol fidelity review (A01-A44)
+
+Lines whose text or pin changed (pins above updated in place): Algorithm 1 lines 3, 4, 6 (`\mathrm{col}` replaces the old symbol for the label map), 9, 13, 18, 20 (new label `ln:run-frozen`), 25, 26, 36, 39; Algorithm 2 lines 8, 12; Algorithm 3 lines 2, 10, 12, 20; Algorithm 4 lines 12, 13, 16, 19, 22, 27, 30; Algorithm 5 line 7; Algorithm 6 lines 4, 5, 9, 12; Algorithm 7 line 2; Algorithm 8 lines 12, 13, 17 and the `\Ensure`. No numbered line was added or removed (counts remain 39, 13, 20, 33, 12, 14, 14, 17).

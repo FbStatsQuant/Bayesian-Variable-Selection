@@ -32,6 +32,7 @@ the case $L=1$.
 \end{assumption}
 
 \begin{assumption}{FSb}{Fixed signals, raw scale}
+The intercept $\alpha^*$ and the raw coefficients $\bstar$ are deterministic, and
 $b_{\mathrm{lo}}\le\abs{\beta^*_j}\le b_{\mathrm{hi}}$ for every $j\in\Sz$, with fixed $0<b_{\mathrm{lo}}\le b_{\mathrm{hi}}<\infty$.
 \end{assumption}
 
@@ -111,7 +112,9 @@ $c_{\mathrm{SB}}:=\kappa^2\tlow^2/\{200(M_1^2+\sigs^2)\}$.
 \subsection{The witness designs}\label{sec:a-wit}
 
 \begin{assumption}{WIT}{Witness designs; A6 Theorem~6(b)}
-$\sz$ is fixed; $\norm{\mu}^2\le nM_\mu$ and $\norm{\tstar}^2\le nM_\theta$ for fixed $M_\mu$, $M_\theta$; and one of:
+$\sz$ is fixed; the true columns $\Xr_{\Sz}$ and $\tstar$ are deterministic (if they are random, the conditions below hold
+conditionally on $(\Xr_{\Sz},\tstar)$ on events of probability tending to one, with the same constants);
+$\norm{\mu}^2\le nM_\mu$ and $\norm{\tstar}^2\le nM_\theta$ for fixed $M_\mu$, $M_\theta$; and one of:
 \begin{asmitems}
   \item\label{asm:wit-orth} \emph{(N-orth)} the columns of $X$ outside $\Sz$ are mutually orthogonal and orthogonal to the
     columns in $\Sz$; or
@@ -210,8 +213,8 @@ The conventions fix what ``the method'' means and idealise the computer; they ar
 
 \begin{convention}{C1}{The method}
 Exact arithmetic, the default configuration, valid inputs and seed. A run that meets it is \emph{admissible}; a sample
-size $n$ is admissible if the method accepts some data set of that size as valid input. Statements hold for every valid
-seed and every outcome of the calibration.
+size $n$ is admissible if the method accepts some data set of that size as valid input. A statement that holds for every
+valid seed and every outcome of the calibration says so.
 \end{convention}
 
 \begin{convention}{C2}{Delivery}
@@ -230,17 +233,17 @@ seed and every outcome of the calibration.
     a fixed number of islands; the fallback temperature sequence switched on (the default).
   \item \emph{Random numbers and stops:} ideal independent uniform random numbers; the method's stop-and-return rule and
     stop-only resource guard as coded (a stopped run returns no estimates).
-  \item \emph{Inputs and allocation:} a valid seed (an integer in $[1,2^{31}-1]$) and a declared memory and time
+  \item \emph{Inputs and allocation:} a valid non-degenerate input (finite data, a response of length $n\ge3$ that is not
+    constant, at least one non-constant predictor column), a valid seed (an integer in $[1,2^{31}-1]$), and a declared memory and time
     allocation at least the method's explicit polynomial work and memory envelopes in $(n,\praw)$, including the memory
     checks made before the run and the bounds on the records and time of the local searches.
 \end{enumerate}
 \end{convention}
 
 \begin{convention}{C2p}{Delivery, with the integer limits lifted}
-An idealised machine that never overflows or fails (\as{C2}(i)), ideal random numbers, and the two fixed integer limits of Table~\ref{tab:params} (the ceiling
-$10^6$ on $\ell_n$ and the bound $2^{31}-1$ on $\ell_n+\abs{\tSz}$) removed, everything else (other validators, the cap on the
-enumeration used to find the start mode, and its fallback, every method cap) kept as coded, and an allocation of at least
-the memory and time that the method's own polynomial requirement formulas require.
+Convention~\as{C2}, with in addition the two fixed integer limits of Table~\ref{tab:params} (the ceiling $10^6$ on $\ell_n$
+and the bound $2^{31}-1$ on $\ell_n+\abs{\tSz}$) idealised away; every other validator and cap (including the cap on the
+enumeration used to find the start mode, and its fallback) is kept as coded.
 \end{convention}
 
 \begin{convention}{C3}{Sampler}
@@ -271,31 +274,31 @@ Theorems~1--6 are in Section~\ref{sec:proved}; S-numbers are in Section~\ref{sec
 Assumption & Used by \\
 \midrule
 Assumption~\as{GL} & Thm.~\ref{thm:post-random}, \ref{thm:screen}, \ref{rem:sharp}(b); \ref{thm:post-fixed}, \ref{rem:no-betamin}, \ref{thm:post-margin}, \ref{thm:reported-fixed} \\
-Assumption~\as{DIM} & Thm.~\ref{thm:post-random}, \ref{thm:reported}; \ref{thm:post-fixed}, \ref{rem:no-betamin}, \ref{thm:post-margin}, \ref{thm:omitted}, \ref{thm:start}, \ref{thm:reported-fixed}, \ref{cor:famc}, \ref{cor:list}, \ref{thm:outputs} \\
-Assumption~\as{SP} & Thm.~\ref{thm:post-random}; \ref{thm:post-fixed}, \ref{rem:no-betamin}, \ref{thm:post-margin}, \ref{thm:reported-fixed} \\
+Assumption~\as{DIM} & Thm.~\ref{thm:post-random}, \ref{thm:reported}; \ref{thm:post-fixed}, \ref{rem:no-betamin}, \ref{thm:post-margin}, \ref{thm:omitted}, \ref{rem:thm2x}, \ref{thm:start}, \ref{thm:reported-fixed}, \ref{cor:famc}, \ref{cor:list}, \ref{thm:outputs} \\
+Assumption~\as{SP} & Thm.~\ref{thm:post-random}; \ref{thm:post-fixed}, \ref{rem:no-betamin}, \ref{thm:post-margin}, \ref{rem:thm2x}, \ref{thm:reported-fixed} \\
 Assumption~\as{GR} & Thm.~\ref{thm:reported}; \ref{thm:start}, \ref{cor:famc}, \ref{cor:list}, \ref{thm:outputs} \\
 Assumption~\as{SGR} & Thm.~\ref{thm:post-random} \\
 Assumption~\as{FSb} & Thm.~\ref{thm:post-random} \\
 Assumption~\as{FSt} & Thm.~\ref{thm:reported}; \ref{thm:start}, \ref{cor:famc}, \ref{cor:list}, \ref{thm:outputs} \\
-Assumption~\as{EFS} & Thm.~\ref{thm:post-random}, \ref{thm:reported}; \ref{cor:famc}, \ref{cor:list}, \ref{thm:outputs} \\
+Assumption~\as{EFS} & Thm.~\ref{thm:post-random}, \ref{thm:reported}; \ref{cor:list}, \ref{thm:outputs} \\
 Assumption~\as{dist} & Thm.~\ref{thm:dist}; \ref{prop:dist}, \ref{thm:dist-param}, \ref{cor:dist-output}; planned \ref{thm:bridge} \\
-Assumption~\as{V} & Thm.~\ref{thm:reported}; \ref{thm:start}, \ref{cor:famc}, \ref{cor:list}, \ref{thm:outputs} \\
-Assumption~\as{reported} & Thm.~\ref{thm:reported}; \ref{cor:famc}, \ref{cor:list}; planned \ref{thm:cov7}(i), \ref{thm:bridge}, \ref{thm:agg-leak} \\
+Assumption~\as{V} & Thm.~\ref{thm:reported}; \ref{thm:start}, \ref{cor:list}, \ref{thm:outputs} \\
+Assumption~\as{reported} & Thm.~\ref{thm:reported}; \ref{cor:list}; planned \ref{thm:cov7}(i), \ref{thm:bridge}, \ref{thm:agg-leak} \\
 Assumption~\as{SCR} & Thm.~\ref{thm:screen} \\
 Assumption~\as{WIT} & Thm.~\ref{rem:sharp}(b) \\
 Assumption~\as{BC} & \ref{thm:post-fixed}, \ref{rem:no-betamin}, \ref{thm:post-margin}, \ref{thm:reported-fixed} \\
-Assumption~\as{EF} & \ref{thm:post-fixed}, \ref{rem:no-betamin}, \ref{thm:post-margin}, \ref{thm:reported-fixed} \\
+Assumption~\as{EF} & \ref{thm:post-fixed}, \ref{rem:no-betamin}, \ref{thm:reported-fixed} \\
 Assumption~\as{NC} & \ref{thm:post-fixed}, \ref{rem:no-betamin}, \ref{thm:post-margin}, \ref{thm:reported-fixed} \\
-Assumption~\as{BM} & \ref{thm:post-fixed}, \ref{thm:post-margin}, \ref{thm:reported-fixed} \\
+Assumption~\as{BM} & \ref{thm:post-fixed}, \ref{thm:reported-fixed} \\
 Assumption~\as{margin} & \ref{thm:post-margin} \\
 Assumption~\as{omitted} & \ref{thm:omitted} \\
 Assumption~\as{NL} & \ref{thm:start}, \ref{thm:outputs} \\
 Assumption~\as{reported-fixed} & \ref{thm:reported-fixed} \\
 Convention~\as{C1} & Thm.~\ref{thm:reported}, \ref{thm:screen}; \ref{thm:reported-fixed}, \ref{cor:famc}, \ref{cor:list}, \ref{thm:outputs} \\
-Convention~\as{C2} & \ref{thm:reported-fixed} \\
+Convention~\as{C2} & Thm.~\ref{thm:reported}; \ref{thm:reported-fixed}, \ref{cor:famc} \\
 Convention~\as{C2p} & Thm.~\ref{thm:reported}; \ref{thm:reported-fixed}, \ref{cor:famc}, \ref{cor:list} \\
 Convention~\as{C3} & Thm.~\ref{prop:unbiased}; \ref{thm:outputs}, \ref{prop:worst-island}, \ref{rem:alt-route} \\
-No assumption & Theorem~\ref{rem:sharp}(a); \ref{lem:summaries}; \ref{rem:vis} (gives \as{V}); \ref{rem:thm2x} (hypotheses stated in it) \\
+No assumption & Thm.~\ref{rem:sharp}(a); \ref{lem:summaries}; \ref{rem:vis} (gives \as{V}) \\
 \bottomrule
 \end{tabular}
 \end{table}

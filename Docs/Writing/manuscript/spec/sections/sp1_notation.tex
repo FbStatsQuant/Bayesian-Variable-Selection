@@ -16,6 +16,10 @@ meaning ($a_n\gg b_n$: $b_n=o(a_n)$).
 \begin{definition}[Data and retained predictors]\label{def:data}
 The data are a response $\yr\in\R^n$ and $\praw$ predictors. A predictor that is constant in the sample is
 \emph{removed}; $\Xr$ is the $n\times p$ matrix of the $p$ retained predictors, and $p$ always denotes this number.
+The retained predictors are indexed $1,\dots,p$ in the order of their original columns, and $\mathrm{col}(j)\in\set{\praw}$ is the
+original one-based column number of retained predictor $j$ (the \emph{label map}). Models and all indices in this
+document are retained indices; the method reports models, the median model and inclusion-probability labels in original
+column numbers, $j\mapsto\mathrm{col}(j)$.
 \end{definition}
 
 \begin{definition}[Designs]\label{def:designs}
@@ -53,8 +57,10 @@ $\tmin:=\min_{j\in\Sz}\abs{\theta^*_j}$.
 \end{definition}
 
 \begin{definition}[Asymptotic regime and rate parameters]\label{def:regime}
-All results are asymptotic in $n\to\infty$, along a sequence of problems in which $p=p_n$ (and $\praw$), the design and
-the coefficients may change with $n$. A quantity is \emph{fixed} if it does not depend on $n$; every constant introduced
+Most results are asymptotic in $n\to\infty$, along a sequence of problems in which $p=p_n$ (and $\praw$), the design and
+the coefficients may change with $n$. Lemma~\ref{lem:summaries}, Theorem~\ref{rem:sharp}(a) and Proposition~\ref{prop:unbiased} hold for every data
+set; Theorem~\ref{thm:dist} holds for every $n\ge n_0$; the delivery clauses hold for every admissible $n$. A quantity is
+\emph{fixed} if it does not depend on $n$; every constant introduced
 in an assumption is fixed. The parameters that may depend on $n$, and where they are introduced, are:
 \begin{itemize}[leftmargin=1.5em,itemsep=0pt]
   \item the dimensions $n$, $p=p_n$, $\praw$, and the true model size $\sz$ (fixed under \as{SP});
