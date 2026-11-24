@@ -79,9 +79,10 @@ second local search starts from the start mode and does not depend on the partic
 \paragraph{Stage 1: inputs, the exact case and the check before the run.} Invalid inputs stop the run with no model; a constant response, or no retained predictor, stops it with the empty
 model and no estimates. If the model space is small, at most $(5\Nc_0+4N_0)\,p$ models with $N_0:=\max(2500,n,p)$ and
 $\Nc_0:=\lceil512N_0/2500\rceil$ (Appendix~\ref{app:params}), the method scores every model and computes everything
-exactly. Otherwise it estimates the memory the run will need and the worst-case time of the local search from the start
-mode, and stops with status \texttt{resource\_limit} if the
-estimate exceeds the allocation (8\,GiB and 24 hours by default).
+exactly. In both cases it first estimates the memory and time the run will need (for enumeration, from the number of
+models and a timing of the scorer; for the sampler, including the worst-case time of the local search from the start
+mode), and stops with status \texttt{resource\_limit} if the estimate exceeds the allocation (8\,GiB and 24 hours by
+default).
 
 \paragraph{Stage 2: blocks and block tables.} The method partitions the predictors into blocks $C_1,\dots,C_J$ of at most
 $B:=\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)$ predictors, by complete-linkage clustering on $1-\abs{\hat r_{jl}}$,
@@ -124,8 +125,9 @@ $\Zhat_r:=m(\emptyset)\,\bar Z_0\prod_{t=1}^{\Ts}\{N^{-1}\sum_v\omega^{(t)}_v\}$
 the product of the average reweighting factors.
 
 The \emph{calibration} (stage 4) chooses the grid and the effort before the final run, from one pilot island and a few
-rounds of four short diagnostic islands; the grid is chosen so that each step keeps at least $90\%$ effective sample
-size, computed on a set of candidate models. The calibration starts at
+rounds of four short diagnostic islands; the main construction chooses a grid on which each step keeps at least $90\%$
+effective sample size, computed on a set of candidate models (a fallback grid need not, and this is not a bound on the
+final run's effective sample size). The calibration starts at
 tier $i=0$ and moves at most once to tier $i=1$, which multiplies all particle numbers by four, when one of its
 diagnostics fires (Appendix~\ref{sec:supp-cal} gives the full procedure). Three facts are all that the results use: the calibration's outcome is a function of the data and of its own
 random numbers; it is \emph{frozen} before the final run draws any random number; and it \emph{succeeds} when it freezes a
@@ -137,8 +139,9 @@ its own random stream.
 predictor, adding one (while the size is below $K$), or swapping a member for a non-member. A local search scans every
 neighbour of the current model and moves to the best one (ties broken lexicographically) if its log score is strictly
 higher, for at most a capped number of moves. If a scan finds no strictly better neighbour, the search stops and its end
-point is \emph{certified} (a local optimum). If it uses up its move cap first, it scans once more: the end point is
-certified if that scan finds no improvement, and uncertified otherwise. Two searches run after the islands: from the best model found so far, with move cap
+point is \emph{certified} (a local optimum). If it uses up its move cap first, it scans once more: if that scan finds no
+improvement the end point is certified; otherwise the search returns the best improving neighbour, uncertified. Every
+scanned model also counts towards the best model the run has scored. Two searches run after the islands: from the best model found so far, with move cap
 $\ell_n:=\lceil\log_2(n+p+1)\rceil$; and from the start mode $\tSz$, with move cap $\ell_n+\abs{\tSz}$.
 
 \subsection{What a run reports}\label{sec:outputs-method}
@@ -176,8 +179,9 @@ Section~\ref{sec:posterior}, and the theorems of Section~\ref{sec:proved} say wh
     it is what one compares across priors or data sets. Given the calibration, $\Zhat$ is unbiased for $Z$
     (Result~5), so, by Markov's inequality, the probability that the run completes and still reports a lower bound
     $\log(0.05\,\Zhat)$ above $\log Z$ is at most $0.05$.
-  \item \emph{The returned list $\mathcal T$} holds the best models scored, with their exact log scores; renormalising
-    the posterior to it gives a second set of estimates (supplement, Corollary~\ref{cor:list}).
+  \item \emph{The returned list $\mathcal T$} holds the best models scored, with their exact log scores. A completed run
+    also reports the posterior renormalised to this list: a second set of inclusion probabilities, median model and
+    evidence (supplement, Corollary~\ref{cor:list}).
 \end{itemize}
 At moderate $n$ these outputs describe a posterior spread over the true model and many one-predictor extensions of it,
 not a point mass: in single synthetic draws at $n=200$ the one-predictor extensions together weighed about as much as the
@@ -230,18 +234,21 @@ ways listed in Table~\ref{tab:engine}, and none of the theorems above has been p
 elsewhere; this edition quotes no result from them.
 
 \paragraph{The frozen configuration.} It runs $R'=16$ islands as separate processes that do not communicate, merged as
-the method pools its four. Each island has a fixed $N=2{,}500$ particles ($10^4$ for the runs at $p=10^5$; a planned
-$10^6$ fit with $N=10^4$ was never run). The calibration is the pilot alone: no rebuilds ($I_{\max}=0$, the number of
-rebuild rounds, set in every run plan; the program's default is $3$), no refinement of the pilot's grid ($m=1$, the
-setting \code{refine_m}), and no move to the larger tier. The method's multinomial resampling is kept. Appendix
+the method pools its four. Each island has a fixed $N=2{,}500$ particles ($10^4$ for the rung and pilot runs at $p=10^5$,
+where two continuity runs kept $2{,}500$; a planned $10^6$ fit with $N=10^4$ was never run). The calibration builds a
+candidate grid from the pilot and uses it if that construction succeeds, otherwise the pilot's schedule; there are no
+diagnostic rebuilds ($I_{\max}=0$, the number of rebuild rounds, set in every run plan; the program's default is $3$), no
+refinement of the selected grid ($m=1$, the setting \code{refine_m}), and no move to the larger tier. The method's multinomial resampling is kept. Appendix
 Table~\ref{tab:engine} lists every change against the method.
 
 \paragraph{How it was checked against the method.} Only at $p=10^4$: ten simulated data sets, two seeds each, run with both
-the method and the engine (40 fits), scored against criteria declared before any fit (same best model, same median
-probability model, inclusion probabilities and evidence within their Monte Carlo error, predictive laws close, cost).
-The engine matched the method on all of them, under the scoring script as corrected before scoring (an independent
-review had found a defect in the registered script, which printed a weaker verdict); a re-score with $I_{\max}=0$ also
-matched. There was
+the method and the engine (40 fits), scored against criteria declared before any fit: the same best model on at least
+nine of the ten data sets; the same median probability model in every seed pair; inclusion probabilities within
+$\max(0.01,\ 3\times\text{their combined standard error})$; evidence estimates within three combined standard errors (with a seed-to-seed
+yardstick and an island floor); close predictive laws; and cost. The registered scoring script did not print a clean
+verdict, because of a defect that an independent review identified; under the amended script, which governs, every
+criterion passed (and the best model agreed on all ten data sets). A later re-score, with fourteen engine fits rerun at
+$I_{\max}=0$ and the other fits as before, was also clean. There was
 no run of the method at $p=10^5$ or $10^6$; there the engine was judged only by its own pre-declared precision, cost,
 memory and restart criteria. Whether a parallel engine that reproduces the method's output inherits its guarantees, and
 what more islands and a fixed particle number do to them, are open (Section~\ref{sec:planned}).

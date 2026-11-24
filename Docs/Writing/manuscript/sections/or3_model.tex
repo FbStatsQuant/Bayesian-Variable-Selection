@@ -39,7 +39,8 @@ $\tfrac12$, each one-predictor model $\tfrac1{10}$, and each larger model $\tfra
 \toprule
 Choice & Default & Why \\
 \midrule
-likelihood & Gaussian linear model with an intercept, on centred and scaled data &
+likelihood & Gaussian linear model with an intercept on the raw scale; the method centres and scales the data and
+scores the centred model, with no intercept parameter &
 the standard model for variable selection; standardising makes the posterior unchanged when the response is shifted or
 rescaled, and puts every predictor on one scale, so one prior fits all. \\
 model-size prior & $\BB(1,p)$: $w(k)=\tfrac12/\binom{2p-1}{k}$ &
@@ -93,7 +94,7 @@ theorem that makes the posterior miss small makes every summary right at once.
 
 \paragraph{Compared with \SL.} The two priors are close in kind. \emph{Model prior:} theirs lets each predictor enter
 independently with probability $\lambda_n=r_n/P_n$, where $P_n$ is their number of predictors (our $p$), and caps the model size at $\bar r_n$ (their (6), p.~951); both $r_n$
-and $\bar r_n$ are chosen by the user, and their theorems need $\lambda_n\to0$. Ours mixes over the inclusion probability
+and $\bar r_n$ are chosen by the user, and their Theorems~1--3 need $\lambda_n\to0$ (their (13), p.~952). Ours mixes over the inclusion probability
 (beta-binomial), which costs each predictor about $\log p$ in log prior odds, as theirs does for their usual choices of $r_n$, with nothing to choose, and fixes the cap at
 $\lfloor n/2\rfloor$. \emph{Coefficients:} theirs is $\Normal(0,\sigma^2V_\xi)$ with a user-chosen $V_\xi$ (p.~951); in
 their numerical work $V_\xi^{-1}=(X_\xi^\top X_\xi+\tau I)/n$ with $\tau=0.01$ (p.~959). Ours is exactly this form with

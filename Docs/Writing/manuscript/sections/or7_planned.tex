@@ -5,8 +5,9 @@
 \textsf{PLANNED --- nothing here is claimed.} #1}}\par\smallskip}
 
 Everything in this section is planned work. None of it is proved, and no sentence here is a claim about the method. The
-theory work has been paused since 2026-11-20. The owner has set the order: the trap theorem first, then the analysis at
-$p=10^7$, both after the $p=10^6$ runs. Lean work starts only when the owner approves it.
+theory work has been paused since 2026-11-20 until the owner restarts it. The owner has set the order: the trap theorem
+first, then the analysis at $p=10^7$, both after the $p=10^6$ runs and only if those go well; neither is committed. Lean
+work starts only when the owner approves it.
 
 \subsection{PLANNED: the trap theorem}\label{sec:plan-trap}
 
@@ -28,7 +29,8 @@ questions (Section~\ref{sec:open-hq}).
 \plannedbanner{The engine design is paused; the theory analysis is not started.}
 
 \paragraph{What is planned.} One showcase fit at $p=10^7$: one simulated autoregressive data set with $n=200$ and a known
-true model, one seed, on an engine derived from the $p=10^6$ engine and required to give identical output at $p\le10^6$,
+true model, one seed, on an engine derived from the $p=10^6$ engine and required to give bit-identical output to it at default
+settings on the overlap and $p=10^6$ test data sets (one $p=10^6$ fit included),
 with a theory analysis of ``coverage at $p=10^7$''. No project document defines ``coverage''. It could mean whether the
 hypotheses of Results~1--6 can hold at $n=200$ and $p=10^7$ (\as{DIM} allows $p\le n^A$, so $A\ge3.04$ here), or which
 statements a single fit with one seed can support at all. This edition says only that such an analysis is planned; which
@@ -52,9 +54,11 @@ project scaffold and a few reusable small lemmas exist.
 \plannedbanner{None is proved; none is used by Results~1--6.}
 
 \begin{enumerate}[leftmargin=1.6em,itemsep=1pt]
-  \item \emph{From the returned list to a probability statement.} Corollary~\ref{cor:list} shows, data set by data set,
-    that the list a run returns holds enough posterior mass for Remark~\ref{cor:dist-output}. Turning this into a
-    probability statement needs a link between the standardised and the raw scale of the local search; it is open.
+  \item \emph{From the returned list to a probability statement.} Corollary~\ref{cor:list} gives, data set by data set
+    and under pathwise hypotheses (among them that the true model is in the list and the posterior miss is small), a bound
+    on the posterior mass of the list a run returns, the premise of Remark~\ref{cor:dist-output}. Turning this into a
+    probability statement under that remark's law needs a link between the standardised and the raw scale of the local
+    search; it is open.
   \item \emph{A Gaussian-row form of Result~3 with the leakage controlled in total} rather than one leaked predictor at a
     time.
   \item \emph{The start law when the mean of the response is a general vector} outside the span of the candidates
@@ -64,7 +68,8 @@ project scaffold and a few reusable small lemmas exist.
   \item \emph{The overlap premise} of Remark~\ref{rem:alt-route}, not yet derived from conditions on the design.
   \item \emph{The parallel method.} Pooling over the four coded islands is proved (Result~5, and the worst-island bound of the supplement, Section~\ref{sec:outputs}).
     That a parallel engine whose output is identical to the method's inherits every guarantee is supported by identical
-    outputs in tests, and a note is in progress; there is no theorem. More islands, island weighting and a fixed particle
-    number per island, as in the $p=10^6$ engine (Section~\ref{sec:supp-1m}), are open.
+    outputs on the data sets tested, and a note is in progress; there is no theorem, and the tests do not establish
+    identical output on every input. More islands, a secondary evidence-weighted pooling of the inclusion probabilities
+    (the primary pooling has equal weights), and a fixed particle number per island, as in the $p=10^6$ engine (Section~\ref{sec:supp-1m}), are open.
 \end{enumerate}
 Appendix~\ref{app:status} lists further possible strengthenings, none of them started.

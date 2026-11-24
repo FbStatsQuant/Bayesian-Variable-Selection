@@ -23,7 +23,8 @@ of true predictors fixed, satisfies it; we judge the qualitative conditions, not
 (a Gaussian linear model, sparsity, a bound on the dimension, a law for the predictors, an eigenvalue floor), plus fixed
 signals for Result~1, which \SL{} leave implicit (their theorems state no lower bound on the coefficients; their proofs
 use one). These assumptions hold on all our designs, strong common factors included. The theorem about the reported model (Result 3) adds two
-conditions that \SL{} do not have, visibility and a small leakage set; they hold for block and autoregressive designs and
+conditions that \SL{} do not have in this form: visibility given up to $15$ other predictors, with a uniform margin
+(they ask only a marginal form, for their screening procedure), and a small leakage set; they hold for block and autoregressive designs and
 fail for pervasive factors. That is why Result 3 is stated for block and AR designs, and why Result 4 exists: it needs
 neither condition.
 
@@ -44,9 +45,9 @@ Assumption & Used by & Reasonable? & vs \SL \\
 \lab{SP} fixed true model size & 1, 6(b) & few strong effects; nearly necessary for the rate & same as (4), p.~950 \\
 \midrule
 \multicolumn{4}{@{}l}{\textbf{The predictors and the signal}} \\
-\lab{SGR}, \lab{GR} law of the rows & 1--3 & Gaussian or sub-Gaussian; bounded features included, rare binary features not & stronger than Cond.~1, p.~953 (standardised predictors, their cap $\lesssim\log n$) \\
+\lab{SGR}, \lab{GR} law of the rows & 1--3 & Gaussian or sub-Gaussian; bounded features included, rare binary features not & stronger than Cond.~1, p.~953 (standardised predictors, their cap within our window) \\
 \lab{FSb}, \lab{FSt} fixed signals & 1, 3 & effects that do not shrink with $n$; Result 2 needs none & same, if their $\bstar$ is fixed \\
-\lab{EFS} eigenvalue floor & 1, 3 & holds in all our designs (floors $0.1$ to $1$); no upper bound, so factors allowed & mixed: stronger unless their $\bar r_n$ is large \\
+\lab{EFS} eigenvalue floor & 1, 3 & holds in all our designs (floors $0.1$ to $1$); no upper bound, so factors allowed & mixed: stronger than Cond.~3 when our window covers its sets; else not comparable \\
 \ref{asm:dist}(d) no near-collinearity & 2 & only exact duplicates and exact dependences fail & stronger: none in their Thms 1--2; not comparable with Cond.~3 \\
 \midrule
 \multicolumn{4}{@{}l}{\textbf{The reported model (Result 3 only)}} \\
@@ -107,8 +108,9 @@ The true model size $\sz\ge1$ is fixed.
 \Areas{Yes when a few strong effects drive the response; it is the usual assumption for exact selection. It is also nearly
 necessary for the rate we prove: on every design, $\pis{\Sz}\le\{1+(\sz+1)/(3\sqrt n)\}^{-1}$ (Result~6(a)), so a posterior
 miss of order $\rn$ is possible only if $\sz=O(\sqrt{\log n})$. Result~4 does not assume it.}
-\Asl{\emph{The same} as their strict sparsity (4), p.~950, which their Theorems~2, 3 and~S use; their Theorem~1 also
-allows growing supports (p.~950), so against that theorem ours is \emph{stronger}.}
+\Asl{\emph{The same} as their strict sparsity (4), p.~950, which their Theorems~2 and~3 use; their Theorem~S assumes
+a sparse true model without citing (4) (supp.\ p.~13), and their Theorem~1 also allows growing supports (p.~950), so
+against that theorem ours is \emph{stronger}.}
 
 % ------------------------------------------------------------------------------------------------
 \subsection{The predictors and the signal}\label{sec:a-post}
@@ -133,8 +135,9 @@ correlation matrix) of independent features $\eta_k$, each within $c$ standard d
 bounded data such as genotypes with allele frequencies bounded away from zero are inside. For Result~3 the Gaussian
 requirement is a real restriction: such genotype data are outside Result~3 as stated, though the fixed-design version
 (supplement, Theorem~\ref{thm:reported-fixed}) can cover an observed design that meets its conditions.}
-\Asl{\emph{Stronger} than their Condition~1 (p.~953) when their model-size cap $\bar r_n$ is of order $\log n$ or less;
-otherwise not comparable, except for Gaussian rows, which satisfy both. Details: Appendix~\ref{app:sl}.}
+\Asl{\emph{Stronger} than their Condition~1 (p.~953), for centred unit-variance predictors, when their model-size cap
+$\bar r_n$ is at most our window $5(A+1)(\sz+1)\log n$; otherwise not comparable, except for centred Gaussian rows with
+unit variances, which satisfy both. Details: Appendix~\ref{app:sl}.}
 
 \ahead{Fixed signals}{\lab{FSb}, \lab{FSt}}{}
 \Astate
@@ -173,8 +176,8 @@ are allowed. The smallest eigenvalue of $\Sig$ is $1$ (S1, IND), $1/3$ (S2), $0.
 $1-\rho$ (one factor at $\rho$), $0.40$ (two factors), $0.25$ (AR), $0.5$ (BLK) and $0.7$ (FAC). In real data with
 near-duplicate predictors (two genes correlated at $0.99$) the floor is small and the constants degrade, but the
 assumption still holds if the floor stays fixed.}
-\Asl{\emph{Mixed}: stronger than their Condition~3 (p.~955) when our sets are no larger than theirs; otherwise not
-comparable. Details: Appendix~\ref{app:sl}.}
+\Asl{\emph{Mixed}: stronger than their Condition~3 (p.~955) when our window covers the sets it constrains; otherwise,
+and against the Gram conditions of their Theorems~1 and~S, not comparable. Details: Appendix~\ref{app:sl}.}
 
 % ------------------------------------------------------------------------------------------------
 \subsection{The assumptions of the distribution result}\label{sec:a-dist}
@@ -210,8 +213,9 @@ whose effect is unbounded in noise units, for (e).}
 \Areas{Yes: every design we study is inside, and (d) is very mild; a user is inside after removing exact duplicates and
 exact linear dependences. There is no lower bound on the coefficients, so weak effects are allowed. Without (d) the result
 still holds with one extra factor $\sqrt{\log(\praw\vee n)}$ in the radius (supplement, Proposition~\ref{prop:dist}).}
-\Asl{Items (a)--(c) and (e) compare as the entries above; item (d) is \emph{stronger} than their Theorems~1--2, which
-have no such condition, and not comparable with their Condition~3. Details: Appendix~\ref{app:sl}.}
+\Asl{Items (a)--(c) compare as the entries above; item (e), an upper bound on each signal with no lower bound, has no
+direct counterpart; item (d) is \emph{stronger} than their Theorems~1--2, which have no such condition, and not comparable
+with their Condition~3. Details: Appendix~\ref{app:sl}.}
 
 % ------------------------------------------------------------------------------------------------
 \subsection{The assumptions of the reported-model result}\label{sec:a-rm}
@@ -319,7 +323,7 @@ much larger than a multiple of the sparsity. The budget inequality is a sufficie
 conservative: at the constants of the strong-factor designs it asks $n\gtrsim1{,}450$, while in those designs the certified
 model already contained every true predictor in all $30$ fits at $n=100$ (Remark~\ref{rem:screen}). No visibility or
 leakage condition is needed, so pervasive factors are allowed.}
-\Asl{\emph{As} the eigenvalue floor and the signal bounds above, on other sets. \SL's sure-screening Theorem~3 (p.~956) is
+\Asl{\emph{As} the eigenvalue floor and the signal bounds above, on other sets. \SL's Theorem~3 (p.~956) is
 the nearest conclusion; Section~\ref{sec:screen} compares the two.}
 
 % ------------------------------------------------------------------------------------------------
