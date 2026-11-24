@@ -19,3 +19,5 @@ Screenshots are in the HQ thread; the gist is below, in order.
    - The "vs Song and Liang" column is "as good as nothing for some rows".
    - Both columns must actually answer the question: is this assumption reasonable for real data, why, and how does
      it compare to theirs, in plain words.
+4. **Add a short section, before Table 1, stating Song and Liang's conditions** that the table compares against: model,
+   sparsity, Conditions 1, 3, 5, and the rest. Give each a formula plus words, with its page. "Else it is pointless."
