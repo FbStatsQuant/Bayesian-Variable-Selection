@@ -1,0 +1,138 @@
+% =====================================================================================================
+\section{The sampler}\label{sec:sampler}
+
+This section specifies SMC-BVS as coded at \code{method-v3.1.1-listpip}, in its default configuration. The inputs are
+the data, a seed and a computing allocation; every other quantity is a constant of Table~\ref{tab:params}.
+
+\subsection{Objects used by the sampler}\label{sec:sampler-objects}
+
+\begin{definition}[Particles, islands and rounds]\label{def:island}
+A \emph{particle} is a model $S\in\Om$. An \emph{island} is a population of particles evolved by
+Algorithm~\ref{alg:island} on a fixed grid with its own random stream. A \emph{round} applies the $p+B+2$ Markov moves of
+Definition~\ref{def:moves} to every particle, in an order drawn uniformly at random afresh for each particle and each
+round. A \emph{step} moves an island from $\grid{t-1}$ to $\grid t$.
+\end{definition}
+
+\begin{definition}[Neighbour graph]\label{def:nbgraph}
+The \emph{neighbour graph} is the graph on $\set{p}$ constructed in Algorithm~\ref{alg:blocks} from the sample
+correlations, with threshold $\abs{\hat r_{jl}}>\sqrt{2\log p/n}$ and between $1$ and $B$ neighbours per predictor before
+symmetrisation; $\mathcal N(j)$ is the set of neighbours of $j$.
+\end{definition}
+
+\begin{definition}[Markov moves]\label{def:moves}
+Each move leaves $\pi_\xi$ invariant and stays in $\Om$. With current model $S$ and temperature $\xi$:
+\begin{enumerate}[label=(\roman*),leftmargin=2em,itemsep=1pt]
+  \item \emph{Inclusion update of $j\in\set{p}$} (Gibbs): with $a:=\gamma_\xi(S\cup\{j\})/\gamma_\xi(S\setminus\{j\})$,
+    the new model is $S\cup\{j\}$ with probability $o_j:=a/(1+a)$ and $S\setminus\{j\}$ otherwise; $o_j:=0$ if
+    $\abs{S\setminus\{j\}}=K$.
+  \item \emph{Uniform swap}: pick $j\in S$ and $l\notin S$ uniformly at random, propose $S':=(S\setminus\{j\})\cup\{l\}$,
+    and accept with probability $\min\{1,\gamma_\xi(S')/\gamma_\xi(S)\}$. If $S=\emptyset$ or $S=\set{p}$ the move does
+    nothing.
+  \item \emph{Neighbour swap}: pick $j\in S$ uniformly, and $l\in\mathcal N(j)\setminus S$ uniformly; propose
+    $S':=(S\setminus\{j\})\cup\{l\}$, and accept with probability
+    \[
+      \min\Big\{1,\ \frac{\gamma_\xi(S')}{\gamma_\xi(S)}\cdot\frac{\abs{\mathcal N(j)\setminus S}}{\abs{\mathcal N(l)\setminus S'}}\Big\}.
+    \]
+    If $S=\emptyset$, or $\mathcal N(j)\setminus S=\emptyset$, the move does nothing.
+  \item \emph{Independence move}: propose $S'\sim\pi_0$, independently of $S$, and accept with probability
+    $\min\{1,\exp\{\xi(\Delta(S')-\Delta(S))\}\}$.
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[Neighbours of a model, and local search]\label{def:localsearch}
+Two models are \emph{neighbours} if one is obtained from the other by deleting a predictor, adding one (while the size is
+below $K$), or swapping a member for a non-member. A \emph{local search} with move cap $c$ from a model $S$ is
+Algorithm~\ref{alg:ls}. Its end point is \emph{certified} if the last scan found no neighbour with a strictly higher log
+score.
+\end{definition}
+
+\begin{definition}[Stores of scored models]\label{def:stores}
+Throughout a run the method keeps three stores of the models scored so far: the $40p+1$ best by $F$; the $20p$ best by
+$\gamma_0$; and the $20p$ best by $\gamma_1=e^{F}/m(\emptyset)$. \emph{The best model found so far} is the model with the
+highest $F$ among the models recorded so far: during the calibration, the block-table models and those scored in the
+calibration; in the final run, the block-table models, those scored in the final run, and the models passed on by the
+calibration.
+\end{definition}
+
+\subsection{The algorithm as coded}\label{sec:algorithm}
+
+\IfFileExists{sections/sp4_algorithms.tex}{\input{sections/sp4_algorithms}}{[Algorithms: to be inserted.]}
+
+\subsection{Outputs}\label{sec:outputs-method}
+
+\begin{definition}[Run outcomes]\label{def:outcomes}
+A run ends \emph{exact} ($\Om$ was enumerated), \emph{completed} (the sampler ran to the end), or \emph{stopped}. An
+exact or completed run \emph{produces output}. A stopped run reports no estimates. A run is \emph{admissible} when it meets
+Convention~\as{C1}. $\Acal$ is the event that the method uses the sampler and its calibration succeeds; every completed
+run lies in $\Acal$.
+\end{definition}
+
+\begin{definition}[Reported model and certification]\label{def:shat}
+The \emph{reported model} $\Shat$ is the best model by log score among all models the run scored, exact ties going to the
+smaller model, then to the lexicographically smaller one. $\Shat$ is \emph{certified} when the method enumerated $\Om$, or
+when $\Shat$ ends a local search whose last scan found no strict improvement.
+\end{definition}
+
+\begin{definition}[Inclusion-probability estimates and median model]\label{def:pipr}
+Island $r$'s estimate $\PIPhat_{r,j}$ is the average, over its particles and its four measured rounds, of the Gibbs
+probability $o_j$ of Definition~\ref{def:moves}(i). A completed run reports
+\[
+  \PIPhat_j:=\frac14\sum_{r=1}^4\PIPhat_{r,j},\qquad \MPMhat:=\{j:\PIPhat_j>1/2\}.
+\]
+An exact run reports the exact $\PIP_j$ and $\MPM$.
+\end{definition}
+
+\begin{definition}[Evidence estimate]\label{def:zhat}
+Island $r$'s evidence estimate is
+\[
+  \Zhat_r:=m(\emptyset)\,\bar Z_0\prod_{t=1}^{\Ts}\Big\{\frac1N\sum_{v=1}^N\omega^{(t)}_v\Big\},\qquad
+  \omega^{(t)}_v:=\exp\{(\grid t-\grid{t-1})\Delta(S_v)\},
+\]
+with $S_v$ the particles before reweighting at step $t$. A completed run reports $\log\Zhat$ with
+\begin{equation}\label{eq:pool}
+  \Zhat:=\frac14\sum_{r=1}^4\Zhat_r,
+\end{equation}
+and the lower bound $\log(0.05\,\Zhat)$; an exact run reports $\log Z$. Islands are not weighted by their evidence
+estimates.
+\end{definition}
+
+\begin{definition}[Returned list and list-renormalised quantities]\label{def:list}
+A completed run returns the list $\mathcal T$ of the best (at most $40p+1$) models it scored, with their log scores. For a
+nonempty $\mathcal T\subseteq\Om$,
+\[
+  Z_{\mathcal T}:=\sum_{S\in\mathcal T}e^{F(S)},\qquad
+  \mathrm{pip}_{\mathcal T}(j):=\frac{1}{Z_{\mathcal T}}\sum_{S\in\mathcal T,\,S\ni j}e^{F(S)},\qquad
+  \mathrm{mpm}_{\mathcal T}:=\{j:\mathrm{pip}_{\mathcal T}(j)>\tfrac12\}.
+\]
+A completed run reports these as its list-renormalised inclusion probabilities, median model and evidence. $\hat\Pi$ is
+the posterior restricted to $\mathcal T$: the models of $\mathcal T$ weighted in proportion to $e^{F(S)}$, each with its
+exact conditional posterior of $(\beta,\sigma^2)$ ($\hat\Pi$ is not computed by the method).
+\end{definition}
+
+\begin{definition}[Delivery domain]\label{def:dom}
+$\Dom:=\big\{(n,\praw):\lceil\log_2(n+\praw+1)\rceil\le10^6,\ \lceil\log_2(n+\praw+1)\rceil+\lfloor n/2\rfloor\le2^{31}-1\big\}$.
+\end{definition}
+
+\subsection{The parallel engine for \texorpdfstring{$p=10^6$}{p=10\^{}6} (engineering; no theorem covers it)}\label{sec:supp-1m}
+
+\emph{No statement of Sections~\ref{sec:theorems}--\ref{sec:supp} covers this engine.} Code tag \code{p1m-freeze-F2}
+(frozen 2026-11-19, on top of \code{method-v3.1.1-listpip}). It differs from Section~\ref{sec:algorithm} only as follows.
+\begin{enumerate}[leftmargin=2em,itemsep=1pt]
+  \item \emph{Islands:} $R'=16$ islands run as separate processes that do not communicate; merged by the union of their
+    stores, equal-weight inclusion probabilities, the plain mean of the $\Zhat_r$, and a final local search on the merged
+    store.
+  \item \emph{Particles:} a fixed $N=2{,}500$ per island ($10^4$ for the rung and pilot runs at $p=10^5$); no tiers.
+  \item \emph{Calibration:} a candidate grid built from the pilot, used if its construction succeeds, otherwise the
+    pilot's schedule; no diagnostic rebuilds ($I_{\max}=0$); the selected grid is not refined ($m=1$); no move to tier~1.
+  \item \emph{Blocks:} the same complete-linkage clustering, truncated at a correlation threshold, packed next-fit by
+    smallest index; at most $\min(B,14)$ predictors per block.
+  \item \emph{Random numbers:} addressed by position (counter-based); the result does not depend on the number of threads.
+  \item \emph{Scoring:} a batched kernel with different floating-point arithmetic (about $10^{-9}$ relative), on a fixed
+    instruction set; kernel passes admitted on a rolling basis; every accepted model re-scored by the exact scorer;
+    inclusion probabilities summed in exact fixed point.
+  \item \emph{Stores:} no score cache and no $20p$ stores; each island keeps its $40p+1$ best models, offered only above the
+    calibration floor.
+  \item \emph{Extra outputs:} a deterministic lower bound on $\log Z$ (the log of the summed exact weights of the stored
+    models), a predictive law from the stored models, and an evidence estimate from the top stored models.
+\end{enumerate}
+Multinomial resampling is unchanged.

@@ -1,0 +1,216 @@
+% =====================================================================================================
+\section{The distributions}\label{sec:prior}
+
+Throughout this section $S\in\Om$, and $X$, $y$ are the standardised data of Definition~\ref{def:standardise}.
+
+\subsection{Priors}
+
+\begin{definition}[Model prior, with the size cap $K$]\label{def:modelprior}
+The prior mass of a model $S\in\Om$ depends only on its size:
+\begin{equation}\label{eq:modelprior}
+  \pi(S)=\frac{w(\abs{S})}{\bar w_K},\qquad w(k):=\frac{1}{2\binom{2p-1}{k}},\qquad
+  \bar w_K:=\sum_{k=0}^{K}\binom{p}{k}w(k),
+\end{equation}
+and $\pi(S)=0$ for $\abs{S}>K$. This is the beta-binomial prior $\BB(1,p)$ restricted to $\Om$: $w(\abs{S})$ is the mass
+of $S$ when $q\sim\BetaDist(1,p)$ and, given $q$, each predictor enters independently with probability $q$.
+\end{definition}
+
+\begin{definition}[Coefficient prior]\label{def:slab}
+Given $S$ and $\sigma^2$, the coefficients have the $g$-prior with $g=n$ and a unit ridge,
+\begin{equation}\label{eq:slab}
+  \theta_S\mid S,\sigma^2\sim\Normal\big(0,\;n\sigma^2(G_S+I)^{-1}\big),
+\end{equation}
+with density
+\[
+  p(\theta_S\mid S,\sigma^2)=(2\pi n\sigma^2)^{-\abs{S}/2}\det(G_S+I)^{1/2}
+  \exp\Big\{-\frac{\theta_S^\top(G_S+I)\theta_S}{2n\sigma^2}\Big\}.
+\]
+For $S=\emptyset$ there is no coefficient.
+\end{definition}
+
+\begin{definition}[Variance prior]\label{def:ig}
+$\sigma^2\sim\IG(a_0,b_0)$ with $a_0=b_0=0.01$, independent of $S$, with density
+\[
+  p(\sigma^2)=\frac{b_0^{a_0}}{\Gamma(a_0)}(\sigma^2)^{-a_0-1}e^{-b_0/\sigma^2},\qquad \sigma^2>0 .
+\]
+\end{definition}
+
+\subsection{Posterior}
+
+\begin{definition}[Joint posterior]\label{def:jointpost}
+The posterior of $(S,\theta_S,\sigma^2)$ is the law on $\bigcup_{S\in\Om}\{S\}\times\R^{\abs{S}}\times(0,\infty)$ with
+density, with respect to counting measure on $\Om$ times Lebesgue measure,
+\[
+  \Pi(S,\theta_S,\sigma^2\mid y)\ \propto\ \pi(S)\,p(\theta_S\mid S,\sigma^2)\,p(\sigma^2)\,p(y\mid S,\theta_S,\sigma^2),
+\]
+with the factors of Definitions~\ref{def:modelprior}, \ref{def:slab}, \ref{def:ig} and~\ref{def:working}.
+\end{definition}
+
+\begin{definition}[Marginal likelihood]\label{def:marglik}
+The marginal likelihood of $S$ is $m(S):=\int\!\!\int p(y\mid S,\theta_S,\sigma^2)\,p(\theta_S\mid S,\sigma^2)\,p(\sigma^2)
+\,d\theta_S\,d\sigma^2$. In closed form,
+\begin{equation}\label{eq:marglik}
+  m(S)=C_n\Big(\frac{\det H_S}{\det(G_S+I)}\Big)^{-1/2}(2b_0+\SSq_S)^{-\nu},\quad
+  H_S:=(n+1)G_S+I,\ \ \SSq_S:=y^\top y-n\,z_S^\top H_S^{-1}z_S,
+\end{equation}
+with $\nu:=a_0+n/2$ and $C_n:=(2b_0)^{a_0}\Gamma(a_0+n/2)/\{\pi^{n/2}\Gamma(a_0)\}$ (here $\pi=3.14\ldots$); for
+$S=\emptyset$ the determinant ratio is $1$ and $\SSq_\emptyset=y^\top y$.
+\end{definition}
+
+\begin{definition}[Log score, posterior over models, evidence]\label{def:posterior}
+The \emph{log score} of $S\in\Om$, the \emph{posterior over models} and the \emph{evidence} are
+\begin{equation}\label{eq:posterior}
+  F(S):=\log\{w(\abs{S})/\bar w_K\}+\log m(S),\qquad \pis{S}=\frac{e^{F(S)}}{Z},\qquad Z:=\sum_{S'\in\Om}e^{F(S')} .
+\end{equation}
+\end{definition}
+
+\begin{definition}[Posterior summaries]\label{def:summaries}
+The \emph{inclusion probability} of predictor $j$ is $\PIP_j:=\sum_{S\ni j}\pis{S}$; the \emph{highest posterior model} is
+$\HPM:=\argmax_S\pis{S}$; the \emph{median probability model} is $\MPM:=\{j:\PIP_j>1/2\}$; and the \emph{posterior miss}
+is $1-\pis{\Sz}$.
+\end{definition}
+
+\begin{definition}[Fitted conditional law and Hellinger distance]\label{def:hellinger}
+In the setting of Definition~\ref{def:dist-setting}, a posterior draw $(S,\beta,\sigma^2)$, mapped back to the original
+units, defines the conditional law $\Normal(\bar y+(x-\bar x)^\top\beta,\sigma^2)$ of $y$ given $x$; the law of $x$ is not
+estimated. Let $f$ be the joint density of $(x,y)$ with $x$ from its true law and $y\mid x$ from this fitted law, and $f^*$
+the true joint density. Then $d_H(f,f^*):=(1-\int\sqrt{ff^*})^{1/2}$, and $\Pi(\cdot\mid\Dn)$ denotes the posterior of
+$(S,\beta,\sigma^2)$. The posterior is not defined if fewer than two predictors remain or the response is constant in the
+sample.
+\end{definition}
+
+\subsection{The start law and the tempered targets}
+
+\begin{definition}[Blocks and block tables]\label{def:blocks}
+The \emph{blocks} $C_1,\dots,C_J$ are a partition of $\set{p}$ into sets of at most
+$B:=\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)$ predictors, a deterministic function of $X$ constructed by
+Algorithm~\ref{alg:blocks}. For a block $C_k$ and $U\subseteq C_k$ with $\abs{U}\le K$, the \emph{block table} is
+$h_k(U):=m(U)/m(\emptyset)$, so $h_k(\emptyset)=1$.
+\end{definition}
+
+\begin{definition}[Start law and start mode]\label{def:startlaw}
+The start law is
+\begin{equation}\label{eq:startlaw}
+  \pi_0(S)=\frac{\gamma_0(S)}{\bar Z_0},\qquad \gamma_0(S):=\frac{w(\abs{S})}{\bar w_K}\prod_{k=1}^J h_k(S\cap C_k),\qquad
+  \bar Z_0:=\sum_{S\in\Om}\gamma_0(S),\qquad S\in\Om .
+\end{equation}
+The \emph{start mode} $\tSz$ is the maximiser of $\pi_0$ of smallest size, and among those the lexicographically smallest
+set.
+\end{definition}
+
+\begin{definition}[Discrepancy]\label{def:discrepancy}
+$\Delta(S):=\log\{m(S)/m(\emptyset)\}-\sum_{k=1}^J\log h_k(S\cap C_k)$. Then $\gamma_0(S)e^{\Delta(S)}=e^{F(S)}/m(\emptyset)$.
+\end{definition}
+
+\begin{definition}[Tempered targets]\label{def:path}
+For a temperature $\xi\in[0,1]$, $\gamma_\xi:=\gamma_0e^{\xi\Delta}$ and
+\begin{equation}\label{eq:path}
+  \pi_\xi(S):=\frac{\gamma_0(S)e^{\xi\Delta(S)}}{\sum_{S'\in\Om}\gamma_0(S')e^{\xi\Delta(S')}},\qquad S\in\Om,
+\end{equation}
+so $\pi_\xi=\pi_0$ at $\xi=0$ and $\pi_1=\pis{\cdot}$. The sampler runs along a \emph{grid} (schedule)
+$0=\grid0<\grid1<\dots<\grid{\Ts}=1$, chosen by the calibration (Definitions~\ref{def:pilot}--\ref{def:gridrule},
+Algorithm~\ref{alg:calib}) and then frozen.
+\end{definition}
+
+\begin{definition}[Effective sample size, and the pilot's next-temperature rule]\label{def:pilot}
+For particles $S_1,\dots,S_H$ and an increment $\delta\ge0$, the \emph{effective sample size} of the weights
+$e^{\delta\Delta(S_v)}$ is
+\[
+  \mathrm{ESS}(\delta):=\Big(\sum_{v=1}^He^{\delta\Delta(S_v)}\Big)^2\Big/\sum_{v=1}^He^{2\delta\Delta(S_v)} .
+\]
+From the current temperature $\xi$, the pilot's next temperature $\xi'$ is: $\xi'=1$ if $\mathrm{ESS}(1-\xi)\ge0.90H$;
+otherwise $\xi'=\mathrm{lo}$, where $\mathrm{lo}$ results from $60$ bisection halvings on $(\xi,1]$ started at
+$(\mathrm{lo},\mathrm{hi})=(\xi,1)$, each setting $\mathrm{lo}\leftarrow\mathrm{mid}$ if
+$\mathrm{ESS}(\mathrm{mid}-\xi)\ge0.90H$ and $\mathrm{hi}\leftarrow\mathrm{mid}$ otherwise. If $\xi'-\xi<1/\Tmax_i$, the
+step is \emph{forced}: $\xi':=\min(1,\xi+1/\Tmax_i)$, set to $1$ when within $10^{-12}$ of $1$.
+\end{definition}
+
+\begin{definition}[Candidate set and restricted effective sample size]\label{def:rho}
+The \emph{candidate set} $\mathcal V$ is the empty model together with the store of the $20p$ best models scored so far by
+$\gamma_0$ and the store of the $20p$ best by $F$. With $\psi(u):=\log\sum_{S\in\mathcal V}\gamma_0(S)e^{u\Delta(S)}$, the
+\emph{restricted effective sample size} of a step from $u$ to $v$ is
+\[
+  \rho(u,v):=\exp\{2\psi(v)-\psi(u)-\psi(2v-u)\}.
+\]
+\end{definition}
+
+\begin{definition}[Grid construction]\label{def:gridrule}
+Given the pilot's temperatures $\mathcal P$ (sorted) and $\mathcal V$: start with the grid $(0)$ and $u=0$. While $u<1$:
+let $b$ be the smallest element of $\mathcal P$ above $u$; if $\rho(u,b)\ge0.90$, set $v=b$; otherwise $v=\mathrm{lo}$
+after $60$ bisection halvings on $(u,b]$ started at $(\mathrm{lo},\mathrm{hi})=(u,b)$, each setting
+$\mathrm{lo}\leftarrow\mathrm{mid}$ if $\rho(u,\mathrm{mid})\ge0.90$ and $\mathrm{hi}\leftarrow\mathrm{mid}$ otherwise.
+Set $v=1$ if $v\ge1-10^{-12}$; append $v$ and set $u=v$. The construction \emph{fails} if no element of $\mathcal P$ lies
+above $u$, if no bisection point passes, if $v\le u$, if $\rho(u,v)<0.90$ for the appended $v$, or if the grid has more
+than $\Tmax_i$ intervals.
+\end{definition}
+
+\subsection{Hyperparameters and constants}
+
+Table~\ref{tab:params} lists every constant of the method with its default value. The user sets only the seed and the
+computing allocation.
+
+{\footnotesize\setlength{\tabcolsep}{3.5pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.25\linewidth}>{\raggedright\arraybackslash}p{0.09\linewidth}>{\raggedright\arraybackslash}p{0.33\linewidth}>{\raggedright\arraybackslash}p{0.28\linewidth}@{}}
+\caption{Hyperparameters and constants, with their defaults and code locations.}\label{tab:params}\\
+\toprule
+Parameter & Symbol & Default & Code \\ \endfirsthead
+\toprule
+Parameter & Symbol & Default & Code \\ \endhead
+\multicolumn{4}{@{}l}{\textbf{Prior}}\\
+size cap & $K$ & $\min(p,\lfloor n/2\rfloor)$ & \code{cpp/v3_score.h:40}; \code{v3_preprocess.R:21} \\
+model prior $\BB(1,p)$ & $w(k)$, $\bar w_K$ & $\tfrac12/\binom{2p-1}{k}$, renormalised to $\Om$ & \code{cpp/v3_score.h:61-70} \\
+coefficient prior scale; ridge & $g$ & $g=n$; unit ridge $I$ & \code{cpp/v3_score.h:175-183} \\
+inverse-gamma shape, scale & $a_0$, $b_0$ & $0.01$, $0.01$ & \code{cpp/v3_score.h:14} \\
+\midrule\multicolumn{4}{@{}l}{\textbf{Data preparation and score}}\\
+duplicate threshold & & $\abs{\hat r_{jl}}\ge1-10^{-10}$ (reported only) & \code{cpp/v3_core.cpp:742-760} \\
+small-$\SSq_S$ recomputation & & $\SSq_S<10^{-8}\,y^\top y$ & \code{cpp/v3_score.h:219} \\
+\midrule\multicolumn{4}{@{}l}{\textbf{Blocks and start}}\\
+block size cap & $B$ & $\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)$ & \code{v3_preprocess.R:22}; \code{cpp/v3_core.cpp:145-146} \\
+neighbour threshold & & $\abs{\hat r_{jl}}>\sqrt{2\log p/n}$; 1 to $B$ neighbours before symmetrisation & \code{cpp/v3_blocks.h:146-172} \\
+start-mode enumeration cap & & $10^6$, then tie-aware recursion & \code{cpp/v3_core.cpp:469}; \code{cpp/v3_start.h:271-305} \\
+\midrule\multicolumn{4}{@{}l}{\textbf{Exact case}}\\
+exact-case threshold & & enumerate if $\abs{\Om}\le(5\Nc_0+4N_0)p$ & \code{cpp/v3_core.cpp:71-85}; \code{v3_fit.R:105-106} \\
+global certificate margin & & $64$ machine epsilons times a factor depending on the conditioning of $H_S$ & \code{cpp/v3_score.h:240-246}; \code{cpp/v3_core.cpp:560-567} \\
+\midrule\multicolumn{4}{@{}l}{\textbf{Sampler}}\\
+islands & & $4$ & \code{v3_run.R:91} \\
+particles per island & $N_i$ & $4^iN_0$, $N_0:=\max(2500,n,p)$ & \code{v3_preprocess.R:25,30} \\
+burn-in rounds at $\xi=1$ & $\Lbi$ & $\max(4,\lceil\log_2(n+1)\rceil)$ & \code{v3_preprocess.R:24} \\
+measured rounds & & $4$ & \code{v3_run.R:90}; \code{v3_calib.R:12} \\
+resampling & & multinomial, every step & \code{cpp/v3_engine.h:230-259}, \code{:316-327} \\
+moves per round & & $p$ inclusion updates, $1$ uniform swap, $B$ neighbour swaps, $1$ independence move & \code{cpp/v3_engine.h:111-214} \\
+\midrule\multicolumn{4}{@{}l}{\textbf{Calibration}}\\
+calibration particles & $\Nc_i$ & $4^i\lceil512N_0/2500\rceil$ & \code{v3_preprocess.R:26,30} \\
+step ceiling & $\Tmax_i$ & $4^i\max(1000,\ell_n^2)$ & \code{v3_preprocess.R:27,30} \\
+tiers & $i$ & $i\in\{0,1\}$, factor $4^i$, at most one move to tier 1 & \code{v3_preprocess.R:30}; \code{v3_calib.R:150-159} \\
+pilot effective-sample-size target & & $0.90\,\Nc_i$ & \code{cpp/v3_calib.h:31} \\
+pilot step floor & & $1/\Tmax_i$ & \code{cpp/v3_calib.h:38-43} \\
+grid target & & $\rho\ge0.90$ & \code{cpp/v3_calib.h:79,84,92} \\
+bisections & & $60$ & \code{cpp/v3_calib.h:34,82} \\
+candidate set & $\mathcal V$ & $\emptyset$, best $20p$ by $\gamma_0$, best $20p$ by $F$ & \code{cpp/v3_core.cpp:699-724}; \code{cpp/v3_ledger.h:78} \\
+rebuild iterations & & at most $\ell_n$ & \code{v3_calib.R:84-119} \\
+triggers E1, E2 & & gap $1$ in log score; s.d.\ $1$ of $\log\Zhat_r$ & \code{v3_calib.R:101-102} \\
+diagnostic islands per rebuild & & $4$ & \code{cpp/v3_core.cpp:664} \\
+snap to $\xi=1$ & & within $10^{-12}$ & \code{cpp/v3_calib.h:42,89} \\
+grid fallback & & on & \code{v3_calib.R:120-125,163-169}; \code{v3_fit.R:151} \\
+\midrule\multicolumn{4}{@{}l}{\textbf{Local searches}}\\
+base move cap & $\ell_n$ & $\lceil\log_2(n+p+1)\rceil$ & \code{v3_preprocess.R:23} \\
+move cap from the start mode & & $\ell_n+\abs{\tSz}$ & \code{cpp/v3_core.cpp:473}; \code{v3_run.R:100-101} \\
+search from the start mode & & on & \code{v3_fit.R:73}; \code{cpp/v3_core.cpp:460-481} \\
+\midrule\multicolumn{4}{@{}l}{\textbf{Outputs}}\\
+pooling of islands & & equal weights & \code{v3_run.R:154,162} \\
+estimated MPM threshold & & $\PIPhat_j>1/2$ & \code{v3_run.R:163} \\
+stored models & & best $40p+1$ by $F$ & \code{cpp/v3_ledger.h:78} \\
+evidence lower bound & & $0.05\,\Zhat$ & \code{v3_run.R:155} \\
+low-effective-sample-size flag & & below $0.5N$ at some step & \code{v3_run.R:201} \\
+near-tie window & & $10^{-9}$ in log score & \code{v3_run.R:171} \\
+\midrule\multicolumn{4}{@{}l}{\textbf{Computing}}\\
+allocation defaults & & 8\,GiB ($8\cdot2^{30}$ bytes), 24\,h & \code{v3_fit.R:28,47,60,73,92} \\
+score cache & & $500p$ models, cleared when full & \code{v3_run.R:92}; \code{v3_calib.R:147} \\
+check before the run & & memory; exact case: time of 200 timed scores $\times$ count; sampler: worst-case time $2(\ell_n+K+1)(p+p^2/4)\times$(time of a size-$K$ score) & \code{v3_fit.R:10-14,26-68,114-117,144-148} \\
+random streams & & 0--4 (tier 0), 5--9 (tier 1), 10--13 (final islands) & \code{v3_run.R:8-11}; \code{cpp/v3_core.cpp:444,626,667} \\
+seed & & integer in $[1,2^{31}-1]$ & \code{v3_preprocess.R:7-11} \\
+\midrule\multicolumn{4}{@{}l}{\textbf{Fixed integer limits}}\\
+ceiling on the base move cap & & $\ell_n\le10^6$, else the run ends with an error & \code{v3_run.R:96} \\
+integer range of the move cap & & $\ell_n+\abs{\tSz}\le2^{31}-1$, else the run ends with an error & \code{cpp/v3_core.cpp:474} \\
+\bottomrule
+\end{longtable}}

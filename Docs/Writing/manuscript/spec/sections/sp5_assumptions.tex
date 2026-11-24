@@ -1,0 +1,272 @@
+% =====================================================================================================
+\section{The assumptions}\label{sec:assumptions}
+
+Each assumption has a number and a fixed key; the key in parentheses is the label used to cite it. Table~\ref{tab:usage}
+lists the statements that use each one.
+
+\subsection{The data model}\label{sec:a-all}
+
+\begin{assumption}{GL}{Gaussian linear model}
+The data follow~\eqref{eq:model}, with a fixed noise variance $\sigs^2>0$ and noise independent of the design.
+\end{assumption}
+
+\begin{assumption}{DIM}{Dimension}
+$2\le p\le n^A$ for a fixed $A\ge1$.
+\end{assumption}
+
+\begin{assumption}{SP}{Sparsity}
+The true model size $\sz\ge1$ is fixed.
+\end{assumption}
+
+\subsection{The predictors and the signal}\label{sec:a-post}
+
+\begin{assumption}{GR}{Gaussian rows}
+The rows of $\Xr$ are i.i.d.\ $\Normal_p(m_n,\Sig)$, where $\Sig$ is a correlation matrix.
+\end{assumption}
+
+\begin{assumption}{SGR}{Sub-Gaussian rows on sparse directions}
+The raw rows are i.i.d.\ copies of a random vector $x\in\R^{\praw}$ with mean $m_n$ and covariance matrix $\Sig$, a
+correlation matrix, and, for a fixed $L>0$, $\E\exp\{\lambda u^\top(x-m_n)\}\le\exp\{L^2\lambda^2u^\top\Sig u/2\}$ for every
+$\lambda\in\R$ and every $u\in\R^{\praw}$ with at most $5(A+1)(\sz+1)\log n$ nonzero entries. Gaussian rows \as{GR} are
+the case $L=1$.
+\end{assumption}
+
+\begin{assumption}{FSb}{Fixed signals, raw scale}
+$b_{\mathrm{lo}}\le\abs{\beta^*_j}\le b_{\mathrm{hi}}$ for every $j\in\Sz$, with fixed $0<b_{\mathrm{lo}}\le b_{\mathrm{hi}}<\infty$.
+\end{assumption}
+
+\begin{assumption}{FSt}{Fixed signals, standardised scale}
+$\yr=\alpha\one+X\tstar+\varepsilon$ with $\varepsilon\sim\Normal_n(0,\sigs^2I_n)$, a fixed $\sigs^2>0$, noise independent
+of $\Xr$, a deterministic $\tstar$, $\sz\ge1$ fixed, and $\theta_{\mathrm{lo}}\le\abs{\theta^*_j}\le\theta_{\mathrm{hi}}$ for
+$j\in\Sz$, with fixed $0<\theta_{\mathrm{lo}}\le\theta_{\mathrm{hi}}$.
+\end{assumption}
+
+\begin{assumption}{EFS}{Population eigenvalue floor}
+$\lmin(\Sigma_{n,S})\ge\varphi^2$ for every $S$ with $\abs{S}\le5(A+1)(\sz+1)\log n$, for a fixed $\varphi\in(0,1]$ (for
+instance, $\lmin(\Sig)\ge\varphi^2$).
+\end{assumption}
+
+\subsection{The distribution-level setting}\label{sec:a-dist}
+
+In the setting of Definition~\ref{def:dist-setting}, fix a \emph{level} $M\ge1$; the \emph{window} is
+$q_n:=\min\{\praw,\lceil C_qM\log n\rceil\}$ with $C_q:=2(s(A+2)+4)/\log2$.
+
+\begin{assumption}{dist}{Distribution-level setting; A6 Assumption~3}
+The integer $s\ge0$ and the constants $A\ge1$, $L\ge1$, $c_\psi>0$ and $\bar b>0$ are fixed.
+\begin{asmitems}
+  \item\label{asm:dist-model} \emph{Gaussian linear model for i.i.d.\ pairs.} $y=\alpha^*+x^\top\bstar+\varepsilon$ with
+    $\varepsilon\sim\Normal(0,\sigs^2)$, $\sigs^2>0$, independent of $x$; $\alpha^*$, $\bstar$, $\sigs$ and the law of $x$ may
+    depend on $n$.
+  \item\label{asm:dist-sparse} \emph{Sparsity and dimension.} At most $s$ coordinates of $\bstar$ are nonzero, and
+    $2\le\praw\le n^A$.
+  \item\label{asm:dist-subg} \emph{Sub-Gaussian predictors on sparse directions.} Every predictor has positive variance,
+    and $\E\exp(\lambda u^\top\zeta)\le\exp\big(L^2\lambda^2\Var(u^\top\zeta)/2\big)$ for every $\lambda\in\R$ and every
+    $u\in\R^{\praw}$ with at most $q_n$ nonzero entries.
+  \item\label{asm:dist-nec} \emph{No near-exact collinearity.} $\lmin(\Corr(x_T))\ge c_\psi/n$ for every set $T$ of at
+    most $q_n$ predictors.
+  \item\label{asm:dist-bs} \emph{Bounded signal.} $\abs{\beta^*_j}\sd(x_j)\le\bar b\,\sigs$ for every $j$.
+\end{asmitems}
+\end{assumption}
+
+\subsection{The reported-model assumptions}\label{sec:a-rm}
+
+A \emph{leakage set} is a deterministic $Q$ with $\Sz\subseteq Q\subseteq\set{p}$; its \emph{lattice} is
+$\Lat(Q):=\{T:\Sz\subseteq T\subseteq Q\}$. The notation $\Cov(\cdot,\cdot\mid W_U)$ and $\bar\beta_{U,l}$ is that of
+Definition~\ref{def:designs}.
+
+\begin{assumption}{V}{Visibility: no true predictor masked by $\le15$ others}
+For every $j\in\Sz$ and every $U\not\ni j$ with $\abs{U}\le15$, $\abs{\Cov(W_j,W^\top\tstar\mid W_U)}\ge a$, for a fixed
+$a>0$.
+\end{assumption}
+
+\begin{assumption}{reported}{Polynomial leakage set with local regressions; A6 Assumption~4}
+Fix $b\in(0,\tfrac12)$ and $b_H>0$ with $15b_H+b<\tfrac12$.
+\begin{asmitems}
+  \item\label{asm:rr-leak} \emph{Leakage set.} There is a deterministic $Q\supseteq\Sz$ with $\abs{Q}\le n^b$ and, for
+    large $n$, $\abs{Q}\le K$ and ($Q=\set{p}$ or $K\ge2\abs{Q}+32\sz+1$), such that: (i) \emph{no leak outside $Q$:}
+    there is a deterministic $\varpi_n$ with $\varpi_n\sqrt{n/\log n}\to0$ such that
+    $\abs{\Cov(W_l,W_j\mid W_U)}\le\varpi_n$ for all $l\notin Q$, $j\in\Sz\setminus U$ and $\abs{U}\le15$; and (ii)
+    \emph{locality:} there is a deterministic $\delta_n\to0$, and every $l\notin Q$ has a deterministic
+    $\Hl_l\supseteq\{l\}\cup\Sz$ with $\abs{\Hl_l}\le n^{b_H}$, such that for all $l\notin Q$, all $U\not\ni l$ with
+    $\abs{U}\le15$ and $U_0:=U\cap\Hl_l$: $\abs{\Cov(W_l,W_v\mid W_{U_0})}\le\delta_n$ and
+    $\abs{\Cov(W_j,W_v\mid W_{U_0})}\le\delta_n$ for all $v\in U\setminus\Hl_l$ and $j\in\Sz\setminus U_0$.
+  \item\label{asm:rr-floor} \emph{Floor on the leakage set.} $\lmin(\Sigma_{n,Q\cup\{l\}})\ge\varphi^2$ for every
+    $l\in\set{p}$, with $\varphi$ as in \as{EFS}.
+  \item\label{asm:rr-local} \emph{Local regressions within the leakage set.} There are deterministic sequences
+    $d_n=o(\log n)$ and $L_n$, and for every $l\in\set{p}$ a deterministic $N_l\subseteq Q\setminus\{l\}$ with
+    $\abs{N_l}\le d_n$, such that $\norm{\bar\beta_{T,l}-\bar\beta_{T\cap N_l,l}}_1\le L_n$ for every $T\in\Lat(Q)$ with
+    $l\notin T$, where $L_n\to0$ and $L_n^2\log(\abs{Q}+1)=o(\log n)$.
+\end{asmitems}
+\end{assumption}
+
+\subsection{The certified-screening assumption}\label{sec:a-scr}
+
+\begin{assumption}{SCR}{Floor on sets of the budget size, and signal bounds; A6 \S5.5}
+The design is fixed. For a model-size budget $k_n\in\{0,\dots,K-1\}$: $\lmin(\Rhat_S)\ge\kappa$, for a fixed $\kappa>0$,
+for every $S$ with $\abs{S}\le k_n+\sz$; $\tmin\ge\tlow>0$ and $\norm{\tstar}_1\le M_1$; $\kappa$, $\tlow$, $M_1$ and
+$\sigs^2$ are fixed; and $(k_n+1)\log p+\log n\le c_{\mathrm{SB}}\,n$, where
+$c_{\mathrm{SB}}:=\kappa^2\tlow^2/\{200(M_1^2+\sigs^2)\}$.
+\end{assumption}
+
+\subsection{The witness designs}\label{sec:a-wit}
+
+\begin{assumption}{WIT}{Witness designs; A6 Theorem~6(b)}
+$\sz$ is fixed; $\norm{\mu}^2\le nM_\mu$ and $\norm{\tstar}^2\le nM_\theta$ for fixed $M_\mu$, $M_\theta$; the null
+predictors are either orthogonal (to each other and to the true ones) or have i.i.d.\ $\Normal(0,1)$ raw entries
+independent of the true predictors and of the noise; and $p\le n^A$.
+\end{assumption}
+
+\subsection{The assumptions of the supplementary results}\label{sec:a-supp}
+
+\begin{assumption}{BC}{Bounded coefficients}
+$\max_{j}\abs{\theta^*_j}\le\bar\theta$ for a fixed $\bar\theta<\infty$.
+\end{assumption}
+
+\begin{assumption}{EF}{Eigenvalue floor on sets of bounded size}
+$\lmin(\Rhat_S)\ge\varphi_0^2$ for every model $S$ with $\abs{S}\le2(A+1)\sz+2$, for a fixed $\varphi_0\in(0,1]$.
+\end{assumption}
+
+\begin{assumption}{NC}{No near-exact collinearity among sets of logarithmic size}
+$\lmin(G_S)\ge g_0$ for every model $S$ with $\abs{S}\le3(A+1)(\sz+1)\log n$, for a fixed $g_0>0$.
+\end{assumption}
+
+\begin{assumption}{BM}{Beta-min}
+Either (a) $\tmin\ge C_\beta\,\sigs\rn$ with a fixed $C_\beta>0$ such that $C_\beta^2\varphi_0^2>c_0(\sz,A)$, the constant
+of Definition~\ref{def:constants}; or (b) $\tmin\sqrt{n/\log n}\to\infty$.
+\end{assumption}
+
+\begin{assumption}{margin}{Floor on the true model and an identifiability margin; A6 Assumption~A.4}
+\begin{asmitems}
+  \item $\lmin(\Rhat_{\Sz})\ge\varphi_0^2$ for a fixed $\varphi_0\in(0,1]$.
+  \item Every model $S\in\Om$ that misses a true predictor and has at most $j_0:=\lceil(2A+1)\sz\rceil+1$ predictors
+    outside $\Sz$ leaves unexplained signal $\norm{(I-P_S)\mu}^2\ge c_{\mathrm{id}}\,\sigs^2\log n$, for a fixed
+    $c_{\mathrm{id}}>c_1(\sz,A)$, the constant of Definition~\ref{def:constants}.
+\end{asmitems}
+\end{assumption}
+
+\begin{assumption}{omitted}{Candidate-only fitting; A6 Assumption~A.6}
+The method is run on the response $\yr$ and a set $\mathcal C$ of $p$ candidate predictors, with rows $x_{\mathcal C,i}$
+collected in $x_{\mathcal C}$; $\Sigma$ and $R$ are the covariance and the correlation matrix of a candidate row.
+\begin{asmitems}
+  \item \emph{Model.} The candidate rows are i.i.d.\ $\Normal_p(m_{\mathcal C},\Sigma)$, and, given them, the responses are
+    independent with $\yr_i\mid x_{\mathcal C}\sim\Normal(\alpha'+x_{\mathcal C,i}^\top\beta^{\mathcal C},\sigma^2_{\mathcal C})$,
+    $\sigma^2_{\mathcal C}>0$. We write $\Sz^{\mathcal C}:=\supp\beta^{\mathcal C}$ and $s_{\mathcal C}:=\abs{\Sz^{\mathcal C}}$.
+  \item \emph{Floor.} $\lmin(R_T)\ge c_{\mathcal C}$ for every $T\subseteq\mathcal C$ with
+    $\abs{T}\le3(A+1)(s_{\mathcal C}+1)\log n$, for a fixed $c_{\mathcal C}>0$.
+  \item \emph{Signal relative to the residual variance.} $\beta^{\mathcal C\top}\Sigma\beta^{\mathcal C}\le
+    M_{\mathcal C}\sigma^2_{\mathcal C}$ for a fixed $M_{\mathcal C}$, and $n\min_{j\in\Sz^{\mathcal C}}\Sigma_{jj}(\beta^{\mathcal
+    C}_j)^2/(\sigma^2_{\mathcal C}\log n)\to\infty$.
+\end{asmitems}
+\end{assumption}
+
+\begin{assumption}{NL}{No leakage, as seen by the start law}
+Every null predictor $l\notin\Sz$ has a deterministic \emph{neighbourhood} $\Hl_l\supseteq\{l\}\cup\Sz$ with
+$\abs{\Hl_l}\le e^{\kappa_H\sqrt{\log n}}$ for a fixed $\kappa_H$, such that, for every $U\not\ni l$ with $\abs{U}\le15$ and
+$U_0:=U\cap\Hl_l$: (i) \emph{no leak:} $\abs{\Cov(W_l,W_j\mid W_{U_0})}\le C_Ln^{-1/2}$ for every $j\in\Sz\setminus U_0$,
+with a fixed $C_L$; and (ii) \emph{locality:} $\abs{\Cov(W_l,W_v\mid W_{U_0})}\le r^\circ_n$ and
+$\abs{\Cov(W_j,W_v\mid W_{U_0})}\le r^\circ_n$ for every $v\in U\setminus\Hl_l$ and $j\in\Sz\setminus U_0$, where
+$r^\circ_n(n\log n)^{1/4}\to0$.
+\end{assumption}
+
+For a set $U$ and a predictor $l\notin U$: the \emph{signal gain} is $\delta^2_{U,l}:=\norm{(P_{U\cup\{l\}}-P_U)\mu}^2$;
+the \emph{residual scale} is $\tau^2_U:=\sigs^2+\norm{(I-P_U)\mu}^2/(n-1)$; and $\hat\beta_{U,l}:=(X_U^\top X_U)^{-1}X_U^\top
+x_l$, padded with zeros.
+
+\begin{assumption}{reported-fixed}{Fixed-design visibility and leakage; A6 Assumption~A.13}
+\begin{asmitems}
+  \item\label{asm:rf-floor} \emph{Floors.} $\lmin(\Rhat_T)\ge\varphi_0^2$ for every $T$ with $\abs{T}\le16$ and for every
+    $T=Q\cup\{l\}$, $l\in\set{p}$, with $Q$ as in~\ref{asm:rf-leak}.
+  \item\label{asm:rf-vis} \emph{Visibility.} There is a deterministic $\omega_n\to\infty$ such that
+    $\delta^2_{U,j}\ge\omega_n\log n$ for every $j\in\Sz$ and every $U\not\ni j$ with $\abs{U}\le15$.
+  \item\label{asm:rf-leak} \emph{Bounded leakage.} There are a deterministic $Q\supseteq\Sz$ (with $\abs{Q}\le K$ and
+    ($Q=\set{p}$ or $K\ge2\abs{Q}+32\sz+1$) for large $n$) and a fixed $\eta\in[0,\eta_A)$,
+    $\eta_A:=(\sqrt{2A+1}-\sqrt{2A})^2$, such that $\delta^2_{U,l}\le\eta\,\tau^2_U\log n$ for every $l\notin Q$ and every
+    $U\not\ni l$ with $\abs{U}\le15$.
+  \item\label{asm:rf-size} \emph{Size of the leakage set.} One of: (d1) $\abs{Q\setminus\Sz}\le(1-\delta_Q)\log n$ for a
+    fixed $\delta_Q\in(0,1)$; or (d2) $\abs{Q}\le n^b$ with $b<\tfrac12-\tfrac\eta2-\sqrt{2A\eta}$,
+    $\theta^{*2}_{\min}n/(\abs{Q}+\log n)\to\infty$, and local regressions: for every $l$ a deterministic set
+    $N_l\subseteq Q\setminus\{l\}$ with $\abs{N_l}\le h\log_2n$, for a fixed $h$ with $h+b<\tfrac12$, and a deterministic
+    $L_n\to0$ with $L_n^2\log(\abs{Q}+1)=o(\log n)$, such that $\norm{\hat\beta_{T,l}-\hat\beta_{T\cap N_l,l}}_1\le L_n$
+    for every $T\in\Lat(Q)$ with $\abs{T}<K$ and $l\notin T$.
+\end{asmitems}
+\end{assumption}
+
+\begin{definition}[Explicit constants]\label{def:constants}
+With $j_0:=\lceil(2A+1)\sz\rceil+1$ and $C_x:=Aj_0+\sz+\log(j_0+1)+2$:
+$c_0(\sz,A):=\max\{4C_*,\,32[\sz(A+1)+2]\}$ with $C_*:=2\sz+3[Aj_0+\sz+\log(j_0+1)+1]=3C_x+2\sz-3$; and, with
+$C_A:=8+3A$,
+\[
+  c_1(\sz,A):=\Big(\sqrt{2C_x}+\sqrt{2C_x+C_Aj_0+(2/\log2)\{\sz(A+1)+2\}}\Big)^2 .
+\]
+\end{definition}
+
+\subsection{Conventions}\label{sec:conventions}
+
+The conventions fix what ``the method'' means and idealise the computer; they are not statistical assumptions.
+
+\begin{convention}{C1}{The method}
+Exact arithmetic, the default configuration, valid inputs and seed. A run that meets it is \emph{admissible}; a sample
+size $n$ is admissible if the method accepts some data set of that size as valid input. Statements hold for every valid
+seed and every outcome of the calibration.
+\end{convention}
+
+\begin{convention}{C2}{Delivery}
+\begin{enumerate}[label=(\roman*),leftmargin=2em]
+  \item \emph{Idealised machine:} exact arithmetic at unit cost (including $\exp$ and $\log$); no integer, index,
+    random-stream identifier or allocation overflow; wall time at most $c_{\mathrm t}\cdot(\text{operation count})+c_{\mathrm
+    t0}$ and peak memory at most $c_{\mathrm m}\cdot(\text{words held})+c_{\mathrm m0}$ for fixed constants $(c_{\mathrm
+    t},c_{\mathrm t0},c_{\mathrm m},c_{\mathrm m0})$; every allocation within the declared memory succeeds; the build and its
+    dependencies work; no external interruption or worker crash.
+  \item \emph{Covered configuration:} the default core of the software, with the local search from the start mode (cap
+    $\ell_n+\abs{\tSz}$) and the rule that resolves ties in the start mode, implemented with
+    $O\big(p\sum_k(2^{\abs{C_k}}+(K+1)^2)\big)$ operations and $O\big(\sum_k2^{\abs{C_k}}+J(K+1)\big)$ storage; the local
+    search from the start mode starting at the smallest, lexicographically first maximiser of the start law; the default
+    list of summaries only; certificate computations with declared polynomial operation and memory budgets, included in
+    the allocation; serial execution or a fixed number of concurrent workers (memory envelope multiplied by that number);
+    a fixed number of islands; the fallback temperature sequence switched on (the default).
+  \item \emph{Random numbers and stops:} ideal independent uniform random numbers; the method's stop-and-return rule and
+    stop-only resource guard as coded (a stopped run returns no estimates).
+  \item \emph{Inputs and allocation:} a valid seed (an integer in $[1,2^{31}-1]$) and a declared memory and time
+    allocation at least the method's explicit polynomial work and memory envelopes in $(n,\praw)$, including the memory
+    checks made before the run and the bounds on the records and time of the local searches.
+\end{enumerate}
+\end{convention}
+
+\begin{convention}{C2p}{Delivery, with the integer limits lifted}
+An idealised machine that never overflows or fails (\as{C2}(i)), ideal random numbers, and the two fixed integer limits of Table~\ref{tab:params} (the ceiling
+$10^6$ on $\ell_n$ and the bound $2^{31}-1$ on $\ell_n+\abs{\tSz}$) removed, everything else (other validators, the cap on the
+enumeration used to find the start mode, and its fallback, every method cap) kept as coded, and an allocation of at least
+the memory and time that the method's own polynomial requirement formulas require.
+\end{convention}
+
+\begin{convention}{C3}{Sampler}
+\begin{enumerate}[label=(\roman*),leftmargin=2em,itemsep=1pt]
+  \item The computer does exact arithmetic.
+  \item Within each random stream, the random numbers are fresh, independent, ideal uniforms; the final run's stream for
+    each island is independent of the data and of the calibration's streams.
+  \item The coded start sampler returns exact draws from $\pi_0$, and the reported start normaliser equals the exact
+    normalising constant of the unnormalised weights of $\pi_0$.
+  \item The coded Markov moves realise their stated kernels, applied in a uniformly random order that is independent of
+    the state.
+  \item The outcome of the calibration is a function of the data and of the calibration's random streams, and each island's
+    record is a measurable function of that outcome and of the island's stream.
+  \item Statements about estimates refer to the potential (uninterrupted) run, which is identified with the reported
+    values on completed runs.
+\end{enumerate}
+\end{convention}
+
+\subsection{Which statements use which assumption}\label{sec:usage}
+
+\begin{table}[ht]
+\centering\small
+\setlength{\tabcolsep}{4pt}
+\caption{Assumptions and conventions against the statements that use them, read from the hypotheses of each statement.
+Theorems~1--6 are in Section~\ref{sec:proved}; S-numbers are in Section~\ref{sec:supp}.}\label{tab:usage}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.3\linewidth}>{\raggedright\arraybackslash}p{0.62\linewidth}@{}}
+\toprule
+Assumption & Used by \\
+\midrule
+\USAGEROWS
+\bottomrule
+\end{tabular}
+\end{table}

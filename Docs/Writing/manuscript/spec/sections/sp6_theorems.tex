@@ -1,0 +1,160 @@
+% =====================================================================================================
+\section{The official theorem statements}\label{sec:theorems}
+
+Theorems~1--6 are the proved headline results (Proposition~5 is Theorem-numbered); their numbers are those of the A6
+edition (``Result $k$''). Planned Theorems~P1--P4 are not proved. Each statement carries one tag, outside it: PROVED with
+the registry rows that carry it and their status strings on main, or PLANNED.
+
+\subsection{Proved}\label{sec:proved}
+
+\begin{mainthm}[Posterior concentration, random sub-Gaussian design]\label{thm:post-random}
+Assume \as{GL}, \as{DIM} with $p=\praw$ (the bound on the number of raw predictors), \as{SP}, \as{SGR}, \as{FSb} and
+\as{EFS}. Columns keep their raw labels, and $\Sz:=\{j\in\set{\praw}:\beta^*_j\neq0\}$ with $\bstar$ the coefficients of
+the raw design; on the event that the method removes a column, set $\PIP_j:=0$ for a removed column $j$ and
+$\pis{\Sz}:=0$ if $\Sz\notin\Om$, and, if no column is retained, take the posterior to be a point mass at $\emptyset$.
+Then, under the joint law of the design and the noise,
+\begin{gather}
+  1-\pis{\Sz}=\OP\Big(\sqrt{\frac{\log n}{n}}\Big),\qquad \P\big(\HPM=\MPM=\Sz\big)\to1,\label{eq:post-random}\\
+  \max_{j\in\set{\praw}}\big|\PIP_j-\ind{j\in\Sz}\big|=\OP\Big(\sqrt{\frac{\log n}{n}}\Big).\nonumber
+\end{gather}
+\end{mainthm}
+
+\proved{\TAGone}
+
+\begin{mainthm}[Distribution-level consistency]\label{thm:dist}
+There are constants $c_{\mathrm H}>0$, $M_0$ and $n_0$, depending only on $(s,A,L,c_\psi,\bar b)$, such that the following
+holds. Fix a level $M\ge M_0$ and assume Assumption~\as{dist}, with the window $q_n$ of this $M$. Then for every
+$n\ge n_0$ with $\sqrt n/\log n\ge M$,
+\begin{equation}\label{eq:dist-i}
+  \P^*\Big[\,\Pi\Big(d_H(f,f^*)>\sqrt{M\log n/n}\ \Big|\ \Dn\Big)>n^{-c_{\mathrm H} M}\Big]\ \le\ n^{-c_{\mathrm H} M}.
+\end{equation}
+\end{mainthm}
+
+\proved{\TAGtwo}
+
+\begin{mainthm}[The reported model equals the true model]\label{thm:reported}
+Let $\Sig$ be positive definite and assume \as{GR}, \as{DIM}, \as{FSt}, \as{V}, \as{EFS}, Assumption~\as{reported}
+and Convention~\as{C1}. Then, under the joint law of the design and the noise, there are data events $\mathcal G_n$ with
+$\P(\mathcal G_n)\to1$ on which \emph{every} admissible run that produces output reports $\Shat=\Sz$, whatever its seed and
+the outcome of its internal calibration. In particular,
+\begin{equation}\label{eq:reported}
+  \P(\text{the run produces output and }\Shat\neq\Sz)\to0 .
+\end{equation}
+If moreover Convention~\as{C2p} holds, then
+\begin{equation}\label{eq:delivery}
+  \P(\text{the run produces output})=1\ \ \text{for every admissible }n\ge3,\qquad \P(\Shat=\Sz)\to1 .
+\end{equation}
+\end{mainthm}
+
+\proved{\TAGthree}
+
+\begin{mainthm}[Certified screening]\label{thm:screen}
+Let the design be fixed and assume \as{GL}, Assumption~\as{SCR} with model-size budget $k_n$, and Convention~\as{C1};
+\as{SP} is not assumed. Then
+\[
+  \P\big(\text{the run produces output},\ \Shat\text{ is certified},\ \abs{\Shat}\le k_n,\ \Sz\not\subseteq\Shat\big)\to0 .
+\]
+\end{mainthm}
+
+\proved{\TAGfour}
+
+\begin{mainprop}[Each island's evidence estimate is unbiased]\label{prop:unbiased}
+Under Convention~\as{C3}, given the calibration, each island's evidence estimate $\Zhat_r$ is unbiased for $Z$, for every
+design and data set. Consequently, on $\Acal$, the pooled estimate~\eqref{eq:pool} satisfies
+$\E[\Zhat\mid\text{calibration}]=Z$.
+\end{mainprop}
+
+\proved{\TAGfive}
+
+\begin{mainthm}[The rate cannot be improved]\label{rem:sharp}
+\textup{(a)} \emph{Every design.} For every $n\ge3$, every standardised design with $p\ge2$, every response and every
+model $S$ with $\abs{S}\le\min(K-1,p/2)$,
+\begin{equation}\label{eq:sharp-a}
+  \pis{S}\ \le\ \Big(1+\frac{\abs{S}+1}{3\sqrt n}\Big)^{-1}.
+\end{equation}
+So no model of that size, the true one included, can carry posterior mass closer to one than about
+$(\abs{S}+1)/(3\sqrt n)$. For true models with $\sz\le\min(K-1,p/2)$, no design gives a rate faster than
+$n^{-1/2}$, and a posterior miss of order $\rn$ is possible only if $\sz=O(\sqrt{\log n})$.
+
+\textup{(b)} \emph{Witness designs.} Assume \as{GL} and \as{WIT}. Then, for every $p>\sz$, bounded or growing, with
+$\pi=3.14\ldots$ in this display,
+\begin{equation}\label{eq:sharp-b}
+  \E\big[1-\pis{\Sz}\big]\ \ge\ (1-o(1))\,(\sz+1)\,\frac{2(p-\sz)}{2p-1-\sz}\,
+  \sqrt{\frac{\log\!\big(p\sqrt n/(\sz+1)\big)}{\pi n}},
+\end{equation}
+and, if moreover $p\to\infty$, $1-\pis{\Sz}\ge(1-\oP(1))\,(\sz+1)\sqrt{\log p/(\pi n)}$.
+\end{mainthm}
+
+\proved{\TAGsix}
+
+\subsection{Planned}\label{sec:planned}
+
+Nothing in this subsection is proved or claimed. The owner's order is the trap theorem first, then the analysis at
+$p=10^7$, both after the $p=10^6$ runs and only if those go well. Where the target is not fixed, the statement is a
+candidate and the open choice is boxed.
+
+\begin{definition}[Single-flip chains, mixing time]\label{def:singleflip}
+A \emph{single-flip chain} is a Markov chain on $\Om$ that leaves $\pis{\cdot}$ invariant and whose every transition
+adds or removes at most one predictor. For a Markov kernel $P$ on $\Om$ with invariant law $\pis{\cdot}$, the
+\emph{mixing time} is $t_{\mathrm{mix}}(P):=\min\{t\ge0:\max_{S\in\Om}\norm{P^t(S,\cdot)-\pis{\cdot}}_{\mathrm{TV}}\le1/4\}$.
+The \emph{weighted tempered Gibbs sampler} is the sampler of Zanella and Roberts (2019) targeting $\pis{\cdot}$.
+\end{definition}
+
+\begin{planthm}[The trap theorem; candidate]\label{thm:trap}
+There is a family $\mathfrak F$ of design sequences \textup{[open choice~1]} whose posterior has several well-separated
+modes, such that for every sequence in $\mathfrak F$:
+\begin{enumerate}[label=(\roman*),leftmargin=2em,itemsep=1pt]
+  \item with probability tending to one, $t_{\mathrm{mix}}(P)\ge\tau_n$ for every single-flip chain $P$
+    \textup{[open choice~3]} and for the weighted tempered Gibbs sampler, where $\tau_n\to\infty$ at a rate
+    \textup{[open choice~4]} that grows quickly with the problem size; and
+  \item the hypotheses of Theorem~$k$ hold, for one $k\in\{1,3,4\}$ \textup{[open choice~2]}, so that its conclusion holds
+    on $\mathfrak F$.
+\end{enumerate}
+\end{planthm}
+
+\openchoice{P1}{(1)~The design family $\mathfrak F$: no statement, draft or design family exists. (2)~Which result is
+``our consistency on the same design'': Theorem~\ref{thm:post-random}, \ref{thm:reported} or~\ref{thm:screen}. If it is
+Theorem~\ref{thm:reported}, a leakage set $Q$ satisfying Assumption~\as{reported} must be exhibited for $\mathfrak F$
+(the leakage-set choice). (3)~The class of chains: every single-flip chain, or one named kernel (for example a
+Metropolis--Hastings add/remove chain). (4)~The growth rate of $\tau_n$ (for example exponential in $n$ or in $\sz$).}
+
+\planned{No statement exists in any project file. Owner: Theory Department (on hold). Order: after the $p=10^6$ mission,
+before Planned Theorem~\ref{thm:cov7}.}
+
+\begin{planthm}[Coverage at $p=10^7$; candidate]\label{thm:cov7}
+Let $A_7:=\log(10^7)/\log200\ (\approx3.04)$, and let $\mathfrak D_{\mathrm{AR}}$ be the autoregressive showcase design,
+continued as a sequence in $n$ with $p_n=\lceil n^{A_7}\rceil$, a known true model and its structure fixed
+\textup{[open choice~2]}.
+\begin{enumerate}[label=(\roman*),leftmargin=2em,itemsep=1pt]
+  \item \emph{(Reading ``theory coverage''.)} $\mathfrak D_{\mathrm{AR}}$ satisfies the hypotheses of Theorems
+    \textup{[open choice~3]} with $A=A_7$; in particular, for Theorem~\ref{thm:reported}, there is a leakage set $Q$
+    satisfying Assumption~\as{reported} \textup{[open choice~4]}.
+  \item \emph{(Reading ``claim coverage''.)} Of the statements of Sections~\ref{sec:proved} and~\ref{sec:supp}, those
+    whose conclusion holds for every seed on a data event (Theorem~\ref{thm:reported}, Theorem~\ref{thm:reported-fixed},
+    Corollary~\ref{cor:list}, Lemma~\ref{lem:summaries}, Theorem~\ref{rem:sharp}(a)) are the ones a single fit with one
+    seed can support.
+\end{enumerate}
+\end{planthm}
+
+\openchoice{P2}{(1)~What ``coverage at $p=10^7$'' means: reading~(i), whether the hypotheses of the theorems can hold at
+$n=200$, $p=10^7$; or reading~(ii), which statements a single fit with one seed can support (reading~(ii) may not be a
+theorem). No project document defines ``coverage''. (2)~The showcase design: the autoregressive correlation, the true
+model and the coefficients are not fixed in any project document. (3)~Which theorems reading~(i) covers. (4)~The leakage
+set $Q$ for $\mathfrak D_{\mathrm{AR}}$. Also open: the fit runs on an engine derived from the $p=10^6$ engine
+(Section~\ref{sec:supp-1m}), which no theorem covers.}
+
+\planned{The engine design is paused; the theory analysis is not started. Owner: Theory (analysis), Engineering (engine).
+Order: after Planned Theorem~\ref{thm:trap}.}
+
+\PLANNEDTHREEFOUR
+
+\subsection{Planned work with no new statement}\label{sec:planned-other}
+
+\begin{enumerate}[leftmargin=1.6em,itemsep=1pt]
+  \item \emph{Lean certificates} (not started; only with the owner's approval): first Theorem~\ref{rem:sharp}(a),
+    Lemma~\ref{lem:summaries} with the worst-island bound (Proposition~\ref{prop:worst-island}), and the Hellinger
+    reduction behind Remark~\ref{cor:dist-output}; then Theorem~\ref{thm:post-fixed} and Theorem~\ref{thm:dist}. A Lean
+    statement certifies a result only if it matches the statement given here.
+  \item \emph{Named open items below headline level} (\code{Theory_work/Dept/QUEUE.md}, ``Named open items''; no official
+    statement): \NONHEADLINE
+\end{enumerate}
