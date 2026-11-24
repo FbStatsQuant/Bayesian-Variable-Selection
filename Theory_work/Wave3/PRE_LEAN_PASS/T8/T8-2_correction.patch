@@ -1,0 +1,14 @@
+# T8-2 (HQ approved; T8 card AGREE; consultant AGREE with a rider): Theory_work/Wave3/W3-START2-R/STATEMENT.md:237, START-R's optimality remark. "By (T0), o0 >= (1/2)(n + 1)^{-1/2} on every data set" -> "... on every data set with s0 < K and n >= 4". FLOOR (T0) is stated for a valid data set with n >= 4 and EX-A (W3-START/STATEMENT.md:241) and needs s0 < K for the second display; "on every data set" is not asymptotic. Rider (consultant): n >= 4 added to the same correction. The lemma R3_RATE.md:164 carries only "s0 < K" and the reader row (READER_VERSIONS.md:598-599) carries "n >= 4 and s0 < K" (hence for all large n). Line 237 lies inside the registered span of W3-START2-R:START-R (STATEMENT.md:226-240): wording only; clauses (i)-(iii) untouched. Line count unchanged.
+diff --git a/Theory_work/Wave3/W3-START2-R/STATEMENT.md b/Theory_work/Wave3/W3-START2-R/STATEMENT.md
+index 14cad816..bf088735 100644
+--- a/Theory_work/Wave3/W3-START2-R/STATEMENT.md
++++ b/Theory_work/Wave3/W3-START2-R/STATEMENT.md
+@@ -234,7 +234,7 @@ p = s₀). Assume (FL-R16), (V-R) and (L-R⁺⁺). Then:
+ * (iii) **No leakage, uncorrelated nulls.** If Q = S₀ and (L-gain-0) holds (for instance C_L = 0 in (L-R⁺⁺) with
+   Q = S₀): **o₀ = O_P(√(log n/n))**, hence 1 − π₀(S₀) = O_P(√(log n/n)).
+ (At each n where the right side of (i) is ≥ 1 its event is sure; the O_P statements need no rate tending to zero — as
+-PARENT `:140-144`. By (T0), o₀ ≥ ½(n + 1)^{−1/2} on every data set, so (iii) is optimal up to the factor √log n.)
++PARENT `:140-144`. By (T0), o₀ ≥ ½(n + 1)^{−1/2} on every data set with s₀ < K and n ≥ 4, so (iii) is optimal up to the factor √log n.)
+ Proof structure: (B-R⁺⁺), then (T1⁺⁺)(d) conditionally on the design, as in (a); for (iii) the second display of
+ (T1⁺⁺)(d) with (B-R⁺⁺)(iii) for the leading term and (B-R⁺⁺)(i) for 𝔏_n(S₀).
+ 

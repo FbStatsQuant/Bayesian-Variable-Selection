@@ -106,7 +106,7 @@ Numbering of the headline theorems (proposal; see `CLAIMS_CARD.md`):
 - **(A5) No near-collinearity among $O(\log n)$ columns.** $\lambda_{\min}(X_S^\top X_S)\ge g_0$ for every $S$ with
   $|S|\le 3(A+1)(s_0+1)\log n$, for a fixed $g_0>0$.
 - **(A6) Beta-min.** $\theta^*_{\min}\ge C_\beta\,\sigma_*\sqrt{\log n/n}$ with a fixed $C_\beta>0$ such that
-  $C_\beta^2\varphi_0^2>c_0(s_0,A)$ [S1-F1]; or $\theta^*_{\min}\sqrt{n/\log n}\to\infty$.
+  $C_\beta^2\varphi_0^2>c_0(s_0,A)$ [S1-F1]; or $\theta^*_{\min}\ge\sigma_*\sqrt{M_n\log n/n}/\varphi_0$ for a fixed sequence $M_n\to\infty$.
 
 Then there are $n_0$ and $C$, depending only on $(s_0,A,\sigma_*^2,\bar\theta,\varphi_0,g_0,C_\beta)$, such that for every
 $n\ge n_0$ and every design and $\theta^*$ satisfying (A1)–(A6) at that $n$ [H5-1]
@@ -118,8 +118,8 @@ $$
 P\big(\mathrm{HPM}=\mathrm{MPM}=S_0\big)\ \ge\ 1-4C\sqrt{\tfrac{\log n}{n}}\ \to1,\qquad
 \max_{j\le p}\big|\mathrm{PIP}_j-\mathbf 1\{j\in S_0\}\big|\le 1-\pi(S_0\mid y)=O_P\Big(\sqrt{\tfrac{\log n}{n}}\Big).
 $$
-(Expectation over the noise, design fixed. With the second form of (A6), $n_0$ depends also on the divergence of
-$\theta^*_{\min}\sqrt{n/\log n}$.)
+(Expectation over the noise, design fixed. With the second form of (A6), $n_0$ depends also on the sequence
+$(M_n)$.)
 
 **Theorem 1′ (no eigenvalue condition off $S_0$ beyond the vanishing floor (A5)).** Replace (A4) by
 - **(A4′) Floor on the truth and an identifiability margin.** $\lambda_{\min}(\hat R_{S_0})\ge\varphi_0^2$, and every model
@@ -177,22 +177,22 @@ the shape of the posterior or of the output is proved here; the theorem describe
 `W3-POST:Thm-1@1.0.1` (= `SOP:TH09@1.0.2`, T03♯ with the SL0/SL1 consequences), `Theory_work/Wave3/W3-POST/STATEMENT.md:61-100`
 (hypotheses :63-75; conclusions 1–3 at :80-85).
 Registry status of `W3-POST:Thm-1@1.0.1`, verbatim: **"PROVED-CHECKED; council C3, MANIFEST 420c1cb0…, astra=8.8 PASS, opus=8.7 PASS"**.
-Registry status of `SOP:TH09@1.0.2` (main 6cd699dd, W3-T03ACC accepted) [REG-6cd6], verbatim: **"PROVED-CHECKED (T03♯ only: the conjunction of W3-T03ACC:T03S.1–T03S.4, clause map CHECKPOINT_4.md §2; council R1, MANIFEST 9714aea4…, astra=9.5 PASS, opus=9.4 PASS; LC-A, LC-B, LC-C VERIFIED). Not upgraded (their statuses stay as at theory_main.tsv:68): T02(i♯) and T02(ii♯) PROVED, SF/XF VERIFIED; T01–T03 PROVED-LOCKED (wave 3; external review queued), SAME-FAMILY-ONLY"** [S1-F9]. Theorem 1 (T03♯) is therefore PROVED-CHECKED through `SOP:TH09`; and `W3-POST:Thm-1@1.0.1` now carries the label above and no open condition (relabel, main 2676e71f).
-**Re-base [H5-1].** Expectation display: `W3-POST2:C@1.0.6`, `Theory_work/Wave3/W3-POST2/STATEMENT.md:83-94`, case (i)
+Registry status of `SOP:TH09@1.0.2` (main 6cd699dd, W3-T03ACC accepted) [REG-6cd6], verbatim: **"PROVED-CHECKED (T03♯ only: the conjunction of W3-T03ACC:T03S.1–T03S.4, clause map CHECKPOINT_4.md §2; council R1, MANIFEST 9714aea4…, astra=9.5 PASS, opus=9.4 PASS; LC-A, LC-B, LC-C VERIFIED). Not upgraded (their statuses stay as at theory_main.tsv:68): T02(i♯) and T02(ii♯) PROVED, SF/XF VERIFIED; T01–T03 PROVED-LOCKED (wave 3; external review queued), SAME-FAMILY-ONLY"** [S1-F9]. Theorem 1 (T03♯) is therefore PROVED-CHECKED through `SOP:TH09`, and `W3-POST:Thm-1@1.0.1` now carries the label above and no open condition (relabel, main 2676e71f).
+**Re-base [H5-1].** Expectation display: `W3-POST2:C@1.0.7`, `Theory_work/Wave3/W3-POST2/STATEMENT.md:83-94`, case (i)
 (hypotheses = Theorem 1's: R1 size conditions, G, (E), (F₀), (F_λ), (F_w), BM($c$), $c>c_0$, all "at that $n$"; HPM/MPM
-bounds $P(\cdot\neq S_0)\le2E\delta_n$ at :91). Theorem 1′: `W3-POST2:E@1.0.6` (:126-133) with `W3-POST2:C` case (iii),
-and `W3-POST2:A0@1.0.6` (`lemmas/A_occam.md:14-15`) for (F_w) ⇒ (OS). Remark (o): `W3-POST2:A1@1.0.6` (:54-56).
-Registry statuses (main 2676e71f: relabel, Thm-1 conditions discharged), verbatim [REG-2676]: `W3-POST2:C@1.0.6` **"PROVED-CHECKED, conditional on W3-POST:Prop-LB, W2-APP:POST"**; `W3-POST2:E@1.0.6` **"PROVED-CHECKED, conditional on
-W2-APP:POST"**; `W3-POST2:A1@1.0.6` **"PROVED-CHECKED, conditional on W2-APP:POST"**;
-`W3-POST2:A0@1.0.6` **"PROVED-CHECKED"**; `W2-APP:POST@1.0.7` **"PROVED-CHECKED"**. W3-T03ACC passed: **Form A applies**
-(below). The expectation route (`W3-POST2:C`) still lists `W3-POST:Prop-LB` ("PROVED (by this seat, unchecked)"); `[L1a′]` is no longer a listed condition.
+bounds $P(\cdot\neq S_0)\le2E\delta_n$ at :91). Theorem 1′: `W3-POST2:E@1.0.7` (:126-133) with `W3-POST2:C` case (iii),
+and `W3-POST2:A0@1.0.7` (`lemmas/A_occam.md:14-15`) for (F_w) ⇒ (OS). Remark (o): `W3-POST2:A1@1.0.7` (:54-56).
+Registry statuses (main 33bfcb9c: `W3-POST:Prop-LB` relabelled PROVED-CHECKED, so `W3-POST2:C` no longer lists it; earlier, at main 2676e71f, `W3-POST2:C@1.0.6` was "PROVED-CHECKED, conditional on W3-POST:Prop-LB, W2-APP:POST"), verbatim [REG-33bf]: `W3-POST2:C@1.0.7` **"PROVED-CHECKED, conditional on W2-APP:POST"**; `W3-POST2:E@1.0.7` **"PROVED-CHECKED, conditional on
+W2-APP:POST"**; `W3-POST2:A1@1.0.7` **"PROVED-CHECKED, conditional on W2-APP:POST"**;
+`W3-POST2:A0@1.0.7` **"PROVED-CHECKED"**; `W2-APP:POST@1.0.7` **"PROVED-CHECKED"**. W3-T03ACC passed: **Form A applies**
+(below). `W3-POST:Prop-LB@1.0.1` is "PROVED-CHECKED; council C3, …" (main 33bfcb9c), so the expectation route (`W3-POST2:C`) lists only `W2-APP:POST`; `[L1a′]` is no longer a listed condition (main 2676e71f).
 
 ### Abstract forms of row 1.1 (HQ order 2026-11-16; outcome: **Form A**, W3-T03ACC accepted, main 6cd699dd) [REG-f526, REG-6cd6]
 - **Form A — W3-T03ACC passes (T03♯ PROVED-CHECKED).** The abstract states Theorem 1 in its $O_P$ form (rate,
   HPM = MPM = $S_0$, PIPs), whose master then carries no open condition. The design-uniform expectation display and
   Theorem 1′ are stated in the body with their own conditions until those are cleared: the expectation route
-  (`W3-POST2:C`) also lists `W3-POST:Prop-LB` (author-only; implied by the checked `W3-PSHARP:B` — recorder item)
-  and `W2-APP:POST` (now "PROVED-CHECKED"; `SOP:TH128` discharged, main 6cd699dd; `[L1a′]` no longer listed, main 2676e71f).
+  (`W3-POST2:C`) lists `W2-APP:POST` (now "PROVED-CHECKED"; `SOP:TH128` discharged, main 6cd699dd; `[L1a′]` no longer listed, main 2676e71f)
+  and, until main 33bfcb9c, listed `W3-POST:Prop-LB` (now "PROVED-CHECKED; council C3, …").
 - **Form B — not used (W3-T03ACC passed; kept for the record).** Two variants:
   - **B1 (abstract, condition stated verbatim in reader words):** *"Conditional on the posterior concentration theorem
     for the coded prior — verified independently by reviewers of the same and of a different model family, but without
@@ -214,7 +214,7 @@ W2-APP:POST"**; `W3-POST2:A1@1.0.6` **"PROVED-CHECKED, conditional on W2-APP:POS
 | B1.4 | (A6) ⇔ (BM) | identity | (A6) is BM($c$) with $c=C_\beta^2\varphi_0^2$, or BM-∞. |
 | B1.5 | δ_n rate ⇒ HPM/MPM/PIP clauses | inside the master | SL0/SL1, deterministic (W3-POST STATEMENT.md:121); expectation form: POST2 C :90-91 ($P(\mathrm{HPM}\neq S_0)\le2E\delta_n$, same for MPM) and Markov. |
 | B1.6 | (A1)–(A6) at $n$ ⇒ POST2 C case (i) at $n$ | identity (+ R1) | Same hypotheses, read at a single $n$ (C is uniform: constants depend only on the fixed constants). (F₀) ⇐ (A4) with $S=S_0$. $M=s_0^2\bar\theta^2$ (B1.1). |
-| B1.7 | (A4′) ⇒ (F₀) and (ID; $c$) ⇒ (ID$^M$; $c$); (A5) ⇒ (OS) | identity / EXISTS-CHECKED | (ID) ⇒ (ID$^M$) since $L_S\ge\Delta_S$ (POST2 STATEMENT.md:40-41, inside the claim's definitions). (A5) ⇒ (F_w) (B1.3) ⇒ (DG) ⇒ (ADG) ⇒ (OS) for $n\ge n_0$: `W3-POST2:A0@1.0.6`, "PROVED-CHECKED" [REG-6cd6] [REG-f526]. |
+| B1.7 | (A4′) ⇒ (F₀) and (ID; $c$) ⇒ (ID$^M$; $c$); (A5) ⇒ (OS) | identity / EXISTS-CHECKED | (ID) ⇒ (ID$^M$) since $L_S\ge\Delta_S$ (POST2 STATEMENT.md:40-41, inside the claim's definitions). (A5) ⇒ (F_w) (B1.3) ⇒ (DG) ⇒ (ADG) ⇒ (OS) for $n\ge n_0$: `W3-POST2:A0@1.0.7`, "PROVED-CHECKED" [REG-6cd6] [REG-f526]. |
 
 **Effort:** B1.1–B1.4 are a half page; one Sol line check.
 
@@ -256,11 +256,11 @@ as a post-freeze rider — it would make "no eigenvalue condition off $S_0$" lit
 
 ## 2. Theorem 2 — Posterior concentration (random Gaussian design)
 <!-- ROW thm2 BEGIN -->
-**Card row** 1.2 · **Section version** 0.4 (2026-11-16) · **Pending delta** —
+**Card row** 1.2 · **Section version** 0.5 (2026-11-17) · **Pending delta** — (v0.5 update-log entry: last line of #### Update log (thm2))
 
 
 ### Reader statement
-**Theorem 2.** Let the rows of $X^{\mathrm r}$ be i.i.d. $N_p(m_n,\Sigma_n)$ with $\Sigma_n$ a correlation matrix, and
+**Theorem 2.** Let the rows of $X^{\mathrm r}$ be i.i.d. with mean $m_n$ and covariance matrix $\Sigma_n$, a correlation matrix, sub-Gaussian along sparse directions: for a fixed $L$, $E\exp\{\lambda u^\top(x-m_n)\}\le\exp\{L^2\lambda^2u^\top\Sigma_nu/2\}$ for every $\lambda\in\mathbb R$ and every $u$ with at most $5(A+1)(s_0+1)\log n$ nonzero entries (Gaussian rows $N_p(m_n,\Sigma_n)$: $L=1$), and
 assume
 - **(A1) Model.** (S1) and (S2).
 - **(A2) Sparsity and fixed signals.** $s_0\ge1$ is fixed and $b_{\mathrm{lo}}\le|\beta^*_j|\le b_{\mathrm{hi}}$ for
@@ -274,9 +274,9 @@ $$
 \max_j|\mathrm{PIP}_j-\mathbf 1\{j\in S_0\}|=O_P\Big(\sqrt{\tfrac{\log n}{n}}\Big).
 $$
 
-*Remarks.* No upper eigenvalue bound on $\Sigma_n$ and no beta-min beyond (A2) are needed; $p\gg n$ is allowed. The
-master allows the floor on sets of size $O(\log n)$ to vanish slowly ($\psi_n\gg(\log n)^{3/2}/\sqrt n$); the reader
-version uses a constant for simplicity.
+*Remarks.* (i) Gaussian rows satisfy the sub-Gaussian condition with $L=1$, so the Gaussian statement (the previous Theorem 2) is the case $L=1$; it also holds with the constant $L$ of the coordinates when $x=m_n+B\xi$, $BB^\top=\Sigma_n$, and $\xi$ has independent, mean-zero, unit-variance coordinates sub-Gaussian with constant $L$ (Rademacher or uniform coordinates: $L=1$; coordinates within $K$ standard deviations of the mean: $L=K$); it fails for a binary predictor whose success probability tends to zero.
+(ii) For centred rows it contains the i.i.d. case of the isotropic sub-Gaussian rows of Narisetty and He (2014, Lemma 6.1), the case $\Sigma_n=I$, with a uniform sub-Gaussian bound (verified against arXiv v1: Lemma 6.1, statement p. 16, proof p. 28; journal version (Ann. Statist. 42(2)) not accessed: `reviews/NH14_check.md`); this is the class-1 anchor (HQ rulings D114, D120). As a factual remark, not an anchor, it implies Song and Liang's Condition 1 for the centred rows $x-m_n$.
+(iii) No upper eigenvalue bound on $\Sigma_n$ and no beta-min beyond (A2) are needed; $p\gg n$ is allowed. The master allows the floor on sets of size $O(\log n)$ to vanish slowly ($\psi_n\gg(\log n)^{3/2}/\sqrt n$); the reader version uses a constant for simplicity; the sub-Gaussian statement keeps the fixed floor. The coexisting expectation-form statement (Theorem 2X, MIXED / incomparable, conditional) is in §11.
 
 ### Why each assumption
 - (A1) as Theorem 1.
@@ -285,28 +285,27 @@ version uses a constant for simplicity.
   clauses still hold (remark (ii) of Theorem 1).
 - (A3) Transfers to the sample floors (A4)–(A5) of Theorem 1 with probability $\to1$ (entrywise Gram concentration).
   The small-set part is needed (anchored floors); the $O(\log n)$ part is improvable (the entrywise transfer is crude).
-  Gaussian rows are used only for the entrywise concentration step; sub-Gaussian rows are expected to work (not
-  claimed).
+  The sub-Gaussian condition on the rows is used only for the entrywise concentration step (so as to transfer (A3) from the
+  population to the sample); the posterior argument uses the observed design only. Gaussian rows are the case $L=1$.
 
 ### Master theorem
 `W3-POST:Thm-1@1.0.1` item 6 (random-design interface), `Theory_work/Wave3/W3-POST/STATEMENT.md:95-100`, status as in §1;
 with `W2-APP:POST@1.0.7`, `Theory_work/Wave2/W2-APP/lemmas/L1_POST.md:27-33`, status verbatim **"PROVED-CHECKED"**
 (main 6cd699dd) [REG-6cd6] (`C-PACK:SL0@1.0.1`, the posterior-summary lemma, is now "PROVED-CHECKED"), and its restatement `W3-POST:Cor-1R@1.0.0`
-(`W3-POST/STATEMENT.md:106-118`), status **"PROVED (by this seat, unchecked)"**.
+(`W3-POST/STATEMENT.md:106-118`), status **"PROVED (by this seat, unchecked)"**. **Presented statement (sub-Gaussian rows; Gaussian = the case $L=1$):** `W3-D3:Thm2SG@1.0.0` (with `W3-D3:B3w@1.0.0`, `W3-D3:ExSG@1.0.0`), main 0eb1b6ef [REG-0eb1], status verbatim **"PROVED-CHECKED; council R2, MANIFEST 1c14a298…, sol=8.5 PASS, opus=9.3 PASS"** (each); inputs `W3-POST:Thm-1@1.0.2`, `W3-DIST:B0/B1/B2core/B2@1.0.3` (and `W3-DIST:B3@1.0.3` as the proof template of B3w only; its last sentence, conditional on `W3-POST:Thm-1`, is not used), `W3-READER:R1@1.0.5`. **Coexisting statement (Theorem 2X, §11):** `W3-D2:Thm2X@1.0.3` (with `W3-D2:Cor2X@1.0.0`), recorded at main 2e0decc8, status as at main 34c8fb4d [REG-2e0d], **"PROVED-CHECKED, conditional on W2-APP:POST, C-MIS:GDb, C-MIS:Prop-P; council R2, MANIFEST d408b7dc…, sol=9.2 PASS, opus=9.6 PASS"** (each).
 
 ### Bridges
 | # | Bridge | Mark | Detail |
 |---|---|---|---|
 | B2.1 | (A3) ⇒ LSF (i) and (ii) with $\psi_n=\varphi^2$ | NEW arithmetic | LSF asks the floor on $|S|\le\min(p,s_0+j_0)$ and on $|S|\le\bar k_n=\min\{p,s_0+\max(j_0,\bar m_n)\}$, $\bar m_n=\lceil[s_0(A\log n+\log2)+\log2+\tfrac{s_0+2}2\log n]/\log\tfrac32\rceil$ (L1_POST.md:20-25). For $n\ge3$: $\bar k_n<(2.4664As_0+3.6996s_0+4.9327)\log n\le5(A+1)(s_0+1)\log n$ (R1) [R1-E6], and $s_0+j_0\le(2A+2)s_0+2$ is smaller. Checked numerically (LOG). |
-| B2.2 | LSF + Gaussian rows + fixed coefficients ⇒ events $\mathcal A_n$, $P(\mathcal A_n)\to1$, carrying (E), (F_λ), (F_w), BM-∞ with common constants | EXISTS-CHECKED | `W2-APP:POST@1.0.7` part (a), "PROVED-CHECKED" (accepted at W2-APP's CP3, main f526e45b; SOP:TH09 discharged, main 6cd699dd) [REG-f526, REG-6cd6]. Raw-scale coefficients are covered (L1_POST.md:12-15, event $\mathcal H_n$). Theorems 2, 6 and 10 depend on it; Theorem 4 does not (its master uses its own Gaussian-design transfer [S1-F12]). |
-| B2.3 | events ⇒ conclusions under the joint law | inside the master | Theorem 1 item 6 (diagonal transfer). |
+| B2.2 | LSF + Gaussian rows + fixed coefficients ⇒ events $\mathcal A_n$, $P(\mathcal A_n)\to1$, carrying (E), (F_λ), (F_w), BM-∞ with common constants | EXISTS-CHECKED | `W2-APP:POST@1.0.7` part (a), "PROVED-CHECKED" (accepted at W2-APP's CP3, main f526e45b; SOP:TH09 discharged, main 6cd699dd) [REG-f526, REG-6cd6]. Raw-scale coefficients are covered (L1_POST.md:12-15, event $\mathcal H_n$). Theorems 6 and 10 depend on it, as did the previous Gaussian proof of Theorem 2 (the presented Theorem 2 uses B2.2′ instead); Theorem 4 does not (its master uses its own Gaussian-design transfer [S1-F12]). |
+| B2.3 | events ⇒ conclusions under the joint law | inside the master | Theorem 1 item 6 (diagonal transfer), via `W3-D3:Thm2SG`. **B2.2′** (sub-Gaussian rows: (A3) and the sub-Gaussian condition ⇒ the events $\mathcal A_n$ of B2.2; replaces B2.2 for the presented statement; EXISTS-CHECKED): `W3-D3:B3w@1.0.0` (built on `W3-DIST:B1`, `B2core`, `B2` part (a), `W3-READER:R1`), main 0eb1b6ef [REG-0eb1]; B2.2 stays for the Gaussian case. Bridges B2.1′, B2.1″ of Theorem 2X: §11. |
 
 **Effort:** B2.1 half a page.
-
 ### Honest limits
 None for the statement. Status [REG-6cd6]: T03♯ is PROVED-CHECKED (`SOP:TH09@1.0.2`, main 6cd699dd) and `W2-APP:POST` is
 "PROVED-CHECKED"; the posterior-summary lemma SL0 is "PROVED-CHECKED" since main 33e1f0f5 [REG-33e1]. Abstract wording: Form A of
-row 1.1 applies here too.
+row 1.1 applies here too. The statement is Theorem 2 with sub-Gaussian rows (v0.5, H5 card 17); its status is that of `W3-D3:Thm2SG` (above).
 
 #### Update log (thm2)
 - v0.1 2026-11-15: first version (CP1).
@@ -317,6 +316,7 @@ row 1.1 applies here too.
 - FRZ-RQ 2026-11-16: [REG-6cd6] `W2-APP:POST@1.0.7` "PROVED-CHECKED"; T03♯ discharged; Form A. Statuses only (EQUAL).
 - R1 2026-11-16: [R1-E6] B2.1 constant harmonised with R1 (EQUAL).
 - FRZ-B 2026-11-16: requote at main 2676e71f [REG-2676] (relabel D97): `W3-POST:Thm-1@1.0.1`; EQUAL (statuses only).
+- v0.5 2026-11-17: [H5-17] H5 card 17 (consultant AGREED; D115, D120): Theorem 2 is presented with sub-Gaussian rows on sparse directions (text of W3-D3 READER_DELTA; Gaussian rows = $L=1$); the expectation-form statement Theorem 2X coexists (§11). Tag: Theorem 2 **STRONGER** than the Gaussian statement; Theorem 2X **MIXED / incomparable**. Statuses verbatim from main 0eb1b6ef, 2e0decc8.
 <!-- ROW thm2 END -->
 
 ---
@@ -446,7 +446,7 @@ display is attained is not proved. Status: the expectation display and remarks (
 
 
 ### Reader statement
-**Theorem 4** (candidate-only fitting with omitted Gaussian predictors; no condition on how $\Sigma$, $\beta$, $\sigma^2$ vary with $n$) [P4]. The method is run on the candidate predictors
+**Theorem 4** (candidate-only fitting with omitted Gaussian predictors; $\Sigma$, $\beta$, $\sigma^2$ may vary with $n$, subject only to (A1)–(A3)) [P4]. The method is run on the candidate predictors
 $x_{\mathcal C}$ and the response $y^{\mathrm r}$ only ($p$ = number of candidates). Assume:
 - **(A0) Model.** The candidate rows $x_{\mathcal C,1},\dots,x_{\mathcal C,n}$ are i.i.d. $N_p(m,\Sigma)$, and, given the
   candidate design, the responses are independent with
@@ -459,7 +459,7 @@ $x_{\mathcal C}$ and the response $y^{\mathrm r}$ only ($p$ = number of candidat
   $\beta^{\mathcal C\top}\Sigma\beta^{\mathcal C}\le M_0\,\sigma^2_{\mathcal C}$ and
   $n\min_{j\in S_0^{\mathcal C}}\Sigma_{jj}(\beta^{\mathcal C}_j)^2/(\sigma^2_{\mathcal C}\log n)\to\infty$.
 
-No condition is placed on how $m$, $\Sigma$, $\beta^{\mathcal C}$ or $\sigma^2_{\mathcal C}$ vary with $n$. Then
+$m$, $\Sigma$, $\beta^{\mathcal C}$ and $\sigma^2_{\mathcal C}$ may depend on $n$; no condition beyond (A1)–(A3) is placed on how they vary. Then
 $$
 E\big[1-\pi(S_0^{\mathcal C}\mid y)\big]=O\Big(\sqrt{\tfrac{\log n}{n}}\Big),\qquad
 P\big(\mathrm{HPM}\neq S_0^{\mathcal C}\big)=O\Big(\sqrt{\tfrac{\log n}{n}}\Big).
@@ -467,7 +467,7 @@ $$
 *Example (omitted predictors: the full model is misspecified for the candidate-only fit) [P4].* If the rows $(x_{\mathcal C,i},x_{\mathcal M,i})$ are i.i.d. Gaussian with
 $\Sigma_{\mathcal C\mathcal C}$ invertible and
 $y^{\mathrm r}_i=\alpha+x_{\mathcal C,i}^\top\beta_{\mathcal C}+x_{\mathcal M,i}^\top\beta_{\mathcal M}+\varepsilon_i$ with
-$\varepsilon\sim N_n(0,\sigma^2I)$ independent of the rows, then (A0) holds with
+$\varepsilon\sim N_n(0,\sigma^2I)$ independent of the rows, then (A0) holds, provided the $\sigma^2_{\mathcal C}$ below is positive (for instance $\sigma^2>0$), with
 $\beta^{\mathcal C}=\beta_{\mathcal C}+\Sigma_{\mathcal C\mathcal C}^{-1}\Sigma_{\mathcal C\mathcal M}\beta_{\mathcal M}$ and
 $\sigma^2_{\mathcal C}=\sigma^2+\beta_{\mathcal M}^\top(\Sigma_{\mathcal M\mathcal M}-\Sigma_{\mathcal M\mathcal C}\Sigma_{\mathcal C\mathcal C}^{-1}\Sigma_{\mathcal C\mathcal M})\beta_{\mathcal M}$.
 (If $\Sigma_{\mathcal C\mathcal C}$ is singular, the same holds with its Moore–Penrose inverse in place of the inverse.)
@@ -478,7 +478,7 @@ the truth onto the candidate linear models: the posterior concentrates on the su
 predictor. Under the same assumptions the posterior's fitted mean and variance also contract around this law, with its
 mean centred over the sample (the fitted mean carries no intercept), in the in-sample average Hellinger and
 Kullback–Leibler distances, at rate $M_n/\sqrt n$ in Hellinger and $M_n/n$ in Kullback–Leibler (any $M_n\to\infty$).
-For a fixed design the contraction needs only that the posterior mass of $S_0^{\mathcal C}$ tends to one in probability
+For a fixed design, under the same Gaussian model for the responses and (A1), the contraction needs only that the posterior mass of $S_0^{\mathcal C}$ tends to one in probability
 (with the energy bound and a floor on $S_0^{\mathcal C}$); it holds uniformly over any class of fixed-design configurations with
 common constants and bounded support size on which this convergence is uniform. A fixed-design version of the theorem, uniform
 over the residual variance, also holds (remarks in the paper; same status).
@@ -502,33 +502,33 @@ two rows rest on different masters with their own conditions.
   (a liminf condition at a fixed constant suffices; remark).
 
 ### Master theorem
-**Headline masters [H5-3]:** the fixed-design theorems `W3-MISR:MIS(i)@1.0.1` (:110-123; uniform over the residual
-variance), `W3-MISR:MIS(i')@1.0.1` (:127-140) and `W3-MISR:MIS(ii)@1.0.1` (:144-160; random candidate designs,
-conditional form) carry the headline flag; statuses verbatim: MIS(i) **"PROVED-CHECKED, conditional on W3-POST2:C; …"**;
-MIS(i′) and MIS(ii) **"PROVED-CHECKED, conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1; council R2, MANIFEST 217d6708…,
-sol=9.2 PASS, opus=8.9 PASS; …"** (main 6cd699dd) [REG-6cd6]. The reader statement above is their **Gaussian-row reader version**: `W3-MISR-R:CorGb-plus` (with `W3-MISR-R:CorG-min`
+**Headline masters [H5-3]:** the fixed-design theorems `W3-MISR:MIS(i)@1.0.2` (:110-123; uniform over the residual
+variance), `W3-MISR:MIS(i')@1.0.2` (:127-140) and `W3-MISR:MIS(ii)@1.0.2` (:144-160; random candidate designs,
+conditional form) carry the headline flag; statuses verbatim (versions and statuses as at main 34c8fb4d): MIS(i), MIS(i′) and MIS(ii)
+**"PROVED-CHECKED, conditional on W2-APP:POST; council R2, MANIFEST 217d6708…,
+sol=9.2 PASS, opus=8.9 PASS; …"** (each) [REG-34c8]. The reader statement above is their **Gaussian-row reader version**: `W3-MISR-R:CorGb-plus` (with `W3-MISR-R:CorG-min`
 (E1), (E2) for the Example) and, for the remark, `W3-MISR-R:CorH-plus`, `W3-MISR-R:CorH-U` — statuses verbatim from the
-registry (main 2b54cb3c, then 6cd699dd) [REG-2b54, REG-6cd6]: `W3-MISR-R:CorGb-plus@1.0.1` **"PROVED-CHECKED, conditional on W3-POST2:C,
-W3-POST2:E, W3-POST2:A1, W3-POST2:A0, C-MIS:GDb, C-MIS:Prop-P; council R3, MANIFEST 052ea6dffa0495584b051435b1e82d6b7c598d965e3b13ddc067545728728069, sol=10.0 PASS, opus=9.6 PASS"**;
-`W3-MISR-R:CorG-min@1.0.1` **"PROVED-CHECKED; council R3, MANIFEST 052ea6dffa0495584b051435b1e82d6b7c598d965e3b13ddc067545728728069, sol=10.0 PASS, opus=9.6 PASS"**;
-`W3-MISR-R:CorH-plus@1.0.1` **"PROVED-CHECKED, conditional on W3-POST2:D; council R3, MANIFEST 052ea6dffa0495584b051435b1e82d6b7c598d965e3b13ddc067545728728069, sol=10.0 PASS, opus=9.6 PASS"**;
-`W3-MISR-R:CorH-U@1.0.1` **"PROVED-CHECKED, conditional on W3-POST2:D, W3-POST2:C, W3-POST2:A0,
-C-MIS:Prop-P; clause (G) also conditional on W3-POST2:E, W3-POST2:A1, C-MIS:GDb; council R3, MANIFEST 052ea6dffa0495584b051435b1e82d6b7c598d965e3b13ddc067545728728069, sol=10.0 PASS, opus=9.6 PASS"**.
+registry (versions and statuses as at main 34c8fb4d) [REG-34c8]: `W3-MISR-R:CorGb-plus@1.0.3` **"PROVED-CHECKED, conditional on W2-APP:POST,
+C-MIS:GDb, C-MIS:Prop-P; council R3, MANIFEST 052ea6dffa0495584b051435b1e82d6b7c598d965e3b13ddc067545728728069, sol=10.0 PASS, opus=9.6 PASS"**;
+`W3-MISR-R:CorG-min@1.0.3` **"PROVED-CHECKED; council R3, MANIFEST 052ea6dffa0495584b051435b1e82d6b7c598d965e3b13ddc067545728728069, sol=10.0 PASS, opus=9.6 PASS"**;
+`W3-MISR-R:CorH-plus@1.0.3` **"PROVED-CHECKED, conditional on W2-APP:POST; council R3, MANIFEST 052ea6dffa0495584b051435b1e82d6b7c598d965e3b13ddc067545728728069, sol=10.0 PASS, opus=9.6 PASS"**;
+`W3-MISR-R:CorH-U@1.0.3` **"PROVED-CHECKED, conditional on W2-APP:POST,
+C-MIS:Prop-P; clause (G) also conditional on C-MIS:GDb; council R3, MANIFEST 052ea6dffa0495584b051435b1e82d6b7c598d965e3b13ddc067545728728069, sol=10.0 PASS, opus=9.6 PASS"**.
 These replace `W3-MISR:Cor-G(b)` below as the row's reader-version master. `W3-MISR:Cor-G(b)` stays ACTIVE and coexists
 with CorGb-plus (CorGb-plus implies it and reuses its proof steps); `W3-MISR:Cor-G(a)` is SUPERSEDED-VALID by CorG-min.
 The remark's Kullback–Leibler sentence rests on CorH-plus (centred reference), not on `W3-MISR:Cor-H` (whose KL reading
 is restricted to a deterministic intercept at 2.1.0).
-Earlier reader-version master, kept for the record: `W3-MISR:Cor-G(b)@1.0.1`,
-`Theory_work/Wave3/W3-MISR/STATEMENT.md:171-174`, status verbatim:
-**"PROVED-CHECKED, conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1, W3-POST2:A0, C-MIS:Prop-P, C-MIS:GDb; input
+Earlier reader-version master, kept for the record: `W3-MISR:Cor-G(b)@1.0.2`,
+`Theory_work/Wave3/W3-MISR/STATEMENT.md:171-174`, status verbatim (main 34c8fb4d):
+**"PROVED-CHECKED, conditional on W2-APP:POST, C-MIS:Prop-P, C-MIS:GDb; input
 versions …; council R2, MANIFEST 217d6708…, sol=9.2 PASS, opus=8.9 PASS; …"**.
-Inputs, verbatim (main 6cd699dd) [REG-6cd6]: `W3-POST2:C/E/A1/A0@1.0.5` as quoted in §1 (C, E, A1 "PROVED-CHECKED,
+Inputs, verbatim (main 6cd699dd) [REG-6cd6]: `W3-POST2:C/E/A1/A0@1.0.7` as quoted in §1 (main 33bfcb9c) (C, E, A1 "PROVED-CHECKED,
 conditional on …"; A0 "PROVED-CHECKED"); `C-MIS:Prop-P@1.0.0`: **"R02
 VERIFIED; R04 wording fixes checked in R05; council PASS"**; `C-MIS:GD(b)@1.0.0`: **"R02 VERIFIED-WITH-AMENDMENTS
 (applied); council PASS"**; `SOP:TH09` as in §1; `SOP:TH128@1.0.2`: **"PROVED-CHECKED (the conjunction of W3-T03ACC:T03S.1–T03S.5 = record clauses
 1–5, clause map CHECKPOINT_4.md §2; council R1, MANIFEST 9714aea4…, astra=9.5 PASS, opus=9.4 PASS; LC-A, LC-B, LC-C
 VERIFIED)"** [S1-F9, REG-6cd6]; neither is a condition of the masters any more (discharged, main 6cd699dd).
-Fixed-design form: `W3-MISR:MIS(i)@1.0.1` (:110-123), **"PROVED-CHECKED, conditional on W3-POST2:C; …"**.
+Fixed-design form: `W3-MISR:MIS(i)@1.0.2` (:110-123), **"PROVED-CHECKED, conditional on W2-APP:POST; …"** (main 34c8fb4d).
 
 ### Bridges
 | # | bridge | mark | detail |
@@ -536,8 +536,8 @@ Fixed-design form: `W3-MISR:MIS(i)@1.0.1` (:110-123), **"PROVED-CHECKED, conditi
 | B4.0 | (A0) ⇒ CorGb-plus setting | NEW (one line) | take no explicit omitted columns, ε := y^r − α′1 − X_𝒞β^𝒞: given X_𝒞 it is N_n(0, σ²_𝒞I), hence independent of X_𝒞 ((N) with q = 0; (OV) with γ = 0, τ² = 0). The Example is `CorG-min` (E1) (and (E2) for the linear-plus-noise sentence) |
 | B4.1 | (A2) size 3(A+1)(s+1)log n ⇒ CorGb-plus's \|T\| ≤ s + max(j₀, m♯_n), for all large n | NEW arithmetic (as current B4.1) | unchanged arithmetic; the floor is now on R; sufficient for the O(·) conclusions |
 | B4.2 | (A3) = CorGb-plus's signal conditions (→ ∞ branch of its liminf condition) | identity | `STATEMENT.md` §3 |
-| B4.3 | POST2 C, E, A1, A0 (and D for the remark) | EXISTS-CHECKED, conditional (A0 unconditional) | recorded at main f526e45b; `SOP:TH09`/`TH128` discharged (main 6cd699dd); C still conditional on `W3-POST:Prop-LB` (§1; [L1a′] no longer listed, main 2676e71f) [REG-f526, REG-6cd6] |
-| B4.4 | Remark ⇒ CorH-U (RD) with 𝒦^♭_n := 𝒦^λ_n(s, A, 2M₀+1, (c_R/8)^{1/2}, C_OS, c) ((UP) by MIS(i) + Markov) and the events 𝒜_n of CorGb-plus's proof (P(𝒜_n) → 1); contraction sentence for a fixed design ⇒ CorH-plus (a′), (KL), with the premise δ_n → 0 in probability; uniform sentence ⇒ CorH-U (U-a), with its premise (UP); "fixed-design version of the theorem, uniform over the residual variance" ⇒ W3-MISR:MIS(i)@1.0.0 (BASE `STATEMENT.md:110-114`, constants free of v) | NEW (composition; the random-design part is `CorH-U` clause (G), STATEMENT §5) | the Hellinger rate M_n/√n and KL rate M_n/n are the sets H^a, K^a; the reference is centred (STATEMENT §1: μ(κ) = Cxβ) [R1] |
+| B4.3 | POST2 C, E, A1, A0 (and D for the remark) | EXISTS-CHECKED, conditional (A0 unconditional) | recorded at main f526e45b; `SOP:TH09`/`TH128` discharged (main 6cd699dd); C no longer conditional on `W3-POST:Prop-LB` (PROVED-CHECKED, main 33bfcb9c; §1; [L1a′] no longer listed, main 2676e71f) [REG-f526, REG-6cd6, REG-33bf] |
+| B4.4 | Remark ⇒ CorH-U (RD) with 𝒦^♭_n := 𝒦^λ_n(s, A, 2M₀+1, (c_R/8)^{1/2}, C_OS, c) ((UP) by MIS(i) + Markov) and the events 𝒜_n of CorGb-plus's proof (P(𝒜_n) → 1); contraction sentence for a fixed design ⇒ CorH-plus (a′), (KL), with the premise δ_n → 0 in probability; uniform sentence ⇒ CorH-U (U-a), with its premise (UP); "fixed-design version of the theorem, uniform over the residual variance" ⇒ W3-MISR:MIS(i)@1.0.2 (BASE `STATEMENT.md:110-114`, constants free of v) | NEW (composition; the random-design part is `CorH-U` clause (G), STATEMENT §5) | the Hellinger rate M_n/√n and KL rate M_n/n are the sets H^a, K^a; the reference is centred (STATEMENT §1: μ(κ) = Cxβ) [R1] |
 
 ### Honest limits
 Nothing is claimed when, given the candidates, $y$ is not Gaussian with a mean linear in the candidates and a constant
@@ -659,7 +659,7 @@ abstract.
 
 ## 6. Theorem 6 — The reported model equals the truth (random Gaussian design; main theorem)
 <!-- ROW thm6 BEGIN -->
-**Card row** 3.1 · **Section version** 0.9 (2026-11-16) · **Pending delta** — (RM2-R rider merged, v0.8)
+**Card row** 3.1 · **Section version** 1.0 (2026-11-17) · **Pending delta** — (RM2-R rider merged, v0.8; Corollaries 6L and FAMC: §11; v1.0 log entry: last line of #### Update log (thm6))
 
 
 ### Reader statement
@@ -702,10 +702,9 @@ does not reach }S_0)$. *(Interpretation, not part of the theorem [D71]: the two 
 search error.)* (i) $\mathcal G_n$ can be chosen ($\mathcal M_n\cap\mathrm{Sand}_n(Q)\cap\mathrm{NA}\cap\mathrm{TL}$) so that on it the local search from the start mode only deletes the spurious members of the start
 mode, one per move, at most $n^b$ moves, and certifies $S_0$; its move cap never binds. (ii) The polylogarithmic case
 $|Q|\le(\log n)^{\kappa}$ is a special case (the earlier version of the theorem). (iii) Examples (never hypotheses):
-metric-local correlation, polynomial correlation decay of exponent $\alpha>2$ (`W3-RM2:Ex-PolyR@1.0.3` "PROVED; line-checked LC2-C; Astra seat
-ACCEPT; not examined by the Opus seat — next council round; conditional on W2-APP:POST, W2-LOC2:Lemma-BC, W2-LOC2:Lemma-IR; …"),
+metric-local correlation, polynomial correlation decay of exponent $\alpha>2$ (`W3-RM2:Ex-PolyR@1.0.5` "PROVED-CHECKED; council R1, MANIFEST c8596ad0…, astra=9.5 PASS, opus=9.5 PASS"
+(main 8b4d3101)),
 one-factor blocks [R2-O6].
-
 ### Why each assumption
 - (A2) Fixed signals give the posterior input (Theorem 2) and the truth-removal margin.
 - (A3) No truth can be explained away by at most 15 others: every truth enters the start mode. Needed in this form for
@@ -808,6 +807,7 @@ regressions are local. HQ choices: keep them as stated (faithful), or state Theo
 - FRZ-B 2026-11-16: [B2] GUARD-W wording "returns no estimates; anything else … flagged incomplete and is not covered" with code lines (EQUAL).
 - FRZ-B 2026-11-16: [T14-REP] (H5 card 16, AGREED; `W3-AUDIT-AX:REP@1.0.0`; W3-AUDIT d727e7a3 `track_A_C/H5_T14_CARD.md` "Consultant edits") integer-limit passage: one sentence, then the caps, $\mathfrak D$, code lines with $p_{\mathrm{raw}}$; in the default configuration neither limit can be reached on any input R can represent; the other IDEAL-W obligations remain — **STRONGER** (informal remark [RM2R-6] → proved code fact; no premise added or dropped).
 - FRZ-B 2026-11-16: requote at main fe05ccec [REG-fe05] (D95): masters RM2-R-plus/RM0-plus/DLV-0/Cont-plus @1.0.1 plain "PROVED-CHECKED; council R3, …"; the two C-DLV audits "CODE-CHECKED"; row 3.1 carries no open registry condition; B1 moot (EQUAL, statuses only).
+- v1.0 2026-11-17: [H5-17] H5 card 17 (consultant AGREED; D115, D120, D121): Corollary 6L (pending recording; pathwise sentence for Cor 9C) and Corollary FAMC (`W3-FAMC:Cor-FAMC`, main 8b4d3101) added in §11. No hypothesis of Theorem 6 changed. Tag: Theorem 6 **STRONGER** through 6L (added conclusions); FAMC additive.
 <!-- ROW thm6 END -->
 
 ---
@@ -821,7 +821,7 @@ regressions are local. HQ choices: keep them as stated (faithful), or state Theo
 **Theorem 7.** Let the design be fixed, with non-constant raw columns [R3]. Assume
 - **(A1) Model and posterior conditions.** (S1), (S2), (S3); (A2)–(A5) of Theorem 1; and the beta-min
   $\theta^*_{\min}\ge C_\beta\,\sigma_*\sqrt{\log n/n}$ with a fixed $C_\beta$ above an explicit constant depending on
-  $(s_0,A,M,\sigma_*^2,\varphi_0)$ (Remark (a)), or $\theta^*_{\min}\sqrt{n/\log n}\to\infty$ [RM2R-4].
+  $(s_0,A,M,\sigma_*^2,\varphi_0)$ (Remark (a)), or $\theta^*_{\min}\ge\sigma_*\sqrt{M_n\log n/n}/\varphi_0$ for a fixed sequence $M_n\to\infty$ [RM2R-4].
 - **(A2) Floors.** $\lambda_{\min}(\hat R_T)\ge\varphi_0^2$ for every $T$ with $|T|\le16$ and for every
   $T=Q\cup\{l\}$, $l\in[p]$ ($Q$ as in (A4)).
 - **(A3) Visibility.** There is a fixed $M_V$, larger than an explicit constant depending on $(A,M,\sigma_*^2)$
@@ -882,7 +882,7 @@ nonconstant raw columns").
 | # | Bridge | Mark | Detail |
 |---|---|---|---|
 | B7.1′ | (A1) ⇒ (T1-F♭) | identity + B1.1–B1.4 [RM2R-4] | (T1-F♭) = Theorem 1's (H0) with BM-∞ or BM(c), c > c₀ (`W3-RM2-R/STATEMENT.md:95-99`); (A1)'s constant exceeds c₀. Replaces B7.1. |
-| B7.2′ | (A5)(a) + (A1) ⇒ (BM-W⁺) | NEW (two lines; council-checked as READER_DELTA R7.2 of W3-RM2-R) | fixed $D>2+4A$, $d_n^2\le D\log n$ for large $n$; the strict constant of Remark (a); `W3-RM2-R/STATEMENT.md:107-112` (last sentence of (BM-W⁺)). Under $\theta^*_{\min}\sqrt{n/\log n}\to\infty$: (BM-W) ⇒ (BM-W⁺). |
+| B7.2′ | (A5)(a) + (A1) ⇒ (BM-W⁺) | NEW (two lines; council-checked as READER_DELTA R7.2 of W3-RM2-R) | fixed $D>2+4A$, $d_n^2\le D\log n$ for large $n$; the strict constant of Remark (a); `W3-RM2-R/STATEMENT.md:107-112` (last sentence of (BM-W⁺)). Under $\theta^*_{\min}\ge\sigma_*\sqrt{M_n\log n/n}/\varphi_0$ for a fixed sequence $M_n\to\infty$: (BM-W) ⇒ (BM-W⁺). |
 | B7.3′ | (A5)(b) signal clause (Remark (a) form) ⇒ (BM-Q♭) ⇒ (BM-W⁺) | identity | `W3-RM2-R/STATEMENT.md:107-112`; checked as R7.3 of W3-RM2-R. |
 | B7.4′ | (A3) = (V♭) | identity | `W3-RM2-R/STATEMENT.md:101-105`. |
 | B7.1 | (A1) ⇒ (T1-F) | as B1.1–B1.4 (with BM-∞) | (T1-F) uses BM-∞ (RM STATEMENT.md:91-92). Superseded by B7.1′ for the current master. |
@@ -899,8 +899,8 @@ posterior. What exists instead: (i) the intuition paragraphs above, one per cond
 same conclusion under population analogues of these conditions [R1-S6]; (iii) the examples table (polylog: every
 example of the earlier version; polynomial: one truth with $n^b$ weak proxies, `W3-RM2:Ex-Proxy@1.0.3` "PROVED-CHECKED; council R1, …"; one
 equicorrelated group, $b<3/10$, `W3-RM2:Ex-Equi@1.0.3` "PROVED-CHECKED; council R1, …"; polynomial decay $\alpha>2$,
-`W3-RM2:Ex-PolyF@1.0.3` "PROVED; line-checked LC2-C; Astra seat ACCEPT; not examined by the Opus seat — next council round;
-conditional on W2-LOC2:Lemma-BC, W2-LOC2:Lemma-IR; …") [R1-E8].
+`W3-RM2:Ex-PolyF@1.0.4` "PROVED; line-checked LC2-C; Astra seat ACCEPT; not examined by the Opus seat — next council round"
+(main c9b3b967: the conditions on W2-LOC2:Lemma-BC, W2-LOC2:Lemma-IR are dropped) [R1-E8].
 **Not available:** the theorem without any lattice condition (open problem: control of the actual search path), and
 any $b\ge\tfrac12$. Recommendation: present (A5)(a) in the main text (fully explicit) and (b) as the strengthening.
 
@@ -1063,8 +1063,8 @@ and inverse-gamma prior §3; no tuning). $\Pi(\cdot\mid D_n)$ is the resulting e
 back to the original units: $S$ is the set of included predictors, $\beta\in\mathbb R^{p_{\mathrm{raw}}}$ the coefficient vector
 (zero outside $S$ and on removed predictors), $\sigma^2$ the noise variance. If fewer than two predictors remain, or the
 response is constant in the sample, the posterior is not defined; under the assumptions below such data sets have
-probability smaller than the exceptional probabilities in the theorems and are counted in them (and $p=p_{\mathrm{raw}}$
-outside them).
+probability smaller than the exceptional probabilities in the theorems and are counted in them: there the posterior probabilities in the displays are read as 1.
+The common exceptional set of the proofs also contains every data set with $p<p_{\mathrm{raw}}$.
 
 *What is estimated.* A draw $(S,\beta,\sigma^2)$ defines a conditional law of $y$ given $x$,
 $N\big(\bar y+(x-\bar x)^\top\beta,\ \sigma^2\big)$, with the sample-mean intercept ($\bar y$, $\bar x$ are the sample means). The
@@ -1231,14 +1231,14 @@ Page and equation numbers are those of the published paper (J. R. Statist. Soc. 
 
 ### Master theorem
 W3-DIST reader versions (`Theory_work/Wave3/W3-DIST/STATEMENT.md` v1.4.10, §1R :126-269); H5 card 13 AGREED; recorded on
-main cb642afd (rule e7a7216c). Statuses verbatim from `Theory_work/INFRA/registry/claims.tsv` at cb642afd [REG-cb64]:
+main cb642afd (rule e7a7216c). Statuses verbatim from `Theory_work/INFRA/registry/claims.tsv` at cb642afd [REG-cb64]; versions `@1.0.2` and the Cor-C and DIST-C conditions as at main 20d01e52 (HQ D111; at 2676e71f they were "conditional on W1-N1:B, W1-N1:F, EX-A"):
 - Theorem 9 (display (i), level-M form, (ii), (iii)) = `W3-DIST:Thm-A` (:185-207; = DIST-1 (1.1) + bridges B0, B1, B2; the
-  sentence without (A4) = DIST-2 (1.2) + B0, B1): `W3-DIST:Thm-A@1.0.1` **"PROVED-CHECKED; council R2, MANIFEST 9719c817… (= R2 c5cd9cdd re-frozen CITATION-ONLY as R2r), astra=9.3 PASS, opus=9.2 PASS"**; masters
-  `W3-DIST:DIST-1@1.0.1`, `W3-DIST:DIST-2@1.0.1` the same.
-- Theorem 9B = `W3-DIST:Thm-B@1.0.1` (:209-215): **"PROVED-CHECKED; council R2, MANIFEST 9719c817… (= R2 c5cd9cdd re-frozen CITATION-ONLY as R2r), astra=9.3 PASS, opus=9.2 PASS"**; bridge
-  `W3-DIST:B3@1.0.1` **"PROVED-CHECKED, conditional on W3-POST:Thm-1 (for its last sentence); …"**.
-- Corollary 9C = `W3-DIST:Cor-C@1.0.1` (:217-238): **"PROVED-CHECKED, conditional on W1-N1:B, W1-N1:F, EX-A (exact arithmetic); council R2, MANIFEST 9719c817… (= R2 c5cd9cdd re-frozen CITATION-ONLY as R2r), astra=9.3 PASS, opus=9.2 PASS"**.
-  DIST-C's delivery statements (not used by 9C): `W3-DIST:DIST-C@1.0.1` **"PROVED-CHECKED, conditional on W1-N1:B, W1-N1:F,
+  sentence without (A4) = DIST-2 (1.2) + B0, B1): `W3-DIST:Thm-A@1.0.2` **"PROVED-CHECKED; council R2, MANIFEST 9719c817… (= R2 c5cd9cdd re-frozen CITATION-ONLY as R2r), astra=9.3 PASS, opus=9.2 PASS"**; masters
+  `W3-DIST:DIST-1@1.0.2`, `W3-DIST:DIST-2@1.0.2` the same.
+- Theorem 9B = `W3-DIST:Thm-B@1.0.2` (:209-215): **"PROVED-CHECKED; council R2, MANIFEST 9719c817… (= R2 c5cd9cdd re-frozen CITATION-ONLY as R2r), astra=9.3 PASS, opus=9.2 PASS"**; bridge
+  `W3-DIST:B3@1.0.2` **"PROVED-CHECKED, conditional on W3-POST:Thm-1 (for its last sentence); …"**.
+- Corollary 9C = `W3-DIST:Cor-C@1.0.2` (:217-238): **"PROVED-CHECKED, conditional on EX-A (exact arithmetic); council R2, MANIFEST 9719c817… (= R2 c5cd9cdd re-frozen CITATION-ONLY as R2r), astra=9.3 PASS, opus=9.2 PASS"**.
+  DIST-C's delivery statements (not used by 9C): `W3-DIST:DIST-C@1.0.2` **"PROVED-CHECKED, conditional on
   EX-A (exact arithmetic); council R2, MANIFEST 9719c817… (= R2 c5cd9cdd re-frozen CITATION-ONLY as R2r), astra=9.3 PASS, opus=9.2 PASS"**.
 
 ### Bridges
@@ -1318,7 +1318,7 @@ $\mathcal A$ or with completion, not conditional on them. The guarantees describ
 *Scope.* The exact-enumeration branch (small model spaces) is not covered by this theorem [S3-N3].
 
 *Remark (row 3.5: the pooled evidence is unbiased).* Given the calibration, on $\mathcal A$, $E[\hat Z\mid\text{calibration}]=Z$
-for every design and data set; no statistical condition is needed (claim `W3-READER:PoolZ@1.0.1`, `STATEMENT.md`, from the
+for every design and data set; no statistical condition is needed (claim `W3-READER:PoolZ@1.0.2`, `STATEMENT.md`, from the
 per-island identity of the unbiasedness theorem by linearity). The guarantees describe the run as if uninterrupted; a run stopped by its time guard reports status `resource_limit` and returns no estimates; anything else it returns is flagged incomplete and is not covered (`v3_fit.R:84-85`; `v3_run.R:110-113, 142-147`) [B2]. [GUARD-W]
 
 ### Why each assumption
@@ -1332,13 +1332,13 @@ per-island identity of the unbiasedness theorem by linearity). The guarantees de
 - (S5) idealises the random numbers and the coded kernels; they are not statistical assumptions.
 
 ### Master theorem
-`W3-SAMP:C@1.1.5`, `Theory_work/Wave3/W3-SAMP/STATEMENT.md:149-163`, clause (C-v) at :158-162, status **"PROVED-CHECKED, conditional on W1-N1:B, W1-N1:F; council R1, MANIFEST 68480a72…, astra=9.1 PASS, opus=8.8 PASS"**
-(main 2676e71f) [REG-2676]; `W1-N1:B`, `W1-N1:F` (the conditions) each **"PROVED under the named premises of STATEMENT §2 — cross-family checked (Codex gpt-6.1-sol: LC1, MP1 CONTINUE, SW1, council C1 9.3) and council-passed (Claude Opus 5.5: C1 8.9), round 1, 2026-11-08."**;
+`W3-SAMP:C@1.1.6`, `Theory_work/Wave3/W3-SAMP/STATEMENT.md:149-163`, clause (C-v) at :158-162, status **"PROVED-CHECKED; council R1, MANIFEST 68480a72…, astra=9.1 PASS, opus=8.8 PASS"**
+(main 20d01e52, W1-N1:B/F discharge, HQ D111; at main 2676e71f it was "PROVED-CHECKED, conditional on W1-N1:B, W1-N1:F") [REG-2676, REG-20d0]; `W1-N1:B`, `W1-N1:F` (formerly the conditions) each **"PROVED under the named premises of STATEMENT §2 — cross-family checked (Codex gpt-6.1-sol: LC1, MP1 CONTINUE, SW1, council C1 9.3) and council-passed (Claude Opus 5.5: C1 8.9), round 1, 2026-11-08."**;
 start input `W3-START2-R:IF-START@1.0.0` (IF-START⁺⁺, `W3-START2-R/STATEMENT.md:241-246`, under (T3⁺⁺)(b) at :226-240 with (L-R⁺⁺) at
 :70-81), **"PROVED-CHECKED; council R2, MANIFEST 12bb52cd… (= R2 90886d06 re-frozen CITATION-ONLY as R2r), sol=9.0 PASS, opus=9.3 PASS"** (main b48fd0a1; supersedes `W3-START2:IF-START`, free, SUPERSEDED-VALID) [REPIN]; posterior input Theorem 2
 (`W3-POST:Thm-1@1.0.1` item 6 with `W2-APP:POST@1.0.7`, "PROVED-CHECKED"). Alternative
-route (remark): `W3-SAMP:TR@2.1.5`, "PROVED-CHECKED; council R1, MANIFEST 68480a72…, astra=9.1 PASS, opus=8.8 PASS" [REG-2676]. Row 3.5: `W1-N1:Thm-N1@1.0.0`,
-"PROVED-CHECKED", and `W3-READER:PoolZ@1.0.1` "PROVED-CHECKED; council R3, MANIFEST 7aebdf2e…, sol=9.5 PASS, opus=9.4 PASS".
+route (remark): `W3-SAMP:TR@2.1.6`, "PROVED-CHECKED; council R1, MANIFEST 68480a72…, astra=9.1 PASS, opus=8.8 PASS" [REG-2676]. Row 3.5: `W1-N1:Thm-N1@1.0.0`,
+"PROVED-CHECKED", and `W3-READER:PoolZ@1.0.2` "PROVED-CHECKED; council R3, MANIFEST 7aebdf2e…, sol=9.5 PASS, opus=9.4 PASS".
 
 ### Bridges
 | # | Bridge | Mark | Detail |
@@ -1346,7 +1346,7 @@ route (remark): `W3-SAMP:TR@2.1.5`, "PROVED-CHECKED; council R1, MANIFEST 68480a
 | B10.1 | (A2)–(A3) ⇒ $o_1=O_P(\sqrt{\log n/n})$ | via Theorem 2: EXISTS-CHECKED (`W2-APP:POST@1.0.7`) + R1 (B2.1) | `lemmas/R4_printed_outputs.md` step (1); standardised-signal convention covered by `L1_POST.md:11, 15-18`. |
 | B10.2 | (A3)–(A5) ⇒ $\mathbf 1_{\mathcal A}o_0=O_P(\rho_n)$ | EXISTS-CHECKED + R1 (B6.1) | IF-START⁺⁺ under (T3⁺⁺)(b) with $Q=S_0$; (A4)–(A5) = (V-R), (L-R⁺⁺) with $\bar H_n=e^{\kappa\sqrt{\log n}}$ (Theorem 5, B5.1′) [REPIN]. |
 | B10.3 | $\mathbf 1_{\mathcal A}\max(o_0,o_1)=O_P(\rho_n)$ ⇒ (C-v) with rate $\rho_n$ | **NEW** (assembly) | `lemmas/R4_printed_outputs.md` steps (3)–(4). |
-| B10.4 | pooled $\hat Z$ unbiased | **NEW** (claim) | `W3-READER:PoolZ@1.0.1`, two-line proof from N1. |
+| B10.4 | pooled $\hat Z$ unbiased | **NEW** (claim) | `W3-READER:PoolZ@1.0.2`, two-line proof from N1. |
 
 ### Honest limits
 The conclusion is localised to calibration success $\mathcal A$ on the sampler branch (intersections, not conditioning);
@@ -1354,8 +1354,8 @@ that $P(\mathcal A)\to1$ is not claimed here (under (S4), whose item (i) now inc
 admissible $n$, and without the two limits lifted on $\mathfrak D$; that link is not used here) [S4-S1, RM2R-1]. The theorem covers only designs with no leakage outside the true model (A5), such as independent predictors; AR and
 block designs are outside it (row 3.5 applies there, and row 3.1 for particular AR or block designs that satisfy Theorem 6's
 conditions) [AUD-B11, R2-L1]. The rate $\rho_n$ is the start law's rate;
-its ratio to the posterior rate $\sqrt{\log n/n}$ is $e^{C\sqrt{\log n}}/\sqrt{\log n}$ [R2-E2]. Registry conditions [REG-2676]: `W3-SAMP:C` and `W3-READER:R4@1.0.1` are "PROVED-CHECKED, conditional on W1-N1:B, W1-N1:F" (the two
-N1 premises "PROVED under the named premises", cross-family checked and council-passed); `W2-APP:POST` is "PROVED-CHECKED".
+its ratio to the posterior rate $\sqrt{\log n/n}$ is $e^{C\sqrt{\log n}}/\sqrt{\log n}$ [R2-E2]. Registry conditions: since main 20d01e52 (HQ D111) `W3-SAMP:C@1.1.6` and `W3-READER:R4@1.0.3` carry no condition on W1-N1:B, W1-N1:F (at main 2676e71f [REG-2676] they were "PROVED-CHECKED, conditional on W1-N1:B, W1-N1:F"; the two
+N1 premises remain "PROVED under the named premises", cross-family checked and council-passed); `W2-APP:POST` is "PROVED-CHECKED".
 
 #### Update log (thm10)
 - v0.3 2026-11-16: first version (manager's CP1 decision 4; bridge leg).
@@ -1394,15 +1394,65 @@ N1 premises "PROVED under the named premises", cross-family checked and council-
 | Bridge | Theorem | Mark | Where proved | Importance |
 |---|---|---|---|---|
 | B2.2 `W2-APP:POST@1.0.7` | 2, 6, 10 | EXISTS-CHECKED | accepted at W2-APP CP3; SL0 cleared (main 33e1f0f5); SOP:TH09 discharged (main 6cd699dd) | none |
-| B4.3 / B1.7 POST2 C/E/A1/A0 | 1 (re-base), 1′, 4 | EXISTS-CHECKED, conditional (A0 unconditional; §1) | recorded at main f526e45b; @1.0.6 after main 2676e71f | conditions quoted in §1 (C: W3-POST:Prop-LB, W2-APP:POST; E, A1: W2-APP:POST) [S4-F1, REG-6cd6] |
+| B4.3 / B1.7 POST2 C/E/A1/A0 | 1 (re-base), 1′, 4 | EXISTS-CHECKED, conditional (A0 unconditional; §1) | recorded at main f526e45b; @1.0.7 after main 33bfcb9c | conditions quoted in §1 (C, E, A1: W2-APP:POST; A0 unconditional) [S4-F1, REG-6cd6, REG-33bf] |
 | B6.6′ / B7.5 (S4) ⇔ delivery premises (D) of `W3-RM2-R:DLV-0` | 6, 7 | identity | `W3-RM2-R/STATEMENT.md:71-93` | low |
 | B6.6 / B7.4 RM2 ⇒ delivery assembly; (S4) premise table — **historical** (former hypotheses; not used by current 6, 7) [R1-F2] | — | NEW | `lemmas/R3_delivery_assembly.md` | — |
 | B6.3 local regressions ⇒ variance clause | 6 (7: B7.3) | NEW | `lemmas/R2_local_regression.md` | medium |
 | B1.1–B1.3, B2.1, B3.2, B4.1, B6.1 set sizes and elementary bridges | 1, 2, 3, 4, 6, 10 | NEW | `lemmas/R1_set_sizes.md` | medium |
 | B10.3 printed outputs assembly | 10 | NEW | `lemmas/R4_printed_outputs.md` | high (row 3.6) |
-| B10.4 pooled evidence unbiased (`W3-READER:PoolZ@1.0.1`) | 10 (row 3.5), card 4.1 | NEW (registered claim, approved) | `STATEMENT.md` | medium |
+| B10.4 pooled evidence unbiased (`W3-READER:PoolZ@1.0.2`) | 10 (row 3.5), card 4.1 | NEW (registered claim, approved) | `STATEMENT.md` | medium |
 | B6.7 raw-scale coefficients in Theorems 5, 6, 10 | 5, 6, 10 | NEW (optional) | not proposed | low–medium |
 
 All NEW items are covered by the bridge leg's one Sol line check, together with the v0.1 → v0.3 diff of the reader
 statements. The CP3 council's Sol seat gives the fresh `FIDELITY: FAITHFUL | NOT-FAITHFUL` line on the final reader
 statements (HQ-confirmed; no separate review).
+
+---
+
+## 11. Additions of H5 card 17 (2026-11-17; consultant AGREED; D115, D120, D121)
+
+These blocks are appended here so that the line numbers of §§1–10 stay unchanged. They belong to the reader versions of Theorem 2 (§2), Theorem 6 (§6) and card rows 1.2, 3.1L and 3.1F. Update-log entries are in §2 (v0.5) and §6 (v1.0).
+
+### 11.1 Theorem 2X (coexisting statement under Theorem 2; tag MIXED / incomparable; conditional)
+**Source:** W3-D2 READER_DELTA (text) and `W3-D2/REPORT.md` §3 (card text). Statuses verbatim (recorded at main 2e0decc8; `Thm2X@1.0.3`, status as at main 34c8fb4d) [REG-2e0d]: `W3-D2:Thm2X@1.0.3`, `W3-D2:Cor2X@1.0.0`: **"PROVED-CHECKED, conditional on W2-APP:POST, C-MIS:GDb, C-MIS:Prop-P; council R2, MANIFEST d408b7dc…, sol=9.2 PASS, opus=9.6 PASS"** (each).
+
+**Theorem 2X (smaller-set, expectation form).** Let the rows of $X^{\mathrm r}$ be i.i.d. $N_p(m,\Sigma)$ with $\Sigma_{jj}>0$, and let $R$ be the correlation matrix of a row. Assume (S1) with $\sigma^2>0$ allowed to depend on $n$ and
+- **(A1) Dimension and sparsity.** $2\le p\le n^A$; $s_0\ge1$ fixed.
+- **(A2) Sparse eigenvalue floor.** $\lambda_{\min}(R_{TT})\ge c$ for every $T$ with $1\le|T|\le3(A+1)(s_0+1)\log n$, for a fixed $c>0$.
+- **(A3) Signal relative to the noise.** $\beta^\top\Sigma\beta\le M_0\sigma^2$ and $n\min_{j\in S_0}\Sigma_{jj}\beta_j^2/(\sigma^2\log n)\to\infty$.
+
+$m$, $\Sigma$, $\beta$ and $\sigma^2$ may depend on $n$; no condition beyond (A1)–(A3) is placed on how they vary. Then
+$$E\big[1-\pi(S_0\mid y)\big]=O\Big(\sqrt{\tfrac{\log n}{n}}\Big),\quad P(\mathrm{HPM}\neq S_0)+P(\mathrm{MPM}\neq S_0)=O\Big(\sqrt{\tfrac{\log n}{n}}\Big),\quad E\max_j|\mathrm{PIP}_j-\mathbf 1\{j\in S_0\}|=O\Big(\sqrt{\tfrac{\log n}{n}}\Big).$$
+It is conditional on `W2-APP:POST`, `C-MIS:GDb` and `C-MIS:Prop-P` (the inputs of Theorem 4's master), as recorded.
+
+*Remarks.* Fixed $\sigma^2$, a correlation matrix $\Sigma$ and $b_{\mathrm{lo}}\le|\beta_j|\le b_{\mathrm{hi}}$ on $S_0$ give (A3) with $M_0=s_0^2b_{\mathrm{hi}}^2/\sigma^2$. This is Theorem 4 with no omitted predictors, plus the deterministic PIP/MPM consequences. Against Theorem 2: it asks the floor on smaller sets and lets the parameters vary with $n$, but needs Gaussian rows and gives an expectation form; Theorem 2's sub-Gaussian rows are not covered, and Theorem 2's fixed parameters are not required here.
+
+**Bridges.** B2.1′ := `W3-D2:Thm2X` (`W3-MISR-R:CorGb-plus` with $q=0$ and `W3-READER:R1` B4.1); B2.1″ := `W3-D2:Cor2X` (the old hypotheses ⇒ the new ones). B2.1–B2.3 stay for the coexisting statement of §2.
+
+### 11.2 Corollary 6L (what the returned list gives) — recorded (W3-D5P)
+Presented as a software statement once the code re-pin to method-v3.1.1-listpip is recorded. Source: `theory/W3-D5P` (CARD.md v0.3 Option A, READER_DELTA v0.2). Master, recorded: `W3-D5P:LIST-R@1.0.0` "PROVED-CHECKED; council R4, …" (unconditional: IMPL-LIST discharged at `method-v3.1.1-listpip`, main 7100bb3b, `W3-D5P/reviews/IMPL_LIST_codeprint.md` §5); `W3-D5P:LIST-K@1.0.0` "PROVED-CHECKED; council R4, …"; `W3-D5P:LIST-CODE@1.0.0` "CODE-CHECKED (code reading at core 4676af6); council R4, …". Inputs: `W3-RM2-R:RM2-R-plus@1.0.1`, `RM0-plus@1.0.1`, `DLV-0@1.0.1` "PROVED-CHECKED; council R3, …"; `W2-APP:POST@1.0.7` "PROVED-CHECKED".
+
+**Corollary 6L.** A run that produces output returns, besides the reported model, a list of at most $40p+1$ distinct models with their unnormalised log posterior weights (the best-scored models met by the run). The method prints three further summaries. On a run that uses the sampler they are computed from this list: the inclusion probabilities $\hat p^{\,\mathrm{list}}_j$ of the posterior renormalised to the list, their median model $\hat S^{\mathrm{list}}=\{j:\hat p^{\,\mathrm{list}}_j>\tfrac12\}$ and the list evidence $\hat Z^{\mathrm{list}}$ (the sum of the list's weights). On a small problem solved by exact enumeration they are the exact inclusion probabilities, the exact median model and, where it is printed, the evidence of the enumeration's list. Write $\varepsilon_n:=1-\pi(S_0\mid y)$. Under the assumptions of Theorem 6, on the same data events $\mathcal G_n$, every run that produces output, whatever its seed and calibration outcome, reports $\hat S=S_0$ and has $S_0$ in its list (on the sampler; on exact enumeration, in the enumeration's list where it is returned), and
+$$
+\max_j\big|\hat p^{\,\mathrm{list}}_j-\mathbf 1\{j\in S_0\}\big|\le\varepsilon_n,\qquad
+\max_j\big|\hat p^{\,\mathrm{list}}_j-\mathrm{PIP}_j\big|\le\varepsilon_n,\qquad
+1-\varepsilon_n\le\hat Z^{\mathrm{list}}/Z\le1\ \ \text{(where }\hat Z^{\mathrm{list}}\text{ is printed)},
+$$
+so that $0\le\log Z-\log\hat Z^{\mathrm{list}}\le-\log(1-\varepsilon_n)$; and $\hat S^{\mathrm{list}}=\hat S=S_0$ when $\varepsilon_n<\tfrac12$. Since $\varepsilon_n=O_P(\sqrt{\log n/n})$, the two PIP errors and the log-evidence error $|\log\hat Z^{\mathrm{list}}-\log Z|$ (where printed) are $O_P(\sqrt{\log n/n})$ on output, and without "on output" under the delivery conventions (S4).
+
+*Remark.* This covers every design inside Theorem 6, including AR and block designs that satisfy Theorem 6's conditions, on which the sampler's averaged PIPs, median model and evidence are not covered (Theorem 10 needs no leakage outside the true model). The list quantities are deterministic functions of the run's output; they speak about the posterior restricted to the list, which on Theorem 6's data event holds at least the mass of $S_0$. *Relation to Corollary 9C (D121):* 6L supplies Cor 9C's list-mass premise pathwise on the part of the stated event where $\pi(S_0\mid y)\ge n^{-cM/2}$ (there the list holds at least that mass); the probability form under Cor 9C's law needs the raw-scale bridge (open). Tag vs Theorem 6: **STRONGER** (added conclusions, same hypotheses and event). Cor 9C's status is unchanged.
+
+### 11.3 Corollary FAMC (block and AR designs whose true coefficients do not cancel)
+`W3-FAMC:Cor-FAMC@1.0.0`, main 8b4d3101 [REG-8b4d], status verbatim **"PROVED-CHECKED; council R5, MANIFEST b32ee9df…, sol=10.0 PASS, opus=9.5 PASS"**. Reader text (verbatim, `Theory_work/Dept/writing_answers/FAMC_NOTE_2026-11-17.md` on dept/theory; checked for faithfulness against `Theory_work/Wave3/W3-FAMC/STATEMENT.md` §1):
+
+> **Corollary (block and autoregressive designs).** In the setting of Theorem 6, suppose that, for all large n, the predictors are correlated either in independent blocks of bounded size (uniformly well conditioned) or autoregressively with a fixed ρ ∈ (−1, 1), and that a fixed number of true coefficients have absolute values bounded away from 0 and ∞.
+> Suppose also that the true predictors cannot cancel one another. One of the following holds:
+> - one true predictor per block;
+> - signs aligned with the correlation. For AR: equal signs if ρ > 0, and signs alternating with the column index if ρ < 0. For a block with several truths: after flipping some columns' signs, all its partial correlations are ≥ 0 and the flipped true coefficients share one sign;
+> - (AR only) the truths are spread apart by an explicit separation bound;
+> - the coefficient vector stays a fixed distance from a closed set B of cancelling directions. B is null for AR designs, and possibly not null for general block designs.
+>
+> Then, on data events of probability tending to one, every admissible run that returns a result reports exactly the true model, whatever its seed. Under Theorem 6's delivery conventions, every run returns a result with probability one. So the true model is recovered with probability tending to one, with Theorem 6's qualifications (lifted integer limits, bounded domain, time guard).
+> Not covered: coefficients that cancel. For example, two adjacent autoregressive true predictors with coefficients 1 and −2 at correlation 0.5.
+
+It is an assembly of recorded results (Lemma VIS, TRACK_B B9/B10, RM2 E2, C-GROW); it changes no theorem and adds no assumption. Every condition is class 2b (typical designs), supported by class-2a lemmas (`W3-FAMC/STATEMENT.md` §2). For block and AR designs whose true coefficients do not cancel, it replaces Theorem 6's (A3)–(A6) by primitive conditions. It covers every fixed AR correlation $\rho\in(-1,1)$; the constants degrade as $|\rho|\to1$ (`W3-FAMC/STATEMENT.md` §1b(iv)).

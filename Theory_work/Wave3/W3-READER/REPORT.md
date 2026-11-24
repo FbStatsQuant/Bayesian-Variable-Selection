@@ -18,10 +18,10 @@ gates: correct:PENDING(bridge-leg Sol line check)
 REGISTRY
 claim: W3-READER:R1 | kind: lemma | statement: lemmas/R1_set_sizes.md:1-59 | premises: READER_VERSIONS.md (Thms 1, 2, 3, 4, 6, 10)
 name: Lemma R1 (set-size and elementary bridges to the posterior and main-theorem hypotheses)
-status: PROVED (by this seat, unchecked) | status_source: lemmas/R1_set_sizes.md:3
+status: PROVED-CHECKED; council R3, MANIFEST 7aebdf2eb126058719114df656d0eaf416adb1ae3d21138cb11b51d7075d2263, sol=9.5 PASS, opus=9.4 PASS | status_source: CHECKPOINT_4.md:9
 conclusion: identity: s0+j0 <= (2A+2)s0+2; s0+m#_n <= 3(A+1)(s0+1)log n; kbar_n <= 5(A+1)(s0+1)log n; 16+s0 <= 5(A+1)(s0+1)log n (n >= 3); bounded coefficients => energy; Gaussian nulls => (W-sph) | scope: n >= 3, A >= 1, s0 >= 1
 depends_on: SOP:TH09@1.0.2@proof:[T03R]E2(ii)
-gates: correct:PENDING(bridge-leg Sol line check; S1 verified the arithmetic analytically)
+gates: correct:PASS(reviews/R2_council_sol.md, reviews/R2_council_opus.md, reviews/R3_council_sol.md, reviews/R3_council_opus.md, reviews/R3r_record_sol.md, reviews/R3r_record_opus.md, reviews/R4_council_opus.md, reviews/R5_council_opus.md, reviews/R5r_record_sol.md, reviews/R5r_record_opus.md)
 
 REGISTRY
 claim: W3-READER:R2 | kind: lemma | statement: lemmas/R2_local_regression.md:1-43 | premises: lemmas/R2_local_regression.md:6-9
@@ -41,13 +41,13 @@ gates: correct:PENDING(bridge-leg Sol line check)
 REGISTRY
 claim: W3-READER:R4 | kind: lemma | statement: lemmas/R4_printed_outputs.md:1-51 | premises: lemmas/R4_printed_outputs.md (Claim)
 name: Lemma R4 (printed PIPs, MPM, HPM and evidence estimate are consistent: assembly)
-status: PROVED (by this seat, unchecked) | status_source: lemmas/R4_printed_outputs.md:3
+status: PROVED-CHECKED; council R3, MANIFEST 7aebdf2eb126058719114df656d0eaf416adb1ae3d21138cb11b51d7075d2263, sol=9.5 PASS, opus=9.4 PASS | status_source: CHECKPOINT_4.md:18
 conclusion: rate: 1_A max(o0, o1) = O_P(n^{-1/2} exp(C_R sqrt(log n))); hence Zhat/Z - 1, log Zhat - log Z, ||pip_primary - 1_S0||_inf = O_P(that) on A; P(A and MPM != S0) -> 0; P(completed and Shat != S0) -> 0 | scope: Gaussian rows, standardised-signal convention, Q = S0 (no leakage outside the true model, e.g. independent predictors; AR and block designs not covered)
-depends_on: W3-SAMP:C@1.1.5 ; W3-START2-R:IF-START@1.0.0 ; W3-START2-R:START-R@1.0.0 ; W3-POST:Thm-1@1.0.1 ; W2-APP:POST@1.0.7
-gates: correct:PENDING(bridge-leg Sol line check)
+depends_on: W3-SAMP:C@1.1.6 ; W3-START2-R:IF-START@1.0.0 ; W3-START2-R:START-R@1.0.0 ; W3-POST:Thm-1@1.0.1 ; W2-APP:POST@1.0.7
+gates: correct:PASS(reviews/R2_council_sol.md, reviews/R2_council_opus.md, reviews/R3_council_sol.md, reviews/R3_council_opus.md, reviews/R3r_record_sol.md, reviews/R3r_record_opus.md, reviews/R4_council_opus.md, reviews/R5_council_opus.md, reviews/R5r_record_sol.md, reviews/R5r_record_opus.md)
 ```
 
-Notes for the ingest (HQ / recorder): R4 inherits `W3-SAMP:C@1.1.5`'s conditions (W1-N1:B, W1-N1:F; main 2676e71f) [REG-2676]; `W2-APP:POST@1.0.7` is "PROVED-CHECKED"; `W3-POST:Thm-1@1.0.1` "PROVED-CHECKED; council C3, …". R3 carries F-UNI's qualifications ([OP] author-only; e4/N3 OPEN; P1/S.3 code-reading audit).
+Notes for the ingest (HQ / recorder): At main 2676e71f R4 inherited `W3-SAMP:C`'s conditions (W1-N1:B, W1-N1:F) [REG-2676]; since main 20d01e52 (HQ D111) `W3-SAMP:C@1.1.6` and `W3-READER:R4@1.0.3` carry none; `W2-APP:POST@1.0.7` is "PROVED-CHECKED"; `W3-POST:Thm-1@1.0.1` "PROVED-CHECKED; council C3, …". R3 carries F-UNI's qualifications ([OP] author-only; e4/N3 OPEN; P1/S.3 code-reading audit).
 The reader-version corollaries (Theorems 1–8, 10 of `READER_VERSIONS.md`) are not proposed as separate rows here;
 HQ decides whether each reader version gets a row (PROGRAM "Readability": "The reader version is a corollary with its
 bridges checked").

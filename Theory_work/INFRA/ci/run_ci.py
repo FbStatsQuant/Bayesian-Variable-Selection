@@ -1,6 +1,9 @@
 """run_ci.py — continuous audit of the theory program (local, read-only on tracked files).
 
 Steps (each can be selected with --steps, default all):
+  manifests  tools/verify_accepted.py: `manifest.py verify` over EVERY accepted manifest (the council digest of each
+             ACTIVE claim with an accept record, the set check.py counts); a manifest whose frozen inputs changed
+             after the round fails the run and is named with the file(s) whose hash differs
   check      tools/check.py (registry vs files, SoP registry, FINAL chapter); ERRORs fail the run
   paper      tools/assemble.py --check (generated paper blocks current)
   falsify    re-run the cheap saved falsification scripts listed in ci/falsification.tsv (cheap = calibrated
@@ -13,7 +16,7 @@ Steps (each can be selected with --steps, default all):
   optimize   EVENT-TRIGGERED only (--event wave-boundary|technique|strategy-review [--note ...]): pick one
              BINDING claim of an unsettled headline hypothesis (binding.tsv; more early sub-par signals first)
              and write an improvement-ticket brief priced in re-proof + re-review
-Default steps: check,paper,falsify,cite,reaudit. falsification.tsv entries with kind=boundary simulate just
+Default steps: manifests,check,paper,falsify,cite,reaudit. falsification.tsv entries with kind=boundary simulate just
 outside an assumption: if the conclusion still holds, that is reported as an "improvable" SIGNAL, not a failure.
 Options: --seed N (default: today's date, so a day's picks are reproducible), --calibrate (time every
 falsification entry with a 120 s cap and rewrite runtime_s/cheap in falsification.tsv), --out DIR.
@@ -342,6 +345,15 @@ def step_check(out):
     return p.returncode == 0, "check.py: " + " | ".join(last) + " (full list: check.txt)"
 
 
+def step_manifests(out):
+    p = subprocess.run([PY, os.path.join(R.TOOLS, "verify_accepted.py")], capture_output=True, text=True,
+                       encoding="utf-8", errors="replace")
+    txt = p.stdout + p.stderr
+    with open(os.path.join(out, "manifests.txt"), "w", encoding="utf-8") as fh:
+        fh.write(txt)
+    return p.returncode == 0, txt.strip() or "verify_accepted.py printed nothing"
+
+
 def step_paper(out):
     p = subprocess.run([PY, os.path.join(R.TOOLS, "assemble.py"), "--check"], capture_output=True, text=True,
                        encoding="utf-8", errors="replace")
@@ -579,7 +591,7 @@ is weak necessity evidence) and stop.
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--steps", default="check,paper,falsify,cite,reaudit")
+    ap.add_argument("--steps", default="manifests,check,paper,falsify,cite,reaudit")
     ap.add_argument("--event", default="", help="optimizer trigger: wave-boundary | technique | strategy-review")
     ap.add_argument("--note", default="", help="what happened (quoted in the optimizer brief)")
     ap.add_argument("--seed", type=int)
@@ -596,7 +608,7 @@ def main():
         print(msg)
         return
     results = []
-    steps = {"check": step_check, "paper": step_paper, "falsify": step_falsify, "cite": step_cite,
+    steps = {"manifests": step_manifests, "check": step_check, "paper": step_paper, "falsify": step_falsify, "cite": step_cite,
              "reaudit": lambda o: step_reaudit(o, rng), "optimize": lambda o: step_optimize(o, rng, a.event, a.note)}
     if a.event and "optimize" not in a.steps.split(","):
         a.steps += ",optimize"

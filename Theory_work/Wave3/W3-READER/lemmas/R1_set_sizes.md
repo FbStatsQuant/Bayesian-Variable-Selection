@@ -1,6 +1,6 @@
 # R1 — Set-size and elementary bridges (W3-READER bridge leg, 2026-11-16)
 
-Status: **PROVED (by this seat, unchecked)**. The arithmetic of B1.2, B1.3, B2.1, B4.1, B6.1 was verified analytically
+Status: **PROVED-CHECKED** (registry `W3-READER:R1@1.0.5`, council R3). The arithmetic of B1.2, B1.3, B2.1, B4.1, B6.1 was verified analytically
 by the S1 fidelity read (`reviews/S1_fidelity_sol.md`, "NEW arithmetic bridges"); this file writes the proofs out for the
 line check. Numeric spot check: LOG 2026-11-15 (grid $A\in[1,20]$, $s_0\le39$, $n\in[3,10^{15}]$, 0 violations).
 

@@ -42,6 +42,23 @@ citation check → council (two seats; only C/S/F block; diff round) → **CP3**
 Engineering and compute tickets follow their own DESIGN.md plus the output-preservation contract. Writing follows
 PROGRAM Readability, with a fidelity check of every number.
 
+## 3b. Standing model roles (owner, 2026-11-18: "the best I've found and we will stick to it")
+- **Opus:** the driver. HQ, department managers, decisions, integration and final reviews.
+  - **Opus as agents** (owner, 11-18): also used as worker agents for large tasks that are still difficult, when we divide and conquer (parallel Opus children on hard sub-problems). Never for simple or mechanical work; that goes to Sonnet or Haiku.
+  - **Phase rule (owner, 11-18):** Opus + Fable for engine design and long software construction. In RUN phases (campaigns, read-backs, reports, housekeeping), the work goes to Sonnet workers and Haiku chores, with one Opus child per hard sub-task (diagnosis, code review, budget options). **Managers are always Opus** (owner, 11-18). Long-lived manager threads restart from a RESUME file at checkpoints, to keep context costs down.
+  - **Step-down rule (owner, 11-18):** as soon as a task's remaining complexity drops to what Sonnet or Haiku can easily do, hand it down to them, even mid-task. Opus decomposes and solves the hard core; Sonnet and Haiku execute the rest.
+- **Fable 5.2:** the VP. HQ's consultant and second signature; hard mathematics and rulings as a precision tool.
+- **Astra 6.2:** the external adviser. HQ-only, independent opinions; also adversarial "break it" reads.
+- **Sol 6.2:** the reviewer. Council seats and final-text checks; its verdicts are input, triaged against the acceptance filter.
+- **Sonnet and Haiku:** unlimited workers, in parallel wherever the work splits. Sonnet builds, analyses and writes; Haiku does chores.
+
+- **Right-model rule (owner, 11-18):** choose the model by what the task demands, not by default. Tokens aren't a problem in themselves.
+  - Fable when a task truly needs it (propose it; the owner is glad to sign it off).
+  - Opus for long agentic or difficult work.
+  - Sonnet for standard building, analysis and writing.
+  - Haiku for simple tasks.
+  - Opus is never the blanket option.
+
 ## 4. Access and autonomy
 - **Repo:** github.com/FbStatsQuant/Bayesian-Variable-Selection (public for now; the owner will make it private).
   Clones:
@@ -313,3 +330,4 @@ level is recorded in `HQ_NOW.md`.
   They never write outside their worktree, either: reviews go to `.rc_tmp/`, and the manager copies them and cleans up
   (Engineering, PR #47 incident, 11-16).
 - Managers check pending requests when a review runs over 2 h.
+- **No shell redirects or heredoc outputs outside the worktree** (e.g. `> /tmp/.../scratchpad/x`): the harness prompts on them even in full-access (Theory READER seat, 11-18). **A seat stuck on an approval prompt is cancelled and relaunched by its parent** (`task_cancel` on the parent's own delegate task), not left waiting for the owner.

@@ -14,13 +14,13 @@ uses = {
  "thm1": "W3-POST:Thm-1@1.0.0; SOP:TH09@1.0.2; W3-POST2:C@1.0.5; W3-POST2:E@1.0.5; W3-POST2:A0@1.0.5; W3-POST2:A1@1.0.5; W3-READER:R1",
  "thm2": "W3-POST:Thm-1@1.0.0 item 6; W2-APP:POST@1.0.7; W3-READER:R1",
  "thm3": "W3-PSHARP:A@1.0.0; W3-PSHARP:B@1.0.0; W3-PSHARP-R:AE@1.0.0; W3-PSHARP-R:A2C@1.0.0; W3-READER:R1 (B3.2)",
- "thm4": "W3-MISR:MIS(i)@1.0.1; MIS(i')@1.0.1; MIS(ii)@1.0.1; W3-MISR-R:CorGb-plus@1.0.1; CorG-min@1.0.1; CorH-plus@1.0.1; CorH-U@1.0.1; W3-READER:R1 (B4.1)",
+ "thm4": "W3-MISR:MIS(i)@1.0.2; MIS(i')@1.0.2; MIS(ii)@1.0.2; W3-MISR-R:CorGb-plus@1.0.3; CorG-min@1.0.3; CorH-plus@1.0.3; CorH-U@1.0.3; W3-READER:R1 (B4.1)",
  "thm5": "W3-START2-R:START-R@1.0.0; W3-START2-R:BR@1.0.0; W3-START:FLOOR@1.0.0",
  "thm6": "W3-RM2-R:RM2-R-plus@1.0.0; RM0-plus@1.0.0; DLV-0@1.0.0; Cont-plus@1.0.0; W3-RM2:RM2-R@1.0.3; W3-RM:RM-0@1.0.0; W3-RM:E4@1.0.0; W3-RM2:D-to-W@1.0.3; W3-RM2:POST-R@1.0.3; W3-READER:R1, R2",
  "thm7": "W3-RM2-R:RM2-F-plus@1.0.0; RM0-plus@1.0.0; DLV-0@1.0.0; W3-RM2:RM2-F@1.0.3; W3-RM2:W-suff@1.0.3; W3-RM:RM-0@1.0.0; W3-READER:R1, R2",
  "thm8": "W3-SCR:A1@1.0.0",
  "thm9": "W3-DIST:Thm-A@1.0.0; Thm-B@1.0.0; Cor-C@1.0.0; DIST-1@1.0.0; DIST-2@1.0.0; B3@1.0.0",
- "thm10": "W3-SAMP:C@1.1.4; W3-SAMP:TR@2.1.4; W3-START2-R:IF-START@1.0.0; W3-POST:Thm-1@1.0.0; W2-APP:POST@1.0.7; W1-N1:Thm-N1@1.0.0; W3-READER:R4, PoolZ",
+ "thm10": "W3-SAMP:C@1.1.6; W3-SAMP:TR@2.1.6; W3-START2-R:IF-START@1.0.0; W3-POST:Thm-1@1.0.0; W2-APP:POST@1.0.7; W1-N1:Thm-N1@1.0.0; W3-READER:R4, PoolZ",
 }
 cur_rv, snap_rv = (T / "READER_VERSIONS.md").read_text(), (SNAP / "READER_VERSIONS.md").read_text()
 cr, sr = rows(cur_rv), rows(snap_rv)
@@ -35,7 +35,7 @@ ss = lambda p: (SNAP / p).read_text() if (SNAP / p).exists() else ""
 pz = ("## Claim PoolZ", "## Bridge lemmas")
 add("W3-READER:PoolZ", "STATEMENT.md §Claim PoolZ", "W1-N1:Thm-N1@1.0.0", section(st("STATEMENT.md"), *pz), section(ss("STATEMENT.md"), *pz))
 for r, f in [("R1", "lemmas/R1_set_sizes.md"), ("R2", "lemmas/R2_local_regression.md"), ("R3", "lemmas/R3_delivery_assembly.md"), ("R4", "lemmas/R4_printed_outputs.md")]:
-    add("W3-READER:" + r, f, {"R1": "SOP:TH09@1.0.2 ([T03R] E2(ii))", "R2": "-", "R3": "W2-UNI:F-UNI@2.1.0; W3-RM2:RM2-R/F@1.0.3 (history)", "R4": "W3-SAMP:C@1.1.4; W3-START2-R:IF-START@1.0.0; W3-START2-R:START-R@1.0.0; W2-APP:POST@1.0.7"}[r], st(f), ss(f))
+    add("W3-READER:" + r, f, {"R1": "SOP:TH09@1.0.2 ([T03R] E2(ii))", "R2": "-", "R3": "W2-UNI:F-UNI@2.1.0; W3-RM2:RM2-R/F@1.0.3 (history)", "R4": "W3-SAMP:C@1.1.6; W3-START2-R:IF-START@1.0.0; W3-START2-R:START-R@1.0.0; W2-APP:POST@1.0.7"}[r], st(f), ss(f))
 add("NOTATION", "NOTATION.md", "code pins (Scripts/SMC_BVS/core)", st("NOTATION.md"), ss("NOTATION.md"))
 for k in sorted(cr, key=lambda x: int(x[3:])):
     add("RV/" + k, "READER_VERSIONS.md ROW " + k, uses.get(k, ""), cr[k], sr.get(k, ""))

@@ -1,0 +1,14 @@
+# CORRECTION-ONLY, STAGED (HQ ruling; consultant AGREE). Sol-2 S2-3 (Sol-2 card): CLAIMS_CARD.md:166 history bullet quotes W3-POST2:D at @1.0.6; registry at 2676e71f has D@1.1.6. Line count unchanged.
+diff --git a/Theory_work/Wave3/W3-READER/CLAIMS_CARD.md b/Theory_work/Wave3/W3-READER/CLAIMS_CARD.md
+index 2d21cda7..74208f26 100644
+--- a/Theory_work/Wave3/W3-READER/CLAIMS_CARD.md
++++ b/Theory_work/Wave3/W3-READER/CLAIMS_CARD.md
+@@ -163,7 +163,7 @@ honest-status rows.
+   Rows 3.1/3.2 now rest on W3-RM2-R (conditional on two code-reading audits). The two bullets above and the list below
+   are history where they disagree.
+ * **Status refresh (main 2676e71f, relabel D97) [REG-2676].** `W3-POST:Thm-1@1.0.1` "PROVED-CHECKED; council C3, …" and its conditions discharged on
+-  POST2 C/E/A0/A1/D (@1.0.6: C conditional on W3-POST:Prop-LB, W2-APP:POST; E, A1, D on W2-APP:POST; A0 unconditional), W3-DIST (Thm-A/B, DIST-1/2 @1.0.1; Cor-C and
++  POST2 C/E/A0/A1 (@1.0.6) and D (@1.1.6) (C conditional on W3-POST:Prop-LB, W2-APP:POST; E, A1, D on W2-APP:POST; A0 unconditional), W3-DIST (Thm-A/B, DIST-1/2 @1.0.1; Cor-C and
+   DIST-C conditional on W1-N1:B, W1-N1:F, EX-A), W3-SAMP (C/LT♯ conditional on W1-N1:B, W1-N1:F; D on W1-N1:B; TR unconditional); R4 and PoolZ recorded
+   (R4 conditional on W1-N1:B, W1-N1:F); `W1-N1:B`, `W1-N1:F` are "PROVED under the named premises", cross-family checked and council-passed.
+ * **Status refresh (main 33bfcb9c, 20d01e52) [REG-33bf, REG-20d0].** `W3-POST:Prop-LB@1.0.1` is "PROVED-CHECKED; council C3, …" (33bfcb9c), so `W3-POST2:C@1.0.7` is "PROVED-CHECKED, conditional on W2-APP:POST" (E, A1, D likewise; A0 unconditional). Since 20d01e52 (W1-N1:B/F discharge, HQ D111) `W3-SAMP:C@1.1.6`, `LT#@2.0.6`, `TR@2.1.6`, `D@2.1.6`, `W3-READER:R4@1.0.3` and `PoolZ@1.0.2` carry no condition on W1-N1:B, W1-N1:F, and `W3-DIST:Cor-C@1.0.2`, `DIST-C@1.0.2` are "PROVED-CHECKED, conditional on EX-A (exact arithmetic)"; `W1-N1:B`, `W1-N1:F` themselves remain "PROVED under the named premises". `W3-MISR-R` rows are `@1.0.3` and `W3-MISR:MIS(i)`, `MIS(i')`, `MIS(ii)` are `@1.0.2` (34c8fb4d; condition lists expanded to `W2-APP:POST`, as row 1.4 quotes). The two bullets above that quote the earlier conditions are history.

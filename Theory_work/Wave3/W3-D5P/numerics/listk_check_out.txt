@@ -1,0 +1,10 @@
+trials=20000; every "worst" value must be <= 1e-12 (inequality slack) or ~0 (identities)
+a: 1-piT(S0) - eps                         worst = 4.441e-16  OK
+a: max|pipT-1S0| - (1-piT(S0))             worst = 3.331e-16  OK
+b: max|pipT-PIP| - (1-pi(T))               worst = 1.221e-15  OK
+b: |TV - (1-pi(T))|                        worst = 7.772e-16  OK
+d: (logZ-logZT) - eps/(1-eps)              worst = 1.377e-14  OK
+d: logZ+log(pi(S0)) - logZT                worst = 1.421e-14  OK
+d: logZT - logZ                            worst = 7.105e-15  OK
+d: |logZT-(logZ+log pi(T))|                worst = 2.842e-14  OK
+clause (c) violations: 0

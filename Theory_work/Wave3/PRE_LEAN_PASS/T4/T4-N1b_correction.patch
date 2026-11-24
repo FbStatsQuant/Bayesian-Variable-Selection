@@ -1,0 +1,23 @@
+# T4-N1b (manager ruling: apply the T4-N1 phrase fix to the same phrase elsewhere in the reader, in the same touch, with a PURE check): READER_VERSIONS.md:824 (Theorem 7 (A1), second form of the beta-min) and :885 (bridge B7.2', 'Under ... : (BM-W) => (BM-W+)'). The limit phrase 'theta*_min sqrt(n/log n) -> infinity' is replaced as in T4-N1 (the master BM-infinity is a deterministic envelope; the display is made at a given n): 'theta*_min >= sigma_* sqrt(M_n log n/n)/phi_0 for a fixed sequence M_n -> infinity'. Reader prose only; line counts unchanged. Lines 824 and 885 lie inside the W3-READER:R1 premises span 661-811? (824: no, 661-811 ends at 811; 885: no): check in the PURE report; helpers/GATES_G2.md:133 is left alone (manager).
+diff --git a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+index b8f3015d..ac255443 100644
+--- a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
++++ b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+@@ -821,7 +821,7 @@ regressions are local. HQ choices: keep them as stated (faithful), or state Theo
+ **Theorem 7.** Let the design be fixed, with non-constant raw columns [R3]. Assume
+ - **(A1) Model and posterior conditions.** (S1), (S2), (S3); (A2)–(A5) of Theorem 1; and the beta-min
+   $\theta^*_{\min}\ge C_\beta\,\sigma_*\sqrt{\log n/n}$ with a fixed $C_\beta$ above an explicit constant depending on
+-  $(s_0,A,M,\sigma_*^2,\varphi_0)$ (Remark (a)), or $\theta^*_{\min}\sqrt{n/\log n}\to\infty$ [RM2R-4].
++  $(s_0,A,M,\sigma_*^2,\varphi_0)$ (Remark (a)), or $\theta^*_{\min}\ge\sigma_*\sqrt{M_n\log n/n}/\varphi_0$ for a fixed sequence $M_n\to\infty$ [RM2R-4].
+ - **(A2) Floors.** $\lambda_{\min}(\hat R_T)\ge\varphi_0^2$ for every $T$ with $|T|\le16$ and for every
+   $T=Q\cup\{l\}$, $l\in[p]$ ($Q$ as in (A4)).
+ - **(A3) Visibility.** There is a fixed $M_V$, larger than an explicit constant depending on $(A,M,\sigma_*^2)$
+@@ -882,7 +882,7 @@ nonconstant raw columns").
+ | # | Bridge | Mark | Detail |
+ |---|---|---|---|
+ | B7.1′ | (A1) ⇒ (T1-F♭) | identity + B1.1–B1.4 [RM2R-4] | (T1-F♭) = Theorem 1's (H0) with BM-∞ or BM(c), c > c₀ (`W3-RM2-R/STATEMENT.md:95-99`); (A1)'s constant exceeds c₀. Replaces B7.1. |
+-| B7.2′ | (A5)(a) + (A1) ⇒ (BM-W⁺) | NEW (two lines; council-checked as READER_DELTA R7.2 of W3-RM2-R) | fixed $D>2+4A$, $d_n^2\le D\log n$ for large $n$; the strict constant of Remark (a); `W3-RM2-R/STATEMENT.md:107-112` (last sentence of (BM-W⁺)). Under $\theta^*_{\min}\sqrt{n/\log n}\to\infty$: (BM-W) ⇒ (BM-W⁺). |
++| B7.2′ | (A5)(a) + (A1) ⇒ (BM-W⁺) | NEW (two lines; council-checked as READER_DELTA R7.2 of W3-RM2-R) | fixed $D>2+4A$, $d_n^2\le D\log n$ for large $n$; the strict constant of Remark (a); `W3-RM2-R/STATEMENT.md:107-112` (last sentence of (BM-W⁺)). Under $\theta^*_{\min}\ge\sigma_*\sqrt{M_n\log n/n}/\varphi_0$ for a fixed sequence $M_n\to\infty$: (BM-W) ⇒ (BM-W⁺). |
+ | B7.3′ | (A5)(b) signal clause (Remark (a) form) ⇒ (BM-Q♭) ⇒ (BM-W⁺) | identity | `W3-RM2-R/STATEMENT.md:107-112`; checked as R7.3 of W3-RM2-R. |
+ | B7.4′ | (A3) = (V♭) | identity | `W3-RM2-R/STATEMENT.md:101-105`. |
+ | B7.1 | (A1) ⇒ (T1-F) | as B1.1–B1.4 (with BM-∞) | (T1-F) uses BM-∞ (RM STATEMENT.md:91-92). Superseded by B7.1′ for the current master. |

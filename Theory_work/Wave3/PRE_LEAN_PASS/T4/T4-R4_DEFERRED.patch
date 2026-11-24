@@ -1,0 +1,27 @@
+# PENDING (statement-span edit: HQ + consultant; card: apply only if W3-D3 is reopened). T4 R4 (T4 card, AGREE): W3-D3/STATEMENT.md:64-65 (the card says :61-62; the sentence is on :64-65) and lemmas/B3w.md:25: m#_n computed with (n, p, s0), as in (c); on A_n, p_ret = p. Thm2SG statement untouched. Line counts unchanged.
+diff --git a/Theory_work/Wave3/W3-D3/STATEMENT.md b/Theory_work/Wave3/W3-D3/STATEMENT.md
+index b62f6277..d3abc490 100644
+--- a/Theory_work/Wave3/W3-D3/STATEMENT.md
++++ b/Theory_work/Wave3/W3-D3/STATEMENT.md
+@@ -61,7 +61,7 @@ Then, under the joint law of design and noise,
+ Registry id `W3-D3:B3w`.
+ 
+ Assume (A1)–(A4) of §1 and put W̄_n := 5(A + 1)(s₀ + 1) log n, q_n := ⌊W̄_n⌋, j₀ := ⌈(2A + 1)s₀⌉ + 1, m♯_n as in
+-[W3P] `:36-37` (computed with p_ret and s₀), and, for the unit-noise model of [EB]`B0.md` (coefficients β̃* := β*/σ*,
++[W3P] `:36-37` (computed with (n, p, s₀), as in (c); on 𝒜_n, p_ret = p), and, for the unit-noise model of [EB]`B0.md` (coefficients β̃* := β*/σ*,
+ standardised coefficients θ̃* := D_xβ̃*),
+   M_E := 2s₀²b_hi²/σ*²,  φ₀² := φ²/4,  g₀ := φ²/8,  M_n := b_lo²nφ²/(8σ*² log n).
+ Let 𝓔₁ be the event of [EB]`B1.md` and 𝓔₂(q_n) the event of [EB]`B2core.md` at q = q_n, both events of the raw design,
+diff --git a/Theory_work/Wave3/W3-D3/lemmas/B3w.md b/Theory_work/Wave3/W3-D3/lemmas/B3w.md
+index e742957f..6eb6a877 100644
+--- a/Theory_work/Wave3/W3-D3/lemmas/B3w.md
++++ b/Theory_work/Wave3/W3-D3/lemmas/B3w.md
+@@ -22,7 +22,7 @@ interface constants in units of σ*²). Let 𝓔₁ ([EB]`B1.md`) and 𝓔₂(q_
+ raw design, and 𝒜_n := 𝓔₁ ∩ 𝓔₂(q_n). (𝓔₂(q_n) = 𝓔₂(w_n): in ℝ^p, "at most q_n nonzero entries" and "at most w_n" are the
+ same condition.) Put
+   **[R-2]** M_E := 2s₀²b_hi²/σ*²,  φ₀² := φ²/4,  g₀ := φ²/8,  M_n := b_lo²nφ²/(8σ*² log n),  j₀ := ⌈(2A + 1)s₀⌉ + 1,
+-and m♯_n as in [W3P] `:36-37` (computed with p_ret and s₀). **[R-3]** Let n₁ = n₁(s₀, A, L) be the least integer
++and m♯_n as in [W3P] `:36-37` (computed with (n, p, s₀), as in (c); on 𝒜_n, p_ret = p). **[R-3]** Let n₁ = n₁(s₀, A, L) be the least integer
+ n₁ ≥ max(3, 2s₀) such that W̄_n(1 + A log n) ≤ c₂n/L⁴ for every n ≥ n₁ (c₂ = 10⁻⁵; n₁ is finite because the left side
+ is O((log n)²)). For n ≥ n₁:
+ (a) On 𝒜_n: (i) p_ret = p ≥ 2 (no column of X^r is constant in the sample), |supp θ̃*| = s₀ and s₀ ≤ K_cap;

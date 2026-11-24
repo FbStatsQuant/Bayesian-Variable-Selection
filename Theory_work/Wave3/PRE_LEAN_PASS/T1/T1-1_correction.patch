@@ -1,0 +1,26 @@
+diff --git a/Theory_work/Wave3/W3-PSHARP/STATEMENT.md b/Theory_work/Wave3/W3-PSHARP/STATEMENT.md
+index a6fddedd..8bdc78e6 100644
+--- a/Theory_work/Wave3/W3-PSHARP/STATEMENT.md
++++ b/Theory_work/Wave3/W3-PSHARP/STATEMENT.md
+@@ -97,7 +97,7 @@ c(p, 0) > ½; and c(p, s₀)/(s₀ + 1) → ½ when p → ∞ and s₀/p → 0 [
+ 
+ **Consequences** (any sequence with s₀ ≤ min(K − 1, p/2); any designs; any data, random or not):
+ - **(B1)** π(S₀) ≤ [1 + (s₀ + 1)/(3√n)]⁻¹ surely. So π(S₀) → 1 (in probability, along any subsequence) forces
+-  s₀ = o(√n); if s₀ ≥ λ√n then π(S₀) ≤ 1/(1 + λ/3); and if s₀/√n → ∞ then π(S₀) → 0 surely.
++  s₀ = o(√n); if s₀ ≥ λ√n, λ ≥ 0, then π(S₀) ≤ 1/(1 + λ/3); and if s₀/√n → ∞ then π(S₀) → 0 surely.
+   **Critical scale [K01-P1]:** if s₀/√n → λ ∈ (0, ∞) and s₀/p → 0, then limsup π(S₀) ≤ e^{−λ/2}, surely (from the full
+   sum 𝒪^{lb}_n: liminf 𝒪^{lb}_n ≥ e^{λ/2} − 1).
+ - **(B2)** δ_n = O_P(ρ_n) for a deterministic ρ_n → 0 forces s₀ + 1 = O(√n ρ_n). In particular the rate r_n forces
+diff --git a/Theory_work/Wave3/W3-PSHARP/lemmas/B_sparsity.md b/Theory_work/Wave3/W3-PSHARP/lemmas/B_sparsity.md
+index 01b05152..2ad3cc4b 100644
+--- a/Theory_work/Wave3/W3-PSHARP/lemmas/B_sparsity.md
++++ b/Theory_work/Wave3/W3-PSHARP/lemmas/B_sparsity.md
+@@ -30,7 +30,7 @@ c ≥ 1 ⟺ (s₀+1)(p−s₀) ≥ 2p−1−s₀ ⟺ (s₀−1)(p−s₀−1) 
+ Put a_n := (s₀+1)/(3√n), deterministic. By the above, **for every data set**, δ_n/(1−δ_n) ≥ a_n, i.e.
+ π(S₀) ≤ 1/(1 + a_n) and δ_n ≥ a_n/(1 + a_n).
+ - **B1.** If π(S₀) → 1 in probability along a subsequence, then 1/(1 + a_n) → 1 along it (a deterministic upper bound of
+-  a sequence converging to 1 in probability), so s₀ = o(√n) there. If s₀ ≥ λ√n: a_n ≥ λ/3 and π(S₀) ≤ 1/(1 + λ/3). If
++  a sequence converging to 1 in probability), so s₀ = o(√n) there. If s₀ ≥ λ√n (λ ≥ 0): a_n ≥ λ/3 and π(S₀) ≤ 1/(1 + λ/3). If
+   s₀/√n → ∞: π(S₀) ≤ 1/(1 + a_n) → 0, surely.
+ - **B1, critical scale.** Let s₀/√n → λ ∈ (0, ∞) and s₀/p → 0 (so s₀ → ∞, p → ∞, and K − s₀ → ∞ because
+   s₀ = o(n) and p − s₀ → ∞). Fix j ≥ 1. For n large, j ≤ K − s₀, and the j-th term of 𝒪^{lb}_n is

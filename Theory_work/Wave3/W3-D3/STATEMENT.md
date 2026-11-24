@@ -145,17 +145,17 @@ constant]." Separate factual remark, not an anchor: it also implies Song–Liang
 
 ## 6. Inputs (registry id @ version; statuses verbatim from `Theory_work/INFRA/registry/claims.tsv` at main 029bb748; version pins requoted at the recording, task D3)
 
-- `W3-POST:Thm-1@1.0.1` ([W3P] `:61-100`; items 1–3 under item 6) — "PROVED-CHECKED; council C3, MANIFEST
+- `W3-POST:Thm-1@1.0.2` ([W3P] `:61-100`; items 1–3 under item 6) — "PROVED-CHECKED; council C3, MANIFEST
   420c1cb0b13771355c19f3412ac6d03fe325de3c62ab851b978c9d32c0d85d22, astra=8.8 PASS, opus=8.7 PASS".
-- `W3-DIST:B0@1.0.2`, `W3-DIST:B1@1.0.2`, `W3-DIST:B2core@1.0.2`, `W3-DIST:B2@1.0.2` ([DIST] `:385-408`; proofs
+- `W3-DIST:B0@1.0.3`, `W3-DIST:B1@1.0.3`, `W3-DIST:B2core@1.0.3`, `W3-DIST:B2@1.0.3` ([DIST] `:385-408`; proofs
   [EB]`B0.md`, `B1.md`, `B2core.md`, `B2.md`) — each "PROVED-CHECKED; council R2, MANIFEST
   9719c81705729389283bcc99a31cdef06afe84bafef076cbfbadead951b9ed1a (= R2 c5cd9cdd re-frozen CITATION-ONLY as R2r),
   astra=9.3 PASS, opus=9.2 PASS".
-- `W3-DIST:B3@1.0.2` ([DIST] `:409-414`; proof [EB]`B3.md`, the template of Lemma B3w) — "PROVED-CHECKED, conditional on
+- `W3-DIST:B3@1.0.3` ([DIST] `:409-414`; proof [EB]`B3.md`, the template of Lemma B3w) — "PROVED-CHECKED, conditional on
   W3-POST:Thm-1 (for its last sentence); council R2, MANIFEST
   9719c81705729389283bcc99a31cdef06afe84bafef076cbfbadead951b9ed1a (= R2 c5cd9cdd re-frozen CITATION-ONLY as R2r),
   astra=9.3 PASS, opus=9.2 PASS". (Its last sentence, δ_n → 0, is not used; W3-POST:Thm-1 is consumed directly above.)
-- `W3-READER:R1@1.0.3` ([R1] B1.2 `:15-17`, B1.3 `:19-31`) — "PROVED-CHECKED; council R3, MANIFEST
+- `W3-READER:R1@1.0.5` ([R1] B1.2 `:15-17`, B1.3 `:19-31`) — "PROVED-CHECKED; council R3, MANIFEST
   7aebdf2eb126058719114df656d0eaf416adb1ae3d21138cb11b51d7075d2263, sol=9.5 PASS, opus=9.4 PASS".
 - External, standard: Hoeffding's lemma (W. Hoeffding, J. Amer. Statist. Assoc. 58 (1963) 13–30, eq. (4.16)) for ExSG (b).
 - Definitions only: [W3P] §0 `:16-39`; [NOT] §1–§2; [RV] (S1), (S2) `:28-29`.

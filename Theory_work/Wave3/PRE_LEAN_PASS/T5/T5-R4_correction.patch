@@ -1,0 +1,14 @@
+# CORRECTION-ONLY, STAGED (HQ ruling; consultant AGREE). STATEMENT-SPAN edit: the recorder rehashes and cascades. T5 R4 (T5 card, AGREE): W3-DIST/STATEMENT.md:151-152 (Thm-A premises span :150-152): convention for inadmissible data. The reader copy (READER_VERSIONS.md:1065-1067) is staged separately (T5-R4-reader). Line count unchanged.
+diff --git a/Theory_work/Wave3/W3-DIST/STATEMENT.md b/Theory_work/Wave3/W3-DIST/STATEMENT.md
+index 46d67fce..150094f9 100644
+--- a/Theory_work/Wave3/W3-DIST/STATEMENT.md
++++ b/Theory_work/Wave3/W3-DIST/STATEMENT.md
+@@ -149,7 +149,7 @@ inverse-gamma prior with shape 0.01 and rate 0.01. (3) The posterior is mapped b
+ coefficient vector in the original units (zero outside S and for removed predictors), and σ² the noise variance in the
+ original units. If fewer than two predictors remain, or the response is constant in the sample, the posterior is not
+ defined here; under the assumptions below such data sets have probability smaller than the exceptional probabilities
+-in the theorems and are counted in them (in particular r = p outside them).
++in the theorems and are counted in them: there the posterior probabilities in the displays are read as 1. The common exceptional set of the proofs also contains every data set with r < p.
+ 
+ *The distribution attached to a posterior draw.* A draw (S, β, σ²) defines a joint density f for a new pair (x, y): x
+ has its true distribution and, given x, y is normal with mean ȳ + (x − x̄)ᵀβ and variance σ², where ȳ and x̄ are the
