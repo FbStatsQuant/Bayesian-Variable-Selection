@@ -59,3 +59,7 @@ Papers/Own_work/
 # all full-text paper copies stay local (owner 2026-11-24; repo is public)
 Papers/**/*.pdf
 Papers/Core_bibliography/03_Krishna_2009_web_text/
+# machine-local data, secrets and worktrees (REORG 2026-11-25; repo is public)
+/_local/
+/_wt/
+/scratch
