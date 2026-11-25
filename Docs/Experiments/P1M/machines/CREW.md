@@ -34,13 +34,13 @@ Roots and terms are as in `REORG_PLAN.md` §0. Inventory baseline: `INVENTORY.md
 |---|---|---|
 | Home quota | `quota -s \| grep -A1 export/nots/home \| tail -1` (exactly this line; the last line of plain `quota -s` is another filesystem) | MB used of 10,240; **WARN ≥ 7,000 MB; GUARD ≥ 8,192 MB → §3** |
 | Queue | `squeue -u fb31 -h -o '%i %j %T %Z'` | jobs and WorkDirs: these paths are IN USE today; nothing under them is touched |
-| Scratch tree vs INDEX | `ls -1 /scratch/fb31/SMC_Engineering_Department/{runs,archive,data,code}` (depth 2) compared with the path column of `~/SMC_Engineering_Department/INDEX.md` | folders on disk without an INDEX row, and INDEX rows whose folder is missing |
-| Stray folders (scratch) | `ls -1A /scratch/fb31` compared with the allowlist {`SMC_Engineering_Department`, plus old paths kept as symlinks or waiting rows in REORG_PLAN §3: `theory_w2`, `theory_w3`, `w3scale`, `home_holding_*`, `home_guard`, `qr_data`, `.claude-science`, the listed loose files} | any new name = **stray**: report with size, mtime, owner guess |
+| Scratch tree vs INDEX | `ls -1 /scratch/fb31/SMC-BVS/{runs,archive,slurm_out}` and `ls -1 ~/SMC-BVS/{_local/*,_wt}` (depth 2) compared with `~/SMC-BVS/INDEX.md` (NOTS ROOT, REORG 11-25) | folders on disk without an INDEX row, and INDEX rows whose folder is missing |
+| Stray folders (scratch) | `ls -1A /scratch/fb31` compared with the allowlist {`SMC-BVS`, and not ours: `BQTF`, `qr_data`, `.claude-science`, `qr_small_del2_MOVED.md`, `scr_backups_MOVED.md`, `scr_onizuka_MOVED.md`, `cksum_units.sh`, `del_unit.sh`, `mkchunks.sh`, `mkunits.sh`} (REORG 11-25) | any new name = **stray**: report with size, mtime, owner guess |
 | Stray folders (home) | `ls -1A ~` compared with the inventory list (INVENTORY §3.1) | new top-level names, and any SMC-BVS output in home (names matching `run*`, `out*`, `slurm*`, `*.rds`, `*.out`) |
 | Home growth | `timeout 120 nice du -s ~/.vscode-server ~/.t3 ~/.codex ~/.claude` one at a time, `sleep 5` between them | per-item MB and day-on-day change (app-build churn ≈ 0.4–0.9 GB/day when auto-update is on) |
-| Scratch size | `timeout 120 nice du -s /scratch/fb31/SMC_Engineering_Department` | total, and `tmp/` size |
-| Department tmp | `find /scratch/fb31/SMC_Engineering_Department/tmp -mindepth 1 -maxdepth 1 -mtime +7` | leftovers > 7 d (deleted under rule N-T1 when their job is gone) |
-| Home guard | `tail -3 ~/home_guard.log` | last guard run and its result |
+| Scratch size | `timeout 120 nice du -s /scratch/fb31/SMC-BVS` | total, and `tmp/` size |
+| Department tmp | `find ~/SMC-BVS/_local/tmp -mindepth 1 -maxdepth 1 -mtime +7` | leftovers > 7 d (deleted under rule N-T1 when their job is gone) |
+| Home guard | `tail -3 ~/SMC-BVS/_local/engineering/crews/home_guard/home_guard.log` | last guard run and its result |
 
 ### 1.2 Owls
 
@@ -60,8 +60,8 @@ Roots and terms are as in `REORG_PLAN.md` §0. Inventory baseline: `INVENTORY.md
 
 | Rule | Where | What | Conditions (all must hold) |
 |---|---|---|---|
-| N-T1 | `/scratch/fb31/SMC_Engineering_Department/tmp/<entry>` | job TMPDIR leftovers | mtime > 7 d; the entry's name is a Slurm job id not in `squeue -u fb31`, or a dated job folder whose job is not running; not a symlink target of anything in `runs/` |
-| N-T2 | inside `/scratch/fb31/SMC_Engineering_Department/{code,runs}/**` | named compile caches only: `.cpp_cache/`, `__pycache__/`, `*.o` beside a built `.so` | parent run not in `squeue`; mtime > 7 d; frozen code trees under `code/` keep their sources (only the cache folder goes) |
+| N-T1 | `~/SMC-BVS/_local/tmp/<entry>` | job TMPDIR leftovers | mtime > 7 d; the entry's name is a Slurm job id not in `squeue -u fb31`, or a dated job folder whose job is not running; not a symlink target of anything in `runs/` |
+| N-T2 | inside `/scratch/fb31/SMC-BVS/runs/**` and `~/SMC-BVS/_wt/**` | named compile caches only: `.cpp_cache/`, `__pycache__/`, `*.o` beside a built `.so` | parent run not in `squeue`; mtime > 7 d; frozen code trees under `code/` keep their sources (only the cache folder goes) |
 | O-T1 | `${ENG_ROOT_OWLS}/tmp/<entry>` | job TMPDIR leftovers | mtime > 7 d; no process has a file open or its cwd there (`lsof +D <entry>` empty, Owls only); entry is not today's crew folder |
 | O-T2 | `${ENG_ROOT_OWLS}/**` | named compile caches: `.cpp_cache/`, `__pycache__/`, `Rtmp*` inside `tmp/` | as O-T1 |
 | T2 | Owls `/tmp` | clearly BVS-named items (§4) | all §4 conditions |
@@ -77,16 +77,15 @@ A dry-run flag (`--dry-run`) prints the deletions without doing them; the first 
 ## 3. The 8 GB guard action (NOTS home)
 
 - **≥ 7,000 MB (WARN):** report the line and the per-item growth in the morning brief.
-- **≥ 8,192 MB (GUARD):** in the same single ssh call, run the existing guard: `~/bin/home_guard.sh` (it acts only above
-  8,192 MB, safe actions only, logged to `~/home_guard.log`; it never touches `~/.ssh`, credentials, `~/projects`, `~/R`,
+- **≥ 8,192 MB (GUARD):** in the same single ssh call, run the existing guard: `~/SMC-BVS/_local/engineering/crews/home_guard/home_guard.sh` (it acts only above
+  8,192 MB, safe actions only, logged to `~/SMC-BVS/_local/engineering/crews/home_guard/home_guard.log`; it never touches `~/.ssh`, credentials, `~/projects`, `~/R`,
   run output, or anything a running fb31 process references). Then re-read the quota line once.
   - If still ≥ 8,192 MB: **report to HQ at once** (not just in the brief) with the top items; the usual remaining live
     items need a quiet window and a restart (NOTS_STORAGE.md §6: Codex `0.167.0`, old T3 runtime, second VS Code server
     build, the `openai.chatgpt` extension). The crew does not restart services or delete live builds.
   - **≥ 9,500 MB:** report at once as a big problem (the 10,240 MB hard quota breaks ssh, T3, VS Code server and Slurm
     writes) and recommend that no new job be submitted until it is fixed.
-- The guard's holding path (`/scratch/fb31/home_holding_<date>/`) changes to
-  `${ENG_SCRATCH_NOTS}/archive/home_guard/holding_<date>/` when HQ applies REORG_PLAN step N4. The crew reports holdings older
+- The guard's holding path is `/scratch/fb31/SMC-BVS/archive/home_guard/holding_<date>/` (REORG 11-25). The crew reports holdings older
   than 14 days; deleting them (regenerable binaries only) needs HQ's OK.
 - The guard is not scheduled on NOTS (scrontab disabled, the self-resubmitting job never submitted). Running it from this
   daily check, inside the one ssh call, is the schedule; nothing else is installed on NOTS.
