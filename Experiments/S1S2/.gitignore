@@ -1,0 +1,5 @@
+octave-workspace
+.nfs*
+*.rds
+*.log
+specs/results_*
