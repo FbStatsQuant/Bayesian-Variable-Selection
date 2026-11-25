@@ -15,11 +15,11 @@ all). Every `mv` below is a rename: metadata only, seconds, mtimes and atimes ke
 |---|---:|---|
 | `~/SMC_Engineering_Department/` | **≈ 435 GB** | `records/` 413.73 GB (21 groups, 715 desktop-verified units), `tmp/` 17.21 GB (incl. 16 git worktrees ≈ 5.3 GB, ribo 0.04 GB), `staging/` 4.03 GB (4 git worktrees), `envs/` 0.32, `Rlib/` 0.11, `crews/` 0.01, `scripts/` (NOTS batch-script copies), `bench/`, `logs/`, `7d/`, `INDEX.md` |
 | ↳ `tmp/20261118-riboflavin/` | 0.04 GB | **exception 1** (ribo-s1..5 running; @reboot line); untouched |
-| `~/SMC_Theory_Department/` | **≈ 81 GB** | `tmp/` ≥ 18 GB (11-16…11-23 recorder clones/probes: RL 4.10, RD 3.57, TA 3.46, D95 2.38, RD2 1.78, …; **20 standalone git clones**), `ci/` (sandboxes, venv-numerics, `bvs_r06_*/LF` clone), `records/` (theory_w2/w3, w3_* numerics: data of record, kept), `refs/` (2 PDFs), `recorder/20261116-T` (a clone), `helpers/`, `logs/`, `BENCH_*`, `SMC_LIT*` |
+| `~/SMC_Theory_Department/` | **86.77 GB** | `tmp/` **84.92 GB** (11-16…11-23 recorder clones/probes, e.g. D2 6.04, RL 4.10, RD 3.57, TA 3.46, V 3.06, D3 3.05; **20 standalone git clones**, 29.0 GB of it in `.git` packs; one `venv313`), `ci/` 0.74 (sandboxes, venv-numerics, `bvs_r06_*/LF` clone), `records/` 0.54 (theory_w2/w3, w3_* numerics: data of record, kept), `recorder/` 0.31 (a clone), `refs/` (2 PDFs), `recorder/20261116-T` (a clone), `helpers/`, `logs/`, `BENCH_*`, `SMC_LIT*` |
 | `~/SMC_Writing_Department/` | 1.4 MB | `SAM_STYLE_papers/` (2 PDFs) |
 | `~/Papers_local/` | 63 MB | `Papers/{Benchmark_methods,Core_bibliography,Priors_and_decision_rules,SMC}` (copyrighted PDFs) |
-| `~/BVS-wt/` (28 worktrees) | 9.0 GB | ≈ 0.30 GB each (tracked checkout); ignored 0.97 GB in total (live ones included) |
-| `~/.t3/worktrees/Bayesian-Variable-Selection/` (100 + 1 nested) | 32 GB | ≈ 0.3 GB checkout each + ignored 8.63 GB (`.rc_tmp/` review dirs 7.4 GB, `.venv`/`.uv-cache` 0.43 GB, `theory_campaign/A-DRAFT/reading/` 289 MB) |
+| `~/BVS-wt/` (28 worktrees) | 9.58 GB | ≈ 0.30 GB each (tracked checkout); ignored 0.97 GB in total (live ones included) |
+| `~/.t3/worktrees/Bayesian-Variable-Selection/` (100 + 1 nested) | 33.91 GB | ≈ 0.3 GB checkout each + ignored 8.63 GB (`.rc_tmp/` review dirs 7.4 GB, `.venv`/`.uv-cache` 0.43 GB, `theory_campaign/A-DRAFT/reading/` 289 MB) |
 | ENG nested worktrees (16 in `tmp/`, 4 in `staging/`) | ≈ 6.5 GB | detached or `exp/P1M-*` branches, 0 unpushed |
 | `~/theory_campaign/` | 21 MB | Nov-2 SMC theory campaign (A-REV3…8): SMC, orphaned |
 | `~/bvs_tmp/` | 1 KB | retired Theory tmp (README + empty `ci/`) |
@@ -60,7 +60,7 @@ BNP-Lean PhaseB: `TRUTH_AUDITOR`, `PhaseB`, `bnp_stage` inside), `govbench_*`, `
 
 **Archive units** (in `ROOT/_local/engineering/records/reorg_20261125_owls/`, picked up by the hourly desktop pull):
 `A1_wt_residue/` (per worktree: `git diff HEAD` patch + tar of untracked/ignored non-cache files: ≈ 0.5 GB), `A2_eng_tmp/`
-(≈ 11.2 GB, 61k files → a few tars), `A3_theory_tmp/` (bundles + tars, ≤ 18 GB), `A4_tmp_misc/` (≈ 0.15 GB). Each unit holds
+(≈ 11.2 GB, 61k files → a few tars), `A3_theory_tmp/` (3 bundles + tars of the non-git residue; measured before tarring, reported if > 20 GB), `A4_tmp_misc/` (≈ 0.15 GB). Each unit holds
 **tars + bundles + SHA256SUMS only**: no loose files, so a `SHA256SUMS` inside the archived data can never be seen as a
 nested unit by `serve_pull.sh`. Sources are deleted after `tar -df` (and `git bundle verify`) pass; the unit itself leaves
 Owls only once it is in `desktop_verified.txt` (D1).
@@ -216,9 +216,9 @@ ROOT/
 
 | action | bytes | items |
 |---|---:|---|
-| **move** (rename, same FS) | ≈ 500 GB | ENG ≈ 418.6 GB (records 413.73, staging 4.03 − wts, envs/Rlib/crews/…), Theory ≈ 63 GB after T2 (records/ci/refs/BENCH…), Writing 1.4 MB, Papers 63 MB, theory_campaign 21 MB, 5 worktrees ≈ 1.6 GB (P1M, THEORY-DEPT, WRITING, LEAN, campaign) |
-| **copy, then delete source** (tar/bundle into reorg units, `tar -d` / `git bundle verify`; the unit later goes to the desktop) | ≈ 30 GB | A2 ENG tmp 11.2 GB, A3 Theory tmp/ci/recorder ≤ 18 GB, A1 worktree residue ≈ 0.5 GB, A4 /tmp + bvs_tmp 0.15 GB |
-| **delete** (regenerable; every commit on origin) | ≈ 48 GB | 144 stale worktree checkouts ≈ 44 GB (100 T3 + 1 nested ≈ 31, 20 ENG nested ≈ 6.5, 24 BVS-wt ≈ 7.3; caches included), caches ≈ 8 GB (`.rc_tmp/base`+`build_*`, `.venv`, `.uv-cache`, ENG `uv-cache` 0.29), `/tmp/claude-71711` stale ≈ 0.01 GB, `~/.cache/bvs_*` 3.5 KB |
+| **move** (rename, same FS) | ≈ 422 GB | ENG ≈ 416 GB (records 413.73, staging 4.03 − 1.7 wts, envs/Rlib/crews/…), Theory ≈ 1.9 GB after T2 (records/ci/recorder/refs/BENCH…), Writing 1.4 MB, Papers 63 MB, theory_campaign 21 MB, 5 worktrees ≈ 1.6 GB (P1M, THEORY-DEPT, WRITING, LEAN, campaign) |
+| **copy, then delete source** (tar/bundle into reorg units, `tar -d` / `git bundle verify`; the unit later goes to the desktop) | ≈ 12 GB + A3 | A2 ENG tmp 11.2 GB, A3 Theory tmp non-git residue (to measure; ≤ 56 GB worst case), A1 worktree residue ≈ 0.5 GB, A4 /tmp + bvs_tmp 0.15 GB |
+| **delete** (regenerable; every commit on origin or in ROOT) | ≈ 52 GB + Theory tmp clones (≥ 29 GB packs + checkouts) | 144 stale worktree checkouts ≈ 44 GB (100 T3 + 1 nested ≈ 31, 20 ENG nested ≈ 6.5, 24 BVS-wt ≈ 7.3; caches included), caches ≈ 8 GB (`.rc_tmp/base`+`build_*`, `.venv`, `.uv-cache`, ENG `uv-cache` 0.29), `/tmp/claude-71711` stale ≈ 0.01 GB, `~/.cache/bvs_*` 3.5 KB |
 | **push** | 17 commits | 4 refs (§3) |
 | frees on `/` (local /tmp) | ≈ 0.16 GB | `/tmp` is 92 % full mostly from non-SMC items |
 
