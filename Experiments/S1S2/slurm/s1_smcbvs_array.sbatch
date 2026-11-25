@@ -13,8 +13,8 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=3G
-#SBATCH --time=04:00:00
+#SBATCH --mem=2G
+#SBATCH --time=02:00:00
 #SBATCH --chdir=/scratch/fb31/SMC-BVS/runs/S1S2/logs
 #SBATCH --output=/scratch/fb31/SMC-BVS/runs/S1S2/logs/%x_%A_%a.out
 #SBATCH --error=/scratch/fb31/SMC-BVS/runs/S1S2/logs/%x_%A_%a.err
@@ -39,12 +39,13 @@ export TMPDIR=/scratch/fb31/SMC-BVS/tmp/S1S2/${SLURM_ARRAY_JOB_ID}_${tid}
 mkdir -p "$TMPDIR"; trap 'rm -rf "$TMPDIR"' EXIT
 export SMCBVS_CORE_DIR=$DEPLOY/smcbvs_core@7100bb3b
 
+TIMEV=(); [[ -x /usr/bin/time ]] && TIMEV=(/usr/bin/time -v)     # absent on the login node; sacct has MaxRSS anyway
 cmd=(Rscript "$DEPLOY/S1S2/harness/run_one.R" --method smcbvs --setting "$setting" --rep "$rep" --out "$RUNS")
 rc=0
 if (( WALL > 600 )); then
-  timeout --signal=TERM --kill-after=60 $(( WALL - 300 )) /usr/bin/time -v "${cmd[@]}" || rc=$?
+  timeout --signal=TERM --kill-after=60 $(( WALL - 300 )) "${TIMEV[@]}" "${cmd[@]}" || rc=$?
 else
-  /usr/bin/time -v "${cmd[@]}" || rc=$?
+  "${TIMEV[@]}" "${cmd[@]}" || rc=$?
 fi
 if (( rc == 124 || rc == 137 )) && [[ ! -f "$json" ]]; then
   mkdir -p "$(dirname "$json")"

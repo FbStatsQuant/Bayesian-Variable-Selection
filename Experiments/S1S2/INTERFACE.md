@@ -1,6 +1,6 @@
 # S1/S2 harness: interface contract (v2 manager, 2026-11-25). Binding for every builder.
 
-Goal (owner via HQ): run S1 and S2 at every setting with 100 seeds per setting, for SMC-BVS and the 5 approved benchmarks. The output is successes/100 per setting and method. **This turn builds and smoke-tests only. Never launch the 100-seed grid.** Compute: OWLS ONLY (never NOTS), nice -n 19, at most 4 cores per process, and stay lean (Owls is shared: 80 cores, load ≈ 50, 40 GB of RAM free).
+Goal (owner via HQ): run S1 and S2 at every setting with 100 seeds per setting, for SMC-BVS and the 5 approved benchmarks. The output is successes/100 per setting and method. **The 100-seed grid needs the owner's GO per suite and method. GIVEN 2026-11-25 for S1 × SMC-BVS only (NOTS); benchmarks and S2 still need a GO.** Compute (updated 2026-11-25, owner decisions HQ_DECISIONS b5548635 / 0b241b1d): the Owls-only rule is deleted. The S1 100-seed SMC-BVS run goes on NOTS (Slurm arrays, `slurm/`, inside the single NOTS tree, POLICIES §8). Owls work: nice -n 19, within the Owls core cap (POLICIES rule 5), and stay lean.
 
 ## Owner rules (all builders and reviewers)
 1. ZERO execution failures. Each benchmark follows its author's algorithm exactly, using the author's own software: glmnet, ncvreg, BAS, the PARNI-scheme GitHub repo (ASI) and susieR. Never reimplement anything the author ships. Use the author's recommended defaults and the tuning the source paper describes.

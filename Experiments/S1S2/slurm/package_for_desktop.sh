@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# package_for_desktop.sh -- run on OWLS after a VERIFIED pull. Builds ONE flat desktop-offload unit per batch:
+#   ROOT/_local/engineering/records/S1S2_smcbvs_b<K>/{S1_01.tar, ..., S1_16.tar, SHA256SUMS}
+# (only tars plus one SHA256SUMS; no nested SHA256SUMS anywhere -- the desktop extractor treats every SHA256SUMS as a
+# unit). Each S1_xx.tar holds smcbvs/S1_xx/rep_RRR.{json,rds} of the batch's reps plus smcbvs/S1_xx/FILES_b<K>.sha256
+# (per-file sums, a plain list, not named SHA256SUMS).
+#   package_for_desktop.sh --batch K --reps LO-HI --manifest <pull manifest> [--src DIR] [--records DIR] [--dry-run]
+# Every source file is re-hashed and must match the pull manifest (the NOTS sums) before it is packed. The unit is built
+# in ROOT/_local/tmp and moved into records/ in one rename (same filesystem), so serve_pull.sh never sees half a unit.
+# The desktop pulls hourly at :20 (crews/offload/serve_pull.sh); when it lists the unit in crews/offload/
+# desktop_verified.txt, free_nots_scratch.sh may delete the NOTS copy.
+set -euo pipefail
+ROOT=/home/fb31/Bayesian-Variable-Selection
+SRC=$ROOT/_local/engineering/runs/S1S2
+REC=$ROOT/_local/engineering/records
+batch=""; reps=""; man=""; dry=0
+while (($#)); do case "$1" in --batch) batch="$2"; shift 2;; --reps) reps="$2"; shift 2;; --manifest) man="$2"; shift 2;;
+  --src) SRC="$2"; shift 2;; --records) REC="$2"; shift 2;; --dry-run) dry=1; shift;; *) echo "unknown arg $1" >&2; exit 64;; esac; done
+[[ "$batch" =~ ^[0-9]+$ && "$reps" =~ ^([0-9]+)-([0-9]+)$ && -f "$man" ]] || { echo "usage: --batch K --reps LO-HI --manifest FILE" >&2; exit 64; }
+lo=${BASH_REMATCH[1]}; hi=${BASH_REMATCH[2]}
+unit=S1S2_smcbvs_b${batch}
+[[ ! -e "$REC/$unit" ]] || { echo "refusing: $REC/$unit exists" >&2; exit 65; }
+stage=$ROOT/_local/tmp/$(date +%Y%m%d)-opusN-pkg-$unit; rm -rf "$stage"; mkdir -p "$stage/$unit"; trap 'rm -rf "$stage"' EXIT
+# files of the batch, as listed (and hashed) by the pull manifest
+awk -v lo="$lo" -v hi="$hi" '{ f = substr($0, 67); if (match(f, /rep_[0-9]+\./)) { r = substr(f, RSTART + 4, RLENGTH - 5) + 0; if (r >= lo && r <= hi) print } }' "$man" > "$stage/batch.sha256"
+nf=$(wc -l < "$stage/batch.sha256"); (( nf > 0 )) || { echo "no files of reps $lo-$hi in $man" >&2; exit 65; }
+( cd "$SRC" && sha256sum --quiet -c "$stage/batch.sha256" ) || { echo "FAILED: Owls copies do not match the pull manifest" >&2; exit 1; }
+echo "verified $nf source files against $man"
+for sd in $(cut -c67- "$stage/batch.sha256" | xargs -n1 dirname | sort -u); do        # e.g. smcbvs/S1_03
+  s=$(basename "$sd")
+  grep -F "  $sd/" "$stage/batch.sha256" | sed "s#  $sd/#  #" > "$stage/FILES_b${batch}_$s.sha256"
+  { grep -F "  $sd/" "$stage/batch.sha256" | cut -c67-; } > "$stage/list_$s"
+  mkdir -p "$stage/tree/$sd"; cp "$stage/FILES_b${batch}_$s.sha256" "$stage/tree/$sd/FILES_b${batch}.sha256"
+  tar -cf "$stage/$unit/$s.tar" -C "$SRC" -T "$stage/list_$s" -C "$stage/tree" "$sd/FILES_b${batch}.sha256"
+  [[ $(tar -tf "$stage/$unit/$s.tar" | wc -l) -eq $(( $(wc -l < "$stage/list_$s") + 1 )) ]] || { echo "tar count mismatch $s" >&2; exit 1; }
+done
+( cd "$stage/$unit" && sha256sum -- *.tar > SHA256SUMS && sha256sum --quiet -c SHA256SUMS )
+[[ $(find "$stage/$unit" -name SHA256SUMS | wc -l) -eq 1 && -z $(find "$stage/$unit" -mindepth 1 -type d) ]] || { echo "unit not flat" >&2; exit 1; }
+echo "unit $unit: $(ls "$stage/$unit" | wc -l) entries, $(du -sh "$stage/$unit" | cut -f1)"
+if ((dry)); then ls -la "$stage/$unit"; echo "[dry-run] not moved into $REC"; exit 0; fi
+mkdir -p "$REC"; mv "$stage/$unit" "$REC/$unit"
+echo "PACKAGED: $REC/$unit (desktop pulls hourly at :20; then check crews/offload/desktop_verified.txt for '$unit')"
