@@ -1,7 +1,7 @@
 # CREW — daily machines check (design; machines crew, leg 1)
 
-> **Scope rule (owner via HQ, 2026-11-15):** Engineering works only inside `SMC_Engineering_Department` on each machine
-> (plus its NOTS scratch link). Everything else in `/home/fb31` on Owls or NOTS is **out of scope**: not inventoried,
+> **Scope rule (owner via HQ, 2026-11-15):** Engineering works only inside `ROOT/_local/engineering` on each machine (ROOT = Owls `/home/fb31/Bayesian-Variable-Selection`, NOTS `/home/fb31/SMC-BVS`; LAYOUT.md)
+> (plus NOTS `ROOT/scratch`). Everything else in `/home/fb31` on Owls or NOTS is **out of scope**: not inventoried,
 > moved, cleaned or touched. The only exceptions are the HQ-approved SMC-BVS moves and the home guard. Out-of-scope rows
 > below are withdrawn.
 
@@ -47,7 +47,7 @@ Roots and terms are as in `REORG_PLAN.md` §0. Inventory baseline: `INVENTORY.md
 | Check | Command | Report / threshold |
 |---|---|---|
 | **Root filesystem** | `df -h /` (and `df -h /home` for context) | **ALERT above 85% use** (on 11-15 at 20:30 CT it was already **87%**, 9.6 G free; `/` holds `/tmp` and filled up on 11-15 ~20:19). ALERT goes to HQ in the morning brief, at once if ≥ 95% |
-| Owls footprint | `du -sh` (nice 19) of `${ENG_ROOT_OWLS}/{tmp,bench,crews,logs,staging}`, `/home/fb31/BVS-wt/*` (`--exclude=.git`), the main checkout | sizes and day-on-day change; worktree branch and last commit (`git -C`) |
+| Owls footprint | `du -sh` (nice 19) of `${ENG_ROOT_OWLS}/{tmp,bench,crews,logs,staging}`, `ROOT/_wt/*` (`--exclude=.git`), the main checkout | sizes and day-on-day change; worktree branch and last commit (`git -C`) |
 | Strays in `/home/fb31` | `ls -1A /home/fb31` compared with the known list (INVENTORY §4) | new SMC-BVS-looking names (`p1m_*`, `*bvs*`, `*smc*`, `w3*`, `g0*`) = **stray**; the owner of the folder gets a note; Engineering strays go to `${ENG_ROOT_OWLS}` |
 | `bvs_tmp` | `find /home/fb31/bvs_tmp/{theory,ci,engineering} -mindepth 1 -maxdepth 1 -mtime +7` | report folders untouched > 7 d to their owners (Theory, CI). Engineering keeps nothing there any more: anything under `bvs_tmp/engineering/` is reported as an Engineering stray |
 | Department tmp | `find ${ENG_ROOT_OWLS}/tmp -mindepth 1 -maxdepth 1 -mtime +7` | leftovers > 7 d (rule O-T1) |
@@ -177,7 +177,7 @@ Machines (daily check <date> <time>):
   SMC-compute-only from now on**: it never acts on BNP's processes or guard, nor on VS Code.
 
 ## Standing NOTS home hygiene job (HQ 2026-11-18; supersedes the scope rule above for these two items only)
-The owner lets HQ manage NOTS. HQ ordered a standing job in the daily crew: `~/SMC_Engineering_Department/crews/home_hygiene/nots_home_prune.sh --apply` on Owls (one ssh call; dry run without `--apply`).
+The owner lets HQ manage NOTS. HQ ordered a standing job in the daily crew: `/home/fb31/Bayesian-Variable-Selection/_local/engineering/crews/home_hygiene/nots_home_prune.sh --apply` on Owls (one ssh call; dry run without `--apply`).
 - **`~/.t3/runtime/versions/<v>`:** keep only the newest (version sort and mtime must agree, otherwise nothing is deleted) plus empty `.staging-*` dirs (a non-empty one is reported).
 - **`~/.vscode-server/cli/servers/<name>`:** keep only the first entry of `lru.json` plus any server a live fb31 process uses.
 - **Live processes:** a version or server in use is skipped (pgrep sees only the login node the call lands on).
