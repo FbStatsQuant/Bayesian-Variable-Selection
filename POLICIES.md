@@ -63,7 +63,7 @@ PROGRAM Readability, with a fidelity check of every number.
 - **Repo:** github.com/FbStatsQuant/Bayesian-Variable-Selection (public for now; the owner will make it private).
   Clones:
   - Owls `/home/fb31/Bayesian-Variable-Selection` (shared root clone; don't switch its branch);
-  - worktrees under `/home/fb31/BVS-wt/`;
+  - worktrees under `/home/fb31/Bayesian-Variable-Selection/_wt/` (REORG 2026-11-25; see LAYOUT.md);
   - the desktop (HQ).
 
   Push credentials are configured on Owls.
@@ -262,9 +262,9 @@ same rules for anything it runs.
    - Owls: no sudden spikes. Ramp up gradually and keep within the core cap.
    - If anything looks like it could trigger a security alert, ask HQ first.
 8. **The Engineering Department works only inside its folders** (owner, 2026-11-15):
-   - **Owls:** `/home/fb31/SMC_Engineering_Department/`.
-   - **NOTS:** `/home/fb31/SMC_Engineering_Department/`, created by the owner, with heavy data under
-     `/home/fb31/SMC_Engineering_Department/scratch`, a symlink to `/scratch/fb31/SMC_Engineering_Department/`.
+   - **Owls:** `/home/fb31/Bayesian-Variable-Selection/_local/engineering/` (REORG 2026-11-25; was `~/SMC_Engineering_Department`).
+   - **NOTS:** `/home/fb31/SMC-BVS/_local/engineering/`, with heavy data under `/home/fb31/SMC-BVS/scratch`, a symlink to
+     `/scratch/fb31/SMC-BVS/` (was `~/SMC_Engineering_Department` and `/scratch/fb31/SMC_Engineering_Department`).
 
    No Engineering file anywhere else: temp files, logs, job scripts, outputs and crews all live inside. The exceptions are
    its git worktree on Owls (repo code only) and Slurm's own spool. Existing SMC-BVS material is moved in by the
