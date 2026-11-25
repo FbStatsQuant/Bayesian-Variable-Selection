@@ -56,3 +56,6 @@ Papers/Core_bibliography/32b_2015_Song_Liang_*.pdf
 
 # Owner's own unpublished papers (style references; never public)
 Papers/Own_work/
+# all full-text paper copies stay local (owner 2026-11-24; repo is public)
+Papers/**/*.pdf
+Papers/Core_bibliography/03_Krishna_2009_web_text/
