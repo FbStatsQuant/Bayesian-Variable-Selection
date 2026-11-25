@@ -54,7 +54,7 @@ function Invoke-Pull {
   if (-not (Test-Path $have)) { New-Item -ItemType File -Path $have | Out-Null }
   $stamp  = Get-Date -Format 'yyyyMMdd_HHmmss'
   $tar    = Join-Path $incoming "pull_$stamp.tar"; $script:tar = $tar
-  $remote = "bash /home/fb31/SMC_Engineering_Department/crews/offload/serve_pull.sh $Client $MaxPullGB"
+  $remote = "bash /home/fb31/Bayesian-Variable-Selection/_local/engineering/crews/offload/serve_pull.sh $Client $MaxPullGB"
   if ($DryRun) { Log "dry run: would run ssh $SshHost `"$remote`" < $have > $tar"; return 0 }
   $bat = Join-Path $incoming "pull_$stamp.cmd"
   Set-Content -Path $bat -Encoding ASCII -Value @(
