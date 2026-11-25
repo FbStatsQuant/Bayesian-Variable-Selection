@@ -12,11 +12,10 @@
    - The number of true signals is $s_0 \in [5,30]$, and signal strength is set on an SNR grid.
    - Each setting is repeated over 20–100 replicates.
    - The metrics are TPR/FDR, exact recovery, estimation or prediction error, and runtime.
-2. **The Bayesian-sampler community has one de facto standard: the Yang–Wainwright–Jordan (YWJ) design.**
-   - Covariance: AR(1), $\rho=0.6$ in the Griffin et al. (2021) variant.
-   - Size: $n=500$, $p\in\{500,5000\}$, $s_0=10$.
-   - Signal: $\beta^*=\mathrm{SNR}\sqrt{\sigma^2\log p/n}\,(2,-3,2,2,-3,3,-2,3,-2,3)$.
-   - 8 of the papers use it, and PIP efficiency is measured against an add–delete–swap baseline.
+2. **The Bayesian-sampler community has one de facto standard: the Yang–Wainwright–Jordan (YWJ) design family.**
+   - Signal (YWJ 2016): $\beta^*=\mathrm{SNR}\sqrt{\sigma^2\log p/n}\,(2,-3,2,2,-3,3,-2,3,-2,3)$, $s_0=10$, $\mathrm{SNR}\in\{0.5,1,2,3\}$.
+   - Covariance: YWJ's original is $\Sigma_{jk}=e^{-\lvert j-k\rvert}$ (AR with $\rho\approx0.37$), with $n\in\{500,1000\}$ and $p\in\{1000,5000\}$ in its tables. Griffin et al. (2021) switched to $0.6^{\lvert j-k\rvert}$ with $n\in\{500,1000\}$ and $p\in\{500,5000\}$, and the later sampler papers follow Griffin. We call that version **YWJ/Griffin**.
+   - 8 papers use the YWJ $\beta$ vector (6 of them with its exact scaling). PIP efficiency is measured against an add–delete–swap baseline.
 3. **The frequentist best-subset community uses the Hastie–Tibshirani–Tibshirani (2020) grid.** It combines AR(1) $\rho\in\{0,0.35,0.7\}$, the "beta-types", and ten log-spaced SNR values $\nu=\mathrm{Var}(x^\top\beta)/\sigma^2\in[0.05,6]$.
 4. **At $p\ge 10^5$, almost every paper uses real genotypes with a synthetic phenotype.**
    - Only two published designs use a synthetic $X$ at $p=10^6$: Hazimeh & Mazumder (2020), "Gaussian 1M" ($n=200$, $k=20$, $\nu=10$), and Hazimeh et al. (2022) ($n=1000$, equicorrelation 0.1).
@@ -49,7 +48,7 @@ Johndrow, Orenstein & Bhattacharya (2020), *Scalable approximate MCMC algorithms
 
 Two of its pieces recur elsewhere:
 - **The decaying signal** $2^{(9-j)/4}$ reappears in Biswas et al. (2022), logistic case.
-- **The maize matrix** ($n=2267$, $p=98{,}385$) is reused by Biswas et al. (2022) and by Jankowiak (2023). Jankowiak pads it with iid columns up to $p=7.5\times10^5$.
+- **The maize matrix** ($n=2267$, $p=98{,}385$) is reused by Biswas et al. (2022), who list $n=2266$, and by Jankowiak (2023). Jankowiak pads it with iid columns up to $p=7.5\times10^5$.
 
 The maize matrix is the de facto large-$p$ real design for Bayesian samplers.
 
@@ -73,7 +72,7 @@ Each count is the number of papers (out of 89) that use the design at least once
 
 | Convention | Definition | Papers |
 |---|---|---|
-| (a) YWJ scaling | $\beta^*=\mathrm{SNR}\cdot\sqrt{\sigma^2\log p/n}\cdot(2,-3,2,2,-3,3,-2,3,-2,3,0,\dots)$, with $\mathrm{SNR}\in\{0.5,1,2,3\}$ and $\sigma=1$ | 8: YWJ 2016, Zanella–Roberts 2019, Griffin 2021, Wan–Griffin 2021, Liang 2022, Zhou 2022, Liang 2023, Staerk 2024 |
+| (a) YWJ scaling | $\beta^*=\mathrm{SNR}\cdot\sqrt{\sigma^2\log p/n}\cdot(2,-3,2,2,-3,3,-2,3,-2,3,0,\dots)$, with $\mathrm{SNR}\in\{0.5,1,2,3\}$ and $\sigma=1$ | 6 with this exact scaling: YWJ 2016, Zanella–Roberts 2019 ($\Sigma=I$), Griffin 2021, Liang 2022, Zhou 2022, Staerk 2024. Two more use the bare vector, with no $\sqrt{\log p/n}$ factor: Wan–Griffin 2021 ($\beta=\mathrm{SNR}\cdot(2,-3,\dots)$, logistic) and Liang 2023 (no SNR factor) |
 | (b) Variance-ratio SNR | $\nu=\mathrm{Var}(x^\top\beta)/\sigma^2$ and $\mathrm{PVE}=\nu/(1+\nu)$, with $\sigma^2$ solved from $\nu$; Hastie's grid is $\nu\in\{0.05,0.09,0.14,0.25,0.42,0.71,1.22,2.07,3.52,6.00\}$ | ≈9: Bertsimas 2016; Hastie 2020; Hazimeh 2020/2022; Bertsimas–Pauphilet 2020; Meinshausen 2009 ($\nu\in\{0.25,1,4,16\}$); Friedman 2010 ($\nu=3$); Wang–Leng 2016 ($R^2\in\{0.5,0.9\}$); Ishwaran–Rao 2005 ($R^2=0.75$) |
 | (c) PVE / $h^2$ with random effects | $b_j\sim N(0,\tau^2)$ at random positions, with $\sigma^2$ set for the target PVE (SuSiE uses $\{0.05,0.1,0.2,0.4\}$) | ≈14, the genomics line: SuSiE, Guan–Stephens, Zhou 2013, Kim 2024, and others |
 | (d) Fixed vectors | Tibshirani's $(3,1.5,0,0,2,0,0,0)$ (5 papers); $(0.6,1.2,1.8,2.4,3.0)$ (Johnson–Rossell, Narisetty–He); equal amplitude with random signs, $\pm A$ (knockoffs with $A=3.5$; best-subset $\pm1$; ≈7 papers); decaying $2^{(9-j)/4}$ (Johndrow, Biswas) | — |
@@ -91,7 +90,7 @@ Each count is the number of papers (out of 89) that use the design at least once
   |---|---|
   | Selection-accuracy papers | 50–200 data sets (100 is the mode) |
   | Sampler-efficiency papers | 1 data set × 50–200 independent runs (Schäfer–Chopin, Zanella–Roberts, Griffin, Staerk), or 20 data sets × several chains (YWJ) |
-  | Best-subset papers | 10 |
+  | Best-subset papers | usually 10 (Bertsimas 2016, Hastie 2020, Hazimeh 2020); Zhu 2020 uses 100 |
   | Fine-mapping papers | 150–6000 data sets |
 
 **Where our design sits.** Our design uses $\beta^*=a(1,-0.8,0.9,-0.7,0.6)$ with well-separated truths, so $\nu\approx a^2\sum\beta_j^2$. The table maps it onto the conventions above.
@@ -100,7 +99,8 @@ Each count is the number of papers (out of 89) that use the design at least once
 |---|---|---|---|---|
 | ours, strong ($a=1$) | 3.30 | 0.77 | 2.28 | ≈1.1 |
 | ours, weak ($a=0.6$) | 1.19 | 0.54 | 1.37 | ≈0.7 |
-| YWJ, $n=500$, $p=5000$, SNR = 1 / 2 / 3 (AR 0.6) | 0.44 / 1.75 / 3.94 | 0.30 / 0.64 / 0.80 | 2 / 4 / 6 (at its own $n,p$) | 1 / 2 / 3 |
+| YWJ/Griffin, $n=500$, $p=5000$, SNR = 1 / 2 / 3 ($\rho=0.6$) | 0.44 / 1.75 / 3.94 | 0.30 / 0.64 / 0.80 | 2 / 4 / 6 (at its own $n,p$) | 1 / 2 / 3 |
+| YWJ original, same $n,p$, $\Sigma=e^{-\lvert j-k\rvert}$ | 0.63 / 2.52 / 5.67 | 0.39 / 0.72 / 0.85 | 2 / 4 / 6 | 1 / 2 / 3 |
 | Hazimeh "Gaussian 1M" ($k=20$, $\nu=10$) | 10 | 0.91 | 2.69 | ≈1.3 |
 
 For YWJ, $\beta_{\min}/\sqrt{\log p/n}=2\cdot\mathrm{SNR}$ by construction. By total signal ($\nu$), our strong cell is easy (about YWJ SNR 3). By the smallest signal, it is moderate (about YWJ SNR 1).
@@ -111,23 +111,23 @@ For YWJ, $\beta_{\min}/\sqrt{\log p/n}=2\cdot\mathrm{SNR}$ by construction. By t
 
 | Dataset | $n$ | $p$ | Access | Used by (papers in this survey) |
 |---|---|---|---|---|
-| **Riboflavin** (*B. subtilis*) | 71 | 4,088 | public, R package `hdi` | 6: Meinshausen–Meier–Bühlmann 2009 (real $X$ + synthetic $\beta$); Meinshausen–Bühlmann 2010; Bühlmann 2014; Javanmard–Montanari 2014; Dezeure 2015; Hazimeh 2022 (with pairwise interactions, $p=8.36\times10^6$) |
-| **PCR mouse** (Lan 2006, GSE3330) | 60 | 22,575 | public (GEO) | 8: Narisetty–He 2014; Song–Liang 2015; Shin 2018; Narisetty 2019; Griffin 2021; Liang 2022; Biswas 2022; Staerk 2024 |
-| **Leukemia** (Golub 1999) | 72 | 7,129 (3,571 after preprocessing) | public | 7: Zou–Hastie 2005; Fan–Lv 2008; Friedman 2010; Breheny–Huang 2011; Bertsimas 2016; Wan 2021; Staerk 2024 |
-| Boston housing + interactions | 506 | 104 | public | 5: Schäfer–Chopin 2013; Griffin 2021; Liang 2022; Shin 2018 (+1000 noise columns); Hazimeh 2020 (+probes, $p=104{,}000$) |
+| **Riboflavin** (*B. subtilis*) | 71 (Meinshausen–Bühlmann 2010 used earlier versions with $n=115$ and $158$) | 4,088 | public, R package `hdi` | 6: Meinshausen–Meier–Bühlmann 2009 (real $X$ + synthetic $\beta$); Meinshausen–Bühlmann 2010; Bühlmann 2014; Javanmard–Montanari 2014; Dezeure 2015; Hazimeh 2022 (with pairwise interactions, $p=8.36\times10^6$) |
+| **PCR mouse** (Lan 2006, GSE3330) | 60 | 22,575 (22,576 in Griffin 2021) | public (GEO) | 8: Narisetty–He 2014; Song–Liang 2015; Shin 2018; Narisetty 2019; Griffin 2021; Liang 2022; Biswas 2022; Staerk 2024 |
+| **Leukemia** (Golub 1999) | 72 | 7,129 probes (Staerk 2024 says 6,817 genes); 3,571 after preprocessing | public | 7: Zou–Hastie 2005; Fan–Lv 2008; Friedman 2010; Breheny–Huang 2011; Bertsimas 2016; Wan 2021; Staerk 2024 |
+| Boston housing | 506 | 104 with interactions | public | 5: Schäfer–Chopin 2013, Griffin 2021, Liang 2022 (the 104-column interaction version); Hazimeh 2020 (interactions plus probes, $p=104{,}000$); Shin 2018 (10 continuous predictors + 1000 noise columns, $p=1010$) |
 | Concrete / Protein | 1030 / 96 | 79 / 88 | public | 3: Schäfer–Chopin 2013; Griffin 2021; Liang 2022 |
 | Tecator | 172 | 100 | public | 3: Griffin 2021; Liang 2022; Staerk 2024 |
 | Lymph node (Hans 2007) | 148 | 4,514 | public | 3: Hans 2007; Narisetty 2019; Biswas 2022 |
-| **Maize GWAS** (Romay 2013) | 2,267 | 98,385 | shared or panzea (verify) | 3: Johndrow 2020; Biswas 2022; Jankowiak 2023 (padded to $7.5\times10^5$) |
+| **Maize GWAS** (Romay 2013) | 2,267 (2,266 in Biswas 2022) | 98,385 | shared or panzea (verify) | 3: Johndrow 2020; Biswas 2022; Jankowiak 2023 (padded to $7.5\times10^5$) |
 | Mouse SNP, testis weight | 993 | 79,748 | public (Carbonetto 2017) | 2: Griffin 2021; Liang 2022 |
-| TGFB colon cancer | 262 | 10,172 | public (supplement) | 2: Zanella–Roberts 2019; Papaspiliopoulos–Rossell 2017 |
+| TGFB colon cancer | 262 | 10,172 | public (supplement) | 2: Zanella–Roberts 2019 ($p=10{,}172$); Papaspiliopoulos–Rossell 2017 (a 10-gene subset) |
 | Scheetz rat eye (GSE5680) | 120 | 18,976 | public | Wang–Leng 2016, plus downstream papers we did not read |
 | Ozone / Crime / Diabetes / Prostate | 203–442 / 47 | 8–134 | public | Liang 2008; Ray–Szabó 2022; Ishwaran–Rao 2005; Bertsimas 2016; Tibshirani 1996; Zou–Hastie 2005 |
 | Bloom yeast BY×RM | 1,008 | 30,594 | public | data-source paper; a realistic $n\sim10^3$, $p\sim3\times10^4$ test bed |
 | Atwell *Arabidopsis* | ≈96–199 | 216,130 | public (AraPheno) | data-source paper; **the only public design with $n$ in the hundreds and $p$ in the hundreds of thousands** |
 | HS mice (Valdar 2006) | ≈2,000 | — | public | Zhou 2013 |
 | WTCCC | ≈2–5k per disease | 3–4.4×10⁵ | **restricted** | 6: Carbonetto–Stephens 2012; Zhou 2013; Moser 2015; Zhu–Stephens 2017; Candès 2018; Sesia 2019 |
-| UK Biobank | $10^5$–$5\times10^5$ | $10^6$–$1.8\times10^7$ | **restricted** | 9: Qian 2020; Ge 2019; Lloyd-Jones 2019; Privé 2020; Weissbrod 2020; Sesia 2021; Zou 2022; Cui 2024; McCreight 2025 |
+| UK Biobank | $10^3$–$5\times10^5$ | $5.9\times10^5$–$1.8\times10^7$ | **restricted** | 9: Qian 2020; Ge 2019; Lloyd-Jones 2019; Privé 2020; Weissbrod 2020; Sesia 2021; Zou 2022; Cui 2024; McCreight 2025 |
 | GTEx genotypes | 287–574 | $10^3$–$1.2\times10^4$ | **restricted** (dbGaP) | Wang 2020 (SuSiE); Kim 2024 |
 
 ---
@@ -173,12 +173,12 @@ For YWJ, $\beta_{\min}/\sqrt{\log p/n}=2\cdot\mathrm{SNR}$ by construction. By t
 | Paper | $X$ | $n$ | $p$ | $s_0$ | Signal | Selection metrics? |
 |---|---|---|---|---|---|---|
 | **Hazimeh & Mazumder 2020** (L0Learn) | iid $N(0,1)$ | 200 | **$10^6$** | 20 | $\nu=10$, equal ones, equally spaced | yes (TP/FP, support recovery) |
-| | equicorrelated / AR | 1000 | $5\times10^4$, $10^5$ | 100, 50 | $\nu$ swept | yes |
+| | AR $\rho=0.5$ / equicorrelated $\rho=0.3$ | 1000 | $5\times10^4$ / $10^5$ | 100 / 50 | $\nu=10$ / $\nu=100$ | yes |
 | **Hazimeh, Mazumder & Saab 2022** (L0BnB) | equicorrelated $\rho=0.1$ | 1000 | $10^3$–**$10^6$** | 10 | $\nu=5$ | timing and optimality gap |
 | Bertsimas & Van Parys 2020 | Toeplitz $\rho=0.1$ | up to $10^5$ | $2\times10^5$ | 10–30 | $\pm1$, SNR $\{3,7,20\}$ | accuracy and false-alarm rates |
 | Bertsimas, Pauphilet & Van Parys 2020 | Toeplitz $\rho\in\{0.2,0.7\}$ | 500–3700 | $2\times10^4$ | 100 | $\pm1$, $\nu$ grid | TPR, FDR |
 | Johndrow et al. 2020 (19-536) | iid / AR 0.9 | ≤5000 | $5\times10^4$ | 23 | $2^{(9-j)/4}$, $\sigma=2$ | no |
-| Liang, Livingstone & Griffin 2022 | **YWJ, AR 0.6** | 500, 1000 | **$5\times10^4$** | 10 | YWJ SNR $\{0.5,1,2,3\}$ | PIP-MSE |
+| Liang, Livingstone & Griffin 2022 | **YWJ/Griffin, AR 0.6** | 500, 1000 | **$5\times10^4$** | 10 | YWJ SNR $\{0.5,1,2,3\}$ | PIP-MSE |
 | Biswas, Mackey & Meng 2022 | iid | 1000 | $5\times10^4$ | 10 | $\beta_j=2$, $\sigma=2$ | TPR, FDR |
 | Shin, Bhattacharya & Johnson 2018 | equicorrelated / AR 0.5 / iid | 400 | $2\times10^4$ | 5 | $(0.5,\dots,1.5)$, random signs, $\sigma=1.5$ | PR curves |
 | Fan & Lv 2008 | iid | 800 | $2\times10^4$ | 18 | $a=5\log n/\sqrt n$ | screening coverage |
@@ -188,7 +188,7 @@ For YWJ, $\beta_{\min}/\sqrt{\log p/n}=2\cdot\mathrm{SNR}$ by construction. By t
 | **Song & Liang 2015** | equicorrelated $\rho=0.25$ on the first 2,000 columns, independent elsewhere | 100 | **$5\times10^5$** | 5 | $\beta=(0.2,\dots,0.6)$, $\sigma^2=0.25$ | yes (100 data sets) |
 | Hans, Dobra & West 2007 | real 8,408 columns + iid padding | 41 | $2.5\times10^4$ | 4 | $\sigma^2=0.5$ | time to find $S_0$ |
 
-**B. Real genotype $X$ + synthetic $\beta$ (the dominant large-$p$ protocol)**
+**B. Real (or realistically simulated) genotype $X$ + synthetic $\beta$ (the dominant large-$p$ protocol)**
 
 | Paper | $X$ source | $n$ | $p$ | $s_0$ | Signal |
 |---|---|---|---|---|---|
@@ -197,14 +197,16 @@ For YWJ, $\beta_{\min}/\sqrt{\log p/n}=2\cdot\mathrm{SNR}$ by construction. By t
 | Zhou, Carbonetto & Stephens 2013 | height cohort / PARC / WTCCC | 3,925 | ≈$3$–$5.5\times10^5$ | 10–$10^4$ | PVE 0.2, 0.6 |
 | Hoggart et al. 2008 | FREGENE simulated haplotypes | 2,000 | $4.8\times10^5$ | 10 | risk ratio 2 |
 | Moser et al. 2015 | height cohort | 3,924 | 287,854 | 3,000 | $h^2\in\{0.2,0.5,0.8\}$ |
-| Lloyd-Jones 2019 / Ge 2019 / Privé 2020 | UKB HapMap3 | $10^4$–$3\times10^5$ | ≈$0.8$–$1.1\times10^6$ | $10^2$–$3\times10^5$ | $h^2$ 0.1–0.5 (prediction) |
+| Lloyd-Jones 2019 / Ge 2019 / Privé 2020 | UKB HapMap3 | $10^4$–$3\times10^5$ | ≈$0.8$–$1.1\times10^6$ | $10^2$–$3\times10^5$ | $h^2$ 0.1–0.8 (prediction) |
 | Sesia et al. 2021 | UKB | ≈489k | 592,000 | 4,000 | heritability grid (knockoffs) |
 
-**C. The gap.** Only three designs have both $p\ge 5\times10^5$ and selection scoring:
+**C. The gap.** Four designs have both $p\ge 5\times10^5$ and selection scoring:
 - Hazimeh 2020 (Gaussian 1M): iid $X$, $n=200$.
 - Song–Liang 2015: $p=5\times10^5$, $n=100$, with correlation confined to 2,000 columns.
 - Jankowiak 2023 (padded maize): real $X$, $n=2267$.
-- **No published design uses a correlated synthetic $X$ (AR or block) with $n\le10^3$ at $p=10^6$.** Our AR and block 1M cells fill exactly this slot.
+- Sesia 2021 (KnockoffGWAS): real UKB $X$, $n\approx4.9\times10^5$, $p=592{,}000$ (power and FDP).
+
+**No published design uses a correlated synthetic $X$ (AR or block) with $n\le10^3$ at $p=10^6$.** Our AR and block 1M cells fill exactly this slot.
 
 ---
 
@@ -221,7 +223,7 @@ For YWJ, $\beta_{\min}/\sqrt{\log p/n}=2\cdot\mathrm{SNR}$ by construction. By t
 
 | # | Add | Exact spec | Why |
 |---|---|---|---|
-| **S1** | **YWJ cell** | $x_i\sim N(0,\Sigma)$, $\Sigma_{jk}=0.6^{\lvert j-k\rvert}$; $n\in\{500,1000\}$; $p\in\{500,5000\}$; $s_0=10$ (first 10 coordinates); $\beta^*=\mathrm{SNR}\sqrt{\log p/n}\,(2,-3,2,2,-3,3,-2,3,-2,3)$; $\mathrm{SNR}\in\{0.5,1,2,3\}$; $\sigma=1$ | It is the sampler community's standard (8 papers). The Griffin/Liang/Zanella code is public, so we can run the competitors ourselves. Note that YWJ's original uses $e^{-\lvert j-k\rvert}$ ($\rho\approx0.37$); label our cell "YWJ/Griffin, $\rho=0.6$". |
+| **S1** | **YWJ/Griffin cell** | $x_i\sim N(0,\Sigma)$, $\Sigma_{jk}=0.6^{\lvert j-k\rvert}$; $n\in\{500,1000\}$; $p\in\{500,5000\}$; $s_0=10$ (first 10 coordinates); $\beta^*=\mathrm{SNR}\sqrt{\log p/n}\,(2,-3,2,2,-3,3,-2,3,-2,3)$; $\mathrm{SNR}\in\{0.5,1,2,3\}$; $\sigma=1$ | It is the sampler community's standard (8 papers). The Griffin/Liang/Zanella code is public, so we can run the competitors ourselves. Note that YWJ's original uses $e^{-\lvert j-k\rvert}$ ($\rho\approx0.37$); label our cell "YWJ/Griffin, $\rho=0.6$". |
 | **S2** | **Hastie et al. grid** | AR(1) $\rho\in\{0,0.35,0.7\}$; $(n,p,s)\in\{(50,1000,5),(100,1000,10)\}$; beta-types 1 and 2 (3 optional); the 10-point $\nu$ grid from 0.05 to 6 | It is the frequentist standard, and it gives an SNR curve instead of two points. |
 | **S3** | **Equicorrelated** | $\Sigma_{jk}=0.5$ (the standard), plus 0.8 (Dezeure, hard); $s_0\in\{5,10\}$ | Upgrades our contingent FAC arm (0.3) to the common setting. |
 | **S4** | **Real $X$ + synthetic $\beta$ (riboflavin)** | Dezeure 2015 protocol: riboflavin $X$ ($n=71$; their $p=500$ top-variance columns, plus the full 4,088); $s_0\in\{3,15\}$; $\beta$ from $U(0,2)$, $U(0,4)$, $U(-2,2)$ or fixed $\{1,2,10\}$ at random positions; $\sigma=1$ | The standard semi-real design. We already ship riboflavin. |
@@ -239,7 +241,7 @@ For YWJ, $\beta_{\min}/\sqrt{\log p/n}=2\cdot\mathrm{SNR}$ by construction. By t
 | **L2** | Hazimeh 2022 | equicorrelated $\rho=0.1$; $n=1000$; $p\in\{10^4,10^5,10^6\}$; $k=10$; $\nu=5$ | Published (timing only), so we add selection metrics. |
 | **L3** | **YWJ scaled up** | S1 with $p\in\{5\times10^4,10^5,10^6\}$, $n\in\{500,1000\}$, $\mathrm{SNR}\in\{1,2\}$ | Liang 2022 stops at $5\times10^4$, so this continues the standard into new territory. |
 | **L4** | Our AR 0.6 and BLK at 1M | as planned ($n=200$, $s_0=5$), but reported in S8 units | The open slot from §5C (correlated synthetic, $n\le10^3$). |
-| **L5** | Real genotype $X$ + synthetic $\beta$ | **public sources only:** Atwell *Arabidopsis* ($n\approx199$, $p=216{,}130$); Bloom yeast ($n=1008$, $p=30{,}594$); optionally maize ($n=2267$, $p=98{,}385$) padded with iid columns to $10^6$ as in Jankowiak (first confirm the maize data can be downloaded). Use the Guan–Stephens protocol: $s_0\in\{10,30\}$, $b_j\sim N(0,1)$ at random positions, $\sigma^2$ set for PVE $\in\{0.1,0.3,0.5\}$. | The field's dominant large-$p$ protocol. Avoid UKB, WTCCC and GTEx: they are restricted, and our repo is public. |
+| **L5** | Real genotype $X$ + synthetic $\beta$ | **public sources only:** Atwell *Arabidopsis* ($n\approx199$, $p=216{,}130$); Bloom yeast ($n=1008$, $p=30{,}594$); optionally maize ($n=2267$, $p=98{,}385$) padded with iid columns to $10^6$, extending Jankowiak's padding, which stopped at $7.5\times10^5$ (first confirm the maize data can be downloaded). Use the Guan–Stephens protocol: $s_0\in\{10,30\}$, $b_j\sim N(0,1)$ at random positions, $\sigma^2$ set for PVE $\in\{0.1,0.3,0.5\}$. | The field's dominant large-$p$ protocol. Avoid UKB, WTCCC and GTEx: they are restricted, and our repo is public. |
 
 ### 6.3 What to do with the stopped AR-0.6 replicate block
 
@@ -321,7 +323,7 @@ Read levels: F = full text, A = abstract only. Fields: S = BVS sampler, P = BVS 
 | 43 | Liang2022 | Liang X.; Livingstone S.; Griffin J.; Adaptive random neighbourhood informed Markov chain Monte Carlo for high-dimensional Bayesian variable selection; Statistics and Computing; 32(5); article 84 | 2022 | 10.1007/s11222-022-10137-8 (arXiv:2110.11747) | S | F |
 | 44 | Liang2023 | Liang X.; Livingstone S.; Griffin J.; Adaptive MCMC for Bayesian variable selection in generalised linear models and survival models; Entropy; 25(9); 1310 | 2023 | 10.3390/e25091310 (arXiv 2308.00869) | S | F |
 | 45 | LloydJones2019 | Lloyd-Jones LR; Zeng J; Sidorenko J; Yengo L; Moser G; Kemper KE; et al. Improved polygenic prediction by Bayesian multiple regression on summary statistics. Nat Commun 10 5086 | 2019 | 10.1038/s41467-019-12653-0 | P | F |
-| 46 | McCreight2025 | McCreight A; Cho Y; Li R; Nachun D; Gan H; Carbonetto P; Stephens M; Denault W; Wang G. SuSiE 2.0: improved efficiency and calibration for genetic fine-mapping and prediction. bioRxiv preprint | 2025 | 10.1101/2025.11.25.690514 | G | F |
+| 46 | McCreight2025 | McCreight A; Cho Y; Li R; Nachun D; Gan H; Carbonetto P; Stephens M; Denault W; Wang G. SuSiE 2.0: improved methods and implementations for genetic fine-mapping and phenotype prediction. bioRxiv preprint | 2025 | 10.1101/2025.11.25.690514 | G | F |
 | 47 | Meinshausen2009 | Meinshausen N; Meier L; Buhlmann P. P-values for high-dimensional regression; Journal of the American Statistical Association 104(488):1671-1681 | 2009 | 10.1198/jasa.2009.tm08647; arXiv:0811.2177 | F | F |
 | 48 | MeinshausenBuhlmann2010 | Meinshausen N; Buhlmann P. Stability selection (with discussion); Journal of the Royal Statistical Society Series B 72(4):417-473 | 2010 | 10.1111/j.1467-9868.2010.00740.x; arXiv:0809.2932 | F | F |
 | 49 | MeinshausenYu2009 | Meinshausen N; Yu B. Lasso-type recovery of sparse representations for high-dimensional data; Annals of Statistics 37(1):246-270 | 2009 | 10.1214/07-AOS582; arXiv:0806.0145 | F | F |

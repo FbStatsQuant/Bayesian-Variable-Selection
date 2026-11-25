@@ -107,7 +107,7 @@ Schafer C.; Chopin N.; Sequential Monte Carlo on large binary sampling spaces; S
 - **Metrics:** spread of Monte Carlo PIP estimates across 200 runs (box-plots: 80% white box; outliers black); averaged key indicators in Tables 3-8; number of evaluations of pi; run time
 - **Competitors:** SMC (proposed; logistic conditionals model); standard metropolised Gibbs MCMC (Liu 1996; bit-flip count truncated geometric mean 2); Adaptive MCMC (Nott-Kohn 2005); SMC vs MCMC with and without main-effect restrictions
 - **Real data:** Boston Housing (n=506;p=104 after expansion); Concrete Compressive Strength (n=1030;p=79); Protein activity (Clyde-Parmigiani 1998; n=96;p=88)
-- **Code/data:** R scripts; csv-format data; datasets freely available (StatLib; UCI; BAS package); no repo URL found in text
+- **Code/data:** Python 2.6 (SciPy) implementation; csv-format data; R scripts generated for plots only; datasets freely available (StatLib; UCI; BAS package); no repo URL found in text
 - *Source pages:* Sec 6.1-6.5 (pp 21-26); Figs 3-8 and Tables 3-8; *read level:* full-text; *scout file:* `S1_BVS.tsv`
 
 ### Rockova2014
@@ -177,8 +177,8 @@ Narisetty N.N.; Shen J.; He X.; Skinny Gibbs: a consistent and scalable Gibbs sa
 - **n:** 100;200
 - **p (max):** 1000 (p grid 50;250;1000; CPU timing p=50 to 1000 step 50)
 - **s0:** 4 or 8 (two sparsity levels)
-- **β / SNR:** beta_t=(-1.5;2;-2.5;3) for |t|=4; beta_t=(-1.5;1.714;-1.929;2.143;-2.357;2.571;-2.786;3) for |t|=8 (timing study uses (1.5;2;2.5;3)); logistic link
-- **Noise:** Bernoulli with logistic link (no Gaussian noise); **replicates:** 100 randomly generated datasets per setting (10 Gibbs chains each; burn-in 2000; length 5000); 10 datasets for CPU timing
+- **β / SNR:** beta_t=(-1.5;2;-2.5;3) for |t|=4; beta_t=(-1.5;1.714;-1.929;2.143;-2.357;2.571;-2.786;3) for |t|=8 at p=1000 (Table 3); (-2;2.143;-2.286;2.429;-2.571;2.714;-2.857;3) for |t|=8 at p=50;250 (Table 2) (timing study uses (1.5;2;2.5;3)); logistic link
+- **Noise:** Bernoulli with logistic link (no Gaussian noise); **replicates:** 100 randomly generated datasets per setting (10 Gibbs chains each; burn-in 2000 (5000 for Table 3 p=1000); length 5000); 10 datasets for CPU timing
 - **Metrics:** TP; TPs (true positives at known sparsity); FP; exact recovery Z=t; inclusion Z contains t; Zs=t; CPU time vs p; 10-fold CV squared-error prediction error; marginal posterior probabilities from two chains
 - **Competitors:** Skinny Gibbs; BASAD (full Gibbs); BSR (Liang 2013 Bayesian subset regression); varbvs variational Bayes; adaptive Lasso; SCAD; MCP
 - **Real data:** Mouse PCR GPAT (Lan 2006; n=60; 22575 genes screened to 99 + gender -> p=100; binary response GPAT<Q(0.4)); Lymph node (Hans 2007; n=148; p=4514: 4512 genes + tumour size + ER status; binary risk)
@@ -264,7 +264,7 @@ Liang X.; Livingstone S.; Griffin J.; Adaptive random neighbourhood informed Mar
 Zhou Q.; Yang J.; Vats D.; Roberts G.O.; Rosenthal J.S.; Dimension-free mixing for high-dimensional Bayesian variable selection; J. R. Stat. Soc. B; 84(5); 1751-1784 (2022). **10.1111/rssb.12546 (arXiv:2105.05719)**
 
 - **X:** iid-N(0,I) rows; AR1-type Toeplitz(rho=e^{-|j-k|}, i.e. rho=0.37 per step); block(size d=20, within-block Sigma_jk=e^{-|j-k|/3}). Study I follows Yang-Wainwright-Jordan 2016 design: rows iid MN(0,Sigma); Study II: block-diagonal Sigma_{d,p} with d=20 blocks, rho_|j-k|=exp(-|j-k|/3); real GWAS X (SNP genotypes)
-- **n:** 500;1000;5000 (n=500,p=1000 and n=1000,p=5000 in study I; n=1000,p=5000 in study II); GWAS n=5418
+- **n:** 500;1000 (n=500,p=1000 and n=1000,p=5000 in study I; n=1000,p=5000 in study II); GWAS n=5418
 - **p (max):** 328129 (real GWAS); synthetic max p=5000; p grid 1e3;5e3;3.3e5(real)
 - **s0:** 10 (study I; first 10 coords); 100 (study II; gamma* uniform among size-100 sets)
 - **β / SNR:** Study I: beta*_[10]=SNR*sqrt(log p/n)*(2,-3,2,2,-3,3,-2,3,-2,3); SNR=1,2,3; study II: beta_gamma*~N(0,sigma_beta^2 I_100) with sigma_beta=0.1..0.5 (designed to induce multimodality; worst at 0.2)
@@ -298,7 +298,7 @@ Liang X.; Livingstone S.; Griffin J.; Adaptive MCMC for Bayesian variable select
 - **p (max):** 500 (simulation); real: SLE chromosomes p=5771; 9306; 32290; 42430 (flag p>=1e4: chr 3 and 11); survival gene sets p=1554; 662; 54675 (GSE31210; p>=1e4); 22283 (GSE4573; p>=1e4)
 - **s0:** 10 (beta=(2;-3;2;2;-3;3;-2;3;-2;3;0...0))
 - **β / SNR:** beta_1..10 = (2;-3;2;2;-3;3;-2;3;-2;3); signal level only via these coefficients (no explicit SNR)
-- **Noise:** Bernoulli (logistic); generalised-gamma survival with censoring details in App D / earlier papers; **replicates:** Sec 5.1: one simulated dataset per model (logistic; Cox; Weibull) with trace plots; real data: 10 repetitions of 1 h runs for SLE; PIP gold standard = PARNI-CPM run for ~12 h
+- **Noise:** Bernoulli (logistic); generalised-gamma survival with censoring details in App D / earlier papers; **replicates:** Sec 5.1: two simulated datasets (500 x 500) (logistic; Cox; Weibull) with trace plots; real data: 10 repetitions of 1 h runs for SLE; PIP gold standard = PARNI-CPM run for ~12 h
 - **Metrics:** trace plot of log posterior model probability and CPU time (Sec 5.1); average MSE of PIP estimates over all p covariates relative to long-run gold standard (12 h PARNI-CPM); relative efficiency = ratio of average MSE vs baseline
 - **Competitors:** PARNI-adaptiveALA; PARNI-LA; PARNI-ALA; add-delete-swap (ADS thinned; ADS-DA; ADS-CPM); PARNI-DA; PARNI-CPM
 - **Real data:** SLE GWAS (4035 cases; 6959 controls; chromosomes 1;3;11;21 with 5771;42430;32290;9306 SNPs; 5 fixed covariates gender + PC1-PC4); NKI breast cancer survival (n=272; 1554 genes + 5 clinical); METABRIC (n=1903; 662 gene/mutation covariates); GSE31210 lung (n=226; p=54675); GSE4573 lung (n=130; p=22283); all used for PIP-MSE efficiency (Cox; Weibull)
@@ -630,7 +630,7 @@ Zou H; Hastie T. Regularization and variable selection via the elastic net; Jour
 Zou H. The adaptive lasso and its oracle properties; Journal of the American Statistical Association 101(476):1418-1429 (2006). **10.1198/016214506000000735**
 
 - **X:** AR1(rho=0.5; 0.75); other (Model 0: 4x4 C matrix with rho1=-0.39; rho2=0.23 making lasso path inconsistent). Model 0 x~N(0;C) with C from Corollary 1 (rho1=-0.39; rho2=0.23); Models 1-2 corr(j1;j2)=0.5^|j1-j2|; logistic example corr 0.75 (rho between xi and xj; Hunter-Li 2005 model); weights from OLS (gamma in 0.5;1;2 chosen by 2-D CV); tuning by 5-fold CV
-- **n:** n=60 or 120 (Model 0; p=4); n=20 or 60 (Model 1; p=8); n=40 or 80 (Model 2; p=8); n=200 (logistic; p=9); test sets of 10000
+- **n:** n=60; 120 or 300 (Model 0; p=4); n=20 or 60 (Model 1; p=8); n=40 or 80 (Model 2; p=8); n=200 (logistic; p=9); test sets of 10000
 - **p (max):** 9 (logistic example p=9; Models 1-2 p=8; Model 0 p=4)
 - **s0:** Model 0 s=3 (beta=(5.6;5.6;5.6;0)); Model 1 s=3 (beta=(3;1.5;0;0;2;0;0;0)); Model 2 s=8 (beta_j=0.85); logistic s=3 beta=(3;0;0;1.5;0;0;7;0;0)
 - **β / SNR:** Model 1: sigma=1;3;6 giving SNR~21.25;2.35;0.59; Model 2: sigma=1;3;6 giving SNR 14.46;1.61;0.40 (printed values); Model 0 sigma in (9;5) paired with n=60;120; SNR=beta'C beta/sigma^2
@@ -727,7 +727,7 @@ Friedman J; Hastie T; Tibshirani R. Regularization paths for generalized linear 
 - **Noise:** Gaussian with k set for SNR=3; binomial; **replicates:** timings averaged over 3 runs
 - **Metrics:** CPU time in seconds (glmnet naive vs covariance updating vs lars vs l1logreg vs BBR vs LPL); cross-validation error curves (Fig 2)
 - **Competitors:** lars; l1logreg (interior point); BBR/BMR (Bayesian binary regression); LPL (Lange); SGD-like tools in Table 5 (Leukemia benchmark vs other packages)
-- **Real data:** Cancer (Ramaswamy 2002; 14 classes; N=144; p=16063); Leukemia (Golub 1999; N=72; p=3571 preprocessed by Dettling 2004); InternetAd (N=2359; p=1430; 1.2% nonzero); NewsGroup (N=11314; p=777811; 0.05% nonzero; binary tri-gram features)
+- **Real data:** Cancer (Ramaswamy 2002; 14 classes; N=144; p=16063); Leukemia (Golub 1999; N=72; p=3571 preprocessed by Dettling 2004); InternetAd (N=2359; p=1430; 1% nonzero); NewsGroup (N=11314; p=777811; 0.05% nonzero; binary tri-gram features)
 - **Code/data:** R package glmnet (CRAN); code in paper
 - *Source pages:* Sec 5.1 pp 12-13 (Table 1; design and SNR=3); Sec 5.2 pp 13-14 (Tables 2-3); Sec 5.3 p15 (Table 4 real data); Table 5; Fig 2 p17; *read level:* full-text; *scout file:* `S2_FREQ.tsv`
 
@@ -781,7 +781,7 @@ Javanmard A; Montanari A. Confidence intervals and hypothesis testing for high-d
 
 - **X:** other (circulant banded Sigma); real-X+real-y. Rows iid N(0;Sigma) with circulant symmetric Sigma: Sigma_jj=1; 0.1 for k in j+1..j+5 (and wraparound); 0 otherwise (eq 59); design held FIXED across the 20 realisations; lasso lambda=4 sigma_hat sqrt(2 log p / n) with scaled-lasso sigma_hat; mu=2 sqrt(log p/n); alpha=0.05
 - **n:** (n;p) = (1000;600) and (2000;1500) (note n>p); real riboflavin n=71
-- **p (max):** 2000 (real riboflavin p=4088; synthetic p up to 1500)
+- **p (max):** 4088 (real riboflavin p=4088; synthetic p=600 and 1500; no p=2000)
 - **s0:** s0=10;30 (n=1000;p=600); s0=25;50 (n=2000;p=1500)
 - **β / SNR:** theta_0i=b on uniformly random support with b in {0.1;0.25;0.5}; unit noise N(0;1); no SNR defined
 - **Noise:** Gaussian N(0;1); **replicates:** 20 independent realisations of the noise with fixed design and coefficients
@@ -935,7 +935,7 @@ Hazimeh H; Mazumder R; Saab A. Sparse regression at scale: branch-and-bound root
 - **X:** equicorr(rho=0.1); block(k0 blocks; AR1 within block; rho up to 0.9); real-X+real-y. Default Sigma_ij=0.1 for i!=j (constant correlation); feature-correlation study: block-diagonal Sigma with k0 blocks of equal size each Sigma^(l)_ij=rho^|i-j| (exponentially decaying within block) rho values incl 0.8 and 0.9; y and X columns mean-centred and unit-l2 normalised; Gurobi/MOSEK/GRB baselines
 - **n:** n=1000 (p=1e3;1e4;1e5;1e6); n=100..1e5 (p=1e4; sample-size study); real Riboflavin n=71
 - **p (max):** 8.3e6 (p grid 1e3;1e4;1e5;1e6; real riboflavin with all pairwise interactions p=8362004)
-- **s0:** k0=10 (default); k0 in 5..25 (sparsity study at p=1e4)
+- **s0:** k0=10 (default); k0 in 10;15;20;25 (sparsity study at p=1e4)
 - **β / SNR:** k0 equi-spaced nonzeros all equal 1; SNR=Var(X beta)/sigma^2=5 by default ('relatively difficult but allows full support recovery'); SNR in 0.5;1;2;3;4;5 (n=p=1000; Table 2)
 - **Noise:** Gaussian sigma^2 set from SNR; **replicates:** not stated (running-time tables; 2 h time limit per instance)
 - **Metrics:** running time to optimality; optimality gap after time limit; number of BnB nodes; (statistical metrics not the focus)
@@ -996,7 +996,7 @@ Candes E; Fan Y; Janson L; Lv J. Panning for gold: model-X knockoffs for high-di
 Sesia M; Sabatti C; Candes EJ. Gene hunting with hidden Markov model knockoffs; Biometrika 106(1):1-18 (2019). **10.1093/biomet/asy033; arXiv:1706.04677**
 
 - **X:** other (discrete Markov chain K=5); other (HMM K=9 latent clock chain); binary/SNP-genotypes. 6.1 Markov chain: p=1000; states {-2..2}; Q_j(k|l)=1/K+gamma_j(1-1/K) if k=l; gamma_j~U[0;0.5]; 6.2 HMM: latent chain 'clockwise' K=9 stay prob 0.9 move 0.1; emissions gamma=0.35; 6.3 real WTCCC chr-1 SNPs 29258 (14708 individuals) pruned by clustering (corr<=0.5) to 5260 representatives; HMM fit by fastPHASE K=12 on 10 folds; Sec 7 real GWAS: single-linkage SNP clustering (max corr<=0.5) then representative chosen on 20% holdout
-- **n:** n=1000 (p=1000; Markov and HMM sims); n~1400+1000 shared (real chr-1 SNPs p=5260 after clustering); real GWAS n=4644-5302 (NFBC) and 4913 (WTCCC)
+- **n:** n=1000 (p=1000; Markov and HMM sims); n=14,708 genotyped individuals (1000 held out for representative selection) (real chr-1 SNPs p=5260 after clustering); real GWAS n=4644-5302 (NFBC) and 4913 (WTCCC)
 - **p (max):** 3.8e5 (real GWAS WTCCC p=377749; NFBC p=328934 pre-clustering; 59005 and 71145 post-clustering); sims p=1000
 - **s0:** 60 nonzero (all simulations)
 - **β / SNR:** Y|X~Bernoulli(logit(X'beta)) with beta_j=a/sqrt(n) on 60 support variables (signal amplitude a varied e.g. a=10 Markov; a=6 HMM); lasso (l1 logistic; CV) feature importance W_j=|b_j(lambda_CV)|-|b_{j+p}(lambda_CV)|; FDR target alpha=0.1
@@ -1111,7 +1111,7 @@ Benner C; Spencer CCA; Havulinna AS; Salomaa V; Ripatti S; Pirinen M. FINEMAP: e
 - **p (max):** 1920 SNPs in region (m=750;1000;1250;1500 in scenario A; m=150 in scenario B); real data 363 and 8612 SNPs
 - **s0:** 5 causal SNPs (scenarios A and B)
 - **β / SNR:** effect sizes set so single-SNP power at 5e-8 is about 0.5; sigma^2=1-sum 2 f_c(1-f_c) beta_c^2 (unit phenotype variance); causal SNPs random among those with correlated proxies
-- **Noise:** Gaussian; **replicates:** 500 datasets per (m,K) combination in scenarios A and B (2000 datasets in scenario B)
+- **Noise:** Gaussian; **replicates:** 500 datasets per (m,K) combination in scenarios A and B (2500 datasets in total in scenario B (K=1..5))
 - **Metrics:** processing time (log10 scale); max abs difference of single-SNP inclusion probabilities vs CAVIARBF; proportion of causal SNPs captured among top-ranked SNPs by PIP
 - **Competitors:** CAVIARBF (exhaustive search); PAINTOR; CAVIAR (discussed)
 - **Real data:** 4q22/SNCA Parkinson (UKPDC and WTCCC2): 2Mb 363 genotyped SNPs; 15q21/LIPC HDL-C FINRISK n=19115: 6Mb 8612 SNPs
@@ -1186,7 +1186,7 @@ Cui R; Elzur RA; Kanai M; Ulirsch JC; Weissbrod O; Daly MJ; Neale BM; Fan Z; Fin
 - **p (max):** 6.6e6 common imputed variants genome-wide (causal variants drawn from these; fine-mapping done per 3Mb locus)
 - **s0:** 1000 causal (ideal RFR sims) or 700 (N=150K ideal); misspecified: 1434 sparse large-effect variants from SuSiE posterior for UKB height plus non-sparse x%=0.5;1;5 of variants
 - **β / SNR:** total SNP heritability 0.5; ideal: beta~N(0,0.5/1000) on standardized genotypes and error N(0,0.5); non-sparse effects variance proportional to [2p(1-p)]^alpha with alpha=-0.38; non-sparse share of heritability 58;75;83;100 percent (1% coverage), 0.5% and 5% coverage settings
-- **Noise:** Gaussian; **replicates:** ideal RFR: two sets at each of N=366K and N=100K; 9 misspecification simulation sets (Table 1) over whole genome loci
+- **Noise:** Gaussian; **replicates:** ideal RFR: two sets at each of N=366K and N=100K; 10 misspecification simulation sets (Table 1 caption: ten sets) (Table 1) over whole genome loci
 - **Metrics:** Replication Failure Rate (down-sampling PIP>0.9 at N=100K vs PIP<0.1 at 366K); calibration of PIP bins with Wilson CI; recall of simulated large effects among top-N PIP variants; runtime; PRS performance; functional enrichment
 - **Competitors:** SuSiE; FINEMAP; COJO-ABF; ABF; SuSiE-inf; FINEMAP-inf; minPIP and minPIP-inf
 - **Real data:** 10 UKBB quantitative traits (Height eBMD Plt HbA1c RBC ALP IGF1 LDLC Lym eGFR) N=366K vs 100K down-sampling
@@ -1194,7 +1194,7 @@ Cui R; Elzur RA; Kanai M; Ulirsch JC; Weissbrod O; Daly MJ; Neale BM; Fan Z; Fin
 - *Source pages:* Results: Simulations (Fig 2-3 Table 1); Methods: Large-scale simulations with misspecification; Simulated genotypes; Causal variants simulation; ideal simulations for RFR; *read level:* full-text; *scout file:* `S3_GENOMICS.tsv`
 
 ### McCreight2025
-McCreight A; Cho Y; Li R; Nachun D; Gan H; Carbonetto P; Stephens M; Denault W; Wang G. SuSiE 2.0: improved efficiency and calibration for genetic fine-mapping and prediction. bioRxiv preprint (2025). **10.1101/2025.11.25.690514**
+McCreight A; Cho Y; Li R; Nachun D; Gan H; Carbonetto P; Stephens M; Denault W; Wang G. SuSiE 2.0: improved methods and implementations for genetic fine-mapping and phenotype prediction. bioRxiv preprint (2025). **10.1101/2025.11.25.690514**
 
 - **X:** real UK Biobank genotypes; 150 randomly sampled LD blocks across chr1-22; MAF>1%, missing<5% (mean imputation); standardized. n=1000 and p=5000 per block (main); runtime study p=500;1000;2500 (RSS with regularized LD); regional only, no genome-wide p
 - **n:** 1000
