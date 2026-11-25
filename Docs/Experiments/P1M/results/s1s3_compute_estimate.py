@@ -82,13 +82,29 @@ for n,p in [(500,500),(1000,500),(500,5000),(1000,5000)]:
 print('S2 n50 T',round(tcost('S2n50',50,1000,'c'),2),'n100 T',round(tcost('S2n100',100,1000,'c'),2),'F2',round(fcost(1000,'c'),2))
 if INCLUDE_S3:
     for n,p in [(500,500),(1000,500),(500,5000),(1000,5000)]: print('S3',n,p,'T',round(tcost('S3',n,p,'c'),2))
+for lab,cl,n,p_ in [('S1 p=500','S1',500,500),('S1 p=5000','S1',500,5000),('S2 n=50','S2n50',50,1000),('S2 n=100','S2n100',100,1000)]:
+    print('T/F2 ratio',lab,round(tcost(cl,n,p_,'c')/fcost(p_,'c')))
 print('S2 mean T per fit (central)',round(sum(tcost(t2cls(c),c[1],1000,'c') for c in S2)/len(S2),2),'| S1 mean T per fit',round(sum(tcost('S1',n,p,'c') for n,p,_ in S1)/len(S1),2))
 print('S1 T by p (10 fits/cell, central): p=500',round(sum(10*tcost('S1',n,p,'c') for n,p,_ in S1 if p==500)),'p=5000',round(sum(10*tcost('S1',n,p,'c') for n,p,_ in S1 if p==5000)))
 print('S2 T by n (10 fits/cell, central): n=50',round(sum(10*tcost('S2n50',50,1000,'c') for c in S2 if c[1]==50)),'n=100',round(sum(10*tcost('S2n100',100,1000,'c') for c in S2 if c[1]==100)))
+print('\n=== cost-driver breakdown (central)')
+TT=tot(res['c'][1]); TOT=tot(res['c'][0])+tot(res['c'][1])+tot(res['c'][2])
+s2t=res['c'][1]['S2']; s1t=res['c'][1]['S1']
+s2n50=sum(10*tcost('S2n50',50,1000,'c') for c in S2 if c[1]==50)
+s2n50_noesc=s2n50/ESC['S2n50'][1]
+s1p5=sum(10*tcost('S1',n,p,'c') for n,p,_ in S1 if p==5000)
+print('S2 T bridge',round(s2t),f'= {100*s2t/TOT:.0f}% of the central total, {100*s2t/TT:.0f}% of the T bridge')
+print('  of which n=50 cells',round(s2n50),f'({100*s2n50/s2t:.0f}% of S2 T); same cells with no escalation (factor 1)',round(s2n50_noesc),'-> escalation adds',round(s2n50-s2n50_noesc))
+print('S1 T bridge at p=5000',round(s1p5),f'= {100*s1p5/TOT:.0f}% of the central total, {100*s1p5/TT:.0f}% of the T bridge')
+print('S2 n=50 + S1 p=5000 T together',round(s2n50+s1p5),f'= {100*(s2n50+s1p5)/TOT:.0f}% of the central total')
+print('E block (F2 + competitors)',round(res['c'][0]['E']+res['c'][2]['E']))
+print('v0.3 reference: S3 T bridge was 5507 (59% of the v0.3 T bridge) -- run with --with-s3 to reproduce')
 print('\n=== 6A.6 replicate alternatives (central)')
 for RF,RT in [(20,10),(50,10),(100,10),(50,20),(50,50),(100,50)]:
     f,t,c=run(RF,RT,'c'); nc=sum(ncell[s] for s in SUITES)
     print('RF',RF,'RT',RT,'SMC fits',RF*nc+100+RT*nc,'F2',round(tot(f)),'T',round(tot(t)),'comp',round(tot(c)),'tot',round(tot(f)+tot(t)+tot(c)))
+for RF,RT in [(50,20),(50,50),(100,10)]:
+    f,t,c=run(RF,RT,'c'); v=tot(f)+tot(t)+tot(c); print('share of remaining 22,258: RF',RF,'RT',RT,round(v),f'{100*v/22258:.0f}%')
 print('levers (central, saving vs the 50/10 design):')
 base=tot(res['c'][0])+tot(res['c'][1])+tot(res['c'][2])
 l1=sum(5*tcost('S1',n,p,'c') for n,p,_ in S1 if p==5000)
@@ -133,8 +149,8 @@ PILOT_T=[('T1 S1 n=500 p=5000 (SNR 1,2 x 2 seeds)', 500,5000,'S1',4),
          ('T2 S1 n=1000 p=5000 (SNR 1,2 x 1 seed)', 1000,5000,'S1',2),
          ('T3 S1 n=500 p=500 (f_n at p=500)', 500,500,'S1',3),
          ('T4 S1 n=1000 p=500 (f_n at p=500)', 1000,500,'S1',3),
-         ('T5 S2 n=50 p=1000 (rho 0,.35,.7 x bt1,2 ...)', 50,1000,'S2n50',5),
-         ('T6 S2 n=100 p=1000', 100,1000,'S2n100',5)]
+         ('T5 S2 n=50 p=1000 (rho in {0,.35,.7}, mid-grid nu)', 50,1000,'S2n50',5),
+         ('T6 S2 n=100 p=1000 (same)', 100,1000,'S2n100',5)]
 PILOT_F=[('F1 p=500 (6 paired with T3/T4 + 10 F2-only)',500,16),
          ('F2 p=1000 (10 paired with T5/T6 + 10 F2-only)',1000,20),
          ('F3 p=5000 (6 paired with T1/T2)',5000,6)]
@@ -154,4 +170,14 @@ print('pilot fits: T',nT,'F2',nF,'total',nT+nF)
 print('stage 1 (cheap: T3,T4,T5,T6 + all F2 at p<=1000), central:',round(sum(pt['c'][0][i] for i in (2,3,4,5))+pt['c'][1][0]+pt['c'][1][1],1))
 print('stage 2 (p=5000: T1,T2 + F3), central:',round(pt['c'][0][0]+pt['c'][0][1]+pt['c'][1][2],1))
 print('pilot as share of 200 core-h exploratory authority: central',round(100*(sum(pt['c'][0])+sum(pt['c'][1]))/200),'% high',round(100*(sum(pt['high'][0])+sum(pt['high'][1]))/200),'%')
+print('P6 observation, 16 h wall for a cs fit at n=100,p=1000 (billed core-h at 2 CPUs):',16*2)
 print('pilot as share of the central total:',round(100*(sum(pt['c'][0])+sum(pt['c'][1]))/(tot(res['c'][0])+tot(res['c'][1])+tot(res['c'][2])),1),'%')
+# pilot by machine (T at p<=1000 is the R core on Owls, F2 and T at p=5000 are NOTS; Owls T x0.97)
+print('\n=== 6A.9 pilot by machine')
+for case in ('low','c','high'):
+    tt,ff=pt[case]
+    nots=tt[0]+tt[1]+sum(ff); owls=0.97*(tt[2]+tt[3]+tt[4]+tt[5])
+    print(case,'NOTS billed (T1+T2+all F2)',round(nots,1),'| Owls core-h (T3..T6 x0.97)',round(owls,1),'| all-NOTS equivalent',round(sum(tt)+sum(ff),1))
+print('P(no escalation in 6 fits at a 15% incidence) =',round(0.85**6,2))
+print('Owls days at 230/day: riboflavin-anchor T p=5000 (c):',round(split['c']['Tbig']*0.97*10/230,1))
+print('pilot Owls days at 230/day (c):',round(0.97*(pt['c'][0][2]+pt['c'][0][3]+pt['c'][0][4]+pt['c'][0][5])/230,2))

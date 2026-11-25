@@ -1,4 +1,4 @@
-# EXPERIMENT_PLAN — SMC-BVS at p = 10⁶ (draft v0.2 after the Fable review, EXP-CP1, 2026-11-15; **v0.3 update 2026-11-24: the simulation suite is S1–S3**)
+# EXPERIMENT_PLAN — SMC-BVS at p = 10⁶ (draft v0.2 after the Fable review, EXP-CP1, 2026-11-15; v0.3 update 2026-11-24; **v0.4 update 2026-11-25: the simulation suite is S1 and S2 only, S3 dropped**)
 
 Status: **DRAFT FOR REVIEW.** Planning only: nothing is built, submitted or changed. Author: Experiment department
 (Claude Opus 5.5, Claude Third, Owls). HQ approves every launch; one independent Sol review (feasibility and budget) comes
@@ -15,12 +15,27 @@ Tags as in SCALING_DESIGN_v0: **[OP-bit]** same output bits as v3.1; **[OP-law]*
 
 ---
 
-## v0.3 update (2026-11-24): the primary simulation suite is S1–S3 (owner decision via HQ). PLAN ONLY.
+## v0.4 update (2026-11-25): S3 is DROPPED; the primary simulation suite is S1 and S2 only (owner decision via HQ). PLAN ONLY.
 
 No run, NOTS job, Owls compute or ssh was used for this update; SMC-BVS is on its break (HQ H-54) and the owner restarts it later.
 
-- **Binding decision.** The last entry of `MAIN:Theory_work/Wave3/HQ_DECISIONS.md` (line 908, "2026-11-24 evening. OWNER: the
-  simulation suite is S1–S3 from BENCH_DESIGN §6.1") makes S1–S3 the simulation suite. The spec is `MAIN:Theory_work/Dept/assess/BENCH_DESIGN/REPORT.md`
+- **Binding decision.** The last entry of `MAIN:Theory_work/Wave3/HQ_DECISIONS.md` (line 910, "2026-11-25. OWNER: the simulation suite is S1 and S2 only; S3 is DROPPED") supersedes the S3 part of the 11-24 evening entry (line 908). **Why (the entry's reason):** an independent Haiku re-check (3 agents, full text) confirmed S1 = Griffin et al. 2021 Sec 4.1 + Table 1 exactly and S2 = Hastie et al. 2020 Sec 3.1 exactly, but S3 matches no paper: it was a composite (ρ = 0.5 from Shin 2018, ρ = 0.8 from Dezeure 2015, s₀ = 10 a Theory choice, n and p an HQ default copied from S1).
+- **What changed in this file.**
+  - **S3 removed** from §1 (v0.3 note), §2.0 (the S3 table; one line remains at §2.0.4), §2.0.5, §2.0.7, §3.6, §4A, §6A (all of it re-computed), §7 R13 and §10 (the two S3-only references).
+  - **Cells:** 138 (S1 16 + S2 120 + block E 2), down from 170 [D, script output]. **Our SMC fits: 8,260** (6,900 F2 + 1,360 T), down from 10,180.
+  - **Central total 5,294 core-h NOTS-billed if everything ran on NOTS (range 2,312–15,759), down from 11,813 (4.4k–37.7k).** The recommended NOTS/Owls split is 2,330 NOTS billed + 2,884 Owls core-h (§6A.7).
+  - **Block E does not depend on S3** (it is two S1 cells), so it stays unchanged.
+  - **Open choices that only concerned S3 are removed:** the S3 signal and SNR levels, and the Theory question on S3 (compound symmetry, D1, ties in the partition). The HQ_DECISIONS entry does not keep either.
+  - **§6A.9 (new, replaces the pilot paragraph of §6A.6):** the calibration pilot re-based on S1/S2.
+  - **Script:** `results/s1s3_compute_estimate.py` now drops S3 by default (`INCLUDE_S3`; `--with-s3` reproduces the v0.3 numbers, 11,813 central, as a check). Every number in §6A is that script's output.
+- **Where v0.4 and v0.3 conflict, v0.4 governs.** Writing removes S3 from `sim_designs_cite.tex` (HQ_DECISIONS line 910).
+
+## v0.3 update (2026-11-24): the primary simulation suite is S1–S3 (owner decision via HQ). PLAN ONLY. **[S3 part superseded by v0.4 above.]**
+
+No run, NOTS job, Owls compute or ssh was used for this update; SMC-BVS is on its break (HQ H-54) and the owner restarts it later.
+
+- **Binding decision.** The 11-24 evening entry of `MAIN:Theory_work/Wave3/HQ_DECISIONS.md` (line 908, "2026-11-24 evening. OWNER: the
+  simulation suite is S1–S3 from BENCH_DESIGN §6.1") made S1–S3 the simulation suite; line 910 (11-25) dropped S3. The spec is `MAIN:Theory_work/Dept/assess/BENCH_DESIGN/REPORT.md`
   §6.1 (9e783a89); the per-paper setups are in `MAIN:…/BENCH_DESIGN/PAPERS.md`. Engineering updates this plan only.
 - **What changed in this file** (everything else is the v0.2 text, unchanged):
   - **§2.0 (new):** the primary suite S1–S3: cells, data-generating process, replicates, the two engines.
@@ -88,10 +103,10 @@ Every claim is illustrated, not proved, by the experiment. Designs appear only a
 | C8 | **Comparison.** Selection, prediction and cost against methods that actually run at each p. | paper §Experiments | §4 |
 | C9 (contingent) | **Strong factors at p ≫ n** (D1), at 10⁴ only, if P6 or the D1 ruling says it is fair game. | D1 (#12) | as in C2 and C6 |
 
-**v0.3 note.** The selection, PIP, distribution and comparison claims (C2, C4, C5, C8) are now evidenced first on the primary suite S1–S3 (§2.0), in the field's
+**v0.3/v0.4 note.** The selection, PIP, distribution and comparison claims (C2, C4, C5, C8) are now evidenced first on the primary suite S1 and S2 (§2.0), in the field's
 metrics (§3.6) and against the field's competitors (§4A). The scale claim C1 and the large-p start-mass and evidence claims (C3, C7) stay on the secondary own-β cells (§2.1–2.3),
-which supply the 10⁴, 10⁵ and 10⁶ rungs that S1–S3 do not reach (S1–S3 stop at p = 5,000). **[P] PROPOSED (needs owner/HQ):** this split of the claims between the two families.
-C9 (strong factors, D1) is no longer contingent for S3: S3 is a compound-symmetry (one-factor) design, see §2.0.4.
+which supply the 10⁴, 10⁵ and 10⁶ rungs that S1 and S2 do not reach (they stop at p = 5,000). **[P] PROPOSED (needs owner/HQ):** this split of the claims between the two families.
+C9 (strong factors, D1) stays contingent as in v0.2: with S3 dropped, no primary cell is a compound-symmetry design.
 
 Claims are always worded with the theorem's labels. C5's coded-output statements are conditional on the delivery premises
 P-STORE / P-HIT, so the run records the diagnostics for those premises (§3.3). C5 is stated only as an
@@ -99,7 +114,7 @@ illustration of a candidate theorem until W3-DIST records a status.
 
 ## 2. Designs
 
-### 2.0 PRIMARY: the simulation suite S1–S3 (owner decision, 2026-11-24; spec `MAIN:…/BENCH_DESIGN/REPORT.md` §6.1 rows S1–S3)
+### 2.0 PRIMARY: the simulation suite S1 and S2 (owner decisions 2026-11-24 and 2026-11-25; spec `MAIN:…/BENCH_DESIGN/REPORT.md` §6.1 rows S1–S2; S3 dropped)
 
 #### 2.0.1 Common data model
 Random design as in §2.1: each replicate draws a fresh (X, ε) with rows x_i ~ N_p(0, Σ), y = Xβ* + ε, ε ~ N(0, σ²I), α* = 0. Data are regenerated from the seed
@@ -127,26 +142,19 @@ Every cell reports its SNR three ways (REPORT §6.1 S8; §3.6).
 | SNR | ν = Var(xᵀβ)/σ² on the 10-point grid {0.05, 0.09, 0.14, 0.25, 0.42, 0.71, 1.22, 2.07, 3.52, 6.00} (PVE 0.05–0.86); σ² = β*ᵀΣβ*/ν |
 | cells | 3 × 2 × 2 × 10 = **120** |
 
-#### 2.0.4 S3: equicorrelated (REPORT §6.1 S3; an HQ default for the size, no paper fixes it)
-| item | spec |
-|---|---|
-| Σ | Σ_jk = ρ for j ≠ k, 1 on the diagonal; ρ ∈ {0.5, 0.8}. ρ = 0.5 is the modal value and the George–McCulloch (1993) simulation value (REPORT §7); ρ = 0.8 is Dezeure et al. (2015) (REPORT §2, §6.1 S3) |
-| s₀ | {5, 10}; S₀ = the first s₀ coordinates (position is immaterial under compound symmetry) |
-| (n, p) | S1's four pairs: n ∈ {500, 1000} × p ∈ {500, 5,000} (HQ default) |
-| β*, SNR | **[P] PROPOSED (needs owner/HQ):** β* = SNR·√(log p / n)·(the first s₀ entries of the S1 vector), σ = 1, SNR ∈ {1, 2}. The sources fix no signal for S3 |
-| cells | 2 × 2 × 4 × 2 = **32** [P]. (16 (ρ, s₀, n, p) combinations; 64 cells if all four S1 SNR values are used) |
-| flag | S3 is the one-factor compound-symmetry design that §2.2 calls FAC (there ρ = 0.3, contingent on D1). P6 found such designs at p ≫ n always escalated and expensive (R13, risk register below). **UNVERIFIED:** how the coded partition (complete linkage cut at 1 − τ_n) behaves when every \|r\| ties. **Open question to Theory/HQ:** the D1 (strong-factor) status of S3 |
+#### 2.0.4 S3 (equicorrelated): DROPPED by the owner, 2026-11-25
+Dropped by the owner (HQ_DECISIONS line 910): S3 matched no paper. It was a composite of ρ = 0.5 (Shin 2018), ρ = 0.8 (Dezeure 2015), s₀ = 10 (a Theory choice) and an (n, p) copied from S1. No S3 cell, fit or cost remains in this plan. The 32 S3 cells and their compute are visible only through `results/s1s3_compute_estimate.py --with-s3` (the v0.3 check).
 
 #### 2.0.5 Replicates (REPORT §6.1 S7, §2 "Replicates")
 - REPORT S7: ≥ 50 data sets per cell for selection rates (100 if cheap), with Monte Carlo standard errors. For efficiency: 1 data set × ≥ 50 independent runs. The field's usual counts are 50–200 (selection) and 10 (best-subset papers; Hastie et al. use 10, PAPERS.md).
-- **[P] PROPOSED (needs owner/HQ), F2 engine (§2.0.7):** **R_F = 50** data sets per cell in all three suites (the S7 floor; 100 for S1 and S3 if cheap, since F2 is cheap, §6A.3).
-- **[P] PROPOSED (needs owner/HQ), theorem-covered method T (§2.0.7):** a paired **bridge subset of R_T = 10** of the same data sets per cell (the HTT count), because T is about 7–47× dearer than F2 per fit (§6A.3, [D]). T on every data set is costed in §6A.6 and does not fit the envelope.
+- **[P] PROPOSED (needs owner/HQ), F2 engine (§2.0.7):** **R_F = 50** data sets per cell in both suites (the S7 floor; 100 for S1 if cheap, since F2 is cheap, §6A.3).
+- **[P] PROPOSED (needs owner/HQ), theorem-covered method T (§2.0.7):** a paired **bridge subset of R_T = 10** of the same data sets per cell (the HTT count), because T is about 7–20× dearer than F2 per fit (§6A.3, [D]). T on every data set (R_T = 50) is costed in §6A.6; with S3 gone it is 20.4k central, about 91% of the remaining envelope, so it still does not fit with a reserve.
 - **[P] Efficiency block E:** the S1 cell n = 500, p = 5,000 at SNR ∈ {1, 2}, **1 data set × 50 independent engine seeds** (F2), against the baselines of §4A; the gold standard for PIP-MSE is one long MC3 run per cell. Needs owner/HQ.
 
 #### 2.0.6 Why the old own-β cells are secondary
-The owner chose literature-standard designs over our own (HQ_DECISIONS line 908). BENCH_DESIGN found our suite nonstandard in three ways: our own β with s₀ = 5, no SNR grid, and
+The owner chose literature-standard designs over our own (HQ_DECISIONS line 908; the suite is S1 and S2 since line 910). BENCH_DESIGN found our suite nonstandard in three ways: our own β with s₀ = 5, no SNR grid, and
 not the community's metrics (REPORT §0.5). Our cells are well defined and already used by the theory (A7 Thms 1–4 quote β_min), so they are **kept, as the secondary family**
-(REPORT §6.3), reported in the S8 units so readers can place them (§3.6). They also carry the scale rungs (10⁴, 10⁵, 10⁶) that S1–S3 do not reach.
+(REPORT §6.3), reported in the S8 units so readers can place them (§3.6). They also carry the scale rungs (10⁴, 10⁵, 10⁶) that S1 and S2 do not reach.
 Status of that family: 10⁴ overlap and science legs, the 10⁵ rung and 7 fits at 10⁶ are done (`LEDGER.md` totals, closed ≈ 6,042 core-h [M]); no further secondary compute is planned in v0.3 **[P]**.
 
 #### 2.0.7 Which engine each suite needs (the theory is about the method as coded)
@@ -156,10 +164,10 @@ Status of that family: 10⁴ overlap and science legs, the 10⁵ rung and 7 fits
 | **F2, the production engine** | engine tag p1m-freeze-F2: fixed N = 2,500, R′ = 16, bounded calibration (I_max 0), class A. [Δlaw] relative to T | RM-0 holds pathwise for every seed, N_e, R′ and calibration outcome (this plan §0.2). For p ≤ 2,500 and n ≤ 2,500 its N equals v3.1's (`DECISIONS.md` D-1, Theory PSMC-S0). At p = 10⁴, n = 200: 40/40 fits delivered, HPM equal 10/10 data sets, max \|ΔPIP\| 3.8·10⁻⁴, d_H(V,T)/d_H(T,f*) 0.0034–0.0136 (`results/overlap1e4/OVERLAP_1e4_VERDICT.md`, summary 2) [M] |
 
 Which suite needs which:
-- **A claim that cites a theorem ("the method the theory covers does X on the standard benchmark") needs T results on the same data sets.** F2 alone supports a claim about the engine, with the 10⁴ overlap as the only agreement evidence; that was at n = 200 and p = 10⁴, **not** at S1–S3 settings.
+- **A claim that cites a theorem ("the method the theory covers does X on the standard benchmark") needs T results on the same data sets.** F2 alone supports a claim about the engine, with the 10⁴ overlap as the only agreement evidence; that was at n = 200 and p = 10⁴, **not** at S1 or S2 settings.
 - **S1:** F2 on all 16 cells (workhorse for 50 replicates). T bridge on all 16 cells. The p = 500 cells are the closest to T in law (N = 2,500 for both; only R′ and the calibration differ). The p = 5,000 cells differ in N (T: 5,000; F2: 2,500), so they are exactly where the bridge is needed.
 - **S2:** F2 on all 120 cells; T bridge on all 120 cells. p = 1,000 gives N = 2,500 for both (as above). At n = 50 and n = 100 T is expected to escalate (§6A.2).
-- **S3:** F2 on all 32 cells; T bridge on all 32 cells. T is the expensive arm here (compound symmetry, escalation expected, p = 5,000 gives N = 5,000). **[P]** The bridge criteria are those of `results/overlap1e4/OVERLAP_1e4_PREREG.md` §4, re-registered for S1–S3 before any run.
+- **[P]** The bridge criteria are those of `results/overlap1e4/OVERLAP_1e4_PREREG.md` §4, re-registered for S1 and S2 before any run.
 - An F2 build for Owls (§6A.7) would carry a different floating-point ISA family from the NOTS build, so its bits would not pool with NOTS bits (R10, P6 N2).
 
 ### 2.1 SECONDARY. Common data model (random design, matches W3-DIST (RD))
@@ -286,7 +294,7 @@ comparison.
 - Peak RSS per process, private and shared (mmap); bytes written and read.
 - Per-step µs by phase; `score_counts$logical` (and `fresh` as OD-3 rules); node type (sapphirerapids only).
 
-### 3.6 Standard metrics for S1–S3, and the real-data rule (v0.3; REPORT §4, §6.1 S6–S8)
+### 3.6 Standard metrics for S1 and S2, and the real-data rule (v0.3, S3 removed in v0.4; REPORT §4, §6.1 S6–S8)
 Computed for both our arms (T and F2) and for every competitor, by one evaluator. The §3.1–§3.5 metrics stay as extras (REPORT §6.1 S6 keeps sup-PIP error, Brier/reliability, Hellinger and the evidence metrics).
 - **Selection (truth known):** TPR and FDR of the reported model (HPM) and of the MPM; exact recovery P(Ŝ = S₀); FP and FN counts; model size. Each with a Monte Carlo standard error over the data sets of a cell.
 - **Posterior accuracy:** PIP-MSE against a long-run gold standard (REPORT §4: Liang 2022/2023, Staerk 2024). **[P]** The gold standard is a long MC3 run, produced for the efficiency block E only (§2.0.5), not for every data set.
@@ -297,10 +305,10 @@ Computed for both our arms (T and F2) and for every competitor, by one evaluator
 - **Real data (not truth-known) is for posterior accuracy and prediction only** (HQ_DECISIONS line 908). On real data we report PIP-MSE against a gold standard, PIP calibration against the gold standard,
   out-of-sample prediction error and log predictive density, and runtime. We make **no** TPR, FDR or exact-recovery claim on real data, because S₀ is unknown there.
   **[P] needs owner/HQ:** which real data sets (REPORT §6.1 S5: PCR mouse n = 60, p = 22,575; Schäfer–Chopin's Boston/concrete/protein; Tecator; and the riboflavin fits already running on Owls, n = 71, p = 4,088, `HANDOFF_V2.md` §1).
-  The semi-real design S4 (real X + synthetic β) is **not** part of the owner's S1–S3 and is left out until the owner or HQ rules.
+  The semi-real design S4 (real X + synthetic β) is **not** part of the owner's suite (S1 and S2) and is left out until the owner or HQ rules.
 
 ## 4. Competitors that can actually run at each p
-*(This table is for the secondary 10⁴–10⁶ rungs. The competitors for S1–S3 are in §4A.)*
+*(This table is for the secondary 10⁴–10⁶ rungs. The competitors for S1 and S2 are in §4A.)*
 
 Every competitor runs on the **same regenerated datasets**, with default or CV tuning fixed before the runs. Selection
 and predictive metrics are computed by the same evaluator.
@@ -320,14 +328,14 @@ and predictive metrics are computed by the same evaluator.
 Cost: under 10 core-h per dataset for all the penalised and variational methods at 1M. BAS and millipede are restricted
 to 10⁴–10⁵. Budgeted at about 1–2% of the total.
 
-## 4A. Competitors for S1–S3 (v0.3; REPORT §6.1 S9)
+## 4A. Competitors for S1 and S2 (v0.3; S3 column removed in v0.4; REPORT §6.1 S9)
 All run on the same data sets as our arms, with tuning frozen before the first run and the same evaluator (risk R14). Runtime comparisons are only valid between jobs on the same hardware class.
-| group | methods (code) | S1 | S2 | S3 | note |
-|---|---|---|---|---|---|
-| frequentist and variational | glmnet (lasso, 10-fold CV, λ_min and λ_1se), ncvreg (MCP/SCAD), L0Learn (L0L2, CV), SuSiE (susieR, L = 10), varbvs | all | all | all | REPORT S9: "already standard" |
-| best-subset set (S2 only) | forward stepwise, relaxed lasso, and best subset through L0Learn (Hastie et al. also use Gurobi MIO; no licence is assumed) | – | all | – | PAPERS.md "Hastie2020"; their R code is public (github.com/ryantibs/best-subset) |
-| Bayesian MCMC baselines | add–delete–swap MC3 (baseline), ASI (Griffin 2021), PARNI (Liang 2022), wTGS (Zanella–Roberts 2019); public code | all | **[P] not run** | all | REPORT S9; the Griffin/Liang/Zanella code is public (REPORT S1 "Why"). **[P]** S2 is the frequentist frame; MCMC there only if owner/HQ ask |
-| SMC precedent | Schäfer–Chopin 2013 SMC | **[P]** if the scripts can be obtained | – | – | REPORT S9 |
+| group | methods (code) | S1 | S2 | note |
+|---|---|---|---|---|
+| frequentist and variational | glmnet (lasso, 10-fold CV, λ_min and λ_1se), ncvreg (MCP/SCAD), L0Learn (L0L2, CV), SuSiE (susieR, L = 10), varbvs | all | all | REPORT S9: "already standard" |
+| best-subset set (S2 only) | forward stepwise, relaxed lasso, and best subset through L0Learn (Hastie et al. also use Gurobi MIO; no licence is assumed) | – | all | PAPERS.md "Hastie2020"; their R code is public (github.com/ryantibs/best-subset) |
+| Bayesian MCMC baselines | add–delete–swap MC3 (baseline), ASI (Griffin 2021), PARNI (Liang 2022), wTGS (Zanella–Roberts 2019); public code | all | **[P] not run** | REPORT S9; the Griffin/Liang/Zanella code is public (REPORT S1 "Why"). **[P]** S2 is the frequentist frame; MCMC there only if owner/HQ ask |
+| SMC precedent | Schäfer–Chopin 2013 SMC | **[P]** if the scripts can be obtained | – | REPORT S9 |
 Block E also runs the four MCMC baselines (50 runs each) for r_{A,B}. Cost: §6A.5.
 
 ## 5. Engineering prerequisites: gap list from W3-SCALE revision D to a 1M-ready engine ("v4")
@@ -361,7 +369,7 @@ this is 3–4 calendar weeks including reviews. G1, G2, G4, G5 and G12 are the e
 UNVERIFIED speed-up: without it a 1M fit still runs, through checkpointed serial islands, but takes about 10 days of
 wall time (§7).
 
-## 6. Cost model and budget (SECONDARY own-β cells; v0.3: the compute of the primary suite S1–S3 is §6A)
+## 6. Cost model and budget (SECONDARY own-β cells; v0.3/v0.4: the compute of the primary suite S1 and S2 is §6A)
 *(§6.2–§6.4 are the v0.2 planning numbers for the secondary ladder. The actual spend to date is in `LEDGER.md`: closed ≈ 6,042 core-h of the ≈ 28.3k envelope [M].)*
 
 ### 6.1 Inputs (measured unless marked)
