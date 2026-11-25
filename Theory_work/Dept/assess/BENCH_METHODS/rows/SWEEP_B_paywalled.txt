@@ -1,0 +1,2 @@
+Liang2013; Liang F; Song Q; Yu K (2013) Bayesian subset modeling for high-dimensional generalized linear models. JASA; 10.1080/01621459.2012.761942
+Ormerod2017; Ormerod JT; You C; Muller S (2017) A variational Bayes approach to variable selection. EJS; 10.1214/17-EJS1332

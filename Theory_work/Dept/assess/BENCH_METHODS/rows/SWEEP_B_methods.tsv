@@ -1,0 +1,138 @@
+paper_key	method_key	raw_name	role	location	note
+Lamnisos2013	NEW:ADAPT_MC3_GIBBS	ADMC3 and ADGibbs (adaptive selection probabilities from s^2 or inclusion frequencies m)	proposed	Sec 3-4, Tables 1-4	adaptive variable-selection probabilities in MC3 and Gibbs
+Lamnisos2013	MC3_ADS	MC3 (Madigan-York) non-adaptive	competitor	Tables 1-4	uniform selection probabilities; also the base of the proposed
+Lamnisos2013	GIBBS_GAMMA	Gibbs sampler (George-McCulloch) non-adaptive	competitor	Tables 1-4	
+Ji2013	NEW:ADAPT_PM_MIS	Adaptive Metropolized independence sampler with point-mass mixture proposal	proposed	Sec 3-4, Figs 2-6, Tables 1-2	
+Ji2013	MC3_ADS	Non-adaptive random-walk Metropolis on (beta) with spike-and-slab prior	competitor	Sec 4.1 Fig 4 Table 1	logistic regression p=10; RW Metropolis on coefficients, not an add-delete-swap on gamma
+Ji2013	NEW:AUX_VAR_GIBBS_LOGIT	Approximate auxiliary-variable Gibbs sampler for logistic regression (Holmes-Held)	competitor	Sec 4.1 Fig 2	fixed covariates, no selection
+Ji2013	NEW:LIANG2006_KERNEL_MCMC	Liang et al. (2006) MCMC for Bayesian kernel regression variable selection	competitor	Sec 4.2 Fig 5 Table 2	
+Ji2013	NEW:LUCAS2006_MCMC	Lucas (2006) precomputed-proposal MCMC for Gibbs random field model selection	competitor	Sec 4.3 Fig 6	
+Carvalho2010	HORSESHOE	Horseshoe prior	proposed	Sec 4 Tables 2-5	normal means; posterior mean and thresholding
+Carvalho2010	GLOBAL_LOCAL_OTHER	Double-exponential (Bayesian lasso-type) and normal-exponential-gamma priors	competitor	Sec 4.1 Table 4	normal means
+Carvalho2010	NEW:EB_MIXTURE_JS04	Empirical-Bayes point-mass plus double-exponential mixture, posterior median (Johnstone-Silverman 2004)	competitor	Sec 4.1 Table 4	normal means
+Carvalho2010	NEW:TWOGROUP_SB_MIXTURE	Discrete-mixture Strawderman-Berger two-groups posterior probabilities	gold	Tables 2-3 (thresholding rule)	reference posterior probabilities for the horseshoe weights
+Carvalho2010	LASSO	Graphical-lasso style neighbourhood selection (Meinshausen-Buhlmann AND/OR)	competitor	Sec 4.2 Table 5	covariance estimation from Vanguard data, n=86 p=59
+Carvalho2010	NEW:FINCS_BMA	Bayesian model averaging over Gaussian graphical models with feature-inclusion stochastic search	competitor	Sec 4.2 Table 5	used as the benchmark
+Bhattacharya2015	GLOBAL_LOCAL_OTHER	Dirichlet-Laplace prior (DL, a=1/n and a=1/2)	proposed	Sec 4 Tables 1-2	normal means
+Bhattacharya2015	GLOBAL_LOCAL_OTHER	Bayesian lasso (BL)	competitor	Sec 4 Tables 1-2	normal means; same key as proposed, kept separate by role
+Bhattacharya2015	HORSESHOE	Horseshoe (HS)	competitor	Sec 4 Tables 1-2	
+Bhattacharya2015	LASSO	Lasso (LS)	competitor	Sec 4 Table 1	
+Bhattacharya2015	NEW:EB_MEDIAN	Empirical Bayes median (EBMed, Johnstone-Silverman)	competitor	Sec 4 Table 1	
+Bhattacharya2015	NEW:POINTMASS_PRIOR_MEDIAN	Point-mass spike-and-slab posterior median (PM)	competitor	Sec 4 Table 1	normal means
+Bondell2012	NEW:BCR	Penalized credible regions (joint and marginal credible sets)	proposed	Sec 4 Tables 1-5	
+Bondell2012	GIBBS_GAMMA	SSVS (4 fixed/random hyperparameter versions)	competitor	Sec 4.1 Tables 1-2 Figs 1-2	only run for p=50 and p=500; infeasible at p=2000
+Bondell2012	LASSO	Lasso	competitor	Sec 4.1 Tables 1-2 Fig 3; Sec 4.2 Table 3	
+Bondell2012	ADALASSO	Adaptive lasso	competitor	Sec 4.1 Table 1	p=50 only
+Bondell2012	DANTZIG	Dantzig selector	competitor	Sec 4.1 Tables 1-2 Fig 3	
+Bondell2012	FSTEP	Forward selection	competitor	Sec 4.1 Table 1	p=50 only
+Bondell2012	SCAD	SCAD (BIC tuning)	competitor	Sec 4.2 Table 3	p=50 consistency comparison
+Bondell2012	SIS	SIS + SCAD	competitor	Sec 4.2 Table 4; Sec 5 Table 5	p=10000 sims and real 22575 genes
+Hahn2015	NEW:DSS	Decoupling shrinkage and selection (adaptive-lasso surrogate path)	proposed	Sec 3-4 examples, Tables 1-2, Figs 1-5	real data only
+Hahn2015	HORSESHOE	Horseshoe prior posterior fed to DSS (DSS-HS)	variant	US crime example Table 1; diabetes Fig 4	prior used inside the proposed summary
+Hahn2015	BAS	BAS package HPM and MPM (robust and g-priors)	competitor	US crime Table 1; diabetes example	MPM/HPM comparison against DSS
+Hahn2015	GIBBS_GAMMA	Gibbs search over models (Garcia-Donato and Martinez-Beneito)	competitor	Diabetes example	MPM under Gibbs search
+Rossell2017	NLP_MOMBF	pMOM and piMOM nonlocal priors with mombf Gibbs and birth-death search	proposed	Sec 5 Figs 4-6 Table 3	
+Rossell2017	BMS	bms (BMS 0.3.3) with benchmark (BRIC) and hyper-g priors	competitor	Sec 5.2 Figs 4-6; Table 3	local priors; run with Beta-Binomial model prior
+Rossell2017	LASSO	LASSO (10-fold CV, parcor mylars)	competitor	Sec 5.2 Figs 4-6; Table 3	
+Rossell2017	SCAD	SCAD (10-fold CV, ncvreg)	competitor	Sec 5.2 Figs 4-6; Table 3	
+Piironen2017	NEW:REG_HORSESHOE	Regularized horseshoe (finite slab) with sparsity-informed tau prior	proposed	Sec 4.1-4.2, Figs 5-10	fitted in Stan
+Piironen2017	HORSESHOE	Original horseshoe (Stan)	competitor	Sec 4.1.1 toy example; Sec 4.2 Fig 10	
+Piironen2017	LASSO	Lasso (glmnet, 10-fold CV) baseline	competitor	Sec 4.2 Fig 10	real data logistic classification only
+Bhadra2017	GLOBAL_LOCAL_OTHER	Horseshoe+ prior	proposed	Sec 5.1 Table 2; Sec 5.2 Fig 6	normal means
+Bhadra2017	HORSESHOE	Horseshoe (Stan, two tau priors)	competitor	Sec 5.1 Table 2; Sec 5.2 Fig 6; Sec 6 Table 3	
+Bhadra2017	GLOBAL_LOCAL_OTHER	Dirichlet-Laplace prior	competitor	Sec 5.1 Table 2; Sec 5.2 Fig 6	same key as proposed, separated by role
+Zhang2022	GLOBAL_LOCAL_OTHER	R2-D2 prior (marginal and conditional versions)	proposed	Sec 6 Tables 2-6; Sec 7 Table 7	
+Zhang2022	HORSESHOE	Horseshoe (R package horseshoe)	competitor	Sec 6 Tables 2-7	
+Zhang2022	GLOBAL_LOCAL_OTHER	Horseshoe+ (Stan), Dirichlet-Laplace (dlbayes), Normal-Beta-Prime (NormalBetaPrime)	competitor	Sec 6 Tables 2-7	three other global-local priors collapsed into one row
+Huang2016	VB_OTHER	VB Algorithm 1 (component-wise) and Algorithm 2 (batch-wise) spike-and-slab	proposed	Sec 4-5, Tables 1-7	not the Carbonetto-Stephens updates
+Huang2016	LASSO	Lasso	competitor	Sec 4.1-4.3 Tables 1-6; Sec 5 Table 7	
+Huang2016	SCAD	SCAD	competitor	Sec 4.1 Table 1	low-dimensional benchmark only
+Huang2016	RIDGE	Ridge regression	competitor	Sec 5 Table 7	Boston housing
+Moran2019	SSLASSO	Spike-and-slab lasso with unknown variance, scaled SSL	proposed	Sec 6.6 Table 1	
+Moran2019	SSLASSO	SSL with fixed sigma^2 (Rockova-George 2018), sigma^2=3 and sigma^2=1	competitor	Sec 6.6 Table 1	same key as proposed; separated by role
+Moran2019	LASSO	Lasso (glmnet)	competitor	Sec 6.6 Table 1; Sec 6.7	
+Moran2019	SQRT_LASSO	Scaled lasso (Sun-Zhang)	competitor	Sec 6.6 Table 1	
+Moran2019	ADALASSO	Adaptive lasso	competitor	Sec 6.6 Table 1	
+Moran2019	SCAD	SCAD	competitor	Sec 6.6 Table 1	
+Moran2019	MCP	MCP (two implementations)	competitor	Sec 6.6 Table 1	
+Bai2022	NEW:SSGL	Spike-and-slab group lasso (MAP/EM)	proposed	Sec 7 Figs; App B	grouped regression
+Bai2022	NEW:GROUP_LASSO	Group lasso	competitor	Sec 7; Sec 8 Table 2	
+Bai2022	NEW:BSGS	Bayesian sparse group selection (BSGS)	competitor	Sec 7	
+Bai2022	NEW:SOFTBART	SoftBART	competitor	Sec 7	nonparametric additive settings
+Bai2022	RF_ML	Random forests	competitor	Sec 7	
+Bai2022	NEW:SUPERLEARNER	SuperLearner	competitor	Sec 7	
+Bai2022	NEW:GROUP_SPIKE_POINTMASS	GroupSpike point-mass group spike-and-slab via MCMC	competitor	Sec 7 footnote	
+Deshpande2019	NEW:MSSL	Multivariate spike-and-slab lasso (mSSL-DPE and mSSL-DCPE)	proposed	Sec 3.2 Tables 1-4	multivariate response
+Deshpande2019	LASSO	Separate lasso per outcome then glasso (Sep.L+G)	competitor	Sec 3.2 Tables 1-4	
+Deshpande2019	SSLASSO	Separate SSL per outcome plus SSG (Sep.SSL+SSG)	competitor	Sec 3.2 Tables 1-4	
+Deshpande2019	NEW:MRCE	MRCE (Rothman et al. 2010)	competitor	Sec 3.2 Tables 1-4	
+Deshpande2019	NEW:CAPME	CAPME (Cai et al. 2013)	competitor	Sec 3.2 Tables 1-4	
+Nishimura2023	NEW:PRIOR_PRECOND_CG_GIBBS	Prior-preconditioned CG within Gibbs sampler (Bayesian bridge prior)	proposed	Sec 3, Sec 4, Supp S5-S6	logistic regression
+Nishimura2023	NEW:DIRECT_CHOLESKY_GIBBS	Gibbs sampler with direct Cholesky draw of beta	competitor	Sec 3-4; Supp S6	same target; compares runtime and ESS only
+Ray2020	VB_OTHER	VB (Lap): variational Bayes with Laplace slab, logistic regression	proposed	Sec 5 Table 1; Supp Tables 3-4	
+Ray2020	VB_OTHER	VB (Gauss): Gaussian-slab variational Bayes	variant	Sec 5 Table 1	
+Ray2020	VARBVS	varbvs	competitor	Sec 5 Table 1; Supp Sec 8.2	
+Ray2020	SKINNY	SkinnyGibbs	competitor	Sec 5 Table 1; Supp Sec 8.2	did not finish at p=5000
+Ray2020	EMVS	BinaryEMVS	competitor	Sec 5 Table 1; Supp Sec 8.2	binary-response EMVS
+Ray2020	NEW:BHGLM	BhGLM (EM for mixture of Laplace priors)	competitor	Sec 5 Table 1	
+Ray2020	HORSESHOE	rstanarm horseshoe (HMC)	competitor	Sec 5 Table 1	
+Kowal2022	NEW:BBA_ACCEPTABLE_FAMILY	Branch-and-bound search over acceptable family of subsets (Smin, Ssmall)	proposed	Sec 3 Figs 1-2 Table 1	
+Kowal2022	NEW:DSS	Adaptive-lasso search over Bayes decision subsets (Hahn-Carvalho DSS), lasso(bayes)	competitor	Sec 3 Fig 1	
+Kowal2022	FSTEP	Forward and backward search under same Bayesian model	competitor	Sec 3 Fig 1	
+Kowal2022	HORSESHOE	Horseshoe regression model as base predictive model; post.mean estimate	competitor	Sec 3 Fig 1	used as reference model and as no-selection baseline
+Kowal2022	ADALASSO	Adaptive lasso (CV, 1se)	competitor	Sec 3 Fig 1 Table 1	
+Kowal2022	STEPWISE_IC	Classical subset selection with AIC (leaps; screened to 35 when p>35)	competitor	Sec 3 Fig 1 Table 1	forward and backward also run
+Kowal2022	NEW:POSTERIOR_HPD_SELECTION	Posterior 95 percent HPD interval excludes zero	competitor	Sec 3 Table 1	
+Martin2017	NEW:EB_FRACTIONAL_POSTERIOR	Empirical Bayes fractional posterior with Rao-Blackwellized MH over S	proposed	Sec 4 Tables 1-3	
+Martin2017	BASAD	BASAD and BASAD.BIC	competitor	Sec 4.2 Tables 1-3	COPIED from Narisetty-He 2014, not rerun
+Martin2017	NEW:BCR	BCR.Joint (Bondell-Reich credible region)	competitor	Sec 4.2 Tables 1-3	COPIED from Narisetty-He 2014, not rerun
+Martin2017	SPIKESLAB_IR	SpikeSlab (Ishwaran-Rao)	competitor	Sec 4.2 Tables 1-3	COPIED from Narisetty-He 2014, not rerun
+Martin2017	LASSO	Lasso.BIC	competitor	Sec 4.2 Tables 1-3	COPIED from Narisetty-He 2014, not rerun
+Martin2017	ENET	EN.BIC	competitor	Sec 4.2 Tables 1-3	COPIED from Narisetty-He 2014, not rerun
+Martin2017	SCAD	SCAD.BIC	competitor	Sec 4.2 Tables 1-3	COPIED from Narisetty-He 2014, not rerun
+Chen2016	NEW:PMTM	Paired-move multiple-try Metropolis (pMTM, ada-pMTM, pRNS)	proposed	Sec 3-4, Tables 1-5	
+Chen2016	GIBBS_GAMMA	Random-scan and systematic-scan Gibbs on gamma	competitor	Sec 4.1; Sec 4.2 Tables 1-4	
+Chen2016	EMVS	EMVS	competitor	Sec 4.2 Tables 1-5	
+Chen2016	LASSO	Lasso	competitor	Sec 4.2 Tables 1-5	
+Chen2016	ADALASSO	Adaptive lasso	competitor	Sec 4.2 Tables 1-5	
+Chen2016	SCAD	SCAD	competitor	Sec 4.2 Tables 1-5	
+Truong2023	NEW:VC_WTGS	Variable-complexity weighted tempered Gibbs sampler	proposed	Sec 4 Figs 1-5	
+Truong2023	WTGS	Subset wTGS (Jankowiak)	competitor	Sec 4.1-4.2 Fig 5	variance of Rao-Blackwellized PIP estimator
+Chung2026	NEW:SYM_RANDOM_SCAN_COLLAPSED_GIBBS	Symmetric random-scan collapsed Gibbs with data-informed proposal weights	proposed	Sec 4 Table 1; Sec 5 Table 2	no competitor run
+vandenBergh2026	NEW:STICKY_PDMP	Sticky PDMP samplers (ZigZag, Bouncy Particle, Boomerang) for spike-and-slab	proposed	Sec 4 simulations	
+vandenBergh2026	RJMCMC	Reversible-jump MCMC in NIMBLE	competitor	Sec 4 simulations (RI-CLPM, OMRF p=10)	condition-matched reference
+Duan2026	NEW:DC_MARGINAL_LIKELIHOOD	Difference-of-convex optimization of negative log marginal likelihood	proposed	Sec 3.1 Fig 2; Sec 3.2 Fig 4	
+Duan2026	NEW:ARD_EM	EM for automatic relevance determination (Tipping 2001)	competitor	Sec 3.1 Fig 2	iterations to convergence only
+Duan2026	NEW:PGD_MARGINAL_LIKELIHOOD	Projected gradient descent on same loss	competitor	Sec 3.1 Fig 2	
+vandenBergh2026b	NEW:MOMS	Mixtures of mutually singular distributions (MoMS) sampler	proposed	Sec 2.5.1 diabetes p=10; Sec 3-4 applications	
+vandenBergh2026b	RJMCMC	Carefully engineered RJMCMC	competitor	Sec 2.5.1	ESS per second
+vandenBergh2026b	NEW:ENUMERATION_EXACT	Full model enumeration	gold	Sec 2.5.1	exact PIPs at p=10
+Bsila2025	NEW:ALPHAVB	AlphaVB (CAVI) and AlphaSVB (stochastic) Renyi alpha-divergence VB with spike-and-slab Laplace prior	proposed	Sec 5.2 Table 3; Sec 5.3 Table 4	
+Bsila2025	LASSO	Lasso (glmnet, k-fold CV)	competitor	Sec 5.2 Table 3	
+Bsila2025	VB_OTHER	sparsevb (Ray-Szabo)	competitor	Sec 5.2 Table 3	
+Bsila2025	VARBVS	varbvs	competitor	Sec 5.2 Table 3	
+Bsila2025	SPIKESLAB_IR	spikeslab package	competitor	Sec 5.2 Table 3	
+Yang2025	NEW:COXPH_SUSIE	CoxPH-SuSiE (gIBSS)	proposed	Sec 5 simulations; Sec 6 asthma	survival outcomes
+Yang2025	SUSIE	SuSiE-RSS approach	competitor	Sec 5	summary-statistics approach to TTE data
+Yang2025	NLP_MOMBF	BVSNLP (nonlocal priors with screening and MCMC)	competitor	Sec 5	BVSNLP uses piMOM-type nonlocal priors; not mombf itself
+Yang2025	NEW:R2BGLIMS	R2BGLiMS (MCMC BVS for GLMs, Weibull model)	competitor	Sec 5	
+Yang2025	VB_OTHER	survival.svb (Komodromos et al.)	competitor	Sec 5	
+Yang2020	NEW:GSD	Group spike-and-diffusing (GSD) prior	proposed	Sec 5 Tables 1-6	
+Yang2020	SSS	GSD-SSS (shotgun stochastic search) and GSD-Gibbs implementations	variant	Sec 5	two samplers for the proposed posterior
+Yang2020	NEW:GROUP_LASSO	Group lasso and adaptive group lasso	competitor	Sec 5 Tables 1-6	
+Yang2020	NEW:GROUP_SCAD_MCP	Group SCAD and group MCP	competitor	Sec 5 Tables 1-6	group versions of SCAD and MCP
+Yang2020	NEW:BGL_SS	Bayesian group lasso with spike-and-slab (BGL-SS)	competitor	Sec 5 Tables 1-6	
+Yang2020	NEW:SPARSE_GROUP_LASSO	Sparse-group lasso	competitor	Sec 5 Tables 5-6	bi-level designs only
+Atchade2023	NEW:ASYNC_GIBBS	Asynchronous approximate MCMC (Algorithm 2)	proposed	Sec 4	
+Atchade2023	NEW:EXACT_GIBBS_SPIKESLAB	Exact spike-and-slab MCMC (Algorithm 1)	variant	Sec 4.1 Figs 1-3	reference exact sampler
+Atchade2023	VB_OTHER	Mean-field variational approximation fit by SGD (own implementation)	competitor	Sec 4 logistic example	
+Zhang2018	NEW:PCR_DL	Penalized credible regions with Dirichlet-Laplace prior (also normal and Laplace priors, R2-tuned)	proposed	Sec 6 Tables 1-6	
+Zhang2018	NEW:BCR	Bondell-Reich credible region with normal prior (hyper and tune)	competitor	Sec 6 Tables 1-3	
+Zhang2018	LASSO	Lasso via LARS	competitor	Sec 6 Tables 1-3; Table 6	
+Piironen2020	NEW:PROJPRED	Projection predictive feature selection (projpred), L1 search	proposed	Sec 7 Figs 8-10, Tables 1-2	
+Piironen2020	LASSO	Lasso (glmnet), lambda_opt and lambda_1se	competitor	Sec 7.3 Fig 8; Sec 7.4 Fig 10	
+Piironen2020	RELAXED_LASSO	Lasso, relaxed	competitor	Sec 7.3 Fig 8	
+Piironen2020	ENET	Elastic net (alpha 0.7 and 0.3)	competitor	Sec 7.4 Fig 10	
+Piironen2020	RIDGE	Ridge	competitor	Sec 7.4 Fig 10	
+Piironen2020	SPIKESLAB_IR	spikeslab package (illustration)	competitor	Sec 2.3 Fig 3	n=50 p up to 50 illustration only
+Piironen2020	HORSESHOE	Regularized horseshoe reference model	variant	Sec 2.3, Sec 6	reference model for projection

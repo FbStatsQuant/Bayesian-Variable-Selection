@@ -1,0 +1,9 @@
+paper_key	method_key	reason
+Staerk2024	HBS	not run (Haiku V01; Opus re-read: comparators are MC3, MC3-swap, wTGS)
+Staerk2024	ASI	not run (Opus re-read; Griffin et al. only cited)
+Staerk2024	LIT_MH	not run (Opus re-read)
+Hahn2015	BAS	BAS used only as cross-check of HPM/MPM, no comparison column (Haiku W03; reclassified gold)
+Rockova2018	EMVS	EM implementation variant of SSL itself (Haiku W06; Opus re-read Table 1 p.~21: "Two variants of the Spike-and-Slab LASSO procedure")
+Jankowiak2023	TGS	PG-TGS is an ablation of own PG-wTGS (Haiku W22; reclassified variant)
+Yang2025	SUSIE	only own SuSiE-based approach run (Haiku W30)
+Truong2023	WTGS	comparator is subset wTGS (Jankowiak 2023), not wTGS (Opus re-read after Haiku W25)

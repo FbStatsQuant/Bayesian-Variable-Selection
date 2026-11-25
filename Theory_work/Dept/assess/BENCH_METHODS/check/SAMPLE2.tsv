@@ -1,0 +1,31 @@
+id	paper_key	method_key	claimed	raw_name	location_claimed	venue_year	doi	arxiv	local_pdf
+W01	Bottolo2010	SSS	competitor	SSS 2.0 (Hans et al 2007)	App B.3 Ex1-Ex6 (ESSi vs SSS, same number of evaluations)	BA 2010	10.1214/10-BA523	1002.2706	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Bottolo2010.pdf
+W02	GarciaDonato2013	BAS	competitor	BAS (R package; MCMC+BAS; renormalised)	Sec 4 pp 12-13	JASA 2013	10.1080/01621459.2012.742443	1101.4368	/home/fb31/Papers_local/Papers/Core_bibliography/28_2013_Garcia_Donato_Martinez_Beneito_On_Sampling_Strategies_in_Bayesian_Variable_Selection_Problems_With_Large_Model_Spaces.pdf
+W03	Hahn2015	BAS	competitor	BAS package HPM and MPM (robust and g-priors)	US crime Table 1; diabetes example	JASA 2015	10.1080/01621459.2014.993077	1408.0464	/home/fb31/SMC_Theory_Department/BENCH_METHODS_papers/Hahn2015.pdf
+W04	Ma2015	BAS	competitor	BAS	Sec 3 p 31	JASA 2015	10.1080/01621459.2014.980908	1403.2397	/home/fb31/SMC_Theory_Department/SMC_LIT/papers/Ma2015_arXiv1403.2397v2.pdf
+W05	Chen2016	EMVS	competitor	EMVS	Sec 4.2 Tables 1-5	arXiv 2016		1611.09790	/home/fb31/SMC_Theory_Department/BENCH_METHODS_papers/Chen2016.pdf
+W06	Rockova2018	EMVS	competitor	EMVS implementation	Sec 5.1	JASA 2018	10.1080/01621459.2016.1260469		/home/fb31/Papers_local/Papers/Benchmark_methods/Rockova_George_2018_SSL.pdf
+W07	Shin2018	SSS	competitor	SSS shotgun stochastic search	Sec 3.2	Stat Sinica 2018	10.5705/ss.202016.0167	1507.07106	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Shin2018.pdf
+W08	Deshpande2019	SSLASSO	competitor	Separate SSL per outcome plus SSG (Sep.SSL+SSG)	Sec 3.2 Tables 1-4	JCGS 2019	10.1080/10618600.2019.1593179	1708.08911	/home/fb31/SMC_Theory_Department/BENCH_METHODS_papers/Deshpande2019.pdf
+W09	Narisetty2019	BASAD	competitor	BASAD (full Gibbs)	Sec 4 Tables 1-3	JASA 2019	10.1080/01621459.2018.1482754		/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Narisetty2019.pdf
+W10	Narisetty2019	VARBVS	competitor	varbvs variational Bayes	Sec 4 Tables 1-3	JASA 2019	10.1080/01621459.2018.1482754		/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Narisetty2019.pdf
+W11	Zanella2019	HBS	competitor	Hamming ball sampler (Titsias-Yau)	Sec 5.1-5.3	JRSSB 2019	10.1111/rssb.12316	1805.00541	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Zanella2019.pdf
+W12	Ray2020	SKINNY	competitor	SkinnyGibbs	Sec 5 Table 1; Supp Sec 8.2	NeurIPS 2020		2010.11665	/home/fb31/SMC_Theory_Department/BENCH_METHODS_papers/Ray2020.pdf
+W13	Ray2020	VARBVS	competitor	varbvs	Sec 5 Table 1; Supp Sec 8.2	NeurIPS 2020		2010.11665	/home/fb31/SMC_Theory_Department/BENCH_METHODS_papers/Ray2020.pdf
+W14	Weissbrod2020	SUSIE	competitor	SuSiE (no functional prior)	Results: main simulations Table 1	Nat Genet 2020	10.1038/s41588-020-00735-5		
+W15	Griffin2021	PT	competitor	parallel tempering	Sec 4.1-4.4	Biometrika 2021	10.1093/biomet/asaa055	1708.05678	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Griffin2021.pdf
+W16	Griffin2021	SMC_SC	competitor	Schafer-Chopin SMC	Sec 4.2-4.4	Biometrika 2021	10.1093/biomet/asaa055	1708.05678	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Griffin2021.pdf
+W17	Biswas2022	SKINNY	competitor	Skinny Gibbs (skinnybasad R package)	Sec 3 Figs 2-4	ICML 2022		2204.01668	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Biswas2022.pdf
+W18	Liang2022	ASI	competitor	ASI (Griffin et al 2021)	Sec 5.1-5.2	Stat Comput 2022	10.1007/s11222-022-10137-8	2110.11747	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Liang2022.pdf
+W19	Ray2022	EMVS	competitor	EMVS	Sec 5.2 Table 2; Supp	JASA 2022	10.1080/01621459.2020.1847121	1904.07150	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Ray2022.pdf
+W20	Ray2022	SSLASSO	competitor	SSLASSO	Sec 5.2 Table 2; Supp	JASA 2022	10.1080/01621459.2020.1847121	1904.07150	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Ray2022.pdf
+W21	Ray2022	VARBVS	competitor	varbvs	Sec 5.2 Table 2; Supp	JASA 2022	10.1080/01621459.2020.1847121	1904.07150	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Ray2022.pdf
+W22	Jankowiak2023	TGS	competitor	PG-TGS; PG-wGS; PG-wTGS (Polya-gamma logistic versions)	Sec 7	AISTATS 2023		2208.01180	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Jankowiak2023.pdf
+W23	Jankowiak2023	WTGS	competitor	wTGS (full)	Sec 7	AISTATS 2023		2208.01180	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Jankowiak2023.pdf
+W24	Mazumder2023	SSLASSO	competitor	spike-and-slab lasso (SSLASSO R package)	Sec 5.1; Fig 4; Sec 5.2	Oper Res 2023	10.1287/opre.2022.2276	1708.03288	/home/fb31/SMC_Theory_Department/BENCH_METHODS_papers/Mazumder2023.pdf
+W25	Truong2023	WTGS	competitor	Subset wTGS (Jankowiak)	Sec 4.1-4.2 Fig 5	arXiv 2023		2304.02899	/home/fb31/SMC_Theory_Department/BENCH_METHODS_papers/Truong2023.pdf
+W26	Kim2024	SSLASSO	competitor	SSLasso	Sec 5	JMLR 2024		2208.10910	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/MrASH_arxiv.pdf
+W27	Kim2024	SUSIE	competitor	SuSiE	Sec 5	JMLR 2024		2208.10910	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/MrASH_arxiv.pdf
+W28	Kim2024	VARBVS	competitor	varbvs	Sec 5	JMLR 2024		2208.10910	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/MrASH_arxiv.pdf
+W29	Staerk2024	WTGS	competitor	adaptive wTGS via scaleBVS (frequency and R-B PIPs)	Sec 5 (p.18; Tables of acceptance rates/convergence)	BA 2024	10.1214/22-BA1351	2105.01039	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Staerk2024.pdf
+W30	Yang2025	SUSIE	competitor	SuSiE-RSS approach	Sec 5	arXiv 2025		2506.06233	/home/fb31/SMC_Theory_Department/BENCH_METHODS_papers/Yang2025.pdf

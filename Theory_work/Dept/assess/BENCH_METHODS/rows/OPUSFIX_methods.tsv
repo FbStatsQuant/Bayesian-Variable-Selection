@@ -1,0 +1,8 @@
+paper_key	method_key	raw_name	role	location	note
+Liang2022	WTGS	weighted tempered Gibbs sampler (wTGS)	competitor	Sec 5.2 (real data)	Opus fix after Haiku V41
+Staerk2024	WTGS	adaptive wTGS via scaleBVS (frequency and R-B PIPs)	competitor	Sec 5 (p.18; Tables of acceptance rates/convergence)	Opus fix after Haiku V01 re-read
+Staerk2024	BAS	BAS exact PIPs	gold	Sec 5 p.18	Opus fix after Haiku V01 re-read
+Hahn2015	BAS	BAS (HPM/MPM cross-check)	gold	diabetes example	Opus fix after Haiku W03
+Rockova2018	EMVS	EMVS-style EM implementation of SSL	variant	Table 1	Opus fix after Haiku W06
+Jankowiak2023	TGS	PG-TGS ablation	variant	Sec 7.3	Opus fix after Haiku W22
+Truong2023	NEW:SUBSET_WTGS	subset wTGS (Jankowiak 2023)	competitor	Sec 4 Fig 5	Opus fix after Haiku W25 re-read

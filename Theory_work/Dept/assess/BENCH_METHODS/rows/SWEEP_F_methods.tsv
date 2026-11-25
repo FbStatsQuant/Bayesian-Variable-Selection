@@ -1,0 +1,115 @@
+paper_key	method_key	raw_name	role	location	note
+Mazumder2011	TLP_OTHER_NONCONVEX	SparseNet (MC+ penalty; coordinate descent over gamma-lambda surface)	proposed	Sec 7; Table 1	
+Mazumder2011	TLP_OTHER_NONCONVEX	LLA and MLLA (multistage local linear approx for MC+)	competitor	Sec 7; Table 1	same MC+ criterion; different optimizer; key shared with SparseNet
+Mazumder2011	LASSO	LASSO	competitor	Sec 7; Table 1	
+Mazumder2011	FSTEP	forward-stepwise regression	competitor	Sec 7; Table 1	
+Mazumder2011	BEST_SUBSET_MIO	best-subset selection (exhaustive/leaps-type)	competitor	Sec 7; Table 1	run on small-p example S1 (exhaustive-type subset search; not MIO solver)
+Belloni2011	SQRT_LASSO	square-root lasso; post square-root lasso	proposed	Sec 5; Fig 1-2	
+Belloni2011	LASSO	infeasible lasso with known sigma; post-lasso; cv-lasso; 1-step and 2-step feasible lasso	competitor	Sec 5 and App C.3; Fig 1-2; Fig 5-6	
+Sun2012	SQRT_LASSO	scaled lasso; scaled MCP; scaled SCAD	proposed	Sec 4.1; Tables 1-2; Sec 4.2 Table 4	
+Sun2012	LASSO	lasso with cross-validation and adjusted cross-validation (lasso/LSE)	competitor	Sec 4.2; Table 3-4 real data	
+Sun2012	NEW:PMLE_STADLER	l1-penalized joint ML of (beta;sigma) (Stadler et al 2010) and its bias correction	competitor	Sec 4.1; Tables 1-2	
+Sun2012	STABSEL	stability selection (50 percent in 100 replications)	competitor	Sec 4.2 real data selection	used as reference selection on real data
+Sun2012	MCP	MCP (scaled MCP selection)	variant	Sec 4.1; Tables 1-2	
+Sun2012	SCAD	SCAD (scaled SCAD selection)	variant	Sec 4.1; Tables 1-2	
+Shen2012	NEW:TLP	truncated L1 penalty (TLP) with one-step TLP-OS	proposed	Simulations; Tables 1-2	
+Shen2012	LASSO	Lasso (glmnet)	competitor	Simulations; Tables 1-2	
+Shen2012	SCAD	SCAD and one-step SCAD-OS	competitor	Simulations; Tables 1-2	
+vandeGeer2014	DEBIASED	desparsified lasso (nodewise lasso)	proposed	Sec 4; Tables 1-10	
+vandeGeer2014	MS_SPLIT	multiple sample splitting (Meinshausen Meier Buhlmann 2009)	competitor	Sec 4.1; Tables 5-8; Tables 9-10 for logistic	
+vandeGeer2014	NEW:RESID_BOOT_ADALASSO	residual bootstrap with adaptive lasso (Chatterjee-Lahiri 2013)	competitor	Sec 4.1; Tables 1-4 intervals only	
+Zhang2014	DEBIASED	LDPE and restricted LDPE (low-dimensional projection estimator)	proposed	Sec 4; Tables 2-3; Figs 1-2	
+Zhang2014	LASSO	Lasso at universal penalty level	competitor	Sec 4; Table 2	
+Zhang2014	SQRT_LASSO	scaled Lasso and scaled Lasso-LSE	competitor	Sec 4; Table 2	
+FanSamworth2009	SIS	Van-SIS; Var1-SIS; Var2-SIS; ISIS variants then SCAD	proposed	Sec 4; Tables 1-7	
+FanSamworth2009	SCAD	SCAD after (I)SIS	variant	Sec 4; Tables 1-7	
+FanSamworth2009	LASSO	LASSO (and SIS-LASSO variants)	competitor	Sec 4; Tables 1-4	
+FanSamworth2009	NEW:NSC	nearest shrunken centroids (Tibshirani et al 2003)	competitor	Sec 4; Tables 1-4	classification setting
+Shah2013	STABSEL	complementary pairs stability selection (CPSS) with new error bounds	proposed	Sec 4.1; Fig 4-7	
+Shah2013	STABSEL	original Meinshausen-Buhlmann stability selection bound	competitor	Sec 4.1; Fig 4-7; Table 1 real data	
+Shah2013	LASSO	Lasso with oracle choice of lambda; base procedure	competitor	Sec 4.1; Fig 4-5	
+Lockhart2014	LASSO	covariance test for lasso path	proposed	Sec 5; Tables 2-4; Fig 2-4	
+Lockhart2014	FSTEP	forward stepwise RSS-drop test	competitor	Sec 5; Fig 2 and 4; Sec 7 real data Table 1	
+Lee2016	LASSO	polyhedral post-selection inference for lasso	proposed	Sec 6-7; Fig 4 and 6	
+Lee2016	MS_SPLIT	data splitting intervals (halves)	competitor	Sec 7; Fig 6 diabetes data	
+Lee2016	NEW:POSI	POSI simultaneous inference (Berk et al 2013)	competitor	Sec 7; Fig 6 diabetes data	
+GSell2016	NEW:FORWARDSTOP	ForwardStop; StrongStop; TailStop sequential FDR rules	proposed	Sec 3-5; Fig 2-8; Table 2	
+GSell2016	NEW:ALPHA_INVESTING	alpha-investing (Foster-Stine)	competitor	Sec 5.1; Fig 4; Table 2	
+GSell2016	NEW:ALPHA_THRESHOLDING	alpha-thresholding	competitor	Sec 5.1; Fig 4; Table 2	
+Xing2023	NEW:GAUSSIAN_MIRROR	Gaussian mirror (GM) with OLS and Lasso	proposed	Sec 6; Figs 3-4	
+Xing2023	KNOCKOFF	fixed-X knockoff (p<n/2); model-X knockoff known covariance; model-X estimated covariance; model-X-fix	competitor	Sec 6.1-6.2; Figs 3-4	
+Xing2023	NEW:BH_OLS	BH on OLS z-statistics (low-dim)	competitor	Sec 6.1; Fig 3	
+Xing2023	MARGINAL	BH-ma: BH on marginal regression p-values	competitor	Sec 6.2; Fig 4	
+Xing2023	MS_SPLIT	BH-ds: Lasso screen on half then OLS p-values then BH	competitor	Sec 6.2; Fig 4	single data split not multi-split
+Xing2023	LASSO	Lasso (base for knockoff and GM statistics)	competitor	Sec 6.2	
+Dai2023	NEW:DATA_SPLIT_FDR	DS and MDS (data-splitting mirror statistics)	proposed	Sec 4; Figs 3-6	
+Dai2023	KNOCKOFF	model-X knockoff filter (equi-correlated)	competitor	Sec 4.1; Figs 5-6	
+Dai2023	MS_SPLIT	MBHq: multiple-splitting BH with Lasso screen and OLS p-values (hdi)	competitor	Sec 4.1; Figs 5-6	
+Barber2019	KNOCKOFF	high-dimensional knockoff with data splitting or recycling after screening	proposed	Sec 5; Figs 3-6; Sec 6 GWAS	
+Barber2019	NEW:BH_SCREEN_OLS	screen on part of data then OLS t-tests with BH (sign-restricted)	competitor	Sec 5.2	
+Barber2019	SQRT_LASSO	selective inference for square-root lasso (Tian et al) then BH	competitor	Sec 5.2	
+Barber2019	LASSO	lasso path screening step	variant	Sec 5.2	used as screening for BH and knockoff arms
+Wang2013	NEW:CALIB_CCCP	calibrated CCCP nonconvex penalized regression with HBIC	proposed	Sec 4.1; Tables 1-4	
+Wang2013	LASSO	Lasso (glmnet; 5-fold CV)	competitor	Sec 4.1; Tables 1-2	
+Wang2013	ADALASSO	adaptive Lasso	competitor	Sec 4.1; Tables 1-2	
+Wang2013	NEW:HLASSO	hard-thresholded Lasso (HLasso) with HBIC	competitor	Sec 4.1; Tables 1-2	
+Wang2013	SCAD	SCAD from uncalibrated CCCP	competitor	Sec 4.1; Tables 1-2	
+Wang2013	MCP	MCP (PLUS package; a=1.5 and 3)	competitor	Sec 4.1; Tables 1-3	
+Fan2014	SCAD	SCAD via LLA (zero or lasso initial; 2-step recommended) and coordinate descent	proposed	Sec 4.1; Table 1	
+Fan2014	MCP	MCP via LLA and coordinate descent	proposed	Sec 4.1; Table 1	
+Fan2014	LASSO	l1 penalization (glmnet)	competitor	Sec 4.1; Table 1	
+Buhlmann2010	NEW:PC_SIMPLE	PC-simple algorithm (pcalg)	proposed	Sec 6.1; Figs 1-3; Sec 6.2	
+Buhlmann2010	LASSO	Lasso (lars)	competitor	Sec 6.1; Figs 1-2	
+Buhlmann2010	ENET	Elastic Net (elasticnet package; l1 path)	competitor	Sec 6.1; Figs 1-2	
+Buhlmann2010	ADALASSO	adaptive Lasso	competitor	Sec 6.1 second experiment; Fig 3	
+Buhlmann2010	RELAXED_LASSO	relaxed Lasso (relaxo)	competitor	Sec 6.1 second experiment; Fig 3	
+Mazumder2023	NEW:L0_SHRINK	L1+L0 and L2+L0 best-subsets with shrinkage (MIO + discrete first-order)	proposed	Sec 5.1; Figs 2-4; Sec 5.2 real data	
+Mazumder2023	BEST_SUBSET_MIO	L0 best-subsets (DFO warm start; MIO polish)	competitor	Sec 5.1; Figs 2-3	
+Mazumder2023	LASSO	L1 lasso (scikit-learn)	competitor	Sec 5.1; Figs 2-3	
+Mazumder2023	RELAXED_LASSO	relaxed lasso RL1 (Hastie-Tibshirani-Tibshirani variant); also polished lasso L1P	competitor	Sec 5.1; Fig 4 and Sec 5.2	
+Mazumder2023	RIDGE	ridge L2	competitor	Sec 5.1; Figs 2-3	
+Mazumder2023	ENET	elastic net L1+L2	competitor	Sec 5.1; Figs 2-3	
+Mazumder2023	NEW:ADAENET	adaptive elastic net AEN (gcdnet)	competitor	Sec 5.1; Fig 4	
+Mazumder2023	NEW:MNET	Mnet (MCP plus ridge)	competitor	Sec 5.1; Fig 4	
+Mazumder2023	SSLASSO	spike-and-slab lasso (SSLASSO R package)	competitor	Sec 5.1; Fig 4; Sec 5.2	
+Mazumder2023	HORSESHOE	horseshoe regression	competitor	Supplement; Sec 5.2 Fig 8	
+Mazumder2023	NEW:EBREG	ebreg empirical-Bayes regression (Martin-Mess-Walker)	competitor	Supplement; Fig 8	
+Cho2012	NEW:TCS	tilted correlation screening TCS1 TCS2	proposed	Sec 4; Tables 2-6	
+Cho2012	NEW:PC_SIMPLE	PC-simple (PCS)	competitor	Sec 4; Tables 2-5	
+Cho2012	FSTEP	forward regression FR (Wang 2009) and forward selection FS (lars)	competitor	Sec 4; Tables 2-6	
+Cho2012	LASSO	Lasso (lars)	competitor	Sec 4; Tables 2-5	
+Cho2012	SIS	ISIS (package SIS)	competitor	Sec 4; Tables 2-5	
+Cho2012	MCP	MC+ (PLUS)	competitor	Sec 4; Tables 2-6	
+Cho2012	SCAD	SCAD (LLA; package SIS)	competitor	Sec 4; Tables 2-6	
+Cho2012	NEW:FLASH	FLASH (Radchenko and James 2011)	competitor	Sec 4; Tables 2-6	
+Zou2009	NEW:ADAENET	adaptive elastic-net (AEnet) and SIS+AEnet	proposed	Sec 4; Tables 1-3	
+Zou2009	LASSO	Lasso	competitor	Sec 4; Tables 1-2	
+Zou2009	ENET	Elastic net	competitor	Sec 4; Tables 1-2	
+Zou2009	ADALASSO	adaptive lasso	competitor	Sec 4; Tables 1-2	
+Zou2009	SCAD	SCAD (also SIS+SCAD)	competitor	Sec 4; Tables 1-3	
+Zou2009	SIS	SIS preselection in SIS+AEnet	variant	Sec 5 Table 3	
+Candes2007	DANTZIG	Dantzig selector and Gauss-Dantzig	proposed	Sec 4; Tables 1-3	compared only to ideal oracle risk; no other estimator run
+Chatterjee2025	NEW:UNILASSO	uniLasso (univariate-guided lasso) and Polish variant	proposed	Sec 8; Fig 6; Table 2-3	
+Chatterjee2025	LASSO	lasso (glmnet; also matched-support lasso)	competitor	Sec 8; Fig 6; Table 2-3	
+Chatterjee2025	ADALASSO	adaptive lasso with univariate weights 1/|beta_j|	competitor	Sec 3 Table 3; Sec 8 Fig 6	
+Ren2024	KNOCKOFF	derandomized model-X knockoffs with e-BH	proposed	Sec 4; Figs 2-4; Sec 5 real data	
+Ren2024	KNOCKOFF	original model-X knockoffs (LCD statistic)	competitor	Sec 4; Figs 2-4	
+Ke2024	KNOCKOFF	knockoff with Lasso or OLS ranking; SDP vs CI augmented designs	proposed	Sec 7 Experiments 1-4; Figs 9-10	theory paper; simulations validate phase diagrams
+Ke2024	LASSO	Lasso-path ranking (prototype)	competitor	Sec 7 Experiments 1-4	
+Spector2022	KNOCKOFF	MVR and ME (maximum entropy) model-X knockoffs	proposed	Sec 4; Figs 3-6	
+Spector2022	KNOCKOFF	SDP model-X knockoffs; equicorrelated; ASDP	competitor	Sec 4; Figs 3-6	
+Spector2022	NEW:GAUSSIAN_MIRROR	Gaussian mirror	competitor	App F.3; Fig 18	rerun of Xing et al setting
+Spector2022	LASSO	lasso coefficient difference (LCD) statistic	variant	Sec 4; Figs 3-6	
+Huang2018	NEW:SDAR	SDAR/ASDAR support detection and root finding for L0	proposed	Sec 7; Table 1; Figs	
+Huang2018	LASSO	Lasso (LARS)	competitor	Sec 7; Table 1; recovery figures	
+Huang2018	MCP	MCP (Matlab implementation)	competitor	Sec 7; Table 1	
+Huang2018	FSTEP	FoBa forward-backward greedy	competitor	Sec 7; Table 1	
+Huang2018	NEW:GRADES	GraDes gradient descent with sparsification (Garg-Khandekar)	competitor	Sec 7; Table 1	
+FanTang2013	NEW:GIC	generalized information criterion with a_n=(log log n) log p	proposed	Sec 5.1; Figs 1-2; Sec 5.2	
+FanTang2013	STEPWISE_IC	BIC (a_n=log n) and AIC and a_n=log p tuning criteria	competitor	Sec 5.1; Figs 1-2	tuning-selection criteria applied on penalized paths
+FanTang2013	LASSO	Lasso path (coordinate descent)	variant	Sec 5.1; Figs 1-2	base estimator for tuning comparison
+FanTang2013	SCAD	SCAD path	variant	Sec 5.1; Figs 1-2	base estimator for tuning comparison
+FanTang2013	ADALASSO	re-weighted adaptive Lasso	variant	Sec 5.1; Figs 1-2	base estimator for tuning comparison
+Li2012	NEW:DCSIS	DC-SIS distance-correlation sure independence screening	proposed	Sec 4; Tables 1-5	
+Li2012	SIS	SIS (Fan-Lv Pearson)	competitor	Sec 4 Example 1-2; Tables 1-2	
+Li2012	NEW:SIRS	SIRS sure independence ranking and screening (Zhu et al 2011)	competitor	Sec 4 Example 1-2; Tables 1-2	

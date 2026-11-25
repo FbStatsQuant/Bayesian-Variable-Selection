@@ -1,0 +1,345 @@
+paper_key	method_key	raw_name	role	location	note
+GeorgeMcCulloch1993	GIBBS_GAMMA	SSVS	proposed	Sec 4 Ex4.1-4.2 Tables 1-2; Sec 5 Ex5.1-5.3	4-6 tuning settings (c_i; tau_i) compared with each other only
+GeorgeMcCulloch1993	STEPWISE_IC	all-subsets regression; backward elimination; stepwise regression; Cp	competitor	Sec 5 Ex5.1 Hald (Table 3); Ex5.3 bank (Tables 5-6)	informal comparison of selected models on real data only; no simulation competitors
+GeorgeMcCulloch1993	FSTEP	forward selection	competitor	Sec 5 Ex5.1 Hald; Ex5.3 bank	informal real-data comparison
+Hans2007	SSS	SSS shotgun stochastic search	proposed	Sec 4.2-4.5 Figs 1,3,4; Sec 5	
+Hans2007	MC3_ADS	MC3 (Madigan-York); fixed-dimensional Metropolis	competitor	Sec 4.2 Fig 1 (equal model evaluations); Sec 4.5 Fig 4	Metropolis fixed-size comparison in orthogonal case Sec 4.5
+Hans2007	GIBBS_GAMMA	one-at-a-time Gibbs sampler	competitor	Sec 4.2 Fig 1	
+Bottolo2010	ESS	ESS (ESSi independent prior; ESSg g-prior)	proposed	Sec 4.1-4.2; App B.1-B.3	
+Bottolo2010	SSS	SSS 2.0 (Hans et al 2007)	competitor	App B.3 Ex1-Ex6 (ESSi vs SSS, same number of evaluations)	
+Bottolo2010	MC3_ADS	MC3 add/delete/swap used as local move inside ESS	variant	Sec 3.3; App B.1 (FSMH vs MC3 local moves)	ablation of the local move
+Clyde2011	BAS	BAS (eplogp; uniform; RST-MC; RST-RM initial inclusion probs)	proposed	Sec 4 Tables 1-2; Sec 5-6 Table 3	simulation p=15 (enumerable); real data p=88
+Clyde2011	MC3_ADS	MC3 (add/delete); RS random-swap; RS-Thin	competitor	Sec 4 Tables 1-2; Sec 5 US crime; Sec 6 protein Table 3	Monte-Carlo and re-normalised estimators for each
+Clyde2011	NEW:SRSWOR	SRSWOR simple random sampling without replacement of models	competitor	Sec 4 Tables 1-2	uniform random sampling of models without replacement
+GuanStephens2011	PIMASS	BVSR via piMASS MCMC	proposed	Sec 5.1-5.8	real genotypes with simulated phenotypes up to p=5.5e5; real CRP data p=530691
+GuanStephens2011	MARGINAL	single-SNP Bayes factors / single-SNP analyses	competitor	Sec 5	
+GuanStephens2011	LASSO	LASSO (lars package)	competitor	Sec 5 prediction simulation	
+Carbonetto2012	VARBVS	varbvs variational approximation	proposed	Sec 5.1-5.2 Tables 1-4; Sec 6	
+Carbonetto2012	MC3_ADS	MCMC with birth/death Metropolis-Hastings steps on gamma (appendix)	gold	Sec 5.2 Tables 1-3; Sec 6	reference for variational accuracy; exact enumeration also used for small p
+Schafer2013	SMC_SC	SMC with logistic conditional proposal	proposed	Sec 6.1-6.5 Figs 3-8 Tables 3-8	real-data design only (Boston p=104; concrete p=79; protein p=88); no synthetic p grid
+Schafer2013	GIBBS_GAMMA	metropolised Gibbs MCMC (Liu 1996; bit-flip count truncated geometric mean 2)	competitor	Sec 6.1-6.5	
+Schafer2013	NEW:ADAPT_MCMC_NK	Adaptive MCMC of Nott and Kohn (2005)	competitor	Sec 6.1-6.5	adaptive independence/Gibbs sampler on gamma
+Rockova2014	EMVS	EMVS (and DAEMVS)	proposed	Sec 4-5 Table 1; Sec 7.3; Sec 8	beta-binomial vs independent-logistic vs MRF priors compared within EMVS
+Rockova2014	MC3_ADS	MH stochastic search (one-step random-scan proposal) on marginal posterior of gamma	competitor	Sec 4.3	v0=0, v1=1000; no lasso/SCAD comparison
+SongLiang2015	SAM	SAM split-and-merge	proposed	Sec 3-5; Tables 1-2; Figs 1-5	
+SongLiang2015	LASSO	lasso glmnet 10-fold CV; SIS-lasso; ISIS-lasso	competitor	Sec 4.2 Table 2 (massive example); Sec 5.1-5.2	SIS-lasso/ISIS-lasso only on real data
+SongLiang2015	ENET	elastic net glmnet 10-fold CV	competitor	Sec 4.2 Table 2	
+SongLiang2015	SIS	SIS-SCAD; ISIS-SCAD (R package SIS)	competitor	Sec 4.2 Table 2; Sec 5.1-5.2	SCAD used as second stage; SCAD alone not run
+SongLiang2015	HORSESHOE	horseshoe prior via Gibbs sampler	competitor	Supplement S4	tried at P_n=500000 (about 24 h for a couple of iterations); remark in Sec 7
+Yang2016	MC3_ADS	random-walk add-delete-swap Metropolis-Hastings (analysed algorithm)	proposed	Sec 3.4 Tables 1-2 Figs 1-2	theory paper; the studied sampler is the main object
+Yang2016	LASSO	lasso (CV)	competitor	Sec 3.4 (Sigma_bad design, p=80)	
+Titsias2017	HBS	Hamming ball sampler HB1-3 (radius m=1-3; K=10)	proposed	Sec 2.2 Fig 3; Sec 4.2	SI D.1-D.3 not available in the PDF read
+Titsias2017	GIBBS_GAMMA	block Gibbs samplers BG1-3	competitor	Sec 2.2 Fig 3; Sec 4.2	
+Narisetty2019	SKINNY	Skinny Gibbs	proposed	Sec 4 Tables 1-3; Sec 5.1-5.2	
+Narisetty2019	BASAD	BASAD (full Gibbs)	competitor	Sec 4 Tables 1-3	
+Narisetty2019	NEW:BSR	BSR Bayesian subset regression (Liang et al 2013)	competitor	Sec 4 Tables 1-3	
+Narisetty2019	VARBVS	varbvs variational Bayes	competitor	Sec 4 Tables 1-3	
+Narisetty2019	ADALASSO	adaptive lasso	competitor	Sec 4 Tables 1-3	
+Narisetty2019	SCAD	SCAD	competitor	Sec 4 Tables 1-3	
+Narisetty2019	MCP	MCP	competitor	Sec 4 Tables 1-3	
+Zanella2019	TGS	TGS tempered Gibbs sampler	proposed	Sec 5.1 Fig 4; Sec 5.2 Tables 1-2; Sec 5.3 Fig 6	
+Zanella2019	WTGS	wTGS weighted tempered Gibbs sampler	proposed	Sec 5.1-5.3	
+Zanella2019	GIBBS_GAMMA	Gibbs sampler (Metropolised)	competitor	Sec 5.1-5.3	
+Zanella2019	HBS	Hamming ball sampler (Titsias-Yau)	competitor	Sec 5.1-5.3	
+Griffin2021	ASI	ASI adaptively scaled individual (also EIA and multi-chain versions)	proposed	Sec 4.1 Table 1; Sec 4.2-4.4	EIA = exploratory individual adaptation, ablation of ASI
+Griffin2021	MC3_ADS	add-delete-swap MH (also LASSO-initialised ADS)	competitor	Sec 4.1 Table 1; Sec 4.2-4.4	
+Griffin2021	PT	parallel tempering	competitor	Sec 4.1-4.4	
+Griffin2021	HBS	Hamming ball sampler	competitor	Sec 4.1-4.4	
+Griffin2021	SMC_SC	Schafer-Chopin SMC	competitor	Sec 4.2-4.4	
+Griffin2021	NEW:ADAPT_JI_SCHMIDLER	Ji-Schmidler adaptive MCMC	competitor	Sec 4.1-4.4	adaptive Metropolis-Hastings on gamma
+Wan2021	ASI	ASI-DA; ASI-Laplace; ASI-CPM (logistic and AFT models)	proposed	Sec 4 Tables 1-4	
+Wan2021	MC3_ADS	ADS-DA; ADS-Laplace; ADS-CPM add-delete-swap	competitor	Sec 4 Tables 1-4	Polya-gamma, Laplace and correlated pseudo-marginal variants of the likelihood
+Biswas2022	NEW:S3_SPIKESLAB	S3 scalable spike-and-slab Gibbs sampler	proposed	Sec 2.3 Fig 1; Sec 3 Figs 2-4; Sec 4 Table 2	
+Biswas2022	GIBBS_GAMMA	SOTA exact Gibbs samplers (Bhattacharya 2016 style; Polya-gamma)	competitor	Sec 3 Figs 2-4; Sec 4 Table 2	Gibbs on continuous spike-and-slab; closest key
+Biswas2022	SKINNY	Skinny Gibbs (skinnybasad R package)	competitor	Sec 3 Figs 2-4	
+Liang2022	PARNI	PARNI-KW; PARNI-RM	proposed	Sec 5.1 Table 1; Sec 5.2 Tables 2-3	
+Liang2022	MC3_ADS	Add-Delete-Swap	competitor	Sec 5.1-5.2	
+Liang2022	ASI	ASI (Griffin et al 2021)	competitor	Sec 5.1-5.2	
+Liang2022	WTGS	weighted tempered Gibbs sampler	gold	Sec 5.1-5.2	gold-standard PIPs
+Zhou2022	LIT_MH	LIT-MH-1; LIT-MH-2 (proposed) and LB-MH-1; LB-MH-2 (Zanella locally balanced)	proposed	Sec 5 Table 1; Sec 6 Tables 3-4	LB-MH is a competitor informed proposal under the same key
+Zhou2022	MC3_ADS	RW-MH random-walk MH	competitor	Sec 5 Tables 1-2; Sec 6	
+Jankowiak2023	NEW:SUBSET_WTGS	Subset wTGS (anchor set A)	proposed	Sec 7.1-7.4 Figs 1-5	
+Jankowiak2023	WTGS	wTGS (full)	competitor	Sec 7	infeasible beyond moderate P
+Jankowiak2023	TGS	PG-TGS; PG-wGS; PG-wTGS (Polya-gamma logistic versions)	competitor	Sec 7	
+Jankowiak2023	ASI	ASI (Griffin); Wan-Griffin for PG	competitor	Sec 7	not competitive
+Liang2023	PARNI	PARNI-adaptiveALA; PARNI-LA; PARNI-ALA; PARNI-DA; PARNI-CPM	proposed	Sec 5.1 Fig 1; Sec 5.2 Tables 1-2; Sec 5.3 Tables 3-4	
+Liang2023	MC3_ADS	ADS (thinned); ADS-DA; ADS-CPM	competitor	Sec 5.1-5.3	
+Staerk2024	NEW:MADASUB	MAdaSub serial and parallel	proposed	Sec 5.1-5.3 Table 1; Sec 6.1-6.2	
+Staerk2024	MC3_ADS	add-delete-swap MC3	competitor	Sec 5.1-5.3	
+Staerk2024	ASI	ASI / AdaptMC (Griffin 2021)	competitor	Sec 5.1-5.3	
+Staerk2024	LIT_MH	locally informed sampler (Zanella)	competitor	Sec 5.1-5.3	
+Staerk2024	HBS	Hamming ball sampler	competitor	Sec 5.1-5.3	
+Ishwaran2005	SPIKESLAB_IR	Zcut rescaled spike-and-slab (alpha=0.10); svsForwd	proposed	Sec 7 Table 1; Sec 8 Table 2	svsForwd is a forward ordering by posterior mean (variant)
+Ishwaran2005	NEW:OLS_HARD	OLS-hard thresholding of OLS Z statistics	competitor	Sec 7-8	
+Ishwaran2005	FSTEP	OLSForwd forward OLS ordering	competitor	Sec 8 Table 2	
+Liang2008	BVS_GPRIOR_OTHER	hyper-g (a=3,4); Zellner-Siow (ZS-N, ZS-F); also fixed-g BRIC and EB-local/EB-global as comparison priors	proposed	Sec 5 Table 1; Sec 6.1-6.2 Tables 2-3	exact enumeration at p=15
+Liang2008	STEPWISE_IC	AIC; BIC model selection (all subsets)	competitor	Sec 5 Table 1; Sec 6	oracle OLS and full OLS also reported as references
+Scott2010	NEW:MULTIPLICITY_PRIOR	fully Bayes uniform prior on inclusion probability p; empirical-Bayes p-hat	proposed	Sec 6.1-6.4 Table 3 Figs 3-5	model-prior comparison; enumerated simulations with m=14; Table 1 grid m up to 100
+Scott2010	NEW:FIXED_INCL_PRIOR	uncorrected fixed-p=1/2 prior; oracle Bayes	competitor	Sec 6.1-6.4	oracle Bayes is a reference using the true p
+Johnson2012	NLP_MOMBF	pMOM (r=1,2); piMOM (mombf)	proposed	Sec 4 Figs 2-4	p=n grid up to 500
+Johnson2012	NEW:INTRINSIC_PRIOR	intrinsic prior (Casella et al 2009)	competitor	Sec 4	
+Johnson2012	NEW:BIC_MODEL_PROB	BIC-based model posterior probabilities	competitor	Sec 4	asymptotic approximation to the intrinsic prior
+Johnson2012	SCAD	SCAD (ncvreg)	competitor	Sec 4 Fig 4	
+Johnson2012	LASSO	LASSO (parcor; 10-fold CV)	competitor	Sec 4 Fig 4	
+Zhou2013	BAYES_GWAS	BSLMM (GEMMA); BSLMM-EB	proposed	Results: Simulations PVE and Phenotype Prediction; WTCCC; HS mice Tables 3-4	
+Zhou2013	NEW:LMM_BLUP	LMM (GCTA-like); LMM-Bayes	competitor	Results: Simulations; HS mice	
+Zhou2013	PIMASS	BVSR (Guan-Stephens)	competitor	Results: Simulations; HS mice	
+Zhou2013	GLOBAL_LOCAL_OTHER	Bayesian Lasso (R package BLR)	competitor	Results: HS mice (Fig 4; Table 4)	
+Zhou2013	BAYES_GWAS	BayesC (GenSel); BayesA-Flex	competitor	Results: HS mice (Fig 4)	BayesC/BayesA are genomic-prediction mixture priors
+Narisetty2014	BASAD	BASAD (median probability model); BASAD.BIC	proposed	Sec 8 Tables 1-6; Sec 9 Fig 1	
+Narisetty2014	NLP_MOMBF	piMOM (Johnson-Rossell 2012)	competitor	Sec 8 Tables 1-6	only run for p<=n
+Narisetty2014	NEW:BCR	BCR.Joint (Bondell-Reich 2012)	competitor	Sec 8 Tables 1-6	
+Narisetty2014	SPIKESLAB_IR	SpikeSlab (Ishwaran-Rao 2005)	competitor	Sec 8 Tables 1-6	
+Narisetty2014	LASSO	Lasso.BIC	competitor	Sec 8 Tables 1-6	BIC tuning
+Narisetty2014	ENET	EN.BIC	competitor	Sec 8 Tables 1-6	BIC tuning
+Narisetty2014	SCAD	SCAD.BIC	competitor	Sec 8 Tables 1-6	BIC tuning
+Moser2015	BAYES_GWAS	BayesR	proposed	Results: simulated data using real genotypes Figs 1-3	
+Moser2015	BAYES_GWAS	BSLMM (GEMMA)	competitor	Results: simulated data Figs 1-3	
+Moser2015	NEW:LMM_BLUP	LMM	competitor	Results: simulated data	
+Moser2015	NEW:GPRS	GPRS genomic profile risk score	competitor	Results: prediction AUC	
+Moser2015	MARGINAL	single-SNP GWAS	competitor	Results: simulated data	
+Bhattacharya2016	HORSESHOE	horseshoe prior with fast Gaussian sampler (posterior mean and median)	proposed	Sec 2-3 Figs 1-2 Table 1	sampler timing compared with the standard exact sampler at p=500 and 5000
+Bhattacharya2016	SCAD	SCAD (ncvreg 10-fold CV)	competitor	Sec 3 Table 1	
+Bhattacharya2016	MCP	MCP (ncvreg 10-fold CV)	competitor	Sec 3 Table 1	
+Bhattacharya2016	DEBIASED	debiased-lasso intervals (van de Geer 2014; Javanmard-Montanari 2014)	competitor	Sec 3 Table 1 (coverage)	
+Papaspiliopoulos2017	NEW:COOLBLOCK	Coolblock block-diagonal model search	proposed	Sec 5.1-5.5 Table 1	
+Papaspiliopoulos2017	NLP_MOMBF	Gibbs sampler (mombf modelSelection)	competitor	Sec 5 Table 1	
+Zhu2017	NEW:RSS	RSS Bayesian regression with summary statistics (RSS-P)	proposed	Sec 4 Figs 1-4 Table 1; Sec 6	
+Zhu2017	BAYES_GWAS	GEMMA-BVSR; GEMMA-BSLMM (full data)	competitor	Sec 4 Figs 1-4 Table 1	
+Rockova2018	SSLASSO	SSL; adaptive NSSL (theta~B(1,p)); non-adaptive and oracle theta	proposed	Sec 5.1 Figs 2-3; Sec 3.2	single illustrative example n=100 p=1000
+Rockova2018	MCP	SparseNet with MCP penalty, CV over (lambda,gamma) grid	competitor	Sec 5.1 Fig 3	
+Rockova2018	EMVS	EMVS implementation	competitor	Sec 5.1	run as a check; authors state paths are very similar; not a formal comparison
+Shin2018	S5	S5 with peMoM and piMoM nonlocal priors (also Zellner g-prior version)	proposed	Sec 3.1-3.2 Figs 2-3; Sec 7.3 Fig 4; Sec 8.1-8.2 Tables 2-3	
+Shin2018	LASSO	lasso	competitor	Sec 3.2; Sec 8 Tables 2-3	
+Shin2018	ADALASSO	adaptive lasso	competitor	Sec 3.2; Sec 8 Tables 2-3	
+Shin2018	SCAD	SCAD	competitor	Sec 3.2; Sec 8 Tables 2-3	
+Shin2018	MCP	MCP	competitor	Sec 3.2; Sec 8 Tables 2-3	
+Shin2018	NEW:RECIPROCAL_LASSO	reduced reciprocal lasso	competitor	Sec 8 Tables 2-3	
+Shin2018	SSS	SSS shotgun stochastic search	competitor	Sec 3.2	BASAD excluded as too slow (not run)
+LloydJones2019	BAYES_GWAS	SBayesR	proposed	Results: genome-wide simulation; real data 5-fold CV	
+LloydJones2019	BAYES_GWAS	BayesR (individual-level)	gold	Results: genome-wide simulation	individual-level reference
+LloydJones2019	BAYES_GWAS	LDpred; LDpred-inf	competitor	Results: simulation; UK Biobank CV	
+LloydJones2019	NEW:RSS	RSS	competitor	Results: simulation	
+LloydJones2019	NEW:SBLUP	SBLUP	competitor	Results: UK Biobank CV	
+LloydJones2019	NEW:CLUMP_THRESHOLD	P+T clumping and thresholding	competitor	Results: UK Biobank CV	
+Johndrow2020	HORSESHOE	new exact sampler; approximate sampler (delta=1e-4)	proposed	pp.9-10 Figs 1-2; Tables 1-4; Figs 3-9; maize GWAS	
+Johndrow2020	HORSESHOE	old exact sampler (Polson-Scott-Windle + Bhattacharya et al)	competitor	Table 1; Figs 3-9	
+Johndrow2020	LASSO	lasso (10-fold CV)	competitor	maize GWAS real data	ESS/s and posterior marginals vs lasso
+Rossell2021	NEW:ALA	ALA approximate Laplace approximation (default and 1-2 Newton steps)	proposed	Sec 5.1-5.4; Fig 4	exact Laplace approximation (LA) used as variant
+Rossell2021	BVS_GPRIOR_OTHER	exact g-Zellner marginal likelihood (Gaussian linear)	competitor	Sec 5.1	
+Rossell2021	LASSO	group LASSO	competitor	Sec 5.2	
+Rossell2021	SCAD	group SCAD	competitor	Sec 5.2	
+Rossell2021	MCP	group MCP	competitor	Sec 5.2	
+Ray2022	VB_OTHER	sparsevb	proposed	Sec 5.2 Table 2; Supp A.1-A.5 Tables 3-7	
+Ray2022	VARBVS	varbvs	competitor	Sec 5.2 Table 2; Supp	
+Ray2022	EMVS	EMVS	competitor	Sec 5.2 Table 2; Supp	
+Ray2022	SSLASSO	SSLASSO	competitor	Sec 5.2 Table 2; Supp	
+Ray2022	NEW:EBREG	ebreg fractional-likelihood empirical Bayes MCMC	competitor	Sec 5.2 Table 2; Supp	
+Kim2024	MRASH	mr.ash	proposed	Sec 5.1-5.3 Table 1 Figs 2-4	
+Kim2024	RIDGE	ridge	competitor	Sec 5	
+Kim2024	LASSO	Lasso	competitor	Sec 5	
+Kim2024	ENET	Elastic Net	competitor	Sec 5	
+Kim2024	SCAD	SCAD	competitor	Sec 5	
+Kim2024	MCP	MCP	competitor	Sec 5	
+Kim2024	L0LEARN	L0Learn	competitor	Sec 5	
+Kim2024	SSLASSO	SSLasso	competitor	Sec 5	
+Kim2024	NEW:TRIMMED_LASSO	Trimmed Lasso	competitor	Sec 5	
+Kim2024	GLOBAL_LOCAL_OTHER	Bayesian Lasso (BGLR)	competitor	Sec 5	
+Kim2024	BAYES_GWAS	BayesB (BGLR)	competitor	Sec 5	genomic-prediction spike-and-slab; closest key
+Kim2024	VARBVS	varbvs	competitor	Sec 5	
+Kim2024	SUSIE	SuSiE	competitor	Sec 5	
+Tibshirani1996	LASSO	lasso (CV and generalized CV)	proposed	Sec 7 Simulations 7.2-7.5 Tables 3-8; Sec 3 prostate	
+Tibshirani1996	RIDGE	ridge regression	competitor	Sec 7	
+Tibshirani1996	NEW:BEST_SUBSET_LEAPS	best subset (leaps; 5-fold CV)	competitor	Sec 7	exhaustive search via leaps, not MIO
+Tibshirani1996	NEW:GARROTE	non-negative garotte	competitor	Sec 7	
+FanLi2001	SCAD	SCAD (two tunings: GCV-chosen a vs a=3.7)	proposed	Sec 4.3 Ex 4.1-4.3 Tables 1-6; Ex 4.4 Table 7	
+FanLi2001	LASSO	LASSO (L1 penalty)	competitor	Sec 4.3 Tables 1-6; Ex 4.4	
+FanLi2001	NEW:HARD_THRESHOLD	hard thresholding penalty	competitor	Sec 4.3	
+FanLi2001	RIDGE	ridge	competitor	Sec 4.3	
+FanLi2001	STEPWISE_IC	best subset (AIC/BIC)	competitor	Sec 4.3; Ex 4.4 Table 7	
+FanLi2001	NEW:GARROTE	nonnegative garrote	competitor	Sec 4.3	
+ZouHastie2005	ENET	elastic net (LARS-EN; naive EN; 2-D tuning grid)	proposed	Sec 5 Examples 1-4 Table 2; Sec 6 leukaemia	simulations p<=40; real leukaemia p=7129
+ZouHastie2005	LASSO	lasso	competitor	Sec 5 Table 2; Sec 6	
+ZouHastie2005	RIDGE	ridge	competitor	Sec 5 Table 2	
+Zou2006	ADALASSO	adaptive lasso	proposed	Sec 4 Tables 1-4; Fig 2	
+Zou2006	LASSO	lasso (LARS)	competitor	Sec 4 Tables 1-4	
+Zou2006	SCAD	SCAD (LQA algorithm)	competitor	Sec 4 Tables 1-4	
+Zou2006	NEW:GARROTE	nonnegative garotte	competitor	Sec 4	
+Hoggart2008	GLOBAL_LOCAL_OTHER	NEG normal-exponential-gamma shrinkage (penalised logistic; posterior mode)	proposed	Results: Main, Whole-genome, Re-sequencing simulations; T2D analysis	
+Hoggart2008	LASSO	DE double-exponential (L1) penalty	variant	Results: Main Simulation Study	lasso penalty inside the same algorithm
+Hoggart2008	MARGINAL	Armitage trend test (single SNP)	competitor	Results: simulations	
+Meinshausen2009	MS_SPLIT	multi sample-splitting p-values	proposed	Sec 4.1 Simulations A-C Figs 2-3; Sec 4.3	
+Meinshausen2009	MS_SPLIT	single-split (Wasserman-Roeder)	competitor	Sec 4.1 Figs 2-3	
+Meinshausen2009	ADALASSO	adaptive lasso (Zou 2006)	competitor	Sec 4.1 Table 1	
+MeinshausenYu2009	LASSO	lasso (analysed; illustration only)	proposed	Sec 4 Figs 1-3	theory paper; no competing method
+Wasserman2009	MS_SPLIT	screen-and-clean (lasso screening with LOO-CV, split sample)	proposed	Sec 5; Sec 6 Tables 1-2	single sample-splitting procedure
+Wasserman2009	FSTEP	forward stepwise screening	competitor	Sec 6 Tables 1-2	
+Wasserman2009	MARGINAL	marginal regression screening	competitor	Sec 6 Tables 1-2	
+Wasserman2009	ADALASSO	two-stage adaptive lasso split-sample	competitor	Sec 6 Table 2	
+Wu2009	LASSO	lasso penalised logistic regression	proposed	Sec 3-4.2 Table 1	
+Wu2009	MARGINAL	univariate per-SNP logistic tests	competitor	Sec 3; Sec 4.1-4.2	
+Friedman2010	LASSO	glmnet coordinate descent lasso/elastic-net paths	proposed	Sec 5.1 Table 1; Sec 5.2-5.3 Tables 2-4	
+Friedman2010	LASSO	lars; l1logreg (interior point); LPL (Lange)	competitor	Sec 5.1-5.3 Tables 1-5	alternative lasso solvers; timing comparison
+Friedman2010	NEW:BBR_BMR	BBR/BMR Bayesian binary/multinomial regression	competitor	Sec 5.2 Tables 2-3; Table 5	
+MeinshausenBuhlmann2010	STABSEL	stability selection (subsampling; randomised lasso)	proposed	Sec 4 scenarios A-G pp 18-21; Figs 5-7	
+MeinshausenBuhlmann2010	LASSO	lasso; cross-validated lasso	competitor	Sec 4	
+MeinshausenBuhlmann2010	FSTEP	OMP; randomised OMP	competitor	Sec 4	
+Zhang2010	MCP	MC+ with various gamma	proposed	Sec 2.2 Table 1; Sec 6.1 Tables 3-4; Sec 6.4 Figs 5-6	
+Zhang2010	LASSO	lasso	competitor	Sec 6.1 Tables 3-4	
+Zhang2010	SCAD	SCAD+ (PLUS algorithm local solution)	competitor	Sec 6.1 Tables 3-4	
+BrehenyHuang2011	MCP	MCP coordinate descent (ncvreg)	proposed	Sec 5.1-5.2 Fig 3-4 Table 1; Sec 6 Table 2	also compared with LLA algorithm
+BrehenyHuang2011	SCAD	SCAD coordinate descent (ncvreg)	proposed	Sec 5.1-5.2	
+BrehenyHuang2011	LASSO	lasso glmnet 10-fold CV	competitor	Sec 5.2 Table 1; Sec 6	
+Javanmard2014	DEBIASED	debiased lasso (Javanmard-Montanari)	proposed	Sec 5.1 Tables 1-2; Sec 5.2	synthetic p=600 and 1500; real riboflavin p=4088
+Javanmard2014	MS_SPLIT	multisample-splitting (Meinshausen-Meier-Buhlmann 2009)	competitor	Sec 5.1; Sec 5.2	
+Javanmard2014	NEW:RIDGE_PROJ	ridge-type projection (Buhlmann 2013)	competitor	Sec 5.1; Sec 5.2	
+Bogdan2015	SLOPE	SLOPE (BH-type lambda; Gaussian lambda_G; scaled SLOPE)	proposed	Sec 1.3.3 Fig 2; Sec 3.1-3.3	prox timing to p=1e7; regression sims p<=1e4
+Bogdan2015	LASSO	lasso with lambda_Bonf; lasso with lambda_CV (10-fold)	competitor	Sec 3.2 Fig 5; Sec 3.2.4	
+Bogdan2015	MARGINAL	Benjamini-Hochberg on marginal tests	competitor	Sec 1.3.3; Sec 3.2	
+Su2017	LASSO	lasso path (analysed; Fig 1 compared with least-squares ordering)	proposed	Sec 1 Fig 1; Sec 2.4 Fig 5; Sec 4 Figs 6-7	theory paper; no competing method
+Qian2020	LASSO	snpnet / BASIL lasso	proposed	UK Biobank analysis Figs 2-5 Tables 1-3	real data only; p=805426
+Qian2020	RELAXED_LASSO	relaxed lasso	variant	UK Biobank analysis Figs 2-5	
+Qian2020	ENET	elastic net (alpha 0.001; 0.1; 0.5; 0.9)	variant	UK Biobank analysis	
+Qian2020	BAYES_GWAS	PRS-CS; SBayesR	competitor	UK Biobank analysis Tables 1-3	
+Qian2020	NEW:CLUMP_THRESHOLD	P+T; clumping	competitor	UK Biobank analysis	
+Qian2020	NEW:SEQ_LR_TOPK	sequential logistic/linear regression on top-k univariate SNPs	competitor	UK Biobank analysis	
+Qian2020	NEW:ONESTEP_PLS	one-step PLS-like truncated model (K=10000, 100000); prescreened lasso	competitor	UK Biobank analysis	
+Bertsimas2016	BEST_SUBSET_MIO	MIO (Gurobi); discrete first-order method	proposed	Sec 5.1 Figs 8-10; Tables 3-8 appendix	
+Bertsimas2016	LASSO	lasso (glmnet)	competitor	Sec 5.1-5.4	
+Bertsimas2016	TLP_OTHER_NONCONVEX	Sparsenet (MCP penalty family)	competitor	Sec 5.1-5.4	
+Bertsimas2016	FSTEP	stepwise regression (R stats)	competitor	Sec 5.1-5.4	
+Bertsimas2016	RELAXED_LASSO	debiased lasso = unrestricted least squares on lasso support	competitor	Sec 5.1; App D.2	not the desparsified lasso
+Bertsimas2016	NEW:LAD_LASSO	LAD-lasso	competitor	Sec 5 (robust section)	
+BertsimasPauphilet2020	BEST_SUBSET_MIO	CIO convex integer optimisation (cutting planes; Gurobi); SS Boolean relaxation (SubsetSelection)	proposed	Sec 3.1-3.5 Table 2, Table 4; Sec 4.4 Table 7	
+BertsimasPauphilet2020	LASSO	lasso (glmnet)	competitor	Sec 3-4	
+BertsimasPauphilet2020	ENET	elastic net (glmnet)	competitor	Sec 3-4	
+BertsimasPauphilet2020	MCP	MCP (ncvreg)	competitor	Sec 3-4	
+BertsimasPauphilet2020	SCAD	SCAD (ncvreg)	competitor	Sec 3-4	
+BertsimasVanParys2020	BEST_SUBSET_MIO	exact cutting-plane (Julia; Gurobi)	proposed	Sec 4.1 Table 1; Fig 1; Table 2; Sec 4.4	
+BertsimasVanParys2020	LASSO	lasso heuristic (glmnet)	competitor	Sec 4.1 Fig 1; Table 2	
+Hastie2020	LASSO	lasso	competitor	Sec 3 setup pp 8-10	comparison study; no proposed method
+Hastie2020	RELAXED_LASSO	relaxed lasso	competitor	Sec 3	
+Hastie2020	FSTEP	forward stepwise	competitor	Sec 3	
+Hastie2020	BEST_SUBSET_MIO	best subset (Gurobi MIO; 3-min limit per k)	competitor	Sec 3.2 pp 10-11	
+Hazimeh2020	L0LEARN	L0Learn (CD + local search; L0; L0L1; L0L2)	proposed	Sec 5.1-5.6 Table 1	timing at p=1e6
+Hazimeh2020	LASSO	lasso (glmnet)	competitor	Sec 5.3-5.6	
+Hazimeh2020	RELAXED_LASSO	relaxed lasso	competitor	Sec 5.3-5.6	
+Hazimeh2020	ENET	elastic net (glmnet)	competitor	Sec 5.3-5.6	
+Hazimeh2020	MCP	MCP (ncvreg)	competitor	Sec 5.3-5.6	
+Hazimeh2020	FSTEP	forward stepwise	competitor	Sec 5.3-5.6	
+Hazimeh2020	NEW:IHT	iterative hard thresholding	competitor	Sec 5.3-5.6	
+Hazimeh2020	BEST_SUBSET_MIO	MIO subproblems via Gurobi	competitor	Sec 5	
+Zhu2020	ABESS	ABESS splicing + SIC	proposed	Simulation: Table 1; Fig 1; Fig 2	
+Zhu2020	STEPWISE_IC	ASR exhaustive all-subset regression	competitor	Simulation Table 1 (low-dimensional)	
+Zhu2020	LASSO	lasso (glmnet)	competitor	Simulation Table 1; Fig 2	CV and SIC tuning
+Zhu2020	SCAD	SCAD (ncvreg)	competitor	Simulation Table 1; Fig 2	
+Zhu2020	MCP	MCP (ncvreg)	competitor	Simulation Table 1; Fig 2	
+Hazimeh2022	NEW:L0BNB	L0BnB branch-and-bound with first-order node solves	proposed	Sec 4.1-4.4 Tables 1-4 Fig 2	real riboflavin with all pairwise interactions p=8362004
+Hazimeh2022	BEST_SUBSET_MIO	Gurobi; MOSEK; Bertsimas-Van Parys cutting-plane solver	competitor	Sec 4.2.1 Table 1; Sec 4.2.2 Table 2	L0Learn used for warm starts and CV
+Zhu2022abess	ABESS	abess library	proposed	Sec 3 Fig 2; Sec 4 Tables 2-3	
+Zhu2022abess	LASSO	scikit-learn LassoCV/LogisticRegressionCV; celer	competitor	Sec 3 Fig 2; Sec 4 Tables 2-3	
+Zhu2022abess	FSTEP	scikit-learn OMP (l0)	competitor	Sec 3 Fig 2; Sec 4	
+Zhu2022abess	NEW:SPCA_ELASTICNET	elasticnet R package sparse PCA	competitor	Sec 4 Table 3 (SPCA genetic data)	sparse PCA task, not regression
+BarberCandes2015	KNOCKOFF	knockoff and knockoff+ (equi-variant and SDP)	proposed	Sec 3.3.1-3.3.2 Figs 3-5; Sec 4 HIV	
+BarberCandes2015	NEW:BH_OLS_PVALUES	BHq on OLS p-values (also log-factor and whitened-noise variants)	competitor	Sec 3.3 Figs 3-5; Sec 4	
+Candes2018	KNOCKOFF	model-X knockoffs (LCD statistic)	proposed	Sec 5.1-5.4 Figs 1-7; Sec 6; Sec 7 Crohn	
+Candes2018	KNOCKOFF	fixed-X knockoffs	competitor	Sec 5 Figs 1-6	
+Candes2018	MARGINAL	BHq on marginal p-values	competitor	Sec 5; Sec 7	
+Candes2018	NEW:BH_OLS_PVALUES	BHq on MLE p-values (n>p)	competitor	Sec 5	
+Candes2018	NEW:CRT	conditional randomisation test	competitor	Sec 5 (small case)	
+Sesia2019	KNOCKOFF	HMM knockoffs (true parameters and fastPHASE-estimated)	proposed	Sec 6.1-6.3 Figs 5-11 Tables 1-3; Sec 7.1	
+Sesia2019	KNOCKOFF	Gaussian knockoffs (Candes et al 2018)	competitor	Sec 6	
+Sesia2019	MARGINAL	marginal / conventional GWAS	competitor	Sec 7 Table 4	
+Sesia2021	KNOCKOFF	knockoffs with population-structure adjustment (genome-wide)	proposed	Results: simulated phenotypes Figs 3-4; UK Biobank Table 1	SI Appendix not read
+Sesia2021	BAYES_GWAS	BOLT-LMM with PLINK clumping (FWER 5e-8; heuristic FDR)	competitor	Results: simulated and UKB phenotypes	
+FanLv2008	SIS	SIS and ISIS (SIS-SCAD, SIS-DS, SIS-DS-SCAD, SIS-DS-AdaLasso)	proposed	Sec 3.3 Tables 1-2; Sec 4.2 Tables 4-6; Sec 3.3.3 leukaemia	
+FanLv2008	DANTZIG	Dantzig selector	competitor	Sec 3.3 Tables 1-2	
+FanLv2008	LASSO	lasso (LARS)	competitor	Sec 3.3 Tables 1-2; Sec 4.2	
+Wang2016	HOLP	HOLP	proposed	Sec 4.1 Tables 1-2; Sec 4.2 Fig 3; Sec 4.5	
+Wang2016	SIS	SIS; ISIS	competitor	Sec 4.1-4.5	
+Wang2016	NEW:RRCS	RRCS robust rank correlation screening	competitor	Sec 4.1	
+Wang2016	FSTEP	forward regression (FR)	competitor	Sec 4.1	
+Wang2016	NEW:TILTING	tilting (Cho-Fryzlewicz)	competitor	Sec 4.1	
+Wang2016	LASSO	lasso after screening	competitor	Sec 4.1 Table 2	post-screening models
+Wang2016	SCAD	SCAD after screening (also ISIS-SCAD, SIS-SCAD)	competitor	Sec 4.1 Table 2	post-screening models
+Hormozdiari2014	BAYES_FINEMAP	CAVIAR extended (ECM; E1-Post)	proposed	Results: Simulations Figs 1-5; CHI3L2 locus	
+Hormozdiari2014	BAYES_FINEMAP	1-Post single-causal posterior (Maller 2012)	competitor	Results: Simulations	
+Hormozdiari2014	MARGINAL	top-k by association statistic	competitor	Results: Simulations	
+Hormozdiari2014	NEW:CONDITIONAL_METHOD	conditional method (CM; stepwise conditional association)	competitor	Results: Simulations	
+Kichaev2014	BAYES_FINEMAP	PAINTOR (single-causal and no-annotation variants)	proposed	Results: simulations Tables 1-3; lipid loci	
+Kichaev2014	BAYES_FINEMAP	CAVIAR; CAVIARBF-style (Table S1)	competitor	Results: simulations	
+Kichaev2014	NEW:FGWAS	fgwas (with and without annotations)	competitor	Results: simulations	
+Kichaev2014	MARGINAL	marginal p-value ranking	competitor	Results: simulations	
+Chen2015	BAYES_FINEMAP	CAVIARBF approximate Bayes factors	proposed	Methods: data simulation and evaluation; Fig 2 Table 1; Fig 7 timing	
+Chen2015	BAYES_FINEMAP	BIMBAM; PAINTOR	competitor	Fig 2 Table 1	
+Chen2015	ENET	ENET elastic net	competitor	Fig 2 Table 1	
+Chen2015	LASSO	LASSO (lars)	competitor	Fig 2 Table 1	
+Benner2016	BAYES_FINEMAP	FINEMAP	proposed	Sec 4 scenarios A and B; Sec 4.3-4.4 real data	
+Benner2016	BAYES_FINEMAP	CAVIARBF; PAINTOR	competitor	Sec 4 scenarios A and B	CAVIAR only discussed
+Wen2016	BAYES_FINEMAP	DAP-1; adaptive DAP	proposed	Results: Simulation Studies Figs 1-2 Tables 1-2	
+Wen2016	NEW:EXACT_ENUMERATION	exact Bayesian enumeration	gold	Results: Simulation Studies	reference posterior (p=15 in sim 2)
+Wen2016	NEW:MCMC_UNSPECIFIED	MCMC	competitor	Results: Simulation Studies	sampler not specified in the field record
+Wang2020	SUSIE	SuSiE (L=10; 20)	proposed	Sec 4 Figs 1-3 Table 2; Sec 5	
+Wang2020	BAYES_FINEMAP	DAP-G; CAVIAR (S<=3); FINEMAP (S<=3)	competitor	Sec 4 Figs 1-3	
+Wang2020	NEW:HIER_TESTING	hierarchical testing (Mandozzi-Buhlmann)	competitor	Sec 4	
+Wang2020	LASSO	lasso	competitor	Sec 4 (timing)	
+Weissbrod2020	NEW:POLYFUN	PolyFun + SuSiE; PolyFun + FINEMAP	proposed	Results: main simulations; Table 3 mismatched LD	
+Weissbrod2020	SUSIE	SuSiE (no functional prior)	competitor	Results: main simulations Table 1	
+Weissbrod2020	BAYES_FINEMAP	FINEMAP; CAVIARBF (1 or 2 causal); fastPAINTOR	competitor	Results: main simulations Table 1	
+Zou2022	SUSIE	SuSiE-RSS (summary data; L, residual variance, refinement variants)	proposed	Results: simulations with UK Biobank genotypes Figs 2-6 Table 2	individual-level SuSiE used as in-sample baseline
+Zou2022	BAYES_FINEMAP	FINEMAP; DAP-G; CAVIAR	competitor	Results: simulations Figs 2-6	
+Cui2024	SUSIE	SuSiE-inf (proposed extension); SuSiE baseline	proposed	Results: Simulations Figs 2-3 Table 1	
+Cui2024	BAYES_FINEMAP	FINEMAP; FINEMAP-inf (proposed extension)	competitor	Results: Simulations	
+Cui2024	NEW:COJO_ABF	COJO-ABF	competitor	Results: Simulations	
+Cui2024	NEW:ABF	ABF approximate Bayes factor; minPIP	competitor	Results: Simulations	
+McCreight2025	SUSIE	SuSiE-ash (new); SuSiE-inf; SuSiE	proposed	Results Fig 1; Supp Note S.4 Figs S1-S6	SuSiE and SuSiE-inf are also benchmark comparators
+McCreight2025	NEW:SPARSEPRO	SparsePro attainable coverage	competitor	Supplement (benchmark)	no improvement over SuSiE
+McCreight2025	NEW:BAYES_LP	Bayesian linear programming (Spector-Janson)	competitor	Supplement (benchmark)	
+Buhlmann2014	MS_SPLIT	multi sample-splitting	competitor	Sec 1 riboflavin example; Sec 3.4	review; methods applied to riboflavin (n=71; p=4088) as illustration; none proposed
+Buhlmann2014	NEW:RIDGE_PROJ	ridge projection estimator	competitor	Sec 1 riboflavin example; Sec 3.4	
+Buhlmann2014	STABSEL	stability selection with lasso	competitor	Sec 1 riboflavin example; Sec 3.4	
+Dezeure2015	MS_SPLIT	MS-Split multiple sample-splitting	competitor	Sec 2.5 Figs 2-3 (Toeplitz; Exp.decay; Equi.corr; RealX)	benchmark study; none proposed
+Dezeure2015	DEBIASED	Lasso-Pro desparsified lasso; Jm2013 (Javanmard-Montanari)	competitor	Sec 2.5	
+Dezeure2015	NEW:RIDGE_PROJ	Ridge projection	competitor	Sec 2.5	
+Dezeure2015	NEW:COVTEST	covariance test	competitor	Sec 2.5	used heuristically as p-value
+Dezeure2015	NEW:BOOT_LASSO	bootstrapped lasso: Res-Boot (Chatterjee-Lahiri); liuyu (Liu-Yu)	competitor	Sec 2.5	not used for multiple-testing adjusted p-values
+Ge2019	NEW:PRS_CS	PRS-CS; PRS-CS-auto	proposed	Results: Simulations Fig 1	polygenic prediction from summary statistics
+Ge2019	BAYES_GWAS	LDpred; LDpred-inf	competitor	Results: Simulations Fig 1; real data	
+Ge2019	NEW:CLUMP_THRESHOLD	P+T clumping and thresholding; unadjusted PRS	competitor	Results: Simulations Fig 1	
+Prive2020	BAYES_GWAS	LDpred2 (inf, grid, sparse, auto)	proposed	Sec 3.1 Table 1; Sec 4.2 Figs 1-2	
+Prive2020	BAYES_GWAS	LDpred1 (inf and grid); SBayesR	competitor	Sec 3.1; Sec 4.2	
+Prive2020	NEW:PRS_CS	PRS-CS	competitor	Sec 4.2	
+Prive2020	NEW:CLUMP_THRESHOLD	C+T; SCT	competitor	Sec 3.1; Sec 4.2	
+Prive2020	NEW:LASSOSUM	lassosum	competitor	Sec 4.2	
+ShiDunson2011	SMC_OTHER	PSS particle stochastic search (data-sequential SMC)	proposed	Sec 3 Ex1 (normal; p=15 then 100) Figs 1-4; Ex2 (probit) Figs 5-7	author preprint read
+ShiDunson2011	GIBBS_GAMMA	SSVS Gibbs sampler	competitor	Sec 3 Figs 1-7	
+ShiDunson2011	MC3_ADS	SSVS Metropolis-Hastings version	competitor	Sec 3 Figs 1-7	MH proposal unspecified
+Ma2015	SMC_OTHER	LIPS local information propagation SMC	proposed	Sec 3 experiments pp 22-32	
+Ma2015	BMS	MC3 add/delete/swap via R package BMS	competitor	Sec 3 pp 30-31	fails to produce meaningful estimates at p=1000
+Ma2015	BAS	BAS	competitor	Sec 3 p 31	cannot run for p>=n or p>=1000
+Ma2015	NEW:IBMA	iBMA iterative Bayesian model averaging	competitor	Sec 3	
+Ma2015	LASSO	lasso (10-fold CV)	competitor	Sec 3 prediction	
+YoussfiChopin	SMC_OTHER	tempered waste-free SMC for bi-level selection (probit) with ALA	proposed	Sec 4.1 Figs 1-3; Sec 4.2 SNDS data	p=250 in simulation; p=337 binary variables real data
+Duan2019	SMC_OTHER	zero-norm SMC over subsets (density-tempered)	proposed	Sec 4 Table 1	
+Duan2019	ADALASSO	adaptive lasso (Zou 2006)	competitor	Sec 4 Table 2	
+Rockova2018PEM	NEW:PARTICLE_EM	Particle EM (PEM; lambda=1; lambda=0 parallel EM variant)	proposed	Sec 6.1-6.2 Table 4	
+Rockova2018PEM	EMVS	EMVS	competitor	Sec 6	
+Rockova2018PEM	GIBBS_GAMMA	SSVS MCMC (T=100000) benchmark	competitor	Sec 6.2	
+Rockova2018PEM	SMC_OTHER	SMC variant (K=5000)	competitor	Sec 6	compared visually with PEM
+ClydeGhosh2012	NEW:HT_ESTIMATOR	Horvitz-Thompson finite-population inclusion-probability estimators	proposed	Sec 5 Table 1	estimators, not samplers
+ClydeGhosh2012	MC3_ADS	MH add/delete/random-swap sampler (Clyde et al 2011); empirical and renormalised estimators	competitor	Sec 5 Table 1	same sampler output feeds all estimators
+GarciaDonato2013	GIBBS_GAMMA	Freq: Gibbs sampler with frequency-based estimates	proposed	Sec 4 pp 12-13	local PDF is arXiv v1 (Jan 2011); JASA version not read
+GarciaDonato2013	BAS	BAS (R package; MCMC+BAS; renormalised)	competitor	Sec 4 pp 12-13	
+GarciaDonato2013	NEW:SSBM	SSBM Berger-Molina stochastic search adapted to g-prior	competitor	Sec 4 pp 12-13	
+Vuong2024	SMC_OTHER	annealed SMC for joint selection and estimation (linear and mixed models)	proposed	Sec 4.1 Tables 4.1-4.3; Sec 4.2-4.4	MSc project
+AssenHinne2026	SMC_OTHER	A-RJSMC anchored reversible-jump SMC	proposed	Sec 4.2 variable selection Table 1; Tables 2-3	
+AssenHinne2026	RJMCMC	HG-RJMCMC (Hastie-Green); BD-RJMCMC (birth-death); T-RJMCMC (transport RJ)	competitor	Sec 4.2 Table 1; Tables 2-3	
+AssenHinne2026	SMC_OTHER	SMC of South et al 2019 (factor model)	gold	Sec 4 factor model	gold standard
+FanPanMcCormick2026	NEW:AIS_RPS	Rashomon-seeded annealed importance sampling	proposed	Sec 4 Figs 2-3; Sec 5 Table 1	Bayesian factorial-design partition model; not regression selection
+FanPanMcCormick2026	MC3_ADS	single-flip MH MCMC (10^6 iterations; reference)	gold	Sec 4 scenario 2	exact enumeration in scenario 1
+FanPanMcCormick2026	NEW:PAC_BAYES_GREEDY	PAC-Bayes estimator (greedy search for localised set)	competitor	Sec 4	
+Schafer2012	SMC_SC	SMC for binary vectors (Ch.4 BVS)	proposed	Ch.4 pp 75-88	chapters 1-2 and 4 are the Schafer-Chopin 2013 paper
+Schafer2012	GIBBS_GAMMA	metropolised Gibbs (k*=2)	competitor	Ch.4 p 88	
+Schafer2012	NEW:ADAPT_MCMC_NK	Adaptive MCMC (Nott-Kohn)	competitor	Ch.4 p 88	
+Schafer2012	RJMCMC	Green's automatic generic reversible-jump sampler	competitor	Ch.5 pp 104-105	binary-response GLM model selection
+Schafer2012	NEW:SA_CE_LOCALSEARCH	cross-entropy method; simulated annealing; 1-opt local search	competitor	Ch.6 p 127	binary optimisation (UQBO), not regression selection
