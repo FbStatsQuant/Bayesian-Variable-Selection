@@ -103,3 +103,18 @@ No mismatch touched a DOI. Every DOI and arXiv id resolves to the paper cited. T
 - C3 and C6 report that some OK rows were written from their first read, without re-opening the source in the final pass.
 - Two location fields in C6 still hold "p.?" placeholders.
 - McCreight 2025: bioRxiv returned HTTP 429, so its design rows rest on the abstract and the scout's HTML read.
+
+## Follow-up check C7: owner-fetched paywalled papers
+
+The owner fetched the JASA PDFs of George & McCulloch 1993 and Ročková & George 2014 (EMVS). A Sonnet scout read both in full (`scout/S5_PAYWALL.tsv`). Its rows replace the earlier abstract-only GM1993 row and the thesis-chapter EMVS row.
+
+One Haiku checker then verified both papers' PAPERS.md entries and every REPORT.md line naming them against the PDFs (`check/C7.tsv`).
+
+**Totals:** 30 items. OK 29; MISMATCH 0; UNVERIFIABLE 1.
+
+- **The one unverifiable item** is the §2 count "ρ=0.6: 6 papers". It is our own tally, so no single source can confirm it. The EMVS ρ=0.6 design itself is confirmed (Sec 4, p. 831).
+- **The JASA EMVS differs from the thesis chapter in four ways.** All are now reflected in PAPERS.md:
+  - the illustrative β is (3,2,1,0,…) instead of (1,2,3,0,…);
+  - there is no SDCA timing study;
+  - there are no lasso, SCAD or group-lasso comparisons;
+  - code is available from the authors on request.

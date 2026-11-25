@@ -1,7 +1,7 @@
 # BENCH_DESIGN: how variable selection is benchmarked, and what our suite needs
 
 *Theory Department, 2026-11-24. Owner's order via HQ; the advisor pointed us to JMLR 21 (2020) 19-536.*
-*Inputs: a full read of 19-536 plus three Sonnet scout sweeps, `scout/S1_BVS.tsv`, `S2_FREQ.tsv` and `S3_GENOMICS.tsv`, with a fourth scout (`S4_LOCAL.tsv`) for papers the owner already had locally. It covers 89 unique papers, 88 of them read in full text. The per-paper setups are in [`PAPERS.md`](PAPERS.md), which is part of this report. The Haiku check log is in [`CHECK.md`](CHECK.md).*
+*Inputs: a full read of 19-536 plus three Sonnet scout sweeps, `scout/S1_BVS.tsv`, `S2_FREQ.tsv` and `S3_GENOMICS.tsv`, with a fourth scout (`S4_LOCAL.tsv`) for papers the owner already had locally. It covers 89 unique papers, 89 of them read in full text. The per-paper setups are in [`PAPERS.md`](PAPERS.md), which is part of this report. The Haiku check log is in [`CHECK.md`](CHECK.md).*
 
 ---
 
@@ -62,7 +62,7 @@ Each count is the number of papers (out of 89) that use the design at least once
 |---|---|---|---|---|
 | Independent | $I$ | ≈30 | — | Scott–Berger 2010; Su et al. 2017; Biswas 2022; Hazimeh 2020 (1M) |
 | **AR(1) / Toeplitz** | $\rho^{\lvert j-k\rvert}$ | **32** | $\rho=0.5$ (15 papers), $0.9$ (11), $0.6$ (6, the BVS-sampler line), $e^{-1}\approx0.37$ (YWJ original, Zhou 2022) | Tibshirani 1996; Fan–Li 2001; YWJ 2016; Griffin 2021; Hastie 2020; Johndrow 2020 |
-| **Equicorrelated** | $\Sigma_{jk}=\rho$ | ≈23 | $\rho=0.5$ is modal; 0.25 (Johnson–Rossell 2012, Narisetty–He 2014, Song–Liang 2015); 0.6 (Ročková–George 2018); 0.8 (Dezeure 2015); 0.1 (Hazimeh 2022) | Friedman 2010 (glmnet timing); Shin 2018; Zhu 2020 |
+| **Equicorrelated** | $\Sigma_{jk}=\rho$ | ≈24 | $\rho=0.5$ is modal; ≈0.5 (George–McCulloch 1993); 0.25 (Johnson–Rossell 2012, Narisetty–He 2014, Song–Liang 2015); 0.6 (Ročková–George 2018); 0.8 (Dezeure 2015); 0.1 (Hazimeh 2022) | Friedman 2010 (glmnet timing); Shin 2018; Zhu 2020 |
 | Block-diagonal | blocks of 10–20 | ≈11 | within-block $\rho$ from 0.5 to 0.9 | Dezeure 2015 ($20\times20$, equicorrelated); Zhou 2022 ($d=20$); Papaspiliopoulos–Rossell 2017 (10) |
 | Factor | $\Lambda\Lambda^\top+I$ | 3 | 2–20 factors | Meinshausen–Bühlmann 2010; Zou–Hastie 2005; Wang–Leng 2016 |
 | Adversarial | built to break a method | ≈7 | — | YWJ $\Sigma_{\rm bad}$; Zou 2006 "Model 0"; Bertsimas–Pauphilet 2020; Titsias–Yau 2017 (confounded pair); Zanella–Roberts 2019 (pair with $\rho=0.99$) |
@@ -253,12 +253,9 @@ Keep our $s_0=5$ strong and weak cells as a secondary family. They are not a sta
 
 ## 7. Gaps, caveats, paywalled papers
 
-**Paywalled must-haves:**
-
-| Paper | DOI | Status |
-|---|---|---|
-| George & McCulloch (1993), *Variable selection via Gibbs sampling*, JASA 88(423):881–889 | 10.1080/01621459.1993.10476353 | abstract only; no open or local copy |
-| Ročková & George (2014), *EMVS*, JASA 109(506):828–846 | 10.1080/01621459.2013.869223 | the thesis chapter was read instead; the journal version was not |
+**Paywalled must-haves, fetched by the owner and read in full** (scout S5, owner-fetched copies on Owls, not committed):
+- George & McCulloch (1993), *Variable selection via Gibbs sampling*, JASA 88(423):881–889, DOI 10.1080/01621459.1993.10476353. It has two small simulations: (n, p, s0) = (60, 5, 2) with iid $X$, and (120, 60, 45) with pairwise correlation ≈0.5. It also has three real data sets, all with $p\le15$.
+- Ročková & George (2014), *EMVS*, JASA 109(506):828–846, DOI 10.1080/01621459.2013.869223. This is the journal version, replacing the thesis chapter read earlier. Simulations: AR(1) $\rho=0.6$, $n=100$, $p=1000$, $\beta=(3,2,1,0,\dots)$, $\sigma^2=3$; and a structured three-group example with equicorrelation 0.8 ($p=99$). Real data: the yeast motif set ($n=1568$, $p=8192$).
 
 **Paywalled, but read in full from local copies on Owls** (scout S4): Clyde, Ghosh & Littman 2011 (10.1198/jcgs.2010.09049); Ročková & George 2018, *The spike-and-slab LASSO* (10.1080/01621459.2016.1260469), read from the author manuscript dated 7 August 2015; Song & Liang 2015 (10.1111/rssb.12095), with its supplement.
 
@@ -302,7 +299,7 @@ Read levels: F = full text, A = abstract only. Fields: S = BVS sampler, P = BVS 
 | 22 | FanLv2010 | Fan J; Lv J. A selective overview of variable selection in high dimensional feature space (invited review). Preprint arXiv:0910.1122 (Sept 2009); journal version not checked against the paper text | 2009 | arXiv:0910.1122 | R | F |
 | 23 | Friedman2010 | Friedman J; Hastie T; Tibshirani R. Regularization paths for generalized linear models via coordinate descent; Journal of Statistical Software 33(1):1-22 | 2010 | 10.18637/jss.v033.i01 | F | F |
 | 24 | Ge2019 | Ge T; Chen CY; Ni Y; Feng YA; Smoller JW. Polygenic prediction via Bayesian regression and continuous shrinkage priors. Nat Commun 10 1776 | 2019 | 10.1038/s41467-019-09718-5 | O | F |
-| 25 | GeorgeMcCulloch1993 | George E.I.; McCulloch R.E.; Variable selection via Gibbs sampling; J. Amer. Statist. Assoc.; 88(423); 881-889 | 1993 | 10.1080/01621459.1993.10476353 | S | A |
+| 25 | GeorgeMcCulloch1993 | George E.I.; McCulloch R.E.; Variable selection via Gibbs sampling; J. Amer. Statist. Assoc.; 88(423); 881-889 | 1993 | 10.1080/01621459.1993.10476353 | S | F |
 | 26 | Griffin2021 | Griffin J.E.; Latuszynski K.; Steel M.F.J.; In search of lost (mixing) time: adaptive Markov chain Monte Carlo schemes for Bayesian variable selection with very large p; Biometrika; 108(1); 53-69 | 2021 | 10.1093/biomet/asaa055 (arXiv:1708.05678) | S | F |
 | 27 | GuanStephens2011 | Guan Y; Stephens M. Bayesian variable selection regression for genome-wide association studies and other large-scale problems. Ann Appl Stat 5(3) 1780-1815 | 2011 | 10.1214/11-AOAS455 (arXiv 1110.6019) | S | F |
 | 28 | Hans2007 | Hans C.; Dobra A.; West M.; Shotgun stochastic search for "large p" regression; J. Amer. Statist. Assoc.; 102(478); 507-516 | 2007 | 10.1198/016214507000000121 | S | F |
