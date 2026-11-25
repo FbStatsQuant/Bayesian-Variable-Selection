@@ -244,8 +244,9 @@ When the owner is back, HQ gives a short morning brief: what was decided, what m
    - The tree is in scratch, with home kept minimal. An `INDEX.md` at its root records what lives where and its provenance.
    - Only idle data moves: nothing used by queued or running jobs. Old paths get a symlink or an index entry.
    - The exclusions in rule 1 stay untouched.
-5. **Owls is fair game for small-scale computation.** It is a shared server: use `nice`, cap concurrent cores (≤ 16 unless
-   HQ approves more), and run nothing large or multi-day. Outputs live in the owning worktree or folder; no clutter in
+5. **Owls is fair game for small-scale computation.** It is a shared server: use `nice`, cap concurrent cores (≤ 40 per company,
+   owner 2026-11-25; the fb31-wide Owls guard is also 40 and is shared with other companies such as BQTF, so check
+   current use before ramping), and run nothing large or multi-day. Outputs live in the owning worktree or folder; no clutter in
    `/home/fb31`.
 6. **NOTS and Owls must look squeaky clean 24/7.** Every file has an owner and a place, temp files are removed when a job
    ends, and stray files are a defect reported in the daily report.
