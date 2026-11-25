@@ -2,7 +2,7 @@
 
 Owner's question (via HQ, 11-24): has anyone published or preprinted variable selection by SMC in a way similar to
 ours (`method-v3.1.1-listpip`), and if so with what theory, compared with our Theorems 1–6 and planned P1–P5 (A7 spec)?
-Staffing: Opus manager; Claude Work Sonnet workers (2 searchers, 1 retriever, 6 full-text readers). No Fable, no Astra.
+Staffing: Opus manager; Claude Work Sonnet workers (2 searchers, 1 retriever, 8 full-text readers). No Fable, no Astra.
 Evidence: `notes/` (one file per paper: a coverage log page by page, then model, sampler, theorems, comparison and verdict)
 and `search/` (about 120 candidates scored, with queries and citation chains). No PDFs are committed; they are on Owls in
 `/home/fb31/SMC_Theory_Department/SMC_LIT/papers/`.
@@ -23,10 +23,8 @@ bridge $\pi_\xi\propto\gamma_0e^{\xi\Delta}$, the pilot-then-frozen grid, Gibbs,
 SMC, independent islands, Rao–Blackwellised PIPs, an evidence estimate, the certified reported model, the list outputs,
 or $p\gg n$. Their largest $p$: 104 (S–C), 337 (Y–C, $n=47{,}916$), 1,000 (Ma; $n=700$), 100 (S–D). Ours goes to $10^6$.
 
-**One open item:** Duan (NUS working paper, 2019; SSRN 3377038), "Variable selection with big data based on zero norm and
-via sequential Monte Carlo", is blocked (403 / bot check). It was reported to HQ for the owner to fetch. From the abstract and
-the author's 2018 slides, it is best-subset *optimisation* by density-tempered SMC. Its "theory" is an extreme-value
-assessment of the maximal $R^2$, not consistency; the slides state no theorem. Expected risk is low but **unverified**.
+**Late reads (owner-fetched, 11-24):** Duan (NUS working paper, 2019; SSRN 3377038) and Ročková (2018, *JASA*) were read in
+full after the first delivery. Neither has any theorem, so the verdict is unchanged.
 
 ## Candidates read in full
 
@@ -40,10 +38,12 @@ assessment of the maximal $R^2$, not consistency; the slides state no theorem. E
 | Fan, Pan & McCormick 2026 (arXiv v1, 28 pp.) | annealed IS over partitions of factorial cells (12–36 cells; not variable selection); start law built from an enumerated "Rashomon set"; geometric bridge; adaptive pilot, then a frozen ladder; independent runs | Thm 1 / Cor 1–2: almost-sure consistency of self-normalised AIS as the number of runs grows | partial (closest analogue of our data-driven start + frozen grid; different model space) |
 | van Assen & Hinne 2026 (arXiv v1) | anchored reversible-jump SMC, adaptive tempering; variable selection only at $p=4$ | none | none |
 | Vuong 2024, MSc project, SFU | annealed SMC from the prior, fixed 10-rung grid, single-flip moves; $p\le6$ | none (an MC CLT quoted) | none |
+| Duan 2019, NUS working paper (SSRN 3377038) | best subset of FIXED size $p_s$ by in-sample $R^2$ (optimisation, not a posterior): density-tempered SMC over permutations; start law $\propto$ single-regressor $R^2$; geometric bridge with ESS-adaptive steps; block re-draw moves; reports the best subset only; $p\le900$, $p_s\le20$ | none: informal "global optimum as $M\to\infty$" remarks and a heuristic Weibull approximation of the maximal $R^2$ | partial (method family; low) |
+| Ročková 2018, *JASA* (+ 5-page supplement) | Particle EM: a deterministic ensemble optimiser of an entropy-regularised ELBO over $K$ binary models (continuous spike-and-slab, BB(1, p)); inclusion probabilities renormalised over the particle set; a secondary SMC variant on a fixed $v_0$ grid; $p\le200$ | none (supplement: an elementary TV bound $\lVert\pi-\pi_T\rVert\le2\sum_{\gamma\notin S}\pi(\gamma\mid Y)$) | none to partial (precursor of list-renormalised PIPs) |
 
 Not read in full (not SMC over models, or background only): Bottolo & Richardson 2010 (ESS, tempered population MCMC), Zanella & Roberts
-2019, Papaspiliopoulos & Rossell 2017 (exact block-diagonal marginals, the nearest precedent for our block tables), Ročková 2018
-(particle EM, a deterministic multi-mode optimiser; no open copy), Jasra et al. 2008 (trans-dimensional SMC, mixtures).
+2019, Papaspiliopoulos & Rossell 2017 (exact block-diagonal marginals, the nearest precedent for our block tables), Jasra et al.
+2008 (trans-dimensional SMC, mixtures).
 
 ## Our theory against theirs
 
@@ -61,7 +61,7 @@ Not read in full (not SMC over models, or background only): Bottolo & Richardson
 ## What we must cite, and how we differentiate
 
 - **Cite as SMC-over-models precedents:** Schäfer & Chopin 2013 (+ thesis 2012), Shi & Dunson 2011, Ma 2015, Youssfi &
-  Chopin 2024; for the start law, Papaspiliopoulos & Rossell 2017 (block tables) and Fan et al. 2026 (data-driven start,
+  Chopin 2024, Duan 2019 (tempered SMC for best subset); Ročková 2018 with Clyde–Ghosh for list-renormalised summaries; for the start law, Papaspiliopoulos & Rossell 2017 (block tables) and Fan et al. 2026 (data-driven start,
   frozen ladder); for the SMC machinery, Del Moral–Doucet–Jasra 2006, Del Moral 2004 and Schweizer 2012a (Prop 5).
 - **One-sentence differentiation:** *"Tempered SMC over inclusion vectors goes back to Schäfer and Chopin (2013). Their
   sampler and its successors start from the uniform law or the prior, move particles with a single fitted
@@ -81,6 +81,6 @@ Not read in full (not SMC over models, or background only): Bottolo & Richardson
 - About 120 candidates; Google Scholar and ProQuest only through web search; Semantic Scholar was rate-limited, so the forward citation
   chains of Schäfer–Chopin (106 citing items) and Shi–Dunson were followed through Semantic Scholar plus OpenAlex.
 - Versions not obtained: the Schäfer–Chopin journal version and its announced genetics supplement; the JASA versions of
-  García-Donato & Martínez-Beneito (arXiv v1 read) and Ma (arXiv v2 with supplement read); the published Shi–Dunson text (preprint read);
-  Duan 2019 (above); Ročková 2018.
+  García-Donato & Martínez-Beneito (arXiv v1 read) and Ma (arXiv v2 with supplement read); the published Shi–Dunson text (preprint read).
+  Duan 2019 and Ročková 2018 were obtained by the owner and read in full.
 - The readers' typo findings in others' papers (Yang et al. A.2 exponent; Fan et al. eq. (3)) are noted in `notes/`, unverified.
