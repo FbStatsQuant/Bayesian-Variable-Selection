@@ -180,7 +180,7 @@ The number of true predictors $\sz\ge1$ is fixed.
 Assumption~A3 says that a fixed, small number of predictors matter, however large $n$ and $p$ become. It is the strict
 sparsity condition~(4) of \citet{SongLiang2015}. It holds for a trait driven by a handful of genes. It fails for a trait
 with hundreds of small effects, more of which become detectable as $n$ grows. For our rate it is nearly necessary:
-by Theorem~\ref{thm:sharp}(a), the rate $\rn$ is possible only if $\sz=O(\sqrt{\log n})$.
+by Theorem~\ref{thm:sharp}(a), the rate $\rn$ is possible only if $\sz=O(\sqrt{\log n})$ (for $\sz\le\min(K-1,p/2)$).
 
 \subsection{Prior specification}\label{sec:prior}
 
@@ -219,7 +219,7 @@ and the posterior over models is
 \begin{equation}\label{eq:posterior}
   \pis{S}=\frac{\pi(S)\,m(S)}{Z},\qquad Z=\sum_{S\in\Om}\pi(S)\,m(S).
 \end{equation}
-We call $\pi(S)m(S)$ the \emph{score} of $S$ and $Z$ the \emph{evidence}. The usual summaries are the inclusion
+In $Z$, $\pi(S)$ is normalised over $\Om$ and $m(S)$ includes its constant factor, given in the specification, so $Z$ is the evidence itself. We call $\pi(S)m(S)$ the \emph{score} of $S$ and $Z$ the \emph{evidence}. The usual summaries are the inclusion
 probabilities $\PIP_j=\sum_{S\ni j}\pis{S}$, the highest posterior model $\HPM=\arg\max_S\pis{S}$, which
 \citet{SongLiang2015} call the maximum a posteriori model, and the median probability model $\MPM=\{j:\PIP_j>1/2\}$ of
 \citet{BarbieriBerger2004}.
@@ -266,10 +266,10 @@ predictors one at a time. The steps are as follows.
 A run reports four things.
 \begin{enumerate}[label=(\roman*)]
   \item \emph{The reported model} $\Shat$: the model with the highest score among all models the run scored, ties going
-    to the smaller model. It is the run's estimate of the $\HPM$. It is \emph{certified} if it is the end point of one of
+    to the smaller model, then to the lexicographically smaller one. It is the run's estimate of the $\HPM$. It is \emph{certified} if it is the end point of one of
     the two searches and that search found no neighbour with a higher score. A certified model is a local optimum of
     the posterior under additions, deletions and swaps.
-  \item \emph{Posterior model probabilities, up to $Z$:} the list of the $40p+1$ best models scored, with their scores.
+  \item \emph{Posterior model probabilities, up to $Z$:} the list of at most $40p+1$ best models scored, with their scores.
     By~\eqref{eq:posterior} the ratio of two scores is the exact posterior odds of the two models.
   \item \emph{Inclusion probabilities:} for each predictor $j$, the estimate $\widehat{\PIP}_j$ is the average, over
     particles and islands at $\xi=1$, of the conditional probability that $j$ is in the model given the rest of the
@@ -477,7 +477,7 @@ $\abs{\Cov(W_j,\,W^\top\tstar\mid W_U)}\ge a$, for a fixed $a>0$.
 Assumption~A8 says that each true predictor stays related to the signal $W^\top\tstar$, by a fixed margin, whichever
 $15$ other predictors are held fixed. The start law looks at one block at a time, so it can pick up a true predictor
 only through what that predictor explains given the other members of its block. The assumption holds for independent
-predictors, for autoregressive correlation with true effects of one sign, and for block designs with the true
+predictors, for positive autoregressive correlation with true effects of one sign, and for block designs with the true
 predictors in different blocks. It fails when other predictors cancel a true predictor's signal: two true predictors
 with coefficients $1$ and $-1$ and correlation $\rho$ each have covariance $1-\rho$ with the signal, which vanishes as
 $\rho\to1$. The marginal relevance condition of \citet{SongLiang2015} (their Condition~5) asks that every true
@@ -624,7 +624,7 @@ and, if $p\to\infty$, $1-\pis{\Sz}\ge(1-\oP(1))\,(\sz+1)\sqrt{\log p/(\pi n)}$.
 \end{thm}
 
 Part (a) holds for every data set and has no assumption. Under this prior no model of that size, the true one included,
-can have posterior mass closer to one than about $(\abs{S}+1)/(3\sqrt n)$. So no design gives a rate faster than
+can have posterior mass closer to one than about $(\abs{S}+1)/(3\sqrt n)$. So, for $\sz\le\min(K-1,p/2)$, no design gives a rate faster than
 $n^{-1/2}$, and the rate $\rn$ of Theorem~\ref{thm:post} is possible only when $\sz=O(\sqrt{\log n})$. This is why A3 is
 nearly necessary. Part (b) shows that in the most favourable designs, with orthogonal or independent null predictors,
 the posterior still misses the true model by a constant times $\sqrt{\log p/n}$. With $p=n^A$ this is the rate of
@@ -644,8 +644,7 @@ which of the three theorems, the exact class of chains, and the growth rate.
 
 The target must be positioned against two results on fast mixing. \citet{YangWainwrightJordan2016} show that a
 Metropolis--Hastings chain with single flips and swaps mixes in a number of steps polynomial in $n$, $p$ and $\sz$,
-under eigenvalue and signal conditions. Zhou et al.\ (2022)\footnote{Q.~Zhou, J.~Yang, D.~Vats, G.~O.~Roberts and
-J.~S.~Rosenthal (2022), Dimension-free mixing for high-dimensional Bayesian variable selection, arXiv:2105.05719.} show
+under eigenvalue and signal conditions. \citet{ZhouYangVatsRobertsRosenthal2022} show
 that an informed chain mixes fast when the posterior has a single mode under additions, deletions and swaps, and give
 an example where mixing is slow. The family of designs must therefore violate the conditions of both papers while our
 consistency result holds on it. No existing result covers the sampler of \citet{ZanellaRoberts2019}.

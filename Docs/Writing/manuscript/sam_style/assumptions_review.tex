@@ -1,0 +1,201 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,array,longtable}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{natbib}
+\setlist{nosep,leftmargin=1.4em}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+\newcommand{\sz}{s_0}
+
+\title{Our assumptions: origin, referee risk, and the S1--S3 simulations}
+\author{SMC-BVS Writing Department}
+\date{25 November 2026}
+
+\begin{document}
+\maketitle
+
+\section*{How to read this}
+Two reviewers read our assumptions A1--A10 and the computing conventions C1--C3 independently: Fable 5.2 and Astra
+(gpt-6.2-astra). This note merges their answers. Where they disagree, both views are given. ``SAM'' is
+\citet{SongLiang2015}; page numbers are journal pages, ``supp.'' means their supplement.
+
+The assumptions describe a sequence of problems as $n$ grows. ``Holds'' for a design means the design, continued in $n$
+with its structure fixed, satisfies the assumption. Where an assumption has explicit constants that our actual $(n,p,\sz)$
+violate, we say so separately.
+
+The designs, fixed by the owner on 24 November:
+\begin{itemize}
+  \item \textbf{S1}: AR(1) predictors, $\rho=0.6$; $n\in\{500,1000\}$, $p\in\{500,5000\}$, $\sz=10$;
+    $\mathrm{SNR}\in\{0.5,1,2,3\}$, $\sigma=1$, and
+    \[\beta^*=\mathrm{SNR}\sqrt{\log p/n}\,(2,-3,2,2,-3,3,-2,3,-2,3,0,\dots,0).\]
+  \item \textbf{S2}: AR(1), $\rho\in\{0,0.35,0.7\}$; $(n,p,s)\in\{(50,1000,5),(100,1000,10)\}$; coefficients equal
+    to $1$ (beta-types 1, 2); $\sigma^2=\beta^\top\Sigma\beta/\nu$ over ten values of $\nu$ from $0.05$ to $6$.
+  \item \textbf{S3}: equicorrelated predictors, $\rho\in\{0.5,0.8\}$; $\sz\in\{5,10\}$; S1's $(n,p)$. The coefficients,
+    their signs and $\sigma$ are not fixed in any source yet, so some S3 answers are conditional.
+\end{itemize}
+
+\section*{The answers at a glance}
+Pushback: L low, M medium, H high. ``\,/\,'' separates the two reviewers (Fable\,/\,Astra) where they differ.
+
+{\small
+\begin{longtable}{@{}p{3.0cm}p{3.1cm}p{1.45cm}p{2.25cm}p{2.25cm}p{2.25cm}@{}}
+\toprule
+Assumption & Origin & Pushback & S1 & S2 & S3 \\
+\midrule
+\endhead
+A1 Gaussian linear model & SAM, same & L & holds & holds & holds if $y$ is Gaussian \\
+A2 $p\le n^A$ & not SAM (SAM allows faster $p$) & L\,/\,M & holds & holds & holds \\
+A3 fixed $\sz$ & SAM, same & L--M\,/\,M & holds & holds; $n/\sz=10$ only & holds \\
+A4(a) sub-Gaussian rows & not SAM; stronger than SAM's Cond.~1 & L & holds & holds & holds \\
+A4(b) Gaussian rows & not SAM; stronger than anything SAM assumes & M--H & holds & holds & holds \\
+A5(a) fixed raw signals & implicit in SAM's proofs & M\,/\,H & \textbf{fails} & holds; most cells weak & depends on $\beta^*$ \\
+A5(b) fixed standardised signals & ours & H & \textbf{fails} & fails & fails \\
+A6 eigenvalue floor & not SAM; standard & L\,/\,M & holds & holds & holds \\
+A7 setting of Thm 2 & SAM (after Jiang 2007) & L\,/\,M & holds & holds; weak at $n=50$ & plausibly holds \\
+A8 visibility & partial faithfulness; stronger than SAM's Cond.~5 & H & \textbf{fails} & holds & holds only if all signs agree \\
+A9 small leakage set & ours & H & asymptotically only & asymptotically only & \textbf{fails} \\
+A10 screening conditions & ours as a package & M\,/\,H & \textbf{fails} & \textbf{fails} & \textbf{fails} \\
+C1--C3 idealised computer & not statistical & L\,/\,L--H & n/a & n/a & n/a \\
+\bottomrule
+\end{longtable}}
+
+\section*{Assumption by assumption}
+
+\textbf{A1. Gaussian linear model.} Same as SAM's model (their (1)--(2), pp.~947, 950). Every paper in this area
+assumes it. A referee may ask about non-Gaussian errors; the planned misspecification result is our answer. It holds in
+S1 and S2; in S3 once $y$ is generated with Gaussian noise.
+
+\textbf{A2. At most polynomially many predictors, $p\le n^A$.} SAM allows more: $p$ up to $\exp(Cn^\alpha)$ for the
+density result (Cor.~1, p.~954) and $n^{\kappa\log n}$ for selection (Cor.~S1, supp.~p.~16). Polynomial $p$ is the
+assumption of \citet{BuhlmannKalischMaathuis2010}. Fable expects little pushback because $A$ can be any fixed number.
+Astra expects some: a referee may say a fixed power excludes the ultrahigh-dimensional growth SAM covers. It holds in all
+designs ($A\le1.77$).
+
+\textbf{A3. A fixed number of true predictors.} SAM's strict sparsity, (4) on p.~950, used by all its selection
+results. A referee who knows \citet{YangWainwrightJordan2016} will note that they let $\sz$ grow. It holds in all
+designs, but in S2 $n/\sz=10$, so the limit statements say little there.
+
+\textbf{A4. The law of the rows.} (a) asks every sparse combination of predictors to have Gaussian-like tails; (b) asks
+exactly Gaussian rows, for Theorem~3. Neither is from SAM. (a) is the usual random-design condition
+\citep[e.g.][]{NarisettyHe2014}. For centred predictors (a) implies SAM's Condition~1 (p.~953). The reviewers differ on
+scope: Fable shows this when SAM's size cap is within our set size; Astra shows it for every cap (by convexity of
+$t\mapsto e^{t^2}$), which would make the qualifier in our short version unnecessary. SAM's weaker Condition~2 (p.~954,
+second moments only) is not in our short version's comparison and should be. (b) is where referees will push: SAM does
+not need Gaussian rows, and (b) excludes genotypes and binary data, where the method is aimed. All three designs have
+Gaussian rows, so both hold.
+
+\textbf{A5. Fixed signals.} (a) asks the true coefficients to be fixed nonzero numbers on the raw scale. SAM states no
+lower bound, but its proofs use fixed coefficients (supp.~pp.~5--6, 15), so (a) is SAM's in substance. The wider
+literature asks only a bound that shrinks like $\sigma\sqrt{\log p/n}$ \citep[Cond.~3 of][]{FanLv2008}; a referee will
+ask for that. (b) asks the coefficients to be fixed on the \emph{sample-standardised} scale; it is ours, and no data are
+generated that way. Both reviewers find:
+\begin{itemize}
+  \item S1 violates (a) and (b) by construction: $\beta^*\propto\sqrt{\log p/n}$, the smallest coefficient runs from
+    $0.08$ to $0.78$ over the cells and shrinks with $n$. Our short version's sentence ``it holds \dots as in our
+    simulations'' is no longer true.
+  \item S2 meets (a) in the letter (coefficients $1$), but most $\nu$ cells are weak in noise units at $n=50,100$.
+  \item (b) fails in every design that draws $y$ from raw coefficients, because the standardised coefficient is the raw
+    one times a random sample standard deviation.
+\end{itemize}
+
+\textbf{A6. Eigenvalue floor.} No set of up to about $5(A+1)(\sz+1)\log n$ predictors may be nearly collinear in the
+population. Standard sparse-eigenvalue condition. SAM's counterparts are Condition~3 (p.~955) and the Gram bounds
+(22)--(23) of Theorem~S (supp.~p.~13), whose floor may vanish; ours is fixed but has no ceiling. Fable: low pushback.
+Astra: medium, because it also forbids near-duplicate null predictors that do not affect the truth. It holds in all
+designs: the floors are $0.25$ (S1), $1$, $0.48$, $0.18$ (S2), and $0.5$, $0.2$ (S3). Equicorrelation $0.8$ does not
+break it.
+
+\textbf{A7. The setting of Theorem~2.} SAM's density-consistency setting, which follows Jiang (2007): our Theorem~2 has
+the form of their (15), p.~952, with a population floor $c_\psi/n$ in place of their ridge prior. No beta-min. It is the
+one assumption set that holds in every design. At $n=50$ the conclusion is weak (radius at least $0.28$ on a distance at
+most $1$), and the constants $M_0,n_0$ have no numerical value. Our short version's remark that SAM's density result
+assumes ``nothing about collinearity'' is true only for SAM's ridge prior.
+
+\textbf{A8. Visibility.} Every true predictor keeps a covariance with the signal bounded away from $0$ after
+conditioning on any $15$ other predictors. SAM's Condition~5 (p.~958) is the marginal case with no margin, and serves
+only its screening step. Fable found published precedents that our documents miss: partial faithfulness with a margin
+\citep[(D4) of][]{BuhlmannKalischMaathuis2010}, the marginal condition of \citet{FanLv2008}, and the conditional one of
+\citet{BarutFanVerhasselt2016}. Our earlier ``no precedent found'' is wrong. Expect high pushback: Bühlmann et al.\ call
+their own version restrictive, and it fails by cancellation when signs are mixed and predictors correlated.
+\begin{itemize}
+  \item S1 fails: with S1's sign pattern the smallest conditional covariance is $0.2\%$ of the coefficient, predictor~5
+    has the wrong marginal sign, and the margin shrinks with $n$. The worst conditioning sets are not blocks the method
+    would form, so this says A8 is too strong, not that the method fails.
+  \item S2 holds: all coefficients are positive and correlations nonnegative.
+  \item S3 holds if all signs agree and fails or nearly fails with mixed signs (exactly zero at $\rho=0.5$ for alternating
+    $\pm1$). \citet{ShinBhattacharyaJohnson2018}, cited for S3, use random signs.
+\end{itemize}
+
+\textbf{A9. Small leakage set.} Only a set $Q$ of fewer than $\sqrt n$ predictors may imitate the signal, the rest must
+be explainable locally, and the constants are tight ($15b_H+b<\tfrac12$). It is ours; SAM has only an informal remark
+(p.~958). High pushback: long, uncheckable on data, written for our own search. Both reviewers find it can hold only as
+a limit: at our sample sizes the size conditions fail in every cell (for instance the model-size cap needs $K\ge341$ when
+$K=250$ at $n=500$; $|H_l|\le n^{b_H}$ allows at most $1.26$ predictors at $n=1000$). In S1 and S2 it plausibly holds as
+$n\to\infty$. In S3 it fails outright: every null predictor stays correlated with the signal after conditioning, so $Q$
+would have to contain all $p$ predictors.
+
+\textbf{A10. Conditions for certified screening.} A floor on the observed design, a lower and an $\ell_1$ bound on the
+coefficients, and a sample-size inequality with the constant $1/200$. The parts are standard; the package is ours.
+Condition (c) fails in every cell, even with zero budget, by three or more orders of magnitude: its right side is at
+most $n/(200\sz^2)$, about $0.05$ in S1, against a left side of at least $12$. S1 would need $n$ of about $3\times10^6$.
+Fable rates pushback medium (the form is fine, the constant is the problem); Astra high (a referee may call Theorem~4
+empty at practical sizes).
+
+\textbf{C1--C3. The idealised computer.} Exact arithmetic, ideal random numbers, a machine that does not fail. Not
+statistical and not checkable from a design. Every theorem about an algorithm idealises this way; SAM's sampler
+statements are limits in the number of iterations (supp.~p.~13). Proposition~5 (unbiased evidence) is the classical SMC
+identity under C3. Fable: low pushback. Astra: high if Theorem~3's delivery clause is read as a promise about real
+hardware, and it notes that delivery for every $n$ needs the stronger convention with lifted integer limits, not C2
+alone.
+
+\section*{Verdict}
+\textbf{Standard.} A1 and A3 are SAM's. A5(a) is SAM's in substance. A7 is SAM's density setting with one extra mild
+condition. A2, A4(a), A6 and C1--C3 are standard, though not from SAM.
+
+\textbf{Ours.} A5(b), A9 and the constant in A10(c). A8 in this form, though it should be cited as partial
+faithfulness.
+
+\textbf{At risk.} By theorem, under S1--S3:
+\begin{itemize}
+  \item \textbf{Theorem 3} (the reported model is the true model) covers none of the three designs. S1 fails A5(b) and
+    A8; S2 fails A5(b) and A9's constants; S3 fails A9, and A8 unless signs agree. A5(b), A8 and A9 also carry the
+    highest referee risk.
+  \item \textbf{Theorem 1} (posterior concentration) does not cover S1, whose signals shrink like $\sqrt{\log p/n}$. It
+    covers S2 in the letter and S3 if its coefficients are fixed numbers.
+  \item \textbf{Theorem 4} (certified screening) is empty at our sizes: A10(c) fails everywhere.
+  \item \textbf{Theorem 2} (fitted distribution) and \textbf{Proposition 5} (unbiased evidence) cover all three designs.
+\end{itemize}
+
+\textbf{For the owner to decide.} Either add one design that Theorem~3 covers (for example AR(1) with fixed
+coefficients of one sign), or say plainly that S1--S3 test the method outside Theorem~3, with Theorem~2 as the result
+that covers them. S3's coefficients, signs and $\sigma$ also need to be fixed; with mixed signs S3 fails A8.
+
+\section*{Where the reviewers disagree}
+\begin{itemize}
+  \item Pushback levels: A2, A3, A6, A7 (Fable low, Astra medium); A5(a), A10 (Fable medium, Astra high); C1--C3
+    (Fable low, Astra high if read as a hardware promise).
+  \item A4(a) versus SAM's Condition~1: Fable shows the implication when SAM's cap is within our set size; Astra shows it
+    for every cap. Astra's argument is short and looks right; if confirmed, drop the qualifier in the short version.
+  \item A8 origin: only Fable searched outside SAM and found the partial-faithfulness precedents.
+\end{itemize}
+
+\section*{Corrections to our earlier documents}
+\begin{enumerate}
+  \item Short version, A5: ``as in our simulations'' is false for S1.
+  \item Short version, SAM list: add SAM's Condition~2 (p.~954) and Theorem~S with (22)--(23), (26) (supp.~pp.~13,
+    15), the SAM result that matches our Theorem~1.
+  \item Short version, A7 row: ``nothing about collinearity'' holds only for SAM's ridge prior.
+  \item A8: cite \citet{BuhlmannKalischMaathuis2010}, \citet{FanLv2008}, \citet{BarutFanVerhasselt2016}; ``no precedent''
+    is wrong.
+  \item Short version, ``Reasonable?'' column: rows A6, A9, A10 still describe the old simulation suite.
+\end{enumerate}
+
+\bibliographystyle{abbrvnat}
+\bibliography{../../shared/refs}
+\end{document}
