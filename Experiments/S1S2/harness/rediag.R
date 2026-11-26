@@ -14,7 +14,13 @@ stem <- file.path(opt$out, opt$method, opt$setting, sprintf("rep_%03d", as.integ
 full <- readRDS(paste0(stem, ".rds")); rec <- full[setdiff(names(full), c("pip", "extra"))]
 tab <- read_settings(file.path(BASE, "specs", "settings.tsv")); row <- tab[tab$setting_id == opt$setting, ]
 d <- gen_data(row, as.integer(opt$rep))
-stopifnot(identical(digest::digest(list(d$X, d$y), algo = "md5"), rec$data_md5))
+md5_note <- ""
+if (!identical(digest::digest(list(d$X, d$y), algo = "md5"), rec$data_md5)) {
+  # data_md5 hashes R's serialization, which changes with the R version (NOTS R 4.5.2 vs Owls R 4.6.0: same data, different
+  # md5; checked 2026-11-26 by the engine scores F(S0), F(MPM) agreeing to 1e-13). Stop only when the R version is the same.
+  if (identical(rec$R_version, R.version.string)) stop("data md5 differs from the record under the same R version")
+  md5_note <- sprintf(" [data_md5 not comparable: record %s, here %s; checked by hpm_F_check instead]", rec$R_version, R.version.string)
+}
 fitfun <- load_method("smcbvs", BASE); env <- environment(fitfun)
 if (!exists("v3_fit", envir = globalenv())) { Sys.setenv(V3_CORE_DIR = get("SMCBVS_CORE_DIR", env)); source(file.path(get("SMCBVS_CORE_DIR", env), "v3.R")) }
 e <- full$extra
@@ -42,7 +48,7 @@ if (identical(rec$status, "ok")) {
   rec$eflag_any <- ef$eflag_any; rec$eflags <- I(as.character(ef$eflags))
 } else rec$failure_type <- "other"
 rec$diag_sec <- proc.time()[["elapsed"]] - t0
-rec$diag_backfill <- paste("harness/rediag.R", format(Sys.time(), tz = "UTC", usetz = TRUE), "(record predates the diagnostics; model list = saved top 50)")
+rec$diag_backfill <- paste("harness/rediag.R", format(Sys.time(), tz = "UTC", usetz = TRUE), "(record predates the diagnostics; model list = saved top 50)", md5_note)
 saveRDS(c(rec, list(pip = full$pip, extra = e[setdiff(names(e), ".top_store")])), paste0(stem, ".rds.tmp")); file.rename(paste0(stem, ".rds.tmp"), paste0(stem, ".rds"))
 writeLines(toJSON(rec, auto_unbox = TRUE, digits = NA, null = "null", na = "null", pretty = TRUE), paste0(stem, ".json.tmp"))
 file.rename(paste0(stem, ".json.tmp"), paste0(stem, ".json"))

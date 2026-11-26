@@ -71,9 +71,10 @@ models_generic <- function(fit) {
 
 # (2) failure type. "none" if the selection is exact; "search" if the method's own score prefers S0 to what it
 # selected (the method would have selected S0 had it found it); "statistical" otherwise (the posterior itself prefers
-# a wrong model); "other" when the fit failed or no score is available.
-failure_type_of <- function(success, status, logpost_S0, logpost_sel) {
-  if (!identical(status, "ok")) return("other")
+# a wrong model); "computational" when the fit hit a wall-time limit (HQ ruling 2026-11-26: counted, never dropped;
+# the denominator stays the number of tasks); "other" when the fit failed otherwise or no score is available.
+failure_type_of <- function(success, status, logpost_S0 = NA_real_, logpost_sel = NA_real_) {
+  if (!identical(status, "ok")) return(if (grepl("timeout", as.character(status %||% ""), ignore.case = TRUE)) "computational" else "other")
   if (isTRUE(success)) return("none")
   if (!is.finite(logpost_S0) || !is.finite(logpost_sel)) return("other")
   if (logpost_S0 > logpost_sel) "search" else "statistical"

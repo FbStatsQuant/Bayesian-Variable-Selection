@@ -3,3 +3,4 @@ octave-workspace
 *.rds
 *.log
 specs/results_*
+specs/longfits_*

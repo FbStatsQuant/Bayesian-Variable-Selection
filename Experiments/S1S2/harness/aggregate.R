@@ -31,7 +31,8 @@ cat("wrote", nrow(res), "rows to", opt$dest, "\n")
 #   Rscript harness/aggregate.R --method smcbvs --suite 1 [--out DIR] [--reps 100]  -> specs/results_S<suite>_<method>.{tsv,md}
 # success = MPM equals S0 exactly (OURS); Wilson 95% interval over the expected reps (missing / failed = non-success).
 # Failure split from rec$failure_type (harness/diagnostics.R): statistical (the method's own score prefers its selection
-# to S0), search (it prefers S0 but selected something else), other (failed fit, or no scorer to classify).
+# to S0), search (it prefers S0 but selected something else), computational (wall-time limit hit; HQ ruling 2026-11-26:
+# counted against the 100 tasks, never dropped), other (any other failed fit, or no scorer to classify).
 # pi_S0 = diag_post$pi_S0; min ESS/N = summary$min_ess_over_N (SMC-BVS only); runtime = adapter runtime_sec;
 # core-h = sum over records of (wall_sec_harness + diag_sec) / 3600, single-threaded fits.
 if (!is.null(opt$method)) {
@@ -45,7 +46,7 @@ if (!is.null(opt$method)) {
     g <- function(r, ...) { x <- r; for (k in c(...)) { x <- x[[k]]; if (is.null(x)) return(NA_real_) }; as.numeric(x) }
     okv <- vapply(recs, function(r) identical(r$status, "ok"), TRUE)
     suc <- vapply(recs, function(r) isTRUE(r$success) && identical(r$status, "ok"), TRUE)
-    ft <- vapply(recs, function(r) if (identical(r$status, "ok")) as.character(r$failure_type %||% "other") else "other", "")
+    ft <- vapply(recs, function(r) if (identical(r$status, "ok")) as.character(r$failure_type %||% "other") else failure_type_of(FALSE, r$status), "")
     ft[suc] <- "none"
     pis <- vapply(recs[okv], g, 0, "diag_post", "pi_S0")
     ess <- vapply(recs[okv], g, 0, "summary", "min_ess_over_N")
@@ -57,7 +58,8 @@ if (!is.null(opt$method)) {
     rows[[length(rows) + 1]] <- data.frame(setting_id = s, label = row$label, n = row$n, p = row$p, snr = row$snr,
       n_records = sum(have), n_ok = sum(okv), n_failed = sum(!okv), n_missing = R - sum(have),
       successes = sum(suc), reps = R, success_rate = sum(suc) / R, wilson_lo = w[1], wilson_hi = w[2],
-      fail_statistical = sum(ft == "statistical"), fail_search = sum(ft == "search"), fail_other = sum(!suc & !(ft %in% c("statistical", "search"))),
+      fail_statistical = sum(ft == "statistical"), fail_search = sum(ft == "search"), n_computational = sum(ft == "computational"),
+      fail_other = sum(!suc & !(ft %in% c("statistical", "search", "computational"))),
       eflag_n = sum(ef), pi_S0_median = q(pis, .5), pi_S0_q25 = q(pis, .25), pi_S0_q75 = q(pis, .75),
       min_ess_over_N_median = q(ess, .5), runtime_median_sec = q(rt, .5), core_h_total = sum(wall) / 3600,
       stringsAsFactors = FALSE)
@@ -68,10 +70,10 @@ if (!is.null(opt$method)) {
   f2 <- function(x, d = 2) ifelse(is.na(x), "–", formatC(x, format = "f", digits = d))
   md <- c(sprintf("# %s on S%d: %d settings x %d reps (harness/aggregate.R, %s)", m, su, nrow(D), R, format(Sys.time(), "%Y-%m-%d %H:%M")), "",
           "Success = MPM equals S0 exactly; 95% Wilson interval over the expected reps (missing and failed count as non-success).", "",
-          "| setting | (n, p, SNR) | success | Wilson 95% | stat / search / other | E-flags | π̂(S0) median [IQR] | min ESS/N median | runtime median (s) | core-h | ok / failed / missing |",
+          "| setting | (n, p, SNR) | success | Wilson 95% | stat / search / computational / other | E-flags | π̂(S0) median [IQR] | min ESS/N median | runtime median (s) | core-h | ok / failed / missing |",
           "|---|---|---|---|---|---|---|---|---|---|---|")
-  for (i in seq_len(nrow(D))) with(D[i, ], md <<- c(md, sprintf("| %s | (%d, %d, %g) | %d/%d | [%s, %s] | %d / %d / %d | %d | %s [%s, %s] | %s | %s | %s | %d / %d / %d |",
-    setting_id, n, p, snr, successes, reps, f2(wilson_lo, 3), f2(wilson_hi, 3), fail_statistical, fail_search, fail_other, eflag_n,
+  for (i in seq_len(nrow(D))) with(D[i, ], md <<- c(md, sprintf("| %s | (%d, %d, %g) | %d/%d | [%s, %s] | %d / %d / %d / %d | %d | %s [%s, %s] | %s | %s | %s | %d / %d / %d |",
+    setting_id, n, p, snr, successes, reps, f2(wilson_lo, 3), f2(wilson_hi, 3), fail_statistical, fail_search, n_computational, fail_other, eflag_n,
     f2(pi_S0_median, 3), f2(pi_S0_q25, 3), f2(pi_S0_q75, 3), f2(min_ess_over_N_median, 3), f2(runtime_median_sec, 0), f2(core_h_total, 2),
     n_ok, n_failed, n_missing)))
   writeLines(md, paste0(stem, ".md"))

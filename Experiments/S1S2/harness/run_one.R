@@ -68,10 +68,10 @@ run_one <- function(method, setting_id, rep, out = NULL, ctrl = list()) {
           "adapter extra$top_models" else NA_character_) else list(note = "no PIP returned")
       rec$diag_post$sigma_hat <- sigma_hat_generic(method, fit)
       rec$diag_post$scorer <- "none: the adapter exposes no log-posterior scorer"
-      rec$failure_type <- if (!identical(rec$status, "ok")) "other" else if (isTRUE(rec$success)) "none" else "unclassified (no scorer)"
+      rec$failure_type <- if (!identical(rec$status, "ok")) failure_type_of(FALSE, rec$status) else if (isTRUE(rec$success)) "none" else "unclassified (no scorer)"
     }
-  }, error = function(e) { rec$diag_post <<- list(error = conditionMessage(e)); rec$failure_type <<- "other" })
-  else if (!identical(rec$status, "ok")) rec$failure_type <- "other" else rec$failure_type <- if (isTRUE(rec$success)) "none" else "unclassified (no scorer)"
+  }, error = function(e) { rec$diag_post <<- list(error = conditionMessage(e)); rec$failure_type <<- failure_type_of(FALSE, if (identical(rec$status, "ok")) "diagnostics error" else rec$status) })
+  else if (!identical(rec$status, "ok")) rec$failure_type <- failure_type_of(FALSE, rec$status) else rec$failure_type <- if (isTRUE(rec$success)) "none" else "unclassified (no scorer)"
   rec$diag_sec <- proc.time()[["elapsed"]] - t_diag
   if (!is.null(fit$extra$eflag_any)) { rec$eflag_any <- fit$extra$eflag_any; rec$eflags <- I(as.character(fit$extra$eflags)) }
   rec$finished <- format(Sys.time(), tz = "UTC", usetz = TRUE)
