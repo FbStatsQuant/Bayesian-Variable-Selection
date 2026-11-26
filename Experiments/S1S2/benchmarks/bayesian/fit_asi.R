@@ -58,11 +58,13 @@
 #   pip = output.prob_inclusion
 #
 # THE 18 ARGUMENTS  (value | source | tag)
-#   [INS] documents 15 of them (it has no data_fixed, RB_adap is listed, no
-#   updateg; its printed signature omits RB_adap but its list has it); [RUN]
-#   passes 16 (no data_fixed, no updateg); the function takes 18 (m.1).  So the
-#   two example scripts do not run against the shipped function as written.
-#   The two undocumented arguments are set from the code itself.
+#   [INS] p.4 prints a 15-argument signature (data, target, g, gprior, mode,
+#   RB, hparam, tau, nu, burnin, numbofits, thin, numbofreps, heat, adap_type)
+#   but its list on pp.4-5 describes 16 inputs: those 15 and RB_adap.  [RUN]
+#   passes 16 (the 16 of the list; no data_fixed, no updateg).  The function
+#   takes 18 (m.1).  So the two example scripts do not run against the shipped
+#   function as written.  The two arguments [INS] does not describe,
+#   data_fixed and updateg, are set from the code itself.
 #    1 data_fixed  zeros(n, 0): no covariate forced into every model.  The
 #                  code always adds its own intercept column (m.67)
 #                                  | code m.17-18, m.53, m.67; not in [INS]     | OURS-9
@@ -122,6 +124,24 @@
 #   OURS-6  selection: median probability model, PIP > 0.5 (INTERFACE.md).
 #   OURS-7  threads: OMP_NUM_THREADS = OPENBLAS_NUM_THREADS = ctrl$threads
 #           (default 1, max 4) in the environment of the Octave process.
+#   OURS-10 timeout: the Octave call is stopped after ctrl$timeout_sec seconds
+#           (R's system2(timeout = )).  Default max(3600, 8 * p * f) s, where
+#           f = max(1, burnin * numbofreps / 50000, numbofits * thin *
+#           numbofreps / 100000) scales it with a run longer than the default.
+#           Measured fits at the default length took 1.7 to 2.1 s * p (929 s
+#           at p = 500, 1727 to 2136 s at p = 1000, 10266 s at p = 5000), so
+#           the default is about 4 times the expected time.  On expiry the
+#           adapter returns status "failed: timeout ...", no selection, and
+#           deletes its temporary directory.
+#   OURS-11 runtime_sec = the sampler's own wall time (tic/toc around the
+#           ASI_sampler call in the driver): the fit only, as INTERFACE.md
+#           asks.  extra$octave_call_sec is the whole Octave call (start-up,
+#           reading and writing the files, the sampler).
+#   OURS-12 a non-finite value in the recorded log posterior (output.logpost)
+#           is treated as a failed fit: status "failed: non-finite logpost".
+#           Example: a constant y gives a zero residual sum of squares and an
+#           infinite log marginal likelihood (m.83), and the code returns
+#           PIPs all the same.
 #   OURS-9  data_fixed and updateg: the two arguments [INS] does not document,
 #           set from the code so that nothing is forced in and g stays fixed.
 #   PRE     PREPROCESSING, done HERE, in R, once: X <- scale(X); y <- scale(y,
@@ -171,6 +191,7 @@
 #   ctrl$numbofreps, ctrl$adap_type   arguments of ASI_sampler
 #   ctrl$suite                "S1" (default) or "S2", from harness/run_one.R; sets tags only
 #   ctrl$threads              BLAS/OpenMP threads of the Octave process (1; max 4)
+#   ctrl$timeout_sec          time limit of the Octave call in seconds (OURS-10)
 #   ctrl$octave_home          Octave environment (default above)
 #   ctrl$sampler_dir          folder holding ASI_sampler.m (sha256 is checked)
 #   ctrl$driver               path of run_asi.m (default: asi_octave/ next to this file)
@@ -250,6 +271,11 @@ fit_asi <- function(X, y, method_seed, ctrl = list()) {
     if (is.na(threads) || threads < 1L) threads <- 1L
     threads <- min(threads, 4L)
     gprior <- 0; mode <- 1; RB_adap <- 1; RB <- 1; heat <- 1; updateg <- 0      # fixed: see THE 18 ARGUMENTS
+    # OURS-10: time limit of the Octave call
+    timeout_default <- ceiling(max(3600, 8 * p * max(1, burnin * numbofreps / 50000, numbofits * thin * numbofreps / 100000)))
+    timeout_sec <- if (ov("timeout_sec")) as.numeric(ctrl$timeout_sec) else timeout_default
+    if (length(timeout_sec) != 1L || !is.finite(timeout_sec) || timeout_sec < 1) stop("ctrl$timeout_sec must be one finite number >= 1 (seconds)")
+    timeout_sec <- ceiling(timeout_sec)
 
     # ---- PRE: preprocessing, here and only here ---------------------------
     sdx <- apply(X, 2L, stats::sd)
@@ -276,10 +302,13 @@ fit_asi <- function(X, y, method_seed, ctrl = list()) {
              paste0("OMP_NUM_THREADS=", threads), paste0("OPENBLAS_NUM_THREADS=", threads),
              paste0("MKL_NUM_THREADS=", threads))
     t_call0 <- proc.time()[["elapsed"]]
-    rc <- system2(octave, c("--norc", "--no-history", "--quiet", "--no-window-system", shQuote(driver)),
-                  stdout = logf, stderr = errf, env = env)
+    # system2(timeout = ): R stops the command (and the processes it started) after timeout_sec and returns 124, with a warning
+    rc <- suppressWarnings(system2(octave, c("--norc", "--no-history", "--quiet", "--no-window-system", shQuote(driver)),
+                                   stdout = logf, stderr = errf, env = env, timeout = timeout_sec))
     t_call1 <- proc.time()[["elapsed"]]
     done <- file.path(workdir, "done.txt")
+    if (identical(as.integer(rc), 124L) && !file.exists(done))
+      stop("timeout: the Octave call was stopped after ", timeout_sec, " s (ctrl$timeout_sec; elapsed ", round(t_call1 - t_call0, 1), " s)")
     if (!identical(as.integer(rc), 0L) || !file.exists(done)) {
       tail_of <- function(f) if (file.exists(f)) paste(utils::tail(readLines(f, warn = FALSE), 6L), collapse = " | ") else ""
       stop("Octave run failed (exit ", rc, "): ", substr(gsub("\\s+", " ", paste(tail_of(errf), tail_of(logf))), 1L, 600L))
@@ -305,6 +334,8 @@ fit_asi <- function(X, y, method_seed, ctrl = list()) {
     which_sampler <- readLines(file.path(workdir, "which_sampler.txt"), warn = FALSE)[1L]
     if (!identical(normalizePath(which_sampler), normalizePath(sampler))) stop("Octave resolved ASI_sampler to another file: ", which_sampler)
     if (anyNA(pip) || any(pip < 0 | pip > 1)) stop("ASI_sampler returned PIPs outside [0, 1] or NaN")
+    if (any(!is.finite(logpost))) stop("non-finite logpost (", sum(!is.finite(logpost)), " of ", length(logpost), " recorded values of output.logpost)")   # OURS-12
+    if (!is.finite(sampler_sec) || sampler_sec < 0) stop("the driver returned no sampler time")
 
     # ---- record what was actually used --------------------------------------
     tag <- function(value, tag, source) list(value = value, tag = tag, source = source)
@@ -346,7 +377,11 @@ fit_asi <- function(X, y, method_seed, ctrl = list()) {
       pip_estimator = tag("output.prob_inclusion: plain mean of gamma over numbofits * numbofreps recorded draws", "author", "ASI_sampler.m m.529, m.565 (NOTE-a, NOTE-b)"),
       seed         = tag(as.numeric(method_seed), "OURS", "OURS-5: INTERFACE.md Seeds; rand('state', method_seed) and randn('state', method_seed) in asi_octave/run_asi.m"),
       selection    = tag("median probability model: PIP > 0.5", "OURS", "OURS-6: INTERFACE.md Selection rule"),
-      threads      = tag(threads, "OURS", "OURS-7: Owls compute rule; OMP_NUM_THREADS and OPENBLAS_NUM_THREADS of the Octave process")
+      threads      = tag(threads, "OURS", "OURS-7: Owls compute rule; OMP_NUM_THREADS and OPENBLAS_NUM_THREADS of the Octave process"),
+      timeout_sec  = tag(timeout_sec, "OURS", if (ov("timeout_sec")) "OURS-10: ctrl$timeout_sec" else
+                         "OURS-10: default max(3600, 8 * p * f) s, f = max(1, burnin * numbofreps / 50000, numbofits * thin * numbofreps / 100000); about 4 times the measured time of a default-length fit"),
+      runtime_def  = tag("runtime_sec = sampler_sec: wall time of the ASI_sampler call alone (tic/toc in asi_octave/run_asi.m)", "OURS",
+                         "OURS-11: INTERFACE.md 'elapsed wall seconds of the fit only'; extra$octave_call_sec is the whole Octave call")
     )
 
     # ---- diagnostics --------------------------------------------------------
@@ -368,12 +403,13 @@ fit_asi <- function(X, y, method_seed, ctrl = list()) {
     )
     out$selected <- as.integer(sel)
     out$pip <- pip
-    out$runtime_sec <- call_sec
+    out$runtime_sec <- sampler_sec                                # OURS-11: the fit only; call_sec is kept in extra
     out$extra <- c(list(status = "ok"), conv, list(
       accept_trace_every_100 = acc[unique(c(which(seq_along(acc) %% 100L == 0L), length(acc)))],
       zetaAS_final = A, zetaDS_final = D, pi_final = pi_final,
       prob_inclusion2_all_zero = all(pip2 == 0),
       mean_model_size_by_chain = colMeans(modelsize),
+      runtime_note = "runtime_sec = sampler_sec (ASI_sampler call only); octave_call_sec = whole Octave call; octave_startup_io_sec = their difference",
       convergence_note = paste("accept_final is output.accept at the last recorded iteration: the running acceptance rate of all chains pooled, from",
                                "iteration 1, an empty proposal counted as 0 (m.244-247, m.538). zeta_final, zetaAS_final, zetaDS_final are returned",
                                "by the code; pi_final = A/(A+D) and rhat_logpost are derived in the adapter (OURS). No convergence test is applied."),

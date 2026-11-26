@@ -191,6 +191,9 @@ for (cn in names(cases)) {
                 length(r$extra$zetaAS_final) == p && length(r$extra$zetaDS_final) == p && length(r$extra$pi_final) == p &&
                 isTRUE(r$extra$prob_inclusion2_all_zero) && grepl("^10\\.", r$software$octave_version),
               "asi: extra holds the code's acceptance rate, final zeta, final A and D (length p) and the derived pi; prob_inclusion2 is all zero; Octave version recorded")
+        check(identical(r$runtime_sec, r$extra$sampler_sec) && r$extra$octave_call_sec >= r$runtime_sec &&
+                isTRUE(all.equal(r$extra$octave_call_sec - r$extra$sampler_sec, r$extra$octave_startup_io_sec)) && tg1("runtime_def") == "OURS",
+              "asi: runtime_sec is the sampler's own wall time (fit only); extra$octave_call_sec is the whole Octave call and is not smaller")
         info("asi     acceptance %.3f | zeta_final %.4f | R-hat(log posterior) %.3f | mean model size %.2f | Octave call %.1f s = sampler %.1f s + startup/io %.2f s",
              r$extra$accept_final, r$extra$zeta_final, r$extra$rhat_logpost, r$extra$mean_model_size,
              r$extra$octave_call_sec, r$extra$sampler_sec, r$extra$octave_startup_io_sec)
@@ -400,6 +403,8 @@ if ("asi" %in% names(methods)) {
   check(rdef$extra$json_summary$recorded_draws == 4000 * 25 && rdef$extra$json_summary$iterations_total == 6000 &&
           v("kappa") == 1e-4 && isTRUE(all.equal(v("eps"), 0.1 / 30)) && isTRUE(all.equal(v("zeta_start"), 0.1)),
         "asi defaults: 6000 iterations, PIP over 4000 x 25 recorded draws; the code's own kappa = 0.0001, eps = 0.1/p, zeta start 0.1 are recorded")
+  check(identical(v("timeout_sec"), 3600) && tg("timeout_sec") == "OURS" && grepl("max(3600, 8 * p", sr("timeout_sec"), fixed = TRUE),
+        "asi defaults: timeout_sec = max(3600, 8 * p * f) = 3600 s at p = 30, tagged OURS")
   info("asi default-length fit on the 40 x 30 problem: Octave call %.1f s (sampler %.1f s, startup/io %.2f s); acceptance %.3f; zeta_final %.4f",
        rdef$extra$octave_call_sec, rdef$extra$sampler_sec, rdef$extra$octave_startup_io_sec, rdef$extra$accept_final, rdef$extra$zeta_final)
 
@@ -467,8 +472,24 @@ if ("asi" %in% names(methods)) {                            # an edited sampler 
   unlink(tmp, recursive = TRUE)
   r <- methods$asi$f(Xs, ys, 1, c(small, list(adap_type = 2)))
   check(grepl("^failed: adap_type must be", r$extra$status), "asi / ctrl$adap_type = 2 (documented in instructions.pdf, broken in the code) -> refused")
+  # regression (Astra-B2): a constant y makes the code's log posterior infinite while it still returns PIPs
+  set.seed(77); Xc <- matrix(rnorm(30 * 20), 30, 20); yc <- rep(3, 30)
+  r <- tryCatch(methods$asi$f(Xc, yc, 1, small), error = function(e) NULL)
+  check(!is.null(r) && identical(names(r), NAMES) && grepl("^failed: non-finite logpost", r$extra$status) && identical(r$selected, integer(0)) && is.null(r$pip),
+        sprintf("asi / 30 x 20 design, constant y -> %s", if (is.null(r)) "ERROR" else substr(r$extra$status, 1, 80)))
+  # timeout: a fit that needs about 50 s, limit 3 s
+  octave_children <- function() suppressWarnings(system2("pgrep", c("-f", shQuote(paste0("[a]si_octave_", Sys.getpid(), "_"))), stdout = TRUE, stderr = FALSE))
+  t0 <- proc.time()[["elapsed"]]
+  r <- tryCatch(methods$asi$f(X, y, 1, c(asi_quick, list(timeout_sec = 3))), error = function(e) NULL)
+  el <- proc.time()[["elapsed"]] - t0
+  check(!is.null(r) && identical(names(r), NAMES) && grepl("^failed: timeout", r$extra$status) && identical(r$selected, integer(0)) && is.null(r$pip) && el < 30,
+        sprintf("asi / ctrl$timeout_sec = 3 on a 50 s fit -> %s (returned after %.1f s)", if (is.null(r)) "ERROR" else substr(r$extra$status, 1, 60), el))
+  Sys.sleep(1)
+  check(length(octave_children()) == 0L, "asi: no Octave process of the timed-out fit is left running")
+  r <- tryCatch(methods$asi$f(Xs, ys, 1, c(small, list(timeout_sec = 0))), error = function(e) NULL)
+  check(!is.null(r) && grepl("^failed: ctrl\\$timeout_sec must be", r$extra$status), "asi / ctrl$timeout_sec = 0 -> refused")
   left <- list.files(TMP_ROOT, pattern = paste0("^asi_octave_", Sys.getpid(), "_"))
-  check(length(left) == 0L, "asi: no temporary directory is left after the failure paths")
+  check(length(left) == 0L, "asi: no temporary directory is left after the failure paths (incl. the timed-out fit)")
 }
 # small-p edge: h = 10/p needs p > 10 (ASI); bas_mc3 has no such limit under the package defaults
 if ("asi" %in% names(methods)) {

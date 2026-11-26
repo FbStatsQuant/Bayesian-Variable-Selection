@@ -274,8 +274,9 @@
 #        USED: the repo script, tau = 0.2, 25 chains, 2000 + 4000 (EX).
 #   Also: the original zip's run scripts call ASI_sampler with 16 arguments
 #   while its ASI_sampler.m takes 18 (data_fixed first, updateg last), so the
-#   scripts do not match the sampler they ship with; instructions.pdf documents
-#   a third, 15-argument form.  eps and kappa were checked in the repo code:
+#   scripts do not match the sampler they ship with; instructions.pdf prints a
+#   15-argument signature and describes 16 inputs (the 15 and RB_adap).  eps
+#   and kappa were checked in the repo code:
 #   ASI.R sets PIPs = kappa + (1 - 2 kappa) * (RB mean) (r.378) and updates
 #   zeta through logit_e / inv_logit_e with eps (r.387-388), both from alg_par.
 #

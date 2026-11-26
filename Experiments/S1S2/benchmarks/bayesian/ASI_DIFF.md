@@ -109,7 +109,7 @@ Selections were the same. Not measured: D-4 to D-9 and the rest of D-2, because 
 
 - `RB_adap` and `RB` are arguments (m.1) but appear nowhere in the body. `prob_inclusion` is always the plain mean (m.565); `prob_inclusion2` is never filled and returns zeros (m.110, m.566). `instructions.pdf` says `prob_inclusion` is the Rao-Blackwellised estimate when RB = 1.
 - `instructions.pdf` gives `adap_type = 2` for adaptation in burn-in only. The code tests `adap_type == 1` or `adap_type == 0 && it < burnin` (m.249); with 2, nothing adapts and π stays 0/0.
-- Both run scripts call `ASI_sampler` with 16 arguments; the function takes 18 (`data_fixed` first, `updateg` last); `instructions.pdf` documents 15. The shipped scripts cannot run the shipped sampler as written.
+- Both run scripts call `ASI_sampler` with 16 arguments; the function takes 18 (`data_fixed` first, `updateg` last); `instructions.pdf` prints a 15-argument signature (p.4) and describes 16 inputs in its list (the 15 and `RB_adap`, pp.4-5). The shipped scripts cannot run the shipped sampler as written.
 - The run scripts' 100 + 200 iterations match no run reported in the paper (Sec 4.3 reports 500 + 2500 for ASI).
 
 ## Run length and τ for S1 (ruling 3)
@@ -122,7 +122,7 @@ Selections were the same. Not measured: D-4 to D-9 and the rest of D-2, because 
 | PARNI `simulation_example.R` e.67–79 | 2000 | 4000 | none | 25 | 0.2 | the Sec 4.1 design type (g = 9, h = 10/p) |
 | Paper Sec 4.1, supplement | not stated | not stated | — | 5 and 25 | not stated | S1 |
 
-**Used (HQ corrected ruling 2026-11-25):** the PARNI `simulation_example.R` row exactly: 2000 burn-in + 4000 recorded, 25 chains, τ = 0.2, with X scaled and y centred as in that script (e.12–13). In `settings` these carry the source "authors' repo R/simulation/simulation_example.R @3b95d66; not stated in the Biometrika text", with tag "author" in suite S1 and "OURS" in suite S2, where the S1 settings are used unchanged. The earlier ruling τ = 0.234 (paper Sec 4.3) is withdrawn. `test_bayesian.R` reads the script from the pinned clone and checks that every argument of its ASI `alg_par` equals the adapter's (only `verbose` differs).
+**Used (HQ corrected ruling 2026-11-25):** the PARNI `simulation_example.R` row exactly: 2000 burn-in + 4000 recorded, 25 chains, τ = 0.2, with X scaled and y centred as in that script (e.12–13). In `settings` these carry the source "authors' repo R/simulation/simulation_example.R @3b95d66; not stated in the Biometrika text", with tag "author" in suite S1 and "OURS" in suite S2, where the S1 settings are used unchanged. The earlier ruling τ = 0.234 (paper Sec 4.3) is withdrawn. `test_bayesian.R` checks the values the Octave adapter passes (`burnin`, `numbofits`, `numbofreps`, `tau`) and that their `settings` sources cite the repo script; it does not read the PARNI script or compare its `alg_par` fields.
 
 The `fit_asi_parni.R` options that move the R code towards the original (`ctrl$kappa`, `ctrl$init_zeta`, `ctrl$phi_prop`) are off by default. Since the owner's decision the row that runs is the same one, but in the original code: `burnin = 2000`, `numbofits = 4000`, `thin = 1`, `numbofreps = 25`, `tau = 0.2` passed to `ASI_sampler.m`.
 
@@ -135,13 +135,13 @@ Harness data S1_03 (n = 500, p = 500, SNR 2), rep 1; both codes at 2000 + 4000 i
 | Selection (two seeds each) | {1,…,10} = the true support, both seeds | the same, both seeds |
 | Σ PIP | 10.368, 10.367 | 10.368, 10.367 |
 | Largest null PIP | 0.024 (variable 90) | 0.024, 0.025 |
-| max abs(ΔPIP), seed to seed, same code | 0.0009 | 0.0012 |
-| max abs(ΔPIP), `.m` against PARNI (four seed pairs) | 0.0006 to 0.0019 | |
+| max abs(ΔPIP), seed to seed, same code | 0.00085 | 0.00121 |
+| max abs(ΔPIP), `.m` against PARNI (the four seed pairs) | 0.00064, 0.00072, 0.00151, 0.00185 | |
 | Acceptance rate; final ζ | 0.48; 0.952 (clamp) | 0.65; 0.9998 |
 | R-hat of the log posterior | 1.000 | 1.000 |
 | Wall time, one core | 971 s and 1182 s | 77 s and 77 s |
 
-On this S1 cell the two codes give the same PIPs to within Monte Carlo error: the code-to-code difference is no larger than the seed-to-seed difference of either code. The differences D-1 to D-10 change the tuning (ζ, acceptance rate), not the result here. The original under Octave is 13 to 15 times slower. One data set at one S1 setting; it says nothing about S2, where both codes mix poorly (PARNI adapter on the S2 SNR-6 case: 3 TP 3 FP, R-hat 1.03; the original: next paragraph and the table above).
+All four runs (two seeds of each code) selected the same 10 variables, the true support, and their PIPs agree closely: the largest PIP difference between a run of the original and a run of PARNI is 0.00064, 0.00072, 0.00151 and 0.00185 over the four pairs; between the two seeds of the same code it is 0.00085 (Octave) and 0.00121 (PARNI). Two seeds per code do not give a Monte Carlo standard error, so this does not show that the two codes agree to within Monte Carlo error; two of the four cross-code differences are larger than both within-code differences. The original under Octave is 13 to 15 times slower. One data set at one S1 setting; it says nothing about S2, where both codes mix poorly (PARNI adapter on the S2 SNR-6 case: 3 TP 3 FP, R-hat 1.03; the original: next paragraph and the table above).
 
 S2-type data (test case n = 50, p = 1000, 5 signals, SNR 6), original code, two seeds: selections {1,2,4,54,672,755,821} and {1,2,4,54,672,755,821,825}, max abs(ΔPIP) 0.236, R-hat 1.04 and 1.03, acceptance 0.13, final ζ 0.09. PARNI on the same data (earlier round, τ = 0.234): {1,2,4,54,755,821} and {1,2,4,54,755,821,825}, max abs(ΔPIP) 0.147, acceptance 0.17. Both codes are seed-dependent there and agree on the main null variables selected; a code-to-code difference cannot be separated from the seed-to-seed difference with two seeds each.
 
