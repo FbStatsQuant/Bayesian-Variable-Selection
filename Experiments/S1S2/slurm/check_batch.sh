@@ -14,6 +14,7 @@
 #       rule; also escalated (tier 1, N = 4 N0), checks_passed_calibration, local_limit, ls0_improved; runtime, N, tier.
 # STOP rule (manager, 2026-11-25): STOP and report if ANY task failed / timed out / was OOM-killed / has no record after
 # its job ended, or if E-flags (checks_passed_final == FALSE) exceed 5% of the finished fits overall or in any class.
+# S2 E-flag line differs (HQ ops deviation 2026-11-26): 10% while running; at the end > 10% STOP, (5%, 10%] REVIEW.
 # Writes the per-fit table to _local/engineering/S1S2/logs/check_b<K>.tsv (S2: check_s2_b<K>.tsv) and prints the summary.
 set -euo pipefail
 ENG=/home/fb31/SMC-BVS/_local/engineering
@@ -110,11 +111,20 @@ if (!is.null(sx) && nrow(sx)) {
 eflag_pct <- tapply(tab$checks_passed_final[ok] %in% FALSE, tab$class[ok], mean)
 reasons <- c(if (bad_sacct) paste0(bad_sacct, " tasks in a bad Slurm state"),
              if (any(grepl("^failed", tab$status))) paste0(sum(grepl("^failed", tab$status)), " failed records"),
-             if (unfinished == 0 && any(!done)) paste0(sum(!done), " tasks without a record after their jobs ended"),
-             if (any(ok) && mean(tab$checks_passed_final[ok] %in% FALSE) > 0.05) "E-flags > 5% overall",
-             if (any(eflag_pct > 0.05)) paste0("E-flags > 5% in class ", paste(names(eflag_pct)[eflag_pct > 0.05], collapse = ",")))
+             if (unfinished == 0 && any(!done)) paste0(sum(!done), " tasks without a record after their jobs ended"))
+# E-flag line. S1: 5% (while running and at the end). S2 (HQ ops deviation 2026-11-26, decided on the noise argument --
+# the S2 base rate ~4.8% sits at the 5% line): STOP while running only above 10%; at batch end above 10% = STOP, in
+# (5%, 10%] = REVIEW (manager -> HQ with the flag breakdown; no automatic cancel, no packaging), <= 5% = PASS.
+ef_all <- if (any(ok)) mean(tab$checks_passed_final[ok] %in% FALSE) else 0
+ef_stop <- if (suite == 2) 0.10 else 0.05
+reasons <- c(reasons,
+             if (ef_all > ef_stop) sprintf("E-flags > %g%% overall", 100 * ef_stop),
+             if (any(eflag_pct > ef_stop)) paste0(sprintf("E-flags > %g%% in class ", 100 * ef_stop), paste(names(eflag_pct)[eflag_pct > ef_stop], collapse = ",")))
+review <- suite == 2 && unfinished == 0 && !length(reasons) && (ef_all > 0.05 || any(eflag_pct > 0.05))
 cat(sprintf("-- unfinished Slurm tasks: %d\n", unfinished))
 cat(if (length(reasons)) paste0("VERDICT: STOP -- ", paste(reasons, collapse = "; "), "\n") else
-    if (unfinished > 0) "VERDICT: RUNNING -- no STOP condition so far\n" else "VERDICT: PASS -- no STOP condition\n")
+    if (unfinished > 0) "VERDICT: RUNNING -- no STOP condition so far\n" else
+    if (review) sprintf("VERDICT: REVIEW -- S2 E-flags %.1f%% overall (class max %.1f%%) in (5%%, 10%%]: manager -> HQ with the breakdown\n", 100 * ef_all, 100 * max(eflag_pct)) else
+    "VERDICT: PASS -- no STOP condition\n")
 cat("per-fit table:", out, "\n")
 REOF
