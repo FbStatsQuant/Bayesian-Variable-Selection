@@ -73,6 +73,10 @@ while read -r _ a nm r p cur k; do
   (( cur == k )) && continue
   # re-check ownership and name of the array right before touching it
   [[ $(squeue -j "$a" -h -o '%u %j' | sort -u) == "fb31 $nm" ]] || { echo "SKIP $a: owner/name check failed"; continue; }
-  scontrol update JobId="$a" ArrayTaskThrottle="$k" && echo "SET $a $nm ArrayTaskThrottle $cur -> $k" || echo "SET_FAILED $a $nm $cur -> $k"
+  # scontrol exits non-zero when some tasks of the array have finished ("Job has already finished") although the
+  # throttle is applied to the rest, so the result is judged by reading the throttle back
+  scontrol update JobId="$a" ArrayTaskThrottle="$k" > /dev/null 2>&1
+  now=$(scontrol show job "$a" 2>/dev/null | grep -m1 -o 'ArrayTaskThrottle=[0-9]*' | cut -d= -f2)
+  [[ "$now" == "$k" ]] && echo "SET $a $nm ArrayTaskThrottle $cur -> $k" || echo "SET_FAILED $a $nm $cur -> $k (reads ${now:-?})"
 done < <(grep '^A ' <<< "$plan")
 exit 0

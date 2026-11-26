@@ -46,11 +46,14 @@ while true; do
   if [[ "$verdict" == "VERDICT: STOP"* && "$live" -gt 0 ]]; then
     say "ALERT STOP (batch still running): $verdict"
     if (( cancel && ! cancelled )); then
-      co=$(ssh -o ConnectTimeout=60 nots "ids=\$(squeue -u fb31 -h -t PD -o '%u %j %i' | awk '\$1 == \"fb31\" && index(\$2, \"$prefix\") == 1 { print \$3 }' | paste -sd' ' -);
-        echo PENDING_IDS=\$ids; [ -n \"\$ids\" ] && scancel -u fb31 --state=PENDING \$ids; echo SCANCEL_RC=\$?" 2>&1); crc=$?
-      echo "$co" >> "$log"
-      say "CANCELLED_PENDING rc=$crc $(grep -E '^(PENDING_IDS|SCANCEL_RC)=' <<< "$co" | paste -sd' ' -)"
-      (( crc == 0 )) && cancelled=1
+      # array job ids (%F; squeue truncates the "<id>_[ranges]" string of %i), cancelled with --state=PENDING so running
+      # tasks are untouched; done only when no pending task of the prefix is left
+      co=$(ssh -o ConnectTimeout=60 nots "ids=\$(squeue -u fb31 -h -t PD -o '%u %j %F' | awk '\$1 == \"fb31\" && index(\$2, \"$prefix\") == 1 { print \$3 }' | sort -u | paste -sd' ' -);
+        echo PENDING_ARRAYS=\$ids; [ -n \"\$ids\" ] && scancel -u fb31 --state=PENDING \$ids; echo SCANCEL_RC=\$?;
+        echo LEFT=\$(squeue -u fb31 -h -r -t PD -o '%j' | grep -c '^$prefix')" 2>&1); crc=$?
+      echo "$co" >> "$log"; left=$(sed -n 's/^LEFT=//p' <<< "$co" | tail -1)
+      say "CANCELLED_PENDING rc=$crc left_pending=${left:-?} $(grep -E '^(PENDING_ARRAYS|SCANCEL_RC)=' <<< "$co" | paste -sd' ' -)"
+      [[ $crc -eq 0 && "$left" == 0 ]] && cancelled=1
     fi
   fi
   if (( live == 0 )); then
