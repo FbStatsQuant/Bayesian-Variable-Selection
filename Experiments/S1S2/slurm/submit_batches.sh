@@ -6,13 +6,14 @@
 # A batch = reps LO..HI of every setting in the chosen classes (all 16 settings, reps 1-25 -> 400 tasks). One array per
 # setting class, because Slurm gives every task of an array the same --mem/--time:
 #   class        settings      n     p     default mem / time / partition   (override: MEM_<C>, TIME_<C>, PART_<C>)
-#   P5000N1000   S1_13-S1_16   1000  5000  8G / 12:00:00 / commons
-#   P5000N500    S1_05-S1_08   500   5000  8G / 12:00:00 / commons   (S1_07 smoke still running: provisional)
+#   P5000N1000   S1_13-S1_16   1000  5000  8G / 24:00:00 / commons
+#   P5000N500    S1_05-S1_08   500   5000  8G / 24:00:00 / commons
 #   P500N1000    S1_09-S1_12   1000  500   2G / 02:00:00 / commons
 #   P500N500     S1_01-S1_04   500   500   2G / 02:00:00 / commons
 # Sizing (Owls smoke, 1 core, load ~50): S1_03 299 s, S1_11 215 s, S1_15 11,215 s (tier 0, N 5000, peak 1.80 GB),
-# S1_07 > 3.1 h. time = 12 h ~ 3.85x the Owls S1_15 time (manager: ~3x observed, within the 24 h commons max), covering
-# a tier-1 escalation (N x4) and the harness diagnostics. mem: p=5000 = the engine's own allocation (mem_gb = 8; its
+# S1_07 > 3.1 h. Batch 1 ran p=5000 at 12 h: 10/200 fits hit the harness wall timeout (42,900 s), all at SNR 2-3; slowest
+# ok fit 40,156 s (S1_08, tier 1). HQ GO 2026-11-26: p=5000 time = 24 h (the commons max), harness timeout = 86,100 s.
+# mem: p=5000 = the engine's own allocation (mem_gb = 8; its
 # preflight bound is 6.68 GB at tier 0, 6.76 GB at tier 1, dominated by the 500p-model cache); p=500 bound 0.34-0.62 GB.
 # Arrays are submitted longest class first, so the long p=5000 tasks start first and the short ones backfill.
 # Concurrency: the %K throttles of the arrays sum to <= --max-conc (<= 600), split in proportion to the task counts.
@@ -47,7 +48,10 @@ lo=${BASH_REMATCH[1]}; hi=${BASH_REMATCH[2]}
 
 declare -A CELLS=( [P500N500]="1 2 3 4" [P5000N500]="5 6 7 8" [P500N1000]="9 10 11 12" [P5000N1000]="13 14 15 16" )
 declare -A DMEM=( [P500N500]=2G [P500N1000]=2G [P5000N500]=8G [P5000N1000]=8G )
-declare -A DTIME=( [P500N500]=02:00:00 [P500N1000]=02:00:00 [P5000N500]=12:00:00 [P5000N1000]=12:00:00 )
+declare -A DTIME=( [P500N500]=02:00:00 [P500N1000]=02:00:00 [P5000N500]=24:00:00 [P5000N1000]=24:00:00 )
+# Node constraint (manager 2026-11-26): p=5000 pinned to the 70 Sapphire Rapids commons nodes (Platinum 8468), because in
+# batch 1 the Cascade Lake nodes (Gold 6230) ran 1.2-2.4x slower and hosted 8/10 timeouts. CONSTRAINT_<C>= (empty) unpins.
+declare -A DCONS=( [P500N500]="" [P500N1000]="" [P5000N500]=sapphirerapids [P5000N1000]=sapphirerapids )
 IFS=, read -ra CL <<< "$classes"
 nrep=$(( hi - lo + 1 )); total=0
 for c in "${CL[@]}"; do [[ -n "${CELLS[$c]:-}" ]] || { echo "unknown class $c" >&2; exit 64; }; total=$(( total + 4 * nrep )); done
@@ -66,13 +70,15 @@ for c in "${CL[@]}"; do
   n=$(( 4 * nrep ))
   K=$(( total <= maxconc ? n : (n * maxconc) / total )); (( K >= 1 )) || K=1
   v="MEM_$c"; mem=${!v:-${DMEM[$c]}}; v="TIME_$c"; tl=${!v:-${DTIME[$c]}}; v="PART_$c"; part=${!v:-commons}
+  v="CONSTRAINT_$c"; cons=${!v-${DCONS[$c]}}
   memg=${mem%G}; sumK=$(( sumK + K )); sumMem=$(( sumMem + K * memg ))
   cmd=(sbatch --parsable --job-name="s1smc_b${batch}_${c}" --partition="$part" --cpus-per-task=$CPUS_PER_TASK --mem="$mem" --time="$tl"
        --array="${ranges}%${K}" --export="ALL,S1S2_WALL_SEC=$(secs "$tl")")
+  [[ -n "$cons" ]] && cmd+=(--constraint="$cons")
   [[ -n "$dep" ]] && cmd+=(--dependency="$dep")
   cmd+=("$SBATCH_FILE")
   cmds+=("$(printf '%q ' "${cmd[@]}")")
-  echo "# class $c: settings ${CELLS[$c]// /,} reps $lo-$hi -> $n tasks, %$K concurrent, mem $mem, time $tl, $part"
+  echo "# class $c: settings ${CELLS[$c]// /,} reps $lo-$hi -> $n tasks, %$K concurrent, mem $mem, time $tl, $part${cons:+, constraint $cons}"
 done
 echo "# batch $batch: $total tasks; peak concurrency $sumK tasks = $(( sumK * ALLOC_CPUS_PER_TASK )) allocated CPUs (cap $CPU_CAP), ${sumMem}G requested (cap ${MEM_CAP_G}G)"
 (( sumK * ALLOC_CPUS_PER_TASK <= CPU_CAP && sumMem <= MEM_CAP_G )) || { echo "FATAL: batch alone exceeds the per-user cap" >&2; exit 65; }

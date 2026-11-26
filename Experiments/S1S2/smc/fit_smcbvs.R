@@ -99,6 +99,44 @@ diag_smcbvs <- function(X, y, fit, S0) {
        posterior = post, scorer = "v3_score (engine scorer, F = log prior + log marginal)")
 }
 
+# Progress lines (HQ ruling (b), 2026-11-26; OURS, operational only). The engine prints nothing while it runs, and a fit
+# killed by the harness wall timeout leaves no rds, so its progress is otherwise lost. This wraps the four R closures in
+# the engine's compiled-call environment .v3cpp that each run one whole SMC pass (calibration pilot, V/grid build,
+# diagnostic islands, final run) and writes one line per call to stderr (Slurm .err):
+#   PROGRESS <utc> fit_t=<s since v3_fit start> <call> tier=<k> iter=<i> secs=<call s> stages=<per island>
+# Arguments and return values pass through unchanged; no random numbers are drawn; engine files are not edited.
+# Time per stage is not measured by the engine; secs / stages is the per-stage average of one pass.
+smcbvs_progress_hooks <- function() {
+  e <- get(".v3cpp", envir = globalenv())
+  if (isTRUE(attr(e$cpp_final_run, "smcbvs_progress"))) return(invisible(FALSE))
+  t_fit0 <- proc.time()[["elapsed"]]
+  assign(".smcbvs_progress_t0", t_fit0, envir = globalenv())
+  nst <- function(x) tryCatch(paste(vapply(x, function(i) length(i$ess), 1L), collapse = ","), error = function(err) "NA")
+  wrap <- function(nm, tier_at, iter_at, stages) {
+    f <- get(nm, envir = e)
+    g <- function(...) {
+      a <- list(...); t <- proc.time()[["elapsed"]]
+      tier <- if (!is.na(tier_at) && length(a) >= tier_at) a[[tier_at]] else NA
+      it <- if (!is.na(iter_at) && length(a) >= iter_at) a[[iter_at]] else NA
+      now <- function() format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
+      t0 <- get(".smcbvs_progress_t0", envir = globalenv())
+      message(sprintf("PROGRESS %s fit_t=%.0f %s start tier=%s iter=%s", now(), t - t0, nm, tier, it))
+      r <- f(...)
+      message(sprintf("PROGRESS %s fit_t=%.0f %s end tier=%s iter=%s secs=%.1f status=%s stages=%s", now(),
+                      proc.time()[["elapsed"]] - t0, nm, tier, it, proc.time()[["elapsed"]] - t,
+                      tryCatch(as.character(r$status %||% "NA"), error = function(err) "NA"), stages(r)))
+      r
+    }
+    attr(g, "smcbvs_progress") <- TRUE
+    assign(nm, g, envir = e)
+  }
+  wrap("cpp_cal_pilot", 2L, NA, function(r) nst(list(r$island)))
+  wrap("cpp_cal_V", NA, NA, function(r) "-")
+  wrap("cpp_cal_diag", 2L, 8L, function(r) nst(r$islands))
+  wrap("cpp_final_run", NA, NA, function(r) tryCatch(nst(r$islands), error = function(err) "NA"))
+  invisible(TRUE)
+}
+
 fit_smcbvs <- function(X, y, method_seed, ctrl = list()) {
   out <- NULL
   res <- tryCatch(fit_smcbvs_inner(X, y, method_seed, ctrl, function(f) out <<- f), error = function(e) e)
@@ -128,6 +166,12 @@ fit_smcbvs_inner <- function(X, y, method_seed, ctrl = list(), keep = function(f
     if (!exists("v3_fit", envir = globalenv())) {
       Sys.setenv(V3_CORE_DIR = SMCBVS_CORE_DIR)
       source(file.path(SMCBVS_CORE_DIR, "v3.R"), local = FALSE)
+    }
+    if (!identical(Sys.getenv("SMCBVS_PROGRESS"), "0")) {            # SMCBVS_PROGRESS=0 turns the lines off
+      smcbvs_progress_hooks()
+      assign(".smcbvs_progress_t0", proc.time()[["elapsed"]], envir = globalenv())
+      message(sprintf("PROGRESS %s fit_t=0 v3_fit start n=%d p=%d seed=%s", format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"),
+                      nrow(X), ncol(X), method_seed))
     }
     get("v3_fit", envir = globalenv())(X, y, seed = as.numeric(method_seed), allocation = alloc)
   }, error = function(e) structure(list(status = "error", message = conditionMessage(e)), class = "smcbvs_error"))
@@ -167,6 +211,7 @@ fit_smcbvs_inner <- function(X, y, method_seed, ctrl = list(), keep = function(f
                 log_Z = fit$log_Z, log_Z_r = fit$log_Z_r, log_Z_rel_m0 = fit$log_Z_rel_m0, log_Z_lower95 = fit$log_Z_lower95,
                 hpm = sort(as.integer(fit$hpm)), hpm_F = fit$hpm_F, top_models = topm,
                 ess_per_stage = ess, stage_table = st, flags = fit$flags, timings = fit$timings,
+                timings_calibration = lapply(fit$calibration$tiers, function(t) c(tier = t$tier, t$seconds, rebuilds = t$rebuilds %||% NA)),
                 pip_list = fit$pip_list, mpm_list = fit$mpm_list, log_Z_list = fit$log_Z_list,
                 local_certified = fit$local_certified, peak_memory_kb = fit$peak_memory_kb, preflight = fit$preflight,
                 budgets = fit$budgets[c("K", "B", "ell", "L", "N0", "H0", "T0", "R")],

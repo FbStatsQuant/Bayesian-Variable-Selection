@@ -37,10 +37,13 @@ Scratch is purged after 14 days without access and has no backup. Pull and packa
 
 ## Per-class resources (1 CPU per task; the engine is serial)
 
+The harness wall timeout is the Slurm time minus 300 s (p=5000: 86,100 s). Batch 1 ran p=5000 at 12 h; 10 of 200 fits timed out, so HQ raised p=5000 to 24 h (2026-11-26).
+p=5000 tasks are pinned to the Sapphire Rapids commons nodes (`--constraint=sapphirerapids`; override `CONSTRAINT_<class>=` to unpin): in batch 1 the Cascade Lake nodes ran 1.2–2.4× slower and hosted 8 of the 10 timeouts.
+
 | class | settings | mem | time |
 |---|---|---|---|
-| P5000N1000 | S1_13–16 | 8G | 12:00:00 |
-| P5000N500 | S1_05–08 | 8G | 12:00:00 |
+| P5000N1000 | S1_13–16 | 8G | 24:00:00 |
+| P5000N500 | S1_05–08 | 8G | 24:00:00 |
 | P500N1000 | S1_09–12 | 2G | 02:00:00 |
 | P500N500 | S1_01–04 | 2G | 02:00:00 |
 
