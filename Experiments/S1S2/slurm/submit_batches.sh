@@ -87,13 +87,17 @@ echo "# fb31 now running on NOTS: ${ucpu} CPUs, ${umem}G -> free under cap: $(( 
 (( ucpu + sumK * ALLOC_CPUS_PER_TASK <= CPU_CAP )) || echo "WARNING: only $(( CPU_CAP - ucpu )) CPUs (= $(( (CPU_CAP - ucpu) / ALLOC_CPUS_PER_TASK )) tasks) free under the cap; the rest wait (QOSMaxCpuPerUserLimit)" >&2
 (( umem + sumMem <= MEM_CAP_G )) || echo "WARNING: only $(( MEM_CAP_G - umem ))G free under the mem cap; some tasks wait (QOSMaxMemoryPerUser)" >&2
 
+# --go: refuse while any job of this batch is in the queue -- checked ONCE, before the first sbatch (inside the loop it
+# saw the batch's own first array and refused the other classes; batch 2, 2026-11-26)
+if [[ $mode == go ]]; then
+  live=$(squeue -u fb31 -h -o %j | grep -c "^s1smc_b${batch}_" || true)
+  (( live == 0 )) || { echo "REFUSED: $live jobs of batch $batch still queued/running (re-run --go only after they end; ok tasks are skipped)" >&2; exit 67; }
+fi
 for c in "${cmds[@]}"; do
   case $mode in
     print) echo "$c";;
     test)  echo "\$ ${c/sbatch --parsable/sbatch --test-only}"; eval "${c/sbatch --parsable/sbatch --test-only}" 2>&1 || true;;
-    go)    live=$(squeue -u fb31 -h -o %j | grep -c "^s1smc_b${batch}_" || true)
-           (( live == 0 )) || { echo "REFUSED: $live jobs of batch $batch still queued/running (re-run --go only after they end; ok tasks are skipped)" >&2; exit 67; }
-           mkdir -p "$LOGDIR" "$(dirname "$SUBLOG")" /scratch/fb31/SMC-BVS/tmp/S1S2
+    go)    mkdir -p "$LOGDIR" "$(dirname "$SUBLOG")" /scratch/fb31/SMC-BVS/tmp/S1S2
            jid=$(eval "$c"); echo "SUBMITTED $jid  $c"
            printf '%s\t%s\t%s\t%s\t%s\n' "$(date -u +%FT%TZ)" "$batch" "$jid" "$mhash" "$c" >> "$SUBLOG";;
   esac

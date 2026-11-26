@@ -5,6 +5,9 @@
 # unit). Each S1_xx.tar holds smcbvs/S1_xx/rep_RRR.{json,rds} of the batch's reps plus smcbvs/S1_xx/FILES_b<K>.sha256
 # (per-file sums, a plain list, not named SHA256SUMS).
 #   package_for_desktop.sh --batch K --reps LO-HI --manifest <pull manifest> [--src DIR] [--records DIR] [--dry-run]
+#                          [--unit-tag b1r --select FILE]
+# Supplementary unit (e.g. the reruns of batch 1): --unit-tag b1r names the unit S1S2_smcbvs_b1r (FILES_b1r.sha256 inside)
+# and --select FILE (one relative path per line, e.g. smcbvs/S1_16/rep_005.json) packs only those manifest files.
 # Every source file is re-hashed and must match the pull manifest (the NOTS sums) before it is packed. The unit is built
 # in ROOT/_local/tmp and moved into records/ in one rename (same filesystem), so serve_pull.sh never sees half a unit.
 # The desktop pulls hourly at :20 (crews/offload/serve_pull.sh); when it lists the unit in crews/offload/
@@ -13,25 +16,31 @@ set -euo pipefail
 ROOT=/home/fb31/Bayesian-Variable-Selection
 SRC=$ROOT/_local/engineering/runs/S1S2
 REC=$ROOT/_local/engineering/records
-batch=""; reps=""; man=""; dry=0
+batch=""; reps=""; man=""; dry=0; utag=""; sel=""
 while (($#)); do case "$1" in --batch) batch="$2"; shift 2;; --reps) reps="$2"; shift 2;; --manifest) man="$2"; shift 2;;
-  --src) SRC="$2"; shift 2;; --records) REC="$2"; shift 2;; --dry-run) dry=1; shift;; *) echo "unknown arg $1" >&2; exit 64;; esac; done
+  --src) SRC="$2"; shift 2;; --records) REC="$2"; shift 2;; --dry-run) dry=1; shift;;
+  --unit-tag) utag="$2"; shift 2;; --select) sel="$2"; shift 2;; *) echo "unknown arg $1" >&2; exit 64;; esac; done
 [[ "$batch" =~ ^[0-9]+$ && "$reps" =~ ^([0-9]+)-([0-9]+)$ && -f "$man" ]] || { echo "usage: --batch K --reps LO-HI --manifest FILE" >&2; exit 64; }
 lo=${BASH_REMATCH[1]}; hi=${BASH_REMATCH[2]}
-unit=S1S2_smcbvs_b${batch}
+utag=${utag:-b$batch}; [[ "$utag" =~ ^b[0-9]+[a-z0-9]*$ ]] || { echo "bad --unit-tag" >&2; exit 64; }
+[[ -z "$sel" || -s "$sel" ]] || { echo "--select: empty or missing file" >&2; exit 64; }
+unit=S1S2_smcbvs_${utag}
 [[ ! -e "$REC/$unit" ]] || { echo "refusing: $REC/$unit exists" >&2; exit 65; }
 stage=$ROOT/_local/tmp/$(date +%Y%m%d)-opusN-pkg-$unit; rm -rf "$stage"; mkdir -p "$stage/$unit"; trap 'rm -rf "$stage"' EXIT
 # files of the batch, as listed (and hashed) by the pull manifest
 awk -v lo="$lo" -v hi="$hi" '{ f = substr($0, 67); if (match(f, /rep_[0-9]+\./)) { r = substr(f, RSTART + 4, RLENGTH - 5) + 0; if (r >= lo && r <= hi) print } }' "$man" > "$stage/batch.sha256"
+if [[ -n "$sel" ]]; then awk 'NR == FNR { want[$0] = 1; next } (substr($0, 67) in want)' "$sel" "$stage/batch.sha256" > "$stage/sel.sha256"
+  [[ $(wc -l < "$stage/sel.sha256") -eq $(grep -c . "$sel") ]] || { echo "--select: some paths are not in the manifest" >&2; exit 65; }
+  mv "$stage/sel.sha256" "$stage/batch.sha256"; fi
 nf=$(wc -l < "$stage/batch.sha256"); (( nf > 0 )) || { echo "no files of reps $lo-$hi in $man" >&2; exit 65; }
 ( cd "$SRC" && sha256sum --quiet -c "$stage/batch.sha256" ) || { echo "FAILED: Owls copies do not match the pull manifest" >&2; exit 1; }
 echo "verified $nf source files against $man"
 for sd in $(cut -c67- "$stage/batch.sha256" | xargs -n1 dirname | sort -u); do        # e.g. smcbvs/S1_03
   s=$(basename "$sd")
-  grep -F "  $sd/" "$stage/batch.sha256" | sed "s#  $sd/#  #" > "$stage/FILES_b${batch}_$s.sha256"
+  grep -F "  $sd/" "$stage/batch.sha256" | sed "s#  $sd/#  #" > "$stage/FILES_${utag}_$s.sha256"
   { grep -F "  $sd/" "$stage/batch.sha256" | cut -c67-; } > "$stage/list_$s"
-  mkdir -p "$stage/tree/$sd"; cp "$stage/FILES_b${batch}_$s.sha256" "$stage/tree/$sd/FILES_b${batch}.sha256"
-  tar -cf "$stage/$unit/$s.tar" -C "$SRC" -T "$stage/list_$s" -C "$stage/tree" "$sd/FILES_b${batch}.sha256"
+  mkdir -p "$stage/tree/$sd"; cp "$stage/FILES_${utag}_$s.sha256" "$stage/tree/$sd/FILES_${utag}.sha256"
+  tar -cf "$stage/$unit/$s.tar" -C "$SRC" -T "$stage/list_$s" -C "$stage/tree" "$sd/FILES_${utag}.sha256"
   [[ $(tar -tf "$stage/$unit/$s.tar" | wc -l) -eq $(( $(wc -l < "$stage/list_$s") + 1 )) ]] || { echo "tar count mismatch $s" >&2; exit 1; }
 done
 ( cd "$stage/$unit" && sha256sum -- *.tar > SHA256SUMS && sha256sum --quiet -c SHA256SUMS )
