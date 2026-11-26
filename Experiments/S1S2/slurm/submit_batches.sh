@@ -21,6 +21,8 @@
 # NOTS (e.g. BQTF arrays). The script reads fb31's running usage and warns when the batch would not fit beside it;
 # Slurm itself never exceeds the cap (excess tasks wait as QOSMaxCpuPerUserLimit / QOSMaxMemoryPerUser).
 # --test-only runs `sbatch --test-only` per array (validation only; nothing is queued).
+# Re-runnable: --go refuses while any s1smc_b<K>_* job is still in the queue; after the batch has ended, --go again
+# resubmits it and every task whose record is already ok exits at once (re-runs failures only).
 set -euo pipefail
 ENG=/home/fb31/SMC-BVS/_local/engineering
 DEPLOY=${S1S2_DEPLOY:-$ENG/S1S2/deploy}
@@ -83,7 +85,9 @@ for c in "${cmds[@]}"; do
   case $mode in
     print) echo "$c";;
     test)  echo "\$ ${c/sbatch --parsable/sbatch --test-only}"; eval "${c/sbatch --parsable/sbatch --test-only}" 2>&1 || true;;
-    go)    mkdir -p "$LOGDIR" "$(dirname "$SUBLOG")" /scratch/fb31/SMC-BVS/tmp/S1S2
+    go)    live=$(squeue -u fb31 -h -o %j | grep -c "^s1smc_b${batch}_" || true)
+           (( live == 0 )) || { echo "REFUSED: $live jobs of batch $batch still queued/running (re-run --go only after they end; ok tasks are skipped)" >&2; exit 67; }
+           mkdir -p "$LOGDIR" "$(dirname "$SUBLOG")" /scratch/fb31/SMC-BVS/tmp/S1S2
            jid=$(eval "$c"); echo "SUBMITTED $jid  $c"
            printf '%s\t%s\t%s\t%s\t%s\n' "$(date -u +%FT%TZ)" "$batch" "$jid" "$mhash" "$c" >> "$SUBLOG";;
   esac

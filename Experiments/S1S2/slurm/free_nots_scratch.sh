@@ -8,6 +8,8 @@
 #      keeping records_manifests/<unit>/); otherwise records_manifests/<unit>/SHA256SUMS.txt must exist;
 #   G4 on NOTS, immediately before rm, each file re-hashes to the manifest (sha256sum -c); only then are exactly the
 #      manifest's files removed (rm per file, never a directory or glob). Empty setting dirs are left in place.
+#      Re-runnable: files already deleted by an interrupted earlier run are skipped (--ignore-missing); every file still
+#      present must verify before anything is removed.
 # Scratch purge (14 days without access, no backup) makes this step urgent but never skippable: pull + package right
 # after each batch; delete only after G1-G4.
 set -euo pipefail
@@ -24,8 +26,9 @@ if [[ -d "$ENG/records/$unit" ]]; then ( cd "$ENG/records/$unit" && sha256sum --
 else [[ -s "$ENG/records_manifests/$unit/SHA256SUMS.txt" ]] || { echo "G3 FAIL: unit gone from records/ and no records_manifests/$unit/SHA256SUMS.txt"; exit 1; }; echo "G3 ok: unit offloaded, manifest kept"; fi
 grep -vE '^[0-9a-f]{64}  smcbvs/S1_[0-9]{2}/rep_[0-9]{3}\.(json|rds)$' "$man" && { echo "refusing: unexpected path in manifest"; exit 1; }
 if ((go == 0)); then
-  ssh nots "cd '$NRUNS' && sha256sum --quiet -c -" < "$man" && echo "G4 ok (dry run): NOTS files match; would delete $(wc -l < "$man") files" || echo "G4 FAIL (dry run)"
+  ssh nots "cd '$NRUNS' && sha256sum --quiet --ignore-missing -c - && echo \"G4 ok (dry run): present NOTS files match the manifest\"" < "$man" || echo "G4 FAIL (dry run)"
+  ssh nots "cd '$NRUNS' && n=0; while IFS= read -r f; do [ -e \"\$f\" ] && n=\$((n+1)); done; echo \"present on NOTS: \$n of $(wc -l < "$man")\"" < <(cut -c67- "$man")
   exit 0
 fi
-ssh nots "set -euo pipefail; cd '$NRUNS'; m=\$(mktemp); cat > \"\$m\"; sha256sum --quiet -c \"\$m\" || { echo 'G4 FAIL: NOTS files differ; nothing deleted'; rm -f \"\$m\"; exit 1; }
-          cut -c67- \"\$m\" | while IFS= read -r f; do rm -f -- \"\$f\"; done; echo \"G4 ok: deleted \$(wc -l < \"\$m\") files\"; rm -f \"\$m\"" < "$man"
+ssh nots "set -euo pipefail; cd '$NRUNS'; m=\$(mktemp); cat > \"\$m\"; sha256sum --quiet --ignore-missing -c \"\$m\" || { echo 'G4 FAIL: NOTS files differ; nothing deleted'; rm -f \"\$m\"; exit 1; }
+          n=0; while IFS= read -r f; do if [ -e \"\$f\" ]; then rm -f -- \"\$f\"; n=\$((n+1)); fi; done < <(cut -c67- \"\$m\"); echo \"G4 ok: deleted \$n files (rest already gone)\"; rm -f \"\$m\"" < "$man"
