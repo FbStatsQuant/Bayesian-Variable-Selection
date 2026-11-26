@@ -113,6 +113,7 @@ Each method runs under its own prior. There is no shared prior, so the three do 
 7d. **κ = 0.0001 as hard-coded.** The paper says "We use κ = 0.001" (Sec 2.4 p.9); the code has 0.0001 (m.160) and it is not an argument. The file is not edited, so 0.0001 runs (owner's decision: the `.m` as it is). ε = 0.1/p agrees with the paper (m.49-50).
 7e. **ASI seed.** The driver calls `rand("state", method_seed)` and `randn("state", method_seed)` before the sampler; "state" selects Octave's Mersenne Twister and initialises it from the scalar. The sampler draws with `rand` only (`randn` only when `updateg == 1`). The same seed gives identical PIPs (tested). MATLAB would give other draws from the same seed.
 7f. **ASI cost under Octave.** In burn-in the code computes the Rao-Blackwellised probabilities with two interpreted `for j = 1:p` loops per chain move (m.305-311, m.331-348). Under Octave (no JIT) this is the whole cost: see "Test results" for the measured times and the grid estimate. It is a decision for the manager and HQ, not something the adapter may change.
+7g. **A killed ASI run leaves nothing behind.** By default Octave writes its whole workspace (X, y, sampler state; 40 MB at p = 5000) to `octave-workspace` in the current directory when it receives SIGTERM or SIGHUP. The driver turns that off (`crash_dumps_octave_core(false)` and the two signal variants) before it reads anything; a killed run then returns `status = "failed: Octave run failed (exit 1): fatal: caught signal Terminated …"` and the adapter deletes its temporary directory. If the R process itself is killed, its `asi_octave_<pid>_*` directory stays under `ROOT/_local/tmp` and has to be removed by hand.
 8. **OURS-S1, SuSiE L = 20 for all settings (HQ ruling; package default min(10, p)).** Wang et al. 2020 Sec 4.2 (p.16 of the Owls copy) used L = 20 in their 10-effect scenario and L = 10 in their 1-to-5-effect scenario. L is not set from s0: the adapter never sees s0, and choosing L by the true number of effects would give SuSiE oracle knowledge the other methods do not get. In the tests L = 10 and L = 20 selected the same sets. `ctrl$L` overrides (recorded).
 8a. **SuSiE, paper vs this run (recorded, nothing changed).** Wang et al. ran susieR 0.4.29 (Sec 4.2 p.15); this is CRAN 0.14.2. Their displayed results fixed the prior variance at 0.1 var(y) and estimated σ² (Sec 4.2 p.16; they report similar performance when both are estimated); here both are estimated, the `susie()` default. The residual-variance bounds are the defaults var(y)/1e4 and Inf.
 9. **OURS-S2, SuSiE scored by PIP > 0.5.** The authors report 95% credible sets, not a median probability model. The sets are stored in `extra$credible_sets` and not used.
@@ -163,7 +164,7 @@ So the original code states no run length and no τ for the Sec 4.1 experiments.
 
 ## Test results (Owls, 2026-11-25, one core per process, nice 19)
 
-`test_bayesian.R`, final files: 0 failed checks. Quick run (`--only=<m>`): BAS 74, ASI 86, SuSiE 65 checks passed (`.rc_tmp/fableB/logs/o1_*.log`). `--full` on the option (A) state: BAS 87, SuSiE 78 (`r6_*.log`). ASI at its default length was run case by case (`--long --cases=…`, `--full --cases=…`; 0 failed). Run times vary with machine load by up to a factor of two.
+`test_bayesian.R`, final files: 0 failed checks. Quick run (`--only=<m>`): BAS 74, ASI 88, SuSiE 65 checks passed (`.rc_tmp/fableB/logs/o1_bas_mc3.log`, `o2_asi_quick.log`, `o1_susie.log`). One short ASI fit through `harness/run_one.R` (S2_001, rep 1, output to scratch): status ok, tags written as in suite S2. `--full` on the option (A) state: BAS 87, SuSiE 78 (`r6_*.log`). ASI at its default length was run case by case (`--long --cases=…`, `--full --cases=…`; 0 failed). Run times vary with machine load by up to a factor of two.
 
 ASI checks that are specific to the Octave route (all pass): the sampler file has the pinned sha256 in both copies; the driver's call is the 18-argument signature of line 1; `asi_octave/` holds only `run_asi.m`; the adapter's PIPs are identical to a direct Octave call of `ASI_sampler(zeros(n,0), scale(X), y − mean(y), 9, 0, 1, 1, 1, 10/p, 0.2, 1, 100, 200, 1, 25, 1, 1, 0)` with the same seed; `nargin('ASI_sampler')` = 18; **determinism: the same `method_seed` in two separate Octave runs gives identical PIPs, final ζ and acceptance rate**; a different seed gives different draws; an edited copy of the sampler is refused, a byte-identical copy elsewhere runs; missing Octave, sampler or temporary root, `adap_type = 2` and p = 8 return `failed: …` without an R error; no temporary directory is left.
 
@@ -171,19 +172,30 @@ ASI checks that are specific to the Octave route (all pass): the sampler file ha
 |---|---|---|---|
 | S1-like n=200 p=500 ρ=.6 SNR=3 | 6.3 s, exact support, Σ PIP 13.49 | 928.8 s, exact support, Σ PIP 10.80, acceptance 0.72, final ζ 0.952 (the clamp), R-hat 1.000 | 0.5 s, selects {10} only |
 | S1-like n=200 p=500 SNR=0.5 | 2.1 s, none, Σ PIP 0.55 | demo length only (100 + 200): 50.3 s, none, Σ PIP 1.16 | 0.4 s, none |
-| S2 hi-5 n=50 p=1000 ρ=.35 SNR=6 | 12.5 s, 3 TP 0 FP, Σ PIP 10.91 | @@S2ROW@@ | 1.7 s, 1 TP |
+| S2 hi-5 n=50 p=1000 ρ=.35 SNR=6 | 12.5 s, 3 TP 0 FP, Σ PIP 10.91 | 1726.5 s, 3 TP 4 FP: selects {1,2,4,54,672,755,821}, Σ PIP 11.05, acceptance 0.13, final ζ 0.085, R-hat 1.04, 4 PIPs in (0.4, 0.6) | 1.7 s, 1 TP |
 | S2 hi-5 n=50 p=1000 SNR=0.42 | 4.9 s, none, Σ PIP 0.46 | demo length only (100 + 200): 85.2 s, none, Σ PIP 1.93 | 0.4 s, none (all PIP = 0) |
-| S1 full n=1000 p=5000 SNR=2 | 24.4 s, exact support, Σ PIP 11.43, 3.2 GB (single-fit probe) | @@FULLROW@@ | 14.9 s, 6 TP 0 FP, 0.50 GB |
+| S1 full n=1000 p=5000 SNR=2 | 24.4 s, exact support, Σ PIP 11.43, 3.2 GB (single-fit probe) | 10266 s (2.85 h), exact support, Σ PIP 10.30, largest null PIP 0.009, acceptance 0.30, final ζ 0.953 (the clamp), R-hat 1.000 (run as the one-core user unit `fableB-asi-full`, log `.rc_tmp/fableB/logs/o2_asi_full_default.log`; a first run was killed by a server restart at burn-in iteration 1340 after 6275 s). Demo length (100 + 200): 459.6 s, exact support, Σ PIP 10.30, acceptance 0.32, Octave process 0.11 GB | 14.9 s, 6 TP 0 FP, 0.50 GB |
 
 ASI at the demo length of the authors' run scripts (100 + 200 iterations, 25 chains; used by the quick test): S1-like SNR 3: 51.3 s, exact support, Σ PIP 10.75; S2 SNR 6: 85.8 s, 3 TP 1 FP, Σ PIP 6.35.
 
-**Where the ASI time goes.** Octave start-up plus file transfer is 0.3 to 0.7 s per fit; the rest is the sampler. Almost all of it is burn-in: each burn-in chain move runs two interpreted `for j = 1:p` loops for the Rao-Blackwellised probabilities (m.305-311, m.331-348), about 34 µs per variable per chain move in Octave 10.3.0. Measured per burn-in iteration (25 chains): 0.46 s at p = 500, 0.8 s at p = 1000, 4.4 s at p = 5000. After burn-in an iteration costs about 0.03 s at p = 500. So a default-length fit costs about 1.7 s × p: 15 min at p = 500, 29 min at p = 1000, about 2.4 h at p = 5000. The Octave process uses about 0.1 GB. Even a 40 × 30 problem takes 215 s at the default length.
+**Where the ASI time goes.** Octave start-up plus file transfer is 0.3 to 0.7 s per fit; the rest is the sampler. Almost all of it is burn-in: each burn-in chain move runs two interpreted `for j = 1:p` loops for the Rao-Blackwellised probabilities (m.305-311, m.331-348), about 34 µs per variable per chain move in Octave 10.3.0. Measured per burn-in iteration (25 chains): 0.46 s at p = 500, 0.8 s at p = 1000, 4.4 to 5.2 s at p = 5000 (depending on machine load). After burn-in an iteration costs about 0.03 s at p = 500. So a default-length fit costs about 1.7 to 2.1 s × p: 15 min at p = 500, 29 min at p = 1000, 2.85 h measured at p = 5000 (n = 1000). The Octave process uses about 0.1 GB. Even a 40 × 30 problem takes 215 s at the default length.
 
-@@S2SEED@@
+**ASI in S2 depends on the seed, as BAS does.** The S2 SNR-6 data, method seeds +0 and +1, default length (scratch script `.rc_tmp/fableB/probe/probe_asi_s2_seed.R`): selections {1,2,4,54,672,755,821} and {1,2,4,54,672,755,821,825}; Σ PIP 11.05 and 11.30; R-hat 1.040 and 1.027; acceptance 0.130 and 0.138; final ζ 0.085 and 0.087. The largest PIP difference is 0.236 (variable 54: 0.555 against 0.792); five variables differ by more than 0.1; one crosses 0.5 (variable 825: 0.49 against 0.51). The true support is {1,…,5}; variables 3 and 5 have PIP below 0.03 in both runs. The seed +0 run, made in a separate process, reproduced the test run's numbers exactly. The PARNI adapter on the same data selected {1,2,4,54,755,821} and {1,2,4,54,755,821,825} in the earlier round (table below). Both codes and both seeds put high PIP on the same null variables (54, 755, 821), so this looks like the posterior under this prior at n = 50, with Monte Carlo noise on top, and not an adapter fault.
 
 **The original code against the PARNI R code on the same data** (harness data S1_03, n = 500, p = 500, SNR 2, rep 1; both at 2000 + 4000 iterations, 25 chains, τ = 0.2; scratch script `.rc_tmp/fableB/probe/probe_cmp_parni_vs_m.R`):
 
-@@CMP@@
+| | Original `.m` under Octave | PARNI R `ASI()` |
+|---|---|---|
+| Selection (two seeds each) | {1,…,10} = the true support, both seeds | the same, both seeds |
+| Σ PIP | 10.368, 10.367 | 10.368, 10.367 |
+| Largest null PIP | 0.024 (variable 90) | 0.024, 0.025 |
+| max abs(ΔPIP), seed to seed, same code | 0.0009 | 0.0012 |
+| max abs(ΔPIP), `.m` against PARNI (four seed pairs) | 0.0006 to 0.0019 | |
+| Acceptance rate; final ζ | 0.48; 0.952 (clamp) | 0.65; 0.9998 |
+| R-hat of the log posterior | 1.000 | 1.000 |
+| Wall time, one core | 971 s and 1182 s | 77 s and 77 s |
+
+On this S1 cell the two codes give the same PIPs to within Monte Carlo error: the code-to-code difference is no larger than the seed-to-seed difference of either code. The differences D-1 to D-10 change the tuning (ζ, acceptance rate), not the result here. The original under Octave is 13 to 15 times slower. One data set at one S1 setting; it says nothing about S2, where both codes mix poorly (PARNI adapter on the S2 SNR-6 case: 3 TP 3 FP, R-hat 1.03; the original: next paragraph and the table above).
 
 Earlier PARNI-adapter results on the five cases above (round r5, τ = 0.2; reference only): 101.9 s exact, Σ PIP 10.81; 66.8 s none, 1.21; 78.7 s, 3 TP 3 FP, 10.19, acceptance 0.12, R-hat 1.03; 104.2 s none, 2.29; full size 349.5 s, exact, 10.29, 0.39 GB.
 
@@ -198,7 +210,7 @@ Side check of the original MATLAB code's tuning values (`ctrl = list(kappa = 1e-
 
 In both cases the change from these three values is no larger than the seed-to-seed change. This checks only the three values that the repo exposes; it says nothing about D-2 (factor 2, per-chain steps), D-4, D-5 or D-6, which cannot be set.
 
-Each adapter was also run once through `harness/run_one.R` (setting S2_001, rep 1, output to scratch) in the first round: status ok for all three; not repeated since (the adapter interface did not change).
+BAS and SuSiE were also run once through `harness/run_one.R` (setting S2_001, rep 1, output to scratch) in the first round: status ok; not repeated since (their interface did not change). The Octave ASI adapter was run through it after it was built (above).
 
 Observations worth knowing before the smoke gate:
 - SuSiE misses most of the 10 adjacent, sign-alternating S1 signals at n = 200 (it selects one variable; `refine = TRUE` does not change this). At n = 500 and n = 1000 with p = 500, SNR 3, it recovered all 10 in a side check; at n = 1000, p = 5000, SNR 2 it found 6 of 10. This is the method at its defaults, not an adapter fault.
@@ -208,7 +220,7 @@ Observations worth knowing before the smoke gate:
 
 Rough cost of the 100-seed grid (not launched here), from the single fits above on a loaded machine: BAS 2 to 7 s (p = 500), 5 to 25 s (S2, p = 1000), 24 s (p = 5000), so near 50 core-hours for 13,600 fits, with up to about 3 GB per fit; SuSiE under 2 s to 15 s, near 10 core-hours. Treat these as ±50%.
 
-**ASI under Octave is the expensive method: about 7,800 core-hours for the grid.** S1: 800 fits at p = 500 × 15 min ≈ 200 h, and 800 fits at p = 5000 × 2.4 h ≈ 1,900 h. S2: 12,000 fits at p = 1000 × 29 min ≈ 5,700 h. With 40 Owls cores that is about 8 days. The cost is the burn-in of the unmodified code under an interpreter; MATLAB compiles such loops and would probably run the same file much faster (not measured; MATLAB is not available on Owls, and NOTS is excluded). The only levers that leave the file untouched are run settings (`burnin`, `numbofreps`), and those are the owner's to change: cost is proportional to `burnin × numbofreps × p`. This is reported for a decision; the adapter runs the ruled settings.
+**ASI under Octave is the expensive method: about 8,000 core-hours for the grid.** S1: 800 fits at p = 500 × 15 min ≈ 200 h, and 800 fits at p = 5000 × 2.85 h ≈ 2,300 h (measured at n = 1000 only; the n = 500 cells were not timed). S2: 12,000 fits at p = 1000 × 29 min ≈ 5,700 h. With 40 Owls cores that is 8 to 9 days. The cost is the burn-in of the unmodified code under an interpreter; MATLAB compiles such loops and would probably run the same file much faster (not measured; MATLAB is not available on Owls, and NOTS is excluded). The only levers that leave the file untouched are run settings (`burnin`, `numbofreps`), and those are the owner's to change: cost is proportional to `burnin × numbofreps × p`. This is reported for a decision; the adapter runs the ruled settings.
 
 ## Sources read
 
@@ -251,4 +263,4 @@ cd Experiments/S1S2/benchmarks/bayesian
 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 nice -n 19 Rscript test_bayesian.R [--only=bas_mc3|asi|susie] [--full] [--long] [--cases=<regex>]
 ```
 
-Exit status 0 means every check passed. The quick `--only` runs take about 3 minutes (BAS), 8 minutes (ASI: demo-length fits plus one default-length fit on a 40 × 30 problem) and 1 minute (SuSiE). For ASI, `--long` runs the SNR-3 and SNR-6 cases at the default length (15 and 29 minutes) and `--full` adds the n = 1000, p = 5000 fit (about 2.5 hours); `--cases=<regex>` runs section 1 for the matching cases only, e.g. `--only=asi --long "--cases=S2.*SNR=6$"`.
+Exit status 0 means every check passed. The quick `--only` runs take about 3 minutes (BAS), 8 minutes (ASI: demo-length fits plus one default-length fit on a 40 × 30 problem) and 1 minute (SuSiE). For ASI, `--long` runs the SNR-3 and SNR-6 cases at the default length (15 and 29 minutes) and `--full` adds the n = 1000, p = 5000 fit (about 3 hours); `--cases=<regex>` runs section 1 for the matching cases only, e.g. `--only=asi --long "--cases=S2.*SNR=6$"`.

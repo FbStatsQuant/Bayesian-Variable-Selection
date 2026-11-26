@@ -47,6 +47,8 @@
 #   DRIVER  asi_octave/run_asi.m (OURS): reads the data and the arguments
 #           written by this adapter, seeds the generator, calls ASI_sampler,
 #           writes the returned fields.  It sets no value itself.
+#           Its first three statements turn off Octave's workspace dump on a
+#           signal, so that a killed run writes no "octave-workspace" file.
 #
 # THE CALL (run_asi.m; argument order = line 1 of ASI_sampler.m)
 #   rand("state", method_seed); randn("state", method_seed);

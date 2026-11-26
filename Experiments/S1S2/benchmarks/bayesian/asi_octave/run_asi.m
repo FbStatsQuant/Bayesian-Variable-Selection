@@ -20,9 +20,17 @@
 %      ASI_sampler.m.  data_fixed is an n x 0 matrix (no forced covariates);
 %   6. writes the fields of the returned struct, unchanged, as raw doubles, and
 %      the sampler's wall time (tic/toc around the call).
+%   0. before anything else, turns off Octave's workspace dump on a signal
+%      (crash_dumps_octave_core, sigterm_dumps_octave_core,
+%      sighup_dumps_octave_core).  Without this a killed run writes the file
+%      "octave-workspace" (X, y and all sampler state) into the directory the
+%      harness was started from.  It changes nothing in a run that completes.
 % No value is set here: every argument comes from params.txt, i.e. from
 % fit_asi.R, whose PROVENANCE block gives the source of each.
 % =============================================================================
+crash_dumps_octave_core(false);
+sigterm_dumps_octave_core(false);
+sighup_dumps_octave_core(false);
 workdir = getenv("ASI_OCTAVE_WORKDIR");
 if isempty(workdir) || ~exist(workdir, "dir")
   error("run_asi: ASI_OCTAVE_WORKDIR is not set or is not a directory");

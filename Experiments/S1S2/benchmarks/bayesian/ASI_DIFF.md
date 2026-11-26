@@ -124,4 +124,25 @@ Selections were the same. Not measured: D-4 to D-9 and the rest of D-2, because 
 
 **Used (HQ corrected ruling 2026-11-25):** the PARNI `simulation_example.R` row exactly: 2000 burn-in + 4000 recorded, 25 chains, τ = 0.2, with X scaled and y centred as in that script (e.12–13). In `settings` these carry the source "authors' repo R/simulation/simulation_example.R @3b95d66; not stated in the Biometrika text", with tag "author" in suite S1 and "OURS" in suite S2, where the S1 settings are used unchanged. The earlier ruling τ = 0.234 (paper Sec 4.3) is withdrawn. `test_bayesian.R` reads the script from the pinned clone and checks that every argument of its ASI `alg_par` equals the adapter's (only `verbose` differs).
 
-The `fit_asi.R` options that move the R code towards the original (`ctrl$kappa`, `ctrl$init_zeta`, `ctrl$phi_prop`) are off by default.
+The `fit_asi_parni.R` options that move the R code towards the original (`ctrl$kappa`, `ctrl$init_zeta`, `ctrl$phi_prop`) are off by default. Since the owner's decision the row that runs is the same one, but in the original code: `burnin = 2000`, `numbofits = 4000`, `thin = 1`, `numbofreps = 25`, `tau = 0.2` passed to `ASI_sampler.m`.
+
+## The `.m` under Octave against PARNI (measured 2026-11-25, after the decision)
+
+Harness data S1_03 (n = 500, p = 500, SNR 2), rep 1; both codes at 2000 + 4000 iterations, 25 chains, τ = 0.2, X scaled and y centred; two method seeds each.
+
+| | Original `.m` under Octave | PARNI R `ASI()` |
+|---|---|---|
+| Selection (two seeds each) | {1,…,10} = the true support, both seeds | the same, both seeds |
+| Σ PIP | 10.368, 10.367 | 10.368, 10.367 |
+| Largest null PIP | 0.024 (variable 90) | 0.024, 0.025 |
+| max abs(ΔPIP), seed to seed, same code | 0.0009 | 0.0012 |
+| max abs(ΔPIP), `.m` against PARNI (four seed pairs) | 0.0006 to 0.0019 | |
+| Acceptance rate; final ζ | 0.48; 0.952 (clamp) | 0.65; 0.9998 |
+| R-hat of the log posterior | 1.000 | 1.000 |
+| Wall time, one core | 971 s and 1182 s | 77 s and 77 s |
+
+On this S1 cell the two codes give the same PIPs to within Monte Carlo error: the code-to-code difference is no larger than the seed-to-seed difference of either code. The differences D-1 to D-10 change the tuning (ζ, acceptance rate), not the result here. The original under Octave is 13 to 15 times slower. One data set at one S1 setting; it says nothing about S2, where both codes mix poorly (PARNI adapter on the S2 SNR-6 case: 3 TP 3 FP, R-hat 1.03; the original: next paragraph and the table above).
+
+S2-type data (test case n = 50, p = 1000, 5 signals, SNR 6), original code, two seeds: selections {1,2,4,54,672,755,821} and {1,2,4,54,672,755,821,825}, max abs(ΔPIP) 0.236, R-hat 1.04 and 1.03, acceptance 0.13, final ζ 0.09. PARNI on the same data (earlier round, τ = 0.234): {1,2,4,54,755,821} and {1,2,4,54,755,821,825}, max abs(ΔPIP) 0.147, acceptance 0.17. Both codes are seed-dependent there and agree on the main null variables selected; a code-to-code difference cannot be separated from the seed-to-seed difference with two seeds each.
+
+Cost: the original under Octave takes about 1.7 to 2.1 s × p per fit at the ruled run length (15 min at p = 500, 29 min at p = 1000, 2.85 h measured at n = 1000, p = 5000); PARNI took 77 s to 350 s. At n = 1000, p = 5000, SNR 2 both give the exact support (Σ PIP 10.30 for the original, 10.29 for PARNI). See README, "Test results".

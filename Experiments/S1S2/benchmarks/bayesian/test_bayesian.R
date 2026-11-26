@@ -349,6 +349,8 @@ if ("asi" %in% names(methods)) {
         "asi: the driver passes the 18 arguments in the order of the signature, each from params.txt")
   check(identical(list.files(file.path(here, "asi_octave"), pattern = "\\.m$", recursive = TRUE), "run_asi.m"),
         "asi: asi_octave/ holds the driver run_asi.m only (no shim, no copy of the sampler)")
+  check(all(c("crash_dumps_octave_core(false);", "sigterm_dumps_octave_core(false);", "sighup_dumps_octave_core(false);") %in% trimws(code)),
+        "asi: the driver turns off Octave's workspace dump on a signal (a killed run must not write octave-workspace)")
 
   # direct call, independent of the adapter's driver: the test writes the data itself and calls ASI_sampler with literal arguments
   ra <- methods$asi$f(X, y, s, asi_quick)
@@ -408,6 +410,7 @@ if ("asi" %in% names(methods)) {
         "asi: ctrl$tau, ctrl$adap_type, ctrl$numbofreps reach ASI_sampler and are tagged OURS")
   left <- list.files(TMP_ROOT, pattern = paste0("^asi_octave_", Sys.getpid(), "_"))
   check(length(left) == 0L, "asi: no temporary directory of this process is left under _local/tmp")
+  check(!file.exists(file.path(here, "octave-workspace")) && !file.exists("octave-workspace"), "asi: no octave-workspace dump next to the adapters or in the working directory")
 }
 
 # =============================================================================
