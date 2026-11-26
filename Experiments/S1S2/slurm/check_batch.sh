@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
-# check_batch.sh -- run on NOTS. Batch health check for the S1 SMC-BVS run, with the manager's STOP rule.
-#   check_batch.sh --batch K --reps LO-HI [--jobs JOBID,JOBID,...]
-#   (--jobs defaults to the array job ids logged for batch K in _local/engineering/S1S2/logs/submissions.tsv)
+# check_batch.sh -- run on NOTS. Batch health check for the S1 / S2 SMC-BVS runs, with the manager's STOP rule.
+#   check_batch.sh [--suite 1|2] --batch K --reps LO-HI [--jobs JOBID,JOBID,...]
+#   (--jobs defaults to the array job ids logged for batch K in _local/engineering/S1S2/logs/submissions.tsv: batch field
+#   "K" for S1, "S2.K" for S2). Suite 1 (default): S1_01..S1_16, classes P500N500/P5000N500/P500N1000/P5000N1000.
+#   Suite 2: S2_001..S2_120, classes S2N50P1000 (cells 1-60) / S2N100P1000 (cells 61-120).
 # Reports, per setting class and overall:
 #   (1) Slurm: sacct State counts (COMPLETED / FAILED / TIMEOUT / OUT_OF_MEMORY / CANCELLED / NODE_FAIL / RUNNING /
 #       PENDING), elapsed (median, max) and MaxRSS (max) of the batch steps;
@@ -12,22 +14,24 @@
 #       rule; also escalated (tier 1, N = 4 N0), checks_passed_calibration, local_limit, ls0_improved; runtime, N, tier.
 # STOP rule (manager, 2026-11-25): STOP and report if ANY task failed / timed out / was OOM-killed / has no record after
 # its job ended, or if E-flags (checks_passed_final == FALSE) exceed 5% of the finished fits overall or in any class.
-# Writes the per-fit table to _local/engineering/S1S2/logs/check_b<K>.tsv (small) and prints the summary.
+# Writes the per-fit table to _local/engineering/S1S2/logs/check_b<K>.tsv (S2: check_s2_b<K>.tsv) and prints the summary.
 set -euo pipefail
 ENG=/home/fb31/SMC-BVS/_local/engineering
 RUNS=${S1S2_RUNS:-/scratch/fb31/SMC-BVS/runs/S1S2}
 SUBLOG=$ENG/S1S2/logs/submissions.tsv
-batch=""; reps=""; jobs=""
-while (($#)); do case "$1" in --batch) batch="$2"; shift 2;; --reps) reps="$2"; shift 2;; --jobs) jobs="$2"; shift 2;;
+batch=""; reps=""; jobs=""; suite=1
+while (($#)); do case "$1" in --suite) suite="$2"; shift 2;; --batch) batch="$2"; shift 2;; --reps) reps="$2"; shift 2;; --jobs) jobs="$2"; shift 2;;
   *) echo "unknown arg $1" >&2; exit 64;; esac; done
 [[ "$batch" =~ ^[0-9]+$ && "$reps" =~ ^([0-9]+)-([0-9]+)$ ]] || { echo "usage: --batch K --reps LO-HI [--jobs ...]" >&2; exit 64; }
 lo=${BASH_REMATCH[1]}; hi=${BASH_REMATCH[2]}
-[[ -z "$jobs" && -f "$SUBLOG" ]] && jobs=$(awk -F'\t' -v b="$batch" '$2 == b { print $3 }' "$SUBLOG" | paste -sd, -)
-OUT=$ENG/S1S2/logs/check_b${batch}.tsv; mkdir -p "$(dirname "$OUT")"
+[[ "$suite" == 1 || "$suite" == 2 ]] || { echo "--suite must be 1 or 2" >&2; exit 64; }
+if [[ $suite == 1 ]]; then bkey=$batch; OUT=$ENG/S1S2/logs/check_b${batch}.tsv; else bkey=S2.$batch; OUT=$ENG/S1S2/logs/check_s2_b${batch}.tsv; fi
+[[ -z "$jobs" && -f "$SUBLOG" ]] && jobs=$(awk -F'\t' -v b="$bkey" '$2 == b { print $3 }' "$SUBLOG" | paste -sd, -)
+mkdir -p "$(dirname "$OUT")"
 tmp=$(mktemp -d /scratch/fb31/SMC-BVS/tmp/S1S2/check.XXXXXX); trap 'rm -rf "$tmp"' EXIT
 : > "$tmp/sacct_x"; : > "$tmp/sacct_b"
 
-echo "== batch $batch, reps $lo-$hi, jobs ${jobs:-<none logged>}  ($(date -u +%FT%TZ))"
+echo "== suite $suite batch $batch, reps $lo-$hi, jobs ${jobs:-<none logged>}  ($(date -u +%FT%TZ))"
 if [[ -n "$jobs" ]]; then
   sacct -j "$jobs" -X -n -P -o JobID,JobName,State,ExitCode,Elapsed > "$tmp/sacct_x" || true
   sacct -j "$jobs" -n -P -o JobID,MaxRSS,Elapsed,State | grep '\.batch|' > "$tmp/sacct_b" || true
@@ -36,10 +40,16 @@ if [[ -n "$jobs" ]]; then
 fi
 
 source "$ENG/envs/S1S2/env.sh"
-nice -n 19 Rscript --vanilla - "$RUNS" "$lo" "$hi" "$OUT" "$tmp/sacct_x" "$tmp/sacct_b" <<'REOF'
-a <- commandArgs(TRUE); runs <- a[1]; lo <- as.integer(a[2]); hi <- as.integer(a[3]); out <- a[4]
-cls_of <- function(cell) c("P500N500", "P5000N500", "P500N1000", "P5000N1000")[(cell - 1) %/% 4 + 1]
-g <- expand.grid(rep = lo:hi, cell = 1:16); g$setting <- sprintf("S1_%02d", g$cell); g$class <- cls_of(g$cell)
+nice -n 19 Rscript --vanilla - "$RUNS" "$lo" "$hi" "$OUT" "$tmp/sacct_x" "$tmp/sacct_b" "$suite" <<'REOF'
+a <- commandArgs(TRUE); runs <- a[1]; lo <- as.integer(a[2]); hi <- as.integer(a[3]); out <- a[4]; suite <- as.integer(a[7])
+if (suite == 1) {
+  cls_of <- function(cell) c("P500N500", "P5000N500", "P500N1000", "P5000N1000")[(cell - 1) %/% 4 + 1]
+  g <- expand.grid(rep = lo:hi, cell = 1:16); g$setting <- sprintf("S1_%02d", g$cell)
+} else {
+  cls_of <- function(cell) ifelse(cell <= 60, "S2N50P1000", "S2N100P1000")
+  g <- expand.grid(rep = lo:hi, cell = 1:120); g$setting <- sprintf("S2_%03d", g$cell)
+}
+g$class <- cls_of(g$cell)
 g$task_id <- (g$cell - 1) * 100 + g$rep
 flag <- function(f, k) { v <- f[[k]]; if (is.null(v) || length(v) != 1 || is.na(v)) NA else isTRUE(v) }
 rows <- lapply(seq_len(nrow(g)), function(i) {

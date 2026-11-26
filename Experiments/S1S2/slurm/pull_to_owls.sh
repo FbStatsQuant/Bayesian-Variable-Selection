@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# pull_to_owls.sh -- run on OWLS. Copy S1 SMC-BVS records from NOTS scratch to Owls and verify every file by sha256.
-#   pull_to_owls.sh --reps LO-HI [--tag b<K>] [--src-sub smcbvs] [--dest DIR] [--dry-run]
-#   source : nots:/scratch/fb31/SMC-BVS/runs/S1S2/<src-sub>/S1_xx/rep_RRR.{json,rds}   (S1_01..S1_16, reps LO..HI)
+# pull_to_owls.sh -- run on OWLS. Copy S1 / S2 SMC-BVS records from NOTS scratch to Owls and verify every file by sha256.
+#   pull_to_owls.sh [--suite 1|2] --reps LO-HI [--tag b<K>] [--src-sub smcbvs] [--dest DIR] [--dry-run]
+#   source : nots:/scratch/fb31/SMC-BVS/runs/S1S2/<src-sub>/S<suite>_*/rep_RRR.{json,rds}   (suite 1 = S1_01..S1_16, the
+#            default; suite 2 = S2_001..S2_120; reps LO..HI)
 #   dest   : /home/fb31/Bayesian-Variable-Selection/_local/engineering/runs/S1S2/<src-sub>/...   (--dest overrides the root)
 # Steps: (1) on NOTS, sha256 of the existing record files of the range -> manifest (ONE ssh); (2) rsync exactly those
 # files (--files-from); a different existing Owls file (e.g. the Owls smoke rep_001) is NOT overwritten silently: rsync
@@ -11,15 +12,16 @@
 set -euo pipefail
 NRUNS=/scratch/fb31/SMC-BVS/runs/S1S2
 DEST=/home/fb31/Bayesian-Variable-Selection/_local/engineering/runs/S1S2
-reps=""; tag=""; sub=smcbvs; dry=0
-while (($#)); do case "$1" in --reps) reps="$2"; shift 2;; --tag) tag="$2"; shift 2;; --src-sub) sub="$2"; shift 2;;
+reps=""; tag=""; sub=smcbvs; dry=0; suite=1
+while (($#)); do case "$1" in --suite) suite="$2"; shift 2;; --reps) reps="$2"; shift 2;; --tag) tag="$2"; shift 2;; --src-sub) sub="$2"; shift 2;;
   --dest) DEST="$2"; shift 2;; --dry-run) dry=1; shift;; *) echo "unknown arg $1" >&2; exit 64;; esac; done
 [[ "$reps" =~ ^([0-9]+)-([0-9]+)$ ]] || { echo "need --reps LO-HI" >&2; exit 64; }
 lo=${BASH_REMATCH[1]}; hi=${BASH_REMATCH[2]}; [[ "$sub" =~ ^[A-Za-z0-9_/]+$ ]] || exit 64
+[[ "$suite" == 1 || "$suite" == 2 ]] || { echo "--suite must be 1 or 2" >&2; exit 64; }
 ts=$(date -u +%Y%m%dT%H%M%SZ); tag=${tag:-r${lo}-${hi}}
 mkdir -p "$DEST/_manifests"; man="$DEST/_manifests/pull_${tag}_${ts}.sha256"
-# (1) remote manifest: paths relative to the NOTS runs root, e.g. smcbvs/S1_03/rep_001.rds
-ssh nots "cd '$NRUNS' && for d in $sub/*/; do for r in \$(seq $lo $hi); do for e in json rds; do
+# (1) remote manifest: paths relative to the NOTS runs root, e.g. smcbvs/S1_03/rep_001.rds (only S<suite>_* dirs)
+ssh nots "cd '$NRUNS' && for d in $sub/S${suite}_*/; do for r in \$(seq $lo $hi); do for e in json rds; do
             f=\${d}rep_\$(printf %03d \$r).\$e; [ -f \"\$f\" ] && echo \"\$f\"; done; done; done | xargs -r -d '\n' sha256sum" > "$man.part"
 mv "$man.part" "$man"
 nf=$(wc -l < "$man"); echo "manifest: $man ($nf files)"

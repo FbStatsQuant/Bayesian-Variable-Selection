@@ -2,7 +2,8 @@
 # s1_smcbvs_array.sbatch -- S1 SMC-BVS grid on NOTS: ONE fit (setting x rep) per array task. OURS (operational).
 # Submitted ONLY through submit_batches.sh, which sets per class (on the command line, overriding the defaults below):
 #   --array=<task ids>%K  --mem  --time  --partition  --job-name=s1smc_b<k>_<class>  --export=ALL,S1S2_WALL_SEC=<secs>
-# Task ids index slurm/tasks_S1_smcbvs.tsv (task_id = (cell-1)*100 + rep).
+# Task ids index slurm/tasks_S1_smcbvs.tsv (task_id = (cell-1)*100 + rep); S2 (submit_s2_batches.sh) passes
+# S1S2_TASKS=<deploy>/S1S2/slurm/tasks_S2_smcbvs.tsv in --export (same formula, suite 2).
 # Idempotent: a task whose rep json already exists with "status": "ok" exits 0 without fitting. run_one.R writes the
 # rds/json atomically (tmp + rename). If the fit hits the harness wall limit (S1S2_WALL_SEC - 300 s), a minimal
 # "failed: harness wall timeout" json is written (only if no json exists), so the task is visible and re-runnable.
@@ -22,7 +23,8 @@ set -euo pipefail
 ENG=/home/fb31/SMC-BVS/_local/engineering
 DEPLOY=${S1S2_DEPLOY:-$ENG/S1S2/deploy}
 RUNS=${S1S2_RUNS:-/scratch/fb31/SMC-BVS/runs/S1S2}
-TASKS=$DEPLOY/S1S2/slurm/tasks_S1_smcbvs.tsv
+TASKS=${S1S2_TASKS:-$DEPLOY/S1S2/slurm/tasks_S1_smcbvs.tsv}
+[[ "$TASKS" == "$DEPLOY"/S1S2/slurm/tasks_S[12]_smcbvs.tsv && -f "$TASKS" ]] || { echo "FATAL: bad S1S2_TASKS $TASKS" >&2; exit 2; }
 WALL=${S1S2_WALL_SEC:-0}
 source "$ENG/envs/S1S2/env.sh"
 

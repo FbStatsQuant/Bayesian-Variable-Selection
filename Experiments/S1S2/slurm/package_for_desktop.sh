@@ -6,6 +6,11 @@
 # (per-file sums, a plain list, not named SHA256SUMS).
 #   package_for_desktop.sh --batch K --reps LO-HI --manifest <pull manifest> [--src DIR] [--records DIR] [--dry-run]
 #                          [--unit-tag b1r --select FILE]
+#                          [--suite 1|2] [--slurm-tsv FILE]
+# S2 (--suite 2): unit S1S2_smcbvs_s2b<K> with S2_001.tar ... S2_120.tar (FILES_s2b<K>.sha256 inside each).
+# Partition record (--slurm-tsv FILE, written by sacct_record.sh and copied by watch_batch.sh): FILE must have a
+# FILE.sha256 next to it (the NOTS sum) that verifies; it is packed as slurm_<tag>.tar = slurm/<basename FILE> +
+# slurm/<basename FILE>.sha256, listed in the unit SHA256SUMS like every other tar.
 # Supplementary unit (e.g. the reruns of batch 1): --unit-tag b1r names the unit S1S2_smcbvs_b1r (FILES_b1r.sha256 inside)
 # and --select FILE (one relative path per line, e.g. smcbvs/S1_16/rep_005.json) packs only those manifest files.
 # Every source file is re-hashed and must match the pull manifest (the NOTS sums) before it is packed. The unit is built
@@ -16,19 +21,24 @@ set -euo pipefail
 ROOT=/home/fb31/Bayesian-Variable-Selection
 SRC=$ROOT/_local/engineering/runs/S1S2
 REC=$ROOT/_local/engineering/records
-batch=""; reps=""; man=""; dry=0; utag=""; sel=""
+batch=""; reps=""; man=""; dry=0; utag=""; sel=""; suite=1; stsv=""
 while (($#)); do case "$1" in --batch) batch="$2"; shift 2;; --reps) reps="$2"; shift 2;; --manifest) man="$2"; shift 2;;
   --src) SRC="$2"; shift 2;; --records) REC="$2"; shift 2;; --dry-run) dry=1; shift;;
-  --unit-tag) utag="$2"; shift 2;; --select) sel="$2"; shift 2;; *) echo "unknown arg $1" >&2; exit 64;; esac; done
+  --unit-tag) utag="$2"; shift 2;; --select) sel="$2"; shift 2;;
+  --suite) suite="$2"; shift 2;; --slurm-tsv) stsv="$2"; shift 2;; *) echo "unknown arg $1" >&2; exit 64;; esac; done
 [[ "$batch" =~ ^[0-9]+$ && "$reps" =~ ^([0-9]+)-([0-9]+)$ && -f "$man" ]] || { echo "usage: --batch K --reps LO-HI --manifest FILE" >&2; exit 64; }
 lo=${BASH_REMATCH[1]}; hi=${BASH_REMATCH[2]}
-utag=${utag:-b$batch}; [[ "$utag" =~ ^b[0-9]+[a-z0-9]*$ ]] || { echo "bad --unit-tag" >&2; exit 64; }
+[[ "$suite" == 1 || "$suite" == 2 ]] || { echo "--suite must be 1 or 2" >&2; exit 64; }
+if [[ $suite == 1 ]]; then utag=${utag:-b$batch}; [[ "$utag" =~ ^b[0-9]+[a-z0-9]*$ ]] || { echo "bad --unit-tag" >&2; exit 64; }
+else utag=${utag:-s2b$batch}; [[ "$utag" =~ ^s2b[0-9]+[a-z0-9]*$ ]] || { echo "bad --unit-tag (S2: s2b<K>...)" >&2; exit 64; }; fi
+if [[ -n "$stsv" ]]; then [[ -s "$stsv" && -s "$stsv.sha256" ]] || { echo "--slurm-tsv: file or its .sha256 missing" >&2; exit 64; }
+  ( cd "$(dirname "$stsv")" && sha256sum --quiet -c "$(basename "$stsv").sha256" ) || { echo "--slurm-tsv: sha256 mismatch" >&2; exit 1; }; fi
 [[ -z "$sel" || -s "$sel" ]] || { echo "--select: empty or missing file" >&2; exit 64; }
 unit=S1S2_smcbvs_${utag}
 [[ ! -e "$REC/$unit" ]] || { echo "refusing: $REC/$unit exists" >&2; exit 65; }
 stage=$ROOT/_local/tmp/$(date +%Y%m%d)-opusN-pkg-$unit; rm -rf "$stage"; mkdir -p "$stage/$unit"; trap 'rm -rf "$stage"' EXIT
 # files of the batch, as listed (and hashed) by the pull manifest
-awk -v lo="$lo" -v hi="$hi" '{ f = substr($0, 67); if (match(f, /rep_[0-9]+\./)) { r = substr(f, RSTART + 4, RLENGTH - 5) + 0; if (r >= lo && r <= hi) print } }' "$man" > "$stage/batch.sha256"
+awk -v lo="$lo" -v hi="$hi" -v pre="S${suite}_" '{ f = substr($0, 67); if (index(f, "/" pre) && match(f, /rep_[0-9]+\./)) { r = substr(f, RSTART + 4, RLENGTH - 5) + 0; if (r >= lo && r <= hi) print } }' "$man" > "$stage/batch.sha256"
 if [[ -n "$sel" ]]; then awk 'NR == FNR { want[$0] = 1; next } (substr($0, 67) in want)' "$sel" "$stage/batch.sha256" > "$stage/sel.sha256"
   [[ $(wc -l < "$stage/sel.sha256") -eq $(grep -c . "$sel") ]] || { echo "--select: some paths are not in the manifest" >&2; exit 65; }
   mv "$stage/sel.sha256" "$stage/batch.sha256"; fi
@@ -43,6 +53,8 @@ for sd in $(cut -c67- "$stage/batch.sha256" | xargs -n1 dirname | sort -u); do  
   tar -cf "$stage/$unit/$s.tar" -C "$SRC" -T "$stage/list_$s" -C "$stage/tree" "$sd/FILES_${utag}.sha256"
   [[ $(tar -tf "$stage/$unit/$s.tar" | wc -l) -eq $(( $(wc -l < "$stage/list_$s") + 1 )) ]] || { echo "tar count mismatch $s" >&2; exit 1; }
 done
+if [[ -n "$stsv" ]]; then b=$(basename "$stsv"); mkdir -p "$stage/slurm/slurm"; cp "$stsv" "$stsv.sha256" "$stage/slurm/slurm/"
+  tar -cf "$stage/$unit/slurm_${utag}.tar" -C "$stage/slurm" "slurm/$b" "slurm/$b.sha256"; echo "partition record: slurm_${utag}.tar ($b)"; fi
 ( cd "$stage/$unit" && sha256sum -- *.tar > SHA256SUMS && sha256sum --quiet -c SHA256SUMS )
 [[ $(find "$stage/$unit" -name SHA256SUMS | wc -l) -eq 1 && -z $(find "$stage/$unit" -mindepth 1 -type d) ]] || { echo "unit not flat" >&2; exit 1; }
 echo "unit $unit: $(ls "$stage/$unit" | wc -l) entries, $(du -sh "$stage/$unit" | cut -f1)"

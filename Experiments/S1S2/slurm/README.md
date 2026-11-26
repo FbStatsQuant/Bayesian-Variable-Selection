@@ -27,11 +27,17 @@ Scratch is purged after 14 days without access and has no backup. Pull and packa
 | `tasks_S1_smcbvs.tsv` | — | 1,600 rows: `task_id = (cell-1)*100 + rep`, setting_id, rep |
 | `s1_smcbvs_array.sbatch` | NOTS (Slurm) | one fit per task. Idempotent: it skips a task whose json has top-level status ok. On a harness wall timeout it writes a "failed" json |
 | `submit_batches.sh` | NOTS login | builds the per-class arrays of one batch and prints them. `--test-only` validates; `--go` submits |
-| `check_batch.sh` | NOTS login | sacct states, record status and engine E-flags, then the STOP verdict |
+| `check_batch.sh` | NOTS login | sacct states, record status and engine E-flags, then the STOP verdict (`--suite 2` for S2) |
 | `deploy_to_nots.sh` | Owls | deploys from `--commit HASH` (or a worktree snapshot), builds the manifest, installs env.sh |
 | `pull_to_owls.sh` | Owls | builds a NOTS sha256 manifest, rsyncs, then runs `sha256sum -c` on Owls |
-| `package_for_desktop.sh` | Owls | builds one flat unit (16 tars + one SHA256SUMS) and moves it into `records/` atomically |
+| `package_for_desktop.sh` | Owls | builds one flat unit (16 tars, S2: 120, + `slurm_<tag>.tar` partition record + one SHA256SUMS) and moves it into `records/` atomically |
 | `free_nots_scratch.sh` | Owls | deletes a batch's NOTS copy only after gates G1–G4 (desktop verified + three sha checks). Dry run by default |
+| `tasks_S2_smcbvs.tsv` | — | 12,000 rows for S2 (S2_001..S2_120), same formula; the sbatch reads it when `S1S2_TASKS` points to it |
+| `submit_s2_batches.sh` | NOTS login | S2 batches: classes S2N50P1000 / S2N100P1000, commons, `--constraint=cascadelake`, 1G, 08:00:00; initial throttle = 768 − S1 tasks running on commons |
+| `sacct_record.sh` | NOTS login | partition record of one batch (JobID, task, Partition, NodeList, Elapsed, State, MaxRSS, node features, CPU model) → `S1S2/logs/sacct_<tag>.tsv` |
+| `watch_batch.sh` | Owls (systemd user unit) | per-batch watcher: check, ALERT on STOP (`--cancel-pending-on-stop` cancels the batch's PENDING tasks), at DONE pull + partition record + package. `--suite 2` for S2 |
+| `s2_throttle.sh` | NOTS login | re-tunes ONLY the S2 arrays' ArrayTaskThrottle: LOWER when S1 p=5000 pends on our commons QOS cap, else TRACK 768 − S1 commons running |
+| `s2_throttle_ctl.sh` | Owls (systemd user timer, 10 min) | one ssh per run to `s2_throttle.sh --apply`; log `_local/engineering/logs/S1S2_throttle.log` |
 | `toy_fit.R` | either | environment proof (n=100, p=200) |
 | `nots_env.sh` | — | the environment (installed as envs/S1S2/env.sh) |
 
