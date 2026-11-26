@@ -1,10 +1,10 @@
 method	combo	ok	runtime_sec	success	n_selected	TP	FP	FN	n	p	status
-asi	S1_03	ok	79.7	TRUE	10	10	0	0	500	500	ok
-asi	S1_07	ok	315.9	TRUE	10	10	0	0	500	5000	ok
-asi	S1_11	ok	100.7	TRUE	10	10	0	0	1000	500	ok
-asi	S1_15	ok	244.5	TRUE	10	10	0	0	1000	5000	ok
-asi	S2_016	ok	88.4	FALSE	5	0	5	5	50	1000	ok
-asi	S2_076	ok	91.2	FALSE	0	0	0	10	100	1000	ok
+asi	S1_03	ok	1497.5	TRUE	10	10	0	0	500	500	ok
+asi	S1_07	ok	8905.2	TRUE	10	10	0	0	500	5000	ok
+asi	S1_11	ok	1290.1	TRUE	10	10	0	0	1000	500	ok
+asi	S1_15	ok	9544.4	TRUE	10	10	0	0	1000	5000	ok
+asi	S2_016	ok	1914.3	FALSE	4	0	4	5	50	1000	ok
+asi	S2_076	ok	2152.2	FALSE	0	0	0	10	100	1000	ok
 bas_mc3	S1_03	ok	9.8	TRUE	10	10	0	0	500	500	ok
 bas_mc3	S1_07	ok	41.9	FALSE	11	10	1	0	500	5000	ok
 bas_mc3	S1_11	ok	7.6	TRUE	10	10	0	0	1000	500	ok
