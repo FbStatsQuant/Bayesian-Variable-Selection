@@ -11,6 +11,10 @@
 #   copied to Owls runs/S1S2/_logs/sacct/sacct_<tag>.tsv (+ .sha256, the NOTS sum, verified); if the final verdict is
 #   PASS, also package_for_desktop.sh (with the partition record) -> records/S1S2_smcbvs_<tag>; logs "WATCH DONE ...".
 # Suites: --suite 1 (default; S1, job names s1smc_b<K>_*, tag b<K>) or --suite 2 (S2, s2smc_b<K>_*, tag s2b<K>).
+# Benchmarks: --method M (default smcbvs = everything above, unchanged): job names s<suite>bm_<M>_b<K>_*, pull/record tag
+# <M>_s<suite>b<K>, records under runs/S1S2/<M>/, check_batch.sh --method M (benchmark STOP rule incl. data identity and
+# the method's CPU-h budget), unit S1S2_<M>_s<suite>b<K>; --cancel-pending-on-stop is ON for benchmarks (HQ rule:
+# a STOP cancels the batch's pending tasks).
 # Re-runnable: check/pull/record are idempotent; packaging refuses if the unit already exists.
 # Reruns of a batch (e.g. its timed-out tasks under job name s1smc_b1r_<class>): --jobs <their ids> (passed to
 # check_batch.sh and sacct_record.sh), --prefix s1smc_b1r_ (queue count), --tag b1r (pull manifest and record tag),
@@ -23,21 +27,24 @@ set -uo pipefail
 HERE=$(cd "$(dirname "$0")" && pwd)
 NSL=/home/fb31/SMC-BVS/_local/engineering/S1S2/deploy/S1S2/slurm
 RDIR=/home/fb31/Bayesian-Variable-Selection/_local/engineering/runs/S1S2/_logs/sacct
-batch=""; reps=""; interval=1800; log=/dev/stdout; jobs=""; prefix=""; tag=""; nopkg=0; suite=1; cancel=0
+batch=""; reps=""; interval=1800; log=/dev/stdout; jobs=""; prefix=""; tag=""; nopkg=0; suite=1; cancel=0; method=smcbvs
 while (($#)); do case "$1" in --batch) batch="$2"; shift 2;; --reps) reps="$2"; shift 2;; --interval) interval="$2"; shift 2;;
   --log) log="$2"; shift 2;; --jobs) jobs="$2"; shift 2;; --prefix) prefix="$2"; shift 2;; --tag) tag="$2"; shift 2;;
-  --suite) suite="$2"; shift 2;; --cancel-pending-on-stop) cancel=1; shift;;
+  --suite) suite="$2"; shift 2;; --cancel-pending-on-stop) cancel=1; shift;; --method) method="$2"; shift 2;;
   --no-package) nopkg=1; shift;; *) echo "unknown arg $1" >&2; exit 64;; esac; done
 [[ "$batch" =~ ^[0-9]+$ && "$reps" =~ ^[0-9]+-[0-9]+$ ]] || { echo "usage: --batch K --reps LO-HI" >&2; exit 64; }
 [[ "$suite" == 1 || "$suite" == 2 ]] || { echo "--suite must be 1 or 2" >&2; exit 64; }
 [[ -z "$jobs" || "$jobs" =~ ^[0-9,]+$ ]] || { echo "--jobs: comma-separated job ids" >&2; exit 64; }
-if [[ $suite == 1 ]]; then prefix=${prefix:-s1smc_b${batch}_}; tag=${tag:-b$batch}; else prefix=${prefix:-s2smc_b${batch}_}; tag=${tag:-s2b$batch}; fi
-[[ "$prefix" =~ ^s[12]smc_b[0-9]+[a-z0-9]*_$ && "$tag" =~ ^[A-Za-z0-9_]+$ ]] || { echo "bad --prefix/--tag" >&2; exit 64; }
+[[ "$method" =~ ^[a-z0-9_]+$ ]] || { echo "bad --method" >&2; exit 64; }
+if [[ "$method" != smcbvs ]]; then prefix=${prefix:-s${suite}bm_${method}_b${batch}_}; tag=${tag:-${method}_s${suite}b$batch}; cancel=1
+elif [[ $suite == 1 ]]; then prefix=${prefix:-s1smc_b${batch}_}; tag=${tag:-b$batch}; else prefix=${prefix:-s2smc_b${batch}_}; tag=${tag:-s2b$batch}; fi
+[[ ( "$prefix" =~ ^s[12]smc_b[0-9]+[a-z0-9]*_$ || "$prefix" =~ ^s[12]bm_${method}_b[0-9]+[a-z0-9]*_$ ) && "$tag" =~ ^[A-Za-z0-9_]+$ ]] || { echo "bad --prefix/--tag" >&2; exit 64; }
+mopt=(); [[ "$method" != smcbvs ]] && mopt=(--method "$method")
 say() { echo "WATCH $(date -u +%FT%TZ) $tag $*" >> "$log"; }
-say "start pid=$$ suite=$suite interval=${interval}s prefix=$prefix tag=$tag jobs=${jobs:-<submissions.tsv>} package=$((1 - nopkg)) cancel_pending_on_stop=$cancel"
+say "start pid=$$ suite=$suite method=$method interval=${interval}s prefix=$prefix tag=$tag jobs=${jobs:-<submissions.tsv>} package=$((1 - nopkg)) cancel_pending_on_stop=$cancel"
 cancelled=0
 while true; do
-  out=$(ssh -o ConnectTimeout=60 nots "$NSL/check_batch.sh --suite $suite --batch $batch --reps $reps ${jobs:+--jobs $jobs} 2>&1; echo LIVE=\$(squeue -u fb31 -h -o %j | grep -c '^${prefix}')" 2>&1)
+  out=$(ssh -o ConnectTimeout=60 nots "$NSL/check_batch.sh --suite $suite ${mopt[*]} --batch $batch --reps $reps ${jobs:+--jobs $jobs} 2>&1; echo LIVE=\$(squeue -u fb31 -h -o %j | grep -c '^${prefix}')" 2>&1)
   rc=$?
   { echo "----- $(date -u +%FT%TZ)"; echo "$out"; } >> "$log"
   live=$(sed -n 's/^LIVE=//p' <<< "$out" | tail -1); verdict=$(grep '^VERDICT' <<< "$out" | tail -1)
@@ -57,12 +64,12 @@ while true; do
     fi
   fi
   if (( live == 0 )); then
-    pull=$("$HERE/pull_to_owls.sh" --suite "$suite" --reps "$reps" --tag "$tag" 2>&1); prc=$?
+    pull=$("$HERE/pull_to_owls.sh" --suite "$suite" "${mopt[@]}" --reps "$reps" --tag "$tag" 2>&1); prc=$?
     echo "$pull" >> "$log"
     man=$(sed -n 's/^manifest: \([^ ]*\) .*/\1/p' <<< "$pull" | tail -1)
     if (( prc != 0 )) || ! grep -q '^VERIFIED' <<< "$pull"; then say "DONE pull FAILED rc=$prc; $verdict"; exit 1; fi
     # partition record: written on NOTS, copied, verified against the NOTS sha256
-    rec=$(ssh -o ConnectTimeout=60 nots "$NSL/sacct_record.sh --suite $suite --batch $batch --tag $tag ${jobs:+--jobs $jobs}" 2>&1)
+    rec=$(ssh -o ConnectTimeout=60 nots "$NSL/sacct_record.sh --suite $suite ${mopt[*]} --batch $batch --tag $tag ${jobs:+--jobs $jobs}" 2>&1)
     echo "$rec" >> "$log"; stsv=""
     read -r _ rpath rsha rrows < <(grep '^SACCT_RECORD ' <<< "$rec" | tail -1) || true
     if [[ -n "${rsha:-}" ]]; then
@@ -74,7 +81,7 @@ while true; do
     if (( nopkg )); then
       say "DONE pull=VERIFIED manifest=$man record=${stsv:-MISSING} package=SKIPPED (--no-package) $verdict"
     elif [[ "$verdict" == "VERDICT: PASS"* && -n "$stsv" ]]; then
-      pk=$("$HERE/package_for_desktop.sh" --suite "$suite" --batch "$batch" --reps "$reps" --manifest "$man" --slurm-tsv "$stsv" 2>&1); krc=$?
+      pk=$("$HERE/package_for_desktop.sh" --suite "$suite" "${mopt[@]}" --batch "$batch" --reps "$reps" --manifest "$man" --slurm-tsv "$stsv" 2>&1); krc=$?
       echo "$pk" >> "$log"; say "DONE pull=VERIFIED manifest=$man record=$stsv package_rc=$krc $verdict"
     else
       say "DONE pull=VERIFIED manifest=$man record=${stsv:-MISSING} package=SKIPPED (verdict not PASS or no record) $verdict"

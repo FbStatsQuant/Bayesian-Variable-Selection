@@ -39,6 +39,9 @@
 #           0.3.34, installed with micromamba 2.10.0 in user space at
 #           /home/fb31/Bayesian-Variable-Selection/_local/engineering/envs/octave
 #           (nothing system-wide).  MATLAB is not available on Owls.
+#   ENV     S1S2_ASI_OCTAVE_HOME, S1S2_ASI_SAMPLER_DIR and S1S2_ASI_TMP, when
+#           set, replace the Owls default paths (NOTS: set by env_bench.sh;
+#           same conda lock, same sha256-checked ASI_sampler.m); OURS-ops.
 #   SHIMS   none.  ASI_sampler.m runs under Octave as shipped.  The only names
 #           it uses that Octave lacks is `stop` (m.151, m.256, m.288, ...),
 #           which the code calls when a quantity turns complex; MATLAB has no
@@ -192,11 +195,13 @@
 #   ctrl$suite                "S1" (default) or "S2", from harness/run_one.R; sets tags only
 #   ctrl$threads              BLAS/OpenMP threads of the Octave process (1; max 4)
 #   ctrl$timeout_sec          time limit of the Octave call in seconds (OURS-10)
-#   ctrl$octave_home          Octave environment (default above)
+#   ctrl$octave_home          Octave environment (default: env S1S2_ASI_OCTAVE_HOME, else above)
 #   ctrl$sampler_dir          folder holding ASI_sampler.m (sha256 is checked)
+#                             (default: env S1S2_ASI_SAMPLER_DIR, else the folder above)
 #   ctrl$driver               path of run_asi.m (default: asi_octave/ next to this file)
 #   ctrl$tmp_root             parent of the temporary directory
-#                             (default /home/fb31/Bayesian-Variable-Selection/_local/tmp)
+#                             (default: env S1S2_ASI_TMP; else /home/fb31/Bayesian-Variable-
+#                             Selection/_local/tmp; if that does not exist, env TMPDIR)
 #   ctrl$keep_tmp             TRUE keeps the temporary directory (debugging)
 # =============================================================================
 
@@ -221,13 +226,18 @@ fit_asi <- function(X, y, method_seed, ctrl = list()) {
 
   res <- tryCatch(withCallingHandlers({
     ov <- function(nm) !is.null(ctrl[[nm]])
-    # ---- paths ------------------------------------------------------------
-    octave_home <- if (ov("octave_home")) as.character(ctrl$octave_home) else file.path(ROOT, "_local/engineering/envs/octave")
+    envd <- function(var, dflt) { v <- Sys.getenv(var); if (nzchar(v)) v else dflt }
+    # ---- paths (ctrl > env S1S2_ASI_* > Owls default) -----------------------
+    octave_home <- if (ov("octave_home")) as.character(ctrl$octave_home) else
+      envd("S1S2_ASI_OCTAVE_HOME", file.path(ROOT, "_local/engineering/envs/octave"))
     octave <- file.path(octave_home, "bin", "octave-cli")
     sampler_dir <- if (ov("sampler_dir")) as.character(ctrl$sampler_dir) else
-      file.path(ROOT, "_local/engineering/ext/griffin_asi_original/Version3.0")
+      envd("S1S2_ASI_SAMPLER_DIR", file.path(ROOT, "_local/engineering/ext/griffin_asi_original/Version3.0"))
     driver <- if (ov("driver")) as.character(ctrl$driver) else file.path(.fit_asi_dir, "asi_octave", "run_asi.m")
-    tmp_root <- if (ov("tmp_root")) as.character(ctrl$tmp_root) else file.path(ROOT, "_local/tmp")
+    tmp_root <- if (ov("tmp_root")) as.character(ctrl$tmp_root) else {
+      tr <- envd("S1S2_ASI_TMP", file.path(ROOT, "_local/tmp"))
+      if (!dir.exists(tr) && !nzchar(Sys.getenv("S1S2_ASI_TMP")) && nzchar(Sys.getenv("TMPDIR"))) Sys.getenv("TMPDIR") else tr
+    }
     if (!file.exists(octave)) stop("octave-cli not found at ", octave)
     sampler <- file.path(sampler_dir, "ASI_sampler.m")
     if (!file.exists(sampler)) stop("ASI_sampler.m not found in ", sampler_dir)

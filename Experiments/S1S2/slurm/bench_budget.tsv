@@ -1,0 +1,11 @@
+suite	method	block	budget_cpuh	fit_limit_sec	mem	mem_p5000	hold	ctrl	fit_limit_p5000	ctrl_p5000
+2	lasso_cv	25	50	600	2G	-	-	-	-	-
+2	scad	25	50	600	2G	-	-	-	-	-
+2	susie	25	50	600	2G	-	-	-	-	-
+2	bas_mc3	5	112.5	1800	6G	-	-	-	-	-
+2	asi	1	20332.5	10800	2G	-	owner_ok_after_b1	{"timeout_sec":10500}	-	-
+1	lasso_cv	25	50	600	2G	4G	-	-	-	-
+1	scad	10	50	600	2G	4G	-	-	-	-
+1	susie	10	50	600	2G	4G	-	-	-	-
+1	bas_mc3	5	50	1800	4G	12G	-	-	-	-
+1	asi	1	7080	7200	2G	4G	-	{"timeout_sec":6900}	28800	{"timeout_sec":28500}

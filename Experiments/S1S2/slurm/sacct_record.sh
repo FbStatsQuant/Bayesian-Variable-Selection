@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # sacct_record.sh -- run on NOTS (read-only Slurm queries). Partition record of one batch, written at the batch's DONE:
-#   sacct_record.sh [--suite 1|2] --batch K [--jobs JOBID,...] [--tag TAG]
+#   sacct_record.sh [--suite 1|2] --batch K [--jobs JOBID,...] [--tag TAG] [--method M]
+#   (--method M other than smcbvs: a benchmark batch, job ids logged under "S<suite>bm.<M>.<K>", TAG default
+#   <M>_s<suite>b<K>)
 #   -> _local/engineering/S1S2/logs/sacct_<TAG>.tsv  (TAG default b<K> for S1, s2b<K> for S2); prints
 #      "SACCT_RECORD <path> <sha256> <rows>" (watch_batch.sh copies the file to Owls and checks that sha256).
 # One row per array task (tasks moved to long by scontrol keep their ArrayJobId and get their own JobIDRaw):
@@ -12,12 +14,14 @@
 set -euo pipefail
 ENG=/home/fb31/SMC-BVS/_local/engineering
 SUBLOG=$ENG/S1S2/logs/submissions.tsv
-suite=1; batch=""; jobs=""; tag=""
+suite=1; batch=""; jobs=""; tag=""; method=smcbvs
 while (($#)); do case "$1" in --suite) suite="$2"; shift 2;; --batch) batch="$2"; shift 2;; --jobs) jobs="$2"; shift 2;;
-  --tag) tag="$2"; shift 2;; *) echo "unknown arg $1" >&2; exit 64;; esac; done
+  --tag) tag="$2"; shift 2;; --method) method="$2"; shift 2;; *) echo "unknown arg $1" >&2; exit 64;; esac; done
 [[ "$batch" =~ ^[0-9]+$ && ( "$suite" == 1 || "$suite" == 2 ) ]] || { echo "usage: [--suite 1|2] --batch K" >&2; exit 64; }
 [[ $suite == 1 ]] && bkey=$batch || bkey=S2.$batch
 [[ $suite == 1 ]] && tag=${tag:-b$batch} || tag=${tag:-s2b$batch}
+if [[ "$method" != smcbvs ]]; then [[ "$method" =~ ^[a-z0-9_]+$ ]] || { echo "bad --method" >&2; exit 64; }
+  bkey=S${suite}bm.${method}.${batch}; [[ "$tag" == b$batch || "$tag" == s2b$batch ]] && tag=${method}_s${suite}b$batch; fi
 [[ "$tag" =~ ^[A-Za-z0-9_]+$ ]] || { echo "bad --tag" >&2; exit 64; }
 [[ -z "$jobs" ]] && jobs=$(awk -F'\t' -v b="$bkey" '$2 == b { print $3 }' "$SUBLOG" | paste -sd, -)
 [[ "$jobs" =~ ^[0-9]+(,[0-9]+)*$ ]] || { echo "no job ids for batch $bkey" >&2; exit 65; }

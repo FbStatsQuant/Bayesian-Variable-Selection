@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # pull_to_owls.sh -- run on OWLS. Copy S1 / S2 SMC-BVS records from NOTS scratch to Owls and verify every file by sha256.
-#   pull_to_owls.sh [--suite 1|2] --reps LO-HI [--tag b<K>] [--src-sub smcbvs] [--dest DIR] [--dry-run]
+#   pull_to_owls.sh [--suite 1|2] --reps LO-HI [--tag b<K>] [--src-sub smcbvs | --method M] [--dest DIR] [--dry-run]
+#   (--method M = --src-sub M: the benchmark records of method M, e.g. runs/S1S2/lasso_cv/S1_xx/...)
 #   source : nots:/scratch/fb31/SMC-BVS/runs/S1S2/<src-sub>/S<suite>_*/rep_RRR.{json,rds}   (suite 1 = S1_01..S1_16, the
 #            default; suite 2 = S2_001..S2_120; reps LO..HI)
 #   dest   : /home/fb31/Bayesian-Variable-Selection/_local/engineering/runs/S1S2/<src-sub>/...   (--dest overrides the root)
@@ -13,7 +14,7 @@ set -euo pipefail
 NRUNS=/scratch/fb31/SMC-BVS/runs/S1S2
 DEST=/home/fb31/Bayesian-Variable-Selection/_local/engineering/runs/S1S2
 reps=""; tag=""; sub=smcbvs; dry=0; suite=1
-while (($#)); do case "$1" in --suite) suite="$2"; shift 2;; --reps) reps="$2"; shift 2;; --tag) tag="$2"; shift 2;; --src-sub) sub="$2"; shift 2;;
+while (($#)); do case "$1" in --suite) suite="$2"; shift 2;; --reps) reps="$2"; shift 2;; --tag) tag="$2"; shift 2;; --src-sub|--method) sub="$2"; shift 2;;
   --dest) DEST="$2"; shift 2;; --dry-run) dry=1; shift;; *) echo "unknown arg $1" >&2; exit 64;; esac; done
 [[ "$reps" =~ ^([0-9]+)-([0-9]+)$ ]] || { echo "need --reps LO-HI" >&2; exit 64; }
 lo=${BASH_REMATCH[1]}; hi=${BASH_REMATCH[2]}; [[ "$sub" =~ ^[A-Za-z0-9_/]+$ ]] || exit 64

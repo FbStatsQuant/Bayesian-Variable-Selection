@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # check_batch.sh -- run on NOTS. Batch health check for the S1 / S2 SMC-BVS runs, with the manager's STOP rule.
-#   check_batch.sh [--suite 1|2] --batch K --reps LO-HI [--jobs JOBID,JOBID,...]
+#   check_batch.sh [--suite 1|2] --batch K --reps LO-HI [--jobs JOBID,JOBID,...] [--method M]
+#   (--method other than smcbvs, the default: a BENCHMARK batch; handed over to check_bench.sh, which has the benchmark
+#   STOP rule and the data-identity check. Everything below is the SMC-BVS check, unchanged.)
 #   (--jobs defaults to the array job ids logged for batch K in _local/engineering/S1S2/logs/submissions.tsv: batch field
 #   "K" for S1, "S2.K" for S2). Suite 1 (default): S1_01..S1_16, classes P500N500/P5000N500/P500N1000/P5000N1000.
 #   Suite 2: S2_001..S2_120, classes S2N50P1000 (cells 1-60) / S2N100P1000 (cells 61-120).
@@ -20,9 +22,13 @@ set -euo pipefail
 ENG=/home/fb31/SMC-BVS/_local/engineering
 RUNS=${S1S2_RUNS:-/scratch/fb31/SMC-BVS/runs/S1S2}
 SUBLOG=$ENG/S1S2/logs/submissions.tsv
-batch=""; reps=""; jobs=""; suite=1
+batch=""; reps=""; jobs=""; suite=1; method=smcbvs
 while (($#)); do case "$1" in --suite) suite="$2"; shift 2;; --batch) batch="$2"; shift 2;; --reps) reps="$2"; shift 2;; --jobs) jobs="$2"; shift 2;;
-  *) echo "unknown arg $1" >&2; exit 64;; esac; done
+  --method) method="$2"; shift 2;; *) echo "unknown arg $1" >&2; exit 64;; esac; done
+# benchmark methods (S1/S2 benchmark grids): their own STOP rule (no E-flags; data identity vs SMC-BVS) in check_bench.sh
+if [[ "$method" != smcbvs ]]; then
+  exec "$(cd "$(dirname "$0")" && pwd)/check_bench.sh" --suite "$suite" --method "$method" --batch "$batch" --reps "$reps" ${jobs:+--jobs "$jobs"}
+fi
 [[ "$batch" =~ ^[0-9]+$ && "$reps" =~ ^([0-9]+)-([0-9]+)$ ]] || { echo "usage: --batch K --reps LO-HI [--jobs ...]" >&2; exit 64; }
 lo=${BASH_REMATCH[1]}; hi=${BASH_REMATCH[2]}
 [[ "$suite" == 1 || "$suite" == 2 ]] || { echo "--suite must be 1 or 2" >&2; exit 64; }

@@ -1,4 +1,10 @@
 # run_one.R -- one fit = one record.   Rscript harness/run_one.R --method M --setting ID --rep R [--out DIR] [--ctrl JSON]
+# Multi-rep mode (S2 benchmarks, slurm/s2_bench_array.sbatch):
+#   Rscript harness/run_one.R --method M --setting ID --reps LO-HI|R1,R2,LO-HI [--out DIR] [--ctrl JSON] [--progress FILE]
+# loads the adapter ONCE and fits the reps in order in this one R process, writing exactly the per-rep rds/json of the
+# single-rep mode (same run_one()). A rep whose json already has top-level status "ok" is skipped; one rep's failure
+# never stops the loop. --progress FILE: one line "start <rep> <unix time>" before and "end <rep> <status>" after each
+# rep, read by the sbatch watchdog (per-rep wall limit). --rep and --reps are mutually exclusive.
 # Writes <out>/<method>/<setting_id>/rep_<RRR>.{rds,json} (default out = ROOT/runs/S1S2). Never errors out of a batch:
 # every failure (data, adapter load, fit, scoring) is caught and written as a record with status "failed: <msg>".
 # PROVENANCE: INTERFACE.md "Per-run record", "Seeds", "Adapter signature". success = (selected == true support
@@ -14,7 +20,7 @@ source(file.path(BASE, "harness", "generate.R")); source(file.path(BASE, "harnes
 source(file.path(BASE, "harness", "diagnostics.R"))
 suppressPackageStartupMessages(library(jsonlite))
 
-run_one <- function(method, setting_id, rep, out = NULL, ctrl = list()) {
+run_one <- function(method, setting_id, rep, out = NULL, ctrl = list(), .fitfun = NULL) {
   out <- out %||% S1S2_RUNS
   rep <- as.integer(rep)
   rec <- list(setting_id = setting_id, method = method, rep = rep, status = "failed: not started",
@@ -34,7 +40,7 @@ run_one <- function(method, setting_id, rep, out = NULL, ctrl = list()) {
     # manager addition 2026-11-25: every adapter gets the suite and setting_id (never s0 or the support)
     ctrl$suite <- paste0("S", row$suite); ctrl$setting_id <- setting_id
     rec$ctrl <- ctrl
-    fitfun <- load_method(method, BASE)
+    fitfun <- if (is.function(.fitfun)) .fitfun else load_method(method, BASE)    # multi-rep mode: loaded once
     t0 <- proc.time()[["elapsed"]]
     fit <- fitfun(d$X, d$y, rec$method_seed, ctrl)
     rec$wall_sec_harness <- proc.time()[["elapsed"]] - t0
@@ -90,10 +96,39 @@ run_one <- function(method, setting_id, rep, out = NULL, ctrl = list()) {
   invisible(rec)
 }
 
-if (!interactive() && !is.null(OPT$method)) {
+if (!interactive() && !is.null(OPT$method) && is.null(OPT[["reps"]])) {
   ctrl <- tryCatch(as.list(fromJSON(OPT$ctrl, simplifyVector = TRUE)), error = function(e) list())
   r <- run_one(OPT$method, OPT$setting, OPT$rep, OPT$out, ctrl)
   cat(sprintf("%s %s rep %s: %s  success=%s  |sel|=%s TP=%s FP=%s FN=%s  runtime=%.1fs\n", r$method, r$setting_id, r$rep,
               r$status, r$success, r$n_selected %||% NA, r$TP %||% NA, r$FP %||% NA, r$FN %||% NA, r$runtime_sec %||% NA))
+  quit(status = 0)
+}
+
+# ---- multi-rep mode (--reps) -----------------------------------------------------------------------------------------
+parse_reps <- function(x) {
+  x <- gsub("[[:space:]]", "", as.character(x))
+  if (!grepl("^[0-9]+(-[0-9]+)?(,[0-9]+(-[0-9]+)?)*$", x)) stop("--reps: expected LO-HI or a comma list, got '", x, "'")
+  r <- unlist(lapply(strsplit(x, ",")[[1]], function(t) { b <- as.integer(strsplit(t, "-")[[1]]); if (length(b) == 2) { if (b[1] > b[2]) stop("--reps: ", t); b[1]:b[2] } else b }))
+  if (anyDuplicated(r) || any(r < 1)) stop("--reps: duplicate or non-positive reps")
+  r
+}
+json_ok <- function(f) file.exists(f) && isTRUE(tryCatch(identical(fromJSON(f, simplifyVector = FALSE)$status, "ok"), error = function(e) FALSE))
+if (!interactive() && !is.null(OPT$method) && !is.null(OPT$reps)) {
+  if (!is.null(OPT[["rep"]])) stop("give --rep or --reps, not both")   # [[ ]]: OPT$rep would partially match "reps"
+  ctrl <- tryCatch(as.list(fromJSON(OPT$ctrl, simplifyVector = TRUE)), error = function(e) list())
+  reps <- parse_reps(OPT$reps); out <- OPT$out %||% S1S2_RUNS
+  prog <- function(...) if (!is.null(OPT$progress)) cat(..., "\n", sep = "", file = OPT$progress, append = TRUE)
+  # one load; a load error is not fatal here: fitfun = NULL makes run_one() retry the load per rep and record the error
+  fitfun <- tryCatch(load_method(OPT$method, BASE), error = function(e) { message("adapter load failed: ", conditionMessage(e)); NULL })
+  for (rp in reps) {
+    jf <- file.path(out, OPT$method, OPT$setting, sprintf("rep_%03d.json", rp))
+    if (json_ok(jf)) { cat(sprintf("%s %s rep %d: SKIP (json already ok)\n", OPT$method, OPT$setting, rp)); prog("skip ", rp); next }
+    prog("start ", rp, " ", as.integer(Sys.time()))
+    r <- tryCatch(run_one(OPT$method, OPT$setting, rp, OPT$out, ctrl, .fitfun = fitfun),
+                  error = function(e) list(method = OPT$method, setting_id = OPT$setting, rep = rp, status = paste0("failed: harness: ", conditionMessage(e))))
+    prog("end ", rp, " ", gsub("[[:space:]]+", "_", r$status %||% "?"))
+    cat(sprintf("%s %s rep %s: %s  success=%s  |sel|=%s TP=%s FP=%s FN=%s  runtime=%.1fs\n", r$method, r$setting_id, r$rep,
+                r$status, r$success %||% NA, r$n_selected %||% NA, r$TP %||% NA, r$FP %||% NA, r$FN %||% NA, as.numeric(r$runtime_sec %||% NA)))
+  }
   quit(status = 0)
 }
