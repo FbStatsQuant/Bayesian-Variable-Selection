@@ -856,3 +856,18 @@
     - P2 (E4–E6) is running.
   - **NOTS hygiene pass 1.** Dry run: 30 desktop-verified units passed the gates (775 MB of scratch), plus benchtest waste; 3 smcbvs S2 units are blocked (the gate script takes smcbvs S1 only).
     - Stage 2 is approved and running, together with the owner-approved dry run of the shared tooling (~/.vscode-server, ~/.t3, ~/.codex).
+
+- **2026-11-27T16:29Z, SMC-PERF / TH-CHECKS / hygiene / S1 final relabel** (manager).
+  - **Particle-export engine copy: VERIFIED** (HQ condition: log the patch diff and the verification).
+    - What it is: an output-only patch of v3.1.1 at `_local/engineering/perf_engine/particle_export.patch`, 122 lines, sha256 156621a1d2f6108d…. It touches `cpp/v3_engine.h`, `cpp/v3_core.cpp` and `v3_run.R`, and adds `final_models` (unique models, counts and max size per island) and `max_size_visited`.
+    - Verification, `perf_engine/VERIFY.md` (Owls, R 4.6.0): the copy's source equals `git archive method-v3.1.1-listpip`. The patch round-trips with `patch -p1`.
+    - Bit-identity: 30 fits (6 escalated, 4 S1 p=500 SNR≥2, 20 S2) give a complete fit object and adapter output that are identical() to the frozen engine's, timing/resource paths excluded. An original-vs-original control shows the same timing-only differences.
+    - The frozen engine's sha256 is unchanged after the runs.
+    - Against the stored NOTS records, hpm/selected/top-model lists match 30/30; pip and log_Z differ by ≤ 7e-13 because the Owls R 4.6.0 data regeneration differs from NOTS R 4.5.2. A NOTS same-platform bit-identity check runs before the pilot array.
+    - Use: the pilot arm only (X1). Cost ≤ 5 CPU-h.
+  - **Designer B evidence-report candidate:** the 2-fit e2e check PASSED (S2_080 reps 48 and 80; 150 fields identical() frozen vs candidate; log_Z_report = max(log_Z, log_Z_list); gaps 1.26 and 13.16 nats). 0.34 CPU-h.
+  - **Joint plan:** B signed. Cause class (b), finite-particle estimator error. The 343-billed rerun was withdrawn. A is finalising.
+  - **X1 tranches a+b launched** (frozen baseline, fresh reps 141–160, export harness; 320 fits, about 190 billed). Below the 200 CPU-h checkpoint.
+  - **TH-CHECKS P2** (E4–E6, list view) done, 4.5 CPU-h, gates PASS. The interim E3/E5 list view went to HQ and Theory.
+  - **S1 final relabelled FINAL**, with `final/runtime_S1_smcbvs_asi.{md,tsv}` (HQ request).
+  - **NOTS hygiene pass 1, stage 2:** scratch freed about 0.79 GB; home quota 8830M/10240M; 11 items kept, including the K9 clones (the VN worktree depends on them). Tooling stage 2 approved: Codex 0.167.2 only; the cache is held while live.
