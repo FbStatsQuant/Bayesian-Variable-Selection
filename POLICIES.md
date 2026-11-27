@@ -15,6 +15,17 @@ the documents win.
   - All theory tickets, including W3-DIST and W3-READER, are under the Theory Department (handover 2026-11-15, owner).
 - **Advisors:** HQ consultant (Fable 5.2), the second signature on headline changes (PROTOCOL_v4 H5).
 
+### 1a. Managers manage, task leads work (owner, 2026-11-27; overrides anything below that has managers doing the work)
+- **Department managers are managers and orchestrators only.** They brief, staff, set limits, route, integrate and
+  report to HQ. They do no technical work, and they spawn task leads and nothing else.
+- **Every major task gets its own Opus 5.5 task lead** (delegate_task, Claude Work, effort high; Claude Third only as
+  rate-limit overflow). Only leads, and the agents each lead spawns (Sonnet/Haiku/Neon, effort ≤ high), do actual work.
+  Leads report to their manager.
+- **Scoped life cycle:** a lead lives for its task and closes with a final report at delivery. New tasks get new leads;
+  leads are never reused across tasks.
+- **Pace:** 2–3 concurrent leads per department when usage limits allow. On "pace down", one major lead stays active
+  and the others pause at a clean checkpoint. Progress lines report the active lead count.
+
 ## 2. Binding policies (read in this order)
 1. `Theory_work/Wave3/PROGRAM.md`: goals, presentation rule, **Readability** (clear statements, reader versions, full
    notation; proofs may be as hard as needed if checked).
