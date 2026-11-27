@@ -944,3 +944,8 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
 ## 2026-11-27 — Owner: SMC-PERF must not be tailored to S1/S2
 - Only principled, pre-declared changes with nothing tuned on S1/S2, holding on both suites on fresh seeds; material accuracy gains only. "None beyond option 1" is acceptable if argued.
 - Keep the Fable and Astra designers alive through the committee round and the pilot results.
+
+## 2026-11-27 — Owner org rule: managers orchestrate, Opus task leads execute
+- Department managers are managers and orchestrators only.
+- Each major task gets its own Opus 5.5 task lead (Claude Work, high; Claude Third as rate-limit overflow). The lead may spawn its own helpers, reports to its manager, and has a scoped life cycle: it closes at delivery, and new tasks get new leads.
+- Engineering now: LEAD SMC-PERF and LEAD CAMPAIGN-OPS (S2 ASI completion, S2 final, hygiene).
