@@ -786,3 +786,14 @@
   - The deliverable reports the n=50 behaviour as a method finding: under beta-binomial(1,1) and 120k MC3 iterations the chain drifts to near-saturated models (k≈48, R²=1). Counts of memory kills, numeric errors and computational failures are given per setting.
   - Implemented in submit_bench.sh --oom-pass [--oom-mem 64G] (S1S2_REFIT_OOM=1 in bench_array.sbatch re-fits only the rc=137 stubs; job names …_b<K>m_…; label S<s>bm.<M>.<K>m) and in check_bench.sh (for bas_mc3, an OUT_OF_MEMORY task with ReqMem below 64G is a WARNING).
 - 2026-11-27 ~05:00Z — S2 bas_mc3 batch 1 64G pass (job 2950272): 25 of the 28 memory-killed fits now fit; 3 were killed again at 64G (S2_024 r23, S2_028 r8, S2_034 r24), each reaching the ceiling about 2 min into the fit (runaway growth). Batch 1 final: n=50 1,478/1,500 ok, 19 numeric errors, 3 computational failures; n=100 1,500/1,500. HQ RULING (option 1): a 64G memory kill inside a 64G pass is recorded as BAS computational, reported to HQ in one line, and does not halt the grid; batch 2's 64G pass and batch 3 go ahead without waiting. Guard: it is still a STOP to HQ if BAS computational failures exceed 2% of a batch's n=50 class, or if any n=100 fit is killed at 64G. Implemented in check_bench.sh: reps killed at 64G or more are counted per class, and the batch's default job list now includes its --oom-pass label.
+- 2026-11-27 ~06:30Z — S2 SuSiE sanity check, requested by HQ after SuSiE recovered 3/12,000 models exactly. Verdict: not an adapter or data bug; the grid is unchanged pending an HQ and owner ruling.
+  - Adapter: susie(scale(X), centred y, L=20); everything else is the susieR 0.14.2 default. It reproduces the stored records exactly. L=10 and L=20 give identical fits.
+  - Data: inputs are the same as BAS (same two preprocessing lines, data_md5 matched).
+  - Cause: at n/s ≤ 10 with equal effects, IBSS (initialised at σ²=var(y)) converges to an underfit optimum. Only 1–3 effects stay active, the rest have prior variance V pruned to 0, and σ² comes out at about 5× the truth.
+  - Evidence that it is a local optimum (S2_070 / S2_010, 20 reps each):
+    - A warm start from a fit with σ² fixed at the truth, then σ² left free, reaches a higher ELBO in 16/20 and 15/20 reps.
+    - That warm-started fit recovers the exact model in 0.65 / 0.40 of reps, against 0 under the default start.
+  - Tried without effect (all 0 exact): refine=TRUE, the EM prior method, V fixed at 0.1·var(y), and a lasso start via susie_init_coef.
+  - Selecting one variable per 95% credible set instead of PIP>0.5 does not help.
+  - Proposed: report SuSiE under author defaults as a method finding. An optional sensitivity variant with σ² fixed at a non-oracle estimate, tagged OURS, would cost about 9 CPU-h for S2.
+  - Diagnostic scripts: _local/engineering/reports/S1S2/scripts/susie_check/.
