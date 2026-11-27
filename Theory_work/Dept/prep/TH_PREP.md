@@ -32,6 +32,45 @@ Lines marked **[Opus]** are my own reading or inference. They are not proved, an
    - **Route-breaking changes:** BB(1,1); dropping centring/scaling; anything that makes the score non-closed-form.
 5. **[Opus], for SMC-PERF.** For small models, BB(1,1) and BB(1,p) differ in per-variable prior penalty by only about log 2 (0.7 nats) out of the total 7.5–10 nats per variable. Switching to BB(1,1) would cost the size-tail proof step but would barely change under-selection. The levers that move under-selection are g and a p-dependent b with u < 1 (§3).
 
+## 0a. Scope ruling (owner via HQ, 2026-11-27): what serves (1)–(3) and what is DEFERRED
+
+Theory now does **only** the 1-to-1 Song–Liang equivalents in our setup:
+- **(1)** true-model consistency;
+- **(2)** true-distribution consistency;
+- **(3)** consistency under misspecification.
+
+Everything else is **DEFERRED** until (1)–(3) have finished proofs **and** Lean code. Assumptions are kept only if (1)–(3) need them. Proof writing stays on HOLD until the SMC-PERF engine decision. Tags used below: **[1]**, **[2]**, **[3]** = serves that theorem; **[DEFERRED]**.
+
+| item in this file | serves | note |
+|---|---|---|
+| §1 model as coded (data, slab, σ², size prior, cap) | [1][2][3] | the sampler and report rows matter only to deferred results, except MPM/HPM, which (1) uses through `lem:summaries` |
+| §2 T1 `thm:post-random`, assumptions GL, DIM, SP, GR/SGR, FSb, EFS | **[1] core** | SL Thm 3 + Thm S equivalent; `lem:summaries` (HPM/MPM/PIP from δ) is part of it |
+| §2 T1 BM(a) / `asm:margin` (fixed-design variants) | **[1] variant, pending** | keep only if the owner wants S1's boundary signals inside (1); otherwise DEFERRED |
+| §2 T1 sample EF, NC (fixed design `thm:post-fixed`) | [1] variant, pending; NC also **[2]** (as `nec`) | — |
+| `thm:post-fixed` expectation bound (W3-POST2:C route) | **[3] input** | (3) reduces to it (R3 → R1 expectation route); an input lemma, not a separate result |
+| `rem:sharp` (Result 6), `rem:thm2x`, `thm:post-margin` as separate results | **[DEFERRED]** | extensions |
+| §2 T2 `thm:dist` and the `asm:dist` items (model, sparse, subg, nec, bs) | **[2] core** | SL Thm 1/2 equivalent |
+| `prop:dist` (ii) (without NC), `thm:dist-param`, `cor:dist-output`, in-sample Hellinger (W3-POST2 D) | **[DEFERRED]** | extensions |
+| §2 T3 `thm:omitted` / C-MIS MIS(i)–(iii), `asm:omitted` (a)(b)(c) | **[3] core** | SL **Cor 2** equivalent (selection of the projection support) |
+| §2 T3 [Opus] candidate: `thm:dist` on the candidate re-run (KL-projection Hellinger) | **[3] core, candidate** | the 1-to-1 SL **Thm 4** equivalent; to be stated after the engine decision |
+| §2 T4 (all SMC results: `prop:unbiased`, W3-SAMP, `thm:outputs`, T4a, T4b), assumptions EX-A, H-U, KERNEL, CAL/SI, START | **[DEFERRED]** | the particle-limit theorem is explicitly deferred |
+| reported-model and screening results (`thm:reported`, `cor:famc`, `cor:list`, `thm:screen`), assumptions V, leakage set, local regressions, NL, C1/C2/C2p, SCR budget | **[DEFERRED]** | not Song–Liang equivalents; their assumptions are dropped from the (1)–(3) list |
+| §3 sensitivity map, columns R1, R2, R3 | [1][2][3] | **columns R4 and R5: [DEFERRED]**. The kernel, tempering and N/islands rows affect only R4/R5, so they do not touch (1)–(3) |
+| §3 rows: slab/g, ridge, size prior, cap, σ² prior, centring/scaling, MPM/HPM/threshold | [1][2][3] | still decision-relevant |
+| §4 E1, E3 | [1] | — |
+| §4 E2 | [1] (sample floors); [2] (nec) | — |
+| §4 E4 | [2] | — |
+| §4 E5, E6 | [1][2][3] | — |
+| §4 E8 | [3] | — |
+| §4 E7 | **[DEFERRED]** | the particle limit; HQ may tell Engineering to drop it |
+| §5 items 1, 4, 5, 6 | [1][2][3] | item 1 = SONG_LIANG_MAP refresh |
+| §5 items 2, 3 | **[DEFERRED]** | cards TH01/M1 |
+
+**Net assumption list for (1)–(3):**
+- **[1]:** GL, DIM, SP, GR (or SGR), FSb, EFS; plus BM/margin only if the S1-covering variant is chosen.
+- **[2]:** the five `asm:dist` items.
+- **[3]:** `asm:omitted` (a)(b)(c), plus the [1] inputs through the expectation route.
+
 ## 1. The model as coded (v3.1.1, tag `method-v3.1.1-listpip`)
 
 | element | as coded | source |
@@ -71,7 +110,7 @@ On S1/S2 this is 7.5–10 nats, so the partial t² must exceed about 15–20 (§
   - RWY = Raskutti, Wainwright & Yu (2011, IEEE-IT);
   - RZ = Rudelson & Zhou (2013, IEEE-IT).
 
-### T1. True-model consistency (counterpart of SL Thm 3, sure screening, and Thm S, MAP consistency)
+### T1. True-model consistency (counterpart of SL Thm 3, sure screening, and Thm S, MAP consistency) — **[1]**
 
 **Headline: `thm:post-random`** (`s4_results.tex:111-120`). Under GL, DIM, SP, SGR, FSb and EFS:
 - 1 − π(S₀|y) = O_P(√(log n/n));
@@ -99,7 +138,7 @@ The rate is sharp up to √log n (`rem:sharp`, row 1.3): no design gives a rate 
 | BM(a) | θ_min ≥ C_β σ √(log n/n) with C_β²φ₀² > c₀(s₀,A) | `thm:post-fixed` | (a) in form; **(b) for the constant** | CSV15, YWJ, MY09; SL proof step "at a fixed multiple of log n" (supp. pp. 6, 15) | S1: ratio θ_min/(σ√(log p/n)) = 2·SNR ∈ {1, 2, 4, 6}. The proof constant c₀ = max{4C*, 32[s₀(A+1)+2]} is far above the empirical transition (between ratio 2 and 4). **Proposed (b) replacement:** the margin form of `asm:margin`, with its constant fitted on S1/S2 (§4, E1) |
 | asm:margin | every S that misses a true predictor and adds ≤ j₀ nulls has ‖(I−P_S)μ‖² ≥ c_id σ² log n | `thm:post-margin` | (b) candidate | none found as stated (precedent search: NOT FOUND); closest is NH14 Cond 4.4, residual-signal identifiability | this is the quantity that explains bt2 (§4, E1) |
 
-### T2. Distribution consistency (counterpart of SL Thm 1 and Thm 2, Hellinger contraction)
+### T2. Distribution consistency (counterpart of SL Thm 1 and Thm 2, Hellinger contraction) — **[2]**
 
 **`thm:dist`** (`s4_results.tex:191-198`, row 2.1). Under the setting of `asm:dist`, for every level M ≥ M₀ with √n/log n ≥ M:
 
@@ -117,7 +156,7 @@ Companions: `prop:dist` (level-M form; without NC the radius gains a factor √l
 | nec | λ_min(Corr(x_T)) ≥ c_ψ/n, \|T\| ≤ q_n | (a) | SBJ, NH14, BRT09 | population: true |
 | bs | \|β*_j\|sd(x_j) ≤ b̄σ* | (a) | YWJ, SC11 | true per setting |
 
-### T3. Misspecification (counterpart of SL Thm 4 and Cor 2)
+### T3. Misspecification (counterpart of SL Thm 4 and Cor 2) — **[3]**
 
 The delivered counterparts are `thm:omitted` (supplement, row 1.4) and C-MIS Theorem MIS (i)–(iii) / Cor N, with W3-MISR MIS(i), (i′), (ii). The setting: the method is re-run on the candidate columns only, and the omitted part is Gaussian given the candidates. Then:
 - E[1 − π(S₀^C | y)] = O(√(log n/n)), where S₀^C = supp(β_C + γ) is the support of the best approximating model;
@@ -141,7 +180,7 @@ These are stronger than SL in one way: they give the exact best model at a rate,
 | asm:omitted (b) | floor λ_min(R_T) ≥ c_C on 3(A+1)(s_C+1)log n sets | (a) | as EF / NC | population: true |
 | asm:omitted (c) | signal relative to residual variance: β^CᵀΣβ^C ≤ M_C σ_C², and n·min Σ_jj(β^C_j)²/(σ_C² log n) → ∞ | (a) | beta-min form, as BM(b) | computable from the population (§4, E8) |
 
-### T4. SMC theorems (particle limit; no SL analog in this form)
+### T4. SMC theorems (particle limit; no SL analog in this form) — **[DEFERRED]** (scope ruling 2026-11-27; kept for record)
 
 SL's sampler results are almost-sure limits as the number of iterations → ∞ (supp. pp. 9–16).
 
@@ -171,6 +210,8 @@ Its route is a standard Feynman–Kac application (Del Moral 2004; Chopin 2004 T
 Two caveats. These classes come from the SMC literature, not from regression-selection papers; the owner's (a) test does not fit them literally. And no S1/S2 evidence is needed for them beyond the Monte Carlo-error checks in §4, E7.
 
 ## 3. Sensitivity map
+
+**Scope (2026-11-27):** only columns R1–R3 serve (1)–(3). Columns R4 and R5, and the rows on kernels, tempering and N/islands, are **[DEFERRED]**.
 
 Ratings:
 - **cheap:** constants only, or a one-line re-check;
@@ -245,7 +286,7 @@ Where each element enters, element by element: `TH_PREP_support/W2_ROUTES.md` §
 | E4 (P2) | T2: Hellinger contraction | Per fit, the posterior mean of β (sparse: entries with PIP > 10⁻³) and E[σ² \| y]. Per top-50 model, β̂_S and E[σ² \| S]. Theory computes d_H to the truth in closed form with the population Σ | an empirical counterpart of Result 2, including fits where selection fails (no beta-min needed) |
 | E5 (P2) | the cap and the size tail | maximum \|S\| over the final particles and over all visited models; mass at \|S\| ≥ K−2 | checks that the cap never binds (needed if the cap changes) |
 | E6 (P2) | σ² prior / envelope | σ̂² under the posterior (not only under the MPM), compared with the true σ² | the IG(0.01,0.01) constants |
-| E7 (P2) | T4 particle limit | (a) Per-island PIP vectors, or their between-island SD on S₀ ∪ {PIP > 0.01}. (b) **Only if SMC-PERF runs N-ladders anyway:** PIP and log Ẑ at N, 2N and 4N on a few cells, to check Monte Carlo variance ∝ 1/N | (b) support for T4a/T4b; costs no extra runs if piggy-backed on SMC-PERF |
+| E7 **[DEFERRED]** | T4 particle limit | (a) Per-island PIP vectors, or their between-island SD on S₀ ∪ {PIP > 0.01}. (b) **Only if SMC-PERF runs N-ladders anyway:** PIP and log Ẑ at N, 2N and 4N on a few cells, to check Monte Carlo variance ∝ 1/N | (b) support for T4a/T4b; costs no extra runs if piggy-backed on SMC-PERF |
 | E8 (P3, optional, needs refits) | T3 misspecification | hide k ∈ {1,2} true columns, refit on the candidates, and compare the MPM/HPM with the population S₀^C = supp(β_C + Σ_CC⁻¹Σ_CMβ_M) (on AR(1), the two neighbours of a hidden column) | the only way to get (b) evidence for T3. Owner-level compute decision |
 
 Definitions follow the existing SPEC §10 conventions: X scaled with `scale()`, the true σ, and seeds only (never store X or y).
