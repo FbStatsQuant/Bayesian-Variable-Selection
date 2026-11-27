@@ -929,3 +929,9 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
 - S2 ASI seeds 26–100 RELEASED (cap S2bm.asi 20,332.5 billed CPU-h; staged watchers; throttled behind S1 ASI).
 - Beta-type 2 diagnostic GO: log-only (failure type, |Ŝ|, block PIPs, S0 vs MPM/HPM under our posterior), with bt1 as control.
 - SuSiE stays at the author defaults (susieR 0.14.2, L=20 is OURS); the S2 IBSS local optimum is reported as a finding, with no sensitivity run.
+
+## 2026-11-27 — Owner orders SMC-PERF deep dive (Engineering)
+- Designers: Fable 5.2 (Claude Work) + Astra 6.2 (codex), independent first, then joint plan; cheaper workers run experiments under the Eng manager.
+- Committee: fresh Opus 5.5 (Claude Third) + Sol 6.2 + Gemini 4 Neon; designers keep only warranted points, with no overblown complexity and no nitpicks.
+- Baseline = existing S1/S2 results. Pre-declared options, validated on both suites with fresh seeds. HQ soft cap 1,500 CPU-h (HQ's number). No new 100-seed campaign without the owner.
+- Deliverable: decision memo (reports/S1S2/perf/) covering what limits SMC-BVS, ranked options, and what to do next.
