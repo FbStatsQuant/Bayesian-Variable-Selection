@@ -28,7 +28,7 @@
 # Hold (bench_budget.tsv hold = owner_ok_after_b1, i.e. S2 asi; S1 asi has none): --go for any batch other than 1 refuses unless
 # --owner-ok-asi-full is given; that flag is recorded in column 6 of submissions.tsv.
 # Job names s<suite>bm_<M>_b<K>_<class>; submissions.tsv batch field "S<suite>bm.<M>.<K>" (never matches S1 "K" or
-# S2 SMC "S2.K"). --go refuses while any s<suite>bm_<M>_b<K>_* job is queued; after the batch has ended, --go again
+# S2 SMC "S2.K"). --go refuses while any s<suite>bm_<M>_b<K>_<class> job of the chosen classes is queued; after the batch has ended, --go again
 # resubmits it and every rep whose record is already ok is skipped (resubmitting a block re-fits only its non-ok reps).
 # --oom-pass [--oom-mem 64G] (HQ ruling 2026-11-27, S2 bas_mc3; run after batch K has ended): ONE re-fit pass, at
 # --oom-mem, of exactly the reps of batch K whose json is the memory-kill stub "failed: harness: R process exited rc=137
@@ -201,8 +201,10 @@ if [[ $mode == go ]]; then
   if [[ "$hold" == owner_ok_after_b1 && "$batch" != 1 ]] && (( ! ownerok )); then
     echo "REFUSED: $method batch $batch is on hold until the owner OKs the full grid (--owner-ok-asi-full)" >&2; exit 68; fi
   (( over == 0 )) || { echo "REFUSED: S$suite $method billed CPU-h $used >= budget $budget (hard stop)" >&2; exit 69; }
-  live=$(squeue -u fb31 -h -o %j | grep -Ec "^s${suite}bm_${method}_b${batch}m?_" || true)
-  (( live == 0 )) || { echo "REFUSED: $live jobs of S$suite $method batch $batch (or its oom-pass) still queued/running (re-run --go only after they end; ok reps are skipped)" >&2; exit 67; }
+  # with --classes, only the chosen classes' jobs block (a batch too large for MaxSubmitPU is submitted class by class)
+  cre=$(IFS='|'; echo "${CL[*]}")
+  live=$(squeue -u fb31 -h -o %j | grep -Ec "^s${suite}bm_${method}_b${batch}m?_(${cre})\$" || true)
+  (( live == 0 )) || { echo "REFUSED: $live jobs of S$suite $method batch $batch (or its oom-pass) in classes $classes still queued/running (re-run --go only after they end; ok reps are skipped)" >&2; exit 67; }
 fi
 for c in "${cmds[@]}"; do
   case $mode in
