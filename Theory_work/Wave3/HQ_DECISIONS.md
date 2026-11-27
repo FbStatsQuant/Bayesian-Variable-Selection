@@ -924,3 +924,8 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
 - 2026-11-26 evening CT. **OWNER SIGNS: the five benchmark grids on S2 only** (lasso-CV, SCAD, BAS MC3, ASI [Griffin .m under Octave], SuSiE; 120 settings x 100 reps = 60,000 fits). Same seeds and datasets as the SMC-BVS S2 run; same staged batches and watcher; NOTS, concurrency at most 468; a hard CPU-h stop per method. S1 benchmarks are NOT signed.
 - 2026-11-26 night CT. **OWNER SIGNS: S1 benchmark grids for lasso-CV, SCAD, BAS MC3 and SuSiE** (6,400 fits; same seeds and data as the SMC-BVS S1 run; staged; hard CPU-h stops). ASI on S1 is not signed: Engineering quotes its cost first. All results tables gain mean Hamming distance, TP, FP and F1 next to success/100. Open: the full ASI budget on S2 (batches 2–3, up to about 20.3k billed CPU-h), held for the owner.
 - 2026-11-26 night CT. **OWNER: finish S1 for every method first, so there is something to compare against.** ASI on S1 is signed (hard stop 7,080 billed CPU-h). NOTS order: S1 SMC tail > S1 cheap four > S1 ASI > S2 cheap four > S2 ASI batch 1; S2 ASI batches 2–3 stay held for the owner.
+
+## 2026-11-27 — Owner rulings: S2 ASI released; bt2 diagnostic GO; SuSiE as is
+- S2 ASI seeds 26–100 RELEASED (cap S2bm.asi 20,332.5 billed CPU-h; staged watchers; throttled behind S1 ASI).
+- Beta-type 2 diagnostic GO: log-only (failure type, |Ŝ|, block PIPs, S0 vs MPM/HPM under our posterior), with bt1 as control.
+- SuSiE stays at the author defaults (susieR 0.14.2, L=20 is OURS); the S2 IBSS local optimum is reported as a finding, with no sensitivity run.
