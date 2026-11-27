@@ -810,3 +810,9 @@
   - S1 6-method comparison on reps 1–25:
     - SMC-BVS vs ASI exact W/T/L: 0/399/1.
     - Hamming W/T/L: 2/341/57, p≈6e-15, almost all at SNR 0.5/1.
+- 2026-11-27 ~09:20Z — Final S1/S2 SMC-BVS deliverable built: reports/S1S2/final/ (README, results tables from aggregate.R --final, data manifest smcbvs_data_md5.tsv, pull_manifests.tsv). Sent to HQ.
+- 2026-11-27 ~11:15Z — S2 bas_mc3 method finding written (option A): reports/S1S2/final/bas_mc3_S2_failures.{md,tsv}, built by reports/S1S2/scripts/bas_s2_failures.R.
+  - n=50: 130 fits OOM at 16G (refit at 64G), 72 numeric errors, 9 computational failures.
+  - n=100: 1 fit OOM at 16G, then ok at 64G.
+  - The failures show no dependence on ν, ρ or beta-type.
+- S1 asi b2/b3 are monitored by the hourly scheduled self-check 7dd3778b. The previous background wait was stopped at its 2 h limit.
