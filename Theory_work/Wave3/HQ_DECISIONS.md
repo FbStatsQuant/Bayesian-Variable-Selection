@@ -935,3 +935,8 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
 - Committee: fresh Opus 5.5 (Claude Third) + Sol 6.2 + Gemini 4 Neon; designers keep only warranted points, with no overblown complexity and no nitpicks.
 - Baseline = existing S1/S2 results. Pre-declared options, validated on both suites with fresh seeds. HQ soft cap 1,500 CPU-h (HQ's number). No new 100-seed campaign without the owner.
 - Deliverable: decision memo (reports/S1S2/perf/) covering what limits SMC-BVS, ranked options, and what to do next.
+
+## 2026-11-27 — Owner theory scope: Song–Liang 1-to-1 only
+- Theory targets only our-setup equivalents of Song–Liang: consistency for the true model, the true distribution, and under misspecification.
+- Assumptions only as needed for these three. The particle-limit theorem and other extensions are deferred until the three have proofs AND Lean code.
+- TH-CHECKS: E7 dropped; E8 (misspecification refits) still owner-gated.
