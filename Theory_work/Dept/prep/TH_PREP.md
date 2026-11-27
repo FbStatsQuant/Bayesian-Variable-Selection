@@ -291,6 +291,15 @@ Where each element enters, element by element: `TH_PREP_support/W2_ROUTES.md` §
 
 Definitions follow the existing SPEC §10 conventions: X scaled with `scale()`, the true σ, and seeds only (never store X or y).
 
+### 4a. Evidence received: Engineering TH-CHECKS P1 (E1–E3), 2026-11-27
+
+Source: `_local/engineering/reports/S1S2/theory_checks/P1.md` (13,600 fits, post hoc; validation PASS to 1e-12). Read through the scope ruling (§0a).
+
+- **E1 → [1], `asm:margin` (the (b) candidate).** "min t² > 2 × price" is a near-perfect **necessary** condition: 9 of 11,466 fits below it recover S₀ (sensitivity 0.993, AUC 0.989). It is **not sufficient**: P(exact | yes) = 0.95 on S1 and 0.45 on S2. The §4 back-of-envelope matches the **population** min t² (S1 SNR 1: 11.7/16.0 against 15.4/20.0; SNR 2: 46.8/64.1). It explains bt2 at ρ > 0: population min t² at ν = 6 drops to 24.5–26.8 (ρ = 0.35) and 4.9–6.7 (ρ = 0.7) against 2 × price ≈ 15–16, and margin_MPM > 0 in 96–100% of bt2 fits. Consequence for (1): state the margin condition with constant c ≥ 2 on the **population** t²; it is (b)-supported as a necessary threshold. The sufficiency gap on S2 is consistent with s₀ log p/n = 0.69 (non-asymptotic), not a counterexample.
+- **E2 → [1], design form.** S1: sample sparse floors stay ≥ 0.06 at ⌈2(A+1)s₀+2⌉ and ≥ 0.12 at 2s₀, so the fixed-design EF holds there. S2: the greedy proxy (an upper bound) at ⌈2(A+1)s₀+2⌉ is about 1e-4 (n = 100) and 1e-5 (n = 50), so the **sample EF form is vacuous on S2**. Consequence: state (1) in the **random-design, population-EFS form** (headline `thm:post-random`), which holds analytically on both suites. Keep `thm:post-fixed` as secondary, with S1-only empirical support.
+- **E3 → [1], rate (list view only).** S1, SNR ≥ 2: (1−π̂(S₀))/√(log n/n) ≈ 4.2–5.1, roughly flat from n = 500 to 1000. This is consistent with the T1 rate, with a constant of about 4.5 (two n values only). S2 is uninformative. The particle-level π̂ and E7 are not available. Both are **[DEFERRED]** (SMC limit); no refits needed for (1)–(3).
+- **Still open for (1)–(3):** P2 (E4 Hellinger → [2]; E5 cap and E6 σ² → [1]–[3]).
+
 ## 5. Inconsistencies found (for the post-decision theory pass)
 
 These are listed in `W1_STATEMENTS.md` §6; the ones that matter:
