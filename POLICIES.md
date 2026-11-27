@@ -26,6 +26,14 @@ the documents win.
 - **Pace:** 2–3 concurrent leads per department when usage limits allow. On "pace down", one major lead stays active
   and the others pause at a clean checkpoint. Progress lines report the active lead count.
 
+### 1b. Review acceptance bar (owner, 2026-11-27)
+- **Plans and experiments:** every reviewer scores ≥ 8 (per reviewer, not the average).
+- **Headline theorem statements and proofs, and paper claims:** every reviewer scores ≥ 8.5. Core results also need
+  Lean or an independent check.
+- **No open blocking issue:** any correctness or design flaw a reviewer marks as blocking is fixed, whatever the score.
+- **At most 3 rounds:** if the bar is not met after round 3, the item escalates to HQ, which decides what is worth fixing.
+  Non-blocking nitpicks may be declined with a one-line reason.
+
 ## 2. Binding policies (read in this order)
 1. `Theory_work/Wave3/PROGRAM.md`: goals, presentation rule, **Readability** (clear statements, reader versions, full
    notation; proofs may be as hard as needed if checked).
