@@ -181,6 +181,23 @@ systemd-run --user --unit=s1s2-watch-s1bm-lasso_cv-b1-$(date +%Y%m%d-%H%M%S) --c
 #   package_for_desktop.sh --suite 1 --method lasso_cv --batch 1 --reps 1-25 --manifest <…/pull_lasso_cv_s1b1_*.sha256> --slurm-tsv <…>
 ```
 To re-run failed reps, resubmit the same batch after it has ended: reps whose json is ok are skipped.
+```bash
+# 4 (Owls) free the NOTS scratch copy of a benchmark batch: only after the desktop lists S1S2_<M>_s<suite>b<K> in
+#   crews/offload/desktop_verified.txt (G1) and the Owls copies / unit tars re-hash (G2, G3); G4 re-hashes on NOTS before rm
+Experiments/S1S2/slurm/free_nots_scratch.sh --method lasso_cv --suite 1 --batch 1 --manifest <pull manifest of lasso_cv_s1b1>   # dry run
+Experiments/S1S2/slurm/free_nots_scratch.sh --method lasso_cv --suite 1 --batch 1 --manifest <same manifest> --go
+# 5 (Owls) tables: per method (incl. benchmarks) and paired vs SMC-BVS (outputs in specs/, gitignored)
+Rscript Experiments/S1S2/harness/aggregate.R --method lasso_cv --suite 1          # results_S1_lasso_cv.{tsv,md}
+Rscript Experiments/S1S2/harness/aggregate.R --method smcbvs --suite 1 --final    # refuses while a timeout stub's task is queued
+Rscript Experiments/S1S2/harness/paired.R --suite 1 [--methods lasso_cv,scad,susie,bas_mc3,asi] [--reps 1-100] [--pairing joint|pairwise]
+Rscript Experiments/S1S2/harness/test_aggregate_supersede.R                         # offline test of aggregate.R's record rules
+```
+aggregate.R appends hamming_mean, TP_mean, FP_mean, FN_mean, F1_mean (failed or missing record = Ŝ = ∅) after the existing
+columns; benchmarks have NA E-flag columns. Both scripts read only `<runs>/<M>/<setting>/rep_RRR.json` (never
+`_superseded/` or audit folders) and stop on a json whose setting_id / rep / method differs from its path or on a
+duplicate record. paired.R pairs on (setting, rep) with equal data_md5 (mismatches counted and listed), McNemar exact p on
+the exact-recovery discordant pairs and a sign test on Hamming; joint pairing = the rule of
+reports/S1S2/scripts/build_S1_comparison.R (numbers agree exactly on S1 reps 1–25, 2026-11-27).
 
 ## Benchmark STOP rule (check_bench.sh; no E-flag rule)
 STOP (and the watcher cancels the batch's pending tasks) if any of these holds:

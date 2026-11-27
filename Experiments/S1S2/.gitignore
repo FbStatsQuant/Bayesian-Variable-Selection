@@ -4,3 +4,4 @@ octave-workspace
 *.log
 specs/results_*
 specs/longfits_*
+specs/paired_*

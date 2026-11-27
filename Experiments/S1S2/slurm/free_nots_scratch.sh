@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 # free_nots_scratch.sh -- run on OWLS. Deletes the NOTS scratch copy of ONE batch's records, only when it is safe.
 #   free_nots_scratch.sh --batch K --manifest <pull manifest used for the unit> [--also-unit UNIT ...] [--go]  (dry run)
+#   free_nots_scratch.sh --method M --suite 1|2 --batch K --manifest <pull manifest of --method M> [--also-unit UNIT ...] [--go]
+#   --method M (default smcbvs = S1 SMC-BVS, unchanged): a benchmark batch (M = lasso_cv|scad|susie|bas_mc3|asi): unit
+#   S1S2_<M>_s<suite>b<K> (package_for_desktop.sh --method M), --also-unit S1S2_<M>_s<suite>b<K><tag>; the manifest may list
+#   only <M>/S<suite>_xx/rep_RRR.{json,rds}, so only NOTS /scratch/fb31/SMC-BVS/runs/S1S2/<M>/S<suite>_xx/rep_* are removed.
 # Batch with reruns (b1 + b1r): use the LATEST pull manifest of the batch (b1r: reflects the overwritten jsons) and
 # --also-unit S1S2_smcbvs_b1r, so G1 requires BOTH units desktop-verified and G3 checks both.
 # Gates, each its own sha256 check, all must pass (else nothing is deleted):
@@ -17,12 +21,22 @@
 set -euo pipefail
 ROOT=/home/fb31/Bayesian-Variable-Selection; ENG=$ROOT/_local/engineering
 SRC=$ENG/runs/S1S2; NRUNS=/scratch/fb31/SMC-BVS/runs/S1S2
-batch=""; man=""; go=0; also=()
+batch=""; man=""; go=0; also=(); method=smcbvs; suite=""
 while (($#)); do case "$1" in --batch) batch="$2"; shift 2;; --manifest) man="$2"; shift 2;; --go) go=1; shift;;
-  --also-unit) [[ "$2" =~ ^S1S2_smcbvs_b[0-9]+[a-z0-9]*$ ]] || { echo "bad --also-unit" >&2; exit 64; }; also+=("$2"); shift 2;;
+  --also-unit) also+=("$2"); shift 2;; --method) method="$2"; shift 2;; --suite) suite="$2"; shift 2;;
   *) echo "unknown arg $1" >&2; exit 64;; esac; done
-[[ "$batch" =~ ^[0-9]+$ && -f "$man" ]] || { echo "usage: --batch K --manifest FILE [--go]" >&2; exit 64; }
-units=("S1S2_smcbvs_b${batch}" "${also[@]}")
+[[ "$batch" =~ ^[0-9]+$ && -f "$man" ]] || { echo "usage: [--method M --suite 1|2] --batch K --manifest FILE [--go]" >&2; exit 64; }
+if [[ "$method" == smcbvs ]]; then   # unchanged: S1 SMC-BVS units S1S2_smcbvs_b<K>
+  [[ -z "$suite" || "$suite" == 1 ]] || { echo "--method smcbvs: S1 only (units S1S2_smcbvs_b<K>)" >&2; exit 64; }
+  unit0="S1S2_smcbvs_b${batch}"; ure='^S1S2_smcbvs_b[0-9]+[a-z0-9]*$'; pre='smcbvs/S1_[0-9]{2}'
+else
+  [[ "$method" =~ ^(lasso_cv|scad|susie|bas_mc3|asi)$ ]] || { echo "bad --method $method" >&2; exit 64; }
+  [[ "$suite" == 1 || "$suite" == 2 ]] || { echo "--method $method needs --suite 1|2" >&2; exit 64; }
+  unit0="S1S2_${method}_s${suite}b${batch}"; ure="^S1S2_${method}_s${suite}b[0-9]+[a-z0-9]*\$"
+  if [[ "$suite" == 1 ]]; then pre="${method}/S1_[0-9]{2}"; else pre="${method}/S2_[0-9]{3}"; fi
+fi
+for u in "${also[@]}"; do [[ "$u" =~ $ure ]] || { echo "bad --also-unit $u" >&2; exit 64; }; done
+units=("$unit0" "${also[@]}")
 for unit in "${units[@]}"; do
   grep -qxF "$unit" "$ENG/crews/offload/desktop_verified.txt" || { echo "G1 FAIL: $unit not in desktop_verified.txt"; exit 1; }; echo "G1 ok: desktop verified $unit"
 done
@@ -31,7 +45,7 @@ for unit in "${units[@]}"; do
   if [[ -d "$ENG/records/$unit" ]]; then ( cd "$ENG/records/$unit" && sha256sum --quiet -c SHA256SUMS ) || { echo "G3 FAIL: $unit tars"; exit 1; }; echo "G3 ok: $unit tars verify"
   else [[ -s "$ENG/records_manifests/$unit/SHA256SUMS.txt" ]] || { echo "G3 FAIL: $unit gone from records/ and no records_manifests/$unit/SHA256SUMS.txt"; exit 1; }; echo "G3 ok: $unit offloaded, manifest kept"; fi
 done
-grep -vE '^[0-9a-f]{64}  smcbvs/S1_[0-9]{2}/rep_[0-9]{3}\.(json|rds)$' "$man" && { echo "refusing: unexpected path in manifest"; exit 1; }
+grep -vE "^[0-9a-f]{64}  ${pre}/rep_[0-9]{3}\\.(json|rds)\$" "$man" && { echo "refusing: unexpected path in manifest"; exit 1; }
 if ((go == 0)); then
   ssh nots "cd '$NRUNS' && sha256sum --quiet --ignore-missing -c - && echo \"G4 ok (dry run): present NOTS files match the manifest\"" < "$man" || echo "G4 FAIL (dry run)"
   ssh nots "cd '$NRUNS' && n=0; while IFS= read -r f; do [ -e \"\$f\" ] && n=\$((n+1)); done; echo \"present on NOTS: \$n of $(wc -l < "$man")\"" < <(cut -c67- "$man")

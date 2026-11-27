@@ -24,6 +24,8 @@ Experiments/S1S2/
   harness/methods.R            registry: method name -> adapter file + fit function
   harness/smoke.R              the gate: every method x 6 combos x 1 seed; writes smoke_table.tsv
   harness/aggregate.R          successes/100 per setting x method (for later)
+  harness/paired.R             paired SMC-BVS vs benchmark tables (same data_md5; McNemar, Hamming sign test)
+  harness/records.R            record reader shared by aggregate.R and paired.R (identity / duplicate checks)
   smc/fit_smcbvs.R             SMC-BVS adapter (manager's team)
   benchmarks/frequentist/fit_lasso_cv.R, fit_scad.R          (Fable-F)
   benchmarks/bayesian/fit_bas_mc3.R, fit_asi.R, fit_susie.R   (Fable-B; vendored PARNI code is NOT copied into git: clone it to _local, pin the commit)
