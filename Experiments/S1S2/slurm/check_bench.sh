@@ -14,7 +14,9 @@
 # STOP (benchmarks have no E-flag rule):
 #   - failed + crashed reps > 5% of the finished reps (records + crashed), overall or in a class; while tasks are still
 #     pending/running the rule applies to a group only once it has >= 20 finished reps (noise guard; at batch end always);
-#   - any task OUT_OF_MEMORY or NODE_FAIL (sacct);
+#   - any task OUT_OF_MEMORY or NODE_FAIL (sacct). EXCEPT bas_mc3 (HQ ruling 2026-11-27): an OUT_OF_MEMORY task that
+#     requested < 64G is a reported WARNING (its rc=137 reps get one 64G pass, submit_bench.sh --oom-pass); an
+#     OUT_OF_MEMORY at >= 64G, and any NODE_FAIL, stay STOP;
 #   - the method's billed CPU-h (sacct CPUTimeRAW over ALL its S<suite>bm.<M>.* jobs, every batch) >= budget_cpuh in
 #     bench_budget.tsv;
 #   - ANY data-identity mismatch, or a record whose SMC-BVS reference is missing although the SMC-BVS rep is ok.
@@ -51,7 +53,7 @@ tmp=$(mktemp -d "$TMPB/checkbm.XXXXXX"); trap 'rm -rf "$tmp"' EXIT
 
 echo "== suite $suite method $method batch $batch, reps $lo-$hi, jobs ${jobs:-<none logged>}  ($(date -u +%FT%TZ))"
 if [[ -n "$jobs" ]]; then
-  sacct -j "$jobs" -X -n -P -o JobID,JobName,State,ExitCode,Elapsed > "$tmp/sacct_x" || true
+  sacct -j "$jobs" -X -n -P -o JobID,JobName,State,ExitCode,Elapsed,ReqMem > "$tmp/sacct_x" || true
   sacct -j "$jobs" -n -P -o JobID,MaxRSS,Elapsed,State | grep '\.batch|' > "$tmp/sacct_b" || true
   echo "-- Slurm states (array tasks)"
   awk -F'|' '{ n = split($2, a, "_"); cls = a[n]; st = $3; sub(/ .*/, "", st); c[cls "|" st]++ } END { for (k in c) print k "|" c[k] }' "$tmp/sacct_x" | sort | column -t -s'|'
@@ -78,13 +80,19 @@ tk$cell <- (tk$task_id - tk$rep_lo) %/% 100 + 1
 g$task_id <- NA_integer_
 for (i in seq_len(nrow(tk))) { j <- g$cell == tk$cell[i] & g$rep >= tk$rep_lo[i] & g$rep <= tk$rep_hi[i]; g$task_id[j] <- tk$task_id[i] }
 # Slurm task states: "<array>_<task>" rows only (a pending range "<array>_[..]" is not one task)
-sx <- tryCatch(read.delim(a[5], sep = "|", header = FALSE, col.names = c("JobID", "JobName", "State", "Exit", "Elapsed"),
+sx <- tryCatch(read.delim(a[5], sep = "|", header = FALSE, col.names = c("JobID", "JobName", "State", "Exit", "Elapsed", "ReqMem"),
                           colClasses = "character"), error = function(e) NULL)
-ended_ids <- integer(0); unfinished <- 0L; oom_nf <- 0L; bad_states <- 0L
+ended_ids <- integer(0); unfinished <- 0L; oom_nf <- 0L; bad_states <- 0L; oom_warn <- 0L
 if (!is.null(sx) && nrow(sx)) {
   st <- sub(" .*", "", sx$State)
   unfinished <- sum(st %in% c("PENDING", "RUNNING", "REQUEUED", "SUSPENDED", "CONFIGURING", "COMPLETING", "RESIZING"))
   oom_nf <- sum(st %in% c("OUT_OF_MEMORY", "NODE_FAIL"))
+  if (identical(method, "bas_mc3")) {   # HQ ruling 2026-11-27: OOM below 64G = warning (64G pass follows)
+    rq <- sub("[nc]$", "", sx$ReqMem); rg <- suppressWarnings(as.numeric(sub("[KMGT]$", "", rq))) *
+      c(K = 1 / 1024^2, M = 1 / 1024, G = 1, T = 1024)[sub("^[0-9.]+", "", rq)]
+    low <- st == "OUT_OF_MEMORY" & !is.na(rg) & rg < 64
+    oom_warn <- sum(low); oom_nf <- oom_nf - oom_warn
+  }
   bad_states <- sum(st %in% c("FAILED", "TIMEOUT", "OUT_OF_MEMORY", "NODE_FAIL", "CANCELLED", "PREEMPTED", "BOOT_FAIL", "DEADLINE"))
   one <- grepl("^[0-9]+_[0-9]+$", sx$JobID)
   ended_ids <- unique(as.integer(sub("^[0-9]+_", "", sx$JobID[one & !(st %in% c("PENDING", "RUNNING", "REQUEUED", "SUSPENDED",
@@ -156,6 +164,7 @@ reasons <- c(if (any(over5)) paste0("failed+crashed > 5% in ", paste(names(over5
 cat(sprintf("-- unfinished Slurm tasks: %d; tasks in a bad Slurm state: %d; billed CPU-h %.2f / %g\n", unfinished, bad_states, used, budget))
 nrp <- sum(tab$md5 %in% "ref_pending")
 rp_note <- if (nrp) sprintf(" (%d reps await their SMC-BVS reference: SMC-BVS rep not finished; re-check later)", nrp) else ""
+if (oom_warn) rp_note <- paste0(rp_note, sprintf("; WARNING: %d tasks OUT_OF_MEMORY below 64G (bas_mc3 ruling: one 64G pass for their rc=137 reps, submit_bench.sh --oom-pass)", oom_warn))
 cat(if (length(reasons)) paste0("VERDICT: STOP -- ", paste(reasons, collapse = "; "), "\n") else
     if (unfinished > 0) paste0("VERDICT: RUNNING -- no STOP condition so far", rp_note, "\n") else
     paste0("VERDICT: PASS -- no STOP condition", rp_note, "\n"))

@@ -20,6 +20,9 @@
 # for that rep (computational failure, diagnostics.R) and restarts R for the reps after it. If R dies during a rep for
 # any other reason, that rep gets "failed: harness: R process exited rc=<rc> during the fit" and the loop continues.
 # Exit status: 0 when every rep of the block has a json, else 1 (the task then shows FAILED in sacct).
+# S1S2_REFIT_OOM=1 (set by submit_bench.sh --oom-pass; HQ ruling 2026-11-27, S2 bas_mc3): re-fit ONLY the reps whose json
+# is the memory-kill stub "failed: harness: R process exited rc=137 during the fit"; every other rep (ok, or failed for
+# any other reason, e.g. a BAS numeric error) is left as it is.
 #SBATCH --job-name=bench
 #SBATCH --partition=commons
 #SBATCH --nodes=1
@@ -85,7 +88,13 @@ fail_json() {   # rep, status: written only if the rep has no ok json (atomic tm
   echo "REP $1: $2"
 }
 
-todo=(); for (( r = rlo; r <= rhi; r++ )); do is_ok "$(jpath "$r")" || todo+=("$r"); done
+is_oomstub() { [[ -f "$1" ]] && grep -Eq '"status": ?"failed: harness: R process exited rc=137 during the fit"' "$1"; }
+todo=()
+if [[ "${S1S2_REFIT_OOM:-0}" == 1 ]]; then
+  for (( r = rlo; r <= rhi; r++ )); do is_oomstub "$(jpath "$r")" && todo+=("$r"); done; echo "mode=refit_oom (only rc=137 stubs)"
+else
+  for (( r = rlo; r <= rhi; r++ )); do is_ok "$(jpath "$r")" || todo+=("$r"); done
+fi
 echo "todo=${#todo[@]} of $(( rhi - rlo + 1 )) reps: ${todo[*]:-none}"
 prog=$TMPDIR/progress; rc_all=0
 while (( ${#todo[@]} )); do

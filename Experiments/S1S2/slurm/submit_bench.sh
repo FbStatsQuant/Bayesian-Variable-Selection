@@ -30,6 +30,13 @@
 # Job names s<suite>bm_<M>_b<K>_<class>; submissions.tsv batch field "S<suite>bm.<M>.<K>" (never matches S1 "K" or
 # S2 SMC "S2.K"). --go refuses while any s<suite>bm_<M>_b<K>_* job is queued; after the batch has ended, --go again
 # resubmits it and every rep whose record is already ok is skipped (resubmitting a block re-fits only its non-ok reps).
+# --oom-pass [--oom-mem 64G] (HQ ruling 2026-11-27, S2 bas_mc3; run after batch K has ended): ONE re-fit pass, at
+# --oom-mem, of exactly the reps of batch K whose json is the memory-kill stub "failed: harness: R process exited rc=137
+# during the fit" (bench_array.sbatch with S1S2_REFIT_OOM=1 re-fits only those; failed-for-another-reason reps stay).
+# Only the array tasks holding such reps are submitted; job names s<suite>bm_<M>_b<K>m_<class>, submissions.tsv batch
+# field "S<suite>bm.<M>.<K>m" (counts toward the method budget). An rc=137 rep that is killed again at --oom-mem keeps a
+# stub (new slurm_job) = computational failure; there is no further pass. Watch it with watch_batch.sh --jobs <its ids>
+# --prefix s<suite>bm_<M>_b<K>m_ --tag <M>_s<suite>b<K>m --no-package.
 # Watch / pull / package / record with --suite S --method M (watch_batch.sh, check_batch.sh, pull_to_owls.sh,
 # sacct_record.sh, package_for_desktop.sh); unit S1S2_<M>_s<suite>b<K>.
 set -euo pipefail
@@ -43,17 +50,20 @@ LOGDIR=${S1S2_LOGDIR:-/scratch/fb31/SMC-BVS/runs/S1S2/logs}
 SUBLOG=${S1S2_SUBLOG:-$ENG/S1S2/logs/submissions.tsv}
 CPU_CAP=1536; TASK_CAP=768; MEM_CAP_G=2304; SUBMIT_CAP=5000; BENCH_CAP=468; RESERVE=300; ALLOC_CPUS_PER_TASK=2
 
-suite=""; method=""; batch=""; reps=""; classes=""; maxconc=""; dep=""; mode=print; ownerok=0
+suite=""; method=""; batch=""; reps=""; classes=""; maxconc=""; dep=""; mode=print; ownerok=0; oompass=0; oommem=64G
 while (($#)); do case "$1" in
   --suite) suite="$2"; shift 2;; --method) method="$2"; shift 2;; --batch) batch="$2"; shift 2;; --reps) reps="$2"; shift 2;;
   --classes) classes="$2"; shift 2;; --max-conc) maxconc="$2"; shift 2;; --dependency) dep="$2"; shift 2;;
-  --owner-ok-asi-full) ownerok=1; shift;; --test-only) mode=test; shift;; --go) mode=go; shift;;
-  -h|--help) sed -n '2,34p' "$0"; exit 0;; *) echo "unknown arg $1" >&2; exit 64;; esac; done
+  --owner-ok-asi-full) ownerok=1; shift;; --oom-pass) oompass=1; shift;; --oom-mem) oommem="$2"; shift 2;; --test-only) mode=test; shift;; --go) mode=go; shift;;
+  -h|--help) sed -n '2,41p' "$0"; exit 0;; *) echo "unknown arg $1" >&2; exit 64;; esac; done
 [[ "$suite" == 1 || "$suite" == 2 ]] || { echo "need --suite 1|2" >&2; exit 64; }
 [[ "$method" =~ ^[a-z0-9_]+$ && "$method" != smcbvs ]] || { echo "need --method <benchmark method> (not smcbvs)" >&2; exit 64; }
 [[ "$batch" =~ ^[1-3]$ ]] || { echo "need --batch 1|2|3" >&2; exit 64; }
 [[ "$reps" =~ ^([0-9]+)-([0-9]+)$ ]] || { echo "need --reps LO-HI" >&2; exit 64; }
 lo=${BASH_REMATCH[1]}; hi=${BASH_REMATCH[2]}
+[[ "$oommem" =~ ^[0-9]+G$ ]] || { echo "--oom-mem: e.g. 64G" >&2; exit 64; }
+RUNS=${S1S2_RUNS:-/scratch/fb31/SMC-BVS/runs/S1S2}
+bsfx=$batch; (( oompass )) && bsfx=${batch}m
 plan=(x 1-25 26-60 61-100)
 [[ "$lo-$hi" == "${plan[$batch]}" ]] || { echo "batch $batch is reps ${plan[$batch]} (HQ plan), not $lo-$hi" >&2; exit 64; }
 awk -v m="$method" '$1 == m && $2 == "=" && $3 ~ /^list\(file/ { f = 1 } END { exit !f }' "$DEPLOY/S1S2/harness/methods.R" ||
@@ -131,21 +141,44 @@ for c in "${CL[@]}"; do
       print out, n + 0, f + 0 }' "$TASKS")
   ncell=$(wc -w <<< "${CELLS[$c]}")
   (( fits == ncell * nrep )) || { echo "FATAL: class $c: task list covers $fits fits, expected $(( ncell * nrep ))" >&2; exit 65; }
+  if (( oompass )); then   # only the tasks of this batch holding an rc=137 stub rep
+    oids=(); nstub=0
+    for cell in ${CELLS[$c]}; do
+      if [[ $suite == 2 ]]; then st=$(printf 'S2_%03d' "$cell"); else st=$(printf 'S1_%02d' "$cell"); fi
+      for (( r = lo; r <= hi; r++ )); do
+        j=$(printf '%s/%s/%s/rep_%03d.json' "$RUNS" "$method" "$st" "$r")
+        if [[ -f "$j" ]] && grep -Eq '"status": ?"failed: harness: R process exited rc=137 during the fit"' "$j"; then
+          t=$(awk -F'\t' -v s="$st" -v r="$r" 'NR > 1 && $2 == s && $3 <= r && r <= $4 { print $1 }' "$TASKS")
+          [[ "$t" =~ ^[0-9]+$ ]] || { echo "FATAL: no task for $st rep $r" >&2; exit 65; }
+          oids+=("$t"); nstub=$(( nstub + 1 ))
+        fi
+      done
+    done
+    ids=$(printf '%s\n' "${oids[@]}" | awk 'NF' | sort -nu | paste -sd, -); n=$( [[ -n "$ids" ]] && tr ',' '\n' <<< "$ids" | wc -l || echo 0)
+    echo "# oom-pass class $c: $nstub rc=137 reps in $n tasks${ids:+: $ids}"
+    (( n > 0 )) || continue
+  fi
   IDS[$c]=$ids; NT[$c]=$n; total=$(( total + n ))
 done
+if (( oompass )); then
+  CL2=(); for c in "${CL[@]}"; do [[ -n "${NT[$c]:-}" ]] && CL2+=("$c"); done; CL=("${CL2[@]}")
+  (( total > 0 )) || { echo "# oom-pass: no rc=137 stub in S$suite $method batch $batch; nothing to submit"; exit 0; }
+fi
 
 sumK=0; sumMem=0; cmds=()
 for c in "${CL[@]}"; do
   n=${NT[$c]}
   K=$(( total <= maxconc ? n : (n * maxconc) / total )); (( K >= 1 )) || K=1
   dm=$cmem; dl=$limit; (( ${PVAL[$c]} == 5000 )) && { dm=$cmem5k; dl=$lim5k; }
+  (( oompass )) && dm=$oommem
   dtime=$(hms $(( block * dl + 600 )))
   v="MEM_$c"; mem=${!v:-$dm}; v="TIME_$c"; tl=${!v:-$dtime}; v="PART_$c"; part=${!v:-commons}
   v="CONSTRAINT_$c"; cons=${!v-cascadelake}
   (( $(secs "$tl") <= 86400 )) || { echo "FATAL: class $c time $tl > 24 h (commons MaxWall)" >&2; exit 65; }
   memg=${mem%G}; sumK=$(( sumK + K )); sumMem=$(( sumMem + K * memg ))
-  cmd=(sbatch --parsable --job-name="s${suite}bm_${method}_b${batch}_${c}" --partition="$part" --cpus-per-task=1 --mem="$mem" --time="$tl"
-       --array="${IDS[$c]}%${K}" --export="ALL,S1S2_SUITE=$suite,S1S2_METHOD=$method")
+  xenv=""; (( oompass )) && xenv=",S1S2_REFIT_OOM=1"
+  cmd=(sbatch --parsable --job-name="s${suite}bm_${method}_b${bsfx}_${c}" --partition="$part" --cpus-per-task=1 --mem="$mem" --time="$tl"
+       --array="${IDS[$c]}%${K}" --export="ALL,S1S2_SUITE=$suite,S1S2_METHOD=$method$xenv")
   [[ -n "$cons" ]] && cmd+=(--constraint="$cons")
   [[ -n "$dep" ]] && cmd+=(--dependency="$dep")
   cmd+=("$SBATCH_FILE")
@@ -168,8 +201,8 @@ if [[ $mode == go ]]; then
   if [[ "$hold" == owner_ok_after_b1 && "$batch" != 1 ]] && (( ! ownerok )); then
     echo "REFUSED: $method batch $batch is on hold until the owner OKs the full grid (--owner-ok-asi-full)" >&2; exit 68; fi
   (( over == 0 )) || { echo "REFUSED: S$suite $method billed CPU-h $used >= budget $budget (hard stop)" >&2; exit 69; }
-  live=$(squeue -u fb31 -h -o %j | grep -c "^s${suite}bm_${method}_b${batch}_" || true)
-  (( live == 0 )) || { echo "REFUSED: $live jobs of S$suite $method batch $batch still queued/running (re-run --go only after they end; ok reps are skipped)" >&2; exit 67; }
+  live=$(squeue -u fb31 -h -o %j | grep -Ec "^s${suite}bm_${method}_b${batch}m?_" || true)
+  (( live == 0 )) || { echo "REFUSED: $live jobs of S$suite $method batch $batch (or its oom-pass) still queued/running (re-run --go only after they end; ok reps are skipped)" >&2; exit 67; }
 fi
 for c in "${cmds[@]}"; do
   case $mode in
@@ -177,7 +210,7 @@ for c in "${cmds[@]}"; do
     test)  echo "\$ ${c/sbatch --parsable/sbatch --test-only}"; eval "${c/sbatch --parsable/sbatch --test-only}" 2>&1 || true;;
     go)    mkdir -p "$LOGDIR" "$(dirname "$SUBLOG")" /scratch/fb31/SMC-BVS/tmp/S1S2
            jid=$(eval "$c"); echo "SUBMITTED $jid  $c"
-           printf '%s\t%s\t%s\t%s\t%s\t%s\n' "$(date -u +%FT%TZ)" "S${suite}bm.${method}.${batch}" "$jid" "$mhash" "$c" "$note" >> "$SUBLOG";;
+           printf '%s\t%s\t%s\t%s\t%s\t%s\n' "$(date -u +%FT%TZ)" "S${suite}bm.${method}.${bsfx}" "$jid" "$mhash" "$c" "$note" >> "$SUBLOG";;
   esac
 done
 [[ $mode == print ]] && echo "# (printed only; nothing submitted. --test-only validates, --go submits)"
