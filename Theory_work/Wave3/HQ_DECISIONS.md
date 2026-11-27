@@ -940,3 +940,7 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
 - Theory targets only our-setup equivalents of Song–Liang: consistency for the true model, the true distribution, and under misspecification.
 - Assumptions only as needed for these three. The particle-limit theorem and other extensions are deferred until the three have proofs AND Lean code.
 - TH-CHECKS: E7 dropped; E8 (misspecification refits) still owner-gated.
+
+## 2026-11-27 — Owner: SMC-PERF must not be tailored to S1/S2
+- Only principled, pre-declared changes with nothing tuned on S1/S2, holding on both suites on fresh seeds; material accuracy gains only. "None beyond option 1" is acceptable if argued.
+- Keep the Fable and Astra designers alive through the committee round and the pilot results.
