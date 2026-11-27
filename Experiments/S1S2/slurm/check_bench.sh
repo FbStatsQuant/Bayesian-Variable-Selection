@@ -17,7 +17,9 @@
 #   - any task OUT_OF_MEMORY or NODE_FAIL (sacct);
 #   - the method's billed CPU-h (sacct CPUTimeRAW over ALL its S<suite>bm.<M>.* jobs, every batch) >= budget_cpuh in
 #     bench_budget.tsv;
-#   - ANY data-identity mismatch, or a record whose SMC-BVS reference is missing.
+#   - ANY data-identity mismatch, or a record whose SMC-BVS reference is missing although the SMC-BVS rep is ok.
+#     A rep whose SMC-BVS fit has not finished (no json / non-ok stub, e.g. a running rerun) is "ref_pending": reported
+#     in the verdict line, not a STOP; its identity is checked once the SMC-BVS record exists (re-run this check).
 # RUNNING while tasks are pending/running and no STOP condition holds; PASS at batch end otherwise.
 # Writes the per-rep table to _local/engineering/S1S2/logs/check_s<suite>bm_<M>_b<K>.tsv and prints the summary.
 # Test overrides (default = the NOTS paths): S1S2_ENG, S1S2_RUNS, S1S2_TMP, S1S2_ENV, S1S2_MD5_REF.
@@ -105,10 +107,14 @@ rows <- lapply(seq_len(nrow(g)), function(i) {
     r$runtime_sec <- as.numeric(j$runtime_sec %||% NA); r$data_md5 <- as.character(j$data_md5 %||% NA)
     k <- paste(g$setting[i], g$rep[i])
     if (!is.na(refkey[k])) { r$ref_md5 <- unname(refkey[k]); r$ref_src <- "index" } else {
-      r$ref_md5 <- md5_of_json(file.path(runs, "smcbvs", g$setting[i], sprintf("rep_%03d.json", g$rep[i])))
-      r$ref_src <- if (is.na(r$ref_md5)) "none" else "live_json" }
+      sj <- file.path(runs, "smcbvs", g$setting[i], sprintf("rep_%03d.json", g$rep[i]))
+      r$ref_md5 <- md5_of_json(sj)
+      # SMC-BVS rep not finished (no json, or a non-ok stub such as a timeout whose rerun is still running): the
+      # reference does not exist YET -> "ref_pending" (reported, not a STOP; manager 2026-11-27, S1_08 reps 12/17)
+      s_ok <- file.exists(sj) && identical(tryCatch(jsonlite::fromJSON(sj, simplifyVector = FALSE)$status, error = function(e) NULL), "ok")
+      r$ref_src <- if (!is.na(r$ref_md5)) "live_json" else if (s_ok) "none" else "pending" }
     r$md5 <- if (is.na(r$data_md5)) { if (identical(r$status, "ok")) "absent_in_ok_record" else "unverifiable" } else
-             if (is.na(r$ref_md5)) "no_reference" else if (identical(r$data_md5, r$ref_md5)) "match" else "MISMATCH"
+             if (is.na(r$ref_md5)) { if (identical(r$ref_src, "pending")) "ref_pending" else "no_reference" } else if (identical(r$data_md5, r$ref_md5)) "match" else "MISMATCH"
   }
   as.data.frame(r, stringsAsFactors = FALSE)
 })
@@ -122,7 +128,7 @@ summ <- function(d) {
              timeout = sum(grepl("timeout", d$status)), crashed = sum(d$crashed), missing = sum(d$status == "missing" & !d$crashed),
              bad_pct = if (fin) round(100 * bad / fin, 1) else NA, finished = fin, success = sum(d$success %in% TRUE),
              md5_match = sum(d$md5 %in% "match"), md5_MISMATCH = sum(d$md5 %in% c("MISMATCH", "absent_in_ok_record")),
-             md5_noref = sum(d$md5 %in% "no_reference"), md5_unverif = sum(d$md5 %in% "unverifiable"),
+             md5_noref = sum(d$md5 %in% "no_reference"), md5_refpend = sum(d$md5 %in% "ref_pending"), md5_unverif = sum(d$md5 %in% "unverifiable"),
              ref_index = sum(d$ref_src %in% "index"), ref_live = sum(d$ref_src %in% "live_json"),
              rt_med_s = if (any(d$status == "ok")) round(median(d$runtime_sec[d$status == "ok"], na.rm = TRUE), 1) else NA)
 }
@@ -130,7 +136,7 @@ S <- do.call(rbind, c(lapply(split(tab, tab$class), summ), list(ALL = summ(tab))
 cat("-- records (bad = failed + crashed; bad_pct of finished reps) and data identity vs SMC-BVS\n"); print(S)
 fails <- tab[tab$failed | tab$crashed, c("setting", "rep", "task_id", "status")]
 if (nrow(fails)) { cat("-- failed / crashed reps\n"); print(utils::head(fails, 30)) }
-mm <- tab[tab$md5 %in% c("MISMATCH", "absent_in_ok_record", "no_reference"), c("setting", "rep", "md5", "data_md5", "ref_md5", "ref_src")]
+mm <- tab[tab$md5 %in% c("MISMATCH", "absent_in_ok_record", "no_reference", "ref_pending"), c("setting", "rep", "md5", "data_md5", "ref_md5", "ref_src")]
 if (nrow(mm)) { cat("-- DATA IDENTITY problems\n"); print(utils::head(mm, 30)) }
 sb <- tryCatch(read.delim(a[6], sep = "|", header = FALSE, col.names = c("JobID", "MaxRSS", "Elapsed", "State")), error = function(e) NULL)
 if (!is.null(sb) && nrow(sb)) {
@@ -148,7 +154,10 @@ reasons <- c(if (any(over5)) paste0("failed+crashed > 5% in ", paste(names(over5
              if (nmm) paste0(nmm, " data_md5 MISMATCH vs SMC-BVS"),
              if (nnr) paste0(nnr, " records without an SMC-BVS reference md5"))
 cat(sprintf("-- unfinished Slurm tasks: %d; tasks in a bad Slurm state: %d; billed CPU-h %.2f / %g\n", unfinished, bad_states, used, budget))
+nrp <- sum(tab$md5 %in% "ref_pending")
+rp_note <- if (nrp) sprintf(" (%d reps await their SMC-BVS reference: SMC-BVS rep not finished; re-check later)", nrp) else ""
 cat(if (length(reasons)) paste0("VERDICT: STOP -- ", paste(reasons, collapse = "; "), "\n") else
-    if (unfinished > 0) "VERDICT: RUNNING -- no STOP condition so far\n" else "VERDICT: PASS -- no STOP condition\n")
+    if (unfinished > 0) paste0("VERDICT: RUNNING -- no STOP condition so far", rp_note, "\n") else
+    paste0("VERDICT: PASS -- no STOP condition", rp_note, "\n"))
 cat("per-rep table:", out, "\n")
 REOF
