@@ -1,0 +1,6 @@
+group	n_settings	cap_binds_store_total	cap_binds_top50_total	max_mass_size_ge_Km2	max_size_pos_mass	K_min	K_max	max_over_K	med_over_K
+S1 SNR<=1	8	0	0	0	14	250	500	0.056	0.024
+S1 SNR>=2	8	0	0	0	17	250	500	0.068	0.049
+S2 nu in [2.07,3.52]	24	0	0	0	25	25	50	0.52	0.47
+S2 nu<2.07	84	0	0	0	14	25	50	0.48	0.36
+S2 nu=6	12	0	0	0	24	25	50	0.48	0.47

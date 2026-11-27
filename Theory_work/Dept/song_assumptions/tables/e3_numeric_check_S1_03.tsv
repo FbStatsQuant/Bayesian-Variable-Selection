@@ -1,0 +1,12 @@
+quantity	value
+cv_interior	0.470588235294118
+cv_end	0.64
+theory_interior	0.470588235294118
+theory_end	0.64
+min_cv_random_sets	0.584317937701396
+min_cv_neighbour_sets	0.470588235294118
+MC_E_exp_negZ2_opt	0.717706800798589
+formula_E_exp_negZ2	0.717740562565273
+MC_var_Z	0.470683212894511
+gen_resid_var_col250_on_249_251	0.470063084491439
+gen_resid_var_se_approx	0.0298523049268495
