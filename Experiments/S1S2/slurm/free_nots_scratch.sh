@@ -2,6 +2,8 @@
 # free_nots_scratch.sh -- run on OWLS. Deletes the NOTS scratch copy of ONE batch's records, only when it is safe.
 #   free_nots_scratch.sh --batch K --manifest <pull manifest used for the unit> [--also-unit UNIT ...] [--go]  (dry run)
 #   free_nots_scratch.sh --method M --suite 1|2 --batch K --manifest <pull manifest of --method M> [--also-unit UNIT ...] [--go]
+#   --method smcbvs --suite 2: S2 SMC-BVS unit S1S2_smcbvs_s2b<K> (pull manifest pull_s2b<K>_*.sha256; paths
+#   smcbvs/S2_xxx/rep_RRR.{json,rds}); --also-unit S1S2_smcbvs_s2b<K><tag>. Without --suite (or --suite 1): S1, unchanged.
 #   --method M (default smcbvs = S1 SMC-BVS, unchanged): a benchmark batch (M = lasso_cv|scad|susie|bas_mc3|asi): unit
 #   S1S2_<M>_s<suite>b<K> (package_for_desktop.sh --method M), --also-unit S1S2_<M>_s<suite>b<K><tag>; the manifest may list
 #   only <M>/S<suite>_xx/rep_RRR.{json,rds}, so only NOTS /scratch/fb31/SMC-BVS/runs/S1S2/<M>/S<suite>_xx/rep_* are removed.
@@ -26,8 +28,10 @@ while (($#)); do case "$1" in --batch) batch="$2"; shift 2;; --manifest) man="$2
   --also-unit) also+=("$2"); shift 2;; --method) method="$2"; shift 2;; --suite) suite="$2"; shift 2;;
   *) echo "unknown arg $1" >&2; exit 64;; esac; done
 [[ "$batch" =~ ^[0-9]+$ && -f "$man" ]] || { echo "usage: [--method M --suite 1|2] --batch K --manifest FILE [--go]" >&2; exit 64; }
-if [[ "$method" == smcbvs ]]; then   # unchanged: S1 SMC-BVS units S1S2_smcbvs_b<K>
-  [[ -z "$suite" || "$suite" == 1 ]] || { echo "--method smcbvs: S1 only (units S1S2_smcbvs_b<K>)" >&2; exit 64; }
+if [[ "$method" == smcbvs && "$suite" == 2 ]]; then   # S2 SMC-BVS units S1S2_smcbvs_s2b<K> (manifest pull_s2b<K>_*.sha256)
+  unit0="S1S2_smcbvs_s2b${batch}"; ure='^S1S2_smcbvs_s2b[0-9]+[a-z0-9]*$'; pre='smcbvs/S2_[0-9]{3}'
+elif [[ "$method" == smcbvs ]]; then   # unchanged: S1 SMC-BVS units S1S2_smcbvs_b<K>
+  [[ -z "$suite" || "$suite" == 1 ]] || { echo "--method smcbvs: --suite 1 (default) or 2" >&2; exit 64; }
   unit0="S1S2_smcbvs_b${batch}"; ure='^S1S2_smcbvs_b[0-9]+[a-z0-9]*$'; pre='smcbvs/S1_[0-9]{2}'
 else
   [[ "$method" =~ ^(lasso_cv|scad|susie|bas_mc3|asi)$ ]] || { echo "bad --method $method" >&2; exit 64; }
@@ -47,9 +51,9 @@ for unit in "${units[@]}"; do
 done
 grep -vE "^[0-9a-f]{64}  ${pre}/rep_[0-9]{3}\\.(json|rds)\$" "$man" && { echo "refusing: unexpected path in manifest"; exit 1; }
 if ((go == 0)); then
-  ssh nots "cd '$NRUNS' && sha256sum --quiet --ignore-missing -c - && echo \"G4 ok (dry run): present NOTS files match the manifest\"" < "$man" || echo "G4 FAIL (dry run)"
+  ssh nots "cd '$NRUNS' && nice -n 19 ionice -c3 sha256sum --quiet --ignore-missing -c - && echo \"G4 ok (dry run): present NOTS files match the manifest\"" < "$man" || echo "G4 FAIL (dry run)"
   ssh nots "cd '$NRUNS' && n=0; while IFS= read -r f; do [ -e \"\$f\" ] && n=\$((n+1)); done; echo \"present on NOTS: \$n of $(wc -l < "$man")\"" < <(cut -c67- "$man")
   exit 0
 fi
-ssh nots "set -euo pipefail; cd '$NRUNS'; m=\$(mktemp); cat > \"\$m\"; sha256sum --quiet --ignore-missing -c \"\$m\" || { echo 'G4 FAIL: NOTS files differ; nothing deleted'; rm -f \"\$m\"; exit 1; }
+ssh nots "set -euo pipefail; cd '$NRUNS'; m=\$(mktemp); cat > \"\$m\"; nice -n 19 ionice -c3 sha256sum --quiet --ignore-missing -c \"\$m\" || { echo 'G4 FAIL: NOTS files differ; nothing deleted'; rm -f \"\$m\"; exit 1; }
           n=0; while IFS= read -r f; do if [ -e \"\$f\" ]; then rm -f -- \"\$f\"; n=\$((n+1)); fi; done < <(cut -c67- \"\$m\"); echo \"G4 ok: deleted \$n files (rest already gone)\"; rm -f \"\$m\"" < "$man"
