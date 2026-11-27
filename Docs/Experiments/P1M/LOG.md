@@ -797,3 +797,16 @@
   - Selecting one variable per 95% credible set instead of PIP>0.5 does not help.
   - Proposed: report SuSiE under author defaults as a method finding. An optional sensitivity variant with σ² fixed at a non-oracle estimate, tagged OURS, would cost about 9 CPU-h for S2.
   - Diagnostic scripts: _local/engineering/reports/S1S2/scripts/susie_check/.
+- 2026-11-27 ~08:40Z — S1 SMC-BVS COMPLETE. All S1 batches (1, 1r, 2, 3, 4) and S2 batches (1–3) are DONE.
+  - S1 totals: 1,600/1,600 ok, 0 failed, 0 computational; exact success 759/1,600; E-flags 7 (6 low ESS); billed 4,110 of 12,000 CPU-h.
+  - b1r: the 10 reruns of batch 1's 24 h timeouts (S1_08 r12/r17, S1_15 r14, S1_16 r5/9/11/12/13/14/17) all completed; the longest took 64,833 s (18.0 h).
+  - b1r packaging: the b1r watcher ran an older script with no record step, so the partition record sacct_b1r.tsv (10 rows) was made by hand. Packaged as S1S2_smcbvs_b1r (--unit-tag b1r --select of the 10 json+rds).
+  - b2: the watcher's pull failed on an ssh drop (rsync rc=255). A relaunched watcher re-pulled it (VERIFIED), wrote the record and packaged S1S2_smcbvs_b2.
+  - md5 reference reinstalled from the final pulls (--roots runs/S1S2; 13,600 rows: S1 1,600, S2 12,000; sha256 cf70806d…).
+  - Scheduled self-check 1a4b3884 deleted, as its brief says to once everything is DONE.
+- 2026-11-27 ~08:50Z — S1 asi batch 1 PASS.
+  - 400/400 ok; data_md5 matches on all 400; 192 exact successes; billed 1,200.3 of 7,080 CPU-h; packaged as S1S2_asi_s1b1.
+  - Batches 2 (2955509–12) and 3 (2955513–16) submitted with watchers. The throttle gives S1 asi 468 slots and holds S2 asi b1 at a limit of 1.
+  - S1 6-method comparison on reps 1–25:
+    - SMC-BVS vs ASI exact W/T/L: 0/399/1.
+    - Hamming W/T/L: 2/341/57, p≈6e-15, almost all at SNR 0.5/1.
