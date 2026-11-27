@@ -816,3 +816,15 @@
   - n=100: 1 fit OOM at 16G, then ok at 64G.
   - The failures show no dependence on ν, ρ or beta-type.
 - S1 asi b2/b3 are monitored by the hourly scheduled self-check 7dd3778b. The previous background wait was stopped at its 2 h limit.
+- 2026-11-27 ~13:45Z — OWNER RULINGS via HQ:
+  - (1) S2 asi batches 2–3 released.
+    - b2 submitted as 2958409/10, with its watcher.
+    - b3 (4,800 tasks) exceeds MaxSubmitPU 5000 while b2 is queued. submit_when_room.sh, an Owls unit (s1s2-defer-s2bm-asi-b3-*, log S1S2_defer_s2bm_asi_b3.log), submits it class by class as room frees, then launches its watcher. submit_bench.sh's live-batch refusal now respects --classes (93301b1c).
+    - Projected cost about 1.0 billed CPU-h per fit, about 12,000 for S2 asi in total against the 20,332.5 hard stop.
+  - (2) bt2 diagnostic GO, log-only. Done: reports/S1S2/diagnostics/bt2_diagnostic.{md, per_rep.tsv, by_setting.tsv}, built by reports/S1S2/scripts/bt2_diagnostic.R; 8,000 fits read; 0.03 CPU-h.
+    - bt2 failures are statistical (4 of 3,992 are search).
+    - The MPM is smaller than s in 3,988 of 4,000 fits; neighbour swaps are negligible.
+    - logpost(S0) − logpost(HPM) at ν=6 ranges from −5 to −35, growing with ρ.
+    - Reading: the posterior prefers a sparse subset of the correlated block; this is not a sampler failure.
+  - (3) SuSiE stays at author defaults; the IBSS local optimum is a reported finding (added to final/README.md), with no sensitivity run.
+  - Confirmed: every grid fit ran on NOTS Slurm; Owls ran only the small SuSiE diagnostic fits.
