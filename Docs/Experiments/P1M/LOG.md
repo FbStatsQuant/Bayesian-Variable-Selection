@@ -828,3 +828,16 @@
     - Reading: the posterior prefers a sparse subset of the correlated block; this is not a sampler failure.
   - (3) SuSiE stays at author defaults; the IBSS local optimum is a reported finding (added to final/README.md), with no sensitivity run.
   - Confirmed: every grid fit ran on NOTS Slurm; Owls ran only the small SuSiE diagnostic fits.
+- 2026-11-27 ~14:10Z — NEW OWNER-ORDERED PROJECT: SMC-PERF, a deep study of SMC-BVS v3.1.1 performance on S1/S2 and what to do next. The deliverable is a decision memo in reports/S1S2/perf/.
+  - Team:
+    - Designer A: Fable 5.2 on Claude Work, effort high.
+    - Designer B: Astra 6.2 on Codex, reasoning effort high.
+    - Workers: Sonnet/Haiku 5.5.
+    - Committee: fresh Opus 5.5 (Claude Third), Sol 6.2 and Neon threads, one round per proposal version.
+  - Rules:
+    - Experiments on NOTS with at most 100 project slots; Owls for small jobs only.
+    - Soft cap 1,500 billed CPU-h (ask HQ before exceeding it).
+    - Any engine, prior or selection change is pre-declared and validated on both S1 and S2; final claims use fresh seeds 101+.
+    - Baseline frozen; flag any break of the Song–Liang route.
+    - No 100-seed campaign without the owner.
+  - Shared brief: reports/S1S2/perf/PROJECT_BRIEF.md. Phase 1, the independent diagnoses, has started.
