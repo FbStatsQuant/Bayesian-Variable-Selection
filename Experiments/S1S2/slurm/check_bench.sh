@@ -16,7 +16,10 @@
 #     pending/running the rule applies to a group only once it has >= 20 finished reps (noise guard; at batch end always);
 #   - any task OUT_OF_MEMORY or NODE_FAIL (sacct). EXCEPT bas_mc3 (HQ ruling 2026-11-27): an OUT_OF_MEMORY task that
 #     requested < 64G is a reported WARNING (its rc=137 reps get one 64G pass, submit_bench.sh --oom-pass); an
-#     OUT_OF_MEMORY at >= 64G, and any NODE_FAIL, stay STOP;
+#     OUT_OF_MEMORY at >= 64G, and any NODE_FAIL, stay STOP; REFINED by HQ (2026-11-27, option 1): a rep killed at
+#     >= 64G (its rc=137 stub sits in an OUT_OF_MEMORY task of a >= 64G job, i.e. the --oom-pass) is a BAS computational
+#     failure, reported, and a STOP only if such reps exceed 2% of the batch's S2N50P1000 reps or occur in any other
+#     class (S2N100P1000; any S1 class);
 #   - the method's billed CPU-h (sacct CPUTimeRAW over ALL its S<suite>bm.<M>.* jobs, every batch) >= budget_cpuh in
 #     bench_budget.tsv;
 #   - ANY data-identity mismatch, or a record whose SMC-BVS reference is missing although the SMC-BVS rep is ok.
@@ -45,7 +48,7 @@ budget=$(awk -F'\t' -v s="$suite" -v m="$method" 'NR > 1 && $1 == s && $2 == m {
 TASKS=$HERE/tasks_S${suite}_bench_${method}.tsv; [[ -f "$TASKS" ]] || { echo "no task list $TASKS" >&2; exit 65; }
 bkey=S${suite}bm.${method}.${batch}; mkey=S${suite}bm.${method}.
 OUT=$ENG/S1S2/logs/check_s${suite}bm_${method}_b${batch}.tsv
-[[ -z "$jobs" && -f "$SUBLOG" ]] && jobs=$(awk -F'\t' -v b="$bkey" '$2 == b { print $3 }' "$SUBLOG" | paste -sd, -)
+[[ -z "$jobs" && -f "$SUBLOG" ]] && jobs=$(awk -F'\t' -v b="$bkey" '$2 == b || $2 == b "m" { print $3 }' "$SUBLOG" | paste -sd, -)   # + its --oom-pass
 alljobs=""; [[ -f "$SUBLOG" ]] && alljobs=$(awk -F'\t' -v k="$mkey" 'index($2, k) == 1 { print $3 }' "$SUBLOG" | sort -u | paste -sd, -)
 mkdir -p "$(dirname "$OUT")" "$TMPB"
 tmp=$(mktemp -d "$TMPB/checkbm.XXXXXX"); trap 'rm -rf "$tmp"' EXIT
@@ -82,7 +85,7 @@ for (i in seq_len(nrow(tk))) { j <- g$cell == tk$cell[i] & g$rep >= tk$rep_lo[i]
 # Slurm task states: "<array>_<task>" rows only (a pending range "<array>_[..]" is not one task)
 sx <- tryCatch(read.delim(a[5], sep = "|", header = FALSE, col.names = c("JobID", "JobName", "State", "Exit", "Elapsed", "ReqMem"),
                           colClasses = "character"), error = function(e) NULL)
-ended_ids <- integer(0); unfinished <- 0L; oom_nf <- 0L; bad_states <- 0L; oom_warn <- 0L
+ended_ids <- integer(0); unfinished <- 0L; oom_nf <- 0L; bad_states <- 0L; oom_warn <- 0L; hi_oom_tids <- integer(0)
 if (!is.null(sx) && nrow(sx)) {
   st <- sub(" .*", "", sx$State)
   unfinished <- sum(st %in% c("PENDING", "RUNNING", "REQUEUED", "SUSPENDED", "CONFIGURING", "COMPLETING", "RESIZING"))
@@ -92,6 +95,8 @@ if (!is.null(sx) && nrow(sx)) {
       c(K = 1 / 1024^2, M = 1 / 1024, G = 1, T = 1024)[sub("^[0-9.]+", "", rq)]
     low <- st == "OUT_OF_MEMORY" & !is.na(rg) & rg < 64
     oom_warn <- sum(low); oom_nf <- oom_nf - oom_warn
+    hi <- st == "OUT_OF_MEMORY" & !is.na(rg) & rg >= 64 & grepl("^[0-9]+_[0-9]+$", sx$JobID)   # judged per rep below
+    hi_oom_tids <- unique(as.integer(sub("^[0-9]+_", "", sx$JobID[hi]))); oom_nf <- oom_nf - sum(hi)
   }
   bad_states <- sum(st %in% c("FAILED", "TIMEOUT", "OUT_OF_MEMORY", "NODE_FAIL", "CANCELLED", "PREEMPTED", "BOOT_FAIL", "DEADLINE"))
   one <- grepl("^[0-9]+_[0-9]+$", sx$JobID)
@@ -156,7 +161,18 @@ grp <- split(tab, tab$class); grp$ALL <- tab
 over5 <- vapply(grp, function(d) { fin <- sum(d$status != "missing") + sum(d$crashed); bad <- sum(d$failed) + sum(d$crashed)
   fin > 0 && (unfinished == 0 || fin >= 20) && bad / fin > 0.05 }, TRUE)
 nmm <- sum(tab$md5 %in% c("MISMATCH", "absent_in_ok_record")); nnr <- sum(tab$md5 %in% "no_reference")
-reasons <- c(if (any(over5)) paste0("failed+crashed > 5% in ", paste(names(over5)[over5], collapse = ",")),
+comp_reasons <- character(0)
+if (identical(method, "bas_mc3")) {   # reps killed at >= 64G = BAS computational (HQ 2026-11-27)
+  comp <- grepl("rc=137", tab$status) & tab$task_id %in% hi_oom_tids
+  if (length(hi_oom_tids)) {
+    cc <- tapply(comp, tab$class, sum); nn <- table(tab$class)[names(cc)]
+    cat("-- bas_mc3 computational failures (rep killed at >= 64G) per class\n"); print(data.frame(class = names(cc), comp = as.integer(cc), reps = as.integer(nn), pct = round(100 * as.integer(cc) / as.integer(nn), 2)), row.names = FALSE)
+    if (any(comp)) { cat("   reps:", paste(tab$setting[comp], tab$rep[comp], collapse = "; "), "\n") }
+    for (k in names(cc)) if (cc[[k]] > 0 && (k != "S2N50P1000" || cc[[k]] / nn[[k]] > 0.02))
+      comp_reasons <- c(comp_reasons, sprintf("bas_mc3 computational (64G OOM) %d/%d in %s", cc[[k]], nn[[k]], k))
+  }
+}
+reasons <- c(comp_reasons, if (any(over5)) paste0("failed+crashed > 5% in ", paste(names(over5)[over5], collapse = ",")),
              if (oom_nf) paste0(oom_nf, " tasks OUT_OF_MEMORY/NODE_FAIL"),
              if (used >= budget) sprintf("billed CPU-h %.2f >= budget %g", used, budget),
              if (nmm) paste0(nmm, " data_md5 MISMATCH vs SMC-BVS"),
