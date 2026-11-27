@@ -19,6 +19,11 @@
 # Reruns of a batch (e.g. its timed-out tasks under job name s1smc_b1r_<class>): --jobs <their ids> (passed to
 # check_batch.sh and sacct_record.sh), --prefix s1smc_b1r_ (queue count), --tag b1r (pull manifest and record tag),
 # --no-package (the batch's unit exists).
+# --rerun (benchmarks; requires --jobs <the rerun's ids>): a resubmission of a batch's non-ok reps. Until a rep is re-fit,
+# its record is still the previous attempt's failure stub, so the failed+crashed > 5% clause is stale while the rerun
+# runs: a STOP whose ONLY reason is that clause is logged but does not cancel pending tasks; any other reason (OOM/
+# NODE_FAIL in the rerun's own jobs, budget, data_md5) still cancels. The final verdict is unchanged (S2 bas_mc3 b1,
+# 2026-11-27: the restarted watcher cancelled the 16G rerun on the 6G attempt's stubs).
 # Launch:
 #   systemd-run --user --unit=s1s2-watch-b1-$(date +%Y%m%d-%H%M%S) --collect --quiet \
 #     -p StandardOutput=append:$LOG -p StandardError=append:$LOG  <this script> --batch 1 --reps 1-25 --log $LOG
@@ -27,21 +32,22 @@ set -uo pipefail
 HERE=$(cd "$(dirname "$0")" && pwd)
 NSL=/home/fb31/SMC-BVS/_local/engineering/S1S2/deploy/S1S2/slurm
 RDIR=/home/fb31/Bayesian-Variable-Selection/_local/engineering/runs/S1S2/_logs/sacct
-batch=""; reps=""; interval=1800; log=/dev/stdout; jobs=""; prefix=""; tag=""; nopkg=0; suite=1; cancel=0; method=smcbvs
+batch=""; reps=""; interval=1800; log=/dev/stdout; jobs=""; prefix=""; tag=""; nopkg=0; suite=1; cancel=0; method=smcbvs; rerun=0
 while (($#)); do case "$1" in --batch) batch="$2"; shift 2;; --reps) reps="$2"; shift 2;; --interval) interval="$2"; shift 2;;
   --log) log="$2"; shift 2;; --jobs) jobs="$2"; shift 2;; --prefix) prefix="$2"; shift 2;; --tag) tag="$2"; shift 2;;
   --suite) suite="$2"; shift 2;; --cancel-pending-on-stop) cancel=1; shift;; --method) method="$2"; shift 2;;
-  --no-package) nopkg=1; shift;; *) echo "unknown arg $1" >&2; exit 64;; esac; done
+  --no-package) nopkg=1; shift;; --rerun) rerun=1; shift;; *) echo "unknown arg $1" >&2; exit 64;; esac; done
 [[ "$batch" =~ ^[0-9]+$ && "$reps" =~ ^[0-9]+-[0-9]+$ ]] || { echo "usage: --batch K --reps LO-HI" >&2; exit 64; }
 [[ "$suite" == 1 || "$suite" == 2 ]] || { echo "--suite must be 1 or 2" >&2; exit 64; }
 [[ -z "$jobs" || "$jobs" =~ ^[0-9,]+$ ]] || { echo "--jobs: comma-separated job ids" >&2; exit 64; }
 [[ "$method" =~ ^[a-z0-9_]+$ ]] || { echo "bad --method" >&2; exit 64; }
+(( rerun )) && [[ -z "$jobs" ]] && { echo "--rerun requires --jobs <the rerun's job ids>" >&2; exit 64; }
 if [[ "$method" != smcbvs ]]; then prefix=${prefix:-s${suite}bm_${method}_b${batch}_}; tag=${tag:-${method}_s${suite}b$batch}; cancel=1
 elif [[ $suite == 1 ]]; then prefix=${prefix:-s1smc_b${batch}_}; tag=${tag:-b$batch}; else prefix=${prefix:-s2smc_b${batch}_}; tag=${tag:-s2b$batch}; fi
 [[ ( "$prefix" =~ ^s[12]smc_b[0-9]+[a-z0-9]*_$ || "$prefix" =~ ^s[12]bm_${method}_b[0-9]+[a-z0-9]*_$ ) && "$tag" =~ ^[A-Za-z0-9_]+$ ]] || { echo "bad --prefix/--tag" >&2; exit 64; }
 mopt=(); [[ "$method" != smcbvs ]] && mopt=(--method "$method")
 say() { echo "WATCH $(date -u +%FT%TZ) $tag $*" >> "$log"; }
-say "start pid=$$ suite=$suite method=$method interval=${interval}s prefix=$prefix tag=$tag jobs=${jobs:-<submissions.tsv>} package=$((1 - nopkg)) cancel_pending_on_stop=$cancel"
+say "start pid=$$ suite=$suite method=$method interval=${interval}s prefix=$prefix tag=$tag jobs=${jobs:-<submissions.tsv>} package=$((1 - nopkg)) cancel_pending_on_stop=$cancel rerun=$rerun"
 cancelled=0
 while true; do
   out=$(ssh -o ConnectTimeout=60 nots "$NSL/check_batch.sh --suite $suite ${mopt[*]} --batch $batch --reps $reps ${jobs:+--jobs $jobs} 2>&1; echo LIVE=\$(squeue -u fb31 -h -o %j | grep -c '^${prefix}')" 2>&1)
@@ -52,7 +58,11 @@ while true; do
   say "live_jobs=$live $verdict"
   if [[ "$verdict" == "VERDICT: STOP"* && "$live" -gt 0 ]]; then
     say "ALERT STOP (batch still running): $verdict"
-    if (( cancel && ! cancelled )); then
+    stale_only=0
+    if (( rerun )); then rs=${verdict#VERDICT: STOP -- }; rs=$(sed -E 's/(^|; )failed\+crashed > 5% in [^;]*//; s/^; //' <<< "$rs")
+      [[ -z "${rs// /}" ]] && stale_only=1; fi
+    (( stale_only )) && say "rerun: STOP reason is only the failure-rate clause (previous attempt's stubs); pending tasks NOT cancelled"
+    if (( cancel && ! cancelled && ! stale_only )); then
       # array job ids (%F; squeue truncates the "<id>_[ranges]" string of %i), cancelled with --state=PENDING so running
       # tasks are untouched; done only when no pending task of the prefix is left
       co=$(ssh -o ConnectTimeout=60 nots "ids=\$(squeue -u fb31 -h -t PD -o '%u %j %F' | awk '\$1 == \"fb31\" && index(\$2, \"$prefix\") == 1 { print \$3 }' | sort -u | paste -sd' ' -);
