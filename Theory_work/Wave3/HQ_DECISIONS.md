@@ -949,3 +949,10 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
 - Department managers are managers and orchestrators only.
 - Each major task gets its own Opus 5.5 task lead (Claude Work, high; Claude Third as rate-limit overflow). The lead may spawn its own helpers, reports to its manager, and has a scoped life cycle: it closes at delivery, and new tasks get new leads.
 - Engineering now: LEAD SMC-PERF and LEAD CAMPAIGN-OPS (S2 ASI completion, S2 final, hygiene).
+
+## 2026-11-27 — Owner lifts full stop for Theory: TH-SONG-ASSUMPTIONS (Song–Liang theorem map & defensible assumptions)
+- Full stop lifted for Theory Department only (Engineering and Writing remain paused pending owner word).
+- Mandate: read Song & Liang (2015) main paper + supplement carefully, analyze all S1/S2 simulation data, clearly define our counterpart to every important theorem in Song (true distribution, true model, misspecification, plus complete Song map), and conjecture assumptions that (1) yield a clear proof path and (2) hold up to journal referee scrutiny (verified literature precedents and/or empirical simulation support; no unrealistic or artificially stringent assumptions).
+- Authorized chain & staffing (POLICIES.md §1a): Theory Manager orchestrates only → 1 Opus 5.5 high Task Lead on Claude Personal (`claudeAgent_personal`); Task Lead may spawn a few Sonnet (`claudeAgent_personal`) / Sol (`codex`, `gpt-6.2-sol`) mechanical workers (no Neon bulk workers) plus **1 Fable 5.2 (`claudeAgent_personal`, high) + 1 Astra 6.2 (`codex`, `gpt-6.2-astra`, high)** advisors (explicitly owner-approved).
+- Council (children of Task Lead): fresh Opus (Claude Personal) + Neon (`gemini-4-neon`, high) + Sol (`gpt-6.2-sol`, high) judge defensibility and theorem relevance. Substantive feedback is addressed (consulting Fable/Astra if needed); pure nitpicking and nitpick-driven score deductions are logged and disregarded.
+- Deliverable includes an assumption-by-assumption Owner Defensibility Dossier ready for the owner's personal interrogation.
