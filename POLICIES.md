@@ -15,12 +15,19 @@ the documents win.
   - All theory tickets, including W3-DIST and W3-READER, are under the Theory Department (handover 2026-11-15, owner).
 - **Advisors:** HQ consultant (Fable 5.2), the second signature on headline changes (PROTOCOL_v4 H5).
 
-### 1a. Managers manage, task leads work (owner, 2026-11-27; overrides anything below that has managers doing the work)
-- **Department managers are managers and orchestrators only.** They brief, staff, set limits, route, integrate and
-  report to HQ. They do no technical work, and they spawn task leads and nothing else.
-- **Every major task gets its own Opus 5.5 task lead** (delegate_task, Claude Work, effort high; Claude Third only as
-  rate-limit overflow). Only leads, and the agents each lead spawns (Sonnet/Haiku/Neon, effort ≤ high), do actual work.
-  Leads report to their manager.
+### 1a. Managers manage, task leads work (owner board protocol, 2026-11-27; overrides anything below)
+- **Chain:** CEO → Department Manager → Task Lead → Workers and Reviewers.
+- **The CEO and every department manager are orchestrators ONLY, never workers.** They brief, staff, set limits, route,
+  integrate and report. They never inspect files, edit, compile, run checks or review line by line. A department
+  thread must never become a mix of HQ orders, agent management and actual work. Managers spawn task leads and
+  nothing else.
+- **Every non-trivial task gets its own task lead**, a child (delegate_task) inside the department thread. Default lead
+  and executor: Opus 5.5, effort high, on **Claude Personal** (the owner adjusts the account by usage). The lead owns
+  execution end to end and may spawn helpers of any authorized type. **Workers AND reviewers are children of the lead**,
+  never of the manager.
+- **Neon is reserved** for (a) orchestrating departments (department manager threads run on Orchestrator (Neon)) and
+  (b) an optional third reviewer next to the standard Opus + Sol pair. No Neon bulk workers.
+- **Astra or Fable** need approval up the chain (lead → manager → HQ → owner) before launch, every time.
 - **Scoped life cycle:** a lead lives for its task and closes with a final report at delivery. New tasks get new leads;
   leads are never reused across tasks.
 - **Pace:** 2–3 concurrent leads per department when usage limits allow. On "pace down", one major lead stays active
