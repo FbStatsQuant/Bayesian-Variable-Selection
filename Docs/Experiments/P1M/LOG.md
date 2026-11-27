@@ -841,3 +841,18 @@
     - Baseline frozen; flag any break of the Song–Liang route.
     - No 100-seed campaign without the owner.
   - Shared brief: reports/S1S2/perf/PROJECT_BRIEF.md. Phase 1, the independent diagnoses, has started.
+
+- 2026-11-27 ≈15:40Z (Eng v2 manager). S1 ASI complete; SMC-PERF diagnoses done; TH-CHECKS P1; NOTS hygiene.
+  - **S1 ASI:** b2 PASS 14:26Z, b3 PASS 14:37Z; S2 asi b1 PASS 14:41Z; S2 b2 running; b3 waits on the deferred submitter.
+  - **S1 final six-method comparison** (reps 1–100, strict md5, reports/S1S2/S1_comparison_final_*; final/results_S1_asi). Exact out of 1,600: ASI 773, SMC-BVS 759, BAS 658, SuSiE 555, SCAD 193, Lasso 0.
+    - SMC vs ASI paired: exact W/T/L 1/1584/15 (McNemar p = 5e-4); Hamming W/T/L 9/1391/200.
+  - **SMC-PERF.** Owner framing (modest gains; feasible cells only; "keep v3.1.1" acceptable) and the Theory cost map were relayed to both designers.
+    - Both independent diagnoses are done: the limit is the data, then the BB(1,p) entry cost at S2 ν 3.52–6. The selection rule (HPM / list-MPM) is the first option.
+    - E0 subset enumeration: 0.024 CPU-h.
+    - Phase 2 (responses, then one joint plan with Designer A holding the pen): perf/JOINT_PLAN_BRIEF.md.
+  - **TH-CHECKS (Theory, post hoc).** P1 (E1 margin, E2 eigen floors, E3 list-view rate): theory_checks/P1.md. Validation PASS on all 13,600 fits; 6.1 CPU-h on Owls.
+    - min t² > 2 × price is necessary, not sufficient.
+    - The particle-level E3/E5 are not in the records (the adapter dropped pip_r; the engine does not export particle states). HQ ruled the list view; E7 is dropped by owner scope.
+    - P2 (E4–E6) is running.
+  - **NOTS hygiene pass 1.** Dry run: 30 desktop-verified units passed the gates (775 MB of scratch), plus benchtest waste; 3 smcbvs S2 units are blocked (the gate script takes smcbvs S1 only).
+    - Stage 2 is approved and running, together with the owner-approved dry run of the shared tooling (~/.vscode-server, ~/.t3, ~/.codex).
