@@ -322,6 +322,7 @@ Both senior judges signed off on v1.4 (3ee24ea9) in one pass, each writing only 
      - well defined since (U2a) gives R_n(B) > 0;
      - ϑ ∈ [0, 1], and ā = min{1, …} needs no generic ω;
      - TS-b states s0 ≥ 1 (null model not claimed) and π(T) > 0 since s ≤ K = min(p, ⌊n/2⌋) for large n.
+- **HQ D5 ruling (superset claim, paper Thm/Conj 3.3(a)): KEEP.** Verified against SL p. 957: Corollary 2 (SL §2.3, misspecified models) states π(s̃ ⊂ ξ | D_n^s) →_P 1, s̃ = supp β₀, for a fixed subset under Thm 4's conditions plus no exact multicollinearity. TM-a0-inc is that statement (fixed p_C, Σ_CC nonsingular, cap eventually non-binding, as SL remark (c), p. 958, requires); its a.s. mode strengthens SL's in-probability display. A scope note was added to DEFINITIONS §4.3 and to ASSUMPTIONS A-MOM.
 - **Round cap honoured.** One discussion round, then one sign-off pass. No second round was run; the Manager's instruction was to finalize directly.
 - **Final commit:** see the Stage 3 report to the Manager (the hash of the commit containing this section).
 
