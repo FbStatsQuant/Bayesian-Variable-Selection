@@ -6,9 +6,11 @@
 %   population-only selection margin, no proof constants in the assumptions, primitive form of the
 %   omitted-signal assumption.  Statements will be refined when Theory's final pass lands.
 % Map to Theory labels:  A1 A-GL, A2 A-SPARSE, A3 A-DIM, A4 A-SUBG, A5 A-NEC, A6 A-BS,
-%   A7 A-MARGIN-H, A8 A-MARGIN-U (senior population form), A9 A-MIS(iii) primitive form,
-%   A10 A-MOM.  Theorem 3.1 = TD (thm:dist), 3.3(a) = TS-a, 3.3(b) = TS-b, 3.6(a) = TM-a0,
-%   3.6(b) = TM-a/TM-b.
+%   A7 A-MARGIN-U (senior population form), A8 A-MOM, A9 A-MIS(iii) primitive form.
+%   Theorems: TD (thm:dist) -> thm:th-dist; TS-b -> thm:th-select; TM-a0 / TM-a,TM-b -> thm:th-mis (a)/(b).
+% Owner scope (HQ 2026-11-27/28): Song-Liang counterparts only -- true distribution, true model,
+%   misspecification.  Pruned: sure screening (TS-a, A-MARGIN-H), the deletion converse, the beta-min
+%   proposition (kept as a sentence of justification), the almost-sure corollary TD-as.
 
 \section{Theoretical properties}\label{sec:theory}
 
@@ -141,8 +143,7 @@ $(s,A,L,c_\psi,\bar b)$, such that for every $M\ge M_0$ and all sufficiently lar
 \noindent\textit{[Draft status: proved and independently checked (delivered thm:dist; registry row 2.1).]}
 
 Theorem~\ref{thm:th-dist} has the form of Theorems~1 and~2 of \citet{SongLiang2015}: their bound
-$\exp(-c_1n\epsilon_n^2)$ equals $n^{-c_1M}$ at our rate. When $c_HM>1$ the bound is summable, so by the Borel--Cantelli
-lemma $\Pi\{d_H(f,f^*)>\epsilon_n\mid\Dn\}\to0$ almost surely. Three differences matter. First, no lower bound on the
+$\exp(-c_1n\epsilon_n^2)$ equals $n^{-c_1M}$ at our rate. Three differences matter. First, no lower bound on the
 effects is needed: effects too small to be selected do not move the fitted density by more than $\epsilon_n$. Second,
 nothing is tuned. \citet{SongLiang2015} require conditions (9)--(14) on the prior inclusion probability $r_n/P_n$,
 the size cap $\bar r_n$ and the prior covariance $V_\xi$. Our cap $K=\min(p,\lfloor n/2\rfloor)$ is far larger than
@@ -152,25 +153,10 @@ fast enough; under the beta-binomial prior it decays like $2^{-k}$. Third, the r
 \subsection{Selection of the true model}\label{sec:theory-selection}
 
 Density consistency does not imply selection: a true predictor can be replaced by a combination of other predictors
-with almost the same fit. \citet{SongLiang2015} rule this out with an identifiability condition. We use the residual
-signal~\eqref{eq:th-R}.
+with almost the same fit. \citet{SongLiang2015} rule this out with an identifiability condition (their Condition~3).
+We use the residual signal~\eqref{eq:th-R}, and ask it to beat the price~\eqref{eq:th-price}.
 
-\begin{assumption}[Identifiable true predictor]\label{a:th-ident}
-For a true predictor $x_j$, $j\in\Sz$, and every fixed integer $m\ge0$,
-\[
-  \frac{1}{\sigs^2\log n}\,\min\big\{R_n(S):\ j\notin S,\ \abs S\le\sz+m\big\}\ \to\ \infty .
-\]
-\end{assumption}
-
-Assumption~\ref{a:th-ident} says that no small model without $x_j$ can predict the true mean well: what it leaves
-unexplained is of larger order than $\sigs^2\log n$, which is $n\epsilon_n^2$ up to a constant. It is Condition~3 of
-\citet{SongLiang2015} stated on the residual signal; their condition also asks the unexplained part to be of larger
-order than $\epsilon_n^2$ (their $\delta_n\succ\epsilon_n^2$). \citet{NarisettyHe2014} (Condition~4.4) and
-\citet{LuoChen2013} use the same object. Its use is that every density without $x_j$ then lies outside the Hellinger
-ball of Theorem~\ref{thm:th-dist}, so the posterior must keep $x_j$. It is asked of one predictor at a time: a strong
-predictor is found even if another true predictor is not identifiable.
-
-Exact selection needs a sharper condition. A rival of $\Sz$ is a model $S=(\Sz\setminus D)\cup N$ that leaves out a
+A rival of $\Sz$ is a model $S=(\Sz\setminus D)\cup N$ that leaves out a
 nonempty set $D\subseteq\Sz$ of $d$ true predictors and adds a set $N$ of $m\ge0$ null predictors. The added nulls can
 absorb part of the signal of the left-out ones. We measure this by the \emph{leakage}
 \begin{equation}\label{eq:th-leak}
@@ -192,8 +178,8 @@ every $m\in\{0,\dots,\bar m\}$ with $\sz-\abs D+m\le K$,
 For $m=0$, condition~\eqref{eq:th-margin} reads $R_n(\Sz\setminus D)\ge2(1+\eta)^2\sigs^2\,\mathrm{Pr}_n(\abs D)$: the
 signal lost by leaving out $D$ must exceed twice the price of $D$. The constant~$2$ comes from the likelihood. The log
 posterior odds of $\Sz$ against $\Sz\setminus D$ are about $\hat R/(2\sigs^2)-\mathrm{Pr}_n(\abs D)$, where $\hat R$ is
-the sample version of $R_n(\Sz\setminus D)$, so the true model wins when $R_n$ exceeds $2\sigs^2\mathrm{Pr}_n$, and
-loses when it falls short (Remark~\ref{rem:th-converse}). For $m\ge1$, the second term on the right is the most that
+the sample version of $R_n(\Sz\setminus D)$, so the true model wins when $R_n$ exceeds $2\sigs^2\mathrm{Pr}_n$ and
+loses when it falls short by a fixed factor; no smaller constant can work. For $m\ge1$, the second term on the right is the most that
 the best of $\binom{p-\sz}{m}$ null sets can gain by chance. It is small when the nulls cannot imitate the missing
 signal ($\vartheta_n$ small) and reaches the worst case, about $\sqrt{2m\log p}$, otherwise. Rivals with more than
 $\bar m$ nulls need no condition. Such a rival fits no better than $\Sz\cup N$, and the Occam factor of the $m$ added
@@ -201,71 +187,42 @@ nulls, of order $n^{-m/2}$ up to logarithmic factors, outweighs the price of any
 $s(A+\tfrac12)\log n$.
 
 Assumption~\ref{a:th-margin} is a condition on the law of $(x,y)$ only; it involves no tuning and no sample quantity.
-Conditions of this type are standard. \citet{NarisettyHe2014} (Condition~4.4) ask the residual signal of every model
+Conditions of this type are standard. Condition~3 of \citet{SongLiang2015} asks that no combination of other
+predictors mimic a true one; ours says how well it may mimic it. \citet{NarisettyHe2014} (Condition~4.4) ask the residual signal of every model
 that misses a true predictor to exceed $5(1+\delta)\sigs^2\abs{\Sz}\log(\sqrt n\vee p)$, and \citet{LuoChen2013} ask the
 ratio to $\log p$ to diverge; ours charges each missed predictor its own price with constant~$2$. The order $\log p$
 cannot be avoided: below a threshold of this order no method recovers the support
-\citep{Wainwright2009,FletcherRanganGoyal2009}. The familiar beta-min form is a special case.
-
-\begin{proposition}[Eigenvalue floor and beta-min]\label{prop:th-betamin}
-Let $\varphi^2\le\lmin\{\Corr(x_T)\}$ for every set $T$ of at most $s+\bar m$ predictors, and let
-$\theta_{\min}=\min_{j\in\Sz}\abs{\beta^*_j}\sd(x_j)/\sigs$. If $\sz\ge1$ and, for a fixed $\eta>0$,
+\citep{Wainwright2009,FletcherRanganGoyal2009}. The familiar beta-min form is a special case. Let
+$\varphi^2\le\lmin\{\Corr(x_T)\}$ for every set $T$ of at most $s+\bar m$ predictors, and
+$\theta_{\min}=\min_{j\in\Sz}\abs{\beta^*_j}\sd(x_j)/\sigs$. Since $R_n(S)\ge n\varphi^2\sum_{j\in D}\beta_j^{*2}\Var(x_j)$,
+$\mathrm{Pr}_n(d)\le d\log(2p\sqrt{n+1})$ and $\log\binom{p-\sz}{m}\le m\log p$, condition~\eqref{eq:th-margin} holds
+whenever
 \[
-  \theta_{\min}\ \ge\ \frac{(1+\eta)(1+\sqrt{\bar m})}{\varphi}\,\Big\{\frac{2\log\big(2p\sqrt{n+1}\big)}{n}\Big\}^{1/2},
+  \theta_{\min}\ \ge\ \frac{(1+\eta)(1+\sqrt{\bar m})}{\varphi}\,\Big\{\frac{2\log\big(2p\sqrt{n+1}\big)}{n}\Big\}^{1/2}.
 \]
-then Assumption~\ref{a:th-margin} holds.
-\end{proposition}
-
-\begin{proof}
-Let $S=(\Sz\setminus D)\cup N$ with $\abs D=d\ge1$ and $\abs N=m\le\bar m$. The error $x^\top\bstar-a-x_S^\top b$ is a
-linear combination of the at most $s+\bar m$ predictors in $D\cup S$, with coefficient $\beta^*_j$ on each $x_j$,
-$j\in D$. Hence $R_n(S)\ge n\varphi^2\sum_{j\in D}\beta_j^{*2}\Var(x_j)\ge n\varphi^2d\,\theta_{\min}^2\sigs^2$, and this
-bounds the left side of~\eqref{eq:th-margin} below by $\varphi\theta_{\min}(nd)^{1/2}$. With
-$\ell_n=\log(2p\sqrt{n+1})$, each term of~\eqref{eq:th-price} is at most $\ell_n$, so $\mathrm{Pr}_n(d)\le d\ell_n$; and
-$\omega\le\sqrt2$, $\log\binom{p-\sz}{m}\le m\ell_n$. The right side is therefore at most
-$(1+\eta)(2\ell_n)^{1/2}(\sqrt d+\sqrt m)\le(1+\eta)(2\ell_n)^{1/2}\sqrt d\,(1+\sqrt{\bar m})$.
-\end{proof}
-
-For independent predictors the leakage is zero, and Assumption~\ref{a:th-margin} holds as soon as
-$\beta_j^{*2}\Var(x_j)\ge2(1+\eta)^2\sigs^2\log(2p\sqrt{n+1})/n$ for every $j\in\Sz$: each true effect must exceed the
-noise level by the factor $\{2\log(2p\sqrt n)/n\}^{1/2}$. Under correlation, the proposition gives the same threshold
-inflated by $\varphi^{-1}(1+\sqrt{\bar m})$; condition~\eqref{eq:th-margin} itself is sharper, because it charges the
-correlation only through the leakage.
+For independent predictors the leakage is zero and the requirement drops to
+$\beta_j^{*2}\Var(x_j)\ge2(1+\eta)^2\sigs^2\log(2p\sqrt{n+1})/n$ for every $j\in\Sz$: each standardised effect must
+exceed the noise level by the factor $\{2\log(2p\sqrt n)/n\}^{1/2}$. Condition~\eqref{eq:th-margin} itself is
+sharper, because it charges correlation only through the leakage.
 
 \begin{theorem}[Selection consistency]\label{thm:th-select}
-Assume \ref{a:th-gl}--\ref{a:th-bs}.
-\begin{enumerate}[label=(\alph*)]
-  \item \emph{Sure screening.} If a true predictor $x_j$ satisfies Assumption~\ref{a:th-ident}, then for every
-    $M\ge M_0$, every fixed $c<c_H$ and all sufficiently large $n$,
-    \[
-      \P^*\big\{\PIP_j<1-n^{-cM}\big\}\le n^{-c_HM},
-    \]
-    with $c_H$ and $M_0$ as in Theorem~\ref{thm:th-dist}. If every true predictor satisfies
-    Assumption~\ref{a:th-ident}, then $\min_{j\in\Sz}\PIP_j\to1$ in probability.
-  \item \emph{Selection consistency.} If Assumption~\ref{a:th-margin} holds, then $\pis{\Sz}\to1$ in probability,
-    \[
-      \max_{1\le j\le p}\big\lvert\PIP_j-\ind{j\in\Sz}\big\rvert\ \le\ 1-\pis{\Sz}\ \to\ 0\quad\text{in probability},
-    \]
-    and $\P(\HPM=\MPM=\Sz)\to1$.
-\end{enumerate}
+Assume \ref{a:th-gl}--\ref{a:th-margin}. Then $\pis{\Sz}\to1$ in probability,
+\[
+  \max_{1\le j\le p}\big\lvert\PIP_j-\ind{j\in\Sz}\big\rvert\ \le\ 1-\pis{\Sz}\ \to\ 0\quad\text{in probability},
+\]
+and $\P(\HPM=\MPM=\Sz)\to1$.
 \end{theorem}
-\noindent\textit{[Draft status: (a) target, proof path complete at sketch level (low risk); (b) target, proof path
-open (the superset sum and the mixed-rival odds remain to be written). A delivered special case of (b), with fixed
-effects and a fixed eigenvalue floor, is proved and independently checked (thm:post-random).]}
+\noindent\textit{[Draft status: target; proof path open (the superset sum and the mixed-rival odds remain to be
+written). A delivered special case, with fixed effects and a fixed eigenvalue floor, is proved and independently
+checked (thm:post-random).]}
 
-Part~(a) is the counterpart of Theorem~3 of \citet{SongLiang2015}, the sure screening property. Part~(b) is the
-counterpart of their Theorem~S (supplement), which shows that the posterior odds of every rival against the true model
-tend to zero. Part~(b) gives more: the posterior mass of the true model tends to one, every inclusion probability
-converges to $0$ or $1$, and the two usual point estimates, the highest posterior model and the median probability model
-of \citet{BarbieriBerger2004}, both equal $\Sz$. Their condition~(22), which they note is hardly satisfied, and its
-random-design replacement~(26) are not needed; Assumptions~\ref{a:th-subg} and~\ref{a:th-nec} take their place.
-
-\begin{remark}[The constant 2 is sharp]\label{rem:th-converse}
-Assume \ref{a:th-gl}--\ref{a:th-bs} with $\sz\ge1$. If there is a fixed $\eta>0$ such that, for all large $n$, some
-nonempty $D\subseteq\Sz$ has $R_n(\Sz\setminus D)\le2(1-\eta)\sigs^2\,\mathrm{Pr}_n(\abs D)$, then $\pis{\Sz}\to0$ in probability. So the
-deletion part of Assumption~\ref{a:th-margin} cannot be weakened by a constant factor, and no fixed multiple of the
-price smaller than $2$ suffices. \textit{[Draft status: target, low risk.]}
-\end{remark}
+Theorem~\ref{thm:th-select} is the counterpart of Theorem~S in the supplement of \citet{SongLiang2015}, which shows
+that the posterior odds of every rival against the true model tend to zero, and of their Theorem~3, which shows that
+the inclusion probability of every identifiable true predictor tends to one. It gives more than both: the posterior
+mass of the true model tends to one, every inclusion probability converges to $0$ or $1$, and the two usual point
+estimates, the highest posterior model and the median probability model of \citet{BarbieriBerger2004}, both equal
+$\Sz$. Their eigenvalue condition~(22), which they note is hardly satisfied, and its random-design replacement~(26)
+are not needed; Assumptions~\ref{a:th-subg} and~\ref{a:th-nec} take their place.
 
 \subsection{Misspecified models}\label{sec:theory-mis}
 
@@ -331,7 +288,7 @@ Theorem~\ref{thm:th-dist}.
 \end{theorem}
 \noindent\textit{[Draft status: (a) target, low risk (direct law-of-large-numbers and iterated-logarithm argument over
 finitely many models); (b) target: density part low--medium risk, selection part inherits the open steps of
-Theorem~\ref{thm:th-select}(b). A delivered analogue of the selection part, for jointly Gaussian predictors with
+Theorem~\ref{thm:th-select}. A delivered analogue of the selection part, for jointly Gaussian predictors with
 detectable projected effects, is proved and independently checked (thm:omitted).]}
 
 Part~(a) is the counterpart of Theorem~4 of \citet{SongLiang2015}, which gives the density statement. The inclusion
@@ -351,8 +308,7 @@ has been measured.
 \citet{SongLiang2015} & Here & Difference \\
 \midrule
 Theorems 1--2, Corollary 1 (density) & Theorem~\ref{thm:th-dist} & explicit rate; no tuning sequences; $p\le n^A$ \\
-Theorem 3 (sure screening) & Theorem~\ref{thm:th-select}(a) & same form; residual-signal identifiability \\
-Theorem S (MAP model) & Theorem~\ref{thm:th-select}(b), Remark~\ref{rem:th-converse} & posterior mass of $\Sz$, HPM and MPM; sharp constant \\
+Theorem 3, Theorem S (inclusion, MAP model) & Theorem~\ref{thm:th-select} & posterior mass of $\Sz$; HPM and MPM; all PIPs \\
 Theorem 4 (misspecified subset) & Theorem~\ref{thm:th-mis}(a) & also exact support of $\beta^C$ \\
 Corollary 2 (pseudo-true support) & Theorem~\ref{thm:th-mis}(a)--(b) & inclusion and exclusion; high-dimensional $C$ \\
 \bottomrule
