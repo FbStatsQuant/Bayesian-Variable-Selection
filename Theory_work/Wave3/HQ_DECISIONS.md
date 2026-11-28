@@ -965,4 +965,4 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
 
 ## 2026-11-27 — Owner escalation rule for Theory council (`TH-SONG-ASSUMPTIONS`)
 - If the final round of the 3-reviewer council (Opus / Neon / Sol) finds nothing meaningful yet still scores < 8, replace the 3 reviewers with **2 fresh independent judges**: **1 × Astra 6.2 (`codex`, high)** and **1 × Fable 5.2 (`claudeAgent_personal`, high)** (owner-pre-approved conditionally).
-- Run **one unique round** with Astra + Fable 5.2, apply their substantive feedback, and finalize the assumptions directly with no further rounds.
+- Run **one unique round** with Astra + Fable 5.2, involve the **original Fable 5.2 and Astra 6.2 drafting advisors** in processing their feedback, apply substantive corrections, and finalize the assumptions directly with no further rounds.
