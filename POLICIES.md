@@ -40,6 +40,12 @@ the documents win.
 - **No open blocking issue:** any correctness or design flaw a reviewer marks as blocking is fixed, whatever the score.
 - **At most 3 rounds:** if the bar is not met after round 3, the item escalates to HQ, which decides what is worth fixing.
   Non-blocking nitpicks may be declined with a one-line reason.
+- **Round 2+ = scoped fix-verification, not cold re-reviews (owner, 2026-11-27):** Round 1 uses fresh cold reviewers
+  (Opus, Sol, Neon). Round 2 (and Round 3 if needed) receives the exact Round-1 findings, the point-by-point response,
+  and the diff, and checks **only** (1) whether every Round-1 substantive/blocking issue was genuinely fixed and
+  (2) whether the edits introduced any new substantive flaw or regression. New stylistic nitpicks are disallowed; pure
+  nitpicks and nitpick-driven score deductions are logged with a one-line reason and disregarded. Fresh cold reviewers
+  return only after a major redesign or for a final pre-Lean / pre-submission audit.
 
 ## 2. Binding policies (read in this order)
 1. `Theory_work/Wave3/PROGRAM.md`: goals, presentation rule, **Readability** (clear statements, reader versions, full
