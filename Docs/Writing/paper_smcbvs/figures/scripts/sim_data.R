@@ -27,7 +27,9 @@ SRC <- list(
   s2_asi_records   = paste0(REP, "hq_s2asi_b1/S2_comparison_asi_b1_records.tsv"),   # INTERIM, reps 1-25, 6 methods
   s2_asi_permethod = paste0(REP, "hq_s2asi_b1/S2_comparison_asi_b1_permethod.tsv"),
   s2_asi_paired    = paste0(REP, "hq_s2asi_b1/S2_comparison_asi_b1_paired.tsv"),
-  s2_smc_final = paste0(REP, "final/results_S2_smcbvs.tsv")
+  s2_smc_final = paste0(REP, "final/results_S2_smcbvs.tsv"),
+  s1_smc_final = paste0(REP, "final/results_S1_smcbvs.tsv"),
+  bt2_diag     = paste0(REP, "diagnostics/bt2_diagnostic_per_rep.tsv")     # LOG-ONLY diagnostic of the S2 SMC-BVS fits, rho > 0
 )
 
 METHODS <- c("smcbvs", "asi", "bas_mc3", "susie", "scad", "lasso_cv")
@@ -99,3 +101,6 @@ wilson <- function(x, n, z = 1.959964) {
 }
 
 sha256 <- function(f) sub(" .*", "", system2("sha256sum", shQuote(f), stdout = TRUE))
+
+# Note on the verification against Engineering's tables: build_sim_outputs.R stops unless the recomputed
+# per-setting counts and means equal the *_permethod.tsv values (see SOURCES.md, "Checks").
