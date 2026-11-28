@@ -977,3 +977,8 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
 - One LaTeX project (main.tex plus one file per section) with 3 Opus leads: (1) model/priors/posterior/SMC, owning refs.bib; (2) simulations S1/S2 with a Fable adviser on Claude Third; (3) theory with a Fable adviser on CP. Fables advise only; Opus/Sonnet write.
 - Song's style and cadence; APA-linked citations; metrics defined; truthful selling; brief assumption justifications (data-informed ones explained, not attributed to our data).
 - Review: one round by a fresh Fable (CP) and Astra, feedback only; a second, final round only with the Writing Manager's approval.
+
+## 2026-11-28 — Owner: CITE-AUDIT of the theory citations
+- A fresh Opus lead (not a drafter) extracts every citation claim from the song_assumptions package and section 3.
+- Double-blind verification by Sonnet + Sol; quotes and pages are mandatory; abstracts and memory don't count. A fresh Opus adjudicates disagreements.
+- PARTIAL / NOT SUPPORTED claims are fixed by the authors and synced to Writing. Missing papers go to the owner.
