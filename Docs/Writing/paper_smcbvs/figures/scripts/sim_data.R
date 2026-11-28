@@ -16,7 +16,16 @@
 # A failed fit counts as S_hat = empty (Engineering's counting rule), so prec = NA, rec = 0, exact = 0.
 suppressPackageStartupMessages({ library(data.table); library(jsonlite) })
 
-ENG  <- "/home/fb31/Bayesian-Variable-Selection/_local/engineering/"
+# Location of the Engineering outputs: the environment variable SMCBVS_ENG_DIR if set, otherwise the first of the
+# relative locations below (paths from Docs/Writing/paper_smcbvs in the main clone and in a worktree under _wt/).
+eng_dir <- function() {
+  e <- Sys.getenv("SMCBVS_ENG_DIR", "")
+  cand <- if (nzchar(e)) e else c("../../../_local/engineering", "../../../../../_local/engineering")
+  hit <- cand[dir.exists(file.path(cand, "reports", "S1S2"))]
+  if (!length(hit)) stop("Engineering outputs not found; set SMCBVS_ENG_DIR to the _local/engineering folder")
+  paste0(normalizePath(hit[1]), "/")
+}
+ENG  <- eng_dir()
 REP  <- paste0(ENG, "reports/S1S2/")
 SRC <- list(
   s1_records   = paste0(REP, "S1_comparison_final_records.tsv"),     # FINAL, reps 1-100, 6 methods
@@ -36,8 +45,8 @@ SRC <- list(
 )
 
 METHODS <- c("smcbvs", "asi", "bas_mc3", "susie", "scad", "lasso_cv")
-LABELS  <- c(smcbvs = "SMC-BVS", asi = "ASI", bas_mc3 = "BAS (MC3)", susie = "SuSiE",
-             scad = "SCAD", lasso_cv = "Lasso (CV)")
+LABELS  <- c(smcbvs = "SMC-BVS", asi = "ASI", bas_mc3 = "BAS", susie = "SuSiE",
+             scad = "SCAD", lasso_cv = "Lasso")
 
 # The record tables hold one row per fit; a failed BAS fit carries its error message, with embedded
 # newlines, in the status field. Rejoin continuation lines before parsing.
@@ -111,8 +120,12 @@ smc_summaries <- function(d, cache_dir, tag) {
   if (file.exists(f)) return(fread(f))
   d <- d[method == "smcbvs"]
   files <- ifelse(startsWith(d$file, "/"), d$file, paste0(ENG, d$file))
-  L <- lapply(files, function(x) { s <- fromJSON(x, simplifyVector = FALSE)$summary
-    data.table(escalated = isTRUE(s$escalated), min_ess_over_N = as.numeric(s$min_ess_over_N), eflag_any = isTRUE(s$eflag_any)) })
+  L <- lapply(files, function(x) { j <- fromJSON(x, simplifyVector = FALSE); s <- j$summary
+    w <- as.character(unlist(s$engine_warnings)); tr <- sub("^calibration_trigger:", "", w[startsWith(w, "calibration_trigger:")])
+    data.table(escalated = isTRUE(s$escalated), min_ess_over_N = as.numeric(s$min_ess_over_N), eflag_any = isTRUE(s$eflag_any),
+               eflags = paste(sort(as.character(unlist(s$eflags))), collapse = ";"), triggers = paste(sort(unique(tr)), collapse = ";"), warnings = paste(sort(unique(w)), collapse = ";"),
+               n_stages = as.integer(s$n_stages_final), N_particles = as.integer(s$N_particles),
+               host = as.character(j$host)) })
   out <- cbind(d[, .(setting_id, rep, method)], rbindlist(L))
   fwrite(out, f, sep = "\t")
   out
@@ -178,3 +191,25 @@ json_wall_md5 <- function(d, cache_dir, tag) {
 KMIN <- 20L
 cprec <- function(x) { k <- sum(!is.na(x)); if (k >= KMIN) mean(x, na.rm = TRUE) else NA_real_ }
 fmt_na <- function(fmt, v) ifelse(is.na(v), "--", sprintf(fmt, v))
+
+# Fit time without data generation and diagnostics (runtime_sec of each JSON record; for ASI the sampler call alone),
+# next to the harness wall time, for every method. Cached like the wall times.
+json_runtime <- function(d, cache_dir, tag) {
+  f <- file.path(cache_dir, sprintf("runtime_%s.tsv", tag))
+  if (file.exists(f)) return(fread(f))
+  files <- ifelse(startsWith(d$file, "/"), d$file, paste0(ENG, d$file))
+  r <- vapply(files, function(x) {
+    v <- tryCatch(fromJSON(x, simplifyVector = FALSE)$runtime_sec, error = function(e) NULL)
+    if (is.null(v)) NA_real_ else as.numeric(v) }, 0)
+  out <- data.table(setting_id = d$setting_id, rep = d$rep, method = d$method, runtime_sec = unname(r))
+  fwrite(out, f, sep = "\t")
+  out
+}
+
+# Node hardware from the Slurm partition records (runs/S1S2/_logs/sacct/sacct_*.tsv): node name -> CPU model.
+SACCT_DIR <- paste0(ENG, "runs/S1S2/_logs/sacct/")
+sacct_all <- function() {
+  fs <- list.files(SACCT_DIR, pattern = "^sacct_.*\\.tsv$", full.names = TRUE)
+  rbindlist(lapply(fs, function(f) { x <- fread(f, sep = "\t", colClasses = "character")
+    x[, .(file = basename(f), task, NodeList, Partition, State, ElapsedRaw = as.numeric(ElapsedRaw), CPU_model)] }))
+}

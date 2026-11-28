@@ -6,9 +6,20 @@
 \input{preamble}
 \input{macros}
 
-\title{Sequential Monte Carlo for Bayesian variable selection\\ in high-dimensional linear regression}
+\title{Block-initialised sequential Monte Carlo for Bayesian variable selection\\ in high-dimensional linear regression}
 \author{[Authors to be added]}
 \date{Draft, \today}
+
+% \startappendix: switch to the appendix numbering described at the end of the document.
+\makeatletter
+\newcommand{\startappendix}{%
+  \appendix
+  \setcounter{table}{0}\setcounter{figure}{0}%
+  \renewcommand{\thesection}{\Alph{section}}\renewcommand{\theHsection}{appx.\Alph{section}}%
+  \renewcommand{\thetable}{\Alph{section}\arabic{table}}\renewcommand{\theHtable}{appx.\Alph{section}\arabic{table}}%
+  \renewcommand{\thefigure}{\Alph{section}\arabic{figure}}\renewcommand{\theHfigure}{appx.\Alph{section}\arabic{figure}}%
+  \renewcommand{\@seccntformat}[1]{\ifnum\pdfstrcmp{##1}{section}=0 \appendixname~\fi\csname the##1\endcsname\quad}}
+\makeatother
 
 \begin{document}
 \maketitle
@@ -20,16 +31,14 @@
 \IfFileExists{sections/01_model.tex}{\input{sections/01_model}}{}
 \IfFileExists{sections/02_simulations.tex}{\input{sections/02_simulations}}{}
 \IfFileExists{sections/03_theory.tex}{\input{sections/03_theory}}{}
-% Supplement: sections, tables, figures and equations numbered S1, S2, ...; the hyperref anchors (\theH...)
-% get the same prefix, so they stay distinct from the main text's.
-\IfFileExists{sections/04_sim_supplement.tex}{%
-  \clearpage
-  \setcounter{section}{0}\setcounter{table}{0}\setcounter{figure}{0}\setcounter{equation}{0}%
-  \renewcommand{\thesection}{S\arabic{section}}\renewcommand{\theHsection}{S\arabic{section}}%
-  \renewcommand{\thetable}{S\arabic{table}}\renewcommand{\theHtable}{S\arabic{table}}%
-  \renewcommand{\thefigure}{S\arabic{figure}}\renewcommand{\theHfigure}{S\arabic{figure}}%
-  \input{sections/04_sim_supplement}}{}
-
+% The reference list comes before the appendix.  \clearpage flushes every pending float of the main text first,
+% and the appendix starts on a new page after the references, so no appendix float can land among them.
+\clearpage
 \bibliography{refs}
+
+% Appendix (the simulation supplement): headed "Appendix A", sections A, A.1, ...; tables A1, A2, ...;
+% figures A1, ...; equations (A.1), ....  The prefix is "A", not "S", because the designs are called S1 and S2.
+% The hyperref anchors (\theH...) get the same prefix, so they stay distinct from the main text's.
+\IfFileExists{sections/04_sim_supplement.tex}{\clearpage\startappendix\input{sections/04_sim_supplement}}{}
 
 \end{document}

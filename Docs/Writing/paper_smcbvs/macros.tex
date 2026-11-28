@@ -3,6 +3,11 @@
 % Harmonized with Docs/Writing/shared/smcbvs.sty, the specification
 % (Docs/Writing/manuscript/spec/, method v3.1.1) and TH_PREP.md Sec. 1.  Same names, same meanings.
 % Sections request new macros through the Writing Manager; do not redefine these locally.
+%
+% Round 1 (2026-11-28), symbol collisions across sections.  Section 1 keeps the sampler's letters
+% (Delta(S), omega, N, m, Z, T, the blocks C_b) and changes its own minor ones: block index k -> b,
+% column scaling D -> \DX, constant C_n -> c_n.  The macros marked [S3] give Section 3 distinct
+% letters for its objects; \tstar and \tmin were removed (unused).
 
 % ---------------------------------------------------------------- sets, numbers, norms
 \newcommand{\R}{\mathbb{R}}                    % real numbers
@@ -37,14 +42,21 @@
 \newcommand{\Dn}{\mathcal D_n}                 % data set
 \newcommand{\sigs}{\sigma_*}                   % true noise standard deviation
 \newcommand{\bstar}{\beta^*}                   % true coefficients, original units
-\newcommand{\tstar}{\theta^*}                  % true coefficients, standardised units
-\newcommand{\tmin}{\theta^*_{\min}}            % smallest nonzero |theta*_j|
+\newcommand{\sigr}{\sigma_{\mathrm r}}          % residual sd in the original units: \sigr^2 = s_y^2 sigma^2
+\newcommand{\DX}{D_X}                          % diagonal matrix of the column standard deviations of \Xr
 \newcommand{\Sz}{S_0}                          % true model
 \newcommand{\sz}{s_0}                          % true model size
 \newcommand{\Rhat}{\hat R}                     % sample correlation matrix
 \newcommand{\Sig}{\Sigma_n}                    % population covariance of a design row
 \newcommand{\rn}{\sqrt{\log n/n}}              % posterior rate
 \newcommand{\SSq}{\mathrm{SS}}                 % shrunken residual sum of squares SS_S
+
+% ---------------------------------------------------------------- Section 3 objects [S3] (distinct from Section 1's letters)
+\newcommand{\Px}{P_x}                          % [S3] law of a design row x (was nu; nu is the signal-to-noise ratio of Section 2)
+\newcommand{\Rres}{R_n}                        % [S3] residual signal R_n(S) (was Delta_n(S); Delta(S) is Section 1's discrepancy)
+\newcommand{\leak}{\lambda_n}                  % [S3] leakage lambda_n(A, a) (was rho_n; rho is Section 2's design correlation)
+\newcommand{\Anull}{A}                         % [S3] a set of null predictors, a = |A| (was N, m; N is the particle number, m(S) the marginal likelihood)
+\newcommand{\Pin}[1]{\Pi(#1\mid\Dn)}          % [S3] posterior of (S, beta, sigma_r^2) given the data: one notation for Section 3
 
 % ---------------------------------------------------------------- prior and posterior
 \newcommand{\Om}{\Omega}                       % model space {S : |S| <= K}

@@ -14,6 +14,9 @@
 %    The project's page-level quotes were taken from arXiv versions (see shared/refs.bib notes);
 %    cite sections, not page numbers, when quoting these.
 %  * "note" fields with arXiv provenance removed; DOIs added to all journal articles.
+%  * Round 1 review (2026-11-28): publisher locations removed (APA 7); article number printed as
+%    "Article 84"; Griffin, Jim E. and Tibshirani, Ryan J. given their initials; added ChenChen2008,
+%    ZellnerSiow1980, RafteryMadiganHoeting1997, CastilloVanDerVaart2012, RossellRubio2018 (Crossref-checked).
 %  * Added: Tibshirani1996, FanLi2001, ClydeGhoshLittman2011, WangSarkarCarbonettoStephens2020,
 %    KassWasserman1995, Chopin2002.
 
@@ -37,7 +40,6 @@
   booktitle = {Bayesian Inference and Decision Techniques: Essays in Honor of {B}runo de {F}inetti},
   editor    = {Goel, Prem K. and Zellner, Arnold},
   publisher = {North-Holland},
-  address   = {Amsterdam},
   pages     = {233--243},
   year      = {1986}
 }
@@ -115,7 +117,6 @@
   title     = {{F}eynman--{K}ac formulae: Genealogical and interacting particle systems with applications},
   series    = {Probability and Its Applications},
   publisher = {Springer},
-  address   = {New York},
   year      = {2004},
   doi       = {10.1007/978-1-4684-9393-1}
 }
@@ -196,12 +197,12 @@
 
 % Article number 84 (no page range).
 @article{LiangLivingstoneGriffin2022,
-  author  = {Liang, Xitong and Livingstone, Samuel and Griffin, Jim},
+  author  = {Liang, Xitong and Livingstone, Samuel and Griffin, Jim E.},
   title   = {Adaptive random neighbourhood informed {M}arkov chain {M}onte {C}arlo for high-dimensional {B}ayesian variable selection},
   journal = {Statistics and Computing},
   volume  = {32},
   number  = {5},
-  pages   = {84},
+  pages   = {Article 84},
   year    = {2022},
   doi     = {10.1007/s11222-022-10137-8}
 }
@@ -333,7 +334,7 @@
 % ===================================================================== simulation designs
 
 @article{HastieTibshiraniTibshirani2020,
-  author  = {Hastie, Trevor and Tibshirani, Robert and Tibshirani, Ryan},
+  author  = {Hastie, Trevor and Tibshirani, Robert and Tibshirani, Ryan J.},
   title   = {Best subset, forward stepwise or lasso? {A}nalysis and recommendations based on extensive comparisons},
   journal = {Statistical Science},
   volume  = {35},
@@ -601,4 +602,62 @@
   pages   = {1069--1103},
   year    = {2017},
   doi     = {10.1214/17-BA1085}
+}
+
+% ===================================================================== added after the round 1 review (Crossref, 2026-11-28)
+
+@article{ChenChen2008,
+  author  = {Chen, Jiahua and Chen, Zehua},
+  title   = {Extended {B}ayesian information criteria for model selection with large model spaces},
+  journal = {Biometrika},
+  volume  = {95},
+  number  = {3},
+  pages   = {759--771},
+  year    = {2008},
+  doi     = {10.1093/biomet/asn034}
+}
+
+@article{ZellnerSiow1980,
+  author  = {Zellner, Arnold and Siow, Aloysius},
+  title   = {Posterior odds ratios for selected regression hypotheses},
+  journal = {Trabajos de Estad{\'\i}stica y de Investigaci{\'o}n Operativa},
+  volume  = {31},
+  number  = {1},
+  pages   = {585--603},
+  year    = {1980},
+  doi     = {10.1007/BF02888369}
+}
+
+% MC3 (Markov chain Monte Carlo model composition) for linear regression.
+@article{RafteryMadiganHoeting1997,
+  author  = {Raftery, Adrian E. and Madigan, David and Hoeting, Jennifer A.},
+  title   = {{B}ayesian model averaging for linear regression models},
+  journal = {Journal of the American Statistical Association},
+  volume  = {92},
+  number  = {437},
+  pages   = {179--191},
+  year    = {1997},
+  doi     = {10.1080/01621459.1997.10473615}
+}
+
+@article{CastilloVanDerVaart2012,
+  author  = {Castillo, Isma{\"e}l and {van der Vaart}, Aad},
+  title   = {Needles and straw in a haystack: {P}osterior concentration for possibly sparse sequences},
+  journal = {The Annals of Statistics},
+  volume  = {40},
+  number  = {4},
+  pages   = {2069--2101},
+  year    = {2012},
+  doi     = {10.1214/12-AOS1029}
+}
+
+@article{RossellRubio2018,
+  author  = {Rossell, David and Rubio, Francisco J.},
+  title   = {Tractable {B}ayesian variable selection: {B}eyond normality},
+  journal = {Journal of the American Statistical Association},
+  volume  = {113},
+  number  = {524},
+  pages   = {1742--1758},
+  year    = {2018},
+  doi     = {10.1080/01621459.2017.1371025}
 }

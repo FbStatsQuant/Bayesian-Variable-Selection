@@ -37,6 +37,8 @@
 \setlist[enumerate]{leftmargin=2em,itemsep=1pt,topsep=3pt}
 \setlist[itemize]{leftmargin=1.5em,itemsep=1pt,topsep=3pt}
 \usepackage{xcolor}
+\usepackage{algorithm}                  % algorithm floats (Section 1); load before hyperref
+\usepackage[noend]{algpseudocode}
 
 % ---------------------------------------------------------------- citations (APA, author-year)
 \usepackage[natbibapa]{apacite}
@@ -48,14 +50,18 @@
 \usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,
             urlcolor=blue!50!black,breaklinks=true,pdfusetitle]{hyperref}
 \AtBeginDocument{\renewcommand{\doi}[1]{\url{https://doi.org/#1}}}
+\urlstyle{same}                          % DOIs and URLs in the text font, not typewriter
 
 % ---------------------------------------------------------------- statements
 % Numbered within sections.  Assumptions are numbered A1, A2, ... across the paper.
+% A conjecture is a statement that is not proved in the paper; it shares the theorem counter
+% (Theorem 3.1, Conjecture 3.2, ...), so proved and unproved statements are never confused.
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{proposition}[theorem]{Proposition}
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
 \theoremstyle{definition}
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{example}[theorem]{Example}
