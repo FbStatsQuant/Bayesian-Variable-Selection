@@ -13,9 +13,9 @@ Rossell22	Rossell22.pdf	arXiv:1806.04071v7 (2 Mar 2021). Journal: Bayesian Analy
 ShangClayton11	SC11_arXiv1102.0826v2.pdf	arXiv v2 (2 Feb 2012). Journal: JSPI 141(11) 3463-3474.
 FRG09	FRG09.pdf	Fletcher, Rangan & Goyal, IEEE TIT 55(12) 5758-5772 (preprint version).
 BRT09	BRT09_arXiv0801.1095v3.pdf	arXiv v3. Journal: Ann. Statist. 37(4) 1705-1732.
-ChenChen08	MISSING	Biometrika 95(3) 759-771, DOI 10.1093/biomet/asn034. Not available: any claim about CC08's own content = CAN'T CHECK. Claims only about what LC13/SBJ18 say about CC08 are checkable in LC13/SBJ.
+ChenChen08	CC08.pdf (+ .txt)	Biometrika 95(3) 759-771, journal version (owner-supplied 2026-11-28). Printed page = PDF page + 758.
 Wainwright09	Wainwright09_InfoTheoretic.pdf AND Wainwright09_Lasso_arXiv0605740.pdf	TWO different 2009 papers. Writing's refs.bib key Wainwright2009 = "Sharp thresholds for high-dimensional and noisy sparsity recovery using l1-constrained QP (Lasso)", IEEE TIT 55(5) 2183-2202 (arXiv math/0605740v1 = file _Lasso_). The other file = "Information-theoretic limits on sparsity recovery in the high-dimensional and noisy setting", IEEE TIT 55(12) 5728-5741 (arXiv math/0702301v2). Check each claim against the paper the citing document points to; if it points to the wrong one, say so.
-Cramer36	MISSING	Cramér (1936) Math. Z. 41, 405-414, DOI 10.1007/BF01180430. Not available: CAN'T CHECK (do not verify from memory).
+Cramer36	Cramer36.pdf (+ .txt; OCR poor, use page images)	Cramér (1936) Math. Z. 41, 405-414, in German (owner-supplied 2026-11-28). Printed page = PDF page + 404 (check on the page image).
 JR12	JR12.pdf	JASA 107(498) 649-660, journal version.
 RZ13	RZ13_arXiv1106.1151.pdf	arXiv:1106.1151. Journal: IEEE TIT 59(6) 3434-3447.
 DBW13	DBW13.pdf (journal) ; DBW12wp.pdf (2012 working paper)	De Blasi & Walker, Stat. Sinica 23 (2013) 169-187. Use the journal file; the working paper only if needed and say so.
