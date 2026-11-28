@@ -11,22 +11,24 @@ Every number below is in a table under `tables/` (file named in the section) and
    little resolution (ε_n = 0.83). The cap never binds (E7), so K = n/2 costs nothing empirically.
 2. **TS-b (exact selection) — the margin.**
    - *Necessity of the constant 2 is visible:* κ_del > 1 (equivalently min t² > 2·price) has sensitivity 1.000 on S1 and on
-     S2 (population), and P(exact | κ_del ≤ 1) = 0 (S1) / ≤ 0.0008 (S2, sample). Matches the TS-b converse.
+     S2 (population), and P(exact | κ_del ≤ 1) = 0 (S1) / ≤ 0.0008 (S2, sample). Consistent with the TS-b converse (which is a population/asymptotic statement; this is a per-setting check).
    - *S1 brackets κ = 1 from both sides:* κ_pop 0.64–0.70 at SNR 1 (0/100 exact in every cell) vs 2.54–2.80 at SNR 2
      (92–96/100) (E1, `e1_s1_cells.tsv`). The fixed-ratio (κ_n) framing covers S1; a fixed beta-min (FSb) does not (E4).
    - *Multi-deletions bind on S1* (κ_multi < κ_del in all 16 settings): the margin must quantify over all D ⊆ S0 (E1).
-   - *The "sufficiency gap" on S1 is the superset term:* 40/41 S1 failures at SNR ≥ 2 are S0 plus nulls (E1/E7); the
-     one-null superset ceiling predicted by the exact Beta law is 0.94–0.97 for S1's (n, p) (FABLE_R1 Q1(3f)), observed
-     0.92–0.98. No extra assumption is needed — this is the O((s0+1)√(log p/n)) term of TS-b, the same order as `rem:sharp`.
+   - *The "sufficiency gap" on S1 is consistent with the superset term:* 40/41 S1 failures at SNR ≥ 2 are S0 plus nulls
+     (E1/E7). The heuristic diagnostic E K₁ ≈ (s0+1)/√(2πL(n+1)) (expected number of one-null extensions beating S0, idealised
+     χ² scores; FABLE_R1 Q1(3f)) is 0.033–0.056 at S1's (n, p), the same order as the observed 2–8% shortfall. This is
+     **consistent with**, not a proved ceiling: P(K₁ ≥ 1) ≤ E K₁ bounds one failure type only (Astra R2 Q3). It matches the
+     order of the O((s0+1)√(log p/n)) term in the TS-b rate.
    - *Swap-aware heuristics are not improvements* (κ_pop AUC 0.958 vs κ_del 0.980 on S2): consistent with the advisors'
      finding that proxy swaps cost only a Gaussian-width allowance, not d·price (E1).
    - *S2 is not asymptotic* (s0 log p/n = 0.69); its transition is fitted by the saturating gain (n/2)log(1+R/(nσ²))
-     (P(exact) = ½ at κ_adj_full ≈ 1.0–1.5 across both suites; post hoc). Used only in the finite-n companion.
+     (P(exact) = ½ at κ_adj_full ≈ 1.0–1.5 across both suites; post hoc). Used only in the finite-n diagnostics.
 3. **Eigenvalues.** Population floors hold analytically (n × floor ≥ 8.8 over c_ψ/n); sample sparse floors are vacuous on
    S2 at the theorem's set sizes (1e−5–2e−4; E5). Supports dropping sample floors and keeping A-NEC.
 4. **Bounded signal** holds everywhere (max |β|sd/σ ≤ 1.17, ν ≤ 6; E4).
 5. **Dimension.** A = 0.90–1.77; p ≤ n² everywhere incl. typical user regimes; log p/√n ≤ 0.98 (E6). Consistent with A-DIM
-   and with the TD′ conjecture's A-DIM′.
+   (and with A-DIM′, though TD′ itself is a high-risk conjecture).
 6. **Misspecification (TM).** σ² posterior vs σ_C²: median 0.99 (S1), 0.84–0.98 (S2) (E7) — supports the inflated-variance
    reading. Hidden-column tests need refits (not run; HQ approval required).
 7. **SL's own conditions on our data.** SL Condition 3 holds in population (δ_SL = 0.23–0.42) but ε_n² = o(δ_SL) is weak/fails
