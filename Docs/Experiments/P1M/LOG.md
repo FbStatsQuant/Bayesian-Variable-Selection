@@ -871,3 +871,20 @@
   - **TH-CHECKS P2** (E4–E6, list view) done, 4.5 CPU-h, gates PASS. The interim E3/E5 list view went to HQ and Theory.
   - **S1 final relabelled FINAL**, with `final/runtime_S1_smcbvs_asi.{md,tsv}` (HQ request).
   - **NOTS hygiene pass 1, stage 2:** scratch freed about 0.79 GB; home quota 8830M/10240M; 11 items kept, including the K9 clones (the VN worktree depends on them). Tooling stage 2 approved: Codex 0.167.2 only; the cache is held while live.
+- 2026-11-28 ≈07:20Z (CAMPAIGN-OPS lead). S2 ASI complete; S2 FINAL 6-method comparison built; board stop resumed; NOTS hygiene.
+  - **Resume after the board stop (11-27 23:31Z):** 411 S2 ASI tasks had finished during the pause, 0 failed. Released b2 (2958409, 2958410) and b3 (2961041). The b3 deferred submitter was restarted for the class not yet in (S2N100P1000). It submitted job 2966568 at 11-28 00:41Z and launched the b3 watcher. The SMC-PERF arrays were not touched.
+  - **S2 ASI, all DONE PASS:** b2 (reps 26–60) at 04:36Z, 4,200/4,200 ok, md5 4,200/4,200, 186 exact, 4,347.0 billed. b3 (reps 61–100) at 06:39Z, 4,800/4,800 ok, md5 4,800/4,800, 223 exact, 5,092.4 billed. S2bm.asi total 12,546.0 of the 20,332.5 CPU-h cap.
+  - **S2 FINAL** (`reports/S1S2/S2_comparison_final*`, reps 1–100, 11,919 shared reps, strict md5).
+    - Engine of record: SMC-BVS v3.1.1 (`method-v3.1.1-listpip` = 7100bb3b, LS0 on). C1 is not deployed.
+    - Exact recovery out of 12,000: SMC-BVS 606, BAS (MC3) 556, ASI 536, Lasso (CV) 94, SCAD 21, SuSiE 3. BAS had 81 failed fits (numeric errors and 9 OOM), counted as Ŝ = ∅.
+    - SMC-BVS vs ASI, paired: exact W/T/L 160/11,669/90, McNemar p < 0.001. Hamming W/T/L 1,480/8,717/1,722, sign test p < 0.001 in ASI's favour; mean Hamming 6.59 vs 6.60.
+    - Runtime (`final/runtime_S2_smcbvs_asi.{md,tsv}`, new script `scripts/runtime_S2_table.R`): median wall per fit 4.0 min (SMC-BVS) vs 30.5 min (ASI). Median billed CPU-h per fit 0.136 vs 1.018. Billed totals 2,737.5 vs 12,546.0.
+    - Also new: `final/results_S2_asi{,_by_nsrhonu}.{md,tsv}` from aggregate.R --final, and `final/README.md` updated.
+  - **Writing requests:**
+    - Per-fit precision and recall, which no file had stored, derived from the record JSONs: `final/perfit_precision_recall_S{1,2}.tsv` (S1 9,600 fits, S2 72,000; script `scripts/perfit_precision_recall.py`).
+    - Read-only spec check: v3.1.1 runs two local searches after the final islands: the final search from the HPM, then LS0 from the start mode with cap ℓ_n + |S̃0|, on by default. METHODOLOGY_v3.md (v3.0) describes only one.
+  - **NOTS hygiene:**
+    - smcbvs S2 scratch units s2b1/2/3 freed (570.7 MB; G1–G4 pass; s2b2 rc inferred after the board stop interrupted it).
+    - Home: three superseded T3 runtimes removed under the owner's waiver of the age hold. Quota 9661M → 8181M of 10240M.
+  - **Schedules (lead thread):** hourly ASI check ba74bc20, daily 04:30 hygiene 67a48fbe.
+- 2026-11-28 (Eng v2 manager, via HQ) — SMC-PERF closed. Decision memo (sha 1b319090, B-signed) delivered. Keep v3.1.1 MPM: X2 frozen rule, no rule passes (R2 Holm 0.092). Adopt fix E (output only). Adopt C1 scoped to S2-type (X4 locked criteria all pass; time ×0.32). No slab/prior arm (Q2). Committee 7/7/8 → 8/7/9 → 9/8/9. 507.6 billed CPU-h. Owner rulings requested: C1 deployment scope; external expected-size prior.
