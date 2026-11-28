@@ -1,3 +1,5 @@
+> **STALE (HQ ruling, 2026-11-28):** this text is v3.0 and is stale. The authority is `Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md`. The engine of record, v3.1.1 (`method-v3.1.1-listpip` = 7100bb3b), runs two local searches after the final islands: the final local search, then LS0 from the start mode.
+
 # SMC-BVS v3: composite-start SMC for Bayesian variable selection — complete method report
 
 **Version:** v3.0, 2026-10-19. **Status:** design, agreed by the lead (Opus 5.5) and three theory consultants (Astra-T1 and
