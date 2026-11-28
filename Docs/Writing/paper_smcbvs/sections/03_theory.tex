@@ -68,7 +68,7 @@ Assumption~\ref{a:th-dim} lets $p$ grow like any fixed power of $n$. The polynom
 growth such as $p\le n^5$ already covers any realistic study, since $n=500$ then allows $p$ up to about $3\times10^{13}$.
 \citet{JohnsonRossell2012} prove selection
 consistency for $p\le n$; \citet{SongLiang2015} and \citet{ShinBhattacharyaJohnson2018} allow $\log p$ of order
-$n^\alpha$ with $\alpha<1$, which leads to slower rates. Under Assumption~\ref{a:th-dim}, $\log p=O(\log n)$, so a
+$n^\alpha$ with $\alpha<1$; in \citet{SongLiang2015} this comes with slower rates. Under Assumption~\ref{a:th-dim}, $\log p=O(\log n)$, so a
 single rate of order $\rn$ covers both the multiplicity cost of the prior and the Occam factor.
 
 In the next two assumptions, a \emph{sparse set} is a set of at most $c\log n$ predictors. Both are required, for
@@ -96,7 +96,8 @@ predictors that are nearly exact linear combinations of a few others, such as du
 that of the unit ridge in the slab~\eqref{eq:slab}. The Gram matrix of a model $S$ is of order $n\Corr(x_S)$, and while
 its eigenvalues stay above a fixed level the Occam factor $\{\det(G_S+I)/\det H_S\}^{1/2}$ of~\eqref{eq:marglik} is
 $(n+1)^{-\abs S/2}$ up to a fixed factor per predictor, so that every predictor pays a penalty of order $\tfrac12\log
-n$. Fixed floors on sparse eigenvalues \citep{BickelRitovTsybakov2009,NarisettyHe2014} are a special case. No upper
+n$. Fixed floors on sparse eigenvalues are a special case; \citet{BickelRitovTsybakov2009} and \citet{NarisettyHe2014}
+use sample floors that may vanish slowly, of order $1/\log n$ and $p^{-\kappa}$. No upper
 bound on the eigenvalues is needed, so strong common factors are allowed.
 
 \begin{assumption}[Bounded effects]\label{a:th-bs}
@@ -224,10 +225,10 @@ offset the noise they fit by chance, and their Occam factor should outweigh the 
 \begin{remark}[Other signal conditions]\label{rem:th-margin}
 Condition~3 of \citet{SongLiang2015} asks that no combination of other predictors reproduce a true one;
 Assumption~\ref{a:th-margin} bounds how well it may. \citet{NarisettyHe2014} (Condition~4.4) ask the residual signal of
-every model that misses a true predictor to exceed a multiple of $\sigs^2\sz\log(\sqrt n\vee p)$, and
-\citet{LuoChen2013} ask its ratio to $\log p$ to diverge; Assumption~\ref{a:th-margin} charges each left-out predictor
+every model with fewer than a fixed multiple of $\sz$ predictors that misses a true predictor to exceed a multiple of $\sigs^2\sz\log(\sqrt n\vee p)$, and
+\citet{LuoChen2013} ask its ratio to $\sz\log p$ to diverge; Assumption~\ref{a:th-margin} charges each left-out predictor
 its own price, with constant~$2$. The $\log p$ part of the price cannot be avoided, since below a threshold of that
-order no method recovers the support \citep{Wainwright2009,FletcherRanganGoyal2009}; the $\tfrac12\log n$ part is the
+order no method recovers the support \citep{WainwrightIT2009,FletcherRanganGoyal2009}; the $\tfrac12\log n$ part is the
 cost of the unit-information prior, and no such bound forces it. A beta-min condition is sufficient: if
 $\lmin\{\Corr(x_T)\}\ge\varphi^2$ for every set $T$ of at most $\sz+\bar u_{\sz}$ predictors, which covers every
 rival constrained by Assumption~\ref{a:th-margin}, then, with $\bbmin$ as in Theorem~\ref{thm:th-select-fixed}, the
@@ -300,7 +301,7 @@ $\gamma=\Var(x_{\mathcal C})^{-1}\Cov(x_{\mathcal C},x_O)\bstar_O$: each candida
 signal it can predict, and the rest is added to the noise variance. The statement for $\MPM$ follows from the first
 bound by Markov's inequality, since $\Pi(\Sz^{\mathcal C}\mid\Dn^{\mathcal C})>1/2$ forces $\MPM=\Sz^{\mathcal C}$.
 Theorem~\ref{thm:th-omitted} is the counterpart, for Gaussian predictors, of Corollary~2 of \citet{SongLiang2015}. That
-corollary gives the inclusion of $\Sz^{\mathcal C}$, and their discussion states the converse; here the posterior
+corollary gives the inclusion of $\Sz^{\mathcal C}$, and their discussion states the converse for true predictors among the candidates; here the posterior
 selects $\Sz^{\mathcal C}$ exactly, so a candidate is kept when it stands in for a left-out predictor and dropped when
 its effect is cancelled. Condition~(ii) asks the projected effects to exceed the detection threshold by a diverging
 factor.
@@ -338,7 +339,7 @@ $\abs{\Sz^{\mathcal C}}\le s_{\mathcal C}$ for a fixed integer $s_{\mathcal C}\g
 
 Under Assumptions~\ref{a:th-gl} and~\ref{a:th-mis}, the response given $x_{\mathcal C}$ is again Gaussian and linear,
 with $\beta^{\mathcal C}=\bstar_{\mathcal C}+\gamma$ and $\sigma_{\mathcal C}^2=\sigs^2+\tau^2$: the left-out signal acts
-as extra effects on the candidates that predict it and as extra noise. By Cram\'er's decomposition theorem, under Assumption~\ref{a:th-gl} the condition on the left-out signal in
+as extra effects on the candidates that predict it and as extra noise. By Cram\'er's decomposition theorem \citep{Cramer1936}, under Assumption~\ref{a:th-gl} the condition on the left-out signal in
 Assumption~\ref{a:th-mis} is the same as asking the residual $\varepsilon_{\mathcal C}$ to be Gaussian and independent
 of $x_{\mathcal C}$; the nonsingularity and the conditions for the candidate problem are separate. Its linear-Gaussian part holds whenever $(x_{\mathcal C},x_O)$ is jointly Gaussian; that does not
 make $\beta^{\mathcal C}$ sparse, which is the separate Assumption~\ref{a:th-sparse-c}, the counterpart of
@@ -369,7 +370,7 @@ predictor is typically dense, although common factors alone do not force a dense
 \end{enumerate}
 \end{conjecture}
 
-Part~(a) corresponds to Theorem~4 and Corollary~2 of \citet{SongLiang2015}, stated there for Gaussian data with
+Part~(a) corresponds to Theorem~4 and Corollary~2 of \citet{SongLiang2015}, stated there for the Gaussian linear model (Gaussian errors, predictors with finite second moments) with
 omitted predictors: the density statement, and the inclusion of the pseudo-true support, which their corollary
 derives from the conditions of their Theorem~4 when no exact collinearity holds among the candidates (here,
 $\Var(x_{\mathcal C})$ is nonsingular). As there, the inclusion statement needs a size cap that eventually stops
@@ -380,8 +381,9 @@ conclusions of Theorems~\ref{thm:th-dist} and~\ref{thm:th-omitted} for the candi
 Assumption~\ref{a:th-margin} in place of condition~(ii) of Theorem~\ref{thm:th-omitted}; its constants depend on
 $s_{\mathcal C}$ in place of $s$. If the conjecture holds, then in both parts a null predictor that stands in for a
 missing true one is selected, and the noise variance absorbs what the candidates cannot explain. For other priors and likelihoods, posterior model probabilities
-under misspecification are studied by \citet{RossellRubio2018} and \citet{Rossell2022}, who find that they concentrate
-on the Kullback--Leibler optimal model under suitable conditions.
+under misspecification are studied by \citet{RossellRubio2018}, who show that under a misspecified error distribution
+Bayes factors remain consistent at slower rates, and by \citet{Rossell2022}, who finds that they concentrate on the
+Kullback--Leibler optimal model under suitable conditions.
 
 The modes of convergence differ across the statements. Theorem~\ref{thm:th-dist} and
 Conjecture~\ref{conj:th-mis}(b) give explicit probability bounds, Theorems~\ref{thm:th-select-fixed}
