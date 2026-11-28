@@ -41,7 +41,9 @@ works with
 \end{equation}
 Every column $x_j$ of $X$ then has mean zero and $\norm{x_j}^2=n-1$, and $y^\top y=n-1$. Centring removes the
 intercept, which therefore has no prior. A coefficient $\theta_j$ and a variance $\sigma^2$ on the standardised
-scale correspond to $\beta_j=s_y\theta_j/D_{jj}$ and $s_y^2\sigma^2$ in the original units.
+scale correspond to $\beta_j=s_y\theta_j/D_{jj}$ and $s_y^2\sigma^2$ in the original units. Section~\ref{sec:theory}
+states its results for posterior draws $(S,\beta,\sigma^2)$ mapped back to the original units in this way, and for
+the true coefficients $\bstar$ of~\eqref{eq:model}.
 
 \paragraph{Models.} A model is a subset $S\subseteq\set{p}$, where $\set{p}:=\{1,\dots,p\}$. For a model $S$,
 $X_S$ holds the columns of $X$ indexed by $S$, $G_S:=X_S^\top X_S$ is their Gram matrix and $z_S:=X_S^\top y$. The
@@ -186,11 +188,12 @@ the new weights, $\ESS=(\sum_v\omega_v)^2/\sum_v\omega_v^2$, is at least $0.90\,
 $1/\Tmax$. From the pilot's temperatures, a grid is built so that each step meets the same $0.90$ target, now
 computed exactly on a candidate set: the empty model and the $20p$ best models found so far by $\gamma_0$ and by
 $F$. Four diagnostic islands are run on this grid, the candidate set grows, and the grid is rebuilt, up to $\ell_n$
-times or until it stops changing. If any of a fixed list of warnings fires (an island's best score more than one
+times or until it stops changing. If any of seven calibration warnings fires (an island's best score more than one
 unit below the best found, a standard deviation above one among the islands' log evidence estimates, a local search
-that improves the best model or stops at its move cap, a forced minimum step, a failed or unconverged grid), the
-calibration is repeated once with four times as many particles and a four times higher step ceiling. A grid that fails to be built even then is
-replaced by the last grid built successfully, or by the pilot's temperatures. The frozen grid does not depend on the
+that improves the best model, a local search that stops at its move cap, a forced minimum step, a failed grid, an
+unconverged grid), the calibration is \emph{escalated}: it is repeated once, with four times as many particles and a
+four times higher step ceiling, and the final run then uses four times as many particles too. A grid that fails to
+be built even then is replaced by the last grid built successfully, or by the pilot's temperatures. The frozen grid does not depend on the
 random numbers of the final run.
 
 \paragraph{The final run.} Four islands, each of $N$ particles and with its own random stream, run on the frozen
@@ -199,8 +202,9 @@ inclusion probabilities are estimated. Island $r$ estimates the evidence by
 \begin{equation}\label{eq:zhat}
   \Zhat_r:=m(\emptyset)\,\bar Z_0\prod_{t=1}^{\Ts}\Big(\frac1N\sum_{v=1}^N\omega^{(t)}_v\Big),
 \end{equation}
-with $\omega^{(t)}_v$ computed on the particles before resampling at step $t$. Given the frozen grid, $\Zhat_r$ is an
-unbiased estimator of $Z$, a standard property of this construction \citep{DelMoral2004}. The pooled estimate is
+with $\omega^{(t)}_v$ computed on the particles before resampling at step $t$. Given the frozen calibration, and for a run that
+is not stopped by the time or memory limit, $\Zhat_r$ is an unbiased estimator of $Z$, a standard property of this
+construction \citep{DelMoral2004}; $\log\Zhat_r$ is not unbiased for $\log Z$. The pooled estimate is
 $\Zhat:=\frac14\sum_{r=1}^4\Zhat_r$; the islands are weighted equally.
 
 \paragraph{Local searches.} After the islands, two deterministic searches over the neighbourhood of a model (all
@@ -275,7 +279,7 @@ evidence and its lower limit are
   \log Z_{\mathrm{low}}:=\max\big(\log(0.05\,\Zhat),\ \log\Zlist\big).
 \end{equation}
 Taking the maximum never moves the point estimate away from $Z$, because $\Zlist\le Z$; it can bias the estimate
-upward on the $Z$ scale, so the raw $\Zhat$ remains the unbiased estimate. Because $\Zhat$ is unbiased, Markov's
+upward on the $Z$ scale, so the raw $\Zhat$ remains the unbiased estimate. Because $\Zhat$ is unbiased (under the conditions stated in Section~\ref{sec:model-sampler}), Markov's
 inequality gives $\P(0.05\,\Zhat>Z)\le0.05$, and since $\Zlist\le Z$ the lower limit
 $Z_{\mathrm{low}}$ exceeds $Z$ on exactly the same event. It is therefore a 95\% one-sided lower limit for $Z$. The
 raw $\log\Zhat$, the four island values $\log\Zhat_r$ and the raw limit are reported too, together with the gap
@@ -285,8 +289,11 @@ $\log\Zlist-\log\Zhat$ and a flag when it exceeds one: $\Zhat$ then underestimat
 model; the best model found is the $\HPM$ and is certified. The list fields are computed from the $40p+1$ best models, and the lower limit is
 $\max\{\log(0.05\,Z),\log\Zlist\}$.
 
-\paragraph{Diagnostics.} A run also reports, without changing any output: whether some island's best score lies more
-than one unit below $F(\HPMhat)$; the standard deviation of the island log evidence estimates; whether the local
-search from the islands' best model improved it; whether the effective sample size fell below $0.5N$ at some step;
-whether a local search stopped at its move cap; the models of $\Tlist$ within $10^{-9}$ of the best score; pairs of
-predictors with $\abs{\hat r_{jl}}\ge1-10^{-10}$; and the calibration warnings.
+\paragraph{Diagnostics.} After the final run, four checks are recomputed as flags; they never change an output:
+(i) some island's best score lies more than one unit below $F(\HPMhat)$; (ii) the island log evidence estimates
+$\log\Zhat_r$ have standard deviation above one; (iii) the local search from the best model scored so far raised the
+best score (measured before the search from the start mode); (iv) the effective sample size fell below $N/2$ at
+some step. We say that a run \emph{raised a run-time warning} when at least one of these four flags is set. A run
+also records, without counting them as run-time warnings, whether the calibration was escalated and which
+calibration warnings fired, whether either local search stopped at its move cap, the models of $\Tlist$ within
+$10^{-9}$ of the best score, and the pairs of predictors with $\abs{\hat r_{jl}}\ge1-10^{-10}$.
