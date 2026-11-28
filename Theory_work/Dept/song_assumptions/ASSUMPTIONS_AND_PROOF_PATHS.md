@@ -148,7 +148,7 @@ Each row gives the exact statement, where the proof uses it, its defence, and th
   - Reading aids: √ϑ ≤ ā ≤ √(2ϑ) for ϑ ≤ 3/4. Within one base, (U2b) for every N is the same as min_N √R_n(B∪N) ≥ … + max_N ā·√(2 log C), since both extremes sit at the maximum-leakage N.
   - Special cases (stated, not separate assumptions): (i) Q_n = T, the "no proxies" case, where every null is priced by its own leakage; (ii) if max_{B,N} ϑ(B, N)·log p → 0 outside Q_n, then (U2a) with η implies (U2b) with every η′ < η for large n; (iii) ā ≡ 1, the structure-free fallback (unit-vector bound; coefficient 1, not √2).
   - Rivals with k > m̄_d need **no** signal condition: for p ≤ n^A their summed prior-plus-Occam odds are ≤ n^{−γ} for some γ > 0 (a TS-b step 2 obligation). Classes satisfy the sieve s − d + k ≤ min(K, J) and k ≤ p − s; (U2) and C-i range only over such feasible rivals.
-  - **Population sufficient conditions (corollaries).** (C-i) Strong separation: min R_n(S)/[σ*² log(p∨n)] → ∞ over feasible underfits with |S∖T| ≤ m̄_s implies (U1)–(U2) with Q_n = T. (C-ii) Sparse eigenvalue plus beta-min: let φ² lower-bound λ_min(Corr(x_V)) over |V| ≤ s + m̄_s and θ_min := min_{j∈T}|β*_j|·sd(x_j)/σ*; then θ_min ≥ (1+η)(1 + √m̄_s)·√(2 log(2p√(n+1))/n)/φ implies (U1) and (U2) with ā ≡ 1. For an orthogonal design, a sufficient coordinatewise form of (U1) is β*_j²Var(x_j) ≥ 2(1+η)σ*²·log(2p√(n+1))/n for every j ∈ T; exact (U1) requires n·Σ_{j∈D} β*_j²Var(x_j) ≥ 2(1+η)σ*²·Pr_n(|D|) for each nonempty D.
+  - **Population sufficient conditions (corollaries).** (C-i) Strong separation: min R_n(S)/[σ*² log(p∨n)] → ∞ over feasible underfits with |S∖T| ≤ m̄_s implies (U1)–(U2) with Q_n = T. (C-ii) Sparse eigenvalue plus beta-min: let φ² lower-bound λ_min(Corr(x_V)) over |V| ≤ s + m̄_s and β̄_min := min_{j∈T}|β*_j|·sd(x_j)/σ*; then β̄_min ≥ (1+η)(1 + √m̄_s)·√(2 log(2p√(n+1))/n)/φ implies (U1) and (U2) with ā ≡ 1. For an orthogonal design, a sufficient coordinatewise form of (U1) is β*_j²Var(x_j) ≥ 2(1+η)σ*²·log(2p√(n+1))/n for every j ∈ T; exact (U1) requires n·Σ_{j∈D} β*_j²Var(x_j) ≥ 2(1+η)σ*²·Pr_n(|D|) for each nonempty D.
 - **Lemma W (bridge to the proof; low risk) [P].**
   - (W1) For S ⊇ B with positive residuals, ⟨v_S, v_B⟩ = √(R̂(S)/R̂(B)), with v_S = (I−P_S)μ/‖(I−P_S)μ‖; so ‖v_S − v_B‖ = a(ϑ̂) exactly, ϑ̂ the sample leakage.
   - (W2) On the two-sided sparse-isometry event on T ∪ B ∪ N (size ≤ s + m̄_d, relative error δ_n ≍ √(log(n∨p)/n)), ϑ̂ ≤ ϑ + 2δ_n/(1+δ_n). Because of the cap, ā(ϑ̂) ≤ ā(ϑ) + 2√δ_n.
@@ -337,7 +337,7 @@ type only; correlated nulls, swaps, higher-order rivals, ridge/IG terms and the 
 controlled by it).
 
 ### 3.4 TM-a0 [P, Fable Q6(3a); confirmed with fixes by Astra R2 Q4]
-One fixed i.i.d. law; p_C ≥ 2; the fixed BB(1, p_C) prior. "Raw units with an intercept" means the coded centring (plug-in ȳ, x̄; no intercept parameter with a prior), with draws mapped back by β_j = s_y b_j/s_{x_j}, σ² = s_y² v; Z = (1, x_Cᵀ)ᵀ.
+One fixed i.i.d. law; p_C ≥ 2; the fixed BB(1, p_C) prior. "Raw units with an intercept" means the coded centring (plug-in ȳ, x̄; no intercept parameter with a prior), with draws mapped back by β_j = s_y θ_j/s_{x_j}, σ² = s_y² v; Z = (1, x_Cᵀ)ᵀ.
 1. There are 2^{p_C} models. RSS_S/n → σ_S² := min_b E(y − Z_Sᵀb)² a.s. (SLLN); Q_S − RSS_S = O(1) a.s. eventually;
    b₀s_y² = O(1); log D_S = |S|·log(n+1) + O(1). **Uses A-MOM.**
 2. Models missing supp β^C have σ_S² > σ_C² and lose (n/2)log(σ_S²/σ_C²) + o(n).

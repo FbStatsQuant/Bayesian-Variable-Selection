@@ -40,8 +40,8 @@ For BB(1, p) this is the package's Σ_{k=s−d}^{s−1} price(k). For other prio
 
 **Population sufficient conditions, displayed as corollaries.**
 - **(C-i) Strong separation.** min R_n(S)/[σ*² log(p∨n)] → ∞ over feasible underfits with |S∖T| ≤ m̄_s implies (U1)–(U2) with Q_n = T.
-- **(C-ii) Sparse eigenvalue plus beta-min.** Let φ² be a lower bound on λ_min(Corr(x_V)) over |V| ≤ s + m̄_s, and let θ_min := min_{j∈T} |β*_j|·sd(x_j)/σ*. Then
-  θ_min ≥ (1+η)·(1 + √m̄_s)·√(2 log(2p√(n+1))/n)/φ
+- **(C-ii) Sparse eigenvalue plus beta-min.** Let φ² be a lower bound on λ_min(Corr(x_V)) over |V| ≤ s + m̄_s, and let β̄_min := min_{j∈T} |β*_j|·sd(x_j)/σ*. Then
+  β̄_min ≥ (1+η)·(1 + √m̄_s)·√(2 log(2p√(n+1))/n)/φ
   implies (U1) and (U2) with ā ≡ 1. For an orthogonal design, a sufficient coordinatewise form of (U1) is β*_j²Var(x_j) ≥ 2(1+η)σ*²·log(2p√(n+1))/n for every j ∈ T; exact (U1) requires n·Σ_{j∈D} β*_j²Var(x_j) ≥ 2(1+η)σ*²·Pr_n(|D|) for each nonempty D (the displayed logarithm upper-bounds the average coded refund).
 
 **Lemma W (bridge to the proof; low risk).**
