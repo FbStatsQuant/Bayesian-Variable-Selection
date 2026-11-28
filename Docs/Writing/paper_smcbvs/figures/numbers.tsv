@@ -1,4 +1,15 @@
 quantity	value	note
+S1.rerun.n	10	batch-1 SMC-BVS fits that hit the 24 h limit; rerun as b1r with the same data and seeds
+S1.rerun.settings	(n=500,p=5000,SNR=3):2 (n=1000,p=5000,SNR=2):1 (n=1000,p=5000,SNR=3):7	""
+S1.rerun.exact	10/10	""
+S1.rerun.wall_range	7.96 h-18.01 h	""
+S1.rerun.cpu	Intel Xeon Platinum 8468	partition commons
+S1.snr23.paired.asi.WL	1/15 of 800	SMC-BVS succeeded & ASI missed / reverse; McNemar p = 0.00052
+S1.snr23.paired.asi.WL_basrule	1/25 of 800	reruns scored empty; McNemar p = 8e-07
+S1.smcbvs.snr23.exact800_basrule	749	""
+S1.smcbvs.snr23.exact800	759	""
+S1.asi.snr23.exact800	773	""
+S1.snr23.exact_gap	14 of 800	""
 S1.smcbvs.p500.escalated_in_slowest10pct	11/80	""
 S1.smcbvs.p500.wall_med_escalated	2.0 min	""
 S1.smcbvs.p500.wall_med_not_escalated	1.2 min	""
@@ -231,15 +242,34 @@ S1.bas_mc3.wall_med_all	0.1 min	""
 S1.susie.wall_med_all	0.1 min	""
 S1.scad.wall_med_all	0.5 min	""
 S1.lasso_cv.wall_med_all	0.0 min	""
-S1.billed_total.smcbvs_actual	4110	final/README.md: billed 4,110 incl. batch-1 first attempts
-S1.billed_total.asi_actual	4703	final/runtime_S1_smcbvs_asi.md
-S1.smcbvs.p500.billed_med_range	0.04-0.05	""
-S1.smcbvs.p5000.billed_med_range	2.98-4.37	""
-S1.asi.p500.billed_med_range	0.63-0.69	""
-S1.asi.p5000.billed_med_range	5.12-5.45	""
-S2.tab3.maxSE.exact	2.0	""
+S1.smcbvs.p500.snr0.5.mech	stages 4, N 2500, escalated 2%, wall 0.2 min	""
+S1.smcbvs.p500.snr1.mech	stages 28, N 2500, escalated 8%, wall 0.8 min	""
+S1.smcbvs.p500.snr2.mech	stages 64, N 2500, escalated 2%, wall 2.2 min	""
+S1.smcbvs.p500.snr3.mech	stages 64, N 2500, escalated 3%, wall 2.2 min	""
+S1.smcbvs.p5000.snr0.5.mech	stages 4, N 5000, escalated 2%, wall 5.5 min	""
+S1.smcbvs.p5000.snr1.mech	stages 40, N 20000, escalated 54%, wall 1.34 h	""
+S1.smcbvs.p5000.snr2.mech	stages 92, N 5000, escalated 24%, wall 2.69 h	""
+S1.smcbvs.p5000.snr3.mech	stages 80, N 5000, escalated 26%, wall 2.54 h	""
+S1.smcbvs.snr.stages_range	4 at SNR 0.5 to 64-92 at SNR >= 2	median per (p, SNR)
+S1.smcbvs.minESSoverN.below090	1176/1600	""
+S1.smcbvs.cpu	Intel Xeon Gold 6230: 167; Intel Xeon Platinum 8468: 1271; NA: 162	of 1600 fits, by JSON host
+S1.asi.cpu	Intel Xeon Gold 6230: 1600	Slurm tasks
+S1.bas_mc3.cpu	Intel Xeon Gold 6230: 320	Slurm tasks
+S1.susie.cpu	Intel Xeon Gold 6230: 176	Slurm tasks
+S1.scad.cpu	Intel Xeon Gold 6230: 176	Slurm tasks
+S1.lasso_cv.cpu	Intel Xeon Gold 6230: 80	Slurm tasks
+S2.tab3.maxSE.exact_count	12.2	of 600
 S2.tab3.maxSE.rec	0.01	""
 S2.tab3.maxSE.size	0.47	""
+S2.tab3.maxSE.prec_ratio	0.020	stratified ratio-estimator SE of conditional precision
+S2.tab3.maxSE.prec_naive	0.021	sd/sqrt(k), for comparison
+S2.tab3.k_range	220-595	non-empty fits per cell of Table 4
+S2.tab3.nu2.07.bt1.k_smc_asi	220/600 vs 412/600	""
+S2.tab3.nu2.07.bt2.k_smc_asi	445/600 vs 530/600	""
+S2.tab3.nu3.52.bt1.k_smc_asi	384/600 vs 522/600	""
+S2.tab3.nu3.52.bt2.k_smc_asi	514/600 vs 571/600	""
+S2.tab3.nu6.bt1.k_smc_asi	540/600 vs 572/600	""
+S2.tab3.nu6.bt2.k_smc_asi	575/600 vs 595/600	""
 S2.smcbvs.nu0.05.exact	0/1200	""
 S2.smcbvs.nu0.05.prec	0.15	conditional, k = 26 non-empty
 S2.smcbvs.nu0.05.rec	0.00	""
@@ -1102,6 +1132,9 @@ S2.bas_mc3.nu6.ok	1197/1200	""
 S2.bas_mc3.failed_total	81 (n=50: 81)	""
 S2.bas_mc3.failed_oom	9	""
 S2.bas_mc3.failed_numeric	72	final/bas_mc3_S2_failures.md: 72 numeric errors after MC3 drifts to near-saturated models at n = 50
+S2.susie_check.S2_070	n=100 rho=0 nu=6 bt1; default SuSiE exact 0/100, SMC-BVS 66/100	final/README.md: warm start exact in 65% / 40% of the 20 reps
+S2.susie_check.S2_010	n=50 rho=0 nu=6 bt1; default SuSiE exact 0/100, SMC-BVS 62/100	final/README.md: warm start exact in 65% / 40% of the 20 reps
+S2.susie_check.warm_exact	13/20 and 8/20	final/README.md: warm start recovers the exact model in 65% / 40% of reps (S2_070 / S2_010)
 S2.susie.elbo_check	31/40	final/README.md: warm start with sigma^2 fixed at truth then freed; higher ELBO in 16/20 (S2_070) + 15/20 (S2_010)
 S2.smcbvs.fail_search	141	""
 S2.smcbvs.fail_statistical	11253	""
@@ -1116,67 +1149,62 @@ design.datasets	13600	136 settings x 100 data sets
 S2.smcbvs.eflag_n	574	""
 S2.smcbvs.escalated	4974	""
 S2.smcbvs.minESSoverN.median_range	0.701-0.981	""
-S2.paired.asi.bt=1,n=50,p=1000,s=5,ρ=0.exactWTL	34/936/13	McNemar p = 0.0031; n_shared = 983; SMC 78 ASI 57
-S2.paired.asi.bt=1,n=50,p=1000,s=5,ρ=0.35.exactWTL	27/945/17	McNemar p = 0.17; n_shared = 989; SMC 71 ASI 61
-S2.paired.asi.bt=1,n=50,p=1000,s=5,ρ=0.7.exactWTL	24/938/18	McNemar p = 0.44; n_shared = 980; SMC 81 ASI 75
-S2.paired.asi.bt=1,n=100,p=1000,s=10,ρ=0.exactWTL	5/992/3	McNemar p = 0.73; n_shared = 1000; SMC 75 ASI 73
-S2.paired.asi.bt=1,n=100,p=1000,s=10,ρ=0.35.exactWTL	4/994/2	McNemar p = 0.69; n_shared = 1000; SMC 69 ASI 67
-S2.paired.asi.bt=1,n=100,p=1000,s=10,ρ=0.7.exactWTL	18/980/2	McNemar p = 4e-04; n_shared = 1000; SMC 68 ASI 52
-S2.paired.asi.bt=2,n=50,p=1000,s=5,ρ=0.exactWTL	32/930/26	McNemar p = 0.51; n_shared = 988; SMC 74 ASI 68
-S2.paired.asi.bt=2,n=50,p=1000,s=5,ρ=0.35.exactWTL	4/975/7	McNemar p = 0.55; n_shared = 986; SMC 6 ASI 9
-S2.paired.asi.bt=2,n=50,p=1000,s=5,ρ=0.7.exactWTL	0/993/0	McNemar p = NA; n_shared = 993; SMC 0 ASI 0
-S2.paired.asi.bt=2,n=100,p=1000,s=10,ρ=0.exactWTL	11/987/2	McNemar p = 0.022; n_shared = 1000; SMC 81 ASI 72
-S2.paired.asi.bt=2,n=100,p=1000,s=10,ρ=0.35.exactWTL	1/999/0	McNemar p = 1; n_shared = 1000; SMC 2 ASI 1
-S2.paired.asi.bt=2,n=100,p=1000,s=10,ρ=0.7.exactWTL	0/1000/0	McNemar p = NA; n_shared = 1000; SMC 0 ASI 0
-S2.paired.asi.ν=0.05.exactWTL	0/1193/0	McNemar p = NA; n_shared = 1193; SMC 0 ASI 0
-S2.paired.asi.ν=0.09.exactWTL	0/1187/0	McNemar p = NA; n_shared = 1187; SMC 0 ASI 0
-S2.paired.asi.ν=0.14.exactWTL	0/1193/0	McNemar p = NA; n_shared = 1193; SMC 0 ASI 0
-S2.paired.asi.ν=0.25.exactWTL	0/1187/0	McNemar p = NA; n_shared = 1187; SMC 0 ASI 0
-S2.paired.asi.ν=0.42.exactWTL	0/1192/0	McNemar p = NA; n_shared = 1192; SMC 0 ASI 0
-S2.paired.asi.ν=0.71.exactWTL	0/1191/0	McNemar p = NA; n_shared = 1191; SMC 0 ASI 0
-S2.paired.asi.ν=1.22.exactWTL	0/1191/0	McNemar p = NA; n_shared = 1191; SMC 0 ASI 0
-S2.paired.asi.ν=2.07.exactWTL	0/1188/6	McNemar p = 0.031; n_shared = 1194; SMC 2 ASI 8
-S2.paired.asi.ν=3.52.exactWTL	23/1134/37	McNemar p = 0.092; n_shared = 1194; SMC 81 ASI 95
-S2.paired.asi.ν=6.exactWTL	137/1013/47	McNemar p = 2.1e-11; n_shared = 1197; SMC 522 ASI 432
-S2.paired.asi.n=50.exactWTL	121/5717/81	McNemar p = 0.0059; n_shared = 5919; SMC 310 ASI 270
-S2.paired.asi.n=100.exactWTL	39/5952/9	McNemar p = 1.5e-05; n_shared = 6000; SMC 295 ASI 265
-S2.paired.asi.beta-type1.exactWTL	112/5785/55	McNemar p = 1.2e-05; n_shared = 5952; SMC 442 ASI 385
-S2.paired.asi.beta-type2.exactWTL	48/5884/35	McNemar p = 0.19; n_shared = 5967; SMC 163 ASI 150
-S2.paired.asi.allS2.exactWTL	160/11669/90	McNemar p = 1.1e-05; n_shared = 11919; SMC 605 ASI 535
-S2.smcbvs.wall_med_all	4.0 min	12000 fits, 0 without wall time (failed)
-S2.smcbvs.n50.wall_med	5.9 min	""
-S2.smcbvs.n100.wall_med	1.2 min	""
-S2.asi.wall_med_all	30.5 min	12000 fits, 0 without wall time (failed)
-S2.asi.n50.wall_med	30.5 min	""
-S2.asi.n100.wall_med	30.4 min	""
-S2.bas_mc3.wall_med_all	0.1 min	12000 fits, 9 without wall time (failed)
-S2.bas_mc3.n50.wall_med	0.1 min	""
-S2.bas_mc3.n100.wall_med	0.1 min	""
-S2.susie.wall_med_all	0.0 min	12000 fits, 0 without wall time (failed)
-S2.susie.n50.wall_med	0.0 min	""
-S2.susie.n100.wall_med	0.0 min	""
-S2.scad.wall_med_all	0.0 min	12000 fits, 0 without wall time (failed)
-S2.scad.n50.wall_med	0.0 min	""
-S2.scad.n100.wall_med	0.0 min	""
-S2.lasso_cv.wall_med_all	0.0 min	12000 fits, 0 without wall time (failed)
-S2.lasso_cv.n50.wall_med	0.0 min	""
-S2.lasso_cv.n100.wall_med	0.0 min	""
-S2.paired.nu2.07.WL	0/6 of 1194 shared; SMC 2 ASI 8	McNemar p = 0.031
-S2.paired.nu3.52.WL	23/37 of 1194 shared; SMC 81 ASI 95	McNemar p = 0.092
-S2.paired.nu6.WL	137/47 of 1197 shared; SMC 522 ASI 432	McNemar p = 2.1e-11
-S2.smcbvs.billed_total	2737.5	final/runtime_S2_smcbvs_asi.tsv (sacct)
-S2.smcbvs.core_h_total	1351	sum of per-fit wall time, 1 core
-S2.smcbvs.wall_q90_all	14.7 min	""
-S2.smcbvs.wall_max_all	1.87 h	""
-S2.smcbvs.n50.billed_med	0.200	""
-S2.smcbvs.n100.billed_med	0.043	""
-S2.asi.billed_total	12546.0	final/runtime_S2_smcbvs_asi.tsv (sacct)
-S2.asi.core_h_total	6255	sum of per-fit wall time, 1 core
-S2.asi.wall_q90_all	35.1 min	""
-S2.asi.wall_max_all	1.20 h	""
-S2.asi.n50.billed_med	1.021	""
-S2.asi.n100.billed_med	1.016	""
-S2.billed_med_all	SMC 0.136, ASI 1.018	final/runtime_S2_smcbvs_asi.md (not in the tsv)
+S2.diag.bt2.nu6.rho0.35.misses_scoreorder	189/192	misses in which the selected model scores >= S0
+S2.diag.bt2.nu6.rho0.7.misses_scoreorder	200/200	misses in which the selected model scores >= S0
+S2.diag.bt2.nu6.misses_scoreorder	389/392	""
+S2.diag.bt2.nu6.hpm_eq_mpm	289/392	estimated HPM equals reported MPM, among misses
+S2.diag.bt2.nu6.misses_with_member_pip_0.2-0.8	286/392	fits with at least one block member at PIP in (0.2, 0.8)
+S2.diag.bt2.nu6.median_members_pip_0.2-0.8	2	""
+S2.diag.bt2.nu6.misses_member_within0.1_of_half	137/392	""
+S2.design.s05.rho0.signal	bSb spread 5.0 block 5.0; cond var spread 1.00 block 1.00; per-member signal ratio 1.00	noise var = bSb/nu; signal ratio = (cv2/bSb2)/(cv1/bSb1)
+S2.design.s05.rho0.35.signal	bSb spread 5.0 block 8.7; cond var spread 1.00 block 0.82; per-member signal ratio 0.47	noise var = bSb/nu; signal ratio = (cv2/bSb2)/(cv1/bSb1)
+S2.design.s05.rho0.7.signal	bSb spread 5.0 block 15.4; cond var spread 1.00 block 0.41; per-member signal ratio 0.13	noise var = bSb/nu; signal ratio = (cv2/bSb2)/(cv1/bSb1)
+S2.design.s010.rho0.signal	bSb spread 10.0 block 10.0; cond var spread 1.00 block 1.00; per-member signal ratio 1.00	noise var = bSb/nu; signal ratio = (cv2/bSb2)/(cv1/bSb1)
+S2.design.s010.rho0.35.signal	bSb spread 10.0 block 19.1; cond var spread 1.00 block 0.80; per-member signal ratio 0.42	noise var = bSb/nu; signal ratio = (cv2/bSb2)/(cv1/bSb1)
+S2.design.s010.rho0.7.signal	bSb spread 10.0 block 41.6; cond var spread 1.00 block 0.38; per-member signal ratio 0.09	noise var = bSb/nu; signal ratio = (cv2/bSb2)/(cv1/bSb1)
+S2.paired.all12000.WL	160/90 of 12000	McNemar p = 1.1e-05
+S2.paired.shared.WL	160/90 of 11919	complete cases, six methods; McNemar p = 1.1e-05
+S2.shared.n	11919	data sets on which all six methods finished
+S2.paired.all.nu0.05.WL	0/0 of 1200; SMC 0 ASI 0	McNemar p = NA
+S2.paired.all.nu0.09.WL	0/0 of 1200; SMC 0 ASI 0	McNemar p = NA
+S2.paired.all.nu0.14.WL	0/0 of 1200; SMC 0 ASI 0	McNemar p = NA
+S2.paired.all.nu0.25.WL	0/0 of 1200; SMC 0 ASI 0	McNemar p = NA
+S2.paired.all.nu0.42.WL	0/0 of 1200; SMC 0 ASI 0	McNemar p = NA
+S2.paired.all.nu0.71.WL	0/0 of 1200; SMC 0 ASI 0	McNemar p = NA
+S2.paired.all.nu1.22.WL	0/0 of 1200; SMC 0 ASI 0	McNemar p = NA
+S2.paired.all.nu2.07.WL	0/6 of 1200; SMC 2 ASI 8	McNemar p = 0.031
+S2.paired.all.nu3.52.WL	23/37 of 1200; SMC 81 ASI 95	McNemar p = 0.092
+S2.paired.all.nu6.WL	137/47 of 1200; SMC 523 ASI 433	McNemar p = 2.1e-11
+S2.paired.all.by_bt_n_rho.sig	3 of 12 (SMC ahead 3, ASI ahead 0)	pooled over nu; McNemar p < 0.05
+S2.smcbvs.nu6.exact_share_of_all	523 of 606	""
+S2.paired.all.nu_lt6.WL	23/43 of 10800; SMC 83 ASI 103	McNemar p = 0.019
+S2.paired.shared.asi.bt=1,n=50,p=1000,s=5,ρ=0.exactWTL	34/936/13	McNemar p = 0.0031; n_shared = 983; SMC 78 ASI 57
+S2.paired.shared.asi.bt=1,n=50,p=1000,s=5,ρ=0.35.exactWTL	27/945/17	McNemar p = 0.17; n_shared = 989; SMC 71 ASI 61
+S2.paired.shared.asi.bt=1,n=50,p=1000,s=5,ρ=0.7.exactWTL	24/938/18	McNemar p = 0.44; n_shared = 980; SMC 81 ASI 75
+S2.paired.shared.asi.bt=1,n=100,p=1000,s=10,ρ=0.exactWTL	5/992/3	McNemar p = 0.73; n_shared = 1000; SMC 75 ASI 73
+S2.paired.shared.asi.bt=1,n=100,p=1000,s=10,ρ=0.35.exactWTL	4/994/2	McNemar p = 0.69; n_shared = 1000; SMC 69 ASI 67
+S2.paired.shared.asi.bt=1,n=100,p=1000,s=10,ρ=0.7.exactWTL	18/980/2	McNemar p = 4e-04; n_shared = 1000; SMC 68 ASI 52
+S2.paired.shared.asi.bt=2,n=50,p=1000,s=5,ρ=0.exactWTL	32/930/26	McNemar p = 0.51; n_shared = 988; SMC 74 ASI 68
+S2.paired.shared.asi.bt=2,n=50,p=1000,s=5,ρ=0.35.exactWTL	4/975/7	McNemar p = 0.55; n_shared = 986; SMC 6 ASI 9
+S2.paired.shared.asi.bt=2,n=50,p=1000,s=5,ρ=0.7.exactWTL	0/993/0	McNemar p = NA; n_shared = 993; SMC 0 ASI 0
+S2.paired.shared.asi.bt=2,n=100,p=1000,s=10,ρ=0.exactWTL	11/987/2	McNemar p = 0.022; n_shared = 1000; SMC 81 ASI 72
+S2.paired.shared.asi.bt=2,n=100,p=1000,s=10,ρ=0.35.exactWTL	1/999/0	McNemar p = 1; n_shared = 1000; SMC 2 ASI 1
+S2.paired.shared.asi.bt=2,n=100,p=1000,s=10,ρ=0.7.exactWTL	0/1000/0	McNemar p = NA; n_shared = 1000; SMC 0 ASI 0
+S2.paired.shared.asi.ν=0.05.exactWTL	0/1193/0	McNemar p = NA; n_shared = 1193; SMC 0 ASI 0
+S2.paired.shared.asi.ν=0.09.exactWTL	0/1187/0	McNemar p = NA; n_shared = 1187; SMC 0 ASI 0
+S2.paired.shared.asi.ν=0.14.exactWTL	0/1193/0	McNemar p = NA; n_shared = 1193; SMC 0 ASI 0
+S2.paired.shared.asi.ν=0.25.exactWTL	0/1187/0	McNemar p = NA; n_shared = 1187; SMC 0 ASI 0
+S2.paired.shared.asi.ν=0.42.exactWTL	0/1192/0	McNemar p = NA; n_shared = 1192; SMC 0 ASI 0
+S2.paired.shared.asi.ν=0.71.exactWTL	0/1191/0	McNemar p = NA; n_shared = 1191; SMC 0 ASI 0
+S2.paired.shared.asi.ν=1.22.exactWTL	0/1191/0	McNemar p = NA; n_shared = 1191; SMC 0 ASI 0
+S2.paired.shared.asi.ν=2.07.exactWTL	0/1188/6	McNemar p = 0.031; n_shared = 1194; SMC 2 ASI 8
+S2.paired.shared.asi.ν=3.52.exactWTL	23/1134/37	McNemar p = 0.092; n_shared = 1194; SMC 81 ASI 95
+S2.paired.shared.asi.ν=6.exactWTL	137/1013/47	McNemar p = 2.1e-11; n_shared = 1197; SMC 522 ASI 432
+S2.paired.shared.asi.n=50.exactWTL	121/5717/81	McNemar p = 0.0059; n_shared = 5919; SMC 310 ASI 270
+S2.paired.shared.asi.n=100.exactWTL	39/5952/9	McNemar p = 1.5e-05; n_shared = 6000; SMC 295 ASI 265
+S2.paired.shared.asi.beta-type1.exactWTL	112/5785/55	McNemar p = 1.2e-05; n_shared = 5952; SMC 442 ASI 385
+S2.paired.shared.asi.beta-type2.exactWTL	48/5884/35	McNemar p = 0.19; n_shared = 5967; SMC 163 ASI 150
+S2.paired.shared.asi.allS2.exactWTL	160/11669/90	McNemar p = 1.1e-05; n_shared = 11919; SMC 605 ASI 535
 S2.smcbvs.nu2.07.bt1.prec_conv	k=220 (i)=0.869 (ii)=0.952 (iii)=0.319 (iv)=0.858	""
 S2.asi.nu2.07.bt1.prec_conv	k=412 (i)=0.821 (ii)=0.877 (iii)=0.564 (iv)=0.787	""
 S2.bas_mc3.nu2.07.bt1.prec_conv	k=390 (i)=0.675 (ii)=0.789 (iii)=0.439 (iv)=0.544	""
@@ -1213,11 +1241,157 @@ S2.bas_mc3.nu6.bt2.prec_conv	k=580 (i)=0.938 (ii)=0.940 (iii)=0.907 (iv)=0.906	"
 S2.susie.nu6.bt2.prec_conv	k=500 (i)=0.981 (ii)=0.984 (iii)=0.817 (iv)=0.984	""
 S2.scad.nu6.bt2.prec_conv	k=595 (i)=0.345 (ii)=0.351 (iii)=0.342 (iv)=0.269	""
 S2.lasso_cv.nu6.bt2.prec_conv	k=579 (i)=0.616 (ii)=0.629 (iii)=0.594 (iv)=0.483	""
+S2.prec_rank.c1.smc_above_asi	6 of 6 cells	""
+S2.prec_rank.c2.smc_above_asi	6 of 6 cells	""
+S2.prec_rank.c3.smc_above_asi	2 of 6 cells	nu=2.07 bt1, nu=2.07 bt2, nu=3.52 bt1, nu=3.52 bt2
+S2.prec_rank.c4.smc_above_asi	6 of 6 cells	""
 S2.precdiff.smc_minus_asi.range	+0.047 to +0.084	6 cells nu x bt; max SE 0.013; pairs per cell 220-575
 S2.precdiff.smc_minus_bas_mc3.range	+0.041 to +0.160	6 cells nu x bt; max SE 0.022; pairs per cell 208-569
 S2.precdiff.smc_minus_susie.range	-0.017 to +0.050	6 cells nu x bt; max SE 0.012; pairs per cell 192-499
-S2.precdiff.smc_minus_lasso_cv.range	+0.251 to +0.602	6 cells nu x bt; max SE 0.025; pairs per cell 204-561
 S2.precdiff.smc_minus_scad.range	+0.596 to +0.694	6 cells nu x bt; max SE 0.021; pairs per cell 220-574
+S2.precdiff.smc_minus_lasso_cv.range	+0.251 to +0.602	6 cells nu x bt; max SE 0.025; pairs per cell 204-561
+S2.precdiff.asi.nu2.07.bt1	m=220 diff=+0.047; ASI prec where SMC-BVS empty: 0.821 (192 fits)	""
+S2.precdiff.asi.nu2.07.bt2	m=444 diff=+0.058; ASI prec where SMC-BVS empty: 0.826 (86 fits)	""
+S2.precdiff.asi.nu3.52.bt1	m=384 diff=+0.084; ASI prec where SMC-BVS empty: 0.812 (138 fits)	""
+S2.precdiff.asi.nu3.52.bt2	m=514 diff=+0.054; ASI prec where SMC-BVS empty: 0.808 (57 fits)	""
+S2.precdiff.asi.nu6.bt1	m=539 diff=+0.064; ASI prec where SMC-BVS empty: 0.769 (33 fits)	""
+S2.precdiff.asi.nu6.bt2	m=575 diff=+0.058; ASI prec where SMC-BVS empty: 0.722 (20 fits)	""
 S2.smcbvs.k_nonempty_by_nu	0.05:26 0.09:30 0.14:37 0.25:75 0.42:175 0.71:296 1.22:441 2.07:665 3.52:898 6:1115	of 1200 per nu
-S2.tab3.maxSE.prec_cond	0.021	sd/sqrt(k) over the k non-empty fits of a cell
-S2.tab3.k_range	220-595	non-empty fits per cell of Table 4
+S2.cpu.saccts2b	Intel Xeon Gold 6230: 12000	""
+S2.cpu.sacctasis2b	Intel Xeon Gold 6230: 12000	""
+S1.smcbvs.wall_med_all_min	4.02 min	""
+S2.smcbvs.wall_med_all_min	3.98 min	""
+S1.asi.wall_med_all_min	71.25 min	""
+S2.asi.wall_med_all_min	30.46 min	""
+S1.bas_mc3.wall_med_all_min	0.15 min	""
+S2.bas_mc3.wall_med_all_min	0.10 min	""
+S1.susie.wall_med_all_min	0.06 min	""
+S2.susie.wall_med_all_min	0.01 min	""
+S1.scad.wall_med_all_min	0.51 min	""
+S2.scad.wall_med_all_min	0.01 min	""
+S1.lasso_cv.wall_med_all_min	0.04 min	""
+S2.lasso_cv.wall_med_all_min	0.00 min	""
+S1.smcbvs.n500.p500.snr0.5.wall_med	0.2 min	""
+S1.asi.n500.p500.snr0.5.wall_med	18.1 min	""
+S1.smcbvs.n500.p500.snr1.wall_med	0.7 min	""
+S1.asi.n500.p500.snr1.wall_med	18.4 min	""
+S1.smcbvs.n500.p500.snr2.wall_med	2.7 min	""
+S1.asi.n500.p500.snr2.wall_med	19.4 min	""
+S1.smcbvs.n500.p500.snr3.wall_med	2.4 min	""
+S1.asi.n500.p500.snr3.wall_med	19.4 min	""
+S1.smcbvs.n1000.p500.snr0.5.wall_med	0.2 min	""
+S1.asi.n1000.p500.snr0.5.wall_med	20.5 min	""
+S1.smcbvs.n1000.p500.snr1.wall_med	0.8 min	""
+S1.asi.n1000.p500.snr1.wall_med	20.6 min	""
+S1.smcbvs.n1000.p500.snr2.wall_med	1.8 min	""
+S1.asi.n1000.p500.snr2.wall_med	20.7 min	""
+S1.smcbvs.n1000.p500.snr3.wall_med	1.8 min	""
+S1.asi.n1000.p500.snr3.wall_med	20.4 min	""
+S1.smcbvs.n500.p5000.snr0.5.wall_med	6.7 min	""
+S1.asi.n500.p5000.snr0.5.wall_med	2.50 h	""
+S1.smcbvs.n500.p5000.snr1.wall_med	1.59 h	""
+S1.asi.n500.p5000.snr1.wall_med	2.55 h	""
+S1.smcbvs.n500.p5000.snr2.wall_med	3.04 h	""
+S1.asi.n500.p5000.snr2.wall_med	2.59 h	""
+S1.smcbvs.n500.p5000.snr3.wall_med	2.73 h	""
+S1.asi.n500.p5000.snr3.wall_med	2.56 h	""
+S1.smcbvs.n1000.p5000.snr0.5.wall_med	4.9 min	""
+S1.asi.n1000.p5000.snr0.5.wall_med	2.64 h	""
+S1.smcbvs.n1000.p5000.snr1.wall_med	1.16 h	""
+S1.asi.n1000.p5000.snr1.wall_med	2.71 h	""
+S1.smcbvs.n1000.p5000.snr2.wall_med	2.42 h	""
+S1.asi.n1000.p5000.snr2.wall_med	2.78 h	""
+S1.smcbvs.n1000.p5000.snr3.wall_med	2.28 h	""
+S1.asi.n1000.p5000.snr3.wall_med	2.73 h	""
+S1.n500.p500.snrle1.wall_med_smc_asi	SMC 0.3 min ASI 18.3 min	""
+S1.n500.p500.snrge2.wall_med_smc_asi	SMC 2.5 min ASI 19.4 min	""
+S1.n1000.p500.snrle1.wall_med_smc_asi	SMC 0.3 min ASI 20.5 min	""
+S1.n1000.p500.snrge2.wall_med_smc_asi	SMC 1.8 min ASI 20.6 min	""
+S1.n500.p5000.snrle1.wall_med_smc_asi	SMC 12.1 min ASI 2.52 h	""
+S1.n500.p5000.snrge2.wall_med_smc_asi	SMC 2.88 h ASI 2.58 h	""
+S1.n1000.p5000.snrle1.wall_med_smc_asi	SMC 10.3 min ASI 2.68 h	""
+S1.n1000.p5000.snrge2.wall_med_smc_asi	SMC 2.37 h ASI 2.77 h	""
+S1.smcbvs.overhead	median 0.0 s (0% of median wall)	wall_sec_harness - runtime_sec
+S1.asi.overhead	median 85.1 s (2% of median wall)	wall_sec_harness - runtime_sec
+S1.bas_mc3.overhead	median 0.2 s (2% of median wall)	wall_sec_harness - runtime_sec
+S1.susie.overhead	median 0.3 s (6% of median wall)	wall_sec_harness - runtime_sec
+S1.scad.overhead	median 0.0 s (0% of median wall)	wall_sec_harness - runtime_sec
+S1.lasso_cv.overhead	median 0.0 s (1% of median wall)	wall_sec_harness - runtime_sec
+S2.smcbvs.overhead	median 0.0 s (0% of median wall)	wall_sec_harness - runtime_sec
+S2.asi.overhead	median 35.8 s (2% of median wall)	wall_sec_harness - runtime_sec
+S2.bas_mc3.overhead	median 0.0 s (1% of median wall)	wall_sec_harness - runtime_sec
+S2.susie.overhead	median 0.0 s (3% of median wall)	wall_sec_harness - runtime_sec
+S2.scad.overhead	median 0.0 s (0% of median wall)	wall_sec_harness - runtime_sec
+S2.lasso_cv.overhead	median 0.0 s (2% of median wall)	wall_sec_harness - runtime_sec
+S1.smcbvs.p500.sub_q	median 1.2 min, q90 3.0 min, q99 4.8 min, max 13.1 min	per submitted data set
+S1.smcbvs.p500.fit_q	median 1.2 min, q90 3.0 min, q99 4.8 min, max 13.1 min	per completed fit
+S1.asi.p500.sub_q	median 20.0 min, q90 23.8 min, q99 26.3 min, max 29.1 min	per submitted data set
+S1.asi.p500.fit_q	median 20.0 min, q90 23.8 min, q99 26.3 min, max 29.1 min	per completed fit
+S1.smcbvs.p5000.sub_q	median 1.83 h, q90 5.53 h, q99 32.05 h, max 42.01 h	per submitted data set
+S1.smcbvs.p5000.fit_q	median 1.83 h, q90 5.53 h, q99 12.40 h, max 18.01 h	per completed fit
+S1.asi.p5000.sub_q	median 2.61 h, q90 2.80 h, q99 2.96 h, max 3.12 h	per submitted data set
+S1.asi.p5000.fit_q	median 2.61 h, q90 2.80 h, q99 2.96 h, max 3.12 h	per completed fit
+S2.smcbvs.sub_q	median 4.0 min, q90 14.7 min, q99 59.2 min, max 1.87 h	""
+S2.asi.sub_q	median 30.5 min, q90 35.1 min, q99 49.4 min, max 1.20 h	""
+S1.smcbvs.core_h_total_sub	2171	incl. the ten 24 h first attempts for SMC-BVS
+S2.smcbvs.core_h_total	1351	""
+S1.asi.core_h_total_sub	2349	incl. the ten 24 h first attempts for SMC-BVS
+S2.asi.core_h_total	6255	""
+S2.smcbvs.wall_med_all	4.0 min	""
+S2.asi.wall_med_all	30.5 min	""
+S2.bas_mc3.wall_med_all	0.1 min	""
+S2.susie.wall_med_all	0.0 min	""
+S2.scad.wall_med_all	0.0 min	""
+S2.lasso_cv.wall_med_all	0.0 min	""
+S2.smcbvs.n50.wall_med	5.9 min	""
+S2.smcbvs.n100.wall_med	1.2 min	""
+S2.asi.n50.wall_med	30.5 min	""
+S2.asi.n100.wall_med	30.4 min	""
+S2.bas_mc3.n50.wall_med	0.1 min	""
+S2.bas_mc3.n100.wall_med	0.1 min	""
+S2.susie.n50.wall_med	0.0 min	""
+S2.susie.n100.wall_med	0.0 min	""
+S2.scad.n50.wall_med	0.0 min	""
+S2.scad.n100.wall_med	0.0 min	""
+S2.lasso_cv.n50.wall_med	0.0 min	""
+S2.lasso_cv.n100.wall_med	0.0 min	""
+S2.nu0.05.wall_med_smc_asi	SMC 0.8 min ASI 30.2 min	""
+S2.nu0.09.wall_med_smc_asi	SMC 1.0 min ASI 30.2 min	""
+S2.nu0.14.wall_med_smc_asi	SMC 1.0 min ASI 30.0 min	""
+S2.nu0.25.wall_med_smc_asi	SMC 1.2 min ASI 30.1 min	""
+S2.nu0.42.wall_med_smc_asi	SMC 1.5 min ASI 30.2 min	""
+S2.nu0.71.wall_med_smc_asi	SMC 3.5 min ASI 30.3 min	""
+S2.nu1.22.wall_med_smc_asi	SMC 4.7 min ASI 30.7 min	""
+S2.nu2.07.wall_med_smc_asi	SMC 6.3 min ASI 30.8 min	""
+S2.nu3.52.wall_med_smc_asi	SMC 9.4 min ASI 30.9 min	""
+S2.nu6.wall_med_smc_asi	SMC 15.1 min ASI 31.5 min	""
+S2.smcbvs.n50.nule1.22.mech	stages 12, escalated 63%, wall 4.7 min	""
+S2.smcbvs.n50.nuge2.07.mech	stages 36, escalated 62%, wall 9.9 min	""
+S2.smcbvs.n100.nule1.22.mech	stages 4, escalated 13%, wall 0.5 min	""
+S2.smcbvs.n100.nuge2.07.mech	stages 56, escalated 37%, wall 9.0 min	""
+S2.smcbvs.n50.escalated	3749/6000	""
+S2.smcbvs.n100.escalated	1225/6000	""
+S2.smcbvs.minESSoverN.below090	7016/12000	""
+S2.smcbvs.minESSoverN.below050	500/12000	""
+S1.smcbvs.minESSoverN.below050	6/1600	""
+esc.S1p=500.escalated	28 fits; exact 32.1% vs expected 30.3%; FP 0.00 FN 6.07; standardised over 28 fits	""
+esc.S1p=500.not_escalated	772 fits; exact 47.8% vs expected 50.6%; FP 0.03 FN 4.33; standardised over 772 fits	""
+esc.S1p=500.warning	1 fits; exact 0.0% vs expected 0.0%; FP 0.00 FN 9.00; standardised over 1 fits	""
+esc.S1p=5000.escalated	212 fits; exact 45.8% vs expected 44.8%; FP 0.02 FN 4.09; standardised over 212 fits	""
+esc.S1p=5000.not_escalated	588 fits; exact 48.3% vs expected 49.4%; FP 0.03 FN 4.45; standardised over 588 fits	""
+esc.S1p=5000.warning	6 fits; exact 66.7% vs expected 63.5%; FP 0.00 FN 2.17; standardised over 6 fits	""
+esc.S2n=50.escalated	3749 fits; exact 4.2% vs expected 6.5%; FP 0.05 FN 4.49; standardised over 3749 fits	""
+esc.S2n=50.not_escalated	2251 fits; exact 6.9% vs expected 4.4%; FP 0.04 FN 4.16; standardised over 2251 fits	""
+esc.S2n=50.warning	322 fits; exact 12.7% vs expected 11.3%; FP 0.03 FN 4.10; standardised over 322 fits	""
+esc.S2n=100.escalated	1225 fits; exact 14.9% vs expected 13.8%; FP 0.10 FN 7.54; standardised over 1225 fits	""
+esc.S2n=100.not_escalated	4775 fits; exact 2.4% vs expected 2.6%; FP 0.04 FN 9.00; standardised over 4675 fits	""
+esc.S2n=100.warning	252 fits; exact 43.7% vs expected 39.0%; FP 0.17 FN 3.80; standardised over 252 fits	""
+esc.trigger_recorded	719 of 5214 escalated fits record a trigger: grid_unconverged 533, E2 178, E1 8	""
+S2.smcbvs.eflag_types	E1: 2; E2: 72; E2;low_empirical_ESS: 98; low_empirical_ESS: 402	""
+version.smcbvs	SMC-BVS R core v3.1.1	R version 4.5.2
+version.asi	ASI_sampler.m Version3.0 (Griffin, Latuszynski & Steel) under GNU Octave Version3.0	R version 4.5.2
+version.bas_mc3	BAS 2.1.0	R version 4.5.2
+version.susie	susieR 0.14.2	R version 4.5.2
+version.scad	ncvreg 3.16.0	R version 4.5.2
+version.lasso_cv	glmnet 5.2	R version 4.5.2
+S1.smcbvs.k_nonempty_by_snr	0.5:67 1:398 2:400 3:400	of 400

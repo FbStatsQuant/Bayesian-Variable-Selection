@@ -1,331 +1,375 @@
-% 03_theory.tex -- Section 3: theoretical properties of the SMC-BVS posterior.
-% Owner: Writing Department, Task Lead 3.  Draft of 2026-11-27.
-% Source: Theory TH-SONG-ASSUMPTIONS package v1.3 (origin/dept/theory @ 99b11e4f,
-%   Theory_work/Dept/song_assumptions/THEOREM_DEFINITIONS.md and ASSUMPTIONS_AND_PROOF_PATHS.md),
-%   with the Stage-1 senior generality recommendations (council/SENIOR_FABLE.md, SENIOR_ASTRA.md):
-%   population-only selection margin, no proof constants in the assumptions, primitive form of the
-%   omitted-signal assumption.  Statements will be refined when Theory's final pass lands.
-% Map to Theory labels:  A1 A-GL, A2 A-SPARSE, A3 A-DIM, A4 A-SUBG, A5 A-NEC, A6 A-BS,
-%   A7 A-MARGIN-U (senior population form), A8 A-MOM, A9 A-MIS(iii) primitive form.
-%   Theorems: TD (thm:dist) -> thm:th-dist; TS-b -> thm:th-select; TM-a0 / TM-a,TM-b -> thm:th-mis (a)/(b).
-% Owner scope (HQ 2026-11-27/28): Song-Liang counterparts only -- true distribution, true model,
-%   misspecification.  Pruned: sure screening (TS-a, A-MARGIN-H), the deletion converse, the beta-min
-%   proposition (kept as a sentence of justification), the almost-sure corollary TD-as.
+% 03_theory.tex -- Section 3: theoretical properties of the posterior.
+% Owner: Writing Department, Task Lead 3.
+% Uses the environment `conjecture' (preamble.tex, shared theorem counter).
 
 \section{Theoretical properties}\label{sec:theory}
 
-This section gives the large-sample properties of the posterior of Section~\ref{sec:model}. There are three. The
-posterior recovers the true density of the data at a nearly parametric rate (Theorem~\ref{thm:th-dist}); it puts
-almost all its mass on the true model, so that both the highest posterior model and the median probability model
-select it (Theorem~\ref{thm:th-select}); and when some true predictors are not measured, it targets the best linear
-approximation built from the predictors that are (Theorem~\ref{thm:th-mis}). Each result has a counterpart in
-\citet{SongLiang2015}, listed in Table~\ref{tab:sl-map}. The results concern the exact posterior, which the sampler of
-Section~\ref{sec:model} approximates; they allow $p$ to exceed $n$ by any fixed power.
+Section~\ref{sec:sims} compares methods at fixed sample sizes; here we study the posterior of
+Section~\ref{sec:model} as $n$ grows. We prove three results. The posterior recovers the true density of the data at a
+nearly parametric rate (Theorem~\ref{thm:th-dist}). It selects the true model when the true effects are of fixed
+size and no small set of predictors is nearly collinear (Theorem~\ref{thm:th-select-fixed}). When some true predictors
+are not measured and the predictors are Gaussian, it selects the support of the best linear predictor built from those
+that are (Theorem~\ref{thm:th-omitted}). We conjecture that selection holds under a weaker signal condition
+(Conjecture~\ref{conj:th-select}) and that the misspecification result extends to any response law in fixed dimension and to the weaker signal condition
+in high dimension (Conjecture~\ref{conj:th-mis}). Table~\ref{tab:sl-map} lists the counterparts in \citet{SongLiang2015}. All statements
+concern the exact posterior, which the sampler of Section~\ref{sec:model-sampler} approximates, and $p$ may grow like
+any fixed power of $n$.
 
 \subsection{Setting and notation}\label{sec:theory-setting}
 
-The observations $(x_i,y_i)$, $i=1,\dots,n$, are independent copies of a pair $(x,y)$ with $x\in\R^p$. The
-number of predictors $p=p_n$ may grow with $n$, and so may the law of $(x,y)$. A constant is \emph{fixed} if it does
-not depend on $n$. The true model is
+Throughout this section $(x,\yr)$ is a generic observation in the original units: $x\in\R^p$ is a row of $\Xr$,
+written as a column vector, with coordinates $x_j$, and $\yr$ is the matching response. The observations
+$(x_i,\yr_i)$, $i=1,\dots,n$, are independent copies of $(x,\yr)$. The number of predictors $p=p_n$ may grow with $n$,
+and so may the law of $(x,\yr)$. A constant is \emph{fixed} if it does not depend on $n$. The true model is
 \begin{equation}\label{eq:th-truth}
-  y=\alpha^*+x^\top\bstar+\varepsilon,\qquad \varepsilon\sim\Normal(0,\sigs^2),
+  \yr=\alpha^*+x^\top\bstar+\varepsilon,\qquad \varepsilon\sim\Normal(0,\sigs^2),
 \end{equation}
-with $\Sz=\supp\bstar$ and $\sz=\abs{\Sz}$. We write $\nu$ for the law of $x$, $\Sig$ for its covariance matrix, and
-$\zeta_j=(x_j-\E x_j)/\sd(x_j)$ for the standardised predictors. The true joint density of $(x,y)$, with respect to
-$\nu(dx)\,dy$, is $f^*(x,y)=\phi(y;\alpha^*+x^\top\bstar,\sigs)$, where $\phi(\cdot\,;\mu,\sigma)$ is the
-$\Normal(\mu,\sigma^2)$ density.
+with $\Sz=\supp\bstar$ and $\sz=\abs{\Sz}$. We write $P_x$ for the law of $x$, $\Sig$ for its covariance matrix,
+$\zeta_j=(x_j-\E x_j)/\sd(x_j)$ for the standardised predictors, $\P^*$ for the law of the data and $\E^*$ for its
+expectation. The true joint density of $(x,\yr)$, with respect to $P_x(dx)\,dy$, is
+$f^*(x,y)=\phi(y;\alpha^*+x^\top\bstar,\sigs)$, where $\phi(\cdot\,;\mu,\sigma)$ is the $\Normal(\mu,\sigma^2)$ density.
 
-A posterior draw $(S,\beta,\sigma^2)$, mapped back to the original units, defines the conditional law
-$\Normal(\bar y+(x-\bar x)^\top\beta,\sigma^2)$ of $y$ given $x$. Let $f$ be the joint density of $(x,y)$ when $x\sim\nu$
-and $y$ given $x$ has this law. Let $\Pi(\cdot\mid\Dn)$ be the posterior of $(S,\beta,\sigma^2)$, and
-$\P^*$ the law of the data. As in \citet{SongLiang2015}, we measure distance by the Hellinger distance,
+Let $\Pi(\cdot\mid\Dn)$ be the posterior of $(S,\beta,\sigma^2)$, with $\beta$ and $\sigma^2$ mapped back to the
+original units as in Section~\ref{sec:model-data}; for a model, $\Pi(S\mid\Dn)$ is the probability $\pis{S}$ of
+Section~\ref{sec:model-prior}. A draw defines the conditional law $\Normal(\bar y+(x-\bar x)^\top\beta,\sigma^2)$ of the
+response given $x$, where $\bar y$ and $\bar x$ are the sample means used to centre the data. The method has no
+intercept parameter, so this law depends on the data through these plug-ins as well as through the draw. Let $f$ be the
+joint density of $(x,\yr)$ when $x\sim P_x$ and the response given $x$ has this law. We measure distance by the
+Hellinger distance
 \[
-  d_H(f,f^*)=\Big(1-\int\!\!\int\sqrt{f(x,y)\,f^*(x,y)}\;\nu(dx)\,dy\Big)^{1/2},
+  d_H(f,f^*)=\Big(1-\int\!\!\int\sqrt{f(x,y)\,f^*(x,y)}\;P_x(dx)\,dy\Big)^{1/2},
 \]
-which is their distance divided by $\sqrt2$.
-
-Two quantities drive the selection results. The first is the \emph{residual signal} of a model $S$,
-\begin{equation}\label{eq:th-Delta}
-  \Delta_n(S)=n\,\inf_{a\in\R,\,b\in\R^{\abs S}}\E\big(x^\top\bstar-a-x_S^\top b\big)^2 ,
-\end{equation}
-which is $n$ times the error of the best linear prediction of the true mean from the predictors in $S$. It is zero when
-$S\supseteq\Sz$. The second is the \emph{price} that the prior and the marginal likelihood charge the true model for
-$d$ predictors that a smaller model leaves out,
-\begin{equation}\label{eq:th-price}
-  \mathrm{pen}_n(d)=\log\frac{\pi(\Sz\setminus D)}{\pi(\Sz)}+\frac d2\log(n+1)
-  =\log\frac{\binom{2p-1}{\sz}}{\binom{2p-1}{\sz-d}}+\frac d2\log(n+1),\qquad \abs D=d.
-\end{equation}
-The first term is the prior odds, the second the Occam factor of the $g$-prior with $g=n$. Near the true model each
-left-out predictor costs about $\log(2p/\sz)+\tfrac12\log n$, so $\mathrm{pen}_n(d)$ grows like $d\log p$.
+which is the distance of \citet{SongLiang2015} divided by $\sqrt2$.
 
 \subsection{Consistency of the fitted density}\label{sec:theory-density}
 
-We first state the conditions on the data.
-
 \begin{assumption}[Gaussian linear model]\label{a:th-gl}
-The pairs $(x_i,y_i)$ are independent copies of $(x,y)$, and $y$ follows~\eqref{eq:th-truth} with $\varepsilon$
-independent of $x$ and $\sigs^2>0$. The quantities $\alpha^*$, $\bstar$, $\sigs$ and $\nu$ may depend on $n$.
+The pairs $(x_i,\yr_i)$ are independent copies of $(x,\yr)$, and $\yr$ follows~\eqref{eq:th-truth} with
+$\varepsilon$ independent of $x$ and $\sigs^2>0$. The quantities $\alpha^*$, $\bstar$, $\sigs$ and $P_x$ may depend
+on $n$.
 \end{assumption}
 
-Assumption~\ref{a:th-gl} is model~(1) of \citet{SongLiang2015} with an intercept and a random design. It makes the
-marginal likelihood of every model exact, so that the posterior can be studied model by model. It is the standard
-working model for a continuous response; it fails for counts and for errors whose variance changes with~$x$.
-Section~\ref{sec:theory-mis} removes it in two ways.
+Assumption~\ref{a:th-gl} is the Gaussian linear model with an intercept and a random design. Under it the working
+model of Section~\ref{sec:model-data} is correctly specified, apart from the centring and scaling by sample moments.
+It is the standard model for a continuous response; it fails for counts and for errors whose variance changes
+with~$x$. Section~\ref{sec:theory-mis} relaxes it.
 
 \begin{assumption}[Sparsity]\label{a:th-sparse}
 $\sz\le s$ for a fixed integer $s\ge0$.
 \end{assumption}
 
-Assumption~\ref{a:th-sparse} is the strict sparsity condition~(4) of \citet{SongLiang2015}; \citet{NarisettyHe2014}
-also fix the size of the true model. It says that a few predictors matter however large $p$ becomes. It is what makes
-the number of competing models of the relevant size polynomial in $p$, and so controllable.
+Assumption~\ref{a:th-sparse} says that a few predictors matter however large $p$ becomes, as in
+\citet{NarisettyHe2014}. It makes the number of competing models of the relevant size polynomial in $p$.
 
 \begin{assumption}[Dimension]\label{a:th-dim}
 $2\le p\le n^A$ for a fixed $A\ge1$.
 \end{assumption}
 
-Assumption~\ref{a:th-dim} lets $p$ exceed $n$ by any fixed power. \citet{JohnsonRossell2012} prove selection
-consistency for $p\le n$, and \citet{ShinBhattacharyaJohnson2018} note that their results continue to hold when $p$
-grows polynomially. \citet{SongLiang2015} allow
-faster growth, $p<\exp(Cn^\alpha)$ with $\alpha<1$, at the cost of a slower rate. Under Assumption~\ref{a:th-dim},
-$\log p$ and $\log n$ are of the same order, so a single rate $\rn$ describes the posterior. Whether our results hold for
-$\log p=o(\sqrt n)$ is open.
+Assumption~\ref{a:th-dim} lets $p$ grow like any fixed power of $n$. \citet{JohnsonRossell2012} prove selection
+consistency for $p\le n$; \citet{SongLiang2015} and \citet{ShinBhattacharyaJohnson2018} allow $\log p$ of order
+$n^\alpha$ with $\alpha<1$, which leads to slower rates. Under Assumption~\ref{a:th-dim}, $\log p=O(\log n)$, so a
+single rate of order $\rn$ covers both the multiplicity cost of the prior and the Occam factor.
 
-In the next two assumptions, a \emph{sparse set} is a set of at most $\min(p,k_n)$ predictors, for a fixed sequence
-$k_n$ with $k_n/\log n\to\infty$.
+In the next two assumptions, a \emph{sparse set} is a set of at most $c\log n$ predictors. Both are required, for
+every fixed $c>0$, for all sufficiently large $n$, with constants $L$ and $c_\psi$ that do not depend on $c$.
 
 \begin{assumption}[Sub-Gaussian predictors]\label{a:th-subg}
 Every predictor has positive variance, and for a fixed $L\ge1$,
-$\E\exp(\lambda u^\top\zeta)\le\exp\{L^2\lambda^2\Var(u^\top\zeta)/2\}$ for every $\lambda\in\R$ and every $u\in\R^p$
-supported on a sparse set.
+$\E\exp(t\,v^\top\zeta)\le\exp\{L^2t^2\Var(v^\top\zeta)/2\}$ for every $t\in\R$ and every $v\in\R^p$ supported on a
+sparse set.
 \end{assumption}
 
 Assumption~\ref{a:th-subg} asks that every combination of a few predictors have tails no heavier than a Gaussian with
-the same variance. Condition~1 of \citet{SongLiang2015} plays the same role: it bounds exponential moments of averages
-of up to $\bar r_n$ predictors. Ours is scaled by the variance of each combination, as in \citet{RudelsonZhou2013}. It
-holds for Gaussian rows, and for rows $x=m+\Lambda\xi$ with $\xi$ of independent, bounded, standardised coordinates. Its
-use is that the sample correlations of all sparse sets are then close to the population ones at the same time, so
+the same variance, up to the factor $L$. It is scaled by the variance of each combination, as in
+\citet{RudelsonZhou2013}, and plays the role of Condition~1 of \citet{SongLiang2015}. It holds for Gaussian rows
+($L=1$), and for rows $x=m+\Lambda\xi$ in which $\xi$ has independent standardised coordinates uniformly bounded by a
+fixed constant. It makes the sample correlations of all sparse sets close to the population ones at once, so that
 population conditions carry over to the data.
 
 \begin{assumption}[No near-exact collinearity]\label{a:th-nec}
 $n\,\lmin\{\Corr(x_T)\}\ge c_\psi$ for every sparse set $T$, for a fixed $c_\psi>0$.
 \end{assumption}
 
-Assumption~\ref{a:th-nec} allows the smallest sparse eigenvalue to tend to zero, but no faster than $1/n$. It excludes
-only predictors that are nearly exact linear combinations of a few others, such as duplicated columns. The scale $1/n$
-is set by the prior, not by the data: the slab $\Normal(0,n\sigma^2(X_S^\top X_S+I)^{-1})$ adds a unit ridge to a Gram
-matrix of order $n\Corr(x_S)$, and the Occam factor $(n+1)^{-\abs S/2}$ of a model is intact as long as the eigenvalues
-of that matrix are not small against the ridge. \citet{SongLiang2015} recommend a ridge of the same order
-($c_n\propto n^{-1}$), and their identifiability condition, in its Gaussian form, is a floor on the smallest eigenvalue
-that also tends to zero. Fixed floors on sparse eigenvalues
-\citep{BickelRitovTsybakov2009,NarisettyHe2014} are a special case. No upper bound on the eigenvalues is needed, so
-strong common factors are allowed.
+Assumption~\ref{a:th-nec} lets the smallest sparse eigenvalue tend to zero, but no faster than $1/n$; it excludes only
+predictors that are nearly exact linear combinations of a few others, such as duplicated columns. The scale $1/n$ is
+that of the unit ridge in the slab~\eqref{eq:slab}. The Gram matrix of a model $S$ is of order $n\Corr(x_S)$, and while
+its eigenvalues stay above a fixed level the Occam factor $\{\det(G_S+I)/\det H_S\}^{1/2}$ of~\eqref{eq:marglik} is
+$(n+1)^{-\abs S/2}$ up to a fixed factor per predictor, so that every predictor pays a penalty of order $\tfrac12\log
+n$. Fixed floors on sparse eigenvalues \citep{BickelRitovTsybakov2009,NarisettyHe2014} are a special case. No upper
+bound on the eigenvalues is needed, so strong common factors are allowed.
 
 \begin{assumption}[Bounded effects]\label{a:th-bs}
 $\abs{\beta^*_j}\,\sd(x_j)\le\bar b\,\sigs$ for every $j$, for a fixed $\bar b>0$.
 \end{assumption}
 
-Assumption~\ref{a:th-bs} says that no single standardised effect is unboundedly large compared with the noise. It is
-implied by the approximate sparsity condition~(3) of \citet{SongLiang2015}, $\sum_j\abs{\beta^*_j}<\infty$ for
-standardised predictors, when the noise level is fixed; \citet{YangWainwrightJordan2016} need a bound of the same type,
-in terms of $g$, for the $g$-prior. Its use
-is technical: it keeps the noise variance of the fitted models in a fixed range and the ridge bias negligible. It
-places no lower bound on any effect.
+Assumption~\ref{a:th-bs} bounds each standardised effect by a fixed multiple of the noise standard deviation. With
+Assumption~\ref{a:th-sparse} it bounds the signal-to-noise ratio $\Var(x^\top\bstar)/\sigs^2$ by $s^2\bar b^2$, so
+the noise variance on the standardised scale, $\sigs^2/\Var(\yr)$, stays above $1/(1+s^2\bar b^2)$. It thus excludes
+the noiseless limit, in which that variance tends to zero. \citet{YangWainwrightJordan2016} need a bound of a related
+type for the $g$-prior. It places no lower bound on any effect.
 
-We now state the first result. Let $\epsilon_n=\sqrt{M\log n/n}$ for a level $M\ge1$.
+Let $\epsilon_n=\sqrt{M\log n/n}$ for a level $M\ge1$.
 
 \begin{theorem}[Consistency of the fitted density]\label{thm:th-dist}
 Assume \ref{a:th-gl}--\ref{a:th-bs}. There are fixed constants $c_H>0$ and $M_0$, depending only on
-$(s,A,L,c_\psi,\bar b)$, such that for every $M\ge M_0$ and all sufficiently large $n$,
+$s,A,L,c_\psi,\bar b$ and the hyperparameters $a_0,b_0$, such that for every $M\ge M_0$ and all $n$ larger than a
+threshold that may depend on $M$,
 \[
   \P^*\big[\,\Pi\{d_H(f,f^*)>\epsilon_n\mid\Dn\}>n^{-c_HM}\,\big]\le n^{-c_HM}.
 \]
 \end{theorem}
-% Draft status (visible line below to be removed at submission).
-\noindent\textit{[Draft status: proved and independently checked (delivered thm:dist; registry row 2.1).]}
 
 Theorem~\ref{thm:th-dist} has the form of Theorems~1 and~2 of \citet{SongLiang2015}: their bound
-$\exp(-c_1n\epsilon_n^2)$ equals $n^{-c_1M}$ at our rate. Three differences matter. First, no lower bound on the
-effects is needed: effects too small to be selected do not move the fitted density by more than $\epsilon_n$. Second,
-nothing is tuned. \citet{SongLiang2015} require conditions (9)--(14) on the prior inclusion probability $r_n/P_n$,
-the size cap $\bar r_n$ and the prior covariance $V_\xi$. Our cap $K=\min(p,\lfloor n/2\rfloor)$ is far larger than
-their (10) allows, but, as they remark (p.~951), a cap can be dropped when the prior probability of large models decays
-fast enough; under the beta-binomial prior it decays like $2^{-k}$. Third, the rate is explicit.
+$\exp(-c_1n\epsilon_n^2)$ equals $n^{-c_1M}$ at our rate. As there, no lower bound on the effects is needed, because
+effects too small to be selected move the fitted density by less than $\epsilon_n$. The difference lies in the prior.
+They require conditions (9)--(14) on the prior inclusion probability, the size cap and the prior
+covariance, which must be met by a choice of tuning sequences; Theorem~\ref{thm:th-dist} holds for the fixed prior of
+Section~\ref{sec:model-prior}. Our cap $K=\min(p,\lfloor n/2\rfloor)$ is far larger than their condition (10) allows,
+but, as they remark (p.~951), a cap can be removed when the prior mass of large models decays fast enough; under the
+beta-binomial prior the mass of size $k$ decays like $2^{-k}$. Contraction under such complexity priors is established
+by \citet{CastilloVanDerVaart2012} for the sequence model and by \citet{CastilloSchmidtHieberVanDerVaart2015} for
+regression with a fixed design; Theorem~\ref{thm:th-dist} concerns a random design and the joint law of $(x,\yr)$.
 
 \subsection{Selection of the true model}\label{sec:theory-selection}
 
 Density consistency does not imply selection: a true predictor can be replaced by a combination of other predictors
-with almost the same fit. \citet{SongLiang2015} rule this out with an identifiability condition (their Condition~3).
-We use the residual signal~\eqref{eq:th-Delta}, and ask it to beat the price~\eqref{eq:th-price}.
+with almost the same fit. Selection needs a signal condition. When the effects are of fixed size, a fixed floor on
+sparse eigenvalues is enough.
 
-A rival of $\Sz$ is a model $S=(\Sz\setminus D)\cup N$ that leaves out a
-nonempty set $D\subseteq\Sz$ of $d$ true predictors and adds a set $N$ of $m\ge0$ null predictors. Models that
-contain $\Sz$ need no signal condition: they explain no more of the true mean than $\Sz$, and the prior and the Occam
-factor charge them for every extra predictor. For a rival, the added nulls can absorb
-part of the signal of the left-out predictors. We measure this by the \emph{leakage}
-\begin{equation}\label{eq:th-leak}
-  \rho_n(D,m)=1-\frac{\min_N\Delta_n\{(\Sz\setminus D)\cup N\}}{\Delta_n(\Sz\setminus D)},
+\begin{theorem}[Selection with fixed effects]\label{thm:th-select-fixed}
+Assume \ref{a:th-gl}--\ref{a:th-subg}, with $\sz\ge1$ not depending on $n$. Suppose that, for fixed
+$0<b_{\mathrm{lo}}\le b_{\mathrm{hi}}$ and $\varphi\in(0,1]$, $b_{\mathrm{lo}}\le\abs{\beta^*_j}\sd(x_j)/\sigs\le
+b_{\mathrm{hi}}$ for every $j\in\Sz$, and $\lmin\{\Corr(x_T)\}\ge\varphi^2$ for every set $T$ of at most
+$5(A+1)(\sz+1)\log n$ predictors. Then
+\[
+  1-\Pi(\Sz\mid\Dn)=\OP\big(\rn\big),\qquad
+  \max_{1\le j\le p}\big\lvert\PIP_j-\ind{j\in\Sz}\big\rvert=\OP\big(\rn\big),
+\]
+and $\P^*(\HPM=\MPM=\Sz)\to1$.
+\end{theorem}
+
+Theorem~\ref{thm:th-select-fixed} is the counterpart of Theorem~3 of \citet{SongLiang2015}, on the inclusion of
+identifiable true predictors, and of Theorem~S of their supplement, on the highest posterior model. It controls the
+posterior mass of $\Sz$ itself, and through it every inclusion probability and both point estimates, the highest
+posterior model and the median probability model of \citet{BarbieriBerger2004}. The fixed floor on sparse sets takes
+the place of their eigenvalue condition~(22), which they describe as restrictive, and of its random-design
+form~(26).
+
+Fixed effects leave a margin that grows like $n$. To let effects approach the detection threshold we compare two
+quantities. The \emph{residual signal} of a model $S$,
+\begin{equation}\label{eq:th-resid}
+  R_n(S)=n\,\inf_{a\in\R,\,b\in\R^{\abs S}}\E\big(x^\top\bstar-a-x_S^\top b\big)^2 ,
 \end{equation}
-the largest share of the residual signal of $\Sz\setminus D$ that $m$ null predictors can explain; the minimum is
-over sets $N$ of $m$ null predictors. The leakage is a population partial $R^2$, computable from $\Sig$ alone. It is
-zero for $m=0$ and for independent predictors. Let $\omega(\rho)=\min\{1,(2\rho)^{1/2}\}$ and
-$\bar m=\lceil(2A+1)s\rceil+1$.
+is $n$ times the error of the best linear prediction of the true mean from the predictors in $S$; it is zero when
+$S\supseteq\Sz$. The \emph{price} that the prior and the marginal likelihood charge the true model for a set
+$J\subseteq\Sz$ of $d$ predictors that a smaller model leaves out is
+\begin{equation}\label{eq:th-price}
+  \mathrm{pen}_n(d)=\log\frac{\pi(\Sz\setminus J)}{\pi(\Sz)}+\frac d2\log(n+1)
+  =\log\frac{\binom{2p-1}{\sz}}{\binom{2p-1}{\sz-d}}+\frac d2\log(n+1).
+\end{equation}
+It is defined once $n\ge2s$, since then $\sz\le K$ and $\pi(\Sz)>0$. The first term is the prior odds; for $d=1$ it is
+$\log\{(2p-\sz)/\sz\}$, the prior penalty of Section~\ref{sec:model-prior} at model size $\sz-1$. The second term is
+the Occam factor of the $g$-prior with $g=n$; it differs by less than $d/(2n)$ from the exact value $\tfrac d2\log n$
+for columns orthogonal to the others. Since $\mathrm{pen}_n(d)\le d\log(2p\sqrt{n+1})$, the price grows like
+$d\log(p\sqrt n)$.
+
+A rival of $\Sz$ is a model $S=(\Sz\setminus J)\cup U$ that leaves out a nonempty set $J\subseteq\Sz$ and adds a set
+$U$ of $u\ge0$ null predictors. Under Assumption~\ref{a:th-nec}, $R_n(\Sz\setminus J)>0$ for large $n$, since
+$\Sz$ is a sparse set and $\bstar_J\ne0$. The added nulls can absorb part of this residual signal; we measure how much
+by the \emph{leakage}
+\begin{equation}\label{eq:th-leak}
+  \lambda_n(J,u)=1-\frac{\min_U R_n\{(\Sz\setminus J)\cup U\}}{R_n(\Sz\setminus J)}\in[0,1],
+\end{equation}
+where the minimum is over sets $U$ of $u$ null predictors. It is the largest share of the residual signal of
+$\Sz\setminus J$ that $u$ nulls can explain, a population quantity determined by $\Sig$, $\Sz$ and the direction of
+$\bstar_J$. It is zero for $u=0$ and when the nulls are uncorrelated with the true predictors. Let
+$h(\lambda)=\min\{1,(2\lambda)^{1/2}\}$ and $\bar u=\lceil(2A+1)s\rceil+1$.
 
 \begin{assumption}[Selection margin]\label{a:th-margin}
-$\sz\ge1$, and there is a fixed $\eta>0$ such that, for all sufficiently large $n$ and every nonempty $D\subseteq\Sz$,
+There is a fixed $\eta>0$ such that, for all $n$ larger than some $n_0$ and every nonempty $J\subseteq\Sz$,
 \begin{align}
-  \Delta_n(\Sz\setminus D)\ &\ge\ 2(1+\eta)^2\,\sigs^2\,\mathrm{pen}_n(\abs D), \label{eq:th-margin-del}\\
-  \Big[\frac{\min_N\Delta_n\{(\Sz\setminus D)\cup N\}}{\sigs^2}\Big]^{1/2}
-  \ &\ge\ (1+\eta)\Big[\big\{2\,\mathrm{pen}_n(\abs D)\big\}^{1/2}
-      +\omega\{\rho_n(D,m)\}\Big\{2\log\binom{p-\sz}{m}\Big\}^{1/2}\Big] \label{eq:th-margin-sub}
+  R_n(\Sz\setminus J)\ &\ge\ 2(1+\eta)^2\,\sigs^2\,\mathrm{pen}_n(\abs J), \label{eq:th-margin-del}\\
+  \Big[\frac{\min_U R_n\{(\Sz\setminus J)\cup U\}}{\sigs^2}\Big]^{1/2}
+  \ &\ge\ (1+\eta)\Big[\big\{2\,\mathrm{pen}_n(\abs J)\big\}^{1/2}
+      +h\{\lambda_n(J,u)\}\Big\{2\log\binom{p-\sz}{u}\Big\}^{1/2}\Big] \label{eq:th-margin-sub}
 \end{align}
-for every $m$ with $1\le m\le\min(\bar m,p-\sz)$ and $\sz-\abs D+m\le K$.
+for every $u$ with $1\le u\le\min(\bar u,p-\sz)$ and $\sz-\abs J+u\le K$.
 \end{assumption}
 
-Condition~\eqref{eq:th-margin-del} is the deletion margin: the signal lost by leaving out $D$ must exceed twice the
-price of $D$. The constant~$2$ is the $\tfrac12$ of the Gaussian log-likelihood. The log posterior odds of $\Sz$
-against $\Sz\setminus D$ are about $\hat\Delta/(2\sigs^2)-\mathrm{pen}_n(\abs D)$, where $\hat\Delta$ is the sample
-version of $\Delta_n(\Sz\setminus D)$, so the break-even point is $\Delta_n=2\sigs^2\mathrm{pen}_n$. This is also why
-the price has the form of the extended BIC penalty \citep[Section~2.1]{SongLiang2015}. Condition~\eqref{eq:th-margin-sub}
-is the substitution margin. Its last term is the most that the best of $\binom{p-\sz}{m}$ null sets can gain by
-chance. The factor $\omega\in[0,1]$ says which fraction of the worst case applies: $\omega=0$ when the nulls cannot
-imitate the missing signal, $\omega=1$ when nothing is assumed about them, and then the term is about
-$\sqrt{2m\log p}$. Rivals with more than $\bar m$ nulls need no condition. Such a rival fits no better than
-$\Sz\cup N$, and the Occam factor of the added nulls, of order $n^{-m/2}$ up to logarithmic factors, outweighs the
-price of any deletion, which is at most about $s(A+\tfrac12)\log n$.
+Assumption~\ref{a:th-margin} is a condition on the sequence of laws of $(x,\yr)$; $n_0$ is a property of that
+sequence and enters no constant. It is void when $\sz=0$. Condition~\eqref{eq:th-margin-del} is the deletion margin.
+The log posterior odds of $\Sz$ against $\Sz\setminus J$ are about $\hat R/(2\sigs^2)-\mathrm{pen}_n(\abs J)$, where
+$\hat R$ is the sample counterpart of $R_n(\Sz\setminus J)$, so the break-even point is $R_n=2\sigs^2\mathrm{pen}_n$;
+the constant~$2$ is the $\tfrac12$ of the Gaussian log-likelihood, and $\mathrm{pen}_n$ has the form of the extended
+BIC penalty \citep{ChenChen2008}. Condition~\eqref{eq:th-margin-sub} is the substitution margin. The added nulls pay
+their own prior and Occam price, which offsets the noise they fit by chance; it does not offset the cross term between
+that noise and the signal the rival leaves unexplained, which the last term bounds. That term is the most the best of
+the $\binom{p-\sz}{u}$ null sets can gain this way. The factor $h$ bounds how far the nulls can turn the residual of the
+true mean: $(1-\lambda)^{1/2}$ is the cosine of the angle between its directions with and without them, the distance
+between the two unit directions is at most $(2\lambda)^{1/2}$, and $h$ never exceeds the bound $1$ that assumes nothing
+about the nulls. Rivals with more than $\bar u$ nulls need no condition: their prior price offsets the noise they fit by chance, and
+their Occam factor, of order $n^{-\bar u/2}$, outweighs the price of any deletion, which is at most about $s(A+\tfrac12)\log n$.
 
-Assumption~\ref{a:th-margin} is a condition on the law of $(x,y)$ only; it involves no tuning and no sample quantity.
-Conditions of this type are standard. Condition~3 of \citet{SongLiang2015} asks that no combination of other
-predictors mimic a true one; ours says how well it may mimic it. \citet{NarisettyHe2014} (Condition~4.4) ask the
-residual signal of every model that misses a true predictor to exceed $5(1+\delta)\sigs^2\abs{\Sz}\log(\sqrt n\vee p)$,
-and \citet{LuoChen2013} ask its ratio to $\log p$ to diverge; ours charges each missed predictor its own price, with
-constant~$2$, and allows that ratio to stay bounded. The order $\log p$ cannot be avoided: below a threshold of this
-order no method recovers the support \citep{Wainwright2009,FletcherRanganGoyal2009}.
-
-The familiar beta-min form is a special case. Let $\varphi^2\le\lmin\{\Corr(x_T)\}$ for every set $T$ of at most
-$s+\bar m$ predictors, and $b_{\min}=\min_{j\in\Sz}\abs{\beta^*_j}\sd(x_j)/\sigs$. Since
-$\Delta_n(S)\ge n\varphi^2\sum_{j\in D}\beta_j^{*2}\Var(x_j)$ for every rival,
-$\mathrm{pen}_n(d)\le d\log(2p\sqrt{n+1})$, $\omega\le1$ and $\log\binom{p-\sz}{m}\le m\log p$,
-Assumption~\ref{a:th-margin} holds whenever
+\begin{remark}[Other signal conditions]\label{rem:th-margin}
+Condition~3 of \citet{SongLiang2015} asks that no combination of other predictors reproduce a true one;
+Assumption~\ref{a:th-margin} bounds how well it may. \citet{NarisettyHe2014} (Condition~4.4) ask the residual signal of
+every model that misses a true predictor to exceed a multiple of $\sigs^2\sz\log(\sqrt n\vee p)$, and
+\citet{LuoChen2013} ask its ratio to $\log p$ to diverge; Assumption~\ref{a:th-margin} charges each left-out predictor
+its own price, with constant~$2$. The $\log p$ part of the price cannot be avoided, since below a threshold of that
+order no method recovers the support \citep{Wainwright2009,FletcherRanganGoyal2009}; the $\tfrac12\log n$ part is the
+cost of the unit-information prior, and no such bound forces it. A beta-min condition is sufficient: if
+$\lmin\{\Corr(x_T)\}\ge\varphi^2$ for every set $T$ of at most $s+\bar u$ predictors, which covers every rival
+constrained by Assumption~\ref{a:th-margin}, then the assumption holds whenever
 \[
-  b_{\min}\ \ge\ \frac{(1+\eta)(1+\sqrt{\bar m})}{\varphi}\,\Big\{\frac{2\log\big(2p\sqrt{n+1}\big)}{n}\Big\}^{1/2}.
+  \min_{j\in\Sz}\frac{\abs{\beta^*_j}\sd(x_j)}{\sigs}\ \ge\ \frac{(1+\eta)(1+\sqrt{\bar u})}{\varphi}
+  \Big\{\frac{2\log\big(2p\sqrt{n+1}\big)}{n}\Big\}^{1/2}.
 \]
-For independent predictors the leakage is zero and the requirement drops to
-$\beta_j^{*2}\Var(x_j)\ge2(1+\eta)^2\sigs^2\log(2p\sqrt{n+1})/n$ for every $j\in\Sz$: each standardised effect must
-exceed the noise level by the factor $\{2\log(2p\sqrt n)/n\}^{1/2}$. Assumption~\ref{a:th-margin} itself is sharper,
-because it charges correlation only through the leakage.
+For uncorrelated predictors the leakage is zero and $\varphi=1$, and it suffices that
+$\beta_j^{*2}\Var(x_j)\ge2(1+\eta)^2\sigs^2\log(2p\sqrt{n+1})/n$ for every $j\in\Sz$.
+\end{remark}
 
-\begin{theorem}[Selection consistency]\label{thm:th-select}
-Assume \ref{a:th-gl}--\ref{a:th-margin}. Then $\pis{\Sz}\to1$ in probability,
+\begin{conjecture}[Selection consistency]\label{conj:th-select}
+Assume \ref{a:th-gl}--\ref{a:th-bs}, and \ref{a:th-margin} if $\sz\ge1$. Then $\Pi(\Sz\mid\Dn)\to1$ in probability,
 \[
-  \max_{1\le j\le p}\big\lvert\PIP_j-\ind{j\in\Sz}\big\rvert\ \le\ 1-\pis{\Sz}\ \to\ 0\quad\text{in probability},
+  \max_{1\le j\le p}\big\lvert\PIP_j-\ind{j\in\Sz}\big\rvert\ \le\ 1-\Pi(\Sz\mid\Dn)\ \to\ 0\quad\text{in probability},
 \]
-and $\P(\HPM=\MPM=\Sz)\to1$.
-\end{theorem}
-\noindent\textit{[Draft status: target; proof path open (the superset sum and the mixed-rival odds remain to be
-written). A delivered special case, with fixed effects and a fixed eigenvalue floor, is proved and independently
-checked (thm:post-random).]}
+and $\P^*(\HPM=\MPM=\Sz)\to1$.
+\end{conjecture}
 
-Theorem~\ref{thm:th-select} is the counterpart of Theorem~S in the supplement of \citet{SongLiang2015}, which shows
-that the posterior odds of every rival against the true model tend to zero, and of their Theorem~3, which shows that
-the inclusion probability of every identifiable true predictor tends to one. It gives more than both: the posterior
-mass of the true model tends to one, every inclusion probability converges to $0$ or $1$, and the two usual point
-estimates, the highest posterior model and the median probability model of \citet{BarbieriBerger2004}, both equal
-$\Sz$. Their eigenvalue condition~(22), which they note is hardly satisfied, and its random-design replacement~(26)
-are not needed; Assumptions~\ref{a:th-subg} and~\ref{a:th-nec} take their place.
+Conjecture~\ref{conj:th-select} asks for the conclusions of Theorem~\ref{thm:th-select-fixed}, without a rate, with
+Assumption~\ref{a:th-margin} in place of fixed effects and Assumption~\ref{a:th-nec} in place of a fixed eigenvalue
+floor. Selection consistency under other priors or designs is studied by \citet{ShangClayton2011},
+\citet{NarisettyHe2014}, \citet{CastilloSchmidtHieberVanDerVaart2015} and \citet{Rossell2022}.
 
 \subsection{Misspecified models}\label{sec:theory-mis}
 
-Suppose the method is run on the response and a set $C\subset\{1,\dots,p\}$ of candidate predictors that may miss some
-true ones. As in Section~2.3 of \citet{SongLiang2015}, the set $C$ is fixed before the data are seen, or chosen on
-independent data. The best the method can do is to find the best linear predictor of $y$ from $x_C$. Let
+Suppose the method is run on the response and a set $\mathcal C\subset\{1,\dots,p\}$ of candidate predictors that may
+miss some true ones. The set $\mathcal C$ is fixed before the data are seen, or chosen on independent data. Let $\Pi(\cdot\mid\Dn^{\mathcal C})$ be the posterior computed from
+$(\yr,\Xr_{\mathcal C})$ as in Section~\ref{sec:model}, with $p$ replaced by $\abs{\mathcal C}$. The best the method can
+do is to find the best linear predictor of $\yr$ from $x_{\mathcal C}$. Let
 \[
-  (\alpha_C,\beta^C)=\arg\min_{a,b}\E(y-a-x_C^\top b)^2,\qquad
-  \sigma_C^2=\E(y-\alpha_C-x_C^\top\beta^C)^2,\qquad \Sz^C=\supp\beta^C,
+  (\alpha_{\mathcal C},\beta^{\mathcal C})=\arg\min_{a,b}\E(\yr-a-x_{\mathcal C}^\top b)^2,\qquad
+  \sigma_{\mathcal C}^2=\E(\yr-\alpha_{\mathcal C}-x_{\mathcal C}^\top\beta^{\mathcal C})^2,\qquad
+  \Sz^{\mathcal C}=\supp\beta^{\mathcal C},
 \]
-and let $f_0(x_C,y)=\phi(y;\alpha_C+x_C^\top\beta^C,\sigma_C)$. This $f_0$ is the Kullback--Leibler projection of the
-truth on the Gaussian linear models in $x_C$, display~(17) of \citet{SongLiang2015}, and $\beta^C$ is their~(19). The
-set $\Sz^C$ may contain null predictors that stand in for missing ones, and may lose true predictors whose effect is
-cancelled.
+with $\varepsilon_{\mathcal C}=\yr-\alpha_{\mathcal C}-x_{\mathcal C}^\top\beta^{\mathcal C}$ the residual and
+$s_{\mathcal C}=\abs{\Sz^{\mathcal C}}$. The minimiser is unique when $\Var(x_{\mathcal C})$ is nonsingular;
+Assumption~\ref{a:th-mis} below fixes a sparse choice otherwise. Let
+$f_0(x_{\mathcal C},y)=\phi(y;\alpha_{\mathcal C}+x_{\mathcal C}^\top\beta^{\mathcal C},\sigma_{\mathcal C})$, a density
+with respect to $P_{x_{\mathcal C}}(dx_{\mathcal C})\,dy$, where $P_{x_{\mathcal C}}$ is the law of $x_{\mathcal C}$. The
+fitted density $f$ is defined as in Section~\ref{sec:theory-setting} with $x_{\mathcal C}$ in place of $x$, and both are
+Gaussian linear laws even when the response is discrete. Among such laws, $f_0$ minimises the expected Gaussian negative
+log-likelihood $\E\{-\log\phi(\yr;a+x_{\mathcal C}^\top b,\sigma)\}$; when the truth has a density, this makes $f_0$ the
+Kullback--Leibler projection of display~(17) of \citet{SongLiang2015}, and $\beta^{\mathcal C}$ is their~(19). The set
+$\Sz^{\mathcal C}$ may contain null predictors that stand in for missing ones, and may lose true predictors whose effect
+is cancelled. Let $O=\Sz\setminus\mathcal C$ be the true predictors that are left out.
 
-Two conditions cover two kinds of misspecification. The first allows any law of $(x_C,y)$ in fixed dimension. Let
-$Z=(1,x_C^\top)^\top$ and $u=y-\alpha_C-x_C^\top\beta^C$.
+\begin{theorem}[Omitted Gaussian predictors]\label{thm:th-omitted}
+Suppose that $2\le\abs{\mathcal C}\le n^A$ for a fixed $A\ge1$, that the rows $x_{\mathcal C,i}$ are independent and
+identically distributed Gaussian vectors, and that, given them, the responses are independent with
+$\yr_i\sim\Normal(\alpha_{\mathcal C}+x_{\mathcal C,i}^\top\beta^{\mathcal C},\sigma^2_{\mathcal C})$,
+$\sigma^2_{\mathcal C}>0$. Suppose also that $s_{\mathcal C}\ge1$ is fixed, and that for fixed $\varphi>0$ and $\bar v$,
+\begin{enumerate}[label=(\roman*)]
+  \item $\lmin\{\Corr(x_T)\}\ge\varphi^2$ for every $T\subseteq\mathcal C$ with $\abs T\le3(A+1)(s_{\mathcal C}+1)\log n$;
+  \item $\Var(x_{\mathcal C}^\top\beta^{\mathcal C})\le\bar v\,\sigma^2_{\mathcal C}$, and
+    $n\min_{j\in\Sz^{\mathcal C}}(\beta^{\mathcal C}_j)^2\Var(x_j)/(\sigma^2_{\mathcal C}\log n)\to\infty$.
+\end{enumerate}
+Then $\E^*\{1-\Pi(\Sz^{\mathcal C}\mid\Dn^{\mathcal C})\}=O(\rn)$, and $\P^*(\HPM\ne\Sz^{\mathcal C})$ and
+$\P^*(\MPM\ne\Sz^{\mathcal C})$ are $O(\rn)$.
+\end{theorem}
+
+The conditional model of Theorem~\ref{thm:th-omitted} holds whenever Assumption~\ref{a:th-gl} holds and
+$(x_{\mathcal C},x_O)$ is jointly Gaussian. Then $\beta^{\mathcal C}=\bstar_{\mathcal C}+\gamma$ with
+$\gamma=\Var(x_{\mathcal C})^{-1}\Cov(x_{\mathcal C},x_O)\bstar_O$: each candidate absorbs the part of the left-out
+signal it can predict, and the rest is added to the noise variance. The statement for $\MPM$ follows from the first
+bound by Markov's inequality, since $\Pi(\Sz^{\mathcal C}\mid\Dn^{\mathcal C})>1/2$ forces $\MPM=\Sz^{\mathcal C}$.
+Theorem~\ref{thm:th-omitted} is the counterpart, for Gaussian predictors, of Corollary~2 of \citet{SongLiang2015}. That
+corollary gives the inclusion of $\Sz^{\mathcal C}$, and their discussion states the converse; here the posterior
+selects $\Sz^{\mathcal C}$ exactly, so a candidate is kept when it stands in for a left-out predictor and dropped when
+its effect is cancelled. Condition~(ii) asks the projected effects to exceed the detection threshold by a diverging
+factor.
+
+Two assumptions describe what we expect beyond the Gaussian case. The first allows any law of $(x_{\mathcal C},\yr)$
+in fixed dimension.
 
 \begin{assumption}[Fixed candidate dimension]\label{a:th-mom}
-The law of $(x,y)$ does not depend on $n$; $\abs C\ge2$ is fixed; $\E y^2<\infty$, $\E\norm{x_C}^2<\infty$,
-$\Var(x_C)$ is nonsingular and $\sigma_C^2>0$.
+The pairs $(x_{\mathcal C,i},\yr_i)$ are independent copies of $(x_{\mathcal C},\yr)$, whose law does not depend on
+$n$; $\abs{\mathcal C}$ is fixed; $\E(\yr)^2<\infty$, $\E\norm{x_{\mathcal C}}^2<\infty$, $\Var(x_{\mathcal C})$ is
+nonsingular and $\sigma_{\mathcal C}^2>0$.
 \end{assumption}
 
 Assumption~\ref{a:th-mom} is the setting of Theorem~4 of \citet{SongLiang2015}: a fixed subset of predictors with
-finite second moments (their Condition~4). It asks nothing of the form of $\E(y\mid x_C)$ or of the error law: the
-response may be non-Gaussian, heteroscedastic or nonlinear in $x_C$. Second moments are what is needed for the best
-linear predictor to exist, so the assumption is close to minimal.
+finite second moments. It asks nothing of the form of $\E(\yr\mid x_{\mathcal C})$ or of the error law: the response
+may be discrete, heteroscedastic or nonlinear in $x_{\mathcal C}$. Second moments are what the best linear predictor
+needs to exist.
 
 In high dimension, misspecification of the error law can make Bayesian linear regression overfit
-\citep{GrunwaldVanOmmen2017}. We therefore allow only the misspecification that comes from leaving out predictors. Let
-$O=\Sz\setminus C$ be the true predictors that are left out.
+\citep{GrunwaldVanOmmen2017}, so the second assumption allows only the misspecification that comes from leaving out
+predictors.
 
 \begin{assumption}[Omitted predictors]\label{a:th-mis}
-The left-out signal satisfies $x_O^\top\bstar_O=a+x_C^\top\gamma+e$, where $e\sim\Normal(0,\tau^2)$ is independent of
-$x_C$ and $\varepsilon$, and $\gamma$ has at most $s$ nonzero entries. Assumptions~\ref{a:th-dim}--\ref{a:th-bs} hold for
-the candidate problem, with $(x_C,\beta^C,\sigma_C^2)$ in place of $(x,\bstar,\sigs^2)$.
+Assumption~\ref{a:th-sparse} holds, and the left-out signal satisfies
+$x_O^\top\bstar_O=a+x_{\mathcal C}^\top\gamma+\varepsilon_O$, where $\varepsilon_O\sim\Normal(0,\tau^2)$, $\tau^2\ge0$,
+is independent of $x_{\mathcal C}$ and $\varepsilon$, and $\gamma$ has at most $s$ nonzero entries.
+Assumptions~\ref{a:th-dim}--\ref{a:th-bs} hold for the candidate problem, with $(x_{\mathcal C},\beta^{\mathcal
+C},\sigma_{\mathcal C}^2)$ in place of $(x,\bstar,\sigs^2)$.
 \end{assumption}
 
-Under Assumptions~\ref{a:th-gl} and~\ref{a:th-mis}, $\beta^C=\bstar_C+\gamma$ and $\sigma_C^2=\sigs^2+\tau^2$ (the
-minimiser with at most $2s$ nonzero entries, unique by Assumption~\ref{a:th-nec}): given $x_C$ the data are
-again Gaussian and linear, and the left-out signal acts as extra noise and as extra effects on the candidates that
-predict it. The assumption holds whenever $(x_C,x_O)$ is jointly Gaussian; then $\gamma$ is supported on the candidates
-adjacent to $O$ in the conditional-independence graph of the predictors, so it is sparse when each left-out predictor
-has few neighbours among the candidates. It fails under strong common factors, where the projection spreads over many
-candidates. The sparsity of $\gamma$ keeps the pseudo-true model $\Sz^C$, of size at most $2s$, within the reach of
-Theorems~\ref{thm:th-dist} and~\ref{thm:th-select}.
+Under Assumptions~\ref{a:th-gl} and~\ref{a:th-mis}, the response given $x_{\mathcal C}$ is again Gaussian and linear,
+with $\beta^{\mathcal C}=\bstar_{\mathcal C}+\gamma$ and $\sigma_{\mathcal C}^2=\sigs^2+\tau^2$, so $\beta^{\mathcal C}$
+has at most $2s$ nonzero entries. It is the only such vector with this linear predictor: the difference of two would be
+supported on a sparse set, on which Assumption~\ref{a:th-nec} rules out exact collinearity. The linear-Gaussian part of
+the assumption holds whenever $(x_{\mathcal C},x_O)$ is jointly Gaussian. Sparsity of $\gamma$ is a further
+restriction; it holds, for example, when all but at most $s$ candidates are uncorrelated both with $x_O$ and with those
+$s$ candidates, and it fails when many candidates share in predicting the left-out signal.
 
-\begin{theorem}[Consistency under misspecification]\label{thm:th-mis}
-Let $\Pi(\cdot\mid\Dn^C)$ be the posterior computed from $(y,X_C)$, and $\epsilon_n$ as in
-Theorem~\ref{thm:th-dist}.
+\begin{conjecture}[Consistency under misspecification]\label{conj:th-mis}
+\leavevmode
 \begin{enumerate}[label=(\alph*)]
-  \item \emph{Any response law, fixed dimension.} Under Assumption~\ref{a:th-mom}, for every $\epsilon>0$,
-    $\Pi\{d_H(f,f_0)>\epsilon\mid\Dn^C\}\to0$ and $\Pi(S\supseteq\Sz^C\mid\Dn^C)\to1$ almost surely. If in addition
-    $\E(Z_j^2u^2)<\infty$ for every coordinate $Z_j$ of $Z$, then $\pi(\Sz^C\mid\Dn^C)\to1$ almost surely.
-  \item \emph{Omitted predictors, high dimension.} Under Assumptions~\ref{a:th-gl} and~\ref{a:th-mis}, there are fixed $c>0$ and $M_0$ such that, for every
-    $M\ge M_0$ and all sufficiently large $n$,
+  \item \emph{Any response law, fixed dimension.} Under Assumption~\ref{a:th-mom},
+    $\Pi\{d_H(f,f_0)>\epsilon\mid\Dn^{\mathcal C}\}\to0$ almost surely for every $\epsilon>0$. If in addition
+    $\E(x_j^2\varepsilon_{\mathcal C}^2)<\infty$ for every $j\in\mathcal C$, then
+    $\Pi(\Sz^{\mathcal C}\mid\Dn^{\mathcal C})\to1$ almost surely.
+  \item \emph{Omitted predictors, high dimension.} Under Assumptions~\ref{a:th-gl} and~\ref{a:th-mis}, there are
+    fixed $c>0$ and $M_0$ such that, for every $M\ge M_0$ and all $n$ larger than a threshold that may depend on $M$,
     \[
-      \P^*\big[\,\Pi\{d_H(f,f_0)>\epsilon_n\mid\Dn^C\}>n^{-cM}\,\big]\le n^{-cM}.
+      \P^*\big[\,\Pi\{d_H(f,f_0)>\epsilon_n\mid\Dn^{\mathcal C}\}>n^{-cM}\,\big]\le n^{-cM}.
     \]
-    If moreover $\Sz^C\ne\emptyset$ and Assumption~\ref{a:th-margin} holds for the candidate problem, then
-    $\pi(\Sz^C\mid\Dn^C)\to1$ in probability and $\P(\HPM=\MPM=\Sz^C)\to1$.
+    If moreover $\Sz^{\mathcal C}\ne\emptyset$ and Assumption~\ref{a:th-margin} holds for the candidate problem, with
+    $2s$ in place of $s$, then
+    $\Pi(\Sz^{\mathcal C}\mid\Dn^{\mathcal C})\to1$ in probability and $\P^*(\HPM=\MPM=\Sz^{\mathcal C})\to1$.
 \end{enumerate}
-\end{theorem}
-\noindent\textit{[Draft status: (a) target, low risk (direct law-of-large-numbers and iterated-logarithm argument over
-finitely many models); (b) target: density part low--medium risk, selection part inherits the open steps of
-Theorem~\ref{thm:th-select}. A delivered analogue of the selection part, for jointly Gaussian predictors with
-detectable projected effects, is proved and independently checked (thm:omitted).]}
+\end{conjecture}
 
-Part~(a) is the counterpart of Theorem~4 of \citet{SongLiang2015}, which gives the density statement. The inclusion
-statement is their Corollary~2. The last statement is stronger: the posterior selects exactly the support of the best
-linear predictor, so a candidate is kept if and only if $\beta^C_j\neq0$, which their discussion of Corollary~2
-anticipates but their display does not give. Part~(b) brings the rates and the exact selection of
-Sections~\ref{sec:theory-density}--\ref{sec:theory-selection} to high-dimensional candidate sets. In both parts, a
-null predictor that stands in for a missing true one is selected, and the noise variance absorbs what the candidates
-cannot explain. These are the properties a method needs when, as is usual in practice, not every relevant predictor
-has been measured.
+Part~(a) corresponds to Theorem~4 of \citet{SongLiang2015}, which gives the density statement for Gaussian data with
+omitted predictors; its second statement corresponds to their Corollary~2, with exclusion added. Part~(b) asks for the
+conclusions of Theorems~\ref{thm:th-dist} and~\ref{thm:th-omitted} for the candidate problem, with the margin of
+Assumption~\ref{a:th-margin} in place of condition~(ii) of Theorem~\ref{thm:th-omitted}; its constants depend on $2s$
+in place of $s$. In both parts a null predictor that stands in for a missing true one is selected, and the noise
+variance absorbs what the candidates cannot explain. For other priors and likelihoods, posterior model probabilities
+under misspecification are studied by \citet{RossellRubio2018} and \citet{Rossell2022}, who find that they concentrate
+on the Kullback--Leibler optimal model under suitable conditions.
 
-The scope of the three results is deliberate. They take the number of true predictors fixed, the noise Gaussian
-with constant variance (except in Theorem~\ref{thm:th-mis}(a)), and $p$ polynomial in $n$. They describe the exact
-posterior, not a finite run of the sampler. Within this scope they hold for any correlation structure that meets
-Assumptions~\ref{a:th-subg}--\ref{a:th-margin}, common factors included, and they require nothing to be tuned.
+The modes of convergence differ across the statements. Theorem~\ref{thm:th-dist} and
+Conjecture~\ref{conj:th-mis}(b) give explicit probability bounds, Theorems~\ref{thm:th-select-fixed}
+and~\ref{thm:th-omitted} give rates in probability or in expectation, and Conjecture~\ref{conj:th-select} gives
+convergence in probability. In Conjecture~\ref{conj:th-mis}(a) the law is fixed, and the statements are almost sure
+along one sequence of observations.
 
 \begin{table}[ht]
 \centering\small
-\caption{Results of Section~2 of \citet{SongLiang2015} and their counterparts here.}\label{tab:sl-map}
-\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.30\linewidth}>{\raggedright\arraybackslash}p{0.22\linewidth}>{\raggedright\arraybackslash}p{0.40\linewidth}@{}}
+\caption{Results of Section~2 of \citet{SongLiang2015} and their counterparts here. Theorems are proved;
+conjectures are not.}\label{tab:sl-map}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.30\linewidth}>{\raggedright\arraybackslash}p{0.24\linewidth}>{\raggedright\arraybackslash}p{0.38\linewidth}@{}}
 \toprule
-\citet{SongLiang2015} & Here & Difference \\
+Their result & Here & Statement here \\
 \midrule
-Theorems 1--2, Corollary 1 (density) & Theorem~\ref{thm:th-dist} & explicit rate; no tuning sequences; $p\le n^A$ \\
-Theorem 3, Theorem S (inclusion, MAP model) & Theorem~\ref{thm:th-select} & posterior mass of $\Sz$; HPM and MPM; all PIPs \\
-Theorem 4 (misspecified subset) & Theorem~\ref{thm:th-mis}(a) & also exact support of $\beta^C$ \\
-Corollary 2 (pseudo-true support) & Theorem~\ref{thm:th-mis}(a)--(b) & inclusion and exclusion; high-dimensional $C$ \\
+Theorems 1--2, Corollary 1 (density) & Theorem~\ref{thm:th-dist} & fixed prior, no tuning sequences; $p\le n^A$ \\
+Theorem 3, Theorem S (inclusion, highest posterior model) & Theorem~\ref{thm:th-select-fixed};
+  Conjecture~\ref{conj:th-select} & fixed effects, with a rate; effects near the threshold \\
+Theorem 4 (misspecified subset) & Conjecture~\ref{conj:th-mis}(a) & any response law with finite second moments \\
+Corollary 2 (pseudo-true support) & Theorem~\ref{thm:th-omitted}; Conjecture~\ref{conj:th-mis} & exact support,
+  Gaussian predictors; margin form \\
 \bottomrule
 \end{tabular}
 \end{table}

@@ -3,12 +3,15 @@
 #
 # Run from Docs/Writing/paper_smcbvs on Owls:
 #   OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 Rscript figures/scripts/build_sim_outputs.R <cache_dir>
-# <cache_dir> is a private, untracked folder (wall-time cache); default ../../../.build_lead2.
+# <cache_dir> is a private, untracked scratch folder for the caches of JSON fields (wall time, run summaries);
+# default ../../../.rc_tmp/lead2_r1/cache. The caches are rebuilt from the JSON records when absent.
 # Inputs: the Engineering record tables listed in sim_data.R (read-only). Outputs (all under figures/):
 #   fig_s1_exact.pdf, fig_s2_recall_fp.pdf, fig_s2_pr_supp.pdf, tables/*.tex, numbers.tsv (every number quoted in the prose), SOURCES.md.
+# The build writes no other file; generated tables that are no longer used are removed (OBSOLETE below).
 suppressPackageStartupMessages({ library(data.table); library(ggplot2) })
 args <- commandArgs(trailingOnly = TRUE)
-CACHE <- if (length(args)) args[1] else "../../../.build_lead2"
+CACHE <- if (length(args)) args[1] else "../../../.rc_tmp/lead2_r1/cache"
+dir.create(CACHE, showWarnings = FALSE, recursive = TRUE)
 here <- dirname(sub("^--file=", "", grep("^--file=", commandArgs(FALSE), value = TRUE)))
 source(file.path(here, "sim_data.R"))
 OUT <- "figures"; TAB <- file.path(OUT, "tables")
@@ -16,10 +19,13 @@ dir.create(TAB, showWarnings = FALSE, recursive = TRUE)
 
 COLS   <- c(smcbvs = "#000000", asi = "#E69F00", bas_mc3 = "#0072B2", susie = "#009E73",
             scad = "#D55E00", lasso_cv = "#CC79A7")
-SHAPES <- c(smcbvs = 16, asi = 17, bas_mc3 = 15, susie = 18, scad = 4, lasso_cv = 3)
+SHAPES <- c(smcbvs = 16, asi = 2, bas_mc3 = 0, susie = 5, scad = 4, lasso_cv = 3)   # one filled, the rest open
 theme_set(theme_bw(base_size = 9) +
           theme(panel.grid.minor = element_blank(), strip.background = element_rect(fill = "grey92"),
-                legend.position = "bottom", legend.key.width = unit(1.4, "lines")))
+                legend.position = "bottom", legend.key.width = unit(1.6, "lines"), legend.text = element_text(size = 9)))
+OBSOLETE <- c("tab_s1_exact.tex", "tab_s1_cost.tex", "supp_s1_f1.tex", "supp_s2_cost.tex",
+              as.vector(outer(c("exact", "empty", "size", "prec", "rec", "fp"), c(50, 100), function(a, b) sprintf("supp_s2_%s_n%d.tex", a, b))))
+unlink(file.path(TAB, OBSOLETE))
 
 NUM <- list()                                   # numbers quoted in the prose: key -> value
 num <- function(key, value, note = "") NUM[[key]] <<- data.table(quantity = key, value = as.character(value), note = note)
@@ -56,12 +62,13 @@ g1[, c("lo", "hi") := wilson(x, N)]
 g1 <- rbind(g1[, .(np, snr, method, row = "Exact recovery (%)", y = 100 * x / N, ymin = 100 * lo, ymax = 100 * hi)],
             g1[, .(np, snr, method, row = "False negatives (of 10)", y = fn, ymin = fn - fn_se, ymax = fn + fn_se)])
 g1[, row := factor(row, levels = c("Exact recovery (%)", "False negatives (of 10)"))]
-dodge <- position_dodge(width = 0.5)
+dodge <- position_dodge(width = 0.7)
 p1 <- ggplot(g1, aes(factor(snr), y, colour = method, shape = method, group = method)) +
   geom_line(aes(linewidth = method == "smcbvs"), position = dodge, show.legend = FALSE) +
   geom_errorbar(aes(ymin = ymin, ymax = ymax), width = 0, position = dodge, linewidth = 0.35) +
-  geom_point(position = dodge, size = 1.5) +
+  geom_point(position = dodge, size = 1.6, stroke = 0.6) +
   facet_grid(row ~ np, scales = "free_y", switch = "y") +
+  scale_y_continuous(expand = expansion(mult = c(0.03, 0.03))) +
   scale_colour_manual(values = COLS, labels = LABELS, name = NULL) +
   scale_shape_manual(values = SHAPES, labels = LABELS, name = NULL) +
   scale_linewidth_manual(values = c(`TRUE` = 0.8, `FALSE` = 0.35)) +
@@ -70,47 +77,43 @@ p1 <- ggplot(g1, aes(factor(snr), y, colour = method, shape = method, group = me
   guides(colour = guide_legend(nrow = 1), shape = guide_legend(nrow = 1))
 ggsave(file.path(OUT, "fig_s1_exact.pdf"), p1, width = 6.5, height = 4.2, device = cairo_pdf)
 
-## Table 1: S1 exact recovery at SNR 2 and 3, per (n, p)
-t1 <- dcast(s1[snr >= 2, .(x = sum(exact)), by = .(np, snr, method)], np + snr ~ method, value.var = "x")
-tp1 <- dcast(s1[snr >= 2, .(x = sum(exact)), by = .(snr, method)], snr ~ method, value.var = "x")
-row1 <- function(r, lab, den) {
-  v <- unlist(r[, METHODS, with = FALSE]); cells <- sprintf("%d", v)
-  paste(lab, paste(cells, collapse = " & "), sep = " & ")
-}
-L <- c("\\begin{tabular}{llrrrrrr}", "\\toprule",
-       paste("$(n,p)$ & SNR &", paste(LABELS[METHODS], collapse = " & "), "\\\\"), "\\midrule")
-for (k in seq_len(nrow(t1))) {
-  r <- t1[k]; lab <- if (r$snr == 2) sprintf("$(%s)$", sub("n = (\\d+), p = (\\d+)", "\\1,\\2", r$np)) else ""
-  L <- c(L, paste0(row1(r, paste(lab, "&", r$snr), 100), " \\\\"))
-}
-L <- c(L, "\\midrule")
-for (k in seq_len(nrow(tp1))) L <- c(L, paste0(row1(tp1[k], paste(if (k == 1) "all (of 400)" else "", "&", tp1$snr[k]), 400), " \\\\"))
-L <- c(L, "\\bottomrule", "\\end{tabular}")
-write_tex(L, "tab_s1_exact.tex")
-
-## Table 2: S1 cost, SMC-BVS vs ASI (Engineering runtime table for billed CPU-h; wall times recomputed and checked)
+## S1 run time: checks against Engineering's runtime table (completed attempts), reruns and the per-data-set tail.
 rt <- fread(SRC$s1_runtime)
 wq <- s1[method %in% c("smcbvs", "asi"), .(med = median(wall_sec), q90 = quantile(wall_sec, 0.9, type = 7),
                                              mx = max(wall_sec), ex = sum(exact)), by = .(method, n, p)]
 chk <- merge(wq, rt, by = c("method", "n", "p"))
 stopifnot(nrow(chk) == 8L, max(abs(chk$med - chk$wall_med_s)) < 1e-6, max(abs(chk$mx - chk$wall_max_s)) < 1e-6,
           max(abs(chk$q90 - chk$wall_q90_s)) < 1e-3, all(chk$ex == chk$exact))
-ss1 <- smc_summaries(s1, CACHE, "s1final"); s1 <- merge(s1, ss1, by = c("setting_id", "rep", "method"), all.x = TRUE)
+ss1 <- smc_summaries(s1, CACHE, "s1v2"); s1 <- merge(s1, ss1, by = c("setting_id", "rep", "method"), all.x = TRUE)
+# The ten SMC-BVS fits of batch 1 that hit the 24 h Slurm limit and were rerun (unit b1r): the data sets are listed by
+# the b1r record archives (records/S1S2_smcbvs_b1r/S1_{08,15,16}.tar); the rerun's Slurm record is sacct_b1r.tsv.
+RERUN <- data.table(setting_id = c("S1_08", "S1_08", "S1_15", rep("S1_16", 7)),
+                    rep = c(12L, 17L, 14L, 5L, 9L, 11L, 12L, 13L, 14L, 17L))
+SA <- sacct_all()
+sb <- SA[file == "sacct_b1r.tsv" & State == "COMPLETED"]
+rr <- merge(RERUN, s1[method == "smcbvs"], by = c("setting_id", "rep"))
+stopifnot(nrow(rr) == 10L, nrow(sb) == 10L, max(abs(sort(rr$wall_sec) - sort(sb$ElapsedRaw))) < 300)
+stopifnot(nrow(SA[grepl("^sacct_asi_s1b", file)]) == 1600L, all(SA[grepl("^sacct_asi_s1b", file)]$State == "COMPLETED"))  # ASI: no retries
+num("S1.rerun.n", nrow(rr), "batch-1 SMC-BVS fits that hit the 24 h limit; rerun as b1r with the same data and seeds")
+num("S1.rerun.settings", paste(sprintf("(n=%d,p=%d,SNR=%s):%d", rr[, .N, by = .(n, p, snr)]$n, rr[, .N, by = .(n, p, snr)]$p,
+                                       rr[, .N, by = .(n, p, snr)]$snr, rr[, .N, by = .(n, p, snr)]$N), collapse = " "))
+num("S1.rerun.exact", sprintf("%d/%d", sum(rr$exact), nrow(rr)))
+num("S1.rerun.wall_range", sprintf("%s-%s", hms(min(rr$wall_sec)), hms(max(rr$wall_sec))))
+num("S1.rerun.cpu", paste(unique(sb$CPU_model), collapse = "; "), sprintf("partition %s", paste(unique(sb$Partition), collapse = ",")))
+s1[, rerun := FALSE]; s1[RERUN, on = .(setting_id, rep), rerun := TRUE]; s1[method != "smcbvs", rerun := FALSE]
+s1[, wall_sub := wall_sec + 24 * 3600 * rerun]          # time per submitted data set: the 24 h first attempt + the rerun
+s1[, exact_basrule := exact & !rerun]                   # the BAS rule: a fit that did not finish counts as empty
+pw1 <- merge(s1[method == "smcbvs" & snr >= 2, .(setting_id, rep, smc = exact, smcb = exact_basrule)],
+             s1[method == "asi" & snr >= 2, .(setting_id, rep, asi = exact)], by = c("setting_id", "rep"))
+mcn <- function(w, l) if (w + l == 0) NA_real_ else binom.test(w, w + l)$p.value
+num("S1.snr23.paired.asi.WL", sprintf("%d/%d of %d", sum(pw1$smc & !pw1$asi), sum(pw1$asi & !pw1$smc), nrow(pw1)),
+    sprintf("SMC-BVS succeeded & ASI missed / reverse; McNemar p = %s", signif(mcn(sum(pw1$smc & !pw1$asi), sum(pw1$asi & !pw1$smc)), 2)))
+num("S1.snr23.paired.asi.WL_basrule", sprintf("%d/%d of %d", sum(pw1$smcb & !pw1$asi), sum(pw1$asi & !pw1$smcb), nrow(pw1)),
+    sprintf("reruns scored empty; McNemar p = %s", signif(mcn(sum(pw1$smcb & !pw1$asi), sum(pw1$asi & !pw1$smcb)), 2)))
+num("S1.smcbvs.snr23.exact800_basrule", sum(pw1$smcb)); num("S1.smcbvs.snr23.exact800", sum(pw1$smc)); num("S1.asi.snr23.exact800", sum(pw1$asi))
+num("S1.snr23.exact_gap", sprintf("%d of 800", sum(pw1$asi) - sum(pw1$smc)))
 esc <- s1[method == "smcbvs", .(esc = sum(escalated)), by = .(n, p)]
-L <- c("\\begin{tabular}{llrrrrrr}", "\\toprule",
-       " & & & \\multicolumn{3}{c}{wall time per fit} & & \\\\", "\\cmidrule(lr){4-6}", "$(n,p)$ & method & exact & median & 90\\% & max & CPU-h & escalated \\\\", "\\midrule")
-for (pp in c(500, 5000)) for (nn in c(500, 1000)) {
-  for (m in c("smcbvs", "asi")) {
-    r <- chk[method == m & n == nn & p == pp]
-    L <- c(L, sprintf("%s & %s & %d & %s & %s & %s & %s & %s \\\\",
-                      if (m == "smcbvs") sprintf("$(%d,%d)$", nn, pp) else "", LABELS[m], r$ex,
-                      tex_hms(r$med), tex_hms(r$q90), tex_hms(r$mx), formatC(r$billed_med_per_fit_h, format = "f", digits = 2),
-                      if (m == "smcbvs") esc[n == nn & p == pp]$esc else "--"))
-  }
-  if (!(pp == 5000 && nn == 1000)) L <- c(L, "\\addlinespace[2pt]")
-}
-L <- c(L, "\\bottomrule", "\\end{tabular}")
-write_tex(L, "tab_s1_cost.tex")
+stopifnot(sum(esc$esc) == sum(fread(SRC$s1_smc_final)$escalated))
 stopifnot(sum(esc$esc) == sum(fread(SRC$s1_smc_final)$escalated))
 for (pp in c(500, 5000)) { d <- s1[method == "smcbvs" & p == pp]; q <- quantile(d$wall_sec, 0.9)
   num(sprintf("S1.smcbvs.p%d.escalated_in_slowest10pct", pp), sprintf("%d/%d", sum(d[wall_sec > q]$escalated), nrow(d[wall_sec > q])))
@@ -160,14 +163,20 @@ num("S1.smcbvs.snr23.FN", f2(mean(s1[method == "smcbvs" & snr >= 2]$FN)))
 num("S1.asi.snrle1.hamming_losses_for_smc", sum(pr[group %in% c("SNR = 0.5", "SNR = 1") & method == "asi"]$hamming_losses))
 num("S1.asi.snrle1.hamming_wins_for_smc", sum(pr[group %in% c("SNR = 0.5", "SNR = 1") & method == "asi"]$hamming_wins))
 for (m in METHODS) num(sprintf("S1.%s.wall_med_all", m), hms(median(s1[method == m]$wall_sec)))
-rtall <- rt[grepl("all", method)]
-if (nrow(rtall)) for (k in seq_len(nrow(rtall))) num(sprintf("S1.billed_total.%s", rtall$method[k]), rtall$billed_recorded_h[k])
-num("S1.billed_total.smcbvs_actual", "4110", "final/README.md: billed 4,110 incl. batch-1 first attempts")
-num("S1.billed_total.asi_actual", "4703", "final/runtime_S1_smcbvs_asi.md")
-for (m in c("smcbvs", "asi")) for (pp in c(500, 5000)) {
-  r <- rt[method == m & p == pp]
-  num(sprintf("S1.%s.p%d.billed_med_range", m, pp), sprintf("%.2f-%.2f", min(r$billed_med_per_fit_h), max(r$billed_med_per_fit_h)))
-}
+# Mechanism of the cost: temperature steps and particles of the final run, by p and SNR (SMC-BVS).
+mech1 <- s1[method == "smcbvs", .(stages = median(n_stages), N = median(N_particles), esc = mean(escalated), wall = median(wall_sec)), by = .(p, snr)]
+for (k in seq_len(nrow(mech1))) { r <- mech1[k]
+  num(sprintf("S1.smcbvs.p%d.snr%s.mech", r$p, r$snr), sprintf("stages %d, N %d, escalated %.0f%%, wall %s", as.integer(r$stages), as.integer(r$N), 100 * r$esc, hms(r$wall))) }
+num("S1.smcbvs.snr.stages_range", sprintf("%d at SNR 0.5 to %d-%d at SNR >= 2", as.integer(max(mech1[snr == 0.5]$stages)),
+                                           as.integer(min(mech1[snr >= 2]$stages)), as.integer(max(mech1[snr >= 2]$stages))), "median per (p, SNR)")
+num("S1.smcbvs.minESSoverN.below090", sprintf("%d/%d", sum(s1[method == "smcbvs"]$min_ess_over_N < 0.9), nrow(s1[method == "smcbvs"])))
+# Hardware: node -> CPU model from the Slurm records; SMC-BVS hosts from its JSON records, other methods from their task records.
+cpu_of <- unique(SA[CPU_model != "unknown", .(host = NodeList, CPU_model)])
+stopifnot(!anyDuplicated(cpu_of$host))
+h1 <- merge(s1[method == "smcbvs", .(host)], cpu_of, by = "host", all.x = TRUE)
+num("S1.smcbvs.cpu", paste(sprintf("%s: %d", names(table(h1$CPU_model, useNA = "ifany")), table(h1$CPU_model, useNA = "ifany")), collapse = "; "), "of 1600 fits, by JSON host")
+for (m in c("asi", "bas_mc3", "susie", "scad", "lasso_cv")) { x <- SA[grepl(sprintf("^sacct_%s_s1b", m), file)]
+  num(sprintf("S1.%s.cpu", m), paste(sprintf("%s: %d", names(table(x$CPU_model)), table(x$CPU_model)), collapse = "; "), "Slurm tasks") }
 
 # ================================================================== S2
 S2DATA <- load_s2()
@@ -190,70 +199,78 @@ stopifnot(nrow(S2DATA) == 72000L)
 S2DATA[, src := "final"]
 S2DATA[, method := factor(method, levels = METHODS)]
 NU <- sort(unique(S2DATA$nu))
-S2DATA[, bt_lab := factor(ifelse(beta_type == 1, "beta-type 1 (spread)", "beta-type 2 (block)"))]
+S2DATA[, bt_lab := factor(ifelse(beta_type == 1, "spread support", "block support"), levels = c("spread support", "block support"))]
 S2DATA[, rho_lab := factor(sprintf("rho == %s", rho))]
+S2DATA[, empty := as.numeric(n_selected == 0)]
+ss2 <- smc_summaries(S2DATA, CACHE, "s2v2")
+S2DATA <- merge(S2DATA, ss2, by = c("setting_id", "rep", "method"), all.x = TRUE)
+stopifnot(sum(S2DATA[method == "smcbvs"]$escalated) == sum(fread(SRC$s2_smc_final)$escalated))
 
 saveRDS(S2DATA, file.path(CACHE, "S2DATA.rds")); saveRDS(s1, file.path(CACHE, "S1DATA.rds"))
 
 ## Figure 2 (main): mean recall against mean number of false positives per fit, one path per method across nu;
-## panels beta-type x rho, pooled over n (200 fits per point). Counts need no empty-set convention.
+## panels support type x rho, pooled over n (200 fits per point). Marker size grows with nu over its three largest values.
 g2 <- S2DATA[, .(prec = cprec(prec), rec = mean(rec), FP = mean(FP), N = .N), by = .(method, src, bt_lab, rho_lab, nu)]
 setorder(g2, method, bt_lab, rho_lab, nu)
 g2[, filled := nu %in% c(2.07, 3.52, 6)]
-base2 <- function(g, x, xlab) {
-  ggplot(g, aes({{ x }}, rec, colour = method, shape = method, group = method)) +
-    geom_path(aes(linetype = src, linewidth = method == "smcbvs")) +
-    geom_point(data = g[filled == TRUE & src == "final"], size = 1.5) +
-    geom_point(data = g[nu == 6], size = 2.8, shape = 1, show.legend = FALSE) +
-    facet_grid(bt_lab ~ rho_lab, labeller = labeller(rho_lab = label_parsed)) +
-    scale_colour_manual(values = COLS, labels = LABELS, name = NULL) +
-    scale_shape_manual(values = SHAPES, labels = LABELS, name = NULL) +
-    scale_linetype_manual(values = c(final = "solid", interim = "22"), guide = "none") +
-    scale_linewidth_manual(values = c(`TRUE` = 0.8, `FALSE` = 0.4), guide = "none") +
-    scale_y_continuous(limits = c(0, 1)) + labs(x = xlab, y = "Recall") +
-    guides(colour = guide_legend(nrow = 1), shape = guide_legend(nrow = 1))
-}
-p2 <- base2(g2, FP, "False positives per fit (square-root scale)") +
-  scale_x_sqrt(breaks = c(0, 0.25, 1, 2, 5, 10, 20), labels = c("0", "0.25", "1", "2", "5", "10", "20"))
-ggsave(file.path(OUT, "fig_s2_recall_fp.pdf"), p2, width = 6.5, height = 4.6, device = cairo_pdf)
-# Supplement: the same paths as conditional precision (mean over non-empty fits; shown where k >= KMIN) against recall.
-p2b <- ggplot(g2[!is.na(prec)], aes(rec, prec, colour = method, shape = method, group = method)) +
-  geom_path(aes(linetype = src, linewidth = method == "smcbvs")) +
-  geom_point(data = g2[filled == TRUE], size = 1.5) + geom_point(data = g2[nu == 6], size = 2.8, shape = 1, show.legend = FALSE) +
+SIZES <- c(`2.07` = 0.8, `3.52` = 1.5, `6` = 2.3)
+paths2 <- function(p) p +
+  geom_path(aes(linewidth = method == "smcbvs")) +
+  geom_point(data = function(g) g[filled == TRUE], aes(size = factor(nu)), stroke = 0.6) +
+  geom_point(data = function(g) g[nu == 6], size = 3.6, shape = 1, stroke = 0.4, show.legend = FALSE) +
   facet_grid(bt_lab ~ rho_lab, labeller = labeller(rho_lab = label_parsed)) +
-  scale_colour_manual(values = COLS, labels = LABELS, name = NULL) + scale_shape_manual(values = SHAPES, labels = LABELS, name = NULL) +
-  scale_linetype_manual(values = c(final = "solid", interim = "22"), guide = "none") +
+  scale_colour_manual(values = COLS, labels = LABELS, name = NULL) +
+  scale_shape_manual(values = SHAPES, labels = LABELS, name = NULL) +
+  scale_size_manual(values = SIZES, name = expression(nu)) +
   scale_linewidth_manual(values = c(`TRUE` = 0.8, `FALSE` = 0.4), guide = "none") +
-  coord_cartesian(xlim = c(0, 1), ylim = c(0, 1)) + labs(x = "Recall", y = "Precision") +
-  guides(colour = guide_legend(nrow = 1), shape = guide_legend(nrow = 1))
-ggsave(file.path(OUT, "fig_s2_pr_supp.pdf"), p2b, width = 6.5, height = 4.6, device = cairo_pdf)
+  guides(colour = guide_legend(nrow = 1, order = 1, override.aes = list(size = 2)), shape = guide_legend(nrow = 1, order = 1),
+         size = guide_legend(nrow = 1, order = 2, override.aes = list(shape = 16, colour = "grey30"))) +
+  theme(legend.box = "vertical", legend.spacing.y = unit(0, "pt"), legend.margin = margin(1, 0, 1, 0))
+p2 <- paths2(ggplot(g2, aes(FP, rec, colour = method, shape = method, group = method))) +
+  scale_x_sqrt(breaks = c(0, 1, 2, 5, 10, 20)) + scale_y_continuous(limits = c(0, 1)) +
+  labs(x = "False positives per fit (square-root scale)", y = "Recall")
+ggsave(file.path(OUT, "fig_s2_recall_fp.pdf"), p2, width = 6.5, height = 4.9, device = cairo_pdf)
+# Supplement: the same paths as conditional precision (mean over non-empty fits; shown where k >= KMIN) against recall.
+p2b <- paths2(ggplot(g2[!is.na(prec)], aes(rec, prec, colour = method, shape = method, group = method))) +
+  coord_cartesian(xlim = c(0, 1), ylim = c(0, 1)) + labs(x = "Recall", y = "Conditional precision")
+ggsave(file.path(OUT, "fig_s2_pr_supp.pdf"), p2b, width = 6.5, height = 4.9, device = cairo_pdf)
 unlink(file.path(OUT, "fig_s2_pr.pdf"))
 
-## Table 3: S2 at nu = 2.07, 3.52, 6, split by beta-type, pooled over n and rho (6 settings);
-## Monte Carlo SEs stratified by setting: SE = sqrt(sum_s var_s / n_s) / K.
+## Table 4 (main): S2 at nu = 2.07, 3.52, 6, by support type, pooled over n and rho (6 settings, 600 fits per cell).
+## Monte Carlo SEs stratified by setting: for a mean, sqrt(sum_s var_s / n_s) / K; for conditional precision (a ratio
+## of two sums over the 600 fits), the linearised ratio estimator sqrt(sum_s n_s var_s(z)) / k with z = (prec - c) 1{non-empty}.
 NU3 <- c(2.07, 3.52, 6)
 strat <- function(x, g) { v <- tapply(x, g, var); m <- tapply(x, g, length); sqrt(sum(v / m)) / length(v) }
-t3 <- S2DATA[nu %in% NU3, .(ex = 100 * mean(exact), size = mean(n_selected), empty = 100 * mean(n_selected == 0),
+rse <- function(pr, g) { ne <- !is.na(pr); k <- sum(ne); c0 <- mean(pr[ne]); z <- ifelse(ne, pr - c0, 0)
+  sqrt(sum(tapply(z, g, function(u) length(u) * var(u)))) / k }
+t3 <- S2DATA[nu %in% NU3, .(ex = sum(exact), size = mean(n_selected), empty = sum(n_selected == 0),
                             prec = mean(prec, na.rm = TRUE), k = sum(!is.na(prec)), rec = mean(rec), N = .N,
-                            se_ex = 100 * strat(as.numeric(exact), setting_id), se_size = strat(n_selected, setting_id),
-                            se_prec = sd(prec, na.rm = TRUE) / sqrt(sum(!is.na(prec))), se_rec = strat(rec, setting_id)),
+                            se_ex = .N * strat(as.numeric(exact), setting_id), se_size = strat(n_selected, setting_id),
+                            se_prec = rse(prec, setting_id), se_prec_naive = sd(prec, na.rm = TRUE) / sqrt(sum(!is.na(prec))),
+                            se_rec = strat(rec, setting_id)),
              by = .(nu, beta_type, method, src)]
+stopifnot(all(t3$N == 600L))
 L <- c("\\begin{tabular}{ll*{5}{r}c*{5}{r}}", "\\toprule",
-       " & & \\multicolumn{5}{c}{beta-type 1 (spread support)} & & \\multicolumn{5}{c}{beta-type 2 (block support)} \\\\",
+       " & & \\multicolumn{5}{c}{spread support} & & \\multicolumn{5}{c}{block support} \\\\",
        "\\cmidrule{3-7}\\cmidrule{9-13}",
-       "$\\nu$ & method & exact & $\\abs{\\Shat}$ & empty & prec. & recall & & exact & $\\abs{\\Shat}$ & empty & prec. & recall \\\\", "\\midrule")
-cell <- function(a) sprintf("%.0f & %.1f & %.0f & %.2f & %.2f", a$ex, a$size, a$empty, a$prec, a$rec)
+       " & & exact & mean & empty & cond. & mean & & exact & mean & empty & cond. & mean \\\\",
+       "$\\nu$ & method & (of 600) & $\\abs{\\Shat}$ & (of 600) & prec. & recall & & (of 600) & $\\abs{\\Shat}$ & (of 600) & prec. & recall \\\\", "\\midrule")
+cell <- function(a) sprintf("%d & %.1f & %d & %s & %.2f", a$ex, a$size, a$empty, fmt_na("%.2f", if (a$k >= KMIN) a$prec else NA), a$rec)
 for (v in NU3) {
   for (m in METHODS) {
     a <- t3[nu == v & method == m & beta_type == 1]; b <- t3[nu == v & method == m & beta_type == 2]
-    lab <- LABELS[m]
-    L <- c(L, sprintf("%s & %s & %s & & %s \\\\", if (m == METHODS[1]) v else "", lab, cell(a), cell(b)))
+    L <- c(L, sprintf("%s & %s & %s & & %s \\\\", if (m == METHODS[1]) v else "", LABELS[m], cell(a), cell(b)))
   }
   if (v != 6) L <- c(L, "\\addlinespace[3pt]")
 }
 L <- c(L, "\\bottomrule", "\\end{tabular}")
 write_tex(L, "tab_s2_main.tex")
-num("S2.tab3.maxSE.exact", f1(max(t3$se_ex))); num("S2.tab3.maxSE.rec", f2(max(t3$se_rec))); num("S2.tab3.maxSE.size", f2(max(t3$se_size)))
+num("S2.tab3.maxSE.exact_count", f1(max(t3$se_ex)), "of 600"); num("S2.tab3.maxSE.rec", f2(max(t3$se_rec))); num("S2.tab3.maxSE.size", f2(max(t3$se_size)))
+num("S2.tab3.maxSE.prec_ratio", sprintf("%.3f", max(t3$se_prec)), "stratified ratio-estimator SE of conditional precision")
+num("S2.tab3.maxSE.prec_naive", sprintf("%.3f", max(t3$se_prec_naive)), "sd/sqrt(k), for comparison")
+num("S2.tab3.k_range", sprintf("%d-%d", min(t3$k), max(t3$k)), "non-empty fits per cell of Table 4")
+for (v in NU3) for (b in 1:2) { a <- t3[nu == v & beta_type == b & method == "smcbvs"]; o <- t3[nu == v & beta_type == b & method == "asi"]
+  num(sprintf("S2.tab3.nu%s.bt%d.k_smc_asi", v, b), sprintf("%d/600 vs %d/600", a$k, o$k)) }
 
 ## S2 numbers for the prose
 for (v in NU) for (m in METHODS) {
@@ -295,6 +312,10 @@ num("S2.bas_mc3.failed_oom", sum(grepl("rc=137", S2DATA[method == "bas_mc3"]$sta
 num("S2.bas_mc3.failed_numeric", sum(S2DATA[method == "bas_mc3" & src == "final"]$failed) - sum(grepl("rc=137", S2DATA[method == "bas_mc3" & src == "final"]$status)),
     "final/bas_mc3_S2_failures.md: 72 numeric errors after MC3 drifts to near-saturated models at n = 50")
 # Documented by Engineering, not recomputed here (scripts/susie_check/elbo.R on Owls):
+for (st in c("S2_070", "S2_010")) { d <- S2DATA[setting_id == st]
+  num(sprintf("S2.susie_check.%s", st), sprintf("n=%d rho=%s nu=%s bt%d; default SuSiE exact %d/100, SMC-BVS %d/100", d$n[1], d$rho[1], d$nu[1], d$beta_type[1],
+      sum(d[method == "susie"]$exact), sum(d[method == "smcbvs"]$exact)), "final/README.md: warm start exact in 65% / 40% of the 20 reps") }
+num("S2.susie_check.warm_exact", "13/20 and 8/20", "final/README.md: warm start recovers the exact model in 65% / 40% of reps (S2_070 / S2_010)")
 num("S2.susie.elbo_check", "31/40", "final/README.md: warm start with sigma^2 fixed at truth then freed; higher ELBO in 16/20 (S2_070) + 15/20 (S2_010)")
 f2s <- fread(SRC$s2_smc_final)
 num("S2.smcbvs.fail_search", sum(f2s$fail_search)); num("S2.smcbvs.fail_statistical", sum(f2s$fail_statistical))
@@ -304,122 +325,79 @@ for (m in METHODS) num(sprintf("S2.%s.all.exact12000", m), sum(S2DATA[method == 
 num("design.datasets", 100L * (16L + 120L), "136 settings x 100 data sets")
 num("S2.smcbvs.eflag_n", sum(f2s$eflag_n)); num("S2.smcbvs.escalated", sum(f2s$escalated))
 num("S2.smcbvs.minESSoverN.median_range", sprintf("%.3f-%.3f", min(f2s$min_ess_over_N_median), max(f2s$min_ess_over_N_median)))
-# Engineering's paired SMC-BVS vs ASI comparison (data sets on which all six fits succeeded)
-pe <- fread(SRC$s2_paired)[method == "asi" & scope != "setting"]
-for (k in seq_len(nrow(pe))) { r <- pe[k]
-  num(sprintf("S2.paired.asi.%s.exactWTL", gsub(" ", "", r$group)), sprintf("%d/%d/%d", r$exact_wins, r$exact_ties, r$exact_losses),
-      sprintf("McNemar p = %s; n_shared = %d; SMC %d ASI %d", signif(r$mcnemar_exact_p, 2), r$n_shared, r$smcbvs_exact, r$other_exact)) }
-for (m in METHODS) { d <- S2DATA[method == m]
-  num(sprintf("S2.%s.wall_med_all", m), hms(median(d$wall_sec, na.rm = TRUE)), sprintf("%d fits, %d without wall time (failed)", nrow(d), sum(is.na(d$wall_sec))))
-  for (nn in c(50, 100)) num(sprintf("S2.%s.n%d.wall_med", m, nn), hms(median(d[n == nn]$wall_sec, na.rm = TRUE))) }
 
-# ================================================================== supplement (Section 4) full grids
-s1tab <- function(metric, fmt, caption_key) {
-  w <- dcast(s1[, .(v = get(metric)), by = .(setting_id, n, p, snr, method)][, .(v = if (metric == "exact") sum(v) else if (metric == "prec") cprec(v) else mean(v)),
-             by = .(setting_id, n, p, snr, method)], setting_id + n + p + snr ~ method, value.var = "v")
-  L <- c("\\begin{tabular}{rrr*{6}{r}}", "\\toprule", paste("$n$ & $p$ & SNR &", paste(LABELS[METHODS], collapse = " & "), "\\\\"), "\\midrule")
-  for (k in seq_len(nrow(w))) { r <- w[k]
-    L <- c(L, paste0(sprintf("%d & %d & %s & ", r$n, r$p, r$snr), paste(fmt_na(fmt, unlist(r[, METHODS, with = FALSE])), collapse = " & "), " \\\\"))
-    if (k %% 4 == 0 && k < nrow(w)) L <- c(L, "\\addlinespace[2pt]") }
-  c(L, "\\bottomrule", "\\end{tabular}")
-}
-write_tex(s1tab("exact", "%d", ""), "supp_s1_exact.tex")
-write_tex(s1tab("FP", "%.2f", ""), "supp_s1_fp.tex")
-write_tex(s1tab("FN", "%.2f", ""), "supp_s1_fn.tex")
-write_tex(s1tab("hamming", "%.2f", ""), "supp_s1_hamming.tex")
-write_tex(s1tab("prec", "%.3f", ""), "supp_s1_prec.tex")
-write_tex(s1tab("rec", "%.3f", ""), "supp_s1_rec.tex")
-write_tex(s1tab("F1", "%.3f", ""), "supp_s1_f1.tex")
-s1[, wall_min := wall_sec / 60]
-w <- dcast(s1[, .(v = median(wall_min)), by = .(setting_id, n, p, snr, method)], setting_id + n + p + snr ~ method, value.var = "v")
-L <- c("\\begin{tabular}{rrr*{6}{r}}", "\\toprule", paste("$n$ & $p$ & SNR &", paste(LABELS[METHODS], collapse = " & "), "\\\\"), "\\midrule")
-for (k in seq_len(nrow(w))) { r <- w[k]; v <- unlist(r[, METHODS, with = FALSE])
-  L <- c(L, paste0(sprintf("%d & %d & %s & ", r$n, r$p, r$snr), paste(ifelse(v < 10, sprintf("%.2f", v), sprintf("%.0f", v)), collapse = " & "), " \\\\"))
-  if (k %% 4 == 0 && k < nrow(w)) L <- c(L, "\\addlinespace[2pt]") }
-write_tex(c(L, "\\bottomrule", "\\end{tabular}"), "supp_s1_wall.tex")
+# ---- block support: score ordering (a mode criterion), within-fit PIPs, and the signal per block member ----
+# failure_type in the diagnostic is the harness's score comparison: "statistical" = the posterior scores the selected
+# model at least as high as S0, i.e. S0 is not the posterior mode among the two; it says nothing directly about the MPM.
+for (v in c(6)) for (rr in c(0.35, 0.7)) { x <- bd[beta_type == 2 & nu == v & rho == rr & success == FALSE]
+  num(sprintf("S2.diag.bt2.nu%s.rho%s.misses_scoreorder", v, rr), sprintf("%d/%d", sum(x$failure_type == "statistical"), nrow(x)),
+      "misses in which the selected model scores >= S0") }
+x6 <- bd[beta_type == 2 & nu == 6 & success == FALSE]
+num("S2.diag.bt2.nu6.misses_scoreorder", sprintf("%d/%d", sum(x6$failure_type == "statistical"), nrow(x6)))
+num("S2.diag.bt2.nu6.hpm_eq_mpm", sprintf("%d/%d", sum(x6$HPM_eq_MPM %in% c(TRUE, "TRUE", "True")), nrow(x6)), "estimated HPM equals reported MPM, among misses")
+pipl <- lapply(strsplit(x6$pip_S0, ","), as.numeric)
+mid <- vapply(pipl, function(u) sum(u > 0.2 & u < 0.8), 0L); hi <- vapply(pipl, function(u) sum(u >= 0.5), 0L)
+near <- vapply(pipl, function(u) any(abs(u - 0.5) < 0.1), TRUE)
+num("S2.diag.bt2.nu6.misses_with_member_pip_0.2-0.8", sprintf("%d/%d", sum(mid >= 1), length(mid)), "fits with at least one block member at PIP in (0.2, 0.8)")
+num("S2.diag.bt2.nu6.median_members_pip_0.2-0.8", median(mid))
+num("S2.diag.bt2.nu6.misses_member_within0.1_of_half", sprintf("%d/%d", sum(near), length(near)))
+# beta' Sigma beta and the conditional variance of a block member given the other members, exact for the design.
+sig_info <- rbindlist(lapply(c(5L, 10L), function(s0) rbindlist(lapply(c(0, 0.35, 0.7), function(rho) {
+  p <- 1000L; pos1 <- round(1 + (seq_len(s0) - 1) * (p - 1) / (s0 - 1)); pos2 <- seq_len(s0)
+  f <- function(pos) { S <- rho^abs(outer(pos, pos, "-")); c(bSb = sum(S), cv = mean(1 / diag(solve(S)))) }
+  a <- f(pos1); b <- f(pos2)
+  data.table(s0 = s0, rho = rho, bSb1 = a[["bSb"]], bSb2 = b[["bSb"]], cv1 = a[["cv"]], cv2 = b[["cv"]],
+             ratio = (b[["cv"]] / b[["bSb"]]) / (a[["cv"]] / a[["bSb"]])) }))))
+for (k in seq_len(nrow(sig_info))) { r <- sig_info[k]
+  num(sprintf("S2.design.s0%d.rho%s.signal", r$s0, r$rho), sprintf("bSb spread %.1f block %.1f; cond var spread %.2f block %.2f; per-member signal ratio %.2f",
+      r$bSb1, r$bSb2, r$cv1, r$cv2, r$ratio), "noise var = bSb/nu; signal ratio = (cv2/bSb2)/(cv1/bSb1)") }
 
-# S2: one table per (metric, n); rows beta-type x rho x nu (60), columns the six methods
-s2tab <- function(metric, nn, fmt) {
-  agg <- S2DATA[n == nn, .(v = if (metric == "exact") sum(get(metric)) else if (metric == "prec") cprec(get(metric)) else mean(get(metric)), N = .N),
-                by = .(beta_type, rho, nu, method)]
-  w <- dcast(agg, beta_type + rho + nu ~ method, value.var = "v")
-  L <- c("\\begin{tabular}{rrr*{6}{r}}", "\\toprule",
-         paste("bt & $\\rho$ & $\\nu$ &", paste(LABELS[METHODS], collapse = " & "), "\\\\"), "\\midrule")
-  for (k in seq_len(nrow(w))) { r <- w[k]; v <- unlist(r[, METHODS, with = FALSE])
-    first <- r$nu == min(NU)
-    L <- c(L, paste0(sprintf("%s & %s & %s & ", if (first && r$rho == 0) r$beta_type else "", if (first) r$rho else "", r$nu),
-                     paste(fmt_na(fmt, v), collapse = " & "), " \\\\"))
-    if (r$nu == max(NU) && k < nrow(w)) L <- c(L, "\\addlinespace[2pt]") }
-  c(L, "\\bottomrule", "\\end{tabular}")
-}
-for (nn in c(50, 100)) {
-  write_tex(s2tab("exact", nn, "%d"), sprintf("supp_s2_exact_n%d.tex", nn))
-  write_tex(s2tab("prec", nn, "%.2f"), sprintf("supp_s2_prec_n%d.tex", nn))
-  write_tex(s2tab("rec", nn, "%.2f"), sprintf("supp_s2_rec_n%d.tex", nn))
-  write_tex(s2tab("FP", nn, "%.2f"), sprintf("supp_s2_fp_n%d.tex", nn))
-  S2DATA[, empty := 100 * (n_selected == 0)]
-  write_tex(s2tab("empty", nn, "%.0f"), sprintf("supp_s2_empty_n%d.tex", nn))
-}
-
-writeLines(c(sprintf("S1 fits: %d; S2 fits: %d", nrow(s1), nrow(S2DATA))))
-
-# S2 mean |S_hat| tables and the paired SMC-BVS vs ASI table on the shared data sets (all six fits succeeded),
-# recomputed from the records and checked against Engineering's paired table.
-for (nn in c(50, 100)) write_tex(s2tab("n_selected", nn, "%.2f"), sprintf("supp_s2_size_n%d.tex", nn))
-pw <- merge(S2DATA[method == "smcbvs" & shared == TRUE, .(setting_id, rep, nu, beta_type, rho, smc = exact)],
-            S2DATA[method == "asi" & shared == TRUE, .(setting_id, rep, asi = exact)], by = c("setting_id", "rep"))
-tot <- pw[, .(n = .N, w = sum(smc & !asi), l = sum(asi & !smc))]
-ea <- pe[group == "all S2"]
-stopifnot(tot$n == ea$n_shared, tot$w == ea$exact_wins, tot$l == ea$exact_losses)
-for (v in NU3) { a <- pw[nu == v]; e <- pe[group == sprintf("ν = %s", v)]
-  stopifnot(nrow(a) == e$n_shared, sum(a$smc & !a$asi) == e$exact_wins, sum(a$asi & !a$smc) == e$exact_losses) }
-pa <- pw[nu %in% NU3, .(n_shared = .N, smc = sum(smc), asi = sum(asi), w = sum(smc & !asi), l = sum(asi & !smc)),
-         by = .(nu, beta_type, rho)][order(nu, beta_type, rho)]
-mcn <- function(w, l) if (w + l == 0) NA_real_ else binom.test(w, w + l)$p.value
-L <- c("\\begin{tabular}{rrrrrrrr}", "\\toprule", "$\\nu$ & bt & $\\rho$ & shared & SMC-BVS exact & ASI exact & SMC-BVS only & ASI only \\\\", "\\midrule")
-for (k in seq_len(nrow(pa))) { r <- pa[k]
-  L <- c(L, sprintf("%s & %d & %s & %d & %d & %d & %d & %d \\\\", if (k == 1 || pa$nu[k - 1] != r$nu) r$nu else "", r$beta_type, r$rho, r$n_shared, r$smc, r$asi, r$w, r$l))
-  if (k < nrow(pa) && pa$nu[k + 1] != r$nu) L <- c(L, "\\addlinespace[2pt]") }
-tt <- pa[, .(n_shared = sum(n_shared), smc = sum(smc), asi = sum(asi), w = sum(w), l = sum(l)), by = nu]
-L <- c(L, "\\midrule")
-for (k in seq_len(nrow(tt))) { r <- tt[k]; pv <- mcn(r$w, r$l)
-  L <- c(L, sprintf("%s & all & & %d & %d & %d & %d & %d \\\\", r$nu, r$n_shared, r$smc, r$asi, r$w, r$l))
-  num(sprintf("S2.paired.nu%s.WL", r$nu), sprintf("%d/%d of %d shared; SMC %d ASI %d", r$w, r$l, r$n_shared, r$smc, r$asi), sprintf("McNemar p = %s", signif(pv, 2))) }
+# ---- paired SMC-BVS vs ASI on all 12,000 data sets (both finished on every one) ----
+pwa <- merge(S2DATA[method == "smcbvs", .(setting_id, rep, n, nu, beta_type, rho, smc = exact, shared)],
+             S2DATA[method == "asi", .(setting_id, rep, asi = exact, af = failed)], by = c("setting_id", "rep"))
+stopifnot(nrow(pwa) == 12000L, !any(pwa$af), !any(S2DATA[method == "smcbvs"]$failed))
+wl <- function(d) d[, .(N = .N, smc = sum(smc), asi = sum(asi), w = sum(smc & !asi), l = sum(asi & !smc))]
+a0 <- wl(pwa); num("S2.paired.all12000.WL", sprintf("%d/%d of %d", a0$w, a0$l, a0$N), sprintf("McNemar p = %s", signif(mcn(a0$w, a0$l), 2)))
+c0 <- wl(pwa[shared == TRUE]); num("S2.paired.shared.WL", sprintf("%d/%d of %d", c0$w, c0$l, c0$N), sprintf("complete cases, six methods; McNemar p = %s", signif(mcn(c0$w, c0$l), 2)))
+num("S2.shared.n", sum(pwa$shared), "data sets on which all six methods finished")
+for (v in NU) { a <- wl(pwa[nu == v]); num(sprintf("S2.paired.all.nu%s.WL", v), sprintf("%d/%d of %d; SMC %d ASI %d", a$w, a$l, a$N, a$smc, a$asi),
+                                           sprintf("McNemar p = %s", signif(mcn(a$w, a$l), 2))) }
+bys <- pwa[, .(w = sum(smc & !asi), l = sum(asi & !smc)), by = .(beta_type, n, rho)][, p := mapply(mcn, w, l)]
+num("S2.paired.all.by_bt_n_rho.sig", sprintf("%d of %d (SMC ahead %d, ASI ahead %d)", sum(bys$p < 0.05, na.rm = TRUE), nrow(bys),
+    sum(bys$p < 0.05 & bys$w > bys$l, na.rm = TRUE), sum(bys$p < 0.05 & bys$l > bys$w, na.rm = TRUE)), "pooled over nu; McNemar p < 0.05")
+num("S2.smcbvs.nu6.exact_share_of_all", sprintf("%d of %d", sum(pwa[nu == 6]$smc), sum(pwa$smc)))
+num("S2.paired.all.nu_lt6.WL", { a <- wl(pwa[nu < 6]); sprintf("%d/%d of %d; SMC %d ASI %d", a$w, a$l, a$N, a$smc, a$asi) },
+    { a <- wl(pwa[nu < 6]); sprintf("McNemar p = %s", signif(mcn(a$w, a$l), 2)) })
+pa <- pwa[nu %in% NU3, .(N = .N, smc = sum(smc), asi = sum(asi), w = sum(smc & !asi), l = sum(asi & !smc)),
+          by = .(nu, beta_type, rho)][order(nu, beta_type, rho)]
+L <- c("\\begin{tabular}{rlrrrrrrr}", "\\toprule",
+       " & & & & \\multicolumn{2}{c}{exact recovery} & \\multicolumn{2}{c}{only one method exact} & \\\\", "\\cmidrule(lr){5-6}\\cmidrule(lr){7-8}",
+       "$\\nu$ & support & $\\rho$ & data sets & SMC-BVS & ASI & SMC-BVS & ASI & McNemar $p$ \\\\", "\\midrule")
+fp <- function(x) ifelse(is.na(x), "--", ifelse(x < 0.001, sprintf("$%s$", sub("e-0?(\\d+)", "\\\\times10^{-\\1}", formatC(x, format = "e", digits = 0))), sprintf("%.3f", x)))
+for (v in NU3) { for (k in which(pa$nu == v)) { r <- pa[k]
+    L <- c(L, sprintf("%s & %s & %s & %d & %d & %d & %d & %d & \\\\", if (k == min(which(pa$nu == v))) v else "",
+                      if (r$rho == 0) c("spread", "block")[r$beta_type] else "", r$rho, r$N, r$smc, r$asi, r$w, r$l)) }
+  a <- wl(pwa[nu == v]); L <- c(L, sprintf(" & all & & %d & %d & %d & %d & %d & %s \\\\", a$N, a$smc, a$asi, a$w, a$l, fp(mcn(a$w, a$l))))
+  L <- c(L, "\\addlinespace[3pt]") }
+L <- c(L, sprintf("\\multicolumn{3}{l}{all of S2} & %d & %d & %d & %d & %d & %s \\\\", a0$N, a0$smc, a0$asi, a0$w, a0$l, fp(mcn(a0$w, a0$l))),
+       sprintf("\\multicolumn{3}{l}{complete cases} & %d & %d & %d & %d & %d & %s \\\\", c0$N, c0$smc, c0$asi, c0$w, c0$l, fp(mcn(c0$w, c0$l))))
 write_tex(c(L, "\\bottomrule", "\\end{tabular}"), "supp_s2_paired_asi.tex")
+# The complete-case (shared) analysis must still equal Engineering's paired table.
+pe <- fread(SRC$s2_paired)[method == "asi" & scope != "setting"]
+ea <- pe[group == "all S2"]; stopifnot(c0$N == ea$n_shared, c0$w == ea$exact_wins, c0$l == ea$exact_losses)
+for (v in NU3) { a <- wl(pwa[shared == TRUE & nu == v]); e <- pe[group == sprintf("ν = %s", v)]
+  stopifnot(a$N == e$n_shared, a$w == e$exact_wins, a$l == e$exact_losses) }
+for (k in seq_len(nrow(pe))) { r <- pe[k]
+  num(sprintf("S2.paired.shared.asi.%s.exactWTL", gsub(" ", "", r$group)), sprintf("%d/%d/%d", r$exact_wins, r$exact_ties, r$exact_losses),
+      sprintf("McNemar p = %s; n_shared = %d; SMC %d ASI %d", signif(r$mcnemar_exact_p, 2), r$n_shared, r$smcbvs_exact, r$other_exact)) }
 
-# S2 cost, SMC-BVS vs ASI by n (supplement): wall times recomputed and checked against Engineering's runtime table;
-# billed CPU hours from that table (Slurm sacct).
-rt2 <- fread(SRC$s2_runtime)
-wq2 <- S2DATA[method %in% c("smcbvs", "asi"), .(med = median(wall_sec), q90 = quantile(wall_sec, 0.9, type = 7),
-                                                mx = max(wall_sec), ex = sum(exact)), by = .(method, n)]
-chk2 <- merge(wq2, rt2, by = c("method", "n"))
-stopifnot(nrow(chk2) == 4L, max(abs(chk2$med - chk2$wall_med_s)) < 1e-3, max(abs(chk2$mx - chk2$wall_max_s)) < 1e-3,
-          max(abs(chk2$q90 - chk2$wall_q90_s)) < 1e-2, all(chk2$ex == chk2$exact))
-message("verified S2 runtime: recomputed wall median/q90/max and exact counts equal final/runtime_S2_smcbvs_asi.tsv")
-L <- c("\\begin{tabular}{llrrrrrr}", "\\toprule",
-       " & & & \\multicolumn{3}{c}{wall time per fit} & \\multicolumn{2}{c}{billed CPU-h} \\\\", "\\cmidrule(lr){4-6}\\cmidrule(lr){7-8}",
-       "$n$ & method & exact & median & 90\\% & max & median & total \\\\", "\\midrule")
-for (nn in c(50, 100)) for (m in c("smcbvs", "asi")) { r <- chk2[method == m & n == nn]
-  L <- c(L, sprintf("%s & %s & %d & %s & %s & %s & %.3f & %s \\\\", if (m == "smcbvs") nn else "", LABELS[m], r$ex,
-                    tex_hms(r$med), tex_hms(r$q90), tex_hms(r$mx), r$billed_med_per_fit_h, formatC(r$billed_recorded_h, format = "f", digits = 0, big.mark = ",")))
-  if (m == "asi" && nn == 50) L <- c(L, "\\addlinespace[2pt]") }
-write_tex(c(L, "\\bottomrule", "\\end{tabular}"), "supp_s2_cost.tex")
-for (m in c("smcbvs", "asi")) { r <- chk2[method == m]; d <- S2DATA[method == m]
-  num(sprintf("S2.%s.billed_total", m), formatC(sum(r$billed_recorded_h), format = "f", digits = 1), "final/runtime_S2_smcbvs_asi.tsv (sacct)")
-  num(sprintf("S2.%s.core_h_total", m), sprintf("%.0f", sum(d$wall_sec) / 3600), "sum of per-fit wall time, 1 core")
-  num(sprintf("S2.%s.wall_q90_all", m), hms(quantile(d$wall_sec, 0.9))); num(sprintf("S2.%s.wall_max_all", m), hms(max(d$wall_sec)))
-  for (nn in c(50, 100)) num(sprintf("S2.%s.n%d.billed_med", m, nn), sprintf("%.3f", r[n == nn]$billed_med_per_fit_h)) }
-num("S2.billed_med_all", "SMC 0.136, ASI 1.018", "final/runtime_S2_smcbvs_asi.md (not in the tsv)")
-
-# Precision under four conventions (supplement), S2 at nu = 2.07, 3.52, 6 by beta-type, pooled over n and rho:
-# (i) conditional mean over the k non-empty fits; (ii) empty -> 1; (iii) empty -> 0; (iv) pooled, sum TP / sum |S_hat|.
-# Identity checked: (ii) = e + (1 - e)(i) and (iii) = (1 - e)(i), e the empty share.
+# ---- precision: four conventions (sensitivity) and paired differences on jointly non-empty data sets ----
 sens <- S2DATA[nu %in% NU3, .(k = sum(n_selected > 0), N = .N, c1 = mean(prec, na.rm = TRUE), c2 = mean(prec1),
                               c3 = mean(fifelse(n_selected > 0, prec, 0)), c4 = sum(TP) / sum(n_selected), e = mean(n_selected == 0)),
                by = .(nu, beta_type, method)]
 stopifnot(max(abs(sens$c2 - (sens$e + (1 - sens$e) * sens$c1))) < 1e-12, max(abs(sens$c3 - (1 - sens$e) * sens$c1)) < 1e-12)
 L <- c("\\begin{tabular}{ll*{5}{r}c*{5}{r}}", "\\toprule",
-       " & & \\multicolumn{5}{c}{beta-type 1} & & \\multicolumn{5}{c}{beta-type 2} \\\\", "\\cmidrule{3-7}\\cmidrule{9-13}",
+       " & & \\multicolumn{5}{c}{spread support} & & \\multicolumn{5}{c}{block support} \\\\", "\\cmidrule{3-7}\\cmidrule{9-13}",
        "$\\nu$ & method & $k$ & (i) & (ii) & (iii) & (iv) & & $k$ & (i) & (ii) & (iii) & (iv) \\\\", "\\midrule")
 sc <- function(a) sprintf("%d & %.3f & %.3f & %.3f & %.3f", a$k, a$c1, a$c2, a$c3, a$c4)
 for (v in NU3) { for (m in METHODS) {
@@ -428,37 +406,216 @@ for (v in NU3) { for (m in METHODS) {
 write_tex(c(L, "\\bottomrule", "\\end{tabular}"), "supp_s2_prec_conventions.tex")
 for (v in NU3) for (b in 1:2) for (m in METHODS) { a <- sens[nu == v & beta_type == b & method == m]
   num(sprintf("S2.%s.nu%s.bt%d.prec_conv", m, v, b), sprintf("k=%d (i)=%.3f (ii)=%.3f (iii)=%.3f (iv)=%.3f", a$k, a$c1, a$c2, a$c3, a$c4)) }
-# Paired precision differences, SMC-BVS minus another method, on data sets where both selections are non-empty.
-for (o in c("asi", "bas_mc3", "susie", "lasso_cv", "scad")) {
+# ranking of SMC-BVS against ASI under each convention, over the 6 cells
+rk <- merge(sens[method == "smcbvs"], sens[method == "asi"], by = c("nu", "beta_type"))
+for (cc in c("c1", "c2", "c3", "c4")) num(sprintf("S2.prec_rank.%s.smc_above_asi", cc), sprintf("%d of 6 cells", sum(rk[[paste0(cc, ".x")]] > rk[[paste0(cc, ".y")]])),
+                                          paste(rk[rk[[paste0(cc, ".x")]] <= rk[[paste0(cc, ".y")]], sprintf("nu=%s bt%d", nu, beta_type)], collapse = ", "))
+PD <- rbindlist(lapply(setdiff(METHODS, "smcbvs"), function(o) {
   pd <- merge(S2DATA[method == "smcbvs" & nu %in% NU3, .(setting_id, rep, nu, beta_type, a = prec)],
-              S2DATA[method == o, .(setting_id, rep, b = prec)], by = c("setting_id", "rep"))[!is.na(a) & !is.na(b)]
-  r <- pd[, .(d = mean(a - b), se = sd(a - b) / sqrt(.N), m = .N), by = .(nu, beta_type)]
+              S2DATA[method == o, .(setting_id, rep, b = prec)], by = c("setting_id", "rep"))
+  pd[, .(m = sum(!is.na(a) & !is.na(b)), d = mean((a - b)[!is.na(a) & !is.na(b)]),
+         se = { z <- (a - b)[!is.na(a) & !is.na(b)]; sd(z) / sqrt(length(z)) },
+         ca = mean(a[!is.na(a) & !is.na(b)]), cb = mean(b[!is.na(a) & !is.na(b)]),
+         b_only = mean(b[is.na(a) & !is.na(b)]), nb_only = sum(is.na(a) & !is.na(b))), by = .(nu, beta_type)][, method := o] }))
+L <- c("\\begin{tabular}{ll*{4}{r}c*{4}{r}}", "\\toprule",
+       " & & \\multicolumn{4}{c}{spread support} & & \\multicolumn{4}{c}{block support} \\\\", "\\cmidrule{3-6}\\cmidrule{8-11}",
+       " & other & both & & & & & both & & & \\\\",
+       "$\\nu$ & method & non-empty & SMC-BVS & other & difference & & non-empty & SMC-BVS & other & difference \\\\", "\\midrule")
+pc <- function(a) sprintf("%d & %.3f & %.3f & %+.3f (%.3f)", a$m, a$ca, a$cb, a$d, a$se)
+for (v in NU3) { for (o in setdiff(METHODS, "smcbvs")) {
+  L <- c(L, sprintf("%s & %s & %s & & %s \\\\", if (o == "asi") v else "", LABELS[o], pc(PD[nu == v & method == o & beta_type == 1]), pc(PD[nu == v & method == o & beta_type == 2]))) }
+  if (v != 6) L <- c(L, "\\addlinespace[3pt]") }
+write_tex(c(L, "\\bottomrule", "\\end{tabular}"), "supp_s2_prec_paired.tex")
+for (o in setdiff(METHODS, "smcbvs")) { r <- PD[method == o]
   num(sprintf("S2.precdiff.smc_minus_%s.range", o), sprintf("%+.3f to %+.3f", min(r$d), max(r$d)),
       sprintf("6 cells nu x bt; max SE %.3f; pairs per cell %d-%d", max(r$se), min(r$m), max(r$m))) }
+for (v in NU3) for (b in 1:2) { r <- PD[method == "asi" & nu == v & beta_type == b]
+  num(sprintf("S2.precdiff.asi.nu%s.bt%d", v, b), sprintf("m=%d diff=%+.3f; ASI prec where SMC-BVS empty: %.3f (%d fits)", r$m, r$d, r$b_only, r$nb_only)) }
 k_low <- S2DATA[method == "smcbvs", .(k = sum(n_selected > 0)), by = nu]
 num("S2.smcbvs.k_nonempty_by_nu", paste(sprintf("%s:%d", k_low$nu, k_low$k), collapse = " "), "of 1200 per nu")
-num("S2.tab3.maxSE.prec_cond", f3 <- sprintf("%.3f", max(t3$se_prec)), "sd/sqrt(k) over the k non-empty fits of a cell")
-num("S2.tab3.k_range", sprintf("%d-%d", min(t3$k), max(t3$k)), "non-empty fits per cell of Table 4")
+
+# ---- run time ----
+# S2 runtime check against Engineering's table (both methods finished every data set at the first attempt).
+rt2 <- fread(SRC$s2_runtime)
+wq2 <- S2DATA[method %in% c("smcbvs", "asi"), .(med = median(wall_sec), q90 = quantile(wall_sec, 0.9, type = 7),
+                                                mx = max(wall_sec), ex = sum(exact)), by = .(method, n)]
+chk2 <- merge(wq2, rt2, by = c("method", "n"))
+stopifnot(nrow(chk2) == 4L, max(abs(chk2$med - chk2$wall_med_s)) < 1e-3, max(abs(chk2$mx - chk2$wall_max_s)) < 1e-3,
+          max(abs(chk2$q90 - chk2$wall_q90_s)) < 1e-2, all(chk2$ex == chk2$exact))
+for (f in c("^sacct_s2b", "^sacct_asi_s2b")) { x <- SA[grepl(f, file)]; stopifnot(nrow(x) == 12000L, all(x$State == "COMPLETED")) }
+message("verified S2 runtime: recomputed wall median/q90/max and exact counts equal final/runtime_S2_smcbvs_asi.tsv; 12,000 + 12,000 Slurm tasks COMPLETED")
+for (f in c("^sacct_s2b", "^sacct_asi_s2b")) { x <- SA[grepl(f, file)]
+  num(sprintf("S2.cpu.%s", gsub("[^a-z0-9]", "", f)), paste(sprintf("%s: %d", names(table(x$CPU_model)), table(x$CPU_model)), collapse = "; ")) }
+S2DATA[, wall_sub := wall_sec]
+# Main-text table: median wall time per fit (minutes, one core) of the six methods.
+fmin <- function(v) ifelse(v < 0.005, "$<$0.01", ifelse(v < 0.095, sprintf("%.2f", v), ifelse(v < 9.95, sprintf("%.1f", v), formatC(v, format = "f", digits = 0, big.mark = ","))))
+L <- c("\\begin{tabular}{lll*{6}{r}}", "\\toprule", paste("design & size & signal &", paste(LABELS[METHODS], collapse = " & "), "\\\\"), "\\midrule")
+s1[, sig := fifelse(snr <= 1, "$\\mathrm{SNR}\\le1$", "$\\mathrm{SNR}\\ge2$")]
+for (pp in c(500, 5000)) for (nn in c(500, 1000)) for (g in unique(s1$sig)) {
+  v <- s1[p == pp & n == nn & sig == g, .(m = median(wall_sec) / 60), by = method][match(METHODS, method)]$m
+  L <- c(L, sprintf("%s & %s & %s & %s \\\\", if (pp == 500 && nn == 500 && g == unique(s1$sig)[1]) "S1" else "",
+                    if (g == unique(s1$sig)[1]) sprintf("$(%d,%d)$", nn, pp) else "", g, paste(fmin(v), collapse = " & "))) }
+L <- c(L, "\\addlinespace[3pt]")
+S2DATA[, sig := fifelse(nu <= 1.22, "$\\nu\\le1.22$", "$\\nu\\ge2.07$")]
+for (nn in c(50, 100)) for (g in c("$\\nu\\le1.22$", "$\\nu\\ge2.07$")) {
+  v <- S2DATA[n == nn & sig == g, .(m = median(wall_sec, na.rm = TRUE) / 60), by = method][match(METHODS, method)]$m
+  L <- c(L, sprintf("%s & %s & %s & %s \\\\", if (nn == 50 && g == "$\\nu\\le1.22$") "S2" else "",
+                    if (g == "$\\nu\\le1.22$") sprintf("$n=%d$", nn) else "", g, paste(fmin(v), collapse = " & "))) }
+write_tex(c(L, "\\bottomrule", "\\end{tabular}"), "tab_cost.tex")
+for (m in METHODS) { num(sprintf("S1.%s.wall_med_all_min", m), sprintf("%.2f min", median(s1[method == m]$wall_sec) / 60))
+  num(sprintf("S2.%s.wall_med_all_min", m), sprintf("%.2f min", median(S2DATA[method == m]$wall_sec, na.rm = TRUE) / 60)) }
+for (pp in c(500, 5000)) for (nn in c(500, 1000)) for (sn in c(0.5, 1, 2, 3)) for (m in c("smcbvs", "asi")) {
+  num(sprintf("S1.%s.n%d.p%d.snr%s.wall_med", m, nn, pp, sn), hms(median(s1[method == m & n == nn & p == pp & snr == sn]$wall_sec))) }
+for (pp in c(500, 5000)) for (nn in c(500, 1000)) for (g in c(1, 2)) {
+  d <- s1[p == pp & n == nn & (if (g == 1) snr <= 1 else snr >= 2)]
+  num(sprintf("S1.n%d.p%d.%s.wall_med_smc_asi", nn, pp, c("snrle1", "snrge2")[g]),
+      sprintf("SMC %s ASI %s", hms(median(d[method == "smcbvs"]$wall_sec)), hms(median(d[method == "asi"]$wall_sec)))) }
+# Data generation and diagnostics inside the wall time: wall_sec_harness - runtime_sec of each record.
+for (tg in c("s1", "s2")) { rtc <- json_runtime(if (tg == "s1") s1 else S2DATA, CACHE, tg)
+  D <- merge(if (tg == "s1") s1[, .(setting_id, rep, method, wall_sec)] else S2DATA[, .(setting_id, rep, method, wall_sec)], rtc, by = c("setting_id", "rep", "method"))
+  for (m in METHODS) { x <- D[method == m & !is.na(runtime_sec) & !is.na(wall_sec)]
+    num(sprintf("%s.%s.overhead", toupper(tg), m), sprintf("median %.1f s (%.0f%% of median wall)", median(x$wall_sec - x$runtime_sec),
+        100 * median((x$wall_sec - x$runtime_sec) / x$wall_sec)), "wall_sec_harness - runtime_sec") } }
+# Supplement: SMC-BVS against ASI, time per submitted data set (for SMC-BVS in S1, ten data sets took a 24 h first
+# attempt plus the rerun), with the tail at named quantiles.
+qs <- function(x) quantile(x, c(0.5, 0.9, 0.99), type = 7)
+L <- c("\\begin{tabular}{llrrrrrr}", "\\toprule",
+       " & & & \\multicolumn{4}{c}{time per submitted data set} & \\\\", "\\cmidrule(lr){4-7}",
+       "size & method & exact & median & 90\\% & 99\\% & max & escalated \\\\", "\\midrule")
+blk <- list(list(d = s1[p == 500], by = "n", lab = "S1, $p=500$ (minutes)", div = 60, f = function(v) sprintf("%.1f", v), sz = function(nn) sprintf("$n=%d$", nn)),
+            list(d = s1[p == 5000], by = "n", lab = "S1, $p=5000$ (hours)", div = 3600, f = function(v) sprintf("%.2f", v), sz = function(nn) sprintf("$n=%d$", nn)),
+            list(d = S2DATA, by = "n", lab = "S2 (minutes)", div = 60, f = function(v) sprintf("%.1f", v), sz = function(nn) sprintf("$n=%d$", nn)))
+for (b in blk) { L <- c(L, sprintf("\\multicolumn{8}{l}{\\emph{%s}} \\\\", b$lab))
+  for (nn in sort(unique(b$d$n))) for (m in c("smcbvs", "asi")) { x <- b$d[method == m & n == nn]; q <- qs(x$wall_sub) / b$div
+    L <- c(L, sprintf("%s & %s & %d & %s & %s & %s & %s & %s \\\\", if (m == "smcbvs") b$sz(nn) else "", LABELS[m], sum(x$exact),
+                      b$f(q[1]), b$f(q[2]), b$f(q[3]), b$f(max(x$wall_sub) / b$div), if (m == "smcbvs") sum(x$escalated) else "--")) }
+  L <- c(L, "\\addlinespace[3pt]") }
+write_tex(c(L[-length(L)], "\\bottomrule", "\\end{tabular}"), "supp_cost_smc_asi.tex")
+for (pp in c(500, 5000)) for (m in c("smcbvs", "asi")) { x <- s1[method == m & p == pp]
+  q <- qs(x$wall_sub); num(sprintf("S1.%s.p%d.sub_q", m, pp), sprintf("median %s, q90 %s, q99 %s, max %s", hms(q[1]), hms(q[2]), hms(q[3]), hms(max(x$wall_sub))), "per submitted data set")
+  q <- qs(x$wall_sec); num(sprintf("S1.%s.p%d.fit_q", m, pp), sprintf("median %s, q90 %s, q99 %s, max %s", hms(q[1]), hms(q[2]), hms(q[3]), hms(max(x$wall_sec))), "per completed fit") }
+for (m in c("smcbvs", "asi")) { x <- S2DATA[method == m]; q <- qs(x$wall_sub)
+  num(sprintf("S2.%s.sub_q", m), sprintf("median %s, q90 %s, q99 %s, max %s", hms(q[1]), hms(q[2]), hms(q[3]), hms(max(x$wall_sub)))) }
+for (m in c("smcbvs", "asi")) { num(sprintf("S1.%s.core_h_total_sub", m), sprintf("%.0f", sum(s1[method == m]$wall_sub) / 3600), "incl. the ten 24 h first attempts for SMC-BVS")
+  num(sprintf("S2.%s.core_h_total", m), sprintf("%.0f", sum(S2DATA[method == m]$wall_sec) / 3600)) }
+for (m in METHODS) num(sprintf("S2.%s.wall_med_all", m), hms(median(S2DATA[method == m]$wall_sec, na.rm = TRUE)))
+for (m in METHODS) for (nn in c(50, 100)) num(sprintf("S2.%s.n%d.wall_med", m, nn), hms(median(S2DATA[method == m & n == nn]$wall_sec, na.rm = TRUE)))
+for (v in NU) num(sprintf("S2.nu%s.wall_med_smc_asi", v), sprintf("SMC %s ASI %s", hms(median(S2DATA[method == "smcbvs" & nu == v]$wall_sec)), hms(median(S2DATA[method == "asi" & nu == v]$wall_sec))))
+mech2 <- S2DATA[method == "smcbvs", .(stages = median(n_stages), esc = mean(escalated), wall = median(wall_sec)), by = .(n, sig)]
+for (k in seq_len(nrow(mech2))) { r <- mech2[k]; num(sprintf("S2.smcbvs.n%d.%s.mech", r$n, gsub("[^a-z0-9.]", "", r$sig)),
+  sprintf("stages %d, escalated %.0f%%, wall %s", as.integer(r$stages), 100 * r$esc, hms(r$wall))) }
+for (nn in c(50, 100)) num(sprintf("S2.smcbvs.n%d.escalated", nn), sprintf("%d/6000", sum(S2DATA[method == "smcbvs" & n == nn]$escalated)))
+num("S2.smcbvs.minESSoverN.below090", sprintf("%d/%d", sum(S2DATA[method == "smcbvs"]$min_ess_over_N < 0.9), 12000L))
+num("S2.smcbvs.minESSoverN.below050", sprintf("%d/%d", sum(S2DATA[method == "smcbvs"]$min_ess_over_N < 0.5), 12000L))
+num("S1.smcbvs.minESSoverN.below050", sprintf("%d/%d", sum(s1[method == "smcbvs"]$min_ess_over_N < 0.5), 1600L))
+
+# ---- escalation and run-time warnings against accuracy (SMC-BVS) ----
+# 'expected' = the exact-recovery rate the other fits of the same settings achieve, weighted by this group's fits per
+# setting (direct standardisation), so that the comparison is not driven by which settings escalate.
+E <- rbind(s1[method == "smcbvs", .(stratum = sprintf("S1, $p=%d$", p), setting_id, exact, FP, FN, wall_sec, escalated, eflag_any, warnings, eflags)],
+           S2DATA[method == "smcbvs", .(stratum = sprintf("S2, $n=%d$", n), setting_id, exact, FP, FN, wall_sec, escalated, eflag_any, warnings, eflags)])
+std <- function(d, flag) { d <- copy(d)[, fl := flag]
+  r <- d[, .(nf = sum(fl), rate_other = if (sum(!fl)) mean(exact[!fl]) else NA_real_), by = setting_id]
+  r <- r[nf > 0 & !is.na(rate_other)]; list(exp = sum(r$nf * r$rate_other) / sum(r$nf), cover = sum(r$nf)) }
+L <- c("\\begin{tabular}{llrrrrrr}", "\\toprule",
+       " & & & \\multicolumn{2}{c}{exact (\\%)} & & & \\\\", "\\cmidrule(lr){4-5}",
+       "design & fits & number & observed & expected & mean FP & mean FN & median wall \\\\", "\\midrule")
+for (st in unique(E$stratum)) { d <- E[stratum == st]
+  for (g in c("all", "escalated", "not escalated", "warning")) { glab <- c(all = "all", escalated = "escalated", `not escalated` = "not escalated", warning = "run-time warning")[[g]]
+    flag <- switch(g, all = rep(TRUE, nrow(d)), escalated = d$escalated, `not escalated` = !d$escalated, warning = d$eflag_any)
+    x <- d[flag]; ex <- if (g == "all") NA_real_ else std(d, flag)$exp
+    L <- c(L, sprintf("%s & %s & %d & %.1f & %s & %.2f & %.2f & %s \\\\", if (g == "all") st else "", glab, nrow(x), 100 * mean(x$exact),
+                      fmt_na("%.1f", 100 * ex), mean(x$FP), mean(x$FN), tex_hms(median(x$wall_sec))))
+    if (g != "all") num(sprintf("esc.%s.%s", gsub("[^A-Za-z0-9=]", "", st), gsub(" ", "_", g)),
+                        sprintf("%d fits; exact %.1f%% vs expected %s%%; FP %.2f FN %.2f; standardised over %s fits", nrow(x), 100 * mean(x$exact), fmt_na("%.1f", 100 * ex), mean(x$FP), mean(x$FN),
+                                if (g == "all") "--" else std(d, flag)$cover)) }
+  if (st != tail(unique(E$stratum), 1)) L <- c(L, "\\addlinespace[3pt]") }
+write_tex(c(L, "\\bottomrule", "\\end{tabular}"), "supp_escalation.tex")
+tr <- E[escalated == TRUE, .(trig = sub("^calibration_trigger:", "", grep("^calibration_trigger:", unlist(strsplit(warnings, ";")), value = TRUE))), by = .(stratum, setting_id)]
+num("esc.trigger_recorded", sprintf("%d of %d escalated fits record a trigger: %s", nrow(tr), sum(E$escalated),
+                                    paste(sprintf("%s %d", names(sort(table(tr$trig), decreasing = TRUE)), sort(table(tr$trig), decreasing = TRUE)), collapse = ", ")))
+num("S2.smcbvs.eflag_types", paste(sprintf("%s: %d", names(table(E[grepl("^S2", stratum) & eflag_any == TRUE]$eflags)),
+                                           table(E[grepl("^S2", stratum) & eflag_any == TRUE]$eflags)), collapse = "; "))
+
+# ---- software versions, from the first JSON record of each method ----
+for (m in METHODS) { f <- S2DATA[method == m & setting_id == "S2_001" & rep == 1]$file; f <- ifelse(startsWith(f, "/"), f, paste0(ENG, f))
+  j <- fromJSON(f, simplifyVector = FALSE)
+  num(sprintf("version.%s", m), sprintf("%s %s", j$software$name, j$software$version), sub(" \\(.*", "", j$R_version)) }
+
+# ================================================================== supplement (Section 4) full grids
+s1[, empty := as.numeric(n_selected == 0)]
+s1tab <- function(metric, fmt) {
+  agg <- s1[, .(v = { x <- get(metric); if (metric %in% c("exact", "empty")) sum(x) else if (metric == "prec") cprec(x)
+                       else if (metric == "wall_sec") median(x) / 60 else mean(x) }), by = .(setting_id, n, p, snr, method)]
+  w <- dcast(agg, setting_id + n + p + snr ~ method, value.var = "v")
+  L <- c("\\begin{tabular}{rrr*{6}{r}}", "\\toprule", paste("$n$ & $p$ & SNR &", paste(LABELS[METHODS], collapse = " & "), "\\\\"), "\\midrule")
+  for (k in seq_len(nrow(w))) { r <- w[k]; v <- unlist(r[, METHODS, with = FALSE])
+    cells <- if (metric == "wall_sec") fmin(v) else fmt_na(fmt, v)
+    L <- c(L, paste0(sprintf("%d & %d & %s & ", r$n, r$p, r$snr), paste(cells, collapse = " & "), " \\\\"))
+    if (k %% 4 == 0 && k < nrow(w)) L <- c(L, "\\addlinespace[2pt]") }
+  c(L, "\\bottomrule", "\\end{tabular}")
+}
+write_tex(s1tab("exact", "%d"), "supp_s1_exact.tex")
+write_tex(s1tab("FP", "%.2f"), "supp_s1_fp.tex")
+write_tex(s1tab("FN", "%.2f"), "supp_s1_fn.tex")
+write_tex(s1tab("hamming", "%.2f"), "supp_s1_hamming.tex")
+write_tex(s1tab("n_selected", "%.2f"), "supp_s1_size.tex")
+write_tex(s1tab("empty", "%d"), "supp_s1_empty.tex")
+write_tex(s1tab("prec", "%.3f"), "supp_s1_prec.tex")
+write_tex(s1tab("rec", "%.3f"), "supp_s1_rec.tex")
+write_tex(s1tab("wall_sec", ""), "supp_s1_wall.tex")
+num("S1.smcbvs.k_nonempty_by_snr", paste(s1[method == "smcbvs", sprintf("%s:%d", snr, sum(n_selected > 0)), by = snr]$V1, collapse = " "), "of 400")
+
+# S2: one table per metric with n = 50 and n = 100 side by side; rows support type x rho x nu (60).
+s2tab <- function(metric, fmt) {
+  agg <- S2DATA[, .(v = { x <- get(metric); if (metric %in% c("exact", "empty")) sum(x) else if (metric == "prec") cprec(x)
+                          else if (metric == "wall_sec") median(x, na.rm = TRUE) / 60 else mean(x) }), by = .(n, beta_type, rho, nu, method)]
+  w <- dcast(agg, beta_type + rho + nu ~ n + method, value.var = "v")
+  cn <- c(paste0("50_", METHODS), paste0("100_", METHODS))
+  short <- c(smcbvs = "SMC-BVS", asi = "ASI", bas_mc3 = "BAS", susie = "SuSiE", scad = "SCAD", lasso_cv = "Lasso")
+  L <- c("\\begin{tabular}{lrr*{6}{r}c*{6}{r}}", "\\toprule",
+         " & & & \\multicolumn{6}{c}{$n=50$, $\\sz=5$} & & \\multicolumn{6}{c}{$n=100$, $\\sz=10$} \\\\", "\\cmidrule{4-9}\\cmidrule{11-16}",
+         paste("support & $\\rho$ & $\\nu$ &", paste(short[METHODS], collapse = " & "), "& &", paste(short[METHODS], collapse = " & "), "\\\\"), "\\midrule")
+  for (k in seq_len(nrow(w))) { r <- w[k]; v <- unlist(r[, cn, with = FALSE])
+    cells <- if (metric == "wall_sec") fmin(v) else fmt_na(fmt, v)
+    first <- r$nu == min(NU)
+    L <- c(L, paste0(sprintf("%s & %s & %s & ", if (first) c("spread", "block")[r$beta_type] else "", if (first) r$rho else "", r$nu),
+                     paste(cells[1:6], collapse = " & "), " & & ", paste(cells[7:12], collapse = " & "), " \\\\"))
+    if (r$nu == max(NU) && k < nrow(w)) L <- c(L, "\\addlinespace[2pt]") }
+  c(L, "\\bottomrule", "\\end{tabular}")
+}
+write_tex(s2tab("exact", "%d"), "supp_s2_exact.tex")
+write_tex(s2tab("empty", "%d"), "supp_s2_empty.tex")
+write_tex(s2tab("n_selected", "%.2f"), "supp_s2_size.tex")
+write_tex(s2tab("prec", "%.2f"), "supp_s2_prec.tex")
+write_tex(s2tab("rec", "%.2f"), "supp_s2_rec.tex")
+write_tex(s2tab("FP", "%.2f"), "supp_s2_fp.tex")
+write_tex(s2tab("wall_sec", ""), "supp_s2_wall.tex")
+
+writeLines(c(sprintf("S1 fits: %d; S2 fits: %d", nrow(s1), nrow(S2DATA))))
 
 # ================================================================== provenance
 src_lines <- vapply(names(SRC), function(k) sprintf("| `%s` | `%s` | `%s` |", k, sub(ENG, "", SRC[[k]], fixed = TRUE), sha256(SRC[[k]])), "")
-wall_lines <- vapply(c("wall_s1final", "wall_s2final5", "wallmd5_s2asi100"), function(t) {
-  f <- file.path(CACHE, sprintf("%s.tsv", t)); sprintf("| wall cache `%s` | %d per-fit JSON records (`wall_sec_harness`) | `%s` |", t, nrow(fread(f)), sha256(f)) }, "")
+sacct_files <- list.files(SACCT_DIR, pattern = "^sacct_.*\\.tsv$", full.names = TRUE)
+sacct_lines <- sprintf("| Slurm records | `%s` (%d files) | sha256 of the sorted list of their sha256 sums: `%s` |", sub(ENG, "", SACCT_DIR, fixed = TRUE),
+                       length(sacct_files), digest_list <- sub(" .*", "", system2("sha256sum", stdout = TRUE, input = paste(vapply(sacct_files, sha256, ""), collapse = "\n"))))
+cache_lines <- vapply(c("wall_s1final", "wall_s2final5", "wallmd5_s2asi100", "smcsum_s1v2", "smcsum_s2v2", "runtime_s1", "runtime_s2"), function(t) {
+  f <- file.path(CACHE, sprintf("%s.tsv", t)); sprintf("| cache `%s` | %d per-fit JSON records | `%s` |", t, nrow(fread(f)), sha256(f)) }, "")
 writeLines(c("# Provenance of the S1/S2 figures and tables (Sections 2 and 4)", "",
-  sprintf("Built %s UTC on Owls by `figures/scripts/build_sim_outputs.R` (R %s).", format(Sys.time(), tz = "UTC", "%Y-%m-%d %H:%M"), getRversion()), "",
-  "Inputs are read-only Engineering outputs under `_local/engineering/` on Owls; nothing from them is stored in the repository.", "",
-  "| input | path (under `_local/engineering/`) | sha256 |", "|---|---|---|", src_lines, wall_lines, "",
+  sprintf("Built %s UTC by `figures/scripts/build_sim_outputs.R` (R %s).", format(Sys.time(), tz = "UTC", "%Y-%m-%d %H:%M"), getRversion()), "",
+  "Inputs are read-only Engineering outputs under `_local/engineering/` (located through `SMCBVS_ENG_DIR` or a relative path; see `sim_data.R`); nothing from them is stored in the repository. The caches hold fields read from the per-fit JSON records and are rebuilt when absent.", "",
+  "| input | path (under `_local/engineering/`) | sha256 |", "|---|---|---|", src_lines, sacct_lines, cache_lines, "",
   "## Checks run by the build (it stops if any fails)",
-  "- Recomputed per-setting exact-recovery counts and mean FP, FN, F1 equal Engineering's `*_permethod.tsv` for every setting and method (S1 96 rows, S2 600 + 720 rows; max abs difference < 1e-15).",
-  "- S1 median, 90% and max wall times recomputed from the JSON records equal `final/runtime_S1_smcbvs_asi.tsv`.",
-  "- S2: the five non-ASI methods in the final 6-method records are identical (|S_hat|, TP, FP, exact, md5) to the earlier 5-method build, fit by fit (60,000 fits).",
-  "- S2: recomputed exact W/L of SMC-BVS vs ASI on the shared data sets equal `S2_comparison_final_paired.tsv` (all of S2 and nu = 2.07, 3.52, 6); recomputed wall median/q90/max and exact counts equal `final/runtime_S2_smcbvs_asi.tsv`.",
-  "- Every fit of S1 and S2 agrees with Engineering's per-fit tables `final/perfit_precision_recall_S{1,2}.tsv` in |S_hat|, TP, FP, FN and exact; their precision equals TP/|S_hat| wherever |S_hat| > 0 (NA for an empty selection).",
-  "- S2 ASI: the `data_md5` of every ASI JSON record (12,000) equals the md5 of the SMC-BVS record for the same data set.",
+  "- Recomputed per-setting exact-recovery counts and mean FP, FN, F1 equal Engineering's `*_permethod.tsv` for every setting and method (S1 96 rows, S2 720 rows).",
+  "- Every fit of S1 and S2 agrees with Engineering's per-fit tables `final/perfit_precision_recall_S{1,2}.tsv` in |S_hat|, TP, FP, FN and exact; their precision equals TP/|S_hat| wherever |S_hat| > 0.",
+  "- S1 median, 90% and max wall times of completed fits equal `final/runtime_S1_smcbvs_asi.tsv`; the ten rerun SMC-BVS fits match the ten COMPLETED tasks of `sacct_b1r.tsv` in elapsed time (within 5 min); the 1,600 ASI tasks of S1 all COMPLETED at the first attempt.",
+  "- S2: the five non-ASI methods are identical (|S_hat|, TP, FP, exact, md5) to the earlier 5-method build, fit by fit (60,000 fits); the `data_md5` of every ASI record equals that of the SMC-BVS record for the same data set (12,000).",
+  "- S2: the complete-case (six methods finished) exact W/L of SMC-BVS vs ASI equal `S2_comparison_final_paired.tsv` (all of S2 and nu = 2.07, 3.52, 6); the paper's paired table uses all 12,000 data sets, on which both methods finished. Recomputed wall median/q90/max and exact counts equal `final/runtime_S2_smcbvs_asi.tsv`; all 24,000 SMC-BVS and ASI Slurm tasks COMPLETED.",
+  "- Escalation counts per fit (JSON `summary.escalated`) sum to Engineering's `final/results_S{1,2}_smcbvs.tsv` totals.",
+  "- Precision conventions: (ii) = e + (1 - e)(i) and (iii) = (1 - e)(i) to 1e-12 in every cell.",
   "", "## Status of the inputs",
-  "- S1: FINAL (reps 1-100, all six methods, 1,600 fits each).",
-  "- S2: FINAL, reps 1-100, all six methods (12,000 fits each), from `S2_comparison_final_records.tsv`.",
-  "- Precision is TP/|S_hat| per fit, averaged over the k non-empty fits of a cell (conditional precision; shown as -- when k < 20 in the full grids); the empty-selection share is reported beside it. `supp_s2_prec_conventions.tex` gives the empty -> 1, empty -> 0 and pooled (sum TP / sum |S_hat|) versions; the build checks (ii) = e + (1 - e)(i) and (iii) = (1 - e)(i). Recall is TP/s0 per fit, averaged over all fits.",
+  "- S1 and S2: FINAL (reps 1-100, all six methods; 1,600 and 12,000 fits per method).",
+  "- Precision is TP/|S_hat| per fit, averaged over the k non-empty fits of a cell (conditional precision; -- when k < 20); the empty count is reported beside it. Recall is TP/s0 per fit, averaged over all fits. A fit that did not finish counts as an empty selection (81 BAS fits in S2); the ten SMC-BVS fits of S1 that hit the 24 h limit were rerun, and the text gives the counts under the empty-selection rule too.",
   "", "`numbers.tsv` lists every number quoted in the prose of Section 2, keyed by quantity."),
   file.path(OUT, "SOURCES.md"))
 fwrite(rbindlist(NUM), file.path(OUT, "numbers.tsv"), sep = "\t")
