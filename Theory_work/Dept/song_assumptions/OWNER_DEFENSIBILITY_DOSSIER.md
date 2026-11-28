@@ -1,6 +1,6 @@
 # OWNER DEFENSIBILITY DOSSIER: assumption-by-assumption Q&A
 
-Theory Department, mission TH-SONG-ASSUMPTIONS, 2026-11-27. Task Lead: Opus 5.5. **v1.2 (council round-1 revision; see COUNCIL_RECORD.md).**
+Theory Department, mission TH-SONG-ASSUMPTIONS, 2026-11-27. Task Lead: Opus 5.5. **v1.3 (council round-2 revision; see COUNCIL_RECORD.md).**
 
 This file is for the owner's grilling. Each assumption gets the same six questions:
 1. What exactly is assumed?
@@ -24,9 +24,9 @@ Sources and conventions:
 | A-DIM | TD, TS, TM | yes (SBJ p. 14, JR12, SL Cor S1) | A ≤ 1.77 | A-DIM′ (TD′, conjecture, high proof risk) |
 | A-SUBG | TD, TS, TM-a/b | yes (SL Cond. 1, RZ, NH14 L6.1) | Gaussian rows | moments-only in TM-a0 |
 | A-NEC | TD, TS, TM-a/b | same type; a comparison with SBJ, NH14, BRT09, SL (26), not dominance | n × floor = 8.8–250 | for TD: drop it at a √log p cost (prop:dist(ii)); for TS-b sufficient, necessity unproved |
-| A-BS / BS′ | TD, TS, TM-a/b | yes (YWJ (7a), SC11 2.7) | ≤ 1.17σ | aggregate energy (BS′): recorded, not adopted |
-| A-MARGIN-H | TS-a | SL Cond. 3 + Thm 3 proof | ≥ 1 in only 9/136 | not needed for the sharp claim |
-| A-MARGIN-U | TS-b, TM-b | same type as NH14 4.4, Luo–Chen (comparison, not dominance) | deletions: S1 brackets κ = 1; mixed d = 1, m ≤ 2: holds with the design width (E9) | imposed only on classes with B_Dm > 0; constant 2 sharp for deletions (converse, with A-NEC on T) |
+| A-BS / BS′ | TD, TS, TM-a/b | yes (YWJ (7a), SC11 2.7) | ≈ 1.17σ (1.175) | aggregate energy (BS′): recorded, not adopted |
+| A-MARGIN-H | TS-a | SL Cond. 3 + Thm 3 proof | residual ratio ≥ 1 in only 9/136 (scale diagnostic) | not needed for the sharp claim |
+| A-MARGIN-U | TS-b, TM-b | same type as NH14 4.4, Luo–Chen (comparison, not dominance) | deletions: S1 brackets κ = 1; mixed: zero-slack diagnostic positive for d ≤ 3, m ≤ 2 (E9/E9b; m = 2 at p = 500 only) | imposed only on classes with B_Dm > 0; constant 2 sharp for deletions (converse, with A-NEC on T) |
 | A-MIS(iii) | TM-a, TM-b | SL f₀; Rossell 2022 Prop. 6 (fixed-design analogue) | in-sample illustration only: σ² ratio 0.99 (S1), 0.84–0.98 (S2) | (i′), (ii) as remarks; TM-a0 moments-only |
 
 ---
@@ -128,7 +128,7 @@ Sources and conventions:
    - It keeps the estimated noise variance in a fixed range.
    - It controls the unit-ridge shrinkage term.
 3. **Standard?** In type: YWJ (7a), p. 7: "some form of upper bound on the norm ‖β*‖₂ in terms of the g-hyperparameter is required" (P17 B4b); SC11 Assumption 2.7, p. 7. Both their bounds grow with n (via g ≍ p^{2α} in YWJ, via φ_n in SC11), whereas A-BS uses a fixed b̄, so the precedent is for the type of condition, not its strength.
-4. **Holds on our data?** Max |β|sd/σ ≤ 1.17 and βᵀΣβ/σ² ≤ 6 in every setting (E4).
+4. **Holds on our data?** Max |β|sd/σ ≈ 1.17 (1.175) and βᵀΣβ/σ² ≤ 6 in every setting (E4).
 5. **Weaker forms.** A-BS′ is the aggregate form. All targets keep A-BS, because TS-b uses the size lemma prop:dist(i), which is proved under A-BS. Astra R1's energy pair is the O(n) form and is not identical to A-BS′(b).
 6. **Referee: "Why bound signals from above at all?"** Answer:
    - It is a technical device for the Fubini denominator and the ridge term, and YWJ need the same.
@@ -143,7 +143,7 @@ Sources and conventions:
    - SL's proof (SLs pp. 5–6) gives d² ≥ min{δ_n, β_t²δ_n/(20σ²), 1−√0.8}.
    - The same residual-signal object appears in NH14 Cond. 4.4, p. 11, and Luo & Chen, arXiv v1 p. 7.
 4. **Holds on our data?** Only partly, and we say so.
-   - As a **scale diagnostic only** (restricted search; radius ε_n² = s0 log p/n; fixed-variance affinity, an upper bound on the optimised one), the per-variable screening margin over ε_n² is ≥ 1 in only 9 of 136 settings, yet S1 at SNR 2 recovers 92–96% with a ratio of 0.75 (E2). This cannot certify the theorem's margin (C_H is unknown).
+   - As a **scale diagnostic only** (restricted search; radius ε_n² = s0 log p/n), the residual-variance/radius² ratio is ≥ 1 in only 9 of 136 settings (the fixed-variance squared Hellinger ratio never reaches 1), yet S1 at SNR 2 recovers 92–96% with a ratio of 0.75 (E2). This cannot certify the theorem's margin (C_H is unknown).
    - TS-a has an inexplicit constant by construction, so it is **not** claimed at boundary signal levels.
 5. **Weaker forms.** None is needed. The sharp, data-relevant claim is carried by TS-b.
 6. **Referee: "Your sure-screening constant is unknown."** Answer: so is SL's (c₁). TS-a is the per-predictor counterpart of SL Thm 3, and the explicit threshold is in TS-b.
@@ -152,10 +152,10 @@ Sources and conventions:
 1. **Assumed.**
    - Exact form (Astra R2, quantifier per council R1). Fix M independently of n; J = ⌊s + C_s·M⌋. There are fixed 0 < δ < 1, γ > 0 and t_n → ∞ such that for every class (D, m) with D ≠ ∅ (d = |D| true predictors dropped), m ≤ J added nulls, **and B_Dm > 0**:
      √((1−δ)·min_{|N|=m} R_n(S)/σ*²) ≥ w_Dm + t_n + √(2(1+δ)·B_Dm), B_Dm = Pr_n(d) − (m/2)log(n/(C log p)) + γ log n,
-     with C the truncation constant of the superset step.
-   - **Classes with B_Dm ≤ 0 need no signal at all**: such a rival sits inside the bigger model S0 ∪ N, whose fit is at least as good, and its extra Occam credit beats the deletion price. This caps the active m at m*(d) ≈ 2(Pr_n(d) + γ log n)/log(n/(C log p)), e.g. m ≤ 3 for d = 1 at S1's (500, 500).
+     with C a fixed constant for which the superset step's containing-model bound holds with a tight multiplier.
+   - **Classes with B_Dm ≤ 0 need no signal at all**: such a rival sits inside the bigger model S0 ∪ N, whose fit is at least as good, and its extra Occam credit beats the deletion price. This caps the active m at m*(d) ≈ 2(Pr_n(d) + γ log n)/log(n/(C log p)), asymptotically. At S1's sizes the implied C ≍ (s0+1)² ≈ 121 makes the credit ≈ 0, so every m ≤ J is active there (Opus R2).
    - w_Dm is the one-sided conditional Gaussian width of the m added nulls, computed on the observed design and so stated on a design event of probability 1 − o(1); w_D0 = 0. The combinatorial bound w_Dm ≤ √(2 log C(p−s0, m)) ≈ √(2m log p) is always allowed but is a **worst-case (factor-proxy) form**: it does not cover S1 at SNR 2 (at (500, 500), d = 1, m = 2 it fails, 7.42 > 6.84). The squared form R ≥ 2(1+η)²(√d+√m)²σ²·price is worst-case in the same way.
-   - Plain form: dropping true predictors must leave more unexplained signal than **twice** the prior-plus-Occam price of those predictors, with a little room. When nulls are added in their place, there is an extra allowance w_Dm for the best-looking nulls; on realistic correlated designs this allowance is small (0.1–0.6 on S1, E9), not √(2m log p).
+   - Plain form: dropping true predictors must leave more unexplained signal than **twice** the prior-plus-Occam price of those predictors, with a little room. When nulls are added in their place, there is an extra allowance w_Dm for the best-looking nulls; on S1's AR(1) designs this allowance is estimated small (0.1–0.6, E9), not √(2m log p).
    - For pure deletions, liminf κ_n > 1 implies the condition for some small δ, γ > 0, where κ_n = min_D R_n(S0∖D)/(2σ²Pr_n(d)).
 2. **Why needed.** The posterior odds of a rival against S0 are exp{Pr_n − ½·(gain in fit)}, and the gain in fit is (√R + noise)².
    - If R is below 2·Pr, the rival wins. That is the **converse** (target, under A-NEC on T): if limsup κ_n < 1, then π(S0|y) → 0; at a single-deletion boundary, liminf P(π(S0|y) ≤ ½) ≥ Φ(−c).
@@ -172,12 +172,12 @@ Sources and conventions:
    - **SL themselves state no margin.** Their MAP proof treats min|β_t| as a fixed constant (SLs p. 15) and needs the "hardly satisfied" sample condition (22).
 4. **Holds on our data?** This is the strongest evidence in the package.
    - **S1 is consistent with κ = 1 as the threshold.** κ is 0.64–0.70 at SNR 1, with 0 of 100 exact in every (n, p) cell, and 2.54–2.80 at SNR 2, with 92–96 of 100 exact (E1). The transition is bracketed, not located.
-   - **The data are consistent with the necessary direction.** P1's check min t² > 2·price has sensitivity 1.000 on S1 and 0.985 on S2 (sample). When it fails, recovery is 0 of 800 fits on S1 and 9 of 10,666 = 0.00084 on S2 (9 of 11,466 pooled); the population κ_del ≤ 1 row gives 0 on both. (P1's price numerator is one off from the exact price(s0−1); the theorem's κ_n is ≤ ~1.4% below the data κ on S1, and the bracket is unchanged.)
-   - **The mixed part holds on S1 designs with the design width (E9).** For d = 1, m ≤ 2, the conditional width is 0.10–0.47 (m = 1) and 0.22–0.59 (m = 2), and the margin surplus is ≥ 3.29 at SNR 2 and ≥ 6.7 at SNR 3 for every single deletion (Monte Carlo, 4 designs × 300 draws per cell, no fits). Not evaluated: d ≥ 2 mixed classes and m = 3.
+   - **The data are consistent with the necessary direction.** P1's check min t² > 2·price has sensitivity 1.000 on S1 and 0.985 on S2 (sample). When it fails, recovery is 0 of 800 fits on S1 and 9 of 10,666 = 0.00084 on S2 (9 of 11,466 pooled); the population κ_del ≤ 1 row gives 0 on both. (P1's price numerator is one off from the exact price(s0−1); the exact all-deletion κ_n is 0.626–0.693 at SNR 1 and 2.505–2.771 at SNR 2, 1.1–1.7% below the data proxy, so the bracket is unchanged.)
+   - **Mixed part: a zero-slack diagnostic on S1 designs (E9, E9b).** The estimated conditional width is 0.10–0.47 (m = 1) and 0.22–0.59 (m = 2). The estimated surplus at δ = γ = t_n = 0 is positive for every evaluated class (d ≤ 3, m = 1 in all four cells, m = 2 at p = 500). At SNR 2 it is ≈ 3.29 or more at C = 1, and ≥ 2.39 with C = 121 or no credit at all (Monte Carlo, 4 designs × 300 draws, no fits; Opus's independent rerun agrees). This does not test the positive-slack inequality or its design-event quantifier. Not evaluated: m = 2 at p = 5,000, m ≥ 3 (active at S1's sizes), d ≥ 4.
    - **Multi-predictor deletions bind on S1** in all 16 settings, which is why the margin quantifies over all subsets D.
    - **The sufficiency gap is consistent with the superset term.**
      - At SNR ≥ 2, 40 of the 41 S1 failures are supersets of S0 (39 with exactly one extra null). A heuristic diagnostic, the expected number of one-null extensions beating S0, E K₁ ≈ (s0+1)/√(2πL(n+1)), is 0.031–0.050 at S1's (n, p) (0.033–0.056 under the exact Beta tail), the same order as the observed 2–8% shortfall.
-     - This is consistent with, not a proof of, the superset term being the main failure mode. E K₁ bounds one failure type only and is not a ceiling on success (Astra R2). It is a mode-type diagnostic; it does **not** match TS-b's mass-rate term (s0+1)√(log p/n), which is 0.87–1.44 at S1's sizes and so not informative there.
+     - This is consistent with, not a proof of, the superset term being the main failure mode. E K₁ bounds one failure type only and is not a ceiling on success (Astra R2). It is a mode-type diagnostic (rivals beating S0 in exact score, an HPM event; MPM failure is separate); it does **not** match TS-b's mass-rate term (s0+1)√(log p/n), which is 0.87–1.44 at S1's sizes and so not informative there.
    - **S2 is not an asymptotic regime** (s0 log p/n = 0.69). The finite-n diagnostics use the saturating gain, which puts the transition at κ ≈ 1.0–1.5 on both suites (post hoc, flagged).
 5. **Weaker forms evaluated.**
    - (i) The old explicit constant c1(s0, A): replaced, since it is far above the S1 transition.
@@ -193,7 +193,7 @@ Sources and conventions:
 
 ## A-MIS(iii): the working residual for misspecification (TM-a, TM-b)
 1. **Assumed.**
-   - The candidate set C is chosen before seeing the outcome, or on independent data, and Σ_CC is nonsingular (so the projection β^C is unique; A-NEC alone does not give this).
+   - The candidate set C is fixed before the analysis sample is drawn, or chosen on independent data (choosing it from the same design before seeing y is not enough), and Σ_CC is nonsingular (so the projection β^C is unique; A-NEC alone does not give this).
    - The working residual u = y − α_C − x_Cᵀβ^C is independent of x_C and Gaussian N(0, σ_C²).
    - The other assumptions hold for the candidate problem.
 2. **Why needed.** The candidate-only data are then exactly a correctly specified Gaussian linear model with parameters (β^C, σ_C²), so TD and TS-b apply verbatim with SL's f₀ in place of f*.
@@ -241,6 +241,6 @@ Sources and conventions:
 2. **TS-a** is not a boundary-signal result (inexplicit constant).
 3. **MARGIN\*** (sharper swap constant) is an open refinement, not a target; it relies on a conjectured "separated proxies imply a joint proxy" lemma.
 4. **Evidence on S1** brackets the transition with only two informative SNR levels. SNR 1.25 and 1.5 cells would locate it, but they need fits and HQ approval.
-5. **TS-b proof obligations** (Astra R2, council R1): at fixed M, J is a fixed integer, so the superset/mixed classes form a finite union, but the truncated-Beta superset bound and the uniform width concentration still need writing out; A-NEC necessity is unproved.
+5. **TS-b proof obligations** (Astra R2, council R1): at fixed M, J is a fixed integer, so the superset/mixed classes form a finite union, but the truncated-Beta superset bound, the coded-likelihood mixed-class bound (step 3, Sol R2 form) and the uniform width concentration still need writing out; A-NEC necessity is unproved.
 6. **Literature.** The Chen & Chen (2008) primary text is unverified (paywalled; attested second-hand via Luo & Chen p. 7 and SBJ p. 14). Grünwald–van Ommen are verified on the 2014 arXiv text, not the Bayesian Analysis 2017 pagination.
-7. **Mixed-rival evidence is partial.** E9 covers d = 1, m ≤ 2 on simulated S1 designs only; d ≥ 2 mixed classes, m = 3 and S2 designs are not evaluated.
+7. **Mixed-rival evidence is partial.** E9/E9b give a zero-slack diagnostic (mean widths) for d ≤ 3, m = 1 (all S1 cells) and m = 2 (p = 500) on simulated S1 designs only. m = 2 at p = 5,000, m ≥ 3 (active at S1's sizes), d ≥ 4 and S2 designs are not evaluated.
