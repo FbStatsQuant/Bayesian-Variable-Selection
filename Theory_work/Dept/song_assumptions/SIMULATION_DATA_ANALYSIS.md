@@ -1,7 +1,41 @@
-# S1/S2 simulation-data analysis for TH-SONG-ASSUMPTIONS — DRAFT (worker D1, Sonnet 5.5), 2026-11-27
+# SIMULATION DATA ANALYSIS — S1/S2 evidence for the TH-SONG assumptions
+
+Computations: worker D1 (Sonnet 5.5), 2026-11-27, read-only on Engineering data; Lead synthesis and notes: Task Lead (Opus 5.5).
 
 Mechanical data analysis for the Task Lead. No theorems are written here. Evidence against an assumption is reported as found.
 Every number below is in a table under `tables/` (file named in the section) and is produced by a script under `scripts/`.
+
+## Lead synthesis — what the data say about each target (read this first)
+
+1. **TD (distribution).** d_H < ε_n in all 136 settings (median ratio 0.10–0.56; q90 ≤ 0.63; E7). Supports TD; S2 has
+   little resolution (ε_n = 0.83). The cap never binds (E7), so K = n/2 costs nothing empirically.
+2. **TS-b (exact selection) — the margin.**
+   - *Necessity of the constant 2 is visible:* κ_del > 1 (equivalently min t² > 2·price) has sensitivity 1.000 on S1 and on
+     S2 (population), and P(exact | κ_del ≤ 1) = 0 (S1) / ≤ 0.0008 (S2, sample). Matches the TS-b converse.
+   - *S1 brackets κ = 1 from both sides:* κ_pop 0.64–0.70 at SNR 1 (0/100 exact in every cell) vs 2.54–2.80 at SNR 2
+     (92–96/100) (E1, `e1_s1_cells.tsv`). The fixed-ratio (κ_n) framing covers S1; a fixed beta-min (FSb) does not (E4).
+   - *Multi-deletions bind on S1* (κ_multi < κ_del in all 16 settings): the margin must quantify over all D ⊆ S0 (E1).
+   - *The "sufficiency gap" on S1 is the superset term:* 40/41 S1 failures at SNR ≥ 2 are S0 plus nulls (E1/E7); the
+     one-null superset ceiling predicted by the exact Beta law is 0.94–0.97 for S1's (n, p) (FABLE_R1 Q1(3f)), observed
+     0.92–0.98. No extra assumption is needed — this is the O((s0+1)√(log p/n)) term of TS-b, the same order as `rem:sharp`.
+   - *Swap-aware heuristics are not improvements* (κ_pop AUC 0.958 vs κ_del 0.980 on S2): consistent with the advisors'
+     finding that proxy swaps cost only a Gaussian-width allowance, not d·price (E1).
+   - *S2 is not asymptotic* (s0 log p/n = 0.69); its transition is fitted by the saturating gain (n/2)log(1+R/(nσ²))
+     (P(exact) = ½ at κ_adj_full ≈ 1.0–1.5 across both suites; post hoc). Used only in the finite-n companion.
+3. **Eigenvalues.** Population floors hold analytically (n × floor ≥ 8.8 over c_ψ/n); sample sparse floors are vacuous on
+   S2 at the theorem's set sizes (1e−5–2e−4; E5). Supports dropping sample floors and keeping A-NEC.
+4. **Bounded signal** holds everywhere (max |β|sd/σ ≤ 1.17, ν ≤ 6; E4).
+5. **Dimension.** A = 0.90–1.77; p ≤ n² everywhere incl. typical user regimes; log p/√n ≤ 0.98 (E6). Consistent with A-DIM
+   and with the TD′ conjecture's A-DIM′.
+6. **Misspecification (TM).** σ² posterior vs σ_C²: median 0.99 (S1), 0.84–0.98 (S2) (E7) — supports the inflated-variance
+   reading. Hidden-column tests need refits (not run; HQ approval required).
+7. **SL's own conditions on our data.** SL Condition 3 holds in population (δ_SL = 0.23–0.42) but ε_n² = o(δ_SL) is weak/fails
+   numerically (E3); SL Cor S1's κ_eff = log p/(log n)² is 0.13–0.22 on S1 (< ¼) and 0.33–0.45 on S2 (> ¼) (E6).
+
+Caveat on evidence strength: S1 has two non-trivial SNR levels per cell, so the transition is bracketed, not located; all
+"post hoc" items are flagged in the body. Cheap strengthening (needs fits, HQ approval): S1 at SNR 1.25/1.5.
+
+---
 
 ## 0. Provenance, definitions, cost
 
@@ -136,7 +170,7 @@ Reading: the per-variable screening margin exceeds ε_n² (ratio ≥ 1) in 9 of 
 
 ## E3. Song–Liang Condition 3 (identifiability, p. 955), Gaussian AR(1) (`tables/e3_condition3.tsv`, `summ_E3.tsv`, `e3_numeric_check_S1_03.tsv`)
 
-For Z = x_k + Σ b_i x_{j_i} ~ N(0, V), E exp(−Z²) = (1+2V)^(−1/2), so the condition holds with δ_SL = 1 − (1+2v)^(−1/2), v = min Var(x_k | others) = (1−ρ²)/(1+ρ²) for ≥ 2 others (1−ρ² at an end column). This is independent of r̄ ≥ 2 and of n. The form of the condition is taken from `SONG_LIANG_MAP.md` row 9 (I did not have the paper PDF); r̄ε_n² is tabulated as the brief asks.
+For Z = x_k + Σ b_i x_{j_i} ~ N(0, V), E exp(−Z²) = (1+2V)^(−1/2), so the condition holds with δ_SL = 1 − (1+2v)^(−1/2), v = min Var(x_k | others) = (1−ρ²)/(1+ρ²) for ≥ 2 others (1−ρ² at an end column). This is independent of r̄ ≥ 2 and of n. The form of the condition was taken from `SONG_LIANG_MAP.md` row 9; **Lead check:** it matches SL p. 955 as printed (E exp{−(x_k + Σ_{i≤r̄_n} b_i x_{j_i})²} ≤ 1 − δ_n, δ_n ≻ ε_n², j_i ≠ k). r̄ε_n² is tabulated as the brief asks.
 
 | ρ | v | δ_SL | ε_n²/δ_SL | r̄ε_n²/δ at r̄ = s0 | r̄ = 2s0 | r̄ = ⌈log n⌉s0 |
 |---|---|---|---|---|---|---|

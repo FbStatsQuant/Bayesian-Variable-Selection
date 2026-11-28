@@ -9,6 +9,13 @@
 4. Song–Liang supplement: "Lemma A.2 of the Appendix" is **NOT FOUND** in either local copy (main paper or supplement has no appendix).
 5. Wang (2009) and Kim–Kwon–Choi (2012): not obtained. Item A4 is covered by Luo & Chen (2013) instead (allowed by the brief).
 
+**Task Lead errata (2026-11-27, checked on rendered page images; these override the worker text below).**
+- E1. SL main p. 950 reads **P_n ≻ n^θ** for some θ > 0 (with b_n ≻ a_n meaning a_n/b_n → 0): a growth *lower* bound, not "P_n ≺ n^θ" (§F, first bullet, is wrong).
+- E2. SLs Corollary S1 (p. 16) reads **P_n < n^{κ log n}** (quasi-polynomial), not "P_n < n^κ log n"; the closing parenthetical "polynomial dimension" in §F and in item 5 of the inference list is wrong.
+- E3. SLs Theorem S (p. 13), alternatives 1–2 read **log(√(n l_n)/r_n) ≻ √(log P_n)** and **log(√n/r_n) ≻ √(log P_n)** (square root on log P_n).
+- E4. SL main p. 952, condition (8) is printed Δ(r_n) ≺ ε_n (page image confirms; Jiang 2007 (7) has ε_n²).
+- E5. B6 (Fletcher–Rangan–Goyal) explicit-constant reading is the worker's derivation; cite FRG only for the order with "(derived)" flagged.
+
 ---
 
 ## A. Identifiability / residual-signal margin
