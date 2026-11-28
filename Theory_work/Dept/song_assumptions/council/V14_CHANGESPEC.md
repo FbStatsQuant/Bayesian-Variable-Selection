@@ -63,7 +63,7 @@ This needs step 2 on the bases T ∪ (B∖T), which is not written. The headline
 **Evidence** (moved out of the statement):
 - On S1, the minimum of R_n(B)/(2σ²Pr_n(d)) equals the exact κ_n. It was taken over all 1,023 D, and over B with up to 2 inside proxies from the 5 nearest nulls. The value is 2.505–2.771 at SNR 2 and 0.626–0.693 at SNR 1; the binding D retain x_10, which screens every null (`.rc_tmp/lead_v14/u2a_check.py`).
 - With Q_n = T plus the L_n → ∞ nearest nulls, the outside leakage is ρ^{2k}(1−ρ²)/(1−ρ^{2k+2}) at distance k (0.265, 0.087, 0.030, 0.011 at ρ = 0.6), so special case (ii) applies along the S1 sequence.
-- The fallback alone fails at SNR 2 and holds at SNR 3, as before.
+- The fallback alone (ā ≡ 1): on the evaluated classes (d ≤ 3, selected D for d ≥ 2; m ≤ 2 at p = 500, m = 1 at p = 5,000) at η = 0, it fails at SNR 2 (minimum surplus −0.692 at d = 1, m = 1; −2.008 at m = 2) and holds at SNR 3 (minimum 1.412, d = 1, m = 2); m up to m̄_d is not evaluated (population computation on `tables/e9b_width_ext_s1.tsv` with the combinatorial width √(2 log C(p−s, m))).
 
 ## 2. Other changed statements
 - **A-MARGIN-H (TS-a), diverging ratio.** For the predictor j and **every fixed k**, inf{R_n(S) : j ∉ S, |S| ≤ k}/(σ*² log n) → ∞. This gives screening at every fixed level M. A diverging ratio at an unspecified speed gives nothing uniform for M = M_n → ∞.

@@ -38,7 +38,7 @@ Every number below is in a table under `tables/` (file named in the section) and
 
    - *Leakage decay (AR(1), ρ = 0.6):* with Q_n = T plus the L_n nearest nulls, the outside leakage at distance k is
      ρ^{2k}(1−ρ²)/(1−ρ^{2k+2}) = 0.265, 0.087, 0.030, 0.011 (k = 1–4), so special case (ii) of the population form applies along the S1 sequence. Estimated on S1's AR(1) designs, not a property of correlated designs in general.
-   - *The structure-free fallback* (ā ≡ 1, unit-vector bound) fails at SNR 2 and holds at SNR 3, as before.
+   - *The structure-free fallback* (ā ≡ 1, unit-vector bound): on the evaluated classes (d ≤ 3, selected D for d ≥ 2; m ≤ 2 at p = 500, m = 1 at p = 5,000) at η = 0, it fails at SNR 2 (minimum surplus −0.692 at d = 1, m = 1; −2.008 at m = 2) and holds at SNR 3 (minimum 1.412, d = 1, m = 2); m up to m̄_d is not evaluated (population computation on `tables/e9b_width_ext_s1.tsv` with the combinatorial width √(2 log C(p−s, m))).
    - *Mixed rivals (E9/E9b) are diagnostics of the refined design-conditional form only.* They are not diagnostics of the population form. On
      simulated S1 designs the estimated conditional width of the added nulls is 0.10–0.47 (m = 1) and 0.22–0.59 (m = 2), far below the worst-case
      √(2 log C(p−s0, m)) = 3.5–4.8. E9b's 3 D per (cell, d, m) are **selected examples** (chosen by population residual); four designs at zero slack
