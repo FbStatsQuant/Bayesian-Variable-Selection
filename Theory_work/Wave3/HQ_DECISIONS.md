@@ -949,3 +949,31 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
 - Department managers are managers and orchestrators only.
 - Each major task gets its own Opus 5.5 task lead (Claude Work, high; Claude Third as rate-limit overflow). The lead may spawn its own helpers, reports to its manager, and has a scoped life cycle: it closes at delivery, and new tasks get new leads.
 - Engineering now: LEAD SMC-PERF and LEAD CAMPAIGN-OPS (S2 ASI completion, S2 final, hygiene).
+
+## 2026-11-27 — Owner lifts full stop for Theory: TH-SONG-ASSUMPTIONS (Song–Liang theorem map & defensible assumptions)
+- Full stop lifted for Theory Department only (Engineering and Writing remain paused pending owner word).
+- Mandate: read Song & Liang (2015) main paper + supplement carefully, analyze all S1/S2 simulation data, clearly define our counterpart to every important theorem in Song (true distribution, true model, misspecification, plus complete Song map), and conjecture assumptions that (1) yield a clear proof path and (2) hold up to journal referee scrutiny (verified literature precedents and/or empirical simulation support; no unrealistic or artificially stringent assumptions).
+- Authorized chain & staffing (POLICIES.md §1a): Theory Manager orchestrates only → 1 Opus 5.5 high Task Lead on Claude Personal (`claudeAgent_personal`); Task Lead may spawn a few Sonnet (`claudeAgent_personal`) / Sol (`codex`, `gpt-6.2-sol`) mechanical workers (no Neon bulk workers) plus **1 Fable 5.2 (`claudeAgent_personal`, high) + 1 Astra 6.2 (`codex`, `gpt-6.2-astra`, high)** advisors (explicitly owner-approved).
+- Council (children of Task Lead): fresh Opus (Claude Personal) + Neon (`gemini-4-neon`, high) + Sol (`gpt-6.2-sol`, high) judge defensibility and theorem relevance. Substantive feedback is addressed (consulting Fable/Astra if needed); pure nitpicking and nitpick-driven score deductions are logged and disregarded.
+- Deliverable includes an assumption-by-assumption Owner Defensibility Dossier ready for the owner's personal interrogation.
+
+## 2026-11-27 — Owner lifts full stop for Engineering on Claude Third
+- Full stop lifted for Engineering Department (resumes SMC-PERF and CAMPAIGN-OPS in parallel with Theory; Writing remains paused/idle).
+- Account allocation: **Claude Third (`claudeAgent_claude_third`)** for all Engineering Claude agents (both Opus 5.5 high task leads, Sonnet/Haiku workers, Opus committee seat, and SMC-PERF Fable designer).
+- Board protocol enforced on resume (`POLICIES.md` §1a/§1b): Engineering manager orchestrates only; workers and reviewers are children of the leads; **no Neon bulk workers** (Neon reserved for the 3rd committee reviewer `gemini-4-neon` high only); existing SMC-PERF approval covers at most 1 Fable 5.2 (`claudeAgent_claude_third`, high) + 1 Astra 6.2 (`codex`, `gpt-6.2-astra`, high) designer pair (no additional Fables/Astras without new owner approval).
+- Running NOTS jobs were left to finish naturally (owner confirmed); leads check what finished, release held pending tasks, and restart Owls throttle/submitter and schedules.
+
+## 2026-11-27 — Owner escalation rule for Theory council (`TH-SONG-ASSUMPTIONS`)
+- If the final round of the 3-reviewer council (Opus / Neon / Sol) finds nothing meaningful yet still scores < 8, replace the 3 reviewers with **2 fresh independent judges**: **1 × Astra 6.2 (`codex`, high)** and **1 × Fable 5.2 (`claudeAgent_personal`, high)** (owner-pre-approved conditionally).
+- Run **one unique round** with Astra + Fable 5.2, involve the **original Fable 5.2 and Astra 6.2 drafting advisors** in processing their feedback, apply substantive corrections, and finalize the assumptions directly with no further rounds.
+
+## 2026-11-27 — Owner final theory pass: Senior Fable+Astra completeness, generality & naturalness review (`TH-SONG-ASSUMPTIONS`)
+- Council R2 accepted as passed as-is (no Council R3 of Opus/Neon/Sol).
+- Owner authorizes **1 fresh Fable 5.2 (`claudeAgent_personal`, high) + 1 fresh Astra 6.2 (`codex`, high)** as a final reviewing council to hold a structured discussion with the Proposers (Opus CP Task Lead + original Fable 5.2 & Astra 6.2 drafting advisors).
+- Mandate: verify nothing important was missed, and ensure every assumption is stated in a **general, design-agnostic, natural form** for the general linear-regression BVS problem (matching Song & Liang's generality — no AR or S1/S2-specific assumptions baked in; re-express or replace anything overly tied to S1/S2 while keeping S1/S2 strictly as empirical support). Finalize deliverables for the owner's personal review.
+- Hard round cap: **1 discussion round default, 2 rounds max**, with any 2nd round requiring explicit approval from the Theory Department Manager.
+
+## 2026-11-28 — Owner: PAPER-DRAFT to Writing
+- One LaTeX project (main.tex plus one file per section) with 3 Opus leads: (1) model/priors/posterior/SMC, owning refs.bib; (2) simulations S1/S2 with a Fable adviser on Claude Third; (3) theory with a Fable adviser on CP. Fables advise only; Opus/Sonnet write.
+- Song's style and cadence; APA-linked citations; metrics defined; truthful selling; brief assumption justifications (data-informed ones explained, not attributed to our data).
+- Review: one round by a fresh Fable (CP) and Astra, feedback only; a second, final round only with the Writing Manager's approval.

@@ -15,16 +15,37 @@ the documents win.
   - All theory tickets, including W3-DIST and W3-READER, are under the Theory Department (handover 2026-11-15, owner).
 - **Advisors:** HQ consultant (Fable 5.2), the second signature on headline changes (PROTOCOL_v4 H5).
 
-### 1a. Managers manage, task leads work (owner, 2026-11-27; overrides anything below that has managers doing the work)
-- **Department managers are managers and orchestrators only.** They brief, staff, set limits, route, integrate and
-  report to HQ. They do no technical work, and they spawn task leads and nothing else.
-- **Every major task gets its own Opus 5.5 task lead** (delegate_task, Claude Work, effort high; Claude Third only as
-  rate-limit overflow). Only leads, and the agents each lead spawns (Sonnet/Haiku/Neon, effort ≤ high), do actual work.
-  Leads report to their manager.
+### 1a. Managers manage, task leads work (owner board protocol, 2026-11-27; overrides anything below)
+- **Chain:** CEO → Department Manager → Task Lead → Workers and Reviewers.
+- **The CEO and every department manager are orchestrators ONLY, never workers.** They brief, staff, set limits, route,
+  integrate and report. They never inspect files, edit, compile, run checks or review line by line. A department
+  thread must never become a mix of HQ orders, agent management and actual work. Managers spawn task leads and
+  nothing else.
+- **Every non-trivial task gets its own task lead**, a child (delegate_task) inside the department thread. Default lead
+  and executor: Opus 5.5, effort high, on **Claude Personal** (the owner adjusts the account by usage). The lead owns
+  execution end to end and may spawn helpers of any authorized type. **Workers AND reviewers are children of the lead**,
+  never of the manager.
+- **Neon is reserved** for (a) orchestrating departments (department manager threads run on Orchestrator (Neon)) and
+  (b) an optional third reviewer next to the standard Opus + Sol pair. No Neon bulk workers.
+- **Astra or Fable** need approval up the chain (lead → manager → HQ → owner) before launch, every time.
 - **Scoped life cycle:** a lead lives for its task and closes with a final report at delivery. New tasks get new leads;
   leads are never reused across tasks.
 - **Pace:** 2–3 concurrent leads per department when usage limits allow. On "pace down", one major lead stays active
   and the others pause at a clean checkpoint. Progress lines report the active lead count.
+
+### 1b. Review acceptance bar (owner, 2026-11-27)
+- **Plans and experiments:** every reviewer scores ≥ 8 (per reviewer, not the average).
+- **Headline theorem statements and proofs, and paper claims:** every reviewer scores ≥ 8.5. Core results also need
+  Lean or an independent check.
+- **No open blocking issue:** any correctness or design flaw a reviewer marks as blocking is fixed, whatever the score.
+- **At most 3 rounds:** if the bar is not met after round 3, the item escalates to HQ, which decides what is worth fixing.
+  Non-blocking nitpicks may be declined with a one-line reason.
+- **Round 2+ = scoped fix-verification, not cold re-reviews (owner, 2026-11-27):** Round 1 uses fresh cold reviewers
+  (Opus, Sol, Neon). Round 2 (and Round 3 if needed) receives the exact Round-1 findings, the point-by-point response,
+  and the diff, and checks **only** (1) whether every Round-1 substantive/blocking issue was genuinely fixed and
+  (2) whether the edits introduced any new substantive flaw or regression. New stylistic nitpicks are disallowed; pure
+  nitpicks and nitpick-driven score deductions are logged with a one-line reason and disregarded. Fresh cold reviewers
+  return only after a major redesign or for a final pre-Lean / pre-submission audit.
 
 ## 2. Binding policies (read in this order)
 1. `Theory_work/Wave3/PROGRAM.md`: goals, presentation rule, **Readability** (clear statements, reader versions, full
