@@ -42,13 +42,13 @@ For BB(1, p) this is the package's Σ_{k=s−d}^{s−1} price(k). For other prio
 - **(C-i) Strong separation.** min R_n(S)/[σ*² log(p∨n)] → ∞ over feasible underfits with |S∖T| ≤ m̄_s implies (U1)–(U2) with Q_n = T.
 - **(C-ii) Sparse eigenvalue plus beta-min.** Let φ² be a lower bound on λ_min(Corr(x_V)) over |V| ≤ s + m̄_s, and let θ_min := min_{j∈T} |β*_j|·sd(x_j)/σ*. Then
   θ_min ≥ (1+η)·(1 + √m̄_s)·√(2 log(2p√(n+1))/n)/φ
-  implies (U1) and (U2) with ā ≡ 1. For an orthogonal design, (U1) alone reads β*_j²Var(x_j) ≥ 2(1+η)σ*²·log(2p√(n+1))/n.
+  implies (U1) and (U2) with ā ≡ 1. For an orthogonal design, a sufficient coordinatewise form of (U1) is β*_j²Var(x_j) ≥ 2(1+η)σ*²·log(2p√(n+1))/n for every j ∈ T; exact (U1) requires n·Σ_{j∈D} β*_j²Var(x_j) ≥ 2(1+η)σ*²·Pr_n(|D|) for each nonempty D (the displayed logarithm upper-bounds the average coded refund).
 
 **Lemma W (bridge to the proof; low risk).**
 - (W1) For S ⊇ B with positive residuals, ⟨v_S, v_B⟩ = √(R̂(S)/R̂(B)), so ‖v_S − v_B‖ = a(ϑ̂) exactly.
 - (W2) On the two-sided sparse-isometry event on T ∪ B ∪ N (size ≤ s + m̄_d, relative error δ_n ≍ √(log(n∨p)/n)), ϑ̂ ≤ ϑ + 2δ_n/(1+δ_n). Because of the cap, ā(ϑ̂) ≤ ā(ϑ) + 2√δ_n.
 - (W3) **Simultaneous Gaussian bound.** Let H ≤ 2^s Σ_{b ≤ m̄_s} C(|Q_n|−s, b) = n^{o(1)} be the number of bases and l_n := log(H+1) + t_n, with t_n → ∞ and t_n = o(log n). Conditionally on X, with probability 1 − O(e^{−t_n}), simultaneously over bases and N,
-  −⟨v_S, g⟩ ≤ √(2l_n) + ‖v_S − v_B‖·√(2[log C(p−s, m) + l_n]).
+  −⟨v_S, g⟩ ≤ √(2l_n) + ‖v_S − v_B‖·√(2[log C(p−s, m) + l_n]). By the same union bound, simultaneously, −⟨v_S, g⟩ ≤ √(2[log C(p−s, m) + l_n]) directly; take the minimum of the two bounds before applying W2, so the effective chord coefficient is capped at 1 (the uncapped chord a(ϑ̂) exceeds 1 when ϑ̂ > 3/4).
   The surplus over ā·√(2 log C) is o_P(√log n), and the root-scale slack absorbs it because Pr_n(d) ≳ log n for d ≥ 1.
 - **Consequence.** The population form implies the **base-indexed** conditional-width condition. TS-b step 3 is then run per base. For fixed D, each null set gives exactly one S, so the containing-model odds are summed once at the total null size k, with no multiplier of order H.
 - **Not claimed.** The population form does not imply the v1.3 class-level conditional-width condition when Q_n ≠ T: across bases, the smallest residual and the largest width can occur at different bases. That condition is kept as a **parallel sufficient condition** (the "refined design-conditional form", ASSUMPTIONS §3.3). E9/E9b are diagnostics of it.
@@ -61,16 +61,16 @@ For BB(1, p) this is the package's Σ_{k=s−d}^{s−1} price(k). For other prio
 This needs step 2 on the bases T ∪ (B∖T), which is not written. The headline (U2a) is therefore conservative: by a factor (1+ρ²)/(1−ρ²) on the signal when both AR(1) neighbours of an isolated true predictor are proxies, and similarly for block designs.
 
 **Evidence** (moved out of the statement):
-- On S1, the minimum of R_n(B)/(2σ²Pr_n(d)) equals the exact κ_n. It was taken over all 1,023 D, and over B with up to 2 inside proxies from the 5 nearest nulls. The value is 2.505–2.771 at SNR 2 and 0.626–0.693 at SNR 1; the binding D retain x_10, which screens every null (`.rc_tmp/lead_v14/u2a_check.py`).
-- With Q_n = T plus the L_n → ∞ nearest nulls, the outside leakage is ρ^{2k}(1−ρ²)/(1−ρ^{2k+2}) at distance k (0.265, 0.087, 0.030, 0.011 at ρ = 0.6), so special case (ii) applies along the S1 sequence.
+- On S1, over all 1,023 deletions D with B = (T∖D) plus at most two of the five tested proxies (the five nulls nearest S0), the minimum of R_n(B)/(2σ²Pr_n(d)) equals the exact κ_n; larger proxy sets were not tested. The value is 2.505–2.771 at SNR 2 and 0.626–0.693 at SNR 1; the binding D retain x_10, which screens every null (`.rc_tmp/lead_v14/u2a_check.py`).
+- For the endpoint deletion (retained true predictors on one side), a single outside null at distance k beyond the deleted endpoint, with the intervening nulls not in the base, leaks ρ^{2k}(1−ρ²)/(1−ρ^{2k+2}) (0.265, 0.087, 0.030, 0.011 at ρ = 0.6 for k = 1–4). Special case (ii) needs the uniform bound max ϑ·log p → 0, which L_n → ∞ alone does not give: with Q_n = T plus the L_n nearest nulls, the worst outside leakage over d ≤ 3, up to 2 inside proxies and up to 3 outside nulls is ≈ 0.25ρ^{2L_n} (unit coefficients; `.rc_tmp/lead_v14/leak_uniform.py`), so choosing L_n with ρ^{2L_n}·log p → 0 (L_n of order log log p plus a slowly diverging term, keeping log|Q_n| = o(log n)) puts the S1 sequence in special case (ii).
 - The fallback alone (ā ≡ 1): on the evaluated classes (d ≤ 3, selected D for d ≥ 2; m ≤ 2 at p = 500, m = 1 at p = 5,000) at η = 0, it fails at SNR 2 (minimum surplus −0.692 at d = 1, m = 1; −2.008 at m = 2) and holds at SNR 3 (minimum 1.412, d = 1, m = 2); m up to m̄_d is not evaluated (population computation on `tables/e9b_width_ext_s1.tsv` with the combinatorial width √(2 log C(p−s, m))).
 
 ## 2. Other changed statements
 - **A-MARGIN-H (TS-a), diverging ratio.** For the predictor j and **every fixed k**, inf{R_n(S) : j ∉ S, |S| ≤ k}/(σ*² log n) → ∞. This gives screening at every fixed level M. A diverging ratio at an unspecified speed gives nothing uniform for M = M_n → ∞.
-  - Remark (fixed-level form): at a fixed level M, inf R_n(S)/(σ*² log n) ≥ C_L·M over |S| ≤ min(K, J(M)), with C_L above the inverse Hellinger-conversion constant, suffices. It is sharper for finite-ratio signals and gives the a.s. corollary at a large fixed level.
+  - Remark (fixed-level form): at a fixed level M, inf R_n(S)/(σ*² log n) ≥ C_L·M over S with j ∉ S and |S| ≤ min(K, J(M)), with C_L above the inverse Hellinger-conversion constant, suffices. It is sharper for finite-ratio signals and gives the a.s. corollary at a large fixed level.
   - TS-a is stated first per predictor (any j satisfying its own margin, whatever the other signals do) and then jointly.
 - **A-SUBG / A-NEC windows.** They are imposed on sets of size ≤ k_n, a deterministic design order with k_n ≥ q_n(M) at the claimed level.
-  - For fixed-level statements this is "for every fixed c, sets of size ≤ c·log n".
+  - For fixed-level statements it suffices, across all fixed levels, to impose them on sets of size ≤ c·log n for every fixed c; a single fixed level needs only one such window.
   - For M = M_n → ∞ (the delivered `thm:dist` range M ≤ √n/log n) it is q_n(M_n).
   - For TD′ it is the enlarged q_n.
   - The constants L and c_ψ are common.
@@ -78,14 +78,14 @@ This needs step 2 on the bases T ∪ (B∖T), which is not written. The headline
 - **A-DIM′.** log p = o(√n) is the conjecture's regime. The product form (s+1)M log p·log(p∨n) ≤ c·n is its proof budget. TD′ stays a high-risk conjecture.
 - **A-BS′ (recorded, not adopted).** The recorded pair is V := Var(xᵀβ*)/σ*² = O(1) and E := Σ_j β*_j² Var(x_j)/(nσ*²) = o(1); at fixed s it is equivalent to the stated BS′. The open target is V = O(1) alone, i.e. population R² = V/(1+V) ≤ 1 − c. With A-NEC on T it gives E ≤ M_μ/c_ψ = O(1). Open: whether the size lemma and the ridge remainder hold at O(1) rather than o(1) energy.
 - **A-MIS(iii), primitive form.** For the omitted true predictors O, x_Oᵀβ*_O = a + x_Cᵀγ + e with e ~ N(0, τ²) independent of x_C, τ² ≥ 0. Then β^C = β*_C + γ and σ_C² = σ*² + τ². This is equivalent to v1.3's statement (Cramér decomposition). Uniqueness comes from a sparse representation together with A-NEC; full rank is a sufficient version.
-- **A-SPARSE-C (new label).** |supp β^C| ≤ s_C, fixed. It holds under local dependence: in a Gaussian AR(1), an omitted predictor projects on its two neighbours. It fails under pervasive factors, where the projection is dense. The relaxation is TD-A.
-- **TM-a / TM-b** are corollaries of TD and TS-b, **conditional on each admissible C**, with the candidate dimension in the cap, price, window and prior. An unconditional statement needs uniform constants and almost-sure admissibility, or the bound + P(C inadmissible). The a.s. corollary needs summable exception probabilities.
+- **A-SPARSE-C (new label).** |supp β^C| ≤ s_C, fixed. It holds under Markov-type separation: in a Gaussian AR(1) (a Markov chain), the nearest retained candidates on each side separate an omitted predictor from all other candidates, so it projects on at most two of them. Local covariance dependence alone need not give a sparse regression. It fails under pervasive factors, where the projection is dense. The relaxation is TD-A.
+- **TM-a / TM-b** are corollaries of TD and TS-b, **conditional on each admissible C**, with the candidate dimension in the cap, price, window and prior. An unconditional statement needs common constants and a common validity threshold over admissible candidate sets, and then adds + P(C inadmissible), which vanishes identically under almost-sure admissibility. The a.s. corollary needs summable exception probabilities.
 - **TM-a0-inc (new target, the SL Cor 2 counterpart).** Π(S ⊇ S0^C | data) → 1 a.s. under A-MOM's second moments only. Full rank and finitely many underfits give a positive risk gap. The score moments enter only for exclusion (TM-a0 exact).
 - **Converse (TS-b).**
   - It is stated under its minimal set: A-GL, sparse isometry and A-NEC on T, and A-BS for the ridge term.
   - A price-scale restriction Pr_n(1) = O(log n) holds under A-DIM.
   - Boundary remainder: log odds = Pr_n(1) − (√λ̂ + Z)²/2 + O_P(1) at λ = O(log n), with V_n/n = 1 + O_P(n^{−1/2}) and λ̂ − λ = o_P(1) by fixed-support relative transfer.
-  - The O_P(1) remainder suffices for P(π(T|y) ≤ ½) → Φ(−c), because the leading fluctuation is √(2Pr_n)·(c+Z).
+  - The O_P(1) remainder suffices for P(the specified single-deletion rival beats T) → Φ(−c), hence liminf P(π(T|y) ≤ ½) ≥ Φ(−c), because the leading fluctuation is √(2Pr_n)·(c+Z). The local expansion requires Pr_n(1) = O(log n) and fixed-support relative error O_P(n^{−1/2}), supplied for instance by A-DIM and relative A-SUBG on T.
 - **Sieve.** Classes satisfy s − d + k ≤ min(K, J) and k ≤ p − s.
 - **Credit constant.** C = 1 by convention, with the multiplier in the tight remainder. "C ≍ (s0+1)² ≈ 121" is withdrawn; E9b's C = 121 column is a sensitivity setting. The single-rival price Pr_n(d, m) and the summed class bound B_Dm are distinct.
 
@@ -105,9 +105,9 @@ This needs step 2 on the bases T ∪ (B∖T), which is not written. The headline
   - Omitted variables: A-MIS(iii) with A-SPARSE-C; A-MOM for the fixed-dimension result.
 - **Worked cases (DOSSIER).** Each gives the conditioning set and coefficients. Leakage depends on both for multi-deletions. Checked numerically in `.rc_tmp/lead_v14/worked_cases.py`.
   - **Orthogonal:** R_n(T∖D) = nΣ_{j∈D} β*_j²Var(x_j), and leakage is 0.
-  - **AR(1) ρ:** deleting an interior predictor whose neighbours are retained gives Var = (1−ρ²)/(1+ρ²) per unit β², and leakage 0 (screened). Deleting an endpoint gives 1−ρ²; the outside null at distance k leaks ρ^{2k}(1−ρ²)/(1−ρ^{2k+2}).
+  - **AR(1) ρ:** deleting an interior predictor whose neighbours are retained gives Var = (1−ρ²)/(1+ρ²) per unit β², and leakage 0 (screened). Deleting an endpoint (retained true predictors on one side) gives 1−ρ²; a single outside null at distance k beyond the endpoint, intervening nulls not in the base, leaks ρ^{2k}(1−ρ²)/(1−ρ^{2k+2}).
   - **Block, fixed size b, equicorrelation within blocks:** only same-block nulls leak, and Q_n = the blocks of T has |Q_n| ≤ s·b.
-  - **Equicorrelation ρ, one omitted predictor, b retained, m nulls:** leakage mρ²/[(1+bρ)(1+(b+m−1)ρ)], which is ρ²/(1+bρ)² at m = 1 and tends to ρ/(1+bρ). Every null leaks equally, so Q_n = T and the interpolated (U2b) is the operative form. A one-factor model is this case.
+  - **Equicorrelation ρ, one omitted predictor, b retained, m nulls:** leakage mρ²/[(1+bρ)(1+(b+m−1)ρ)], which is ρ²/(1+bρ)² at m = 1 and tends to ρ/(1+bρ). Every null leaks equally, so no small Q_n makes outside leakage vanish; Q_n = T is admissible even with positive leakage, and the interpolated (U2b) is the operative form. The formula describes the equal-loading one-factor case.
 - **No S1/S2 number in any statement.** D4 is rewritten: the form is chosen on generality grounds, and S1 is checked against it.
 
 ## 4. Engine decision (HQ, SMC-PERF closed, memo 1b319090)

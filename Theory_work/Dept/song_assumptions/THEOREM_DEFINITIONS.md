@@ -119,7 +119,7 @@ Assumption labels refer to `ASSUMPTIONS_AND_PROOF_PATHS.md` §2. They form four 
 
 No assumption names a design family or a simulation constant; S1/S2 enter only as evidence (SIMULATION_DATA_ANALYSIS, DOSSIER).
 
-**Windows.** A-SUBG and A-NEC are imposed on sets of size ≤ k_n, a deterministic design order with k_n ≥ q_n(M) at the claimed level: for fixed-level statements this reads "for every fixed c, sets of size ≤ c·log n"; for M = M_n → ∞ (the delivered `thm:dist` range M ≤ √n/log n) it is q_n(M_n); for TD′ it is the enlarged q_n. The constants L and c_ψ are common.
+**Windows.** A-SUBG and A-NEC are imposed on sets of size ≤ k_n, a deterministic design order with k_n ≥ q_n(M) at the claimed level: for fixed-level statements it suffices, across all fixed levels, to impose them on sets of size ≤ c·log n for every fixed c (a single fixed level needs only one such window); for M = M_n → ∞ (the delivered `thm:dist` range M ≤ √n/log n) it is q_n(M_n); for TD′ it is the enlarged q_n. The constants L and c_ψ are common.
 
 ### 4.1 TD: true-distribution consistency (SL Theorems 1–2, Corollary 1)
 **Mathematical statement (delivered form, `thm:dist`).** Assume A-GL, A-SPARSE, A-DIM, A-SUBG, A-NEC and A-BS. There are constants c_H > 0, M₀ and n₀, depending only on (s, A, L, c_ψ, b̄), such that for every M ≥ M₀ and every n ≥ n₀ with √n/log n ≥ M,
@@ -132,7 +132,7 @@ The delivered assumption set imposes A-SUBG and A-NEC on the level-dependent siz
 Π(d_H(f, f*) > √(M log n/n) | D_n) → 0 P*-almost surely. Proof path: Borel–Cantelli on the display above, since
 Σ_n n^{−c_H M} < ∞. This is the counterpart of SL's almost-sure mode in Thm 4.
 
-**TD′ [conjecture, HIGH proof risk at the proposed rate].** Replace A-DIM by A-DIM′, (s+1)·M·log p·log(p∨n) ≤ c_dim·n (headline form: (log p)² = o(n) for fixed s and M; a sufficient isometry budget only). Conjectured statement (exact, Sol R2): keep 2 ≤ p and the coded input domain with its exceptional event, and impose A-SUBG and A-NEC on the enlarged window q_n = min{p, ⌈C′(s+1)M log(p∨n)⌉}. Then there are c > 0 and M₀ such that for every M ≥ M₀ with M log(p∨n) ≤ c√n and ε_n² = M log(p∨n)/n,
+**TD′ [conjecture, HIGH proof risk at the proposed rate].** Replace A-DIM by A-DIM′, (s+1)·M·log p·log(p∨n) ≤ c_dim·n (the conjecture's regime is log p = o(√n); this product form is a sufficient isometry budget only, not the same condition: at fixed M, log p ∼ a√n with small a > 0 satisfies the budget but not the regime). Conjectured statement (exact, Sol R2): keep 2 ≤ p and the coded input domain with its exceptional event, and impose A-SUBG and A-NEC on the enlarged window q_n = min{p, ⌈C′(s+1)M log(p∨n)⌉}. Then there are c > 0 and M₀ such that for every M ≥ M₀ with M log(p∨n) ≤ c√n and ε_n² = M log(p∨n)/n,
 
   P*[ Π( d_H(f, f*) > ε_n | D_n ) > exp(−cM log(p∨n)) ] ≤ exp(−cM log(p∨n)).
 
@@ -154,7 +154,7 @@ The delivered assumption set imposes A-SUBG and A-NEC on the level-dependent siz
   whatever the other signals do (the counterpart of SL Thm 3, which is also stated per identifiable predictor).
 - **(b) Jointly.** If every j ∈ S0 satisfies A-MARGIN-H, then min_{j∈S0} PIP_j → 1 in probability (almost surely, for posterior tails, if c′_H M > 1).
 
-The diverging ratio gives screening at every fixed level M; at an unspecified speed it gives nothing uniform for M = M_n → ∞. **Remark (fixed-level form).** At a fixed level M it suffices that inf R_n(S)/(σ*² log n) ≥ C_L·M over |S| ≤ min(K, J), J := ⌊s + C_s M⌋ (prop:dist(i)), with C_L above the inverse Hellinger-conversion constant; this is sharper for finite-ratio signals and gives the a.s. corollary at a large fixed level. C_L is inexplicit, so TS-a makes no claim at boundary signal levels.
+The diverging ratio gives screening at every fixed level M; at an unspecified speed it gives nothing uniform for M = M_n → ∞. **Remark (fixed-level form).** At a fixed level M it suffices that inf R_n(S)/(σ*² log n) ≥ C_L·M over S with j ∉ S and |S| ≤ min(K, J), J := ⌊s + C_s M⌋ (prop:dist(i)), with C_L above the inverse Hellinger-conversion constant; this is sharper for finite-ratio signals and gives the a.s. corollary at a large fixed level. C_L is inexplicit, so TS-a makes no claim at boundary signal levels.
 
 **TS-b, exact selection [TARGET, population margin form, low–medium risk].** Assume A-GL, A-SPARSE, A-DIM, A-SUBG, A-NEC, A-BS and **A-MARGIN-U (population form)**, stated here in full. Write T = S0, s = s0. For a rival S ⊉ T, its **base** is B := S ∩ Q_n, N := S ∖ Q_n, d := |T∖B|, and k := |B∖T| + |N| is the number of added predictors. Let m̄_d := ⌈(2A+1)d⌉ + 1 (the range of delivered `asm:margin`(b) with s replaced by d) and ā(B, N) := min{1, √(2(1 − √(1 − ϑ(B, N))))}.
 
@@ -165,14 +165,14 @@ The diverging ratio gives screening at every fixed level M; at an unspecified sp
 
   √( R_n(B ∪ N)/σ*² ) ≥ √( 2(1+η)·Pr_n(d) ) + ā(B, N)·√( 2 log C(p−s, m) ).
 
-Q_n is an accounting device, not an object to be found: any such Q_n may be used, enlarging it moves rivals from (U2b) to (U2a), and leakage outside Q_n need not vanish, since it is priced by ā (√ϑ ≤ ā ≤ √(2ϑ) for ϑ ≤ 3/4). Special cases, not separate assumptions: (i) Q_n = T, "no proxies", where every null is priced by its own leakage; (ii) if max ϑ·log p → 0 outside Q_n, (U2a) with η implies (U2b) with every η′ < η; (iii) ā ≡ 1, the structure-free fallback (coefficient 1). Rivals with k > m̄_d need no signal condition: for p ≤ n^A their summed prior-plus-Occam odds are ≤ n^{−γ} for some γ > 0 (TS-b step 2). Classes are restricted to the sieve s − d + k ≤ min(K, J), k ≤ p − s.
+Q_n is an accounting device, not an object to be found: any such Q_n may be used, enlarging it moves rivals from (U2b) to (U2a), and leakage outside Q_n need not vanish, since it is priced by ā (√ϑ ≤ ā ≤ √(2ϑ) for ϑ ≤ 3/4). Special cases, not separate assumptions: (i) Q_n = T, "no proxies", where every null is priced by its own leakage; (ii) if max ϑ·log p → 0 outside Q_n, (U2a) with η implies (U2b) with every η′ < η; (iii) ā ≡ 1, the structure-free fallback (coefficient 1). Rivals with k > m̄_d need no signal condition: for p ≤ n^A their summed prior-plus-Occam odds are ≤ n^{−γ} for some γ > 0 (TS-b step 2). Classes are restricted to the sieve s − d + k ≤ min(K, J), k ≤ p − s; (U2) and C-i range only over such feasible rivals.
 
 Then, for some γ > 0 depending on (η, A),
 
   1 − π(S0 | D_n) = O_P( (s0+1)·√(log p/n) + n^{−γ} + n^{−c_H M} ),  P(HPM = MPM = S0) → 1,
   max_j |PIP_j − 1{j ∈ S0}| ≤ 1 − π(S0 | D_n).
 
-- **Population sufficient conditions (corollaries).** (C-i) Strong separation: min R_n(S)/[σ*² log(p∨n)] → ∞ over feasible underfits with |S∖T| ≤ m̄_s implies (U1)–(U2) with Q_n = T. (C-ii) Sparse eigenvalue plus beta-min: if φ² lower-bounds λ_min(Corr(x_V)) over |V| ≤ s + m̄_s and θ_min := min_{j∈T}|β*_j|·sd(x_j)/σ* ≥ (1+η)(1 + √m̄_s)·√(2 log(2p√(n+1))/n)/φ, then (U1) and (U2) hold with ā ≡ 1. For an orthogonal design (U1) reads β*_j²Var(x_j) ≥ 2(1+η)σ*²·log(2p√(n+1))/n.
+- **Population sufficient conditions (corollaries).** (C-i) Strong separation: min R_n(S)/[σ*² log(p∨n)] → ∞ over feasible underfits with |S∖T| ≤ m̄_s implies (U1)–(U2) with Q_n = T. (C-ii) Sparse eigenvalue plus beta-min: if φ² lower-bounds λ_min(Corr(x_V)) over |V| ≤ s + m̄_s and θ_min := min_{j∈T}|β*_j|·sd(x_j)/σ* ≥ (1+η)(1 + √m̄_s)·√(2 log(2p√(n+1))/n)/φ, then (U1) and (U2) hold with ā ≡ 1. For an orthogonal design, a sufficient coordinatewise form of (U1) is β*_j²Var(x_j) ≥ 2(1+η)σ*²·log(2p√(n+1))/n for every j ∈ T; exact (U1) requires n·Σ_{j∈D} β*_j²Var(x_j) ≥ 2(1+η)σ*²·Pr_n(|D|) for each nonempty D.
 - **Bridge to the proof (Lemma W, ASSUMPTIONS §2).** The population form implies the **base-indexed** design-conditional width condition on a design event of probability 1 − o(1); TS-b step 3 is run per base. It does **not** imply the v1.3 class-level conditional-width condition when Q_n ≠ T. That condition is kept as a parallel sufficient condition, the **refined design-conditional form** (ASSUMPTIONS §3.3, with credit constant C = 1 by convention); E9/E9b are diagnostics of the refined form only.
 - For pure deletions, (U1) is liminf κ_n > 1. Every nonempty D ⊆ S0 counts, not only singletons.
 - Models larger than J are handled by the size lemma prop:dist(i), which is proved under A-BS; that is why TS-b keeps A-BS (A-BS′ needs the lemma extended first). Proof obligations (ASSUMPTIONS §3.3): the truncated superset sum, the coded mixed odds per base, and the k > m̄_d step remain to be written out.
@@ -180,11 +180,11 @@ Then, for some γ > 0 depending on (η, A),
 
 **TS-b converse [TARGET, low risk].** Assume only its minimal set: A-GL, sparse isometry and A-NEC on T (a two-sided determinant refund d·log(n+1)/2 + O(1); a one-sided refund bound cannot prove the converse), and A-BS for the ridge term; the price-scale restriction Pr_n(1) = O(log n) holds under A-DIM. No forward margin is assumed.
 - If limsup κ_n < 1, then π(S0 | D_n) → 0 in probability.
-- If √R_n(S0∖{j})/σ* − √(2·price_n) → c ∈ ℝ, then liminf P(π(S0 | D_n) ≤ ½) ≥ Φ(−c) > 0. Boundary remainder: log odds = Pr_n(1) − (√λ̂ + Z)²/2 + O_P(1) at λ = O(log n), with V_n/n = 1 + O_P(n^{−1/2}) and λ̂ − λ = o_P(1) by fixed-support relative transfer; the O_P(1) remainder suffices because the leading fluctuation is √(2Pr_n)·(c+Z). Equality would need control of all other odds (Astra R2 Q3).
+- If √R_n(S0∖{j})/σ* − √(2·price_n) → c ∈ ℝ, then liminf P(π(S0 | D_n) ≤ ½) ≥ Φ(−c) > 0. Boundary remainder: log odds = Pr_n(1) − (√λ̂ + Z)²/2 + O_P(1) at λ = O(log n), with V_n/n = 1 + O_P(n^{−1/2}) and λ̂ − λ = o_P(1) by fixed-support relative transfer (relative error O_P(n^{−1/2}) on T, from A-DIM and relative A-SUBG on T); the O_P(1) remainder suffices because the leading fluctuation is √(2Pr_n)·(c+Z). Equality would need control of all other odds (Astra R2 Q3).
 
 The constant 2 is therefore sharp for deletions. The S1 evidence (the transition is bracketed between SNR 1 and SNR 2, not located) is in SIMULATION_DATA_ANALYSIS item 2 (E1) and the U2a check.
 
-**MARGIN\* (v1.3 open refinement) is superseded** by the population form: (U2a) is Fable's M1 on bases inside the accounting set, and the leakage-priced (U2b) replaces M2. A factor-proxy design (Fable Q1(3c)) shows the width term is needed at one (d, m); there is no necessity result for (U2b) in general.
+**MARGIN\* (v1.3 open refinement) is superseded** by the population form: (U2a) charges every base inside the accounting set the full deletion price, whereas Fable's M1 let inside proxies pay for their entry (the weaker-variant remark, ASSUMPTIONS §2), and the leakage-priced (U2b) replaces M2. A factor-proxy design (Fable Q1(3c)) shows the width term is needed at one (d, m); there is no necessity result for (U2b) in general.
 
 **Rejected:** the uniform "constant 2 for every rival" margin of DESIGN_MEMO_R0. Fable Q1(3d) gives a counterexample for a fixed number m of added nulls when log n = o(log p). The question is OPEN under p ≤ n^A, and it is recorded as a conjecture only.
 
@@ -217,7 +217,7 @@ Proof path (Fable Q6(3a), fixes by Astra R2 Q4): there are 2^{p_C} models; the S
 
   P*[ Π( d_H(f, f₀) > √(M log n / n) | D_n^C ) > n^{−c M} ] ≤ n^{−c M}  (the a.s. corollary, for posterior tails, if c·M > 1).
 
-An unconditional statement (over a data-dependent C) needs uniform constants and almost-sure admissibility, or adds + P(C inadmissible); the a.s. corollary needs summable exception probabilities.
+An unconditional statement (over a data-dependent C) needs common constants and a common validity threshold over admissible candidate sets, and then adds + P(C inadmissible), which vanishes identically under almost-sure admissibility; the a.s. corollary needs summable exception probabilities.
 
 **TM-b, selection of the pseudo-true support [TARGET, margin form; a corollary of TS-b for each admissible C].** Assume A-MIS(iii), A-SPARSE-C and the TS-b assumptions for the candidate problem, with A-MARGIN-U written in σ_C² units on μ_C = X_Cβ^C, and assume a nonempty pseudo-support S0^C := supp β^C ≠ ∅ (the forward steps would also go through with S0^C = ∅, where the deletion and mixed classes are empty, but that case is not claimed; the converse needs S0^C ≠ ∅). Then 1 − π(S0^C | D_n^C) has the TS-b in-probability rate (the delivered `thm:omitted` gives an expectation bound, which TM-b does not reproduce), and P(HPM = MPM = S0^C) → 1. In particular, as SL Cor 2's prose claims:
 - a true predictor in C is selected iff β^C_j ≠ 0;

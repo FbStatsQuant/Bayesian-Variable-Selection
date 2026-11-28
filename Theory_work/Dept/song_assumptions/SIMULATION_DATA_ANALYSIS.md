@@ -26,7 +26,7 @@ Every number below is in a table under `tables/` (file named in the section) and
      diagnostic (rivals beating S0 in exact score, an HPM event; MPM failure is separate; Sol R2) and does **not** match the order of the TS-b mass-rate term (s0+1)√(log p/n), which is 0.87–1.44 at
      S1's sizes and therefore not informative there (Opus R1).
    - *U2a check (population form; Lead, `.rc_tmp/lead_v14/u2a_check.py`, no fits):* the minimum of R_n(B)/(2σ²Pr_n(d)) over
-     all 1,023 D and over B = (S0∖D) ∪ (up to 2 inside proxies from the 5 nearest nulls) **equals the exact κ_n**. The binding D retain x_10,
+     all 1,023 D and over B = (S0∖D) ∪ (at most two of the five tested proxies, the five nulls nearest S0) **equals the exact κ_n**; larger proxy sets were not tested. The binding D retain x_10,
      which screens every null. So (U2a) is no tighter than (U1) on S1 at these proxy sets:
 
      | cell | SNR 1 | SNR 2 | SNR 3 |
@@ -36,8 +36,7 @@ Every number below is in a table under `tables/` (file named in the section) and
      | (1000, 500) | 0.626 | 2.505 | 5.635 |
      | (1000, 5000) | 0.670 | 2.679 | 6.028 |
 
-   - *Leakage decay (AR(1), ρ = 0.6):* with Q_n = T plus the L_n nearest nulls, the outside leakage at distance k is
-     ρ^{2k}(1−ρ²)/(1−ρ^{2k+2}) = 0.265, 0.087, 0.030, 0.011 (k = 1–4), so special case (ii) of the population form applies along the S1 sequence. Estimated on S1's AR(1) designs, not a property of correlated designs in general.
+   - *Leakage decay (AR(1), ρ = 0.6):* For the endpoint deletion (retained true predictors on one side), a single outside null at distance k beyond the deleted endpoint, with the intervening nulls not in the base, leaks ρ^{2k}(1−ρ²)/(1−ρ^{2k+2}) (0.265, 0.087, 0.030, 0.011 at ρ = 0.6 for k = 1–4). Special case (ii) needs the uniform bound max ϑ·log p → 0, which L_n → ∞ alone does not give: with Q_n = T plus the L_n nearest nulls, the worst outside leakage over d ≤ 3, up to 2 inside proxies and up to 3 outside nulls is ≈ 0.25ρ^{2L_n} (unit coefficients; `.rc_tmp/lead_v14/leak_uniform.py`), so choosing L_n with ρ^{2L_n}·log p → 0 (L_n of order log log p plus a slowly diverging term, keeping log|Q_n| = o(log n)) puts the S1 sequence in special case (ii).
    - *The structure-free fallback* (ā ≡ 1, unit-vector bound): on the evaluated classes (d ≤ 3, selected D for d ≥ 2; m ≤ 2 at p = 500, m = 1 at p = 5,000) at η = 0, it fails at SNR 2 (minimum surplus −0.692 at d = 1, m = 1; −2.008 at m = 2) and holds at SNR 3 (minimum 1.412, d = 1, m = 2); m up to m̄_d is not evaluated (population computation on `tables/e9b_width_ext_s1.tsv` with the combinatorial width √(2 log C(p−s, m))).
    - *Mixed rivals (E9/E9b) are diagnostics of the refined design-conditional form only.* They are not diagnostics of the population form. On
      simulated S1 designs the estimated conditional width of the added nulls is 0.10–0.47 (m = 1) and 0.22–0.59 (m = 2), far below the worst-case
