@@ -27,8 +27,8 @@ expectation. The true joint density of $(x,\yr)$, with respect to $\Px(dx)\,dy$,
 $f^*(x,y)=\phi(y;\alpha^*+x^\top\bstar,\sigs)$, where $\phi(\cdot\,;\mu,\sigma)$ is the $\Normal(\mu,\sigma^2)$ density.
 
 A posterior draw $(S,\theta_S,v)$ on the standardised scale of Section~\ref{sec:model-data} maps to coefficients
-$\beta$ and a variance $\sigma^2=s_y^2v$ in the original units. Let $\Pi(\cdot\mid\Dn)$ be the posterior of
-$(S,\beta,\sigma^2)$; for a model, $\Pi(S\mid\Dn)$ is the probability $\pis{S}$ of
+$\beta$ and a variance $\sigma^2=s_y^2v$ in the original units. Let $\Pin{\cdot}$ be the posterior of
+$(S,\beta,\sigma^2)$; for a model, $\Pin{S}$ is the probability $\pis{S}$ of
 Section~\ref{sec:model-prior}. A draw defines the conditional law $\Normal\{\bar y^{\mathrm r}+(x-\bar x^{\mathrm r})^\top\beta,\sigma^2\}$ of the
 response given $x$, where $\bar y^{\mathrm r}$ and $\bar x^{\mathrm r}$ are the sample means used to centre the data. The method has no
 intercept parameter, so this law depends on the data through these plug-ins as well as through the draw. Let $f$ be the
@@ -140,7 +140,7 @@ fixed $\underline b>0$ and $\varphi\in(0,1]$, the smallest standardised effect
 $\bbmin=\min_{j\in\Sz}\abs{\beta^*_j}\sd(x_j)/\sigs$ satisfies $\bbmin\ge\underline b$, and $\lmin\{\Corr(x_T)\}\ge\varphi^2$ for every set $T$ of at most
 $5(A+1)(\sz+1)\log n$ predictors. Then
 \[
-  1-\Pi(\Sz\mid\Dn)=\OP\big(\rn\big),\qquad
+  1-\Pin{\Sz}=\OP\big(\rn\big),\qquad
   \max_{1\le j\le p}\big\lvert\PIP_j-\ind{j\in\Sz}\big\rvert=\OP\big(\rn\big),
 \]
 and $\P^*(\HPM=\MPM=\Sz)\to1$.
@@ -237,9 +237,9 @@ $\beta_j^{*2}\Var(x_j)\ge2(1+\eta)\sigs^2\log(2p\sqrt{n+1})/n$ for every $j\in\S
 \end{remark}
 
 \begin{conjecture}[Selection consistency]\label{conj:th-select}
-Assume \ref{a:th-gl}--\ref{a:th-margin}, with $\sz\ge1$. Then $\Pi(\Sz\mid\Dn)\to1$ in probability,
+Assume \ref{a:th-gl}--\ref{a:th-margin}, with $\sz\ge1$. Then $\Pin{\Sz}\to1$ in probability,
 \[
-  \max_{1\le j\le p}\big\lvert\PIP_j-\ind{j\in\Sz}\big\rvert\ \le\ 1-\Pi(\Sz\mid\Dn)\ \to\ 0\quad\text{in probability},
+  \max_{1\le j\le p}\big\lvert\PIP_j-\ind{j\in\Sz}\big\rvert\ \le\ 1-\Pin{\Sz}\ \to\ 0\quad\text{in probability},
 \]
 and $\P^*(\HPM=\MPM=\Sz)\to1$.
 \end{conjecture}
@@ -345,8 +345,8 @@ predictor is typically dense, although common factors alone do not force a dense
 \leavevmode
 \begin{enumerate}[label=(\alph*)]
   \item \emph{Any response law, fixed dimension.} Under Assumption~\ref{a:th-mom},
-    $\Pi\{d_H(f,f_0)>\epsilon\mid\Dn^{\mathcal C}\}\to0$ for every $\epsilon>0$ and
-    $\Pi(S\supseteq\Sz^{\mathcal C}\mid\Dn^{\mathcal C})\to1$, almost surely. If in addition
+    $\Pi\{d_H(f,f_0)>\epsilon\mid\Dn^{\mathcal C}\}\to0$ almost surely for every $\epsilon>0$, and
+    $\Pi(S\supseteq\Sz^{\mathcal C}\mid\Dn^{\mathcal C})\to1$ in probability. If in addition
     $\E(x_j^2\varepsilon_{\mathcal C}^2)<\infty$ for every $j\in\mathcal C$, then
     $\Pi(\Sz^{\mathcal C}\mid\Dn^{\mathcal C})\to1$ almost surely.
   \item \emph{Omitted predictors, high dimension.} Under Assumptions~\ref{a:th-gl}, \ref{a:th-mis}
@@ -363,8 +363,10 @@ predictor is typically dense, although common factors alone do not force a dense
 Part~(a) corresponds to Theorem~4 and Corollary~2 of \citet{SongLiang2015}, stated there for Gaussian data with
 omitted predictors: the density statement, and the inclusion of the pseudo-true support, which their corollary
 derives from the conditions of their Theorem~4 when no exact collinearity holds among the candidates (here,
-$\Var(x_{\mathcal C})$ is nonsingular). Their corollary states convergence in probability; the almost sure form is
-stronger. The last statement of part~(a) adds exclusion. Part~(b) asks for the
+$\Var(x_{\mathcal C})$ is nonsingular). As there, the inclusion statement needs a size cap that eventually stops
+binding (their remark~(c), p.~958): here $K=\abs{\mathcal C}$ once $n\ge2\abs{\mathcal C}$, so every candidate model
+has positive prior probability. We expect the inclusion to hold almost surely as well, which would strengthen their
+form. The last statement of part~(a) adds exclusion. Part~(b) asks for the
 conclusions of Theorems~\ref{thm:th-dist} and~\ref{thm:th-omitted} for the candidate problem, with the margin of
 Assumption~\ref{a:th-margin} in place of condition~(ii) of Theorem~\ref{thm:th-omitted}; its constants depend on
 $s_{\mathcal C}$ in place of $s$. In both parts a null predictor that stands in for a missing true one is selected, and the noise
@@ -375,7 +377,7 @@ on the Kullback--Leibler optimal model under suitable conditions.
 The modes of convergence differ across the statements. Theorem~\ref{thm:th-dist} and
 Conjecture~\ref{conj:th-mis}(b) give explicit probability bounds, Theorems~\ref{thm:th-select-fixed}
 and~\ref{thm:th-omitted} give rates in probability or in expectation, and Conjecture~\ref{conj:th-select} gives
-convergence in probability. In Conjecture~\ref{conj:th-mis}(a) the law is fixed, and the statements are almost sure
+convergence in probability. In Conjecture~\ref{conj:th-mis}(a) the law is fixed, and the density and exact-selection statements are almost sure
 along one sequence of observations.
 
 \begin{table}[ht]

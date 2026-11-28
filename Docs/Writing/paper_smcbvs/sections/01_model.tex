@@ -36,7 +36,8 @@ A predictor that is constant in the sample carries no information and is removed
 $\Xr$ denotes the remaining $n\times p$ matrix, so $p$ always denotes the number of retained predictors, indexed
 $1,\dots,p$ in their original order. All models below are sets of retained indices; SMC-BVS reports them in the
 original column numbers. If no predictor remains, or if the response is constant, a run returns the empty model and
-no estimates.
+no estimates. We take $p\ge2$, as Section~\ref{sec:theory} does; for $p=1$ the model space has two models, and a run
+enumerates them (Section~\ref{sec:model-sampler}).
 
 \paragraph{Standardisation.} SMC-BVS centres and scales every column and the response. Let
 $P^\perp_{\one}:=I_n-n^{-1}\one_n\one_n^\top$, let $\DX:=\operatorname{diag}(d_1,\dots,d_p)$ hold the sample standard
