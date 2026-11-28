@@ -64,7 +64,9 @@ Assumption~\ref{a:th-sparse} says that a few predictors matter however large $p$
 $2\le p\le n^A$ for a fixed $A\ge1$.
 \end{assumption}
 
-Assumption~\ref{a:th-dim} lets $p$ grow like any fixed power of $n$. \citet{JohnsonRossell2012} prove selection
+Assumption~\ref{a:th-dim} lets $p$ grow like any fixed power of $n$. The polynomial regime is a deliberate choice:
+growth such as $p\le n^5$ already covers any realistic study, since $n=500$ then allows $p$ up to about $3\times10^{13}$.
+\citet{JohnsonRossell2012} prove selection
 consistency for $p\le n$; \citet{SongLiang2015} and \citet{ShinBhattacharyaJohnson2018} allow $\log p$ of order
 $n^\alpha$ with $\alpha<1$, which leads to slower rates. Under Assumption~\ref{a:th-dim}, $\log p=O(\log n)$, so a
 single rate of order $\rn$ covers both the multiplicity cost of the prior and the Occam factor.
