@@ -59,17 +59,17 @@ Reading: S1 sits at s0 log p/n ≈ 0.06–0.17, S2 at 0.69 for every cell. S2 is
 |---|---|---|---|---|---|
 | S1 (16) | 0.18–7.20 | 0.16–6.30 | = κ_del | 0.16–6.30 | 0.16–4.68 |
 | S2 bt1 ρ = 0 | 0.031–3.95 | = κ_del | = κ_del | 0.031–3.95 | 0.034–1.34 |
-| S2 bt1 ρ = 0.35 | same | same | 0.025–3.09 | 0.025–3.09 | same as above ×≈0.8 |
-| S2 bt1 ρ = 0.7 | same | same | 0.011–1.35 | 0.011–1.35 | 0.012–1.24 |
-| S2 bt2 ρ = 0 | same as bt1 ρ = 0 | | | | |
+| S2 bt1 ρ = 0.35 | same as bt1 ρ = 0 | = κ_del | 0.025–3.09 | 0.025–3.09 | 0.027–1.34 |
+| S2 bt1 ρ = 0.7 | same as bt1 ρ = 0 | = κ_del | 0.011–1.35 | 0.011–1.35 | 0.012–1.24 |
+| S2 bt2 ρ = 0 | same as bt1 ρ = 0 | = κ_del | = κ_del | 0.031–3.95 | 0.034–1.34 |
 | S2 bt2 ρ = 0.35 | 0.013–1.69 | = κ_del | = κ_del | 0.013–1.69 | 0.015–1.15 |
 | S2 bt2 ρ = 0.7 | 0.0027–0.42 | = κ_del | = κ_del | 0.0027–0.42 | 0.0030–0.41 |
 
-How the minimum is reached:
-- S1: the binding rival is the 3-variable deletion (κ_multi < κ_del, because the signs alternate) at SNR ≤ 1, and the single deletion at SNR ≥ 2.
-- S2 bt1, ρ > 0: the binding rival is the swap of one true variable for its two neighbours (m = 2), or for two true variables and four neighbours at low ν.
-- S2 bt2, ρ > 0: the block interior has no free neighbours, so swaps do not bind and κ_pop = κ_del, which falls with ρ.
-- S2 at ν ≥ 2 under κ_adj_full: the binding rival is the **empty model** (D = S0, `kappa_adj_full_arg` = "delall d=10" or "d=5"). The ν at which S0 beats ∅ under the saturating gain is `nu_crit_empty` = 3.22 (n = 100, s0 = 10) and 3.52 (n = 50, s0 = 5).
+How the minimum is reached (`kappa_arg`, `kappa_adj_full_arg`):
+- S1: κ_pop is attained by a 3-variable deletion in all 16 settings (κ_multi < κ_del, because the signs alternate). Λ_min is attained by the 3-variable deletion at SNR ≤ 1 and by the single deletion at SNR ≥ 2 (a positive Λ shrinks with fewer deleted variables).
+- S2 bt1, ρ > 0: κ_pop is attained by a swap of one true variable for neighbouring nulls (`swap1`, all 40 settings).
+- S2 bt2, ρ = 0.35: the single or 3-variable deletion (20 of 20). bt2, ρ = 0.7: 2-variable deletions (10) and swaps (10).
+- S2 at ν ≥ 2.07 under κ_adj_full (36 settings): the binding rival is the **empty model** (D = S0) in 21, a deletion of 4 of 5 true variables in 3, a swap in 9, a 3-variable deletion in 3. The ν at which S0 beats ∅ under the saturating gain is `nu_crit_empty` = 3.22 (n = 100, s0 = 10) and 3.52 (n = 50, s0 = 5).
 
 **Per S1 cell, κ at the empirical recovery transition** (`tables/e1_s1_cells.tsv`): the transition lies between SNR 1 and SNR 2 in all four (n, p) cells.
 
@@ -116,7 +116,7 @@ AUC for exact recovery (`e1_auc.tsv`), all fits / S1 / S2 / S2 with ν ≥ 2.07 
 Reading:
 - **No.** The swap-aware margin does not close the S2 gap. P(exact ∣ κ_pop > 1) = 0.27 on S2 (S1: 0.95, unchanged because κ_pop > 1 coincides with κ_del > 1 on S1). On S2 it is a worse ranker than κ_del (AUC 0.958 vs 0.980; 0.845 vs 0.923 among ν ≥ 2.07).
 - **Why.** Neighbour-swap rivals do not predict failure. At ν = 6, bt1, exact recovery is 0.60–0.70 for ρ = 0, 0.35 and 0.7 alike (n = 100: 0.66, 0.60, 0.65), while κ_swap falls from 3.95 to 3.09 to 1.35. At ρ = 0.7, κ_pop < 1 for ν ≤ 3.52 predicts failure, but κ_del-type failure already happens there at ρ = 0.
-- **What does move the transition on S2** is the saturation of the likelihood gain. With the σ²-estimated gain and the full set of deletions, the empty-model rival binds. Exact recovery then switches on across κ_adj_full ≈ 1.0 → 1.3, with P(exact) = 0.5 at 1.21–1.27 for bt1 and bt2 (ρ = 0, 0.35), 1.02 for bt1 ρ = 0.7, and 1.51 for bt2 ρ = 0.35 (8 successes; `e1_logistic_kappa.tsv`). The S1 value is 1.50. These agree within a factor 1.2 across suites. This reading is post hoc: it was defined after the first results, so it is a fit to these data, not a pre-declared test.
+- **What does move the transition on S2** is the saturation of the likelihood gain. With the σ²-estimated gain and the full set of deletions, a large deletion (most often the empty model) binds. Exact recovery then switches on across κ_adj_full ≈ 1.0 → 1.3, with P(exact) = 0.5 at 1.21–1.27 for bt1 and bt2 (ρ = 0, 0.35), 1.02 for bt1 ρ = 0.7, and 1.51 for bt2 ρ = 0.35 (8 successes; `e1_logistic_kappa.tsv`). The S1 value is 1.50. These agree within a factor 1.2 across suites. This reading is post hoc: it was defined after the first results, so it is a fit to these data, not a pre-declared test.
 - **Residual gap.** Even κ_adj_full > 1.25 gives P(exact ∣ yes) = 0.63, not 0.95. At ν = 3.52, n = 100, ρ = 0, bt1: κ_del = 2.3, passprob = 0.81, κ_adj_full = 1.05, exact = 0.09. At ν = 6, n = 50: κ_adj_full = 1.28, exact = 0.62. The remainder is sample fluctuation in a regime with s0 log p/n = 0.69; it is not an identifiability failure.
 - **Where S1 fails.** S1 failures at SNR ≥ 2 (41 fits) are not signal-margin failures: 40 of 41 are supersets of S0 (39 with exactly one extra null; `e7_failure_composition.tsv`). The superset margin is ω = price − log p = 1.49–1.84 nats per added null (S2: 0.69 at n = 100, 1.05 at n = 50; `omega_add_per_null`). This is O(1) nats, not scaled by SNR, and no deletion/swap margin sees it.
 
@@ -232,7 +232,7 @@ Failure composition (`e7_failure_composition.tsv`): S1 SNR ≥ 2: 97.6% are supe
 
 1. **Sufficiency of any per-variable margin on S2.** κ_del > 1 gives P(exact) = 0.23 on S2; the swap-aware κ_pop > 1 gives 0.27 and ranks worse than κ_del (AUC 0.958 vs 0.980). At ν = 3.52, κ_del = 2.2–2.3 but exact recovery is 3–16%.
 2. **Neighbour-swap rivals are not what limits recovery in S2 bt1.** At ν = 6, recovery is the same for ρ = 0, 0.35, 0.7 (0.60–0.70), while κ_swap falls by a factor 3. The brief's Λ (with m·log p multiplicity) is also not decisive: AUC 0.967 vs 0.980 for κ_del on S2.
-3. **Quadratic gain overstates the margin.** ½R/σ² is not the right scale when R is a sizeable fraction of nσ²; with the σ²-estimated gain the empty-model rival binds from ν ≈ 3.2–3.5, and the transition (κ_adj_full ≈ 1.0–1.3) matches S2. This is post hoc.
+3. **Quadratic gain overstates the margin.** ½R/σ² is not the right scale when R is a sizeable fraction of nσ²; with the σ²-estimated gain the empty-model rival binds (21 of the 36 S2 settings with ν ≥ 2.07; ν_crit = 3.2–3.5), and the transition (κ_adj_full ≈ 1.0–1.3) matches S2. This is post hoc.
 4. **Superset failures (S1) are invisible to deletion margins.** 40 of 41 S1 failures at SNR ≥ 2 add one null; the margin against that is ω = price − log p = 1.5–1.8 nats, independent of SNR. In S2 ω = 0.7–1.05 nats.
 5. **S2 is not asymptotic**: s0 log p/n = 0.69, ε_n = 0.83, d_H ≤ 1, so the Hellinger check has almost no resolution and failures at ν ≤ 1.22 follow from the empty model beating S0.
 6. **Sample eigenvalue floors are vacuous on S2** (1e-5–2e-4 at m2; n = 50: λ_min(R̂_T) = 0 in 30–35% of fits, P1). Only the population/random-design form is supportable there.
