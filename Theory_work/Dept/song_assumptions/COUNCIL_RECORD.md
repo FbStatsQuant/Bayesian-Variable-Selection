@@ -42,7 +42,7 @@ Note on A-DIM′ and A-BS′. These are *weaker alternatives evaluated under the
 | # | seat | blocker | v1.2 disposition |
 |---|---|---|---|
 | B-1 | Neon B1, Opus B1(i) | A-MARGIN-U binds on classes with B_Dm ≤ 0 (needs √R ≥ w + t_n for no reason); C unnamed | **Fixed.** Imposed only on nonempty classes with D ≠ ∅, m ≤ J, B_Dm > 0. B_Dm ≤ 0 classes are dispatched by the containing-model credit (TS-b step 3). Active m ≤ m*(d). C is named as the superset-step truncation constant. Files: ASSUMPTIONS §2, §3.3 step 3, §4 row 11; DEFINITIONS TS-b; DOSSIER. |
-| B-2 | Opus B1(ii)–(iii) | Worst-case width and squared forms fail on S1 at SNR 2; evidence covers only m = 0 | **Fixed.** Both forms are labelled worst-case (factor-proxy) forms that do not cover S1 at SNR 2, and the Opus arithmetic is quoted. New **E9** Monte Carlo of the conditional width on simulated S1 designs (no fits; ≈ 2 CPU-min, nice, single thread): w_Dm(X) = 0.10–0.47 (m = 1), 0.22–0.59 (m = 2); the surplus is ≥ 3.29 at SNR 2 and ≥ 6.7 at SNR 3 for every d = 1 class; d ≥ 2 mixed and m = 3 are marked not evaluated. The design-event quantifier for w_Dm(X) is stated. |
+| B-2 | Opus B1(ii)–(iii) | Worst-case width and squared forms fail on S1 at SNR 2; evidence covers only m = 0 | **Fixed.** Both forms are labelled worst-case (factor-proxy) forms that do not cover S1 at SNR 2, and the Opus arithmetic is quoted. New **E9** Monte Carlo of the conditional width on simulated S1 designs (no fits; ≈ 2 CPU-min, nice, single thread): w_Dm(X) = 0.10–0.47 (m = 1), 0.22–0.59 (m = 2); the surplus is ≥ 3.29 at SNR 2 and ≥ 6.7 at SNR 3 for every d = 1, m ≤ 2 class (m = 2 at p = 500 only; corrected in R2); d ≥ 2 mixed and m = 3 are marked not evaluated. The design-event quantifier for w_Dm(X) is stated. |
 | B-3 | Neon B2 (+ Opus S5, Sol 6) | A-NEC "weaker than every precedent"; SL (26) called "fixed-type" | **Fixed.** Rewritten as a comparison of object, scale and window, not dominance: SBJ A4 and NH14 4.5 use the minimum nonzero sample eigenvalue (they allow duplicates; NH14's p^{−κ} can be smaller); SL (26) is a vanishing two-sided sample condition. ASSUMPTIONS, DOSSIER and the DEFINITIONS SL-6/7 row are all corrected. |
 | B-4 | Sol 1 | Raw-unit map and input domain; TM-a0 admits p_C = 1; prior convention | **Fixed.** Raw-unit map β_j = s_y b_j/s_{x_j}, σ² = s_y² v (DEFINITIONS §1). Undefined posteriors are counted in the exceptional event. TM-a0/A-MOM: p_C ≥ 2, fixed coded BB(1, p_C) eventually untruncated, coded centring, exceptional event a.s. eventually empty. |
 | B-5 | Sol 2 | TS-b\* has no testable statement | **Fixed by demotion.** It is now "MARGIN\* (open refinement)" and is removed from the defined targets (DEFINITIONS §4.2, ASSUMPTIONS §2 and §6, DOSSIER weak points). |
@@ -110,3 +110,56 @@ Round 2+ is **scoped fix-verification**, not a cold re-review. The R2 seats were
 - The R2 gate is cleared iff (a) every R1 blocker and substantive point is judged genuinely fixed, and (b) no new substantive flaw or regression was introduced by the v1.2 edits.
 - New points that are not regressions of a v1.2 edit, and all new stylistic nitpicks, are logged with a one-line reason and disregarded for the gate. So are score penalties driven by them.
 - Point-by-point response: `council/RESPONSE_R1.md`. Diff: `council/R1_TO_R2.diff`. Any Round 3 uses the scoped brief `briefs/COUNCIL_BRIEF_R3_SCOPED.md`.
+
+## Round 2 (package v1.2, commit 7c7ca30f; seats ran under the fuller R2 brief, triaged under POLICIES §1b)
+
+### Scores
+| seat | overall | lowest D/R | R1 blockers | new blockers |
+|---|---|---|---|---|
+| Neon (gemini-4-neon, high) | 9.0 | A-NEC D 8.5; A-MARGIN-U 8.5/8.5 | B-1…B-5 resolved | 0 (4 minor substantive) |
+| Opus (claude-opus-5-5, high) | 8.6 | A-NEC D 8.5; A-MARGIN-U 8.5/8.5 | B-1…B-5 resolved | 0 (S-1…S-3) |
+| Sol (gpt-6.2-sol, high) | 8.0 | A-MARGIN-U 7.5/8; A-NEC D 8 | B-1, B-4, B-5 resolved; **B-2, B-3 not resolved** | 1 (step-3 rate bound) |
+
+Per-assumption tables: `council/R2_<SEAT>.md` §1.
+
+### Gate (§1b)
+**Not cleared.** (a) Sol judges B-2 (E9 scope over-stated) and B-3 (leftover "smaller than each" sentence) partially fixed; Neon S1/S3 and Opus S-2/S-3 flag the same two passages. (b) The step-3 log-odds display introduced in the B-1 fix drops −γ log n (all three seats) and, per Sol, uses a quadratic that is not an upper bound for residuals of order n. These are genuine regressions/partial fixes of v1.2 edits, so they count for the gate.
+
+Override (Manager ruling: Astra 6.2 + Fable 5.2 judges if the last round finds nothing substantive yet scores < 8): **not triggered** — R2 is not the last round, and it found substantive issues. Logged here; no extra judges spawned.
+
+### Triage of R2 points (all fixed in v1.3 unless stated)
+| seat / # | point | gate-relevant? | disposition |
+|---|---|---|---|
+| Sol 1 / Neon S2 / Opus S-1 | step 3: B_Dm includes +γ log n; quadratic not an upper bound for large residuals | yes (regression) | step 3 rewritten in Sol's coded-likelihood form: H_Dm = B_Dm − γ log n, W = (min √λ̂_S − w_Dm − t_n)₊², log Σ odds ≤ H_Dm − (n/2+a₀)log(1+W/V_n) + O_P(1), V_n = n(1+o_P(1)); B ≤ 0 → W = 0; B > 0 → monotonicity at W = 2(1+δ)B_Dm; U through size s0+J, capped by p; C defined as a fixed constant with a tight multiplier. Linearisation paragraph aligned |
+| Sol 2 / Neon S3 / Opus S-3 | E9 scope: zero-slack diagnostic, mean widths, C = 1; m = 2 only at p = 500; m ≥ 3 (and m = 4 at p = 5,000) active; d ≥ 2; C ≍ (s0+1)² | yes (B-2 partial) | all four files now say "estimated zero-slack diagnostic"; scope and not-evaluated list (m = 2 at p = 5,000, m ≥ 3, d ≥ 4) everywhere the evidence is summarised; cap m*(d) labelled asymptotic, C ≈ 121 at S1 sizes. New **E9b** (`scripts/e9b_width_mc_ext.py`, `tables/e9b_width_ext_s1.tsv`, 108 rows): d = 1–3, m = 1 (all cells) and m = 2 (p = 500), 3 binding D each; SNR 2 min surplus 2.39 (C = 121) / 2.49 (no credit), d = 2, 3 ≥ 3.6; SNR 3 ≥ 5.8. Agrees with Opus's independent rerun. "Uncorrelated far nulls" replaced by Sol's AR(1) Markov argument (the 40-null search contains an exact minimiser) |
+| Sol 4 / Neon S1 / Opus S-2 | A-NEC "smaller than each" contradicts the NH14 caveat; SL (26) lower/upper thresholds; NH14/SBJ wording | yes (B-3 partial) | blanket sentence replaced by "No blanket ordering" in ASSUMPTIONS, DOSSIER and DEFINITIONS SL-6/7; SL (26) described with a vanishing lower and growing upper threshold; NH14 allows exact dependence; SBJ ν_{k*} indexed through min(n, \|k\|) |
+| Sol 3 | exact all-deletion κ_n (1,023 D): 0.626–0.693 / 2.505–2.771, gaps 1.1–1.7%; 40/41 & 39/41; E K₁ is an HPM event | yes (fixes the v1.2 "≤ ~1.4%" note) | exact κ_n quoted (Lead reproduced it) in SIMULATION, ASSUMPTIONS, DOSSIER, DEFINITIONS converse; data κ kept as the restricted proxy; counts and HPM wording fixed |
+| Neon S4 / Sol 7 (part) | thm:omitted "special case" | yes (stale v1.2 text against a v1.2 fix) | "previously delivered analogue" in ASSUMPTIONS §3.5 and DEFINITIONS SL-9 row |
+| Sol 5 | TD′ exact conjecture, (s+1), TS-b′ undefined, "stretched-exponential", TD-A variance proxy | partly (v1.2 TD′/A-DIM′ edits) | adopted: exact display with q_n = min{p, ⌈C′(s+1)M log(p∨n)⌉}, tail exp(−cM log(p∨n)), M range; TS-b′ removed; centred-tail variance proxy |
+| Sol 6 | b₀ coded vs raw; A-BS fixed-endpoint bound; raw p on the centring event; ν(dx)dy; candidate-set rule; rank relaxation | partly (candidate rule was weakened in a v1.2 edit) | all adopted (cheap) |
+| Sol 7 (rest) | SL-0 EBIC qualification; s0 = 0 / TM-b nonempty pseudo-support; form-invariance qualification | no (unchanged text) — adopted anyway, cheap | adopted in DEFINITIONS SL-0, TM-b, §5 and ASSUMPTIONS §§3.5, 5 |
+| Sol 8 | rounding (6.696, SD 0.1208, 1.175); 9/136 is the residual ratio; fixed-variance Hellinger max 0.21; min(p, s0+J) ≤ q_n | partly | all adopted |
+| Neon N1 / Opus N1, N2 | E9 table rounding (3.29, 0.10, 6.696) | nitpick | adopted (cheap) |
+| Neon N2 / Opus N5 | TD′ (s+1); "uniform summation" vs finite union | nitpick | adopted (cheap) |
+| Neon N3 | §5 data-free-slab cell | nitpick | adopted (cheap) |
+| Neon N4 | b₀ units blend | nitpick | adopted (with Sol 6) |
+| Neon N5 | A-MOM score-card row | nitpick | adopted (cheap) |
+| Opus N3 | "(choosing a smaller number is not enough)" unclear | nitpick | adopted (cheap) |
+| Opus N4 | E9 mechanism is generic, w_D1 ≈ (log p)/√n | nitpick | adopted as a one-line note in the E9 reading |
+| Opus N6 | COUNCIL_RECORD B-2 row "d = 1, m ≤ 2" | nitpick | adopted (row corrected above) |
+| Sol nitpick | casing of "E K₁"/"HPM" | nitpick | adopted where touched; no other change |
+
+No R2 point was declined. Score penalties: Sol's A-MARGIN-U 7.5 and A-NEC 8 tie to Sol 1/2/4 (gate-relevant); none are nitpick-driven.
+
+### Lead errors caught in R2 (for the owner)
+- step-3 accounting (+γ log n kept; quadratic in place of the coded likelihood);
+- "smaller than each" left in after the NH14 caveat;
+- the C = 1 "m ≤ 3" example presented as describing S1;
+- E9 coverage over-stated ("d = 1, m ≤ 2" on all of S1; actual m = 2 at p = 500 only);
+- "uncorrelated far nulls" (AR(1) correlations are nonzero; the Markov property is the right reason);
+- "≤ ~1.4%" (exact gaps up to 1.7%);
+- rounding of 3.30 / 6.7 / 1.17;
+- thm:omitted "special case".
+
+### Round 2 outcome
+Package revised to v1.3. Response: `council/RESPONSE_R2.md`. Diff: `council/R2_TO_R3.diff`. Round 3 (last allowed) is scoped fix-verification with `briefs/COUNCIL_BRIEF_R3_SCOPED.md`.

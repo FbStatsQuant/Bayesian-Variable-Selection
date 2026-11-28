@@ -120,7 +120,7 @@ Each row gives the exact statement, where the proof uses it, its defence, and th
 - **Used in.** The Fubini denominator, i.e. the fixed-endpoint lower bound of §3.1 step 1 for the normalised contrast density (order n^{−s0/2} times the variance-integration factor ≍ n^{−1/2}, on a high-probability event; Sol R2); keeping σ̂² in a fixed range; the unit-ridge term ‖β̂_S0‖²/(n+1). **Verify at proof audit** that nothing else uses coordinatewise boundedness (Fable Q5).
 - **Defence.**
   - (a) YWJ (7a), p. 7: "some form of upper bound on the norm ‖β*‖₂ in terms of the g-hyperparameter is required" (P17 B4b); SC11 Assumption 2.7, p. 7. Both bounds grow with n (with g ≍ p^{2α} in YWJ, with φ_n in SC11), whereas A-BS uses a fixed constant b̄; the precedent is for the type of condition, not its strength.
-  - (b) max|β|sd/σ ≤ 1.17 and ν ≤ 6 in every setting (D1 E4).
+  - (b) max|β|sd/σ ≈ 1.17 (1.175) and ν ≤ 6 in every setting (D1 E4).
 - **Weaker alternatives.** The aggregate energy pair (Astra Q5) / A-BS′ (Fable Q5): recorded, not adopted, until the size lemma is re-proved under it. All targets keep A-BS.
 
 ### A-MARGIN-H — Hellinger-scale residual signal (TS-a)

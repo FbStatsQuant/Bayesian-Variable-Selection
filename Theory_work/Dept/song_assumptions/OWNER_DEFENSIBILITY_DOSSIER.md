@@ -108,9 +108,9 @@ Sources and conventions:
    - Forward deletion step (step 1 only): needs **no** floor, because the Occam refund is ≤ (n+1)^{d/2} for any design (Cauchy interlacing).
 3. **Standard?** Same type; a comparison of object, scale and window, **not** a dominance claim (council R1, all three seats):
    - SBJ Assumption 4, p. 14, and NH14 Cond. 4.5, pp. 11, 17, bound the minimum **nonzero sample** eigenvalue, so they allow exact duplicates that A-NEC excludes; NH14's floor ≳ p_n^{−κ} can be below c_ψ/n at large p, and NH14 also impose an upper bound.
-   - SL (26), SLs p. 15, is a vanishing two-sided **sample** condition on sets of size r̄_n + |t|, introduced because their (22) "is hardly satisfied" (SLs pp. 15–16).
+   - SL (26), SLs p. 15, is a two-sided **sample** condition (a vanishing lower threshold l_n ≫ r̄_n log P_n/n and a growing upper threshold) on sets of size r̄_n + |t|, introduced because their (22) "is hardly satisfied" (SLs pp. 15–16).
    - BRT09 Assumption 2, p. 9 (c/log n) and MY09 "slowly vanishing" (P17 B6) are sample floors on other windows.
-   - As a floor *value* on full-rank sets, c_ψ/n is smaller than each; as a *condition set* (population object, q_n window, together with A-SUBG) it is not uniformly weaker.
+   - **No blanket ordering** (Sol R2): c_ψ/n lies below SL's l_n and BRT09's c/log n where the regimes overlap, but NH14's p_n^{−κ} can be smaller than c_ψ/n, SBJ's ν_{k*} is indexed through min(n, |k|), and as a *condition set* (population object, q_n window, together with A-SUBG) A-NEC is not uniformly weaker than any of them.
 4. **Holds on our data?**
    - Population floors are (1−ρ)/(1+ρ) = 0.176–1, i.e. n × floor = 8.8–250 (E5); the slack relative to c_ψ/n is this divided by c_ψ.
    - Sample sparse floors at the delivered fixed-design set sizes are vacuous on S2 (1e−5 to 2e−4). This is why we **dropped every sample floor and every fixed floor**.
