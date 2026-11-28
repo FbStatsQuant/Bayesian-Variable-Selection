@@ -1,0 +1,13 @@
+       beta_type  rho failed share_FN_with_selected_neighbour_gt0
+1.0.35         1 0.35   1860                             0.001613
+2.0.35         2 0.35   1992                             0.000502
+1.0.7          1 0.70   1850                             0.029730
+2.0.7          2 0.70   2000                             0.002000
+       share_FP_adjacent_gt0 share_FP_any_gt0 share_size_mpm_lt_s share_empty
+1.0.35              0.002151           0.0403               0.986       0.831
+2.0.35              0.000502           0.0382               0.998       0.582
+1.0.7               0.030270           0.0600               0.986       0.818
+2.0.7               0.002000           0.0345               1.000       0.453
+  suite k_exact statistical search none
+1     1     759         837      4  759
+2     2     606       11253    141  606

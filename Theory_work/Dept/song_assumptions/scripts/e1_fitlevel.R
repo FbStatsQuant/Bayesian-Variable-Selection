@@ -15,7 +15,7 @@ pp <- vapply(seq_len(nrow(st)), function(i) { ps <- setting_pop(st[i, ])
 mg$passprob <- pp
 d <- merge(pf[, c("setting_id", "rep", "suite", "rho", "nu", "beta_type", "n", "success", "gt2price", "gt2price_pop",
                   "ratio_min_t2_price", "min_t2_pop", "price", "margin_mpm")],
-           mg[, c("setting_id", "kappa_del", "kappa_multi", "kappa_swap", "kappa_pop", "Lambda_min", "Lambda_min_over_logn", "passprob")],
+           mg[, c("setting_id", "kappa_del", "kappa_multi", "kappa_swap", "kappa_pop", "Lambda_min", "Lambda_min_over_logn", "kappa_adj_pop", "Lambda_adj_min_over_logn", "kappa_full", "kappa_adj_full", "Lambda_full_min_over_logn", "Lambda_adj_full_min_over_logn", "passprob")],
            by = "setting_id")
 stopifnot(nrow(d) == 13600)
 d$exact <- as.logical(d$success)
@@ -38,8 +38,12 @@ preds <- list(P1_sample_mint2_gt_2price = d$gt2price == 1 | d$gt2price == TRUE,
 for (eta in c(0, 0.1, 0.25, 0.5, 1)) {
   preds[[sprintf("kappa_del_gt_%g", 1 + eta)]] <- d$kappa_del > 1 + eta
   preds[[sprintf("kappa_multi_gt_%g", 1 + eta)]] <- pmin(d$kappa_del, d$kappa_multi) > 1 + eta
-  preds[[sprintf("kappa_pop_gt_%g", 1 + eta)]] <- d$kappa_pop > 1 + eta }
+  preds[[sprintf("kappa_pop_gt_%g", 1 + eta)]] <- d$kappa_pop > 1 + eta
+  preds[[sprintf("kappa_adj_gt_%g", 1 + eta)]] <- d$kappa_adj_pop > 1 + eta
+  preds[[sprintf("kappa_full_gt_%g", 1 + eta)]] <- d$kappa_full > 1 + eta
+  preds[[sprintf("kappa_adj_full_gt_%g", 1 + eta)]] <- d$kappa_adj_full > 1 + eta }
 for (cc in c(-1, 0, 0.25, 0.5, 1, 1.5, 2, 3, 4, 6, 8)) preds[[sprintf("Lambda_min_gt_%g_logn", cc)]] <- d$Lambda_min > cc * log(d$n)
+for (cc in c(0, 0.5, 1, 2)) { preds[[sprintf("Lambda_adj_gt_%g_logn", cc)]] <- d$Lambda_adj_min_over_logn > cc; preds[[sprintf("Lambda_adj_full_gt_%g_logn", cc)]] <- d$Lambda_adj_full_min_over_logn > cc }
 preds[["passprob_gt_0.5"]] <- d$passprob > 0.5
 preds[["passprob_gt_0.25"]] <- d$passprob > 0.25
 
@@ -51,7 +55,7 @@ tt <- do.call(rbind, lapply(names(groups), function(g) { idx <- groups[[g]]
       acc = (tp + tn) / sum(idx), share_yes = (tp + fp) / sum(idx)) })) }))
 write_tsv(tt, file.path(base, "tables", "e1_2x2_predictors.tsv"))
 
-scores <- list(kappa_del = d$kappa_del, kappa_pop = d$kappa_pop, Lambda_min_over_logn = d$Lambda_min_over_logn,
+scores <- list(kappa_del = d$kappa_del, kappa_pop = d$kappa_pop, kappa_adj_pop = d$kappa_adj_pop, kappa_full = d$kappa_full, kappa_adj_full = d$kappa_adj_full, Lambda_adj_full_min_over_logn = d$Lambda_adj_full_min_over_logn, Lambda_adj_min_over_logn = d$Lambda_adj_min_over_logn, Lambda_min_over_logn = d$Lambda_min_over_logn,
                pop_min_t2_over_price = d$ratio_pop, sample_min_t2_over_price = d$sample_ratio, passprob = d$passprob)
 au <- do.call(rbind, lapply(names(groups), function(g) { idx <- groups[[g]]
   data.frame(group = g, n = sum(idx), n_exact = sum(d$exact[idx]),
@@ -67,12 +71,12 @@ write_tsv(ps_tab, file.path(base, "tables", "e1_setting_exact_vs_margin.tsv"))
 
 # S1 transition: per (n,p) the pair of SNR cells bracketing the transition, with kappa_pop; plus logit interpolation at 50% where bracketed
 s1 <- ps_tab[ps_tab$suite == 1, ]
-s1 <- s1[order(s1$n, s1$p, s1$snr), c("setting_id", "n", "p", "snr", "kappa_del", "kappa_multi", "kappa_swap", "kappa_pop", "Lambda_min_over_logn", "passprob", "exact_share", "wil_lo", "wil_hi")]
+s1 <- s1[order(s1$n, s1$p, s1$snr), c("setting_id", "n", "p", "snr", "kappa_del", "kappa_multi", "kappa_swap", "kappa_pop", "kappa_adj_pop", "kappa_adj_full", "Lambda_min_over_logn", "passprob", "exact_share", "wil_lo", "wil_hi")]
 write_tsv(s1, file.path(base, "tables", "e1_s1_cells.tsv"))
 # logistic fit exact ~ log(kappa_pop) (fit level), per suite and per S2 group: kappa at P(exact)=0.5 and 0.9
 lg <- do.call(rbind, lapply(c("S1", "S2", "S2_bt1", "S2_bt2", "S2_nu_ge_2.07", "S2_nu_ge_2.07_bt1", "S2_nu_ge_2.07_bt2", "S2_bt1_rho0", "S2_bt1_rho0.35", "S2_bt1_rho0.7", "S2_bt2_rho0", "S2_bt2_rho0.35"), function(g) {
   idx <- groups[[g]]; dd <- d[idx, ]; out <- list()
-  for (sc in c("kappa_del", "kappa_pop")) {
+  for (sc in c("kappa_del", "kappa_pop", "kappa_adj_pop", "kappa_adj_full")) {
     f <- try(suppressWarnings(glm(exact ~ log(dd[[sc]]), family = binomial, data = dd)), silent = TRUE)
     if (inherits(f, "try-error")) next
     b <- coef(f); k50 <- exp(-b[1] / b[2]); k90 <- exp((qlogis(0.9) - b[1]) / b[2])

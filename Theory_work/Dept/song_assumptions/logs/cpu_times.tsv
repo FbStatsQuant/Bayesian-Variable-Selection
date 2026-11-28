@@ -1,0 +1,9 @@
+script	wall_s	user_s	sys_s
+e1_margin	22.06	320.85	7.44
+e1_fitlevel	2.87	2.70	0.13
+e0_e3_e4_e5_e6	4.80	4.17	0.56
+e7_retab_proxy	2.82	2.59	0.17
+e7_bt2diag_crosscheck	0.41	0.31	0.08
+e1_pool_check	9.68	48.99	0.63
+make_summary_tables	0.45	0.32	0.08
+total user+sys CPU: 389.0 s = 0.108 CPU-h

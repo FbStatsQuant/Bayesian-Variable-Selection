@@ -1,0 +1,47 @@
+                                                       quantity     value
+cv_interior                                         cv_interior 0.4705882
+cv_end                                                   cv_end 0.6400000
+theory_interior                                 theory_interior 0.4705882
+theory_end                                           theory_end 0.6400000
+min_cv_random_sets                           min_cv_random_sets 0.5843179
+min_cv_neighbour_sets                     min_cv_neighbour_sets 0.4705882
+MC_E_exp_negZ2_opt                           MC_E_exp_negZ2_opt 0.7177068
+formula_E_exp_negZ2                         formula_E_exp_negZ2 0.7177406
+MC_var_Z                                               MC_var_Z 0.4706832
+gen_resid_var_col250_on_249_251 gen_resid_var_col250_on_249_251 0.4700631
+gen_resid_var_se_approx                 gen_resid_var_se_approx 0.0298523
+               label    n    p    A p_le_n1.5 p_le_n2 p_le_n3 kappa_eff
+1   S1 (n=500,p=500)  500  500 1.00      TRUE    TRUE    TRUE     0.161
+2  S1 (n=500,p=5000)  500 5000 1.37      TRUE    TRUE    TRUE     0.221
+3  S1 (n=1000,p=500) 1000  500 0.90      TRUE    TRUE    TRUE     0.130
+4 S1 (n=1000,p=5000) 1000 5000 1.23      TRUE    TRUE    TRUE     0.178
+5   S2 (n=50,p=1000)   50 1000 1.77     FALSE    TRUE    TRUE     0.451
+6  S2 (n=100,p=1000)  100 1000 1.50      TRUE    TRUE    TRUE     0.326
+  SL_CorS1_ok logp_over_sqrtn logp_le_sqrtn logp_over_n logp2_over_n
+1        TRUE           0.278          TRUE     0.01243       0.0772
+2        TRUE           0.381          TRUE     0.01703       0.1451
+3        TRUE           0.197          TRUE     0.00621       0.0386
+4        TRUE           0.269          TRUE     0.00852       0.0725
+5       FALSE           0.977          TRUE     0.13816       0.9543
+6       FALSE           0.691          TRUE     0.06908       0.4772
+                      label     n     p    A p_le_n1.5 p_le_n2 p_le_n3
+1                 (100,1e3)   100 1e+03 1.50      TRUE    TRUE    TRUE
+2                 (500,1e4)   500 1e+04 1.48      TRUE    TRUE    TRUE
+3                (1000,1e5)  1000 1e+05 1.67     FALSE    TRUE    TRUE
+4                (5000,1e6)  5000 1e+06 1.62     FALSE    TRUE    TRUE
+5 (300,2e4) gene expression   300 2e+04 1.74     FALSE    TRUE    TRUE
+6            (1e4,5e5) GWAS 10000 5e+05 1.42      TRUE    TRUE    TRUE
+  kappa_eff SL_CorS1_ok logp_over_sqrtn logp_le_sqrtn logp_over_n logp2_over_n
+1     0.326       FALSE           0.691          TRUE     0.06908       0.4772
+2     0.238        TRUE           0.412          TRUE     0.01842       0.1697
+3     0.241        TRUE           0.364          TRUE     0.01151       0.1325
+4     0.190        TRUE           0.195          TRUE     0.00276       0.0382
+5     0.304       FALSE           0.572          TRUE     0.03301       0.3269
+6     0.155        TRUE           0.131          TRUE     0.00131       0.0172
+       setting_id     D       N R_formula R_bruteforce_2e5rows    rel_diff
+S2_080     S2_080   223 222,224  78.17372             78.32879 0.001983611
+S1_03       S1_03   1,2   11,12 115.18403            115.56839 0.003336899
+S2_117     S2_117 1,2,3         442.99110            443.69971 0.001599605
+  setting_id   D     N R_formula R_gen_data_mean20 R_gen_data_se
+1      S1_03 1,2 11,12   115.184          115.1604       2.01974
+max |rel diff| min t2 pop vs P1: 3.552714e-15 ; price: 0 ; kappa_del: 5.551115e-15 

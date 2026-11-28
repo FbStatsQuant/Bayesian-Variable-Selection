@@ -1,0 +1,4 @@
+group	n_settings	n_kdel_gt1	n_kpop_gt1	n_kadj_gt1	n_kadjfull_gt1	n_kadjfull_gt1p25	n_kadjfull_gt1_but_exact_lt_0.5	n_kadjfull_lt1_exact_gt_0.05	n_exact_share_gt_0.5	n_kpop_gt1_but_exact_lt_0.5	n_kpop_lt1_exact_gt_0.05
+S1	16	8	8	8	8	8	0	0	8	0	0
+S2 bt1	60	18	14	12	10	4	4	1	6	8	1
+S2 bt2	60	8	8	7	6	2	4	0	2	6	0

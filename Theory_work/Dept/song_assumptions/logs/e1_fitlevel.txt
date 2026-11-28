@@ -1,0 +1,171 @@
+exact total: 1365  S1: 759  S2: 606 
+
+2x2 kappa_pop>1 vs P1 sample vs P1 pop:
+            group                 predictor yes_exact yes_notexact no_exact
+54             S1 P1_sample_mint2_gt_2price       759           41        0
+55             S1    P1_pop_mint2_gt_2price       759           41        0
+58             S1            kappa_pop_gt_1       759           41        0
+70             S1         kappa_pop_gt_1.25       759           41        0
+82             S1            kappa_pop_gt_2       759           41        0
+105            S1           passprob_gt_0.5       759           41        0
+107            S2 P1_sample_mint2_gt_2price       597          737        9
+108            S2    P1_pop_mint2_gt_2price       606         1994        0
+111            S2            kappa_pop_gt_1       591         1609       15
+123            S2         kappa_pop_gt_1.25       591         1409       15
+135            S2            kappa_pop_gt_2       427          573      179
+158            S2           passprob_gt_0.5       602         1098        4
+266 S2_nu_ge_2.07 P1_sample_mint2_gt_2price       597          737        9
+267 S2_nu_ge_2.07    P1_pop_mint2_gt_2price       606         1994        0
+270 S2_nu_ge_2.07            kappa_pop_gt_1       591         1609       15
+282 S2_nu_ge_2.07         kappa_pop_gt_1.25       591         1409       15
+294 S2_nu_ge_2.07            kappa_pop_gt_2       427          573      179
+317 S2_nu_ge_2.07           passprob_gt_0.5       602         1098        4
+    no_notexact  sens P_exact_given_yes P_exact_given_no
+54          800 1.000             0.949         0.000000
+55          800 1.000             0.949         0.000000
+58          800 1.000             0.949         0.000000
+70          800 1.000             0.949         0.000000
+82          800 1.000             0.949         0.000000
+105         800 1.000             0.949         0.000000
+107       10657 0.985             0.448         0.000844
+108        9400 1.000             0.233         0.000000
+111        9785 0.975             0.269         0.001531
+123        9985 0.975             0.295         0.001500
+135       10821 0.705             0.427         0.016273
+158       10296 0.993             0.354         0.000388
+266        2257 0.985             0.448         0.003972
+267        1000 1.000             0.233         0.000000
+270        1385 0.975             0.269         0.010714
+282        1585 0.975             0.295         0.009375
+294        2421 0.705             0.427         0.068846
+317        1896 0.993             0.354         0.002105
+
+AUC:
+          group     n n_exact AUC_kappa_del AUC_kappa_pop AUC_kappa_adj_pop
+1           all 13600    1365         0.984         0.976             0.980
+2            S1  1600     759         0.978         0.978             0.979
+3            S2 12000     606         0.980         0.958             0.958
+4        S2_bt1  6000     443         0.970         0.941             0.942
+5        S2_bt2  6000     163         0.989         0.989             0.982
+6 S2_nu_ge_2.07  3600     606         0.923         0.845             0.843
+  AUC_kappa_full AUC_kappa_adj_full AUC_Lambda_adj_full_min_over_logn
+1          0.976              0.986                             0.985
+2          0.978              0.978                             0.978
+3          0.958              0.972                             0.977
+4          0.941              0.963                             0.971
+5          0.989              0.985                             0.985
+6          0.845              0.895                             0.912
+  AUC_Lambda_adj_min_over_logn AUC_Lambda_min_over_logn
+1                        0.980                    0.978
+2                        0.978                    0.978
+3                        0.968                    0.967
+4                        0.952                    0.951
+5                        0.988                    0.988
+6                        0.878                    0.873
+  AUC_pop_min_t2_over_price AUC_sample_min_t2_over_price AUC_passprob
+1                     0.984                        0.989        0.984
+2                     0.978                        0.980        0.978
+3                     0.980                        0.984        0.980
+4                     0.970                        0.975        0.972
+5                     0.989                        0.992        0.988
+6                     0.923                        0.939        0.926
+
+logistic:
+                             group          score slope kappa_at_P50
+kappa_del                       S1      kappa_del  4.17         1.89
+kappa_pop                       S1      kappa_pop  4.17         1.66
+kappa_adj_pop                   S1  kappa_adj_pop  4.52         1.57
+kappa_adj_full                  S1 kappa_adj_full  4.87         1.50
+kappa_del1                      S2      kappa_del  5.25         3.44
+kappa_pop1                      S2      kappa_pop  2.75         3.18
+kappa_adj_pop1                  S2  kappa_adj_pop  3.70         1.95
+kappa_adj_full1                 S2 kappa_adj_full  8.28         1.25
+kappa_del2                  S2_bt1      kappa_del  5.39         3.47
+kappa_pop2                  S2_bt1      kappa_pop  2.36         2.97
+kappa_adj_pop2              S2_bt1  kappa_adj_pop  3.16         1.90
+kappa_adj_full2             S2_bt1 kappa_adj_full  7.26         1.21
+kappa_del3                  S2_bt2      kappa_del  5.06         3.38
+kappa_pop3                  S2_bt2      kappa_pop  5.06         3.38
+kappa_adj_pop3              S2_bt2  kappa_adj_pop  5.86         1.96
+kappa_adj_full3             S2_bt2 kappa_adj_full 13.93         1.27
+kappa_del4           S2_nu_ge_2.07      kappa_del  5.22         3.44
+kappa_pop4           S2_nu_ge_2.07      kappa_pop  2.50         3.24
+kappa_adj_pop4       S2_nu_ge_2.07  kappa_adj_pop  3.37         1.98
+kappa_adj_full4      S2_nu_ge_2.07 kappa_adj_full  8.20         1.25
+kappa_del5       S2_nu_ge_2.07_bt1      kappa_del  5.36         3.47
+kappa_pop5       S2_nu_ge_2.07_bt1      kappa_pop  1.94         3.10
+kappa_adj_pop5   S2_nu_ge_2.07_bt1  kappa_adj_pop  2.63         1.96
+kappa_adj_full5  S2_nu_ge_2.07_bt1 kappa_adj_full  7.10         1.21
+kappa_del6       S2_nu_ge_2.07_bt2      kappa_del  5.04         3.38
+kappa_pop6       S2_nu_ge_2.07_bt2      kappa_pop  5.04         3.38
+kappa_adj_pop6   S2_nu_ge_2.07_bt2  kappa_adj_pop  5.78         1.97
+kappa_adj_full6  S2_nu_ge_2.07_bt2 kappa_adj_full 13.93         1.27
+kappa_del7             S2_bt1_rho0      kappa_del  5.09         3.42
+kappa_pop7             S2_bt1_rho0      kappa_pop  5.09         3.42
+kappa_adj_pop7         S2_bt1_rho0  kappa_adj_pop  5.05         1.99
+kappa_adj_full7        S2_bt1_rho0 kappa_adj_full 10.55         1.24
+kappa_del8          S2_bt1_rho0.35      kappa_del  5.19         3.55
+kappa_pop8          S2_bt1_rho0.35      kappa_pop  5.19         2.78
+kappa_adj_pop8      S2_bt1_rho0.35  kappa_adj_pop  5.09         1.97
+kappa_adj_full8     S2_bt1_rho0.35 kappa_adj_full 10.75         1.26
+kappa_del9           S2_bt1_rho0.7      kappa_del  5.99         3.43
+kappa_pop9           S2_bt1_rho0.7      kappa_pop  5.99         1.17
+kappa_adj_pop9       S2_bt1_rho0.7  kappa_adj_pop  6.16         1.02
+kappa_adj_full9      S2_bt1_rho0.7 kappa_adj_full  6.16         1.02
+kappa_del10            S2_bt2_rho0      kappa_del  5.30         3.40
+kappa_pop10            S2_bt2_rho0      kappa_pop  5.30         3.40
+kappa_adj_pop10        S2_bt2_rho0  kappa_adj_pop  5.43         1.95
+kappa_adj_full10       S2_bt2_rho0 kappa_adj_full 11.10         1.23
+kappa_del11         S2_bt2_rho0.35      kappa_del 25.83         1.88
+kappa_pop11         S2_bt2_rho0.35      kappa_pop 25.83         1.88
+kappa_adj_pop11     S2_bt2_rho0.35  kappa_adj_pop  5.01         2.39
+kappa_adj_full11    S2_bt2_rho0.35 kappa_adj_full 11.47         1.51
+                 kappa_at_P90    aic n_exact     n
+kappa_del                3.21  407.8     759  1600
+kappa_pop                2.81  407.8     759  1600
+kappa_adj_pop            2.55  397.2     759  1600
+kappa_adj_full           2.36  388.5     759  1600
+kappa_del1               5.23 1678.4     606 12000
+kappa_pop1               7.09 2347.0     606 12000
+kappa_adj_pop1           3.53 2386.2     606 12000
+kappa_adj_full1          1.63 2011.5     606 12000
+kappa_del2               5.21 1200.5     443  6000
+kappa_pop2               7.55 1715.2     443  6000
+kappa_adj_pop2           3.81 1724.9     443  6000
+kappa_adj_full2          1.64 1389.7     443  6000
+kappa_del3               5.22  480.1     163  6000
+kappa_pop3               5.22  480.1     163  6000
+kappa_adj_pop3           2.86  569.4     163  6000
+kappa_adj_full3          1.49  535.8     163  6000
+kappa_del4               5.24 1677.7     606  3600
+kappa_pop4               7.81 2312.3     606  3600
+kappa_adj_pop4           3.80 2353.0     606  3600
+kappa_adj_full4          1.63 2010.0     606  3600
+kappa_del5               5.22 1200.0     443  1800
+kappa_pop5               9.59 1663.8     443  1800
+kappa_adj_pop5           4.51 1679.3     443  1800
+kappa_adj_full5          1.65 1386.7     443  1800
+kappa_del6               5.23  479.8     163  1800
+kappa_pop6               5.23  479.8     163  1800
+kappa_adj_pop6           2.87  568.3     163  1800
+kappa_adj_full6          1.49  535.8     163  1800
+kappa_del7               5.27  421.7     153  2000
+kappa_pop7               5.27  421.7     153  2000
+kappa_adj_pop7           3.07  509.7     153  2000
+kappa_adj_full7          1.53  424.2     153  2000
+kappa_del8               5.43  407.6     140  2000
+kappa_pop8               4.24  407.6     140  2000
+kappa_adj_pop8           3.04  469.5     140  2000
+kappa_adj_full8          1.55  410.2     140  2000
+kappa_del9               4.95  375.5     150  2000
+kappa_pop9               1.69  375.5     150  2000
+kappa_adj_pop9           1.46  409.0     150  2000
+kappa_adj_full9          1.46  409.0     150  2000
+kappa_del10              5.14  411.2     155  2000
+kappa_pop10              5.14  411.2     155  2000
+kappa_adj_pop10          2.93  491.2     155  2000
+kappa_adj_full10         1.50  412.3     155  2000
+kappa_del11              2.04   69.0       8  2000
+kappa_pop11              2.04   69.0       8  2000
+kappa_adj_pop11          3.71   77.6       8  2000
+kappa_adj_full11         1.82   72.4       8  2000

@@ -1,0 +1,53 @@
+  n_settings n_dH_lt_eps max_q90_ratio min_med_ratio max_med_ratio
+1        136         136     0.6318418     0.1047477      0.559981
+                     g med_ratio.min med_ratio.med med_ratio.max q90_ratio.min q90_ratio.med q90_ratio.max eps_n.min eps_n.med eps_n.max
+1            S1 SNR<=1     0.2804905     0.3614460     0.4578487     0.2879176     0.3826190     0.4811009 0.2492912 0.3221966 0.4127273
+2            S1 SNR>=2     0.1361674     0.1514123     0.1658509     0.1767917     0.1943614     0.2177140 0.2492912 0.3221966 0.4127273
+3 S2 nu in [2.07,3.52]     0.2890618     0.4916447     0.5599810     0.3219731     0.5100959     0.5858954 0.8311291 0.8311291 0.8311291
+4           S2 nu<2.07     0.1047477     0.2161735     0.4187613     0.1237512     0.2418872     0.4436443 0.8311291 0.8311291 0.8311291
+5              S2 nu=6     0.1838588     0.2609936     0.4565255     0.3594884     0.4540764     0.6318418 0.8311291 0.8311291 0.8311291
+                                    group n_settings cap_binds_store_total cap_binds_top50_total max_mass_size_ge_Km2 max_size_pos_mass K_min K_max max_over_K med_over_K
+S1 SNR<=1                       S1 SNR<=1          8                     0                     0                    0                14   250   500      0.056      0.024
+S1 SNR>=2                       S1 SNR>=2          8                     0                     0                    0                17   250   500      0.068      0.049
+S2 nu in [2.07,3.52] S2 nu in [2.07,3.52]         24                     0                     0                    0                25    25    50      0.520      0.470
+S2 nu<2.07                     S2 nu<2.07         84                     0                     0                    0                14    25    50      0.480      0.360
+S2 nu=6                           S2 nu=6         12                     0                     0                    0                24    25    50      0.480      0.470
+                                    group n_settings Esig2_list_ratio_min Esig2_list_ratio_med Esig2_list_ratio_max Esig2_mpm_ratio_min Esig2_mpm_ratio_med Esig2_mpm_ratio_max
+S1 SNR<=1                       S1 SNR<=1          8            1.0331075            1.0874332            1.2227613           1.0362238           1.0914786           1.2237589
+S1 SNR>=2                       S1 SNR>=2          8            0.9581882            0.9875626            0.9959912           0.9647241           0.9881373           0.9986235
+S2 nu in [2.07,3.52] S2 nu in [2.07,3.52]         24            1.1914668            2.5923390            3.2604535           1.2288713           2.7062184           3.3030196
+S2 nu<2.07                     S2 nu<2.07         84            0.9987552            1.1629323            2.1691547           1.0100028           1.2120684           2.3004101
+S2 nu=6                           S2 nu=6         12            0.8989629            1.1358962            1.7018312           0.9562734           1.0883042           1.6315794
+                                    group n_settings lmin_S0_med greedy_m1_med greedy_m1_min greedy_m2_med greedy_m2_min lmin_T_med pi_ratio_exact_min pi_ratio_exact_max
+S1 SNR<=1                       S1 SNR<=1          8   0.2419654    0.17880543    0.14137152  1.287776e-01  6.674097e-02 0.21783580                Inf               -Inf
+S1 SNR>=2                       S1 SNR>=2          8   0.2424245    0.17909454    0.14037199  1.290710e-01  6.641925e-02 0.21391144           4.139377           5.052530
+S2 nu in [2.07,3.52] S2 nu in [2.07,3.52]         24   0.5552807    0.03085444    0.01461236  9.060001e-05  7.070787e-06 0.04763404           2.048948           4.102935
+S2 nu<2.07                     S2 nu<2.07         84   0.5578103    0.03107094    0.01422249  9.323702e-05  7.710797e-06 0.02607472                Inf               -Inf
+S2 nu=6                           S2 nu=6         12   0.5552228    0.03030393    0.01460706  9.902178e-05  8.717842e-06 0.04700925           2.397285           3.651200
+                                    group fits share_MPM_misses_true med_Esig2MPM_over_sigma2 med_Esig2MPM_over_sigma2C q10_over_sigma2C q90_over_sigma2C med_over_sigma2C_given_miss med_over_sigma2_given_miss
+S1 SNR<=1                       S1 SNR<=1  800               1.00000                    1.091                     0.990            0.914             1.06                       0.990                      1.091
+S1 SNR>=2                       S1 SNR>=2  800               0.00125                    0.987                     0.987            0.916             1.05                       0.944                      0.988
+S2 nu in [2.07,3.52] S2 nu in [2.07,3.52] 2400               0.95958                    2.261                     0.837            0.622             1.06                       0.840                      2.337
+S2 nu<2.07                     S2 nu<2.07 8400               1.00000                    1.254                     0.979            0.763             1.22                       0.979                      1.254
+S2 nu=6                           S2 nu=6 1200               0.50500                    1.140                     0.840            0.638             1.09                       0.760                      1.632
+                group failed miss_and_adjacent_FP miss_and_FP_within3 miss_any any_FP share_miss_adjacentFP share_miss_FPwithin3 share_of_misses_with_adjacent_FP
+1           S1 failed    841                    1                   1      801     47               0.00119              0.00119                          0.00125
+2           S2 failed  11394                   64                  74    11309    464               0.00562              0.00649                          0.00566
+3 S2 failed, nu>=2.07   2994                   49                  53     2909    285               0.01637              0.01770                          0.01684
+4 S2 bt1 failed rho>0   3710                   58                  65     3670    186               0.01563              0.01752                          0.01580
+5 S2 bt2 failed rho>0   3992                    5                   7     3992    145               0.00125              0.00175                          0.00125
+              suite beta_type  rho failed_fits empty MPM pure under-selection (miss, no FP) miss + FP adjacent to a missed true miss + FP within 2-3 of a missed true miss + FP elsewhere superset of S0 (no miss, has FP)
+2.1.0             2         1 0.00        1847     0.835                              0.125                            0.000541                              0.000541             0.02599                          0.01354
+2.2.0             2         2 0.00        1845     0.853                              0.115                            0.000000                              0.000000             0.02060                          0.01084
+2.1.0.35          2         1 0.35        1860     0.831                              0.128                            0.001613                              0.001613             0.02473                          0.01237
+2.2.0.35          2         2 0.35        1992     0.582                              0.380                            0.000502                              0.000000             0.03765                          0.00000
+1.griffin.0.6     1   griffin 0.60         841     0.398                              0.546                            0.001189                              0.000000             0.00713                          0.04756
+2.1.0.7           2         1 0.70        1850     0.818                              0.122                            0.029730                              0.002162             0.01892                          0.00919
+2.2.0.7           2         2 0.70        2000     0.453                              0.512                            0.002000                              0.001000             0.03150                          0.00000
+                 regime failed share_miss_true share_superset_no_miss share_empty_MPM share_any_FP share_exactly_one_FP_no_miss med_size_MPM
+S1 SNR<=1     S1 SNR<=1    800          1.0000                0.00000           0.419      0.00875                      0.00000            1
+S1 SNR>=2     S1 SNR>=2     41          0.0244                0.97561           0.000      0.97561                      0.95122           11
+S2 nu<=1.22 S2 nu<=1.22   8400          1.0000                0.00000           0.871      0.02131                      0.00000            0
+S2 nu=2.07   S2 nu=2.07   1198          0.9983                0.00167           0.447      0.05927                      0.00167            1
+S2 nu=3.52   S2 nu=3.52   1119          0.9893                0.01072           0.270      0.08222                      0.00804            2
+S2 nu=6         S2 nu=6    677          0.8951                0.10487           0.126      0.18021                      0.08863            3

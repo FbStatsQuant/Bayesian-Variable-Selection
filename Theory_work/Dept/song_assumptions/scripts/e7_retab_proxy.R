@@ -75,3 +75,8 @@ allf$share_miss_adjacentFP <- allf$miss_and_adjacent_FP / allf$failed; allf$shar
 allf$share_of_misses_with_adjacent_FP <- allf$miss_and_adjacent_FP / allf$miss_any
 write_tsv(allf, file.path(base, "tables", "e7_proxy_summary.tsv"))
 options(width = 220); print(e4a); print(e4f); print(e5); print(e6); print(e23); print(e6c, digits = 3); print(allf, digits = 3); print(pr, digits = 3)
+
+# failure composition by regime (failed fits): misses a true predictor / superset of S0 (no miss, >=1 null) / empty MPM
+fl$reg <- ifelse(fl$suite == 1, ifelse(fl$snr >= 2, "S1 SNR>=2", "S1 SNR<=1"), ifelse(fl$nu == 6, "S2 nu=6", ifelse(fl$nu == 3.52, "S2 nu=3.52", ifelse(fl$nu == 2.07, "S2 nu=2.07", "S2 nu<=1.22"))))
+fc <- do.call(rbind, lapply(split(fl, fl$reg), function(d) data.frame(regime = d$reg[1], failed = nrow(d), share_miss_true = mean(d$nM > 0), share_superset_no_miss = mean(d$nM == 0), share_empty_MPM = mean(d$size == 0), share_any_FP = mean(d$nNull > 0), share_exactly_one_FP_no_miss = mean(d$nM == 0 & d$nNull == 1), med_size_MPM = median(d$size))))
+write_tsv(fc, file.path(base, "tables", "e7_failure_composition.tsv")); print(fc, digits = 3)
