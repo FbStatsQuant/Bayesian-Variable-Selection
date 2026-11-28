@@ -14,11 +14,13 @@
 
 \section{Theoretical properties}\label{sec:theory}
 
-This section studies the posterior distribution of Section~\ref{sec:model} as $n\to\infty$. We follow the plan of
-Section~2 of \citet{SongLiang2015}. We first show that the posterior is consistent for the true density of the data,
-then that it selects the true model, and last that it behaves sensibly when some true predictors are missing from the
-data. Each result has a counterpart in \citet{SongLiang2015}; Table~\ref{tab:sl-map} lists them. All results concern
-the exact posterior, not the output of the sampler.
+This section gives the large-sample properties of the posterior of Section~\ref{sec:model}. There are three. The
+posterior recovers the true density of the data at a nearly parametric rate (Theorem~\ref{thm:th-dist}); it puts
+almost all its mass on the true model, so that both the highest posterior model and the median probability model
+select it (Theorem~\ref{thm:th-select}); and when some true predictors are not measured, it targets the best linear
+approximation built from the predictors that are (Theorem~\ref{thm:th-mis}). Each result has a counterpart in
+\citet{SongLiang2015}, listed in Table~\ref{tab:sl-map}. The results concern the exact posterior, which the sampler of
+Section~\ref{sec:model} approximates; they allow $p$ to exceed $n$ by any fixed power.
 
 \subsection{Setting and notation}\label{sec:theory-setting}
 
@@ -43,18 +45,18 @@ $\P^*$ the law of the data. As in \citet{SongLiang2015}, we measure distance by 
 which is their distance divided by $\sqrt2$.
 
 Two quantities drive the selection results. The first is the \emph{residual signal} of a model $S$,
-\begin{equation}\label{eq:th-R}
-  R_n(S)=n\,\inf_{a\in\R,\,b\in\R^{\abs S}}\E\big(x^\top\bstar-a-x_S^\top b\big)^2 ,
+\begin{equation}\label{eq:th-Delta}
+  \Delta_n(S)=n\,\inf_{a\in\R,\,b\in\R^{\abs S}}\E\big(x^\top\bstar-a-x_S^\top b\big)^2 ,
 \end{equation}
 which is $n$ times the error of the best linear prediction of the true mean from the predictors in $S$. It is zero when
 $S\supseteq\Sz$. The second is the \emph{price} that the prior and the marginal likelihood charge the true model for
 $d$ predictors that a smaller model leaves out,
 \begin{equation}\label{eq:th-price}
-  \mathrm{Pr}_n(d)=\log\frac{\pi(\Sz\setminus D)}{\pi(\Sz)}+\frac d2\log(n+1)
+  \mathrm{pen}_n(d)=\log\frac{\pi(\Sz\setminus D)}{\pi(\Sz)}+\frac d2\log(n+1)
   =\log\frac{\binom{2p-1}{\sz}}{\binom{2p-1}{\sz-d}}+\frac d2\log(n+1),\qquad \abs D=d.
 \end{equation}
 The first term is the prior odds, the second the Occam factor of the $g$-prior with $g=n$. Near the true model each
-left-out predictor costs about $\log(2p/\sz)+\tfrac12\log n$, so $\mathrm{Pr}_n(d)$ grows like $d\log p$.
+left-out predictor costs about $\log(2p/\sz)+\tfrac12\log n$, so $\mathrm{pen}_n(d)$ grows like $d\log p$.
 
 \subsection{Consistency of the fitted density}\label{sec:theory-density}
 
@@ -154,56 +156,64 @@ fast enough; under the beta-binomial prior it decays like $2^{-k}$. Third, the r
 
 Density consistency does not imply selection: a true predictor can be replaced by a combination of other predictors
 with almost the same fit. \citet{SongLiang2015} rule this out with an identifiability condition (their Condition~3).
-We use the residual signal~\eqref{eq:th-R}, and ask it to beat the price~\eqref{eq:th-price}.
+We use the residual signal~\eqref{eq:th-Delta}, and ask it to beat the price~\eqref{eq:th-price}.
 
 A rival of $\Sz$ is a model $S=(\Sz\setminus D)\cup N$ that leaves out a
-nonempty set $D\subseteq\Sz$ of $d$ true predictors and adds a set $N$ of $m\ge0$ null predictors. The added nulls can
-absorb part of the signal of the left-out ones. We measure this by the \emph{leakage}
+nonempty set $D\subseteq\Sz$ of $d$ true predictors and adds a set $N$ of $m\ge0$ null predictors. Models that
+contain $\Sz$ need no signal condition: they explain no more of the true mean than $\Sz$, and the prior and the Occam
+factor charge them for every extra predictor. For a rival, the added nulls can absorb
+part of the signal of the left-out predictors. We measure this by the \emph{leakage}
 \begin{equation}\label{eq:th-leak}
-  \vartheta_n(D,m)=\max_{N}\Big\{1-\frac{R_n\{(\Sz\setminus D)\cup N\}}{R_n(\Sz\setminus D)}\Big\},
+  \rho_n(D,m)=1-\frac{\min_N\Delta_n\{(\Sz\setminus D)\cup N\}}{\Delta_n(\Sz\setminus D)},
 \end{equation}
-the largest share of the residual signal of $\Sz\setminus D$ that $m$ null predictors can explain, the maximum being
-over sets $N$ of $m$ null predictors. It is zero for $m=0$ and for independent predictors. Let
-$\omega(\vartheta)=\min(2\sqrt\vartheta,\sqrt2)$ and $\bar m=\lceil(2A+1)s\rceil+1$.
+the largest share of the residual signal of $\Sz\setminus D$ that $m$ null predictors can explain; the minimum is
+over sets $N$ of $m$ null predictors. The leakage is a population partial $R^2$, computable from $\Sig$ alone. It is
+zero for $m=0$ and for independent predictors. Let $\omega(\rho)=\min\{1,(2\rho)^{1/2}\}$ and
+$\bar m=\lceil(2A+1)s\rceil+1$.
 
 \begin{assumption}[Selection margin]\label{a:th-margin}
-$\sz\ge1$, and there is a fixed $\eta>0$ such that, for all sufficiently large $n$, every nonempty $D\subseteq\Sz$ and
-every $m\in\{0,\dots,\bar m\}$ with $\sz-\abs D+m\le K$,
-\begin{equation}\label{eq:th-margin}
-  \Big[\frac{\{1-\vartheta_n(D,m)\}\,R_n(\Sz\setminus D)}{\sigs^2}\Big]^{1/2}
-  \ \ge\ (1+\eta)\Big[\big\{2\,\mathrm{Pr}_n(\abs D)\big\}^{1/2}+\omega\{\vartheta_n(D,m)\}\Big\{\log\binom{p-\sz}{m}\Big\}^{1/2}\Big].
-\end{equation}
+$\sz\ge1$, and there is a fixed $\eta>0$ such that, for all sufficiently large $n$ and every nonempty $D\subseteq\Sz$,
+\begin{align}
+  \Delta_n(\Sz\setminus D)\ &\ge\ 2(1+\eta)^2\,\sigs^2\,\mathrm{pen}_n(\abs D), \label{eq:th-margin-del}\\
+  \Big[\frac{\min_N\Delta_n\{(\Sz\setminus D)\cup N\}}{\sigs^2}\Big]^{1/2}
+  \ &\ge\ (1+\eta)\Big[\big\{2\,\mathrm{pen}_n(\abs D)\big\}^{1/2}
+      +\omega\{\rho_n(D,m)\}\Big\{2\log\binom{p-\sz}{m}\Big\}^{1/2}\Big] \label{eq:th-margin-sub}
+\end{align}
+for every $m$ with $1\le m\le\min(\bar m,p-\sz)$ and $\sz-\abs D+m\le K$.
 \end{assumption}
 
-For $m=0$, condition~\eqref{eq:th-margin} reads $R_n(\Sz\setminus D)\ge2(1+\eta)^2\sigs^2\,\mathrm{Pr}_n(\abs D)$: the
-signal lost by leaving out $D$ must exceed twice the price of $D$. The constant~$2$ comes from the likelihood. The log
-posterior odds of $\Sz$ against $\Sz\setminus D$ are about $\hat R/(2\sigs^2)-\mathrm{Pr}_n(\abs D)$, where $\hat R$ is
-the sample version of $R_n(\Sz\setminus D)$, so the true model wins when $R_n$ exceeds $2\sigs^2\mathrm{Pr}_n$ and
-loses when it falls short by a fixed factor; no smaller constant can work. For $m\ge1$, the second term on the right is the most that
-the best of $\binom{p-\sz}{m}$ null sets can gain by chance. It is small when the nulls cannot imitate the missing
-signal ($\vartheta_n$ small) and reaches the worst case, about $\sqrt{2m\log p}$, otherwise. Rivals with more than
-$\bar m$ nulls need no condition. Such a rival fits no better than $\Sz\cup N$, and the Occam factor of the $m$ added
-nulls, of order $n^{-m/2}$ up to logarithmic factors, outweighs the price of any deletion, which is at most about
-$s(A+\tfrac12)\log n$.
+Condition~\eqref{eq:th-margin-del} is the deletion margin: the signal lost by leaving out $D$ must exceed twice the
+price of $D$. The constant~$2$ is the $\tfrac12$ of the Gaussian log-likelihood. The log posterior odds of $\Sz$
+against $\Sz\setminus D$ are about $\hat\Delta/(2\sigs^2)-\mathrm{pen}_n(\abs D)$, where $\hat\Delta$ is the sample
+version of $\Delta_n(\Sz\setminus D)$, so the break-even point is $\Delta_n=2\sigs^2\mathrm{pen}_n$. This is also why
+the price has the form of the extended BIC penalty \citep[Section~2.1]{SongLiang2015}. Condition~\eqref{eq:th-margin-sub}
+is the substitution margin. Its last term is the most that the best of $\binom{p-\sz}{m}$ null sets can gain by
+chance. The factor $\omega\in[0,1]$ says which fraction of the worst case applies: $\omega=0$ when the nulls cannot
+imitate the missing signal, $\omega=1$ when nothing is assumed about them, and then the term is about
+$\sqrt{2m\log p}$. Rivals with more than $\bar m$ nulls need no condition. Such a rival fits no better than
+$\Sz\cup N$, and the Occam factor of the added nulls, of order $n^{-m/2}$ up to logarithmic factors, outweighs the
+price of any deletion, which is at most about $s(A+\tfrac12)\log n$.
 
 Assumption~\ref{a:th-margin} is a condition on the law of $(x,y)$ only; it involves no tuning and no sample quantity.
 Conditions of this type are standard. Condition~3 of \citet{SongLiang2015} asks that no combination of other
-predictors mimic a true one; ours says how well it may mimic it. \citet{NarisettyHe2014} (Condition~4.4) ask the residual signal of every model
-that misses a true predictor to exceed $5(1+\delta)\sigs^2\abs{\Sz}\log(\sqrt n\vee p)$, and \citet{LuoChen2013} ask the
-ratio to $\log p$ to diverge; ours charges each missed predictor its own price with constant~$2$. The order $\log p$
-cannot be avoided: below a threshold of this order no method recovers the support
-\citep{Wainwright2009,FletcherRanganGoyal2009}. The familiar beta-min form is a special case. Let
-$\varphi^2\le\lmin\{\Corr(x_T)\}$ for every set $T$ of at most $s+\bar m$ predictors, and
-$\theta_{\min}=\min_{j\in\Sz}\abs{\beta^*_j}\sd(x_j)/\sigs$. Since $R_n(S)\ge n\varphi^2\sum_{j\in D}\beta_j^{*2}\Var(x_j)$,
-$\mathrm{Pr}_n(d)\le d\log(2p\sqrt{n+1})$ and $\log\binom{p-\sz}{m}\le m\log p$, condition~\eqref{eq:th-margin} holds
-whenever
+predictors mimic a true one; ours says how well it may mimic it. \citet{NarisettyHe2014} (Condition~4.4) ask the
+residual signal of every model that misses a true predictor to exceed $5(1+\delta)\sigs^2\abs{\Sz}\log(\sqrt n\vee p)$,
+and \citet{LuoChen2013} ask its ratio to $\log p$ to diverge; ours charges each missed predictor its own price, with
+constant~$2$, and allows that ratio to stay bounded. The order $\log p$ cannot be avoided: below a threshold of this
+order no method recovers the support \citep{Wainwright2009,FletcherRanganGoyal2009}.
+
+The familiar beta-min form is a special case. Let $\varphi^2\le\lmin\{\Corr(x_T)\}$ for every set $T$ of at most
+$s+\bar m$ predictors, and $b_{\min}=\min_{j\in\Sz}\abs{\beta^*_j}\sd(x_j)/\sigs$. Since
+$\Delta_n(S)\ge n\varphi^2\sum_{j\in D}\beta_j^{*2}\Var(x_j)$ for every rival,
+$\mathrm{pen}_n(d)\le d\log(2p\sqrt{n+1})$, $\omega\le1$ and $\log\binom{p-\sz}{m}\le m\log p$,
+Assumption~\ref{a:th-margin} holds whenever
 \[
-  \theta_{\min}\ \ge\ \frac{(1+\eta)(1+\sqrt{\bar m})}{\varphi}\,\Big\{\frac{2\log\big(2p\sqrt{n+1}\big)}{n}\Big\}^{1/2}.
+  b_{\min}\ \ge\ \frac{(1+\eta)(1+\sqrt{\bar m})}{\varphi}\,\Big\{\frac{2\log\big(2p\sqrt{n+1}\big)}{n}\Big\}^{1/2}.
 \]
 For independent predictors the leakage is zero and the requirement drops to
 $\beta_j^{*2}\Var(x_j)\ge2(1+\eta)^2\sigs^2\log(2p\sqrt{n+1})/n$ for every $j\in\Sz$: each standardised effect must
-exceed the noise level by the factor $\{2\log(2p\sqrt n)/n\}^{1/2}$. Condition~\eqref{eq:th-margin} itself is
-sharper, because it charges correlation only through the leakage.
+exceed the noise level by the factor $\{2\log(2p\sqrt n)/n\}^{1/2}$. Assumption~\ref{a:th-margin} itself is sharper,
+because it charges correlation only through the leakage.
 
 \begin{theorem}[Selection consistency]\label{thm:th-select}
 Assume \ref{a:th-gl}--\ref{a:th-margin}. Then $\pis{\Sz}\to1$ in probability,
@@ -274,10 +284,10 @@ Theorems~\ref{thm:th-dist} and~\ref{thm:th-select}.
 Let $\Pi(\cdot\mid\Dn^C)$ be the posterior computed from $(y,X_C)$, and $\epsilon_n$ as in
 Theorem~\ref{thm:th-dist}.
 \begin{enumerate}[label=(\alph*)]
-  \item \emph{Fixed dimension.} Under Assumption~\ref{a:th-mom}, for every $\epsilon>0$,
+  \item \emph{Any response law, fixed dimension.} Under Assumption~\ref{a:th-mom}, for every $\epsilon>0$,
     $\Pi\{d_H(f,f_0)>\epsilon\mid\Dn^C\}\to0$ and $\Pi(S\supseteq\Sz^C\mid\Dn^C)\to1$ almost surely. If in addition
     $\E(Z_j^2u^2)<\infty$ for every coordinate $Z_j$ of $Z$, then $\pi(\Sz^C\mid\Dn^C)\to1$ almost surely.
-  \item \emph{High dimension.} Under Assumptions~\ref{a:th-gl} and~\ref{a:th-mis}, there are fixed $c>0$ and $M_0$ such that, for every
+  \item \emph{Omitted predictors, high dimension.} Under Assumptions~\ref{a:th-gl} and~\ref{a:th-mis}, there are fixed $c>0$ and $M_0$ such that, for every
     $M\ge M_0$ and all sufficiently large $n$,
     \[
       \P^*\big[\,\Pi\{d_H(f,f_0)>\epsilon_n\mid\Dn^C\}>n^{-cM}\,\big]\le n^{-cM}.
@@ -299,6 +309,11 @@ Sections~\ref{sec:theory-density}--\ref{sec:theory-selection} to high-dimensiona
 null predictor that stands in for a missing true one is selected, and the noise variance absorbs what the candidates
 cannot explain. These are the properties a method needs when, as is usual in practice, not every relevant predictor
 has been measured.
+
+The scope of the three results is deliberate. They take the number of true predictors fixed, the noise Gaussian
+with constant variance (except in Theorem~\ref{thm:th-mis}(a)), and $p$ polynomial in $n$. They describe the exact
+posterior, not a finite run of the sampler. Within this scope they hold for any correlation structure that meets
+Assumptions~\ref{a:th-subg}--\ref{a:th-margin}, common factors included, and they require nothing to be tuned.
 
 \begin{table}[ht]
 \centering\small

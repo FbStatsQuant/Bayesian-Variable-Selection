@@ -11,13 +11,15 @@
 
 This section sets out the regression model, the priors and the posterior they give, the sequential Monte Carlo
 sampler that SMC-BVS uses to explore the posterior, and the quantities a run reports. The model and priors are
-standard; the sampler is new. We follow the order of Section~2 of \citet{SongLiang2015}.
+standard. What is new is the sampler: it carries a population of models from a distribution that can be sampled
+exactly to the posterior, and it builds that starting distribution from the correlation structure of the
+predictors.
 
 % ---------------------------------------------------------------------------------------------------------
 \subsection{The linear model and the data}\label{sec:model-data}
 
-Let $\Dn=\{\yr;\Xr\}$ denote a data set of $n$ observations, with response $\yr\in\R^n$ and an $n\times\praw$ design
-matrix of predictors. We assume the Gaussian linear model with an intercept,
+The data $\Dn$ are a response $\yr\in\R^n$ and an $n\times\praw$ matrix $\Xr$ of predictors, measured on the same $n$
+units. They follow the Gaussian linear model with an intercept,
 \begin{equation}\label{eq:model}
   \yr=\alpha^*\one_n+\Xr\bstar+\varepsilon,\qquad \varepsilon\sim\Normal_n(0,\sigs^2I_n),
 \end{equation}
@@ -25,8 +27,8 @@ where $\varepsilon$ is independent of $\Xr$. The number of predictors may be muc
 vector $\bstar$ is sparse: the true model $\Sz:=\{j:\beta^*_j\neq0\}$ has a small size $\sz$. The aim is to recover
 $\Sz$ and to quantify the uncertainty about it.
 
-A predictor that is constant in the sample carries no information and is removed before anything else. We write
-$\Xr$ for the remaining $n\times p$ matrix, so $p$ always denotes the number of retained predictors, indexed
+A predictor that is constant in the sample carries no information and is removed before anything else. From here on
+$\Xr$ denotes the remaining $n\times p$ matrix, so $p$ always denotes the number of retained predictors, indexed
 $1,\dots,p$ in their original order. All models below are sets of retained indices; the method reports them in the
 original column numbers.
 
@@ -47,8 +49,8 @@ method considers every model with at most $K$ predictors,
 \begin{equation}\label{eq:space}
   \Om:=\{S\subseteq\set{p}:\abs{S}\le K\},\qquad K:=\min\big(p,\lfloor n/2\rfloor\big).
 \end{equation}
-As in \citet{SongLiang2015}, the cap is not crucial to the analysis, since the true model is sparse; it keeps every
-matrix to be factorised at most $K\times K$. Given a model, the working likelihood on the standardised data is
+The cap excludes only models with more than $n/2$ predictors, far larger than the sparse models of interest, and it
+bounds every matrix the method factorises at $K\times K$. Given a model, the working likelihood on the standardised data is
 \begin{equation}\label{eq:lik}
   y\mid S,\theta_S,\sigma^2\ \sim\ \Normal_n(X_S\theta_S,\ \sigma^2I_n),
 \end{equation}
@@ -92,7 +94,9 @@ and the marginal likelihood of $S$ is
   m(S)=C_n\Big\{\frac{\det(G_S+I)}{\det H_S}\Big\}^{1/2}\big(2b_0+\SSq_S\big)^{-(a_0+n/2)},\qquad
   C_n:=\frac{(2b_0)^{a_0}\,\Gamma(a_0+n/2)}{\pi^{n/2}\,\Gamma(a_0)},
 \end{equation}
-where $\pi=3.14\ldots$ in $C_n$; for the empty model the determinant ratio is one and $\SSq_\emptyset=y^\top y$. We
+where $\pi=3.14\ldots$ in $C_n$; for the empty model the determinant ratio is one and $\SSq_\emptyset=y^\top y$.
+The split-and-merge method of \citet{SongLiang2015} rests on the same conjugate structure, with a different slab
+precision and an independent Bernoulli model prior under a size cap. We
 call $F(S):=\log\pi(S)+\log m(S)$ the log score of $S$. The posterior over models and the evidence are
 \begin{equation}\label{eq:posterior}
   \pis{S}=\frac{e^{F(S)}}{Z},\qquad Z:=\sum_{S\in\Om}e^{F(S)},\qquad S\in\Om .
@@ -238,19 +242,21 @@ returned list of top models & $\Tlist$ & the best $40p+1$ models scored \\
 A run ends in one of three ways: \emph{exact} (the model space was enumerated), \emph{completed} (the sampler ran to
 the end) or \emph{stopped}. A stopped run reports no estimates. A completed run reports the following.
 
-\paragraph{Inclusion probabilities and the selected model.} Within island $r$, $\PIPhat_{r,j}$ is the average, over
+\paragraph{Inclusion probabilities and the reported model.} Within island $r$, $\PIPhat_{r,j}$ is the average, over
 the $N$ particles and the four measured rounds, of the conditional inclusion probability computed in the inclusion
 update of predictor $j$. Averaging these probabilities rather than the inclusion indicators reduces the Monte Carlo
 noise. The method reports
 \begin{equation}\label{eq:pipmpm}
   \PIPhat_j:=\frac14\sum_{r=1}^4\PIPhat_{r,j},\qquad \MPMhat:=\{j:\PIPhat_j>1/2\}.
 \end{equation}
-The estimated median probability model $\MPMhat$ is the selected model.
+The estimated median probability model $\MPMhat$ is the model SMC-BVS reports. When we compare methods, $\Shat$
+denotes the model a method reports, so $\Shat=\MPMhat$ for SMC-BVS.
 
-\paragraph{The best model found.} The method also reports $\Shat$, the model with the highest log score among all
+\paragraph{The best model found.} The method also stores $\HPMhat$, the model with the highest log score among all
 models scored during the run: in the block tables, the calibration, the islands and both local searches. Ties go to
-the smaller model, then to the lexicographically smaller one. $\Shat$ is \emph{certified} when it is the end point of
-a certified local search; it is then a local maximum of $F$ over its neighbourhood. $\Shat$ estimates the $\HPM$.
+the smaller model, then to the lexicographically smaller one. $\HPMhat$ is \emph{certified} when it is the end point
+of a certified local search; it is then a local maximum of $F$ over its neighbourhood. $\HPMhat$ estimates the
+$\HPM$; it is not the reported model.
 
 \paragraph{The list of top models.} The method returns the list $\Tlist$ of the best models it scored, at most
 $40p+1$ of them, with their log scores. Renormalising the posterior over the list gives
@@ -272,15 +278,15 @@ Taking the maximum never moves the point estimate away from $Z$, because $\Zlist
 upward on the $Z$ scale, so the raw $\Zhat$ remains the unbiased estimate. Because $\Zhat$ is unbiased, Markov's
 inequality gives $\P(0.05\,\Zhat>Z)\le0.05$, and since $\Zlist\le Z$ the lower limit
 $Z_{\mathrm{low}}$ exceeds $Z$ on exactly the same event. It is therefore a 95\% one-sided lower limit for $Z$. The
-raw $\log\Zhat$, the four island values $\log\Zhat_r$ and the raw limit are reported too, with a flag when
-$\log\Zlist$ exceeds $\log\Zhat$ by more than one: the particles then missed posterior mass that the list holds.
+raw $\log\Zhat$, the four island values $\log\Zhat_r$ and the raw limit are reported too, together with the gap
+$\log\Zlist-\log\Zhat$ and a flag when it exceeds one: $\Zhat$ then underestimates $Z$ by more than a factor $e$.
 
-\paragraph{Exact runs.} An exact run reports the exact $\PIP_j$, $\MPM$ and $\log Z$; the best model is the $\HPM$
-and is certified. The list fields are computed from the $40p+1$ best models, and the lower limit is
+\paragraph{Exact runs.} An exact run reports the exact $\PIP_j$, $\MPM$ and $\log Z$, and $\MPM$ is the reported
+model; the best model found is the $\HPM$ and is certified. The list fields are computed from the $40p+1$ best models, and the lower limit is
 $\max\{\log(0.05\,Z),\log\Zlist\}$.
 
 \paragraph{Diagnostics.} A run also reports, without changing any output: whether some island's best score lies more
-than one unit below $F(\Shat)$; the standard deviation of the island log evidence estimates; whether the local
+than one unit below $F(\HPMhat)$; the standard deviation of the island log evidence estimates; whether the local
 search from the islands' best model improved it; whether the effective sample size fell below $0.5N$ at some step;
 whether a local search stopped at its move cap; the models of $\Tlist$ within $10^{-9}$ of the best score; pairs of
 predictors with $\abs{\hat r_{jl}}\ge1-10^{-10}$; and the calibration warnings.
