@@ -271,4 +271,57 @@ The common core of both reports:
 v3.1.1, g = n, truncated BB(1, p) and MPM are confirmed. Fix E (output-only) and C1 (compute-only) do not touch the theorems. Proof writing and Lean stay on HOLD. This is recorded in DEFINITIONS §1 and §5, in ASSUMPTIONS header and §5 (the sensitivity table is now a contingency note, with no row triggered), and in the DOSSIER.
 
 ### Stage 2 sign-off (Final Council, single pass; `briefs/SENIOR_SIGNOFF_BRIEF.md`)
-PENDING
+Both senior judges signed off on v1.4 (3ee24ea9) in one pass, each writing only `council/SIGNOFF_<SEAT>.md`. Neither found a blocker, and no fix changes an assumption.
+
+| judge | verdict | completeness | generality/naturalness | Q&A readiness | Stage 1 |
+|---|---|---|---|---|---|
+| Astra 6.2 | SIGN-OFF WITH FIXES (12 edits) | 8.5 | 9 | 8 | 8 / 7 / 7 |
+| Fable 5.2 | SIGN-OFF WITH FIXES (12 edits) | 8.5 | 9.0 | 8.0 (8.5 with fixes 1, 2, 7) | 7.5 / 6.0 / 6.5 |
+
+- **Overlap.** Fable wrote its list before opening Astra's. Fable fixes 1, 4, 5, 6, 7 and 11 coincide with Astra edits 1, 2, 8, 3, 6 and 7.
+- **Astra, all 12 applied:**
+  - W3 direct union bound, coefficient min{1, a(ϑ̂)};
+  - C-ii orthogonal form is sufficient only, with exact (U1) stated;
+  - converse: Φ(−c) limit for the specified rival, liminf bound for π(T|y) ≤ ½;
+  - refined-form sieve 0 ≤ m ≤ p−s, s−d+m ≤ min(K, J);
+  - TM unconditional statement needs common constants and threshold, plus P(C inadmissible);
+  - TS-a fixed-level infimum over j ∉ S;
+  - window wording; A-DIM′ "i.e." removed;
+  - U2a equality restricted to ≤ 2 of the 5 tested proxies; endpoint-leakage conditioning set;
+  - 2.4889; fallback coefficient 1;
+  - A-SPARSE-C Markov-type wording;
+  - stray 121 mentions removed.
+- **Fable, all 12 applied.** Six were already in through the Astra edits: 1, 4, 5, 6, 7 and 11.
+  - (5) The uniform-leakage check `.rc_tmp/lead_v14/leak_uniform.py` gives ≈ 0.25ρ^{2L}, so special case (ii) on S1 needs ρ^{2L_n}·log p → 0.
+  - (12) The withdrawn "≈ 121" sits only in Defence (b) and SIMULATION.
+  - New edits:
+    - (2) TS-b and A-MARGIN-U statements now fix the admissible level M and J := ⌊s + C_s M⌋.
+    - (3) Pervasive factors "admit no small Q_n with vanishing outside leakage" (ASSUMPTIONS §6 item 2).
+    - (8) Exact κ_n is truncated, never rounded up. The Lead reran `u2a_check.py` to five decimals:
+      - SNR 2 is 2.504–2.770 (2.50455, 2.61261, 2.77075); table cells 2.612, 2.770, 2.504;
+      - SNR 1 is 0.626–0.692 (0.69269; Fable did not list this one), table cell 0.669.
+      - The historical rows above (Sol 3 line, v1.4 changes) keep their original quotes; this line supersedes them.
+    - (9) SIMULATION synthesis says E9 covers the refined form only.
+    - (10) The discrete-y f₀ sentence moved out of TM-a0-inc into the TM setting; see the Writing catch (2) below.
+  - Optional item, noted only: one nearest proxy is exhaustive on S1 by the AR(1) Markov property.
+- **Spec-notation alignment** (Writing Lead 1, via the Manager):
+  - coded draw (S, θ_S, v), raw β;
+  - C-ii θ_min renamed β̄_min (the spec's tmin = min|θ*_j|);
+  - TS-b note that p is the raw dimension (the spec's p^r).
+- **Writing round-1 paper review, five Section 3 catches cross-checked (Manager request; source read-only).** The paper text is v1.3-based.
+  1. **Thm 3.3(b) / A9: no candidate-support bound.** Already resolved in v1.4: TM-a and TM-b assume A-SPARSE-C (|supp β^C| ≤ s_C, fixed) explicitly. The paper should cite it and replace "2s" by s_C; constants depend on s_C. No package change.
+  2. **KL infinite for discrete y.** Partly addressed in v1.4, where only A-MOM had it. Now patched: a TM-setting paragraph (all four TM statements) states
+     - i.i.d. rows, and ν as the true law of x_C;
+     - f₀ as the unique minimiser of expected Gaussian negative log-likelihood, equal to SL's KL projection only when that is finite;
+     - d_H compares fitted Gaussian conditionals over the same ν.
+     DOSSIER A-MIS item 3 is updated.
+  3. **Joint Gaussianity ≠ sparse γ.** v1.4 already separated A-SPARSE-C from A-MIS(iii). Now patched: "jointly Gaussian satisfies (iii)" is qualified as the linear-Gaussian part only, with sparsity the separate A-SPARSE-C. "Fails under pervasive factors" is softened to "can fail … typically dense".
+  4. **A4 with k_n > n.** Not an issue in v1.4: A-SUBG and A-NEC are population conditions. Now patched: a sentence (Windows paragraph, A-SUBG) says the sample isometry is derived only on sets of size ≤ q_n(M) (O(log n) at a fixed level, ≤ C_q√n for M_n ≤ √n/log n), so no sample–population closeness is claimed above n.
+  5. **Leakage depends on β\*; edge cases.** v1.4 defines ϑ through R_n, which depends on β*. Now patched:
+     - "a function of Σ and β*, not of Σ alone";
+     - well defined since (U2a) gives R_n(B) > 0;
+     - ϑ ∈ [0, 1], and ā = min{1, …} needs no generic ω;
+     - TS-b states s0 ≥ 1 (null model not claimed) and π(T) > 0 since s ≤ K = min(p, ⌊n/2⌋) for large n.
+- **Round cap honoured.** One discussion round, then one sign-off pass. No second round was run; the Manager's instruction was to finalize directly.
+- **Final commit:** see the Stage 3 report to the Manager (the hash of the commit containing this section).
+

@@ -15,7 +15,7 @@ Every number below is in a table under `tables/` (file named in the section) and
    - *Necessity of the constant 2 is visible:* κ_del > 1 (equivalently min t² > 2·price) has sensitivity 1.000 on S1 and on
      S2 (population); the sample P1 check has sensitivity 0.985 on S2. When the check fails, exact recovery is 0 on both suites for the population κ_del ≤ 1 row, and 0/800 (S1) and 9/10,666 = 0.00084 (S2) for the sample P1 row. Consistent with the TS-b converse (which is a population/asymptotic statement; this is a per-setting check).
    - *S1 brackets κ = 1 from both sides:* κ_pop 0.64–0.70 at SNR 1 (0/100 exact in every cell) vs 2.54–2.80 at SNR 2
-     (92–96/100) (E1, `e1_s1_cells.tsv`). The fixed-ratio (κ_n) framing covers S1's deletion classes (mixed classes: E9); a fixed beta-min (FSb) does not (E4).
+     (92–96/100) (E1, `e1_s1_cells.tsv`). The fixed-ratio (κ_n) framing covers S1's deletion classes (mixed classes: the U2a check and leakage decay below; E9 covers the refined form only); a fixed beta-min (FSb) does not (E4).
      *Qualification:* E1's MPM recovery and its restricted-search κ do not test exact posterior mass or all active mixed classes.
    - *Multi-deletions bind on S1* (κ_multi < κ_del in all 16 settings): the margin must quantify over all D ⊆ S0 (E1).
    - *The "sufficiency gap" on S1 is consistent with the superset term:* 40/41 S1 failures at SNR ≥ 2 are S0 plus nulls
@@ -31,10 +31,10 @@ Every number below is in a table under `tables/` (file named in the section) and
 
      | cell | SNR 1 | SNR 2 | SNR 3 |
      |---|---|---|---|
-     | (500, 500) | 0.653 | 2.613 | 5.878 |
-     | (500, 5000) | 0.693 | 2.771 | 6.234 |
-     | (1000, 500) | 0.626 | 2.505 | 5.635 |
-     | (1000, 5000) | 0.670 | 2.679 | 6.028 |
+     | (500, 500) | 0.653 | 2.612 | 5.878 |
+     | (500, 5000) | 0.692 | 2.770 | 6.234 |
+     | (1000, 500) | 0.626 | 2.504 | 5.635 |
+     | (1000, 5000) | 0.669 | 2.679 | 6.028 |
 
    - *Leakage decay (AR(1), ρ = 0.6):* For the endpoint deletion (retained true predictors on one side), a single outside null at distance k beyond the deleted endpoint, with the intervening nulls not in the base, leaks ρ^{2k}(1−ρ²)/(1−ρ^{2k+2}) (0.265, 0.087, 0.030, 0.011 at ρ = 0.6 for k = 1–4). Special case (ii) needs the uniform bound max ϑ·log p → 0, which L_n → ∞ alone does not give: with Q_n = T plus the L_n nearest nulls, the worst outside leakage over d ≤ 3, up to 2 inside proxies and up to 3 outside nulls is ≈ 0.25ρ^{2L_n} (unit coefficients; `.rc_tmp/lead_v14/leak_uniform.py`), so choosing L_n with ρ^{2L_n}·log p → 0 (L_n of order log log p plus a slowly diverging term, keeping log|Q_n| = o(log n)) puts the S1 sequence in special case (ii).
    - *The structure-free fallback* (ā ≡ 1, unit-vector bound): on the evaluated classes (d ≤ 3, selected D for d ≥ 2; m ≤ 2 at p = 500, m = 1 at p = 5,000) at η = 0, it fails at SNR 2 (minimum surplus −0.692 at d = 1, m = 1; −2.008 at m = 2) and holds at SNR 3 (minimum 1.412, d = 1, m = 2); m up to m̄_d is not evaluated (population computation on `tables/e9b_width_ext_s1.tsv` with the combinatorial width √(2 log C(p−s, m))).
@@ -71,7 +71,7 @@ Caveat on evidence strength: S1 has two non-trivial SNR levels per cell, so the 
 
 **Population quantities.** β, support, Σ = AR(1)(ρ) and σ² come from `gen_beta`, `quad_ar1` and the σ² rule in `generate.R` (sourced verbatim; β is deterministic, so no seeds are needed). Σ has unit variance, so the standardised coefficient equals β.
 - t²_j = nβ_j²/[(Σ_S0)⁻¹]_jj/σ² = R(S0∖j)/σ². R(S) = n·Var(xᵀβ | x_S) = n·β_Dᵀ Σ_{DD·S} β_D, D = S0∖S.
-- **price = log((2p−1−s0)/s0) + ½ log(n+1)** is P1's price, kept for replication (range 7.60–10.36 nats over all settings). *Lead correction (council R1, Sol):* the exact last-variable price is price(s0−1) = log((2p−s0)/s0) + ½ log(n+1); P1's numerator is one off (difference log((2p−s0)/(2p−1−s0)) ≤ 0.002 nats), and the brief's price(s0) = log((2p−1−s0)/(s0+1)) + ½log(n+1) is *smaller*, not larger. The theorem's κ_n uses Pr_n(d) = Σ_{k=s0−d}^{s0−1} price(k) (adjacent prices); since price(k) decreases in k, κ_n ≤ the data κ = R/(2σ²·d·price), and over all 1,023 nonempty D the exact κ_n on S1 is 0.626–0.693 at SNR 1 and 2.505–2.771 at SNR 2, 1.1–1.7% below the restricted proxy (minimum at d = 6 for p = 500, d = 3 for p = 5,000; Sol R2, reproduced by the Lead); the S1 bracket (0.64–0.70 vs 2.54–2.80 for the proxy) is unchanged. On S1, κ_pop = κ_multi because κ_swap = κ_del.
+- **price = log((2p−1−s0)/s0) + ½ log(n+1)** is P1's price, kept for replication (range 7.60–10.36 nats over all settings). *Lead correction (council R1, Sol):* the exact last-variable price is price(s0−1) = log((2p−s0)/s0) + ½ log(n+1); P1's numerator is one off (difference log((2p−s0)/(2p−1−s0)) ≤ 0.002 nats), and the brief's price(s0) = log((2p−1−s0)/(s0+1)) + ½log(n+1) is *smaller*, not larger. The theorem's κ_n uses Pr_n(d) = Σ_{k=s0−d}^{s0−1} price(k) (adjacent prices); since price(k) decreases in k, κ_n ≤ the data κ = R/(2σ²·d·price), and over all 1,023 nonempty D the exact κ_n on S1 is 0.626–0.692 at SNR 1 and 2.504–2.770 at SNR 2, 1.1–1.7% below the restricted proxy (minimum at d = 6 for p = 500, d = 3 for p = 5,000; Sol R2, reproduced by the Lead); the S1 bracket (0.64–0.70 vs 2.54–2.80 for the proxy) is unchanged. On S1, κ_pop = κ_multi because κ_swap = κ_del.
 - κ(S) = R(S)/(2σ² d·price), d = |S0∖S|. Λ(S) = ½R(S)/σ² − (d−m)·price − m·log p (m = |S∖S0| added nulls), the heuristic log posterior odds S0 : S.
 - **Rival classes.**
   - Brief class (the column names without a suffix): deletions |D| ≤ 3 (exhaustive); swaps |D| ≤ 2 with N ⊆ nulls within distance 3 of D, |N| ≤ 4, chosen greedily. κ_del, κ_multi (|D| = 2, 3), κ_swap, κ_pop = min of the three, Λ_min.
@@ -376,7 +376,7 @@ coded μ) gave 2.40–3.87 at SNR 2 with C = 121: it matched the v1 table within
 | FSb fixed beta-min | β_min/(σ√(log p/n)) (`e4`) | 1–6 (∝ √(log p/n)) | 0.13–2.95 | S1 false as a sequence; S2 true but below the log p/n scale |
 | asm:margin, necessary | sens. of κ_del > 1 (`e1_2x2`) | 1.000 | 1.000 (pop) / 0.985 (sample) | supports (MPM recovery and restricted κ: not a test of exact posterior mass or all active mixed classes) |
 | asm:margin, sufficient | P(exact ∣ κ_pop > 1) | 0.949 | 0.269 (κ_adj_full > 1.25: 0.63) | S1 supports; S2 contradicts / weak |
-| A-MARGIN-U population form, U2a | min R_n(B)/(2σ²Pr_n(d)) over D and ≤ 2 inside proxies (`u2a_check.py`) | = exact κ_n: 0.626–0.693 (SNR 1), 2.505–2.771 (SNR 2) | not run | S1 supports at these proxy sets; binding D retain x_10 |
+| A-MARGIN-U population form, U2a | min R_n(B)/(2σ²Pr_n(d)) over D and ≤ 2 inside proxies (`u2a_check.py`) | = exact κ_n: 0.626–0.692 (SNR 1), 2.504–2.770 (SNR 2) | not run | S1 supports at these proxy sets; binding D retain x_10 |
 | mixed rivals, refined design-conditional form (E9/E9b) | min surplus, δ = γ = t_n = 0 | SNR 2: 2.3862 (C = 121, sensitivity), 2.4889 (no credit) | not run | diagnostic of the refined form only: selected D, four designs, zero slack; no 1 − o(1) event |
 | swap-aware margin (Λ, κ_swap) | AUC; P(exact ∣ yes) (`e1_auc`) | = κ_del | worse than κ_del | contradicts as an improvement |
 | SL Cond 3 | δ_SL; ε_n²/δ_SL (`e3`) | 0.282; 0.22–0.60 | 0.23–0.42; 1.6–3.0 | holds in population; ε_n² = o(δ) weak on S1, fails on S2 |
