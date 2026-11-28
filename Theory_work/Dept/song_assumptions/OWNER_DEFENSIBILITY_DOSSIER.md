@@ -2,6 +2,8 @@
 
 Theory Department, mission TH-SONG-ASSUMPTIONS, 2026-11-27. Task Lead: Opus 5.5. **v1.4 (senior review: completeness, generality and naturalness; see COUNCIL_RECORD.md and council/V14_CHANGESPEC.md).**
 
+**v1.4.1 — CITE-AUDIT fixes (2026-11-28).** Citation-wording fixes F1, F2, F4, F6, F9, F10, F11, F12, F13, F14 applied to this file; see `Theory_work/Dept/cite_audit/CITE_AUDIT.md` (fix list F1–F16). No theorem, assumption or status changed.
+
 This file is for the owner's grilling. Each assumption gets the same six questions:
 1. What exactly is assumed?
 2. Why is it needed, and which proof step uses it?
@@ -87,9 +89,9 @@ Sources and conventions:
    - **A-DIM′**: log p = o(√n) is the conjecture's regime. The product form (s+1)·M·log p·log(p∨n) ≤ c·n (the +1 covers s = 0) is its **proof budget**; they are different conditions (at fixed M, log p ∼ a√n with small a > 0 meets the budget but not the regime). TD′ under A-DIM′ is a **conjecture with high proof risk**.
      - Fable's route (Fubini size tail + isometry) fails at the testing step (Astra R2): at log p = n^{1/3} the entropy of the size window is ≍ n^{2/3} against a testing budget ≍ n^{1/3}.
      - A proof would need localisation at size ≈ t/log p or a direct predictive bound. If it worked, it would cover SL Cor S1's range and SL Cor 1 for α < ½.
-   - **log p = o(n)** with a model-size cap K_n ≤ c·n/log p (NH14 uses p ∧ n/((2+ν) log p), pp. 10–11): the cap fixes the isometry step, not the testing step, so this too is open. It would also be an Engineering decision, because the code uses K = n/2.
-6. **Referee: "SL handle exponential p; you don't."** Answer:
-   - SL's exponential range (Cor 1) relies on their model-size cap r̄_n and the prior conditions (9)–(10), which would fail at our K = n/2.
+   - **log p = o(n)** with a model-size cap K_n ≤ c·n/log p (NH14 uses p ∧ n/((2+ν) log p), p. 6, used in Cond 4.5, p. 11): the cap fixes the isometry step, not the testing step, so this too is open. It would also be an Engineering decision, because the code uses K = n/2.
+6. **Referee: "SL handle stretched-exponential p; you don't."** Answer:
+   - SL's stretched-exponential range (Cor 1; log p = O(n^α), α < 1) relies on their model-size cap r̄_n and the prior conditions (9)–(10), which would fail at our K = n/2.
    - Beyond p ≤ n^A we state a conjecture (TD′) and say honestly that our best route fails at the testing step. We release nothing beyond p ≤ n^A.
    - SL's own *selection* result (Cor S1) is only quasi-polynomial, P_n < n^{κ log n}, and all our S1/S2 settings and tabulated user regimes have p ≤ n².
 
@@ -119,8 +121,8 @@ Sources and conventions:
 3. **Standard?** Same type; a comparison of object, scale and window, **not** a dominance claim (council R1, all three seats):
    - **NH14** Cond. 4.5, pp. 11, 17, bounds the minimum **nonzero sample** eigenvalue. It expressly allows exact dependence through its nonzero convention, which A-NEC excludes. Its floor ≳ p_n^{−κ} can be below c_ψ/n at large p, and NH14 also impose an upper bound.
    - **SBJ** Assumption 4, p. 14 ((8)) is a minimum-nonzero-eigenvalue condition on a sample quantity indexed through min(n, |k|). We do **not** say SBJ allows duplicates.
-   - **SL (26)**, SLs p. 15, is a two-sided **sample** condition on sets of size r̄_n + |t|: a **vanishing** lower threshold (l_n ≫ r̄_n log P_n/n) and a **growing** upper threshold, and Cor S1 chooses such a pair. It was introduced because their (22) "is hardly satisfied" (SLs pp. 15–16).
-   - **SL Condition 3, Gaussian sufficient form** (pp. 955–956): ch₁{var(x)} ≻ ε_n² is the precedent for vanishing floors. A-NEC at 1/n does not supply SL's screening separation; that is A-MARGIN-H's job.
+   - **SL (26)**, SLs p. 15, is a two-sided **sample** condition on sets of size r̄_n + |t|; Thm S also needs (23), l_n ≫ r̄_n log P_n/n, and Cor S1 takes a **vanishing** l_n and a **growing** l′_n. It was introduced because their (22) "is hardly satisfied" (SLs pp. 15–16).
+   - **SL Condition 3, Gaussian sufficient form** (pp. 955–956): ch′₁{var(x)} ≻ ε_n² (smallest eigenvalue; standard normal predictors) is the precedent for vanishing floors. A-NEC at 1/n does not supply SL's screening separation; that is A-MARGIN-H's job.
    - BRT09 Assumption 2, p. 9 (c/log n) and MY09 "slowly vanishing" (P17 B6) are sample floors on other windows.
    - **No blanket ordering** (Sol R2): c_ψ/n lies below SL's l_n and BRT09's c/log n where the regimes overlap, but NH14's p_n^{−κ} can be smaller than c_ψ/n, and as a *condition set* (population object, k_n window, together with A-SUBG) A-NEC is not uniformly weaker than any of them.
 4. **Holds on our data?**
@@ -142,7 +144,7 @@ Sources and conventions:
    - It keeps the estimated noise variance in a fixed range.
    - It controls the unit-ridge shrinkage term.
 3. **Standard?** **Direct counterpart: SL (3), p. 950**: lim Σ_j |β*_j| < ∞, with standardised predictors and fixed σ*, implies A-BS.
-   - In type: YWJ (7a), p. 7: "some form of upper bound on the norm ‖β*‖₂ in terms of the g-hyperparameter is required" (P17 B4b); SC11 Assumption 2.7, p. 7. Both their bounds grow with n (via g ≍ p^{2α} in YWJ, via φ_n in SC11), whereas A-BS uses a fixed b̄, so the precedent is for the type of condition, not its strength.
+   - In type: YWJ (7a), p. 7: "some form of upper bound on the norm ‖β*‖₂ in terms of the g-hyperparameter is required" (P17 B4b); SC11 Assumption 2.7, p. 7. Both their bounds may grow with n (via g ≍ p^{2α} in YWJ, via φ_n in SC11), whereas A-BS uses a fixed b̄, so the precedent is for the type of condition, not its strength.
 4. **Holds on our data?** Max |β|sd/σ ≈ 1.17 (1.175) and βᵀΣβ/σ² ≤ 6 in every setting (E4).
 5. **Weaker forms.** A-BS′ is the aggregate form. All targets keep A-BS, because TS-b uses the size lemma prop:dist(i), which is proved under A-BS. Astra R1's energy pair is the O(n) form and is not identical to A-BS′(b).
 6. **Referee: "Why bound signals from above at all?"** Answer:
@@ -200,7 +202,7 @@ Sources and conventions:
    - Per-coefficient beta-min versions: YWJ (8), p. 9, C_β² ≥ c₀(L + L̃ + α + κ)σ²log p/n with unspecified c₀ (P17); Fan & Lv Cond. 3, p. 25 (PN E15).
    - **Necessity of the log p order for any method:**
      - Wainwright (2009) Thm 2, arXiv v2 p. 4: Gaussian design, averaged over random supports, unspecified C′ (PN B5).
-     - Fletcher, Rangan & Goyal (2009) Thm 1, arXiv v1 p. 4: ML fails below ≈ 2σ² log p per predictor. This constant is C2's derivation from their display (6) (PN B6).
+     - Fletcher, Rangan & Goyal (2009) Thm 1 (i.i.d. Gaussian design, k → ∞), arXiv v1 p. 4: ML fails when the weakest coefficient energy is below ≈ 2σ² log p. This constant is C2's derivation from their display (6) (PN B6).
    - **SL themselves state no margin.** Their MAP proof treats min|β_t| as a fixed constant (SLs p. 15) and needs the "hardly satisfied" sample condition (22).
 4. **Holds on our data?** This is the strongest evidence in the package.
    - **S1 is consistent with κ = 1 as the threshold.** κ is 0.64–0.70 at SNR 1, with 0 of 100 exact in every (n, p) cell, and 2.54–2.80 at SNR 2, with 92–96 of 100 exact (E1). The transition is bracketed, not located.
@@ -226,7 +228,7 @@ Sources and conventions:
      - **(C-ii) Sparse eigenvalue plus beta-min.** Let φ² lower-bound λ_min(Corr(x_V)) over |V| ≤ s + m̄_s, and β̄_min := min_{j∈T} |β*_j|·sd(x_j)/σ*. Then β̄_min ≥ (1+η)·(1 + √m̄_s)·√(2 log(2p√(n+1))/n)/φ implies (U1) and (U2) with ā ≡ 1. For an orthogonal design, a sufficient coordinatewise form of (U1) is β*_j²Var(x_j) ≥ 2(1+η)σ*²·log(2p√(n+1))/n for every j ∈ T; exact (U1) requires n·Σ_{j∈D} β*_j²Var(x_j) ≥ 2(1+η)σ*²·Pr_n(|D|) for each nonempty D.
    - (viii) **Weaker variant (recorded, not adopted): proxies pay their own price.** (U2a) could be weakened to the single-rival price [log π(B)/π(T) + ((s−|B|)/2)log(n+1)]₊ for |B| < s; R_n(B)/(σ*²(1+log|Q_n|)) → ∞ for |B| = s; and no condition for |B| > s. This needs TS-b step 2 on the bases T ∪ (B∖T), which is not written. The headline (U2a) is therefore conservative, by a factor (1+ρ²)/(1−ρ²) on the signal when both AR(1) neighbours of an isolated true predictor are proxies, and similarly for block designs.
 6. **Referees.**
-   - **"Your condition is uncheckable."** Answer: R_n(S) is a population projection residual, the same object as NH14's Δ_n and Rossell's non-centrality λ_tm (arXiv v7 p. 10). For any assumed Σ and β it is computable in closed form, as D1 did for all 136 settings. We also give worked cases: orthogonal, AR(1), block, equicorrelated.
+   - **"Your condition is uncheckable."** Answer: R_n(S) is a population projection residual, the population analogue of NH14's Δ_n and of Rossell's non-centrality λ_tm (arXiv v7 p. 10). For any assumed Σ and β it is computable in closed form, as D1 did for all 136 settings. We also give worked cases: orthogonal, AR(1), block, equicorrelated.
    - **"Why a width term for swaps?"** Answer: it is needed in some designs. In a factor-proxy design a single swap beats S0 unless R ≥ 2(1+ρ)²log p (Fable, numerical check). That shows necessity of the worst-case form at one (d, m), not optimality of every constant. The population form prices each added null by its own leakage, so where leakage is small the condition is close to the deletion threshold; on S1's AR(1) designs (estimated) the leakage decays geometrically with distance.
    - **"Your condition depends on the design."** Answer: it is a population condition on (Σ, β*), with no design event. The refined design-conditional form (a parallel sufficient condition) is stated on a design event of probability 1 − o(1). The structure-free fallback (ā ≡ 1) is always available, at the cost of not covering boundary signals at SNR 2.
    - **"How do I construct Q_n?"** Answer: you do not. Q_n is an **accounting device**: any deterministic Q_n ⊇ T with log|Q_n| = o(log n) may be used, and a larger Q_n only moves rivals from (U2b) to (U2a). Q_n = T is always allowed.
@@ -267,8 +269,8 @@ Each case gives the conditioning set and the coefficients; leakage depends on bo
    - Independent non-Gaussian residual: remark (i′), a suggested sufficient cap and budget.
    - Heteroscedastic residual: remark (ii), a heuristic budget and the Grünwald–van Ommen link (their evidence is empirical and does not establish our proposed threshold).
 6. **Referee: "This isn't real misspecification."** Answer:
-   - TM-a0 covers arbitrary second-moment misspecification at fixed dimension, which is SL's own setting.
-   - In high dimension we target the independent-Gaussian-residual case, and our heuristic remark (ii) suggests heteroscedastic misspecification can break selection once p exceeds about n^{1/(2(ϱ̄−1))}. This threshold is ours and heuristic; it is in the spirit of Grünwald & van Ommen's empirical finding that the general theorems (Kleijn–van der Vaart 2006, De Blasi–Walker 2013) need a fixed model class (GvO arXiv v3 pp. 46–47; PN D10–D12).
+   - TM-a0 covers arbitrary second-moment misspecification at fixed dimension; SL's own setting (Thm 4) is the fixed-dimension case where misspecification comes from omitting true predictors.
+   - In high dimension we target the independent-Gaussian-residual case, and our heuristic remark (ii) suggests heteroscedastic misspecification can break selection once p exceeds about n^{1/(2(ϱ̄−1))}. This threshold is ours and heuristic; it is in the spirit of Grünwald & van Ommen's finding that the covering conditions of general misspecification theorems (De Blasi–Walker 2013; cf. Kleijn–van der Vaart 2006) fail for their infinite union of models (GvO arXiv v3 pp. 46–47; PN D10–D12).
 
 ## A-SPARSE-C: the candidate-level projection is sparse (new label)
 1. **Assumed.** |supp β^C| ≤ s_C, with s_C fixed. This is A-SPARSE applied to the candidate projection β^C = β*_C + γ of A-MIS(iii).
@@ -309,7 +311,7 @@ Each case gives the conditioning set and the coefficients; leakage depends on bo
 3. **MARGIN\*** (sharper swap constant) is **superseded by the population form** of A-MARGIN-U; no separate refinement is open under that name.
 4. **Evidence on S1** brackets the transition with only two informative SNR levels. SNR 1.25 and 1.5 cells would locate it, but they need fits and HQ approval.
 5. **TS-b proof obligations** (Astra R2, council R1, senior review): TS-b is a target, not a theorem. Still to be written: the truncated superset sum, the coded mixed odds **per base** (the base-indexed step 3, Lemma W), the size lemma under A-BS, and the **k > m̄_d step** (rivals with more than m̄_d added predictors, step 2). Polynomial p and fixed s remain, against SL Cor 1. A-NEC necessity is unproved.
-6. **Literature.** The Chen & Chen (2008) primary text is unverified (paywalled; attested second-hand via Luo & Chen p. 7 and SBJ p. 14). Grünwald–van Ommen are verified on the 2014 arXiv text, not the Bayesian Analysis 2017 pagination.
+6. **Literature.** Chen & Chen (2008) is verified against the journal text (Thm 1, p. 763; owner copy); Luo & Chen p. 7 attribute the same threshold. Grünwald–van Ommen are verified on the 2014 arXiv text, not the Bayesian Analysis 2017 pagination.
 7. **Mixed-rival evidence is partial.** E9/E9b are zero-slack diagnostics of the **refined design-conditional form only** (selected D, four simulated S1 designs, mean widths; no 1 − o(1) event) for d ≤ 3, m = 1 (all S1 cells) and m = 2 (p = 500). The population form is checked only by the (U2a) minimum, which equals κ_n at ≤ 2 inside proxies. m = 2 at p = 5,000, m ≥ 3 (active at S1's sizes), d ≥ 4 and S2 designs are not evaluated.
 8. **No necessity result for (U2b).** The constant 2 is sharp only for deletions, and the common-base bound is conservative when many null sets leak in nearly the same direction.
 9. **The high-dimensional TM tier assumes a Gaussian-linear candidate law.** Only TM-a0 and TM-a0-inc tolerate a wrong response law.

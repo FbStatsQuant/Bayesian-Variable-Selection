@@ -1,6 +1,9 @@
 # ASSUMPTIONS AND PROOF PATHS — conjectured assumptions for the TH-SONG targets
 
 Theory Department, mission TH-SONG-ASSUMPTIONS, 2026-11-27. Task Lead: Opus 5.5. **v1.4 (senior review: completeness, generality and naturalness; converged text in council/V14_CHANGESPEC.md). v1.3 = council round-2 revision (COUNCIL_RECORD.md, council/RESPONSE_R2.md).**
+
+**v1.4.1 — CITE-AUDIT fixes (2026-11-28).** Citation-wording fixes F1, F2, F4, F7, F8, F10, F11, F12, F14 applied to this file; see `Theory_work/Dept/cite_audit/CITE_AUDIT.md` (fix list F1–F16). No theorem, assumption or status changed.
+
 Targets and notation: `THEOREM_DEFINITIONS.md` §4 (R_n(S), Pr_n(d), κ_n, D, N, d, m, J, f₀, β^C, σ_C²). Standardised predictors ζ_j := (x_j − E x_j)/sd(x_j). Level and window: fix M ≥ 1 first. The design assumptions A-SUBG and A-NEC are imposed on sets of size ≤ k_n, a deterministic design order with k_n ≥ q_n(M) at the claimed level (THEOREM_DEFINITIONS §4): for fixed-level statements, sets of size ≤ c·log n for every fixed c suffice across all fixed levels (one fixed level needs only one such window); q_n(M_n) for M = M_n → ∞ (the delivered `thm:dist` range M ≤ √n/log n); the enlarged q_n for TD′. The proof constant is as delivered (or5 `sec:a-dist`): q_n(M) := min{p, ⌈C_q M log n⌉}, C_q := 2(s(A+2)+4)/log 2. price_n := price(s0−1) = Pr_n(1). Four blocks: Model (A-GL, A-SPARSE, A-DIM, A-BS); Design (A-SUBG, A-NEC); Signal (A-MARGIN-H, A-MARGIN-U); Omitted variables (A-MIS(iii) with A-SPARSE-C; A-MOM). **No assumption names a design family or a simulation constant; S1/S2 appear only in the Defence (b) items.** Engine decision (HQ, SMC-PERF closed, memo 1b319090): v3.1.1, g = n, truncated BB(1, p) and MPM confirmed; see §5.
 Inputs: advisors `advisors/ASTRA_R1.md` (Astra 6.2) and `advisors/FABLE_R1.md` (Fable 5.2), which were written
 independently, and `advisors/ASTRA_R2.md` (Astra's audit of Fable R1 and of v1 of this file; all its substantive points applied); data `SIMULATION_DATA_ANALYSIS.md` (D1); literature `PRECEDENTS_NEW.md` (C2, with the Lead's errata) and
@@ -54,13 +57,13 @@ Each row gives the exact statement, where the proof uses it, its defence, and th
   - (b) S1/S2 are generated this way.
 - **Weaker alternatives.**
   - Non-Gaussian independent ε, i.e. A-MIS(i′): the Beta law and the Fubini size tail fail. Fable's union route *suggests* a sufficient cap K_n ≤ c·n log n/(log p)² and a variance-proxy budget; neither is shown necessary (Astra R2). **Not adopted** as coded, so it stays a remark.
-  - Heteroscedastic ε: the Grünwald–van Ommen mechanism applies, so it is a remark with the counter-calculation (TM §4.3).
+  - Heteroscedastic ε: the Grünwald–van Ommen mechanism may apply (shown empirically, under bad misspecification), so it is a remark with the counter-calculation (TM §4.3).
 
 ### A-SPARSE — fixed sparsity
 - **Statement.** |S0| ≤ s, with s fixed (or5 `asm:dist`(b)). For TS-b, s0 ≥ 1 is fixed.
 - **Used in.** The size of the window q_n; the 2^{s0} deletion directions (TS-b step 1); the superset mass (s0+1)√(log p/n).
 - **Defence.**
-  - (a) SL strict sparsity (4), p. 950 (used by Thms 2–3 and Thm S; Thm 4 instead assumes a fixed candidate subset and Condition 4, p. 957); NH14 Cond. 4.3, p. 11, "the size of the true model |t| is fixed" (P17).
+  - (a) SL strict sparsity (4), p. 950 (used by Thms 2–3; Thm S assumes a sparse true model t, SLs p. 13; Thm 4 instead assumes a fixed candidate subset and Condition 4, p. 957); NH14 Cond. 4.3, p. 11, "the size of the true model |t| is fixed" (P17).
   - (b) s0 ∈ {5, 10} in S1/S2.
 - **Weaker alternatives.**
   - Growing s0. Fable's route suggests s0²·log p = o(n), s0·(log p)² = o(n) and log s0 = o(η² price) (Fable Q5). `rem:sharp`(a) (which requires s ≤ min(K−1, p/2)) bounds how fast s0 may grow for π(S0|y) → 1; the upper rate s√(log p/n) is not a universal necessity for growing s (Astra R2). **Recorded as a growth remark**, not adopted: the owner's targets use fixed s.
@@ -84,7 +87,7 @@ Each row gives the exact statement, where the proof uses it, its defence, and th
   - (a) Same type as SBJ Assumption 1, log p = O(n^α), p. 14 (P17 B2), and Jiang 2007 Cor 1, K_n ≤ e^{Cn^ξ}, p. 10 (PN C7).
   - (b) log p/√n is 0.20–0.38 on S1 and 0.69–0.98 on S2 (D1 E6).
 - **Risk.** **High at the proposed rate** (Astra R2 Q1). Fable's step 3 fails: at log p = n^{1/3}, A-DIM′ holds but log C(p, q) ≍ n^{2/3} exceeds the testing budget nε² ≍ n^{1/3}. Moreover, the delivered proof localises to sizes s0 + O(t/log n) by fractional Bayes-factor moments whose factor p^{1−λ}n^{−λ/2} is not controlled for super-polynomial p. A proof needs localisation at size ≈ t/log p or a direct predictive bound. **Status: conjecture**, not part of any released statement; no impossibility follows from the failed route.
-- **A-DIM″ (an Engineering option, not adopted).** A cap K_n ≤ c·n/log p solves the isometry inequality but **not** the testing inequality (Astra R2), so it does not by itself give TD at log p = o(n). A *fixed* feasible cap ≥ s is a distinct, easier case. Compare the NH14 cap m_n(ν) = p ∧ n/((2+ν) log p), pp. 10–11 (P17 B6).
+- **A-DIM″ (an Engineering option, not adopted).** A cap K_n ≤ c·n/log p solves the isometry inequality but **not** the testing inequality (Astra R2), so it does not by itself give TD at log p = o(n). A *fixed* feasible cap ≥ s is a distinct, easier case. Compare the NH14 cap m_n(ν) = p ∧ n/((2+ν) log p), p. 6 (used in Cond 4.5, p. 11) (P17 B6).
 
 ### A-SUBG — sub-Gaussian rows on sparse directions, relative to their own variance
 - **Statement.** Every predictor has positive variance, and E exp(λuᵀζ) ≤ exp(L²λ²Var(uᵀζ)/2) for all λ and all u with at most k_n nonzero entries (the window in the header), ζ_j = (x_j − E x_j)/sd(x_j) (or5 `asm:dist`(c), already Σ-relative). The constant L is common to all window sizes. A-SUBG is a population condition; the sample isometry below is derived from it only on sets of size ≤ q_n(M) ≤ n (O(log n) at a fixed level, ≤ C_q√n for M_n ≤ √n/log n), so a window k_n > n is not contradictory and no sample–population closeness is claimed beyond q_n(M).
@@ -105,8 +108,8 @@ Each row gives the exact statement, where the proof uses it, its defence, and th
   - (a) **Comparison of objects, scales and windows — not dominance** (council R1, all three seats). A-NEC is a lower floor on a *population* correlation matrix, on q_n-sets, with a vanishing value c_ψ/n, and it works only together with A-SUBG (for transfer). The precedents differ in object and window:
     - NH14 Cond. 4.5, pp. 11, 17, bounds the minimum **nonzero** *sample* eigenvalue and expressly allows exact dependence (p. 17), which A-NEC excludes; its floor ≳ p_n^{−κ} can be smaller than c_ψ/n at large p, and NH14 also impose an upper bound (P17 B6).
     - SBJ Assumption 4, p. 14, bounds its nonzero-eigenvalue quantity ν_{k*} from (8), indexed through min(n, |k|); we do not claim it expressly allows duplicates (Sol R2).
-    - SL (26), SLs p. 15, is a **two-sided sample** tail condition with a vanishing lower and a growing upper threshold (Cor S1 chooses such a pair; l_n ≫ r̄_n log P_n/n, Cor S1 uses l_n = log^{k₂}n/√n) on sets of size r̄_n + |t|; SL call their (22) "hardly satisfied" (SLs pp. 15–16).
-    - SL Condition 3's Gaussian sufficient form ch₁{var(x)} ≻ ε_n² (pp. 955–956) is SL's own precedent for a vanishing population floor. A-NEC at the 1/n scale does not supply SL's screening separation, which is A-MARGIN-H's job.
+    - SL (26), SLs p. 15, is a **two-sided sample** tail condition on sets of size r̄_n + |t| (Thm S also needs (23), l_n ≫ r̄_n log P_n/n; Cor S1 takes a vanishing l_n = log^{k₂}n/√n and a growing l′_n); SL call their (22) "hardly satisfied" (SLs pp. 15–16).
+    - SL Condition 3's Gaussian sufficient form ch′₁{var(x)} ≻ ε_n² (smallest eigenvalue; standard normal predictors; SL pp. 955–956) is SL's own precedent for a vanishing population floor. A-NEC at the 1/n scale does not supply SL's screening separation, which is A-MARGIN-H's job.
     - BRT09 Assumption 2, p. 9 (c/log n) and MY09 ("slowly vanishing") are sample floors on other windows.
     - **No blanket ordering is claimed** (council R2, all seats). Where the regimes overlap, c_ψ/n is below the BRT09 (c/log n) and MY09 floors and below SL (26)'s lower threshold l_n ≫ r̄_n log P_n/n; NH14's p_n^{−κ} can be smaller still at large p. As *condition sets* (object, normalisation, window) none is uniformly weaker.
   - (b) The population floor (1−ρ)/(1+ρ) is 0.176–1, i.e. n × floor = 8.8–250 (D1 E5); the slack relative to c_ψ/n is this number divided by c_ψ.
@@ -121,7 +124,7 @@ Each row gives the exact statement, where the proof uses it, its defence, and th
 - **Used in.** The Fubini denominator, i.e. the fixed-endpoint lower bound of §3.1 step 1 for the normalised contrast density (order n^{−s0/2} times the variance-integration factor ≍ n^{−1/2}, on a high-probability event; Sol R2); keeping σ̂² in a fixed range; the unit-ridge term ‖β̂_S0‖²/(n+1). **Verify at proof audit** that nothing else uses coordinatewise boundedness (Fable Q5).
 - **Defence.**
   - (a) **Direct counterpart: SL approximate sparsity (3), p. 950**: lim Σ_j |β*_j| < ∞, with standardised predictors and fixed σ*, implies A-BS.
-  - (a) YWJ (7a), p. 7: "some form of upper bound on the norm ‖β*‖₂ in terms of the g-hyperparameter is required" (P17 B4b); SC11 Assumption 2.7, p. 7. Both bounds grow with n (with g ≍ p^{2α} in YWJ, with φ_n in SC11), whereas A-BS uses a fixed constant b̄; the precedent is for the type of condition, not its strength.
+  - (a) YWJ (7a), p. 7: "some form of upper bound on the norm ‖β*‖₂ in terms of the g-hyperparameter is required" (P17 B4b); SC11 Assumption 2.7, p. 7. Both bounds may grow with n (with g ≍ p^{2α} in YWJ, with φ_n in SC11), whereas A-BS uses a fixed constant b̄; the precedent is for the type of condition, not its strength.
   - (b) max|β|sd/σ ≈ 1.17 (1.175) and ν ≤ 6 in every setting (D1 E4).
 - **Weaker alternatives.** The aggregate energy pair (Astra Q5) / A-BS′ (Fable Q5): recorded, not adopted, until the size lemma is re-proved under it. All targets keep A-BS.
 
@@ -170,7 +173,7 @@ Each row gives the exact statement, where the proof uses it, its defence, and th
     - Rossell 2022's non-centrality λ_tm, arXiv v7 p. 10 (PN D13).
     - **Genre.** Corollary C-ii is the standard sparse-eigenvalue plus beta-min pair; (U2b) adds only the projection-geometry coefficient ā, a function of a population variance share (no design family).
   - (a) Necessity of the log p order: Wainwright 2009 Thm 2, arXiv v2 p. 4 (Gaussian design, averaged error; PN B5).
-    Fletcher–Rangan–Goyal Thm 1, arXiv v1 p. 4: ML fails below ≈ 2σ² log p per predictor (constant derived by C2; PN B6).
+    Fletcher–Rangan–Goyal Thm 1 (i.i.d. Gaussian design, k → ∞), arXiv v1 p. 4: ML fails when the weakest coefficient energy is below ≈ 2σ² log p (constant derived by C2 from their (6); PN B6).
   - (b) **Deletion part (m = 0): S1 brackets κ = 1.** κ_multi (= κ_pop on S1, since κ_swap = κ_del there) is 0.64–0.70 at
     SNR 1 (0/100 exact in every cell) and 2.54–2.80 at SNR 2 (92–96/100). Multi-deletions bind on S1 in all 16 settings
     (D1 E1). The data κ uses d·price(s0−1) (P1 convention, log((2p−1−s0)/s0) + ½log(n+1), one off from the exact
@@ -360,7 +363,7 @@ Under A-MIS(iii) and A-SPARSE-C, and **conditional on each admissible C** (candi
 |---|---|---|---|---|
 | 1 | c_id > c1(s0, A), an explicit constant (`asm:margin`) | large proof constant. S1 recovers at κ ≈ 2.5–2.8 (D1), far below c1 | A-MARGIN-U with constant 2(1+η) for deletions, plus the leakage-priced term for added nulls. The converse (with A-NEC on T) shows 2 is sharp for deletions | **adopted** |
 | 2 | FSb: fixed b_lo ≤ \|β\| | S1 has β ∝ √(log p/n), so FSb is false as a sequence (D1 E4) | κ_n framing over triangular arrays | **adopted** |
-| 3 | p ≤ n^A | excludes exponential p, which SL cover (Cor 1) | DIM′ (log p)² = o(n) (Fable); log p = o(n) with a cap (A-DIM″) | **conjecture TD′, high proof risk** (Astra R2: the testing step fails at log p = n^{1/3}); a cap fixes isometry, not testing. p ≤ n^A stays for released statements |
+| 3 | p ≤ n^A | excludes stretched-exponential p (log p = O(n^α), α < 1), which SL cover (Cor 1) | DIM′ (log p)² = o(n) (Fable); log p = o(n) with a cap (A-DIM″) | **conjecture TD′, high proof risk** (Astra R2: the testing step fails at log p = n^{1/3}); a cap fixes isometry, not testing. p ≤ n^A stays for released statements |
 | 4 | EF: sample sparse eigenvalue floor (`thm:post-fixed`) | vacuous on S2: greedy floor 1e−5 to 2e−4 at m2 (D1 E5); SL call (22) "hardly satisfied" | population A-NEC (c_ψ/n) plus the A-SUBG isometry | **adopted** (sample floors demoted to a remark) |
 | 5 | EFS / FLOOR-S0: fixed population floor | unnecessary: R_n(S0∖{j}) = nβ_j²Var(x_j \| rest) already enters the margin | drop it (both advisors) | **adopted** |
 | 6 | A-BS per coordinate | "why bounded signals?" | A-BS′ aggregate energy | **recorded, not adopted** until the size lemma prop:dist(i) is re-proved under it (Astra R2) |
@@ -401,7 +404,7 @@ Per-model prior odds of adding a variable at size k under BB(1, b): (k+1)/(p−k
 2. **MARGIN\* is superseded** by the population form of A-MARGIN-U (v1.4). Its dichotomy lemma ("separated proxies imply a joint proxy", Fable Q1(3d)) is no longer needed: pervasive-factor designs admit no small Q_n with vanishing outside leakage, so special case (ii) is unavailable, and they fall back to the interpolated (U2b) with Q_n = T, a real dichotomy stated as such.
 3. **Proof obligations for TS-b**: at fixed M the summation is a finite union; still to be written are the truncated superset sum (Beta moment bound per m with constants), the coded mixed odds **per base** (step 3, with Lemma W), the size lemma under A-BS (and its extension if A-BS′ is wanted), and the k > m̄_d step. Also c_L (TS-a) and the Cramér range for TM (i′). A growing M or J would need a genuinely uniform summation. Polynomial p and fixed s remain, against SL Cor 1.
 4. **Proofs not seen by Fable.** thm:dist and prop:dist: check that the size tail there is the Fubini argument and that A-BS is used only as in §2.
-5. **Literature still NOT VERIFIED (PN).** The Chen & Chen 2008 primary text (paywalled; second-hand via Luo & Chen p. 7 and SBJ p. 14); the Bayesian Analysis 2017 labels of Grünwald–van Ommen; Song–Liang's "Lemma A.2" (not in the supplement we hold).
+5. **Literature still NOT VERIFIED (PN).** Chen & Chen (2008) is now verified against the journal text (Thm 1, p. 763; owner copy), and Luo & Chen p. 7 attribute the same threshold; still not verified: the Bayesian Analysis 2017 labels of Grünwald–van Ommen and Song–Liang's "Lemma A.2" (not in the supplement we hold).
 6. **Cheap evidence that would strengthen the package** (Fable): S1 cells at SNR 1.25 and 1.5 (κ just above 1); a factor-proxy toy cell (ρ = 0.8). These need fits, so they need HQ approval and are not run here.
 7. **Mixed-rival evidence.** The headline (U2a) is checked on S1 over all 1,023 deletions with at most two of the five tested proxies (the U2a check; larger proxy sets not tested); the outside-leakage decay is closed-form. E9/E9b are a zero-slack diagnostic of the refined form only, with mean widths for d ≤ 3 (selected D for d ≥ 2), m = 1 (all S1 cells) and m = 2 (p = 500 only), on four S1 AR(1) designs. m = 2 at p = 5,000, m ≥ 3 and d ≥ 4 are not evaluated there.
 8. **No necessity result for (U2b).** The constant 2 is sharp only for deletions, and the common-base bound is conservative when many null sets leak in nearly the same direction.
