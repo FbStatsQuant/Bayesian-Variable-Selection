@@ -104,3 +104,16 @@ sha256 <- function(f) sub(" .*", "", system2("sha256sum", shQuote(f), stdout = T
 
 # Note on the verification against Engineering's tables: build_sim_outputs.R stops unless the recomputed
 # per-setting counts and means equal the *_permethod.tsv values (see SOURCES.md, "Checks").
+
+# SMC-BVS run summaries per fit (escalation of the particle number, min ESS/N, E-flags), from the JSON records.
+smc_summaries <- function(d, cache_dir, tag) {
+  f <- file.path(cache_dir, sprintf("smcsum_%s.tsv", tag))
+  if (file.exists(f)) return(fread(f))
+  d <- d[method == "smcbvs"]
+  files <- ifelse(startsWith(d$file, "/"), d$file, paste0(ENG, d$file))
+  L <- lapply(files, function(x) { s <- fromJSON(x, simplifyVector = FALSE)$summary
+    data.table(escalated = isTRUE(s$escalated), min_ess_over_N = as.numeric(s$min_ess_over_N), eflag_any = isTRUE(s$eflag_any)) })
+  out <- cbind(d[, .(setting_id, rep, method)], rbindlist(L))
+  fwrite(out, f, sep = "\t")
+  out
+}

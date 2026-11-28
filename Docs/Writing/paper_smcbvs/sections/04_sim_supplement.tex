@@ -97,3 +97,29 @@ Rows are grouped by beta-type (bt) and $\rho$; within a group $\nu$ runs over it
 \caption{Design S2, $n=100$, $\sz=10$: mean number of false positives.}\label{tab:supp-s2-fp-100}
 \input{figures/tables/supp_s2_fp_n100}
 \end{table}
+
+\begin{table}[p]\centering\scriptsize
+\caption{Design S2, $n=50$, $\sz=5$: mean size of the selected model $\abs{\Shat}$.}\label{tab:supp-s2-size-50}
+\input{figures/tables/supp_s2_size_n50}
+\end{table}
+
+\begin{table}[p]\centering\scriptsize
+\caption{Design S2, $n=100$, $\sz=10$: mean size of the selected model $\abs{\Shat}$.}\label{tab:supp-s2-size-100}
+\input{figures/tables/supp_s2_size_n100}
+\end{table}
+
+\begin{figure}[p]\centering
+\includegraphics[width=\textwidth]{figures/fig_s2_pr_supp}
+\caption{Design S2: mean precision against mean recall as $\nu$ increases from $0.05$ to $6$, by beta-type and $\rho$,
+pooled over $n$. Markers as in Figure~\ref{fig:s2-recall-fp}; ASI (dashed) is interim. An empty selection has precision
+one, so methods that often select nothing sit near the top at low recall.}\label{fig:supp-s2-pr}
+\end{figure}
+
+\begin{table}[htbp]\centering\small
+\caption{Design S2, interim paired comparison of SMC-BVS and ASI on the first $25$ data sets of each setting, at the
+three strongest signals. Shared: data sets on which both fits finished and passed the data checks. SMC-BVS only and
+ASI only: data sets on which exactly one of the two recovers $\Sz$. Exact McNemar tests on the pooled rows give
+$p=1$, $0.48$ and $2\times10^{-7}$ at $\nu=2.07$, $3.52$ and $6$. The comparison is interim and is not used to rank
+the two methods in Section~\ref{sec:sims-s2}.}\label{tab:supp-s2-paired}
+\input{figures/tables/supp_s2_paired_asi}
+\end{table}
