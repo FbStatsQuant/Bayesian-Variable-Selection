@@ -187,6 +187,13 @@ the decisive steps and found no gap (`lemmas/X.md:63–180`, `work/B_transfer/T.
 4. A Lean annotation per step: tier 1/2/3, and the axiom used (`LEAN_PLAN.md` §2), so Lead-L can start from the paper
    proof.
 5. POLICIES §14: scratch only under `.rc_tmp/`; Codex workers never delete and never write outside the worktree.
+6. Citing old proof files (`RECONCILIATION.md`, worker W1): cite each by registry claim + **checked sha**, never by its
+   header. 33 of 39 headers are stale (registry PROVED-CHECKED, sha = checked sha). The reconciliation notes go in a
+   per-ticket `STATUS.md`, **never** into the frozen files (that would break `verify_accepted.py`). Two files have VERSION
+   DRIFT: (i) `W3-DIST/work/E_bridges/B3.md` (current 2caeb0ea…, checked 47ffb2b6…) is superseded by B3′, and its fresh
+   cross-family check is S-3′; (ii) `W3-DIST/work/D_output/P6_DISTC.md` (current 14c14197…, checked 0b0b1556…) feeds
+   only Cor C, which is not one of our targets. Wave 2 must not cite it. If Cor C is wanted later, it first needs one
+   Sol line check at :71–72 and :158. W3-POST:Cor-1R (unchecked) is not a premise of any target; do not cite it.
 
 ## 6. Order and staffing (proposal to the Manager)
 
