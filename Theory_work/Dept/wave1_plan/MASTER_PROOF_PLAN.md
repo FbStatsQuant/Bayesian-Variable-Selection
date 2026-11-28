@@ -1,6 +1,6 @@
 # MASTER PROOF PLAN: Wave 2 (Lead-S, Lead-M, Lead-D) and the hand-off to Wave 3 (Lead-L) — Lead-A v0.1, 2026-11-28
 
-**Status: DRAFT v0.1 for the Plan Council.** The statements proved here are those of `LOCKED_STATEMENTS.md` (= [LS]).
+**Status: DRAFT v0.2 (Astra adviser items 3, 6 folded in) for the Plan Council.** The statements proved here are those of `LOCKED_STATEMENTS.md` (= [LS]).
 Paths are relative to `Theory_work/Wave3/` unless they start with `Theory_work/` or `Docs/`.
 Aliases: [P1] = T01/T02 `PROOF_v3.tex`, [P3] = T03 `PROOF_v2.tex` (both pinned under
 `Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/main@c4ef0dc/Docs/Theory/proofs/`);
@@ -76,8 +76,8 @@ for the unchanged fixed-design steps.
   $J_n\subseteq J^{\rm samp}_n(c)$ on $\mathcal A_n$ (with population $J_n$ deterministic), and under A7′(b), BM$(c)$
   holds with this common $c$. This replaces the last sentence of [B3] Step 5 (BM-∞) and the envelope clause of Step 6
   (packet §2.2).
-- **S-3 (KEY: small-set floor on the tightened window).** On $\mathcal A_n$, A7′(a) on sets of size $\le\min\{p,s_0+j_0\}$
-  gives $(F_\lambda;\varphi_0)$, $\varphi_0^2=\varphi^2/4$, on every $S_0\cup J$ with $|J|\le j_0$ ([B3] Step 3, with
+- **S-3 (KEY: small-set floor on the tightened window).** On $\mathcal A_n$, A7′(a) (anchored: $S_0\cup J$, $|J|\le j_0$;
+  sizes $\le\min\{p,s_0+j_0\}$) gives $(F_\lambda;\varphi_0)$, $\varphi_0^2=\varphi^2/4$, on every $S_0\cup J$ with $|J|\le j_0$ ([B3] Step 3, with
   the window $(2A+3)s+2$ replaced by $\min\{p,s_0+j_0\}$; Step 0(1) still puts these sets inside $q_n$). Check that
   $0<\varphi_0\le\tfrac12$.
 - **S-4 (assembly via L-RAND).** On $\mathcal A_n$ the hypotheses of L-T03♯ hold with common constants
@@ -114,7 +114,9 @@ a.s. event $\Omega_0$ of L-FIX (and of L-LIL in (iii)), and argue pathwise.
   $\log\frac{\pi(S\mid y)}{\pi(\mathcal C\mid y)}\le O(1)+\tfrac{|\mathcal C|}2\log(n+1)-\nu\log\frac{Q_S}{Q_{\mathcal C}}$,
   where $\nu\log(Q_S/Q_{\mathcal C})=\tfrac n2\log\frac{1-\rho_S^2}{1-\rho^2_{\mathcal C}}(1+o(1))\to\infty$ linearly in $n$. So
   every such $S$ has posterior mass $\to0$ a.s., which proves (ii). This is almost sure, a strengthening of SL Cor 2.
-- **M-3 (KEY: density).** For $S\supseteq S_0^{\mathcal C}$ the population best linear predictor from $(1,x_S)$ is
+- **M-3 (KEY: density; tied supersets are the crucial case).** Every superset of $S_0^{\mathcal C}$ has the same limiting
+  score per observation, so M-2 cannot rank them. Density must therefore be proved separately within each containing
+  model, then summed over the finite family (adviser memo, item 6). For $S\supseteq S_0^{\mathcal C}$ the population best linear predictor from $(1,x_S)$ is
   $(\alpha_{\mathcal C},\beta^{\mathcal C}|_S)$, with residual variance $\sigma^2_{\mathcal C}$ (the normal equations for
   $S$ are a subset of those for $\mathcal C$). The conditional NIG posterior given $S$ has mean $\to$ the pseudo-true
   value and spread $O(1/n)$ a.s.; map back to raw units with the a.s. convergent sample moments (continuity). Apply
@@ -123,11 +125,14 @@ a.s. event $\Omega_0$ of L-FIX (and of L-LIL in (iii)), and argue pathwise.
   $\bar y-\bar x^\top\beta$; the IG$(a_0,b_0)$ prior on the standardised scale (rate $b_0s_y^2$ in raw units); the
   truncation $\min\{1,\cdot\}$ in L-HELL, which turns the mean error into a bounded dominated quantity.
 - **M-4 (KEY: exclusion).** For $S\supsetneq S_0^{\mathcal C}$, with $T=S_0^{\mathcal C}$: in the sample
-  $y-\alpha_{\mathcal C}\mathbf 1-X_{\mathcal C}\beta^{\mathcal C}=u$ exactly, so the exact (ridge-free) gain is
-  $u^\top(P_{[1,X_S]}-P_{[1,X_T]})u=\|(\tilde X^\top\tilde X)^{-1/2}\tilde X^\top u\|^2$, with $\tilde X$ the columns of
-  $S\setminus T$ residualised on $[1,X_T]$. Then $\tilde X^\top u=\sum_i(x_{i,S\setminus T}-\hat\Gamma z_i)u_i$ with
-  $\hat\Gamma\to\Gamma$ a.s., and L-LIL gives $\|\tilde X^\top u\|=O(\sqrt{n\log\log n})$, while
-  $(\tilde X^\top\tilde X/n)^{-1}=O(1)$. So the gain is $O(\log\log n)$ a.s. The ridge correction is $O(1)$, the prior
+  $y-\alpha_{\mathcal C}\mathbf 1-X_{\mathcal C}\beta^{\mathcal C}=u$ exactly ($u_i=\varepsilon_{\mathcal C,i}$). Since
+  $\alpha_{\mathcal C}\mathbf 1+X_T\beta^{\mathcal C}_T$ lies in both column spans, the exact (ridge-free) gain is
+  $\mathrm{RSS}_T-\mathrm{RSS}_S=u^\top(P_{Z_S}-P_{Z_T})u\le u^\top P_{Z_S}u=(Z_S^\top u)^\top(Z_S^\top Z_S)^{-1}(Z_S^\top u)$,
+  where $Z_S=[\mathbf 1,X_S]$ is **raw and uncentred**. Then $Z_S^\top u=\sum_iZ_{i,S}u_i$ is an i.i.d. sum with mean 0
+  (normal equations), and L-LIL gives $\|Z_S^\top u\|=O(\sqrt{n\log\log n})$. Also $(Z_S^\top Z_S/n)^{-1}\to(EZ_SZ_S^\top)^{-1}$
+  (SLLN; nonsingular by A8). So the gain is $O(\log\log n)$ a.s. This form (adviser memo, item 6) avoids applying an
+  i.i.d. LIL to empirically centred products. Still to verify: $Q^c_S-\mathrm{RSS}_S=O_{\rm a.s.}(1)$ for the coded
+  ridge score. The ridge correction is $O(1)$, the prior
   ratio is $O(1)$, and the Occam factor is $-\tfrac12|S\setminus T|\log n+O(1)$. Hence $\pi(S\mid y)/\pi(T\mid y)\to0$
   a.s.; with (ii), $\Pi(S_0^{\mathcal C}\mid D_n)\to1$ a.s., and L-POST gives HPM = MPM eventually.
   Moment bookkeeping: the intercept coordinate needs $Eu^2<\infty$ (automatic); the others need

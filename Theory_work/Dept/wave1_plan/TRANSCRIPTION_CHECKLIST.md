@@ -17,7 +17,7 @@ are the packet's §4 (they must survive transcription); T-6 onwards are added by
 | T-10 | $p$ = raw dimension; $p_{\rm ret}=p$ on the design event; exceptional data sets (fewer than 2 non-constant columns, constant $y$) count as failures | all | D-3; S-4 |
 | T-11 | Units: $b_j=|\beta^*_j|\operatorname{sd}(x_j)/\sigma_*$ uses **population** sd and $\sigma_*$; coded $\theta^*_j=\hat s_j\beta^*_j/\sigma_*$; $\hat s^2_j\ge\operatorname{Var}(x_j)/2$ on L-DES | S, M1 | S-2 |
 | T-12 | Hellinger normalisation: $d_H$ = SL's distance divided by $\sqrt2$; the conversion of SL's $\exp(-c_1n\epsilon^2)$ to $n^{-c_1M}$ | D | statement |
-| T-13 | A7′(a) window $\min\{p,s_0+j_0\}$, $j_0=\lceil(2A+1)s_0\rceil+1$; A5 on the logarithmic window $q_n(1)$; the two floors are not conflated | S | S-3 |
+| T-13 | A7′(a) is anchored ($S_0\cup J$, $|J|\le j_0$), window $\le\min\{p,s_0+j_0\}$, $j_0=\lceil(2A+1)s_0\rceil+1$; A5 on the logarithmic window $q_n(1)$; the two floors are not conflated | S | S-3 |
 | T-14 | Constants: $c_H,M_0$ depend only on $(s,A,L,c_\psi,\bar b,a_0,b_0)$; $C_{\rm sel}$ only on $(s,A,\varphi)$; the paper states which constants are explicit | D, S | statements |
 | T-15 | Under A8 nothing uses a Gaussian-likelihood identity of the truth (e.g. $E^*[m_b/f_0]=1$, exact $\chi^2$ laws) | M | M-3, M-4 |
 | T-16 | Thm M(ii) is a.s. (stronger than SL's in-probability Cor 2); (iii)'s moment hypothesis is $E(x_j^2\varepsilon^2_{\mathcal C})<\infty$ for $j\in\mathcal C$ (the intercept needs only $E\varepsilon^2_{\mathcal C}<\infty$) | M | M-2, M-4 |
@@ -25,3 +25,5 @@ are the packet's §4 (they must survive transcription); T-6 onwards are added by
 | T-18 | Status words in headers: only DRAFT / PROMISING / DEFINITIVE with a check record; reconcile old headers (`RECONCILIATION.md`) before the supplement cites them | all | §5 of the plan |
 | T-19 | The old draft Thm 3.2 is not claimed as a special case of Cor S1 (non-nesting note in [LS]) | S, Writing | [LS] Cor S1 |
 | T-20 | $C_{\rm sel}$ labelled "not sharp"; the numerical value with its units (≈111.4 uniform; ≈49.8 at $p=n^2$) only in the supplement | S, Writing | [LS] Thm S note 1 |
+| T-21 | $f_0$ is defined by the expected Gaussian log score; "KL projection" is used only when a finite-KL working law exists (discrete $y$) | M | [LS] Thm M note 3 |
+| T-22 | A8 is one fixed law and one i.i.d. sequence; no $n$-dependent law in Thm M | M | [LS] A8 |
