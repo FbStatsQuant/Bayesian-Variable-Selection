@@ -1,6 +1,6 @@
 # MASTER PROOF PLAN: Wave 2 (Lead-S, Lead-M, Lead-D) and the hand-off to Wave 3 (Lead-L) — Lead-A v0.1, 2026-11-28
 
-**Status: DRAFT v0.2 (Astra adviser items 3, 6 folded in) for the Plan Council.** The statements proved here are those of `LOCKED_STATEMENTS.md` (= [LS]).
+**Status: DRAFT v0.3 (Astra memo items 3, 6; Fable memo R1–R3 folded in) for the Plan Council.** The statements proved here are those of `LOCKED_STATEMENTS.md` (= [LS]).
 Paths are relative to `Theory_work/Wave3/` unless they start with `Theory_work/` or `Docs/`.
 Aliases: [P1] = T01/T02 `PROOF_v3.tex`, [P3] = T03 `PROOF_v2.tex` (both pinned under
 `Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/main@c4ef0dc/Docs/Theory/proofs/`);
@@ -46,7 +46,7 @@ exists.
 | **L-SCALE** scale reduction | Pathwise, $\Pi(\cdot\mid x,y)$ is the image of $\Pi(\cdot\mid x,\tilde y)$, $\tilde y=(y-a)/\sigma$, under $(S,\theta,v)\mapsto(S,\sigma\theta,\sigma^2v)$; plug-in intercepts transform affinely; $d_H$ is preserved draw by draw. Here $a,\sigma$ are deterministic (no response-dependent scaling: checklist T-5). | [DIST] B0 (l.385–390), W3-MISR R′(a′) "PROVED-CHECKED; council R2" | Lead-D | D, S, M1 | 1 |
 | **L-HELL** Hellinger reduction | For Gaussian conditionals sharing the $x$-marginal: $d_H^2(f_{S,\theta,v},f^\dagger)\le(v/\sigma_\dagger^2-1)^2+E_x\min\{1,\Delta(x)^2/(4\sigma_\dagger^2)\}$, $\Delta$ = the difference of the conditional means. Deterministic; the target $f^\dagger$ may be $f^*$ or $f_0$. | [DIST] Lemma H (l.322–327; "not line-checked", so the owner line-checks it) | Lead-D | D, M(i) | 2 (needs the Gaussian affinity identity, axiom G1) |
 | **L-DES** design events | Under A4 (and A3), on an event of probability $\ge1-5p\,e^{-cn/L^4}$: (i) $\tfrac12\le\hat s_j^2/\operatorname{Var}(x_j)\le2$ for all $j$ (no column dropped); (ii) for all $w$ supported on $q$ coordinates and all $a$, $n^{-1}\sum_i(a+w^\top\zeta_i)^2\ge\tfrac12(a^2+\operatorname{Var}(w^\top\zeta))$, provided $q\log(ep/q)\le c'n/L^4$; (iii) with A5 on $q$-sets: $\lambda_{\min}(G_T)\ge c_\psi/8$ for $|T|\le q$; (iv) under A6, $\|\mu\|^2\le2s^2\bar b^2\sigma_*^2n$ and $\|\theta^*\|^2\le2s\bar b^2\sigma_*^2$. | [DIST] B1 (l.391–395), B2-core (l.396–399), B2 (l.400–408); `work/E_bridges/B1.md`, `B2core.md`, `B2.md` | Lead-D | D, S, M1 | 3 (Bernstein and the net argument: axiom P3) |
-| **L-FLOOR** two-floor bridge (B3′) | On the L-DES event with $q=q_n(1)$: A7′(a) ⇒ $(F_\lambda;\varphi_0)$ with $\varphi_0^2=\varphi^2/4$ on $S_0\cup J$, $|J|\le j_0$; A5 ⇒ $(F_w;g_0)$, $g_0=c_\psi/8$, on $S_0\cup J$, $|J|\le m^\sharp_n$, clipped at $p$; for each $j$, $\theta^{*2}_j\ge b_j^2/2$. Hence $b_j\ge C\sqrt{\log(p\sqrt n)/n}$ with $C>C_{\rm sel}$ ⇒ $\theta^{*2}_j\ge c\log n/(n\varphi_0^2)$ for a fixed $c>c_0$ (KEY S-2). | [B3] Steps 0, 3, 4 (checked items), Step 5 to be replaced; Amendments A-1, A-2 | Lead-S | S, M1 | 3 |
+| **L-FLOOR** two-floor bridge (B3′) | On the L-DES event with $q=q_n(1)$: A7′(a) ⇒ $(F_\lambda;\varphi_0)$ with $\varphi_0^2=\varphi^2/4$ on $S_0\cup J$, $|J|\le j_0$; A5 ⇒ $(F_w;g_0)$, $g_0=c_\psi/8$, on $S_0\cup J$, $|J|\le m^\sharp_n$, clipped at $p$; for each $j$, $\theta^{*2}_j\ge b_j^2/2$. Hence $\varphi b_j\ge C_\beta\sqrt{\log(p\sqrt n)/n}$ with $C_\beta>C_{\rm sel}$ ⇒ $\theta^{*2}_j\ge c\log n/(n\varphi_0^2)$ for a fixed $c>c_0$ (KEY S-2). | [B3] Steps 0, 3, 4 (checked items), Step 5 to be replaced; Amendments A-1, A-2 | Lead-S | S, M1 | 3 |
 | **L-T03♯** fixed-design selection core | Regime R1 ($s_0\ge1$ fixed, $2\le p\le n^A$, $s_0\le K$), Gaussian noise G, $(E)$, $(F_\lambda)$, $(F_w)$: (iv) for fixed $c>c_0$, $\Pi(S\not\supseteq J^{\rm samp}_n(c))=O_P(r_n)$, with $J^{\rm samp}_n(c)=\{j:\theta^{*2}_j\ge c\sigma_*^2\log n/(n\varphi_0^2)\}$; under BM$(c)$, (i) $1-\pi(S_0)=O_P(r_n)$ and (ii), (iii). | [T03R] §6 (l.159–209), council-accepted (`W3-T03ACC/REPORT.md` §2: three blind Sol line checks VERIFIED); [W3P] Thm 1 items 1–5 | Lead-S (cite; do not re-prove) | S, M1 | 3 (deterministic assembly; χ² facts as axioms P1, P2) |
 | **L-RAND** random-design transfer | If (X, θ*)-measurable events $\mathcal A_n$ with $P(\mathcal A_n)\to1$ carry the L-T03♯ hypotheses with common constants (and a common $c>c_0$), then its conclusions hold under the joint law, with $O_P$ uniform. | [W3P] Thm 1 item 6 (l.95–100); [POST] step (5) (`Theory_work/Wave2/W2-APP/lemmas/L1_POST.md`) | Lead-S | S, M1 | 2 |
 | **L-SIZE** size tail | Exact BB(1,p) tail (E1), $m^\sharp_n$ bounds; the posterior mass above $m^\sharp_n(\omega)$ is $O_P(e^{-\omega})$ (Lemma 1a/1a′); the exponential version is Lemma S. | [T03R] §1–2 (E1, E2); [W3P] Lemma 1a (l.40–55); [DIST] Lemma S (l.342–354) | Lead-D | D, S | 1 (E1, combinatorial) / 3 |
@@ -69,19 +69,25 @@ for the unchanged fixed-design steps.
   (L-DES at level $M=1$). Show $P(\mathcal A_n^c)\le5n^Ae^{-c_2n/L^4}\to0$ ([B3] Step 6 (vii)). On $\mathcal A_n$:
   $p_{\rm ret}=p$; $|\operatorname{supp}\theta^*|=s_0$; $(E;2s^2\bar b^2)$; $(F_w;c_\psi/8)$ on $S_0\cup J$ with
   $|S_0\cup J|\le\min\{p,s_0+m^\sharp_n\}\le q_n$ ([B3] Step 0 and Amendment A-1: **clip at $p$**).
-- **S-2 (KEY: new B3 step 5 with a fixed $c$).** On $\mathcal A_n$, $\theta^{*2}_j\ge b_j^2/2$. For $j\in J_n$ (population
-  strong set), $b_j^2\ge C^2\log(p\sqrt n)/n$ and $\log(p\sqrt n)\ge\tfrac12\log n$, so
-  $$\theta_j^{*2}\,\frac{n\varphi_0^2}{\log n}\ \ge\ \frac{C^2}{2}\cdot\frac12\cdot\frac{\varphi^2}{4}\ =\ \frac{C^2\varphi^2}{16}=:c\ >\ c_0$$
-  exactly when $C>C_{\rm sel}=4\sqrt{c_0}/\varphi$. The constant is common to all $n$ and all $p\ge2$. Hence
-  $J_n\subseteq J^{\rm samp}_n(c)$ on $\mathcal A_n$ (with population $J_n$ deterministic), and under A7′(b), BM$(c)$
-  holds with this common $c$. This replaces the last sentence of [B3] Step 5 (BM-∞) and the envelope clause of Step 6
-  (packet §2.2).
+- **S-2 (KEY: new B3 step 5 with a fixed $c$).** On $\mathcal A_n$, $\theta^{*2}_j\ge b_j^2/2$. For $j\in J_n$ (the
+  population strong set), $\varphi^2b_j^2\ge C_\beta^2\log(p\sqrt n)/n$, and $\log(p\sqrt n)\ge\tfrac12\log n$, so with
+  $\varphi_0^2=\varphi^2/4$:
+  $$\theta_j^{*2}\,\frac{n\varphi_0^2}{\log n}\ \ge\ \frac{\varphi^2b_j^2}{8}\cdot\frac{n}{\log n}\ \ge\ \frac{C_\beta^2}{8}\cdot\frac{\log(p\sqrt n)}{\log n}\ \ge\ \frac{C_\beta^2}{16}=:c\ >\ c_0$$
+  exactly when $C_\beta>C_{\rm sel}=4\sqrt{c_0}$. The constant is common to all $n$ and all $p\ge2$. Hence
+  $J_n\subseteq J^{\rm samp}_n(c)$ on $\mathcal A_n$ ($J_n$ is deterministic), and under A7′(b), BM$(c)$ holds with this
+  common $c$. This replaces the last sentence of [B3] Step 5 (BM-∞) and the envelope clause of Step 6 (packet §2.2).
 - **S-3 (KEY: small-set floor on the tightened window).** On $\mathcal A_n$, A7′(a) (anchored: $S_0\cup J$, $|J|\le j_0$;
   sizes $\le\min\{p,s_0+j_0\}$) gives $(F_\lambda;\varphi_0)$, $\varphi_0^2=\varphi^2/4$, on every $S_0\cup J$ with $|J|\le j_0$ ([B3] Step 3, with
   the window $(2A+3)s+2$ replaced by $\min\{p,s_0+j_0\}$; Step 0(1) still puts these sets inside $q_n$). Check that
   $0<\varphi_0\le\tfrac12$.
-- **S-4 (assembly via L-RAND).** On $\mathcal A_n$ the hypotheses of L-T03♯ hold with common constants
-  $(M,\varphi_0,g_0,c)=(2s^2\bar b^2,\varphi/2,c_\psi/8,C^2\varphi^2/16)$. By L-RAND, T03♯(iv) gives
+- **S-3′ (KEY: fresh line check of the modified bridge B3′).** [B3] is headed "DRAFT (by this seat, unchecked)" and is
+  written for BM-∞ and exactly $s$ nonzero coefficients (Fable memo R1). B3′ = [B3] with S-2, S-3 and amendments A-1, A-2
+  is a new statement and gets its own cross-family (Sol) line check before the PROMISING review.
+- **S-4 (assembly via L-RAND).** *Alternative spine (Fable R1), to be chosen by Lead-S:* drop the diagonal transfer.
+  Write one per-$n$ bound conditional on $(X,\theta^*)$ over the design event and integrate, e.g.
+  $E\delta_n\le Cr_n+P(\mathcal A_n^c)$ (`W3-POST2/lemmas/C_expectation.md:8-15`, case (i)). Nothing response-dependent
+  then enters before conditioning. Part (a) still uses T03♯(iv) per $n$. On $\mathcal A_n$ the hypotheses of L-T03♯ hold with common constants
+  $(M,\varphi_0,g_0,c)=(2s^2\bar b^2,\varphi/2,c_\psi/8,C_\beta^2/16)$. By L-RAND, T03♯(iv) gives
   $\Pi(S\not\supseteq J^{\rm samp}_n(c))=O_P(r_n)$, hence $\Pi(S\not\supseteq J_n)\le\Pi(S\not\supseteq J^{\rm samp}_n(c))+\mathbf 1_{\mathcal A_n^c}$,
   which is (a). Under A7′(b), T03♯(i)–(iii) give (b), with L-POST for the PIPs, the HPM and the MPM. Replace the
   replacement-design device of [B3] Amendment A-2 by the same device verbatim (it handles $p_{\rm ret}\ne p$ off
@@ -89,8 +95,8 @@ for the unchanged fixed-design steps.
 - **S-5 (KEY: independence and measurability).** Verify that no step uses a response-dependent scaling before
   conditioning on the design (checklist T-5): $\theta^*=D_x\beta^*/\sigma_*$ is design-measurable, $J^{\rm samp}_n(c)$ is
   design-measurable, and $J_n$ is deterministic. Verify that the noise is independent of $(X,\theta^*)$ under A1.
-- **S-6 (Cor S1).** $b_{\min}\ge\underline b$ fixed ⇒ $b_{\min}\ge C\sqrt{\log(p\sqrt n)/n}$ for all large $n$
-  (because $\log(p\sqrt n)/n\le(A+\tfrac12)\log n/n\to0$), for any $C$. Apply (b).
+- **S-6 (Cor S1).** $b_{\min}\ge\underline b$ fixed ⇒ $\varphi b_{\min}\ge C_\beta\sqrt{\log(p\sqrt n)/n}$ for all large $n$
+  (because $\log(p\sqrt n)/n\le(A+\tfrac12)\log n/n\to0$), for any $C_\beta$. Apply (b).
 - **Risks.** Low. Known traps: the window clip at $p$ (T-1); population vs sample strong sets (S-2); $s_0$ varying (S-0).
   The fixed-design core is accepted; nothing new is probabilistic.
 - **Not in scope for Criterion 2:** the sharpened constant (packet §5; needs Astra's extra design estimate); $s_0=0$.
@@ -141,7 +147,8 @@ a.s. event $\Omega_0$ of L-FIX (and of L-LIL in (iii)), and argue pathwise.
   A10 is A2 for that problem; $|\mathcal C|\le n^A$ is A3. With the candidate A4–A6 (and A7′), apply Thm D and Thm S
   verbatim. Here $f_0$ is the true joint density of $(x_{\mathcal C},y)$. Record that $\mathcal C$ is deterministic
   (checklist T-9).
-- **Risks.** Low; everything is elementary. Watch: (1) M-1's uniformity over the finitely many $S$ (fine pathwise); (2)
+- **Risks.** Low; everything is elementary (Fable R2 checked the leading terms: the ridge difference between nested
+  supersets is $O(\log\log n/n)$ before the factor $\nu/(2b+Q)=O(1)$). Watch: (1) M-1's uniformity over the finitely many $S$ (fine pathwise); (2)
   the ridge in $Q_S$ vs the exact projection in M-4; (3) no use of a Gaussian likelihood identity (e.g. $E^*[m_b/f_0]=1$)
   anywhere, because the law is arbitrary.
 - **Optional (not Criterion 2):** the in-probability version for a law that changes with $n$, with a risk gap
@@ -167,7 +174,7 @@ the decisive steps and found no gap (`lemmas/X.md:63–180`, `work/B_transfer/T.
 - **D-4.** Assemble forward: L-SCALE → L-DES → DIST-1 at $t=M\log n/C^2$ → Theorem A(i). Cite Lemmas X, T, S, V by
   ID@version from DEPS.tsv; write the assembly (Remarks (1)–(4), l.261–267) in full.
 - **D-5 (optional).** The a.s. corollary for $c_HM>1$ (Borel–Cantelli), as a remark.
-- **Risks.** Low–medium: the transcription is long (Lemma X is the core), and the proof files' headers must agree with
+- **Risks.** Low–medium. Fable led W3-DIST, so the D line check must be non-Fable (Sol). The transcription is long (Lemma X is the core), and the proof files' headers must agree with
   DEPS.tsv first (RECONCILIATION.md).
 
 ## 5. Common requirements for every Wave 2 proof file

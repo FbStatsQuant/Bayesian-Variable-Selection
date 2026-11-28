@@ -1,4 +1,4 @@
-# TRANSCRIPTION CHECKLIST (Wave 2 proofs → paper and supplement) — Lead-A v0.1, 2026-11-28
+# TRANSCRIPTION CHECKLIST (Wave 2 proofs → paper and supplement) — Lead-A v0.3, 2026-11-28
 
 Every Wave 2 proof file and every Writing transcription is ticked against this list before council review. T-1 to T-5
 are the packet's §4 (they must survive transcription); T-6 onwards are added by Lead-A from the proof plan.
@@ -10,7 +10,7 @@ are the packet's §4 (they must survive transcription); T-6 onwards are added by
 | T-3 | The starting $n$ may depend on $M$: "for every fixed $M\ge M_0$ and all $n\ge n_0(M)$" | D, M1(i) | D-2(3) |
 | T-4 | Selection assumes $s_0\ge1$ ($s_0^{\mathcal C}\ge1$ in Cor M1(ii)); $s_0=0$ is not claimed | S, M1 | S-0 |
 | T-5 | No response-dependent scaling before conditioning on the design: the scale reduction uses deterministic $(\alpha^*,\sigma_*)$, and $\theta^*$, $J^{\rm samp}_n$ are design-measurable | S, D | S-5; L-SCALE |
-| T-6 | The beta-min constant is strict: $C>C_{\rm sel}=4\sqrt{c_0}/\varphi$ gives a common $c=C^2\varphi^2/16>c_0$ for all $p\ge2$; $c_0$ is maxed over $1\le s_0\le s$ | S | S-2 |
+| T-6 | The beta-min constant is strict: $C_\beta>C_{\rm sel}=4\sqrt{c_0}$ (A7′(b) is $\varphi b_{\min}\ge C_\beta\sqrt{\cdot}$) gives a common $c=C_\beta^2/16>c_0$ for all $p\ge2$; $c_0$ is maxed over $1\le s_0\le s$ | S | S-2 |
 | T-7 | $s_0$ may vary with $n$ in $\{1,\dots,s\}$: the subsequence argument (R1 assumes $s_0$ fixed) | S, M1 | S-0 |
 | T-8 | Population strong set $J_n$ (defined by $b_j$) vs sample $J^{\rm samp}_n(c)$ (defined by $\theta^*_j$): $J_n\subseteq J^{\rm samp}_n(c)$ on the design event | S(a) | S-2 |
 | T-9 | The candidate set $\mathcal C$ is fixed before the data (or chosen on independent data); Cor M1 is conditional on $\mathcal C$ | M, M1 | M-5 |
@@ -27,3 +27,5 @@ are the packet's §4 (they must survive transcription); T-6 onwards are added by
 | T-20 | $C_{\rm sel}$ labelled "not sharp"; the numerical value with its units (≈111.4 uniform; ≈49.8 at $p=n^2$) only in the supplement | S, Writing | [LS] Thm S note 1 |
 | T-21 | $f_0$ is defined by the expected Gaussian log score; "KL projection" is used only when a finite-KL working law exists (discrete $y$) | M | [LS] Thm M note 3 |
 | T-22 | A8 is one fixed law and one i.i.d. sequence; no $n$-dependent law in Thm M | M | [LS] A8 |
+| T-23 | Theorem thresholds inherit $n_c$ from A4–A5 at $c=C_qM$ (the "for every $c$ there is $n_c$" wording) | D, S | [LS] §0 |
+| T-24 | Outside $\{p_{\rm ret}=p\}$, the design-only replacement of [B3] Amendment A-2 is kept | S | S-4 |

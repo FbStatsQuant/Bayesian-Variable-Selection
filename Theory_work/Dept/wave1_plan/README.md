@@ -8,7 +8,7 @@ then (2) every targeted theorem has a PROMISING, council-reviewed proof (Wave 2)
 | `LOCKED_STATEMENTS.md` | final A1–A10 (A7′, A9′), with math, plain English and changes; final theorems Thm D, Thm S (a)/(b), Cor S1, Thm M, Cor M1 |
 | `MASTER_PROOF_PLAN.md` | shared-lemma interface contract; KEY-step routes for Lead-S, Lead-M, Lead-D; PROMISING vs DEFINITIVE |
 | `LEAN_PLAN.md` | Wave 3 Lead-L: modules, order, named axioms, acceptance |
-| `TRANSCRIPTION_CHECKLIST.md` | T-1 … T-20 |
+| `TRANSCRIPTION_CHECKLIST.md` | T-1 … T-24 |
 | `RECONCILIATION.md` | proof-file header statuses vs registry/DEPS check records (worker W1) |
 | `council/` | Plan Council briefs, reviews, triage tables, RESPONSE.md per round |
 

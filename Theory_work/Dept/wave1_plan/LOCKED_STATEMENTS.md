@@ -1,6 +1,6 @@
 # LOCKED STATEMENTS: final assumptions A1–A10 and final theorem list (Wave 1 Lead-A, v0.1, 2026-11-28)
 
-**Status: DRAFT v0.2 (v0.1 + Astra adviser memo items 1–3, 6, 8) for the Plan Council (bar ≥ 8.0).** Nothing is locked until the council clears it and the Theory
+**Status: DRAFT v0.3 (v0.1 + Astra memo items 1–3, 6, 8 + Fable memo §§1–4) for the Plan Council (bar ≥ 8.0).** Nothing is locked until the council clears it and the Theory
 Manager has ruled on every finding.
 Sources: HQ curated packet `Theory_work/Wave3/HQ_ADVISORS_2026-11-28/CURATED_PACKET.md` (= "the packet"; §n = its
 sections) and its five supporting files. Current draft: Writing `sections/03_theory.tex` at writing/main `df9da1e6`
@@ -27,8 +27,11 @@ Numbering. A1–A10 keep the draft's numbers. A7 is replaced by **A7′**, A9 by
 - A draw defines $f(x,y)=P_x(dx)\,\phi(y;\bar y+(x-\bar x)^\top\beta,\sigma^2)$.
   $d_H(f,g)=(1-\iint\sqrt{fg})^{1/2}$, which is Song & Liang's (SL's) distance divided by $\sqrt2$.
 - $r_n:=\sqrt{\log n/n}$; $\epsilon_n:=\sqrt{M\log n/n}$ for a level $M\ge1$.
-- **Sparse set:** a set of at most $c\log n$ predictors. A4 and A5 are required for every fixed $c>0$, for all large
-  $n$, with constants $L$, $c_\psi$ that do not depend on $c$ (as in the draft). Each theorem uses only one window
+- **Sparse set:** a set of at most $c\log n$ predictors. A4 and A5 are required in this form: **for every fixed $c>0$
+  there is $n_c$ such that, for $n\ge n_c$, they hold for all sets of at most $c\log n$ predictors**, with constants
+  $L$, $c_\psi$ that do not depend on $c$. This replaces the draft's ambiguous "for all sufficiently large $n$"
+  (l.74–75); $n_c$ is a property of the sequence of laws (Fable memo 1.3). The supplement states each theorem per
+  $n$, with the explicit window $q_n(M)=\min\{p,\lceil C_qM\log n\rceil\}$. Each theorem uses only one window
   $c$; see `MASTER_PROOF_PLAN.md` §1, shared lemma L-DES.
 - Exceptional data sets. The coded posterior is undefined if fewer than two columns are non-constant or $y$ is constant.
   Every probability statement counts such data sets as failures (the draft's convention, §3.1).
@@ -46,7 +49,8 @@ random.
 
 **A2 (Sparsity).** $s_0\le s$ for a fixed integer $s\ge0$.
 *Plain English:* only a few predictors matter, however many there are.
-*Change:* none. (The selection results add $s_0\ge1$ in their own statements.)
+$s_0$ may vary with $n$ inside $\{0,\dots,s\}$; constants are maxima over this range.
+*Change:* that sentence added. (The selection results add $s_0\ge1$ in their own statements.)
 
 **A3 (Dimension).** $2\le p\le n^A$ for a fixed $A\ge1$.
 *Plain English:* the number of predictors may grow like any fixed power of $n$ (the high-dimensional regime, by
@@ -75,8 +79,9 @@ limit.
 - **(a) Small-set floor (anchored at the true model).** $\lambda_{\min}\{\operatorname{Corr}(x_{S_0\cup J})\}\ge\varphi^2$
   for every set $J$ of at most $j_0$ predictors outside $S_0$, for a fixed $\varphi\in(0,1]$. Sets are subsets of
   $\{1,\dots,p\}$, so their size is automatically at most $\min\{p,s_0+j_0\}$.
-- **(b) Beta-min.** $b_{\min}\ge C\sqrt{\log(p\sqrt n)/n}$ for a fixed constant $C$. The selection theorem states how
-  large $C$ must be.
+- **(b) Beta-min.** $\varphi\,b_{\min}\ge C_\beta\sqrt{\log(p\sqrt n)/n}$ for a fixed constant $C_\beta$. The
+  assumption only names $C_\beta$; the quantifier "$C_\beta>C_0(s,A)$" sits in the theorem (Fable memo 1.5). With
+  $\varphi$ inside, $C_0$ depends only on $(s,A)$.
 
 *Plain English:* (a) the true predictors, together with any small group of other predictors (about $(2A+1)$ times the
 size of the true model), are not nearly collinear: none of them is strongly explained by the rest. (b) Every true effect exceeds the detection threshold
@@ -86,8 +91,12 @@ the support; the $\sqrt n$ is the cost of the unit-information prior.
 predictors with correlation $1-c/n$. They satisfy A5. At the threshold scale, the Kullback–Leibler divergence over $n$
 observations between "the effect is on $x_1$" and "the effect is on $x_2$" is $c\,b_{\min}^2\to0$. So no posterior can
 tell the two apart, and a beta-min condition with A5 alone cannot give selection.
-*Two floors.* A7′(a) is a fixed floor on sets of bounded size $O(s_0)$. A5 is the weak floor $c_\psi/n$ on logarithmic
-sets. Both are used, on different sets (`MASTER_PROOF_PLAN.md` L-FLOOR).
+*Two floors, on two windows that must not be merged (Fable memo 1.4).* A7′(a) is a fixed floor on the **strong window**
+$S_0\cup J$, $|J|\le j_0$, used only for the signal bound, the ridge correction and the rank of deletions. A5 (with A4)
+gives $\lambda_{\min}(G_T)\ge g_0$ on the **weak window** $S_0\cup J$, $|J|\le m^\sharp_n$, so $|T|\le\min(p,s_0+m^\sharp_n)$.
+That gives exact $\chi^2_{|J|}$ laws and the Occam factor for supersets, and absorbs rivals with more than $j_0$ nulls.
+A5 is used in the selection proof but not shown necessary there; the paper claims A5's necessity only for density
+(Prop. NEC, fixed-design core).
 *Sufficient form (simpler to read, stronger):* A7′(a) holds if $\lambda_{\min}\{\operatorname{Corr}(x_T)\}\ge\varphi^2$ for
 every set $T$ of at most $(2A+2)s+2$ predictors (since $s_0+j_0\le(2A+2)s+2$). The anchored form is the one the proof
 uses (`W3-POST/STATEMENT.md:68-70`, $(F_\lambda)$). It is strictly weaker: Astra's example of $j_0+1$ equicorrelated
@@ -100,8 +109,10 @@ main text, because A7 has no proof.
 
 **A8 (Fixed candidate dimension).** The pairs $(x_{\mathcal C,i},y_i)$, $i=1,2,\dots$, form **one** i.i.d. sequence of
 copies of $(x_{\mathcal C},y)$, whose joint law is fixed (it does not depend on $n$); $\mathcal C$ is a fixed set with
-$2\le|\mathcal C|<\infty$; $Ey^2<\infty$, $E\|x_{\mathcal C}\|^2<\infty$,
-$\operatorname{Var}(x_{\mathcal C})$ is nonsingular and $\sigma^2_{\mathcal C}>0$.
+$2\le|\mathcal C|<\infty$; **(a)** $Ey^2<\infty$, $E\|x_{\mathcal C}\|^2<\infty$,
+$\operatorname{Var}(x_{\mathcal C})$ is nonsingular and $\sigma^2_{\mathcal C}>0$; **(b)** (used only for exact
+support) $E(x_j^2\varepsilon^2_{\mathcal C})<\infty$ for every $j\in\mathcal C$. Results concern $n\ge2|\mathcal C|$,
+where the cap is $K=|\mathcal C|$.
 *Plain English:* a fixed set of candidate predictors is used, with any joint law of the candidates and the response
 that has finite second moments. The response may be discrete, heteroscedastic or nonlinear.
 *Why one fixed law:* with an $n$-dependent law, e.g. $y=n^{-1}x_1+\varepsilon$, the projected support is $\{1\}$ for
@@ -111,9 +122,12 @@ every $n$, yet the KL divergence from the null over $n$ observations is $1/(2n)$
 \varepsilon_{\mathcal C},S_0^{\mathcal C},f_0)$ are those of the draft, l.263–281.
 
 **A9′ (Gaussian residual given the candidates), replaces A9.** For a candidate set $\mathcal C=\mathcal C_n$ that is fixed
-before the data are seen (or chosen on independent data), $\operatorname{Var}(x_{\mathcal C})$ is nonsingular, and the
+before the data are seen (or chosen on independent data), the pairs $(x_{\mathcal C,i},y_i)$ are i.i.d.,
+$\operatorname{Var}(x_{\mathcal C})$ is nonsingular, and the
 residual $\varepsilon_{\mathcal C}=y-\alpha_{\mathcal C}-x_{\mathcal C}^\top\beta^{\mathcal C}$ is $N(0,\sigma^2_{\mathcal C})$
-and independent of $x_{\mathcal C}$, with $\sigma^2_{\mathcal C}>0$.
+and independent of the whole vector $x_{\mathcal C}$, with $\sigma^2_{\mathcal C}>0$.
+*Why nothing weaker:* this is exactly A1 for the candidate data. The proofs use the Gaussian likelihood exactly (the
+identity $E[m_b(S)/f_0]=1$, exact $\chi^2$ laws, the truncated moment).
 *Plain English:* given the measured candidates, the response is still Gaussian and linear. Only the coefficients and
 the noise variance change.
 *Remark that replaces the old structural wording (paper).* Under A1, A9′ is equivalent to the structural form: the
@@ -158,17 +172,17 @@ $C_q=2(s(A+2)+4)/\log2$, which is a sparse set with $c=C_qM+1$.
 ### Thm S — Selection consistency, headline (SL Thm 3; SL Thm S and Cor S1)
 
 Let $c_0(s,A):=\max_{1\le s_0\le s}\max\{4C_*,\,32[s_0(A+1)+2]\}$, with $C_*$ the T03 proof constant, and
-$C_{\rm sel}(s,A,\varphi):=4\sqrt{c_0(s,A)}/\varphi$.
+$C_{\rm sel}(s,A):=4\sqrt{c_0(s,A)}$.
 
-**(math)** Assume A1–A6 with $1\le s_0\le s$, and A7′(a). Fix a constant $C>C_{\rm sel}$.
+**(math)** Assume A1–A6 with $1\le s_0\le s$, and A7′(a). Fix a constant $C_\beta>C_{\rm sel}$.
 - **(a) Inclusion of strong predictors, with no condition on the other effects.** Let
-  $J_n:=\{j\in S_0:\ b_j\ge C\sqrt{\log(p\sqrt n)/n}\}$. Then
+  $J_n:=\{j\in S_0:\ \varphi\,b_j\ge C_\beta\sqrt{\log(p\sqrt n)/n}\}$, a deterministic set. Then
   $\Pi(S\supseteq J_n\mid D_n)=1-O_P(r_n)$. Hence $\max_{j\in J_n}(1-\mathrm{PIP}_j)=O_P(r_n)$ (vacuous if $J_n=\emptyset$).
-- **(b) Exact selection.** If also A7′(b) holds with this $C$, so that $J_n=S_0$, then
+- **(b) Exact selection.** If also A7′(b) holds with this $C_\beta$, so that $J_n=S_0$, then
   $$1-\Pi(S_0\mid D_n)=O_P(r_n),\qquad \max_{1\le j\le p}|\mathrm{PIP}_j-\mathbf 1\{j\in S_0\}|\le1-\Pi(S_0\mid D_n),$$
   and $P^*(\mathrm{HPM}=\mathrm{MPM}=S_0)\to1$.
 
-**(plain English)** (a) Every true predictor whose standardised effect clears the threshold by the factor $C$ is
+**(plain English)** (a) Every true predictor whose standardised effect clears the threshold by the factor $C_\beta/\varphi$ is
 included with posterior probability close to one, whatever the other effects are. (b) If every true effect clears it,
 the posterior concentrates on the exact true model at the rate $\sqrt{\log n/n}$. Every inclusion probability is then
 near 1 for true predictors and near 0 for the others, and the highest-probability model and the median-probability
@@ -177,16 +191,22 @@ model both equal the true model.
 At $s_0=5$, $A=2$, $\varphi=1$ we have $c_0=775.55$ and $C_{\rm sel}=4\sqrt{c_0}\approx111.4$, uniformly over
 $2\le p\le n^A$. At $p=n^2$ the requirement is asymptotically only $\sqrt{8c_0/2.5}\approx49.8$, because
 $\log(p\sqrt n)=2.5\log n$ there. The packet's "about 49.8" is this $p=n^2$ value (`ASTRA_PHASE2.md` §2). Both
-are in the units of A7′(b). In the main text, write "for every fixed $C$
-larger than a constant $C_{\rm sel}(s,A)/\varphi$ given in the supplement". (2) The inequality $C>C_{\rm sel}$ is strict;
+are in the units of A7′(b). In the main text, write "for every fixed $C_\beta$
+larger than a constant $C_{\rm sel}(s,A)$ given in the supplement". (2) The inequality $C_\beta>C_{\rm sel}$ is strict;
 the strictness is what gives a fixed $c>c_0$ uniformly in $p\ge2$ (`MASTER_PROOF_PLAN.md` S-2). (3) $J_n$ is defined
 by **population** effects. The proof shows $J_n\subseteq J^{\rm sample}_n(c)$ on the design event. (4) $s_0=0$ is not
-claimed (packet §5).
+claimed (packet §5). (5) $O_P$ is in uniform form: for every $\varepsilon>0$ there are $K_\varepsilon$ and $n_\varepsilon$, depending
+only on $\varepsilon$ and the constants, such that the bound holds with probability $\ge1-\varepsilon$ for $n\ge n_\varepsilon$ (T03♯
+gives this per $n$). (6) One sentence in the paper: the rate is sharp up to $\sqrt{\log n}$, since $1-\Pi(S_0)\ge1/(1+\sqrt{n+1})$
+for every data set (`W3-POST/STATEMENT.md:101-104`, Prop. LB). (7) Target for DEFINITIVE, not for Criterion 2: the
+expectation form $E^*\{1-\Pi(S_0\mid D_n)\}=O(r_n)$ in (b), via `W3-POST2/lemmas/C_expectation.md` case (i) and the
+per-$n$ bound $E\delta_n\le Cr_n+P(\mathcal A_n^c)$. It needs its own line check (Fable memo 4.3). It is not claimed for (a).
 
 ### Cor S1 — Fixed effects
 
-**(math)** Assume A1–A6 with $1\le s_0\le s$, and A7′(a). If $b_{\min}\ge\underline b$ for a fixed $\underline b>0$, the
-conclusions of Thm S(b) hold.
+**(math)** Assume A1–A6 with $1\le s_0\le s$, and A7′(a). If $b_{\min}\ge\underline b$ for a fixed $\underline b>0$ (a
+**standardised** lower bound; a fixed raw effect with $\operatorname{sd}(x_j)\to0$ can be undetectable), the conclusions of
+Thm S(b) hold.
 **(plain English)** Effects of fixed size are recovered exactly.
 **Note (nesting).** Cor S1 replaces the draft's Thm 3.2, but its hypotheses do not contain the old ones. The old
 theorem assumed a fixed floor on sets of size $5(A+1)(s_0+1)\log n$ and did not assume A5. Cor S1 assumes A5, which
@@ -196,10 +216,10 @@ theorem.
 
 ### Thm M — Misspecification: fixed candidates, any response law (SL Thm 4, Cor 2)
 
-**(math)** Assume A8. Then, $P^*$-almost surely:
+**(math)** Assume A8(a). Then, $P^*$-almost surely (one null set for all $\epsilon$):
 - **(i) Density.** $\Pi\{d_H(f,f_0)>\epsilon\mid D_n^{\mathcal C}\}\to0$ for every fixed $\epsilon>0$.
 - **(ii) Inclusion.** $\Pi(S\supseteq S_0^{\mathcal C}\mid D_n^{\mathcal C})\to1$.
-- **(iii) Exact support.** If in addition $E(x_j^2\varepsilon_{\mathcal C}^2)<\infty$ for every $j\in\mathcal C$, then
+- **(iii) Exact support.** If in addition A8(b) holds, i.e. $E(x_j^2\varepsilon_{\mathcal C}^2)<\infty$ for every $j\in\mathcal C$, then
   $\Pi(S_0^{\mathcal C}\mid D_n^{\mathcal C})\to1$, and $\mathrm{HPM}=\mathrm{MPM}=S_0^{\mathcal C}$ for all large $n$.
 
 Here $f_0(x_{\mathcal C},y)=P_{x_{\mathcal C}}(dx_{\mathcal C})\,\phi(y;\alpha_{\mathcal C}+x_{\mathcal C}^\top\beta^{\mathcal C},\sigma^2_{\mathcal C})$
@@ -221,11 +241,12 @@ truth, yet the log-score maximiser $N(1/2,1/4)$ is unique (adviser memo, item 1)
 ### Cor M1 — Many candidates (omitted predictors, high dimension)
 
 **(math)** Let $\mathcal C=\mathcal C_n$ be fixed before the data are seen, with $2\le|\mathcal C|\le n^A$ for a fixed
-$A\ge1$. Assume A9′ and A10, and assume A4–A6 for the candidate problem, i.e. with
+$A\ge1$. Assume A9′ and A10, and assume A4–A6 for the candidate problem (A4 and A5 are inherited from the full-design A4,
+A5 when those hold; A6 and A7′ are not, since $\beta^{\mathcal C}=\beta^*_{\mathcal C}+\gamma$ in units of $\sigma_{\mathcal C}$), i.e. with
 $(x_{\mathcal C},\beta^{\mathcal C},\sigma^2_{\mathcal C})$ in place of $(x,\beta^*,\sigma_*^2)$.
 - **(i)** The conclusion of Thm D holds for $\Pi(\cdot\mid D_n^{\mathcal C})$ with $f_0$ in place of $f^*$, and with
   $s_{\mathcal C}$ in place of $s$ in the constants.
-- **(ii)** If also $1\le|S_0^{\mathcal C}|$ and A7′ holds for the candidate problem (with
+- **(ii)** If also $1\le|S_0^{\mathcal C}|$ (so $s_{\mathcal C}\ge1$) and A7′ holds for the candidate problem (with
   $b^{\mathcal C}_j=|\beta^{\mathcal C}_j|\operatorname{sd}(x_j)/\sigma_{\mathcal C}$), the conclusions of Thm S hold
   with $S_0^{\mathcal C}$ in place of $S_0$.
 
@@ -262,8 +283,10 @@ and A9′.
 
 ## 5. Open items for the council
 
-1. A7′(a) is stated in the anchored form, which is weaker and is exactly what the proof uses. The all-subsets form on
-   $(2A+2)s+2$ predictors is offered as a sufficient condition. Which should lead in the main text?
+1. A7′(a) is stated in the anchored form, which is weaker and is exactly what the proof uses (Astra). Fable prefers
+   the all-subsets form on $k_0=s_0+j_0$ predictors ("no true predictor is nearly a combination of a few others") for
+   readability, with the anchored use noted in a remark. Lead-A leads with the anchored form and gives the
+   all-subsets form on $(2A+2)s+2$ predictors as the checkable sufficient condition. Council view requested.
 2. Cor S1 does not nest the old Thm 3.2 (see its note). Is that acceptable?
-3. In Thm S, should the main text state $C_{\rm sel}$ symbolically ($4\sqrt{c_0}/\varphi$), or only "a constant given
+3. In Thm S, should the main text state $C_{\rm sel}$ symbolically ($4\sqrt{c_0}$), or only "a constant given
    in the supplement"? The draft above proposes the latter.
