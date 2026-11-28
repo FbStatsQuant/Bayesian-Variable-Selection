@@ -61,25 +61,32 @@ Section numbers in the old text are those of POLICIES v1 (commit b790a6b9).
 12. **Codex mode.** PROTOCOL_v4 H1 says NORMAL; `HQ_NOW.md` says level 1 since 11-16. **Not resolved here:** the
     handbook defers to `HQ_NOW.md`.
 
-## (c) For HQ to decide
+## (c) For HQ to decide — all RULED by HQ, 2026-11-28 (applied in v2.0)
 
-1. **Which model runs manager threads now:** Neon (old §1a, 11-27) or Opus on Claude Work (11-24 roster)?
-2. **Non-theory councils:** I wrote Opus + Sol with Neon optional (from old §1a). Confirm, or make all councils
-   Opus + Sol + Neon.
-3. **Task-specific owner review orders** (PAPER-DRAFT: one Fable + Astra round; TH-SONG final pass) differ from the
-   default. I wrote that a specific owner order overrides the default for that task. Confirm.
-4. **`HQ_NOW.md` is stale** where the handbook points to it: roster (11-15 thread ids, `BVS-wt` paths), ACCOUNT
-   ALLOCATION (11-15 / 11-24 entries). Please refresh it.
-5. **Overnight / continuous mode** (HQ decides owner-reserved items while the owner is away): is it still in force,
-   and does it cover Fable/Astra approvals?
-6. **Restore-point cron:** still running after the REORG? If so, add its current path back.
-7. **Lean work** until a Lean department exists: I assigned it to Theory. Confirm.
-8. **"Large campaigns need the owner's GO through HQ"** is consolidated from the 11-25 to 11-27 practice (every 100-seed
-   grid was owner-signed). Confirm as a standing rule.
-9. **Today's rule "everything else is a child of a lead"** literally excludes leads (children of the department) and
-   HQ's own advisers (children of HQ). I wrote "everything else is a child".
-10. **Owls "nothing large or multi-day"** vs the multi-day riboflavin fits run on Owls: keep the rule, or allow
-    exceptions with HQ's go?
-11. **Department protocols still carry old numbers:** `Docs/Experiments/P1M/PROTOCOL.md` (≤ 150 tasks, Owls ≤ 16
-    cores, refs to POLICIES §14) and `Theory_work/Dept/PROTOCOL.md` (PROTOCOL_v4 council and Codex-seat rules). The handbook wins, but the
-    departments should update them.
+1. **Which model runs manager threads:** Neon (old §1a) or Opus on Claude Work (11-24 roster)?
+   RULED: whichever the owner sets per department; currently Engineering = Opus 5.5 (Claude Work), Theory and
+   Writing = Orchestrator (Neon). Handbook §1 states the rule; `HQ_NOW.md` holds the setting.
+2. **Non-theory councils:** Opus + Sol with Neon optional?
+   RULED: confirmed. Theory: Opus + Sol + Neon.
+3. **Task-specific owner review orders** (PAPER-DRAFT, TH-SONG final pass) override the default for that task?
+   RULED: confirmed.
+4. **`HQ_NOW.md` stale** (roster, account allocation).
+   RULED: refreshed in this commit (roster on Owls environment, manager models, account allocation; stale entries
+   removed; Codex level line kept unverified).
+5. **Overnight / owner-away mode.**
+   RULED: HQ runs operations fully and decides operational matters; owner-reserved items (paper claims, account
+   changes, large campaigns, department Fable/Astra requests) are queued for the owner. HQ may spawn its own Fable or
+   Astra adviser when unsure on something consequential (owner pre-authorization 2026-11-28). Handbook §1 and rule 8.
+6. **Restore-point cron.**
+   RULED: dropped; "commit meaningful states often" stands.
+7. **Lean work until a Lean department exists.**
+   RULED: Theory. Confirmed.
+8. **Large campaigns need the owner's GO through HQ.**
+   RULED: standing rule (handbook §1 table and §6).
+9. **"Everything else is a child of a lead"** wording.
+   RULED: "Departments and HQ are the only top-level threads. Every other agent is a child: leads under their
+   department, workers and reviewers under their lead, HQ advisers under HQ." (rule 13, §7).
+10. **Owls "nothing large or multi-day".**
+    RULED: "nothing large or multi-day on Owls without HQ's go" (§6).
+11. **Department protocols with old numbers** (`Docs/Experiments/P1M/PROTOCOL.md`, `Theory_work/Dept/PROTOCOL.md`).
+    RULED: HQ orders the departments to update them; the handbook (§9) says it wins on any conflict meanwhile.
