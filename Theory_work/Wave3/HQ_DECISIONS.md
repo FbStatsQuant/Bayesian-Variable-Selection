@@ -966,3 +966,9 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
 ## 2026-11-27 — Owner escalation rule for Theory council (`TH-SONG-ASSUMPTIONS`)
 - If the final round of the 3-reviewer council (Opus / Neon / Sol) finds nothing meaningful yet still scores < 8, replace the 3 reviewers with **2 fresh independent judges**: **1 × Astra 6.2 (`codex`, high)** and **1 × Fable 5.2 (`claudeAgent_personal`, high)** (owner-pre-approved conditionally).
 - Run **one unique round** with Astra + Fable 5.2, involve the **original Fable 5.2 and Astra 6.2 drafting advisors** in processing their feedback, apply substantive corrections, and finalize the assumptions directly with no further rounds.
+
+## 2026-11-27 — Owner final theory pass: Senior Fable+Astra completeness, generality & naturalness review (`TH-SONG-ASSUMPTIONS`)
+- Council R2 accepted as passed as-is (no Council R3 of Opus/Neon/Sol).
+- Owner authorizes **1 fresh Fable 5.2 (`claudeAgent_personal`, high) + 1 fresh Astra 6.2 (`codex`, high)** as a final reviewing council to hold a structured discussion with the Proposers (Opus CP Task Lead + original Fable 5.2 & Astra 6.2 drafting advisors).
+- Mandate: verify nothing important was missed, and ensure every assumption is stated in a **general, design-agnostic, natural form** for the general linear-regression BVS problem (matching Song & Liang's generality — no AR or S1/S2-specific assumptions baked in; re-express or replace anything overly tied to S1/S2 while keeping S1/S2 strictly as empirical support). Finalize deliverables for the owner's personal review.
+- Hard round cap: **1 discussion round default, 2 rounds max**, with any 2nd round requiring explicit approval from the Theory Department Manager.
