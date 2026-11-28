@@ -51,7 +51,7 @@ the documents win.
   3. The **department manager** rules on each finding: adopt it if it is relevant, or decline it as unnecessary
      complexity, with a one-line reason.
   A declined blocking issue is reported to HQ in the same line.
-- **Council composition for theory work (owner, 2026-11-28):** Opus + Sol + Opus (two Opus, one Sol, all high).
+- **Council composition for theory work (owner, 2026-11-28, revised):** Opus + Sol + Neon (Opus 5.5, Sol 6.2, Gemini 4 Neon; all high).
 - **Same council throughout (owner, 2026-11-28):** the council agents are spawned fresh for Round 1 of an item and then
   KEPT for all its rounds: the same threads, which remember what they flagged and why. They are not replaced by fresh
   agents each round.
