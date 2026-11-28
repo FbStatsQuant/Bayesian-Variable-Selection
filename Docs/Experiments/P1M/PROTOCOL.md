@@ -1,6 +1,7 @@
 # PROTOCOL — SMC - Engineering Department (v1.0, approved by HQ 2026-11-15; HQ approves every change)
 
-Tailored under POLICIES.md §13. Engineering's checks are code tests, gates, overlap validation and benchmarks, not proof
+Aligned with company handbook v2.0 (main 8a14bff2); the handbook wins on any conflict.
+Tailored as a department protocol variant (POLICIES.md §9). Engineering's checks are code tests, gates, overlap validation and benchmarks, not proof
 councils.
 **Company minimums kept in full:**
 - independent review before "validated" or "done";
@@ -8,7 +9,7 @@ councils.
 - a decision log;
 - honest labels;
 - escalation;
-- compute discipline (§12).
+- compute discipline (POLICIES §6).
 
 ## 1. Work units and where work lives
 | unit | example | where | record |
@@ -26,14 +27,14 @@ councils.
    - **golden bit tests** for every kernel claimed bit-identical (T1/T2);
    - **invariance tests** for threads, groups and tiles (T3);
    - CI green.
-2. **Independent code review** by a reviewer who did not write the code: an Opus 5.5 helper with a written brief for
+2. **Independent code review** by a reviewer who did not write the code: an Opus 5.5 helper (a child of the task lead) with a written brief for
    routine PRs; a Sol review via HQ for the engine core (scorer, kernels, streams, merge, calibration), subject to the
-   Codex pacing level (POLICIES §14). At level ≥ 1, engine-core PR reviews stay on Sol, but routine PR reviews are
+   Codex pacing level (POLICIES §2). At level ≥ 1, engine-core PR reviews stay on Sol, but routine PR reviews are
    Opus-only. The verdict and the disposition of each finding are filed in `reviews/`.
 3. HQ merges. No self-merge.
 
 **Plan and spec.** The Sol feasibility and budget review at each EXP-CP (commissioned by HQ). Independent expert reviews
-(Fable with owner approval, or Opus) for design questions, each with a written disposition (adopt / reject with reason /
+(Fable only with approval up the chain, or Opus) for design questions, each with a written disposition (adopt / reject with reason /
 defer).
 
 **Experiments, through the gates G0 → G-A → G-B → G-C → G-C2 (ENGINEERING_SPEC §0-v2.6).**
@@ -44,7 +45,7 @@ defer).
 - Every analysis script that turns records into a published table gets an independent review before its numbers are
   quoted as results (as in P6, rule 15).
 
-**Overlap validation (POLICIES §8 (b)).** V against the theory's method on the same datasets, with the tolerances of
+**Overlap validation (POLICIES §4).** V against the theory's method on the same datasets, with the tolerances of
 ENGINEERING_SPEC §0-v2.7. The verdict "validated" also needs an independent review of the comparison (code and tables).
 
 **Benchmarks.** Each number carries: machine, node type, threads, command, date, job id. A measurement replaces a
@@ -63,7 +64,7 @@ planning value only after it has been read back and logged.
 | output class | [OP-bit] / class A / [OP-law] / [Δ𝒞] / [Δlaw] / "V-1M variant" for every engine change |
 
 1M results are always labelled "engineered variant V-1M, validated against the theorem-covered method on the overlap
-rung" (POLICIES §8 (c)).
+rung" (POLICIES §4).
 
 ## 4. Rollback and provenance
 **Git.**
@@ -92,12 +93,12 @@ Outputs are immutable once published (write to a temporary name, then rename). A
 overwrite. A failed or cancelled run keeps its directory and its ledger row.
 
 **Data lifecycle.** Generated data are regenerable from (generator, seed) and checked by hash. Results of record go off
-NOTS by the **continuous offload** (POLICIES §12.13; `machines/OFFLOAD.md`):
+NOTS by the **continuous offload** (POLICIES §6, Storage; `machines/OFFLOAD.md`):
 1. checksummed (SHA-256 computed on NOTS) to Owls, then to the **owner's desktop (primary; path from the owner on 11-16)**;
 2. mirrored to the laptop when it is online;
 3. NOTS scratch is freed only after the Owls and desktop copies are verified.
 
-Nothing of record stays idle in scratch for more than **7 days** (POLICIES §12.12; the CRC purge is 14 days on atime).
+Nothing of record stays idle in scratch for more than **7 days** (POLICIES §6, Storage; the CRC purge is 14 days on atime).
 Nothing of record is deleted without a verified copy, and nothing at a final destination is deleted without the owner's
 request.
 
@@ -124,13 +125,13 @@ request.
   look odd to Rice IT.
 - A stray file found outside the department folders.
 
-## 7. Compute discipline (POLICIES §12, summary; the policy text wins)
+## 7. Compute discipline (POLICIES §6, summary; the policy text wins)
 - Work only inside the department folders.
 - SSH multiplexed, sequential.
 - Polling ≤ 1 squeue/sacct per 5 minutes.
-- Job arrays only; ≤ 150 tasks.
+- Job arrays only; at most 468 concurrent NOTS jobs in total (company-wide).
 - `--constraint=sapphirerapids`; Slurm output under `scratch/slurm_out/`; TMPDIR under `scratch/tmp/$SLURM_JOB_ID`.
-- Owls: `nice`, ≤ 16 cores, gradual ramp-up.
+- Owls: small-scale work only, `nice`, gradual ramp-up; nothing large or multi-day on Owls without HQ's go.
 - Exploratory batches ≤ ~200 core-h on HQ's standing authorisation (logged); gated stages and larger batches only with
   HQ's go.
 - **Cost honesty (HQ, 11-16).** Before submitting, compare the batch's realistic cost with the figure already given to
@@ -159,6 +160,7 @@ Proposed by the Engineering manager, approved by HQ, recorded in the changelog b
 
 ## Changelog
 - v1.0 (2026-11-15) — first version; submitted to HQ with EXP-CP1 v2. Includes the owner-priority rule for NOTS (owner, 11-15).
-- v1.0 approved by HQ 11-15, with two edits folded in: §4 data lifecycle → continuous offload (desktop primary, laptop mirror, NOTS freed after verification, 7-day rule); §2 Sol reviews subject to the Codex pacing level (POLICIES §14; at level ≥ 1 routine PR reviews are Opus-only).
+- v1.0 approved by HQ 11-15, with two edits folded in: §4 data lifecycle → continuous offload (desktop primary, laptop mirror, NOTS freed after verification, 7-day rule); §2 Sol reviews subject to the Codex pacing level (POLICIES §2; at level ≥ 1 routine PR reviews are Opus-only).
 - v1.1 (2026-11-16) — §7: cost-honesty rule (HQ, after the WP3 SPR sweep cost 77.4 core-h against the stated ≈ 40).
-- v1.2 (2026-11-16) — POLICIES §14 (HQ): Codex/sandboxed agents never set TMPDIR or write outside their own worktree (scratch in a git-ignored `.rc_tmp/`); runs over 2 h get a pending-request check. Folded into briefs/BUILD_COMMON.md.
+- v1.2 (2026-11-16) — old POLICIES §14, now §7 (HQ): Codex/sandboxed agents never set TMPDIR or write outside their own worktree (scratch in a git-ignored `.rc_tmp/`); runs over 2 h get a pending-request check. Folded into briefs/BUILD_COMMON.md.
+- v1.3 (2026-11-28) — aligned with company handbook v2.0 (main 8a14bff2): POLICIES section references re-pointed; NOTS cap now 468 concurrent jobs in total; Owls rule now "nothing large or multi-day without HQ's go".
