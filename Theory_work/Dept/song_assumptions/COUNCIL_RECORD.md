@@ -171,3 +171,104 @@ Package revised to v1.3. Response: `council/RESPONSE_R2.md`. Diff: `council/R2_T
   - The three scoped R3 seats had already been dispatched (commit 4bacc09d) before the ruling arrived. Per POLICIES §10 they are not cancelled.
   - When their `council/R3_<SEAT>.md` files arrive, they will be filed as **superseded / informational**. They are not a gate.
 - **Gate status: PASSED (owner ruling).** The package is held at v1.3 pending one final theory idea from the owner.
+
+### Round 3 reports (superseded / informational; filed under POLICIES §10)
+`council/R3_OPUS.md`, `council/R3_NEON.md`, `council/R3_SOL.md` arrived after the owner ruling. They are filed as superseded and are not a gate. All three returned NOT CLEAR, on the same small set of v1.3 one-line edits that RESPONSE_R2 had claimed but not made. The mathematics was rated sound. The missed edits were:
+- the D4 overclaim "margin holds there";
+- DOSSIER "SBJ allows duplicates";
+- DOSSIER "ordinary correlated designs";
+- upward-rounded E9b minima;
+- TD′ q_n without min{p, …}.
+
+All five are folded into v1.4 (below). **Lead error:** claiming fixes in RESPONSE_R2 that were not applied. Since then, every claimed fix is grep-checked before it is reported.
+
+## Owner final theory order: Senior Completeness, Generality & Naturalness Review (2026-11-27/28)
+**Mandate (owner, via the Manager).** Two fresh senior judges, Fable 5.2 (claude-fable-5-2, effort high) and Astra 6.2 (gpt-6.2-astra, reasoning high), audit completeness and, as the owner's top priority, generality and naturalness. Every assumption must be stated design-agnostically for general high-dimensional linear-regression BVS: no AR(1), no S1/S2 structures or constants in any statement. S1/S2 belong only in the evidence. **Round cap:** one discussion round; a second only with prior Manager approval. It was not needed and not requested.
+
+### Stage 1: independent audit (`briefs/SENIOR_REVIEW_BRIEF.md`)
+| judge | completeness | generality/naturalness | readiness | file |
+|---|---|---|---|---|
+| Fable 5.2 | 7.5 | 6.0 | 6.5 | `council/SENIOR_FABLE.md` |
+| Astra 6.2 | 8 | 7 | 7 | `council/SENIOR_ASTRA.md` |
+
+The common core of both reports:
+- (i) A-MARGIN-U's headline used a design-conditional width w_Dm(X) and a proof-defined constant C. It read as engineered and carried S1 numbers inside the statement. Both judges asked for a **population-only headline**.
+- (ii) S1/S2 numbers and the AR(1) design appeared inside statements and decision rationales (D4, the TS-b statement, "C ≈ 121").
+- (iii) Missing SL counterparts:
+  - SL (3) → A-BS;
+  - the SL p. 951 cap remark → q_n;
+  - SL Condition 3's Gaussian form → A-NEC;
+  - prop:dist(ii) and thm:dist-param;
+  - the itemwise TS-a;
+  - the SL Cor 2 inclusion counterpart.
+- (iv) The TM tier needed a primitive form, a pseudo-true sparsity label and a statement conditional on C.
+- (v) Windows were stated through proof constants.
+- (vi) The converse needed its minimal set.
+- (vii) The worked cases promised in the dossier were missing.
+
+### Stage 2: Proposers' response (one round)
+- **Lead proposal:** `council/SENIOR_PROPOSAL_LEAD.md`, with §0 (12 points both judges agree on) and §1 (the merged A-MARGIN-U population form, questions Q1–Q5).
+- **Drafting advisors:** `advisors/SENIOR_RESPONSE_FABLE.md` and `advisors/SENIOR_RESPONSE_ASTRA.md`. Both answered within the single round.
+- **Converged canonical text:** `council/V14_CHANGESPEC.md`.
+
+**Lead-proposal errors caught by the advisors** (all corrected in the spec):
+- the price ratio was inverted (log[π(T∖D)/π(T)], not its reciprocal);
+- the coefficient a was uncapped: ā = min{1, ·}, and the fallback coefficient is 1, not √2;
+- slack was mixed between scales (the root-scale form was adopted);
+- the proposal wrongly said the population form implies the v1.3 class-level conditional-width form. It implies only the **base-indexed** form, so step 3 is run per base and the class-level form is kept as a parallel sufficient condition;
+- the rival range should use m̄_d with total added size k, not m̄ with m;
+- the windows wording would have shrunk the delivered thm:dist range (fixed by k_n ≥ q_n(M), with q_n(M_n) for varying M).
+
+**Settled design questions:**
+- Q2: Astra's geometric coefficient ā, with √ϑ ≤ ā ≤ √(2ϑ) as a reading aid.
+- Q3: A-MARGIN-H as a diverging ratio for every fixed k, with a fixed-level remark.
+- Q4: the A-BS′ recorded pair (V = O(1), E = o(1)), with V = O(1) as the open target.
+- Weaker variant (proxies pay their own price): a remark, not adopted.
+
+### v1.4 changes (commit 3ee24ea9; diff `council/V14_DIFF.diff`)
+- **A-MARGIN-U, population form:**
+  - (U1) deletions, κ_n ≥ 1+η;
+  - (U2a) bases inside a deterministic accounting set Q_n ⊇ T with log|Q_n| = o(log n);
+  - (U2b) outside nulls priced by their leakage ϑ through ā;
+  - special cases Q_n = T, vanishing leakage, and the ā ≡ 1 fallback;
+  - corollaries C-i (strong separation) and C-ii (sparse eigenvalue plus beta-min);
+  - Lemma W (W1–W3) as the bridge to the proof.
+
+  The v1.3 form is kept as the refined design-conditional form, with C = 1 by convention. The "C ≍ (s0+1)² ≈ 121" claim is withdrawn, and C = 121 is a sensitivity setting.
+- **No S1/S2 number or design family appears in any statement.** D4 is rewritten on generality grounds.
+- **Statement changes:**
+  - A-MARGIN-H is now a diverging ratio;
+  - the windows are k_n ≥ q_n(M);
+  - A-NEC is n·φ_min(k_n) ≥ c_ψ;
+  - A-DIM′ is log p = o(√n), with the product form as the proof budget;
+  - A-BS′ is the recorded pair plus the open target;
+  - A-MIS(iii) has its primitive form;
+  - new A-SPARSE-C;
+  - TM-a and TM-b are conditional on each admissible C;
+  - new target TM-a0-inc, the SL Cor 2 counterpart;
+  - the converse uses its minimal set and records the boundary remainder;
+  - the sieve is s − d + k ≤ min(K, J).
+- **SL map additions:** SL (3); the p. 951 cap remark; the SL Condition 3 Gaussian form; prop:dist(ii) and thm:dist-param; TS-a per predictor; TM-a0-inc for SL-9.
+- **Package structure:**
+  - four assumption blocks (Model / Design / Signal / Omitted variables);
+  - DOSSIER worked cases for orthogonal, AR(1), block and equicorrelation/one-factor designs, checked numerically in `.rc_tmp/lead_v14/worked_cases.py`;
+  - TS-b proof path: step 3 is run per base; the k > m̄_d step is an explicit obligation; 3′ is the refined route.
+- **Evidence:**
+  - U2a check: the minimum over D and ≤ 2 inside proxies equals the exact κ_n, 2.505–2.771 at SNR 2 (`.rc_tmp/lead_v14/u2a_check.py`);
+  - AR(1) leakage decay: 0.265, 0.087, 0.030, 0.011;
+  - the fallback ā ≡ 1 fails at SNR 2 (minimum −0.692) and holds at SNR 3 (minimum 1.412) on the evaluated classes only;
+  - E9/E9b are qualified as diagnostics of the refined form (selected D, four designs, zero slack);
+  - E9b is rerun with the raw-centred mean (v1 kept as `_v1_codedmu`; Δ ≤ 0.0015), and all minima are exact (2.3862, not ≥ 2.39);
+  - E2, E7 and E1 readings are qualified.
+- **R3 leftovers fixed:** D4; DOSSIER SBJ and NH14 split; "ordinary correlated designs"; TD′ min{p, …}; §3.2 step 2 min(p, s0 + J); "every m ≤ J active" withdrawn.
+- **Edits by:** the Lead made DEFINITIONS and ASSUMPTIONS. A Sonnet 5.5 worker made DOSSIER and SIMULATION (`briefs/V14_WORKER_BRIEF.md`), and the Lead reviewed its diff.
+- **Lead errors caught during application:**
+  - the E9 minima were first quoted from E9b (E9 is 3.2946 / 6.6961);
+  - "fallback holds at SNR 3" was stated without its coverage, and is now qualified;
+  - one "≥ 3.29" was rounded up in the DOSSIER.
+
+### Engine decision (HQ FYI; SMC-PERF closed, memo 1b319090)
+v3.1.1, g = n, truncated BB(1, p) and MPM are confirmed. Fix E (output-only) and C1 (compute-only) do not touch the theorems. Proof writing and Lean stay on HOLD. This is recorded in DEFINITIONS §1 and §5, in ASSUMPTIONS header and §5 (the sensitivity table is now a contingency note, with no row triggered), and in the DOSSIER.
+
+### Stage 2 sign-off (Final Council, single pass; `briefs/SENIOR_SIGNOFF_BRIEF.md`)
+PENDING
