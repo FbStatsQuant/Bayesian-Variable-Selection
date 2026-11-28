@@ -172,9 +172,10 @@ Platinum 8468 nodes, $167$ on Gold 6230 nodes and $162$ on nodes whose type was 
 favour SMC-BVS by a per-core speed factor that we did not measure. In S2 every SMC-BVS and ASI fit ran on Gold 6230
 nodes.
 
-Seven of the $1{,}600$ SMC-BVS fits raised a run-time warning (Table~\ref{tab:warnings}). The grid is built so that
-the effective sample size, computed exactly on the candidate set $\Vcal$, is at least $0.90$ of the population at
-every step; the particles of the final run also visit models outside $\Vcal$, and their smallest $\ESS/N$ fell below
+Seven of the $1{,}600$ SMC-BVS fits raised a run-time warning (Table~\ref{tab:warnings}). A grid built by
+\textsc{BuildGrid} keeps the effective sample size, computed exactly on the candidate set $\Vcal$, at least $0.90$ of
+the population at every step (the pilot's temperatures, used only when a grid construction fails at tier~$1$, can
+include forced steps and need not); the particles of the final run also visit models outside $\Vcal$, and their smallest $\ESS/N$ fell below
 $0.90$ in $1{,}176$ fits and below $1/2$, a run-time warning, in $6$. Its per-setting median lay between $0.864$ and
 $0.999$. Escalated fits were not less
 accurate: at $p=5000$ they recovered $\Sz$ in $45.8\%$ of cases, against $44.8\%$ for the other fits of the same
