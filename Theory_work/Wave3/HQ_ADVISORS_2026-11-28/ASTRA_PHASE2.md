@@ -1,0 +1,28 @@
+﻿# Astra · Phase 2 · 28 November 2026
+
+**Verdict.** The shrinking-beta-min headline follows from the repository’s proved inequalities. Fable’s \(79\) is a valid rounded sufficient multiplier in the stated example. The proposed \(5.2\) uses different units, requires an additional design estimate and gives a weaker rate as sketched.
+
+## 1. Agreement and independent check
+
+I checked the baseline against local main at 611d400e. W3-T03ACC/sources/W1-T03R/PROOF.md:127–159,186–209 separates the two floors correctly. The bounded-addition comparison needs a fixed correlation floor through \(s_0+j_0\), \(j_0=\lceil(2A+1)s_0\rceil+1\). The larger-addition bound (C8) absorbs the deletion refund using the superset tail. It needs the weak unnormalised Gram floor through the comparison unions. (C10) explicitly accepts fixed \(c>c_0\). W3-POST/STATEMENT.md:65–100 carries this clause through conditioning on a design event.
+
+W3-DIST/work/E_bridges/B3.md, steps 0 and 3–6, supplies the missing population arithmetic. In population noise units its event gives \(\varphi_0^2=\varphi^2/4,\ g_0=c_\psi/8,\ \theta_j^2\ge b_j^2/2\), where \(b_j=|\beta_j^*|\operatorname{sd}(x_j)/\sigma_*\). Thus \(n\varphi_0^2\theta_j^2/\log n\ge n\varphi^2 b_j^2/(8\log n)\). The printed B3 invokes divergence in the last sentence of step 5. Replace that sentence by a common lower bound \(c>c_0\) and use the fixed-\(c\) design event in step 6. Step 3 itself covers the smaller strong-floor window. This proves the proposed corollary by composition; there is no missing probability inequality. Preserve its derivation and review the assembled paper statement. The same reasoning on each strong coordinate plus T03♯(iv) gives inclusion irrespective of the remaining signals.
+
+## 2. Disagreements and resolutions
+
+**Put both constants in the same units.** At \(s_0=5,A=2\), \(j_0=26,\ c_0=775.5500\). In units of \(\sqrt{\log n/n}\), the proved sufficient multiplier on \(\varphi b_{\min}\) is any constant strictly above \(78.768=\sqrt{8c_0}\). In units of \(\sqrt{\log(p\sqrt n)/n}\), the asymptotic cutoff is \(49.82\) at \(p=n^2\), or \(111.40\) rounded upward uniformly over \(2\le p\le n^2\). The proposed multiplier is \(5.156(1+\eta)\) in units of \(\sqrt{\log(2p\sqrt{n+1})/n}\), asymptotically equivalent to the latter units. At \(p=n^2\) compare **49.82 with \(5.156(1+\eta)\)**. The baseline gives \(O_P(r_n)\); the proposal gives \(O_P(r_n+n^{-\gamma})\), which implies consistency for \(\gamma>0\) but may be slower.
+
+**The direction argument needs one more inequality.** Fable’s conditional Gaussian width bound and \(\bar u_d/d\le2A+3\) are valid. In the subsequent display the existing sample bound only gives \(\Delta_S/\sigma_*^2\ge(n-1)\varphi^2 d b_{\min}^2/8\); deleting the factor eight consumes more than arbitrarily small \(\eta\). Repair this directly in population-standardised predictor coordinates. For \(k=s_0+j_0\) fixed, A4 and Bernstein on coordinate products, a union over \(p^2\) entries, and sample centring yield \(\|\widehat\Sigma-\operatorname{Corr}(x)\|_{\max}=O_P(\sqrt{\log n/n})\). Every \(k\)-column Gram in these coordinates therefore has minimum eigenvalue at least \(\varphi^2-k\,o_P(1)\). Minimise its quadratic form over coefficients on \(S\); the \(d\) missing coordinates are fixed. This gives \(\Delta_S/\sigma_*^2\ge n(1-o_P(1))\varphi^2 d b_{\min}^2\) simultaneously, with the centring divisor \(n\). Use the *first* inequality of T03 PROOF_v2.tex:285–300 to retain the leading \(1/2\) in the score, and sum (C8) by missing size \(d\). This is a credible sharpening to review separately. It is unnecessary for the headline.
+
+**Candidate transfer.** The beta-min version of the candidate selection corollary follows immediately. The literal A7 version of Conj. 3.6(b) still depends on the open fine-margin theorem. Use W3-POST2/lemmas/C_expectation.md:8–16 for the expectation claim. W3-MISR-R/lemmas/G2_corr.md:13–26 already resolves the covariance-versus-correlation translation for the old Gaussian version.
+
+## 3. Corrections to my Phase 1
+
+I overstated the novelty of the baseline design bridge. B3 already proves its numerical bounds, and W3-T03ACC contains a pinned reusable copy of the proof by differences. I would add Fable’s strong-coordinate inclusion clause as the direct counterpart of Song–Liang Theorem 3. I also accept the optional bounded-SNR replacement for A6 under A5: relative concentration on the true signal gives \(\|\mu\|^2\le nM\), and \(\lambda_{\min}(G_T)\ge c_\psi/8\) gives \(\|\theta\|^2\le8nM/c_\psi\). This supplies both interfaces of Lemma X. Finally, the active Lean project is a stub, but the archived L-LEAN snapshot contains reusable finite-posterior results, including T21HPM.lean’s majority-mass implication.
+
+## 4. Final decisions and proof order
+
+1. Replace A7 in the main text by standardised beta-min and small-set identifiability. Keep the fine margin conjectural in the supplement.
+2. Lead with strong-coordinate inclusion and exact selection at sufficiently large fixed \(C\); state fixed effects as a corollary. Give the sufficient constant and units in the supplement.
+3. Require a fixed floor only through \(\min(p,s_0+j_0)\). Retain A5 on the logarithmic comparison window. Assemble the checked baseline before pursuing the smaller constant.
+4. Prove fixed-law A8 projection-density consistency and inclusion almost surely by finite-model SLLN; add exact selection under the score moments via the LIL. Give the conditional Gaussian candidate transfer separately. Publish the W3-DIST density proof alongside these results, review each paper proof, then formalise the deterministic cores and audit the named probability axioms.

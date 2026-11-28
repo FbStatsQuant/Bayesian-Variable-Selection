@@ -1,0 +1,34 @@
+% =====================================================================================================
+\section{The model}\label{sec:method}
+
+\begin{definition}[Data-generating model]\label{def:dgm}
+The data follow a Gaussian linear model with an intercept,
+\begin{equation}\label{eq:model}
+  \yr=\alpha^*\one_n+\Xr\bstar+\varepsilon,\qquad \varepsilon\sim\Normal_n(0,\sigs^2I_n),
+\end{equation}
+with $\sigs^2>0$ and $\varepsilon$ independent of $\Xr$. The theorems are proved under this model (in the forms fixed by
+their assumptions), not under the working model of Definition~\ref{def:working}.
+\end{definition}
+
+\begin{definition}[Model space]\label{def:space}
+The method considers every model with at most $K$ predictors,
+\begin{equation}\label{eq:space}
+  \Om:=\{S\subseteq\set{p}:\abs{S}\le K\},\qquad K:=\min\big(p,\lfloor n/2\rfloor\big).
+\end{equation}
+\end{definition}
+
+\begin{definition}[Parameters]\label{def:params}
+The parameters of the working model are a model $S\in\Om$, coefficients $\theta_S\in\R^{\abs{S}}$ and a variance
+$\sigma^2>0$. The intercept is removed by centring and has no parameter.
+\end{definition}
+
+\begin{definition}[Working model and likelihood]\label{def:working}
+Given $(S,\theta_S,\sigma^2)$, the method fits to the standardised data~\eqref{eq:standardise}
+\[
+  y\mid S,\theta_S,\sigma^2\ \sim\ \Normal_n(X_S\theta_S,\sigma^2I_n),
+\]
+with likelihood
+\begin{equation}\label{eq:lik}
+  p(y\mid S,\theta_S,\sigma^2)=(2\pi\sigma^2)^{-n/2}\exp\Big\{-\frac{\norm{y-X_S\theta_S}^2}{2\sigma^2}\Big\}.
+\end{equation}
+\end{definition}

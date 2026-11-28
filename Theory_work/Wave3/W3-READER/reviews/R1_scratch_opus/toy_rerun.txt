@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/home/fb31/BVS-wt/W3-READER/Theory_work/Wave3/W3-READER/numerics/toy_example.py", line 7, in <module>
+    import numpy as np
+ModuleNotFoundError: No module named 'numpy'

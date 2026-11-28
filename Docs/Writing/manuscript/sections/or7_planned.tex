@@ -1,0 +1,75 @@
+% =====================================================================================================
+\section{The planned results (not claimed)}\label{sec:planned}
+
+\newcommand{\plannedbanner}[1]{\par\smallskip\noindent\fbox{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule}{\small
+\textsf{PLANNED --- nothing here is claimed.} #1}}\par\smallskip}
+
+Everything in this section is planned work. None of it is proved, and no sentence here is a claim about the method. The
+theory work has been paused since 2026-11-20 until the owner restarts it. The owner has set the order: the trap theorem
+first, then the analysis at $p=10^7$, both after the $p=10^6$ runs and only if those go well; neither is committed. Lean
+work starts only when the owner approves it.
+
+\subsection{PLANNED: the trap theorem}\label{sec:plan-trap}
+
+\plannedbanner{No statement, draft or design family exists yet.}
+
+\paragraph{What it would show.} Two things on one design whose posterior has several well-separated modes: (i) a lower
+bound on the mixing time of single-flip Markov chain Monte Carlo (one predictor added or removed per step), and of the
+weighted tempered Gibbs sampler of \citet{ZanellaRoberts2019}, showing that such samplers stay trapped near one mode for a
+time that grows quickly with the problem size; and (ii) a consistency result for SMC-BVS on the same design.
+
+\paragraph{Why it matters.} Results~1--6 do not compare SMC-BVS with a Markov chain. Upper bounds on the mixing time of
+single-flip samplers are known under conditions on the design \citep{YangWainwrightJordan2015}; a lower bound on a design
+those conditions exclude, with a positive result for SMC-BVS there, would make the comparison a theorem rather than a
+benchmark. Which design family is meant, and which of our results is the consistency result (Result~1, 3 or~4), are open
+questions (Section~\ref{sec:open-hq}).
+
+\subsection{PLANNED: the analysis at \texorpdfstring{$p=10^7$}{p=10\^{}7}}\label{sec:plan-1e7}
+
+\plannedbanner{The engine design is paused; the theory analysis is not started.}
+
+\paragraph{What is planned.} One showcase fit at $p=10^7$: one simulated autoregressive data set with $n=200$ and a known
+true model, one seed, on an engine derived from the $p=10^6$ engine and required to give bit-identical output to it at default
+settings on the overlap and $p=10^6$ test data sets (one $p=10^6$ fit included),
+with a theory analysis of ``coverage at $p=10^7$''. No project document defines ``coverage''. It could mean whether the
+hypotheses of Results~1--6 can hold at $n=200$ and $p=10^7$ (\as{DIM} allows $p\le n^A$, so $A\ge3.04$ here), or which
+statements a single fit with one seed can support at all. This edition says only that such an analysis is planned; which
+reading is meant is an open question (Section~\ref{sec:open-hq}).
+
+\subsection{PLANNED: Lean certificates of the key results}\label{sec:plan-lean}
+
+\plannedbanner{Not started; it starts only when the owner approves it (now expected in February--March 2027). No result in
+this document is certified in Lean.}
+
+\paragraph{What is planned.} Machine-checked proofs, in the Lean proof assistant, first of deterministic parts: the rate
+lower bound of Result~6(a); the summaries lemma (Lemma~\ref{lem:summaries}) with the bound saying that pooling is no worse
+than the worst island (supplement, Section~\ref{sec:outputs}, ``What is not claimed''~(iii)); and the Hellinger reduction
+behind Remark~\ref{cor:dist-output}. Then, one at a time, the fixed-design posterior result (Theorem~\ref{thm:post-fixed})
+and the distribution result (Result~2), with standard published facts, such as Gaussian and chi-square tail bounds, entering
+as named axioms. Only a Lean statement that matches the paper's statement may be called a certificate of that result. A
+project scaffold and a few reusable small lemmas exist.
+
+\subsection{PLANNED: the named open problems}\label{sec:plan-open}
+
+\plannedbanner{None is proved; none is used by Results~1--6.}
+
+\begin{enumerate}[leftmargin=1.6em,itemsep=1pt]
+  \item \emph{From the returned list to a probability statement.} Corollary~\ref{cor:list} gives, data set by data set
+    and under pathwise hypotheses (among them that the true model is in the list and the posterior miss is small), a bound
+    on the posterior mass of the list a run returns, the premise of Remark~\ref{cor:dist-output}. Turning this into a
+    probability statement under that remark's law needs a link between the standardised and the raw scale of the local
+    search; it is open.
+  \item \emph{A Gaussian-row form of Result~3 with the leakage controlled in total} rather than one leaked predictor at a
+    time.
+  \item \emph{The start law when the mean of the response is a general vector} outside the span of the candidates
+    (an extension of Theorem~\ref{thm:start}), without Gaussian rows.
+  \item \emph{An equicorrelated example} of Assumption~\ref{asm:reported} with leakage-set exponent $b$ below $3/8$.
+  \item \emph{A counting step} (a count of the form $17-\sz$) in a variant of the start-law result.
+  \item \emph{The overlap premise} of Remark~\ref{rem:alt-route}, not yet derived from conditions on the design.
+  \item \emph{The parallel method.} Pooling over the four coded islands is proved (Result~5, and the worst-island bound of the supplement, Section~\ref{sec:outputs}).
+    That a parallel engine whose output is identical to the method's inherits every guarantee is supported by identical
+    outputs on the data sets tested, and a note is in progress; there is no theorem, and the tests do not establish
+    identical output on every input. More islands, a secondary evidence-weighted pooling of the inclusion probabilities
+    (the primary pooling has equal weights), and a fixed particle number per island, as in the $p=10^6$ engine (Section~\ref{sec:supp-1m}), are open.
+\end{enumerate}
+Appendix~\ref{app:status} lists further possible strengthenings, none of them started.

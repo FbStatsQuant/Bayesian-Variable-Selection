@@ -1,0 +1,43 @@
+id	paper_key	method_key	claimed	raw_name	location_claimed	venue_year	doi	arxiv	local_pdf
+V01	Staerk2024	HBS	competitor	Hamming ball sampler	Sec 5.1-5.3	BA 2024	10.1214/22-BA1351	2105.01039	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Staerk2024.pdf
+V02	Ishwaran2005	FSTEP	competitor	OLSForwd forward OLS ordering	Sec 8 Table 2	AoS 2005	10.1214/009053604000001147	math/0505633	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Ishwaran2005.pdf
+V03	Bogdan2015	LASSO	competitor	lasso with lambda_Bonf; lasso with lambda_CV (10-fold)	Sec 3.2 Fig 5; Sec 3.2.4	AoAS 2015	10.1214/15-AOAS842	1407.3824	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/Bogdan2015.pdf
+V04	Titsias2017	GIBBS_GAMMA	competitor	block Gibbs samplers BG1-3	Sec 2.2 Fig 3; Sec 4.2	JASA 2017	10.1080/01621459.2016.1222288	1504.08133	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Titsias2017.pdf
+V05	BertsimasPauphilet2020	ENET	competitor	elastic net (glmnet)	Sec 3-4	Stat Sci 2020	10.1214/19-STS701	1902.06547	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BertsimasPauphilet2020.pdf
+V06	Schafer2013	GIBBS_GAMMA	competitor	metropolised Gibbs MCMC (Liu 1996; bit-flip count truncated geometric mean 2)	Sec 6.1-6.5	Stat Comput 2013	10.1007/s11222-011-9299-z	1101.6037	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Schafer2013.pdf
+V07	Hoggart2008	MARGINAL	competitor	Armitage trend test (single SNP)	Results: simulations	PLoS Genet 2008	10.1371/journal.pgen.1000130		
+V08	Moran2019	LASSO	competitor	Lasso (glmnet)	Sec 6.6 Table 1; Sec 6.7	BA 2019	10.1214/19-BA1149	1801.03019	/home/fb31/SMC_Theory_Department/BENCH_METHODS_papers/Moran2019.pdf
+V09	Chen2016	LASSO	competitor	Lasso	Sec 4.2 Tables 1-5	arXiv 2016		1611.09790	/home/fb31/SMC_Theory_Department/BENCH_METHODS_papers/Chen2016.pdf
+V10	Cho2012	LASSO	competitor	Lasso (lars)	Sec 4; Tables 2-5	JRSSB 2012	10.1111/j.1467-9868.2011.01023.x		/home/fb31/SMC_Theory_Department/BENCH_METHODS_papers/Cho2012.pdf
+V11	Griffin2021	HBS	competitor	Hamming ball sampler	Sec 4.1-4.4	Biometrika 2021	10.1093/biomet/asaa055	1708.05678	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Griffin2021.pdf
+V12	Rockova2018PEM	EMVS	competitor	EMVS	Sec 6	JASA 2018	10.1080/01621459.2017.1360778		/home/fb31/SMC_Theory_Department/SMC_LIT_papers/Rockova_2018_ParticleEM_JASA.pdf
+V13	Liang2023	MC3_ADS	competitor	ADS (thinned); ADS-DA; ADS-CPM	Sec 5.1-5.3	Entropy 2023	10.3390/e25091310	2308.00869	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Wan2023.pdf
+V14	Clyde2011	MC3_ADS	competitor	MC3 (add/delete); RS random-swap; RS-Thin	Sec 4 Tables 1-2; Sec 5 US crime; Sec 6 protein Table 3	JCGS 2011	10.1198/jcgs.2010.09049		/home/fb31/Papers_local/Papers/Core_bibliography/27_2011_Clyde_Ghosh_Littman_Bayesian_Adaptive_Sampling_for_Variable_Selection_and_Model_Averaging.pdf
+V15	Rockova2014	MC3_ADS	competitor	MH stochastic search (one-step random-scan proposal) on marginal posterior of gamma	Sec 4.3	JASA 2014	10.1080/01621459.2013.869223		/home/fb31/SMC_Theory_Department/BENCH_DESIGN_papers/Rockova_George_2014_EMVS_JASA.pdf
+V16	Piironen2020	ENET	competitor	Elastic net (alpha 0.7 and 0.3)	Sec 7.4 Fig 10	EJS 2020	10.1214/20-EJS1711	1810.02406	/home/fb31/SMC_Theory_Department/BENCH_METHODS_papers/Piironen2020.pdf
+V17	Bsila2025	VARBVS	competitor	varbvs	Sec 5.2 Table 3	arXiv 2025		2512.00627	/home/fb31/SMC_Theory_Department/BENCH_METHODS_papers/Bsila2025.pdf
+V18	Dai2023	KNOCKOFF	competitor	model-X knockoff filter (equi-correlated)	Sec 4.1; Figs 5-6	JASA 2023	10.1080/01621459.2022.2060113	2002.08542	/home/fb31/SMC_Theory_Department/BENCH_METHODS_papers/Dai2023.pdf
+V19	Wasserman2009	FSTEP	competitor	forward stepwise screening	Sec 6 Tables 1-2	AoS 2009	10.1214/08-AOS646	0704.1139	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/WassermanRoeder2009.pdf
+V20	Hazimeh2020	MCP	competitor	MCP (ncvreg)	Sec 5.3-5.6	Oper Res 2020	10.1287/opre.2019.1919	1803.01454	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/Hazimeh2020.pdf
+V21	Ray2020	EMVS	competitor	BinaryEMVS	Sec 5 Table 1; Supp Sec 8.2	NeurIPS 2020		2010.11665	/home/fb31/SMC_Theory_Department/BENCH_METHODS_papers/Ray2020.pdf
+V22	Jankowiak2023	ASI	competitor	ASI (Griffin); Wan-Griffin for PG	Sec 7	AISTATS 2023		2208.01180	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Jankowiak2023.pdf
+V23	Bhattacharya2015	LASSO	competitor	Lasso (LS)	Sec 4 Table 1	JASA 2015	10.1080/01621459.2014.960967	1401.5398	/home/fb31/SMC_Theory_Department/BENCH_METHODS_papers/Bhattacharya2015.pdf
+V24	Ray2020	HORSESHOE	competitor	rstanarm horseshoe (HMC)	Sec 5 Table 1	NeurIPS 2020		2010.11665	/home/fb31/SMC_Theory_Department/BENCH_METHODS_papers/Ray2020.pdf
+V25	Zhu2022abess	FSTEP	competitor	scikit-learn OMP (l0)	Sec 3 Fig 2; Sec 4	JMLR 2022		2110.09697	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/Zhu2022abess.pdf
+V26	Meinshausen2009	ADALASSO	competitor	adaptive lasso (Zou 2006)	Sec 4.1 Table 1	JASA 2009	10.1198/jasa.2009.tm08647	0811.2177	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/MeinshausenMeierBuhlmann2009.pdf
+V27	Hans2007	GIBBS_GAMMA	competitor	one-at-a-time Gibbs sampler	Sec 4.2 Fig 1	JASA 2007	10.1198/016214507000000121		/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Hans2007.pdf
+V28	Johndrow2020	LASSO	competitor	lasso (10-fold CV)	maize GWAS real data	JMLR 2020		1705.00841	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/JMLR21_19-536.pdf
+V29	Wen2016	NEW:MCMC_UNSPECIFIED	competitor	MCMC	Results: Simulation Studies	AJHG 2016	10.1016/j.ajhg.2016.03.029		
+V30	Cui2024	NEW:COJO_ABF	competitor	COJO-ABF	Results: Simulations	Nat Genet 2024	10.1038/s41588-023-01597-3		
+V31	Narisetty2014	NLP_MOMBF	competitor	piMOM (Johnson-Rossell 2012)	Sec 8 Tables 1-6	AoS 2014	10.1214/14-AOS1207	1405.6545	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Narisetty2014.pdf
+V32	Duan2026	NEW:ARD_EM	competitor	EM for automatic relevance determination (Tipping 2001)	Sec 3.1 Fig 2	arXiv 2026		2604.21009	/home/fb31/SMC_Theory_Department/BENCH_METHODS_papers/Duan2026.pdf
+V33	Bondell2012	DANTZIG	competitor	Dantzig selector	Sec 4.1 Tables 1-2 Fig 3	JASA 2012	10.1080/01621459.2012.716344		
+V34	Moser2015	NEW:LMM_BLUP	competitor	LMM	Results: simulated data	PLoS Genet 2015	10.1371/journal.pgen.1004969		
+V35	Wang2016	NEW:RRCS	competitor	RRCS robust rank correlation screening	Sec 4.1	JRSSB 2016	10.1111/rssb.12127	1506.01782	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/WangLeng2016.pdf
+V36	Yang2020	NEW:GROUP_SCAD_MCP	competitor	Group SCAD and group MCP	Sec 5 Tables 1-6	BA 2020	10.1214/19-BA1178		/home/fb31/SMC_Theory_Department/BENCH_METHODS_papers/Yang2020.pdf
+V37	Carbonetto2012	LASSO	ABSENT			BA 2012	10.1214/12-BA703		/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Carbonetto2012.pdf
+V38	Wang2020	ENET	ABSENT			JRSSB 2020	10.1111/rssb.12388		/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_SuSiE2020.pdf
+V39	Griffin2021	GIBBS_GAMMA	ABSENT			Biometrika 2021	10.1093/biomet/asaa055	1708.05678	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Griffin2021.pdf
+V40	Narisetty2019	LASSO	ABSENT			JASA 2019	10.1080/01621459.2018.1482754		/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Narisetty2019.pdf
+V41	Liang2022	WTGS	ABSENT	weighted tempered Gibbs sampler	Sec 5.1-5.2	Stat Comput 2022	10.1007/s11222-022-10137-8	2110.11747	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/BVS_Liang2022.pdf
+V42	Hazimeh2020	SCAD	ABSENT			Oper Res 2020	10.1287/opre.2019.1919	1803.01454	/home/fb31/SMC_Theory_Department/BENCH_DESIGN/papers/Hazimeh2020.pdf

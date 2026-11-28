@@ -1,0 +1,11 @@
+% Simulation designs (S1–S2; S3 dropped by the owner 11-25), for later use; not \input anywhere.
+% Citations per Theory's CITE_CHECK (Theory_work/Dept/assess/BENCH_DESIGN/CITE_CHECK.md, main ec44a6a1):
+% "following" = EXACT, "adapted from" / "cf." = SIMILAR. Page pointers are PDF pages of the version named.
+The first design follows \citet[Sec.~4.1 and Table~1]{GriffinLatuszynskiSteel2021}, % EXACT: Biometrika 108(1) Sec 4.1 + Table 1; arXiv 1708.05678v3 pp.13--14
+which is adapted from \citet[Sec.~3.4.1]{YangWainwrightJordan2016}: % SIMILAR: arXiv v1 p.12; beta, scaling, SNR, sigma^2 EXACT; their Sigma is e^{-|j-k|} (rho~0.37), not 0.6
+autoregressive predictors with correlation $0.6^{\lvert j-k\rvert}$, ten nonzero coefficients scaled by
+$\mathrm{SNR}\sqrt{\log p/n}$, and four signal strengths; \citet[Sec.~5.1]{LiangLivingstoneGriffin2022} use the same % EXACT: arXiv v3 Sec 5.1 p.15
+design up to $p=50{,}000$.
+The second design follows \citet[Sec.~3.1]{HastieTibshiraniTibshirani2020}: % EXACT: arXiv 1707.08692v2 Sec 3.1 pp.9--10 (Stat Sci page numbers unverified)
+autoregressive predictors with $\rho\in\{0,0.35,0.7\}$, $(n,p,s)\in\{(50,1000,5),(100,1000,10)\}$, and a grid of ten
+signal-to-noise ratios from $0.05$ to $6$.

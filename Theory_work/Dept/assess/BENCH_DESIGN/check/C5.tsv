@@ -1,0 +1,179 @@
+key	where	item	ours	source	verdict	location
+Schafer2013	PAPERS	doi	10.1007/s11222-011-9299-z (arXiv:1101.6037); Stat Comput 23(2) 163-184 (2013)	Crossref: 10.1007/s11222-011-9299-z = Schafer & Chopin, Statistics and Computing 23(2) 163-184; PDF header arXiv:1101.6037v4	OK	https://api.crossref.org/works/10.1007/s11222-011-9299-z; BVS_Schafer2013.pdf p1
+Schafer2013	PAPERS	X	real-X+real-y: Boston, Concrete, Protein augmented with interactions/squares/logs; no synthetic design	Same: real datasets augmented with first-order interactions, squares, logs (Sec 6.1 pp22-23)	OK	Sec 6.1 pp22-23
+Schafer2013	PAPERS	n	506; 1030; 96	Boston 506 observations; Concrete 1030; Protein 96 (Sec 6.1)	OK	Sec 6.1 pp22-23
+Schafer2013	PAPERS	p	max 104 (Boston); 79 Concrete; 88 Protein	104 possible predictors (Boston); 79 (Concrete); 88 (Protein, constant zero columns dropped)	OK	Sec 6.1 pp22-23
+Schafer2013	PAPERS	s0	unknown (real data)	No true model; reference PIPs from long MCMC run	OK	Sec 6.5 p25 ('MCMC ... for a few days')
+Schafer2013	PAPERS	beta	none; hierarchical prior; reference PIPs from MCMC	No true beta; Bayesian hierarchical prior; reference from MCMC run of a few days	OK	Sec 6.5
+Schafer2013	PAPERS	metrics	spread of MC PIP estimates over 200 runs; key indicators; evaluations of pi; run time	'We run each algorithm 200 times ... Monte Carlo estimate of the marginal probability of inclusion'; box plots; Tables 3-8; ~2.5e6 evaluations of pi	OK	Sec 6.3, 6.5
+Schafer2013	PAPERS	other	Code/data: R scripts; csv-format data	Implementation in Python 2.6 (SciPy); reads csv and generates R scripts for plotting only	MISMATCH	Sec 6.4 p24 ('numerical work ... in Python 2.6')
+Schafer2013	REPORT§2	design (sampler-efficiency runs)	Schafer-Chopin: 1 data set x 50-200 runs (L93)	200 runs per algorithm per real dataset (Sec 6.5)	OK	Sec 6.5
+Schafer2013	REPORT§3	n/p (Boston, Concrete, Protein)	506/104; 1030/79; 96/88 (L117-118)	506/104; 1030/79; 96/88	OK	Sec 6.1
+Schafer2013	REPORT§4	metric (spread of PIPs over runs)	Schafer-Chopin 2013 (L146)	Spread of MC PIP estimates across 200 runs (Sec 6.5)	OK	Sec 6.5
+Schafer2013	REPORT§6.1	datasets (S5)	Boston p=104; concrete 79; protein 88 (L228)	Same	OK	Sec 6.1
+Schafer2013	REPORT§3	Boston row	Shin 2018 listed as using Boston with +1000 noise columns (L117)	Not Schafer; included in Shin row check below	OK	n/a
+Schafer2013	REPORT§8	doi/citation	Row 60: 2013; 10.1007/s11222-011-9299-z (arXiv:1101.6037)	Crossref: Statistics and Computing 23(2) 2011 online / 2013 print; DOI and title match	OK	Crossref API
+Scheetz2006	PAPERS	doi	10.1073/pnas.0602562103; PNAS 103(39) 14429-14434 (2006)	Crossref: Scheetz et al., PNAS 103(39) 14429-14434, 2006	OK	https://api.crossref.org/works/10.1073/pnas.0602562103
+Scheetz2006	PAPERS	X	real-X+real-y: whole-eye expression of F2 rats; 399 markers for eQTL	120 F2 rats (SR/JrHsd x SHRSP intercross); 399 fully informative markers; eye expression arrays	OK	PMC1636701 Results/Methods (web copy)
+Scheetz2006	PAPERS	n	120	120 12-week-old male F2 rats	OK	PMC1636701 Methods
+Scheetz2006	PAPERS	p	above 31,000 probes; 18,976 expressed; 399 markers	'Of >31,000 gene probes ... 18,976 exhibited sufficient signal ... at least 2-fold variation'; 399 markers	OK	PMC1636701 Abstract/Results
+Scheetz2006	PAPERS	s0	n/a; eQTL 1,300 probes linked at alpha=0.001	'significant linkage ... for 1,300 probes (alpha = 0.001; estimated empirical FDR = 2%)'	OK	PMC1636701 Results
+Scheetz2006	PAPERS	beta	n/a (real data)	No simulation; ANOVA linkage	OK	PMC1636701 Methods
+Scheetz2006	PAPERS	metrics	n/a in source; ANOVA linkage; empirical FDR 2%	ANOVA F-tests per marker; empirical FDR 2% (q-values)	OK	PMC1636701 Methods/Results
+Scheetz2006	PAPERS	other	platform 'RAE230A'	Source says only 'an Affymetrix expression microarray' with >31,000 probes; name RAE230A not in text	UNVERIFIABLE	PMC1636701 Results
+Scheetz2006	REPORT§3	n/p (Scheetz rat eye, GSE5680)	120; 18,976 (L124)	120 rats; 18,976 probes with sufficient signal; GEO GSE5680 (Data deposition)	OK	PMC1636701 Methods, data deposition
+Scheetz2006	REPORT§8	doi/citation	Row 61: 2006; 10.1073/pnas.0602562103	Crossref matches	OK	Crossref API
+Scott2010	PAPERS	doi	arXiv:1011.2333; DOI 10.1214/10-AOS792; Ann Stat 38(5) 2587-2619	Crossref 10.1214/10-AOS792 = Scott & Berger, Ann Stat 38(5) 2587-2619, 2010; PDF header arXiv:1011.2333v1 and DOI	OK	Crossref API; BVS_Scott2010.pdf p1
+Scott2010	PAPERS	X	iid N(0,1) covariates	Table 1: N(0,1) design; Sec 6.1 step 1: random m x n design of independent N(0,1)	OK	Table 1 p9; Sec 6.1 p23
+Scott2010	PAPERS	n	Table 1 n not stated; Sec 6.1 n=16,30,60,120 (m=14); GDP n=30	Table 1 sample size not stated; Sec 6.1 'four different sample sizes (n = 16, n = 30, n = 60 and n = 120)'; GDP 30 countries	OK	Sec 6.1 p23; Sec 6.4
+Scott2010	PAPERS	p	max 100 (Table 1 m=11,20,50,100); m=14 in Sec 6.1; m=22 GDP	Table 1 m=100 design with 10 real + 1,90 noise (m=11,20,50,100); m=14 (Sec 6.1); 22 covariates (GDP)	OK	Table 1 p9; Sec 6.1; Sec 6.4
+Scott2010	PAPERS	s0	10 (Table 1); random Binomial(14;p) in Sec 6	'10 regression coefficients that differed from zero'; Sec 6.1: Bernoulli(p) trials with p~U(0,1)	OK	Table 1 text p9; Sec 6.1 step 2
+Scott2010	PAPERS	beta	Table 1: 10 nonzero, values not given in text read; Sec 6: Zellner-Siow prior; Y~N(X beta, I)	Table 1 'Signal' column gives the 10 coefficients (-1.08,-0.84,-0.74,+0.63,-0.51,+0.41,+0.35,-0.30,+0.18,+0.07); Sec 6.1 step 3-4: beta from Zellner-Siow prior, Y~N(X beta, I)	OK	Table 1 p9; Sec 6.1 p23 (our note that values are missing is incomplete, not contradicted)
+Scott2010	PAPERS	metrics	PIP x100; FP count (PIP>0.5); distribution of EB p-hat; EB vs FB	Table 1: PIP x100 for 10 real variables and FPs (PIP>=1/2); Figs 3-5: distribution of p-hat, collapse to 0/1	OK	Table 1 p9; Figs 3-5 pp23-24
+Scott2010	PAPERS	other	replicates 75,000 per n; 75,000 per prior	'performed 75,000 times for each of four different sample sizes'; 75,000 per non-uniform prior	OK	Sec 6.1, 6.2
+Scott2010	REPORT§2	design (independent X)	Scott-Berger 2010 listed as iid (L64)	iid N(0,1) design	OK	Table 1; Sec 6.1
+Scott2010	REPORT§8	doi/citation	Row 62: 2010; arXiv:1011.2333; DOI 10.1214/10-AOS792	Crossref and PDF match	OK	Crossref API
+Sesia2019	PAPERS	doi	10.1093/biomet/asy033; arXiv:1706.04677; Biometrika 106(1) 1-18 (2019)	Crossref 10.1093/biomet/asy033 = Sesia, Sabatti, Candes, Biometrika 106(1) 1-18 (online 2018, print 2019); arXiv:1706.04677v1 PDF	OK	Crossref API; Sesia2019.pdf p1
+Sesia2019	PAPERS	X	Markov chain (K=5) and HMM (K=9 clockwise) binary SNP-style; real WTCCC/NFBC genotypes	Sec 6.1.1: Markov chain on {-2..2}, K=5, gamma_j~U[0,0.5]; Sec 6.2: HMM K=9 clockwise, stay 0.9 move 0.1, gamma=0.35; Sec 6.3/7: real SNPs	OK	Sec 6.1.1 p14; Sec 6.2 p17; Sec 6.3 p21
+Sesia2019	PAPERS	n	sims n=1000; real chr-1 'n~1400+1000 shared'; NFBC 4644-5302; WTCCC 4913	Sims n=1000 (Sec 6.1.2, 6.2.2); chr-1 SNPs 'genotyped in 14,708 individuals' (Sec 6.3); 1000 obs are a hold-out for representative selection; NFBC n 4644-5302 and WTCCC 1917+2996=4913 (Table 4)	MISMATCH	Sec 6.3 p21 ('genotyped in 14,708 individuals'); Table 4 p24
+Sesia2019	PAPERS	p	sims p=1000; chr-1 29,258 -> 5260 after clustering; NFBC 328,934 -> 59,005; WTCCC 377,749 -> 71,145	Sims p=1000; chr-1 29,258 SNPs pruned to 5260 (Sec 6.3); NFBC p=328,934 -> 59,005 and WTCCC 377,749 -> 71,145 (Table 4)	OK	Sec 6.3 p21; Table 4 p24
+Sesia2019	PAPERS	s0	60 nonzero (all sims)	'The coefficient vector beta has 60 non-zero elements' (Sec 6.1.1); 60 randomly chosen nonzero for chr-1 (Sec 6.3)	OK	Sec 6.1.1 p14; Sec 6.3
+Sesia2019	PAPERS	beta	beta_j=a/sqrt(n) on S; a varied (a=10 Markov, a=6 HMM)	beta_j = a/sqrt(n) for j in S; 'a = 10' for sample-size experiment (Markov) and 'a = 6' (HMM, Sec 6.2.3)	OK	Sec 6.1.1 p14; Sec 6.1.2; Sec 6.2.3
+Sesia2019	PAPERS	metrics	power; FDP/FDR (alpha=0.1); replication vs larger meta-analyses; robustness to nu	Power and FDP over 100 replications, target FDR 0.1 (Figs 5, 8, 11); replication vs. larger studies (Sec 7)	OK	Sec 6.1.2, 6.2.2, 6.3, 7.2
+Sesia2019	PAPERS	other	20% holdout for representatives (real GWAS)	'spend ... 20% of the total n to perform marginal t-tests'	OK	Sec 7.1 p23
+Sesia2019	REPORT§3	WTCCC sample sizes (L129)	WTCCC ~2-5k per disease; p 3-4.4e5; cites Sesia 2019	Crohn 1917 cases + 2996 controls (4913); p=377,749	OK	Sec 7.1 p23
+Sesia2019	REPORT§8	doi/citation	Row 63: 2019; 10.1093/biomet/asy033; arXiv:1706.04677	Crossref match	OK	Crossref API
+Sesia2021	PAPERS	doi	10.1073/pnas.2105841118; PNAS 118(40) e2105841118 (2021)	Crossref 10.1073/pnas.2105841118 = Sesia, Bates, Candes, Marchini, Sabatti, PNAS 118(40) 2021	OK	Crossref API; PMC8501795 web copy
+Sesia2021	PAPERS	X	real-X (synthetic beta); phased UKB haplotypes; HMM knockoffs	Knockoffs built from phased haplotypes (HMM) on real UKB genotypes; phenotypes simulated conditional on real genotypes (Results)	OK	PMC8501795 Results
+Sesia2021	PAPERS	n	~489,000 (all UKB)	'phased haplotypes of 489,000 individuals'; '487,297 genotyped and phased subjects (application 27837)'	OK	PMC8501795 Results; Materials 'Preprocessing'
+Sesia2021	PAPERS	p	592,000 SNPs	'592,000 SNPs, chromosomes 1 to 22'	OK	PMC8501795 Results
+Sesia2021	PAPERS	s0	4,000 causal variants in 2,000 loci of 100 kb	'4,000 causal variants paired in 2,000 (100-kb-wide) loci ... 2 causal variants' per locus	OK	PMC8501795 Results (Analysis of simulated phenotypes)
+Sesia2021	PAPERS	beta	homoscedastic linear model; heritability varied; effect-size distribution in SI	Linear model with total heritability varied; effect-size distribution not in main text (SI not in our copy)	UNVERIFIABLE	PMC8501795 Results; SI not available
+Sesia2021	PAPERS	metrics	power = share of 2000 causal loci covered; FDP; resolution	'power is measured as the proportion of the 2,000 causal loci encompassed by at least one discovery, while the FDP ...'	OK	PMC8501795 Results (Fig 3-4)
+Sesia2021	PAPERS	other	4 continuous traits and 4 diseases; 208-kb resolution at FDR 10%; code URL	Traits height, BMI, platelet count, SBP; diseases CVD, respiratory, hyperthyroidism, diabetes; 208-kb resolution FDR 10% (Table 1); code at msesia.github.io/knockoffgwas	OK	PMC8501795 Results; Table 1
+Sesia2021	REPORT§3	UKB row (L130) p range	UK Biobank p = 10^6-1.8x10^7 (cites Sesia 2021)	Sesia 2021 uses 592,000 SNPs (below 10^6)	MISMATCH	PMC8501795 Results
+Sesia2021	REPORT§5C	'only three designs' with p>=5e5 and selection scoring (L~214)	Claims only Hazimeh 2020, Song-Liang 2015, Jankowiak 2023 qualify	Sesia 2021 (row in §5B) has p=592,000 >=5e5 and power/FDP scoring, so it also qualifies	MISMATCH	REPORT §5B row and §5C text
+Sesia2021	REPORT§5B	Sesia 2021 row (L201)	UKB ~489k; 592,000; 4,000; heritability grid	489k individuals; 592,000 SNPs; 4,000 causal variants	OK	PMC8501795
+Sesia2021	REPORT§8	doi/citation	Row 64: 2021; 10.1073/pnas.2105841118	Crossref match	OK	Crossref API
+Shin2018	PAPERS	doi	arXiv:1507.07106; DOI 10.5705/ss.202016.0167; Stat Sinica 28(2) 1053-1078 (2018)	Crossref 10.5705/ss.202016.0167 title/journal match; arXiv:1507.07106v4 PDF	OK	Crossref API; BVS_Shin2018.pdf
+Shin2018	PAPERS	X	equicorr rho=0.5; AR1 rho=0.5; iid; real PCR; Boston+1000 noise	Case 1 compound symmetry 0.5; Case 2 0.5^|j-j'|; Case 3 I (Sec 3.1); PCR (Sec 8.1); Boston + 1000 noise (Sec 8.2)	OK	Sec 3.1 p8; Sec 8.1-8.2
+Shin2018	PAPERS	n	400 (PR); 150-400 (Fig 3); 200 (timing); 60 (PCR); 506 (Boston)	n=400 (Fig 2); 150-400 (Fig 3); n=200 (Sec 7 timing, 'fixed sample size (n = 200)'); PCR n=60; Boston n=506	OK	Sec 3.1-3.2; Sec 8.1-8.2
+Shin2018	PAPERS	p	max 20000 (PR); Boston p=1010 (10+1000 noise); PCR 22,575	(n,p)=(400,10000) and (400,20000) (Fig 2); p=20,000 (Fig 3); Boston p=1,010; PCR 22,575 genes	OK	Sec 3.1; Sec 8.1-8.2
+Shin2018	PAPERS	s0	5	True model t={1,2,3,4,5}	OK	Sec 3.1 p8
+Shin2018	PAPERS	beta	beta0=(0.50,0.75,1.00,1.25,1.50); random signs (prob 1/2); sigma=1.5	'beta_t0=(0.50,0.75,1.00,1.25,1.50)^T and sigma = 1.5 ... signs ... randomly determined with probability one-half'	OK	Sec 3.1 p8
+Shin2018	PAPERS	metrics	PR curves; posterior prob of true model; models with odds >0.001; time; MSPE; model size	PR curves averaged over 100 replicates (Fig 2); posterior probability of true model (Fig 3); MSPE over 100 splits (Sec 8.1)	OK	Sec 3.1-3.2; Sec 8.1
+Shin2018	PAPERS	other	PCR response SCD1; 55 train/5 test splits x 100	Response SCD1 (Sec 8.1 line 'restrict attention ... to SCD1'); 'randomly split ... 5 test samples and 55 training samples'; 100 replications	OK	Sec 8.1 p22-23
+Shin2018	REPORT§2	equicorrelated design (L66)	Shin 2018 in equicorrelated row	Compound symmetry rho=0.5 Case 1	OK	Sec 3.1
+Shin2018	REPORT§3	Boston row (L117)	'Boston housing + interactions' p=104; Shin 2018 (+1000 noise columns)	Shin's Boston uses 10 continuous predictors (no interactions) plus 1,000 noise columns, p=1,010	MISMATCH	Sec 8.2 p25-26
+Shin2018	REPORT§3	PCR row (L115)	PCR n=60, p=22,575; Shin 2018 listed	n=60; 22,575 genes	OK	Sec 8.1
+Shin2018	REPORT§4	metric (PR curves / true-model posterior)	L142 PR curves; L147 posterior prob of true model, time to MAP	Sec 3.1-3.2 PR curves; posterior prob of true model and models visited	OK	Sec 3.1-3.2; Sec 8
+Shin2018	REPORT§5	L183 row	equicorr/AR0.5/iid; n=400; p=2e4; s=5; (0.5..1.5) random signs; sigma=1.5; PR curves	Same	OK	Sec 3.1
+Shin2018	REPORT§8	doi/citation	Row 65: arXiv:1507.07106; DOI 10.5705/ss.202016.0167	Crossref match	OK	Crossref API
+SongLiang2015	PAPERS	doi	10.1111/rssb.12095; JRSSB 77(5) 947-972 (2015)	Crossref 10.1111/rssb.12095 = Song & Liang, JRSSB 77(5) 947-972 (online 2014; print 2015); PDF header	OK	Crossref API; refs/Song_Liang_2015.pdf p1
+SongLiang2015	PAPERS	X	MVN; equicorr 0.25 (all pairs) Ex1; first 100 cols corr 0.25, rest indep Ex2; 2000 correlated massive; S4 pairwise 0.25	Ex1 'correlation between all different columns 0.25' (Sec 4.1.1); Ex2 first 100 columns mutually correlated 0.25, 900 independent (Sec 4.1.2); massive 2000 correlated rho=0.25, rest uncorrelated (Sec 4.2); supplement S4 pairwise 0.25	OK	Sec 4.1.1 p960-961; 4.1.2 p962; 4.2 p964; Supp S4
+SongLiang2015	PAPERS	n	Ex1 20-120 (Figs 1-3 n=38..125); Ex2 150; massive 100; S4 500; PCR 60; metabolic 50	Ex1 Fig 1 n=38,50,63,75,88,100,113 and Fig 3 up to 125; Ex2 n=150; massive n=100; S4 n=500; metabolic n=50 subjects; PCR n=60	OK	Sec 4.1.1; 4.1.2; 4.2; Supp S4; Sec 5.1-5.2
+SongLiang2015	PAPERS	p	Ex1 P_n=n^1.5 (~1315 at n=120); Ex2 1000; massive 500,000; S4 500; metabolic 10,000; PCR 22,575	P_n=n^1.5 (Sec 4.1.1); P_n=1000 (Ex2); P_n=500,000 (massive); S4 P_n=n=500; metabolic 10,000 SNPs preselected; PCR 22,575	OK	Sec 4.1.1-4.2; Sec 5.1-5.2; Supp S4
+SongLiang2015	PAPERS	s0	Ex1 5; Ex2 3; massive 5; S4 5	Ex1 first five columns true; Ex2 first three; massive five of the 2000 correlated; S4 five nonzero	OK	Sec 4.1.1-4.2; Supp S4
+SongLiang2015	PAPERS	beta	Ex1 (0.7,0.9,1.1,1.3,1.5) sigma=1; Ex2 (1.5,3.0,4.5); massive (0.2..0.6) sigma^2=0.25; S4 sigma^2=1	Ex1 beta=(0.7,0.9,1.1,1.3,1.5), sigma*=1; Ex2 (1.5,3.0,4.5); massive (0.2,0.3,0.4,0.5,0.6), sigma*^2=0.25; Supp S4 same five values, sigma^2=1	OK	Sec 4.1.1 p960; 4.1.2 p962; 4.2 p964; Supp S4
+SongLiang2015	PAPERS	metrics	Ex1 marginal inclusion probs and MAP prob; Ex2 Table 1 sizes; massive Table 2 fsr/nsr/MSE; time 16 h serial; real LOOCV	Figs 1-3 (PIPs, MAP probability); Table 1 (166.6 / 98.2 / 3.2 / 3.0); Table 2 (fsr, nsr, MSE); '16 h' serial and ~0.5 h on 100 cores (Sec 6); LOOCV Figs 4-5	OK	Sec 4.1.1-4.2; Sec 5; Sec 6 p968
+SongLiang2015	PAPERS	other	replicates 100 per setting; real single dataset; stage-1 alpha 0.15, stage-2 0.01; tau=0.01; a0=b0=1; r_n=P_n^(1-gamma), gamma=0.75	100 simulated data sets per setting; real single dataset; alpha1=0.15, alpha2=0.01; tau=0.01; a0=b0=1; gamma=0.75 with r_n=P_n^(1-gamma) (Sec 3.2)	MISMATCH	Sec 3.2 p960 ('we set gamma = 0.75 and r_n = P_n unless otherwise stated'); Ex1 r_n=sqrt(n) (Sec 4.1.1); PCR stage 2 r_n=P_n^0.3 (Sec 5.2)
+SongLiang2015	REPORT§2	equicorr 0.25 (L66)	Song-Liang 2015 listed under rho=0.25	rho=0.25 equicorrelation	OK	Sec 4.1.1
+SongLiang2015	REPORT§3	PCR row (L115)	PCR n=60, p=22,575; Song-Liang 2015 listed	n=60; 22,575	OK	Sec 5.2
+SongLiang2015	REPORT§5	massive row (L188)	equicorr 0.25 on first 2000 columns; n=100; p=5e5; s=5; beta=(0.2..0.6); sigma^2=0.25; 100 data sets	Same	OK	Sec 4.2 p964
+SongLiang2015	REPORT§5	L205 note	p=5e5, n=100, correlation confined to 2,000 columns	Same	OK	Sec 4.2
+SongLiang2015	REPORT§8	doi/citation	Row 66: 2015; 10.1111/rssb.12095	Crossref match	OK	Crossref API
+Staerk2024	PAPERS	doi	arXiv:2105.01039; DOI 10.1214/22-BA1351; Bayesian Anal 19(1) 261-291 (2024)	Crossref 10.1214/22-BA1351 = Staerk, Kateri, Ntzoufras, Bayesian Analysis 19(1) 261-291 (2024); arXiv:2105.01039v2 PDF	OK	Crossref API; BVS_Staerk2024.pdf
+Staerk2024	PAPERS	X	Toeplitz rho^|k-l| with rho=0.9 illustrative; rho 0.3/0.9/0.99 low-dim; rho=0.6 high-dim; real Tecator/PCR/Golub	Sec 5.1 rho=0.9 (n=60,p=20); Sec 5.2 rho in {0.3,0.9,0.99}; Sec 5.3 rho=0.6; Sec 6 Tecator, PCR, Golub	OK	Sec 5.1 p14; 5.2 p15; 5.3 p18-19; 6.1-6.2
+Staerk2024	PAPERS	n	60 (illustrative and low-dim); 500,1000 (high-dim); real 172/60/72	n=60 (5.1, 5.2); n in {500,1000} (5.3); Tecator 172; PCR 60; Golub 72	OK	Sec 5.1-5.3; 6.1-6.2
+Staerk2024	PAPERS	p	max 5000 high-dim; PCR 22575; Golub 3571 (6817 raw); Tecator 100	p in {500,5000} (5.3); PCR 22,575; Golub '6817 gene expression measurements' reduced to p=3571 (6.2); Tecator p=100	OK	Sec 5.3 p19; Sec 6.2 p27
+Staerk2024	PAPERS	s0	5 (illustrative); random 0-10 (low-dim); 10 (high-dim)	S0={1..5} (5.1); s0 randomly drawn from {0..10} (5.2); (2,-3,2,2,-3,3,-2,3,-2,3) i.e. 10 nonzero (5.3)	OK	Sec 5.1-5.3
+Staerk2024	PAPERS	beta	beta0=(0.4..2.0); U(-2,2); SNR*sqrt(log p/n)*(2,-3,...); SNR 0.5,1,2,3; sigma=1	beta0=(0.4,0.8,1.2,1.6,2.0,0,...) (5.1); beta_j~U(-2,2) (5.2); beta0=SNR*sqrt(log p/n)*(2,-3,...), SNR in {0.5,1,2,3}, sigma=1 (5.3)	OK	Sec 5.1-5.3
+Staerk2024	PAPERS	metrics	relative ESS of PIP vs add-delete-swap MC3; acceptance; PIP stability; MSE of PIPs; time	Time-standardised relative ESS vs ADS (Sec 5.3 with 200 runs); acceptance rates; PIP stability across 25 chains (6.2)	OK	Sec 5.3 p19-20; Sec 6.2
+Staerk2024	PAPERS	other	replicates: 200 datasets low-dim; 1 dataset x 200 runs high-dim; 25 chains real; code github MAdaSub	200 datasets (5.2); one dataset per setting, algorithm run 200 times (5.3); 25 independent chains (6.1, 6.2); code https://github.com/chstaerk/MAdaSub	OK	Sec 5.2; 5.3; 6.1-6.2; Sec 1
+Staerk2024	REPORT§2	YWJ scaling (L76)	Staerk 2024 among users of (a) YWJ scaling	beta0=SNR*sqrt(log p/n)*(2,-3,...), sigma=1	OK	Sec 5.3
+Staerk2024	REPORT§3	Golub row (L116)	Leukemia (Golub 1999): 7,129 raw (3,571 after preprocessing); Staerk 2024 listed	Staerk: 6817 gene expression measurements, n=72; p=3571 after Dudoit preprocessing	MISMATCH	Sec 6.2 p27 ('6817 gene expression measurements'); note Golub 1999 original array has 7,129 probes (minor)
+Staerk2024	REPORT§3	PCR row (L115)	PCR n=60, p=22,575; Staerk listed	Same	OK	Sec 6.2
+Staerk2024	REPORT§3	Tecator row (L119)	Tecator 172 x 100; Staerk listed	n=172, p=100	OK	Sec 6.1 p25
+Staerk2024	REPORT§4	ESS metric (L145) and PIP-MSE (L144)	Staerk 2024 listed under time-standardised ESS and PIP-MSE	Time-standardised relative ESS used (5.3); PIP MSE/variance reported	OK	Sec 5.3; Sec 6
+Staerk2024	REPORT§8	doi/citation	Row 67: 2024; arXiv:2105.01039; DOI 10.1214/22-BA1351	Crossref match	OK	Crossref API
+Su2017	PAPERS	doi	10.1214/16-AOS1521; arXiv:1511.01957; Ann Stat 45(5) 2133-2150 (2017)	Crossref 10.1214/16-AOS1521 = Su, Bogdan, Candes, Ann Stat 45(5) 2133-2150 (2017); PDF arXiv:1511.01957v4	OK	Crossref API; Su2017.pdf
+Su2017	PAPERS	X	iid N(0,1)	'X entries iid N(0;1)' (Fig 1; Fig 5-7); theory linear-sparsity regime	OK	Sec 1 Fig 1; Sec 2.4; Sec 4
+Su2017	PAPERS	n	n=1010 (Fig 1); n=p=1000 and 5000 (Fig 5); n=250 (Fig 6); n=p=1000 (Fig 7)	Fig 1 1010 x 1000; Sec 2.4 n=p=1000 and n=p=5000; Fig 6 n=250; Fig 7 n=p=1000	OK	Sec 1 p3; Sec 2.4 p9; Sec 4
+Su2017	PAPERS	p	max 5e3 (noiseless illustration); typical 1000	p=1000 (Figs 1,6,7); p=5000 (Sec 2.4 numerical)	OK	Sec 2.4; Sec 4
+Su2017	PAPERS	s0	k=200; k=eps p with eps=0.2; k=18; k=5..150	Fig 1: beta_1..200=4; Fig 5 eps=0.2; Fig 6: 18 coefficients; Fig 7: k from 5 to 150	OK	Sec 1; Sec 2.4; Sec 4
+Su2017	PAPERS	beta	Fig 1 beta=4 on 200; Fig 5 mixture sigma=0; Fig 6 beta=2.5sqrt(2log p)~9.3 on 18, sigma^2=1 or 0; Fig 7 beta=50, sigma^2=1	Fig 1 beta=4, unit-variance errors; Fig 6 beta=2.5*sqrt(2 log p)~9.3, sigma^2=1 or 0; Fig 7 beta=50, sigma^2=1; Fig 5 sigma=0	OK	Sec 1 p3; Sec 2.4; Sec 4 p10-11
+Su2017	PAPERS	metrics	TPP vs FDP along lasso path; rank of first FD; exact recovery 75% (noiseless Fig 6)	TPP/FDP paths; exact recovery 'occurs in only 75% of all replicates' (Sec 4, Fig 6 setting); 500 trials (Fig 6); 100 replicates (Fig 5b, 7)	OK	Sec 4 p11 ('75% of all replicates')
+Su2017	PAPERS	other	replicates: 10 paths (Fig 5a); 100 (Fig 5b, 7); 500 (Fig 6)	10 independent Lasso paths (Fig 5a); 100 replicates (Fig 5b, 7); 500 trials (Fig 6)	OK	Sec 2.4; Sec 4
+Su2017	REPORT§2	independent design (L64)	Su et al. 2017 listed under Independent	iid N(0,1)	OK	Sec 1
+Su2017	REPORT§4	exact recovery (L140)	Su 2017 listed	Exact recovery probability 75% in noiseless Fig 6 setting	OK	Sec 4
+Su2017	REPORT§8	doi/citation	Row 68: 2017; 10.1214/16-AOS1521; arXiv:1511.01957	Crossref match	OK	Crossref API
+Tibshirani1996	PAPERS	doi	10.1111/j.2517-6161.1996.tb02080.x; JRSSB 58(1) 267-288 (1996)	Crossref 10.1111/j.2517-6161.1996.tb02080.x = Tibshirani, JRSSB 58(1) 267-288 (1996); course copy read	OK	Crossref API; course-hosted PDF
+Tibshirani1996	PAPERS	X	Ex1-3 AR(0.5) Sigma_ij=0.5^|i-j|; Ex4 pairwise 0.5 (x=z+z_i)	Ex1-3 correlation rho^|i-j| with rho=0.5 (Sec 7.2); Ex4 x_ij=z_ij+z_i giving pairwise corr 0.5 (Sec 7.5)	OK	Sec 7.2 p274; Sec 7.5 p275
+Tibshirani1996	PAPERS	n	Ex1-3 n=20; Ex4 n=100; prostate n not extracted	Ex1 '50 data sets consisting of 20 observations'; Ex4 '50 data sets each having 100 observations'	OK	Sec 7.2; Sec 7.5
+Tibshirani1996	PAPERS	p	Ex4 p=40 (max); Ex1-3 p=8	8 coefficients (Ex1-3); 40 variables (Ex4)	OK	Sec 7.2-7.5
+Tibshirani1996	PAPERS	s0	Ex1 s=3; Ex2 s=8; Ex3 s=1; Ex4 s=20	Ex1 beta=(3,1.5,0,0,2,0,0,0); Ex2 all 0.85; Ex3 (5,0,...,0); Ex4 blocks of 10 twos	OK	Sec 7.2-7.5
+Tibshirani1996	PAPERS	beta	Ex1 a=3 SNR~5.7; Ex2 a=3 SNR~1.8; Ex3 a=2 SNR~7; Ex4 noise sd 15, SNR~9	Ex1 'a = 3 ... signal-to-noise ratio of approximately 5.7'; Ex2 SNR 1.8; Ex3 a=2 SNR ~7; Ex4 y=beta'x+15 eps (text garbled in OCR, read as 15) SNR ~9	OK	Sec 7.2-7.5 (Ex4 OCR garbled; 15 read from '156')
+Tibshirani1996	PAPERS	metrics	median MSE (ME); avg zeros; most frequent models; bootstrap SE	Mean squared error reported in tables (Tables 3-8); average number of zero coefficients (Ex4); bootstrap SEs for prostate (Fig 6)	OK	Sec 7 Tables 3-8; Sec 3
+Tibshirani1996	PAPERS	other	replicates 50 per example; MSE over 200 simulations (Ex1 text)	'simulated 50 data sets' (Ex1, Ex4); 'Table 3 shows the mean-squared errors over 200 simulations'	OK	Sec 7.2 p274 (internal inconsistency as our note says)
+Tibshirani1996	REPORT§2	AR(1) rho=0.5 (L65)	Tibshirani 1996 listed under AR(1)	AR(0.5) designs (Ex1-3)	OK	Sec 7.2
+Tibshirani1996	REPORT§2	adversarial/other (L79)	Tibshirani's (3,1.5,0,0,2,0,0,0) (5 papers)	Ex1 coefficients (3,1.5,0,0,2,0,0,0)	OK	Sec 7.2
+Tibshirani1996	REPORT§3	Prostate row (L125)	Ozone/Crime/Diabetes/Prostate n 203-442/47; p 8-134; Tibshirani 1996 listed	Prostate has 8 predictors (p=8) (Sec 3-4); prostate n not stated in our extract, row does not list prostate n separately	OK	Sec 3 p273
+Tibshirani1996	REPORT§8	doi/citation	Row 69: 1996; 10.1111/j.2517-6161.1996.tb02080.x	Crossref match	OK	Crossref API
+Titsias2017	PAPERS	doi	arXiv:1504.08133; DOI 10.1080/01621459.2016.1222288; JASA 112(520) 1598-1611 (2017)	Crossref 10.1080/01621459.2016.1222288 = Titsias & Yau, JASA 112(520) 1598-1611 (2017); arXiv:1504.08133 PDF	OK	Crossref API; BVS_Titsias2017.pdf
+Titsias2017	PAPERS	X	two perfectly confounded relevant columns among noisy redundant inputs; SI details	'two relevant covariates ... perfect confounders ... noisy redundant inputs' (Sec 2.2 / 4.2)	OK	Sec 2.2 p6
+Titsias2017	PAPERS	n	100 (simulated)	N = 100 responses	OK	Sec 2.2 p6
+Titsias2017	PAPERS	p	1200 (sim); 10000 eQTL (SI D.3)	D = 1,200 covariates; eQTL with 10,000 covariates in SI D.3 (SI not in our copy)	OK	Sec 2.2 p6; Sec 4 (SI not read)
+Titsias2017	PAPERS	s0	2 true covariates (perfect confounders)	'two relevant covariates that fully explain the data'	OK	Sec 2.2 p6
+Titsias2017	PAPERS	beta	not stated in main text (SI D)	Main text gives no beta/SNR; only that the two relevant covariates explain the response	OK	Sec 2.2 p6
+Titsias2017	PAPERS	metrics	running marginal PIPs of x11, x611 vs 0.5; CPU time; IACT; log joint density	Trace plots of running marginal PIPs of x11 and x611 converging to 0.5 (Fig 3); CPU time and integrated autocorrelation time	OK	Sec 2.2 p6; Fig 3
+Titsias2017	PAPERS	other	priors: sigma^2 IG(0.1,0.1); g=N; Beta(0.001,1); K=10 blocks; HB1-3 radius 1-3	sigma^2 InvGa(0.1,0.1); g=N; Beta(pi0|0.001,1); HB K=10, m=1-3 (Sec 2.2, 4.1)	OK	Sec 2.2 p6; Sec 4 (priors p13)
+Titsias2017	REPORT§2	adversarial design (L69)	Titsias-Yau 2017 (confounded pair)	Two perfectly confounded relevant covariates	OK	Sec 2.2
+Titsias2017	REPORT§7	SI not read (L267)	Titsias-Yau simulation details in SI we did not read	SI D not in arXiv v2 PDF; main text only	OK	Sec 2.2; Sec 4.2
+Titsias2017	REPORT§8	doi/citation	Row 70: 2017; arXiv:1504.08133; DOI 10.1080/01621459.2016.1222288	Crossref match	OK	Crossref API
+Valdar2006	PAPERS	doi	10.1534/genetics.106.060004; Genetics 174(2) 959-984 (2006)	Crossref 10.1534/genetics.106.060004 = Valdar et al., Genetics 174(2) 959-984 (2006); author list matches	OK	Crossref API; PMC1602068 web copy
+Valdar2006	PAPERS	X	real-X+real-y: heterogeneous stock mice; genotypes in companion paper not opened; pedigree A matrix	HS mice from eight inbred strains, 50 generations of pseudo-random breeding; additive relationship matrix from the pedigree (Methods)	OK	PMC1602068 Materials and Methods
+Valdar2006	PAPERS	n	2448 (1220 F; 1228 M)	'2448 genetically heterogeneous stock (HS) mice (1220 female, 1228 male)'	OK	PMC1602068 Abstract/Methods
+Valdar2006	PAPERS	p	not given in this paper	No markers analysed in this paper (pedigree heritability only)	OK	PMC1602068 Methods
+Valdar2006	PAPERS	s0	n/a	n/a	OK	PMC1602068
+Valdar2006	PAPERS	beta	n/a; 88 phenotypes; 15 covariates	'heritability of 88 complex traits'; '15 covariates'	OK	PMC1602068 Abstract; Methods
+Valdar2006	PAPERS	metrics	heritability h2 and common-environment effect from mixed model; covariate effects	'We estimated the heritability of each phenotype'; mixed model with additive and common-environment random effects	OK	PMC1602068 Methods
+Valdar2006	PAPERS	other	85 families cited to Zhou 2013; genotype data URL mus.well.ox.ac.uk	'85 families' does not appear in this paper; no genotype URL checked in this paper	UNVERIFIABLE	PMC1602068
+Valdar2006	REPORT§3	HS mice row (L128)	HS mice (Valdar 2006) n ~2,000; p -; cites Zhou 2013	n=2448 (rounded to ~2,000)	OK	PMC1602068 Abstract
+Valdar2006	REPORT§8	doi/citation	Row 71: 2006; 10.1534/genetics.106.060004	Crossref match	OK	Crossref API
+Wan2021	PAPERS	doi	10.1007/s11222-020-09974-2; Stat Comput 31(1) art 6 (2021)	Crossref 10.1007/s11222-020-09974-2 = Wan & Griffin, Stat Comput 31 (2021); PDF header 'Statistics and Computing (2021) 31:6'	OK	Crossref API; BVS_Wan2021.pdf p1
+Wan2021	PAPERS	X	AR1 rho=0.6; real microarray / survival	x_i~N(0,Sigma), Sigma_jk=0.6^|j-k| (Sec 4.1); real logistic and AFT sets (Sec 4.2)	OK	Sec 4.1 p7-8; Sec 4.2 p9
+Wan2021	PAPERS	n	500,1000 (sim); 31,62,72,136 (logistic real); 235, 614 (AFT)	(n,p) in {500,1000} x {500,5000} (Sec 4.1); Table 1 real n: 31, 62, 72, 136; Table 4 DLBCL 235, Breast 614	OK	Sec 4.1 p7; Tables 1, 4
+Wan2021	PAPERS	p	max 5000 sim; real Prostate 10150	p in {500,5000} (Sec 4.1); real p: 755, 1224, 3571, 10,150; DLBCL 7399; Breast 3378	OK	Table 1 p8; Table 4 p9
+Wan2021	PAPERS	s0	10	First 10 coefficients nonzero (Sec 4.1)	OK	Sec 4.1 p7
+Wan2021	PAPERS	beta	beta=SNR*(2,-3,2,2,-3,3,-2,3,-2,3,0..0), SNR in {0.5,1,2,3}	beta = SNR(2,-3,2,2,-3,3,-2,3,-2,3,0,...,0)^T, no sqrt(log p/n) factor (Sec 4.1)	OK	Sec 4.1 p7
+Wan2021	PAPERS	metrics	median ESS; time-normalised ESS vs ADS-DA; ESS	Time-normalised ESS (ESS/T) relative to ADS-DA, Tables 1-4	OK	Sec 4.1-4.2; Tables 1-4
+Wan2021	PAPERS	other	replicates: one simulated dataset per (n,p,SNR) cell	Table 1 uses one data set per cell ('apart from the data set with n=500, p=5000 and SNR=1' is discussed as a single data set)	OK	Sec 4.1 p8
+Wan2021	REPORT§2	YWJ scaling (L76)	Wan-Griffin 2021 listed among users of (a) beta=SNR*sqrt(sigma^2 log p/n)*(2,-3,...)	Wan 2021 uses beta=SNR*(2,-3,...) with no sqrt(log p/n) factor	MISMATCH	Sec 4.1 p7 (eq. for beta)
+Wan2021	REPORT§3	Leukemia row (L116)	Leukemia p=3571; Wan 2021 listed	Leukemia n=72, p=3571 (Table 1)	OK	Table 1 p8
+Wan2021	REPORT§4	ESS metric (L145)	Wan 2021 listed under time-standardised ESS	Time-normalised ESS (Tables 1-4)	OK	Sec 4
+Wan2021	REPORT§8	doi/citation	Row 72: 2021; 10.1007/s11222-020-09974-2	Crossref match	OK	Crossref API
+Wang2016	PAPERS	doi	10.1111/rssb.12127; arXiv:1506.01782; JRSSB 78(3) 589-611 (2016)	Crossref 10.1111/rssb.12127 = Wang & Leng, JRSSB 78(3) 589-611 (online 2015; print 2016); arXiv:1506.01782v1 PDF	OK	Crossref API; WangLeng2016.pdf
+Wang2016	PAPERS	X	iid; equicorr 0.3/0.6/0.9; AR; factor; group; extreme correlation	Six examples (i) iid, (ii) compound symmetry, (iii) AR, (iv) factor, (v) group, (vi) extreme correlation (Sec 4.1)	OK	Sec 4.1 pp12-14
+Wang2016	PAPERS	n	(p,n)=(1000,100), (10000,200); Sim II 50-500; real 120	Sim I (p,n)=(1000,100) and (10000,200); Sim II n=50..500; real n=120	OK	Sec 4.1, 4.4, 4.5
+Wang2016	PAPERS	p	1.9e4 (real 18976 -> top 5000); Sim II up to ~1.1e4	p=1000 and 10000; Sim II p=4*floor(exp(n^(1/3))) up to ~1.1e4; real 18,976 probes reduced to top 5000 variance	OK	Sec 4.1, 4.4, 4.5
+Wang2016	PAPERS	s0	5 (ii-iv,vi); 15 (group); Sim II s=floor(n^(1/4))*(1.5 or 1)	beta_i=5 for i=1..5 (ii); beta1=3,beta4=1.5,beta7=2 (iii); 15 true in groups (v); Sim II s=floor(n^(1/4)) times 1.5 or 1	OK	Sec 4.1 pp12-14; Sec 4.4
+Wang2016	PAPERS	beta	(i) beta=(-1)^u(|N(0,1)|+4logn/sqrt(n)), u~Ber(0.4); R^2 50%/90%; x5 example y=5x1+...-20 rho x5	(i) beta_i=(-1)^u_i(|N(0,1)|+4 log n/sqrt n), u~Ber(0.4); R^2=var(x'beta)/var(y) 50% or 90%; x5 example 'y=5x1+5x2+5x3+5x4-20rho x5+eps'	OK	Sec 4.1 p12-13; Sec 4.2
+Wang2016	PAPERS	metrics	coverage (true model in submodel); #FN; #FP; exact recovery; size; ||beta_hat-beta||; time	Probability of including true model; #FN/#FP; exact recovery; model size; ||beta_hat-beta||_2; time (Table 2)	OK	Sec 4.1-4.3; Table 2
+Wang2016	PAPERS	other	replicates: 200 (p=1000); 100 (p=10000); 50 per n in Sim II; 200 x5 example	'200 datasets are used for p=1000 and 100 datasets are for p=10000'; 50 datasets each example (Sim II); 200 x5 example	OK	Sec 4.1 p12; Sec 4.4 p17; Sec 4.2
+Wang2016	REPORT§2	factor design (L68)	Wang-Leng 2016 under factor model	Example (iv) factor model x_i=sum phi f + eta	OK	Sec 4.1
+Wang2016	REPORT§2	R^2 grid (L77)	Wang-Leng 2016 (R^2 in {0.5,0.9})	R^2=50% and 90%	OK	Sec 4.1 p12
+Wang2016	REPORT§4	screening coverage (L143)	Wang-Leng 2016 under sure-screening coverage	Probability of including true model in submodel of size n	OK	Sec 4.1-4.2
+Wang2016	REPORT§5	Wang & Leng 2016 row (L185)	iid/equicorr/AR/factor; n=200; p=1e4; s=5; R^2 in {0.5,0.9}; screening coverage	Sim I at (p,n)=(10000,200); R^2=50/90%; s=5 in main examples	OK	Sec 4.1 p12; Table 2
+Wang2016	REPORT§8	doi/citation	Row 73: 2016; 10.1111/rssb.12127; arXiv:1506.01782	Crossref match (print 2016)	OK	Crossref API
+Wang2020	PAPERS	doi	10.1111/rssb.12388 (bioRxiv 10.1101/501114); JRSSB 82(5) 1273-1300 (2020)	Crossref 10.1111/rssb.12388 = Wang, Sarkar, Carbonetto, Stephens, JRSSB 82(5) 1273-1300 (2020); PDF header matches	OK	Crossref API; BVS_SuSiE2020.pdf p1
+Wang2020	PAPERS	X	real GTEx genotypes; real LD; 150 genes; p=1000-12000	Real human genotypes n=574 (GTEx); 150 randomly chosen genes; 1000 to 12000 SNPs (Sec 4, p14)	OK	Sec 4 p14
+Wang2020	PAPERS	n	574 sim; 87 splice QTL; timing 1e5 and 1000	n=574 genotype samples (p14); 87 Yoruban individuals (Sec 5); timing n=100000 (p=500) and n=1000 (p=50000)	OK	Sec 4 p14; Sec 5 p20; Sec 4.5 timing p16
+Wang2020	PAPERS	p	scenario1 p=1000; scenario2 3000-12000; timing 500/50000; splice ~600	Scenario 1 p=1000; scenario 2 3000-12000 SNPs; timing demo p=500 and p=50000; splice ~600 SNPs per intron	OK	Sec 4 p14-15; Sec 5 p20
+Wang2020	PAPERS	s0	S in {1..5}; S=10 (scenario 2)	'all pairwise combinations of S in {1,...,5}'; scenario 2 'S = 10'	OK	Sec 4 p14-15
+Wang2020	PAPERS	beta	b_j~N(0,0.6^2); PVE phi in {0.05,0.1,0.2,0.4}; scenario 2 phi=0.3; sigma0^2=0.1 var(y)	b_j~N(0,0.6^2); phi in {0.05,0.1,0.2,0.4}; scenario 2 phi=0.3; sigma0_l^2 fixed 0.1 var(y) (p16) and 0.096 in real data (Sec 5)	OK	Sec 4 p14-16; Sec 5 p20
+Wang2020	PAPERS	metrics	power/FDR of PIPs; CS coverage, size, purity; calibration; run time	Power and FDR of PIPs (Figs 1-2); CS coverage and size/purity (Fig 3); timing (Table 2)	OK	Sec 4 Figs 1-3; Sec 4.5
+Wang2020	PAPERS	other	replicates: 6000 (scenario 1); 300 (scenario 2)	2 x 150 x 5 x 4 = 6000 data sets (scenario 1); 2 x 150 = 300 (scenario 2)	OK	Sec 4 p15
+Wang2020	REPORT§2	PVE set (L78)	SuSiE uses PVE {0.05,0.1,0.2,0.4}	Same	OK	Sec 4 p15
+Wang2020	REPORT§3	GTEx row (L131)	GTEx genotypes n 287-574; p 1e3-1.2e4; Wang 2020 listed	n=574; p=1000-12000	OK	Sec 4 p14
+Wang2020	REPORT§4	credible-set metrics (L149)	SuSiE line: Wang 2020 credible-set coverage, size and purity	Coverage, size, purity of CSs (Fig 3)	OK	Sec 4.3 p17
+Wang2020	REPORT§8	doi/citation	Row 74: 2020; 10.1111/rssb.12388 (bioRxiv 10.1101/501114)	Crossref match; bioRxiv DOI not checked	OK	Crossref API

@@ -1,0 +1,97 @@
+# W3-D2 — PROOF of Theorem 2X and Corollary 2X (v1.3, 2026-11-17; v1.3 = council R1 editorial [R1-opus-E1, E4] (P5 added, a remark); v1.1 = K1 amendments [K1-1]–[K1-4], `reviews/K1_disposition.md`; v1.2 = K2 editorial [K2-E1], [K2-E2] and line 3 rewritten to carry the full conditional status verbatim [K3-E2])
+
+Status: **PROVED (by this seat, unchecked), conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1, W3-POST2:A0, C-MIS:GDb, C-MIS:Prop-P** (the list carried from `W3-MISR-R:CorGb-plus@1.0.1`, historical; the active conditions, at `CorGb-plus@1.0.3`, are W2-APP:POST, C-MIS:GDb, C-MIS:Prop-P: STATEMENT §5).
+Statement: `STATEMENT.md` v1.4 (v1.1 locked; v1.2–v1.4 EQUAL) §§0–3 [K2-E2]; clause (E) is the explicit form of §1. Aliases as there. Every step is either a citation (file:line, id@version) or
+elementary; no new estimate.
+
+## P0. Deterministic facts (STATEMENT §3)
+
+Fix a data set with y^r non-constant; write π for π(· | X^r, y^r) and δ := 1 − π(S₀) (δ = 1 if S₀ ∉ Ω).
+1. *PIP error.* For j ∈ S₀: 1 − PIP_j = π(S ∌ j) ≤ π(S ≠ S₀) = δ. For j ∉ S₀: PIP_j = π(S ∋ j) ≤ π(S ≠ S₀) = δ.
+   So max_j |PIP_j − 1{j ∈ S₀}| ≤ δ.
+2. *HPM.* If HPM = T ≠ S₀, then π(T) ≥ π(S₀) = 1 − δ (T maximises π) and π(T) ≤ π(S ≠ S₀) = δ; so δ ≥ ½.
+3. *MPM.* MPM = {j : PIP_j > ½}. If MPM ≠ S₀, either some j ∈ S₀ has PIP_j ≤ ½, so δ ≥ 1 − PIP_j ≥ ½ by 1, or some
+   j ∉ S₀ has PIP_j > ½, so δ ≥ PIP_j > ½ by 1. Either way δ ≥ ½.
+(Item 1 is [MISR] MIS-R (i) consequence 1, `:118-119`, "for every data set".) Under the model of STATEMENT §0, y^r is
+non-constant almost surely (σ² > 0, n ≥ 2), so P0 holds almost surely.
+
+## P1. Theorem 2X is an instance of CorGb-plus
+
+Map STATEMENT §0 to the setting of [MISR-R] §3 (`:96-100`) with candidate set 𝒞 := [p] and **no omitted columns**:
+- q := 0, X^r_𝓜 the n × 0 matrix, β_𝓜 ∈ ℝ⁰, so X^r_𝓜β_𝓜 = 0 ∈ ℝⁿ; X^r_𝒞 := X^r, β_𝒞 := β, m_𝒞 := m, Σ_𝒞𝒞 := Σ;
+  α as in §0 (deterministic; [MISR-R] §2 allows any real random variable, `:51-54`).
+- **(N)** ([MISR-R] `:56`): ε ~ N_n(0, σ²I_n), σ² a deterministic (n-dependent) parameter (§0 `:19`, `:21`), independent of
+  (X^r_𝒞, X^r_𝓜) = (X^r, empty) — this is §0 [K1-3].
+- **(OV)** ([MISR-R] `:67-68`) with the deterministic choices a := 0, γ := 0, τ² := 0: conditionally on X^r,
+  X^r_𝓜β_𝓜 = 0 has law δ₀ = N_n(0·1 + X^r·0, 0·I_n) (N_k(m, 0) := δ_m, [MISR-R] `:31`). So (OV) holds; a, γ, τ² are
+  deterministic as [MISR-R] `:97-98` requires.
+- Then β^𝒞 = β_𝒞 + γ = β, σ²_𝒞 = σ² + τ² = σ² > 0, supp β^𝒞 = S₀, s = s₀, and
+  π_𝒞(· | X^r_𝒞, y^r) = π(· | X^r, y^r): both are the coded target of [W3P] §0 computed from the same (X^r, y^r)
+  ([MISR] §0 `:21-22`: "π_𝒞(· | x, y^r) is the coded target of [W3P] §0 (lines 16-29) computed from (x, y^r)").
+  So CorGb-plus's δ_n = 1 − π_𝒞(supp β^𝒞 | X^r_𝒞, y^r) is STATEMENT's δ_n, and its HPM is STATEMENT's HPM.
+- Rows: i.i.d. N_p(m, Σ) with Σ_jj > 0 ([MISR-R] `:96`) — §0. "Everything may depend on n" ([MISR-R] `:99`) — §0.
+
+Hypotheses of CorGb-plus ([MISR-R] `:100-104`), with c_R := c:
+- 2 ≤ p ≤ n^A: (A1). s := |supp β^𝒞| = s₀ ≥ 1 fixed: (A1) and the fixed s₀ of STATEMENT §1.
+- *Floor.* CorGb-plus asks λ_min(R_TT) ≥ c_R for every T ⊆ 𝒞 with |T| ≤ k_n := s + max(j₀, m♯_n). For n ≥ max(3, 2s₀)
+  we have s₀ ≤ K = min(p, ⌊n/2⌋) (p ≥ s₀ because S₀ ⊆ [p]), so `W3-READER:R1@1.0.2` B4.1 ([R1] `:43-45`, valid for
+  s ≤ K, n ≥ 3, A ≥ 1, s ≥ 1 and p ≤ n^A ((A1); used in B1.3, [R1] `:25`), with p = |𝒞| [K1-2]) gives k_n ≤ 3(A + 1)(s₀ + 1) log n. Every non-empty T with |T| ≤ k_n is
+  therefore covered by (A2). (Empty T does not arise: CorGb-plus's proof uses non-empty T only, `lemmas/G2_corr.md`
+  step 2; if the floor is read for T = ∅ it is vacuous.)
+- *Energy.* β^𝒞ᵀΣ_𝒞𝒞β^𝒞 = βᵀΣβ ≤ M₀σ² = M₀σ²_𝒞: (A3).
+- *Beta-min.* ρ_n^{BM} = n·min_{j∈S₀} Σ_jjβ_j²/(σ² log n) = ρ_n → ∞ by (A3); this is the "→ ∞" branch named at
+  [MISR-R] `:104` ("in particular if ρ_n^{BM} → ∞"), which satisfies liminf ρ_n^{BM} > 16c₀(s, A)/c_R.
+
+Conclusion of CorGb-plus ([MISR-R] `:104-107`): there are n* and C such that for every n ≥ n*,
+  E δ_n ≤ C r_n + (2 + 2k_n)n^{−2} + n^{−1} = b_n,  P(HPM ≠ S₀) ≤ 2C r_n + (2 + 2k_n)n^{−2} + n^{−1} ≤ 2b_n.
+C is the constant of MIS-R (i) on 𝒦^λ_n(s, A, 2M₀ + 1, (c_R/8)^{1/2}, C_OS, c′), C_OS = C_OS(s, A) from the bridge
+(F_w; 1) ⇒ (OS) and c′ = c₀(s, A) + 1 on the → ∞ branch (`lemmas/G2_corr.md`, [R-3]): it depends only on (s₀, A, M₀, c).
+n* depends on the sequence. (Take n* ≥ max(3, 2s₀) as well, for the floor step above.) This is legitimate [K1-1]:
+CorGb-plus's floor and energy hypotheses are used only at the current n ≥ n* (and beta-min only through a liminf; k_n is
+undefined for s > K) [K2-E1], and its bounds at n concern the n-th law only (its proof checks class membership n by n, `lemmas/G2_corr.md` steps 1–5); so they hold here
+for every n ≥ max(n*_master, 3, 2s₀).
+
+## P2. The remaining displays of Theorem 2X
+
+By P0.1, E max_j |PIP_j − 1{j ∈ S₀}| ≤ E δ_n ≤ b_n. By P0.3 and Markov, P(MPM ≠ S₀) ≤ P(δ_n ≥ ½) ≤ 2E δ_n ≤ 2b_n
+(P0.2 gives the same bound for the HPM, consistent with P1). Finally k_n ≤ 3(A + 1)(s₀ + 1) log n (P1), so
+(2 + 2k_n)n^{−2} = O(log n/n²) and n^{−1} = o(r_n); hence b_n = O(r_n). ∎ (Theorem 2X)
+
+## P3. Corollary 2X
+
+Assume the recorded hypotheses (STATEMENT §2). Then the §0 setting holds with m := m_n, Σ := Σ_n (Σ_jj = 1 > 0),
+σ² := σ*² > 0, α := α*, β := β* (parameters of the model of `Theory_work/Wave3/W3-READER/NOTATION.md:15-20`, read as
+non-random as in the recorded fixed-signal setting) [K1-3]. (Remark on the master, not on Theorem 2X: CorGb-plus allows a
+random α, [MISR-R] `:52-53` [R1-opus-E4].)
+- (A1): (S2) and s₀ ≥ 1.
+- (A2) with c := φ²: R = Σ_n (unit diagonal), and every T with 1 ≤ |T| ≤ 3(A + 1)(s₀ + 1) log n also has
+  |T| ≤ 5(A + 1)(s₀ + 1) log n, where the recorded floor gives λ_min(Σ_{n,T}) ≥ φ². (If the recorded floor is asked only on
+  |S| ≤ 3(A + 1)(s₀ + 1) log n, this is (A2) directly.)
+- (A3), energy: βᵀΣ_nβ = β_{S₀}ᵀ(Σ_n)_{S₀S₀}β_{S₀} ≤ λ_max((Σ_n)_{S₀S₀})‖β_{S₀}‖² ≤ tr((Σ_n)_{S₀S₀})·s₀b_hi² = s₀²b_hi²
+  (a positive semidefinite matrix has λ_max ≤ trace; the trace of an s₀ × s₀ correlation block is s₀). So
+  βᵀΣ_nβ ≤ M₀σ*² with M₀ := s₀²b_hi²/σ*², fixed.
+- (A3), beta-min: ρ_n = n·min_{j∈S₀}β_j²/(σ*² log n) ≥ n b_lo²/(σ*² log n) → ∞.
+So Theorem 2X applies. Its displays give the recorded conclusions: δ_n ≥ 0 and E δ_n = O(r_n) give δ_n = O_P(r_n)
+(Markov: P(δ_n > L r_n) ≤ E δ_n/(L r_n)); P(HPM ≠ S₀) + P(MPM ≠ S₀) = O(r_n) → 0 gives P(HPM = MPM = S₀) → 1; the PIP
+error is ≥ 0 with expectation O(r_n), hence O_P(r_n). ∎ (Corollary 2X)
+
+## P4. What the proof does not use
+
+No upper eigenvalue bound on Σ; no condition on m; α deterministic as in §0 (the master itself would allow a random α, [MISR-R] `:52-53`; a remark on
+the master, not on Theorem 2X) [K1-3, R1-opus-E4]; no fixed σ², Σ or β (only the fixed constants A, s₀, c, M₀ and
+ρ_n → ∞); no Gaussianity beyond the rows and the noise (both used only through CorGb-plus).
+
+## P5. Supporting arithmetic for STATEMENT §7 caveat (b) (remark; not part of a claim) [R1-opus-E1]
+
+Claim: k̄_n := min{p, s₀ + max(j₀, m̄_n)} ≤ 3(A + 1)(s₀ + 1) log n for every n ≥ 3, A ≥ 1, s₀ ≥ 1, p ≤ n^A, with m̄_n of
+`Theory_work/Wave2/W2-APP/lemmas/L1_POST.md:20-21`. Write s := s₀, t := log n, d := 1/log(3/2) < 2.4664.
+- j₀ branch: s + j₀ ≤ (2A + 2)s + 2 ≤ 3(A + 1)(s + 1)t since t > 1 ([R1] B4.1, `:45`).
+- m̄_n branch: as in [R1] B2.1 (`:38-40`), s + m̄_n ≤ d(As + s/2 + 1)t + (1 + d log 2)(s + 1), and 1 + d log 2 = d log 3 < 2.7096.
+  So it suffices that t·[3(A + 1)(s + 1) − d(As + s/2 + 1)] ≥ 2.7096(s + 1). The bracket is
+  ≥ 0.5336As + 3A + 1.7668s + 0.5336 > 0, increasing in A.
+  - n ≥ 4 (t ≥ log 4 > 1.386): at A = 1 the left side is ≥ 1.386(2.3004s + 3.5336) ≥ 3.188s + 4.897 > 2.7096s + 2.7096,
+    and the left side increases with A.
+  - n = 3 (t = log 3 > 1.0986): the inequality holds if A(0.5862s + 3.2958) ≥ 0.7686s + 2.1239; for A ≥ 1.32 the left side
+    is ≥ 0.7737s + 4.350, which exceeds the right side for every s ≥ 1. For 1 ≤ A < 1.32 the cap gives k̄_n ≤ p ≤ 3^A < 4.27,
+    so k̄_n ≤ 4 < 3·2·2·1.0986 ≤ 3(A + 1)(s + 1) log 3.
+Numerical cross-check: council R1 Opus seat, 7 426 052 grid cases, 0 violations (`reviews/R1_council_opus.md`).

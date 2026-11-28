@@ -1,0 +1,10 @@
+# R2 seat record — opus (HQ carrier; PROTOCOL_v4 §7; CITATION-ONLY; NOT a new review)
+
+Seat record: `reviews/R2f_record_opus.md` (council round R2, score 9.6, all gates PASS), bound to MANIFEST_R2f (MANIFEST 483928c2c3de579bba3827f90a25c928ee30461d4f501f2b766a1f26485a48a0). Opus R2 = the diff round (run as D1, `reviews/D1_council_opus.md`, 9.6 PASS, Thm2X and Cor2X ACCEPT) on MANIFEST f62740c7…, carried by `reviews/R2_record_opus.md` and re-frozen FORM-ONLY as R2f (483928c2…, `reviews/R2f_record_opus.md`; form check `reviews/F1_formcheck_opus.md`: FORM-ONLY). CITATION-ONLY re-freeze as `reviews/MANIFEST_R2f2.txt` (MANIFEST d408b7dc2c23f82fca1ebd927b120f8a1788e5da422d61826785b061379c5561): after R2f only four entries changed, all requotes of registry statuses or a dated-history note (HQ 11-23): the external input EXT:Theory_work/Wave3/W3-READER/CLAIMS_CARD.md (READER requotes after the W1-N1:B/F discharge, commit 20d01e52, and the Prop-LB relabel, commit 33bfcb9c); STATEMENT.md §5 (the quoted statuses of W3-MISR-R:CorGb-plus, W3-POST2:C and W3-POST:Prop-LB and the version pin of W3-READER:R1, lines 79, 81-82, 83, 85-86 and the caveat (a) sentence at 105-107, same line count, no mathematics: the ticket's citecheck.py needs them verbatim; Opus one-shot check `reviews/R2f2_requote_check_opus.md`: REQUOTE-VERDICT: PURE); DEPS.tsv (the S:inputs row re-hashed; the R:registry row keeps its sha, its line span moves by one); and REPORT.md (one new line 2, HQ: "Statuses quoted here are as of CP3; claims.tsv governs."; PROOF.md:3, REPORT §1-3/§6, TARGET.md:21 and STATEMENT.md:4 stay as dated history). Every other entry is byte-identical. This carrier binds the seat's outcome to the frozen files of the W3-D2 ticket; the per-claim table is the seat's own (ids as registered).
+
+| id | decision |
+|---|---|
+| W3-D2:Thm2X | ACCEPT |
+| W3-D2:Cor2X | ACCEPT |
+
+COUNCIL-VERDICT round=R2 manifest=d408b7dc2c23f82fca1ebd927b120f8a1788e5da422d61826785b061379c5561 seat=opus score=9.6 gates=PASS

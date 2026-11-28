@@ -1,0 +1,53 @@
+% =====================================================================================================
+\section{How to read this document}\label{sec:intro}
+
+This edition of the manuscript is written for one reader with two questions: \emph{do the assumptions make sense?} and
+\emph{do the theorems look natural and intelligible?} It follows the method from the data to the guarantees, in this
+order.
+\begin{enumerate}[leftmargin=1.6em,itemsep=1pt]
+  \item \emph{The model and the priors} (Section~\ref{sec:method}): what the software assumes and sets, every default with
+    the reason for it (Table~\ref{tab:prior}).
+  \item \emph{The sampler} (Section~\ref{sec:sampler}): the algorithm as coded, how to read its outputs, which parts the
+    theorems cover (Table~\ref{tab:coverage}), and, separately, the parallel engine built for $p=10^6$, which no theorem
+    covers.
+  \item \emph{The assumptions} (Section~\ref{sec:assumptions}): one table of verdicts (Table~\ref{tab:a-summary}), then one
+    entry per assumption with five parts: the statement, its meaning in words, what it rules out, whether it is reasonable
+    for real designs, and how it compares with the conditions of \citet{SongLiang2015}, the split-and-merge paper.
+  \item \emph{The proved results} (Section~\ref{sec:proved}), the main ones first. Each comes in words, then as a formal
+    statement, then with a grey status box quoting the project's registry (its list of statements and their review
+    status), a paragraph on why it is natural, and a comparison with \citet{SongLiang2015}. Result~$k$ is Theorem~$k$
+    (Result~5 is Proposition~5).
+  \item \emph{The planned results} (Section~\ref{sec:planned}), each marked \textsf{PLANNED}: nothing there is claimed.
+  \item \emph{The statuses} (Section~\ref{sec:statuses}): what changed in the registry since the theory freeze of
+    2026-11-17, and the open questions.
+\end{enumerate}
+The supplement (Appendix~\ref{sec:supp}) holds the minor results, listed first with one line each, and the appendices hold
+the notation, the full parameter table with code locations, the conventions in full and the status ledger. The 1M runs and
+the benchmarks are reported elsewhere.
+
+\paragraph{The method in one paragraph.} SMC-BVS puts a fixed prior on models and coefficients: a beta-binomial prior on
+the model size \citep{ScottBerger2010} and a $g$-prior with a unit ridge, so that the posterior over models is known in
+closed form up to its normalising constant, the evidence. Nothing is tuned by the user. The method partitions the
+predictors into small blocks of correlated predictors, scores every subset of every block exactly, and combines these
+block tables into a \emph{start law}, an approximation of the posterior that can be computed and sampled exactly. A
+sequential Monte Carlo sampler, run as four independent \emph{islands}, then moves from the start law to the posterior
+along a tempered path that an internal calibration fixes in advance. Two deterministic local searches, one of them from
+the mode of the start law, finish the run. The run reports its best model, pooled inclusion probabilities, their median
+probability model and an evidence estimate.
+
+\paragraph{What is proved.} Table~\ref{tab:results} lists the six proved results in words. In short: the posterior
+concentrates on the true model and on the true law of the response at the rate $\rn$, which cannot be improved; for
+block and autoregressive (AR(1)) designs whose true coefficients do not cancel, with probability tending to one every run
+reports exactly the true model; a certified small model rarely misses a true predictor; and
+the evidence estimate is unbiased. All results are asymptotic in $n$, with $p$ at most polynomial in $n$.
+
+\paragraph{What is not claimed.} No theorem covers the parallel engine used at $p=10^6$, more than four islands, or a run
+that stops early. Results about a run's estimates hold on the event that the run's calibration succeeds (or that the run
+completes). We do not bound the probability of that event. The one exception: on an idealised computer
+(Convention~\as{C2p}, Section~\ref{sec:conventions}) every run produces output.
+
+The consistency of the pooled inclusion probabilities, their median model and the evidence estimate is proved only on
+designs \emph{without leakage}, where no null predictor is correlated with a true one at a fixed level (supplement,
+Remark~\ref{thm:outputs}). Among our designs that means only the independent ones (S1 and IND): no correlated design,
+including the autoregressive design of the $p=10^6$ plan, has a consistency guarantee for these estimates. The reported
+model (Result~3) and the evidence's unbiasedness (Result~5) do not need this condition.

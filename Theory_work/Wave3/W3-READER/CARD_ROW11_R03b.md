@@ -1,0 +1,39 @@
+# CARD — row 1.1 better gate: R03b's four open proposals + SHARP3b verdicts (W3-READER → Theory Dept → HQ + consultant)
+
+v1 2026-11-16 (lead). **Confirmed by H5 card 6** (consultant AGREE, relayed by the manager): row 1.1 better =
+PASS-with-open-items O1–O3; B+ rejected for the row; N1 → post-freeze rider POST2-R1. Conditions applied: "off $S_0$"
+wording; floor on $S_0$ "sufficient; not known to be necessary (O3)"; `improvable` stays set on POST2 C/E; no
+two-sided rate on every design until N1 is proved; no numerical margin values in reader-facing text. Context: row 1.1 is re-based on `W3-POST2:C`
+(uniform expectation rate) with `W3-POST2:E` as the variant Theorem 1′ (H5 card 5). R03b is the in-ticket
+better-theorem review (`Theory_work/Wave3/W3-POST2/reviews/R03b_better_theorem_astra.md`, gpt-6-astra high): C+ and D+
+adopted in POST2 v1.2 (`R03b_disposition.md:9-11`); four open (`:12-15`; `W3-POST2/REPORT.md:184-187`).
+
+**Blind verdicts (SHARP3b; `api/sharp3b/`, main f237bfa3):** `W3-POST2:C` IMPROVABLE-EASY, `W3-POST2:E` IMPROVABLE-EASY.
+Both agree the rate $\sqrt{\log n/n}$ is right and the slack is in constants, the floor on $S_0$ and the *lower* bound.
+One genuinely new, cheap, headline-relevant item (N1 below: a matching expectation lower bound); the rest map onto R03b's
+four. **No correctness issue** in the lines checked (`C_expectation.md:19-24, 58-62`; `E_visibility.md:44-54`).
+
+## R03b's four proposals
+| # | What it says | Proposed disposition | Evidence | Bearing of SHARP3b |
+|---|---|---|---|---|
+| A+ | Weaker Occam-sum interface: exact truncated χ² moments $b_J$ instead of $a_J$; completion costs $H_J$ instead of the amplified high-shell maximum. Same conclusions under a strictly weaker sufficient (OS). | **Defer as named open item POST2-O1.** The reader statements never display (OS) (Theorem 1/1′ assume the primitive (A5); (OS) only in remark (o)); no reader hypothesis or conclusion changes. Low risk, bookkeeping. | R03b :51-79 ("Risk / falsity: low"); `R03b_disposition.md:12`; `REPORT.md:184`; `W3-POST2/ASSUMPTION_MAP.md` row POST2-OS | f00 (a): the $\sqrt{\log n}$ weight is **not** an artefact for the expectation statement (exact for $d_J=1$); only the truncation level is slack, which "only changes constants or special designs" and "is the already-recorded A+". Supports defer; corrects ASSUMPTION_MAP's "proof envelopes" wording (editorial). |
+| E+ | Smaller margin constant: $c_1\approx54$ (prob.) / $\approx60$ (exp.) at $s_0=A=1$ instead of $\approx161$; a universal $c\approx4$ is impossible at $p=n^A$ (deletion obstruction $\approx2a_p+2$). | **Defer as named open item POST2-O2** (constants; both $c_0$, $c_1$ are proof artefacts, value in a remark; the theorem's form is unchanged). Candidate for a post-freeze rider together with N1 (below). | R03b :153-176; `R03b_disposition.md:13`; `REPORT.md:185`; `W3-POST2/STATEMENT.md:130` | f01 (a)1 confirms and goes further: a *graded* margin (≈ $2|J|(A+\frac12)+1$ on pure deletions, per-size on swaps) reaches the obstruction $2A+2+\epsilon$ in probability and ≈ 15 at $A=1$ with Claim C's event; slack verified at `E_visibility.md:48-54` (log 2 linearisation; target $n^{-2}$ where $O(r_n)$ suffices). f00 gives ≈ 116 by its own arithmetic. Strengthens the case for a rider; does not change the disposition (constants / hypothesis form). |
+| E-floor+ | Replace (F₀) by a bounded ridge cost $L_{S_0}=O(1)$ in Claim E's probability conclusions (expectation not transferred). | **Defer as named open item POST2-O3** (the most valuable: Theorem 1′ would need no eigenvalue condition). Medium risk; splits Theorem 1′ into a floor-free probability statement and a floored expectation statement; not cheap before the freeze. Post-freeze rider candidate with a kill budget. | R03b :178-195 ("Risk / falsity: medium"); `R03b_disposition.md:15`; `REPORT.md:186`; N8 (`REPORT.md:155`) | f00 (a) and f01 (a)2 agree (F₀) is stronger than needed; f01 proposes a **vanishing unnormalised floor** $\lambda_{\min}(X_{S_0}^\top X_{S_0})\ge C_0$ as a cheaper variant, but the step ($\eta_n$ in [T03R] (B3)) "cannot be certified from the files". f00: in C1/C2 (size tail) (F₀) enters only through $\|\theta^*\|^2\le1.5M/\varphi_0^2$ (verified, `C_expectation.md:21-22`), so the by-product needs only $\|\theta^*\|^2\le nM'$ — A2, no bearing on row 1.1's displays. |
+| B+ | Growing reference cost in the size-tail lemma (Claim B), with explicit payment $e^{(1/(2\sigma_*^2)+\epsilon)L_T}$. | **Reject for row 1.1 (no bearing).** Row 1.1 uses Claim B only in remark (v), whose hypotheses B+ does not change; stays a POST2 open item outside the headline; the related necessity question is settled by W3-PSHARP Proposition C. | R03b :87-112; `R03b_disposition.md:14`; `REPORT.md:187`; `W3-PSHARP/STATEMENT.md:116-149` | Not addressed by SHARP3b. |
+
+## New items from SHARP3b
+| # | What it says | Proposed disposition | Evidence | Check |
+|---|---|---|---|---|
+| N1 | **Matching expectation lower bound** $E\delta_n\ge c\,r_n-4/n$ on every design with a floor on $S_0\cup\{j\}$ (cases i–ii), even at fixed $p$: the truncated moment $E[e^{\chi^2_1/2}\mathbf 1\{\chi^2_1\le\tau\}]=\sqrt{2\tau/\pi}$ at $\tau\approx\log n$. Would make Theorem 1's expectation display two-sided ($E\delta_n\asymp\sqrt{\log n/n}$) and answer POST2's open question "Does the $\sqrt{\log n}$ factor in $E\delta_n$ appear?" (`REPORT.md:190`). | **Post-freeze rider POST2-R1** (manager, 2026-11-16; T12 not widened, W3-PSHARP-R is in its statement lock); bundle with E+ / graded margin. Not adopted before the freeze: one step is unchecked. | f00 (b), (c)1; f01 (b) (same calculation) | The one step "D_j ≥ σ*²χ²_j − C (reverse of (B3))" is flagged by the referee itself as needing a check against [T03R]; I have not verified it. Consistent with W3-PSHARP Cor A1's $\liminf E\delta_n/[(s_0+1)\sqrt{\log p/(\pi n)}]\ge1$ on witness designs. |
+| N2 | Direct bound on $P(\mathrm{HPM}\neq S_0)$ (avoid Markov at ½; gains ~log n) | **Defer (D):** easy at fixed $p$, unclear for dependent growing $p$ (referee's own caveat). | f00 (b) "Corollaries are lossy"; f01 (b) | — |
+| N3 | In-probability rate $\sqrt{(1+\log p)/n}$ for sub-polynomial $p$ under (DG) | **Already a named open item** (W3-PSHARP: "Not settled: an upper bound of order $\sqrt{(1\vee\log p)/n}$ when $\log p=o(\log n)$", `W3-PSHARP/STATEMENT.md:88`). Not the main regime ($p\gg n$). | f01 (b), (c)3 | — |
+| N4 | Exponential bound for the scale-event term in C2 (size-tail by-product) | **Remark (A2, low value).** | f00 (b) "By-product C2" | depends on the form of $\mathcal B_n$ (referee's assumption) |
+| N5 | Scope: growing $s_0$, $\log p=o(n)$, non-Gaussian noise | **Known scope limits (B)**; the expectation rate rests on an exactly-integrable Gaussian moment (f00: Gaussianity "probably close to necessary for this rate in expectation"). | f00 (a); f01 (a)4 | — |
+
+**Update (H5 card 7, HQ):** O1 now ranks **with O3** as a post-freeze rider: it is what would make "no eigenvalue
+condition off $S_0$" literally true; whether (OS) holds without any eigenvalue condition is open.
+
+## Proposed gate outcome
+Row 1.1 better gate = **PASS with named open items POST2-O1, O2, O3** (B+ rejected for the row; N2–N5 remarks/known
+items), plus **N1 → post-freeze rider POST2-R1** (manager's decision). If confirmed, the reader
+statement of Theorem 1 does not change before the freeze; N1 would later add a two-sided expectation display.

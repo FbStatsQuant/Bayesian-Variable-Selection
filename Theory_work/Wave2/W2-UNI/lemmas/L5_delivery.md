@@ -45,5 +45,5 @@ are otherwise unchanged (TR1 §1 table), and Step 2's "P(no output) = 0" is read
 ℓ_n + |S̃₀| ≤ ℓ_raw + K_n ≤ ℓ_raw + ⌊n/2⌋ ≤ 2³¹ − 1 (the exact branch reaches neither check); under A:IDEAL-W⁺ both predicates are false. The allocation that
 TR1 §2 requires for the shipped cap and preflight (W_G, M_G, P_e + A, P̄_LS0) is already the premise at :11-12. 𝔇 is sufficient, not necessary (TR1's larger
 D_K uses min(p_raw, ⌊n/2⌋)), and it is bounded, so (a) carries no asymptotic conclusion. Wording aligned with W3-RM2-R Lemma DLV-0 (W3-RM2-R
-`STATEMENT.md:80-90, 144-150`); its "treated as true" for the lifted predicates is read as "are false" (TR1 §2). A:IDEAL-W⁺ is a registered assumption;
+STATEMENT.md lines 80–90 and 144–150; branch theory/W3-RM2-R e78a1055, on main with task V); its "treated as true" for the lifted predicates is read as "are false" (TR1 §2). A:IDEAL-W⁺ is a registered assumption;
 IDEAL-W itself (C-DLV `STATEMENT.md:24-25`) is unchanged.

@@ -561,11 +561,19 @@ def claim_checks(cid, r, fold, by, aliases, g, memo, add):
             continue
         if s_d == 3 or s_d == "NEG":
             continue
+        # rule (c): every use an LC-verified proof step; only for inputs that are proved (strength 2) or unclassified but PROVED
+        lcs = [(u, *R.lc_step_check(cid, d, u)) for u in sorted(uses)] if R.lc_input_eligible(dr) else []
+        if lcs and all(ok_ for _, ok_, _ in lcs):
+            add("INFO", "A3-assurance", cid, f"uses {d} ({ASSURANCE.get(s_d, s_d)}) only through LC-verified proof step(s): "
+                + "; ".join(f"{u!r} = {why}" for u, _, why in lcs) + " (the input row is not upgraded)")
+            continue
         add("ERROR", "A3-assurance", cid, f"status {R.status_token(st)!r} but uses {d}@"
             f"{','.join(sorted(uses))}, whose assurance is below it ({ASSURANCE.get(s_d, s_d)}: "
             f"{dr.get('status', '')[:80]!r}); check that input, or make it an explicit hypothesis: depend on it "
             "ONLY as `" + d + "@hyp`, name it in the hashed statement / premise text, and write 'conditional on "
-            "<it>' in the status; acks do not waive this")
+            "<it>' in the status; acks do not waive this"
+            + ("; LC-step rule: " + "; ".join(f"{u!r}: {why}" for u, ok_, why in lcs if not ok_)
+               if lcs and any(r_.get("input") == d and r_.get("consumer") == cid for r_ in R.lc_steps_rows()) else ""))
     own = R.conditions(cid, by, g, memo)
     for w, path in sorted(own.items()):
         if len(path) == 2:

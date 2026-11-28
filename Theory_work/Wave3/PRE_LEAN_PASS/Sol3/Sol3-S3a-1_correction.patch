@@ -1,0 +1,13 @@
+# Sol-3 S3a-1 (Sol-3 card, AGREE): stale status header, W3-D2/PROOF.md:3. Registry status and STATEMENT §5 are right; only the header list is historical. File is in D2's manifests: CITATION-ONLY re-freeze when D2 is next opened (card: not urgent). Line count unchanged.
+diff --git a/Theory_work/Wave3/W3-D2/PROOF.md b/Theory_work/Wave3/W3-D2/PROOF.md
+index 6c2bd86f..63890362 100644
+--- a/Theory_work/Wave3/W3-D2/PROOF.md
++++ b/Theory_work/Wave3/W3-D2/PROOF.md
+@@ -1,6 +1,6 @@
+ # W3-D2 — PROOF of Theorem 2X and Corollary 2X (v1.3, 2026-11-17; v1.3 = council R1 editorial [R1-opus-E1, E4] (P5 added, a remark); v1.1 = K1 amendments [K1-1]–[K1-4], `reviews/K1_disposition.md`; v1.2 = K2 editorial [K2-E1], [K2-E2] and line 3 rewritten to carry the full conditional status verbatim [K3-E2])
+ 
+-Status: **PROVED (by this seat, unchecked), conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1, W3-POST2:A0, C-MIS:GDb, C-MIS:Prop-P** (conditions carried from `W3-MISR-R:CorGb-plus@1.0.1`, STATEMENT §5).
++Status: **PROVED (by this seat, unchecked), conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1, W3-POST2:A0, C-MIS:GDb, C-MIS:Prop-P** (the list carried from `W3-MISR-R:CorGb-plus@1.0.1`, historical; the active conditions, at `CorGb-plus@1.0.3`, are W2-APP:POST, C-MIS:GDb, C-MIS:Prop-P: STATEMENT §5).
+ Statement: `STATEMENT.md` v1.4 (v1.1 locked; v1.2–v1.4 EQUAL) §§0–3 [K2-E2]; clause (E) is the explicit form of §1. Aliases as there. Every step is either a citation (file:line, id@version) or
+ elementary; no new estimate.
+ 

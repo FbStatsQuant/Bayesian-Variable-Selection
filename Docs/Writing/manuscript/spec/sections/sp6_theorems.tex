@@ -1,0 +1,203 @@
+% =====================================================================================================
+\section{The official theorem statements}\label{sec:theorems}
+
+Theorems~1--6 are the proved headline results (Proposition~5 is Theorem-numbered); their numbers are those of the A6
+edition (``Result $k$''). Planned Theorems~P1--P4 are not proved. Each statement carries one tag, outside it: PROVED with
+the registry rows that carry it and their status strings on main, or PLANNED.
+
+\subsection{Proved}\label{sec:proved}
+
+\begin{mainthm}[Posterior concentration, random sub-Gaussian design]\label{thm:post-random}
+Assume \as{GL}, \as{DIM}, \as{SP}, \as{SGR}, \as{FSb} and \as{EFS}, where in \as{DIM}, \as{SGR} and \as{EFS} the
+dimension is the number $\praw$ of raw predictor columns (before the method removes constant columns) and the sets are
+sets of raw columns; the prior, the cap $K$ and the posterior use the retained columns. Columns keep their raw labels, and $\Sz:=\{j\in\set{\praw}:\beta^*_j\neq0\}$ with $\bstar$ the coefficients of
+the raw design; on the event that the method removes a column, set $\PIP_j:=0$ for a removed column $j$ and
+$\pis{\Sz}:=0$ if $\Sz\notin\Om$, and, if no column is retained, take the posterior to be a point mass at $\emptyset$.
+Then, under the joint law of the design and the noise,
+\begin{gather}
+  1-\pis{\Sz}=\OP\Big(\sqrt{\frac{\log n}{n}}\Big),\qquad \P\big(\HPM=\MPM=\Sz\big)\to1,\label{eq:post-random}\\
+  \max_{j\in\set{\praw}}\big|\PIP_j-\ind{j\in\Sz}\big|=\OP\Big(\sqrt{\frac{\log n}{n}}\Big).\nonumber
+\end{gather}
+\end{mainthm}
+
+\proved{\rid{W3-D3:Thm2SG}, \rid{W3-D3:B3w}, \rid{W3-D3:ExSG}: \rid{PROVED-CHECKED}. Gaussian rows ($L=1$): \rid{W3-POST:Thm-1}, \rid{W2-APP:POST}, \rid{W3-READER:R1}: \rid{PROVED-CHECKED}.}
+
+\begin{mainthm}[Distribution-level consistency]\label{thm:dist}
+There are constants $c_{\mathrm H}>0$, $M_0$ and $n_0$, depending only on $(s,A,L,c_\psi,\bar b)$, such that the following
+holds. Fix a level $M\ge M_0$ and assume Assumption~\as{dist}, with the window $q_n$ of this $M$. On a data set on which fewer
+than two predictors remain or the response is constant, the posterior is not defined, and the posterior probabilities
+below are read as $1$. Then for every $n\ge n_0$ with $\sqrt n/\log n\ge M$,
+\begin{equation}\label{eq:dist-i}
+  \P^*\Big[\,\Pi\Big(d_H(f,f^*)>\sqrt{M\log n/n}\ \Big|\ \Dn\Big)>n^{-c_{\mathrm H} M}\Big]\ \le\ n^{-c_{\mathrm H} M}.
+\end{equation}
+\end{mainthm}
+
+\proved{\rid{W3-DIST:Thm-A}: \rid{PROVED-CHECKED}.}
+
+\begin{mainthm}[The reported model equals the true model]\label{thm:reported}
+Let $\Sig$ be positive definite and assume \as{GR}, \as{DIM}, \as{FSt}, \as{V}, \as{EFS}, Assumption~\as{reported}
+and Convention~\as{C1}. Then, under the joint law of the design and the noise, there are data events $\mathcal G_n$ with
+$\P(\mathcal G_n)\to1$ on which \emph{every} admissible run that produces output reports $\Shat=\Sz$, whatever its seed and
+the outcome of its internal calibration. In particular,
+\begin{equation}\label{eq:reported}
+  \P(\text{the run produces output and }\Shat\neq\Sz)\to0 .
+\end{equation}
+If moreover Convention~\as{C2} holds, then $\P(\text{the run produces output})=1$ for every admissible $(n,\praw)\in\Dom$
+(Definition~\ref{def:dom}). If Convention~\as{C2p} holds, then
+\begin{equation}\label{eq:delivery}
+  \P(\text{the run produces output})=1\ \ \text{for every admissible }n\ge3,\qquad \P(\Shat=\Sz)\to1 .
+\end{equation}
+\end{mainthm}
+
+\proved{\rid{W3-RM2-R:RM2-R-plus}, \rid{W3-RM2-R:RM0-plus}, \rid{W3-RM2-R:DLV-0}: \rid{PROVED-CHECKED}. Code conformance \rid{C-DLV:L2-S3}, \rid{C-DLV:P1-Inventory}: \rid{CODE-CHECKED (second seat, code reading; holds at pin 4676af6 after amendments A-1--A-7)}.}
+
+\begin{mainthm}[Certified screening]\label{thm:screen}
+Let the design be fixed and assume \as{GL}, Assumption~\as{SCR} with model-size budget $k_n$, and Convention~\as{C1};
+\as{SP} is not assumed. Then
+\[
+  \P\big(\text{the run produces output},\ \Shat\text{ is certified},\ \abs{\Shat}\le k_n,\ \Sz\not\subseteq\Shat\big)\to0 .
+\]
+\end{mainthm}
+
+\proved{\rid{W3-SCR:A1}, \rid{W3-SCR:A-inf}, \rid{W3-SCR:SCR-A}: \rid{PROVED-CHECKED}.}
+
+\begin{mainprop}[Each island's evidence estimate is unbiased]\label{prop:unbiased}
+Assume Convention~\as{C3}, and let $\mathcal C$ be the calibration record. For every fixed data set (probability over the
+final run's random streams), almost surely on $\Acal$, each island's potential evidence estimate satisfies
+$\E[\Zhat_r\mid\mathcal C]=Z$, $r=1,\dots,4$, and hence the pooled estimate~\eqref{eq:pool} satisfies
+$\E[\Zhat\mid\mathcal C]=Z$. Under the joint law of the data and the method's random numbers, the same identities hold
+conditionally on the data and $\mathcal C$, and $\E[\ind{\Acal}\Zhat]=\E[\ind{\Acal}Z]$. No condition on the design is
+made.
+\end{mainprop}
+
+\proved{\rid{W1-N1:Thm-N1}, \rid{W3-READER:PoolZ}, \rid{W3-AUDIT-AX:FR}: \rid{PROVED-CHECKED}; line checks \rid{W3-AUDIT-AW:ISL}, \rid{W3-AUDIT-AW:FRZ}.}
+
+\begin{mainthm}[The rate cannot be improved]\label{rem:sharp}
+\textup{(a)} \emph{Every design.} For every $n\ge3$, every standardised design with $p\ge2$, every response and every
+model $S$ with $\abs{S}\le\min(K-1,p/2)$,
+\begin{equation}\label{eq:sharp-a}
+  \pis{S}\ \le\ \Big(1+\frac{\abs{S}+1}{3\sqrt n}\Big)^{-1}.
+\end{equation}
+So no model of that size, the true one included, can carry posterior mass closer to one than about
+$(\abs{S}+1)/(3\sqrt n)$. For true models with $\sz\le\min(K-1,p/2)$, no design gives a rate faster than
+$n^{-1/2}$, and a posterior miss of order $\rn$ is possible only if $\sz=O(\sqrt{\log n})$.
+
+\textup{(b)} \emph{Witness designs.} Assume \as{GL} and \as{WIT}. Then, for every $p>\sz$, bounded or growing, with
+$\pi=3.14\ldots$ in this display,
+\begin{equation}\label{eq:sharp-b}
+  \E\big[1-\pis{\Sz}\big]\ \ge\ (1-o(1))\,(\sz+1)\,\frac{2(p-\sz)}{2p-1-\sz}\,
+  \sqrt{\frac{\log\!\big(p\sqrt n/(\sz+1)\big)}{\pi n}},
+\end{equation}
+and, if moreover $p\to\infty$, $1-\pis{\Sz}\ge(1-\oP(1))\,(\sz+1)\sqrt{\log p/(\pi n)}$.
+\end{mainthm}
+
+\proved{(a)~\rid{W3-PSHARP:B}; (b)~\rid{W3-PSHARP:A} (with Corollary~A1) and \rid{W3-PSHARP-R:AE} (with Corollary~A1-E):
+\rid{PROVED-CHECKED}.}
+
+\subsection{Planned}\label{sec:planned}
+
+Nothing in this subsection is proved or claimed. The owner's order is the trap theorem first, then the analysis at
+$p=10^7$, both after the $p=10^6$ runs and only if those go well. Where the target is not fixed, the statement is a
+candidate and the open choice is boxed.
+
+\begin{definition}[Single-flip chains, mixing time]\label{def:singleflip}
+A \emph{single-flip chain} is a Markov chain on $\Om$ that leaves $\pis{\cdot}$ invariant and whose every transition
+adds or removes at most one predictor. For a Markov kernel $P$ on $\Om$ with invariant law $\pis{\cdot}$, the
+\emph{mixing time} is $t_{\mathrm{mix}}(P):=\min\{t\ge0:\max_{S\in\Om}\norm{P^t(S,\cdot)-\pis{\cdot}}_{\mathrm{TV}}\le1/4\}$.
+The \emph{weighted tempered Gibbs sampler} is the sampler of Zanella and Roberts (2019) targeting $\pis{\cdot}$.
+\end{definition}
+
+\begin{planthm}[The trap theorem; candidate]\label{thm:trap}
+There is a family $\mathfrak F$ of design sequences \textup{[open choice~1]} whose posterior has several well-separated
+modes, such that for every sequence in $\mathfrak F$:
+\begin{enumerate}[label=(\roman*),leftmargin=2em,itemsep=1pt]
+  \item with probability tending to one, $t_{\mathrm{mix}}(P)\ge\tau_n$ for every single-flip chain $P$
+    \textup{[open choice~3]} and for the weighted tempered Gibbs sampler, where $\tau_n\to\infty$ at a rate
+    \textup{[open choice~4]} that grows quickly with the problem size; and
+  \item the hypotheses of Theorem~$k$ hold, for one $k\in\{1,3,4\}$ \textup{[open choice~2]}, so that its conclusion holds
+    on $\mathfrak F$.
+\end{enumerate}
+\end{planthm}
+
+\openchoice{P1}{(1)~The design family $\mathfrak F$: no statement, draft or design family exists. (2)~Which result is
+``our consistency on the same design'': Theorem~\ref{thm:post-random}, \ref{thm:reported} or~\ref{thm:screen}. If it is
+Theorem~\ref{thm:reported}, a leakage set $Q$ satisfying Assumption~\as{reported} must be exhibited for $\mathfrak F$
+(the leakage-set choice). (3)~The class of chains: every single-flip chain, or one named kernel (for example a
+Metropolis--Hastings add/remove chain). (4)~The growth rate of $\tau_n$ (for example exponential in $n$ or in $\sz$).}
+
+\planned{No statement exists in any project file. Owner: Theory Department (on hold). Order: after the $p=10^6$ mission,
+before Planned Theorem~\ref{thm:cov7}.}
+
+\begin{planthm}[Coverage at $p=10^7$; candidate]\label{thm:cov7}
+Let $A_7:=\log(10^7)/\log200\ (\approx3.04)$, and let $\mathfrak D_{\mathrm{AR}}$ be the autoregressive showcase design,
+continued as a sequence in $n$ with $p_n=\lceil n^{A_7}\rceil$, a known true model and its structure fixed
+\textup{[open choice~2]}.
+\begin{enumerate}[label=(\roman*),leftmargin=2em,itemsep=1pt]
+  \item \emph{(Reading ``theory coverage''.)} $\mathfrak D_{\mathrm{AR}}$ satisfies the hypotheses of Theorems
+    \textup{[open choice~3]} with $A=A_7$; in particular, for Theorem~\ref{thm:reported}, there is a leakage set $Q$
+    satisfying Assumption~\as{reported} \textup{[open choice~4]}.
+  \item \emph{(Reading ``claim coverage''.)} Of the statements of Sections~\ref{sec:proved} and~\ref{sec:supp}, those
+    whose conclusion holds for every seed on a data event (Theorem~\ref{thm:reported}, Theorem~\ref{thm:reported-fixed},
+    Corollary~\ref{cor:list}, Lemma~\ref{lem:summaries}, Theorem~\ref{rem:sharp}(a)) are the ones a single fit with one
+    seed can support.
+\end{enumerate}
+\end{planthm}
+
+\openchoice{P2}{(1)~What ``coverage at $p=10^7$'' means: reading~(i), whether the hypotheses of the theorems can hold at
+$n=200$, $p=10^7$; or reading~(ii), which statements a single fit with one seed can support (reading~(ii) may not be a
+theorem). No project document defines ``coverage''. (2)~The showcase design: the owner fixed one simulated AR-strong data set with $n=200$, a known truth, one fit and one
+seed (\code{HQ_DECISIONS.md}); the continuation as a sequence in $n$ is not fixed. (3)~Which theorems reading~(i) covers. (4)~The leakage
+set $Q$ for $\mathfrak D_{\mathrm{AR}}$. Also open: the fit runs on an engine derived from the $p=10^6$ engine
+(Section~\ref{sec:supp-1m}), which no theorem covers.}
+
+\planned{The engine design is paused; the theory analysis is not started. Owner: Theory (analysis), Engineering (engine).
+Order: after Planned Theorem~\ref{thm:trap}.}
+
+\begin{planthm}[The raw-scale search bridge; candidate]\label{thm:bridge}
+Assume Assumption~\as{dist} with $s\ge1$ and the window $q_n$ of a level $M\ge M_0$, and assume raw-scale counterparts of
+the hypotheses of Theorem~\ref{thm:reported} \textup{[open choice~1]}, so that the true coefficients $\bstar$ are fixed on
+the raw scale and the standardised coefficients $\tstar=D\bstar$ are random. Then there are data events of
+$\P^*$-probability tending to one on which every admissible completed run, whatever its seed and calibration outcome,
+returns a list $\mathcal T$ with $\pi(\mathcal T\mid\Dn)\ge n^{-c_{\mathrm H}M/2}$. Consequently the conclusion of
+Remark~\ref{cor:dist-output} holds for every such run on events of $\P^*$-probability tending to one
+\textup{[open choice~2]}.
+\end{planthm}
+
+\openchoice{P3}{(1)~The raw-scale hypotheses: Theorem~\ref{thm:reported} and its masters take $\tstar$ deterministic on the
+standardised scale, while Theorem~\ref{thm:dist} takes i.i.d.\ pairs with fixed raw $\bstar$; for $\sz\ge1$ no design
+satisfies both (erratum E3 of \code{W3-D5P}), so the population conditions (\as{FSt}, \as{V}, Assumption~\as{reported})
+must be restated for fixed $\bstar$. (2)~The target: the list-mass premise only (as stated), or the full conclusion of
+Theorem~\ref{thm:reported} on the raw scale. Today the premise is known only pathwise, on the part of the data event of
+Corollary~\ref{cor:list} where $\pi(\Sz\mid y)\ge n^{-c_{\mathrm H}M/2}$.}
+
+\planned{Named open item (\code{QUEUE.md}, ``Named open items'', D121; \code{READER_VERSIONS.md}, row B6.7). Not a ticket;
+no statement in any project file. Owner: Theory (on hold).}
+
+\begin{planthm}[The reported model under an aggregated leak; candidate]\label{thm:agg-leak}
+The conclusions of Theorem~\ref{thm:reported} hold when, in Assumption~\as{reported}, the per-predictor bound
+\ref{asm:rr-leak}(i) is replaced by a condition on the leaks aggregated over the predictors outside $Q$
+\textup{[open choice~1]}, the other hypotheses of Theorem~\ref{thm:reported} being kept.
+\end{planthm}
+
+\openchoice{P4}{(1)~The aggregated condition: no form is written in any project file (\code{W3-RM2-R/STATEMENT.md} and
+\code{PLAN.md} name ``the aggregated Form~R leak'' only). (2)~Whether it is stated for the random-design form
+(Theorem~\ref{thm:reported}) only, or also for the fixed-design form (Theorem~\ref{thm:reported-fixed}).}
+
+\planned{Named open item (\code{QUEUE.md}, ``Named open items''; \code{W3-RM2-R/STATEMENT.md}, ``Not targeted''). No
+statement in any project file. Owner: Theory (on hold).}
+
+\subsection{Planned work with no new statement}\label{sec:planned-other}
+
+\begin{enumerate}[leftmargin=1.6em,itemsep=1pt]
+  \item \emph{Lean certificates} (not started; only with the owner's approval): first Theorem~\ref{rem:sharp}(a),
+    Lemma~\ref{lem:summaries} with the worst-island bound (Proposition~\ref{prop:worst-island}), and the Hellinger
+    reduction behind Remark~\ref{cor:dist-output}; then Theorem~\ref{thm:post-fixed} and Theorem~\ref{thm:dist}. A Lean
+    statement certifies a result only if it matches the statement given here.
+  \item \emph{Named open items below headline level} (\code{Theory_work/Dept/QUEUE.md}, ``Named open items''; no official
+    statement): \begin{enumerate}[label=(\alph*),leftmargin=1.6em,itemsep=0pt]
+      \item the start-law theorem (Theorem~\ref{thm:start}) with a general mean signal $\mu$ in the misspecified case
+        (\code{W3-START2R-O1});
+      \item the equicorrelated example with threshold $b<3/8$, and its converse (\code{O4}$'$);
+      \item the count $17-\sz$ in the start-law analysis (\code{START2-O1}).
+    \end{enumerate}
+\end{enumerate}

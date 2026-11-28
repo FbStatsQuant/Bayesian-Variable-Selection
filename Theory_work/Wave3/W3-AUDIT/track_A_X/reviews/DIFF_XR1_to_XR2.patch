@@ -1,0 +1,100 @@
+diff --git a/Theory_work/Wave3/W3-AUDIT/track_A_X/T14_REP/CHECK.md b/Theory_work/Wave3/W3-AUDIT/track_A_X/T14_REP/CHECK.md
+index e1f3e2dd..1b11e9cd 100644
+--- a/Theory_work/Wave3/W3-AUDIT/track_A_X/T14_REP/CHECK.md
++++ b/Theory_work/Wave3/W3-AUDIT/track_A_X/T14_REP/CHECK.md
+@@ -3,7 +3,7 @@
+ Status (lead's label): **PROVED; Sol line check VERIFIED (no amendments)** (`../reviews/LC1_reply_sol_T14.md`,
+ brief `../reviews/LC1_brief_sol_T14.md`). The HQ ruling specified one Sol line check and no council; a registry label is
+ HQ's call.
+-Frozen text (sha256, first 12 hex, 2026-11-16): STATEMENT `c7ba13d75550`, PROOF `8211b04f1800`. Code of record 4676af6.
++Frozen text (sha256, first 12 hex, v1 for diff round XR2): STATEMENT `6ecee3d43d53`, PROOF `97f1aaf4c1c1`. Code of record 4676af6.
+ Citation check: 0 MISS (`CITECHECK.txt`). Kill budget: not touched (one attempt, verified).
+ Sol's scope remark (finding 4): the conclusion holds in the shipped default configuration; non-default options
+ (`v3.ls0_ell` > 10⁶) are excluded and the qualification must be kept when quoted.
+diff --git a/Theory_work/Wave3/W3-AUDIT/track_A_X/T14_REP/CITECHECK.txt b/Theory_work/Wave3/W3-AUDIT/track_A_X/T14_REP/CITECHECK.txt
+index a48091e6..f9f88be9 100644
+--- a/Theory_work/Wave3/W3-AUDIT/track_A_X/T14_REP/CITECHECK.txt
++++ b/Theory_work/Wave3/W3-AUDIT/track_A_X/T14_REP/CITECHECK.txt
+@@ -26,9 +26,14 @@ OK            [PROOF.md] v3_run.R:101-101 sha=9dcf57e697 | ro$ls0_cap <- if (ide
+ OK            [PROOF.md] cpp/v3_core.cpp:404-404 sha=1c3e134aae | o.ls0_cap_plus_mode = !ro.containsElementNamed("ls0_cap") || as<std::string>(ro["ls0_cap"]) != "ell_n";
+ OK            [PROOF.md] cpp/v3_core.cpp:469-469 sha=35f7274942 | ModeResult m = start_mode(st, 1000000, o.ls0_tie_dp);
+ OK            [PROOF.md] cpp/v3_start.h:220-224 sha=fc383d4a28 | for (int k = 0; k <= K; ++k) {
++OK            [PROOF.md] cpp/v3_start.h:281-301 sha=09dd494518 | std::function<void(int, int)> rec = [&](int b, int r) {
++OK            [PROOF.md] cpp/v3_start.h:111-111 sha=9b957391c6 | if (j <= top) st.codes_by_size[b][j].push_back(code);
++OK            [PROOF.md] cpp/v3_start.h:201-209 sha=769e681a34 | for (int b = 0; b < J; ++b) {
++OK            [PROOF.md] cpp/v3_start.h:261-261 sha=9334c5c245 | if (dp.kbest < 0 || !feasible()) throw std::runtime_error("start_mode tie DP: no tight path from (J, kbest) (i
++OK            [PROOF.md] cpp/v3_start.h:263-268 sha=ae0fe18066 | for (int i = 0; i < p; ++i) {
+ OK            [PROOF.md] cpp/v3_score.h:40-40 sha=3b222c88d0 | D.n = n; D.p = p; D.K = std::min(p, n / 2); D.W = nwords(p);
+ OK            [PROOF.md] cpp/v3_core.cpp:473-473 sha=eb29fd99a2 | long long cap_ll = (long long)o.ls0_ell + (o.ls0_cap_plus_mode ? (long long)m.S.size() : 0LL);  // checked (R0
+ OK            [PROOF.md] cpp/v3_core.cpp:474-474 sha=2efd1bb2f7 | if (o.ls0_ell < 0 || cap_ll > (long long)std::numeric_limits<int>::max()) stop("LS0 move cap out of range");
+ 
+-31 citations: 31 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
++36 citations: 36 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+ Not machine-checked: unbackticked references and the semantic match of each excerpt.
+diff --git a/Theory_work/Wave3/W3-AUDIT/track_A_X/T14_REP/PROOF.md b/Theory_work/Wave3/W3-AUDIT/track_A_X/T14_REP/PROOF.md
+index 8312c10e..d2e178a9 100644
+--- a/Theory_work/Wave3/W3-AUDIT/track_A_X/T14_REP/PROOF.md
++++ b/Theory_work/Wave3/W3-AUDIT/track_A_X/T14_REP/PROOF.md
+@@ -1,4 +1,4 @@
+-# T14 · Lemma REP — PROOF v0 (DRAFT; code at pin 4676af6, paths relative to `Scripts/SMC_BVS/core/`)
++# T14 · Lemma REP — PROOF v1 (DRAFT; code at pin 4676af6, paths relative to `Scripts/SMC_BVS/core/`)
+ 
+ Fix an R-representable input that reaches the LS0 settings, i.e. a sampler-branch fit that has passed preprocessing,
+ the preflight, setup and calibration (otherwise neither site is evaluated).
+@@ -20,12 +20,24 @@ integers, so n, p_raw ≤ 2³¹ − 1, hence p ≤ 2³¹ − 1. The context is b
+ ## Step 3 — (REP-b), the cap-range guard
+ `o.ls0_ell = as<int>(ro["ls0_ell"])` = ℓ_n (`cpp/v3_core.cpp:402`); `o.ls0_cap_plus_mode` is true because
+ `ro$ls0_cap` = "ell_n_plus_mode" (`v3_run.R:101`; `cpp/v3_core.cpp:404`). `m = start_mode(st, 1000000, true)`
+-(`cpp/v3_core.cpp:469`) returns a set of size k̂ ≤ K: every candidate of the enumeration and of the tie-aware fallback has
+-size k̂, and k̂ ranges over 0..K (`cpp/v3_start.h:220-224`; T9 (TDP-a), (TDP-b)). K = `D.K` = min(p, n/2) in `int`
++(`cpp/v3_core.cpp:469`) returns a set of size at most max(k̂, 0) ≤ K, by a structural argument valid in any arithmetic
++(council XR1 Opus F1; it does not use T9, whose (TDP-a), (TDP-b) assume EX-A or (H2-FP)):
++(1) `mode_dp` sets k̂ = `kbest` only to some k ∈ {0, …, K} (the scan `for (int k = 0; k <= K; ++k)`,
++`cpp/v3_start.h:220-224`), or leaves k̂ = −1.
++(2) Each leaf of `rec(J, k̂)` (`cpp/v3_start.h:281-301`) is reached along edges that subtract the block size j from the
++remaining size and accepts only r = 0, with codes c ∈ `arg[b][j]` ⊆ `codes_by_size[b][j]` (each of popcount j,
++`cpp/v3_start.h:111, 201-209`); so its set has exactly k̂ elements. If no leaf is reached, `bestS` stays empty.
++(3) `mode_tie_dp` returns only after the root check `feasible()` passes (`cpp/v3_start.h:261`), and keeps i in IN only
++when `feasible()` holds with i added (`cpp/v3_start.h:263-268`); an i that fails is moved to OUT, and feasibility is
++preserved because a witness path for (IN, OUT) cannot contain i. At the end IN ∪ OUT = {0, …, p − 1} and `feasible()`
++holds, so some reachable tight path with block sizes summing to k̂ has, block by block, a code whose set contains IN's
++members of that block and avoids OUT's; hence IN equals that path's set and |IN| = k̂.
++The tests in (2), (3) are integer bookkeeping on whatever doubles `mode_dp` computed; no property of those doubles is used. K = `D.K` = min(p, n/2) in `int`
+ (`cpp/v3_score.h:40`) ≤ ⌊(2³¹ − 1)/2⌋ = 2³⁰ − 1. So `cap_ll` = ℓ_n + |m.S| ≤ 32 + 2³⁰ − 1 = 2³⁰ + 31 < 2³¹ − 1 = INT_MAX,
+ computed in `long long` (`cpp/v3_core.cpp:473`), and `o.ls0_ell < 0` is false (ℓ_n ≥ 3); the guard at
+ `cpp/v3_core.cpp:474` does not fire. ∎(REP-b)
+ 
+ ## Conclusion
+ On every R-representable input both predicates lifted by A:IDEAL-W⁺ are false; so IDEAL-W⁺ costs nothing on any input the software can receive (n, p ≤ 2³¹ − 1). The
+-bounds use only R's integer `dim` limit and the shipped option values; no memory or time assumption is used.
++bounds use only R's integer `dim` limit, the shipped option values and the integer structure of `start_mode` (Step 3);
++no arithmetic idealisation, memory or time assumption is used.
+diff --git a/Theory_work/Wave3/W3-AUDIT/track_A_X/T14_REP/STATEMENT.md b/Theory_work/Wave3/W3-AUDIT/track_A_X/T14_REP/STATEMENT.md
+index 185b2cbf..2a6455e6 100644
+--- a/Theory_work/Wave3/W3-AUDIT/track_A_X/T14_REP/STATEMENT.md
++++ b/Theory_work/Wave3/W3-AUDIT/track_A_X/T14_REP/STATEMENT.md
+@@ -1,4 +1,4 @@
+-# T14 · Lemma REP (IDEAL-W⁺ is vacuous on inputs R can represent) — STATEMENT v0 (DRAFT, post-freeze item; not locked; wording per manager 11-16: "IDEAL-W⁺ costs nothing on any input the software can receive (n, p ≤ 2³¹ − 1)")
++# T14 · Lemma REP (IDEAL-W⁺ is vacuous on inputs R can represent) — STATEMENT v1 (DRAFT, post-freeze item; not locked; wording per manager 11-16: "IDEAL-W⁺ costs nothing on any input the software can receive (n, p ≤ 2³¹ − 1)")
+ 
+ HQ 11-16: approved as a small post-freeze item outside the track D cap; drafting allowed now; kill at 1 day; one Sol line
+ check. Tier B (code reading). **Lean target: no** (a code fact; the arithmetic is trivial).
+@@ -25,7 +25,7 @@ vectors raise only the length bound n·p_raw); the core reads both as C++ `int`
+ For every R-representable input of the shipped `v3_fit` that reaches the two sites:
+ - **(REP-a)** at `Scripts/SMC_BVS/core/v3_run.R:95-97`, `le` = ℓ_n = ⌈log₂(n + p + 1)⌉ ≤ 32, so `le > 1e6` is false (and the
+   other conditions of that validator hold, so it does not stop);
+-- **(REP-b)** at `Scripts/SMC_BVS/core/cpp/v3_core.cpp:473-474`, `o.ls0_ell` = ℓ_n ∈ [2, 32] and
++- **(REP-b)** at `Scripts/SMC_BVS/core/cpp/v3_core.cpp:473-474`, `o.ls0_ell` = ℓ_n ∈ [3, 32] and
+   `cap_ll` = ℓ_n + |S̃₀| ≤ 32 + ⌊n/2⌋ ≤ 2³⁰ + 31 < 2³¹ − 1 = INT_MAX, so neither disjunct of the guard holds.
+ Hence the two predicates that A:IDEAL-W⁺ lifts are false on every R-representable input: **IDEAL-W⁺ costs nothing on any input the software
+ can receive (n, p ≤ 2³¹ − 1)**: its two extra predicates are false there, so its extra clause holds vacuously.
+@@ -36,3 +36,9 @@ can receive (n, p ≤ 2³¹ − 1)**: its two extra predicates are false there,
+ - That other `int` arithmetic is safe on all R-representable inputs (e.g. `2 * p - 1`, `cpp/v3_blocks.h:49`, overflows for
+   p ≥ 2³⁰): that is IDEAL-W's own content, unchanged.
+ - Non-default options (a user setting `v3.ls0_ell` > 10⁶ makes X7 fire by design).
++
++## Changelog
++| version | clause | tag | reason | trigger | check |
++|---|---|---|---|---|---|
++| v0 | all | NEW-CLAIM | HQ 11-16 post-freeze item | manager message 11-16 | Sol line check VERIFIED (`reviews/LC1_reply_sol_T14.md`) |
++| v1 | (REP-b) proof: structural size bound on the start mode (no T9, no EX-A/H2-FP); ℓ_n range [3, 32] | EQUAL (claim unchanged; proof made premise-free as stated) | XR1 Opus F1, E7, E8 | `reviews/XR1_council_opus.md` | diff round XR2 |

@@ -1,0 +1,287 @@
+% S1_algorithms.tex -- the SMC-BVS sampler AS CODED, in eight algorithm environments (Assignment 7, transcription S1).
+% Not a document: \input it into one that loads algorithm, algpseudocode, ../../shared/smcbvs.sty and the A6 macros
+% (owner_review.tex lines 1-60).  Operational numbered lines carry their code pins in a trailing "%@" comment; S1_pins.md lists the pins of every line (structural lines too).
+% Closing lines (end if / end for / end while / end procedure) are suppressed, so they are not numbered:
+\algtext*{EndIf}\algtext*{EndFor}\algtext*{EndWhile}\algtext*{EndProcedure}
+% Notation: blocks are C_k, h_k, k in [J] (as in A6); sizes of models are written a, u; models are sets of retained columns
+% (retained 1-based indices are used throughout; the fit reports them as original column numbers through col, Definition def:data).
+% \log\gamma_xi(S) := \log\gamma_0(S) + xi*\Delta(S).  Line numbers are the printed ones.
+
+% =================================================================================================================
+\begin{algorithm}
+\caption{\textsc{Run}: a complete run (stage~1, and the order and the statuses of stages 2--7).}\label{alg:run}
+{\scriptsize
+\begin{algorithmic}[1]
+\Require $\yr\in\R^n$, $\Xr\in\R^{n\times\praw}$, a seed $s$, an allocation of $g$ GiB of memory and $h$ hours (defaults $8$ and $24$)
+\Ensure a status; the reported model $\Shat$ and the estimates of Algorithm~\ref{alg:outputs}
+\Procedure{Run}{}
+\State \textbf{if} $s$ is not a single integer in $[1,2^{31}-1]$ \textbf{then return} status \texttt{invalid\_input}, no model %@ v3_fit.R:88-89; v3_preprocess.R:7-11
+\State \textbf{if} the allocation is not a list, or its \texttt{mem\_gb} or \texttt{hours} (default if absent or NULL) is not a single positive finite number \textbf{then} raise an R error (nothing is returned) %@ v3_fit.R:91-95
+\State\label{ln:run-clock} create the wall clock that every \textsc{Guard} call below reads, counting from the entry to \textsc{Run} %@ v3_fit.R:73-74,96; v3_runtime.h:14-24
+\State \textbf{if} $\Xr$ is not a numeric matrix, $\yr$ not a numeric vector, $\abs{\yr}\ne n$, an entry is not finite, $n<3$ or $\praw<1$ \textbf{then return} status \texttt{invalid\_input}, no model %@ v3_preprocess.R:99-107; v3_fit.R:99-103
+\State drop every column whose entries are all exactly equal; $\mathrm{col}:=$ the retained original column numbers, increasing; $p:=\abs{\mathrm{col}}$ %@ v3_preprocess.R:111-112
+\State \textbf{if} $p=0$ \textbf{then return} status \texttt{no\_predictors}, $\Shat=\emptyset$, no estimates (tested before the next line) %@ v3_preprocess.R:114; v3_fit.R:99-102
+\State \textbf{if} all $\yr_i$ are exactly equal \textbf{then return} status \texttt{y\_constant}, $\Shat=\emptyset$, no estimates %@ v3_preprocess.R:115; v3_fit.R:99-102
+\State standardise each retained column and $\yr$ (divide by the largest absolute entry, subtract the mean, divide by the standard deviation with divisor $n-1$; if the largest absolute centred scaled entry is $\le\sqrt{\epsilon_{\mathrm{mach}}}$, first subtract the first raw entry, divide by the largest absolute difference and centre twice): this gives $X\in\R^{n\times p}$, $y$ of \eqref{eq:standardise} %@ v3_preprocess.R:37-68,118-123
+\State $K\gets\min(p,\lfloor n/2\rfloor)$; $B\gets\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)$; $\ell_n\gets\lceil\log_2(n+p+1)\rceil$; $\Lbi\gets\max(4,\lceil\log_2(n+1)\rceil)$; $N_0\gets\max(2500,n,p)$; $\Nc_0\gets\lceil512N_0/2500\rceil$; $\Tmax_0\gets\max(1000,\ell_n^2)$; for tier $i\in\{0,1\}$: $N_i,\Nc_i,\Tmax_i:=4^i\times$ the tier-$0$ values %@ v3_preprocess.R:19-33 (K 21, B 22, ell 23, L 24, N0 25, H0 26, T0 27, tiers 30)
+\State $\abs\Om\gets\sum_{k=0}^{K}\binom pk$ (exact integers, stopped once above the threshold); exact $\gets[\abs\Om\le(5\Nc_0+4N_0)\,p]$ %@ v3_core.cpp:72-85; v3_preprocess.R:28; v3_fit.R:105-106
+\State \textbf{if} \textsc{Check}(exact or sampler, tier~$0$) \textbf{then return} status \texttt{resource\_limit}, no model, no estimates %@ v3_fit.R:115-117
+\State build the data context: $G=X^\top X$, $z=X^\top y$, $y^\top y$, $\log m(\emptyset)$, $\log w(k)$ and $\log\bar w_K$ for $k\le K$; record the duplicate components of $G$ (pairs with $\abs{\hat r_{jl}}\ge1-10^{-10}$; reported only) %@ v3_fit.R:118-120; v3_score.h:39-72; v3_core.cpp:91-106,742-760
+\If{exact}
+\State visit every $S\in\Om$ in depth-first order (the empty model, then each model extended by larger column numbers up to size $K$); compute $F(S)$; keep $\log Z$ and $\sum_{S\ni j}e^{F(S)}$ by streaming log-sum-exp (long double); keep the best model under \textsc{Better} (Algorithm~\ref{alg:outputs}) and the list $\mathcal T$ of the $40p+1$ best by $F$ %@ v3_core.cpp:524-559; v3_exact.R:6-19
+\State \textbf{if} a scoring fails numerically (Cholesky, Cholesky from a recomputed Gram, augmented QR) \textbf{then return} status \texttt{numerical\_failure}, $\Shat:=$ the best model so far, flagged incomplete, no estimates %@ v3_core.cpp:556; v3_score.h:227-238; v3_fit.R:125-131
+\State status $\gets$ \texttt{exact}; \textbf{return} \textsc{ReportExact} (Algorithm~\ref{alg:outputs}) %@ v3_fit.R:120-131
+\EndIf
+\State\label{ln:run-tabfail} (stages~2--3) \textsc{Blocks}, \textsc{Tables} (Algorithm~\ref{alg:blocks}); \textbf{if} a table scoring fails \textbf{then return} status \texttt{numerical\_failure}, $\Shat:=$ the best scored table model, no estimates; then \textsc{StartLaw} (Algorithm~\ref{alg:start}), then \textsc{Neighbours} (Algorithm~\ref{alg:blocks}) %@ v3_fit.R:133-140; v3_core.cpp:278-303
+\State (stage~4) $(\text{status}_c,\text{frozen})\gets$ \textsc{Calibrate} (Algorithm~\ref{alg:cal}); \textbf{if} $\text{status}_c\ne\text{ok}$ \textbf{then return} status $:=\text{status}_c$ (\texttt{resource\_limit}, \texttt{numerical\_failure} or \texttt{schedule\_limit}), $\Shat:=$ the calibration's best model, flagged incomplete, no estimates %@ v3_fit.R:149-160
+\State\label{ln:run-frozen} frozen $=(0=\grid0<\dots<\grid{\Ts}=1,\ i,\ N_i,\ \Lbi,\ \text{the models of the three stores})$; \textbf{if} $\ell_n>10^6$ \textbf{then} raise an R error; new ledger and score cache ($500p$ entries); \textsc{Offer} every block-table model, then every model of the three calibration stores (scored afresh, not counted as events) %@ v3_fit.R:161-162; v3_run.R:88-104,225-231; v3_core.cpp:407-442
+\For{$r=1,\dots,4$}\label{ln:run-isl1}
+\State $(\Zhat_r,\PIPhat_{r,\cdot})\gets$ \textsc{Island}$(r,N_i,\grid{\cdot},\Lbi)$ on random stream $9+r$ (Algorithm~\ref{alg:island}) %@ v3_core.cpp:443-446
+\State \textbf{if} \textsc{Guard} fired inside the island \textbf{then} status $\gets$ \texttt{resource\_limit} and leave the loop %@ v3_core.cpp:451; v3_engine.h:335-338
+\EndFor
+\State\label{ln:run-ls1} \textbf{if} status $=$ completed \textbf{then} $\mathrm{LS}_1\gets$ \textsc{LocalSearch}(the best model scored so far, $\ell_n$) (Algorithm~\ref{alg:ls}); \textbf{if} \textsc{Guard}(its duration) fires \textbf{then} status $\gets$ \texttt{resource\_limit} %@ v3_core.cpp:453-459
+\State\label{ln:run-ls0} \textbf{if} status $=$ completed \textbf{then} $\tSz\gets$ \textsc{StartMode}; \textbf{if} $\ell_n+\abs{\tSz}>2^{31}-1$ \textbf{then} raise an R error; $\mathrm{LS}_0\gets$ \textsc{LocalSearch}$(\tSz,\ \ell_n+\abs{\tSz})$; \textbf{if} \textsc{Guard}(the duration of \textsc{StartMode} and this search) fires \textbf{then} status $\gets$ \texttt{resource\_limit} %@ v3_core.cpp:465-481
+\State \textbf{if} a scoring failed numerically in line~\ref{ln:run-frozen} (the inherited models) or in lines~\ref{ln:run-isl1}--\ref{ln:run-ls0} \textbf{then} status $\gets$ \texttt{numerical\_failure} (the calibration's best model and its saved score are reconciled with the ledger) %@ v3_core.cpp:417-428,483-505
+\State \textbf{if} status $\ne$ completed \textbf{then return} status, $\Shat:=$ the best model scored so far, flagged incomplete, every estimate unavailable %@ v3_run.R:143-148; v3_fit.R:84-85
+\State status $\gets$ \texttt{completed}; \textbf{return} \textsc{Report} (Algorithm~\ref{alg:outputs}) %@ v3_run.R:150-221; v3_fit.R:171-176
+\EndProcedure
+\Procedure{Check}{branch, $i$}\Comment{true iff the allocation is exceeded}
+\If{branch is exact}
+\State $k^*\gets\min(K,\lceil p/2\rceil)$; bytes $\gets8(3np+p^2)+8(40p+1)(k^*+8)+32p$; $\tau\gets$ mean time of $200$ scorings of models of size $k^*$ on the first $\min(p,\max(64,k^*))$ columns; seconds $\gets\abs\Om\,\tau$ %@ v3_fit.R:10-14,31-34
+\State \textbf{return} [bytes $>g\,2^{30}$ or seconds $>3600h$] %@ v3_fit.R:60
+\Else
+\State $N\gets N_i$, $W\gets\lceil p/64\rceil$, $C\gets500p$; bytes $\gets8(3np+3p^2)+16\lceil p/B\rceil2^B+8\lceil p/B\rceil(K+1)(B+1)+29\cdot2^{\lceil\log_2(2C)\rceil}+4CK+(80p+1)(4K+64)+2N(8W+4K+96)$ %@ v3_fit.R:36-41
+\State \textbf{if} the search from the start mode is on (default): $\sigma\gets\ell_n+K+1$ scans; bytes $\mathrel{+}=(2\sigma+4)(12K+256)+96\sigma+4(8W+4K+96)+4096$ %@ v3_fit.R:43-45,113-115
+\State exceeded $\gets$ [bytes $>g\,2^{30}$]; \textbf{if} the search from the start mode is on \textbf{and} bytes $\le g\,2^{30}$ \textbf{then} $\tau_K\gets$ mean time of $200$ scorings of size-$K$ models (kept per model size, reused by later calls) and exceeded $\gets$ exceeded or $[\,2\sigma\,(p+p^2/4)\,\tau_K>3600h\,]$ %@ v3_fit.R:42-48,60-65,107-115,144-147
+\State \textbf{return} exceeded %@ v3_fit.R:67
+\EndIf
+\EndProcedure
+\Procedure{Guard}{$\delta$}\Comment{called after every bridge stage, grid construction and local search}
+\State \textbf{if} (time elapsed since the entry to \textsc{Run}, line~\ref{ln:run-clock}) $+\ \delta>3600h$ \textbf{then} set the sticky flag ``exceeded''; \textbf{return} exceeded %@ v3_runtime.h:21-27; call sites v3_engine.h:335, v3_core.cpp:459,480,645,692, v3_calib.R:354-355
+\EndProcedure
+\end{algorithmic}}
+\end{algorithm}
+
+% =================================================================================================================
+\begin{algorithm}
+\caption{Stage~2: blocks, block tables and the neighbour graph.}\label{alg:blocks}
+{\footnotesize
+\begin{algorithmic}[1]
+\Require standardised $X$; $B$ and $K$ of Algorithm~\ref{alg:run}
+\Ensure blocks $C_1,\dots,C_J$ (increasing members), tables $h_k$, neighbour sets $\mathcal N(j)$
+\Procedure{Blocks}{}
+\State $\hat r_{jl}\gets G_{jl}/\sqrt{G_{jj}G_{ll}}$; $d_{jl}\gets1-\abs{\hat r_{jl}}$ %@ v3_blocks.h:10-17,55
+\State complete-linkage tree: start from $p$ singleton clusters; $p-1$ times merge the pair $(a,b)$ of active clusters with the smallest $d(a,b)=\max_{j\in a,l\in b}d_{jl}$; among exactly equal distances take the pair whose union has the lexicographically smallest increasing index list (a proper prefix first); the left child of the new node is the child with the smaller minimum index %@ v3_blocks.h:46-108 (pair order 62-66, choice 76-83, left child 85-86, max rule 94-98)
+\State cut top-down: stack $\gets$ root; \textbf{while} the stack is not empty pop a node; \textbf{if} it has at most $B$ leaves emit its leaves, left to right, as a cluster, \textbf{else} push its right child, then its left child %@ v3_blocks.h:128-132
+\State pack next-fit in emission order: $\mathrm{cur}\gets\emptyset$; for each cluster $c$: \textbf{if} $\abs{\mathrm{cur}}+\abs c>B$ \textbf{then} close the block $\mathrm{cur}$ and $\mathrm{cur}\gets\emptyset$; $\mathrm{cur}\gets\mathrm{cur}\cup c$; close the last block; sort every block increasing; these are $C_1,\dots,C_J$ (a block has at most $16$ members) %@ v3_blocks.h:134-141; v3_core.cpp:145-149
+\EndProcedure
+\Procedure{Tables}{}
+\For{$k\in\set J$ and every $U\subseteq C_k$ with $\abs U\le K$ (coded by the bits of the increasing members of $C_k$)}
+\State $\log h_k(U)\gets\log m(U)-\log m(\emptyset)$, with $h_k(\emptyset)=1$, $\log m(U)$ by a direct call of the scorer of eq.~\eqref{eq:marglik}, which records its route (this is not \textsc{Eval}: no cache, no offer; the table models are offered to the ledgers later); a numerical failure stops the run (Algorithm~\ref{alg:run}, line~\ref{ln:run-tabfail}) %@ v3_start.h:76-98 (score 93, entry 95); v3_engine.h:89-100; v3_core.cpp:282-298,372-385,603-614
+\EndFor
+\EndProcedure
+\Procedure{Neighbours}{}
+\State \textbf{if} $p=1$ \textbf{then} $\mathcal N(1)\gets\emptyset$ and stop; $\rho_n\gets\sqrt{2\log p/n}$ %@ v3_blocks.h:152,154
+\For{$j\in\set p$}
+\State order the $l\ne j$ by $\abs{\hat r_{jl}}$ decreasing, ties by smaller $l$; $a_j\gets$ length of the longest prefix whose entries all have $\abs{\hat r_{jl}}>\rho_n$; $\mathrm{ch}_j\gets$ the first $\min(B,\max(1,a_j))$ entries %@ v3_blocks.h:157-168
+\EndFor
+\State $\mathcal N(j)\gets\{l:\ l\in\mathrm{ch}_j\ \text{or}\ j\in\mathrm{ch}_l\}$, increasing (a symmetric graph) %@ v3_blocks.h:170-171
+\EndProcedure
+\end{algorithmic}}
+\end{algorithm}
+
+% =================================================================================================================
+\begin{algorithm}
+\caption{Stage~3: model evaluation, the start law $\pi_0$ with its exact sampler, and the start mode $\tSz$.}\label{alg:start}
+{\footnotesize
+\begin{algorithmic}[1]
+\Require blocks and tables of Algorithm~\ref{alg:blocks}; $\varpi(a):=w(a)/\bar w_K$ for $a=0,\dots,K$
+\Ensure $\bar Z_0$; a sampler for $\pi_0$; $\tSz$
+\Procedure{Eval}{$S$}\Comment{the score of a model $\abs S\le K$; used by every algorithm}
+\State $\log m(S)\gets$ the cached value if present, else the scorer (Cholesky of $H_S$ and $G_S+I$; on failure, or if the resulting $\log m(S)$ is not finite, the Gram is recomputed from $X$ and the Cholesky repeated; then, on the same condition, augmented QR; else numerical failure; whenever $\SSq_S<10^{-8}y^\top y$, $\SSq_S$ is recomputed as $\norm{y-X_Sb}^2+(\norm{X_Sb}^2+\norm b^2)/n$ with $b=nH_S^{-1}z_S$); the cache holds $\log m$ only; an insertion that finds $500p$ entries stored first empties the cache, and lookups still hit while it is full %@ v3_engine.h:89-96; v3_score.h:145-159,176-238,274-292; v3_core.cpp:409
+\State $c\gets\sum_k\log h_k(S\cap C_k)$ over the blocks that $S$ meets %@ v3_start.h:54-66
+\State $\log\gamma_0(S)\gets\log\varpi(\abs S)+c$; $\ \Delta(S)\gets\{\log m(S)-\log m(\emptyset)\}-c$; $\ F(S)\gets\log\varpi(\abs S)+\log m(S)$ %@ v3_engine.h:97; v3_start.h:69
+\State \textsc{Offer}$(S)$ (Algorithm~\ref{alg:outputs}) \textbf{if} the score was computed afresh (cache miss); \textbf{return} $(\log m,\log\gamma_0,\Delta,F)$ %@ v3_engine.h:98-100; v3_ledger.h:104-113
+\EndProcedure
+\Procedure{StartLaw}{}
+\State $e_k(a)\gets\sum_{U\subseteq C_k,\ \abs U=a}h_k(U)$ for $k\in\set J$, $a=0,\dots,\min(\abs{C_k},K)$ (log-sum-exp) %@ v3_start.h:106-120
+\State $\Phi_0(0)\gets1$, $\Phi_0(a)\gets0$ for $a>0$; for $k\in\set J$, $a=0,\dots,K$: $\Phi_k(a)\gets\sum_{u=0}^{\min(\abs{C_k},a)}e_k(u)\,\Phi_{k-1}(a-u)$ %@ v3_start.h:121-131
+\State $\bar Z_0\gets\sum_{a=0}^{K}\varpi(a)\,\Phi_J(a)$; $\ q(a)\gets\varpi(a)\Phi_J(a)/\bar Z_0$ %@ v3_start.h:132-138
+\State for $k\in\set J$, $r=0,\dots,K$, $u\le\min(\abs{C_k},r)$: $P_k(u\mid r)\gets e_k(u)\,\Phi_{k-1}(r-u)/\Phi_k(r)$ (for $\Phi_k(r)=0$ the table is all zero and is never sampled); every cumulative table used below ($q$, $P_k(\cdot\mid r)$, and the subsets of a block) is set to $1$ from its last positive entry on %@ v3_start.h:15-31,115-118,132-175
+\EndProcedure
+\Procedure{DrawStart}{}\Comment{one exact draw from $\pi_0$; the uniforms are used in this order}
+\State draw $a\sim q$ (inverse CDF: the smallest index whose cumulative probability exceeds $u$) %@ v3_start.h:160; v3_start.h:18-20
+\State $r\gets a$; \textbf{for} $k=J,J-1,\dots,1$ \textbf{while} $r>0$ \textbf{do} draw $a_k\sim P_k(\cdot\mid r)$ and $r\gets r-a_k$ (put $a_k:=0$ for the blocks not reached) %@ v3_start.h:161-166
+\State \textbf{for} $k=1,\dots,J$ with $a_k>0$ \textbf{do} draw $U_k\subseteq C_k$, $\abs{U_k}=a_k$, with probability $h_k(U_k)/e_k(a_k)$ (subsets of size $a_k$ listed by increasing bit code) %@ v3_start.h:168-173
+\State \textbf{return} $S=\bigcup_kU_k$ %@ v3_start.h:174-175
+\EndProcedure
+\Procedure{StartMode}{}
+\State $\mu_k(a)\gets\max_{U\subseteq C_k,\abs U=a}\log h_k(U)$; $\ A_k(a):=$ the set of $U$ whose $\log h_k(U)$ equals it exactly (as doubles) %@ v3_start.h:201-210
+\State $M_0(0)\gets0$; $\ M_k(a)\gets\max_{u\le\min(\abs{C_k},a)}\{M_{k-1}(a-u)+\mu_k(u)\}$ (nothing is added for $u=0$), for $k\in\set J$, $a\le K$ %@ v3_start.h:211-219
+\State $a^*\gets$ the smallest $a$ attaining $\max_a\{\log\varpi(a)+M_J(a)\}$ (a strict comparison keeps the smaller size) %@ v3_start.h:220-224
+\State $\mathcal E\gets$ the sets of size $a^*$ built from $r=a^*$ at $k=J$ downwards: block $k$ takes a size $u\le\min(\abs{C_k},r)$ and any $U_k\in A_k(u)$ such that $M_{k-1}(r-u)+\mu_k(u)=M_k(r)$ exactly in binary64 (nothing is added for $u=0$), then $r\gets r-u$; every step must satisfy the equality, and $r=0$ at the end; $\tSz\gets$ the lexicographically smallest set of $\mathcal E$ (a proper prefix first), found by enumerating $\mathcal E$ and, as soon as the count reaches $10^6$ (even if that is all of $\mathcal E$), by the tie-aware DP (for $i=1,\dots,p$: include $i$ iff some set of $\mathcal E$ contains the chosen indices and $i$ and avoids the excluded ones) %@ v3_start.h:178-186,227-257,271-305 (enumeration 281-301, tie DP 237-270, used 303)
+\EndProcedure
+\end{algorithmic}}
+\end{algorithm}
+
+% =================================================================================================================
+\begin{algorithm}
+\caption{Stage~4: calibration (adaptive tempering): pilot, grid, rebuilds, tier rule, fallback, freeze.}\label{alg:cal}
+{\scriptsize
+\begin{algorithmic}[1]
+\Require data and setup of Algorithms~\ref{alg:run}--\ref{alg:start}; $\Nc_i,\Tmax_i$ of Algorithm~\ref{alg:run}
+\Ensure status $\in\{\text{ok},\texttt{resource\_limit},\texttt{numerical\_failure},\texttt{schedule\_limit}\}$; frozen $=(\text{grid},i,N_i,\Lbi,\text{stores})$
+\Procedure{Calibrate}{}
+\State persistent state: a ledger (best model, $\mathcal T$ the $40p+1$ best by $F$, $\mathcal L_0$ the $20p$ best by $\log\gamma_0$, $\mathcal L_1$ the $20p$ best by $F$), a score cache, random streams $0,\dots,9$ (stream $j$ seeded by $(s,j)$); \textsc{Offer} every block-table model %@ v3_calib.R:147-148; v3_core.cpp:603-614, (ingest_tables 372-388)
+\State $i\gets0$ %@ v3_calib.R:144 (argument tier = 0)
+\While{true}
+\State $(\text{st},\text{grid},\text{trig},\text{fb})\gets$ \textsc{CalTier}$(i)$; \textbf{if} st $\ne$ ok \textbf{then return} st (the calibration's best model, no estimates) %@ v3_calib.R:151-153
+\State \textbf{if} no trigger of trig is true \textbf{or} $i=1$ \textbf{then} leave the loop (at tier~$1$ the triggers are only recorded) %@ v3_calib.R:154-155
+\State \textbf{if} \textsc{Check}(sampler, tier~$1$) \textbf{then return} \texttt{resource\_limit} (the escalation does not happen) %@ v3_calib.R:157; v3_fit.R:144-148
+\State $i\gets1$ (stores, cache and the score ledger carry over; the temperatures of tier~$0$ do not; streams $5,\dots,9$ are used) %@ v3_calib.R:158; v3_core.cpp:626,667
+\EndWhile
+\State \textbf{if} grid $=\emptyset$ \textbf{and} $i=1$ \textbf{then} grid $\gets$ fb (valid fallback) %@ v3_calib.R:163-169
+\State \textbf{if} grid $=\emptyset$ \textbf{then return} \texttt{schedule\_limit} (for $i=0$ the code names it \texttt{grid\_failure\_no\_escalation}; unreachable, since a failed grid is a trigger) %@ v3_calib.R:170
+\State freeze: grid, tier $i$, $N_i$, $\Lbi$, and the models of $\mathcal T\cup\mathcal L_0\cup\mathcal L_1$ with the best model, as candidates for the reported model (not as particles); \textbf{return} ok %@ v3_calib.R:160,184-190; v3_core.cpp:728-740
+\EndProcedure
+\Procedure{CalTier}{$i$}\Comment{a firing \textsc{Guard} or a numerical failure in any line below ends the tier with that status}
+\State $(\Xi,\text{forced})\gets$ \textsc{Island}$(0,\Nc_i,\text{adaptive},\Lbi)$ on stream $0$ if $i=0$, else $5$; $\Xi:=(0,\text{the pilot's temperatures})$; a partial island ends the tier before the search %@ v3_calib.R:44,57; v3_core.cpp:626-650
+\State $\mathrm{LS}\gets$ \textsc{LocalSearch}(best scored model, $\ell_n$); \textsc{Guard}; $E_3\gets[F(\text{best})$ strictly increased during $\mathrm{LS}]$; lim $\gets[\mathrm{LS}$ stopped at its move cap$]$ %@ v3_core.cpp:640-648; v3_calib.R:25,59-60
+\State trig $\gets\{E_1{=}\text{false},E_2{=}\text{false},E_3,\ \text{forced}>0,\ \text{gridfail}{=}\text{false},\ \text{unconverged}{=}\text{false},\ \text{lim}\}$ %@ v3_calib.R:60-61
+\State grid $\gets$ \textsc{BuildGrid}$(\Xi)$ (a numerical failure of the rescoring ends the tier); \textsc{Guard} (a firing ends the tier); \textbf{if} the construction failed \textbf{then} trig.gridfail $\gets$ true; converged $\gets$ false %@ v3_calib.R:64-82; v3_core.cpp:699-724
+\If{the construction succeeded}
+\For{$\iota=1,\dots,\ell_n$}
+\State \textbf{for} $r=1,\dots,4$: $(\Zhat_r,\cdot)\gets$ \textsc{Island}$(r,\Nc_i,\text{grid},\Lbi)$ on stream $(0\text{ or }5)+r$, continuing the stream of the previous $\iota$ (a partial island ends the tier before the later islands and the search); $b_r\gets$ the largest $F$ scored by island $r$ in this $\iota$ %@ v3_core.cpp:657-686; v3_calib.R:86,100
+\State $\mathrm{LS}\gets$ \textsc{LocalSearch}(best scored model, $\ell_n$); \textsc{Guard}; $E_{3,\iota}\gets[F(\text{best})$ strictly increased during $\mathrm{LS}]$ %@ v3_core.cpp:687-692; v3_calib.R:103
+\State $E_1\gets[\exists r:\ b_r<F(\text{best})-1]$; $\ E_2\gets[\mathrm{sd}(\log\Zhat_1,\dots,\log\Zhat_4)>1]$ (divisor $3$); trig.$E_1,E_2\gets E_1,E_2$; trig.$E_3\gets$ trig.$E_3\vee E_{3,\iota}$; trig.lim $\gets$ trig.lim $\vee[\mathrm{LS}$ at its move cap$]$ %@ v3_calib.R:101-102,109-110
+\State grid$'\gets$ \textsc{BuildGrid}$(\Xi)$ (the sets $\mathcal L_0,\mathcal L_1$ have been updated; a numerical failure of the rescoring ends the tier); \textsc{Guard} (a firing ends the tier); \textbf{if} the construction failed \textbf{then} trig.gridfail $\gets$ true and leave the $\iota$-loop (grid is not replaced) %@ v3_calib.R:111-114; v3_core.cpp:699-724
+\State \textbf{if} grid$'$ has exactly the same temperatures as grid \textbf{then} grid $\gets$ grid$'$, converged $\gets$ true, leave the $\iota$-loop; \textbf{else} grid $\gets$ grid$'$ %@ v3_calib.R:115-116
+\EndFor
+\State \textbf{if} not trig.gridfail \textbf{and} not converged \textbf{then} trig.unconverged $\gets$ true %@ v3_calib.R:118
+\EndIf
+\State \textbf{if} trig.gridfail \textbf{and} $i=1$ \textbf{then} fb $\gets$ the last grid built successfully in this tier if there is one, else $\Xi$ (the pilot's schedule); \textbf{return} (ok, grid $=\emptyset$ if trig.gridfail else grid, trig, fb) %@ v3_calib.R:120-126
+\EndProcedure
+\Procedure{BuildGrid}{$\Xi$}
+\State $\mathcal V\gets\{\emptyset\}\cup\mathcal L_0\cup\mathcal L_1$, in lexicographic order; rescore each $S\in\mathcal V$ for $\log\gamma_0(S)$ and $\Delta(S)$ (outside the score cache; no score event); $\psi(u)\gets\log\sum_{S\in\mathcal V}\exp\{\log\gamma_0(S)+u\Delta(S)\}$; $\rho(u,v)\gets\exp\{2\psi(v)-\psi(u)-\psi(2v-u)\}$ %@ v3_core.cpp:703-724; v3_calib.h:49-58; v3_calib.R:64-66
+\State $\mathrm{grid}\gets(0)$; $u\gets0$; \textbf{while} $u<1$: $b\gets$ the smallest element of $\Xi$ above $u$ (fail if none) %@ v3_calib.h:70-76
+\State \textbf{if} $\rho(u,b)\ge0.90$ \textbf{then} $v\gets b$; \textbf{else} $\mathrm{lo}\gets u$, $\mathrm{hi}\gets b$, any $\gets$ false, and $60$ times: $\mathrm{mid}\gets(\mathrm{lo}+\mathrm{hi})/2$; \textbf{if} $\rho(u,\mathrm{mid})\ge0.90$ \textbf{then} $\mathrm{lo}\gets\mathrm{mid}$, any $\gets$ true \textbf{else} $\mathrm{hi}\gets\mathrm{mid}$; \textbf{if} not any \textbf{then fail}; $v\gets\mathrm{lo}$ %@ v3_calib.h:78-88
+\State \textbf{if} $v\ge1-10^{-12}$ \textbf{then} $v\gets1$; \textbf{if} not $v>u$ \textbf{or} not $\rho(u,v)\ge0.90$ \textbf{then fail}; append $v$ to grid; \textbf{if} more than $\Tmax_i$ intervals \textbf{then fail}; $u\gets v$ %@ v3_calib.h:89-95
+\EndProcedure
+\Procedure{NextTemperature}{$\xi;\ \Delta_1,\dots,\Delta_N$}\Comment{the pilot's rule; $N=\Nc_i$; $\mathrm{ESS}(\delta)=(\sum_ve^{\delta\Delta_v})^2/\sum_ve^{2\delta\Delta_v}$}
+\State \textbf{if} $\mathrm{ESS}(1-\xi)\ge0.90N$ \textbf{then return} $1$; \textbf{else} $\mathrm{lo}\gets\xi$, $\mathrm{hi}\gets1$, and $60$ times: $\mathrm{mid}\gets(\mathrm{lo}+\mathrm{hi})/2$; \textbf{if} $\mathrm{ESS}(\mathrm{mid}-\xi)\ge0.90N$ \textbf{then} $\mathrm{lo}\gets\mathrm{mid}$ \textbf{else} $\mathrm{hi}\gets\mathrm{mid}$ %@ v3_calib.h:19-23,30-37
+\State \textbf{if} $\mathrm{lo}-\xi<1/\Tmax_i$ \textbf{then} $f\gets\min(1,\xi+1/\Tmax_i)$; \textbf{if} $f\ge1-10^{-12}$ \textbf{then} $f\gets1$; count a forced step; \textbf{return} $f$; \textbf{else return} $\mathrm{lo}$ %@ v3_calib.h:38-45
+\EndProcedure
+\end{algorithmic}}
+\end{algorithm}
+
+% =================================================================================================================
+\begin{algorithm}
+\caption{Stage~5: one island (the final run, a diagnostic island or the pilot), the PIP estimator $\PIPhat_{r,j}$ and the evidence estimator $\Zhat_r$.}\label{alg:island}
+{\footnotesize
+\begin{algorithmic}[1]
+\Require island number $r$, $N$ particles, a schedule (the frozen grid $0=\grid0<\dots<\grid{\Ts}=1$, or the adaptive rule \textsc{NextTemperature} of Algorithm~\ref{alg:cal}), $\Lbi$; its own random stream
+\Ensure $\Zhat_r$, $\PIPhat_{r,1},\dots,\PIPhat_{r,p}$
+\Procedure{Island}{$r,N,\text{schedule},\Lbi$}
+\State \textbf{for} $v=1,\dots,N$: $S_v\gets$ \textsc{DrawStart}; \textsc{Eval}$(S_v)$ (the $N$ draws are independent draws from $\pi_0$) %@ v3_engine.h:283-292
+\State $\log\Zhat_r\gets\log m(\emptyset)+\log\bar Z_0$; $\ \xi\gets0$; $\ t\gets0$ %@ v3_engine.h:299-302
+\While{true}
+\State \textbf{if} the schedule is the grid: stop when $t=\Ts$, else $\xi'\gets\grid{t+1}$; \textbf{if} adaptive: stop when $\xi=1$, else $\xi'\gets$ \textsc{NextTemperature}$(\xi;\Delta(S_1),\dots,\Delta(S_N))$; $t\gets t+1$ %@ v3_engine.h:303-315
+\State $\omega_v\gets\exp\{(\xi'-\xi)\,\Delta(S_v)\}$ for $v=1,\dots,N$; $\ \log\Zhat_r\gets\log\Zhat_r+\log\{N^{-1}\sum_v\omega_v\}$ (log-sum-exp); ($\mathrm{ESS}_t=(\sum\omega_v)^2/\sum\omega_v^2$ is recorded) %@ v3_engine.h:316-322
+\State multinomial resampling: draw $N$ uniforms $u_1,\dots,u_N$ first; $a_v\gets$ the smallest $k$ with $c_k/c_N\ \ge\ u_v$, where $c_k:=\sum_{l\le k}\exp\{\log\omega_l-\max_{l'}\log\omega_{l'}\}$ is accumulated in particle order in binary64 (the last cumulative $c_N/c_N$ is set to $1$; $u_v=0$ is replaced by the smallest positive double); $S_v\gets S_{a_v}$ for all $v$ %@ v3_engine.h:234-259,324-327
+\State \textbf{for} $v=1,\dots,N$ in order: \textsc{Round}$(S_v,\xi')$ (Algorithm~\ref{alg:moves}); $\ \xi\gets\xi'$ %@ v3_engine.h:330-334; v3_engine.h:215-218
+\State \textbf{if} \textsc{Guard}(the duration of this stage) fires \textbf{then} the island is partial and the run stops (status \texttt{resource\_limit}) %@ v3_engine.h:335-338
+\EndWhile
+\State $\Ts\gets t$; \textbf{for} $l=1,\dots,\Lbi$: \textbf{for} $v=1,\dots,N$: \textsc{Round}$(S_v,1)$ (burn-in, no resampling) %@ v3_engine.h:340-347
+\State $\varrho_j\gets0$ for $j\in\set p$; \textbf{for} $h=1,\dots,4$: \textbf{for} $v=1,\dots,N$ in order: \textsc{Round}$(S_v,1)$, in which every inclusion update of predictor $j$ adds the probability $o_j$ it computed (before drawing its indicator) to $\varrho_j$ (Algorithm~\ref{alg:moves}) %@ v3_engine.h:349-360,128
+\State $\PIPhat_{r,j}\gets\varrho_j/(4N)$ for $j\in\set p$; $\ \Zhat_r\gets m(\emptyset)\,\bar Z_0\prod_{t=1}^{\Ts}\{N^{-1}\sum_v\omega^{(t)}_v\}$; \textbf{return} $(\Zhat_r,\PIPhat_{r,\cdot})$ %@ v3_engine.h:363-367; v3_run.R:150-162 (stored as log\_Z, pip)
+\EndProcedure
+\end{algorithmic}}
+\end{algorithm}
+
+% =================================================================================================================
+\begin{algorithm}
+\caption{The Markov moves: one round, and the four kinds of move with their acceptance probabilities.}\label{alg:moves}
+{\footnotesize
+\begin{algorithmic}[1]
+\Require a particle $S$ (with $\abs S\le K$), a temperature $\xi$; $\log\gamma_\xi(S)=\log\gamma_0(S)+\xi\Delta(S)$ from \textsc{Eval}; the graph $\mathcal N$; $B$; $m:=p+B+2$
+\Ensure $S$ updated in place; each move leaves $\pi_\xi\propto\gamma_0e^{\xi\Delta}$ invariant
+\Procedure{Round}{$S,\xi$}
+\State draw a uniformly random order of the $m$ labels $G_1,\dots,G_p,U,N_1,\dots,N_B,I$ by Fisher--Yates ($m-1$ uniforms); \textbf{for} the labels in that order: $G_j\mapsto$ \textsc{Gibbs}$(S,j,\xi)$, $U\mapsto$ \textsc{UniformSwap}, each $N_b\mapsto$ \textsc{NeighbourSwap}, $I\mapsto$ \textsc{Independence} %@ v3_engine.h:195-214
+\EndProcedure
+\Procedure{Gibbs}{$S,j,\xi$}\Comment{inclusion update of predictor $j$}
+\State the current state counts as a held score event; \textbf{if} $j\in S$ \textbf{then} $S^+\gets S$, $S^-\gets S\setminus\{j\}$; \textbf{else if} $\abs S<K$ \textbf{then} $S^+\gets S\cup\{j\}$, $S^-\gets S$; \textbf{else} $o_j\gets0$ (then nothing further is scored) %@ v3_engine.h:113-127
+\State \textbf{unless} $o_j$ was set to $0$: \textsc{Eval} the other configuration (a score event), then $a\gets\gamma_\xi(S^+)/\gamma_\xi(S^-)$ and $o_j\gets a/(1+a)$ (evaluated as a logistic function of $\log a$); in a measured round add $o_j$ to $\varrho_j$ (also when $o_j=0$) %@ v3_engine.h:119-128; v3_util.h:30-34
+\State draw $u$ (one uniform, also when $o_j\in\{0,1\}$); include $j$ iff $u<o_j$; $S\gets S^+$ if included, else $S^-$ (for $\abs S=K$, $j\notin S$ the model is left as it is) %@ v3_engine.h:129-131
+\EndProcedure
+\Procedure{UniformSwap}{$S,\xi$}
+\State \textbf{if} $\abs S\in\{0,p\}$ \textbf{then} do nothing (no uniform used) %@ v3_engine.h:148
+\State $j\gets$ a member of $S$, $l\gets$ a non-member, each uniform ($\lfloor uk\rfloor$ over the increasing lists); $S'\gets(S\setminus\{j\})\cup\{l\}$; accept with probability $\min\{1,\ \gamma_\xi(S')/\gamma_\xi(S)\}$, evaluated as $\min\{1,\ \exp(\lambda'-\lambda)\}$ with $\lambda:=\log\gamma_0(S)+\xi\Delta(S)$ and $\lambda'$ the same for $S'$; one uniform $u$, accept iff $u<$ that probability %@ v3_engine.h:14,150-158
+\EndProcedure
+\Procedure{NeighbourSwap}{$S,\xi$}
+\State \textbf{if} $S=\emptyset$ \textbf{then} do nothing; $j\gets$ a uniform member of $S$; $\mathcal C\gets\mathcal N(j)\setminus S$; \textbf{if} $\mathcal C=\emptyset$ \textbf{then} do nothing (no score, no further uniform) %@ v3_engine.h:164-170
+\State $l\gets$ uniform in $\mathcal C$ (increasing list); $S'\gets(S\setminus\{j\})\cup\{l\}$; accept with probability $\min\Big\{1,\ \dfrac{\gamma_\xi(S')}{\gamma_\xi(S)}\cdot\dfrac{\abs{\mathcal N(j)\setminus S}}{\abs{\mathcal N(l)\setminus S'}}\Big\}$ (the reverse proposal picks $j$ among $\mathcal N(l)\setminus S'\ni j$); one uniform $u$, accept iff $u<$ that probability (also when it is $1$) %@ v3_engine.h:171-179
+\EndProcedure
+\Procedure{Independence}{$S,\xi$}
+\State $S'\gets$ \textsc{DrawStart} (an exact draw from $\pi_0$; always scored); accept with probability $\min\{1,\ \exp[\xi\{\Delta(S')-\Delta(S)\}]\}$ ($=\min\{1,\gamma_\xi(S')\pi_0(S)/(\gamma_\xi(S)\pi_0(S'))\}$); one uniform $u$ is always used %@ v3_engine.h:182-191
+\EndProcedure
+\end{algorithmic}}
+\end{algorithm}
+
+% =================================================================================================================
+\begin{algorithm}
+\caption{Stage~6: the local search, certification, and the two searches of a run.}\label{alg:ls}
+{\footnotesize
+\begin{algorithmic}[1]
+\Require a start model $C_0$ ($\abs{C_0}\le K$), a move cap $\mathrm{cap}$
+\Ensure the returned model, a flag \emph{certified}, a flag \emph{limit}; every scanned model is offered to the ledger
+\Procedure{LocalSearch}{$C_0,\mathrm{cap}$}
+\State $C\gets C_0$; \textsc{Eval}$(C)$ (emitted as a score event, and so offered, only in $\mathrm{LS}_0$; the final search and both calibration searches do not emit it); $\mathrm{mv}\gets0$ %@ v3_engine.h:377-383; v3_core.cpp:456,476,642,689
+\While{true}
+\State $\mathrm{best}\gets$ none; for every $Q$ below, \textsc{Eval}$(Q)$ and: \textbf{if} best is none \textbf{or} $F(Q)>F(\mathrm{best})$ \textbf{or} [$F(Q)=F(\mathrm{best})$ and $Q$ precedes best lexicographically, a proper prefix first] \textbf{then} $\mathrm{best}\gets Q$ %@ v3_engine.h:387-393
+\State \textbf{for} $j=1,\dots,p$ in order: $Q\gets C\setminus\{j\}$ if $j\in C$; $Q\gets C\cup\{j\}$ if $j\notin C$ and $\abs C<K$ (otherwise skip $j$) %@ v3_engine.h:394-399
+\State \textbf{for} $j\in C$ increasing, \textbf{for} $l\notin C$ increasing: $Q\gets(C\setminus\{j\})\cup\{l\}$ %@ v3_engine.h:400-406
+\If{best is not none \textbf{and} $F(\mathrm{best})>F(C)$}\Comment{a strict improvement; an equal $F$ is not a move}
+\State \textbf{if} $\mathrm{mv}\ge\mathrm{cap}$ \textbf{then return} (best, certified $=$ false, limit $=$ true) (the extra scan at the cap found an improving neighbour: it is returned, not entered) %@ v3_engine.h:408-411
+\State $C\gets\mathrm{best}$; $\mathrm{mv}\gets\mathrm{mv}+1$ %@ v3_engine.h:412
+\Else
+\State \textbf{return} $(C,$ certified $=$ true, limit $=$ false$)$ (no strictly better neighbour: also at $\mathrm{mv}=\mathrm{cap}$, after the extra scan) %@ v3_engine.h:413-415
+\EndIf
+\EndWhile
+\EndProcedure
+\Procedure{TwoSearches}{}\Comment{after the islands; lines~\ref{ln:run-ls1}--\ref{ln:run-ls0} of Algorithm~\ref{alg:run}}
+\State $\mathrm{LS}_1\gets$ \textsc{LocalSearch}(the model with the best $F$ scored so far under \textsc{Better}, in the tables, the calibration, the islands and earlier scans; $\ \ell_n)$ %@ v3_core.cpp:454-459; v3_run.R:91 (ell)
+\State $\tSz\gets$ \textsc{StartMode} (Algorithm~\ref{alg:start}); $\ \mathrm{LS}_0\gets$ \textsc{LocalSearch}$(\tSz,\ \ell_n+\abs{\tSz})$ (no random numbers; the centre is scored and offered) %@ v3_core.cpp:465-481 (mode 469, cap 473-475); v3_run.R:98-101
+\EndProcedure
+\end{algorithmic}}
+\end{algorithm}
+
+% =================================================================================================================
+\begin{algorithm}
+\caption{Stage~7: the ledger, the reported model, pooling, the certification flag, the list $\mathcal T$ and the list-renormalised fields.}\label{alg:outputs}
+{\footnotesize
+\begin{algorithmic}[1]
+\Require the ledger of Algorithm~\ref{alg:run}; $\Zhat_r,\PIPhat_{r,\cdot}$ for $r=1,\dots,4$; $\mathrm{LS}_1,\mathrm{LS}_0$ of Algorithm~\ref{alg:ls}
+\Ensure $\Shat$, $\PIPhat$, $\MPMhat$, $\log\Zhat$, its lower bound, certified, $\mathcal T$, the list fields; every model and index is reported in original column numbers ($j\mapsto\mathrm{col}(j)$)
+\Procedure{Better}{$S,F,S',F'$}\Comment{$S$ before $S'$ in the reported-model order}
+\State \textbf{return} $F>F'$ \textbf{or} [$F=F'$ \textbf{and} ($\abs S<\abs{S'}$ \textbf{or} ($\abs S=\abs{S'}$ \textbf{and} $S$ precedes $S'$ lexicographically))] %@ v3_util.h:117-126
+\EndProcedure
+\Procedure{Offer}{$S$}\Comment{called by \textsc{Eval} on a fresh score; the stores are sets, so repeats change nothing}
+\State best model $\gets S$ \textbf{if} \textsc{Better}$(S,F(S),\text{best},F(\text{best}))$ %@ v3_ledger.h:84-88
+\State $\mathcal T\gets$ the $40p+1$ models with the largest $F$ (ties: smaller size, then lexicographic); $\mathcal L_0\gets$ the $20p$ with the largest $\log\gamma_0$ and $\mathcal L_1\gets$ the $20p$ with the largest $F$ (ties: lexicographic) %@ v3_ledger.h:35-64,72,76-80,89-94
+\EndProcedure
+\Procedure{Report}{}\Comment{status completed}
+\State $\Shat\gets$ the best model of the ledger (the best $F$ over every model scored in the tables, the calibration, the islands and both searches; ties by \textsc{Better}) %@ v3_run.R:142; v3_ledger.h:84-88
+\State $\log\Zhat\gets\log\sum_{r=1}^4\Zhat_r-\log4$ (log-sum-exp); lower bound $\log(0.05)+\log\Zhat$; also $\log\Zhat-\log m(\emptyset)$ %@ v3_run.R:150-157
+\State $\PIPhat_j\gets\frac14\sum_{r=1}^4\PIPhat_{r,j}$ (equal weights); $\ \MPMhat\gets\{j:\PIPhat_j>1/2\}$ (strict) %@ v3_run.R:159-163
+\State cert$_1\gets[\mathrm{LS}_1$ certified $\wedge\ \Shat=$ its returned model$]$; $\ \mathrm{cert}_0\gets[\mathrm{LS}_0$ certified $\wedge\ \Shat=$ its returned model$]$; certified $\gets\mathrm{cert}_1\vee\mathrm{cert}_0$; the global-certificate flag is false %@ v3_run.R:178-179,185-197
+\State $\mathcal T\gets$ the store $\mathcal T$ with its log scores $F$ ($\abs{\mathcal T}\le40p+1$) %@ v3_run.R:210; v3_ledger.h:72,78
+\State list-renormalised fields: $F_{\max}\gets\max_{S\in\mathcal T}F(S)$; $u_S\gets\exp\{F(S)-F_{\max}\}$ (a score of $-\infty$ has $u_S=0$); $\mathrm{den}\gets\sum_{S\in\mathcal T}u_S$; $\ \mathrm{pip}_{\mathcal T}(j)\gets\mathrm{den}^{-1}\sum_{S\in\mathcal T,S\ni j}u_S$; $\ \mathrm{mpm}_{\mathcal T}\gets\{j:\mathrm{pip}_{\mathcal T}(j)>1/2\}$; $\ \log Z_{\mathcal T}\gets F_{\max}+\log\mathrm{den}$ (sums run from the last store entry to the first); \textbf{if} the numbers of models and scores differ, a model appears twice, or a stored column is not retained \textbf{then} raise an R error; \textbf{else if} $\mathcal T$ is empty, or a score is $\mathrm{NaN}$ or $+\infty$, or all are $-\infty$ \textbf{then} the fields are unavailable, with a flag naming the reason; the list size, whether the store is full, and the source are reported %@ v3_run.R:176,240-278
+\State diagnostics, reported only (never change an output): $E_1$ (some island's best $F$ is below $F(\Shat)-1$, $\Shat$ including $\mathrm{LS}_0$), $E_2$ (the standard deviation of the island $\log\Zhat_r$ exceeds $1$), $E_3$ ($\mathrm{LS}_1$ strictly raised the best $F$, measured before $\mathrm{LS}_0$), low-ESS flag (some step below $0.5N$), move-cap flags, near ties within $10^{-9}$ of the best $F$ in $\mathcal T$, cut groups, calibration flags %@ v3_run.R:169-209 (E1-E3 181-191)
+\State \textbf{return} $\Shat,\PIPhat,\MPMhat,\log\Zhat,\log(0.05\Zhat)$, certified, $\mathcal T$, $\mathrm{pip}_{\mathcal T},\mathrm{mpm}_{\mathcal T},\log Z_{\mathcal T}$ %@ v3_run.R:119-222; v3_fit.R:176
+\EndProcedure
+\Procedure{ReportExact}{}\Comment{status exact (every $S\in\Om$ was scored)}
+\State $\Shat\gets$ the best model under \textsc{Better} (the highest posterior model); $\log Z\gets\log\sum_{S\in\Om}e^{F(S)}$; $\PIP_j\gets\sum_{S\ni j}e^{F(S)}/Z$; $\ \MPM\gets\{j:\PIP_j>1/2\}$; also $\log Z-\log m(\emptyset)$ and $\log(0.05)+\log Z$ %@ v3_core.cpp:557-559; v3_exact.R:13-15; v3_fit.R:125-127
+\State certified $\gets$ true; the global-certificate flag $\gets[F(\Shat)-\eta(\Shat)>\max_{S\ne\Shat}\{F(S)+\eta(S)\}]$, with the heuristic rounding bound (not a validated bound) $\eta(S):=64\,\epsilon_{\mathrm{mach}}\big[\nu\,(y^\top y/Q_S)(1+\abs S\,c_H(S))+\abs S\,\{c_H(S)+c_A(S)\}+\abs{\log C_n}+\nu\,\abs{\log(2b_0+Q_S)}\big]$, where $\nu,C_n$ are those of eq.~\eqref{eq:marglik}, $Q_S$ is the residual quadratic as used by the scorer, $c_H(S)$ and $c_A(S)$ are the squared ratios of the largest to the smallest diagonal entry of the factor of $H_S$ and of $G_S+I$ ($c_H=c_A=1$ for $S=\emptyset$); list fields: $\mathrm{pip}_{\mathcal T}:=\PIP$, $\mathrm{mpm}_{\mathcal T}:=\MPM$, $\log Z_{\mathcal T}$ from the $40p+1$ best models as above %@ v3_fit.R:128-129,131; v3_run.R:271-279; v3_core.cpp:538-551,560-567; v3_score.h:204-224,240-246
+\EndProcedure
+\end{algorithmic}}
+\end{algorithm}

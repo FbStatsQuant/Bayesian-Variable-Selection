@@ -1,0 +1,230 @@
+diff --git a/Theory_work/Wave3/W3-D3/DEPS.tsv b/Theory_work/Wave3/W3-D3/DEPS.tsv
+index e14709d9..83eafaa6 100644
+--- a/Theory_work/Wave3/W3-D3/DEPS.tsv
++++ b/Theory_work/Wave3/W3-D3/DEPS.tsv
+@@ -1,11 +1,11 @@
+ id	file[:lines]	uses	sha	checked_sha	checked_by	state
+ S:setting	STATEMENT.md:23-39		9d4cd72f9d19ff89	9d4cd72f9d19ff89	reviews/K1_linecheck_opus.md	OK
+ S:Thm2SG	STATEMENT.md:41-57	S:setting	243b77e0796f16e0	243b77e0796f16e0	reviews/K2_recheck_opus.md	OK
+-S:B3w	STATEMENT.md:59-79	S:setting	3287fafe4da3041d	3287fafe4da3041d	reviews/K2_recheck_opus.md	OK
+-S:ExSG	STATEMENT.md:81-88		6b83f9d40ce7fef1	6b83f9d40ce7fef1	reviews/K1_linecheck_opus.md	OK
+-S:class	STATEMENT.md:111-141	S:ExSG	4da143855dff15dd	4da143855dff15dd	reviews/K2_recheck_opus.md	OK
+-S:inputs	STATEMENT.md:143-158		4da0091979c82106	4da0091979c82106	reviews/K2_recheck_opus.md	OK
+-P:B3w	lemmas/B3w.md:12-134	S:B3w,S:inputs	67594826abbeb661	67594826abbeb661	reviews/K3_recheck_opus.md	OK
++S:B3w	STATEMENT.md:59-80	S:setting	2936d4aab6e60634	3287fafe4da3041d	reviews/K2_recheck_opus.md	STALE
++S:ExSG	STATEMENT.md:82-90		a77b2844d9b4adda	6b83f9d40ce7fef1	reviews/K1_linecheck_opus.md	STALE
++S:class	STATEMENT.md:113-143	S:ExSG	4da143855dff15dd	4da143855dff15dd	reviews/K2_recheck_opus.md	OK
++S:inputs	STATEMENT.md:145-160		4da0091979c82106	4da0091979c82106	reviews/K2_recheck_opus.md	OK
++P:B3w	lemmas/B3w.md:12-134	S:B3w,S:inputs	0f1cd4bf262c570b	67594826abbeb661	reviews/K3_recheck_opus.md	STALE
+ P:Thm2SG	lemmas/ASSEMBLY.md:21-52	S:Thm2SG,P:B3w,S:inputs	5db2fe6b2eca4beb	5db2fe6b2eca4beb	reviews/K2_recheck_opus.md	OK
+-P:ExSG	lemmas/ASSEMBLY.md:54-83	S:ExSG	0cd0673df06dbe0e	0cd0673df06dbe0e	reviews/K1_linecheck_opus.md	OK
+-R:registry	REPORT.md:62-89	S:Thm2SG,S:B3w,S:ExSG	34ef8bbe5ce1b247	34ef8bbe5ce1b247	reviews/K3_recheck_opus.md	OK
++P:ExSG	lemmas/ASSEMBLY.md:54-83	S:ExSG	7e4c9265f8760d8c	0cd0673df06dbe0e	reviews/K1_linecheck_opus.md	STALE
++R:registry	REPORT.md:64-91	S:Thm2SG,S:B3w,S:ExSG	e345cb9a2860d58a	34ef8bbe5ce1b247	reviews/K3_recheck_opus.md	STALE
+diff --git a/Theory_work/Wave3/W3-D3/PLAN.md b/Theory_work/Wave3/W3-D3/PLAN.md
+index 07d6593e..47eae0fc 100644
+--- a/Theory_work/Wave3/W3-D3/PLAN.md
++++ b/Theory_work/Wave3/W3-D3/PLAN.md
+@@ -41,7 +41,7 @@ grid; small exact-posterior run with Rademacher/uniform correlated rows), `READE
+   sparse eigenvalue floor. Their (centred, isotropic) rows satisfy (SG) with K = C·α (C absolute; standard ψ₂ ⇔ MGF
+   equivalence, 3-line remark in TARGET.md); ours is weaker on sparse directions and allows any correlation Σ_n.
+ - **SL's own condition: Song–Liang (2015) Condition 1** (Theorem 2, p. 953): an exponential-moment bound on averages of
+-  ≤ r̄_n predictors, with their Gaussian example. Same family; (SG) ⇒ Condition 1 for every r (TRACK_B B7, confirmed in
++  ≤ r̄_n predictors, with their Gaussian example. Same family; (SG) ⇒ Condition 1 for every r, for the centred predictors x − m_n [R1-sol-S1] (TRACK_B B7, confirmed in
+   `W3-AUDIT/reviews/AUDITCALC_check_opus.md` §4); the converse fails, so (SG) is the stronger of the two.
+ - See also (not BVS, not an anchor): RZ Def. 1.5/Thm 1.6 — the anisotropic ψ₂ form ⟨x, y⟩ sub-Gaussian at its own scale,
+   i.e. the correlated-row version of NH14's assumption. **Checked negative:** YWJ15 (arXiv 1505.07925v1) uses only
+diff --git a/Theory_work/Wave3/W3-D3/READER_DELTA.md b/Theory_work/Wave3/W3-D3/READER_DELTA.md
+index d32ee805..fbdfa206 100644
+--- a/Theory_work/Wave3/W3-D3/READER_DELTA.md
++++ b/Theory_work/Wave3/W3-D3/READER_DELTA.md
+@@ -32,7 +32,7 @@ probability tending to one; the posterior argument uses the observed design only
+ **Assumption class (HQ ruling 2026-11-17: class 1, stated precisely, with a 2b backup).** Class 1: "Sub-Gaussian rows on
+ sparse directions with arbitrary correlation. This contains Narisetty & He's (2014, Lemma 6.1) isotropic sub-Gaussian
+ rows as the special case Σ = I [for centred rows, with L a fixed multiple of their sub-Gaussian constant], and implies
+-Song & Liang's Condition 1." (NH14 cited from arXiv v1 pp. 16–17, journal version not checked; Song & Liang p. 953.)
++Song & Liang's Condition 1 [for the centred predictors z = x − m_n]." [R1-sol-S1] (NH14 cited from arXiv v1 pp. 16–17, journal version not checked; Song & Liang p. 953.)
+ 2b backup: "Light-tailed, correlated features are the ordinary situation: Gaussian predictors qualify, and so do
+ correlated mixtures x = m + Bξ of independent features each confined to an interval of K standard deviations on either
+ side of its mean (for instance Rademacher features, K = 1; uniform features, K = √3)." (HQ's first wording "any bounded … predictors
+diff --git a/Theory_work/Wave3/W3-D3/REPORT.md b/Theory_work/Wave3/W3-D3/REPORT.md
+index 3c702bcb..6cd5de60 100644
+--- a/Theory_work/Wave3/W3-D3/REPORT.md
++++ b/Theory_work/Wave3/W3-D3/REPORT.md
+@@ -20,8 +20,8 @@ reached. Tag against row 1.2's reader statement: STRONGER (`STATEMENT.md` §8; c
+   Theorem 2SG keeps the reader statement's fixed floor φ² (option o2, a floor of order 1/n through `W3-DIST:B2`, is OFF by
+   HQ). Against the reader statement nothing is weaker.
+ - **Assumption class.** (A4) is classed 1 by HQ's ruling (2026-11-17, D114): it contains Narisetty & He's (2014, Lemma 6.1)
+-  isotropic sub-Gaussian rows as the case Σ = I (centred rows; L a fixed multiple of their constant) and implies Song & Liang's
+-  Condition 1; no verified Bayesian-selection paper states sub-Gaussian rows with a general correlation matrix (a report of
++  isotropic sub-Gaussian rows as the case Σ = I (centred rows; L a fixed multiple of their constant) and, for the centred
++  predictors z = x − m_n, implies Song & Liang's Condition 1 [R1-sol-S1]; no verified Bayesian-selection paper states sub-Gaussian rows with a general correlation matrix (a report of
+   the search). 2b backup sentence as approved (`STATEMENT.md` §5). NH14 cited from arXiv v1 pp. 16–17, journal version not checked.
+ - **Constants.** Explicit, not optimised (threshold n₁ of order 10⁹–10¹¹ for L = 1 at the absolute constant c₂ = 10⁻⁵ of
+   B2-core; `numerics/N1_out.txt`).
+@@ -31,9 +31,11 @@ Row 1.2 unchanged (statement, masters, "clean" mark). Added sentence under row 1
+ > *Sub-Gaussian predictors.* The same conclusions hold when the rows are i.i.d. with mean $m_n$ and correlation matrix
+ > $\Sigma_n$ and, instead of being Gaussian, are sub-Gaussian along sparse directions: for a fixed $L$,
+ > $E\exp\{\lambda u^\top(x-m_n)\}\le\exp\{L^2\lambda^2u^\top\Sigma_nu/2\}$ for every $u$ with at most $5(A+1)(s_0+1)\log n$
+-> nonzero entries (Gaussian rows: $L=1$; correlated mixtures of independent features, each sub-Gaussian or bounded by a fixed multiple of its standard deviation, also qualify).
+-> This contains the isotropic sub-Gaussian rows of Narisetty and He (2014, Lemma 6.1) and implies Song and Liang's
+-> Condition 1.
++> nonzero entries (Gaussian rows: $L=1$; so do correlated mixtures $x=m_n+B\xi$ of independent mean-zero, unit-variance
++> features that are sub-Gaussian with one common constant $L$, for instance features confined to $K$ standard deviations
++> of their mean with one common $K$, giving $L=K$). For centred rows this contains the isotropic sub-Gaussian rows of
++> Narisetty and He (2014, Lemma 6.1), the case $\Sigma_n=I$; for the centred predictors $x-m_n$ it implies Song and
++> Liang's Condition 1. [R1-sol-S1, R1-opus-S1]
+ 
+ "Master" cell for the added sentence: `W3-D3:Thm2SG` (with `W3-D3:B3w`, `W3-D3:ExSG`), statuses as recorded at CP3; inputs
+ `W3-POST:Thm-1@1.0.1`, `W3-DIST:B0/B1/B2core/B2/B3@1.0.1`, `W3-READER:R1@1.0.2`, all PROVED-CHECKED. "Mark" cell: **clean**
+@@ -63,7 +65,7 @@ API blind-audit card: `API_CARD.md` (`api_request_build.py`). Council: (filled a
+ 
+ ```
+ REGISTRY
+-claim: W3-D3:B3w | kind: lemma | statement: STATEMENT.md:59-79 | premises: STATEMENT.md:23-39 ; STATEMENT.md:41-57
++claim: W3-D3:B3w | kind: lemma | statement: STATEMENT.md:59-80 | premises: STATEMENT.md:23-39 ; STATEMENT.md:41-57
+ status: PROVED (by this seat, unchecked) | status_source: lemmas/B3w.md:3
+ assumptions: A:GAUSS-NOISE ; A:P-POLY ; A:FIXED-S0 ; A:COEF-BOUNDED ; A:POP-FLOOR-5LOG (new | fixed population sparse eigenvalue floor on logarithmic sets | lambda_min(Sigma_n,S) >= phi^2 for every S of size at most 5(A+1)(s0+1) log n, fixed phi in (0,1], Sigma_n a correlation matrix | STATEMENT.md:41-57 | shared no | bridge W3-D3:B3w) ; A:SUBG-SPARSE-ROWS (new | sub-Gaussian predictors on sparse directions | E exp(lambda u'(x - m_n)) <= exp(L^2 lambda^2 u' Sigma_n u / 2) for every u with at most 5(A+1)(s0+1) log n nonzero entries, fixed L; variant of A:DIST-A3 on the window 5(A+1)(s0+1) log n | STATEMENT.md:41-57 | shared no | bridge W3-D3:B3w)
+ conclusion: posterior: random-design interface events of W3-POST Theorem 1 item 6; on E1 and E2(q_n) (probability >= 1 - 4p e^{-c1 n/L^4} - e^{-c2 n/L^4}) no column is constant and (E; M_E), (F_lambda; phi0^2 = phi^2/4), (F_w; g0 = phi^2/8), BM-inf with envelope b_lo^2 n phi^2/(8 sigma^2 log n) hold; (X°, θ°)-measurable events A'_n ⊇ A_n of the completed pair on which the hypotheses of W3-POST Theorem 1 item 6 hold (regime R1) | rate: n/a | scope: iid rows with correlation-matrix covariance, (A1)-(A4), n >= n1(s0, A, L)
+@@ -71,7 +73,7 @@ depends_on: W3-DIST:B0@stmt ; W3-DIST:B1@stmt ; W3-DIST:B2core@stmt ; W3-DIST:B2
+ implies:
+ 
+ REGISTRY
+-claim: W3-D3:ExSG | kind: proposition | statement: STATEMENT.md:81-88 | premises: STATEMENT.md:23-39
++claim: W3-D3:ExSG | kind: proposition | statement: STATEMENT.md:82-90 | premises: STATEMENT.md:23-39
+ status: PROVED (by this seat, unchecked) | status_source: lemmas/ASSEMBLY.md:3
+ assumptions:
+ conclusion: identity: x = m + B xi with independent mean-zero unit-variance L-sub-Gaussian coordinates satisfies (A4) with L for every direction; L = 1 for Gaussian, Rademacher, uniform[-sqrt3, sqrt3]; L = K for coordinates in an interval of length 2K (Hoeffding's lemma, proved in place) | rate: n/a | scope: any p, d
+diff --git a/Theory_work/Wave3/W3-D3/STATEMENT.md b/Theory_work/Wave3/W3-D3/STATEMENT.md
+index a75e3b0f..67617082 100644
+--- a/Theory_work/Wave3/W3-D3/STATEMENT.md
++++ b/Theory_work/Wave3/W3-D3/STATEMENT.md
+@@ -1,4 +1,4 @@
+-# W3-D3 — STATEMENT v1.2 (2026-11-17; lead: Claude Opus 5.5, high; track D ticket #3, sub-Gaussian rows for Theorem 2)
++# W3-D3 — STATEMENT v1.3 (2026-11-17; lead: Claude Opus 5.5, high; track D ticket #3, sub-Gaussian rows for Theorem 2)
+ 
+ Ticket W3-D3: Theorem 2 (claims card row 1.2, posterior concentration on a random design) with Gaussian rows replaced by
+ rows that are sub-Gaussian along sparse directions, as a **coexisting** claim. The proof reuses W3-DIST's
+@@ -6,7 +6,7 @@ population-to-sample bridge (owner condition D105/D112). Source: W3-AUDIT `TRACK
+ theory/W3-AUDIT). Tier B (no new key lemma). Delta statement (RIDER_RULES §1) over the recorded reader Theorem 2
+ ([RV] row thm2) and its master [W3P] Theorem 1 item 6. This file **asserts no proof status**: proofs in `lemmas/`,
+ statuses in the checkpoints. Asymptotic (n → ∞) unless marked *deterministic*. No method change.
+-v1.2 = v1.1 with the line-check amendments [K1-1]…[K1-12] (`reviews/K1_linecheck_opus.md`;
++v1.3 = v1.2 with the council R1 dispositions (`reviews/R1_disposition.md`). v1.2 = v1.1 with the line-check amendments [K1-1]…[K1-12] (`reviews/K1_linecheck_opus.md`;
+ `reviews/K1_disposition.md`). v1.1 = v1.0 with the statement-lock amendments [L1-1]…[L1-6] (`reviews/L1_statement_lock_sol.md`, LOCK-WITH-AMENDMENTS;
+ `reviews/L1_disposition.md`) and the HQ anchoring wording with the lead's queued edits Q1, Q2
+ (`reviews/PENDING_LEAD_EDITS.md`).
+@@ -76,7 +76,8 @@ and 𝒜_n := 𝓔₁ ∩ 𝓔₂(q_n). There is n₁ = n₁(s₀, A, L) ≥ max
+     which (X°, θ°) satisfies ‖X°θ°‖² ≤ nM_E, (F_λ; φ₀), (F_w; g₀) (with m♯_n computed from (n, p, s₀)) and
+     θ°²_min nφ₀²/log n ≥ M_n. Then 𝒜′_n is (X°, θ°)-measurable and 𝒜_n ⊆ 𝒜′_n ∩ {p_ret = p}. Moreover (with (b):
+     P(𝒜′_nᶜ) ≤ P(𝒜_nᶜ) → 0) the hypotheses of [W3P] Theorem 1 item 6 hold for (X°, θ°, ε/σ*) in regime R1 with the events
+-    𝒜′_n, the common constants (M_E, φ₀, g₀) and the common envelope M_n [K1-3].
++    𝒜′_n, the common constants (M_E, φ₀, g₀) and the common envelope M_n [K1-3]. (For n < n₁ put 𝒜′_n := ∅; item 6
++    needs only P(𝒜′_n) → 1 [R1-opus-E5].)
+ 
+ ## 3. Proposition ExSG — families satisfying (A4)
+ 
+@@ -85,7 +86,8 @@ with independent coordinates, E ξ_k = 0 and Var ξ_k = 1.
+ (a) If E exp(λξ_k) ≤ exp(L²λ²/2) for every k and every λ ∈ ℝ, then x has mean m and covariance Σ, and
+     E exp(λuᵀ(x − m)) ≤ exp(L²λ²uᵀΣu/2) for **every** u ∈ ℝ^p and λ ∈ ℝ. In particular (A4) holds with this L.
+ (b) The scalar hypothesis of (a) holds with L = 1 when ξ_k is standard Gaussian, Rademacher (±1 with probability ½) or
+-    uniform on [−√3, √3]; and it holds with L = K whenever ξ_k takes its values in an interval of length 2K (K > 0).
++    uniform on [−√3, √3]; and it holds with L = K whenever every ξ_k takes its values in an interval of length 2K, with
++    the same K > 0 for all k [R1-opus-E4].
+ 
+ ## 4. Remarks (not part of the registered spans)
+ 
+@@ -185,9 +187,12 @@ HQ's decision). Status: every input is PROVED-CHECKED (§6).
+ | 1.1 | §2: raw bridge events vs (X°, θ°)-measurable interface events; completed pair; part (c) | **STRONGER on the companion claim B3w** (added conclusion (c), proved in B3w Step 6); EQUAL for Theorem 2SG (the interface its proof uses, made explicit; B3 Step 6 / A-2) [K1-8] | [L1-2] | L1-2 | `reviews/K1_linecheck_opus.md`: tag corrected per K1-8 |
+ | 1.1 | §0: conventions when columns are removed (π(S₀) := 0, PIP_j := 0, p_ret = 0) | EQUAL (conventions off an event of probability → 0) | [L1-3] | L1-3 | as above |
+ | 1.1 | §4 (e) unit variances; §5 centring qualifier; §2 heading and provenance moved out of the span | EQUAL (outside spans / editorial) | [L1-4], [L1-5], [L1-6] | L1-4..6 | as above |
+-| 1.1 | §3 ExSG: B for the mixing matrix; **part (b) bounded features, L = K (Hoeffding)** | **STRONGER** on the companion claim ExSG (an added conclusion; Theorem 2SG unchanged) | support for HQ's 2b sentence [Q2] | HQ ruling via manager | statement-change check (pending; Opus diff round) |
++| 1.1 | §3 ExSG: B for the mixing matrix; **part (b) bounded features, L = K (Hoeffding)** | **STRONGER** on the companion claim ExSG (an added conclusion; Theorem 2SG unchanged) | support for HQ's 2b sentence [Q2] | HQ ruling via manager | `reviews/K1_linecheck_opus.md`: CONFIRMED (STRONGER on ExSG) [R1-opus-E1] |
+ | 1.1 | §5 HQ class-1 and 2b wording; NH14 "journal version not checked" | EQUAL (outside spans) | HQ ruling [Q1], [Q2] | HQ ruling | — |
+ | 1.1 | §2 bookkeeping (n₁ ≥ max(3, 2s₀), 𝓔₂(q_n) for 𝓔₂(w_n), p_ret in m♯_n, θ̃*); §4 (a), (b), (d); §6; §7; §8 [K1-7] | EQUAL (equal events and objects on 𝒜_n / outside spans; consumed scope narrowed to items 1–3) | L1, Q2 | K1-7 | `reviews/K1_linecheck_opus.md` |
+ | 1.2 | §2 (c): θ⁰ with supp θ⁰ = S₀ (supp θ° = S₀ on every outcome); "and so" replaced by the explicit appeal to (b) and R1; the measurability remark moved to §4 (f) | EQUAL for Theorem 2SG (the v1.1 conclusion with an arbitrary θ⁰ was stated for supp θ°; the proof's intended object is S₀, and the two agree on {p_ret = p}); on the companion claim B3w (c) the completion is specialised (supp θ⁰ = S₀ instead of any support of size s₀): **WEAKER in form, EQUAL in use** (ASSEMBLY needs one completion; the broader v1.1 completion is no longer claimed); 𝒜′_n drops '|supp θ°| = s₀', now automatic [K2-4] | [K1-1], [K1-3], [K1-11] | K1, K2 | `reviews/K2_recheck_opus.md` (tag per K2-4); `reviews/K3_recheck_opus.md`: CONFIRMED |
+ | 1.2 | §1 (A3): the recorded parenthetical "(for instance, λ_min(Σ_n) ≥ φ²)" restored | EQUAL (an example, not a condition) | [K1-10] | K1 | `reviews/K2_recheck_opus.md`: CONFIRMED |
+ | 1.2 | §5, §6 (outside spans): off-main paths written as plain text; B3 status quoted in full; Condition-1 example note; "qualify" glossed | EQUAL (outside spans) | [K1-9], [K1-12], citecheck | K1, lead | — |
++| 1.3 | §3 ExSG (b): "every ξ_k … with the same K > 0 for all k" | EQUAL (the reading (a) needs; a common constant was implicit) | [R1-opus-E4] | council R1 | diff round R2 |
++| 1.3 | §2 (c): "for n < n₁ put 𝒜′_n := ∅" | EQUAL (completes a definition; item 6 needs only P(𝒜′_n) → 1) | [R1-opus-E5] | council R1 | diff round R2 |
++| 1.3 | §9 check cell of the ExSG (b) row | EQUAL (bookkeeping) | [R1-opus-E1] | council R1 | — |
+diff --git a/Theory_work/Wave3/W3-D3/TARGET.md b/Theory_work/Wave3/W3-D3/TARGET.md
+index 88e683cd..5c15ccea 100644
+--- a/Theory_work/Wave3/W3-D3/TARGET.md
++++ b/Theory_work/Wave3/W3-D3/TARGET.md
+@@ -6,18 +6,19 @@
+ 
+ | hypothesis | row 1.2 (recorded) | Theorem 2SG | used where | class (D109) |
+ |---|---|---|---|---|
+-| row law | i.i.d. N_p(m_n, Σ_n), Σ_n a correlation matrix | i.i.d., mean m_n, covariance Σ_n a correlation matrix, and (A4) | B3w: sample SDs ([EB]`B1.md`), sparse sample Gram floors ([EB]`B2core.md`, `B2.md` (a)) | 1 (proposed; STATEMENT §5: between NH14 Lemma 6.1 and SL Condition 1) |
++| row law | i.i.d. N_p(m_n, Σ_n), Σ_n a correlation matrix | i.i.d., mean m_n, covariance Σ_n a correlation matrix, and (A4) | B3w: sample SDs ([EB]`B1.md`), sparse sample Gram floors ([EB]`B2core.md`, `B2.md` (a)) | 1 (HQ ruling D114; STATEMENT §5: between NH14 Lemma 6.1 and SL Condition 1) [R1-opus-E2] |
+ | (A4) constant L | — (L = 1) | fixed L | B1, B2core exponents c₁n/L⁴, c₂n/L⁴; threshold n₁(s₀, A, L) | as above |
+ | (A1)–(A3) | as recorded | verbatim | as in row 1.2 | as recorded (ASSUMPTION_COMPLIANCE.md lines 27–29, branch theory/W3-AUDIT) |
+ 
+ No hypothesis is weakened below the recorded reader statement except the row law, so no boundary numerics are owed; a
+-sanity run with non-Gaussian rows (Rademacher, uniform, and a correlated Rademacher mixture) is in `numerics/`.
++sanity run with non-Gaussian correlated rows (AR(0.5) mixtures of independent Rademacher or uniform features) is in
++`numerics/` [R1-opus-E3].
+ 
+ ## Parity rows
+ 
+ | clause | vs row 1.2 (reader Thm 2) | vs closest published result |
+ |---|---|---|
+-| hypotheses | STRONGER theorem (row law widened; rest verbatim) | Song & Liang (2015) Thm 2 (p. 953): random design under their Condition 1 (weaker than (A4)), their prior with tuning (not the coded prior), conclusion = Hellinger contraction of the joint density, not model selection. NH14 Lemma 6.1 (p. 16): independent isotropic sub-Gaussian rows (identity covariance) give the sparse minimum-eigenvalue part of their Condition 4.5 with high probability (pp. 16–17); their prior is a spike-and-slab prior with shrinking and diffusing variances. Ours: coded prior, no tuning, exact selection at rate √(log n/n) under any correlation with a sparse floor. |
++| hypotheses | STRONGER theorem (row law widened; rest verbatim) | Song & Liang (2015) Thm 2 (p. 953): random design under their Condition 1 (implied by (A4) for the centred predictors x − m_n [R1-sol-S1]), their prior with tuning (not the coded prior), conclusion = Hellinger contraction of the joint density, not model selection. NH14 Lemma 6.1 (p. 16): independent isotropic sub-Gaussian rows (identity covariance) give the sparse minimum-eigenvalue part of their Condition 4.5 with high probability (pp. 16–17); their prior is a spike-and-slab prior with shrinking and diffusing variances. Ours: coded prior, no tuning, exact selection at rate √(log n/n) under any correlation with a sparse floor. |
+ | conclusions | EQUAL (verbatim) | different in kind from SL's (exact selection with a rate, against contraction of the joint density); no comparison with NH14's conclusions is made here |
+ 
+ ## Why each assumption (one line each; for the reader version)
+diff --git a/Theory_work/Wave3/W3-D3/citecheck.py b/Theory_work/Wave3/W3-D3/citecheck.py
+index 70e4a070..3c5268e3 100644
+--- a/Theory_work/Wave3/W3-D3/citecheck.py
++++ b/Theory_work/Wave3/W3-D3/citecheck.py
+@@ -5,7 +5,7 @@
+     "`path:a-b`" (path = a repo path, or a ticket-local file) must point to an existing file with 1 <= a <= b <= #lines.
+     A bare "`:a-b`" with no alias earlier on its line is reported as UNRESOLVED (counted as a failure).
+ (2) Token checks: TOKENS (a token that must occur in the cited range).
+-(3) Status checks: every registry status quoted in STATEMENT §5 occurs verbatim in claims.tsv for that id@version.
++(3) Status checks: every registry status quoted in STATEMENT §6 occurs verbatim in claims.tsv for that id@version.
+ Writes reviews/CITECHECK.txt. Run: python3 Theory_work/Wave3/W3-D3/citecheck.py
+ """
+ import csv
+diff --git a/Theory_work/Wave3/W3-D3/lemmas/ASSEMBLY.md b/Theory_work/Wave3/W3-D3/lemmas/ASSEMBLY.md
+index 8dcb8652..87422c7e 100644
+--- a/Theory_work/Wave3/W3-D3/lemmas/ASSEMBLY.md
++++ b/Theory_work/Wave3/W3-D3/lemmas/ASSEMBLY.md
+@@ -56,8 +56,8 @@ By Step 1 (on {p_ret = p} the outputs for (X^r, y^r) and (X^r, ỹ) coincide) th
+ *Claim* (`STATEMENT.md` §3). Let x = m + Bξ, m ∈ ℝ^p, B ∈ ℝ^{p×d} with BBᵀ = Σ a correlation matrix, ξ ∈ ℝ^d with independent
+ coordinates, E ξ_k = 0, Var ξ_k = 1. (a) If E exp(λξ_k) ≤ exp(L²λ²/2) for all k and λ, then E x = m, Cov(x) = Σ and
+ E exp(λuᵀ(x − m)) ≤ exp(L²λ²uᵀΣu/2) for all u ∈ ℝ^p, λ ∈ ℝ; in particular (A4) holds with this L. (b) The scalar hypothesis
+-holds with L = 1 for standard Gaussian, Rademacher and uniform on [−√3, √3] coordinates, and with L = K when ξ_k takes its
+-values in an interval of length 2K.
++holds with L = 1 for standard Gaussian, Rademacher and uniform on [−√3, √3] coordinates, and with L = K when every ξ_k
++takes its values in an interval of length 2K, the same K for all k [R1-opus-E4].
+ 
+ *Proof of (a).* E x = m + B E ξ = m; Cov(x) = B Cov(ξ) Bᵀ = B I_d Bᵀ = Σ. Fix u, λ and put v := Bᵀu ∈ ℝ^d. Then
+ uᵀ(x − m) = vᵀξ = Σ_k v_kξ_k, and by independence (each factor finite by hypothesis)
+diff --git a/Theory_work/Wave3/W3-D3/lemmas/B3w.md b/Theory_work/Wave3/W3-D3/lemmas/B3w.md
+index 2ff508ce..e742957f 100644
+--- a/Theory_work/Wave3/W3-D3/lemmas/B3w.md
++++ b/Theory_work/Wave3/W3-D3/lemmas/B3w.md
+@@ -37,7 +37,7 @@ is O((log n)²)). For n ≥ n₁:
+     (F_w; g₀) (m♯_n computed from (n, p, s₀)) and θ°²_min nφ₀²/log n ≥ M_n. Then 𝒜′_n is (X°, θ°)-measurable, 𝒜_n ⊆ 𝒜′_n ∩ {p_ret = p}, ε is independent of (X°, θ°), and
+     the hypotheses of [W3P] Theorem 1 item 6 (`:95-100`) hold for (X°, θ°, ε/σ*) in regime R1 with the events 𝒜′_n, the
+     common constants (M_E, φ₀, g₀) and the common envelope M_n. (𝒜_n need not be (X, θ̃*)-measurable; it is used only
+-    for its probability, P(𝒜′_nᶜ) ≤ P(𝒜_nᶜ).)
++    for its probability, P(𝒜′_nᶜ) ≤ P(𝒜_nᶜ). For n < n₁ put 𝒜′_n := ∅; item 6 needs only P(𝒜′_n) → 1 [R1-opus-E5].)
+ 
+ ## Inherited results used (statuses verbatim; registry at main 029bb748)
+ - [EB]`B0.md` (`W3-DIST:B0@1.0.1`), [EB]`B1.md` (`W3-DIST:B1@1.0.1`), [EB]`B2core.md` (`W3-DIST:B2core@1.0.1`),
+diff --git a/Theory_work/Wave3/W3-D3/numerics/N2_subgauss_rows.py b/Theory_work/Wave3/W3-D3/numerics/N2_subgauss_rows.py
+index 8a4e2fdb..cf2eacfe 100644
+--- a/Theory_work/Wave3/W3-D3/numerics/N2_subgauss_rows.py
++++ b/Theory_work/Wave3/W3-D3/numerics/N2_subgauss_rows.py
+@@ -1,6 +1,6 @@
+ """W3-D3 numerics N2 (sanity, not evidence for a claim): exact coded posterior (full enumeration, p = 10) on random
+ designs with NON-Gaussian rows x = L xi, L = chol(Sigma), Sigma_jk = 0.5^|j-k| (AR(1) correlation), xi i.i.d. Gaussian /
+-Rademacher / uniform[-sqrt3, sqrt3] (all satisfy (A4) with K = 1, Proposition ExSG). Truth: s0 = 2, beta = (1, -1, 0, ...),
++Rademacher / uniform[-sqrt3, sqrt3] (all satisfy (A4) with L = 1, Proposition ExSG). Truth: s0 = 2, beta = (1, -1, 0, ...),
+ sigma = 1, intercept 0. Reports mean delta_n * sqrt(n / log n) and the frequency of HPM = MPM = S0 over R replicates.
+ The Post class is copied verbatim from Theory_work/Wave3/W3-POST/numerics/post_exact.py (exact target as coded).
+ Run: /home/fb31/SMC_Theory_Department/ci/venv-numerics/bin/python -I N2_subgauss_rows.py > N2_out.txt"""

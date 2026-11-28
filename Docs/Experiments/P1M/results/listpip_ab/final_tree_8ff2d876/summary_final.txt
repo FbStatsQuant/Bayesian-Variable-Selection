@@ -1,0 +1,52 @@
+                unit     status_old     status_new identical fingerprint_equal
+           exact_p10          exact          exact      TRUE              TRUE
+ exact_p12_dup_const          exact          exact      TRUE              TRUE
+   exact_p14_integer          exact          exact      TRUE              TRUE
+         guard_calib resource_limit resource_limit      TRUE              TRUE
+        invalid_seed  invalid_input  invalid_input      TRUE              TRUE
+       near_constant      completed      completed      TRUE              TRUE
+       no_predictors  no_predictors  no_predictors      TRUE              TRUE
+      resource_limit resource_limit resource_limit      TRUE              TRUE
+         smc_default      completed      completed      TRUE              TRUE
+          smc_ls0off      completed      completed      TRUE              TRUE
+         smc_p40_dup      completed      completed      TRUE              TRUE
+     smc_p48_integer      completed      completed      TRUE              TRUE
+         smc_p60_n30      completed      completed      TRUE              TRUE
+         tie_dp_p400      completed      completed      TRUE              TRUE
+          y_constant     y_constant     y_constant      TRUE              TRUE
+ names_order_same attributes_same element_attributes_same new_fields_last
+             TRUE            TRUE                    TRUE            TRUE
+             TRUE            TRUE                    TRUE            TRUE
+             TRUE            TRUE                    TRUE            TRUE
+             TRUE            TRUE                    TRUE            TRUE
+             TRUE            TRUE                    TRUE            TRUE
+             TRUE            TRUE                    TRUE            TRUE
+             TRUE            TRUE                    TRUE            TRUE
+             TRUE            TRUE                    TRUE            TRUE
+             TRUE            TRUE                    TRUE            TRUE
+             TRUE            TRUE                    TRUE            TRUE
+             TRUE            TRUE                    TRUE            TRUE
+             TRUE            TRUE                    TRUE            TRUE
+             TRUE            TRUE                    TRUE            TRUE
+             TRUE            TRUE                    TRUE            TRUE
+             TRUE            TRUE                    TRUE            TRUE
+             fields flag log_Z_list list_size list_full source hours48
+             6 of 7    -  -53.46742       401      TRUE  exact   FALSE
+             6 of 7    -  -41.95482       441      TRUE  exact   FALSE
+             6 of 7    -  -43.44892       561      TRUE  exact   FALSE
+ none (status path)    -         NA        NA        NA      -   FALSE
+ none (status path)    -         NA        NA        NA      -   FALSE
+             6 of 7    -  -51.78319      1201      TRUE  store   FALSE
+ none (status path)    -         NA        NA        NA      -   FALSE
+ none (status path)    -         NA        NA        NA      -   FALSE
+             6 of 7    -  -67.99590      1601      TRUE  store   FALSE
+             6 of 7    -  -67.99590      1601      TRUE  store   FALSE
+             6 of 7    -  -79.18487      1601      TRUE  store   FALSE
+             6 of 7    -  -68.06612      1921      TRUE  store   FALSE
+             6 of 7    -  -42.57808      2401      TRUE  store   FALSE
+             6 of 7    -  -52.58533     16001      TRUE  store    TRUE
+ none (status path)    -         NA        NA        NA      -   FALSE
+
+hours = 48 (allocation changes only the admission / guard, not the fit; the same on the OLD and the NEW side): 1 units
+
+15 units; all checks passed: 15; identical: 15; fingerprint equal: 15; names/order: 15; attributes: 15; element attributes: 15; new fields last: 15

@@ -1,0 +1,505 @@
+% =====================================================================================================
+\section{Supplement: further results}\label{sec:supp}
+
+Each result below comes with one line on why it matters; the status notes give their standing.
+
+\subsection{The posterior}\label{sec:supp-post}
+
+\subsubsection{Fixed design}\label{sec:supp-fixed}
+
+\why{The same conclusions hold for a deterministic design, under conditions on the observed sample that a user can
+check; it is the route for bounded data such as genotypes.}
+
+The theorem uses four assumptions beyond those of Theorem~\ref{thm:post-random}'s setting.
+
+\begin{assumption}{BC}{Bounded coefficients}
+$\max_{j}\abs{\theta^*_j}\le\bar\theta$ for a fixed $\bar\theta<\infty$. \hfill [\SA{post}]
+\end{assumption}
+
+\begin{assumption}{EF}{Eigenvalue floor on sets of bounded size}
+$\lmin(\Rhat_S)\ge\varphi_0^2$ for every model $S$ with $\abs{S}\le2(A+1)\sz+2$, for a fixed $\varphi_0\in(0,1]$. \hfill [\SA{post}]
+\end{assumption}
+
+\begin{assumption}{NC}{No near-exact collinearity among sets of logarithmic size}
+$\lmin(G_S)\ge g_0$ for every model $S$ with $\abs{S}\le3(A+1)(\sz+1)\log n$, for a fixed $g_0>0$; on the correlation
+scale, a floor $g_0/(n-1)$ that vanishes as $n$ grows. \hfill [\SA{post}]
+\end{assumption}
+
+\begin{assumption}{BM}{Beta-min}
+Either (a) $\tmin\ge C_\beta\,\sigs\rn$ with a fixed $C_\beta>0$ such that $C_\beta^2\varphi_0^2>c_0(\sz,A)$, an explicit
+constant (Appendix~\ref{app:constants}); or (b) $\tmin\sqrt{n/\log n}\to\infty$. \hfill [\SA{post}]
+\end{assumption}
+
+\begin{theorem}[Posterior concentration, fixed design]\label{thm:post-fixed}
+Let the design be fixed and assume \as{GL}, \as{DIM}, \as{SP}, \as{BC}, \as{EF}, \as{NC} and \as{BM}. Then, along every
+sequence that satisfies these assumptions,
+\begin{equation}\label{eq:post-op}
+  \max_{j\in\set{p}}\big|\PIP_j-\ind{j\in\Sz}\big|\ \le\ 1-\pis{\Sz}\ =\ \OP\Big(\sqrt{\frac{\log n}{n}}\Big),\qquad
+  \P\big(\HPM=\MPM=\Sz\big)\to1 .
+\end{equation}
+Moreover, there are $n_0$ and $C_{\mathrm E}$, depending only on $(\sz,A,\sigs^2,\bar\theta,\varphi_0,g_0,C_\beta)$, such that for
+every $n\ge n_0$ and every design and $\tstar$ that satisfy the assumptions at that $n$,
+\begin{equation}\label{eq:post-exp}
+  \E\big[1-\pis{\Sz}\big]\ \le\ C_{\mathrm E}\sqrt{\frac{\log n}{n}},\qquad \P\big(\HPM=\MPM=\Sz\big)\ \ge\ 1-4C_{\mathrm E}\sqrt{\frac{\log n}{n}} .
+\end{equation}
+The expectation is over the noise, with the design fixed. Under form (b) of \as{BM}, $n_0$ also depends on how fast
+$\tmin\sqrt{n/\log n}$ diverges.
+\end{theorem}
+
+
+\status{The in-probability conclusions~\eqref{eq:post-op}: \textbf{proved and independently checked}. The expectation
+bound~\eqref{eq:post-exp}: \textbf{proved and checked, conditional on one supporting result} (a proposition giving a lower
+bound on the posterior miss) \textbf{that is proved but not yet independently checked}; its other input, a lemma bounding
+the tail of the posterior model size, is now independently checked. Registry: Appendix~\ref{app:status}, row 1.1.}
+
+\paragraph{Is the beta-min reasonable?} The beta-min \lab{BM}, at the usual order $\sigs\rn$, has the same form as \SL's proof rates, with a fixed multiple of
+$\log n$ where theirs has a diverging multiple of $\bar r_n\log P_n$ (supp.\ p.~15). \SL's Theorem~1 bounds the
+coefficients above through (3) and (8) (pp.~950, 952). Without any lower bound, specificity can fail
+(Remark~\ref{rem:no-betamin}).
+\emph{Precedents:} \citet[Theorem~5 and Corollary~1, pp.~13--14]{CastilloSchmidtHieberVanDerVaart2015} and
+\citet[Theorem~1, display (8), p.~9]{YangWainwrightJordan2015} require the nonzero coefficients to exceed a multiple of
+$\sqrt{\log p/n}$ (in the first, with column norms of order $\sqrt n$, compatibility numbers bounded below and a bound on
+the true model size through the mutual coherence; in the second, for the coordinates it recovers); when $p\ge n^a$ for some fixed $a>0$ our order $\sigs\rn$ is the same, and when $\log p=o(\log n)$ ours is the larger requirement.
+
+\subsubsection{Further posterior results}
+
+\begin{remark}[The posterior miss at moderate $n$; a heuristic, not a theorem]\label{rem:moderate-n}
+The posterior miss is carried mainly by the models
+$\Sz\cup\{j\}$ that add one null predictor; each is light, but together, since the fit factor $e^{T_j^2/2}$ ($T_j^2$
+approximately $\chi^2_1$) has no finite mean, they carry about $(\sz+1)\sqrt{\log p/(\pi n)}$ times the weight of $\Sz$:
+the expression of Remark~\ref{rem:sharp}(b), here as a ratio to the weight of $\Sz$. With $\sz=5$, $n=200$ and $p=10^4$ this is about $0.7$. In single
+synthetic draws (AR(0.6), $\sz=5$) the measured total weight of these models, relative to that of $\Sz$, was $1.0$--$1.2$
+at $n=200$ and $p=10^4$--$10^6$, and $0.52$ at $n=400$, $p=10^4$. So at simulated sizes the posterior is spread over $\Sz$
+and many one-predictor extensions of it.
+\end{remark}
+
+\why{Without the beta-min condition, the posterior still rejects over-fitted models and still keeps every true predictor
+that is strong enough; specificity, however, can fail.}
+
+\begin{remark}[Without beta-min]\label{rem:no-betamin}
+Under the other assumptions of Theorem~\ref{thm:post-fixed}, the posterior mass of models that strictly contain $\Sz$ is
+$\OP(\rn)$, and every true predictor with $\theta_j^{*2}\ge c\,\sigs^2\log n/(n\varphi_0^2)$, $c>c_0(\sz,A)$, has
+$1-\PIP_j=\OP(\rn)$. Specificity can fail without beta-min: a numerical counterexample, reported with the proof, shows this.
+\end{remark}
+
+\status{Part of the posterior concentration result, with the status of the in-probability form of
+Theorem~\ref{thm:post-fixed}.}
+
+\why{It replaces the eigenvalue floor away from the true model, and the beta-min condition, by a floor on the true model
+alone and a margin on the unexplained signal; it keeps the vanishing floor \as{NC}.}
+
+\begin{localassumption}[Floor on the true model and an identifiability margin]\label{asm:margin}
+\begin{asmitems}
+  \item $\lmin(\Rhat_{\Sz})\ge\varphi_0^2$ for a fixed $\varphi_0\in(0,1]$.
+  \item Every model $S\in\Om$ that misses a true predictor and has at most $j_0:=\lceil(2A+1)\sz\rceil+1$ predictors
+    outside $\Sz$ leaves unexplained signal $\norm{(I-P_S)\mu}^2\ge c_{\mathrm{id}}\,\sigs^2\log n$, for a fixed
+    $c_{\mathrm{id}}>c_1(\sz,A)$, an explicit constant (Appendix~\ref{app:constants}).
+\end{asmitems}
+\end{localassumption}
+
+\begin{theorem}[Posterior concentration under an identifiability margin]\label{thm:post-margin}
+Let the design be fixed and assume \as{GL}, \as{DIM}, \as{SP}, \as{BC}, \as{NC} and Assumption~\ref{asm:margin}. Then
+the conclusions~\eqref{eq:post-op}--\eqref{eq:post-exp} of Theorem~\ref{thm:post-fixed} hold, the expectation bound with
+constants depending only on $(\sz,A,\sigs^2,\bar\theta,\varphi_0,g_0,c_{\mathrm{id}})$.
+\end{theorem}
+
+\status{The in-probability conclusions: \textbf{proved and independently checked}. The expectation bound:
+\textbf{proved and checked, conditional on the same supporting result} (the lower-bound proposition, not yet independently
+checked) as the expectation bound of Theorem~\ref{thm:post-fixed}. Registry: Appendix~\ref{app:status}, row 1.1.}
+
+Under \as{EF} and \as{BM}(a), Assumption~\ref{asm:margin} holds with $c_{\mathrm{id}}=C_\beta^2\varphi_0^2(1-1/n)$. So
+Theorem~\ref{thm:post-margin} contains Theorem~\ref{thm:post-fixed} when $C_\beta^2\varphi_0^2>c_1$; when
+$c_0<C_\beta^2\varphi_0^2\le c_1$, Theorem~\ref{thm:post-fixed} applies and Theorem~\ref{thm:post-margin} is not known to
+apply: the two coexist, and neither contains the other.
+
+\why{It says what the posterior selects when some true predictors are missing from the data: the predictors used by the
+best linear predictor built from the available ones.}
+
+In this result the method is run on the response $\yr$ and a set $\mathcal C$ of $p$ candidate predictors, with rows
+$x_{\mathcal C,i}$ collected in $x_{\mathcal C}$; $\Sigma$ and $R$ are the covariance and the correlation matrix of a
+candidate row.
+
+\begin{localassumption}[Candidate-only fitting]\label{asm:omitted}
+\begin{asmitems}
+  \item \emph{Model.} The candidate rows are i.i.d.\ $\Normal_p(m_{\mathcal C},\Sigma)$, and, given them, the responses are
+    independent with $\yr_i\mid x_{\mathcal C}\sim\Normal(\alpha'+x_{\mathcal C,i}^\top\beta^{\mathcal C},\sigma^2_{\mathcal C})$,
+    $\sigma^2_{\mathcal C}>0$. We write $\Sz^{\mathcal C}:=\supp\beta^{\mathcal C}$ and $s_{\mathcal C}:=\abs{\Sz^{\mathcal C}}$.
+  \item \emph{Floor.} $\lmin(R_T)\ge c_{\mathcal C}$ for every $T\subseteq\mathcal C$ with
+    $\abs{T}\le3(A+1)(s_{\mathcal C}+1)\log n$, for a fixed $c_{\mathcal C}>0$.
+  \item \emph{Signal relative to the residual variance.} $\beta^{\mathcal C\top}\Sigma\beta^{\mathcal C}\le
+    M_{\mathcal C}\sigma^2_{\mathcal C}$ for a fixed $M_{\mathcal C}$, and $n\min_{j\in\Sz^{\mathcal C}}\Sigma_{jj}(\beta^{\mathcal
+    C}_j)^2/(\sigma^2_{\mathcal C}\log n)\to\infty$.
+\end{asmitems}
+\end{localassumption}
+
+\begin{theorem}[Omitted variables]\label{thm:omitted}
+Assume \as{DIM} (with $p$ the number of candidates), Assumption~\ref{asm:omitted}, and that $s_{\mathcal C}\ge1$ is fixed. No
+condition is placed on how $m_{\mathcal C}$, $\Sigma$, $\beta^{\mathcal C}$ or $\sigma^2_{\mathcal C}$ vary with $n$. Then
+\[
+  \E\big[1-\pi(\Sz^{\mathcal C}\mid y)\big]=O\Big(\sqrt{\frac{\log n}{n}}\Big),\qquad
+  \P\big(\HPM\neq\Sz^{\mathcal C}\big)=O\Big(\sqrt{\frac{\log n}{n}}\Big).
+\]
+\end{theorem}
+
+\status{\textbf{Proved and checked, conditional on} the expectation bound of Theorem~\ref{thm:post-fixed} (hence on the
+lower-bound proposition, not yet independently checked) and on two lemmas on Gaussian designs that are independently
+verified. Registry: Appendix~\ref{app:status}, row 1.4.}
+
+\begin{example}[Omitted Gaussian predictors]\label{ex:omitted}
+If candidates and omitted predictors are jointly Gaussian, the response given the candidates is Gaussian with a linear
+mean, and $\beta^{\mathcal C}=\beta^*_{\mathcal C}+\Sigma_{\mathcal C\mathcal C}^{-1}\Sigma_{\mathcal C\mathcal M}\beta^*_{\mathcal M}$:
+each candidate absorbs the part of the omitted signal it can predict, and the rest is added to the noise variance
+$\sigma^2_{\mathcal C}$. This is an example of Assumption~\ref{asm:omitted}(a), not a claim that the assumption holds in
+ordinary data.
+\end{example}
+
+\subsection{The distribution}\label{sec:supp-dist}
+
+\why{It shows what the collinearity condition of Result~2 buys: dropping it costs one logarithmic factor in the radius,
+and the posterior also puts almost no mass on large models.}
+
+\begin{proposition}[Level-$M$ form, and the case without the collinearity condition]\label{prop:dist}
+\textup{(i)} There is a constant $C_{\mathrm s}$, depending only on $(s,A,L,c_\psi,\bar b)$, such that the following holds. The
+constants of Theorem~\ref{thm:dist} serve every level $M$ with $M_0\le M\le\sqrt n/\log n$, and $M$ may depend on $n$:
+whenever $n\ge n_0$ and Assumption~\ref{asm:dist} holds with the window $q_n$ of this $M$,~\eqref{eq:dist-i} holds, and also
+\begin{equation}\label{eq:dist-ii}
+  \P^*\Big[\,\Pi\big(\abs{S}>s+C_{\mathrm s}M\ \big|\ \Dn\big)>n^{-c_{\mathrm H} M}\Big]\ \le\ n^{-c_{\mathrm H} M}.
+\end{equation}
+The two exceptional sets can be taken to be the same, and the bounds are uniform over all laws of the data that satisfy
+Assumption~\ref{asm:dist} with the given constants.
+\textup{(ii)} If Assumption~\ref{asm:dist}\ref{asm:dist-nec} is dropped and Assumption~\ref{asm:dist}\ref{asm:dist-subg} is
+required only for single predictors, then~\eqref{eq:dist-i} holds with radius $\sqrt{M\log n\cdot\log(\praw\vee n)/n}$,
+and~\eqref{eq:dist-ii} with $s+C_{\mathrm s}M\log n$ in place of $s+C_{\mathrm s}M$.
+\end{proposition}
+
+\status{\textbf{Proved and independently checked} (part of the same result as Theorem~\ref{thm:dist}). Registry:
+Appendix~\ref{app:status}, row 2.1.}
+
+\why{With a fixed eigenvalue floor and every true signal above the detection scale, the distribution is learned at the
+parametric rate.}
+
+\begin{theorem}[Parametric rate when the true predictors are detectable]\label{thm:dist-param}
+Assume Assumption~\ref{asm:dist} with the window $q_n$ of level $M=1$, with exactly $s\ge1$ nonzero coordinates of $\bstar$;
+that $\lmin(\Corr(x_T))\ge\psi$ for a fixed $\psi>0$ and every set $T$ of at most $(2A+3)s+2$ predictors; and that
+$\min\{\abs{\beta^*_j}\sd(x_j)/\sigs:\beta^*_j\neq0\}\ge b_n$, where $b_n>0$ and $b_n^2n/\log n\to\infty$. Then
+$\Pi(d_H(f,f^*)>M_n/\sqrt n\mid\Dn)\to0$ in $\P^*$-probability, for every sequence $M_n\to\infty$.
+\end{theorem}
+
+\status{\textbf{Proved and independently checked}. Registry: Appendix~\ref{app:status}, row 2.1.}
+
+\why{The distribution guarantee carries over to the list of models that a completed run returns, provided that list
+holds a non-negligible share of the posterior, a premise that is not proved here; it is therefore stated as a conditional
+remark.}
+
+A completed run returns a list $\mathcal T$ of at most $40p+1$ distinct models with their log scores; let
+$\pi(\mathcal T\mid\Dn)$ be the posterior probability of the list, and $\hat\Pi$ the posterior restricted to it (the models
+of $\mathcal T$ weighted in proportion to their exponentiated log scores, each with its exact conditional posterior of
+$(\beta,\sigma^2)$; $\hat\Pi$ is not computed by the method).
+
+\begin{remark}[The output of the sampler, conditionally on the mass of its list]\label{cor:dist-output}
+Assume the conditions of Proposition~\ref{prop:dist}(i), and that the returned log scores are computed in exact
+arithmetic. With $\P^*$-probability at least $1-n^{-c_{\mathrm H}M}$, every completed run, whatever its random numbers, with
+$\pi(\mathcal T\mid\Dn)\ge n^{-c_{\mathrm H}M/2}$ satisfies $\hat\Pi(d_H(f,f^*)>\sqrt{M\log n/n})\le n^{-c_{\mathrm H}M/2}$. If a
+completed run scored $\Sz$ and $\pi(\Sz\mid\Dn)>\tfrac12$, then the list contains $\Sz$, $\Shat=\Sz$, and $\pi(\mathcal
+T\mid\Dn)>\tfrac12$.
+\end{remark}
+
+\status{\textbf{Proved and checked, conditional on} exact arithmetic and on \samplerconds; the description of the
+output was checked against the code. Registry: Appendix~\ref{app:status}, row 2.1.}
+
+Whether the list carries enough posterior probability is a property of the run; this remark does not assert it, and
+in general nothing in this paper proves it. On the designs of Theorem~\ref{thm:reported} the list holds almost all the
+posterior mass (Corollary~\ref{cor:list}); that this yields the premise here is not claimed.
+
+\subsection{The method}\label{sec:supp-method}
+
+\why{It explains why the sampler starts in the right place: without leakage, the start law already concentrates on the
+true model.}
+
+\begin{theorem}[The start law concentrates]\label{thm:start}
+Assume \as{GR}, \as{DIM} with $p>\sz$, \as{FSt}, \as{V}, \as{NL}, and $\lmin(\Sigma_{n,S})\ge\varphi_{\mathrm b}^2$ for every
+$S$ with $\abs{S}\le16+\sz$, for a fixed $\varphi_{\mathrm b}>0$. Then $\P(\pi_0(\Sz)\ge1-n^{-c})\to1$ for every
+$c<\tfrac12$. If moreover $\Cov(W_l,W_j)=0$ for every null $l$ and true $j$, then $1-\pi_0(\Sz)=\OP(\rn)$. The exponent
+$\tfrac12$ cannot be improved: $1-\pi_0(\Sz)\ge\tfrac13(n+1)^{-1/2}$ for every valid data set with $n\ge4$ and $\sz<K$.
+\end{theorem}
+
+\status{\textbf{Proved and independently checked}. Registry: Appendix~\ref{app:status}, row 3.3.}
+
+With leakage, the start law concentrates instead on the models between the true model and the leakage set: keep the
+other assumptions of Theorem~\ref{thm:start}, and let \as{NL} hold with $\Sz$ replaced by a deterministic $Q\supseteq\Sz$ with $\abs{Q}\le K$, so
+that only predictors outside $Q$ are required not to leak. Then $\P\big(\pi_0(\Lat(Q))\ge1-(\abs{Q}+1)n^{-1/2}e^{C\sqrt{\log n}}\big)\to1$.
+
+\why{It is the only reported-model statement that does not assume Gaussian rows: its conditions are on the sample
+$(X,\tstar)$.}
+
+For a set $U$ and a predictor $l\notin U$, the \emph{signal gain} $\delta^2_{U,l}:=\norm{(P_{U\cup\{l\}}-P_U)\mu}^2$ is the
+increase in explained mean signal when $x_l$ joins $X_U$; the \emph{residual scale} is $\tau^2_U:=\sigs^2+\norm{(I-P_U)\mu}^2/(n-1)$;
+and $\hat\beta_{U,l}:=(X_U^\top X_U)^{-1}X_U^\top x_l$, padded with zeros.
+
+\begin{localassumption}[Fixed-design visibility and leakage]\label{asm:reported-fixed}
+\begin{asmitems}
+  \item\label{asm:rf-floor} \emph{Floors.} $\lmin(\Rhat_T)\ge\varphi_0^2$ for every $T$ with $\abs{T}\le16$ and for every
+    $T=Q\cup\{l\}$, $l\in\set{p}$, with $Q$ as in~\ref{asm:rf-leak}.
+  \item\label{asm:rf-vis} \emph{Visibility.} There is a deterministic $\omega_n\to\infty$ such that
+    $\delta^2_{U,j}\ge\omega_n\log n$ for every $j\in\Sz$ and every $U\not\ni j$ with $\abs{U}\le15$.
+  \item\label{asm:rf-leak} \emph{Bounded leakage.} There are a deterministic $Q\supseteq\Sz$ (with $\abs{Q}\le K$ and
+    ($Q=\set{p}$ or $K\ge2\abs{Q}+32\sz+1$) for large $n$) and a fixed $\eta\in[0,\eta_A)$,
+    $\eta_A:=(\sqrt{2A+1}-\sqrt{2A})^2$, such that $\delta^2_{U,l}\le\eta\,\tau^2_U\log n$ for every $l\notin Q$ and every
+    $U\not\ni l$ with $\abs{U}\le15$.
+  \item\label{asm:rf-size} \emph{Size of the leakage set.} One of: (d1) $\abs{Q\setminus\Sz}\le(1-\delta_Q)\log n$ for a
+    fixed $\delta_Q\in(0,1)$; or (d2) $\abs{Q}\le n^b$ with $b<\tfrac12-\tfrac\eta2-\sqrt{2A\eta}$,
+    $\theta^{*2}_{\min}n/(\abs{Q}+\log n)\to\infty$, and local regressions: for every $l$ a deterministic set
+    $N_l\subseteq Q\setminus\{l\}$ with $\abs{N_l}\le h\log_2n$, for a fixed $h$ with $h+b<\tfrac12$, and a deterministic $L_n\to0$ with
+    $L_n^2\log(\abs{Q}+1)=o(\log n)$, such that $\norm{\hat\beta_{T,l}-\hat\beta_{T\cap N_l,l}}_1\le L_n$ for every
+    $T\in\Lat(Q)$ with $\abs{T}<K$ and $l\notin T$.
+\end{asmitems}
+\end{localassumption}
+
+\begin{theorem}[The reported model equals the true model: fixed design]\label{thm:reported-fixed}
+Let the design be fixed, with no raw predictor constant in the sample (an input condition of the delivery result; then
+$p=\praw$). Assume \as{GL}, \as{DIM}, \as{SP}, \as{BC},
+\as{EF}, \as{NC}, \as{BM}(b), Assumption~\ref{asm:reported-fixed} and Convention~\as{C1}. Then the conclusions of
+Theorem~\ref{thm:reported} hold: there are data events $\mathcal G_n$ with $\P(\mathcal G_n)\to1$ on which every
+admissible run that produces output reports $\Shat=\Sz$, for every seed and calibration outcome; and the delivery
+clauses hold under \as{C2} on $\Dom$ and under \as{C2p} for every admissible $n\ge3$.
+\end{theorem}
+
+\status{\textbf{Proved and independently checked}, with no open condition: the version proved in the registry is a stronger form of
+this statement. Registry: Appendix~\ref{app:status}, row 3.2.}
+
+\why{It states in one place when Theorem~\ref{thm:reported} applies to block and autoregressive designs.}
+
+\begin{corollary}[Block and autoregressive designs]\label{cor:famc}
+In the setting of Theorem~\ref{thm:reported}, suppose that for all large $n$ the predictors are correlated either in
+independent blocks of bounded size (uniformly well conditioned) or autoregressively with a fixed $\rho\in(-1,1)$, and that
+a fixed number of true coefficients have absolute values bounded away from $0$ and $\infty$. Suppose also that the true
+predictors cannot cancel one another: (a) one true predictor per block; or (b) signs aligned with the correlation (for AR,
+equal signs if $\rho>0$ and signs alternating with the column index if $\rho<0$; for a block with several true predictors,
+after flipping some columns' signs all its partial correlations are nonnegative and the flipped true coefficients share
+one sign); or (c) for AR only, the true predictors are spread apart by an explicit separation bound; or (d) the coefficient
+vector stays a fixed distance from a closed set $B$ of cancelling directions ($B$ is null for AR designs, and possibly not
+null for general block designs). Then, on data events of probability tending to one, every admissible run that returns a
+result reports exactly the true model, whatever its seed. Under the delivery conventions of Theorem~\ref{thm:reported},
+every run returns a result with probability one, so the true model is recovered with probability tending to one, with
+that theorem's qualifications (lifted integer limits, bounded domain, time guard).
+\end{corollary}
+
+Not covered: coefficients that cancel, such as two adjacent autoregressive true predictors with coefficients $1$ and $-2$
+at correlation $0.5$. Our designs meet the conditions: block designs with one true predictor per block, and the AR($0.5$)
+and AR($0.6$) layouts, whose true predictors are spread apart. The constants degrade as $\abs\rho\to1$.
+
+\status{\textbf{Proved and independently checked} (recorded on main at 8b4d3101): an assembly of recorded results, with no
+new assumption. Registry: claim W3-FAMC:Cor-FAMC.}
+
+
+\subsection{The reported estimates are consistent, on designs without leakage}\label{sec:outputs}
+
+\why{It is the only result on the consistency of the reported inclusion probabilities, median model and evidence
+estimate; it needs the condition \as{NL}, which, of our designs, only the independent ones satisfy, so it is stated
+as a remark.}
+
+
+\begin{assumption}{NL}{No leakage, as seen by the start law}
+Every null predictor $l\notin\Sz$ has a deterministic \emph{neighbourhood} $\Hl_l\supseteq\{l\}\cup\Sz$ with
+$\abs{\Hl_l}\le e^{\kappa_H\sqrt{\log n}}$ for a fixed $\kappa_H$, such that, for every $U\not\ni l$ with $\abs{U}\le15$ and
+$U_0:=U\cap\Hl_l$: (i) \emph{no leak:} $\abs{\Cov(W_l,W_j\mid W_{U_0})}\le C_Ln^{-1/2}$ for every $j\in\Sz\setminus U_0$,
+with a fixed $C_L$; and (ii) \emph{locality:} $\abs{\Cov(W_l,W_v\mid W_{U_0})}\le r^\circ_n$ and
+$\abs{\Cov(W_j,W_v\mid W_{U_0})}\le r^\circ_n$ for every $v\in U\setminus\Hl_l$ and $j\in\Sz\setminus U_0$, where
+$r^\circ_n(n\log n)^{1/4}\to0$. \hfill [\SA{pe}]
+\end{assumption}
+
+The remark concerns runs that use the sampler; enumeration is not covered. On the event $\Acal$ of
+Section~\ref{sec:conventions}, $\Zhat$, $\PIPhat$ and
+$\MPMhat$ denote the pooled values the four islands would produce if the run did not stop; on completed runs they
+are the reported values. Let $\rho_n:=n^{-1/2}e^{C_\rho\sqrt{\log n}}$, with $C_\rho$ depending only on the fixed quantities of the
+assumptions.
+
+\begin{remark}[The reported estimates are consistent]\label{thm:outputs}
+Assume \as{GR}, \as{DIM} with $p>\sz$, \as{FSt}, \as{EFS}, \as{V}, \as{NL}, and Conventions~\as{C1} and~\as{C3}. Then,
+under the joint law of the design, the noise and the method's random numbers,
+\begin{gather}
+  \ind{\Acal}\Big(\big|\Zhat/Z-1\big|+\big|\log\Zhat-\log Z\big|+\max_{j\in\set{p}}\big|\PIPhat_j-\ind{j\in\Sz}\big|\Big)
+    =\OP(\rho_n),\label{eq:outputs-rate}\\
+  \P\big(\Acal\cap\{\MPMhat\neq\Sz\}\big)\to0,\qquad \P\big(\text{the run completes and }\Shat\neq\Sz\big)\to0,
+    \label{eq:outputs-sel}
+\end{gather}
+and~\eqref{eq:outputs-rate} also holds for the reported values multiplied by the indicator of a completed run.
+\end{remark}
+
+\asmlist{(1)~\as{GR}, \as{FSt}, \as{EFS}, \as{V} as in Result~3; (2)~\as{DIM} [\SA{all}]; (3)~\as{NL} no leakage
+[\SA{pe}]; (4)~Conventions \as{C1}, \as{C3} (Appendix~\ref{app:conventions}).}
+
+\status{\textbf{Proved and checked, conditional on} \samplerconds. Registry: Appendix~\ref{app:status}, row 3.6.}
+
+\par\noindent\textit{What is not claimed.}\phantomsection\label{rem:outputs}
+(i) No lower bound on $\P(\Acal)$ is asserted: the statements are about intersections with $\Acal$ or with completion, not
+conditional on them.
+(ii) The rate $\rho_n$ is the start law's rate; it is slower than the posterior rate $\rn$, by the factor
+$e^{C_\rho\sqrt{\log n}}/\sqrt{\log n}$.
+(iii) Pooling cannot make things worse: the pooled inclusion probabilities are never farther from the exact ones, in the
+largest coordinate, than those of the worst island (proved and checked, conditional on the same two sampler results as
+Remark~\ref{thm:outputs}; registry row 4.1).
+
+\paragraph{Is the no-leakage condition reasonable?}\phantomsection\label{sec:a-pe}
+
+\ahead{No leakage}{\lab{NL}}{In no regime do \SL{} have a condition of this kind: none of their theorems concerns a
+start law. Only our independent designs satisfy it.}
+\ev{With no conditioning, \lab{NL} asks $\abs{\Cov(W_l,W_j)}\le C_Ln^{-1/2}$ for every null predictor $l$ and true
+predictor $j$. In AR(1) with correlation $0.5$ the neighbour of a true predictor has covariance $0.5$; in a block design
+every block-mate of a true predictor has covariance at least $0.4$. For such designs the start law concentrates on the
+models between the true model and the leakage set, not on the true model alone. On AR and BLK the present proof route
+cannot be extended as $n\to\infty$, because the start law's mass on the true model then decays faster than any power of
+$n$; at the sizes of the $10^6$ plan this asymptotic decay says nothing, and we have no bound on this mass there in either
+direction. For S3, S4 and S6, a theorem under a weaker, group-relative form of \lab{NL} is a candidate; it is not
+proved.}
+\ro{Any null predictor correlated with a true one at a fixed level.}
+\ds{\textbf{Inside:} the independent designs only. \textbf{Outside:} all locally correlated and factor designs, including AR, the
+primary design of the $10^6$ plan.}
+
+\why{It is the only recorded route to the reported inclusion probabilities and median model that does not need \as{NL};
+its global-overlap premise is not yet derived from conditions on the design.}
+
+\begin{remark}[An alternative route for the estimates]\label{rem:alt-route}
+An argument that does not go through the evidence estimate gives the conclusions of Remark~\ref{thm:outputs} for the
+inclusion probabilities and the median and highest posterior models under a global-overlap condition (stated in full with
+the proof).
+\end{remark}
+
+\status{\textbf{Proved and independently checked}; its global-overlap premise is a named open premise. Registry:
+Appendix~\ref{app:status}, row 3.6.}
+
+
+\subsection{The calibration and the Markov moves in full}\label{sec:supp-cal}
+
+\why{Every result holds for every outcome of the calibration, so the main text uses only three facts about it; this is the
+procedure itself, for reproducibility.}
+
+At tier $i$ the calibration's islands have $\Nc_i:=4^i\Nc_0$ particles, and the \emph{step ceiling} is
+$\Tmax_i:=4^i\max(1000,\ell_n^2)$.
+
+\paragraph{Stores of models.} Throughout the run the method keeps three stores of the models scored so far: the $40p+1$
+best by $F$; the $20p$ best by $\gamma_0$; and the $20p$ best by $\gamma_1=e^{F}/m(\emptyset)$, that is, by $F$. The two
+stores of $20p$ feed the candidate set below. \emph{The best model found so far} is the model with the highest $F$ among
+the models recorded so far: during the calibration, the block-table models (recorded before the pilot starts) and those
+scored in the calibration; in the final run, the block-table models, those scored in the final run, and the models passed
+on by the calibration.
+
+\begin{center}
+\fbox{\begin{minipage}{0.93\linewidth}\small
+\textbf{Algorithm 1: calibration.}
+\begin{enumerate}[leftmargin=1.6em,itemsep=1pt,label=\arabic*.]
+  \item Set the tier $i\leftarrow0$.
+  \item \emph{Pilot.} Run one island of $\Nc_i$ particles (reweight, resample, move, as in Section~\ref{sec:algorithm})
+    with an adaptive schedule. From the current $\xi$, the next temperature is $\xi'=1$ if that step keeps an effective
+    sample size of at least $0.90\,\Nc_i$; otherwise it is found by 60 bisections on $(\xi,1]$. If the step is shorter than
+    $1/\Tmax_i$, take $\xi'=\min(1,\xi+1/\Tmax_i)$ instead and count a \emph{forced step}. At $\xi=1$, run $\Lbi$ burn-in rounds and
+    four measured rounds, then a local search (move cap $\ell_n$) from the best model found so far.
+  \item \emph{Grid.} Build a grid from the pilot's temperatures on the candidate set $\mathcal V$ (below). If the
+    construction fails, record a trigger and skip step~4.
+  \item \emph{Rebuild loop.} Repeat at most $\ell_n$ times: run four diagnostic islands of $\Nc_i$ particles on the
+    current grid (each as in Section~\ref{sec:algorithm}, with $\Lbi$ burn-in and four measured rounds); run a local search
+    (move cap $\ell_n$) from the best model found so far; recompute $\mathcal V$, and rebuild the grid from the pilot's
+    temperatures. Stop when the rebuilt grid is identical to the previous one (the grid has \emph{converged}), or when a
+    rebuild fails.
+  \item \emph{Triggers.} If $i=0$ and any trigger fires (list below): repeat the check before the run, set $i\leftarrow1$,
+    and go to step~2. The scored models, the three stores and the score cache carry over; the tier-$0$ temperatures do
+    not, and tier~1 uses its own random streams. At tier~1, triggers are only recorded.
+  \item \emph{Fallback.} If the grid construction failed at tier $1$, use the last grid built successfully at tier $1$,
+    or else the tier-$1$ pilot's own temperatures. (An unconverged grid is used as it is.)
+  \item \emph{Freeze} the grid, the tier $i$, the number of particles $N_i$ and $\Lbi$, and pass the three stores and the
+    calibration's best model to the final run, as candidates for the reported model (they are not particles). With the
+    fallback on (the default), a grid always exists at this point; if it does not, stop the run without estimates.
+\end{enumerate}
+\end{minipage}}
+\end{center}
+
+\paragraph{The candidate set and the grid.} The candidate set $\mathcal V$ is the empty model together with the two stores
+of $20p$ models (the best by $\gamma_0$ and the best by $F$). On $\mathcal V$, let
+$\psi(u):=\log\sum_{S\in\mathcal V}\gamma_0(S)e^{u\,\Delta(S)}$. A step from temperature $u$ to $v$ has \emph{restricted effective
+sample size}
+\[
+  \rho(u,v):=\exp\{2\psi(v)-\psi(u)-\psi(2v-u)\},
+\]
+the effective-sample-size fraction that the step would leave if the particles were the models of $\mathcal V$ with
+weights proportional to $\gamma_u$. The grid \emph{refines} the pilot's temperatures. Starting at $u=0$, let $b$ be the
+smallest pilot temperature above $u$. If $\rho(u,b)\ge0.90$, the next grid point is $b$; otherwise it is the largest
+point of $(u,b]$ that passes, found by 60 bisections. The construction continues from the new point, again aiming at the
+smallest pilot temperature above it, until it reaches $1$; so every pilot temperature is in the grid, and points are
+inserted where a pilot step fails the check on $\mathcal V$. The construction \emph{fails} if a step
+makes no numerical progress, if an appended temperature does not pass the $0.90$ check (temperatures within $10^{-12}$ of
+$1$ are set to $1$), or if more than $\Tmax_i$ steps are needed.
+
+\paragraph{Triggers.} At tier $0$ the calibration moves to tier $1$ if any of these occurs: \emph{island disagreement}
+(E1: some diagnostic island's best log score is more than $1$ below the best score found so far); \emph{evidence
+spread} (E2: the sample standard deviation of the four islands' log-evidence estimates exceeds $1$); \emph{late
+improvement} (E3: a calibration local search, the pilot's included, ended with a strictly higher best log score than the
+best before it started); a forced pilot step; a failed grid construction; a grid
+that did not converge; or a local search that was still improving when it reached its move cap. E1 and E2 are taken from
+the last completed rebuild; E3 and the move-cap trigger count over the pilot and every rebuild.
+
+\paragraph{When the calibration succeeds.} The calibration \emph{succeeds} when it freezes a grid, built by the main
+construction or by the fallback. Without a trigger, tier $0$ freezes its own grid. The calibration's own estimates are
+archived and never reported.
+
+
+\paragraph{The Markov moves.} One \emph{round} applies $p+B+2$ moves to a particle, in an order drawn uniformly at random
+afresh for each particle and each round; each move leaves $\pi_\xi$ invariant.
+\begin{itemize}[leftmargin=1.5em,itemsep=1pt]
+  \item \emph{Inclusion update of predictor $j$} (one for each $j\in\set{p}$; a Gibbs update): with
+    $a:=\gamma_\xi(S\cup\{j\})/\gamma_\xi(S\setminus\{j\})$, include $j$ with probability $o_j:=a/(1+a)$, or $o_j:=0$ if
+    including $j$ would exceed the cap $K$. The probability $o_j$, not the drawn indicator, is what the inclusion-probability
+    estimate uses (step~3 below).
+  \item \emph{Uniform swap:} pick a member $j$ of the model and a non-member $l$ uniformly at random; propose
+    $S':=(S\setminus\{j\})\cup\{l\}$, and accept with probability $\min\{1,\gamma_\xi(S')/\gamma_\xi(S)\}$. (If
+    the model is empty or equal to $\set{p}$, the move does nothing.)
+  \item \emph{Neighbour swaps} ($B$ of them): pick a member $j$ uniformly, and a non-member $l$ uniformly among $j$'s
+    neighbours in the neighbour graph; propose the swap, and accept with the Metropolis--Hastings probability, which
+    includes the correction $\abs{\mathcal N(j)\setminus S}/\abs{\mathcal N(l)\setminus S'}$ for the different
+    neighbourhood sizes. (If the model is empty, or $j$ has no neighbour outside it, the move does nothing.)
+  \item \emph{Independence move:} propose a fresh draw $S'$ from $\pi_0$, and accept with probability
+    $\min\{1,\exp\{\xi\,(\Delta(S')-\Delta(S))\}\}$.
+\end{itemize}
+Swaps keep the model size; the inclusion updates and the independence move can change it. Every move stays in $\Om$:
+the inclusion updates enforce the cap, and $\pi_0$ lives on $\Om$.
+
+
+\subsection{The engine for \texorpdfstring{$p=10^6$}{p=10\^{}6} (an engineered variant)}\label{sec:supp-1m}
+
+\why{It is the engine of the planned runs at $p=10^6$; it differs from the method, and no theorem covers it.}
+
+\emph{This describes a different engine, not the method of Section~\ref{sec:method}, which the results are about.} To run at $p=10^6$, the planned engine changes the method as listed in Table~\ref{tab:1m}, taken from the
+draft engineering specification of 2026-11-15; entries marked ``to be decided'' depend on a precision study. The run at
+$p=10^6$ will be reported as an engineered variant validated against the method above on shared problem sizes ($p=10^4$,
+and $p=10^5$ where possible), not as a run covered by the theorems.
+
+{\small
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.2\linewidth}>{\raggedright\arraybackslash}p{0.33\linewidth}>{\raggedright\arraybackslash}p{0.4\linewidth}@{}}
+\caption{The $10^6$ engine against the method.}\label{tab:1m}\\
+\toprule
+Aspect & The method & The $10^6$ engine \\ \midrule \endhead
+particles per island & $4^i\max(2500,n,p)$ & fixed, $2{,}500$ ($10^4$ in one arm of the precision study) \\
+islands & four, in one process & sixteen, in separate processes, merged afterwards (union of stored models; equal-weight inclusion probabilities as the primary estimate) \\
+random numbers & sequential streams & addressed by position (counter-based) \\
+scoring & the score of Section~\ref{sec:posterior} & a batched kernel with different floating-point arithmetic, agreeing to about $10^{-9}$ in relative terms \\
+blocks & the partition of Section~\ref{sec:algorithm}, $B\le16$ & complete linkage truncated at a correlation threshold, the same top-down cut, packing by smallest index; $B\le14$ \\
+calibration & Algorithm~1, with at most one move to tier 1 & the pilot and at most a fixed number of rebuilds (0 or 3, to be decided), no move to tier 1 except after a failed construction \\
+grid & as frozen & optionally each interval split into $m\in\{1,4\}$ equal parts (to be decided) \\
+estimates & those of Section~\ref{sec:outputs-method} & the same, plus a deterministic lower bound on $\log Z$ from the stored models, an evidence estimate based on how often the islands visit the stored models, and inclusion probabilities computed from the stored models \\
+resampling and moves & multinomial; $B$ neighbour swaps per round & systematic resampling and more neighbour swaps per round, off unless the precision study shows a gain \\
+caches & a score cache, the store of the $40p+1$ best models, and the two stores of $20p$ & no score cache and no stores of $20p$ in the final islands; each island keeps a store of its $40p+1$ best models \\
+\bottomrule
+\end{longtable}}
+
+
+\subsection{Open questions}\label{sec:open}
+
+None of these is needed for any statement above.
+\begin{enumerate}[leftmargin=1.5em,itemsep=1pt]
+  \item Remove the vanishing floor \as{NC} from Theorem~\ref{thm:post-margin}, and weaken its floor on the true model.
+  \item Prove $\E[1-\pis{\Sz}]\gtrsim\rn$ on every design with a floor on the sets $\Sz\cup\{j\}$.
+  \item Whether Assumption~\ref{asm:dist}\ref{asm:dist-nec} is needed for the rate $\rn$ of Result~2.
+  \item Leakage sets of size $n^b$ with $b\ge\tfrac12$, and raw-scale signals in Result~3 and Remark~\ref{thm:outputs}.
+  \item Consistency of the reported estimates on designs with leakage (AR and block designs).
+  \item The parallel method: an inheritance statement for an output-identical engine, and results for many islands and
+    island weighting at very large $p$.
+\end{enumerate}

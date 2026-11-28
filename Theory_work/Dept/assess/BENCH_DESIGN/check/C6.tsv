@@ -1,0 +1,167 @@
+key	where	item	ours	source	verdict	location
+Wasserman2009	PAPERS	doi	10.1214/08-AOS646; arXiv:0704.1139	Crossref: Ann. Statist. 37(5A) 2178-2201 (2009); PDF header arXiv:0704.1139v2	OK	doi.org/10.1214/08-AOS646; PDF p.1
+Wasserman2009	PAPERS	X	iid N(0,1) (A,B); AR chain rho=0.5 (C); unfaithful rho=0.95 tau=0.01 (D); real MrOS SNPs	Sec 6: A,B iid; C X_{j+1}=rho X_j+sqrt(1-rho^2) eps with rho=0.5; D X2=rho X1+tau eps etc, tau=0.01, rho=0.95; Sec 5 MrOS SNPs	OK	Sec 5 and Sec 6, pp.10-11
+Wasserman2009	PAPERS	n	100 (p=100,1000); 100 and 1000 for D (p=10); real 860	Table 1 has n=100 and n=1000 (model D, p=10); Sec 5 n=860	OK	Table 1; Sec 5 p.10
+Wasserman2009	PAPERS	p	max 1000; real 2066 coefficients	Table 1 p in {10,100,1000}; Sec 5: 296 SNPs = 296 main + 1770 interactions = 2066	OK	Table 1; Sec 5 p.10
+Wasserman2009	PAPERS	s0	A s=0; B,C s=10; D s=2	Sec 6: B,C beta_j=delta(10-j) for j=1..10, so beta_10=0 and only 9 coefficients are nonzero; D beta1=-beta2=10	OK	note: effective nonzero count is 9 for B,C; Sec 6 p.11
+Wasserman2009	PAPERS	beta	triangle delta=0.5 (p=100) or 1.5 (p=1000); D beta1=-beta2=10; unit noise	Table 1 caption: delta=0.5 for p=100, delta=1.5 for p=1000; Sec 6 D beta1=-beta2=10; errors N(0,1)	OK	Table 1 caption p.11; Sec 6
+Wasserman2009	PAPERS	metrics	size; power pi_av; false positive rate	Table 1 size and power pi_av; Table 2 size, power, FPR	OK	Tables 1-2 pp.11-12
+Wasserman2009	PAPERS	other:replicates	not stated in text read	No replication count found in Sec 6 or Tables 1-2	UNVERIFIABLE	Sec 6 pp.10-12
+Wasserman2009	REPORT§8	other:citation/DOI	Wasserman L; Roeder K; Ann Stat 37(5A):2178-2201; 2009; 10.1214/08-AOS646; arXiv:0704.1139	Crossref metadata matches; PDF header arXiv:0704.1139v2	OK	REPORT §8 row 75
+Weissbrod2020	PAPERS	doi	10.1038/s41588-020-00735-5	Crossref: Nat Genet 52(12) 1355-1363 (2020)	OK	doi.org; PMC7710571
+Weissbrod2020	PAPERS	X	real UKB genotypes N=337,491; 10 3Mb chr1 loci with 1,468-27,784 SNPs; priors from 18,212,157 SNPs	Results "Main simulations"; Methods "Main fine-mapping simulations" (same numbers)	OK	Results p.3; Methods
+Weissbrod2020	PAPERS	n	337,491 (320K summary statistics); up to 44K in mismatched-LD sims	Results: summary statistics from N=320K; Methods: N=337,491 genotypes; mismatched-LD sims up to N=44K	OK	Results; Methods
+Weissbrod2020	PAPERS	p	1.82e7 genome-wide; 27,784 max per locus	18,212,157 genome-wide SNPs; 1,468-27,784 per 3Mb locus	OK	Results; Methods
+Weissbrod2020	PAPERS	s0	10 causal per locus; genome-wide causal proportion 0.5%	"each target locus including 10 causal SNPs"; genome-wide proportion 0.5%	OK	Results "Main simulations"
+Weissbrod2020	PAPERS	beta	h2=25%; 0.5% causal; 0.05% h2 per locus; baseline-LF v2.2.UKB, tau from 16 traits	h2=25%, 0.5%, 0.05% per locus; baseline-LF 2.2.UKB, 16 traits; causal probability proportional to var[beta_i|a_i]	OK	Results; Methods "Main fine-mapping simulations"
+Weissbrod2020	PAPERS	metrics	calibration (FDR at PIP thresholds); power (PIP>0.95); cost; Wald test with jackknife	FDR at PIP=0.95 and 0.5; power at PIP=0.95 and 0.5; computational cost; Wald test with jackknife over datasets	OK	Fig 1; Methods
+Weissbrod2020	PAPERS	other:replicates	not recovered from main text	Number of simulated datasets not stated in main text (aggregated over loci)	UNVERIFIABLE	Results; Supplementary Note not available
+Weissbrod2020	REPORT§3	UKB row (paper listed)	UK Biobank used by Weissbrod 2020	Results: UKB genotypes N=337,491; 49 traits fine-mapped	OK	REPORT §3 UK Biobank row
+Weissbrod2020	REPORT§4	PIP calibration	Weissbrod 2020 listed	Fig 1a-b: FDR of PIP thresholds	OK	REPORT §4 metrics table
+Weissbrod2020	REPORT§8	other:citation/DOI	Weissbrod O et al.; Nat Genet 52(12) 1355-1363; 2020; 10.1038/s41588-020-00735-5	Crossref metadata matches	OK	REPORT §8 row 76
+Wen2016	PAPERS	doi	10.1016/j.ajhg.2016.03.029	Crossref: Am J Hum Genet 98(6) 1114-1129 (2016)	OK	doi.org; PMC4908152
+Wen2016	PAPERS	X	real GEUVADIS genotypes; sim1 50 cis-SNPs per gene with 20% annotated; sim2 15 neighbouring cis-SNPs	Results sim1: 1500 genes x 50 cis-SNPs from 343 Europeans, 20% annotated; sim2: p=15 neighbouring cis-SNPs	OK	Results "Enrichment Analysis" and "Accuracy of Adaptive DAP"
+Wen2016	PAPERS	n	343	343 European individuals	OK	Results sim1
+Wen2016	PAPERS	p	50 per gene (sim1); 15 (sim2); real 100 kb bins (GEUVADIS), 2 Mb cis (GTEx)	sim1 50; sim2 15; GEUVADIS 100 kb bins around TSS; GTEx 44 tissues; GTEx window size not stated (Intro: molecular QTL loci typically 1-2 Mb)	OK	note: 2 Mb GTEx window inferred from Intro, not stated for GTEx; Results
+Wen2016	PAPERS	s0	sim2 1-5 QTNs uniform; sim1 Bernoulli with prob exp(-4+alpha1 d)/(1+exp(...))	sim2 "uniformly select one to five QTNs"; sim1 Bernoulli trial with p=exp(-4+alpha1 d)/(1+exp(-4+alpha1 d))	OK	Results sim1, sim2
+Wen2016	PAPERS	beta	QTN effect N(0,0.6^2); residual variance 1; alpha1 0.00-1.00	"genetic effect of each QTN drawn from N(0,0.6^2)"; residual error variance 1; alpha1 from 0.00 to 1.00	OK	Results sim1
+Wen2016	PAPERS	metrics	bias/SE of alpha1; C*/C ratio; RMSE of PIPs; runtime (EM 21 min vs MCMC 84 h, 11,838 genes)	Fig 1 alpha1 estimates with SE; C*/C in Table 1; RMSE; "21 min" EM and "84 hr ... all 11,838 genes" in Real data	OK	Results Fig 1, Table 1; Real data
+Wen2016	PAPERS	other:replicates	100 datasets per alpha1; 1250 for sim2	"generate 100 datasets for each alpha1 value"; "1,250 simulated datasets"	OK	Results sim1, sim2
+Wen2016	REPORT§3	GTEx row (paper not listed)	GTEx row lists Wang 2020 and Kim 2024 only	Wen 2016 also analyses GTEx cis-eQTLs in 44 tissues	OK	REPORT §3 GTEx row; omission, not a contradiction
+Wu2009	PAPERS	doi	10.1093/bioinformatics/btp041	Crossref: Bioinformatics 25(6) 714-721 (2009)	OK	doi.org; PMC2732298
+Wu2009	PAPERS	X	synthetic latent MVN thresholded at first quartile to -1/0/1, first 10 correlated; coeliac genotypes	Sec 3: "only the first 10 predictors are correlated"; x_ij=-1,0,1 by first-quartile cutoff; Sec 4 coeliac genotypes	OK	Sec 3; Sec 4.1
+Wu2009	PAPERS	n	2200 (coeliac); synthetic 500-2000	Sec 4.1 n=2200 (938 M, 1262 F; 778 cases, 1422 controls); Table 1 rows include n=500, 2000	OK	Sec 4.1; Table 1
+Wu2009	PAPERS	p	310,637 coeliac; synthetic up to 100,000	Sec 4.1 p=310,637; Table 1 rows (100 000, 2000) and (50 000, 2000)	OK	Sec 4.1; Table 1
+Wu2009	PAPERS	s0	synthetic 5 main + 2 interactions; coeliac sim 4 main + 2 interactions	Sec 3: beta_j=1 for j<=5, eta12=eta34=0.5; Sec 4.2: beta=1 for gender + 3 SNPs; eta=2 for 2 pairs	OK	Sec 3; Sec 4.2
+Wu2009	PAPERS	beta	mu=1, beta_j=1 (synthetic), eta=0.5; coeliac mu=-3, beta=1, eta=2	Sec 3: mu=1, beta_j=1 for j<=5, eta12=eta34=0.5; Sec 4.2: mu=-3, beta=1, eta=2	OK	Sec 3; Sec 4.2 p.7
+Wu2009	PAPERS	metrics	true predictors recovered at stage 1 and 2; FDR vs lambda1; LOO vs univariate P; time with/without swindle	Table 1 K_true,1 and K_true,2; Fig 1 FDR and LOO plots; times with and without swindle	OK	Table 1; Fig 1; Sec 3
+Wu2009	PAPERS	other:replicates	50 random replicates per setting (both)	Table 1 "based on 50 random samples"; Sec 4.2 "50 random replicates"	OK	Table 1; Sec 4.2
+Wu2009	REPORT§7	Wu 2009 grid incomplete	tables garbled; (n,p) grid incomplete	PMC text tables partly garbled; visible rows (5000,500), (50000,2000), (100000,2000)	OK	REPORT §7 Weaker evidence
+Yang2016	PAPERS	doi	10.1214/15-AOS1417; arXiv:1505.07925	Crossref: Ann. Statist. 44(6) 2497-2532 (2016); PDF header arXiv:1505.07925v1	OK	doi.org; PDF p.1
+Yang2016	PAPERS	X	iid rows N(0,I); correlated Sigma_jk=exp(-|j-k|) (AR(1) rho=0.37); Sigma_bad	Sec 3.4.1: "Correlated design: x_i ~ N(0,Sigma) i.i.d. and Sigma_jk = e^{-|j-k|}"; Sec 3.4.2 Sigma_bad with mu=(2 sqrt p)^{-1}	OK	Sec 3.4.1 p.11; Sec 3.4.2 p.14
+Yang2016	PAPERS	n	500;1000 in Tables 1-2 (text 300;900); Sigma_bad n=300	Tables 1-2 columns (n,p)=(500,1000),(500,5000),(1000,1000),(1000,5000); text Sec 3.4.1 n in {300,900}; Sigma_bad n=300	OK	Sec 3.4.1; Tables 1-2; note: source is internally inconsistent
+Yang2016	PAPERS	p	5000 max (grid 1000;5000; text also 500); Sigma_bad p=80	Tables use p in {1000,5000}; text says p in {500,5000}; Sigma_bad (n,p,s*)=(300,80,20)	OK	Sec 3.4.1; Tables 1-2; Sec 3.4.2
+Yang2016	PAPERS	s0	10 (s*=10); Sigma_bad s*=20	beta* has 10 nonzero entries; Sigma_bad "s* = 20"; prior s0=100	OK	Sec 3.4.1; Sec 3.4.2
+Yang2016	PAPERS	beta	beta*=SNR*sqrt(sigma^2 log p/n)*(2,-3,2,2,-3,3,-2,3,-2,3,0..); SNR in {0.5,1,2,3}; sigma^2=1; g=p^3; s0=100	Sec 3.4.1 same formula, SNR in {0.5,1,2,3}, sigma^2=1, g=p^3, s0=100	OK	Sec 3.4.1 p.11
+Yang2016	PAPERS	metrics	Gelman-Rubin <1.5 (SP); H-T and N-T log posterior differences; iterations in units of p	Tables 1-2 SP, H-T, N-T; GR scale factor on R^2; Figs 1-2	OK	Sec 3.4.1 Tables 1-2; Sec 3.4.2 Fig 2
+Yang2016	PAPERS	other:replicates	20 simulated datasets per setting (6 chains); 100 for Sigma_bad	Table 1-2 captions "computed based on 20 simulated datasets"; six chains; Sigma_bad "over 100 replicates"	OK	Sec 3.4.1; Sec 3.4.2
+Yang2016	REPORT§0	item 2 YWJ covariance and size	YWJ: covariance AR(1) rho=0.6 (Griffin variant); size n=500, p in {500,5000}	YWJ original Sigma_jk=e^{-|j-k|} (rho~0.37); tables n in {500,1000}, p in {1000,5000}; text n in {300,900}, p in {500,5000}	MISMATCH	REPORT §0 item 2; Sec 3.4.1 of Yang2016
+Yang2016	REPORT§2	YWJ SNR table row (nu, PVE)	YWJ n=500, p=5000, AR 0.6: nu=0.44/1.75/3.94; PVE=0.30/0.64/0.80 at SNR 1/2/3	Recomputed with source design e^{-|j-k|}, n=500, p=5000, same beta: nu=0.63/2.52/5.67; PVE=0.39/0.72/0.85 (the 0.6 numbers are reproduced only for rho=0.6)	MISMATCH	REPORT §2 "Where our design sits" table
+Yang2016	REPORT§2	AR(1) row, e^{-1}~0.37 (YWJ original)	YWJ original e^{-1}~0.37, Zhou 2022	Yang2016 Sec 3.4.1 Sigma_jk=e^{-|j-k|}	OK	REPORT §2 table row AR(1)
+Yang2016	REPORT§2	signal convention (a) list	8 papers incl. YWJ 2016 with YWJ scaling	Sec 3.4.1 formula and SNR grid match	OK	REPORT §2 Signal conventions (a)
+Yang2016	REPORT§2	sampler-efficiency replicates	20 data sets x several chains (YWJ)	20 simulated datasets; six chains per dataset	OK	REPORT §2 Replicates table
+Yang2016	REPORT§4	YWJ Gelman-Rubin	YWJ 2016 (Gelman-Rubin) listed under posterior probability / MAP metrics	GR scale factor and posterior probability differences in Tables 1-2	OK	REPORT §4 metrics table
+Yang2016	REPORT§5	Liang 2022 row uses YWJ AR 0.6	YWJ, AR 0.6 (Liang 2022)	Yang2016 YWJ covariance is e^{-|j-k|} (not 0.6); the AR 0.6 row is attributed to Liang 2022, not Yang2016	MISMATCH	REPORT §5A table, Liang 2022 row (same error as §0)
+Yang2016	REPORT§6.1	S1 YWJ cell spec	Sigma_jk=0.6^{|j-k|}; n in {500,1000}; p in {500,5000}; labelled "YWJ"	Yang2016 Sigma_jk=e^{-|j-k|}; tables p in {1000,5000}; the report notes the original but still labels the 0.6 cell as YWJ	MISMATCH	REPORT §6.1 S1
+Yang2016	REPORT§8	other:citation/DOI	Yang Y; Wainwright MJ; Jordan MI; Ann Stat 44(6) 2497-2532; 2016; 10.1214/15-AOS1417 (arXiv:1505.07925)	Crossref metadata matches; arXiv id in PDF header	OK	REPORT §8 row 79
+Zanella2019	PAPERS	doi	10.1111/rssb.12316; arXiv:1805.00541	Crossref: JRSS-B 81(3) 489-517 (2019); arXiv 1805.00541 resolves to same title (2018)	OK	doi.org; export.arxiv.org
+Zanella2019	PAPERS	X	Scen1 Sigma12=0.99, beta0=(1,0,..); Scen2 Sigma=0.9 in blocks {1,2,3},{4,5,6}, beta0=(3,3,-2,3,3,-2,0..); Scen3 I, beta0=(2,-3,2,2,-3,3,-2,3,-2,3,0..)	Sec 5.2: same three scenarios and coefficient vectors; unit variances	OK	Sec 5.2 pp.22-23
+Zanella2019	PAPERS	n	simulated (p,n) grid (100,50),(200,200),(1000,500); real 192 and 262	Table 1 rows (100,50),(200,200),(1000,500); Sec 5.3 DLD n=192; TGFB n=262	OK	Sec 5.2 Table 1; Sec 5.3
+Zanella2019	PAPERS	p	1000 simulated; real TGFB p=10172	Table 1 p up to 1000; Sec 5.3 TGFB p=10172 (TGFB172 p=172, DLD p=57)	OK	Sec 5.2; Sec 5.3
+Zanella2019	PAPERS	s0	scen1 1; scen2 6; scen3 10	beta0 has 1, 6 and 10 nonzero entries	OK	Sec 5.2
+Zanella2019	PAPERS	beta	beta*=sqrt(sigma^2 log p/n)*SNR*beta0; sigma=1; SNR 0.5,1,2,3; h=5/p; c=1e3 (simulations)	Sec 5.2 same formula, SNR grid, sigma=1, h=5/p; Sec 5.2 c=10^3 for simulations (c=n, max(n,p^2) for real data)	OK	Sec 5.2 pp.22-23; Sec 5.3
+Zanella2019	PAPERS	metrics	relative efficiency (ESS/CPU time ratio vs Gibbs), median over variables; PIP agreement across runs; CPU time	Eq. (20) relative efficiency; Table 1 median over variables; Fig 6 PIP agreement across 20 runs	OK	Sec 5.2 Table 1; Sec 5.3 Fig 6
+Zanella2019	PAPERS	other:replicates	50 runs per algorithm per simulated dataset; 20 runs per real dataset	"50 runs of each algorithm"; "20 independent runs of each algorithm for each dataset"	OK	Sec 5.2; Sec 5.3
+Zanella2019	PAPERS	other:code URL	code https://github.com/gzanella/TGS	No GitHub URL in extracted text; text says real data from supplements of Rossell & Rubio (2017) and Rossell & Telesca (2017)	UNVERIFIABLE	Sec 5.3 (URL not in extracted text)
+Zanella2019	REPORT§2	adversarial row, Zanella pair rho=0.99	Zanella-Roberts 2019 (pair with rho=0.99)	Scen1 Sigma12=0.99	OK	REPORT §2 table row Adversarial
+Zanella2019	REPORT§2	signal convention (a) list	Zanella-Roberts 2019 uses YWJ scaling	Scen3 uses the YWJ coefficient vector with the same sqrt(sigma^2 log p/n) scaling; Zanella cites Yang et al. 2016 for it	OK	REPORT §2 Signal conventions (a)
+Zanella2019	REPORT§3	TGFB colon cancer row (n=262, p=10172)	262; 10,172; Zanella-Roberts 2019 and Papaspiliopoulos-Rossell 2017	n=262, p=10172 (Sec 5.3)	OK	REPORT §3 table
+Zanella2019	REPORT§4	time-standardised relative ESS	Zanella-Roberts 2019	Relative efficiency ESS/time vs Gibbs (Eq. 20)	OK	REPORT §4 metrics table
+Zanella2019	REPORT§8	other:citation/DOI	Zanella G; Roberts G; JRSS-B 81(3) 489-517; 2019; 10.1111/rssb.12316 (arXiv:1805.00541)	Crossref metadata matches; arXiv id matches	OK	REPORT §8 row 80
+Zhang2010	PAPERS	doi	10.1214/09-AOS729; arXiv:1002.4734	Crossref: Ann. Statist. 38(2) 894-942 (2010); PDF header arXiv:1002.4734v1	OK	doi.org; PDF p.1
+Zhang2010	PAPERS	X	greedy sequentially sampled groups of correlated columns (exp minus chi2_1 pool); AR-type sigma12^{|k-j|} (0.9 and 0.1) in Exp 5	Sec 6.1: pool of 600 columns (exponential minus chi2_1), groups of 10 chosen greedily; Sec 6.4 Exp 5 sigma_jk=sigma12^{|k-j|}, sigma12=0.9 or 0.1	OK	Sec 6.1 pp.27-28; Sec 6.4 pp.29-30
+Zhang2010	PAPERS	n	n=300 (p=200; 2000); n=600 (p=3000)	Exp 1 (n,p)=(300,200); Sec 6 (n,p)=(300,2000) and (600,3000)	OK	Sec 2.2; Sec 6
+Zhang2010	PAPERS	p	max 3000 (Exp 1-2 p=200; Exp 3-4 p=2000; Exp 5 p=3000)	Exp 1-3 p=200/2000; Exp 4 p=2000; Exp 5 p=3000	OK	Sec 2.2; Sec 6
+Zhang2010	PAPERS	s0	d0=10;20;40 (Exp 1); d0=30 (Exp 3-4); 5 blocks of (1,2,3,4,3,2,1) (Exp 5)	Table 1 d0 in {10,20,40}; Exp 4 d0=30; Exp 5 five blocks of beta*(1,2,3,4,3,2,1)	OK	Sec 2.2 Table 1; Sec 6.4
+Zhang2010	PAPERS	beta	beta_j=+-beta* on support; beta*/sigma=1/2 (Exp 1); Exp 5 ||X beta||^2/n=3	Exp 1 beta*/sigma=1/2 (Table 1 text); Exp 5 "beta* sets ||X beta||^2/n=3"; sigma=1 noise	OK	Sec 2.2; Sec 6.4
+Zhang2010	PAPERS	metrics	CS=I(A_hat=A0); PLUS steps k; SE of beta and mu; MSE of sigma-hat; complexity	Table 1 CS, SE_beta, SE_mu; Table 3-4; Figs 5-6 sigma-hat MSE; steps k	OK	Sec 2.2 Table 1; Sec 6
+Zhang2010	REPORT§4	exact recovery list includes Zhang 2010	Zhang 2010 in exact-recovery metric list	CS indicator = exact support recovery (Table 1)	OK	REPORT §4 metrics table
+Zhang2010	REPORT§8	other:citation/DOI	Zhang C-H; Ann Stat 38(2):894-942; 2010; 10.1214/09-AOS729; arXiv:1002.4734	Crossref metadata matches; arXiv id matches	OK	REPORT §8 row 81
+Zhou2013	PAPERS	doi	10.1371/journal.pgen.1003264	Crossref: PLoS Genet 9(2) e1003264 (2013)	OK	doi.org; PMC3567190
+Zhou2013	PAPERS	X	real genotypes ~300,000 SNPs, 3,925 Australians; causal SNPs among typed SNPs	Sec "Simulations: PVE Estimation": real genotypes at about 300,000 SNPs in 3,925 individuals; "run ... with all SNPs, including the simulated causal variants"	OK	Results "Simulations: PVE Estimation"
+Zhou2013	PAPERS	n	3925 (sim and height); 1868 (lipids); ~14000 cases + ~3000 controls (WTCCC); mouse n lost	Results: 3,925 height; 1,868 lipids; "about 14,000 cases ... about 3,000 shared controls"; mouse n absent in extracted text	OK	Results; WTCCC section
+Zhou2013	PAPERS	p	~3e5 sim; ~5.5e5 lipids; ~4.5e5 WTCCC	"about 300,000 typed SNPs"; lipids "about 550,000 SNPs"; WTCCC "about 450,000 SNPs"	OK	Results
+Zhou2013	PAPERS	s0	Scen I 10;100;1000;10000; Scen II 10 or 100 moderate + 10000 small	Table 3-4 settings "10, 100, 1000, 10000" and "10/10000, 100/10000"	OK	Results; Table 4 p.?; Methods
+Zhou2013	PAPERS	beta	Scen I effects N(0,1) on S causal SNPs; Scen II two groups; Gaussian errors for PVE 0.2 and 0.6	"effect sizes coming from a standard normal distribution"; two groups of causal SNPs; PVE=0.6 and 0.2	OK	Results "Simulations: PVE Estimation"
+Zhou2013	PAPERS	metrics	RMSE of PVE; RPG; correlation; AUC and Brier (WTCCC); RMSE (mouse); time	Fig 1 RMSE; Fig 2 RPG; Fig S2 correlation; Fig 3 AUC; Fig S4 Brier; mouse RMSE; Table 3-4 time	OK	Results; Supplement Figs S2, S4
+Zhou2013	PAPERS	other:replicates	20 per setting; WTCCC 20 splits; mouse 40 splits (20 intra, 20 inter)	"20 replicates in each case"; "20 such splits"; "20 intra-family and 20 inter-family splits"	OK	Results; Table 3 note
+Zhou2013	REPORT§3	HS mice row (approx 2,000 mice)	HS mice (Valdar 2006) approx 2,000 (Zhou 2013)	Mouse n stripped from extracted PMC and PLoS text; only "85 families" is visible	UNVERIFIABLE	REPORT §3 real datasets table; Results "Predicting Quantitative Phenotypes in HS mice"
+Zhou2013	REPORT§3	WTCCC row lists Zhou 2013	Zhou 2013 among 6 WTCCC users	WTCCC seven diseases used (Results)	OK	REPORT §3 WTCCC row
+Zhou2013	REPORT§5	Zhou 2013 large-p row	n=3,925; p ~3-5.5e5; s0 10-10^4; PVE 0.2, 0.6	n=3925; p ~3e5 and 5.5e5; Scen I 10-10000 causal; PVE 0.2 and 0.6	OK	REPORT §5B table row
+Zhou2013	REPORT§2	(c) PVE convention list	Zhou 2013 uses PVE with random effects	PVE 0.2 and 0.6 simulations; BSLMM random effects	OK	REPORT §2 Signal conventions (c)
+Zhou2013	REPORT§8	other:citation/DOI	Zhou X; Carbonetto P; Stephens M; PLoS Genet 9(2) e1003264; 2013; 10.1371/journal.pgen.1003264	Crossref metadata matches	OK	REPORT §8 row 82
+Zhou2022	PAPERS	doi	10.1111/rssb.12546; arXiv:2105.05719	Crossref: JRSS-B 84(5) 1751-1784 (2022); PDF header arXiv:2105.05719v3	OK	doi.org; PDF p.1
+Zhou2022	PAPERS	X	Study I iid rows, Sigma_jk=e^{-|j-k|}; Study II block-diagonal d=20 with e^{-|j-k|/3}; GWAS SNP genotypes	Sec 5.1: correlated design Sigma_jk=e^{-|j-k|}; Sec 5.3: Sigma_d blocks with (Sigma_d)_jk=e^{-|j-k|/3}, d=20; Sec 6 GWAS genotypes 0,1,2	OK	Sec 5.1 p.21; Sec 5.3 p.24; Sec 6 p.26
+Zhou2022	PAPERS	n	500;1000;5000 (n=500 p=1000; n=1000 p=5000); GWAS n=5418	Study I (n,p)=(500,1000),(1000,5000); Study II n=1000; GWAS n=5418. The value 5000 is p, not n	MISMATCH	Sec 5.1 p.21; Sec 5.3 p.24; Sec 6
+Zhou2022	PAPERS	p	328129 (GWAS); synthetic max 5000; grid 1e3;5e3;3.3e5	(n,p)=(500,1000),(1000,5000); GWAS p=328,129	OK	Sec 5.1; Sec 6
+Zhou2022	PAPERS	s0	10 (study I, first 10 coords); 100 (study II)	beta*[10] nonzero (Study I); "gamma* uniform among size-100 sets" (Study II)	OK	Sec 5.1; Sec 5.3
+Zhou2022	PAPERS	beta	Study I beta*[10]=SNR*sqrt(log p/n)*(2,-3,2,2,-3,3,-2,3,-2,3), SNR 1,2,3; Study II beta_gamma~N(0,sigma_beta^2 I100), sigma_beta 0.1-0.5	Sec 5.1 same formula with SNR=1,2,3; Sec 5.3 sigma_beta=0.1,...,0.5, multimodality worst at 0.2	OK	Sec 5.1 p.21; Sec 5.3 p.24
+Zhou2022	PAPERS	metrics	MAP success, H_max, wall time, MSE of beta, acceptance, local modes, ESS of T1/T2, ESS/time, PIP	Table 1 Success and Time; Table 2 Local modes; ESS per minute; PIP tables for GWAS	OK	Sec 5.1 Table 1; Sec 5.3 Table 2; Sec 6
+Zhou2022	PAPERS	other:replicates	100 per setting (study I); 20 (study II); 5 runs (GWAS)	"we simulate 100 data sets"; "we simulate 20 data sets"; "for each algorithm, we conduct 5 independent runs"	OK	Sec 5.1; Sec 5.3; Sec 6
+Zhou2022	REPORT§2	AR(1) row, e^{-1}~0.37 (Zhou 2022)	e^{-1}~0.37 (YWJ original, Zhou 2022)	Study I Sigma_jk=e^{-|j-k|}	OK	REPORT §2 AR(1) row
+Zhou2022	REPORT§2	block row d=20	Zhou 2022 (d=20)	Study II d=20 blocks	OK	REPORT §2 Block-diagonal row
+Zhou2022	REPORT§4	time-to-MAP and ESS/time	Zhou 2022 in ESS/time and MAP-hit metrics	Table 1 (H_max, time); ESS(T2)/time in Sec 6	OK	REPORT §4 metrics table
+Zhou2022	REPORT§8	other:citation/DOI	Zhou Q; Yang J; Vats D; Roberts GO; Rosenthal JS; JRSS-B 84(5) 1751-1784; 2022; 10.1111/rssb.12546 (arXiv:2105.05719)	Crossref metadata matches; arXiv id matches	OK	REPORT §8 row 83
+Zhu2017	PAPERS	doi	10.1214/17-AOAS1046	Crossref: Ann Appl Stat 11(3) 1561-1592 (2017)	OK	doi.org; PMC5796536
+Zhu2017	PAPERS	X	WTCCC 1458 UK Blood Service controls; 12,758 SNPs chr16; IL27 region 982 SNPs; LD ref 1480 birth-cohort controls	Sec 4: 1458 individuals; 12,758 SNPs chr16; IL27 982 SNPs; "1480 control individuals in the WTCCC 1958 British Birth Cohort" as reference	OK	Sec 4.1, 4.2 p.?
+Zhu2017	PAPERS	n	1458 (simulations); height GWAS 253,288 (summary)	Sec 4: 1458 individuals; Sec 6 height GWAS N=253,288	OK	Sec 4; Sec 6
+Zhu2017	PAPERS	p	12,758 (chr16); 982 (IL27); ~1.06M height SNPs	12,758; 982; 1,064,575 height SNPs analysed ("~1.06 million")	OK	Sec 4; Sec 6
+Zhu2017	PAPERS	s0	50 causal (scen 1); T=10,100,1000 (+10,000 small) (scen 2); 10 (IL27)	Scen 1.1/1.2 50 causal; Scen 2.1/2.2 T=10,100,1000 with 10,000 small; IL27 10 causal	OK	Sec 4.2 Scenarios 1.1-2.2; Sec 4.1
+Zhu2017	PAPERS	beta	effects N(0,1); polygenic N(0,0.001^2); PVE 0.05-0.5 step 0.05; PVE 0.2 and 0.6; IL27 PVE 0.2 (0.02, 0.002 supp)	N(0,1) for large effects; small N(0,0.001^2) (printed 0.0012); PVE 0.05-0.5 by 0.05; PVE 0.2, 0.6; IL27 PVE 0.2 with 0.02/0.002 in Supp	OK	Sec 4.1-4.2
+Zhu2017	PAPERS	metrics	PVE bias and relative RMSE; expected SNPs (sum of PIPs) agreement; TP vs FP; runtime	Relative RMSE of PVE (Sec 4.2 Fig 3); ENS agreement (Fig 4); TP/FP trade-off; CPU times	OK	Sec 4.2-4.3; Figs 3-4
+Zhu2017	PAPERS	other:replicates	50 per PVE (scen 1); 20 per combination (scen 2); 20 datasets (IL27)	"50 independent replicates for each PVE"; "20 independent replicates"; "20 independent datasets"	OK	Sec 4.2; Sec 4.1
+Zhu2017	REPORT§3	WTCCC row lists Zhu-Stephens 2017	Zhu-Stephens 2017 among WTCCC users	Sec 4 uses WTCCC genotypes	OK	REPORT §3 WTCCC row
+Zhu2017	REPORT§8	other:citation/DOI	Zhu X; Stephens M; AoAS 11(3) 1561-1592; 2017; 10.1214/17-AOAS1046	Crossref metadata matches	OK	REPORT §8 row 84
+Zhu2020	PAPERS	doi	10.1073/pnas.2014241117	Crossref: PNAS 117(52) 33117-33123 (2020)	OK	doi.org; PMC7777147
+Zhu2020	PAPERS	X	AR(1) Sigma_ij=0.5^{|i-j|} (low-dim); high-dim Sigma=I or 0.8 off-diagonal	Sec Simulation: low-dim Sigma_ij=0.5^{|i-j|}; high-dim uncorrelated and constant correlation 0.8	OK	Simulation section; Fig 2
+Zhu2020	PAPERS	n	n=40 or 60 (low-dim); n=500 (high-dim)	low-dim (n,sigma) in {(40,3),(40,1),(60,1)}; high-dim n=500	OK	Simulation section; Table 1; Fig 2
+Zhu2020	PAPERS	p	max 2500 (grid 500;1500;2500); low-dim p=8 (timing 20-40)	High-dim p = 500, 1500, 2500; low-dim p=8; timing p from 20 to 40	OK	Simulation section; Fig 1
+Zhu2020	PAPERS	s0	s=3 (low-dim); s=10 (high-dim: 3 strong, 4 moderate, 3 weak)	low-dim beta has 3 nonzero; high-dim 10 effective variables with 3 strong, 4 moderate, rest weak	OK	Simulation section
+Zhu2020	PAPERS	beta	low-dim beta=(3,1.5,0,0,2,0,0,0); (n,sigma)=(40,3),(40,1),(60,1); high-dim SD 10/5/2 for strong/moderate/weak; sigma^2=1	low-dim beta same; text (n,sigma)=(40,3) etc. but Table 1 labels sigma^2=3; high-dim N(0,SD^2) with SD 10/5/2; sigma^2=1	OK	note: Table 1 labels sigma^2 while text gives sigma; Simulation section
+Zhu2020	PAPERS	metrics	TPR; TNR; relative error ||beta_hat-beta||/||beta||; sparsity-level error; runtime	TPR, TNR, ReErr = ||beta_hat-beta||_2/||beta||_2, SLE = s_hat - s*, runtime	OK	Simulation section; Fig 2
+Zhu2020	PAPERS	other:replicates	100 synthetic datasets	"All simulation results are based on 100 synthetic datasets"	OK	Simulation section
+Zhu2020	REPORT§2	replicates table, best-subset papers = 10	Best-subset papers usually use 10 replicates	Zhu 2020 (best-subset) uses 100 synthetic datasets	MISMATCH	REPORT §2 Replicates table
+Zhu2020	REPORT§2	equicorrelated row, Zhu 2020	Zhu 2020 example of equicorrelated design	High-dim constant correlation 0.8	OK	REPORT §2 Equicorrelated row
+Zhu2020	REPORT§4	l2 error metric, Zhu 2020	Zhu 2020 uses l2 error	ReErr = ||beta_hat-beta||_2/||beta||_2	OK	REPORT §4 metrics table
+Zhu2020	REPORT§8	other:citation/DOI	Zhu J; Wen C; Zhu J; Zhang H; Wang X; PNAS 117(52) 33117-33123; 2020; 10.1073/pnas.2014241117	Crossref metadata matches	OK	REPORT §8 row 85
+Zhu2022abess	PAPERS	doi	arXiv:2110.09697	PDF header arXiv:2110.09697v2 [stat.ML] 17 Jun 2022; author list Jin Zhu, Xueqin Wang, ... matches	OK	PDF p.1
+Zhu2022abess	PAPERS	other:JMLR volume/pages	JMLR 23(202):1-7 (2022)	Journal volume and pages not in the arXiv PDF text; no DOI check possible	UNVERIFIABLE	PDF p.1
+Zhu2022abess	PAPERS	X	real-X+real-y; no simulation study; usage example only	Sec 3 usage example generate.data(n=300,p=1000,...); performance on real data only (Sec 4)	OK	Sec 3 Fig 2 p.3; Sec 4 Tables 2-3
+Zhu2022abess	PAPERS	n	300 (usage example); real 3895; 118; 7074; 217	generate.data(n=300) ; Table 2: 3895, 118, 7074; Table 3: 217 observations	OK	Sec 3 code; Sec 4 Tables 2-3
+Zhu2022abess	PAPERS	p	1000 (example); real up to 85400	generate.data(p=1000); Table 2 superconductivity 3895 x 85400; SPCA 1,413 factors	OK	Sec 3; Sec 4 Tables 2-3
+Zhu2022abess	PAPERS	s0	3 (usage example)	beta=(3,-2,0,0,2,0,...): three nonzero entries	OK	Sec 3 code p.3
+Zhu2022abess	PAPERS	beta	usage example beta=(3,-2,2,0,...); no SNR	beta = c(3,-2,0,0,2,rep(0,995)); no SNR specified	OK	Sec 3 code p.3
+Zhu2022abess	PAPERS	metrics	test MSE; AUC; NNZ; runtime; explained variance (SPCA)	Table 2 MSE, AUC, NNZ, runtime; Table 3 explained variance	OK	Sec 4 Tables 2-3
+Zhu2022abess	PAPERS	other:replicates	20 randomly drawn test sets	"based on 20 randomly drawn test sets" (Table 2)	OK	Table 2 caption
+Zou2006	PAPERS	doi	10.1198/016214506000000735	Crossref: JASA 101(476) 1418-1429 (2006)	OK	doi.org
+Zou2006	PAPERS	X	AR-type (0.5^{|j1-j2|}) in Model 1-2; Model 0 C matrix with rho1=-0.39, rho2=0.23; logistic corr 0.75	Sec 4 Model 0: C with rho1=-.39, rho2=.23; Models 1-2 corr=(.5)^{|j1-j2|}; logistic rho=.75 (Hunter-Li model)	OK	Sec 4 Numerical experiments; logistic example
+Zou2006	PAPERS	n	n=60 or 120 (Model 0); 20 or 60 (Model 1); 40 or 80 (Model 2); 200 (logistic); test 10000	Table 1 Model 0 has three settings: (n,sigma)=(60,9),(120,5),(300,3); Model 1 n=20,60; Model 2 n=40,80; logistic n=200; test sets 10,000	MISMATCH	Sec 4 Table 1; omits n=300 (largest n)
+Zou2006	PAPERS	p	9 (logistic); 8 (Models 1-2); 4 (Model 0)	Model 0 4 predictors; Models 1-2 8; logistic 9	OK	Sec 4 Model 0-2; logistic example
+Zou2006	PAPERS	s0	Model 0 s=3; Model 1 s=3; Model 2 s=8; logistic s=3	Model 0 beta=(5.6,5.6,5.6,0); Model 1 (3,1.5,0,0,2,0,0,0); Model 2 0.85 x 8; logistic (3,0,0,1.5,0,0,7,0,0)	OK	Sec 4 Models 0-2; logistic example
+Zou2006	PAPERS	beta	Model 1 sigma=1,3,6 SNR ~21.25,2.35,0.59; Model 2 SNR 14.46,1.61,0.40; Model 0 sigma 9,5 with n 60,120	Model 1 SNR "about 21.25, 2.35, and .59"; Model 2 SNR 14.46, 1.61, .40; Model 0 sigma per Table 1 (9,5,3)	OK	Sec 4 Models 1-2; Table 1
+Zou2006	PAPERS	metrics	prob. solution path contains true model; RPE; median number selected; misclassification RPE; SE of adaptive lasso	Table 1 probability; RPE E[(yhat-x beta)^2]/sigma^2 in Table 2; Table 3 median number selected; Table 4 SE; logistic RPE of classifier	OK	Sec 4 Tables 1-4; logistic example
+Zou2006	PAPERS	other:replicates	100 datasets per setting	"we simulated 100 training datasets for each combination"; logistic "100 datasets"	OK	Sec 4
+Zou2006	REPORT§2	adversarial row, Zou 2006 Model 0	Zou 2006 Model 0 listed as adversarial design	Model 0 built so lasso path is inconsistent (Corollary 1)	OK	REPORT §2 Adversarial row
+Zou2006	REPORT§8	other:citation/DOI	Zou H; JASA 101(476) 1418-1429; 2006; 10.1198/016214506000000735	Crossref metadata matches	OK	REPORT §8 row 87
+Zou2022	PAPERS	doi	10.1371/journal.pgen.1010299	Crossref: PLoS Genet 18(7) e1010299 (2022)	OK	doi.org; PMC9337707
+Zou2022	PAPERS	X	UKB imputed genotypes; 200 regions ~1000 SNPs (390 kb); X from 50,000 UKB samples; LD in-sample or out-of-sample panels 500/1000	Results "Simulations using UK Biobank genotypes": 200 regions of ~1000 SNPs (390 kb avg); X = 50,000 random UKB samples; reference panels of 500 or 1000	OK	Results pp.? (Simulations); Methods
+Zou2022	PAPERS	n	50,000 (PVE 0.5%); 2,500 (PVE 10%); 800 (PVE 30%)	N=50,000 main; "N = 2,500 and N = 800" for PVE 10% and 30%	OK	Results "Fine-mapping causal SNPs with larger effects"
+Zou2022	PAPERS	p	about 1000 per region (390 kb)	"each region contained roughly 1,000 SNPs (390 kb on average)"	OK	Results
+Zou2022	PAPERS	s0	1;2;3 causal	"1, 2 or 3 causal variants"	OK	Results
+Zou2022	PAPERS	beta	total PVE 0.5% (main), 10% (N=2500), 30% (N=800); model (1) effects	"total PVE of 0.5%"; PVE 10% and 30% with N=2,500 and N=800	OK	Results
+Zou2022	PAPERS	metrics	power vs FDR (PIP threshold); 95% CS coverage; CS power; median CS size; purity; runtime	Figs 3-6 power vs FDR; CS coverage, power, median size, median purity; Table 2 runtimes	OK	Results; Table 2
+Zou2022	PAPERS	other:replicates	200 regions x 3 values of S = 600 datasets per PVE setting	"200 x 3 = 600 data sets"	OK	Results
+Zou2022	REPORT§3	UKB row lists Zou 2022	Zou 2022 among UK Biobank users	Results: UK Biobank genotypes	OK	REPORT §3 UK Biobank row
+Zou2022	REPORT§4	CS coverage list includes Zou 2022	Zou 2022 among CS coverage/size/purity users	Results: CS coverage, size, purity	OK	REPORT §4 metrics table
+Zou2022	REPORT§8	other:citation/DOI	Zou Y; Carbonetto P; Wang G; Stephens M; PLoS Genet 18(7) e1010299; 2022; 10.1371/journal.pgen.1010299	Crossref metadata matches	OK	REPORT §8 row 88
+ZouHastie2005	PAPERS	doi	10.1111/j.1467-9868.2005.00503.x	Crossref: JRSS-B 67(2) 301-320 (2005)	OK	doi.org; course-hosted PDF
+ZouHastie2005	PAPERS	X	Ex1-2 corr 0.5^{|i-j|}; Ex3 equicorrelated 0.5; Ex4 three latent factors Z plus noise sd 0.1; 25 noise predictors	Sec 5 (a) corr 0.5^{|i-j|}; (c) corr 0.5 for all i,j; (d) X_i=Z_g+eps_i, eps ~ N(0,0.01), 25 iid noise predictors	OK	Sec 5 examples (a)-(d), pp.312-313
+ZouHastie2005	PAPERS	n	20/20/200 (Ex1-2); 100/100/400 (Ex3); 50/50/400 (Ex4); idealised n=100; leukaemia 72	Sec 5 (a) 20/20/200; (c) 100/100/400; (d) 50/50/400; idealised n=100; leukaemia 72 samples (38 train, 34 test)	OK	Sec 5 p.312-314
+ZouHastie2005	PAPERS	p	8 (Ex1-2); 40 (Ex3-4); leukaemia 7129	Ex1-2 eight predictors; Ex3-4 40; leukaemia 7129 genes	OK	Sec 5; leukaemia section p.314
+ZouHastie2005	PAPERS	s0	Ex1 s=3; Ex2 s=8; Ex3 s=20; Ex4 s=15	Ex1 (3,1.5,0,0,2,0,0,0); Ex2 0.85 x 8; Ex3 20 nonzero (blocks of 10 twos); Ex4 15 nonzero (3 each)	OK	Sec 5 (a)-(d)
+ZouHastie2005	PAPERS	beta	Ex1 sigma=3; Ex2 beta=0.85 sigma=3; Ex3 blocks (0,2,0,2) sigma=15; Ex4 beta=3 on 15 predictors sigma=15	Ex1 sigma=3; Ex2 beta_j=0.85 sigma=3; Ex3 blocks of 0s and 2s, sigma=15; Ex4 beta=(3 x 15, 0 x 25), sigma=15	OK	Sec 5 (a)-(d)
+ZouHastie2005	PAPERS	metrics	median test MSE; number selected (grouping); solution paths	Table 2 median MSE over 50 replications; number of selected variables; Fig 4 solution paths	OK	Sec 5 Table 2; Sec 5 grouping discussion
+ZouHastie2005	PAPERS	other:replicates	50 data sets per example	"we simulated 50 data sets" (Ex1, Ex3, Ex4); Table 2 "based on 50 replications"	OK	Sec 5 (a)-(d)
+ZouHastie2005	REPORT§2	Factor row, Zou-Hastie 2005	Factor design with 3 latent factors (Zou-Hastie 2005)	Ex4 three latent groups	OK	REPORT §2 Factor row
+ZouHastie2005	REPORT§3	leukaemia row lists Zou-Hastie 2005	Zou-Hastie 2005 among leukaemia users (7129 genes, 72 samples)	7129 genes; 72 samples	OK	REPORT §3 Leukemia row
+ZouHastie2005	REPORT§8	other:citation/DOI	Zou H; Hastie T; JRSS-B 67(2) 301-320; 2005; 10.1111/j.1467-9868.2005.00503.x	Crossref metadata matches	OK	REPORT §8 row 89

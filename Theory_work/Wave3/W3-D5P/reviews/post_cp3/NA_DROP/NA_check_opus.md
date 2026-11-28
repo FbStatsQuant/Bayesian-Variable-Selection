@@ -1,0 +1,47 @@
+# NA_DROP statement-change check (Claude Opus 5.5, effort high, fresh, read-only) — reply verbatim
+<!-- received 2026-11-17 via delegate_task; Claude Personal; brief BRIEF_NA_check_opus.md; change at 19c0e4b7 -->
+
+I ran no write commands and left git state unchanged. I read the brief and everything in it except `LOG.md`, `CHECKPOINT_*`, other reviews and `reviews/R3r_correction.patch`. That covers the patch, `CHANGE.md`, both drafts, the current `STATEMENT.md`, `lemmas/L2_listCODE.md`, `lemmas/L3_listR.md`, SPEC carrier §4, and RM2R `STATEMENT.md:144-163`. I also read the cited code: `v3_fit.R:70-174`, `v3_preprocess.R:95-130`, `v3_exact.R:1-19`, `cpp/v3_core.cpp:524-568` and `cpp/v3_score.h:35-75, 180-240`.
+
+**Integrity check.** The drafts match `NA_DROP_expected_sha256.txt`: STATEMENT is `1eae14ea…` and L3 is `87beaeff…`. `diff` of each current file against its draft shows exactly the STATEMENT and L3 hunks in the patch. I did not run the REPORT, CARD and READER_DELTA hunks through `git apply`, because they sit on top of R3r. I read them as text only.
+
+## Findings
+
+Severity: C = critical (a claim is false or unproved), S = substantive, F = must fix before applying (minor), E = editorial.
+
+| # | Where | Sev | Finding | Fix |
+|---|---|---|---|---|
+| NA-C1 | `STATEMENT_v1.2_draft.md:104`, the label of (o). The same wording appears in the changelog row (`:167`) and in the L3 Step 0′ heading (`L3_listR_v1.2_draft.md:44`). | **F** | The label "*No field is NA*" sits inside the claim span, and read literally it is false. On an exact-branch output run the fit keeps `cut_group = NA` and `cut_group_count = NA_integer_`: they are set at `v3_fit.R:77`, only assigned on the sampler branch (`:142`), and the exact branch returns at `:131`. Step 0′ proves something narrower: the three list fields are not NA. It proves nothing about `list_size`, `list_full` or `pip_list_flag`. | Rename to "*No list field is NA*" or "*The list fields are never NA*" in all three places. The body of (o) is correct as written. |
+| NA-C2 | `L3_listR_v1.2_draft.md:45` | **F** | "Fix any data set (valid, non-degenerate: the input of an output run)" makes an unproved claim. DLV-0 gives "non-degenerate ⇒ output" (RM2R `:144-147`), not the converse. It also seems to narrow the proof to non-degenerate inputs, while (o) says "for every data set". The proof never uses non-degeneracy; it only needs yᵀy > 0, which comes from the code. | Replace with "Fix any data set and an admissible run on it that returns output." |
+| NA-C3 | `REPORT.md:9, 10, 11, 17-19, 39, 50, 63` and the IMPL-LIST entry in the `assumptions:` line (`:65`) | **F** | v1.2 adds one line in §1 (line 56 becomes 56-57) and two lines in (C3). After applying, the pointers are stale. In the draft, (C3) is `:100-128` (was 99-125). The premises are `:29-64` and IMPL-LIST is `:60-64` (was 59-63). LIST-K is `:68-76`, LIST-CODE is `:80-96`, and the links are `:83-89`. Separately, the IMPL-LIST assumption text in the registry ("computed as SPEC_LIST_PIP §2 and §4 prescribe…") does not carry the new reading [NA-1]. Its status line still credits only LC1 and LC1R, which never checked Step 0′. I could not see whether R3r already fixes any of this. | Update the pointers in the REPORT hunk. Add "exact-branch row: log_Z_list from fit$exact$top [NA-1]" to the A:IMPL-LIST entry. Add "Step 0′ (v1.2) checked by NA_check_opus" to the LIST-R status. |
+| NA-C4 | Changelog `STATEMENT_v1.2_draft.md:167` ("Premise: EQUAL") | **S** (disclosure) | Under v1.1.2, an implementation that read "the store" as `fit$top_store` (not returned on the exact branch) and printed NA there conformed to IMPL-LIST. v1.2 rules that implementation out. So the premise is EQUAL only because HQ's reading is authoritative; as text, IMPL-LIST is narrower. The code supports reading (1): `fit$exact <- e` (`v3_fit.R:122`) always carries `top = store_to_list(top, D)` (`cpp/v3_core.cpp:565`). IMPL-LIST's "changes no other field" keeps it, so on every exact output run the store *is* returned. | Keep EQUAL, but add a disclosure to the tag cell: "EQUAL under SPEC owner's (HQ) reading; `fit$exact$top` is always returned at the pin (`v3_fit.R:122`, `v3_core.cpp:565`); an implementation printing NA on the exact branch no longer satisfies IMPL-LIST — verified at the code-read." |
+| NA-C5 | `L3_listR_v1.2_draft.md:46-55` (Step 0′, exact branch) | E | Step 0′ argues the SPEC rows away, but never says that `pip_list := pip_primary` and `mpm_list := mpm` are themselves not NA on the exact branch. It follows from L2 (iv): `pip_primary` = PIP, `mpm` = MPM, both real. | Add: "on the exact branch `pip_list` = `pip_primary` = PIP and `mpm_list` = `mpm` = MPM (L2 (iv)), real-valued under EX-A." |
+| NA-C6 | `L3_listR_v1.2_draft.md:52-54` | E | Two citations are imprecise. (a) For yᵀy > 0, the constant-y test is `v3_preprocess.R:115` (`all(y == y[1])`); `v3_fit.R:99-102` only routes the status. The scorer's yᵀy uses the standardised y (`v3_preprocess.R:123`, `cpp/v3_score.h:56`), which is nonzero when the raw y is non-constant. (b) "ϖ(k) > 0" should cite `cpp/v3_score.h:60-70`: `logprior[k] = −ln2 − lchoose(2p−1, k) − logW_K` is finite for 0 ≤ k ≤ K. | Add the two citations. |
+| NA-C7 | `L3_listR_v1.2_draft.md:71, 77` | E | Step 1 still argues "not NA" for the sampler branch only. On the exact branch it now relies silently on Step 0′. | Write "(not NA by Step 0′)" in both branch paragraphs. The sampler sentence can then be shortened. |
+| NA-C8 | `L3_listR_v1.2_draft.md:110` (Step 3) | E | X_n := ½\|log_Z_list − log Z\| is defined only on 𝒪. The old "0 otherwise" covered NA, not 𝒪ᶜ. This does not matter under (D), since P(𝒪ᶜ) = 0, and B₁ and B₂ always had the same gap. | Optional: add "(X_n := 0 on 𝒪ᶜ, a null event under (D))". |
+| NA-C9 | READER_DELTA hunk ("…the evidence of the enumeration's list; none of the three is ever missing on a run that produces output") | E | Placed in the exact-enumeration sentence, the "never missing" clause reads as exact-only. (o) covers both branches. | Make it its own sentence: "On either branch, every run that produces output prints all three." |
+
+## Verdicts by question
+
+1. **Is (o) true and proved by Step 0′? Yes, once NA-C1 and NA-C2 are fixed.**
+   - **The NA rows.** SPEC §4's NA and absent rows are: a non-output status; an empty list; a duplicate model; a NaN or +Inf score; the exact-branch store missing; and, under reading (2), all scores −Inf. Step 0′ lists them all.
+   - **Nonempty lists.** On the sampler branch, ∅ ∈ 𝓜^run (L2 A4) and the hpm_better-maximum is in 𝒯 (L2 (iii)). On the exact branch, the maximum over Ω is in 𝒯^ex (L2 (iv)). The cap is at least 41 because p_ret ≥ 1.
+   - **No duplicates.** The duplicate row is excluded by (0.5) and L2 D2.
+   - **Finite scores.** Lemma S.2 (RM2R `:151-152`) applies with yᵀy > 0, and the size prior is finite. As corroboration, `Scorer::score` returns only a finite log m or throws `NumericalFailure` (`v3_score.h:187, 201, 231-237`), which ends the run with a non-output status. For ∅, log m₀ is finite because b₀ = 0.01 > 0.
+   - **Reading (1)** removes the exact-branch row. The log-sum-exp bound (finite maximum, sum in [1, \|𝒯\|]) is right, and it even holds in floating point.
+   - **Delivery event.** Under (D) every run outputs, so HQ's condition ("provably never NA on the delivery event") is met; in fact (o) holds on every output run.
+2. **Are all the qualifier removals justified? Yes.**
+   - (C3)(i): on 𝒢⁺_n, Step 1 now has log_Z_list = logZ_{𝒯^ex} on the exact branch (by NA-1), and LIST-K (d) applies.
+   - Dropping "when returned" for 𝒯^ex holds even at the pin (`v3_fit.R:122`).
+   - B₃ (old and new agree on 𝒪 given (o)), the (ii) rate display, Steps 2–3 and (iii): each depends only on Step 1 bounds that now hold on every output run.
+3. **Is the IMPL-LIST edit faithful to SPEC §4 under reading (1)? Yes.** `pip_list` = `pip_primary` = `e$pip` (`v3_fit.R:127`), which is the enumeration PIPs. `log_Z_list` comes from `fit$exact$top` (`v3_core.cpp:565`), and the SPEC §2 formula applied to that store gives logZ_{𝒯^ex} under EX-A. Adding `list_size` and `list_full` is harmless; the claim says nothing about them.
+   - **Reading (2) conflicts with no LIST-CODE clause (i)–(v).** LIST-CODE says the values are F(S) and makes no finiteness claim. Finiteness comes from Lemma S.2, so the all-−Inf row cannot fire on an output run.
+   - The tag needs the disclosure in NA-C4.
+4. **Are the tags right? Yes, with NA-C4.** The conclusions are **STRONGER**: (o) is new, and the evidence clauses now hold on every output run. (o) is a new clause of LIST-R, not a new claim id, so STRONGER fits rather than NEW-CLAIM. The premise is **EQUAL** only under HQ's authoritative reading; as text it is narrower, and the row should say so.
+5. **Are the derived texts faithful to v1.2? Mostly.**
+   - CARD (both options) is faithful.
+   - REPORT's conclusion and rate lines are faithful. Its line pointers, A:IMPL-LIST entry and status line are not (NA-C3).
+   - READER_DELTA is faithful apart from placement (NA-C9).
+6. **Is any interpretive sentence in a claim span unproved? Yes, one:** the label "*No field is NA*" (NA-C1). The NA-1 provenance note ("the reading HQ confirmed…") is in §1, among the premises, outside the (C3) span; it is acceptable there. No other unproved interpretive text found in (C3).
+
+NA-CHECK: ACCEPT-WITH-CHANGES

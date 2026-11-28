@@ -1,0 +1,31 @@
+id	paper_key	method_key	claimed	verdict	location	evidence
+W01	Bottolo2010	SSS	competitor	OK	App B.3 (Performance of ESSi and comparison with SSS); Sec 4.2	All the examples were run in parallel with ESSi and SSS 2.0 (Hans et al., 2007)
+W02	GarciaDonato2013	BAS	competitor	OK	Sec 4 (simulation comparison, Table 2); p.12-13	BAS Bayesian adaptive sampling of Clyde et al. (2010)
+W03	Hahn2015	BAS	competitor	MISMATCH	Sec 4 diabetes example (claimed: US crime Table 1, which has no BAS column); reference check only, not a competitor run	as well as the HPM and MPM given by BAS) coincide with the DSS summary model; Table 1 columns are DSS-HS, DSS-Robust, DSS-g-prior, MPM (Robust), MPM (g-prior)
+W04	Ma2015	BAS	competitor	OK	Sec 3 Numerical examples (PIP comparison, p=1000 case)	For comparison, we apply another method, BAS, to estimate the PIPs
+W05	Chen2016	EMVS	competitor	OK	Sec 4.2 Simulated examples (Tables 1-5)	R packages glmnet, parcor, ncvreg and EMVS are used for Lasso, adaptive lasso
+W06	Rockova2018	EMVS	competitor	MISMATCH	Sec 4.1 Table 1 (EMVS column is the paper's own EM variant of the SSL penalty, role variant; no comparison row in Sec 5.1)	Table 1: Two variants of the Spike-and-Slab LASSO procedure; The EMVS implementation with a Laplace mixture has
+W07	Shin2018	SSS	competitor	OK	Sec 7.3 Performance comparisons between S5 and SSS (Appendix; claimed Sec 3.2)	Performance comparisons between S5 and SSS
+W08	Deshpande2019	SSLASSO	competitor	OK	Sec 3.1 Tables 1-4, SEP.SSL+SSG rows (claimed Sec 3.2)	Sep.SSL + SSG: We first estimate B column-by-column, deploying Ročková and George
+W09	Narisetty2019	BASAD	competitor	OK	Sec 4 simulation study, Tables 1-3	We report the results from the usual Gibbs sampler described in Subsection 2.2 (BASAD)
+W10	Narisetty2019	VARBVS	competitor	OK	Sec 4 simulation study, Tables 1-3	we choose the recent R package varbvs for implementation
+W11	Zanella2019	HBS	competitor	OK	Sec 5 real-data comparison, Fig. 6	Comparison of GS, HBS and wTGS (columns) on three real datasets
+W12	Ray2020	SKINNY	competitor	OK	Sec 5 Numerical study, Table 1	We also compare our approach with the varbvs [10], SkinnyGibbs [32], BinaryEMVS
+W13	Ray2020	VARBVS	competitor	OK	Sec 5 Numerical study, Table 1	We also compare our approach with the varbvs [10]
+W14	Weissbrod2020	SUSIE	competitor	UNVERIFIABLE	Results: main simulations, Table 1 (not reachable)	Only abstract and figure legends retrievable from nature.com (doi); Fig. 1 legend: Calibration, power and computational cost of fine-mapping methods in main simulations; Table 1 text and Results section absent; Europe PMC unreachable; no arXiv copy
+W15	Griffin2021	PT	competitor	OK	Sec 4.3 (boston/concrete/protein; Figs 4-6)	we also consider parallel tempering versions of the first three algorithms
+W16	Griffin2021	SMC_SC	competitor	OK	Sec 4.3 (Figs 4-6)	the sequential Monte Carlo algorithm of Schäfer and Chopin (2013)
+W17	Biswas2022	SKINNY	competitor	OK	Sec 3 comparisons (Figs 2-4; Appendix B.3 cost)	the Skinny Gibbs sampler for 1000 iterations
+W18	Liang2022	ASI	competitor	OK	Sec 5.1 Simulated data (Table 1; Fig 4 trace plots); Sec 5.2 real data (Table 3)	We are interested in comparing the performance of the ASI and PARNI schemes relative to an Add-
+W19	Ray2022	EMVS	competitor	OK	Sec 5.2 Table 2; Supp	EMVS R-package (an expectation-maximization algorithm for spike-and-slab
+W20	Ray2022	SSLASSO	competitor	OK	Sec 5.2 Table 2; Supp	SSLASSO R-package (spike-and-slab LASSO [39])
+W21	Ray2022	VARBVS	competitor	OK	Sec 5.2 Table 2; Supp	We consider the varbvs
+W22	Jankowiak2023	TGS	competitor	MISMATCH	Sec 7.3 cancer data (PG-TGS is an ablation of the paper's own PG-wTGS, role variant)	we consider two variants, PG-TGS and PG-wGS, which do without weighting by η(γ−j , ω) and tempering
+W23	Jankowiak2023	WTGS	competitor	OK	Sec 7.1 Subset wTGS performance for large P, Fig 2	By contrast wTGS does not scale
+W24	Mazumder2023	SSLASSO	competitor	OK	Sec 5.1 Synthetic datasets, Fig 4 (also App C.2 Fig 8)	for SSL, we used R package SSLASSO
+W25	Truong2023	WTGS	competitor	OK	Sec 4 Experiments, Fig 5 (subset wTGS [11] vs VC-wTGS; Jankowiak subset variant mapped to WTGS)	Fig. 5 shows that VC-wTGS outperforms subset wTGS [11] at high values
+W26	Kim2024	SSLASSO	competitor	OK	Sec 5.1 Methods Compared table and results figures	the Spike-and-Slab Lasso (SSLasso) and the Trimmed Lasso are
+W27	Kim2024	SUSIE	competitor	OK	Sec 5.1 Methods Compared table and results figures	L0Learn (Hazimeh and Mazumder, 2020) and SuSiE (Wang et al., 2020) are better
+W28	Kim2024	VARBVS	competitor	OK	Sec 5.1 Methods Compared table and results figures	Compared to varbvs, Mr.ASH features a more flexible prior
+W29	Staerk2024	WTGS	competitor	OK	Sec 5.2 Low-dimensional simulation study, Fig 3 (paper's own method is MAdaSub)	adaptive weighted Tempered Gibbs Sampler based on weighted frequency estimates (wTGS)
+W30	Yang2025	SUSIE	competitor	MISMATCH	Sec 3.4 (the paper's own SuSiE-RSS-based approach, role variant); Sec 5 simulations; Wang et al. (2020) SuSiE itself not run	Another approach we considered built on the “SuSiE-RSS” method from Zou et al. (2022).

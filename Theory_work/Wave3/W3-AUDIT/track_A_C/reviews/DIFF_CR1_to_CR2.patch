@@ -1,0 +1,190 @@
+diff --git a/Theory_work/Wave3/W3-AUDIT/track_A_C/C1_AUDITS/CHECK.md b/Theory_work/Wave3/W3-AUDIT/track_A_C/C1_AUDITS/CHECK.md
+index 5d22fe46..6ff68716 100644
+--- a/Theory_work/Wave3/W3-AUDIT/track_A_C/C1_AUDITS/CHECK.md
++++ b/Theory_work/Wave3/W3-AUDIT/track_A_C/C1_AUDITS/CHECK.md
+@@ -16,7 +16,12 @@ Code of record: `Scripts/SMC_BVS/core/` at 4676af6 (= HEAD for the core).
+ | 3 line check | Claude stand-in (blind) | CLC1 **NOT VERIFIED** (1 C, 1 S, 3 E) → all accepted, v2 | `../reviews/CLC1_reply_opus.md`, `CLC1_disposition.md` |
+ | 3 line check (Sol) | Sol | **VERIFIED WITH AMENDMENTS** (2 E, applied, PROOF v2.1); A7-complete = yes; DLV0-E2-excludes = yes | `../reviews/CSL1_reply_sol.md` |
+ | 6 citation check | script | **0 bad** (225 citations) | `CITECHECK.txt` |
+-| 7 council C-R1 | Sol + Opus, blind | pending (manager GO) | `../reviews/` |
++| 7 council C-R1 | Sol + Opus, blind | MANIFEST 221ca4e1: Sol 9.3 PASS (no findings); Opus 8.5 FAIL (1 F: A4's two terms; 6 E) → all applied (STATEMENT v2.1, PROOF v2.2) | `../reviews/CR1_council_{sol,opus}.md`, `CR1_disposition.md` |
++| 7 diff round C-R2 | Opus (D91: diff-only re-check) | pending | `../reviews/MANIFEST_CR2.txt`, `DIFF_CR1_to_CR2.patch` |
+ 
+ Reuse: T10 (`Theory_work/Wave3/W3-AUDIT/track_A/T10_P1S3/`, council-bound R2) for the re-located map and S.3 steps.
++**Note for the `C-DLV:L1-R` / `:Cor-R` / FIN M_G owners (C-R1 Opus E5; not C1's claim):** at the pin the SMC branch
++builds a second (timing) context in the LS0 preflight (`v3_fit.R:12` via `v3_fit.R:47`), m = min(p, max(64, K)) columns,
++so an m × m Gram and an n × m copy (`cpp/v3_score.h:41-52`); m can be about n/2. An X5 instance (coverage unaffected);
++whether the word/memory envelopes count it on the SMC branch is for those owners.
+ Lean target: no.
+diff --git a/Theory_work/Wave3/W3-AUDIT/track_A_C/C1_AUDITS/CITECHECK.txt b/Theory_work/Wave3/W3-AUDIT/track_A_C/C1_AUDITS/CITECHECK.txt
+index 846aa81e..22fa917f 100644
+--- a/Theory_work/Wave3/W3-AUDIT/track_A_C/C1_AUDITS/CITECHECK.txt
++++ b/Theory_work/Wave3/W3-AUDIT/track_A_C/C1_AUDITS/CITECHECK.txt
+@@ -14,6 +14,7 @@ OK            [STATEMENT.md] cpp/v3_start.h:272-272 sha=7a6fb31f17 | if (tie_dp
+ OK            [STATEMENT.md] cpp/v3_core.cpp:18-18 sha=cb5fa3fa29 | stop("object has no C++ pointer (ptr)");
+ OK            [STATEMENT.md] cpp/v3_core.cpp:480-480 sha=3fe6e0943e | if (E.guard && E.guard->check(sec_ls0, "ls0", local_event(o.tier, -1, PH_LS0))) status = "resource_limit";
+ OK            [STATEMENT.md] v3_calib.R:170-170 sha=0afbed03df | if (status == "ok" && is.null(last$grid)) status <- if (e == 1) "schedule_limit" else "grid_failure_no_escalat
++OK            [STATEMENT.md] Theory_work/Wave1C/FINAL/sections/s6_delivery.tex:37-44 sha=955eed009e | \texttt{allocation\$mem\_gb} $\ge\mathrm{mem}_n/2^{30}$, \texttt{allocation\$hours} $\ge\mathrm{time}_n/3600$,
+ OK            [STATEMENT.md] cpp/v3_core.cpp:480-480 sha=3fe6e0943e | if (E.guard && E.guard->check(sec_ls0, "ls0", local_event(o.tier, -1, PH_LS0))) status = "resource_limit";
+ OK            [STATEMENT.md] Theory_work/Wave1C/C-DLV/INVENTORY.md:80-81 sha=fe5fed41fa | Under (d)-premises EX-A, IDEAL-W, MACH and valid declared inputs, and after additionally excluding the shipped
+ OK            [STATEMENT.md] v3_calib.R:122-125 sha=4501bbf810 | if (isTRUE(grid_fallback) && trig$grid_failure && tier == 1) {   # tier 0 failures escalate as in v3
+@@ -21,10 +22,12 @@ OK            [STATEMENT.md] v3_calib.R:163-170 sha=af82929290 | if (status == "
+ OK            [STATEMENT.md] Theory_work/State_of_Project/sections/02_method.tex:189-192 sha=2db75e8430 | \item \textbf{Cut:} top-down from the root; any node with more than $B$ members is split into its two children
+ OK            [STATEMENT.md] v3_preprocess.R:99-107 sha=39b58e4bbe | if (!is.matrix(X) || !is.numeric(X) || !typeof(X) %in% c("integer", "double"))
+ OK            [STATEMENT.md] v3_fit.R:114-117 sha=a671f24bad | ls0_wc <- isTRUE(ls0) && !identical(getOption("v3.ls0_cap", "ell_n_plus_mode"), "ell_n")
+-OK            [STATEMENT.md] v3_fit.R:144-148 sha=a013da5a09 | pf_fun <- function(e) {
+-OK            [STATEMENT.md] v3_calib.R:157-157 sha=382f59a78e | if (!is.null(preflight) && isTRUE(preflight(1))) { status <- "resource_limit"; blocked <- "resource_limit"; br
+ OK            [STATEMENT.md] v3_fit.R:43-47 sha=5a8a22a0fa | if (isTRUE(ls0_worst_case)) {
+ OK            [STATEMENT.md] v3_fit.R:61-66 sha=6987ee1faa | if (branch != "exact" && isTRUE(ls0_worst_case)) {
++OK            [STATEMENT.md] v3_fit.R:117-117 sha=9b407003b8 | if (pf$exceeds) { fit$status <- "resource_limit"; return(finish(fit)) }
++OK            [STATEMENT.md] v3_fit.R:144-148 sha=a013da5a09 | pf_fun <- function(e) {
++OK            [STATEMENT.md] v3_calib.R:157-157 sha=382f59a78e | if (!is.null(preflight) && isTRUE(preflight(1))) { status <- "resource_limit"; blocked <- "resource_limit"; br
++OK            [STATEMENT.md] Theory_work/Wave1C/FINAL/sections/s6_delivery.tex:37-44 sha=955eed009e | \texttt{allocation\$mem\_gb} $\ge\mathrm{mem}_n/2^{30}$, \texttt{allocation\$hours} $\ge\mathrm{time}_n/3600$,
+ OK            [STATEMENT.md] cpp/v3_core.cpp:209-209 sha=51932e648e | try { check_blocks(st.blocks); } catch (...) { delete g; throw; }
+ OK            [PROOF.md] v3_fit.R:76-78 sha=41fa37dc9c | fit <- list(seed = seed, allocation = allocation, local_certified = FALSE, global_certified = FALSE,
+ OK            [PROOF.md] v3_fit.R:129-129 sha=3977b0a4d4 | fit$estimates_available <- TRUE
+@@ -37,7 +40,7 @@ OK            [PROOF.md] v3_run.R:110-114 sha=576f726c9c | v3_unavailable_estima
+ OK            [PROOF.md] v3_fit.R:89-89 sha=7fba198a38 | if (!isTRUE(valid_seed)) { fit$status <- "invalid_input"; fit$message <- valid_seed; return(finish(fit)) }
+ OK            [PROOF.md] v3_fit.R:88-88 sha=f2c1ed5150 | valid_seed <- tryCatch({ if (length(seed) != 1) stop("seed must be a single integer"); v3_check_seed(seed); TR
+ OK            [PROOF.md] v3_fit.R:99-103 sha=017e556e30 | if (pre$status != "ok") {
+-OK            [PROOF.md] v3_preprocess.R:98-107 sha=6805499040 | bad <- function(reason) list(status = "invalid_input", reason = reason)
++OK            [PROOF.md] v3_preprocess.R:99-107 sha=39b58e4bbe | if (!is.matrix(X) || !is.numeric(X) || !typeof(X) %in% c("integer", "double"))
+ OK            [PROOF.md(cont)] v3_preprocess.R:114-114 sha=9450fa0e89 | if (!length(kept)) return(c(list(status = "no_predictors", hpm = integer(0)), base))
+ OK            [PROOF.md(cont)] v3_preprocess.R:115-115 sha=13b4b3fc77 | if (all(y == y[1])) return(c(list(status = "y_constant", hpm = integer(0)), base))
+ OK            [PROOF.md] v3_fit.R:117-117 sha=9b407003b8 | if (pf$exceeds) { fit$status <- "resource_limit"; return(finish(fit)) }
+@@ -222,7 +225,8 @@ OK            [PROOF.md] cpp/v3_core.cpp:469-469 sha=35f7274942 | ModeResult m =
+ OK            [PROOF.md(cont)] cpp/v3_core.cpp:272-272 sha=805c1dad38 | List cpp_setup(SEXP ctx, int B) {
+ OK            [PROOF.md(cont)] cpp/v3_core.cpp:261-261 sha=051a40e1a1 | _["log_gamma0"] = D.logprior[s.size()] + c, _["log_pi0"] = D.logprior[s.size()] + c - h->st->logZbar0);
+ OK            [PROOF.md] cpp/v3_core.cpp:92-92 sha=e7fbc12288 | int n = X.nrow(), p = X.ncol();
++OK            [PROOF.md] Theory_work/Wave1C/FINAL/sections/s6_delivery.tex:37-44 sha=955eed009e | \texttt{allocation\$mem\_gb} $\ge\mathrm{mem}_n/2^{30}$, \texttt{allocation\$hours} $\ge\mathrm{time}_n/3600$,
+ OK            [PROOF.md] Theory_work/Wave1C/C-DLV/STATEMENT.md:54-56 sha=da460f059c | **(P2) Lemma R** (L1; uses TDP-IMPL): for valid inputs (n ≥ 3, raw dimension p_raw), every seed and uniform re
+ 
+-225 citations: 225 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
++229 citations: 229 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+ Not machine-checked: unbackticked references and the semantic match of each excerpt.
+diff --git a/Theory_work/Wave3/W3-AUDIT/track_A_C/C1_AUDITS/PROOF.md b/Theory_work/Wave3/W3-AUDIT/track_A_C/C1_AUDITS/PROOF.md
+index 9a937eac..5bfbb3cf 100644
+--- a/Theory_work/Wave3/W3-AUDIT/track_A_C/C1_AUDITS/PROOF.md
++++ b/Theory_work/Wave3/W3-AUDIT/track_A_C/C1_AUDITS/PROOF.md
+@@ -1,4 +1,4 @@
+-# C1 · Check of C-DLV:P1-Inventory and C-DLV:L2-S3 — PROOF v2.1 (code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
++# C1 · Check of C-DLV:P1-Inventory and C-DLV:L2-S3 — PROOF v2.2 (code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
+ 
+ Reuse. T10 (`Theory_work/Wave3/W3-AUDIT/track_A/T10_P1S3/`, STATEMENT v2.2 / PROOF v2.1, council-bound R2:
+ `Theory_work/Wave3/W3-AUDIT/track_A/reviews/MANIFEST_R2.txt`) re-audited P1/S.3 at this pin as a new claim (P1′, S.3′).
+@@ -15,11 +15,11 @@ return FALSE otherwise). `finish` (`v3_fit.R:79-87`) never sets it TRUE (`v3_fit
+ | return | status source | row |
+ |---|---|---|
+ | `v3_fit.R:89` | seed check `v3_fit.R:88` (its `stop` is caught by `tryCatch`) | A1 |
+-| `v3_fit.R:99-103` | `v3_preprocess` (`v3_preprocess.R:98-107`, `:114`, `:115`) | A3, A4, A5 |
+-| `v3_fit.R:117` | preflight `v3_fit.R:114-117`: bytes > mem (both branches); exact-branch seconds; SMC-branch LS0 worst-case seconds and `ls0_archive` bytes (`v3_fit.R:43-47, 61-66`, default configuration) | B1, B2; **B1′ (A-7)** |
++| `v3_fit.R:99-103` | `v3_preprocess` (`v3_preprocess.R:99-107`, `:114`, `:115`) | A3, A4, A5 |
++| `v3_fit.R:117` | preflight `v3_fit.R:114-117`: bytes > mem (both branches); exact-branch seconds; SMC-branch LS0 worst-case seconds and `ls0_archive` bytes (`v3_fit.R:43-47, 61-66`, default configuration) | B1, B2; **B1′ (A-7)**, the tier-0 site |
+ | `v3_fit.R:131` with `e$status != "exact"` | `cpp/v3_core.cpp:536, 556` (only "exact" or "numerical_failure") | C1 |
+ | `v3_fit.R:134-138` | `cpp_setup` failure (`cpp/v3_core.cpp:284-297`; `v3_setup.R:71-72`) | C2 |
+-| `v3_fit.R:154-159` | `v3_calibrate`: `resource_limit` (`v3_calib.R:81, 113`; escalation re-preflight `v3_calib.R:157` via `pf_fun`, `v3_fit.R:144-148`, which includes the LS0 terms), `numerical_failure` (C3 sites), `schedule_limit` / `grid_failure_no_escalation` (`v3_calib.R:163-170`) | E3, B3 (with A-7), C3, D1, D2 |
++| `v3_fit.R:154-159` | `v3_calibrate`: `resource_limit` (`v3_calib.R:81, 113`; escalation re-preflight `v3_calib.R:157` via `pf_fun`, `v3_fit.R:144-148`, which includes the LS0 terms), `numerical_failure` (C3 sites), `schedule_limit` / `grid_failure_no_escalation` (`v3_calib.R:163-170`) | E3, B3 (its unspecified tier-1 memory estimate includes `ls0_archive`), C3, D1, D2 |
+ | `v3_fit.R:173` via `v3_run.R:143-148` | final run status ≠ "completed": `numerical_failure` (`cpp/v3_core.cpp:483-484`) or `resource_limit` (guard: `cpp/v3_engine.h:335-338`, `cpp/v3_core.cpp:451, 459`; LS0 guard `cpp/v3_core.cpp:480`) | C4, E1, E2, E5 |
+ The pilot/diagnostic guard stops (`cpp/v3_core.cpp:637, 645, 673-680, 692`) reach `v3_fit` through the calibration
+ status (`v3_calib.R:57, 100`), rows E1, E2 (T10 §1). The sticky guard rule is E4 (`cpp/v3_runtime.h:21-27`).
+@@ -29,7 +29,7 @@ components and, if the bytes fit, times a size-K score and sets `exceeds` also w
+ `hours`·3600 (`v3_fit.R:43-47, 61-66`). INVENTORY's B1 trigger is memory-only with a byte formula without this term
+ (`Theory_work/Wave1C/C-DLV/INVENTORY.md:29`), and B2 is the exact branch (`Theory_work/Wave1C/C-DLV/INVENTORY.md:30`):
+ no row states this trigger. The exit (status `resource_limit` at `v3_fit.R:117`, or at `v3_calib.R:157` on escalation)
+-is the same site as B1/B3, but its trigger is new (commit ef33f91c, after INVENTORY v2). It is reachable on valid inputs
++is the same site as B1 (tier 0, row B1′) or B3 (escalation), but its tier-0 trigger is new (commit ef33f91c, after INVENTORY v2). It is reachable on valid inputs
+ with an allocation too small for the estimate. On escalation the time term cannot newly fire (ŝ_K is cached in
+ `time_fun`, `v3_fit.R:107-112`, and the seconds do not depend on the tier), but the byte term can, as for B3.
+ 
+@@ -81,7 +81,8 @@ Each of S.3's steps (`Theory_work/Wave1C/C-DLV/lemmas/L2_degenerate.md:38-66`) a
+ **New X2-class sites at the pin (amendment A-2), each unreachable:** `get_holder` (`cpp/v3_core.cpp:18`; every fit-path
+ call passes `ctx` or `setup$ptr`; T10 §2); the `start_mode` exceptions (`cpp/v3_start.h:261, 272`, via
+ `cpp/v3_core.cpp:469`): `:272` needs cap < 2 and the only call passes 10⁶; `:261` needs k̂ < 0 or a failed root
+-feasibility check, excluded by T9 (TDP-e) under T4 (ENC) (T10 §2, X9); the implicit-error class X2-imp (T10 §2).
++feasibility check, excluded by T9 (TDP-e) under T4 (ENC), T9's (H4) being discharged by IDEAL-W, MACH and T2's |C_b| ≤ 16 (T10 §2,
++X9); the implicit-error class X2-imp (T10 §2).
+ **Erratum sites (viii)–(ix)** (= X7, X8): stops no invariant excludes; excluded by A:IDEAL-W⁺ or 𝔇 as recorded, and
+ false for every input R can represent, in the default configuration (`v3.ls0_ell`, `v3.ls0_cap` unset): n, p ≤ 2³¹ − 1 (`cpp/v3_core.cpp:92`), so `le` ≤ 32 < 10⁶ and `cap_ll` ≤
+ 32 + 2³⁰ − 1 < 2³¹ − 1 (T10 §2; `Theory_work/Wave3/W3-AUDIT/track_A_X/T14_REP/PROOF.md`). ∎(C1-b)
+@@ -90,9 +91,10 @@ false for every input R can represent, in the default configuration (`v3.ls0_ell
+ §1 gives the coverage; §2 gives D2 and the X2 class unreachable. Of the remaining rows, A1, A2 are excluded by the
+ declared inputs, A3–A5 by DLV-0's non-degeneracy (or by S.1 a.s. on the classes), C1–C5 by EX-A (S.2, whose (vi) caller
+ list holds at the pin, §2), A7 and X1, X3–X6 by IDEAL-W and MACH, X7–X8 by A:IDEAL-W⁺ or 𝔇 (or R representability),
+-and B1–B3 (with A-7), D1, E1–E5 are the resource and schedule rows that DLV-0 handles by its own walk (outside this
++and B1, B1′, B2, B3, D1, E1–E5 are the resource and schedule rows that DLV-0 handles by its own walk (outside this
+ item). In particular the A-7 trigger is named in DLV-0's (E2) ("on the SMC branch with the C-GROW cap also the LS0
+-archive and LS0 time") and excluded there by 𝒜_n's FIN A4 term P̄_LS0 (W3-RM2-R `lemmas/Q5_dlv0.md` lines 59-64 at
+-e78a1055); DLV-0 does not take it from the inventory. `C-DLV:L1-R` alone would not cover it (it bounds exact-branch
++archive and LS0 time") and excluded there by FIN A4's two terms: the LS0 seconds by time_n ≥ P̄_LS0 and the
++`ls0_archive` bytes by mem_n ≥ P_e + A, e = 0, 1 (`Theory_work/Wave1C/FINAL/sections/s6_delivery.tex:37-44`; W3-RM2-R
++`lemmas/Q5_dlv0.md` lines 59-65 at e78a1055: "the LS0 preflight time 2(ℓ_n + K + 1)q(p)ŝ_K ≤ P̄_LS0 and memory P_e + A"); DLV-0 does not take it from the inventory. `C-DLV:L1-R` alone would not cover it (it bounds exact-branch
+ preflight seconds only, `Theory_work/Wave1C/C-DLV/STATEMENT.md:54-56`). D1 is unreachable on the shipped path under EX-A (T10 §3, amendment A-4). So the audits
+ supply DLV-0's premise at the pin. ∎
+diff --git a/Theory_work/Wave3/W3-AUDIT/track_A_C/C1_AUDITS/STATEMENT.md b/Theory_work/Wave3/W3-AUDIT/track_A_C/C1_AUDITS/STATEMENT.md
+index 292b0ef3..63700ea5 100644
+--- a/Theory_work/Wave3/W3-AUDIT/track_A_C/C1_AUDITS/STATEMENT.md
++++ b/Theory_work/Wave3/W3-AUDIT/track_A_C/C1_AUDITS/STATEMENT.md
+@@ -1,4 +1,4 @@
+-# C1 · Check of the audits C-DLV:P1-Inventory and C-DLV:L2-S3 at the pin — STATEMENT v2 (draft, not locked)
++# C1 · Check of the audits C-DLV:P1-Inventory and C-DLV:L2-S3 at the pin — STATEMENT v2.1 (draft; Sol LOCK on v2)
+ 
+ Track A_C item C1 (manager, 11-16: the last unchecked inputs on row 3.1). Tier B (PROTOCOL_v4 §2, §2A NORMAL;
+ second-seat code reading of two registered "AUDITED (code reading)" claims). **Lean target: no** (code facts).
+@@ -45,15 +45,17 @@ of two finite positive numbers. Premises as in C-DLV: EX-A, IDEAL-W, MACH; for X
+ - **(C1-b) S.3 holds at the pin.** D2 (`v3_calib.R:170`) is unreachable, by S.3's argument at re-located lines; each
+   invariant (i)–(vii) holds at the pin (re-located; for (i) the cited reason must be the code (T2 BLK), not the
+   specification); and the X2-class sites new since the audit (`start_mode` exceptions, `get_holder`, implicit errors)
+-  are unreachable on valid internal state (T10 §2, under T4 ENC and T9 TDP-e for `start_mode`). The erratum's
++  are unreachable on valid internal state (T10 §2, under T4 ENC and T9 TDP-e for `start_mode`; T9's execution premise
++  (H4) — `int` ranges, |C_b| ≤ 31, allocations, recursion — is discharged by IDEAL-W, MACH and T2's |C_b| ≤ 16). The erratum's
+   (viii)–(ix) (= X7–X8) are reachable only beyond R's dimension limit: for every input R can represent
+   (n, p ≤ 2³¹ − 1) both predicates are false (T10 v2.2 §2; `track_A_X/T14_REP`).
+ - **(C1-c) Consequence for DLV-0.** On valid declared inputs, under EX-A, IDEAL-W, MACH and (for X7–X8) A:IDEAL-W⁺ or
+-  𝔇: every exit without estimates of the shipped `v3_fit` at the pin is a site in A1–A5, A7, B1 (with A-7)–B3, C1–C5,
++  𝔇: every exit without estimates of the shipped `v3_fit` at the pin is a site in A1–A5, A7, B1, B1′ (A-7), B2, B3, C1–C5,
+   D1, D2, E1–E5, X1–X8, and D2 and the X2 class are unreachable; so the two audits, amended, supply at the pin the
+   premise DLV-0 takes from them. The exit added by A-7 is walked and excluded by DLV-0 itself: its (E2) names the SMC
+-  LS0 archive and LS0 time preflight terms and excludes them by the allocation 𝒜_n's term P̄_LS0 (FIN A4) (W3-RM2-R
+-  `lemmas/Q5_dlv0.md` lines 59-64 at e78a1055). So no correctness break on row 3.1; the defect is in the registered
++  LS0 archive and LS0 time preflight terms and excludes the LS0 time term by P̄_LS0 and the `ls0_archive` bytes by
++  mem_n ≥ P_e + A, e = 0, 1 (FIN A4, `Theory_work/Wave1C/FINAL/sections/s6_delivery.tex:37-44`) (W3-RM2-R
++  `lemmas/Q5_dlv0.md` lines 59-65 at e78a1055). So no correctness break on row 3.1; the defect is in the registered
+   inventory text (A-7), not in DLV-0. (`C-DLV:L1-R` bounds only exact-branch preflight seconds; the LS0 preflight
+   seconds bound is FIN A4's, which DLV-0 imports; neither is checked here.)
+ 
+@@ -67,12 +69,24 @@ of two finite positive numbers. Premises as in C-DLV: EX-A, IDEAL-W, MACH; for X
+ - A-5 (S.3 (i)): its reason cites the specification (`Theory_work/State_of_Project/sections/02_method.tex:189-192`); at the pin the reason is the code
+   (T2 BLK-a/BLK-b).
+ - A-6 (A6, A3): `degenerate_n` is not coded; n < 3 is rejected by A3 (`v3_preprocess.R:99-107`).
+-- **A-7 (B1; the one coverage defect)**: at the pin, in the default configuration, the SMC preflight `v3_fit.R:114-117`
+-  (and the escalation re-preflight `v3_fit.R:144-148` → `v3_calib.R:157`) also returns `resource_limit` when the LS0
+-  worst-case seconds 2(ℓ_n + K + 1)(p + p²/4)ŝ_K exceed `hours`·3600, and adds an `ls0_archive` byte term
+-  (`v3_fit.R:43-47, 61-66`; commit ef33f91c, after INVENTORY v2). Row B1′ (or B1 extended): trigger "bytes incl.
+-  `ls0_archive` > mem, or LS0 seconds > hours"; gate `ls0` on and `v3.ls0_cap` ≠ "ell_n"; class (a) for bytes, (b)-like
+-  under MACH for the measured seconds (as B2). Reachable on valid inputs with an insufficient allocation.
++- **A-7 (B1; the one coverage defect)**: at the pin, in the default configuration, the tier-0 SMC preflight
++  `v3_fit.R:114-117` adds an `ls0_archive` byte term and, if the bytes fit, also returns `resource_limit` when the LS0
++  worst-case seconds 2(ℓ_n + K + 1)(p + p²/4)ŝ_K exceed `hours`·3600 (`v3_fit.R:43-47, 61-66`; commit ef33f91c, after
++  INVENTORY v2). **Row B1′** (the tier-0 site `v3_fit.R:117`): trigger "bytes incl. `ls0_archive` > mem, or LS0 seconds
++  > hours"; gate `ls0` on and `v3.ls0_cap` ≠ "ell_n"; class (a) for bytes, (b)-like under MACH for the measured seconds
++  (as B2). Reachable on valid inputs with an insufficient allocation. The escalation re-preflight (`v3_fit.R:144-148` →
++  `v3_calib.R:157`) stays row B3, whose registered trigger "tier-1 memory estimate > mem" names no formula and so
++  includes the `ls0_archive` bytes; its LS0 seconds term cannot newly fire there (ŝ_K is cached, the seconds do not
++  depend on the tier; PROOF §1.1).
++
++## Inputs consumed (status as recorded)
++- T10 P1/S.3 re-audit (STATEMENT v2.2 / PROOF v2.1), T2 BLK (v6), T4 ENC (v3), T9 TDP (v3): track A, lead's label
++  "PROVED", council R2 bound (sol 9.1 / opus 9.3; `Theory_work/Wave3/W3-AUDIT/track_A/reviews/MANIFEST_R2.txt`).
++- T14 REP (v1): lead's label "PROVED; Sol line check VERIFIED (no amendments)", council XR2 bound (sol 9.4 / opus 9.5;
++  `Theory_work/Wave3/W3-AUDIT/track_A_X/reviews/MANIFEST_XR2.txt`); not registered.
++- `C-DLV:Prop-F` (A-4): "PROVED-CHECKED for the patched calibration law (R04; council round 2)" (registry, verbatim).
++- FIN A4 (`Theory_work/Wave1C/FINAL/sections/s6_delivery.tex:37-44`): HQ audit A4 addition, "OK-WITH-FIXES" (as DLV-0
++  records it); imported by DLV-0, not checked here.
+ 
+ ## Not claimed
+ - Probability or resource bounds for the reachable (a)/(b)/(c) rows (`C-DLV:L1-R`, `:Cor-R`, `:Thm-D`, `:Prop-F`).
+@@ -85,3 +99,4 @@ of two finite positive numbers. Premises as in C-DLV: EX-A, IDEAL-W, MACH; for X
+ | v1 | all | NEW-CLAIM (verdict on two registered audits at the pin) | track A_C C1 | manager 11-16 | `CHECK.md` |
+ | v2 | (C1-a), (C1-c): A-7 (B1 trigger missing at the pin), DLV-0 (E2) covers it; configuration: all five options named; §1.3 nodes | WEAKER (P1 holds only after A-7) / STRONGER (options stated) | CLC1 #1 (C), #2 (S), #5 (E) | `reviews/CLC1_reply_opus.md` | Sol read (gate) |
+ | v2 (PROOF v2.1) | — (proof only: `cpp/v3_core.cpp:209` rethrow listed; §1.3 call conditions) | EQUAL | CSL1 Sol E1, E2 | `reviews/CSL1_reply_sol.md` | council |
++| v2.1 | (C1-c) A4's two terms; A-7 scope (B1′ tier-0, B3 escalation; no LS0 seconds at escalation); (H4) named; inputs' statuses | EQUAL (claim unchanged; attribution and wording) | C-R1 Opus F1, E1–E4 | `reviews/CR1_council_opus.md` | diff round C-R2 (Opus) |

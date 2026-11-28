@@ -1,0 +1,104 @@
+diff --git a/Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/CHECK.md b/Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/CHECK.md
+index 182f60e1..fde07b08 100644
+--- a/Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/CHECK.md
++++ b/Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/CHECK.md
+@@ -1,8 +1,8 @@
+ # V1 VIS — CHECK (Tier B per PROTOCOL_v4 §2, §2A NORMAL; key lemma)
+ 
+ Status (lead's label): **PROVED; Sol LOCK WITH CHANGES + VERIFIED WITH AMENDMENTS (changes applied); Claude line check
+-VERIFIED WITH AMENDMENTS (applied); council V-R1 Sol PASS / Opus FAIL (repaired, v1.3); diff round V-R2 pending.**
+-Frozen text (sha256, first 12 hex, 2026-11-17 13:43 CST, v1.3 for V-R2): STATEMENT `958f7f481d8c`, PROOF `9d1904f8c30d`. No code (pure mathematics).
++VERIFIED WITH AMENDMENTS (applied); council V-R1 Sol PASS / Opus FAIL (repaired, v1.3); V-R2 Opus 9.4 PASS (bound); v1.4 edits in diff round V-R3.**
++Frozen text (sha256, first 12 hex, 2026-11-17 13:50 CST, v1.4 for V-R3): STATEMENT `267a8d1b0a41`, PROOF `d40289f08eaf`. No code (pure mathematics).
+ 
+ | Tier B step | who | state | record |
+ |---|---|---|---|
+@@ -12,5 +12,6 @@ Frozen text (sha256, first 12 hex, 2026-11-17 13:43 CST, v1.3 for V-R2): STATEME
+ | 3 line check (Sol) | Sol | **VERIFIED WITH AMENDMENTS** (VSL1), applied (PROOF v1.2) | `../reviews/VSL1_reply_sol.md` |
+ | 6 citation check | script | **0 bad** (4 citations) | `CITECHECK.txt` |
+ | 7 council V-R1 | Sol + Opus, blind | MANIFEST c271cfac: Sol 9.5 PASS; Opus 8.4 FAIL (F-1 remark on track C designs) → v1.3 | `../reviews/VR1_council_{sol,opus}.md`, `VR1_disposition.md` |
+-| 7 diff round V-R2 | Opus (D91) | pending | `../reviews/MANIFEST_VR2.txt`, `DIFF_VR1_to_VR2.patch` |
++| 7 diff round V-R2 | Opus (D91) | **9.4 PASS, bound** (MANIFEST 0bc1e0b4); 4 E → v1.4 | `../reviews/VR2_council_opus.md`, `VR2_disposition.md` |
++| 7 diff round V-R3 | Opus (D91) | pending (N-1–N-4 only) | `../reviews/MANIFEST_VR3.txt`, `DIFF_VR2_to_VR3.patch` |
+ Lean target: yes (STATEMENT).
+diff --git a/Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/PROOF.md b/Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/PROOF.md
+index 11b6c5c1..372af5fc 100644
+--- a/Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/PROOF.md
++++ b/Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/PROOF.md
+@@ -1,4 +1,4 @@
+-# V1 · Lemma VIS — PROOF v1.3
++# V1 · Lemma VIS — PROOF v1.4
+ 
+ Fix n; Σ = Σ_n is a p × p correlation matrix with c₁₆ > 0 (positive definite in (VIS-a)), W ~ N_p(0, Σ). For U ⊆ [p]
+ write U^c := [p] ∖ U. F1 is applied to positive definite matrices only: to Σ in (VIS-a), and to Σ_V with |V| ≤ 16
+@@ -41,7 +41,7 @@ a sign σd_j times a sum of nonnegative terms, one of which (k = j) is |θ*_j| 
+ ## (VIS-b)
+ *B is closed.* 𝒩 is a closed subset of the unit sphere, hence compact. Let θ_m ∈ B, θ_m → θ; choose ν_m ∈ 𝒩 with
+ ⟨ν_m, θ_m⟩ = 0; a subsequence ν_m → ν ∈ 𝒩, and ⟨ν, θ⟩ = lim ⟨ν_m, θ_m⟩ = 0, so θ ∈ B.
+-*Bound.* Fix n, j, U and let γ := γ(U, j). By (VIS-0) γ ≠ 0; ν := γ/|γ| ∈ 𝒩_n ⊆ 𝒩, so ν^⊥ ⊆ B and
++*Bound.* Fix n ≥ n₀, j, U and let γ := γ(U, j). By (VIS-0) γ ≠ 0; ν := γ/|γ| ∈ 𝒩_n ⊆ 𝒩, so ν^⊥ ⊆ B and
+ |⟨ν, ϑ⟩| = dist(ϑ, ν^⊥) ≥ dist(ϑ, B). Hence |Cov(W_j, Wᵀθ* | W_U)| = |γ|·|⟨ν, ϑ⟩| ≥ |γ_{i(j)}|·dist(ϑ, B) ≥ c₁₆·dist(ϑ, B).
+ *Minimum attained.* ν ↦ |⟨ν, ϑ⟩| is continuous on the compact 𝒩, and dist(ϑ, B) = inf_{ν∈𝒩} dist(ϑ, ν^⊥) =
+ inf_{ν∈𝒩} |⟨ν, ϑ⟩| (B = ∪_{ν∈𝒩} ν^⊥), so the infimum is a minimum; as B is closed, dist(ϑ, B) > 0 iff ϑ ∉ B.
+@@ -95,11 +95,14 @@ alignment of (VIS-a) is required only within a block. ∎
+   so δ = 0. (VIS-a) gives the explicit constant θ_lo c₁₆ directly.
+ - Track C's designs (`Theory_work/Wave3/W3-AUDIT/track_C/RESULTS.md:28-50`; spread placement signs + − + −, clustered
+   placement four adjacent aligned truths). *(VIS-a) instances:* IND in both placements (components are singletons, so
+-  alignment is vacuous); the clustered (aligned) placement of AR(ρ), ρ > 0, of the block compound-symmetry designs and of
+-  the one-factor designs (D10, D12, D14). Block designs with the spread placement are (VIS-a) instances only if the
+-  truths lie in different blocks (alignment is required within a block); otherwise they are (VIS-b) cases. *(VIS-b)
+-  cases:* AR(ρ) with the spread placement (not aligned; there the (VIS-a) inequality itself can fail), Toeplitz, the
+-  three-factor designs D11, D13, D15 (not covered by (VIS-e), which treats one factor), S5's spread placement. B8's s5
++  alignment is vacuous); the clustered (aligned) placement of AR(ρ), ρ > 0, of the block compound-symmetry designs, of
++  the one-factor designs (D10, D12, D14) and of S5 (D16; s5-type M-matrix form, B8); the block compound-symmetry designs
++  with the spread placement too, since track C's spread truths lie in different blocks (alignment is required only
++  within a block). *(VIS-b) cases:* AR(ρ) with the spread placement (not aligned; there the (VIS-a) inequality itself can
++  fail), Toeplitz in both placements (its precision matrix may well be a Stieltjes matrix, which would put the clustered
++  placement under (VIS-a), but this is not proved here), the one-factor designs with the spread (mixed-sign) placement
++  (D10, D12; D14's spread truths lie on B), the three-factor designs D11, D13, D15 (not covered by (VIS-e), which treats
++  one factor), S5's spread placement, and the FRED-QD-like tiles (D19). B8's s5
+   and fac2 (aligned truths) are shown inside by B8's own computations — s5 by the M-matrix form of Σ⁻¹, i.e. a (VIS-a)
+   instance; fac2 by an explicit formula for the conditional covariances (`Theory_work/Wave3/W3-AUDIT/TRACK_B.md:222-228`).
+ - Illustration of B (AR(ρ), two truths at distance g, U = ∅, j = k₁): γ = (1, ρ^g), so B ⊇ {θ₁ + ρ^gθ₂ = 0} for each gap g
+diff --git a/Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md b/Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md
+index f18305b6..a09d1174 100644
+--- a/Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md
++++ b/Theory_work/Wave3/W3-AUDIT/track_V/V1_VIS/STATEMENT.md
+@@ -1,4 +1,4 @@
+-# V1 · Lemma VIS (visibility with a margin uniform in n: a sign route and a generic-position route) — STATEMENT v1.3 (draft; Sol LOCK WITH CHANGES on v1.1, changes applied)
++# V1 · Lemma VIS (visibility with a margin uniform in n: a sign route and a generic-position route) — STATEMENT v1.4 (draft; Sol LOCK WITH CHANGES on v1.1, changes applied)
+ 
+ Track V item V1 (manager 11-17, D112; owner + consultant requirement: a margin **uniform in n**, not "nonzero for almost
+ every β"). Tier B (new lemma; pure linear algebra and topology, no code). **Lean target: yes** (finite-dimensional:
+@@ -33,7 +33,7 @@ conditions with an explicit uniform constant.
+   such that DΣ⁻¹D has nonpositive off-diagonal entries, and the truths are **aligned**: d_k·sgn(θ*_k) = d_j·sgn(θ*_j) for
+   every j, k ∈ S₀ in the same connected component of the graph of Σ⁻¹ (the graph with an edge {l, l′} iff (Σ⁻¹)_{ll′} ≠ 0).
+   Then for every j ∈ S₀ and U ∌ j: |Cov(W_j, Wᵀθ* | W_U)| ≥ |θ*_j|·Var(W_j | W_U), and this is ≥ θ_lo·c₁₆ when |U| ≤ 15.
+-- **(VIS-b) Generic-position route (explicit constant).** For every j ∈ S₀ and U ∌ j with |U| ≤ 15,
++- **(VIS-b) Generic-position route (explicit constant).** For every n ≥ n₀, every j ∈ S₀ and U ∌ j with |U| ≤ 15,
+   |Cov(W_j, Wᵀθ* | W_U)| ≥ c₁₆ · dist(ϑ, B). B is closed, so for a fixed ϑ, ϑ ∉ B ⇔ dist(ϑ, B) > 0, and
+   dist(ϑ, B) = min_{ν∈𝒩} |⟨ν, ϑ⟩| (attained: 𝒩 is compact). Hence for a design sequence with
+   **c̲ := inf_{n≥n₀} c₁₆(Σ_n) > 0** and **δ := inf_{n≥n₀} dist(ϑ_n, B) > 0** (for instance ϑ_n in a fixed compact
+@@ -45,7 +45,7 @@ conditions with an explicit uniform constant.
+   matrices with c_m := inf_{n≥n₀} min_{|V|≤15+s₀} λ_min(Σ_{n,V}) > 0; 𝒩 formed over n ≥ n₀):
+   (i) *finitely many local patterns*: the labelled matrices Σ_{n,V}, V = U ∪ S₀ (labels: which indices are U, which is
+   j, and the rank of each truth), take finitely many values over all n, j, U — e.g. block-diagonal Σ_n with blocks from
+-  a fixed finite list of correlation matrices; block designs with equicorrelated blocks of a fixed ρ_b and any sizes
++  a fixed finite list of correlation matrices; block designs with equicorrelated blocks of a fixed ρ_b ∈ [0, 1) and any sizes
+   (also growing), the entries depending only on block sharing; equicorrelation with a fixed ρ (ρ ∈ [0, 1) when p → ∞, for
+   positive definiteness); factor models Σ_n = Ψ + ΛΛᵀ (unit
+   diagonal) whose rows (λ_l, ψ_l) take finitely many values;
+@@ -53,7 +53,7 @@ conditions with an explicit uniform constant.
+   |ρ| < 1, fixed; banded/MA(q)); also block-diagonal designs whose blocks are of this form, with finitely many r's.
+ - **(VIS-e) Instances of the sign route** (each with D and the floor): independent columns (D = I; c₁₆ = 1); AR(ρ), |ρ| < 1
+   (d_l = s^l with s := sgn ρ, s := +1 if ρ = 0; alignment: s^k·sgn(θ*_k) is the same for every k ∈ S₀ — for ρ > 0 equal
+-  signs, for ρ < 0 signs alternating with the column index; c₁₆ ≥ (1 − |ρ|)/(1 + |ρ|)); equicorrelation ρ ∈ [0, 1) (D = I; c₁₆ ≥ 1 − ρ); one-factor
++  signs, for ρ < 0 sgn(θ*_k) = σ·(−1)^k for a common σ, i.e. the sign is fixed by the parity of k; c₁₆ ≥ (1 − |ρ|)/(1 + |ρ|)); equicorrelation ρ ∈ [0, 1) (D = I; c₁₆ ≥ 1 − ρ); one-factor
+   Σ = Ψ + λλᵀ with Ψ diagonal positive (d_l = sgn(λ_l), sgn 0 := +1; c₁₆ ≥ min_l ψ_l); block-diagonal combinations of
+   these (D blockwise; alignment is required only within a block).
+ 
+@@ -81,3 +81,4 @@ n ≥ n₀.
+ | v1.1 | target quote (Σ_n PD only in Thm 6; theorem ↔ lines); (VIS-a) PD premise, |U| ≤ 15 for the c₁₆ bound; (VIS-b) ϑ ∉ B ⇔ δ > 0, min attained, n ≥ n₀; reading for Thm 5/6/10 floors; ρ = 0, equicorrelation ρ ≥ 0; "a.e." bullet | WEAKER (premises stated) / EQUAL | VLC1 #1–#7, #10 | `reviews/VLC1_disposition.md` | Sol read |
+ | v1.2 | — (proof only: the false remark "(VIS-a) is a case of (VIS-b)" replaced by the two-route remark with Sol's example; (VIS-0) locality parenthetical) | EQUAL (no clause changed) | VSL1 Sol #1 (C, remark), #2 (E) | `reviews/VSL1_reply_sol.md` | council |
+ | v1.3 | — (proof remark on track C reworded: spread placements are (VIS-b) cases, clustered (VIS-a), three-factor not (VIS-e)); target: n ≥ n₀; B over n ≥ n₀; AR alignment written out; growing equicorrelated blocks in (VIS-d)(i) | EQUAL (no clause changed) / STRONGER ((VIS-d)(i) example) | V-R1 Opus F-1, E-1–E-5 | `reviews/VR1_council_opus.md` | diff round V-R2 (Opus) |
++| v1.4 | (VIS-b) per-n bound for n ≥ n₀ (𝒩 is formed over n ≥ n₀); ρ_b ∈ [0, 1); AR ρ < 0 parity wording; track C remark completed | WEAKER ((VIS-b) for n ≥ n₀ only, as used) / EQUAL | V-R2 Opus N-1–N-4 | `reviews/VR2_council_opus.md` | diff round V-R3 (Opus) |

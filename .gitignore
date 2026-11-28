@@ -52,6 +52,14 @@ __pycache__/
 # full-text copies of copyrighted papers (keep local only; repo is public)
 **/song_liang.txt
 Papers/Core_bibliography/32_2015_Song_Liang_*.pdf
+Papers/Core_bibliography/32b_2015_Song_Liang_*.pdf
 
 # Owner's own unpublished papers (style references; never public)
 Papers/Own_work/
+# all full-text paper copies stay local (owner 2026-11-24; repo is public)
+Papers/**/*.pdf
+Papers/Core_bibliography/03_Krishna_2009_web_text/
+# machine-local data, secrets and worktrees (REORG 2026-11-25; repo is public)
+/_local/
+/_wt/
+/scratch

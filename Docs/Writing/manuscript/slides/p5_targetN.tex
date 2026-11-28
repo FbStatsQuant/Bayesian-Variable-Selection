@@ -1,0 +1,61 @@
+% P5 and Target N (manager). Source: Theory_work/Dept/assess/MIS_KL/ASSESS_fable.md §2 (setting (P), Target A, Target N);
+% open-choice block: ASSESS_astra.md §2, §3 (intercept), §5. Statements verbatim; notation of the ASSESS files.
+\begin{frame}{P5 (new) --- Misspecification under a KL projection, fixed $p$: setting}
+\begin{alertblock}{Setting (P)}
+Rows $(x_i,y_i)$ i.i.d.\ from a fixed law $P^*$ on $\mathbb R^p\times\mathbb R$, $\Sigma=\mathrm{Var}(x)\succ0$,
+$\beta^0=\Sigma^{-1}\mathrm{Cov}(x,y)$, $\alpha^0=Ey-Ex^\top\beta^0$, $r=y-\alpha^0-x^\top\beta^0$, $v=Er^2>0$,
+$S_0=\operatorname{supp}\beta^0$ (SL's $\tilde s$), $f_0=\nu_x(dx)\,\phi(y;\alpha^0+x^\top\beta^0,v)$.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{P5 (new) --- Misspecification under a KL projection, fixed $p$}
+\small
+\begin{alertblock}{Planned Theorem P5 (Target A; candidate)}
+Under (P) with $p$ fixed, $E[\|x\|^2r^2]<\infty$ and $Er^4<\infty$, for the coded posterior:
+\[
+1-\pi(S_0\mid D_n)=O_P(n^{-1/2}),\quad P(\mathrm{HPM}=\mathrm{MPM}=S_0)\to1,\quad
+\max_j|\mathrm{PIP}_j-1\{j\in S_0\}|=O_P(n^{-1/2}),
+\]
+\[
+\Pi\big(d_H(f_{S,\theta,v'},f_0)>M_nn^{-1/2}\ \text{or}\ \mathrm{KL}(f_0\,\|\,f_{S,\theta,v'})>M_n/n\ \big|\ D_n\big)\to0
+\ \text{in probability, for every }M_n\to\infty,
+\]
+and $f_0$ is the Kullback--Leibler projection of $P^*$ whenever that divergence is finite for some member of the family.
+No Gaussianity, no linear conditional mean, no homoscedasticity.
+\end{alertblock}
+\textbf{Status: PLANNED} \quad{\footnotesize Source: \texttt{Theory\_work/Dept/assess/MIS\_KL/ASSESS\_fable.md} \S2.}
+\end{frame}
+
+\begin{frame}{P5 --- open choice (Astra's lock conditions)}
+\small
+\begin{block}{Open choice P5 (not decided)}
+\begin{itemize}
+  \item \textbf{Exact selection or consistency.} Target: $\Pi\{H(f,f_0)>\epsilon\mid D_n\}\to_{P_*}0$ $(\epsilon>0)$,
+    $\pi(S_0\mid D_n)\to_{P_*}1$. ``Exactness is plausible and worth targeting; inclusion plus Hellinger consistency is a
+    fallback.''
+  \item \textbf{Literal KL.} ``Assume a unique projection, a positive-definite covariance of the retained predictors, finite
+    joint fourth moments, and finite $\mathrm{KL}(P_*\Vert f_0)$ for the literal KL interpretation. Otherwise describe the
+    target as the Gaussian expected-log-score projection.''
+  \item \textbf{Intercept.} ``\dots{} with raw coefficients and the plug-in intercept of \texttt{W3-DIST/STATEMENT.md} \S0 \dots''
+    ``A common random intercept cancels for model selection, but can destroy iid rows and a deterministic population
+    density target; fix it initially.''
+  \item \textbf{Example.} ``Require an example outside (OV$^{c}$), and an explicit audit of standardisation and the
+    variance prior.''
+\end{itemize}
+\end{block}
+{\footnotesize Source: \texttt{Theory\_work/Dept/assess/MIS\_KL/ASSESS\_astra.md} \S2, \S3, \S5.}
+\end{frame}
+
+\begin{frame}{Target N --- the heteroscedastic boundary at growing $p$}
+\begin{alertblock}{Target N (candidate)}
+Fixed design, $y^r=\alpha1+x\beta+\varepsilon$, $\varepsilon\sim N_n(0,\mathrm{diag}(v_i))$, all design hypotheses of
+MIS-R (i) in force. For a null column put
+$\rho_j=\sum_i\tilde x_{ij}^2v_i\big/\big(\bar v\sum_i\tilde x_{ij}^2\big)$, with $\tilde x_j$ the part of $x_j$ orthogonal
+to $x_{S_0}$ and $\bar v$ the mean variance. If $p=n^{A'}$ and $p^{1-o(1)}$ mutually orthogonal null columns have
+$\rho_j\ge\rho>1+1/(2A')$, then $\pi(S_0\mid x,y^r)\to0$ in probability. So the scalar covariance in (GR$^{c}$) cannot
+be dropped at polynomial $p$.
+\end{alertblock}
+{\footnotesize Statement: \texttt{Theory\_work/Dept/assess/MIS\_KL/ASSESS\_fable.md} \S2.}\par
+\textbf{Status: PLANNED, conditional: kept only if a valid design exists.}
+{\footnotesize (Status: \texttt{Docs/Writing/ASSIGNMENT\_8.md}.)}
+\end{frame}

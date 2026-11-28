@@ -1,0 +1,14 @@
+# T7-MIN (Theorem 2X, the same sentence) READER_VERSIONS.md:1424. T7 addendum (walk T7 MINOR; HQ-approved reader wording class, CORRECTION-ONLY; same reader touch as T7-1/T7-2): the sentence 'no condition on how Sigma, beta, sigma^2 vary with n' contradicts (A2)-(A3), which are conditions on the sequence; the masters say only 'may depend on n' (W3-MISR-R/STATEMENT.md:99). Reader prose only. Line count unchanged. Line 1424 is outside every W3-READER registry premises span (R1: ...1283-1388; R3: 32-60).
+diff --git a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+index b8f3015d..e3ff2a6b 100644
+--- a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
++++ b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+@@ -1421,7 +1421,7 @@ These blocks are appended here so that the line numbers of §§1–10 stay uncha
+ - **(A2) Sparse eigenvalue floor.** $\lambda_{\min}(R_{TT})\ge c$ for every $T$ with $1\le|T|\le3(A+1)(s_0+1)\log n$, for a fixed $c>0$.
+ - **(A3) Signal relative to the noise.** $\beta^\top\Sigma\beta\le M_0\sigma^2$ and $n\min_{j\in S_0}\Sigma_{jj}\beta_j^2/(\sigma^2\log n)\to\infty$.
+ 
+-No condition is placed on how $m$, $\Sigma$, $\beta$ or $\sigma^2$ vary with $n$. Then
++$m$, $\Sigma$, $\beta$ and $\sigma^2$ may depend on $n$; no condition beyond (A1)–(A3) is placed on how they vary. Then
+ $$E\big[1-\pi(S_0\mid y)\big]=O\Big(\sqrt{\tfrac{\log n}{n}}\Big),\quad P(\mathrm{HPM}\neq S_0)+P(\mathrm{MPM}\neq S_0)=O\Big(\sqrt{\tfrac{\log n}{n}}\Big),\quad E\max_j|\mathrm{PIP}_j-\mathbf 1\{j\in S_0\}|=O\Big(\sqrt{\tfrac{\log n}{n}}\Big).$$
+ It is conditional on `W2-APP:POST`, `C-MIS:GDb` and `C-MIS:Prop-P` (the inputs of Theorem 4's master), as recorded.
+ 

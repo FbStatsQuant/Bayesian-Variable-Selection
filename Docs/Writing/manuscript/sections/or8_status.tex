@@ -1,0 +1,62 @@
+% =====================================================================================================
+\section{Statuses since the freeze, and open questions}\label{sec:statuses}\label{sec:scope}\label{sec:who-outside}\label{sec:SL-concl}
+
+\subsection{What changed since the theory freeze}\label{sec:status-diff}
+
+The theorems were frozen on 2026-11-17 (registry tag \code{theory-v2026-11-freeze}, cut at 03:03 CT). The registry on
+main was compared with that tag on 2026-11-23. Sixteen commits changed the registry file, all on 2026-11-17 and
+2026-11-18 (two of them only re-froze citations or a manifest); there has been no change since 2026-11-18. Twelve rows
+were added and none removed; the status strings of 22 existing rows changed, and one added row was re-frozen after its
+addition. \emph{No result was retracted, narrowed or superseded.} No change is a downgrade: each records a check, drops a
+condition, or rewrites a condition list to name current inputs. Table~\ref{tab:status-diff} groups them; the verbatim registry strings are in
+Appendix~\ref{app:status-verbatim}. The status boxes of this document quote the registry on main; the ledger in
+Appendix~\ref{app:status} shows the freeze state.
+
+\begin{table}[ht]
+\centering\small
+\caption{Changes to the registry since the freeze, grouped. None is a downgrade.}\label{tab:status-diff}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.1\linewidth}>{\raggedright\arraybackslash}p{0.48\linewidth}>{\raggedright\arraybackslash}p{0.36\linewidth}@{}}
+\toprule
+Date & What changed & Where it shows here \\
+\midrule
+11-17 & The line checks of the two results on the coded sampler were recorded; their conditions were dropped from every
+dependent result. & Result~5; Remarks~\ref{cor:dist-output} (now conditional on exact arithmetic only) and
+\ref{thm:outputs}; the worst-island bound \\
+11-17 & The lower-bound proposition behind the expectation bound was recorded as independently checked. &
+the expectation bound of Theorem~\ref{thm:post-fixed} and Theorem~\ref{thm:post-margin}; the exact-order note of Result~6;
+Theorem~\ref{thm:omitted} \\
+11-17 & The sub-Gaussian form of Result~1 was recorded as proved and checked, with no inherited condition (an external
+blind audit found nothing). & Result~1 \\
+11-17 & The comparison form of the posterior concentration result was recorded; it stays conditional on three earlier
+inputs. & Remark~\ref{rem:thm2x} \\
+11-17 & The lemma giving sufficient conditions for visibility was recorded. & Remark~\ref{rem:vis} \\
+11-17 & Two locality lemmas were recorded as checked, and the conditions on them were dropped from the two
+polynomial-locality examples (one of which was recorded as checked). & Corollary~\ref{cor:famc} \\
+11-17 & The condition lists of the missed-signal family were rewritten to name current inputs only. &
+Theorem~\ref{thm:omitted} \\
+11-18 & The list result was recorded with no condition, the code reading it waited for being done. &
+Corollary~\ref{cor:list} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{What did not change.} Three qualifications stay true and stay in the text. (i) The results checked against the
+code (the link of Result~3 to the code, the list result, the identities of the frozen run) were read at an earlier core
+commit; the
+re-reading at the final method tag is a pending step. (ii) Corollary~\ref{cor:list} supplies the premise of Remark~\ref{cor:dist-output} only pathwise
+(Section~\ref{sec:plan-open}, item 1). (iii) Remark~\ref{rem:thm2x} stays conditional.
+
+\subsection{Open questions for the project lead}\label{sec:open-hq}
+
+These are carried from earlier rounds or found in this one. None blocks a statement above. Appendix~\ref{app:status-open}
+lists four more, about the parallel engine's checks and registry housekeeping, which change no statement.
+\begin{enumerate}[leftmargin=1.6em,itemsep=1pt]
+  \item \emph{Related work.} A paragraph on the wider literature (selection consistency, Markov chain Monte Carlo for
+    variable selection, sequential Monte Carlo on binary spaces) awaits the owner's reference list.
+  \item \emph{The leakage set of Example~\ref{ex:leak}.} The example calls predictor $5$ a leaked predictor; which set $Q$
+    satisfies Assumption~\ref{asm:reported} for that example has not been worked out.
+  \item \emph{The trap theorem} (Section~\ref{sec:plan-trap}): which design family, and which of our results is meant by
+    ``our consistency on the same design''?
+  \item \emph{``Coverage at $p=10^7$''} (Section~\ref{sec:plan-1e7}): the hypotheses of the theorems at $n=200$,
+    $p=10^7$, or the claims a single fit can support?
+\end{enumerate}

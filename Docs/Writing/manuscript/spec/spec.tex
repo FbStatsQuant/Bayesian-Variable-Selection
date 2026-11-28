@@ -1,0 +1,92 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amssymb}
+\usepackage{../../shared/smcbvs}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{url}
+\usepackage{float}
+\makeatletter\g@addto@macro\UrlBreaks{\do\_\do\-\do\:}\makeatother
+\urlstyle{tt}
+\DeclareUrlCommand\code{}
+\setlength{\emergencystretch}{3em}
+\renewcommand{\topfraction}{0.95}\renewcommand{\textfraction}{0.05}\renewcommand{\floatpagefraction}{0.75}
+
+% ---- A6 notation (owner_review.tex, lines 21-26)
+\newcommand{\Nc}{N^{\mathrm c}}          % calibration particles
+\newcommand{\grid}[1]{\xi_{[#1]}}        % temperatures of the grid
+\newcommand{\Lbi}{L_{\mathrm{bi}}}       % burn-in rounds
+\newcommand{\Ts}{T_{\mathrm s}}          % number of steps
+\newcommand{\Tmax}{T^{\max}}             % step ceiling
+\makeatletter\defasm{SGR}{SG}\makeatother
+
+% ---- assumption display keys for the A6 local assumptions (LaTeX labels unchanged from A6)
+\defasm{dist}{DIST}\defasm{reported}{RM}\defasm{margin}{MARG}\defasm{omitted}{OMIT}
+\defasm{reported-fixed}{RMF}\defasm{SCR}{SCR}\defasm{WIT}{WIT}
+
+% ---- numbered assumptions and conventions: "Assumption 5.n (KEY) (Name)."
+\newcounter{spasm}[section]
+\renewcommand{\thespasm}{\thesection.\arabic{spasm}}
+\renewenvironment{assumption}[2]{%
+  \par\medskip\noindent\refstepcounter{spasm}%
+  \phantomsection\label{asm:#1}%
+  \textbf{Assumption \thespasm\ (\asmdisp{#1})} \textit{(#2).}\ \ignorespaces}{\par\medskip}
+\renewenvironment{convention}[2]{%
+  \par\medskip\noindent\refstepcounter{spasm}%
+  \phantomsection\label{asm:#1}%
+  \textbf{Convention \thespasm\ (\asmdisp{#1})} \textit{(#2).}\ \ignorespaces}{\par\medskip}
+
+% ---- headline, planned and supplementary statements
+\theoremstyle{plain}
+\newtheorem{mainthm}{Theorem}
+\newtheorem{mainprop}[mainthm]{Proposition}
+\newtheorem{planthm}{Planned Theorem}
+\renewcommand{\theplanthm}{P\arabic{planthm}}
+\newtheorem{suppthm}{Theorem}
+\renewcommand{\thesuppthm}{S\arabic{suppthm}}
+\newtheorem{suppprop}[suppthm]{Proposition}
+\newtheorem{suppcor}[suppthm]{Corollary}
+\newtheorem{supplem}[suppthm]{Lemma}
+\theoremstyle{remark}
+\newtheorem{supprem}[suppthm]{Remark}
+
+% ---- status tags (outside the environments) and open-choice boxes
+\newcommand{\tagbox}[1]{\par\smallskip\noindent\fcolorbox{gray!60}{gray!8}{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule}{\footnotesize #1}}\par\medskip}
+\newcommand{\proved}[1]{\tagbox{\textsf{\textbf{PROVED}} \quad Registry: #1}}
+\newcommand{\planned}[1]{\tagbox{\textsf{\textbf{PLANNED}} \quad #1}}
+\newcommand{\rid}[1]{\texttt{#1}}
+\newcommand{\openchoice}[2]{\par\smallskip\noindent\fcolorbox{black}{white}{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule}{\small
+  \textsf{\textbf{OPEN CHOICE #1 (not decided; see Appendix~\ref{app:hq})}}\par #2}}\par\medskip}
+
+\title{SMC-BVS: formal specification\\[2pt]
+\large The model, the distributions, the sampler, the assumptions and the official statements}
+\author{SMC-BVS project, Writing Department}
+\date{Specification, 2026-11-24 (method \code{method-v3.1.1-listpip}; registry on main)}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Scope.} This document defines every object of the SMC-BVS method once and states every official result
+once. It contains no proofs, no discussion of the assumptions and no numerical results; those are in the owner-review
+edition (\code{manuscript/owner_review.tex}, main \code{248c452a}), whose notation it uses. Status tags quote the project
+registry (\code{Theory_work/INFRA/registry/claims.tsv} on main); the council part of each status string (round, manifest,
+scores) is omitted. Code locations are relative to \code{Scripts/SMC_BVS/core/}.
+
+\tableofcontents
+
+\input{sections/sp1_notation}
+\input{sections/sp2_model}
+\input{sections/sp3_distributions}
+\input{sections/sp4_sampler}
+\input{sections/sp5_assumptions}
+\input{sections/sp6_theorems}
+\input{sections/sp7_supplementary}
+
+\appendix
+\input{sections/spA_crosswalk}
+\input{sections/spB_hq}
+
+\end{document}

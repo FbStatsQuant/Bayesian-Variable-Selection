@@ -1,0 +1,16 @@
+# W3-AUDIT track A_W — line checks of the W1-N1:B / W1-N1:F steps (lead: Opus 5.5, high; reports to the Theory Dept manager)
+
+Times from `date` (CST). Write scope: `Theory_work/Wave3/W3-AUDIT/track_A_W/` (outside the bound manifests).
+
+- 2026-11-17 Manager (owner greenlight, HQ-approved): Tier B line checks of the steps behind the D97 NOT-COVERED edges
+  (recorder package §2): D → W1-N1:B (B-b) control flow + (B-0)/(B-d); MR → W1-N1:B (B-d) MEAS; MR → W1-N1:F L3 at general
+  c. Checks: blind Opus line check → one Sol read → council Sol + Opus → diff rounds Opus-only. Cost ≈ 1 day, kill 1.5 days.
+- 2026-11-17 12:27 `git pull --rebase` (803dc983); main 4d65550a read. Items: W1_ISL ((B-0), (B-b) control
+  flow, (B-d) at the pin) and W2_FRZ (T12 freezing lemma, SI/A₀/O_r at the pin, MR/F/D freezing steps, evidence bounds).
+  STATEMENT/PROOF v1; citecheck 0 bad (W1 63, W2 29). Blind line check WLC1 (Opus, fresh) launched.
+- 2026-11-17 12:36 WLC1 returned: W1, W2 VERIFIED WITH AMENDMENTS, no C (3 S, 1 F, 9 E); all accepted → v1.1; citecheck 0 bad (73/37). CHECKPOINT_1 written; Sol read WSL1 ready, held for GO.
+- 2026-11-17 12:39 Manager GO: Sol read WSL1 launched (Codex gpt-6.1-sol high, delegate 639add55). Meanwhile: API blind-audit card builder API_CARD/build.py (audit1 pattern; 9 items AUDITW; verbatim excerpts from git blobs; status words scrubbed; changelogs cut); draft build on e8d30aa0 (~27k tokens/request); final build after bind.
+- 2026-11-17 12:41 WSL1 (Sol) returned: W1 LOCK + VERIFIED; W2 LOCK + VERIFIED; no finding on the items; 1 C on consumer scope (D, MR hold with (𝒜°, 𝓒°) only; W2 states it) → recording package. CHECK.md written; API card README; council W-R1 frozen: MANIFEST 0b8b93aa… (reviews/MANIFEST_WR1.txt, INPUTS_WR1.txt), briefs BRIEF_WR1_{sol,opus}.md; seats launched.
+- 2026-11-17 12:44 W-R1 Sol seat: 9.4 PASS, W1/W2 ACCEPT, 1 E. Opus seat running.
+- 2026-11-17 12:50 W-R1 Opus seat: 8.1 FAIL (F1 no-error-exit premise; F2 locators; 7 E). All accepted (WR1_disposition.md): W1/W2 v1.2 (also the X7 validator via T14 REP); citecheck 0 bad (79/43); API card rebuilt on 5daf97a8 (~28.8k tokens). Diff round W-R2 frozen: MANIFEST d4f64540… (DIFF_WR1_to_WR2.patch); Opus diff seat only (D91; Sol had no C).
+- 2026-11-17 12:56 W-R2 Opus diff seat: 9.3 PASS (all W-R1 findings RESOLVED; 8 new E → next manifest). bind R2 OK: "R2; MANIFEST d4f64540…; opus=9.3 PASS(reviews/WR2_council_opus.md)" (with W-R1 sol=9.4 PASS on 0b8b93aa). Recording package: CHECKPOINT_2_RECORDING_PACKAGE.md. Budget ~0.5 day of 1.5.

@@ -1,0 +1,80 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{natbib}
+\usepackage{float}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit}
+\usepackage{../shared/smcbvs}
+\bibliographystyle{abbrvnat}
+\setcitestyle{authoryear,round}
+\linespread{1.0}
+\renewcommand{\topfraction}{0.95}\renewcommand{\textfraction}{0.05}\renewcommand{\floatpagefraction}{0.75}
+\setlength{\emergencystretch}{3em}
+\usepackage{url}
+\makeatletter\g@addto@macro\UrlBreaks{\do\_\do\-\do\:}\makeatother
+\urlstyle{tt}
+\DeclareUrlCommand\code{}
+\newcommand{\Nc}{N^{\mathrm c}}          % calibration particles
+\newcommand{\grid}[1]{\xi_{[#1]}}        % temperatures of the grid
+\newcommand{\Lbi}{L_{\mathrm{bi}}}       % burn-in rounds
+\newcommand{\Ts}{T_{\mathrm s}}          % number of steps
+\newcommand{\Tmax}{T^{\max}}             % step ceiling
+\newcommand{\grouprow}[1]{\midrule\multicolumn{6}{@{}l}{\textbf{#1}}\\}
+\newcommand{\why}[1]{\par\noindent\textit{Why it matters.} #1\par\smallskip}
+\newcommand{\scope}[1]{\par\noindent{\small\textit{Scope.} #1}\par\smallskip}
+\newcommand{\asmlist}[1]{\par\smallskip\noindent{\small\textit{Assumptions.} #1}\par\smallskip}
+\newcommand{\samplerconds}{two results on the coded sampler (each island realises the frozen run of the theory, and
+conditioning on the frozen calibration preserves its identities), proved under their named premises and independently
+checked; their final line checks were recorded on 2026-11-17, after the freeze}
+% assumptions-section paragraph heads
+\newcommand{\SA}[1]{\S\ref{sec:a-#1}}
+\makeatletter\defasm{SGR}{SG}\makeatother
+\newcommand{\lab}[1]{\textup{(\asmdisp{#1})}}
+\newcommand{\SL}{Song and Liang}
+\newcommand{\ahead}[3]{\par\smallskip\noindent\textbf{#1} #2. #3\par}
+\newcommand{\ev}[1]{\noindent\emph{Evidence.} #1\par}
+\newcommand{\ro}[1]{\noindent\emph{Rules out.} #1\par}
+\newcommand{\pr}[1]{\noindent\emph{Precedents.} #1\par}
+\newcommand{\ds}[1]{\noindent\emph{Our designs.} #1\par}
+\newcommand{\tu}[1]{\noindent\emph{A typical user.} #1\par}
+\newcommand{\yes}{$\bullet$}\newcommand{\no}{$\circ$}\newcommand{\unc}{?}\newcommand{\na}{--}
+
+\title{SMC-BVS: the model, the sampler, the assumptions and the theorems\\[2pt]
+\large Owner-review edition}
+\author{SMC-BVS project, Writing Department}
+\date{Draft for the owner's review, \today}
+
+\makeatletter\@removefromreset{theorem}{section}\makeatother
+% Results 1--6 are Theorems 1--6 (Result 5 is Proposition 5): their own counter.
+\theoremstyle{plain}
+\newtheorem{mainthm}{Theorem}
+\newtheorem{mainprop}[mainthm]{Proposition}
+\theoremstyle{remark}
+\newtheorem{mainrem}{Remark}[mainthm]
+\renewcommand{\thetheorem}{\arabic{theorem}}
+\begin{document}
+\maketitle
+
+\input{sections/or1_reading}
+\input{sections/s2_setup}
+\input{sections/or3_model}
+\input{sections/or4_sampler}
+\input{sections/or5_assumptions}
+\input{sections/or6_theorems}
+\input{sections/or7_planned}
+\input{sections/or8_status}
+
+\bibliography{../shared/refs}
+
+\appendix
+\setcounter{theorem}{0}\counterwithin{theorem}{section}
+\input{sections/supp_index}
+\input{sections/supplement_or}
+\input{sections/appendices_or}
+\input{sections/appendix_sl_or}
+
+\end{document}

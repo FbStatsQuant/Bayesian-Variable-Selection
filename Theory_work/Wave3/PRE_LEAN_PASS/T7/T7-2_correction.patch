@@ -1,0 +1,14 @@
+# T7-2 (T7 card, AGREE; HQ: reader stale-wording class, CORRECTION-ONLY): READER_VERSIONS.md:481 (thm4 remark). 'needs only' omits two premises of CorH-plus (Gaussian responses, size conditions (A1)). Reader prose only. Line count unchanged. Inside the W3-READER:R1 premises span 444-564: recorder's hash/cascade.
+diff --git a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+index b8f3015d..d55aa85a 100644
+--- a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
++++ b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+@@ -478,7 +478,7 @@ the truth onto the candidate linear models: the posterior concentrates on the su
+ predictor. Under the same assumptions the posterior's fitted mean and variance also contract around this law, with its
+ mean centred over the sample (the fitted mean carries no intercept), in the in-sample average Hellinger and
+ Kullback–Leibler distances, at rate $M_n/\sqrt n$ in Hellinger and $M_n/n$ in Kullback–Leibler (any $M_n\to\infty$).
+-For a fixed design the contraction needs only that the posterior mass of $S_0^{\mathcal C}$ tends to one in probability
++For a fixed design, under the same Gaussian model for the responses and (A1), the contraction needs only that the posterior mass of $S_0^{\mathcal C}$ tends to one in probability
+ (with the energy bound and a floor on $S_0^{\mathcal C}$); it holds uniformly over any class of fixed-design configurations with
+ common constants and bounded support size on which this convergence is uniform. A fixed-design version of the theorem, uniform
+ over the residual variance, also holds (remarks in the paper; same status).

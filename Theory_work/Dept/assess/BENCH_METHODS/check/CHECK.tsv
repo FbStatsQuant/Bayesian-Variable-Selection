@@ -1,0 +1,43 @@
+id	paper_key	method_key	claimed	verdict	location	evidence
+V01	Staerk2024	HBS	competitor	MISMATCH	Sec 5.1-5.3 comparisons (Table 1 and text); no Hamming ball sampler run anywhere in full text	comparators are add-delete-swap MC3 and "Tempered Gibbs Sampler based on weighted frequency estimates (wTGS)"; no 'Hamming' or 'Titsias' in full text
+V02	Ishwaran2005	FSTEP	competitor	OK	Sec 8 Breiman simulations, Table 2	table header "Zcut OLS-hard svsForwd OLSForwd"; OLSForwd = forward ordering by Z-statistics
+V03	Bogdan2015	LASSO	competitor	OK	Sec 1 numerical comparison (Fig 2, p.11-12); Fig 5 caption; claimed Sec 3.2.4 does not exist	"(2) Lasso with the smoothing parameter lambda_CV chosen with 10-fold cross-validation"
+V04	Titsias2017	GIBBS_GAMMA	competitor	OK	Sec 4 simulation, Fig 3 and Fig 4	"three block Gibbs Samplers (BG1-3), which conditionally update blocks of elements of X of size K = 1 - 3"; BG1 is componentwise (K=1)
+V05	BertsimasPauphilet2020	ENET	competitor	OK	Sec 3-4, Figs 1-8 (ENet vs CIO, SS, MCP, SCAD)	"ENet (in red), MCP (in orange), SCAD (in pink) with OLS loss"
+V06	Schafer2013	GIBBS_GAMMA	competitor	OK	Sec 6.3 How to compare to Markov chain Monte Carlo	"the standard metropolised Gibbs (Liu, 1996, MCMC)"
+V07	Hoggart2008	MARGINAL	competitor	OK	Results: Main Simulation Study; Table 1	"(iii) the Armitage trend test (ATT)"
+V08	Moran2019	LASSO	competitor	OK	Sec 6.6 Simulation Study (Table 1); Sec 6.7 not checked	"the Lasso (Friedman et al., 2010), the scaled Lasso"
+V09	Chen2016	LASSO	competitor	OK	Sec 4.2 Simulated examples, Tables 1-5	"R packages glmnet, parcor, ncvreg and EMVS are used for Lasso, adaptive lasso"
+V10	Cho2012	LASSO	competitor	OK	Sec 4 simulations, Tables 2-5 (Lasso column)	"FS and the Lasso are implemented using the R package lars"
+V11	Griffin2021	HBS	competitor	OK	Sec 4.3-4.4, Figs 4-7 captions (Hamming Ball run on moderate and large p real data)	"We also consider the Hamming Ball and the Ji-Schmidler samplers"
+V12	Rockova2018PEM	EMVS	competitor	OK	Sec 6 (6.1 benchmark comparison, Fig 4)	"First, we apply the EMVS procedure of Rockova and George (2014)"
+V13	Liang2023	MC3_ADS	competitor	OK	Sec 5.1-5.3 (ADS thinned; Table 2 ADS-DA, ADS-CPM)	"ADS (thinned) proposal provides the benchmark performance of a simple add-delete-swap MCMC"
+V14	Clyde2011	MC3_ADS	competitor	OK	Sec 4 simulations (Tables 1-2); Sec 5-6 real data	"we compare BAS with the MCMC algorithms MC3 and RS"
+V15	Rockova2014	MC3_ADS	competitor	OK	Sec 4.3 A Speed Comparison With Stochastic Search	"Metropolis-Hastings (MH) sampler with a one-step random scan proposal to simulate from the marginal posterior on gamma"; key mapping is a single-flip add/delete proposal, judged close enough to MC3
+V16	Piironen2020	ENET	competitor	OK	Sec 7.4 Real world benchmarks, Fig 10	"elastic net (with alpha = 0.7 and alpha = 0.3)"
+V17	Bsila2025	VARBVS	competitor	OK	Sec 5.2 Sparse High Dimensional Regression Benchmark (item 3); Table 3	"varbvs (Carbonetto and Stephens 2012): Another variational variable selection method"
+V18	Dai2023	KNOCKOFF	competitor	OK	Sec 4.1 simulation settings (Figs 5-6)	"we use the equi-correlated knockoffs"
+V19	Wasserman2009	FSTEP	competitor	OK	Sec 6 Simulations (screen and clean, Tables 1-2)	"Size and power of screen and clean procedures using lasso, stepwise and marginal regression"
+V20	Hazimeh2020	MCP	competitor	OK	Sec 5.1 Experimental Setup (method list); MCP rows in Sec 5.2-5.5 tables	"MCP: This is the MCP penalty of [32]. We use the implementation provided in ncvreg [7]."
+V21	Ray2020	EMVS	competitor	OK	Sec 5 Numerical study, Table 1 (BinEMVS row)	"BinaryEMVS [30]" in the list of compared packages; Table 1 row "BinEMVS"
+V22	Jankowiak2023	ASI	competitor	OK	Sec 7.3 cancer data (Fig 4); Sec 7.1 Fig 1 caption	"we compare to ASI (Wan and Griffin, 2021), an adaptive MCMC scheme"
+V23	Bhattacharya2015	LASSO	competitor	OK	Simulation comparison, Table 1 (Lasso (LS) row)	"for Lasso (LS), Empirical Bayes median (EBMed) as in"
+V24	Ray2020	HORSESHOE	competitor	OK	Sec 5 Numerical study, Table 1 (rstanarm row)	"rstanarm" row in Table 1; "implemented for the horseshoe global-local shrinkage prior"
+V25	Zhu2022abess	FSTEP	competitor	OK	Sec 4 Performance, Table 2 note (claimed Sec 3 Fig 2 is an R-only demo)	"scikit-learn (l0): OrthogonalMatchingPursuit (for regression)"
+V26	Meinshausen2009	ADALASSO	competitor	OK	Sec 4.2 Comparisons with adaptive Lasso (claimed Sec 4.1 Table 1)	"Next, we compare the multi-split selector with the adaptive Lasso (Zou, 2006)"
+V27	Hans2007	GIBBS_GAMMA	competitor	OK	Sec 4.2 Comparison With Markov Chain Monte Carlo, Fig 1	"Figure 1. Accumulated Posterior Mass for SSS, Gibbs, and MC3"
+V28	Johndrow2020	LASSO	competitor	OK	Sec 7 GWAS Application (maize), Fig 8 text	"The Lasso estimates for these parameters, with the penalty chosen by 10-fold cross-validation, are also indicated"; a reference comparison rather than a full benchmark
+V29	Wen2016	NEW:MCMC_UNSPECIFIED	competitor	OK	Results: final simulation study and Fig 3 panels B-E (PMC copy PMC4908152)	"Comparison of PIP values estimated by adaptive DAP and MCMC with various running lengths"
+V30	Cui2024	NEW:COJO_ABF	competitor	MISMATCH	Claimed Results: Simulations is wrong; COJO-ABF appears only in the real-data RFR analysis (Results text and Supp Note A); simulations use only SuSiE and FINEMAP (PMC copy PMC11056999)	"SuSiE, FINEMAP and COJO-ABF show high RFR" (real data); simulations: "simulations to investigate how SuSiE and FINEMAP may be affected"
+V31	Narisetty2014	NLP_MOMBF	competitor	OK	Sec 8 simulation studies, Tables 1-6	"piMOM, the nonlocal prior method proposed by Johnson and Rossell (2012)"
+V32	Duan2026	ARD_EM	competitor	OK	Sec 3.1 Simulation, Fig 2	"the EM algorithm for automatic relevance determination (ARD) Tipping (2001)"
+V33	Bondell2012	DANTZIG	competitor	OK	Sec 4.1 Comparison of variable ranking (method list for Tables 1-2 and ROC/PRC figures; PMC copy PMC3587767)	method label "Dantzig" listed with "Adaptive LASSO" and "LASSO" in the comparison; local file BENCH_METHODS_papers/Bondell2012.pdf is a Cloudflare challenge page, not the paper
+V34	Moser2015	NEW:LMM_BLUP	competitor	OK	Results: simulated data, Figs 1-2 and S1-S2 Tables	"Comparison of performance of BayesR, BSLMM, LMM and GPRS in simulated data"
+V35	Wang2016	NEW:RRCS	competitor	OK	Sec 4 Numerical Studies Part 1; Sec 4.1 Simulation study I, Table 1	"robust rank correlation based screening (RRCS, Li, et al. 2012)"
+V36	Yang2020	NEW:GROUP_SCAD_MCP	competitor	OK	Sec 5 numerical study, Tables 1-6	"methods including adaptive group Lasso (agLasso), group Lasso (gLasso), group SCAD (gSCAD), group MCP (gMCP)"
+V37	Carbonetto2012	LASSO	ABSENT	OK	Full text: Lasso only in Introduction and references; no Lasso in the experiments	"The Lasso (Tibshirani 1996) and related penalized regres-" (Introduction)
+V38	Wang2020	ENET	ABSENT	OK	Full text: elastic net only in Introduction and background; glmnet lasso only as a runtime benchmark (Sec 4), no ENET comparator	"competitive with the lasso, implemented in the glmnet R package"
+V39	Griffin2021	GIBBS_GAMMA	ABSENT	OK	Sec 4.1-4.4 comparisons run ADS, ASI, EIA, PT, SMC, Hamming Ball, Ji-Schmidler; Gibbs mentioned only in Introduction	"Gibbs samplers (Nott and Kohn, 2005; ...)" (Introduction)
+V40	Narisetty2019	LASSO	ABSENT	OK	Sec 5 simulation tables (rows BASAD, Skinny, VBayes, BSR, Alasso, SCAD, MCP); plain Lasso used only as the Alasso initial estimate, not reported as a competitor	"For Adaptive Lasso, the initial estimate of beta is obtained from Lasso tuned using BIC"
+V41	Liang2022	WTGS	ABSENT	MISMATCH	Sec 5.2 Real data (Table 2 datasets)	"the tempered Gibbs sampler (TGS) and weighted tempered Gibbs sampler (WTGS) of Zanella and Roberts (2019)"; WTGS is run as a comparator on the real datasets
+V42	Hazimeh2020	SCAD	ABSENT	OK	Introduction and Sec 2 background only; no SCAD in Sec 5 experiments or tables	"continuous non-convex regularizers (e.g., MCP, SCAD, etc)" (background)

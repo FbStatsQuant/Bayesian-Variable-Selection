@@ -1,0 +1,2 @@
+bind: OK, 1 review(s) give a PASS verdict (>= 8.0) on MANIFEST f62740c74ee1740a4cfbbcd9d12e0c845dc8435fb0adde6e380ca9bda3469d2b
+council cell: R2; MANIFEST f62740c74ee1740a4cfbbcd9d12e0c845dc8435fb0adde6e380ca9bda3469d2b; opus=9.6 PASS(reviews/R2_record_opus.md)

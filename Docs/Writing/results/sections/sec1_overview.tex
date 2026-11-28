@@ -1,0 +1,131 @@
+% =====================================================================================================
+\section{Overview}\label{sec:overview}
+
+This section states the results in words and says where each one is. The data are $n$ observations of a response and $p$
+predictors, with $p$ possibly much larger than $n$. The response follows a sparse Gaussian linear model, and the method
+is a sequential Monte Carlo sampler for the posterior over models under a fixed prior, combined with a local search.
+Throughout we compare with \citet{SongLiang2015}, the closest earlier analysis of Bayesian variable selection with
+$p\gg n$ and a sampler. Terms such as the start law, calibration, islands, completed runs and certification are defined in
+Section~\ref{sec:method}.
+
+\paragraph{Does the posterior pick the right model? (Section~\ref{sec:selection})} Yes, under sparsity, eigenvalue and
+signal-strength conditions (a beta-min condition: a lower bound on the smallest true coefficient). For fixed designs, the posterior mass outside the true model is at most a constant times
+$\rn$ on average, uniformly over the designs that meet the conditions (Theorems~\ref{thm:post-fixed}
+and~\ref{thm:post-margin}); the highest posterior model and the median probability model equal the true model with
+probability tending to one. For random Gaussian designs the posterior miss is $\OP(\rn)$, and the same models recover
+the true model with probability tending to one (Theorem~\ref{thm:post-random}). For true models of at most
+$\min(K-1,p/2)$ predictors no design allows a rate faster than $n^{-1/2}$, and on two families of designs the rate $\rn$ is attained (Theorem~\ref{thm:sharp}). When
+some true predictors are missing from the data, the posterior selects the predictors used by the best linear predictor
+built from the others (Theorem~\ref{thm:omitted}).
+
+\paragraph{Is the posterior right about the distribution? (Section~\ref{sec:distribution})} Yes, for i.i.d.\ observations
+with light-tailed predictors and no near-exact collinearity among small groups of them. The posterior contracts around
+the true conditional law of the response given the predictors, at the rate $\rn$, in the Hellinger distance of
+\citet{SongLiang2015}, with no beta-min condition (Theorem~\ref{thm:dist}); at the parametric rate when the true
+predictors are detectable (Theorem~\ref{thm:dist-param}); and the same holds for the list of models that a completed run
+returns, whenever that list carries a non-negligible share of the posterior (Corollary~\ref{cor:dist-output}).
+
+\paragraph{Does the method, as coded, deliver it? (Section~\ref{sec:delivery})} Yes, under conditions on how the signal
+looks block by block. The \textbf{main theorem}, Theorem~\ref{thm:reported-random}, says that there is an event,
+determined by the data alone and of probability tending to one, on which every run that produces output reports exactly
+the true model, whatever its seed. As an intermediate step, the start law, the distribution from which the sampler starts, already
+concentrates on the true model (Theorem~\ref{thm:start}). A certified small model rarely misses a true predictor, under much weaker conditions
+(Theorems~\ref{thm:screen} and~\ref{thm:screen-margin}). On the event that the calibration succeeds, the reported
+estimates are consistent (Theorem~\ref{thm:outputs}; the statement is about that event, and makes no claim about how
+likely it is or conditional on it), and the evidence estimate is unbiased (Remark~\ref{rem:unbiased}).
+
+\paragraph{What carries over to the parallel method? (Section~\ref{sec:parallel})} The pooling of the four islands is
+covered; the rest is empirical or open, and we say so.
+
+\paragraph{How the results depend on each other.} The proofs use each other as follows.
+\begin{itemize}[leftmargin=1.5em,itemsep=1pt]
+  \item Theorem~\ref{thm:post-random} (Gaussian rows) applies Theorem~\ref{thm:post-fixed} to the sample, after showing that
+    the sample conditions hold with probability tending to one; the same transfer also covers signals fixed on the
+    standardised scale, as used in Section~\ref{sec:delivery}.
+  \item Theorems~\ref{thm:post-margin} and~\ref{thm:omitted} use the expectation form of Theorem~\ref{thm:post-fixed}.
+  \item Theorem~\ref{thm:dist-param} uses Theorem~\ref{thm:post-fixed}, applied to the sample; Corollary~\ref{cor:dist-output}
+    uses Proposition~\ref{prop:dist}.
+  \item Theorem~\ref{thm:reported-random} (the main theorem) uses the transfer of Theorem~\ref{thm:post-random};
+    Theorem~\ref{thm:reported-fixed} uses Theorem~\ref{thm:post-fixed}; Theorem~\ref{thm:outputs} uses the transfer of
+    Theorem~\ref{thm:post-random} and the start-law Theorem~\ref{thm:start}.
+  \item Theorems~\ref{thm:sharp}, \ref{thm:dist}, \ref{thm:start}, \ref{thm:screen} and~\ref{thm:screen-margin} use no
+    other result of this paper.
+\end{itemize} [Location of the proofs: to be fixed with the paper's supplementary material.]
+
+\paragraph{What ``asymptotic'' means here.} The results are statements as $n\to\infty$, with $p$ allowed to grow
+polynomially in $n$ and to exceed $n$; two lower bounds hold at every finite $n$: Theorem~\ref{thm:sharp}(a) for
+$n\ge3$, and the lower bound on $1-\pi_0(\Sz)$ after Theorem~\ref{thm:start} for $n\ge4$. At moderate $n$ and large $p$ the posterior is not close to a point mass: it
+is spread over the true model and its many one-predictor supersets, each individually light (Remark~\ref{rem:moderate}).
+The theorems describe the limit of this picture.
+
+\paragraph{How to read a result.} Each result has the same layout: a sentence on the question it answers; a paragraph
+\emph{In words}; the new assumptions it needs, each with a line on what it rules out; the formal statement;
+\ifshowstatus a shaded status note; \fi and remarks with fixed titles. Conditions used across sections have short names, such
+as \as{GL}; conditions used only within one subsection are numbered Assumptions, such as Assumption~\ref{asm:margin}.
+Appendix~\ref{app:notation} lists the main symbols, and every assumption with the theorems that use it. ``The method''
+always means the method as coded, under Convention~\as{C1}.
+
+\ifshowstatus
+\paragraph{Status notes (internal).} Each shaded note gives the verification status of the result: ``proved and
+independently checked'' (independent checks and a council review), ``proved and independently verified'' (two
+independent verification passes), ``proved and checked, conditional on'' named inputs, or ``in progress''. Nothing in
+progress is called a theorem. The notes, the status column of Table~\ref{tab:overview} and its footnotes are for internal
+use and are removed for submission; Appendix~\ref{app:status} gives the records.
+\fi
+
+\newcommand{\st}[1]{\ifshowstatus #1\fi}
+\begin{table}[H]
+\centering\small
+\caption{The results at a glance.}\label{tab:overview}
+\begin{tabularx}{\linewidth}{@{}l>{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{0.13\linewidth} l l@{}}
+\toprule
+Result & In words & Design & Rate & \st{Status} \\
+\midrule
+Thm~\ref{thm:post-fixed} & posterior concentrates on the true model & fixed & $\rn$ & \st{verified$^{a,e}$} \\
+Thm~\ref{thm:post-margin} & the same under an identifiability margin & fixed & $\rn$ & \st{conditional$^{b,e}$} \\
+Thm~\ref{thm:post-random} & the same for Gaussian rows & Gaussian rows & $\rn$ & \st{verified$^{a,e}$} \\
+Thm~\ref{thm:sharp} & the rate cannot be improved & any; witness & lower bounds & \st{checked$^{e}$} \\
+Thm~\ref{thm:omitted} & omitted variables: support of the best candidate predictor & Gaussian rows & $\rn$ & \st{conditional$^{b,e}$} \\
+Thm~\ref{thm:dist} & posterior recovers the conditional law & i.i.d.\ pairs & $\rn$ & \st{checked} \\
+Thm~\ref{thm:dist-param} & parametric rate for detectable signals & i.i.d.\ pairs & parametric & \st{checked$^{c}$} \\
+Cor~\ref{cor:dist-output} & the same for the list a completed run returns & i.i.d.\ pairs & $\rn$ & \st{checked$^{d}$} \\
+Thm~\ref{thm:start} & the start law concentrates on the true model & Gaussian rows & $n^{-c}$, all $c<\tfrac12$ & \st{checked} \\
+Thm~\ref{thm:reported-random} & \textbf{every run that produces output reports the true model} & Gaussian rows & --- & \st{checked$^{e}$} \\
+Thm~\ref{thm:reported-fixed} & the same, fixed design & fixed & --- & \st{checked$^{e}$} \\
+Thms~\ref{thm:screen}, \ref{thm:screen-margin} & a certified small model rarely misses a true predictor & fixed & --- & \st{checked} \\
+Thm~\ref{thm:outputs} & reported estimates consistent, on the event that the calibration succeeds & Gaussian rows & $n^{-1/2}e^{C\sqrt{\log n}}$ & \st{checked$^{e}$} \\
+Rem~\ref{rem:unbiased} & the pooled evidence estimate is unbiased & any & exact & \st{see note$^{f}$} \\
+Sec~\ref{sec:parallel} & parallel engine; many islands & --- & --- & \st{in progress / open} \\
+\bottomrule
+\end{tabularx}
+\ifshowstatus
+\par\smallskip\raggedright\footnotesize
+$^{a}$ ``Verified'': proved and independently verified in two independent verification passes, without a council
+review. For Theorem~\ref{thm:post-fixed} this is the in-probability form; its expectation bound is conditional on two
+supporting results (a lower-bound proposition and a size-tail lemma) not yet independently checked.
+$^{b}$ Conditional on those two results.
+$^{c}$ Conditional on Theorem~\ref{thm:post-fixed} in probability form (verified).
+$^{d}$ Under exact arithmetic.
+$^{e}$ The short bridging argument that puts the statement in reader form awaits its final independent check.
+$^{f}$ Per island checked; the pooled form is not yet independently checked.
+\fi
+\end{table}
+
+\paragraph{Correspondence with \citet{SongLiang2015}.} Table~\ref{tab:SL} points to where each comparison is made; it adds
+no claim.
+
+\begin{table}[H]
+\centering\small
+\caption{Where each result is compared with \citet{SongLiang2015}.}\label{tab:SL}
+\begin{tabular}{@{}lll@{}}
+\toprule
+This paper & Song and Liang (2015) & Comparison \\
+\midrule
+Theorems~\ref{thm:post-fixed}, \ref{thm:post-margin} & Theorem 3 (sure screening) & Remark~\ref{rem:SL-fixed} \\
+Theorem~\ref{thm:post-random} & random-design setting & Remark~\ref{rem:SL-random} \\
+Theorem~\ref{thm:omitted} & Theorem 4, Corollary 2 & Remark~\ref{rem:SL-omitted} \\
+Theorems~\ref{thm:dist}, \ref{thm:dist-param}, Corollary~\ref{cor:dist-output} & Theorems 1--2 & Section~\ref{sec:SL-dist} \\
+Theorem~\ref{thm:reported-random} & their sampler (stochastic approximation Monte Carlo) & Remark~\ref{rem:SL-reported} \\
+\bottomrule
+\end{tabular}
+\end{table}

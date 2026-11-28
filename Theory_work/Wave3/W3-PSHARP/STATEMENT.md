@@ -97,7 +97,7 @@ c(p, 0) > ½; and c(p, s₀)/(s₀ + 1) → ½ when p → ∞ and s₀/p → 0 [
 
 **Consequences** (any sequence with s₀ ≤ min(K − 1, p/2); any designs; any data, random or not):
 - **(B1)** π(S₀) ≤ [1 + (s₀ + 1)/(3√n)]⁻¹ surely. So π(S₀) → 1 (in probability, along any subsequence) forces
-  s₀ = o(√n); if s₀ ≥ λ√n then π(S₀) ≤ 1/(1 + λ/3); and if s₀/√n → ∞ then π(S₀) → 0 surely.
+  s₀ = o(√n); if s₀ ≥ λ√n, λ ≥ 0, then π(S₀) ≤ 1/(1 + λ/3); and if s₀/√n → ∞ then π(S₀) → 0 surely.
   **Critical scale [K01-P1]:** if s₀/√n → λ ∈ (0, ∞) and s₀/p → 0, then limsup π(S₀) ≤ e^{−λ/2}, surely (from the full
   sum 𝒪^{lb}_n: liminf 𝒪^{lb}_n ≥ e^{λ/2} − 1).
 - **(B2)** δ_n = O_P(ρ_n) for a deterministic ρ_n → 0 forces s₀ + 1 = O(√n ρ_n). In particular the rate r_n forces

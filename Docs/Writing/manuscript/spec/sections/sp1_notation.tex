@@ -1,0 +1,83 @@
+% =====================================================================================================
+\section{Notation and setting}\label{sec:setup}
+
+\begin{definition}[General notation]\label{def:notation}
+For an integer $k\ge1$, $\set{k}:=\{1,\dots,k\}$. Vectors are columns; $\norm{v}$ and $\norm{v}_1$ are the Euclidean and
+$\ell_1$ norms; $I_n$ is the identity and $\one_n$ the vector of ones; $\lmin(\cdot)$ is the smallest eigenvalue of a
+symmetric matrix; $\abs{S}$ is the size of a set; $a\vee b:=\max(a,b)$; $\ind{E}$ is an indicator. Logarithms are natural
+($\log$) or binary ($\log_2$). A star marks a true value, and the superscript $\mathrm r$ marks raw, unstandardised data.
+For a matrix $\Lambda$ and sets $U,V$, $\Lambda_{UV}$ is the sub-matrix with rows in $U$ and columns in $V$, and
+$\Lambda_U:=\Lambda_{UU}$. For random variables, $V_n=\OP(a_n)$ means that $\abs{V_n}/a_n$ is bounded in probability and
+$V_n=\oP(a_n)$ that it tends to zero in probability; \emph{with probability tending to one} means that the probability of
+the event tends to one. For positive sequences, $O$, $o$, $\lesssim$, $\gtrsim$, $\asymp$ and $\gg$ have their usual
+meaning ($a_n\gg b_n$: $b_n=o(a_n)$).
+\end{definition}
+
+\begin{definition}[Data and retained predictors]\label{def:data}
+The data are a response $\yr\in\R^n$ and $\praw$ predictors. A predictor that is constant in the sample is
+\emph{removed}; $\Xr$ is the $n\times p$ matrix of the $p$ retained predictors, and $p$ always denotes this number.
+The retained predictors are indexed $1,\dots,p$ in the order of their original columns, and $\mathrm{col}(j)\in\set{\praw}$ is the
+original one-based column number of retained predictor $j$ (the \emph{label map}). Models and all indices in this
+document are retained indices; the method reports models, the median model and inclusion-probability labels in original
+column numbers, $j\mapsto\mathrm{col}(j)$.
+\end{definition}
+
+\begin{definition}[Designs]\label{def:designs}
+In a \emph{fixed design}, $\Xr$ is deterministic and probability refers to the noise. In a \emph{random Gaussian design},
+the rows of $\Xr$ are i.i.d.\ $\Normal_p(m_n,\Sig)$ and probability refers to the joint law of design and noise;
+$W=(W_1,\dots,W_p)\sim\Normal_p(0,\Sig)$ denotes a centred copy of one row, with sub-vectors $W_S$. For sets $U$ and
+indices $j,l$, $\Cov(W_j,W_l\mid W_U)$ is the partial covariance given $(W_k)_{k\in U}$, and
+$\bar\beta_{U,l}:=\Sigma_{n,UU}^{-1}\Sigma_{n,Ul}$ is the population regression coefficient of $W_l$ on $W_U$, padded
+with zeros to a vector indexed by a larger set when needed.
+\end{definition}
+
+\begin{definition}[Standardisation]\label{def:standardise}
+With $P^\perp_{\one}:=I_n-n^{-1}\one\one^\top$ and $D$ the diagonal matrix of the column sample standard deviations of
+$\Xr$ (divisor $n-1$),
+\begin{equation}\label{eq:standardise}
+  X:=P^\perp_{\one}\Xr D^{-1},\qquad y:=P^\perp_{\one}\yr/s_y,\qquad s_y^2:=\norm{P^\perp_{\one}\yr}^2/(n-1).
+\end{equation}
+Every column $x_j$ of $X$ has mean zero and $\norm{x_j}^2=n-1$, and $y^\top y=n-1$.
+\end{definition}
+
+\begin{definition}[Models]\label{def:models}
+A \emph{model} is a set $S\subseteq\set{p}$, equivalently its inclusion vector $\gamma\in\{0,1\}^p$ with
+$\gamma_j:=\ind{j\in S}$; then $\abs{\gamma}=\abs{S}$ and $X_\gamma=X_S$. This document writes $S$. For a model $S$:
+$X_S$ holds the columns of $X$ in $S$; $G_S:=X_S^\top X_S$ is their Gram matrix; $\Rhat_S:=G_S/(n-1)$ is their sample
+correlation matrix; $\hat r_{jl}$ is the sample correlation of predictors $j$ and $l$; $P_S$ is the projection onto the
+span of $X_S$ ($P_\emptyset:=0$); and $z_S:=X_S^\top y$.
+\end{definition}
+
+\begin{definition}[True model and true coefficients]\label{def:truth}
+Under the data-generating model~\eqref{eq:model} (Definition~\ref{def:dgm}), the \emph{true model} is
+$\Sz:=\{j:\beta^*_j\neq0\}$, of size $\sz$; its members are the \emph{true predictors}, the others the \emph{null
+predictors}. The \emph{standardised coefficients} are $\tstar:=D\bstar$ (support $\Sz$), so that
+$P^\perp_{\one}\yr=X\tstar+P^\perp_{\one}\varepsilon$; the \emph{mean signal} is $\mu:=X\tstar$; and
+$\tmin:=\min_{j\in\Sz}\abs{\theta^*_j}$.
+\end{definition}
+
+\begin{definition}[Asymptotic regime and rate parameters]\label{def:regime}
+Most results are asymptotic in $n\to\infty$, along a sequence of problems in which $p=p_n$ (and $\praw$), the design and
+the coefficients may change with $n$. Lemma~\ref{lem:summaries}, Theorem~\ref{rem:sharp}(a) and Proposition~\ref{prop:unbiased} hold for every data
+set; Theorem~\ref{thm:dist} holds for every $n\ge n_0$; the delivery clauses hold for every admissible $n$. A quantity is
+\emph{fixed} if it does not depend on $n$; every constant introduced
+in an assumption is fixed. The parameters that may depend on $n$, and where they are introduced, are:
+\begin{itemize}[leftmargin=1.5em,itemsep=0pt]
+  \item the dimensions $n$, $p=p_n$, $\praw$, and the true model size $\sz$ (fixed under \as{SP});
+  \item the posterior rate $\rn$, the size cap $K=K_n$ (Definition~\ref{def:space}), the block size cap $B=B_n$, the
+    base move cap $\ell_n$ and the particle numbers $N_0$, $N_i$, $\Nc_i$, the burn-in $\Lbi$ and the step ceiling
+    $\Tmax_i$ (Table~\ref{tab:params});
+  \item the level $M$ and the window $q_n$ of Assumption~\as{dist};
+  \item the model-size budget $k_n$ of Assumption~\as{SCR};
+  \item the sequences $\varpi_n$, $\delta_n$, $d_n$, $L_n$ and the leakage set $Q$ with neighbourhoods $\Hl_l$ and
+    $N_l$ of Assumption~\as{reported};
+  \item the sequence $r^\circ_n$ and neighbourhoods $\Hl_l$ of Assumption~\as{NL}; the sequence $\omega_n$ of
+    Assumption~\as{reported-fixed}; and the rate $\rho_n$ of Remark~\ref{thm:outputs}.
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Setting of the distribution results]\label{def:dist-setting}
+In Theorem~\ref{thm:dist} and the results that cite it, the observations are $n$ i.i.d.\ copies $(x^{(i)},y^{(i)})$ of a
+pair $(x,y)$, with $x\in\R^{\praw}$ the vector of all observed predictors, and $\zeta_j:=(x_j-\E x_j)/\sd(x_j)$. The data
+set is $\Dn$ and its law is $\P^*$. The method runs on the predictors that are not constant in the sample.
+\end{definition}

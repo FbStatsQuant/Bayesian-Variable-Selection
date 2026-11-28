@@ -1,0 +1,70 @@
+% =====================================================================================================
+\section{Crosswalk to the A6 edition}\label{app:crosswalk}
+
+Labels are those of the A6 edition (\code{owner_review.tex}); the A6 number is the one printed there.
+
+\begin{longtable}{@{}l l l@{}}
+\caption{Statements: number here, label, and A6 number.}\label{tab:cross-stmt}\\
+\toprule Here & Label & A6 \\ \midrule \endfirsthead
+\toprule Here & Label & A6 \\ \midrule \endhead
+\bottomrule \endfoot
+\ref{thm:post-random} & \code{thm:post-random} & Result 1 \\
+\ref{thm:dist} & \code{thm:dist} & Result 2 \\
+\ref{thm:reported} & \code{thm:reported} & Result 3 \\
+\ref{thm:screen} & \code{thm:screen} & Result 4 \\
+\ref{prop:unbiased} & \code{prop:unbiased} & Result 5 \\
+\ref{rem:sharp} & \code{rem:sharp} & Result 6 \\
+\ref{lem:summaries} & \code{lem:summaries} & Lemma 1 \\
+\ref{thm:post-fixed} & \code{thm:post-fixed} & A.1 \\
+\ref{rem:no-betamin} & \code{rem:no-betamin} & A.3 \\
+\ref{thm:post-margin} & \code{thm:post-margin} & A.5 \\
+\ref{thm:omitted} & \code{thm:omitted} & A.7 \\
+\ref{rem:thm2x} & \code{rem:thm2x} & A.19 \\
+\ref{prop:dist} & \code{prop:dist} & A.9 \\
+\ref{thm:dist-param} & \code{thm:dist-param} & A.10 \\
+\ref{cor:dist-output} & \code{cor:dist-output} & A.11 \\
+\ref{thm:start} & \code{thm:start} & A.12 \\
+\ref{thm:reported-fixed} & \code{thm:reported-fixed} & A.14 \\
+\ref{cor:famc} & \code{cor:famc} & A.15 \\
+\ref{rem:vis} & \code{rem:vis} & A.20 \\
+\ref{cor:list} & \code{cor:list} & A.16 \\
+\ref{thm:outputs} & \code{thm:outputs} & A.17 \\
+\ref{prop:worst-island} & \code{prop:worst-island} & inside A.17 (the worst-island sentence) \\
+\ref{rem:alt-route} & \code{rem:alt-route} & A.18 \\
+\end{longtable}
+
+\begin{longtable}{@{}l l l@{}}
+\caption{Assumptions and conventions: key here, label, and where A6 states them.}\label{tab:cross-asm}\\
+\toprule Here & Label & A6 \\ \midrule \endfirsthead
+\toprule Here & Label & A6 \\ \midrule \endhead
+\bottomrule \endfoot
+\as{GL} & \code{asm:GL} & 5.1 \\
+\as{DIM} & \code{asm:DIM} & 5.1 \\
+\as{SP} & \code{asm:SP} & 5.1 \\
+\as{GR} & \code{asm:GR} & 5.2 \\
+\as{SGR} & \code{asm:SGR} & 5.2 \\
+\as{FSb} & \code{asm:FSb} & 5.2 \\
+\as{FSt} & \code{asm:FSt} & 5.2 \\
+\as{EFS} & \code{asm:EFS} & 5.2 \\
+\as{dist} & \code{asm:dist} & Assumption 3 \\
+\as{V} & \code{asm:V} & 5.4 \\
+\as{reported} & \code{asm:reported} & Assumption 4 \\
+\as{SCR} & \code{asm:SCR} & \S5.5, in the text of Result 4 \\
+\as{WIT} & \code{asm:WIT} & in the text of Result 6(b) \\
+\as{BC} & \code{asm:BC} & A.1.1 \\
+\as{EF} & \code{asm:EF} & A.1.1 \\
+\as{NC} & \code{asm:NC} & A.1.1 \\
+\as{BM} & \code{asm:BM} & A.1.1 \\
+\as{margin} & \code{asm:margin} & Assumption A.4 \\
+\as{omitted} & \code{asm:omitted} & Assumption A.6 \\
+\as{NL} & \code{asm:NL} & A.5 \\
+\as{reported-fixed} & \code{asm:reported-fixed} & Assumption A.13 \\
+\as{C1} & \code{asm:C1} & 5.6 \\
+\as{C2} & \code{asm:C2} & C.2 \\
+\as{C2p} & \code{asm:C2p} & 5.6 \\
+\as{C3} & \code{asm:C3} & 5.6 \\
+\end{longtable}
+
+Not carried over, because they are not results: Remark~4.1 (\code{rem:screen}), Remark~A.2 (\code{rem:moderate-n}),
+Example~A.8 (\code{ex:omitted}), Example~2 (\code{ex:leak}), Remark~A.21 (\code{rem:dist-asm}). New here: Planned
+Theorems~\ref{thm:trap}--\ref{thm:agg-leak} and Definition~\ref{def:singleflip}.

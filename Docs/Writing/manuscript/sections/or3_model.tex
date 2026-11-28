@@ -1,0 +1,102 @@
+% =====================================================================================================
+\section{The model and the priors}\label{sec:method}\label{sec:prior}
+
+This section says what the method assumes about the data and what prior it puts on models and coefficients. Every
+choice is fixed by the software; the user sets nothing. Table~\ref{tab:prior} lists each choice with its default and
+the reason for it; Appendix~\ref{app:params} gives the code location of every constant.
+
+\paragraph{Working model.} Given a model $S$, coefficients $\theta_S\in\R^{\abs{S}}$ and a variance $\sigma^2>0$, the
+method fits $y\mid S,\theta_S,\sigma^2\sim\Normal_n(X_S\theta_S,\sigma^2I_n)$ to the standardised data of
+Section~\ref{sec:setup}. Here $\theta_S$ and $\sigma^2$ are working parameters; the intercept is removed by centring.
+The theorems are proved under the true model~\eqref{eq:model}, not under this working model.
+
+\paragraph{Model space and model prior.} The method considers every model with at most $K$ predictors,
+\begin{equation}\label{eq:space}
+  \Om:=\{S\subseteq\set{p}:\abs{S}\le K\},\qquad K:=\min\big(p,\lfloor n/2\rfloor\big),
+\end{equation}
+and gives a model a prior probability that depends only on its size:
+\begin{equation}\label{eq:modelprior}
+  \text{prior of }S=\frac{w(\abs{S})}{\bar w_K},\qquad w(k):=\frac{1}{2\binom{2p-1}{k}},\qquad
+  \bar w_K:=\sum_{k=0}^{K}\binom{p}{k}w(k).
+\end{equation}
+This is the beta-binomial prior $\BB(1,p)$ \citep{ScottBerger2010} restricted to $\Om$: a probability $q$ is drawn from
+$\BetaDist(1,p)$, and given $q$ each predictor enters independently with probability $q$. Its mean model size is about
+one. Adding a predictor to a model of size $k$ multiplies the prior by $(k+1)/(2p-1-k)$, a cost of about
+$\log\{2p/(k+1)\}$ in log prior odds. For example, with $p=3$ and $n\ge6$ the empty model has prior probability
+$\tfrac12$, each one-predictor model $\tfrac1{10}$, and each larger model $\tfrac1{20}$.
+
+\paragraph{Coefficients and noise variance.} Given $S$ and $\sigma^2$, the coefficients have a $g$-prior
+\citep{Zellner1986} with $g=n$ and a unit ridge, and the variance an inverse-gamma prior:
+\begin{equation}\label{eq:slab}
+  \theta_S\mid S,\sigma^2\sim\Normal\big(0,\;n\sigma^2(G_S+I)^{-1}\big),\qquad \sigma^2\sim\IG(a_0,b_0),\quad a_0=b_0=0.01 .
+\end{equation}
+
+\begin{table}[ht]
+\centering\small
+\setlength{\tabcolsep}{4pt}
+\caption{The model and the priors: every choice, its default, and why. Nothing here is tuned by the user.}\label{tab:prior}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.2\linewidth}>{\raggedright\arraybackslash}p{0.24\linewidth}>{\raggedright\arraybackslash}p{0.5\linewidth}@{}}
+\toprule
+Choice & Default & Why \\
+\midrule
+likelihood & Gaussian linear model with an intercept on the raw scale; the method centres and scales the data and
+scores the centred model, with no intercept parameter &
+the standard model for variable selection; standardising makes the posterior unchanged when the response is shifted or
+rescaled, and puts every predictor on one scale, so one prior fits all. \\
+model-size prior & $\BB(1,p)$: $w(k)=\tfrac12/\binom{2p-1}{k}$ &
+corrects for multiplicity \citep{ScottBerger2010}: each extra predictor costs about $\log(2p)$ in log prior odds,
+the order needed to keep $p$ null predictors out; it has no parameter to tune; its mean model size is about one. \\
+size cap & $K=\min(p,\lfloor n/2\rfloor)$ &
+a model with more predictors than about half the observations cannot be estimated reliably; the cap keeps every model's
+fit well posed and bounds the model space. \\
+coefficient prior & $g$-prior, $g=n$ &
+a unit-information prior: worth about one observation; it costs each extra predictor about $\tfrac12\log n$ in the
+marginal likelihood, a BIC-like penalty. \\
+ridge & unit ridge, $G_S+I$ &
+keeps the prior proper when the columns of a model are collinear, which happens when $p>n$; it is negligible when
+$G_S$ is of order $n$. \\
+noise-variance prior & $\IG(0.01,0.01)$ &
+proper, and close to the usual non-informative $1/\sigma^2$; with $n$ observations its parameters change the posterior
+very little. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{The posterior, in closed form}\label{sec:posterior}
+
+Integrating $\theta_S$ and $\sigma^2$ out gives the marginal likelihood of each model,
+\begin{equation}\label{eq:marglik}
+  m(S)=C_n\Big(\frac{\det H_S}{\det(G_S+I)}\Big)^{-1/2}(2b_0+\SSq_S)^{-\nu},\quad
+  H_S:=(n+1)G_S+I,\ \ \SSq_S:=y^\top y-n\,z_S^\top H_S^{-1}z_S,
+\end{equation}
+with $\nu:=a_0+n/2$ and $C_n:=(2b_0)^{a_0}\Gamma(a_0+n/2)/\{\pi^{n/2}\Gamma(a_0)\}$ (here $\pi=3.14\ldots$).
+$\SSq_S$ is a shrunken residual sum of squares. The determinant ratio is a penalty for size (an Occam factor): in a
+well-conditioned model it multiplies $m(S)$ by about $(n+1)^{-1/2}$ for each extra predictor. The \emph{log score} of a
+model and the \emph{posterior over models} are
+\begin{equation}\label{eq:posterior}
+  F(S):=\log\{w(\abs{S})/\bar w_K\}+\log m(S),\qquad \pis{S}=\frac{e^{F(S)}}{Z},\qquad Z:=\sum_{S'\in\Om}e^{F(S')} .
+\end{equation}
+The normalising constant $Z$ is the \emph{evidence}. So the posterior is known exactly up to one number; the whole
+difficulty is that $\Om$ is too large to sum over, which is what the sampler of Section~\ref{sec:sampler} is for.
+
+The posterior is summarised by four quantities. The \emph{inclusion probability} of predictor $j$ is
+$\PIP_j:=\sum_{S\ni j}\pis{S}$; the \emph{highest posterior model} is $\HPM:=\argmax_S\pis{S}$; the \emph{median
+probability model} is $\MPM:=\{j:\PIP_j>1/2\}$ \citep{BarbieriBerger2004}; and the \emph{posterior miss} is
+$1-\pis{\Sz}$, the posterior mass outside the true model.
+
+\begin{lemma}[The posterior miss controls the summaries]\label{lem:summaries}
+For every data set, $\max_{j\in\set{p}}\abs{\PIP_j-\ind{j\in\Sz}}\le1-\pis{\Sz}$. If $\pis{\Sz}>1/2$, then
+$\HPM=\MPM=\Sz$.
+\end{lemma}
+
+The proof is two lines: every model that misses a true predictor, or contains a null one, differs from $\Sz$. So a
+theorem that makes the posterior miss small makes every summary right at once.
+
+\paragraph{Compared with \SL.} The two priors are close in kind. \emph{Model prior:} theirs lets each predictor enter
+independently with probability $\lambda_n=r_n/P_n$, where $P_n$ is their number of predictors (our $p$), and caps the model size at $\bar r_n$ (their (6), p.~951); both $r_n$
+and $\bar r_n$ are chosen by the user, and their Theorems~1--3 need $\lambda_n\to0$ (their (13), p.~952). Ours mixes over the inclusion probability
+(beta-binomial), which costs each predictor about $\log p$ in log prior odds, as theirs does for their usual choices of $r_n$, with nothing to choose, and fixes the cap at
+$\lfloor n/2\rfloor$. \emph{Coefficients:} theirs is $\Normal(0,\sigma^2V_\xi)$ with a user-chosen $V_\xi$ (p.~951); in
+their numerical work $V_\xi^{-1}=(X_\xi^\top X_\xi+\tau I)/n$ with $\tau=0.01$ (p.~959). Ours is exactly this form with
+$\tau=1$. \emph{Noise:} both use an inverse-gamma prior; theirs takes $a_0=b_0=1$ in their numerical work (pp.~959--960), ours
+$0.01$.

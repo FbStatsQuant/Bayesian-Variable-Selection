@@ -1,0 +1,46 @@
+diff --git a/Theory_work/Wave3/W3-D2/STATEMENT.md b/Theory_work/Wave3/W3-D2/STATEMENT.md
+index e87e3d52..e5d6e7f7 100644
+--- a/Theory_work/Wave3/W3-D2/STATEMENT.md
++++ b/Theory_work/Wave3/W3-D2/STATEMENT.md
+@@ -1,4 +1,4 @@
+-# W3-D2 — STATEMENT v1.1 (2026-11-17; lead: Claude Opus 5.5, high; track D ticket #2, "check X"; v1.1 = statement-lock amendments [L1-1], [L1-2], locked by `reviews/L1_statement_lock_sol.md` (LOCK-WITH-AMENDMENTS; `reviews/L1_disposition.md`))
++# W3-D2 — STATEMENT v1.2 (2026-11-17; lead: Claude Opus 5.5, high; track D ticket #2, "check X"; v1.1 = statement-lock amendments [L1-1], [L1-2], locked by `reviews/L1_statement_lock_sol.md` (LOCK-WITH-AMENDMENTS; `reviews/L1_disposition.md`); v1.2 = §7 caveats written out (CP1, EQUAL))
+ 
+ Ticket W3-D2: Theorem 2 (claims card row 1.2, posterior concentration on a random Gaussian design) derived from the
+ omitted-variables master `W3-MISR-R:CorGb-plus@1.0.1`, so that its eigenvalue floor is asked on smaller sets. Source:
+@@ -20,9 +20,9 @@ marked *deterministic*. No method change.
+   S₀ := supp β, s₀ := |S₀|.
+ * **Everything may depend on n:** m, Σ, α, β, σ² and p (no condition beyond (A1)–(A3)).
+ * **Posterior and outputs.** π(· | X^r, y^r) is the method's posterior over models S ⊆ [p] with |S| ≤ K := min(p, ⌊n/2⌋):
+-  the exact posterior of the coded prior (columns and response standardised, a g-prior with g = n on the coefficients,
+-  an inverse-gamma prior on the noise variance, a capped beta-binomial prior on the model size), as defined in [W3P] §0
+-  (`:16-29`) and computed from (X^r, y^r) [L1-1].
++  the exact posterior of the coded prior (columns and response standardised; coefficients N(0, nσ²(X_SᵀX_S + I)⁻¹)
++  given (S, σ²); an inverse-gamma prior on the noise variance; a capped beta-binomial prior on the model size),
++  computed from (X^r, y^r) as defined in [W3P] §0 `:16-29` [L1-1].
+   δ_n := 1 − π(S₀ | X^r, y^r) (π(S₀) := 0 if s₀ > K); PIP_j := π(j ∈ S); HPM := a measurable selection of
+   argmax π (any tie rule); MPM := {j : PIP_j > ½} ([W3P] `:31-34`). r_n := √(log n/n).
+ 
+@@ -98,9 +98,13 @@ recorded one (Corollary 2X); the floor is asked on sets of size 3(A + 1)(s₀ +
+ Σ need not be a correlation matrix; the fixed absolute signal bounds b_lo ≤ |β_j| ≤ b_hi and the fixed σ*² are replaced by
+ the relative conditions (A3) (energy and beta-min measured against σ², which may vary with n) [L1-2]; and the conclusions
+ are in expectation (rate for E δ_n, the PIP error and the HPM/MPM error probabilities) instead of O_P / w.p. → 1.
+-Two things are not stronger and must travel with the tag: the status (conditional, §5, against the row's "clean"), and
+-remark (b): against the old **master's** vanishing-floor extension the two forms are incomparable (neither dominates on
+-the floor hypotheses) [L1-2].
++Two things are not stronger and must travel with the tag [L1-2, CP1]:
++- **Caveat (a) — status.** Theorem 2X and Corollary 2X rest on `W3-MISR-R:CorGb-plus@1.0.1`, whose status is conditional
++  on W3-POST2:C, W3-POST2:E, W3-POST2:A1, W3-POST2:A0, C-MIS:GDb and C-MIS:Prop-P; through W3-POST2:C this includes
++  `W3-POST:Prop-LB`, which is "PROVED (by this seat, unchecked)" (§5). Row 1.2 as recorded is "clean"; the new form is not.
++- **Caveat (b) — floor on the large sets.** Against the old **master** (W2-APP:POST with LSF), which allows the floor on the
++  sets of size ≤ k̄_n to vanish slowly, Theorem 2X needs a fixed floor on all its sets: the two are incomparable on the
++  floor hypotheses (remark (b)). STRONGER holds against the constant-floor reader statement only.
+ 
+ ## 8. Changelog
+ 
+@@ -109,3 +113,5 @@ the floor hypotheses) [L1-2].
+ | 1.0 | all | NEW-CLAIM | first version | ticket | `reviews/L1_statement_lock_sol.md` (LOCK-WITH-AMENDMENTS) |
+ | 1.1 | §0 posterior line; §1 title, clause (E) moved out of the reader statement; §2 "bounds" | EQUAL | presentation [L1-1] | L1-1 | lock amendments (lead applies; the lock reviewer specified the fix) |
+ | 1.1 | §4 remark (b), §7 tag wording | EQUAL | faithfulness of the comparison with the old master [L1-2] | L1-2 | as above |
++| 1.2 | §7 caveats (a), (b) written out (outside the registered spans) | EQUAL | manager's CP1 answer | CP1 | none needed (EQUAL, outside spans) |
++| 1.2 | §0 posterior line: coefficient prior written as coded (ridge form, not "g-prior"); citation on one line | EQUAL | wording of the verbal gloss; the definition is the [W3P] pointer | lead (citecheck) | K1/council read |

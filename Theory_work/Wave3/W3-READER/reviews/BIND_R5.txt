@@ -1,0 +1,2 @@
+bind: OK, 1 review(s) give a PASS verdict (>= 8.0) on MANIFEST 9f1104743b12c1358bc5b2bbb8266c7bac345fe81f4d6bf213f25b052b80df52
+council cell: R5; MANIFEST 9f1104743b12c1358bc5b2bbb8266c7bac345fe81f4d6bf213f25b052b80df52; opus=9.6 PASS(reviews/R5_council_opus.md)

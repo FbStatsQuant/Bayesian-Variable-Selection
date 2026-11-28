@@ -1,0 +1,5 @@
+# NOTE — wrong date "2026-11-23" in recorder text written on 2026-11-17 (recorder; HQ-approved correction-only landing)
+
+The true date of all the recordings listed below is **2026-11-17** (they were recorded during the night of 2026-11-17). Recorder TAG strings, registry notes and event reasons written on 2026-11-17 carry the wrong date "2026-11-23" for: the W1-N1:B/F discharge (W3-AUDIT-AW:ISL/FRZ, W3-SAMP erratum), the Prop-LB relabel, the CorGb-plus refresh, W3-D2, W3-D3, the W3-MISR family refresh (MF), Q3a, track V, and the recorder's check-note files (MF_*_check_opus.md, *_requote_check_opus.md and similar files in the reviews/ folders).
+
+They are left unchanged as append-only history: registry notes and events.log lines are not rewritten. Only the date strings of the track V carriers (VR4r_ and VR4r3_record_sol/opus.md) and of VR4r3_requote_check_opus.md were corrected, in the same commit as this note, together with a re-record of the (stale) accept record of W3-AUDIT-V:VIS; no manifest, claim text or status changed.

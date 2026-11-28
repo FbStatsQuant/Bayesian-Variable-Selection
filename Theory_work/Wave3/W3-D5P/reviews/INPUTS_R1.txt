@@ -1,0 +1,14 @@
+# External inputs of W3-D5P council R1 (manifest.py freeze --extra). Consumed statements, cited proof steps, pinned code.
+# No registry tables (HQ rule 11-16 20:44); registry rows are quoted in the brief.
+Theory_work/Wave3/W3-RM2-R/STATEMENT.md
+Theory_work/Wave3/W3-RM/STATEMENT.md
+Theory_work/Wave3/W3-RM2/STATEMENT.md
+Theory_work/Wave1C/C-DLV/lemmas/L4_delivery.md
+Theory_work/Wave1C/C-DLV/lemmas/L2_degenerate.md
+Theory_work/Wave3/W3-SAMP/STATEMENT.md
+Theory_work/Wave3/W3-SAMP/lemmas/CC_code_check.md
+Theory_work/Wave2/W2-APP/lemmas/L1_POST.md
+Theory_work/Wave3/W3-DIST/STATEMENT.md
+Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+Theory_work/Wave3/W3-READER/CLAIMS_CARD.md
+Scripts/SMC_BVS/core

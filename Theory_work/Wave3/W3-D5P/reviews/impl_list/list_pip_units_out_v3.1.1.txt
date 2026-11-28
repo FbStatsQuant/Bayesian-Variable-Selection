@@ -1,0 +1,5 @@
+hand cases ok: 37 checks
+exact-branch fixtures: 6 of 6; store holds every model in 4 
+INV-SCORE-BITS provenance: fb (no inherited) 2325 distinct store models: table 5, local-search reach 675, particle only 1645; fa top store: 1601 of 1601 also in the inherited set (2325 inherited models)
+INV-SCORE-BITS test: 6402 store models (fit with inherited: top 1601, leaders gamma1 800, gamma0 800; final run without inherited: 1601, 800, 800) + 150 table entries identical across paths
+list_pip_units: all 155 checks passed (core /home/fb31/BVS-wt/W3-D5P/.rc_tmp/implist2/Scripts/SMC_BVS/core )

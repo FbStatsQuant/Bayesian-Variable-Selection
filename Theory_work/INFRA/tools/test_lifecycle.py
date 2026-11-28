@@ -2242,6 +2242,255 @@ try:
                         not a5_before and a5_nofile and a5_wrongdir and a5_notsol and a5_badsha and not a5_pass
                         and a5_conflict and a5_council and not a5_back))
 
+        # ---------------- relabel task (HQ 11-16, rule (c), card 12 cond. 1): an @proof edge into a NON-upgraded row satisfies
+        # A3 only through a recorded, VERIFIED LC step (registry/lc_steps.tsv + a CLEAN carrier of exact LC-STEP-VERIFIED
+        # lines + a review line equal to the verdict); fail-closed (two Opus review rounds: negated / quoted / prefix /
+        # re-spelled / self-certified / symlinked variants)
+        TL = "Theory_work/WaveT/LCT"
+        put(f"{TL}/STATEMENT.md", "Lemma W. Step one holds.\nTheorem Y. Y holds, using step one of Lemma W.\n")
+        put(f"{TL}/LOG.md", "# LCT log\n\nPROVED (by this seat, unchecked)\nPROVED-CHECKED\nOPEN; a gap\nSEE NOTES\n")
+        SRCT = "proof line 1\nproof line 2 (step one)\nproof line 3\n"
+        put(f"{TL}/SRC.md", SRCT)
+        run("registry.py", "add", "TLC:W", "--file", f"{TL}/STATEMENT.md", "--lines", "1-1", "--kind", "lemma", "--name",
+            "Lemma W", "--status", "PROVED (by this seat, unchecked)", "--source", f"{TL}/LOG.md:3", "--reason", "t")
+        run("registry.py", "add", "TLC:Y", "--file", f"{TL}/STATEMENT.md", "--lines", "2-2", "--kind", "theorem", "--name",
+            "Theorem Y", "--status", "PROVED-CHECKED", "--source", f"{TL}/LOG.md:4",
+            "--field", "depends_on=TLC:W@proof:step one", "--reason", "t")
+        USE = "proof:step one"
+        LCS = "Theory_work/INFRA/registry/lc_steps.tsv"
+        REV, CAR = f"{TL}/reviews/LC_sol.md", f"{TL}/reviews/LC_record.md"
+        VERD = "VERIFIED — step one of Lemma W: the proof line 2 follows"
+        REVT = f"# Sol line check\n\n{VERD}\n"
+
+        def lc_files(rng="2-2", sha=None, carrier_path=CAR, cline=None, extra="", verd=VERD, review=REV, review_text=None):
+            shaS = sha or R._digest(R.read_lines(f"{TL}/SRC.md"))
+            put(LCS, "consumer\tinput\tuse\tfile\tlines\tsha256\tcarrier\n"
+                f"TLC:Y\tTLC:W\t{USE}\t{TL}/SRC.md\t{rng}\t{shaS}\t{carrier_path}\n")
+            line = cline if cline is not None else (f"LC-STEP-VERIFIED: TLC:Y | TLC:W | {USE} | {TL}/SRC.md:{rng} | "
+                                                    f"sha256={shaS} | review={review} | verdict={verd}")
+            put(carrier_path, f"# LC carrier\n\n{line}\n{extra}")
+            put(REV, review_text if review_text is not None else REVT)
+
+        def a3lc():
+            return [f for f in acc_errs("TLC:Y") if f[1] == "A3-assurance" and "TLC:W" in f[3]]
+
+        def stamp(cid="TLC:Y"):
+            return R.accept_stamp(cid, R.index(R.load_claims()), R.Graph(R.load_claims()), R.load_aliases())
+
+        def okl(c, i_, u, rng="2-2"):
+            return (f"LC-STEP-VERIFIED: {c} | {i_} | {u} | {TL}/SRC.md:{rng} | sha256="
+                    f"{R._digest(R.read_lines(f'{TL}/SRC.md'))} | review={REV} | verdict={VERD}")
+        a3_none = bool(a3lc())                                # no lc_steps.tsv row: the weak input blocks (baseline)
+        stamp0, stampW0 = stamp(), stamp("TLC:W")
+        lc_files()
+        a3_pass = bool(a3lc())                                # exact step, hash, clean carrier, verbatim review line -> satisfied
+        stamp1, stampW1 = stamp(), stamp("TLC:W")
+        put(REV, REVT + "an extra line\n")
+        stamp_rev = stamp()                                   # the review enters the accept identity
+        put(REV, REVT)
+        put(CAR, open(os.path.join(TMP, CAR), encoding="utf-8").read() + "a harmless extra line\n")
+        stamp_car = stamp()                                   # so does the carrier
+        lc_files(extra=okl("TLC:Y2", "TLC:W", "proof:other") + "\n" + okl("TLC:Y", "TLC:W1", USE) + "\n"
+                       + okl("TLC:Y", "TLC:W", USE + "-b") + "\n")
+        a3_shared = bool(a3lc())                              # other edges' VALID lines (look-alike ids/uses) do not conflict
+        lc_files(cline=okl("TLC:Y", "TLC:W", USE, "1-3"))
+        a3_range = bool(a3lc())                               # carrier verifies another (wider) range -> not the cited step
+        lc_files(extra=okl("TLC:Y", "TLC:W", USE, "1-3") + "\n")
+        a3_two = bool(a3lc())                                 # a second line for the same edge use with another range
+        lc_files(extra=okl("TLC:Y", "TLC:W", USE) + "\n")
+        a3_dup = bool(a3lc())                                 # two identical lines
+        lc_files()
+        put(f"{TL}/SRC.md", "proof line 1\nproof line 2 CHANGED\nproof line 3\n")
+        a3_hash = bool(a3lc())                                # source changed since the line check -> hash mismatch
+        stamp_src = stamp()
+        put(f"{TL}/SRC.md", SRCT)
+        a3_back = bool(a3lc())
+        a3_confl = []
+        for extra in (f"LC-STEP-NOT-VERIFIED: TLC:Y | TLC:W | {USE} | reason=t\n",           # the plain spelling
+                      f"LC-STEP-NOT-VERIFIED: TLC:Y | TLC:W | {USE}\n",                        # no trailing pipe
+                      f"LC-STEP-NOT-VERIFIED: TLC:Y |  TLC:W | {USE} | reason=t\n",            # double space
+                      f"- LC-STEP-NOT-VERIFIED: TLC:Y | TLC:W | {USE} | reason=t\n",           # bullet
+                      f"    LC-STEP-NOT-VERIFIED: TLC:Y | TLC:W | {USE} | reason=t\n",         # indented
+                      f"LC-STEP NOT-VERIFIED: TLC:Y | TLC:W | {USE}\n",                        # separator
+                      f"lc-step-not-verified: TLC:Y | TLC:W | {USE}\n",                        # case
+                      f"LC\u2011STEP\u2011NOT\u2011VERIFIED: TLC:Y | TLC:W | {USE}\n",     # non-breaking hyphens
+                      f"LC-STEP-NOT-VERIFIED: Y | W | {USE}\n",                                # ticket-local ids
+                      f"LC-STEP-NOT-VERIFIED: TLC:Y | TLC:W | Proof:Step one\n",              # use case
+                      f"LC_STEP_NOT_VERIFIED: TLC:Y | TLC:W | {USE}\n",                        # underscores
+                      f"LC\\_STEP\\_NOT\\_VERIFIED: TLC:Y | TLC:W | {USE}\n",             # markdown-escaped underscores
+                      f"_LC-STEP-NOT-VERIFIED: TLC:Y | TLC:W | {USE}_\n",                      # markdown italics
+                      f"_LC_STEP_NOT_VERIFIED: TLC:Y | TLC:W | {USE}_\n"):                    # italics + underscores
+            lc_files(extra=extra)
+            a3_confl.append(bool(a3lc()))                     # ANY LC-STEP line that is not an exact VERIFIED line -> refused
+        lc_files(cline="no verdict line here")
+        a3_nocar = bool(a3lc())                               # carrier without the line -> no carrier verdict
+        a3_verd = []
+        for v in ("UN-VERIFIED: gap at line two of the proof", "NOT YET VERIFIED, gap at line 2 of the proof",
+                  "PARTIALLY VERIFIED (line 2 only; gap remains)", "VERIFIED", "VERIFIED with a gap: step one of Lemma W fails",
+                  "VERIFIED-WITH-GAP: step one of Lemma W, see remarks", "VERIFIED (FALSE) - step one of Lemma W is refuted",
+                  "VERIFIED except for the case n = 1 (left open) here",
+                  "Author claims VERIFIED, but line 2 has a gap in the proof",          # does not begin with VERIFIED
+                  "Steps 2-3 VERIFIED; step one REFUTED (counterexample n=2)",
+                  "> VERIFIED - step one of Lemma W: the proof line 2 follows",        # a quoted author claim
+                  "VERIFIED with minor gaps in step one of Lemma W holds",
+                  "| step one (line 2) | NOT CHECKED | step two | VERIFIED | other step only |"):
+            lc_files(verd=v, review_text=f"# r\n\n{v}\n")
+            a3_verd.append(bool(a3lc()))                      # negative / qualified / vague verdicts, even if the review repeats them
+        lc_files(verd="VERIFIED-WITH-AMENDMENTS - step one of Lemma W holds after the stated fix",
+                 review_text="# r\n\nVERIFIED-WITH-AMENDMENTS - step one of Lemma W holds after the stated fix\n")
+        a3_amend = bool(a3lc())                               # a legitimate VERIFIED-WITH-AMENDMENTS line passes
+        lc_files(verd="| T02 item 5(a) | W1:74-82 | VERIFIED | the exact step one of Lemma W holds on the line |",
+                 review_text="# r\n\n| T02 item 5(a) | W1:74-82 | VERIFIED | the exact step one of Lemma W holds on the line |\n")
+        a3_table = bool(a3lc())                               # a verbatim markdown table row with a VERIFIED cell passes
+        a3_rev = []
+        for rt in ("# r\n\nVerdict: NOT VERIFIED - step one of Lemma W: the proof line 2 follows.\n",              # negation (substring)
+                   f"# r\n\n> {VERD}\nReviewer verdict: NOT VERIFIED, gap at line 2.\n",                            # quoted author claim
+                   "# r\n\nsomething else\n"):                                                                       # no verdict line
+            lc_files(review_text=rt)
+            a3_rev.append(bool(a3lc()))
+        lc_files(verd="VERIFIED - step one of Lemma W: the proof line 2",
+                 review_text="# r\n\nVERIFIED - step one of Lemma W: the proof line 2 does NOT follow; the step fails.\n")
+        a3_prefix = bool(a3lc())                              # verdict = a prefix of a negating review line -> refused
+        lc_files(review=CAR)
+        a3_self = bool(a3lc())                                # the carrier cannot be its own review
+        lc_files(carrier_path=f"{TL}/LC_record.md")
+        a3_path = bool(a3lc())                                # carrier outside a reviews/ folder -> refused
+        lc_files(carrier_path=f"{TL}/scratch/reviews/LC_record.md")
+        a3_scratch = bool(a3lc())                             # scratch path -> refused
+        outside = os.path.join(os.path.dirname(TMP), "lc_outside_dir")
+        os.makedirs(outside, exist_ok=True)
+        a3_link = []
+        for what in ("carrier", "review", "cited", "dotdot"):
+            lc_files()
+            try:
+                if what == "dotdot":   # reviews/lnk -> scratch dir; carrier named reviews/lnk/../x.md
+                    os.makedirs(os.path.join(TMP, TL, "scratch", "sub"), exist_ok=True)
+                    os.symlink(os.path.join(TMP, TL, "scratch", "sub"), os.path.join(TMP, TL, "reviews", "lnk"))
+                    shutil.copy(os.path.join(TMP, CAR), os.path.join(TMP, TL, "scratch", "x.md"))
+                    lc_files(carrier_path=f"{TL}/reviews/lnk/../x.md")
+                else:
+                    tgt = {"carrier": CAR, "review": REV, "cited": f"{TL}/SRC.md"}[what]
+                    real = os.path.join(outside, what + ".md")
+                    shutil.copy(os.path.join(TMP, tgt), real)
+                    os.remove(os.path.join(TMP, tgt))
+                    os.symlink(real, os.path.join(TMP, tgt))
+                a3_link.append(bool(a3lc()))                  # any symlink / `..` in the cited file, carrier or review -> refused
+            except OSError:
+                a3_link.append(True)                          # no symlinks on this platform: nothing to test
+            for q in (CAR, REV, f"{TL}/SRC.md", f"{TL}/reviews/lnk"):
+                if os.path.islink(os.path.join(TMP, q)):
+                    os.remove(os.path.join(TMP, q))
+            put(f"{TL}/SRC.md", SRCT)
+        lc_files()
+        run("registry.py", "set", "TLC:Y", f"depends_on=TLC:W@proof:step one; TLC:W@stmt", "--reason", "t")
+        a3_mixed = bool(a3lc())                               # a statement use of the weak input is not covered
+        run("registry.py", "set", "TLC:Y", "depends_on=TLC:W@proof:step one", "--reason", "t")
+        a3_end = bool(a3lc())
+        a3_inp = []
+        for st_, ln_ in (("OPEN; a gap", 5), ("SEE NOTES", 6)):   # an OPEN input, an unclassified non-PROVED input: rule not applicable
+            run("registry.py", "correct-status", "TLC:W", "--status", st_, "--source", f"{TL}/LOG.md:{ln_}", "--reason", "t")
+            a3_inp.append(bool(a3lc()))
+        run("registry.py", "correct-status", "TLC:W", "--status", "PROVED (by this seat, unchecked)", "--source",
+            f"{TL}/LOG.md:3", "--reason", "t")
+        os.remove(os.path.join(TMP, LCS))
+        a3_gone = bool(a3lc())                                # tsv removed -> blocks again
+        stampW2 = stamp("TLC:W")
+        flags = {"none": a3_none, "pass": not a3_pass, "shared": not a3_shared, "range": a3_range, "two": a3_two, "dup": a3_dup,
+                 "hash": a3_hash, "back": not a3_back, "confl": all(a3_confl), "nocar": a3_nocar, "verd": all(a3_verd),
+                 "amend": not a3_amend, "table": not a3_table, "rev": all(a3_rev), "prefix": a3_prefix, "self": a3_self,
+                 "path": a3_path, "scratch": a3_scratch, "link": all(a3_link), "mixed": a3_mixed, "end": not a3_end,
+                 "inp": all(a3_inp), "gone": a3_gone, "stamp_lc": stamp1 != stamp0, "stamp_rev": stamp_rev != stamp1,
+                 "stamp_car": stamp_car != stamp1, "stamp_src": stamp_src != stamp1, "stamp_other": stampW0 == stampW1}
+        bad_flags = [k for k, v in flags.items() if not v]
+        results.append(("relabel rule (c): an @proof edge into a non-upgraded row satisfies A3 only through a recorded "
+                        "VERIFIED LC step (lc_steps.tsv + a clean carrier of exact LC-STEP-VERIFIED lines + a review line "
+                        "equal to the verdict): no row / wrong, wider or duplicate range / source hash mismatch (restored -> "
+                        "passes) / any LC-STEP line that is not an exact VERIFIED line (12 spellings) / no carrier line / "
+                        "negative, qualified or vague verdicts / a review that negates, quotes or extends the verdict / the "
+                        "carrier as its own review / carrier outside reviews/, in scratch / symlink or `..` in the cited "
+                        "file, carrier or review / an extra statement use / an OPEN or unclassified non-PROVED input -> A3 "
+                        "refuses; other edges' valid lines, VERIFIED-WITH-AMENDMENTS and a verbatim table row with a VERIFIED "
+                        "cell pass; the LC-step digests (source, carrier, review) enter the accept identity, an unrelated "
+                        "claim's identity is unchanged" + ("" if not bad_flags else f" [FAILED: {', '.join(bad_flags)}]"),
+                        not bad_flags))
+
+        # ---------------- manifest.py (HQ 2026-11; Opus review): only per-directory .gitignore counts (a tracked file stays covered, global excludes are
+        # not read), freeze skips git-ignored untracked files and refuses an all-ignored ticket / listed directory, a listed ignored file
+        # still verifies and an unlisted one is not ADDED; registry / decision-log external inputs WARN (any spelling, on freeze and verify)
+        MGR = os.path.join(TMP, "mg_repo")
+        for _d in ("tk/out", "tk/reviews", "Theory_work/INFRA/registry", "data/num", "gen/tk2"):
+            os.makedirs(os.path.join(MGR, _d), exist_ok=True)
+        _gi = subprocess.run(["git", "init", "-q", MGR], capture_output=True)
+        _env = dict(os.environ, GIT_CONFIG_NOSYSTEM="1", GIT_CONFIG_GLOBAL=os.devnull, HOME=TMP)
+
+        def mg(rel, text):
+            with open(os.path.join(MGR, rel), "w", encoding="utf-8", newline="\n") as fh:
+                fh.write(text)
+
+        def mrun(*args, env=None):
+            return subprocess.run([sys.executable, MANP, *args], capture_output=True, text=True, cwd=MGR, env=env or _env)
+        mg(".gitignore", "tk/out/\ntk/ign.txt\ndata/num/\ngen/\n*.rds\n"); mg("tk/a.md", "a\n"); mg("tk/ign.txt", "i\n"); mg("tk/out/c.txt", "c\n")
+        mg("tk/tracked.rds", "t\n"); mg("data/num/n1.csv", "n\n"); mg("gen/tk2/a.md", "g\n"); mg("ext.md", "e\n")
+        mg("Theory_work/INFRA/registry/claims.tsv", "r\n"); mg("Theory_work/INFRA/DECISIONS.md", "d\n")
+        mg("L_ok.txt", "ext.md\n"); mg("L_dir.txt", "Theory_work\n"); mg("L_ign.txt", "data/num\n")
+        mg("L_live.txt", "./Theory_work/INFRA/DECISIONS.md\nTheory_work//INFRA/registry/claims.tsv\nTheory_work/INFRA/../INFRA/registry/claims.tsv\next.md\n")
+        ok_git = _gi.returncode == 0 and subprocess.run(["git", "-C", MGR, "add", "-f", "tk/tracked.rds"], capture_output=True, env=_env).returncode == 0
+        f_ok = mrun("freeze", "tk", "tk/reviews/M_ok.txt", "--extra", "L_ok.txt")
+        m_ok = open(os.path.join(MGR, "tk", "reviews", "M_ok.txt"), encoding="utf-8").read() if os.path.exists(os.path.join(MGR, "tk", "reviews", "M_ok.txt")) else ""
+        f_live = mrun("freeze", "tk", "tk/reviews/M_live.txt", "--extra", "L_live.txt")
+        f_dir = mrun("freeze", "tk", "tk/reviews/M_dir.txt", "--extra", "L_dir.txt")
+        v_dir = mrun("verify", "tk", "tk/reviews/M_dir.txt")
+        v_live = mrun("verify", "tk", "tk/reviews/M_live.txt")
+        f_ign = mrun("freeze", "tk", "tk/reviews/M_ign.txt", "--extra", "L_ign.txt")          # a listed directory that is entirely ignored
+        f_tk2 = mrun("freeze", "gen/tk2", "gen/tk2/M.txt")                                       # a ticket folder that is entirely ignored
+        # an untracked file that the USER's global excludes would hide is still covered (only .gitignore counts)
+        _gx = os.path.join(TMP, "mg_global_excludes"); open(_gx, "w", encoding="utf-8").write("*.md\n")
+        _gcfg = os.path.join(TMP, "mg_global_cfg"); open(_gcfg, "w", encoding="utf-8").write(f"[core]\n\texcludesFile = {_gx}\n")
+        mg("tk/notes.md", "untracked, hidden by the user's global excludes\n")
+        f_glob = mrun("freeze", "tk", "tk/reviews/M_glob.txt", "--extra", "L_ok.txt", env=dict(_env, GIT_CONFIG_GLOBAL=_gcfg))
+        m_glob = open(os.path.join(MGR, "tk", "reviews", "M_glob.txt"), encoding="utf-8").read() if os.path.exists(os.path.join(MGR, "tk", "reviews", "M_glob.txt")) else ""
+        os.remove(os.path.join(MGR, "tk", "notes.md"))
+        # an older manifest that hashed an ignored file: still verifies; CHANGED when it changes; an unlisted ignored file is not ADDED
+        _spec = importlib.util.spec_from_file_location("manifest_t", MANP); _M = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_M)
+        _rows = [f"{_M.sha(p)}  {n}" for p, n in _M.ticket_files(os.path.join(MGR, "tk"), False)]
+        with open(os.path.join(MGR, "tk", "reviews", "M_old.txt"), "w", encoding="utf-8", newline="\n") as fh:
+            fh.write(f"MANIFEST {_M.digest(_rows)}\n" + "\n".join(_rows) + "\n")
+        v_old = mrun("verify", "tk", "tk/reviews/M_old.txt")
+        mg("tk/out/new_ignored.txt", "n\n"); v_ok2 = mrun("verify", "tk", "tk/reviews/M_ok.txt")      # an unlisted ignored file: not ADDED
+        mg("tk/ign.txt", "i changed\n")
+        v_old2 = mrun("verify", "tk", "tk/reviews/M_old.txt"); v_ok3 = mrun("verify", "tk", "tk/reviews/M_ok.txt")
+        mg("tk/b.md", "an unignored new file\n"); v_ok4 = mrun("verify", "tk", "tk/reviews/M_ok.txt")   # ADDED
+        # a listed directory with one ignored and one unignored file: NOTE, and only the unignored one is frozen; the whole repo (".") and an
+        # absolute spelling of the decision log also WARN
+        mg("data/README", "r\n"); mg("L_part.txt", "data\n"); mg("L_all.txt", ".\n"); mg("L_abs.txt", os.path.join(MGR, "Theory_work", "INFRA", "DECISIONS.md") + "\n")
+        f_part = mrun("freeze", "tk", "tk/reviews/M_part.txt", "--extra", "L_part.txt")
+        m_part = open(os.path.join(MGR, "tk", "reviews", "M_part.txt"), encoding="utf-8").read() if os.path.exists(os.path.join(MGR, "tk", "reviews", "M_part.txt")) else ""
+        f_all = mrun("freeze", "tk", "M_all.txt", "--extra", "L_all.txt"); f_abs = mrun("freeze", "tk", "M_abs.txt", "--extra", "L_abs.txt")
+        # a git failure (not a work tree) excludes nothing: the old behaviour
+        import tempfile
+        _plain = tempfile.mkdtemp(prefix="mg_plain_"); os.makedirs(os.path.join(_plain, "tk"), exist_ok=True)   # outside any work tree (the sandbox is one)
+        open(os.path.join(_plain, "tk", "a.md"), "w").write("a\n"); open(os.path.join(_plain, "tk", "ign.txt"), "w").write("i\n")
+        open(os.path.join(_plain, ".gitignore"), "w").write("tk/ign.txt\n")
+        f_plain = subprocess.run([sys.executable, MANP, "freeze", "tk", "tk/M.txt"], capture_output=True, text=True, cwd=_plain, env=_env)   # no repo: exit 1
+        plain_lib = _M.ignored_paths(os.path.join(_plain, "tk")) == set() and {n for _, n in _M.ticket_files(os.path.join(_plain, "tk"))} == {"a.md", "ign.txt"}
+        shutil.rmtree(_plain, ignore_errors=True)
+        results.append(("manifest.py: only per-directory .gitignore counts (a tracked file matching a pattern stays covered; the user's global excludes "
+                        "are not read); freeze skips git-ignored untracked files and says how many, and REFUSES an all-ignored ticket folder or listed "
+                        "directory; an older manifest that listed an ignored file still verifies (CHANGED when it changes), an unlisted ignored file is "
+                        "not ADDED, an unignored one is; registry / decision-log external inputs WARN once per listed input in any spelling (./, //, "
+                        "..), also for a listed directory and on verify, exit code unchanged; an ordinary input does not; outside a work tree nothing is excluded (the library path; the CLI needs a repository)",
+                        ok_git and f_ok.returncode == 0 and "ign.txt" not in m_ok and "out/c.txt" not in m_ok and "tracked.rds" in m_ok
+                        and "NOTE: 2 git-ignored" in f_ok.stderr and "WARNING" not in f_ok.stderr
+                        and f_live.returncode == 0 and f_live.stderr.count("WARNING") == 3 and f_dir.returncode == 0 and f_dir.stderr.count("WARNING") == 1
+                        and v_dir.returncode == 0 and v_dir.stderr.count("WARNING") == 1 and v_live.returncode == 0 and v_live.stderr.count("WARNING") == 3
+                        and f_ign.returncode == 1 and "git-ignored" in f_ign.stderr and f_tk2.returncode == 1 and "empty manifest" in f_tk2.stderr
+                        and f_glob.returncode == 0 and "notes.md" in m_glob
+                        and v_old.returncode == 0 and v_ok2.returncode == 0 and v_old2.returncode == 1 and "CHANGED ign.txt" in v_old2.stdout
+                        and v_ok3.returncode == 0 and v_ok4.returncode == 1 and "ADDED b.md" in v_ok4.stdout
+                        and f_part.returncode == 0 and "NOTE: 1 git-ignored" in f_part.stderr and "EXT:data/README" in m_part and "n1.csv" not in m_part
+                        and f_all.returncode == 0 and f_all.stderr.count("WARNING") == 1 and f_abs.returncode == 0 and f_abs.stderr.count("WARNING") == 1
+                        and f_plain.returncode == 1 and "not inside a git repository" in f_plain.stderr and plain_lib))
+
 finally:
     SB.__exit__(None, None, None)
 for name, ok in results:

@@ -5,7 +5,7 @@ the documents win.
 
 ## 1. Organization (owner, 2026-11-15)
 - **Owner: Felipe.** Sets goals, decides budget and big-picture questions; may talk to any department directly.
-- **CEO: Theory HQ.** Thread `647bfd65-83bc-403a-b3b0-0a8352044e7f`, environment `1fde6176-4453-43b0-82cc-70fda5110037`
+- **CEO: Theory HQ.** Thread `mcp:4f1a2e12-7ac4-4619-9128-1469ea92eb2e`, environment `1fde6176-4453-43b0-82cc-70fda5110037`
   (owner's desktop). HQ runs all departments and reports to the owner when he asks.
 - **Department managers** report to HQ. Current roster: `Theory_work/Wave3/HQ_NOW.md` "DEPARTMENTS / ACTIVE THREADS".
   - SMC - Theory Department: theory tickets.
@@ -14,6 +14,53 @@ the documents win.
   - Lean department: certificates.
   - All theory tickets, including W3-DIST and W3-READER, are under the Theory Department (handover 2026-11-15, owner).
 - **Advisors:** HQ consultant (Fable 5.2), the second signature on headline changes (PROTOCOL_v4 H5).
+
+### 1a. Managers manage, task leads work (owner board protocol, 2026-11-27; overrides anything below)
+- **Chain:** CEO → Department Manager → Task Lead → Workers and Reviewers.
+- **The CEO and every department manager are orchestrators ONLY, never workers.** They brief, staff, set limits, route,
+  integrate and report. They never inspect files, edit, compile, run checks or review line by line. A department
+  thread must never become a mix of HQ orders, agent management and actual work. Managers spawn task leads and
+  nothing else.
+- **Every non-trivial task gets its own task lead**, a child (delegate_task) inside the department thread. Default lead
+  and executor: Opus 5.5, effort high, on **Claude Personal** (the owner adjusts the account by usage). The lead owns
+  execution end to end and may spawn helpers of any authorized type. **Workers AND reviewers are children of the lead**,
+  never of the manager.
+- **Neon is reserved** for (a) orchestrating departments (department manager threads run on Orchestrator (Neon)) and
+  (b) an optional third reviewer next to the standard Opus + Sol pair. No Neon bulk workers.
+- **Astra or Fable** need approval up the chain (lead → manager → HQ → owner) before launch, every time.
+- **Scoped life cycle:** a lead lives for its task and closes with a final report at delivery. New tasks get new leads;
+  leads are never reused across tasks.
+- **Pace:** 2–3 concurrent leads per department when usage limits allow. On "pace down", one major lead stays active
+  and the others pause at a clean checkpoint. Progress lines report the active lead count.
+
+### 1b. Review acceptance bar (owner, 2026-11-27)
+- **Plans and experiments:** every reviewer scores ≥ 8 (per reviewer, not the average).
+- **Headline theorem statements and proofs, and paper claims:** every reviewer scores ≥ 8.5. Core results also need
+  Lean or an independent check.
+- **No open blocking issue:** any correctness or design flaw a reviewer marks as blocking is fixed, whatever the score.
+- **At most 3 rounds, then a Fable arbiter (owner, 2026-11-28; company-wide).** If after round 3 the bar is still not met
+  (any reviewer below 8), or the lead's team and the council still disagree, the department spawns ONE fresh Fable 5.2
+  arbiter (high; Claude Personal by default). This use is pre-approved by the owner. The arbiter reads the item, every
+  round's findings and responses, and the manager's rulings. It decides one of two things: either the important issues
+  are all resolved and the item is final, or a specific, short list of issues still needs work, which gets one more
+  round. Its verdict is binding and reported to HQ. Non-blocking nitpicks may be declined with a one-line reason at any
+  round.
+- **Three separate roles in every council review (owner, 2026-11-28):**
+  1. The **task lead and its team** do the work.
+  2. The **council** reviews and scores; it never edits.
+  3. The **department manager** rules on each finding: adopt it if it is relevant, or decline it as unnecessary
+     complexity, with a one-line reason.
+  A declined blocking issue is reported to HQ in the same line.
+- **Council composition for theory work (owner, 2026-11-28, revised):** Opus + Sol + Neon (Opus 5.5, Sol 6.2, Gemini 4 Neon; all high).
+- **Same council throughout (owner, 2026-11-28):** the council agents are spawned fresh for Round 1 of an item and then
+  KEPT for all its rounds: the same threads, which remember what they flagged and why. They are not replaced by fresh
+  agents each round.
+- **Round 2+ = scoped fix-verification, not cold re-reviews (owner, 2026-11-27):** Round 1 is a full review. In Round 2
+  (and Round 3 if needed) the same reviewers receive their Round-1 findings, the point-by-point response,
+  and the diff, and checks **only** (1) whether every Round-1 substantive/blocking issue was genuinely fixed and
+  (2) whether the edits introduced any new substantive flaw or regression. New stylistic nitpicks are disallowed; pure
+  nitpicks and nitpick-driven score deductions are logged with a one-line reason and disregarded. A new council is
+  spawned only for a new item, after a major redesign, or for a final pre-Lean / pre-submission audit.
 
 ## 2. Binding policies (read in this order)
 1. `Theory_work/Wave3/PROGRAM.md`: goals, presentation rule, **Readability** (clear statements, reader versions, full
@@ -42,11 +89,28 @@ citation check → council (two seats; only C/S/F block; diff round) → **CP3**
 Engineering and compute tickets follow their own DESIGN.md plus the output-preservation contract. Writing follows
 PROGRAM Readability, with a fidelity check of every number.
 
+## 3b. Standing model roles (owner, 2026-11-18: "the best I've found and we will stick to it")
+- **Opus:** the driver. HQ, department managers, decisions, integration and final reviews.
+  - **Opus as agents** (owner, 11-18): also used as worker agents for large tasks that are still difficult, when we divide and conquer (parallel Opus children on hard sub-problems). Never for simple or mechanical work; that goes to Sonnet or Haiku.
+  - **Phase rule (owner, 11-18):** Opus + Fable for engine design and long software construction. In RUN phases (campaigns, read-backs, reports, housekeeping), the work goes to Sonnet workers and Haiku chores, with one Opus child per hard sub-task (diagnosis, code review, budget options). **Managers are always Opus** (owner, 11-18). Long-lived manager threads restart from a RESUME file at checkpoints, to keep context costs down.
+  - **Step-down rule (owner, 11-18):** as soon as a task's remaining complexity drops to what Sonnet or Haiku can easily do, hand it down to them, even mid-task. Opus decomposes and solves the hard core; Sonnet and Haiku execute the rest.
+- **Fable 5.2:** the VP. HQ's consultant and second signature; hard mathematics and rulings as a precision tool.
+- **Astra 6.2:** the external adviser. HQ-only, independent opinions; also adversarial "break it" reads.
+- **Sol 6.2:** the reviewer. Council seats and final-text checks; its verdicts are input, triaged against the acceptance filter.
+- **Sonnet and Haiku:** unlimited workers, in parallel wherever the work splits. Sonnet builds, analyses and writes; Haiku does chores.
+
+- **Right-model rule (owner, 11-18):** choose the model by what the task demands, not by default. Tokens aren't a problem in themselves.
+  - Fable when a task truly needs it (propose it; the owner is glad to sign it off).
+  - Opus for long agentic or difficult work.
+  - Sonnet for standard building, analysis and writing.
+  - Haiku for simple tasks.
+  - Opus is never the blanket option.
+
 ## 4. Access and autonomy
 - **Repo:** github.com/FbStatsQuant/Bayesian-Variable-Selection (public for now; the owner will make it private).
   Clones:
   - Owls `/home/fb31/Bayesian-Variable-Selection` (shared root clone; don't switch its branch);
-  - worktrees under `/home/fb31/BVS-wt/`;
+  - worktrees under `/home/fb31/Bayesian-Variable-Selection/_wt/` (REORG 2026-11-25; see LAYOUT.md);
   - the desktop (HQ).
 
   Push credentials are configured on Owls.
@@ -96,7 +160,7 @@ agent they start.
   new SMC agent. Its budget resets Monday 16:00 CT.
 - **Claude Third:** **retired for SMC** (owner, 11-16). No SMC agent starts or resumes on it.
 - **Claude Work:** the Writing Department and its Fable writing advisor (owner, 11-16); otherwise as HQ says.
-- **Codex** (Sol `gpt-6.1-sol`, Astra `gpt-6-astra`, high): one shared Codex Pro account, also used by the owner's BNP
+- **Codex** (Sol `gpt-6.2-sol` (owner GO 11-17 night after the SOL62 A/B; was 6.1. 6.2 verdicts are input, not decisions: every point is triaged against the acceptance filter), Astra `gpt-6-astra`, high): one shared Codex Pro account, also used by the owner's BNP
   Lean project. NORMAL mode until HQ switches it.
 - **NOTS:** Owls now has its own login (`ssh nots`, dedicated key `~/.ssh/id_ed25519_nots`, comment "owls-bvs-departments";
   revocable by deleting that line from NOTS `~/.ssh/authorized_keys`). Departments run read-only queries
@@ -227,8 +291,9 @@ When the owner is back, HQ gives a short morning brief: what was decided, what m
    - The tree is in scratch, with home kept minimal. An `INDEX.md` at its root records what lives where and its provenance.
    - Only idle data moves: nothing used by queued or running jobs. Old paths get a symlink or an index entry.
    - The exclusions in rule 1 stay untouched.
-5. **Owls is fair game for small-scale computation.** It is a shared server: use `nice`, cap concurrent cores (≤ 16 unless
-   HQ approves more), and run nothing large or multi-day. Outputs live in the owning worktree or folder; no clutter in
+5. **Owls is fair game for small-scale computation.** It is a shared server: use `nice`, cap concurrent cores (≤ 40 per company,
+   owner 2026-11-25; the fb31-wide Owls guard is also 40 and is shared with other companies such as BQTF, so check
+   current use before ramping), and run nothing large or multi-day. Outputs live in the owning worktree or folder; no clutter in
    `/home/fb31`.
 6. **NOTS and Owls must look squeaky clean 24/7.** Every file has an owner and a place, temp files are removed when a job
    ends, and stray files are a defect reported in the daily report.
@@ -245,9 +310,9 @@ same rules for anything it runs.
    - Owls: no sudden spikes. Ramp up gradually and keep within the core cap.
    - If anything looks like it could trigger a security alert, ask HQ first.
 8. **The Engineering Department works only inside its folders** (owner, 2026-11-15):
-   - **Owls:** `/home/fb31/SMC_Engineering_Department/`.
-   - **NOTS:** `/home/fb31/SMC_Engineering_Department/`, created by the owner, with heavy data under
-     `/home/fb31/SMC_Engineering_Department/scratch`, a symlink to `/scratch/fb31/SMC_Engineering_Department/`.
+   - **Owls:** `/home/fb31/Bayesian-Variable-Selection/_local/engineering/` (REORG 2026-11-25; was `~/SMC_Engineering_Department`).
+   - **NOTS:** `/home/fb31/SMC-BVS/_local/engineering/`, with heavy data under `/home/fb31/SMC-BVS/scratch`, a symlink to
+     `/scratch/fb31/SMC-BVS/` (was `~/SMC_Engineering_Department` and `/scratch/fb31/SMC_Engineering_Department`).
 
    No Engineering file anywhere else: temp files, logs, job scripts, outputs and crews all live inside. The exceptions are
    its git worktree on Owls (repo code only) and Slurm's own spool. Existing SMC-BVS material is moved in by the
@@ -309,4 +374,8 @@ level is recorded in `HQ_NOW.md`.
 **Unattended agents never wait on approvals (HQ, 2026-11-16; from Theory D62):**
 - A Codex or other unattended reviewer that triggers a sandbox approval request stalls forever, because no tool can answer it.
 - Briefs therefore never set TMPDIR or write outside the agent's own worktree or folder. Scratch goes in `<worktree>/.rc_tmp/` at the worktree root (git-ignored via the shared .git/info/exclude), never inside a ticket folder, because manifest.py walks ticket folders and stray files break freeze and bind. Never add a .gitignore inside a frozen folder.
+- **Codex agents never delete anything**, not even their own `.rc_tmp/`, since deletions trigger approval prompts.
+  They never write outside their worktree, either: reviews go to `.rc_tmp/`, and the manager copies them and cleans up
+  (Engineering, PR #47 incident, 11-16).
 - Managers check pending requests when a review runs over 2 h.
+- **No shell redirects or heredoc outputs outside the worktree** (e.g. `> /tmp/.../scratchpad/x`): the harness prompts on them even in full-access (Theory READER seat, 11-18). **A seat stuck on an approval prompt is cancelled and relaunched by its parent** (`task_cancel` on the parent's own delegate task), not left waiting for the owner.

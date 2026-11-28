@@ -1,0 +1,12 @@
+# C1 seat record — sol (HQ carrier; PROTOCOL_v4 §7; relabel of a legacy council, precedent Prop-LB; NOT a new review)
+
+Seat review: `reviews/C1_council_sol.md` (council round 1, score 9.3, all six gates PASS; package-level verdict). W2-LOC2's council round 1 (C1: Codex gpt-6.1-sol xhigh 9.3 and Claude Opus 5.5 high 9.1, all six gates PASS in both seats; `reviews/C1_council_sol.md`, `reviews/C1_council_opus.md`) had no frozen manifest, verdict line or per-claim table. Both seats' G1 name the two lemmas: Opus `C1_council_opus.md:47-50` ("Lemma BC's cofactor-path argument is correct (the i→j component of a monomial's functional graph is a simple path; one edge has length ≥ d(i,j)/h; (1 + d/h)^{−α} ≤ h^α(1 + d)^{−α}; 2×2 Schur step with det H ≥ C⁻²). Lemma IR (banded truncation + column-weighted Combes–Thomas + resolvent, B ≍ d/log d) gives (1+d)^{1−α}log^{α−1}, summable for α > 2 — correct."), Sol `C1_council_sol.md` G1 ("In L6, the cofactor path argument preserves exponent alpha under bounded conditioning. The separate band-truncation inverse bound gives a summable regression envelope for alpha > 2."). HQ CARRIER RELABEL OF A LEGACY COUNCIL (precedent W3-POST:Prop-LB, W3-POST Thm-1): the seats' package-level outcome for the two lemmas is bound to the frozen current files of the W2-LOC2 ticket, `reviews/MANIFEST_C1r.txt` (MANIFEST ab5fe0fed285c6ffc9d787f3385273588053cbfd6f950db8ec2aceb7e4337e1e), which include the CORRECTION-ONLY RM2 wording patch `W3-FAMC/reviews/RM2_wording.patch` (W2-LOC2/lemmas/L6_poly.md:107 and W3-RM2/lemmas/L6_examples.md:77, :168; line counts unchanged; registered statement spans untouched; expected sha256 verified; independent Opus PURE check `W3-FAMC/reviews/RM2_wording_check_opus.md`). Supplementary evidence (not the basis of the label): the independent Opus seat of the RM2 council, `W3-FAMC/reviews/RM2_ExPolyR_seat_opus.md` (round R1 on W3-RM2 MANIFEST_R1r 322e8c12, 9.5 PASS, ACCEPT on W2-LOC2:Lemma-BC and Lemma-IR, each read in full), and `W3-FAMC/reviews/E2_check_opus_R1.md` (instance M = 15, α = 3 only; `W3-FAMC/reviews/E2_COVERAGE.md`). Only these two lemmas are accepted here; the other W2-LOC2 rows keep their labels.
+
+HQ-DERIVED rows (the seat's verdict was package-level):
+
+| id | decision |
+|---|---|
+| W2-LOC2:Lemma-BC | ACCEPT |
+| W2-LOC2:Lemma-IR | ACCEPT |
+
+COUNCIL-VERDICT round=R1 manifest=ab5fe0fed285c6ffc9d787f3385273588053cbfd6f950db8ec2aceb7e4337e1e seat=sol score=9.3 gates=PASS
