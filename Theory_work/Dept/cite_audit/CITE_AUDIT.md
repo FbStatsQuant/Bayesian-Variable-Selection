@@ -151,3 +151,9 @@ A = Sonnet 5.5, B = Sol 6.2; "adj." = decided by the Opus adjudicator.
 | C421 | W3:301 | SL15 | **PARTIAL** | SUPP / PART → adj. | SL15 p. 957, Cor 2 and following prose (page image) | For any true predictor xt with t ∈ t ∩ s, it will be asymptotically selected under this criterion if and only if β0,t ≠ 0 |
 | C428 | W3:370 | SL15 | **PARTIAL** | SUPP / PART → adj. | SL15 p. 948 (2) (x has arbitrary law νx); pp. 956-957, Sec 2.3, Condition 4, Thm 4, Cor 2 | f*(y, x) dx dy = φ(y; xᵀβ*, σ*) νx(dx) dy … Assume that Xs does not include all of the true predictors of model (1). |
 | C434 | W3:381 | RR18 | **PARTIAL** | PART / PART | Rossell & Rubio 2018 (arXiv) abstract and Sec 4-5 (eq (11)) | Under suitable conditions misspecified Bayes factors are consistent and induce sparsity at the same asymptotic rates than under the correct model. |
+
+## Step 5 status (2026-11-28)
+
+- F1–F16 applied by a separate Step-5 author (Sonnet 5.5; not a verifier) in `dept/theory` **eef1addd** (TH-SONG v1.4.1; the three files only; lead reviewed the diff).
+  Owner terminology ruling: our own TD/AP/OD prose never said "ultrahigh"; the only hits in `song_assumptions/` are verbatim paper titles and one PDF path, kept as is.
+- W1–W9: [`WRITING_SYNC.md`](WRITING_SYNC.md) + [`WRITING_SYNC.patch`](WRITING_SYNC.patch), against `writing/main` 2682a942. The patched paper builds cleanly (latexmk exit 0, no warnings, 45 pp.). To be applied by Writing via the Theory Manager → Writing Manager.
