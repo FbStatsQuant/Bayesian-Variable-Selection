@@ -1,0 +1,84 @@
+% sections/02_simulations.tex -- Section 2: simulation studies S1 and S2.
+% Owner: Writing Department, Task Lead 2.
+% Every number in this section is produced by figures/scripts/build_sim_outputs.R from the Engineering
+% per-fit records on Owls (read-only); figures/SOURCES.md lists the inputs and their sha256 sums.
+% Generated pieces are \input from figures/tables/; edit the script, not the generated files.
+
+\section{Simulation studies}\label{sec:sims}
+
+This section compares SMC-BVS with five methods on two published simulation designs. The first design is one on
+which adaptive MCMC was shown to work well; the second is a standard design for comparing selection methods across a
+wide range of signal strengths. All six methods were run on the same data sets.
+
+% ---------------------------------------------------------------------------------------------------------
+\subsection{Designs}\label{sec:sims-designs}
+
+\paragraph{Design S1.} The first design follows \citet[Sec.~4.1 and Table~1]{GriffinLatuszynskiSteel2021}, which is
+adapted from \citet[Sec.~3.4.1]{YangWainwrightJordan2016}. The rows of $X$ are independent $\Normal_p(0,\Sigma)$ with
+$\Sigma_{jk}=0.6^{\abs{j-k}}$, the noise variance is $\sigs^2=1$, and the first ten coefficients are nonzero,
+\begin{equation}\label{eq:s1beta}
+  \bstar=\mathrm{SNR}\sqrt{\log p/n}\;(2,-3,2,2,-3,3,-2,3,-2,3,0,\dots,0)^\top .
+\end{equation}
+We used the grid of \citet[Table~1]{GriffinLatuszynskiSteel2021}: $(n,p)\in\{(500,500),(500,5000),(1000,500),
+(1000,5000)\}$ and $\mathrm{SNR}\in\{0.5,1,2,3\}$, 16 settings in all. \citet[Sec.~5.1]{LiangLivingstoneGriffin2022}
+use the same design up to $p=50{,}000$.
+
+\paragraph{Design S2.} The second design follows \citet[Sec.~3.1]{HastieTibshiraniTibshirani2020}. The rows of $X$ are
+independent $\Normal_p(0,\Sigma)$ with $\Sigma_{jk}=\rho^{\abs{j-k}}$ and $\rho\in\{0,0.35,0.7\}$, and
+$(n,p,\sz)\in\{(50,1000,5),(100,1000,10)\}$. The $\sz$ nonzero coefficients all equal one. Under beta-type~1 they sit
+at equally spaced positions, $\mathrm{round}(1+(k-1)(p-1)/(\sz-1))$ for $k=1,\dots,\sz$; under beta-type~2 they are the
+first $\sz$ coordinates, a block of adjacent and, for $\rho>0$, correlated predictors. The noise variance is set by
+the signal-to-noise ratio, $\sigs^2=\bstar{}^\top\Sigma\bstar/\nu$, on the ten values
+$\nu\in\{0.05,0.09,0.14,0.25,0.42,0.71,1.22,2.07,3.52,6\}$, equally spaced on the log scale. This gives
+$2\times3\times2\times10=120$ settings.
+
+For each of the $136$ settings we simulated $100$ data sets. Every method was fitted to the same $13{,}600$ data sets;
+an MD5 checksum of each data set was compared across methods before any result was counted.
+
+% ---------------------------------------------------------------------------------------------------------
+\subsection{Methods compared}\label{sec:sims-methods}
+
+SMC-BVS was run with its default settings (Table~\ref{tab:defaults}) and reports the median probability model
+$\MPMhat$ of Section~\ref{sec:model-output}. For comparison, five methods were applied, each at the settings of its
+authors.
+\begin{itemize}
+  \item \emph{Lasso} \citep{Tibshirani1996}, with the R package glmnet \citep{FriedmanHastieTibshirani2010} and the
+  penalty chosen by tenfold cross-validation (the one-standard-error rule, the package default).
+  \item \emph{SCAD} \citep{FanLi2001}, with the R package ncvreg \citep{BrehenyHuang2011}, $a=3.7$, and the penalty
+  that minimises the tenfold cross-validation error.
+  \item \emph{BAS} \citep{ClydeGhoshLittman2011}, the MC3 sampler of the R package BAS with its default Zellner--Siow
+  prior on the coefficients and a $\BB(1,1)$ prior on the model, run for $120{,}000$ iterations after $60{,}000$ of
+  burn-in.
+  \item \emph{SuSiE} \citep{WangSarkarCarbonettoStephens2020}, the R package susieR with $L=20$ single effects and the
+  package defaults otherwise.
+  \item \emph{ASI}, the adaptive MCMC sampler of \citet{GriffinLatuszynskiSteel2021}, with their code and their settings
+  for design S1: independent $\Normal(0,9)$ priors on the coefficients, a prior expected model size of $10$, and $25$
+  chains of $6{,}000$ iterations, the first $2{,}000$ discarded.
+\end{itemize}
+For BAS, SuSiE and ASI the selected model is the median probability model, $\{j:\PIPhat_j>0.5\}$, as for SMC-BVS; for
+the lasso and SCAD it is the set of nonzero coefficients. The three Bayesian competitors use priors that differ from
+ours, so their posteriors differ from ours as well; the comparison is between methods as their authors run them, not
+between samplers of one posterior. Each fit ran on a single core of a computing cluster with heterogeneous nodes.
+
+% ---------------------------------------------------------------------------------------------------------
+\subsection{Performance measures}\label{sec:sims-metrics}
+
+Let $\Shat$ denote the model selected by a method for one data set and $\Sz$ the true model. We report, for each
+setting, averages over the $100$ data sets of the following.
+\begin{itemize}
+  \item \emph{Exact recovery}: $\ind{\Shat=\Sz}$, reported as the number of data sets out of $100$.
+  \item \emph{False positives} $\mathrm{FP}=\abs{\Shat\setminus\Sz}$, \emph{false negatives}
+  $\mathrm{FN}=\abs{\Sz\setminus\Shat}$, and the \emph{Hamming distance} $\abs{\Shat\,\triangle\,\Sz}=\mathrm{FP}+\mathrm{FN}$.
+  \item \emph{Precision} $1-\mathrm{FP}/\max(\abs{\Shat},1)$, \emph{recall} $\abs{\Shat\cap\Sz}/\sz$, and
+  $F_1=2\abs{\Shat\cap\Sz}/(2\abs{\Shat\cap\Sz}+\mathrm{FP}+\mathrm{FN})$, all computed per data set and then
+  averaged. An empty $\Shat$ makes no false selection and has precision one. Precision is one minus the false
+  selection rate, and recall is one minus the negative selection rate, of \citet[Sec.~4.2]{SongLiang2015}.
+  \item \emph{Run time}: the wall-clock time of one fit on one core, including data generation and diagnostics, and the
+  CPU hours billed by the cluster scheduler for it.
+\end{itemize}
+Intervals for exact recovery are Wilson $95\%$ intervals \citep{Wilson1927}. A fit that failed is counted as
+$\Shat=\emptyset$. This happened only for BAS in S2 (81 of 12,000 fits; numerical failures at $n=50$ and nine fits
+killed for exceeding $64$\,GB of memory).
+
+%%% RESULTS-S1
+%%% RESULTS-S2

@@ -1,0 +1,76 @@
+% macros.tex -- shared notation for the SMC-BVS paper.
+% Owner: Writing Department, Task Lead 1.  Loaded by main.tex after preamble.tex.
+% Harmonized with Docs/Writing/shared/smcbvs.sty, the specification
+% (Docs/Writing/manuscript/spec/, method v3.1.1) and TH_PREP.md Sec. 1.  Same names, same meanings.
+% Sections request new macros through the Writing Manager; do not redefine these locally.
+
+% ---------------------------------------------------------------- sets, numbers, norms
+\newcommand{\R}{\mathbb{R}}                    % real numbers
+\newcommand{\N}{\mathbb{N}}                    % natural numbers
+\newcommand{\one}{\mathbf{1}}                  % vector of ones, \one_n
+\newcommand{\ind}[1]{\mathbf{1}\{#1\}}         % indicator of an event
+\newcommand{\set}[1]{[#1]}                     % \set{p} = {1,...,p}
+\newcommand{\abs}[1]{\lvert #1\rvert}          % absolute value; size of a set
+\newcommand{\norm}[1]{\lVert #1\rVert}         % Euclidean norm
+
+% ---------------------------------------------------------------- probability
+\DeclareMathOperator{\E}{\mathbb{E}}           % expectation
+\renewcommand{\P}{\mathbb{P}}                  % probability
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Corr}{Corr}
+\DeclareMathOperator{\sd}{sd}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\Normal}{\mathrm{N}}               % normal law, \Normal_n(mu, Sigma)
+\newcommand{\IG}{\mathrm{IG}}                  % inverse-gamma law IG(shape, scale)
+\newcommand{\BetaDist}{\mathrm{Beta}}          % beta law
+\newcommand{\BB}{\mathrm{BB}}                  % beta-binomial model prior BB(a, b)
+\newcommand{\OP}{O_{\P}}                       % bounded in probability
+\newcommand{\oP}{o_{\P}}                       % tends to zero in probability
+\newcommand{\lmin}{\lambda_{\min}}             % smallest eigenvalue
+
+% ---------------------------------------------------------------- data and true model
+\newcommand{\yr}{y^{\mathrm r}}                % raw response
+\newcommand{\Xr}{X^{\mathrm r}}                % raw design (retained columns)
+\newcommand{\praw}{p_{\mathrm{raw}}}           % number of columns before constant ones are removed
+\newcommand{\Dn}{\mathcal D_n}                 % data set
+\newcommand{\sigs}{\sigma_*}                   % true noise standard deviation
+\newcommand{\bstar}{\beta^*}                   % true coefficients, original units
+\newcommand{\tstar}{\theta^*}                  % true coefficients, standardised units
+\newcommand{\tmin}{\theta^*_{\min}}            % smallest nonzero |theta*_j|
+\newcommand{\Sz}{S_0}                          % true model
+\newcommand{\sz}{s_0}                          % true model size
+\newcommand{\Rhat}{\hat R}                     % sample correlation matrix
+\newcommand{\Sig}{\Sigma_n}                    % population covariance of a design row
+\newcommand{\rn}{\sqrt{\log n/n}}              % posterior rate
+\newcommand{\SSq}{\mathrm{SS}}                 % shrunken residual sum of squares SS_S
+
+% ---------------------------------------------------------------- prior and posterior
+\newcommand{\Om}{\Omega}                       % model space {S : |S| <= K}
+\newcommand{\post}{\pi(\cdot\mid y)}           % posterior over models
+\newcommand{\pis}[1]{\pi(#1\mid y)}            % posterior probability of a model
+\newcommand{\PIP}{\mathrm{PIP}}                % posterior inclusion probability
+\newcommand{\HPM}{\mathrm{HPM}}                % highest posterior model
+\newcommand{\MPM}{\mathrm{MPM}}                % median probability model
+
+% ---------------------------------------------------------------- the sampler
+\newcommand{\Nb}{\mathcal N}                   % neighbour sets \Nb(j)
+\newcommand{\Nc}{N^{\mathrm c}}                % calibration particles
+\newcommand{\Lbi}{L_{\mathrm{bi}}}             % burn-in rounds at xi = 1
+\newcommand{\Tmax}{T^{\max}}                   % step ceiling of the schedule
+\newcommand{\grid}[1]{\xi_{[#1]}}              % t-th temperature of the frozen grid
+\newcommand{\Ts}{T}                            % number of steps of the grid
+\newcommand{\ESS}{\mathrm{ESS}}                % effective sample size
+\newcommand{\Vcal}{\mathcal V}                 % candidate set of the grid construction
+\newcommand{\tSz}{\tilde S_0}                  % start mode (mode of the start law)
+
+% ---------------------------------------------------------------- outputs
+\newcommand{\Shat}{\hat S}                     % best model found (certified when flagged)
+\newcommand{\Zhat}{\hat Z}                     % evidence estimate
+\newcommand{\PIPhat}{\widehat{\mathrm{PIP}}}   % estimated inclusion probability
+\newcommand{\MPMhat}{\widehat{\mathrm{MPM}}}   % estimated median probability model
+\newcommand{\Tlist}{\mathcal T}                % returned list of top models
+\newcommand{\Zlist}{Z_{\mathcal T}}            % list evidence (sum over the list)
+\newcommand{\piplist}{\mathrm{pip}_{\mathcal T}}  % list-renormalised inclusion probability
+\newcommand{\mpmlist}{\mathrm{mpm}_{\mathcal T}}  % list-renormalised median model

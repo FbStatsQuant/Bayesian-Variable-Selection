@@ -1,0 +1,27 @@
+% main.tex -- the SMC-BVS paper (draft).
+% Owner: Writing Department, Task Lead 1.  Build from this directory:  latexmk -pdf main
+% Sections are optional inputs, so the paper compiles while any of them is still missing.
+% Section owners: 01_model (Lead 1), 02_simulations and 04_sim_supplement (Lead 2), 03_theory (Lead 3).
+\documentclass[11pt]{article}
+\input{preamble}
+\input{macros}
+
+\title{Sequential Monte Carlo for Bayesian variable selection\\ in ultrahigh-dimensional linear regression}
+\author{[Authors to be added]}
+\date{Draft, \today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+[Abstract to be written after Sections~1--3 are complete.]
+\end{abstract}
+
+\IfFileExists{sections/01_model.tex}{\input{sections/01_model}}{}
+\IfFileExists{sections/02_simulations.tex}{\input{sections/02_simulations}}{}
+\IfFileExists{sections/03_theory.tex}{\input{sections/03_theory}}{}
+\IfFileExists{sections/04_sim_supplement.tex}{\input{sections/04_sim_supplement}}{}
+
+\bibliography{refs}
+
+\end{document}

@@ -1,0 +1,286 @@
+% sections/01_model.tex -- Section 1: the model, the priors, the sampler and the reported quantities.
+% Owner: Writing Department, Task Lead 1.
+% Sources (method v3.1.1 unchanged, plus the two reporting fields of the adopted evidence fix):
+%   Docs/Writing/manuscript/spec/sections/sp1_notation.tex, sp2_model.tex, sp3_distributions.tex,
+%   sp4_sampler.tex, sp4_algorithms.tex (spec of 2026-11-24);
+%   Theory_work/Dept/prep/TH_PREP.md Sec. 1;
+%   _local/engineering/reports/S1S2/perf/DECISION_MEMO.md (fix E) and designer_B/evidence_fix/README.md.
+% No internal identifiers (tags, code names, field names) in the printed text.
+
+\section{Model and method}\label{sec:model}
+
+This section sets out the regression model, the priors and the posterior they give, the sequential Monte Carlo
+sampler that SMC-BVS uses to explore the posterior, and the quantities a run reports. The model and priors are
+standard; the sampler is new. We follow the order of Section~2 of \citet{SongLiang2015}.
+
+% ---------------------------------------------------------------------------------------------------------
+\subsection{The linear model and the data}\label{sec:model-data}
+
+Let $\Dn=\{\yr;\Xr\}$ denote a data set of $n$ observations, with response $\yr\in\R^n$ and an $n\times\praw$ design
+matrix of predictors. We assume the Gaussian linear model with an intercept,
+\begin{equation}\label{eq:model}
+  \yr=\alpha^*\one_n+\Xr\bstar+\varepsilon,\qquad \varepsilon\sim\Normal_n(0,\sigs^2I_n),
+\end{equation}
+where $\varepsilon$ is independent of $\Xr$. The number of predictors may be much larger than $n$, and the coefficient
+vector $\bstar$ is sparse: the true model $\Sz:=\{j:\beta^*_j\neq0\}$ has a small size $\sz$. The aim is to recover
+$\Sz$ and to quantify the uncertainty about it.
+
+A predictor that is constant in the sample carries no information and is removed before anything else. We write
+$\Xr$ for the remaining $n\times p$ matrix, so $p$ always denotes the number of retained predictors, indexed
+$1,\dots,p$ in their original order. All models below are sets of retained indices; the method reports them in the
+original column numbers.
+
+\paragraph{Standardisation.} The method centres and scales every column and the response. Let
+$P^\perp_{\one}:=I_n-n^{-1}\one_n\one_n^\top$, let $D$ be the diagonal matrix of the sample standard deviations of
+the columns of $\Xr$, and let $s_y$ be the sample standard deviation of $\yr$, all with divisor $n-1$. The method
+works with
+\begin{equation}\label{eq:standardise}
+  X:=P^\perp_{\one}\Xr D^{-1},\qquad y:=P^\perp_{\one}\yr/s_y .
+\end{equation}
+Every column $x_j$ of $X$ then has mean zero and $\norm{x_j}^2=n-1$, and $y^\top y=n-1$. Centring removes the
+intercept, which therefore has no prior. A coefficient $\theta_j$ and a variance $\sigma^2$ on the standardised
+scale correspond to $\beta_j=s_y\theta_j/D_{jj}$ and $s_y^2\sigma^2$ in the original units.
+
+\paragraph{Models.} A model is a subset $S\subseteq\set{p}$, where $\set{p}:=\{1,\dots,p\}$. For a model $S$,
+$X_S$ holds the columns of $X$ indexed by $S$, $G_S:=X_S^\top X_S$ is their Gram matrix and $z_S:=X_S^\top y$. The
+method considers every model with at most $K$ predictors,
+\begin{equation}\label{eq:space}
+  \Om:=\{S\subseteq\set{p}:\abs{S}\le K\},\qquad K:=\min\big(p,\lfloor n/2\rfloor\big).
+\end{equation}
+As in \citet{SongLiang2015}, the cap is not crucial to the analysis, since the true model is sparse; it keeps every
+matrix to be factorised at most $K\times K$. Given a model, the working likelihood on the standardised data is
+\begin{equation}\label{eq:lik}
+  y\mid S,\theta_S,\sigma^2\ \sim\ \Normal_n(X_S\theta_S,\ \sigma^2I_n),
+\end{equation}
+with coefficients $\theta_S\in\R^{\abs{S}}$ and variance $\sigma^2>0$.
+
+% ---------------------------------------------------------------------------------------------------------
+\subsection{Priors and posterior}\label{sec:model-prior}
+
+\paragraph{Model prior.} Each predictor enters the model independently with probability $q$, and $q$ has a
+$\BetaDist(1,p)$ prior. This is the beta-binomial prior $\BB(1,p)$, restricted to $\Om$. Integrating out $q$, a model
+of size $k$ has prior mass proportional to
+\begin{equation}\label{eq:modelprior}
+  w(k):=\int_0^1q^k(1-q)^{p-k}\,p(1-q)^{p-1}\,dq=\frac{1}{2\binom{2p-1}{k}},\qquad
+  \pi(S)=\frac{w(\abs{S})}{\sum_{k=0}^{K}\binom pk w(k)},\quad S\in\Om .
+\end{equation}
+The prior expected model size, before the cap, is $p/(p+1)$, close to one. Because $q$ is random, the prior odds of
+adding one more predictor fall as $p$ grows, which is the multiplicity adjustment of \citet{ScottBerger2010}: moving
+from size $k$ to size $k+1$ multiplies the prior mass of a model by $(k+1)/(2p-1-k)$.
+
+\paragraph{Coefficient and variance priors.} Given $S$ and $\sigma^2$, the coefficients have Zellner's $g$-prior
+\citep{Zellner1986} with $g=n$ and a unit ridge,
+\begin{equation}\label{eq:slab}
+  \theta_S\mid S,\sigma^2\ \sim\ \Normal_{\abs S}\big(0,\ n\sigma^2(G_S+I)^{-1}\big).
+\end{equation}
+With $g=n$ the prior carries about as much information as one observation \citep{KassWasserman1995}. The ridge
+keeps the prior proper when the columns of $X_S$ are linearly dependent; since every diagonal entry of $G_S$ is $n-1$,
+it barely changes the prior otherwise. The variance has the prior $\sigma^2\sim\IG(a_0,b_0)$ with $a_0=b_0=0.01$,
+independent of $S$, on the standardised scale.
+
+\paragraph{Posterior.} The priors are conjugate, so $\theta_S$ and $\sigma^2$ integrate out in closed form. Let
+\begin{equation}\label{eq:HS}
+  H_S:=(n+1)G_S+I,\qquad \SSq_S:=y^\top y-n\,z_S^\top H_S^{-1}z_S .
+\end{equation}
+Given $S$, the posterior of the parameters is
+\begin{equation}\label{eq:condpost}
+  \sigma^2\mid S,y\ \sim\ \IG\big(a_0+n/2,\ b_0+\SSq_S/2\big),\qquad
+  \theta_S\mid S,\sigma^2,y\ \sim\ \Normal_{\abs S}\big(nH_S^{-1}z_S,\ n\sigma^2H_S^{-1}\big),
+\end{equation}
+and the marginal likelihood of $S$ is
+\begin{equation}\label{eq:marglik}
+  m(S)=C_n\Big\{\frac{\det(G_S+I)}{\det H_S}\Big\}^{1/2}\big(2b_0+\SSq_S\big)^{-(a_0+n/2)},\qquad
+  C_n:=\frac{(2b_0)^{a_0}\,\Gamma(a_0+n/2)}{\pi^{n/2}\,\Gamma(a_0)},
+\end{equation}
+where $\pi=3.14\ldots$ in $C_n$; for the empty model the determinant ratio is one and $\SSq_\emptyset=y^\top y$. We
+call $F(S):=\log\pi(S)+\log m(S)$ the log score of $S$. The posterior over models and the evidence are
+\begin{equation}\label{eq:posterior}
+  \pis{S}=\frac{e^{F(S)}}{Z},\qquad Z:=\sum_{S\in\Om}e^{F(S)},\qquad S\in\Om .
+\end{equation}
+The posterior inclusion probability of predictor $j$ is $\PIP_j:=\sum_{S\ni j}\pis{S}$. The highest posterior model
+$\HPM$ maximises $\pis{S}$, and the median probability model is $\MPM:=\{j:\PIP_j>1/2\}$ \citep{BarbieriBerger2004}.
+
+The score shows the price a predictor pays to enter. If $x_j$ is orthogonal to the columns of $X_S$, adding $j$ to
+a model of size $k$ changes $F$ by
+\[
+  -\log\frac{2p-1-k}{k+1}\;-\;\frac12\log n\;-\;\Big(a_0+\frac n2\Big)\log\frac{2b_0+\SSq_{S\cup\{j\}}}{2b_0+\SSq_S},
+\]
+a prior penalty of about $\log(2p)$, an Occam penalty of $\tfrac12\log n$, and a gain from the reduction in the
+residual sum of squares. A predictor enters only if the last term outweighs the first two.
+
+% ---------------------------------------------------------------------------------------------------------
+\subsection{The sampler}\label{sec:model-sampler}
+
+The model space has $\sum_{k\le K}\binom pk$ elements, far too many to enumerate when $p$ is large. How fast MCMC
+samplers mix on this space depends on $p$ and on the correlation between predictors
+\citep{YangWainwrightJordan2016,GriffinLatuszynskiSteel2021,ZhouYangVatsRobertsRosenthal2022}. SMC-BVS instead moves a population of models, called
+particles, from a distribution that can be sampled exactly to the posterior, along a sequence of intermediate
+distributions \citep{Chopin2002,DelMoralDoucetJasra2006}; \citet{SchaferChopin2013} use the same idea on binary
+spaces. We describe the parts in the order in which a run uses them. Table~\ref{tab:defaults} lists the default
+constants. The user sets only a random seed and a computing allocation.
+
+\paragraph{Exact enumeration.} If $\abs{\Om}\le(5\Nc_0+4N_0)\,p$, where $N_0$ and $\Nc_0$ are the particle numbers of
+Table~\ref{tab:defaults}, the method scores every model in $\Om$ and reports the exact posterior summaries. The
+threshold equals the number of inclusion updates in a single round of the nine islands of a run (five in the
+calibration, four in the final run; see below). Otherwise the method runs the sampler.
+
+\paragraph{Blocks and the start law.} The predictors are partitioned into blocks $C_1,\dots,C_J$ of at most
+$B:=\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)$ predictors each, by complete-linkage clustering with
+distance $1-\abs{\hat r_{jl}}$, where $\hat r_{jl}$ is the sample correlation of predictors $j$ and $l$. Strongly
+correlated predictors therefore tend to share a block. Within block $C_k$, every subset $U\subseteq C_k$ with
+$\abs U\le K$ is scored, giving the table $h_k(U):=m(U)/m(\emptyset)$; a block has at most $2^{16}$ subsets. The
+start law is
+\begin{equation}\label{eq:startlaw}
+  \pi_0(S)\ \propto\ \gamma_0(S):=\pi(S)\prod_{k=1}^{J}h_k(S\cap C_k),\qquad S\in\Om .
+\end{equation}
+It scores the predictors of each block jointly, by their exact marginal likelihood, and treats different blocks as
+if they did not interact, apart from the prior on the total model size. Its
+normalising constant $\bar Z_0:=\sum_{S\in\Om}\gamma_0(S)$ and independent exact draws from it are computed by a
+recursion over blocks and model sizes, with no Monte Carlo error. The same recursion gives the mode of $\pi_0$, the
+start mode $\tSz$.
+
+\paragraph{The tempering path.} Let
+\[
+  \Delta(S):=\log\frac{m(S)}{m(\emptyset)}-\sum_{k=1}^{J}\log h_k(S\cap C_k),
+\]
+the part of the log marginal likelihood that the blocks do not explain; $\Delta(S)=0$ whenever $S$ lies within one
+block. Since $e^{F(S)}=m(\emptyset)\,\gamma_0(S)\,e^{\Delta(S)}$, the distributions
+\begin{equation}\label{eq:path}
+  \pi_\xi(S)\ \propto\ \gamma_0(S)\,e^{\xi\Delta(S)},\qquad 0\le\xi\le1,
+\end{equation}
+run from the start law $\pi_0$ at $\xi=0$ to the posterior $\pis{\cdot}$ at $\xi=1$. The sampler moves along a grid
+of temperatures $0=\grid0<\grid1<\dots<\grid{\Ts}=1$.
+
+\paragraph{One step.} An island is a population of $N$ particles $S_1,\dots,S_N$, drawn independently from $\pi_0$.
+The step from $\grid{t-1}$ to $\grid t$ has three parts:
+\begin{enumerate}
+  \item \emph{Reweight.} Particle $v$ receives the weight $\omega^{(t)}_v:=\exp\{(\grid t-\grid{t-1})\Delta(S_v)\}$.
+  \item \emph{Resample.} $N$ particles are drawn with replacement in proportion to the weights (multinomial
+    resampling, at every step).
+  \item \emph{Move.} Each particle receives one round of Markov moves that leave $\pi_{\grid t}$ invariant.
+\end{enumerate}
+A round consists of $p+B+2$ moves applied in an order drawn uniformly at random for each particle:
+\begin{itemize}
+  \item an inclusion update of every predictor $j$: $j$ is added or deleted with its exact conditional probability
+    under $\pi_\xi$ (a Gibbs step; an addition is not allowed at size $K$);
+  \item one uniform swap: a member and a non-member of $S$, each chosen uniformly, are exchanged, with a
+    Metropolis--Hastings acceptance step;
+  \item $B$ neighbour swaps: a member $j$ of $S$ is exchanged for a non-member $l$ among the neighbours of $j$, with
+    the Metropolis--Hastings ratio corrected for the asymmetric proposal;
+  \item one independence move: a fresh draw $S'$ from $\pi_0$ is proposed, and it replaces $S$ with probability
+    $\min\{1,e^{\xi\{\Delta(S')-\Delta(S)\}}\}$.
+\end{itemize}
+The neighbours $\Nb(j)$ of predictor $j$ are the at most $B$ predictors most correlated with $j$ among those with
+$\abs{\hat r_{jl}}>\sqrt{2\log p/n}$, or the single most correlated predictor if none passes; the relation is then
+made symmetric. A swap exchanges two predictors in one move, which inclusion updates can do only through an
+intermediate model that may be much less probable; the independence move lets a particle jump to a model of a
+different shape.
+
+\paragraph{The schedule.} The grid is chosen in a separate calibration run and then frozen. A pilot island of $\Nc$
+particles moves adaptively: from each temperature it takes the largest step for which the effective sample size of
+the new weights, $\ESS=(\sum_v\omega_v)^2/\sum_v\omega_v^2$, is at least $0.90\,\Nc$, with a minimum step of
+$1/\Tmax$. From the pilot's temperatures, a grid is built so that each step meets the same $0.90$ target, now
+computed exactly on a candidate set: the empty model and the $20p$ best models found so far by $\gamma_0$ and by
+$F$. Four diagnostic islands are run on this grid, the candidate set grows, and the grid is rebuilt, up to $\ell_n$
+times or until it stops changing. If any of a fixed list of warnings fires (an island's best score more than one
+unit below the best found, a standard deviation above one among the islands' log evidence estimates, a local search
+that improves the best model or stops at its move cap, a forced minimum step, a failed or unconverged grid), the
+calibration is repeated once with four times as many particles and a four times higher step ceiling. A grid that fails to be built even then is
+replaced by the last grid built successfully, or by the pilot's temperatures. The frozen grid does not depend on the
+random numbers of the final run.
+
+\paragraph{The final run.} Four islands, each of $N$ particles and with its own random stream, run on the frozen
+grid. At $\xi=1$ each island applies $\Lbi$ further rounds as burn-in, then four measured rounds, from which the
+inclusion probabilities are estimated. Island $r$ estimates the evidence by
+\begin{equation}\label{eq:zhat}
+  \Zhat_r:=m(\emptyset)\,\bar Z_0\prod_{t=1}^{\Ts}\Big(\frac1N\sum_{v=1}^N\omega^{(t)}_v\Big),
+\end{equation}
+with $\omega^{(t)}_v$ computed on the particles before resampling at step $t$. Given the frozen grid, $\Zhat_r$ is an
+unbiased estimator of $Z$, a standard property of this construction \citep{DelMoral2004}. The pooled estimate is
+$\Zhat:=\frac14\sum_{r=1}^4\Zhat_r$; the islands are weighted equally.
+
+\paragraph{Local searches.} After the islands, two deterministic searches over the neighbourhood of a model (all
+models one deletion, one addition or one swap away) climb the log score. At each move the search scans the whole
+neighbourhood and moves to its best member, if that member strictly improves $F$. The first search starts from the
+best model scored so far, with at most $\ell_n$ moves; the second starts from the start mode $\tSz$, with at
+most $\ell_n+\abs{\tSz}$ moves. A search is \emph{certified} when it stops because no neighbour has a strictly higher
+score.
+
+\paragraph{Resources.} Before it starts, the method checks its memory and time needs against the allocation (by
+default 8\,GiB and 24\,h). A run that would exceed the allocation, runs out of time, or meets a numerical failure in
+scoring stops and reports no estimates.
+
+\begin{table}[t]
+\centering\small
+\caption{Default constants of SMC-BVS. Here $i\in\{0,1\}$ is the calibration tier: $i=1$ only after a warning in
+the calibration at $i=0$.}\label{tab:defaults}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Quantity & Symbol & Default \\
+\midrule
+model-size cap & $K$ & $\min(p,\lfloor n/2\rfloor)$ \\
+block size cap & $B$ & $\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)$ \\
+particles per island, final run & $N=N_i$ & $4^iN_0$, with $N_0:=\max(2500,n,p)$ \\
+particles per island, calibration & $\Nc=\Nc_i$ & $4^i\lceil512N_0/2500\rceil$ \\
+step ceiling & $\Tmax=\Tmax_i$ & $4^i\max(1000,\ell_n^2)$ \\
+move cap of the local search & $\ell_n$ & $\lceil\log_2(n+p+1)\rceil$ \\
+burn-in rounds at $\xi=1$ & $\Lbi$ & $\max(4,\lceil\log_2(n+1)\rceil)$ \\
+islands; measured rounds & & $4$; $4$ \\
+effective sample size target & & $0.90$ \\
+returned list of top models & $\Tlist$ & the best $40p+1$ models scored \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ---------------------------------------------------------------------------------------------------------
+\subsection{Variable selection and the reported quantities}\label{sec:model-output}
+
+A run ends in one of three ways: \emph{exact} (the model space was enumerated), \emph{completed} (the sampler ran to
+the end) or \emph{stopped}. A stopped run reports no estimates. A completed run reports the following.
+
+\paragraph{Inclusion probabilities and the selected model.} Within island $r$, $\PIPhat_{r,j}$ is the average, over
+the $N$ particles and the four measured rounds, of the conditional inclusion probability computed in the inclusion
+update of predictor $j$. Averaging these probabilities rather than the inclusion indicators reduces the Monte Carlo
+noise. The method reports
+\begin{equation}\label{eq:pipmpm}
+  \PIPhat_j:=\frac14\sum_{r=1}^4\PIPhat_{r,j},\qquad \MPMhat:=\{j:\PIPhat_j>1/2\}.
+\end{equation}
+The estimated median probability model $\MPMhat$ is the selected model.
+
+\paragraph{The best model found.} The method also reports $\Shat$, the model with the highest log score among all
+models scored during the run: in the block tables, the calibration, the islands and both local searches. Ties go to
+the smaller model, then to the lexicographically smaller one. $\Shat$ is \emph{certified} when it is the end point of
+a certified local search; it is then a local maximum of $F$ over its neighbourhood. $\Shat$ estimates the $\HPM$.
+
+\paragraph{The list of top models.} The method returns the list $\Tlist$ of the best models it scored, at most
+$40p+1$ of them, with their log scores. Renormalising the posterior over the list gives
+\begin{equation}\label{eq:list}
+  \Zlist:=\sum_{S\in\Tlist}e^{F(S)},\qquad
+  \piplist(j):=\frac{1}{\Zlist}\sum_{S\in\Tlist,\,S\ni j}e^{F(S)},\qquad
+  \mpmlist:=\{j:\piplist(j)>1/2\}.
+\end{equation}
+These are reported beside $\PIPhat$ and $\MPMhat$. Since $\Tlist\subseteq\Om$, the list evidence satisfies
+$\Zlist\le Z$, with no Monte Carlo error.
+
+\paragraph{The evidence.} The Monte Carlo estimate $\Zhat$ and the bound $\Zlist$ are combined. The reported log
+evidence and its lower limit are
+\begin{equation}\label{eq:evidence}
+  \log Z_{\mathrm{rep}}:=\max\big(\log\Zhat,\ \log\Zlist\big),\qquad
+  \log Z_{\mathrm{low}}:=\max\big(\log(0.05\,\Zhat),\ \log\Zlist\big).
+\end{equation}
+Taking the maximum never moves the point estimate away from $Z$, because $\Zlist\le Z$; it can bias the estimate
+upward on the $Z$ scale, so the raw $\Zhat$ remains the unbiased estimate. Because $\Zhat$ is unbiased, Markov's
+inequality gives $\P(0.05\,\Zhat>Z)\le0.05$, and since $\Zlist\le Z$ the lower limit
+$Z_{\mathrm{low}}$ exceeds $Z$ on exactly the same event. It is therefore a 95\% one-sided lower limit for $Z$. The
+raw $\log\Zhat$, the four island values $\log\Zhat_r$ and the raw limit are reported too, with a flag when
+$\log\Zlist$ exceeds $\log\Zhat$ by more than one: the particles then missed posterior mass that the list holds.
+
+\paragraph{Exact runs.} An exact run reports the exact $\PIP_j$, $\MPM$ and $\log Z$; the best model is the $\HPM$
+and is certified. The list fields are computed from the $40p+1$ best models, and the lower limit is
+$\max\{\log(0.05\,Z),\log\Zlist\}$.
+
+\paragraph{Diagnostics.} A run also reports, without changing any output: whether some island's best score lies more
+than one unit below $F(\Shat)$; the standard deviation of the island log evidence estimates; whether the local
+search from the islands' best model improved it; whether the effective sample size fell below $0.5N$ at some step;
+whether a local search stopped at its move cap; the models of $\Tlist$ within $10^{-9}$ of the best score; pairs of
+predictors with $\abs{\hat r_{jl}}\ge1-10^{-10}$; and the calibration warnings.

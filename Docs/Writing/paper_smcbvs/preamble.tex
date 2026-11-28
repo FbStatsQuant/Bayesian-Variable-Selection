@@ -1,0 +1,68 @@
+% preamble.tex -- packages, citation style and environments for the SMC-BVS paper.
+% Owner: Writing Department, Task Lead 1.  Loaded by main.tex before macros.tex.
+%
+% Citations.  APA author-year through BibTeX: apacite (APA style .bst) in natbib mode
+% (option natbibapa), so the natbib commands are the interface:
+%   \citep{SongLiang2015}          -> (Song & Liang, 2015)
+%   \citet{SongLiang2015}          -> Song and Liang (2015)
+%   \citep[Sec.~2]{SongLiang2015}  -> (Song & Liang, 2015, Sec. 2)
+%   \citealp{SongLiang2015}        -> Song & Liang, 2015        (inside your own parentheses)
+%   \citeyearpar{SongLiang2015}    -> (2015)
+% Every citation is a hyperlink to its entry in the reference list (hyperref, loaded last).
+% Owls (TeX Live 2020) has no biblatex/biber; apacite 6.03 and multirow are installed from CTAN
+% in ~/texmf.  Any full TeX Live distribution (or Overleaf) has both.  Build: latexmk -pdf main.
+
+% ---------------------------------------------------------------- page and fonts
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\setlength{\emergencystretch}{2em}
+\frenchspacing
+
+% ---------------------------------------------------------------- mathematics
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{bm}
+
+% ---------------------------------------------------------------- tables, figures, lists
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage[labelfont=bf,font=small]{caption}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\setlist[enumerate]{leftmargin=2em,itemsep=1pt,topsep=3pt}
+\setlist[itemize]{leftmargin=1.5em,itemsep=1pt,topsep=3pt}
+\usepackage{xcolor}
+
+% ---------------------------------------------------------------- citations (APA, author-year)
+\usepackage[natbibapa]{apacite}
+\bibliographystyle{apacite}
+\renewcommand{\doiprefix}{}              % DOIs are printed as https://doi.org/... links
+\makeatletter\NAT@longnamesfalse\makeatother % APA 7: "et al." for three or more authors from the first citation
+
+% ---------------------------------------------------------------- hyperlinks (load last)
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,
+            urlcolor=blue!50!black,breaklinks=true,pdfusetitle]{hyperref}
+\AtBeginDocument{\renewcommand{\doi}[1]{\url{https://doi.org/#1}}}
+
+% ---------------------------------------------------------------- statements
+% Numbered within sections.  Assumptions are numbered A1, A2, ... across the paper.
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{assumption}{Assumption}
+\renewcommand{\theassumption}{A\arabic{assumption}}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% Equations numbered within sections: (1.1), (1.2), ...
+\numberwithin{equation}{section}
