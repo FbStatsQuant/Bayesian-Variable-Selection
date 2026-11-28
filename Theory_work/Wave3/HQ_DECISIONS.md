@@ -972,3 +972,8 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
 - Owner authorizes **1 fresh Fable 5.2 (`claudeAgent_personal`, high) + 1 fresh Astra 6.2 (`codex`, high)** as a final reviewing council to hold a structured discussion with the Proposers (Opus CP Task Lead + original Fable 5.2 & Astra 6.2 drafting advisors).
 - Mandate: verify nothing important was missed, and ensure every assumption is stated in a **general, design-agnostic, natural form** for the general linear-regression BVS problem (matching Song & Liang's generality — no AR or S1/S2-specific assumptions baked in; re-express or replace anything overly tied to S1/S2 while keeping S1/S2 strictly as empirical support). Finalize deliverables for the owner's personal review.
 - Hard round cap: **1 discussion round default, 2 rounds max**, with any 2nd round requiring explicit approval from the Theory Department Manager.
+
+## 2026-11-28 — Owner: PAPER-DRAFT to Writing
+- One LaTeX project (main.tex plus one file per section) with 3 Opus leads: (1) model/priors/posterior/SMC, owning refs.bib; (2) simulations S1/S2 with a Fable adviser on Claude Third; (3) theory with a Fable adviser on CP. Fables advise only; Opus/Sonnet write.
+- Song's style and cadence; APA-linked citations; metrics defined; truthful selling; brief assumption justifications (data-informed ones explained, not attributed to our data).
+- Review: one round by a fresh Fable (CP) and Astra, feedback only; a second, final round only with the Writing Manager's approval.
