@@ -104,3 +104,9 @@ v1.1 contained seven over-claims by the Lead, all now withdrawn:
 
 ### Round 1 outcome
 The package was revised to v1.2. Round 2 is dispatched to the same three seats with `briefs/COUNCIL_BRIEF_R2.md`.
+
+### HQ owner ruling (POLICIES §1b, received 2026-11-27 after R2 dispatch)
+Round 2+ is **scoped fix-verification**, not a cold re-review. The R2 seats were already running under the fuller R2 brief. Per POLICIES §10 they are not cancelled; the ruling is applied at triage:
+- The R2 gate is cleared iff (a) every R1 blocker and substantive point is judged genuinely fixed, and (b) no new substantive flaw or regression was introduced by the v1.2 edits.
+- New points that are not regressions of a v1.2 edit, and all new stylistic nitpicks, are logged with a one-line reason and disregarded for the gate. So are score penalties driven by them.
+- Point-by-point response: `council/RESPONSE_R1.md`. Diff: `council/R1_TO_R2.diff`. Any Round 3 uses the scoped brief `briefs/COUNCIL_BRIEF_R3_SCOPED.md`.
