@@ -1176,6 +1176,7 @@ S2.paired.all.nu2.07.WL	0/6 of 1200; SMC 2 ASI 8	McNemar p = 0.031
 S2.paired.all.nu3.52.WL	23/37 of 1200; SMC 81 ASI 95	McNemar p = 0.092
 S2.paired.all.nu6.WL	137/47 of 1200; SMC 523 ASI 433	McNemar p = 2.1e-11
 S2.paired.all.by_bt_n_rho.sig	3 of 12 (SMC ahead 3, ASI ahead 0)	pooled over nu; McNemar p < 0.05
+S2.paired.all.by_bt_n_rho.untestable	2 of 12	no discordant pairs
 S2.smcbvs.nu6.exact_share_of_all	523 of 606	""
 S2.paired.all.nu_lt6.WL	23/43 of 10800; SMC 83 ASI 103	McNemar p = 0.019
 S2.paired.shared.asi.bt=1,n=50,p=1000,s=5,ρ=0.exactWTL	34/936/13	McNemar p = 0.0031; n_shared = 983; SMC 78 ASI 57
@@ -1374,18 +1375,18 @@ S2.smcbvs.n100.escalated	1225/6000	""
 S2.smcbvs.minESSoverN.below090	7016/12000	""
 S2.smcbvs.minESSoverN.below050	500/12000	""
 S1.smcbvs.minESSoverN.below050	6/1600	""
-esc.S1p=500.escalated	28 fits; exact 32.1% vs expected 30.3%; FP 0.00 FN 6.07; standardised over 28 fits	""
-esc.S1p=500.not_escalated	772 fits; exact 47.8% vs expected 50.6%; FP 0.03 FN 4.33; standardised over 772 fits	""
-esc.S1p=500.warning	1 fits; exact 0.0% vs expected 0.0%; FP 0.00 FN 9.00; standardised over 1 fits	""
-esc.S1p=5000.escalated	212 fits; exact 45.8% vs expected 44.8%; FP 0.02 FN 4.09; standardised over 212 fits	""
-esc.S1p=5000.not_escalated	588 fits; exact 48.3% vs expected 49.4%; FP 0.03 FN 4.45; standardised over 588 fits	""
-esc.S1p=5000.warning	6 fits; exact 66.7% vs expected 63.5%; FP 0.00 FN 2.17; standardised over 6 fits	""
-esc.S2n=50.escalated	3749 fits; exact 4.2% vs expected 6.5%; FP 0.05 FN 4.49; standardised over 3749 fits	""
-esc.S2n=50.not_escalated	2251 fits; exact 6.9% vs expected 4.4%; FP 0.04 FN 4.16; standardised over 2251 fits	""
-esc.S2n=50.warning	322 fits; exact 12.7% vs expected 11.3%; FP 0.03 FN 4.10; standardised over 322 fits	""
-esc.S2n=100.escalated	1225 fits; exact 14.9% vs expected 13.8%; FP 0.10 FN 7.54; standardised over 1225 fits	""
-esc.S2n=100.not_escalated	4775 fits; exact 2.4% vs expected 2.6%; FP 0.04 FN 9.00; standardised over 4675 fits	""
-esc.S2n=100.warning	252 fits; exact 43.7% vs expected 39.0%; FP 0.17 FN 3.80; standardised over 252 fits	""
+esc.S1p=500.escalated	28 fits; exact 32.1%; on the 28 compared fits observed 32.1% vs expected 30.3%; FP 0.00 FN 6.07	""
+esc.S1p=500.not_escalated	772 fits; exact 47.8%; on the 772 compared fits observed 47.8% vs expected 50.6%; FP 0.03 FN 4.33	""
+esc.S1p=500.warning	1 fits; exact 0.0%; on the 1 compared fits observed 0.0% vs expected 0.0%; FP 0.00 FN 9.00	""
+esc.S1p=5000.escalated	212 fits; exact 45.8%; on the 212 compared fits observed 45.8% vs expected 44.8%; FP 0.02 FN 4.09	""
+esc.S1p=5000.not_escalated	588 fits; exact 48.3%; on the 588 compared fits observed 48.3% vs expected 49.4%; FP 0.03 FN 4.45	""
+esc.S1p=5000.warning	6 fits; exact 66.7%; on the 6 compared fits observed 66.7% vs expected 63.5%; FP 0.00 FN 2.17	""
+esc.S2n=50.escalated	3749 fits; exact 4.2%; on the 3749 compared fits observed 4.2% vs expected 6.5%; FP 0.05 FN 4.49	""
+esc.S2n=50.not_escalated	2251 fits; exact 6.9%; on the 2251 compared fits observed 6.9% vs expected 4.4%; FP 0.04 FN 4.16	""
+esc.S2n=50.warning	322 fits; exact 12.7%; on the 322 compared fits observed 12.7% vs expected 11.3%; FP 0.03 FN 4.10	""
+esc.S2n=100.escalated	1225 fits; exact 14.9%; on the 1225 compared fits observed 14.9% vs expected 13.8%; FP 0.10 FN 7.54	""
+esc.S2n=100.not_escalated	4775 fits; exact 2.4%; on the 4675 compared fits observed 2.4% vs expected 2.6%; FP 0.04 FN 9.00	""
+esc.S2n=100.warning	252 fits; exact 43.7%; on the 252 compared fits observed 43.7% vs expected 39.0%; FP 0.17 FN 3.80	""
 esc.trigger_recorded	719 of 5214 escalated fits record a trigger: grid_unconverged 533, E2 178, E1 8	""
 S2.smcbvs.eflag_types	E1: 2; E2: 72; E2;low_empirical_ESS: 98; low_empirical_ESS: 402	""
 version.smcbvs	SMC-BVS R core v3.1.1	R version 4.5.2

@@ -50,8 +50,9 @@
 % ---------------------------------------------------------------- hyperlinks (load last)
 \usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,
             urlcolor=blue!50!black,breaklinks=true,pdfusetitle]{hyperref}
-\AtBeginDocument{\renewcommand{\doi}[1]{\url{https://doi.org/#1}}}
+\AtBeginDocument{\renewcommand{\doi}[1]{\urlstyle{same}\url{https://doi.org/#1}}}
 \urlstyle{same}                          % DOIs and URLs in the text font, not typewriter
+\AtBeginDocument{\urlstyle{same}}        % apacite resets the style to APACtt; set it again
 
 % ---------------------------------------------------------------- statements
 % Numbered within sections.  Assumptions are numbered A1, A2, ... across the paper.

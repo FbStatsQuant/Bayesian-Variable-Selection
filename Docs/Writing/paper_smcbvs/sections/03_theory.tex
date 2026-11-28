@@ -6,7 +6,8 @@ size and no small set of predictors is nearly collinear (Theorem~\ref{thm:th-sel
 are not measured and the predictors are Gaussian, it selects the support of the best linear predictor built from those
 that are (Theorem~\ref{thm:th-omitted}). We conjecture that selection holds under a weaker signal condition
 (Conjecture~\ref{conj:th-select}) and that the misspecification result extends to any response law in fixed dimension and to the weaker signal condition
-in high dimension (Conjecture~\ref{conj:th-mis}). Table~\ref{tab:sl-map} lists the counterparts in \citet{SongLiang2015}. All statements
+in high dimension (Conjecture~\ref{conj:th-mis}). Proofs of the three theorems will be given in a companion proof
+supplement; they are not included in this draft. Table~\ref{tab:sl-map} lists the counterparts in \citet{SongLiang2015}. All statements
 concern the exact posterior, which the sampler of Section~\ref{sec:model-sampler} approximates, and $p$ may grow like
 any fixed power of $n$.
 
@@ -73,7 +74,7 @@ every fixed $c>0$, for all sufficiently large $n$, with constants $L$ and $c_\ps
 
 \begin{assumption}[Sub-Gaussian predictors]\label{a:th-subg}
 Every predictor has positive variance, and for a fixed $L\ge1$,
-$\E\exp(t\,v^\top\zeta)\le\exp\{L^2t^2\Var(v^\top\zeta)/2\}$ for every $t\in\R$ and every $v\in\R^p$ supported on a
+$\E\exp(t\,w^\top\zeta)\le\exp\{L^2t^2\Var(w^\top\zeta)/2\}$ for every $t\in\R$ and every $w\in\R^p$ supported on a
 sparse set.
 \end{assumption}
 
@@ -188,7 +189,7 @@ and $\bstar$, not by $\Sig$ alone, and it is zero when $U$ is uncorrelated with 
 
 \begin{assumption}[Selection margin]\label{a:th-margin}
 There are a fixed $\eta>0$ and an accounting set $Q_n$ such that, for all $n$ larger than some $n_0$ and every
-$B\subseteq Q_n$ with $B\not\supseteq\Sz$ and $\abs{B\setminus\Sz}\le\bar u_d$, where $d=\abs{\Sz\setminus B}$,
+$B\subseteq Q_n$ with $B\not\supseteq\Sz$, $\abs B\le K$ and $\abs{B\setminus\Sz}\le\bar u_d$, where $d=\abs{\Sz\setminus B}$,
 \begin{align}
   \Rres(B)\ &\ge\ 2(1+\eta)\,\sigs^2\,\mathrm{pen}_n(d), \label{eq:th-margin-del}\\
   \Big\{\frac{\Rres(B\cup U)}{\sigs^2}\Big\}^{1/2}
@@ -202,20 +203,21 @@ $\abs{B\cup U}\le K$.
 Assumption~\ref{a:th-margin} is a condition on the sequence of laws of $(x,\yr)$; $n_0$ is a property of that
 sequence and enters no constant. By~\eqref{eq:th-margin-del}, $\Rres(B)>0$, so the leakage is well defined. Taking
 $B=\Sz\setminus J$ in~\eqref{eq:th-margin-del} gives the deletion margin: the signal lost by leaving out a set $J$ of
-true predictors must exceed twice its price. The log posterior odds of $\Sz$ against $\Sz\setminus J$ are about
+true predictors must exceed $2\sigs^2$ times its price. Heuristically, the log posterior odds of $\Sz$ against $\Sz\setminus J$ are about
 $\hat R/(2\sigs^2)-\mathrm{pen}_n(\abs J)$, where $\hat R$ is the sample counterpart of $\Rres(\Sz\setminus J)$, so the
 break-even point is $\Rres=2\sigs^2\mathrm{pen}_n$; the constant~$2$ is the $\tfrac12$ of the Gaussian log-likelihood,
 and $\mathrm{pen}_n$ has the form of the extended BIC penalty \citep{ChenChen2008}. Predictors inside $Q_n$ may enter
 a base as proxies, and~\eqref{eq:th-margin-del} charges such a base the full deletion price. Nulls outside $Q_n$ are
-charged through~\eqref{eq:th-margin-sub}, the substitution margin. They pay their own prior and Occam price, which
-offsets the noise they fit by chance; that price does not offset the cross term between this noise and the signal the
+charged through~\eqref{eq:th-margin-sub}, the substitution margin. The heuristic behind
+Conjecture~\ref{conj:th-select} is that they pay their own prior and Occam price, which offsets the noise they fit by
+chance, but that this price does not offset the cross term between this noise and the signal the
 rival leaves unexplained, which the last term bounds by the most the best of $\binom{p-\sz}{u}$ null sets can gain. The
 factor $h$ is the distance between the unit directions of the residual of the true mean with and without $U$, whose
 cosine is $(1-\lambda)^{1/2}$, capped at the bound $1$ that assumes nothing about the nulls; $\lambda^{1/2}\le
 h(\lambda)\le(2\lambda)^{1/2}$ for $\lambda\le3/4$. Any accounting set may be used. The simplest is $Q_n=\Sz$, where
-every null is priced by its own leakage; enlarging $Q_n$ moves close proxies of true predictors into the bases. Rivals
-with more nulls than $\bar u_d$ need no condition: their prior price offsets the noise they fit by
-chance, and their Occam factor outweighs the price of the deletion.
+every null is priced by its own leakage; enlarging $Q_n$ moves close proxies of true predictors into the bases. The
+assumption stops at $\bar u_d$ nulls because we expect larger rivals to need no condition: their prior price should
+offset the noise they fit by chance, and their Occam factor should outweigh the price of the deletion.
 
 \begin{remark}[Other signal conditions]\label{rem:th-margin}
 Condition~3 of \citet{SongLiang2015} asks that no combination of other predictors reproduce a true one;
@@ -244,7 +246,8 @@ Assume \ref{a:th-gl}--\ref{a:th-margin}, with $\sz\ge1$. Then $\Pin{\Sz}\to1$ in
 and $\P^*(\HPM=\MPM=\Sz)\to1$.
 \end{conjecture}
 
-Conjecture~\ref{conj:th-select} asks for the conclusions of Theorem~\ref{thm:th-select-fixed}, without a rate, with
+When $\sz=0$ the true model is empty; neither Theorem~\ref{thm:th-select-fixed} nor
+Conjecture~\ref{conj:th-select} makes a claim for it. Conjecture~\ref{conj:th-select} asks for the conclusions of Theorem~\ref{thm:th-select-fixed}, without a rate, with
 Assumption~\ref{a:th-margin} in place of fixed effects and Assumption~\ref{a:th-nec} in place of a fixed eigenvalue
 floor. Selection consistency under other priors or designs is studied by \citet{ShangClayton2011},
 \citet{NarisettyHe2014}, \citet{CastilloSchmidtHieberVanDerVaart2015} and \citet{Rossell2022}.
@@ -278,10 +281,11 @@ is cancelled. Let $O=\Sz\setminus\mathcal C$ be the true predictors that are lef
 Suppose that $2\le\abs{\mathcal C}\le n^A$ for a fixed $A\ge1$, that the rows $x_{\mathcal C,i}$ are independent and
 identically distributed Gaussian vectors, and that, given them, the responses are independent with
 $\yr_i\sim\Normal(\alpha_{\mathcal C}+x_{\mathcal C,i}^\top\beta^{\mathcal C},\sigma^2_{\mathcal C})$,
-$\sigma^2_{\mathcal C}>0$. Suppose also that $s_{\mathcal C}=\abs{\Sz^{\mathcal C}}\ge1$ is fixed, and that for fixed $\varphi>0$ and $\bar v$,
+$\sigma^2_{\mathcal C}>0$. Suppose also that $\Var(x_{\mathcal C})$ is nonsingular, that $\Sz^{\mathcal C}$ is nonempty and of fixed size,
+and that for fixed $\varphi>0$ and $\bar\kappa$,
 \begin{enumerate}[label=(\roman*)]
-  \item $\lmin\{\Corr(x_T)\}\ge\varphi^2$ for every $T\subseteq\mathcal C$ with $\abs T\le3(A+1)(s_{\mathcal C}+1)\log n$;
-  \item $\Var(x_{\mathcal C}^\top\beta^{\mathcal C})\le\bar v\,\sigma^2_{\mathcal C}$, and
+  \item $\lmin\{\Corr(x_T)\}\ge\varphi^2$ for every $T\subseteq\mathcal C$ with $\abs T\le3(A+1)(\abs{\Sz^{\mathcal C}}+1)\log n$;
+  \item $\Var(x_{\mathcal C}^\top\beta^{\mathcal C})\le\bar\kappa\,\sigma^2_{\mathcal C}$, and
     $n\min_{j\in\Sz^{\mathcal C}}(\beta^{\mathcal C}_j)^2\Var(x_j)/(\sigma^2_{\mathcal C}\log n)\to\infty$.
 \end{enumerate}
 Then $\E^*\{1-\Pi(\Sz^{\mathcal C}\mid\Dn^{\mathcal C})\}=O(\rn)$, and $\P^*(\HPM\ne\Sz^{\mathcal C})$ and
@@ -308,11 +312,12 @@ $n$; $\abs{\mathcal C}\ge2$ is fixed; $\E(\yr)^2<\infty$, $\E\norm{x_{\mathcal C
 nonsingular and $\sigma_{\mathcal C}^2>0$.
 \end{assumption}
 
-Assumption~\ref{a:th-mom} is the setting of Theorem~4 of \citet{SongLiang2015}: a fixed subset of predictors with
-finite second moments. It asks nothing of the form of $\E(\yr\mid x_{\mathcal C})$ or of the error law: the response
+Assumption~\ref{a:th-mom} extends the setting of Theorem~4 of \citet{SongLiang2015}. It keeps their fixed subset
+of predictors and the moment condition of that theorem (their Condition~4), but drops their Gaussian linear model for
+the full set of predictors. It asks nothing of the form of $\E(\yr\mid x_{\mathcal C})$ or of the error law: the response
 may be discrete, heteroscedastic or nonlinear in $x_{\mathcal C}$. Second moments are what the best linear predictor
-needs to exist. The lower bound $\abs{\mathcal C}\ge2$ matches Assumption~\ref{a:th-dim}: the method is run on at
-least two predictors.
+needs to exist. The lower bound $\abs{\mathcal C}\ge2$ matches Assumption~\ref{a:th-dim}: the results of this section cover
+dimensions of at least two, and the one-predictor case is enumerated exactly (Section~\ref{sec:model-data}).
 
 In high dimension, misspecification of the error law can make Bayesian linear regression overfit
 \citep{GrunwaldVanOmmen2017}, so the other two allow only the misspecification that comes from leaving out predictors, and ask the
@@ -331,14 +336,16 @@ $\abs{\Sz^{\mathcal C}}\le s_{\mathcal C}$ for a fixed integer $s_{\mathcal C}\g
 
 Under Assumptions~\ref{a:th-gl} and~\ref{a:th-mis}, the response given $x_{\mathcal C}$ is again Gaussian and linear,
 with $\beta^{\mathcal C}=\bstar_{\mathcal C}+\gamma$ and $\sigma_{\mathcal C}^2=\sigs^2+\tau^2$: the left-out signal acts
-as extra effects on the candidates that predict it and as extra noise. By Cram\'er's decomposition theorem,
+as extra effects on the candidates that predict it and as extra noise. By Cram\'er's decomposition theorem, under Assumption~\ref{a:th-gl} the condition on the left-out signal in
 Assumption~\ref{a:th-mis} is the same as asking the residual $\varepsilon_{\mathcal C}$ to be Gaussian and independent
-of $x_{\mathcal C}$. Its linear-Gaussian part holds whenever $(x_{\mathcal C},x_O)$ is jointly Gaussian; that does not
+of $x_{\mathcal C}$; the nonsingularity and the conditions for the candidate problem are separate. Its linear-Gaussian part holds whenever $(x_{\mathcal C},x_O)$ is jointly Gaussian; that does not
 make $\beta^{\mathcal C}$ sparse, which is the separate Assumption~\ref{a:th-sparse-c}, the counterpart of
 Assumption~\ref{a:th-sparse} for the candidate problem. For a fixed candidate set, as in \citet{SongLiang2015}, it is
-automatic. With Assumption~\ref{a:th-sparse}, it holds when a few candidates $V$ separate the left-out predictors from
-the other candidates, in the sense that $x_O$ is conditionally independent of $x_{\mathcal C\setminus V}$ given $x_V$,
-since then $\gamma$ is supported on $V$. It can fail under pervasive factors, where the projection of a left-out
+automatic. With Assumption~\ref{a:th-sparse} and $(x_{\mathcal C},x_O)$ jointly Gaussian, it holds when a few candidates $V$
+separate the left-out predictors from the other candidates, in the sense that $x_O$ is conditionally independent of
+$x_{\mathcal C\setminus V}$ given $x_V$, since then $\gamma$ is supported on $V$. Without joint Gaussianity,
+conditional independence does not suffice: the linear projection of $x_O$ can still load on $x_{\mathcal C\setminus
+V}$ unless $\E(x_O\mid x_V)$ is linear in $x_V$. It can fail under pervasive factors, where the projection of a left-out
 predictor is typically dense, although common factors alone do not force a dense projection.
 
 \begin{conjecture}[Consistency under misspecification]\label{conj:th-mis}
@@ -369,16 +376,16 @@ has positive prior probability. We expect the inclusion to hold almost surely as
 form. The last statement of part~(a) adds exclusion. Part~(b) asks for the
 conclusions of Theorems~\ref{thm:th-dist} and~\ref{thm:th-omitted} for the candidate problem, with the margin of
 Assumption~\ref{a:th-margin} in place of condition~(ii) of Theorem~\ref{thm:th-omitted}; its constants depend on
-$s_{\mathcal C}$ in place of $s$. In both parts a null predictor that stands in for a missing true one is selected, and the noise
-variance absorbs what the candidates cannot explain. For other priors and likelihoods, posterior model probabilities
+$s_{\mathcal C}$ in place of $s$. If the conjecture holds, then in both parts a null predictor that stands in for a
+missing true one is selected, and the noise variance absorbs what the candidates cannot explain. For other priors and likelihoods, posterior model probabilities
 under misspecification are studied by \citet{RossellRubio2018} and \citet{Rossell2022}, who find that they concentrate
 on the Kullback--Leibler optimal model under suitable conditions.
 
 The modes of convergence differ across the statements. Theorem~\ref{thm:th-dist} and
 Conjecture~\ref{conj:th-mis}(b) give explicit probability bounds, Theorems~\ref{thm:th-select-fixed}
 and~\ref{thm:th-omitted} give rates in probability or in expectation, and Conjecture~\ref{conj:th-select} gives
-convergence in probability. In Conjecture~\ref{conj:th-mis}(a) the law is fixed, and the density and exact-selection statements are almost sure
-along one sequence of observations.
+convergence in probability. In Conjecture~\ref{conj:th-mis}(a) the law is fixed; the density and exact-selection statements are almost sure
+along one sequence of observations, and the inclusion statement holds in probability.
 
 \begin{table}[ht]
 \centering\small

@@ -4,7 +4,7 @@
 
 \section{Full simulation results}\label{sec:sims-supp}
 
-This section gives every setting of designs S1 and S2 (Section~\ref{sec:sims}). For S1 it lists exact recovery, false
+This appendix gives every setting of designs S1 and S2 (Section~\ref{sec:sims}). For S1 it lists exact recovery, false
 positives, false negatives, Hamming distance, the size of the selected model, empty selections, conditional precision,
 recall and wall-clock time; for S2 the same measures except false negatives and Hamming distance, which follow from
 the others as $\sz(1-\text{recall})$ and their sum with the false positives. Exact recovery and empty selections are
@@ -12,9 +12,9 @@ counts out of the $100$ data sets of a setting; times are medians; the other ent
 sets, except conditional precision, which is the mean over the data sets with a non-empty selection and is shown as --
 when there are fewer than $20$ of them. Measures are defined in Section~\ref{sec:sims-metrics}.
 
-The section then gives the S2 precision under other conventions for empty selections and on paired data sets
+The appendix then gives the S2 precision under other conventions for empty selections and on paired data sets
 (Tables~\ref{tab:supp-s2-prec-conv} and~\ref{tab:supp-s2-prec-paired}), the paired exact-recovery comparison of
-SMC-BVS and ASI in S2 (Table~\ref{tab:supp-s2-paired}), the time per submitted data set of these two methods
+SMC-BVS and ASI in S2 (Tables~\ref{tab:supp-s2-paired} and~\ref{tab:supp-s2-paired-bys}), the time per submitted data set of these two methods
 (Table~\ref{tab:supp-cost-smc-asi}) and the accuracy of escalated and warned SMC-BVS fits
 (Table~\ref{tab:supp-escalation}).
 
@@ -140,7 +140,7 @@ minus the other method, with its standard error, stratified by setting, in paren
 
 \begin{table}[htbp]\centering\small
 \caption{Design S2: paired exact recovery of SMC-BVS and ASI at the three strongest signals, by support type and
-$\rho$, pooled over $n$, with totals over all of S2. A failed fit counts as a miss. The columns under ``only one method
+$\rho$, pooled over $n$, with totals over all of S2. The columns under ``only one method
 exact'' count the data sets on which that method recovered $\Sz$ and the other did not; McNemar $p$ is the exact
 two-sided test on these two counts. The complete cases are the $11{,}919$ data sets on which all six methods
 finished.}\label{tab:supp-s2-paired}
@@ -148,18 +148,29 @@ finished.}\label{tab:supp-s2-paired}
 \end{table}
 
 \begin{table}[htbp]\centering\small
-\caption{SMC-BVS and ASI: exact recovery (out of $200$ in S1, $6{,}000$ in S2) and the quantiles of the time per
+\caption{Design S2: paired exact recovery of SMC-BVS and ASI by support type, $n$ and $\rho$, pooled over the ten
+values of $\nu$ ($1{,}000$ data sets per row). Columns as in Table~\ref{tab:supp-s2-paired}; -- marks a row in which no
+data set separates the two methods, so the test is undefined.}\label{tab:supp-s2-paired-bys}
+\input{figures/tables/supp_s2_paired_bys}
+\end{table}
+
+\begin{table}[htbp]\centering\small
+\caption{SMC-BVS and ASI: exact recovery (out of $400$ in S1, $6{,}000$ in S2) and the quantiles of the time per
 submitted data set on one core; units are given for each block. For the ten S1 fits of SMC-BVS that reached the
-$24$-hour limit, the time is the $24$ hours of the first attempt plus the rerun; no other fit of either method was
+$24$-hour limit, the time is the summed run time of both attempts,
+the $24$ hours of the first plus the rerun; no other fit of either method was
 retried. Escalated: number of SMC-BVS fits whose calibration was escalated. The S1 fits of SMC-BVS ran mostly on newer
 nodes than the other fits (Section~\ref{sec:sims-s1}).}\label{tab:supp-cost-smc-asi}
 \input{figures/tables/supp_cost_smc_asi}
 \end{table}
 
-\begin{table}[htbp]\centering\small
-\caption{SMC-BVS fits by escalation and run-time warning (Section~\ref{sec:model-output}). Observed: percentage of the
-fits in the row with $\Shat=\Sz$. Expected: the percentage that the other fits of the same settings achieve, weighted
-by the number of fits of the row in each setting; it removes the effect of the settings in which escalation or a
-warning is common. Mean FP and FN are false positives and false negatives; times are medians per fit.}\label{tab:supp-escalation}
+\begin{table}[htbp]\centering\footnotesize
+\caption{SMC-BVS fits by escalation and run-time warning (Section~\ref{sec:model-output}). Exact: percentage of all
+fits in the row with $\Shat=\Sz$. The standardised comparison uses the fits of the row in settings that also have
+fits outside it (compared); on these, observed is the percentage with $\Shat=\Sz$ and expected the percentage that the
+other fits of the same settings achieve, weighted by the number of compared fits in each setting, which removes the
+effect of the settings in which escalation or a warning is common. The two differ in one row: at S2, $n=100$, one
+setting had no escalated fit, so $4{,}675$ of the $4{,}775$ non-escalated fits are compared. Mean FP and FN are false
+positives and false negatives; times are medians per fit.}\label{tab:supp-escalation}
 \input{figures/tables/supp_escalation}
 \end{table}

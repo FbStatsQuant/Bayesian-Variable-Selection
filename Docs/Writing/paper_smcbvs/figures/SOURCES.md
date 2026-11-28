@@ -1,6 +1,6 @@
 # Provenance of the S1/S2 figures and tables (Sections 2 and 4)
 
-Built 2026-11-28 08:49 UTC by `figures/scripts/build_sim_outputs.R` (R 4.6.0).
+Built 2026-11-28 10:01 UTC by `figures/scripts/build_sim_outputs.R` (R 4.6.0).
 
 Inputs are read-only Engineering outputs under `_local/engineering/` (located through `SMCBVS_ENG_DIR` or a relative path; see `sim_data.R`); nothing from them is stored in the repository. The caches hold fields read from the per-fit JSON records and are rebuilt when absent.
 

@@ -369,6 +369,18 @@ for (v in NU) { a <- wl(pwa[nu == v]); num(sprintf("S2.paired.all.nu%s.WL", v), 
 bys <- pwa[, .(w = sum(smc & !asi), l = sum(asi & !smc)), by = .(beta_type, n, rho)][, p := mapply(mcn, w, l)]
 num("S2.paired.all.by_bt_n_rho.sig", sprintf("%d of %d (SMC ahead %d, ASI ahead %d)", sum(bys$p < 0.05, na.rm = TRUE), nrow(bys),
     sum(bys$p < 0.05 & bys$w > bys$l, na.rm = TRUE), sum(bys$p < 0.05 & bys$l > bys$w, na.rm = TRUE)), "pooled over nu; McNemar p < 0.05")
+num("S2.paired.all.by_bt_n_rho.untestable", sprintf("%d of %d", sum(bys$w + bys$l == 0), nrow(bys)), "no discordant pairs")
+setorder(bys, beta_type, n, rho)
+fp0 <- function(x) ifelse(is.na(x), "--", ifelse(x < 0.001, sprintf("$%s$", sub("e-0?(\\d+)", "\\\\times10^{-\\1}", formatC(x, format = "e", digits = 0))), sprintf("%.3f", x)))
+L <- c("\\begin{tabular}{lrrrrrrrr}", "\\toprule",
+       " & & & & \\multicolumn{2}{c}{exact recovery} & \\multicolumn{2}{c}{only one method exact} & \\\\", "\\cmidrule(lr){5-6}\\cmidrule(lr){7-8}",
+       "support & $n$ & $\\rho$ & data sets & SMC-BVS & ASI & SMC-BVS & ASI & McNemar $p$ \\\\", "\\midrule")
+byx <- pwa[, .(N = .N, smc = sum(smc), asi = sum(asi), w = sum(smc & !asi), l = sum(asi & !smc)), by = .(beta_type, n, rho)][order(beta_type, n, rho)]
+for (k in seq_len(nrow(byx))) { r <- byx[k]
+  L <- c(L, sprintf("%s & %s & %s & %d & %d & %d & %d & %d & %s \\\\", if (r$n == 50 && r$rho == 0) c("spread", "block")[r$beta_type] else "",
+                    if (r$rho == 0) r$n else "", r$rho, r$N, r$smc, r$asi, r$w, r$l, fp0(mcn(r$w, r$l))))
+  if (k == 6) L <- c(L, "\\addlinespace[3pt]") }
+write_tex(c(L, "\\bottomrule", "\\end{tabular}"), "supp_s2_paired_bys.tex")
 num("S2.smcbvs.nu6.exact_share_of_all", sprintf("%d of %d", sum(pwa[nu == 6]$smc), sum(pwa$smc)))
 num("S2.paired.all.nu_lt6.WL", { a <- wl(pwa[nu < 6]); sprintf("%d/%d of %d; SMC %d ASI %d", a$w, a$l, a$N, a$smc, a$asi) },
     { a <- wl(pwa[nu < 6]); sprintf("McNemar p = %s", signif(mcn(a$w, a$l), 2)) })
@@ -454,11 +466,12 @@ S2DATA[, wall_sub := wall_sec]
 # Main-text table: median wall time per fit (minutes, one core) of the six methods.
 fmin <- function(v) ifelse(v < 0.005, "$<$0.01", ifelse(v < 0.095, sprintf("%.2f", v), ifelse(v < 9.95, sprintf("%.1f", v), formatC(v, format = "f", digits = 0, big.mark = ","))))
 L <- c("\\begin{tabular}{lll*{6}{r}}", "\\toprule", paste("design & size & signal &", paste(LABELS[METHODS], collapse = " & "), "\\\\"), "\\midrule")
-s1[, sig := fifelse(snr <= 1, "$\\mathrm{SNR}\\le1$", "$\\mathrm{SNR}\\ge2$")]
-for (pp in c(500, 5000)) for (nn in c(500, 1000)) for (g in unique(s1$sig)) {
+s1[, sig := fifelse(snr == 0.5, "$\\mathrm{SNR}=0.5$", fifelse(snr == 1, "$\\mathrm{SNR}=1$", "$\\mathrm{SNR}\\ge2$"))]
+SIG1 <- c("$\\mathrm{SNR}=0.5$", "$\\mathrm{SNR}=1$", "$\\mathrm{SNR}\\ge2$")
+for (pp in c(500, 5000)) for (nn in c(500, 1000)) for (g in SIG1) {
   v <- s1[p == pp & n == nn & sig == g, .(m = median(wall_sec) / 60), by = method][match(METHODS, method)]$m
-  L <- c(L, sprintf("%s & %s & %s & %s \\\\", if (pp == 500 && nn == 500 && g == unique(s1$sig)[1]) "S1" else "",
-                    if (g == unique(s1$sig)[1]) sprintf("$(%d,%d)$", nn, pp) else "", g, paste(fmin(v), collapse = " & "))) }
+  L <- c(L, sprintf("%s & %s & %s & %s \\\\", if (pp == 500 && nn == 500 && g == SIG1[1]) "S1" else "",
+                    if (g == SIG1[1]) sprintf("$(%d,%d)$", nn, pp) else "", g, paste(fmin(v), collapse = " & "))) }
 L <- c(L, "\\addlinespace[3pt]")
 S2DATA[, sig := fifelse(nu <= 1.22, "$\\nu\\le1.22$", "$\\nu\\ge2.07$")]
 for (nn in c(50, 100)) for (g in c("$\\nu\\le1.22$", "$\\nu\\ge2.07$")) {
@@ -520,19 +533,22 @@ E <- rbind(s1[method == "smcbvs", .(stratum = sprintf("S1, $p=%d$", p), setting_
            S2DATA[method == "smcbvs", .(stratum = sprintf("S2, $n=%d$", n), setting_id, exact, FP, FN, wall_sec, escalated, eflag_any, warnings, eflags)])
 std <- function(d, flag) { d <- copy(d)[, fl := flag]
   r <- d[, .(nf = sum(fl), rate_other = if (sum(!fl)) mean(exact[!fl]) else NA_real_), by = setting_id]
-  r <- r[nf > 0 & !is.na(rate_other)]; list(exp = sum(r$nf * r$rate_other) / sum(r$nf), cover = sum(r$nf)) }
-L <- c("\\begin{tabular}{llrrrrrr}", "\\toprule",
-       " & & & \\multicolumn{2}{c}{exact (\\%)} & & & \\\\", "\\cmidrule(lr){4-5}",
-       "design & fits & number & observed & expected & mean FP & mean FN & median wall \\\\", "\\midrule")
+  r2 <- d[fl == TRUE, .(obs = sum(exact)), by = setting_id]; r <- merge(r[nf > 0 & !is.na(rate_other)], r2, by = "setting_id")
+  list(exp = sum(r$nf * r$rate_other) / sum(r$nf), obs = sum(r$obs) / sum(r$nf), cover = sum(r$nf)) }
+L <- c("\\setlength{\\tabcolsep}{4pt}%", "\\begin{tabular}{llrrrrrrrr}", "\\toprule",
+       " & & & & \\multicolumn{3}{c}{standardised comparison} & & & \\\\", "\\cmidrule(lr){5-7}",
+       " & & & exact & & observed & expected & mean & mean & median \\\\",
+       "design & fits & number & (\\%) & compared & (\\%) & (\\%) & FP & FN & wall \\\\", "\\midrule")
 for (st in unique(E$stratum)) { d <- E[stratum == st]
   for (g in c("all", "escalated", "not escalated", "warning")) { glab <- c(all = "all", escalated = "escalated", `not escalated` = "not escalated", warning = "run-time warning")[[g]]
     flag <- switch(g, all = rep(TRUE, nrow(d)), escalated = d$escalated, `not escalated` = !d$escalated, warning = d$eflag_any)
-    x <- d[flag]; ex <- if (g == "all") NA_real_ else std(d, flag)$exp
-    L <- c(L, sprintf("%s & %s & %d & %.1f & %s & %.2f & %.2f & %s \\\\", if (g == "all") st else "", glab, nrow(x), 100 * mean(x$exact),
+    x <- d[flag]; sd0 <- if (g == "all") list(exp = NA_real_, obs = NA_real_, cover = NA) else std(d, flag); ex <- sd0$exp
+    L <- c(L, sprintf("%s & %s & %d & %.1f & %s & %s & %s & %.2f & %.2f & %s \\\\", if (g == "all") st else "", glab, nrow(x), 100 * mean(x$exact),
+                      if (g == "all") "--" else sprintf("%d", sd0$cover), fmt_na("%.1f", 100 * sd0$obs),
                       fmt_na("%.1f", 100 * ex), mean(x$FP), mean(x$FN), tex_hms(median(x$wall_sec))))
     if (g != "all") num(sprintf("esc.%s.%s", gsub("[^A-Za-z0-9=]", "", st), gsub(" ", "_", g)),
-                        sprintf("%d fits; exact %.1f%% vs expected %s%%; FP %.2f FN %.2f; standardised over %s fits", nrow(x), 100 * mean(x$exact), fmt_na("%.1f", 100 * ex), mean(x$FP), mean(x$FN),
-                                if (g == "all") "--" else std(d, flag)$cover)) }
+                        sprintf("%d fits; exact %.1f%%; on the %s compared fits observed %s%% vs expected %s%%; FP %.2f FN %.2f", nrow(x), 100 * mean(x$exact),
+                                sd0$cover, fmt_na("%.1f", 100 * sd0$obs), fmt_na("%.1f", 100 * ex), mean(x$FP), mean(x$FN))) }
   if (st != tail(unique(E$stratum), 1)) L <- c(L, "\\addlinespace[3pt]") }
 write_tex(c(L, "\\bottomrule", "\\end{tabular}"), "supp_escalation.tex")
 tr <- E[escalated == TRUE, .(trig = sub("^calibration_trigger:", "", grep("^calibration_trigger:", unlist(strsplit(warnings, ";")), value = TRUE))), by = .(stratum, setting_id)]

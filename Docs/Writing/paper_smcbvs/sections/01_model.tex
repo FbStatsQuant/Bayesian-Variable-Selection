@@ -13,9 +13,11 @@
 We call the method SMC-BVS, for sequential Monte Carlo for Bayesian variable selection. Its model and priors are
 standard: a Gaussian linear model, a beta-binomial prior on the models and Zellner's $g$-prior on the coefficients
 (Sections~\ref{sec:model-data} and~\ref{sec:model-prior}). Its sampler (Section~\ref{sec:model-sampler}) partitions
-the predictors into blocks of correlated predictors and computes exactly the posterior that results if the blocks are
-treated as unrelated. A population of models starts from this distribution, and a tempering path then restores the
-interactions between blocks, so the population ends at the posterior over all models up to a size cap. The blocks
+the predictors into blocks of correlated predictors. A population of models starts from a distribution that can be
+sampled exactly: the product, over the blocks, of the exact marginal-likelihood ratio of each block's part of a model
+against the empty model, coupled only by the prior on the model size. A tempering path then brings in what this
+product leaves out, the correlation between blocks and the coupling of all blocks through the shared residual
+variance, so the population ends at the posterior over all models up to a size cap. The blocks
 decide where the sampler starts, not which models it can reach. In the split-and-merge method of
 \citet{SongLiang2015}, by contrast, the subsets of predictors decide which predictors enter the final analysis.
 Section~\ref{sec:model-output} defines the quantities a run reports.
@@ -88,9 +90,10 @@ $\BetaDist(1,p)$ prior. This is the beta-binomial prior $\BB(1,p)$, restricted t
 of size $k$ has prior mass
 \begin{equation}\label{eq:modelprior}
   \pi(S)=\varpi(\abs S),\qquad \varpi(k):=\frac{w(k)}{\sum_{k'=0}^{K}\binom p{k'}w(k')},\qquad
-  w(k):=\int_0^1q^k(1-q)^{p-k}\,p(1-q)^{p-1}\,dq=\frac{1}{2\binom{2p-1}{k}} .
+  w(k):=\frac{1}{2\binom{2p-1}{k}},
 \end{equation}
-The prior expected model size, before the cap, is $p/(p+1)$, close to one. Moving from size $k$ to size $k+1$
+where $w(k)=\int_0^1q^k(1-q)^{p-k}\,p(1-q)^{p-1}\,dq$ is the mass of one model of size $k$ under $\BB(1,p)$ before
+the cap. The prior expected model size, before the cap, is $p/(p+1)$, close to one. Moving from size $k$ to size $k+1$
 multiplies the prior mass of a model by $(k+1)/(2p-1-k)$, about $(k+1)/(2p)$. Two choices make these odds fall as $p$
 grows: $q$ is random, which is the multiplicity adjustment of \citet{ScottBerger2010}, and its prior mean $1/(p+1)$
 shrinks with $p$, unlike the uniform $\BetaDist(1,1)$ that \citet{ScottBerger2010} use by default. Beta priors whose
@@ -152,22 +155,50 @@ chain samplers mix on this space depends on $p$ and on the correlation between p
 \citep{Chopin2002,DelMoralDoucetJasra2006} instead moves a population of models, called particles, from a
 distribution that can be sampled exactly to the posterior, along a sequence of intermediate distributions. Here it
 gives three things a single chain does not: an unbiased estimate of the evidence $Z$; independent populations, whose
-disagreement measures the Monte Carlo error; and a starting distribution that already contains the exact posterior
-within each block of correlated predictors. \citet{SchaferChopin2013} introduced sequential Monte Carlo on binary
+disagreement measures the Monte Carlo error; and a starting distribution that already gives the models within any one
+block of correlated predictors their exact posterior odds. \citet{SchaferChopin2013} introduced sequential Monte Carlo on binary
 spaces, with independence proposals from a parametric family fitted to the particles; SMC-BVS starts from the exact
 block law~\eqref{eq:startlaw}, runs on a temperature grid that is frozen before the final run, and moves particles by
 Gibbs updates and swaps. Particle methods for selection were also proposed by \citet{ShiDunson2011} and
 \citet{Duan2019}, and \citet{ZanellaRoberts2019} combine tempering with importance weights inside a Gibbs sampler.
 \citet{PapaspiliopoulosRossell2017} compute posterior quantities exactly when $X^\top X$ is block diagonal; the start
-law of SMC-BVS is an exact computation of this kind made as if the blocks were uncorrelated, and the tempering path
-removes that assumption.
+law of SMC-BVS uses exact computations within blocks, but it is not the posterior even when the blocks are
+orthogonal, because all blocks share the residual variance; the tempering path corrects for this coupling and for the
+correlation between blocks.
 
 We describe the parts in the order in which a run uses them (Algorithm~\ref{alg:run}). Table~\ref{tab:defaults}
 lists the constants. No constant is tuned to the data set; the user supplies a random seed and a computing
 allocation.
 
+\begin{table}[tbp]
+\centering\small\renewcommand{\arraystretch}{1.15}
+\caption{Constants of SMC-BVS. Here $\tau\in\{0,1\}$ is the calibration tier: $\tau=1$ only after a warning in the
+calibration at $\tau=0$. The constants are resource budgets fixed before the studies of Section~\ref{sec:sims}, not
+tuned on them, and not accuracy guarantees; their separate effect on accuracy has not been studied, and the warnings
+of Section~\ref{sec:model-output} show when a budget was too small for a data set.}\label{tab:defaults}
+\begin{tabular}{@{}l>{$}l<{$}>{\raggedright\arraybackslash}p{4.6cm}>{\raggedright\arraybackslash}p{4.4cm}@{}}
+\toprule
+Quantity & \text{Symbol} & Default & Role \\
+\midrule
+size cap & K & $\min(p,\lfloor n/2\rfloor)$ & factorised matrices at most $K\times K$ \\
+block size cap & B & $\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)$ & at most $2^{16}$ entries per block table \\
+final particles per island & N=N_\tau & $4^\tau N_0$, with $N_0:=\max(2500,n,p)$ & at least $p$ and $n$ particles \\
+calibration particles & \Nc=\Nc_\tau & $4^\tau\lceil512N_0/2500\rceil$ & about $N_\tau/5$ \\
+step ceiling & \Tmax=\Tmax_\tau & $4^\tau\max(1000,\ell_n^2)$ & bounds the pilot and grid steps \\
+local-search move cap & \ell_n & $\lceil\log_2(n+p+1)\rceil$ & also the number of grid rebuilds \\
+burn-in rounds at $\xi=1$ & \Lbi & $\max(4,\lceil\log_2(n+1)\rceil)$ & grows slowly with $n$ \\
+islands; measured rounds & & $4$; $4$ & a spread for the checks \\
+effective sample size target & & $0.90$ & weight $\mathrm{CV}^2\le1/9$ per step \\
+candidate set & \Vcal & $\emptyset$; $20p$ best by $\gamma_0$; $20p$ best by $F$ & $\abs\Vcal\le40p+1$; builds the grid \\
+returned list & \Tlist & the $40p+1$ best models by $F$ & a check on the estimates; $\Zlist\le Z$ \\
+escalation & & factor $4$, at most once & up to about $16$ times the work of tier $0$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \paragraph{Exact enumeration.} If $\abs{\Om}\le(5\Nc_0+4N_0)\,p$, where $N_0$ and $\Nc_0$ are the particle numbers of
-Table~\ref{tab:defaults}, SMC-BVS scores every model in $\Om$ and reports the exact posterior summaries. The
+Table~\ref{tab:defaults}, SMC-BVS checks the memory and time of the enumeration against the allocation (see
+\emph{Resources} below), scores every model in $\Om$ and reports the exact posterior summaries. The
 threshold equals the number of inclusion updates in a single round of the nine islands of a run (five in the
 calibration, four in the final run; see below). Otherwise the method runs the sampler.
 
@@ -182,7 +213,7 @@ $B:=\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)$ predictors each, in th
   \item The clusters, in this left-to-right order, are packed into blocks: a cluster joins the current block if the
     block then has at most $B$ predictors, and otherwise starts a new block. A cluster is never split.
 \end{enumerate}
-Strongly correlated predictors therefore share a block. Within block $C_b$, every subset $U\subseteq C_b$ is scored,
+Strongly correlated predictors therefore tend to share a block; a cluster of more than $B$ predictors is cut. Within block $C_b$, every subset $U\subseteq C_b$ is scored,
 giving the table $h_b(U):=m(U)/m(\emptyset)$, with $h_b(\emptyset)=1$; a block has at most $2^{16}$ subsets, and
 $\abs U\le B\le K$.
 
@@ -191,30 +222,34 @@ $\abs U\le B\le K$.
   \pi_0(S):=\frac{\gamma_0(S)}{\bar Z_0},\qquad \gamma_0(S):=\varpi(\abs S)\prod_{b=1}^{J}h_b(S\cap C_b),\qquad
   \bar Z_0:=\sum_{S\in\Om}\gamma_0(S),\qquad S\in\Om .
 \end{equation}
-It scores the predictors of each block jointly, by their exact marginal likelihood, and treats different blocks as
-if they did not interact, apart from the prior on the total model size. Because $\varpi$ depends on $S$ only through
+Each factor $h_b(S\cap C_b)$ is the exact marginal-likelihood ratio, against the empty model, of the part of $S$ in
+block $b$ fitted on its own, and the factors are coupled only through the prior on the total model size. For a model
+within one block, $\gamma_0(S)=e^{F(S)}/m(\emptyset)$ exactly. For other models $\gamma_0$ is not the posterior of a
+simpler model: even when the blocks are orthogonal they share the variance $v$, and integrating $v$ out couples
+them. Because $\varpi$ depends on $S$ only through
 $\abs S$, a recursion over blocks and sizes computes $\bar Z_0$ exactly. With
 \begin{equation}\label{eq:recursion}
-  e_b(u):=\sum_{U\subseteq C_b,\ \abs U=u}h_b(U),\qquad
-  \Phi_0(a):=\ind{a=0},\qquad
-  \Phi_b(a):=\sum_{u=0}^{\min(\abs{C_b},a)}e_b(u)\,\Phi_{b-1}(a-u),
+  \begin{aligned}
+    e_b(u)&:=\sum_{U\subseteq C_b,\ \abs U=u}h_b(U),\qquad \Phi_0(a):=\ind{a=0},\\
+    \Phi_b(a)&:=\sum_{u=0}^{\min(\abs{C_b},a)}e_b(u)\,\Phi_{b-1}(a-u),\qquad b=1,\dots,J,
+  \end{aligned}
 \end{equation}
 $\Phi_b(a)$ is the total block weight of the models of size $a$ that use only the first $b$ blocks, and
 $\bar Z_0=\sum_{a=0}^{K}\varpi(a)\Phi_J(a)$. An exact draw from $\pi_0$ runs the recursion backwards: draw the size
 $a$ with probability $\varpi(a)\Phi_J(a)/\bar Z_0$; set $r:=a$ and, for $b=J,J-1,\dots,1$, draw the size $u_b$ of
 $S\cap C_b$ with probability $e_b(u)\Phi_{b-1}(r-u)/\Phi_b(r)$ and set $r\gets r-u_b$; finally draw, in each block,
 a subset $U_b$ of size $u_b$ with probability $h_b(U_b)/e_b(u_b)$, and return $S=\bigcup_bU_b$. Replacing sums by
-maxima gives the mode: with $\mu_b(u):=\max_{\abs U=u}\log h_b(U)$, $M_0(a):=0$ for $a=0$ (and $-\infty$ otherwise)
-and $M_b(a):=\max_u\{M_{b-1}(a-u)+\mu_b(u)\}$, the mode has the smallest size $a^*$ that maximises
-$\log\varpi(a)+M_J(a)$, and a backward pass through the maximising choices gives its blocks. The \emph{start mode}
+maxima gives the mode: with $\mu_b(u):=\max_{U\subseteq C_b,\,\abs U=u}\log h_b(U)$, $M_0(0):=0$, $M_0(a):=-\infty$ for
+$a>0$, and $M_b(a):=\max_{0\le u\le\min(\abs{C_b},a)}\{M_{b-1}(a-u)+\mu_b(u)\}$, the mode has the smallest size $a^*$
+that maximises $\log\varpi(a)+M_J(a)$ over $0\le a\le K$, and a backward pass through the maximising choices gives its blocks. The \emph{start mode}
 $\tSz$ is the lexicographically smallest of the maximisers of $\pi_0$ of size $a^*$.
 
 \paragraph{The tempering path.} Let
 \[
   \Delta(S):=\log\frac{m(S)}{m(\emptyset)}-\sum_{b=1}^{J}\log h_b(S\cap C_b),
 \]
-the part of the log marginal likelihood that the blocks do not explain; $\Delta(S)=0$ whenever $S$ lies within one
-block. Since $e^{F(S)}=m(\emptyset)\,\gamma_0(S)\,e^{\Delta(S)}$, the distributions
+the part of the log marginal likelihood that the product of block ratios misses (the correlation between blocks and
+their coupling through $v$); $\Delta(S)=0$ whenever $S$ lies within one block. Since $e^{F(S)}=m(\emptyset)\,\gamma_0(S)\,e^{\Delta(S)}$, the distributions
 \begin{equation}\label{eq:path}
   \pi_\xi(S)\ \propto\ \gamma_\xi(S):=\gamma_0(S)\,e^{\xi\Delta(S)},\qquad 0\le\xi\le1,
 \end{equation}
@@ -270,9 +305,9 @@ empty model, the $20p$ best by $\gamma_0$ and the $20p$ best by $F$, duplicates 
 Section~\ref{sec:model-output}, which holds the $40p+1$ best models by $F$.) With
 \begin{equation}\label{eq:ress}
   \psi(\xi):=\log\sum_{S\in\Vcal}\gamma_0(S)\,e^{\xi\Delta(S)},\qquad
-  \rho(\xi,\xi'):=\exp\{2\psi(\xi')-\psi(\xi)-\psi(2\xi'-\xi)\},\qquad 0\le \xi<\xi'\le1,
+  \rho(\xi,\xi'):=\exp\{2\psi(\xi')-\psi(\xi)-\psi(2\xi'-\xi)\},
 \end{equation}
-$\rho(\xi,\xi')$ is the effective sample size, as a fraction of the population, of the weights
+for $0\le\xi<\xi'\le1$, $\rho(\xi,\xi')$ is the effective sample size, as a fraction of the population, of the weights
 $e^{(\xi'-\xi)\Delta(S)}$ when $S$ follows $\pi_\xi$ restricted to $\Vcal$; it is computed exactly, with no Monte Carlo error. The grid starts at $0$
 and, from each temperature $\xi$, steps to the next pilot temperature if $\rho\ge0.90$ there, and otherwise to the
 largest temperature below it at which $\rho\ge0.90$. Diagnostic islands then run on the grid, the candidate set
@@ -315,16 +350,14 @@ $\Nc_\tau$, $\Tmax_\tau$, $\ell_n$ and $\Lbi$ are those of Table~\ref{tab:defaul
     \State $c\gets$ the smallest pilot temperature above $\xi$
     \State \textbf{if} $\rho(\xi,c)\ge0.90$ \textbf{then} $\xi'\gets c$ \textbf{else} $\xi'\gets$ the largest point found by
       60 bisection halvings of $(\xi,c]$ with $\rho(\xi,\xi')\ge0.90$; \textbf{fail} if none passes
-    \State \textbf{if} $\xi'\ge1-10^{-12}$ \textbf{then} $\xi'\gets1$; append $\xi'$; \textbf{fail} if the grid has more than
-      $\Tmax_\tau$ steps; $\xi\gets\xi'$
+    \State \textbf{if} $\xi'\ge1-10^{-12}$ \textbf{then} $\xi'\gets1$; \textbf{fail} unless $\xi'>\xi$ and
+      $\rho(\xi,\xi')\ge0.90$; append $\xi'$; \textbf{fail} if the grid has more than $\Tmax_\tau$ steps; $\xi\gets\xi'$
   \EndWhile
+  \State \textbf{return} the grid
 \EndProcedure
 \Statex
-\Statex \emph{Calibration warnings}, evaluated at the end of a tier: (W1) a diagnostic island's best log score lies
-  more than one unit below that of the best model found; (W2) the four diagnostic estimates $\log\Zhat_r$ have
-  standard deviation above one; (W1) and (W2) refer to the last set of diagnostic islands. (W3) a local search raised
-  the best log score; (W4) a local search stopped at its move cap; (W5) the pilot took a forced step; (W6) a grid
-  construction failed; (W7) the grid had not converged after $\ell_n$ rebuilds.
+\Statex \emph{Calibration warnings} (W1)--(W7), evaluated at the end of a tier, are those of Table~\ref{tab:warnings};
+  (W1) and (W2) refer to the last set of diagnostic islands, and (W7) means no convergence after $\ell_n$ rebuilds.
 \end{algorithmic}
 \end{algorithm}
 
@@ -333,10 +366,12 @@ $\Nc_\tau$, $\Tmax_\tau$, $\ell_n$ and $\Lbi$ are those of Table~\ref{tab:defaul
 that exceeds the time allocation or meets a numerical failure stops and reports no estimates.}\label{alg:run}
 \small
 \begin{algorithmic}[1]
-\State Remove the constant columns; standardise as in~\eqref{eq:standardise}; set the constants of
-  Table~\ref{tab:defaults}
-\State \textbf{if} $\abs\Om\le(5\Nc_0+4N_0)\,p$ \textbf{then} score every $S\in\Om$, report the exact summaries, and stop
-\State Check the memory and time needs against the allocation; stop if they exceed it
+\State Remove the constant columns; \textbf{if} none remains, or the response is constant, \textbf{then} return the empty
+  model with no estimates
+\State Standardise as in~\eqref{eq:standardise}; set the constants of Table~\ref{tab:defaults}; the branch is
+  \emph{exact} if $\abs\Om\le(5\Nc_0+4N_0)\,p$ and the sampler otherwise
+\State Check the memory and time needs of the branch against the allocation; stop if they exceed it
+\State \textbf{if} the branch is exact \textbf{then} score every $S\in\Om$, report the exact summaries, and stop
 \State Build the blocks $C_b$ and the tables $h_b$; run the recursion~\eqref{eq:recursion}; build the neighbour sets
 \State Calibrate (Algorithm~\ref{alg:calibration}): the frozen grid $0=\grid0<\dots<\grid\Ts=1$ and the tier $\tau$
 \For{$r=1,\dots,4$, each island with its own random stream}
@@ -353,7 +388,8 @@ that exceeds the time allocation or meets a numerical failure stops and reports 
 In Algorithm~\ref{alg:calibration} a failed grid at tier~$0$ is a warning and leads to tier~$1$; at tier~$1$ the
 warnings are only recorded, an unconverged grid is used as it stands, and a failed construction is replaced by the
 last grid built successfully at that tier, or by the pilot's temperatures. The forced step bounds the number of pilot
-steps by $\Tmax$.
+steps by $\Tmax$. A grid built by \textsc{BuildGrid} has $\rho\ge0.90$ at every step on the candidate set it was built
+on; the pilot's temperatures, used only in this fallback, can include forced steps and need not.
 
 \paragraph{The final run.} Four islands, each of $N$ particles and with its own random stream, run on the frozen
 grid. At $\xi=1$ each island applies $\Lbi$ further rounds as burn-in, then four measured rounds, from which the
@@ -384,45 +420,28 @@ of Section~\ref{sec:model-output}; they never change a particle or the reported 
 size $k$. A step of an island costs about $N(p+B+2)$ scores, most of them in the $p$ inclusion updates, and a run
 makes about
 \[
-  (p+B+2)\big\{\Nc(T_{\mathrm{pilot}}+\Lbi+4)+4\iota\,\Nc(\Ts+\Lbi+4)+4N(\Ts+\Lbi+4)\big\}
+  (p+B+2)\big\{\Nc_\tau(T_{\mathrm{pilot}}+\Lbi+4)+4\iota\,\Nc_\tau(\Ts+\Lbi+4)+4N_\tau(\Ts+\Lbi+4)\big\}
 \]
-scores, for $\iota$ rebuilds, a pilot of $T_{\mathrm{pilot}}$ steps and a grid of $\Ts$ steps, plus the block tables
-(at most $J\,2^B$ scores) and the local searches (at most $(\ell_n+K+1)\{p+K(p-K)\}$ scores each). Because
-$N\ge p$, the work per step grows like $p^2k^3$ once $p$ exceeds both $2{,}500$ and $n$, and it is four times larger after an escalation. The
-memory is dominated by the $p\times p$ Gram and correlation matrices, about $24p^2$ bytes, so for moderate $n$ the
-default allocation of 8\,GiB allows $p$ up to about $18{,}000$; at the sizes of Section~\ref{sec:sims} the time limit, not the memory,
-is the binding constraint, and Section~\ref{sec:sims} reports the run times.
+scores, for a calibration at tier $\tau$ with a pilot of $T_{\mathrm{pilot}}$ steps and $\iota$ rebuilds, four
+diagnostic islands per rebuild and four final islands, and a grid of $\Ts$ steps (taking the diagnostic grids to be as
+long as the final one). An escalated run adds the calibration work of tier~$0$ to this expression at $\tau=1$. To
+these come the block tables (at most $J\,2^B$ scores) and the two local searches. A scan of the neighbourhood of a
+model of size $k$ scores at most $p$ deletions and additions and $k(p-k)\le p^2/4$ swaps, and a search makes at most
+its move cap plus one scans, so each search scores at most $(\ell_n+K+1)(p+\lfloor p^2/4\rfloor)$ models. Because
+$N\ge p$, the work per step grows like $p^2k^3$ once $p$ exceeds both $2{,}500$ and $n$, and it is four times larger
+after an escalation. The data set the length of the path: in the studies of Section~\ref{sec:sims} the median grid
+had $4$ steps in S1 at $\mathrm{SNR}=0.5$ and between $64$ and $92$ at $\mathrm{SNR}\ge2$, and between $4$
+and $56$ in the groups of S2 reported there. The memory is dominated by three $p\times p$ arrays (the Gram, correlation and
+distance matrices, $24p^2$ bytes) and by a cache of the scores of up to $500p$ models with room for $K$ indices each
+(about $2000\,pK$ bytes). The default allocation of 8\,GiB then allows $p$ up to about $15{,}900$ at $n=100$ and
+about $5{,}900$ at $n=1000$. At the sizes of Section~\ref{sec:sims} the time limit, not the memory, is the binding
+constraint, and Section~\ref{sec:sims} reports the run times.
 
-\paragraph{Resources.} Before the sampler starts, and again before an escalation, SMC-BVS checks its memory need and
-the worst-case time of its local searches against the allocation (by default 8\,GiB and 24\,h). A run that would
+\paragraph{Resources.} Before it enumerates or samples, and again before an escalation, SMC-BVS checks its memory
+need against the allocation (by default 8\,GiB and 24\,h), and also the time of the enumeration or, for the sampler,
+the worst-case time of its local searches. A run that would
 exceed the allocation, runs out of time, or meets a numerical failure in scoring stops. A stopped run reports no
 estimates, even if some of its islands had finished.
-
-\begin{table}[tbp]
-\centering\small
-\caption{Constants of SMC-BVS. Here $\tau\in\{0,1\}$ is the calibration tier: $\tau=1$ only after a warning in the
-calibration at $\tau=0$. The constants are resource budgets fixed before the studies of Section~\ref{sec:sims}, not
-tuned on them, and not accuracy guarantees; their separate effect on accuracy has not been studied, and the warnings
-of Section~\ref{sec:model-output} show when a budget was too small for a data set.}\label{tab:defaults}
-\begin{tabular}{@{}l>{$}l<{$}>{\raggedright\arraybackslash}p{4.6cm}>{\raggedright\arraybackslash}p{4.4cm}@{}}
-\toprule
-Quantity & \text{Symbol} & Default & Role \\
-\midrule
-size cap & K & $\min(p,\lfloor n/2\rfloor)$ & factorised matrices at most $K\times K$ \\
-block size cap & B & $\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)$ & at most $2^{16}$ entries per block table \\
-final particles per island & N=N_\tau & $4^\tau N_0$, with $N_0:=\max(2500,n,p)$ & at least $p$ and $n$ particles \\
-calibration particles & \Nc=\Nc_\tau & $4^\tau\lceil512N_0/2500\rceil$ & about $N_\tau/5$ \\
-step ceiling & \Tmax=\Tmax_\tau & $4^\tau\max(1000,\ell_n^2)$ & bounds the pilot and grid steps \\
-local-search move cap & \ell_n & $\lceil\log_2(n+p+1)\rceil$ & also the number of grid rebuilds \\
-burn-in rounds at $\xi=1$ & \Lbi & $\max(4,\lceil\log_2(n+1)\rceil)$ & grows slowly with $n$ \\
-islands; measured rounds & & $4$; $4$ & a spread for the checks \\
-effective sample size target & & $0.90$ & weight $\mathrm{CV}^2\le1/9$ per step \\
-candidate set & \Vcal & $\emptyset$; $20p$ best by $\gamma_0$; $20p$ best by $F$ & linear in $p$ \\
-returned list & \Tlist & the $40p+1$ best models scored & $\abs\Vcal\le40p+1$ \\
-escalation & & factor $4$, at most once & up to about $16$ times the work of tier $0$ \\
-\bottomrule
-\end{tabular}
-\end{table}
 
 % ---------------------------------------------------------------------------------------------------------
 \subsection{Variable selection and the reported quantities}\label{sec:model-output}
@@ -443,8 +462,10 @@ report the median probability model because it is optimal for prediction under c
 \citet{BarbieriBerger2004}, and because it depends on the posterior only through the inclusion probabilities, which
 the averages of the $o_j$ estimate with less Monte Carlo noise than the probability of any single model. The highest posterior model is a single point of a very large
 space; when $p$ is large its posterior probability can be small and close to that of many other models. The spread
-of the four island estimates gives a standard error for $\PIPhat_j$ (their standard deviation over two); a predictor
-whose $\PIPhat_j$ lies within about two standard errors of $1/2$ is in or out of $\MPMhat$ by Monte Carlo chance.
+of the four island estimates gives a standard error for $\PIPhat_j$ given the frozen calibration (their standard
+deviation over two). When $\PIPhat_j$ lies within about two standard errors of $1/2$, we read the membership of $j$ in
+$\MPMhat$ as sensitive to Monte Carlo error: a run with another seed could decide it differently. The standard error
+does not measure a bias from the finite number of particles.
 
 \paragraph{The best model found.} SMC-BVS also stores $\HPMhat$, the model with the highest log score among all
 models scored during the run: in the block tables, the calibration, the islands and both local searches. Ties go to
@@ -480,7 +501,9 @@ too, together with the gap $\log\Zlist-\log\Zhat$ and a flag when it exceeds one
 more than a factor $e$.
 
 \paragraph{Exact runs.} An exact run reports the exact $\PIP_j$, $\MPM$ and $\log Z$, and $\MPM$ is the reported
-model; the best model found is the $\HPM$ and is certified. The list fields are computed from the $40p+1$ best models.
+model; the best model found is the $\HPM$ and is certified. Its list fields are the exception to~\eqref{eq:list}:
+$\piplist$ and $\mpmlist$ are copies of the exact $\PIP$ and $\MPM$, and only $\Zlist$ and the list $\Tlist$ itself
+come from the $40p+1$ best models.
 The lower limit $\max\{\log Z-\log20,\log\Zlist\}$ is kept only so that exact and completed runs have the same
 output.
 
@@ -494,7 +517,7 @@ a local search found, or the weights degenerated at some step. Its estimates sho
 another seed.
 
 \begin{table}[tp]
-\centering\small
+\centering\small\renewcommand{\arraystretch}{1.15}
 \caption{The checks of a run. In the calibration a warning leads to the escalation; in the final run the four flags
 define a run-time warning.}\label{tab:warnings}
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{9.2cm}cc@{}}
