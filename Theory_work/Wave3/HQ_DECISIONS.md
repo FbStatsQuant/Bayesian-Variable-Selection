@@ -962,3 +962,7 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
 - Account allocation: **Claude Third (`claudeAgent_claude_third`)** for all Engineering Claude agents (both Opus 5.5 high task leads, Sonnet/Haiku workers, Opus committee seat, and SMC-PERF Fable designer).
 - Board protocol enforced on resume (`POLICIES.md` §1a/§1b): Engineering manager orchestrates only; workers and reviewers are children of the leads; **no Neon bulk workers** (Neon reserved for the 3rd committee reviewer `gemini-4-neon` high only); existing SMC-PERF approval covers at most 1 Fable 5.2 (`claudeAgent_claude_third`, high) + 1 Astra 6.2 (`codex`, `gpt-6.2-astra`, high) designer pair (no additional Fables/Astras without new owner approval).
 - Running NOTS jobs were left to finish naturally (owner confirmed); leads check what finished, release held pending tasks, and restart Owls throttle/submitter and schedules.
+
+## 2026-11-27 — Owner escalation rule for Theory council (`TH-SONG-ASSUMPTIONS`)
+- If the final round of the 3-reviewer council (Opus / Neon / Sol) finds nothing meaningful yet still scores < 8, replace the 3 reviewers with **2 fresh independent judges**: **1 × Astra 6.2 (`codex`, high)** and **1 × Fable 5.2 (`claudeAgent_personal`, high)** (owner-pre-approved conditionally).
+- Run **one unique round** with Astra + Fable 5.2, apply their substantive feedback, and finalize the assumptions directly with no further rounds.
