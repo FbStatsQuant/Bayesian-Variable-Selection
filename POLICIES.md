@@ -38,8 +38,13 @@ the documents win.
 - **Headline theorem statements and proofs, and paper claims:** every reviewer scores ≥ 8.5. Core results also need
   Lean or an independent check.
 - **No open blocking issue:** any correctness or design flaw a reviewer marks as blocking is fixed, whatever the score.
-- **At most 3 rounds:** if the bar is not met after round 3, the item escalates to HQ, which decides what is worth fixing.
-  Non-blocking nitpicks may be declined with a one-line reason.
+- **At most 3 rounds, then a Fable arbiter (owner, 2026-11-28; company-wide).** If after round 3 the bar is still not met
+  (any reviewer below 8), or the lead's team and the council still disagree, the department spawns ONE fresh Fable 5.2
+  arbiter (high; Claude Personal by default). This use is pre-approved by the owner. The arbiter reads the item, every
+  round's findings and responses, and the manager's rulings. It decides one of two things: either the important issues
+  are all resolved and the item is final, or a specific, short list of issues still needs work, which gets one more
+  round. Its verdict is binding and reported to HQ. Non-blocking nitpicks may be declined with a one-line reason at any
+  round.
 - **Three separate roles in every council review (owner, 2026-11-28):**
   1. The **task lead and its team** do the work.
   2. The **council** reviews and scores; it never edits.
