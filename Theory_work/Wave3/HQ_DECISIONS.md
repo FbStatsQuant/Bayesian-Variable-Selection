@@ -992,3 +992,7 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
 - The HQ advisers' curated, verified analysis goes to Theory as top priority. Every assumption must be accepted company-wide, then definitive proofs and Lean ASAP.
 - Theory gets one dedicated Fable 5.2 (Claude Personal) and one Astra 6.2 adviser, assisting its task leads.
 - Review councils for this work: Opus + Sol + Opus.
+
+## 2026-11-28 — Owner: definition of done for the top-priority theory push
+- DONE when (1) every assumption is accepted company-wide as reasonable and adequate, AND (2) every targeted theorem (density, selection, misspecification) has at least a partial, promising, council-reviewed proof.
+- Until then this is the company's top priority: Theory gets accounts and agents first. Definitive proofs and Lean continue after.
