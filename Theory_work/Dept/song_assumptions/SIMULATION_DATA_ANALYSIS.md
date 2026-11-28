@@ -1,6 +1,6 @@
 # SIMULATION DATA ANALYSIS — S1/S2 evidence for the TH-SONG assumptions
 
-Computations: worker D1 (Sonnet 5.5), 2026-11-27, read-only on Engineering data; Lead synthesis and notes: Task Lead (Opus 5.5).
+Computations: worker D1 (Sonnet 5.5), 2026-11-27, read-only on Engineering data; Lead synthesis, notes and E9: Task Lead (Opus 5.5). **v1.2 (council round-1 revision; see COUNCIL_RECORD.md).**
 
 Mechanical data analysis for the Task Lead. No theorems are written here. Evidence against an assumption is reported as found.
 Every number below is in a table under `tables/` (file named in the section) and is produced by a script under `scripts/`.
@@ -11,20 +11,25 @@ Every number below is in a table under `tables/` (file named in the section) and
    little resolution (ε_n = 0.83). The cap never binds (E7), so K = n/2 costs nothing empirically.
 2. **TS-b (exact selection) — the margin.**
    - *Necessity of the constant 2 is visible:* κ_del > 1 (equivalently min t² > 2·price) has sensitivity 1.000 on S1 and on
-     S2 (population), and P(exact | κ_del ≤ 1) = 0 (S1) / ≤ 0.0008 (S2, sample). Consistent with the TS-b converse (which is a population/asymptotic statement; this is a per-setting check).
+     S2 (population); the sample P1 check has sensitivity 0.985 on S2. When the check fails, exact recovery is 0 on both suites for the population κ_del ≤ 1 row, and 0/800 (S1) and 9/10,666 = 0.00084 (S2) for the sample P1 row. Consistent with the TS-b converse (which is a population/asymptotic statement; this is a per-setting check).
    - *S1 brackets κ = 1 from both sides:* κ_pop 0.64–0.70 at SNR 1 (0/100 exact in every cell) vs 2.54–2.80 at SNR 2
-     (92–96/100) (E1, `e1_s1_cells.tsv`). The fixed-ratio (κ_n) framing covers S1; a fixed beta-min (FSb) does not (E4).
+     (92–96/100) (E1, `e1_s1_cells.tsv`). The fixed-ratio (κ_n) framing covers S1's deletion classes (mixed classes: E9); a fixed beta-min (FSb) does not (E4).
    - *Multi-deletions bind on S1* (κ_multi < κ_del in all 16 settings): the margin must quantify over all D ⊆ S0 (E1).
    - *The "sufficiency gap" on S1 is consistent with the superset term:* 40/41 S1 failures at SNR ≥ 2 are S0 plus nulls
      (E1/E7). The heuristic diagnostic E K₁ ≈ (s0+1)/√(2πL(n+1)) (expected number of one-null extensions beating S0, idealised
-     χ² scores; FABLE_R1 Q1(3f)) is 0.033–0.056 at S1's (n, p), the same order as the observed 2–8% shortfall. This is
-     **consistent with**, not a proved ceiling: P(K₁ ≥ 1) ≤ E K₁ bounds one failure type only (Astra R2 Q3). It matches the
-     order of the O((s0+1)√(log p/n)) term in the TS-b rate.
+     χ² scores; FABLE_R1 Q1(3f)) is 0.031–0.050 at S1's (n, p) by the displayed formula (0.033–0.056 under Fable's exact-Beta
+     tail), the same order as the observed 2–8% shortfall; 39 of the 41 failures add exactly one null. This is
+     **consistent with**, not a proved ceiling: P(K₁ ≥ 1) ≤ E K₁ bounds one failure type only (Astra R2 Q3). It is a mode-type
+     (HPM/MPM) diagnostic and does **not** match the order of the TS-b mass-rate term (s0+1)√(log p/n), which is 0.87–1.44 at
+     S1's sizes and therefore not informative there (Opus R1).
+   - *Mixed rivals (E9, new):* on simulated S1 designs the conditional Gaussian width of the added nulls is 0.10–0.47 (m = 1)
+     and 0.22–0.59 (m = 2), far below the worst-case √(2 log C(p−s0, m)) = 3.5–4.8. With it, A-MARGIN-U holds for every single
+     deletion with m ≤ 2 at SNR 2 (surplus ≥ 3.29) and SNR 3 (≥ 6.7); the worst-case forms fail at SNR 2.
    - *Swap-aware heuristics are not improvements* (κ_pop AUC 0.958 vs κ_del 0.980 on S2): consistent with the advisors'
      finding that proxy swaps cost only a Gaussian-width allowance, not d·price (E1).
    - *S2 is not asymptotic* (s0 log p/n = 0.69); its transition is fitted by the saturating gain (n/2)log(1+R/(nσ²))
      (P(exact) = ½ at κ_adj_full ≈ 1.0–1.5 across both suites; post hoc). Used only in the finite-n diagnostics.
-3. **Eigenvalues.** Population floors hold analytically (n × floor ≥ 8.8 over c_ψ/n); sample sparse floors are vacuous on
+3. **Eigenvalues.** Population floors hold analytically (n × floor ≥ 8.8; slack relative to c_ψ/n is this divided by c_ψ); sample sparse floors are vacuous on
    S2 at the theorem's set sizes (1e−5–2e−4; E5). Supports dropping sample floors and keeping A-NEC.
 4. **Bounded signal** holds everywhere (max |β|sd/σ ≤ 1.17, ν ≤ 6; E4).
 5. **Dimension.** A = 0.90–1.77; p ≤ n² everywhere incl. typical user regimes; log p/√n ≤ 0.98 (E6). Consistent with A-DIM
@@ -48,7 +53,7 @@ Caveat on evidence strength: S1 has two non-trivial SNR levels per cell, so the 
 
 **Population quantities.** β, support, Σ = AR(1)(ρ) and σ² come from `gen_beta`, `quad_ar1` and the σ² rule in `generate.R` (sourced verbatim; β is deterministic, so no seeds are needed). Σ has unit variance, so the standardised coefficient equals β.
 - t²_j = nβ_j²/[(Σ_S0)⁻¹]_jj/σ² = R(S0∖j)/σ². R(S) = n·Var(xᵀβ | x_S) = n·β_Dᵀ Σ_{DD·S} β_D, D = S0∖S.
-- **price = log((2p−1−s0)/s0) + ½ log(n+1)** is P1's price. It equals the brief's price(k) at k = s0−1 (the price of the last variable of S0). The brief's literal price(s0) is 2% larger and would break the "< 2%" cross-check, so P1's is used.
+- **price = log((2p−1−s0)/s0) + ½ log(n+1)** is P1's price, kept for replication (range 7.60–10.36 nats over all settings). *Lead correction (council R1, Sol):* the exact last-variable price is price(s0−1) = log((2p−s0)/s0) + ½ log(n+1); P1's numerator is one off (difference log((2p−s0)/(2p−1−s0)) ≤ 0.002 nats), and the brief's price(s0) = log((2p−1−s0)/(s0+1)) + ½log(n+1) is *smaller*, not larger. The theorem's κ_n uses Pr_n(d) = Σ_{k=s0−d}^{s0−1} price(k) (adjacent prices); since price(k) decreases in k, κ_n ≤ the data κ = R/(2σ²·d·price), by ≤ ~1.4% on S1 (e.g. Pr_n(3) = 23.44 vs 3·7.70 = 23.11 at (500, 500)); the S1 bracket (0.64–0.70 vs 2.54–2.80) is unchanged. On S1, κ_pop = κ_multi because κ_swap = κ_del.
 - κ(S) = R(S)/(2σ² d·price), d = |S0∖S|. Λ(S) = ½R(S)/σ² − (d−m)·price − m·log p (m = |S∖S0| added nulls), the heuristic log posterior odds S0 : S.
 - **Rival classes.**
   - Brief class (the column names without a suffix): deletions |D| ≤ 3 (exhaustive); swaps |D| ≤ 2 with N ⊆ nulls within distance 3 of D, |N| ≤ 4, chosen greedily. κ_del, κ_multi (|D| = 2, 3), κ_swap, κ_pop = min of the three, Λ_min.
@@ -89,7 +94,7 @@ Reading: S1 sits at s0 log p/n ≈ 0.06–0.17, S2 at 0.69 for every cell. S2 is
 
 ## E1. Residual-signal margin (the key test)
 
-**Per-setting population margins** (`tables/e1_margin_by_setting.tsv`; ranges in `summ_E1_E2.tsv`). Medians over settings:
+**Per-setting population margins** (`tables/e1_margin_by_setting.tsv`; ranges in `summ_E1_E2.tsv`). Ranges (min–max) over settings:
 
 | group | κ_del | κ_multi | κ_swap | κ_pop (brief) | κ_adj_full (mine) |
 |---|---|---|---|---|---|
@@ -123,7 +128,7 @@ At SNR 3, κ_pop = 5.7–6.3 and exact recovery is 0.95–0.98. So the S1 transi
 | predictor | group | yes: exact / not | no: exact / not | sensitivity | P(exact ∣ yes) | P(exact ∣ no) |
 |---|---|---|---|---|---|---|
 | P1 sample min t² > 2·price | S1 | 759 / 41 | 0 / 800 | 1.000 | 0.949 | 0 |
-| | S2 | 597 / 737 | 9 / 10657 | 0.985 | 0.448 | 0.0008 |
+| | S2 | 597 / 737 | 9 / 10657 | 0.985 | 0.448 | 0.00084 |
 | P1 population min t² > 2·price (= κ_del > 1) | S1 | 759 / 41 | 0 / 800 | 1.000 | 0.949 | 0 |
 | | S2 | 606 / 1994 | 0 / 9400 | 1.000 | 0.233 | 0 |
 | **κ_pop > 1** | S1 | 759 / 41 | 0 / 800 | 1.000 | 0.949 | 0 |
@@ -158,7 +163,7 @@ Reading:
 
 ## E2. Hellinger-scale screening margin (SL Thm 3 route) (`e1_margin_by_setting.tsv`: `e2_*`; `summ_E1_E2.tsv`)
 
-min over true j and S ∌ j, |S| ≤ s0+4 of Var(xᵀβ | x_S)/σ² (population; D ∋ j with |D| ≤ 3 exhaustive, N greedy with |N| ≤ 4+|D|), against ε_n² = s0 log p/n and log n/n.
+min over true j and S ∌ j, |S| ≤ s0+4 of Var(xᵀβ | x_S)/σ² (population; D ∋ j with |D| ≤ 3 exhaustive, N greedy with |N| ≤ 4+|D|), against ε_n² = s0 log p/n (P2's radius, not the TD radius M log n/n) and log n/n. *Lead note:* this is a restricted search, so where nested it gives an upper bound on the full-sieve minimum; it is a **scale diagnostic** and cannot certify A-MARGIN-H (C_H unknown).
 
 | | S1 | S2 |
 |---|---|---|
@@ -166,7 +171,7 @@ min over true j and S ∌ j, |S| ≤ s0+4 of Var(xᵀβ | x_S)/σ² (population;
 | ratio to ε_n² (min / median / max) | 0.047 / 0.47 / 1.69 | 0.0006 / 0.056 / 1.74 |
 | settings with ratio ≥ 1 | 4 of 16 (SNR 3 only) | 5 of 120 (n = 50, bt1/bt2 at ρ ≤ 0.35, ν ≥ 3.52 or 6) |
 | ratio to log n/n | 0.42–23 | 0.009–15 |
-| Gaussian d_H² version, 1 − (1+margin/4)^(−1/2), over ε_n² | 0.006–0.21 | 0.00007–0.18 |
+| Gaussian d_H² version with τ = σ (fixed-variance affinity, an **upper bound** on the variance-optimised 1 − (1 + margin/2)^(−1/4) of TS-a), 1 − (1+margin/4)^(−1/2), over ε_n² | 0.006–0.21 | 0.00007–0.18 |
 
 Reading: the per-variable screening margin exceeds ε_n² (ratio ≥ 1) in 9 of 136 settings, and never by more than a factor 1.74. S1 SNR 2 has ratio 0.75 and still recovers exactly in 92–96% of fits. A constant-free "margin ≥ C ε_n²" requirement with C ≫ 1 is not met anywhere, so the route with a literal unit constant is conservative here. The margin is ≫ log n/n in most S1 and good S2 cells (up to 23×), which is the scale the margin condition needs.
 
@@ -253,7 +258,7 @@ Reading: p ≤ n² holds everywhere, including all typical regimes (A ≤ 1.77);
 | S2 bt1, ρ > 0 | 3,710 | 58 (1.6%) | 65 | 3,670 | 186 |
 | S2 bt2, ρ > 0 | 3,992 | 5 (0.1%) | 7 | 3,992 | 145 |
 
-Reading: in S1/S2 failures the MPM is almost never a "proxy" for a missed variable. It is empty or an under-selected subset: 87% of S2 ν ≤ 1.22 failures are empty MPMs; median |MPM| is 1–3 at ν = 2.07–6. The exception is S2 bt1 at ρ = 0.7 (3.0% of failed fits). This is a statement about well-specified data (no hidden columns): it shows the posterior does not substitute neighbours when the true variable is present in the candidate set. It says nothing about the hidden-column case (E8 of TH_PREP, needs refits).
+Reading: in S1/S2 failures the MPM is almost never a "proxy" for a missed variable. It is empty or an under-selected subset: 87% of S2 ν ≤ 1.22 failures are empty MPMs; median |MPM| is 1–3 at ν = 2.07–6. The exception is S2 bt1 at ρ = 0.7 (3.0% of failed fits). This is a statement about well-specified data (no hidden columns) and about the same-data selected MPM (a selected-group summary): it shows the posterior does not substitute neighbours when the true variable is present in the candidate set. It says nothing about the hidden-column case (E8 of TH_PREP, needs refits).
 Failure composition (`e7_failure_composition.tsv`): S1 SNR ≥ 2: 97.6% are supersets of S0 (95% with one extra null); S2 ν = 6: 89.5% miss a true variable, 10.5% supersets; S2 ν ≤ 3.52: ≥ 98.9% miss a true variable.
 
 ## E8. Engineering `perf/` items relevant to assumptions (all read-only)
@@ -263,6 +268,33 @@ Failure composition (`e7_failure_composition.tsv`): S1 SNR ≥ 2: 97.6% are supe
 - Prior/slab variants (`perf/JOINT_PLAN.md` §2(iii), §8; `designer_A/Q2_SLAB.md`): g = 4n or 9n turns all 15 S1 exact losses into modes but loses 92 or 170 of 2,400 feasible-S2 fits; FLS g = max(n, p²) +21 / −656; hyper-g, hyper-g/n, Zellner–Siow lose on both suites; BB(1, p^u) with u = 1.5 is +23 in S1 and −612 in S2; BB(1, p/4) flips 8 of 680 within-truth comparisons; Bernoulli(m/p) with m = 2 or 5 gains on both suites but was rejected as a tuned constant. None was run as an SMC fit. Consequence for theory: no monotone change in the price of a variable helps both suites, which is the superset margin ω (S1) versus the empty-model margin (S2) found above.
 - `perf/experiments/S1_asi_gap/REPORT.md`: all 15 S1 exact losses are "S0 plus one null with PIP 0.50–0.62", 0 search misses (matches `e7_failure_composition.tsv`: 40 of 41 S1 failures at SNR ≥ 2 are supersets).
 - N-ladders: none run (`JOINT_PLAN.md`, "No N-ladder (HQ ruling)").
+
+## E9. Conditional Gaussian width of added nulls on S1 designs (Lead, council R1 follow-up; `scripts/e9_width_mc.py`, `tables/e9_width_s1.tsv`)
+
+Question (Opus R1 B1(c)): does A-MARGIN-U, with the design-specific width w_Dm(X) = E_g max_{|N|=m}(−⟨v_S, g⟩), cover S1's
+boundary signals for mixed rivals, where the worst-case combinatorial width does not?
+
+Method: for each S1 cell at SNR 2 and 3, 4 simulated designs (AR(1) ρ = 0.6, columns centred and scaled, β as in
+`harness/generate.R`), every single deletion D = {j} (10 per cell), m = 1 (all cells) and m = 2 (p = 500 cells; all pairs);
+300 Gaussian draws g per design. The class condition is checked in its limit form (δ = γ = t_n = 0, C = 1):
+√(min_{|N|=m} R_n(S)/σ²) ≥ w_Dm + √(2B_Dm), B_Dm = Pr_n(1) − (m/2)log(n/log p) > 0. Population R_n(S) is exact; min over N
+is exhaustive over the 40 nulls nearest S0 (far nulls are uncorrelated with the signal). No fits, no outcome data; ≈ 2 CPU-min,
+single-threaded, under nice.
+
+| n, p | SNR | m | w_comb = √(2 log C(p−s0,m)) | w_Dm(X) over j (MC) | √(2B) | √(min R/σ²) (binding j) | min surplus with w_Dm(X) | min surplus with w_comb |
+|---|---|---|---|---|---|---|---|---|
+| 500, 500 | 2 | 1 | 3.52 | 0.19–0.39 | 3.32 | 6.84 | 3.30 | 0.001 |
+| 500, 500 | 2 | 2 | 4.84 | 0.38–0.59 | 2.58 | 6.84 | 3.85 | −0.57 |
+| 500, 5000 | 2 | 1 | 4.13 | 0.28–0.41 | 3.99 | 8.01 | 3.68 | −0.11 |
+| 1000, 500 | 2 | 1 | 3.52 | 0.11–0.32 | 3.32 | 6.84 | 3.36 | 0.001 |
+| 1000, 500 | 2 | 2 | 4.84 | 0.26–0.52 | 2.44 | 6.84 | 4.07 | −0.43 |
+| 1000, 5000 | 2 | 1 | 4.13 | 0.20–0.33 | 3.99 | 8.01 | 3.76 | −0.11 |
+| all four | 3 | 1–2 | 3.52–4.84 | 0.12–0.59 | 2.44–3.99 | 10.26–12.01 | ≥ 6.70 | ≥ 2.85 |
+
+Reading: the conditional width on AR(1) designs is an order of magnitude below the worst case, because v_S barely depends
+on far-away nulls. With it, the mixed part of A-MARGIN-U holds with a large surplus for d = 1, m ≤ 2 at SNR 2 and 3; with
+the worst-case width it is at equality or fails at SNR 2. Not evaluated: d ≥ 2 mixed classes, and m = 3 at d = 1
+(B_D3 > 0 at S1's sizes). Between-design SD of w_Dm(X) ≤ 0.12.
 
 ## Evidence against (what a theorem-writer should not assume)
 
@@ -302,7 +334,8 @@ Failure composition (`e7_failure_composition.tsv`): S1 SNR ≥ 2: 97.6% are supe
 | rate 1−π̂(S0) ∝ √(log n/n) | ratio given exact (`e7`) | 4.1–5.1 | 2.0–4.1 | weak (two n, list view) |
 
 ## Files produced
-- `SIMULATION_DATA_ANALYSIS_draft.md` (this report).
+- `SIMULATION_DATA_ANALYSIS.md` (this report; the D1 draft was merged into it).
+- `scripts/e9_width_mc.py` and `tables/e9_width_s1.tsv` (E9, Lead; `logs/e9_width_mc.log`).
 - `scripts/`: `pop_lib.R`, `e1_margin.R`, `e1_fitlevel.R`, `e0_e3_e4_e5_e6.R`, `e7_retab_proxy.R`, `e7_bt2diag_crosscheck.R`, `e1_pool_check.R`, `make_summary_tables.R`, `run_all.sh`.
 - `tables/` (about 40 TSV files; the main ones: `e1_margin_by_setting.tsv`, `e1_2x2_predictors.tsv`, `e1_auc.tsv`, `e1_logistic_kappa.tsv`, `e1_s1_cells.tsv`, `e1_setting_exact_vs_margin.tsv`, `e0_regime_by_setting.tsv`, `e3_condition3.tsv`, `e4_bounded_signal.tsv`, `e5_eigen_floors.tsv`, `e6_*.tsv`, `e7_*.tsv`, `validation_*.tsv`, `summ_*.tsv`); `logs/`.
 - `.rc_tmp/song/s1s2_ro/` (staged read-only copies, `SOURCES.md`).
