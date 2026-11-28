@@ -10,8 +10,11 @@ than this refresh are in git history.
    Fable 5.2 (Claude Personal) and one Astra 6.2 adviser. Definitive proofs and Lean follow.
 2. **Theory scope:** Song–Liang 1-to-1 only (true model, true distribution, misspecification). Other extensions wait
    until these have proofs and Lean code.
-3. **Writing:** PAPER-DRAFT (one LaTeX project, 3 Opus leads). CITE-AUDIT of the theory citations runs alongside.
-4. **Engineering:** SMC-PERF deep dive and CAMPAIGN-OPS (S2 ASI completion, S2 final, hygiene).
+3. **Writing:** PAPER-DRAFT delivered (45 pp, writing/main df9da1e6, citation audit applied). Next pieces (Intro,
+   Discussion, proof supplement, real data, ablation) wait for the owner's direction; Section 3 will follow Theory's
+   final statements.
+4. **Engineering:** idle. SMC-PERF closed (memo 1b319090: keep v3.1.1; fix E adopted; C1 recommended for S2-type data).
+   Owner rulings pending: C1 deployment scope; an external expected-size prior. One-shot HYGIENE lead on 2026-12-01.
 5. Simulation suite is S1 + S2 only. The p = 10⁶ project comes last.
 
 ## DEPARTMENTS / ACTIVE THREADS
@@ -34,4 +37,4 @@ All departments run on the Owls environment `b18966a3-98dd-4510-a488-d5dfb1650da
   its Claude workers and reviewers) on Claude Third.
 - **HQ:** Claude Work.
 
-## CODEX PACING LEVEL (owner sets; POLICIES §14): **1 (light pacing)** since 2026-11-16 late (owner: "let's have a surplus to burn when we actually need it"; Codex at 95% with the weekly reset in 6d20h). Previously 0.
+## CODEX PACING LEVEL (owner sets): **1 (light pacing)** since 2026-11-16 late (owner: "let's have a surplus to burn when we actually need it"; Codex at 95% with the weekly reset in 6d20h). Previously 0.
