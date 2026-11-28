@@ -982,3 +982,8 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
 - A fresh Opus lead (not a drafter) extracts every citation claim from the song_assumptions package and section 3.
 - Double-blind verification by Sonnet + Sol; quotes and pages are mandatory; abstracts and memory don't count. A fresh Opus adjudicates disagreements.
 - PARTIAL / NOT SUPPORTED claims are fixed by the authors and synced to Writing. Missing papers go to the owner.
+
+## 2026-11-28 — Owner: HQ advisers (Fable on Claude Third + Astra) on assumptions and proofs
+- Both read the HQ/owner review (Theory_work/Wave3/REVIEW_S3_HQ_OWNER_2026-11-28.md, with the assumptions addendum).
+- Each independently: assumption keep/change/drop and the 4 open decisions; a proof plan for density, selection and misspecification with a Lean plan; an audit of existing proofs; a misspecification plan (A9/Gaussian vs general law under A8).
+- Then one exchange round and a joint memo to the owner. Workspace: _wt/hq_advisors (dept/theory @ 40febfb6, read-only).
