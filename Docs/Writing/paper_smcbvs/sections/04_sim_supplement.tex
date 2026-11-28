@@ -77,6 +77,15 @@ Each table puts $n=50$ ($\sz=5$) and $n=100$ ($\sz=10$) side by side. Rows are g
 within a group, $\nu$ runs over its ten values. The $81$ BAS fits that failed, all at $n=50$, count as empty
 selections.
 
+\begin{figure}[hb]\centering
+\includegraphics[width=\textwidth]{figures/fig_s2_pr_supp}
+\caption{Design S2: conditional precision against mean recall, by support type and $\rho$, pooled over $n$. Each path
+joins the ten signal levels $\nu$ of a method; the points are separate simulated settings. Markers grow with $\nu$
+over its three largest values and the ring marks $\nu=6$, as in Figure~\ref{fig:s2-recall-fp}. Points with fewer
+than $20$ non-empty selections are omitted, which removes the weakest signals for SMC-BVS and
+SuSiE.}\label{fig:supp-s2-pr}
+\end{figure}
+
 \begin{table}[p]\centering\scriptsize\setlength{\tabcolsep}{3.2pt}\captionsetup{skip=4pt}
 \caption{Design S2: exact recovery, the number of data sets out of $100$ with $\Shat=\Sz$.}\label{tab:supp-s2-exact}
 \input{figures/tables/supp_s2_exact}
@@ -111,15 +120,6 @@ selections.
 \caption{Design S2: median wall-clock time per completed fit on one core, in minutes (Xeon Gold 6230 nodes).}\label{tab:supp-s2-wall}
 \input{figures/tables/supp_s2_wall}
 \end{table}
-
-\begin{figure}[p]\centering
-\includegraphics[width=\textwidth]{figures/fig_s2_pr_supp}
-\caption{Design S2: conditional precision against mean recall, by support type and $\rho$, pooled over $n$. Each path
-joins the ten signal levels $\nu$ of a method; the points are separate simulated settings. Markers grow with $\nu$
-over its three largest values and the ring marks $\nu=6$, as in Figure~\ref{fig:s2-recall-fp}. Points with fewer
-than $20$ non-empty selections are omitted, which removes the weakest signals for SMC-BVS and
-SuSiE.}\label{fig:supp-s2-pr}
-\end{figure}
 
 \begin{table}[htbp]\centering\scriptsize\setlength{\tabcolsep}{3.5pt}
 \caption{Design S2: precision under four conventions for empty selections at the three strongest signals, by support

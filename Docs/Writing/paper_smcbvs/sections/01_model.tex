@@ -47,11 +47,11 @@ $n-1$. The method works with
 \end{equation}
 Every column $x_j$ of $X$ then has mean zero and $\norm{x_j}^2=n-1$, and $y^\top y=n-1$. Everything below is
 therefore unchanged when $\yr$ or a column of $\Xr$ is replaced by a non-constant affine function of itself. Centring
-removes the intercept, which has no prior. A coefficient vector $\theta$ and a variance $\sigma^2$ on the standardised
-scale correspond to the original-scale coefficients $\beta_j:=s_y\theta_j/d_j$, the residual variance
-$\sigr^2:=s_y^2\sigma^2$ and the intercept $\bar y^{\mathrm r}-\bar x^{\mathrm r\top}\beta$, where $\bar y^{\mathrm r}$
+removes the intercept, which has no prior. We write $\theta$ for coefficients and $v$ for the residual variance on the standardised
+scale, and $\beta$ and $\sigma^2$ for their counterparts in the original units: $\beta_j:=s_y\theta_j/d_j$,
+$\sigma^2:=s_y^2v$ and the intercept $\bar y^{\mathrm r}-\bar x^{\mathrm r\top}\beta$, where $\bar y^{\mathrm r}$
 and $\bar x^{\mathrm r}$ are the sample means of $\yr$ and of the rows of $\Xr$. Section~\ref{sec:theory} states its
-results for posterior draws $(S,\beta,\sigr^2)$ mapped back to the original units in this way, and for the true
+results for posterior draws $(S,\beta,\sigma^2)$ mapped back to the original units in this way, and for the true
 coefficients $\bstar$ of~\eqref{eq:model}. Probabilities of models given $y$ are also conditional on $X$, which we
 suppress from the notation.
 
@@ -65,9 +65,9 @@ The cap excludes only models with more than $n/2$ predictors, far larger than th
 bounds every matrix the method factorises at $K\times K$. Given a model, the working likelihood on the standardised
 data is
 \begin{equation}\label{eq:lik}
-  y\mid S,\theta_S,\sigma^2\ \sim\ \Normal_n(X_S\theta_S,\ \sigma^2I_n),
+  y\mid S,\theta_S,v\ \sim\ \Normal_n(X_S\theta_S,\ vI_n),
 \end{equation}
-with coefficients $\theta_S\in\R^{\abs{S}}$ and variance $\sigma^2>0$.
+with coefficients $\theta_S\in\R^{\abs{S}}$ and variance $v>0$.
 
 \paragraph{A working model.} Model~\eqref{eq:lik} is not the sampling model of the standardised data: centring puts
 $y$ in the $(n-1)$-dimensional subspace orthogonal to $\one_n$, and scaling fixes $y^\top y=n-1$, while
@@ -96,26 +96,26 @@ shrinks with $p$, unlike the uniform $\BetaDist(1,1)$ that \citet{ScottBerger201
 second parameter grows with $p$ are standard in the theory of sparse posteriors
 \citep{CastilloVanDerVaart2012,CastilloSchmidtHieberVanDerVaart2015}.
 
-\paragraph{Coefficient and variance priors.} Given $S$ and $\sigma^2$, the coefficients of the predictors in $S$ have
+\paragraph{Coefficient and variance priors.} Given $S$ and $v$, the coefficients of the predictors in $S$ have
 Zellner's $g$-prior \citep{Zellner1986} with $g=n$ and a unit ridge,
 \begin{equation}\label{eq:slab}
-  \theta_S\mid S,\sigma^2\ \sim\ \Normal_{\abs S}\big(0,\ n\sigma^2(G_S+I)^{-1}\big),
+  \theta_S\mid S,v\ \sim\ \Normal_{\abs S}\big(0,\ nv(G_S+I)^{-1}\big),
 \end{equation}
 and the coefficients of the other predictors are zero. We call~\eqref{eq:slab} the \emph{slab}. With $g=n$ it carries
 about as much information as one observation \citep{KassWasserman1995}. The ridge keeps the slab proper when the
 columns of $X_S$ are linearly dependent. It has little effect in the directions in which the eigenvalues of $G_S$ are
-large relative to one, and in a direction of near-collinearity it sets the prior variance to about $n\sigma^2$. The
-variance has the prior $\sigma^2\sim\IG(a_0,b_0)$ with shape $a_0=0.01$ and scale $b_0=0.01$, that is, density
-proportional to $(\sigma^2)^{-a_0-1}e^{-b_0/\sigma^2}$, independent of $S$, on the standardised scale.
+large relative to one, and in a direction of near-collinearity it sets the prior variance to about $nv$. The
+variance has the prior $v\sim\IG(a_0,b_0)$ with shape $a_0=0.01$ and scale $b_0=0.01$, that is, density
+proportional to $v^{-a_0-1}e^{-b_0/v}$, independent of $S$, on the standardised scale.
 
-\paragraph{Posterior.} The priors are conjugate, so $\theta_S$ and $\sigma^2$ integrate out in closed form. Let
+\paragraph{Posterior.} The priors are conjugate, so $\theta_S$ and $v$ integrate out in closed form. Let
 \begin{equation}\label{eq:HS}
   H_S:=(n+1)G_S+I,\qquad \SSq_S:=y^\top y-n\,z_S^\top H_S^{-1}z_S .
 \end{equation}
 Given $S$, the posterior of the parameters is
 \begin{equation}\label{eq:condpost}
-  \sigma^2\mid S,y\ \sim\ \IG\big(a_0+n/2,\ b_0+\SSq_S/2\big),\qquad
-  \theta_S\mid S,\sigma^2,y\ \sim\ \Normal_{\abs S}\big(nH_S^{-1}z_S,\ n\sigma^2H_S^{-1}\big),
+  v\mid S,y\ \sim\ \IG\big(a_0+n/2,\ b_0+\SSq_S/2\big),\qquad
+  \theta_S\mid S,v,y\ \sim\ \Normal_{\abs S}\big(nH_S^{-1}z_S,\ nvH_S^{-1}\big),
 \end{equation}
 and the marginal likelihood of $S$ is
 \begin{equation}\label{eq:marglik}
@@ -129,8 +129,8 @@ the log score of $S$. The posterior over models and the evidence are
 \end{equation}
 The posterior inclusion probability of predictor $j$ is $\PIP_j:=\sum_{S\ni j}\pis{S}$. The highest posterior model
 $\HPM$ maximises $\pis{S}$, and the median probability model is $\MPM:=\{j:\PIP_j>1/2\}$ \citep{BarbieriBerger2004}.
-SMC-BVS samples models only; given a model $S$, draws of $(\theta_S,\sigma^2)$ from~\eqref{eq:condpost}, mapped to the
-original units as above, give posterior draws of $(S,\beta,\sigr^2)$.
+SMC-BVS samples models only; given a model $S$, draws of $(\theta_S,v)$ from~\eqref{eq:condpost}, mapped to the
+original units as above, give posterior draws of $(S,\beta,\sigma^2)$.
 
 The score shows the price a predictor pays to enter. If $x_j$ is orthogonal to the columns of $X_S$, adding $j$ to
 a model of size $k$ changes $F$ by
@@ -223,7 +223,7 @@ of temperatures $0=\grid0<\grid1<\dots<\grid{\Ts}=1$.
 \paragraph{One step.} An island is a population of $N$ particles $S_1,\dots,S_N$, drawn independently from $\pi_0$,
 with its own random stream. The step from $\grid{t-1}$ to $\grid t$ has three parts:
 \begin{enumerate}
-  \item \emph{Reweight.} Particle $v$ receives the weight $\omega^{(t)}_v:=\exp\{(\grid t-\grid{t-1})\Delta(S_v)\}$.
+  \item \emph{Reweight.} Particle $i$ receives the weight $\omega^{(t)}_i:=\exp\{(\grid t-\grid{t-1})\Delta(S_i)\}$.
   \item \emph{Resample.} $N$ particles are drawn with replacement in proportion to the weights (multinomial
     resampling).
   \item \emph{Move.} Each particle receives one round of Markov moves that leave $\pi_{\grid t}$ invariant.
@@ -262,60 +262,60 @@ lets a particle jump to a model of a different shape.
 \paragraph{The temperature grid.} The grid is chosen by a calibration (Algorithm~\ref{alg:calibration}) and then
 frozen. The calibration has its own random streams, so the frozen grid does not depend on the random numbers of the
 final run. A pilot island of $\Nc$ particles first moves adaptively: from each temperature it takes the largest step
-for which the effective sample size of the new weights, $\ESS=(\sum_v\omega_v)^2/\sum_v\omega_v^2$, is at least
+for which the effective sample size of the new weights, $\ESS=(\sum_i\omega_i)^2/\sum_i\omega_i^2$, is at least
 $0.90\,\Nc$. The pilot sees only the models it samples, so its schedule can step across a temperature at which a model
 it has not visited takes over. The grid is therefore built on a candidate set $\Vcal$ of models scored so far: the
 empty model, the $20p$ best by $\gamma_0$ and the $20p$ best by $F$, duplicates removed, so $\abs\Vcal\le40p+1$. ($\Vcal$ is not the returned list $\Tlist$ of
 Section~\ref{sec:model-output}, which holds the $40p+1$ best models by $F$.) With
 \begin{equation}\label{eq:ress}
-  \psi(u):=\log\sum_{S\in\Vcal}\gamma_0(S)\,e^{u\Delta(S)},\qquad
-  \rho(u,v):=\exp\{2\psi(v)-\psi(u)-\psi(2v-u)\},\qquad 0\le u<v\le1,
+  \psi(\xi):=\log\sum_{S\in\Vcal}\gamma_0(S)\,e^{\xi\Delta(S)},\qquad
+  \rho(\xi,\xi'):=\exp\{2\psi(\xi')-\psi(\xi)-\psi(2\xi'-\xi)\},\qquad 0\le \xi<\xi'\le1,
 \end{equation}
-$\rho(u,v)$ is the effective sample size, as a fraction of the population, of the weights $e^{(v-u)\Delta(S)}$ when
-$S$ follows $\pi_u$ restricted to $\Vcal$; it is computed exactly, with no Monte Carlo error. The grid starts at $0$
-and, from each temperature $u$, steps to the next pilot temperature if $\rho\ge0.90$ there, and otherwise to the
+$\rho(\xi,\xi')$ is the effective sample size, as a fraction of the population, of the weights
+$e^{(\xi'-\xi)\Delta(S)}$ when $S$ follows $\pi_\xi$ restricted to $\Vcal$; it is computed exactly, with no Monte Carlo error. The grid starts at $0$
+and, from each temperature $\xi$, steps to the next pilot temperature if $\rho\ge0.90$ there, and otherwise to the
 largest temperature below it at which $\rho\ge0.90$. Diagnostic islands then run on the grid, the candidate set
 grows, and the grid is rebuilt until it no longer changes. If the calibration raises one of seven warnings, it is
 \emph{escalated}: it is repeated once, with four times as many particles and a four times higher step ceiling, and
 the final run then uses four times as many particles too.
 
 \begin{algorithm}[tp]
-\caption{Calibration of the temperature grid. Tier $i=0$ first; tier $i=1$ at most once, after a warning.
-$\Nc_i$, $\Tmax_i$, $\ell_n$ and $\Lbi$ are those of Table~\ref{tab:defaults}.}\label{alg:calibration}
+\caption{Calibration of the temperature grid. Tier $\tau=0$ first; tier $\tau=1$ at most once, after a warning.
+$\Nc_\tau$, $\Tmax_\tau$, $\ell_n$ and $\Lbi$ are those of Table~\ref{tab:defaults}.}\label{alg:calibration}
 \small
 \begin{algorithmic}[1]
-\State $i\gets0$
+\State $\tau\gets0$
 \Loop
-  \State \emph{Pilot:} draw $\Nc_i$ particles from $\pi_0$ and set $\xi\gets0$. While $\xi<1$: let $\xi'\gets1$ if
-    $\ESS\ge0.90\,\Nc_i$ for a step to $1$, else the largest $\xi'$ with $\ESS\ge0.90\,\Nc_i$ (60 bisection halvings);
-    if $\xi'-\xi<1/\Tmax_i$, take the \emph{forced step} $\xi'\gets\min(1,\xi+1/\Tmax_i)$; reweight, resample and move
+  \State \emph{Pilot:} draw $\Nc_\tau$ particles from $\pi_0$ and set $\xi\gets0$. While $\xi<1$: let $\xi'\gets1$ if
+    $\ESS\ge0.90\,\Nc_\tau$ for a step to $1$, else the largest $\xi'$ with $\ESS\ge0.90\,\Nc_\tau$ (60 bisection halvings);
+    if $\xi'-\xi<1/\Tmax_\tau$, take the \emph{forced step} $\xi'\gets\min(1,\xi+1/\Tmax_\tau)$; reweight, resample and move
     to $\xi'$. At $\xi=1$ apply $\Lbi$ rounds and four measured rounds. $\Xi\gets$ the pilot's temperatures.
   \State Local search from the best model scored so far, with move cap $\ell_n$.
   \State $\mathcal G\gets\textsc{BuildGrid}(\Xi)$
   \For{$\iota=1,\dots,\ell_n$, while $\mathcal G$ was built}
-    \State Run four diagnostic islands of $\Nc_i$ particles on $\mathcal G$, each followed by $\Lbi$ rounds and four
+    \State Run four diagnostic islands of $\Nc_\tau$ particles on $\mathcal G$, each followed by $\Lbi$ rounds and four
       measured rounds at $\xi=1$; then a local search from the best model scored so far, move cap $\ell_n$.
     \State $\mathcal G'\gets\textsc{BuildGrid}(\Xi)$ on the updated $\Vcal$; \textbf{if} it fails, leave the loop
       (keep $\mathcal G$)
     \State \textbf{if} $\mathcal G'$ has exactly the same temperatures as $\mathcal G$ \textbf{then} leave the loop
       (\emph{converged}) \textbf{else} $\mathcal G\gets\mathcal G'$
   \EndFor
-  \State \textbf{if} no warning of the list below fired, or $i=1$, \textbf{then} leave the loop
-  \State Check memory and time for tier $1$ against the allocation (stop the run if exceeded); $i\gets1$. The scored
+  \State \textbf{if} no warning of the list below fired, or $\tau=1$, \textbf{then} leave the loop
+  \State Check memory and time for tier $1$ against the allocation (stop the run if exceeded); $\tau\gets1$. The scored
     models carry over to tier $1$; the temperatures of tier $0$ do not.
 \EndLoop
 \State \textbf{if} a grid construction failed at tier $1$ \textbf{then} $\mathcal G\gets$ the last grid built at
   tier $1$, or $\Xi$ if there is none
-\State Freeze $\mathcal G$, the tier $i$ and $N_i$; pass the stored models on as candidates for $\HPMhat$ and $\Tlist$
+\State Freeze $\mathcal G$, the tier $\tau$ and $N_\tau$; pass the stored models on as candidates for $\HPMhat$ and $\Tlist$
 \Statex
 \Procedure{BuildGrid}{$\Xi$}\Comment{$\rho$ of~\eqref{eq:ress} on the current $\Vcal$}
-  \State $u\gets0$; grid $\gets(0)$
-  \While{$u<1$}
-    \State $c\gets$ the smallest pilot temperature above $u$
-    \State \textbf{if} $\rho(u,c)\ge0.90$ \textbf{then} $v\gets c$ \textbf{else} $v\gets$ the largest point found by
-      60 bisection halvings of $(u,c]$ with $\rho(u,v)\ge0.90$; \textbf{fail} if none passes
-    \State \textbf{if} $v\ge1-10^{-12}$ \textbf{then} $v\gets1$; append $v$; \textbf{fail} if the grid has more than
-      $\Tmax_i$ steps; $u\gets v$
+  \State $\xi\gets0$; grid $\gets(0)$
+  \While{$\xi<1$}
+    \State $c\gets$ the smallest pilot temperature above $\xi$
+    \State \textbf{if} $\rho(\xi,c)\ge0.90$ \textbf{then} $\xi'\gets c$ \textbf{else} $\xi'\gets$ the largest point found by
+      60 bisection halvings of $(\xi,c]$ with $\rho(\xi,\xi')\ge0.90$; \textbf{fail} if none passes
+    \State \textbf{if} $\xi'\ge1-10^{-12}$ \textbf{then} $\xi'\gets1$; append $\xi'$; \textbf{fail} if the grid has more than
+      $\Tmax_\tau$ steps; $\xi\gets\xi'$
   \EndWhile
 \EndProcedure
 \Statex
@@ -337,9 +337,9 @@ that exceeds the time allocation or meets a numerical failure stops and reports 
 \State \textbf{if} $\abs\Om\le(5\Nc_0+4N_0)\,p$ \textbf{then} score every $S\in\Om$, report the exact summaries, and stop
 \State Check the memory and time needs against the allocation; stop if they exceed it
 \State Build the blocks $C_b$ and the tables $h_b$; run the recursion~\eqref{eq:recursion}; build the neighbour sets
-\State Calibrate (Algorithm~\ref{alg:calibration}): the frozen grid $0=\grid0<\dots<\grid\Ts=1$ and the tier $i$
+\State Calibrate (Algorithm~\ref{alg:calibration}): the frozen grid $0=\grid0<\dots<\grid\Ts=1$ and the tier $\tau$
 \For{$r=1,\dots,4$, each island with its own random stream}
-  \State Draw $N_i$ particles from $\pi_0$; for $t=1,\dots,\Ts$: reweight, resample, move (one round at $\grid t$)
+  \State Draw $N_\tau$ particles from $\pi_0$; for $t=1,\dots,\Ts$: reweight, resample, move (one round at $\grid t$)
   \State At $\xi=1$: $\Lbi$ burn-in rounds, then four measured rounds; compute $\Zhat_r$~\eqref{eq:zhat} and
     $\PIPhat_{r,j}$~\eqref{eq:pipmpm}
 \EndFor
@@ -358,15 +358,14 @@ steps by $\Tmax$.
 grid. At $\xi=1$ each island applies $\Lbi$ further rounds as burn-in, then four measured rounds, from which the
 inclusion probabilities are estimated. Island $r$ estimates the evidence by
 \begin{equation}\label{eq:zhat}
-  \Zhat_r:=m(\emptyset)\,\bar Z_0\prod_{t=1}^{\Ts}\Big(\frac1N\sum_{v=1}^N\omega^{(t)}_v\Big),
+  \Zhat_r:=m(\emptyset)\,\bar Z_0\prod_{t=1}^{\Ts}\Big(\frac1N\sum_{i=1}^N\omega^{(t)}_i\Big),
 \end{equation}
-with $\omega^{(t)}_v$ computed on the particles before resampling at step $t$. The pooled estimate is
-$\Zhat:=\frac14\sum_{r=1}^4\Zhat_r$; the islands are weighted equally. Consider, for fixed data and a fixed frozen
-grid, the final run carried out to the end without a time limit. Over its random numbers, $\Zhat_r$ is an unbiased
-estimator of $Z$, a standard property of this construction \citep{DelMoral2004}, and so is $\Zhat$; $\log\Zhat$ is
-not unbiased for $\log Z$. A run that is stopped by the time limit reports nothing, so this property describes the
-uninterrupted estimator. If run time depends on the particle paths, the estimate of a run that finished need not
-be exactly unbiased.
+with $\omega^{(t)}_i$ computed on the particles before resampling at step $t$. The pooled estimate is
+$\Zhat:=\frac14\sum_{r=1}^4\Zhat_r$; the islands are weighted equally. Given the frozen calibration, and for a
+run that is not interrupted, each $\Zhat_r$ and the pooled $\Zhat$ are unbiased estimators of $Z$, the expectation
+being over the random numbers of the final run; this is a standard property of the construction
+\citep{DelMoral2004}. Nothing is claimed conditional on the run completing within its time allocation, and
+$\log\Zhat$ is not unbiased for $\log Z$.
 
 \paragraph{Local searches.} After the islands, two deterministic searches climb the log score over the neighbourhood
 of a model: all models one deletion, one addition (below size $K$) or one swap away. A search scans the whole
@@ -400,8 +399,8 @@ estimates, even if some of its islands had finished.
 
 \begin{table}[tbp]
 \centering\small
-\caption{Constants of SMC-BVS. Here $i\in\{0,1\}$ is the calibration tier: $i=1$ only after a warning in the
-calibration at $i=0$. The constants are resource budgets fixed before the studies of Section~\ref{sec:sims}, not
+\caption{Constants of SMC-BVS. Here $\tau\in\{0,1\}$ is the calibration tier: $\tau=1$ only after a warning in the
+calibration at $\tau=0$. The constants are resource budgets fixed before the studies of Section~\ref{sec:sims}, not
 tuned on them, and not accuracy guarantees; their separate effect on accuracy has not been studied, and the warnings
 of Section~\ref{sec:model-output} show when a budget was too small for a data set.}\label{tab:defaults}
 \begin{tabular}{@{}l>{$}l<{$}>{\raggedright\arraybackslash}p{4.6cm}>{\raggedright\arraybackslash}p{4.4cm}@{}}
@@ -410,9 +409,9 @@ Quantity & \text{Symbol} & Default & Role \\
 \midrule
 size cap & K & $\min(p,\lfloor n/2\rfloor)$ & factorised matrices at most $K\times K$ \\
 block size cap & B & $\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)$ & at most $2^{16}$ entries per block table \\
-final particles per island & N=N_i & $4^iN_0$, with $N_0:=\max(2500,n,p)$ & at least $p$ and $n$ particles \\
-calibration particles & \Nc=\Nc_i & $4^i\lceil512N_0/2500\rceil$ & about $N_i/5$ \\
-step ceiling & \Tmax=\Tmax_i & $4^i\max(1000,\ell_n^2)$ & bounds the pilot and grid steps \\
+final particles per island & N=N_\tau & $4^\tau N_0$, with $N_0:=\max(2500,n,p)$ & at least $p$ and $n$ particles \\
+calibration particles & \Nc=\Nc_\tau & $4^\tau\lceil512N_0/2500\rceil$ & about $N_\tau/5$ \\
+step ceiling & \Tmax=\Tmax_\tau & $4^\tau\max(1000,\ell_n^2)$ & bounds the pilot and grid steps \\
 local-search move cap & \ell_n & $\lceil\log_2(n+p+1)\rceil$ & also the number of grid rebuilds \\
 burn-in rounds at $\xi=1$ & \Lbi & $\max(4,\lceil\log_2(n+1)\rceil)$ & grows slowly with $n$ \\
 islands; measured rounds & & $4$; $4$ & a spread for the checks \\
@@ -475,8 +474,7 @@ is over the random numbers of the final run, for fixed data and a fixed frozen g
 $Z_{\mathrm{low}}$ exceeds $Z$ on exactly the same event. The raw limit $\log\Zhat-\log20$ lies $\log20\approx3.0$
 units below the estimate. This is a statement about Monte Carlo error, not about statistical uncertainty in the data.
 A run that is stopped issues no limit, so the probability that an attempted run issues a limit above $Z$ is at most
-$0.05$; the probability conditional on the run finishing is at most $0.05$ divided by the probability of finishing,
-and we do not claim more. The raw $\log\Zhat$, the four island values $\log\Zhat_r$ and the raw limit are reported
+$0.05$; as for $\Zhat$, nothing is claimed conditional on the run completing. The raw $\log\Zhat$, the four island values $\log\Zhat_r$ and the raw limit are reported
 too, together with the gap $\log\Zlist-\log\Zhat$ and a flag when it exceeds one: $\Zhat$ then underestimates $Z$ by
 more than a factor $e$.
 

@@ -7,7 +7,17 @@
 % Round 1 (2026-11-28), symbol collisions across sections.  Section 1 keeps the sampler's letters
 % (Delta(S), omega, N, m, Z, T, the blocks C_b) and changes its own minor ones: block index k -> b,
 % column scaling D -> \DX, constant C_n -> c_n.  The macros marked [S3] give Section 3 distinct
-% letters for its objects; \tstar and \tmin were removed (unused).
+% letters for its objects.
+%
+% Coefficient and variance convention (Theory v2 alignment, 2026-11-28).  Standardised ("coded") quantities have
+% their own letters; raw (original-unit) quantities have the usual ones:
+%   coefficients  theta_S, \tstar (standardised)   <->   beta, \bstar (original units); no "b" for coefficients;
+%   variance      v (standardised, the variance of eq:lik; prior v ~ IG(a_0,b_0))
+%                 <->   sigma^2 := s_y^2 v (original units), \sigs^2 the true noise variance.
+%   So sigma^2 always means an original-unit variance, and posterior draws are (S, beta, sigma^2).
+%   Dimensions: \praw = p^r columns before constant ones are removed, p retained.  \SSq_S is Theory's Q_S;
+%   H_S = (n+1)G_S + I as in Theory.  Theory's shape a_0+n/2 is written out (nu is Section 2's signal-to-noise ratio).
+%   Signal sizes: \tmin = min_{j in S_0} |theta*_j| (standardised); \bbmin = min_{j in S_0} |beta*_j| sd(x_j)/sigma_*.
 
 % ---------------------------------------------------------------- sets, numbers, norms
 \newcommand{\R}{\mathbb{R}}                    % real numbers
@@ -38,11 +48,13 @@
 % ---------------------------------------------------------------- data and true model
 \newcommand{\yr}{y^{\mathrm r}}                % raw response
 \newcommand{\Xr}{X^{\mathrm r}}                % raw design (retained columns)
-\newcommand{\praw}{p_{\mathrm{raw}}}           % number of columns before constant ones are removed
+\newcommand{\praw}{p^{\mathrm r}}             % number of columns before constant ones are removed
 \newcommand{\Dn}{\mathcal D_n}                 % data set
 \newcommand{\sigs}{\sigma_*}                   % true noise standard deviation
 \newcommand{\bstar}{\beta^*}                   % true coefficients, original units
-\newcommand{\sigr}{\sigma_{\mathrm r}}          % residual sd in the original units: \sigr^2 = s_y^2 sigma^2
+\newcommand{\tstar}{\theta^*}                  % true coefficients, standardised (coded) units
+\newcommand{\tmin}{\theta_{\min}}              % min over S_0 of |theta*_j|
+\newcommand{\bbmin}{\bar\beta_{\min}}          % min over S_0 of |beta*_j| sd(x_j)/sigma_*  (scale-free signal size)
 \newcommand{\DX}{D_X}                          % diagonal matrix of the column standard deviations of \Xr
 \newcommand{\Sz}{S_0}                          % true model
 \newcommand{\sz}{s_0}                          % true model size
@@ -56,7 +68,7 @@
 \newcommand{\Rres}{R_n}                        % [S3] residual signal R_n(S) (was Delta_n(S); Delta(S) is Section 1's discrepancy)
 \newcommand{\leak}{\lambda_n}                  % [S3] leakage lambda_n(A, a) (was rho_n; rho is Section 2's design correlation)
 \newcommand{\Anull}{A}                         % [S3] a set of null predictors, a = |A| (was N, m; N is the particle number, m(S) the marginal likelihood)
-\newcommand{\Pin}[1]{\Pi(#1\mid\Dn)}          % [S3] posterior of (S, beta, sigma_r^2) given the data: one notation for Section 3
+\newcommand{\Pin}[1]{\Pi(#1\mid\Dn)}          % [S3] posterior of (S, beta, sigma^2) given the data: one notation for Section 3
 
 % ---------------------------------------------------------------- prior and posterior
 \newcommand{\Om}{\Omega}                       % model space {S : |S| <= K}

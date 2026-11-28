@@ -69,8 +69,8 @@ p1 <- ggplot(g1, aes(factor(snr), y, colour = method, shape = method, group = me
   geom_point(position = dodge, size = 1.6, stroke = 0.6) +
   facet_grid(row ~ np, scales = "free_y", switch = "y") +
   scale_y_continuous(expand = expansion(mult = c(0.03, 0.03))) +
-  scale_colour_manual(values = COLS, labels = LABELS, name = NULL) +
-  scale_shape_manual(values = SHAPES, labels = LABELS, name = NULL) +
+  scale_colour_manual(values = COLS, labels = LABELS, breaks = METHODS, name = NULL) +
+  scale_shape_manual(values = SHAPES, labels = LABELS, breaks = METHODS, name = NULL) +
   scale_linewidth_manual(values = c(`TRUE` = 0.8, `FALSE` = 0.35)) +
   labs(x = "SNR", y = NULL) +
   theme(strip.placement = "outside", strip.background.y = element_blank(), strip.text.y = element_text(size = 8.5)) +
@@ -219,19 +219,23 @@ paths2 <- function(p) p +
   geom_point(data = function(g) g[filled == TRUE], aes(size = factor(nu)), stroke = 0.6) +
   geom_point(data = function(g) g[nu == 6], size = 3.6, shape = 1, stroke = 0.4, show.legend = FALSE) +
   facet_grid(bt_lab ~ rho_lab, labeller = labeller(rho_lab = label_parsed)) +
-  scale_colour_manual(values = COLS, labels = LABELS, name = NULL) +
-  scale_shape_manual(values = SHAPES, labels = LABELS, name = NULL) +
+  scale_colour_manual(values = COLS, labels = LABELS, breaks = METHODS, name = NULL) +
+  scale_shape_manual(values = SHAPES, labels = LABELS, breaks = METHODS, name = NULL) +
   scale_size_manual(values = SIZES, name = expression(nu)) +
   scale_linewidth_manual(values = c(`TRUE` = 0.8, `FALSE` = 0.4), guide = "none") +
   guides(colour = guide_legend(nrow = 1, order = 1, override.aes = list(size = 2)), shape = guide_legend(nrow = 1, order = 1),
          size = guide_legend(nrow = 1, order = 2, override.aes = list(shape = 16, colour = "grey30"))) +
-  theme(legend.box = "vertical", legend.spacing.y = unit(0, "pt"), legend.margin = margin(1, 0, 1, 0))
+  theme(legend.box = "vertical", legend.spacing.y = unit(0, "pt"), legend.margin = margin(1, 0, 1, 0),
+        panel.spacing.x = unit(10, "pt"))
 p2 <- paths2(ggplot(g2, aes(FP, rec, colour = method, shape = method, group = method))) +
-  scale_x_sqrt(breaks = c(0, 1, 2, 5, 10, 20)) + scale_y_continuous(limits = c(0, 1)) +
+  scale_x_sqrt(breaks = c(0, 1, 2, 5, 10, 20)) +
+  scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.25), labels = c("0", "0.25", "0.5", "0.75", "1")) +
   labs(x = "False positives per fit (square-root scale)", y = "Recall")
 ggsave(file.path(OUT, "fig_s2_recall_fp.pdf"), p2, width = 6.5, height = 4.9, device = cairo_pdf)
 # Supplement: the same paths as conditional precision (mean over non-empty fits; shown where k >= KMIN) against recall.
 p2b <- paths2(ggplot(g2[!is.na(prec)], aes(rec, prec, colour = method, shape = method, group = method))) +
+  scale_x_continuous(breaks = seq(0, 1, 0.25), labels = c("0", "0.25", "0.5", "0.75", "1")) +
+  scale_y_continuous(breaks = seq(0, 1, 0.25), labels = c("0", "0.25", "0.5", "0.75", "1")) +
   coord_cartesian(xlim = c(0, 1), ylim = c(0, 1)) + labs(x = "Recall", y = "Conditional precision")
 ggsave(file.path(OUT, "fig_s2_pr_supp.pdf"), p2b, width = 6.5, height = 4.9, device = cairo_pdf)
 unlink(file.path(OUT, "fig_s2_pr.pdf"))
