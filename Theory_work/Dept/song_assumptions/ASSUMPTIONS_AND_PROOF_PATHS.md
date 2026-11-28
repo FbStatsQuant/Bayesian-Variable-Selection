@@ -1,7 +1,7 @@
 # ASSUMPTIONS AND PROOF PATHS — conjectured assumptions for the TH-SONG targets
 
-Theory Department, mission TH-SONG-ASSUMPTIONS, 2026-11-27. Task Lead: Opus 5.5. **v1.3 (council round-2 revision; see COUNCIL_RECORD.md and council/RESPONSE_R2.md).**
-Targets and notation: `THEOREM_DEFINITIONS.md` §4 (R_n(S), Pr_n(d), κ_n, D, N, d, m, J, f₀, β^C, σ_C²). Standardised predictors ζ_j := (x_j − E x_j)/sd(x_j). Level and window as delivered (or5 `sec:a-dist`): fix M ≥ 1 first; q_n(M) := min{p, ⌈C_q M log n⌉}, C_q := 2(s(A+2)+4)/log 2. price_n := price(s0−1) = Pr_n(1).
+Theory Department, mission TH-SONG-ASSUMPTIONS, 2026-11-27. Task Lead: Opus 5.5. **v1.4 (senior review: completeness, generality and naturalness; converged text in council/V14_CHANGESPEC.md). v1.3 = council round-2 revision (COUNCIL_RECORD.md, council/RESPONSE_R2.md).**
+Targets and notation: `THEOREM_DEFINITIONS.md` §4 (R_n(S), Pr_n(d), κ_n, D, N, d, m, J, f₀, β^C, σ_C²). Standardised predictors ζ_j := (x_j − E x_j)/sd(x_j). Level and window: fix M ≥ 1 first. The design assumptions A-SUBG and A-NEC are imposed on sets of size ≤ k_n, a deterministic design order with k_n ≥ q_n(M) at the claimed level (THEOREM_DEFINITIONS §4): "for every fixed c, sets of size ≤ c·log n" for fixed-level statements; q_n(M_n) for M = M_n → ∞ (the delivered `thm:dist` range M ≤ √n/log n); the enlarged q_n for TD′. The proof constant is as delivered (or5 `sec:a-dist`): q_n(M) := min{p, ⌈C_q M log n⌉}, C_q := 2(s(A+2)+4)/log 2. price_n := price(s0−1) = Pr_n(1). Four blocks: Model (A-GL, A-SPARSE, A-DIM, A-BS); Design (A-SUBG, A-NEC); Signal (A-MARGIN-H, A-MARGIN-U); Omitted variables (A-MIS(iii) with A-SPARSE-C; A-MOM). **No assumption names a design family or a simulation constant; S1/S2 appear only in the Defence (b) items.** Engine decision (HQ, SMC-PERF closed, memo 1b319090): v3.1.1, g = n, truncated BB(1, p) and MPM confirmed; see §5.
 Inputs: advisors `advisors/ASTRA_R1.md` (Astra 6.2) and `advisors/FABLE_R1.md` (Fable 5.2), which were written
 independently, and `advisors/ASTRA_R2.md` (Astra's audit of Fable R1 and of v1 of this file; all its substantive points applied); data `SIMULATION_DATA_ANALYSIS.md` (D1); literature `PRECEDENTS_NEW.md` (C2, with the Lead's errata) and
 `writing_answers/PRECEDENTS_2026-11-17.md` (verified earlier).
@@ -25,10 +25,10 @@ Every citation below is either in PRECEDENTS_2026-11-17 (marked "P17") or in PRE
 
 | # | question | Astra R1 | Fable R1 | decision |
 |---|---|---|---|---|
-| D1 | form of the selection margin | √((1−δ)nρ_S) ≥ a_Dm + √(2(1+δ)[B_Dm]₊), where a_Dm is the proxy-search Gaussian width | MARGIN-U: √R/σ ≥ (1+η)[√((2Pr−m log(n/C log p))₊) + √(2m log p)]. Sharp variant MARGIN\* with a leakage set | **A-MARGIN-U** in Astra's transparent form (R2 Q2): conditional one-sided width w_Dm, slack δ for sample transfer, γ > 0, imposed **only on classes with B_Dm > 0** (council R1: Neon, Opus). Same structure in both advisors ([both advisors] for steps 1–4 only). MARGIN\* is recorded as an **open refinement** (not a target) |
+| D1 | form of the selection margin | √((1−δ)nρ_S) ≥ a_Dm + √(2(1+δ)[B_Dm]₊), where a_Dm is the proxy-search Gaussian width | MARGIN-U: √R/σ ≥ (1+η)[√((2Pr−m log(n/C log p))₊) + √(2m log p)]. Sharp variant MARGIN\* with a leakage set | **v1.4: A-MARGIN-U, population form** (senior review; V14_CHANGESPEC §1): (U1) deletions, (U2a) bases inside a deterministic accounting set Q_n, (U2b) outside nulls priced by their leakage with Astra's geometric coefficient ā; merges Fable's P-U and Astra's finite-ratio form. Lemma W bridges it to the proof. v1.3's conditional-width form (Astra R2 Q2, classes with B_Dm > 0) is kept as the **refined design-conditional form**, a parallel sufficient condition. MARGIN\* is superseded |
 | D2 | is the constant 2 sharp? | yes for single deletions. A uniform 2+η for swaps is OPEN. R2: the converse holds given A-NEC on T (two-sided determinant refund) | yes for deletions, with a converse. The width term is attained by a factor-proxy design | constant 2 for deletions plus a converse (needs A-NEC on T). Width term for added nulls; the factor-proxy example shows it is needed at one (d,m), not that every constant is optimal |
 | D3 | the memo's literal "2·d·price for every rival" | not provable | counterexample for a fixed number m of added nulls when log n = o(log p) | **rejected**. Recorded as OPEN under p ≤ n^A |
-| D4 | covering the S1 boundary signals | covered when c_j²a > 2a+1 with log p/log n → a | fixed-ratio framing: liminf κ_n > 1 | **κ_n framing** (triangular arrays). S1 brackets κ = 1 for deletions; for mixed rivals with d = 1, m ≤ 2 the conditional width on S1 designs is 0.1–0.6 (E9), so the margin holds there with surplus ≥ 3.3 at SNR 2 |
+| D4 | covering the S1 boundary signals | covered when c_j²a > 2a+1 with log p/log n → a | fixed-ratio framing: liminf κ_n > 1 | **κ_n framing** (triangular arrays), chosen on **generality grounds**: a scale-free ratio of population residual signal to the coded price, with no design family. S1 is then checked against it (Defence (b) of A-MARGIN-U): it brackets κ = 1 for deletions, and (U2a) holds at SNR 2 with ratio equal to the exact κ_n |
 | D5 | dimension | keep p ≤ n^A for released statements. R2: Fable's DIM′ route fails at its testing step (at log p = n^{1/3}: sieve log-entropy ≍ n^{2/3} against a testing budget nε² ≍ n^{1/3}) | DIM′: (log p)² = O(n) via the Fubini size tail. log p = o(n) needs a cap c·n/log p | released statements keep **A-DIM**. **TD′ is a conjecture with HIGH proof risk at the proposed rate**; the route needs localisation at size ≈ t/log p or a direct predictive bound. A fixed feasible cap is a distinct, easier case. No impossibility is implied |
 | D6 | eigenvalue conditions | drop the fixed floor (including on T). Keep NEC plus relative SUBG | drop EFS and FLOOR-S0. NEC is needed only for the Occam factor | **drop all fixed and sample floors.** Keep A-NEC (used for the Occam factor, the size lemma prop:dist(i) and the TD tests) and Σ-relative A-SUBG [both advisors] |
 | D7 | bounded signal | aggregate energy pair (O(n) form) | BS′: βᵀΣβ ≤ M_μσ², s·b̄_n² = o(n) | **A-BS** (as delivered) for TD **and** TS-b/TM-b, because TS-b uses the size lemma prop:dist(i), proved under A-BS (R2). **A-BS′** is a weaker alternative, available once the size lemma is extended |
@@ -77,8 +77,8 @@ Each row gives the exact statement, where the proof uses it, its defence, and th
 - **Weaker alternatives.** See A-DIM′ and A-DIM″ below; the anti-stringency verdict is in §4, item 3.
 
 ### A-DIM′ — dimension relaxation (conjecture, TD′)
-- **Statement.** (s+1)·M·log p·log(p∨n) ≤ c_dim·n (the +1 keeps the coarse-window/variance-integration term at s = 0; Neon, Sol). The headline form is (log p)² = o(n) for fixed s and M. This is a sufficient **isometry** budget only; the conjectured TD′ statement is given exactly in THEOREM_DEFINITIONS §4.1 (input domain 2 ≤ p with the coded exceptional event; A-SUBG and A-NEC on the enlarged window q_n = min{p, ⌈C′(s+1)M log(p∨n)⌉}; tail exp(−cM log(p∨n)); M ≥ M₀ with M log(p∨n) ≤ c√n) (Sol R2).
-- **Used in.** Sample control on q_n-sets, where q_n ≍ (s+1)·M·log₂(p√n) is the coarse size window from the Fubini size tail (TD′ step 2).
+- **Statement.** log p = o(√n) is the conjecture's regime. Its proof budget is the product form (s+1)·M·log p·log(p∨n) ≤ c_dim·n (the +1 keeps the coarse-window/variance-integration term at s = 0; Neon, Sol), a sufficient **isometry** budget only; the conjectured TD′ statement is given exactly in THEOREM_DEFINITIONS §4.1 (input domain 2 ≤ p with the coded exceptional event; A-SUBG and A-NEC on the enlarged window q_n = min{p, ⌈C′(s+1)M log(p∨n)⌉}; tail exp(−cM log(p∨n)); M ≥ M₀ with M log(p∨n) ≤ c√n) (Sol R2).
+- **Used in.** Sample control on q_n-sets, where q_n ≍ min{p, (s+1)·M·log₂(p√n)} is the coarse size window from the Fubini size tail (TD′ step 2).
 - **Defence.**
   - (c) Its dimension envelope contains SL Cor S1's quasi-polynomial range p < n^{κ log n} and overlaps the stretched-exponential envelope of SL Cor 1 for α < ½ (overlapping dimension envelopes only: the cap, prior and radius differ, so TD′ would not recover Cor 1 in full).
   - (a) Same type as SBJ Assumption 1, log p = O(n^α), p. 14 (P17 B2), and Jiang 2007 Cor 1, K_n ≤ e^{Cn^ξ}, p. 10 (PN C7).
@@ -87,7 +87,7 @@ Each row gives the exact statement, where the proof uses it, its defence, and th
 - **A-DIM″ (an Engineering option, not adopted).** A cap K_n ≤ c·n/log p solves the isometry inequality but **not** the testing inequality (Astra R2), so it does not by itself give TD at log p = o(n). A *fixed* feasible cap ≥ s is a distinct, easier case. Compare the NH14 cap m_n(ν) = p ∧ n/((2+ν) log p), pp. 10–11 (P17 B6).
 
 ### A-SUBG — sub-Gaussian rows on sparse directions, relative to their own variance
-- **Statement.** Every predictor has positive variance, and E exp(λuᵀζ) ≤ exp(L²λ²Var(uᵀζ)/2) for all λ and all u with at most q_n(M) nonzero entries, ζ_j = (x_j − E x_j)/sd(x_j) (or5 `asm:dist`(c), already Σ-relative).
+- **Statement.** Every predictor has positive variance, and E exp(λuᵀζ) ≤ exp(L²λ²Var(uᵀζ)/2) for all λ and all u with at most k_n nonzero entries (the window in the header), ζ_j = (x_j − E x_j)/sd(x_j) (or5 `asm:dist`(c), already Σ-relative). The constant L is common to all window sizes.
 - **Used in.**
   - The two-sided sparse isometry (1−δ)n·vᵀΣv ≤ ‖Xv‖² ≤ (1+δ)n·vᵀΣv on (s0+J)-sparse v. This gives the R-transfer (1−δ)R ≤ R̂ ≤ (1+δ)R (TS-b step 4).
   - The conversion inequality d_H² ≥ c_L·min{1, R/(nσ²)} (TS-a): relative SUBG gives E V⁴ ≤ C_L(E V²)² for an affine mean contrast V, hence P(V² ≥ E V²/2) ≥ 1/(4C_L) (Paley–Zygmund), and the Gaussian conditional affinity converts this (Astra R2 Q4). This converts R into Hellinger separation; it does **not** supply a lower bound on R (Gaussian duplicates have R = 0).
@@ -99,13 +99,14 @@ Each row gives the exact statement, where the proof uses it, its defence, and th
   - Bounded predictors (SL Thm 1): **not dominated.** Bounded coordinates satisfy the per-coordinate version, but the sparse-direction relative version can fail: x₁ = Z, x₂ = Z + B with Z Rademacher and B ~ Bernoulli(1/n) independent are bounded with variances bounded below, yet the standardised contrast recovering B − EB has ψ₂²/Var growing with n (Sol, Neon, Opus R1). Independent bounded coordinates, or linear mixtures of independent bounded features with bounded standardised range (or5 `asm:dist` remarks), do satisfy A-SUBG.
 
 ### A-NEC — no near-exact collinearity (vanishing population floor)
-- **Statement.** λ_min(Corr(x_T)) ≥ c_ψ/n for every |T| ≤ q_n (or5 `asm:dist`(d)).
+- **Statement.** With the sparse eigenvalue φ_min(k) := min_{1≤|V|≤k} λ_min(Corr(x_V)), n·φ_min(k_n) ≥ c_ψ (or5 `asm:dist`(d), window as in the header). The sparse eigenvalue may vanish, but no faster than the ridge scale τ/n (τ = 1 as coded). Excluding exact duplicates alone does not ensure it: two predictors with correlation 1 − n^{−2} fail it.
 - **Used in.** (i) The full Occam factor (n+1)^{−m/2} on added nulls: λ_min(X_TᵀX_T) ≳ 1 relative to the unit ridge (coded determinant ratio det[(n+1)G+I]/det[G+I]); also Q_U − RSS_U = O_P(σ²) uniformly (in-span shrinkage eigenvalues O(1/n)). (ii) The size lemma prop:dist(i) and the TD tests (or5 `asm:dist`(d)); without A-NEC, prop:dist(ii) gives only s + C_s M log n (Opus R1). (iii) The TS-b converse, which needs the two-sided determinant refund d·log(n+1)/2 + O(1) on T (Astra R2 Q3). The *sufficient* direction **of the deletion step (step 1) only** uses the one-sided refund ≤ (n+1)^{d/2}, valid for every design by Cauchy interlacing (Fable (F3)). A-NEC is a sufficient, convenient device; heuristically, a null nearly collinear with the model pays almost no Occam price, but **necessity is unproved** (Astra R2).
 - **Defence.**
   - (a) **Comparison of objects, scales and windows — not dominance** (council R1, all three seats). A-NEC is a lower floor on a *population* correlation matrix, on q_n-sets, with a vanishing value c_ψ/n, and it works only together with A-SUBG (for transfer). The precedents differ in object and window:
     - NH14 Cond. 4.5, pp. 11, 17, bounds the minimum **nonzero** *sample* eigenvalue and expressly allows exact dependence (p. 17), which A-NEC excludes; its floor ≳ p_n^{−κ} can be smaller than c_ψ/n at large p, and NH14 also impose an upper bound (P17 B6).
     - SBJ Assumption 4, p. 14, bounds its nonzero-eigenvalue quantity ν_{k*} from (8), indexed through min(n, |k|); we do not claim it expressly allows duplicates (Sol R2).
     - SL (26), SLs p. 15, is a **two-sided sample** tail condition with a vanishing lower and a growing upper threshold (Cor S1 chooses such a pair; l_n ≫ r̄_n log P_n/n, Cor S1 uses l_n = log^{k₂}n/√n) on sets of size r̄_n + |t|; SL call their (22) "hardly satisfied" (SLs pp. 15–16).
+    - SL Condition 3's Gaussian sufficient form ch₁{var(x)} ≻ ε_n² (pp. 955–956) is SL's own precedent for a vanishing population floor. A-NEC at the 1/n scale does not supply SL's screening separation, which is A-MARGIN-H's job.
     - BRT09 Assumption 2, p. 9 (c/log n) and MY09 ("slowly vanishing") are sample floors on other windows.
     - **No blanket ordering is claimed** (council R2, all seats). Where the regimes overlap, c_ψ/n is below the BRT09 (c/log n) and MY09 floors and below SL (26)'s lower threshold l_n ≫ r̄_n log P_n/n; NH14's p_n^{−κ} can be smaller still at large p. As *condition sets* (object, normalisation, window) none is uniformly weaker.
   - (b) The population floor (1−ρ)/(1+ρ) is 0.176–1, i.e. n × floor = 8.8–250 (D1 E5); the slack relative to c_ψ/n is this number divided by c_ψ.
@@ -113,18 +114,21 @@ Each row gives the exact statement, where the proof uses it, its defence, and th
 
 ### A-BS / A-BS′ — bounded signal
 - **A-BS (as delivered, used for TD).** |β*_j|·sd(x_j) ≤ b̄σ* for every j (or5 `asm:dist`(e)).
-- **A-BS′ (weaker alternative, not yet usable).**
-  - (a) β*ᵀΣβ* ≤ M_μσ*².
-  - (b) max_j |β*_j|sd(x_j) ≤ b̄_nσ*, with s·b̄_n² = o(n).
-  - TS-b and TM-b use the size lemma prop:dist(i), which is proved under A-BS; A-BS′ becomes usable only once that lemma is extended (Astra R2). Note Astra R1's energy pair is the O(n) form, not identical to (b).
+- **A-BS′ (recorded, not adopted).**
+  - Recorded pair: V := Var(xᵀβ*)/σ*² = O(1) and E := Σ_j β*_j² Var(x_j)/(nσ*²) = o(1); at fixed s this is equivalent to v1.3's BS′ ((a) β*ᵀΣβ* ≤ M_μσ*², (b) s·b̄_n² = o(n)).
+  - Open target: V = O(1) alone, i.e. population R² = V/(1+V) ≤ 1 − c. With A-NEC on T it gives E ≤ M_μ/c_ψ = O(1). Open: whether the size lemma and the ridge remainder hold at O(1) rather than o(1) energy.
+  - TS-b and TM-b use the size lemma prop:dist(i), which is proved under A-BS; A-BS′ becomes usable only once that lemma is extended (Astra R2).
 - **Used in.** The Fubini denominator, i.e. the fixed-endpoint lower bound of §3.1 step 1 for the normalised contrast density (order n^{−s0/2} times the variance-integration factor ≍ n^{−1/2}, on a high-probability event; Sol R2); keeping σ̂² in a fixed range; the unit-ridge term ‖β̂_S0‖²/(n+1). **Verify at proof audit** that nothing else uses coordinatewise boundedness (Fable Q5).
 - **Defence.**
+  - (a) **Direct counterpart: SL approximate sparsity (3), p. 950**: lim Σ_j |β*_j| < ∞, with standardised predictors and fixed σ*, implies A-BS.
   - (a) YWJ (7a), p. 7: "some form of upper bound on the norm ‖β*‖₂ in terms of the g-hyperparameter is required" (P17 B4b); SC11 Assumption 2.7, p. 7. Both bounds grow with n (with g ≍ p^{2α} in YWJ, with φ_n in SC11), whereas A-BS uses a fixed constant b̄; the precedent is for the type of condition, not its strength.
   - (b) max|β|sd/σ ≈ 1.17 (1.175) and ν ≤ 6 in every setting (D1 E4).
 - **Weaker alternatives.** The aggregate energy pair (Astra Q5) / A-BS′ (Fable Q5): recorded, not adopted, until the size lemma is re-proved under it. All targets keep A-BS.
 
 ### A-MARGIN-H — Hellinger-scale residual signal (TS-a)
-- **Statement.** For each j ∈ S0: inf{R_n(S) : j ∉ S, |S| ≤ min(K, J)} ≥ C_H(L)·M·σ*²·log n, with J = ⌊s + C_s M⌋ the effective-sieve size (council R1: Sol, Neon; under A-DIM, log n and log(p∨n) differ by the factor A). Then |S ∪ S0| ≤ min(p, 2s + C_s M) ≤ q_n for large n at fixed M (also covering bounded p), inside the A-SUBG window.
+- **Statement (diverging ratio).** For the predictor j and **every fixed k**, inf{R_n(S) : j ∉ S, |S| ≤ k}/(σ*² log n) → ∞. This gives screening at every fixed level M; a diverging ratio at an unspecified speed gives nothing uniform for M = M_n → ∞. TS-a is stated first per predictor (any j satisfying its own margin, whatever the other signals do) and then jointly. Same form as delivered `asm:omitted`(c) and Luo & Chen's condition.
+  - **Remark (fixed-level form).** At a fixed level M, inf R_n(S)/(σ*² log n) ≥ C_L·M over |S| ≤ min(K, J), J = ⌊s + C_s M⌋ the effective-sieve size, with C_L above the inverse Hellinger-conversion constant, suffices (council R1: Sol, Neon; under A-DIM, log n and log(p∨n) differ by the factor A). It is sharper for finite-ratio signals and gives the a.s. corollary at a large fixed level.
+  - The relevant sets satisfy |S ∪ S0| ≤ min(p, s0 + J) ≤ q_n for large n at fixed M (also covering bounded p), inside the A-SUBG window.
 - **Used in.** TS-a: by the SUBG conversion, d_H(f, f*)² ≥ c_L·min{1, R_n(S)/(nσ*²)} > ε_n² for every f supported on such an S, so these f lie outside the TD ball; models with |S| > J carry the posterior size tail, which is added to the contraction tail (constant c′_H < c_H in TS-a). A-MARGIN-H is what supplies the lower bound on R; it plays the role of SL Condition 3.
 - **Defence.**
   - (a) SL Condition 3, p. 955, and the proof of Thm 3, SLs pp. 5–6: d² ≥ min{δ_n, β_t²δ_n/(20σ²), 1−√0.8}. The same residual-signal form appears in Luo & Chen arXiv v1 p. 7 (PN A4) and NH14 Cond. 4.4, p. 11 (PN A2).
@@ -132,38 +136,39 @@ Each row gives the exact statement, where the proof uses it, its defence, and th
 - **Weaker alternatives.** The constant is inexplicit by construction. The sharp claim is carried by TS-b, not TS-a.
 
 ### A-MARGIN-U — residual-signal margin for exact selection (TS-b, TM-b)
-- **Statement (Astra R2 Q2 form, quantifier per council R1).** Fix an admissible M independently of n and let
-  J := ⌊s + C_s M⌋ be the bounded posterior size from prop:dist(i). There are fixed 0 < δ < 1, γ > 0 and t_n → ∞ such
-  that, for all large n and every **nonempty class (D, m) with D ≠ ∅, m ≤ J and B_Dm > 0**,
+- **Statement (population form; v1.4 headline; canonical text `council/V14_CHANGESPEC.md` §1).** Write T = S0, s = s0. For a rival S ⊉ T, its **base** is B := S ∩ Q_n, N := S ∖ Q_n, d := |T∖B|, and k := |B∖T| + |N| (the number of added predictors).
+  - Price: Pr_n(d) := max_{|D|=d} log[π(T∖D)/π(T)] + (d/2)·log(n+1). For BB(1, p) this is Σ_{k=s−d}^{s−1} price(k). For other priors the deletion refund at T need not bound the refund at T ∪ (S∖T), so the statement keeps the coded price; for any other prior, re-derive it.
+  - Rival range: m̄_d := ⌈(2A+1)d⌉ + 1 (delivered `asm:margin`(b) with s replaced by d). Leakage ϑ(B, N) := 1 − R_n(B ∪ N)/R_n(B); coefficient ā(B, N) := min{1, √(2(1 − √(1 − ϑ(B, N))))}.
+  - Fix η > 0 and a deterministic **accounting set** Q_n ⊇ T with log|Q_n| = o(log n). For all large n:
+    - **(U1) Deletions.** R_n(T∖D) ≥ 2(1+η)·σ*²·Pr_n(|D|) for every nonempty D ⊆ T. This is κ_n ≥ 1+η, the case B = T∖D, N = ∅ of (U2a).
+    - **(U2a) Bases.** R_n(B) ≥ 2(1+η)·σ*²·Pr_n(d) for every B ⊆ Q_n with B ⊉ T and |B∖T| ≤ m̄_d.
+    - **(U2b) Outside nulls.** For every such B and every N ⊆ Q_n^c with 1 ≤ |N| = m and |B∖T| + m ≤ m̄_d:
+      √(R_n(B ∪ N)/σ*²) ≥ √(2(1+η)·Pr_n(d)) + ā(B, N)·√(2 log C(p−s, m)).
+  - Q_n is an accounting device, not an object to be found. Any such Q_n may be used; enlarging it moves rivals from (U2b) to (U2a). Leakage outside Q_n need not vanish: it is priced by ā.
+  - Reading aids: √ϑ ≤ ā ≤ √(2ϑ) for ϑ ≤ 3/4. Within one base, (U2b) for every N is the same as min_N √R_n(B∪N) ≥ … + max_N ā·√(2 log C), since both extremes sit at the maximum-leakage N.
+  - Special cases (stated, not separate assumptions): (i) Q_n = T, the "no proxies" case, where every null is priced by its own leakage; (ii) if max_{B,N} ϑ(B, N)·log p → 0 outside Q_n, then (U2a) with η implies (U2b) with every η′ < η for large n; (iii) ā ≡ 1, the structure-free fallback (unit-vector bound; coefficient 1, not √2).
+  - Rivals with k > m̄_d need **no** signal condition: for p ≤ n^A their summed prior-plus-Occam odds are ≤ n^{−γ} for some γ > 0 (a TS-b step 2 obligation). Classes satisfy the sieve s − d + k ≤ min(K, J) and k ≤ p − s.
+  - **Population sufficient conditions (corollaries).** (C-i) Strong separation: min R_n(S)/[σ*² log(p∨n)] → ∞ over feasible underfits with |S∖T| ≤ m̄_s implies (U1)–(U2) with Q_n = T. (C-ii) Sparse eigenvalue plus beta-min: let φ² lower-bound λ_min(Corr(x_V)) over |V| ≤ s + m̄_s and θ_min := min_{j∈T}|β*_j|·sd(x_j)/σ*; then θ_min ≥ (1+η)(1 + √m̄_s)·√(2 log(2p√(n+1))/n)/φ implies (U1) and (U2) with ā ≡ 1. For an orthogonal design (U1) alone reads β*_j²Var(x_j) ≥ 2(1+η)σ*²·log(2p√(n+1))/n.
+- **Lemma W (bridge to the proof; low risk) [P].**
+  - (W1) For S ⊇ B with positive residuals, ⟨v_S, v_B⟩ = √(R̂(S)/R̂(B)), with v_S = (I−P_S)μ/‖(I−P_S)μ‖; so ‖v_S − v_B‖ = a(ϑ̂) exactly, ϑ̂ the sample leakage.
+  - (W2) On the two-sided sparse-isometry event on T ∪ B ∪ N (size ≤ s + m̄_d, relative error δ_n ≍ √(log(n∨p)/n)), ϑ̂ ≤ ϑ + 2δ_n/(1+δ_n). Because of the cap, ā(ϑ̂) ≤ ā(ϑ) + 2√δ_n.
+  - (W3) **Simultaneous Gaussian bound.** Let H ≤ 2^s Σ_{b ≤ m̄_s} C(|Q_n|−s, b) = n^{o(1)} be the number of bases and l_n := log(H+1) + t_n, with t_n → ∞ and t_n = o(log n). Conditionally on X, with probability 1 − O(e^{−t_n}), simultaneously over bases and N: −⟨v_S, g⟩ ≤ √(2l_n) + ‖v_S − v_B‖·√(2[log C(p−s, m) + l_n]). The surplus over ā·√(2 log C) is o_P(√log n), and the root-scale slack absorbs it because Pr_n(d) ≳ log n for d ≥ 1.
+  - **Consequence.** The population form implies the **base-indexed** conditional-width condition on a design event of probability 1 − o(1); TS-b step 3 is run per base. For fixed D each null set gives exactly one S, so the containing-model odds are summed once at the total null size k, with no multiplier of order H.
+  - **Not claimed.** The population form does not imply the v1.3 class-level conditional-width condition when Q_n ≠ T: across bases, the smallest residual and the largest width can occur at different bases.
+- **Refined design-conditional form (parallel sufficient condition; the v1.3 headline).** Fix an admissible M and J := ⌊s + C_s M⌋. There are fixed 0 < δ < 1, γ > 0 and t_n → ∞ such that, for all large n and every class (D, m) with D ≠ ∅, m ≤ J and B_Dm > 0,
   √((1−δ)·min_{|N|=m} R_n(S)/σ*²) ≥ w_Dm + t_n + √(2(1+δ)·B_Dm),   B_Dm := Pr_n(d) − (m/2)·log(n/(C log p)) + γ log n,
-  where C is a fixed constant for which the containing-model bound of the superset step (step 2) holds with a tight
-  multiplier (the truncation scale alone does not select a unique C; Sol R2). Classes with B_Dm ≤ 0 need **no** signal condition:
-  S ⊂ U = S0 ∪ N gives RSS_S ≥ RSS_U, and the containing-model credit (C log p/n)^{m/2} beats the deletion price, so their
-  mass is O_P(n^{−γ}) (Neon B1, Opus B1). This bounds the active m by m*(d) ≈ 2(Pr_n(d) + γ log n)/log(n/(C log p))
-  asymptotically and removes the dependence on J and C_s. The cap is asymptotic: at C = 1 it would give m ≤ 3 for d = 1 at
-  S1's (500, 500), but the one-null mass of step 2 implies C ≍ (s0+1)² ≈ 121, so at S1's sizes the containing-model credit is
-  ≈ 0 and every m ≤ J is active there (Opus R2).
-  - w_Dm is the **one-sided conditional Gaussian width** of the residual directions: with v_S = (I−P_S)μ/‖(I−P_S)μ‖ and g
-    standard Gaussian in the centred observation space, w_Dm(X) = E_g max_{|N|=m}(−⟨v_S, g⟩). Use the worst case over D, a
-    deterministic upper bound holding with design probability 1 − o(1), or the combinatorial bound
-    w_Dm ≤ √(2 log C(p−s0, m)) outright (a bound must hold on the design event; a heuristic estimate does not suffice). w_D0 = 0. Because w_Dm(X) is conditional on
-    the design, the assumption is stated on a design event of probability 1 − o(1) (unlike R_n, which is a population object).
-  - **Worst-case forms.** The combinatorial width √(2 log C(p−s0, m)) ≈ √(2m log p) and the squared form
-    R_n(S) ≥ 2(1+η)²(√d+√m)²σ*²·price_n are **worst-case (factor-proxy) forms**. They do **not** cover S1 at SNR 2 (Opus R1:
-    at (500, 500), d = 1, m = 1 the combinatorial form is at equality, 3.52 + 3.32 = 6.84; at m = 2 it fails, 7.42 > 6.84).
-    Coverage of S1 rests on the design-specific conditional width, estimated small on S1's AR(1) designs (E9/E9b below).
-  - For m = 0 the condition is implied by liminf κ_n > 1 for *some* small γ, δ > 0, because Pr_n(d) ≳ log n.
-  - The multiplicative form √R/σ ≥ (1+η)[w + √(2B)] + a_n is equivalent after choosing δ small relative to η and t_n ≤ a_n/3.
-- **Used in.** TS-b steps 1, 3 and 4. The converse (with A-NEC on T) shows the constant 2 is sharp for deletions.
+  with **C = 1 by convention** (the multiplier of the superset step is carried in the tight remainder; the v1.3 claim "C ≍ (s0+1)² ≈ 121" is withdrawn). B_Dm is a summed class bound, distinct from the single-rival price Pr_n(d, m). Classes with B_Dm ≤ 0 need no signal condition (containing-model credit; Neon B1, Opus B1). w_Dm(X) = E_g max_{|N|=m}(−⟨v_S, g⟩) is the one-sided conditional Gaussian width, with w_D0 = 0; use the worst case over D, a deterministic bound holding with design probability 1 − o(1), or w_Dm ≤ √(2 log C(p−s0, m)) outright, and state the condition on a design event of probability 1 − o(1). TS-b also holds under this form (§3.3, step 3′). The combinatorial width and the squared form R_n(S) ≥ 2(1+η)²(√d+√m)²σ*²·price_n are worst-case (factor-proxy) forms. The multiplicative form √R/σ ≥ (1+η)[w + √(2B)] + a_n is equivalent after choosing δ small relative to η and t_n ≤ a_n/3.
+- **Used in.** TS-b steps 1–3 (step 3 per base via Lemma W, step 4 for the transfer). The converse (with A-NEC on T) shows the constant 2 is sharp for deletions.
 - **Defence.**
   - (a) Same object, a projection residual of the true mean:
     - NH14 Cond. 4.4, p. 11 (page image): Δ_n(K) > 5σ²|t|(1+δ) log(√n ∨ p_n), over models of size < K|t| that miss a true
       predictor (PN A2). **Comparison, not dominance:** NH14 multiply by |t| for every such model and use constant 5(1+δ);
-      ours is per missed predictor with constant 2(1+δ) for deletions, but adds the width term w_Dm for mixed rivals and
+      ours is per missed predictor with constant 2(1+η) for deletions, but adds the leakage-priced term for nulls outside Q_n and
       works over a different model range and prior. Neither condition contains the other uniformly (Astra R2).
     - Luo & Chen Consistency Condition, arXiv v1 p. 7: Δ_n(s)/(p₀ ln p) → ∞ (PN A4). Ours needs a fixed ratio for deletions,
-      not → ∞.
+      not → ∞; corollary C-i is exactly this diverging-ratio form.
     - Rossell 2022's non-centrality λ_tm, arXiv v7 p. 10 (PN D13).
+    - **Genre.** Corollary C-ii is the standard sparse-eigenvalue plus beta-min pair; (U2b) adds only the projection-geometry coefficient ā, a function of a population variance share (no design family).
   - (a) Necessity of the log p order: Wainwright 2009 Thm 2, arXiv v2 p. 4 (Gaussian design, averaged error; PN B5).
     Fletcher–Rangan–Goyal Thm 1, arXiv v1 p. 4: ML fails below ≈ 2σ² log p per predictor (constant derived by C2; PN B6).
   - (b) **Deletion part (m = 0): S1 brackets κ = 1.** κ_multi (= κ_pop on S1, since κ_swap = κ_del there) is 0.64–0.70 at
@@ -173,22 +178,13 @@ Each row gives the exact statement, where the proof uses it, its defence, and th
     nonempty D: the exact κ_n is 0.626–0.693 at SNR 1 and 2.505–2.771 at SNR 2, 1.1–1.7% below the restricted data proxy, with
     the minimum at d = 6 (p = 500) or d = 3 (p = 5,000) (Sol R2; reproduced by the Lead). The bracket around 1 is unchanged. This brackets a finite-sample
     transition at this scale; it does not test the full A-MARGIN-U inequality.
-  - (b) **Mixed part: E9 and E9b, a zero-slack diagnostic** (`scripts/e9_width_mc.py`, `scripts/e9b_width_mc_ext.py`,
-    `tables/e9_width_s1.tsv`, `tables/e9b_width_ext_s1.tsv`; 4 simulated S1 designs × 300 Gaussian draws, no fits, ≈ 3 CPU-min
-    in total). *What is measured* (Sol R2): the estimated surplus √(min_N R_n/σ²) − w̄_Dm − √(2[B_Dm]₊) with the four-design
-    mean width w̄_Dm, at δ = γ = t_n = 0. It does **not** test the positive-slack inequality or its 1 − o(1) design-event
-    quantifier. Mean widths are 0.10–0.47 (m = 1) and 0.22–0.59 (m = 2) (largest between-design SD ≈ 0.12), against the
-    combinatorial 3.52–4.13 (m = 1) and 4.84 (m = 2).
-    - E9 (all ten single deletions, C = 1): m = 1 in all four S1 cells and m = 2 in the two p = 500 cells; minimum surplus
-      ≈ 3.29 at SNR 2 and ≈ 6.70 at SNR 3.
-    - E9b (Opus R2 S-3): d = 1, 2, 3, the three binding D per (d, m), the same m coverage; with C = (s0+1)² = 121 or with no
-      containing-model credit, the minimum surplus at SNR 2 is 2.39 (d = 1, m = 2) and ≥ 3.6 for d = 2, 3, and ≥ 5.8 at SNR 3.
-      Opus's independent rerun agrees (2.40).
-    - **Not evaluated:** m = 2 at p = 5,000; m ≥ 3 (active in all four cells at C = 1, with m = 4 also active at p = 5,000;
-      every m ≤ J is active at C ≈ 121); d ≥ 4 and the non-binding D for d ≥ 2; designs other than S1's AR(1).
-    - The population minimum over N searched the 40 nulls nearest S0. By the Gaussian AR(1) Markov property this contains an
-      exact minimiser: if max D < 10 the retained x_10 screens every null, and if 10 ∈ D the nearest null x_11 screens the
-      farther ones (Sol R2). The width itself ranges over all nulls.
+  - (b) **U2a check on S1** (`.rc_tmp/lead_v14/u2a_check.py`). The minimum of R_n(B)/(2σ²Pr_n(d)) over all 1,023 D and over B with up to 2 inside proxies from the 5 nearest nulls equals the exact κ_n: 2.505–2.771 at SNR 2 and 0.626–0.693 at SNR 1. The binding D retain x_10, which screens every null.
+  - (b) **Outside leakage on S1.** With Q_n = T plus the L_n → ∞ nearest nulls, the outside null at distance k leaks ρ^{2k}(1−ρ²)/(1−ρ^{2k+2}) (0.265, 0.087, 0.030, 0.011 at ρ = 0.6), so special case (ii) applies along the S1 sequence. The fallback ā ≡ 1 alone fails at SNR 2 and holds at SNR 3.
+  - (b) **E9 and E9b: diagnostics of the refined design-conditional form only** (`scripts/e9_width_mc.py`, `scripts/e9b_width_mc_ext.py`, `tables/e9_width_s1.tsv`, `tables/e9b_width_ext_s1.tsv`; 4 simulated S1 designs × 300 Gaussian draws, no fits). They estimate the zero-slack surplus √(min_N R_n/σ²) − w̄_Dm − √(2[B_Dm]₊) with the four-design mean width w̄_Dm, at δ = γ = t_n = 0. Four designs at zero slack establish no 1 − o(1) design event and do not test the positive-slack inequality. E9b's 3 D per (cell, d, m) are **selected examples**, chosen by population residual. Mean widths are 0.10–0.47 (m = 1) and 0.22–0.59 (m = 2); E9b's range is 0.142–0.426, against the combinatorial 3.52–4.13 (m = 1) and 4.84 (m = 2).
+    - E9 (all ten single deletions, C = 1): m = 1 in all four S1 cells and m = 2 in the two p = 500 cells; minimum surplus 3.2946 at SNR 2 and 6.6961 at SNR 3 (`tables/e9_width_s1.tsv`).
+    - E9b (rerun with the raw-centred mean μ as in harness/generate.R; the v1 coded-mean table is kept as `tables/e9b_width_ext_s1_v1_codedmu.tsv`; d = 1 identical, d = 2, 3 change by ≤ 0.0015). Exact minimum surplus at SNR 2, for C = 1 / C = 121 (a sensitivity setting) / no credit: d = 1 3.2896 / 2.3862 / 2.4889; d = 2 4.2658 / 3.6228 / 3.6867; d = 3 4.2987 / 3.8030 / 3.7921. At SNR 3: d = 1 6.7098 / 5.8065 / 5.9091; d = 2 9.1027 / 8.4597 / 8.5237; d = 3 9.8397 / 9.3440 / 9.3332.
+    - **Not evaluated:** m = 2 at p = 5,000; m ≥ 3; d ≥ 4 and the non-binding D for d ≥ 2; designs other than S1's AR(1).
+    - The population minimum over N searched the 40 nulls nearest S0. By the Gaussian AR(1) Markov property this contains an exact minimiser: if max D < 10 the retained x_10 screens every null, and if 10 ∈ D the nearest null x_11 screens the farther ones (Sol R2). The width itself ranges over all nulls.
   - (b) **Deletion check on the data.** P1's min t² > 2·price has sensitivity 1.000 on S1 and 0.985 on S2 (sample). When it
     fails, recovery is 0/800 on S1 and 9/10,666 = 0.00084 on S2 (sample check; 9/11,466 pooled); the population κ_del ≤ 1
     row gives 0 on both. Consistent with the converse; not an exact necessity statement.
@@ -198,7 +194,8 @@ Each row gives the exact statement, where the proof uses it, its defence, and th
     κ_del (AUC 0.967 vs 0.980 on S2; D1 E1).
   - The delivered c_id > c1(s0, A) with a large explicit constant: replaced, because the threshold is now 2(1+δ) for
     deletions and the converse shows nothing below 2 works for deletions.
-  - MARGIN\* (2+η with a leakage set, Fable Q1(3c)): an **open refinement**, not a defined target (no testable statement yet; Sol R1).
+  - MARGIN\* (2+η with a leakage set, Fable Q1(3c)): **superseded** by the population form ((U2a) is its M1 on bases inside Q_n; the leakage-priced (U2b) replaces M2).
+  - **Weaker variant, not adopted: proxies pay their own price.** (U2a) could be weakened to the single-rival price [log π(B)/π(T) + ((s−|B|)/2)log(n+1)]₊ for |B| < s, to R_n(B)/(σ*²(1+log|Q_n|)) → ∞ for |B| = s, and to no condition for |B| > s. This needs step 2 on the bases T ∪ (B∖T), which is not written. The headline (U2a) is therefore conservative: by a factor (1+ρ²)/(1−ρ²) on the signal when both AR(1) neighbours of an isolated true predictor are proxies, and similarly for block designs (worked cases, DOSSIER).
   - γ = 0: the rate display would contain n⁰; consistency would need a separate o_P(1) argument retaining a diverging surplus.
     Not adopted for the headline.
 
@@ -240,7 +237,7 @@ Each row gives the exact statement, where the proof uses it, its defence, and th
    density. Markov on the numerator plus separate control of the denominator event (lower bound ≍ D_T^{−1/2}n^{−1/2}e^{−Λ}
    in noise units) gives the coarse cutoff s0 + ⌈[s0 log(2p) + (s0+2)log(n+1)/2 + 3t]/log 2⌉ (as in the delivered W3-DIST
    lemma X4(a)). This uses the BB(1,p) 2^{−k} size tail.
-2. **Sample control on q_n-sets.** Isometry under A-SUBG holds when q_n·log p ≤ c·n with q_n ≍ (s+1)M log₂(p√n), which A-DIM′ gives (the +1 covers s = 0).
+2. **Sample control on q_n-sets.** Isometry under A-SUBG holds when q_n·log p ≤ c·n with q_n ≍ min{p, (s+1)M log₂(p√n)}, which A-DIM′ gives (the +1 covers s = 0).
 3. **Tests and entropy — this step FAILS as stated.** At log p = n^{1/3}, log C(p, q_n) ≍ n^{2/3} while the testing budget is
    nε_n² = M log(p∨n) ≍ n^{1/3}. The delivered proof avoids this at polynomial p by localising to s0 + O(t/log n) through
    fractional Bayes-factor moments (X4(b,c)), whose factor p^{1−λ}n^{−λ/2} is uncontrolled for super-polynomial p.

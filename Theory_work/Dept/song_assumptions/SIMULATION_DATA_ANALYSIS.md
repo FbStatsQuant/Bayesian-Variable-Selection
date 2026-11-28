@@ -1,19 +1,22 @@
 # SIMULATION DATA ANALYSIS — S1/S2 evidence for the TH-SONG assumptions
 
-Computations: worker D1 (Sonnet 5.5), 2026-11-27, read-only on Engineering data; Lead synthesis, notes and E9: Task Lead (Opus 5.5). **v1.3 (council round-2 revision; see COUNCIL_RECORD.md).**
+Computations: worker D1 (Sonnet 5.5), 2026-11-27, read-only on Engineering data; Lead synthesis, notes and E9: Task Lead (Opus 5.5). **v1.4 (senior review: completeness, generality and naturalness; see COUNCIL_RECORD.md and council/V14_CHANGESPEC.md).**
 
 Mechanical data analysis for the Task Lead. No theorems are written here. Evidence against an assumption is reported as found.
 Every number below is in a table under `tables/` (file named in the section) and is produced by a script under `scripts/`.
 
 ## Lead synthesis — what the data say about each target (read this first)
 
-1. **TD (distribution).** d_H < ε_n in all 136 settings (median ratio 0.10–0.56; q90 ≤ 0.63; E7). Supports TD; S2 has
+1. **TD (distribution).** d_H < ε_n in all 136 settings (median ratio 0.10–0.56; q90 ≤ 0.63; E7). S2 has
    little resolution (ε_n = 0.83). The cap never binds (E7), so K = n/2 costs nothing empirically.
+   *Qualification:* E7 is a predictive-summary diagnostic. It reports across-replicate quantiles of a predictive distance at
+   posterior-mean coefficients, with a different radius, and does not measure within-data posterior mass. It is consistent with TD, not a test of it.
 2. **TS-b (exact selection) — the margin.**
    - *Necessity of the constant 2 is visible:* κ_del > 1 (equivalently min t² > 2·price) has sensitivity 1.000 on S1 and on
      S2 (population); the sample P1 check has sensitivity 0.985 on S2. When the check fails, exact recovery is 0 on both suites for the population κ_del ≤ 1 row, and 0/800 (S1) and 9/10,666 = 0.00084 (S2) for the sample P1 row. Consistent with the TS-b converse (which is a population/asymptotic statement; this is a per-setting check).
    - *S1 brackets κ = 1 from both sides:* κ_pop 0.64–0.70 at SNR 1 (0/100 exact in every cell) vs 2.54–2.80 at SNR 2
      (92–96/100) (E1, `e1_s1_cells.tsv`). The fixed-ratio (κ_n) framing covers S1's deletion classes (mixed classes: E9); a fixed beta-min (FSb) does not (E4).
+     *Qualification:* E1's MPM recovery and its restricted-search κ do not test exact posterior mass or all active mixed classes.
    - *Multi-deletions bind on S1* (κ_multi < κ_del in all 16 settings): the margin must quantify over all D ⊆ S0 (E1).
    - *The "sufficiency gap" on S1 is consistent with the superset term:* 40/41 S1 failures at SNR ≥ 2 are S0 plus nulls
      (E1/E7). The heuristic diagnostic E K₁ ≈ (s0+1)/√(2πL(n+1)) (expected number of one-null extensions beating S0, idealised
@@ -22,11 +25,25 @@ Every number below is in a table under `tables/` (file named in the section) and
      **consistent with**, not a proved ceiling: P(K₁ ≥ 1) ≤ E K₁ bounds one failure type only (Astra R2 Q3). It is a mode-type
      diagnostic (rivals beating S0 in exact score, an HPM event; MPM failure is separate; Sol R2) and does **not** match the order of the TS-b mass-rate term (s0+1)√(log p/n), which is 0.87–1.44 at
      S1's sizes and therefore not informative there (Opus R1).
-   - *Mixed rivals (E9/E9b, a zero-slack diagnostic):* on simulated S1 designs the estimated conditional width of the added
-     nulls is 0.10–0.47 (m = 1) and 0.22–0.59 (m = 2), far below the worst-case √(2 log C(p−s0, m)) = 3.5–4.8. The estimated
-     surplus (mean widths, δ = γ = t_n = 0) is positive for every evaluated class (d ≤ 3; m = 1 in all cells, m = 2 at
-     p = 500): ≈ 3.29 or more at SNR 2 with C = 1, and ≥ 2.39 with C = 121 or no containing-model credit. m = 2 at p = 5,000
-     and m ≥ 3 are not evaluated; the worst-case forms fail at SNR 2.
+   - *U2a check (population form; Lead, `.rc_tmp/lead_v14/u2a_check.py`, no fits):* the minimum of R_n(B)/(2σ²Pr_n(d)) over
+     all 1,023 D and over B = (S0∖D) ∪ (up to 2 inside proxies from the 5 nearest nulls) **equals the exact κ_n**. The binding D retain x_10,
+     which screens every null. So (U2a) is no tighter than (U1) on S1 at these proxy sets:
+
+     | cell | SNR 1 | SNR 2 | SNR 3 |
+     |---|---|---|---|
+     | (500, 500) | 0.653 | 2.613 | 5.878 |
+     | (500, 5000) | 0.693 | 2.771 | 6.234 |
+     | (1000, 500) | 0.626 | 2.505 | 5.635 |
+     | (1000, 5000) | 0.670 | 2.679 | 6.028 |
+
+   - *Leakage decay (AR(1), ρ = 0.6):* with Q_n = T plus the L_n nearest nulls, the outside leakage at distance k is
+     ρ^{2k}(1−ρ²)/(1−ρ^{2k+2}) = 0.265, 0.087, 0.030, 0.011 (k = 1–4), so special case (ii) of the population form applies along the S1 sequence. Estimated on S1's AR(1) designs, not a property of correlated designs in general.
+   - *The structure-free fallback* (ā ≡ 1, unit-vector bound) fails at SNR 2 and holds at SNR 3, as before.
+   - *Mixed rivals (E9/E9b) are diagnostics of the refined design-conditional form only.* They are not diagnostics of the population form. On
+     simulated S1 designs the estimated conditional width of the added nulls is 0.10–0.47 (m = 1) and 0.22–0.59 (m = 2), far below the worst-case
+     √(2 log C(p−s0, m)) = 3.5–4.8. E9b's 3 D per (cell, d, m) are **selected examples** (chosen by population residual); four designs at zero slack
+     establish no 1 − o(1) event. Exact minima over all evaluated classes, at δ = γ = t_n = 0 (never rounded upward): at SNR 2, 3.2896 (C = 1), 2.3862 (C = 121,
+     a **sensitivity setting**, not an implied constant) and 2.4889 (no credit); at SNR 3, 5.8065 (C = 121). m = 2 at p = 5,000 and m ≥ 3 are not evaluated.
    - *Swap-aware heuristics are not improvements* (κ_pop AUC 0.958 vs κ_del 0.980 on S2): consistent with the advisors'
      finding that proxy swaps cost only a Gaussian-width allowance, not d·price (E1).
    - *S2 is not asymptotic* (s0 log p/n = 0.69); its transition is fitted by the saturating gain (n/2)log(1+R/(nσ²))
@@ -36,8 +53,8 @@ Every number below is in a table under `tables/` (file named in the section) and
 4. **Bounded signal** holds everywhere (max |β|sd/σ ≈ 1.17 (1.175), ν ≤ 6; E4).
 5. **Dimension.** A = 0.90–1.77; p ≤ n² everywhere incl. typical user regimes; log p/√n ≤ 0.98 (E6). Consistent with A-DIM
    (and with A-DIM′, though TD′ itself is a high-risk conjecture).
-6. **Misspecification (TM).** σ² posterior vs σ_C²: median 0.99 (S1), 0.84–0.98 (S2) (E7) — supports the inflated-variance
-   reading. Hidden-column tests need refits (not run; HQ approval required).
+6. **Misspecification (TM).** σ² posterior vs σ_C²: median 0.99 (S1), 0.84–0.98 (S2) (E7). This illustrates variance inflation for a
+   fitted (selected-MPM) subset and does not verify a prespecified-candidate theorem. Hidden-column tests need refits (not run; HQ approval required).
 7. **SL's own conditions on our data.** SL Condition 3 holds in population (δ_SL = 0.23–0.42) but ε_n² = o(δ_SL) is weak/fails
    numerically (E3); SL Cor S1's κ_eff = log p/(log n)² is 0.13–0.22 on S1 (< ¼) and 0.33–0.45 on S2 (> ¼) (E6).
 
@@ -175,7 +192,7 @@ min over true j and S ∌ j, |S| ≤ s0+4 of Var(xᵀβ | x_S)/σ² (population;
 | ratio to log n/n | 0.42–23 | 0.009–15 |
 | Gaussian d_H² version with τ = σ (fixed-variance squared distance, an **upper bound** on the variance-optimised 1 − (1 + margin/2)^(−1/4) of TS-a), 1 − (1+margin/4)^(−1/2), over ε_n² | 0.006–0.21 | 0.00007–0.18 |
 
-Reading: the per-variable screening margin (residual variance over ε_n²) exceeds ε_n² (ratio ≥ 1) in 9 of 136 settings (the fixed-variance squared Hellinger ratio never reaches 1; max 0.21), and never by more than a factor 1.74. S1 SNR 2 has ratio 0.75 and still recovers exactly in 92–96% of fits. A constant-free "margin ≥ C ε_n²" requirement with C ≫ 1 is not met anywhere, so the route with a literal unit constant is conservative here. The margin is ≫ log n/n in most S1 and good S2 cells (up to 23×), which is the scale the margin condition needs.
+Reading: the residual-variance/radius² ratio is ≥ 1 in 9/136 settings (max 1.74); the fixed-variance squared Hellinger ratio never reaches 1 (max 0.21). S1 SNR 2 has ratio 0.75 and still recovers exactly in 92–96% of fits. This is a scale diagnostic only: C_H is unknown, so it is not compared with ε_n² as a requirement. The margin is ≫ log n/n in most S1 and good S2 cells (up to 23×), which is the scale the margin condition needs.
 
 ## E3. Song–Liang Condition 3 (identifiability, p. 955), Gaussian AR(1) (`tables/e3_condition3.tsv`, `summ_E3.tsv`, `e3_numeric_check_S1_03.tsv`)
 
@@ -242,6 +259,8 @@ Reading: p ≤ n² holds everywhere, including all typical regimes (A ≤ 1.77);
 
 ## E7. Re-tabulated Engineering/Theory numbers and the proxy check
 
+*Scope (v1.4).* E7 is a predictive-summary diagnostic: across-replicate quantiles of a predictive distance at posterior-mean coefficients, with a different radius from TD's. It does not measure within-data posterior mass. The selected-MPM variance ratio below illustrates variance inflation for a fitted subset; it does not verify a prespecified-candidate theorem.
+
 **P2 E4 (Hellinger, Theory's d_H from P2's β̄; `tables/e7_E4_dH_by_group.tsv`, `e7_E4_dH_overall.tsv`; source `e4_dh_by_setting.tsv` columns `med_ratio`, `q90_d_mix`, `eps_n`).** d_H < ε_n in all 136 settings, for both the median and the q90. Median d_H/ε_n: S1 SNR ≥ 2: 0.136–0.166; S1 SNR ≤ 1: 0.28–0.46; S2 ν < 2.07: 0.105–0.42; ν = 2.07–3.52: 0.29–0.56; ν = 6: 0.18–0.46. Largest q90 ratio 0.63. Caveat (Theory's): list view only, and ε_n = 0.83 on S2 makes the check weak there.
 
 **P2 E5 (cap; `e7_E5_size_cap.tsv`, from `p2_by_setting.tsv` columns `n_cap_binds_*`, `max_over_K`, `max_mass_size_ge_Km2`).** The cap never binds (0 of 13,600 fits, store and top 50) and the mass at |S| ≥ K−2 is 0. Largest stored size / K: S1 ≤ 0.068; S2 ≤ 0.52.
@@ -272,6 +291,8 @@ Failure composition (`e7_failure_composition.tsv`): S1 SNR ≥ 2: 97.6% are supe
 - N-ladders: none run (`JOINT_PLAN.md`, "No N-ladder (HQ ruling)").
 
 ## E9. Conditional Gaussian width of added nulls on S1 designs (Lead, council R1 follow-up; `scripts/e9_width_mc.py`, `tables/e9_width_s1.tsv`)
+
+*v1.4 scope.* E9 and E9b check the **refined design-conditional form** (the v1.3 class-level condition, kept as a parallel sufficient condition in ASSUMPTIONS §3.3). They are not checks of the population form (U1)–(U2); the U2a check is in the Lead synthesis above.
 
 Question (Opus R1 B1(c)): does A-MARGIN-U, with the design-specific width w_Dm(X) = E_g max_{|N|=m}(−⟨v_S, g⟩), cover S1's
 boundary signals for mixed rivals, where the worst-case combinatorial width does not?
@@ -304,25 +325,29 @@ m = 2 at p = 5,000; m = 3 (B_D3 > 0 in all four cells at C = 1) and m = 4 at p =
 SD of w_Dm(X): 0.121.
 
 **E9b. Extension to d ≤ 3 and to the credit constant** (council R2: Opus S-3, Sol 2; `scripts/e9b_width_mc_ext.py`,
-`tables/e9b_width_ext_s1.tsv`, `logs/e9b_width_mc_ext.log`; ≈ 1 CPU-min, single thread, nice). The superset step's one-null
-mass O_P((s0+1)√(log p/n)) implies C ≍ (s0+1)² ≈ 121 at m = 1, so log(n/(C log p)) ≈ −0.7 to +0.3 at S1's sizes. The
-containing-model credit is then about zero and every m ≤ J is active (the cap m*(d) is asymptotic). E9b recomputes the
-surplus for d = 1, 2, 3 (for each (d, m), the three D with the smallest population min_N R), m = 1 (all cells) and m = 2
-(p = 500), under C = 1, C = 121 and no credit (B = Pr_n(d)); 4 designs × 300 draws.
+`tables/e9b_width_ext_s1.tsv`, `logs/e9b_width_mc_ext.log`; ≈ 1 CPU-min, single thread, nice). **v1.4 rerun:** the mean μ is now the
+raw-centred mean, as in `harness/generate.R`. The v1 table (coded mean) is kept as `tables/e9b_width_ext_s1_v1_codedmu.tsv` (superseded);
+d = 1 is identical and d = 2, 3 change by ≤ 0.0015. The credit constant is C = 1 by convention (multiplier in the tight remainder).
+"C ≍ (s0+1)² ≈ 121" is **withdrawn**: the C = 121 column is a **sensitivity setting** in which log(n/(C log p)) ≈ −0.7 to +0.3 at S1's sizes, so the
+containing-model credit is about zero. E9b recomputes the surplus for d = 1, 2, 3, m = 1 (all cells) and m = 2 (p = 500), under C = 1, C = 121 and no
+credit (B = Pr_n(d)); 4 designs × 300 draws. For each (d, m) the 3 D per cell are **selected examples**, chosen by smallest population min_N R; they
+are not a sample of classes.
 
-| SNR | d | m | per-design w_Dm(X) | min surplus, C = 1 | C = 121 | no credit |
-|---|---|---|---|---|---|---|
-| 2 | 1 | 1 | 0.06–0.45 | 3.29 | 2.63 | 2.66 |
-| 2 | 1 | 2 | 0.13–0.48 | 3.84 | 2.39 | 2.49 |
-| 2 | 2 | 1 | 0.04–0.44 | 4.27 | 3.83 | 3.80 |
-| 2 | 2 | 2 | 0.13–0.53 | 4.55 | 3.62 | 3.69 |
-| 2 | 3 | 1 | 0.07–0.44 | 4.30 | 3.95 | 3.93 |
-| 2 | 3 | 2 | 0.18–0.46 | 4.54 | 3.80 | 3.79 |
-| 3 | 1–3 | 1–2 | 0.04–0.53 | ≥ 6.71 | ≥ 5.81 | ≥ 5.91 |
+Exact minima over all evaluated classes at each (SNR, d) (δ = γ = t_n = 0; quoted to 4 decimals, never rounded upward):
 
-All evaluated classes are active at C = 121. Opus's independent R2 rerun (`.rc_tmp/opus_r2/`, 200 draws) gives 2.40–3.87 for
-the same (d, m) at SNR 2 with C = 121, matching within Monte Carlo error. C = 121 can give a *smaller* surplus than no
-credit, because log(n/(C log p)) < 0 turns the credit into a charge.
+| SNR | d | C = 1 | C = 121 | no credit |
+|---|---|---|---|---|
+| 2 | 1 | 3.2896 | 2.3862 | 2.4889 |
+| 2 | 2 | 4.2658 | 3.6228 | 3.6867 |
+| 2 | 3 | 4.2987 | 3.8030 | 3.7921 |
+| 3 | 1 | 6.7098 | 5.8065 | 5.9091 |
+| 3 | 2 | 9.1027 | 8.4597 | 8.5237 |
+| 3 | 3 | 9.8397 | 9.3440 | 9.3332 |
+
+The per-design mean widths w_Dm(X) range over 0.142–0.426 (individual draws 0.037–0.531). The minimum at SNR 2 is 2.3862 at
+(d, m) = (1, 2) with C = 121 and 2.4889 with no credit. All evaluated classes are active at C = 121. Opus's R2 rerun (`.rc_tmp/opus_r2/`, 200 draws,
+coded μ) gave 2.40–3.87 at SNR 2 with C = 121: it matched the v1 table within Monte Carlo error and is not re-quoted for v1.4. C = 121 can give a
+*smaller* surplus than no credit, because log(n/(C log p)) < 0 turns the credit into a charge. Four designs at zero slack establish no 1 − o(1) event.
 
 ## Evidence against (what a theorem-writer should not assume)
 
@@ -333,7 +358,7 @@ credit, because log(n/(C log p)) < 0 turns the credit into a charge.
 5. **S2 is not asymptotic**: s0 log p/n = 0.69, ε_n = 0.83, d_H ≤ 1, so the Hellinger check has almost no resolution and failures at ν ≤ 1.22 follow from the empty model beating S0.
 6. **Sample eigenvalue floors are vacuous on S2** (1e-5–2e-4 at m2; n = 50: λ_min(R̂_T) = 0 in 30–35% of fits, P1). Only the population/random-design form is supportable there.
 7. **SL Condition 3 and Cor S1 numerics on S2**: ε_n²/δ_SL = 1.6–3.0 (not o(1)); κ_eff = 0.33–0.45 > ¼.
-8. **Screening margin Var(xᵀβ∣x_S)/σ² ≥ C ε_n² fails** for C ≥ 2 in all 136 settings, although recovery occurs at ratio 0.75 (S1 SNR 2). The unit-constant form is not necessary.
+8. **Screening scale diagnostic.** The residual-variance/radius² ratio is ≥ 1 in only 9/136 settings (max 1.74), yet recovery occurs at ratio 0.75 (S1 SNR 2). It is a scale diagnostic, not a test of A-MARGIN-H.
 9. **Fixed beta-min in S1** is false as a sequence (β ∝ √(log p/n)); S2 β_min/(σ√(log p/n)) is 0.13–2.95.
 10. **Rate evidence** for 1−π̂(S0) ∝ √(log n/n) rests on two sample sizes and the list view only (P1 §4.4).
 11. **No evidence for proxy substitution** in well-specified data (0.1–1.6% of failed fits); this does not test T3 with hidden columns.
@@ -350,21 +375,25 @@ credit, because log(n/(C log p)) < 0 turns the credit into a charge.
 | EF sample floor | greedy λ_min at m1, m2 (`e5`) | 0.14–0.20; 0.07–0.17 | 0.014–0.04; 1e-5–2e-4 | S1 supports; S2 contradicts |
 | bs bounded signal | max ∣β∣/σ; ν (`e4`) | ≈ 1.17 (1.175); ≤ 3.9 | ≤ 1.10; ≤ 6 | supports |
 | FSb fixed beta-min | β_min/(σ√(log p/n)) (`e4`) | 1–6 (∝ √(log p/n)) | 0.13–2.95 | S1 false as a sequence; S2 true but below the log p/n scale |
-| asm:margin, necessary | sens. of κ_del > 1 (`e1_2x2`) | 1.000 | 1.000 (pop) / 0.985 (sample) | supports |
+| asm:margin, necessary | sens. of κ_del > 1 (`e1_2x2`) | 1.000 | 1.000 (pop) / 0.985 (sample) | supports (MPM recovery and restricted κ: not a test of exact posterior mass or all active mixed classes) |
 | asm:margin, sufficient | P(exact ∣ κ_pop > 1) | 0.949 | 0.269 (κ_adj_full > 1.25: 0.63) | S1 supports; S2 contradicts / weak |
+| A-MARGIN-U population form, U2a | min R_n(B)/(2σ²Pr_n(d)) over D and ≤ 2 inside proxies (`u2a_check.py`) | = exact κ_n: 0.626–0.693 (SNR 1), 2.505–2.771 (SNR 2) | not run | S1 supports at these proxy sets; binding D retain x_10 |
+| mixed rivals, refined design-conditional form (E9/E9b) | min surplus, δ = γ = t_n = 0 | SNR 2: 2.3862 (C = 121, sensitivity), 2.4889 (no credit) | not run | diagnostic of the refined form only: selected D, four designs, zero slack; no 1 − o(1) event |
 | swap-aware margin (Λ, κ_swap) | AUC; P(exact ∣ yes) (`e1_auc`) | = κ_del | worse than κ_del | contradicts as an improvement |
 | SL Cond 3 | δ_SL; ε_n²/δ_SL (`e3`) | 0.282; 0.22–0.60 | 0.23–0.42; 1.6–3.0 | holds in population; ε_n² = o(δ) weak on S1, fails on S2 |
-| SL Thm 3 screening margin | min_j Var/σ² ÷ ε_n² (`e1`: e2) | 0.05–1.69 | 0.0006–1.74 | weak (residual ratio ≥ 1 in 9/136; recovery occurs below 1) |
-| Hellinger rate (T2) | d_H/ε_n (`e7`) | 0.14–0.17 (SNR ≥ 2) | 0.10–0.56 | supports (S2 low resolution) |
+| SL Thm 3 screening margin | residual-variance/radius² ratio (`e1`: e2) | 0.05–1.69 | 0.0006–1.74 | scale diagnostic only (ratio ≥ 1 in 9/136; recovery occurs below 1) |
+| Hellinger rate (T2) | d_H/ε_n (`e7`) | 0.14–0.17 (SNR ≥ 2) | 0.10–0.56 | consistent (predictive-summary diagnostic at posterior-mean coefficients, different radius; not within-data posterior mass; S2 low resolution) |
 | size cap K | max size/K (`e7`) | ≤ 0.068 | ≤ 0.52 | supports (never binds) |
-| σ² convergence to σ²_C (T3) | E[σ²∣MPM]/σ²_C (`e7`) | 0.99 | 0.84–0.98 | supports, with a downward in-sample bias |
+| σ² convergence to σ²_C (T3) | E[σ²∣MPM]/σ²_C (`e7`) | 0.99 | 0.84–0.98 | illustrates variance inflation for a fitted (selected-MPM) subset; does not verify a prespecified-candidate theorem; downward in-sample bias |
 | proxy behaviour (SL Cor 2 type) | share of failures, MPM misses and holds adjacent null (`e7`) | 0.1% | 0.6% (bt1 ρ = 0.7: 3%) | no evidence either way (well-specified data) |
 | rate 1−π̂(S0) ∝ √(log n/n) | ratio given exact (`e7`) | 4.1–5.1 | 2.0–4.1 | weak (two n, list view) |
 
 ## Files produced
 - `SIMULATION_DATA_ANALYSIS.md` (this report; the D1 draft was merged into it).
 - `scripts/e9_width_mc.py` and `tables/e9_width_s1.tsv` (E9, Lead; `logs/e9_width_mc.log`).
-- `scripts/e9b_width_mc_ext.py` and `tables/e9b_width_ext_s1.tsv` (E9b, Lead; `logs/e9b_width_mc_ext.log`).
+- `scripts/e9b_width_mc_ext.py` and `tables/e9b_width_ext_s1.tsv` (E9b, Lead; `logs/e9b_width_mc_ext.log`; v1.4 rerun with the raw-centred mean).
+- `tables/e9b_width_ext_s1_v1_codedmu.tsv` (E9b v1 table with the coded mean; **superseded**, kept for the record).
+- `.rc_tmp/lead_v14/u2a_check.py` (U2a check, Lead; numbers in the Lead synthesis) and `.rc_tmp/lead_v14/worked_cases.py` (numerical check of the four worked cases in the DOSSIER).
 - `scripts/`: `pop_lib.R`, `e1_margin.R`, `e1_fitlevel.R`, `e0_e3_e4_e5_e6.R`, `e7_retab_proxy.R`, `e7_bt2diag_crosscheck.R`, `e1_pool_check.R`, `make_summary_tables.R`, `run_all.sh`.
 - `tables/` (about 40 TSV files; the main ones: `e1_margin_by_setting.tsv`, `e1_2x2_predictors.tsv`, `e1_auc.tsv`, `e1_logistic_kappa.tsv`, `e1_s1_cells.tsv`, `e1_setting_exact_vs_margin.tsv`, `e0_regime_by_setting.tsv`, `e3_condition3.tsv`, `e4_bounded_signal.tsv`, `e5_eigen_floors.tsv`, `e6_*.tsv`, `e7_*.tsv`, `validation_*.tsv`, `summ_*.tsv`); `logs/`.
 - `.rc_tmp/song/s1s2_ro/` (staged read-only copies, `SOURCES.md`).
