@@ -6,15 +6,22 @@
 # Pr_n(d) = sum_{k=s0-d}^{s0-1} price(k), price(k) = log((2p-1-k)/(k+1)) + 0.5 log(n+1).
 # For each (d, m), the 3 deletion sets D with the smallest population min_N R are evaluated (binding classes).
 # m = 2 only at p = 500 (all pairs of nulls); m >= 3 not evaluated. Width does not depend on SNR (same direction).
+# v2 (senior review C-2 / Sol R3-3): mu = X_raw[:, S0] beta with X_raw the CENTRED RAW AR(1) design, as in harness/generate.R.
+# Column rescaling preserves projection spans, so only mu changes; for d = 1 the scaling cancels exactly (E9 unaffected).
 # No fits, no outcome data. Single-threaded, run under nice.
 import os, sys, math, itertools
 os.environ.setdefault("OMP_NUM_THREADS", "1"); os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
 import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from e9_width_mc import S0, COEF, CELLS, R_pop, sim_X, widths
+from e9_width_mc import S0, COEF, CELLS, RHO, R_pop, widths
 
 NX = int(sys.argv[1]) if len(sys.argv) > 1 else 4; NG = int(sys.argv[2]) if len(sys.argv) > 2 else 300
 SNRS = [2.0, 3.0]; s0 = 10; NEAR = np.arange(10, 50); NBIND = 3
+
+def sim_X(n, p, rng):   # same draws as e9_width_mc.sim_X, but centred only (raw scale)
+    X = np.empty((n, p)); X[:, 0] = rng.standard_normal(n); e = math.sqrt(1 - RHO ** 2)
+    for j in range(1, p): X[:, j] = RHO * X[:, j - 1] + e * rng.standard_normal(n)
+    X -= X.mean(0); return X
 
 def price(k, n, p): return math.log((2 * p - 1 - k) / (k + 1)) + 0.5 * math.log(n + 1)
 
