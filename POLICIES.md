@@ -40,8 +40,14 @@ the documents win.
 - **No open blocking issue:** any correctness or design flaw a reviewer marks as blocking is fixed, whatever the score.
 - **At most 3 rounds:** if the bar is not met after round 3, the item escalates to HQ, which decides what is worth fixing.
   Non-blocking nitpicks may be declined with a one-line reason.
-- **Round 2+ = scoped fix-verification, not cold re-reviews (owner, 2026-11-27):** Round 1 uses fresh cold reviewers
-  (Opus, Sol, Neon). Round 2 (and Round 3 if needed) receives the exact Round-1 findings, the point-by-point response,
+- **Three separate roles in every council review (owner, 2026-11-28):**
+  1. The **task lead and its team** do the work.
+  2. The **council** reviews and scores; it never edits.
+  3. The **department manager** rules on each finding: adopt it if it is relevant, or decline it as unnecessary
+     complexity, with a one-line reason.
+  A declined blocking issue is reported to HQ in the same line.
+- **Council composition for theory work (owner, 2026-11-28):** Opus + Sol + Opus (two fresh Opus, one Sol, all high).
+- **Round 2+ = scoped fix-verification, not cold re-reviews (owner, 2026-11-27):** Round 1 uses fresh cold reviewers. Round 2 (and Round 3 if needed) receives the exact Round-1 findings, the point-by-point response,
   and the diff, and checks **only** (1) whether every Round-1 substantive/blocking issue was genuinely fixed and
   (2) whether the edits introduced any new substantive flaw or regression. New stylistic nitpicks are disallowed; pure
   nitpicks and nitpick-driven score deductions are logged with a one-line reason and disregarded. Fresh cold reviewers
