@@ -144,18 +144,18 @@ and $0.999$, and $7$ of the $1{,}600$ fits raised a run-time warning.
 \includegraphics[width=\textwidth]{figures/fig_s2_recall_fp}
 \caption{Design S2: mean recall against mean number of false positives per fit (square-root scale) as $\nu$ increases
 from $0.05$ to $6$, by beta-type and $\rho$, pooled over $n\in\{50,100\}$ ($200$ fits per point). Filled points mark
-$\nu=2.07$, $3.52$ and $6$, and the circled point is $\nu=6$. ASI (dashed, open points) is interim: the first $25$ data
-sets of each setting ($50$ fits per point). Precision against recall is in
+$\nu=2.07$, $3.52$ and $6$, and the circled point is $\nu=6$. ASI (dashed, open points) is interim: the first $60$ data
+sets of each setting ($120$ fits per point). Precision against recall is in
 Figure~\ref{fig:supp-s2-pr}.}\label{fig:s2-recall-fp}
 \end{figure}
 
 \begin{table}[t]\centering\small
 \caption{Design S2 at the three strongest signals, by beta-type, pooled over $n$ and $\rho$: exact recovery
 (percentage of data sets), mean $\abs{\Shat}$, percentage of empty selections, and mean precision and recall per fit;
-an empty selection has precision one. Each cell averages $600$ fits ($^\dagger$ASI, interim: the first $25$ data sets
-of each setting, $150$ fits). The largest Monte Carlo standard error, stratified by setting, is $2.0$ percentage
-points for exact recovery, $0.47$ for $\abs{\Shat}$ and $0.01$ for precision and recall (ASI: $4.0$, $0.27$ and
-$0.03$).}\label{tab:s2-main}
+an empty selection has precision one. Each cell averages $600$ fits ($^\dagger$ASI, interim: the first $60$ data sets
+of each setting, $360$ fits). The largest Monte Carlo standard error, stratified by setting, is $2.0$ percentage
+points for exact recovery, $0.47$ for $\abs{\Shat}$ and $0.01$ for precision and recall (ASI: $2.6$, $0.16$ and
+$0.02$).}\label{tab:s2-main}
 \input{figures/tables/tab_s2_main}
 \end{table}
 
@@ -179,8 +179,8 @@ finds $70\%$, against $73\%$ and $84\%$. Much of the shortfall is empty selectio
 data sets at $\nu=2.07$, $25\%$ at $3.52$ and $7\%$ at $6$. Its precision of $0.97$ to $0.98$ at every level of $\nu$
 partly reflects this, since an empty selection has precision one. The lasso and SCAD reach their higher recall by
 selecting $11$ and $17$ false predictors per fit at $\nu=6$. The interim results for ASI (Table~\ref{tab:s2-main}) are
-close to those of BAS in recall and between BAS and SMC-BVS in precision. They cover a quarter of the data sets, so we
-do not rank ASI against the other methods here; the paired comparison on those data sets is in
+close to those of BAS. They cover $60$ of the $100$ data sets per setting, so we do not rank ASI against the other
+methods here; the paired comparison on those data sets is in
 Table~\ref{tab:supp-s2-paired}.
 
 The weakest case for SMC-BVS is beta-type~2 with correlated predictors, where $\Sz$ is a block of $\sz$ adjacent
@@ -194,7 +194,7 @@ of the block reproduce that fit almost as well, and under a model prior that is 
 costs more prior mass than it adds in likelihood. The posterior spreads over many subsets of the block: at $\nu=6$ the
 average inclusion probability of a block member is between $0.39$ and $0.61$, depending on $n$ and $\rho$, and the
 median probability model keeps only some of the members. BAS and, on its interim data, ASI behave the same way ($0$ to
-$6\%$ exact, recall $0.40$ to $0.68$). The lasso, which at $\rho=0.7$ still selects about nine variables per fit,
+$6\%$ exact, recall $0.40$ to $0.67$). The lasso, which at $\rho=0.7$ still selects about nine variables per fit,
 recovers the block in $22.5\%$ of these data sets; $60$ of its $64$ exact recoveries at $\nu=6$ come from this case.
 Over all of S2, $141$ of the $11{,}394$ misses of SMC-BVS were search failures.
 
@@ -204,7 +204,7 @@ check on two settings, a warm start from a fit with the residual variance fixed 
 value reached a higher evidence lower bound in $31$ of $40$ data sets. We report SuSiE at its defaults, as for the other methods.
 
 In design S2 the median fit of SMC-BVS took $4.0$ minutes ($5.9$ at $n=50$, $1.2$ at $n=100$) and that of ASI
-$30.5$ minutes, on its first $25$ data sets per setting. The calibration was escalated in $4{,}974$ of the
+$30.4$ minutes, on its first $60$ data sets per setting. The calibration was escalated in $4{,}974$ of the
 $12{,}000$ SMC-BVS fits, and $574$ raised a run-time warning; the per-setting median of the smallest $\ESS/N$ was
 between $0.701$ and $0.981$.
 % PENDING (Engineering CAMPAIGN-OPS): ASI final reps 26-100 for S2; an S2 run-time / CPU-hour table as for S1.

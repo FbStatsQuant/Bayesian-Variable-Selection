@@ -29,7 +29,9 @@ SRC <- list(
   s2_asi_paired    = paste0(REP, "hq_s2asi_b1/S2_comparison_asi_b1_paired.tsv"),
   s2_smc_final = paste0(REP, "final/results_S2_smcbvs.tsv"),
   s1_smc_final = paste0(REP, "final/results_S1_smcbvs.tsv"),
-  bt2_diag     = paste0(REP, "diagnostics/bt2_diagnostic_per_rep.tsv")     # LOG-ONLY diagnostic of the S2 SMC-BVS fits, rho > 0
+  bt2_diag     = paste0(REP, "diagnostics/bt2_diagnostic_per_rep.tsv"),    # LOG-ONLY diagnostic of the S2 SMC-BVS fits, rho > 0
+  s1_perfit    = paste0(REP, "final/perfit_precision_recall_S1.tsv"),       # Engineering per-fit TP/FP/FN/precision/recall
+  s2_perfit    = paste0(REP, "final/perfit_precision_recall_S2.tsv")        # 5 methods x 12,000 + ASI reps completed so far
 )
 
 METHODS <- c("smcbvs", "asi", "bas_mc3", "susie", "scad", "lasso_cv")
@@ -113,6 +115,62 @@ smc_summaries <- function(d, cache_dir, tag) {
   files <- ifelse(startsWith(d$file, "/"), d$file, paste0(ENG, d$file))
   L <- lapply(files, function(x) { s <- fromJSON(x, simplifyVector = FALSE)$summary
     data.table(escalated = isTRUE(s$escalated), min_ess_over_N = as.numeric(s$min_ess_over_N), eflag_any = isTRUE(s$eflag_any)) })
+  out <- cbind(d[, .(setting_id, rep, method)], rbindlist(L))
+  fwrite(out, f, sep = "\t")
+  out
+}
+
+# ---------------------------------------------------------------------------------------------------------
+# Engineering's per-fit precision/recall tables (final/perfit_precision_recall_S{1,2}.tsv). Precision there is
+# TP/(TP+FP) with NA for an empty selection; exact is the record's success flag.
+read_perfit <- function(f) {
+  d <- fread(f, na.strings = c("NA", ""))
+  d[, exact := as.character(exact) %in% c("True", "TRUE")]
+  d[]
+}
+
+# Stop unless our records and the per-fit table agree fit by fit (|S_hat|, TP, FP, FN, exact), and unless the
+# per-fit precision equals TP/|S_hat| wherever |S_hat| > 0.
+check_perfit <- function(d, pf, tag) {
+  m <- merge(d[, .(setting_id, rep, method, n_selected, TP, FP, FN, exact)],
+             pf[, .(setting_id, rep, method, n2 = n_selected, TP2 = TP, FP2 = FP, FN2 = FN, ex2 = exact, pr2 = precision)],
+             by = c("setting_id", "rep", "method"))
+  # Fits killed before writing a selection (BAS, rc=137) carry NA counts in the per-fit table; we count them as
+  # empty selections (Engineering's counting rule), so check that and then fill the NAs accordingly.
+  na <- is.na(m$n2)
+  stopifnot(nrow(m) == nrow(d), all(m$n_selected[na] == 0L), all(!m$exact[na]))
+  if (any(na)) m[na, `:=`(n2 = 0L, TP2 = 0L, FP2 = 0L, FN2 = FN)]
+  if (any(na)) message(sprintf("  %s: %d fits with NA counts in the per-fit table (killed fits), counted as empty", tag, sum(na)))
+  stopifnot(all(m$n_selected == m$n2), all(m$TP == m$TP2), all(m$FP == m$FP2), all(m$FN == m$FN2),
+            all(m$exact == m$ex2), all(is.na(m$pr2) == (m$n2 == 0)),
+            all(abs(m$pr2 - m$TP / pmax(m$n2, 1))[m$n2 > 0] < 1e-6))   # the table rounds to 6 significant digits
+  message(sprintf("verified %s: %d fits agree with Engineering's per-fit table", tag, nrow(m)))
+  invisible(nrow(m))
+}
+
+# ASI in design S2, from the per-fit table: reps 1..R, where R is the largest r such that every one of the 120
+# settings has reps 1..r. R = 100 once the S2 ASI campaign is final; then nothing is marked interim.
+load_s2_asi <- function(pf) {
+  a <- pf[method == "asi"]
+  cnt <- a[, .(r = { x <- sort(unique(rep)); k <- which(x != seq_along(x))[1]; if (is.na(k)) length(x) else k - 1L }), by = setting_id]
+  st <- settings_of(SRC$s2_permethod, 2)
+  stopifnot(nrow(cnt) == nrow(st))
+  R <- min(cnt$r)
+  a <- a[rep <= R, .(setting_id, rep, method, status, n_selected, TP, FP, FN, hamming = FP + FN, F1 = as.numeric(F1), exact, file)]
+  a <- a[st, on = "setting_id"]
+  stopifnot(nrow(a) == nrow(st) * R)
+  a <- add_metrics(a)
+  setattr(a, "R", R)
+  a
+}
+
+# Wall time and data checksum per fit from the JSON records (used for ASI in S2, whose per-fit table has no md5).
+json_wall_md5 <- function(d, cache_dir, tag) {
+  f <- file.path(cache_dir, sprintf("wallmd5_%s.tsv", tag))
+  if (file.exists(f)) return(fread(f))
+  files <- ifelse(startsWith(d$file, "/"), d$file, paste0(ENG, d$file))
+  L <- lapply(files, function(x) { j <- fromJSON(x, simplifyVector = FALSE)
+    data.table(wall_sec = as.numeric(j$wall_sec_harness), data_md5 = as.character(j$data_md5)) })
   out <- cbind(d[, .(setting_id, rep, method)], rbindlist(L))
   fwrite(out, f, sep = "\t")
   out

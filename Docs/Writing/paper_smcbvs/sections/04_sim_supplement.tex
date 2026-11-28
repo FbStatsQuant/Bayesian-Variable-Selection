@@ -6,10 +6,9 @@
 
 This section gives every setting of designs S1 and S2 (Section~\ref{sec:sims}) for every measure of
 Section~\ref{sec:sims-metrics}. Entries are averages over the $100$ data sets of a setting, except exact recovery,
-which is a count out of $100$. In design S2 the ASI column (marked $\dagger$) is interim: it averages the first $25$
-data sets of each setting, the only ones for which ASI had finished when this draft was built, so its exact-recovery
-counts are out of $25$. The other five methods use all $100$ data sets; on the first $25$ their selected models are
-identical to those used in Section~\ref{sec:sims}.
+which is a count out of $100$. In design S2 the ASI column (marked $\dagger$) is interim: it averages the first $60$ data sets of each setting,
+the ones for which ASI had finished when this draft was built, so its exact-recovery counts are out of $60$. The other
+five methods use all $100$ data sets, as in Section~\ref{sec:sims}.
 
 \subsection{Design S1}\label{sec:sims-supp-s1}
 
@@ -59,12 +58,12 @@ identical to those used in Section~\ref{sec:sims}.
 Rows are grouped by beta-type (bt) and $\rho$; within a group $\nu$ runs over its ten values.
 
 \begin{table}[p]\centering\scriptsize
-\caption{Design S2, $n=50$, $\sz=5$: exact recovery, the number of data sets out of 100 (ASI$^\dagger$: out of 25).}\label{tab:supp-s2-exact-50}
+\caption{Design S2, $n=50$, $\sz=5$: exact recovery, the number of data sets out of 100 (ASI$^\dagger$: out of 60).}\label{tab:supp-s2-exact-50}
 \input{figures/tables/supp_s2_exact_n50}
 \end{table}
 
 \begin{table}[p]\centering\scriptsize
-\caption{Design S2, $n=100$, $\sz=10$: exact recovery, the number of data sets out of 100 (ASI$^\dagger$: out of 25).}\label{tab:supp-s2-exact-100}
+\caption{Design S2, $n=100$, $\sz=10$: exact recovery, the number of data sets out of 100 (ASI$^\dagger$: out of 60).}\label{tab:supp-s2-exact-100}
 \input{figures/tables/supp_s2_exact_n100}
 \end{table}
 
@@ -116,10 +115,10 @@ one, so methods that often select nothing sit near the top at low recall.}\label
 \end{figure}
 
 \begin{table}[htbp]\centering\small
-\caption{Design S2, interim paired comparison of SMC-BVS and ASI on the first $25$ data sets of each setting, at the
-three strongest signals. Shared: data sets on which both fits finished and passed the data checks. SMC-BVS only and
-ASI only: data sets on which exactly one of the two recovers $\Sz$. Exact McNemar tests on the pooled rows give
-$p=1$, $0.48$ and $2\times10^{-7}$ at $\nu=2.07$, $3.52$ and $6$. The comparison is interim and is not used to rank
-the two methods in Section~\ref{sec:sims-s2}.}\label{tab:supp-s2-paired}
+\caption{Design S2, interim paired comparison of SMC-BVS and ASI on the first $60$ data sets of each setting, at the
+three strongest signals. Shared: data sets fitted by both methods; the data checksum of every ASI fit equals that of the
+SMC-BVS fit. SMC-BVS only and ASI only: data sets on which exactly one of the two recovers $\Sz$. Exact McNemar tests
+on the pooled rows give $p=0.25$, $0.20$ and $1\times10^{-9}$ at $\nu=2.07$, $3.52$ and $6$. The comparison is
+interim and is not used to rank the two methods in Section~\ref{sec:sims-s2}.}\label{tab:supp-s2-paired}
 \input{figures/tables/supp_s2_paired_asi}
 \end{table}

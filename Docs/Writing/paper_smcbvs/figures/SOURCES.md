@@ -1,6 +1,6 @@
 # Provenance of the S1/S2 figures and tables (Sections 2 and 4)
 
-Built 2026-11-28 06:28 UTC on Owls by `figures/scripts/build_sim_outputs.R` (R 4.6.0).
+Built 2026-11-28 07:14 UTC on Owls by `figures/scripts/build_sim_outputs.R` (R 4.6.0).
 
 Inputs are read-only Engineering outputs under `_local/engineering/` on Owls; nothing from them is stored in the repository.
 
@@ -18,18 +18,23 @@ Inputs are read-only Engineering outputs under `_local/engineering/` on Owls; no
 | `s2_smc_final` | `reports/S1S2/final/results_S2_smcbvs.tsv` | `f70874e92bf05d11a19a50e8ea5c616589b6728056c7d886c3c4711961885518` |
 | `s1_smc_final` | `reports/S1S2/final/results_S1_smcbvs.tsv` | `0f227f9af817a3532996450471e7f574c46dd45d834e0f1e399bd919b094665e` |
 | `bt2_diag` | `reports/S1S2/diagnostics/bt2_diagnostic_per_rep.tsv` | `cf562ddd897351a51eb05dae1c12b1e703e4468999e417bf8101440333805cf5` |
-| wall cache `s1final` | 9600 per-fit JSON records (`wall_sec_harness`) | `4825ba8c5521b7e934ec104a7ae8520d81dfaa0f4d178fe4f81bb1d9af95c315` |
-| wall cache `s2final5` | 60000 per-fit JSON records (`wall_sec_harness`) | `593d01bb37b65afcc96fa7c01222184e40e0ac2889316d2fccc5e2f5c15d31bc` |
-| wall cache `s2asi25` | 18000 per-fit JSON records (`wall_sec_harness`) | `f9967d9625d133628794ab52311cc3155c9a99192d75b19118761179b40ae531` |
+| `s1_perfit` | `reports/S1S2/final/perfit_precision_recall_S1.tsv` | `d74ae54a402b6a4dd2c4a71b175ecfcd851d7ec956783f63a99ce2f9f4f8acd6` |
+| `s2_perfit` | `reports/S1S2/final/perfit_precision_recall_S2.tsv` | `12cdd0f861fa85fd49db568c22b4f2a30139bf73b7dd0b02959fb5166f910cdd` |
+| wall cache `wall_s1final` | 9600 per-fit JSON records (`wall_sec_harness`) | `4825ba8c5521b7e934ec104a7ae8520d81dfaa0f4d178fe4f81bb1d9af95c315` |
+| wall cache `wall_s2final5` | 60000 per-fit JSON records (`wall_sec_harness`) | `593d01bb37b65afcc96fa7c01222184e40e0ac2889316d2fccc5e2f5c15d31bc` |
+| wall cache `wallmd5_s2asi60` | 7200 per-fit JSON records (`wall_sec_harness`) | `827b5cb2c0d4c317ef96fa19d64a50f70e5700a864ec689330959e8b2a139e08` |
 
 ## Checks run by the build (it stops if any fails)
 - Recomputed per-setting exact-recovery counts and mean FP, FN, F1 equal Engineering's `*_permethod.tsv` for every setting and method (S1 96 rows, S2 600 + 720 rows; max abs difference < 1e-15).
 - S1 median, 90% and max wall times recomputed from the JSON records equal `final/runtime_S1_smcbvs_asi.tsv`.
 - S2 interim (reps 1-25) records of the five non-ASI methods are identical (|S_hat|, TP, exact) to the final 100-rep records on reps 1-25.
+- Every fit of S1 and S2 agrees with Engineering's per-fit tables `final/perfit_precision_recall_S{1,2}.tsv` in |S_hat|, TP, FP, FN and exact; their precision equals TP/|S_hat| wherever |S_hat| > 0 (NA for an empty selection).
+- S2 ASI reps 1-60: the `data_md5` of every ASI JSON record equals the md5 of the SMC-BVS record for the same data set.
 
 ## Status of the inputs
 - S1: FINAL (reps 1-100, all six methods, 1,600 fits each).
-- S2: FINAL for SMC-BVS, lasso, SCAD, BAS, SuSiE (reps 1-100, 12,000 fits each). ASI is INTERIM: reps 1-25 (3,000 fits), from the HQ build `hq_s2asi_b1/`. Replace by the Engineering S2 final (`S2_comparison_final_*`) when it exists.
+- S2: FINAL for SMC-BVS, lasso, SCAD, BAS, SuSiE (reps 1-100, 12,000 fits each).
+- S2 ASI: INTERIM, reps 1-60 of 100 (7200 fits), from `final/perfit_precision_recall_S2.tsv`. When Engineering regenerates that table with reps 1-100, rerun the build: R is detected from the table and the interim marks disappear.
 - Precision and recall are per fit and then averaged (precision = 1 - FP/max(|S_hat|,1)); Engineering's `precision`/`recall` columns are pooled ratios (sum TP / sum |S_hat|), which this build does not use.
 
 `numbers.tsv` lists every number quoted in the prose of Section 2, keyed by quantity.
