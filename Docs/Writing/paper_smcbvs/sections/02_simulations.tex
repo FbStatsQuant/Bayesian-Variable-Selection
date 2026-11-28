@@ -69,15 +69,19 @@ setting, averages over the $100$ data sets of the following.
   \item \emph{Exact recovery}: $\ind{\Shat=\Sz}$, reported as the number of data sets out of $100$.
   \item \emph{False positives} $\mathrm{FP}=\abs{\Shat\setminus\Sz}$, \emph{false negatives}
   $\mathrm{FN}=\abs{\Sz\setminus\Shat}$, and the \emph{Hamming distance} $\abs{\Shat\,\triangle\,\Sz}=\mathrm{FP}+\mathrm{FN}$.
-  \item \emph{Precision} $1-\mathrm{FP}/\max(\abs{\Shat},1)$, \emph{recall} $\abs{\Shat\cap\Sz}/\sz$, and
-  $F_1=2\abs{\Shat\cap\Sz}/(2\abs{\Shat\cap\Sz}+\mathrm{FP}+\mathrm{FN})$, all computed per data set and then
-  averaged. An empty $\Shat$ makes no false selection and has precision one. Precision is one minus the false
-  selection rate, and recall is one minus the negative selection rate, of \citet[Sec.~4.2]{SongLiang2015}.
+  \item \emph{Precision} $\abs{\Shat\cap\Sz}/\abs{\Shat}$, \emph{recall} $\abs{\Shat\cap\Sz}/\sz$, and
+  $F_1=2\abs{\Shat\cap\Sz}/(2\abs{\Shat\cap\Sz}+\mathrm{FP}+\mathrm{FN})$, computed per data set. Precision and recall
+  are one minus the false selection rate and one minus the negative selection rate of \citet{SongLiang2015}. Recall and $F_1$ are averaged over all data sets. Precision is undefined when
+  $\Shat=\emptyset$, so we average it over the $k$ data sets with $\Shat\neq\emptyset$ and report the share $e$ of
+  empty selections beside it. If $c$ is this conditional mean, scoring an empty selection as precision one would
+  give $e+(1-e)c$ and scoring it as zero would give $(1-e)c$; Table~\ref{tab:supp-s2-prec-conv} lists both, and the
+  precision pooled over data sets.
   \item \emph{Run time}: the wall-clock time of one fit on one core, including data generation and diagnostics, and the
   CPU hours billed by the cluster scheduler for it.
 \end{itemize}
 Intervals for exact recovery are Wilson $95\%$ intervals \citep{Wilson1927}; for the averages in
-Table~\ref{tab:s2-main} the caption gives the largest Monte Carlo standard error. A fit that failed is counted as
+Table~\ref{tab:s2-main} the caption gives the largest Monte Carlo standard error. Entries of conditional precision
+based on fewer than $k=20$ non-empty selections are not reported. A fit that failed is counted as
 $\Shat=\emptyset$. Only BAS failed: $81$ of its $12{,}000$ fits in S2, all at $n=50$, where its chain can drift to
 nearly saturated models; $72$ of these stopped with a numerical error and $9$ exceeded $64$\,GB of memory.
 
@@ -144,57 +148,63 @@ and $0.999$, and $7$ of the $1{,}600$ fits raised a run-time warning.
 \includegraphics[width=\textwidth]{figures/fig_s2_recall_fp}
 \caption{Design S2: mean recall against mean number of false positives per fit (square-root scale) as $\nu$ increases
 from $0.05$ to $6$, by beta-type and $\rho$, pooled over $n\in\{50,100\}$ ($200$ fits per point). Filled points mark
-$\nu=2.07$, $3.52$ and $6$, and the circled point is $\nu=6$. ASI (dashed, open points) is interim: the first $60$ data
-sets of each setting ($120$ fits per point). Precision against recall is in
+$\nu=2.07$, $3.52$ and $6$, and the circled point is $\nu=6$. Precision against recall is in
 Figure~\ref{fig:supp-s2-pr}.}\label{fig:s2-recall-fp}
 \end{figure}
 
 \begin{table}[t]\centering\small
-\caption{Design S2 at the three strongest signals, by beta-type, pooled over $n$ and $\rho$: exact recovery
-(percentage of data sets), mean $\abs{\Shat}$, percentage of empty selections, and mean precision and recall per fit;
-an empty selection has precision one. Each cell averages $600$ fits ($^\dagger$ASI, interim: the first $60$ data sets
-of each setting, $360$ fits). The largest Monte Carlo standard error, stratified by setting, is $2.0$ percentage
-points for exact recovery, $0.47$ for $\abs{\Shat}$ and $0.01$ for precision and recall (ASI: $2.6$, $0.16$ and
-$0.02$).}\label{tab:s2-main}
+\caption{Design S2 at the three strongest signals, by beta-type, pooled over $n$ and $\rho$ ($600$ fits per cell):
+exact recovery (percentage of data sets), mean $\abs{\Shat}$, percentage of empty selections, mean precision over the
+$k$ non-empty selections ($k=600$ minus the empty ones; $220\le k\le595$), and mean recall. Empty selections include
+failed BAS fits. The largest Monte Carlo standard error is $2.0$ percentage points for exact recovery, $0.47$ for
+$\abs{\Shat}$, $0.021$ for precision and $0.01$ for recall.}\label{tab:s2-main}
 \input{figures/tables/tab_s2_main}
 \end{table}
 
 Design S2 is harder than S1: $n/\sz=10$, and at the seven levels $\nu\le1.22$ no method recovers $\Sz$ in more than one
 of the $1{,}200$ data sets per level. What separates the methods there is how much they select when the data carry
 little signal. Over the $4{,}800$ fits per method at $\nu\le0.25$, SMC-BVS selects $0.02$ false positives per fit and
-at most $3$ in any fit. SCAD selects $5.90$ on average and up to $43$, the lasso $0.77$ and up to $58$, and BAS $0.44$
-and up to $39$.
+at most $3$ in any fit; ASI selects $0.18$ (at most $9$), BAS $0.44$ (at most $39$), the lasso $0.77$ (at most $58$)
+and SCAD $5.90$ (at most $43$). What any method selects at this level is mostly noise: at $\nu\le0.14$ the precision
+of every method is below $0.5$. SMC-BVS selects anything in only $26$ to $37$ of the $1{,}200$ data sets per level, ASI
+in $149$ to $197$ and SCAD in $631$ to $661$.
 
-The comparison is decided at $\nu\ge3.52$ (Figure~\ref{fig:s2-recall-fp} and Table~\ref{tab:s2-main}). Pooled
-counts mix very different cases, so we separate them. When the true predictors are not correlated with one another
-(beta-type~1, and beta-type~2 at $\rho=0$), SMC-BVS recovers $\Sz$ at $\nu=6$ in $383$ of $600$ and $132$ of $200$
-data sets, BAS in $330$ and $113$, and the lasso in $1$ and $3$. In beta-type~1 SMC-BVS makes $0.14$ false selections
-per fit, against $0.68$ for BAS, $14.6$ for the lasso and $18.6$ for SCAD. In the upper row of
-Figure~\ref{fig:s2-recall-fp} and the lower-left panel its curve lies to the left of every curve but SuSiE's: for a
-given recall it selects fewer false predictors.
+The comparison is decided at $\nu\ge3.52$ (Figure~\ref{fig:s2-recall-fp} and Table~\ref{tab:s2-main}). At $\nu=6$
+SMC-BVS recovers $\Sz$ in $523$ of $1{,}200$ data sets, BAS in $455$, ASI in $433$, the lasso in $64$, SCAD in $14$
+and SuSiE in $3$. On the $1{,}197$ data sets where all six methods finished, SMC-BVS alone recovers $\Sz$ in $137$
+and ASI alone in $47$ (exact McNemar test, $p<0.001$). Pooled counts mix very different cases, so we separate them.
+When the true predictors are not correlated with one another (beta-type~1, and beta-type~2 at $\rho=0$), SMC-BVS
+recovers $\Sz$ at $\nu=6$ in $383$ of $600$ and $132$ of $200$ data sets, BAS in $330$ and $113$, ASI in $319$ and
+$106$, and the lasso in $1$ and $3$. In beta-type~1 SMC-BVS makes $0.14$ false selections per fit, against $0.53$ for
+ASI, $0.68$ for BAS, $14.6$ for the lasso and $18.6$ for SCAD. In the upper row of Figure~\ref{fig:s2-recall-fp} and
+the lower-left panel its curve lies to the left of every curve but SuSiE's: for a given recall it selects fewer false
+predictors. When SMC-BVS selects something, it is more precise than ASI and BAS: on data sets where both selections
+are non-empty, its precision exceeds that of ASI by $0.05$ to $0.08$ and that of BAS by $0.04$ to $0.16$ in the six
+cells of Table~\ref{tab:s2-main} (standard errors at most $0.02$). SuSiE is about as precise ($-0.02$ to $+0.05$) but
+recovers almost nothing.
 
-The price is recall at moderate signal. At $\nu=3.52$ SMC-BVS recovers $\Sz$ in $81$ of $1{,}200$ data sets and BAS
-in $92$; SMC-BVS finds $32\%$ of the true predictors, against $47\%$ for BAS and $69\%$ for the lasso; at $\nu=6$ it
-finds $70\%$, against $73\%$ and $84\%$. Much of the shortfall is empty selections: SMC-BVS selects nothing in $45\%$ of the
-data sets at $\nu=2.07$, $25\%$ at $3.52$ and $7\%$ at $6$. Its precision of $0.97$ to $0.98$ at every level of $\nu$
-partly reflects this, since an empty selection has precision one. The lasso and SCAD reach their higher recall by
-selecting $11$ and $17$ false predictors per fit at $\nu=6$. The interim results for ASI (Table~\ref{tab:s2-main}) are
-close to those of BAS. They cover $60$ of the $100$ data sets per setting, so we do not rank ASI against the other
-methods here; the paired comparison on those data sets is in
+The price is recall at moderate signal. At $\nu=3.52$ ASI recovers $\Sz$ in $95$ of $1{,}200$ data sets, BAS in $92$
+and SMC-BVS in $81$; paired with ASI, SMC-BVS alone succeeds in $23$ and ASI alone in $37$ ($p=0.09$). SMC-BVS finds
+$32\%$ of the true predictors, against $44\%$ for ASI, $47\%$ for BAS and $69\%$ for the lasso; at $\nu=6$ it finds
+$70\%$, against $73\%$, $73\%$ and $84\%$. Much of the shortfall is empty selections: SMC-BVS selects nothing in $45\%$
+of the data sets at $\nu=2.07$, $25\%$ at $3.52$ and $7\%$ at $6$, against $21\%$, $9\%$ and $3\%$ for ASI. The lasso
+and SCAD reach their higher recall by selecting $11$ and $17$ false predictors per fit at $\nu=6$. Over all of S2,
+SMC-BVS recovers $\Sz$ in $606$ of $12{,}000$ data sets, BAS in $556$ and ASI in $536$; on the $11{,}919$ shared data
+sets SMC-BVS alone succeeds in $160$ and ASI alone in $90$ ($p<0.001$), and the paired comparison by setting is in
 Table~\ref{tab:supp-s2-paired}.
 
 The weakest case for SMC-BVS is beta-type~2 with correlated predictors, where $\Sz$ is a block of $\sz$ adjacent
 columns with equal coefficients. At $\nu=6$ SMC-BVS recovers the block in $4\%$ of the data sets at $\rho=0.35$ and in
 none at $\rho=0.7$, and its recall falls to $0.58$ and $0.38$; in the same settings with spread-out support
-(beta-type~1) it recovers $\Sz$ in $67.5\%$ of the data sets at $\rho=0.7$. The failures come from the posterior, not
+(beta-type~1) it recovers $\Sz$ in $67.5\%$ of the data sets at $\rho=0.7$, ASI in $55.5\%$. The failures come from the posterior, not
 from the search. In $3{,}988$ of the $3{,}992$ beta-type~2 fits with $\rho>0$ that missed $\Sz$, our posterior scores
 the selected model at least as high as $\Sz$, and in none of the $4{,}000$ is the selected model larger than $\Sz$.
 With equal effects on adjacent correlated columns the response depends mostly on the sum of the block. A few members
 of the block reproduce that fit almost as well, and under a model prior that is sparse at $p=1000$ each further member
 costs more prior mass than it adds in likelihood. The posterior spreads over many subsets of the block: at $\nu=6$ the
 average inclusion probability of a block member is between $0.39$ and $0.61$, depending on $n$ and $\rho$, and the
-median probability model keeps only some of the members. BAS and, on its interim data, ASI behave the same way ($0$ to
-$6\%$ exact, recall $0.40$ to $0.67$). The lasso, which at $\rho=0.7$ still selects about nine variables per fit,
+median probability model keeps only some of the members. BAS and ASI behave the same way ($0$ to $6\%$ exact, recall
+$0.40$ to $0.67$). The lasso, which at $\rho=0.7$ still selects about nine variables per fit,
 recovers the block in $22.5\%$ of these data sets; $60$ of its $64$ exact recoveries at $\nu=6$ come from this case.
 Over all of S2, $141$ of the $11{,}394$ misses of SMC-BVS were search failures.
 
@@ -203,8 +213,10 @@ algorithm, started at its default residual variance, stops at a local optimum wi
 check on two settings, a warm start from a fit with the residual variance fixed at its true
 value reached a higher evidence lower bound in $31$ of $40$ data sets. We report SuSiE at its defaults, as for the other methods.
 
-In design S2 the median fit of SMC-BVS took $4.0$ minutes ($5.9$ at $n=50$, $1.2$ at $n=100$) and that of ASI
-$30.4$ minutes, on its first $60$ data sets per setting. The calibration was escalated in $4{,}974$ of the
-$12{,}000$ SMC-BVS fits, and $574$ raised a run-time warning; the per-setting median of the smallest $\ESS/N$ was
-between $0.701$ and $0.981$.
-% PENDING (Engineering CAMPAIGN-OPS): ASI final reps 26-100 for S2; an S2 run-time / CPU-hour table as for S1.
+Design S2 is cheap for SMC-BVS (Table~\ref{tab:supp-s2-cost}). Its median fit took $4.0$ minutes ($5.9$ at
+$n=50$, $1.2$ at $n=100$) against $30.5$ minutes for ASI, and its median billed cost was $0.136$ CPU hours per fit
+against $1.018$. Its tail is again the longer one, with a $90\%$ quantile of $14.7$ minutes and a slowest fit of
+$1.87$ hours against $35.1$ minutes and $1.20$ hours for ASI. Over the $12{,}000$ fits SMC-BVS used $1{,}351$
+core-hours of wall time and was billed $2{,}738$ CPU hours; ASI used $6{,}255$ and was billed $12{,}546$. The
+calibration was escalated in $4{,}974$ of the SMC-BVS fits and $574$ raised a run-time warning; the per-setting median
+of the smallest $\ESS/N$ was between $0.701$ and $0.981$.

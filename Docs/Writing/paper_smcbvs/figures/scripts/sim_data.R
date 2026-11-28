@@ -9,10 +9,11 @@
 #   exact      = 1{S_hat == S0}                      (from the record; MPM for the Bayesian methods)
 #   FP, FN, TP = |S_hat \ S0|, |S0 \ S_hat|, |S_hat ∩ S0|
 #   hamming    = FP + FN
-#   prec       = 1 - FP / max(|S_hat|, 1)            (precision; an empty selection has precision 1)
+#   prec       = TP / |S_hat|, undefined (NA) when S_hat is empty   (precision; averaged over the k non-empty fits)
+#   prec1      = 1 - FP / max(|S_hat|, 1)            (empty -> 1; sensitivity table only)
 #   rec        = TP / s0                             (recall)
 #   F1         = 2 TP / (2 TP + FP + FN)
-# A failed fit counts as S_hat = empty (Engineering's counting rule), so prec = 1, rec = 0, exact = 0.
+# A failed fit counts as S_hat = empty (Engineering's counting rule), so prec = NA, rec = 0, exact = 0.
 suppressPackageStartupMessages({ library(data.table); library(jsonlite) })
 
 ENG  <- "/home/fb31/Bayesian-Variable-Selection/_local/engineering/"
@@ -22,16 +23,16 @@ SRC <- list(
   s1_permethod = paste0(REP, "S1_comparison_final_permethod.tsv"),
   s1_paired    = paste0(REP, "S1_comparison_final_paired.tsv"),
   s1_runtime   = paste0(REP, "final/runtime_S1_smcbvs_asi.tsv"),
-  s2_records   = paste0(REP, "S2_comparison_records.tsv"),           # 5 methods final, reps 1-100 (no ASI)
-  s2_permethod = paste0(REP, "S2_comparison_permethod.tsv"),
-  s2_asi_records   = paste0(REP, "hq_s2asi_b1/S2_comparison_asi_b1_records.tsv"),   # INTERIM, reps 1-25, 6 methods
-  s2_asi_permethod = paste0(REP, "hq_s2asi_b1/S2_comparison_asi_b1_permethod.tsv"),
-  s2_asi_paired    = paste0(REP, "hq_s2asi_b1/S2_comparison_asi_b1_paired.tsv"),
+  s2_records   = paste0(REP, "S2_comparison_final_records.tsv"),     # FINAL, reps 1-100, 6 methods
+  s2_permethod = paste0(REP, "S2_comparison_final_permethod.tsv"),
+  s2_paired    = paste0(REP, "S2_comparison_final_paired.tsv"),
+  s2_runtime   = paste0(REP, "final/runtime_S2_smcbvs_asi.tsv"),
+  s2_records5  = paste0(REP, "S2_comparison_records.tsv"),           # earlier 5-method build (no ASI), cross-check only
   s2_smc_final = paste0(REP, "final/results_S2_smcbvs.tsv"),
   s1_smc_final = paste0(REP, "final/results_S1_smcbvs.tsv"),
   bt2_diag     = paste0(REP, "diagnostics/bt2_diagnostic_per_rep.tsv"),    # LOG-ONLY diagnostic of the S2 SMC-BVS fits, rho > 0
   s1_perfit    = paste0(REP, "final/perfit_precision_recall_S1.tsv"),       # Engineering per-fit TP/FP/FN/precision/recall
-  s2_perfit    = paste0(REP, "final/perfit_precision_recall_S2.tsv")        # 5 methods x 12,000 + ASI reps completed so far
+  s2_perfit    = paste0(REP, "final/perfit_precision_recall_S2.tsv")        # 6 methods x 12,000
 )
 
 METHODS <- c("smcbvs", "asi", "bas_mc3", "susie", "scad", "lasso_cv")
@@ -57,7 +58,8 @@ settings_of <- function(pm_file, suite) {
 
 add_metrics <- function(d) {
   d[, exact := as.logical(exact)]
-  d[, prec := 1 - FP / pmax(n_selected, 1)]
+  d[, prec := fifelse(n_selected > 0, TP / pmax(n_selected, 1), NA_real_)]
+  d[, prec1 := 1 - FP / pmax(n_selected, 1)]
   d[, rec  := TP / s0]
   d[, failed := status != "ok"]
   d[]
@@ -69,13 +71,9 @@ load_s1 <- function() {
   add_metrics(d)
 }
 
-load_s2 <- function(which = c("final5", "asi25")) {
-  which <- match.arg(which)
-  f  <- if (which == "final5") SRC$s2_records else SRC$s2_asi_records
-  pm <- if (which == "final5") SRC$s2_permethod else SRC$s2_asi_permethod
-  d <- read_records(f)[settings_of(pm, 2), on = "setting_id"]
-  if (which == "final5") stopifnot(nrow(d) == 5L * 12000L) else stopifnot(nrow(d) == 6L * 3000L)
-  stopifnot(all(d$in_permethod))
+load_s2 <- function(f = SRC$s2_records, n_methods = 6L) {
+  d <- read_records(f)[settings_of(SRC$s2_permethod, 2), on = "setting_id"]
+  stopifnot(nrow(d) == n_methods * 12000L, all(d$in_permethod))
   add_metrics(d)
 }
 
@@ -175,3 +173,8 @@ json_wall_md5 <- function(d, cache_dir, tag) {
   fwrite(out, f, sep = "\t")
   out
 }
+
+# Conditional precision of a group of fits: the mean over its k non-empty fits, reported only when k >= KMIN.
+KMIN <- 20L
+cprec <- function(x) { k <- sum(!is.na(x)); if (k >= KMIN) mean(x, na.rm = TRUE) else NA_real_ }
+fmt_na <- function(fmt, v) ifelse(is.na(v), "--", sprintf(fmt, v))
