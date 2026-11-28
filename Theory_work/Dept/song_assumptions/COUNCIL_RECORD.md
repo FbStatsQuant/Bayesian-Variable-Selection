@@ -163,3 +163,11 @@ No R2 point was declined. Score penalties: Sol's A-MARGIN-U 7.5 and A-NEC 8 tie 
 
 ### Round 2 outcome
 Package revised to v1.3. Response: `council/RESPONSE_R2.md`. Diff: `council/R2_TO_R3.diff`. Round 3 (last allowed) is scoped fix-verification with `briefs/COUNCIL_BRIEF_R3_SCOPED.md`.
+
+### HQ owner ruling (2026-11-27, after v1.3 push): Round 2 accepted as PASSED
+- The owner accepts Council R2 as **passed as-is**: Neon 9.0, Opus 8.6, Sol 8.0. The 8.5 threshold is explicitly waived for Sol ("let's leave it like that").
+- The v1.3 fixes above, already applied when the ruling arrived, stand as the final cleanups.
+- **No Round 3, and no Astra + Fable override judges.**
+  - The three scoped R3 seats had already been dispatched (commit 4bacc09d) before the ruling arrived. Per POLICIES §10 they are not cancelled.
+  - When their `council/R3_<SEAT>.md` files arrive, they will be filed as **superseded / informational**. They are not a gate.
+- **Gate status: PASSED (owner ruling).** The package is held at v1.3 pending one final theory idea from the owner.
